@@ -17,8 +17,8 @@ import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.search.ui.ISearchPageScoreComputer;
 
 /**
- * Implements a {@link IAdapterFactory} for {@link ISearchPageScoreComputer}s
- * which ranks {@link AbstractTaskContainer}s high for the task search page
+ * Implements a {@link IAdapterFactory} for {@link ISearchPageScoreComputer}s which ranks {@link AbstractTaskContainer}s
+ * high for the task search page
  * 
  * @author Willian Mitsuda
  */

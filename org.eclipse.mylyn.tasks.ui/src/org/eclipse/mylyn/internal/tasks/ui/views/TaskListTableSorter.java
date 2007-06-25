@@ -46,16 +46,14 @@ public class TaskListTableSorter extends ViewerSorter {
 
 	public void setColumn(String column) {
 		if (view.isFocusedMode()) {
-			MessageDialog
-					.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-							ITasksUiConstants.TITLE_DIALOG,
-							"Manual sorting is disabled in focused mode, sort order will not take effect until focused mode is disabled.");
+			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+					ITasksUiConstants.TITLE_DIALOG,
+					"Manual sorting is disabled in focused mode, sort order will not take effect until focused mode is disabled.");
 		}
 	}
 
 	/**
-	 * compare - invoked when column is selected calls the actual comparison
-	 * method for particular criteria
+	 * compare - invoked when column is selected calls the actual comparison method for particular criteria
 	 */
 	@Override
 	public int compare(Viewer compareViewer, Object o1, Object o2) {
@@ -97,8 +95,8 @@ public class TaskListTableSorter extends ViewerSorter {
 			if (o2 instanceof AbstractTaskContainer || o2 instanceof AbstractRepositoryQuery) {
 
 				return this.view.sortDirection
-						* ((AbstractTaskContainer) o1).getSummary()
-								.compareToIgnoreCase(((AbstractTaskContainer) o2).getSummary());
+						* ((AbstractTaskContainer) o1).getSummary().compareToIgnoreCase(
+								((AbstractTaskContainer) o2).getSummary());
 			} else {
 				return -1;
 			}

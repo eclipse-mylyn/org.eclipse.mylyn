@@ -20,16 +20,15 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IWorkingSet;
 
 /**
- * AbstractTaskListFilter for task working sets 
+ * AbstractTaskListFilter for task working sets
  * 
  * @author Eugene Kuleshov
  */
 public class TaskWorkingSetFilter extends AbstractTaskListFilter {
-	
+
 	private final TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 
 	private IWorkingSet currentWorkingSet;
-
 
 	@Override
 	public boolean select(Object parent, Object element) {
@@ -65,5 +64,5 @@ public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 	public void setCurrentWorkingSet(IWorkingSet currentWorkingSet) {
 		this.currentWorkingSet = currentWorkingSet;
 	}
-	
+
 }

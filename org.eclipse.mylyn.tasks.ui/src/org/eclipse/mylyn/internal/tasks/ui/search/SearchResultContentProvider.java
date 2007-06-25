@@ -48,8 +48,7 @@ public abstract class SearchResultContentProvider implements IStructuredContentP
 	}
 
 	/**
-	 * This method is called whenever the set of matches for the given elements
-	 * changes.
+	 * This method is called whenever the set of matches for the given elements changes.
 	 * 
 	 * @param updatedElements
 	 *            The array of objects that has to be refreshed

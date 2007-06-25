@@ -29,7 +29,6 @@ public class NewQueryWizard extends MultiRepositoryAwareWizard {
 		super(new SelectRepositoryPageForNewQuery(), TITLE);
 	}
 
-	
 	private static final class SelectRepositoryPageForNewQuery extends SelectRepositoryPage {
 		public SelectRepositoryPageForNewQuery() {
 			super(TaskRepositoryFilter.CAN_QUERY);
@@ -41,5 +40,5 @@ public class NewQueryWizard extends MultiRepositoryAwareWizard {
 			return repositoryUi.getQueryWizard(taskRepository, null);
 		}
 	}
-	
+
 }

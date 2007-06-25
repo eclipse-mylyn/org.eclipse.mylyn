@@ -32,26 +32,23 @@ public class TaskActivationHistory {
 	private int currentIndex = -1;
 
 	/**
-	 * The number of tasks from the previous Eclipse session to load into the
-	 * history at startup. (This is not the maximum size of the history, which
-	 * is currently unbounded)
+	 * The number of tasks from the previous Eclipse session to load into the history at startup. (This is not the
+	 * maximum size of the history, which is currently unbounded)
 	 */
 	private static final int NUM_SAVED_HISTORY_ITEMS_TO_LOAD = 12;
 
 	private boolean persistentHistoryLoaded = false;
 
 	/**
-	 * Load in a number of saved history tasks from previous session. Should be
-	 * called from constructor but ContextManager doesn't seem to be able to
-	 * provide activity history at that point
+	 * Load in a number of saved history tasks from previous session. Should be called from constructor but
+	 * ContextManager doesn't seem to be able to provide activity history at that point
 	 * 
 	 * @author Wesley Coelho
 	 */
 	public void loadPersistentHistory() {
 		int tasksAdded = 0;
 		history.clear();
-		for (int i = ContextCorePlugin.getContextManager().getActivityMetaContext().getInteractionHistory()
-				.size() - 1; i >= 0; i--) {
+		for (int i = ContextCorePlugin.getContextManager().getActivityMetaContext().getInteractionHistory().size() - 1; i >= 0; i--) {
 			AbstractTask prevTask = getHistoryTaskAt(i);
 
 			if (prevTask != null && !history.contains(prevTask)) {
@@ -68,12 +65,13 @@ public class TaskActivationHistory {
 	}
 
 	/**
-	 * Returns the task corresponding to the interaction event history item at
-	 * the specified position
+	 * Returns the task corresponding to the interaction event history item at the specified position
 	 */
 	protected AbstractTask getHistoryTaskAt(int pos) {
-		InteractionEvent event = ContextCorePlugin.getContextManager().getActivityMetaContext()
-				.getInteractionHistory().get(pos);
+		InteractionEvent event = ContextCorePlugin.getContextManager()
+				.getActivityMetaContext()
+				.getInteractionHistory()
+				.get(pos);
 		return TasksUiPlugin.getTaskListManager().getTaskList().getTask(event.getStructureHandle());
 	}
 
@@ -95,13 +93,13 @@ public class TaskActivationHistory {
 	public AbstractTask getPreviousTask() {
 		try {
 			boolean active = false;
-			for (AbstractTask task: history) {
-				if(task.isActive()) {
+			for (AbstractTask task : history) {
+				if (task.isActive()) {
 					active = true;
 					break;
 				}
 			}
-			
+
 			if (hasPrevious()) {
 				if ((currentIndex == 0 && !history.get(currentIndex).isActive()) || !active) {
 					return history.get(currentIndex);
@@ -143,5 +141,5 @@ public class TaskActivationHistory {
 			StatusHandler.fail(e, "could not clear history", false);
 		}
 	}
-	
+
 }

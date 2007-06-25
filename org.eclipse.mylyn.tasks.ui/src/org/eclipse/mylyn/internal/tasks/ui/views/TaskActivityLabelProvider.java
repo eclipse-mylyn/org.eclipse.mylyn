@@ -71,13 +71,14 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 		if (element instanceof ScheduledTaskDelegate) {
 			ScheduledTaskDelegate activityDelegate = (ScheduledTaskDelegate) element;
 			AbstractTask task = activityDelegate.getCorrespondingTask();
-			switch (columnIndex) {			
+			switch (columnIndex) {
 			case 2:
 				if (task != null) {
-					return task.getTaskKey() +": " + task.getSummary();
-				} 
+					return task.getTaskKey() + ": " + task.getSummary();
+				}
 			case 3:
-				return DateUtil.getFormattedDurationShort(activityDelegate.getDateRangeContainer().getElapsed(activityDelegate));
+				return DateUtil.getFormattedDurationShort(activityDelegate.getDateRangeContainer().getElapsed(
+						activityDelegate));
 			case 4:
 				return task.getEstimateTimeHours() + UNITS_HOURS;
 			case 5:
@@ -87,7 +88,8 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 					return "";
 				}
 			case 6:
-				if (activityDelegate.getStart() > 0 && activityDelegate.getDateRangeContainer().getElapsed(activityDelegate) > 0) {
+				if (activityDelegate.getStart() > 0
+						&& activityDelegate.getDateRangeContainer().getElapsed(activityDelegate) > 0) {
 					return DateFormat.getDateInstance(DateFormat.MEDIUM).format(activityDelegate.getStart());
 				} else {
 					return "";

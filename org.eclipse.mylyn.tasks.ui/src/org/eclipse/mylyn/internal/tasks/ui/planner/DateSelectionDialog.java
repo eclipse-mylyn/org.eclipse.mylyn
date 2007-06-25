@@ -37,31 +37,32 @@ public class DateSelectionDialog extends Dialog {
 	private Date reminderDate = null;
 
 	private String title = "Date Selection";
-	
+
 	private Calendar initialCalendar = GregorianCalendar.getInstance();
 
 	private FormToolkit toolkit;
-	
+
 	public DateSelectionDialog(Shell parentShell, String title) {
 		this(parentShell, GregorianCalendar.getInstance(), title);
 	}
 
 	public DateSelectionDialog(Shell parentShell, Calendar initialDate, String title) {
 		super(parentShell);
-		
-		toolkit = new FormToolkit(parentShell.getDisplay());;
-		if(title != null) {
+
+		toolkit = new FormToolkit(parentShell.getDisplay());
+		;
+		if (title != null) {
 			this.title = title;
 		}
-		if(initialDate != null) {
-			this.initialCalendar.setTime(initialDate.getTime());			
+		if (initialDate != null) {
+			this.initialCalendar.setTime(initialDate.getTime());
 		}
 		reminderDate = initialCalendar.getTime();
 	}
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		getShell().setText(title);		
+		getShell().setText(title);
 		DatePickerPanel datePanel = new DatePickerPanel(parent, SWT.NULL, initialCalendar);
 		datePanel.addSelectionChangedListener(new ISelectionChangedListener() {
 
@@ -72,10 +73,10 @@ public class DateSelectionDialog extends Dialog {
 				}
 			}
 		});
-		datePanel.setBackground(toolkit.getColors().getBackground());		
+		datePanel.setBackground(toolkit.getColors().getBackground());
 		return datePanel;
 	}
-	
+
 	@Override
 	public boolean close() {
 		toolkit.dispose();
@@ -88,11 +89,11 @@ public class DateSelectionDialog extends Dialog {
 		createButton(parent, IDialogConstants.CLIENT_ID + 1, "Clear", false);
 		super.createButtonsForButtonBar(parent);
 	}
-	
+
 	@Override
 	protected void buttonPressed(int buttonId) {
 		super.buttonPressed(buttonId);
-		if(buttonId == IDialogConstants.CLIENT_ID + 1) {
+		if (buttonId == IDialogConstants.CLIENT_ID + 1) {
 			reminderDate = null;
 			okPressed();
 		}

@@ -57,12 +57,17 @@ public class RepositoryTaskHandleTest extends TestCase {
 		BugzillaTask bugTask = new BugzillaTask(repository, id, "label 124");
 		assertEquals(repository, bugTask.getRepositoryUrl());
 
-		manager.getTaskList().moveToContainer(bugTask, TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
+		manager.getTaskList().moveToContainer(bugTask,
+				TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 		manager.saveTaskList();
 		manager.resetTaskList();
 		manager.readExistingOrCreateNewList();
 
-		BugzillaTask readReport = (BugzillaTask) manager.getTaskList().getDefaultCategory().getChildren().iterator().next();
+		BugzillaTask readReport = (BugzillaTask) manager.getTaskList()
+				.getDefaultCategory()
+				.getChildren()
+				.iterator()
+				.next();
 		assertEquals(readReport.getSummary(), readReport.getSummary());
 		assertEquals(readReport.getRepositoryUrl(), readReport.getRepositoryUrl());
 	}

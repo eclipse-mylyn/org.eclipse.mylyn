@@ -42,7 +42,7 @@ public class BugzillaTaskListFactory extends AbstractTaskListFactory {
 	public String getTaskElementName() {
 		return TAG_BUGZILLA_REPORT;
 	}
-	
+
 	@Override
 	public Set<String> getQueryElementNames() {
 		Set<String> names = new HashSet<String>();
@@ -50,7 +50,7 @@ public class BugzillaTaskListFactory extends AbstractTaskListFactory {
 		names.add(TAG_BUGZILLA_CUSTOM_QUERY);
 		return names;
 	}
-	
+
 	@Override
 	public boolean canCreate(AbstractRepositoryQuery category) {
 		return category instanceof BugzillaRepositoryQuery;
@@ -60,7 +60,7 @@ public class BugzillaTaskListFactory extends AbstractTaskListFactory {
 	public boolean canCreate(AbstractTask task) {
 		return task instanceof BugzillaTask;
 	}
-	
+
 	@Override
 	public String getQueryElementName(AbstractRepositoryQuery query) {
 		if (query instanceof BugzillaRepositoryQuery) {
@@ -81,7 +81,7 @@ public class BugzillaTaskListFactory extends AbstractTaskListFactory {
 		}
 		return query;
 	}
-	
+
 	@Override
 	public void setAdditionalAttributes(AbstractTask task, Element element) {
 		element.setAttribute(KEY_SEVERITY, ((BugzillaTask) task).getSeverity());

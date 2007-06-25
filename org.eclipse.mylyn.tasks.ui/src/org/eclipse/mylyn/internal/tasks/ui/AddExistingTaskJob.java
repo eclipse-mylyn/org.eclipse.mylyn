@@ -41,9 +41,8 @@ public class AddExistingTaskJob extends Job {
 	private String taskId;
 
 	/**
-	 * Optional; informs the task container the task initialy belongs to; if
-	 * null, it will be added to the current selected task's category in task
-	 * list
+	 * Optional; informs the task container the task initialy belongs to; if null, it will be added to the current
+	 * selected task's category in task list
 	 */
 	private AbstractTaskCategory taskContainer;
 
@@ -68,7 +67,7 @@ public class AddExistingTaskJob extends Job {
 				Calendar newSchedule = Calendar.getInstance();
 				TasksUiPlugin.getTaskListManager().setScheduledEndOfDay(newSchedule);
 				TasksUiPlugin.getTaskListManager().setScheduledFor(newTask, newSchedule.getTime());
-				
+
 				TasksUiUtil.refreshAndOpenTaskListElement(newTask);
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 
@@ -76,8 +75,7 @@ public class AddExistingTaskJob extends Job {
 						AbstractTaskCategory category = taskContainer;
 						TaskListView taskListView = TaskListView.getFromActivePerspective();
 						if (category == null) {
-							Object selectedObject = ((IStructuredSelection) taskListView.getViewer().getSelection())
-									.getFirstElement();
+							Object selectedObject = ((IStructuredSelection) taskListView.getViewer().getSelection()).getFirstElement();
 							if (selectedObject instanceof TaskCategory) {
 								category = (TaskCategory) selectedObject;
 							} else {
@@ -94,8 +92,8 @@ public class AddExistingTaskJob extends Job {
 					public void run() {
 						IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 						if (window != null) {
-							MessageDialog.openWarning(window.getShell(), "Add Existing Task Failed", MessageFormat
-									.format("Unable to retrieve task \"{0}\" from repository.", taskId));
+							MessageDialog.openWarning(window.getShell(), "Add Existing Task Failed",
+									MessageFormat.format("Unable to retrieve task \"{0}\" from repository.", taskId));
 						}
 					}
 

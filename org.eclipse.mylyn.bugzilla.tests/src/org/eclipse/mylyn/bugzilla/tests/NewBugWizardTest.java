@@ -30,8 +30,8 @@ public class NewBugWizardTest extends TestCase {
 
 	public void testPlatformOptions() throws Exception {
 
-		
-		RepositoryTaskData newReport = new RepositoryTaskData(new BugzillaAttributeFactory(), BugzillaCorePlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_220_URL, "1");
+		RepositoryTaskData newReport = new RepositoryTaskData(new BugzillaAttributeFactory(),
+				BugzillaCorePlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_220_URL, "1");
 
 		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_220_URL);
@@ -57,7 +57,8 @@ public class NewBugWizardTest extends TestCase {
 		String platform = Platform.getOSArch();
 		if (platform.equals("x86")) {
 			if (os.equals("macosx"))
-				assertEquals("Macintosh", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString()).getValue());
+				assertEquals("Macintosh", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString())
+						.getValue());
 			else
 				assertEquals("PC", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString()).getValue());
 		} else if (platform.equals("x86_64"))
@@ -70,9 +71,11 @@ public class NewBugWizardTest extends TestCase {
 			assertEquals("Sun", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString()).getValue());
 		else if (platform.equals("ppc")) {
 			if (os.equals("macosx"))
-				assertEquals("Macintosh", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString()).getValue());
+				assertEquals("Macintosh", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString())
+						.getValue());
 			else
-				assertEquals("Power", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString()).getValue());
+				assertEquals("Power", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString())
+						.getValue());
 		}
 	}
 

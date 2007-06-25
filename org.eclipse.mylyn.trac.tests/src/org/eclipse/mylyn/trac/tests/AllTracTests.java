@@ -24,7 +24,7 @@ public class AllTracTests {
 
 	public static Test suite() {
 //		UrlConnectionUtil.initCommonsLoggingSettings();
-		
+
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.trac.tests");
 		// $JUnit-BEGIN$
 		// suite.addTestSuite(TracXmlRpcTest.class);

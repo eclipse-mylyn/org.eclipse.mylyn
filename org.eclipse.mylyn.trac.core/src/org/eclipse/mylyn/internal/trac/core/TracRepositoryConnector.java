@@ -149,11 +149,11 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public boolean markStaleTasks(TaskRepository repository,
-			Set<AbstractTask> tasks, IProgressMonitor monitor) throws CoreException {
+	public boolean markStaleTasks(TaskRepository repository, Set<AbstractTask> tasks, IProgressMonitor monitor)
+			throws CoreException {
 		try {
 			monitor.beginTask("Getting changed tasks", IProgressMonitor.UNKNOWN);
-			
+
 			if (!TracRepositoryConnector.hasChangedSince(repository)) {
 				// always run the queries for web mode
 				return true;
@@ -177,7 +177,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 				Set<Integer> ids = client.getChangedTickets(since);
 				if (ids.isEmpty()) {
 					// repository is unchanged
-					return false; 
+					return false;
 				}
 
 				for (AbstractTask task : tasks) {
@@ -198,8 +198,8 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public AbstractTask createTaskFromExistingId(TaskRepository repository, String taskId,
-			IProgressMonitor monitor) throws CoreException {
+	public AbstractTask createTaskFromExistingId(TaskRepository repository, String taskId, IProgressMonitor monitor)
+			throws CoreException {
 		AbstractTask task = super.createTaskFromExistingId(repository, taskId, monitor);
 		if (task == null) {
 			// repository does not support XML-RPC, fall back to web access
@@ -234,8 +234,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			repositoryTask.setOwner(taskData.getAttributeValue(RepositoryTaskAttribute.USER_ASSIGNED));
 			repositoryTask.setCompleted(TracTask.isCompleted(taskData.getStatus()));
 			repositoryTask.setUrl(repository.getUrl() + ITracClient.TICKET_URL + taskData.getId());
-			repositoryTask.setPriority(TracTask.getMylarPriority(taskData.getAttributeValue(Attribute.PRIORITY
-					.getTracKey())));
+			repositoryTask.setPriority(TracTask.getMylarPriority(taskData.getAttributeValue(Attribute.PRIORITY.getTracKey())));
 			Kind kind = TracTask.Kind.fromType(taskData.getAttributeValue(Attribute.TYPE.getTracKey()));
 			repositoryTask.setTaskKind((kind != null) ? kind.toString() : null);
 			// TODO: Completion Date

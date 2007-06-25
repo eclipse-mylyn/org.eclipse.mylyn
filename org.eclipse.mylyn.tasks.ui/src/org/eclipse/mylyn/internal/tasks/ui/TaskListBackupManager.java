@@ -40,7 +40,7 @@ import org.eclipse.ui.progress.IProgressService;
 public class TaskListBackupManager implements IPropertyChangeListener {
 
 	private static final String TITLE_TASKLIST_BACKUP = "Tasklist Backup";
-  
+
 	private static final String BACKUP_JOB_NAME = "Scheduled task data backup";
 
 	public static final String BACKUP_FAILURE_MESSAGE = "Could not backup task data. Check backup preferences.\n";
@@ -48,7 +48,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 	private static final long SECOND = 1000;
 
 	private static final long MINUTE = 60 * SECOND;
-  
+
 	private static final long HOUR = 60 * MINUTE;
 
 	private static final long DAY = 24 * HOUR;
@@ -88,7 +88,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 //		String destination = MylarTaskListPlugin.getMylarCorePrefs().getString(
 //				TaskListPreferenceConstants.BACKUP_FOLDER);
 		String destination = TasksUiPlugin.getDefault().getBackupFolderPath();
-		
+
 		File backupFolder = new File(destination);
 		if (!backupFolder.exists()) {
 			backupFolder.mkdir();
@@ -124,7 +124,8 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 	/** public for testing purposes */
 	public void removeOldBackups(File folder) {
 
-		int maxBackups = TasksUiPlugin.getDefault().getPreferenceStore().getInt(TasksUiPreferenceConstants.BACKUP_MAXFILES);
+		int maxBackups = TasksUiPlugin.getDefault().getPreferenceStore().getInt(
+				TasksUiPreferenceConstants.BACKUP_MAXFILES);
 
 		File[] files = folder.listFiles();
 		ArrayList<File> backupFiles = new ArrayList<File>();
@@ -147,14 +148,14 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 			int toomany = backupFileArray.length - maxBackups;
 			if (toomany > 0) {
 				for (int x = 0; x < toomany; x++) {
-					if(backupFileArray[x] != null) {
+					if (backupFileArray[x] != null) {
 						backupFileArray[x].delete();
 					}
 				}
 			}
 		}
 	}
-	
+
 //	public File getMostRecentBackup() {
 //		String destination = TasksUiPlugin.getDefault().getBackupFolderPath();
 //
@@ -187,7 +188,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 //	}
 
 	class CheckBackupRequired extends TimerTask {
-  
+
 		@Override
 		public void run() {
 			if (!Platform.isRunning() || TasksUiPlugin.getDefault() == null) {
@@ -195,7 +196,8 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 			} else {
 				long lastBackup = TasksUiPlugin.getDefault().getPreferenceStore().getLong(
 						TasksUiPreferenceConstants.BACKUP_LAST);
-				int days = TasksUiPlugin.getDefault().getPreferenceStore().getInt(TasksUiPreferenceConstants.BACKUP_SCHEDULE);
+				int days = TasksUiPlugin.getDefault().getPreferenceStore().getInt(
+						TasksUiPreferenceConstants.BACKUP_SCHEDULE);
 				long waitPeriod = days * DAY;
 				final long now = new Date().getTime();
 
@@ -228,9 +230,8 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 							new Date().getTime());
 				}
 			} catch (InvocationTargetException e) {
-				MessageDialog
-						.openError(null, BACKUP_JOB_NAME,
-								"Error occured during scheduled tasklist backup.\nCheck settings on Tasklist preferences page.");
+				MessageDialog.openError(null, BACKUP_JOB_NAME,
+						"Error occured during scheduled tasklist backup.\nCheck settings on Tasklist preferences page.");
 			} catch (InterruptedException e) {
 				return Status.CANCEL_STATUS;
 			}

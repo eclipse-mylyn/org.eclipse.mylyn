@@ -38,10 +38,10 @@ public class NewTracTaskWizard extends Wizard implements INewWizard {
 		this.taskRepository = taskRepository;
 
 		newTaskPage = new NewTracTaskPage(taskRepository);
-		
+
 		setWindowTitle("New Task");
 		setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
-		
+
 		setNeedsProgressMonitor(true);
 	}
 

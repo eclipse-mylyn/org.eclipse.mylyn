@@ -281,7 +281,7 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 		}
 		return getId();
 	}
-	
+
 	public void setTaskKey(String key) {
 		setAttributeValue(RepositoryTaskAttribute.TASK_KEY, key);
 	}

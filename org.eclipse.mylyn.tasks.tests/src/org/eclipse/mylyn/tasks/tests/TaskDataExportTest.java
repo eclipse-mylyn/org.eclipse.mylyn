@@ -53,7 +53,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 
 		removeFiles(new File(TasksUiPlugin.getDefault().getDataDirectory()));
 		ContextCorePlugin.getDefault().getContextStore().init();
-		
+
 		// Create the export wizard
 		wizard = new TaskDataExportWizard();
 		wizard.addPages();
@@ -87,7 +87,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 	}
 
 	@Override
-	protected void tearDown() throws Exception {		
+	protected void tearDown() throws Exception {
 		removeFiles(destinationDir);
 		destinationDir.delete();
 		assertFalse(destinationDir.exists());
@@ -96,8 +96,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 	}
 
 	/**
-	 * Tests the wizard when it has been asked to export all task data to a zip
-	 * file
+	 * Tests the wizard when it has been asked to export all task data to a zip file
 	 */
 	public void testExportAllToZip() throws Exception {
 

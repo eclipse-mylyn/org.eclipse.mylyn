@@ -18,5 +18,5 @@ public class TracSeverity extends TracTicketAttribute {
 	public TracSeverity(String name, int value) {
 		super(name, value);
 	}
-	
+
 }

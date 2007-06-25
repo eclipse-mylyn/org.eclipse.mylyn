@@ -14,7 +14,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
 /**
- * @author Willian Mitsuda  
+ * @author Willian Mitsuda
  */
 public class ShowInTaskListAction extends BaseSelectionListenerAction {
 

@@ -152,22 +152,27 @@ public class SaxRepositoriesWriter {
 
 			handler.startDocument();
 			AttributesImpl rootAttributes = new AttributesImpl();
-			rootAttributes.addAttribute("", TaskRepositoriesExternalizer.ATTRIBUTE_VERSION, TaskRepositoriesExternalizer.ATTRIBUTE_VERSION, "", "1");
+			rootAttributes.addAttribute("", TaskRepositoriesExternalizer.ATTRIBUTE_VERSION,
+					TaskRepositoriesExternalizer.ATTRIBUTE_VERSION, "", "1");
 
-			handler.startElement("", TaskRepositoriesExternalizer.ELEMENT_TASK_REPOSITORIES, TaskRepositoriesExternalizer.ELEMENT_TASK_REPOSITORIES, rootAttributes);
+			handler.startElement("", TaskRepositoriesExternalizer.ELEMENT_TASK_REPOSITORIES,
+					TaskRepositoriesExternalizer.ELEMENT_TASK_REPOSITORIES, rootAttributes);
 
 			for (TaskRepository repository : new ArrayList<TaskRepository>(repositories)) {
 
 				AttributesImpl ieAttributes = new AttributesImpl();
 				for (String key : repository.getProperties().keySet()) {
-					ieAttributes.addAttribute("", key, key, "", XmlStringConverter.convertToXmlString(repository
-							.getProperties().get(key)));
+					ieAttributes.addAttribute("", key, key, "",
+							XmlStringConverter.convertToXmlString(repository.getProperties().get(key)));
 				}
 
-				handler.startElement("", TaskRepositoriesExternalizer.ELEMENT_TASK_REPOSITORY, TaskRepositoriesExternalizer.ELEMENT_TASK_REPOSITORY, ieAttributes);
-				handler.endElement("", TaskRepositoriesExternalizer.ELEMENT_TASK_REPOSITORY, TaskRepositoriesExternalizer.ELEMENT_TASK_REPOSITORY);
+				handler.startElement("", TaskRepositoriesExternalizer.ELEMENT_TASK_REPOSITORY,
+						TaskRepositoriesExternalizer.ELEMENT_TASK_REPOSITORY, ieAttributes);
+				handler.endElement("", TaskRepositoriesExternalizer.ELEMENT_TASK_REPOSITORY,
+						TaskRepositoriesExternalizer.ELEMENT_TASK_REPOSITORY);
 			}
-			handler.endElement("", TaskRepositoriesExternalizer.ELEMENT_TASK_REPOSITORIES, TaskRepositoriesExternalizer.ELEMENT_TASK_REPOSITORIES);
+			handler.endElement("", TaskRepositoriesExternalizer.ELEMENT_TASK_REPOSITORIES,
+					TaskRepositoriesExternalizer.ELEMENT_TASK_REPOSITORIES);
 
 			handler.endDocument();
 		}

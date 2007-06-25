@@ -15,17 +15,17 @@ package org.eclipse.mylyn.tasks.core;
  * A container that stores tasks from any repository.
  * 
  * @author Mik Kersten
- * @since	2.0
- */ 
+ * @since 2.0
+ */
 public abstract class AbstractTaskCategory extends AbstractTaskContainer {
 
 	public AbstractTaskCategory(String handleAndDescription) {
 		super(handleAndDescription);
 	}
-	
+
 	/**
-	 * Override to return true for categories that the user creates, deletes, and renames.
-	 * Return false for categories that are managed 
+	 * Override to return true for categories that the user creates, deletes, and renames. Return false for categories
+	 * that are managed
 	 */
 	public abstract boolean isUserDefined();
 }

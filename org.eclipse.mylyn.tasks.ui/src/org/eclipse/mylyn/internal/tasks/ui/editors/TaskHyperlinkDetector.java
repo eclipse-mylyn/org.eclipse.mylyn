@@ -77,7 +77,7 @@ public class TaskHyperlinkDetector extends AbstractHyperlinkDetector {
 		if (repository != null) {
 			return repository;
 		}
-		
+
 		IResource resource = (IResource) getAdapter(IResource.class);
 		if (resource == null) {
 			if (textViewer instanceof RepositoryTextViewer) {

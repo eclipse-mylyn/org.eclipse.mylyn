@@ -16,12 +16,10 @@ import org.eclipse.compare.structuremergeviewer.IStructureCreator;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 
 /**
- * This implementation of the <code>IStructureCreator</code> interface makes
- * the contents of a <code>BugReport</code> object available as a hierarchical
- * structure of <code>IStructureComparator</code>s.
+ * This implementation of the <code>IStructureCreator</code> interface makes the contents of a <code>BugReport</code>
+ * object available as a hierarchical structure of <code>IStructureComparator</code>s.
  * <p>
- * It is used when comparing a modified bug report to the one on the
- * corresponding server.
+ * It is used when comparing a modified bug report to the one on the corresponding server.
  */
 public class BugzillaCompareStructureCreator implements IStructureCreator {
 
@@ -60,15 +58,13 @@ public class BugzillaCompareStructureCreator implements IStructureCreator {
 	}
 
 	/**
-	 * Called whenever a copy operation has been performed on a tree node. This
-	 * implementation throws an <code>AssertionFailedException</code> since we
-	 * cannot update a bug report object.
+	 * Called whenever a copy operation has been performed on a tree node. This implementation throws an
+	 * <code>AssertionFailedException</code> since we cannot update a bug report object.
 	 * 
 	 * @param structure
 	 *            the node for which to save the new content
 	 * @param input
-	 *            the object from which the structure tree was created in
-	 *            <code>getStructure</code>
+	 *            the object from which the structure tree was created in <code>getStructure</code>
 	 */
 	public void save(IStructureComparator node, Object input) {
 		// ignore

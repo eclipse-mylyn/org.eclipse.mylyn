@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.internal.tasks.core;
 
-
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -32,7 +31,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 public class LocalRepositoryConnector extends AbstractRepositoryConnector {
 
 	public static final String REPOSITORY_LABEL = "Local Tasks";
-	
+
 	public static final String REPOSITORY_KIND = "local";
 
 	public static final String REPOSITORY_URL = "local";
@@ -40,7 +39,7 @@ public class LocalRepositoryConnector extends AbstractRepositoryConnector {
 	public static final String REPOSITORY_VERSION = "1";
 
 	public static final String DEFAULT_SUMMARY = "New Task";
-	
+
 	@Override
 	public boolean canCreateNewTask(TaskRepository repository) {
 		return true;
@@ -63,8 +62,7 @@ public class LocalRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public boolean markStaleTasks(TaskRepository repository,
-			Set<AbstractTask> tasks, IProgressMonitor monitor) {
+	public boolean markStaleTasks(TaskRepository repository, Set<AbstractTask> tasks, IProgressMonitor monitor) {
 		return false;
 	}
 
@@ -128,7 +126,7 @@ public class LocalRepositoryConnector extends AbstractRepositoryConnector {
 		// ignore
 
 	}
-	
+
 	@Override
 	public boolean isUserManaged() {
 		return false;

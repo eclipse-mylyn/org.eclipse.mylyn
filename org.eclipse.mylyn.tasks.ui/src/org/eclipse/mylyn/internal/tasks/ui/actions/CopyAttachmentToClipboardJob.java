@@ -40,7 +40,7 @@ public class CopyAttachmentToClipboardJob extends Job {
 		if (attachment == null) {
 			throw new IllegalArgumentException("attachment may not be null");
 		}
-		
+
 		this.attachment = attachment;
 	}
 
@@ -63,11 +63,11 @@ public class CopyAttachmentToClipboardJob extends Job {
 			StatusHandler.displayStatus("Copy Attachment to Clipboard", e.getStatus());
 			return Status.OK_STATUS;
 		}
-		
+
 		String contents = new String(out.toByteArray());
 		contents = contents.replaceAll("\r\n|\n", System.getProperty("line.separator"));
 		copyToClipboard(contents);
-		
+
 		return Status.OK_STATUS;
 	}
 

@@ -21,8 +21,7 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TaskListSaveManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
- * Tests the mechanism for saving the task data periodically. If this test fails
- * unexpectedly, try adjusting the timing.
+ * Tests the mechanism for saving the task data periodically. If this test fails unexpectedly, try adjusting the timing.
  * 
  * @author Wesley Coelho
  * @author Mik Kersten (rewrite)
@@ -36,7 +35,7 @@ public class BackgroundSaveTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		TasksUiPlugin.getTaskListManager().saveTaskList(); 
+		TasksUiPlugin.getTaskListManager().saveTaskList();
 		saveManager = new TaskListSaveManager();
 //		saveManager = TasksUiPlugin.getDefault().getTaskListSaveManager();
 

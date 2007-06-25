@@ -28,7 +28,7 @@ import org.eclipse.ui.IEditorPart;
 public class TracTaskEditorFactory extends AbstractTaskEditorFactory {
 
 	private static final String TITLE = "Browser";
-	
+
 	@Override
 	public boolean canCreateEditorFor(AbstractTask task) {
 		return (task instanceof TracTask);
@@ -43,8 +43,8 @@ public class TracTaskEditorFactory extends AbstractTaskEditorFactory {
 		} else if (input instanceof TaskEditorInput) {
 			TaskEditorInput taskInput = (TaskEditorInput) input;
 			return taskInput.getTask() instanceof TracTask;
-		} 
- 
+		}
+
 		return false;
 	}
 
@@ -58,8 +58,8 @@ public class TracTaskEditorFactory extends AbstractTaskEditorFactory {
 				return new TracTaskEditor(parentEditor);
 			}
 		} else if (editorInput instanceof TaskEditorInput) {
-			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(TracCorePlugin.REPOSITORY_KIND,
-					((TaskEditorInput)editorInput).getTask().getRepositoryUrl());
+			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+					TracCorePlugin.REPOSITORY_KIND, ((TaskEditorInput) editorInput).getTask().getRepositoryUrl());
 			if (TracRepositoryConnector.hasRichEditor(repository)) {
 				// the editor is actually initialized with a RepositoryTaskEditorInput, see bug 193430
 				return new TracTaskEditor(parentEditor);

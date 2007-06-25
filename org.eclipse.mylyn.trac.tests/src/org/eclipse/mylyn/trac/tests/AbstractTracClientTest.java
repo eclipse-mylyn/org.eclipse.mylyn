@@ -53,7 +53,7 @@ public abstract class AbstractTracClientTest extends TestCase {
 	public AbstractTracClientTest() {
 		this(null, PrivilegeLevel.USER);
 	}
-	
+
 	public ITracClient connect096() throws Exception {
 		return connect(TracTestConstants.TEST_TRAC_096_URL);
 	}
@@ -87,7 +87,8 @@ public abstract class AbstractTracClientTest extends TestCase {
 		return connect(url, username, password, proxy, version);
 	}
 
-	public ITracClient connect(String url, String username, String password, Proxy proxy, Version version) throws Exception {
+	public ITracClient connect(String url, String username, String password, Proxy proxy, Version version)
+			throws Exception {
 		this.repositoryUrl = url;
 		this.username = username;
 		this.password = password;

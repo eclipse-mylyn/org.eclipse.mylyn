@@ -27,17 +27,15 @@ import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.web.core.WebClientUtil;
 
 /**
- * Note that task repositories use Strings for storing time stamps because using
- * Date objects led to the following problems:
+ * Note that task repositories use Strings for storing time stamps because using Date objects led to the following
+ * problems:
  * <ul>
- * <li>Often we are unable to get the time zone of the repository so
- * interpreting the date string correctly doesn't work.</li>
- * <li>Even if we do know the time zone information the local clock may be
- * wrong. This can cause lost incoming when asking the repository for all
- * changes since date X.</li>
- * <li>The solution we have come up with thus far is not to interpret the date
- * as a DATE object but rather simply use the date string given to us by the
- * repository itself.</li>
+ * <li>Often we are unable to get the time zone of the repository so interpreting the date string correctly doesn't
+ * work.</li>
+ * <li>Even if we do know the time zone information the local clock may be wrong. This can cause lost incoming when
+ * asking the repository for all changes since date X.</li>
+ * <li>The solution we have come up with thus far is not to interpret the date as a DATE object but rather simply use
+ * the date string given to us by the repository itself.</li>
  * </ul>
  * 
  * @author Mik Kersten
@@ -76,7 +74,7 @@ public class TaskRepository {
 	public static final String PROXY_USERNAME = "org.eclipse.mylyn.tasklist.repositories.proxy.username";
 
 	public static final String PROXY_PASSWORD = "org.eclipse.mylyn.tasklist.repositories.proxy.password";
-	
+
 	public static final String OFFLINE = "org.eclipse.mylyn.tasklist.repositories.offline";
 
 	// HACK: Lock used to work around race condition in
@@ -115,8 +113,8 @@ public class TaskRepository {
 	}
 
 	/**
-	 * for testing purposes sets repository time zone to local default time zone
-	 * sets character encoding to DEFAULT_CHARACTER_ENCODING
+	 * for testing purposes sets repository time zone to local default time zone sets character encoding to
+	 * DEFAULT_CHARACTER_ENCODING
 	 */
 	public TaskRepository(String kind, String serverUrl, String version) {
 		this(kind, serverUrl, version, DEFAULT_CHARACTER_ENCODING, TimeZone.getDefault().getID());
@@ -159,8 +157,7 @@ public class TaskRepository {
 	}
 
 	/**
-	 * The username is cached since it needs to be retrieved frequently (e.g.
-	 * for Task List decoration).
+	 * The username is cached since it needs to be retrieved frequently (e.g. for Task List decoration).
 	 */
 	public String getUserName() {
 		// NOTE: if anonymous, user name is "" string so we won't go to keyring
@@ -305,7 +302,7 @@ public class TaskRepository {
 					return false;
 				}
 			} else {
-				if(!getUrl().equals(repository.getUrl())) {
+				if (!getUrl().equals(repository.getUrl())) {
 					return false;
 				}
 			}
@@ -322,8 +319,8 @@ public class TaskRepository {
 
 	@Override
 	public int hashCode() {
-		int res = getUrl()==null ? 1 : getUrl().hashCode();
-		return res * 31 + (getConnectorKind()==null ? 1 : getConnectorKind().hashCode());
+		int res = getUrl() == null ? 1 : getUrl().hashCode();
+		return res * 31 + (getConnectorKind() == null ? 1 : getConnectorKind().hashCode());
 	}
 
 	@Override
@@ -380,8 +377,8 @@ public class TaskRepository {
 	}
 
 	/**
-	 * ONLY for use by IRepositoryConstants. To set the sync time call
-	 * IRepositoryConstants.setSyncTime(repository, date);
+	 * ONLY for use by IRepositoryConstants. To set the sync time call IRepositoryConstants.setSyncTime(repository,
+	 * date);
 	 */
 	public void setSynchronizationTimeStamp(String syncTime) {
 		this.properties.put(IRepositoryConstants.PROPERTY_SYNCTIMESTAMP, syncTime);
@@ -465,7 +462,7 @@ public class TaskRepository {
 	public void setBugRepository(boolean isBugRepository) {
 		this.isBugRepository = isBugRepository;
 	}
-	
+
 	public void setOffline(boolean offline) {
 		properties.put(OFFLINE, String.valueOf(offline));
 	}

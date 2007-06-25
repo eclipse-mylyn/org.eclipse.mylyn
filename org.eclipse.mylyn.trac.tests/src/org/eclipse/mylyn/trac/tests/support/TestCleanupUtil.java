@@ -9,8 +9,8 @@ import org.eclipse.mylyn.trac.tests.AbstractTracClientTest;
 import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
 
 /**
- * Utility that cleans up artifacts created by the Trac test suite. This class
- * should be run periodically to speed up execution of (attachment) tests.
+ * Utility that cleans up artifacts created by the Trac test suite. This class should be run periodically to speed up
+ * execution of (attachment) tests.
  * 
  * @author Steffen Pingel
  */

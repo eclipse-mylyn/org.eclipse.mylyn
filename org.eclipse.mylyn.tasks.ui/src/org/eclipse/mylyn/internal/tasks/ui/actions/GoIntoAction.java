@@ -25,6 +25,7 @@ import org.eclipse.ui.IViewPart;
 public class GoIntoAction extends Action implements IViewActionDelegate {
 
 	private static final String LABEL = "Go Into";
+
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.view.go.into";
 
 	//		

@@ -30,14 +30,14 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 
 	private static final String DUPLICATE_NUMBER = "112233";
 
-	private static final String DUPLICATE = "duplicate of "+DUPLICATE_NUMBER;
-	
+	private static final String DUPLICATE = "duplicate of " + DUPLICATE_NUMBER;
+
 	private String TASK_FORMAT_1 = "task#1";
 
 	private String TASK_FORMAT_2 = "task# 1";
 
 	private String TASK_FORMAT_3 = "task1";
-	
+
 	private String TASK_FORMAT_4 = "task #1";
 
 	private String BUG_FORMAT_1 = "bug# 1";
@@ -45,11 +45,11 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 	private String BUG_FORMAT_2 = "bug # 1";
 
 	private String BUG_FORMAT_3 = "bug1";
-	
+
 	private String BUG_FORMAT_4 = "bug #1";
 
 	private String BUG_FORMAT_1_2 = "bug# 2";
-	
+
 	//private BugzillaTaskHyperlinkDetector detector = new BugzillaTaskHyperlinkDetector();
 	private TaskHyperlinkDetector detector = new TaskHyperlinkDetector();
 
@@ -57,7 +57,8 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 
 	private RepositoryTextViewer viewer = new RepositoryTextViewer(dummyRepository, new Shell(), SWT.NONE);
 
-	private String[] formats = { TASK_FORMAT_1, TASK_FORMAT_2, TASK_FORMAT_3, TASK_FORMAT_4, BUG_FORMAT_1, BUG_FORMAT_2, BUG_FORMAT_3,  BUG_FORMAT_4 };
+	private String[] formats = { TASK_FORMAT_1, TASK_FORMAT_2, TASK_FORMAT_3, TASK_FORMAT_4, BUG_FORMAT_1,
+			BUG_FORMAT_2, BUG_FORMAT_3, BUG_FORMAT_4 };
 
 	@Override
 	protected void setUp() throws Exception {
@@ -124,9 +125,9 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		assertEquals(1, links.length);
 		assertEquals(testString.indexOf(BUG_FORMAT_1_2), links[0].getHyperlinkRegion().getOffset());
 	}
-	
+
 	public void testDuplicate() {
-		String testString = "*** This bug has been marked as a "+DUPLICATE+" ***";
+		String testString = "*** This bug has been marked as a " + DUPLICATE + " ***";
 		viewer.setDocument(new Document(testString));
 		Region region = new Region(testString.indexOf(DUPLICATE), testString.length());
 		IHyperlink[] links = detector.detectHyperlinks(viewer, region, false);

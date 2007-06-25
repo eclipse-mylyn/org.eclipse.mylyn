@@ -31,6 +31,7 @@ import org.eclipse.ui.IWorkbench;
 public class NewWebTaskWizard extends Wizard implements INewWizard {
 
 	protected TaskRepository taskRepository;
+
 	protected String newTaskUrl;
 
 	public NewWebTaskWizard(TaskRepository taskRepository, String newTaskUrl) {

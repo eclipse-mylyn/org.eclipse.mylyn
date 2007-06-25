@@ -11,9 +11,8 @@
 
 package org.eclipse.mylyn.tasks.core;
 
-
 /**
- * Immutable.  Defines changes to Task List elements.
+ * Immutable. Defines changes to Task List elements.
  * 
  * @author Mik Kersten
  * @since 2.0
@@ -24,25 +23,25 @@ public final class TaskContainerDelta {
 		/**
 		 * One container added to another or to the root.
 		 */
-		ADDED, 
-		
+		ADDED,
+
 		/**
 		 * One container removed from another or from the root.
 		 */
-		REMOVED, 
-		
+		REMOVED,
+
 		/**
-		 * Container has changed, e.g. has new children, a task's priority or planning info.
-		 * For tasks changed state tends to be show in a view.
+		 * Container has changed, e.g. has new children, a task's priority or planning info. For tasks changed state
+		 * tends to be show in a view.
 		 */
-		CHANGED, 
-		
+		CHANGED,
+
 		/**
-		 * The content of the container has changed, e.g. new data has been downloaded for a
-		 * task from the repository.  For tasks content tends to be show in an editor.
+		 * The content of the container has changed, e.g. new data has been downloaded for a task from the repository.
+		 * For tasks content tends to be show in an editor.
 		 */
-		CONTENT, 
-		
+		CONTENT,
+
 		/**
 		 * The root of the data structure has changed.
 		 */
@@ -50,9 +49,9 @@ public final class TaskContainerDelta {
 	}
 
 	private final AbstractTaskContainer container;
-	
+
 	private final Kind kind;
-	
+
 	public TaskContainerDelta(AbstractTaskContainer container, Kind kind) {
 		this.container = container;
 		this.kind = kind;
@@ -65,5 +64,5 @@ public final class TaskContainerDelta {
 	public Kind getKind() {
 		return kind;
 	}
-	
+
 }

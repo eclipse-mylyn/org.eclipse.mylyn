@@ -25,14 +25,14 @@ public class AbstractChangeCompletionAction extends Action {
 			if (!(abstractTaskContainer instanceof AbstractTask)) {
 				allLocalTasks = false;
 				break;
-			} else if (!((AbstractTask)abstractTaskContainer).isLocal()) {
+			} else if (!((AbstractTask) abstractTaskContainer).isLocal()) {
 				allLocalTasks = false;
 				break;
 			}
 		}
 		return allLocalTasks;
 	}
-	
+
 	protected String generateMessage(List<AbstractTask> toComplete, String status) {
 		String message = "Mark selected local tasks " + status + "?\n\n";
 		int i = 0;
@@ -41,7 +41,7 @@ public class AbstractChangeCompletionAction extends Action {
 			if (i < 20) {
 				message += "    ";
 				if (task.getTaskKey() != null) {
-					message +=  task.getTaskKey() + ": ";
+					message += task.getTaskKey() + ": ";
 				}
 				message += task.getSummary() + "\n";
 			} else {

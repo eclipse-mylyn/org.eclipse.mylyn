@@ -74,13 +74,15 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 			}
 
 			@Override
-			public RepositoryTaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor) throws CoreException {
+			public RepositoryTaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
+					throws CoreException {
 				// ignore
 				return null;
 			}
 
 			@Override
-			public String postTaskData(TaskRepository repository, RepositoryTaskData taskData, IProgressMonitor monitor) throws CoreException {
+			public String postTaskData(TaskRepository repository, RepositoryTaskData taskData, IProgressMonitor monitor)
+					throws CoreException {
 				// ignore
 				return null;
 			}
@@ -134,13 +136,13 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public void updateTaskFromRepository(TaskRepository repository, AbstractTask repositoryTask, IProgressMonitor monitor) {
+	public void updateTaskFromRepository(TaskRepository repository, AbstractTask repositoryTask,
+			IProgressMonitor monitor) {
 		// ignore
 	}
 
 	@Override
-	public boolean markStaleTasks(TaskRepository repository,
-			Set<AbstractTask> tasks, IProgressMonitor monitor) {
+	public boolean markStaleTasks(TaskRepository repository, Set<AbstractTask> tasks, IProgressMonitor monitor) {
 		// ignore
 		return false;
 	}

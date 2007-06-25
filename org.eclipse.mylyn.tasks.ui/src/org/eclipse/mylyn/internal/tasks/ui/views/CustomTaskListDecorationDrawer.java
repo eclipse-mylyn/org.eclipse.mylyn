@@ -135,8 +135,8 @@ class CustomTaskListDecorationDrawer implements Listener {
 	}
 
 	private boolean hideDecorationOnContainer(AbstractTaskContainer element) {
-		return taskListView.isFocusedMode() &&
-			Arrays.asList(this.taskListView.getViewer().getExpandedElements()).contains(element);
+		return taskListView.isFocusedMode()
+				&& Arrays.asList(this.taskListView.getViewer().getExpandedElements()).contains(element);
 	}
 
 	private boolean hasIncoming(AbstractTaskContainer container) {

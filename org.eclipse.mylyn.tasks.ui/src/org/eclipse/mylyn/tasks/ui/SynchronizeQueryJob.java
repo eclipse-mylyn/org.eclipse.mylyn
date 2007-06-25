@@ -98,8 +98,8 @@ class SynchronizeQueryJob extends Job {
 			// check if the repository has changed at all and have the connector mark tasks that need synchronization 
 			try {
 				monitor.subTask("Checking for changed tasks");
-				boolean hasChangedOrNew = connector.markStaleTasks(repository, allTasks,
-						new SubProgressMonitor(monitor, 20));
+				boolean hasChangedOrNew = connector.markStaleTasks(repository, allTasks, new SubProgressMonitor(
+						monitor, 20));
 				if (!hasChangedOrNew && !forced) {
 					updateQueryStatus(null);
 					return Status.OK_STATUS;
@@ -160,7 +160,7 @@ class SynchronizeQueryJob extends Job {
 			repositoryQuery.setSynchronizing(false);
 		}
 		taskList.notifyContainersUpdated(queries);
-		
+
 		if (status != null && isForced()) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
@@ -190,7 +190,8 @@ class SynchronizeQueryJob extends Job {
 				if (task != null) {
 					// update the existing task from the query hit
 					boolean changed = connector.updateTaskFromQueryHit(repository, task, hit);
-					if (changed && !task.isStale() && task.getSynchronizationState() == RepositoryTaskSyncState.SYNCHRONIZED) {
+					if (changed && !task.isStale()
+							&& task.getSynchronizationState() == RepositoryTaskSyncState.SYNCHRONIZED) {
 						// set incoming marker for web tasks 
 						task.setSynchronizationState(RepositoryTaskSyncState.INCOMING);
 					}
@@ -200,7 +201,7 @@ class SynchronizeQueryJob extends Job {
 					task.setStale(true);
 					task.setSynchronizationState(RepositoryTaskSyncState.INCOMING);
 				}
-				
+
 				taskList.addTask(task, repositoryQuery);
 				if (synchronizeChangedTasks && task.isStale()) {
 					tasksToBeSynchronized.add(task);

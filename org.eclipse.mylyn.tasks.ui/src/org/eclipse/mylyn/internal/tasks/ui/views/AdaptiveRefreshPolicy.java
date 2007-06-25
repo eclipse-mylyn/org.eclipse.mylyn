@@ -25,27 +25,28 @@ public class AdaptiveRefreshPolicy {
 	private int refreshThreshold = 1500;
 
 	private Set<IFilteredTreeListener> listeners = new HashSet<IFilteredTreeListener>();
-	
+
 	private Text filterText = null;
-	
+
 	private Job refreshJob;
-	
+
 	/**
 	 * @param refreshJob
-	 * @param filteredTree	can be null
+	 * @param filteredTree
+	 *            can be null
 	 */
 	public AdaptiveRefreshPolicy(Job refreshJob, Text filterText) {
 		this.refreshJob = refreshJob;
 		this.filterText = filterText;
 		refreshJob.addJobChangeListener(REFRESH_JOB_LISTENER);
 	}
-	
+
 	public void dispose() {
 		if (refreshJob != null) {
 			refreshJob.removeJobChangeListener(REFRESH_JOB_LISTENER);
-		}	
+		}
 	}
-	
+
 	private final IJobChangeListener REFRESH_JOB_LISTENER = new IJobChangeListener() {
 
 		public void aboutToRun(IJobChangeEvent event) {
@@ -78,7 +79,7 @@ public class AdaptiveRefreshPolicy {
 			// ignore
 		}
 	};
-	
+
 	public void textChanged(String text) {
 		if (refreshJob == null)
 			return;
@@ -86,12 +87,12 @@ public class AdaptiveRefreshPolicy {
 		int refreshDelay = 0;
 		int textLength = text.length();
 		if (textLength > 0) {
-			refreshDelay = (int)(refreshThreshold /(textLength*0.6));
+			refreshDelay = (int) (refreshThreshold / (textLength * 0.6));
 		}
 		refreshJob.addJobChangeListener(REFRESH_JOB_LISTENER);
 		refreshJob.schedule(refreshDelay);
 	}
-	
+
 	public void addListener(IFilteredTreeListener listener) {
 		listeners.add(listener);
 	}
@@ -103,5 +104,5 @@ public class AdaptiveRefreshPolicy {
 	public void setRefreshDelay(int refreshDelay) {
 		this.refreshThreshold = refreshDelay;
 	}
-	
+
 }

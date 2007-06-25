@@ -47,11 +47,11 @@ public class TracTicketField implements Serializable {
 	private String label;
 
 	private String[] options;
-	
+
 	private String defaultValue;
-	
+
 	private boolean custom;
-	
+
 	private int order;
 
 	private boolean optional;
@@ -131,19 +131,19 @@ public class TracTicketField implements Serializable {
 	public String getDefaultValue() {
 		return defaultValue;
 	}
-	
+
 	public void setDefaultValue(String defaultValue) {
 		this.defaultValue = defaultValue;
 	}
-	
+
 	public boolean isCustom() {
 		return custom;
 	}
-	
+
 	public void setCustom(boolean custom) {
 		this.custom = custom;
 	}
-	
+
 	@Override
 	public String toString() {
 		return name;

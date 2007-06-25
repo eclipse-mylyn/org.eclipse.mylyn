@@ -41,8 +41,8 @@ public abstract class AbstractRepositoryTaskEditorInput implements IEditorInput 
 	private RepositoryTaskData editableTaskData;
 
 	private RepositoryTaskData oldTaskData;
-	
-	private Set<RepositoryTaskAttribute> oldEdits; 
+
+	private Set<RepositoryTaskAttribute> oldEdits;
 
 	protected AbstractRepositoryTaskEditorInput(TaskRepository repository, String taskId) {
 		this.taskId = taskId;
@@ -82,7 +82,7 @@ public abstract class AbstractRepositoryTaskEditorInput implements IEditorInput 
 	public Set<RepositoryTaskAttribute> getOldEdits() {
 		return oldEdits;
 	}
-	
+
 	public ImageDescriptor getImageDescriptor() {
 		return TasksUiImages.REPOSITORY_SMALL;
 	}
@@ -101,8 +101,7 @@ public abstract class AbstractRepositoryTaskEditorInput implements IEditorInput 
 	}
 
 	/**
-	 * @return <code>true</code> if the argument is an editor input on the
-	 *         same bug.
+	 * @return <code>true</code> if the argument is an editor input on the same bug.
 	 */
 	@Override
 	public abstract boolean equals(Object o);

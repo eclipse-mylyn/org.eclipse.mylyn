@@ -70,7 +70,7 @@ public class TaskActivityWizardPage extends WizardPage {
 	private int numDaysToReport = 0;
 
 	private Table filtersTable;
-	
+
 	private TaskElementLabelProvider labelProvider = new TaskElementLabelProvider(false);
 
 	public TaskActivityWizardPage() {
@@ -296,7 +296,7 @@ public class TaskActivityWizardPage extends WizardPage {
 		TableItem[] items = filtersTable.getItems();
 		for (TableItem item : items) {
 			if (item.getChecked() && item.getData() instanceof AbstractTaskCategory) {
-				result.add((AbstractTaskCategory)item.getData());
+				result.add((AbstractTaskCategory) item.getData());
 			}
 		}
 		return result;

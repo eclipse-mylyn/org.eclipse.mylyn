@@ -53,12 +53,10 @@ public class TaskListBackupManagerTest extends TestCase {
 		// false);
 		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TasksUiPreferenceConstants.BACKUP_SCHEDULE, 1);
 		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TasksUiPreferenceConstants.BACKUP_LAST, 0f);
-		assertEquals(0, TasksUiPlugin.getDefault().getPreferenceStore()
-				.getLong(TasksUiPreferenceConstants.BACKUP_LAST));
+		assertEquals(0, TasksUiPlugin.getDefault().getPreferenceStore().getLong(TasksUiPreferenceConstants.BACKUP_LAST));
 		backupManager.start(5);
 		Thread.sleep(3000);
-		assertEquals(0, TasksUiPlugin.getDefault().getPreferenceStore()
-				.getLong(TasksUiPreferenceConstants.BACKUP_LAST));
+		assertEquals(0, TasksUiPlugin.getDefault().getPreferenceStore().getLong(TasksUiPreferenceConstants.BACKUP_LAST));
 	}
 
 	public void testAutoBackupEnabled() throws InterruptedException, InvocationTargetException, IOException {

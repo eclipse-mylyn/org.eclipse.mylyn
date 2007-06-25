@@ -12,8 +12,7 @@
 package org.eclipse.mylyn.internal.trac.core;
 
 /**
- * Indicates that an exception on the repository side has been encountered while
- * processing the request.
+ * Indicates that an exception on the repository side has been encountered while processing the request.
  * 
  * @author Steffen Pingel
  */

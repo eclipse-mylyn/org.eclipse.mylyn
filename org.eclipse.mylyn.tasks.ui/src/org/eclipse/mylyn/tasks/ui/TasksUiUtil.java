@@ -497,8 +497,7 @@ public class TasksUiUtil {
 					query.getRepositoryUrl());
 		} else if (element instanceof AbstractTask) {
 			AbstractTask task = (AbstractTask) element;
-			return TasksUiPlugin.getRepositoryManager()
-					.getRepository(task.getConnectorKind(), task.getRepositoryUrl());
+			return TasksUiPlugin.getRepositoryManager().getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 		} else if (element instanceof IResource) {
 			IResource resource = (IResource) element;
 			return TasksUiPlugin.getDefault().getRepositoryForResource(resource, true);

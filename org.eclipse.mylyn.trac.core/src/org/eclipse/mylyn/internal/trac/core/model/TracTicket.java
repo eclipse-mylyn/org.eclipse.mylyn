@@ -209,17 +209,17 @@ public class TracTicket {
 	public void setActions(String[] actions) {
 		this.actions = actions;
 	}
-	
+
 	public String[] getActions() {
 		return actions;
 	}
-	
+
 	public void setResolutions(String[] resolutions) {
 		this.resolutions = resolutions;
 	}
-	
+
 	public String[] getResolutions() {
 		return resolutions;
 	}
-	
+
 }

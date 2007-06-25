@@ -51,5 +51,5 @@ public class TracMilestone extends TracAttribute implements Serializable {
 	public void setDue(Date due) {
 		this.due = due;
 	}
-	
+
 }

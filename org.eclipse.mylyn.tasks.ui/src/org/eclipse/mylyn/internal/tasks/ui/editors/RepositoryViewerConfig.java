@@ -89,7 +89,7 @@ public class RepositoryViewerConfig extends SourceViewerConfiguration {
 
 	@Override
 	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
-		List<IHyperlinkDetector> detectors = new ArrayList<IHyperlinkDetector>();		
+		List<IHyperlinkDetector> detectors = new ArrayList<IHyperlinkDetector>();
 		detectors.addAll(Arrays.asList(TasksUiPlugin.getDefault().getTaskHyperlinkDetectors()));
 		return detectors.toArray(new IHyperlinkDetector[detectors.size()]);
 	}

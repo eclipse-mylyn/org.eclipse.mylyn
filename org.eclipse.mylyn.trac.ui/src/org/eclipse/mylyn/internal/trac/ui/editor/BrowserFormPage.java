@@ -27,18 +27,18 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 public class BrowserFormPage extends FormPage {
 
 	public static final String ID_EDITOR = "org.eclipse.mylyn.trac.ui.editor";
-	
+
 	private Browser browser;
 
 	public BrowserFormPage(FormEditor editor, String title) {
 		super(editor, ID_EDITOR, title);
 	}
-	
+
 	@Override
 	protected void createFormContent(IManagedForm managedForm) {
 		super.createFormContent(managedForm);
 		try {
-			AbstractTask task = ((TaskEditorInput)getEditorInput()).getTask();
+			AbstractTask task = ((TaskEditorInput) getEditorInput()).getTask();
 			ScrolledForm form = managedForm.getForm();
 			form.getBody().setLayout(new FillLayout());
 			browser = new Browser(form.getBody(), SWT.NONE);

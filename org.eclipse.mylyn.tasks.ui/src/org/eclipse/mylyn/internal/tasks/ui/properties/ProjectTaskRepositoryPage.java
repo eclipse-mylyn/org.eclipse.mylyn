@@ -74,7 +74,7 @@ public class ProjectTaskRepositoryPage extends PropertyPage {
 		description.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 
 		listViewer = CheckboxTableViewer.newCheckList(composite, SWT.TOP | SWT.BORDER);
-		listViewer.getTable().setFont(font);		
+		listViewer.getTable().setFont(font);
 		GridData data = new GridData(GridData.FILL_BOTH);
 		data.grabExcessHorizontalSpace = true;
 
@@ -85,8 +85,8 @@ public class ProjectTaskRepositoryPage extends PropertyPage {
 		listViewer.getTable().setLayoutData(data);
 		listViewer.getTable().setFont(font);
 
-		listViewer.setLabelProvider(new DecoratingLabelProvider(new TaskRepositoryLabelProvider(), PlatformUI
-				.getWorkbench().getDecoratorManager().getLabelDecorator()));
+		listViewer.setLabelProvider(new DecoratingLabelProvider(new TaskRepositoryLabelProvider(),
+				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
 		listViewer.setContentProvider(new IStructuredContentProvider() {
 			public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 			}
@@ -174,7 +174,7 @@ public class ProjectTaskRepositoryPage extends PropertyPage {
 			TaskRepository selectedRepository = (TaskRepository) listViewer.getCheckedElements()[0];
 			try {
 				TasksUiPlugin plugin = TasksUiPlugin.getDefault();
-				if(plugin.canSetRepositoryForResource(project)) {
+				if (plugin.canSetRepositoryForResource(project)) {
 					plugin.setRepositoryForResource(project, selectedRepository);
 				}
 			} catch (CoreException e) {

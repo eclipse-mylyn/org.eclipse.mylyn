@@ -17,9 +17,8 @@ import org.eclipse.mylyn.context.tests.support.TestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.trac.tests.TracTestConstants;
 
 /**
- * Initializes Trac repositories to a defined state. This is done once per test
- * run, since cleaning and initializing the repository for each test method
- * would take too long.
+ * Initializes Trac repositories to a defined state. This is done once per test run, since cleaning and initializing the
+ * repository for each test method would take too long.
  * 
  * @author Steffen Pingel
  */
@@ -28,8 +27,7 @@ public class TestFixture {
 	public static XmlRpcServer.TestData data010;
 
 	/**
-	 * Adds the existing repository content to the test data of
-	 * <code>server</code>.
+	 * Adds the existing repository content to the test data of <code>server</code>.
 	 */
 	private static void initializeTestData(XmlRpcServer server) throws Exception {
 		server.ticketMilestone("milestone1").itemCreated();

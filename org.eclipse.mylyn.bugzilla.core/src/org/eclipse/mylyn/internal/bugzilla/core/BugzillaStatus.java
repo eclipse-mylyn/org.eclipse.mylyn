@@ -45,7 +45,8 @@ public class BugzillaStatus extends Status {
 		this.repositoryUrl = repositoryUrl;
 	}
 
-	public BugzillaStatus(int severity, String pluginId, int code, String repositoryUrl, String errorMessage, Throwable e) {
+	public BugzillaStatus(int severity, String pluginId, int code, String repositoryUrl, String errorMessage,
+			Throwable e) {
 		super(severity, pluginId, code, "MylarStatus", e);
 		this.errorMessage = errorMessage;
 		this.repositoryUrl = repositoryUrl;
@@ -59,8 +60,8 @@ public class BugzillaStatus extends Status {
 
 		switch (getCode()) {
 		case RepositoryStatus.ERROR_REPOSITORY_LOGIN:
-			return BugzillaMessages
-					.bind(BugzillaMessages.repositoryLoginFailure, this.getRepositoryUrl(), this.errorMessage);
+			return BugzillaMessages.bind(BugzillaMessages.repositoryLoginFailure, this.getRepositoryUrl(),
+					this.errorMessage);
 		case RepositoryStatus.ERROR_REPOSITORY_NOT_FOUND:
 			return BugzillaMessages.bind(BugzillaMessages.repositoryNotFound, this.errorMessage);
 		case RepositoryStatus.ERROR_REPOSITORY:
@@ -68,7 +69,7 @@ public class BugzillaStatus extends Status {
 		case RepositoryStatus.ERROR_IO:
 			String string1 = "Unknown IO error occurred";
 			String string2 = "No message provided";
-			if(getException() != null) {
+			if (getException() != null) {
 				string1 = getException().getClass().getSimpleName();
 				string2 = getException().getMessage();
 			}

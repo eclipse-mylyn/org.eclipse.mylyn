@@ -34,8 +34,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
 /**
- * Wizard for exporting tasklist data files to the file system. This wizard uses
- * a single page: TaskDataExportWizardPage
+ * Wizard for exporting tasklist data files to the file system. This wizard uses a single page: TaskDataExportWizardPage
  * 
  * @author Wesley Coelho
  * @author Mik Kersten
@@ -43,8 +42,7 @@ import org.eclipse.ui.progress.IProgressService;
 public class TaskDataExportWizard extends Wizard implements IExportWizard {
 
 	/**
-	 * The name of the dialog store's section associated with the task data
-	 * export wizard
+	 * The name of the dialog store's section associated with the task data export wizard
 	 */
 	private final static String SETTINGS_SECTION = "org.eclipse.mylyn.tasklist.ui.exportWizard";
 
@@ -71,8 +69,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 	}
 
 	/**
-	 * Finds or creates a dialog settings section that is used to make the
-	 * dialog control settings persistent
+	 * Finds or creates a dialog settings section that is used to make the dialog control settings persistent
 	 */
 	public IDialogSettings getSettingsSection(IDialogSettings master) {
 		IDialogSettings settings = master.getSection(SETTINGS_SECTION);
@@ -99,16 +96,15 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 	}
 
 	/**
-	 * Called when the user clicks finish. Saves the task data. Waits until all
-	 * overwrite decisions have been made before starting to save files. If any
-	 * overwrite is canceled, no files are saved and the user must adjust the
+	 * Called when the user clicks finish. Saves the task data. Waits until all overwrite decisions have been made
+	 * before starting to save files. If any overwrite is canceled, no files are saved and the user must adjust the
 	 * dialog.
 	 */
 	@Override
 	public boolean performFinish() {
 		boolean overwrite = exportPage.overwrite();
 		boolean zip = exportPage.zip();
-		
+
 		Collection<AbstractTask> taskContextsToExport = TasksUiPlugin.getTaskListManager().getTaskList().getAllTasks();
 
 		// Get file paths to check for existence
@@ -123,7 +119,8 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 
 		final File destTaskListFile = new File(destDir + File.separator + ITasksUiConstants.DEFAULT_TASK_LIST_FILE);
 		final File destActivationHistoryFile = new File(destDir + File.separator
-				+ InteractionContextManager.CONTEXT_HISTORY_FILE_NAME + InteractionContextManager.CONTEXT_FILE_EXTENSION);
+				+ InteractionContextManager.CONTEXT_HISTORY_FILE_NAME
+				+ InteractionContextManager.CONTEXT_FILE_EXTENSION);
 		final File destZipFile = new File(destDir + File.separator + getZipFileName());
 
 		// Prompt the user to confirm if ANY of the save repositoryOperations will cause
@@ -155,8 +152,8 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 
 				if (exportPage.exportTaskContexts()) {
 					for (AbstractTask task : taskContextsToExport) {
-						File contextFile = ContextCorePlugin.getContextManager()
-								.getFileForContext(task.getHandleIdentifier());
+						File contextFile = ContextCorePlugin.getContextManager().getFileForContext(
+								task.getHandleIdentifier());
 						File destTaskFile = new File(destDir + File.separator + contextFile.getName());
 						if (destTaskFile.exists()) {
 							if (!MessageDialog.openConfirm(getShell(), "Confirm File Replace",
@@ -174,8 +171,9 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 
 		// FileCopyJob job = new FileCopyJob(destZipFile, destTaskListFile,
 		// destActivationHistoryFile);
-		TaskDataExportJob job = new TaskDataExportJob(exportPage.getDestinationDirectory(), exportPage.exportTaskList(), exportPage
-				.exportActivationHistory(), exportPage.exportTaskContexts(), exportPage.zip(), destZipFile.getName(), taskContextsToExport);
+		TaskDataExportJob job = new TaskDataExportJob(exportPage.getDestinationDirectory(),
+				exportPage.exportTaskList(), exportPage.exportActivationHistory(), exportPage.exportTaskContexts(),
+				exportPage.zip(), destZipFile.getName(), taskContextsToExport);
 		IProgressService service = PlatformUI.getWorkbench().getProgressService();
 
 		try {

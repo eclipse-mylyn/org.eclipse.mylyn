@@ -20,9 +20,8 @@ import org.eclipse.mylyn.web.core.HtmlTag;
 import org.eclipse.mylyn.web.core.HtmlStreamTokenizer.Token;
 
 /**
- * This is in place to escape & characters within the resource and rdf:about
- * attributes. Currently the values are not escaped which causes sax parser
- * errors. This bug has been filed and can be found here:
+ * This is in place to escape & characters within the resource and rdf:about attributes. Currently the values are not
+ * escaped which causes sax parser errors. This bug has been filed and can be found here:
  * https://bugzilla.mozilla.org/show_bug.cgi?id=264785
  * 
  * @author Rob Elves

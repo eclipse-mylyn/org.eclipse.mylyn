@@ -37,9 +37,8 @@ import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
- * Job that performs exporting (copying or zipping) of Mylar Task List data
- * Assumes that check with user for overwrite already done. Overwrites
- * destination if exists!
+ * Job that performs exporting (copying or zipping) of Mylar Task List data Assumes that check with user for overwrite
+ * already done. Overwrites destination if exists!
  * 
  * @author Wesley Coelho
  * @author Mik Kersten
@@ -68,7 +67,8 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 	/** export all data */
 	public TaskDataExportJob(String destinationDirectory, boolean zipIt, String zipFileName) {
 		this(destinationDirectory, true, true, true, zipIt, zipFileName, TasksUiPlugin.getTaskListManager()
-				.getTaskList().getAllTasks());
+				.getTaskList()
+				.getAllTasks());
 	}
 
 	/** export specified data */
@@ -127,8 +127,8 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 						destRepositoriesFile.delete();
 					}
 					if (!copy(sourceRepositoriesFile, destRepositoriesFile)) {
-						StatusHandler.fail(new Exception("Export Exception"),
-								"Could not export repositories file.", false);
+						StatusHandler.fail(new Exception("Export Exception"), "Could not export repositories file.",
+								false);
 					}
 					monitor.worked(1);
 				}
@@ -153,8 +153,7 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 						destTaskListFile.delete();
 					}
 					if (!copy(sourceTaskListFile, destTaskListFile)) {
-						StatusHandler.fail(new Exception("Export Exception"), "Could not export task list file.",
-								false);
+						StatusHandler.fail(new Exception("Export Exception"), "Could not export task list file.", false);
 					}
 					monitor.worked(1);
 				}
@@ -165,7 +164,8 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 		if (exportActivationHistory) {
 			try {
 				File sourceActivationHistoryFile = new File(contextsDirectory,
-						InteractionContextManager.CONTEXT_HISTORY_FILE_NAME + InteractionContextManager.CONTEXT_FILE_EXTENSION);
+						InteractionContextManager.CONTEXT_HISTORY_FILE_NAME
+								+ InteractionContextManager.CONTEXT_FILE_EXTENSION);
 
 				if (sourceActivationHistoryFile.exists()) {
 

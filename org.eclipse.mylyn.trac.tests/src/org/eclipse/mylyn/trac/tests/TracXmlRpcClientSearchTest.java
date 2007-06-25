@@ -32,12 +32,12 @@ public class TracXmlRpcClientSearchTest extends AbstractTracClientSearchTest {
 		connect010();
 		searchValidateTicket();
 	}
-	
+
 	public void testSearchValidateTicket011() throws Exception {
 		connect011();
-		searchValidateTicket();		
+		searchValidateTicket();
 	}
-	
+
 	public void searchValidateTicket() throws Exception {
 		TracSearch search = new TracSearch();
 		search.addFilter("summary", "summary1");

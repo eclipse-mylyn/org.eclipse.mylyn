@@ -48,7 +48,7 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
  * @author Mik Kersten
  */
 public class TaskSearchPage extends DialogPage implements ISearchPage {
-	
+
 	public static final String ID = "org.eclipse.mylyn.tasks.ui.search.page";
 
 	private static final String PAGE_KEY = "page";
@@ -209,7 +209,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 	public void setVisible(boolean visible) {
 		if (firstView) {
 			getControl().setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
-			
+
 			List<TaskRepository> repositories = TasksUiPlugin.getRepositoryManager().getAllRepositories();
 			List<TaskRepository> searchableRepositories = new ArrayList<TaskRepository>();
 			for (TaskRepository repository : repositories) {
@@ -305,8 +305,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		@Override
 		public void createControl(Composite parent) {
 			Hyperlink hyperlink = new Hyperlink(parent, SWT.NONE);
-			hyperlink
-					.setText("ERROR: Unable to present query page, ensure repository configuration is valid and retry");
+			hyperlink.setText("ERROR: Unable to present query page, ensure repository configuration is valid and retry");
 			hyperlink.setUnderlined(true);
 			hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 				@Override

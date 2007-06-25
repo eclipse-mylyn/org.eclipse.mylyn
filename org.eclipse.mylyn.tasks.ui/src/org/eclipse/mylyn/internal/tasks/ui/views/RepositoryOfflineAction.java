@@ -24,7 +24,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 public class RepositoryOfflineAction extends Action implements ISelectionChangedListener {
 
 	private static final String ID = "org.eclipse.mylyn.tasklist.repositories.offline";
-	
+
 	private TaskRepository repository;
 
 	public RepositoryOfflineAction() {
@@ -46,7 +46,7 @@ public class RepositoryOfflineAction extends Action implements ISelectionChanged
 	public void selectionChanged(SelectionChangedEvent event) {
 		ISelection selection = event.getSelection();
 		if (selection instanceof IStructuredSelection) {
-			Object selectedObject = ((IStructuredSelection)selection).getFirstElement();
+			Object selectedObject = ((IStructuredSelection) selection).getFirstElement();
 			if (selectedObject instanceof TaskRepository) {
 				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 						((TaskRepository) selectedObject).getConnectorKind());

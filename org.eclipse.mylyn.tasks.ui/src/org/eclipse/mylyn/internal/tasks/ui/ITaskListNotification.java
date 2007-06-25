@@ -29,7 +29,7 @@ public interface ITaskListNotification extends Comparable<ITaskListNotification>
 	public Image getNotificationIcon();
 
 	public Image getOverlayIcon();
-	
+
 	public Date getDate();
 
 	public void setDate(Date date);

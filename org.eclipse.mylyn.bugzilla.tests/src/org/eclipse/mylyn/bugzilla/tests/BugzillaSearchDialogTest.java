@@ -47,15 +47,14 @@ public class BugzillaSearchDialogTest extends TestCase {
 	}
 
 	/**
-	 * Test that the search dialog is initialized properly with the given
-	 * repository.
+	 * Test that the search dialog is initialized properly with the given repository.
 	 * 
 	 * @throws Exception
 	 */
 	public void testSearchDialogInit() throws Exception {
 		TaskRepository repo = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND,
-				IBugzillaConstants.TEST_BUGZILLA_222_URL, IBugzillaConstants.BugzillaServerVersion.SERVER_222
-						.toString());
+				IBugzillaConstants.TEST_BUGZILLA_222_URL,
+				IBugzillaConstants.BugzillaServerVersion.SERVER_222.toString());
 		manager.addRepository(repo, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		BugzillaSearchPage page = new BugzillaSearchPage(repo);
 		Shell shell = BugzillaTestPlugin.getDefault().getWorkbench().getDisplay().getShells()[0];
@@ -67,6 +66,6 @@ public class BugzillaSearchDialogTest extends TestCase {
 		 * not retrieved properly, throw an exception if the page is not
 		 * initialized properly, or pass otherwise.
 		 */
-		assertFalse(page.getProductCount() == 0);		
+		assertFalse(page.getProductCount() == 0);
 	}
 }

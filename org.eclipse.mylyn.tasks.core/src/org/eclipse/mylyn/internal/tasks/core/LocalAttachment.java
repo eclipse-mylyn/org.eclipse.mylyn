@@ -35,13 +35,13 @@ public class LocalAttachment implements Serializable, ITaskAttachment {
 	private RepositoryTaskData repositoryTaskData;
 
 	private String filePath;
-	
+
 	private String comment = "";
-	
+
 	private String description = "";
-	
+
 	private String contentType = "";
-	
+
 	private boolean isPatch = false;
 
 	private String filename;
@@ -49,7 +49,7 @@ public class LocalAttachment implements Serializable, ITaskAttachment {
 	private byte[] content;
 
 	private File file;
-	
+
 	public String getComment() {
 		return comment;
 	}
@@ -97,11 +97,11 @@ public class LocalAttachment implements Serializable, ITaskAttachment {
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
 	}
-	
+
 	public String getFilename() {
 		return this.filename;
 	}
-	
+
 	public void setFilename(String filename) {
 		this.filename = filename;
 	}
@@ -115,13 +115,13 @@ public class LocalAttachment implements Serializable, ITaskAttachment {
 		assert file != null || content != null;
 		return (file != null) ? file.length() : content.length;
 	}
-	
+
 	public void setFile(File file) {
 		this.file = file;
 	}
-	
+
 	public void setContent(byte[] content) {
 		this.content = content;
 	}
-	
+
 }

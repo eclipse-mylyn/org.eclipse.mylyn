@@ -64,7 +64,8 @@ public class DeleteAction extends Action {
 				break;
 			}
 		}
-		boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+		boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow()
 				.getShell(), "Confirm Delete", message);
 		if (!deleteConfirmed) {
 			return;

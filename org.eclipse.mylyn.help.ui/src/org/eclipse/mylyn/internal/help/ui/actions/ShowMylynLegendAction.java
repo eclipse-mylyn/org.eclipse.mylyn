@@ -26,7 +26,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class ShowMylynLegendAction implements IWorkbenchWindowActionDelegate, IViewActionDelegate {
 
-		public void dispose() {
+	public void dispose() {
 		// ignore
 	}
 
@@ -46,6 +46,6 @@ public class ShowMylynLegendAction implements IWorkbenchWindowActionDelegate, IV
 
 	public void init(IViewPart view) {
 		// ignore
-		
+
 	}
 }

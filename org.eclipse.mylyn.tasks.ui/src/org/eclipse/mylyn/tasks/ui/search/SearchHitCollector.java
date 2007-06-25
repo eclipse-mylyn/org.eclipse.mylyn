@@ -39,8 +39,7 @@ import org.eclipse.search.ui.text.Match;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * Used for returning results from Eclipse Search view. Collects results of a
- * repository search.
+ * Used for returning results from Eclipse Search view. Collects results of a repository search.
  * 
  * @author Rob Elves
  * @since 2.0
@@ -71,7 +70,7 @@ public class SearchHitCollector implements ISearchQuery, ITaskCollector {
 	private final ITaskFactory taskFactory;
 
 	private static final String QUERYING_REPOSITORY = "Querying Repository...";
-	
+
 	private String type;
 
 	private TaskRepository repository;
@@ -82,7 +81,8 @@ public class SearchHitCollector implements ISearchQuery, ITaskCollector {
 
 	private IProgressMonitor monitor;
 
-	public SearchHitCollector(TaskList tasklist, TaskRepository repository, AbstractRepositoryQuery repositoryQuery, ITaskFactory taskFactory) {
+	public SearchHitCollector(TaskList tasklist, TaskRepository repository, AbstractRepositoryQuery repositoryQuery,
+			ITaskFactory taskFactory) {
 		this.taskList = tasklist;
 		this.repository = repository;
 		this.repositoryQuery = repositoryQuery;
@@ -113,13 +113,12 @@ public class SearchHitCollector implements ISearchQuery, ITaskCollector {
 			hitTask = task;
 		}
 
-		
 		if (!monitor.isCanceled()) {
 			monitor.subTask(getFormattedMatchesString(searchResult.getMatchCount()));
 			monitor.worked(1);
 		}
-		
-		taskResults.add(hitTask);	
+
+		taskResults.add(hitTask);
 		this.searchResult.addMatch(new Match(hitTask, 0, 0));
 	}
 
@@ -127,16 +126,16 @@ public class SearchHitCollector implements ISearchQuery, ITaskCollector {
 		if (taskData == null) {
 			throw new IllegalArgumentException();
 		}
-		
+
 		AbstractTask task = taskFactory.createTask(taskData, new SubProgressMonitor(monitor, 1));
 		if (task != null) {
-			
+
 			if (!monitor.isCanceled()) {
 				monitor.subTask(getFormattedMatchesString(searchResult.getMatchCount()));
 				monitor.worked(1);
 			}
-			
-			taskResults.add(task);			
+
+			taskResults.add(task);
 			this.searchResult.addMatch(new Match(task, 0, 0));
 		}
 	}
@@ -144,7 +143,7 @@ public class SearchHitCollector implements ISearchQuery, ITaskCollector {
 	public String getLabel() {
 		return QUERYING_REPOSITORY;
 	}
-	
+
 	public String getTypeLabel() {
 		return type;
 	}
@@ -152,7 +151,7 @@ public class SearchHitCollector implements ISearchQuery, ITaskCollector {
 	public void setTypeLabel(String type) {
 		this.type = type;
 	}
-	
+
 	public boolean canRerun() {
 		return true;
 	}
@@ -171,10 +170,10 @@ public class SearchHitCollector implements ISearchQuery, ITaskCollector {
 
 	public IStatus run(IProgressMonitor monitor) throws OperationCanceledException {
 		this.monitor = monitor;
-		
+
 		try {
 			monitor.beginTask(QUERYING_REPOSITORY, IProgressMonitor.UNKNOWN);
-			
+
 			aboutToStart(0);
 
 			if (monitor.isCanceled()) {
@@ -210,7 +209,7 @@ public class SearchHitCollector implements ISearchQuery, ITaskCollector {
 		// Cut no longer used references because the collector might be re-used
 		monitor = null;
 	}
-	
+
 	protected String getFormattedMatchesString(int count) {
 		if (count == 1) {
 			return MATCH;
@@ -225,6 +224,6 @@ public class SearchHitCollector implements ISearchQuery, ITaskCollector {
 
 	public AbstractRepositoryQuery getRepositoryQuery() {
 		return repositoryQuery;
-	}	
+	}
 
 }

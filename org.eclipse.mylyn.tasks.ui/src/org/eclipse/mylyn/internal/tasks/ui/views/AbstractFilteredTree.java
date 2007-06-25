@@ -67,10 +67,10 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 			StatusHandler.fail(e, "Could not get refresh job", false);
 		}
 		setInitialText("");
-		
+
 		Bundle bundle = Platform.getBundle("org.eclipse.ui.workbench");
 		if (bundle.getLocation().contains("_3.3.")) {
-			eclipse_3_3_workbench  = true;
+			eclipse_3_3_workbench = true;
 		}
 	}
 
@@ -124,16 +124,16 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 				}
 			}
 		});
-		
+
 		Composite superComposite = new Composite(parent, SWT.NONE);
 		GridLayout superLayout = new GridLayout(4, false);
 		GridData superLayoutData = new GridData(SWT.LEFT, SWT.CENTER, true, false);
 		superComposite.setLayout(superLayout);
 		superComposite.setLayoutData(superLayoutData);
-		
+
 		Composite workingSetComposite = createActiveWorkingSetComposite(superComposite);
 		workingSetComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
-		
+
 		Composite activeTaskComposite = createActiveTaskComposite(superComposite);
 		activeTaskComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
 		parent.layout();
@@ -165,11 +165,11 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 			filterToolBar.add(clearTextAction);
 		}
 	}
-	
+
 	protected abstract Composite createProgressComposite(Composite container);
 
 	protected abstract Composite createActiveWorkingSetComposite(Composite container);
-	
+
 	protected abstract Composite createActiveTaskComposite(Composite container);
 
 	@Override
@@ -177,12 +177,12 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 		if (refreshPolicy != null) {
 			refreshPolicy.textChanged(filterText.getText());
 		}
-		
+
 		if (eclipse_3_3_workbench) {
 			// bug 165353 work-around for premature return at
 			// FilteredTree.java:374
 			updateToolbar(true);
-		} 
+		}
 	}
 
 	protected Job getRefreshJob() {

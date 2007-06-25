@@ -55,7 +55,7 @@ public class BugzillaProductParserTest extends TestCase {
 		repository.setAuthenticationCredentials(credentials.username, credentials.password);
 		return repository;
 	}
-	
+
 	public void test222Products() throws Exception {
 		setRepository(IBugzillaConstants.TEST_BUGZILLA_222_URL);
 		List<String> productList = BugzillaCorePlugin.getRepositoryConfiguration(repository, false).getProducts();
@@ -65,7 +65,7 @@ public class BugzillaProductParserTest extends TestCase {
 	}
 
 	public void test2201Products() throws Exception {
-		setRepository(IBugzillaConstants.TEST_BUGZILLA_2201_URL);		
+		setRepository(IBugzillaConstants.TEST_BUGZILLA_2201_URL);
 		List<String> productList = BugzillaCorePlugin.getRepositoryConfiguration(repository, false).getProducts();
 		Iterator<String> itr = productList.iterator();
 		assertTrue(itr.hasNext());
@@ -74,21 +74,21 @@ public class BugzillaProductParserTest extends TestCase {
 	}
 
 	public void test220Products() throws Exception {
-		setRepository(IBugzillaConstants.TEST_BUGZILLA_220_URL);	
+		setRepository(IBugzillaConstants.TEST_BUGZILLA_220_URL);
 		List<String> productList = BugzillaCorePlugin.getRepositoryConfiguration(repository, false).getProducts();
 		assertEquals(2, productList.size());
 		assertTrue(productList.contains("TestProduct"));
-		assertTrue(productList.contains("Widget"));	
+		assertTrue(productList.contains("Widget"));
 
 	}
 
 	public void test218Products() throws Exception {
-		setRepository(IBugzillaConstants.TEST_BUGZILLA_218_URL);	
+		setRepository(IBugzillaConstants.TEST_BUGZILLA_218_URL);
 		List<String> productList = BugzillaCorePlugin.getRepositoryConfiguration(repository, false).getProducts();
 		assertEquals(1, productList.size());
 		assertTrue(productList.contains("TestProduct"));
 	}
-	
+
 //  No longer supporting 216
 //	public void test216Products() throws Exception {
 //

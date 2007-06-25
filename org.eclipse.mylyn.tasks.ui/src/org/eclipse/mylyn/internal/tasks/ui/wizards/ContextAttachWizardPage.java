@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Text;
 public class ContextAttachWizardPage extends WizardPage {
 
 	private static final String DESCRIPTION = "Attaches local context to repository task";
-		
+
 	private TaskRepository repository;
 
 	private AbstractTask task;
@@ -38,24 +38,24 @@ public class ContextAttachWizardPage extends WizardPage {
 	private Text commentText;
 
 	private boolean complete = true;
-	
+
 	protected ContextAttachWizardPage(TaskRepository repository, AbstractTask task) {
 		super(ContextAttachWizard.WIZARD_TITLE);
 		this.repository = repository;
-		this.task = task; 
+		this.task = task;
 		setDescription(DESCRIPTION);
 	}
 
 	public void createControl(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout());
-		
+
 		new Label(composite, SWT.NONE).setText("Task: " + task.getSummary());
 		new Label(composite, SWT.NONE).setText("Repository: " + repository.getUrl());
 		new Label(composite, SWT.NONE).setText("Comment: ");
 		commentText = new Text(composite, SWT.V_SCROLL | SWT.MULTI | SWT.BORDER | SWT.WRAP);
 		commentText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-	
+
 		commentText.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
 				getWizard().getContainer().updateButtons();
@@ -67,8 +67,8 @@ public class ContextAttachWizardPage extends WizardPage {
 		});
 
 		setControl(composite);
-		
-		if(task.getSynchronizationState() != RepositoryTaskSyncState.SYNCHRONIZED) {
+
+		if (task.getSynchronizationState() != RepositoryTaskSyncState.SYNCHRONIZED) {
 			setErrorMessage("Task must be synchronized before attaching context");
 			complete = false;
 			getWizard().getContainer().updateButtons();

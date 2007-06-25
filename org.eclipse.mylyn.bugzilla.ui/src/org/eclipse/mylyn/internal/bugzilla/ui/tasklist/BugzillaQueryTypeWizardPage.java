@@ -40,9 +40,9 @@ public class BugzillaQueryTypeWizardPage extends WizardPage {
 	private Button buttonForm;
 
 	private Composite composite;
-	
+
 	private BugzillaCustomQueryWizardPage customPage;
-	
+
 	private BugzillaSearchPage searchPage;
 
 	public BugzillaQueryTypeWizardPage(TaskRepository repository) {
@@ -50,7 +50,7 @@ public class BugzillaQueryTypeWizardPage extends WizardPage {
 		setTitle(TITLE);
 		setDescription(DESCRIPTION);
 		setImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
-		customPage = new BugzillaCustomQueryWizardPage(repository);		
+		customPage = new BugzillaCustomQueryWizardPage(repository);
 		searchPage = new BugzillaSearchPage(repository);
 		searchPage.setRestoreQueryOptions(false);
 	}
@@ -75,7 +75,7 @@ public class BugzillaQueryTypeWizardPage extends WizardPage {
 
 	@Override
 	public IWizardPage getNextPage() {
-		if(buttonForm.getSelection()) {
+		if (buttonForm.getSelection()) {
 			searchPage.setWizard(this.getWizard());
 			return searchPage;
 		}

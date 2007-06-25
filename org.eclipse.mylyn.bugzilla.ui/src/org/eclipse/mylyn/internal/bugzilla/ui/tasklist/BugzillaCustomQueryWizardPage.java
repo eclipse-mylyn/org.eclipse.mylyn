@@ -113,7 +113,7 @@ public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 //	public boolean isPageComplete() {
 //		return super.canFlipToNextPage();
 //	}
-	
+
 //	@Override
 //	public IWizardPage getNextPage() {
 //		return null;

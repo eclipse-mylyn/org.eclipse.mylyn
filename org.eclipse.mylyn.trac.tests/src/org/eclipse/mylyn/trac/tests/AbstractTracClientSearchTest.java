@@ -26,8 +26,7 @@ import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
 import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.Ticket;
 
 /**
- * Test cases that validate search results for classes that implement
- * {@link ITracClient}.
+ * Test cases that validate search results for classes that implement {@link ITracClient}.
  * 
  * @author Steffen Pingel
  */
@@ -76,7 +75,7 @@ public abstract class AbstractTracClientSearchTest extends AbstractTracClientTes
 			// XXX need to fix bug 175211
 			return;
 		}
-		
+
 		connect011();
 		getTickets();
 	}

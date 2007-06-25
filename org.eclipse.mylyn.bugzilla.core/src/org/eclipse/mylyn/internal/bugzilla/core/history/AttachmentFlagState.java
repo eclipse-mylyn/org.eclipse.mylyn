@@ -11,8 +11,8 @@
 package org.eclipse.mylyn.internal.bugzilla.core.history;
 
 /**
- * @author John Anvik 
+ * @author John Anvik
  */
-public enum AttachmentFlagState{
+public enum AttachmentFlagState {
 	OFF, GRANTED, DENIED, REQUESTED, UNKNOWN;
 }

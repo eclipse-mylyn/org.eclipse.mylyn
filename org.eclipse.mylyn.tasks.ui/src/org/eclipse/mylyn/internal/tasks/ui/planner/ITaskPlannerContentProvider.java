@@ -16,5 +16,6 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 public interface ITaskPlannerContentProvider {
 
 	public void removeTask(AbstractTask task);
+
 	public void addTask(AbstractTask task);
 }

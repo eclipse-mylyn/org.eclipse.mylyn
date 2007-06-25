@@ -19,8 +19,8 @@ import org.w3c.dom.Element;
 /**
  * Responsible for storing and creating task list elements.
  * 
- * When overriding these methods be sure not to perform network access since the Task List is
- * read and written frequently.
+ * When overriding these methods be sure not to perform network access since the Task List is read and written
+ * frequently.
  * 
  * @author Mik Kersten
  * @author Ken Sueda
@@ -35,15 +35,15 @@ public abstract class AbstractTaskListFactory {
 	public static final String KEY_TASK = "Task";
 
 	public abstract boolean canCreate(AbstractTask task);
-	
+
 	public boolean canCreate(AbstractRepositoryQuery query) {
 		return false;
 	}
-	
-	public AbstractRepositoryQuery createQuery(String repositoryUrl, String queryString, String label, Element element){
+
+	public AbstractRepositoryQuery createQuery(String repositoryUrl, String queryString, String label, Element element) {
 		return null;
 	}
-	
+
 	public abstract AbstractTask createTask(String repositoryUrl, String taskId, String label, Element element);
 
 	public String getQueryElementName(AbstractRepositoryQuery query) {
@@ -53,7 +53,7 @@ public abstract class AbstractTaskListFactory {
 	public Set<String> getQueryElementNames() {
 		return Collections.emptySet();
 	}
-	
+
 	public abstract String getTaskElementName();
 
 	public void setAdditionalAttributes(AbstractRepositoryQuery query, Element node) {

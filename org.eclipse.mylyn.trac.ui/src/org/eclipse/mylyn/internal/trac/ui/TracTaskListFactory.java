@@ -32,12 +32,12 @@ public class TracTaskListFactory extends AbstractTaskListFactory {
 	private static final String KEY_TRAC_TASK = KEY_TRAC + AbstractTaskListFactory.KEY_TASK;
 
 	private static final String KEY_TRAC_QUERY = KEY_TRAC + AbstractTaskListFactory.KEY_QUERY;
-	
+
 	@Override
 	public String getTaskElementName() {
 		return KEY_TRAC_TASK;
 	}
-	
+
 	@Override
 	public Set<String> getQueryElementNames() {
 		Set<String> names = new HashSet<String>();
@@ -49,17 +49,17 @@ public class TracTaskListFactory extends AbstractTaskListFactory {
 	public boolean canCreate(AbstractTask task) {
 		return task instanceof TracTask;
 	}
-	
+
 	@Override
 	public boolean canCreate(AbstractRepositoryQuery category) {
 		return category instanceof TracRepositoryQuery;
 	}
-	
+
 	@Override
 	public String getQueryElementName(AbstractRepositoryQuery query) {
 		return query instanceof TracRepositoryQuery ? KEY_TRAC_QUERY : "";
 	}
-	
+
 	@Override
 	public AbstractTask createTask(String repositoryUrl, String taskId, String summary, Element element) {
 		return new TracTask(repositoryUrl, taskId, summary);

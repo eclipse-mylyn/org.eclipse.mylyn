@@ -32,7 +32,7 @@ public class TaskWorkingSetElementAdapter implements IWorkingSetElementAdapter {
 		}
 		return elements;
 	}
-	
+
 	private IAdaptable[] selectContainers(IAdaptable[] elements) {
 		List<IAdaptable> containers = new ArrayList<IAdaptable>(elements.length);
 		for (IAdaptable adaptable : elements) {

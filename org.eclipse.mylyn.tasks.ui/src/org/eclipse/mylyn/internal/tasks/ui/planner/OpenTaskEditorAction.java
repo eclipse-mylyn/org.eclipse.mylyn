@@ -44,7 +44,7 @@ public class OpenTaskEditorAction extends Action {
 		ISelection selection = viewer.getSelection();
 		Object object = ((IStructuredSelection) selection).getFirstElement();
 		if (object instanceof AbstractTask) {
-			TasksUiUtil.openEditor((AbstractTask)object, false);
+			TasksUiUtil.openEditor((AbstractTask) object, false);
 		}
 //		if (obj instanceof Task) {
 //			((Task) obj).openTaskInEditor(false);

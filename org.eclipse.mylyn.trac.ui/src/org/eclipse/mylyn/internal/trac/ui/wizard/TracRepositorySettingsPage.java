@@ -231,9 +231,9 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 						result = Version.TRAC_0_9;
 
 						if (e instanceof TracPermissionDeniedException) {
-							setStatus(RepositoryStatus
-									.createStatus(repositoryUrl, IStatus.INFO, TracUiPlugin.PLUGIN_ID,
-											"Authentication credentials are valid. Note: Insufficient permissions for XML-RPC access, falling back to web access."));
+							setStatus(RepositoryStatus.createStatus(repositoryUrl, IStatus.INFO,
+									TracUiPlugin.PLUGIN_ID,
+									"Authentication credentials are valid. Note: Insufficient permissions for XML-RPC access, falling back to web access."));
 						}
 					} catch (TracLoginException e2) {
 						throw e;

@@ -38,7 +38,7 @@ public class TaskActivityEditorInput implements IEditorInput {
 	private Set<AbstractTask> completedTasks = new HashSet<AbstractTask>();
 
 	private Set<AbstractTask> inProgressTasks = new HashSet<AbstractTask>();
-	
+
 	private Set<AbstractTask> plannedTasks = new HashSet<AbstractTask>();
 
 	private TaskReportGenerator taskReportGenerator = null;
@@ -70,11 +70,11 @@ public class TaskActivityEditorInput implements IEditorInput {
 
 		completedTasks = completedTaskCollector.getTasks();
 		inProgressTasks = inProgressTaskCollector.getTasks();
-		
+
 		plannedTasks.addAll(TasksUiPlugin.getTaskListManager().getActivityNextWeek().getChildren());
-		
+
 		plannedTasks.addAll(TasksUiPlugin.getTaskListManager().getActivityFuture().getChildren());
-				
+
 		//plannedTasks = new HashSet<ITask>();
 	}
 
@@ -110,7 +110,7 @@ public class TaskActivityEditorInput implements IEditorInput {
 	public Set<AbstractTask> getInProgressTasks() {
 		return inProgressTasks;
 	}
-	
+
 	public Set<AbstractTask> getPlannedTasks() {
 		return plannedTasks;
 	}
@@ -155,23 +155,23 @@ public class TaskActivityEditorInput implements IEditorInput {
 		}
 		return duration;
 	}
-	
-	public void removeCompletedTask( AbstractTask task) {
-		completedTasks.remove(task);				
+
+	public void removeCompletedTask(AbstractTask task) {
+		completedTasks.remove(task);
 	}
-	
+
 	public void removeInProgressTask(AbstractTask task) {
 		inProgressTasks.remove(task);
 	}
-	
-	public void addPlannedTask(AbstractTask task) {		
-		plannedTasks.add(task);		
+
+	public void addPlannedTask(AbstractTask task) {
+		plannedTasks.add(task);
 	}
-	
+
 	public void removePlannedTask(AbstractTask task) {
 		plannedTasks.remove(task);
 	}
-	
+
 	public int getPlannedEstimate() {
 		int estimated = 0;
 		for (AbstractTask task : plannedTasks) {

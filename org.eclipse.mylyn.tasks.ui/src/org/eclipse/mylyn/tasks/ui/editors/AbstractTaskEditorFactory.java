@@ -26,20 +26,20 @@ public abstract class AbstractTaskEditorFactory {
 	public abstract IEditorPart createEditor(TaskEditor parentEditor, IEditorInput editorInput);
 
 	public abstract IEditorInput createEditorInput(AbstractTask task);
-	
+
 	public abstract String getTitle();
-	
+
 	public abstract boolean canCreateEditorFor(AbstractTask task);
-	
+
 	public abstract boolean canCreateEditorFor(IEditorInput input);
-	
+
 	public boolean providesOutline() {
 		return false;
 	}
-	
+
 	/**
-	 * @return	A higher integer for high priority, low integer for low priority.  Higher 
-	 * priority editors will be placed earlier in the tab list.
+	 * @return A higher integer for high priority, low integer for low priority. Higher priority editors will be placed
+	 *         earlier in the tab list.
 	 */
 	public int getTabOrderPriority() {
 		return 1;

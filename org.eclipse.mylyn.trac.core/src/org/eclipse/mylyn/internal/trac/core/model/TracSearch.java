@@ -26,8 +26,7 @@ import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter.CompareOperat
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 
 /**
- * Represents a Trac search. A search can have multiple {@link TracSearchFilter}s
- * that all need to match.
+ * Represents a Trac search. A search can have multiple {@link TracSearchFilter}s that all need to match.
  * 
  * @author Steffen Pingel
  */
@@ -63,7 +62,7 @@ public class TracSearch {
 	public void addFilter(TracSearchFilter filter) {
 		filterByFieldName.put(filter.getFieldName(), filter);
 	}
-	
+
 	public List<TracSearchFilter> getFilters() {
 		return new ArrayList<TracSearchFilter>(filterByFieldName.values());
 	}
@@ -88,8 +87,7 @@ public class TracSearch {
 	 * Returns a Trac query string that conforms to the format defined at
 	 * {@link http://projects.edgewall.com/trac/wiki/TracQuery#QueryLanguage}.
 	 * 
-	 * @return the empty string, if no search order and criteria are defined; a
-	 *         string that starts with &amp;, otherwise
+	 * @return the empty string, if no search order and criteria are defined; a string that starts with &amp;, otherwise
 	 */
 	public String toQuery() {
 		StringBuilder sb = new StringBuilder();
@@ -117,11 +115,9 @@ public class TracSearch {
 	}
 
 	/**
-	 * Returns a URL encoded string that can be passed as an argument to the
-	 * Trac query script.
+	 * Returns a URL encoded string that can be passed as an argument to the Trac query script.
 	 * 
-	 * @return the empty string, if no search order and criteria are defined; a
-	 *         string that starts with &amp;, otherwise
+	 * @return the empty string, if no search order and criteria are defined; a string that starts with &amp;, otherwise
 	 */
 	public String toUrl() {
 		StringBuilder sb = new StringBuilder();
@@ -178,5 +174,5 @@ public class TracSearch {
 			}
 		}
 	}
-	
+
 }

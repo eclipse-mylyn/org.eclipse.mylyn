@@ -15,11 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents a search criterion. Each criterion is applied to a field such as
- * milestone or priority. It has a compare operator and a list of values. The
- * compare mode is <code>OR</code> for the operators <code>contains</code>,
- * <code>starts with</code>, <code>ends with</code> and <code>is</code>.
- * The compare mode is <code>AND</code> for all other (negated) operators.
+ * Represents a search criterion. Each criterion is applied to a field such as milestone or priority. It has a compare
+ * operator and a list of values. The compare mode is <code>OR</code> for the operators <code>contains</code>,
+ * <code>starts with</code>, <code>ends with</code> and <code>is</code>. The compare mode is <code>AND</code>
+ * for all other (negated) operators.
  * 
  * @author Steffen Pingel
  */

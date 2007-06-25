@@ -156,8 +156,8 @@ public final class RepositorySynchronizationManager {
 	 */
 	public synchronized void saveOutgoing(AbstractTask repositoryTask, Set<RepositoryTaskAttribute> modifiedAttributes) {
 		repositoryTask.setSynchronizationState(RepositoryTaskSyncState.OUTGOING);
-		TasksUiPlugin.getTaskDataManager().saveEdits(repositoryTask.getRepositoryUrl(),
-				repositoryTask.getTaskId(), Collections.unmodifiableSet(modifiedAttributes));
+		TasksUiPlugin.getTaskDataManager().saveEdits(repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId(),
+				Collections.unmodifiableSet(modifiedAttributes));
 		TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(repositoryTask, false);
 	}
 

@@ -28,5 +28,5 @@ public class MockStatusHandler implements IStatusHandler {
 	public void assertNoStatus() {
 		TestCase.assertNull("Unexpected error reported through MylarStatusHandler", status);
 	}
-	
+
 }

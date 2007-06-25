@@ -92,7 +92,7 @@ public class TaskListUiTest extends TestCase {
 
 			cat1task1 = manager.createNewLocalTask("task 1");
 			cat1task1.setPriority(PriorityLevel.P1.toString());
-			cat1task1.setCompleted(true);			
+			cat1task1.setCompleted(true);
 			manager.getTaskList().moveToContainer(cat1task1, cat1);
 
 			cat1task1sub1 = manager.createNewLocalTask("sub task 1");
@@ -255,7 +255,7 @@ public class TaskListUiTest extends TestCase {
 		List<AbstractTaskContainer> selectedElements = new Vector<AbstractTaskContainer>();
 		selectedElements.add(cat1task1);
 		int numCategoriesMinusArchiveContainer = manager.getTaskList().getCategories().size() - 1;
-		int numSeparators = 1; 
+		int numSeparators = 1;
 		// adding a separator and the New Category... action
 		int expectedNrOfSubMenuEntries = numCategoriesMinusArchiveContainer + numSeparators + 1;
 		NewCategoryAction newCatActon = new NewCategoryAction();

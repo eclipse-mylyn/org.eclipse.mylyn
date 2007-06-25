@@ -39,8 +39,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * Temporary date picker from patch posted to:
- * https://bugs.eclipse.org/bugs/show_bug.cgi?taskId=19945
+ * Temporary date picker from patch posted to: https://bugs.eclipse.org/bugs/show_bug.cgi?taskId=19945
  * 
  * see bug# 19945
  * 
@@ -142,7 +141,7 @@ public class DatePicker extends Composite {
 			public void widgetSelected(SelectionEvent arg0) {
 				Calendar newCalendar = GregorianCalendar.getInstance();
 				newCalendar.set(Calendar.HOUR_OF_DAY, TasksUiPlugin.getTaskListManager().getStartHour());
-				if(date != null) {
+				if (date != null) {
 					newCalendar.setTime(date.getTime());
 				}
 
@@ -157,7 +156,7 @@ public class DatePicker extends Composite {
 				dateText.setEnabled(false);
 
 				int dialogResponse = dialog.open();
-				if(dialog.getDate()!=null) {
+				if (dialog.getDate() != null) {
 					newCalendar.setTime(dialog.getDate());
 				} else {
 					newCalendar = null;
@@ -193,7 +192,7 @@ public class DatePicker extends Composite {
 		dateText.setBackground(backgroundColor);
 		super.setBackground(backgroundColor);
 	}
-	
+
 	public void setDate(Calendar date) {
 		this.date = date;
 		updateDateText();
@@ -259,7 +258,6 @@ public class DatePicker extends Composite {
 			notifyPickerListeners();
 		}
 
-		
 		pickButton.setEnabled(true);
 		dateText.setEnabled(true);
 	}

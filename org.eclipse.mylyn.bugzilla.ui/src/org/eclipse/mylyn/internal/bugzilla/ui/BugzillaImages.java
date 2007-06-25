@@ -32,13 +32,13 @@ public class BugzillaImages {
 	public static final String T_TOOL = "etool16";
 
 	public static final String T_VIEW = "eview16";
-	
+
 	public static final ImageDescriptor OVERLAY_BUGZILLA = create(T_VIEW, "overlay-bugzilla.gif");
-	
+
 	public static final ImageDescriptor BUG = create(T_ELCL, "bug.gif");
 
 	public static final ImageDescriptor BUG_COMMENT = create(T_ELCL, "bug-comment.gif");
-	
+
 	public static final ImageDescriptor REMOVE_ALL = create("", "remove-all.gif");
 
 	public static final ImageDescriptor REMOVE = create("", "remove.gif");
@@ -48,13 +48,13 @@ public class BugzillaImages {
 	public static final ImageDescriptor OPEN = create("", "openresult.gif");
 
 	public static final ImageDescriptor OVERLAY_CRITICAL = create(T_VIEW, "overlay-critical.gif");
-	
+
 	public static final ImageDescriptor OVERLAY_MAJOR = create(T_VIEW, "overlay-major.gif");
 
 	public static final ImageDescriptor OVERLAY_ENHANCEMENT = create(T_VIEW, "overlay-enhancement.gif");
 
 	public static final ImageDescriptor OVERLAY_MINOR = create(T_VIEW, "overlay-minor.gif");
-	
+
 	private static ImageDescriptor create(String prefix, String name) {
 		try {
 			return ImageDescriptor.createFromURL(makeIconFileURL(prefix, name));

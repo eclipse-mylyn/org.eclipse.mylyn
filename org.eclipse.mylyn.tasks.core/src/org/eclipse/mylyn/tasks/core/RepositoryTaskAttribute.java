@@ -31,8 +31,8 @@ public class RepositoryTaskAttribute implements Serializable {
 	/**
 	 * Key for the author of a comment.
 	 * 
-	 * TODO remove this key: Trac uses owner to denote the assignee of a ticket
-	 * and AbstractRepository has a getOwner() method which is confusing
+	 * TODO remove this key: Trac uses owner to denote the assignee of a ticket and AbstractRepository has a getOwner()
+	 * method which is confusing
 	 */
 	public static final String USER_OWNER = "task.common.user.owner";
 
@@ -81,15 +81,14 @@ public class RepositoryTaskAttribute implements Serializable {
 	public static final String KEYWORDS = "task.common.keywords";
 
 	/**
-	 * Boolean attribute. If true, repository user needs to be added to the cc
-	 * list.
+	 * Boolean attribute. If true, repository user needs to be added to the cc list.
 	 */
 	public static final String ADD_SELF_CC = "task.common.addselfcc";
 
 	public static final String NEW_CC = "task.common.newcc";
 
 	public static final String REMOVE_CC = "task.common.removecc";
-	
+
 	public static final String TASK_KEY = "task.common.key";
 
 	/**
@@ -270,7 +269,7 @@ public class RepositoryTaskAttribute implements Serializable {
 	public void clearMetaData() {
 		metaData.clear();
 	}
-	
+
 	public void putMetaDataValue(String key, String value) {
 		metaData.put(key, value);
 	}
@@ -282,7 +281,7 @@ public class RepositoryTaskAttribute implements Serializable {
 	public void removeMetaDataValue(String key) {
 		metaData.remove(key);
 	}
-	
+
 	public Map<String, String> getMetaData() {
 		return Collections.unmodifiableMap(metaData);
 	}

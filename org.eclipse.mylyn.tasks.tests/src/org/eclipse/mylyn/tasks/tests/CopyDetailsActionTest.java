@@ -19,9 +19,9 @@ import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryTask;
 public class CopyDetailsActionTest extends TestCase {
 
 	public void testIdLabelIncluded() {
-		MockRepositoryTask task = new MockRepositoryTask("123");		
+		MockRepositoryTask task = new MockRepositoryTask("123");
 		String text = CopyTaskDetailsAction.getTextForTask(task);
 		assertTrue(text.startsWith(task.getTaskKey()));
 	}
-	
+
 }

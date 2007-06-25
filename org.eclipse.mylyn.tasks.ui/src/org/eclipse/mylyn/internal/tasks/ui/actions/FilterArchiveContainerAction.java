@@ -18,28 +18,30 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
- * @author Mik Kersten 
+ * @author Mik Kersten
  */
 public class FilterArchiveContainerAction extends Action {
 
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.filter.archive";
 
 	private static final String LABEL = "Filter Archive Category";
-	
+
 	private final TaskListView view;
 
 	public FilterArchiveContainerAction(TaskListView view) {
 		this.view = view;
 		setText(LABEL);
 		setToolTipText(LABEL);
-		setId(ID); 
+		setId(ID);
 		setImageDescriptor(TasksUiImages.FILTER_ARCHIVE);
-		setChecked(TasksUiPlugin.getDefault().getPreferenceStore().contains(TasksUiPreferenceConstants.FILTER_ARCHIVE_MODE));
+		setChecked(TasksUiPlugin.getDefault().getPreferenceStore().contains(
+				TasksUiPreferenceConstants.FILTER_ARCHIVE_MODE));
 	}
 
 	@Override
 	public void run() {
-		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TasksUiPreferenceConstants.FILTER_ARCHIVE_MODE, isChecked());
+		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TasksUiPreferenceConstants.FILTER_ARCHIVE_MODE,
+				isChecked());
 		if (isChecked()) {
 			view.addFilter(view.getArchiveFilter());
 		} else {

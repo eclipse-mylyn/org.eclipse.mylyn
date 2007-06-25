@@ -93,8 +93,8 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 			BugzillaCorePlugin.setConfigurationCacheFile(repConfigCacheFile.toFile());
 		}
 
-		BugzillaRepositoryConnector bugzillaConnector = (BugzillaRepositoryConnector) TasksUiPlugin
-				.getRepositoryManager().getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
+		BugzillaRepositoryConnector bugzillaConnector = (BugzillaRepositoryConnector) TasksUiPlugin.getRepositoryManager()
+				.getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
 
 		TasksUiPlugin.getRepositoryManager().addListener(bugzillaConnector.getClientManager());
 	}
@@ -118,8 +118,8 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	@Override
 	public void stop(BundleContext context) throws Exception {
 
-		BugzillaRepositoryConnector bugzillaConnector = (BugzillaRepositoryConnector) TasksUiPlugin
-				.getRepositoryManager().getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
+		BugzillaRepositoryConnector bugzillaConnector = (BugzillaRepositoryConnector) TasksUiPlugin.getRepositoryManager()
+				.getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
 
 		TasksUiPlugin.getRepositoryManager().removeListener(bugzillaConnector.getClientManager());
 
@@ -135,8 +135,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns an image descriptor for the image file at the given plug-in
-	 * relative path.
+	 * Returns an image descriptor for the image file at the given plug-in relative path.
 	 * 
 	 * @param path
 	 *            the path
@@ -148,8 +147,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 
 	public static String[] getQueryOptions(String prefId, String[] selectedProducts, String repositoryUrl) {
 		IPreferenceStore prefs = BugzillaUiPlugin.getDefault().getPreferenceStore();
-		if ((prefId.equals(IBugzillaConstants.VALUES_COMPONENT) || prefId.equals(IBugzillaConstants.VALUES_VERSION) || prefId
-				.equals(IBugzillaConstants.VALUES_TARGET))
+		if ((prefId.equals(IBugzillaConstants.VALUES_COMPONENT) || prefId.equals(IBugzillaConstants.VALUES_VERSION) || prefId.equals(IBugzillaConstants.VALUES_TARGET))
 				&& selectedProducts != null) {
 			List<String> options = new ArrayList<String>();
 			for (String product : selectedProducts) {
@@ -205,9 +203,8 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Update all of the query options for the bugzilla search page TODO: unify
-	 * update of search options with update of bug attributes
-	 * (BugzillaServerFacade.updateBugAttributeOptions)
+	 * Update all of the query options for the bugzilla search page TODO: unify update of search options with update of
+	 * bug attributes (BugzillaServerFacade.updateBugAttributeOptions)
 	 */
 	public static void updateQueryOptions(TaskRepository repository, IProgressMonitor monitor) {
 

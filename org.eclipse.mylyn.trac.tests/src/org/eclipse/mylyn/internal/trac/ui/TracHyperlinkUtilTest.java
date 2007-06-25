@@ -1,7 +1,5 @@
 package org.eclipse.mylyn.internal.trac.ui;
 
-
-
 import junit.framework.TestCase;
 
 import org.eclipse.jface.text.Region;
@@ -27,7 +25,7 @@ public class TracHyperlinkUtilTest extends TestCase {
 		assertNotNull(links);
 		assertEquals(1, links.length);
 		assertEquals(new Region(0, 20), links[0].getHyperlinkRegion());
-		assertEquals("12", ((TaskHyperlink)links[0]).getTaskId());
+		assertEquals("12", ((TaskHyperlink) links[0]).getTaskId());
 	}
 
 	public void testFindHyperlinksTicket() {
@@ -35,18 +33,18 @@ public class TracHyperlinkUtilTest extends TestCase {
 		assertNotNull(links);
 		assertEquals(1, links.length);
 		assertEquals(new Region(0, 3), links[0].getHyperlinkRegion());
-		assertEquals("11", ((TaskHyperlink)links[0]).getTaskId());
+		assertEquals("11", ((TaskHyperlink) links[0]).getTaskId());
 
 		links = TracHyperlinkUtil.findHyperlinks(repository, "#11, #234", 6, 0);
 		assertNotNull(links);
 		assertEquals(1, links.length);
-		assertEquals("234", ((TaskHyperlink)links[0]).getTaskId());
+		assertEquals("234", ((TaskHyperlink) links[0]).getTaskId());
 
 		links = TracHyperlinkUtil.findHyperlinks(repository, "  ticket:123  ", 2, 0);
 		assertNotNull(links);
 		assertEquals(1, links.length);
 		assertEquals(new Region(2, 10), links[0].getHyperlinkRegion());
-		assertEquals("123", ((TaskHyperlink)links[0]).getTaskId());
+		assertEquals("123", ((TaskHyperlink) links[0]).getTaskId());
 	}
 
 	public void testFindHyperlinksReport() {
@@ -54,7 +52,7 @@ public class TracHyperlinkUtilTest extends TestCase {
 		assertEquals(1, links.length);
 		assertEquals(new Region(0, 10), links[0].getHyperlinkRegion());
 		assertEquals("http://localhost/report/123", ((WebHyperlink) links[0]).getURLString());
-	
+
 		links = TracHyperlinkUtil.findHyperlinks(repository, "{123}", 0, 0);
 		assertEquals(1, links.length);
 		assertEquals(new Region(0, 5), links[0].getHyperlinkRegion());
@@ -116,15 +114,21 @@ public class TracHyperlinkUtilTest extends TestCase {
 		assertEquals(1, links.length);
 		assertEquals("http://localhost/changeset/?new=456&old=123", ((WebHyperlink) links[0]).getURLString());
 
-		links = TracHyperlinkUtil.findHyperlinks(repository, "diff:trunk/trac@3538//sandbox/vc-refactoring/trac@3539", 0, 0);
+		links = TracHyperlinkUtil.findHyperlinks(repository, "diff:trunk/trac@3538//sandbox/vc-refactoring/trac@3539",
+				0, 0);
 		assertNotNull(links);
 		assertEquals(1, links.length);
-		assertEquals("http://localhost/changeset/?new_path=sandbox%2Fvc-refactoring%2Ftrac&old_path=trunk%2Ftrac&new=3539&old=3538", ((WebHyperlink) links[0]).getURLString());
+		assertEquals(
+				"http://localhost/changeset/?new_path=sandbox%2Fvc-refactoring%2Ftrac&old_path=trunk%2Ftrac&new=3539&old=3538",
+				((WebHyperlink) links[0]).getURLString());
 
-		links = TracHyperlinkUtil.findHyperlinks(repository, "diff:tags/trac-0.9.2/wiki-default//tags/trac-0.9.3/wiki-default", 0, 0);
+		links = TracHyperlinkUtil.findHyperlinks(repository,
+				"diff:tags/trac-0.9.2/wiki-default//tags/trac-0.9.3/wiki-default", 0, 0);
 		assertNotNull(links);
 		assertEquals(1, links.length);
-		assertEquals("http://localhost/changeset/?new_path=tags%2Ftrac-0.9.3%2Fwiki-default&old_path=tags%2Ftrac-0.9.2%2Fwiki-default", ((WebHyperlink) links[0]).getURLString());
+		assertEquals(
+				"http://localhost/changeset/?new_path=tags%2Ftrac-0.9.3%2Fwiki-default&old_path=tags%2Ftrac-0.9.2%2Fwiki-default",
+				((WebHyperlink) links[0]).getURLString());
 	}
 
 	public void testFindHyperlinksWiki() {
@@ -146,7 +150,7 @@ public class TracHyperlinkUtilTest extends TestCase {
 
 		links = TracHyperlinkUtil.findHyperlinks(repository, "paGe", 0, 0);
 		assertNull(links);
-		
+
 		links = TracHyperlinkUtil.findHyperlinks(repository, "WikiPage", 0, 0);
 		assertNotNull(links);
 		assertEquals(1, links.length);
@@ -161,11 +165,11 @@ public class TracHyperlinkUtilTest extends TestCase {
 		assertEquals(1, links.length);
 		assertEquals("http://localhost/milestone/1.0", ((WebHyperlink) links[0]).getURLString());
 	}
-	
+
 	public void testFindHyperlinksAttachment() {
 		IHyperlink[] links = TracHyperlinkUtil.findHyperlinks(repository, "attachment:ticket:123:foo.bar", 1, 0);
 		assertNotNull(links);
-		assertEquals("123", ((TaskHyperlink)links[0]).getTaskId());
+		assertEquals("123", ((TaskHyperlink) links[0]).getTaskId());
 	}
 
 	public void testFindHyperlinksFiles() {
@@ -173,7 +177,7 @@ public class TracHyperlinkUtilTest extends TestCase {
 		assertNotNull(links);
 		assertEquals(1, links.length);
 		assertEquals("http://localhost/browser/trunk/foo", ((WebHyperlink) links[0]).getURLString());
-		
+
 		links = TracHyperlinkUtil.findHyperlinks(repository, "source:trunk/foo@123", 1, 0);
 		assertNotNull(links);
 		assertEquals(1, links.length);

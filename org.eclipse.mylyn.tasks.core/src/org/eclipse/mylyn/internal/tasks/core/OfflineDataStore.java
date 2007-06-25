@@ -17,8 +17,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 
 /**
- * This object holds RepositoryTaskData and is serialized to disk for offline
- * storage.
+ * This object holds RepositoryTaskData and is serialized to disk for offline storage.
  * 
  * @author Rob Elves
  */

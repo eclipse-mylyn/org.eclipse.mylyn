@@ -24,7 +24,7 @@ public class RepositoryTaskHandleUtil {
 		if (!isValidTaskId(taskId)) {
 			throw new RuntimeException("invalid handle for task, can not contain: " + HANDLE_DELIM + ", was: " + taskId);
 		}
-		
+
 		if (repositoryUrl == null) {
 			return MISSING_REPOSITORY + HANDLE_DELIM + taskId;
 		} else {
@@ -49,7 +49,6 @@ public class RepositoryTaskHandleUtil {
 		}
 		return null;
 	}
-
 
 	public static boolean isValidTaskId(String taskId) {
 		return !taskId.contains(HANDLE_DELIM);

@@ -82,8 +82,8 @@ public class BugzillaTaskEditorInput extends RepositoryTaskEditorInput {
 	private void updateOptions(RepositoryTaskData taskData) {
 		try {
 			if (taskData != null) {
-				BugzillaRepositoryConnector bugzillaConnector = (BugzillaRepositoryConnector) TasksUiPlugin
-						.getRepositoryManager().getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
+				BugzillaRepositoryConnector bugzillaConnector = (BugzillaRepositoryConnector) TasksUiPlugin.getRepositoryManager()
+						.getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
 				bugzillaConnector.updateAttributeOptions(repository, taskData);
 			}
 		} catch (Exception e) {

@@ -32,7 +32,7 @@ public class TaskScheduleContentProvider extends TaskListContentProvider {
 	private TaskListManager taskListManager;
 
 	private UnscheduledCategory unscheduledCategory = new UnscheduledCategory();
-	
+
 	private static final class UnscheduledCategory extends AbstractTaskCategory {
 
 		public static final String LABEL = "<Unscheduled>";
@@ -40,7 +40,7 @@ public class TaskScheduleContentProvider extends TaskListContentProvider {
 		public static final String HANDLE = "unscheduled";
 
 		private AbstractTask activeTask = null;
-		
+
 		public UnscheduledCategory() {
 			super(HANDLE);
 		}
@@ -48,7 +48,7 @@ public class TaskScheduleContentProvider extends TaskListContentProvider {
 		public void setActiveTask(AbstractTask activeTask) {
 			this.activeTask = activeTask;
 		}
-		
+
 		@Override
 		public Set<AbstractTask> getChildren() {
 			Set<AbstractTask> customChildren = new HashSet<AbstractTask>();
@@ -57,7 +57,7 @@ public class TaskScheduleContentProvider extends TaskListContentProvider {
 			}
 			return customChildren;
 		}
-		
+
 		@Override
 		public String getPriority() {
 			return PriorityLevel.P1.toString();
@@ -89,7 +89,7 @@ public class TaskScheduleContentProvider extends TaskListContentProvider {
 		if (parent.equals(this.view.getViewSite())) {
 			unscheduledCategory.activeTask = null;
 			Set<AbstractTaskContainer> ranges = new HashSet<AbstractTaskContainer>();
-			
+
 			ranges.addAll(taskListManager.getDateRanges());
 			ranges.add(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer());
 			AbstractTask activeTask = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();

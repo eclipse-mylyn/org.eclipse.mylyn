@@ -140,8 +140,7 @@ public class TaskHistoryTest extends TestCase {
 	}
 
 	/**
-	 * Tests navigation to previous/next tasks that are chosen from a list
-	 * rather than being sequentially navigated
+	 * Tests navigation to previous/next tasks that are chosen from a list rather than being sequentially navigated
 	 */
 	public void testArbitraryHistoryNavigation() {
 
@@ -188,7 +187,7 @@ public class TaskHistoryTest extends TestCase {
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 2) == task2);
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 3) == task4);
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 4) == task1);
-		
+
 		// Pick a task from drop down history
 		navigateAction = prevAction.new TaskNavigateAction(task4);
 		navigateAction.run();
@@ -197,7 +196,7 @@ public class TaskHistoryTest extends TestCase {
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 2) == task3);
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 3) == task2);
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 4) == task1);
-		
+
 		// Hit previous task button
 		taskView.getPreviousTaskAction().run();
 		assertTrue(task3.isActive());
@@ -205,9 +204,9 @@ public class TaskHistoryTest extends TestCase {
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 2) == task3);
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 3) == task2);
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 4) == task1);
-		
+
 		(new TaskDeactivateAction()).run(task3);
-		
+
 		// List<ITask> nextHistoryList = taskHistory.getNextTasks();
 		// assertTrue(nextHistoryList.get(0) == task3);
 		// assertTrue(nextHistoryList.get(1) == task4);

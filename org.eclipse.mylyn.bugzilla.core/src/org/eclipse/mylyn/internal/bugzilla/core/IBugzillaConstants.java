@@ -17,7 +17,7 @@ public interface IBugzillaConstants {
 
 	//public static final String POST_ARGS_PASSWORD = "&Bugzilla_password=";
 	//public static final String POST_ARGS_LOGIN = "GoAheadAndLogIn=1&Bugzilla_login=";	
-	
+
 	static final String ERROR_MIDAIR_COLLISION = "collision";
 
 	static final String ERROR_MSG_MIDAIR_COLLISION = "A mid-air collision has occurred. Please synchronize by selecting Synchronize in the task's context menu.";
@@ -27,7 +27,7 @@ public interface IBugzillaConstants {
 	static final String ERROR_MSG_COMMENT_REQUIRED = "You have to specify a new comment when making this change. Please comment on the reason for this change.";
 
 	static final String ERROR_INVALID_USERNAME_OR_PASSWORD = "Invalid Username or Password";
-	
+
 	static final String LOGGED_OUT = "logged out";
 
 	static final String MOST_RECENT_QUERY = "org.eclipse.mylyn.bugzilla.query.last";
@@ -37,41 +37,41 @@ public interface IBugzillaConstants {
 	public static final int RETURN_ALL_HITS = -1;
 
 	public static final String CONTENT_TYPE_RDF = "&ctype=rdf";
-	
+
 	public static final String POST_INPUT_BUGZILLA_PASSWORD = "Bugzilla_password";
-	
+
 	public static final String POST_INPUT_BUGZILLA_LOGIN = "Bugzilla_login";
-	
+
 	public static final String POST_INPUT_BUGID = "bugid";
-	
+
 	public static final String POST_INPUT_ACTION = "action";
-	
+
 	public static final String POST_INPUT_COMMENT = "comment";
 
 	public static final String POST_INPUT_DESCRIPTION = "description";
-	
+
 	public static final String POST_INPUT_DATA = "data";
-	
+
 	public static final String URL_POST_LOGIN = "/index.cgi";
 
 	public static final String URL_POST_ATTACHMENT_UPLOAD = "/attachment.cgi";
 
 	public static final String URL_GET_ATTACHMENT_DOWNLOAD = "/attachment.cgi?id=";
-	
+
 	public static final String URL_GET_ATTACHMENT_SUFFIX = "/attachment.cgi?id=";
-	
+
 	public static final String URL_BUG_ACTIVITY = "/show_activity.cgi?id=";
-	
+
 	public static final String URL_SHOW_VOTES = "/votes.cgi?action=show_bug&bug_id=";
-	
+
 	public static final String URL_VOTE = "/votes.cgi?action=show_user&bug_id=";
-	
+
 	public static final String URL_DEPENDENCY_TREE = "/showdependencytree.cgi?id=";
-	
+
 	public static final String URL_DEPENDENCY_GRAPH = "/showdependencygraph.cgi?id=";
 
 	public static final String URL_GET_SHOW_BUG = "/show_bug.cgi?id=";
-	
+
 	public static final String URL_GET_CONFIG_RDF = "/config.cgi?ctype=rdf";
 
 	//For including fields in the xml (XML Summary mode as they like to call it) 
@@ -82,19 +82,19 @@ public interface IBugzillaConstants {
 	// and on bug#161321. Thanks -relves 
 	// (see also: https://bugzilla.mozilla.org/show_bug.cgi?id=136603https://bugzilla.mozilla.org/show_bug.cgi?id=136603)
 	public static final String URL_GET_SHOW_BUG_XML = "/show_bug.cgi?ctype=xml&excludefield=attachmentdata&id=";
-	
+
 	public static final String URL_GET_SHOW_BUG_XML_NOID = "/show_bug.cgi?ctype=xml&excludefield=attachmentdata";
-	
+
 	public static final String URL_POST_SHOW_BUG = "/show_bug.cgi";
-	
+
 	public static final String XML_ERROR_INVALIDBUGID = "invalidbugid";
 
 	public static final String XML_ERROR_NOTFOUND = "notfound";
-	
-	public static final String XML_ERROR_NOTPERMITTED = "notpermitted"; 
+
+	public static final String XML_ERROR_NOTPERMITTED = "notpermitted";
 
 	public static final String ENCODING_UTF_8 = "UTF-8";
-	
+
 	/** Supported bugzilla repository versions */
 	static public enum BugzillaServerVersion {
 		SERVER_218, SERVER_220, SERVER_222, SERVER_30;
@@ -215,7 +215,7 @@ public interface IBugzillaConstants {
 	public static final String VALUE_STATUS_ASSIGNED = "ASSIGNED";
 
 	public static final String VALUE_STATUS_VERIFIED = "VERIFIED";
-	
+
 	public static final String VALUE_RESOLUTION_LATER = "LATER";
 
 	public static enum BUGZILLA_OPERATION {
@@ -247,7 +247,7 @@ public interface IBugzillaConstants {
 	public static final String CHANGES_SUBMITTED = "changes submitted";
 
 	public static final String SHOW_ACTIVITY = "/show_activity.cgi?id=";
-	
+
 	public static final String REPOSITORY_SETTING_SHORT_LOGIN = "bugzilla.shortLoginEnabled";
 
 	public static final String BUGZILLA_TASK_KIND = "Bug";

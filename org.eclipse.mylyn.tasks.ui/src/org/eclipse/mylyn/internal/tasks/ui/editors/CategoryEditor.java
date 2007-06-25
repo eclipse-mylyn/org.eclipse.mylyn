@@ -35,7 +35,7 @@ import org.eclipse.ui.part.EditorPart;
 public class CategoryEditor extends EditorPart {
 
 	public static final String ID_EDITOR = "org.eclipse.mylyn.tasks.ui.editors.category";
-	
+
 	private Text url;
 
 	private CategoryEditorInput input = null;

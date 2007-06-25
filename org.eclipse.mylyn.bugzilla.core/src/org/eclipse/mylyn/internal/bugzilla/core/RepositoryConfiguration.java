@@ -18,10 +18,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 /**
- * Class describing the configuration of products and components for a given
- * Bugzilla installation.
+ * Class describing the configuration of products and components for a given Bugzilla installation.
  * 
  * @author Rob Elves
  */
@@ -32,7 +30,7 @@ public class RepositoryConfiguration implements Serializable {
 	private static final String VERSION_UNKNOWN = "unknown";
 
 	private String repositoryUrl = "<unknown>";
-	
+
 	private Map<String, ProductEntry> products = new HashMap<String, ProductEntry>();
 
 	private List<String> platforms = new ArrayList<String>();
@@ -65,7 +63,7 @@ public class RepositoryConfiguration implements Serializable {
 		super();
 		// ignore
 	}
-	
+
 	public void addStatus(String status) {
 		bugStatus.add(status);
 	}
@@ -102,8 +100,8 @@ public class RepositoryConfiguration implements Serializable {
 	}
 
 	/**
-	 * Returns an array of names of component that exist for a given product or
-	 * <code>null</code> if the product does not exist.
+	 * Returns an array of names of component that exist for a given product or <code>null</code> if the product does
+	 * not exist.
 	 */
 	public List<String> getComponents(String product) {
 		ProductEntry entry = products.get(product);
@@ -114,8 +112,8 @@ public class RepositoryConfiguration implements Serializable {
 	}
 
 	/**
-	 * Returns an array of names of versions that exist for a given product or
-	 * <code>null</code> if the product does not exist.
+	 * Returns an array of names of versions that exist for a given product or <code>null</code> if the product does
+	 * not exist.
 	 */
 	public List<String> getVersions(String product) {
 		ProductEntry entry = products.get(product);
@@ -348,7 +346,7 @@ public class RepositoryConfiguration implements Serializable {
 	public void setRepositoryUrl(String repositoryUrl) {
 		this.repositoryUrl = repositoryUrl;
 	}
-	
+
 	/*
 	 * Intermediate step until configuration is made generic.
 	 */
@@ -383,7 +381,5 @@ public class RepositoryConfiguration implements Serializable {
 			return new ArrayList<String>();
 		}
 	}
-
-	
 
 }

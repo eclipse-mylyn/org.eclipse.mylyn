@@ -30,7 +30,9 @@ import org.eclipse.ui.PlatformUI;
 public class TracRepositorySettingsPageTest extends AbstractTracClientTest {
 
 	private TracConnectorUi connector;
+
 	private TracRepositorySettingsPage page;
+
 	private TracValidator validator;
 
 	public TracRepositorySettingsPageTest() {
@@ -57,7 +59,8 @@ public class TracRepositorySettingsPageTest extends AbstractTracClientTest {
 	}
 
 	@Override
-	public ITracClient connect(String url, String username, String password, Proxy proxy, Version version) throws Exception {
+	public ITracClient connect(String url, String username, String password, Proxy proxy, Version version)
+			throws Exception {
 		page.setUrl(url);
 		page.setUserId(username);
 		page.setPassword(password);
@@ -65,7 +68,7 @@ public class TracRepositorySettingsPageTest extends AbstractTracClientTest {
 		validator = page.new TracValidator(page.createTaskRepository(), version);
 		return null;
 	}
-	
+
 	public void testValidateXmlRpc() throws Exception {
 		version = Version.XML_RPC;
 		connect010();

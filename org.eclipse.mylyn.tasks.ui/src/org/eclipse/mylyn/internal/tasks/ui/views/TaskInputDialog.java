@@ -83,7 +83,7 @@ public class TaskInputDialog extends Dialog {
 		taskNameTextWidget = new Text(composite, SWT.SINGLE | SWT.BORDER);
 		GridData taskNameGD = new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL);
 		taskNameGD.widthHint = 200;
-		taskNameGD.horizontalSpan = 1; 
+		taskNameGD.horizontalSpan = 1;
 		taskNameTextWidget.setLayoutData(taskNameGD);
 
 		final Combo c = new Combo(composite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL | SWT.READ_ONLY
@@ -128,7 +128,7 @@ public class TaskInputDialog extends Dialog {
 				// ignore
 			}
 		});
-		
+
 		Button removeReminder = new Button(composite, SWT.PUSH | SWT.CENTER);
 		removeReminder.setText("Clear");
 		removeReminder.addSelectionListener(new SelectionAdapter() {
@@ -138,14 +138,13 @@ public class TaskInputDialog extends Dialog {
 				reminderDate = null;
 			}
 		});
-		
+
 //		
 //		scheduledForDate.setLayout(new GridLayout());
 //		GridData datePickerGD = new GridData();
 //		datePickerGD.widthHint = 300;
 //		scheduledForDate.setLayoutData(datePickerGD);
-		
-		
+
 		Label urlLabel = new Label(composite, SWT.WRAP);
 		urlLabel.setText("Web Link:");
 		urlLabel.setFont(parent.getFont());
@@ -185,8 +184,7 @@ public class TaskInputDialog extends Dialog {
 	}
 
 	/**
-	 * Sets the Get Description button enabled or not depending on whether there
-	 * is a URL specified
+	 * Sets the Get Description button enabled or not depending on whether there is a URL specified
 	 */
 	protected void setButtonStatus() {
 		String url = issueURLTextWidget.getText();
@@ -197,7 +195,7 @@ public class TaskInputDialog extends Dialog {
 //			if (url.equals(defaultPrefix)) {
 //				getDescButton.setEnabled(false);
 //			} else {
-				getDescButton.setEnabled(true);
+			getDescButton.setEnabled(true);
 //			}
 		} else {
 			getDescButton.setEnabled(false);
@@ -205,9 +203,8 @@ public class TaskInputDialog extends Dialog {
 	}
 
 	/**
-	 * Returns the default URL text for the task by first checking the contents
-	 * of the clipboard and then using the default prefix preference if that
-	 * fails
+	 * Returns the default URL text for the task by first checking the contents of the clipboard and then using the
+	 * default prefix preference if that fails
 	 */
 	protected String getDefaultIssueUrl() {
 
@@ -246,8 +243,7 @@ public class TaskInputDialog extends Dialog {
 	}
 
 	/**
-	 * Returns the contents of the clipboard or "" if no text content was
-	 * available
+	 * Returns the contents of the clipboard or "" if no text content was available
 	 */
 	protected String getClipboardText() {
 		Clipboard clipboard = new Clipboard(Display.getDefault());

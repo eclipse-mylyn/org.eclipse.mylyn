@@ -76,13 +76,13 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 	}
 
 	/**
-	 * This function checks to make sure the given string is not
-	 * <code>null</code>. If it is, the empty string is returned instead.
+	 * This function checks to make sure the given string is not <code>null</code>. If it is, the empty string is
+	 * returned instead.
 	 * 
 	 * @param newValue
 	 *            The string to be checked.
-	 * @return If the text is <code>null</code>, then return the null string (<code>""</code>).
-	 *         Otherwise, return the text.
+	 * @return If the text is <code>null</code>, then return the null string (<code>""</code>). Otherwise, return
+	 *         the text.
 	 */
 	private String checkText(String newValue) {
 		return ((newValue == null) ? "" : newValue);
@@ -148,8 +148,7 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 	}
 
 	/**
-	 * Sets the image for this object. This image is used when displaying this
-	 * object in the UI.
+	 * Sets the image for this object. This image is used when displaying this object in the UI.
 	 * 
 	 * @param newImage
 	 *            The new image.
@@ -181,9 +180,8 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 	}
 
 	/**
-	 * Parses the given <code>BugReport</code> into a tree of
-	 * <code>BugzillaCompareNode</code>'s suitable for use in a compare
-	 * viewer.
+	 * Parses the given <code>BugReport</code> into a tree of <code>BugzillaCompareNode</code>'s suitable for use
+	 * in a compare viewer.
 	 * 
 	 * @param bug
 	 *            The <code>BugReport</code> that needs parsing.
@@ -196,15 +194,18 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 		Image attributeImage = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT);
 		BugzillaCompareNode attributes = new BugzillaCompareNode("Attributes", null, attributeImage);
 		for (RepositoryTaskAttribute attribute : bug.getAttributes()) {
-			BugzillaCompareNode child = new BugzillaCompareNode(attribute.toString(), attribute.getValue(), defaultImage);
-			attributes.addChild(child);	
+			BugzillaCompareNode child = new BugzillaCompareNode(attribute.toString(), attribute.getValue(),
+					defaultImage);
+			attributes.addChild(child);
 		}
-	
+
 		BugzillaCompareNode comments = new BugzillaCompareNode("Comments", null, defaultImage);
-		for (Iterator<TaskComment> iter = bug.getComments().iterator(); iter.hasNext();) {			
+		for (Iterator<TaskComment> iter = bug.getComments().iterator(); iter.hasNext();) {
 			TaskComment taskComment = iter.next();
-			String bodyString = "Comment from " + taskComment.getAuthorName() + ":\n\n" + taskComment.getText();			
-			comments.addChild(new BugzillaCompareNode(taskComment.getAttributeValue(BugzillaReportElement.BUG_WHEN.getKeyString()), bodyString, defaultImage));
+			String bodyString = "Comment from " + taskComment.getAuthorName() + ":\n\n" + taskComment.getText();
+			comments.addChild(new BugzillaCompareNode(
+					taskComment.getAttributeValue(BugzillaReportElement.BUG_WHEN.getKeyString()), bodyString,
+					defaultImage));
 		}
 		topNode.addChild(comments);
 
@@ -222,7 +223,7 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 
 		return titleNode;
 	}
-	
+
 //	public static BugzillaCompareNode parseBugReport(BugzillaReport bug) {
 //		Image defaultImage = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_DEF_VIEW);
 //		BugzillaCompareNode topNode = new BugzillaCompareNode("Bug #" + bug.getId(), null, defaultImage);

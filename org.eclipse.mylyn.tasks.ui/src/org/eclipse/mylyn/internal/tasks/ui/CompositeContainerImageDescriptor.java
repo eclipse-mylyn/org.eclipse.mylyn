@@ -22,11 +22,11 @@ import org.eclipse.swt.graphics.Point;
 public class CompositeContainerImageDescriptor extends CompositeImageDescriptor {
 
 	private ImageData base;
-	
+
 	private ImageData overlay;
-	
+
 	protected Point size;
-	
+
 	public CompositeContainerImageDescriptor(ImageDescriptor icon, ImageDescriptor overlay, boolean wide) {
 		this.base = getImageData(icon);
 		if (overlay != null) {
@@ -38,17 +38,17 @@ public class CompositeContainerImageDescriptor extends CompositeImageDescriptor 
 		}
 		this.size = new Point(width, base.height);
 	}
-	
+
 	@Override
 	protected void drawCompositeImage(int width, int height) {
 		drawImage(base, 0, 0);
 		if (overlay != null) {
-			drawImage(overlay, base.width+2, 0);
+			drawImage(overlay, base.width + 2, 0);
 		}
 	}
 
 	private ImageData getImageData(ImageDescriptor descriptor) {
-		ImageData data = descriptor.getImageData(); 
+		ImageData data = descriptor.getImageData();
 		// see bug 51965: getImageData can return null
 		if (data == null) {
 			data = DEFAULT_IMAGE_DATA;

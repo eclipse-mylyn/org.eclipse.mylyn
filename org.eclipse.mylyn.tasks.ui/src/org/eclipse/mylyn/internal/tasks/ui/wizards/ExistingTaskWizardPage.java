@@ -29,8 +29,8 @@ public class ExistingTaskWizardPage extends WizardPage {
 
 	private static final String TITLE = "Enter Task ID";
 
-	private static final String DESCRIPTION = "Provide the identifier for the task, issue, or bug report.\n" 
-		+ "The format is specific to the repository.";
+	private static final String DESCRIPTION = "Provide the identifier for the task, issue, or bug report.\n"
+			+ "The format is specific to the repository.";
 
 	private Text taskIdText;
 

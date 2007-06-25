@@ -16,9 +16,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-
 /**
- * @author John Anvik 
+ * @author John Anvik
  */
 public class TaskHistory implements Iterable<TaskRevision>, Serializable {
 
@@ -81,8 +80,8 @@ public class TaskHistory implements Iterable<TaskRevision>, Serializable {
 	}
 
 	public int size() {
-		return this.otherEvents.size() + this.statusEvents.size()
-				+ this.resolutionEvents.size() + this.assignmentEvents.size();
+		return this.otherEvents.size() + this.statusEvents.size() + this.resolutionEvents.size()
+				+ this.assignmentEvents.size();
 	}
 
 	@Override

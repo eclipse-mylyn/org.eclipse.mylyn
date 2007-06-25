@@ -533,10 +533,11 @@ public class TracXmlRpcClient extends AbstractTracClient {
 
 	public InputStream getAttachmentData(int ticketId, String filename) throws TracException {
 		byte[] data = (byte[]) call("ticket.getAttachment", ticketId, filename);
-		return new ByteArrayInputStream(data); 
+		return new ByteArrayInputStream(data);
 	}
 
-	public void putAttachmentData(int ticketId, String filename, String description, InputStream in) throws TracException {
+	public void putAttachmentData(int ticketId, String filename, String description, InputStream in)
+			throws TracException {
 		byte[] data;
 		try {
 			data = readData(in, new NullProgressMonitor());
@@ -549,17 +550,17 @@ public class TracXmlRpcClient extends AbstractTracClient {
 	private byte[] readData(InputStream in, IProgressMonitor monitor) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		try {
-			byte[] buffer = new byte[512]; 
+			byte[] buffer = new byte[512];
 			while (true) {
 				int count = in.read(buffer);
 				if (count == -1) {
 					return out.toByteArray();
 				}
-				if (monitor.isCanceled()) { 
+				if (monitor.isCanceled()) {
 					throw new OperationCanceledException();
 				}
 				out.write(buffer, 0, count);
-				if (monitor.isCanceled()) { 
+				if (monitor.isCanceled()) {
 					throw new OperationCanceledException();
 				}
 			}

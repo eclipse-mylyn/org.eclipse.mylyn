@@ -16,7 +16,7 @@ import java.io.Serializable;
 public class TracAttribute implements Serializable {
 
 	private static final long serialVersionUID = -4535033208999685315L;
-	
+
 	private String name;
 
 	public TracAttribute(String name) {
@@ -26,14 +26,14 @@ public class TracAttribute implements Serializable {
 	public String getName() {
 		return name;
 	}
-	
+
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	@Override
 	public String toString() {
 		return name;
 	}
-	
+
 }

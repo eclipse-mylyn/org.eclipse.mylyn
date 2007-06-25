@@ -53,8 +53,7 @@ public class AttachmentJobTest extends TestCase {
 
 		manager = TasksUiPlugin.getRepositoryManager();
 
-		repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND,
-				MockRepositoryConnector.REPOSITORY_URL);
+		repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, MockRepositoryConnector.REPOSITORY_URL);
 		manager.addRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		attachmentHandler = new MockAttachmentHandler();
@@ -65,7 +64,7 @@ public class AttachmentJobTest extends TestCase {
 
 		statusHandler = new MockStatusHandler();
 		StatusHandler.addStatusHandler(statusHandler);
-		
+
 		attachment = new RepositoryAttachment(null);
 		attachment.setRepositoryKind(repository.getConnectorKind());
 		attachment.setRepositoryUrl(repository.getUrl());
@@ -103,7 +102,7 @@ public class AttachmentJobTest extends TestCase {
 
 		assertEquals(Status.OK_STATUS, job.getResult());
 		statusHandler.assertNoStatus();
-		
+
 		RandomAccessFile raf = new RandomAccessFile(file, "r");
 		byte[] data = new byte[expected.getBytes().length];
 		try {

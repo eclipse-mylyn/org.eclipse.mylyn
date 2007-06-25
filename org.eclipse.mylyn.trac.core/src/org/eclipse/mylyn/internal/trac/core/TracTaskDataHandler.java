@@ -136,8 +136,7 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 
 				TaskComment taskComment = new TaskComment(factory, data.getComments().size() + 1);
 				taskComment.setAttributeValue(RepositoryTaskAttribute.COMMENT_AUTHOR, comments[i].getAuthor());
-				taskComment
-						.setAttributeValue(RepositoryTaskAttribute.COMMENT_DATE, comments[i].getCreated().toString());
+				taskComment.setAttributeValue(RepositoryTaskAttribute.COMMENT_DATE, comments[i].getCreated().toString());
 				taskComment.setAttributeValue(RepositoryTaskAttribute.COMMENT_TEXT, comments[i].getNewValue());
 				data.addComment(taskComment);
 			}
@@ -152,8 +151,8 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 				taskAttachment.setRepositoryUrl(repository.getUrl());
 				taskAttachment.setTaskId("" + ticket.getId());
 				taskAttachment.setAttributeValue(Attribute.DESCRIPTION.getTracKey(), attachments[i].getDescription());
-				taskAttachment.setAttributeValue(RepositoryTaskAttribute.ATTACHMENT_FILENAME, attachments[i]
-						.getFilename());
+				taskAttachment.setAttributeValue(RepositoryTaskAttribute.ATTACHMENT_FILENAME,
+						attachments[i].getFilename());
 				taskAttachment.setAttributeValue(RepositoryTaskAttribute.USER_OWNER, attachments[i].getAuthor());
 				taskAttachment.setAttributeValue(RepositoryTaskAttribute.ATTACHMENT_DATE, attachments[i].getCreated()
 						.toString());

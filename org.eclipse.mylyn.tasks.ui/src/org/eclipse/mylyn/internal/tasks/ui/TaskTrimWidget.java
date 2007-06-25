@@ -140,7 +140,8 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		GridData gridData = new GridData(SWT.NONE, SWT.CENTER, false, false);
 		composite.setLayoutData(gridData);
 
-		navigateAction = new ActivateTaskHistoryDropDownAction(TasksUiPlugin.getTaskListManager().getTaskActivationHistory(), false);
+		navigateAction = new ActivateTaskHistoryDropDownAction(TasksUiPlugin.getTaskListManager()
+				.getTaskActivationHistory(), false);
 
 		ToolBarManager manager = new ToolBarManager(SWT.FLAT);
 		manager.add(navigateAction);
@@ -196,8 +197,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 				if (TaskListView.getFromActivePerspective().getDrilledIntoCategory() != null) {
 					TaskListView.getFromActivePerspective().goUpToRoot();
 				}
-				TasksUiUtil.refreshAndOpenTaskListElement((TasksUiPlugin.getTaskListManager().getTaskList()
-						.getActiveTask()));
+				TasksUiUtil.refreshAndOpenTaskListElement((TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask()));
 			}
 		});
 

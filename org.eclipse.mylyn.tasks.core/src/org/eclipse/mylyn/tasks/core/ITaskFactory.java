@@ -11,7 +11,6 @@ package org.eclipse.mylyn.tasks.core;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
-
 /**
  * Used for creating tasks from repository task data.
  * 

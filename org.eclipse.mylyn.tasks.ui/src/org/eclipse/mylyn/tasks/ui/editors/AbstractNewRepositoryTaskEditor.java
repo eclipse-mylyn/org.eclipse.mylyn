@@ -65,8 +65,7 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.themes.IThemeManager;
 
 /**
- * An editor used to view a locally created bug that does not yet exist on a
- * server.
+ * An editor used to view a locally created bug that does not yet exist on a server.
  * 
  * @author Rob Elves (modifications)
  * @since 2.0
@@ -104,7 +103,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		}
 
 		initTaskEditor(site, (RepositoryTaskEditorInput) input);
-		
+
 		setTaskOutlineModel(RepositoryTaskOutlineNode.parseBugReport(taskData, false));
 		newSummary = taskData.getSummary();
 	}
@@ -252,7 +251,8 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 			TasksUiPlugin.getTaskListManager().setScheduledEndOfDay(newTaskSchedule);
 		}
 		scheduledForDate.setDate(newTaskSchedule);
-		Button removeReminder = getManagedForm().getToolkit().createButton(sectionClient, "Clear", SWT.PUSH | SWT.CENTER);
+		Button removeReminder = getManagedForm().getToolkit().createButton(sectionClient, "Clear",
+				SWT.PUSH | SWT.CENTER);
 		removeReminder.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -310,8 +310,8 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	protected class DescriptionListener implements Listener {
 		public void handleEvent(Event event) {
 			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
-					new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(), taskData
-							.getRepositoryKind(), "New Description", false, taskData.getSummary()))));
+					new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(),
+							taskData.getRepositoryKind(), "New Description", false, taskData.getSummary()))));
 		}
 	}
 
@@ -331,8 +331,8 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	}
 
 	/**
-	 * Creates the button layout. This displays options and buttons at the
-	 * bottom of the editor to allow actions to be performed on the bug.
+	 * Creates the button layout. This displays options and buttons at the bottom of the editor to allow actions to be
+	 * performed on the bug.
 	 */
 	@Override
 	protected void createActionsLayout(Composite formComposite) {
@@ -387,11 +387,10 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	}
 
 	/**
-	 * Returns the {@link AbstractTaskContainer category} the new task belongs
-	 * to
+	 * Returns the {@link AbstractTaskContainer category} the new task belongs to
 	 * 
-	 * @return {@link AbstractTaskContainer category} where the new task must be
-	 *         added to, or null if it must not be added to the task list
+	 * @return {@link AbstractTaskContainer category} where the new task must be added to, or null if it must not be
+	 *         added to the task list
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
@@ -453,7 +452,6 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		return true;
 	}
 
-
 	@Override
 	protected void createPeopleLayout(Composite composite) {
 		// ignore, new editor doesn't have people section
@@ -476,12 +474,13 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 
 					Object selectedObject = null;
 					if (TaskListView.getFromActivePerspective() != null)
-						selectedObject = ((IStructuredSelection) TaskListView.getFromActivePerspective().getViewer()
+						selectedObject = ((IStructuredSelection) TaskListView.getFromActivePerspective()
+								.getViewer()
 								.getSelection()).getFirstElement();
 
 					if (selectedObject instanceof TaskCategory) {
-						TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(
-								newTask, ((TaskCategory) selectedObject));
+						TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(newTask,
+								((TaskCategory) selectedObject));
 					}
 				}
 			});
@@ -489,7 +488,6 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 
 		return newTask;
 	}
-
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {

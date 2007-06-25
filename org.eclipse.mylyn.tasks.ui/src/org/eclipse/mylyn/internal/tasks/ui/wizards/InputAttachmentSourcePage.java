@@ -442,8 +442,8 @@ public class InputAttachmentSourcePage extends WizardPage {
 	}
 
 	/**
-	 * Sets the source name of the import to be the supplied path. Adds the name
-	 * of the path to the list of items in the source combo and selects it.
+	 * Sets the source name of the import to be the supplied path. Adds the name of the path to the list of items in the
+	 * source combo and selects it.
 	 * 
 	 * @param path
 	 *            the path to be added

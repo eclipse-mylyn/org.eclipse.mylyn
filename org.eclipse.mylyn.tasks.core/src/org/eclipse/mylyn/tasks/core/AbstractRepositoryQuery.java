@@ -19,7 +19,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
  * @author Mik Kersten
  * @author Eugene Kuleshov
  * @author Rob Elves
- * @since	2.0
+ * @since 2.0
  */
 public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 

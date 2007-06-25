@@ -21,7 +21,7 @@ import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
  * @since 2.0
  */
 public interface ITaskActivityListener {
- 
+
 	public abstract void taskActivated(AbstractTask task);
 
 	public abstract void taskDeactivated(AbstractTask task);
@@ -29,7 +29,8 @@ public interface ITaskActivityListener {
 	public abstract void taskListRead();
 
 	/**
-	 * @param week	can be null
+	 * @param week
+	 *            can be null
 	 */
 	public abstract void activityChanged(ScheduledTaskContainer week);
 

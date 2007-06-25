@@ -32,8 +32,7 @@ public class OpenSearchResultAction extends Action {
 	 * @param text
 	 *            The text for this action
 	 * @param resultView
-	 *            The <code>RepositorySearchResultView</code> this action
-	 *            works on
+	 *            The <code>RepositorySearchResultView</code> this action works on
 	 */
 	public OpenSearchResultAction(String text, RepositorySearchResultView resultView) {
 		setText(text);
@@ -55,7 +54,8 @@ public class OpenSearchResultAction extends Action {
 			// go through each of the selected items and show it in an editor
 			for (Iterator<AbstractTask> it = selection.iterator(); it.hasNext();) {
 				AbstractTask repositoryHit = it.next();
-				TasksUiUtil.openRepositoryTask(repositoryHit.getRepositoryUrl(), repositoryHit.getTaskId(), repositoryHit.getUrl());
+				TasksUiUtil.openRepositoryTask(repositoryHit.getRepositoryUrl(), repositoryHit.getTaskId(),
+						repositoryHit.getUrl());
 				// try {
 				// int taskId = Integer.parseInt(repositoryHit.getId());
 				// String bugUrl =

@@ -27,7 +27,7 @@ public class NewAttachmentWizardDialog extends WizardDialog {
 
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 		setMinimumPageSize(600, 300);
-		setPageSize(600, 300);		
+		setPageSize(600, 300);
 	}
 
 	@Override

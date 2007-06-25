@@ -30,14 +30,12 @@ public class RepositoryTaskSelection implements IRepositoryTaskSelection {
 	protected String repositoryKind;
 
 	/**
-	 * The comment, if a comment was selected. If the selection was not a
-	 * comment, then this is <code>null</code>.
+	 * The comment, if a comment was selected. If the selection was not a comment, then this is <code>null</code>.
 	 */
 	protected TaskComment taskComment;
 
 	/**
-	 * Creates a new <code>RepositoryTaskSelection</code> with no supplied
-	 * comment.
+	 * Creates a new <code>RepositoryTaskSelection</code> with no supplied comment.
 	 * 
 	 * @param taskId
 	 *            The taskId of the Bugzilla object that the selection was on.
@@ -62,9 +60,8 @@ public class RepositoryTaskSelection implements IRepositoryTaskSelection {
 	 * @param contents
 	 *            The contents of the selection.
 	 * @param taskComment
-	 *            The <code>Comment</code> object for this selection. If a
-	 *            comment was not selected, then this should be
-	 *            <code>null</code>.
+	 *            The <code>Comment</code> object for this selection. If a comment was not selected, then this should
+	 *            be <code>null</code>.
 	 */
 	public RepositoryTaskSelection(String id, String server, String kind, String contents, TaskComment taskComment,
 			String summary) {

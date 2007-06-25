@@ -589,8 +589,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	}
 
 	/**
-	 * Creates the buttons for remembering a query and accessing previously
-	 * saved queries.
+	 * Creates the buttons for remembering a query and accessing previously saved queries.
 	 */
 	protected Control createSaveQuery(Composite control) {
 		GridLayout layout;
@@ -848,8 +847,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	}
 
 	/**
-	 * Returns <code>true</code> if at least some parameter is given to query
-	 * on.
+	 * Returns <code>true</code> if at least some parameter is given to query on.
 	 */
 	private boolean canQuery() {
 		return product.getSelectionCount() > 0 || component.getSelectionCount() > 0 || version.getSelectionCount() > 0
@@ -861,8 +859,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	}
 
 	/**
-	 * Return search pattern data and update search history list. An existing
-	 * entry will be updated or a new one created.
+	 * Return search pattern data and update search history list. An existing entry will be updated or a new one
+	 * created.
 	 */
 	private BugzillaSearchData getPatternData(Combo widget, Combo operation,
 			ArrayList<BugzillaSearchData> previousSearchQueryData) {
@@ -962,8 +960,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	/**
 	 * Goes through the query form and builds up the query parameters.
 	 * 
-	 * Example: short_desc_type=substring&amp;short_desc=bla&amp; ... TODO: The
-	 * encoding here should match TaskRepository.getCharacterEncoding()
+	 * Example: short_desc_type=substring&amp;short_desc=bla&amp; ... TODO: The encoding here should match
+	 * TaskRepository.getCharacterEncoding()
 	 * 
 	 * @throws UnsupportedEncodingException
 	 */
@@ -1259,9 +1257,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			hardware.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_HARDWARE, selectedProducts,
 					repositoryUrl));
 
-			os
-					.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_OS, selectedProducts,
-							repositoryUrl));
+			os.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_OS, selectedProducts, repositoryUrl));
 		}
 	}
 
@@ -1314,8 +1310,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		String[] options = startingUrl.split("&");
 		for (String option : options) {
 			String key = option.substring(0, option.indexOf("="));
-			String value = URLDecoder.decode(option.substring(option.indexOf("=") + 1), repository
-					.getCharacterEncoding());
+			String value = URLDecoder.decode(option.substring(option.indexOf("=") + 1),
+					repository.getCharacterEncoding());
 			if (key == null)
 				continue;
 

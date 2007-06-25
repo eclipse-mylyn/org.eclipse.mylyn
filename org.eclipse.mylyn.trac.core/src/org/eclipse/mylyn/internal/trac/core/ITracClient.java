@@ -31,8 +31,7 @@ import org.eclipse.mylyn.internal.trac.core.model.TracTicketType;
 import org.eclipse.mylyn.internal.trac.core.model.TracVersion;
 
 /**
- * Defines the requirements for classes that provide remote access to Trac
- * repositories.
+ * Defines the requirements for classes that provide remote access to Trac repositories.
  * 
  * @author Steffen Pingel
  */
@@ -74,7 +73,7 @@ public interface ITracClient {
 	public static final String TICKET_URL = "/ticket/";
 
 	public static final String NEW_TICKET_URL = "/newticket";
-	
+
 	public static final String CUSTOM_QUERY_URL = "/query";
 
 	public static final String TICKET_ATTACHMENT_URL = "/attachment/ticket/";
@@ -92,7 +91,7 @@ public interface ITracClient {
 	public static final String MILESTONE_URL = "/milestone/";
 
 	public static final String BROWSER_URL = "/browser/";
-	
+
 	public static final String ATTACHMENT_URL = "/attachment/ticket/";
 
 	/**
@@ -112,8 +111,7 @@ public interface ITracClient {
 	Version getVersion();
 
 	/**
-	 * Queries tickets from repository. All found tickets are added to
-	 * <code>result</code>.
+	 * Queries tickets from repository. All found tickets are added to <code>result</code>.
 	 * 
 	 * @param query
 	 *            the search criteria
@@ -133,11 +131,10 @@ public interface ITracClient {
 	void validate() throws TracException;
 
 	/**
-	 * Returns true, if the repository details are cached. If this method
-	 * returns true, invoking <tt>updateAttributes(monitor, false)</tt> will
-	 * return without opening a connection.
+	 * Returns true, if the repository details are cached. If this method returns true, invoking
+	 * <tt>updateAttributes(monitor, false)</tt> will return without opening a connection.
 	 * 
-	 * @see #updateAttributes(IProgressMonitor, boolean) 
+	 * @see #updateAttributes(IProgressMonitor, boolean)
 	 */
 	boolean hasAttributes();
 
@@ -152,7 +149,7 @@ public interface ITracClient {
 	TracComponent[] getComponents();
 
 	TracTicketField[] getTicketFields();
-	
+
 	TracMilestone[] getMilestones();
 
 	TracPriority[] getPriorities();

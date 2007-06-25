@@ -49,7 +49,7 @@ public class TaskReportGeneratorTest extends TestCase {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		manager.resetTaskList();
-		TasksUiPlugin.getTaskListManager().saveTaskList(); 
+		TasksUiPlugin.getTaskListManager().saveTaskList();
 //		TasksUiPlugin.getDefault().getTaskListSaveManager().saveTaskList(true);
 		assertEquals(0, manager.getTaskList().getAllTasks().size());
 	}
@@ -69,14 +69,14 @@ public class TaskReportGeneratorTest extends TestCase {
 		assertEquals(1, generator.getAllCollectedTasks().size());
 		assertEquals(task1, generator.getAllCollectedTasks().get(0));
 	}
-	
+
 	public void testCompletedTasksDateBoundsRetrieved() throws InvocationTargetException, InterruptedException {
 		AbstractTask task1 = manager.createNewLocalTask("task 1");
 		manager.getTaskList().moveToContainer(task1, manager.getTaskList().getDefaultCategory());
 		task1.setCompleted(true);
 		Thread.sleep(1000);
 		long now = new Date().getTime();
-		
+
 		CompletedTaskCollector collector = new CompletedTaskCollector(new Date(now));
 		TaskReportGenerator generator = new TaskReportGenerator(manager.getTaskList());
 		generator.addCollector(collector);
@@ -90,10 +90,9 @@ public class TaskReportGeneratorTest extends TestCase {
 		assertEquals(1, generator.getAllCollectedTasks().size());
 		assertEquals(task1, generator.getAllCollectedTasks().get(0));
 	}
-	
+
 	public void testCompletedBugzillaTasksRetrieved() throws InvocationTargetException, InterruptedException {
-		BugzillaTask task1 = new BugzillaTask("repo", "1",
-				"bugzillatask 1");
+		BugzillaTask task1 = new BugzillaTask("repo", "1", "bugzillatask 1");
 		manager.getTaskList().moveToContainer(task1, manager.getTaskList().getDefaultCategory());
 
 		CompletedTaskCollector collector = new CompletedTaskCollector(new Date(0));
@@ -133,7 +132,8 @@ public class TaskReportGeneratorTest extends TestCase {
 
 	public void testCompletedBugzillaTasksInCategoryRetrieved() throws InvocationTargetException, InterruptedException {
 		BugzillaTask task1 = new BugzillaTask("repo", "1", "task 1");
-		manager.getTaskList().moveToContainer(task1, TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
+		manager.getTaskList().moveToContainer(task1,
+				TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 		task1.setCompleted(true);
 		TaskCategory cat1 = new TaskCategory("TaskReportGeneratorTest Category");
 		manager.getTaskList().addCategory(cat1);
@@ -156,7 +156,8 @@ public class TaskReportGeneratorTest extends TestCase {
 
 	public void testCompletedBugzillaTasksInQueryRetrieved() throws InvocationTargetException, InterruptedException {
 		BugzillaTask task1 = new BugzillaTask("repo", "1", "task 1");
-		manager.getTaskList().moveToContainer(task1, TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
+		manager.getTaskList().moveToContainer(task1,
+				TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 		task1.setCompleted(false);
 
 		BugzillaRepositoryQuery bugQuery = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl",

@@ -61,7 +61,7 @@ import org.eclipse.ui.internal.dialogs.WorkingSetLabelProvider;
 public class TaskWorkingSetAction extends Action implements IMenuCreator {
 
 	public static final String LABEL_SETS_NONE = "All";
-	
+
 	public static String ID_TASK_WORKING_SET = "org.eclipse.mylyn.tasks.ui.workingSet";
 
 	public static String TASK_WORKING_SET_TEXT_LABEL = "Select and Edit Working Sets";
@@ -252,8 +252,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 				}
 			}
 			newList.removeAll(tempList);
-			getWindow().getActivePage()
-					.setWorkingSets(newList.toArray(new IWorkingSet[newList.size()]));
+			getWindow().getActivePage().setWorkingSets(newList.toArray(new IWorkingSet[newList.size()]));
 		}
 	}
 
@@ -269,28 +268,27 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 		@Override
 		public void runWithEvent(Event event) {
 			Set<IWorkingSet> newList = new HashSet<IWorkingSet>(Arrays.asList(getEnabledSets()));
-			
-						Set<IWorkingSet> tempList = new HashSet<IWorkingSet>();
-						Iterator<IWorkingSet> iter = newList.iterator();
-						while (iter.hasNext()) {
-							IWorkingSet workingSet = iter.next();
-							if (workingSet != null && workingSet.getId().equalsIgnoreCase(ID_TASK_WORKING_SET)) {
-								tempList.add(workingSet);
-							}
-						}
-						newList.removeAll(tempList);
-			
-						if (isChecked()) {
-							IWorkingSet[] allWorkingSets = getAllWorkingSets();
-							for (IWorkingSet workingSet : allWorkingSets) {
-								if (workingSet != null && workingSet.getId().equalsIgnoreCase(ID_TASK_WORKING_SET)) {
-									newList.add(workingSet);
-								}
-							}
-						}
-			
-						getWindow().getActivePage()
-								.setWorkingSets(newList.toArray(new IWorkingSet[newList.size()]));
+
+			Set<IWorkingSet> tempList = new HashSet<IWorkingSet>();
+			Iterator<IWorkingSet> iter = newList.iterator();
+			while (iter.hasNext()) {
+				IWorkingSet workingSet = iter.next();
+				if (workingSet != null && workingSet.getId().equalsIgnoreCase(ID_TASK_WORKING_SET)) {
+					tempList.add(workingSet);
+				}
+			}
+			newList.removeAll(tempList);
+
+			if (isChecked()) {
+				IWorkingSet[] allWorkingSets = getAllWorkingSets();
+				for (IWorkingSet workingSet : allWorkingSets) {
+					if (workingSet != null && workingSet.getId().equalsIgnoreCase(ID_TASK_WORKING_SET)) {
+						newList.add(workingSet);
+					}
+				}
+			}
+
+			getWindow().getActivePage().setWorkingSets(newList.toArray(new IWorkingSet[newList.size()]));
 		}
 
 	}
@@ -365,8 +363,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 				}
 			}
 
-			getWindow().getActivePage()
-					.setWorkingSets(newList.toArray(new IWorkingSet[newList.size()]));
+			getWindow().getActivePage().setWorkingSets(newList.toArray(new IWorkingSet[newList.size()]));
 		}
 
 	}

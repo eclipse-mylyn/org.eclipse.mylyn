@@ -45,7 +45,7 @@ public class TracHyperlinkUtil {
 	static Pattern revisionLogPattern3 = Pattern.compile("log:(\\w+)?@(\\d+):(\\d+)");
 
 	static Pattern diffPattern1 = Pattern.compile("diff:@(\\d+):(\\d+)");
-	
+
 	static Pattern diffPattern2 = Pattern.compile("diff:([\\w\\./-]+)(@(\\d+))?//([\\w\\./-]+)(@(\\d+))?");
 
 	static Pattern wikiPattern1 = Pattern.compile("wiki:(\\w+)");
@@ -63,19 +63,16 @@ public class TracHyperlinkUtil {
 	 * <li>Tickets: #1 or ticket:1
 	 * <li>Ticket comments: comment:ticket:1:2
 	 * <li>Reports: {1} or report:1
-	 * <li>Changesets: r1, [1], changeset:1 or (restricted) [1/trunk],
-	 * changeset:1/trunk
+	 * <li>Changesets: r1, [1], changeset:1 or (restricted) [1/trunk], changeset:1/trunk
 	 * <li>Revision log: r1:3, [1:3] or log:@1:3, log:trunk@1:3
-	 * <li>Diffs: diff:@1:3,
-	 * diff:tags/trac-0.9.2/wiki-default//tags/trac-0.9.3/wiki-default or
+	 * <li>Diffs: diff:@1:3, diff:tags/trac-0.9.2/wiki-default//tags/trac-0.9.3/wiki-default or
 	 * diff:trunk/trac@3538//sandbox/vc-refactoring@3539
 	 * <li>Wiki pages: CamelCase or wiki:CamelCase
 	 * <li>Milestones: milestone:1.0
 	 * <li>Attachment: attachment:ticket:944:attachment.1073.diff
 	 * <li>Files: source:trunk/COPYING
 	 * <li>A specific file revision: source:/trunk/COPYING@200
-	 * <li>A particular line of a specific file revision:
-	 * source:/trunk/COPYING@200#L25
+	 * <li>A particular line of a specific file revision: source:/trunk/COPYING@200#L25
 	 * </ul>
 	 * 
 	 * @see http://trac.edgewall.org/wiki/TracLinks

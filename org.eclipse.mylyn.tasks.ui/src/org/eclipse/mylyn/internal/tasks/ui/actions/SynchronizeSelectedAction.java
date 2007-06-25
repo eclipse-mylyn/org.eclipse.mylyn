@@ -83,26 +83,27 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 
 			RepositorySynchronizationManager syncManager = TasksUiPlugin.getSynchronizationManager();
 			if (!queriesToSyncMap.isEmpty()) {
-				
+
 				// determine which repositories to synch changed tasks for
 				HashMap<TaskRepository, Set<AbstractRepositoryQuery>> repositoriesToSync = new HashMap<TaskRepository, Set<AbstractRepositoryQuery>>();
 				for (AbstractRepositoryConnector connector : queriesToSyncMap.keySet()) {
 					List<AbstractRepositoryQuery> queriesToSync = queriesToSyncMap.get(connector);
-					if(queriesToSync==null || queriesToSync.isEmpty()) {
+					if (queriesToSync == null || queriesToSync.isEmpty()) {
 						continue;
 					}
-					
+
 					for (AbstractRepositoryQuery query : queriesToSync) {
-						TaskRepository repos = TasksUiPlugin.getRepositoryManager().getRepository(query.getRepositoryKind(), query.getRepositoryUrl());
+						TaskRepository repos = TasksUiPlugin.getRepositoryManager().getRepository(
+								query.getRepositoryKind(), query.getRepositoryUrl());
 						Set<AbstractRepositoryQuery> queries = repositoriesToSync.get(repos);
-						if(queries == null) {
+						if (queries == null) {
 							queries = new HashSet<AbstractRepositoryQuery>();
 							repositoriesToSync.put(repos, queries);
 						}
 						queries.add(query);
 					}
 				}
-				
+
 				for (Map.Entry<TaskRepository, Set<AbstractRepositoryQuery>> entry : repositoriesToSync.entrySet()) {
 					TaskRepository repository = entry.getKey();
 					AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
@@ -124,9 +125,9 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 
 		queriesToSyncMap.clear();
 		tasksToSyncMap.clear();
-		
+
 //		TasksUiPlugin.getTaskListManager().getTaskList().notifyContainerUpdated(null);
-		
+
 //		if (TaskListView.getFromActivePerspective() != null) {
 //			TaskListView.getFromActivePerspective().getViewer().refresh();
 //		}		

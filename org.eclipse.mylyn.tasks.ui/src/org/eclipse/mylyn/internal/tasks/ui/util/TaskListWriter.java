@@ -322,7 +322,7 @@ public class TaskListWriter {
 								if (queryTagNames != null && queryTagNames.contains(child.getNodeName())) {
 									Element childElement = (Element) child;
 									// TODO: move this stuff into externalizer
-									String repositoryUrl =childElement.getAttribute(DelegatingTaskExternalizer.KEY_REPOSITORY_URL);
+									String repositoryUrl = childElement.getAttribute(DelegatingTaskExternalizer.KEY_REPOSITORY_URL);
 									String queryString = childElement.getAttribute(AbstractTaskListFactory.KEY_QUERY_STRING);
 									if (queryString.length() == 0) { // fallback for legacy
 										queryString = childElement.getAttribute(AbstractTaskListFactory.KEY_QUERY);
@@ -331,11 +331,14 @@ public class TaskListWriter {
 									if (label.length() == 0) { // fallback for legacy
 										label = childElement.getAttribute(DelegatingTaskExternalizer.KEY_LABEL);
 									}
-																		
-									AbstractRepositoryQuery query = externalizer.createQuery(repositoryUrl, queryString, label, childElement);
+
+									AbstractRepositoryQuery query = externalizer.createQuery(repositoryUrl,
+											queryString, label, childElement);
 									if (query != null) {
 										wasRead = true;
-										if (childElement.getAttribute(DelegatingTaskExternalizer.KEY_LAST_REFRESH) != null && !childElement.getAttribute(DelegatingTaskExternalizer.KEY_LAST_REFRESH).equals("")) {
+										if (childElement.getAttribute(DelegatingTaskExternalizer.KEY_LAST_REFRESH) != null
+												&& !childElement.getAttribute(
+														DelegatingTaskExternalizer.KEY_LAST_REFRESH).equals("")) {
 											query.setLastSynchronizedStamp(childElement.getAttribute(DelegatingTaskExternalizer.KEY_LAST_REFRESH));
 										}
 										taskList.internalAddQuery(query);

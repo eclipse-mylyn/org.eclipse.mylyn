@@ -53,17 +53,16 @@ public class ProjectRepositoryAssociationTest extends TestCase {
 		assertEquals(REPOSITORY_KIND, returnedRepository.getConnectorKind());
 		assertEquals(REPOSITORY_URL, returnedRepository.getUrl());
 	}
-	
+
 	public void testRepositoryForFolder() throws CoreException {
-		IFolder folder = projectWrapper.createFolder("testFolder");		
+		IFolder folder = projectWrapper.createFolder("testFolder");
 		assertTrue(folder.exists());
 		assertNull(TasksUiPlugin.getDefault().getRepositoryForResource(folder, true));
 		TaskRepository repository = new TaskRepository(REPOSITORY_KIND, REPOSITORY_URL);
 		TasksUiPlugin.getRepositoryManager().addRepository(repository,
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		TasksUiPlugin.getDefault().setRepositoryForResource(folder, repository);
-		TaskRepository returnedRepository = TasksUiPlugin.getDefault().getRepositoryForResource(
-				folder, true);
+		TaskRepository returnedRepository = TasksUiPlugin.getDefault().getRepositoryForResource(folder, true);
 		assertNotNull(returnedRepository);
 		assertEquals(REPOSITORY_KIND, returnedRepository.getConnectorKind());
 		assertEquals(REPOSITORY_URL, returnedRepository.getUrl());

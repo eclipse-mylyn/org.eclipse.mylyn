@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * Wizard page for creating new tickets through a web browser.
  * 
- * @author Eugene Kuleshov 
+ * @author Eugene Kuleshov
  * @author Mik Kersten
  * @author Steffen Pingel
  */

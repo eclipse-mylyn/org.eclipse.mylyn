@@ -17,9 +17,9 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
  * @author Mik Kersten
  */
 public class MockRepositoryTask extends AbstractTask {
-	
+
 	private String ownerId;
-	
+
 	public MockRepositoryTask(String taskId) {
 		super(MockRepositoryConnector.REPOSITORY_URL, taskId, taskId);
 	}
@@ -27,11 +27,11 @@ public class MockRepositoryTask extends AbstractTask {
 	public MockRepositoryTask(String repositoryUrl, String taskId) {
 		super(repositoryUrl, taskId, taskId);
 	}
-	
+
 	public MockRepositoryTask(String repositoryUrl, String taskId, String summary) {
 		super(repositoryUrl, taskId, summary);
 	}
-	
+
 	@Override
 	public String getConnectorKind() {
 		return "mock";
@@ -41,10 +41,10 @@ public class MockRepositoryTask extends AbstractTask {
 	public void setOwner(String ownerId) {
 		this.ownerId = ownerId;
 	}
-	
+
 	@Override
 	public String getOwner() {
-		if(ownerId == null) {
+		if (ownerId == null) {
 			return super.getOwner();
 		} else {
 			return ownerId;

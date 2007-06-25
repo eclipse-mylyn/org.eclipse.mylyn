@@ -47,8 +47,7 @@ public class TaskEditorTest extends TestCase {
 	}
 
 	/**
-	 * Automated task creation needs to access newly created task editors. This
-	 * test tests that the access is available.
+	 * Automated task creation needs to access newly created task editors. This test tests that the access is available.
 	 * 
 	 * @throws Exception
 	 */
@@ -57,7 +56,8 @@ public class TaskEditorTest extends TestCase {
 				IBugzillaConstants.TEST_BUGZILLA_222_URL);
 
 		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(),
-				BugzillaCorePlugin.REPOSITORY_KIND, repository.getUrl(), TasksUiPlugin.getTaskDataManager().getNewRepositoryTaskId());
+				BugzillaCorePlugin.REPOSITORY_KIND, repository.getUrl(), TasksUiPlugin.getTaskDataManager()
+						.getNewRepositoryTaskId());
 		model.setNew(true);
 		BugzillaRepositoryConnector.setupNewBugAttributes(repository, model);
 		NewTaskEditorInput editorInput = new NewTaskEditorInput(repository, model);

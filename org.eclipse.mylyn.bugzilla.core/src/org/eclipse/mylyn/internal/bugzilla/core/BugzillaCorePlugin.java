@@ -267,14 +267,11 @@ public class BugzillaCorePlugin extends Plugin {
 
 			// Get OS Lookup Map
 			// Check that the result is in Values, if it is not, set it to other
-			RepositoryTaskAttribute opSysAttribute = newBugModel.getAttribute(BugzillaReportElement.OP_SYS
-					.getKeyString());
-			RepositoryTaskAttribute platformAttribute = newBugModel.getAttribute(BugzillaReportElement.REP_PLATFORM
-					.getKeyString());
+			RepositoryTaskAttribute opSysAttribute = newBugModel.getAttribute(BugzillaReportElement.OP_SYS.getKeyString());
+			RepositoryTaskAttribute platformAttribute = newBugModel.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString());
 
 			String OS = Platform.getOS();
 			String platform = Platform.getOSArch();
-			
 
 			String bugzillaOS = null; // Bugzilla String for OS
 			String bugzillaPlatform = null; // Bugzilla String for Platform
@@ -286,18 +283,18 @@ public class BugzillaCorePlugin extends Plugin {
 			// 
 			// The search in casesensitive.	
 			if (opSysAttribute != null) {
-				while (bugzillaOS!= null && opSysAttribute.getOptionParameter(bugzillaOS) == null) {
+				while (bugzillaOS != null && opSysAttribute.getOptionParameter(bugzillaOS) == null) {
 					int dotindex = bugzillaOS.lastIndexOf('.');
-					if (dotindex > 0) 
+					if (dotindex > 0)
 						bugzillaOS = bugzillaOS.substring(0, dotindex);
 					else {
 						int spaceindex = bugzillaOS.lastIndexOf(' ');
-						if (spaceindex > 0) 
+						if (spaceindex > 0)
 							bugzillaOS = bugzillaOS.substring(0, spaceindex);
-						else	
+						else
 							bugzillaOS = null;
 					}
-				}				
+				}
 			} else {
 				bugzillaOS = null;
 			}
@@ -310,18 +307,17 @@ public class BugzillaCorePlugin extends Plugin {
 				//
 				// If the OS is "macosx" we change the Platform to "Macintosh"
 				//
-				if (bugzillaPlatform!= null &&
-						(bugzillaPlatform.compareTo("Power")== 0 || bugzillaPlatform.compareTo("PC")== 0) &&
-						 OS!= null       && OS.compareTo("macosx")== 0) {
+				if (bugzillaPlatform != null
+						&& (bugzillaPlatform.compareTo("Power") == 0 || bugzillaPlatform.compareTo("PC") == 0)
+						&& OS != null && OS.compareTo("macosx") == 0) {
 					bugzillaPlatform = "Macintosh";
-				} else
-				if (platformAttribute != null && platformAttribute.getOptionParameter(bugzillaPlatform) == null) {
+				} else if (platformAttribute != null && platformAttribute.getOptionParameter(bugzillaPlatform) == null) {
 					// If the platform we found is not int the list of available
 					// optinos, set the
 					// Bugzilla Platform to null, and juse use "other"
 					bugzillaPlatform = null;
 				}
-			} 
+			}
 			// Set the OS and the Platform in the taskData
 			if (bugzillaOS != null && opSysAttribute != null) {
 				opSysAttribute.setValue(bugzillaOS);
@@ -331,7 +327,8 @@ public class BugzillaCorePlugin extends Plugin {
 
 			if (bugzillaPlatform != null && platformAttribute != null) {
 				platformAttribute.setValue(bugzillaPlatform);
-			} else if (opSysAttribute != null && platformAttribute != null && platformAttribute.getOptionParameter(OPTION_ALL) != null) {
+			} else if (opSysAttribute != null && platformAttribute != null
+					&& platformAttribute.getOptionParameter(OPTION_ALL) != null) {
 				opSysAttribute.setValue(OPTION_ALL);
 			}
 

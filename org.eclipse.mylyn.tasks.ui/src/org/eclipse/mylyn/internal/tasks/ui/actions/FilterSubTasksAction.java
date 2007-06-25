@@ -47,7 +47,7 @@ public class FilterSubTasksAction extends Action {
 			view.getViewer().collapseAll();
 			if (view.isFocusedMode()) {
 				view.getViewer().expandAll();
-			} 
+			}
 			view.getViewer().refresh();
 		} finally {
 			view.getViewer().getControl().setRedraw(true);

@@ -114,15 +114,14 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(0, manager.getTaskList().getAllTasks().size());
 		manager.getTaskList().moveToContainer(task, manager.getTaskList().getDefaultCategory());
 		assertEquals(1, manager.getTaskList().getAllTasks().size());
-		
-		
+
 		manager.saveTaskList();
 
 		manager.resetTaskList();
 		manager.readExistingOrCreateNewList();
 		assertEquals(1, manager.getTaskList().getAllTasks().size());
 
-		manager.getTaskList().deleteTask(task);		
+		manager.getTaskList().deleteTask(task);
 		assertEquals(0, manager.getTaskList().getAllTasks().size());
 		manager.saveTaskList();
 		assertEquals(0, manager.getTaskList().getAllTasks().size());
@@ -190,15 +189,13 @@ public class TaskListManagerTest extends TestCase {
 		RepositoryTaskData taskData = new RepositoryTaskData(new MockAttributeFactory(), task.getConnectorKind(),
 				task.getRepositoryUrl(), task.getTaskId(), task.getTaskKind());
 		TasksUiPlugin.getTaskDataManager().setNewTaskData(taskData);
-		assertNotNull(TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(),
-				task.getTaskId()));
+		assertNotNull(TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId()));
 
 		RepositoryTaskData taskData2 = new RepositoryTaskData(new MockAttributeFactory(), task2.getConnectorKind(),
 				task2.getRepositoryUrl(), task2.getTaskId(), task2.getTaskKind());
 		taskData2.setNewComment("TEST");
 		TasksUiPlugin.getTaskDataManager().setNewTaskData(taskData2);
-		assertNotNull(TasksUiPlugin.getTaskDataManager().getNewTaskData(task2.getRepositoryUrl(),
-				task2.getTaskId()));
+		assertNotNull(TasksUiPlugin.getTaskDataManager().getNewTaskData(task2.getRepositoryUrl(), task2.getTaskId()));
 		assertEquals("TEST", TasksUiPlugin.getTaskDataManager().getNewTaskData(task2.getRepositoryUrl(),
 				task2.getTaskId()).getNewComment());
 
@@ -206,8 +203,8 @@ public class TaskListManagerTest extends TestCase {
 		assertNull(manager.getTaskList().getTask("http://a-123"));
 		assertNotNull(manager.getTaskList().getTask("http://b-123"));
 		assertNotNull(TasksUiPlugin.getTaskDataManager().getNewTaskData("http://b", "123"));
-		RepositoryTaskData otherData = TasksUiPlugin.getTaskDataManager().getNewTaskData(
-				task2.getRepositoryUrl(), task2.getTaskId());
+		RepositoryTaskData otherData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task2.getRepositoryUrl(),
+				task2.getTaskId());
 		assertNotNull(otherData);
 		assertEquals("TEST", otherData.getNewComment());
 	}
@@ -474,8 +471,8 @@ public class TaskListManagerTest extends TestCase {
 		manager.resetTaskList();
 		manager.readExistingOrCreateNewList();
 		assertEquals(1, manager.getTaskList().getAllTasks().size());
-	}	
-	
+	}
+
 	public void testCreateAndMove() {
 		MockRepositoryTask repositoryTask = new MockRepositoryTask("1");
 		repositoryTask.setTaskKind("kind");
@@ -516,7 +513,7 @@ public class TaskListManagerTest extends TestCase {
 		assertNotNull(manager.getTaskList());
 		manager.resetTaskList();
 		manager.readExistingOrCreateNewList();
-		
+
 		// read once
 		Set<AbstractTaskCategory> readCats = manager.getTaskList().getTaskContainers();
 		assertTrue(manager.getTaskList().getCategories().contains(cat1));
@@ -524,7 +521,7 @@ public class TaskListManagerTest extends TestCase {
 		AbstractTaskContainer readCat1 = iterator.next();
 		assertEquals(cat1, readCat1);
 		assertEquals(1, readCat1.getChildren().size());
-		
+
 		manager.saveTaskList();
 		assertNotNull(manager.getTaskList());
 		manager.resetTaskList();
@@ -537,7 +534,7 @@ public class TaskListManagerTest extends TestCase {
 		iterator = readCats.iterator();
 		AbstractTaskContainer reReadCat1 = iterator.next();
 		assertEquals(cat1, reReadCat1);
-		
+
 		assertEquals(1, reReadCat1.getChildren().size());
 	}
 

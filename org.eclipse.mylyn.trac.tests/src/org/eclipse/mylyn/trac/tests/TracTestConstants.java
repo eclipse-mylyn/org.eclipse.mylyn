@@ -25,9 +25,9 @@ public class TracTestConstants {
 	public static final String TEST_TRAC_010_DIGEST_AUTH_URL = "http://mylyn.eclipse.org/trac010digest";
 
 	public static final String TEST_TRAC_010_FORM_AUTH_URL = "http://mylyn.eclipse.org/trac010formauth";
-	
+
 	public static final String TEST_TRAC_011_URL = "http://mylyn.eclipse.org/trac011";
-	
+
 	public static final String TEST_TRAC_INVALID_URL = "http://mylyn.eclipse.org/doesnotexist";
 
 }

@@ -11,19 +11,8 @@
 package org.eclipse.mylyn.internal.bugzilla.core.history;
 
 /**
- * @author John Anvik 
+ * @author John Anvik
  */
 public enum AttachmentFlagStatus {
-	REVIEW /* Firefox */, 
-	SUPERREVIEW /* Firefox */, 
-	APPROVAL /* Firefox */, 
-	UI /* Firefox */, 
-	BRANCH /* Firefox */, 
-	OBSOLETE, 
-	UNKNOWN, 
-	COMMITTED /* Gnome */, 
-	ACCEPTED /* Gnome accepted-committ_now*/, 
-	COMMENTED /* Gnome */, 
-	NONE /* Gnome */, 
-	REJECTED/* Gnome */ ;
+	REVIEW /* Firefox */, SUPERREVIEW /* Firefox */, APPROVAL /* Firefox */, UI /* Firefox */, BRANCH /* Firefox */, OBSOLETE, UNKNOWN, COMMITTED /* Gnome */, ACCEPTED /* Gnome accepted-committ_now*/, COMMENTED /* Gnome */, NONE /* Gnome */, REJECTED/* Gnome */;
 }

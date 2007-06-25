@@ -59,28 +59,27 @@ class TaskListCellModifier implements ICellModifier {
 		int columnIndex = -1;
 		try {
 			columnIndex = Arrays.asList(this.taskListView.columnNames).indexOf(property);
-			 if (((TreeItem) element).getData() instanceof AbstractTask) {
-					final AbstractTaskContainer taskListElement = (AbstractTaskContainer) ((TreeItem) element).getData();
-					AbstractTask task = (AbstractTask) taskListElement;
-					switch (columnIndex) {
-					case 0:
-						if (!(task != null)) {
-							TasksUiPlugin.getTaskListManager().getTaskList().renameTask(task,
-									((String) value).trim());
-						}
-						break;
-					case 1:
-						break;
-					case 2:
-						toggleTaskActivation(taskListElement);
-						break;
+			if (((TreeItem) element).getData() instanceof AbstractTask) {
+				final AbstractTaskContainer taskListElement = (AbstractTaskContainer) ((TreeItem) element).getData();
+				AbstractTask task = (AbstractTask) taskListElement;
+				switch (columnIndex) {
+				case 0:
+					if (!(task != null)) {
+						TasksUiPlugin.getTaskListManager().getTaskList().renameTask(task, ((String) value).trim());
 					}
-				} else
-			if (((TreeItem) element).getData() instanceof AbstractTaskCategory) {
+					break;
+				case 1:
+					break;
+				case 2:
+					toggleTaskActivation(taskListElement);
+					break;
+				}
+			} else if (((TreeItem) element).getData() instanceof AbstractTaskCategory) {
 				AbstractTaskCategory container = (AbstractTaskCategory) ((TreeItem) element).getData();
 				switch (columnIndex) {
 				case 0:
-					TasksUiPlugin.getTaskListManager().getTaskList()
+					TasksUiPlugin.getTaskListManager()
+							.getTaskList()
 							.renameContainer(container, ((String) value).trim());
 				case 1:
 					break;

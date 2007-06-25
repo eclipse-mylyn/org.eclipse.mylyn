@@ -37,8 +37,8 @@ class RepositoryTaskEditorDropListener implements DropTargetListener {
 
 	private final Control control;
 
-	public RepositoryTaskEditorDropListener(AbstractRepositoryTaskEditor AbstractTaskEditor,
-			FileTransfer fileTransfer, TextTransfer textTransfer, Control control) {
+	public RepositoryTaskEditorDropListener(AbstractRepositoryTaskEditor AbstractTaskEditor, FileTransfer fileTransfer,
+			TextTransfer textTransfer, Control control) {
 		this.AbstractTaskEditor = AbstractTaskEditor;
 		this.fileTransfer = fileTransfer;
 		this.textTransfer = textTransfer;
@@ -102,31 +102,28 @@ class RepositoryTaskEditorDropListener implements DropTargetListener {
 		if (textTransfer.isSupportedType(event.currentDataType)) {
 			String text = (String) event.data;
 			AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
-					this.AbstractTaskEditor.repository.getUrl(),
-					this.AbstractTaskEditor.taskData.getId());
+					this.AbstractTaskEditor.repository.getUrl(), this.AbstractTaskEditor.taskData.getId());
 			if (!(task != null)) {
 				// Should not happen
 				return;
 			}
 
 			AbstractTaskEditor.setGlobalBusy(true);
-			NewAttachmentWizard naw = new NewAttachmentWizard(this.AbstractTaskEditor.repository,
-					task, text);
+			NewAttachmentWizard naw = new NewAttachmentWizard(this.AbstractTaskEditor.repository, task, text);
 			openDialog(naw);
 		}
 		if (fileTransfer.isSupportedType(event.currentDataType)) {
 			String[] files = (String[]) event.data;
 			if (files.length > 0) {
 				AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
-						this.AbstractTaskEditor.repository.getUrl(),
-						this.AbstractTaskEditor.taskData.getId());
+						this.AbstractTaskEditor.repository.getUrl(), this.AbstractTaskEditor.taskData.getId());
 				if (task == null) {
 					// Should not happen
 					return;
 				}
 
-				NewAttachmentWizard naw = new NewAttachmentWizard(this.AbstractTaskEditor.repository,
-						task, new File(files[0]));
+				NewAttachmentWizard naw = new NewAttachmentWizard(this.AbstractTaskEditor.repository, task, new File(
+						files[0]));
 				openDialog(naw);
 
 			}

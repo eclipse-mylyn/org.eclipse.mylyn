@@ -23,8 +23,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 
 /**
- * Collects tasks that are not complete but have been worked on during the
- * specified number of previous days.
+ * Collects tasks that are not complete but have been worked on during the specified number of previous days.
  * 
  * @author Wesley Coelho (Adapted from CompletedTaskCollector by Key Sueda)
  * @author Mik Kersten
@@ -36,7 +35,8 @@ public class InProgressTaskCollector implements ITaskCollector {
 	private Date periodStartDate;
 
 	protected static boolean hasActivitySince(AbstractTask task, Date startDate) {
-		IInteractionContext mylarContext = ContextCorePlugin.getContextManager().loadContext(task.getHandleIdentifier());
+		IInteractionContext mylarContext = ContextCorePlugin.getContextManager()
+				.loadContext(task.getHandleIdentifier());
 		if (mylarContext != null) {
 			List<InteractionEvent> events = mylarContext.getInteractionHistory();
 			if (events.size() > 0) {

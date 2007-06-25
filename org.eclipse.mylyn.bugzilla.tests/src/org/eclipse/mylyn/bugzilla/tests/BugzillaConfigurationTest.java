@@ -46,7 +46,8 @@ public class BugzillaConfigurationTest extends TestCase {
 	}
 
 	public void test222RDFProductConfig() throws Exception {
-		BugzillaClient client = new BugzillaClient(new URL(IBugzillaConstants.TEST_BUGZILLA_222_URL), "","","","", "UTF-8");
+		BugzillaClient client = new BugzillaClient(new URL(IBugzillaConstants.TEST_BUGZILLA_222_URL), "", "", "", "",
+				"UTF-8");
 		RepositoryConfiguration config = client.getRepositoryConfiguration();
 		assertNotNull(config);
 		assertEquals("2.22.1", config.getInstallVersion());
@@ -64,7 +65,8 @@ public class BugzillaConfigurationTest extends TestCase {
 	}
 
 	public void test2201RDFProductConfig() throws Exception {
-		BugzillaClient client = new BugzillaClient(new URL(IBugzillaConstants.TEST_BUGZILLA_2201_URL), "","","","", "UTF-8");
+		BugzillaClient client = new BugzillaClient(new URL(IBugzillaConstants.TEST_BUGZILLA_2201_URL), "", "", "", "",
+				"UTF-8");
 		RepositoryConfiguration config = client.getRepositoryConfiguration();
 		assertNotNull(config);
 		assertEquals("2.20.1", config.getInstallVersion());
@@ -82,7 +84,8 @@ public class BugzillaConfigurationTest extends TestCase {
 	}
 
 	public void test220RDFProductConfig() throws Exception {
-		BugzillaClient client = new BugzillaClient(new URL(IBugzillaConstants.TEST_BUGZILLA_220_URL), "","","","", "UTF-8");
+		BugzillaClient client = new BugzillaClient(new URL(IBugzillaConstants.TEST_BUGZILLA_220_URL), "", "", "", "",
+				"UTF-8");
 		RepositoryConfiguration config = client.getRepositoryConfiguration();
 		assertNotNull(config);
 		assertEquals("2.20.3", config.getInstallVersion());
@@ -100,7 +103,8 @@ public class BugzillaConfigurationTest extends TestCase {
 	}
 
 	public void test218RDFProductConfig() throws Exception {
-		BugzillaClient client = new BugzillaClient(new URL(IBugzillaConstants.TEST_BUGZILLA_218_URL), "","","","", "UTF-8");
+		BugzillaClient client = new BugzillaClient(new URL(IBugzillaConstants.TEST_BUGZILLA_218_URL), "", "", "", "",
+				"UTF-8");
 		RepositoryConfiguration config = client.getRepositoryConfiguration();
 		assertNotNull(config);
 		assertEquals("2.18.6", config.getInstallVersion());
@@ -118,7 +122,8 @@ public class BugzillaConfigurationTest extends TestCase {
 	}
 
 	public void testEclipseRDFProductConfig() throws Exception {
-		BugzillaClient client = new BugzillaClient(new URL(IBugzillaConstants.ECLIPSE_BUGZILLA_URL), "","","","", "UTF-8");
+		BugzillaClient client = new BugzillaClient(new URL(IBugzillaConstants.ECLIPSE_BUGZILLA_URL), "", "", "", "",
+				"UTF-8");
 		RepositoryConfiguration config = client.getRepositoryConfiguration();
 		assertNotNull(config);
 		assertEquals("2.22.1", config.getInstallVersion());
@@ -157,13 +162,11 @@ public class BugzillaConfigurationTest extends TestCase {
 		BugzillaCorePlugin.readRepositoryConfigurationFile();
 		assertNotNull(BugzillaCorePlugin.getRepositoryConfiguration(configuration1.getRepositoryUrl()));
 		assertNotNull(BugzillaCorePlugin.getRepositoryConfiguration(configuration2.getRepositoryUrl()));
-		RepositoryConfiguration testLoadedConfig = BugzillaCorePlugin.getRepositoryConfiguration(configuration1
-				.getRepositoryUrl());
+		RepositoryConfiguration testLoadedConfig = BugzillaCorePlugin.getRepositoryConfiguration(configuration1.getRepositoryUrl());
 		assertEquals(1, testLoadedConfig.getProducts().size());
 		assertEquals(configuration1.getProducts().get(0), testLoadedConfig.getProducts().get(0));
 	}
 
-	
 //	@SuppressWarnings("deprecation")
 //	public void testHtmlCleaner() throws IOException, BugzillaException, GeneralSecurityException {
 //		StringBuffer incoming = new StringBuffer();
@@ -179,22 +182,22 @@ public class BugzillaConfigurationTest extends TestCase {
 //        StringBuffer result = XmlCleaner.clean(new StringReader(incoming.toString()));
 //        System.err.println(result);      
 //	}
-	
+
 	/**
-	 * Can use this to test config data submitted by users. Be sure not to commit user's config file though.
-	 * The file included (rdfconfig218.txt) is from mylar.eclipse.org/bugs218
+	 * Can use this to test config data submitted by users. Be sure not to commit user's config file though. The file
+	 * included (rdfconfig218.txt) is from mylar.eclipse.org/bugs218
 	 */
 	public void testRepositoryConfigurationFromFile() throws Exception {
-		
+
 		URL entryURL = BugzillaTestPlugin.getDefault().getBundle().getEntry("testdata/configuration/rdfconfig218.txt");
 		assertNotNull(entryURL);
 		URL fileURL = FileLocator.toFileURL(entryURL);
-		assertNotNull(fileURL);		
+		assertNotNull(fileURL);
 
 		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(fileURL.getFile())));
 
 		if (true) {
-			StringBuffer result = XmlCleaner.clean(in);			
+			StringBuffer result = XmlCleaner.clean(in);
 			StringReader strReader = new StringReader(result.toString());
 			in = new BufferedReader(strReader);
 		}
@@ -217,11 +220,12 @@ public class BugzillaConfigurationTest extends TestCase {
 			}
 		});
 		reader.parse(new InputSource(in));
-		
+
 		RepositoryConfiguration config = contentHandler.getConfiguration();
 		assertNotNull(config);
 
-		assertTrue(config.getProducts().contains("Test-Long-Named-Product-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+		assertTrue(config.getProducts().contains(
+				"Test-Long-Named-Product-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
 
 		// Add your additional checking for valid data here if necessary
 

@@ -11,14 +11,12 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
-
 /**
  * @author Mik Kersten
  */
 //public class ManageEditorsAction extends Action {
 //
 //	public static final String ID = "org.eclipse.mylyn.ui.editors.auto.manage";
-
 //	public ManageEditorsAction() {
 //		super("Manage Editors with Context", IAction.AS_CHECK_BOX);
 //		setId(ID);

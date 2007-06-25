@@ -17,5 +17,5 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 public interface IFilteredTreeListener {
 
 	public void filterTextChanged(String text);
-	
+
 }

@@ -60,8 +60,7 @@ public class TracAttachmentHandler extends AbstractAttachmentHandler {
 			String comment, IProgressMonitor monitor) throws CoreException {
 		if (!TracRepositoryConnector.hasAttachmentSupport(repository, task)) {
 			throw new CoreException(new RepositoryStatus(repository.getUrl(), IStatus.INFO, TracCorePlugin.PLUGIN_ID,
-					RepositoryStatus.ERROR_REPOSITORY,
-					"Attachments are not supported by this repository access type"));
+					RepositoryStatus.ERROR_REPOSITORY, "Attachments are not supported by this repository access type"));
 		}
 
 		monitor.beginTask("Uploading attachment", IProgressMonitor.UNKNOWN);
@@ -69,7 +68,8 @@ public class TracAttachmentHandler extends AbstractAttachmentHandler {
 			try {
 				ITracClient client = connector.getClientManager().getRepository(repository);
 				int id = Integer.parseInt(task.getTaskId());
-				client.putAttachmentData(id, attachment.getFilename(), attachment.getDescription(), attachment.createInputStream());
+				client.putAttachmentData(id, attachment.getFilename(), attachment.getDescription(),
+						attachment.createInputStream());
 				if (comment != null && comment.length() > 0) {
 					TracTicket ticket = new TracTicket(id);
 					client.updateTicket(ticket, comment);

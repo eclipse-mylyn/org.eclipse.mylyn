@@ -43,7 +43,8 @@ public class AttachFileAction extends BaseSelectionListenerAction {
 
 			NewAttachmentWizard attachmentWizard = new NewAttachmentWizard(repository, repositoryTask);
 			NewAttachmentWizardDialog dialog = new NewAttachmentWizardDialog(PlatformUI.getWorkbench()
-					.getActiveWorkbenchWindow().getShell(), attachmentWizard);
+					.getActiveWorkbenchWindow()
+					.getShell(), attachmentWizard);
 			attachmentWizard.setDialog(dialog);
 			dialog.create();
 			int result = dialog.open();

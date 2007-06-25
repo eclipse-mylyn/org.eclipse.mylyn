@@ -67,7 +67,8 @@ public class CreateQueryFromSearchAction extends Action {
 					AbstractRepositoryQuery query = searchHitCollector.getRepositoryQuery();
 					InputDialog dialog = new InputDialog(PlatformUI.getWorkbench()
 							.getActiveWorkbenchWindow()
-							.getShell(), "Create Query", "Name of query to be added to the " + TaskListView.LABEL_VIEW + ": ", "", null);
+							.getShell(), "Create Query", "Name of query to be added to the " + TaskListView.LABEL_VIEW
+							+ ": ", "", null);
 					int dialogResult = dialog.open();
 					if (dialogResult == Window.OK) {
 						query.setHandleIdentifier(dialog.getValue());

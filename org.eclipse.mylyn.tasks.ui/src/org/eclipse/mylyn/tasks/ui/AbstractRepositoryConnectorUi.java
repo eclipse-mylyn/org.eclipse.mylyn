@@ -69,9 +69,8 @@ public abstract class AbstractRepositoryConnectorUi {
 	public abstract IWizard getNewTaskWizard(TaskRepository taskRepository);
 
 	/**
-	 * Override to return a custom task editor ID. If overriding this method the
-	 * connector becomes responsible for showing the additional pages handled by
-	 * the default task editor. As of Mylar 2.0M2 these are the Planning and
+	 * Override to return a custom task editor ID. If overriding this method the connector becomes responsible for
+	 * showing the additional pages handled by the default task editor. As of Mylar 2.0M2 these are the Planning and
 	 * Context pages.
 	 */
 	public String getTaskEditorId(AbstractTask repositoryTask) {
@@ -86,7 +85,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	public List<AbstractTaskContainer> getLegendItems() {
 		return Collections.emptyList();
 	}
-	
+
 	/**
 	 * @param repositoryTask
 	 *            can be null
@@ -94,7 +93,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	public String getTaskKindLabel(AbstractTask repositoryTask) {
 		return LABEL_TASK_DEFAULT;
 	}
-	
+
 	/**
 	 * @param taskData
 	 *            can be null
@@ -102,13 +101,12 @@ public abstract class AbstractRepositoryConnectorUi {
 	public String getTaskKindLabel(RepositoryTaskData taskData) {
 		return LABEL_TASK_DEFAULT;
 	}
-	
+
 	/**
-	 * Connector-specific task icons.  
-	 * Not recommended to override unless providing custom icons and kind overlays.
+	 * Connector-specific task icons. Not recommended to override unless providing custom icons and kind overlays.
 	 * 
-	 * For connectors that have a decorator that they want to reuse, the connector can 
-	 * maintain a reference to the label provider and get the descriptor from the images it returns.
+	 * For connectors that have a decorator that they want to reuse, the connector can maintain a reference to the label
+	 * provider and get the descriptor from the images it returns.
 	 */
 	public ImageDescriptor getTaskListElementIcon(AbstractTaskContainer element) {
 		if (element instanceof AbstractRepositoryQuery) {
@@ -126,10 +124,10 @@ public abstract class AbstractRepositoryConnectorUi {
 	public ImageDescriptor getTaskKindOverlay(AbstractTask task) {
 		return null;
 	}
-	
+
 	/**
-	 * Connector-specific priority icons.  Not recommended to override since priority
-	 * icons are used elsewhere in the Task List UI (e.g. filter selection in view menu).
+	 * Connector-specific priority icons. Not recommended to override since priority icons are used elsewhere in the
+	 * Task List UI (e.g. filter selection in view menu).
 	 */
 	public ImageDescriptor getTaskPriorityOverlay(AbstractTask task) {
 		return TasksUiImages.getImageDescriptorForPriority(PriorityLevel.fromString(task.getPriority()));
@@ -167,29 +165,30 @@ public abstract class AbstractRepositoryConnectorUi {
 	public WizardPage getSearchPage(TaskRepository repository, IStructuredSelection selection) {
 		return null;
 	}
-	
+
 	/**
-	 * Override to return a URL that provides the user with an 
-	 * account creation page for the repository
-	 * @param taskRepository TODO
+	 * Override to return a URL that provides the user with an account creation page for the repository
+	 * 
+	 * @param taskRepository
+	 *            TODO
 	 */
 	public String getAccountCreationUrl(TaskRepository taskRepository) {
 		return null;
 	}
 
 	/**
-	 * Override to return a URL that provides the user with an 
-	 * account management page for the repository
-	 * @param taskRepository TODO
+	 * Override to return a URL that provides the user with an account management page for the repository
+	 * 
+	 * @param taskRepository
+	 *            TODO
 	 */
 	public String getAccountManagementUrl(TaskRepository taskRepository) {
 		return null;
 	}
-	
+
 	/**
-	 * Only override if task should be opened by a custom editor, default
-	 * behavior is to open with a rich editor, falling back to the web browser
-	 * if not available.
+	 * Only override if task should be opened by a custom editor, default behavior is to open with a rich editor,
+	 * falling back to the web browser if not available.
 	 * 
 	 * @return true if the task was successfully opened
 	 */
@@ -218,7 +217,7 @@ public abstract class AbstractRepositoryConnectorUi {
 
 		return true;
 	}
-	
+
 	public IHyperlink[] findHyperlinks(TaskRepository repository, String text, int lineOffset, int regionOffset) {
 		return null;
 	}

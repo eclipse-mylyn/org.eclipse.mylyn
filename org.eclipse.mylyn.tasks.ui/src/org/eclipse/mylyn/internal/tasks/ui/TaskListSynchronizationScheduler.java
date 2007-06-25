@@ -39,13 +39,13 @@ public class TaskListSynchronizationScheduler implements IPropertyChangeListener
 	private List<ScheduledTaskListSynchJob> jobsQueue = Collections.synchronizedList(jobs);
 
 	private final MutexRule rule = new MutexRule();
-	
-	public TaskListSynchronizationScheduler(boolean refreshOnStartup) {		
+
+	public TaskListSynchronizationScheduler(boolean refreshOnStartup) {
 		boolean enabled = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
 				TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED);
 		if (refreshOnStartup && enabled) {
-			addJobToQueue(new ScheduledTaskListSynchJob(DELAY_QUERY_REFRESH_ON_STARTUP, TasksUiPlugin
-					.getTaskListManager()));
+			addJobToQueue(new ScheduledTaskListSynchJob(DELAY_QUERY_REFRESH_ON_STARTUP,
+					TasksUiPlugin.getTaskListManager()));
 		}
 	}
 
@@ -80,18 +80,20 @@ public class TaskListSynchronizationScheduler implements IPropertyChangeListener
 			@Override
 			public void done(IJobChangeEvent event) {
 				synchronized (refreshJob) {
-					if(refreshJob == jobToAdd && event.getResult() != Status.CANCEL_STATUS) {
-						startSynchJob();						
-					}	
-				}				
+					if (refreshJob == jobToAdd && event.getResult() != Status.CANCEL_STATUS) {
+						startSynchJob();
+					}
+				}
 			}
 		});
 		jobsQueue.add(jobToAdd);
 	}
-	
+
 	/**
-	 * @param delay  sync delay (ms)
-	 * @param repositories used to scope sync to queries associated with given repositories, can be null (sync all repositories)
+	 * @param delay
+	 *            sync delay (ms)
+	 * @param repositories
+	 *            used to scope sync to queries associated with given repositories, can be null (sync all repositories)
 	 */
 	public void synchNow(long delay, List<TaskRepository> repositories) {
 		cancelAll();
@@ -126,13 +128,14 @@ public class TaskListSynchronizationScheduler implements IPropertyChangeListener
 			}
 		}
 	}
-	
+
 	static class MutexRule implements ISchedulingRule {
-	      public boolean isConflicting(ISchedulingRule rule) {
-	         return rule == this;
-	      }
-	      public boolean contains(ISchedulingRule rule) {
-	         return rule == this;
-	      }
-	   }
+		public boolean isConflicting(ISchedulingRule rule) {
+			return rule == this;
+		}
+
+		public boolean contains(ISchedulingRule rule) {
+			return rule == this;
+		}
+	}
 }

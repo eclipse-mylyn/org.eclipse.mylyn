@@ -62,8 +62,7 @@ public class BugzillaQueryTest extends TestCase {
 	}
 
 	/**
-	 * This is the first test so that the repository credentials are correctly
-	 * set for the other tests
+	 * This is the first test so that the repository credentials are correctly set for the other tests
 	 */
 	public void testAddCredentials() {
 		if (!repository.hasCredentials()) {
@@ -75,7 +74,7 @@ public class BugzillaQueryTest extends TestCase {
 	}
 
 	public void testGetBug() throws Exception {
-		RepositoryTaskData taskData = handler.getTaskData(repository, "1",  new NullProgressMonitor());
+		RepositoryTaskData taskData = handler.getTaskData(repository, "1", new NullProgressMonitor());
 		assertNotNull(taskData);
 		assertEquals("user@mylar.eclipse.org", taskData.getAssignedTo());
 		assertEquals("foo", taskData.getDescription());
@@ -84,7 +83,7 @@ public class BugzillaQueryTest extends TestCase {
 		// part of the bug
 		assertEquals("P1", taskData.getAttributeValue(BugzillaReportElement.PRIORITY.getKeyString()));
 	}
-	
+
 	// TODO: Uncomment when bug#176513 completed
 //	public void testGetBugs() throws Exception {
 //		HashSet<String> taskIds = new HashSet<String>();

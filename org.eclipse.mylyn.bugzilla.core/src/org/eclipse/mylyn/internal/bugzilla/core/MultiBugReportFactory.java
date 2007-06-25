@@ -36,7 +36,8 @@ public class MultiBugReportFactory extends AbstractReportFactory {
 
 	public void populateReport(Map<String, RepositoryTaskData> bugMap) throws IOException, CoreException {
 
-		SaxMultiBugReportContentHandler contentHandler = new SaxMultiBugReportContentHandler(bugzillaAttributeFactory, bugMap);
+		SaxMultiBugReportContentHandler contentHandler = new SaxMultiBugReportContentHandler(bugzillaAttributeFactory,
+				bugMap);
 		collectResults(contentHandler, false);
 
 		if (contentHandler.errorOccurred()) {
@@ -44,13 +45,11 @@ public class MultiBugReportFactory extends AbstractReportFactory {
 			if (errorResponse.equals(IBugzillaConstants.XML_ERROR_NOTFOUND)
 					|| errorResponse.equals(IBugzillaConstants.XML_ERROR_INVALIDBUGID)) {
 				throw new CoreException(new BugzillaStatus(IStatus.WARNING, BugzillaCorePlugin.PLUGIN_ID,
-						RepositoryStatus.ERROR_REPOSITORY, "",
-						IBugzillaConstants.ERROR_MSG_INVALID_BUG_ID));
+						RepositoryStatus.ERROR_REPOSITORY, "", IBugzillaConstants.ERROR_MSG_INVALID_BUG_ID));
 			}
 			if (errorResponse.equals(IBugzillaConstants.XML_ERROR_NOTPERMITTED)) {
 				throw new CoreException(new BugzillaStatus(IStatus.WARNING, BugzillaCorePlugin.PLUGIN_ID,
-						RepositoryStatus.ERROR_REPOSITORY, "",
-						IBugzillaConstants.ERROR_MSG_OP_NOT_PERMITTED));
+						RepositoryStatus.ERROR_REPOSITORY, "", IBugzillaConstants.ERROR_MSG_OP_NOT_PERMITTED));
 			}
 		}
 	}

@@ -62,8 +62,7 @@ public class BugzillaTestPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns the string from the plugin's resource bundle, or 'key' if not
-	 * found.
+	 * Returns the string from the plugin's resource bundle, or 'key' if not found.
 	 */
 	public static String getResourceString(String key) {
 		ResourceBundle bundle = BugzillaTestPlugin.getDefault().getResourceBundle();
@@ -88,8 +87,7 @@ public class BugzillaTestPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns an image descriptor for the image file at the given plug-in
-	 * relative path.
+	 * Returns an image descriptor for the image file at the given plug-in relative path.
 	 * 
 	 * @param path
 	 *            the path

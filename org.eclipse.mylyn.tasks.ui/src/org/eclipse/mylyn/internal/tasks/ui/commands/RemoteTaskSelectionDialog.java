@@ -94,8 +94,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 		List<TaskRepository> repositories = new ArrayList<TaskRepository>();
 		TaskRepositoryManager repositoryManager = TasksUiPlugin.getRepositoryManager();
 		for (AbstractRepositoryConnector connector : repositoryManager.getRepositoryConnectors()) {
-			Set<TaskRepository> connectorRepositories = repositoryManager
-					.getRepositories(connector.getConnectorKind());
+			Set<TaskRepository> connectorRepositories = repositoryManager.getRepositories(connector.getConnectorKind());
 			for (TaskRepository repository : connectorRepositories) {
 				if (TaskRepositoryFilter.CAN_CREATE_TASK_FROM_KEY.accept(repository, connector)) {
 					repositories.add(repository);
@@ -118,8 +117,8 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 		matchingTasksLabel.setText("&Matching tasks:");
 		tasksViewer = new TableViewer(area, SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		tasksViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(400, 200).create());
-		tasksViewer.setLabelProvider(new DecoratingLabelProvider(new TaskElementLabelProvider(true), PlatformUI
-				.getWorkbench().getDecoratorManager().getLabelDecorator()));
+		tasksViewer.setLabelProvider(new DecoratingLabelProvider(new TaskElementLabelProvider(true),
+				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
 		tasksViewer.setContentProvider(new ArrayContentProvider());
 		tasksViewer.addFilter(new ViewerFilter() {
 
@@ -223,8 +222,8 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 		categoryViewer = new ComboViewer(addToTaskListComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
 		categoryViewer.setContentProvider(new ArrayContentProvider());
 		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
-		LinkedList<AbstractTaskContainer> categories = new LinkedList<AbstractTaskContainer>(taskList
-				.getUserCategories());
+		LinkedList<AbstractTaskContainer> categories = new LinkedList<AbstractTaskContainer>(
+				taskList.getUserCategories());
 		categories.addFirst(taskList.getDefaultCategory());
 		categoryViewer.setInput(categories);
 		categoryViewer.setLabelProvider(new LabelProvider() {
@@ -367,13 +366,11 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 		if (!taskSelection.isEmpty()) {
 			selectedTask = (AbstractTask) ((IStructuredSelection) taskSelection).getFirstElement();
 		} else {
-			selectedRepository = (TaskRepository) ((IStructuredSelection) repositoriesViewer.getSelection())
-					.getFirstElement();
+			selectedRepository = (TaskRepository) ((IStructuredSelection) repositoriesViewer.getSelection()).getFirstElement();
 		}
 		shouldAddToTaskList = addToTaskListCheck.getSelection();
 		if (shouldAddToTaskList) {
-			selectedCategory = (AbstractTaskCategory) ((IStructuredSelection) categoryViewer.getSelection())
-					.getFirstElement();
+			selectedCategory = (AbstractTaskCategory) ((IStructuredSelection) categoryViewer.getSelection()).getFirstElement();
 		}
 	}
 

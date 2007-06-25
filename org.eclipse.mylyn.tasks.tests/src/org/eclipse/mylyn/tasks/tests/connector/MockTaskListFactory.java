@@ -30,13 +30,12 @@ public class MockTaskListFactory extends AbstractTaskListFactory {
 		MockRepositoryTask task = new MockRepositoryTask(repositoryUrl, taskId, summary);
 		return task;
 	}
- 
-	
+
 	@Override
 	public String getTaskElementName() {
 		return "Mock" + AbstractTaskListFactory.KEY_TASK;
 	}
-	
+
 //	private static final String KEY_MOCK = "Mock";
 //	
 //	@Override
@@ -53,7 +52,7 @@ public class MockTaskListFactory extends AbstractTaskListFactory {
 //	public boolean canCreateElementFor(AbstractQueryHit queryHit) {
 //		return queryHit instanceof AbstractQueryHit;
 //	}
-	
+
 //	@Override
 //	public boolean canReadCategory(Node node) {
 //		return false;

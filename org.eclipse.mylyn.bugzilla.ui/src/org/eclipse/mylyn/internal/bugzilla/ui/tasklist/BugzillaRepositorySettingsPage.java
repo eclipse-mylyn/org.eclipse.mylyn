@@ -128,8 +128,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		shortLoginLabel.setText(LABEL_SHORT_LOGINS);
 		cleanQAContact = new Button(parent, SWT.CHECK | SWT.LEFT);
 		if (repository != null) {
-			boolean shortLogin = Boolean.parseBoolean(repository
-					.getProperty(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN));
+			boolean shortLogin = Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN));
 			cleanQAContact.setSelection(shortLogin);
 		}
 
@@ -144,8 +143,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 				repositoryVersionCombo.select(i);
 				setVersion(version);
 			} else {
-				for (IBugzillaConstants.BugzillaServerVersion serverVersion : IBugzillaConstants.BugzillaServerVersion
-						.values()) {
+				for (IBugzillaConstants.BugzillaServerVersion serverVersion : IBugzillaConstants.BugzillaServerVersion.values()) {
 					if (version.startsWith(serverVersion.toString())) {
 						i = repositoryVersionCombo.indexOf(serverVersion.toString());
 						if (i != -1) {
@@ -165,8 +163,8 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 	@Override
 	public void updateProperties(TaskRepository repository) {
-		repository.setProperty(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN, String.valueOf(cleanQAContact
-				.getSelection()));
+		repository.setProperty(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN,
+				String.valueOf(cleanQAContact.getSelection()));
 	}
 
 	@Override
@@ -260,17 +258,17 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 //		}
 //	}
 
-
 	@Override
 	protected Validator getValidator(TaskRepository repository) {
-		
-		if(repositoryVersionCombo.getSelectionIndex() != 0) {
-			return new BugzillaValidator(repository, repositoryVersionCombo.getItem(repositoryVersionCombo.getSelectionIndex()));
+
+		if (repositoryVersionCombo.getSelectionIndex() != 0) {
+			return new BugzillaValidator(repository,
+					repositoryVersionCombo.getItem(repositoryVersionCombo.getSelectionIndex()));
 		} else {
 			return new BugzillaValidator(repository, null);
 		}
 	}
-	
+
 //	public String getBugzillaVersion() {
 //		if (repositoryVersionCombo.getSelectionIndex() == 0) {
 //			return null;
@@ -284,7 +282,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		super.applyValidatorResult(validator);
 
 		if (((BugzillaValidator) validator).getResult() != null && ((BugzillaValidator) validator).getResult() != null) {
-			setBugzillaVersion(((BugzillaValidator) validator).getResult());			
+			setBugzillaVersion(((BugzillaValidator) validator).getResult());
 		}
 	}
 
@@ -303,7 +301,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		final String httpAuthUser;
 
 		final String httpAuthPass;
-		
+
 		final Proxy proxy;
 
 		private String[] versions = new String[1];;
@@ -342,21 +340,20 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 //				MylarStatusHandler.displayStatus("Validation failed", status);
 			}
 		}
-		
 
 		private void displayError(final String serverUrl, Throwable e) {
 			IStatus status;
 			if (e instanceof MalformedURLException) {
-				status = new BugzillaStatus(Status.WARNING, BugzillaCorePlugin.PLUGIN_ID, RepositoryStatus.ERROR_NETWORK,
-						"Server URL is invalid.");
+				status = new BugzillaStatus(Status.WARNING, BugzillaCorePlugin.PLUGIN_ID,
+						RepositoryStatus.ERROR_NETWORK, "Server URL is invalid.");
 			} else if (e instanceof CoreException) {
 				status = ((CoreException) e).getStatus();
 			} else if (e instanceof IOException) {
 				status = new BugzillaStatus(Status.WARNING, BugzillaCorePlugin.PLUGIN_ID, RepositoryStatus.ERROR_IO,
 						serverUrl, e.getMessage());
 			} else {
-				status = new BugzillaStatus(Status.WARNING, BugzillaCorePlugin.PLUGIN_ID, RepositoryStatus.ERROR_NETWORK,
-						serverUrl, e.getMessage());
+				status = new BugzillaStatus(Status.WARNING, BugzillaCorePlugin.PLUGIN_ID,
+						RepositoryStatus.ERROR_NETWORK, serverUrl, e.getMessage());
 			}
 			StatusHandler.displayStatus("Validation failed", status);
 			setStatus(status);

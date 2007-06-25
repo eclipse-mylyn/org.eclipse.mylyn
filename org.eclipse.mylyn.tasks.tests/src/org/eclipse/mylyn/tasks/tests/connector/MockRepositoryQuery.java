@@ -24,7 +24,7 @@ public class MockRepositoryQuery extends AbstractRepositoryQuery {
 		super(description);
 		super.setUrl(MOCK_URL);
 	}
-	
+
 	public MockRepositoryQuery(String description, String url) {
 		super(description);
 		super.setUrl(url);

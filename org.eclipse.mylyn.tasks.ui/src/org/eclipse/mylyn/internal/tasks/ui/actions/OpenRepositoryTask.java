@@ -34,7 +34,8 @@ public class OpenRepositoryTask extends Action implements IWorkbenchWindowAction
 
 	public void run(IAction action) {
 		RemoteTaskSelectionDialog dlg = new RemoteTaskSelectionDialog(PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow().getShell());
+				.getActiveWorkbenchWindow()
+				.getShell());
 		dlg.setTitle("Open Repository Task");
 
 		IDialogSettings settings = TasksUiPlugin.getDefault().getDialogSettings();
@@ -72,8 +73,8 @@ public class OpenRepositoryTask extends Action implements IWorkbenchWindowAction
 		if (dlg.shouldAddToTaskList()) {
 			for (String id : selectedIds) {
 				final IProgressService svc = PlatformUI.getWorkbench().getProgressService();
-				final AddExistingTaskJob job = new AddExistingTaskJob(dlg.getSelectedTaskRepository(), id, dlg
-						.getSelectedCategory());
+				final AddExistingTaskJob job = new AddExistingTaskJob(dlg.getSelectedTaskRepository(), id,
+						dlg.getSelectedCategory());
 				job.schedule();
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 
@@ -92,9 +93,8 @@ public class OpenRepositoryTask extends Action implements IWorkbenchWindowAction
 				}
 			}
 			if (!openSuccessful) {
-				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
-						ITasksUiConstants.TITLE_DIALOG, 
-						"Could not find matching repository task.");
+				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+						ITasksUiConstants.TITLE_DIALOG, "Could not find matching repository task.");
 			}
 		}
 	}

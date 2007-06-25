@@ -62,8 +62,7 @@ import org.eclipse.mylyn.web.core.WebClientUtil;
 import org.eclipse.mylyn.web.core.HtmlStreamTokenizer.Token;
 
 /**
- * Represents a Trac repository that is accessed through the Trac's query script
- * and web interface.
+ * Represents a Trac repository that is accessed through the Trac's query script and web interface.
  * 
  * @author Steffen Pingel
  */
@@ -75,9 +74,9 @@ public class TracWebClient extends AbstractTracClient {
 
 	public TracWebClient(URL url, Version version, String username, String password, Proxy proxy) {
 		super(url, version, username, password, proxy);
-		
-		 httpClient = new HttpClient();
-		 httpClient.setHttpConnectionManager(new MultiThreadedHttpConnectionManager());
+
+		httpClient = new HttpClient();
+		httpClient.setHttpConnectionManager(new MultiThreadedHttpConnectionManager());
 	}
 
 	private synchronized GetMethod connect(String serverURL) throws TracException {
@@ -292,8 +291,7 @@ public class TracWebClient extends AbstractTracClient {
 	}
 
 	/**
-	 * Trac has sepcial encoding rules for the returned output: None is
-	 * represented by "--".
+	 * Trac has sepcial encoding rules for the returned output: None is represented by "--".
 	 */
 	private String parseTicketValue(String value) {
 		if ("--".equals(value)) {
@@ -303,8 +301,8 @@ public class TracWebClient extends AbstractTracClient {
 	}
 
 	/**
-	 * Extracts constant values from <code>query</code>. The Trac query
-	 * script does not return fields that matched exactly againt a single value.
+	 * Extracts constant values from <code>query</code>. The Trac query script does not return fields that matched
+	 * exactly againt a single value.
 	 */
 	private Map<String, String> getExactMatchValues(TracSearch query) {
 		Map<String, String> values = new HashMap<String, String>();
@@ -402,8 +400,7 @@ public class TracWebClient extends AbstractTracClient {
 	};
 
 	/**
-	 * Parses the JavaScript code from the query page to extract repository
-	 * configuration.
+	 * Parses the JavaScript code from the query page to extract repository configuration.
 	 */
 	private void parseAttributes(String text) throws IOException {
 		StreamTokenizer t = new StreamTokenizer(new StringReader(text));
@@ -443,8 +440,8 @@ public class TracWebClient extends AbstractTracClient {
 						data.ticketResolutions = new ArrayList<TracTicketResolution>();
 						attributeFactory = new AttributeFactory() {
 							public void addAttribute(String value) {
-								data.ticketResolutions.add(new TracTicketResolution(value, data.ticketResolutions
-										.size() + 1));
+								data.ticketResolutions.add(new TracTicketResolution(value,
+										data.ticketResolutions.size() + 1));
 							}
 						};
 					} else if ("severity".equals(t.sval)) {
@@ -647,8 +644,7 @@ public class TracWebClient extends AbstractTracClient {
 	}
 
 	/**
-	 * Looks for a <code>strong</code> tag and returns the text enclosed by
-	 * the tag.
+	 * Looks for a <code>strong</code> tag and returns the text enclosed by the tag.
 	 */
 	private String getStrongText(HtmlStreamTokenizer tokenizer) throws IOException, ParseException {
 		for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {

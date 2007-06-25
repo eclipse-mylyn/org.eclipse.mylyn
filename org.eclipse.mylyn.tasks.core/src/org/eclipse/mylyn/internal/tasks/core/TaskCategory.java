@@ -15,7 +15,6 @@ package org.eclipse.mylyn.internal.tasks.core;
 
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 
-
 /**
  * @author Mik Kersten
  */

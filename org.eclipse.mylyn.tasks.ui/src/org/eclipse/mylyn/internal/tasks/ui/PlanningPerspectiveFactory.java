@@ -25,7 +25,7 @@ import org.eclipse.ui.internal.PageLayout;
 public class PlanningPerspectiveFactory implements IPerspectiveFactory {
 
 	public static final String ID_PERSPECTIVE = "org.eclipse.mylyn.tasklist.ui.perspectives.planning";
-	
+
 	public void createInitialLayout(IPageLayout layout) {
 		defineActions(layout);
 		defineLayout(layout);
@@ -63,7 +63,7 @@ public class PlanningPerspectiveFactory implements IPerspectiveFactory {
 
 	@SuppressWarnings("unchecked")
 	public static void removeUninterestingActionSets(IPageLayout layout) {
-		ArrayList actionSets = ((PageLayout)layout).getActionSets();
+		ArrayList actionSets = ((PageLayout) layout).getActionSets();
 		actionSets.remove("org.eclipse.ui.edit.text.actionSet.annotationNavigation");
 		actionSets.remove("org.eclipse.ui.edit.text.actionSet.convertLineDelimitersTo");
 		actionSets.remove("org.eclipse.ui.externaltools.ExternalToolsSet");

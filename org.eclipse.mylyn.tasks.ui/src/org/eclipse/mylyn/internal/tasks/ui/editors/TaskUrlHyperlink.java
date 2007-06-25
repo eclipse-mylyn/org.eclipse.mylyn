@@ -20,6 +20,7 @@ public class TaskUrlHyperlink extends URLHyperlink {
 	public TaskUrlHyperlink(IRegion region, String urlString) {
 		super(region, urlString);
 	}
+
 	@Override
 	public void open() {
 		String url = getURLString();

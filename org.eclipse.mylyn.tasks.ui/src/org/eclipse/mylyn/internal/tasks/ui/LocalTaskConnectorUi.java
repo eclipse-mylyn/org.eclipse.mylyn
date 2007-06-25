@@ -26,7 +26,6 @@ public class LocalTaskConnectorUi extends AbstractRepositoryConnectorUi {
 		return new NewLocalTaskWizard();
 	}
 
-
 	@Override
 	public IWizard getQueryWizard(TaskRepository repository, AbstractRepositoryQuery queryToEdit) {
 		return null;

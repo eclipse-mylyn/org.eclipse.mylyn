@@ -16,24 +16,25 @@ import org.eclipse.ui.IPersistableElement;
 
 /**
  * Adapter factory used to adapt AbstractTaskContainer to IPersistableElement
- *    
+ * 
  * @author Eugene Kuleshov
  */
 public class TaskWorkingSetAdapterFactory implements IAdapterFactory {
 
 	private static final String TASK_ELEMENT_FACTORY_ID = "org.eclipse.mylyn.tasks.ui.workingSets.elementFactory";
-	
+
 	@SuppressWarnings("unchecked")
 	private static final Class[] ADAPTER_TYPES = new Class[] { IPersistableElement.class };
-	
-	@SuppressWarnings("unchecked") 
+
+	@SuppressWarnings("unchecked")
 	public Class[] getAdapterList() {
 		return ADAPTER_TYPES;
 	}
 
-	public Object getAdapter(final Object adaptableObject, @SuppressWarnings("unchecked") Class adapterType) {
-	    if (adapterType == IPersistableElement.class && adaptableObject instanceof AbstractTaskContainer) {
-	    	return new IPersistableElement() {
+	public Object getAdapter(final Object adaptableObject, @SuppressWarnings("unchecked")
+	Class adapterType) {
+		if (adapterType == IPersistableElement.class && adaptableObject instanceof AbstractTaskContainer) {
+			return new IPersistableElement() {
 				public void saveState(IMemento memento) {
 					AbstractTaskContainer container = (AbstractTaskContainer) adaptableObject;
 					memento.putString(TaskWorkingSetElementFactory.HANDLE_TASK, container.getHandleIdentifier());
@@ -42,7 +43,7 @@ public class TaskWorkingSetAdapterFactory implements IAdapterFactory {
 				public String getFactoryId() {
 					return TASK_ELEMENT_FACTORY_ID;
 				}
-	    	};
+			};
 		} else if (adapterType == IPersistableElement.class && adaptableObject instanceof IProject) {
 			return new IPersistableElement() {
 				public void saveState(IMemento memento) {
@@ -53,9 +54,8 @@ public class TaskWorkingSetAdapterFactory implements IAdapterFactory {
 				public String getFactoryId() {
 					return TASK_ELEMENT_FACTORY_ID;
 				}
-	    	};
+			};
 		}
 		return null;
 	}
 }
-

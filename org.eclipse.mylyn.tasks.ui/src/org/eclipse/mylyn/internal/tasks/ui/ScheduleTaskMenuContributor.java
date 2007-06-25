@@ -55,9 +55,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 
 		final MenuManager subMenuManager = new MenuManager(LABEL_REMINDER);
 
-		subMenuManager
-				.setVisible(selectedElements.size() > 0
-						&& selectedElements.get(0) instanceof AbstractTask);// !(selectedElements.get(0) instanceof AbstractTaskContainer || selectedElements.get(0) instanceof AbstractRepositoryQuery));
+		subMenuManager.setVisible(selectedElements.size() > 0 && selectedElements.get(0) instanceof AbstractTask);// !(selectedElements.get(0) instanceof AbstractTaskContainer || selectedElements.get(0) instanceof AbstractRepositoryQuery));
 
 		AbstractTaskContainer singleSelection = null;
 		if (selectedElements.size() == 1) {
@@ -189,7 +187,8 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 					theCalendar.setTime(singleTaskSelection.getScheduledForDate());
 				}
 				DateSelectionDialog reminderDialog = new DateSelectionDialog(PlatformUI.getWorkbench()
-						.getActiveWorkbenchWindow().getShell(), theCalendar, DatePicker.TITLE_DIALOG);
+						.getActiveWorkbenchWindow()
+						.getShell(), theCalendar, DatePicker.TITLE_DIALOG);
 				int result = reminderDialog.open();
 				if (result == Window.OK) {
 					for (AbstractTaskContainer element : taskListElementsToSchedule) {

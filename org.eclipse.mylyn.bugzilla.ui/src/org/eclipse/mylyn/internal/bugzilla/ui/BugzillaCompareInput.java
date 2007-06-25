@@ -58,16 +58,14 @@ public class BugzillaCompareInput extends CompareEditorInput {
 	}
 
 	/**
-	 * @return The original object that's to be compared (appears on the top of
-	 *         the compare view).
+	 * @return The original object that's to be compared (appears on the top of the compare view).
 	 */
 	public IStructureComparator getAncestor() {
 		return ancestor;
 	}
 
 	/**
-	 * Sets the original object that's to be compared (appears on the top of the
-	 * compare view).
+	 * Sets the original object that's to be compared (appears on the top of the compare view).
 	 * 
 	 * @param newAncestor
 	 *            The new original object.
@@ -79,16 +77,14 @@ public class BugzillaCompareInput extends CompareEditorInput {
 	}
 
 	/**
-	 * @return The local object that's to be compared (appears on the left side
-	 *         of the compare view).
+	 * @return The local object that's to be compared (appears on the left side of the compare view).
 	 */
 	public IStructureComparator getLeft() {
 		return left;
 	}
 
 	/**
-	 * Sets the local object that's to be compared (appears on the left side of
-	 * the compare view).
+	 * Sets the local object that's to be compared (appears on the left side of the compare view).
 	 * 
 	 * @param newLeft
 	 *            The new local object.
@@ -99,16 +95,14 @@ public class BugzillaCompareInput extends CompareEditorInput {
 	}
 
 	/**
-	 * @return The online object that's to be compared (appears on the right
-	 *         side of the compare view).
+	 * @return The online object that's to be compared (appears on the right side of the compare view).
 	 */
 	public IStructureComparator getRight() {
 		return right;
 	}
 
 	/**
-	 * Sets the online object that's to be compared (appears on the right side
-	 * of the compare view).
+	 * Sets the online object that's to be compared (appears on the right side of the compare view).
 	 * 
 	 * @param newRight
 	 *            The new online object.

@@ -13,7 +13,6 @@ package org.eclipse.mylyn.internal.bugzilla.core;
 
 import java.io.IOException;
 
-
 /**
  * @author Rob Elves
  */

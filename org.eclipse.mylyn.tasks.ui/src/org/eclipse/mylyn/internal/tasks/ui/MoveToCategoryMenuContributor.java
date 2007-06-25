@@ -33,12 +33,12 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 		final MenuManager subMenuManager = new MenuManager(LABEL);
 
 		//subMenuManager.setVisible(selectedElements.size() > 0 && !(selectedElements.get(0) instanceof AbstractTaskContainer || selectedElements.get(0) instanceof AbstractRepositoryQuery));
-		
-		subMenuManager
-		.setVisible(selectedElements.size() > 0
-				&& selectedElements.get(0) instanceof AbstractTask);
-		
-		List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(TasksUiPlugin.getTaskListManager().getTaskList().getCategories());
+
+		subMenuManager.setVisible(selectedElements.size() > 0 && selectedElements.get(0) instanceof AbstractTask);
+
+		List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(TasksUiPlugin.getTaskListManager()
+				.getTaskList()
+				.getCategories());
 		Collections.sort(categories);
 		for (final AbstractTaskCategory category : categories) {
 			if (!category.equals(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer())) {
@@ -69,15 +69,13 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 		subMenuManager.add(action);
 		return subMenuManager;
 	}
-	
+
 	/**
 	 * public for testing
 	 * 
-	 * Deals with text where user has entered a '@' or tab character but which are not meant to be accelerators.
-	 * from: Action#setText: 
-	 * Note that if you want to insert a '@' character into the text (but no accelerator,
-	 * you can simply insert a '@' or a tab at the end of the text.
-	 * see Action#setText
+	 * Deals with text where user has entered a '@' or tab character but which are not meant to be accelerators. from:
+	 * Action#setText: Note that if you want to insert a '@' character into the text (but no accelerator, you can simply
+	 * insert a '@' or a tab at the end of the text. see Action#setText
 	 */
 	public String handleAcceleratorKeys(String text) {
 		if (text == null) {
@@ -94,17 +92,16 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 		return text;
 	}
 
-	/** 
+	/**
 	 * @param selectedElements
-	 * @param category 
+	 * @param category
 	 */
 	private void moveToCategory(final List<AbstractTaskContainer> selectedElements, AbstractTaskCategory category) {
 		for (AbstractTaskContainer element : selectedElements) {
 			if (element instanceof AbstractTask) {
-				TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer((AbstractTask) element,
-						category);
+				TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer((AbstractTask) element, category);
 			}
 		}
 	}
-	
+
 }

@@ -32,12 +32,12 @@ import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
  * Extend to provide facility for downloading files from the task repository.
  * 
  * @author Steffen Pingel
- * @since	2.0
+ * @since 2.0
  */
 public abstract class AbstractAttachmentHandler {
 
 	protected static final int BUFFER_SIZE = 1024;
-	
+
 	private TaskDataManager taskDataManager = null;
 
 	public static final String MESSAGE_ATTACHMENTS_NOT_SUPPORTED = "Attachments not supported by connector: ";
@@ -47,7 +47,7 @@ public abstract class AbstractAttachmentHandler {
 	public final static String MYLAR_CONTEXT_FILENAME = "mylyn-context.zip";
 
 	public static final String MYLAR_CONTEXT_DESCRIPTION = "mylyn/context/zip";
-	
+
 	public abstract void uploadAttachment(TaskRepository repository, AbstractTask task, ITaskAttachment attachment,
 			String comment, IProgressMonitor monitor) throws CoreException;
 
@@ -61,33 +61,35 @@ public abstract class AbstractAttachmentHandler {
 	public abstract boolean canDeprecate(TaskRepository repository, RepositoryAttachment attachment);
 
 	/**
-	 * To deprecate, change the attribute on the RepositoryAttachment and pass
-	 * to this method
+	 * To deprecate, change the attribute on the RepositoryAttachment and pass to this method
 	 */
-	public abstract void updateAttachment(TaskRepository repository, RepositoryAttachment attachment) throws CoreException;
-	
+	public abstract void updateAttachment(TaskRepository repository, RepositoryAttachment attachment)
+			throws CoreException;
+
 	public void downloadAttachment(TaskRepository repository, RepositoryAttachment attachment, OutputStream out,
 			IProgressMonitor monitor) throws CoreException {
 		monitor.beginTask("Downloading attachment", IProgressMonitor.UNKNOWN);
 		try {
-			InputStream in = new BufferedInputStream(getAttachmentAsStream(repository, attachment, new SubProgressMonitor(monitor, 1)));
+			InputStream in = new BufferedInputStream(getAttachmentAsStream(repository, attachment,
+					new SubProgressMonitor(monitor, 1)));
 			try {
-				byte[] buffer = new byte[BUFFER_SIZE]; 
+				byte[] buffer = new byte[BUFFER_SIZE];
 				while (true) {
 					int count = in.read(buffer);
 					if (count == -1) {
 						return;
 					}
-					if (monitor.isCanceled()) { 
+					if (monitor.isCanceled()) {
 						throw new OperationCanceledException();
 					}
 					out.write(buffer, 0, count);
-					if (monitor.isCanceled()) { 
+					if (monitor.isCanceled()) {
 						throw new OperationCanceledException();
 					}
 				}
 			} catch (IOException e) {
-				throw new CoreException(RepositoryStatus.createStatus(repository, IStatus.ERROR, "org.eclipse.mylyn.tasks.core", "IO error reading attachment: " + e.getMessage()));
+				throw new CoreException(RepositoryStatus.createStatus(repository, IStatus.ERROR,
+						"org.eclipse.mylyn.tasks.core", "IO error reading attachment: " + e.getMessage()));
 			} finally {
 				try {
 					in.close();
@@ -108,7 +110,7 @@ public abstract class AbstractAttachmentHandler {
 			return (remoteContextAttachments != null && remoteContextAttachments.size() > 0);
 		}
 	}
-	
+
 	/**
 	 * Implementors of this repositoryOperations must perform it locally without going to the server since it is used
 	 * for frequent repositoryOperations such as decoration.
@@ -166,7 +168,7 @@ public abstract class AbstractAttachmentHandler {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Retrieves a context stored in <code>attachment</code> from <code>task</code>.
 	 * 
@@ -202,9 +204,9 @@ public abstract class AbstractAttachmentHandler {
 		}
 		return true;
 	}
-	
+
 	public void setTaskDataManager(TaskDataManager taskDataManager) {
 		this.taskDataManager = taskDataManager;
 	}
-	
+
 }

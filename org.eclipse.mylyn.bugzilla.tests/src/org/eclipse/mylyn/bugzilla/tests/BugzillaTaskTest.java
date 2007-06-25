@@ -37,11 +37,11 @@ public class BugzillaTaskTest extends TestCase {
 
 	private BugzillaAttributeFactory attributeFactory = new BugzillaAttributeFactory();
 
-
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		new BugzillaTaskDataHandler((BugzillaRepositoryConnector)TasksUiPlugin.getRepositoryManager().getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND));
+		new BugzillaTaskDataHandler((BugzillaRepositoryConnector) TasksUiPlugin.getRepositoryManager()
+				.getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND));
 	}
 
 	@Override
@@ -53,32 +53,31 @@ public class BugzillaTaskTest extends TestCase {
 		BugzillaTask task = new BugzillaTask("repo", "1", "summary");
 		RepositoryTaskData taskData = new RepositoryTaskData(new BugzillaAttributeFactory(),
 				BugzillaCorePlugin.REPOSITORY_KIND, IBugzillaConstants.ECLIPSE_BUGZILLA_URL, "1");
-				
+
 		//XXX rewrite test
-		
+
 		assertNull(task.getCompletionDate());
 
 		Date now = new Date();
 		String nowTimeStamp = new SimpleDateFormat(BugzillaAttributeFactory.comment_creation_ts_format).format(now);
 
 		TaskComment taskComment = new TaskComment(new BugzillaAttributeFactory(), 1);
-		RepositoryTaskAttribute attribute = attributeFactory.createAttribute(BugzillaReportElement.BUG_WHEN
-				.getKeyString());
+		RepositoryTaskAttribute attribute = attributeFactory.createAttribute(BugzillaReportElement.BUG_WHEN.getKeyString());
 		attribute.setValue(nowTimeStamp);
 		taskComment.addAttribute(BugzillaReportElement.BUG_WHEN.getKeyString(), attribute);
 		taskData.addComment(taskComment);
 		assertNull(task.getCompletionDate());
 
-		RepositoryTaskAttribute resolvedAttribute = attributeFactory.createAttribute(BugzillaReportElement.BUG_STATUS
-				.getKeyString());
+		RepositoryTaskAttribute resolvedAttribute = attributeFactory.createAttribute(BugzillaReportElement.BUG_STATUS.getKeyString());
 		resolvedAttribute.setValue(IBugzillaConstants.VALUE_STATUS_RESOLVED);
 		taskData.addAttribute(BugzillaReportElement.BUG_STATUS.getKeyString(), resolvedAttribute);
-		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
-		connector.updateTaskFromTaskData(new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND, "http://eclipse.org"), task, taskData);
+		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+				BugzillaCorePlugin.REPOSITORY_KIND);
+		connector.updateTaskFromTaskData(new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND, "http://eclipse.org"),
+				task, taskData);
 		assertNotNull(task.getCompletionDate());
-		assertEquals(taskData.getAttributeFactory()
-				.getDateForAttributeType(BugzillaReportElement.BUG_WHEN.getKeyString(), nowTimeStamp), task
-				.getCompletionDate());
+		assertEquals(taskData.getAttributeFactory().getDateForAttributeType(
+				BugzillaReportElement.BUG_WHEN.getKeyString(), nowTimeStamp), task.getCompletionDate());
 
 	}
 

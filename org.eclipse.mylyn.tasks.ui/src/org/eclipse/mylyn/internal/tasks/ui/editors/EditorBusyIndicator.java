@@ -60,8 +60,8 @@ public class EditorBusyIndicator {
 		try {
 			if (images == null) {
 				images = TasksUiImages.getProgressImages();// If we fail to
-															// load do not
-															// continue
+				// load do not
+				// continue
 				if (images == null) {
 					showingBusy = false;
 					return;

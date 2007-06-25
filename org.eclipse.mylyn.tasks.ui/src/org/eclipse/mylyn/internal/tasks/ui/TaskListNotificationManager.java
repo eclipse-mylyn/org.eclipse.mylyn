@@ -69,7 +69,8 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 									if (currentlyNotifying.size() > 0) {
 										popup = new TaskListNotificationPopup(new Shell(PlatformUI.getWorkbench()
 												.getDisplay()));
-										List<ITaskListNotification> toDisplay = new ArrayList<ITaskListNotification>(currentlyNotifying);
+										List<ITaskListNotification> toDisplay = new ArrayList<ITaskListNotification>(
+												currentlyNotifying);
 										Collections.sort(toDisplay);
 										popup.setContents(toDisplay);
 										cleanNotified();
@@ -158,9 +159,11 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 	}
 
 	public void startNotification(long initialStartupTime) {
-		if (TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(TasksUiPreferenceConstants.NOTIFICATIONS_ENABLED)) {
+		if (TasksUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getBoolean(TasksUiPreferenceConstants.NOTIFICATIONS_ENABLED)) {
 			if (!openJob.cancel()) {
-				try {					
+				try {
 					openJob.join();
 				} catch (InterruptedException e) {
 					// ignore
@@ -198,11 +201,11 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 
 	public void propertyChange(PropertyChangeEvent event) {
 		if (event.getProperty().equals(TasksUiPreferenceConstants.NOTIFICATIONS_ENABLED)) {
-			Object newValue = event.getNewValue(); 
+			Object newValue = event.getNewValue();
 			if (!(newValue instanceof Boolean)) {
 				// default if no preference value
 				startNotification(OPEN_POPUP_DELAY);
-			} else if ((Boolean)newValue == true) {
+			} else if ((Boolean) newValue == true) {
 				startNotification(OPEN_POPUP_DELAY);
 			} else {
 				stopNotification();

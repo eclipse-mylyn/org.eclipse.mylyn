@@ -39,8 +39,7 @@ public class AddExistingTaskWizard extends MultiRepositoryAwareWizard {
 
 		@Override
 		protected IWizard createWizard(TaskRepository taskRepository) {
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(
-					taskRepository.getConnectorKind());
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskRepository.getConnectorKind());
 			return connectorUi.getAddExistingTaskWizard(taskRepository);
 		}
 	}

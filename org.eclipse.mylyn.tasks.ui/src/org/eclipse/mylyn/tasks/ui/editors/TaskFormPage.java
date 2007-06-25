@@ -64,7 +64,7 @@ import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.themes.IThemeManager;
 
 /**
- * Used by the task editor.  Not recommended to extend.
+ * Used by the task editor. Not recommended to extend.
  * 
  * NOTE: likely to change for 3.0.
  * 
@@ -238,8 +238,8 @@ public class TaskFormPage extends FormPage {
 	}
 
 	/**
-	 * Text viewer generally used for displaying non-editable text. No
-	 * annotation model or spell checking support. Supports cut/copy/paste/etc..
+	 * Text viewer generally used for displaying non-editable text. No annotation model or spell checking support.
+	 * Supports cut/copy/paste/etc..
 	 */
 	protected TextViewer addTextViewer(TaskRepository repository, Composite composite, String text, int style) {
 
@@ -294,9 +294,8 @@ public class TaskFormPage extends FormPage {
 	}
 
 	/**
-	 * For viewing and editing text. Spell checking w/ annotations supported One
-	 * or two max per editor, any more and the spell checker will bring the
-	 * editor to a grinding halt.
+	 * For viewing and editing text. Spell checking w/ annotations supported One or two max per editor, any more and the
+	 * spell checker will bring the editor to a grinding halt.
 	 */
 	protected TextViewer addTextEditor(TaskRepository repository, Composite composite, String text, boolean spellCheck,
 			int style) {
@@ -424,7 +423,7 @@ public class TaskFormPage extends FormPage {
 	}
 
 	public void markDirty(boolean dirty) {
-		isDirty = dirty;	
+		isDirty = dirty;
 		getManagedForm().dirtyStateChanged();
 		return;
 	}
@@ -457,8 +456,7 @@ public class TaskFormPage extends FormPage {
 		}
 
 		public void paint(Annotation annotation, GC gc, Canvas canvas, Rectangle bounds) {
-			ImageUtilities
-					.drawImage(((ErrorAnnotation) annotation).getImage(), gc, canvas, bounds, SWT.CENTER, SWT.TOP);
+			ImageUtilities.drawImage(((ErrorAnnotation) annotation).getImage(), gc, canvas, bounds, SWT.CENTER, SWT.TOP);
 		}
 
 		public boolean isPaintable(Annotation annotation) {

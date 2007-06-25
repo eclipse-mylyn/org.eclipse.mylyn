@@ -22,18 +22,17 @@ public interface IRepositoryTaskSelection extends ISelection {
 	public boolean hasComment();
 
 	/**
-	 * @return the <code>Comment</code> object for this selection, or
-	 *         <code>null</code> if a comment was not selected.
+	 * @return the <code>Comment</code> object for this selection, or <code>null</code> if a comment was not
+	 *         selected.
 	 */
 	public TaskComment getComment();
 
 	/**
-	 * Sets the <code>Comment</code> object for this selection. If a comment
-	 * was not selected, then this should be <code>null</code>.
+	 * Sets the <code>Comment</code> object for this selection. If a comment was not selected, then this should be
+	 * <code>null</code>.
 	 * 
 	 * @param taskComment
-	 *            The selection's comment, or <code>null</code> if not
-	 *            applicable.
+	 *            The selection's comment, or <code>null</code> if not applicable.
 	 */
 	public void setComment(TaskComment taskComment);
 
@@ -64,8 +63,8 @@ public interface IRepositoryTaskSelection extends ISelection {
 	public void setId(String id);
 
 	/**
-	 * @return The server of the Bugzilla object that the selection was on, or
-	 *         <code>null</code> if no server is supplied.
+	 * @return The server of the Bugzilla object that the selection was on, or <code>null</code> if no server is
+	 *         supplied.
 	 */
 	public String getRepositoryUrl();
 

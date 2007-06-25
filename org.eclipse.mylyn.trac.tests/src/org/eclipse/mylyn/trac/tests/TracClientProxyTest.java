@@ -10,27 +10,29 @@ import org.eclipse.mylyn.web.core.WebClientUtil;
 public class TracClientProxyTest extends AbstractTracClientTest {
 
 	private TestProxy testProxy;
+
 	private Proxy proxy;
+
 	private int proxyPort;
-	
+
 	public TracClientProxyTest() {
 	}
-	
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		
+
 		testProxy = new TestProxy();
 		proxyPort = testProxy.startAndWait();
 	}
-	
+
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		
+
 		testProxy.stop();
 	}
-	
+
 	public void testConnectProxyWeb() throws Exception {
 		version = Version.TRAC_0_9;
 		connectProxy(TracTestConstants.TEST_TRAC_010_URL, "GET");
@@ -62,5 +64,5 @@ public class TracClientProxyTest extends AbstractTracClientTest {
 
 		assertEquals(expectedMethod, testProxy.getRequest().getMethod());
 	}
-	
+
 }

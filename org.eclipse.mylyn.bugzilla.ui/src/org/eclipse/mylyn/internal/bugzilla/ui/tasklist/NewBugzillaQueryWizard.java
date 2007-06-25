@@ -65,25 +65,25 @@ public class NewBugzillaQueryWizard extends Wizard {
 		TasksUiPlugin.getTaskListManager().getTaskList().addQuery(queryCategory);
 //		boolean offline = MylarTaskListPlugin.getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.WORK_OFFLINE);
 //		if (!offline) {
-			WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
-				@Override
-				protected void execute(IProgressMonitor monitor) throws CoreException {
-					monitor.beginTask("Executing query", 50);
-					try {
-						AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
-								.getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
-						TasksUiPlugin.getSynchronizationManager().synchronize(connector, queryCategory, null, true);
-					} finally {
-						monitor.done();
-					}
+		WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
+			@Override
+			protected void execute(IProgressMonitor monitor) throws CoreException {
+				monitor.beginTask("Executing query", 50);
+				try {
+					AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
+							.getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
+					TasksUiPlugin.getSynchronizationManager().synchronize(connector, queryCategory, null, true);
+				} finally {
+					monitor.done();
 				}
-			};
-
-			try {
-				getContainer().run(true, false, op);
-			} catch (Exception e) {
-				StatusHandler.log(e, "There was a problem executing the query refresh");
 			}
+		};
+
+		try {
+			getContainer().run(true, false, op);
+		} catch (Exception e) {
+			StatusHandler.log(e, "There was a problem executing the query refresh");
+		}
 //		}
 
 		return true;

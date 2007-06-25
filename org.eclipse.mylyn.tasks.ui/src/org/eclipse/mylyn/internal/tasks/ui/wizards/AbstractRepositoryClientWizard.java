@@ -27,8 +27,7 @@ import org.eclipse.ui.INewWizard;
 public abstract class AbstractRepositoryClientWizard extends Wizard implements INewWizard {
 
 	/**
-	 * If not null, indicates that the wizard will initially jump to a specific
-	 * connector page
+	 * If not null, indicates that the wizard will initially jump to a specific connector page
 	 */
 	private String repositoryType;
 

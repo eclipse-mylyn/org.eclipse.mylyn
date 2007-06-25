@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
-
 /**
  * @author Rob Elves
  * @author Mik Kersten
@@ -21,8 +20,8 @@ public class ContentOutlineTools {
 	public static final String OFFLINE_SERVER_DEFAULT = "[local]";
 
 	/**
-	 * Returns a unique handle for the bugzilla selection. Contains the bug taskId,
-	 * the bug server, and (if applicable) the comment number.
+	 * Returns a unique handle for the bugzilla selection. Contains the bug taskId, the bug server, and (if applicable)
+	 * the comment number.
 	 * 
 	 * @param taskSelection
 	 *            The bugzilla selection.
@@ -42,7 +41,8 @@ public class ContentOutlineTools {
 	}
 
 	public static String getName(IRepositoryTaskSelection taskSelection) {
-		String name = taskSelection.getRepositoryUrl() + ": Bug#: " + taskSelection.getId() + ": " + taskSelection.getBugSummary();
+		String name = taskSelection.getRepositoryUrl() + ": Bug#: " + taskSelection.getId() + ": "
+				+ taskSelection.getBugSummary();
 		if (taskSelection.hasComment()) {
 			name += " : Comment#: " + taskSelection.getComment().getNumber();
 		} else if (taskSelection.isCommentHeader()) {

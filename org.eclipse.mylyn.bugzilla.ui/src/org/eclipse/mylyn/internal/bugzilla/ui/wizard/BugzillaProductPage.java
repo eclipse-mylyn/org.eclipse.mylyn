@@ -88,8 +88,7 @@ public class BugzillaProductPage extends WizardPage {
 	private List<String> products = null;
 
 	/**
-	 * Reference to the bug wizard which created this page so we can create the
-	 * second page
+	 * Reference to the bug wizard which created this page so we can create the second page
 	 */
 	private NewBugzillaTaskWizard bugWizard;
 
@@ -227,9 +226,8 @@ public class BugzillaProductPage extends WizardPage {
 													+ "Please ensure proper configuration in "
 													+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ". ", true);
 								} else if (ce.getStatus().getException() instanceof IOException) {
-									StatusHandler.fail(ce,
-											"Connection Error, please ensure proper configuration in "
-													+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".", true);
+									StatusHandler.fail(ce, "Connection Error, please ensure proper configuration in "
+											+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".", true);
 								} else {
 									StatusHandler.fail(ce, "Error updating repository attributes for "
 											+ repository.getUrl(), true);
@@ -310,8 +308,8 @@ public class BugzillaProductPage extends WizardPage {
 					String key = option.substring(0, option.indexOf("="));
 					if ("product".equals(key)) {
 						try {
-							products.add(URLDecoder.decode(option.substring(option.indexOf("=") + 1), repository
-									.getCharacterEncoding()));
+							products.add(URLDecoder.decode(option.substring(option.indexOf("=") + 1),
+									repository.getCharacterEncoding()));
 							// TODO: list box only accepts a single selection so
 							// we break on first found
 							break;

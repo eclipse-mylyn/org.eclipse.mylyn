@@ -32,12 +32,13 @@ public class EditRepositoryPropertiesAction extends AbstractTaskRepositoryAction
 
 	@Override
 	protected boolean updateSelection(IStructuredSelection selection) {
-		if(selection != null && !selection.isEmpty()){
+		if (selection != null && !selection.isEmpty()) {
 			Object selectedObject = selection.getFirstElement();
-			if(selectedObject instanceof TaskRepository){
+			if (selectedObject instanceof TaskRepository) {
 				TaskRepository taskRepository = (TaskRepository) selectedObject;
-				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(taskRepository.getConnectorKind());
-				if(connector.isUserManaged()){
+				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+						taskRepository.getConnectorKind());
+				if (connector.isUserManaged()) {
 					return true;
 				}
 				return false;
@@ -45,7 +46,7 @@ public class EditRepositoryPropertiesAction extends AbstractTaskRepositoryAction
 		}
 		return false;
 	}
-	
+
 	@Override
 	public void run() {
 		IStructuredSelection selection = getStructuredSelection();

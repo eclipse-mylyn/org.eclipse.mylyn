@@ -52,8 +52,8 @@ public class ClearOutgoingAction extends Action {
 		ArrayList<AbstractTask> toClear = new ArrayList<AbstractTask>();
 		for (Object selectedObject : selectedElements) {
 			if (selectedObject instanceof AbstractTask
-					&& ((AbstractTask) selectedObject).getSynchronizationState()
-							.equals(RepositoryTaskSyncState.OUTGOING)) {
+					&& ((AbstractTask) selectedObject).getSynchronizationState().equals(
+							RepositoryTaskSyncState.OUTGOING)) {
 				toClear.add(((AbstractTask) selectedObject));
 			}
 		}

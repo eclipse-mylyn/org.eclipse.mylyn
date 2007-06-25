@@ -67,12 +67,14 @@ public class NewTaskWizard extends Wizard implements INewWizard {
 		final AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 		if (taskDataHandler == null) {
 			StatusHandler.displayStatus("Error creating new task", new RepositoryStatus(IStatus.ERROR,
-					TasksUiPlugin.ID_PLUGIN, RepositoryStatus.ERROR_REPOSITORY, "The selected repository does not support creating new tasks."));
+					TasksUiPlugin.ID_PLUGIN, RepositoryStatus.ERROR_REPOSITORY,
+					"The selected repository does not support creating new tasks."));
 			return false;
 		}
 
-		AbstractAttributeFactory attributeFactory = taskDataHandler.getAttributeFactory(taskRepository.getUrl(), taskRepository.getConnectorKind(), AbstractTask.DEFAULT_TASK_KIND);
-		
+		AbstractAttributeFactory attributeFactory = taskDataHandler.getAttributeFactory(taskRepository.getUrl(),
+				taskRepository.getConnectorKind(), AbstractTask.DEFAULT_TASK_KIND);
+
 		final RepositoryTaskData taskData = new RepositoryTaskData(attributeFactory, taskRepository.getConnectorKind(),
 				taskRepository.getUrl(), TasksUiPlugin.getDefault().getNextNewRepositoryTaskId());
 		taskData.setNew(true);
@@ -82,8 +84,10 @@ public class NewTaskWizard extends Wizard implements INewWizard {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					try {
 						if (!taskDataHandler.initializeTaskData(taskRepository, taskData, monitor)) {
-							throw new CoreException(new RepositoryStatus(IStatus.ERROR,
-									TasksUiPlugin.ID_PLUGIN, RepositoryStatus.ERROR_REPOSITORY, "The selected repository does not support creating new tasks."));						}
+							throw new CoreException(new RepositoryStatus(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+									RepositoryStatus.ERROR_REPOSITORY,
+									"The selected repository does not support creating new tasks."));
+						}
 					} catch (CoreException e) {
 						throw new InvocationTargetException(e);
 					}

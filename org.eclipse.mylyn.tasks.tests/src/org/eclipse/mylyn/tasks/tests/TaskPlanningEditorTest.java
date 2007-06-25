@@ -42,11 +42,10 @@ public class TaskPlanningEditorTest extends TestCase {
 	protected void tearDown() throws Exception {
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
 		TasksUiPlugin.getRepositoryManager().clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
-		TasksUiPlugin.getTaskListManager().resetTaskList();		
+		TasksUiPlugin.getTaskListManager().resetTaskList();
 		TasksUiPlugin.getTaskListManager().saveTaskList();
 		super.tearDown();
 	}
-
 
 	public void testDirtyOnEdit() {
 		LocalTask task = new LocalTask("1", MOCK_LABEL);
@@ -89,12 +88,11 @@ public class TaskPlanningEditorTest extends TestCase {
 		assertEquals(NEW_DESCRIPTION, editor.getDescription());
 		assertFalse(editor.isDirty());
 	}
-	
-	/** 
-	 * Test that if editor is dirty and external rename happens
-	 * editor remains dirty
+
+	/**
+	 * Test that if editor is dirty and external rename happens editor remains dirty
 	 */
-	public void testRenameInDirtyState() {		
+	public void testRenameInDirtyState() {
 		LocalTask task = new LocalTask("1", MOCK_LABEL);
 		task.setSummary(DESCRIPTION);
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
@@ -107,12 +105,12 @@ public class TaskPlanningEditorTest extends TestCase {
 		assertFalse(editor.isDirty());
 		editor.setDescription(NEW_DESCRIPTION);
 		assertTrue(editor.isDirty());
-		TasksUiPlugin.getTaskListManager().getTaskList().renameTask(task, NEW_DESCRIPTION+"2");
-		assertEquals(NEW_DESCRIPTION+"2", task.getSummary());
+		TasksUiPlugin.getTaskListManager().getTaskList().renameTask(task, NEW_DESCRIPTION + "2");
+		assertEquals(NEW_DESCRIPTION + "2", task.getSummary());
 		editor.updateTaskData(task);
 		//assertEquals(NEW_DESCRIPTION+"2", editor.getFormTitle());
-		assertEquals(NEW_DESCRIPTION+"2", editor.getDescription());
+		assertEquals(NEW_DESCRIPTION + "2", editor.getDescription());
 		assertTrue(editor.isDirty());
 	}
-	
+
 }

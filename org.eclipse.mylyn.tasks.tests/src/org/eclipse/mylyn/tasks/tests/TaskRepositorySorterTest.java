@@ -46,7 +46,7 @@ public class TaskRepositorySorterTest extends TestCase {
 		assertTrue(sorter.compare(null, t1, t2) < 0);
 		assertTrue(sorter.compare(null, t3, t1) > 0);
 	}
-	
+
 	public void testLabelSorting() {
 		TaskRepositoriesSorter sorter = new TaskRepositoriesSorter();
 		TaskRepository t1 = new TaskRepository("kind", "http://a");
@@ -55,7 +55,7 @@ public class TaskRepositorySorterTest extends TestCase {
 		t2.setProperty(IRepositoryConstants.PROPERTY_LABEL, "b");
 		TaskRepository t3 = new TaskRepository("kind", "http://a");
 		t3.setProperty(IRepositoryConstants.PROPERTY_LABEL, "c");
-		
+
 		assertTrue(sorter.compare(null, t1, t2) < 0);
 		assertTrue(sorter.compare(null, t3, t1) > 0);
 	}
@@ -65,7 +65,7 @@ public class TaskRepositorySorterTest extends TestCase {
 		TaskRepository t1 = new TaskRepository("kind", "http://a");
 		t1.setProperty(IRepositoryConstants.PROPERTY_LABEL, "a");
 		TaskRepository t2 = new TaskRepository("kind", "http://a");
-		
+
 		assertTrue(sorter.compare(null, t1, t2) < 0);
 	}
 

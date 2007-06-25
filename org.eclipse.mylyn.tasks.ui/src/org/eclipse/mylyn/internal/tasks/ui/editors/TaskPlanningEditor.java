@@ -134,7 +134,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 	private ImageHyperlink getDescLink;
 
 	private ImageHyperlink openUrlLink;
-	
+
 	private TaskEditor parentEditor = null;
 
 	private ITaskListChangeListener TASK_LIST_LISTENER = new ITaskListChangeListener() {
@@ -142,7 +142,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		public void containersChanged(Set<TaskContainerDelta> containers) {
 			for (TaskContainerDelta taskContainerDelta : containers) {
 				if (taskContainerDelta.getContainer() instanceof AbstractTask) {
-					final AbstractTask updateTask = (AbstractTask)taskContainerDelta.getContainer();
+					final AbstractTask updateTask = (AbstractTask) taskContainerDelta.getContainer();
 					if (updateTask != null && task != null
 							&& updateTask.getHandleIdentifier().equals(task.getHandleIdentifier())) {
 						if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
@@ -506,9 +506,9 @@ public class TaskPlanningEditor extends TaskFormPage {
 			}
 
 			public void linkExited(HyperlinkEvent e) {
-			}			
+			}
 		});
-		
+
 		toolkit.paintBordersFor(urlComposite);
 		toolkit.paintBordersFor(statusComposite);
 	}

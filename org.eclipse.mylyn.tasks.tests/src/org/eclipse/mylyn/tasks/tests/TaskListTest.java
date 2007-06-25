@@ -13,7 +13,6 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.core.TaskList;
 
-
 /**
  * @author Mik Kersten
  */
@@ -24,5 +23,5 @@ public class TaskListTest extends TestCase {
 		taskList.addCategory(new TaskCategory("a"));
 		assertEquals(2, taskList.getUserCategories().size());
 	}
-	
+
 }

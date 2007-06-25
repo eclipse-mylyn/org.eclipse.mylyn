@@ -50,14 +50,14 @@ public abstract class AbstractTracClient implements ITracClient {
 	protected TracClientData data;
 
 	protected Proxy proxy;
-	
+
 	public AbstractTracClient(URL repositoryUrl, Version version, String username, String password, Proxy proxy) {
 		this.repositoryUrl = repositoryUrl;
 		this.version = version;
 		this.username = username;
 		this.password = password;
 		this.proxy = proxy;
-		
+
 		this.data = new TracClientData();
 	}
 
@@ -72,11 +72,8 @@ public abstract class AbstractTracClient implements ITracClient {
 	protected void authenticateAccountManager(HttpClient httpClient) throws IOException, TracLoginException {
 		PostMethod post = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl + LOGIN_URL));
 		post.setFollowRedirects(false);
-		NameValuePair[] data = {
-				new NameValuePair("referer", ""),
-				new NameValuePair("user", username),
-				new NameValuePair("password", password)
-		};
+		NameValuePair[] data = { new NameValuePair("referer", ""), new NameValuePair("user", username),
+				new NameValuePair("password", password) };
 		post.setRequestBody(data);
 		try {
 			int code = httpClient.executeMethod(post);
@@ -88,11 +85,12 @@ public abstract class AbstractTracClient implements ITracClient {
 			post.releaseConnection();
 		}
 	}
-	
+
 	/**
 	 * Check if authentication cookie has been set.
-
-	 * @throws TracLoginException thrown if the cookie has not been set
+	 * 
+	 * @throws TracLoginException
+	 *             thrown if the cookie has not been set
 	 */
 	protected void validateAuthenticationState(HttpClient httpClient) throws TracLoginException {
 		Cookie[] cookies = httpClient.getState().getCookies();
@@ -101,10 +99,10 @@ public abstract class AbstractTracClient implements ITracClient {
 				return;
 			}
 		}
-		
+
 		throw new TracLoginException();
 	}
-	
+
 	public TracComponent[] getComponents() {
 		return (data.components != null) ? data.components.toArray(new TracComponent[0]) : null;
 	}
@@ -124,7 +122,7 @@ public abstract class AbstractTracClient implements ITracClient {
 	public TracTicketField[] getTicketFields() {
 		return (data.ticketFields != null) ? data.ticketFields.toArray(new TracTicketField[0]) : null;
 	}
-	
+
 	public TracTicketResolution[] getTicketResolutions() {
 		return (data.ticketResolutions != null) ? data.ticketResolutions.toArray(new TracTicketResolution[0]) : null;
 	}
@@ -144,24 +142,24 @@ public abstract class AbstractTracClient implements ITracClient {
 	public boolean hasAttributes() {
 		return (data.lastUpdate != 0);
 	}
-	
+
 	public void updateAttributes(IProgressMonitor monitor, boolean force) throws TracException {
 		if (!hasAttributes() || force) {
 			updateAttributes(monitor);
 			data.lastUpdate = System.currentTimeMillis();
 		}
 	}
-	
+
 	public abstract void updateAttributes(IProgressMonitor monitor) throws TracException;
 
 	public void setData(TracClientData data) {
 		this.data = data;
 	}
-	
+
 	public String[] getDefaultTicketResolutions() {
-		return new String[] { "fixed", "invalid", "wontfix", "duplicate", "worksforme" }; 
+		return new String[] { "fixed", "invalid", "wontfix", "duplicate", "worksforme" };
 	}
-	
+
 	public String[] getDefaultTicketActions(String status) {
 		if ("new".equals(status)) {
 			return new String[] { "leave", "resolve", "reassign", "accept" };
@@ -178,9 +176,9 @@ public abstract class AbstractTracClient implements ITracClient {
 	public void setProxy(Proxy proxy) {
 		this.proxy = proxy;
 	}
-	
+
 	public Proxy getProxy() {
 		return proxy;
 	}
-	
+
 }

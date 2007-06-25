@@ -36,7 +36,7 @@ public class AttributeContainer implements Serializable {
 
 	/** report attributes (status, resolution, etc.) */
 	private HashMap<String, RepositoryTaskAttribute> attributes;
-	
+
 	private transient AbstractAttributeFactory attributeFactory;
 
 	public AttributeContainer(AbstractAttributeFactory attributeFactory) {
@@ -55,10 +55,11 @@ public class AttributeContainer implements Serializable {
 			return;
 		}
 		String mapped = attributeFactory.mapCommonAttributeKey(key);
-		if(mapped == null) {
-			StatusHandler.log("Mylar Error: mapped value for "+key+" returned null.", this);
+		if (mapped == null) {
+			StatusHandler.log("Mylar Error: mapped value for " + key + " returned null.", this);
 			return;
-		} if (!attributes.containsKey(mapped)) {
+		}
+		if (!attributes.containsKey(mapped)) {
 			attributeKeys.add(mapped);
 		}
 		attributes.put(mapped, attribute);
@@ -79,8 +80,8 @@ public class AttributeContainer implements Serializable {
 	}
 
 	public List<RepositoryTaskAttribute> getAttributes() {
-		ArrayList<RepositoryTaskAttribute> attributeEntries = new ArrayList<RepositoryTaskAttribute>(attributeKeys
-				.size());
+		ArrayList<RepositoryTaskAttribute> attributeEntries = new ArrayList<RepositoryTaskAttribute>(
+				attributeKeys.size());
 		for (Iterator<String> it = attributeKeys.iterator(); it.hasNext();) {
 			String key = it.next();
 			RepositoryTaskAttribute attribute = attributes.get(key);
@@ -110,8 +111,7 @@ public class AttributeContainer implements Serializable {
 	}
 
 	/**
-	 * sets a value on an attribute, if attribute doesn't exist, appropriate
-	 * attribute is created
+	 * sets a value on an attribute, if attribute doesn't exist, appropriate attribute is created
 	 */
 	public void setAttributeValue(String key, String value) {
 		if (attributeFactory == null) {
@@ -151,8 +151,8 @@ public class AttributeContainer implements Serializable {
 		}
 		return returnValue;
 	}
-	
-	public AbstractAttributeFactory getAttributeFactory(){
+
+	public AbstractAttributeFactory getAttributeFactory() {
 		return attributeFactory;
 	}
 

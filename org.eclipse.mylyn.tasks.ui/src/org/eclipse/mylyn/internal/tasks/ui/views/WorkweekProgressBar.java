@@ -40,7 +40,7 @@ public class WorkweekProgressBar extends Canvas {
 	private int colorBarWidth = 0;
 
 	private Color completedColor;
-	
+
 	private Composite parent;
 
 	public WorkweekProgressBar(Composite parent) {
@@ -52,7 +52,7 @@ public class WorkweekProgressBar extends Canvas {
 			public void controlResized(ControlEvent e) {
 				colorBarWidth = scale(currentTickCount);
 				redraw();
-			} 
+			}
 		});
 		addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent e) {
@@ -63,7 +63,7 @@ public class WorkweekProgressBar extends Canvas {
 		completedColor = themeManager.getCurrentTheme().getColorRegistry().get(
 				TaskListColorsAndFonts.THEME_COLOR_TASK_TODAY_COMPLETED);
 	}
-	
+
 	public void setMaximum(int max) {
 		maxTickCount = max;
 	}
@@ -126,8 +126,9 @@ public class WorkweekProgressBar extends Canvas {
 
 		Rectangle rect = getClientArea();
 		gc.fillRectangle(rect);
-		drawBevelRect(gc, rect.x, rect.y, rect.width - 1, rect.height - 1, disp
-				.getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW), disp.getSystemColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW));
+		drawBevelRect(gc, rect.x, rect.y, rect.width - 1, rect.height - 1,
+				disp.getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW),
+				disp.getSystemColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW));
 
 		setStatusColor(gc);
 		colorBarWidth = Math.min(rect.width - 2, colorBarWidth);
@@ -148,14 +149,14 @@ public class WorkweekProgressBar extends Canvas {
 	public void setCount(int count) {
 		currentTickCount++;
 		int x = colorBarWidth;
-		
+
 		colorBarWidth = scale(currentTickCount);
 
 		if (currentTickCount == maxTickCount)
 			colorBarWidth = getClientArea().width - 1;
 		paintStep(x, colorBarWidth);
 	}
-	
+
 	public void step(int failures) {
 		currentTickCount++;
 		int x = colorBarWidth;

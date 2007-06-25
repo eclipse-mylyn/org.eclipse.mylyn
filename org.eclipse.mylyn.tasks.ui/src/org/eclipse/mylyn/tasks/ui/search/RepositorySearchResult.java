@@ -36,8 +36,7 @@ public class RepositorySearchResult extends AbstractTextSearchResult {
 	 * Constructor for <code>RepositorySearchResult</code> class.
 	 * 
 	 * @param query
-	 *            <code>AbstractRepositorySearchQuery</code> that is producing
-	 *            this result.
+	 *            <code>AbstractRepositorySearchQuery</code> that is producing this result.
 	 */
 	public RepositorySearchResult(ISearchQuery query) {
 		super();
@@ -50,9 +49,8 @@ public class RepositorySearchResult extends AbstractTextSearchResult {
 	}
 
 	/**
-	 * This function always returns <code>null</code>, as the matches for
-	 * this implementation of <code>AbstractTextSearchResult</code> never
-	 * contain files.
+	 * This function always returns <code>null</code>, as the matches for this implementation of
+	 * <code>AbstractTextSearchResult</code> never contain files.
 	 * 
 	 * @see org.eclipse.search.ui.text.AbstractTextSearchResult#getFileMatchAdapter()
 	 */

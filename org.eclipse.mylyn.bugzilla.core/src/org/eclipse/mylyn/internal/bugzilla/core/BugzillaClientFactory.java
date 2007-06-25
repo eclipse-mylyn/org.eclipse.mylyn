@@ -33,7 +33,8 @@ public class BugzillaClientFactory {
 			throws MalformedURLException {
 		URL url = new URL(hostUrl);
 
-		BugzillaClient client = new BugzillaClient(url, username, password, htAuthUser, htAuthPass, encoding, configParameters);
+		BugzillaClient client = new BugzillaClient(url, username, password, htAuthUser, htAuthPass, encoding,
+				configParameters);
 		client.setProxy(proxy);
 		return client;
 	}

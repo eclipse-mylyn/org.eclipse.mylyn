@@ -215,10 +215,12 @@ public class TracRepositoryConnectorTest extends TestCase {
 			public void accept(RepositoryTaskData data) {
 				fail("Unexpected call to accept()");
 			}
+
 			@Override
 			public void accept(AbstractTask hit) {
 				result.add(hit);
-			}};
+			}
+		};
 		IStatus queryStatus = connector.performQuery(query, repository, new NullProgressMonitor(), hitCollector);
 
 		assertTrue(queryStatus.isOK());
@@ -230,17 +232,17 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 	public void testUpdateTaskDetails() throws InvalidTicketException {
 		init(TracTestConstants.TEST_TRAC_010_URL, Version.TRAC_0_9);
-		
+
 		TracTicket ticket = new TracTicket(123);
 		ticket.putBuiltinValue(Key.DESCRIPTION, "mydescription");
 		ticket.putBuiltinValue(Key.PRIORITY, "mypriority");
 		ticket.putBuiltinValue(Key.SUMMARY, "mysummary");
 		ticket.putBuiltinValue(Key.TYPE, "mytype");
 
-		TracTask task = new TracTask(TracTestConstants.TEST_TRAC_010_URL, ""+123, "desc");
+		TracTask task = new TracTask(TracTestConstants.TEST_TRAC_010_URL, "" + 123, "desc");
 		assertEquals(TracTestConstants.TEST_TRAC_010_URL + ITracClient.TICKET_URL + "123", task.getUrl());
 		assertEquals("desc", task.getSummary());
-		
+
 		connector.updateTaskFromTicket(task, ticket, false);
 		assertEquals(TracTestConstants.TEST_TRAC_010_URL + ITracClient.TICKET_URL + "123", task.getUrl());
 		assertEquals("123", task.getTaskKey());
@@ -251,11 +253,11 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 	public void testUpdateTaskDetailsSummaryOnly() throws InvalidTicketException {
 		init(TracTestConstants.TEST_TRAC_010_URL, Version.TRAC_0_9);
-		
+
 		TracTicket ticket = new TracTicket(456);
 		ticket.putBuiltinValue(Key.SUMMARY, "mysummary");
 
-		TracTask task = new TracTask(TracTestConstants.TEST_TRAC_010_URL, ""+456, "desc");
+		TracTask task = new TracTask(TracTestConstants.TEST_TRAC_010_URL, "" + 456, "desc");
 
 		connector.updateTaskFromTicket(task, ticket, false);
 		assertEquals(TracTestConstants.TEST_TRAC_010_URL + ITracClient.TICKET_URL + "456", task.getUrl());
@@ -307,7 +309,8 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 	public void testContextXmlRpc010() throws Exception {
 		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
-		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.attachmentTicketId + "", new NullProgressMonitor());
+		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.attachmentTicketId + "",
+				new NullProgressMonitor());
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 
 		//int size = task.getTaskData().getAttachments().size();
@@ -317,18 +320,19 @@ public class TracRepositoryConnectorTest extends TestCase {
 		sourceContextFile.deleteOnExit();
 
 		assertTrue(connector.getAttachmentHandler().attachContext(repository, task, "", new NullProgressMonitor()));
-		
+
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		// TODO attachment may have been overridden therefore size may not have changed
 		//assertEquals(size + 1, task.getTaskData().getAttachments().size());
-		
+
 		//RepositoryAttachment attachment = task.getTaskData().getAttachments().get(size);
 		//assertTrue(connector.retrieveContext(repository, task, attachment, TasksUiPlugin.getDefault().getProxySettings(), TasksUiPlugin.getDefault().getDataDirectory()));
 	}
 
 	public void testContextWeb096() throws Exception {
 		init(TracTestConstants.TEST_TRAC_096_URL, Version.TRAC_0_9);
-		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.attachmentTicketId + "", new NullProgressMonitor());
+		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.attachmentTicketId + "",
+				new NullProgressMonitor());
 
 		File sourceContextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
 		sourceContextFile.createNewFile();

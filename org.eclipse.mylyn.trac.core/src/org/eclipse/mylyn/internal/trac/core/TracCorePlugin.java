@@ -37,7 +37,7 @@ public class TracCorePlugin extends Plugin {
 	public final static String REPOSITORY_KIND = "trac";
 
 	private TracRepositoryConnector connector;
-	
+
 	public TracCorePlugin() {
 	}
 
@@ -57,7 +57,7 @@ public class TracCorePlugin extends Plugin {
 			connector.stop();
 			connector = null;
 		}
-		
+
 		plugin = null;
 		super.stop(context);
 	}
@@ -65,7 +65,7 @@ public class TracCorePlugin extends Plugin {
 	public TracRepositoryConnector getConnector() {
 		return connector;
 	}
-	
+
 	void setConnector(TracRepositoryConnector connector) {
 		this.connector = connector;
 	}
@@ -85,7 +85,7 @@ public class TracCorePlugin extends Plugin {
 		} else if (e instanceof TracPermissionDeniedException) {
 			return TracStatus.createPermissionDeniedError(repository.getUrl(), PLUGIN_ID);
 		}
-		
+
 		return toStatus(e);
 	}
 
@@ -101,9 +101,11 @@ public class TracCorePlugin extends Plugin {
 			}
 			return new RepositoryStatus(Status.ERROR, PLUGIN_ID, RepositoryStatus.ERROR_IO, message, e);
 		} else if (e instanceof ClassCastException) {
-			return new RepositoryStatus(Status.ERROR, PLUGIN_ID, RepositoryStatus.ERROR_IO, "Unexpected server response: " + e.getMessage(), e);
+			return new RepositoryStatus(Status.ERROR, PLUGIN_ID, RepositoryStatus.ERROR_IO,
+					"Unexpected server response: " + e.getMessage(), e);
 		} else if (e instanceof MalformedURLException) {
-			return new RepositoryStatus(Status.ERROR, PLUGIN_ID, RepositoryStatus.ERROR_IO, "Repository URL is invalid", e);
+			return new RepositoryStatus(Status.ERROR, PLUGIN_ID, RepositoryStatus.ERROR_IO,
+					"Repository URL is invalid", e);
 		} else {
 			return new RepositoryStatus(Status.ERROR, PLUGIN_ID, RepositoryStatus.ERROR_INTERNAL, "Unexpected error", e);
 		}
@@ -134,5 +136,3 @@ public class TracCorePlugin extends Plugin {
 	}
 
 }
-
-

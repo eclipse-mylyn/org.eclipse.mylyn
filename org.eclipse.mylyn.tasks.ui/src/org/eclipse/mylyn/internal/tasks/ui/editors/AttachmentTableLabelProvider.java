@@ -37,8 +37,8 @@ public class AttachmentTableLabelProvider extends DecoratingLabelProvider implem
 
 	private IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
 
-	public AttachmentTableLabelProvider(AbstractRepositoryTaskEditor AbstractTaskEditor,
-			ILabelProvider provider, ILabelDecorator decorator) {
+	public AttachmentTableLabelProvider(AbstractRepositoryTaskEditor AbstractTaskEditor, ILabelProvider provider,
+			ILabelDecorator decorator) {
 		super(provider, decorator);
 		this.AbstractTaskEditor = AbstractTaskEditor;
 	}
@@ -47,7 +47,7 @@ public class AttachmentTableLabelProvider extends DecoratingLabelProvider implem
 		RepositoryAttachment attachment = (RepositoryAttachment) element;
 		if (columnIndex == 0) {
 			if (AbstractAttachmentHandler.MYLAR_CONTEXT_DESCRIPTION.equals(attachment.getDescription())
-				|| AbstractAttachmentHandler.MYLAR_CONTEXT_DESCRIPTION_LEGACY.equals(attachment.getDescription())) {
+					|| AbstractAttachmentHandler.MYLAR_CONTEXT_DESCRIPTION_LEGACY.equals(attachment.getDescription())) {
 				return TasksUiImages.getImage(TasksUiImages.CONTEXT_TRANSFER);
 			} else if (attachment.isPatch()) {
 				return TasksUiImages.getImage(TasksUiImages.ATTACHMENT_PATCH);

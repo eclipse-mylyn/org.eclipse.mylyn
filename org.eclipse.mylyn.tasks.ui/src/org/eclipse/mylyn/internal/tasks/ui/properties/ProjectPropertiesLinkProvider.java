@@ -50,7 +50,6 @@ public class ProjectPropertiesLinkProvider extends AbstractTaskRepositoryLinkPro
 		return null;
 	}
 
-
 	@Override
 	public boolean canSetTaskRepository(IResource resource) {
 		IProject project = resource.getProject();
@@ -63,7 +62,7 @@ public class ProjectPropertiesLinkProvider extends AbstractTaskRepositoryLinkPro
 		if (project == null || !project.isAccessible()) {
 			return false;
 		}
-		
+
 		IScopeContext projectScope = new ProjectScope(project);
 		IEclipsePreferences projectNode = projectScope.getNode(TasksUiPlugin.ID_PLUGIN);
 		if (projectNode != null) {

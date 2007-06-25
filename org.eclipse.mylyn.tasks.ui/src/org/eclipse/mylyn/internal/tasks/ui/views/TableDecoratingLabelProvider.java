@@ -39,7 +39,7 @@ public class TableDecoratingLabelProvider extends DecoratingLabelProvider implem
 			if (element instanceof AbstractTaskContainer && !(element instanceof AbstractTask)) {
 				return super.getImage(element);
 			} else {
-				AbstractTask task = TaskElementLabelProvider.getCorrespondingTask((AbstractTaskContainer)element);
+				AbstractTask task = TaskElementLabelProvider.getCorrespondingTask((AbstractTaskContainer) element);
 				if (task != null) {
 					if (task.isActive()) {
 						return TasksUiImages.getImage(TasksUiImages.TASK_ACTIVE);
@@ -59,7 +59,7 @@ public class TableDecoratingLabelProvider extends DecoratingLabelProvider implem
 				return null;
 			}
 			return super.getImage(element);
-		} 
+		}
 		return null;
 	}
 

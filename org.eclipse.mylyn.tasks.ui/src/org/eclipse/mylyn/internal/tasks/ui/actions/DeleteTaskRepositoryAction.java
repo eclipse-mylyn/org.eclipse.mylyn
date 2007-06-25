@@ -43,17 +43,17 @@ public class DeleteTaskRepositoryAction extends AbstractTaskRepositoryAction {
 	public void init(IViewPart view) {
 		// ignore
 	}
-	
+
 	@Override
 	public void run() {
 		try {
 
-			boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+			boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench()
+					.getActiveWorkbenchWindow()
 					.getShell(), "Confirm Delete", "Delete the selected task repositories?");
 			if (deleteConfirmed) {
 				IStructuredSelection selection = getStructuredSelection();
-				Set<AbstractRepositoryQuery> queries = TasksUiPlugin.getTaskListManager().getTaskList()
-						.getQueries();
+				Set<AbstractRepositoryQuery> queries = TasksUiPlugin.getTaskListManager().getTaskList().getQueries();
 				List<TaskRepository> repositoriesInUse = new ArrayList<TaskRepository>();
 				List<TaskRepository> repositoriesToDelete = new ArrayList<TaskRepository>();
 				for (Object selectedObject : selection.toList()) {
@@ -74,14 +74,14 @@ public class DeleteTaskRepositoryAction extends AbstractTaskRepositoryAction {
 				}
 
 				for (TaskRepository taskRepository : repositoriesToDelete) {
-					TasksUiPlugin.getRepositoryManager().removeRepository(taskRepository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
+					TasksUiPlugin.getRepositoryManager().removeRepository(taskRepository,
+							TasksUiPlugin.getDefault().getRepositoriesFilePath());
 				}
 
 				if (repositoriesInUse.size() > 0) {
-					MessageDialog
-							.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-									"Repository In Use",
-									"One or more of the selected repositories is being used by a query and can not be deleted.");
+					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+							"Repository In Use",
+							"One or more of the selected repositories is being used by a query and can not be deleted.");
 				}
 			}
 		} catch (Exception e) {

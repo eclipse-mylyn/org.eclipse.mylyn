@@ -12,7 +12,6 @@ package org.eclipse.mylyn.internal.bugzilla.core.history;
 
 import java.io.Serializable;
 
-
 /**
  * @author John Anvik
  */
@@ -46,7 +45,7 @@ public class TaskRevision implements Comparable<TaskRevision>, Serializable {
 		TaskRevision event = new TaskRevision();
 
 		event.setWhat(type);
-		
+
 		if (STATUS.equals(type)) {
 			event = new StatusEvent(StatusType.convert(change));
 		}

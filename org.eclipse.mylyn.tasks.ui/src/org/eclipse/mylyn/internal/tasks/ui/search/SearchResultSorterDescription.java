@@ -26,13 +26,12 @@ public class SearchResultSorterDescription extends ViewerSorter {
 	private TaskKeyComparator taskKeyComparator = new TaskKeyComparator();
 
 	/**
-	 * Returns a negative, zero, or positive number depending on whether the
-	 * first bug's summary goes before, is the same as, or goes after the
-	 * second element's summary.
+	 * Returns a negative, zero, or positive number depending on whether the first bug's summary goes before, is the
+	 * same as, or goes after the second element's summary.
 	 * <p>
 	 * 
-	 * @see org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers.Viewer,
-	 *      java.lang.Object, java.lang.Object)
+	 * @see org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+	 *      java.lang.Object)
 	 */
 	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
@@ -54,9 +53,8 @@ public class SearchResultSorterDescription extends ViewerSorter {
 	}
 
 	/**
-	 * Returns the category of the given element. The category is a number used
-	 * to allocate elements to bins; the bins are arranged in ascending numeric
-	 * order. The elements within a bin are arranged via a second level sort
+	 * Returns the category of the given element. The category is a number used to allocate elements to bins; the bins
+	 * are arranged in ascending numeric order. The elements within a bin are arranged via a second level sort
 	 * criterion.
 	 * <p>
 	 * 

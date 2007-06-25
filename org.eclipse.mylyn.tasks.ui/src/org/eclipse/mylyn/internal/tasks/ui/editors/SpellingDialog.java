@@ -24,8 +24,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 /**
- * TODO this is used only for spell checking which is not yet implemented,
- * therefore this is not properly tested
+ * TODO this is used only for spell checking which is not yet implemented, therefore this is not properly tested
  * 
  * @author Shawn Minto
  */

@@ -25,11 +25,12 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 public class TableSorterTest extends TestCase {
 
 	public void testRootTaskSorting() {
-		TaskListTableSorter sorter = new TaskListTableSorter(TaskListView.getFromActivePerspective(), TaskListTableSorter.SortByIndex.SUMMARY);
-		 		
+		TaskListTableSorter sorter = new TaskListTableSorter(TaskListView.getFromActivePerspective(),
+				TaskListTableSorter.SortByIndex.SUMMARY);
+
 		AbstractTask task = new LocalTask("1", "");
 		TaskCategory category = new TaskCategory("cat");
-		
+
 		assertEquals(-1, sorter.compare(null, task, category));
 		assertEquals(1, sorter.compare(null, category, task));
 	}

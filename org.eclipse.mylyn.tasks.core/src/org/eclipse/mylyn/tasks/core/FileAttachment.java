@@ -25,13 +25,13 @@ import java.io.InputStream;
 public class FileAttachment implements ITaskAttachment {
 
 	private static final String APPLICATION_OCTET_STREAM = "application/octet-stream";
-	
+
 	private String contentType = APPLICATION_OCTET_STREAM;
-	
+
 	private String filename;
-	
+
 	private String description;
-	
+
 	private boolean patch;
 
 	private File file;
@@ -40,11 +40,11 @@ public class FileAttachment implements ITaskAttachment {
 		if (file == null) {
 			throw new IllegalArgumentException();
 		}
-		
+
 		this.file = file;
 		this.filename = file.getName();
 	}
-	
+
 	public String getContentType() {
 		return contentType;
 	}
@@ -84,5 +84,5 @@ public class FileAttachment implements ITaskAttachment {
 	public long getLength() {
 		return file.length();
 	}
-	
+
 }

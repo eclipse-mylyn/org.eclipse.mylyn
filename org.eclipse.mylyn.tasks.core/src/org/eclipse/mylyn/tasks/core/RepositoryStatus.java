@@ -52,7 +52,7 @@ public class RepositoryStatus extends Status {
 	private String htmlMessage;
 
 	protected String repositoryUrl;
-	
+
 	public RepositoryStatus(TaskRepository repository, int severity, String pluginId, int code, String message) {
 		this(repository.getUrl(), severity, pluginId, code, message, null);
 	}
@@ -152,21 +152,18 @@ public class RepositoryStatus extends Status {
 	}
 
 	public static RepositoryStatus createStatus(String repositoryUrl, int severity, String pluginId, String message) {
-		return new RepositoryStatus(repositoryUrl, severity, pluginId, RepositoryStatus.ERROR_REPOSITORY,
-				message);
+		return new RepositoryStatus(repositoryUrl, severity, pluginId, RepositoryStatus.ERROR_REPOSITORY, message);
 	}
 
 	public static RepositoryStatus createLoginError(String repositoryUrl, String pluginId) {
-		return new RepositoryStatus(repositoryUrl, Status.ERROR, pluginId,
-				RepositoryStatus.ERROR_REPOSITORY_LOGIN, NLS.bind(
-						"Unable to login to {0}. Please validate credentials via Task Repositories view.",
+		return new RepositoryStatus(repositoryUrl, Status.ERROR, pluginId, RepositoryStatus.ERROR_REPOSITORY_LOGIN,
+				NLS.bind("Unable to login to {0}. Please validate credentials via Task Repositories view.",
 						repositoryUrl));
 	}
 
 	public static RepositoryStatus createNotFoundError(String repositoryUrl, String pluginId) {
-		return new RepositoryStatus(repositoryUrl, Status.ERROR, pluginId,
-				RepositoryStatus.ERROR_REPOSITORY_NOT_FOUND, NLS.bind("Repository {0} could not be found.",
-						repositoryUrl));
+		return new RepositoryStatus(repositoryUrl, Status.ERROR, pluginId, RepositoryStatus.ERROR_REPOSITORY_NOT_FOUND,
+				NLS.bind("Repository {0} could not be found.", repositoryUrl));
 	}
 
 	public static RepositoryStatus createCollisionError(String repositoryUrl, String pluginId) {

@@ -10,7 +10,6 @@ package org.eclipse.mylyn.internal.trac.core;
 
 import org.apache.xmlrpc.XmlRpcException;
 
-
 public class TracNoSuchMethodException extends TracException {
 
 	private static final long serialVersionUID = 9075003728286406705L;

@@ -17,8 +17,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.tasks.ui.search.RepositorySearchResult;
 
 /**
- * This implementation of <code>SearchResultContentProvider</code> is used for the
- * table view of a Bugzilla search result.
+ * This implementation of <code>SearchResultContentProvider</code> is used for the table view of a Bugzilla search
+ * result.
  * 
  * @author Rob Elves (moved into task.ui)
  */
@@ -54,7 +54,7 @@ public class SearchResultTableContentProvider extends SearchResultContentProvide
 					viewer.update(updatedElements[i], null);
 				else {
 //					if (!tableLimited || viewer.getTable().getItemCount() < SearchPreferencePage.getTableLimit())
-						viewer.add(updatedElements[i]);
+					viewer.add(updatedElements[i]);
 				}
 			} else
 				viewer.remove(updatedElements[i]);

@@ -15,6 +15,7 @@ import org.eclipse.jface.action.Action;
 
 /**
  * This class sorts search results by a supplied category.
+ * 
  * @author Rob Elves (moved to tasks.ui)
  */
 public class SearchResultSortAction extends Action {
@@ -29,8 +30,7 @@ public class SearchResultSortAction extends Action {
 	 * Constructor
 	 * 
 	 * @param label
-	 *            The string used as the text for the action, or null if there
-	 *            is no text
+	 *            The string used as the text for the action, or null if there is no text
 	 * @param page
 	 *            The view where the Bugzilla search results are displayed.
 	 * @param sortOrder

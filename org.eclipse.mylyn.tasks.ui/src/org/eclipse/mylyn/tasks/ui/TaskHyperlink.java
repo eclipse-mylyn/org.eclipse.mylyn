@@ -16,7 +16,7 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
- * Immutable.  Encapsulates information for linking to tasks from text.
+ * Immutable. Encapsulates information for linking to tasks from text.
  * 
  * @author Eugene Kuleshov
  * @author Steffen Pingel
@@ -42,7 +42,7 @@ public final class TaskHyperlink implements IHyperlink {
 	public String getTaskId() {
 		return taskId;
 	}
-	
+
 	public String getTypeLabel() {
 		return null;
 	}

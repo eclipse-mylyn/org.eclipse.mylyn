@@ -38,7 +38,8 @@ public class ScheduledTaskDelegate extends AbstractTask {
 		this(parent, task, start, end, 0);
 	}
 
-	public ScheduledTaskDelegate(ScheduledTaskContainer parent, AbstractTask task, Calendar start, Calendar end, long activity) {
+	public ScheduledTaskDelegate(ScheduledTaskContainer parent, AbstractTask task, Calendar start, Calendar end,
+			long activity) {
 		super(task.getRepositoryUrl(), task.getTaskId(), task.getSummary());
 		this.task = task;
 		if (start != null) {
@@ -191,7 +192,7 @@ public class ScheduledTaskDelegate extends AbstractTask {
 	public void addParentContainer(AbstractTaskContainer container) {
 		task.addParentContainer(container);
 	}
-	
+
 	@Override
 	public void removeParentContainer(AbstractTaskContainer container) {
 		task.removeParentContainer(container);

@@ -23,7 +23,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 public class FilterCompletedTasksAction extends Action {
 
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.filter.completed";
-	
+
 	private static final String LABEL = "Filter Completed Tasks";
 
 	private final TaskListView view;
@@ -34,12 +34,14 @@ public class FilterCompletedTasksAction extends Action {
 		setToolTipText(LABEL);
 		setId(ID);
 		setImageDescriptor(TasksUiImages.FILTER_COMPLETE);
-		setChecked(TasksUiPlugin.getDefault().getPreferenceStore().contains(TasksUiPreferenceConstants.FILTER_COMPLETE_MODE));
+		setChecked(TasksUiPlugin.getDefault().getPreferenceStore().contains(
+				TasksUiPreferenceConstants.FILTER_COMPLETE_MODE));
 	}
 
 	@Override
 	public void run() {
-		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TasksUiPreferenceConstants.FILTER_COMPLETE_MODE, isChecked());
+		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TasksUiPreferenceConstants.FILTER_COMPLETE_MODE,
+				isChecked());
 		if (isChecked()) {
 			view.addFilter(view.getCompleteFilter());
 		} else {

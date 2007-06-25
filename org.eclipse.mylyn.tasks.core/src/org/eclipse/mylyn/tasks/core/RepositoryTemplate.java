@@ -24,7 +24,7 @@ import java.util.Map;
 public final class RepositoryTemplate {
 
 	public final Map<String, String> genericAttributes = new LinkedHashMap<String, String>();
-	
+
 	public final String label;
 
 	public final String repositoryUrl;
@@ -42,11 +42,12 @@ public final class RepositoryTemplate {
 	public final String version;
 
 	public final boolean addAutomatically;
-	
+
 	public final String characterEncoding;
 
-	public RepositoryTemplate(String label, String repositoryUrl, String characterEncoding, String version, String newTaskUrl, String taskPrefix,
-			String taskQuery, String newAccountUrl, boolean anonymous, boolean addAutomatically) {
+	public RepositoryTemplate(String label, String repositoryUrl, String characterEncoding, String version,
+			String newTaskUrl, String taskPrefix, String taskQuery, String newAccountUrl, boolean anonymous,
+			boolean addAutomatically) {
 		this.label = label;
 		this.repositoryUrl = repositoryUrl;
 		this.newTaskUrl = newTaskUrl;
@@ -58,17 +59,16 @@ public final class RepositoryTemplate {
 		this.characterEncoding = characterEncoding;
 		this.addAutomatically = addAutomatically;
 	}
-	
+
 	public void addAttribute(String name, String value) {
 		genericAttributes.put(name, value);
 	}
-	
+
 	public String getAttribute(String name) {
 		return genericAttributes.get(name);
 	}
-	
+
 	public Map<String, String> getAttributes() {
 		return this.genericAttributes;
 	}
 }
-

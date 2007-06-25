@@ -73,7 +73,8 @@ public class TaskRepositoryManagerTest extends TestCase {
 	}
 
 	public void testGet() throws MalformedURLException {
-		assertEquals("", TasksUiPlugin.getDefault().getPreferenceStore().getString(TaskRepositoryManager.PREF_REPOSITORIES));
+		assertEquals("", TasksUiPlugin.getDefault().getPreferenceStore().getString(
+				TaskRepositoryManager.PREF_REPOSITORIES));
 
 		TaskRepository repository = new TaskRepository(DEFAULT_KIND, DEFAULT_URL);
 		manager.addRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
@@ -103,7 +104,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 		repositoryList.add(repository2);
 		repositoryList.add(repository1);
 		manager.readRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
-		
+
 		// NOTE: different conditions for running with and without the JIRA
 		// Connector
 		if (manager.getRepositoryConnectors().size() > 1) {
@@ -117,7 +118,8 @@ public class TaskRepositoryManagerTest extends TestCase {
 	}
 
 	public void testRepositoryAttributePersistance() throws MalformedURLException {
-		assertEquals("", TasksUiPlugin.getDefault().getPreferenceStore().getString(TaskRepositoryManager.PREF_REPOSITORIES));
+		assertEquals("", TasksUiPlugin.getDefault().getPreferenceStore().getString(
+				TaskRepositoryManager.PREF_REPOSITORIES));
 
 		String version = "123";
 		String encoding = "UTF-16";
@@ -137,7 +139,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 		TaskRepository temp = manager.getRepository(repository1.getConnectorKind(), repository1.getUrl());
 		assertNotNull(temp);
 		assertEquals(version, temp.getVersion());
-		assertTrue(temp.isAnonymous());		
+		assertTrue(temp.isAnonymous());
 		assertEquals(encoding, temp.getCharacterEncoding());
 		assertEquals(fakeTimeZone, temp.getTimeZoneId());
 		assertEquals(dateString, temp.getSynchronizationTimeStamp());
@@ -149,7 +151,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 		TaskRepository repository = new TaskRepository(DEFAULT_KIND, DEFAULT_URL);
 		manager.addRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		assertNotNull(manager.getRepository(repository.getConnectorKind(), repository.getUrl()));
-	
+
 		TaskRepository repository2 = new TaskRepository(DEFAULT_KIND, ANOTHER_URL);
 		manager.addRepository(repository2, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		assertNotNull(manager.getRepository(repository2.getConnectorKind(), repository2.getUrl()));
@@ -170,13 +172,14 @@ public class TaskRepositoryManagerTest extends TestCase {
 	}
 
 	public void testRepositoryWithCustomAttributes() throws Exception {
-		
+
 		// Note: if a connector doesn't exist the associated repositories are not loaded (orphaned) 
 		// causing this test to fail.
 		AbstractRepositoryConnector connector = new MockRepositoryConnector();
 		manager.addRepositoryConnector(connector);
-		
-		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, "http://jroller.com/page/eu");
+
+		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND,
+				"http://jroller.com/page/eu");
 		repository.setProperty("owner", "euxx");
 		manager.addRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
@@ -198,7 +201,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 		repositoryList.add(repository2);
 		repositoryList.add(repository1);
 		manager.readRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
- 
+
 		assertEquals("got: " + manager.getAllRepositories(), 2, manager.getAllRepositories().size());
 	}
 }

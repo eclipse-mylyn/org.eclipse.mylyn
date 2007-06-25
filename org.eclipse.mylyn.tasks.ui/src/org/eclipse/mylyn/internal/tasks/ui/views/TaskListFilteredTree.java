@@ -156,7 +156,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			public void activityChanged(ScheduledTaskContainer week) {
 				updateTaskProgressBar();
 			}
-			
+
 			public void taskActivated(AbstractTask task) {
 			}
 
@@ -213,7 +213,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		final ImageHyperlink workingSetButton = new ImageHyperlink(container, SWT.FLAT);
 		workingSetButton.setImage(TasksUiImages.getImage(TasksUiImages.TOOLBAR_ARROW_RIGHT));
 		workingSetButton.setToolTipText("Select Working Set");
-		
+
 		workingSetLink = new TaskListHyperlink(container, SWT.LEFT);
 		workingSetLink.setText(TaskWorkingSetAction.LABEL_SETS_NONE);
 		workingSetLink.setUnderlined(false);
@@ -274,12 +274,12 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		activeTaskLink = new TaskListHyperlink(container, SWT.LEFT);
 		activeTaskLink.setText(LABEL_ACTIVE_NONE);
 		activeTaskLink.setForeground(TaskListColorsAndFonts.COLOR_HYPERLINK_WIDGET);
-		
+
 		AbstractTask activeTask = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
 		if (activeTask != null) {
 			indicateActiveTask(activeTask);
 		}
-		
+
 		final ActivateTaskHistoryDropDownAction action = new ActivateTaskHistoryDropDownAction(
 				TasksUiPlugin.getTaskListManager().getTaskActivationHistory(), true);
 
@@ -364,7 +364,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			return;
 		}
 
-		String text = task.getSummary(); 
+		String text = task.getSummary();
 		activeTaskLink.setText(text);
 		activeTaskLink.setUnderlined(false);
 		activeTaskLink.setToolTipText("Open: " + task.getSummary());

@@ -64,8 +64,8 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.internal.net.ProxyPreferencePage;
 
 /**
- * Extend to provide custom repository settings.  This page is typically invoked by the user
- * requesting properties via the Task Repositories view.
+ * Extend to provide custom repository settings. This page is typically invoked by the user requesting properties via
+ * the Task Repositories view.
  * 
  * @author Mik Kersten
  * @author Rob Elves

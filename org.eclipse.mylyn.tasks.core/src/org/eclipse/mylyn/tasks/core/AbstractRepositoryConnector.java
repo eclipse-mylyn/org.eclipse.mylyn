@@ -24,12 +24,12 @@ import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
 
 /**
- * Encapsulates common operations that can be performed on a task repository.  Extend to
- * connect with a Java API or WS API for accessing the repository.
+ * Encapsulates common operations that can be performed on a task repository. Extend to connect with a Java API or WS
+ * API for accessing the repository.
  * 
  * @author Mik Kersten
  * @author Rob Elves
- * @since	2.0
+ * @since 2.0
  */
 public abstract class AbstractRepositoryConnector {
 
@@ -44,7 +44,7 @@ public abstract class AbstractRepositoryConnector {
 	public void init(TaskList taskList) {
 		this.taskList = taskList;
 	}
-	
+
 	/**
 	 * Set upon construction
 	 */
@@ -210,8 +210,7 @@ public abstract class AbstractRepositoryConnector {
 	 * @return true, if properties of <code>existingTask</code> were changed
 	 * @since 2.0
 	 */
-	public boolean updateTaskFromQueryHit(TaskRepository repository, AbstractTask existingTask,
-			AbstractTask queryHit) {
+	public boolean updateTaskFromQueryHit(TaskRepository repository, AbstractTask existingTask, AbstractTask queryHit) {
 		boolean changed = false;
 		if (existingTask.isCompleted() != queryHit.isCompleted()) {
 			existingTask.setCompleted(queryHit.isCompleted());
@@ -237,10 +236,10 @@ public abstract class AbstractRepositoryConnector {
 			existingTask.setUrl(queryHit.getUrl());
 			changed = true;
 		}
-		
+
 		return changed;
 	}
-	
+
 	protected final boolean hasTaskPropertyChanged(Object existingProperty, Object newProperty) {
 		// the query hit does not have this property
 		if (newProperty == null) {
@@ -248,7 +247,7 @@ public abstract class AbstractRepositoryConnector {
 		}
 		return (existingProperty == null) ? true : !existingProperty.equals(newProperty);
 	}
-	
+
 	public String[] getPepositoryPropertyNames() {
 		return new String[] { IRepositoryConstants.PROPERTY_VERSION, IRepositoryConstants.PROPERTY_TIMEZONE,
 				IRepositoryConstants.PROPERTY_ENCODING };
@@ -300,6 +299,7 @@ public abstract class AbstractRepositoryConnector {
 
 	/**
 	 * Used for referring to the task in the UI.
+	 * 
 	 * @return
 	 */
 	public String getTaskIdPrefix() {

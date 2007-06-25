@@ -22,7 +22,7 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 public class WebHyperlink implements IHyperlink {
 
 	private final IRegion region;
-	
+
 	private final String url;
 
 	public WebHyperlink(IRegion region, String url) {

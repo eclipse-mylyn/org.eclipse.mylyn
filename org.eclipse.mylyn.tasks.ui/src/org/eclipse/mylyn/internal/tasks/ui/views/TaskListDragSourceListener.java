@@ -38,7 +38,7 @@ class TaskListDragSourceListener implements DragSourceListener {
 	private final TaskListView view;
 
 //	static final String ID_DATA_TASK_DRAG = "task-drag";
-	
+
 	/**
 	 * @param view
 	 */
@@ -56,18 +56,18 @@ class TaskListDragSourceListener implements DragSourceListener {
 		StructuredSelection selection = (StructuredSelection) this.view.getViewer().getSelection();
 		AbstractTaskContainer selectedElement = null;
 		if (((IStructuredSelection) selection).getFirstElement() instanceof AbstractTaskContainer) {
-			selectedElement = (AbstractTaskContainer)((IStructuredSelection) selection).getFirstElement();
+			selectedElement = (AbstractTaskContainer) ((IStructuredSelection) selection).getFirstElement();
 		}
 		if (TaskTransfer.getInstance().isSupportedType(event.dataType)) {
 			List<AbstractTask> tasks = new ArrayList<AbstractTask>();
 			for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
 				AbstractTaskContainer element = (AbstractTaskContainer) iter.next();
 				if (element instanceof AbstractTask) {
-					tasks.add((AbstractTask)element);
+					tasks.add((AbstractTask) element);
 				}
 			}
 			event.data = tasks.toArray();
-		} else if (FileTransfer.getInstance().isSupportedType(event.dataType) && selectedElement != null) {	
+		} else if (FileTransfer.getInstance().isSupportedType(event.dataType) && selectedElement != null) {
 			File file = ContextCorePlugin.getContextManager().getFileForContext(selectedElement.getHandleIdentifier());
 			if (file != null) {
 				event.data = new String[] { file.getAbsolutePath() };

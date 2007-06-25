@@ -18,8 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A representation of an operation that can be done to the bug when it is
- * submitted
+ * A representation of an operation that can be done to the bug when it is submitted
  * 
  * NOTE: likely to change for 3.0
  * 

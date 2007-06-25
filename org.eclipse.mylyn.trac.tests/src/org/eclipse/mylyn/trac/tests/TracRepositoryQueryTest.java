@@ -35,7 +35,8 @@ public class TracRepositoryQueryTest extends TestCase {
 		TaskRepositoryManager manager = TasksUiPlugin.getRepositoryManager();
 		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
-		TaskRepository repository = new TaskRepository(TracCorePlugin.REPOSITORY_KIND, TracTestConstants.TEST_TRAC_096_URL);	
+		TaskRepository repository = new TaskRepository(TracCorePlugin.REPOSITORY_KIND,
+				TracTestConstants.TEST_TRAC_096_URL);
 		manager.addRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		TracSearch search = new TracSearch();
@@ -43,19 +44,19 @@ public class TracRepositoryQueryTest extends TestCase {
 		TracRepositoryQuery query = new TracRepositoryQuery(repository.getUrl(), queryUrl, "description");
 		TasksUiPlugin.getTaskListManager().getTaskList().addQuery(query);
 
-		TracTask task = new TracTask(TracTestConstants.TEST_TRAC_096_URL, ""+123, "desc");
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);		
-		
+		TracTask task = new TracTask(TracTestConstants.TEST_TRAC_096_URL, "" + 123, "desc");
+		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
+
 		String oldUrl = repository.getUrl();
 		String newUrl = TracTestConstants.TEST_TRAC_010_URL;
-		TasksUiPlugin.getTaskListManager().refactorRepositoryUrl(oldUrl, newUrl);	
+		TasksUiPlugin.getTaskListManager().refactorRepositoryUrl(oldUrl, newUrl);
 		repository.setUrl(newUrl);
-		
+
 		assertEquals(newUrl, query.getRepositoryUrl());
 		assertEquals(newUrl + ITracClient.QUERY_URL + search.toUrl(), query.getUrl());
 		assertEquals(newUrl + ITracClient.TICKET_URL + 123, task.getUrl());
 	}
-	
+
 	public void testGetFilterList() {
 		String repositoryUrl = "https://foo.bar/repo";
 		String parameterUrl = "&status=new&status=assigned&status=reopened&milestone=0.1";

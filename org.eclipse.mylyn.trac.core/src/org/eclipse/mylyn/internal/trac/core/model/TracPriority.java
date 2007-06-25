@@ -18,5 +18,5 @@ public class TracPriority extends TracTicketAttribute {
 	public TracPriority(String name, int value) {
 		super(name, value);
 	}
-	
+
 }

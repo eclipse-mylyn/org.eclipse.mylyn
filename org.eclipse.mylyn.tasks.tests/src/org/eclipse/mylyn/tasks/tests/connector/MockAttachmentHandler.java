@@ -77,5 +77,5 @@ public class MockAttachmentHandler extends AbstractAttachmentHandler {
 	public void setAttachmentData(byte[] data) {
 		this.data = data;
 	}
-	
+
 }

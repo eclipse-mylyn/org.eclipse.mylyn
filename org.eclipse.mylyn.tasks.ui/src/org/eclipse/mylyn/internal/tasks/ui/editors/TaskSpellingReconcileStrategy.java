@@ -34,8 +34,7 @@ import org.eclipse.ui.texteditor.spelling.SpellingContext;
 import org.eclipse.ui.texteditor.spelling.SpellingProblem;
 
 /**
- * Adapted from
- * org.eclipse.jdt.internal.ui.text.spelling.PropertiesSpellingReconcileStrategy
+ * Adapted from org.eclipse.jdt.internal.ui.text.spelling.PropertiesSpellingReconcileStrategy
  * 
  * @author Jeff Pound
  * @author Rob Elves
@@ -43,8 +42,8 @@ import org.eclipse.ui.texteditor.spelling.SpellingProblem;
 public class TaskSpellingReconcileStrategy implements IReconcilerExtension, IReconcilingStrategy {
 
 	/**
-	 * Spelling problem collector that forwards {@link SpellingProblem}s as
-	 * {@link IProblem}s to the {@link org.eclipse.jdt.core.IProblemRequestor}.
+	 * Spelling problem collector that forwards {@link SpellingProblem}s as {@link IProblem}s to the
+	 * {@link org.eclipse.jdt.core.IProblemRequestor}.
 	 */
 	private class SpellingProblemCollector implements ISpellingProblemCollector {
 
@@ -69,10 +68,10 @@ public class TaskSpellingReconcileStrategy implements IReconcilerExtension, IRec
 		 */
 		public void accept(SpellingProblem problem) {
 			try {
-				int line = fDocument.getLineOfOffset(problem.getOffset()) + 1;			
-				
-				fAddAnnotations.put(new ErrorAnnotation(line, null), new Position(problem.getOffset(), problem
-						.getLength()));
+				int line = fDocument.getLineOfOffset(problem.getOffset()) + 1;
+
+				fAddAnnotations.put(new ErrorAnnotation(line, null), new Position(problem.getOffset(),
+						problem.getLength()));
 
 			} catch (BadLocationException x) {
 				// drop this SpellingProblem
@@ -122,9 +121,8 @@ public class TaskSpellingReconcileStrategy implements IReconcilerExtension, IRec
 	/**
 	 * The spelling context containing the Java properties content type.
 	 * <p>
-	 * Since his reconcile strategy is for the Properties File editor which
-	 * normally edits Java properties files we always use the Java properties
-	 * file content type for performance reasons.
+	 * Since his reconcile strategy is for the Properties File editor which normally edits Java properties files we
+	 * always use the Java properties file content type for performance reasons.
 	 * </p>
 	 * 
 	 * @since 3.2

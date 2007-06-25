@@ -42,7 +42,7 @@ public class TaskListElementPropertiesAction extends Action {
 		ISelection selection = viewer.getSelection();
 		Object element = ((IStructuredSelection) selection).getFirstElement();
 		if (element instanceof TaskCategory || element instanceof AbstractRepositoryQuery) {
-			TasksUiUtil.refreshAndOpenTaskListElement((AbstractTaskContainer)element);	
+			TasksUiUtil.refreshAndOpenTaskListElement((AbstractTaskContainer) element);
 		}
 	}
 }

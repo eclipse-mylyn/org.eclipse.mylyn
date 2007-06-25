@@ -25,8 +25,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * General purpose dialog for selecting an item from a combo box.
  * 
- * @author This was (essentially) copied from Eclipse's internal implementation
- *         by Wesley Coelho
+ * @author This was (essentially) copied from Eclipse's internal implementation by Wesley Coelho
  */
 public class ComboSelectionDialog extends Dialog {
 
@@ -94,8 +93,7 @@ public class ComboSelectionDialog extends Dialog {
 	}
 
 	/**
-	 * Returns the array index of the selected string or -1 if no string was
-	 * selected.
+	 * Returns the array index of the selected string or -1 if no string was selected.
 	 */
 	public int getSelectedIndex() {
 		return fSelectedIndex;

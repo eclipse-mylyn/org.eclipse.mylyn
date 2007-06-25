@@ -32,21 +32,25 @@ import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
 public class TracClientFactoryTest extends TestCase {
 
 	public void testCreateClient() throws Exception {
-		ITracClient client = TracClientFactory.createClient(TracTestConstants.TEST_TRAC_010_URL, Version.TRAC_0_9, "user",
+		ITracClient client = TracClientFactory.createClient(TracTestConstants.TEST_TRAC_010_URL, Version.TRAC_0_9,
+				"user", "password", Proxy.NO_PROXY);
+		assertTrue(client instanceof TracWebClient);
+		client = TracClientFactory.createClient(TracTestConstants.TEST_TRAC_010_SSL_URL, Version.TRAC_0_9, "user",
 				"password", Proxy.NO_PROXY);
 		assertTrue(client instanceof TracWebClient);
-		client = TracClientFactory.createClient(TracTestConstants.TEST_TRAC_010_SSL_URL, Version.TRAC_0_9, "user", "password", Proxy.NO_PROXY);
-		assertTrue(client instanceof TracWebClient);
 
-		client = TracClientFactory.createClient(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC, "user", "password", Proxy.NO_PROXY);
+		client = TracClientFactory.createClient(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC, "user",
+				"password", Proxy.NO_PROXY);
 		assertTrue(client instanceof TracXmlRpcClient);
-		client = TracClientFactory.createClient(TracTestConstants.TEST_TRAC_010_SSL_URL, Version.XML_RPC, "user", "password", Proxy.NO_PROXY);
+		client = TracClientFactory.createClient(TracTestConstants.TEST_TRAC_010_SSL_URL, Version.XML_RPC, "user",
+				"password", Proxy.NO_PROXY);
 		assertTrue(client instanceof TracXmlRpcClient);
 	}
 
 	public void testCreateClientNull() throws Exception {
 		try {
-			TracClientFactory.createClient(TracTestConstants.TEST_TRAC_010_URL, null, "user", "password", Proxy.NO_PROXY);
+			TracClientFactory.createClient(TracTestConstants.TEST_TRAC_010_URL, null, "user", "password",
+					Proxy.NO_PROXY);
 			fail("Expected Exception");
 		} catch (Exception e) {
 		}

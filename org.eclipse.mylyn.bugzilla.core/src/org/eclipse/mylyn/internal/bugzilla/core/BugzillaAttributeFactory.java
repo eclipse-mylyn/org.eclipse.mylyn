@@ -33,17 +33,17 @@ public class BugzillaAttributeFactory extends AbstractAttributeFactory {
 	private static final String creation_ts_format = DATE_FORMAT_1;
 
 	/**
-	 * public for testing Bugzilla 2.18 uses DATE_FORMAT_1 but later versions
-	 * use DATE_FORMAT_2 Using lowest common denominator DATE_FORMAT_1
+	 * public for testing Bugzilla 2.18 uses DATE_FORMAT_1 but later versions use DATE_FORMAT_2 Using lowest common
+	 * denominator DATE_FORMAT_1
 	 */
 	public static final String comment_creation_ts_format = DATE_FORMAT_1;
 
 	private static final String attachment_creation_ts_format = DATE_FORMAT_1;
-	
+
 	private static final long serialVersionUID = 5087501781682994759L;
 
 	@Override
-	public String mapCommonAttributeKey(String key) {		
+	public String mapCommonAttributeKey(String key) {
 		if (key.equals(RepositoryTaskAttribute.NEW_CC)) {
 			return BugzillaReportElement.NEWCC.getKeyString();
 		} else if (key.equals(RepositoryTaskAttribute.COMMENT_DATE)) {
@@ -52,7 +52,7 @@ public class BugzillaAttributeFactory extends AbstractAttributeFactory {
 			return BugzillaReportElement.WHO.getKeyString();
 		} else if (key.equals(RepositoryTaskAttribute.USER_CC)) {
 			return BugzillaReportElement.CC.getKeyString();
-		}  else if (key.equals(RepositoryTaskAttribute.COMMENT_TEXT)) {
+		} else if (key.equals(RepositoryTaskAttribute.COMMENT_TEXT)) {
 			return BugzillaReportElement.THETEXT.getKeyString();
 		} else if (key.equals(RepositoryTaskAttribute.DATE_CREATION)) {
 			return BugzillaReportElement.CREATION_TS.getKeyString();
@@ -94,7 +94,7 @@ public class BugzillaAttributeFactory extends AbstractAttributeFactory {
 			return key;
 		}
 	}
-	
+
 	@Override
 	public boolean isHidden(String key) {
 		try {
@@ -121,7 +121,7 @@ public class BugzillaAttributeFactory extends AbstractAttributeFactory {
 			return true;
 		}
 	}
-	
+
 	@Override
 	public Date getDateForAttributeType(String attributeKey, String dateString) {
 		if (dateString == null || dateString.equals("")) {

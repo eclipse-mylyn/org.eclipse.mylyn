@@ -82,7 +82,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 				AbstractTask toMove = null;
 				if (selectedObject instanceof AbstractTask) {
 					toMove = (AbstractTask) selectedObject;
-				} 
+				}
 				if (toMove != null) {
 					tasksToMove.add(toMove);
 				}
@@ -120,22 +120,24 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 				if (targetTask.getParentContainers().size() > 0) {
 					AbstractTaskContainer container = targetTask.getParentContainers().iterator().next();
 					if (container instanceof TaskCategory) {
-						targetCategory = (TaskCategory)container;
+						targetCategory = (TaskCategory) container;
 					}
 				}
 				if (targetCategory == null) {
-					TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task, TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
+					TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task,
+							TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 				} else {
 					TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task, targetCategory);
 				}
 			} else if (currentTarget instanceof ScheduledTaskContainer) {
-				ScheduledTaskContainer container = (ScheduledTaskContainer)currentTarget;
+				ScheduledTaskContainer container = (ScheduledTaskContainer) currentTarget;
 				Calendar newSchedule = Calendar.getInstance();
-				newSchedule.setTimeInMillis(container.getStart().getTimeInMillis());				
+				newSchedule.setTimeInMillis(container.getStart().getTimeInMillis());
 				TasksUiPlugin.getTaskListManager().setScheduledEndOfDay(newSchedule);
 				TasksUiPlugin.getTaskListManager().setScheduledFor(task, newSchedule.getTime());
 			} else if (currentTarget == null) {
-				TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(newTask, TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
+				TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(newTask,
+						TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 			}
 		}
 

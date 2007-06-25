@@ -59,8 +59,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 	}
 
 	/**
-	 * Finds or creates a dialog settings section that is used to make the
-	 * dialog control settings persistent
+	 * Finds or creates a dialog settings section that is used to make the dialog control settings persistent
 	 */
 	public IDialogSettings getSettingsSection(IDialogSettings master) {
 		IDialogSettings settings = master.getSection(SETTINGS_SECTION);
@@ -87,9 +86,8 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 	}
 
 	/**
-	 * Called when the user clicks finish. Saves the task data. Waits until all
-	 * overwrite decisions have been made before starting to save files. If any
-	 * overwrite is canceled, no files are saved and the user must adjust the
+	 * Called when the user clicks finish. Saves the task data. Waits until all overwrite decisions have been made
+	 * before starting to save files. If any overwrite is canceled, no files are saved and the user must adjust the
 	 * dialog.
 	 */
 	@Override
@@ -141,7 +139,8 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 					continue;
 				}
 				if (!importPage.importTaskContexts()
-						&& entry.getName().matches(".*-\\d*" + InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD + "$")) {
+						&& entry.getName().matches(
+								".*-\\d*" + InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD + "$")) {
 					continue;
 				}
 
@@ -204,12 +203,12 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 			monitor.beginTask(JOB_LABEL, zipEntriesToExtract.size() + 2);
 
 			try {
-				ZipFileUtil.extactEntries(sourceZipFile, zipEntriesToExtract, TasksUiPlugin.getDefault().getDataDirectory());
+				ZipFileUtil.extactEntries(sourceZipFile, zipEntriesToExtract, TasksUiPlugin.getDefault()
+						.getDataDirectory());
 				//ZipFileUtil.unzipFiles(sourceZipFile, TasksUiPlugin.getDefault().getDataDirectory());
 
 			} catch (IOException ioe) {
-				StatusHandler.fail(new Exception("Import Exception"), "Problem occured extracting from zip file.",
-						true);
+				StatusHandler.fail(new Exception("Import Exception"), "Problem occured extracting from zip file.", true);
 				return;
 			}
 			readTaskListData();

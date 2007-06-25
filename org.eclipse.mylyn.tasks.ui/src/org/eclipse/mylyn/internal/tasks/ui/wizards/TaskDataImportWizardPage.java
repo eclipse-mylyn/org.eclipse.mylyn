@@ -284,8 +284,7 @@ public class TaskDataImportWizardPage extends WizardPage {
 	}
 
 	/**
-	 * Saves the control values in the dialog settings to be used as defaults
-	 * the next time the page is opened
+	 * Saves the control values in the dialog settings to be used as defaults the next time the page is opened
 	 */
 	public void saveSettings() {
 		IDialogSettings settings = getDialogSettings();

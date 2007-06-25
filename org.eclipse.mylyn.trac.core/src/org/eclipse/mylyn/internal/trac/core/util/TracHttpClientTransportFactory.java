@@ -31,8 +31,7 @@ import org.apache.xmlrpc.client.XmlRpcTransportFactory;
 import org.eclipse.mylyn.web.core.WebClientUtil;
 
 /**
- * A custom transport factory used to establish XML-RPC connections. Uses the
- * Mylar proxy settings.
+ * A custom transport factory used to establish XML-RPC connections. Uses the Mylar proxy settings.
  * 
  * @author Steffen Pingel
  */
@@ -54,6 +53,7 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 	public static class TracHttpClientTransport extends XmlRpcCommonsTransport {
 
 		private Proxy proxy;
+
 		private Cookie[] cookies;
 
 		public TracHttpClientTransport(XmlRpcClient client, Proxy proxy, Cookie[] cookies) {
@@ -61,7 +61,7 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 
 			this.proxy = proxy;
 			this.cookies = cookies;
-			
+
 			XmlRpcHttpClientConfig config = (XmlRpcHttpClientConfig) client.getConfig();
 			// this needs to be set to avoid exceptions
 			getHttpClient().getParams().setAuthenticationPreemptive(config.getBasicUserName() != null);
@@ -71,7 +71,7 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 		protected String getUserAgent() {
 			return WebClientUtil.USER_AGENT;
 		}
-		
+
 		public HttpClient getHttpClient() {
 			return (HttpClient) getValue("client");
 		}
@@ -103,7 +103,7 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 				throw new RuntimeException("Internal error accessing field: " + name, t);
 			}
 		}
-		
+
 		@Override
 		protected InputStream getInputStream() throws XmlRpcException {
 			int responseCode = getMethod().getStatusCode();
@@ -113,12 +113,12 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 
 			return super.getInputStream();
 		}
-		
+
 		@Override
 		protected void initHttpHeaders(XmlRpcRequest request) throws XmlRpcClientException {
 			// super call needed to initialize private fields of XmlRpcCommonsTransport
 			super.initHttpHeaders(request);
-			
+
 			// The super method sets a private field that contains the
 			// HttpClient Method object which is initialized using the wrong url.			
 			// Since the URL can not be modified once the Method object has been
@@ -126,13 +126,13 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 			// assigned to the private field
 
 			XmlRpcHttpClientConfig config = (XmlRpcHttpClientConfig) request.getConfig();
-			
+
 			String url = config.getServerURL().toString();
 			WebClientUtil.setupHttpClient(getHttpClient(), proxy, url, null, null);
 			if (cookies != null) {
 				getHttpClient().getState().addCookies(cookies);
 			}
-			
+
 			PostMethod method = new PostMethod(WebClientUtil.getRequestPath(url));
 			setMethod(method);
 
@@ -141,19 +141,22 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 			setCredentials(config);
 			setCompressionHeaders(config);
 
-	        if (config.getConnectionTimeout() != 0)
-	            getHttpClient().getHttpConnectionManager().getParams().setConnectionTimeout(config.getConnectionTimeout());
-	        
-	        if (config.getReplyTimeout() != 0)
-	        	getHttpClient().getHttpConnectionManager().getParams().setSoTimeout(config.getConnectionTimeout());
-	        
+			if (config.getConnectionTimeout() != 0)
+				getHttpClient().getHttpConnectionManager().getParams().setConnectionTimeout(
+						config.getConnectionTimeout());
+
+			if (config.getReplyTimeout() != 0)
+				getHttpClient().getHttpConnectionManager().getParams().setSoTimeout(config.getConnectionTimeout());
+
 			method.getParams().setVersion(HttpVersion.HTTP_1_1);
 		}
 
 	}
 
 	private XmlRpcClient client;
+
 	private Proxy proxy;
+
 	private Cookie[] cookies;
 
 	public TracHttpClientTransportFactory(XmlRpcClient client) {
@@ -163,21 +166,21 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 	public XmlRpcTransport getTransport() {
 		return new TracHttpClientTransport(client, proxy, cookies);
 	}
-	
+
 	public Proxy getProxy() {
 		return proxy;
 	}
-	
+
 	public void setProxy(Proxy proxy) {
 		this.proxy = proxy;
 	}
-	
+
 	public Cookie[] getCookies() {
 		return cookies;
 	}
-	
+
 	public void setCookies(Cookie[] cookies) {
 		this.cookies = cookies;
 	}
-	
+
 }

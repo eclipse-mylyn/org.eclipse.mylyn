@@ -27,10 +27,10 @@ import org.xml.sax.SAXParseException;
 public class RepositoryConfigurationFactory extends AbstractReportFactory {
 
 	public RepositoryConfigurationFactory(InputStream inStream, String encoding) {
-		super(inStream, encoding);		
+		super(inStream, encoding);
 	}
 
-	public RepositoryConfiguration getConfiguration() throws IOException, CoreException {		
+	public RepositoryConfiguration getConfiguration() throws IOException, CoreException {
 		SaxConfigurationContentHandler contentHandler = new SaxConfigurationContentHandler();
 		collectResults(contentHandler, true);
 		RepositoryConfiguration config = contentHandler.getConfiguration();

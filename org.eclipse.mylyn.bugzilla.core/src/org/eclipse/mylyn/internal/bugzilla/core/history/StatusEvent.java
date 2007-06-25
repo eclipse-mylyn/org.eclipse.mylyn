@@ -11,12 +11,12 @@
 package org.eclipse.mylyn.internal.bugzilla.core.history;
 
 /**
- * @author John Anvik 
+ * @author John Anvik
  */
 public class StatusEvent extends TaskRevision {
 
 	private static final long serialVersionUID = 245446279981920435L;
-	
+
 	private final StatusType type;
 
 	public StatusEvent(StatusType type) {
@@ -30,7 +30,7 @@ public class StatusEvent extends TaskRevision {
 
 	@Override
 	public String toString() {
-		return this.getName() + " | " + this.getDate() + " | " + this.getWhat()
-				+ " | " + this.getRemoved() + " | " + this.getType();
+		return this.getName() + " | " + this.getDate() + " | " + this.getWhat() + " | " + this.getRemoved() + " | "
+				+ this.getType();
 	}
 }

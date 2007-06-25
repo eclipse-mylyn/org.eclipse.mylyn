@@ -21,8 +21,8 @@ import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 
 /**
- * Provides a mapping from Mylar task keys to Trac ticket keys. 
- *
+ * Provides a mapping from Mylar task keys to Trac ticket keys.
+ * 
  * @author Steffen Pingel
  */
 public class TracAttributeFactory extends AbstractAttributeFactory {
@@ -32,59 +32,54 @@ public class TracAttributeFactory extends AbstractAttributeFactory {
 	private static Map<String, Attribute> attributeByTracKey = new HashMap<String, Attribute>();
 
 	private static Map<String, String> tracKeyByTaskKey = new HashMap<String, String>();
-	
+
 	public enum Attribute {
-		CC(Key.CC, "CC:", RepositoryTaskAttribute.USER_CC, true, false), 
-		CHANGE_TIME(Key.CHANGE_TIME, "Last Modification:", RepositoryTaskAttribute.DATE_MODIFIED, true, true),
-		COMPONENT(Key.COMPONENT, "Component:", RepositoryTaskAttribute.PRODUCT),
-		DESCRIPTION(Key.DESCRIPTION, "Description:", RepositoryTaskAttribute.DESCRIPTION, true, false),
-		ID(Key.ID, "<used by search engine>", null, true),
-		KEYWORDS(Key.KEYWORDS, "Keywords:", RepositoryTaskAttribute.KEYWORDS),
-		MILESTONE(Key.MILESTONE, "Milestone:", null),
-		NEW_CC(RepositoryTaskAttribute.NEW_CC, "Add CC:"),
-		OWNER(Key.OWNER, "Assigned to:", RepositoryTaskAttribute.USER_ASSIGNED, true, true),
-		PRIORITY(Key.PRIORITY, "Priority:", null),
-		REPORTER(Key.REPORTER, "Reporter:", RepositoryTaskAttribute.USER_REPORTER, true, true),
-		RESOLUTION(Key.RESOLUTION, "Resolution:", RepositoryTaskAttribute.RESOLUTION, false, true),
-		SEVERITY(Key.SEVERITY, "Severity:", null),
-		STATUS(Key.STATUS, "Status:", RepositoryTaskAttribute.STATUS, false, true),
-		SUMMARY(Key.SUMMARY, "Summary:", RepositoryTaskAttribute.SUMMARY, true),
-		TIME(Key.TIME, "Created:", RepositoryTaskAttribute.DATE_CREATION, true, true), 
-		TYPE(Key.TYPE, "Type:", null), 
-		VERSION(Key.VERSION, "Version:", null);		
-		
+		CC(Key.CC, "CC:", RepositoryTaskAttribute.USER_CC, true, false), CHANGE_TIME(Key.CHANGE_TIME,
+				"Last Modification:", RepositoryTaskAttribute.DATE_MODIFIED, true, true), COMPONENT(Key.COMPONENT,
+				"Component:", RepositoryTaskAttribute.PRODUCT), DESCRIPTION(Key.DESCRIPTION, "Description:",
+				RepositoryTaskAttribute.DESCRIPTION, true, false), ID(Key.ID, "<used by search engine>", null, true), KEYWORDS(
+				Key.KEYWORDS, "Keywords:", RepositoryTaskAttribute.KEYWORDS), MILESTONE(Key.MILESTONE, "Milestone:",
+				null), NEW_CC(RepositoryTaskAttribute.NEW_CC, "Add CC:"), OWNER(Key.OWNER, "Assigned to:",
+				RepositoryTaskAttribute.USER_ASSIGNED, true, true), PRIORITY(Key.PRIORITY, "Priority:", null), REPORTER(
+				Key.REPORTER, "Reporter:", RepositoryTaskAttribute.USER_REPORTER, true, true), RESOLUTION(
+				Key.RESOLUTION, "Resolution:", RepositoryTaskAttribute.RESOLUTION, false, true), SEVERITY(Key.SEVERITY,
+				"Severity:", null), STATUS(Key.STATUS, "Status:", RepositoryTaskAttribute.STATUS, false, true), SUMMARY(
+				Key.SUMMARY, "Summary:", RepositoryTaskAttribute.SUMMARY, true), TIME(Key.TIME, "Created:",
+				RepositoryTaskAttribute.DATE_CREATION, true, true), TYPE(Key.TYPE, "Type:", null), VERSION(Key.VERSION,
+				"Version:", null);
+
 		private final boolean isHidden;
-		
+
 		private final boolean isReadOnly;
-		
+
 		private final String tracKey;
-		
+
 		private final String prettyName;
 
 		private final String taskKey;
 
-		Attribute(String tracKey, String prettyName, String taskKey, boolean hidden, boolean readonly) {		
+		Attribute(String tracKey, String prettyName, String taskKey, boolean hidden, boolean readonly) {
 			this.tracKey = tracKey;
 			this.taskKey = taskKey;
 			this.prettyName = prettyName;
 			this.isHidden = hidden;
 			this.isReadOnly = readonly;
-			
+
 			attributeByTracKey.put(tracKey, this);
 			if (taskKey != null) {
 				tracKeyByTaskKey.put(taskKey, tracKey);
 			}
 		}
 
-		Attribute(Key key, String prettyName, String taskKey, boolean hidden, boolean readonly) {		
+		Attribute(Key key, String prettyName, String taskKey, boolean hidden, boolean readonly) {
 			this(key.getKey(), prettyName, taskKey, hidden, readonly);
 		}
 
-		Attribute(Key key, String prettyName, String taskKey, boolean hidden) {		
+		Attribute(Key key, String prettyName, String taskKey, boolean hidden) {
 			this(key.getKey(), prettyName, taskKey, hidden, false);
 		}
-		
-		Attribute(Key key, String prettyName, String taskKey) {		
+
+		Attribute(Key key, String prettyName, String taskKey) {
 			this(key.getKey(), prettyName, taskKey, false, false);
 		}
 
@@ -94,7 +89,7 @@ public class TracAttributeFactory extends AbstractAttributeFactory {
 		Attribute(String taskKey, String prettyName) {
 			this(taskKey, prettyName, taskKey, true, false);
 		}
-		
+
 		public String getTaskKey() {
 			return taskKey;
 		}
@@ -105,12 +100,12 @@ public class TracAttributeFactory extends AbstractAttributeFactory {
 
 		public boolean isHidden() {
 			return isHidden;
-		}	
-		
+		}
+
 		public boolean isReadOnly() {
 			return isReadOnly;
 		}
-		
+
 		@Override
 		public String toString() {
 			return prettyName;
@@ -127,7 +122,7 @@ public class TracAttributeFactory extends AbstractAttributeFactory {
 		if (isInternalAttribute(key)) {
 			return true;
 		}
-		
+
 		Attribute attribute = attributeByTracKey.get(key);
 		return (attribute != null) ? attribute.isHidden() : false;
 	}
@@ -153,9 +148,10 @@ public class TracAttributeFactory extends AbstractAttributeFactory {
 	}
 
 	static boolean isInternalAttribute(String id) {
-		return RepositoryTaskAttribute.COMMENT_NEW.equals(id) || RepositoryTaskAttribute.REMOVE_CC.equals(id) || RepositoryTaskAttribute.NEW_CC.equals(id) || RepositoryTaskAttribute.ADD_SELF_CC.equals(id);
+		return RepositoryTaskAttribute.COMMENT_NEW.equals(id) || RepositoryTaskAttribute.REMOVE_CC.equals(id)
+				|| RepositoryTaskAttribute.NEW_CC.equals(id) || RepositoryTaskAttribute.ADD_SELF_CC.equals(id);
 	}
-	
+
 	@Override
 	public Date getDateForAttributeType(String attributeKey, String dateString) {
 		if (dateString == null || dateString.length() == 0) {

@@ -202,8 +202,7 @@ public class ScheduledTaskContainer extends AbstractTaskCategory {
 	}
 
 	/**
-	 * The handle for most containers is their summary. Override to specify a
-	 * different natural ordering.
+	 * The handle for most containers is their summary. Override to specify a different natural ordering.
 	 */
 	@Override
 	public int compareTo(AbstractTaskContainer taskListElement) {

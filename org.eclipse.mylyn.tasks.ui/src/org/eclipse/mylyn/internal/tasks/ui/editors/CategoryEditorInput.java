@@ -60,7 +60,7 @@ public class CategoryEditorInput implements IEditorInput {
 	public String getCategoryName() {
 		return category.getSummary();
 	}
-	
+
 	public String getUrl() {
 		return category.getUrl();
 	}
@@ -69,7 +69,7 @@ public class CategoryEditorInput implements IEditorInput {
 		TasksUiPlugin.getTaskListManager().getTaskList().renameContainer(category, description);
 //		category.setDescription(summary);
 	}
-	
+
 	public void setUrl(String url) {
 		category.setUrl(url);
 		Set<AbstractTaskContainer> updated = new HashSet<AbstractTaskContainer>();
@@ -77,5 +77,5 @@ public class CategoryEditorInput implements IEditorInput {
 		TasksUiPlugin.getTaskListManager().getTaskList().notifyContainersUpdated(updated);
 //		.notifyContainerUpdated(category);
 	}
-	
+
 }

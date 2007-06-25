@@ -65,22 +65,20 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor TASK_NEW = create(T_TOOL, "task-new.gif");
 
-	public static final ImageDescriptor TASK_REPOSITORY_HISTORY = create(T_TOOL,
-			"task-repository-history.gif");
+	public static final ImageDescriptor TASK_REPOSITORY_HISTORY = create(T_TOOL, "task-repository-history.gif");
 
 	public static final ImageDescriptor TASK_REPOSITORY_NOTES = create(T_TOOL, "task-repository-notes.gif");
 
-	public static final ImageDescriptor TASK_REPOSITORY_COMPLETED = create(T_TOOL,
-			"task-repository-completed.gif");
+	public static final ImageDescriptor TASK_REPOSITORY_COMPLETED = create(T_TOOL, "task-repository-completed.gif");
 
 	public static final ImageDescriptor TASK_REMOTE = create(T_TOOL, "task-remote.gif");
-	
+
 	public static final ImageDescriptor TASK_WORKING_SET = create(T_TOOL, "open-task.gif");
 
 	public static final ImageDescriptor TASKLIST = create("eview16", "task-list.gif");
 
 	public static final ImageDescriptor REPOSITORY = create("eview16", "repository.gif");
-	
+
 	public static final ImageDescriptor REPOSITORY_SUBMIT = create(T_TOOL, "repository-submit.gif");
 
 	public static final ImageDescriptor REPOSITORY_SMALL = create(T_OBJ, "repository-small.gif");
@@ -92,7 +90,7 @@ public class TasksUiImages {
 	public static final ImageDescriptor REMOVE = create(T_ELCL, "remove.gif");
 
 	public static final ImageDescriptor DELETE = create(T_ELCL, "delete.gif");
-	
+
 	public static final ImageDescriptor FILTER_COMPLETE = create(T_ELCL, "filter-complete.gif");
 
 	public static final ImageDescriptor FILTER_ARCHIVE = create(T_ELCL, "filter-archive.gif");
@@ -104,9 +102,9 @@ public class TasksUiImages {
 	public static final ImageDescriptor FILTER = create(T_TOOL, "view-filter.gif");
 
 	public static final ImageDescriptor FIND_CLEAR = create(T_TOOL, "find-clear.gif");
-	
+
 	public static final ImageDescriptor FIND_CLEAR_DISABLED = create(T_TOOL, "find-clear-disabled.gif");
-	
+
 	public static final ImageDescriptor WARNING = create(T_ELCL, "warning.gif");
 
 	public static final ImageDescriptor OVERLAY_WEB = create(T_TOOL, "overlay-web.gif");
@@ -116,7 +114,7 @@ public class TasksUiImages {
 	public static final ImageDescriptor BROWSER_SMALL = create(T_OBJ, "browser-small.gif");
 
 	public static final ImageDescriptor BROWSER_OPEN_TASK = create(T_TOOL, "open-browser.gif");
-	
+
 	public static final ImageDescriptor OVERLAY_SYNCHRONIZING = create(T_EVIEW, "overlay-synchronizing.gif");
 
 	public static final ImageDescriptor OVERLAY_HAS_DUE = create(T_EVIEW, "overlay-has-due.gif");
@@ -138,33 +136,33 @@ public class TasksUiImages {
 	public static final ImageDescriptor TASK_REPOSITORY_NEW = create(T_TOOL, "task-repository-new.gif");
 
 	public static final ImageDescriptor TOOLBAR_ARROW_RIGHT = create(T_TOOL, "toolbar-arrow-right.gif");
-	
+
 	public static final ImageDescriptor TOOLBAR_ARROW_DOWN = create(T_TOOL, "toolbar-arrow-down.gif");
-	
+
 	public static final ImageDescriptor COMMENT = create(T_TOOL, "comment.gif");
 
 	public static final ImageDescriptor LINK_EDITOR = create(T_TOOL, "link-editor.gif");
-	
+
 	public static final ImageDescriptor PERSON = create(T_TOOL, "person.gif");
 
 	public static final ImageDescriptor PERSON_NARROW = create(T_TOOL, "person-narrow.gif");
-	
+
 	public static final ImageDescriptor PERSON_ME = create(T_TOOL, "person-me.gif");
-	
+
 	public static final ImageDescriptor PERSON_ME_NARROW = create(T_TOOL, "person-me-narrow.gif");
-	
+
 	public static final ImageDescriptor CONTEXT_ATTACH = create(T_TOOL, "context-attach.gif");
 
 	public static final ImageDescriptor CONTEXT_RETRIEVE = create(T_TOOL, "context-retrieve.gif");
 
 	public static final ImageDescriptor CONTEXT_TRANSFER = create(T_TOOL, "context-transfer.gif");
 
-	public static final ImageDescriptor CONTEXT_CLEAR = create(T_TOOL, "context-clear.gif");	
-	
+	public static final ImageDescriptor CONTEXT_CLEAR = create(T_TOOL, "context-clear.gif");
+
 	public static final ImageDescriptor ATTACHMENT_PATCH = create(T_OBJ, "attachment-patch.gif");
 
 	public static final ImageDescriptor TASK_RETRIEVE = create(T_TOOL, "task-retrieve.gif");
-	
+
 	public static final ImageDescriptor OVERLAY_INCOMMING = create(T_EVIEW, "overlay-incoming.gif");
 
 	public static final ImageDescriptor OVERLAY_INCOMMING_NEW = create(T_EVIEW, "overlay-incoming-new.gif");
@@ -176,7 +174,7 @@ public class TasksUiImages {
 	public static final ImageDescriptor OVERLAY_SYNCH_INCOMMING_NEW = create(T_EVIEW, "overlay-synch-incoming-new.gif");
 
 	public static final ImageDescriptor OVERLAY_SYNCH_OUTGOING = create(T_EVIEW, "overlay-synch-outgoing.gif");
-	
+
 	public static final ImageDescriptor OVERLAY_CONFLICT = create(T_EVIEW, "overlay-conflicting.gif");
 
 	public static final ImageDescriptor OVERLAY_REPOSITORY = create(T_EVIEW, "overlay-repository.gif");
@@ -186,7 +184,7 @@ public class TasksUiImages {
 	public static final ImageDescriptor OVERLAY_WARNING = create(T_OVR, "overlay-warning.gif");
 
 	public static final ImageDescriptor OVERLAY_BLANK = create(T_OVR, "overlay-blank.gif");
-	
+
 	public static final ImageDescriptor STATUS_NORMAL = create(T_EVIEW, "status-normal.gif");
 
 	public static final ImageDescriptor STATUS_CONTEXT = create(T_EVIEW, "status-server-context.gif");
@@ -238,7 +236,7 @@ public class TasksUiImages {
 	public static final ImageDescriptor BANNER_REPOSITORY = create(T_WIZBAN, "banner-repository.gif");
 
 	public static final ImageDescriptor BANNER_WORKING_SET = create(T_WIZBAN, "workset_wiz.png");
-	
+
 	public static final ImageDescriptor BANNER_REPOSITORY_SETTINGS = create(T_WIZBAN, "banner-repository-settings.gif");
 
 	public static final ImageDescriptor BANNER_REPOSITORY_CONTEXT = create(T_WIZBAN, "banner-repository-context.gif");
@@ -246,7 +244,7 @@ public class TasksUiImages {
 	public static final ImageDescriptor BANNER_IMPORT = create(T_WIZBAN, "banner-import.gif");
 
 	public static final ImageDescriptor BLANK_TINY = create(T_ELCL, "clearDot.gif");
-	
+
 	public static final ImageDescriptor BLANK = create(T_ELCL, "blank.gif");
 
 	private static ImageDescriptor create(String prefix, String name) {
@@ -260,22 +258,21 @@ public class TasksUiImages {
 //	private static ImageDescriptor createSize(ImageDescriptor base, Point size) {
 //		return new TaskListImageDescriptor(base, size);
 //	}
-	
+
 	/**
 	 * Lazily initializes image map.
 	 */
 	public static Image getImage(ImageDescriptor imageDescriptor) {
 		ImageRegistry imageRegistry = getImageRegistry();
-		Image image = imageRegistry.get(""+imageDescriptor.hashCode());
+		Image image = imageRegistry.get("" + imageDescriptor.hashCode());
 		if (image == null) {
 			image = imageDescriptor.createImage(true);
-			imageRegistry.put(""+imageDescriptor.hashCode(), image);
+			imageRegistry.put("" + imageDescriptor.hashCode(), image);
 		}
 		return image;
 	}
-	
-	public static Image getImageWithOverlay(ImageDescriptor icon, ImageDescriptor overlay, boolean top,
-			boolean left) {
+
+	public static Image getImageWithOverlay(ImageDescriptor icon, ImageDescriptor overlay, boolean top, boolean left) {
 		if (icon == null) {
 			return null;
 		}
@@ -285,7 +282,7 @@ public class TasksUiImages {
 		}
 		key += new Boolean(top).hashCode();
 		key += new Boolean(left).hashCode();
-		
+
 		Image image = getImageRegistry().get(key);
 
 		if (image == null) {
@@ -295,13 +292,14 @@ public class TasksUiImages {
 		}
 		return image;
 	}
-	
+
 	/**
-	 * Lazily initializes image map. 
+	 * Lazily initializes image map.
 	 * 
-	 * @param	icon	cannot be null
+	 * @param icon
+	 *            cannot be null
 	 */
-	public static Image getCompositeTaskImage(ImageDescriptor icon, ImageDescriptor overlayKind, boolean wide) {	
+	public static Image getCompositeTaskImage(ImageDescriptor icon, ImageDescriptor overlayKind, boolean wide) {
 		if (icon == null) {
 			return null;
 		}
@@ -332,19 +330,20 @@ public class TasksUiImages {
 		}
 		Image image = getImageRegistry().get(key);
 		if (image == null) {
-			CompositeContainerImageDescriptor imageDescriptor = new CompositeContainerImageDescriptor(icon, OVERLAY_BLANK, wide);
+			CompositeContainerImageDescriptor imageDescriptor = new CompositeContainerImageDescriptor(icon,
+					OVERLAY_BLANK, wide);
 			image = imageDescriptor.createImage(true);
 			getImageRegistry().put(key, image);
 		}
 		return image;
 	}
-	
+
 	public static Image getCompositeSynchImage(ImageDescriptor icon, boolean background) {
 		String key = "" + icon.hashCode();
 		if (background) {
 			key += ".background";
 		}
-				
+
 		Image image = getImageRegistry().get(key);
 		if (image == null) {
 			CompositeSynchImageDescriptor imageDescriptor = new CompositeSynchImageDescriptor(icon, background);
@@ -353,7 +352,7 @@ public class TasksUiImages {
 		}
 		return image;
 	}
-	
+
 	private static ImageRegistry getImageRegistry() {
 		if (imageRegistry == null) {
 			imageRegistry = new ImageRegistry();
@@ -389,7 +388,7 @@ public class TasksUiImages {
 		return progressImages;
 
 	}
-	
+
 	public static Image getImageForPriority(PriorityLevel priorityLevel) {
 		if (priorityLevel == null) {
 			return null;
@@ -421,5 +420,5 @@ public class TasksUiImages {
 			return null;
 		}
 	}
-		
+
 }

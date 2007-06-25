@@ -29,7 +29,7 @@ import org.eclipse.ui.PartInitException;
 public class TaskActivityWizard extends Wizard implements INewWizard {
 
 	private static final String TITLE = "New Task Activity Report";
-	
+
 	private TaskActivityWizardPage planningGamePage;
 
 	public TaskActivityWizard() {
@@ -41,12 +41,11 @@ public class TaskActivityWizard extends Wizard implements INewWizard {
 	@Override
 	public boolean performFinish() {
 		try {
-			IWorkbenchPage page = TasksUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow()
-					.getActivePage();
+			IWorkbenchPage page = TasksUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			if (page == null)
 				return false;
-			IEditorInput input = new TaskActivityEditorInput(planningGamePage.getReportStartDate(), planningGamePage
-					.getSelectedContainers(), TasksUiPlugin.getTaskListManager().getTaskList());
+			IEditorInput input = new TaskActivityEditorInput(planningGamePage.getReportStartDate(),
+					planningGamePage.getSelectedContainers(), TasksUiPlugin.getTaskListManager().getTaskList());
 			page.openEditor(input, TaskPlanningEditor.ID_EDITOR_PLANNING);
 		} catch (PartInitException ex) {
 			StatusHandler.log(ex, "couldn't open summary editor");

@@ -83,9 +83,9 @@ public abstract class RetrieveTitleFromUrlJob extends Job implements TitleListen
 					pageTitle = url;
 					titleRetrieved = false;
 				} else {
-					titleRetrieved = true;	
+					titleRetrieved = true;
 				}
-				setTitle(pageTitle);				
+				setTitle(pageTitle);
 			}
 		});
 		return Status.OK_STATUS;

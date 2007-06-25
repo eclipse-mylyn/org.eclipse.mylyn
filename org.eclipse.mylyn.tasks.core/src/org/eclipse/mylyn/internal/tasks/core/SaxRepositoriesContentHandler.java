@@ -34,10 +34,8 @@ public class SaxRepositoriesContentHandler extends DefaultHandler {
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		try {
 			if (localName.equals(TaskRepositoriesExternalizer.ELEMENT_TASK_REPOSITORY) && attributes != null) {
-				String kind = XmlStringConverter.convertXmlToString(attributes
-						.getValue(IRepositoryConstants.PROPERTY_CONNECTOR_KIND));
-				String url = XmlStringConverter.convertXmlToString(attributes
-						.getValue(IRepositoryConstants.PROPERTY_URL));
+				String kind = XmlStringConverter.convertXmlToString(attributes.getValue(IRepositoryConstants.PROPERTY_CONNECTOR_KIND));
+				String url = XmlStringConverter.convertXmlToString(attributes.getValue(IRepositoryConstants.PROPERTY_URL));
 				if (kind != null && kind.length() > 0 && url != null && url.length() > 0) {
 					TaskRepository repository = new TaskRepository(kind, url);
 					for (int index = 0; index < attributes.getLength(); index++) {

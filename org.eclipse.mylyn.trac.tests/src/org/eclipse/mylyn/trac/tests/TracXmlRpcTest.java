@@ -31,13 +31,12 @@ import org.eclipse.mylyn.context.tests.support.TestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.trac.core.util.TracHttpClientTransportFactory;
 
 /**
- * Test cases for <a href="http://trac-hacks.org/wiki/XmlRpcPlugin">Trac XML-RPC
- * Plugin</a> API. Revision 1188 or higher is required.
+ * Test cases for <a href="http://trac-hacks.org/wiki/XmlRpcPlugin">Trac XML-RPC Plugin</a> API. Revision 1188 or
+ * higher is required.
  * 
  * <p>
- * This class does not depend on any Mylar (connector) classes except for
- * TracHttpClientTransportFactory which is needed for initialization of
- * HttpClient.
+ * This class does not depend on any Mylar (connector) classes except for TracHttpClientTransportFactory which is needed
+ * for initialization of HttpClient.
  * 
  * @author Steffen Pingel
  */
@@ -62,7 +61,8 @@ public class TracXmlRpcTest extends TestCase {
 		random = new Random();
 
 		Credentials credentials = TestUtil.readCredentials(PrivilegeLevel.ADMIN);
-		createConnection(new URL(TracTestConstants.TEST_TRAC_010_URL + XMLRPC_URL), credentials.username, credentials.password);
+		createConnection(new URL(TracTestConstants.TEST_TRAC_010_URL + XMLRPC_URL), credentials.username,
+				credentials.password);
 
 		tickets = new ArrayList<Integer>();
 	}

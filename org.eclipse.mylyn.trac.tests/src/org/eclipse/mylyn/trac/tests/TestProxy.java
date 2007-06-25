@@ -30,11 +30,11 @@ public class TestProxy implements Runnable {
 	private IOException exception;
 
 	private volatile boolean stopped = false;
-	
+
 	public TestProxy(int listenPort) {
 		this.listenPort = listenPort;
 	}
-	
+
 	public TestProxy() {
 	}
 
@@ -44,7 +44,7 @@ public class TestProxy implements Runnable {
 		}
 		return listenPort;
 	}
-	
+
 	public void start() {
 		runner = new Thread(this, "TestProxy :" + listenPort);
 		runner.start();
@@ -57,21 +57,21 @@ public class TestProxy implements Runnable {
 		Thread.sleep(100);
 		return port;
 	}
-	
+
 	public void run() {
 		ServerSocket serverSocket = null;
 		try {
 			serverSocket = new ServerSocket(listenPort);
 			synchronized (this) {
 				listenPort = serverSocket.getLocalPort();
-				notifyAll();				
+				notifyAll();
 			}
 			while (!stopped) {
 				Socket socket = serverSocket.accept();
 				try {
 					Message request = readMessage(socket.getInputStream());
 					setRequest(request);
-					
+
 					Message response = waitForResponse();
 					writeMessage(response, socket.getOutputStream());
 				} finally {
@@ -205,7 +205,7 @@ public class TestProxy implements Runnable {
 			int i = request.indexOf(" ");
 			return (i != -1) ? request.substring(0, i) : request;
 		}
-		
+
 	}
 
 	public static void main(String[] args) {
@@ -221,7 +221,7 @@ public class TestProxy implements Runnable {
 		} finally {
 			proxy.stop();
 		}
-		
+
 	}
-	
+
 }

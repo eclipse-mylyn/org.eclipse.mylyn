@@ -104,8 +104,8 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 			attachment = new RepositoryAttachment(attributeFactory);
 			if (attributes != null) {
 				if ("1".equals(attributes.getValue(BugzillaReportElement.IS_OBSOLETE.getKeyString()))) {
-					attachment.addAttribute(BugzillaReportElement.IS_OBSOLETE.getKeyString(), attributeFactory
-							.createAttribute(BugzillaReportElement.IS_OBSOLETE.getKeyString()));
+					attachment.addAttribute(BugzillaReportElement.IS_OBSOLETE.getKeyString(),
+							attributeFactory.createAttribute(BugzillaReportElement.IS_OBSOLETE.getKeyString()));
 					attachment.setObsolete(true);
 				}
 				if ("1".equals(attributes.getValue(BugzillaReportElement.IS_PATCH.getKeyString()))) {
@@ -219,11 +219,9 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 		case BUG:
 			// Reached end of bug. Need to set LONGDESCLENGTH to number of
 			// comments
-			RepositoryTaskAttribute numCommentsAttribute = repositoryTaskData
-					.getAttribute(BugzillaReportElement.LONGDESCLENGTH.getKeyString());
+			RepositoryTaskAttribute numCommentsAttribute = repositoryTaskData.getAttribute(BugzillaReportElement.LONGDESCLENGTH.getKeyString());
 			if (numCommentsAttribute == null) {
-				numCommentsAttribute = attributeFactory.createAttribute(BugzillaReportElement.LONGDESCLENGTH
-						.getKeyString());
+				numCommentsAttribute = attributeFactory.createAttribute(BugzillaReportElement.LONGDESCLENGTH.getKeyString());
 				numCommentsAttribute.setValue("" + repositoryTaskData.getComments().size());
 				repositoryTaskData.addAttribute(BugzillaReportElement.LONGDESCLENGTH.getKeyString(),
 						numCommentsAttribute);
@@ -235,11 +233,11 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 			for (RepositoryAttachment attachment : repositoryTaskData.getAttachments()) {
 				TaskComment taskComment = attachIdToComment.get(attachment.getId());
 				if (taskComment != null) {
-					attachment.setCreator(taskComment.getAuthor());					
+					attachment.setCreator(taskComment.getAuthor());
 				}
-				attachment.setAttributeValue(RepositoryTaskAttribute.ATTACHMENT_URL, repositoryTaskData
-						.getRepositoryUrl()
-						+ IBugzillaConstants.URL_GET_ATTACHMENT_SUFFIX + attachment.getId());
+				attachment.setAttributeValue(RepositoryTaskAttribute.ATTACHMENT_URL,
+						repositoryTaskData.getRepositoryUrl() + IBugzillaConstants.URL_GET_ATTACHMENT_SUFFIX
+								+ attachment.getId());
 				attachment.setRepositoryKind(repositoryTaskData.getRepositoryKind());
 				attachment.setRepositoryUrl(repositoryTaskData.getRepositoryUrl());
 				attachment.setTaskId(repositoryTaskData.getId());

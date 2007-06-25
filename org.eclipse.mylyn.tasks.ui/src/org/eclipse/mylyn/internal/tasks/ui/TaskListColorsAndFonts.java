@@ -41,7 +41,7 @@ public class TaskListColorsAndFonts {
 	public static final String THEME_COLOR_CATEGORY_GRADIENT_END = "org.eclipse.mylyn.tasks.ui.colors.category.gradient.end";
 
 	public static final String THEME_COLOR_TASKLIST_CATEGORY = THEME_COLOR_CATEGORY_GRADIENT_END;
-	
+
 	public static final Color BACKGROUND_ARCHIVE = new Color(Display.getDefault(), 225, 226, 246);
 
 	public static final Color COLOR_TASK_ACTIVE = new Color(Display.getDefault(), 36, 22, 50);
@@ -50,8 +50,8 @@ public class TaskListColorsAndFonts {
 
 	public static final Color COLOR_HYPERLINK_WIDGET = new Color(Display.getDefault(), 40, 99, 172);
 
-	public static final Color COLOR_HYPERLINK_TEXT = new Color(Display.getDefault(), 0, 0, 255);	
-	
+	public static final Color COLOR_HYPERLINK_TEXT = new Color(Display.getDefault(), 0, 0, 255);
+
 	public static final Color COLOR_SPELLING_ERROR = new Color(Display.getDefault(), 255, 0, 0);
 
 	public static final Font BOLD = JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT);
@@ -64,8 +64,8 @@ public class TaskListColorsAndFonts {
 		Font defaultFont = JFaceResources.getFontRegistry().get(JFaceResources.DEFAULT_FONT);
 		FontData[] defaultData = defaultFont.getFontData();
 		if (defaultData != null && defaultData.length == 1) {
-			FontData data = new FontData(defaultData[0].getName(), defaultData[0].getHeight(), defaultData[0]
-					.getStyle());
+			FontData data = new FontData(defaultData[0].getName(), defaultData[0].getHeight(),
+					defaultData[0].getStyle());
 
 			// NOTE: Windows XP only, for: data.data.lfStrikeOut = 1;
 			try {
@@ -115,5 +115,5 @@ public class TaskListColorsAndFonts {
 	}
 
 	public static final String TASK_EDITOR_FONT = "org.eclipse.mylyn.tasks.ui.fonts.task.editor.comment";
-												   
+
 }

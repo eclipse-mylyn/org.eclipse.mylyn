@@ -96,7 +96,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	public static final String LABEL_VIEW_REPOSITORIES = "Task Repositories view";
 
 	public static final String ID_PLUGIN = "org.eclipse.mylyn.tasks.ui";
-	
+
 	private static final String FOLDER_OFFLINE = "offline";
 
 	private static final String DIRECTORY_METADATA = ".metadata";
@@ -532,7 +532,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	}
 
 	public String getDefaultDataDirectory() {
-		return ResourcesPlugin.getWorkspace().getRoot().getLocation().toString() + '/' +DIRECTORY_METADATA+ '/'+ NAME_DATA_DIR;
+		return ResourcesPlugin.getWorkspace().getRoot().getLocation().toString() + '/' + DIRECTORY_METADATA + '/'
+				+ NAME_DATA_DIR;
 	}
 
 	public String getDataDirectory() {
@@ -823,10 +824,10 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			AbstractTask repositoryTask) {
 
 		TaskListNotificationIncoming notification = new TaskListNotificationIncoming(repositoryTask);
-		RepositoryTaskData newTaskData = getTaskDataManager().getNewTaskData(
-				repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId());
-		RepositoryTaskData oldTaskData = getTaskDataManager().getOldTaskData(
-				repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId());
+		RepositoryTaskData newTaskData = getTaskDataManager().getNewTaskData(repositoryTask.getRepositoryUrl(),
+				repositoryTask.getTaskId());
+		RepositoryTaskData oldTaskData = getTaskDataManager().getOldTaskData(repositoryTask.getRepositoryUrl(),
+				repositoryTask.getTaskId());
 
 		if (newTaskData != null && oldTaskData != null) {
 

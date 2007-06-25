@@ -24,7 +24,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
  */
 public class EncodingTest extends AbstractBugzillaTest {
 
-	public void testEncodingSetting()  {
+	public void testEncodingSetting() {
 
 		String charset = BugzillaClient.getCharsetFromString("text/html; charset=UTF-8");
 		assertEquals("UTF-8", charset);
@@ -32,24 +32,22 @@ public class EncodingTest extends AbstractBugzillaTest {
 		charset = BugzillaClient.getCharsetFromString("text/html");
 		assertEquals(null, charset);
 
-		charset = BugzillaClient
-				.getCharsetFromString("<<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-2\">>");
+		charset = BugzillaClient.getCharsetFromString("<<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-2\">>");
 		assertEquals("iso-8859-2", charset);
 
-		charset = BugzillaClient
-				.getCharsetFromString("<<meta http-equiv=\"Content-Type\" content=\"text/html\">>");
+		charset = BugzillaClient.getCharsetFromString("<<meta http-equiv=\"Content-Type\" content=\"text/html\">>");
 		assertEquals(null, charset);
 	}
 
 	/**
-	 * This test just shows that when the encoding is changed on the repository
-	 * synchronization does in fact return in a different encoding (though it
-	 * may not be legible)
+	 * This test just shows that when the encoding is changed on the repository synchronization does in fact return in a
+	 * different encoding (though it may not be legible)
 	 */
 	public void testDifferentReportEncoding() throws CoreException {
 		init222();
 		repository.setCharacterEncoding("UTF-8");
-		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingId(repository, "57", new NullProgressMonitor());
+		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingId(repository, "57",
+				new NullProgressMonitor());
 		assertNotNull(task);
 		//TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		assertTrue(task.getSummary().equals("\u00E6"));//"\u05D0"));
@@ -62,12 +60,14 @@ public class EncodingTest extends AbstractBugzillaTest {
 		// iso-8859-1 'incorrect' interpretation
 		assertFalse(task.getSummary().equals("\u00E6"));//"\u05D0"));
 	}
-	
+
 	public void testProperEncodingUponPost() throws CoreException {
 		init222();
 		repository.setCharacterEncoding("UTF-8");
-		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingId(repository, "57", new NullProgressMonitor());
-		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
+		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingId(repository, "57",
+				new NullProgressMonitor());
+		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(),
+				task.getTaskId());
 		assertNotNull(task);
 		assertTrue(task.getSummary().equals("\u00E6"));//"\u05D0"));
 		String priority = null;

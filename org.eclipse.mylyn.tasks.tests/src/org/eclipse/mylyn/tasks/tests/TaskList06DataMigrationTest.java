@@ -146,7 +146,8 @@ class TaskListDataMigration implements IRunnableWithProgress {
 
 	public void doMigration(IProgressMonitor monitor) {
 		try {
-			if(dataDirectory == null || !dataDirectory.exists()) return;
+			if (dataDirectory == null || !dataDirectory.exists())
+				return;
 			monitor.beginTask("Mylar Data Migration", 4);
 			migrateTaskList(new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN));
 			monitor.worked(1);
@@ -209,11 +210,8 @@ class TaskListDataMigration implements IRunnableWithProgress {
 			monitor.beginTask("Migrate Repository Data", 1);
 			ZipFileUtil.createZipFile(newRepositoriesFile, filesToZip, new SubProgressMonitor(monitor, 1));
 			if (!oldRepositoriesFile.delete()) {
-				StatusHandler
-						.fail(
-								null,
-								"Could not remove old repositories file. Check read/write permission on data directory.",
-								false);
+				StatusHandler.fail(null,
+						"Could not remove old repositories file. Check read/write permission on data directory.", false);
 				return false;
 			}
 			monitor.worked(1);
@@ -229,7 +227,8 @@ class TaskListDataMigration implements IRunnableWithProgress {
 	public boolean migrateTaskContextData(IProgressMonitor monitor) {
 		ArrayList<File> contextFiles = new ArrayList<File>();
 		for (File file : dataDirectory.listFiles()) {
-			if (file.getName().startsWith("http") || file.getName().startsWith("local") || file.getName().startsWith("task")) {
+			if (file.getName().startsWith("http") || file.getName().startsWith("local")
+					|| file.getName().startsWith("task")) {
 				if (!file.getName().endsWith(".zip")) {
 					contextFiles.add(file);
 				}
@@ -250,7 +249,7 @@ class TaskListDataMigration implements IRunnableWithProgress {
 			for (File file : contextFiles) {
 				ArrayList<File> filesToZip = new ArrayList<File>();
 				filesToZip.add(file);
-				File newContextFile = new File(contextsFolder, file.getName()+".zip");
+				File newContextFile = new File(contextsFolder, file.getName() + ".zip");
 				if (newContextFile.exists()) {
 					if (!newContextFile.delete()) {
 						StatusHandler.fail(null,
@@ -275,12 +274,13 @@ class TaskListDataMigration implements IRunnableWithProgress {
 		}
 		return true;
 	}
-		
+
 	public boolean migrateActivityData(IProgressMonitor monitor) {
-		File oldActivityFile = new File(dataDirectory, InteractionContextManager.OLD_CONTEXT_HISTORY_FILE_NAME+InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD);
+		File oldActivityFile = new File(dataDirectory, InteractionContextManager.OLD_CONTEXT_HISTORY_FILE_NAME
+				+ InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD);
 		if (!oldActivityFile.exists())
 			return false;
-		
+
 		File contextsFolder = new File(dataDirectory, WorkspaceAwareContextStore.CONTEXTS_DIRECTORY);
 		if (!contextsFolder.exists()) {
 			if (!contextsFolder.mkdir()) {
@@ -289,9 +289,10 @@ class TaskListDataMigration implements IRunnableWithProgress {
 				return false;
 			}
 		}
-		
-		File newActivityFile = new File(contextsFolder, InteractionContextManager.CONTEXT_HISTORY_FILE_NAME+InteractionContextManager.CONTEXT_FILE_EXTENSION);
-		
+
+		File newActivityFile = new File(contextsFolder, InteractionContextManager.CONTEXT_HISTORY_FILE_NAME
+				+ InteractionContextManager.CONTEXT_FILE_EXTENSION);
+
 		if (newActivityFile.exists()) {
 			if (!newActivityFile.delete()) {
 				StatusHandler.fail(null,
@@ -305,11 +306,8 @@ class TaskListDataMigration implements IRunnableWithProgress {
 			monitor.beginTask("Migrate Activity Data", 1);
 			ZipFileUtil.createZipFile(newActivityFile, filesToZip, new SubProgressMonitor(monitor, 1));
 			if (!oldActivityFile.delete()) {
-				StatusHandler
-						.fail(
-								null,
-								"Could not remove old activity file. Check read/write permission on data directory.",
-								false);
+				StatusHandler.fail(null,
+						"Could not remove old activity file. Check read/write permission on data directory.", false);
 				return false;
 			}
 			monitor.worked(1);

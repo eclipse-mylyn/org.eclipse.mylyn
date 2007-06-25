@@ -35,7 +35,7 @@ public class ReminderCellEditor extends DialogCellEditor {
 	private DateSelectionDialog dialog;
 
 	private String formatString = "dd-MMM-yyyy";
-	
+
 	private SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.ENGLISH);
 
 	public ReminderCellEditor(Composite parent) {
@@ -59,15 +59,15 @@ public class ReminderCellEditor extends DialogCellEditor {
 			}
 		}
 		Calendar newCalendar = GregorianCalendar.getInstance();
-		if(initialCalendar != null) {
+		if (initialCalendar != null) {
 			newCalendar.setTime(initialCalendar.getTime());
-		} 
-		
+		}
+
 		dialog = new DateSelectionDialog(cellEditorWindow.getShell(), newCalendar, DatePicker.TITLE_DIALOG);
 		int dialogResponse = dialog.open();
-		
-		if(dialogResponse == DateSelectionDialog.CANCEL) {
-			if(initialCalendar != null) {
+
+		if (dialogResponse == DateSelectionDialog.CANCEL) {
+			if (initialCalendar != null) {
 				reminderDate = initialCalendar.getTime();
 			} else {
 				reminderDate = null;
@@ -75,7 +75,7 @@ public class ReminderCellEditor extends DialogCellEditor {
 		} else {
 			reminderDate = dialog.getDate();
 		}
-		
+
 		String result = null;
 		if (reminderDate != null) {
 			result = format.format(reminderDate);
@@ -87,10 +87,10 @@ public class ReminderCellEditor extends DialogCellEditor {
 		return reminderDate;
 	}
 
-	 @Override
-	protected void doSetFocus() { 
-		 reminderDate = null;
-		 super.doSetFocus();
-	 }
-	
+	@Override
+	protected void doSetFocus() {
+		reminderDate = null;
+		super.doSetFocus();
+	}
+
 }

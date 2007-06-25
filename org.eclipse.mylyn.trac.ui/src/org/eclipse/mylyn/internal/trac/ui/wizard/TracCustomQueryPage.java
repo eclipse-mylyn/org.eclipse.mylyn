@@ -54,8 +54,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
 /**
- * Trac search page. Provides a form similar to the one the Bugzilla connector
- * uses.
+ * Trac search page. Provides a form similar to the one the Bugzilla connector uses.
  * 
  * @author Steffen Pingel
  */
@@ -229,8 +228,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 	}
 
 	/**
-	 * Creates the area for selection on product attributes
-	 * component/version/milestone.
+	 * Creates the area for selection on product attributes component/version/milestone.
 	 */
 	protected Control createProductAttributes(Composite control) {
 		Composite group = new Composite(control, SWT.NONE);
@@ -263,8 +261,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 	}
 
 	/**
-	 * Creates the area for selection of ticket attributes
-	 * status/resolution/priority.
+	 * Creates the area for selection of ticket attributes status/resolution/priority.
 	 */
 	protected Control createTicketAttributes(Composite control) {
 		Composite group = new Composite(control, SWT.NONE);
@@ -536,7 +533,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 			}
 		}
 
-		 public String getFieldName() {
+		public String getFieldName() {
 			return fieldName;
 		}
 

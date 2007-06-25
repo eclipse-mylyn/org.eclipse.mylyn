@@ -15,7 +15,7 @@ import org.eclipse.swt.graphics.Image;
  * @author Mik Kersten
  */
 public class PersonContentProposal implements IContentProposal {
-	
+
 	private final String address;
 
 	private boolean isCurrentUser = false;

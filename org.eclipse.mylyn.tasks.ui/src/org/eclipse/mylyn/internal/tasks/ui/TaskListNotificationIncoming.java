@@ -26,7 +26,7 @@ import org.eclipse.ui.PlatformUI;
 public class TaskListNotificationIncoming implements ITaskListNotification {
 
 	private final AbstractTask task;
-	
+
 	private String description = null;
 
 	private DecoratingLabelProvider labelProvider = new DecoratingLabelProvider(new TaskElementLabelProvider(true),
@@ -45,7 +45,7 @@ public class TaskListNotificationIncoming implements ITaskListNotification {
 	public String getLabel() {
 		return labelProvider.getText(task);
 	}
-	
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
@@ -63,6 +63,7 @@ public class TaskListNotificationIncoming implements ITaskListNotification {
 	public Image getNotificationIcon() {
 		return labelProvider.getImage(task);
 	}
+
 //
 //	public synchronized void setNotified(boolean notified) {
 //		task.setNotified(true);
@@ -97,21 +98,21 @@ public class TaskListNotificationIncoming implements ITaskListNotification {
 	public Date getDate() {
 		return date;
 	}
-	
-	public void setDate(Date date) {	
+
+	public void setDate(Date date) {
 		this.date = date;
 	}
-	
+
 	public int compareTo(ITaskListNotification anotherNotification) throws ClassCastException {
-	    if (!(anotherNotification != null))
-	      throw new ClassCastException("A ITaskListNotification object expected.");
-	    Date anotherDate = (anotherNotification).getDate();
-	    if(date != null && anotherDate != null) {
-	    	return date.compareTo(anotherDate);
-	    } else if(date == null) {
-	    	return -1;
-	    } else {
-	    	return 1;
-	    }    
-	  }
+		if (!(anotherNotification != null))
+			throw new ClassCastException("A ITaskListNotification object expected.");
+		Date anotherDate = (anotherNotification).getDate();
+		if (date != null && anotherDate != null) {
+			return date.compareTo(anotherDate);
+		} else if (date == null) {
+			return -1;
+		} else {
+			return 1;
+		}
+	}
 }

@@ -13,7 +13,6 @@ package org.eclipse.mylyn.tasks.core;
 
 import java.util.Set;
 
-
 /**
  * Listener for task list modifications and task content modifications.
  * 
@@ -23,5 +22,5 @@ import java.util.Set;
 public interface ITaskListChangeListener {
 
 	public abstract void containersChanged(Set<TaskContainerDelta> containers);
-	
+
 }

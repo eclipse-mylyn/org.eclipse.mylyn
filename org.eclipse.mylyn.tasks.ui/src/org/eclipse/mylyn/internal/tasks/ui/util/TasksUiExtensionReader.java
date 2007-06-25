@@ -254,8 +254,7 @@ public class TasksUiExtensionReader {
 			if (hyperlinkDetector instanceof IHyperlinkDetector) {
 				TasksUiPlugin.getDefault().addTaskHyperlinkDetector((IHyperlinkDetector) hyperlinkDetector);
 			} else {
-				StatusHandler.log("Could not load detector: " + hyperlinkDetector.getClass().getCanonicalName(),
-						null);
+				StatusHandler.log("Could not load detector: " + hyperlinkDetector.getClass().getCanonicalName(), null);
 			}
 		} catch (CoreException e) {
 			StatusHandler.log(e, "Could not load tasklist hyperlink detector extension");
@@ -268,8 +267,8 @@ public class TasksUiExtensionReader {
 			if (editor instanceof AbstractTaskEditorFactory) {
 				TasksUiPlugin.getDefault().addContextEditor((AbstractTaskEditorFactory) editor);
 			} else {
-				StatusHandler.log("Could not load editor: " + editor.getClass().getCanonicalName()
-						+ " must implement " + AbstractTaskEditorFactory.class.getCanonicalName(), null);
+				StatusHandler.log("Could not load editor: " + editor.getClass().getCanonicalName() + " must implement "
+						+ AbstractTaskEditorFactory.class.getCanonicalName(), null);
 			}
 		} catch (CoreException e) {
 			StatusHandler.log(e, "Could not load tasklist listener extension");
@@ -315,8 +314,7 @@ public class TasksUiExtensionReader {
 					ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(element.getContributor()
 							.getName(), iconPath);
 					if (descriptor != null) {
-						TasksUiPlugin.getDefault().addBrandingIcon(
-								connectorUi.getConnectorKind(),
+						TasksUiPlugin.getDefault().addBrandingIcon(connectorUi.getConnectorKind(),
 								TasksUiImages.getImage(descriptor));
 					}
 				}
@@ -325,8 +323,7 @@ public class TasksUiExtensionReader {
 					ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(element.getContributor()
 							.getName(), overlayIconPath);
 					if (descriptor != null) {
-						TasksUiPlugin.getDefault().addOverlayIcon(
-								connectorUi.getConnectorKind(), descriptor);
+						TasksUiPlugin.getDefault().addOverlayIcon(connectorUi.getConnectorKind(), descriptor);
 					}
 				}
 			} else {
@@ -401,9 +398,8 @@ public class TasksUiExtensionReader {
 				AbstractTaskListFactory externalizer = (AbstractTaskListFactory) externalizerObject;
 				externalizers.add(externalizer);
 			} else {
-				StatusHandler.log("Could not load externalizer: "
-						+ externalizerObject.getClass().getCanonicalName() + " must implement "
-						+ AbstractTaskListFactory.class.getCanonicalName(), null);
+				StatusHandler.log("Could not load externalizer: " + externalizerObject.getClass().getCanonicalName()
+						+ " must implement " + AbstractTaskListFactory.class.getCanonicalName(), null);
 			}
 
 			// Object taskHandler =

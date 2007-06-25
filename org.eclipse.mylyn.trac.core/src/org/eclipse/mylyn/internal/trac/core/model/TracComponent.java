@@ -38,5 +38,5 @@ public class TracComponent extends TracAttribute {
 	public void setOwner(String owner) {
 		this.owner = owner;
 	}
-	
+
 }

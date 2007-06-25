@@ -37,13 +37,14 @@ public class BugzillaAttachmentHandler extends AbstractAttachmentHandler {
 	}
 
 	@Override
-	public InputStream getAttachmentAsStream(TaskRepository repository, RepositoryAttachment attachment, IProgressMonitor monitor) throws CoreException {
+	public InputStream getAttachmentAsStream(TaskRepository repository, RepositoryAttachment attachment,
+			IProgressMonitor monitor) throws CoreException {
 		try {
 			BugzillaClient client = connector.getClientManager().getClient(repository);
 			return client.getAttachmentData(attachment.getId());
 		} catch (IOException e) {
 			throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
-					RepositoryStatus.ERROR_IO, repository.getUrl(), e));			
+					RepositoryStatus.ERROR_IO, repository.getUrl(), e));
 		}
 	}
 
@@ -81,4 +82,3 @@ public class BugzillaAttachmentHandler extends AbstractAttachmentHandler {
 	}
 
 }
-

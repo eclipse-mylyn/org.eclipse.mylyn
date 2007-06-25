@@ -50,7 +50,7 @@ public abstract class AbstractBugzillaTest extends TestCase {
 	protected TaskRepository repository;
 
 	protected TaskList taskList;
-	
+
 	protected ITaskFactory taskFactory;
 
 	public AbstractBugzillaTest() {
@@ -106,18 +106,20 @@ public abstract class AbstractBugzillaTest extends TestCase {
 		assertEquals(abstractRepositoryClient.getConnectorKind(), DEFAULT_KIND);
 
 		connector = (BugzillaRepositoryConnector) abstractRepositoryClient;
-		
+
 		taskFactory = new TaskFactory(repository);
 //		connector.setForceSynchExecForTesting(true);
 		TasksUiPlugin.getSynchronizationManager().setForceSyncExec(true);
 	}
 
 	protected BugzillaTask generateLocalTaskAndDownload(String taskNumber) throws CoreException {
-		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingId(repository, taskNumber, new NullProgressMonitor());
+		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingId(repository, taskNumber,
+				new NullProgressMonitor());
 		TasksUiPlugin.getSynchronizationManager().setTaskRead(task, true);
 		assertNotNull(task);
-		TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task, TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
-		
+		TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task,
+				TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
+
 		return task;
 	}
 

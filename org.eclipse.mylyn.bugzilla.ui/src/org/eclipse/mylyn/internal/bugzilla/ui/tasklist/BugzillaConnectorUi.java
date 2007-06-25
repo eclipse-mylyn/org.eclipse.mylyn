@@ -46,7 +46,7 @@ import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
  * @author Eugene Kuleshov
  */
 public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
-	
+
 	@Override
 	public String getAccountCreationUrl(TaskRepository taskRepository) {
 		return taskRepository.getUrl() + "/createaccount.cgi";
@@ -56,27 +56,27 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 	public String getAccountManagementUrl(TaskRepository taskRepository) {
 		return taskRepository.getUrl() + "/userprefs.cgi";
 	}
-	
+
 	@Override
 	public List<AbstractTaskContainer> getLegendItems() {
 		List<AbstractTaskContainer> legendItems = new ArrayList<AbstractTaskContainer>();
-		
+
 		BugzillaTask blocker = new BugzillaTask("", "critical", "Critical or Blocker");
-		blocker.setSeverity("critical");		
+		blocker.setSeverity("critical");
 		legendItems.add(blocker);
-		
+
 		BugzillaTask major = new BugzillaTask("", "major", "Major");
-		major.setSeverity("major");		
+		major.setSeverity("major");
 		legendItems.add(major);
-		
+
 		BugzillaTask enhancement = new BugzillaTask("", "enhancement", "Enhancement");
-		enhancement.setSeverity("enhancement");		
+		enhancement.setSeverity("enhancement");
 		legendItems.add(enhancement);
-		
+
 		BugzillaTask trivial = new BugzillaTask("", "trivial", "Trivial or Minor");
-		trivial.setSeverity("trivial");		
+		trivial.setSeverity("trivial");
 		legendItems.add(trivial);
-		
+
 		return legendItems;
 	}
 
@@ -85,9 +85,9 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 	@Override
 	public ImageDescriptor getTaskKindOverlay(AbstractTask task) {
 		if (task instanceof BugzillaTask) {
-			BugzillaTask bugzillaTask = (BugzillaTask)task;
+			BugzillaTask bugzillaTask = (BugzillaTask) task;
 			String severity = bugzillaTask.getSeverity();
-	
+
 			if (severity != null) {
 				// XXX: refactor to use configuration
 				if ("blocker".equals(severity) || "critical".equals(severity)) {
@@ -157,17 +157,17 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 			return null;
 		}
 	}
-	
+
 	@Override
 	public String getTaskKindLabel(AbstractTask repositoryTask) {
 		return IBugzillaConstants.BUGZILLA_TASK_KIND;
 	}
-	
+
 	@Override
 	public String getTaskKindLabel(RepositoryTaskData taskData) {
 		return IBugzillaConstants.BUGZILLA_TASK_KIND;
 	}
-	
+
 	@Override
 	public AbstractRepositorySettingsPage getSettingsPage() {
 		return new BugzillaRepositorySettingsPage(this);
@@ -205,14 +205,15 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 	@SuppressWarnings("restriction")
 	@Override
 	public boolean supportsDueDates(AbstractTask task) {
-		if(task instanceof BugzillaTask){
+		if (task instanceof BugzillaTask) {
 			// XXX This is only used in the planning editor, and if its input was set correctly as a RepositoryTaskEditorInput
 			// we wouldn't have to get the task data this way from here
-			RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
-			if(taskData != null && taskData.getAttribute(BugzillaReportElement.ESTIMATED_TIME.getKeyString()) != null)
+			RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(),
+					task.getTaskId());
+			if (taskData != null && taskData.getAttribute(BugzillaReportElement.ESTIMATED_TIME.getKeyString()) != null)
 				return true;
 		}
 		return super.supportsDueDates(task);
 	}
-	
+
 }

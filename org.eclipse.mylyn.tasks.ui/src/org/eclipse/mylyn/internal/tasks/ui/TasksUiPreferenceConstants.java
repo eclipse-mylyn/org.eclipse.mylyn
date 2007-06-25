@@ -15,7 +15,7 @@ package org.eclipse.mylyn.internal.tasks.ui;
  * @author Mik Kersten
  */
 public final class TasksUiPreferenceConstants {
-	
+
 	public static final String ACTIVATE_MULTIPLE = "org.eclipse.mylyn.tasks.ui.activation.multipe";
 
 	public static final String ACTIVATE_WHEN_OPENED = "org.eclipse.mylyn.tasks.ui.activate.when.opened";
@@ -43,15 +43,15 @@ public final class TasksUiPreferenceConstants {
 	public static final String PLANNING_STARTHOUR = "org.eclipse.mylyn.tasks.ui.planning.start.hour";
 
 	public static final String EDITOR_TASKS_RICH = "org.eclipse.mylyn.tasks.ui.reporting.open.editor";
-	
+
 //	public static final String REPORTING_OPEN_EXTERNAL = "org.eclipse.mylyn.tasks.ui.reporting.open.external";
 //
 //	public static final String REPORTING_OPEN_INTERNAL = "org.eclipse.mylyn.tasks.ui.reporting.open.internal";
 
 //	public static final String REPORTING_DISABLE_INTERNAL = "org.eclipse.mylyn.tasks.ui.reporting.disable.internal";
-	
+
 	public static final String REPOSITORY_SYNCH_SCHEDULE_ENABLED = "org.eclipse.mylyn.tasks.ui.repositories.synch.schedule";
-	
+
 	public static final String REPOSITORY_SYNCH_SCHEDULE_MILISECONDS = "org.eclipse.mylyn.tasks.ui.repositories.synch.schedule.miliseconds";
 
 }

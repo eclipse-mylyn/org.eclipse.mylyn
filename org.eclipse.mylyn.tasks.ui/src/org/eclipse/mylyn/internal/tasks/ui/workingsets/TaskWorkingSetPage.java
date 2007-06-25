@@ -297,9 +297,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		tree.setSorter(new CustomSorter());
 
 		ArrayList<Object> containers = new ArrayList<Object>();
-		for (AbstractTaskContainer element : TasksUiPlugin.getTaskListManager()
-				.getTaskList()
-				.getRootElements()) {
+		for (AbstractTaskContainer element : TasksUiPlugin.getTaskListManager().getTaskList().getRootElements()) {
 			if (!(element instanceof TaskArchive)) {
 				containers.add(element);
 			}

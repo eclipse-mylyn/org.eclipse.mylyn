@@ -21,17 +21,17 @@ import java.io.InputStream;
  * @since 2.0
  */
 public interface ITaskAttachment {
-	
+
 	public InputStream createInputStream() throws IOException;
-	
+
 	public String getContentType();
 
 	public String getDescription();
 
 	public String getFilename();
-	
+
 	public long getLength();
 
 	public boolean isPatch();
-	
+
 }

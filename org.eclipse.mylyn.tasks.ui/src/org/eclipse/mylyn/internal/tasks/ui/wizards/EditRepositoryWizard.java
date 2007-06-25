@@ -35,12 +35,11 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 	public EditRepositoryWizard(TaskRepository repository) {
 		super();
 		this.repository = repository;
-		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(
-				repository.getConnectorKind());
+		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
 		abstractRepositorySettingsPage = connectorUi.getSettingsPage();
 		abstractRepositorySettingsPage.setRepository(repository);
 		abstractRepositorySettingsPage.setVersion(repository.getVersion());
-		abstractRepositorySettingsPage.setWizard(this);		
+		abstractRepositorySettingsPage.setWizard(this);
 		setNeedsProgressMonitor(true);
 		setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPOSITORY_SETTINGS);
 		setWindowTitle(TITLE);
@@ -55,23 +54,25 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 			String oldUrl = repository.getUrl();
 			String newUrl = abstractRepositorySettingsPage.getServerUrl();
 			TasksUiPlugin.getTaskListManager().refactorRepositoryUrl(oldUrl, newUrl);
-			
+
 			repository.flushAuthenticationCredentials();
 			repository.setUrl(newUrl);
 			repository.setVersion(abstractRepositorySettingsPage.getVersion());
 			repository.setCharacterEncoding(abstractRepositorySettingsPage.getCharacterEncoding());
-			repository.setAuthenticationCredentials(abstractRepositorySettingsPage.getUserName(), abstractRepositorySettingsPage.getPassword());			
+			repository.setAuthenticationCredentials(abstractRepositorySettingsPage.getUserName(),
+					abstractRepositorySettingsPage.getPassword());
 			repository.setRepositoryLabel(abstractRepositorySettingsPage.getRepositoryLabel());
 			repository.setAnonymous(abstractRepositorySettingsPage.isAnonymousAccess());
 			repository.setHttpAuthenticationCredentials(abstractRepositorySettingsPage.getHttpAuthUserId(),
 					abstractRepositorySettingsPage.getHttpAuthPassword());
-			
-			repository.setProperty(TaskRepository.PROXY_USEDEFAULT, String.valueOf(abstractRepositorySettingsPage.getUseDefaultProxy()));
+
+			repository.setProperty(TaskRepository.PROXY_USEDEFAULT,
+					String.valueOf(abstractRepositorySettingsPage.getUseDefaultProxy()));
 			repository.setProperty(TaskRepository.PROXY_HOSTNAME, abstractRepositorySettingsPage.getProxyHostname());
 			repository.setProperty(TaskRepository.PROXY_PORT, abstractRepositorySettingsPage.getProxyPort());
-			repository.setProxyAuthenticationCredentials(abstractRepositorySettingsPage.getProxyUserName(), abstractRepositorySettingsPage.getProxyPassword());
-			
-			
+			repository.setProxyAuthenticationCredentials(abstractRepositorySettingsPage.getProxyUserName(),
+					abstractRepositorySettingsPage.getProxyPassword());
+
 			abstractRepositorySettingsPage.updateProperties(repository);
 			TasksUiPlugin.getRepositoryManager().notifyRepositorySettingsChanged(repository);
 			TasksUiPlugin.getRepositoryManager().saveRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
@@ -92,7 +93,7 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 	public boolean canFinish() {
 		return abstractRepositorySettingsPage.isPageComplete();
 	}
-	
+
 	/** public for testing */
 	public AbstractRepositorySettingsPage getSettingsPage() {
 		return abstractRepositorySettingsPage;

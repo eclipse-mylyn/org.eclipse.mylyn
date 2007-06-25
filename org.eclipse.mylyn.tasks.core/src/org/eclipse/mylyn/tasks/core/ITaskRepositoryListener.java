@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.tasks.core;
 
-
 /**
  * Notified of change to task repositories.
  * 
@@ -21,11 +20,11 @@ package org.eclipse.mylyn.tasks.core;
 public interface ITaskRepositoryListener {
 
 	public abstract void repositoriesRead();
-	
+
 	public abstract void repositoryAdded(TaskRepository repository);
-	
+
 	public abstract void repositoryRemoved(TaskRepository repository);
-	
+
 	public abstract void repositorySettingsChanged(TaskRepository repository);
-	
+
 }

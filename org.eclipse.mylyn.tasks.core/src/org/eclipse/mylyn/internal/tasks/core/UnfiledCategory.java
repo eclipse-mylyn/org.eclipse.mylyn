@@ -28,7 +28,7 @@ public class UnfiledCategory extends AbstractTaskCategory {
 	public UnfiledCategory() {
 		super(HANDLE);
 	}
-	
+
 	@Override
 	public String getPriority() {
 		return PriorityLevel.P1.toString();

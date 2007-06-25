@@ -20,9 +20,9 @@ import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 public class TaskArchive extends AbstractTaskCategory {
 
 	public static final String HANDLE = "archive";
-	
+
 	public static final String LABEL_ARCHIVE = "Archive (all tasks)";
-	
+
 	public TaskArchive() {
 		super(HANDLE);
 	}
@@ -36,7 +36,7 @@ public class TaskArchive extends AbstractTaskCategory {
 	public String getHandleIdentifier() {
 		return HANDLE;
 	}
-	
+
 	@Override
 	public String getSummary() {
 		return LABEL_ARCHIVE;

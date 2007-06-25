@@ -11,18 +11,11 @@
 package org.eclipse.mylyn.internal.bugzilla.core.history;
 
 /**
- * @author John Anvik 
+ * @author John Anvik
  */
 public enum StatusType {
-	VERIFIED, 
-	RESOLVED, 
-	CLOSED, 
-	REOPENED, 
-	ASSIGNED, 
-	NEW, 
-	UNCONFIRMED, 
-	NEEDINFO, /* ANT? */
-	WAITING , /* GCC */
+	VERIFIED, RESOLVED, CLOSED, REOPENED, ASSIGNED, NEW, UNCONFIRMED, NEEDINFO, /* ANT? */
+	WAITING, /* GCC */
 	SUSPENDED, /* GCC */
 	MODIFIED, /* Redhat */
 	POST, /* Redhat */
@@ -58,43 +51,43 @@ public enum StatusType {
 		if (change.equals("UNCONFIRMED")) {
 			return UNCONFIRMED;
 		}
-		if(change.startsWith("NEEDINFO")){
+		if (change.startsWith("NEEDINFO")) {
 			return NEEDINFO;
 		}
-		if(change.equals("WAITING")){
+		if (change.equals("WAITING")) {
 			return WAITING;
 		}
-		if(change.equals("SUSPENDED")){
+		if (change.equals("SUSPENDED")) {
 			return SUSPENDED;
 		}
-		if(change.equals("MODIFIED")){
+		if (change.equals("MODIFIED")) {
 			return MODIFIED;
 		}
-		if(change.equals("POST")){
+		if (change.equals("POST")) {
 			return POST;
 		}
-		if(change.equals("INVESTIGATE")){
+		if (change.equals("INVESTIGATE")) {
 			return INVESTIGATE;
 		}
-		if(change.equals("PASSES_QA")){
+		if (change.equals("PASSES_QA")) {
 			return PASSES_QA;
 		}
-		if(change.equals("PROD_READY")){
+		if (change.equals("PROD_READY")) {
 			return PROD_READY;
 		}
-		if(change.equals("RELEASE_PENDING")){
+		if (change.equals("RELEASE_PENDING")) {
 			return RELEASE_PENDING;
 		}
-		if(change.equals("ON_QA")){
+		if (change.equals("ON_QA")) {
 			return ON_QA;
 		}
-		if(change.equals("QA_READY")){
+		if (change.equals("QA_READY")) {
 			return QA_READY;
 		}
-		if(change.equals("FAILS_QA")){
+		if (change.equals("FAILS_QA")) {
 			return FAILS_QA;
 		}
-		if(change.equals("SPEC")){
+		if (change.equals("SPEC")) {
 			return SPEC;
 		}
 		if (change.equals("") == false) {

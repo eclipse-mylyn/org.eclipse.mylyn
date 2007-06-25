@@ -14,12 +14,11 @@ package org.eclipse.mylyn.tasks.core;
 import java.io.Serializable;
 import java.util.Date;
 
-
 /**
  * Extend to provide mapping between repository task attribute IDs and native repository IDs.
  * 
  * @author Rob Elves
- * @since	2.0
+ * @since 2.0
  */
 public abstract class AbstractAttributeFactory implements Serializable {
 
@@ -29,15 +28,15 @@ public abstract class AbstractAttributeFactory implements Serializable {
 		attribute.setReadOnly(isReadOnly(mapped));
 		return attribute;
 	}
-	
+
 	public abstract String mapCommonAttributeKey(String key);
-	
+
 	public abstract String getName(String key);
-		
+
 	public abstract boolean isReadOnly(String key);
 
 	public abstract boolean isHidden(String key);
-	
+
 	/**
 	 * @return null if date cannot be parsed
 	 */

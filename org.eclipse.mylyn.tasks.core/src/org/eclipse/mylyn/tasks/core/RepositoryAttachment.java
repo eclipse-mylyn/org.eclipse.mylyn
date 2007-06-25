@@ -25,7 +25,7 @@ public class RepositoryAttachment extends AttributeContainer implements Serializ
 	private static final long serialVersionUID = 2663237137799050826L;
 
 	private boolean isPatch = false;
-	
+
 	private boolean isObsolete = false;
 
 	private String creator = "";

@@ -39,18 +39,19 @@ import org.eclipse.ui.PlatformUI;
  * @author Mik Kersten
  * @author Leo Dos Santos
  */
-public class ActivateTaskHistoryDropDownAction extends TaskNavigateDropDownAction implements  IWorkbenchWindowPulldownDelegate, ITaskActivityListener {
+public class ActivateTaskHistoryDropDownAction extends TaskNavigateDropDownAction implements
+		IWorkbenchWindowPulldownDelegate, ITaskActivityListener {
 
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.navigate.previous";
 
 	private boolean scopeToWorkingSet = false;
 
 	private static final String LABEL = "Activate Previous Task";
-	
+
 	public ActivateTaskHistoryDropDownAction() {
 		this(TasksUiPlugin.getTaskListManager().getTaskActivationHistory(), false);
 	}
-	
+
 	public ActivateTaskHistoryDropDownAction(TaskActivationHistory history, boolean scopeToWorkingSet) {
 		super(history);
 		setText(LABEL);
@@ -67,7 +68,7 @@ public class ActivateTaskHistoryDropDownAction extends TaskNavigateDropDownActio
 		super.dispose();
 		TasksUiPlugin.getTaskListManager().addActivityListener(this);
 	}
-	
+
 	@Override
 	protected void addActionsToMenu() {
 		List<AbstractTask> tasks = new ArrayList<AbstractTask>(taskHistory.getPreviousTasks());
@@ -119,7 +120,7 @@ public class ActivateTaskHistoryDropDownAction extends TaskNavigateDropDownActio
 			item.fill(dropDownMenu, -1);
 		}
 	}
-	
+
 	@Override
 	public void run() {
 		if (taskHistory.hasPrevious()) {
@@ -181,7 +182,7 @@ public class ActivateTaskHistoryDropDownAction extends TaskNavigateDropDownActio
 	public void taskDeactivated(AbstractTask task) {
 		// TODO: update label
 	}
-	
+
 	public void init(IWorkbenchWindow window) {
 	}
 
@@ -197,7 +198,7 @@ public class ActivateTaskHistoryDropDownAction extends TaskNavigateDropDownActio
 
 	public void calendarChanged() {
 	}
-	
+
 	public void taskListRead() {
 	}
 

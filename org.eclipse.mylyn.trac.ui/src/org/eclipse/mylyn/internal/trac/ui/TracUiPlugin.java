@@ -40,14 +40,15 @@ public class TracUiPlugin extends AbstractUIPlugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		
+
 		TasksUiPlugin.getRepositoryManager().addListener(TracCorePlugin.getDefault().getConnector().getClientManager());
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		TasksUiPlugin.getRepositoryManager().removeListener(TracCorePlugin.getDefault().getConnector().getClientManager());
-		
+		TasksUiPlugin.getRepositoryManager().removeListener(
+				TracCorePlugin.getDefault().getConnector().getClientManager());
+
 		plugin = null;
 		super.stop(context);
 	}

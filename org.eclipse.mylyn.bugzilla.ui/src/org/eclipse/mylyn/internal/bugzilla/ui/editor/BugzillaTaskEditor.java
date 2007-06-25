@@ -693,7 +693,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			return null;
 		}
 	}
-	
+
 	@Override
 	/**
 	 * This method is duplicated in NewBugzillaTaskEditor for now.

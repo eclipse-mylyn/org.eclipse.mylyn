@@ -31,9 +31,9 @@ public final class BugzillaMessages extends NLS {
 	public static String repositoryLoginFailure;
 
 	public static String repositoryNotFound;
-	
+
 	public static String repositoryCommentReqd;
-	
+
 	public static String repositoryCollision;
 
 	public static String operationCancelled;

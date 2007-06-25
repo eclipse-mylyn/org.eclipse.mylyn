@@ -19,5 +19,5 @@ import java.util.Set;
 public interface ITaskListNotificationProvider {
 
 	public Set<ITaskListNotification> getNotifications();
-	
+
 }

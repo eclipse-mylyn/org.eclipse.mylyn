@@ -38,10 +38,8 @@ public class RepositoryTaskOutlinePage extends ContentOutlinePage {
 			if ((part instanceof AbstractRepositoryTaskEditor) && (selection instanceof IStructuredSelection)) {
 				if (((IStructuredSelection) selection).getFirstElement() instanceof IRepositoryTaskSelection) {
 					if (((IStructuredSelection) getSelection()).getFirstElement() instanceof IRepositoryTaskSelection) {
-						IRepositoryTaskSelection brs1 = (IRepositoryTaskSelection) ((IStructuredSelection) getSelection())
-								.getFirstElement();
-						IRepositoryTaskSelection brs2 = ((IRepositoryTaskSelection) ((IStructuredSelection) selection)
-								.getFirstElement());
+						IRepositoryTaskSelection brs1 = (IRepositoryTaskSelection) ((IStructuredSelection) getSelection()).getFirstElement();
+						IRepositoryTaskSelection brs2 = ((IRepositoryTaskSelection) ((IStructuredSelection) selection).getFirstElement());
 						if (ContentOutlineTools.getHandle(brs1).compareTo(ContentOutlineTools.getHandle(brs2)) == 0) {
 							// don't need to make a selection for the same
 							// element
@@ -58,7 +56,7 @@ public class RepositoryTaskOutlinePage extends ContentOutlinePage {
 
 	/**
 	 * Creates a new <code>RepositoryTaskOutlinePage</code>.
-	 *
+	 * 
 	 * @param topTreeNode
 	 *            The top data node of the tree for this view.
 	 * @param editor
@@ -80,10 +78,11 @@ public class RepositoryTaskOutlinePage extends ContentOutlinePage {
 				if (element instanceof RepositoryTaskOutlineNode) {
 					RepositoryTaskOutlineNode node = (RepositoryTaskOutlineNode) element;
 
-					if (RepositoryTaskOutlineNode.LABEL_COMMENTS.equals(node.getContents())||
-						RepositoryTaskOutlineNode.LABEL_NEW_COMMENT.equals(node.getContents())) {
+					if (RepositoryTaskOutlineNode.LABEL_COMMENTS.equals(node.getContents())
+							|| RepositoryTaskOutlineNode.LABEL_NEW_COMMENT.equals(node.getContents())) {
 						return TasksUiImages.getImage(TasksUiImages.COMMENT);
-					} if (RepositoryTaskOutlineNode.LABEL_DESCRIPTION.equals(node.getContents())) {
+					}
+					if (RepositoryTaskOutlineNode.LABEL_DESCRIPTION.equals(node.getContents())) {
 						return TasksUiImages.getImage(TasksUiImages.TASK_NOTES);
 					} else if (node.getComment() != null) {
 						return TasksUiImages.getImage(TasksUiImages.PERSON);
@@ -134,7 +133,7 @@ public class RepositoryTaskOutlinePage extends ContentOutlinePage {
 
 	/**
 	 * A content provider for the tree for this view.
-	 *
+	 * 
 	 * @see ITreeContentProvider
 	 */
 	protected static class BugTaskOutlineContentProvider implements ITreeContentProvider {

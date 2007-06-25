@@ -55,7 +55,7 @@ public class TaskRepositoriesView extends ViewPart {
 	private BaseSelectionListenerAction repositoryPropertiesAction;
 
 	private BaseSelectionListenerAction resetConfigurationAction;
-	
+
 	private RepositoryOfflineAction offlineAction;
 
 	private final ITaskRepositoryListener REPOSITORY_LISTENER = new ITaskRepositoryListener() {
@@ -102,10 +102,13 @@ public class TaskRepositoriesView extends ViewPart {
 			return (TaskRepositoriesView) view;
 		return null;
 	}
-	
+
 	public static TaskRepositoriesView openInActivePerspective() {
 		try {
-			return (TaskRepositoriesView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ID);
+			return (TaskRepositoriesView) PlatformUI.getWorkbench()
+					.getActiveWorkbenchWindow()
+					.getActivePage()
+					.showView(ID);
 		} catch (Exception e) {
 			return null;
 		}
@@ -116,11 +119,11 @@ public class TaskRepositoriesView extends ViewPart {
 		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
 		viewer.setContentProvider(new ViewContentProvider());
 
-		viewer.setLabelProvider(new DecoratingLabelProvider(new TaskRepositoryLabelProvider(), PlatformUI
-				.getWorkbench().getDecoratorManager().getLabelDecorator()));
+		viewer.setLabelProvider(new DecoratingLabelProvider(new TaskRepositoryLabelProvider(),
+				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
 
 		viewer.setSorter(new TaskRepositoriesSorter());
-				
+
 //				new ViewerSorter() {
 //
 //			@Override
@@ -138,14 +141,14 @@ public class TaskRepositoriesView extends ViewPart {
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
 
 			public void doubleClick(DoubleClickEvent event) {
-				if(repositoryPropertiesAction.isEnabled()){
+				if (repositoryPropertiesAction.isEnabled()) {
 					repositoryPropertiesAction.run();
 				}
 			}
 		});
 
 		TasksUiPlugin.getRepositoryManager().addListener(new TaskRepositoryListener());
-		
+
 		makeActions();
 		hookContextMenu();
 		contributeToActionBars();
@@ -155,13 +158,13 @@ public class TaskRepositoriesView extends ViewPart {
 	private void makeActions() {
 		deleteRepositoryAction = new DeleteTaskRepositoryAction();
 		viewer.addSelectionChangedListener(deleteRepositoryAction);
-		
+
 		repositoryPropertiesAction = new EditRepositoryPropertiesAction();
 		viewer.addSelectionChangedListener(repositoryPropertiesAction);
-		
+
 		resetConfigurationAction = new ResetRepositoryConfigurationAction();
 		viewer.addSelectionChangedListener(resetConfigurationAction);
-		
+
 		offlineAction = new RepositoryOfflineAction();
 		viewer.addSelectionChangedListener(offlineAction);
 	}
@@ -241,9 +244,9 @@ public class TaskRepositoriesView extends ViewPart {
 						getViewer().refresh(true);
 					}
 				}
-			});			
+			});
 		}
 
 	}
-	
+
 }

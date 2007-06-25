@@ -43,7 +43,7 @@ public class TaskKeyComparator implements Comparator<String> {
 
 	public String[] split(String s) {
 		Matcher matcher = PATTERN.matcher(s);
- 
+
 		if (!matcher.find()) {
 			return new String[] { null, null, s };
 		}

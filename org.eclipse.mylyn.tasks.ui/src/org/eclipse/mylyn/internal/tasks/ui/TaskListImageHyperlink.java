@@ -29,7 +29,7 @@ public class TaskListImageHyperlink extends ImageHyperlink {
 		if (t == null) {
 			return null;
 		}
-		
+
 		String returnText = t;
 		if (gc.textExtent(t).x > width) {
 			for (int i = t.length(); i > 0; i--) {
@@ -43,5 +43,5 @@ public class TaskListImageHyperlink extends ImageHyperlink {
 		}
 		return returnText;
 	}
-	
+
 }

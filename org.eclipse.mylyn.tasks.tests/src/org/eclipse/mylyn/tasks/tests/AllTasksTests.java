@@ -53,7 +53,7 @@ public class AllTasksTests {
 		suite.addTestSuite(OfflineStorageTest.class);
 		suite.addTestSuite(OfflineCachingStorageTest.class);
 		// $JUnit-END$
-		
+
 		// suite.addTestSuite(BackgroundSaveTest.class);
 		// suite.addTestSuite(RetrieveTitleFromUrlTest.class);
 		return suite;

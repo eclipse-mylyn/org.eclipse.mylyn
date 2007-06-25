@@ -11,12 +11,12 @@
 package org.eclipse.mylyn.internal.bugzilla.core.history;
 
 /**
- * @author John Anvik 
+ * @author John Anvik
  */
 public class ResolutionEvent extends TaskRevision {
 
 	private static final long serialVersionUID = 6609447743555687524L;
-	
+
 	private final ResolutionType type;
 
 	public ResolutionEvent(ResolutionType type) {
@@ -34,8 +34,8 @@ public class ResolutionEvent extends TaskRevision {
 
 	@Override
 	public String toString() {
-		return this.getName() + " | " + this.getDate() + " | " + this.getWhat()
-				+ " | " + this.getRemoved() + " | " + (this.getType().equals(ResolutionType.UNKNOWN) ? "" : this.getType());
+		return this.getName() + " | " + this.getDate() + " | " + this.getWhat() + " | " + this.getRemoved() + " | "
+				+ (this.getType().equals(ResolutionType.UNKNOWN) ? "" : this.getType());
 	}
 
 }

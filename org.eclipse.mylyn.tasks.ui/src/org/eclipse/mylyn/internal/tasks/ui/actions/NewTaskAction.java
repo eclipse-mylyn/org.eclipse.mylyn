@@ -38,7 +38,7 @@ public class NewTaskAction extends Action implements IViewActionDelegate {
 
 	@Override
 	public void run() {
-		
+
 		IWizard wizard;
 		List<TaskRepository> repositories = TasksUiPlugin.getRepositoryManager().getAllRepositories();
 		if (repositories.size() == 1) {

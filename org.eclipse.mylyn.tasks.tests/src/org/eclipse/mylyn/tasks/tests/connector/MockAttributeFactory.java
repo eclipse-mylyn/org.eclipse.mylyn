@@ -12,8 +12,6 @@ import java.util.Date;
 
 import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
 
-
-
 /**
  * @author Rob Elves
  */
@@ -43,7 +41,7 @@ public class MockAttributeFactory extends AbstractAttributeFactory {
 	public String mapCommonAttributeKey(String key) {
 		return key;
 	}
-	
+
 	@Override
 	public Date getDateForAttributeType(String attributeKey, String dateString) {
 		// ignore

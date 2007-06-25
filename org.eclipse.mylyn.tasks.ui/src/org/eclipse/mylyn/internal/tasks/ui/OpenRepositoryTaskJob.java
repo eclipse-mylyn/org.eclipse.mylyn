@@ -64,10 +64,9 @@ public class OpenRepositoryTaskJob extends Job {
 		if (repository == null) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					MessageDialog
-							.openError(null, "Repository Not Found", "Could not find repository configuration for "
-									+ serverUrl + ". \nPlease set up repository via "
-									+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".");
+					MessageDialog.openError(null, "Repository Not Found",
+							"Could not find repository configuration for " + serverUrl
+									+ ". \nPlease set up repository via " + TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".");
 					TasksUiUtil.openUrl(taskUrl, false);
 				}
 
@@ -78,7 +77,7 @@ public class OpenRepositoryTaskJob extends Job {
 		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 				repositoryKind);
 		try {
-			
+
 			AbstractTaskDataHandler offlineHandler = connector.getTaskDataHandler();
 			if (offlineHandler != null) {
 				// the following code was copied from SynchronizeTaskJob
@@ -113,7 +112,8 @@ public class OpenRepositoryTaskJob extends Job {
 				if (taskData == null) {
 					TasksUiUtil.openUrl(taskUrl, false);
 				} else {
-					AbstractRepositoryTaskEditorInput editorInput = new RepositoryTaskEditorInput(repository, taskData.getId(), taskUrl);
+					AbstractRepositoryTaskEditorInput editorInput = new RepositoryTaskEditorInput(repository,
+							taskData.getId(), taskUrl);
 					TasksUiUtil.openEditor(editorInput, TaskEditor.ID_EDITOR, page);
 				}
 			}

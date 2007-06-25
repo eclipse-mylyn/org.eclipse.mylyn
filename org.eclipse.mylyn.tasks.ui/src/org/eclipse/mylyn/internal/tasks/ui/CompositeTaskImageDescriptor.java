@@ -24,15 +24,15 @@ public class CompositeTaskImageDescriptor extends CompositeImageDescriptor {
 	private ImageData base;
 
 	private ImageData kind;
-	
+
 	protected Point size;
 
 	public static final int OFFSET_DECORATION = 6;
-	
+
 	static final int WIDTH_ICON = 16;
-		
+
 	private int offset = 0;
-	
+
 	public CompositeTaskImageDescriptor(ImageDescriptor icon, ImageDescriptor overlayKind, boolean wide) {
 		this.base = getImageData(icon);
 		if (overlayKind != null) {
@@ -45,17 +45,17 @@ public class CompositeTaskImageDescriptor extends CompositeImageDescriptor {
 		}
 		this.size = new Point(width, base.height);
 	}
-	
+
 	@Override
 	protected void drawCompositeImage(int width, int height) {
 		drawImage(base, offset, 1);
 		if (kind != null) {
-			drawImage(kind, offset+5, 6);
+			drawImage(kind, offset + 5, 6);
 		}
 	}
 
 	private ImageData getImageData(ImageDescriptor descriptor) {
-		ImageData data = descriptor.getImageData(); 
+		ImageData data = descriptor.getImageData();
 		// see bug 51965: getImageData can return null
 		if (data == null) {
 			data = DEFAULT_IMAGE_DATA;

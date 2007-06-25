@@ -78,7 +78,8 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 	}
 
 	/**
-	 * Should only be used by TaskListManager and unit tests 
+	 * Should only be used by TaskListManager and unit tests
+	 * 
 	 * @param saveContext
 	 * @param async
 	 */
@@ -109,14 +110,13 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						if (PlatformUI.getWorkbench() != null && PlatformUI.getWorkbench().getDisplay() != null) {
-							MessageDialog
-									.openInformation(
-											PlatformUI.getWorkbench().getDisplay().getActiveShell(),
-											ITasksUiConstants.TITLE_DIALOG,
-											"If task list is blank, Mylar Task List may have failed to initialize.\n\n"
-													+ "First, try restarting to see if that corrects the problem.\n\n"
-													+ "Then, check the Error Log view for messages, and the FAQ for solutions.\n\n"
-													+ ITasksUiConstants.URL_HOMEPAGE);
+							MessageDialog.openInformation(
+									PlatformUI.getWorkbench().getDisplay().getActiveShell(),
+									ITasksUiConstants.TITLE_DIALOG,
+									"If task list is blank, Mylar Task List may have failed to initialize.\n\n"
+											+ "First, try restarting to see if that corrects the problem.\n\n"
+											+ "Then, check the Error Log view for messages, and the FAQ for solutions.\n\n"
+											+ ITasksUiConstants.URL_HOMEPAGE);
 						}
 					}
 				});
@@ -131,8 +131,7 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 	}
 
 	/**
-	 * Copies all files in the current data directory to the specified folder.
-	 * Will overwrite.
+	 * Copies all files in the current data directory to the specified folder. Will overwrite.
 	 */
 	public void copyDataDirContentsTo(String targetFolderPath) {
 		saveTaskList(true, false);
@@ -147,8 +146,8 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 				File destDir = new File(targetFolderPath + File.separator + currFile.getName());
 				if (!destDir.exists()) {
 					if (!destDir.mkdir()) {
-						StatusHandler.log("Unable to create destination context folder: "
-								+ destDir.getAbsolutePath(), this);
+						StatusHandler.log("Unable to create destination context folder: " + destDir.getAbsolutePath(),
+								this);
 						continue;
 					}
 				}

@@ -49,14 +49,14 @@ public class TaskTest extends TestCase {
 		task.setUrl(null);
 		assertFalse(task.hasValidUrl());
 	}
-	
+
 	public void testPriorityNeverNull() {
 		AbstractTask task = new LocalTask("handle", "label");
 		assertNotNull(task.getPriority());
-		
-		PriorityLevel def = PriorityLevel.getDefault();		
-		assertNotNull(def);		
+
+		PriorityLevel def = PriorityLevel.getDefault();
+		assertNotNull(def);
 		assertEquals(def, AbstractTask.PriorityLevel.fromDescription("garbage"));
-		assertEquals(def, AbstractTask.PriorityLevel.fromString("garbage"));		
+		assertEquals(def, AbstractTask.PriorityLevel.fromString("garbage"));
 	}
 }

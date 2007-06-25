@@ -22,12 +22,12 @@ public class NewLocalCategoryWizard extends Wizard implements INewWizard {
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		setForcePreviousAndNextButtons(false);
 	}
-	
+
 	@Override
 	public boolean canFinish() {
 		return true;
 	}
-	
+
 	@Override
 	public boolean performFinish() {
 		new NewCategoryAction().run();

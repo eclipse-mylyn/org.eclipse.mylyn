@@ -29,7 +29,7 @@ public class TaskListHyperlink extends Hyperlink {
 		if (t == null) {
 			return null;
 		}
-		
+
 		String returnText = t;
 		if (gc.textExtent(t).x > width) {
 			for (int i = t.length(); i > 0; i--) {

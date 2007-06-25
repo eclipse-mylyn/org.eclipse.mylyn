@@ -136,10 +136,9 @@ public class TaskDataExportWizardPage extends WizardPage {
 		destDirGroup.setText("Export destination folder");
 		destDirGroup.setLayout(new GridLayout(2, false));
 		destDirGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		new Label(destDirGroup, SWT.NONE).setText("Export file: "+TaskDataExportWizard.getZipFileName());
+		new Label(destDirGroup, SWT.NONE).setText("Export file: " + TaskDataExportWizard.getZipFileName());
 		new Label(destDirGroup, SWT.NONE);
 
-		
 		destDirText = new Text(destDirGroup, SWT.BORDER);
 		destDirText.setEditable(false);
 		destDirText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -197,8 +196,7 @@ public class TaskDataExportWizardPage extends WizardPage {
 	}
 
 	/**
-	 * Saves the control values in the dialog settings to be used as defaults
-	 * the next time the page is opened
+	 * Saves the control values in the dialog settings to be used as defaults the next time the page is opened
 	 */
 	public void saveSettings() {
 		IDialogSettings settings = getDialogSettings();

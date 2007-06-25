@@ -18,7 +18,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 public class OpenTasksUiPreferencesAction extends Action {
 
 	public static final String ID = "org.eclipse.mylyn.tasks.ui.actions.preferences.open";
-	
+
 	private static final String LABEL = "Preferences...";
 
 	public OpenTasksUiPreferencesAction() {

@@ -33,10 +33,10 @@ public class TaskStatusMenuContributor implements IDynamicSubMenuContributor {
 		AbstractTask singleTask = null;
 		if (selectedElements.size() == 1) {
 			if (selectedElements.get(0) instanceof AbstractTask) {
-				singleTask = (AbstractTask)selectedElements.get(0);
+				singleTask = (AbstractTask) selectedElements.get(0);
 			}
 		}
-		
+
 		Action action = new MarkTaskCompleteAction(selectedElements);
 		if (singleTask != null && singleTask.isCompleted()) {
 			action.setEnabled(false);
@@ -46,8 +46,8 @@ public class TaskStatusMenuContributor implements IDynamicSubMenuContributor {
 		subMenuManager.add(action);
 		if (singleTask != null && !singleTask.isCompleted()) {
 			action.setEnabled(false);
-		}		
-		
+		}
+
 		subMenuManager.add(new Separator());
 		action = new MarkTaskReadAction(selectedElements);
 		subMenuManager.add(action);

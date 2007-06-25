@@ -24,20 +24,20 @@ public class CompositeSynchImageDescriptor extends CompositeImageDescriptor {
 	private ImageData base;
 
 	private ImageData background;
-	
+
 	private boolean fillBackground;
 
 	protected Point size;
-	
+
 	static int WIDTH;
-	
+
 	public CompositeSynchImageDescriptor(ImageDescriptor icon, boolean fillBackground) {
 		this.base = getImageData(icon);
 		this.background = getImageData(TasksUiImages.OVERLAY_SOLID_WHITE);
 		this.size = new Point(background.width, background.height);
 		this.fillBackground = fillBackground;
 	}
-	
+
 	@Override
 	protected void drawCompositeImage(int width, int height) {
 		if (fillBackground) {
@@ -47,7 +47,7 @@ public class CompositeSynchImageDescriptor extends CompositeImageDescriptor {
 	}
 
 	private ImageData getImageData(ImageDescriptor descriptor) {
-		ImageData data = descriptor.getImageData(); 
+		ImageData data = descriptor.getImageData();
 		// see bug 51965: getImageData can return null
 		if (data == null) {
 			data = DEFAULT_IMAGE_DATA;

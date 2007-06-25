@@ -11,15 +11,15 @@
 package org.eclipse.mylyn.internal.bugzilla.core.history;
 
 /**
- * @author John Anvik 
+ * @author John Anvik
  */
 public class AssignmentEvent extends TaskRevision {
 
 	private static final long serialVersionUID = 3258693199936631348L;
-	
+
 	private final String assigned;
-	
-	public AssignmentEvent(String change){
+
+	public AssignmentEvent(String change) {
 		this.what = TaskRevision.ASSIGNMENT;
 		this.assigned = change;
 		this.added = change;
@@ -28,7 +28,7 @@ public class AssignmentEvent extends TaskRevision {
 	public String getAssigned() {
 		return this.assigned;
 	}
-	
+
 	@Override
 	public String toString() {
 		return this.getName() + " | " + this.getDate() + " | " + this.getWhat() + " | " + this.getRemoved() + " | "

@@ -184,7 +184,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		// Get the task
 		BugzillaTask task = generateLocalTaskAndDownload("3");
 
-		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getEditableCopy(task.getRepositoryUrl(), task.getTaskId());
+		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getEditableCopy(task.getRepositoryUrl(),
+				task.getTaskId());
 		assertNotNull(taskData);
 
 		TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task,
@@ -204,7 +205,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		// After submit task should be in SYNCHRONIZED state
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSynchronizationState());
-		RepositoryTaskData taskData2 = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
+		RepositoryTaskData taskData2 = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(),
+				task.getTaskId());
 		assertFalse(taskData2.getLastModified().equals(taskData.getLastModified()));
 		// Still not read
 		assertFalse(taskData2.getLastModified().equals(task.getLastReadTimeStamp()));
@@ -265,7 +267,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		init222();
 		String taskNumber = "33";
 		BugzillaTask task = generateLocalTaskAndDownload(taskNumber);
-		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
+		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(),
+				task.getTaskId());
 
 		assertNotNull(task);
 		assertNotNull(taskData);
@@ -356,14 +359,16 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		init222();
 		String taskID = "4";
 		BugzillaTask task4 = generateLocalTaskAndDownload(taskID);
-		RepositoryTaskData taskData4 = TasksUiPlugin.getTaskDataManager().getEditableCopy(task4.getRepositoryUrl(), task4.getTaskId());
+		RepositoryTaskData taskData4 = TasksUiPlugin.getTaskDataManager().getEditableCopy(task4.getRepositoryUrl(),
+				task4.getTaskId());
 		assertNotNull(task4);
 		assertNotNull(taskData4);
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task4.getSynchronizationState());
 		assertEquals(taskID, taskData4.getId());
 
 		BugzillaTask task5 = generateLocalTaskAndDownload("5");
-		RepositoryTaskData taskData5 = TasksUiPlugin.getTaskDataManager().getEditableCopy(task5.getRepositoryUrl(), task5.getTaskId());
+		RepositoryTaskData taskData5 = TasksUiPlugin.getTaskDataManager().getEditableCopy(task5.getRepositoryUrl(),
+				task5.getTaskId());
 		assertNotNull(task5);
 		assertNotNull(taskData5);
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task5.getSynchronizationState());
@@ -431,7 +436,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 		init222();
 		BugzillaTask task7 = generateLocalTaskAndDownload("7");
-		RepositoryTaskData recentTaskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task7.getRepositoryUrl(), task7.getTaskId());
+		RepositoryTaskData recentTaskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task7.getRepositoryUrl(),
+				task7.getTaskId());
 		assertNotNull(recentTaskData);
 		TasksUiPlugin.getSynchronizationManager().setTaskRead(task7, true);
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task7.getSynchronizationState());
@@ -464,7 +470,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 			recentTaskData.setAttributeValue(BugzillaReportElement.PRIORITY.getKeyString(), priority);
 		}
 		// REMOVE ALL TASK DATA
-		TasksUiPlugin.getTaskDataManager().clear(); 
+		TasksUiPlugin.getTaskDataManager().clear();
 		connector.getTaskDataHandler().postTaskData(repository, recentTaskData, new NullProgressMonitor());
 		TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector, repository);
 		assertEquals(RepositoryTaskSyncState.INCOMING, task7.getSynchronizationState());
@@ -498,7 +504,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 	 */
 	protected void timeTracker(int taskid, boolean enableDeadline) throws Exception {
 		BugzillaTask bugtask = generateLocalTaskAndDownload("" + taskid);
-		RepositoryTaskData bugtaskdata = TasksUiPlugin.getTaskDataManager().getNewTaskData(bugtask.getRepositoryUrl(), bugtask.getTaskId());
+		RepositoryTaskData bugtaskdata = TasksUiPlugin.getTaskDataManager().getNewTaskData(bugtask.getRepositoryUrl(),
+				bugtask.getTaskId());
 		assertNotNull(bugtaskdata);
 		assertEquals(taskid + "", bugtaskdata.getId());
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, bugtask.getSynchronizationState());
@@ -544,14 +551,15 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 //		for (AbstractTask task : tasks) {
 //			RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(
 //					task.getHandleIdentifier());
-			bugtaskdata.setAttributeValue(BugzillaReportElement.ADD_COMMENT.getKeyString(), "New Estimate: "
-					+ estimatedTime + "\nNew Remaining: " + remainingTime + "\nAdd: " + addTime);
-			submit(bugtask, bugtaskdata);
+		bugtaskdata.setAttributeValue(BugzillaReportElement.ADD_COMMENT.getKeyString(), "New Estimate: "
+				+ estimatedTime + "\nNew Remaining: " + remainingTime + "\nAdd: " + addTime);
+		submit(bugtask, bugtaskdata);
 //		}
 
 		synchAndAssertState(tasks, RepositoryTaskSyncState.SYNCHRONIZED);
 
-		bugtaskdata = TasksUiPlugin.getTaskDataManager().getNewTaskData(bugtask.getRepositoryUrl(), bugtask.getTaskId());
+		bugtaskdata = TasksUiPlugin.getTaskDataManager()
+				.getNewTaskData(bugtask.getRepositoryUrl(), bugtask.getTaskId());
 
 		assertEquals(estimatedTime,
 				Float.parseFloat(bugtaskdata.getAttributeValue(BugzillaReportElement.ESTIMATED_TIME.getKeyString())));
@@ -588,8 +596,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		boolean isPatch[] = { false, true, false, false, false, false, false, true, false, false };
 		boolean isObsolete[] = { false, true, false, true, false, false, false, false, false, false };
 
-		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(
-				task.getRepositoryUrl(), task.getTaskId());
+		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(),
+				task.getTaskId());
 
 		Iterator<RepositoryAttachment> iter = taskData.getAttachments().iterator();
 

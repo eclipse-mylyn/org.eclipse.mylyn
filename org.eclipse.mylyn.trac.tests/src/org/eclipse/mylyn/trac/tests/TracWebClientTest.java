@@ -52,7 +52,7 @@ public class TracWebClientTest extends AbstractTracClientRepositoryTest {
 	public void testValidateAnonymousLogin() throws Exception {
 		connect(TracTestConstants.TEST_TRAC_010_URL, "", "");
 		repository.validate();
-		
+
 		connect(TracTestConstants.TEST_TRAC_096_URL, "", "");
 		repository.validate();
 	}
@@ -61,7 +61,7 @@ public class TracWebClientTest extends AbstractTracClientRepositoryTest {
 		connect(TracTestConstants.TEST_TRAC_096_URL, "", "");
 		updateAttributes();
 	}
-	
+
 	public void testUpdateAttributesAnonymous010() throws Exception {
 		connect(TracTestConstants.TEST_TRAC_010_URL, "", "");
 		updateAttributes();

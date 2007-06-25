@@ -27,8 +27,8 @@ public class TaskRepositoryLabelProvider implements ILabelProvider {
 //extends LabelProvider implements ITableLabelProvider {
 
 	public Image getColumnImage(Object obj, int index) {
-		if(index == 0) { 
-			return getImage(obj);		
+		if (index == 0) {
+			return getImage(obj);
 		} else {
 			return null;
 		}
@@ -44,8 +44,9 @@ public class TaskRepositoryLabelProvider implements ILabelProvider {
 				return TasksUiImages.getImage(TasksUiImages.REPOSITORY);
 			}
 		} else if (object instanceof TaskRepository) {
-			if (((TaskRepository)object).isOffline()) {
-				return TasksUiImages.getImageWithOverlay(TasksUiImages.REPOSITORY, TasksUiImages.OVERLAY_OFFLINE, true, false);
+			if (((TaskRepository) object).isOffline()) {
+				return TasksUiImages.getImageWithOverlay(TasksUiImages.REPOSITORY, TasksUiImages.OVERLAY_OFFLINE, true,
+						false);
 			} else {
 				return TasksUiImages.getImage(TasksUiImages.REPOSITORY);
 			}
@@ -61,17 +62,17 @@ public class TaskRepositoryLabelProvider implements ILabelProvider {
 			return ((AbstractRepositoryConnector) object).getLabel();
 		} else {
 			return getText(object);
-		}		
+		}
 	}
 
 	public void addListener(ILabelProviderListener listener) {
 		// ignore
-		
+
 	}
 
 	public void dispose() {
 		// ignore
-		
+
 	}
 
 	public boolean isLabelProperty(Object element, String property) {
@@ -81,6 +82,6 @@ public class TaskRepositoryLabelProvider implements ILabelProvider {
 
 	public void removeListener(ILabelProviderListener listener) {
 		// ignore
-		
+
 	}
 }

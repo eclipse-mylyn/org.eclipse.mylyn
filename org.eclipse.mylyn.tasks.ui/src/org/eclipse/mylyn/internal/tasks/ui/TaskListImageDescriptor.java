@@ -31,8 +31,7 @@ public class TaskListImageDescriptor extends CompositeImageDescriptor {
 
 	protected Point size;
 
-	public TaskListImageDescriptor(ImageDescriptor baseDesc, ImageDescriptor overlayDesc, boolean top,
-			boolean left) {
+	public TaskListImageDescriptor(ImageDescriptor baseDesc, ImageDescriptor overlayDesc, boolean top, boolean left) {
 		this.base = getImageData(baseDesc);
 		this.top = top;
 		this.left = left;
@@ -47,7 +46,7 @@ public class TaskListImageDescriptor extends CompositeImageDescriptor {
 		this.base = getImageData(baseDesc);
 		setImageSize(size);
 	}
-	
+
 	@Override
 	protected void drawCompositeImage(int width, int height) {
 		drawImage(base, 0, 0);
@@ -63,7 +62,7 @@ public class TaskListImageDescriptor extends CompositeImageDescriptor {
 	}
 
 	private ImageData getImageData(ImageDescriptor descriptor) {
-		ImageData data = descriptor.getImageData(); 
+		ImageData data = descriptor.getImageData();
 		// see bug 51965: getImageData can return null
 		if (data == null) {
 			data = DEFAULT_IMAGE_DATA;

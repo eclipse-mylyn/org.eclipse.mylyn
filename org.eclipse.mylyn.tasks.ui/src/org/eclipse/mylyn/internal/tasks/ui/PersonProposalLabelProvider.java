@@ -19,15 +19,15 @@ public class PersonProposalLabelProvider extends LabelProvider {
 	@Override
 	public Image getImage(Object element) {
 		if (element instanceof PersonContentProposal) {
-			return ((PersonContentProposal)element).getImage();
+			return ((PersonContentProposal) element).getImage();
 		}
 		return null;
 	}
-	
+
 	@Override
 	public String getText(Object element) {
 		if (element instanceof PersonContentProposal) {
-			return ((PersonContentProposal)element).getLabel();
+			return ((PersonContentProposal) element).getLabel();
 		}
 		return super.getText(element);
 	}

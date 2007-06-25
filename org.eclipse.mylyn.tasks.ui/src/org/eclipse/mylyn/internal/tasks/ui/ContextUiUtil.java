@@ -85,8 +85,8 @@ public class ContextUiUtil {
 		return true;
 	}
 
-	public static boolean uploadContext(final TaskRepository repository, final AbstractTask task,
-			final String comment, final IRunnableContext context) {
+	public static boolean uploadContext(final TaskRepository repository, final AbstractTask task, final String comment,
+			final IRunnableContext context) {
 		final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 				repository.getConnectorKind());
 		try {

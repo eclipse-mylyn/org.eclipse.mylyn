@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.internal.tasks.core;
 
-
 /**
  * @author Rob Elves
  */
@@ -34,17 +33,17 @@ public interface ITaskDataStorage {
 	 * if last id remove folder (i.e. in case of refactoring urls)
 	 */
 	public void remove(String repositoryUrl, String id);
-	
+
 	/**
 	 * persist any unsaved data
 	 */
 	public void flush();
-	
+
 	/**
 	 * DESTROY ALL OFFLINE DATA
 	 */
 	public void clear();
-	
+
 	// Methods for NEW unsubmitted task data, currently not used
 
 //	public void putNew(TaskDataState newTaskDataState);

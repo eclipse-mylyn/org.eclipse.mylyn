@@ -62,15 +62,13 @@ import org.eclipse.ui.part.EditorPart;
 
 /**
  * 
- * Note: Some methods have been generalized to remove duplicate code but the
- * design still isn't right (long parameter lists, inflexible table creation).
- * Needs refactoring. (Planned tasks section is currently disabled but should
- * also use the new common methods)
+ * Note: Some methods have been generalized to remove duplicate code but the design still isn't right (long parameter
+ * lists, inflexible table creation). Needs refactoring. (Planned tasks section is currently disabled but should also
+ * use the new common methods)
  * 
  * @author Mik Kersten
  * @author Ken Sueda (original prototype)
- * @author Wesley Coelho (added tasks in progress section, refactored-out
- *         similar code)
+ * @author Wesley Coelho (added tasks in progress section, refactored-out similar code)
  * @author Mik Kersten (rewrite)
  */
 public class TaskActivityEditorPart extends EditorPart {
@@ -395,7 +393,7 @@ public class TaskActivityEditorPart extends EditorPart {
 	private TableViewer createTableSection(Composite parent, FormToolkit toolkit, String title, String[] columnNames,
 			int[] columnWidths, int[] sortConstants) {
 		Section tableSection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR); // |
-																								// ExpandableComposite.TWISTIE
+		// ExpandableComposite.TWISTIE
 		tableSection.setText(title);
 		// tableSection.setExpanded(true);
 		tableSection.marginHeight = 8;
@@ -692,9 +690,9 @@ public class TaskActivityEditorPart extends EditorPart {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
 			writer.write("<html><head></head><body>"
 			// + "<link rel=\"stylesheet\"
-					// href=\"http://eclipse.org/mylar/style.css\"
-					// type=\"text/css\"></head><body>"
-					);
+			// href=\"http://eclipse.org/mylar/style.css\"
+			// type=\"text/css\"></head><body>"
+			);
 
 			exportSummarySection(writer);
 
@@ -717,8 +715,7 @@ public class TaskActivityEditorPart extends EditorPart {
 
 		writer.write("<table border=\"1\" width=\"100%\" id=\"plannedActivityTable\">");
 		writer.write("<tr>");
-		writer
-				.write("<td width=\"59\"><b>Type</b></td><td width=\"55\"><b>Priority</b></td><td width=\"495\"><b>Description</b></td>");
+		writer.write("<td width=\"59\"><b>Type</b></td><td width=\"55\"><b>Priority</b></td><td width=\"495\"><b>Description</b></td>");
 		writer.write("<td><b>Elapsed</b></td><td><b>Estimated</b></td><td><b>Reminder</b></td>");
 		writer.write("</tr>");
 
@@ -729,7 +726,8 @@ public class TaskActivityEditorPart extends EditorPart {
 				String formatString = "dd-MM-yyyy";
 				SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.ENGLISH);
 
-				String elapsedTimeString = DateUtil.getFormattedDuration(TasksUiPlugin.getTaskListManager().getElapsedTime(currentTask), false);
+				String elapsedTimeString = DateUtil.getFormattedDuration(TasksUiPlugin.getTaskListManager()
+						.getElapsedTime(currentTask), false);
 				String estimatedTimeString = currentTask.getEstimateTimeHours() + " hours";
 				if (elapsedTimeString.equals(""))
 					elapsedTimeString = BLANK_CELL;
@@ -766,10 +764,8 @@ public class TaskActivityEditorPart extends EditorPart {
 
 		writer.write("<table border=\"1\" width=\"100%\" id=\"activityTable\">");
 		writer.write("<tr>");
-		writer
-				.write("<td width=\"59\"><b>Type</b></td><td width=\"55\"><b>Priority</b></td><td width=\"495\"><b>Description</b></td>");
-		writer
-				.write("<td><b>Created</b></td><td><b>Completed</b></td><td><b>Elapsed</b></td><td><b>Estimated</b></td>");
+		writer.write("<td width=\"59\"><b>Type</b></td><td width=\"55\"><b>Priority</b></td><td width=\"495\"><b>Description</b></td>");
+		writer.write("<td><b>Created</b></td><td><b>Completed</b></td><td><b>Elapsed</b></td><td><b>Estimated</b></td>");
 		writer.write("</tr>");
 
 		for (Object element : activityContentProvider.getElements(null)) {
@@ -779,7 +775,8 @@ public class TaskActivityEditorPart extends EditorPart {
 				String formatString = "dd-MM-yyyy";
 				SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.ENGLISH);
 
-				String elapsedTimeString = DateUtil.getFormattedDuration(TasksUiPlugin.getTaskListManager().getElapsedTime(currentTask), false);
+				String elapsedTimeString = DateUtil.getFormattedDuration(TasksUiPlugin.getTaskListManager()
+						.getElapsedTime(currentTask), false);
 				String estimatedTimeString = currentTask.getEstimateTimeHours() + " hours";
 				if (elapsedTimeString.equals(""))
 					elapsedTimeString = NO_TIME_ELAPSED;

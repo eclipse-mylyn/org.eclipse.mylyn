@@ -57,8 +57,7 @@ import org.eclipse.ui.dialogs.SelectionStatusDialog;
 public class TaskSelectionDialog extends SelectionStatusDialog {
 
 	/**
-	 * Implements a {@link ViewFilter} based on content typed in the filter
-	 * field
+	 * Implements a {@link ViewFilter} based on content typed in the filter field
 	 */
 	private static class TaskFilter extends ViewerFilter {
 
@@ -84,13 +83,12 @@ public class TaskSelectionDialog extends SelectionStatusDialog {
 			}
 			if (element instanceof AbstractTask) {
 				AbstractTask repositoryTask = (AbstractTask) element;
-				String taskString = repositoryTask.getTaskKey() + ": "
-						+ repositoryTask.getSummary();
+				String taskString = repositoryTask.getTaskKey() + ": " + repositoryTask.getSummary();
 				return pattern.matcher(taskString).find();
 			} else if (element instanceof AbstractTask) {
 				String taskString = ((AbstractTask) element).getSummary();
 				return pattern.matcher(taskString).find();
-			} 
+			}
 			return false;
 		}
 	}
@@ -163,7 +161,8 @@ public class TaskSelectionDialog extends SelectionStatusDialog {
 
 		// Compute the task navigation history (in recent-to-older order)
 		final List<AbstractTask> taskHistory = new ArrayList<AbstractTask>(TasksUiPlugin.getTaskListManager()
-				.getTaskActivationHistory().getPreviousTasks());
+				.getTaskActivationHistory()
+				.getPreviousTasks());
 		Collections.reverse(taskHistory);
 
 		// Compute the task set who will be presented on dialog; the trick to

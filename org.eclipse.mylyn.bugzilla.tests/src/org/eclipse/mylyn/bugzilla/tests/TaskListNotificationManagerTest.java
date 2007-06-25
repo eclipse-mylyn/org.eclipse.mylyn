@@ -78,14 +78,13 @@ public class TaskListNotificationManagerTest extends TestCase {
 		TasksUiPlugin.getRepositoryManager().addRepository(repository,
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		AbstractTask task = new BugzillaTask("https://bugs.eclipse.org/bugs", "142891", "label");
-		assertEquals( RepositoryTaskSyncState.SYNCHRONIZED, task.getSynchronizationState());
+		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSynchronizationState());
 		assertFalse(task.isNotified());
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
 		TaskListNotificationManager notificationManager = TasksUiPlugin.getTaskListNotificationManager();
 		notificationManager.collectNotifications();
 		assertTrue(notificationManager.getNotifications().contains(new TaskListNotificationIncoming(task)));
-		task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
-				"https://bugs.eclipse.org/bugs-142891");
+		task = TasksUiPlugin.getTaskListManager().getTaskList().getTask("https://bugs.eclipse.org/bugs-142891");
 		assertNotNull(task);
 		assertTrue(task.isNotified());
 	}
@@ -97,7 +96,7 @@ public class TaskListNotificationManagerTest extends TestCase {
 				"summary");
 		TasksUiPlugin.getTaskListManager().getTaskList().addQuery(query);
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(hit, query);
-		
+
 		TaskListNotificationManager notificationManager = TasksUiPlugin.getTaskListNotificationManager();
 		assertFalse(hit.isNotified());
 		notificationManager.collectNotifications();

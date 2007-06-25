@@ -164,14 +164,13 @@ class SynchronizeTaskJob extends Job {
 
 		task.setSynchronizationStatus(null);
 
-		final TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
-				task.getConnectorKind(), task.getRepositoryUrl());
+		final TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(task.getConnectorKind(),
+				task.getRepositoryUrl());
 		try {
 			if (repository == null) {
 				throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, 0,
 						"Associated repository could not be found. Ensure proper repository configuration of "
-								+ task.getRepositoryUrl() + " in " + TasksUiPlugin.LABEL_VIEW_REPOSITORIES
-								+ ".", null));
+								+ task.getRepositoryUrl() + " in " + TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".", null));
 			}
 
 			TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(task, false);

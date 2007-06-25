@@ -47,7 +47,7 @@ public class OpenWithBrowserAction extends BaseSelectionListenerAction {
 	private void runWithSelection(Object selectedObject) {
 		String urlString = null;
 		if (selectedObject instanceof AbstractTask) {
-			AbstractTask task = (AbstractTask)selectedObject;
+			AbstractTask task = (AbstractTask) selectedObject;
 			if (task.hasValidUrl()) {
 				urlString = task.getUrl();
 			}
@@ -55,7 +55,7 @@ public class OpenWithBrowserAction extends BaseSelectionListenerAction {
 			AbstractTaskContainer query = (AbstractTaskContainer) selectedObject;
 			urlString = query.getUrl();
 		}
-		
+
 		if (urlString != null) {
 			TasksUiUtil.openUrl(urlString, false);
 		}

@@ -86,12 +86,11 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 	}
 
 	/**
-	 * @return The children of this node, represented as an <code>Object</code>
-	 *         array.
+	 * @return The children of this node, represented as an <code>Object</code> array.
 	 */
 	public RepositoryTaskOutlineNode[] getChildren() {
-		return (nodeChildren == null) ? new RepositoryTaskOutlineNode[0] : nodeChildren
-				.toArray(new RepositoryTaskOutlineNode[nodeChildren.size()]);
+		return (nodeChildren == null) ? new RepositoryTaskOutlineNode[0]
+				: nodeChildren.toArray(new RepositoryTaskOutlineNode[nodeChildren.size()]);
 	}
 
 	/**
@@ -116,8 +115,8 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 	}
 
 	/**
-	 * @return <code>true</code> if the given object is another node
-	 *         representing the same piece of data in the editor.
+	 * @return <code>true</code> if the given object is another node representing the same piece of data in the
+	 *         editor.
 	 */
 	@Override
 	public boolean equals(Object arg0) {
@@ -158,9 +157,8 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 	}
 
 	/**
-	 * Parses the given <code>IBugzillaBug</code> into a tree of
-	 * <code>RepositoryTaskOutlineNode</code>'s suitable for use in the
-	 * <code>RepositoryTaskOutlinePage</code> view.
+	 * Parses the given <code>IBugzillaBug</code> into a tree of <code>RepositoryTaskOutlineNode</code>'s suitable
+	 * for use in the <code>RepositoryTaskOutlinePage</code> view.
 	 * 
 	 * @param bug
 	 *            The bug that needs parsing.
@@ -211,9 +209,8 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 //	}
 
 	/**
-	 * Parses the given <code>BugReport</code> into a tree of
-	 * <code>RepositoryTaskOutlineNode</code>'s suitable for use in the
-	 * <code>RepositoryTaskOutlinePage</code> view.
+	 * Parses the given <code>BugReport</code> into a tree of <code>RepositoryTaskOutlineNode</code>'s suitable for
+	 * use in the <code>RepositoryTaskOutlinePage</code> view.
 	 * 
 	 * @param bug
 	 *            The <code>BugReport</code> that needs parsing.
@@ -223,11 +220,11 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 
 		String bugId = bug.getId();
 		String bugServer = bug.getRepositoryUrl();
-		RepositoryTaskOutlineNode topNode = new RepositoryTaskOutlineNode(bugId, bugServer, bug.getLabel(), bug, bug
-				.getSummary());
+		RepositoryTaskOutlineNode topNode = new RepositoryTaskOutlineNode(bugId, bugServer, bug.getLabel(), bug,
+				bug.getSummary());
 
-		RepositoryTaskOutlineNode desc = new RepositoryTaskOutlineNode(bugId, bugServer, LABEL_DESCRIPTION, bug
-				.getDescription(), bug.getSummary());
+		RepositoryTaskOutlineNode desc = new RepositoryTaskOutlineNode(bugId, bugServer, LABEL_DESCRIPTION,
+				bug.getDescription(), bug.getSummary());
 		desc.setIsDescription(true);
 
 		topNode.addChild(desc);
@@ -236,26 +233,26 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 		for (Iterator<TaskComment> iter = bug.getComments().iterator(); iter.hasNext();) {
 			TaskComment taskComment = iter.next();
 			// first comment is the bug summary
-			if(taskComment.getNumber() == 0) continue;
+			if (taskComment.getNumber() == 0)
+				continue;
 			if (comments == null) {
-				comments = new RepositoryTaskOutlineNode(bugId, bugServer, LABEL_COMMENTS, taskComment, bug
-						.getSummary());
+				comments = new RepositoryTaskOutlineNode(bugId, bugServer, LABEL_COMMENTS, taskComment,
+						bug.getSummary());
 				comments.setIsCommentHeader(true);
 			}
-			comments.addChild(new RepositoryTaskOutlineNode(bugId, bugServer, taskComment.getCreated(),
-					taskComment, bug.getSummary()));
+			comments.addChild(new RepositoryTaskOutlineNode(bugId, bugServer, taskComment.getCreated(), taskComment,
+					bug.getSummary()));
 		}
 		if (comments != null) {
 			topNode.addChild(comments);
 		}
 
 		if (hasNewComment) {
-			topNode
-					.addChild(new RepositoryTaskOutlineNode(bugId, bugServer, LABEL_NEW_COMMENT, null, bug.getSummary()));
+			topNode.addChild(new RepositoryTaskOutlineNode(bugId, bugServer, LABEL_NEW_COMMENT, null, bug.getSummary()));
 		}
-		
-		RepositoryTaskOutlineNode titleNode = new RepositoryTaskOutlineNode(bugId, bugServer, "BugReport Object",
-				null, bug.getSummary());
+
+		RepositoryTaskOutlineNode titleNode = new RepositoryTaskOutlineNode(bugId, bugServer, "BugReport Object", null,
+				bug.getSummary());
 		titleNode.addChild(topNode);
 
 		return titleNode;

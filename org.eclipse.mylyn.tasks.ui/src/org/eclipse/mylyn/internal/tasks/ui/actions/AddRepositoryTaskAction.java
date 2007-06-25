@@ -30,7 +30,7 @@ import org.eclipse.ui.PlatformUI;
 public class AddRepositoryTaskAction extends Action implements IViewActionDelegate {
 
 	private static final String WIZARD_LABEL = "Add an existing repository task/issue";
-	
+
 	public void run(IAction action) {
 		try {
 			AddExistingTaskWizard wizard = new AddExistingTaskWizard();

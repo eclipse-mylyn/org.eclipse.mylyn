@@ -11,13 +11,11 @@
 package org.eclipse.mylyn.internal.bugzilla.core.history;
 
 /**
- * @author John Anvik 
+ * @author John Anvik
  */
 public enum ResolutionType {
-	
-	FIXED, DUPLICATE, WONTFIX, INVALID, WORKSFORME, REOPENED, LATER, 
-	REMIND, MOVED, UNKNOWN, NOTABUG, NOTGNOME, INCOMPLETE, OBSOLETE, EXPIRED, 
-	NOTXIMIAN, NEXTRELEASE, ERRATA, RAWHIDE, UPSTREAM, CANTFIX, CURRENTRELEASE, INSUFFICIENT_DATA, DEFERRED;
+
+	FIXED, DUPLICATE, WONTFIX, INVALID, WORKSFORME, REOPENED, LATER, REMIND, MOVED, UNKNOWN, NOTABUG, NOTGNOME, INCOMPLETE, OBSOLETE, EXPIRED, NOTXIMIAN, NEXTRELEASE, ERRATA, RAWHIDE, UPSTREAM, CANTFIX, CURRENTRELEASE, INSUFFICIENT_DATA, DEFERRED;
 
 	public static ResolutionType convert(String change) {
 		if (change.equals("FIXED")) {
@@ -62,31 +60,31 @@ public enum ResolutionType {
 		if (change.equals("OBSOLETE")) { // Gnome
 			return ResolutionType.OBSOLETE;
 		}
-		if(change.equals("NOTXIMIAN")){ // Gnome
+		if (change.equals("NOTXIMIAN")) { // Gnome
 			return ResolutionType.NOTXIMIAN;
 		}
-		if(change.equals("NEXTRELEASE")){ // Redhat
+		if (change.equals("NEXTRELEASE")) { // Redhat
 			return ResolutionType.NEXTRELEASE;
 		}
-		if(change.equals("ERRATA")){// Redhat
+		if (change.equals("ERRATA")) {// Redhat
 			return ResolutionType.ERRATA;
 		}
-		if(change.equals("RAWHIDE")){// Redhat
+		if (change.equals("RAWHIDE")) {// Redhat
 			return ResolutionType.RAWHIDE;
 		}
-		if(change.equals("UPSTREAM")){// Redhat
+		if (change.equals("UPSTREAM")) {// Redhat
 			return ResolutionType.UPSTREAM;
 		}
-		if(change.equals("CANTFIX")){// Redhat
+		if (change.equals("CANTFIX")) {// Redhat
 			return ResolutionType.CANTFIX;
 		}
-		if(change.equals("CURRENTRELEASE")){// Redhat
+		if (change.equals("CURRENTRELEASE")) {// Redhat
 			return ResolutionType.CURRENTRELEASE;
 		}
-		if(change.equals("INSUFFICIENT_DATA")){// Redhat
+		if (change.equals("INSUFFICIENT_DATA")) {// Redhat
 			return ResolutionType.INSUFFICIENT_DATA;
 		}
-		if(change.equals("DEFERRED")){// Redhat
+		if (change.equals("DEFERRED")) {// Redhat
 			return ResolutionType.DEFERRED;
 		}
 		if (change.equals("") == false) {

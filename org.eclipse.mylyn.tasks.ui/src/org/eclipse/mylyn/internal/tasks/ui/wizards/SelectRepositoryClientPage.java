@@ -57,12 +57,12 @@ public class SelectRepositoryClientPage extends WizardPage {
 
 		public Object[] getElements(Object parent) {
 			List<AbstractRepositoryConnector> userManagedRepositories = new ArrayList<AbstractRepositoryConnector>();
-			for(AbstractRepositoryConnector connector: TasksUiPlugin.getRepositoryManager().getRepositoryConnectors()){
-				if(connector.isUserManaged()){
+			for (AbstractRepositoryConnector connector : TasksUiPlugin.getRepositoryManager().getRepositoryConnectors()) {
+				if (connector.isUserManaged()) {
 					userManagedRepositories.add(connector);
 				}
 			}
-			
+
 			return userManagedRepositories.toArray();
 		}
 	}
@@ -102,22 +102,22 @@ public class SelectRepositoryClientPage extends WizardPage {
 			}
 
 		});
-		
+
 		viewer.addOpenListener(new IOpenListener() {
 			public void open(OpenEvent event) {
 				getContainer().showPage(getNextPage());
 			}
 		});
-		
+
 		setControl(container);
 	}
 
 	@Override
 	public IWizardPage getNextPage() {
 		if (isPageComplete()) {
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(
-					wizard.getRepositoryConnector().getConnectorKind());
-			
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(wizard.getRepositoryConnector()
+					.getConnectorKind());
+
 			AbstractRepositorySettingsPage nextPage = connectorUi.getSettingsPage();
 			wizard.setRepositorySettingsPage(nextPage);
 			nextPage.setWizard(wizard);

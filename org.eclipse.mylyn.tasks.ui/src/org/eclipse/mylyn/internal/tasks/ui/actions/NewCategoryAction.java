@@ -40,14 +40,14 @@ public class NewCategoryAction extends Action implements IViewActionDelegate {
 		setId(ID);
 		setImageDescriptor(TasksUiImages.CATEGORY_NEW);
 	}
-	
+
 	public void init(IViewPart view) {
 	}
-	
+
 	public void run(IAction action) {
 		run();
 	}
-	
+
 	@Override
 	public void run() {
 		InputDialog dialog = new InputDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),

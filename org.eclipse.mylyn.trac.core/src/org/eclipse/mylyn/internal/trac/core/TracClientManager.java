@@ -47,9 +47,9 @@ public class TracClientManager implements ITaskRepositoryListener {
 	public synchronized ITracClient getRepository(TaskRepository taskRepository) throws MalformedURLException {
 		ITracClient repository = clientByUrl.get(taskRepository.getUrl());
 		if (repository == null) {
-			repository = TracClientFactory.createClient(taskRepository.getUrl(), Version.fromVersion(taskRepository
-					.getVersion()), taskRepository.getUserName(), taskRepository.getPassword(), taskRepository
-					.getProxy());
+			repository = TracClientFactory.createClient(taskRepository.getUrl(),
+					Version.fromVersion(taskRepository.getVersion()), taskRepository.getUserName(),
+					taskRepository.getPassword(), taskRepository.getProxy());
 			clientByUrl.put(taskRepository.getUrl(), repository);
 
 			TracClientData data = clientDataByUrl.get(taskRepository.getUrl());
