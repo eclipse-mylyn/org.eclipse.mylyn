@@ -328,7 +328,8 @@ public final class RepositorySynchronizationManager {
 			return rule == this;
 		}
 	}
-
+	
+	/*
 	private static class RepositoryMutexRule implements ISchedulingRule {
 
 		private TaskRepository repository = null;
@@ -353,4 +354,6 @@ public final class RepositorySynchronizationManager {
 			return repository;
 		}
 	}
+	*/
+
 }

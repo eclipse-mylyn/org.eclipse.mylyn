@@ -10,13 +10,13 @@
  *******************************************************************************/
 package org.eclipse.mylyn.tasks.ui.search;
 
-import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
@@ -48,38 +48,25 @@ public class SearchHitCollector implements ISearchQuery, ITaskCollector {
 
 	private static final String LABEL_MAX_HITS_REACHED = "Max allowed number of hits returned exceeded. Some hits may not be displayed. Please narrow query scope.";
 
-	protected Set<AbstractTask> taskResults = new HashSet<AbstractTask>();
+	private static final String QUERYING_REPOSITORY = "Querying Repository...";
 
-	/** The number of matches found */
-	private int matchCount;
+	private Set<AbstractTask> taskResults = new HashSet<AbstractTask>();
 
-	/** The string to display to the user while querying */
-	private static final String STARTING = "querying the server";
-
-	/** The string to display to the user when we have 1 match */
-	private static final String MATCH = "1 match";
-
-	/** The string to display to the user when we have multiple or no matches */
-	private static final String MATCHES = "{0} matches";
-
-	/** The string to display to the user when the query is done */
-	private static final String DONE = "done";
+//	/** The string to display to the user when we have 1 match */
+//	private static final String MATCH = "1 match";
+//
+//	/** The string to display to the user when we have multiple or no matches */
+//	private static final String MATCHES = "{0} matches";
 
 	private final TaskList taskList;
 
 	private final ITaskFactory taskFactory;
-
-	private static final String QUERYING_REPOSITORY = "Querying Repository...";
-
-	private String type;
 
 	private TaskRepository repository;
 
 	private AbstractRepositoryQuery repositoryQuery;
 
 	private RepositorySearchResult searchResult;
-
-	private IProgressMonitor monitor;
 
 	public SearchHitCollector(TaskList tasklist, TaskRepository repository, AbstractRepositoryQuery repositoryQuery,
 			ITaskFactory taskFactory) {
@@ -90,10 +77,8 @@ public class SearchHitCollector implements ISearchQuery, ITaskCollector {
 		this.taskFactory = taskFactory;
 	}
 
-	public void aboutToStart(int startMatchCount) {
+	public void aboutToStart() {
 		taskResults.clear();
-		matchCount = startMatchCount;
-		monitor.setTaskName(STARTING);
 
 		searchResult.removeAll();
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -113,11 +98,6 @@ public class SearchHitCollector implements ISearchQuery, ITaskCollector {
 			hitTask = task;
 		}
 
-		if (!monitor.isCanceled()) {
-			monitor.subTask(getFormattedMatchesString(searchResult.getMatchCount()));
-			monitor.worked(1);
-		}
-
 		taskResults.add(hitTask);
 		this.searchResult.addMatch(new Match(hitTask, 0, 0));
 	}
@@ -127,14 +107,8 @@ public class SearchHitCollector implements ISearchQuery, ITaskCollector {
 			throw new IllegalArgumentException();
 		}
 
-		AbstractTask task = taskFactory.createTask(taskData, new SubProgressMonitor(monitor, 1));
+		AbstractTask task = taskFactory.createTask(taskData, new SubProgressMonitor(new NullProgressMonitor(), 1));
 		if (task != null) {
-
-			if (!monitor.isCanceled()) {
-				monitor.subTask(getFormattedMatchesString(searchResult.getMatchCount()));
-				monitor.worked(1);
-			}
-
 			taskResults.add(task);
 			this.searchResult.addMatch(new Match(task, 0, 0));
 		}
@@ -142,14 +116,6 @@ public class SearchHitCollector implements ISearchQuery, ITaskCollector {
 
 	public String getLabel() {
 		return QUERYING_REPOSITORY;
-	}
-
-	public String getTypeLabel() {
-		return type;
-	}
-
-	public void setTypeLabel(String type) {
-		this.type = type;
 	}
 
 	public boolean canRerun() {
@@ -169,54 +135,38 @@ public class SearchHitCollector implements ISearchQuery, ITaskCollector {
 	}
 
 	public IStatus run(IProgressMonitor monitor) throws OperationCanceledException {
-		this.monitor = monitor;
+		if (monitor == null) {
+			monitor = new NullProgressMonitor();
+		}
 
-		try {
-			monitor.beginTask(QUERYING_REPOSITORY, IProgressMonitor.UNKNOWN);
+		//monitor.beginTask(QUERYING_REPOSITORY, IProgressMonitor.UNKNOWN);
+		aboutToStart();
 
-			aboutToStart(0);
-
-			if (monitor.isCanceled()) {
-				throw new OperationCanceledException("Search cancelled");
+		if (monitor.isCanceled()) {
+			throw new OperationCanceledException("Search cancelled");
+		}
+		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+				repositoryQuery.getRepositoryKind());
+		if (connector != null) {
+			IStatus status = connector.performQuery(repositoryQuery, repository, monitor, this);
+			if (!status.isOK()) {
+				StatusHandler.displayStatus("Search failed", status);
 			}
-			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-					repositoryQuery.getRepositoryKind());
-			if (connector != null) {
-				IStatus status = connector.performQuery(repositoryQuery, repository, monitor, this);
-				if (!status.isOK()) {
-					StatusHandler.displayStatus("Search failed", status);
-				}
-			} else {
-				return new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, IStatus.OK,
-						"repository connector could not be found", null);
-			}
-
-			return Status.OK_STATUS;
-		} finally {
-			done();
-		}
-	}
-
-	public void done() {
-		if (monitor != null && !monitor.isCanceled()) {
-			// if the operation is cancelled, finish with the data that we
-			// already have
-			String matchesString = getFormattedMatchesString(matchCount);
-			monitor.setTaskName(MessageFormat.format(DONE, new Object[] { matchesString }));
-			monitor.done();
+		} else {
+			return new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, IStatus.OK,
+					"repository connector could not be found", null);
 		}
 
-		// Cut no longer used references because the collector might be re-used
-		monitor = null;
+		return Status.OK_STATUS;
 	}
 
-	protected String getFormattedMatchesString(int count) {
-		if (count == 1) {
-			return MATCH;
-		}
-		Object[] messageFormatArgs = { new Integer(count) };
-		return MessageFormat.format(MATCHES, messageFormatArgs);
-	}
+//	protected String getFormattedMatchesString(int count) {
+//		if (count == 1) {
+//			return MATCH;
+//		}
+//		Object[] messageFormatArgs = { new Integer(count) };
+//		return MessageFormat.format(MATCHES, messageFormatArgs);
+//	}
 
 	public Set<AbstractTask> getTasks() {
 		return taskResults;
