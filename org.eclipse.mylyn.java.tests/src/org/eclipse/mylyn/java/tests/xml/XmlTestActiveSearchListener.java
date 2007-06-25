@@ -57,14 +57,13 @@ public class XmlTestActiveSearchListener extends TestActiveSearchListener {
 						Match m = mar[j];
 						try {
 
-							AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(f.getName());
+							AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
+									f.getName());
 
 							String handle = bridge.getHandleForOffsetInObject(f, m.getOffset());
 
 							XmlNodeHelper node = new XmlNodeHelper(handle);
-							if (node != null) {
-								nodes.add(node);
-							}
+							nodes.add(node);
 						} catch (Exception e) {
 							e.printStackTrace();
 							// don't care

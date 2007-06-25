@@ -77,6 +77,7 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 		return CONTENT_TYPE;
 	}
 
+	@Override
 	public Object getAdaptedParent(Object object) {
 		if (object instanceof IFile) {
 			IFile file = (IFile)object;

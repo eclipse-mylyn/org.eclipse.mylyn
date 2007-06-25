@@ -346,7 +346,7 @@ public class ContextCorePlugin extends Plugin {
 				AbstractContextStructureBridge bridge = (AbstractContextStructureBridge) object;
 				if (element.getAttribute(BridgesExtensionPointReader.ATTR_PARENT_CONTENT_TYPE) != null) {
 					String parentContentType = element.getAttribute(BridgesExtensionPointReader.ATTR_PARENT_CONTENT_TYPE);
-					if (parentContentType instanceof String) {
+					if (parentContentType != null) {
 						bridge.setParentContentType(parentContentType);
 					}
 				}

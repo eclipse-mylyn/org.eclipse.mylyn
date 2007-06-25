@@ -63,7 +63,7 @@ public class FocusProblemsListAction extends AbstractFocusMarkerViewAction {
 		for (StructuredViewer viewer : getViewers()) {
 			if (viewer instanceof TableViewer) {
 				TableViewer tableViewer = (TableViewer) viewer;
-				if (tableViewer != null && !(tableViewer.getLabelProvider() instanceof MarkerViewLabelProvider)) {
+				if (!(tableViewer.getLabelProvider() instanceof MarkerViewLabelProvider)) {
 					tableViewer.setLabelProvider(new MarkerViewLabelProvider((TableViewLabelProvider) tableViewer
 							.getLabelProvider()));
 				}

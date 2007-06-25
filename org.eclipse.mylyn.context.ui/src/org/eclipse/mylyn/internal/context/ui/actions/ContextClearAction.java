@@ -48,7 +48,7 @@ public class ContextClearAction extends TaskContextAction {
 	
 	public void run(IAction action) {
 		AbstractTask task = TaskListView.getFromActivePerspective().getSelectedTask();
-		if (task instanceof AbstractTask) {
+		if (task != null) {
 			boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 					.getShell(), "Confirm clear context", "Clear context for the selected task?");
 			if (!deleteConfirmed)

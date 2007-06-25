@@ -156,7 +156,7 @@ public class ContextPerspectiveManager implements ITaskActivityListener, IPerspe
 						toRemove.add(actionSetDescriptor);
 					}
 				}
-				perspective.turnOffActionSets((IActionSetDescriptor[]) toRemove
+				perspective.turnOffActionSets(toRemove
 						.toArray(new IActionSetDescriptor[toRemove.size()]));
 			}
 		}

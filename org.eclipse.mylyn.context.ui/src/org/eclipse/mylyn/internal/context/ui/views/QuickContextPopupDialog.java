@@ -84,6 +84,7 @@ public class QuickContextPopupDialog extends PopupDialog implements
 		return super.close();
 	}
 	
+	@Override
 	protected Control createDialogArea(Composite parent) {
 		createViewer(parent);
 		createUIListenersTreeViewer();
@@ -122,10 +123,12 @@ public class QuickContextPopupDialog extends PopupDialog implements
 		return viewer;
 	}
 
+	@Override
 	protected Point getInitialSize() {
 		return new Point(400, 500);
 	}
 	
+	@Override
 	protected void fillDialogMenu(IMenuManager dialogMenu) {
 		dialogMenu.add(new Separator());
 		super.fillDialogMenu(dialogMenu);
@@ -146,6 +149,7 @@ public class QuickContextPopupDialog extends PopupDialog implements
 		});		
 		
 		tree.addMouseListener(new MouseAdapter() {
+			@Override
 			public void mouseUp(MouseEvent e) { 
 				handleTreeViewerMouseUp(tree, e);
 			}
@@ -291,6 +295,7 @@ public class QuickContextPopupDialog extends PopupDialog implements
 	}
 
 
+	@Override
 	protected Control createTitleControl(Composite parent) {
 		// Applies only to dialog title - not body.  See createDialogArea
 		// Create the text widget

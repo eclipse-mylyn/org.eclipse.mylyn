@@ -34,6 +34,7 @@ public class QuickOutlinePatternAndInterestFilter extends ViewerFilter {
 		stringMatcher = null;
 	}
 
+	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
 		boolean isInteresting = interestFilter.select(viewer, parentElement, element);
 		if (!isInteresting) {

@@ -196,8 +196,8 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		
 		public void taskActivated(AbstractTask task) {
 			boolean hasLocalContext = ContextCorePlugin.getContextManager().hasContext(task.getHandleIdentifier());
-			if (!hasLocalContext && task instanceof AbstractTask) {
-				AbstractTask repositoryTask = (AbstractTask) task;
+			if (!hasLocalContext) {
+				AbstractTask repositoryTask = task;
 				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 						repositoryTask);
 				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(

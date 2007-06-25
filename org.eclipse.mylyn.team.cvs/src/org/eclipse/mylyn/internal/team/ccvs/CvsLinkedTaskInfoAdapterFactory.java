@@ -84,7 +84,7 @@ public class CvsLinkedTaskInfoAdapterFactory implements IAdapterFactory {
 							ICVSResource cvsResource = CVSWorkspaceRoot.getCVSFolderFor(project);
 							try {
 								String repositoryRelativePath = cvsResource.getRepositoryRelativePath();
-								if (cvsResource != null && repositoryRelativePath != null
+								if (repositoryRelativePath != null
 										&& path.startsWith(repositoryRelativePath)) {
 									return project;
 								}

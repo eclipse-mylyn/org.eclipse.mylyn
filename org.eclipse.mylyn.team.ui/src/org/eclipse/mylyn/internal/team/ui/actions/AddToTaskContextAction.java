@@ -52,6 +52,7 @@ public class AddToTaskContextAction extends Action implements IViewActionDelegat
 	public void init(IViewPart view) {
 	}
 
+	@Override
 	public void run() {
 		if (selection instanceof StructuredSelection) {
 			run((StructuredSelection) selection);

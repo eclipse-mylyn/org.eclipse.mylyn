@@ -189,15 +189,15 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 			PDESourcePage sp = null;
 			List<TreeViewer> viewers = new ArrayList<TreeViewer>(2);
 			if ((sp = (PDESourcePage) ((PDEFormEditor) editor).findPage(PluginInputContext.CONTEXT_ID)) != null) {
-				ISortableContentOutlinePage p = sp.getContentOutline();
-				if (p != null && p.getControl() != null) {
+				ISortableContentOutlinePage page = sp.getContentOutline();
+				if (page != null && page.getControl() != null) {
 					try {
-						if (p != null && p instanceof SourceOutlinePage) {
+						if (page instanceof SourceOutlinePage) {
 							// get the tree viewer for the outline
-							Class<?> clazz2 = p.getClass();
+							Class<?> clazz2 = page.getClass();
 							Field field2 = clazz2.getDeclaredField("viewer");
 							field2.setAccessible(true);
-							Object f2 = field2.get(p);
+							Object f2 = field2.get(page);
 							if (f2 != null && f2 instanceof TreeViewer) {
 								viewers.add((TreeViewer) f2);
 							}

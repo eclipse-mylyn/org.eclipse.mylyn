@@ -211,13 +211,13 @@ public class ContextEditorFormPage extends FormPage {
 
 		Label attachImage = toolkit.createLabel(sectionClient, "");
 		attachImage.setImage(TasksUiImages.getImage(ContextUiImages.CONTEXT_ATTACH));
-		attachImage.setEnabled(task instanceof AbstractTask);
+		attachImage.setEnabled(task != null);
 		Hyperlink attachHyperlink = toolkit.createHyperlink(sectionClient, "Attach context...", SWT.NONE);
-		attachHyperlink.setEnabled(task instanceof AbstractTask);
+		attachHyperlink.setEnabled(task != null);
 		attachHyperlink.addMouseListener(new MouseListener() {
 
 			public void mouseUp(MouseEvent e) {
-				new ContextAttachAction().run((AbstractTask) task);
+				new ContextAttachAction().run(task);
 			}
 
 			public void mouseDoubleClick(MouseEvent e) {
@@ -231,13 +231,13 @@ public class ContextEditorFormPage extends FormPage {
 
 		Label retrieveImage = toolkit.createLabel(sectionClient, "");
 		retrieveImage.setImage(TasksUiImages.getImage(ContextUiImages.CONTEXT_RETRIEVE));
-		retrieveImage.setEnabled(task instanceof AbstractTask);
+		retrieveImage.setEnabled(task != null);
 		Hyperlink retrieveHyperlink = toolkit.createHyperlink(sectionClient, "Retrieve Context...", SWT.NONE);
-		retrieveHyperlink.setEnabled(task instanceof AbstractTask);
+		retrieveHyperlink.setEnabled(task != null);
 		retrieveHyperlink.addMouseListener(new MouseListener() {
 
 			public void mouseUp(MouseEvent e) {
-				new ContextRetrieveAction().run((AbstractTask) task);
+				new ContextRetrieveAction().run(task);
 			}
 
 			public void mouseDoubleClick(MouseEvent e) {

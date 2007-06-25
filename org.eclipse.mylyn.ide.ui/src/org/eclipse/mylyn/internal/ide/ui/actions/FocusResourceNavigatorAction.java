@@ -53,7 +53,7 @@ public class FocusResourceNavigatorAction extends AbstractAutoFocusViewAction {
 		IEditorInput input = part.getEditorInput();
 		Object adapted = input.getAdapter(IResource.class);
 		if (adapted instanceof IResource) {
-			return new StructuredSelection((IResource)adapted);
+			return new StructuredSelection(adapted);
 		} else {
 			return null;
 		}

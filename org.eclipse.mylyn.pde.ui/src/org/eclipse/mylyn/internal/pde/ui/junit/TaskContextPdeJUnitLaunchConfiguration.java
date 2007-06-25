@@ -38,6 +38,6 @@ public class TaskContextPdeJUnitLaunchConfiguration extends JUnitLaunchConfigura
 					"Context Test Suite", 
 					"No test types found in the active task context.");
 		} 
-		return (IMember[])contextTestCases.toArray(new IMember[contextTestCases.size()]);
+		return contextTestCases.toArray(new IMember[contextTestCases.size()]);
 	}
 }

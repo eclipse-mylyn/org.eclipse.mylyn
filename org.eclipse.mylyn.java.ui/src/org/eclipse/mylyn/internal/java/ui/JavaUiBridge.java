@@ -114,7 +114,7 @@ public class JavaUiBridge extends AbstractContextUiBridge {
 		Object out = editorPart.getAdapter(IContentOutlinePage.class);
 		if (out instanceof JavaOutlinePage) {
 			JavaOutlinePage page = (JavaOutlinePage) out;
-			if (page != null && page.getControl() != null) {
+			if (page.getControl() != null) {
 				try {
 					viewers.add((TreeViewer) javaOutlineField.get(page));
 				} catch (Exception e) {

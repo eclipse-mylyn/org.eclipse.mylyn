@@ -1,4 +1,4 @@
-#Fri Jun 08 18:38:33 PDT 2007
+#Sun Jun 24 11:52:58 EDT 2007
 eclipse.preferences.version=1
 org.eclipse.jdt.core.compiler.codegen.inlineJsrBytecode=enabled
 org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.5
@@ -36,6 +36,7 @@ org.eclipse.jdt.core.compiler.problem.nullReference=error
 org.eclipse.jdt.core.compiler.problem.overridingPackageDefaultMethod=warning
 org.eclipse.jdt.core.compiler.problem.possibleAccidentalBooleanAssignment=ignore
 org.eclipse.jdt.core.compiler.problem.potentialNullReference=warning
+org.eclipse.jdt.core.compiler.problem.redundantNullCheck=warning
 org.eclipse.jdt.core.compiler.problem.specialParameterHidingField=disabled
 org.eclipse.jdt.core.compiler.problem.staticAccessReceiver=warning
 org.eclipse.jdt.core.compiler.problem.suppressWarnings=enabled
@@ -45,7 +46,7 @@ org.eclipse.jdt.core.compiler.problem.uncheckedTypeOperation=warning
 org.eclipse.jdt.core.compiler.problem.undocumentedEmptyBlock=ignore
 org.eclipse.jdt.core.compiler.problem.unhandledWarningToken=warning
 org.eclipse.jdt.core.compiler.problem.unnecessaryElse=ignore
-org.eclipse.jdt.core.compiler.problem.unnecessaryTypeCheck=ignore
+org.eclipse.jdt.core.compiler.problem.unnecessaryTypeCheck=warning
 org.eclipse.jdt.core.compiler.problem.unqualifiedFieldAccess=ignore
 org.eclipse.jdt.core.compiler.problem.unusedDeclaredThrownException=ignore
 org.eclipse.jdt.core.compiler.problem.unusedDeclaredThrownExceptionWhenOverriding=disabled
@@ -100,9 +101,11 @@ org.eclipse.jdt.core.formatter.brace_position_for_enum_declaration=end_of_line
 org.eclipse.jdt.core.formatter.brace_position_for_method_declaration=end_of_line
 org.eclipse.jdt.core.formatter.brace_position_for_switch=end_of_line
 org.eclipse.jdt.core.formatter.brace_position_for_type_declaration=end_of_line
+org.eclipse.jdt.core.formatter.comment.clear_blank_lines=false
 org.eclipse.jdt.core.formatter.comment.clear_blank_lines_in_block_comment=false
 org.eclipse.jdt.core.formatter.comment.clear_blank_lines_in_javadoc_comment=false
 org.eclipse.jdt.core.formatter.comment.format_block_comments=false
+org.eclipse.jdt.core.formatter.comment.format_comments=true
 org.eclipse.jdt.core.formatter.comment.format_header=false
 org.eclipse.jdt.core.formatter.comment.format_html=true
 org.eclipse.jdt.core.formatter.comment.format_javadoc_comments=true

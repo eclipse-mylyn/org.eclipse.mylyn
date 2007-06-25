@@ -188,8 +188,8 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 			if (task == null && taskFullUrl != null) {
 				// search by fullUrl
 				for (AbstractTask currTask : TasksUiPlugin.getTaskListManager().getTaskList().getAllTasks()) {
-					if (currTask instanceof AbstractTask) {
-						String currUrl = ((AbstractTask) currTask).getUrl();
+					if (currTask != null) {
+						String currUrl = currTask.getUrl();
 						if (taskFullUrl.equals(currUrl)) {
 							return new LinkedTaskInfo(currTask, null);
 						}
@@ -257,6 +257,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 			this.element = element;
 		}
 
+		@Override
 		protected IStatus run(IProgressMonitor monitor) {
 			ILinkedTaskInfo info = null;
 			if (element instanceof ILinkedTaskInfo) {

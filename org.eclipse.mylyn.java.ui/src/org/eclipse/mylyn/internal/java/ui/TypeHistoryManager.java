@@ -46,7 +46,7 @@ public class TypeHistoryManager implements IInteractionContextListener {
 		if (element instanceof IType) {
 			IType type = (IType) element;
 			try {
-				if (type != null && type.exists() && !type.isAnonymous() && !isAspectjType(type)) {
+				if (type.exists() && !type.isAnonymous() && !isAspectjType(type)) {
 //					TypeInfo info = factory.create(type.getPackageFragment().getElementName().toCharArray(), type
 //							.getElementName().toCharArray(), enclosingTypeNames(type), type.getFlags(), getPath(type));
 

@@ -27,6 +27,7 @@ public class ContextEditorFactory extends AbstractTaskEditorFactory {
 
 	private static final String LABEL = "Context";
 
+	@Override
 	public boolean canCreateEditorFor(AbstractTask task) {
 		return task != null && ContextCorePlugin.getContextManager().hasContext(task.getHandleIdentifier());
 	}
@@ -34,6 +35,7 @@ public class ContextEditorFactory extends AbstractTaskEditorFactory {
 	/**
 	 * Works for any kind of task
 	 */
+	@Override
 	public boolean canCreateEditorFor(IEditorInput input) {
 		if (input instanceof RepositoryTaskEditorInput) {
 			RepositoryTaskEditorInput repositoryTaskEditorInput = (RepositoryTaskEditorInput)input;
@@ -43,15 +45,18 @@ public class ContextEditorFactory extends AbstractTaskEditorFactory {
 		}
 	}
 
+	@Override
 	public IEditorPart createEditor(TaskEditor parentEditor, IEditorInput editorInput) {
 		ContextEditorFormPage formPage = new ContextEditorFormPage(parentEditor, "org.eclipse.mylyn.context.ui.editor.context", LABEL);
 		return formPage;
 	}
 
+	@Override
 	public IEditorInput createEditorInput(AbstractTask task) {
 		return new ContextEditorInput(task);
 	}
 
+	@Override
 	public String getTitle() {
 		return LABEL;
 	}

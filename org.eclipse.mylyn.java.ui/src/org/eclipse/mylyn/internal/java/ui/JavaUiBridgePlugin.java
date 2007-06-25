@@ -70,7 +70,7 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 				if (!MonitorUiPlugin.getDefault().suppressConfigurationWizards()) {
 					RecommendedPreferencesWizard wizard = new RecommendedPreferencesWizard();
 					Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-					if (wizard != null && shell != null && !shell.isDisposed()) {
+					if (shell != null && !shell.isDisposed()) {
 						WizardDialog dialog = new WizardDialog(shell, wizard);
 						dialog.create();
 						dialog.open();

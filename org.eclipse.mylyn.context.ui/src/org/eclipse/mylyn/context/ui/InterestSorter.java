@@ -32,7 +32,7 @@ public class InterestSorter extends ViewerSorter {
 	public int compare(Viewer viewer, Object e1, Object e2) {
 		IInteractionElement element1 = getCorresponding(e1);
 		IInteractionElement element2 = getCorresponding(e2);
-		if (element1 instanceof IInteractionElement && element2 instanceof IInteractionElement) {
+		if (element1 != null && element2 != null) {
 			return comparator.compare(element1, element2);
 		} else {
 			return 0;

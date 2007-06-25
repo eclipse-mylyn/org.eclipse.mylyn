@@ -45,21 +45,20 @@ public class FindReferencesInContextAction extends Action implements IWorkbenchW
 				if (resolved != null && resolved.length == 1 && resolved[0] != null) {
 					IJavaElement element = resolved[0];
 
-					TaskContextWorkingSetManager updater = TaskContextWorkingSetManager.getDefault().getWorkingSetUpdater();
+					TaskContextWorkingSetManager updater = TaskContextWorkingSetManager.getDefault()
+							.getWorkingSetUpdater();
 					if (updater != null && updater.getWorkingSet() != null) {
 						IJavaSearchScope scope = JavaSearchScopeFactory.getInstance().createJavaSearchScope(
 								updater.getWorkingSet(), false);
 						JavaSearchQuery query = new JavaSearchQuery(new ElementQuerySpecification(element,
 								IJavaSearchConstants.REFERENCES, scope, "Mylar Current Task Context"));
-						if (query != null) {
-							NewSearchUI.activateSearchResultView();
+						NewSearchUI.activateSearchResultView();
 
-							if (query.canRunInBackground()) {
-								NewSearchUI.runQueryInBackground(query);
-							} else {
-								IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
-								NewSearchUI.runQueryInForeground(progressService, query);
-							}
+						if (query.canRunInBackground()) {
+							NewSearchUI.runQueryInBackground(query);
+						} else {
+							IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
+							NewSearchUI.runQueryInForeground(progressService, query);
 						}
 					}
 				}

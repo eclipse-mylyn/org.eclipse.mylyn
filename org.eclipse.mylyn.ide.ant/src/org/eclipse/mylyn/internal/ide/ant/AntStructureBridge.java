@@ -100,7 +100,8 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 				}
 			}
 		} else if (o instanceof IFile) {
-			AbstractContextStructureBridge parentBridge = ContextCorePlugin.getDefault().getStructureBridge(parentContentType);
+			AbstractContextStructureBridge parentBridge = ContextCorePlugin.getDefault().getStructureBridge(
+					parentContentType);
 			return parentBridge.getParentHandle(handle);
 		} else {
 			// return null if we can't get a parents
@@ -144,7 +145,9 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 				// XXX needed if the editor is the only way to get the model
 				// get the active editor, which should be the ant editor so we
 				// can get the AntModel
-				IEditorPart editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+				IEditorPart editorPart = PlatformUI.getWorkbench()
+						.getActiveWorkbenchWindow()
+						.getActivePage()
 						.getActiveEditor();
 				if (editorPart instanceof AntEditor) {
 					AntModel antModel = ((AntEditor) editorPart).getAntModel();
@@ -178,14 +181,12 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 			return ((XmlNodeHelper) object).getHandle();
 		} else if (object instanceof AntElementNode) {
 			AntElementNode node = (AntElementNode) object;
-				String path = node.getElementPath();
-				if (path == null || node == null || node.getIFile() == null) {
-					return null;
-				}
-				XmlNodeHelper helper = new XmlNodeHelper(node.getIFile().getFullPath().toString(), path);
-				if (helper != null) {
-					return helper.getHandle();
-				}
+			String path = node.getElementPath();
+			if (path == null || node.getIFile() == null) {
+				return null;
+			}
+			XmlNodeHelper helper = new XmlNodeHelper(node.getIFile().getFullPath().toString(), path);
+			return helper.getHandle();
 		} else if (object instanceof File) {
 			File file = (File) object;
 			// get the handle for the build.xml file
@@ -262,8 +263,7 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 	}
 
 	/**
-	 * @see org.eclipse.mylyn.context.core.AbstractContextStructureBridge#getHandleForOffsetInObject(Object,
-	 *      int)
+	 * @see org.eclipse.mylyn.context.core.AbstractContextStructureBridge#getHandleForOffsetInObject(Object, int)
 	 */
 	@Override
 	public String getHandleForOffsetInObject(Object resource, int offset) {

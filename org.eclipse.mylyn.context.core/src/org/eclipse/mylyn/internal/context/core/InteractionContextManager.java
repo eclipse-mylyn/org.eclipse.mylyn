@@ -835,7 +835,7 @@ public class InteractionContextManager {
 			} else {
 				// make it a landmark by setting interest to 2 x landmark
 				// interest
-				if (element != null && bridge.canBeLandmark(element.getHandleIdentifier())) {
+				if (bridge.canBeLandmark(element.getHandleIdentifier())) {
 					changeValue = (2 * InteractionContextManager.getScalingFactors().getLandmark()) - originalValue + 1;
 				} else {
 					return false;

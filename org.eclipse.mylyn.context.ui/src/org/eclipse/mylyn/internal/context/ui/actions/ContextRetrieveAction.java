@@ -84,8 +84,8 @@ public class ContextRetrieveAction extends Action implements IViewActionDelegate
 					currentTask = ((TaskEditor) activeEditor).getTaskEditorInput().getTask();
 				}
 
-				if (currentTask instanceof AbstractTask) {
-					ContextUiUtil.downloadContext((AbstractTask) currentTask, attachment, PlatformUI
+				if (currentTask != null) {
+					ContextUiUtil.downloadContext(currentTask, attachment, PlatformUI
 							.getWorkbench().getProgressService());
 				} else {
 					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
@@ -98,7 +98,7 @@ public class ContextRetrieveAction extends Action implements IViewActionDelegate
 	public void run(AbstractTask task) {
 		ContextRetrieveWizard wizard = new ContextRetrieveWizard(task);
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-		if (wizard != null && shell != null && !shell.isDisposed()) {
+		if (shell != null && !shell.isDisposed()) {
 			WizardDialog dialog = new WizardDialog(shell, wizard);
 			dialog.create();
 			dialog.setTitle(ContextRetrieveWizard.WIZARD_TITLE);
@@ -125,8 +125,8 @@ public class ContextRetrieveAction extends Action implements IViewActionDelegate
 					action.setEnabled(false);
 				}
 			}
-		} else if (selectedTask instanceof AbstractTask) {
-			task = (AbstractTask) selectedTask;
+		} else {
+			task = selectedTask;
 			repository = TasksUiPlugin.getRepositoryManager().getRepository(task.getConnectorKind(),
 					task.getRepositoryUrl());
 			connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(task.getConnectorKind());
@@ -134,9 +134,6 @@ public class ContextRetrieveAction extends Action implements IViewActionDelegate
 			action.setEnabled(handler != null && handler.canDownloadAttachment(repository, task)
 					&& connector.getAttachmentHandler() != null
 					&& connector.getAttachmentHandler().hasRepositoryContext(repository, task));
-		} else {
-			task = null;
-			action.setEnabled(false);
-		}
+		} 
 	}
 }

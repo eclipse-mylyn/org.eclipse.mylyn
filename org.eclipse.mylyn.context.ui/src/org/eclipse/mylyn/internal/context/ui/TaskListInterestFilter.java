@@ -135,8 +135,8 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 				return false;
 			}
 		}
-		if (task instanceof AbstractTask) {
-			AbstractTask repositoryTask = (AbstractTask) task;
+		if (task != null) {
+			AbstractTask repositoryTask = task;
 
 			if(repositoryTask.getLastReadTimeStamp() == null){
 				return true;

@@ -17,7 +17,7 @@ import java.util.Comparator;
  * Ranks elements by their degree-of-interest.
  * 
  * @author Mik Kersten
- * @since	2.0
+ * @since 2.0
  */
 public class InterestComparator<T> implements Comparator<T> {
 
@@ -25,14 +25,12 @@ public class InterestComparator<T> implements Comparator<T> {
 		if (e1 instanceof IInteractionElement && e2 instanceof IInteractionElement) {
 			IInteractionElement info1 = (IInteractionElement) e1;
 			IInteractionElement info2 = (IInteractionElement) e2;
-			if (info1 != null && info2 != null) {
-				float v1 = info1.getInterest().getValue();
-				float v2 = info2.getInterest().getValue();
-				if (v1 >= v2)
-					return -1;
-				if (v1 < v2)
-					return 1;
-			}
+			float v1 = info1.getInterest().getValue();
+			float v2 = info2.getInterest().getValue();
+			if (v1 >= v2)
+				return -1;
+			if (v1 < v2)
+				return 1;
 		}
 		return 0;
 	}

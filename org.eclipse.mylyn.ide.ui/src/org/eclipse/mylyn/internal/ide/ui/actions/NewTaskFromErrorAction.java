@@ -57,8 +57,7 @@ public class NewTaskFromErrorAction implements IViewActionDelegate, ISelectionCh
 		NewTaskWizard wizard = new NewTaskWizard();
 
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-		if (wizard != null && shell != null && !shell.isDisposed()) {
-
+		if (shell != null && !shell.isDisposed()) {
 			WizardDialog dialog = new WizardDialog(shell, wizard);
 			dialog.setBlockOnOpen(true);
 			if (dialog.open() == WizardDialog.CANCEL) {

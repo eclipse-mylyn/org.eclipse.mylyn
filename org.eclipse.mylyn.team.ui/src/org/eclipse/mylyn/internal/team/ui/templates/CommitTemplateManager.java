@@ -146,15 +146,16 @@ public class CommitTemplateManager {
 					String description, String className) throws Exception {
 				if (keyword.equals(foundKeyword)) {
 					AbstractCommitTemplateVariable handler = (AbstractCommitTemplateVariable) element.createExecutableExtension(ATTR_CLASS);
-					if (handler instanceof AbstractCommitTemplateVariable) {
+					if (handler != null) {
 						(handler).setDescription(description);
 						(handler).setRecognizedKeyword(foundKeyword);
-					} else {
-						String recognizedKeyword = handler.getRecognizedKeyword();
-						if (recognizedKeyword == null || !recognizedKeyword.equals(foundKeyword)) {
-							throw new IllegalArgumentException("Keyword markup does not match handler implementation");
-						}
-					}
+					} 
+//					else {
+//						String recognizedKeyword = handler.getRecognizedKeyword();
+//						if (recognizedKeyword == null || !recognizedKeyword.equals(foundKeyword)) {
+//							throw new IllegalArgumentException("Keyword markup does not match handler implementation");
+//						}
+//					}
 
 					return handler;
 				}

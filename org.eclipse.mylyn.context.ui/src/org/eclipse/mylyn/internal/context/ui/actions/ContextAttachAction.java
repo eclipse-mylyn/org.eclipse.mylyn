@@ -81,7 +81,7 @@ public class ContextAttachAction extends Action implements IViewActionDelegate {
 
 		ContextAttachWizard wizard = new ContextAttachWizard(task);
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-		if (wizard != null && shell != null && !shell.isDisposed()) {
+		if (shell != null && !shell.isDisposed()) {
 			WizardDialog dialog = new WizardDialog(shell, wizard);
 			dialog.create();
 			dialog.setTitle(ContextAttachWizard.WIZARD_TITLE);
@@ -95,8 +95,8 @@ public class ContextAttachAction extends Action implements IViewActionDelegate {
 
 	public void selectionChanged(IAction action, ISelection selection) {
 		AbstractTask selectedTask = TaskListView.getSelectedTask(selection);
-		if (selectedTask instanceof AbstractTask) {
-			task = (AbstractTask) selectedTask;
+		if (selectedTask != null) {
+			task = selectedTask;
 			repository = TasksUiPlugin.getRepositoryManager().getRepository(task.getConnectorKind(),
 					task.getRepositoryUrl());
 			connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(task.getConnectorKind());
