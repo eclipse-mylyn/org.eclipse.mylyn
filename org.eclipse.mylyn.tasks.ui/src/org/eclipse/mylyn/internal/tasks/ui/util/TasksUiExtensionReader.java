@@ -292,7 +292,6 @@ public class TasksUiExtensionReader {
 			} else {
 				StatusHandler.log("could not not load connector core: " + connectorCore, null);
 			}
-
 		} catch (CoreException e) {
 			StatusHandler.log(e, "Could not load tasklist listener extension");
 		}
