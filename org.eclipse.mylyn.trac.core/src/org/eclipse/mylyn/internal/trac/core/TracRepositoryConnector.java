@@ -180,6 +180,17 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 					return false;
 				}
 
+				if (ids.size() == 1) {
+					// getChangedTickets() is expected to always return at least one ticket because
+					// the repository synchronization timestamp is set to the most recent modification date
+					Integer id = ids.iterator().next();
+					Date lastChanged = client.getTicketLastChanged(id);
+					if (since.equals(lastChanged)) {
+						// repository didn't actually change
+						return false;
+					}
+				}
+				
 				for (AbstractTask task : tasks) {
 					Integer id = getTicketId(task.getTaskId());
 					if (ids.contains(id)) {

@@ -189,4 +189,6 @@ public interface ITracClient {
 
 	void setProxy(Proxy proxy);
 
+	Date getTicketLastChanged(Integer id) throws TracException;
+
 }

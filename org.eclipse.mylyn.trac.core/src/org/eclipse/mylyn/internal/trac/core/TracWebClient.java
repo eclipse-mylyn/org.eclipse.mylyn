@@ -699,4 +699,8 @@ public class TracWebClient extends AbstractTracClient {
 
 	}
 
+	public Date getTicketLastChanged(Integer id) {
+		throw new UnsupportedOperationException();
+	}
+
 }

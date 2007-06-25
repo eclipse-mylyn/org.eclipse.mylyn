@@ -640,4 +640,10 @@ public class TracXmlRpcClient extends AbstractTracClient {
 		}
 	}
 
+	
+	public Date getTicketLastChanged(Integer id) throws TracException {
+		Object[] result = (Object[]) call("ticket.get", id);
+		return parseDate(result[2]);
+	}
+
 }
