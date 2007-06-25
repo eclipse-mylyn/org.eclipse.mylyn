@@ -17,6 +17,7 @@ import java.util.Calendar;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
@@ -24,6 +25,8 @@ import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.RetrieveTitleFromUrlJob;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.monitor.core.DateUtil;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
@@ -161,6 +164,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private FormToolkit toolkit;
 
+	private Action activateAction;
+
 	public static final String ID_EDITOR_PLANNING = "org.eclipse.mylyn.tasks.ui.planning.editor";
 
 	public TaskPlanningEditor(FormEditor editor) {
@@ -277,8 +282,10 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		form = managedForm.getForm();
 		toolkit = managedForm.getToolkit();
-		// form.setImage(TaskListImages.getImage(TaskListImages.CALENDAR));
-		// toolkit.decorateFormHeading(form.getForm());
+
+		if (task != null) {
+			addHeaderControls();
+		}
 
 		editorComposite = form.getBody();
 		GridLayout editorLayout = new GridLayout();
@@ -297,6 +304,50 @@ public class TaskPlanningEditor extends TaskFormPage {
 		} else if (summary != null) {
 			summary.setFocus();
 		}
+	}
+
+	private void addHeaderControls() {
+
+		if (parentEditor.getTopForm() != null) {
+
+			activateAction = new Action() {
+				@Override
+				public void run() {
+					if (!task.isActive()) {
+						setChecked(true);
+						new TaskActivateAction().run(task);
+					} else {
+						setChecked(false);
+						new TaskDeactivateAction().run(task);
+					}
+				}
+
+			};
+
+			activateAction.setImageDescriptor(TasksUiImages.TASK_ACTIVE_CENTERED);
+			activateAction.setToolTipText("Toggle Activation");
+			activateAction.setChecked(task.isActive());
+			parentEditor.getTopForm().getToolBarManager().add(activateAction);
+
+			parentEditor.getTopForm().getToolBarManager().update(true);
+		}
+
+		// if (form.getToolBarManager() != null) {
+		// form.getToolBarManager().add(repositoryLabelControl);
+		// if (repositoryTask != null) {
+		// SynchronizeEditorAction synchronizeEditorAction = new
+		// SynchronizeEditorAction();
+		// synchronizeEditorAction.selectionChanged(new
+		// StructuredSelection(this));
+		// form.getToolBarManager().add(synchronizeEditorAction);
+		// }
+		//
+		// // Header drop down menu additions:
+		// // form.getForm().getMenuManager().add(new
+		// // SynchronizeSelectedAction());
+		//
+		// form.getToolBarManager().update(true);
+		// }
 	}
 
 	@Override
