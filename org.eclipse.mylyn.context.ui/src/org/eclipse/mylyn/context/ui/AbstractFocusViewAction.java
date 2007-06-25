@@ -308,6 +308,9 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 	 *         installed
 	 */
 	private Set<Class<?>> getPreservedFilterClasses() {
+		if (ContextUiPlugin.getDefault() == null || viewPart == null) {
+			return Collections.emptySet();
+		}
 		try {
 			return ContextUiPlugin.getDefault().getPreservedFilterClasses(viewPart.getSite().getId());
 		} catch (Exception e) {
