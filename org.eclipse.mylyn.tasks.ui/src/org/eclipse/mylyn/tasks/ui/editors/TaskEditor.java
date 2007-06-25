@@ -122,11 +122,14 @@ public final class TaskEditor extends SharedHeaderFormEditor implements IBusyEdi
 
 	@SuppressWarnings("unchecked")
 	IFormPage[] getPages() {
+
 		ArrayList formPages = new ArrayList();
-		for (int i = 0; i < pages.size(); i++) {
-			Object page = pages.get(i);
-			if (page instanceof IFormPage)
-				formPages.add(page);
+		if (pages != null) {
+			for (int i = 0; i < pages.size(); i++) {
+				Object page = pages.get(i);
+				if (page instanceof IFormPage)
+					formPages.add(page);
+			}
 		}
 		return (IFormPage[]) formPages.toArray(new IFormPage[formPages.size()]);
 	}

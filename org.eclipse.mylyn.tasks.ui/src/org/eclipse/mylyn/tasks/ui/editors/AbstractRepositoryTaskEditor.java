@@ -2353,8 +2353,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		return outlinePage;
 	}
 
-	private boolean isDisposed = false;
-
 	private Button[] radios;
 
 	private Control[] radioOptions;
@@ -2634,7 +2632,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	@Override
 	public void showBusy(boolean busy) {
-		if (!isDisposed && busy != formBusy) {
+		if (!getManagedForm().getForm().isDisposed() && busy != formBusy) {
 			// parentEditor.showBusy(busy);
 			if (synchronizeEditorAction != null) {
 				synchronizeEditorAction.setEnabled(!busy);
@@ -2856,7 +2854,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 			}
 		} finally {
-			if (!this.isDisposed) {
+			if (!getManagedForm().getForm().isDisposed()) {
 				setGlobalBusy(false);
 			}
 		}
@@ -2894,7 +2892,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						StatusHandler.log(exception.getStatus());
 					} else if (exception.getStatus().getCode() == RepositoryStatus.REPOSITORY_COMMENT_REQUIRED) {
 						StatusHandler.displayStatus("Comment required", exception.getStatus());
-						if (!isDisposed && newCommentTextViewer != null
+						if (!getManagedForm().getForm().isDisposed() && newCommentTextViewer != null
 								&& !newCommentTextViewer.getControl().isDisposed()) {
 							newCommentTextViewer.getControl().setFocus();
 						}
