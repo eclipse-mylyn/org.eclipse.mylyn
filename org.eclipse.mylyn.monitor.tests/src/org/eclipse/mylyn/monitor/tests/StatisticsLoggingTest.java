@@ -61,6 +61,7 @@ public class StatisticsLoggingTest extends ContextTest {
 		logger.stopMonitoring();
 
 		report.getStatisticsFromInteractionHistory(logFile, new JobChangeAdapter() {
+			@Override
 			public void done(IJobChangeEvent event) {
 				List<InteractionEventSummary> summary = report.getLastParsedSummary().getSingleSummaries();
 				assertEquals(1, summary.size());
