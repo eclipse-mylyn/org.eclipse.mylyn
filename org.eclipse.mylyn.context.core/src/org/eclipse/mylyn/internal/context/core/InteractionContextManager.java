@@ -578,7 +578,7 @@ public class InteractionContextManager {
 			}
 			setContextCapturePaused(false);
 			if (contextFiles != null) {
-				contextFiles.add(getFileForContext(handleIdentifier));
+				contextFiles.remove(getFileForContext(handleIdentifier));
 			}
 		} catch (SecurityException e) {
 			StatusHandler.fail(e, "Could not delete context file", false);
