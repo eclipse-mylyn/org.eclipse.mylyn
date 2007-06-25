@@ -158,10 +158,12 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 		}
 	}
 	
+	@Override
 	public String getTaskKindLabel(AbstractTask repositoryTask) {
 		return IBugzillaConstants.BUGZILLA_TASK_KIND;
 	}
 	
+	@Override
 	public String getTaskKindLabel(RepositoryTaskData taskData) {
 		return IBugzillaConstants.BUGZILLA_TASK_KIND;
 	}

@@ -31,6 +31,7 @@ public class TracXmlRpcClientTest extends AbstractTracClientRepositoryTest {
 		super(Version.XML_RPC);
 	}
 
+	@Override
 	public void testValidate011() throws Exception {
 		validate(TracTestConstants.TEST_TRAC_011_URL);
 	}

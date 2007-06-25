@@ -29,10 +29,12 @@ public class TracTaskEditorFactory extends AbstractTaskEditorFactory {
 
 	private static final String TITLE = "Browser";
 	
+	@Override
 	public boolean canCreateEditorFor(AbstractTask task) {
 		return (task instanceof TracTask);
 	}
 
+	@Override
 	public boolean canCreateEditorFor(IEditorInput input) {
 		if (input instanceof RepositoryTaskEditorInput) {
 			RepositoryTaskEditorInput taskInput = (RepositoryTaskEditorInput) input;
@@ -46,6 +48,7 @@ public class TracTaskEditorFactory extends AbstractTaskEditorFactory {
 		return false;
 	}
 
+	@Override
 	public IEditorPart createEditor(TaskEditor parentEditor, IEditorInput editorInput) {
 		if (editorInput instanceof RepositoryTaskEditorInput) {
 			RepositoryTaskEditorInput taskInput = (RepositoryTaskEditorInput) editorInput;
@@ -67,6 +70,7 @@ public class TracTaskEditorFactory extends AbstractTaskEditorFactory {
 		return null;
 	}
 
+	@Override
 	public IEditorInput createEditorInput(AbstractTask task) {
 		TracTask tracTask = (TracTask) task;
 		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(TracCorePlugin.REPOSITORY_KIND,
@@ -83,10 +87,12 @@ public class TracTaskEditorFactory extends AbstractTaskEditorFactory {
 		}
 	}
 
+	@Override
 	public String getTitle() {
 		return "Trac";
 	}
 
+	@Override
 	public boolean providesOutline() {
 		return true;
 	}

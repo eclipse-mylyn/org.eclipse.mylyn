@@ -320,6 +320,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 			versions[0] = version;
 		}
 
+		@Override
 		public void run(IProgressMonitor monitor) throws CoreException {
 			try {
 				validate(monitor);

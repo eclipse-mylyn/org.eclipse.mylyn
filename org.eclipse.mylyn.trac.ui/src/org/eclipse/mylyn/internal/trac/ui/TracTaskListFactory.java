@@ -33,16 +33,19 @@ public class TracTaskListFactory extends AbstractTaskListFactory {
 
 	private static final String KEY_TRAC_QUERY = KEY_TRAC + AbstractTaskListFactory.KEY_QUERY;
 	
+	@Override
 	public String getTaskElementName() {
 		return KEY_TRAC_TASK;
 	}
 	
+	@Override
 	public Set<String> getQueryElementNames() {
 		Set<String> names = new HashSet<String>();
 		names.add(KEY_TRAC_QUERY);
 		return names;
 	}
 
+	@Override
 	public boolean canCreate(AbstractTask task) {
 		return task instanceof TracTask;
 	}

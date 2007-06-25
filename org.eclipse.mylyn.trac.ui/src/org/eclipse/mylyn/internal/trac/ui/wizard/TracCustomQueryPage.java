@@ -493,6 +493,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 		return super.performAction();
 	}
 
+	@Override
 	public IDialogSettings getDialogSettings() {
 		IDialogSettings settings = TracUiPlugin.getDefault().getDialogSettings();
 		IDialogSettings dialogSettings = settings.getSection(PAGE_NAME);
@@ -515,6 +516,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 		return true;
 	}
 
+	@Override
 	public void saveState() {
 		String repoId = "." + repository.getUrl();
 		IDialogSettings settings = getDialogSettings();

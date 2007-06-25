@@ -93,11 +93,8 @@ public abstract class AbstractRepositoryConnector {
 	 */
 	public AbstractTask createTaskFromExistingId(TaskRepository repository, String id, boolean retrieveSubTasks,
 			IProgressMonitor monitor) throws CoreException {
-		AbstractTask task = taskList.getTask(repository.getUrl(), id);
-		AbstractTask repositoryTask = null;
-		if (task instanceof AbstractTask) {
-			repositoryTask = (AbstractTask) task;
-		} else if (task == null && getTaskDataHandler() != null) {
+		AbstractTask repositoryTask = taskList.getTask(repository.getUrl(), id);
+		if (repositoryTask == null && getTaskDataHandler() != null) {
 			RepositoryTaskData taskData = null;
 			taskData = getTaskDataHandler().getTaskData(repository, id, new SubProgressMonitor(monitor, 1));
 			if (taskData != null) {

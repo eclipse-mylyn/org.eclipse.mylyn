@@ -32,6 +32,7 @@ public class TracWebClientTest extends AbstractTracClientRepositoryTest {
 		validate(TracTestConstants.TEST_TRAC_096_URL);
 	}
 
+	@Override
 	public void testValidate011() throws Exception {
 		try {
 			validate(TracTestConstants.TEST_TRAC_011_URL);

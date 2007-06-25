@@ -93,6 +93,7 @@ public class RepositoryStatus extends Status {
 	/**
 	 * Returns the message that is relevant to the code of this status.
 	 */
+	@Override
 	public String getMessage() {
 		String message = super.getMessage();
 		if (message != null && !"".equals(message)) {

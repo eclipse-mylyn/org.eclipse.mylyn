@@ -81,6 +81,7 @@ public class ScheduledTaskContainer extends AbstractTaskCategory {
 				&& (endDate.getTimeInMillis() >= cal.getTimeInMillis());
 	}
 
+	@Override
 	public void clear() {
 		totalEstimated = 0;
 		totalElapsed = 0;
@@ -147,6 +148,7 @@ public class ScheduledTaskContainer extends AbstractTaskCategory {
 		// ignore
 	}
 
+	@Override
 	public String getPriority() {
 		return "";
 	}

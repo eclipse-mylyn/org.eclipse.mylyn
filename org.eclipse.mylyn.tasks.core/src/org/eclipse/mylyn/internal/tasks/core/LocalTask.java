@@ -34,14 +34,17 @@ public class LocalTask extends AbstractTask {
 		return LocalRepositoryConnector.REPOSITORY_KIND;
 	}
 
+	@Override
 	public boolean isNotified() {
 		return true;
 	}
 	
+	@Override
 	public String getLastReadTimeStamp() {
 		return SYNC_DATE_NOW;
 	}
 	
+	@Override
 	public String getOwner() {
 		return LocalRepositoryConnector.REPOSITORY_KIND;
 	}

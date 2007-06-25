@@ -211,6 +211,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 		//MultiStatus queryStatus = new MultiStatus(TracUiPlugin.PLUGIN_ID, IStatus.OK, "Query result", null);
 		final List<AbstractTask> result = new ArrayList<AbstractTask>();
 		QueryHitCollector hitCollector = new QueryHitCollector(new TaskFactory(repository)) {
+			@Override
 			public void accept(RepositoryTaskData data) {
 				fail("Unexpected call to accept()");
 			}

@@ -685,6 +685,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 
 	}
 
+	@Override
 	protected String getHistoryUrl() {
 		if (repository != null && taskData != null) {
 			return repository.getUrl() + IBugzillaConstants.URL_BUG_ACTIVITY + taskData.getId();

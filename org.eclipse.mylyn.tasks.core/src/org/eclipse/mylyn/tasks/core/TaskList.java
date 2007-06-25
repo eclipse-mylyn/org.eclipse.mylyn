@@ -173,17 +173,14 @@ public class TaskList {
 
 	public void refactorRepositoryUrl(String oldRepositoryUrl, String newRepositoryUrl) {
 		for (AbstractTask task : tasks.values()) {
-			if (task instanceof AbstractTask) {
-				AbstractTask repositoryTask = (AbstractTask) task;
-				if (oldRepositoryUrl.equals(RepositoryTaskHandleUtil.getRepositoryUrl(repositoryTask.getHandleIdentifier()))) {
-					tasks.remove(repositoryTask.getHandleIdentifier());
-					repositoryTask.setRepositoryUrl(newRepositoryUrl);
-					tasks.put(repositoryTask.getHandleIdentifier(), repositoryTask);
+			if (oldRepositoryUrl.equals(RepositoryTaskHandleUtil.getRepositoryUrl(task.getHandleIdentifier()))) {
+				tasks.remove(task.getHandleIdentifier());
+				task.setRepositoryUrl(newRepositoryUrl);
+				tasks.put(task.getHandleIdentifier(), task);
 
-					String taskUrl = repositoryTask.getUrl();
-					if (taskUrl != null && taskUrl.startsWith(oldRepositoryUrl)) {
-						repositoryTask.setUrl(newRepositoryUrl + taskUrl.substring(oldRepositoryUrl.length()));
-					}
+				String taskUrl = task.getUrl();
+				if (taskUrl != null && taskUrl.startsWith(oldRepositoryUrl)) {
+					task.setUrl(newRepositoryUrl + taskUrl.substring(oldRepositoryUrl.length()));
 				}
 			}
 		}
@@ -378,7 +375,7 @@ public class TaskList {
 	}
 
 	/**
-	 * @return	First in set of all active tasks.  Normal user operations only supports a single active task.
+	 * @return First in set of all active tasks. Normal user operations only supports a single active task.
 	 */
 	public AbstractTask getActiveTask() {
 		if (activeTasks.size() > 0) {
@@ -470,14 +467,10 @@ public class TaskList {
 		if (!RepositoryTaskHandleUtil.isValidTaskId(taskId)) {
 			return null;
 		}
-		
+
 		String handle = RepositoryTaskHandleUtil.getHandle(repositoryUrl, taskId);
 		AbstractTask task = getTask(handle);
-		if (task instanceof AbstractTask) {
-			return (AbstractTask) task;
-		} else {
-			return null;
-		}
+		return task;
 	}
 
 	/**
@@ -488,11 +481,9 @@ public class TaskList {
 	 */
 	public AbstractTask getRepositoryTask(String taskUrl) {
 		for (AbstractTask currTask : tasks.values()) {
-			if (currTask instanceof AbstractTask) {
-				String currUrl = ((AbstractTask) currTask).getUrl();
-				if (currUrl != null && !currUrl.equals("") && currUrl.equals(taskUrl)) {
-					return (AbstractTask) currTask;
-				}
+			String currUrl = currTask.getUrl();
+			if (currUrl != null && !currUrl.equals("") && currUrl.equals(taskUrl)) {
+				return currTask;
 			}
 		}
 		return null;
@@ -507,7 +498,8 @@ public class TaskList {
 	public AbstractTask getTaskByKey(String repositoryUrl, String taskKey) {
 		for (AbstractTask task : tasks.values()) {
 			String currentTaskKey = task.getTaskKey();
-			if (currentTaskKey != null && currentTaskKey.equals(taskKey) && task.getRepositoryUrl().equals(repositoryUrl)) {
+			if (currentTaskKey != null && currentTaskKey.equals(taskKey)
+					&& task.getRepositoryUrl().equals(repositoryUrl)) {
 				return task;
 			}
 		}
@@ -516,7 +508,7 @@ public class TaskList {
 
 	public AbstractTaskCategory getContainerForHandle(String categoryHandle) {
 		for (AbstractTaskCategory cat : categories.values()) {
-			if (cat instanceof AbstractTaskCategory) {
+			if (cat != null) {
 				if (cat.getHandleIdentifier().equals(categoryHandle)) {
 					return cat;
 				}
@@ -602,11 +594,8 @@ public class TaskList {
 		Set<AbstractTask> repositoryTasks = new HashSet<AbstractTask>();
 		if (repositoryUrl != null) {
 			for (AbstractTask task : tasks.values()) {
-				if (task instanceof AbstractTask) {
-					AbstractTask repositoryTask = (AbstractTask) task;
-					if (repositoryTask.getRepositoryUrl().equals(repositoryUrl)) {
-						repositoryTasks.add(repositoryTask);
-					}
+				if (task.getRepositoryUrl().equals(repositoryUrl)) {
+					repositoryTasks.add(task);
 				}
 			}
 		}

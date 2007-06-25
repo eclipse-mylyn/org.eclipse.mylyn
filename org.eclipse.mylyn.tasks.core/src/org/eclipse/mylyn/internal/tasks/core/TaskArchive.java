@@ -27,6 +27,7 @@ public class TaskArchive extends AbstractTaskCategory {
 		super(HANDLE);
 	}
 
+	@Override
 	public String getPriority() {
 		return PriorityLevel.P5.toString();
 	}

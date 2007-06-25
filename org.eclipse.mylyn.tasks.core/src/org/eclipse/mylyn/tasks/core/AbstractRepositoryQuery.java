@@ -37,6 +37,7 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 		super(description);
 	}
 
+	@Override
 	public String getPriority() {
 		if (super.isEmpty()) {
 			return PriorityLevel.P1.toString();

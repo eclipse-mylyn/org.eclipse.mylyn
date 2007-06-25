@@ -188,6 +188,7 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 			this.version = version;
 		}
 
+		@Override
 		public void run(IProgressMonitor monitor) throws CoreException {
 			try {
 				validate();

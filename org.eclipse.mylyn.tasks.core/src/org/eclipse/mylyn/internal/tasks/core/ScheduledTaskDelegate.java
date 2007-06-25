@@ -40,9 +40,6 @@ public class ScheduledTaskDelegate extends AbstractTask {
 
 	public ScheduledTaskDelegate(ScheduledTaskContainer parent, AbstractTask task, Calendar start, Calendar end, long activity) {
 		super(task.getRepositoryUrl(), task.getTaskId(), task.getSummary());
-		if (task == null) {
-			throw new RuntimeException("attempted to instantiated with null task: " + parent);
-		}
 		this.task = task;
 		if (start != null) {
 			this.startMili = start.getTimeInMillis();
@@ -110,66 +107,82 @@ public class ScheduledTaskDelegate extends AbstractTask {
 		return task.getParentContainers();
 	}
 
+	@Override
 	public Set<AbstractTask> getChildren() {
 		return task.getChildren();
 	}
 
+	@Override
 	public Date getCompletionDate() {
 		return task.getCompletionDate();
 	}
 
+	@Override
 	public Date getCreationDate() {
 		return task.getCreationDate();
 	}
 
+	@Override
 	public String getSummary() {
 		return task.getSummary();
 	}
 
+	@Override
 	public int getEstimateTimeHours() {
 		return task.getEstimateTimeHours();
 	}
 
+	@Override
 	public String getTaskKind() {
 		return task.getTaskKind();
 	}
 
+	@Override
 	public String getNotes() {
 		return task.getNotes();
 	}
 
+	@Override
 	public String getPriority() {
 		return task.getPriority();
 	}
 
+	@Override
 	public Date getScheduledForDate() {
 		return task.getScheduledForDate();
 	}
 
+	@Override
 	public String getUrl() {
 		return task.getUrl();
 	}
 
+	@Override
 	public boolean isReminded() {
 		return task.isReminded();
 	}
 
+	@Override
 	public boolean hasValidUrl() {
 		return task.hasValidUrl();
 	}
 
+	@Override
 	public boolean isActive() {
 		return task.isActive();
 	}
 
+	@Override
 	public boolean isCompleted() {
 		return task.isCompleted();
 	}
 
+	@Override
 	public boolean isPastReminder() {
 		return task.isPastReminder();
 	}
 
+	@Override
 	public void setActive(boolean active) {
 		task.setActive(active);
 	}
@@ -184,18 +197,22 @@ public class ScheduledTaskDelegate extends AbstractTask {
 		task.removeParentContainer(container);
 	}
 
+	@Override
 	public void setCompleted(boolean completed) {
 		task.setCompleted(completed);
 	}
 
+	@Override
 	public void setCompletionDate(Date date) {
 		task.setCompletionDate(date);
 	}
 
+	@Override
 	public void setCreationDate(Date date) {
 		task.setCreationDate(date);
 	}
 
+	@Override
 	public void setEstimatedTimeHours(int estimated) {
 		task.setEstimatedTimeHours(estimated);
 	}
@@ -204,49 +221,59 @@ public class ScheduledTaskDelegate extends AbstractTask {
 	// task.setHandleIdentifier(taskId);
 	// }
 
+	@Override
 	public void setTaskKind(String kind) {
 		task.setTaskKind(kind);
 	}
 
+	@Override
 	public void setNotes(String notes) {
 		task.setNotes(notes);
 	}
 
+	@Override
 	public void setPriority(String priority) {
 		task.setPriority(priority);
 	}
 
+	@Override
 	public void setReminded(boolean reminded) {
 		task.setReminded(reminded);
 	}
 
+	@Override
 	public void setScheduledForDate(Date date) {
 		task.setScheduledForDate(date);
 	}
 
+	@Override
 	public void setUrl(String url) {
 		task.setUrl(url);
 	}
 
+	@Override
 	public int compareTo(AbstractTaskContainer taskListElement) {
 		return task.toString().compareTo(((AbstractTask) taskListElement).toString());
 	}
 
+	@Override
 	public void setSummary(String description) {
 		task.setSummary(description);
 	}
 
+	@Override
 	public Date getDueDate() {
 		return task.getDueDate();
 	}
 
+	@Override
 	public void setDueDate(Date date) {
 		task.setDueDate(date);
 	}
 
 	@Override
 	public boolean isLocal() {
-		return ((AbstractTask)task).isLocal();
+		return task.isLocal();
 	}
 
 	@Override

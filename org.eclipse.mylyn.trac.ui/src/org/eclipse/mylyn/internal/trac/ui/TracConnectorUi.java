@@ -47,6 +47,7 @@ public class TracConnectorUi extends AbstractRepositoryConnectorUi {
 		return TracHyperlinkUtil.findHyperlinks(repository, text, lineOffset, regionOffset);
 	}
 
+	@Override
 	public String getTaskKindLabel(AbstractTask repositoryTask) {
 		return "Ticket";
 	}

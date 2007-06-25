@@ -34,6 +34,7 @@ public class BugzillaTaskEditorFactory extends AbstractTaskEditorFactory {
 
 	private static final String TITLE = "Bugzilla";
 
+	@Override
 	public EditorPart createEditor(TaskEditor parentEditor, IEditorInput editorInput) {
 		AbstractRepositoryTaskEditor editor = null;
 		if (editorInput instanceof RepositoryTaskEditorInput) {
@@ -49,6 +50,7 @@ public class BugzillaTaskEditorFactory extends AbstractTaskEditorFactory {
 		return editor;
 	}
 
+	@Override
 	public IEditorInput createEditorInput(AbstractTask task) {
 		if (task instanceof BugzillaTask) {
 			BugzillaTask bugzillaTask = (BugzillaTask) task;
@@ -60,18 +62,22 @@ public class BugzillaTaskEditorFactory extends AbstractTaskEditorFactory {
 		return null;
 	}
 
+	@Override
 	public String getTitle() {
 		return TITLE;
 	}
 
+	@Override
 	public boolean canCreateEditorFor(AbstractTask task) {
 		return task instanceof BugzillaTask;
 	}
 
+	@Override
 	public boolean providesOutline() {
 		return true;
 	}
 
+	@Override
 	public boolean canCreateEditorFor(IEditorInput input) {
 		if (input instanceof RepositoryTaskEditorInput) {
 			return BugzillaCorePlugin.REPOSITORY_KIND.equals(((RepositoryTaskEditorInput) input).getRepository()
