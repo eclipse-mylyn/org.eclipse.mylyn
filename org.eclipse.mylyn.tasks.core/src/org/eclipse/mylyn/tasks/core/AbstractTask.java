@@ -169,10 +169,13 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 		this.url = "";
 	}
 
+	/**
+	 * Final to preserve the handle identifier format required by the framework.
+	 */
 	public final String getHandleIdentifier() {
-		return RepositoryTaskHandleUtil.getHandle(repositoryUrl, taskId);
+		return super.getHandleIdentifier();
 	}
-
+	
 	/**
 	 * True for tasks that can be modified without a round-trip to a server. For example, such a task can be marked
 	 * completed via the Task List.
@@ -237,8 +240,13 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 		return repositoryUrl;
 	}
 
+	public final void setHandleIdentifier(String handleIdentifier) {
+		throw new RuntimeException("Cannot set the handle identifier of a task, set repository URL instead.");
+	}
+	
 	public final void setRepositoryUrl(String repositoryUrl) {
 		this.repositoryUrl = repositoryUrl;
+		super.setHandleIdentifier(RepositoryTaskHandleUtil.getHandle(repositoryUrl, taskId));
 	}
 
 	/**

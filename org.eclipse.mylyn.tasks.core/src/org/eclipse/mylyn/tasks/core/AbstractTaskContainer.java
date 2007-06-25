@@ -25,7 +25,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
  */
 public abstract class AbstractTaskContainer extends PlatformObject implements Comparable<AbstractTaskContainer> {
 
-	private String handle = "";
+	private String handleIdentifier = "";
 
 	private Set<AbstractTask> children = new CopyOnWriteArraySet<AbstractTask>();
 
@@ -35,8 +35,8 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	protected String url = null;
 
 	public AbstractTaskContainer(String handleAndDescription) {
-		assert handle != null;
-		this.handle = handleAndDescription;
+		assert handleIdentifier != null;
+		this.handleIdentifier = handleAndDescription;
 	}
 
 	/**
@@ -74,7 +74,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	}
 
 	public String getSummary() {
-		return handle;
+		return handleIdentifier;
 	}
 
 	public boolean isEmpty() {
@@ -82,16 +82,16 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	}
 
 	public String getHandleIdentifier() {
-		return handle;
+		return handleIdentifier;
 	}
 
-	public void setHandleIdentifier(String handle) {
-		this.handle = handle;
+	public void setHandleIdentifier(String handleIdentifier) {
+		this.handleIdentifier = handleIdentifier;
 	}
 
 	@Override
 	public int hashCode() {
-		return handle.hashCode();
+		return handleIdentifier.hashCode();
 	}
 
 	public void setUrl(String url) {
@@ -119,7 +119,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 
 	@Override
 	public String toString() {
-		return "container: " + handle;
+		return "container: " + handleIdentifier;
 	}
 
 	public String getPriority() {
