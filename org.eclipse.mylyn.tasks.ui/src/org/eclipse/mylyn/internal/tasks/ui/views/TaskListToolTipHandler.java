@@ -15,6 +15,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -116,7 +117,7 @@ public class TaskListToolTipHandler {
 			return sb.toString();
 		} else if (element instanceof AbstractTask) {
 			AbstractTask task = (AbstractTask) element;
-			StringBuilder sb = new StringBuilder();
+			StringBuilder sb = new StringBuilder();			
 			sb.append(TasksUiPlugin.getConnectorUi(task.getConnectorKind()).getTaskKindLabel(task));
 			String key = task.getTaskKey();
 			if (key != null) {
@@ -155,10 +156,9 @@ public class TaskListToolTipHandler {
 			Date date = task.getScheduledForDate();
 			if (date != null) {
 				sb.append("Scheduled for: ");
+				sb.append(new SimpleDateFormat("E").format(date)).append(", ");
 				sb.append(DateFormat.getDateInstance(DateFormat.LONG).format(date));
-				sb.append(" (");
-				sb.append(DateFormat.getTimeInstance(DateFormat.SHORT).format(date));
-				sb.append(")\n");
+				sb.append(" (").append(DateFormat.getTimeInstance(DateFormat.SHORT).format(date)).append(")\n");
 			}
 
 			long elapsed = TasksUiPlugin.getTaskListManager().getElapsedTime(task);
@@ -203,7 +203,7 @@ public class TaskListToolTipHandler {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
 			status = query.getSynchronizationStatus();
 		}
-
+		
 		if (status != null) {
 			StringBuilder sb = new StringBuilder();
 			sb.append(status.getMessage());
@@ -211,8 +211,8 @@ public class TaskListToolTipHandler {
 				sb.append(" Please synchronize manually for full error message.");
 			}
 			return sb.toString();
-		}
-
+		} 
+		
 		return null;
 	}
 
@@ -229,7 +229,7 @@ public class TaskListToolTipHandler {
 			}
 		}
 
-		String text = "Completed " + completed + " of " + total;
+		String text = "Total: " + total + " (Complete: " + completed + ", Incomplete: " + (total - completed) + ")";
 		return new ProgressData(completed, total, text);
 	}
 
@@ -312,13 +312,13 @@ public class TaskListToolTipHandler {
 					Tree w = (Tree) widget;
 					widget = w.getItem(widgetPosition);
 				}
-
+				
 				if (widget == null) {
 					hideTooltip();
 					tipWidget = null;
 					return;
 				}
-
+				
 				if (widget == tipWidget) {
 					// already displaying tooltip
 					return;
@@ -391,7 +391,7 @@ public class TaskListToolTipHandler {
 		tipShell = new Shell(parent.getDisplay(), SWT.TOOL | SWT.NO_FOCUS | SWT.MODELESS | SWT.ON_TOP);
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 2;
-		gridLayout.marginWidth = 2;
+		gridLayout.marginWidth = 5;
 		gridLayout.marginHeight = 2;
 		tipShell.setLayout(gridLayout);
 		tipShell.setBackground(tipShell.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
@@ -401,11 +401,6 @@ public class TaskListToolTipHandler {
 		String detailsText = getDetailsText(element);
 		if (detailsText != null) {
 			addIconAndLabel(tipShell, null, detailsText);
-		}
-
-		String statusText = getStatusText(element);
-		if (statusText != null) {
-			addIconAndLabel(tipShell, TasksUiImages.getImage(TasksUiImages.WARNING), statusText);
 		}
 
 		String synchText = getSynchText(element);
@@ -425,23 +420,42 @@ public class TaskListToolTipHandler {
 
 		ProgressData progress = getProgressData(element);
 		if (progress != null) {
-			addLabel(tipShell, progress.text);
+			addIconAndLabel(tipShell, null, progress.text);
 
+			// label height need to be set to 0 to remove gap below the progress bar 
+			Label label = new Label(tipShell, SWT.NONE);
+			GridData labelGridData = new GridData(SWT.FILL, SWT.TOP, true, false);
+			labelGridData.heightHint = 0;
+			label.setLayoutData(labelGridData);
+			
 			Composite progressComposite = new Composite(tipShell, SWT.NONE);
 			GridLayout progressLayout = new GridLayout(1, false);
-			progressLayout.marginWidth = 2;
+			progressLayout.marginWidth = 0;
 			progressLayout.marginHeight = 0;
-			progressLayout.marginBottom = 2;
-			progressLayout.horizontalSpacing = 0;
-			progressLayout.verticalSpacing = 0;
 			progressComposite.setLayout(progressLayout);
-			progressComposite.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false, 4, 1));
+			progressComposite.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 
 			WorkweekProgressBar taskProgressBar = new WorkweekProgressBar(progressComposite);
-			taskProgressBar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+			taskProgressBar.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 			taskProgressBar.reset(progress.completed, progress.total);
+
+			// do we really need custom canvas? code below renders the same
+//			IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
+//			Color color = themeManager.getCurrentTheme().getColorRegistry().get(
+//					TaskListColorsAndFonts.THEME_COLOR_TASK_TODAY_COMPLETED);
+//			ProgressBar bar = new ProgressBar(tipShell, SWT.SMOOTH);
+//			bar.setForeground(color);
+//			bar.setSelection((int) (100d * progress.completed / progress.total));
+//			GridData gridData = new GridData(SWT.FILL, SWT.TOP, true, false);
+//			gridData.heightHint = 5;
+//			bar.setLayoutData(gridData);
 		}
 
+		String statusText = getStatusText(element);
+		if (statusText != null) {
+			addIconAndLabel(tipShell, TasksUiImages.getImage(TasksUiImages.WARNING), statusText);
+		}
+		
 		tipShell.pack();
 		setHoverLocation(tipShell, location);
 		tipShell.setVisible(true);
@@ -457,17 +471,6 @@ public class TaskListToolTipHandler {
 		return null;
 	}
 
-	private void addLabel(Shell parent, String text) {
-		Label textLabel = new Label(parent, SWT.NONE);
-		textLabel.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
-		textLabel.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
-		textLabel.setAlignment(SWT.CENTER);
-		GridData gd = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER);
-		gd.horizontalSpan = 2;
-		textLabel.setLayoutData(gd);
-		textLabel.setText(removeTrailingNewline(text));
-	}
-
 	private String removeTrailingNewline(String text) {
 		if (text.endsWith("\n")) {
 			return text.substring(0, text.length() - 1);
@@ -479,15 +482,13 @@ public class TaskListToolTipHandler {
 		Label imageLabel = new Label(parent, SWT.NONE);
 		imageLabel.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
 		imageLabel.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
-		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING);
-		imageLabel.setLayoutData(gd);
+		imageLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING));
 		imageLabel.setImage(image);
 
 		Label textLabel = new Label(parent, SWT.NONE);
 		textLabel.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
 		textLabel.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
-		gd = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER);
-		textLabel.setLayoutData(gd);
+		textLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER));
 		textLabel.setText(removeTrailingNewline(text));
 	}
 
