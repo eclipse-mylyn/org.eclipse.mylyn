@@ -2723,7 +2723,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					if (modifiedTask != null) {
 						// Attach context if required
 						if (attachContext && connector.getAttachmentHandler() != null) {
-							connector.getAttachmentHandler().attachContext(repository, modifiedTask, "", new SubProgressMonitor(monitor, 1));
+							connector.getAttachmentHandler().attachContext(repository, modifiedTask, "",
+									new SubProgressMonitor(monitor, 1));
 						}
 
 						modifiedTask.setSubmitting(true);
@@ -2927,15 +2928,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				public void run() {
 					if (getCategory() != null) {
 						TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(newTask, getCategory());
-
 					}
 				}
 			});
-
 		}
 
 		return newTask;
-
 	}
 
 	/**

@@ -175,7 +175,6 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 			List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(
 					TasksUiPlugin.getTaskListManager().getTaskList().getCategories());
 
-			// This is added to solve Bug 180252
 			Collections.sort(categories);
 			for (final AbstractTaskCategory category : categories) {
 				if (!category.equals(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer())) {

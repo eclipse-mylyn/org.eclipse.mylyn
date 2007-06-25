@@ -223,4 +223,8 @@ public class SearchHitCollector implements ISearchQuery, ITaskCollector {
 		return taskResults;
 	}
 
+	public AbstractRepositoryQuery getRepositoryQuery() {
+		return repositoryQuery;
+	}	
+
 }

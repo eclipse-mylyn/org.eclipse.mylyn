@@ -1,6 +1,7 @@
 package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.text.MessageFormat;
+import java.util.Calendar;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -63,15 +64,11 @@ public class AddExistingTaskJob extends Job {
 				repository.getConnectorKind());
 		try {
 			final AbstractTask newTask = connector.createTaskFromExistingId(repository, taskId, monitor);
-
-//			if (newTask instanceof AbstractTask) {
-//				// TODO: encapsulate in abstract connector
-//				AbstractTask repositoryTask = (AbstractTask) newTask;
-//				TasksUiPlugin.getTaskDataManager().push(newTask.getHandleIdentifier(),
-//						repositoryTask.getTaskData());
-//			}
-
 			if (newTask != null) {
+				Calendar newSchedule = Calendar.getInstance();
+				TasksUiPlugin.getTaskListManager().setScheduledEndOfDay(newSchedule);
+				TasksUiPlugin.getTaskListManager().setScheduledFor(newTask, newSchedule.getTime());
+				
 				TasksUiUtil.refreshAndOpenTaskListElement(newTask);
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 
@@ -90,7 +87,6 @@ public class AddExistingTaskJob extends Job {
 						TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(newTask, category);
 						taskListView.getViewer().setSelection(new StructuredSelection(newTask));
 					}
-
 				});
 			} else {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {

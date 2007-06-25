@@ -10,20 +10,35 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.ui.search;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.mylyn.internal.tasks.ui.AddExistingTaskJob;
+import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskTableLabelProvider;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.tasks.ui.editors.RepositoryTaskEditorInput;
 import org.eclipse.search.internal.ui.SearchMessages;
 import org.eclipse.search.ui.IContextMenuConstants;
 import org.eclipse.search.ui.text.AbstractTextSearchViewPage;
@@ -33,10 +48,12 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.IShowInTargetList;
+import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.themes.IThemeManager;
 
 /**
@@ -75,6 +92,8 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 
 	private OpenSearchResultAction openInEditorAction;
 
+	private CreateQueryFromSearchAction addTaskListAction;
+
 	private static final String[] SHOW_IN_TARGETS = new String[] { IPageLayout.ID_RES_NAV };
 
 	private static final IShowInTargetList SHOW_IN_TARGET_LIST = new IShowInTargetList() {
@@ -95,6 +114,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		currentSortOrder = ORDER_DEFAULT;
 
 		openInEditorAction = new OpenSearchResultAction("Open in Editor", this);
+		addTaskListAction = new CreateQueryFromSearchAction("Create Query from Search...", this);
 	}
 
 	@Override
@@ -212,25 +232,66 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 			throws PartInitException {
 		AbstractTask repositoryHit = (AbstractTask) match.getElement();
 
-		TasksUiUtil.openRepositoryTask(repositoryHit.getRepositoryUrl(), repositoryHit.getTaskId(), repositoryHit
-				.getUrl());
+		TasksUiUtil.openRepositoryTask(repositoryHit.getRepositoryUrl(), repositoryHit.getTaskId(),
+				repositoryHit.getUrl());
 	}
 
 	@Override
-	protected void fillContextMenu(IMenuManager mgr) {
-		super.fillContextMenu(mgr);
-
-		// Create the submenu for sorting
-		MenuManager sortMenu = new MenuManager(SearchMessages.SortDropDownAction_label);
-		sortMenu.add(sortByPriorityAction);
-		sortMenu.add(sortByDescriptionAction);
+	protected void fillContextMenu(IMenuManager menuManager) {
+		super.fillContextMenu(menuManager);
+		MenuManager sortMenuManager = new MenuManager(SearchMessages.SortDropDownAction_label);
+		sortMenuManager.add(sortByPriorityAction);
+		sortMenuManager.add(sortByDescriptionAction);
 
 		sortByPriorityAction.setChecked(currentSortOrder == sortByPriorityAction.getSortOrder());
 		sortByDescriptionAction.setChecked(currentSortOrder == sortByDescriptionAction.getSortOrder());
 
 		// Add the new context menu items
-		mgr.appendToGroup(IContextMenuConstants.GROUP_VIEWER_SETUP, sortMenu);
-		mgr.appendToGroup(IContextMenuConstants.GROUP_OPEN, openInEditorAction);
+		menuManager.appendToGroup(IContextMenuConstants.GROUP_VIEWER_SETUP, sortMenuManager);
+		menuManager.appendToGroup(IContextMenuConstants.GROUP_OPEN, openInEditorAction);
+		menuManager.appendToGroup(IContextMenuConstants.GROUP_OPEN, addTaskListAction);
+
+		// HACK: this should be a contribution
+		final MenuManager subMenuManager = new MenuManager("Add to " + TaskListView.LABEL_VIEW + " Category");
+		List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(TasksUiPlugin.getTaskListManager()
+				.getTaskList()
+				.getCategories());
+
+		Collections.sort(categories);
+		for (final AbstractTaskCategory category : categories) {
+			if (!category.equals(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer())) {
+				Action action = new Action() {
+					@Override
+					public void run() {
+						moveToCategory(category);
+					}
+				};
+				String text = category.getSummary();
+				action.setText(text);
+				action.setImageDescriptor(TasksUiImages.CATEGORY);
+				subMenuManager.add(action);
+			}
+		}
+		menuManager.appendToGroup(IContextMenuConstants.GROUP_OPEN, subMenuManager);
+	}
+
+	private void moveToCategory(AbstractTaskCategory category) {
+		final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
+		StructuredSelection selection = (StructuredSelection) this.getViewer().getSelection();
+		for (Iterator<?> iterator = selection.iterator(); iterator.hasNext();) {
+			Object selectedObject = iterator.next();
+			if (selectedObject instanceof AbstractTask) {
+				AbstractTask task = (AbstractTask) selectedObject;
+				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(task.getRepositoryUrl());
+				final AddExistingTaskJob job = new AddExistingTaskJob(repository, task.getTaskId(), category);
+				job.schedule();
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						progressService.showInDialog(RepositorySearchResultView.this.getSite().getShell(), job);
+					}
+				});
+			}
+		}
 	}
 
 	class SearchViewTableLabelProvider extends TaskTableLabelProvider {
