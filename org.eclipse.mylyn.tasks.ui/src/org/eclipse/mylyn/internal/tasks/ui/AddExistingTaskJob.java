@@ -100,7 +100,7 @@ public class AddExistingTaskJob extends Job {
 				});
 			}
 		} catch (final CoreException e) {
-			StatusHandler.fail(e.getStatus().getException(), e.getMessage(), true);
+			StatusHandler.displayStatus("Unable to open task", e.getStatus());
 		} finally {
 			monitor.done();
 		}

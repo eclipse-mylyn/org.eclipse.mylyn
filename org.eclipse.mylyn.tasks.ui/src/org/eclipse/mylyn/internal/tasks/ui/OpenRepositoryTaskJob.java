@@ -95,11 +95,7 @@ public class OpenRepositoryTaskJob extends Job {
 				});
 			}
 		} catch (final CoreException e) {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					StatusHandler.displayStatus("Unable to open task.", e.getStatus());
-				}
-			});
+			StatusHandler.displayStatus("Unable to open task", e.getStatus());
 		} finally {
 			monitor.done();
 		}
