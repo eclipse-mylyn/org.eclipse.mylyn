@@ -214,7 +214,7 @@ public class NewAttachmentWizard extends Wizard {
 	 * If task is open, force inplace refresh Must be called from UI thread.
 	 */
 	public static boolean forceRefreshInplace(AbstractTask task) {
-		if (task instanceof AbstractTask) {
+		if (task != null) {
 			String handleTarget = task.getHandleIdentifier();
 			for (TaskEditor editor : TasksUiUtil.getActiveRepositoryTaskEditors()) {
 				if (editor.getEditorInput() instanceof AbstractRepositoryTaskEditorInput) {

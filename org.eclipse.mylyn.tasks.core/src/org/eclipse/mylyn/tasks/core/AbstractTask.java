@@ -172,6 +172,7 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 	/**
 	 * Final to preserve the handle identifier format required by the framework.
 	 */
+	@Override
 	public final String getHandleIdentifier() {
 		return super.getHandleIdentifier();
 	}
@@ -240,6 +241,7 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 		return repositoryUrl;
 	}
 
+	@Override
 	public final void setHandleIdentifier(String handleIdentifier) {
 		throw new RuntimeException("Cannot set the handle identifier of a task, set repository URL instead.");
 	}
@@ -283,7 +285,7 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof AbstractTask && obj != null) {
+		if (obj instanceof AbstractTask) {
 			return this.getHandleIdentifier().compareTo(((AbstractTask) obj).getHandleIdentifier()) == 0;
 		} else {
 			return false;
@@ -308,6 +310,7 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 		}
 	}
 
+	@Override
 	public String getPriority() {
 		return priority;
 	}
@@ -352,6 +355,7 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 		return containers;
 	}
 
+	@Override
 	public String getSummary() {
 		return summary;
 	}
@@ -428,6 +432,7 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 		this.taskKind = kind;
 	}
 
+	@Override
 	public int compareTo(AbstractTaskContainer taskListElement) {
 		return summary.compareTo(((AbstractTask) taskListElement).summary);
 	}

@@ -140,6 +140,6 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	 * The handle for most containers is their summary. Override to specify a different natural ordering.
 	 */
 	public int compareTo(AbstractTaskContainer taskListElement) {
-		return getHandleIdentifier().compareTo(((AbstractTaskContainer) taskListElement).getHandleIdentifier());
+		return getHandleIdentifier().compareTo(taskListElement.getHandleIdentifier());
 	}
 }
