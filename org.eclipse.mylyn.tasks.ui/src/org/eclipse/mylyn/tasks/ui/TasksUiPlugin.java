@@ -479,7 +479,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				try {
 					EditRepositoryWizard wizard = new EditRepositoryWizard(repository);
 					Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-					if (wizard != null && shell != null && !shell.isDisposed()) {
+					if (shell != null && !shell.isDisposed()) {
 						WizardDialog dialog = new WizardDialog(shell, wizard);
 						dialog.create();
 						// dialog.setTitle("Repository Credentials Missing");

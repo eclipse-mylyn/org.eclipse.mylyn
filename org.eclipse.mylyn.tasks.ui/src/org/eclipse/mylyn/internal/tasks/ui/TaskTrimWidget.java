@@ -176,6 +176,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		});
 
 		activeTaskLabel.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				if (TaskListView.getFromActivePerspective().getDrilledIntoCategory() != null) {
 					TaskListView.getFromActivePerspective().goUpToRoot();
@@ -221,6 +222,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 			copyTaskDetailsAction.selectionChanged(selection);
 
 			manager.add(new OpenTaskListElementAction(null) {
+				@Override
 				public void run() {
 					TasksUiUtil.refreshAndOpenTaskListElement(activeTask);
 				}
@@ -235,12 +237,14 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 
 			if (activeTask.isActive()) {
 				manager.add(new TaskDeactivateAction() {
+					@Override
 					public void run() {
 						super.run(activeTask);
 					}
 				});
 			} else {
 				manager.add(new TaskActivateAction() {
+					@Override
 					public void run() {
 						TasksUiPlugin.getTaskListManager().getTaskActivationHistory().addTask(activeTask);
 						super.run(activeTask);

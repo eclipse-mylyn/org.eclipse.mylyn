@@ -66,33 +66,39 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 		// ignore
 		return new AbstractTaskDataHandler() {
 
+			@Override
 			public AbstractAttributeFactory getAttributeFactory(String repositoryUrl, String repositoryKind,
 					String taskKind) {
 				// we don't care about the repository information right now
 				return new MockAttributeFactory();
 			}
 
+			@Override
 			public RepositoryTaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor) throws CoreException {
 				// ignore
 				return null;
 			}
 
+			@Override
 			public String postTaskData(TaskRepository repository, RepositoryTaskData taskData, IProgressMonitor monitor) throws CoreException {
 				// ignore
 				return null;
 			}
 
+			@Override
 			public boolean initializeTaskData(TaskRepository repository, RepositoryTaskData data,
 					IProgressMonitor monitor) throws CoreException {
 				// ignore
 				return false;
 			}
 
+			@Override
 			public AbstractAttributeFactory getAttributeFactory(RepositoryTaskData taskData) {
 				// ignore
 				return new MockAttributeFactory();
 			}
 
+			@Override
 			public Set<String> getSubTaskIds(RepositoryTaskData taskData) {
 				return Collections.emptySet();
 			}

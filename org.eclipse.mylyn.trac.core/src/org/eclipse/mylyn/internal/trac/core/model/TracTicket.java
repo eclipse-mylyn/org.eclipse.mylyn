@@ -163,7 +163,7 @@ public class TracTicket {
 				return false;
 			}
 			putBuiltinValue(key, value);
-		} else if (value instanceof String) {
+		} else if (value != null) {
 			putCustomValue(keyName, value);
 		} else {
 			throw new InvalidTicketException("Expected string value for custom key '" + keyName + "', got '" + value

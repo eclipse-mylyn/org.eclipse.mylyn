@@ -134,7 +134,7 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 						filteredRoots.add(element);
 					}
 				} else if (element instanceof AbstractTaskCategory) {
-					if (selectContainer((AbstractTaskCategory) element)) {
+					if (selectContainer(element)) {
 						filteredRoots.add(element);
 					}
 				}

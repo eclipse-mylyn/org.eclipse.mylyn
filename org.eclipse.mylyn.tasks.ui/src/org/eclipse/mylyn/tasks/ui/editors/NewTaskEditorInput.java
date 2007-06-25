@@ -28,6 +28,7 @@ public class NewTaskEditorInput extends RepositoryTaskEditorInput {
 		super.setEditableTaskData(taskData);
 	}
 
+	@Override
 	public String getName() {
 		return this.toolTipText;
 	}

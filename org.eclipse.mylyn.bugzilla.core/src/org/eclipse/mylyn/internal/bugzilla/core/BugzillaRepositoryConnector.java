@@ -96,12 +96,14 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		return BugzillaCorePlugin.REPOSITORY_KIND;
 	}
 
+	@Override
 	public AbstractTask createTask(String repositoryUrl, String id, String summary) {
 		BugzillaTask task = new BugzillaTask(repositoryUrl, id, summary);
 		task.setCreationDate(new Date());
 		return task;
 	}
 
+	@Override
 	public void updateTaskFromTaskData(TaskRepository repository, AbstractTask repositoryTask,
 			RepositoryTaskData taskData) {
 		BugzillaTask bugzillaTask = (BugzillaTask) repositoryTask;
@@ -539,7 +541,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		for (String option : optionValues) {
 			a.addOption(option, option);
 		}
-		if (optionValues != null && optionValues.size() > 0) {
+		if (optionValues.size() > 0) {
 			a.setValue(optionValues.get(optionValues.size() - 1));
 		}
 
@@ -552,7 +554,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		for (String option : optionValues) {
 			a.addOption(option, option);
 		}
-		if (optionValues != null && optionValues.size() > 0) {
+		if (optionValues.size() > 0) {
 			a.setValue(optionValues.get(0));
 		}
 
@@ -564,7 +566,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		for (String option : optionValues) {
 			a.addOption(option, option);
 		}
-		if (optionValues != null && optionValues.size() > 0) {
+		if (optionValues.size() > 0) {
 			a.setValue(optionValues.get(0));
 		}
 
@@ -576,7 +578,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		for (String option : optionValues) {
 			a.addOption(option, option);
 		}
-		if (optionValues != null && optionValues.size() > 0) {
+		if (optionValues.size() > 0) {
 			a.setValue(optionValues.get(optionValues.size() - 1));
 		}
 

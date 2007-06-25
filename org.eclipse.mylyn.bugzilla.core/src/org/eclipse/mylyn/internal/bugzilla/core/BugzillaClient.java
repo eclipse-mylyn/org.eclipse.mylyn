@@ -745,7 +745,7 @@ public class BugzillaClient {
 						if (!taskData.isNew() && (title.toLowerCase(Locale.ENGLISH).indexOf("processed") != -1)) {
 							existingBugPosted = true;
 						} else if (taskData.isNew() && prefix != null && prefix2 != null && postfix != null
-								&& postfix2 != null && result == null) {
+								&& postfix2 != null) {
 							int startIndex = -1;
 							int startIndexPrefix = title.toLowerCase(Locale.ENGLISH).indexOf(
 									prefix.toLowerCase(Locale.ENGLISH));

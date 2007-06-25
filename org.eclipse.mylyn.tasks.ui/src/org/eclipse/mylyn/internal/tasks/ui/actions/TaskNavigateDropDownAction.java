@@ -21,14 +21,13 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 
 /**
- * This abstract class contains some common code used by NextTaskDropDownAction
- * and PreviousTaskDropDownAction
+ * This abstract class contains some common code used by NextTaskDropDownAction and PreviousTaskDropDownAction
  * 
  * @author Wesley Coelho
  * @author Mik Kersten
  */
 public abstract class TaskNavigateDropDownAction extends Action implements IMenuCreator {
-	
+
 	protected TaskActivationHistory taskHistory;
 
 	protected Menu dropDownMenu = null;
@@ -45,8 +44,8 @@ public abstract class TaskNavigateDropDownAction extends Action implements IMenu
 	}
 
 	/**
-	 * Action for navigating to a specified task. This class should be protected
-	 * but has been made public for testing only
+	 * Action for navigating to a specified task. This class should be protected but has been made public for testing
+	 * only
 	 */
 	public class TaskNavigateAction extends Action {
 
@@ -63,10 +62,8 @@ public abstract class TaskNavigateDropDownAction extends Action implements IMenu
 			setText(taskDescription);
 			setEnabled(true);
 			setToolTipText(task.getSummary());
-			if (task != null) {
-				Image image = labelProvider.getImage(task);
-				setImageDescriptor(ImageDescriptor.createFromImage(image));
-			}
+			Image image = labelProvider.getImage(task);
+			setImageDescriptor(ImageDescriptor.createFromImage(image));
 		}
 
 		@Override

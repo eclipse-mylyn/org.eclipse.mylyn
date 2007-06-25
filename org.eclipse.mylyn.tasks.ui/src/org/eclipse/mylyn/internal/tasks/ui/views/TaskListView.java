@@ -1200,11 +1200,11 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			addAction(removeFromCategoryAction, manager, element);
 		}
 		addAction(deleteAction, manager, element);
-		if (!(element instanceof AbstractTask) || element instanceof AbstractTaskContainer) {
+		if (!(element instanceof AbstractTask)) {
 			addAction(renameAction, manager, element);
 		}
 
-		if (element instanceof AbstractTaskContainer && !(element instanceof AbstractTask)) {
+		if (element != null && !(element instanceof AbstractTask)) {
 			manager.add(goIntoAction);
 		}
 		if (drilledIntoCategory != null) {
@@ -1236,8 +1236,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	}
 
 	private void addMenuManager(IMenuManager menuToAdd, IMenuManager manager, AbstractTaskContainer element) {
-		if ((element instanceof AbstractTask)
-				|| (element instanceof AbstractTaskContainer || element instanceof AbstractRepositoryQuery)) {
+		if ((element instanceof AbstractTask) || element instanceof AbstractRepositoryQuery) {
 			manager.add(menuToAdd);
 		}
 	}
@@ -1275,7 +1274,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			} else if (action instanceof RenameAction) {
 				action.setEnabled(true);
 			}
-		} else if (element instanceof AbstractTaskContainer) {
+		} else if (element != null) {
 			if (action instanceof MarkTaskCompleteAction) {
 				action.setEnabled(false);
 			} else if (action instanceof MarkTaskIncompleteAction) {

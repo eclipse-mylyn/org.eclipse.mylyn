@@ -85,6 +85,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		return index == -1 ? null : url.substring(0, index);
 	}
 
+	@Override
 	public String getTaskIdFromTaskUrl(String url) {
 		if (url == null) {
 			return null;
@@ -218,12 +219,14 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		return task;
 	}
 
+	@Override
 	public AbstractTask createTask(String repositoryUrl, String id, String summary) {
 		TracTask tracTask = new TracTask(repositoryUrl, id, summary);
 		tracTask.setCreationDate(new Date());
 		return tracTask;
 	}
 
+	@Override
 	public void updateTaskFromTaskData(TaskRepository repository, AbstractTask repositoryTask,
 			RepositoryTaskData taskData) {
 		if (taskData != null) {

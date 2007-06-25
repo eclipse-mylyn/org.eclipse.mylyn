@@ -70,8 +70,8 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 					TaskCategory cat = (TaskCategory) obj;
 					for (AbstractTask task : cat.getChildren()) {
 						AbstractRepositoryConnector client = TasksUiPlugin.getRepositoryManager()
-								.getRepositoryConnector(((AbstractTask) task).getConnectorKind());
-						addTaskToSync(client, (AbstractTask) task);
+								.getRepositoryConnector(task.getConnectorKind());
+						addTaskToSync(client, task);
 					}
 				} else if (obj instanceof AbstractTask) {
 					AbstractTask repositoryTask = (AbstractTask) obj;

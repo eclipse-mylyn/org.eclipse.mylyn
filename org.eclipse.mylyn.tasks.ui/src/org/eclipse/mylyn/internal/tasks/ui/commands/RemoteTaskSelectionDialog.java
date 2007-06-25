@@ -290,8 +290,8 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 				return TasksUiPlugin.getDefault().getRepositoryForResource(resource, true);
 			} else {
 				AbstractTask task = (AbstractTask) adaptable.getAdapter(AbstractTask.class);
-				if (task instanceof AbstractTask) {
-					AbstractTask rtask = (AbstractTask) task;
+				if (task != null) {
+					AbstractTask rtask = task;
 					return getRepository(rtask.getRepositoryUrl(), rtask.getConnectorKind());
 				}
 			}

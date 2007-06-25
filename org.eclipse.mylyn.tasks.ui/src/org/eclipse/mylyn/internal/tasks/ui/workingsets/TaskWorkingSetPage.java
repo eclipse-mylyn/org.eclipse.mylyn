@@ -147,6 +147,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 	}
 
 	class CustomSorter extends ViewerSorter {
+		@Override
 		public int compare(Viewer viewer, Object e1, Object e2) {
 			if (e1 instanceof ElementCategory && ((ElementCategory) e1).getLabel(e1).equals(LABEL_TASKS)) {
 				return -1;
@@ -296,10 +297,10 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		tree.setSorter(new CustomSorter());
 
 		ArrayList<Object> containers = new ArrayList<Object>();
-		for (AbstractTaskContainer element : (Set<AbstractTaskContainer>) TasksUiPlugin.getTaskListManager()
+		for (AbstractTaskContainer element : TasksUiPlugin.getTaskListManager()
 				.getTaskList()
 				.getRootElements()) {
-			if (element instanceof AbstractTaskContainer && !(element instanceof TaskArchive)) {
+			if (!(element instanceof TaskArchive)) {
 				containers.add(element);
 			}
 		}
@@ -352,6 +353,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		selectAllButton.setText(IDEWorkbenchMessages.ResourceWorkingSetPage_selectAll_label);
 		selectAllButton.setToolTipText(IDEWorkbenchMessages.ResourceWorkingSetPage_selectAll_toolTip);
 		selectAllButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent selectionEvent) {
 				tree.setCheckedElements(treeContentProvider.getElements(tree.getInput()));
 				validateInput();
@@ -363,6 +365,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		deselectAllButton.setText(IDEWorkbenchMessages.ResourceWorkingSetPage_deselectAll_label);
 		deselectAllButton.setToolTipText(IDEWorkbenchMessages.ResourceWorkingSetPage_deselectAll_toolTip);
 		deselectAllButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent selectionEvent) {
 				tree.setCheckedElements(new Object[0]);
 				validateInput();
@@ -442,7 +445,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 				}
 			}
 		}
-		if (infoMessage == null && tree.getCheckedElements().length == 0) {
+		if (tree.getCheckedElements().length == 0) {
 			infoMessage = "No categories/queries selected.";
 		}
 		setMessage(infoMessage, INFORMATION);

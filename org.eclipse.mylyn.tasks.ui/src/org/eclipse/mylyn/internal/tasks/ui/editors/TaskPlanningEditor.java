@@ -188,7 +188,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 				summary.setText(updateTask.getSummary());
 				TaskPlanningEditor.this.markDirty(wasDirty);
 			}
-			if (parentEditor != null && updateTask != null) {
+			if (parentEditor != null) {
 				parentEditor.changeTitle();
 				parentEditor.updateTitle(updateTask.getSummary());
 			}
@@ -218,7 +218,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		if (task instanceof LocalTask) {
 			String label = summary.getText();
 			// task.setDescription(label);
-			TasksUiPlugin.getTaskListManager().getTaskList().renameTask((AbstractTask) task, label);
+			TasksUiPlugin.getTaskListManager().getTaskList().renameTask(task, label);
 
 			// TODO: refactor mutation into TaskList?
 			task.setUrl(issueReportURL.getText());
@@ -388,6 +388,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		} else {
 			priorityCombo.addSelectionListener(new SelectionAdapter() {
 
+				@Override
 				public void widgetSelected(SelectionEvent e) {
 					TaskPlanningEditor.this.markDirty(true);
 
@@ -413,6 +414,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		} else {
 			statusCombo.addSelectionListener(new SelectionAdapter() {
 
+				@Override
 				public void widgetSelected(SelectionEvent e) {
 					if (statusCombo.getSelectionIndex() == 0) {
 						task.setCompleted(true);
@@ -636,6 +638,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		dueDatePicker.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		dueDatePicker.addPickerSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				TaskPlanningEditor.this.markDirty(true);
 			}
@@ -657,9 +660,9 @@ public class TaskPlanningEditor extends TaskFormPage {
 			}
 		});
 
-		if (task instanceof AbstractTask && !(task instanceof LocalTask)) {
-			AbstractRepositoryConnectorUi connector = TasksUiPlugin.getConnectorUi(((AbstractTask) task).getConnectorKind());
-			if (connector != null && connector.supportsDueDates((AbstractTask) task)) {
+		if (task != null && !(task instanceof LocalTask)) {
+			AbstractRepositoryConnectorUi connector = TasksUiPlugin.getConnectorUi(task.getConnectorKind());
+			if (connector != null && connector.supportsDueDates(task)) {
 				dueDatePicker.setEnabled(false);
 				clearDueDate.setEnabled(false);
 			}
@@ -768,8 +771,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		TaskRepository repository = null;
-		if (task instanceof AbstractTask && !(task instanceof LocalTask)) {
-			AbstractTask repositoryTask = (AbstractTask) task;
+		if (task != null && !(task instanceof LocalTask)) {
+			AbstractTask repositoryTask = task;
 			repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryTask.getConnectorKind(),
 					repositoryTask.getRepositoryUrl());
 		}

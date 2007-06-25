@@ -50,7 +50,7 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 			if (adaptable instanceof AbstractTaskContainer) {
 				String handle = ((AbstractTaskContainer) adaptable).getHandleIdentifier();
 				for (AbstractTaskContainer element : TasksUiPlugin.getTaskListManager().getTaskList().getRootElements()) {
-					if (element instanceof AbstractTaskContainer && element.getHandleIdentifier().equals(handle)) {
+					if (element != null && element.getHandleIdentifier().equals(handle)) {
 						list.add(adaptable);
 					}
 				}

@@ -148,6 +148,7 @@ public class TaskListNotificationPopup extends PopupDialog {
 		hyperlink.setBackground(null);
 		hyperlink.setImage(TasksUiImages.getImage(TasksUiImages.NOTIFICATION_CLOSE));
 		hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				close();
 			}

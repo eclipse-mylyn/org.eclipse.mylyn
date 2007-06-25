@@ -32,7 +32,7 @@ public class RestoreTaskListAction implements IViewActionDelegate {
 		try {
 			IWizard wizard = new TaskDataImportWizard();
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-			if (wizard != null && shell != null && !shell.isDisposed()) {
+			if (shell != null && !shell.isDisposed()) {
 				WizardDialog dialog = new WizardDialog(shell, wizard);
 				dialog.create();
 				dialog.setTitle("Restore Task List from History");

@@ -188,6 +188,7 @@ public class DatePicker extends Composite {
 		return date;
 	}
 
+	@Override
 	public void setBackground(Color backgroundColor) {
 		dateText.setBackground(backgroundColor);
 		super.setBackground(backgroundColor);

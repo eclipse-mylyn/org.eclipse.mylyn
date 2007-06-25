@@ -393,6 +393,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	 * @return {@link AbstractTaskContainer category} where the new task must be
 	 *         added to, or null if it must not be added to the task list
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	protected AbstractTaskCategory getCategory() {
 		int index = categoryChooser.getSelectionIndex();

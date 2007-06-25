@@ -115,7 +115,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 
 			Iterator<IWorkingSet> iter = sortedWorkingSets.iterator();
 			while (iter.hasNext()) {
-				IWorkingSet workingSet = (IWorkingSet) iter.next();
+				IWorkingSet workingSet = iter.next();
 				if (workingSet != null && workingSet.getId().equalsIgnoreCase(ID_TASK_WORKING_SET)) {
 					ActionContributionItem itemSet = new ActionContributionItem(new ToggleWorkingSetAction(workingSet));
 					itemSet.fill(dropDownMenu, -1);
@@ -225,6 +225,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 			super(WorkbenchMessages.Edit);
 		}
 
+		@Override
 		public void run() {
 			TaskWorkingSetAction.this.run(this);
 		}
@@ -238,20 +239,21 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 			setChecked(areNoTaskWorkingSetsEnabled());
 		}
 
+		@Override
 		public void runWithEvent(Event event) {
 			Set<IWorkingSet> newList = new HashSet<IWorkingSet>(Arrays.asList(getEnabledSets()));
 
 			Set<IWorkingSet> tempList = new HashSet<IWorkingSet>();
 			Iterator<IWorkingSet> iter = newList.iterator();
 			while (iter.hasNext()) {
-				IWorkingSet workingSet = (IWorkingSet) iter.next();
+				IWorkingSet workingSet = iter.next();
 				if (workingSet != null && workingSet.getId().equalsIgnoreCase(ID_TASK_WORKING_SET)) {
 					tempList.add(workingSet);
 				}
 			}
 			newList.removeAll(tempList);
 			getWindow().getActivePage()
-					.setWorkingSets((IWorkingSet[]) newList.toArray(new IWorkingSet[newList.size()]));
+					.setWorkingSets(newList.toArray(new IWorkingSet[newList.size()]));
 		}
 	}
 
@@ -264,13 +266,14 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 //			setChecked(!areAllTaskWorkingSetsEnabled());
 		}
 
+		@Override
 		public void runWithEvent(Event event) {
 			Set<IWorkingSet> newList = new HashSet<IWorkingSet>(Arrays.asList(getEnabledSets()));
 			
 						Set<IWorkingSet> tempList = new HashSet<IWorkingSet>();
 						Iterator<IWorkingSet> iter = newList.iterator();
 						while (iter.hasNext()) {
-							IWorkingSet workingSet = (IWorkingSet) iter.next();
+							IWorkingSet workingSet = iter.next();
 							if (workingSet != null && workingSet.getId().equalsIgnoreCase(ID_TASK_WORKING_SET)) {
 								tempList.add(workingSet);
 							}
@@ -287,7 +290,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 						}
 			
 						getWindow().getActivePage()
-								.setWorkingSets((IWorkingSet[]) newList.toArray(new IWorkingSet[newList.size()]));
+								.setWorkingSets(newList.toArray(new IWorkingSet[newList.size()]));
 		}
 
 	}
@@ -325,6 +328,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 //					.setWorkingSets((IWorkingSet[]) newList.toArray(new IWorkingSet[newList.size()]));
 //		}
 
+		@Override
 		public void runWithEvent(Event event) {
 			Set<IWorkingSet> newList = new HashSet<IWorkingSet>(Arrays.asList(getEnabledSets()));
 
@@ -336,7 +340,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 				Set<IWorkingSet> tempList = new HashSet<IWorkingSet>();
 				Iterator<IWorkingSet> iter = newList.iterator();
 				while (iter.hasNext()) {
-					IWorkingSet workingSet = (IWorkingSet) iter.next();
+					IWorkingSet workingSet = iter.next();
 					if (workingSet != null && workingSet.getId().equalsIgnoreCase(ID_TASK_WORKING_SET)) {
 						tempList.add(workingSet);
 					}
@@ -362,7 +366,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 			}
 
 			getWindow().getActivePage()
-					.setWorkingSets((IWorkingSet[]) newList.toArray(new IWorkingSet[newList.size()]));
+					.setWorkingSets(newList.toArray(new IWorkingSet[newList.size()]));
 		}
 
 	}
@@ -397,6 +401,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 			}
 		}
 
+		@Override
 		protected Control createDialogArea(Composite parent) {
 			initializeDialogUnits(parent);
 
@@ -445,6 +450,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 			return composite;
 		}
 
+		@Override
 		protected void okPressed() {
 			Set<IWorkingSet> newList = new HashSet<IWorkingSet>(Arrays.asList(getEnabledSets()));
 			Set<IWorkingSet> tempList = new HashSet<IWorkingSet>();
@@ -462,10 +468,11 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 			System.arraycopy(selection, 0, setsToEnable, 0, selection.length);
 			newList.addAll(new HashSet<IWorkingSet>(Arrays.asList(setsToEnable)));
 
-			window.getActivePage().setWorkingSets((IWorkingSet[]) newList.toArray(new IWorkingSet[newList.size()]));
+			window.getActivePage().setWorkingSets(newList.toArray(new IWorkingSet[newList.size()]));
 			super.okPressed();
 		}
 
+		@Override
 		protected List<?> getSelectedWorkingSets() {
 			ISelection selection = viewer.getSelection();
 			if (selection instanceof IStructuredSelection) {
@@ -474,6 +481,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 			return null;
 		}
 
+		@Override
 		protected void availableWorkingSetsChanged() {
 			viewer.setInput(window.getWorkbench().getWorkingSetManager().getWorkingSets());
 			super.availableWorkingSetsChanged();
@@ -486,15 +494,18 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 			updateButtonAvailability();
 		}
 
+		@Override
 		protected void configureShell(Shell shell) {
 			super.configureShell(shell);
 		}
 
+		@Override
 		protected void selectAllSets() {
 			viewer.setCheckedElements(window.getWorkbench().getWorkingSetManager().getWorkingSets());
 			updateButtonAvailability();
 		}
 
+		@Override
 		protected void deselectAllSets() {
 			viewer.setCheckedElements(new Object[0]);
 			updateButtonAvailability();

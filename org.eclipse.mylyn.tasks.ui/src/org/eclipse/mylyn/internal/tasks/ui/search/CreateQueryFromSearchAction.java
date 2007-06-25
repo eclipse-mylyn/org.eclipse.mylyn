@@ -52,6 +52,7 @@ public class CreateQueryFromSearchAction extends Action {
 	/**
 	 * Add the search result to the Task List.
 	 */
+	@Override
 	public void run() {
 		ISelection selection = resultView.getViewer().getSelection();
 		if (selection instanceof IStructuredSelection) {
@@ -63,7 +64,7 @@ public class CreateQueryFromSearchAction extends Action {
 						task.getConnectorKind());
 				if (queries.length != 0 && connector != null) {
 					SearchHitCollector searchHitCollector = (SearchHitCollector) queries[0];
-					AbstractRepositoryQuery query = (AbstractRepositoryQuery) searchHitCollector.getRepositoryQuery();
+					AbstractRepositoryQuery query = searchHitCollector.getRepositoryQuery();
 					InputDialog dialog = new InputDialog(PlatformUI.getWorkbench()
 							.getActiveWorkbenchWindow()
 							.getShell(), "Create Query", "Name of query to be added to the " + TaskListView.LABEL_VIEW + ": ", "", null);

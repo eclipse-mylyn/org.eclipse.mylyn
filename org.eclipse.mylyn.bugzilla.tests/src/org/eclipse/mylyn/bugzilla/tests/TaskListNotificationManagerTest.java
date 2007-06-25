@@ -84,7 +84,7 @@ public class TaskListNotificationManagerTest extends TestCase {
 		TaskListNotificationManager notificationManager = TasksUiPlugin.getTaskListNotificationManager();
 		notificationManager.collectNotifications();
 		assertTrue(notificationManager.getNotifications().contains(new TaskListNotificationIncoming(task)));
-		task = (AbstractTask) TasksUiPlugin.getTaskListManager().getTaskList().getTask(
+		task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
 				"https://bugs.eclipse.org/bugs-142891");
 		assertNotNull(task);
 		assertTrue(task.isNotified());

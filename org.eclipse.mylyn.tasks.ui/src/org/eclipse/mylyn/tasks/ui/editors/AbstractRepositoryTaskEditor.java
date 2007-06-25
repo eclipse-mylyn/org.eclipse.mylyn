@@ -367,7 +367,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				if (select instanceof RepositoryTaskOutlineNode) {
 					RepositoryTaskOutlineNode n = (RepositoryTaskOutlineNode) select;
 
-					if (n != null && lastSelected != null
+					if (lastSelected != null
 							&& ContentOutlineTools.getHandle(n).equals(ContentOutlineTools.getHandle(lastSelected))) {
 						// we don't need to set the selection if it is already
 						// set
@@ -995,7 +995,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		if (getDuplicateSearchCollectorsList() != null) {
 			allCollectors.addAll(getDuplicateSearchCollectorsList());
 		}
-		if (allCollectors != null) {
+		if (allCollectors.isEmpty()) {
 			duplicateDetectorLabel = new Label(relatedBugsComposite, SWT.LEFT);
 			duplicateDetectorLabel.setText(LABEL_SELECT_DETECTOR);
 
@@ -1034,9 +1034,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		} else {
 			Label label = new Label(relatedBugsComposite, SWT.LEFT);
 			label.setText(LABEL_NO_DETECTOR);
-
 		}
-
 	}
 
 	protected SearchHitCollector getDuplicateSearchCollector(String name) {
@@ -1432,12 +1430,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			public void widgetSelected(SelectionEvent e) {
 				AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(),
 						taskData.getId());
-				if (!(task instanceof AbstractTask)) {
+				if (!(task != null)) {
 					// Should not happen
 					return;
 				}
 				if (AbstractRepositoryTaskEditor.this.isDirty
-						|| ((AbstractTask) task).getSynchronizationState().equals(RepositoryTaskSyncState.OUTGOING)) {
+						|| task.getSynchronizationState().equals(RepositoryTaskSyncState.OUTGOING)) {
 					MessageDialog.openInformation(attachmentsComposite.getShell(),
 							"Task not synchronized or dirty editor",
 							"Commit edits or synchronize task before adding attachments.");
@@ -1463,12 +1461,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				public void widgetSelected(SelectionEvent e) {
 					AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(),
 							taskData.getId());
-					if (task == null || !(task instanceof AbstractTask)) {
+					if (task == null) {
 						// Should not happen
 						return;
 					}
 					if (AbstractRepositoryTaskEditor.this.isDirty
-							|| ((AbstractTask) task).getSynchronizationState().equals(RepositoryTaskSyncState.OUTGOING)) {
+							|| task.getSynchronizationState().equals(RepositoryTaskSyncState.OUTGOING)) {
 						MessageDialog.openInformation(attachmentsComposite.getShell(),
 								"Task not synchronized or dirty editor",
 								"Commit edits or synchronize task before deleting attachments.");
@@ -1532,7 +1530,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			descriptionTextViewer.getTextWidget().addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
 					String newValue = descriptionTextViewer.getTextWidget().getText();
-					RepositoryTaskAttribute attribute = (RepositoryTaskAttribute) taskData.getAttribute(RepositoryTaskAttribute.DESCRIPTION);
+					RepositoryTaskAttribute attribute = taskData.getAttribute(RepositoryTaskAttribute.DESCRIPTION);
 					attribute.setValue(newValue);
 					attributeChanged(attribute);
 					taskData.setDescription(newValue);
@@ -1817,10 +1815,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 					@Override
 					public void linkActivated(HyperlinkEvent e) {
-						if (taskComment != null) {
-							deleteComment(taskComment);
-							submitToRepository();
-						}
+						deleteComment(taskComment);
+						submitToRepository();
 					}
 				});
 
@@ -2715,8 +2711,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 											"Task could not be created. No additional information was provided by the connector."));
 						}
 					} else {
-						modifiedTask = (AbstractTask) TasksUiPlugin.getTaskListManager().getTaskList().getTask(
-								repository.getUrl(), taskData.getId());
+						modifiedTask = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(),
+								taskData.getId());
 					}
 
 					// Synchronization accounting...

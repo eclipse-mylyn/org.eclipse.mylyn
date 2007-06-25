@@ -334,6 +334,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 
 	private class TestOfflineTaskHandler extends AbstractTaskDataHandler {
 
+		@Override
 		public AbstractAttributeFactory getAttributeFactory(String repositoryUrl, String repositoryKind, String taskKind) {
 			// ignore
 			return null;
@@ -344,26 +345,31 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 			return null;
 		}
 
+		@Override
 		public RepositoryTaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor) throws CoreException {
 			return null;
 		}
 
+		@Override
 		public String postTaskData(TaskRepository repository, RepositoryTaskData taskData, IProgressMonitor monitor) throws CoreException {
 			// ignore
 			return null;
 		}
 
+		@Override
 		public boolean initializeTaskData(TaskRepository repository, RepositoryTaskData data, IProgressMonitor monitor)
 				throws CoreException {
 			// ignore
 			return false;
 		}
 
+		@Override
 		public AbstractAttributeFactory getAttributeFactory(RepositoryTaskData taskData) {
 			// ignore
 			return null;
 		}
 
+		@Override
 		public Set<String> getSubTaskIds(RepositoryTaskData taskData) {
 			return Collections.emptySet();
 		}

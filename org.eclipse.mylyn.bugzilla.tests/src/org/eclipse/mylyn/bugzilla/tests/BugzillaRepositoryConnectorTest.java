@@ -578,7 +578,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		init222();
 		int bugId = 19;
 		String taskNumber = "" + bugId;
-		BugzillaTask task = (BugzillaTask) generateLocalTaskAndDownload(taskNumber);
+		BugzillaTask task = generateLocalTaskAndDownload(taskNumber);
 
 		// TasksUiPlugin.getSynchronizationManager().synchronize(connector,
 		// task, true, null);

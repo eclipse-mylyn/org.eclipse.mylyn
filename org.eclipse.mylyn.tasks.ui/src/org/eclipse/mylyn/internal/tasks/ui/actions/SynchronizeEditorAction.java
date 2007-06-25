@@ -56,8 +56,8 @@ public class SynchronizeEditorAction extends BaseSelectionListenerAction {
 		if (selectedObject instanceof TaskEditor) {
 			TaskEditor editor = (TaskEditor) selectedObject;
 			AbstractTask task = editor.getTaskEditorInput().getTask();
-			if (task instanceof AbstractTask) {
-				repositoryTask = (AbstractTask) task;
+			if (task != null) {
+				repositoryTask = task;
 			}
 		} else if (selectedObject instanceof AbstractRepositoryTaskEditor) {
 			AbstractRepositoryTaskEditor editor = (AbstractRepositoryTaskEditor) selectedObject;

@@ -34,6 +34,7 @@ public class OfflineCachingStorageTest extends TestCase {
 
 	private OfflineCachingStorage storage;
 
+	@Override
 	protected void setUp() throws Exception {
 		//dataDir = new File("c:/offline");
 		dataDir = new File(TasksUiPlugin.getDefault().getDataDirectory() + '/' + "offline");
@@ -42,6 +43,7 @@ public class OfflineCachingStorageTest extends TestCase {
 		super.setUp();
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		storage.stop();
 		storage.clear();

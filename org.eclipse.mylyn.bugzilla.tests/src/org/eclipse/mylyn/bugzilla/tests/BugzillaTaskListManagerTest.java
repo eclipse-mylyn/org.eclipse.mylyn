@@ -101,7 +101,7 @@ public class BugzillaTaskListManagerTest extends TestCase {
 		// manager.setTaskList(list);
 		manager.readExistingOrCreateNewList();
 		assertEquals(1, manager.getTaskList().getDefaultCategory().getChildren().size());
-		AbstractTask readTask = (AbstractTask) manager.getTaskList().getDefaultCategory().getChildren().iterator()
+		AbstractTask readTask = manager.getTaskList().getDefaultCategory().getChildren().iterator()
 				.next();
 
 		assertEquals(repositoryTask.getHandleIdentifier(), readTask.getHandleIdentifier());

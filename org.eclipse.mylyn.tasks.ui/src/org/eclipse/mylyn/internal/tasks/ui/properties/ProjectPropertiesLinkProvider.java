@@ -33,6 +33,7 @@ public class ProjectPropertiesLinkProvider extends AbstractTaskRepositoryLinkPro
 
 	private static final String PROJECT_REPOSITORY_URL = PROPERTY_PREFIX + ".url";
 
+	@Override
 	public TaskRepository getTaskRepository(IResource resource, TaskRepositoryManager repositoryManager) {
 		IProject project = resource.getProject();
 		if (project == null || !project.isAccessible()) {

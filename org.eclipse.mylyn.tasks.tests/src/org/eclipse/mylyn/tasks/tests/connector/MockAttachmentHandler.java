@@ -28,21 +28,25 @@ public class MockAttachmentHandler extends AbstractAttachmentHandler {
 
 	private byte[] data;
 
+	@Override
 	public boolean canDeprecate(TaskRepository repository, RepositoryAttachment attachment) {
 		// ignore
 		return false;
 	}
 
+	@Override
 	public boolean canDownloadAttachment(TaskRepository repository, AbstractTask task) {
 		// ignore
 		return true;
 	}
 
+	@Override
 	public boolean canUploadAttachment(TaskRepository repository, AbstractTask task) {
 		// ignore
 		return true;
 	}
 
+	@Override
 	public void downloadAttachment(TaskRepository repository, RepositoryAttachment attachment, OutputStream target,
 			IProgressMonitor monitor) throws CoreException {
 		try {
@@ -52,16 +56,19 @@ public class MockAttachmentHandler extends AbstractAttachmentHandler {
 		}
 	}
 
+	@Override
 	public InputStream getAttachmentAsStream(TaskRepository repository, RepositoryAttachment attachment,
 			IProgressMonitor monitor) throws CoreException {
 		// ignore
 		return new ByteArrayInputStream(data);
 	}
 
+	@Override
 	public void updateAttachment(TaskRepository repository, RepositoryAttachment attachment) throws CoreException {
 		// ignore
 	}
 
+	@Override
 	public void uploadAttachment(TaskRepository repository, AbstractTask task, ITaskAttachment attachment,
 			String comment, IProgressMonitor monitor) throws CoreException {
 		// ignore

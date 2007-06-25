@@ -85,7 +85,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 	private SynchronizeEditorAction synchronizeEditorAction = new SynchronizeEditorAction();
 
 	private ShowInTaskListAction showInTaskListAction = new ShowInTaskListAction();
-	
+
 	private GlobalAction cutAction;
 
 	private GlobalAction undoAction;
@@ -213,10 +213,8 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 			showInTaskListAction.selectionChanged(selection);
 
 			manager.add(openWithBrowserAction);
-			if (task instanceof AbstractTask) {
-				manager.add(attachFileAction);
-				manager.add(synchronizeEditorAction);
-			}
+			manager.add(attachFileAction);
+			manager.add(synchronizeEditorAction);
 
 			if (task.isActive()) {
 				manager.add(new TaskDeactivateAction() {

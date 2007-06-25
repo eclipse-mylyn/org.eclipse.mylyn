@@ -430,7 +430,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 		setRepository(BugzillaCorePlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_222_URL);
 		RepositoryTaskData report = init(bugid);
 		assertNotNull(report);
-		assertTrue(report instanceof RepositoryTaskData);
+		assertTrue(report != null);
 		RepositoryTaskData bugReport = report;
 		assertEquals("search-match-test 2", bugReport.getSummary());
 		assertEquals("search-match-test 2", bugReport.getDescription());

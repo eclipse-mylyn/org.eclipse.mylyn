@@ -250,7 +250,6 @@ public class OfflineFileStorage implements ITaskDataStorage {
 				}
 				fileOutputStream = new FileOutputStream(dataFile);
 				FileChannel channel = fileOutputStream.getChannel();
-				lock = null;
 				lock = channel.tryLock();
 				if (lock != null) {
 					final ZipOutputStream outputStream = new ZipOutputStream(fileOutputStream);

@@ -19,7 +19,6 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.layout.TreeColumnLayout;
-import org.eclipse.jface.resource.JFaceColors;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -54,16 +53,13 @@ import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PatternFilter;
-import org.eclipse.ui.dialogs.PreferenceLinkArea;
 import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.internal.ObjectActionContributorManager;
-import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 /**
  * @author Mik Kersten
@@ -256,6 +252,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		indicateActiveTaskWorkingSet();
 
 		workingSetLink.addMouseListener(new MouseAdapter() {
+			@Override
 			public void mouseDown(MouseEvent e) {
 				if (currentWorkingSet != null) {
 					workingSetAction.run(currentWorkingSet);
@@ -416,6 +413,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			copyTaskDetailsAction.selectionChanged(selection);
 
 			manager.add(new OpenTaskListElementAction(null) {
+				@Override
 				public void run() {
 					TasksUiUtil.refreshAndOpenTaskListElement(activeTask);
 				}
@@ -423,12 +421,14 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 			if (activeTask.isActive()) {
 				manager.add(new TaskDeactivateAction() {
+					@Override
 					public void run() {
 						super.run(activeTask);
 					}
 				});
 			} else {
 				manager.add(new TaskActivateAction() {
+					@Override
 					public void run() {
 						TasksUiPlugin.getTaskListManager().getTaskActivationHistory().addTask(activeTask);
 						super.run(activeTask);

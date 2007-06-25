@@ -321,11 +321,7 @@ public class BugzillaCorePlugin extends Plugin {
 					// Bugzilla Platform to null, and juse use "other"
 					bugzillaPlatform = null;
 				}
-			} else {
-				// If we have a strange platform, then just set bugzillaPatforrm
-				// to null, and use "other"
-				bugzillaPlatform = null;
-			}
+			} 
 			// Set the OS and the Platform in the taskData
 			if (bugzillaOS != null && opSysAttribute != null) {
 				opSysAttribute.setValue(bugzillaOS);

@@ -104,14 +104,14 @@ class RepositoryTaskEditorDropListener implements DropTargetListener {
 			AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
 					this.AbstractTaskEditor.repository.getUrl(),
 					this.AbstractTaskEditor.taskData.getId());
-			if (!(task instanceof AbstractTask)) {
+			if (!(task != null)) {
 				// Should not happen
 				return;
 			}
 
 			AbstractTaskEditor.setGlobalBusy(true);
 			NewAttachmentWizard naw = new NewAttachmentWizard(this.AbstractTaskEditor.repository,
-					(AbstractTask) task, text);
+					task, text);
 			openDialog(naw);
 		}
 		if (fileTransfer.isSupportedType(event.currentDataType)) {
@@ -120,13 +120,13 @@ class RepositoryTaskEditorDropListener implements DropTargetListener {
 				AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
 						this.AbstractTaskEditor.repository.getUrl(),
 						this.AbstractTaskEditor.taskData.getId());
-				if (!(task instanceof AbstractTask)) {
+				if (task == null) {
 					// Should not happen
 					return;
 				}
 
 				NewAttachmentWizard naw = new NewAttachmentWizard(this.AbstractTaskEditor.repository,
-						(AbstractTask) task, new File(files[0]));
+						task, new File(files[0]));
 				openDialog(naw);
 
 			}

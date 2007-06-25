@@ -44,6 +44,7 @@ public class MockAttributeFactory extends AbstractAttributeFactory {
 		return key;
 	}
 	
+	@Override
 	public Date getDateForAttributeType(String attributeKey, String dateString) {
 		// ignore
 		return null;

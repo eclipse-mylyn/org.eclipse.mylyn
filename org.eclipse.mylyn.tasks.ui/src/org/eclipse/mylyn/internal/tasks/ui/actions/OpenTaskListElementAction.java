@@ -43,7 +43,7 @@ public class OpenTaskListElementAction extends Action {
 		ISelection selection = viewer.getSelection();
 		List<?> list = ((IStructuredSelection) selection).toList();
 		for (Iterator<?> iterator = list.iterator(); iterator.hasNext();) {
-			Object element = (Object) iterator.next();
+			Object element = iterator.next();
 //			if (element instanceof ITaskListElement && !(element instanceof AbstractTaskContainer)) {
 			if (element instanceof AbstractTask) {
 				TasksUiUtil.refreshAndOpenTaskListElement((AbstractTaskContainer) element);

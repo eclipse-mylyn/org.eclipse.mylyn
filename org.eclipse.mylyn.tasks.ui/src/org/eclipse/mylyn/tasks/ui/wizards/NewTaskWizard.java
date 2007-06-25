@@ -64,7 +64,7 @@ public class NewTaskWizard extends Wizard implements INewWizard {
 		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 				taskRepository.getConnectorKind());
 
-		final AbstractTaskDataHandler taskDataHandler = (AbstractTaskDataHandler) connector.getTaskDataHandler();
+		final AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 		if (taskDataHandler == null) {
 			StatusHandler.displayStatus("Error creating new task", new RepositoryStatus(IStatus.ERROR,
 					TasksUiPlugin.ID_PLUGIN, RepositoryStatus.ERROR_REPOSITORY, "The selected repository does not support creating new tasks."));

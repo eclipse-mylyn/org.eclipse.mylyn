@@ -260,6 +260,7 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 			setSystem(true);
 		}
 
+		@Override
 		protected IStatus run(IProgressMonitor monitor) {
 			while (true) {
 				if (saveRequested) {

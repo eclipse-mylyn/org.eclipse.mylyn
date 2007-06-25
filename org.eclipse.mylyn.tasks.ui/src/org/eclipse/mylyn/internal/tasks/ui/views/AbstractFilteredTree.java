@@ -153,6 +153,7 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 				 * 
 				 * @see org.eclipse.jface.action.Action#run()
 				 */
+				@Override
 				public void run() {
 					clearText();
 				}

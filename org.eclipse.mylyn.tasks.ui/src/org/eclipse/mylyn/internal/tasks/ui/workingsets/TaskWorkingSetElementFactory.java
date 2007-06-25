@@ -37,7 +37,7 @@ public class TaskWorkingSetElementFactory implements IElementFactory {
 			TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 			for (AbstractTaskContainer element : taskList.getRootElements()) {
 				if (element.getHandleIdentifier().equals(taskHandle)) {
-					return (IAdaptable) element;
+					return element;
 				}
 			}
 		}

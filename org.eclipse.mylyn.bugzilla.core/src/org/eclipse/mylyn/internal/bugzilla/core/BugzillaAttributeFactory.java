@@ -122,6 +122,7 @@ public class BugzillaAttributeFactory extends AbstractAttributeFactory {
 		}
 	}
 	
+	@Override
 	public Date getDateForAttributeType(String attributeKey, String dateString) {
 		if (dateString == null || dateString.equals("")) {
 			return null;

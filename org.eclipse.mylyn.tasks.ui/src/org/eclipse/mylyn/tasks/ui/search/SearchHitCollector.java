@@ -119,7 +119,7 @@ public class SearchHitCollector implements ISearchQuery, ITaskCollector {
 			monitor.worked(1);
 		}
 		
-		taskResults.add((AbstractTask)hitTask);	
+		taskResults.add(hitTask);	
 		this.searchResult.addMatch(new Match(hitTask, 0, 0));
 	}
 

@@ -224,7 +224,7 @@ public class TasksUiExtensionReader {
 				AbstractDuplicateDetector duplicateDetector = (AbstractDuplicateDetector) obj;
 				duplicateDetector.setName(element.getAttribute(ATTR_NAME));
 				duplicateDetector.setKind(element.getAttribute(ATTR_KIND));
-				TasksUiPlugin.getDefault().addDuplicateDetector((AbstractDuplicateDetector) duplicateDetector);
+				TasksUiPlugin.getDefault().addDuplicateDetector(duplicateDetector);
 			} else {
 				StatusHandler.log("Could not load duplicate detector: " + obj.getClass().getCanonicalName(), null);
 			}
@@ -302,7 +302,7 @@ public class TasksUiExtensionReader {
 			Object connectorUiObject = element.createExecutableExtension(ATTR_CLASS);
 			if (connectorUiObject instanceof AbstractRepositoryConnectorUi) {
 				AbstractRepositoryConnectorUi connectorUi = (AbstractRepositoryConnectorUi) connectorUiObject;
-				TasksUiPlugin.getDefault().addRepositoryConnectorUi((AbstractRepositoryConnectorUi) connectorUi);
+				TasksUiPlugin.getDefault().addRepositoryConnectorUi(connectorUi);
 
 				String customNotificationsString = element.getAttribute(ATTR_CUSTOM_NOTIFICATIONS);
 				if (customNotificationsString != null) {
@@ -316,7 +316,7 @@ public class TasksUiExtensionReader {
 							.getName(), iconPath);
 					if (descriptor != null) {
 						TasksUiPlugin.getDefault().addBrandingIcon(
-								((AbstractRepositoryConnectorUi) connectorUi).getConnectorKind(),
+								connectorUi.getConnectorKind(),
 								TasksUiImages.getImage(descriptor));
 					}
 				}
@@ -326,7 +326,7 @@ public class TasksUiExtensionReader {
 							.getName(), overlayIconPath);
 					if (descriptor != null) {
 						TasksUiPlugin.getDefault().addOverlayIcon(
-								((AbstractRepositoryConnectorUi) connectorUi).getConnectorKind(), descriptor);
+								connectorUi.getConnectorKind(), descriptor);
 					}
 				}
 			} else {

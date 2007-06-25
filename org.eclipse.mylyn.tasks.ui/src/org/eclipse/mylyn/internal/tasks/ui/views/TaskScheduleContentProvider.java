@@ -58,6 +58,7 @@ public class TaskScheduleContentProvider extends TaskListContentProvider {
 			return customChildren;
 		}
 		
+		@Override
 		public String getPriority() {
 			return PriorityLevel.P1.toString();
 		}
@@ -83,6 +84,7 @@ public class TaskScheduleContentProvider extends TaskListContentProvider {
 		this.taskListManager = taskActivityManager;
 	}
 
+	@Override
 	public Object[] getElements(Object parent) {
 		if (parent.equals(this.view.getViewSite())) {
 			unscheduledCategory.activeTask = null;
@@ -94,8 +96,8 @@ public class TaskScheduleContentProvider extends TaskListContentProvider {
 			boolean containsActiveTask = false;
 			if (activeTask != null) {
 				for (AbstractTaskContainer taskListElement : ranges) {
-					if (taskListElement instanceof AbstractTaskContainer) {
-						if (((AbstractTaskContainer) taskListElement).getChildren().contains(activeTask)) {
+					if (taskListElement != null) {
+						if (taskListElement.getChildren().contains(activeTask)) {
 							containsActiveTask = true;
 						}
 					}
@@ -112,6 +114,7 @@ public class TaskScheduleContentProvider extends TaskListContentProvider {
 		}
 	}
 
+	@Override
 	public Object getParent(Object child) {
 //		if (child instanceof DateRangeActivityDelegate) {
 //			DateRangeActivityDelegate dateRangeTaskWrapper = (DateRangeActivityDelegate) child;
@@ -121,6 +124,7 @@ public class TaskScheduleContentProvider extends TaskListContentProvider {
 //		}
 	}
 
+	@Override
 	public boolean hasChildren(Object parent) {
 		if (parent instanceof ScheduledTaskContainer) {
 			ScheduledTaskContainer dateRangeTaskCategory = (ScheduledTaskContainer) parent;

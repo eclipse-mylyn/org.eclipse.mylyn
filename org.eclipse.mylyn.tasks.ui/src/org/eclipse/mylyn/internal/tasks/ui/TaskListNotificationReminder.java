@@ -93,7 +93,7 @@ public class TaskListNotificationReminder implements ITaskListNotification {
 	}
 	
 	public int compareTo(ITaskListNotification anotherNotification) throws ClassCastException {
-	    if (!(anotherNotification instanceof ITaskListNotification))
+	    if (!(anotherNotification != null))
 	      throw new ClassCastException("A ITaskListNotification object expected.");
 	    Date anotherDate = (anotherNotification).getDate();
 	    if(date != null && anotherDate != null) {

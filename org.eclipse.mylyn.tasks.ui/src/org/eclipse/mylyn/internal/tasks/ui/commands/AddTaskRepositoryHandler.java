@@ -23,11 +23,12 @@ import org.eclipse.ui.PlatformUI;
  */
 public class AddTaskRepositoryHandler extends AbstractHandler {
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		String param = event.getParameter("org.eclipse.mylyn.tasks.command.taskRepositoryId");
 		NewRepositoryWizard wizard = new NewRepositoryWizard(param);
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-		if (wizard != null && shell != null && !shell.isDisposed()) {
+		if (shell != null && !shell.isDisposed()) {
 			WizardDialog dialog = new WizardDialog(shell, wizard);
 			dialog.create();
 			dialog.getShell().setText("Add Task Repository");

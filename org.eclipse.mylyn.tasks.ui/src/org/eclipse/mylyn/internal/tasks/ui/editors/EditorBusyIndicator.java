@@ -90,6 +90,7 @@ public class EditorBusyIndicator {
 
 		animateTask = new TimerTask() {
 
+			@Override
 			public void run() {
 
 				try {

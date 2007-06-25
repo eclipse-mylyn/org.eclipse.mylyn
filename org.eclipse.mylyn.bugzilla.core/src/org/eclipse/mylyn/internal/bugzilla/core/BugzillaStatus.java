@@ -54,6 +54,7 @@ public class BugzillaStatus extends Status {
 	/**
 	 * Returns the message that is relevant to the code of this status.
 	 */
+	@Override
 	public String getMessage() {
 
 		switch (getCode()) {

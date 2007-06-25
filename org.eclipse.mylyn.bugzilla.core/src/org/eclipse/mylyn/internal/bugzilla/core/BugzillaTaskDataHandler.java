@@ -67,6 +67,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		this.connector = connector;
 	}
 
+	@Override
 	public RepositoryTaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
 			throws CoreException {
 		try {
@@ -103,6 +104,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		}
 	}
 
+	@Override
 	public Set<RepositoryTaskData> getMultiTaskData(TaskRepository repository, Set<String> taskIds,
 			IProgressMonitor monitor) throws CoreException {
 		try {
@@ -144,6 +146,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		}
 	}
 
+	@Override
 	public String postTaskData(TaskRepository repository, RepositoryTaskData taskData, IProgressMonitor monitor)
 			throws CoreException {
 		try {
@@ -166,11 +169,13 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		}
 	}
 
+	@Override
 	public AbstractAttributeFactory getAttributeFactory(String repositoryUrl, String repositoryKind, String taskKind) {
 		// we don't care about the repository information right now
 		return attributeFactory;
 	}
 
+	@Override
 	public AbstractAttributeFactory getAttributeFactory(RepositoryTaskData taskData) {
 		return getAttributeFactory(taskData.getRepositoryUrl(), taskData.getRepositoryKind(), taskData.getTaskKind());
 	}
@@ -274,6 +279,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		}
 	}
 
+	@Override
 	public boolean initializeTaskData(TaskRepository repository, RepositoryTaskData data, IProgressMonitor monitor)
 			throws CoreException {
 		// Bugzilla needs a product to create task data
@@ -281,6 +287,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 	}
 
 	// TODO: Move to AbstractTaskDataHandler
+	@Override
 	public Set<String> getSubTaskIds(RepositoryTaskData taskData) {
 		Set<String> result = new HashSet<String>();
 		RepositoryTaskAttribute attribute = taskData.getAttribute(BugzillaReportElement.DEPENDSON.getKeyString());

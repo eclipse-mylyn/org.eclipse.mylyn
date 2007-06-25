@@ -68,8 +68,7 @@ import org.eclipse.swt.widgets.Display;
 /**
  * Provides facilities for using and managing the Task List and task activity information.
  * 
- * TODO: pull task activity management out into new TaskActivityManager
- * NOTE: likely to change for 3.0
+ * TODO: pull task activity management out into new TaskActivityManager NOTE: likely to change for 3.0
  * 
  * @author Mik Kersten
  * @author Rob Elves (task activity)
@@ -214,7 +213,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		public void containersChanged(Set<TaskContainerDelta> containers) {
 			for (TaskContainerDelta taskContainerDelta : containers) {
 				if (taskContainerDelta.getContainer() instanceof AbstractTask) {
-					switch(taskContainerDelta.getKind()) {
+					switch (taskContainerDelta.getKind()) {
 					case REMOVED:
 						TaskListManager.this.resetAndRollOver();
 						return;
@@ -325,15 +324,14 @@ public class TaskListManager implements IPropertyChangeListener {
 					activityNextWeek.addTask(new ScheduledTaskDelegate(activityNextWeek, task, tempCalendar,
 							tempCalendar));
 				} else if (activityFuture.includes(tempCalendar)) {
-					activityFuture.addTask(new ScheduledTaskDelegate(activityFuture, task, tempCalendar,
-							tempCalendar));
+					activityFuture.addTask(new ScheduledTaskDelegate(activityFuture, task, tempCalendar, tempCalendar));
 				} else if (activityThisWeek.includes(tempCalendar) && !activityThisWeek.getChildren().contains(task)) {
 					activityThisWeek.addTask(new ScheduledTaskDelegate(activityThisWeek, task, tempCalendar,
 							tempCalendar));
 				} else if (activityPreviousWeek.includes(tempCalendar)
 						&& !activityPreviousWeek.getChildren().contains(task)) {
-					activityPreviousWeek.addTask(new ScheduledTaskDelegate(activityPreviousWeek, task,
-							tempCalendar, tempCalendar));
+					activityPreviousWeek.addTask(new ScheduledTaskDelegate(activityPreviousWeek, task, tempCalendar,
+							tempCalendar));
 				} else if (activityPast.includes(tempCalendar) && !activityPast.getChildren().contains(task)) {
 					activityPast.addTask(new ScheduledTaskDelegate(activityPast, task, tempCalendar, tempCalendar));
 				}
@@ -436,8 +434,8 @@ public class TaskListManager implements IPropertyChangeListener {
 					if (activeTime == null) {
 						activeTime = new Long(0);
 					}
-					ScheduledTaskDelegate delegate = new ScheduledTaskDelegate(week, currentTask,
-							currentTaskStart, currentTaskEnd, activeTime);
+					ScheduledTaskDelegate delegate = new ScheduledTaskDelegate(week, currentTask, currentTaskStart,
+							currentTaskEnd, activeTime);
 					week.addTask(delegate);
 					if (taskActivityHistoryInitialized) {
 						for (ITaskActivityListener listener : activityListeners) {
@@ -732,12 +730,15 @@ public class TaskListManager implements IPropertyChangeListener {
 	private void refactorOfflineHandles(String oldRepositoryUrl, String newRepositoryUrl) {
 		TaskDataManager taskDataManager = TasksUiPlugin.getTaskDataManager();
 		for (AbstractTask task : taskList.getAllTasks()) {
-			if (task instanceof AbstractTask) {
-				AbstractTask repositoryTask = (AbstractTask) task;
+			if (task != null) {
+				AbstractTask repositoryTask = task;
 				if (repositoryTask.getRepositoryUrl().equals(oldRepositoryUrl)) {
-					RepositoryTaskData newTaskData = taskDataManager.getNewTaskData(repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId());
-					RepositoryTaskData oldTaskData = taskDataManager.getOldTaskData(repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId());
-					Set<RepositoryTaskAttribute> edits = taskDataManager.getEdits(repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId());
+					RepositoryTaskData newTaskData = taskDataManager.getNewTaskData(repositoryTask.getRepositoryUrl(),
+							repositoryTask.getTaskId());
+					RepositoryTaskData oldTaskData = taskDataManager.getOldTaskData(repositoryTask.getRepositoryUrl(),
+							repositoryTask.getTaskId());
+					Set<RepositoryTaskAttribute> edits = taskDataManager.getEdits(repositoryTask.getRepositoryUrl(),
+							repositoryTask.getTaskId());
 					taskDataManager.remove(repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId());
 
 					if (newTaskData != null) {
@@ -921,18 +922,15 @@ public class TaskListManager implements IPropertyChangeListener {
 	}
 
 	public boolean isOwnedByUser(AbstractTask task) {
-//		if (task instanceof WebTask || (task instanceof AbstractTask && ((AbstractTask) task).isLocal())) {
 		if (task.isLocal()) {
 			return true;
 		}
 
-		if (task instanceof AbstractTask) {
-			AbstractTask repositoryTask = (AbstractTask) task;
-			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
-					repositoryTask.getConnectorKind(), repositoryTask.getRepositoryUrl());
-			if (repository != null && repositoryTask.getOwner() != null) {
-				return repositoryTask.getOwner().equals(repository.getUserName());
-			}
+		AbstractTask repositoryTask = task;
+		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+				repositoryTask.getConnectorKind(), repositoryTask.getRepositoryUrl());
+		if (repository != null && repositoryTask.getOwner() != null) {
+			return repositoryTask.getOwner().equals(repository.getUserName());
 		}
 
 		return false;
@@ -1153,13 +1151,15 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	/**
 	 * Creates a new local task and schedules for today
-	 * @param summary if null DEFAULT_SUMMARY (New Task) used.
+	 * 
+	 * @param summary
+	 *            if null DEFAULT_SUMMARY (New Task) used.
 	 */
 	public LocalTask createNewLocalTask(String summary) {
 		if (summary == null) {
 			summary = LocalRepositoryConnector.DEFAULT_SUMMARY;
 		}
-		LocalTask newTask = new LocalTask(""+taskList.getNextLocalTaskId(), summary);
+		LocalTask newTask = new LocalTask("" + taskList.getNextLocalTaskId(), summary);
 		newTask.setPriority(PriorityLevel.P3.toString());
 
 		scheduleNewTask(newTask);
@@ -1173,9 +1173,9 @@ public class TaskListManager implements IPropertyChangeListener {
 			taskList.addTask(newTask, (TaskCategory) selectedObject);
 		} else if (selectedObject instanceof AbstractTask) {
 			AbstractTask task = (AbstractTask) selectedObject;
-			
+
 			AbstractTaskContainer container = null;
-			if(task.getChildren().size() > 0 && task.getParentContainers().iterator().hasNext()) {
+			if (task.getChildren().size() > 0 && task.getParentContainers().iterator().hasNext()) {
 				container = task.getParentContainers().iterator().next();
 			}
 			if (container instanceof TaskCategory) {

@@ -27,7 +27,6 @@ import org.eclipse.mylyn.monitor.core.DateUtil;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -244,12 +243,10 @@ public class TaskListToolTipHandler {
 			}
 		} else if (element instanceof AbstractTask) {
 			AbstractTask repositoryTask = (AbstractTask) element;
-			if (repositoryTask != null) {
-				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-						repositoryTask.getConnectorKind());
-				if (connector != null) {
-					return TasksUiPlugin.getDefault().getBrandingIcon(connector.getConnectorKind());
-				}
+			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+					repositoryTask.getConnectorKind());
+			if (connector != null) {
+				return TasksUiPlugin.getDefault().getBrandingIcon(connector.getConnectorKind());
 			}
 		} else if (element instanceof ScheduledTaskContainer) {
 			return TasksUiImages.getImage(TasksUiImages.CALENDAR);

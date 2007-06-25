@@ -42,7 +42,7 @@ public class TaskWorkingSetElementAdapter implements IWorkingSetElementAdapter {
 				containers.add(adaptable);
 			}
 		}
-		return (IAdaptable[]) containers.toArray(new IAdaptable[containers.size()]);
+		return containers.toArray(new IAdaptable[containers.size()]);
 	}
 
 	public void dispose() {

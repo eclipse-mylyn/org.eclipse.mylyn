@@ -48,7 +48,7 @@ public class OpenWithBrowserAction extends BaseSelectionListenerAction {
 		String urlString = null;
 		if (selectedObject instanceof AbstractTask) {
 			AbstractTask task = (AbstractTask)selectedObject;
-			if (task != null && task.hasValidUrl()) {
+			if (task.hasValidUrl()) {
 				urlString = task.getUrl();
 			}
 		} else if (selectedObject instanceof AbstractTaskContainer) {

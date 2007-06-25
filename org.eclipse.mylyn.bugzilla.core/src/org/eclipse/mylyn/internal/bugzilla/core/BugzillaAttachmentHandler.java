@@ -36,6 +36,7 @@ public class BugzillaAttachmentHandler extends AbstractAttachmentHandler {
 		this.connector = connector;
 	}
 
+	@Override
 	public InputStream getAttachmentAsStream(TaskRepository repository, RepositoryAttachment attachment, IProgressMonitor monitor) throws CoreException {
 		try {
 			BugzillaClient client = connector.getClientManager().getClient(repository);
@@ -46,6 +47,7 @@ public class BugzillaAttachmentHandler extends AbstractAttachmentHandler {
 		}
 	}
 
+	@Override
 	public void uploadAttachment(TaskRepository repository, AbstractTask task, ITaskAttachment attachment,
 			String comment, IProgressMonitor monitor) throws CoreException {
 		try {
@@ -58,18 +60,22 @@ public class BugzillaAttachmentHandler extends AbstractAttachmentHandler {
 		}
 	}
 
+	@Override
 	public boolean canDownloadAttachment(TaskRepository repository, AbstractTask task) {
 		return true;
 	}
 
+	@Override
 	public boolean canUploadAttachment(TaskRepository repository, AbstractTask task) {
 		return true;
 	}
 
+	@Override
 	public boolean canDeprecate(TaskRepository repository, RepositoryAttachment attachment) {
 		return false;
 	}
 
+	@Override
 	public void updateAttachment(TaskRepository repository, RepositoryAttachment attachment) throws CoreException {
 		// implement
 	}

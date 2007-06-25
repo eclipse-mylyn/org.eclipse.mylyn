@@ -60,6 +60,7 @@ public class AbstractReportFactory {
 		final BufferedInputStream is = new BufferedInputStream(inStream, 1024);
 
 		InputStream iis = new InputStream() {
+			@Override
 			public int read() throws IOException {
 				int c;
 				while ((c = is.read()) != -1) {
@@ -78,7 +79,7 @@ public class AbstractReportFactory {
 			in = new InputStreamReader(iis);
 		}
 
-		if (in != null && clean) {
+		if (clean) {
 			StringBuffer result = XmlCleaner.clean(in);
 			StringReader strReader = new StringReader(result.toString());
 			in = new BufferedReader(strReader);

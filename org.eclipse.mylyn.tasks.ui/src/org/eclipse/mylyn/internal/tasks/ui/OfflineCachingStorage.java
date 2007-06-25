@@ -215,6 +215,7 @@ public class OfflineCachingStorage implements ITaskDataStorage {
 			setSystem(true);
 		}
 
+		@Override
 		protected IStatus run(IProgressMonitor monitor) {
 			while (true) {
 				if (saveRequested) {

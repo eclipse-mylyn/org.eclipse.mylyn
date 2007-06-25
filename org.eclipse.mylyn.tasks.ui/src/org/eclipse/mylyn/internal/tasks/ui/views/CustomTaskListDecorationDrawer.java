@@ -109,8 +109,8 @@ class CustomTaskListDecorationDrawer implements Listener {
 			offsetX = event.x + 18 - platformSpecificSquish;
 			offsetY += 2;
 		}
-		if (element instanceof AbstractTaskContainer && !(element instanceof AbstractTask)) {
-			if (!hideDecorationOnContainer(element) && hasIncoming((AbstractTaskContainer) element)) {
+		if (element != null && !(element instanceof AbstractTask)) {
+			if (!hideDecorationOnContainer(element) && hasIncoming(element)) {
 				int additionalSquish = 0;
 				if (platformSpecificSquish > 0 && taskListView.synchronizationOverlaid) {
 					additionalSquish = platformSpecificSquish + 3;
@@ -141,8 +141,8 @@ class CustomTaskListDecorationDrawer implements Listener {
 
 	private boolean hasIncoming(AbstractTaskContainer container) {
 		for (AbstractTask task : container.getChildren()) {
-			if (task instanceof AbstractTask) {
-				AbstractTask containedRepositoryTask = (AbstractTask) task;
+			if (task != null) {
+				AbstractTask containedRepositoryTask = task;
 				if (containedRepositoryTask.getSynchronizationState() == RepositoryTaskSyncState.INCOMING) {
 					return true;
 				}

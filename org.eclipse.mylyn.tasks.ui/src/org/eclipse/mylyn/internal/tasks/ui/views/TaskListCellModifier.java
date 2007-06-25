@@ -64,8 +64,8 @@ class TaskListCellModifier implements ICellModifier {
 					AbstractTask task = (AbstractTask) taskListElement;
 					switch (columnIndex) {
 					case 0:
-						if (!(task instanceof AbstractTask)) {
-							TasksUiPlugin.getTaskListManager().getTaskList().renameTask((AbstractTask) task,
+						if (!(task != null)) {
+							TasksUiPlugin.getTaskListManager().getTaskList().renameTask(task,
 									((String) value).trim());
 						}
 						break;

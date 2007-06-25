@@ -156,6 +156,7 @@ public class TracAttributeFactory extends AbstractAttributeFactory {
 		return RepositoryTaskAttribute.COMMENT_NEW.equals(id) || RepositoryTaskAttribute.REMOVE_CC.equals(id) || RepositoryTaskAttribute.NEW_CC.equals(id) || RepositoryTaskAttribute.ADD_SELF_CC.equals(id);
 	}
 	
+	@Override
 	public Date getDateForAttributeType(String attributeKey, String dateString) {
 		if (dateString == null || dateString.length() == 0) {
 			return null;

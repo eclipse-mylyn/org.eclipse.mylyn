@@ -36,6 +36,7 @@ public class TracAttachmentHandler extends AbstractAttachmentHandler {
 		this.connector = connector;
 	}
 
+	@Override
 	public InputStream getAttachmentAsStream(TaskRepository repository, RepositoryAttachment attachment,
 			IProgressMonitor monitor) throws CoreException {
 		String filename = attachment.getAttributeValue(RepositoryTaskAttribute.ATTACHMENT_FILENAME);
@@ -54,6 +55,7 @@ public class TracAttachmentHandler extends AbstractAttachmentHandler {
 		}
 	}
 
+	@Override
 	public void uploadAttachment(TaskRepository repository, AbstractTask task, ITaskAttachment attachment,
 			String comment, IProgressMonitor monitor) throws CoreException {
 		if (!TracRepositoryConnector.hasAttachmentSupport(repository, task)) {
@@ -80,6 +82,7 @@ public class TracAttachmentHandler extends AbstractAttachmentHandler {
 		}
 	}
 
+	@Override
 	public boolean canDownloadAttachment(TaskRepository repository, AbstractTask task) {
 		if (repository == null) {
 			return false;
@@ -87,6 +90,7 @@ public class TracAttachmentHandler extends AbstractAttachmentHandler {
 		return TracRepositoryConnector.hasAttachmentSupport(repository, task);
 	}
 
+	@Override
 	public boolean canUploadAttachment(TaskRepository repository, AbstractTask task) {
 		if (repository == null) {
 			return false;
@@ -94,10 +98,12 @@ public class TracAttachmentHandler extends AbstractAttachmentHandler {
 		return TracRepositoryConnector.hasAttachmentSupport(repository, task);
 	}
 
+	@Override
 	public boolean canDeprecate(TaskRepository repository, RepositoryAttachment attachment) {
 		return false;
 	}
 
+	@Override
 	public void updateAttachment(TaskRepository repository, RepositoryAttachment attachment) throws CoreException {
 		throw new UnsupportedOperationException();
 	}

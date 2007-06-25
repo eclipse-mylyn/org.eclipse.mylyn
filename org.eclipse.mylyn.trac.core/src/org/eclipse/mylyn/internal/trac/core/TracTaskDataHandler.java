@@ -54,6 +54,7 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 		this.connector = connector;
 	}
 
+	@Override
 	public RepositoryTaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
 			throws CoreException {
 		return downloadTaskData(repository, TracRepositoryConnector.getTicketId(taskId));
@@ -79,11 +80,13 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 		}
 	}
 
+	@Override
 	public AbstractAttributeFactory getAttributeFactory(String repositoryUrl, String repositoryKind, String taskKind) {
 		// we don't care about the repository information right now
 		return attributeFactory;
 	}
 
+	@Override
 	public AbstractAttributeFactory getAttributeFactory(RepositoryTaskData taskData) {
 		return getAttributeFactory(taskData.getRepositoryUrl(), taskData.getRepositoryKind(), taskData.getTaskKind());
 	}
@@ -323,11 +326,12 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 		return createAttribute(factory, data, attribute, values, false);
 	}
 
+	@Override
 	public String postTaskData(TaskRepository repository, RepositoryTaskData taskData, IProgressMonitor monitor)
 			throws CoreException {
 		try {
 			TracTicket ticket = TracRepositoryConnector.getTracTicket(repository, taskData);
-			ITracClient server = ((TracRepositoryConnector) connector).getClientManager().getRepository(repository);
+			ITracClient server = connector.getClientManager().getRepository(repository);
 			if (taskData.isNew()) {
 				int id = server.createTicket(ticket);
 				return id + "";
@@ -344,6 +348,7 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 		}
 	}
 
+	@Override
 	public boolean initializeTaskData(TaskRepository repository, RepositoryTaskData data, IProgressMonitor monitor)
 			throws CoreException {
 		try {
@@ -356,6 +361,7 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 		}
 	}
 
+	@Override
 	public Set<String> getSubTaskIds(RepositoryTaskData taskData) {
 		// TODO Auto-generated method stub
 		return Collections.emptySet();

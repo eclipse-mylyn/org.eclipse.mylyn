@@ -52,7 +52,7 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 	public Image getColumnImage(Object element, int columnIndex) {
 		if (columnIndex == 0) {
 			if (element instanceof ScheduledTaskContainer) {
-				super.getImage((ScheduledTaskContainer)element);
+				super.getImage(element);
 			} else if (element instanceof ScheduledTaskDelegate) {
 				return super.getImage(((ScheduledTaskDelegate) element).getCorrespondingTask());
 			} else {
@@ -73,11 +73,9 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 			AbstractTask task = activityDelegate.getCorrespondingTask();
 			switch (columnIndex) {			
 			case 2:
-				if(task instanceof AbstractTask) {
-					return ((AbstractTask)task).getTaskKey() +": " + task.getSummary();
-				} else {
-					return task.getSummary();
-				}
+				if (task != null) {
+					return task.getTaskKey() +": " + task.getSummary();
+				} 
 			case 3:
 				return DateUtil.getFormattedDurationShort(activityDelegate.getDateRangeContainer().getElapsed(activityDelegate));
 			case 4:

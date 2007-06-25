@@ -318,7 +318,7 @@ public final class TaskEditor extends SharedHeaderFormEditor implements IBusyEdi
 				setActivePage(selectedIndex);
 			}
 
-			if (task instanceof AbstractTask) {
+			if (task != null) {
 				setTitleImage(TasksUiImages.getImage(TasksUiImages.TASK_REPOSITORY));
 			} else if (getEditorInput() instanceof AbstractRepositoryTaskEditorInput) {
 				this.setTitleImage(TasksUiImages.getImage(TasksUiImages.TASK_REMOTE));
@@ -351,6 +351,7 @@ public final class TaskEditor extends SharedHeaderFormEditor implements IBusyEdi
 		updateFormTitle();
 	}
 
+	@Override
 	public void showBusy(boolean busy) {
 		// if (!this.getHeaderForm().getForm().isDisposed()) {
 		// this.getHeaderForm().getForm().setBusy(busy);
@@ -392,15 +393,15 @@ public final class TaskEditor extends SharedHeaderFormEditor implements IBusyEdi
 			if (task instanceof LocalTask) {
 				getHeaderForm().getForm().setText("Task: " + task.getSummary());
 			} else {
-				setFormHeaderImage(((AbstractTask) task).getConnectorKind());
-				setFormHeaderLabel((AbstractTask) task);
+				setFormHeaderImage(task.getConnectorKind());
+				setFormHeaderLabel(task);
 				return;
 			}
 		} else if (input instanceof RepositoryTaskEditorInput) {
 			AbstractTask task = ((RepositoryTaskEditorInput) input).getRepositoryTask();
-			if (task != null && task instanceof AbstractTask) {
-				setFormHeaderImage(((AbstractTask) task).getConnectorKind());
-				setFormHeaderLabel((AbstractTask) task);
+			if (task != null) {
+				setFormHeaderImage(task.getConnectorKind());
+				setFormHeaderLabel(task);
 				return;
 			} else {
 				RepositoryTaskData data = ((RepositoryTaskEditorInput) input).getTaskData();

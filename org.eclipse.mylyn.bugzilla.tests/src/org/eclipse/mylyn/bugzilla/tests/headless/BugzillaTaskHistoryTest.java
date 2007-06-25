@@ -42,6 +42,7 @@ public class BugzillaTaskHistoryTest extends AbstractBugzillaTest {
 
 	private static final String REPORT_ID = "1";
 
+	@Override
 	public void setUp() throws Exception {
 		super.setUp();
 		connector = new BugzillaRepositoryConnector();

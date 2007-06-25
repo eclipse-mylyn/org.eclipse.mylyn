@@ -16,6 +16,7 @@ import org.eclipse.swt.graphics.Image;
  */
 public class PersonProposalLabelProvider extends LabelProvider {
 
+	@Override
 	public Image getImage(Object element) {
 		if (element instanceof PersonContentProposal) {
 			return ((PersonContentProposal)element).getImage();

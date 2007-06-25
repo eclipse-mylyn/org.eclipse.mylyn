@@ -218,9 +218,9 @@ public class TasksUiUtil {
 
 			if (task instanceof LocalTask) {
 				TasksUiUtil.openEditor(task, false);
-			} else if (task instanceof AbstractTask) {
+			} else if (task != null) {
 
-				final AbstractTask repositoryTask = (AbstractTask) task;
+				final AbstractTask repositoryTask = task;
 				String repositoryKind = repositoryTask.getConnectorKind();
 				final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
 						.getRepositoryConnector(repositoryKind);
@@ -272,8 +272,8 @@ public class TasksUiUtil {
 
 	private static String getTaskEditorId(final AbstractTask task) {
 		String taskEditorId = TaskEditor.ID_EDITOR;
-		if (task instanceof AbstractTask) {
-			AbstractTask repositoryTask = (AbstractTask) task;
+		if (task != null) {
+			AbstractTask repositoryTask = task;
 			AbstractRepositoryConnectorUi repositoryUi = TasksUiPlugin.getConnectorUi(repositoryTask.getConnectorKind());
 			String customTaskEditorId = repositoryUi.getTaskEditorId(repositoryTask);
 			if (customTaskEditorId != null) {
@@ -335,8 +335,8 @@ public class TasksUiUtil {
 
 							@Override
 							protected IStatus run(IProgressMonitor monitor) {
-								if (task instanceof AbstractTask) {
-									AbstractTask repositoryTask = (AbstractTask) task;
+								if (task != null) {
+									AbstractTask repositoryTask = task;
 									if (!wasOpen) {
 										TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
 									}
@@ -369,8 +369,8 @@ public class TasksUiUtil {
 					IWorkbenchPage page = window.getActivePage();
 					openEditor(editorInput, taskEditorId, page);
 				}
-				if (task instanceof AbstractTask) {
-					TasksUiPlugin.getSynchronizationManager().setTaskRead((AbstractTask) task, true);
+				if (task != null) {
+					TasksUiPlugin.getSynchronizationManager().setTaskRead(task, true);
 				}
 			} else {
 				StatusHandler.log("Unable to open editor for " + task.getSummary(), TasksUiUtil.class);
@@ -382,9 +382,9 @@ public class TasksUiUtil {
 	 * If task is already open and has incoming, must force refresh in place
 	 */
 	private static boolean refreshIfOpen(AbstractTask task, IEditorInput editorInput) {
-		if (task instanceof AbstractTask) {
-			if (((AbstractTask) task).getSynchronizationState() == RepositoryTaskSyncState.INCOMING
-					|| ((AbstractTask) task).getSynchronizationState() == RepositoryTaskSyncState.CONFLICT) {
+		if (task != null) {
+			if (task.getSynchronizationState() == RepositoryTaskSyncState.INCOMING
+					|| task.getSynchronizationState() == RepositoryTaskSyncState.CONFLICT) {
 				for (TaskEditor editor : getActiveRepositoryTaskEditors()) {
 					if (editor.getEditorInput().equals(editorInput)) {
 						editor.refreshEditorContents();
@@ -423,7 +423,7 @@ public class TasksUiUtil {
 		try {
 			EditRepositoryWizard wizard = new EditRepositoryWizard(repository);
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-			if (wizard != null && shell != null && !shell.isDisposed()) {
+			if (shell != null && !shell.isDisposed()) {
 				WizardDialog dialog = new WizardDialog(shell, wizard);
 				dialog.create();
 				dialog.setBlockOnOpen(true);
@@ -454,7 +454,7 @@ public class TasksUiUtil {
 					TaskEditor taskEditor = (TaskEditor) editor;
 					if (taskEditor.getEditorInput() instanceof TaskEditorInput) {
 						TaskEditorInput input = (TaskEditorInput) taskEditor.getEditorInput();
-						if (input.getTask() instanceof AbstractTask) {
+						if (input.getTask() != null) {
 							repositoryTaskEditors.add((TaskEditor) editor);
 						}
 					}
@@ -509,8 +509,8 @@ public class TasksUiUtil {
 				return TasksUiPlugin.getDefault().getRepositoryForResource(resource, true);
 			} else {
 				AbstractTask task = (AbstractTask) adaptable.getAdapter(AbstractTask.class);
-				if (task instanceof AbstractTask) {
-					AbstractTask rtask = (AbstractTask) task;
+				if (task != null) {
+					AbstractTask rtask = task;
 					return TasksUiPlugin.getRepositoryManager().getRepository(rtask.getConnectorKind(),
 							rtask.getRepositoryUrl());
 				}

@@ -277,8 +277,8 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			return null;
 		}
 		AbstractTask task = getCorrespondingTask((AbstractTaskContainer) element);
-		if (task instanceof AbstractTask) {
-			AbstractTask repositoryTask = (AbstractTask) task;
+		if (task != null) {
+			AbstractTask repositoryTask = task;
 			if (repositoryTask.isSynchronizing()) {
 				return TaskListColorsAndFonts.ITALIC;
 			}

@@ -40,7 +40,7 @@ public class ActivityReportAction extends Action {
 		TaskActivityWizard wizard = new TaskActivityWizard();
 
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-		if (wizard != null && shell != null && !shell.isDisposed()) {
+		if (shell != null && !shell.isDisposed()) {
 
 			WizardDialog dialog = new WizardDialog(shell, wizard);
 			dialog.setBlockOnOpen(true);

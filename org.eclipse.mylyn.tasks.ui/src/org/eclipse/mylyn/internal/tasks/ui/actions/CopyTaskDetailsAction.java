@@ -69,9 +69,7 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 				task = (AbstractTask) object;
 			}
 			if (task != null) {
-				if (task instanceof AbstractTask) {
-					text += ((AbstractTask) task).getTaskKey() + ": ";
-				}
+				text += task.getTaskKey() + ": ";
 
 				text += task.getSummary();
 				if (task.hasValidUrl()) {
