@@ -226,18 +226,24 @@ litigation.
       <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.eclipse.pde.ui"/>
       <import plugin="org.eclipse.debug.ui"/>
-      <import plugin="org.eclipse.mylyn.context.core"/>
-      <import plugin="org.eclipse.mylyn.context.ui"/>
-      <import plugin="org.eclipse.mylyn.monitor.ui"/>
-      <import plugin="org.eclipse.mylyn.resources.ui"/>
-      <import plugin="org.eclipse.mylyn"/>
       <import plugin="org.eclipse.ui.editors"/>
-      <import plugin="org.eclipse.mylyn.ide.ui"/>
       <import plugin="org.eclipse.search"/>
-      <import plugin="org.eclipse.mylyn.monitor.core"/>
       <import plugin="org.eclipse.jdt.core"/>
       <import plugin="org.eclipse.mylyn.java.ui"/>
+      <import plugin="org.eclipse.mylyn.context.ui"/>
+      <import plugin="org.eclipse.mylyn.ide.ui"/>
+      <import plugin="org.eclipse.mylyn.monitor.ui"/>
+      <import plugin="org.eclipse.mylyn.monitor.core"/>
+      <import plugin="org.eclipse.mylyn.resources.ui"/>
+      <import plugin="org.eclipse.mylyn.context.core"/>
+      <import plugin="org.eclipse.mylyn"/>
       <import feature="org.eclipse.mylyn_feature" version="2.0.0.v20070619-1930" match="compatible"/>
+      <import feature="org.eclipse.mylyn.ide_feature" version="2.0.0.v20070619-1930" match="compatible"/>
+      <import plugin="org.eclipse.jdt.launching"/>
+      <import plugin="org.eclipse.jdt.junit"/>
+      <import plugin="org.eclipse.jdt.debug.ui"/>
+      <import plugin="org.eclipse.ant.ui"/>
+      <import plugin="org.eclipse.ui.views"/>
    </requires>
 
    <plugin
