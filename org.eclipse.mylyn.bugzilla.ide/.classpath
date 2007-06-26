@@ -7,7 +7,6 @@
 			<accessrule kind="accessible" pattern="**/TaskListColorsAndFonts"/>
 			<accessrule kind="accessible" pattern="**/TaskListPreferenceConstants"/>
 			<accessrule kind="accessible" pattern="**/mylyn/internal/bugzilla/**"/>
-			<accessrule kind="discouraged" pattern="**/mylyn/**/internal/**"/>
 			<accessrule kind="accessible" pattern="**/internal/**"/>
 		</accessrules>
 	</classpathentry>

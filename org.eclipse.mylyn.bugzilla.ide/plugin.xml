@@ -20,4 +20,17 @@
             version="2.22"/>
    </extension>    
   
+   <extension point="org.eclipse.ui.popupMenus">
+        <viewerContribution
+		    id="org.eclipse.mylyn.tasklist.ui.objectContribution"
+            targetID="org.eclipse.pde.runtime.LogView">
+      	<action
+	      	class="org.eclipse.mylyn.internal.bugzilla.ide.actions.NewTaskFromErrorAction"
+	        icon="icons/etool16/task-repository-new.gif"
+	        id="org.eclipse.mylyn.tasklist.actions.newTaskFromErrorLog"
+	        label="Report as Bug"
+	        menubarPath="org.eclipse.pde.runtime.LogView"/>
+      </viewerContribution>
+   </extension>
+  
 </plugin>
