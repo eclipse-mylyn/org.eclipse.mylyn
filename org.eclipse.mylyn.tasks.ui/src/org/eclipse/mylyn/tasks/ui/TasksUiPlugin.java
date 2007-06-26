@@ -860,11 +860,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				TaskComment lastComment = taskComments.get(taskComments.size() - 1);
 				if (lastComment != null) {
 					descriptionText += "Comment by " + lastComment.getAuthor() + ":\n  ";
-					String commentText = lastComment.getText().replaceAll("\\s", " ").trim();
-					if (commentText.length() > 60) {
-						commentText = commentText.substring(0, 55) + "...";
-					}
-					descriptionText += commentText;
+					descriptionText += cleanValue(lastComment.getText());
 				}
 			}
 		}
@@ -911,8 +907,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		String sep = "";
 		int n = 0;
 		for (Change change : changes) {
-			String removed = change.removed.toString();
-			String added = change.added.toString();
+			String removed = cleanValues(change.removed);
+			String added = cleanValues(change.added);
 			details += sep + "  " + change.field + " " + removed;
 			if (removed.length() > 30) {
 				details += "\n  ";
@@ -931,7 +927,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 //			}
 
 			n++;
-			if (n > 5) { // that may not be enough
+			if (n > 5) {
+				details += "\nOpen to view more changes";
 				break;
 			}
 		}
@@ -939,6 +936,26 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			return "Attributes Changed:\n" + details;
 		}
 		return details;
+	}
+
+	private static String cleanValues(List<String> values) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[");
+		boolean first = true;
+		for (String value : values) {
+			if(!first) sb.append(", ");
+			sb.append(cleanValue(value));
+		}
+		sb.append("]");
+		return sb.toString();
+	}
+	
+	private static String cleanValue(String value) {
+		String commentText = value.replaceAll("\\s", " ").trim();
+		if (commentText.length() > 60) {
+			commentText = commentText.substring(0, 55) + "...";
+		}
+		return commentText;
 	}
 
 	private static Change getDiff(String field, List<String> oldValues, List<String> newValues) {
