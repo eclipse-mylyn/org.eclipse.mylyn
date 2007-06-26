@@ -323,7 +323,7 @@ public class ActiveSearchView extends ViewPart {
 			Set<AbstractRelationProvider> providers = ContextCorePlugin.getDefault().getRelationProviders(
 					uiBridge.getContentType());
 			if (providers != null && providers.size() > 0) {
-				ToggleRelationshipProviderAction action = new ToggleRelationshipProviderAction(providers, uiBridge);
+				ToggleRelationshipProviderAction action = new ToggleRelationshipProviderAction(this, providers, uiBridge);
 				relationshipProviderActions.add(action);
 				manager.add(action);
 			}

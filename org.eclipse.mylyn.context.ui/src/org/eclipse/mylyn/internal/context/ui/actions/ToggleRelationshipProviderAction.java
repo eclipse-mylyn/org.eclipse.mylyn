@@ -35,15 +35,16 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 
 	public static final String ID = "org.eclipse.mylyn.ui.actions.active.search.toggle";
 
-//	private AbstractContextStructureBridge structureBridge;
-
+	private ActiveSearchView view;
+	
 	private Set<AbstractRelationProvider> providers;
 
 	private Menu dropDownMenu = null;
 
-	public ToggleRelationshipProviderAction(Set<AbstractRelationProvider> providers, AbstractContextUiBridge uiBridge) {
+	public ToggleRelationshipProviderAction(ActiveSearchView view, Set<AbstractRelationProvider> providers, AbstractContextUiBridge uiBridge) {
 		super();
 		this.providers = providers;
+		this.view = view;
 		setImageDescriptor(ContextUiPlugin.getDefault().getActiveSearchIcon(uiBridge));
 		setId(ID);
 		setText(ContextUiPlugin.getDefault().getActiveSearchLabel(uiBridge));
@@ -64,7 +65,7 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 
 	@Override
 	public void run() {
-		ActiveSearchView.getFromActivePerspective().updateDegreesOfSeparation(providers, degreeOfSeparation);
+		view.updateDegreesOfSeparation(providers, degreeOfSeparation);
 	}
 
 	public void dispose() {

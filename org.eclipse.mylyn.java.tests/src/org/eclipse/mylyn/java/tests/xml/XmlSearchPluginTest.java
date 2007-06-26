@@ -67,9 +67,9 @@ public class XmlSearchPluginTest extends TestCase implements ISearchPluginTest {
 		WorkspaceSetupHelper.setupWorkspace();
 		jp1 = WorkspaceSetupHelper.getProject1();
 		jp2 = WorkspaceSetupHelper.getProject2();
-		type1 = WorkspaceSetupHelper.getType(jp1, "org.eclipse.mylyn.tests.project1.views.SampleView");
+		type1 = WorkspaceSetupHelper.getType(jp1, "org.eclipse.mylar.tests.project1.views.SampleView");
 		type2 = WorkspaceSetupHelper.getType(jp2,
-				"org.eclipse.mylyn.tests.project2.builder.SampleBuilder.SampleResourceVisitor");
+				"org.eclipse.mylar.tests.project2.builder.SampleBuilder.SampleResourceVisitor");
 		plugin1 = WorkspaceSetupHelper.getFile(jp1, "plugin.xml");
 		tocRefs = WorkspaceSetupHelper.getFile(jp1, "toc-refs.xml");
 		tocNoRefs = WorkspaceSetupHelper.getFile(jp1, "toc-no-refs.xml");

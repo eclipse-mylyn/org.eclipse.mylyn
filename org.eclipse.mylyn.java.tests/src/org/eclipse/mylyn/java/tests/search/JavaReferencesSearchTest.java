@@ -56,9 +56,9 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 		WorkspaceSetupHelper.setupWorkspace();
 		jp1 = WorkspaceSetupHelper.getProject1();
 		jp2 = WorkspaceSetupHelper.getProject2();
-		type1 = WorkspaceSetupHelper.getType(jp1, "org.eclipse.mylyn.tests.project1.views.SampleView");
-		type11 = WorkspaceSetupHelper.getType(jp1, "org.eclipse.mylyn.tests.project1.Project1Plugin");
-		type2 = WorkspaceSetupHelper.getType(jp2, "org.eclipse.mylyn.tests.project2.builder.ToggleNatureAction");
+		type1 = WorkspaceSetupHelper.getType(jp1, "org.eclipse.mylar.tests.project1.views.SampleView");
+		type11 = WorkspaceSetupHelper.getType(jp1, "org.eclipse.mylar.tests.project1.Project1Plugin");
+		type2 = WorkspaceSetupHelper.getType(jp2, "org.eclipse.mylar.tests.project2.builder.ToggleNatureAction");
 		plugin1 = WorkspaceSetupHelper.getFile(jp1, "plugin.xml");
 
 		InteractionContext context = WorkspaceSetupHelper.getContext();

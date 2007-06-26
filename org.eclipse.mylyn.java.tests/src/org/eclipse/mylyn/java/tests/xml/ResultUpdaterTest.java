@@ -48,7 +48,7 @@ public class ResultUpdaterTest extends TestCase implements ISearchPluginTest {
 		// TODO: clear the relationship providers?
 		WorkspaceSetupHelper.setupWorkspace();
 		jp1 = WorkspaceSetupHelper.getProject1();
-		type1 = WorkspaceSetupHelper.getType(jp1, "org.eclipse.mylyn.tests.project1.views.SampleView");
+		type1 = WorkspaceSetupHelper.getType(jp1, "org.eclipse.mylar.tests.project1.views.SampleView");
 		plugin1 = WorkspaceSetupHelper.getFile(jp1, "plugin.xml");
 
 		InteractionContext t = WorkspaceSetupHelper.getContext();
