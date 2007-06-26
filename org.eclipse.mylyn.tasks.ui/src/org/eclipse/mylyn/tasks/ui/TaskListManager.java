@@ -798,7 +798,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	 */
 	public synchronized void saveTaskList() {
 		try {
-			if (taskListInitialized) {
+			if (taskListInitialized && taskListSaveManager != null) {
 				taskListSaveManager.saveTaskList(true, false);
 				// TasksUiPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.TASK_ID,
 				// nextLocalTaskId);
