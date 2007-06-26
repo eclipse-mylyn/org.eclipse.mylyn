@@ -86,9 +86,9 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeAutomaticallyActio
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskListElementPropertiesAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.TaskWorkingSetAction;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListTableSorter.SortByIndex;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewLocalTaskWizard;
+import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -1775,7 +1775,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 					.getWorkingSets()));
 			Set<IWorkingSet> tasksSets = new HashSet<IWorkingSet>(allSets);
 			for (IWorkingSet workingSet : allSets) {
-				if (!workingSet.getId().equalsIgnoreCase(TaskWorkingSetAction.ID_TASK_WORKING_SET)) {
+				if (!workingSet.getId().equalsIgnoreCase(TaskWorkingSetUpdater.ID_TASK_WORKING_SET)) {
 					tasksSets.remove(workingSet);
 				}
 			}

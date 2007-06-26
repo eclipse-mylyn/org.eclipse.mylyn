@@ -20,8 +20,6 @@ import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.bindings.keys.IKeyLookup;
-import org.eclipse.jface.bindings.keys.KeyLookupFactory;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -32,6 +30,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -61,8 +60,6 @@ import org.eclipse.ui.internal.dialogs.WorkingSetLabelProvider;
 public class TaskWorkingSetAction extends Action implements IMenuCreator {
 
 	public static final String LABEL_SETS_NONE = "All";
-
-	public static String ID_TASK_WORKING_SET = "org.eclipse.mylyn.tasks.ui.workingSet";
 
 	public static String TASK_WORKING_SET_TEXT_LABEL = "Select and Edit Working Sets";
 
@@ -104,10 +101,10 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 
 	@SuppressWarnings("unchecked")
 	private void addActionsToMenu() {
-		IWorkingSet[] workingSets = getAllWorkingSets();
+		IWorkingSet[] workingSets = PlatformUI.getWorkbench().getWorkingSetManager().getWorkingSets();
 
 		if (doTaskWorkingSetsExist()) {
-			ActionContributionItem itemAll = new ActionContributionItem(new ToggleAllWorkingSetsAction());
+			ActionContributionItem itemAll = new ActionContributionItem(new ToggleAllWorkingSetsAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow()));
 //			ActionContributionItem itemNone = new ActionContributionItem(new ToggleNoWorkingSetsAction());
 
 			List<IWorkingSet> sortedWorkingSets = Arrays.asList(workingSets);
@@ -116,7 +113,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 			Iterator<IWorkingSet> iter = sortedWorkingSets.iterator();
 			while (iter.hasNext()) {
 				IWorkingSet workingSet = iter.next();
-				if (workingSet != null && workingSet.getId().equalsIgnoreCase(ID_TASK_WORKING_SET)) {
+				if (workingSet != null && workingSet.getId().equalsIgnoreCase(TaskWorkingSetUpdater.ID_TASK_WORKING_SET)) {
 					ActionContributionItem itemSet = new ActionContributionItem(new ToggleWorkingSetAction(workingSet));
 					itemSet.fill(dropDownMenu, -1);
 				}
@@ -131,58 +128,10 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 		editItem.fill(dropDownMenu, -1);
 	}
 
-	private IWorkbenchWindow getWindow() {
-		return PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-	}
-
-	private IWorkingSet[] getAllWorkingSets() {
-		return PlatformUI.getWorkbench().getWorkingSetManager().getWorkingSets();
-	}
-
-	private IWorkingSet[] getEnabledSets() {
-		return getWindow().getActivePage().getWorkingSets();
-	}
-
-	private boolean isWorkingSetEnabled(IWorkingSet set) {
-		IWorkingSet[] enabledSets = getEnabledSets();
-		for (int i = 0; i < enabledSets.length; i++) {
-			if (enabledSets[i].equals(set)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private boolean isOnlyTaskWorkingSetEnabled(IWorkingSet set) {
-		if (!isWorkingSetEnabled(set)) {
-			return false;
-		}
-
-		IWorkingSet[] enabledSets = getEnabledSets();
-		for (int i = 0; i < enabledSets.length; i++) {
-			if (!enabledSets[i].equals(set) && enabledSets[i].getId().equalsIgnoreCase(ID_TASK_WORKING_SET)) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	private boolean areNoTaskWorkingSetsEnabled() {
-		IWorkingSet[] workingSets = getAllWorkingSets();
-		for (IWorkingSet workingSet : workingSets) {
-			if (workingSet != null && workingSet.getId().equalsIgnoreCase(ID_TASK_WORKING_SET)) {
-				if (isWorkingSetEnabled(workingSet)) {
-					return false;
-				}
-			}
-		}
-		return true;
-	}
-
 	private boolean doTaskWorkingSetsExist() {
-		IWorkingSet[] workingSets = getAllWorkingSets();
+		IWorkingSet[] workingSets = PlatformUI.getWorkbench().getWorkingSetManager().getWorkingSets();
 		for (IWorkingSet workingSet : workingSets) {
-			if (workingSet != null && workingSet.getId().equalsIgnoreCase(ID_TASK_WORKING_SET)) {
+			if (workingSet != null && workingSet.getId().equalsIgnoreCase(TaskWorkingSetUpdater.ID_TASK_WORKING_SET)) {
 				return true;
 			}
 		}
@@ -192,8 +141,8 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 	@Override
 	public void run() {
 		String[] ids = new String[1];
-		ids[0] = ID_TASK_WORKING_SET;
-		ConfigureWindowWorkingSetsDialog dialog = new ConfigureWindowWorkingSetsDialog(getWindow(), ids);
+		ids[0] = TaskWorkingSetUpdater.ID_TASK_WORKING_SET;
+		ConfigureWindowWorkingSetsDialog dialog = new ConfigureWindowWorkingSetsDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), ids);
 		dialog.open();
 	}
 
@@ -204,7 +153,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 	public void run(IWorkingSet editWorkingSet) {
 		IWorkingSetManager manager = WorkbenchPlugin.getDefault().getWorkingSetManager();
 		IWorkingSetEditWizard wizard = manager.createWorkingSetEditWizard(editWorkingSet);
-		WizardDialog dialog = new WizardDialog(getWindow().getShell(), wizard);
+		WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wizard);
 
 //		dialog.create();
 		dialog.open();
@@ -232,31 +181,6 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 	}
 
 	// TODO: remove?
-	protected class ToggleAllWorkingSetsAction extends Action {
-
-		ToggleAllWorkingSetsAction() {
-			super("Show All", IAction.AS_CHECK_BOX);
-			setChecked(areNoTaskWorkingSetsEnabled());
-		}
-
-		@Override
-		public void runWithEvent(Event event) {
-			Set<IWorkingSet> newList = new HashSet<IWorkingSet>(Arrays.asList(getEnabledSets()));
-
-			Set<IWorkingSet> tempList = new HashSet<IWorkingSet>();
-			Iterator<IWorkingSet> iter = newList.iterator();
-			while (iter.hasNext()) {
-				IWorkingSet workingSet = iter.next();
-				if (workingSet != null && workingSet.getId().equalsIgnoreCase(ID_TASK_WORKING_SET)) {
-					tempList.add(workingSet);
-				}
-			}
-			newList.removeAll(tempList);
-			getWindow().getActivePage().setWorkingSets(newList.toArray(new IWorkingSet[newList.size()]));
-		}
-	}
-
-	// TODO: remove?
 	protected class ToggleEnableAllSetsAction extends Action {
 
 		ToggleEnableAllSetsAction() {
@@ -267,103 +191,28 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 
 		@Override
 		public void runWithEvent(Event event) {
-			Set<IWorkingSet> newList = new HashSet<IWorkingSet>(Arrays.asList(getEnabledSets()));
+			Set<IWorkingSet> newList = new HashSet<IWorkingSet>(Arrays.asList(TaskWorkingSetUpdater.getEnabledSets()));
 
 			Set<IWorkingSet> tempList = new HashSet<IWorkingSet>();
 			Iterator<IWorkingSet> iter = newList.iterator();
 			while (iter.hasNext()) {
 				IWorkingSet workingSet = iter.next();
-				if (workingSet != null && workingSet.getId().equalsIgnoreCase(ID_TASK_WORKING_SET)) {
+				if (workingSet != null && workingSet.getId().equalsIgnoreCase(TaskWorkingSetUpdater.ID_TASK_WORKING_SET)) {
 					tempList.add(workingSet);
 				}
 			}
 			newList.removeAll(tempList);
 
 			if (isChecked()) {
-				IWorkingSet[] allWorkingSets = getAllWorkingSets();
+				IWorkingSet[] allWorkingSets = PlatformUI.getWorkbench().getWorkingSetManager().getWorkingSets();
 				for (IWorkingSet workingSet : allWorkingSets) {
-					if (workingSet != null && workingSet.getId().equalsIgnoreCase(ID_TASK_WORKING_SET)) {
+					if (workingSet != null && workingSet.getId().equalsIgnoreCase(TaskWorkingSetUpdater.ID_TASK_WORKING_SET)) {
 						newList.add(workingSet);
 					}
 				}
 			}
 
-			getWindow().getActivePage().setWorkingSets(newList.toArray(new IWorkingSet[newList.size()]));
-		}
-
-	}
-
-	private class ToggleWorkingSetAction extends Action {
-		private IWorkingSet set;
-
-		ToggleWorkingSetAction(IWorkingSet set) {
-			super(set.getLabel(), IAction.AS_CHECK_BOX);
-			setImageDescriptor(set.getImageDescriptor());
-			this.set = set;
-			setChecked(isWorkingSetEnabled(set));
-		}
-
-//		public void runWithEvent(Event event) {
-//
-//			Set<IWorkingSet> newList = new HashSet<IWorkingSet>(Arrays.asList(getWindow().getActivePage()
-//					.getWorkingSets()));
-//
-//			if (isChecked()) {
-//				// if the primary modifier key is down then clear the list
-//				// first. this makes the selection exclusive rather than
-//				// additive.
-//				boolean modified = (event.stateMask & KeyLookupFactory.getDefault().formalModifierLookup(
-//						IKeyLookup.M1_NAME)) != 0;
-//
-//				if (modified)
-//					newList.clear();
-//				newList.add(set);
-//			} else {
-//				newList.remove(set);
-//			}
-//
-//			getWindow().getActivePage()
-//					.setWorkingSets((IWorkingSet[]) newList.toArray(new IWorkingSet[newList.size()]));
-//		}
-
-		@Override
-		public void runWithEvent(Event event) {
-			Set<IWorkingSet> newList = new HashSet<IWorkingSet>(Arrays.asList(getEnabledSets()));
-
-			boolean modified = (event.stateMask & KeyLookupFactory.getDefault()
-					.formalModifierLookup(IKeyLookup.M1_NAME)) != 0;
-
-			if (!modified) {
-				// Default behavior is to act as a radio button.
-				Set<IWorkingSet> tempList = new HashSet<IWorkingSet>();
-				Iterator<IWorkingSet> iter = newList.iterator();
-				while (iter.hasNext()) {
-					IWorkingSet workingSet = iter.next();
-					if (workingSet != null && workingSet.getId().equalsIgnoreCase(ID_TASK_WORKING_SET)) {
-						tempList.add(workingSet);
-					}
-				}
-				newList.removeAll(tempList);
-
-				if (isChecked()) {
-					newList.add(set);
-				} else {
-					// If multiples were previously selected, make this action active
-					if (!isOnlyTaskWorkingSetEnabled(set)) {
-						newList.add(set);
-					}
-				}
-
-			} else {
-				// If modifier key is pressed, de/selections are additive.
-				if (isChecked()) {
-					newList.add(set);
-				} else {
-					newList.remove(set);
-				}
-			}
-
-			getWindow().getActivePage().setWorkingSets(newList.toArray(new IWorkingSet[newList.size()]));
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().setWorkingSets(newList.toArray(new IWorkingSet[newList.size()]));
 		}
 
 	}
@@ -449,7 +298,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 
 		@Override
 		protected void okPressed() {
-			Set<IWorkingSet> newList = new HashSet<IWorkingSet>(Arrays.asList(getEnabledSets()));
+			Set<IWorkingSet> newList = new HashSet<IWorkingSet>(Arrays.asList(TaskWorkingSetUpdater.getEnabledSets()));
 			Set<IWorkingSet> tempList = new HashSet<IWorkingSet>();
 			for (IWorkingSet workingSet : newList) {
 				for (String id : taskWorkingSetIds) {
