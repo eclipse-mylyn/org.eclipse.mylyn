@@ -60,7 +60,7 @@ public class TaskRepositoriesExternalizer {
 			outputStream.close();
 
 		} catch (IOException e) {
-			StatusHandler.fail(e, "Could not write: " + file.getAbsolutePath(), true);
+			StatusHandler.fail(e, "Could not write: " + file.getAbsolutePath(), false);
 		} finally {
 			if (outputStream != null) {
 				try {
