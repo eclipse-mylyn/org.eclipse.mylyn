@@ -828,22 +828,25 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		RepositoryTaskData newTaskData = getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
 		RepositoryTaskData oldTaskData = getTaskDataManager().getOldTaskData(task.getRepositoryUrl(), task.getTaskId());
 
-		if (newTaskData != null && oldTaskData != null) {
+		try {
+			if (newTaskData != null && oldTaskData != null) {
+				notification.setDescription(getChangedDescription(newTaskData, oldTaskData));
+				notification.setDetails(getChangedAttributes(newTaskData, oldTaskData));
 
-			notification.setDescription(getChangedDescription(newTaskData, oldTaskData));
-			notification.setDetails(getChangedAttributes(newTaskData, oldTaskData));
-
-			if (connector != null) {
-				AbstractTaskDataHandler offlineHandler = connector.getTaskDataHandler();
-				if (offlineHandler != null && newTaskData.getLastModified() != null) {
-					Date modified = newTaskData.getAttributeFactory().getDateForAttributeType(
-							RepositoryTaskAttribute.DATE_MODIFIED, newTaskData.getLastModified());
-					notification.setDate(modified);
+				if (connector != null) {
+					AbstractTaskDataHandler offlineHandler = connector.getTaskDataHandler();
+					if (offlineHandler != null && newTaskData.getLastModified() != null) {
+						Date modified = newTaskData.getAttributeFactory().getDateForAttributeType(
+								RepositoryTaskAttribute.DATE_MODIFIED, newTaskData.getLastModified());
+						notification.setDate(modified);
+					}
 				}
-			}
 
-		} else {
-			notification.setDescription("Open to view changes");
+			} else {
+				notification.setDescription("Open to view changes");
+			}
+		} catch (Throwable t) {
+			StatusHandler.fail(t, "Could not format notification for: " + task, false);
 		}
 		return notification;
 	}
@@ -857,19 +860,12 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				TaskComment lastComment = taskComments.get(taskComments.size() - 1);
 				if (lastComment != null) {
 					descriptionText += "Comment by " + lastComment.getAuthor() + ":\n  ";
-					String commentText = lastComment.getText();
+					String commentText = lastComment.getText().replaceAll("\\s", " ").trim();
 					if (commentText.length() > 60) {
 						commentText = commentText.substring(0, 55) + "...";
 					}
 					descriptionText += commentText;
 				}
-			}
-		}
-
-		if (descriptionText.equals("")) {
-			String attributes = getChangedAttributes(newTaskData, oldTaskData);
-			if (!attributes.equals("")) {
-				descriptionText += "Attributes Changed:";
 			}
 		}
 
@@ -879,35 +875,68 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	private static String getChangedAttributes(RepositoryTaskData newTaskData, RepositoryTaskData oldTaskData) {
 		List<Change> changes = new ArrayList<Change>();
 		for (RepositoryTaskAttribute newAttribute : newTaskData.getAttributes()) {
+			// HACK delta_ts is not a standard attribute
+			if ("delta_ts,longdesclength,".contains(newAttribute.getId())) {
+				continue;
+			}
 			List<String> newValues = newAttribute.getValues();
 			RepositoryTaskAttribute oldAttribute = oldTaskData.getAttribute(newAttribute.getId());
 			if (oldAttribute == null) {
 				changes.add(getDiff(newAttribute.getName(), null, newValues));
-				break;
 			}
-			List<String> oldValues = oldAttribute.getValues();
-			if (!oldValues.equals(newValues)) {
-				changes.add(getDiff(newAttribute.getName(), oldValues, newValues));
-				break;
+			if (oldAttribute != null) {
+				List<String> oldValues = oldAttribute.getValues();
+				if (!oldValues.equals(newValues)) {
+					changes.add(getDiff(newAttribute.getName(), oldValues, newValues));
+				}
 			}
 		}
+
+		for (RepositoryTaskAttribute oldAttribute : oldTaskData.getAttributes()) {
+			if (oldAttribute.isHidden()) { // may not be a good idea
+				continue;
+			}
+			RepositoryTaskAttribute attribute = newTaskData.getAttribute(oldAttribute.getId());
+			List<String> values = oldAttribute.getValues();
+			if (attribute == null && values != null && !values.isEmpty()) {
+				changes.add(getDiff(oldAttribute.getName(), values, null));
+			}
+		}
+
 		if (changes.isEmpty()) {
 			return "";
 		}
 
 		String details = "";
 		String sep = "";
+		int n = 0;
 		for (Change change : changes) {
-			details += sep;
-			if (!change.removed.isEmpty()) {
-				details += "- " + change.field + " " + change.removed;
-				sep = "\n";
+			String removed = change.removed.toString();
+			String added = change.added.toString();
+			details += sep + "  " + change.field + " " + removed;
+			if (removed.length() > 30) {
+				details += "\n  ";
 			}
-			if (!change.added.isEmpty()) {
-				details += sep;
-				details += "+ " + change.field + " " + change.added;
-				sep = "\n";
+			details += " -> " + added;
+			sep = "\n";
+
+//			if (!change.removed.isEmpty()) {
+//				details += "- " + change.field + " " + change.removed;
+//				sep = "\n";
+//			}
+//			if (!change.added.isEmpty()) {
+//				details += sep;
+//				details += "+ " + change.field + " " + change.added;
+//				sep = "\n";
+//			}
+
+			n++;
+			if (n > 5) { // that may not be enough
+				break;
 			}
+		}
+		if (!details.equals("")) {
+			return "Attributes Changed:\n" + details;
 		}
 		return details;
 	}
@@ -927,7 +956,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	}
 
 	private static class Change {
-		
+
 		final String field;
 
 		final List<String> added;
