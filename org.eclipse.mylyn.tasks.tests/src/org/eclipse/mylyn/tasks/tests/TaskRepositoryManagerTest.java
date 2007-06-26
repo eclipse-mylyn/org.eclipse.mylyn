@@ -17,9 +17,12 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
+import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
+import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
@@ -52,6 +55,21 @@ public class TaskRepositoryManagerTest extends TestCase {
 		}
 	}
 
+	public void testQueryDeletion() {
+		MockRepositoryTask task = new MockRepositoryTask("1");
+		task.setLastReadTimeStamp("now");
+		MockRepositoryQuery query = new MockRepositoryQuery("Test");
+		TasksUiPlugin.getTaskListManager().getTaskList().addQuery(query);
+		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task, query);
+
+		assertNotNull(TasksUiPlugin.getTaskListManager().getTaskList().getTask(task.getHandleIdentifier()));
+		TasksUiPlugin.getTaskListManager().getTaskList().deleteQuery(query);
+		AbstractTask task2 = TasksUiPlugin.getTaskListManager().getTaskList().getTask(task.getHandleIdentifier());
+		assertNotNull(task2);
+		assertEquals(1, task2.getParentContainers().size());
+		
+	}
+	
 	public void testHandles() {
 		String url = "http://foo.bar";
 		String id = "123";
@@ -201,4 +219,5 @@ public class TaskRepositoryManagerTest extends TestCase {
 
 		assertEquals("got: " + manager.getAllRepositories(), 2, manager.getAllRepositories().size());
 	}
+
 }

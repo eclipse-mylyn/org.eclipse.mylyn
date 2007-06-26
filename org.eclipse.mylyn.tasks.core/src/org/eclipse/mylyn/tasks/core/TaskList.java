@@ -302,6 +302,13 @@ public class TaskList {
 	public void deleteQuery(AbstractRepositoryQuery query) {
 		queries.remove(query.getHandleIdentifier());
 
+		for (AbstractTask task : query.getChildren()) {
+			if (task.getParentContainers().size() == 0 && task.getLastReadTimeStamp() != null) {
+				task.addParentContainer(archiveContainer);
+				archiveContainer.internalAddChild(task);
+			}
+		}
+
 		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
 		delta.add(new TaskContainerDelta(query, TaskContainerDelta.Kind.REMOVED));
 		for (ITaskListChangeListener listener : changeListeners) {
@@ -439,7 +446,7 @@ public class TaskList {
 
 	public boolean isEmpty() {
 		boolean archiveIsEmpty = getCategories().size() == 2
-				&& getCategories().iterator().next().equals(archiveContainer)
+				&& getCategories().contains(archiveContainer) && getCategories().contains(defaultCategory)
 				&& archiveContainer.getChildren().isEmpty();
 		return getAllTasks().size() == 0 && archiveIsEmpty && getQueries().size() == 0;
 	}

@@ -515,9 +515,17 @@ public class TaskListManagerTest extends TestCase {
 		Set<AbstractTaskCategory> readCats = manager.getTaskList().getTaskContainers();
 		assertTrue(manager.getTaskList().getCategories().contains(cat1));
 		Iterator<AbstractTaskCategory> iterator = readCats.iterator();
-		AbstractTaskContainer readCat1 = iterator.next();
-		assertEquals(cat1, readCat1);
-		assertEquals(1, readCat1.getChildren().size());
+
+		boolean found = false;
+		while (iterator.hasNext()) {
+			AbstractTaskContainer readCat1 = iterator.next();
+			if (cat1.equals(readCat1)) {
+				found = true;
+				assertEquals(1, readCat1.getChildren().size());
+			}
+		}
+		if (!found)
+			fail(" Category not found afer tasklist read");
 
 		manager.saveTaskList();
 		assertNotNull(manager.getTaskList());
@@ -529,10 +537,16 @@ public class TaskListManagerTest extends TestCase {
 		assertTrue(manager.getTaskList().getCategories().contains(cat1));
 
 		iterator = readCats.iterator();
-		AbstractTaskContainer reReadCat1 = iterator.next();
-		assertEquals(cat1, reReadCat1);
-
-		assertEquals(1, reReadCat1.getChildren().size());
+		found = false;
+		while (iterator.hasNext()) {
+			AbstractTaskContainer readCat1 = iterator.next();
+			if (cat1.equals(readCat1)) {
+				found = true;
+				assertEquals(1, readCat1.getChildren().size());
+			}
+		}
+		if (!found)
+			fail(" Category not found afer tasklist read");
 	}
 
 	public void testSubTaskExternalization() {
@@ -630,9 +644,16 @@ public class TaskListManagerTest extends TestCase {
 		Set<AbstractTaskCategory> readCats = manager.getTaskList().getTaskContainers();
 		assertTrue(manager.getTaskList().getCategories().contains(cat1));
 		Iterator<AbstractTaskCategory> iterator = readCats.iterator();
-		AbstractTaskContainer readCat1 = iterator.next();
-		assertEquals(cat1, readCat1);
-		assertEquals(cat1Contents, readCat1.getChildren());
+		boolean found = false;
+		while (iterator.hasNext()) {
+			AbstractTaskContainer readCat1 = iterator.next();
+			if (cat1.equals(readCat1)) {
+				found = true;
+				assertEquals(cat1Contents, readCat1.getChildren());
+			}
+		}
+		if (!found)
+			fail(" Category not found afer tasklist read");
 	}
 
 	public void testExternalizationOfHandlesWithDash() {
