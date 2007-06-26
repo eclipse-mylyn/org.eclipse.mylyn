@@ -597,38 +597,47 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		categoryGradientEnd = themeManager.getCurrentTheme().getColorRegistry().get(
 				TaskListColorsAndFonts.THEME_COLOR_CATEGORY_GRADIENT_END);
 
+		boolean customized = true;
+		if (categoryGradientStart != null && categoryGradientStart.getRed() == 240
+				&& categoryGradientStart.getGreen() == 240 && categoryGradientStart.getBlue() == 240
+				&& categoryGradientEnd != null && categoryGradientEnd.getRed() == 220
+				&& categoryGradientEnd.getGreen() == 220 && categoryGradientEnd.getBlue() == 220) {
+			customized = false;
+		}
+
 		if (gradientListenerAdded == false && categoryGradientStart != null
 				&& !categoryGradientStart.equals(categoryGradientEnd)) {
 			getViewer().getTree().addListener(SWT.EraseItem, CATEGORY_GRADIENT_DRAWER);
-
-			// TODO: weird override of custom gradients
-			Color parentBackground = getViewer().getTree().getParent().getBackground();
-			double GRADIENT_TOP = 1.05;// 1.02;
-			double GRADIENT_BOTTOM = .995;// 1.035;
-
-			int red = Math.min(255, (int) (parentBackground.getRed() * GRADIENT_TOP));
-			int green = Math.min(255, (int) (parentBackground.getGreen() * GRADIENT_TOP));
-			int blue = Math.min(255, (int) (parentBackground.getBlue() * GRADIENT_TOP));
-
-			try {
-				categoryGradientStart = new Color(Display.getDefault(), red, green, blue);
-			} catch (Exception e) {
-				categoryGradientStart = getViewer().getTree().getParent().getBackground();
-				StatusHandler.fail(e, "Could not set color: " + red + ", " + green + ", " + blue, false);
-			}
-			red = Math.max(0, (int) (parentBackground.getRed() / GRADIENT_BOTTOM));
-			green = Math.max(0, (int) (parentBackground.getGreen() / GRADIENT_BOTTOM));
-			blue = Math.max(0, (int) (parentBackground.getBlue() / GRADIENT_BOTTOM));
-			if (red > 255) {
-				red = 255;
-			}
-			try {
-				categoryGradientEnd = new Color(Display.getDefault(), red, green, blue);
-			} catch (Exception e) {
-				categoryGradientStart = getViewer().getTree().getParent().getBackground();
-				StatusHandler.fail(e, "Could not set color: " + red + ", " + green + ", " + blue, false);
-			}
 			gradientListenerAdded = true;
+			if (!customized) {
+				// Set parent-based colors
+				Color parentBackground = getViewer().getTree().getParent().getBackground();
+				double GRADIENT_TOP = 1.05;// 1.02;
+				double GRADIENT_BOTTOM = .995;// 1.035;
+
+				int red = Math.min(255, (int) (parentBackground.getRed() * GRADIENT_TOP));
+				int green = Math.min(255, (int) (parentBackground.getGreen() * GRADIENT_TOP));
+				int blue = Math.min(255, (int) (parentBackground.getBlue() * GRADIENT_TOP));
+
+				try {
+					categoryGradientStart = new Color(Display.getDefault(), red, green, blue);
+				} catch (Exception e) {
+					categoryGradientStart = getViewer().getTree().getParent().getBackground();
+					StatusHandler.fail(e, "Could not set color: " + red + ", " + green + ", " + blue, false);
+				}
+				red = Math.max(0, (int) (parentBackground.getRed() / GRADIENT_BOTTOM));
+				green = Math.max(0, (int) (parentBackground.getGreen() / GRADIENT_BOTTOM));
+				blue = Math.max(0, (int) (parentBackground.getBlue() / GRADIENT_BOTTOM));
+				if (red > 255) {
+					red = 255;
+				}
+				try {
+					categoryGradientEnd = new Color(Display.getDefault(), red, green, blue);
+				} catch (Exception e) {
+					categoryGradientStart = getViewer().getTree().getParent().getBackground();
+					StatusHandler.fail(e, "Could not set color: " + red + ", " + green + ", " + blue, false);
+				}
+			}
 		} else if (categoryGradientStart != null && categoryGradientStart.equals(categoryGradientEnd)) {
 			getViewer().getTree().removeListener(SWT.EraseItem, CATEGORY_GRADIENT_DRAWER);
 			gradientListenerAdded = false;
@@ -794,7 +803,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			linkValue = Boolean.parseBoolean(taskListMemento.getString(MEMENTO_LINK_WITH_EDITOR));
 		}
 		setLinkWithEditor(linkValue);
-		
+
 		getViewer().setSorter(new TaskListTableSorter(this, sortByIndex));
 		getViewer().refresh();
 	}
@@ -1696,7 +1705,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		this.sortByIndex = sortByIndex;
 		getViewer().setSorter(new TaskListTableSorter(this, sortByIndex));
 	}
-	
+
 	public void setSortDirection(int sortDirection) {
 		this.sortDirection = sortDirection;
 		getViewer().setSorter(new TaskListTableSorter(this, sortByIndex));
