@@ -843,7 +843,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				}
 
 			} else {
-				notification.setDescription("Open to view changes");
+				notification.setDescription("New task");
 			}
 		} catch (Throwable t) {
 			StatusHandler.fail(t, "Could not format notification for: " + task, false);
