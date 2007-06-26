@@ -633,4 +633,13 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		// newReport.attributes = attributes;
 	}
 
+	public static int getBugId(String taskId) throws CoreException {
+		try {
+			return Integer.parseInt(taskId);
+		} catch (NumberFormatException e) {
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0,
+					"Invalid bug id: " + taskId, e));
+		}
+	}
+
 }

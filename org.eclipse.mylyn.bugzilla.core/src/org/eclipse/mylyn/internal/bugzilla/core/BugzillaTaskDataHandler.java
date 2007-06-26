@@ -69,7 +69,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			throws CoreException {
 		try {
 			BugzillaClient client = connector.getClientManager().getClient(repository);
-			int bugId = Integer.parseInt(taskId);
+			int bugId = BugzillaRepositoryConnector.getBugId(taskId);
 			RepositoryTaskData taskData;
 			try {
 				taskData = client.getTaskData(bugId);
