@@ -829,7 +829,10 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		RepositoryTaskData oldTaskData = getTaskDataManager().getOldTaskData(task.getRepositoryUrl(), task.getTaskId());
 
 		try {
-			if (newTaskData != null && oldTaskData != null) {
+			if (task.getSynchronizationState().equals(RepositoryTaskSyncState.INCOMING)
+					&& task.getLastReadTimeStamp() == null) {
+				notification.setDescription("New unread task");
+			} else if (newTaskData != null && oldTaskData != null) {
 				notification.setDescription(getChangedDescription(newTaskData, oldTaskData));
 				notification.setDetails(getChangedAttributes(newTaskData, oldTaskData));
 
