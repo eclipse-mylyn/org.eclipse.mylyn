@@ -153,7 +153,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		layout.numColumns = 1;
 		layout.horizontalSpacing = 0;
 		layout.marginHeight = 0;
-		layout.marginLeft = 2;
+		layout.marginLeft = 0;
 		layout.marginRight = 0;
 		composite.setLayout(layout);
 
@@ -170,7 +170,12 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		gc.dispose();
 
 		activeTaskLabel = new TaskListHyperlink(container, SWT.RIGHT);
-		activeTaskLabel.setLayoutData(new GridData(p.x, SWT.DEFAULT));
+		// activeTaskLabel.setLayoutData(new GridData(p.x, SWT.DEFAULT));
+		GridData gridData = new GridData(SWT.LEFT, SWT.CENTER, false, true);
+		gridData.widthHint = p.x;
+		gridData.minimumWidth = p.x;
+		gridData.horizontalIndent = 0;
+		activeTaskLabel.setLayoutData(gridData);
 		activeTaskLabel.setText("<no task active>");
 
 		activeTask = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
