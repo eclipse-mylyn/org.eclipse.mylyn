@@ -841,8 +841,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 						notification.setDate(modified);
 					}
 				}
-			} else {
-				notification.setDescription("New task");
+ 			} else {
+ 				notification.setDescription("Unread task");
 			}
 		} catch (Throwable t) {
 			StatusHandler.fail(t, "Could not format notification for: " + task, false);
