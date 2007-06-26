@@ -16,9 +16,12 @@ import java.util.Set;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -29,12 +32,18 @@ import org.eclipse.ui.IWorkingSetUpdater;
  * @author Eugene Kuleshov
  * @author Mik Kersten
  */
-public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChangeListener {
+public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChangeListener, ITaskActivityListener {
 
 	private List<IWorkingSet> workingSets = new ArrayList<IWorkingSet>();
 
 	public TaskWorkingSetUpdater() {
 		TasksUiPlugin.getTaskListManager().getTaskList().addChangeListener(this);
+		TasksUiPlugin.getTaskListManager().addActivityListener(this);
+	}
+	
+	public void dispose() {
+		TasksUiPlugin.getTaskListManager().getTaskList().removeChangeListener(this);
+		TasksUiPlugin.getTaskListManager().removeActivityListener(this);
 	}
 
 	public void add(IWorkingSet workingSet) {
@@ -78,10 +87,6 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 		}
 	}
 
-	public void dispose() {
-		TasksUiPlugin.getTaskListManager().getTaskList().removeChangeListener(this);
-	}
-
 	public void containersChanged(Set<TaskContainerDelta> delta) {
 		for (TaskContainerDelta taskContainerDelta : delta) {
 			if (taskContainerDelta.getContainer() instanceof TaskCategory
@@ -108,5 +113,21 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 				}
 			}
 		}
+	}
+
+	public void activityChanged(ScheduledTaskContainer week) {
+		// ignore
+	}
+
+	public void taskActivated(AbstractTask task) {
+		
+	}
+
+	public void taskDeactivated(AbstractTask task) {
+		// ignore
+	}
+
+	public void taskListRead() {
+		// ignore
 	}
 }
