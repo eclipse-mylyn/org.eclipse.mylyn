@@ -63,6 +63,7 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 
 		public void contextActivated(IInteractionContext context) {
 			if (!getPreferenceStore().contains(RecommendedPreferencesWizard.MYLAR_FIRST_RUN)) {
+				getPreferenceStore().putValue(RecommendedPreferencesWizard.MYLAR_FIRST_RUN, Boolean.FALSE.toString());
 				JavaUiUtil.installContentAssist(JavaPlugin.getDefault().getPreferenceStore(), true);
 				if (!MonitorUiPlugin.getDefault().suppressConfigurationWizards()) {
 					RecommendedPreferencesWizard wizard = new RecommendedPreferencesWizard();
@@ -71,7 +72,6 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 						WizardDialog dialog = new WizardDialog(shell, wizard);
 						dialog.create();
 						dialog.open();
-						getPreferenceStore().putValue(RecommendedPreferencesWizard.MYLAR_FIRST_RUN, "false");
 					}
 				}
 			}
