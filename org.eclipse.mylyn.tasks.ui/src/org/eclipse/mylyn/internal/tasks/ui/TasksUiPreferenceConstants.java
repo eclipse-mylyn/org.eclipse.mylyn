@@ -17,6 +17,8 @@ public final class TasksUiPreferenceConstants {
 
 	public static final String ACTIVATE_WHEN_OPENED = "org.eclipse.mylyn.tasks.ui.activate.when.opened";
 
+	public static final String SHOW_TRIM = "org.eclipse.mylyn.tasks.ui.show.trim";
+
 	public static final String BACKUP_LAST = "org.eclipse.mylyn.tasks.ui.backup.last";
 
 	public static final String BACKUP_MAXFILES = "org.eclipse.mylyn.tasks.ui.backup.maxfiles";

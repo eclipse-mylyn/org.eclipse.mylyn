@@ -15,14 +15,14 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
-import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskHistoryDropDownAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenTaskListElementAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenWithBrowserAction;
@@ -46,9 +46,12 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.internal.ObjectActionContributorManager;
+import org.eclipse.ui.internal.WorkbenchWindow;
+import org.eclipse.ui.internal.layout.IWindowTrim;
 import org.eclipse.ui.menus.WorkbenchWindowControlContribution;
 
 /**
@@ -70,8 +73,6 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 	private Menu menu = null;
 
 	private TaskListHyperlink activeTaskLabel;
-
-	private ActivateTaskHistoryDropDownAction navigateAction;
 
 	private OpenWithBrowserAction openWithBrowserAction = new OpenWithBrowserAction();
 
@@ -98,12 +99,30 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		}
 	};
 
+	private IPropertyChangeListener SHOW_TRIM_LISTENER = new IPropertyChangeListener() {
+		public void propertyChange(PropertyChangeEvent event) {
+			String property = event.getProperty();
+			if(property.equals(TasksUiPreferenceConstants.SHOW_TRIM)) {
+				setTrimVisible((Boolean) event.getNewValue());
+			}
+		}
+	};
+
 	public TaskTrimWidget() {
-		super();
 		TasksUiPlugin.getTaskListManager().addActivityListener(TASK_CHANGE_LISTENER);
+		TasksUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(SHOW_TRIM_LISTENER);
 		hookContextMenu();
 	}
 
+	private void setTrimVisible(boolean visible) {
+		IWorkbenchWindow window = TasksUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
+		IWindowTrim trim = ((WorkbenchWindow) window).getTrimManager().getTrim(
+				"org.eclipse.mylyn.tasks.ui.trim.container");
+		if (trim != null) {
+			((WorkbenchWindow) window).getTrimManager().setTrimVisible(trim, visible);
+		}
+	}
+	
 	@Override
 	public void dispose() {
 		if (composite != null && !composite.isDisposed()) {
@@ -123,7 +142,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		menu = null;
 
 		TasksUiPlugin.getTaskListManager().removeActivityListener(TASK_CHANGE_LISTENER);
-		super.dispose();
+		TasksUiPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(SHOW_TRIM_LISTENER);
 	}
 
 	@Override
@@ -131,21 +150,14 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		composite = new Composite(parent, SWT.NONE);
 
 		GridLayout layout = new GridLayout();
-		layout.numColumns = 2;
-		layout.horizontalSpacing = 2;
+		layout.numColumns = 1;
+		layout.horizontalSpacing = 0;
 		layout.marginHeight = 0;
-		layout.marginWidth = 0;
+		layout.marginLeft = 2;
+		layout.marginRight = 0;
 		composite.setLayout(layout);
 
-		GridData gridData = new GridData(SWT.NONE, SWT.CENTER, false, false);
-		composite.setLayoutData(gridData);
-
-		navigateAction = new ActivateTaskHistoryDropDownAction(TasksUiPlugin.getTaskListManager()
-				.getTaskActivationHistory(), false);
-
-		ToolBarManager manager = new ToolBarManager(SWT.FLAT);
-		manager.add(navigateAction);
-		manager.createControl(composite);
+		composite.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, true));
 
 		createStatusComposite(composite);
 
@@ -197,7 +209,8 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 				if (TaskListView.getFromActivePerspective().getDrilledIntoCategory() != null) {
 					TaskListView.getFromActivePerspective().goUpToRoot();
 				}
-				TasksUiUtil.refreshAndOpenTaskListElement((TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask()));
+				TasksUiUtil.refreshAndOpenTaskListElement((TasksUiPlugin.getTaskListManager().getTaskList()
+						.getActiveTask()));
 			}
 		});
 
