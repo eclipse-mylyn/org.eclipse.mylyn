@@ -841,7 +841,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 						notification.setDate(modified);
 					}
 				}
-
 			} else {
 				notification.setDescription("New task");
 			}
