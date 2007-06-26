@@ -115,7 +115,9 @@ public class OfflineCachingStorage implements ITaskDataStorage {
 	public void put(TaskDataState taskDataState) {
 		putReadCache(taskDataState);
 		putWriteCache(taskDataState);
-		cacheFlushJob.requestSave();
+		if (cacheFlushJob != null) {
+			cacheFlushJob.requestSave();
+		}
 	}
 
 	public void remove(String repositoryUrl, String id) {

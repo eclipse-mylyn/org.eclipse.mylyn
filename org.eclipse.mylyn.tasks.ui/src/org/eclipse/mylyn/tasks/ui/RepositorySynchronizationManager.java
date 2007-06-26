@@ -16,7 +16,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -288,10 +287,11 @@ public final class RepositorySynchronizationManager {
 				// == null) {
 				dataManager.setOldTaskData(taskData);
 				// }
-			} else if (repositoryTask.getLastReadTimeStamp() == null && repositoryTask.isLocal()) {
-				// fall back for cases where the stamp is missing, set bogus date
-				repositoryTask.setLastReadTimeStamp(LocalTask.SYNC_DATE_NOW);
 			}
+//			else if (repositoryTask.getLastReadTimeStamp() == null && repositoryTask.isLocal()) {
+//				// fall back for cases where the stamp is missing, set bogus date
+//				repositoryTask.setLastReadTimeStamp(LocalTask.SYNC_DATE_NOW);
+//			}
 
 		} else if (!read && repositoryTask.getSynchronizationState().equals(RepositoryTaskSyncState.SYNCHRONIZED)) {
 			repositoryTask.setSynchronizationState(RepositoryTaskSyncState.INCOMING);
@@ -299,9 +299,9 @@ public final class RepositorySynchronizationManager {
 		}
 
 		// for repositories that don't support task data or if no task data is available
-		if (read && taskData == null) {
-			repositoryTask.setLastReadTimeStamp(LocalTask.SYNC_DATE_NOW);
-		}
+		//if (read && taskData == null) {
+		//	repositoryTask.setLastReadTimeStamp(LocalTask.SYNC_DATE_NOW);
+		//}
 	}
 
 	public void discardOutgoing(AbstractTask repositoryTask) {
@@ -328,7 +328,7 @@ public final class RepositorySynchronizationManager {
 			return rule == this;
 		}
 	}
-	
+
 	/*
 	private static class RepositoryMutexRule implements ISchedulingRule {
 

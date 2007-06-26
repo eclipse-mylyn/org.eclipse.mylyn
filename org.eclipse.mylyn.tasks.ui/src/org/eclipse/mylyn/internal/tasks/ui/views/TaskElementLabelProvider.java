@@ -128,7 +128,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			repositoryTask = (AbstractTask) element;
 		}
 		if (repositoryTask != null) {
-			if (repositoryTask.getLastReadTimeStamp() == null) {
+			if (repositoryTask.getSynchronizationState() == RepositoryTaskSyncState.INCOMING && repositoryTask.getLastReadTimeStamp() == null) {
 				if (synchViewStyle) {
 					return TasksUiImages.OVERLAY_SYNCH_INCOMMING_NEW;
 				} else {
