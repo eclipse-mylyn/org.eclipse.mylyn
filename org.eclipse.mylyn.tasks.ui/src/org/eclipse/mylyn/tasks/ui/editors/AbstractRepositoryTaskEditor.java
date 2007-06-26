@@ -1783,7 +1783,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			});
 
 			final Composite toolbarComp = toolkit.createComposite(expandableComposite);
-			toolbarComp.setLayout(new RowLayout());
+			RowLayout rowLayout = new RowLayout();
+			rowLayout.pack = true;
+			rowLayout.marginLeft = 0;
+			toolbarComp.setLayout(rowLayout);
 			toolbarComp.setBackground(null);
 
 			ImageHyperlink formHyperlink = toolkit.createImageHyperlink(toolbarComp, SWT.NONE);
@@ -1869,7 +1872,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			GridLayout ecLayout = new GridLayout();
 			ecLayout.marginHeight = 0;
 			ecLayout.marginBottom = 3;
-			ecLayout.marginLeft = 10;
+			ecLayout.marginLeft = 15;
 			ecComposite.setLayout(ecLayout);
 			ecComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			expandableComposite.setClient(ecComposite);
