@@ -39,6 +39,10 @@ public class TaskListNotificationReminder implements ITaskListNotification {
 	public String getDescription() {
 		return null;
 	}
+	
+	public String getDetails() {
+		return null;
+	}
 
 	public String getLabel() {
 		if (labelProvider.getText(task).length() > 40) {

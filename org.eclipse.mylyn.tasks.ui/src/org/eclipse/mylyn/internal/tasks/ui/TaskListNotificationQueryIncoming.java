@@ -40,6 +40,10 @@ public class TaskListNotificationQueryIncoming implements ITaskListNotification 
 		return hit.getSummary();
 	}
 
+	public String getDetails() {
+		return null;
+	}
+	
 	public String getLabel() {
 		if (labelProvider.getText(hit).length() > 40) {
 			String truncated = labelProvider.getText(hit).substring(0, 35);
