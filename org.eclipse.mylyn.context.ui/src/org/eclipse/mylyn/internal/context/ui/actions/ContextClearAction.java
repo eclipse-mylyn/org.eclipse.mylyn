@@ -28,8 +28,8 @@ public class ContextClearAction extends TaskContextAction {
 	private static final String ID_ACTION = "org.eclipse.mylyn.context.ui.task.clear";
 
 	public ContextClearAction() {
-		setText("Clear Context");
-		setToolTipText("Clear Context");
+		setText("Clear");
+		setToolTipText("Clear");
 		setId(ID_ACTION);
 		setImageDescriptor(TasksUiImages.CONTEXT_CLEAR);
 	}
@@ -48,7 +48,7 @@ public class ContextClearAction extends TaskContextAction {
 		if (task != null) {
 			boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench()
 					.getActiveWorkbenchWindow()
-					.getShell(), "Confirm clear context", "Clear context for the selected task?");
+					.getShell(), "Confirm clear context", "Clear the context for the selected task?  This cannot be undone.");
 			if (!deleteConfirmed)
 				return;
 
