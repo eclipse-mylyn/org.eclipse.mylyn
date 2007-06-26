@@ -141,6 +141,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		openHyperlink.addHyperlinkListener(new IHyperlinkListener() {
 
 			public void linkActivated(HyperlinkEvent e) {
+				getShell().close();
 				new OpenRepositoryTask().run(null);
 			}
 

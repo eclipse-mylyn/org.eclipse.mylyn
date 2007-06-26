@@ -44,7 +44,7 @@ public class LocalRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public boolean canCreateTaskFromKey(TaskRepository repository) {
-		return true;
+		return false;
 	}
 
 	@Override

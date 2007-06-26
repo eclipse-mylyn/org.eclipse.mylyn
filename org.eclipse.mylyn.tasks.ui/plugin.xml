@@ -257,6 +257,24 @@
 		<viewContribution 
 			id="org.eclipse.mylyn.tasks.ui.actions.view" 
 	   		targetID="org.eclipse.mylyn.tasks.ui.views.tasks">
+    <action
+          class="org.eclipse.mylyn.internal.tasks.ui.actions.RestoreTaskListAction"
+          icon="icons/etool16/import.gif"
+          id="org.eclipse.mylyn.tasks.ui.tasks.restore"
+          label="Restore Tasks from History..."
+          menubarPath="tasks"
+          style="push">
+    </action>
+
+  		<action
+          class="org.eclipse.mylyn.internal.tasks.ui.actions.ShowTaskRepositoriesViewAction"
+          enablesFor="*"
+          icon="icons/eview16/repositories.gif"
+          id="org.eclipse.mylyn.tasks.ui.open.repositories.view"
+          label="Show Task Repositories View"
+          menubarPath="tasks"
+          tooltip="Show Task Repositories View">
+         </action>
   		
   		<action
           class="org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeAllAction"
@@ -268,23 +286,12 @@
           toolbarPath="new"
           tooltip="Synchronize Changed">
          </action>
-
-  		<action
-          class="org.eclipse.mylyn.internal.tasks.ui.actions.ShowTaskRepositoriesViewAction"
-          enablesFor="*"
-          icon="icons/eview16/repositories.gif"
-          id="org.eclipse.mylyn.tasks.ui.open.repositories.view"
-          label="Show Task Repositories View"
-          menubarPath="tasks"
-          tooltip="Show Task Repositories View">
-         </action>
     <action
-          class="org.eclipse.mylyn.internal.tasks.ui.actions.RestoreTaskListAction"
-          icon="icons/etool16/import.gif"
-          id="org.eclipse.mylyn.tasks.ui.tasks.restore"
-          label="Restore Tasks from History..."
-          menubarPath="tasks"
-          style="push">
+          class="org.eclipse.mylyn.internal.tasks.ui.actions.OpenTaskSearchAction"
+          icon="icons/elcl16/task-search.gif"
+          id="org.eclipse.mylyn.tasks.ui.search.open"
+          label="Search Repository..."
+          menubarPath="tasks">
     </action>
            		
   		<action
