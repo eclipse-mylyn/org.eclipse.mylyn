@@ -179,14 +179,22 @@ public class TaskListToolTipHandler {
 				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 						task);
 				if (connector != null) {
-					ITaskListNotification notification = TasksUiPlugin.getIncommingNotification(connector, task);
+					ITaskListNotification notification = TasksUiPlugin.getDefault().getIncommingNotification(connector, task);
 					if (notification != null) {
+						String res = null;
 						if (notification.getDescription() != null) {
 							String descriptionText = notification.getDescription();
 							if (descriptionText != null && descriptionText.length() > 0) {
-								return descriptionText;
+								res = descriptionText;
 							}
 						}
+						if(notification.getDetails() !=null) {
+							String details = notification.getDetails();
+							if (details != null && details.length() > 0) {
+								res = res==null ? details : res + "\n" + details;
+							}
+						}
+						return res;
 					}
 				}
 			}

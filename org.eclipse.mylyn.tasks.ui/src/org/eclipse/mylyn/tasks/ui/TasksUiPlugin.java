@@ -252,7 +252,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 							.getRepositoryTasks(repository.getUrl())) {
 						if ((repositoryTask.getLastReadTimeStamp() == null || repositoryTask.getSynchronizationState() == RepositoryTaskSyncState.INCOMING)
 								&& repositoryTask.isNotified() == false) {
-							TaskListNotificationIncoming notification = getIncommingNotification(connector,
+							TaskListNotificationIncoming notification = INSTANCE.getIncommingNotification(connector,
 									repositoryTask);
 							notifications.add(notification);
 							repositoryTask.setNotified(true);
@@ -820,21 +820,20 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		return getTaskDataManager().getNewRepositoryTaskId();
 	}
 
-	public static TaskListNotificationIncoming getIncommingNotification(AbstractRepositoryConnector connector,
-			AbstractTask repositoryTask) {
+	/**
+	 * TODO: move, uses internal class.
+	 */
+	public TaskListNotificationIncoming getIncommingNotification(AbstractRepositoryConnector connector,
+			AbstractTask task) {
 
-		TaskListNotificationIncoming notification = new TaskListNotificationIncoming(repositoryTask);
-		RepositoryTaskData newTaskData = getTaskDataManager().getNewTaskData(repositoryTask.getRepositoryUrl(),
-				repositoryTask.getTaskId());
-		RepositoryTaskData oldTaskData = getTaskDataManager().getOldTaskData(repositoryTask.getRepositoryUrl(),
-				repositoryTask.getTaskId());
+		TaskListNotificationIncoming notification = new TaskListNotificationIncoming(task);
+		RepositoryTaskData newTaskData = getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
+		RepositoryTaskData oldTaskData = getTaskDataManager().getOldTaskData(task.getRepositoryUrl(), task.getTaskId());
 
 		if (newTaskData != null && oldTaskData != null) {
 
-			String descriptionText = getChangedDescription(newTaskData, oldTaskData);
-			if (descriptionText != null) {
-				notification.setDescription(descriptionText);
-			}
+			notification.setDescription(getChangedDescription(newTaskData, oldTaskData));
+			notification.setDetails(getChangedAttributes(newTaskData, oldTaskData));
 
 			if (connector != null) {
 				AbstractTaskDataHandler offlineHandler = connector.getTaskDataHandler();
@@ -852,7 +851,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	}
 
 	private static String getChangedDescription(RepositoryTaskData newTaskData, RepositoryTaskData oldTaskData) {
-
 		String descriptionText = "";
 
 		if (newTaskData.getComments().size() > oldTaskData.getComments().size()) {
@@ -870,29 +868,77 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			}
 		}
 
-		boolean attributeChanged = false;
-
-		for (RepositoryTaskAttribute newAttribute : newTaskData.getAttributes()) {
-			RepositoryTaskAttribute oldAttribute = oldTaskData.getAttribute(newAttribute.getId());
-			if (oldAttribute == null) {
-				attributeChanged = true;
-				break;
-			}
-			if (oldAttribute.getValue() != null && !oldAttribute.getValue().equals(newAttribute.getValue())) {
-				attributeChanged = true;
-				break;
-			} else if (oldAttribute.getValues() != null && !oldAttribute.getValues().equals(newAttribute.getValues())) {
-				attributeChanged = true;
-				break;
+		if (descriptionText.equals("")) {
+			String attributes = getChangedAttributes(newTaskData, oldTaskData);
+			if (!attributes.equals("")) {
+				descriptionText += "Attributes Changed:";
 			}
 		}
 
-		if (attributeChanged) {
-			if (descriptionText.equals("")) {
-				descriptionText += "Attributes changed";
-			}
-		}
 		return descriptionText;
 	}
 
+	private static String getChangedAttributes(RepositoryTaskData newTaskData, RepositoryTaskData oldTaskData) {
+		List<Change> changes = new ArrayList<Change>();
+		for (RepositoryTaskAttribute newAttribute : newTaskData.getAttributes()) {
+			List<String> newValues = newAttribute.getValues();
+			RepositoryTaskAttribute oldAttribute = oldTaskData.getAttribute(newAttribute.getId());
+			if (oldAttribute == null) {
+				changes.add(getDiff(newAttribute.getName(), null, newValues));
+				break;
+			}
+			List<String> oldValues = oldAttribute.getValues();
+			if (!oldValues.equals(newValues)) {
+				changes.add(getDiff(newAttribute.getName(), oldValues, newValues));
+				break;
+			}
+		}
+		if (changes.isEmpty()) {
+			return "";
+		}
+
+		String details = "";
+		String sep = "";
+		for (Change change : changes) {
+			details += sep;
+			if (!change.removed.isEmpty()) {
+				details += "- " + change.field + " " + change.removed;
+				sep = "\n";
+			}
+			if (!change.added.isEmpty()) {
+				details += sep;
+				details += "+ " + change.field + " " + change.added;
+				sep = "\n";
+			}
+		}
+		return details;
+	}
+
+	private static Change getDiff(String field, List<String> oldValues, List<String> newValues) {
+		Change change = new Change(field, newValues);
+		if (oldValues != null) {
+			for (String value : oldValues) {
+				if (change.added.contains(value)) {
+					change.added.remove(value);
+				} else {
+					change.removed.add(value);
+				}
+			}
+		}
+		return change;
+	}
+
+	private static class Change {
+		
+		final String field;
+
+		final List<String> added;
+
+		final List<String> removed = new ArrayList<String>();
+
+		public Change(String field, List<String> newValues) {
+			this.field = field;
+			this.added = new ArrayList<String>(newValues);
+		}
+	}
 }

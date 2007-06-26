@@ -24,6 +24,8 @@ public interface ITaskListNotification extends Comparable<ITaskListNotification>
 
 	public String getDescription();
 
+	public String getDetails();
+	
 	public String getLabel();
 
 	public Image getNotificationIcon();

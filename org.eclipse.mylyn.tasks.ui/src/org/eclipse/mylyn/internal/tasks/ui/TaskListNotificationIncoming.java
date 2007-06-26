@@ -29,10 +29,13 @@ public class TaskListNotificationIncoming implements ITaskListNotification {
 
 	private String description = null;
 
+	private String details = null;
+	
 	private DecoratingLabelProvider labelProvider = new DecoratingLabelProvider(new TaskElementLabelProvider(true),
 			PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator());
 
 	private Date date;
+
 
 	public TaskListNotificationIncoming(AbstractTask task) {
 		this.task = task;
@@ -48,6 +51,14 @@ public class TaskListNotificationIncoming implements ITaskListNotification {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	
+	public String getDetails() {
+		return details;
+	}
+	
+	public void setDetails(String details) {
+		this.details = details;
 	}
 
 	public void openTask() {
