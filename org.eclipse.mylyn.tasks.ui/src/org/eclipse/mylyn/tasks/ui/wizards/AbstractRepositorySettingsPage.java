@@ -212,6 +212,41 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	}
 
 	public void createControl(Composite parent) {
+
+		if (repository != null) {
+			originalUrl = repository.getUrl();
+			oldUsername = repository.getUserName();
+			oldPassword = repository.getPassword();
+
+			if (repository.getHttpUser() != null && repository.getHttpPassword() != null) {
+				oldHttpAuthUserId = repository.getHttpUser();
+				oldHttpAuthPassword = repository.getHttpPassword();
+			} else {
+				oldHttpAuthPassword = "";
+				oldHttpAuthUserId = "";
+			}
+
+			oldProxyHostname = repository.getProperty(TaskRepository.PROXY_HOSTNAME);
+			oldProxyPort = repository.getProperty(TaskRepository.PROXY_PORT);
+			if (oldProxyHostname == null)
+				oldProxyHostname = "";
+			if (oldProxyPort == null)
+				oldProxyPort = "";
+
+			oldProxyUsername = repository.getProxyUsername();
+			oldProxyPassword = repository.getProxyPassword();
+			if (oldProxyUsername == null)
+				oldProxyUsername = "";
+			if (oldProxyPassword == null)
+				oldProxyPassword = "";
+
+		} else {
+			oldUsername = "";
+			oldPassword = "";
+			oldHttpAuthPassword = "";
+			oldHttpAuthUserId = "";
+		}
+
 		compositeContainer = new Composite(parent, SWT.NULL);
 		FillLayout layout = new FillLayout();
 		compositeContainer.setLayout(layout);
@@ -315,6 +350,22 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 				}
 			}
 		};
+
+		if (repository != null) {
+			try {
+				String repositoryLabel = repository.getProperty(IRepositoryConstants.PROPERTY_LABEL);
+				if (repositoryLabel != null && repositoryLabel.length() > 0) {
+					// repositoryLabelCombo.add(repositoryLabel);
+					// repositoryLabelCombo.select(0);
+					repositoryLabelEditor.setStringValue(repositoryLabel);
+				}
+				serverUrlCombo.setText(repository.getUrl());
+				repositoryUserNameEditor.setStringValue(repository.getUserName());
+				repositoryPasswordEditor.setStringValue(repository.getPassword());
+			} catch (Throwable t) {
+				StatusHandler.fail(t, "could not set field value for: " + repository, false);
+			}
+		}
 
 		if (needsAnonymousLogin()) {
 			if (repository != null) {
@@ -468,6 +519,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).span(2, SWT.DEFAULT).applyTo(httpAuthButton);
 
 			httpAuthButton.setText("Enabled");
+
 			httpAuthButton.addSelectionListener(new SelectionListener() {
 				public void widgetSelected(SelectionEvent e) {
 					setHttpAuth(httpAuthButton.getSelection());
@@ -497,7 +549,6 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 					httpAuthComp);
 			((RepositoryStringFieldEditor) httpAuthPasswordEditor).getTextControl().setEchoChar('*');
 
-			// httpAuthGroup.setEnabled(httpAuthButton.getSelection());
 			httpAuthUserNameEditor.setEnabled(httpAuthButton.getSelection(), httpAuthComp);
 			httpAuthPasswordEditor.setEnabled(httpAuthButton.getSelection(), httpAuthComp);
 
@@ -505,53 +556,6 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 					&& !oldHttpAuthUserId.equals(""));
 
 			httpAuthExpComposite.setExpanded(httpAuthButton.getSelection());
-		}
-
-		if (repository != null) {
-			originalUrl = repository.getUrl();
-			oldUsername = repository.getUserName();
-			oldPassword = repository.getPassword();
-
-			if (repository.getHttpUser() != null && repository.getHttpPassword() != null) {
-				oldHttpAuthUserId = repository.getHttpUser();
-				oldHttpAuthPassword = repository.getHttpPassword();
-			} else {
-				oldHttpAuthPassword = "";
-				oldHttpAuthUserId = "";
-			}
-
-			oldProxyHostname = repository.getProperty(TaskRepository.PROXY_HOSTNAME);
-			oldProxyPort = repository.getProperty(TaskRepository.PROXY_PORT);
-			if (oldProxyHostname == null)
-				oldProxyHostname = "";
-			if (oldProxyPort == null)
-				oldProxyPort = "";
-
-			oldProxyUsername = repository.getProxyUsername();
-			oldProxyPassword = repository.getProxyPassword();
-			if (oldProxyUsername == null)
-				oldProxyUsername = "";
-			if (oldProxyPassword == null)
-				oldProxyPassword = "";
-
-			try {
-				String repositoryLabel = repository.getProperty(IRepositoryConstants.PROPERTY_LABEL);
-				if (repositoryLabel != null && repositoryLabel.length() > 0) {
-					// repositoryLabelCombo.add(repositoryLabel);
-					// repositoryLabelCombo.select(0);
-					repositoryLabelEditor.setStringValue(repositoryLabel);
-				}
-				serverUrlCombo.setText(repository.getUrl());
-				repositoryUserNameEditor.setStringValue(repository.getUserName());
-				repositoryPasswordEditor.setStringValue(repository.getPassword());
-			} catch (Throwable t) {
-				StatusHandler.fail(t, "could not set field value for: " + repository, false);
-			}
-		} else {
-			oldUsername = "";
-			oldPassword = "";
-			oldHttpAuthPassword = "";
-			oldHttpAuthUserId = "";
 		}
 
 		if (needsProxy()) {
