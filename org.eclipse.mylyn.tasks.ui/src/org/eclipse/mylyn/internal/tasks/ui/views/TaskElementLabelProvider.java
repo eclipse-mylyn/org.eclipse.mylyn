@@ -83,7 +83,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 
 	private CompositeImageDescriptor getImageDescriptor(Object object) {
 		CompositeImageDescriptor compositeDescriptor = new CompositeImageDescriptor();
-		if (object instanceof TaskArchive) {
+		if (object instanceof TaskArchive || object instanceof UnfiledCategory) {
 			compositeDescriptor.icon = TasksUiImages.CATEGORY_ARCHIVE;
 			return compositeDescriptor;
 		} else if (object instanceof TaskCategory || object instanceof UnfiledCategory) {

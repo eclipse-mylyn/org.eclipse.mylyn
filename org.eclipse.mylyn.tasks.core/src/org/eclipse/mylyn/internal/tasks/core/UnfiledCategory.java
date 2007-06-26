@@ -18,7 +18,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
  */
 public class UnfiledCategory extends AbstractTaskCategory {
 
-	public static final String LABEL = "Misc";
+	public static final String LABEL = "Uncategorized";
 
 	public static final String HANDLE = "uncategorized";
 

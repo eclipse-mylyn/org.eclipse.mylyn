@@ -25,6 +25,7 @@ import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
+import org.eclipse.mylyn.internal.tasks.core.UnfiledCategory;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.RetrieveTitleFromUrlJob;
 import org.eclipse.mylyn.internal.tasks.ui.TaskTransfer;
@@ -108,7 +109,9 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 		}
 
 		for (AbstractTask task : tasksToMove) {
-			if (currentTarget instanceof TaskCategory) {
+			if (currentTarget instanceof UnfiledCategory) {
+				TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task, (UnfiledCategory)currentTarget);
+			} else if (currentTarget instanceof TaskCategory) {
 				TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task, (TaskCategory) currentTarget);
 			} else if (currentTarget instanceof AbstractTask) {
 				AbstractTask targetTask = (AbstractTask) currentTarget;
@@ -257,7 +260,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 				return true;
 			}
 		} else if (selectedObject != null && !(selectedObject instanceof AbstractRepositoryQuery)) {
-			if (getCurrentTarget() instanceof TaskCategory) {
+			if (getCurrentTarget() instanceof TaskCategory || getCurrentTarget() instanceof UnfiledCategory) {
 				return true;
 			} else if (getCurrentTarget() instanceof AbstractTaskContainer
 					&& (getCurrentLocation() == ViewerDropAdapter.LOCATION_AFTER || getCurrentLocation() == ViewerDropAdapter.LOCATION_BEFORE)) {
