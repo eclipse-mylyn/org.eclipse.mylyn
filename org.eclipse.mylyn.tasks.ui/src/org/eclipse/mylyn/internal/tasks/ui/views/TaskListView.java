@@ -424,8 +424,15 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			});
 		}
 
-		public void activityChanged(ScheduledTaskContainer week) {
-			// ignore
+		public void activityChanged(final ScheduledTaskContainer week) {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					if (getCurrentPresentation().getPresentationName().equals(
+							scheduledPresentation.getPresentationName())) {
+						refresh(week);
+					}
+				}
+			});
 		}
 
 		public void taskListRead() {
@@ -443,48 +450,53 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					for (TaskContainerDelta taskContainerDelta : containers) {
-						if (taskContainerDelta.getContainer() instanceof AbstractTask) {
-							AbstractTask task = (AbstractTask) taskContainerDelta.getContainer();
-							switch (taskContainerDelta.getKind()) {
-							case ROOT:
-								refresh(null);
-								break;
-							case ADDED:
-								refresh(null);
-								break;
-							case REMOVED:
-								refresh(null);
-								break;
-							default:
-								// TODO: move logic into deltas
-								refresh(task);
-								Set<AbstractTaskContainer> containers = new HashSet<AbstractTaskContainer>(
-										TasksUiPlugin.getTaskListManager().getTaskList().getQueriesForHandle(
-												task.getHandleIdentifier()));
-								containers.addAll(task.getParentContainers());
-								containers.add(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer());
-								containers.add(TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
-								for (AbstractTaskContainer container : containers) {
-									refresh(container);
-								}
-								break;
-							}
-						} else { // category or query
-							switch (taskContainerDelta.getKind()) {
-							case ROOT:
-								refresh(null);
-								break;
-							case ADDED:
-								refresh(null);
-								break;
-							case REMOVED:
-								refresh(null);
-								break;
-							default:
-								if (getCurrentPresentation().getPresentationName().equals(
-										scheduledPresentation.getPresentationName())) {
+						if (getCurrentPresentation().getPresentationName().equals(
+								scheduledPresentation.getPresentationName())) {
+							// TODO: implement refresh policy for scheduled presentation
+							refresh(null);
+						} else {
+							if (taskContainerDelta.getContainer() instanceof AbstractTask) {
+								AbstractTask task = (AbstractTask) taskContainerDelta.getContainer();
+								switch (taskContainerDelta.getKind()) {
+								case ROOT:
 									refresh(null);
-								} else {
+									break;
+								case ADDED:
+									refresh(null);
+									break;
+								case REMOVED:
+									refresh(null);
+									break;
+								default:
+									// TODO: move logic into deltas
+									refresh(task);
+									Set<AbstractTaskContainer> containers = new HashSet<AbstractTaskContainer>(
+											TasksUiPlugin.getTaskListManager().getTaskList().getQueriesForHandle(
+													task.getHandleIdentifier()));
+									containers.addAll(task.getParentContainers());
+									containers.add(TasksUiPlugin.getTaskListManager()
+											.getTaskList()
+											.getArchiveContainer());
+									containers.add(TasksUiPlugin.getTaskListManager()
+											.getTaskList()
+											.getDefaultCategory());
+									for (AbstractTaskContainer container : containers) {
+										refresh(container);
+									}
+									break;
+								}
+							} else { // category or query
+								switch (taskContainerDelta.getKind()) {
+								case ROOT:
+									refresh(null);
+									break;
+								case ADDED:
+									refresh(null);
+									break;
+								case REMOVED:
+									refresh(null);
+									break;
+								default:
 									if (taskContainerDelta.getContainer().equals(
 											TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory())) {
 										refresh(null);
@@ -498,85 +510,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				}
 			});
 		}
-
-//		public void localInfoChanged(final AbstractTask task) {
-//			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-//				public void run() {
-//					if (getCurrentPresentation().getPresentationName().equals(
-//							scheduledPresentation.getPresentationName())) {
-//						refresh(null);
-//					} else {
-//						refresh(task);
-//					}
-//				}
-//			});
-//			if (task.isActive()) {
-//				String activeTaskLabel = filteredTree.getActiveTaskLabelText();
-//				if (activeTaskLabel != null && !activeTaskLabel.equals(task.getSummary())) {
-//					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-//						public void run() {
-//							filteredTree.indicateActiveTask(task);
-//						}
-//					});
-//				}
-//			}
-//		}
-
-//		public void repositoryInfoChanged(AbstractTask task) {
-//			localInfoChanged(task);
-//		}
-
-//		public void taskMoved(final AbstractTask task, final AbstractTaskContainer fromContainer,
-//				final AbstractTaskContainer toContainer) {
-//			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-//				public void run() {
-//					// category might appear or disappear
-//					refresh(null);
-//					AbstractTaskContainer rootCategory = TasksUiPlugin.getTaskListManager()
-//							.getTaskList()
-//							.getAutomaticCategory();
-//					if (rootCategory.equals(fromContainer) || rootCategory.equals(toContainer)) {
-//						refresh(null);
-//					} else {
-//						refresh(toContainer);
-//						refresh(task);
-//						refresh(fromContainer);
-//					}
-//				}
-//			});
-//		}
-
-//		public void taskDeleted(AbstractTask task) {
-//			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-//				public void run() {
-//					refresh(null);
-//				}
-//			});
-//		}
-
-//		public void containerAdded(AbstractTaskContainer container) {
-//			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-//				public void run() {
-//					refresh(null);
-//				}
-//			});
-//		}
-//
-//		public void containerDeleted(AbstractTaskContainer container) {
-//			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-//				public void run() {
-//					refresh(null);
-//				}
-//			});
-//		}
-
-//		public void taskAdded(AbstractTask task) {
-//			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-//				public void run() {
-//					refresh(null);
-//				}
-//			});
-//		}
 	};
 
 	private final IPropertyChangeListener THEME_CHANGE_LISTENER = new IPropertyChangeListener() {
