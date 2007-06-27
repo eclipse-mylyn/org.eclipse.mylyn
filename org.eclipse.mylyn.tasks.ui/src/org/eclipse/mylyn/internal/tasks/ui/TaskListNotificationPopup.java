@@ -63,7 +63,7 @@ public class TaskListNotificationPopup extends PopupDialog {
 
 	@Override
 	protected Control createContents(Composite parent) {
-		getShell().setBackground(getShell().getDisplay().getSystemColor(SWT.COLOR_GRAY));
+		getShell().setBackground(getShell().getDisplay().getSystemColor(SWT.COLOR_DARK_GRAY));
 		return createDialogArea(parent);
 	}
 

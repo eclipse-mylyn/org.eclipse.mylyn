@@ -123,7 +123,7 @@ public class TracConnectorUi extends AbstractRepositoryConnectorUi {
 		TracTask task = new TracTask("", Kind.TASK.name(), Kind.TASK.toString());
 		task.setTaskKind(Kind.TASK.toString());
 		legendItems.add(task);
-
+		
 		return legendItems;
 	}
 

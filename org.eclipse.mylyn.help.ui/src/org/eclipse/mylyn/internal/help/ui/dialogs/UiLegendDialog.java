@@ -15,6 +15,7 @@ import org.eclipse.jface.dialogs.PopupDialog;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
@@ -45,7 +46,7 @@ import org.eclipse.ui.themes.IThemeManager;
  */
 public class UiLegendDialog extends PopupDialog {
 
-	public static final String TITLE = "Mylyn UI Legend";
+	public static final String TITLE = "  Mylyn UI Overview";
 
 	private FormToolkit toolkit;
 
@@ -61,14 +62,14 @@ public class UiLegendDialog extends PopupDialog {
 
 	@Override
 	protected Control createContents(Composite parent) {
-		getShell().setBackground(getShell().getDisplay().getSystemColor(SWT.COLOR_GRAY));
-
+		getShell().setBackground(getShell().getDisplay().getSystemColor(SWT.COLOR_DARK_GRAY));
 		return createDialogArea(parent);
 	}
 
 	@Override
 	public int open() {
 		int open = super.open();
+		getShell().setLocation(getShell().getLocation().x, 20);
 		getShell().setFocus();
 		return open;
 	}
@@ -96,7 +97,7 @@ public class UiLegendDialog extends PopupDialog {
 		Label image = null;
 
 		Section section = toolkit.createSection(form.getBody(), Section.DESCRIPTION);
-		section.setText(TITLE + "                                                        ");
+		section.setText(TITLE + "                                                 ");
 		Composite sectionClient = toolkit.createComposite(section);
 		GridLayout layout = new GridLayout();
 		layout.verticalSpacing = 0;
@@ -138,14 +139,6 @@ public class UiLegendDialog extends PopupDialog {
 		image.setImage(TasksUiImages.getImage(TasksUiImages.TASK));
 		toolkit.createLabel(sectionClient, "Task                       ");
 
-// image = toolkit.createLabel(sectionClient, "");
-// image.setImage(TasksUiImages.getImage(TasksUiImages.TASK_NOTES));
-// toolkit.createLabel(sectionClient, "Task with notes");
-
-// image = toolkit.createLabel(sectionClient, "");
-// image.setImage(TasksUiImages.getImage(TasksUiImages.TASK_REPOSITORY));
-// toolkit.createLabel(sectionClient, "Repository task");
-
 		image = toolkit.createLabel(sectionClient, "");
 		image.setImage(TasksUiImages.getImage(TasksUiImages.CATEGORY));
 		toolkit.createLabel(sectionClient, "Category");
@@ -161,6 +154,28 @@ public class UiLegendDialog extends PopupDialog {
 		image = toolkit.createLabel(sectionClient, "");
 		image.setImage(TasksUiImages.getImage(TasksUiImages.BLANK));
 
+		
+		Hyperlink openView = toolkit.createHyperlink(sectionClient, "Open Task List...", SWT.NULL);
+		openView.addHyperlinkListener(new IHyperlinkListener() {
+
+			public void linkActivated(HyperlinkEvent e) {
+				close();
+				TaskListView.openInActivePerspective();
+			}
+
+			public void linkEntered(HyperlinkEvent e) {
+				// ignore
+			}
+
+			public void linkExited(HyperlinkEvent e) {
+				// ignore
+			}
+		});
+		
+//		image = toolkit.createLabel(sectionClient, "");
+		
+		
+		
 		section = toolkit.createSection(tasksComposite, Section.TITLE_BAR);
 		section.setText("Priorities                       ");
 		sectionClient = toolkit.createComposite(section);
@@ -254,10 +269,14 @@ public class UiLegendDialog extends PopupDialog {
 		});
 
 		section = toolkit.createSection(form.getBody(), Section.TITLE_BAR);
-		section.setText("Context                                                                            ");
+		section.setText("Task Context                                                                  ");
 		sectionClient = toolkit.createComposite(section);
 		setSectionLayout(sectionClient, section, false);
 
+		image = toolkit.createLabel(sectionClient, "");
+		image.setImage(TasksUiImages.getImage(TasksUiImages.CONTEXT_FOCUS));
+		toolkit.createLabel(sectionClient, "Focus view on active task");
+		
 		image = toolkit.createLabel(sectionClient, "");
 		image.setImage(TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE));
 		toolkit.createLabel(sectionClient, "Inactive task with no context");
@@ -269,7 +288,7 @@ public class UiLegendDialog extends PopupDialog {
 		image = toolkit.createLabel(sectionClient, "");
 		image.setImage(TasksUiImages.getImage(TasksUiImages.TASK_ACTIVE));
 		toolkit.createLabel(sectionClient, "Active task");
-
+		
 		section = toolkit.createSection(form.getBody(), Section.TITLE_BAR);
 		section.setText("Synchronization                                                             ");
 		sectionClient = toolkit.createComposite(section);
@@ -297,8 +316,12 @@ public class UiLegendDialog extends PopupDialog {
 
 		// Connector specifics
 		Composite connectorComposite = toolkit.createComposite(form.getBody());
-		connectorComposite.setLayout(new GridLayout(2, false));
+		connectorComposite.setLayout(new GridLayout(3, false));
 
+		GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING, GridData.VERTICAL_ALIGN_BEGINNING, false, false);
+		gridData.verticalIndent = 0;
+		connectorComposite.setData(gridData);
+		
 		Collection<AbstractRepositoryConnector> connectors = TasksUiPlugin.getRepositoryManager()
 				.getRepositoryConnectors();
 		for (AbstractRepositoryConnector connector : connectors) {
@@ -307,21 +330,25 @@ public class UiLegendDialog extends PopupDialog {
 				List<AbstractTaskContainer> elements = connectorUi.getLegendItems();
 
 				if (!elements.isEmpty()) {
-					section = toolkit.createSection(connectorComposite, Section.TITLE_BAR);
+					section = toolkit.createSection(connectorComposite, Section.TITLE_BAR | SWT.TOP);
 					String label = connector.getLabel();
 					int parenIndex = label.indexOf('(');
 					if (parenIndex != -1) {
 						label = label.substring(0, parenIndex);
 					}
 
-					section.setText("Connector: " + label + " ");
+					section.setText(label);
 					sectionClient = toolkit.createComposite(section);
-					setSectionLayout(sectionClient, section, true);
+					setSectionLayout(sectionClient, section, false);
 
 					for (AbstractTaskContainer taskListElement : elements) {
 						image = toolkit.createLabel(sectionClient, "");
 						image.setImage(labelProvider.getImage(taskListElement));
 						toolkit.createLabel(sectionClient, taskListElement.getSummary());
+					}
+					if (elements.size() < 4)  {
+						image = toolkit.createLabel(sectionClient, "");
+						toolkit.createLabel(sectionClient, "");
 					}
 				}
 			}

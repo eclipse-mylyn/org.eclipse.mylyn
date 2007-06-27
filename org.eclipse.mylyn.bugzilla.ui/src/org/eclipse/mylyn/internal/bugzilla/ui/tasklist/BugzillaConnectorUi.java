@@ -58,7 +58,7 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 	public List<AbstractTaskContainer> getLegendItems() {
 		List<AbstractTaskContainer> legendItems = new ArrayList<AbstractTaskContainer>();
 
-		BugzillaTask blocker = new BugzillaTask("", "critical", "Critical or Blocker");
+		BugzillaTask blocker = new BugzillaTask("", "critical", "Critical, Blocker");
 		blocker.setSeverity("critical");
 		legendItems.add(blocker);
 
@@ -70,7 +70,7 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 		enhancement.setSeverity("enhancement");
 		legendItems.add(enhancement);
 
-		BugzillaTask trivial = new BugzillaTask("", "trivial", "Trivial or Minor");
+		BugzillaTask trivial = new BugzillaTask("", "trivial", "Trivial, Minor");
 		trivial.setSeverity("trivial");
 		legendItems.add(trivial);
 

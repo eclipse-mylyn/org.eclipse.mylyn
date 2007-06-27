@@ -148,6 +148,8 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor PERSON_ME_NARROW = create(T_TOOL, "person-me-narrow.gif");
 
+	public static final ImageDescriptor CONTEXT_FOCUS = create(T_EVIEW, "focus-view.gif");
+	
 	public static final ImageDescriptor CONTEXT_ATTACH = create(T_TOOL, "context-attach.gif");
 
 	public static final ImageDescriptor CONTEXT_RETRIEVE = create(T_TOOL, "context-retrieve.gif");
