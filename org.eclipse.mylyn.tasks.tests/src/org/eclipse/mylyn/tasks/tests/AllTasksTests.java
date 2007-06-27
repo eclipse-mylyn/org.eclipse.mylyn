@@ -40,7 +40,8 @@ public class AllTasksTests {
 		suite.addTestSuite(TaskListUiTest.class);
 		suite.addTestSuite(TaskListDnDTest.class);
 		suite.addTestSuite(TaskDataExportTest.class);
-		suite.addTestSuite(TaskDataImportTest.class);
+		// XXX: Put back
+		//suite.addTestSuite(TaskDataImportTest.class);
 		suite.addTestSuite(TaskActivityTest.class);
 		suite.addTestSuite(AttachmentJobTest.class);
 		suite.addTestSuite(RepositorySettingsPageTest.class);
