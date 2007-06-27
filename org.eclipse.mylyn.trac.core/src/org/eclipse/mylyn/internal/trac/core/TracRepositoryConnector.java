@@ -200,8 +200,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 				return true;
 			} catch (Exception e) {
-				throw new CoreException(new Status(IStatus.ERROR, TracCorePlugin.PLUGIN_ID, IStatus.OK,
-						"Could not determine changed tasks", e));
+				throw new CoreException(TracCorePlugin.toStatus(e, repository));
 			}
 		} finally {
 			monitor.done();
