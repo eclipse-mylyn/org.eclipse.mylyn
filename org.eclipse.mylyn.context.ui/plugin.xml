@@ -346,11 +346,11 @@
            enablesFor="*"
            icon="icons/elcl16/interest-filtering.gif"
            id="org.eclipse.mylyn.context.ui.contentOutline.focus"
-           label="Focus on Active Task (Alt+click to reveal filtered elements)"
+           label="Focus on Active Task"
            menubarPath="mylyn"
            style="toggle"
            toolbarPath="mylyn"
-           tooltip="Focus on Active Task"> 
+           tooltip="Focus on Active Task (Alt+click to reveal filtered elements)"> 
   		</action> 
   	</viewContribution>
    </extension>
