@@ -131,6 +131,8 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		descriptionTextViewer.getControl().setLayoutData(descriptionTextData);
 		descriptionTextViewer.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 
+		addDuplicateDetection(descriptionComposite);
+
 		toolkit.paintBordersFor(descriptionComposite);
 
 	}

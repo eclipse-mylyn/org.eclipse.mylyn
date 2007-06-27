@@ -200,7 +200,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private static final String LABEL_TEXT_EDITOR = "Text Editor";
 
-	private static final String LABEL_NO_DETECTOR = "No duplicate detector available.";
+//	private static final String LABEL_NO_DETECTOR = "No duplicate detector available.";
 
 	protected static final String CONTEXT_MENU_ID = "#MylarRepositoryEditor";
 
@@ -226,9 +226,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private static final String LABEL_SAVE = "Save...";
 
-	private static final String LABEL_SEARCH_DUPS = "Search for Duplicates";
+	private static final String LABEL_SEARCH_DUPS = "Search";
 
-	private static final String LABEL_SELECT_DETECTOR = "Select duplicate detector:";
+	private static final String LABEL_SELECT_DETECTOR = "Duplicate detection";
 
 	private RepositoryTaskEditorInput editorInput;
 
@@ -981,57 +981,57 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * Adds a related bugs section to the bug editor
 	 */
 	protected void createRelatedBugsSection(Composite composite) {
-		Section relatedBugsSection = createSection(editorComposite, getSectionLabel(SECTION_NAME.RELATEDBUGS_SECTION));
-		Composite relatedBugsComposite = toolkit.createComposite(relatedBugsSection);
-		relatedBugsComposite.setLayout(new GridLayout(4, false));
-		relatedBugsComposite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
-		relatedBugsSection.setClient(relatedBugsComposite);
-		relatedBugsSection.setExpanded(repositoryTask == null);
-
-		List<AbstractDuplicateDetector> allCollectors = new ArrayList<AbstractDuplicateDetector>();
-		if (getDuplicateSearchCollectorsList() != null) {
-			allCollectors.addAll(getDuplicateSearchCollectorsList());
-		}
-		if (!allCollectors.isEmpty()) {
-			duplicateDetectorLabel = new Label(relatedBugsComposite, SWT.LEFT);
-			duplicateDetectorLabel.setText(LABEL_SELECT_DETECTOR);
-
-			duplicateDetectorChooser = new CCombo(relatedBugsComposite, SWT.FLAT | SWT.READ_ONLY | SWT.BORDER);
-
-			duplicateDetectorChooser.setLayoutData(GridDataFactory.swtDefaults().hint(150, SWT.DEFAULT).create());
-			duplicateDetectorChooser.setFont(TEXT_FONT);
-
-			Collections.sort(allCollectors, new Comparator<AbstractDuplicateDetector>() {
-
-				public int compare(AbstractDuplicateDetector c1, AbstractDuplicateDetector c2) {
-					return c1.getName().compareToIgnoreCase(c2.getName());
-				}
-
-			});
-
-			for (AbstractDuplicateDetector detector : allCollectors) {
-				duplicateDetectorChooser.add(detector.getName());
-			}
-
-			duplicateDetectorChooser.select(0);
-			duplicateDetectorChooser.setEnabled(true);
-			duplicateDetectorChooser.setData(allCollectors);
-
-			if (allCollectors.size() > 0) {
-
-				searchForDuplicates = toolkit.createButton(relatedBugsComposite, LABEL_SEARCH_DUPS, SWT.NONE);
-				GridData searchDuplicatesButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-				searchForDuplicates.setLayoutData(searchDuplicatesButtonData);
-				searchForDuplicates.addListener(SWT.Selection, new Listener() {
-					public void handleEvent(Event e) {
-						searchForDuplicates();
-					}
-				});
-			}
-		} else {
-			Label label = new Label(relatedBugsComposite, SWT.LEFT);
-			label.setText(LABEL_NO_DETECTOR);
-		}
+//		Section relatedBugsSection = createSection(editorComposite, getSectionLabel(SECTION_NAME.RELATEDBUGS_SECTION));
+//		Composite relatedBugsComposite = toolkit.createComposite(relatedBugsSection);
+//		relatedBugsComposite.setLayout(new GridLayout(4, false));
+//		relatedBugsComposite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
+//		relatedBugsSection.setClient(relatedBugsComposite);
+//		relatedBugsSection.setExpanded(repositoryTask == null);
+//
+//		List<AbstractDuplicateDetector> allCollectors = new ArrayList<AbstractDuplicateDetector>();
+//		if (getDuplicateSearchCollectorsList() != null) {
+//			allCollectors.addAll(getDuplicateSearchCollectorsList());
+//		}
+//		if (!allCollectors.isEmpty()) {
+//			duplicateDetectorLabel = new Label(relatedBugsComposite, SWT.LEFT);
+//			duplicateDetectorLabel.setText(LABEL_SELECT_DETECTOR);
+//
+//			duplicateDetectorChooser = new CCombo(relatedBugsComposite, SWT.FLAT | SWT.READ_ONLY | SWT.BORDER);
+//
+//			duplicateDetectorChooser.setLayoutData(GridDataFactory.swtDefaults().hint(150, SWT.DEFAULT).create());
+//			duplicateDetectorChooser.setFont(TEXT_FONT);
+//
+//			Collections.sort(allCollectors, new Comparator<AbstractDuplicateDetector>() {
+//
+//				public int compare(AbstractDuplicateDetector c1, AbstractDuplicateDetector c2) {
+//					return c1.getName().compareToIgnoreCase(c2.getName());
+//				}
+//
+//			});
+//
+//			for (AbstractDuplicateDetector detector : allCollectors) {
+//				duplicateDetectorChooser.add(detector.getName());
+//			}
+//
+//			duplicateDetectorChooser.select(0);
+//			duplicateDetectorChooser.setEnabled(true);
+//			duplicateDetectorChooser.setData(allCollectors);
+//
+//			if (allCollectors.size() > 0) {
+//
+//				searchForDuplicates = toolkit.createButton(relatedBugsComposite, LABEL_SEARCH_DUPS, SWT.NONE);
+//				GridData searchDuplicatesButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+//				searchForDuplicates.setLayoutData(searchDuplicatesButtonData);
+//				searchForDuplicates.addListener(SWT.Selection, new Listener() {
+//					public void handleEvent(Event e) {
+//						searchForDuplicates();
+//					}
+//				});
+//			}
+//		} else {
+//			Label label = new Label(relatedBugsComposite, SWT.LEFT);
+//			label.setText(LABEL_NO_DETECTOR);
+//		}
 	}
 
 	protected SearchHitCollector getDuplicateSearchCollector(String name) {
@@ -1553,7 +1553,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		createReplyHyperlink(0, replyComp, taskData.getDescription());
 		descriptionSection.setTextClient(replyComp);
-
+//		duplicatesSection.setBackground(new Color(form.getDisplay(), 123, 22, 45));
+		addDuplicateDetection(sectionComposite);
 		toolkit.paintBordersFor(sectionComposite);
 	}
 
@@ -1588,6 +1589,63 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		});
 
 		return replyLink;
+	}
+
+	protected void addDuplicateDetection(Composite composite) {
+		List<AbstractDuplicateDetector> allCollectors = new ArrayList<AbstractDuplicateDetector>();
+		if (getDuplicateSearchCollectorsList() != null) {
+			allCollectors.addAll(getDuplicateSearchCollectorsList());
+		}
+		if (!allCollectors.isEmpty()) {
+			Section duplicatesSection = toolkit.createSection(composite, ExpandableComposite.TWISTIE
+					| ExpandableComposite.SHORT_TITLE_BAR);
+			duplicatesSection.setText(LABEL_SELECT_DETECTOR);
+			duplicatesSection.setLayout(new GridLayout());
+			GridDataFactory.fillDefaults().indent(SWT.DEFAULT, 15).applyTo(duplicatesSection);
+			Composite relatedBugsComposite = toolkit.createComposite(duplicatesSection);
+			relatedBugsComposite.setLayout(new GridLayout(4, false));
+			relatedBugsComposite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
+			duplicatesSection.setClient(relatedBugsComposite);
+			duplicateDetectorLabel = new Label(relatedBugsComposite, SWT.LEFT);
+			duplicateDetectorLabel.setText("Detector:");
+
+			duplicateDetectorChooser = new CCombo(relatedBugsComposite, SWT.FLAT | SWT.READ_ONLY | SWT.BORDER);
+
+			duplicateDetectorChooser.setLayoutData(GridDataFactory.swtDefaults().hint(150, SWT.DEFAULT).create());
+			duplicateDetectorChooser.setFont(TEXT_FONT);
+
+			Collections.sort(allCollectors, new Comparator<AbstractDuplicateDetector>() {
+
+				public int compare(AbstractDuplicateDetector c1, AbstractDuplicateDetector c2) {
+					return c1.getName().compareToIgnoreCase(c2.getName());
+				}
+
+			});
+
+			for (AbstractDuplicateDetector detector : allCollectors) {
+				duplicateDetectorChooser.add(detector.getName());
+			}
+
+			duplicateDetectorChooser.select(0);
+			duplicateDetectorChooser.setEnabled(true);
+			duplicateDetectorChooser.setData(allCollectors);
+
+			if (allCollectors.size() > 0) {
+
+				searchForDuplicates = toolkit.createButton(relatedBugsComposite, LABEL_SEARCH_DUPS, SWT.NONE);
+				GridData searchDuplicatesButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+				searchForDuplicates.setLayoutData(searchDuplicatesButtonData);
+				searchForDuplicates.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event e) {
+						searchForDuplicates();
+					}
+				});
+			}
+//		} else {
+//			Label label = new Label(composite, SWT.LEFT);
+//			label.setText(LABEL_NO_DETECTOR);
+		}
+
 	}
 
 	protected void createCustomAttributeLayout(Composite composite) {
