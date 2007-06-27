@@ -37,9 +37,10 @@ public class WorkspaceAwareContextStore extends AbstractContextStore {
 				+ OLD_DATA_DIR;
 		File newDefaultDataDir = new File(TasksUiPlugin.getDefault().getDefaultDataDirectory());
 		File oldDefaultDataDir = new File(oldDefaultDataPath);
-		if (newDefaultDataDir.exists() && oldDefaultDataDir.exists()) {
-			StatusHandler.log("Legacy data folder detected: " + oldDefaultDataDir.getAbsolutePath(), this);
-		} else if (oldDefaultDataDir.exists() && !newDefaultDataDir.exists()) {
+//		if (newDefaultDataDir.exists() && oldDefaultDataDir.exists()) {
+//			StatusHandler.log("Legacy data folder detected: " + oldDefaultDataDir.getAbsolutePath(), this);
+//		} else 
+		if (oldDefaultDataDir.exists() && !newDefaultDataDir.exists()) {
 			File metadata = new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toString() + '/'
 					+ DIRECTORY_METADATA);
 			if (!metadata.exists()) {
