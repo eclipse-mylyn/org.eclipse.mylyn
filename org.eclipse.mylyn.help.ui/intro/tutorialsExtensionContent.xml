@@ -5,13 +5,13 @@
 		<group label="Mylyn" id="mylyn" style-id="content-group">
 			<link 
 				url="http://org.eclipse.ui.intro/showStandby?partId=org.eclipse.platform.cheatsheet&amp;input=org.eclipse.mylyn.cheatsheet.query" 
-				label="Create a query" id="mylyn-query"	style-id="content-link">
-				<text>Learn how to create a query from bugs.eclipse.org.</text>
+				label="Use the Task List" id="mylyn-query"	style-id="content-link">
+				<text>Learn how to create tasks and task repository queries.</text>
 			</link>
 			<link
 				url="http://org.eclipse.ui.intro/showStandby?partId=org.eclipse.platform.cheatsheet&amp;input=org.eclipse.mylyn.cheatsheet.taskfocus"
-				label="Use Task-Focused UI" id="mylyn-task" style-id="content-link">
-				<text>Learn how to use Task-Focused UI.</text>
+				label="Use the Task-Focused UI" id="mylyn-task" style-id="content-link">
+				<text>Learn how to reduce information overload and multitask with ease.</text>
 			</link>
 		</group>
 	</extensionContent>

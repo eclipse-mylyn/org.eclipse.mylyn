@@ -10,10 +10,10 @@
 				<text>Learn more about Mylyn's Task-Focused UI</text>
 			</link>
 			-->
-			<link label="Mylyn UI Legend"
+			<link label="Mylyn Overview"
 				url="http://org.eclipse.ui.intro/runAction?pluginId=org.eclipse.mylyn.help.ui&amp;class=org.eclipse.mylyn.internal.help.ui.actions.ShowMylynLegendAction&amp;id=org.eclipse.mylyn.doc.legend.show.action"
 				id="mylyn-overview" style-id="content-link">
-				<text>Open the UI Legend, also available in the Help menu</text>
+				<text>See a summary of Mylyn's Task-Focused UI and open the Task List</text>
 			</link>
 		</group>
 	</extensionContent>
