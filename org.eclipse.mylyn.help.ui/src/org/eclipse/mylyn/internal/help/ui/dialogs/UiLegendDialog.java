@@ -69,7 +69,7 @@ public class UiLegendDialog extends PopupDialog {
 	@Override
 	public int open() {
 		int open = super.open();
-		getShell().setLocation(getShell().getLocation().x, 20);
+//		getShell().setLocation(getShell().getLocation().x, getShell().getLocation().y+20);
 		getShell().setFocus();
 		return open;
 	}

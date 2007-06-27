@@ -154,7 +154,7 @@ public class TaskListNotificationPopup extends PopupDialog {
 		section.setTextClient(hyperlink);
 
 		form.pack();
-		return parent;
+		return form;
 	}
 
 	/**
@@ -166,7 +166,7 @@ public class TaskListNotificationPopup extends PopupDialog {
 	}
 
 	private Rectangle restoreBounds() {
-		bounds = form.getBounds();
+		bounds = getShell().getBounds();
 		Rectangle maxBounds = null;
 
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();

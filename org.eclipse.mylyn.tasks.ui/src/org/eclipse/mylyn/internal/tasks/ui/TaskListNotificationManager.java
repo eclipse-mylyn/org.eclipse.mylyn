@@ -74,15 +74,14 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 										popup.setBlockOnOpen(false);
 										popup.open();
 										
-										for (int i = 2; i <= 6; i+= 2) {
-											popup.getShell().setLocation(popup.getShell().getLocation().x, popup.getShell().getLocation().y - i);
-											try {
-												Thread.sleep(70);
-											} catch (InterruptedException e) {
-												// ignore
-											}
-										}
-										
+//										for (int i = 2; i <= 6; i+= 2) {
+//											popup.getShell().setLocation(popup.getShell().getLocation().x, popup.getShell().getLocation().y - i);
+//											try {
+//												Thread.sleep(70);
+//											} catch (InterruptedException e) {
+//												// ignore
+//											}
+//										}
 										closeJob.setSystem(runSystem);
 										closeJob.schedule(CLOSE_POPUP_DELAY);
 										popup.getShell().addShellListener(SHELL_LISTENER);
