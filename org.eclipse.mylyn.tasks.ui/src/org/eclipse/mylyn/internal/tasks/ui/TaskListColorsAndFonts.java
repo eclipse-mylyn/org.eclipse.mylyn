@@ -45,7 +45,7 @@ public class TaskListColorsAndFonts {
 
 	public static final Color COLOR_LABEL_CAUTION = new Color(Display.getDefault(), 200, 10, 30);
 
-	public static final Color COLOR_HYPERLINK_WIDGET = new Color(Display.getDefault(), 40, 99, 172);
+	public static final Color COLOR_HYPERLINK_WIDGET = new Color(Display.getDefault(), 12, 81, 172);
 
 	public static final Color COLOR_HYPERLINK_TEXT = new Color(Display.getDefault(), 0, 0, 255);
 
