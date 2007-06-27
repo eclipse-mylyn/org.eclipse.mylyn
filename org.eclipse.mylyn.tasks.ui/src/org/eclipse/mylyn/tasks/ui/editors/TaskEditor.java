@@ -399,12 +399,12 @@ public final class TaskEditor extends SharedHeaderFormEditor implements IBusyEdi
 			}
 		} else if (input instanceof RepositoryTaskEditorInput) {
 			AbstractTask task = ((RepositoryTaskEditorInput) input).getRepositoryTask();
-			if (task != null) {
+			RepositoryTaskData data = ((RepositoryTaskEditorInput) input).getTaskData();
+			if (task != null && data != null && !data.isNew()) {
 				setFormHeaderImage(task.getConnectorKind());
 				setFormHeaderLabel(task);
 				return;
 			} else {
-				RepositoryTaskData data = ((RepositoryTaskEditorInput) input).getTaskData();
 				if (data != null) {
 					setFormHeaderImage(data.getRepositoryKind());
 					setFormHeaderLabel(data);
