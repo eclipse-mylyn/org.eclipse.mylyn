@@ -7,7 +7,7 @@
       plugin="org.eclipse.mylyn">
 
    <description url="http://eclipse.org/mylyn">
-      Mylyn Task-Focused UI extensions for Plug-in development with PDE.  Provides focusing of PDE element views and editors.
+      Mylyn Task-Focused UI extensions for PDE, Ant, Team Support and CVS.
    </description>
 
    <copyright>
