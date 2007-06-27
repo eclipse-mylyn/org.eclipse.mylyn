@@ -237,8 +237,8 @@ litigation.
       <import plugin="org.eclipse.mylyn.resources.ui"/>
       <import plugin="org.eclipse.mylyn.context.core"/>
       <import plugin="org.eclipse.mylyn"/>
-      <import feature="org.eclipse.mylyn_feature" version="2.0.0.v20070626-1000" match="compatible"/>
-      <import feature="org.eclipse.mylyn.ide_feature" version="2.0.0.v20070626-1000" match="compatible"/>
+      <import feature="org.eclipse.mylyn_feature" version="2.0.0.v20070627-0100" match="greaterOrEqual"/>
+      <import feature="org.eclipse.mylyn.ide_feature" version="2.0.0.v20070627-0100" match="compatible"/>
       <import plugin="org.eclipse.jdt.launching"/>
       <import plugin="org.eclipse.jdt.junit"/>
       <import plugin="org.eclipse.jdt.debug.ui"/>

@@ -246,8 +246,8 @@ litigation.
       <import plugin="org.eclipse.mylyn.tasks.ui"/>
       <import plugin="org.eclipse.mylyn.monitor.core"/>
       <import plugin="org.eclipse.ui.editors"/>
-      <import feature="org.eclipse.mylyn_feature" version="2.0.0.v20070626-1000" match="compatible"/>
-      <import feature="org.eclipse.mylyn.ide_feature" version="2.0.0.v20070626-1000" match="compatible"/>
+      <import feature="org.eclipse.mylyn_feature" version="2.0.0.v20070627-0100" match="greaterOrEqual"/>
+      <import feature="org.eclipse.mylyn.ide_feature" version="2.0.0.v20070627-0100" match="greaterOrEqual"/>
    </requires>
 
    <plugin
