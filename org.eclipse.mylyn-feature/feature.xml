@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.mylyn_feature"
       label="Mylyn Task List (Required)"
-      version="2.0.0.v20070627-0100"
+      version="2.0.0.v20070627-1400"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylyn">
 
@@ -249,56 +249,56 @@ litigation.
          id="org.eclipse.mylyn.help.ui"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070627-0100"
+         version="2.0.0.v20070627-1400"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070627-0100"
+         version="2.0.0.v20070627-1400"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn.context.core"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070627-0100"
+         version="2.0.0.v20070627-1400"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn.tasks.ui"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070627-0100"
+         version="2.0.0.v20070627-1400"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn.monitor.ui"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070627-0100"
+         version="2.0.0.v20070627-1400"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn.tasks.core"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070627-0100"
+         version="2.0.0.v20070627-1400"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn.monitor.core"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070627-0100"
+         version="2.0.0.v20070627-1400"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn.web.core"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070627-0100"
+         version="2.0.0.v20070627-1400"
          unpack="false"/>
 
    <plugin
@@ -452,7 +452,7 @@ litigation.
          id="org.eclipse.mylyn.compatibility"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070627-0100"
+         version="2.0.0.v20070627-1400"
          unpack="false"/>
 
 </feature>
