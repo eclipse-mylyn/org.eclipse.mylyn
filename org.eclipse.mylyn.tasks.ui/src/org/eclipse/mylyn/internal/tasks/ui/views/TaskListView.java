@@ -878,8 +878,10 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		hookOpenAction();
 		contributeToActionBars();
 
-		TaskListToolTipHandler taskListToolTipHandler = new TaskListToolTipHandler();
-		taskListToolTipHandler.activateHoverHelp(getViewer().getControl());
+		if (!SWT.getPlatform().equals("carbon")) {
+			TaskListToolTipHandler taskListToolTipHandler = new TaskListToolTipHandler();
+			taskListToolTipHandler.activateHoverHelp(getViewer().getControl());
+		}
 
 		// Set to empty string to disable native tooltips (windows only?)
 		// bug#160897
