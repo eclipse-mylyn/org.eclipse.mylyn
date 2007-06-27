@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.mylyn.java_feature"
-      label="Mylyn Bridge: Java"
+      label="Mylyn Bridge: Java Development"
       version="2.0.0.v20070627-0100"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylyn">
@@ -223,14 +223,12 @@ litigation.
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.jdt"/>
       <import plugin="org.eclipse.jdt.core"/>
-      <import plugin="org.eclipse.ui.editors"/>
       <import plugin="org.eclipse.jface.text"/>
       <import plugin="org.eclipse.ui.workbench.texteditor"/>
       <import plugin="org.eclipse.search"/>
       <import plugin="org.eclipse.ui.views"/>
       <import plugin="org.eclipse.jdt.debug.ui"/>
       <import plugin="org.eclipse.jdt.ui"/>
-      <import plugin="org.eclipse.team.cvs.ui"/>
       <import plugin="org.eclipse.debug.ui"/>
       <import plugin="org.eclipse.jdt.junit"/>
       <import plugin="org.eclipse.jdt.junit.runtime"/>
@@ -238,7 +236,6 @@ litigation.
       <import plugin="org.eclipse.debug.core"/>
       <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.eclipse.team.ui"/>
-      <import plugin="org.eclipse.team.cvs.core"/>
       <import plugin="org.eclipse.team.core"/>
       <import plugin="org.eclipse.ui.forms"/>
       <import plugin="org.eclipse.mylyn.monitor.ui"/>
@@ -246,11 +243,9 @@ litigation.
       <import plugin="org.eclipse.jdt.debug"/>
       <import plugin="org.eclipse.mylyn.context.core"/>
       <import plugin="org.eclipse.mylyn.context.ui"/>
-      <import plugin="org.eclipse.mylyn.ide.ui"/>
       <import plugin="org.eclipse.mylyn.tasks.ui"/>
-      <import plugin="org.eclipse.mylyn.help.ui"/>
       <import plugin="org.eclipse.mylyn.monitor.core"/>
-      <import plugin="org.eclipse.mylyn"/>
+      <import plugin="org.eclipse.ui.editors"/>
       <import feature="org.eclipse.mylyn_feature" version="2.0.0.v20070626-1000" match="compatible"/>
       <import feature="org.eclipse.mylyn.ide_feature" version="2.0.0.v20070626-1000" match="compatible"/>
    </requires>

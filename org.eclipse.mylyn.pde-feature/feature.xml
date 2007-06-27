@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.mylyn.pde_feature"
-      label="Mylyn Bridge: PDE"
+      label="Mylyn Bridge: Eclipse SDK"
       version="2.0.0.v20070627-0100"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylyn">
@@ -258,6 +258,27 @@ litigation.
          download-size="0"
          install-size="0"
          version="2.0.0.v20070627-0100"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.team.cvs"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.bugzilla.ide"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.team.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
          unpack="false"/>
 
 </feature>
