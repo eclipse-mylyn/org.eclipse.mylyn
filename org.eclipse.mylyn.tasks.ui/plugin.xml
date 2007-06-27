@@ -257,6 +257,17 @@
 		<viewContribution 
 			id="org.eclipse.mylyn.tasks.ui.actions.view" 
 	   		targetID="org.eclipse.mylyn.tasks.ui.views.tasks">
+  		
+  		<action
+          class="org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeAllAction"
+          enablesFor="*"
+          icon="icons/etool16/repository-synchronize.gif"
+          id="org.eclipse.mylyn.tasks.ui.synchronize.changed"
+          label="Synchronize Changed"
+          menubarPath="tasks"
+          toolbarPath="new"
+          tooltip="Synchronize Changed">
+         </action>
     <action
           class="org.eclipse.mylyn.internal.tasks.ui.actions.RestoreTaskListAction"
           icon="icons/etool16/import.gif"
@@ -274,17 +285,6 @@
           label="Show Task Repositories View"
           menubarPath="tasks"
           tooltip="Show Task Repositories View">
-         </action>
-  		
-  		<action
-          class="org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeAllAction"
-          enablesFor="*"
-          icon="icons/etool16/repository-synchronize.gif"
-          id="org.eclipse.mylyn.tasks.ui.synchronize.changed"
-          label="Synchronize Changed"
-          menubarPath="tasks"
-          toolbarPath="new"
-          tooltip="Synchronize Changed">
          </action>
     <action
           class="org.eclipse.mylyn.internal.tasks.ui.actions.OpenTaskSearchAction"
