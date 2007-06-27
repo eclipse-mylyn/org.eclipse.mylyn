@@ -345,20 +345,21 @@ public class TaskListUiTest extends TestCase {
 	}
 
 	public boolean checkCompleteIncompleteFilter(TreeItem[] items, boolean checkComplete) {
-		assertEquals(2, items.length);
+		assertEquals(3, items.length);
 		int count = 0;
 		for (int i = 0; i < items.length; i++) {
-			assertTrue(items[i].getData() instanceof TaskCategory);
-			TreeItem[] sub = items[i].getItems();
-			for (int j = 0; j < sub.length; j++) {
-				assertTrue(sub[j].getData() instanceof AbstractTask);
-				AbstractTask task = (AbstractTask) sub[j].getData();
-				if (checkComplete) {
-					assertTrue(task.isCompleted());
-				} else {
-					assertFalse(task.isCompleted());
+			if (items[i].getData() instanceof TaskCategory) {
+				TreeItem[] sub = items[i].getItems();
+				for (int j = 0; j < sub.length; j++) {
+					assertTrue(sub[j].getData() instanceof AbstractTask);
+					AbstractTask task = (AbstractTask) sub[j].getData();
+					if (checkComplete) {
+						assertTrue(task.isCompleted());
+					} else {
+						assertFalse(task.isCompleted());
+					}
+					count++;
 				}
-				count++;
 			}
 		}
 		assertTrue(count == 5);
@@ -366,20 +367,21 @@ public class TaskListUiTest extends TestCase {
 	}
 
 	public boolean checkPriorityFilter(TreeItem[] items) {
-		assertTrue(items.length == 2);
+		assertTrue(items.length == 3);
 		int p2Count = 0;
 		int p1Count = 0;
 		for (int i = 0; i < items.length; i++) {
-			assertTrue(items[i].getData() instanceof TaskCategory);
-			TreeItem[] sub = items[i].getItems();
-			for (int j = 0; j < sub.length; j++) {
-				assertTrue(sub[j].getData() instanceof AbstractTask);
-				AbstractTask task = (AbstractTask) sub[j].getData();
-				assertTrue(task.getPriority().equals("P2") || task.getPriority().equals("P1"));
-				if (task.getPriority().equals("P2")) {
-					p2Count++;
-				} else {
-					p1Count++;
+			if (items[i].getData() instanceof TaskCategory) {
+				TreeItem[] sub = items[i].getItems();
+				for (int j = 0; j < sub.length; j++) {
+					assertTrue(sub[j].getData() instanceof AbstractTask);
+					AbstractTask task = (AbstractTask) sub[j].getData();
+					assertTrue(task.getPriority().equals("P2") || task.getPriority().equals("P1"));
+					if (task.getPriority().equals("P2")) {
+						p2Count++;
+					} else {
+						p1Count++;
+					}
 				}
 			}
 		}
