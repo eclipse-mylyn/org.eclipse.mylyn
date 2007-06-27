@@ -288,7 +288,6 @@ public class TaskListToolTipHandler {
 			@Override
 			public void mouseDown(MouseEvent e) {
 				hideTooltip();
-				tipWidget = null;
 			}
 		});
 
@@ -297,7 +296,11 @@ public class TaskListToolTipHandler {
 
 			@Override
 			public void mouseExit(MouseEvent e) {
-				hideTooltip();
+				// TODO can these conditions be simplified? see bug 131776
+				if (tipShell != null && !tipShell.isDisposed() && tipShell.getDisplay() != null
+						&& !tipShell.getDisplay().isDisposed() && tipShell.isVisible()) {
+					tipShell.setVisible(false);
+				}
 				tipWidget = null;
 			}
 
@@ -374,12 +377,8 @@ public class TaskListToolTipHandler {
 	}
 
 	private void hideTooltip() {
-		// TODO: can these conditions be simplified? see bug 131776
-		if (tipShell != null && !tipShell.isDisposed() && tipShell.getDisplay() != null
-				&& !tipShell.getDisplay().isDisposed() && tipShell.isVisible()) {
-//			tipShell.setVisible(false);
-			tipShell.close();
-			tipShell = null;
+		if (tipShell != null && !tipShell.isDisposed() && tipShell.isVisible()) {
+			tipShell.setVisible(false);
 		}
 	}
 
@@ -387,10 +386,18 @@ public class TaskListToolTipHandler {
 		hideTooltip();
 
 		AbstractTaskContainer element = getTaskListElement(tipWidget);
-
+		if (element == null) {
+			return;
+		}
+		
 		Shell parent = PlatformUI.getWorkbench().getDisplay().getActiveShell();
 		if (parent == null) {
 			return;
+		}
+
+		// dispose old tooltip
+		if (tipShell != null && !tipShell.isDisposed() && tipShell.getShell() != null) {
+			tipShell.close();
 		}
 
 		tipShell = new Shell(parent.getDisplay(), SWT.TOOL | SWT.NO_FOCUS | SWT.MODELESS | SWT.ON_TOP);
