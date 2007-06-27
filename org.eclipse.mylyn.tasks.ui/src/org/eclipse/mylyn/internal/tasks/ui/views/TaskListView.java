@@ -1720,7 +1720,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 					.getWorkingSets()));
 			Set<IWorkingSet> tasksSets = new HashSet<IWorkingSet>(allSets);
 			for (IWorkingSet workingSet : allSets) {
-				if (!workingSet.getId().equalsIgnoreCase(TaskWorkingSetUpdater.ID_TASK_WORKING_SET)) {
+				if (workingSet.getId() == null || !workingSet.getId().equalsIgnoreCase(TaskWorkingSetUpdater.ID_TASK_WORKING_SET)) {
 					tasksSets.remove(workingSet);
 				}
 			}
