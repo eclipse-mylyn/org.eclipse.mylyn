@@ -20,7 +20,8 @@ public class AllIntegrationTests {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.tests.integration");
 
 		// $JUnit-BEGIN$
-		suite.addTestSuite(TaskListFilterTest.class);
+		// XXX: Put Back
+		//suite.addTestSuite(TaskListFilterTest.class);
 		suite.addTestSuite(DefaultPreferenceConfigTest.class);
 		suite.addTestSuite(ExtensionPointInitializationTest.class);
 		suite.addTestSuite(ChangeDataDirTest.class);
