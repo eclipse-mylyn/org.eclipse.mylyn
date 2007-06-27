@@ -228,7 +228,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private static final String LABEL_SEARCH_DUPS = "Search";
 
-	private static final String LABEL_SELECT_DETECTOR = "Duplicate detection";
+	private static final String LABEL_SELECT_DETECTOR = "Duplicate Detection";
 
 	private RepositoryTaskEditorInput editorInput;
 
