@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.mylyn.ide_feature"
       label="Mylyn Bridge: Eclipse IDE"
-      version="2.0.0.v20070628-1000"
+      version="2.0.0.v20070627-1400"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylyn">
 
@@ -237,7 +237,7 @@ litigation.
          id="org.eclipse.mylyn.ide.ui"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070628-1000"
+         version="2.0.0.v20070627-1400"
          unpack="false"/>
 
 </feature>
