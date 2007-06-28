@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Team CVS Plug-in
 Bundle-SymbolicName: org.eclipse.mylyn.team.cvs;singleton:=true
-Bundle-Version: 2.0.0.v20070627-1400
+Bundle-Version: 2.0.0.v20070628-1000
 Bundle-Vendor: Eclipse.org
 Require-Bundle: org.eclipse.team.core,
  org.eclipse.team.cvs.ui,
