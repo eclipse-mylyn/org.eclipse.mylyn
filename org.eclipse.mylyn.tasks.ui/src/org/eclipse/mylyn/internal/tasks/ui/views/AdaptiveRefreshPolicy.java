@@ -28,7 +28,7 @@ public class AdaptiveRefreshPolicy {
 
 	private Text filterText = null;
 
-	private Job refreshJob;
+	protected Job refreshJob;
 
 	/**
 	 * @param refreshJob
@@ -47,7 +47,7 @@ public class AdaptiveRefreshPolicy {
 		}
 	}
 
-	private final IJobChangeListener REFRESH_JOB_LISTENER = new IJobChangeListener() {
+	protected final IJobChangeListener REFRESH_JOB_LISTENER = new IJobChangeListener() {
 
 		public void aboutToRun(IJobChangeEvent event) {
 			// ignore
