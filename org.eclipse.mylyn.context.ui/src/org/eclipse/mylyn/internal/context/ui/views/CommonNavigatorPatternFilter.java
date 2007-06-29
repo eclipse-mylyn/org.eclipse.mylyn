@@ -16,7 +16,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TaskListPatternFilter;
  */
 public class CommonNavigatorPatternFilter extends TaskListPatternFilter {
 	@Override
-	protected boolean isLeafMatch(Viewer viewer, Object element) {
+	public boolean isLeafMatch(Viewer viewer, Object element) {
 		return super.isLeafMatch(viewer, element);
 	}
 }
