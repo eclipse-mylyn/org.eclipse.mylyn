@@ -1861,8 +1861,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					+ formatDate(taskComment.getCreated()));
 			formHyperlink.setUnderlined(false);
 
+			final Composite toolbarButtonComp = toolkit.createComposite(toolbarComp);
+			toolbarButtonComp.setLayout(new RowLayout());
+			toolbarButtonComp.setBackground(null);
+
 			if (supportsCommentDelete()) {
-				final ImageHyperlink deleteComment = new ImageHyperlink(toolbarComp, SWT.NULL);
+				final ImageHyperlink deleteComment = new ImageHyperlink(toolbarButtonComp, SWT.NULL);
 				toolkit.adapt(deleteComment, true, true);
 				deleteComment.setImage(TasksUiImages.getImage(TasksUiImages.REMOVE));
 				deleteComment.setToolTipText("Remove");
@@ -1878,27 +1882,25 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 			}
 
-			final ImageHyperlink replyLink = createReplyHyperlink(taskComment.getNumber(), toolbarComp,
+			final ImageHyperlink replyLink = createReplyHyperlink(taskComment.getNumber(), toolbarButtonComp,
 					taskComment.getText());
 
 			expandableComposite.addExpansionListener(new ExpansionAdapter() {
 
 				@Override
 				public void expansionStateChanged(ExpansionEvent e) {
-					replyLink.setVisible(expandableComposite.isExpanded());
-					//toolbarComp.setVisible(expandableComposite.isExpanded());
+					toolbarButtonComp.setVisible(expandableComposite.isExpanded());
 				}
 			});
 
-			replyLink.setVisible(expandableComposite.isExpanded());
-			//toolbarComp.setVisible(expandableComposite.isExpanded());
+			toolbarButtonComp.setVisible(expandableComposite.isExpanded());
 
 			formHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 
 				@Override
 				public void linkActivated(HyperlinkEvent e) {
 					expandableComposite.setExpanded(!expandableComposite.isExpanded());
-					replyLink.setVisible(expandableComposite.isExpanded());
+					toolbarButtonComp.setVisible(expandableComposite.isExpanded());
 					form.reflow(true);
 				}
 
@@ -1921,7 +1923,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			// due to a bug in SWT's ExpandableComposite.
 			// 165803: Expandable bars should expand when clicking anywhere
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?taskId=165803
-			expandableComposite.setData(toolbarComp);
+			expandableComposite.setData(toolbarButtonComp);
 
 			expandableComposite.setLayout(new GridLayout());
 			expandableComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -2297,6 +2299,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					// https://bugs.eclipse.org/bugs/show_bug.cgi?taskId=165803
 					if (ex.getData() != null && ex.getData() instanceof Composite) {
 						((Composite) ex.getData()).setVisible(true);
+//						for (Control control : ((Composite) ex.getData()).getChildren()) {
+//							control.setVisible(true);
+//						}
 					}
 
 					break;
