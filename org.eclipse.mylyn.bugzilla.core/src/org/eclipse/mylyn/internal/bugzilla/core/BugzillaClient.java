@@ -238,6 +238,7 @@ public class BugzillaClient {
 			try {
 				code = httpClient.executeMethod(getMethod);
 			} catch (IOException e) {
+				getMethod.getResponseBody();
 				getMethod.releaseConnection();
 				throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 						RepositoryStatus.ERROR_IO, repositoryUrl.toString(), e));
@@ -347,10 +348,28 @@ public class BugzillaClient {
 			int code = httpClient.executeMethod(postMethod);
 			if (code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN) {
 				authenticated = false;
+				postMethod.getResponseBody();
+				postMethod.releaseConnection();
 				throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 						RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(),
 						"HTTP authentication failed."));
+
+			} else if (code == HttpURLConnection.HTTP_PROXY_AUTH) {
+				authenticated = false;
+				postMethod.getResponseBody();
+				postMethod.releaseConnection();
+				throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+						RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(),
+						"Proxy authentication required"));
+
+			} else if (code != HttpURLConnection.HTTP_OK) {
+				authenticated = false;
+				postMethod.getResponseBody();
+				postMethod.releaseConnection();
+				throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+						RepositoryStatus.ERROR_NETWORK, "Http error: " + HttpStatus.getStatusText(code)));
 			}
+
 			if (hasAuthenticationCredentials()) {
 				BufferedReader responseReader = new BufferedReader(new InputStreamReader(
 						postMethod.getResponseBodyAsStream(), characterEncoding));
@@ -591,9 +610,9 @@ public class BugzillaClient {
 
 	public void postAttachment(String bugReportID, String comment, ITaskAttachment attachment) throws HttpException,
 			IOException, CoreException {
-		
+
 		// TODO: Throw IllegalArgumentException if passed null parameter
-		
+
 		WebClientUtil.setupHttpClient(httpClient, proxy, repositoryUrl.toString(), htAuthUser, htAuthPass);
 		if (!authenticated && hasAuthenticationCredentials()) {
 			authenticate();
@@ -643,6 +662,7 @@ public class BugzillaClient {
 				parseHtmlError(bufferedReader);
 
 			} else {
+				postMethod.getResponseBody();
 				throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 						RepositoryStatus.ERROR_NETWORK, repositoryUrl.toString(), "Http error: "
 								+ HttpStatus.getStatusText(status)));
@@ -686,9 +706,13 @@ public class BugzillaClient {
 		if (status == HttpStatus.SC_OK) {
 			return postMethod;
 		} else {
+			postMethod.getResponseBody();
 			postMethod.releaseConnection();
 			//StatusManager.log("Post failed: " + HttpStatus.getStatusText(status), this);
-			throw new IOException("Communication error occurred during upload. \n\n" + HttpStatus.getStatusText(status));
+			throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+					RepositoryStatus.ERROR_IO, repositoryUrl.toString(), new IOException(
+							"Communication error occurred during upload. \n\n" + HttpStatus.getStatusText(status))));
+//			throw new IOException("Communication error occurred during upload. \n\n" + HttpStatus.getStatusText(status));
 		}
 
 	}
