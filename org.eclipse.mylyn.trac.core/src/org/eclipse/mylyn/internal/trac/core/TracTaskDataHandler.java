@@ -340,7 +340,7 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 				return null;
 			}
 		} catch (Exception e) {
-			throw new CoreException(TracCorePlugin.toStatus(e));
+			throw new CoreException(TracCorePlugin.toStatus(e, repository));
 		}
 	}
 

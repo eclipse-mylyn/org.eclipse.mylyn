@@ -48,7 +48,7 @@ public class TracAttachmentHandler extends AbstractAttachmentHandler {
 			int id = Integer.parseInt(attachment.getTaskId());
 			return client.getAttachmentData(id, filename);
 		} catch (Exception e) {
-			throw new CoreException(TracCorePlugin.toStatus(e));
+			throw new CoreException(TracCorePlugin.toStatus(e, repository));
 		}
 	}
 
@@ -72,7 +72,7 @@ public class TracAttachmentHandler extends AbstractAttachmentHandler {
 					client.updateTicket(ticket, comment);
 				}
 			} catch (Exception e) {
-				throw new CoreException(TracCorePlugin.toStatus(e));
+				throw new CoreException(TracCorePlugin.toStatus(e, repository));
 			}
 		} finally {
 			monitor.done();

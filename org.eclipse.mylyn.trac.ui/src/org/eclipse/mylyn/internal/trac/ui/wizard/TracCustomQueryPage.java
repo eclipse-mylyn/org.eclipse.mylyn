@@ -379,7 +379,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 		try {
 			client = connector.getClientManager().getRepository(repository);
 		} catch (MalformedURLException e) {
-			TracUiPlugin.handleTracException(e);
+			StatusHandler.displayStatus("Error updating attributes", TracCorePlugin.toStatus(e, repository));
 			return;
 		}
 
@@ -404,7 +404,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 					service.run(true, true, runnable);
 				}
 			} catch (InvocationTargetException e) {
-				TracUiPlugin.handleTracException(e.getCause());
+				StatusHandler.displayStatus("Error updating attributes", TracCorePlugin.toStatus(e.getCause(), repository));
 				return;
 			} catch (InterruptedException e) {
 				return;

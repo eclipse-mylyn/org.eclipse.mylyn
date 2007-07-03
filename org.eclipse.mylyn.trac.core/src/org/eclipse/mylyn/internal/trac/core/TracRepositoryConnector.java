@@ -118,7 +118,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 				TracTicket ticket = connection.getTicket(getTicketId(repositoryTask.getTaskId()));
 				updateTaskFromTicket((TracTask) repositoryTask, ticket, false);
 			} catch (Exception e) {
-				throw new CoreException(TracCorePlugin.toStatus(e));
+				throw new CoreException(TracCorePlugin.toStatus(e, repository));
 			}
 		}
 	}

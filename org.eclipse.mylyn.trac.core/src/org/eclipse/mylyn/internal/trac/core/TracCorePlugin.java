@@ -86,7 +86,7 @@ public class TracCorePlugin extends Plugin {
 		return toStatus(e);
 	}
 
-	public static IStatus toStatus(Throwable e) {
+	private static IStatus toStatus(Throwable e) {
 		if (e instanceof TracLoginException) {
 			throw new RuntimeException("Invoke TracCorePlugin.toStatus(Throwable, TaskRepository)", e);
 		} else if (e instanceof TracPermissionDeniedException) {

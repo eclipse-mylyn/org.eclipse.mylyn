@@ -19,7 +19,7 @@ import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.TracException;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
 import org.eclipse.mylyn.internal.trac.core.TracTaskDataHandler;
-import org.eclipse.mylyn.internal.trac.ui.TracUiPlugin;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
@@ -103,7 +103,7 @@ public class NewTracTaskPage extends WizardPage {
 		try {
 			client = connector.getClientManager().getRepository(taskRepository);
 		} catch (MalformedURLException e) {
-			TracUiPlugin.handleTracException(e);
+			StatusHandler.displayStatus("Error updating attributes", TracCorePlugin.toStatus(e, taskRepository));
 			return;
 		}
 
@@ -121,7 +121,7 @@ public class NewTracTaskPage extends WizardPage {
 
 				getContainer().run(true, true, runnable);
 			} catch (InvocationTargetException e) {
-				TracUiPlugin.handleTracException(e.getCause());
+				StatusHandler.displayStatus("Error updating attributes", TracCorePlugin.toStatus(e.getCause(), taskRepository));
 				return;
 			} catch (InterruptedException e) {
 				return;

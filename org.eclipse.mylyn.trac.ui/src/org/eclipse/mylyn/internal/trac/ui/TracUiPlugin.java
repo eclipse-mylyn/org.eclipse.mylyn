@@ -11,10 +11,7 @@
 
 package org.eclipse.mylyn.internal.trac.ui;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
-import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -55,19 +52,6 @@ public class TracUiPlugin extends AbstractUIPlugin {
 
 	public static TracUiPlugin getDefault() {
 		return plugin;
-	}
-
-	public static void handleTracException(Throwable e) {
-		handleTracException(TracCorePlugin.toStatus(e));
-	}
-
-	public static void handleTracException(IStatus status) {
-		if (status.getCode() == IStatus.ERROR) {
-			StatusHandler.log(status);
-			ErrorDialog.openError(null, TITLE_MESSAGE_DIALOG, null, status);
-		} else if (status.getCode() == IStatus.INFO) {
-			ErrorDialog.openError(null, TITLE_MESSAGE_DIALOG, null, status);
-		}
 	}
 
 }
