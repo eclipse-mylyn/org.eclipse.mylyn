@@ -81,22 +81,13 @@ public class TracCorePlugin extends Plugin {
 			return RepositoryStatus.createLoginError(repository.getUrl(), PLUGIN_ID);
 		} else if (e instanceof TracPermissionDeniedException) {
 			return TracStatus.createPermissionDeniedError(repository.getUrl(), PLUGIN_ID);
-		}
-
-		return toStatus(e);
-	}
-
-	private static IStatus toStatus(Throwable e) {
-		if (e instanceof TracLoginException) {
-			throw new RuntimeException("Invoke TracCorePlugin.toStatus(Throwable, TaskRepository)", e);
-		} else if (e instanceof TracPermissionDeniedException) {
-			throw new RuntimeException("Invoke TracCorePlugin.toStatus(Throwable, TaskRepository)", e);
 		} else if (e instanceof TracException) {
 			String message = e.getMessage();
 			if (message == null) {
 				message = "I/O error has occured";
 			}
-			return new RepositoryStatus(Status.ERROR, PLUGIN_ID, RepositoryStatus.ERROR_IO, message, e);
+			return new RepositoryStatus(repository.getUrl(), Status.ERROR, PLUGIN_ID, RepositoryStatus.ERROR_IO,
+					message, e);
 		} else if (e instanceof ClassCastException) {
 			return new RepositoryStatus(Status.ERROR, PLUGIN_ID, RepositoryStatus.ERROR_IO,
 					"Unexpected server response: " + e.getMessage(), e);
