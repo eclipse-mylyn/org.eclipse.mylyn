@@ -1770,7 +1770,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	/**
 	 * A listener for selection of the summary field.
 	 */
-	private class DescriptionListener implements Listener {
+	protected class DescriptionListener implements Listener {
+		public DescriptionListener() {
+		}
+		
 		public void handleEvent(Event event) {
 			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
 					new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(),
@@ -2299,9 +2302,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					// https://bugs.eclipse.org/bugs/show_bug.cgi?taskId=165803
 					if (ex.getData() != null && ex.getData() instanceof Composite) {
 						((Composite) ex.getData()).setVisible(true);
-//						for (Control control : ((Composite) ex.getData()).getChildren()) {
-//							control.setVisible(true);
-//						}
 					}
 
 					break;
@@ -2454,6 +2454,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		this.parentEditor = parentEditor;
 	}
 
+	public TaskEditor getParentEditor() {
+		return parentEditor;
+	}
+	
 	public RepositoryTaskOutlineNode getTaskOutlineModel() {
 		return taskOutlineModel;
 	}
