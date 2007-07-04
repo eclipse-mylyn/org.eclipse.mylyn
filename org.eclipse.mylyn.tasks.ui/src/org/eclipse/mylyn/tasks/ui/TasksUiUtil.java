@@ -518,6 +518,10 @@ public class TasksUiUtil {
 		return null;
 	}
 
+	/**
+	 * Use PreferencesUtil.createPreferenceDialogOn(..) instead.
+	 */
+	@Deprecated
 	public static void showPreferencePage(String id, IPreferencePage page) {
 		final IPreferenceNode targetNode = new PreferenceNode(id, page);
 

@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.PopupDialog;
+import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
@@ -30,6 +31,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IHyperlinkListener;
@@ -38,7 +40,6 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.internal.themes.ColorsAndFontsPreferencePage;
 import org.eclipse.ui.themes.IThemeManager;
 
 /**
@@ -254,9 +255,11 @@ public class UiLegendDialog extends PopupDialog {
 		adjust.addHyperlinkListener(new IHyperlinkListener() {
 
 			public void linkActivated(HyperlinkEvent e) {
-				ColorsAndFontsPreferencePage page = new ColorsAndFontsPreferencePage();
-				page.init(PlatformUI.getWorkbench());
-				TasksUiUtil.showPreferencePage(TasksUiUtil.PREFS_PAGE_ID_COLORS_AND_FONTS, page);
+				PreferenceDialog dlg = PreferencesUtil.createPreferenceDialogOn(PlatformUI.getWorkbench()
+						.getActiveWorkbenchWindow()
+						.getShell(), TasksUiUtil.PREFS_PAGE_ID_COLORS_AND_FONTS,
+						new String[] { TasksUiUtil.PREFS_PAGE_ID_COLORS_AND_FONTS }, null);
+				dlg.open();
 			}
 
 			public void linkEntered(HyperlinkEvent e) {

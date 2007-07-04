@@ -9,8 +9,10 @@
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.mylyn.internal.tasks.ui.preferences.TasksUiPreferencePage;
-import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.PreferencesUtil;
 
 /**
  * @author Mik Kersten
@@ -29,6 +31,9 @@ public class OpenTasksUiPreferencesAction extends Action {
 
 	@Override
 	public void run() {
-		TasksUiUtil.showPreferencePage(TasksUiPreferencePage.ID, new TasksUiPreferencePage());
+		PreferenceDialog dlg = PreferencesUtil.createPreferenceDialogOn(PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow()
+				.getShell(), TasksUiPreferencePage.ID, new String[] { TasksUiPreferencePage.ID }, null);
+		dlg.open();
 	}
 }

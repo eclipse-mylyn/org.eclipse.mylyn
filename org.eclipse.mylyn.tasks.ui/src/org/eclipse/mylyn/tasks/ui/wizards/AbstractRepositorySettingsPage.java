@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
@@ -48,7 +49,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
@@ -58,7 +59,6 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.internal.net.ProxyPreferencePage;
 
 /**
  * Extend to provide custom repository settings. This page is typically invoked by the user requesting properties via
@@ -680,9 +680,9 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		changeProxySettingsLink.addHyperlinkListener(new IHyperlinkListener() {
 
 			public void linkActivated(HyperlinkEvent e) {
-				ProxyPreferencePage page = new ProxyPreferencePage();
-				page.init(PlatformUI.getWorkbench());
-				TasksUiUtil.showPreferencePage(PREFS_PAGE_ID_NET_PROXY, page);
+				PreferenceDialog dlg = PreferencesUtil.createPreferenceDialogOn(getShell(), PREFS_PAGE_ID_NET_PROXY,
+						new String[] { PREFS_PAGE_ID_NET_PROXY }, null);
+				dlg.open();
 			}
 
 			public void linkEntered(HyperlinkEvent e) {
