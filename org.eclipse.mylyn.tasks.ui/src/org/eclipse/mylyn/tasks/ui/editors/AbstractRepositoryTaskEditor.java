@@ -1769,11 +1769,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	/**
 	 * A listener for selection of the summary field.
+     * @since 2.1
 	 */
 	protected class DescriptionListener implements Listener {
 		public DescriptionListener() {
 		}
-		
+
 		public void handleEvent(Event event) {
 			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
 					new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(),
@@ -2454,10 +2455,13 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		this.parentEditor = parentEditor;
 	}
 
+	/**
+	 * @since 2.1
+	 */
 	public TaskEditor getParentEditor() {
 		return parentEditor;
 	}
-	
+
 	public RepositoryTaskOutlineNode getTaskOutlineModel() {
 		return taskOutlineModel;
 	}
