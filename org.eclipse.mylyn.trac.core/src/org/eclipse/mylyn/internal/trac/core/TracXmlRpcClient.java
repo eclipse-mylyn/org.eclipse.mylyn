@@ -647,10 +647,13 @@ public class TracXmlRpcClient extends AbstractTracClient {
 		}
 	}
 
-	
 	public Date getTicketLastChanged(Integer id) throws TracException {
 		Object[] result = (Object[]) call("ticket.get", id);
 		return parseDate(result[2]);
+	}
+
+	public String wikiToHtml(String sourceText) throws TracException {
+		return (String) call("wiki.wikiToHtml", sourceText);
 	}
 
 }
