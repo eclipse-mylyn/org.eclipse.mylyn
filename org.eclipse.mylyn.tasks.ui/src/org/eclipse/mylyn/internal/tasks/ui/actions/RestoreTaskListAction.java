@@ -18,12 +18,14 @@ import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
  */
-public class RestoreTaskListAction implements IViewActionDelegate {
+public class RestoreTaskListAction implements IViewActionDelegate, IWorkbenchWindowActionDelegate {
 
 	public void init(IViewPart view) {
 	}
@@ -48,6 +50,17 @@ public class RestoreTaskListAction implements IViewActionDelegate {
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
+	}
+
+	
+	public void dispose() {
+		// ignore
+		
+	}
+
+	public void init(IWorkbenchWindow window) {
+		// ignore
+		
 	}
 
 }
