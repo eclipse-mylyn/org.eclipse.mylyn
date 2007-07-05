@@ -219,6 +219,9 @@
         <newWizardShortcut
               id="org.eclipse.mylyn.tasks.ui.wizards.new.repository.task">
         </newWizardShortcut>
+        <viewShortcut
+              id="org.eclipse.mylyn.tasks.ui.views.repositories">
+        </viewShortcut>
      </perspectiveExtension>
        
        <perspectiveExtension targetID="org.eclipse.team.cvs.ui.cvsPerspective">
