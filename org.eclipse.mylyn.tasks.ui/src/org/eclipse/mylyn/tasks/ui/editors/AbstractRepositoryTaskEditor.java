@@ -1769,7 +1769,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	/**
 	 * A listener for selection of the summary field.
-     * @since 2.1
+	 * 
+	 * @since 2.1
 	 */
 	protected class DescriptionListener implements Listener {
 		public DescriptionListener() {
@@ -1848,6 +1849,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			RowLayout rowLayout = new RowLayout();
 			rowLayout.pack = true;
 			rowLayout.marginLeft = 0;
+			rowLayout.marginBottom = 0;
+			rowLayout.marginTop = 0;
 			toolbarComp.setLayout(rowLayout);
 			toolbarComp.setBackground(null);
 
@@ -1866,7 +1869,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			formHyperlink.setUnderlined(false);
 
 			final Composite toolbarButtonComp = toolkit.createComposite(toolbarComp);
-			toolbarButtonComp.setLayout(new RowLayout());
+			RowLayout buttonCompLayout = new RowLayout();
+			buttonCompLayout.marginBottom = 0;
+			buttonCompLayout.marginTop = 0;
+			toolbarButtonComp.setLayout(buttonCompLayout);
 			toolbarButtonComp.setBackground(null);
 
 			if (supportsCommentDelete()) {
