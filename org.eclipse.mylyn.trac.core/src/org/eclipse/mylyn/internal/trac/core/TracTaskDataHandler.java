@@ -332,11 +332,7 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 				int id = server.createTicket(ticket);
 				return id + "";
 			} else {
-
-				String comment = taskData.getNewComment();
-				// XXX: new comment is now an attribute
-				taskData.removeAttribute(RepositoryTaskAttribute.COMMENT_NEW);
-				server.updateTicket(ticket, comment);
+				server.updateTicket(ticket, taskData.getNewComment());
 				return null;
 			}
 		} catch (Exception e) {

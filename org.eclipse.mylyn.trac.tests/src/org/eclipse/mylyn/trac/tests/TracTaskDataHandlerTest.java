@@ -29,6 +29,8 @@ import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
+import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
@@ -49,6 +51,8 @@ public class TracTaskDataHandlerTest extends TestCase {
 
 	private TestData data;
 
+	private AbstractTaskDataHandler taskDataHandler;
+
 	public TracTaskDataHandlerTest() {
 	}
 
@@ -63,6 +67,8 @@ public class TracTaskDataHandlerTest extends TestCase {
 
 		connector = (TracRepositoryConnector) manager.getRepositoryConnector(TracCorePlugin.REPOSITORY_KIND);
 		TasksUiPlugin.getSynchronizationManager().setForceSyncExec(true);
+				
+		taskDataHandler = connector.getTaskDataHandler();
 	}
 
 	protected void init(String url, Version version) {
@@ -164,4 +170,31 @@ public class TracTaskDataHandlerTest extends TestCase {
 		}
 	}
 
+	public void testPostTaskDataInvalidCredentials010() throws Exception {
+		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
+		postTaskDataInvalidCredentials();
+	}		
+
+	public void testPostTaskDataInvalidCredentials011() throws Exception {
+		init(TracTestConstants.TEST_TRAC_011_URL, Version.XML_RPC);
+		postTaskDataInvalidCredentials();
+	}		
+
+	private void postTaskDataInvalidCredentials() throws Exception {
+		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.offlineHandlerTicketId + "",
+				new NullProgressMonitor());
+		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(),
+				task.getTaskId());
+		
+		taskData.setNewComment("new comment");
+		repository.setAuthenticationCredentials("foo", "bar");
+		try {
+			taskDataHandler.postTaskData(repository, taskData, new NullProgressMonitor());
+		} catch (CoreException expected) {
+			assertEquals(RepositoryStatus.ERROR_REPOSITORY_LOGIN, expected.getStatus().getCode());
+		}
+		assertEquals("new comment", taskData.getNewComment());
+	}
+	
 }
