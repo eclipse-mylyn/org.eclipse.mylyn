@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry exported="true" kind="lib" path="lib-httpclient/commons-httpclient-3.0.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib-httpclient/commons-codec-1.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib-httpclient/commons-httpclient-3.0.1.jar" sourcepath="lib-httpclient/commons-httpclient-3.0.1-src.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib-httpclient/commons-codec-1.3.jar" sourcepath="lib-httpclient/commons-codec-1.3-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib-httpclient/commons-logging-1.0.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib-httpclient/commons-logging-api-1.0.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib-xmlrpc/xmlrpc-client-3.0.jar"/>
