@@ -415,6 +415,7 @@
    		</filter>
   </extension>
   
+  	<!--
 	<extension point="org.eclipse.ui.newWizards">
       <wizard
             canFinishEarly="false"
@@ -427,6 +428,7 @@
             project="false">
       </wizard>
    </extension>
+	-->
 
    <extension point="org.eclipse.ui.commands">
       <category
