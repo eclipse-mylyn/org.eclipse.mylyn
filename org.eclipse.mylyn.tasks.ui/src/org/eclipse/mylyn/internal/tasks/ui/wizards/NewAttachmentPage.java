@@ -51,6 +51,8 @@ public class NewAttachmentPage extends WizardPage {
 
 	private Button attachContextButton;
 
+	private Combo contentTypeList;
+
 	private static List<String> contentTypes;
 
 	private static Map<String, String> extensions2Types;
@@ -131,7 +133,7 @@ public class NewAttachmentPage extends WizardPage {
 
 		new Label(composite, SWT.NONE).setText("Content Type");// .setBackground(parent.getBackground());
 
-		final Combo contentTypeList = new Combo(composite, SWT.BORDER | SWT.DROP_DOWN | SWT.READ_ONLY);
+		contentTypeList = new Combo(composite, SWT.BORDER | SWT.DROP_DOWN | SWT.READ_ONLY);
 		contentTypeList.setLayoutData(new GridData(SWT.DEFAULT, SWT.DEFAULT, false, false, 2, 1));
 		final HashMap<String, Integer> contentTypeIndices = new HashMap<String, Integer>();
 		Iterator<String> iter = contentTypes.iterator();
@@ -244,6 +246,8 @@ public class NewAttachmentPage extends WizardPage {
 
 	@Override
 	public boolean canFlipToNextPage() {
+		if (filePath.getText().equals(InputAttachmentSourcePage.SCREENSHOT_LABEL))
+			return false;
 		return isPageComplete();
 	}
 
@@ -268,4 +272,18 @@ public class NewAttachmentPage extends WizardPage {
 	public boolean getAttachContext() {
 		return attachContextButton.getSelection();
 	}
+
+	public void setContentType() {
+		String type = attachment.getContentType();
+		String[] typeList = contentTypeList.getItems();
+		for (int i = 0; i < typeList.length; i++) {
+			if (typeList[i].equals(type)) {
+				contentTypeList.select(i);
+				contentTypeList.setEnabled(false);
+				isPatchButton.setEnabled(false);
+				return;
+			}
+		}
+	}
+
 }

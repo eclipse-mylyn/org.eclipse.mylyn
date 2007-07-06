@@ -78,12 +78,16 @@ public class InputAttachmentSourcePage extends WizardPage {
 
 	public static final String CLIPBOARD_LABEL = "<Clipboard>";
 
+	public static final String SCREENSHOT_LABEL = "<Screenshot>";
+
 	// input constants
 	protected final static int CLIPBOARD = 1;
 
 	protected final static int FILE = 2;
 
 	protected final static int WORKSPACE = 3;
+
+	protected final static int SCREENSHOT = 4;
 
 	static final char SEPARATOR = System.getProperty("file.separator").charAt(0); //$NON-NLS-1$
 
@@ -93,6 +97,8 @@ public class InputAttachmentSourcePage extends WizardPage {
 
 	// SWT widgets
 	private Button useClipboardButton;
+
+	private Button useScreenshotButton;
 
 	private Combo fileNameField;
 
@@ -183,7 +189,10 @@ public class InputAttachmentSourcePage extends WizardPage {
 
 	@Override
 	public IWizardPage getNextPage() {
-		return wizard.getNextPage(this);
+		if (getInputMethod() == SCREENSHOT) {
+			return wizard.getPage("ScreenShotAttachment");
+		} else
+			return wizard.getNextPage(this);
 	}
 
 	/*
@@ -224,6 +233,13 @@ public class InputAttachmentSourcePage extends WizardPage {
 		useClipboardButton.setSelection(initUseClipboard);
 
 		// 2nd row
+		gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+		gd.horizontalSpan = 3;
+		useScreenshotButton = new Button(composite, SWT.RADIO);
+		useScreenshotButton.setText("Screenshot");
+		useScreenshotButton.setLayoutData(gd);
+
+		// 3rd row
 		useFileButton = new Button(composite, SWT.RADIO);
 		useFileButton.setText("File");
 
@@ -241,7 +257,7 @@ public class InputAttachmentSourcePage extends WizardPage {
 		data.widthHint = Math.max(widthHint, minSize.x);
 		fileBrowseButton.setLayoutData(data);
 
-		// 3rd row
+		// 4th row
 		useWorkspaceButton = new Button(composite, SWT.RADIO);
 		useWorkspaceButton.setText("Workspace");
 		gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
@@ -262,6 +278,21 @@ public class InputAttachmentSourcePage extends WizardPage {
 				setEnableAttachmentFile(state == FILE);
 				setEnableWorkspaceAttachment(state == WORKSPACE);
 				storeClipboardContents();
+				updateWidgetEnablements();
+			}
+		});
+
+		useScreenshotButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (!useScreenshotButton.getSelection())
+					return;
+
+				clearErrorMessage();
+				showError = true;
+				int state = getInputMethod();
+				setEnableAttachmentFile(state == FILE);
+				setEnableWorkspaceAttachment(state == WORKSPACE);
 				updateWidgetEnablements();
 			}
 		});
@@ -405,6 +436,8 @@ public class InputAttachmentSourcePage extends WizardPage {
 					error = "Clipboard does not contain text";
 			} else
 				error = "Cannot retrieve clipboard contents";
+		} else if (inputMethod == SCREENSHOT) {
+			attachmentFound = true;
 		} else if (inputMethod == FILE) {
 			String path = fileNameField.getText();
 			if (path != null && path.length() > 0) {
@@ -498,6 +531,9 @@ public class InputAttachmentSourcePage extends WizardPage {
 			}
 			return FILE;
 		}
+		if (useScreenshotButton.getSelection()) {
+			return SCREENSHOT;
+		}
 		if (useClipboardButton.getSelection()) {
 			return CLIPBOARD;
 		}
@@ -518,6 +554,8 @@ public class InputAttachmentSourcePage extends WizardPage {
 		switch (getInputMethod()) {
 		case CLIPBOARD:
 			return CLIPBOARD_LABEL;
+		case SCREENSHOT:
+			return SCREENSHOT_LABEL;
 		case WORKSPACE:
 			IResource[] resources = getResources(treeViewer.getSelection());
 			if (resources.length > 0 && resources[0].getRawLocation() != null) {
@@ -606,4 +644,5 @@ public class InputAttachmentSourcePage extends WizardPage {
 		}
 		initUseClipboard = b;
 	}
+
 }

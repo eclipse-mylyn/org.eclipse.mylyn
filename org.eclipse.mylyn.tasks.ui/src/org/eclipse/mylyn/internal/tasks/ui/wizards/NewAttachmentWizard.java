@@ -41,6 +41,10 @@ import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
@@ -55,6 +59,8 @@ public class NewAttachmentWizard extends Wizard {
 
 	protected static final String CLIPBOARD_FILENAME = "clipboard.txt";
 
+	protected static final String SCREENSHOT_FILENAME = "screenshot.jpg";
+
 	private LocalAttachment attachment;
 
 	private InputAttachmentSourcePage inputPage;
@@ -62,6 +68,8 @@ public class NewAttachmentWizard extends Wizard {
 	private NewAttachmentPage attachPage;
 
 	private NewAttachmentWizardDialog dialog;
+
+	private ScreenShotAttachmentPage shotPage;
 
 	private boolean hasNewDialogSettings;
 
@@ -145,6 +153,20 @@ public class NewAttachmentWizard extends Wizard {
 						}
 						attachment.setContent(contents.getBytes());
 						attachment.setFilename(CLIPBOARD_FILENAME);
+					} else if (InputAttachmentSourcePage.SCREENSHOT_LABEL.equals(path)) {
+						Image image = shotPage.getScreenshotImage();
+						if (image == null) {
+							throw new InvocationTargetException(new CoreException(new RepositoryStatus(IStatus.ERROR,
+									TasksUiPlugin.ID_PLUGIN, RepositoryStatus.ERROR_INTERNAL, "Screenshot is empty",
+									null)));
+						}
+						String path = TasksUiPlugin.getDefault().getDefaultDataDirectory();
+						ImageLoader loader = new ImageLoader();
+						loader.data = new ImageData[] { image.getImageData() };
+						String fileName = path + "/" + SCREENSHOT_FILENAME;
+						loader.save(fileName, SWT.IMAGE_JPEG);
+						attachment.setFile(new File(fileName));
+						attachment.setFilename(SCREENSHOT_FILENAME);
 					} else {
 						File file = new File(path);
 						attachment.setFile(file);
@@ -267,6 +289,7 @@ public class NewAttachmentWizard extends Wizard {
 			addPage(inputPage);
 		}
 		addPage((attachPage = new NewAttachmentPage(attachment)));
+		addPage((shotPage = new ScreenShotAttachmentPage(attachment)));
 	}
 
 	public LocalAttachment getAttachment() {
