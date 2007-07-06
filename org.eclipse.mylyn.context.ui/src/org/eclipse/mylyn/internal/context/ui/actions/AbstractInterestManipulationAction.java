@@ -12,9 +12,9 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.ui.UiUtil;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.swt.widgets.Display;
@@ -23,7 +23,6 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.ObjectPluginAction;
 
 /**
  * @author Mik Kersten
@@ -37,6 +36,8 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 	protected IViewPart view;
 
 	protected IWorkbenchWindow window;
+	
+	private ISelection selection;
 
 	public void init(IWorkbenchWindow window) {
 		this.window = window;
@@ -56,20 +57,10 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 		}
 
 		boolean increment = isRemove();
-		ISelection currentSelection = null;
-		if (action instanceof ObjectPluginAction) {
-			ObjectPluginAction objectAction = (ObjectPluginAction) action;
-			currentSelection = objectAction.getSelection();
-		} else {
-			try {
-				currentSelection = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getSelection();
-			} catch (Exception e) {
-				// ignore
-			}
-		}
-		if (currentSelection instanceof StructuredSelection) {
-			StructuredSelection selection = (StructuredSelection) currentSelection;
-			for (Object object : selection.toList()) {
+		
+		if (selection instanceof StructuredSelection) {
+			StructuredSelection structuredSelection = (StructuredSelection) selection;
+			for (Object object : structuredSelection.toList()) {
 				IInteractionElement node = null;
 				if (object instanceof IInteractionElement) {
 					node = (IInteractionElement) object;
@@ -123,6 +114,6 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
-		// ignore
+		this.selection = selection;
 	}
 }
