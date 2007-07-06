@@ -160,15 +160,9 @@
            icon="icons/etool16/task.gif"
            class="org.eclipse.mylyn.internal.tasks.ui.editors.CategoryEditor"
            name="Category Editor"
-           id="org.eclipse.mylyn.tasks.ui.editors.category"/>
-    <editor
-          class="org.eclipse.mylyn.internal.tasks.ui.planner.TaskActivityEditorPart"
-          contributorClass="org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionContributor"
-          icon="icons/eview16/task-list.gif"
-          id="org.eclipse.mylyn.tasks.ui.editors.planning"
-          name="Task Planner"/>     
-  </extension>
-  
+           id="org.eclipse.mylyn.tasks.ui.editors.category"/>   
+     </extension>
+   
       <extension point="org.eclipse.ui.perspectiveExtensions">
           <perspectiveExtension targetID="org.eclipse.jdt.ui.JavaPerspective">
                <viewShortcut id="org.eclipse.mylyn.tasks.ui.views.tasks"/>

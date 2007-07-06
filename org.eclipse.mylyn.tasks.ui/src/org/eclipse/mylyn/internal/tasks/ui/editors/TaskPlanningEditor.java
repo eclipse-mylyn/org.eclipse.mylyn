@@ -80,7 +80,7 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public class TaskPlanningEditor extends TaskFormPage {
 
-	public static final String ID_EDITOR = "org.eclipse.mylyn.tasks.ui.editors.planning";
+	public static final String ID = "org.eclipse.mylyn.tasks.ui.editors.planning";
 
 	private static final String CLEAR = "Clear";
 
@@ -163,10 +163,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private Action activateAction;
 
-	public static final String ID_EDITOR_PLANNING = "org.eclipse.mylyn.tasks.ui.planning.editor";
-
 	public TaskPlanningEditor(FormEditor editor) {
-		super(editor, ID_EDITOR, "Planning");
+		super(editor, ID, "Planning");
 		TasksUiPlugin.getTaskListManager().getTaskList().addChangeListener(TASK_LIST_LISTENER);
 	}
 

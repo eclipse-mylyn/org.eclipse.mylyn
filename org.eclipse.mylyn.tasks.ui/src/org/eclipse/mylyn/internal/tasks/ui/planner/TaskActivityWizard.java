@@ -43,7 +43,7 @@ public class TaskActivityWizard extends Wizard implements INewWizard {
 				return false;
 			IEditorInput input = new TaskActivityEditorInput(planningGamePage.getReportStartDate(),
 					planningGamePage.getSelectedContainers(), TasksUiPlugin.getTaskListManager().getTaskList());
-			page.openEditor(input, TaskPlanningEditor.ID_EDITOR_PLANNING);
+			page.openEditor(input, TaskPlanningEditor.ID);
 		} catch (PartInitException ex) {
 			StatusHandler.log(ex, "couldn't open summary editor");
 		}
