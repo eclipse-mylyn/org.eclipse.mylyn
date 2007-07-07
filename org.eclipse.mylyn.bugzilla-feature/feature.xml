@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.mylyn.bugzilla_feature"
       label="Mylyn Connector: Bugzilla"
-      version="2.0.0.v20070627-1400"
+      version="2.0.0.v20070706-2000"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylyn">
 
@@ -242,14 +242,14 @@ litigation.
          id="org.eclipse.mylyn.bugzilla.core"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070627-1400"
+         version="2.0.0.v20070706-2000"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn.bugzilla.ui"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070627-1400"
+         version="2.0.0.v20070706-2000"
          unpack="false"/>
 
 </feature>
