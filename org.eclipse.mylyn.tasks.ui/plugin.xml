@@ -467,7 +467,7 @@
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
             <parameter 
             	id="org.eclipse.ui.views.showView.viewId"
-            	value="org.eclipse.mylyn.tasks.ui.views.TaskListView"/>
+            	value="org.eclipse.mylyn.tasks.ui.views.tasks"/>
       </key>
   </extension>
   
