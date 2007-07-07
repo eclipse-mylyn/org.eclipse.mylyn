@@ -125,7 +125,7 @@ public class UiLegendDialog extends PopupDialog {
 				close();
 			}
 		});
-
+		
 		// TODO: get rid of ridiculous space-based padding
 
 		Composite tasksComposite = toolkit.createComposite(form.getBody());
@@ -357,6 +357,23 @@ public class UiLegendDialog extends PopupDialog {
 			}
 		}
 
+		Hyperlink gettingStartedLink = toolkit.createHyperlink(form.getBody(), "Also see the Getting Started documentation online", SWT.NULL);
+		gettingStartedLink.addHyperlinkListener(new IHyperlinkListener() { 
+
+			public void linkActivated(HyperlinkEvent e) {
+				close();
+				TasksUiUtil.openUrl("http://www.eclipse.org/mylyn/start/", false);
+			}
+
+			public void linkEntered(HyperlinkEvent e) {
+				// ignore
+			}
+
+			public void linkExited(HyperlinkEvent e) {
+				// ignore
+			}
+		});
+		
 		form.pack();
 		return parent;
 	}
