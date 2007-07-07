@@ -93,7 +93,7 @@ public class LandmarkMarkerManager implements IInteractionContextListener {
 								if (marker != null && range != null) {
 									marker.setAttribute(IMarker.CHAR_START, range.getOffset());
 									marker.setAttribute(IMarker.CHAR_END, range.getOffset() + range.getLength());
-									marker.setAttribute(IMarker.MESSAGE, "Mylar Landmark");
+									marker.setAttribute(IMarker.MESSAGE, "Mylyn Landmark");
 									marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_INFO);
 									markerMap.put(node, marker.getId());
 								}
@@ -143,7 +143,6 @@ public class LandmarkMarkerManager implements IInteractionContextListener {
 					resource.getWorkspace().run(runnable, null);
 				} catch (JavaModelException e) {
 					// ignore the Java Model errors
-// MylarStatusHandler.fail(e, "couldn't update landmark marker", false);
 				} catch (CoreException e) {
 					StatusHandler.fail(e, "couldn't update landmark marker", false);
 				}
