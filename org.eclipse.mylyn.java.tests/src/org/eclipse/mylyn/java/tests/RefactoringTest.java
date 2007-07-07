@@ -11,6 +11,7 @@ package org.eclipse.mylyn.java.tests;
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
@@ -57,42 +58,42 @@ public class RefactoringTest extends AbstractJavaContextTest {
 	}
 
 	// XXX: Put back
-//	/**
-//	 * Limitation: only interest of compilation unit is preserved
-//	 */
-//	public void testTypeRename() throws CoreException, InterruptedException, InvocationTargetException {
-//		IType type = project.createType(p1, "Refactor.java", "public class Refactor { }");
-//		monitor.selectionChanged(view, new StructuredSelection(type));
-//		monitor.selectionChanged(view, new StructuredSelection(type.getParent()));
-//		project.build();
-//		IInteractionElement node = ContextCorePlugin.getContextManager().getElement(type.getHandleIdentifier());
-//		IInteractionElement parentNode = ContextCorePlugin.getContextManager().getElement(
-//				type.getParent().getHandleIdentifier());
-//		assertTrue(node.getInterest().isInteresting());
-//		assertTrue(parentNode.getInterest().isInteresting());
-//
-//		TestProgressMonitor monitor = new TestProgressMonitor();
-//		type.rename("NewName", true, monitor);
-//		if (!monitor.isDone())
-//			Thread.sleep(200);
-//		project.build();
-//		ICompilationUnit unit = (ICompilationUnit) p1.getChildren()[0];
-//
-//		IType newType = unit.getTypes()[0];
-//		IInteractionElement newParentNode = ContextCorePlugin.getContextManager().getElement(
-//				newType.getParent().getHandleIdentifier());
-//		IInteractionElement oldParentNode = ContextCorePlugin.getContextManager().getElement(
-//				parentNode.getHandleIdentifier());
-//		assertFalse(oldParentNode.getInterest().isInteresting());
-//		assertTrue(newParentNode.getInterest().isInteresting());
-//
-//		// IMylarElement newNode =
-//		// ContextCorePlugin.getContextManager().getElement(newType.getHandleIdentifier());
-//		// assertTrue(newNode.getInterest().isInteresting());
-//		// IMylarElement oldNode =
-//		// ContextCorePlugin.getContextManager().getElement(node.getHandleIdentifier());
-//		// assertFalse(oldNode.getInterest().isInteresting());
-//	}
+	/**
+	 * Limitation: only interest of compilation unit is preserved
+	 */
+	public void testTypeRename() throws CoreException, InterruptedException, InvocationTargetException {
+		IType type = project.createType(p1, "Refactor.java", "public class Refactor { }");
+		monitor.selectionChanged(view, new StructuredSelection(type));
+		monitor.selectionChanged(view, new StructuredSelection(type.getParent()));
+		project.build();
+		IInteractionElement node = ContextCorePlugin.getContextManager().getElement(type.getHandleIdentifier());
+		IInteractionElement parentNode = ContextCorePlugin.getContextManager().getElement(
+				type.getParent().getHandleIdentifier());
+		assertTrue(node.getInterest().isInteresting());
+		assertTrue(parentNode.getInterest().isInteresting());
+
+		TestProgressMonitor monitor = new TestProgressMonitor();
+		type.rename("NewName", true, monitor);
+		if (!monitor.isDone())
+			Thread.sleep(200);
+		project.build();
+		ICompilationUnit unit = (ICompilationUnit) p1.getChildren()[0];
+
+		IType newType = unit.getTypes()[0];
+		IInteractionElement newParentNode = ContextCorePlugin.getContextManager().getElement(
+				newType.getParent().getHandleIdentifier());
+		IInteractionElement oldParentNode = ContextCorePlugin.getContextManager().getElement(
+				parentNode.getHandleIdentifier());
+		assertFalse(oldParentNode.getInterest().isInteresting());
+		assertTrue(newParentNode.getInterest().isInteresting());
+
+		// IMylarElement newNode =
+		// ContextCorePlugin.getContextManager().getElement(newType.getHandleIdentifier());
+		// assertTrue(newNode.getInterest().isInteresting());
+		// IMylarElement oldNode =
+		// ContextCorePlugin.getContextManager().getElement(node.getHandleIdentifier());
+		// assertFalse(oldNode.getInterest().isInteresting());
+	}
 
 	public void testMethodRename() throws CoreException, InterruptedException, InvocationTargetException {
 		IType type = project.createType(p1, "Refactor.java", "public class Refactor { }");
