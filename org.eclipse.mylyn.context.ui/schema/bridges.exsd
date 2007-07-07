@@ -6,7 +6,7 @@
          <meta.schema plugin="org.eclipse.mylar.context.ui.bridges" id="bridges" name="bridges"/>
       </appInfo>
       <documentation>
-         [Enter description of this extension point.]
+         UI Bridges connect the UI of domain-specific tool, such as the JDT, to the generic context model UI.  For more information please see: http://wiki.eclipse.org/index.php/Mylyn_Integrator_Reference#Context_API
       </documentation>
    </annotation>
 
@@ -125,7 +125,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java"/>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.jface.viewers.ILabelProvider"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -181,7 +181,7 @@
          <meta.section type="since"/>
       </appInfo>
       <documentation>
-         [Enter the first release in which this extension point appears.]
+         1.0
       </documentation>
    </annotation>
 
@@ -190,7 +190,7 @@
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         [Enter extension point usage example here.]
+         
       </documentation>
    </annotation>
 
@@ -199,7 +199,7 @@
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         [Enter API information here.]
+         
       </documentation>
    </annotation>
 
@@ -208,7 +208,7 @@
          <meta.section type="implementation"/>
       </appInfo>
       <documentation>
-         [Enter information about supplied implementation of this extension point.]
+         
       </documentation>
    </annotation>
 

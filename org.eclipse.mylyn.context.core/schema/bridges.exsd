@@ -6,7 +6,7 @@
          <meta.schema plugin="org.eclipse.mylyn.context.core" id="bridges" name="bridges"/>
       </appInfo>
       <documentation>
-         [Enter description of this extension point.]
+         Structure Bridges connect the interaction context model to domain-specific artifacts, such as the Java classes and methods being worked on by a programmer.  For more information please see: http://wiki.eclipse.org/index.php/Mylyn_Integrator_Reference#Context_API 
       </documentation>
    </annotation>
 
@@ -139,7 +139,7 @@
          <meta.section type="since"/>
       </appInfo>
       <documentation>
-         [Enter the first release in which this extension point appears.]
+         1.0
       </documentation>
    </annotation>
 
@@ -148,7 +148,7 @@
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         [Enter extension point usage example here.]
+         
       </documentation>
    </annotation>
 
@@ -157,7 +157,7 @@
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         [Enter API information here.]
+         
       </documentation>
    </annotation>
 
@@ -166,7 +166,7 @@
          <meta.section type="implementation"/>
       </appInfo>
       <documentation>
-         [Enter information about supplied implementation of this extension point.]
+         
       </documentation>
    </annotation>
 
