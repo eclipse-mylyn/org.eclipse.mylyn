@@ -1610,10 +1610,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			duplicateDetectorLabel = new Label(relatedBugsComposite, SWT.LEFT);
 			duplicateDetectorLabel.setText("Detector:");
 
-			duplicateDetectorChooser = new CCombo(relatedBugsComposite, SWT.FLAT | SWT.READ_ONLY | SWT.BORDER);
-
-			duplicateDetectorChooser.setLayoutData(GridDataFactory.swtDefaults().hint(150, SWT.DEFAULT).create());
+			duplicateDetectorChooser = new CCombo(relatedBugsComposite, SWT.FLAT | SWT.READ_ONLY);
+			toolkit.adapt(duplicateDetectorChooser, true, true);
+			duplicateDetectorChooser.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 			duplicateDetectorChooser.setFont(TEXT_FONT);
+			duplicateDetectorChooser.setLayoutData(GridDataFactory.swtDefaults().hint(150, SWT.DEFAULT).create());
 
 			Collections.sort(allCollectors, new Comparator<AbstractDuplicateDetector>() {
 
@@ -1645,6 +1646,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 //		} else {
 //			Label label = new Label(composite, SWT.LEFT);
 //			label.setText(LABEL_NO_DETECTOR);
+
+			toolkit.paintBordersFor(relatedBugsComposite);
+
 		}
 
 	}
