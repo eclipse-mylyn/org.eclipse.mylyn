@@ -25,6 +25,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UnfiledCategory;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskOutlineNode;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskSelection;
@@ -56,8 +57,11 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.editor.FormEditor;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.themes.IThemeManager;
 
@@ -237,7 +241,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		// Reminder
 		getManagedForm().getToolkit().createLabel(sectionClient, "Scheduled for:");
 		// label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		scheduledForDate = new DatePicker(sectionClient, SWT.NONE, DatePicker.LABEL_CHOOSE);
+		scheduledForDate = new DatePicker(sectionClient, SWT.FLAT, DatePicker.LABEL_CHOOSE);
 		scheduledForDate.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		scheduledForDate.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		Calendar newTaskSchedule = Calendar.getInstance();
@@ -250,11 +254,21 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 			TasksUiPlugin.getTaskListManager().setScheduledEndOfDay(newTaskSchedule);
 		}
 		scheduledForDate.setDate(newTaskSchedule);
-		Button removeReminder = getManagedForm().getToolkit().createButton(sectionClient, "Clear",
-				SWT.PUSH | SWT.CENTER);
-		removeReminder.addSelectionListener(new SelectionAdapter() {
+//		Button removeReminder = getManagedForm().getToolkit().createButton(sectionClient, "Clear",
+//				SWT.PUSH | SWT.CENTER);
+//		removeReminder.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				scheduledForDate.setDate(null);
+//			}
+//		});
+		
+		ImageHyperlink clearReminder = getManagedForm().getToolkit().createImageHyperlink(sectionClient, SWT.NONE);
+		clearReminder.setImage(TasksUiImages.getImage(TasksUiImages.REMOVE));
+		clearReminder.setToolTipText("Clear");
+		clearReminder.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void linkActivated(HyperlinkEvent e) {
 				scheduledForDate.setDate(null);
 			}
 		});
@@ -267,9 +281,10 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		dummy.setLayoutData(dummyLabelDataLayout);
 
 		// Estimated time
-		getManagedForm().getToolkit().createLabel(sectionClient, "Estimated time:");
+		getManagedForm().getToolkit().createLabel(sectionClient, "Estimated hours:");
 		// label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		estimatedTime = new Spinner(sectionClient, SWT.NONE);
+		// estimatedTime = new Spinner(sectionClient, SWT.FLAT);
+		estimatedTime = new Spinner(sectionClient, SWT.FLAT);
 		estimatedTime.setDigits(0);
 		estimatedTime.setMaximum(100);
 		estimatedTime.setMinimum(0);
@@ -277,11 +292,21 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		estimatedTime.setSelection(DEFAULT_ESTIMATED_TIME);
 		estimatedTime.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		GridData estimatedDataLayout = new GridData();
-		estimatedDataLayout.widthHint = 110;
+		estimatedDataLayout.widthHint = 30;
 		estimatedTime.setLayoutData(estimatedDataLayout);
-		getManagedForm().getToolkit().createLabel(sectionClient, "hours ");
+		// getManagedForm().getToolkit().createLabel(sectionClient, "hours ");
 		// label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
+		ImageHyperlink clearEstimated = getManagedForm().getToolkit().createImageHyperlink(sectionClient, SWT.NONE);
+		clearEstimated.setImage(TasksUiImages.getImage(TasksUiImages.REMOVE));
+		clearEstimated.setToolTipText("Clear");
+		clearEstimated.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
+			public void linkActivated(HyperlinkEvent e) {
+				estimatedTime.setSelection(0);
+			}
+		});
+		
 		getManagedForm().getToolkit().paintBordersFor(sectionClient);
 	}
 

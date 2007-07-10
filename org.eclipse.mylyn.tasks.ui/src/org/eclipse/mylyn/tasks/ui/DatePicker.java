@@ -20,10 +20,11 @@ import java.util.List;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.tasks.ui.planner.DateSelectionDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
@@ -68,53 +69,43 @@ public class DatePicker extends Composite {
 	public DatePicker(Composite parent, int style, String initialText) {
 		super(parent, style);
 		this.initialText = initialText;
-		initialize();
+		initialize((style & SWT.FLAT) > 0 ? SWT.FLAT : 0);
 	}
 
 	public void setDatePattern(String pattern) {
 		simpleDateFormat.applyPattern(pattern);
 	}
 
-	private void initialize() {
+	private void initialize(int style) {
 
-		GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 2;
+		GridLayout gridLayout = new GridLayout(2, false);
 		gridLayout.horizontalSpacing = 0;
 		gridLayout.verticalSpacing = 0;
 		gridLayout.marginWidth = 0;
 		gridLayout.marginHeight = 0;
-		gridLayout.makeColumnsEqualWidth = false;
 		this.setLayout(gridLayout);
 
-		dateText = new Text(this, SWT.FLAT);
-		GridData dateTextGridData = new org.eclipse.swt.layout.GridData();
+		dateText = new Text(this, style);
+		GridData dateTextGridData = new GridData(SWT.FILL, SWT.FILL, false, false);
 		dateTextGridData.widthHint = 135;
-		dateTextGridData.horizontalAlignment = GridData.FILL;
+		dateTextGridData.verticalIndent = 0;
 
 		dateText.setLayoutData(dateTextGridData);
 		dateText.setText(initialText);
-		dateText.addKeyListener(new KeyListener() {
-
+		dateText.addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyPressed(KeyEvent e) {
 				// key listener used because setting of date picker text causes
 				// modify listener to fire which results in perpetual dirty
 				// editor
 				notifyPickerListeners();
 			}
-
-			public void keyReleased(KeyEvent e) {
-				// ignore
-
-			}
 		});
 
-		dateText.addFocusListener(new FocusListener() {
-
+		dateText.addFocusListener(new FocusAdapter() {
 			Calendar calendar = Calendar.getInstance();
 
-			public void focusGained(FocusEvent e) {
-			}
-
+			@Override
 			public void focusLost(FocusEvent e) {
 				Date reminderDate;
 				try {
@@ -129,12 +120,12 @@ public class DatePicker extends Composite {
 			}
 		});
 
-		pickButton = new Button(this, SWT.FLAT | SWT.ARROW | SWT.DOWN);
-		GridData pickButtonGridData = new org.eclipse.swt.layout.GridData();
-		pickButtonGridData.horizontalAlignment = org.eclipse.swt.layout.GridData.END;
+		pickButton = new Button(this, style | SWT.ARROW | SWT.DOWN);
+		GridData pickButtonGridData = new GridData(SWT.RIGHT, SWT.FILL, false, true);
+		pickButtonGridData.verticalIndent = 0;
 		pickButton.setLayoutData(pickButtonGridData);
-		pickButton.addSelectionListener(new SelectionListener() {
-
+		pickButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				Calendar newCalendar = GregorianCalendar.getInstance();
 				newCalendar.set(Calendar.HOUR_OF_DAY, TasksUiPlugin.getTaskListManager().getStartHour());
@@ -163,10 +154,6 @@ public class DatePicker extends Composite {
 				// Display display = Display.getCurrent();
 				// showDatePicker((display.getCursorLocation().x),
 				// (display.getCursorLocation().y));
-			}
-
-			public void widgetDefaultSelected(SelectionEvent arg0) {
-
 			}
 		});
 

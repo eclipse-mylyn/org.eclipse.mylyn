@@ -715,11 +715,11 @@ public class TaskPlanningEditor extends TaskFormPage {
 		}
 
 		// Estimated time
-		nameValueComp = makeComposite(sectionClient, 2);
+		nameValueComp = makeComposite(sectionClient, 3);
 		label = toolkit.createLabel(nameValueComp, "Estimated hours:");
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 
-		estimated = new Spinner(nameValueComp, SWT.NONE);
+		estimated = new Spinner(nameValueComp, SWT.FLAT);
 		toolkit.adapt(estimated, true, true);
 		estimated.setSelection(task.getEstimateTimeHours());
 		estimated.setDigits(0);
@@ -738,6 +738,17 @@ public class TaskPlanningEditor extends TaskFormPage {
 		estimatedDataLayout.widthHint = 30;
 		estimated.setLayoutData(estimatedDataLayout);
 
+		ImageHyperlink clearEstimated = toolkit.createImageHyperlink(nameValueComp, SWT.NONE);
+		clearEstimated.setImage(TasksUiImages.getImage(TasksUiImages.REMOVE));
+		clearEstimated.setToolTipText(CLEAR);
+		clearEstimated.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
+			public void linkActivated(HyperlinkEvent e) {
+				estimated.setSelection(0);
+				TaskPlanningEditor.this.markDirty(true);
+			}
+		});
+		
 		// Active Time
 		nameValueComp = makeComposite(sectionClient, 3);
 		// GridDataFactory.fillDefaults().span(2, 1).align(SWT.LEFT,
