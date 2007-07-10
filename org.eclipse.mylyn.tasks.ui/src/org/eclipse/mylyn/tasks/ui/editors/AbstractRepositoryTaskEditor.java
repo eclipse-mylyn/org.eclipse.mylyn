@@ -103,7 +103,9 @@ import org.eclipse.mylyn.tasks.ui.search.SearchHitCollector;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTarget;
@@ -171,6 +173,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  * @author Rob Elves
  * @author Jeff Pound (Attachment work)
  * @author Steffen Pingel
+ * @author Xiaoyang Guan (Wiki HTML preview)
  * @since 2.0
  */
 public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
@@ -1509,11 +1512,35 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		RepositoryTaskAttribute attribute = taskData.getDescriptionAttribute();
 		if (attribute != null && !attribute.isReadOnly()) {
-			descriptionTextViewer = addTextEditor(repository, sectionComposite, taskData.getDescription(), true,
-					SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+			if (getRenderingEngine() != null) {
+				// composite with StackLayout to hold text editor and preview widget
+				Composite descriptionComposite = toolkit.createComposite(sectionComposite);
+				descriptionComposite.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+				GridData descriptionGridData = new GridData(GridData.FILL_BOTH);
+				descriptionGridData.heightHint = SWT.DEFAULT;
+				descriptionComposite.setLayoutData(descriptionGridData);
+				final StackLayout descriptionLayout = new StackLayout();
+				descriptionComposite.setLayout(descriptionLayout);
+
+				Browser descriptionWikiBrowser = new Browser(descriptionComposite, SWT.NONE);
+
+				descriptionTextViewer = addTextEditor(repository, descriptionComposite, taskData.getDescription(),
+						true, SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+
+				descriptionLayout.topControl = descriptionTextViewer.getControl();
+				descriptionComposite.layout();
+
+				// composite for edit/preview button
+				Composite buttonComposite = toolkit.createComposite(sectionComposite);
+				buttonComposite.setLayout(new GridLayout());
+				createPreviewButton(buttonComposite, descriptionTextViewer, descriptionWikiBrowser, descriptionLayout,
+						descriptionComposite);
+			} else {
+				descriptionTextViewer = addTextEditor(repository, sectionComposite, taskData.getDescription(), true,
+						SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+			}
 			descriptionTextViewer.setEditable(true);
 			StyledText styledText = descriptionTextViewer.getTextWidget();
-			styledText.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 			gd.widthHint = DESCRIPTION_WIDTH;
 			gd.heightHint = SWT.DEFAULT;
@@ -2047,6 +2074,17 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	}
 
+	/**
+	 * Subclasses that support HTML preview of ticket description and comments override this method to return an
+	 * instance of AbstractRenderingEngine
+	 * 
+	 * @return <code>null</code> if HTML preview is not supported for the repository (default)
+	 * @since 2.1
+	 */
+	protected AbstractRenderingEngine getRenderingEngine() {
+		return null;
+	}
+
 	protected void createNewCommentLayout(Composite composite) {
 		// Section newCommentSection = createSection(composite,
 		// getSectionLabel(SECTION_NAME.NEWCOMMENT_SECTION));
@@ -2064,8 +2102,35 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			taskData.setAttributeValue(RepositoryTaskAttribute.COMMENT_NEW, "");
 		}
 		final RepositoryTaskAttribute attribute = taskData.getAttribute(RepositoryTaskAttribute.COMMENT_NEW);
-		newCommentTextViewer = addTextEditor(repository, newCommentsComposite, attribute.getValue(), true, SWT.FLAT
-				| SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+
+		if (getRenderingEngine() != null) {
+			// composite with StackLayout to hold text editor and preview widget
+			Composite editPreviewComposite = toolkit.createComposite(newCommentsComposite);
+			GridData editPreviewData = new GridData(GridData.FILL_BOTH);
+			editPreviewData.heightHint = DESCRIPTION_HEIGHT;
+			editPreviewComposite.setLayoutData(editPreviewData);
+			editPreviewComposite.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+
+			final StackLayout editPreviewLayout = new StackLayout();
+			editPreviewComposite.setLayout(editPreviewLayout);
+
+			Browser newCommentBrowser = new Browser(editPreviewComposite, SWT.NONE);
+
+			newCommentTextViewer = addTextEditor(repository, editPreviewComposite, attribute.getValue(), true, SWT.FLAT
+					| SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+
+			editPreviewLayout.topControl = newCommentTextViewer.getControl();
+			editPreviewComposite.layout();
+
+			// composite for edit/preview button
+			Composite buttonComposite = toolkit.createComposite(newCommentsComposite);
+			buttonComposite.setLayout(new GridLayout());
+			createPreviewButton(buttonComposite, newCommentTextViewer, newCommentBrowser, editPreviewLayout,
+					editPreviewComposite);
+		} else {
+			newCommentTextViewer = addTextEditor(repository, newCommentsComposite, attribute.getValue(), true, SWT.FLAT
+					| SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		}
 		newCommentTextViewer.setEditable(true);
 
 		GridData addCommentsTextData = new GridData(GridData.FILL_BOTH);
@@ -2091,6 +2156,144 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		newCommentSection.setClient(newCommentsComposite);
 
 		toolkit.paintBordersFor(newCommentsComposite);
+	}
+
+	/**
+	 * Creates and sets up the button for switching between text editor and HTML preview. Subclasses that support HTML
+	 * preview of new comments must override this method.
+	 * 
+	 * @param buttonComposite
+	 *            the composite that holds the button
+	 * @param editor
+	 *            the TextViewer for editing text
+	 * @param previewBrowser
+	 *            the Browser for displaying the preview
+	 * @param editorLayout
+	 *            the StackLayout of the <code>editorComposite</code>
+	 * @param editorComposite
+	 *            the composite that holds <code>editor</code> and <code>previewBrowser</code>
+	 * @since 2.1
+	 */
+	private void createPreviewButton(final Composite buttonComposite, final TextViewer editor,
+			final Browser previewBrowser, final StackLayout editorLayout, final Composite editorComposite) {
+		// create an anonymous object that encapsulates the edit/preview button together with
+		// its state and String constants for button text;
+		// this implementation keeps all information needed to set up the button 
+		// in this object and the method parameters, and this method is reused by both the
+		// description section and new comments section.
+		new Object() {
+			private static final String LABEL_BUTTON_PREVIEW = "Preview";
+
+			private static final String LABEL_BUTTON_EDIT = "Edit";
+
+			private int buttonState = 0;
+
+			private Button previewButton;
+
+			{
+				previewButton = toolkit.createButton(buttonComposite, LABEL_BUTTON_PREVIEW, SWT.PUSH);
+				GridData previewButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+				previewButtonData.widthHint = 100;
+				//previewButton.setImage(TasksUiImages.getImage(TasksUiImages.PREVIEW));
+				previewButton.setLayoutData(previewButtonData);
+				previewButton.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event e) {
+						buttonState = ++buttonState % 2;
+						if (buttonState == 1) {
+							previewBrowser.setText("loading preview...");
+							previewWiki(previewBrowser, editor.getTextWidget().getText());
+						}
+						previewButton.setText(buttonState == 0 ? LABEL_BUTTON_PREVIEW : LABEL_BUTTON_EDIT);
+						editorLayout.topControl = (buttonState == 0 ? editor.getControl() : previewBrowser);
+						editorComposite.layout();
+					}
+				});
+			}
+		};
+	}
+
+	private void previewWiki(final Browser browser, String sourceText) {
+		final class PreviewWikiJob extends Job {
+			private String sourceText;
+
+			private String htmlText;
+
+			private IStatus jobStatus;
+			
+			public PreviewWikiJob(String sourceText) {
+				super("Formatting Wiki Text");
+
+				if (sourceText == null) {
+					throw new IllegalArgumentException("source text must not be null");
+				}
+
+				this.sourceText = sourceText;
+			}
+
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				AbstractRenderingEngine htmlRenderingEngine = getRenderingEngine();
+				if (htmlRenderingEngine == null) {
+					jobStatus = new RepositoryStatus(repository, IStatus.INFO, TasksUiPlugin.ID_PLUGIN,
+							RepositoryStatus.ERROR_INTERNAL, "The repository does not support HTML preview.");
+					return Status.OK_STATUS;
+				}
+
+				jobStatus = Status.OK_STATUS;
+				try {
+					htmlText = htmlRenderingEngine.renderAsHtml(repository, sourceText, monitor);
+				} catch (CoreException e) {
+					jobStatus = e.getStatus();
+				}
+				return Status.OK_STATUS;
+			}
+
+			public String getHtmlText() {
+				return htmlText;
+			}
+			
+			public IStatus getStatus() {
+				return jobStatus;
+			}
+
+		}
+
+		final PreviewWikiJob job = new PreviewWikiJob(sourceText);
+
+		job.addJobChangeListener(new JobChangeAdapter() {
+
+			@Override
+			public void done(final IJobChangeEvent event) {
+				if (!form.isDisposed()) {
+					if (job.getStatus().isOK()) {
+						getPartControl().getDisplay().asyncExec(new Runnable() {
+							public void run() {
+								AbstractRepositoryTaskEditor.this.displayWikiPreview(browser, job.getHtmlText());
+								parentEditor.setMessage(null, IMessageProvider.NONE);
+							}
+						});
+					} else {
+						getPartControl().getDisplay().asyncExec(new Runnable() {
+							public void run() {
+								parentEditor.setMessage(job.getStatus().getMessage(), IMessageProvider.ERROR);
+							}
+						});
+					}
+				}
+				super.done(event);
+			}
+		});
+
+		job.setUser(true);
+		job.schedule();
+	}
+
+	private void displayWikiPreview(Browser browser, String htmlText) {
+		if (htmlText == null) {
+			browser.setText("");
+		} else {
+			browser.setText(htmlText);
+		}
 	}
 
 	/**

@@ -80,8 +80,17 @@ public class TracXmlRpcClientTest extends AbstractTracClientRepositoryTest {
 		assertEquals(new Date(0), versions[1].getTime());
 	}
 
-	public void testWikiToHtml() throws Exception {
+	public void testWikiToHtml010() throws Exception{
 		connect010();
+		wikiToHtml(TracTestConstants.TEST_TRAC_010_URL);
+	}
+	
+	public void testWikiToHtml011() throws Exception{
+		connect011();
+		wikiToHtml(TracTestConstants.TEST_TRAC_011_URL);
+	}
+	
+	public void wikiToHtml(String tracUrl) throws Exception {
 		String html = ((TracXmlRpcClient) repository).wikiToHtml("");
 		assertEquals("", html);
 
@@ -93,7 +102,7 @@ public class TracXmlRpcClientTest extends AbstractTracClientRepositoryTest {
 				+ " * {{{monospace}}} or `monospace`\n" + " * ~~strike-through~~\n" + " * ^superscript^ \n"
 				+ " * ,,subscript,,\n" + "= Heading =\n" + "== Subheading ==\n";
 
-		String expectedHtml = "<h1 id=\"WikiFormattingTesting\"><a class=\"missing wiki\" href=\"http://mylyn.eclipse.org/trac010/wiki/WikiFormattingTesting\" rel=\"nofollow\">WikiFormattingTesting?</a></h1>\n<ul><li><strong>bold</strong>, <strong>\'\'\' can be bold too</strong>, and <strong>! </strong>\n</li><li><i>italic</i>\n</li><li><strong><i>bold italic</i></strong>\n</li><li><span class=\"underline\">underline</span>\n</li><li><tt>monospace</tt> or <tt>monospace</tt>\n</li><li><del>strike-through</del>\n</li><li><sup>superscript</sup> \n</li><li><sub>subscript</sub>\n</li></ul><h1 id=\"Heading\">Heading</h1>\n<h2 id=\"Subheading\">Subheading</h2>\n";
+		String expectedHtml = "<h1 id=\"WikiFormattingTesting\"><a class=\"missing wiki\" href=\"" + tracUrl + "/wiki/WikiFormattingTesting\" rel=\"nofollow\">WikiFormattingTesting?</a></h1>\n<ul><li><strong>bold</strong>, <strong>\'\'\' can be bold too</strong>, and <strong>! </strong>\n</li><li><i>italic</i>\n</li><li><strong><i>bold italic</i></strong>\n</li><li><span class=\"underline\">underline</span>\n</li><li><tt>monospace</tt> or <tt>monospace</tt>\n</li><li><del>strike-through</del>\n</li><li><sup>superscript</sup> \n</li><li><sub>subscript</sub>\n</li></ul><h1 id=\"Heading\">Heading</h1>\n<h2 id=\"Subheading\">Subheading</h2>\n";
 
 		html = ((TracXmlRpcClient) repository).wikiToHtml(source);
 		assertEquals(expectedHtml, html);
