@@ -1045,9 +1045,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	public boolean searchForDuplicates() {
 		String duplicateDetectorName = duplicateDetectorChooser.getItem(duplicateDetectorChooser.getSelectionIndex());
-		// called so that the description text is set on taskData before we
-		// search for duplicates
-		this.saveTaskOffline(new NullProgressMonitor());
 
 		SearchHitCollector collector = getDuplicateSearchCollector(duplicateDetectorName);
 		if (collector != null) {

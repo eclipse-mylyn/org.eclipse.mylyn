@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -262,7 +263,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 //				scheduledForDate.setDate(null);
 //			}
 //		});
-		
+
 		ImageHyperlink clearReminder = getManagedForm().getToolkit().createImageHyperlink(sectionClient, SWT.NONE);
 		clearReminder.setImage(TasksUiImages.getImage(TasksUiImages.REMOVE));
 		clearReminder.setToolTipText("Clear");
@@ -306,7 +307,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 				estimatedTime.setSelection(0);
 			}
 		});
-		
+
 		getManagedForm().getToolkit().paintBordersFor(sectionClient);
 	}
 
@@ -565,5 +566,13 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		}
 
 		return stackTrace;
+	}
+
+	@Override
+	public boolean searchForDuplicates() {
+		// called so that the description text is set on taskData before we
+		// search for duplicates
+		this.saveTaskOffline(new NullProgressMonitor());
+		return super.searchForDuplicates();
 	}
 }
