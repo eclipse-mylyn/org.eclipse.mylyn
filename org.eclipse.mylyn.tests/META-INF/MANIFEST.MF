@@ -1,12 +1,12 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mylar Tests
+Bundle-Name: Mylyn Tests
 Bundle-SymbolicName: org.eclipse.mylyn.tests
 Bundle-Version: 0.0.0
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
 Export-Package: org.eclipse.mylyn.tests
-Bundle-ClassPath: mylar-tests.jar
+Bundle-ClassPath: mylyn-tests.jar
 Require-Bundle: org.junit,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
