@@ -312,49 +312,8 @@ public class TaskListWriter {
 				for (int i = 0; i < list.getLength(); i++) {
 					Node child = list.item(i);
 					try {
-						boolean wasRead = false;
 						if (child.getNodeName().endsWith(AbstractTaskListFactory.KEY_QUERY)) {
-							for (AbstractTaskListFactory externalizer : externalizers) {
-								Set<String> queryTagNames = externalizer.getQueryElementNames();
-								if (queryTagNames != null && queryTagNames.contains(child.getNodeName())) {
-									Element childElement = (Element) child;
-									// TODO: move this stuff into externalizer
-									String repositoryUrl = childElement.getAttribute(DelegatingTaskExternalizer.KEY_REPOSITORY_URL);
-									String queryString = childElement.getAttribute(AbstractTaskListFactory.KEY_QUERY_STRING);
-									if (queryString.length() == 0) { // fallback for legacy
-										queryString = childElement.getAttribute(AbstractTaskListFactory.KEY_QUERY);
-									}
-									String label = childElement.getAttribute(DelegatingTaskExternalizer.KEY_NAME);
-									if (label.length() == 0) { // fallback for legacy
-										label = childElement.getAttribute(DelegatingTaskExternalizer.KEY_LABEL);
-									}
-
-									AbstractRepositoryQuery query = externalizer.createQuery(repositoryUrl,
-											queryString, label, childElement);
-									if (query != null) {
-										wasRead = true;
-										if (childElement.getAttribute(DelegatingTaskExternalizer.KEY_LAST_REFRESH) != null
-												&& !childElement.getAttribute(
-														DelegatingTaskExternalizer.KEY_LAST_REFRESH).equals("")) {
-											query.setLastSynchronizedStamp(childElement.getAttribute(DelegatingTaskExternalizer.KEY_LAST_REFRESH));
-										}
-										taskList.internalAddQuery(query);
-									}
-									NodeList queryChildren = child.getChildNodes();
-									for (int ii = 0; ii < queryChildren.getLength(); ii++) {
-										Node queryNode = queryChildren.item(ii);
-										try {
-											delagatingExternalizer.readQueryHit((Element) queryNode, taskList, query);
-										} catch (TaskExternalizationException e) {
-											hasCaughtException = true;
-										}
-									}
-									break;
-								}
-							}
-							if (!wasRead) {
-								orphanedQueryNodes.add(child);
-							}
+							readQuery(taskList, child);
 						}
 					} catch (Exception e) {
 						handleException(inFile, child, e);
@@ -376,6 +335,51 @@ public class TaskListWriter {
 			// doesn't happen again.
 			// this is OK, since the original (corrupt) tasklist is saved.
 			writeTaskList(taskList, inFile);
+		}
+	}
+
+	private void readQuery(TaskList taskList, Node child) {
+		boolean wasRead = false;
+		for (AbstractTaskListFactory externalizer : externalizers) {
+			Set<String> queryTagNames = externalizer.getQueryElementNames();
+			if (queryTagNames != null && queryTagNames.contains(child.getNodeName())) {
+				Element childElement = (Element) child;
+				// TODO: move this stuff into externalizer
+				String repositoryUrl = childElement.getAttribute(DelegatingTaskExternalizer.KEY_REPOSITORY_URL);
+				String queryString = childElement.getAttribute(AbstractTaskListFactory.KEY_QUERY_STRING);
+				if (queryString.length() == 0) { // fallback for legacy
+					queryString = childElement.getAttribute(AbstractTaskListFactory.KEY_QUERY);
+				}
+				String label = childElement.getAttribute(DelegatingTaskExternalizer.KEY_NAME);
+				if (label.length() == 0) { // fallback for legacy
+					label = childElement.getAttribute(DelegatingTaskExternalizer.KEY_LABEL);
+				}
+
+				AbstractRepositoryQuery query = externalizer.createQuery(repositoryUrl,
+						queryString, label, childElement);
+				if (query != null) {
+					wasRead = true;
+					if (childElement.getAttribute(DelegatingTaskExternalizer.KEY_LAST_REFRESH) != null
+							&& !childElement.getAttribute(
+									DelegatingTaskExternalizer.KEY_LAST_REFRESH).equals("")) {
+						query.setLastSynchronizedStamp(childElement.getAttribute(DelegatingTaskExternalizer.KEY_LAST_REFRESH));
+					}
+					taskList.internalAddQuery(query);
+				}
+				NodeList queryChildren = child.getChildNodes();
+				for (int ii = 0; ii < queryChildren.getLength(); ii++) {
+					Node queryNode = queryChildren.item(ii);
+					try {
+						delagatingExternalizer.readQueryHit((Element) queryNode, taskList, query);
+					} catch (TaskExternalizationException e) {
+						hasCaughtException = true;
+					}
+				}
+				break;
+			}
+		}
+		if (!wasRead) {
+			orphanedQueryNodes.add(child);
 		}
 	}
 
@@ -407,7 +411,7 @@ public class TaskListWriter {
 			// Parse the content of the given file as an XML document
 			// and return a new DOM Document object. Also throws IOException
 			InputStream inputStream = null;
-			if (inputFile.getName().endsWith(ITasksUiConstants.DEFAULT_TASK_LIST_FILE)) {
+			if (inputFile.getName().endsWith(ITasksUiConstants.FILE_EXTENSION)) {
 				// is zipped context
 				inputStream = new ZipInputStream(new FileInputStream(inputFile));
 				((ZipInputStream) inputStream).getNextEntry();
@@ -474,5 +478,71 @@ public class TaskListWriter {
 
 	public List<AbstractTaskListFactory> getExternalizers() {
 		return externalizers;
+	}
+
+	public void writeQuery(AbstractRepositoryQuery query, File outFile) {
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder db;
+		Document doc = null;
+
+		try {
+			db = dbf.newDocumentBuilder();
+			doc = db.newDocument();
+		} catch (ParserConfigurationException e) {
+			StatusHandler.log(e, "could not create document");
+			return;
+		}
+
+		Element root = doc.createElement(ELEMENT_TASK_LIST);
+		root.setAttribute(ATTRIBUTE_VERSION, VALUE_VERSION);
+
+			try {
+				delagatingExternalizer.createQueryElement(query, doc, root);
+			} catch (Throwable t) {
+				StatusHandler.fail(t, "Did not externalize: " + query.getSummary(), true);
+			}
+
+		doc.appendChild(root);
+		writeDOMtoFile(doc, outFile);
+		return;
+	}
+
+	public void readQueries(TaskList taskList, File inFile) {
+		try {
+			if (!inFile.exists())
+				return;
+			Document doc = openAsDOM(inFile);
+			if (doc == null) {
+				handleException(inFile, null, new TaskExternalizationException("TaskList was not well formed XML"));
+				return;
+			}
+			Element root = doc.getDocumentElement();
+			readVersion = root.getAttribute(ATTRIBUTE_VERSION);
+
+			if (!readVersion.equals(VALUE_VERSION_1_0_0)) {
+				NodeList list = root.getChildNodes();
+
+				// read queries
+				for (int i = 0; i < list.getLength(); i++) {
+					Node child = list.item(i);
+					try {
+						if (child.getNodeName().endsWith(AbstractTaskListFactory.KEY_QUERY)) {
+							readQuery(taskList, child);
+						}
+					} catch (Exception e) {
+						handleException(inFile, child, e);
+					}
+				}
+			} else {
+				StatusHandler.log("version: " + readVersion + " not supported", this);
+			}
+		} catch (Exception e) {
+			handleException(inFile, null, e);
+		}
+		
+		if (!hasCaughtException) {
+			// save new task list only if there were no exception!
+			writeTaskList(taskList, inFile);
+		}
 	}
 }

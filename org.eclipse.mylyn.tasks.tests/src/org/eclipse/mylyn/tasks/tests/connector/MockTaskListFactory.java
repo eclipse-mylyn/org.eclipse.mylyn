@@ -8,6 +8,10 @@
 
 package org.eclipse.mylyn.tasks.tests.connector;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListFactory;
 import org.w3c.dom.Element;
@@ -16,10 +20,17 @@ import org.w3c.dom.Element;
  * @author Mik Kersten
  */
 public class MockTaskListFactory extends AbstractTaskListFactory {
+	
+	private static final String QUERY_ELEMENT_NAME = "MockQuery";
 
 	@Override
 	public boolean canCreate(AbstractTask task) {
 		return task instanceof MockRepositoryTask;
+	}
+	
+	@Override
+	public boolean canCreate(AbstractRepositoryQuery query) {
+		return query instanceof MockRepositoryQuery;
 	}
 
 	@Override
@@ -31,6 +42,24 @@ public class MockTaskListFactory extends AbstractTaskListFactory {
 	@Override
 	public String getTaskElementName() {
 		return "Mock" + AbstractTaskListFactory.KEY_TASK;
+	}
+
+	@Override
+	public String getQueryElementName(AbstractRepositoryQuery query) {
+		return QUERY_ELEMENT_NAME;
+	}
+	
+	@Override
+	public AbstractRepositoryQuery createQuery(String repositoryUrl, String queryString, String label, Element element) {
+		MockRepositoryQuery query = new MockRepositoryQuery(label, queryString);
+		return query;
+	}
+	
+	@Override
+	public Set<String> getQueryElementNames() {
+		Set<String> names = new HashSet<String>();
+		names.add(QUERY_ELEMENT_NAME);
+		return names;
 	}
 
 //	private static final String KEY_MOCK = "Mock";
