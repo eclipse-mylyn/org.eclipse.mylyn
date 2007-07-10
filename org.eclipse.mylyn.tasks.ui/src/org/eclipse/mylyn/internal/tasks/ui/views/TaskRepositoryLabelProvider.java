@@ -58,7 +58,7 @@ public class TaskRepositoryLabelProvider implements ILabelProvider {
 		} else if (object instanceof AbstractRepositoryConnector) {
 			return ((AbstractRepositoryConnector) object).getLabel();
 		} else {
-			return getText(object);
+			return null;
 		}
 	}
 
