@@ -21,30 +21,30 @@ public class BugzillaStatus extends Status {
 	private String repositoryUrl = "";
 
 	public BugzillaStatus(int severity, String pluginId, int code) {
-		super(severity, pluginId, code, "MylarStatus", null);
+		super(severity, pluginId, code, "MylynStatus", null);
 		this.errorMessage = null;
 	}
 
 	public BugzillaStatus(int severity, String pluginId, int code, String errorMessage) {
-		super(severity, pluginId, code, "MylarStatus", null);
+		super(severity, pluginId, code, "MylynStatus", null);
 		this.errorMessage = errorMessage;
 	}
 
 	public BugzillaStatus(int severity, String pluginId, int code, String repositoryUrl, Throwable e) {
-		super(severity, pluginId, code, "MylarStatus", e);
+		super(severity, pluginId, code, "MylynStatus", e);
 		this.repositoryUrl = repositoryUrl;
 		this.errorMessage = e.getMessage();
 	}
 
 	public BugzillaStatus(int severity, String pluginId, int code, String repositoryUrl, String errorMessage) {
-		super(severity, pluginId, code, "MylarStatus", null);
+		super(severity, pluginId, code, "MylynStatus", null);
 		this.errorMessage = errorMessage;
 		this.repositoryUrl = repositoryUrl;
 	}
 
 	public BugzillaStatus(int severity, String pluginId, int code, String repositoryUrl, String errorMessage,
 			Throwable e) {
-		super(severity, pluginId, code, "MylarStatus", e);
+		super(severity, pluginId, code, "MylynStatus", e);
 		this.errorMessage = errorMessage;
 		this.repositoryUrl = repositoryUrl;
 	}

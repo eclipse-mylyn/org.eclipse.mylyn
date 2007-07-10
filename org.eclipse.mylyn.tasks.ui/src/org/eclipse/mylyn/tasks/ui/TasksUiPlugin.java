@@ -429,7 +429,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			});
 		} catch (Exception e) {
 			e.printStackTrace();
-			StatusHandler.fail(e, "Mylar Task List initialization failed", false);
+			StatusHandler.fail(e, "Mylyn Task List initialization failed", false);
 		}
 	}
 
@@ -522,7 +522,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				INSTANCE = null;
 			}
 		} catch (Exception e) {
-			StatusHandler.log(e, "Mylar Task List stop terminated abnormally");
+			StatusHandler.log(e, "Mylyn Task List stop terminated abnormally");
 		} finally {
 			super.stop(context);
 		}

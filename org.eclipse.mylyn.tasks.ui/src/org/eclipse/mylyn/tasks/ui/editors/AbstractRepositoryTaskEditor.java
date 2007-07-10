@@ -1,10 +1,11 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 Mylyn project committers and others.
+ * Copyright (c) 2004, 2007 Mylyn project committers and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
+
 package org.eclipse.mylyn.tasks.ui.editors;
 
 import java.io.File;
@@ -202,7 +203,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 //	private static final String LABEL_NO_DETECTOR = "No duplicate detector available.";
 
-	protected static final String CONTEXT_MENU_ID = "#MylarRepositoryEditor";
+	protected static final String CONTEXT_MENU_ID = "#MylynRepositoryEditor";
 
 	private FormToolkit toolkit;
 

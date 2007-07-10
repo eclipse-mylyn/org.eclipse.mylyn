@@ -105,16 +105,11 @@ public class TaskRepositoryManagerTest extends TestCase {
 	}
 
 	public void testRepositoryPersistance() throws MalformedURLException {
-		// assertEquals("",
-		// MylarTaskListPlugin.getMylarCorePrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));
-
 		TaskRepository repository1 = new TaskRepository("bugzilla", "http://bugzilla");
 		TaskRepository repository2 = new TaskRepository("jira", "http://jira");
 		manager.addRepository(repository1, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		manager.addRepository(repository2, TasksUiPlugin.getDefault().getRepositoriesFilePath());
-
-		// assertNotNull(MylarTaskListPlugin.getMylarCorePrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));
-
+		
 		List<TaskRepository> repositoryList = new ArrayList<TaskRepository>();
 		repositoryList.add(repository2);
 		repositoryList.add(repository1);

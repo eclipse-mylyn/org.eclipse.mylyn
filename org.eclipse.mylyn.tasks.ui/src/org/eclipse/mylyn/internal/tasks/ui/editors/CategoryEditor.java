@@ -46,8 +46,6 @@ public class CategoryEditor extends EditorPart {
 		input.setCategoryName(description.getText());
 		input.setUrl(url.getText());
 		isDirty = false;
-		// TODO: save the list
-//		MylarTaskListPlugin.getTaskListManager().notifyListUpdated();
 		firePropertyChange(PROP_DIRTY);
 	}
 

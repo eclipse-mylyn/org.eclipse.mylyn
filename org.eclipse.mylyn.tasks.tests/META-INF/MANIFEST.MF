@@ -23,7 +23,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn,
  org.eclipse.mylyn.web.core
 Eclipse-AutoStart: true
-Bundle-ClassPath: mylar-tasklist-tests.jar
+Bundle-ClassPath: mylyn-tasklist-tests.jar
 Export-Package: org.eclipse.mylyn.tasks.tests,
  org.eclipse.mylyn.tasks.tests.connector
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

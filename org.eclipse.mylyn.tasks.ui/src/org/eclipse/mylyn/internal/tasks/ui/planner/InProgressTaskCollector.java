@@ -32,10 +32,10 @@ public class InProgressTaskCollector implements ITaskCollector {
 	private Date periodStartDate;
 
 	protected static boolean hasActivitySince(AbstractTask task, Date startDate) {
-		IInteractionContext mylarContext = ContextCorePlugin.getContextManager()
+		IInteractionContext interactionContext = ContextCorePlugin.getContextManager()
 				.loadContext(task.getHandleIdentifier());
-		if (mylarContext != null) {
-			List<InteractionEvent> events = mylarContext.getInteractionHistory();
+		if (interactionContext != null) {
+			List<InteractionEvent> events = interactionContext.getInteractionHistory();
 			if (events.size() > 0) {
 				InteractionEvent latestEvent = events.get(events.size() - 1);
 				if (latestEvent.getDate().compareTo(startDate) > 0) {

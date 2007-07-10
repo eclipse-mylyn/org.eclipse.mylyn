@@ -30,7 +30,7 @@ import org.eclipse.mylyn.tasks.core.TaskList;
  */
 public class TaskReportGenerator implements IRunnableWithProgress {
 
-	private static final String LABEL_JOB = "Mylar Task Activity Report";
+	private static final String LABEL_JOB = "Mylyn Task Activity Report";
 
 	private boolean finished;
 

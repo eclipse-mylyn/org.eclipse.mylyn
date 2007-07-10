@@ -27,8 +27,6 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
- * Adapted from MylarContextExternalizer
- * 
  * @author Rob Elves
  */
 public class TaskRepositoriesExternalizer {

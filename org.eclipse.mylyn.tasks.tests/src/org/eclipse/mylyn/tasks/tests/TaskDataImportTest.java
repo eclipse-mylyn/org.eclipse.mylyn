@@ -28,10 +28,6 @@ public class TaskDataImportTest extends AbstractContextTest {
 
 	private TaskDataImportWizardPage wizardPage = null;
 
-	// private String sourceDir = "testdata/taskdataimporttest";
-
-	// private File sourceDirFile = null;
-
 	private String sourceZipPath = "testdata/taskdataimporttest/mylardata-2007-01-19.zip";
 
 	private File sourceZipFile = null;

@@ -268,8 +268,6 @@ public class BugzillaProductPage extends WizardPage {
 					MessageDialog.openError(Display.getDefault().getActiveShell(), NEW_BUGZILLA_TASK_ERROR_TITLE,
 							"Unable to get products. Ensure proper repository configuration in "
 									+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".\n\n");
-					// MylarStatusHandler.log(e, "Failed to retrieve products
-					// from server");
 				}
 			});
 		}

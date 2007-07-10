@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.mylar.tasks.ui">
+<schema targetNamespace="org.eclipse.mylyn.tasks.ui">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.mylar.tasks.ui" id="projectLinkProviders" name="Task Repository Link Provider"/>
+         <meta.schema plugin="org.eclipse.mylyn.tasks.ui" id="projectLinkProviders" name="Task Repository Link Provider"/>
       </appInfo>
       <documentation>
          Providers responsible for linking Workspace resources/projects to the Task Repositories.
@@ -64,7 +64,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.mylar.tasks.ui.AbstractTaskRepositoryLinkProvider"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.tasks.ui.AbstractTaskRepositoryLinkProvider"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -101,7 +101,7 @@
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         See org.eclipse.mylar.tasks.ui.TasksUiPlugin.getRepositoryForResource(IResource resource, boolean silent)
+         See org.eclipse.mylyn.tasks.ui.TasksUiPlugin.getRepositoryForResource(IResource resource, boolean silent)
       </documentation>
    </annotation>
 

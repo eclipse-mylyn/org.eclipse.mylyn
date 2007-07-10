@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2006 Mylar committers and others.
+ * Copyright (c) 2004, 2007 Mylyn project committers and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -46,6 +46,7 @@ public abstract class AbstractAttachmentHandler {
 
 	public final static String MYLAR_CONTEXT_FILENAME = "mylyn-context.zip";
 
+	// TODO: change name to Mylyn for 3.0
 	public static final String MYLAR_CONTEXT_DESCRIPTION = "mylyn/context/zip";
 
 	public abstract void uploadAttachment(TaskRepository repository, AbstractTask task, ITaskAttachment attachment,

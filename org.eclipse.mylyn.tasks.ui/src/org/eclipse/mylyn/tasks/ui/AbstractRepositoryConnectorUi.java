@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2006 Mylar committers and others.
+ * Copyright (c) 2004, 2007 Mylyn project committers and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -70,7 +70,7 @@ public abstract class AbstractRepositoryConnectorUi {
 
 	/**
 	 * Override to return a custom task editor ID. If overriding this method the connector becomes responsible for
-	 * showing the additional pages handled by the default task editor. As of Mylar 2.0M2 these are the Planning and
+	 * showing the additional pages handled by the default task editor. As of Mylyn 2.0M2 these are the Planning and
 	 * Context pages.
 	 */
 	public String getTaskEditorId(AbstractTask repositoryTask) {

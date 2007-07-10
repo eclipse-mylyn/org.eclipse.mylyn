@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.mylar.tasks.ui">
+<schema targetNamespace="org.eclipse.mylyn.tasks.ui">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.mylar.tasks.ui" id="providers" name="Task UI Providers"/>
+         <meta.schema plugin="org.eclipse.mylyn.tasks.ui" id="providers" name="Task UI Providers"/>
       </appInfo>
       <documentation>
          Currently only a work-around for creating a dynamic popupo menu.

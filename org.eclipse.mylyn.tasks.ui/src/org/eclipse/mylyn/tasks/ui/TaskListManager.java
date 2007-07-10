@@ -5,9 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-/*
- * Created on Dec 26, 2004
- */
+
 package org.eclipse.mylyn.tasks.ui;
 
 import java.io.File;
@@ -482,9 +480,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	}
 
 	private void setupCalendarRanges() {
-		// MylarTaskListPlugin.getMylarCorePrefs().getInt(TaskListPreferenceConstants.PLANNING_STARTDAY);
 		startDay = Calendar.MONDAY;
-		// MylarTaskListPlugin.getMylarCorePrefs().getInt(TaskListPreferenceConstants.PLANNING_ENDDAY);
 		endDay = Calendar.SUNDAY;
 		// scheduledStartHour =
 		// TasksUiPlugin.getDefault().getPreferenceStore().getInt(

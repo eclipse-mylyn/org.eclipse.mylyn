@@ -110,7 +110,7 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 							MessageDialog.openInformation(
 									PlatformUI.getWorkbench().getDisplay().getActiveShell(),
 									ITasksUiConstants.TITLE_DIALOG,
-									"If task list is blank, Mylar Task List may have failed to initialize.\n\n"
+									"If task list is blank, Mylyn Task List may have failed to initialize.\n\n"
 											+ "First, try restarting to see if that corrects the problem.\n\n"
 											+ "Then, check the Error Log view for messages, and the FAQ for solutions.\n\n"
 											+ ITasksUiConstants.URL_HOMEPAGE);

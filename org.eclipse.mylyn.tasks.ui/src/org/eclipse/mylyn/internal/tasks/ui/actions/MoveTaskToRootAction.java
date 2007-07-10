@@ -29,23 +29,5 @@ public class MoveTaskToRootAction extends Action {
 	@Override
 	public void run() {
 		throw new RuntimeException("unimplemented");
-		// ISelection selection = this.view.getViewer().getSelection();
-		// Object obj = ((IStructuredSelection)selection).getFirstElement();
-		// if (obj instanceof ITask) {
-		// ITask t = (ITask) obj;
-		// TaskCategory cat = t.getCategory();
-		// if (cat != null) {
-		// cat.removeTask(t);
-		// t.setCategory(null);
-		// t.setParent(null);
-		// MylarTaskListPlugin.getTaskListManager().getTaskList().addRootTask(t);
-		// this.view.getViewer().refresh();
-		// } else if (t.getParent() != null) {
-		// t.getParent().removeSubTask(t);
-		// t.setParent(null);
-		// MylarTaskListPlugin.getTaskListManager().getTaskList().addRootTask(t);
-		// this.view.getViewer().refresh();
-		// }
-		// }
 	}
 }

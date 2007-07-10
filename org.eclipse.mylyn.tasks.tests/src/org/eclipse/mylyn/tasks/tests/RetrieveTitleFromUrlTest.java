@@ -22,7 +22,7 @@ public class RetrieveTitleFromUrlTest extends TestCase {
 
 	// XXX broken due to hang that causes the scheduled job to never complete
 	public void testRetrieve() throws InterruptedException, InvocationTargetException {
-		final String url = "http://eclipse.org/mylar/index.php";
+		final String url = "http://eclipse.org/mylyn";
 		final String knownTitle = "Mylar Technology Project";
 
 		RetrieveTitleFromUrlJob job = new RetrieveTitleFromUrlJob(url) {

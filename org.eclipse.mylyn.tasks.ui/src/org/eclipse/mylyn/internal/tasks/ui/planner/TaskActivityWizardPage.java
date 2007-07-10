@@ -48,7 +48,7 @@ public class TaskActivityWizardPage extends WizardPage {
 
 	private static final int DEFAULT_DAYS = 1;
 
-	private static final String TITLE = "Mylar Task Activity Report";
+	private static final String TITLE = "Mylyn Task Activity Report";
 
 	private static final String DESCRIPTION = "Summarizes task activity and assists planning future tasks.";
 

@@ -58,19 +58,6 @@ public class RemoveFromCategoryAction extends Action {
 					}
 					TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task,
 							TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
-					// just in case, should already be there
-//					MylarTaskListPlugin.getTaskListManager().getTaskList().addTaskToArchive(task);
-//					ITaskContainer cat = task.getCategory();
-//					if (cat != null) {
-//						String message = DeleteAction.genDeleteConfirmationMessage(task);
-//						boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench()
-//								.getActiveWorkbenchWindow().getShell(), "Confirm delete", message);
-//						if (!deleteConfirmed)
-//							return;
-//
-//						MylarTaskListPlugin.getTaskListManager().deleteTask(task);
-//						ContextCorePlugin.getContextManager().contextDeleted(task.getHandleIdentifier()); // task.getContextPath());
-//					}
 				}
 			}
 		} catch (NullPointerException npe) {

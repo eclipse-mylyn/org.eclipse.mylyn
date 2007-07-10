@@ -268,8 +268,6 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			break;
 		default:
 			break;
-		// MylarStatusHandler.log("Unknown bugzilla operation code recieved",
-		// BugzillaRepositoryUtil.class);
 		}
 		if (newOperation != null) {
 			bugReport.addOperation(newOperation);

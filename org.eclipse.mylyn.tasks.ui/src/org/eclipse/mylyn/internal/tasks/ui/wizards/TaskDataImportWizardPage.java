@@ -48,7 +48,7 @@ public class TaskDataImportWizardPage extends WizardPage {
 
 	private static final String LABEL_IMPORT_BACKUP = "From auto backup";
 
-	private final static String PAGE_TITLE = "Import Mylar Task Data";
+	private final static String PAGE_TITLE = "Import Mylyn Task Data";
 
 	private static final String DESCRIPTION = "WARNING: importing overwrites current task list and repositories, use with caution.";
 

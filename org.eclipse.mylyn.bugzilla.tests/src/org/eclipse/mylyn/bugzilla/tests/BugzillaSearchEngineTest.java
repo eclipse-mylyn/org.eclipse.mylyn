@@ -57,7 +57,7 @@ public class BugzillaSearchEngineTest extends TestCase {
 // TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
 // IBugzillaConstants.TEST_BUGZILLA_216_URL,
 // IBugzillaConstants.BugzillaServerVersion.SERVER_216.toString());
-// MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
+// MylynTaskListPlugin.getRepositoryManager().addRepository(repository);
 // List<AbstractQueryHit> hits =
 // runQuery(IBugzillaConstants.TEST_BUGZILLA_216_URL, SEARCH_DESCRIPTION);
 // assertEquals(NUM_EXPECTED_HITS, hits.size());

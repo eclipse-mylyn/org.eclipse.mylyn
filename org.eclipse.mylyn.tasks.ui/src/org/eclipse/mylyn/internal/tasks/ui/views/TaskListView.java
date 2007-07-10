@@ -1186,13 +1186,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	private void addAction(Action action, IMenuManager manager, AbstractTaskContainer element) {
 		manager.add(action);
 		if (element != null) {
-			// ITaskHandler handler =
-			// MylarTaskListPlugin.getDefault().getHandlerForElement(element);
-			// if (handler != null) {
-			// action.setEnabled(handler.enableAction(action, element));
-			// } else {
 			updateActionEnablement(action, element);
-			// }
 		}
 	}
 
@@ -1317,23 +1311,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	 */
 	protected boolean lookForId(String taskId) {
 		return (TasksUiPlugin.getTaskListManager().getTaskList().getTask(taskId) == null);
-		// for (ITask task :
-		// MylarTaskListPlugin.getTaskListManager().getTaskList().getRootTasks())
-		// {
-		// if (task.getHandle().equals(taskId)) {
-		// return true;
-		// }
-		// }
-		// for (TaskCategory cat :
-		// MylarTaskListPlugin.getTaskListManager().getTaskList().getTaskCategories())
-		// {
-		// for (ITask task : cat.getChildren()) {
-		// if (task.getHandle().equals(taskId)) {
-		// return true;
-		// }
-		// }
-		// }
-		// return false;
 	}
 
 	private void hookOpenAction() {
@@ -1500,7 +1477,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		isPaused = paused;
 		IStatusLineManager statusLineManager = getViewSite().getActionBars().getStatusLineManager();
 		if (isPaused) {
-			statusLineManager.setMessage(TasksUiImages.getImage(TasksUiImages.TASKLIST), "Mylar context capture paused");
+			statusLineManager.setMessage(TasksUiImages.getImage(TasksUiImages.TASKLIST), "Mylyn context capture paused");
 			setPartName("(paused) " + PART_NAME);
 		} else {
 			statusLineManager.setMessage("");
@@ -1525,22 +1502,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 		IStructuredSelection selection = restoreSelection(task);
 		getViewer().setSelection(selection, true);
-
-// // if no task exists, select the query hit if exists
-// if (getViewer().getSelection().isEmpty()
-// && (hit =
-// TasksUiPlugin.getTaskListManager().getTaskList().getQueryHit(task.getHandleIdentifier()))
-// != null) {
-// try {
-// AbstractRepositoryQuery query =
-// TasksUiPlugin.getTaskListManager().getTaskList().getQueryForHandle(
-// task.getHandleIdentifier());
-// getViewer().expandToLevel(query, 1);
-// getViewer().setSelection(new StructuredSelection(hit), true);
-// } catch (SWTException e) {
-// MylarStatusHandler.log(e, "Failed to expand Task List");
-// }
-// }
 	}
 
 	private void saveSelection() {

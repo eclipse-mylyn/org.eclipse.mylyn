@@ -34,7 +34,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
- * Job that performs exporting (copying or zipping) of Mylar Task List data Assumes that check with user for overwrite
+ * Job that performs exporting (copying or zipping) of the Task List data Assumes that check with user for overwrite
  * already done. Overwrites destination if exists!
  * 
  * @author Wesley Coelho
@@ -43,7 +43,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
  */
 public class TaskDataExportJob implements IRunnableWithProgress {
 
-	private static final String JOB_LABEL = "Exporting Mylar Task Data";
+	private static final String JOB_LABEL = "Exporting Mylyn Task Data";
 
 	private boolean zip;
 
@@ -81,8 +81,6 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 	}
 
 	public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-		// Collection<ITask> tasks =
-		// MylarTaskListPlugin.getTaskListManager().getTaskList().getAllTasks();
 		int jobSize = 1; // 1 for repositories.xml
 		if (exportTaskList)
 			jobSize++;

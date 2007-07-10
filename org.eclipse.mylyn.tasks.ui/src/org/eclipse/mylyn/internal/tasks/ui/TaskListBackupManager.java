@@ -53,9 +53,6 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 	private Timer timer;
 
 	public TaskListBackupManager() {
-//		boolean enabled = MylarTaskListPlugin.getMylarCorePrefs().getBoolean(
-//				TaskListPreferenceConstants.BACKUP_AUTOMATICALLY);
-//		if (enabled) {
 		int days = TasksUiPlugin.getDefault().getPreferenceStore().getInt(TasksUiPreferenceConstants.BACKUP_SCHEDULE);
 		if (days > 0) {
 			start(MINUTE);
@@ -82,8 +79,6 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 	}
 
 	public void backupNow(boolean synchronous) {
-//		String destination = MylarTaskListPlugin.getMylarCorePrefs().getString(
-//				TaskListPreferenceConstants.BACKUP_FOLDER);
 		String destination = TasksUiPlugin.getDefault().getBackupFolderPath();
 
 		File backupFolder = new File(destination);

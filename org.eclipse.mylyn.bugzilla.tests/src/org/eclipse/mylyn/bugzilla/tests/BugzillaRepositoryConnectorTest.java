@@ -612,7 +612,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 // public void testSimpleLoad() throws Exception {
 // repository = new TaskRepository(DEFAULT_KIND,
 // IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
-// //Credentials credentials = MylarTestUtils.readCredentials();
+// //Credentials credentials = MylynTestUtils.readCredentials();
 // //repository.setAuthenticationCredentials(credentials.username,
 // credentials.password);
 //

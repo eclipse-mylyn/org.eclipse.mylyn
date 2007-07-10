@@ -1,12 +1,9 @@
 /*******************************************************************************
- * Copyright (c) 2006 - 2006 Mylar eclipse.org project and others.
+ * Copyright (c) 2004, 2007 Mylyn project committers and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.mylyn.trac.tests.support;
@@ -69,8 +66,6 @@ public class TestFixture {
 //		ticket.update("comment", "milestone", "milestone2");
 //		ticket = server.ticket().create("summary4", "description4");
 //	
-//	    ticket = server.ticket().create("attachment test", "");
-//	    // create attachment named attachment.txt that contains the text "Mylar"
 //	    ticket = server.ticket().create("test html entities: ���", "���\n\nmulti\nline\n\n'''bold'''\n");
 // 	    ticket = server.ticket().create("offline handler test", "");
 //	}

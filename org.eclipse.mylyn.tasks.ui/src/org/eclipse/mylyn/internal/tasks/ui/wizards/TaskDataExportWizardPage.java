@@ -40,7 +40,7 @@ public class TaskDataExportWizardPage extends WizardPage {
 
 	private static final String LABEL_ACTIVITY_HISTORY = "Task Activity History";
 
-	protected final static String PAGE_TITLE = "Export Mylar Task Data";
+	protected final static String PAGE_TITLE = "Export Mylyn Task Data";
 
 	public final static String PAGE_NAME = PAGE_TITLE;
 

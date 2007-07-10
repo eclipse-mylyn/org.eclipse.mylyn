@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2006 Mylar committers and others.
+ * Copyright (c) 2004, 2007 Mylyn project committers and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,7 +27,7 @@ import org.eclipse.ui.PlatformUI;
 public class RepositoryAwareStatusHandler implements IStatusHandler {
 
 	protected static final String ERROR_MESSAGE = "Please report the following error at:\n"
-			+ "http://bugs.eclipse.org/bugs/enter_bug.cgi?product=Mylar\n\n"
+			+ "http://bugs.eclipse.org/bugs/enter_bug.cgi?product=Mylyn\n\n"
 			+ "Or select Report as Bug from popup menu on error in the Error Log (Window -> Show View -> Error Log)";
 
 	// TODO: implement option to report bug
@@ -41,7 +41,7 @@ public class RepositoryAwareStatusHandler implements IStatusHandler {
 								&& PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
 							shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 						}
-						ErrorDialog.openError(shell, "Mylar Error", ERROR_MESSAGE, status);
+						ErrorDialog.openError(shell, "Mylyn Error", ERROR_MESSAGE, status);
 					}
 				});
 			} catch (Throwable t) {

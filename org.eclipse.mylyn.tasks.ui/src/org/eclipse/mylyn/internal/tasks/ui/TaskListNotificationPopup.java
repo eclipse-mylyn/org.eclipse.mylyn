@@ -40,7 +40,7 @@ public class TaskListNotificationPopup extends PopupDialog {
 
 	private static final int NUM_NOTIFICATIONS_TO_DISPLAY = 3;
 
-	private static final String MYLAR_NOTIFICATION_LABEL = "Mylyn Notification";
+	private static final String LABEL_NOTIFICATION = "Mylyn Notification";
 
 	private Form form;
 
@@ -70,14 +70,14 @@ public class TaskListNotificationPopup extends PopupDialog {
 	@Override
 	protected final Control createDialogArea(final Composite parent) {
 
-		getShell().setText(MYLAR_NOTIFICATION_LABEL);
+		getShell().setText(LABEL_NOTIFICATION);
 
 		form = toolkit.createForm(parent);
 		form.getBody().setLayout(new GridLayout());
 
 		Section section = toolkit.createSection(form.getBody(), Section.TITLE_BAR);
 
-		section.setText(MYLAR_NOTIFICATION_LABEL);
+		section.setText(LABEL_NOTIFICATION);
 		section.setLayout(new GridLayout());
 
 		sectionClient = toolkit.createComposite(section);

@@ -53,17 +53,6 @@ public class OpenSearchResultAction extends Action {
 				AbstractTask repositoryHit = it.next();
 				TasksUiUtil.openRepositoryTask(repositoryHit.getRepositoryUrl(), repositoryHit.getTaskId(),
 						repositoryHit.getUrl());
-				// try {
-				// int taskId = Integer.parseInt(repositoryHit.getId());
-				// String bugUrl =
-				// BugzillaServerFacade.getBugUrlWithoutLogin(repositoryHit.getRepositoryUrl(),
-				// taskId);
-				// TasksUiUtil.openRepositoryTask(repositoryHit.getRepositoryUrl(),
-				// "" + repositoryHit.getId(), bugUrl);
-				// } catch (NumberFormatException e) {
-				// MylarStatusHandler.fail(e, "Could not open, malformed taskId: " +
-				// repositoryHit.getId(), true);
-				// }
 			}
 
 		}

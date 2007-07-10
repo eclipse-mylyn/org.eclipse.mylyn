@@ -119,34 +119,6 @@ public class TaskDataExportTest extends AbstractContextTest {
 		assertTrue(entries.contains("contexts/local-1.xml.zip"));
 	}
 
-	// /** Tests the wizard when it has been asked to export all task data */
-	// public void testExportAll() {
-	//
-	// // Set parameters in the wizard to simulate a user setting them and
-	// // clicking "Finish"
-	// wizardPage.setParameters(true, true, true, true, false,
-	// destinationDir.getPath());
-	// wizard.performFinish();
-	//
-	// // Check that the task list file was exported
-	// File destTaskListFile = new File(destinationDir + File.separator +
-	// TasksUiPlugin.OLD_TASK_LIST_FILE);
-	// assertTrue(destTaskListFile.exists());
-	//
-	// // Check that the activity history file was exported
-	// File destActivationHistoryFile = new File(destinationDir + File.separator
-	// + MylarContextManager.CONTEXT_HISTORY_FILE_NAME +
-	// MylarContextManager.CONTEXT_FILE_EXTENSION_OLD);
-	// assertTrue(destActivationHistoryFile.exists());
-	//
-	// // Check that the task context file created in setUp() was exported
-	// File destTaskContextFile =
-	// ContextCorePlugin.getContextManager().getFileForContext(task1.getHandleIdentifier());
-	// // File destTaskContextFile = new File(destinationDir + File.separator +
-	// // task1.getContextPath() + MylarContextManager.CONTEXT_FILE_EXTENSION);
-	// assertTrue(destTaskContextFile.exists());
-	// }
-
 	private void removeFiles(File root) {
 		if (root.isDirectory()) {
 			for (File file : root.listFiles()) {

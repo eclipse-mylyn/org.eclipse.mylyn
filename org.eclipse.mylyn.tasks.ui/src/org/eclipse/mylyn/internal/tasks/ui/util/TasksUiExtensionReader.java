@@ -398,18 +398,6 @@ public class TasksUiExtensionReader {
 				StatusHandler.log("Could not load externalizer: " + externalizerObject.getClass().getCanonicalName()
 						+ " must implement " + AbstractTaskListFactory.class.getCanonicalName(), null);
 			}
-
-			// Object taskHandler =
-			// element.createExecutableExtension(ATTR_ACTION_CONTRIBUTOR_CLASS);
-			// if (taskHandler instanceof ITaskHandler) {
-			// MylarTaskListPlugin.getDefault().addTaskHandler((ITaskHandler)
-			// taskHandler);
-			// } else {
-			// MylarStatusHandler.log("Could not load contributor: " +
-			// taskHandler.getClass().getCanonicalName()
-			// + " must implement " + ITaskHandler.class.getCanonicalName(),
-			// null);
-			// }
 		} catch (CoreException e) {
 			StatusHandler.log(e, "Could not load task handler extension");
 		}

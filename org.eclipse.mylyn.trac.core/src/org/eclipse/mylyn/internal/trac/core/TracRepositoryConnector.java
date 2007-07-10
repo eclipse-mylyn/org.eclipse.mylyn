@@ -1,12 +1,9 @@
 /*******************************************************************************
- * Copyright (c) 2006 - 2006 Mylar eclipse.org project and others.
+ * Copyright (c) 2004, 2007 Mylyn project committers and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.trac.core;
@@ -244,7 +241,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			repositoryTask.setOwner(taskData.getAttributeValue(RepositoryTaskAttribute.USER_ASSIGNED));
 			repositoryTask.setCompleted(TracTask.isCompleted(taskData.getStatus()));
 			repositoryTask.setUrl(repository.getUrl() + ITracClient.TICKET_URL + taskData.getId());
-			repositoryTask.setPriority(TracTask.getMylarPriority(taskData.getAttributeValue(Attribute.PRIORITY.getTracKey())));
+			repositoryTask.setPriority(TracTask.getMylynPriority(taskData.getAttributeValue(Attribute.PRIORITY.getTracKey())));
 			Kind kind = TracTask.Kind.fromType(taskData.getAttributeValue(Attribute.TYPE.getTracKey()));
 			repositoryTask.setTaskKind((kind != null) ? kind.toString() : null);
 			// TODO: Completion Date
@@ -279,7 +276,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			task.setSummary(ticket.getValue(Key.SUMMARY));
 		}
 		task.setCompleted(TracTask.isCompleted(ticket.getValue(Key.STATUS)));
-		task.setPriority(TracTask.getMylarPriority(ticket.getValue(Key.PRIORITY)));
+		task.setPriority(TracTask.getMylynPriority(ticket.getValue(Key.PRIORITY)));
 		if (ticket.getValue(Key.TYPE) != null) {
 			Kind kind = TracTask.Kind.fromType(ticket.getValue(Key.TYPE));
 			task.setTaskKind((kind != null) ? kind.toString() : ticket.getValue(Key.TYPE));

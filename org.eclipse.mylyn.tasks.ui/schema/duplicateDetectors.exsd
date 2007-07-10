@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.mylar.tasks.ui">
+<schema targetNamespace="org.eclipse.mylyn.tasks.ui">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.mylar.tasks.ui" id="duplicateDetectors" name="duplicateDetectors"/>
+         <meta.schema plugin="org.eclipse.mylyn.tasks.ui" id="duplicateDetectors" name="duplicateDetectors"/>
       </appInfo>
       <documentation>
          [Enter description of this extension point.]

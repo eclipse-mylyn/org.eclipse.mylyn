@@ -156,38 +156,10 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		boolean addHyperlinks = (dependson != null && dependson.length() > 0)
 				|| (blocked != null && blocked.length() > 0);
 
-		// Hyperlink showDependencyTree = toolkit.createHyperlink(composite,
-		// "Show dependency tree", SWT.NONE);
-		// showDependencyTree.addHyperlinkListener(new HyperlinkAdapter() {
-		// public void linkActivated(HyperlinkEvent e) {
-		// if (ExistingBugEditor.this.getEditor() instanceof TaskEditor) {
-		// TaskEditor mylarTaskEditor = (TaskEditor)
-		// ExistingBugEditor.this.getEditor();
-		// mylarTaskEditor.displayInBrowser(repository.getUrl() +
-		// IBugzillaConstants.DEPENDENCY_TREE_URL
-		// + taskData.getId());
-		// }
-		// }
-		// });
-
 		if (addHyperlinks) {
 			getManagedForm().getToolkit().createLabel(composite, "");
 			addBugHyperlinks(composite, BugzillaReportElement.DEPENDSON.getKeyString());
 		}
-
-		// Hyperlink showDependencyGraph = toolkit.createHyperlink(composite,
-		// "Show dependency graph", SWT.NONE);
-		// showDependencyGraph.addHyperlinkListener(new HyperlinkAdapter() {
-		// public void linkActivated(HyperlinkEvent e) {
-		// if (ExistingBugEditor.this.getEditor() instanceof TaskEditor) {
-		// TaskEditor mylarTaskEditor = (TaskEditor)
-		// ExistingBugEditor.this.getEditor();
-		// mylarTaskEditor.displayInBrowser(repository.getUrl() +
-		// IBugzillaConstants.DEPENDENCY_GRAPH_URL
-		// + taskData.getId());
-		// }
-		// }
-		// });
 
 		if (addHyperlinks) {
 			getManagedForm().getToolkit().createLabel(composite, "");
@@ -614,7 +586,6 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				if (BugzillaTaskEditor.this.getEditor() instanceof TaskEditor) {
-//					TaskEditor mylarTaskEditor = (TaskEditor) BugzillaTaskEditor.this.getEditor();
 					TasksUiUtil.openUrl(repository.getUrl() + IBugzillaConstants.URL_SHOW_VOTES + taskData.getId(),
 							false);
 				}

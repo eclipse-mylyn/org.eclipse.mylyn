@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2006 Mylar committers and others.
+ * Copyright (c) 2004, 2007 Mylyn project committers and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -43,38 +43,6 @@ public class NewLocalTaskWizard extends Wizard implements INewWizard {
 
 	@Override
 	public boolean performFinish() {
-
-//		LocalTask newTask = new LocalTask(LocalRepositoryConnector.REPOSITORY_URL, TasksUiPlugin.getTaskListManager()
-//				.genUniqueTaskHandle(), LocalRepositoryConnector.DEFAULT_SUMMARY);
-//		TaskListManager.scheduleNewTask(newTask);
-//
-//		Object selectedObject = null;
-//		TaskListView view = TaskListView.getFromActivePerspective();
-//		if (view != null) {
-//			selectedObject = ((IStructuredSelection) view.getViewer().getSelection()).getFirstElement();
-//		}
-//		if (selectedObject instanceof TaskCategory) {
-//			TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask, (TaskCategory) selectedObject);
-//		} else if (selectedObject instanceof ITask) {
-//			ITask task = (ITask) selectedObject;
-//			if (task.getContainer() instanceof TaskCategory) {
-//				TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask, task.getContainer());
-//			} else if (view != null && view.getDrilledIntoCategory() instanceof TaskCategory) {
-//				TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask, view.getDrilledIntoCategory());
-//			} else {
-//				TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask,
-//						TasksUiPlugin.getTaskListManager().getTaskList().getUncategorizedCategory());
-//			}
-//		} else if (view != null && view.getDrilledIntoCategory() instanceof TaskCategory) {
-//			TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask, view.getDrilledIntoCategory());
-//		} else {
-//			if (view != null && view.getDrilledIntoCategory() != null) {
-//				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), ITasksUiConstants.TITLE_DIALOG,
-//						"The new task has been added to the root of the list, since tasks can not be added to a query.");
-//			}
-//			TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask,
-//					TasksUiPlugin.getTaskListManager().getTaskList().getUncategorizedCategory());
-//		}
 		AbstractTask task = TasksUiPlugin.getTaskListManager().createNewLocalTask(null);
 		if (task != null) {
 			TasksUiUtil.openEditor(task, true);

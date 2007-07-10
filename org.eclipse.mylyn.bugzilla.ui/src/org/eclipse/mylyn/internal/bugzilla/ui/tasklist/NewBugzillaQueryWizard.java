@@ -60,8 +60,6 @@ public class NewBugzillaQueryWizard extends Wizard {
 		final BugzillaRepositoryQuery queryCategory = (BugzillaRepositoryQuery) page.getQuery();
 
 		TasksUiPlugin.getTaskListManager().getTaskList().addQuery(queryCategory);
-//		boolean offline = MylarTaskListPlugin.getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.WORK_OFFLINE);
-//		if (!offline) {
 		WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
 			@Override
 			protected void execute(IProgressMonitor monitor) throws CoreException {
@@ -81,7 +79,6 @@ public class NewBugzillaQueryWizard extends Wizard {
 		} catch (Exception e) {
 			StatusHandler.log(e, "There was a problem executing the query refresh");
 		}
-//		}
 
 		return true;
 	}

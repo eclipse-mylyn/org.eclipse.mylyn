@@ -1,12 +1,9 @@
 /*******************************************************************************
- * Copyright (c) 2006 - 2006 Mylar eclipse.org project and others.
+ * Copyright (c) 2004, 2007 Mylyn project committers and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.mylyn.trac.tests;
@@ -31,14 +28,14 @@ public class TracTaskTest extends TestCase {
 		assertFalse(TracTask.isCompleted(null));
 	}
 
-	public void testGetMylarPriority() {
-		assertEquals("P1", TracTask.getMylarPriority("blocker"));
-		assertEquals("P2", TracTask.getMylarPriority("critical"));
-		assertEquals("P3", TracTask.getMylarPriority("major"));
-		assertEquals("P3", TracTask.getMylarPriority(null));
-		assertEquals("P3", TracTask.getMylarPriority(""));
-		assertEquals("P3", TracTask.getMylarPriority("foo bar"));
-		assertEquals("P4", TracTask.getMylarPriority("minor"));
-		assertEquals("P5", TracTask.getMylarPriority("trivial"));
+	public void testGetMylynPriority() {
+		assertEquals("P1", TracTask.getMylynPriority("blocker"));
+		assertEquals("P2", TracTask.getMylynPriority("critical"));
+		assertEquals("P3", TracTask.getMylynPriority("major"));
+		assertEquals("P3", TracTask.getMylynPriority(null));
+		assertEquals("P3", TracTask.getMylynPriority(""));
+		assertEquals("P3", TracTask.getMylynPriority("foo bar"));
+		assertEquals("P4", TracTask.getMylynPriority("minor"));
+		assertEquals("P5", TracTask.getMylynPriority("trivial"));
 	}
 }

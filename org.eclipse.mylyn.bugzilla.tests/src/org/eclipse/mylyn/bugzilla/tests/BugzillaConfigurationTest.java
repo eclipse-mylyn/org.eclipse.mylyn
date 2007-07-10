@@ -182,7 +182,7 @@ public class BugzillaConfigurationTest extends TestCase {
 
 	/**
 	 * Can use this to test config data submitted by users. Be sure not to commit user's config file though. The file
-	 * included (rdfconfig218.txt) is from mylar.eclipse.org/bugs218
+	 * included (rdfconfig218.txt) is from mylyn.eclipse.org/bugs218
 	 */
 	public void testRepositoryConfigurationFromFile() throws Exception {
 

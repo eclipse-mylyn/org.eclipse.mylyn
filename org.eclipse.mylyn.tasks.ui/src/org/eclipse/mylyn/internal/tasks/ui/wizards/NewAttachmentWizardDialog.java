@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2006 Mylar committers and others.
+ * Copyright (c) 2004, 2007 Mylyn project committers and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class NewAttachmentWizardDialog extends WizardDialog {
 
-	private static final String ATTACHMENT_WIZARD_SETTINGS_SECTION = "PatchWizard"; //$NON-NLS-1$
+	private static final String ATTACHMENT_WIZARD_SETTINGS_SECTION = "PatchWizard"; 
 
 	public NewAttachmentWizardDialog(Shell parent, IWizard wizard) {
 		super(parent, wizard);

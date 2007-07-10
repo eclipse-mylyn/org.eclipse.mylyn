@@ -366,12 +366,6 @@ public class TaskRepositoryManager {
 		repositoryMap.clear();
 		orphanedRepositories.clear();
 		saveRepositories(repositoriesFilePath);
-		// for (AbstractRepositoryConnector repositoryConnector :
-		// repositoryConnectors.values()) {
-		// String prefId = PREF_REPOSITORIES +
-		// repositoryConnector.getRepositoryType();
-		// MylarTaskListPlugin.getMylarCorePrefs().setValue(prefId, "");
-		// }
 	}
 
 	public void notifyRepositorySettingsChanged(TaskRepository repository) {

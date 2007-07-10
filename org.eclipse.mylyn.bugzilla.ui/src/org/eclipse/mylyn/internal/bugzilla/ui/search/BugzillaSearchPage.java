@@ -899,30 +899,12 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	 * Example: https://bugs.eclipse.org/bugs/buglist.cgi?
 	 */
 	private StringBuffer getQueryURLStart(TaskRepository repository) {
-		// StringBuffer sb = new
-		// StringBuffer(BugzillaPlugin.getDefault().getServerName());
 		StringBuffer sb = new StringBuffer(repository.getUrl());
 
 		if (sb.charAt(sb.length() - 1) != '/') {
 			sb.append('/');
 		}
 		sb.append("buglist.cgi?");
-
-		// NOTE: authentication now added in BugzillaSsearchEngine constructor
-		// // use the username and password if we have it
-		// if (repository.hasCredentials()) {
-		// try {
-		// sb.append("GoAheadAndLogIn=1&Bugzilla_login="
-		// + URLEncoder.encode(repository.getUserName(),
-		// BugzillaPlugin.ENCODING_UTF_8)
-		// + "&Bugzilla_password="
-		// + URLEncoder.encode(repository.getPassword(),
-		// BugzillaPlugin.ENCODING_UTF_8) + "&");
-		// } catch (UnsupportedEncodingException e) {
-		// MylarStatusHandler.fail(e, "unsupported encoding", false);
-		// }
-		// }
-
 		return sb;
 	}
 

@@ -58,7 +58,7 @@ public class TaskListDnDTest extends TestCase {
 
 	public void testUrlDrop() {
 		assertEquals(0, manager.getTaskList().getDefaultCategory().getChildren().size());
-		String url = "http://eclipse.org/mylar";
+		String url = "http://eclipse.org/mylyn";
 		String title = "Mylar Technology Project";
 		String urlData = url + "\n" + title;
 

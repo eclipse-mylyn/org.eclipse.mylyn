@@ -87,7 +87,7 @@ public class TaskRepository {
 	static {
 		URL url = null;
 		try {
-			url = new URL("http://eclipse.org/mylar");
+			url = new URL("http://eclipse.org/mylyn");
 		} catch (Exception ex) {
 			// TODO ?
 		}

@@ -321,20 +321,6 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 				validate(monitor);
 			} catch (Exception e) {
 				displayError(serverUrl, e);
-//				IStatus status;
-//				if (e instanceof MalformedURLException) {
-//					status = new MylarStatus(Status.WARNING, BugzillaCorePlugin.PLUGIN_ID,
-//							IMylarStatusConstants.NETWORK_ERROR, "Server URL is invalid.");
-//				} else if (e instanceof CoreException) {
-//					status = ((CoreException) e).getStatus();
-//				} else if (e instanceof IOException) {
-//					status = new MylarStatus(Status.WARNING, BugzillaCorePlugin.PLUGIN_ID,
-//							IMylarStatusConstants.IO_ERROR, serverUrl, e.getMessage());
-//				} else {
-//					status = new MylarStatus(Status.WARNING, BugzillaCorePlugin.PLUGIN_ID,
-//							IMylarStatusConstants.NETWORK_ERROR, serverUrl, e.getMessage());
-//				}
-//				MylarStatusHandler.displayStatus("Validation failed", status);
 			}
 		}
 

@@ -18,7 +18,7 @@ import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 
 /**
- * Provides a mapping from Mylar task keys to Trac ticket keys.
+ * Provides a mapping from Mylyn task keys to Trac ticket keys.
  * 
  * @author Steffen Pingel
  */
@@ -81,7 +81,7 @@ public class TracAttributeFactory extends AbstractAttributeFactory {
 		}
 
 		/**
-		 * This is for Mylar attributes that do not map to Trac attributes.
+		 * This is for Mylyn attributes that do not map to Trac attributes.
 		 */
 		Attribute(String taskKey, String prettyName) {
 			this(taskKey, prettyName, taskKey, true, false);

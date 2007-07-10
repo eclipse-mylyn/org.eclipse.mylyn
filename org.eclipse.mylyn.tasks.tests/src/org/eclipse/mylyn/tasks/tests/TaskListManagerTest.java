@@ -832,7 +832,7 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testMarkTaskRead() {
-		String repositoryUrl = "http://mylar.eclipse.org/bugs222";
+		String repositoryUrl = "http://mylyn.eclipse.org/bugs222";
 		MockRepositoryTask task1 = new MockRepositoryTask(repositoryUrl, "1");
 		MockRepositoryTask task2 = new MockRepositoryTask(repositoryUrl, "2");
 		task1.setSynchronizationState(RepositoryTaskSyncState.INCOMING);
@@ -868,7 +868,7 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testMarkUnRead() {
-		String repositoryUrl = "http://mylar.eclipse.org/bugs222";
+		String repositoryUrl = "http://mylyn.eclipse.org/bugs222";
 		MockRepositoryTask task1 = new MockRepositoryTask(repositoryUrl, "1");
 		MockRepositoryTask task2 = new MockRepositoryTask(repositoryUrl, "2");
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task1.getSynchronizationState());

@@ -111,7 +111,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private Composite editorComposite;
 
-	protected static final String CONTEXT_MENU_ID = "#MylarPlanningEditor";
+	protected static final String CONTEXT_MENU_ID = "#MylynPlanningEditor";
 
 	private Text pathText;
 

@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.mylar.tasks.ui">
+<schema targetNamespace="org.eclipse.mylyn.tasks.ui">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.mylar.tasks.ui" id="repositories" name="Repositories"/>
+         <meta.schema plugin="org.eclipse.mylyn.tasks.ui" id="repositories" name="Repositories"/>
       </appInfo>
       <documentation>
          [Enter description of this extension point.]
@@ -102,7 +102,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.mylar.provisional.tasklist.AbstractRepositoryClient"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.provisional.tasklist.AbstractRepositoryClient"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -150,7 +150,7 @@
                   (no description available)
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.mylar.tasks.ui.AbstractConnectorUi"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.tasks.ui.AbstractConnectorUi"/>
                </appInfo>
             </annotation>
          </attribute>

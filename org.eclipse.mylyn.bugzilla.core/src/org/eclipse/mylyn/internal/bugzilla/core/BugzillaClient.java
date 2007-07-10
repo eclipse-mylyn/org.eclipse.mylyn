@@ -444,13 +444,6 @@ public class BugzillaClient {
 		}
 	}
 
-	// private void checkAuthenticated(CoreException e) {
-	// if (e.getStatus().getCode() ==
-	// IMylarStatusConstants.REPOSITORY_LOGIN_ERROR) {
-	// this.authenticated = false;
-	// }
-	// }
-
 	public boolean getSearchHits(AbstractRepositoryQuery query, ITaskCollector collector) throws IOException,
 			CoreException {
 		GetMethod method = null;

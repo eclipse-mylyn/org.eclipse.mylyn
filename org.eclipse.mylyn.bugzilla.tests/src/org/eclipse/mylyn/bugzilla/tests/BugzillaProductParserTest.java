@@ -31,15 +31,11 @@ public class BugzillaProductParserTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		// repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
-		// new URL(IBugzillaConstants.ECLIPSE_BUGZILLA_URL));
-		// MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		// MylarTaskListPlugin.getRepositoryManager().removeRepository(repository);
 	}
 
 	public BugzillaProductParserTest(String arg0) {

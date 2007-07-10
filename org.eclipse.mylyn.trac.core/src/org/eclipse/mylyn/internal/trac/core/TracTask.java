@@ -1,12 +1,9 @@
 /*******************************************************************************
- * Copyright (c) 2006 - 2006 Mylar eclipse.org project and others.
+ * Copyright (c) 2004, 2007 Mylyn project committers and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.trac.core;
@@ -145,7 +142,7 @@ public class TracTask extends AbstractTask {
 	}
 
 	// TODO use priority attributes from repository instead of hard coded enum
-	public static String getMylarPriority(String tracPriority) {
+	public static String getMylynPriority(String tracPriority) {
 		if (tracPriority != null) {
 			PriorityLevel priority = PriorityLevel.fromPriority(tracPriority);
 			if (priority != null) {
