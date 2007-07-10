@@ -11,6 +11,8 @@ package org.eclipse.mylyn.monitor.ui;
 /**
  * Notified of monitor lifecycle changes.
  * 
+ * TODO: rename to IMylynMonitorLifecycleListener
+ * 
  * @author Brian de Alwis
  * @since 2.0
  */

@@ -96,15 +96,4 @@ public class MenuCommandMonitor implements Listener {
 			StatusHandler.fail(t, "Could not log selection", false);
 		}
 	}
-
-//	/**
-//	 * TODO: generalize this to other resources whose names are private
-//	 */
-//	private String obfuscateItemText(String text) {
-//		if (text.indexOf(".java") != -1 || text.indexOf(".xml") != -1) {
-//			return MylarMonitorUiPlugin.OBFUSCATED_LABEL;
-//		} else {
-//			return text;
-//		}
-//	}
 }

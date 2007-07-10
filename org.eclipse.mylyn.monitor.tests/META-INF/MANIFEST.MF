@@ -21,7 +21,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn.monitor.core,
  org.eclipse.mylyn
 Eclipse-AutoStart: true
-Bundle-ClassPath: mylar-monitor-tests.jar
+Bundle-ClassPath: mylyn-monitor-tests.jar
 Export-Package: org.eclipse.mylyn.monitor.reports.tests,
  org.eclipse.mylyn.monitor.tests,
  org.eclipse.mylyn.monitor.tests.usage.tests

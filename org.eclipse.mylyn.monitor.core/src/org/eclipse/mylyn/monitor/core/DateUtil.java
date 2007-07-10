@@ -159,18 +159,9 @@ public class DateUtil {
 	public static TimeZone getTimeZone(String zoneId) {
 		TimeZone timeZone = TimeZone.getTimeZone(zoneId);
 		if (!timeZone.getID().equals(zoneId)) {
-			StatusHandler.log("Mylar: Specified time zone not available, using " + timeZone.getDisplayName()
+			StatusHandler.log("Specified time zone not available, using " + timeZone.getDisplayName()
 					+ ". Check repository settings.", DateUtil.class);
 		}
 		return timeZone;
 	}
-
-//	public static Date parseDate(String dateString, String dateFormat, TimeZone timeZone) throws ParseException {
-//		Date result = null;
-//		formatter.setTimeZone(timeZone);
-//		formatter.applyPattern(dateFormat);
-//		result = formatter.parse(dateString);
-//		return result;
-//
-//	}
 }

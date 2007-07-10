@@ -103,8 +103,4 @@ public class StatusHandler {
 			handler.displayStatus(title, status);
 		}
 	}
-
-	// public static void setDumpErrorsForTesting(boolean dumpErrors) {
-	// MylarStatusHandler.testingMode = dumpErrors;
-	// }
 }

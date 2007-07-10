@@ -17,8 +17,6 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
  */
 public class InteractionEventClassifier {
 
-	// TODO: Move this class into mylar reporting framework
-
 	/**
 	 * isEdit currently classifies selections in editor as edits. May need to split off a different version
 	 */

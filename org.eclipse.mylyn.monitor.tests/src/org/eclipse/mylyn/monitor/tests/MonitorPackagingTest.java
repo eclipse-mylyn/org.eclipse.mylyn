@@ -31,10 +31,8 @@ public class MonitorPackagingTest extends AbstractContextTest {
 
 	public void testCreateUploadPackage() throws IOException, InterruptedException {
 		UiUsageMonitorPlugin.getDefault().getInteractionLogger().stopMonitoring();
-		// MylarMonitorPlugin.getDefault().stopLog();
 
 		File monitorFile = UiUsageMonitorPlugin.getDefault().getMonitorLogFile();
-		// File logFile = MylarMonitorPlugin.getDefault().getLogFile();
 
 		List<File> files = new ArrayList<File>();
 		files.add(monitorFile);

@@ -47,7 +47,7 @@ public class WindowChangeMonitor implements IWindowListener {
 	public void windowDeactivated(IWorkbenchWindow window) {
 //		InteractionEvent interactionEvent = InteractionEvent.makeCommand(getWindowOrigin(window),
 //				WINDOW_DEACTIVATED);
-//		MylarMonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
+//		MylynMonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 	}
 
 	public void windowActivated(IWorkbenchWindow window) {

@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.mylar.monitor.ui">
+<schema targetNamespace="org.eclipse.mylyn.monitor.ui">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.mylar.monitor.ui" id="user" name="User Monitoring"/>
+         <meta.schema plugin="org.eclipse.mylyn.monitor.ui" id="user" name="User Monitoring"/>
       </appInfo>
       <documentation>
          Provides user-specific monitor extensions, for example, for tracking periods of user activity/inactivity.
@@ -55,7 +55,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.mylar.monitor.ui.AbstractUserActivityTimer"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.monitor.ui.AbstractUserActivityTimer"/>
                </appInfo>
             </annotation>
          </attribute>

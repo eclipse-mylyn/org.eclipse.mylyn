@@ -124,7 +124,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 					activityContextManager = new ActivityContextManager(TIMEOUT_INACTIVITY_MILLIS, activityMonitor);
 					activityContextManager.start();
 				} catch (Exception e) {
-					StatusHandler.fail(e, "Mylar Monitor start failed", false);
+					StatusHandler.fail(e, "Mylyn Monitor start failed", false);
 				}
 			}
 		});
@@ -147,7 +147,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 				}
 			}
 		} catch (Exception e) {
-			StatusHandler.fail(e, "Mylar Monitor stop failed", false);
+			StatusHandler.fail(e, "Mylyn Monitor stop failed", false);
 		}
 		INSTANCE = null;
 	}

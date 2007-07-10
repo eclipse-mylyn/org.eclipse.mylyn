@@ -73,7 +73,6 @@ public class StatisticsLoggingTest extends ContextTest {
 	 * Delay enough to make replicated events different
 	 */
 	private void mockUserDelay() {
-		// TODO: Refactor into mylar.core.tests
 		try {
 			Thread.sleep(100);
 		} catch (InterruptedException ie) {
