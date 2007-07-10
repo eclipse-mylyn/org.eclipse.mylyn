@@ -103,7 +103,7 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 			ContextCorePlugin.getContextManager().removeListener(editorManager);
 			MonitorUiPlugin.getDefault().getSelectionMonitors().remove(resourceInteractionMonitor);
 		} catch (Exception e) {
-			StatusHandler.fail(e, "Mylar XML stop failed", false);
+			StatusHandler.fail(e, "Mylyn XML stop failed", false);
 		}
 	}
 

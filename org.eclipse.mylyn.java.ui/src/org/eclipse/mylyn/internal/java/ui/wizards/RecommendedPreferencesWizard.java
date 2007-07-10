@@ -28,7 +28,7 @@ public class RecommendedPreferencesWizard extends Wizard implements INewWizard {
 
 	private RecommendedPreferencesWizardPage preferencePage;
 
-	public static final String MYLAR_FIRST_RUN = "org.eclipse.mylyn.ui.first.run.0_4_9";
+	public static final String MYLYN_FIRST_RUN = "org.eclipse.mylyn.ui.first.run.0_4_9";
 
 	private static final String DEFAULT_FOLDING_PROVIDER = "org.eclipse.jdt.ui.text.defaultFoldingProvider";
 
@@ -62,8 +62,8 @@ public class RecommendedPreferencesWizard extends Wizard implements INewWizard {
 	}
 
 	private void setPreferences() {
-		boolean mylarContentAssist = preferencePage.isMylarContentAssistDefault();
-		JavaUiUtil.installContentAssist(javaPrefs, mylarContentAssist);
+		boolean mylynContentAssist = preferencePage.isMylynContentAssistDefault();
+		JavaUiUtil.installContentAssist(javaPrefs, mylynContentAssist);
 
 		if (preferencePage.isAutoFolding()) {
 			ContextUiPlugin.getDefault().getPreferenceStore().setValue(ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED,

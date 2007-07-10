@@ -39,9 +39,9 @@ public class ContextUiImages {
 
 	public static final ImageDescriptor CONTEXT_COPY = create(T_ELCL, "context-transfer.gif");
 
-	public static final ImageDescriptor MYLYN = create(T_ELCL, "mylar.gif");
+	public static final ImageDescriptor MYLYN = create(T_ELCL, "mylyn.gif");
 
-	public static final ImageDescriptor MYLYN_OVERLAY = create(T_ELCL, "mylar-overlay.gif");
+	public static final ImageDescriptor MYLYN_OVERLAY = create(T_ELCL, "mylyn-overlay.gif");
 
 	public static final ImageDescriptor DECORATE_INTEREST = create(T_ELCL, "refresh.gif");
 
@@ -92,8 +92,6 @@ public class ContextUiImages {
 	public static final ImageDescriptor FOLDER_GENERIC = create(T_ELCL, "fldr_obj.gif");
 
 	public static final ImageDescriptor LINK_WITH_EDITOR = create(T_ELCL, "link-with-editor.gif");
-
-//	public static final ImageDescriptor OVERLAY_MYLAR = create(T_VIEW, "overlay-mylar.gif");
 
 	public static final ImageDescriptor BLANK = create(T_ELCL, "blank.gif");
 

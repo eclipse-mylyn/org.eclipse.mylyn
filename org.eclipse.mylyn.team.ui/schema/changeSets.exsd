@@ -1,12 +1,12 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.mylar.team.ui">
+<schema targetNamespace="org.eclipse.mylyn.team.ui">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.mylar.team.ui" id="changeSets" name="Mylar Chagne Set Integration"/>
+         <meta.schema plugin="org.eclipse.mylyn.team.ui" id="changeSets" name="Mylyn Chagne Set Integration"/>
       </appInfo>
       <documentation>
-         Provides repository specific team integration for Mylar.
+         Provides repository specific team integration for Mylyn.
       </documentation>
    </annotation>
 
@@ -51,7 +51,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.mylar.provisional.ide.team.TeamRepositoryProvider"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.provisional.ide.team.TeamRepositoryProvider"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -66,7 +66,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.mylar.team.AbstractContextChangeSetManager"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.team.AbstractContextChangeSetManager"/>
                </appInfo>
             </annotation>
          </attribute>

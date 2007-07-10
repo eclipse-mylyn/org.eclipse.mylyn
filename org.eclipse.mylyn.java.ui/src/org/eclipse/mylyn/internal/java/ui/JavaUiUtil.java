@@ -45,11 +45,11 @@ public class JavaUiUtil {
 
 	private static final Point SMALL_SIZE = new Point(16, 16);
 
-	private static final String SEPARATOR_CODEASSIST = "\0"; //$NON-NLS-1$
+	private static final String SEPARATOR_CODEASSIST = "\0"; 
 
-	public static final String ASSIST_MYLAR_TYPE = "org.eclipse.mylyn.java.javaTypeProposalCategory";
+	public static final String ASSIST_MYLYN_TYPE = "org.eclipse.mylyn.java.javaTypeProposalCategory";
 
-	public static final String ASSIST_MYLAR_NOTYPE = "org.eclipse.mylyn.java.javaNoTypeProposalCategory";
+	public static final String ASSIST_MYLYN_NOTYPE = "org.eclipse.mylyn.java.javaNoTypeProposalCategory";
 
 	public static final String ASSIST_JDT_TYPE = "org.eclipse.jdt.ui.javaTypeProposalCategory";
 
@@ -57,29 +57,29 @@ public class JavaUiUtil {
 
 	public static final String ASSIST_JDT_TEMPLATE = "org.eclipse.jdt.ui.templateProposalCategory";
 
-	public static final String ASSIST_MYLAR_TEMPLATE = "org.eclipse.mylyn.java.templateProposalCategory";
+	public static final String ASSIST_MYLYN_TEMPLATE = "org.eclipse.mylyn.java.templateProposalCategory";
 
-	public static void installContentAssist(IPreferenceStore javaPrefs, boolean mylarContentAssist) {
+	public static void installContentAssist(IPreferenceStore javaPrefs, boolean mylynContentAssist) {
 		String oldValue = javaPrefs.getString(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES);
 		StringTokenizer tokenizer = new StringTokenizer(oldValue, SEPARATOR_CODEASSIST);
 		Set<String> disabledIds = new HashSet<String>();
 		while (tokenizer.hasMoreTokens()) {
 			disabledIds.add((String) tokenizer.nextElement());
 		}
-		if (!mylarContentAssist) {
+		if (!mylynContentAssist) {
 			disabledIds.remove(ASSIST_JDT_TYPE);
 			disabledIds.remove(ASSIST_JDT_NOTYPE);
 			disabledIds.remove(ASSIST_JDT_TEMPLATE);
-			disabledIds.add(ASSIST_MYLAR_NOTYPE);
-			disabledIds.add(ASSIST_MYLAR_TYPE);
-			disabledIds.add(ASSIST_MYLAR_TEMPLATE);
+			disabledIds.add(ASSIST_MYLYN_NOTYPE);
+			disabledIds.add(ASSIST_MYLYN_TYPE);
+			disabledIds.add(ASSIST_MYLYN_TEMPLATE);
 		} else {
 			disabledIds.add(ASSIST_JDT_TYPE);
 			disabledIds.add(ASSIST_JDT_NOTYPE);
 			disabledIds.add(ASSIST_JDT_TEMPLATE);
-			disabledIds.remove(ASSIST_MYLAR_NOTYPE);
-			disabledIds.remove(ASSIST_MYLAR_TYPE);
-			disabledIds.remove(ASSIST_MYLAR_TEMPLATE);
+			disabledIds.remove(ASSIST_MYLYN_NOTYPE);
+			disabledIds.remove(ASSIST_MYLYN_TYPE);
+			disabledIds.remove(ASSIST_MYLYN_TEMPLATE);
 		}
 		String newValue = "";
 		for (String id : disabledIds) {

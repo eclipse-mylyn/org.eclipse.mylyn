@@ -138,7 +138,7 @@ public class ContextCorePlugin extends Plugin {
 				provider.stopAllRunningJobs();
 			}
 		} catch (Exception e) {
-			StatusHandler.fail(e, "Mylar Core stop failed", false);
+			StatusHandler.fail(e, "Mylyn Core stop failed", false);
 		}
 	}
 

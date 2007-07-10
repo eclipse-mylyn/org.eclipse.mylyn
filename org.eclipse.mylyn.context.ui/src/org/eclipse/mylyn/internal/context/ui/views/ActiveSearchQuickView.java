@@ -237,40 +237,15 @@ public class ActiveSearchQuickView {
 		viewer = new TreeViewer(parent, SWT.SINGLE | (style & ~SWT.MULTI));
 		viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		// XReferenceContentProvider contentProvider = new
-		// XReferenceContentProvider();
-		// viewer.setContentProvider(contentProvider);
-
 		viewer.setContentProvider(new ContextContentProvider(dialogShell, true));
-		// viewer.setLabelProvider(new TaskscapeNodeLabelProvider());
 		viewer.setLabelProvider(new DecoratingLabelProvider(new DelegatingContextLabelProvider(),
 				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
-		// viewer.setLabelProvider(new
-		// MylarAppearanceAwareLabelProvider(viewer));
-
-		// viewer.setAutoExpandLevel(AbstractTreeViewer.ALL_LEVELS);
 
 		// adding these filters which restrict the contents of
 		// the view according to what has been typed in the
 		// text bar
 		viewer.addFilter(new NamePatternFilter());
-
-		// TODO: figure out if this was needed
-		// viewer.addFilter(new MemberFilter());
-
 		viewer.setInput(dialogShell);
-
-		// doubleClickAction = new DoubleClickAction(dialogShell, viewer);
-
-		// viewer.addDoubleClickListener(new IDoubleClickListener() {
-		// public void doubleClick(DoubleClickEvent event) {
-		// doubleClickAction.run();
-		// if (dialogShell != null && dialogShell.isDisposed()) {
-		// dispose();
-		// }
-		// }
-		// });
-
 		return viewer;
 	}
 

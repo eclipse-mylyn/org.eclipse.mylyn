@@ -100,11 +100,6 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 
 	public void testInterestCapturedForResourceOnFocus() throws CoreException, InvocationTargetException,
 			InterruptedException {
-		// TODO: shouldn't need to do this
-//		float decayFactor = MylarContextManager.getScalingFactors().getDecay().getValue();
-//		MylarContextManager.getScalingFactors().getDecay().setValue(0f);
-//		manager.deactivateContext(context.getHandleIdentifier());
-//		manager.activateContext(context);
 
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
 		ContextCorePlugin.getContextManager().setContextCapturePaused(true);

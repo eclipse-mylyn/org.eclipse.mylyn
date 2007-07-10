@@ -104,9 +104,9 @@ public class ActiveFoldingListener implements IInteractionContextListener {
 					ICompilationUnit compilationUnit = (ICompilationUnit) element;
 					List<IJavaElement> allChildren = getAllChildren(compilationUnit);
 					for (IJavaElement child : allChildren) {
-						IInteractionElement mylarElement = ContextCorePlugin.getContextManager().getElement(
+						IInteractionElement interactionElement = ContextCorePlugin.getContextManager().getElement(
 								bridge.getHandleIdentifier(child));
-						if (mylarElement != null && mylarElement.getInterest().isInteresting()) {
+						if (interactionElement != null && interactionElement.getInterest().isInteresting()) {
 							toExpand.add(child);
 						} else {
 							toCollapse.add(child);

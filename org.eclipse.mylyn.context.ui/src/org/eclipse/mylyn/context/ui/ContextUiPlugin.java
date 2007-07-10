@@ -80,7 +80,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	private static ContextUiPlugin INSTANCE;
 
-	private ResourceBundle resourceBundle;
+//	private ResourceBundle resourceBundle;
 
 	private HighlighterList highlighters = null;
 
@@ -227,13 +227,13 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	public ContextUiPlugin() {
 		super();
 		INSTANCE = this;
-		try {
-			resourceBundle = ResourceBundle.getBundle("org.eclipse.mylyn.MylarUiPluginResources");
-		} catch (MissingResourceException x) {
-			resourceBundle = null;
-		} catch (Throwable t) {
-			StatusHandler.log(t, "plug-in intialization failed");
-		}
+//		try {
+//			resourceBundle = ResourceBundle.getBundle("org.eclipse.mylyn.UiPluginResources");
+//		} catch (MissingResourceException x) {
+//			resourceBundle = null;
+//		} catch (Throwable t) {
+//			StatusHandler.log(t, "plug-in intialization failed");
+//		}
 	}
 
 	@Override
@@ -308,7 +308,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			colorMap.dispose();
 			highlighters.dispose();
 		} catch (Exception e) {
-			StatusHandler.fail(e, "Mylar UI stop failed", false);
+			StatusHandler.fail(e, "Context UI stop failed", false);
 		}
 	}
 
@@ -357,6 +357,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	/**
 	 * Returns the string from the plugin's resource bundle, or 'key' if not found.
 	 */
+	@Deprecated
 	public static String getResourceString(String key) {
 		ResourceBundle bundle = ContextUiPlugin.getDefault().getResourceBundle();
 		try {
@@ -369,6 +370,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	/**
 	 * Returns the string from the plugin's resource bundle, or 'key' if not found.
 	 */
+	@Deprecated
 	public static String getMessage(String key) {
 		ResourceBundle bundle = getDefault().getResourceBundle();
 		try {
@@ -381,8 +383,9 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	/**
 	 * Returns the plugin's resource bundle,
 	 */
+	@Deprecated
 	public ResourceBundle getResourceBundle() {
-		return resourceBundle;
+		return null;
 	}
 
 	public List<AbstractContextUiBridge> getUiBridges() {

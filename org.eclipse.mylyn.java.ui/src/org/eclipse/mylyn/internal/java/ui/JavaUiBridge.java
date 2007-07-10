@@ -5,9 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-/*
- * Created on Apr 6, 2005
- */
+
 package org.eclipse.mylyn.internal.java.ui;
 
 import java.lang.reflect.Field;
@@ -46,7 +44,7 @@ public class JavaUiBridge extends AbstractContextUiBridge {
 			javaOutlineField = JavaOutlinePage.class.getDeclaredField("fOutlineViewer");
 			javaOutlineField.setAccessible(true);
 		} catch (Exception e) {
-			StatusHandler.fail(e, "could not get install Mylar on Outline viewer", true);
+			StatusHandler.fail(e, "could not get install Mylyn on Outline viewer", true);
 		}
 	}
 

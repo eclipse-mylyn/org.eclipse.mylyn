@@ -5,6 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
+
 package org.eclipse.mylyn.internal.team.ui;
 
 import java.util.ArrayList;
@@ -90,8 +91,6 @@ public class ContextChangeSet extends CVSActiveChangeSet/*ActiveChangeSet*/imple
 	public String getComment() {
 		String template = FocusedTeamUiPlugin.getDefault().getPreferenceStore().getString(
 				FocusedTeamUiPlugin.COMMIT_TEMPLATE);
-//		String progressTemplate = MylarTeamPlugin.getDefault().getPreferenceStore().getString(
-//				MylarTeamPlugin.COMMIT_TEMPLATE_PROGRESS);
 		return FocusedTeamUiPlugin.getDefault().getCommitTemplateManager().generateComment(task, template);
 	}
 

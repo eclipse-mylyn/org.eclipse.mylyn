@@ -378,7 +378,7 @@
             visible="false"> 
 	    <action
            class="org.eclipse.mylyn.internal.java.ui.actions.FocusBrowsingPerspectiveAction"
-           id="org.eclipse.mylyn.java.ui.actions.ApplyMylarToBrowsingPerspectiveAction"
+           id="org.eclipse.mylyn.java.ui.actions.ApplyMylynToBrowsingPerspectiveAction"
            style="toggle"
 	       label="Focus Browsing Perspective" 
 	       icon="icons/elcl16/interest-filtering-browsing.gif"

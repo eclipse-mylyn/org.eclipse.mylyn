@@ -117,7 +117,6 @@ public class TaskContextWorkingSetManager implements IWorkingSetUpdater, IIntera
 	}
 
 	public static void getElementsFromTaskscape(List<IAdaptable> elements) {
-		// IMylarContext t = ContextCorePlugin.getContextManager().getActiveContext();
 		for (IInteractionElement node : ContextCorePlugin.getContextManager().getInterestingDocuments()) {
 			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
 					node.getContentType());

@@ -34,22 +34,3 @@ public class FocusedCompilationUnitEditor extends CompilationUnitEditor {
 		super.createPartControl(parent);
 	}
 }
-
-// JavaElementImageProvider prov = new JavaElementImageProvider();
-// if (super.getInputJavaElement() != null) {
-// Image image = prov.getJavaImageDescriptor(super.getInputJavaElement(),
-// 0).createImage();
-// Point size= JavaElementImageProvider.SMALL_SIZE;
-// MylarJavaElementDescriptor desc = new MylarJavaElementDescriptor(image,
-// MylarImages.MYLAR_OVERLAY, size);
-// setTitleImage(MylarImages.getImage(desc));
-// }
-// }
-//
-// @Override
-// public void updatedTitleImage(Image image) {
-// Point size= JavaElementImageProvider.SMALL_SIZE;
-// MylarJavaElementDescriptor desc = new MylarJavaElementDescriptor(image,
-// MylarImages.MYLAR_OVERLAY, size);
-// setTitleImage(MylarImages.getImage(desc));
-// }

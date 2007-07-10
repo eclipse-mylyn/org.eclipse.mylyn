@@ -61,8 +61,8 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 	final IInteractionContextListener PREFERENCES_WIZARD_LISTENER = new IInteractionContextListener() {
 
 		public void contextActivated(IInteractionContext context) {
-//			if (getPreferenceStore().getBoolean(RecommendedPreferencesWizard.MYLAR_FIRST_RUN)) {
-//				getPreferenceStore().setValue(RecommendedPreferencesWizard.MYLAR_FIRST_RUN, false);
+//			if (getPreferenceStore().getBoolean(RecommendedPreferencesWizard.MYLYN_FIRST_RUN)) {
+//				getPreferenceStore().setValue(RecommendedPreferencesWizard.MYLYN_FIRST_RUN, false);
 //				getDefault().savePluginPreferences();
 //				JavaUiUtil.installContentAssist(JavaPlugin.getDefault().getPreferenceStore(), true);
 //				if (!MonitorUiPlugin.getDefault().suppressConfigurationWizards()) {
@@ -120,8 +120,8 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 		initDefaultPrefs();
 
 		// NOTE: moved out of wizard and first task activation to avoid bug 194766
-		if (getPreferenceStore().getBoolean(RecommendedPreferencesWizard.MYLAR_FIRST_RUN)) {
-			getPreferenceStore().setValue(RecommendedPreferencesWizard.MYLAR_FIRST_RUN, false);
+		if (getPreferenceStore().getBoolean(RecommendedPreferencesWizard.MYLYN_FIRST_RUN)) {
+			getPreferenceStore().setValue(RecommendedPreferencesWizard.MYLYN_FIRST_RUN, false);
 			JavaUiUtil.installContentAssist(JavaPlugin.getDefault().getPreferenceStore(), true);
 		}
 		
@@ -151,7 +151,7 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 
 					JavaCore.addElementChangedListener(javaElementChangeListener);
 				} catch (Throwable t) {
-					StatusHandler.fail(t, "Mylar Java plug-in initialization failed", true);
+					StatusHandler.fail(t, "Mylyn Java plug-in initialization failed", true);
 				}
 			}
 		});
@@ -159,7 +159,7 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 
 	private void initDefaultPrefs() {
 		getPreferenceStore().setDefault(InterestInducingProblemListener.PREDICTED_INTEREST_ERRORS, false);
-		getPreferenceStore().setDefault(RecommendedPreferencesWizard.MYLAR_FIRST_RUN, true);
+		getPreferenceStore().setDefault(RecommendedPreferencesWizard.MYLYN_FIRST_RUN, true);
 	}
 
 	@Override
@@ -179,7 +179,7 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 			// CVSUIPlugin.getPlugin().getChangeSetManager().remove(changeSetManager);
 			// TODO: uninstall editor tracker
 		} catch (Exception e) {
-			StatusHandler.fail(e, "Mylar Java stop terminated abnormally", false);
+			StatusHandler.fail(e, "Mylyn Java stop terminated abnormally", false);
 		}
 	}
 
@@ -255,47 +255,6 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 	public static ImageDescriptor getImageDescriptor(String path) {
 		return AbstractUIPlugin.imageDescriptorFromPlugin(PLUGIN_ID, path);
 	}
-
-	// public static boolean isMylarEditorDefault() {
-	// IEditorRegistry editorRegistry =
-	// WorkbenchPlugin.getDefault().getEditorRegistry();
-	// IEditorDescriptor desc = editorRegistry.getDefaultEditor("*.java");
-	//
-	// return
-	// MylarJavaPrefConstants.MYLAR_JAVA_EDITOR_ID.equals(desc.getLabel());
-	// }
-
-	// public static void setDefaultEditorForJavaFiles(boolean mylar) {
-	//
-	// EditorRegistry editorRegistry = (EditorRegistry)
-	// WorkbenchPlugin.getDefault().getEditorRegistry();
-	// // HACK: cast to allow save to be called
-	// IFileEditorMapping[] array =
-	// WorkbenchPlugin.getDefault().getEditorRegistry().getFileEditorMappings();
-	//
-	// // HACK: cast to allow set to be called
-	// editorRegistry.setFileEditorMappings((FileEditorMapping[]) array);
-	// String defaultEditor = editorRegistry.getDefaultEditor("*.java").getId();
-	//
-	// if (mylar) {
-	//
-	// if (!(defaultEditor.equals(MylarJavaPrefConstants.MYLAR_JAVA_EDITOR_ID)))
-	// {
-	// editorRegistry.setDefaultEditor("*.java",
-	// MylarJavaPrefConstants.MYLAR_JAVA_EDITOR_ID);
-	// editorRegistry.saveAssociations();
-	// }
-	// } else {
-	// if (!(defaultEditor.equals(JavaUI.ID_CU_EDITOR))) {
-	// editorRegistry.setDefaultEditor("*.java", JavaUI.ID_CU_EDITOR);
-	// editorRegistry.saveAssociations();
-	// }
-	// }
-	// }
-
-//	public TypeHistoryManager getTypeHistoryManager() {
-//		return typeHistoryManager;
-//	}
 
 	/**
 	 * For testing.

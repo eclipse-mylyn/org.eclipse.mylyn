@@ -126,9 +126,6 @@ public class ResourceStructureBridge extends AbstractContextStructureBridge {
 			try {
 				return workspace.getRoot().getProject(projectName);
 			} catch (IllegalArgumentException e) {
-				// not a file
-				// MylarStatusHandler.fail(e, "bad path for handle: " + handle,
-				// false);
 				return null;
 			}
 		} else if (path.segmentCount() > 1) {

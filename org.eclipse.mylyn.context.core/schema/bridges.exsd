@@ -69,7 +69,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.mylar.context.core.AbstractContextStructureBridge"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.context.core.AbstractContextStructureBridge"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -91,7 +91,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.mylar.context.core.AbstractContextStore"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.context.core.AbstractContextStore"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -120,7 +120,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.mylar.context.core.AbstractRelationProvider"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.context.core.AbstractRelationProvider"/>
                </appInfo>
             </annotation>
          </attribute>

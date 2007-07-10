@@ -111,9 +111,9 @@ public class FocusedJavaProposalProcessor {
 		boolean hasInteresting = false;
 		IJavaElement javaElement = proposal.getJavaElement();
 		if (javaElement != null) {
-			IInteractionElement mylarElement = ContextCorePlugin.getContextManager().getElement(
+			IInteractionElement interactionElement = ContextCorePlugin.getContextManager().getElement(
 					javaElement.getHandleIdentifier());
-			float interest = mylarElement.getInterest().getValue();
+			float interest = interactionElement.getInterest().getValue();
 			if (interest > InteractionContextManager.getScalingFactors().getInteresting()) {
 				// TODO: losing precision here, only going to one decimal place
 				proposal.setRelevance(THRESHOLD_INTEREST + (int) (interest * 10));

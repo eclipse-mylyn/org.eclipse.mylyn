@@ -86,13 +86,6 @@ public class RefactoringTest extends AbstractJavaContextTest {
 				parentNode.getHandleIdentifier());
 		assertFalse(oldParentNode.getInterest().isInteresting());
 		assertTrue(newParentNode.getInterest().isInteresting());
-
-		// IMylarElement newNode =
-		// ContextCorePlugin.getContextManager().getElement(newType.getHandleIdentifier());
-		// assertTrue(newNode.getInterest().isInteresting());
-		// IMylarElement oldNode =
-		// ContextCorePlugin.getContextManager().getElement(node.getHandleIdentifier());
-		// assertFalse(oldNode.getInterest().isInteresting());
 	}
 
 	public void testMethodRename() throws CoreException, InterruptedException, InvocationTargetException {

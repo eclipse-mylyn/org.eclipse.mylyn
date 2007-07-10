@@ -39,6 +39,5 @@ public class ToggleDecorateInterestLevelAction extends Action {
 		if (store)
 			ContextUiPlugin.getDefault().getPreferenceStore().setValue(PREF_ID, on);
 		ContextUiPlugin.getDefault().getPreferenceStore().setValue(ContextUiPrefContstants.INTERSECTION_MODE, true);
-//		ContextCorePlugin.getContextManager().notifyActivePresentationSettingsChange(IMylarContextListener.UpdateKind.UPDATE);
 	}
 }

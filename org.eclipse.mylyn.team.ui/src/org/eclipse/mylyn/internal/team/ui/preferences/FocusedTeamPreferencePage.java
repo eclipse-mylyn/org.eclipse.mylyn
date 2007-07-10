@@ -67,13 +67,11 @@ public class FocusedTeamPreferencePage extends PreferencePage implements IWorkbe
 					.getContextChangeSetManagers()) {
 				changeSetManager.enable();
 			}
-//			MylarTeamPlugin.getDefault().getChangeSetManager().enable();
 		} else {
 			for (AbstractContextChangeSetManager changeSetManager : FocusedTeamUiPlugin.getDefault()
 					.getContextChangeSetManagers()) {
 				changeSetManager.disable();
 			}
-//			MylarTeamPlugin.getDefault().getChangeSetManager().disable();
 		}
 		return true;
 	}
@@ -89,16 +87,6 @@ public class FocusedTeamPreferencePage extends PreferencePage implements IWorkbe
 		commitTemplate.setText(getPreferenceStore().getDefaultString(FocusedTeamUiPlugin.COMMIT_TEMPLATE));
 		manageChangeSets.setSelection(getPreferenceStore().getDefaultBoolean(FocusedTeamUiPlugin.CHANGE_SET_MANAGE));
 	}
-
-//	private Label createLabel(Composite parent, String text) {
-//		Label label = new Label(parent, SWT.LEFT);
-//		label.setText(text);
-//		GridData data = new GridData();
-//		data.horizontalSpan = 2;
-//		data.horizontalAlignment = GridData.BEGINNING;
-//		label.setLayoutData(data);
-//		return label;
-//	}
 
 	private void createChangeSetGroup(Composite parent) {
 		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);

@@ -103,8 +103,6 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 			} else {
 				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), ITasksUiConstants.TITLE_DIALOG,
 						MESSAGE_NO_CONTEXT);
-				// MylarStatusHandler.log("no active element for interest
-				// manipulation", this);
 			}
 		}
 	}

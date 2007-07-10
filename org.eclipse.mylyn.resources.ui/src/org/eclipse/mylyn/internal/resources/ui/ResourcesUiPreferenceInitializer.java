@@ -42,9 +42,6 @@ public class ResourcesUiPreferenceInitializer extends AbstractPreferenceInitiali
 		setExcludedResourcePatterns(ResourcesUiExtensionPointReader.getDefaultResourceExclusions());
 	}
 
-	/**
-	 * Moved from MylarResourcesPlugin to this class.
-	 */
 	public static void setExcludedResourcePatterns(Set<String> patterns) {
 		StringBuilder store = new StringBuilder();
 		for (String string : patterns) {
@@ -54,9 +51,6 @@ public class ResourcesUiPreferenceInitializer extends AbstractPreferenceInitiali
 		ResourcesUiBridgePlugin.getDefault().getPreferenceStore().setValue(PREF_RESOURCES_IGNORED, store.toString());
 	}
 
-	/**
-	 * Moved from MylarResourcesPlugin to this class.
-	 */
 	public static Set<String> getExcludedResourcePatterns() {
 		Set<String> ignored = new HashSet<String>();
 		String read = ResourcesUiBridgePlugin.getDefault().getPreferenceStore().getString(PREF_RESOURCES_IGNORED);

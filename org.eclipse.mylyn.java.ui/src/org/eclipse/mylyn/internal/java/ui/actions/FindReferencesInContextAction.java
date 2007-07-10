@@ -48,7 +48,7 @@ public class FindReferencesInContextAction extends Action implements IWorkbenchW
 						IJavaSearchScope scope = JavaSearchScopeFactory.getInstance().createJavaSearchScope(
 								updater.getWorkingSet(), false);
 						JavaSearchQuery query = new JavaSearchQuery(new ElementQuerySpecification(element,
-								IJavaSearchConstants.REFERENCES, scope, "Mylar Current Task Context"));
+								IJavaSearchConstants.REFERENCES, scope, "Mylyn Current Task Context"));
 						NewSearchUI.activateSearchResultView();
 
 						if (query.canRunInBackground()) {

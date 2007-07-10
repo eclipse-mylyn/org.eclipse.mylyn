@@ -67,7 +67,6 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 		assertEquals(0, changeSetManager.getActiveChangeSets().size());
 
 		changeSetManager.disable();
-//		MylarTeamPlugin.getDefault().getChangeSetManager().disable();
 
 		AbstractTask task1 = new LocalTask("task1", "label");
 		TasksUiPlugin.getTaskListManager().activateTask(task1);
@@ -76,7 +75,6 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 
 		TasksUiPlugin.getTaskListManager().deactivateTask(task1);
 		changeSetManager.enable();
-//		MylarTeamPlugin.getDefault().getChangeSetManager().enable();
 	}
 
 	public void testSingleContextActivation() {

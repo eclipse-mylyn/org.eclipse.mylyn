@@ -29,7 +29,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * Encapsulates the element refresh and expansion state policy for all viewers showing Mylar context.
+ * Encapsulates the element refresh and expansion state policy for all viewers focused on context.
  * 
  * @author Mik Kersten
  */

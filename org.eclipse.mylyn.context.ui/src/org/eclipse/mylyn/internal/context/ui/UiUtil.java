@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Display;
 public class UiUtil {
 
 	public static void displayInterestManipulationFailure() {
-		MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Mylar Interest Manipulation",
+		MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Mylyn Interest Manipulation",
 				"Not a valid landmark, select an element within this resource instead.");
 	}
 
@@ -83,35 +83,3 @@ public class UiUtil {
 	}
 }
 
-// if (node instanceof CompositeContextElement) {
-// CompositeContextElement compositeNode = (CompositeContextElement)node;
-// if (compositeNode.getNodes().isEmpty()) return null;
-// dominantNode = (IMylarElement)compositeNode.getNodes().toArray()[0];
-// if (compositeNode.getNodes().size() > 1) isMultiple = true;
-//            
-// for(IMylarElement concreteNode : compositeNode.getNodes()) {
-// if (dominantNode != null
-// && dominantNode.getDegreeOfInterest().getValue() <
-// concreteNode.getDegreeOfInterest().getValue()) {
-// dominantNode = concreteNode;
-// }
-// }
-// } else if (node instanceof MylarContextElement) {
-// dominantNode = node;
-// }
-// List<Highlighter> highlighters = new ArrayList<Highlighter>();
-// for (Iterator<IDegreeOfInterest> it =
-// compositeDoiInfo.getComposite().getInfos().iterator(); it.hasNext();) {
-// IDegreeOfInterest specificInfo = it.next();
-// Taskscape taskscape = specificInfo.getCorrespondingTaskscape();
-// Highlighter highlighter =
-// MylarUiPlugin.getDefault().getHighlighterForTaskId(taskscape.getId());
-// if (highlighter != null) highlighters.add(highlighter);
-// }
-// if (highlighters.size() == 0) {
-// return MylarUiPlugin.getDefault().getColorMap().BACKGROUND_COLOR;
-// } else if (highlighters.size() == 1) {
-// return highlighters.get(0).getHighlight(info, false);
-// } else {
-// return Highlighter.blend(highlighters, info, false);
-// }

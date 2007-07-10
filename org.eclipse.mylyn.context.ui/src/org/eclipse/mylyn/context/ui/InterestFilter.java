@@ -112,6 +112,10 @@ public class InterestFilter extends ViewerFilter {
 		return temporarilyUnfiltered != null && temporarilyUnfiltered.equals(parent);
 	}
 
+	/**
+	 * TODO: change name to containsInterestFilter(..)
+	 */
+	@Deprecated
 	protected boolean containsMylarInterestFilter(StructuredViewer viewer) {
 		for (ViewerFilter filter : viewer.getFilters()) {
 			if (filter instanceof InterestFilter) {

@@ -285,7 +285,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 			return null;
 
 		QuerySpecification specs = new ElementQuerySpecification(javaElement, limitTo, scope,
-				"Mylar degree of separation: " + degreeOfSeparation);
+				"Mylyn degree of separation: " + degreeOfSeparation);
 
 		return new JavaSearchOperation(specs);
 	}

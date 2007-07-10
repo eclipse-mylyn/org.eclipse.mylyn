@@ -56,25 +56,5 @@ public class CommitTemplateTest extends TestCase {
 		Pattern pattern = Pattern.compile(regex);
 		Matcher matcher = pattern.matcher(comment);
 		assertTrue(matcher.find());
-//		if (matcher.find()) {
-//			return matcher.group(1);
-//		}
 	}
-
-//	public void testLocalTaskCommentParsing() {	
-//		ITask task = new Task("handle", "foo", false);
-//		task.setUrl("http://eclipse.org/mylar");
-//		String comment = ContextChangeSet.generateComment(task, MylarTeamPlugin.DEFAULT_PREFIX_COMPLETED,
-//				MylarTeamPlugin.DEFAULT_PREFIX_PROGRESS);
-//
-//		String url = ContextChangeSet.getUrlFromComment(comment);
-//		assertEquals("http://eclipse.org/mylar", url);
-//
-//		task.setUrl("http://eclipse.org/mylar bla \n bla");
-//		String comment2 = ContextChangeSet.generateComment(task, MylarTeamPlugin.DEFAULT_PREFIX_COMPLETED,
-//				MylarTeamPlugin.DEFAULT_PREFIX_PROGRESS);
-//		String url2 = ContextChangeSet.getUrlFromComment(comment2);
-//		assertEquals("http://eclipse.org/mylar", url2);
-//	}
-
 }

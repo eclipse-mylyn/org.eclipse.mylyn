@@ -76,11 +76,6 @@ public class RecommendedPreferencesWizardPage extends WizardPage {
 		label.setFont(JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT));
 		label.setText(CONTENT_ASSIST_WARNING);
 
-//		label = new Label(buttonComposite, SWT.NONE);
-//		label = new Label(buttonComposite, SWT.NONE);
-//		label.setText("NOTE: if Mylar is uninstalled you must Restore Defaults on above page ");
-//		label.setForeground(TaskListColorsAndFonts.COLOR_LABEL_CAUTION);
-
 		gd = new GridData();
 		label.setLayoutData(gd);
 
@@ -107,31 +102,6 @@ public class RecommendedPreferencesWizardPage extends WizardPage {
 		label = new Label(buttonComposite, SWT.NONE);
 		label.setFont(JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT));
 		label.setText("Toggle via toolbar button ");
-
-//		addMylarActiveWorkingSetButton = new Button(buttonComposite, SWT.CHECK);
-//		gd = new GridData();
-//		addMylarActiveWorkingSetButton.setSelection(true);
-//		addMylarActiveWorkingSetButton.addSelectionListener(new SelectionListener() {
-//
-//			public void widgetSelected(SelectionEvent e) {
-//				workingSet = addMylarActiveWorkingSetButton.getSelection();
-//			}
-//
-//			public void widgetDefaultSelected(SelectionEvent e) {
-//				// don't care about this event
-//			}
-//		});
-
-//		label = new Label(buttonComposite, SWT.NONE);
-//		label.setText(WORKING_SET);
-//		gd = new GridData();
-//		label.setLayoutData(gd);
-//		setControl(buttonComposite);
-
-//		label = new Label(buttonComposite, SWT.NONE);
-//		label = new Label(buttonComposite, SWT.NONE);
-//		label.setFont(JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT));
-//		label.setText("Remove via Window->Working Sets ");
 
 		Label spacer = new Label(buttonComposite, SWT.NONE);
 		spacer.setText(" ");
@@ -170,7 +140,7 @@ public class RecommendedPreferencesWizardPage extends WizardPage {
 		return autoFolding;
 	}
 
-	public boolean isMylarContentAssistDefault() {
+	public boolean isMylynContentAssistDefault() {
 		return contentAssistButton.getSelection();
 	}
 

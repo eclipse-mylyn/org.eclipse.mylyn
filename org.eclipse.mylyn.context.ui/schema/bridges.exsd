@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.mylar.context.ui.bridges">
+<schema targetNamespace="org.eclipse.mylyn.context.ui.bridges">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.mylar.context.ui.bridges" id="bridges" name="bridges"/>
+         <meta.schema plugin="org.eclipse.mylyn.context.ui.bridges" id="bridges" name="bridges"/>
       </appInfo>
       <documentation>
          UI Bridges connect the UI of domain-specific tool, such as the JDT, to the generic context model UI.  For more information please see: http://wiki.eclipse.org/index.php/Mylyn_Integrator_Reference#Context_API
@@ -69,7 +69,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.mylar.context.ui.AbstractContextUiBridge"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.context.ui.AbstractContextUiBridge"/>
                </appInfo>
             </annotation>
          </attribute>

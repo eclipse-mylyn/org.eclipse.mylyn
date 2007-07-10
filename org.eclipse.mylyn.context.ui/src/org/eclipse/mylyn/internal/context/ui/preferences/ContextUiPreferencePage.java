@@ -43,14 +43,14 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 	private Button manageExpansionButton = null;
 
 	/**
-	 * Constructor - set preference store to MylarUiPlugin store since the tasklist plugin needs access to the values
+	 * Constructor - set preference store to ContextUiPlugin store since the tasklist plugin needs access to the values
 	 * stored from the preference page because it needs access to the highlighters on start up.
 	 * 
 	 */
 	public ContextUiPreferencePage() {
 		super();
 		setPreferenceStore(ContextUiPlugin.getDefault().getPreferenceStore());
-		setTitle("Mylar");
+		setTitle("Context");
 	}
 
 	@Override

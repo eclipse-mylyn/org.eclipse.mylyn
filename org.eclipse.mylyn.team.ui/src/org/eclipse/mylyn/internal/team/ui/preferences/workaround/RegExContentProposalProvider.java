@@ -23,7 +23,7 @@ import org.eclipse.jface.fieldassist.IContentProposalProvider;
  * </p>
  * Copied from org.eclipse.ui.texteditor.RegExContentProposalProvider.
  * <p>
- * Needed by org.eclipse.mylyn.internal.team.ui.preferences.workaround.MylarTeamPreferencePage.
+ * Needed by org.eclipse.mylyn.internal.team.ui.preferences.workaround.MylynTeamPreferencePage.
  * <p>
  * TODO Ask platform guys to open this API
  * 

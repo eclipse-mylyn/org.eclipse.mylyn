@@ -93,14 +93,12 @@ public class HighlighterList {
 
 	public void removeHighlighter(Highlighter hl) {
 		this.highlighters.remove(hl);
-		// MylarUiPlugin.getDefault().setDefaultHighlighter(
-		// this.highlighters.get(0));
 	}
 
 	public String externalizeToString() {
 		// Add an initial flag so that we know if the highlighterlist has been
 		// save before.
-		// This is only used when mylar is first launched with eclipse.
+		// This is only used when Mylyn is first launched with eclipse.
 		// if the preference store returns a null string, then we would
 		// initialize
 		// the default highlighter.

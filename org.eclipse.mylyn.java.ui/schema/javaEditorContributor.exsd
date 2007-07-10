@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.mylar.java.ui">
+<schema targetNamespace="org.eclipse.mylyn.java.ui">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.mylar.java.ui" id="javaEditorContributor" name="Mylar Java Editor Contributor"/>
+         <meta.schema plugin="org.eclipse.mylyn.java.ui" id="javaEditorContributor" name="Mylyn Java Editor Contributor"/>
       </appInfo>
       <documentation>
          [Enter description of this extension point.]

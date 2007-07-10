@@ -13,7 +13,7 @@ import org.eclipse.team.internal.ccvs.ui.CVSUIPlugin;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
 
 /**
- * CVS change set integration for Mylar.
+ * CVS change set integration for Mylyn.
  * 
  * @author Mik Kersten
  */

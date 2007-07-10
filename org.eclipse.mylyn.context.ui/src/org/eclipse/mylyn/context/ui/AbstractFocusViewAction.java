@@ -40,7 +40,7 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * Extending this class makes it possible to apply Mylar management to a structured view (e.g. to provide interest-based
+ * Extending this class makes it possible to apply Mylyn management to a structured view (e.g. to provide interest-based
  * filtering).
  * 
  * @author Mik Kersten
@@ -49,7 +49,7 @@ import org.eclipse.ui.PlatformUI;
 public abstract class AbstractFocusViewAction extends Action implements IViewActionDelegate, IActionDelegate2,
 		ISelectionListener {
 
-	private static final String ACTION_LABEL = "Apply Mylar";
+	private static final String ACTION_LABEL = "Apply Mylyn";
 
 	public static final String PREF_ID_PREFIX = "org.eclipse.mylyn.ui.interest.filter.";
 

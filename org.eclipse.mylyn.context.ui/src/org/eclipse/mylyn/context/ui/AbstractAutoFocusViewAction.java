@@ -57,7 +57,7 @@ public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewActio
 						update(true);
 					}
 				} catch (Exception e) {
-					StatusHandler.fail(e, "could not toggle Mylar on view: " + getPartForAction(), true);
+					StatusHandler.fail(e, "could not toggle Mylyn on view: " + getPartForAction(), true);
 				}
 			}
 		});

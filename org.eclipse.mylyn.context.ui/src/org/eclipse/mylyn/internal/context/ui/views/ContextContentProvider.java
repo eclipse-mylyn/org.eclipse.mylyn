@@ -178,12 +178,6 @@ public class ContextContentProvider implements IStructuredContentProvider, ITree
 			return true;
 		} else {
 			return isRootItem(parent);
-			// note: code below is too slow since edges change
-			// AbstractContextStructureBridge bridge =
-			// ContextCorePlugin.getDefault().getStructureBridge(parent);
-			// IMylarElement node =
-			// ContextCorePlugin.getContextManager().getNode(bridge.getHandleIdentifier(parent));
-			// return isRootItem(parent) && node.getEdges().size() > 0;
 		}
 	}
 }
