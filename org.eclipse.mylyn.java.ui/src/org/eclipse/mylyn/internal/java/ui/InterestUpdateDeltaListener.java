@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.internal.java.ui;
 
 import org.eclipse.jdt.core.ElementChangedEvent;
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IElementChangedListener;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaElementDelta;
@@ -39,12 +40,21 @@ public class InterestUpdateDeltaListener implements IElementChangedListener {
 			IJavaElement removed = null;
 			for (int i = 0; i < delta.length; i++) {
 				IJavaElementDelta child = delta[i];
+				if (child.getElement() instanceof ICompilationUnit) {
+					if (((ICompilationUnit)child.getElement()).getOwner() != null) {
+						// see bug 195361, do not reduce interest of temporary working copy
+						return;
+					} 
+				}
+				
 				if (child.getKind() == IJavaElementDelta.ADDED) {
-					if (added == null)
-						added = child.getElement();
+					if (added == null) {
+						added = child.getElement();	
+					}
 				} else if (child.getKind() == IJavaElementDelta.REMOVED) {
-					if (removed == null)
+					if (removed == null) {
 						removed = child.getElement();
+					}
 				}
 				handleDelta(child.getAffectedChildren());
 			}
@@ -52,13 +62,16 @@ public class InterestUpdateDeltaListener implements IElementChangedListener {
 			if (added != null && removed != null) {
 				IInteractionElement element = ContextCorePlugin.getContextManager().getElement(
 						removed.getHandleIdentifier());
-				if (element != null)
+				if (element != null) {
 					resetHandle(element, added.getHandleIdentifier());
+				}
 			} else if (removed != null) {
+				
 				IInteractionElement element = ContextCorePlugin.getContextManager().getElement(
 						removed.getHandleIdentifier());
-				if (element != null)
+				if (element != null) {
 					delete(element);
+				}
 			}
 		} catch (Throwable t) {
 			StatusHandler.fail(t, "delta update failed", false);
