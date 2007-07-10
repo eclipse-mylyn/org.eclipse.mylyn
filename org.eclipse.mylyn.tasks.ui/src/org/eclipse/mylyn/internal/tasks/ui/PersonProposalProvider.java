@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.eclipse.jface.fieldassist.IContentProposal;
@@ -26,6 +27,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Shawn Minto
+ * @author Eugene Kuleshov
  */
 public class PersonProposalProvider implements IContentProposalProvider {
 
@@ -35,7 +37,7 @@ public class PersonProposalProvider implements IContentProposalProvider {
 
 	private String currentUser;
 
-	private Set<String> addressSet = null;
+	private SortedSet<String> addressSet = null;
 
 	public PersonProposalProvider(AbstractTask repositoryTask, RepositoryTaskData taskData) {
 		this.currentTask = repositoryTask;
@@ -45,19 +47,24 @@ public class PersonProposalProvider implements IContentProposalProvider {
 	public IContentProposal[] getProposals(String contents, int position) {
 		ArrayList<IContentProposal> result = new ArrayList<IContentProposal>();
 
-		contents = contents.substring(0, position);
+		SortedSet<String> addressSet = getAddressSet();
+		if (position > 0) {
+			// retrieve subset of the tree set using key range
+			char[] chars = contents.toCharArray();
+			String contents1 = new String(chars, 0, position);
+			chars[position - 1]++;
+			String contents2 = new String(chars, 0, position);
+			addressSet = addressSet.subSet(contents1, contents2);
+		}
 
-		Set<String> addressSet = getAddressSet();
 		for (final String address : addressSet) {
-			if (address.startsWith(contents)) {
-				result.add(new PersonContentProposal(address, address.compareToIgnoreCase(currentUser) == 0));
-			}
+			result.add(new PersonContentProposal(address, address.compareToIgnoreCase(currentUser) == 0));
 		}
 
 		return result.toArray(new IContentProposal[result.size()]);
 	}
 
-	private Set<String> getAddressSet() {
+	private SortedSet<String> getAddressSet() {
 		if (addressSet != null) {
 			return addressSet;
 		}
@@ -131,8 +138,7 @@ public class PersonProposalProvider implements IContentProposalProvider {
 	}
 
 	private void addAddresses(AbstractTask task, Set<String> addressSet) {
-		// TODO: Creator, and CC should be stored on
-		// AbstractTask
+		// TODO: Creator, and CC should be stored on AbstractTask
 
 		addAddress(task.getOwner(), addressSet);
 	}
