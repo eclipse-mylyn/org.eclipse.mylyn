@@ -10,20 +10,13 @@ package org.eclipse.mylyn.internal.context.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.preference.IPreferenceNode;
-import org.eclipse.jface.preference.IPreferencePage;
 import org.eclipse.jface.preference.PreferenceDialog;
-import org.eclipse.jface.preference.PreferenceManager;
-import org.eclipse.jface.preference.PreferenceNode;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
-import org.eclipse.mylyn.internal.context.ui.preferences.ContextUiPreferencePage;
-import org.eclipse.swt.custom.BusyIndicator;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.PreferencesUtil;
 
 /**
  * @author Mik Kersten
@@ -43,26 +36,10 @@ public class EditHighlightersAction extends Action implements IViewActionDelegat
 
 	@Override
 	public void run() {
-		IPreferencePage page = new ContextUiPreferencePage();
-		showPreferencePage(ID_PREFS_HIGHLIGHTERS, page);
-	}
-
-	protected void showPreferencePage(String id, IPreferencePage page) {
-		final IPreferenceNode targetNode = new PreferenceNode(id, page);
-
-		PreferenceManager manager = new PreferenceManager();
-		manager.addToRoot(targetNode);
-		final PreferenceDialog dialog = new PreferenceDialog(PlatformUI.getWorkbench()
+		PreferenceDialog dlg = PreferencesUtil.createPreferenceDialogOn(PlatformUI.getWorkbench()
 				.getActiveWorkbenchWindow()
-				.getShell(), manager);
-		final boolean[] result = new boolean[] { false };
-		BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
-			public void run() {
-				dialog.create();
-				dialog.setMessage(targetNode.getLabelText());
-				result[0] = (dialog.open() == Window.OK);
-			}
-		});
+				.getShell(), ID_PREFS_HIGHLIGHTERS, new String[] { ID_PREFS_HIGHLIGHTERS }, null);
+		dlg.open();
 	}
 
 	public void init(IViewPart view) {
