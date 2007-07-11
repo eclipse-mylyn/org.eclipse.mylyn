@@ -12,10 +12,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
-import java.util.StringTokenizer;
 
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
@@ -46,8 +46,9 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
@@ -69,12 +70,6 @@ import org.eclipse.ui.forms.widgets.Section;
 public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 
 	private static final String LABEL_TIME_TRACKING = "Bugzilla Time Tracking";
-
-	// protected BugzillaCompareInput compareInput;
-
-	// protected Button compareButton;
-
-	protected List keyWordsList;
 
 	protected Text keywordsText;
 
@@ -163,14 +158,6 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			addBugHyperlinks(composite, BugzillaReportElement.BLOCKED.getKeyString());
 		}
 
-		try {
-			addKeywordsList(composite);
-		} catch (IOException e) {
-			MessageDialog.openInformation(null, "Attribute Display Error",
-					"Could not retrieve keyword list, ensure proper configuration in "
-							+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + "\n\nError reported: " + e.getMessage());
-		}
-
 		attribute = this.taskData.getAttribute(BugzillaReportElement.BUG_FILE_LOC.getKeyString());
 		if (attribute != null && !attribute.isReadOnly()) {
 			Label label = createLabel(composite, attribute);
@@ -189,6 +176,14 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
 			Text whiteboardField = createTextField(composite, attribute, SWT.FLAT);
 			GridDataFactory.fillDefaults().hint(135, SWT.DEFAULT).applyTo(whiteboardField);
+		}
+
+		try {
+			addKeywordsList(composite);
+		} catch (IOException e) {
+			MessageDialog.openInformation(null, "Attribute Display Error",
+					"Could not retrieve keyword list, ensure proper configuration in "
+							+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + "\n\nError reported: " + e.getMessage());
 		}
 
 		addVoting(composite);
@@ -490,68 +485,62 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 
 	protected void addKeywordsList(Composite attributesComposite) throws IOException {
 		// newLayout(attributesComposite, 1, "Keywords:", PROPERTY);
-		RepositoryTaskAttribute attribute = taskData.getAttribute(RepositoryTaskAttribute.KEYWORDS);
+		final RepositoryTaskAttribute attribute = taskData.getAttribute(RepositoryTaskAttribute.KEYWORDS);
 		if (attribute == null)
 			return;
-		String keywords = attribute.getValue();
 		Label label = createLabel(attributesComposite, attribute);
 		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
 
 		// toolkit.createText(attributesComposite, keywords)
-		keywordsText = createTextField(attributesComposite, attribute, SWT.FLAT | SWT.READ_ONLY);
+		keywordsText = createTextField(attributesComposite, attribute, SWT.FLAT);
 		keywordsText.setFont(TEXT_FONT);
-		keywordsText.setEditable(false);
-		// keywordsText.setForeground(foreground);
-		// keywordsText.setBackground(JFaceColors.getErrorBackground(display));
 		GridData keywordsData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		keywordsData.horizontalSpan = 2;
 		keywordsData.widthHint = 200;
 		keywordsText.setLayoutData(keywordsData);
-		// keywordsText.setText(keywords);
-		keyWordsList = new List(attributesComposite, SWT.MULTI | SWT.V_SCROLL);
-		keyWordsList.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-		keyWordsList.setFont(TEXT_FONT);
-		GridData keyWordsTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		keyWordsTextData.horizontalSpan = 1;
-		keyWordsTextData.widthHint = 125;
-		keyWordsTextData.heightHint = 40;
-		keyWordsList.setLayoutData(keyWordsTextData);
 
-		// initialize the keywords list with valid values
+		Button changeKeywordsButton = getManagedForm().getToolkit().createButton(attributesComposite, "Edit...",
+				SWT.FLAT);
+		GridData keyWordsButtonData = new GridData();
+		changeKeywordsButton.setLayoutData(keyWordsButtonData);
+		changeKeywordsButton.addSelectionListener(new SelectionListener() {
 
-		java.util.List<String> validKeywords = new ArrayList<String>();
-		try {
-			validKeywords = BugzillaCorePlugin.getRepositoryConfiguration(repository, false).getKeywords();
-		} catch (Exception e) {
-			// ignore
-		}
-
-		if (validKeywords != null) {
-			for (Iterator<String> it = validKeywords.iterator(); it.hasNext();) {
-				String keyword = it.next();
-				keyWordsList.add(keyword);
+			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 
-			// get the selected keywords for the bug
-			StringTokenizer st = new StringTokenizer(keywords, ",", false);
-			ArrayList<Integer> indicies = new ArrayList<Integer>();
-			while (st.hasMoreTokens()) {
-				String s = st.nextToken().trim();
-				int index = keyWordsList.indexOf(s);
-				if (index != -1)
-					indicies.add(new Integer(index));
+			public void widgetSelected(SelectionEvent e) {
+
+				String keywords = attribute.getValue();
+
+				Shell shell = null;
+				if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
+					shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+				} else {
+					shell = new Shell(PlatformUI.getWorkbench().getDisplay());
+				}
+
+				List<String> validKeywords = new ArrayList<String>();
+				try {
+					validKeywords = BugzillaCorePlugin.getRepositoryConfiguration(repository, false).getKeywords();
+				} catch (Exception ex) {
+					// ignore
+				}
+
+				KeywordsDialog keywordsDialog = new KeywordsDialog(shell, keywords, validKeywords);
+				int responseCode = keywordsDialog.open();
+
+				String newKeywords = keywordsDialog.getSelectedKeywordsString();
+				if (responseCode == Dialog.OK && keywords != null) {
+					keywordsText.setText(newKeywords);
+					attribute.setValue(newKeywords);
+					attributeChanged(attribute);
+				} else {
+					return;
+				}
+
 			}
 
-			// select the keywords that were selected for the bug
-			int length = indicies.size();
-			int[] sel = new int[length];
-			for (int i = 0; i < length; i++) {
-				sel[i] = indicies.get(i).intValue();
-			}
-			keyWordsList.select(sel);
-		}
-
-		keyWordsList.addSelectionListener(new KeywordListener());
+		});
 	}
 
 	protected void addVoting(Composite attributesComposite) {
@@ -596,51 +585,6 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 				}
 			}
 		});
-	}
-
-	/**
-	 * Class to handle the selection change of the keywords.
-	 */
-	protected class KeywordListener implements SelectionListener {
-
-		/*
-		 * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-		 */
-		public void widgetSelected(SelectionEvent arg0) {
-			markDirty(true);
-
-			// get the selected keywords and create a string to submit
-			StringBuffer keywords = new StringBuffer();
-			String[] sel = keyWordsList.getSelection();
-
-			// allow unselecting 1 keyword when it is the only one selected
-			if (keyWordsList.getSelectionCount() == 1) {
-				int index = keyWordsList.getSelectionIndex();
-				String keyword = keyWordsList.getItem(index);
-				if (taskData.getAttributeValue(BugzillaReportElement.KEYWORDS.getKeyString()).equals(keyword))
-					keyWordsList.deselectAll();
-			}
-
-			for (int i = 0; i < keyWordsList.getSelectionCount(); i++) {
-				keywords.append(sel[i]);
-				if (i != keyWordsList.getSelectionCount() - 1) {
-					keywords.append(",");
-				}
-			}
-
-			taskData.setAttributeValue(BugzillaReportElement.KEYWORDS.getKeyString(), keywords.toString());
-
-			// update the keywords text field
-			keywordsText.setText(keywords.toString());
-		}
-
-		/*
-		 * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
-		 */
-		public void widgetDefaultSelected(SelectionEvent arg0) {
-			// no need to listen to this
-		}
-
 	}
 
 	@Override
