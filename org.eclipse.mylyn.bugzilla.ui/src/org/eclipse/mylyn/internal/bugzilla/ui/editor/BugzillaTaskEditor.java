@@ -22,7 +22,6 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_OPERATION;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -41,7 +40,6 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
@@ -59,7 +57,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.themes.IThemeManager;
 
 /**
  * An editor used to view a bug report that exists on a server. It uses a <code>BugReport</code> object to store the
@@ -571,12 +568,10 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 
 		votesText = createTextField(votingComposite, votesAttribute, SWT.FLAT | SWT.READ_ONLY);
 		votesText.setFont(TEXT_FONT);
+		GridDataFactory.fillDefaults().minSize(30, SWT.DEFAULT).hint(30, SWT.DEFAULT).applyTo(votesText);
 
 		if (votesAttribute != null && hasChanged(votesAttribute)) {
-			IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
-			Color backgroundIncoming = themeManager.getCurrentTheme().getColorRegistry().get(
-					TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY);
-			votesText.setBackground(backgroundIncoming);
+			votesText.setBackground(getColorIncoming());
 		}
 		votesText.setEditable(false);
 
