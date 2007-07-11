@@ -45,6 +45,9 @@ public abstract class RetrieveTitleFromUrlJob extends Job implements TitleListen
 
 	private boolean titleRetrieved = false;
 
+	private Shell shell = null;
+	private Browser browser = null;
+	
 	public RetrieveTitleFromUrlJob(String url) {
 		super(LABEL_TITLE);
 		this.url = url;
@@ -57,9 +60,9 @@ public abstract class RetrieveTitleFromUrlJob extends Job implements TitleListen
 
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				final Shell shell = new Shell(Display.getDefault());
+				shell = new Shell(Display.getDefault());
 				shell.setVisible(false);
-				Browser browser = new Browser(shell, SWT.NONE);
+				browser = new Browser(shell, SWT.NONE);
 				browser.addTitleListener(RetrieveTitleFromUrlJob.this);
 				browser.setUrl(url);
 			}
@@ -83,6 +86,14 @@ public abstract class RetrieveTitleFromUrlJob extends Job implements TitleListen
 					titleRetrieved = true;
 				}
 				setTitle(pageTitle);
+				
+				if(shell != null && !shell.isDisposed()){
+					shell.dispose();
+				}
+				
+				if(browser != null && !browser.isDisposed()){
+					browser.dispose();
+				}
 			}
 		});
 		return Status.OK_STATUS;
