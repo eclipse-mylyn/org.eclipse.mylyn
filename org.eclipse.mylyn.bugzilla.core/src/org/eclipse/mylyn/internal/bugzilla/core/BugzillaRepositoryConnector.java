@@ -453,6 +453,33 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		}
 	}
 
+	public boolean isRepositoryConfigurationStale(TaskRepository repository) throws CoreException {
+		boolean result = true;
+		try {
+
+			String oldTimestamp = repository.getProperty(IBugzillaConstants.PROPERTY_CONFIGTIMESTAMP);
+			if (oldTimestamp != null && oldTimestamp.equals(IBugzillaConstants.TIMESTAMP_NOT_AVAILABLE)) {
+				result = true;
+			} else {
+				BugzillaClient client = getClientManager().getClient(repository);
+				if (client != null) {
+					String timestamp = client.getConfigurationTimestamp();
+					if (timestamp == null) {
+						repository.setProperty(IBugzillaConstants.PROPERTY_CONFIGTIMESTAMP,
+								IBugzillaConstants.TIMESTAMP_NOT_AVAILABLE);
+						result = true;
+					} else {
+						result = !timestamp.equals(oldTimestamp);
+						repository.setProperty(IBugzillaConstants.PROPERTY_CONFIGTIMESTAMP, timestamp);
+					}
+				}
+			}
+		} catch (Exception e) {
+			// if an error occurs default to true
+		}
+		return result;
+	}
+
 	public void updateAttributeOptions(TaskRepository taskRepository, RepositoryTaskData existingReport)
 			throws CoreException {
 		String product = existingReport.getAttributeValue(BugzillaReportElement.PRODUCT.getKeyString());
@@ -637,8 +664,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		try {
 			return Integer.parseInt(taskId);
 		} catch (NumberFormatException e) {
-			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0,
-					"Invalid bug id: " + taskId, e));
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, "Invalid bug id: "
+					+ taskId, e));
 		}
 	}
 

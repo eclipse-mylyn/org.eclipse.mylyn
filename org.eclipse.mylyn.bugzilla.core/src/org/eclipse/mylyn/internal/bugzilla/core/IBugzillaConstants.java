@@ -15,6 +15,8 @@ public interface IBugzillaConstants {
 	//public static final String POST_ARGS_PASSWORD = "&Bugzilla_password=";
 	//public static final String POST_ARGS_LOGIN = "GoAheadAndLogIn=1&Bugzilla_login=";	
 
+	public static final String PROPERTY_CONFIGTIMESTAMP = "org.eclipse.mylyn.tasklist.repositories.config.timestamp";
+
 	static final String ERROR_MIDAIR_COLLISION = "collision";
 
 	static final String ERROR_MSG_MIDAIR_COLLISION = "A mid-air collision has occurred. Please synchronize by selecting Synchronize in the task's context menu.";
@@ -250,5 +252,7 @@ public interface IBugzillaConstants {
 	public static final String BUGZILLA_TASK_KIND = "Bug";
 
 	static final int MAX_URL_LENGTH = 2000;
+
+	public static final String TIMESTAMP_NOT_AVAILABLE = "n/a";
 
 }

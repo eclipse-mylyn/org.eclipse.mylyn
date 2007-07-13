@@ -46,6 +46,8 @@ import org.eclipse.swt.widgets.Label;
  */
 public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
+	private static final String LABEL_CACHED_CONFIGURATION = "Cached Configuration:";
+
 	private static final String LABEL_SHORT_LOGINS = "Local users enabled:";
 
 	public static final String LABEL_AUTOMATIC_VERSION = "Automatic (Use Validate Settings)";
@@ -57,6 +59,8 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 	protected Combo repositoryVersionCombo;
 
 	private Button cleanQAContact;
+
+	private Button cachedConfigButton;
 
 	public BugzillaRepositorySettingsPage(AbstractRepositoryConnectorUi repositoryUi) {
 		super(TITLE, DESCRIPTION, repositoryUi);
@@ -129,6 +133,18 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 			cleanQAContact.setSelection(shortLogin);
 		}
 
+		Label cachedConfigLabel = new Label(parent, SWT.NONE);
+		cachedConfigLabel.setText(LABEL_CACHED_CONFIGURATION);
+		cachedConfigButton = new Button(parent, SWT.CHECK | SWT.LEFT);
+		if (repository != null) {
+			boolean isCached = true;
+			String oldTimestamp = repository.getProperty(IBugzillaConstants.PROPERTY_CONFIGTIMESTAMP);
+			if (oldTimestamp != null && oldTimestamp.equals(IBugzillaConstants.TIMESTAMP_NOT_AVAILABLE)) {
+				isCached = false;
+			}
+			cachedConfigButton.setSelection(isCached);
+		}
+
 	}
 
 	public void setBugzillaVersion(String version) {
@@ -162,6 +178,12 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 	public void updateProperties(TaskRepository repository) {
 		repository.setProperty(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN,
 				String.valueOf(cleanQAContact.getSelection()));
+		if (cachedConfigButton.getSelection()) {
+			repository.setProperty(IBugzillaConstants.PROPERTY_CONFIGTIMESTAMP, "");
+		} else {
+			repository.setProperty(IBugzillaConstants.PROPERTY_CONFIGTIMESTAMP,
+					IBugzillaConstants.TIMESTAMP_NOT_AVAILABLE);
+		}
 	}
 
 	@Override

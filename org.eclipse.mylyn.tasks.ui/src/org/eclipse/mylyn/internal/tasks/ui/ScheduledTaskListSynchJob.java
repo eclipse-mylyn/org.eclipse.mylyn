@@ -8,6 +8,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 
@@ -41,6 +42,8 @@ public class ScheduledTaskListSynchJob extends Job {
 	private TaskList taskList = null;
 
 	private static long count = 0;
+
+	private static Calendar lastRepositoryRefresh;
 
 	private TaskListManager taskListManager;
 
@@ -87,14 +90,25 @@ public class ScheduledTaskListSynchJob extends Job {
 					continue;
 				}
 
-				// Occasionally update repository attributes
-				if (count >= UPDATE_ATTRIBUTES_FREQUENCY) {
+				RepositorySynchronizationManager synchronizationManager = TasksUiPlugin.getSynchronizationManager();
+				Set<AbstractRepositoryQuery> queries = taskList.getRepositoryQueries(repository.getUrl());
+
+				// Occasionally request update of repository configuration attributes
+				if ((lastRepositoryRefresh == null || lastRepositoryRefresh.get(Calendar.DAY_OF_MONTH) != Calendar.getInstance()
+						.get(Calendar.DAY_OF_MONTH))
+						&& queries != null && queries.size() > 0) {// && count >= UPDATE_ATTRIBUTES_FREQUENCY
 					Job updateJob = new Job("Updating attributes for " + repository.getUrl()) {
 
 						@Override
 						protected IStatus run(IProgressMonitor monitor) {
 							try {
-								connector.updateAttributes(repository, new SubProgressMonitor(monitor, 1));
+								if (connector.isRepositoryConfigurationStale(repository)) {
+									connector.updateAttributes(repository, new SubProgressMonitor(monitor, 1));
+									// HACK: A configuration update occurred. Save on behalf of connector which 
+									// currently can't access the repository manager itself
+									TasksUiPlugin.getRepositoryManager().saveRepositories(
+											TasksUiPlugin.getDefault().getRepositoriesFilePath());
+								}
 							} catch (Throwable t) {
 								// ignore, since we might not be connected
 							}
@@ -104,16 +118,18 @@ public class ScheduledTaskListSynchJob extends Job {
 					//updateJob.setSystem(true);
 					updateJob.setPriority(Job.LONG);
 					updateJob.schedule();
+					lastRepositoryRefresh = null;
 				}
 
-				RepositorySynchronizationManager synchronizationManager = TasksUiPlugin.getSynchronizationManager();
-				Set<AbstractRepositoryQuery> queries = taskList.getRepositoryQueries(repository.getUrl());
 				synchronizationManager.synchronize(connector, repository, queries, null, Job.DECORATE, 0, false);
 
 				monitor.worked(1);
 			}
 		} finally {
 			count = count >= UPDATE_ATTRIBUTES_FREQUENCY ? 0 : count + 1;
+			if (lastRepositoryRefresh == null) {
+				lastRepositoryRefresh = Calendar.getInstance();
+			}
 			if (monitor != null) {
 				monitor.done();
 			}

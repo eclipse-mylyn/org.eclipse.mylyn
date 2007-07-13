@@ -310,6 +310,14 @@ public abstract class AbstractRepositoryConnector {
 	 */
 	public abstract void updateAttributes(TaskRepository repository, IProgressMonitor monitor) throws CoreException;
 
+	/**
+	 * @return true to indicate that the repository configuration is stale and requires update
+	 * @throws CoreException
+	 */
+	public boolean isRepositoryConfigurationStale(TaskRepository repository) throws CoreException {
+		return true;
+	}
+
 	public void setUserManaged(boolean userManaged) {
 		this.userManaged = userManaged;
 	}

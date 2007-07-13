@@ -61,8 +61,8 @@ public class TaskRepositoryManager {
 		return Collections.unmodifiableCollection(repositoryConnectors.values());
 	}
 
-	public AbstractRepositoryConnector getRepositoryConnector(String kind) {
-		return repositoryConnectors.get(kind);
+	public AbstractRepositoryConnector getRepositoryConnector(String connectorKind) {
+		return repositoryConnectors.get(connectorKind);
 	}
 
 	public AbstractRepositoryConnector getRepositoryConnector(AbstractTask task) {
@@ -336,6 +336,7 @@ public class TaskRepositoryManager {
 		saveRepositories(repositoriesFilePath);
 	}
 
+	// TODO: Passing path here seems a little odd
 	public synchronized boolean saveRepositories(String destinationPath) {
 		if (!Platform.isRunning()) {// || TasksUiPlugin.getDefault() == null) {
 			return false;

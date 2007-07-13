@@ -36,6 +36,7 @@ import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.HeadMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.multipart.FilePart;
 import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
@@ -1106,6 +1107,90 @@ public class BugzillaClient {
 		}
 
 		return taskDataMap;
+	}
+
+	public String getConfigurationTimestamp() throws IOException, CoreException {
+		String lastModified = null;
+		HeadMethod method = null;
+		try {
+			method = connectHead(repositoryUrl + "/config.cgi?ctype=rdf");
+
+			Header lastModifiedHeader = method.getResponseHeader("Last-Modified");
+			if (lastModifiedHeader != null) {
+				lastModified = lastModifiedHeader.getValue();
+			}
+
+		} catch (Exception e) {
+			// ignore
+		} finally {
+			if (method != null) {
+				method.releaseConnection();
+			}
+		}
+		return lastModified;
+	}
+
+	private HeadMethod connectHead(String requestURL) throws IOException, CoreException {
+		WebClientUtil.setupHttpClient(httpClient, proxy, requestURL, htAuthUser, htAuthPass);
+		for (int attempt = 0; attempt < 2; attempt++) {
+			// force authentication
+			if (!authenticated && hasAuthenticationCredentials()) {
+				authenticate();
+			}
+
+			HeadMethod headMethod = new HeadMethod(WebClientUtil.getRequestPath(requestURL));
+			if (requestURL.contains(QUERY_DELIMITER)) {
+				headMethod.setQueryString(requestURL.substring(requestURL.indexOf(QUERY_DELIMITER)));
+			}
+
+			headMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset="
+					+ characterEncoding);
+
+			// WARNING!! Setting browser compatability breaks Bugzilla
+			// authentication
+			// getMethod.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
+
+			headMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new BugzillaRetryHandler());
+			headMethod.setDoAuthentication(true);
+
+			int code;
+			try {
+				code = httpClient.executeMethod(headMethod);
+			} catch (IOException e) {
+				headMethod.getResponseBody();
+				headMethod.releaseConnection();
+				throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+						RepositoryStatus.ERROR_IO, repositoryUrl.toString(), e));
+			}
+
+			if (code == HttpURLConnection.HTTP_OK) {
+				return headMethod;
+			} else if (code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN) {
+				headMethod.getResponseBody();
+				// login or reauthenticate due to an expired session
+				headMethod.releaseConnection();
+				authenticated = false;
+				authenticate();
+			} else if (code == HttpURLConnection.HTTP_PROXY_AUTH) {
+				authenticated = false;
+				headMethod.getResponseBody();
+				headMethod.releaseConnection();
+				throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+						RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(),
+						"Proxy authentication required"));
+			} else {
+				headMethod.getResponseBody();
+				headMethod.releaseConnection();
+				throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+						RepositoryStatus.ERROR_NETWORK, "Http error: " + HttpStatus.getStatusText(code)));
+				// throw new IOException("HttpClient connection error response
+				// code: " + code);
+			}
+		}
+
+		throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+				RepositoryStatus.ERROR_INTERNAL, "All connection attempts to " + repositoryUrl.toString()
+						+ " failed. Please verify connection and authentication information."));
 	}
 
 }
