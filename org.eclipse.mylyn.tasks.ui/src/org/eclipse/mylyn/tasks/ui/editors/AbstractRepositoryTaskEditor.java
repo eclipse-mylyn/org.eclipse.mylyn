@@ -702,15 +702,15 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				});
 				try {
 					super.performUpdate(repository, connector, monitor);
+					synchronizeEditorAction.run();
 				} catch (Exception e) {
-					// ignore	
-				}
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 
-					public void run() {
-						refreshEditor();
-					}
-				});
+						public void run() {
+							refreshEditor();
+						}
+					});
+				}
 			}
 		};
 		repositoryConfigRefresh.setImageDescriptor(TasksUiImages.REPOSITORY_SYNCHRONIZE);
@@ -2965,6 +2965,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 			if (activateAction != null) {
 				activateAction.setEnabled(!busy);
+			}
+
+			if (openBrowserAction != null) {
+				openBrowserAction.setEnabled(!busy);
 			}
 
 			if (historyAction != null) {
