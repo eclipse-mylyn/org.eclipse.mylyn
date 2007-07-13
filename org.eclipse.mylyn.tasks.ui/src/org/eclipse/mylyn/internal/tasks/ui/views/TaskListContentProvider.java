@@ -97,9 +97,8 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 		} else if (parent instanceof AbstractTask) {
 			return taskHasUnfilteredChildren((AbstractTask) parent);
 		} else if (parent instanceof AbstractTaskContainer) {
-			AbstractTaskContainer cat = (AbstractTaskContainer) parent;
-			// TODO: should provide hasChildren method!
-			return cat.getChildren() != null && cat.getChildren().size() > 0;
+			AbstractTaskContainer container = (AbstractTaskContainer) parent;
+			return !container.getChildren().isEmpty();
 		}
 		return false;
 	}
