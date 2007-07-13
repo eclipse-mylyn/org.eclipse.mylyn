@@ -54,16 +54,11 @@ public class ResetRepositoryConfigurationAction extends AbstractTaskRepositoryAc
 							@Override
 							protected IStatus run(IProgressMonitor monitor) {
 								monitor.beginTask(jobName, IProgressMonitor.UNKNOWN);
-								try {
-									connector.updateAttributes(repository, monitor);
-								} catch (CoreException ce) {
-									StatusHandler.displayStatus("Error updating attributes", ce.getStatus());
-								}
+								performUpdate(repository, connector, monitor);
 
 								monitor.done();
 								return Status.OK_STATUS;
 							}
-
 						};
 						updateJob.schedule();
 					}
@@ -71,6 +66,15 @@ public class ResetRepositoryConfigurationAction extends AbstractTaskRepositoryAc
 			}
 		} catch (Exception e) {
 			StatusHandler.fail(e, e.getMessage(), true);
+		}
+	}
+
+	public void performUpdate(final TaskRepository repository, final AbstractRepositoryConnector connector,
+			IProgressMonitor monitor) {
+		try {
+			connector.updateAttributes(repository, monitor);
+		} catch (CoreException ce) {
+			StatusHandler.displayStatus("Error updating attributes", ce.getStatus());
 		}
 	}
 

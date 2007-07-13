@@ -36,6 +36,7 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
@@ -80,6 +81,7 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryAttachmentEditorInp
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskOutlineNode;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskOutlinePage;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskSelection;
+import org.eclipse.mylyn.internal.tasks.ui.views.ResetRepositoryConfigurationAction;
 import org.eclipse.mylyn.monitor.core.DateUtil;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -140,6 +142,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IStorageEditorInput;
+import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
@@ -679,6 +682,43 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		Section attributesSection = createSection(editorComposite, getSectionLabel(SECTION_NAME.ATTRIBTUES_SECTION));
 		attributesSection.setExpanded(expandedStateAttributes || hasAttributeChanges);
+
+		Composite toolbarComposite = toolkit.createComposite(attributesSection);
+		toolbarComposite.setBackground(null);
+		toolbarComposite.setLayout(new RowLayout());
+		ResetRepositoryConfigurationAction repositoryConfigRefresh = new ResetRepositoryConfigurationAction() {
+			@Override
+			public void performUpdate(TaskRepository repository, AbstractRepositoryConnector connector,
+					IProgressMonitor monitor) {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+
+					public void run() {
+						setGlobalBusy(true);
+
+					}
+				});
+				try {
+					super.performUpdate(repository, connector, monitor);
+				} catch (Exception e) {
+					// ignore	
+				}
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+
+					public void run() {
+						refreshEditor();
+					}
+				});
+			}
+		};
+		repositoryConfigRefresh.setImageDescriptor(TasksUiImages.REPOSITORY_SYNCHRONIZE);
+		repositoryConfigRefresh.selectionChanged(new StructuredSelection(repository));
+		repositoryConfigRefresh.setToolTipText("Refresh attributes");
+
+		ToolBarManager barManager = new ToolBarManager();
+		barManager.add(repositoryConfigRefresh);
+		barManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+		barManager.createControl(toolbarComposite);
+		attributesSection.setTextClient(toolbarComposite);
 
 		// Attributes Composite- this holds all the combo fields and text fields
 		final Composite attribComp = toolkit.createComposite(attributesSection);
@@ -2219,7 +2259,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			private String htmlText;
 
 			private IStatus jobStatus;
-			
+
 			public PreviewWikiJob(String sourceText) {
 				super("Formatting Wiki Text");
 
@@ -2251,7 +2291,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			public String getHtmlText() {
 				return htmlText;
 			}
-			
+
 			public IStatus getStatus() {
 				return jobStatus;
 			}
