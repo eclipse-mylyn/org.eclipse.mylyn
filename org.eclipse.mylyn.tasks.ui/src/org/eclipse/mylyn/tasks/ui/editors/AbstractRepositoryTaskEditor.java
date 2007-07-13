@@ -616,17 +616,20 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				parentEditor.getTopForm().getToolBarManager().add(historyAction);
 			}
 
-			if (repositoryTask != null) {
-				openBrowserAction = new Action() {
-					@Override
-					public void run() {
-						TasksUiUtil.openUrl(repositoryTask.getUrl(), false);
-					}
-				};
+			if (connector != null) {
+				final String taskUrl = connector.getTaskUrl(taskData.getRepositoryUrl(), taskData.getId());
+				if (taskUrl != null) {
+					openBrowserAction = new Action() {
+						@Override
+						public void run() {
+							TasksUiUtil.openUrl(taskUrl, false);
+						}
+					};
 
-				openBrowserAction.setImageDescriptor(TasksUiImages.BROWSER_OPEN_TASK);
-				openBrowserAction.setToolTipText("Open with Web Browser");
-				parentEditor.getTopForm().getToolBarManager().add(openBrowserAction);
+					openBrowserAction.setImageDescriptor(TasksUiImages.BROWSER_OPEN_TASK);
+					openBrowserAction.setToolTipText("Open with Web Browser");
+					parentEditor.getTopForm().getToolBarManager().add(openBrowserAction);
+				}
 			}
 
 			activateAction = new Action() {
