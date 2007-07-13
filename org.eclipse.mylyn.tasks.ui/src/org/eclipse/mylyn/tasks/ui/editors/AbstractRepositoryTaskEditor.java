@@ -617,7 +617,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			}
 
 			if (connector != null) {
-				final String taskUrl = connector.getTaskUrl(taskData.getRepositoryUrl(), taskData.getId());
+				final String taskUrl = connector.getTaskUrl(taskData.getRepositoryUrl(), taskData.getTaskKey());
 				if (taskUrl != null) {
 					openBrowserAction = new Action() {
 						@Override
