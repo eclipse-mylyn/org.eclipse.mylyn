@@ -685,7 +685,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		Composite toolbarComposite = toolkit.createComposite(attributesSection);
 		toolbarComposite.setBackground(null);
-		toolbarComposite.setLayout(new RowLayout());
+		RowLayout rowLayout = new RowLayout();
+		rowLayout.marginTop = 0;
+		rowLayout.marginBottom = 0;
+		toolbarComposite.setLayout(rowLayout);
 		ResetRepositoryConfigurationAction repositoryConfigRefresh = new ResetRepositoryConfigurationAction() {
 			@Override
 			public void performUpdate(TaskRepository repository, AbstractRepositoryConnector connector,
