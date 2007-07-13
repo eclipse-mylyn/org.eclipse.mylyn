@@ -1,0 +1,77 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.eclipse</groupId>
+    <artifactId>mylyn</artifactId>
+    <version>2.0.0-v20070706-2000</version>
+    <packaging>jar</packaging>
+    <name>Mylyn Core</name>
+    <url>http://www.eclipse.org/mylyn</url>
+    <description>
+        Eclipse Mylyn is a task-focused UI that reduces information overload and
+        makes multi-tasking easy.
+    </description>
+
+    <organization>
+        <name>Eclipse Foundation</name>
+        <url>http://www.eclipse.org</url>
+    </organization>
+
+    <licenses>
+        <license>
+            <name>Eclipse Public License</name>
+            <url>http://www.eclipse.org/org/documents/epl-v10.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>
+            scm:cvs:pserver:anonymous:@dev.eclipse.org:/cvsroot/tools:org.eclipse.mylyn/org.eclipse.mylyn
+        </connection>
+        <url>
+            http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.mylyn/org.eclipse.mylyn/?root&#61;Tools_Project
+        </url>
+    </scm>
+
+    <issueManagement>
+        <system>Bugzilla</system>
+        <url>https://bugs.eclipse.org/bugs/enter_bug.cgi?product=Mylyn</url>
+    </issueManagement>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>.</directory>
+                <includes>
+                    <include>about.html</include>
+                    <include>about.ini</include>
+                    <include>feature.gif</include>
+                </includes>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestFile>META-INF/MANIFEST.MF</manifestFile>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-changelog-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </reporting>
+
+</project>
