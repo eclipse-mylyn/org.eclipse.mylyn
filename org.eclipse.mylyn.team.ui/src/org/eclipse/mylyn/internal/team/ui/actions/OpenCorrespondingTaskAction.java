@@ -102,7 +102,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 	 * 
 	 * This is used in order to keep LinkedTaskInfo lightweight with minimal dependencies.
 	 */
-	private static ILinkedTaskInfo reconsile(ILinkedTaskInfo info) {
+	private static ILinkedTaskInfo reconcile(ILinkedTaskInfo info) {
 		AbstractTask task = info.getTask();
 		if (task != null) {
 			return info;
@@ -265,7 +265,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 			}
 
 			if (info != null) {
-				info = reconsile(info);
+				info = reconcile(info);
 				final AbstractTask task = info.getTask();
 				if (task != null) {
 					TasksUiUtil.refreshAndOpenTaskListElement(task);
