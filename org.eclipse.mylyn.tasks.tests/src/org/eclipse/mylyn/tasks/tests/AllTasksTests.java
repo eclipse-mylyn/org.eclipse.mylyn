@@ -55,6 +55,9 @@ public class AllTasksTests {
 
 		// suite.addTestSuite(BackgroundSaveTest.class);
 		// suite.addTestSuite(RetrieveTitleFromUrlTest.class);
+
+		suite.addTestSuite(org.eclipse.mylyn.tasks.tests.web.NamedPatternTest.class);
+
 		return suite;
 	}
 }
