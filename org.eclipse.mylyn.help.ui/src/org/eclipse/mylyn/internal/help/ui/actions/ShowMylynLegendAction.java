@@ -18,21 +18,32 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.intro.IIntroManager;
+import org.eclipse.ui.intro.IIntroPart;
 
 /**
  * @author Mik Kersten
+ * @author Leo Dos Santos
  */
 public class ShowMylynLegendAction implements IWorkbenchWindowActionDelegate, IViewActionDelegate {
+	
+	private IWorkbenchWindow wbWindow;
 
 	public void dispose() {
 		// ignore
 	}
 
 	public void init(IWorkbenchWindow window) {
-		// ignore
+		wbWindow = window;
 	}
 
 	public void run(IAction action) {
+		IIntroManager introMgr = wbWindow.getWorkbench().getIntroManager();
+		IIntroPart intro = introMgr.getIntro();
+		if (intro != null) {
+			introMgr.setIntroStandby(intro, true);
+		}
+		
 		TaskListView.openInActivePerspective();
 		Shell parentShell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		UiLegendDialog uiLegendDialog = new UiLegendDialog(parentShell);
@@ -44,7 +55,6 @@ public class ShowMylynLegendAction implements IWorkbenchWindowActionDelegate, IV
 	}
 
 	public void init(IViewPart view) {
-		// ignore
-
+		wbWindow = view.getViewSite().getWorkbenchWindow();
 	}
 }
