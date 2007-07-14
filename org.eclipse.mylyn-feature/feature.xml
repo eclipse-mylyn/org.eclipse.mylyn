@@ -224,11 +224,8 @@ litigation.
       <import plugin="org.eclipse.ui.forms"/>
       <import plugin="org.eclipse.mylyn.tasks.core"/>
       <import plugin="org.eclipse.mylyn.tasks.ui"/>
-      <import plugin="org.eclipse.mylyn"/>
       <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.ui.cheatsheets"/>
-      <import plugin="org.eclipse.ui.intro"/>
-      <import plugin="org.eclipse.help.webapp"/>
+      <import plugin="org.eclipse.mylyn"/>
       <import plugin="org.eclipse.mylyn.monitor.core"/>
       <import plugin="org.eclipse.jface.text"/>
       <import plugin="org.eclipse.mylyn.context.core"/>
