@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.mylyn.internal.web.tasks.WebQuery;
 import org.eclipse.mylyn.internal.web.tasks.WebRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -65,13 +66,12 @@ public class LiveWebConnectorTemplatesTest extends TestCase {
 		Map<String, String> attributes = new HashMap<String, String>(template.getAttributes());
 		for (Map.Entry<String, String> e : attributes.entrySet()) {
 			String key = e.getKey();
-// if(key.startsWith(WebRepositoryConnector.PARAM_PREFIX)) {
 			params.put(key, e.getValue());
-// }
 		}
 
-		TaskRepository repository = new TaskRepository(WebRepositoryConnector.REPOSITORY_TYPE, template.repositoryUrl,
-				params);
+		String repositoryUrl = template.repositoryUrl;
+		TaskRepository repository = new TaskRepository(WebRepositoryConnector.REPOSITORY_TYPE, repositoryUrl, params);
+		
 		String url = repository.getUrl();
 		// HACK: repositories that require auth
 		if ("http://demo.otrs.org".equals(url)) {
@@ -80,21 +80,36 @@ public class LiveWebConnectorTemplatesTest extends TestCase {
 			repository.setAuthenticationCredentials("mylar2", "mylar123");
 		}
 
-		String taskQueryUrl = WebRepositoryConnector.evaluateParams(template.taskQueryUrl, repository);
-		String buffer = WebRepositoryConnector.fetchResource(taskQueryUrl, params, repository);
-		assertTrue("Unable to fetch resource\n" + taskQueryUrl, buffer != null && buffer.length() > 0);
+		String queryUrlTemplate = template.taskQueryUrl;
+		String queryUrl = WebRepositoryConnector.evaluateParams(queryUrlTemplate, repository);
 
-		String regexp = WebRepositoryConnector.evaluateParams(
-				template.getAttribute(WebRepositoryConnector.PROPERTY_QUERY_REGEXP), repository);
-		IStatus resultingStatus = WebRepositoryConnector.performQuery(buffer, regexp, null, monitor, collector,
-				repository);
+		String queryPattern = template.getAttribute(WebRepositoryConnector.PROPERTY_QUERY_REGEXP);
+		String regexp = WebRepositoryConnector.evaluateParams(queryPattern, repository);
 
-		assertTrue("Query failed\n" + taskQueryUrl + "\n" + regexp + "\n" + resultingStatus.toString(),
+		String taskPrefix = template.taskPrefixUrl;
+		
+		WebQuery query = new WebQuery(template.label, queryUrl, queryUrlTemplate, queryPattern,
+				taskPrefix, repositoryUrl, params);
+		
+		WebRepositoryConnector connector = new WebRepositoryConnector();
+		IStatus status = connector.performQuery(query, repository, monitor, collector);
+		
+//		IStatus resultingStatus; 
+//		if(regexp!=null && regexp.length()>0) {
+//			resultingStatus = WebRepositoryConnector.performQuery(buffer, regexp, null, monitor, collector,
+//					repository);
+//		} else {
+//			resultingStatus = WebRepositoryConnector.performRssQuery(queryUrl, monitor, collector, repository);
+//		}
+
+		assertTrue("Query failed\n" + queryUrl + "\n" + regexp + "\n" + status.toString(),
 				queryStatus.isOK());
 		try {
-			assertTrue("Expected non-empty query result\n" + taskQueryUrl + "\n" + regexp, hits.size() > 0);
+			assertTrue("Expected non-empty query result\n" + queryUrl + "\n" + regexp, hits.size() > 0);
 		} catch (Throwable t) {
-			System.err.println(taskQueryUrl);
+			String buffer = WebRepositoryConnector.fetchResource(queryUrl, params, repository);
+
+			System.err.println(queryUrl);
 			System.err.println(buffer);
 			System.err.println("--------------------------------------------------------");
 			throw t;
