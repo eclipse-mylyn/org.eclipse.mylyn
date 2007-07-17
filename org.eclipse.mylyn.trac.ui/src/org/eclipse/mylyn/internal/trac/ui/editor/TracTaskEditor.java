@@ -8,6 +8,9 @@
 
 package org.eclipse.mylyn.internal.trac.ui.editor;
 
+import org.eclipse.mylyn.internal.trac.core.TracAttributeFactory;
+import org.eclipse.mylyn.tasks.core.RepositoryOperation;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractRenderingEngine;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
@@ -36,6 +39,16 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 
 	public TaskRepository getRepository() {
 		return repository;
+	}
+
+	@Override
+	protected boolean hasContentAssist(RepositoryTaskAttribute attribute) {
+		return TracAttributeFactory.Attribute.NEW_CC.getTaskKey().equals(attribute.getId());
+	}
+
+	@Override
+	protected boolean hasContentAssist(RepositoryOperation repositoryOperation) {
+		return "owner".equals(repositoryOperation.getInputName());
 	}
 
 }
