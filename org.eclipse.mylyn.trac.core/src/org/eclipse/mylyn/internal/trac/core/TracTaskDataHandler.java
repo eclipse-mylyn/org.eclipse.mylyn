@@ -88,30 +88,14 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 		return getAttributeFactory(taskData.getRepositoryUrl(), taskData.getRepositoryKind(), taskData.getTaskKind());
 	}
 
-	public Date getDateForAttributeType(String attributeKey, String dateString) {
-		if (dateString == null || dateString.length() == 0) {
-			return null;
-		}
-
-		try {
-			String mappedKey = attributeFactory.mapCommonAttributeKey(attributeKey);
-			if (mappedKey.equals(Attribute.TIME.getTracKey()) || mappedKey.equals(Attribute.CHANGE_TIME.getTracKey())) {
-				return TracUtils.parseDate(Integer.valueOf(dateString));
-			}
-		} catch (Exception e) {
-		}
-		return null;
-	}
-
 	public static void updateTaskData(TaskRepository repository, AbstractAttributeFactory factory,
 			RepositoryTaskData data, TracTicket ticket) {
 		if (ticket.getCreated() != null) {
 			data.setAttributeValue(Attribute.TIME.getTracKey(), TracUtils.toTracTime(ticket.getCreated()) + "");
 		}
-		if (ticket.getLastChanged() != null) {
-			data.setAttributeValue(Attribute.CHANGE_TIME.getTracKey(), TracUtils.toTracTime(ticket.getLastChanged())
-					+ "");
-		}
+		
+		Date lastChanged = ticket.getLastChanged();
+
 		Map<String, String> valueByKey = ticket.getValues();
 		for (String key : valueByKey.keySet()) {
 			if (Key.CC.getKey().equals(key)) {
@@ -151,8 +135,14 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 				taskAttachment.setAttributeValue(RepositoryTaskAttribute.ATTACHMENT_FILENAME,
 						attachments[i].getFilename());
 				taskAttachment.setAttributeValue(RepositoryTaskAttribute.USER_OWNER, attachments[i].getAuthor());
-				taskAttachment.setAttributeValue(RepositoryTaskAttribute.ATTACHMENT_DATE, attachments[i].getCreated()
-						.toString());
+				if (attachments[i].getCreated() != null) {
+					if (lastChanged == null || attachments[i].getCreated().after(lastChanged)) {
+						lastChanged = attachments[i].getCreated(); 
+					}
+					
+					taskAttachment.setAttributeValue(RepositoryTaskAttribute.ATTACHMENT_DATE, attachments[i].getCreated()
+							.toString());
+				}
 				taskAttachment.setAttributeValue(RepositoryTaskAttribute.ATTACHMENT_URL, repository.getUrl()
 						+ ITracClient.TICKET_ATTACHMENT_URL + ticket.getId() + "/" + attachments[i].getFilename());
 				taskAttachment.setAttributeValue(RepositoryTaskAttribute.ATTACHMENT_ID, i + "");
@@ -169,6 +159,10 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 			addOperation(repository, data, ticket, actionList, "resolve");
 			addOperation(repository, data, ticket, actionList, "reassign");
 			addOperation(repository, data, ticket, actionList, "reopen");
+		}
+
+		if (lastChanged != null) {
+			data.setAttributeValue(Attribute.CHANGE_TIME.getTracKey(), TracUtils.toTracTime(lastChanged) + "");
 		}
 	}
 

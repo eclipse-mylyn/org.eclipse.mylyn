@@ -8,6 +8,7 @@
 
 package org.eclipse.mylyn.trac.tests;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,9 +26,12 @@ import org.eclipse.mylyn.internal.trac.core.TracTask;
 import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
+import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
+import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
@@ -165,6 +169,31 @@ public class TracTaskDataHandlerTest extends TestCase {
 			fail("Expected CoreException");
 		} catch (CoreException e) {
 		}
+	}
+
+	public void testAttachmentChangesLastModifiedDate010() throws Exception {
+		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
+		attachmentChangesLastModifiedDate();
+	}
+	
+	public void testAttachmentChangesLastModifiedDate011() throws Exception {
+		init(TracTestConstants.TEST_TRAC_011_URL, Version.XML_RPC);
+		attachmentChangesLastModifiedDate();
+	}
+
+	private void attachmentChangesLastModifiedDate() throws Exception {
+		RepositoryTaskData taskData = taskDataHandler.getTaskData(repository, data.attachmentTicketId + "", new NullProgressMonitor());
+		TracTask task = new TracTask(repository.getUrl(), data.attachmentTicketId + "", "");
+		connector.updateTaskFromTaskData(repository, task, taskData);
+		Date lastModified = taskDataHandler.getAttributeFactory(taskData).getDateForAttributeType(RepositoryTaskAttribute.DATE_MODIFIED, taskData.getLastModified());
+		
+		AbstractAttachmentHandler attachmentHandler = connector.getAttachmentHandler();
+		ITaskAttachment attachment = new MockAttachment("abc".getBytes());
+		attachmentHandler.uploadAttachment(repository, task, attachment, null, new NullProgressMonitor());
+		
+		taskData = taskDataHandler.getTaskData(repository, data.attachmentTicketId + "", new NullProgressMonitor());
+		Date newLastModified = taskDataHandler.getAttributeFactory(taskData).getDateForAttributeType(RepositoryTaskAttribute.DATE_MODIFIED, taskData.getLastModified());
+		assertTrue("Expected " + newLastModified + " to be more recent than " + lastModified, newLastModified.after(lastModified));
 	}
 
 	public void testPostTaskDataInvalidCredentials010() throws Exception {
