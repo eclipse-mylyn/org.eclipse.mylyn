@@ -27,8 +27,8 @@ Right click on the new task and select <b>Activate</b> to activate the task.
    <item title="Focus on the task" dialog="true" skip="false">
       <description>
          In the <b>Package Explorer</b> the task-focus turns on automatically if you activate a task.<br/> 
-You can turn on or off this function if you click on the  <b>Focus on the Active Task</b> toogle button in the view&apos;s toolbar.<br/>
-You can use this function in the <b>Outline</b> view, too. Turn on it in this view as well.
+You can turn on or off this function if you click on the  <b>Focus on  Active Task</b> toogle button in the view&apos;s toolbar.<br/>
+You can use this function in the <b>Outline</b> view too. Turn it on in this view as well.
       </description>
    </item>
    <item title="Open the file" dialog="true" skip="false">
