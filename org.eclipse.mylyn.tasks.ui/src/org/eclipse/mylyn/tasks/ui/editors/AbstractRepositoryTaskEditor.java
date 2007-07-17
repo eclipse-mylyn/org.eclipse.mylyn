@@ -616,7 +616,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				parentEditor.getTopForm().getToolBarManager().add(historyAction);
 			}
 
-			if (connector != null) {
+			if (connector != null && taskData != null) {
 				final String taskUrl = connector.getTaskUrl(taskData.getRepositoryUrl(), taskData.getTaskKey());
 				if (taskUrl != null) {
 					openBrowserAction = new Action() {
