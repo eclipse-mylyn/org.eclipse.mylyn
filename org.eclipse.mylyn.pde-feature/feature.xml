@@ -230,6 +230,8 @@ litigation.
       <import plugin="org.eclipse.search"/>
       <import plugin="org.eclipse.jdt.core"/>
       <import plugin="org.eclipse.mylyn.java.ui"/>
+      <import plugin="org.eclipse.jdt.launching"/>
+      <import plugin="org.eclipse.jdt.junit"/>
       <import plugin="org.eclipse.mylyn.context.ui"/>
       <import plugin="org.eclipse.mylyn.ide.ui"/>
       <import plugin="org.eclipse.mylyn.monitor.ui"/>
@@ -237,13 +239,28 @@ litigation.
       <import plugin="org.eclipse.mylyn.resources.ui"/>
       <import plugin="org.eclipse.mylyn.context.core"/>
       <import plugin="org.eclipse.mylyn"/>
-      <import feature="org.eclipse.mylyn_feature" version="2.0.0.v20070627-1400" match="greaterOrEqual"/>
-      <import feature="org.eclipse.mylyn.ide_feature" version="2.0.0.v20070627-1400" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.jdt.launching"/>
-      <import plugin="org.eclipse.jdt.junit"/>
       <import plugin="org.eclipse.jdt.debug.ui"/>
       <import plugin="org.eclipse.ant.ui"/>
       <import plugin="org.eclipse.ui.views"/>
+      <import feature="org.eclipse.mylyn_feature" version="2.0.0.v20070627-1400" match="greaterOrEqual"/>
+      <import feature="org.eclipse.mylyn.ide_feature" version="2.0.0.v20070627-1400" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.debug.core"/>
+      <import plugin="org.eclipse.team.core"/>
+      <import plugin="org.eclipse.team.cvs.ui"/>
+      <import plugin="org.eclipse.team.cvs.core"/>
+      <import plugin="org.eclipse.team.ui"/>
+      <import plugin="org.eclipse.jface"/>
+      <import plugin="org.eclipse.ui.navigator"/>
+      <import plugin="org.eclipse.ui.workbench"/>
+      <import plugin="org.eclipse.mylyn.tasks.core"/>
+      <import plugin="org.eclipse.mylyn.tasks.ui"/>
+      <import plugin="org.eclipse.compare"/>
+      <import plugin="org.eclipse.ui.navigator.resources"/>
+      <import plugin="org.eclipse.mylyn.team.ui"/>
+      <import plugin="org.eclipse.mylyn.bugzilla.ui"/>
+      <import plugin="org.eclipse.mylyn.bugzilla.core"/>
+      <import plugin="org.eclipse.pde.runtime"/>
    </requires>
 
    <plugin
