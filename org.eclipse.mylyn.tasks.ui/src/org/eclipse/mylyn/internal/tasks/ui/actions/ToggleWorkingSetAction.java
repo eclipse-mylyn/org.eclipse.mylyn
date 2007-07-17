@@ -57,6 +57,7 @@ public class ToggleWorkingSetAction extends Action {
 			while (iter.hasNext()) {
 				IWorkingSet workingSet = iter.next();
 				if (workingSet != null
+						&& workingSet.getId() != null
 						&& workingSet.getId().equalsIgnoreCase(TaskWorkingSetUpdater.ID_TASK_WORKING_SET)) {
 					tempList.add(workingSet);
 				}
