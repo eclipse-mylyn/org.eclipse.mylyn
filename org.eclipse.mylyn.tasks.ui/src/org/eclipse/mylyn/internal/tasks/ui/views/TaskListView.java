@@ -195,6 +195,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private static final String PART_NAME = "Task List";
 
+	// TODO: extract to extension points?
+	private static List<ITaskListPresentation> presentations = new ArrayList<ITaskListPresentation>();
+	
 	private boolean focusedMode = false;
 
 	private boolean linkWithEditor;
@@ -266,7 +269,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	private TaskWorkingSetFilter filterWorkingSet = new TaskWorkingSetFilter();
 
 	private Set<AbstractTaskListFilter> filters = new HashSet<AbstractTaskListFilter>();
-
+	
 	protected String[] columnNames = new String[] { "Summary" };
 
 	protected int[] columnWidths = new int[] { 200 };
@@ -604,6 +607,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		TasksUiPlugin.getTaskListManager().getTaskList().addChangeListener(TASK_REFERESH_LISTENER);
 
 		PlatformUI.getWorkbench().getWorkingSetManager().addPropertyChangeListener(this);
+		presentations.add(catagorizedPresentation);
+		presentations.add(scheduledPresentation);
 	}
 
 	@Override
@@ -1272,8 +1277,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		previousTaskAction = new ActivateTaskHistoryDropDownAction(TasksUiPlugin.getTaskListManager()
 				.getTaskActivationHistory(), false);
 		linkWithEditorAction = new LinkWithEditorAction(this);
-		ITaskListPresentation[] presentations = { catagorizedPresentation, scheduledPresentation };
-		presentationDropDownSelectionAction = new PresentationDropDownSelectionAction(this, presentations);
+		presentationDropDownSelectionAction = new PresentationDropDownSelectionAction(this);
 
 		filteredTree.getViewer().addSelectionChangedListener(openWithBrowser);
 		filteredTree.getViewer().addSelectionChangedListener(copyDetailsAction);
@@ -1689,4 +1693,12 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		}
 	}
 
+	/**
+	 * This can be used for experimentally adding additional presentations, but note
+	 * that this convention is extremely likely to change in 
+	 * @return
+	 */
+	public static List<ITaskListPresentation> getPresentations() {
+		return presentations;
+	}
 }

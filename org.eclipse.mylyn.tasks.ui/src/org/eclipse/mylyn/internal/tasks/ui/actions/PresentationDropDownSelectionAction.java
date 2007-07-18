@@ -29,12 +29,9 @@ public class PresentationDropDownSelectionAction extends Action implements IMenu
 
 	protected Menu dropDownMenu = null;
 
-	private ITaskListPresentation[] presentations;
-
-	public PresentationDropDownSelectionAction(TaskListView view, ITaskListPresentation[] presentations) {
+	public PresentationDropDownSelectionAction(TaskListView view) {
 		super();
 		this.view = view;
-		this.presentations = presentations;
 		setMenuCreator(this);
 		setText(LABEL_NAME);
 		setToolTipText(LABEL_NAME);
@@ -44,7 +41,7 @@ public class PresentationDropDownSelectionAction extends Action implements IMenu
 	}
 
 	protected void addActionsToMenu() {
-		for (ITaskListPresentation presentation : presentations) {
+		for (ITaskListPresentation presentation : TaskListView.getPresentations()) {
 			PresentationSelectionAction action = new PresentationSelectionAction(presentation);
 			ActionContributionItem item = new ActionContributionItem(action);
 			action.setText(presentation.getPresentationName());
