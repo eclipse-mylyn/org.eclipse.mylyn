@@ -234,16 +234,18 @@ public class TaskList {
 				if (container instanceof AbstractTaskCategory) {
 					((AbstractTaskCategory) container).setHandleIdentifier(newDescription);
 				} else if (container instanceof AbstractRepositoryQuery) {
-					((AbstractRepositoryQuery) container).setHandleIdentifier(newDescription);
-					this.addQuery((AbstractRepositoryQuery) container);
+					((AbstractRepositoryQuery)container).setHandleIdentifier(newDescription);
+					queries.put(((AbstractRepositoryQuery)container).getHandleIdentifier(), ((AbstractRepositoryQuery)container));
 				}
 			} else if (container instanceof TaskCategory && categories.remove(container.getHandleIdentifier()) != null) {
 				((TaskCategory) container).setHandleIdentifier(newDescription);
-				this.addCategory((TaskCategory) container);
-			}
+				categories.put(((TaskCategory)container).getHandleIdentifier(), (TaskCategory) container);
+			} 
 		}
+		// TODO: make this delta policy symmetrical with tasks
 		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
-		delta.add(new TaskContainerDelta(container, TaskContainerDelta.Kind.CHANGED));
+		delta.add(new TaskContainerDelta(container, TaskContainerDelta.Kind.REMOVED));
+		delta.add(new TaskContainerDelta(container, TaskContainerDelta.Kind.ADDED));
 		for (ITaskListChangeListener listener : changeListeners) {
 			listener.containersChanged(delta);
 		}

@@ -100,6 +100,7 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 				synchronized (workingSets) {
 					switch (taskContainerDelta.getKind()) {
 					case REMOVED:
+						// Remove from all
 						for (IWorkingSet workingSet : workingSets) {
 							ArrayList<IAdaptable> elements = new ArrayList<IAdaptable>(
 									Arrays.asList(workingSet.getElements()));
@@ -108,14 +109,18 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 						}
 						break;
 					case ADDED:
-						for (IWorkingSet workingSet : workingSets) {
+						// Add to the active working set
+						for (IWorkingSet workingSet : TaskWorkingSetUpdater.getEnabledSets()) {
 							ArrayList<IAdaptable> elements = new ArrayList<IAdaptable>(
 									Arrays.asList(workingSet.getElements()));
 							elements.add(taskContainerDelta.getContainer());
 							workingSet.setElements(elements.toArray(new IAdaptable[elements.size()]));
 						}
+						break;
+					case CHANGED:
+						// Ignore since containers change during synch with server
+						break;
 					}
-					break;
 				}
 			}
 		}

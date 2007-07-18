@@ -14,6 +14,7 @@ import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
@@ -74,8 +75,9 @@ class TaskListCellModifier implements ICellModifier {
 					toggleTaskActivation(taskListElement);
 					break;
 				}
-			} else if (((TreeItem) element).getData() instanceof AbstractTaskCategory) {
-				AbstractTaskCategory container = (AbstractTaskCategory) ((TreeItem) element).getData();
+			} else if (((TreeItem) element).getData() instanceof AbstractTaskCategory
+					|| ((TreeItem) element).getData() instanceof AbstractRepositoryQuery) {
+				AbstractTaskContainer container = (AbstractTaskContainer) ((TreeItem) element).getData();
 				switch (columnIndex) {
 				case 0:
 					TasksUiPlugin.getTaskListManager()
