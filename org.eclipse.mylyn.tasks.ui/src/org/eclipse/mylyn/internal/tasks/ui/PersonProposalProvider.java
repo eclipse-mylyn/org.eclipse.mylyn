@@ -8,7 +8,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -45,8 +44,10 @@ public class PersonProposalProvider implements IContentProposalProvider {
 	}
 
 	public IContentProposal[] getProposals(String contents, int position) {
-		ArrayList<IContentProposal> result = new ArrayList<IContentProposal>();
-
+		if (contents == null) {
+			throw new IllegalArgumentException();
+		}
+		
 		SortedSet<String> addressSet = getAddressSet();
 		if (position > 0) {
 			// retrieve subset of the tree set using key range
@@ -57,11 +58,12 @@ public class PersonProposalProvider implements IContentProposalProvider {
 			addressSet = addressSet.subSet(contents1, contents2);
 		}
 
+		IContentProposal[] result = new IContentProposal[addressSet.size()];
+		int i = 0;
 		for (final String address : addressSet) {
-			result.add(new PersonContentProposal(address, address.equalsIgnoreCase(currentUser)));
+			result[i++] = new PersonContentProposal(address, address.equalsIgnoreCase(currentUser));
 		}
-
-		return result.toArray(new IContentProposal[result.size()]);
+		return result;
 	}
 
 	private SortedSet<String> getAddressSet() {
