@@ -200,11 +200,13 @@ public class TaskDataManager {
 			return;
 		}
 		TaskDataState state = retrieveState(repositoryUrl, id);
-		state.discardEdits();
-		try {
-			storage.put(state);
-		} catch (Exception e) {
-			StatusHandler.fail(e, "Discard edits failed.", false);
+		if (state != null) {
+			state.discardEdits();
+			try {
+				storage.put(state);
+			} catch (Exception e) {
+				StatusHandler.fail(e, "Discard edits failed.", false);
+			}
 		}
 	}
 
