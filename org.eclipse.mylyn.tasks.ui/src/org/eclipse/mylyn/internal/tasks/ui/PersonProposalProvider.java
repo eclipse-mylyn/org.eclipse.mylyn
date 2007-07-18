@@ -58,7 +58,7 @@ public class PersonProposalProvider implements IContentProposalProvider {
 		}
 
 		for (final String address : addressSet) {
-			result.add(new PersonContentProposal(address, address.compareToIgnoreCase(currentUser) == 0));
+			result.add(new PersonContentProposal(address, address.equalsIgnoreCase(currentUser)));
 		}
 
 		return result.toArray(new IContentProposal[result.size()]);
