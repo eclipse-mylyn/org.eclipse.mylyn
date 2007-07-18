@@ -202,13 +202,31 @@ public class TracWebClient extends AbstractTracClient {
 					} else if (tag.getTagType() == HtmlTag.Type.H3 && "status".equals(tag.getAttribute("class"))) {
 						String text = getStrongText(tokenizer);
 						if (text.length() > 0) {
+							// Trac 0.9 format: status / status (resolution)
 							int i = text.indexOf(" (");
 							if (i != -1) {
-								// status contains resolution as well
 								ticket.putBuiltinValue(Key.STATUS, text.substring(0, i));
-								ticket.putBuiltinValue(Key.RESOLUTION, text.substring(i, text.length() - 1));
+								ticket.putBuiltinValue(Key.RESOLUTION, text.substring(i + 2, text.length() - 1));
 							} else {
 								ticket.putBuiltinValue(Key.STATUS, text);
+							}
+						}
+					} else if (tag.getTagType() == HtmlTag.Type.SPAN) {
+						String clazz = tag.getAttribute("class");
+						if ("status".equals(clazz)) {
+							// Trac 0.10 format: (status type) / (status type: resolution)
+							String text = getText(tokenizer);
+							if (text.startsWith("(") && text.endsWith(")")) {
+								StringTokenizer t = new StringTokenizer(text.substring(1, text.length() - 1), " :");
+								if (t.hasMoreTokens()) {
+									ticket.putBuiltinValue(Key.STATUS, t.nextToken());
+								}
+								if (t.hasMoreTokens()) {
+									ticket.putBuiltinValue(Key.TYPE, t.nextToken());
+								}
+								if (t.hasMoreTokens()) {
+									ticket.putBuiltinValue(Key.RESOLUTION, t.nextToken());
+								}
 							}
 						}
 					}

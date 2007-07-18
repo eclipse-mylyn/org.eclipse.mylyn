@@ -62,27 +62,46 @@ public abstract class AbstractTracClientSearchTest extends AbstractTracClientTes
 		}
 	}
 
+	public void testGetTicket096() throws Exception {
+		if (version == Version.XML_RPC) {
+			return;
+		}
+
+		connect096();
+		getTicket();
+	}
+
 	public void testGetTicket010() throws Exception {
 		connect010();
-		getTickets();
+		getTicket();
 	}
 
 	public void testGetTicket011() throws Exception {
 		if (version == Version.TRAC_0_9) {
-			// XXX need to fix bug 175211
+			// XXX web mode is broken for Trac 0.11: need to fix bug 175211
 			return;
 		}
 
 		connect011();
-		getTickets();
+		getTicket();
 	}
 
-	private void getTickets() throws Exception {
+	private void getTicket() throws Exception {
 		TracTicket ticket = repository.getTicket(tickets.get(0).getId());
 		assertTicketEquals(tickets.get(0), ticket);
 
 		ticket = repository.getTicket(tickets.get(1).getId());
 		assertTicketEquals(tickets.get(1), ticket);
+	}
+
+	
+	public void testGetTicketInvalidId096() throws Exception {
+		if (version == Version.XML_RPC) {
+			return;
+		}
+
+		connect096();
+		getTicketInvalidId();
 	}
 
 	public void testGetTicketInvalidId010() throws Exception {
