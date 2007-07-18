@@ -196,8 +196,9 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		activeTaskLabel.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
-				if (TaskListView.getFromActivePerspective().getDrilledIntoCategory() != null) {
-					TaskListView.getFromActivePerspective().goUpToRoot();
+				TaskListView taskListView = TaskListView.getFromActivePerspective();
+				if (taskListView != null && taskListView.getDrilledIntoCategory() != null) {
+					taskListView.goUpToRoot();
 				}
 				TasksUiUtil.refreshAndOpenTaskListElement((TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask()));
 			}
