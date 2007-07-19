@@ -735,7 +735,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		repositoryConfigRefresh.selectionChanged(new StructuredSelection(repository));
 		repositoryConfigRefresh.setToolTipText("Refresh attributes");
 
-		ToolBarManager barManager = new ToolBarManager();
+		ToolBarManager barManager = new ToolBarManager(SWT.FLAT);
 		barManager.add(repositoryConfigRefresh);
 		barManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 		barManager.createControl(toolbarComposite);
