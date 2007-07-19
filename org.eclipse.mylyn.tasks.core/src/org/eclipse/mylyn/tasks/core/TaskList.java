@@ -151,7 +151,7 @@ public class TaskList {
 				}
 				task.removeParentContainer(taskContainer);
 				delta.add(new TaskContainerDelta(taskContainer, TaskContainerDelta.Kind.CHANGED));
-			}
+			} 
 		}
 		if (container != null) {
 			internalAddTask(task, container);

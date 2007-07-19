@@ -8,6 +8,8 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
+import java.util.Set;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -18,21 +20,25 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Ken Sueda
+ * @author Mik Kersten
  */
 public class RemoveFromCategoryAction extends Action {
+	private static final String LABEL = "Remove From Category";
+
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.remove";
 
 	private final TaskListView view;
 
 	public RemoveFromCategoryAction(TaskListView view) {
 		this.view = view;
-		setText("Remove From Category");
+		setText(LABEL);
 		setId(ID);
 		setImageDescriptor(TasksUiImages.REMOVE);
 	}
@@ -52,12 +58,26 @@ public class RemoveFromCategoryAction extends Action {
 					}
 
 					TreeItem item = this.view.getViewer().getTree().getSelection()[0];
-					if (item.getParentItem() != null && item.getParentItem().getData() instanceof TaskCategory) {
+					Set<AbstractTaskContainer> parentContainers = task.getParentContainers();
+					
+					if (item.getParentItem() != null && item.getParent().getData() instanceof TaskCategory) {
 						TaskCategory category = (TaskCategory) item.getParentItem().getData();
 						TasksUiPlugin.getTaskListManager().getTaskList().removeFromCategory(category, task);
+						TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task,
+								TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
+					} else if (!task.isLocal() && parentContainers.contains(TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory())) {
+						TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task, TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer());
+					} else if (parentContainers.contains(TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory())) {
+						MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
+								LABEL, "Can not remove from the default category, move to another category instead.");
+					} else {
+						TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task,
+								TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 					}
-					TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task,
-							TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
+					
+					if (item.getParentItem() != null && item.getParentItem().getData() instanceof TaskCategory) {
+
+					}
 				}
 			}
 		} catch (NullPointerException npe) {
