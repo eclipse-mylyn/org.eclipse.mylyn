@@ -24,7 +24,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
-import org.eclipse.mylyn.internal.tasks.core.UnfiledCategory;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
@@ -383,14 +382,21 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		Collections.sort(categories, new Comparator<AbstractTaskContainer>() {
 
 			public int compare(AbstractTaskContainer c1, AbstractTaskContainer c2) {
-				return c1.getSummary().compareToIgnoreCase(c2.getSummary());
+				if (c1.equals(TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory())) {
+					return -1;
+				} else if (c2.equals(TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory())) {
+					return 1;
+				} else {
+					return c1.getSummary().compareToIgnoreCase(c2.getSummary());
+				}
 			}
 
 		});
-		categoryChooser.add(UnfiledCategory.LABEL);
+
 		for (AbstractTaskContainer category : categories) {
 			categoryChooser.add(category.getSummary());
 		}
+
 		categoryChooser.select(0);
 		categoryChooser.setEnabled(false);
 		categoryChooser.setData(categories);
