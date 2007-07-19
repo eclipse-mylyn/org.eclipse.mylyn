@@ -21,7 +21,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * 
  * @author Shawn Minto
  */
 public class KeywordsDialog extends Dialog {
@@ -34,7 +33,7 @@ public class KeywordsDialog extends Dialog {
 
 	public KeywordsDialog(Shell shell, String selectedKeywords, java.util.List<String> validKeywords) {
 		super(shell);
-
+		setShellStyle(getShellStyle() | SWT.RESIZE);
 		StringTokenizer st = new StringTokenizer(selectedKeywords, ",", false);
 		this.selectedKeywords = new ArrayList<String>();
 		while (st.hasMoreTokens()) {
@@ -113,7 +112,6 @@ public class KeywordsDialog extends Dialog {
 
 		keyWordsList.addCheckStateListener(new KeywordListener());
 
-		super.createDialogArea(parent);
 
 		parent.pack();
 
