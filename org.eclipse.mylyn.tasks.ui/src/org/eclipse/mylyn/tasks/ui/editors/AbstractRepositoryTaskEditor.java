@@ -705,7 +705,22 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				});
 				try {
 					super.performUpdate(repository, connector, monitor);
-					synchronizeEditorAction.run();
+					if (connector != null) {
+						TasksUiPlugin.getSynchronizationManager().synchronize(connector, repositoryTask, true,
+								new JobChangeAdapter() {
+
+									@Override
+									public void done(IJobChangeEvent event) {
+										PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+
+											public void run() {
+												refreshEditor();
+											}
+										});
+
+									}
+								});
+					}
 				} catch (Exception e) {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 
