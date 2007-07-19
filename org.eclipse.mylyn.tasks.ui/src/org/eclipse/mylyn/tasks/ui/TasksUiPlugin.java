@@ -470,7 +470,14 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	private void checkForCredentials() {
 		for (TaskRepository repository : taskRepositoryManager.getAllRepositories()) {
+			AbstractRepositoryConnector connector = getRepositoryManager().getRepositoryConnector(
+					repository.getConnectorKind());
+			boolean userManaged = true;
+			if (connector != null) {
+				userManaged = connector.isUserManaged();
+			}
 			if (!repository.isAnonymous()
+					&& !userManaged
 					&& (repository.getUserName() == null || repository.getPassword() == null
 							|| "".equals(repository.getUserName()) || "".equals(repository.getPassword()))) {
 				try {
@@ -537,7 +544,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	 * Only attempt once per startup.
 	 */
 	private boolean attemptMigration = true;
-	
+
 	public synchronized String getDataDirectory() {
 		if (attemptMigration) {
 			migrateFromLegacyDirectory();
@@ -549,12 +556,11 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	private void migrateFromLegacyDirectory() {
 		// Migrate .mylar data folder to .metadata/.mylyn
-		String oldDefaultDataPath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toString() + '/'
-				+ ".mylar"; 
+		String oldDefaultDataPath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toString() + '/' + ".mylar";
 		File oldDefaultDataDir = new File(oldDefaultDataPath);
 		if (oldDefaultDataDir.exists()) { // && !newDefaultDataDir.exists()) {
 			File metadata = new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toString() + '/'
-					+ DIRECTORY_METADATA);		
+					+ DIRECTORY_METADATA);
 			if (!metadata.exists()) {
 				if (!metadata.mkdirs()) {
 					StatusHandler.log("Unable to create metadata folder: " + metadata.getAbsolutePath(), this);
@@ -566,11 +572,11 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 					StatusHandler.log("Could not migrate legacy data from " + oldDefaultDataDir.getAbsolutePath()
 							+ " to " + TasksUiPlugin.getDefault().getDefaultDataDirectory(), this);
 				} else {
-					StatusHandler.log("Migrated legacy task data from " + oldDefaultDataDir.getAbsolutePath()
-							+ " to " + TasksUiPlugin.getDefault().getDefaultDataDirectory(), this);
+					StatusHandler.log("Migrated legacy task data from " + oldDefaultDataDir.getAbsolutePath() + " to "
+							+ TasksUiPlugin.getDefault().getDefaultDataDirectory(), this);
 				}
 			}
-		}	
+		}
 	}
 
 	public void setDataDirectory(String newPath) {
@@ -880,8 +886,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 						notification.setDate(modified);
 					}
 				}
- 			} else {
- 				notification.setDescription("Unread task");
+			} else {
+				notification.setDescription("Unread task");
 			}
 		} catch (Throwable t) {
 			StatusHandler.fail(t, "Could not format notification for: " + task, false);
@@ -981,13 +987,14 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		sb.append("[");
 		boolean first = true;
 		for (String value : values) {
-			if(!first) sb.append(", ");
+			if (!first)
+				sb.append(", ");
 			sb.append(cleanValue(value));
 		}
 		sb.append("]");
 		return sb.toString();
 	}
-	
+
 	private static String cleanValue(String value) {
 		String commentText = value.replaceAll("\\s", " ").trim();
 		if (commentText.length() > 60) {
