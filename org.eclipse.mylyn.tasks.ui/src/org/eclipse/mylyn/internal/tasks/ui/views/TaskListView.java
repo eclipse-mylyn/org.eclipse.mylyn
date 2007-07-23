@@ -1695,8 +1695,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	/**
 	 * This can be used for experimentally adding additional presentations, but note
-	 * that this convention is extremely likely to change in 
-	 * @return
+	 * that this convention is extremely likely to change in the Mylyn 3.0 cycle. 
 	 */
 	public static List<ITaskListPresentation> getPresentations() {
 		return presentations;
