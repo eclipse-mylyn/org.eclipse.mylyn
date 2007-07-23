@@ -138,8 +138,8 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 				if (activityContextManager != null) {
 					activityContextManager.stop();
 				}
-				if (getWorkbench() != null && !getWorkbench().isClosing()) {
-					getWorkbench().removeWindowListener(WINDOW_LISTENER);
+				if (getWorkbench() != null && getWorkbench().getActiveWorkbenchWindow() != null && !getWorkbench().isClosing()) {
+					getWorkbench().removeWindowListener(WINDOW_LISTENER); 
 					getWorkbench().getActiveWorkbenchWindow().getShell().removeShellListener(shellLifecycleListener);
 					if (launchingWorkbenchWindow != null) {
 						removeListenersFromWindow(launchingWorkbenchWindow);
