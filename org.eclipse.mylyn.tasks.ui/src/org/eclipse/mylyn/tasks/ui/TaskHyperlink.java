@@ -44,6 +44,14 @@ public final class TaskHyperlink implements IHyperlink {
 		return null;
 	}
 
+	/**
+	 * @Since 2.1
+	 * @return
+	 */
+	public TaskRepository getRepository() {
+		return repository;
+	}
+
 	public String getHyperlinkText() {
 		return "Open Task " + taskId;
 	}

@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.hyperlink.DefaultHyperlinkPresenter;
+import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlinkPresenter;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
@@ -35,9 +36,13 @@ import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.widgets.Control;
 
 /**
  * @author Rob Elves
@@ -95,8 +100,49 @@ public class RepositoryViewerConfig extends SourceViewerConfiguration {
 	}
 
 	@Override
-	public IHyperlinkPresenter getHyperlinkPresenter(ISourceViewer sourceViewer) {
-		return new DefaultHyperlinkPresenter(new RGB(0, 0, 200));
+	public IHyperlinkPresenter getHyperlinkPresenter(final ISourceViewer sourceViewer) {
+		return new DefaultHyperlinkPresenter(new RGB(0, 0, 200)) {
+			@Override
+			public void showHyperlinks(IHyperlink[] hyperlinks) {
+				super.showHyperlinks(hyperlinks);
+
+				if (hyperlinks != null && hyperlinks.length > 0 && hyperlinks[0] instanceof TaskHyperlink) {
+					TaskHyperlink hyperlink = (TaskHyperlink) hyperlinks[0];
+
+					TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+					String repositoryUrl = hyperlink.getRepository().getUrl();
+
+					AbstractTask task = taskList.getTask(repositoryUrl, hyperlink.getTaskId());
+					if (task == null) {
+						task = taskList.getTaskByKey(repositoryUrl, hyperlink.getTaskId());
+					}
+
+					if (task != null) {
+						Control cursorControl = sourceViewer.getTextWidget().getDisplay().getCursorControl();
+						if (task.getTaskKey() == null) {
+							cursorControl.setToolTipText(task.getSummary());
+						} else {
+							cursorControl.setToolTipText(task.getTaskKey() + ": " + task.getSummary());
+						}
+					}
+				}
+			}
+
+			@Override
+			public void hideHyperlinks() {
+				Control cursorControl = sourceViewer.getTextWidget().getDisplay().getCursorControl();
+				if (cursorControl != null) {
+					cursorControl.setToolTipText(null);
+				}
+
+				super.hideHyperlinks();
+			}
+
+			public void uninstall() {
+				// ignore
+				super.uninstall();
+			}
+		};
 	}
 
 	@Override
