@@ -47,7 +47,9 @@ import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextViewer;
+import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -81,6 +83,7 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryAttachmentEditorInp
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskOutlineNode;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskOutlinePage;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskSelection;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskUrlHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.views.ResetRepositoryConfigurationAction;
 import org.eclipse.mylyn.monitor.core.DateUtil;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
@@ -106,6 +109,8 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.browser.LocationAdapter;
+import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.custom.StyledText;
@@ -278,6 +283,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected CCombo duplicateDetectorChooser;
 
 	protected Label duplicateDetectorLabel;
+
+	private boolean ignoreLocationEvents = false;
 
 	protected enum SECTION_NAME {
 		ATTRIBTUES_SECTION("Attributes"), ATTACHMENTS_SECTION("Attachments"), DESCRIPTION_SECTION("Description"), COMMENTS_SECTION(
@@ -1583,7 +1590,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				final StackLayout descriptionLayout = new StackLayout();
 				descriptionComposite.setLayout(descriptionLayout);
 
-				Browser descriptionWikiBrowser = new Browser(descriptionComposite, SWT.NONE);
+				Browser descriptionWikiBrowser = addBrowser(descriptionComposite, SWT.NONE);
 
 				descriptionTextViewer = addTextEditor(repository, descriptionComposite, taskData.getDescription(),
 						true, SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
@@ -2175,7 +2182,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			final StackLayout editPreviewLayout = new StackLayout();
 			editPreviewComposite.setLayout(editPreviewLayout);
 
-			Browser newCommentBrowser = new Browser(editPreviewComposite, SWT.NONE);
+			Browser newCommentBrowser = addBrowser(editPreviewComposite, SWT.NONE);
 
 			newCommentTextViewer = addTextEditor(repository, editPreviewComposite, attribute.getValue(), true, SWT.FLAT
 					| SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
@@ -2217,6 +2224,30 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		newCommentSection.setClient(newCommentsComposite);
 
 		toolkit.paintBordersFor(newCommentsComposite);
+	}
+
+	private Browser addBrowser(Composite parent, int style) {
+		Browser browser = new Browser(parent, style);
+		// intercept links to open tasks in rich editor and urls in separate browser
+		browser.addLocationListener(new LocationAdapter() {
+			@Override
+			public void changing(LocationEvent event) {
+				// ignore events that are caused by manually setting the contents of the browser
+				if (ignoreLocationEvents) {
+					return;
+				}
+
+				if (event.location != null) {
+					event.doit = false;
+					IHyperlink link = new TaskUrlHyperlink(
+							new Region(0, 0)/* a fake region just to make constructor happy */, event.location);
+					link.open();
+				}
+			}
+
+		});
+
+		return browser;
 	}
 
 	/**
@@ -2261,7 +2292,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					public void handleEvent(Event e) {
 						buttonState = ++buttonState % 2;
 						if (buttonState == 1) {
-							previewBrowser.setText("loading preview...");
+							setText(previewBrowser, "loading preview...");
 							previewWiki(previewBrowser, editor.getTextWidget().getText());
 						}
 						previewButton.setText(buttonState == 0 ? LABEL_BUTTON_PREVIEW : LABEL_BUTTON_EDIT);
@@ -2271,6 +2302,16 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				});
 			}
 		};
+	}
+
+	private void setText(Browser browser, String html) {
+		try {
+			ignoreLocationEvents = true;
+			browser.setText((html != null) ? html : "");
+		} finally {
+			ignoreLocationEvents = false;
+		}
+
 	}
 
 	private void previewWiki(final Browser browser, String sourceText) {
@@ -2329,7 +2370,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					if (job.getStatus().isOK()) {
 						getPartControl().getDisplay().asyncExec(new Runnable() {
 							public void run() {
-								AbstractRepositoryTaskEditor.this.displayWikiPreview(browser, job.getHtmlText());
+								AbstractRepositoryTaskEditor.this.setText(browser, job.getHtmlText());
 								parentEditor.setMessage(null, IMessageProvider.NONE);
 							}
 						});
@@ -2347,14 +2388,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		job.setUser(true);
 		job.schedule();
-	}
-
-	private void displayWikiPreview(Browser browser, String htmlText) {
-		if (htmlText == null) {
-			browser.setText("");
-		} else {
-			browser.setText(htmlText);
-		}
 	}
 
 	/**
