@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,8 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -48,6 +51,8 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskActivationHistory;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
@@ -67,6 +72,7 @@ import org.eclipse.swt.widgets.Display;
  * 
  * @author Mik Kersten
  * @author Rob Elves (task activity)
+ * @author Jevgeni Holodkov (insertQueries)
  * @since 2.0
  */
 public class TaskListManager implements IPropertyChangeListener {
@@ -1188,6 +1194,68 @@ public class TaskListManager implements IPropertyChangeListener {
 			taskList.addTask(newTask, taskList.getDefaultCategory());
 		}
 		return newTask;
+	}
+
+	
+	/**
+	 * Imports Queries to the TaskList and synchronize them with the repository. If the imported query have the
+	 * name that overlaps with the existing one, the the suffix [x] is added, where x is a number starting from 1.
+	 * @param queries to insert
+	 * @return the list queries, which were not inserted since because the related repository was not found.
+	 */
+	public List<AbstractRepositoryQuery> insertQueries(List<AbstractRepositoryQuery> queries) {
+		List<AbstractRepositoryQuery> badQueries = new ArrayList<AbstractRepositoryQuery>();
+		
+		String patternStr = "\\[(\\d+)\\]$"; // all string that end with [x], where x is a number
+	    Pattern pattern = Pattern.compile(patternStr);
+		
+		for (AbstractRepositoryQuery query : queries) {
+
+			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+					query.getRepositoryKind(), query.getRepositoryUrl());
+			if (repository == null) {
+				badQueries.add(query);
+				continue;
+			}
+
+			// resolve name conflict
+			{
+				Set<AbstractRepositoryQuery> existingQueries = getTaskList().getQueries();
+				Map<String, AbstractRepositoryQuery> queryMap = new HashMap<String, AbstractRepositoryQuery>();
+				for (AbstractRepositoryQuery existingQuery : existingQueries) {
+					queryMap.put(existingQuery.getHandleIdentifier(), existingQuery);
+				}
+
+				// suggest a new handle if needed
+				String handle = query.getHandleIdentifier();
+				
+				while (queryMap.get(handle) != null) {
+					Matcher matcher = pattern.matcher(handle);
+					boolean matchFound = matcher.find();
+					if (matchFound) {
+						// increment index
+						int index = Integer.parseInt(matcher.group(1));
+						index++;
+						handle = matcher.replaceAll("[" + index + "]");
+					} else {
+						handle += "[1]";
+					}
+				}
+				query.setHandleIdentifier(handle);
+			}
+
+			// add query
+			TasksUiPlugin.getTaskListManager().getTaskList().addQuery(query);
+
+			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
+					.getRepositoryConnector(repository.getConnectorKind());
+			if (connector != null) {
+				TasksUiPlugin.getSynchronizationManager().synchronize(connector, query, null, true);
+			}
+
+		}
+		
+		return badQueries;
 	}
 
 }

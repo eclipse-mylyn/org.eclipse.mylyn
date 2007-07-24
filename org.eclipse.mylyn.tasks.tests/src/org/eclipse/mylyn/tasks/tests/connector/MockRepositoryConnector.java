@@ -14,6 +14,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -160,8 +161,7 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository, IProgressMonitor monitor,
 			ITaskCollector resultCollector) {
-		// ignore
-		return null;
+		return Status.OK_STATUS;
 	}
 
 	public void setAttachmentHandler(AbstractAttachmentHandler attachmentHandler) {

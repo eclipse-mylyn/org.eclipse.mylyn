@@ -99,7 +99,7 @@
            class="org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataImportWizard"
            icon="icons/eview16/task-list.gif"
            id="org.eclipse.mylyn.tasks.ui.wizards.import"
-           name="Task List">
+           name="Task Data">
         <description>
            Import task data files from file system.
         </description>
@@ -342,7 +342,38 @@
                </or>
             </enablement>
          </action>
+         
+        <!-- <action
+               class="org.eclipse.mylyn.internal.tasks.ui.actions.QueryCloneAction"
+               definitionId="org.eclipse.ui.query.clone"
+               enablesFor="org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery"
+               id="org.eclipse.mylyn.tasks.ui.actions.clone.query"
+               label="Clone Query..."
+               menubarPath="repository"
+               tooltip="Clone Repository Query">
+         </action>-->
+         
+         <action
+               class="org.eclipse.mylyn.internal.tasks.ui.actions.QueryExportAction"
+               definitionId="org.eclipse.ui.query.export"
+               enablesFor="org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery"
+               id="org.eclipse.mylyn.tasks.ui.actions.export.query"
+               label="Export Query..."
+               menubarPath="repository"
+               tooltip="Export Repository Query">
+         </action>
   		
+		  <action
+               class="org.eclipse.mylyn.internal.tasks.ui.actions.QueryImportAction"
+               definitionId="org.eclipse.ui.query.import"
+               enablesFor="*"
+               icon="icons/etool16/import.gif"
+               id="org.eclipse.mylyn.tasks.ui.actions.import.query"
+               label="Import Query..."
+               menubarPath="repository"
+               tooltip="Import Repository Query">
+         </action>
+
   		<action
 	        class="org.eclipse.mylyn.internal.tasks.ui.actions.NewTaskAction"
 	        enablesFor="*"

@@ -57,6 +57,7 @@ import org.xml.sax.SAXException;
  * @author Mik Kersten
  * @author Ken Sueda
  * @author Rob Elves
+ * @author Jevgeni Holodkov
  * 
  * TODO: move to core?
  */
@@ -338,8 +339,11 @@ public class TaskListWriter {
 		}
 	}
 
-	private void readQuery(TaskList taskList, Node child) {
-		boolean wasRead = false;
+	/** 
+	 * Reads the Query from the specified Node. If taskList is not null, then also adds this query to the TaskList
+	 */
+	private AbstractRepositoryQuery readQuery(TaskList taskList, Node child) {
+		AbstractRepositoryQuery query = null;
 		for (AbstractTaskListFactory externalizer : externalizers) {
 			Set<String> queryTagNames = externalizer.getQueryElementNames();
 			if (queryTagNames != null && queryTagNames.contains(child.getNodeName())) {
@@ -355,32 +359,41 @@ public class TaskListWriter {
 					label = childElement.getAttribute(DelegatingTaskExternalizer.KEY_LABEL);
 				}
 
-				AbstractRepositoryQuery query = externalizer.createQuery(repositoryUrl,
-						queryString, label, childElement);
+				query = externalizer.createQuery(repositoryUrl,	queryString, label, childElement);
 				if (query != null) {
-					wasRead = true;
 					if (childElement.getAttribute(DelegatingTaskExternalizer.KEY_LAST_REFRESH) != null
 							&& !childElement.getAttribute(
 									DelegatingTaskExternalizer.KEY_LAST_REFRESH).equals("")) {
 						query.setLastSynchronizedStamp(childElement.getAttribute(DelegatingTaskExternalizer.KEY_LAST_REFRESH));
 					}
-					taskList.internalAddQuery(query);
 				}
-				NodeList queryChildren = child.getChildNodes();
-				for (int ii = 0; ii < queryChildren.getLength(); ii++) {
-					Node queryNode = queryChildren.item(ii);
-					try {
-						delagatingExternalizer.readQueryHit((Element) queryNode, taskList, query);
-					} catch (TaskExternalizationException e) {
-						hasCaughtException = true;
+				
+				// add created Query to the TaskList and read QueryHits (Tasks related to the Query)
+				if (taskList != null) {
+					if (query != null) {
+						taskList.internalAddQuery(query);
+					}
+
+					NodeList queryChildren = child.getChildNodes();
+					for (int ii = 0; ii < queryChildren.getLength(); ii++) {
+						Node queryNode = queryChildren.item(ii);
+						try {
+							delagatingExternalizer.readQueryHit((Element) queryNode, taskList, query);
+						} catch (TaskExternalizationException e) {
+							hasCaughtException = true;
+						}
 					}
 				}
+				
+
 				break;
 			}
 		}
-		if (!wasRead) {
+		if (query == null) {
 			orphanedQueryNodes.add(child);
 		}
+		
+		return query;
 	}
 
 	/**
@@ -480,7 +493,18 @@ public class TaskListWriter {
 		return externalizers;
 	}
 
-	public void writeQuery(AbstractRepositoryQuery query, File outFile) {
+	public void writeQueries(List<AbstractRepositoryQuery> queries, File outFile) {
+		Document doc = createQueryDocument(queries);
+		if (doc != null) {
+			writeDOMtoFile(doc, outFile);
+		}
+		return;
+	}
+
+	/**
+	 * @return null if it was not possible to create the Query document.
+	 */
+	public Document createQueryDocument(List<AbstractRepositoryQuery> queries) {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db;
 		Document doc = null;
@@ -490,59 +514,72 @@ public class TaskListWriter {
 			doc = db.newDocument();
 		} catch (ParserConfigurationException e) {
 			StatusHandler.log(e, "could not create document");
-			return;
+			return null;
 		}
 
 		Element root = doc.createElement(ELEMENT_TASK_LIST);
 		root.setAttribute(ATTRIBUTE_VERSION, VALUE_VERSION);
 
+		for (AbstractRepositoryQuery query : queries) {
 			try {
 				delagatingExternalizer.createQueryElement(query, doc, root);
 			} catch (Throwable t) {
 				StatusHandler.fail(t, "Did not externalize: " + query.getSummary(), true);
+				return null;
 			}
+		}
 
 		doc.appendChild(root);
-		writeDOMtoFile(doc, outFile);
-		return;
+		return doc;
 	}
 
-	public void readQueries(TaskList taskList, File inFile) {
+	public List<AbstractRepositoryQuery> readQueries(File inFile) {
+		List<AbstractRepositoryQuery> queries = new ArrayList<AbstractRepositoryQuery>();
 		try {
 			if (!inFile.exists())
-				return;
+				return queries;
 			Document doc = openAsDOM(inFile);
 			if (doc == null) {
 				handleException(inFile, null, new TaskExternalizationException("TaskList was not well formed XML"));
-				return;
+				return queries;
 			}
-			Element root = doc.getDocumentElement();
-			readVersion = root.getAttribute(ATTRIBUTE_VERSION);
-
-			if (!readVersion.equals(VALUE_VERSION_1_0_0)) {
-				NodeList list = root.getChildNodes();
-
-				// read queries
-				for (int i = 0; i < list.getLength(); i++) {
-					Node child = list.item(i);
-					try {
-						if (child.getNodeName().endsWith(AbstractTaskListFactory.KEY_QUERY)) {
-							readQuery(taskList, child);
-						}
-					} catch (Exception e) {
-						handleException(inFile, child, e);
-					}
-				}
-			} else {
-				StatusHandler.log("version: " + readVersion + " not supported", this);
-			}
+			queries = readQueryDocument(doc);
 		} catch (Exception e) {
 			handleException(inFile, null, e);
 		}
 		
-		if (!hasCaughtException) {
-			// save new task list only if there were no exception!
-			writeTaskList(taskList, inFile);
+		return queries;
+	}
+
+	/**
+	 * @param Query document to read.
+	 */
+	public List<AbstractRepositoryQuery> readQueryDocument(Document doc) {
+		List<AbstractRepositoryQuery> queries = new ArrayList<AbstractRepositoryQuery>();
+		Element root = doc.getDocumentElement();
+		readVersion = root.getAttribute(ATTRIBUTE_VERSION);
+
+		if (!readVersion.equals(VALUE_VERSION_1_0_0)) {
+			NodeList list = root.getChildNodes();
+
+			// read queries
+			for (int i = 0; i < list.getLength(); i++) {
+				Node child = list.item(i);
+				try {
+					if (child.getNodeName().endsWith(AbstractTaskListFactory.KEY_QUERY)) {
+						AbstractRepositoryQuery query = readQuery(null, child);
+						if (query != null) {
+							queries.add(query);
+						}
+					}
+				} catch (Exception e) {
+					StatusHandler.log(e, "Tasks may have been lost from " + child.getNodeName());
+				}
+			}
+		} else {
+			StatusHandler.log("version: " + readVersion + " not supported", this);
 		}
+		
+		return queries;
 	}
 }
