@@ -217,7 +217,9 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 
 	@Override
 	public void dispose() {
-		editorBusyIndicator.dispose();
+		if (editorBusyIndicator != null) {
+			editorBusyIndicator.dispose();
+		}
 
 		for (IEditorPart part : editors) {
 			part.dispose();
