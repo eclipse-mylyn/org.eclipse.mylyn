@@ -603,6 +603,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		};
 
 		if (parentEditor.getTopForm() != null) {
+
+			// TODO: Remove? Added to debug bug#197355
+			parentEditor.getTopForm().getToolBarManager().removeAll();
+
 			parentEditor.getTopForm().getToolBarManager().add(repositoryLabelControl);
 			if (repositoryTask != null) {
 				synchronizeEditorAction = new SynchronizeEditorAction();
@@ -639,28 +643,26 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				}
 			}
 
-			activateAction = new Action() {
-				@Override
-				public void run() {
-					if (!repositoryTask.isActive()) {
-						setChecked(true);
-						new TaskActivateAction().run(repositoryTask);
-					} else {
-						setChecked(false);
-						new TaskDeactivateAction().run(repositoryTask);
-					}
-//					submitToRepository();
-				}
-
-			};
-
 			if (repositoryTask != null) {
+				activateAction = new Action() {
+					@Override
+					public void run() {
+						if (!repositoryTask.isActive()) {
+							setChecked(true);
+							new TaskActivateAction().run(repositoryTask);
+						} else {
+							setChecked(false);
+							new TaskDeactivateAction().run(repositoryTask);
+						}
+//						submitToRepository();
+					}
+
+				};
 				activateAction.setImageDescriptor(TasksUiImages.TASK_ACTIVE_CENTERED);
 				activateAction.setToolTipText("Toggle Activation");
 				activateAction.setChecked(repositoryTask.isActive());
 				parentEditor.getTopForm().getToolBarManager().add(activateAction);
 			}
-
 			// Header drop down menu additions:
 			// form.getForm().getMenuManager().add(new
 			// SynchronizeSelectedAction());
