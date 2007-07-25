@@ -49,7 +49,7 @@ import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
  * @author Eric Booth (initial prototype)
  * @author Rob Elves
  */
-public final class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
+public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 
 	public static final String ID_EDITOR = "org.eclipse.mylyn.tasks.ui.editors.task";
 
