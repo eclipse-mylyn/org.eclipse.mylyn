@@ -127,6 +127,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
@@ -987,6 +988,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				if (attributeCombo.indexOf(value) != -1) {
 					attributeCombo.select(attributeCombo.indexOf(value));
 				}
+				attributeCombo.setSelection(new Point(0,0));
 				attributeCombo.addSelectionListener(new SelectionAdapter() {
 					@Override
 					public void widgetSelected(SelectionEvent event) {
@@ -994,6 +996,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 							String sel = attributeCombo.getItem(attributeCombo.getSelectionIndex());
 							attribute.setValue(sel);
 							attributeChanged(attribute);
+							attributeCombo.setSelection(new Point(0,0));
 						}
 					}
 				});
