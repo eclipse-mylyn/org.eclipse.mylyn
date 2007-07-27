@@ -138,13 +138,18 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 				if (activityContextManager != null) {
 					activityContextManager.stop();
 				}
-				if (getWorkbench() != null && getWorkbench().getActiveWorkbenchWindow() != null && !getWorkbench().isClosing()) {
-					getWorkbench().removeWindowListener(WINDOW_LISTENER); 
-					getWorkbench().getActiveWorkbenchWindow().getShell().removeShellListener(shellLifecycleListener);
+				if (getWorkbench() != null && !getWorkbench().isClosing()) {
+					getWorkbench().removeWindowListener(WINDOW_LISTENER);
+					
+					if(getWorkbench().getActiveWorkbenchWindow() != null && getWorkbench().getActiveWorkbenchWindow().getShell() != null && !getWorkbench().getActiveWorkbenchWindow().getShell().isDisposed()){
+						getWorkbench().getActiveWorkbenchWindow().getShell().removeShellListener(shellLifecycleListener);
+					}
+					
 					if (launchingWorkbenchWindow != null) {
 						removeListenersFromWindow(launchingWorkbenchWindow);
 					}
 				}
+				
 			}
 		} catch (Exception e) {
 			StatusHandler.fail(e, "Mylyn Monitor stop failed", false);
