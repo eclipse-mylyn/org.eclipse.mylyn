@@ -13,6 +13,7 @@ import java.util.Collection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
@@ -27,6 +28,8 @@ public abstract class AbstractRepositoryClientWizard extends Wizard implements I
 	 * If not null, indicates that the wizard will initially jump to a specific connector page
 	 */
 	private String repositoryType;
+
+	protected TaskRepository repository;
 
 	private SelectRepositoryClientPage selectRepositoryClientPage = new SelectRepositoryClientPage(this);
 
@@ -49,6 +52,10 @@ public abstract class AbstractRepositoryClientWizard extends Wizard implements I
 
 	public AbstractRepositoryConnector getRepositoryConnector() {
 		return repositoryConnector;
+	}
+
+	public TaskRepository getRepository() {
+		return repository;
 	}
 
 	@Override
