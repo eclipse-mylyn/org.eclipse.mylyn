@@ -43,7 +43,7 @@ public class ResourceInteractionMonitor extends AbstractUserInteractionMonitor {
 					Object object = ((EditorPart) part).getEditorInput().getAdapter(IResource.class);
 					if (object instanceof IFile) {
 						IFile file = (IFile) object;
-						if (!ContextCorePlugin.getDefault().getKnownContentTypes().contains(file.getFileExtension())) {
+						if (file.getFileExtension() != null && !ContextCorePlugin.getDefault().getKnownContentTypes().contains(file.getFileExtension())) {
 							super.handleElementEdit(part, object, contributeToContext);
 						}
 					}
