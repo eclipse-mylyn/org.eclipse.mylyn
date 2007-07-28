@@ -44,6 +44,8 @@ import org.eclipse.mylyn.internal.trac.core.model.TracTicketResolution;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicketStatus;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicketType;
 import org.eclipse.mylyn.internal.trac.core.model.TracVersion;
+import org.eclipse.mylyn.internal.trac.core.model.TracWikiPage;
+import org.eclipse.mylyn.internal.trac.core.model.TracWikiPageInfo;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylyn.internal.trac.core.util.TracHttpClientTransportFactory;
 import org.eclipse.mylyn.internal.trac.core.util.TracUtils;
@@ -55,8 +57,9 @@ import org.eclipse.mylyn.web.core.WebClientUtil;
  * Represents a Trac repository that is accessed through the Trac XmlRpcPlugin.
  * 
  * @author Steffen Pingel
+ * @author Xiaoyang Guan
  */
-public class TracXmlRpcClient extends AbstractTracClient {
+public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiClient {
 
 	public static final String XMLRPC_URL = "/xmlrpc";
 
@@ -67,6 +70,10 @@ public class TracXmlRpcClient extends AbstractTracClient {
 	public static final int REQUIRED_MINOR = 1;
 
 	private static final int NO_SUCH_METHOD_ERROR = 1;
+
+	private static final int LATEST_VERSION = -1;
+
+	public static final int REQUIRED_WIKI_RPC_VERSION = 2;
 
 	private XmlRpcClient xmlrpc;
 
@@ -652,8 +659,171 @@ public class TracXmlRpcClient extends AbstractTracClient {
 		return parseDate(result[2]);
 	}
 
+	public void validateWikiRPCAPI() throws TracException {
+		if (((Integer) call("wiki.getRPCVersionSupported")) < 2)
+			validate();
+	}
+
 	public String wikiToHtml(String sourceText) throws TracException {
 		return (String) call("wiki.wikiToHtml", sourceText);
 	}
 
+	public String[] getAllWikiPageNames() throws TracException {
+		Object[] result = (Object[]) call("wiki.getAllPages");
+		String[] wikiPageNames = new String[result.length];
+		for (int i = 0; i < wikiPageNames.length; i++) {
+			wikiPageNames[i] = (String) result[i];
+		}
+		return wikiPageNames;
+	}
+
+	public TracWikiPageInfo getWikiPageInfo(String pageName) throws TracException {
+		return getWikiPageInfo(pageName, LATEST_VERSION);
+	}
+
+	public TracWikiPageInfo getWikiPageInfo(String pageName, int version) throws TracException {
+		// Note: if an unexpected null value is passed to XmlRpcPlugin, XmlRpcClient will throw a TracRemoteException. 
+		//       So, this null-parameter checking may be omitted if resorting to XmlRpcClient is more appropriate.
+		if (pageName == null)
+			throw new IllegalArgumentException("Wiki page name cannot be null");
+
+		Object result = (version == LATEST_VERSION) ? call("wiki.getPageInfo", pageName) //
+				: call("wiki.getPageInfoVersion", pageName, version);
+		return parseWikiPageInfo(result);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<TracWikiPageInfo> getWikiPageInfoAllVersions(String pageName) throws TracException {
+		TracWikiPageInfo latestVersion = getWikiPageInfo(pageName);
+		Map<String, Object>[] calls = new Map[latestVersion.getVersion() - 1];
+		for (int i = 0; i < calls.length; i++) {
+			calls[i] = createMultiCall("wiki.getPageInfoVersion", pageName, i + 1);
+		}
+
+		Object[] result = multicall(calls);
+
+		List<TracWikiPageInfo> versions = new ArrayList<TracWikiPageInfo>(result.length + 1);
+		for (Object item : result) {
+			Object pageInfoResult = getMultiCallResult(item);
+			versions.add(parseWikiPageInfo(pageInfoResult));
+		}
+		versions.add(latestVersion);
+
+		return versions;
+	}
+
+	private TracWikiPageInfo parseWikiPageInfo(Object pageInfoResult) throws InvalidWikiPageException {
+		// Note: Trac XML-RPC Plugin returns 0 (as Integer) if pageName or version doesn't exist, 
+		//       and XmlRpcClient doesn't throw an Exception in this case
+		if (pageInfoResult instanceof Map<?, ?>) {
+			TracWikiPageInfo pageInfo = new TracWikiPageInfo();
+			Map<?, ?> infoMap = (Map<?, ?>) pageInfoResult;
+			pageInfo.setPageName((String) infoMap.get("name"));
+			pageInfo.setAuthor((String) infoMap.get("author"));
+			pageInfo.setLastModified(parseDate(infoMap.get("lastModified")));
+			pageInfo.setVersion((Integer) infoMap.get("version"));
+			return pageInfo;
+		} else {
+			throw new InvalidWikiPageException("Wiki page name or version does not exist");
+		}
+	}
+
+	public String getWikiPageContent(String pageName) throws TracException {
+		return getWikiPageContent(pageName, LATEST_VERSION);
+	}
+
+	public String getWikiPageContent(String pageName, int version) throws TracException {
+		// Note: if an unexpected null value is passed to XmlRpcPlugin, XmlRpcClient will throw a TracRemoteException. 
+		//       So, this null-parameter checking may be omitted if resorting to XmlRpcClient is more appropriate.
+		if (pageName == null)
+			throw new IllegalArgumentException("Wiki page name cannot be null");
+		if (version == LATEST_VERSION) {
+			// XmlRpcClient throws a TracRemoteException if pageName or version doesn't exist
+			return (String) call("wiki.getPage", pageName);
+		} else {
+			return (String) call("wiki.getPageVersion", pageName, version);
+		}
+	}
+
+	public String getWikiPageHTML(String pageName) throws TracException {
+		return getWikiPageHTML(pageName, LATEST_VERSION);
+	}
+
+	public String getWikiPageHTML(String pageName, int version) throws TracException {
+		if (pageName == null) {
+			throw new IllegalArgumentException("Wiki page name cannot be null");
+		}
+
+		if (version == LATEST_VERSION) {
+			// XmlRpcClient throws a TracRemoteException if pageName or version doesn't exist
+			return (String) call("wiki.getPageHTML", pageName);
+		} else {
+			return (String) call("wiki.getPageHTMLVersion", pageName, version);
+		}
+	}
+
+	public List<TracWikiPageInfo> getRecentWikiChanges(Date since) throws TracException {
+		if (since == null) {
+			throw new IllegalArgumentException("Date parameter cannot be null");
+		}
+
+		Object[] result = (Object[]) call("wiki.getRecentChanges", since);
+		List<TracWikiPageInfo> changes = new ArrayList<TracWikiPageInfo>(result.length);
+		for (Object item : result) {
+			changes.add(parseWikiPageInfo(item));
+		}
+		return changes;
+	}
+
+	public TracWikiPage getWikiPage(String pageName) throws TracException {
+		return getWikiPage(pageName, LATEST_VERSION);
+	}
+
+	public TracWikiPage getWikiPage(String pageName, int version) throws TracException {
+		TracWikiPage page = new TracWikiPage();
+		page.setPageInfo(getWikiPageInfo(pageName, version));
+		page.setContent(getWikiPageContent(pageName, version));
+		page.setPageHTML(getWikiPageHTML(pageName, version));
+		return page;
+	}
+
+	public boolean putWikipage(String pageName, String content, Map<String, Object> attributes) throws TracException {
+		Boolean result = (Boolean) call("wiki.putPage", pageName, content, attributes);
+		return result.booleanValue();
+	}
+
+	public String[] listWikiPageAttachments(String pageName) throws TracException {
+		Object[] result = (Object[]) call("wiki.listAttachments", pageName);
+		String[] attachments = new String[result.length];
+		for (int i = 0; i < attachments.length; i++) {
+			attachments[i] = (String) result[i];
+		}
+		return attachments;
+	}
+
+	public InputStream getWikiPageAttachment(String attachmentName) throws TracException {
+		byte[] data = (byte[]) call("wiki.getAttachment", attachmentName);
+		return new ByteArrayInputStream(data);
+	}
+
+	public boolean putWikiPageAttachment(String attachmentName, InputStream in) throws TracException {
+		byte[] data;
+		try {
+			data = readData(in, new NullProgressMonitor());
+		} catch (IOException e) {
+			throw new TracException(e);
+		}
+		return (Boolean) call("wiki.putAttachment", attachmentName, data);
+	}
+
+	public String putWikiPageAttachmentEx(String pageName, String fileName, String description, InputStream in,
+			boolean replace) throws TracException {
+		byte[] data;
+		try {
+			data = readData(in, new NullProgressMonitor());
+		} catch (IOException e) {
+			throw new TracException(e);
+		}
+		return (String) call("wiki.putAttachmentEx", pageName, fileName, description, data, replace);
+	}
 }

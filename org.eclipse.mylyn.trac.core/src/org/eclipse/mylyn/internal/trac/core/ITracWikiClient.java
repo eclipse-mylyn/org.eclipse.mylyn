@@ -8,7 +8,17 @@
 
 package org.eclipse.mylyn.internal.trac.core;
 
+import java.io.InputStream;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import org.eclipse.mylyn.internal.trac.core.model.TracWikiPage;
+import org.eclipse.mylyn.internal.trac.core.model.TracWikiPageInfo;
+
 /**
+ * Interface for the WikiRPC API provided by the Trac XML-RPC Plugin
+ * 
  * @author Xiaoyang Guan
  * 
  */
@@ -25,4 +35,205 @@ public interface ITracWikiClient {
 	 */
 	public String wikiToHtml(String sourceText) throws TracException;
 
+	/**
+	 * Validates the Trac XML-RPC WikiRPC API version of the repository
+	 * 
+	 * @throws TracException
+	 */
+	public void validateWikiRPCAPI() throws TracException;
+
+	/**
+	 * Gets the list of the names of all pages from the repository
+	 * 
+	 * @return The array of the names of all Wiki pages
+	 * @throws TracException
+	 */
+	public String[] getAllWikiPageNames() throws TracException;
+
+	/**
+	 * Gets the latest version of a Wiki page from the repository
+	 * 
+	 * @param pageName
+	 *            the name of the Wiki page
+	 * @return the Wiki page at the latest version
+	 * @throws TracException
+	 */
+	public TracWikiPage getWikiPage(String pageName) throws TracException;
+
+	/**
+	 * Gets a specific version of a Wiki page from the repository
+	 * 
+	 * @param pageName
+	 *            the name of the Wiki page
+	 * @param version
+	 *            the version of the Wiki page
+	 * @return the Wiki page at the specified version
+	 * @throws TracException
+	 */
+	public TracWikiPage getWikiPage(String pageName, int version) throws TracException;
+
+	/**
+	 * Gets the information about the latest version of a Wiki page from the repository
+	 * 
+	 * @param pageName
+	 *            the name of the Wiki page
+	 * @return The information about the page at the latest version
+	 * @throws TracException
+	 */
+	public TracWikiPageInfo getWikiPageInfo(String pageName) throws TracException;
+
+	/**
+	 * Gets the information about the specified version of a Wiki page from the repository
+	 * 
+	 * @param pageName
+	 *            the name of the Wiki page
+	 * @param version
+	 *            the version of the Wiki page
+	 * @return The information about the page at the specified version
+	 * @throws TracException
+	 */
+	public TracWikiPageInfo getWikiPageInfo(String pageName, int version) throws TracException;
+
+	/**
+	 * Gets the information about all versions of a Wiki page from the repository
+	 * 
+	 * @param pageName
+	 *            the name of the Wiki page
+	 * @return The list of the information about all versions of the page
+	 * @throws TracException
+	 */
+	public List<TracWikiPageInfo> getWikiPageInfoAllVersions(String pageName) throws TracException;
+
+	/**
+	 * Gets the raw Wiki text of the latest version of a Wiki page from the repository
+	 * 
+	 * @param pageName
+	 *            the name of the Wiki page
+	 * @return the raw Wiki text of the page, latest version
+	 * @throws TracException
+	 */
+	public String getWikiPageContent(String pageName) throws TracException;
+
+	/**
+	 * Gets the raw Wiki text of the specified version of a Wiki page from the repository
+	 * 
+	 * @param pageName
+	 *            the name of the Wiki page
+	 * @param version
+	 *            the version of the Wiki page
+	 * @return the raw Wiki text of the page, specified version
+	 * @throws TracException
+	 */
+	public String getWikiPageContent(String pageName, int version) throws TracException;
+
+	/**
+	 * Gets the rendered HTML of the latest version of a Wiki page from the repository
+	 * 
+	 * @param pageName
+	 *            the name of the Wiki page
+	 * @return the rendered HTML of the page, latest version
+	 * @throws TracException
+	 */
+	public String getWikiPageHTML(String pageName) throws TracException;
+
+	/**
+	 * Gets the rendered HTML of the specified version of a Wiki page from the repository
+	 * 
+	 * @param pageName
+	 *            the name of the Wiki page
+	 * @param version
+	 *            the version of the Wiki page
+	 * @return the rendered HTML of the page, specified version
+	 * @throws TracException
+	 */
+	public String getWikiPageHTML(String pageName, int version) throws TracException;
+
+	/**
+	 * Gets the list of information about all pages that have been modified since a given date from the repository
+	 * 
+	 * @param since
+	 *            the date from which the changes to the Wiki pages should be retrieved
+	 * @return list of information about the modified pages
+	 * @throws TracException
+	 */
+	public List<TracWikiPageInfo> getRecentWikiChanges(Date since) throws TracException;
+
+	/**
+	 * Writes the content of a Wiki page to the repository
+	 * 
+	 * @param pageName
+	 *            the name of the Wiki page
+	 * @param content
+	 *            the content of the page to be written
+	 * @param attributes
+	 *            a Map used to set any Wiki-specific things, which the server can freely ignore or incorporate.
+	 *            Standard names are:
+	 *            <ul>
+	 *            <li> comment (String): A comment for the page.
+	 *            <li> minoredit (Boolean): This was a minor edit only.
+	 *            </ul>
+	 * @return <code>true</code> if successful
+	 * @throws TracException
+	 */
+	public boolean putWikipage(String pageName, String content, Map<String, Object> attributes) throws TracException;
+
+	/**
+	 * Gets the list of the names of attachments on a given Wiki page from the repository
+	 * 
+	 * @param pageName
+	 *            the name of the Wiki page
+	 * @return an array of the names of attachments on the given page. Returns an empty array if the page has no
+	 *         attachment or the page does not exist.
+	 * @throws TracException
+	 */
+	public String[] listWikiPageAttachments(String pageName) throws TracException;
+
+	/**
+	 * Gets the content of an attachment on a Wiki page from the repository
+	 * 
+	 * @param attachmentName
+	 *            the path of the attachment, in the format of "pagename/filename"
+	 * @return An InputStream of the content of the attachment
+	 * @throws TracException
+	 */
+	public InputStream getWikiPageAttachment(String attachmentName) throws TracException;
+
+	/**
+	 * (over)writes an attachment on a Wiki page to the repository. If the named attachment did not exist on the
+	 * repository, it is created; if it already exists, its content is overwritten with the new content. This method is
+	 * compatible with WikiRPC. ITracWikiClient.putWikiPageAttachmentEx has a more extensive set of (Trac-specific)
+	 * features.
+	 * 
+	 * @param attachmentName
+	 *            the path of the attachment, in the format of "pagename/filename"
+	 * @param in
+	 *            An InputStream of the content of the attachment
+	 * @return <code>true</code> if successful
+	 * @throws TracException
+	 */
+	public boolean putWikiPageAttachment(String attachmentName, InputStream in) throws TracException;
+
+	/**
+	 * Attach a file to a Wiki page on the repository. This method is not compatible with WikiRPC.
+	 * 
+	 * @see ITracWikiClient.putAttachment
+	 * 
+	 * @param pageName
+	 *            the name of the Wiki page
+	 * @param fileName
+	 *            the name of the file to be attached
+	 * @param description
+	 *            the description of the attachment
+	 * @param in
+	 *            An InputStream of the content of the attachment
+	 * @param replace
+	 *            whether to overwrite an existing attachment with the same filename
+	 * @return The (possibly transformed) filename of the attachment. If <code>replace</code> is <code>true</code>,
+	 *         the returned name is always the same as the argument <code>fileName</code>; if <code>replace</code>
+	 *         is <code>false</code> and an attachment with name <code>fileName</code> already exists, a number is
+	 *         appended to the file name (before suffix) and the generated filename of the attachment is returned.
+	 * @throws TracException
+	 */
+	public String putWikiPageAttachmentEx(String pageName, String fileName, String description, InputStream in,
+			boolean replace) throws TracException;
 }
