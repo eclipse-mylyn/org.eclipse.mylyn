@@ -1196,66 +1196,80 @@ public class TaskListManager implements IPropertyChangeListener {
 		return newTask;
 	}
 
-	
 	/**
-	 * Imports Queries to the TaskList and synchronize them with the repository. If the imported query have the
-	 * name that overlaps with the existing one, the the suffix [x] is added, where x is a number starting from 1.
-	 * @param queries to insert
+	 * Imports Queries to the TaskList and synchronize them with the repository. If the imported query have the name
+	 * that overlaps with the existing one, the the suffix [x] is added, where x is a number starting from 1.
+	 * 
+	 * @param queries
+	 *            to insert
 	 * @return the list queries, which were not inserted since because the related repository was not found.
 	 */
 	public List<AbstractRepositoryQuery> insertQueries(List<AbstractRepositoryQuery> queries) {
 		List<AbstractRepositoryQuery> badQueries = new ArrayList<AbstractRepositoryQuery>();
-		
-		String patternStr = "\\[(\\d+)\\]$"; // all string that end with [x], where x is a number
-	    Pattern pattern = Pattern.compile(patternStr);
-		
+
 		for (AbstractRepositoryQuery query : queries) {
 
-			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
-					query.getRepositoryKind(), query.getRepositoryUrl());
+			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(query.getRepositoryKind(),
+					query.getRepositoryUrl());
 			if (repository == null) {
 				badQueries.add(query);
 				continue;
 			}
 
-			// resolve name conflict
-			{
-				Set<AbstractRepositoryQuery> existingQueries = getTaskList().getQueries();
-				Map<String, AbstractRepositoryQuery> queryMap = new HashMap<String, AbstractRepositoryQuery>();
-				for (AbstractRepositoryQuery existingQuery : existingQueries) {
-					queryMap.put(existingQuery.getHandleIdentifier(), existingQuery);
-				}
-
-				// suggest a new handle if needed
-				String handle = query.getHandleIdentifier();
-				
-				while (queryMap.get(handle) != null) {
-					Matcher matcher = pattern.matcher(handle);
-					boolean matchFound = matcher.find();
-					if (matchFound) {
-						// increment index
-						int index = Integer.parseInt(matcher.group(1));
-						index++;
-						handle = matcher.replaceAll("[" + index + "]");
-					} else {
-						handle += "[1]";
-					}
-				}
-				query.setHandleIdentifier(handle);
-			}
+			String handle = resolveIdentifiersConflict(query);
+			query.setHandleIdentifier(handle);
 
 			// add query
 			TasksUiPlugin.getTaskListManager().getTaskList().addQuery(query);
 
-			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
-					.getRepositoryConnector(repository.getConnectorKind());
+			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+					repository.getConnectorKind());
 			if (connector != null) {
 				TasksUiPlugin.getSynchronizationManager().synchronize(connector, query, null, true);
 			}
 
 		}
-		
+
 		return badQueries;
+	}
+
+	/**
+	 * Utility method that checks, if there is already a query with the same identifier.
+	 * 
+	 * @param query
+	 * @return a handle, that is not in conflict with any existed one in the system. If there were no conflict in the
+	 *         beginning, then the query's own identifier is returned. If there were, then the suffix [x] is applied the
+	 *         query's identifier, where x is a number.
+	 * @since 2.1
+	 */
+	public String resolveIdentifiersConflict(AbstractRepositoryQuery query) {
+		String patternStr = "\\[(\\d+)\\]$"; // all string that end with [x], where x is a number
+		Pattern pattern = Pattern.compile(patternStr);
+
+		// resolve name conflict
+		Set<AbstractRepositoryQuery> existingQueries = getTaskList().getQueries();
+		Map<String, AbstractRepositoryQuery> queryMap = new HashMap<String, AbstractRepositoryQuery>();
+		for (AbstractRepositoryQuery existingQuery : existingQueries) {
+			queryMap.put(existingQuery.getHandleIdentifier(), existingQuery);
+		}
+
+		// suggest a new handle if needed
+		String handle = query.getHandleIdentifier();
+
+		while (queryMap.get(handle) != null) {
+			Matcher matcher = pattern.matcher(handle);
+			boolean matchFound = matcher.find();
+			if (matchFound) {
+				// increment index
+				int index = Integer.parseInt(matcher.group(1));
+				index++;
+				handle = matcher.replaceAll("[" + index + "]");
+			} else {
+				handle += "[1]";
+			}
+		}
+
+		return handle;
 	}
 
 }

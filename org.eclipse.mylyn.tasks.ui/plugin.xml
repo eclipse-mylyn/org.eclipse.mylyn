@@ -343,7 +343,7 @@
             </enablement>
          </action>
          
-        <!-- <action
+         <action
                class="org.eclipse.mylyn.internal.tasks.ui.actions.QueryCloneAction"
                definitionId="org.eclipse.ui.query.clone"
                enablesFor="org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery"
@@ -351,7 +351,7 @@
                label="Clone Query..."
                menubarPath="repository"
                tooltip="Clone Repository Query">
-         </action>-->
+         </action>
          
          <action
                class="org.eclipse.mylyn.internal.tasks.ui.actions.QueryExportAction"
