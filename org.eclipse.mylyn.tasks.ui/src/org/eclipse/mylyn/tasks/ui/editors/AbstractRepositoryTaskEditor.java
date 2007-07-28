@@ -608,65 +608,68 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			parentEditor.getTopForm().getToolBarManager().removeAll();
 
 			parentEditor.getTopForm().getToolBarManager().add(repositoryLabelControl);
-			if (repositoryTask != null) {
-				synchronizeEditorAction = new SynchronizeEditorAction();
-				synchronizeEditorAction.selectionChanged(new StructuredSelection(this));
-				parentEditor.getTopForm().getToolBarManager().add(synchronizeEditorAction);
-			}
 
-			if (getHistoryUrl() != null) {
-				historyAction = new Action() {
-					@Override
-					public void run() {
-						TasksUiUtil.openUrl(getHistoryUrl(), false);
-					}
-				};
+			if (taskData != null && !taskData.isNew()) {
 
-				historyAction.setImageDescriptor(TasksUiImages.TASK_REPOSITORY_HISTORY);
-				historyAction.setToolTipText(LABEL_HISTORY);
-				parentEditor.getTopForm().getToolBarManager().add(historyAction);
-			}
+				if (repositoryTask != null) {
+					synchronizeEditorAction = new SynchronizeEditorAction();
+					synchronizeEditorAction.selectionChanged(new StructuredSelection(this));
+					parentEditor.getTopForm().getToolBarManager().add(synchronizeEditorAction);
+				}
 
-			if (connector != null && taskData != null) {
-				final String taskUrl = connector.getTaskUrl(taskData.getRepositoryUrl(), taskData.getTaskKey());
-				if (taskUrl != null) {
-					openBrowserAction = new Action() {
+				if (getHistoryUrl() != null) {
+					historyAction = new Action() {
 						@Override
 						public void run() {
-							TasksUiUtil.openUrl(taskUrl, false);
+							TasksUiUtil.openUrl(getHistoryUrl(), false);
 						}
 					};
 
-					openBrowserAction.setImageDescriptor(TasksUiImages.BROWSER_OPEN_TASK);
-					openBrowserAction.setToolTipText("Open with Web Browser");
-					parentEditor.getTopForm().getToolBarManager().add(openBrowserAction);
+					historyAction.setImageDescriptor(TasksUiImages.TASK_REPOSITORY_HISTORY);
+					historyAction.setToolTipText(LABEL_HISTORY);
+					parentEditor.getTopForm().getToolBarManager().add(historyAction);
 				}
-			}
 
-			if (repositoryTask != null) {
-				activateAction = new Action() {
-					@Override
-					public void run() {
-						if (!repositoryTask.isActive()) {
-							setChecked(true);
-							new TaskActivateAction().run(repositoryTask);
-						} else {
-							setChecked(false);
-							new TaskDeactivateAction().run(repositoryTask);
-						}
-//						submitToRepository();
+				if (connector != null) {
+					final String taskUrl = connector.getTaskUrl(taskData.getRepositoryUrl(), taskData.getTaskKey());
+					if (taskUrl != null) {
+						openBrowserAction = new Action() {
+							@Override
+							public void run() {
+								TasksUiUtil.openUrl(taskUrl, false);
+							}
+						};
+
+						openBrowserAction.setImageDescriptor(TasksUiImages.BROWSER_OPEN_TASK);
+						openBrowserAction.setToolTipText("Open with Web Browser");
+						parentEditor.getTopForm().getToolBarManager().add(openBrowserAction);
 					}
+				}
 
-				};
-				activateAction.setImageDescriptor(TasksUiImages.TASK_ACTIVE_CENTERED);
-				activateAction.setToolTipText("Toggle Activation");
-				activateAction.setChecked(repositoryTask.isActive());
-				parentEditor.getTopForm().getToolBarManager().add(activateAction);
+				if (repositoryTask != null) {
+					activateAction = new Action() {
+						@Override
+						public void run() {
+							if (!repositoryTask.isActive()) {
+								setChecked(true);
+								new TaskActivateAction().run(repositoryTask);
+							} else {
+								setChecked(false);
+								new TaskDeactivateAction().run(repositoryTask);
+							}
+//						submitToRepository();
+						}
+
+					};
+					activateAction.setImageDescriptor(TasksUiImages.TASK_ACTIVE_CENTERED);
+					activateAction.setToolTipText("Toggle Activation");
+					activateAction.setChecked(repositoryTask.isActive());
+					parentEditor.getTopForm().getToolBarManager().add(activateAction);
+				}
+				// Header drop down menu additions:
+				// form.getForm().getMenuManager().add(new
+				// SynchronizeSelectedAction());
 			}
-			// Header drop down menu additions:
-			// form.getForm().getMenuManager().add(new
-			// SynchronizeSelectedAction());
-
 			parentEditor.getTopForm().getToolBarManager().update(true);
 		}
 
