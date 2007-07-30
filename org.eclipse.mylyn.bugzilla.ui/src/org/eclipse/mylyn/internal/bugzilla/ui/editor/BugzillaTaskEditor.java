@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -601,10 +602,10 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		}
 	}
 
-	@Override
 	/**
 	 * This method is duplicated in NewBugzillaTaskEditor for now.
 	 */
+	@Override
 	public SearchHitCollector getDuplicateSearchCollector(String name) {
 		String duplicateDetectorName = name.equals("default") ? "Stack Trace" : name;
 		Set<AbstractDuplicateDetector> allDetectors = getDuplicateSearchCollectorsList();
@@ -618,11 +619,19 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		return null;
 	}
 
-	@Override
 	/**
-	 * This method is duplicated in NewBugzillaTaskEditor for now.
+	 * This method is duplicated in BugzillaTaskEditor for now.
 	 */
+	@Override
 	protected Set<AbstractDuplicateDetector> getDuplicateSearchCollectorsList() {
-		return TasksUiPlugin.getDefault().getDuplicateSearchCollectorsList();
+		Set<AbstractDuplicateDetector> bugzillaDuplicateDetectors = new HashSet<AbstractDuplicateDetector>();
+		for (AbstractDuplicateDetector abstractDuplicateDetector : TasksUiPlugin.getDefault()
+				.getDuplicateSearchCollectorsList()) {
+			if (abstractDuplicateDetector.getKind() != null
+					&& abstractDuplicateDetector.getKind().equals(BugzillaCorePlugin.REPOSITORY_KIND)) {
+				bugzillaDuplicateDetectors.add(abstractDuplicateDetector);
+			}
+		}
+		return bugzillaDuplicateDetectors;
 	}
 }

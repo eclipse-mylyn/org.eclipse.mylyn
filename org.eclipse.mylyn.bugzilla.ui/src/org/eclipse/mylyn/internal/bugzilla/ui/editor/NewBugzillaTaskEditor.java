@@ -7,6 +7,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.bugzilla.ui.editor;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -14,6 +15,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.ui.AbstractDuplicateDetector;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -118,7 +120,15 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 	 * This method is duplicated in BugzillaTaskEditor for now.
 	 */
 	protected Set<AbstractDuplicateDetector> getDuplicateSearchCollectorsList() {
-		return TasksUiPlugin.getDefault().getDuplicateSearchCollectorsList();
+		Set<AbstractDuplicateDetector> bugzillaDuplicateDetectors = new HashSet<AbstractDuplicateDetector>();
+		for (AbstractDuplicateDetector abstractDuplicateDetector : TasksUiPlugin.getDefault()
+				.getDuplicateSearchCollectorsList()) {
+			if (abstractDuplicateDetector.getKind() != null
+					&& abstractDuplicateDetector.getKind().equals(BugzillaCorePlugin.REPOSITORY_KIND)) {
+				bugzillaDuplicateDetectors.add(abstractDuplicateDetector);
+			}
+		}
+		return bugzillaDuplicateDetectors;
 	}
 
 	@Override
