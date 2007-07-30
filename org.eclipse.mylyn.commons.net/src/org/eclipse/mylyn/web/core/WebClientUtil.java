@@ -53,20 +53,18 @@ public class WebClientUtil {
 
 	public static int getPort(String repositoryUrl) {
 		int colonSlashSlash = repositoryUrl.indexOf("://");
+		int firstSlash = repositoryUrl.indexOf("/", colonSlashSlash + 3);
 		int colonPort = repositoryUrl.indexOf(':', colonSlashSlash + 1);
-		if (colonPort < 0)
+		if(firstSlash==-1) {
+			firstSlash = repositoryUrl.length();
+		}
+		if (colonPort < 0 || colonPort>firstSlash) {
 			return isRepositoryHttps(repositoryUrl) ? HTTPS_PORT : HTTP_PORT;
+		}
 
 		int requestPath = repositoryUrl.indexOf('/', colonPort + 1);
-
-		int end;
-		if (requestPath < 0)
-			end = repositoryUrl.length();
-		else
-			end = requestPath;
-
+		int end = requestPath < 0 ? repositoryUrl.length() : requestPath;
 		String port = repositoryUrl.substring(colonPort + 1, end);
-
 		if (port.length() == 0) {
 			return isRepositoryHttps(repositoryUrl) ? HTTPS_PORT : HTTP_PORT;
 		}
