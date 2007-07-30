@@ -4,8 +4,10 @@
       
    <extension
    		point="org.eclipse.mylyn.tasks.ui.duplicateDetectors">
-            <detector class="org.eclipse.mylyn.internal.bugzilla.ide.StackTraceDuplicateDetector"
-                      name="Stack Trace">
+            <detector
+                  class="org.eclipse.mylyn.internal.bugzilla.ide.StackTraceDuplicateDetector"
+                  kind="bugzilla"
+                  name="Stack Trace">
             </detector>       
    </extension>
       
