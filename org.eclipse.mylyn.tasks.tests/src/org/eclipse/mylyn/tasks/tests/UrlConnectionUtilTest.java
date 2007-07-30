@@ -31,6 +31,11 @@ public class UrlConnectionUtilTest extends TestCase {
 		assertEquals("example.com", WebClientUtil.getDomain(url));
 		assertEquals("/", WebClientUtil.getRequestPath(url));
 
+		url = "http://example.com";
+		assertEquals(80, WebClientUtil.getPort(url));
+		assertEquals("example.com", WebClientUtil.getDomain(url));
+		assertEquals("", WebClientUtil.getRequestPath(url));
+		
 		url = "https://example.com:321";
 		assertEquals(321, WebClientUtil.getPort(url));
 		assertEquals("example.com", WebClientUtil.getDomain(url));
@@ -53,6 +58,11 @@ public class UrlConnectionUtilTest extends TestCase {
 		assertEquals("/folder/file.txt?search=https://example.com:812/folder/file.txt",
 				WebClientUtil.getRequestPath(url));
 
+		url = "https://jira.codehaus.org/sr/jira.issueviews:searchrequest-xml/temp/SearchRequest.xml?&pid=11093&resolution=-1&sorter/field=updated&sorter/order=DESC&tempMax=1000";
+		assertEquals(443, WebClientUtil.getPort(url));
+		assertEquals("jira.codehaus.org", WebClientUtil.getDomain(url));
+		assertEquals("/sr/jira.issueviews:searchrequest-xml/temp/SearchRequest.xml?&pid=11093&resolution=-1&sorter/field=updated&sorter/order=DESC&tempMax=1000",
+				WebClientUtil.getRequestPath(url));
 	}
 
 	public void testCredentials() {
