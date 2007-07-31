@@ -14,7 +14,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author Mik Kersten
  */
-public class PersonContentProposal implements IContentProposal {
+public class PersonContentProposal implements IContentProposal, Comparable<PersonContentProposal> {
 
 	private final String address;
 
@@ -47,6 +47,15 @@ public class PersonContentProposal implements IContentProposal {
 		} else {
 			return TasksUiImages.getImage(TasksUiImages.PERSON);
 		}
+	}
+
+	public int compareTo(PersonContentProposal otherContentProposal) {
+		if (isCurrentUser) {
+			return -1;
+		} else if(otherContentProposal.isCurrentUser){
+			return 1;
+		}
+		return address.compareToIgnoreCase(otherContentProposal.address);
 	}
 
 }

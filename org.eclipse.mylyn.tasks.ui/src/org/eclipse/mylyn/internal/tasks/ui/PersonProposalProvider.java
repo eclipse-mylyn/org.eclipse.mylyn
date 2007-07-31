@@ -8,6 +8,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -51,7 +52,7 @@ public class PersonProposalProvider implements IContentProposalProvider {
 		SortedSet<String> addressSet = getAddressSet();
 		if (position > 0) {
 			// retrieve subset of the tree set using key range
-			char[] chars = contents.toCharArray();
+			char[] chars = contents.toLowerCase().toCharArray();
 			String contents1 = new String(chars, 0, position);
 			chars[position - 1]++;
 			String contents2 = new String(chars, 0, position);
@@ -63,6 +64,7 @@ public class PersonProposalProvider implements IContentProposalProvider {
 		for (final String address : addressSet) {
 			result[i++] = new PersonContentProposal(address, address.equalsIgnoreCase(currentUser));
 		}
+		Arrays.sort(result);
 		return result;
 	}
 
@@ -73,15 +75,6 @@ public class PersonProposalProvider implements IContentProposalProvider {
 
 		addressSet = new TreeSet<String>(new Comparator<String>() {
 			public int compare(String s1, String s2) {
-				if (currentUser != null) {
-					if (s1.compareToIgnoreCase(s2) == 0 && currentUser.compareToIgnoreCase(s1) == 0) {
-						return 0;
-					} else if (currentUser.compareToIgnoreCase(s1) == 0) {
-						return -1;
-					} else if (currentUser.compareToIgnoreCase(s2) == 0) {
-						return 1;
-					}
-				}
 				return s1.compareToIgnoreCase(s2);
 			}
 		});
