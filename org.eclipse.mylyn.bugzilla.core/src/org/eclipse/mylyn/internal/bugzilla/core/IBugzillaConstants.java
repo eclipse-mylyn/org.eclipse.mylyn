@@ -155,6 +155,8 @@ public interface IBugzillaConstants {
 
 	static final String VALUES_TARGET = "org.eclipse.mylyn.bugzilla.values.target";
 
+	static final String VALUES_KEYWORDS = "org.eclipse.mylyn.bugzilla.values.keywords";
+	
 	static final String ECLIPSE_BUGZILLA_URL = "https://bugs.eclipse.org/bugs";
 
 	static final String TEST_BUGZILLA_216_URL = "http://mylyn.eclipse.org/bugs216";

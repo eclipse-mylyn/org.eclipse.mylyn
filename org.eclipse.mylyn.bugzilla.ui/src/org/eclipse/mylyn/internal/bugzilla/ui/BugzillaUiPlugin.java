@@ -269,6 +269,10 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 				queryOptionsToString(config.getTargetMilestones()));
 		monitor.worked(1);
 
+		prefs.setValue(IBugzillaConstants.VALUES_KEYWORDS + PREF_DELIM_REPOSITORY + repositoryUrl,
+				queryOptionsToString(config.getKeywords()));
+		monitor.worked(1);
+		
 		for (String product : config.getProducts()) {
 			prefs.setValue(IBugzillaConstants.VALUES_COMPONENT + PREF_DELIM_REPOSITORY + repositoryUrl
 					+ PREF_DELIM_REPOSITORY + product, queryOptionsToString(config.getComponents(product)));
