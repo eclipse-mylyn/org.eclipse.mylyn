@@ -27,11 +27,11 @@ import org.eclipse.swt.widgets.Text;
  */
 public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 
-	private static final String LABEL_CUSTOM_QUERY = "Enter query URL";
+	private static final String LABEL_CUSTOM_QUERY = "Enter query &URL";
 
 	private static final String TITLE = "Create query from URL";
 
-//	private static final String DESCRIPTION = "Enter the name and URL for the query";
+	private static final String DESCRIPTION = "Enter the title and URL for the query";
 
 	private Text queryText;
 
@@ -44,7 +44,7 @@ public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 		this.query = query;
 		this.repository = repository;
 		setTitle(LABEL_CUSTOM_QUERY);
-//		setDescription(DESCRIPTION);
+		setDescription(DESCRIPTION);
 		setImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
 	}
 
@@ -52,7 +52,7 @@ public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 		super(TITLE);
 		this.repository = repository;
 		setTitle(LABEL_CUSTOM_QUERY);
-//		setDescription(DESCRIPTION);
+		setDescription(DESCRIPTION);
 		setImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
 	}
 

@@ -103,7 +103,7 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 			setErrorMessage(null);
 			return true;
 		}
-		setErrorMessage("Name is mandatory");
+		setErrorMessage("Query title is mandatory");
 		return false;
 	}
 
