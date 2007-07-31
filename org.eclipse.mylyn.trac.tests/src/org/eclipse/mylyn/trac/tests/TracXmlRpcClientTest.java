@@ -115,12 +115,12 @@ public class TracXmlRpcClientTest extends AbstractTracClientRepositoryTest {
 
 	public void testValidateWikiAPI010() throws Exception {
 		connect010();
-		((TracXmlRpcClient) repository).validateWikiRPCAPI();
+		((TracXmlRpcClient) repository).validateWikiRpcApi();
 	}
 
 	public void testValidateWikiAPI011() throws Exception {
 		connect011();
-		((TracXmlRpcClient) repository).validateWikiRPCAPI();
+		((TracXmlRpcClient) repository).validateWikiRpcApi();
 	}
 
 	public void testGetAllWikiPageNames010() throws Exception {
@@ -231,21 +231,21 @@ public class TracXmlRpcClientTest extends AbstractTracClientRepositoryTest {
 
 		// get HTML -- non-existing version
 		try {
-			((TracXmlRpcClient) repository).getWikiPageHTML("Test", 10);
+			((TracXmlRpcClient) repository).getWikiPageHtml("Test", 10);
 			fail("Expected TracRemoteException");
 		} catch (TracRemoteException e) {
 		}
 
 		// get HTML -- non-existing page name
 		try {
-			((TracXmlRpcClient) repository).getWikiPageHTML("NoSuchPage");
+			((TracXmlRpcClient) repository).getWikiPageHtml("NoSuchPage");
 			fail("Expected TracRemoteException");
 		} catch (TracRemoteException e) {
 		}
 
 		// get HTML -- null parameter
 		try {
-			((TracXmlRpcClient) repository).getWikiPageHTML(null);
+			((TracXmlRpcClient) repository).getWikiPageHtml(null);
 			fail("Expected RuntimeException");
 		} catch (IllegalArgumentException e) {
 		}
@@ -299,8 +299,8 @@ public class TracXmlRpcClientTest extends AbstractTracClientRepositoryTest {
 	private void getWikiPageInfoAllVersions() throws Exception {
 		String pageName = "Test";
 
-		List<TracWikiPageInfo> versions = ((TracXmlRpcClient) repository).getWikiPageInfoAllVersions(pageName);
-		assertTrue(versions.size() >= 1);
+		TracWikiPageInfo[] versions = ((TracXmlRpcClient) repository).getWikiPageInfoAllVersions(pageName);
+		assertTrue(versions.length >= 1);
 		int counter = 1;
 		for (TracWikiPageInfo version : versions) {
 			assertTrue(version.getPageName().equals(pageName));
@@ -319,7 +319,7 @@ public class TracXmlRpcClientTest extends AbstractTracClientRepositoryTest {
 	}
 
 	private void getRecentWikiChanges() throws Exception {
-		List<TracWikiPageInfo> changes = ((TracXmlRpcClient) repository).getRecentWikiChanges(new Date(0));
+		TracWikiPageInfo[] changes = ((TracXmlRpcClient) repository).getRecentWikiChanges(new Date(0));
 		TracWikiPageInfo testPage = null;
 		for (TracWikiPageInfo item : changes) {
 			assertTrue(item.getPageName() != null);
@@ -327,8 +327,7 @@ public class TracXmlRpcClientTest extends AbstractTracClientRepositoryTest {
 				testPage = item;
 			}
 		}
-		assertFalse(changes.contains(null));
-		assertTrue(changes.contains(testPage));
+		assertTrue(testPage != null);
 	}
 
 	public void testPutWikiPage010() throws Exception {

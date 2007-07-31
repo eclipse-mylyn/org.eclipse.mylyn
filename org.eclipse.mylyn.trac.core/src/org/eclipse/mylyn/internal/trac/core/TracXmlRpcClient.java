@@ -659,7 +659,7 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		return parseDate(result[2]);
 	}
 
-	public void validateWikiRPCAPI() throws TracException {
+	public void validateWikiRpcApi() throws TracException {
 		if (((Integer) call("wiki.getRPCVersionSupported")) < 2)
 			validate();
 	}
@@ -693,7 +693,7 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<TracWikiPageInfo> getWikiPageInfoAllVersions(String pageName) throws TracException {
+	public TracWikiPageInfo[] getWikiPageInfoAllVersions(String pageName) throws TracException {
 		TracWikiPageInfo latestVersion = getWikiPageInfo(pageName);
 		Map<String, Object>[] calls = new Map[latestVersion.getVersion() - 1];
 		for (int i = 0; i < calls.length; i++) {
@@ -702,12 +702,12 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 
 		Object[] result = multicall(calls);
 
-		List<TracWikiPageInfo> versions = new ArrayList<TracWikiPageInfo>(result.length + 1);
-		for (Object item : result) {
-			Object pageInfoResult = getMultiCallResult(item);
-			versions.add(parseWikiPageInfo(pageInfoResult));
+		TracWikiPageInfo[] versions = new TracWikiPageInfo[result.length + 1];
+		for (int i = 0; i < result.length; i++) {
+			Object pageInfoResult = getMultiCallResult(result[i]);
+			versions[i] = parseWikiPageInfo(pageInfoResult);
 		}
-		versions.add(latestVersion);
+		versions[result.length] = latestVersion;
 
 		return versions;
 	}
@@ -745,11 +745,11 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		}
 	}
 
-	public String getWikiPageHTML(String pageName) throws TracException {
-		return getWikiPageHTML(pageName, LATEST_VERSION);
+	public String getWikiPageHtml(String pageName) throws TracException {
+		return getWikiPageHtml(pageName, LATEST_VERSION);
 	}
 
-	public String getWikiPageHTML(String pageName, int version) throws TracException {
+	public String getWikiPageHtml(String pageName, int version) throws TracException {
 		if (pageName == null) {
 			throw new IllegalArgumentException("Wiki page name cannot be null");
 		}
@@ -762,15 +762,15 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		}
 	}
 
-	public List<TracWikiPageInfo> getRecentWikiChanges(Date since) throws TracException {
+	public TracWikiPageInfo[] getRecentWikiChanges(Date since) throws TracException {
 		if (since == null) {
 			throw new IllegalArgumentException("Date parameter cannot be null");
 		}
 
 		Object[] result = (Object[]) call("wiki.getRecentChanges", since);
-		List<TracWikiPageInfo> changes = new ArrayList<TracWikiPageInfo>(result.length);
-		for (Object item : result) {
-			changes.add(parseWikiPageInfo(item));
+		TracWikiPageInfo[] changes = new TracWikiPageInfo[result.length];
+		for (int i = 0; i < result.length; i++) {
+			changes[i] = parseWikiPageInfo(result[i]);
 		}
 		return changes;
 	}
@@ -783,7 +783,7 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		TracWikiPage page = new TracWikiPage();
 		page.setPageInfo(getWikiPageInfo(pageName, version));
 		page.setContent(getWikiPageContent(pageName, version));
-		page.setPageHTML(getWikiPageHTML(pageName, version));
+		page.setPageHTML(getWikiPageHtml(pageName, version));
 		return page;
 	}
 
@@ -801,22 +801,34 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		return attachments;
 	}
 
-	public InputStream getWikiPageAttachment(String attachmentName) throws TracException {
+	public InputStream getWikiPageAttachmentData(String pageName, String fileName) throws TracException {
+		String attachmentName = pageName + "/" + fileName;
 		byte[] data = (byte[]) call("wiki.getAttachment", attachmentName);
 		return new ByteArrayInputStream(data);
 	}
 
-	public boolean putWikiPageAttachment(String attachmentName, InputStream in) throws TracException {
-		byte[] data;
-		try {
-			data = readData(in, new NullProgressMonitor());
-		} catch (IOException e) {
-			throw new TracException(e);
-		}
-		return (Boolean) call("wiki.putAttachment", attachmentName, data);
-	}
-
-	public String putWikiPageAttachmentEx(String pageName, String fileName, String description, InputStream in,
+	/**
+	 * Attach a file to a Wiki page on the repository.
+	 * <p>
+	 * This implementation uses the wiki.putAttachmentEx() call, which provides a richer functionality specific to Trac.
+	 * 
+	 * @param pageName
+	 *            the name of the Wiki page
+	 * @param fileName
+	 *            the name of the file to be attached
+	 * @param description
+	 *            the description of the attachment
+	 * @param in
+	 *            An InputStream of the content of the attachment
+	 * @param replace
+	 *            whether to overwrite an existing attachment with the same filename
+	 * @return The (possibly transformed) filename of the attachment. If <code>replace</code> is <code>true</code>,
+	 *         the returned name is always the same as the argument <code>fileName</code>; if <code>replace</code>
+	 *         is <code>false</code> and an attachment with name <code>fileName</code> already exists, a number is
+	 *         appended to the file name (before suffix) and the generated filename of the attachment is returned.
+	 * @throws TracException
+	 */
+	public String putWikiPageAttachmentData(String pageName, String fileName, String description, InputStream in,
 			boolean replace) throws TracException {
 		byte[] data;
 		try {
