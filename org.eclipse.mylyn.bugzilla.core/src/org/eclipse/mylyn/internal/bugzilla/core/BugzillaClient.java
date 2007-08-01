@@ -228,9 +228,13 @@ public class BugzillaClient {
 			getMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset="
 					+ characterEncoding);
 
+			// Resolves bug#195113
+			httpClient.getParams().setParameter("http.protocol.single-cookie-header", true);
+
 			// WARNING!! Setting browser compatability breaks Bugzilla
 			// authentication
 			// getMethod.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
+			// getMethod.getParams().setCookiePolicy(CookiePolicy.RFC_2109);
 
 			getMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new BugzillaRetryHandler());
 			getMethod.setDoAuthentication(true);
