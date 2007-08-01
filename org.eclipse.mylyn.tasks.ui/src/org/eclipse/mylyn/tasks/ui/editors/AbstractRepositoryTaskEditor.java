@@ -789,7 +789,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		createNewCommentLayout(editorComposite);
 		Composite bottomComposite = toolkit.createComposite(editorComposite);
 		bottomComposite.setLayout(new GridLayout(2, false));
-		GridDataFactory.fillDefaults().grab(true, true).applyTo(bottomComposite);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(bottomComposite);
 
 		createActionsLayout(bottomComposite);
 		createPeopleLayout(bottomComposite);
