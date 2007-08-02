@@ -886,4 +886,17 @@
             class="org.eclipse.mylyn.internal.tasks.core.LocalTaskListFactory"
             id="org.eclipse.mylyn.tasks.ui.local.factory"/>
    </extension>
+   
+   <extension point="org.eclipse.ui.bindings">
+     <key commandId="org.eclipse.jdt.ui.edit.text.java.correction.assist.proposals"
+          sequence="M1+1"
+          schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+          contextId="org.eclipse.ui.contexts.dialogAndWindow" />
+          <!-- contextId="org.eclipse.ui.contexts.dialog"/> -->
+   </extension>
+      
+   <extension point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectorTargets">
+     <target id="org.eclipse.mylyn.tasks.ui.TaskEditor" name="Task Editor"/>
+   </extension>
+   
 </plugin>

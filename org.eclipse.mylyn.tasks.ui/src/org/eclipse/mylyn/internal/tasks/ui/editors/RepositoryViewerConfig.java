@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.hyperlink.DefaultHyperlinkPresenter;
@@ -22,7 +21,6 @@ import org.eclipse.jface.text.hyperlink.IHyperlinkPresenter;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
 import org.eclipse.jface.text.reconciler.IReconciler;
-import org.eclipse.jface.text.reconciler.MonoReconciler;
 import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
 import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
@@ -30,11 +28,7 @@ import org.eclipse.jface.text.rules.MultiLineRule;
 import org.eclipse.jface.text.rules.RuleBasedScanner;
 import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.Token;
-import org.eclipse.jface.text.source.DefaultAnnotationHover;
-import org.eclipse.jface.text.source.IAnnotationHover;
-import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskList;
@@ -43,34 +37,21 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.editors.text.EditorsUI;
+import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 
 /**
  * @author Rob Elves
  */
-public class RepositoryViewerConfig extends SourceViewerConfiguration {
+public class RepositoryViewerConfig extends TextSourceViewerConfiguration {
 
 	private RepositoryTextScanner scanner = null;
-
-	private TaskSpellingReconcileStrategy strategy = new TaskSpellingReconcileStrategy();
 
 	private boolean spellcheck = false;
 
 	public RepositoryViewerConfig(boolean spellchecking) {
+		super(EditorsUI.getPreferenceStore());
 		this.spellcheck = spellchecking;
-	}
-
-	public void setAnnotationModel(IAnnotationModel model, IDocument doc) {
-		strategy.setAnnotationModel(model);
-		strategy.setDocument(doc);
-	}
-
-	@Override
-	public IAnnotationHover getAnnotationHover(ISourceViewer sourceViewer) {
-		if (spellcheck) {
-			return new DefaultAnnotationHover();
-		} else {
-			return null;
-		}
 	}
 
 	@Override
@@ -153,11 +134,7 @@ public class RepositoryViewerConfig extends SourceViewerConfiguration {
 	@Override
 	public IReconciler getReconciler(ISourceViewer sourceViewer) {
 		if (spellcheck) {
-			MonoReconciler reconciler = new MonoReconciler(strategy, false);
-			reconciler.setIsIncrementalReconciler(false);
-			reconciler.setProgressMonitor(new NullProgressMonitor());
-			reconciler.setDelay(500);
-			return reconciler;
+			return super.getReconciler(sourceViewer);
 		} else {
 			return null;
 		}
