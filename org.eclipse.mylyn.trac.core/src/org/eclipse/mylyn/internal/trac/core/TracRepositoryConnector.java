@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.internal.trac.core;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -61,6 +62,24 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public boolean canCreateTaskFromKey(TaskRepository repository) {
 		return true;
+	}
+
+	private TracWikiHandler wikiManager = new TracWikiHandler(this);
+
+	public boolean hasWiki(TaskRepository repository) {
+		// check the access mode to validate Wiki support
+		try {
+			ITracClient client = getClientManager().getRepository(repository);
+			if (client instanceof ITracWikiClient) {
+				return true;
+			}
+		} catch (MalformedURLException e) {
+		}
+		return false;
+	}
+
+	public AbstractWikiHandler getWikiManager() {
+		return wikiManager;
 	}
 
 	@Override
@@ -187,7 +206,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 						return false;
 					}
 				}
-				
+
 				for (AbstractTask task : tasks) {
 					Integer id = getTicketId(task.getTaskId());
 					if (ids.contains(id)) {
