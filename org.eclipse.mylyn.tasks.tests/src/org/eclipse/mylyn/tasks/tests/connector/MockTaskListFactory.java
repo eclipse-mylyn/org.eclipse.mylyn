@@ -18,6 +18,7 @@ import org.w3c.dom.Element;
 
 /**
  * @author Mik Kersten
+ * @author Jevgeni Holodkov
  */
 public class MockTaskListFactory extends AbstractTaskListFactory {
 	
@@ -52,6 +53,7 @@ public class MockTaskListFactory extends AbstractTaskListFactory {
 	@Override
 	public AbstractRepositoryQuery createQuery(String repositoryUrl, String queryString, String label, Element element) {
 		MockRepositoryQuery query = new MockRepositoryQuery(label, queryString);
+		query.setRepositoryUrl(repositoryUrl);
 		return query;
 	}
 	

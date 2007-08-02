@@ -28,6 +28,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
  * @author Rob Elves
+ * @author Jevgeni Holodkov
  */
 public class TaskRepositoriesExternalizer {
 
@@ -46,15 +47,7 @@ public class TaskRepositoriesExternalizer {
 				file.createNewFile();
 
 			outputStream = new ZipOutputStream(new FileOutputStream(file));
-			ZipEntry zipEntry = new ZipEntry(TaskRepositoryManager.OLD_REPOSITORIES_FILE);
-			outputStream.putNextEntry(zipEntry);
-			outputStream.setMethod(ZipOutputStream.DEFLATED);
-
-			// OutputStream stream = new FileOutputStream(file);
-			writer.setOutputStream(outputStream);
-			writer.writeRepositoriesToStream(repositories);
-			outputStream.flush();
-			outputStream.closeEntry();
+			writeRepositoriesToZipEntry(repositories, outputStream);
 			outputStream.close();
 
 		} catch (IOException e) {
@@ -70,6 +63,24 @@ public class TaskRepositoriesExternalizer {
 		}
 	}
 
+	/**
+	 * @param repositories
+	 * @param outputStream
+	 * @throws IOException
+	 */
+	public void writeRepositoriesToZipEntry(Collection<TaskRepository> repositories, ZipOutputStream outputStream)
+			throws IOException {
+		ZipEntry zipEntry = new ZipEntry(TaskRepositoryManager.OLD_REPOSITORIES_FILE);
+		outputStream.putNextEntry(zipEntry);
+		outputStream.setMethod(ZipOutputStream.DEFLATED);
+
+		// OutputStream stream = new FileOutputStream(file);
+		writer.setOutputStream(outputStream);
+		writer.writeRepositoriesToStream(repositories);
+		outputStream.flush();
+		outputStream.closeEntry();
+	}
+
 	public Set<TaskRepository> readRepositoriesFromXML(File file) {
 
 		if (!file.exists())
@@ -77,7 +88,20 @@ public class TaskRepositoriesExternalizer {
 		InputStream inputStream = null;
 		try {
 			inputStream = new ZipInputStream(new FileInputStream(file));
-			((ZipInputStream) inputStream).getNextEntry();
+			
+			// search for REPOSITORIES entry
+			ZipEntry entry = ((ZipInputStream) inputStream).getNextEntry();
+			while (entry != null) {
+				if (TaskRepositoryManager.OLD_REPOSITORIES_FILE.equals(entry.getName())) {
+					break;
+				}
+				entry = ((ZipInputStream) inputStream).getNextEntry();
+			}
+			
+			if (entry == null) {
+				return null;
+			}
+			
 			SaxRepositoriesContentHandler contentHandler = new SaxRepositoriesContentHandler();
 			XMLReader reader = XMLReaderFactory.createXMLReader();
 			reader.setContentHandler(contentHandler);

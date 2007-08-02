@@ -11,7 +11,9 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -29,6 +31,7 @@ import org.eclipse.mylyn.internal.tasks.core.UnfiledCategory;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.RetrieveTitleFromUrlJob;
 import org.eclipse.mylyn.internal.tasks.ui.TaskTransfer;
+import org.eclipse.mylyn.internal.tasks.ui.actions.QueryImportAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -47,6 +50,7 @@ import org.eclipse.swt.dnd.TransferData;
 /**
  * @author Mik Kersten
  * @author Rob Elves (added URL based task creation support)
+ * @author Jevgeni Holodkov
  */
 public class TaskListDropAdapter extends ViewerDropAdapter {
 
@@ -88,11 +92,9 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 		} else if (data instanceof String && createTaskFromString((String) data)) {
 			tasksToMove.add(newTask);
 		} else if (FileTransfer.getInstance().isSupportedType(currentTransfer)) {
-			AbstractTask targetTask = null;
+			// transfer the context if the target is a Task
 			if (getCurrentTarget() instanceof AbstractTask) {
-				targetTask = (AbstractTask) getCurrentTarget();
-			}
-			if (targetTask != null) {
+				AbstractTask targetTask = (AbstractTask) getCurrentTarget();
 				final String[] names = (String[]) data;
 				boolean confirmed = MessageDialog.openConfirm(getViewer().getControl().getShell(),
 						ITasksUiConstants.TITLE_DIALOG, "Overwrite the context of the target task with the source's?");
@@ -104,6 +106,22 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 								targetTask.getHandleIdentifier(), file);
 						new TaskActivateAction().run(targetTask);
 					}
+				}
+			} else {
+				// otherwise it is queries
+				final String[] names = (String[]) data;
+				List<AbstractRepositoryQuery> queries = new ArrayList<AbstractRepositoryQuery>();
+				Set<TaskRepository> repositories = new HashSet<TaskRepository>();
+				for (int i = 0; i < names.length; i++) {
+					String path = names[i];
+					File file = new File(path);
+					if (file.isFile()) {
+						queries.addAll(TasksUiPlugin.getTaskListManager().getTaskListWriter().readQueries(file));
+						repositories.addAll(TasksUiPlugin.getTaskListManager().getTaskListWriter().readRepositories(file));
+					}
+				}
+				if (queries.size() > 0) {
+					new QueryImportAction().importQueries(queries, repositories, getViewer().getControl().getShell());
 				}
 			}
 		}
@@ -256,9 +274,8 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 
 		Object selectedObject = ((IStructuredSelection) ((TreeViewer) getViewer()).getSelection()).getFirstElement();
 		if (FileTransfer.getInstance().isSupportedType(currentTransfer)) {
-			if (getCurrentTarget() instanceof AbstractTask) {
-				return true;
-			}
+			// handle all files
+			return true;
 		} else if (selectedObject != null && !(selectedObject instanceof AbstractRepositoryQuery)) {
 			if (getCurrentTarget() instanceof TaskCategory || getCurrentTarget() instanceof UnfiledCategory) {
 				return true;

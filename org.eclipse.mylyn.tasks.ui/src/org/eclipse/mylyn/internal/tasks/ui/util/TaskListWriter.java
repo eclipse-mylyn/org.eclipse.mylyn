@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -40,13 +41,16 @@ import javax.xml.transform.stream.StreamResult;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskExternalizationException;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoriesExternalizer;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListFactory;
 import org.eclipse.mylyn.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -82,6 +86,8 @@ public class TaskListWriter {
 	private List<AbstractTaskListFactory> externalizers;
 
 	private DelegatingTaskExternalizer delagatingExternalizer;
+	
+	private TaskRepositoriesExternalizer repositoriesExternalizer;
 
 	private List<Node> orphanedTaskNodes = new ArrayList<Node>();
 
@@ -93,6 +99,7 @@ public class TaskListWriter {
 
 	public TaskListWriter() {
 		this.delagatingExternalizer = new DelegatingTaskExternalizer();
+		this.repositoriesExternalizer = new TaskRepositoriesExternalizer();
 	}
 
 	public void setDelegateExternalizers(List<AbstractTaskListFactory> externalizers) {
@@ -196,17 +203,26 @@ public class TaskListWriter {
 	private void writeDOMtoFile(Document doc, File file) {
 		try {
 			ZipOutputStream outputStream = new ZipOutputStream(new FileOutputStream(file));
-			ZipEntry zipEntry = new ZipEntry(ITasksUiConstants.OLD_TASK_LIST_FILE);
-			outputStream.putNextEntry(zipEntry);
-			outputStream.setMethod(ZipOutputStream.DEFLATED);
-			// OutputStream outputStream = new FileOutputStream(file);
-			writeDOMtoStream(doc, outputStream);
-			outputStream.flush();
-			outputStream.closeEntry();
+			writeTaskListToZipEntry(doc, outputStream);
 			outputStream.close();
 		} catch (Exception fnfe) {
 			StatusHandler.log(fnfe, "TaskList could not be found");
 		}
+	}
+
+	/**
+	 * @param doc
+	 * @param outputStream
+	 * @throws IOException
+	 */
+	private void writeTaskListToZipEntry(Document doc, ZipOutputStream outputStream) throws IOException {
+		ZipEntry zipEntry = new ZipEntry(ITasksUiConstants.OLD_TASK_LIST_FILE);
+		outputStream.putNextEntry(zipEntry);
+		outputStream.setMethod(ZipOutputStream.DEFLATED);
+		// OutputStream outputStream = new FileOutputStream(file);
+		writeDOMtoStream(doc, outputStream);
+		outputStream.flush();
+		outputStream.closeEntry();
 	}
 
 	/**
@@ -427,7 +443,17 @@ public class TaskListWriter {
 			if (inputFile.getName().endsWith(ITasksUiConstants.FILE_EXTENSION)) {
 				// is zipped context
 				inputStream = new ZipInputStream(new FileInputStream(inputFile));
-				((ZipInputStream) inputStream).getNextEntry();
+				// search for TaskList entry
+				ZipEntry entry = ((ZipInputStream) inputStream).getNextEntry();
+				while (entry != null) {
+					if (ITasksUiConstants.OLD_TASK_LIST_FILE.equals(entry.getName())) {
+						break;
+					}
+					entry = ((ZipInputStream) inputStream).getNextEntry();
+				}
+				if (entry == null) {
+					return null;
+				}
 			} else {
 				inputStream = new FileInputStream(inputFile);
 			}
@@ -494,9 +520,24 @@ public class TaskListWriter {
 	}
 
 	public void writeQueries(List<AbstractRepositoryQuery> queries, File outFile) {
+		Set<TaskRepository> repositories = new HashSet<TaskRepository>();
+		for (AbstractRepositoryQuery query : queries) {
+			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(query.getRepositoryUrl());
+			if (repository != null) {
+				repositories.add(repository);
+			}
+		}
+
 		Document doc = createQueryDocument(queries);
 		if (doc != null) {
-			writeDOMtoFile(doc, outFile);
+			try {
+				ZipOutputStream outputStream = new ZipOutputStream(new FileOutputStream(outFile));
+				writeTaskListToZipEntry(doc, outputStream);
+				repositoriesExternalizer.writeRepositoriesToZipEntry(repositories, outputStream);
+				outputStream.close();
+			} catch (Exception fnfe) {
+				StatusHandler.log(fnfe, "TaskList could not be found");
+			}
 		}
 		return;
 	}
@@ -581,5 +622,13 @@ public class TaskListWriter {
 		}
 		
 		return queries;
+	}
+
+	public Set<TaskRepository> readRepositories(File file) {
+		Set<TaskRepository> repository = repositoriesExternalizer.readRepositoriesFromXML(file);
+		if (repository == null) {
+			repository = new HashSet<TaskRepository>();
+		}
+		return repository;
 	}
 }

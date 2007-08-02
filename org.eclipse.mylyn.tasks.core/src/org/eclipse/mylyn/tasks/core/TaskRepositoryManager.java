@@ -27,6 +27,7 @@ import org.eclipse.mylyn.monitor.core.StatusHandler;
  * 
  * @author Mik Kersten
  * @author Rob Elves
+ * @author Jevgeni Holodkov
  * @since 2.0
  */
 public class TaskRepositoryManager {
@@ -372,6 +373,14 @@ public class TaskRepositoryManager {
 	public void notifyRepositorySettingsChanged(TaskRepository repository) {
 		for (ITaskRepositoryListener listener : listeners) {
 			listener.repositorySettingsChanged(repository);
+		}
+	}
+
+	public void insertRepositories(Set<TaskRepository> repositories, String repositoryFilePath) {
+		for(TaskRepository repository : repositories) {
+			if (getRepository(repository.getConnectorKind(), repository.getUrl()) == null) {
+				addRepository(repository, repositoryFilePath);
+			}
 		}
 	}
 }
