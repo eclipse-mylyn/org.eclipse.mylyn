@@ -15,7 +15,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.ui.AbstractDuplicateDetector;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -123,8 +122,9 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 		Set<AbstractDuplicateDetector> bugzillaDuplicateDetectors = new HashSet<AbstractDuplicateDetector>();
 		for (AbstractDuplicateDetector abstractDuplicateDetector : TasksUiPlugin.getDefault()
 				.getDuplicateSearchCollectorsList()) {
-			if (abstractDuplicateDetector.getKind() != null
-					&& abstractDuplicateDetector.getKind().equals(BugzillaCorePlugin.REPOSITORY_KIND)) {
+
+			if (abstractDuplicateDetector.getKind() == null
+					|| abstractDuplicateDetector.getKind().equals(getConnector().getConnectorKind())) {
 				bugzillaDuplicateDetectors.add(abstractDuplicateDetector);
 			}
 		}

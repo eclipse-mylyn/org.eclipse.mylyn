@@ -627,8 +627,8 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		Set<AbstractDuplicateDetector> bugzillaDuplicateDetectors = new HashSet<AbstractDuplicateDetector>();
 		for (AbstractDuplicateDetector abstractDuplicateDetector : TasksUiPlugin.getDefault()
 				.getDuplicateSearchCollectorsList()) {
-			if (abstractDuplicateDetector.getKind() != null
-					&& abstractDuplicateDetector.getKind().equals(BugzillaCorePlugin.REPOSITORY_KIND)) {
+			if (abstractDuplicateDetector.getKind() == null
+					|| abstractDuplicateDetector.getKind().equals(getConnector().getConnectorKind())) {
 				bugzillaDuplicateDetectors.add(abstractDuplicateDetector);
 			}
 		}
