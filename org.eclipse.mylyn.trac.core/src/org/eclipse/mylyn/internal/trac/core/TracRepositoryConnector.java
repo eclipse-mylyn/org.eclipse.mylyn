@@ -64,7 +64,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		return true;
 	}
 
-	private TracWikiHandler wikiManager = new TracWikiHandler(this);
+	private TracWikiHandler wikiHandler = new TracWikiHandler(this);
 
 	public boolean hasWiki(TaskRepository repository) {
 		// check the access mode to validate Wiki support
@@ -78,8 +78,8 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		return false;
 	}
 
-	public AbstractWikiHandler getWikiManager() {
-		return wikiManager;
+	public AbstractWikiHandler getWikiHandler() {
+		return wikiHandler;
 	}
 
 	@Override

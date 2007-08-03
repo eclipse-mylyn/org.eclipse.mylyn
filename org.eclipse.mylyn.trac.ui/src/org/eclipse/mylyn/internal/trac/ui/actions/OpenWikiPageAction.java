@@ -232,7 +232,7 @@ public class OpenWikiPageAction extends Action implements IViewActionDelegate {
 			//       functionality is generalized into AbstractRepositoryConnector
 			if (connector instanceof TracRepositoryConnector) {
 				TracRepositoryConnector tracConnector = (TracRepositoryConnector) connector;
-				wikiHandler = tracConnector.getWikiManager();
+				wikiHandler = tracConnector.getWikiHandler();
 				action.setEnabled(tracConnector.hasWiki(repository));
 			} else {
 				action.setEnabled(false);
