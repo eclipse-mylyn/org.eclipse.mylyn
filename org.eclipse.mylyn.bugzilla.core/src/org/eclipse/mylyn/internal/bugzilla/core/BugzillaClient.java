@@ -748,7 +748,7 @@ public class BugzillaClient {
 			}
 			BufferedReader in = new BufferedReader(new InputStreamReader(method.getResponseBodyAsStream(),
 					method.getRequestCharSet()));
-			in.mark(10);
+			in.mark(1028);
 			HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(in, null);
 
 			boolean existingBugPosted = false;
@@ -802,7 +802,11 @@ public class BugzillaClient {
 			}
 
 			if ((!taskData.isNew() && existingBugPosted != true) || (taskData.isNew() && result == null)) {
-				in.reset();
+				try {
+					in.reset();
+				} catch (IOException e) {
+					// ignore
+				}
 				parseHtmlError(in);
 			}
 
@@ -913,6 +917,9 @@ public class BugzillaClient {
 
 		if (model.getNewComment().length() != 0) {
 			fields.put(KEY_COMMENT, new NameValuePair(KEY_COMMENT, model.getNewComment()));
+		} else if (o != null && o.getKnobName().equals(IBugzillaConstants.BUGZILLA_OPERATION.duplicate.toString())) {
+			// fix for bug#198677
+			fields.put(KEY_COMMENT, new NameValuePair(KEY_COMMENT, ""));
 		}
 
 		List<String> removeCC = model.getAttributeValues(RepositoryTaskAttribute.REMOVE_CC);
