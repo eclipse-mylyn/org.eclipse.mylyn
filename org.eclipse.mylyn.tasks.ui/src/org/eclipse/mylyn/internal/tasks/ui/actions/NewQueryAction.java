@@ -43,19 +43,21 @@ public class NewQueryAction extends Action implements IViewActionDelegate, IExec
 	private boolean skipRepositoryPage;
 
 	public void run(IAction action) {
-		IWizard wizard;
+		IWizard wizard = null;
 		List<TaskRepository> repositories = TasksUiPlugin.getRepositoryManager().getAllRepositories();
-		if (repositories.size() == 1) {
+		if (repositories.size() == 2) {
 			// NOTE: this click-saving should be generalized
-			TaskRepository taskRepository = repositories.get(0);
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskRepository.getConnectorKind());
-			wizard = connectorUi.getQueryWizard(taskRepository, null);
-			((Wizard) wizard).setForcePreviousAndNextButtons(true);
-			if (connectorUi instanceof LocalTaskConnectorUi) {
-				wizard.performFinish();
-				return;
+			for (TaskRepository taskRepository : repositories) {
+				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskRepository.getConnectorKind());
+				if (!(connectorUi instanceof LocalTaskConnectorUi)) {
+					wizard = connectorUi.getQueryWizard(taskRepository, null);
+					if (wizard == null) {
+						continue;
+					}
+					((Wizard) wizard).setForcePreviousAndNextButtons(true);
+				}
 			}
-		} else if(skipRepositoryPage) {
+		} else if (skipRepositoryPage) {
 			TaskRepository taskRepository = TasksUiUtil.getSelectedRepository();
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskRepository.getConnectorKind());
 			wizard = connectorUi.getQueryWizard(taskRepository, null);
@@ -67,7 +69,7 @@ public class NewQueryAction extends Action implements IViewActionDelegate, IExec
 		} else {
 			wizard = new NewQueryWizard();
 		}
-		
+
 		try {
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			if (shell != null && !shell.isDisposed()) {
