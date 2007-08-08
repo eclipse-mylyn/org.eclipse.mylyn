@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Text;
  */
 public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 
-	private static final String LABEL_CUSTOM_QUERY = "Enter query &URL";
+	private static final String LABEL_CUSTOM_QUERY = "&Enter query URL";
 
 	private static final String TITLE = "Create query from URL";
 

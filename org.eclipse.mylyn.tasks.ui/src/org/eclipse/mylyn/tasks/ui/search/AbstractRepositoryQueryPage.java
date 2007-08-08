@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Text;
  */
 public abstract class AbstractRepositoryQueryPage extends WizardPage implements ISearchPage {
 
-	private static final String TITLE_QUERY_TITLE = "Query &Title:";
+	private static final String TITLE_QUERY_TITLE = "&Query Title:";
 
 	private static final String TITLE = "Enter query parameters";
 

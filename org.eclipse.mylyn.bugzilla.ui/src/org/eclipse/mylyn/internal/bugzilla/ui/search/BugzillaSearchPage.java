@@ -231,7 +231,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 		if (!inSearchContainer()) {
 			final Label queryTitleLabel = new Label(composite, SWT.NONE);
-			queryTitleLabel.setText("Query Title:");
+			queryTitleLabel.setText("&Query Title:");
 
 			Text queryTitle = new Text(composite, SWT.BORDER);
 			queryTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
@@ -254,7 +254,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 		// Info text
 		Label labelSummary = new Label(composite, SWT.LEFT);
-		labelSummary.setText("Summary:");
+		labelSummary.setText("&Summary:");
 		labelSummary.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 
 		// Pattern combo
@@ -275,7 +275,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 		// Info text
 		Label labelComment = new Label(composite, SWT.LEFT);
-		labelComment.setText("Comment:");
+		labelComment.setText("&Comment:");
 		labelComment.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 
 		// Comment pattern combo
@@ -295,7 +295,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		commentOperation.select(0);
 
 		Label labelEmail = new Label(composite, SWT.LEFT);
-		labelEmail.setText("Email:");
+		labelEmail.setText("&Email:");
 		labelEmail.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 
 		// pattern combo
@@ -347,7 +347,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		emailButtons = new Button[] { button0, button1, button2, button3 };
 
 		Label labelKeywords = new Label(composite, SWT.NONE);
-		labelKeywords.setText("Keywords:");
+		labelKeywords.setText("&Keywords:");
 		labelKeywords.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 
 		Composite keywordsComposite = new Composite(composite, SWT.NONE);
@@ -409,7 +409,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		productComposite.setLayout(productLayout);
 
 		Label productLabel = new Label(productComposite, SWT.LEFT);
-		productLabel.setText("Product");
+		productLabel.setText("&Product:");
 
 		GridData productLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		productLayoutData.heightHint = HEIGHT_ATTRIBUTE_COMBO;
@@ -442,7 +442,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		componentComposite.setLayout(componentLayout);
 
 		Label componentLabel = new Label(componentComposite, SWT.LEFT);
-		componentLabel.setText("Component");
+		componentLabel.setText("Compo&nent:");
 
 		component = new List(componentComposite, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
 		GridData componentLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -458,7 +458,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		versionComposite.setLayout(versionLayout);
 
 		Label versionLabel = new Label(versionComposite, SWT.LEFT);
-		versionLabel.setText("Version");
+		versionLabel.setText("Vers&ion:");
 
 		version = new List(versionComposite, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
 		GridData versionLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -474,7 +474,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		milestoneComposite.setLayout(milestoneLayout);
 
 		Label milestoneLabel = new Label(milestoneComposite, SWT.LEFT);
-		milestoneLabel.setText("Milestone");
+		milestoneLabel.setText("&Milestone:");
 
 		target = new List(milestoneComposite, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
 		GridData targetLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -500,7 +500,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		statusComposite.setLayout(statusLayout);
 
 		Label statusLabel = new Label(statusComposite, SWT.LEFT);
-		statusLabel.setText("Status");
+		statusLabel.setText("Stat&us:");
 
 		status = new List(statusComposite, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
 		final GridData gd_status = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -517,7 +517,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		resolutionComposite.setLayout(resolutionLayout);
 
 		Label resolutionLabel = new Label(resolutionComposite, SWT.LEFT);
-		resolutionLabel.setText("Resolution");
+		resolutionLabel.setText("&Resolution:");
 
 		resolution = new List(resolutionComposite, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
 		final GridData gd_resolution = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -534,7 +534,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		priorityComposite.setLayout(priorityLayout);
 
 		Label priorityLabel = new Label(priorityComposite, SWT.LEFT);
-		priorityLabel.setText("Priority");
+		priorityLabel.setText("Priori&ty:");
 
 		priority = new List(priorityComposite, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
 		final GridData gd_priority = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -551,7 +551,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		severityComposite.setLayout(severityLayout);
 
 		Label severityLabel = new Label(severityComposite, SWT.LEFT);
-		severityLabel.setText("Severity");
+		severityLabel.setText("Se&verity:");
 
 		severity = new List(severityComposite, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
 		final GridData gd_severity = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -568,7 +568,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		hardwareComposite.setLayout(hardwareLayout);
 
 		Label hardwareLabel = new Label(hardwareComposite, SWT.LEFT);
-		hardwareLabel.setText("Hardware");
+		hardwareLabel.setText("Hard&ware:");
 
 		hardware = new List(hardwareComposite, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
 		final GridData gd_hardware = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -585,7 +585,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		osComposite.setLayout(osLayout);
 
 		Label osLabel = new Label(osComposite, SWT.LEFT);
-		osLabel.setText("OS");
+		osLabel.setText("&Operating System:");
 
 		os = new List(osComposite, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
 		final GridData gd_os = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -607,7 +607,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 		Label changedInTheLabel = new Label(composite, SWT.LEFT);
 		changedInTheLabel.setLayoutData(new GridData());
-		changedInTheLabel.setText("Changed in:");
+		changedInTheLabel.setText("Ch&anged in:");
 
 		Composite updateComposite = new Composite(composite, SWT.NONE);
 		updateComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
@@ -626,7 +626,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		label.setText(" days.");
 
 		Button updateButton = new Button(updateComposite, SWT.PUSH);
-		updateButton.setText("Update Attributes from Repository");
+		updateButton.setText("Up&date Attributes from Repository");
 		updateButton.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
 		updateButton.addSelectionListener(new SelectionAdapter() {
 			@Override

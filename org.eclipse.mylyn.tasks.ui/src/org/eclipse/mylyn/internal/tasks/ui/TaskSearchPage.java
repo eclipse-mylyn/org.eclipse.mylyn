@@ -110,17 +110,17 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 	}
 
 	private void createRepositoryGroup(Composite control) {
-		 Composite group = new Composite(control, SWT.NONE);
+		Composite group = new Composite(control, SWT.NONE);
 //		 group.setText("Repository");
-		 GridLayout layout = new GridLayout();
-		 layout.numColumns = 4;
-		 group.setLayout(layout);
-		 GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-		 gd.horizontalSpan = 1;
-		 group.setLayoutData(gd);
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 4;
+		group.setLayout(layout);
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.horizontalSpan = 1;
+		group.setLayoutData(gd);
 
 		Label label = new Label(group, SWT.NONE);
-		label.setText("Select Repository: ");
+		label.setText("Se&lect Repository: ");
 
 		repositoryCombo = new Combo(group, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
 		repositoryCombo.addSelectionListener(new SelectionAdapter() {
@@ -130,10 +130,10 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			}
 		});
 		repositoryCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
-		
+
 		label = new Label(group, SWT.NONE);
 		label.setText("  ");
-		
+
 		ImageHyperlink openHyperlink = new ImageHyperlink(group, SWT.NONE);
 		openHyperlink.setText("Open Repository Task by Key/ID...");
 		openHyperlink.setForeground(TaskListColorsAndFonts.COLOR_HYPERLINK_WIDGET);
@@ -152,7 +152,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			public void linkExited(HyperlinkEvent e) {
 				// ignore
 			}
-			
+
 		});
 //		openHyperlink.set
 //		openHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.QUERY));

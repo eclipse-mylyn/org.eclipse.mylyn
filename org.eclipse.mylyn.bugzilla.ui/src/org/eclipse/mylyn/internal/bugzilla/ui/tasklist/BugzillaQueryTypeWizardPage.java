@@ -24,9 +24,9 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class BugzillaQueryTypeWizardPage extends WizardPage {
 
-	private static final String BUTTON_LABEL_QUERY = "Create query from existing &URL";
+	private static final String BUTTON_LABEL_QUERY = "&Create query from existing URL";
 
-	private static final String BUTTON_LABEL_FORM = "Create query using &form";
+	private static final String BUTTON_LABEL_FORM = "Cre&ate query using form";
 
 	private static final String TITLE = "Choose query type";
 
