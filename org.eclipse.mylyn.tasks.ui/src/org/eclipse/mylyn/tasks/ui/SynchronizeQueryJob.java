@@ -192,6 +192,10 @@ class SynchronizeQueryJob extends Job {
 						// set incoming marker for web tasks 
 						task.setSynchronizationState(RepositoryTaskSyncState.INCOMING);
 					}
+
+					task.setSynchronizationStatus(null);
+					task.setSynchronizing(false);
+
 				} else {
 					// new tasks are marked stale by default
 					task = hit;
