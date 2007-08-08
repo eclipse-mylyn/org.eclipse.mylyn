@@ -25,15 +25,18 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaReportElement;
@@ -164,6 +167,17 @@ public class BugzillaProductPage extends WizardPage {
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			}
 		});
+		
+		productViewer.addOpenListener(new IOpenListener() {
+			public void open(OpenEvent event) {
+				if (getWizard().canFinish()) {
+					if (getWizard().performFinish()) {
+						((WizardDialog) getContainer()).close();
+					}
+				}
+			}
+		});
+		
 		initProducts();
 		productViewer.setInput(products);
 		productViewer.addPostSelectionChangedListener(new ISelectionChangedListener() {
