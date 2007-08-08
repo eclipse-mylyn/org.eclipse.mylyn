@@ -183,6 +183,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			return searchPage.getControl();
 		}
 
+		fParentComposite.getParent().getShell().pack();
 		pageWrapper.setData(PAGE_KEY, searchPage);
 		return pageWrapper;
 	}
