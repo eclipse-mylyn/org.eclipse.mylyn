@@ -197,7 +197,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	// TODO: extract to extension points?
 	private static List<ITaskListPresentation> presentations = new ArrayList<ITaskListPresentation>();
-	
+
 	private boolean focusedMode = false;
 
 	private boolean linkWithEditor;
@@ -269,7 +269,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	private TaskWorkingSetFilter filterWorkingSet = new TaskWorkingSetFilter();
 
 	private Set<AbstractTaskListFilter> filters = new HashSet<AbstractTaskListFilter>();
-	
+
 	protected String[] columnNames = new String[] { "Summary" };
 
 	protected int[] columnWidths = new int[] { 200 };
@@ -688,6 +688,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		default:
 			m.putInteger(MEMENTO_KEY_SORT_INDEX, 0);
 		}
+
 		m.putInteger(MEMENTO_KEY_SORT_DIRECTION, sortDirection);
 
 		memento.putString(MEMENTO_LINK_WITH_EDITOR, Boolean.toString(linkWithEditor));
@@ -726,6 +727,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			}
 		}
 
+		filterWorkingSet.setCurrentWorkingSet(getSite().getPage().getAggregateWorkingSet());
 		addFilter(filterWorkingSet);
 		addFilter(filterPriority);
 		if (TasksUiPlugin.getDefault().getPreferenceStore().contains(TasksUiPreferenceConstants.FILTER_COMPLETE_MODE)) {
@@ -1683,7 +1685,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 					.getWorkingSets()));
 			Set<IWorkingSet> tasksSets = new HashSet<IWorkingSet>(allSets);
 			for (IWorkingSet workingSet : allSets) {
-				if (workingSet.getId() == null || !workingSet.getId().equalsIgnoreCase(TaskWorkingSetUpdater.ID_TASK_WORKING_SET)) {
+				if (workingSet.getId() == null
+						|| !workingSet.getId().equalsIgnoreCase(TaskWorkingSetUpdater.ID_TASK_WORKING_SET)) {
 					tasksSets.remove(workingSet);
 				}
 			}
@@ -1694,8 +1697,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	}
 
 	/**
-	 * This can be used for experimentally adding additional presentations, but note
-	 * that this convention is extremely likely to change in the Mylyn 3.0 cycle. 
+	 * This can be used for experimentally adding additional presentations, but note that this convention is extremely
+	 * likely to change in the Mylyn 3.0 cycle.
 	 */
 	public static List<ITaskListPresentation> getPresentations() {
 		return presentations;
