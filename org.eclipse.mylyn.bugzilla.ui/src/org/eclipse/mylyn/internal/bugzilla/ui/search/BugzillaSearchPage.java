@@ -255,7 +255,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		// Info text
 		Label labelSummary = new Label(composite, SWT.LEFT);
 		labelSummary.setText("&Summary:");
-		labelSummary.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+		//labelSummary.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 
 		// Pattern combo
 		summaryPattern = new Combo(composite, SWT.SINGLE | SWT.BORDER);
@@ -276,7 +276,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		// Info text
 		Label labelComment = new Label(composite, SWT.LEFT);
 		labelComment.setText("&Comment:");
-		labelComment.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+		//labelComment.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 
 		// Comment pattern combo
 		commentPattern = new Combo(composite, SWT.SINGLE | SWT.BORDER);
@@ -296,7 +296,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 		Label labelEmail = new Label(composite, SWT.LEFT);
 		labelEmail.setText("&Email:");
-		labelEmail.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+		//labelEmail.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 
 		// pattern combo
 		emailPattern = new Combo(composite, SWT.SINGLE | SWT.BORDER);
@@ -348,7 +348,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 		Label labelKeywords = new Label(composite, SWT.NONE);
 		labelKeywords.setText("&Keywords:");
-		labelKeywords.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+		//labelKeywords.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 
 		Composite keywordsComposite = new Composite(composite, SWT.NONE);
 		keywordsComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
