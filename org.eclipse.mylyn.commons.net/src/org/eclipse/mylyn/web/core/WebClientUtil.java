@@ -8,8 +8,10 @@
 
 package org.eclipse.mylyn.web.core;
 
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
+import java.net.UnknownHostException;
 import java.net.Proxy.Type;
 
 import org.apache.commons.httpclient.Credentials;
@@ -55,10 +57,10 @@ public class WebClientUtil {
 		int colonSlashSlash = repositoryUrl.indexOf("://");
 		int firstSlash = repositoryUrl.indexOf("/", colonSlashSlash + 3);
 		int colonPort = repositoryUrl.indexOf(':', colonSlashSlash + 1);
-		if(firstSlash==-1) {
+		if (firstSlash == -1) {
 			firstSlash = repositoryUrl.length();
 		}
-		if (colonPort < 0 || colonPort>firstSlash) {
+		if (colonPort < 0 || colonPort > firstSlash) {
 			return isRepositoryHttps(repositoryUrl) ? HTTPS_PORT : HTTP_PORT;
 		}
 
@@ -140,7 +142,8 @@ public class WebClientUtil {
 			client.getHostConfiguration().setProxy(WebClientUtil.getDomain(address.getHostName()), address.getPort());
 			if (proxySettings instanceof AuthenticatedProxy) {
 				AuthenticatedProxy authProxy = (AuthenticatedProxy) proxySettings;
-				Credentials credentials = getCredentials(authProxy, address);
+				Credentials credentials = getCredentials(authProxy.getUserName(), authProxy.getPassword(),
+						address.getAddress());
 				AuthScope proxyAuthScope = new AuthScope(address.getHostName(), address.getPort(), AuthScope.ANY_REALM);
 				client.getState().setProxyCredentials(proxyAuthScope, credentials);
 			}
@@ -149,7 +152,12 @@ public class WebClientUtil {
 		if (user != null && password != null) {
 			AuthScope authScope = new AuthScope(WebClientUtil.getDomain(repositoryUrl),
 					WebClientUtil.getPort(repositoryUrl), AuthScope.ANY_REALM);
-			client.getState().setCredentials(authScope, new UsernamePasswordCredentials(user, password));
+			try {
+				client.getState().setCredentials(authScope, getCredentials(user, password, InetAddress.getLocalHost()));
+			} catch (UnknownHostException e) {
+				// TODO: [api] throw this io exception instead
+				throw new IllegalArgumentException(e);
+			}
 		}
 
 		if (WebClientUtil.isRepositoryHttps(repositoryUrl)) {
@@ -166,13 +174,16 @@ public class WebClientUtil {
 	}
 
 	public static Credentials getCredentials(AuthenticatedProxy authProxy, InetSocketAddress address) {
-		String username = authProxy.getUserName();
+		return getCredentials(authProxy.getUserName(), authProxy.getPassword(), address.getAddress());
+	}
+
+	private static Credentials getCredentials(final String username, final String password, final InetAddress address) {
 		int i = username.indexOf("\\");
 		if (i > 0 && i < username.length() - 1) {
-			return new NTCredentials(username.substring(i + 1), authProxy.getPassword(), address.getHostName(),
-					username.substring(0, i));
+			return new NTCredentials(username.substring(i + 1), password, address.getHostName(), username.substring(0,
+					i));
 		} else {
-			return new UsernamePasswordCredentials(username, authProxy.getPassword());
+			return new UsernamePasswordCredentials(username, password);
 		}
 	}
 
