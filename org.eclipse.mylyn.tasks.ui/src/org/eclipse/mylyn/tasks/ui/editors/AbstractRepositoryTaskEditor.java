@@ -1899,17 +1899,21 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected void createCommentLayout(Composite composite) {
 		commentsSection = createSection(composite, getSectionLabel(SECTION_NAME.COMMENTS_SECTION));
 		commentsSection.setText(commentsSection.getText() + " (" + taskData.getComments().size() + ")");
-		ImageHyperlink hyperlink = new ImageHyperlink(commentsSection, SWT.NONE);
-		toolkit.adapt(hyperlink, true, true);
-		hyperlink.setBackground(null);
-		hyperlink.setImage(TasksUiImages.getImage(TasksUiImages.EXPAND_ALL));
-		hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
-			public void linkActivated(HyperlinkEvent e) {
-				revealAllComments();
-			}
-		});
-
-		commentsSection.setTextClient(hyperlink);
+		if (taskData.getComments().size() > 0) {
+			commentsSection.setEnabled(true);
+			ImageHyperlink hyperlink = new ImageHyperlink(commentsSection, SWT.NONE);
+			toolkit.adapt(hyperlink, true, true);
+			hyperlink.setBackground(null);
+			hyperlink.setImage(TasksUiImages.getImage(TasksUiImages.EXPAND_ALL));
+			hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+				public void linkActivated(HyperlinkEvent e) {
+					revealAllComments();
+				}
+			});
+			commentsSection.setTextClient(hyperlink);
+		} else {
+			commentsSection.setEnabled(false);
+		}
 
 		// Additional (read-only) Comments Area
 		Composite addCommentsComposite = toolkit.createComposite(commentsSection);
