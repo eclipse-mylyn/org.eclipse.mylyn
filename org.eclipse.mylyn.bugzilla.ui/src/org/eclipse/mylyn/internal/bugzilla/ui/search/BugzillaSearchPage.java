@@ -333,13 +333,13 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		// buttons.setLayoutData(gd);
 
 		Button button0 = new Button(emailComposite, SWT.CHECK);
-		button0.setText("bug owner");
+		button0.setText("owner");
 
 		Button button1 = new Button(emailComposite, SWT.CHECK);
 		button1.setText("reporter");
 
 		Button button2 = new Button(emailComposite, SWT.CHECK);
-		button2.setText("CC list");
+		button2.setText("cc");
 
 		Button button3 = new Button(emailComposite, SWT.CHECK);
 		button3.setText("commenter");
