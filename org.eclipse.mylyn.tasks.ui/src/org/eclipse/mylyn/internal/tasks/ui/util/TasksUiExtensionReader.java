@@ -20,6 +20,9 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.internal.tasks.ui.views.AbstractTaskListContentProvider;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListPresentation;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListFactory;
@@ -116,6 +119,17 @@ public class TasksUiExtensionReader {
 
 	public static final String ATTR_KIND = "kind";
 
+	private static final String EXTENSION_PRESENTATIONS = "org.eclipse.mylyn.tasks.ui.presentations";
+
+	public static final String ELMNT_PRESENTATION = "presentation";
+
+	public static final String ATTR_CONTENT_PROVIDER = "contentProvider";
+
+	public static final String ATTR_ICON = "icon";
+
+	public static final String ATTR_ID = "id";
+
+	
 	private static boolean coreExtensionsRead = false;
 
 	public static void initStartupExtensions(TaskListWriter delegatingExternalizer) {
@@ -172,6 +186,16 @@ public class TasksUiExtensionReader {
 				}
 			}
 			delegatingExternalizer.setDelegateExternalizers(externalizers);
+
+			IExtensionPoint presentationsExtensionPoint = registry.getExtensionPoint(EXTENSION_PRESENTATIONS);
+			IExtension[] presentations = presentationsExtensionPoint.getExtensions();
+			for (int i = 0; i < presentations.length; i++) {
+				IConfigurationElement[] elements = presentations[i].getConfigurationElements();
+				for (int j = 0; j < elements.length; j++) {
+					readPresentation(elements[j]);
+				}
+			}
+
 			coreExtensionsRead = true;
 		}
 	}
@@ -211,7 +235,24 @@ public class TasksUiExtensionReader {
 				}
 			}
 		}
+	}
 
+	private static void readPresentation(IConfigurationElement element) {
+		try {
+			String id = element.getAttribute(ATTR_ID);
+			String name = element.getAttribute(ATTR_NAME);
+
+			String iconPath = element.getAttribute(ATTR_ICON);
+			ImageDescriptor iconDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin( // 
+					element.getContributor().getName(), iconPath);
+			
+			AbstractTaskListContentProvider contentProvider;
+			contentProvider = (AbstractTaskListContentProvider) element.createExecutableExtension(ATTR_CONTENT_PROVIDER);
+			
+			TaskListView.addPresentation(new TaskListPresentation(id, name, iconDescriptor, contentProvider));
+		} catch (CoreException e) {
+			StatusHandler.log(e, "Could not load presentation extension");
+		}
 	}
 
 	private static void readDuplicateDetector(IConfigurationElement element) {

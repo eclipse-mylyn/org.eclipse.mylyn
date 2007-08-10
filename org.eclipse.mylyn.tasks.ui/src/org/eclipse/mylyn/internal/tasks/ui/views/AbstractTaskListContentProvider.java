@@ -5,22 +5,20 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
+
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
-import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.ITreeContentProvider;
 
 /**
- * @author Rob Elves
- * @author Mik Kersten
+ * @author Eugene Kuleshov
  */
-public interface ITaskListPresentation {
+public abstract class AbstractTaskListContentProvider implements ITreeContentProvider {
 
-	public abstract AbstractTaskListContentProvider getContentProvider();
+	protected TaskListView view;
 
-	public abstract String getPresentationName();
-
-	public abstract ImageDescriptor getImageDescriptor();
-
-	public abstract String getId();
+	public void setView(TaskListView view) {
+		this.view = view;
+	}
 
 }

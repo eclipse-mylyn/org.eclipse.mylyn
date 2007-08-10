@@ -27,7 +27,6 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.layout.TreeColumnLayout;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.CellEditor;
@@ -38,7 +37,6 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeViewerListener;
 import org.eclipse.jface.viewers.OpenEvent;
@@ -160,9 +158,11 @@ import org.eclipse.ui.themes.IThemeManager;
  */
 public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
-	private static final String PRESENTATION_SCHEDULED = "Scheduled";
-
 	public static final String ID = "org.eclipse.mylyn.tasks.ui.views.tasks";
+
+	private static final String PRESENTATION_CATEGORIZED_ID = "org.eclipse.mylyn.tasks.ui.categorized";
+
+	private static final String PRESENTATION_SCHEDULED_ID = "org.eclipse.mylyn.tasks.ui.scheduled";
 
 	public static final String LABEL_VIEW = "Task List";
 
@@ -173,6 +173,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	private static final String MEMENTO_KEY_SORT_INDEX = "sortIndex";
 
 	private static final String MEMENTO_LINK_WITH_EDITOR = "linkWithEditor";
+
+	private static final String MEMENTO_PRESENTATION = "presentation";
 
 	private static final String ID_SEPARATOR_NEW = "new";
 
@@ -303,37 +305,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	private LinkedHashMap<String, IStructuredSelection> lastSelectionByTaskHandle = new LinkedHashMap<String, IStructuredSelection>(
 			MAX_SELECTION_HISTORY_SIZE);
 
-	private ITaskListPresentation catagorizedPresentation = new ITaskListPresentation() {
-
-		public IStructuredContentProvider getContentProvider() {
-			return new TaskListContentProvider(TaskListView.this);
-		}
-
-		public String getPresentationName() {
-			return "Categorized";
-		}
-
-		public ImageDescriptor getImageDescriptor() {
-			return TasksUiImages.CATEGORY;
-		}
-	};
-
-	// TODO: Use extension point
-	private ITaskListPresentation scheduledPresentation = new ITaskListPresentation() {
-
-		public IStructuredContentProvider getContentProvider() {
-			return new TaskScheduleContentProvider(TaskListView.this, TasksUiPlugin.getTaskListManager());
-		}
-
-		public String getPresentationName() {
-			return PRESENTATION_SCHEDULED;
-		}
-
-		public ImageDescriptor getImageDescriptor() {
-			return TasksUiImages.CALENDAR;
-		}
-	};
-
 	/**
 	 * True if the view should indicate that interaction monitoring is paused
 	 */
@@ -430,8 +401,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		public void activityChanged(final ScheduledTaskContainer week) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					if (getCurrentPresentation().getPresentationName().equals(
-							scheduledPresentation.getPresentationName())) {
+					if (PRESENTATION_SCHEDULED_ID.equals(getCurrentPresentation().getId())) {
 						refresh(week);
 					}
 				}
@@ -453,8 +423,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					for (TaskContainerDelta taskContainerDelta : containers) {
-						if (getCurrentPresentation().getPresentationName().equals(
-								scheduledPresentation.getPresentationName())) {
+						if (PRESENTATION_SCHEDULED_ID.equals(getCurrentPresentation().getId())) {
 							// TODO: implement refresh policy for scheduled presentation
 							refresh(null);
 						} else {
@@ -607,8 +576,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		TasksUiPlugin.getTaskListManager().getTaskList().addChangeListener(TASK_REFERESH_LISTENER);
 
 		PlatformUI.getWorkbench().getWorkingSetManager().addPropertyChangeListener(this);
-		presentations.add(catagorizedPresentation);
-		presentations.add(scheduledPresentation);
+//		addPresentation(categorizedPresentation);
+//		addPresentation(scheduledPresentation);
 	}
 
 	@Override
@@ -692,6 +661,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		m.putInteger(MEMENTO_KEY_SORT_DIRECTION, sortDirection);
 
 		memento.putString(MEMENTO_LINK_WITH_EDITOR, Boolean.toString(linkWithEditor));
+
+		memento.putString(MEMENTO_PRESENTATION, currentPresentation.getId());
 	}
 
 	private void restoreState() {
@@ -725,6 +696,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			default:
 				this.sortByIndex = SortByIndex.PRIORITY;
 			}
+
+			applyPresentation(taskListMemento.getString(MEMENTO_PRESENTATION));
 		}
 
 		filterWorkingSet.setCurrentWorkingSet(getSite().getPage().getAggregateWorkingSet());
@@ -782,7 +755,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		tableSorter = new TaskListTableSorter(this, TaskListTableSorter.SortByIndex.PRIORITY);
 		getViewer().setSorter(tableSorter);
 
-		applyPresentation(catagorizedPresentation);
+		applyPresentation(PRESENTATION_CATEGORIZED_ID);
 
 		drillDownAdapter = new DrillDownAdapter(getViewer());
 		getViewer().setInput(getViewSite());
@@ -905,16 +878,31 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		getSite().getPage().addPartListener(editorListener);
 	}
 
+	private void applyPresentation(String id) {
+		if (id != null) {
+			for (ITaskListPresentation presentation : presentations) {
+				if (id.equals(presentation.getId())) {
+					applyPresentation(presentation);
+					break;
+				}
+			}
+		}
+	}
+
 	public void applyPresentation(ITaskListPresentation presentation) {
 		try {
 			getViewer().getControl().setRedraw(false);
 			if (!filteredTree.getFilterControl().getText().equals("")) {
 				filteredTree.getFilterControl().setText("");
 			}
-			if (presentation.getPresentationName().equals(PRESENTATION_SCHEDULED)) {
-				TasksUiPlugin.getTaskListManager().parseFutureReminders();
-			}
-			getViewer().setContentProvider(presentation.getContentProvider());
+			AbstractTaskListContentProvider contentProvider = presentation.getContentProvider();
+			contentProvider.setView(this);
+
+//			if (presentation.getId().equals(PRESENTATION_SCHEDULED_ID)) {
+//				TasksUiPlugin.getTaskListManager().parseFutureReminders();
+//			}
+
+			getViewer().setContentProvider(contentProvider);
 			refreshAndFocus(isFocusedMode());
 
 			currentPresentation = presentation;
@@ -1702,5 +1690,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	 */
 	public static List<ITaskListPresentation> getPresentations() {
 		return presentations;
+	}
+
+	public static void addPresentation(ITaskListPresentation presentation) {
+		presentations.add(presentation);
 	}
 }

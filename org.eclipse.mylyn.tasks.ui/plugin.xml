@@ -6,6 +6,7 @@
     <extension-point id="editors" name="Task Editors" schema="schema/editors.exsd"/>
     <extension-point id="projectLinkProviders" name="Linking Provider from Project to the Task Repository" schema="schema/projectLinkProviders.exsd"/>
     <extension-point id="duplicateDetectors" name="duplicateDetectors" schema="schema/duplicateDetectors.exsd"/>
+    <extension-point id="presentations" name="presentations" schema="schema/presentations.exsd"/>
 
     <extension
           point="org.eclipse.mylyn.context.core.bridges">
@@ -897,6 +898,19 @@
       
    <extension point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectorTargets">
      <target id="org.eclipse.mylyn.tasks.ui.TaskEditor" name="Task Editor"/>
+   </extension>
+
+   <extension point="org.eclipse.mylyn.tasks.ui.presentations">
+      <presentation 
+            id="org.eclipse.mylyn.tasks.ui.categorized"
+            name="Categorized"
+            icon="icons/etool16/category.gif"
+            contentProvider="org.eclipse.mylyn.internal.tasks.ui.views.TaskListContentProvider"/>
+      <presentation
+            id="org.eclipse.mylyn.tasks.ui.scheduled"
+            name="Scheduled"
+            icon="icons/etool16/calendar.gif"
+            contentProvider="org.eclipse.mylyn.internal.tasks.ui.views.TaskScheduleContentProvider"/>
    </extension>
    
 </plugin>

@@ -15,8 +15,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
@@ -36,13 +34,7 @@ import org.eclipse.ui.IWorkingSet;
  * 
  * @author Mik Kersten
  */
-public class TaskListContentProvider implements IStructuredContentProvider, ITreeContentProvider {
-
-	protected final TaskListView view;
-
-	public TaskListContentProvider(TaskListView view) {
-		this.view = view;
-	}
+public class TaskListContentProvider extends AbstractTaskListContentProvider {
 
 	public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 		this.view.expandToActiveTasks();

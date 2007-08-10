@@ -76,9 +76,11 @@ public class TaskScheduleContentProvider extends TaskListContentProvider {
 		}
 	}
 
-	public TaskScheduleContentProvider(TaskListView view, TaskListManager taskActivityManager) {
-		super(view);
-		this.taskListManager = taskActivityManager;
+	public TaskScheduleContentProvider() {
+		this.taskListManager = TasksUiPlugin.getTaskListManager();
+
+		// TaskListManager not initialized yet so can result in NPE
+		//this.taskListManager.parseFutureReminders();
 	}
 
 	@Override
