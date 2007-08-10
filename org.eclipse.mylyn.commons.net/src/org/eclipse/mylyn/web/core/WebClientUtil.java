@@ -155,8 +155,7 @@ public class WebClientUtil {
 			try {
 				client.getState().setCredentials(authScope, getCredentials(user, password, InetAddress.getLocalHost()));
 			} catch (UnknownHostException e) {
-				// TODO: [api] throw this io exception instead
-				throw new IllegalArgumentException(e);
+				client.getState().setCredentials(authScope, getCredentials(user, password, null));
 			}
 		}
 
@@ -179,7 +178,7 @@ public class WebClientUtil {
 
 	private static Credentials getCredentials(final String username, final String password, final InetAddress address) {
 		int i = username.indexOf("\\");
-		if (i > 0 && i < username.length() - 1) {
+		if (i > 0 && i < username.length() - 1 && address != null) {
 			return new NTCredentials(username.substring(i + 1), password, address.getHostName(), username.substring(0,
 					i));
 		} else {
