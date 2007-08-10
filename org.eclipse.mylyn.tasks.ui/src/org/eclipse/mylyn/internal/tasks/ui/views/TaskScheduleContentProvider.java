@@ -132,4 +132,12 @@ public class TaskScheduleContentProvider extends TaskListContentProvider {
 			return super.hasChildren(parent);
 		}
 	}
+
+	@Override
+	public void setView(TaskListView view) {
+		super.setView(view);
+		// TODO: Eliminate need for parseFutureReminders() call. Should probably be done upon date set.
+		this.taskListManager.parseFutureReminders();
+	}
+
 }

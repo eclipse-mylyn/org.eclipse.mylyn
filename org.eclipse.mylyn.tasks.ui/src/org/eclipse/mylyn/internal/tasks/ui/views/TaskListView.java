@@ -898,10 +898,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			AbstractTaskListContentProvider contentProvider = presentation.getContentProvider();
 			contentProvider.setView(this);
 
-//			if (presentation.getId().equals(PRESENTATION_SCHEDULED_ID)) {
-//				TasksUiPlugin.getTaskListManager().parseFutureReminders();
-//			}
-
 			getViewer().setContentProvider(contentProvider);
 			refreshAndFocus(isFocusedMode());
 
