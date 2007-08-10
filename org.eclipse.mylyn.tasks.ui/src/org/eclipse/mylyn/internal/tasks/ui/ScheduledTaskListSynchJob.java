@@ -96,7 +96,7 @@ public class ScheduledTaskListSynchJob extends Job {
 				// Occasionally request update of repository configuration attributes
 				if ((lastRepositoryRefresh == null || lastRepositoryRefresh.get(Calendar.DAY_OF_MONTH) != Calendar.getInstance()
 						.get(Calendar.DAY_OF_MONTH))
-						&& queries != null && queries.size() > 0) {// && count >= UPDATE_ATTRIBUTES_FREQUENCY
+						&& queries != null && queries.size() > 0) {
 					Job updateJob = new Job("Updating attributes for " + repository.getUrl()) {
 
 						@Override
@@ -109,7 +109,7 @@ public class ScheduledTaskListSynchJob extends Job {
 									TasksUiPlugin.getRepositoryManager().saveRepositories(
 											TasksUiPlugin.getDefault().getRepositoriesFilePath());
 								}
-							} catch (Throwable t) {
+							} catch (Exception e) {
 								// ignore, since we might not be connected
 							}
 							return Status.OK_STATUS;

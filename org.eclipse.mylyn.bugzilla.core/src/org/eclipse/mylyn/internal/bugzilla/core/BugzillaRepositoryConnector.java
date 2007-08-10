@@ -10,6 +10,7 @@ package org.eclipse.mylyn.internal.bugzilla.core;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -474,8 +475,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 					}
 				}
 			}
-		} catch (Exception e) {
-			// if an error occurs default to true
+		} catch (MalformedURLException e) {
+			StatusHandler.fail(e, "Error retrieving configuration timestamp for " + repository.getUrl(), false);
 		}
 		return result;
 	}

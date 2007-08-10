@@ -1120,7 +1120,7 @@ public class BugzillaClient {
 		return taskDataMap;
 	}
 
-	public String getConfigurationTimestamp() throws IOException, CoreException {
+	public String getConfigurationTimestamp() throws CoreException {
 		String lastModified = null;
 		HeadMethod method = null;
 		try {
@@ -1132,7 +1132,8 @@ public class BugzillaClient {
 			}
 
 		} catch (Exception e) {
-			// ignore
+			throw new CoreException(new Status(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+					"Error retrieving configuration timestamp", e));
 		} finally {
 			if (method != null) {
 				method.releaseConnection();
