@@ -416,37 +416,45 @@ public class BugzillaClient {
 	}
 
 	public RepositoryTaskData getTaskData(int id) throws IOException, CoreException {
-		GetMethod method = null;
-		try {
+		final String idString = String.valueOf(id);
+		Set<String> data = new HashSet<String>();
+		data.add(idString);
 
-			method = getConnect(repositoryUrl + IBugzillaConstants.URL_GET_SHOW_BUG_XML + id);
-			RepositoryTaskData taskData = null;
-			if (method.getResponseHeader("Content-Type") != null) {
-				Header responseTypeHeader = method.getResponseHeader("Content-Type");
-				for (String type : VALID_CONFIG_CONTENT_TYPES) {
-					if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
-						taskData = new RepositoryTaskData(new BugzillaAttributeFactory(),
-								BugzillaCorePlugin.REPOSITORY_KIND, repositoryUrl.toString(), "" + id,
-								IBugzillaConstants.BUGZILLA_TASK_KIND);
-						setupExistingBugAttributes(repositoryUrl.toString(), taskData);
-						RepositoryReportFactory reportFactory = new RepositoryReportFactory(
-								method.getResponseBodyAsStream(), characterEncoding);
-						reportFactory.populateReport(taskData);
+		Map<String, RepositoryTaskData> returnedData = getTaskData(data);
 
-						return taskData;
-					}
-				}
-			}
+		return returnedData.get(idString);
 
-			parseHtmlError(new BufferedReader(
-					new InputStreamReader(method.getResponseBodyAsStream(), characterEncoding)));
-
-			return null;
-		} finally {
-			if (method != null) {
-				method.releaseConnection();
-			}
-		}
+//		GetMethod method = null;
+//		try {
+//
+//			method = getConnect(repositoryUrl + IBugzillaConstants.URL_GET_SHOW_BUG_XML + id);
+//			RepositoryTaskData taskData = null;
+//			if (method.getResponseHeader("Content-Type") != null) {
+//				Header responseTypeHeader = method.getResponseHeader("Content-Type");
+//				for (String type : VALID_CONFIG_CONTENT_TYPES) {
+//					if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
+//						taskData = new RepositoryTaskData(new BugzillaAttributeFactory(),
+//								BugzillaCorePlugin.REPOSITORY_KIND, repositoryUrl.toString(), "" + id,
+//								IBugzillaConstants.BUGZILLA_TASK_KIND);
+//						setupExistingBugAttributes(repositoryUrl.toString(), taskData);
+//						RepositoryReportFactory reportFactory = new RepositoryReportFactory(
+//								method.getResponseBodyAsStream(), characterEncoding);
+//						reportFactory.populateReport(taskData);
+//
+//						return taskData;
+//					}
+//				}
+//			}
+//
+//			parseHtmlError(new BufferedReader(
+//					new InputStreamReader(method.getResponseBodyAsStream(), characterEncoding)));
+//
+//			return null;
+//		} finally {
+//			if (method != null) {
+//				method.releaseConnection();
+//			}
+//		}
 	}
 
 	public boolean getSearchHits(AbstractRepositoryQuery query, ITaskCollector collector) throws IOException,

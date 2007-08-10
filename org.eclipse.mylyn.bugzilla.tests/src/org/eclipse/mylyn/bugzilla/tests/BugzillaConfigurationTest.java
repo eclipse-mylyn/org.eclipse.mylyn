@@ -51,7 +51,7 @@ public class BugzillaConfigurationTest extends TestCase {
 		assertEquals(7, config.getStatusValues().size());
 		assertEquals(8, config.getResolutions().size());
 		assertEquals(4, config.getPlatforms().size());
-		assertEquals(5, config.getOSs().size());
+		assertEquals(6, config.getOSs().size());
 		assertEquals(5, config.getPriorities().size());
 		assertEquals(7, config.getSeverities().size());
 		assertEquals(3, config.getProducts().size());
@@ -123,7 +123,7 @@ public class BugzillaConfigurationTest extends TestCase {
 				"UTF-8");
 		RepositoryConfiguration config = client.getRepositoryConfiguration();
 		assertNotNull(config);
-		assertEquals("2.22.1", config.getInstallVersion());
+		assertEquals("3.0", config.getInstallVersion());
 		assertEquals(7, config.getStatusValues().size());
 		assertEquals(8, config.getResolutions().size());
 		assertEquals(6, config.getPlatforms().size());
