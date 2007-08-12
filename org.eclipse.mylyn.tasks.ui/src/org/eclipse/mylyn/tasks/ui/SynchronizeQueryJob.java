@@ -58,7 +58,7 @@ class SynchronizeQueryJob extends Job {
 
 	public SynchronizeQueryJob(AbstractRepositoryConnector connector, TaskRepository repository,
 			Set<AbstractRepositoryQuery> queries, TaskList taskList) {
-		super("Synchronizying queries for " + repository.getRepositoryLabel());
+		super("Synchronizing queries for " + repository.getRepositoryLabel());
 
 		this.connector = connector;
 		this.repository = repository;
