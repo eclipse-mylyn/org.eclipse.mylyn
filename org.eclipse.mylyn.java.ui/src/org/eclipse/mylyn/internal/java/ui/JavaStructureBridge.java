@@ -180,7 +180,12 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 	}
 
 	private boolean isWtpClass(Object object) {
-		return object != null && object.getClass().getSimpleName().equals("CompressedJavaProject");
+		try {
+			return object != null && object.getClass().getSimpleName().equals("CompressedJavaProject");
+		} catch (Throwable t) { 
+			// could have malformed name, see bug 165065
+			return false;
+		}
 	}
 
 	@Override
