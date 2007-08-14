@@ -16,13 +16,13 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
+import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
-import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 
 /**
  * @author Rob Elves
  */
-public class JavaStackTraceHyperlinkDetector implements IHyperlinkDetector {
+public class JavaStackTraceHyperlinkDetector extends AbstractHyperlinkDetector {
 
 	private static final Pattern stackTracePattern = Pattern.compile("\\S*.{1}java:\\d*\\){1}",
 			Pattern.CASE_INSENSITIVE);

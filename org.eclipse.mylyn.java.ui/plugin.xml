@@ -104,6 +104,16 @@
              class="org.eclipse.mylyn.internal.java.ui.JavaStackTraceHyperlinkDetector"
              id="org.eclipse.mylyn.java.hyperlink.detector.stack"/>
     </extension>
+    
+   <extension
+         point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
+      <hyperlinkDetector            
+            class="org.eclipse.mylyn.internal.java.ui.JavaStackTraceHyperlinkDetector"
+            id="org.eclipse.mylyn.java.hyperlink.detector.stack"
+            name="Mylyn Stack Trace"
+            targetId="org.eclipse.ui.DefaultTextEditor"/>
+            <!-- targetId="org.eclipse.mylyn.tasks.ui.TaskEditor"/> -->
+   </extension>
 	
   	<!-- ==================== Content Assist ==================== -->
 
