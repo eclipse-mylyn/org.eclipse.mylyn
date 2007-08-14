@@ -116,6 +116,7 @@ import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.custom.VerifyKeyListener;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.dnd.FileTransfer;
@@ -126,6 +127,7 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
@@ -234,6 +236,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private static final int DESCRIPTION_HEIGHT = 10 * 14;
 
+	protected static final int SUMMARY_HEIGHT = 20;
+
 	private static final String LABEL_BUTTON_SUBMIT = "Submit";
 
 	private static final String LABEL_COPY_TO_CLIPBOARD = "Copy to Clipboard";
@@ -252,7 +256,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private boolean expandedStateAttributes = false;
 
-	protected Text summaryText;
+	protected StyledText summaryText;
 
 	protected Button submitButton;
 
@@ -265,6 +269,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	private int[] attachmentsColumnWidths = { 200, 100, 100, 200 };
 
 	private Composite editorComposite;
+
+	protected TextViewer summaryTextViewer;
 
 	private TextViewer newCommentTextViewer;
 
@@ -287,6 +293,23 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected Label duplicateDetectorLabel;
 
 	private boolean ignoreLocationEvents = false;
+
+	/**
+	 * @author Raphael Ackermann (bug 195514)
+	 */
+	private class TabVerifyKeyListener implements VerifyKeyListener {
+
+		public void verifyKey(VerifyEvent event) {
+			// if there is a tab key, do not "execute" it and instead select the Status control
+			if (event.keyCode == SWT.TAB) {
+				event.doit = false;
+				if (headerInfoComposite != null) {
+					headerInfoComposite.setFocus();
+				}
+			}
+		}
+
+	}
 
 	protected enum SECTION_NAME {
 		ATTRIBTUES_SECTION("Attributes"), ATTACHMENTS_SECTION("Attachments"), DESCRIPTION_SECTION("Description"), COMMENTS_SECTION(
@@ -398,7 +421,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						selectNewComment();
 					} else if (n.getKey().equals(RepositoryTaskOutlineNode.LABEL_DESCRIPTION)
 							&& descriptionTextViewer.isEditable()) {
-						selectDescription();
+						focusDescription();
 					} else if (data != null) {
 						select(data, highlight);
 					}
@@ -697,7 +720,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		createSummaryLayout(editorComposite);
 
-		Section attributesSection = createSection(editorComposite, getSectionLabel(SECTION_NAME.ATTRIBTUES_SECTION));
+		attributesSection = createSection(editorComposite, getSectionLabel(SECTION_NAME.ATTRIBTUES_SECTION));
 		attributesSection.setExpanded(expandedStateAttributes || hasAttributeChanges);
 
 		Composite toolbarComposite = toolkit.createComposite(attributesSection);
@@ -809,11 +832,26 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 	}
 
+	/**
+	 * @author Raphael Ackermann (modifications) (bug 195514)
+	 */
 	protected void createSummaryLayout(Composite composite) {
-
 		addSummaryText(composite);
+		if (summaryTextViewer != null) {
+			summaryTextViewer.getTextWidget().addModifyListener(new ModifyListener() {
+				public void modifyText(ModifyEvent e) {
+					String sel = summaryText.getText();
+					RepositoryTaskAttribute a = taskData.getAttribute(RepositoryTaskAttribute.SUMMARY);
+					if (!(a.getValue().equals(sel))) {
+						a.setValue(sel);
+						markDirty(true);
+					}
+				}
+			});
+			summaryTextViewer.prependVerifyKeyListener(new TabVerifyKeyListener());
+		}
 
-		Composite headerInfoComposite = toolkit.createComposite(composite);
+		headerInfoComposite = toolkit.createComposite(composite);
 		GridLayout headerLayout = new GridLayout(11, false);
 		headerLayout.verticalSpacing = 1;
 		headerLayout.marginHeight = 1;
@@ -1221,10 +1259,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	/**
-	 * Adds a text field to display and edit the task's summary.
+	 * Adds a text editor with spell checking enabled to display and edit the task's summary.
 	 * 
+	 * @author Raphael Ackermann (modifications) (bug 195514)
 	 * @param attributesComposite
-	 *            The composite to add the text field to.
+	 *            The composite to add the text editor to.
 	 */
 	protected void addSummaryText(Composite attributesComposite) {
 		Composite summaryComposite = toolkit.createComposite(attributesComposite);
@@ -1235,31 +1274,22 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(summaryComposite);
 
 		if (taskData != null) {
-			RepositoryTaskAttribute attribute = taskData.getAttribute(RepositoryTaskAttribute.SUMMARY);
+			final RepositoryTaskAttribute attribute = taskData.getAttribute(RepositoryTaskAttribute.SUMMARY);
 			if (attribute != null) {
-				// Label summaryLabel = createLabel(summaryComposite,
-				// attribute);
-				// summaryLabel.setFont(TITLE_FONT);
-				summaryText = createTextField(summaryComposite, attribute, SWT.FLAT);
-				IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
-				Font summaryFont = themeManager.getCurrentTheme().getFontRegistry().get(
-						TaskListColorsAndFonts.TASK_EDITOR_FONT);
-				summaryText.setFont(summaryFont);
 
-				GridDataFactory.fillDefaults().grab(true, false).hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(
-						summaryText);
-				summaryText.addModifyListener(new ModifyListener() {
-					public void modifyText(ModifyEvent e) {
-						String sel = summaryText.getText();
-						RepositoryTaskAttribute a = taskData.getAttribute(RepositoryTaskAttribute.SUMMARY);
-						if (!(a.getValue().equals(sel))) {
-							a.setValue(sel);
-							markDirty(true);
-						}
-					}
-				});
+				summaryTextViewer = addTextEditor(repository, summaryComposite, attribute.getValue(), true, SWT.FLAT);
+				summaryTextViewer.setEditable(true);
+
+				GridDataFactory.fillDefaults().grab(true, false).hint(DESCRIPTION_WIDTH, SUMMARY_HEIGHT).applyTo(
+						summaryTextViewer.getControl());
+
+				if (hasChanged(attribute)) {
+					summaryTextViewer.getTextWidget().setBackground(colorIncoming);
+				}
+				summaryTextViewer.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 			}
 		}
+		summaryText = summaryTextViewer.getTextWidget();
 		toolkit.paintBordersFor(summaryComposite);
 	}
 
@@ -1300,8 +1330,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			attachmentsTableViewer = new TableViewer(attachmentsTable);
 			attachmentsTableViewer.setUseHashlookup(true);
 			attachmentsTableViewer.setColumnProperties(attachmentsColumns);
-			ColumnViewerToolTipSupport.enableFor(attachmentsTableViewer,ToolTip.NO_RECREATE);
-			
+			ColumnViewerToolTipSupport.enableFor(attachmentsTableViewer, ToolTip.NO_RECREATE);
+
 			final AbstractTaskDataHandler offlineHandler = connector.getTaskDataHandler();
 			if (offlineHandler != null) {
 				attachmentsTableViewer.setSorter(new ViewerSorter() {
@@ -2666,8 +2696,20 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		focusOn(addCommentsTextBox, false);
 	}
 
-	private void selectDescription() {
-		focusOn(descriptionTextViewer.getTextWidget(), false);
+	/**
+	 * @author Raphael Ackermann (bug 195514)
+	 * @since 2.1
+	 */
+	protected void focusAttributes() {
+		if (attributesSection != null) {
+			focusOn(attributesSection, false);
+		}
+	}
+
+	private void focusDescription() {
+		if (descriptionTextViewer != null) {
+			focusOn(descriptionTextViewer.getTextWidget(), false);
+		}
 	}
 
 	/**
@@ -2748,6 +2790,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private boolean formBusy = false;
 
+	private Composite headerInfoComposite;
+
+	private Section attributesSection;
+
 	public void close() {
 		Display activeDisplay = getSite().getShell().getDisplay();
 		activeDisplay.asyncExec(new Runnable() {
@@ -2796,7 +2842,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		public void handleEvent(Event event) {
 			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
 					new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(),
-							taskData.getRepositoryKind(), "New Comment", false, taskData.getSummary()))));
+							taskData.getRepositoryKind(), getSectionLabel(SECTION_NAME.NEWCOMMENT_SECTION), false,
+							taskData.getSummary()))));
 		}
 	}
 

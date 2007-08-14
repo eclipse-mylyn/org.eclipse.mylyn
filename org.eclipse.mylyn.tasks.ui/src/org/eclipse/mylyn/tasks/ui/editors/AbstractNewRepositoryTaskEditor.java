@@ -24,7 +24,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskOutlineNode;
@@ -33,17 +32,17 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.ui.DatePicker;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.custom.VerifyKeyListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -63,7 +62,6 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.themes.IThemeManager;
 
 /**
  * An editor used to view a locally created bug that does not yet exist on a server.
@@ -72,8 +70,6 @@ import org.eclipse.ui.themes.IThemeManager;
  * @since 2.0
  */
 public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepositoryTaskEditor {
-
-	private static final int DESCRIPTION_WIDTH = 79 * 7; // 500;
 
 	private static final int DEFAULT_FIELD_WIDTH = 150;
 
@@ -92,6 +88,20 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	protected Button addToCategory;
 
 	protected CCombo categoryChooser;
+
+	/**
+	 * @author Raphael Ackermann (bug 195514)
+	 */
+	protected class TabVerifyKeyListener implements VerifyKeyListener {
+
+		public void verifyKey(VerifyEvent event) {
+			// if there is a tab key, do not "execute" it and instead select the Attributes section
+			if (event.keyCode == SWT.TAB) {
+				event.doit = false;
+				focusAttributes();
+			}
+		}
+	}
 
 	public AbstractNewRepositoryTaskEditor(FormEditor editor) {
 		super(editor);
@@ -141,27 +151,15 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 
 	}
 
+	/**
+	 * @author Raphael Ackermann (modifications) (bug 195514)
+	 * @param composite
+	 */
 	@Override
 	protected void createSummaryLayout(Composite composite) {
-		Composite summaryComposite = getManagedForm().getToolkit().createComposite(composite);
-		GridLayout summaryLayout = new GridLayout(2, false);
-		summaryLayout.verticalSpacing = 0;
-		summaryLayout.marginHeight = 2;
-		summaryComposite.setLayout(summaryLayout);
-		GridDataFactory.fillDefaults().grab(true, false).applyTo(summaryComposite);
-
-		RepositoryTaskAttribute attribute = taskData.getAttribute(RepositoryTaskAttribute.SUMMARY);
-		if (attribute != null) {
-			createLabel(summaryComposite, attribute);
-			summaryText = createTextField(summaryComposite, attribute, SWT.FLAT);
-			summaryText.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-			IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
-			Font summaryFont = themeManager.getCurrentTheme().getFontRegistry().get(
-					TaskListColorsAndFonts.TASK_EDITOR_FONT);
-			summaryText.setFont(summaryFont);
-
-			GridDataFactory.fillDefaults().grab(true, false).hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(summaryText);
-			summaryText.addModifyListener(new ModifyListener() {
+		addSummaryText(composite);
+		if (summaryTextViewer != null) {
+			summaryTextViewer.getTextWidget().addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
 					String sel = summaryText.getText();
 					if (!(newSummary.equals(sel))) {
@@ -170,43 +168,9 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 					}
 				}
 			});
+			summaryTextViewer.prependVerifyKeyListener(new TabVerifyKeyListener());
 		}
-		getManagedForm().getToolkit().paintBordersFor(summaryComposite);
 	}
-
-//	@Override
-//	protected void addSummaryText(Composite attributesComposite) {
-//
-//		Composite summaryComposite = getManagedForm().getToolkit().createComposite(attributesComposite);
-//		GridLayout summaryLayout = new GridLayout(2, false);
-//		summaryLayout.verticalSpacing = 0;
-//		summaryLayout.marginHeight = 2;
-//		summaryComposite.setLayout(summaryLayout);
-//		GridDataFactory.fillDefaults().grab(true, false).applyTo(summaryComposite);
-//
-//		RepositoryTaskAttribute attribute = taskData.getAttribute(RepositoryTaskAttribute.SUMMARY);
-//		if (attribute != null) {
-//			createLabel(summaryComposite, attribute);
-//			summaryText = createTextField(summaryComposite, attribute, SWT.FLAT);
-//			summaryText.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-//			IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
-//			Font summaryFont = themeManager.getCurrentTheme().getFontRegistry().get(
-//					TaskListColorsAndFonts.TASK_EDITOR_FONT);
-//			summaryText.setFont(summaryFont);
-//
-//			GridDataFactory.fillDefaults().grab(true, false).hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(summaryText);
-//			summaryText.addModifyListener(new ModifyListener() {
-//				public void modifyText(ModifyEvent e) {
-//					String sel = summaryText.getText();
-//					if (!(newSummary.equals(sel))) {
-//						newSummary = sel;
-//						markDirty(true);
-//					}
-//				}
-//			});
-//		}
-//		getManagedForm().getToolkit().paintBordersFor(summaryComposite);
-//	}
 
 	@Override
 	protected void createAttachmentLayout(Composite comp) {
@@ -347,6 +311,14 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	@Override
 	public boolean isDirty() {
 		return true;
+	}
+
+	/**
+	 * @author Raphael Ackermann (bug 198526)
+	 */
+	@Override
+	public void setFocus() {
+		summaryText.setFocus();
 	}
 
 	@Override
