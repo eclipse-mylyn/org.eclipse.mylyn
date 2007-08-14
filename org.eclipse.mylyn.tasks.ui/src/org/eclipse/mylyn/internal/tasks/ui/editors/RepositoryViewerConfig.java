@@ -8,15 +8,14 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.hyperlink.DefaultHyperlinkPresenter;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
-import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlinkPresenter;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
@@ -32,6 +31,7 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
@@ -73,11 +73,31 @@ public class RepositoryViewerConfig extends TextSourceViewerConfiguration {
 		return scanner;
 	}
 
+//	@Override
+//	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
+//		List<IHyperlinkDetector> detectors = new ArrayList<IHyperlinkDetector>();
+//		detectors.addAll(Arrays.asList(TasksUiPlugin.getDefault().getTaskHyperlinkDetectors()));
+//		return detectors.toArray(new IHyperlinkDetector[detectors.size()]);
+//	}
+	
 	@Override
-	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
-		List<IHyperlinkDetector> detectors = new ArrayList<IHyperlinkDetector>();
-		detectors.addAll(Arrays.asList(TasksUiPlugin.getDefault().getTaskHyperlinkDetectors()));
-		return detectors.toArray(new IHyperlinkDetector[detectors.size()]);
+	@SuppressWarnings("unchecked")
+	protected Map getHyperlinkDetectorTargets(final ISourceViewer sourceViewer) {
+		IAdaptable context = new IAdaptable() {
+			public Object getAdapter(Class adapter) {
+				if(adapter==TaskRepository.class) {
+					if(sourceViewer instanceof RepositoryTextViewer) {
+						return ((RepositoryTextViewer) sourceViewer).getRepository();
+					}
+				}
+				return null;
+			}
+		};
+		
+		Map targets = new HashMap();
+		targets.put("org.eclipse.ui.DefaultTextEditor", context);
+		targets.put("org.eclipse.mylyn.tasks.ui.TaskEditor", context);
+		return targets;
 	}
 
 	@Override
