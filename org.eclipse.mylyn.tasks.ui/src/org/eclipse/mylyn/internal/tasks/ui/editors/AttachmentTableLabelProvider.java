@@ -8,12 +8,11 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
-import org.eclipse.jface.viewers.DecoratingLabelProvider;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.jface.viewers.ITableColorProvider;
-import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
@@ -22,6 +21,7 @@ import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.WorkbenchImages;
@@ -30,8 +30,7 @@ import org.eclipse.ui.themes.IThemeManager;
 /**
  * @author Mik Kersten
  */
-public class AttachmentTableLabelProvider extends DecoratingLabelProvider implements ITableColorProvider,
-		ITableLabelProvider {
+public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 
 	private final AbstractRepositoryTaskEditor AbstractTaskEditor;
 
@@ -39,7 +38,6 @@ public class AttachmentTableLabelProvider extends DecoratingLabelProvider implem
 
 	public AttachmentTableLabelProvider(AbstractRepositoryTaskEditor AbstractTaskEditor, ILabelProvider provider,
 			ILabelDecorator decorator) {
-		super(provider, decorator);
 		this.AbstractTaskEditor = AbstractTaskEditor;
 	}
 
@@ -114,5 +112,39 @@ public class AttachmentTableLabelProvider extends DecoratingLabelProvider implem
 
 	public Font getFont(Object element, int columnIndex) {
 		return super.getFont(element);
+	}
+
+	public String getToolTipText(Object element) {
+		RepositoryAttachment attachment = (RepositoryAttachment) element;
+		return "File: " + attachment.getAttributeValue("filename");
+		/*"\nFilename\t\t"  + attachment.getAttributeValue("filename")
+			  +"ID\t\t\t"        + attachment.getAttributeValue("attachid")
+		      + "\nDate\t\t\t"    + attachment.getAttributeValue("date")
+		      + "\nDescription\t" + attachment.getAttributeValue("desc")
+		      + "\nCreator\t\t"   + attachment.getCreator()
+		      + "\nType\t\t\t"    + attachment.getAttributeValue("type")
+		      + "\nURL\t\t\t"     + attachment.getAttributeValue("task.common.attachment.url");*/
+	}
+
+	public Point getToolTipShift(Object object) {
+		return new Point(5, 5);
+	}
+
+	public int getToolTipDisplayDelayTime(Object object) {
+		return 200;
+	}
+
+	public int getToolTipTimeDisplayed(Object object) {
+		return 5000;
+	}
+
+	public void update(ViewerCell cell) {
+		Object element = cell.getElement();
+		cell.setText(getColumnText(element, cell.getColumnIndex()));
+		Image image = getColumnImage(element, cell.getColumnIndex());
+		cell.setImage(image);
+		cell.setBackground(getBackground(element));
+		cell.setForeground(getForeground(element));
+		cell.setFont(getFont(element));
 	}
 }
