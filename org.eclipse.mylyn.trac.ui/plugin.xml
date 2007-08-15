@@ -48,5 +48,14 @@
          </action>
       </viewerContribution>
    </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.eclipse.mylyn.internal.trac.ui.editor.TracWikiPageEditor"
+            icon="icons/eview16/trac-icon.gif"
+            id="org.eclipse.mylyn.trac.ui.editor.wikipage"
+            name="Wiki Page Editor">
+      </editor>
+   </extension>
 
 </plugin>

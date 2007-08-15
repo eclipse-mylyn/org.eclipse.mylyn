@@ -23,7 +23,10 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.trac.core.AbstractWikiHandler;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
+import org.eclipse.mylyn.internal.trac.core.model.TracWikiPage;
 import org.eclipse.mylyn.internal.trac.ui.TracUiPlugin;
+import org.eclipse.mylyn.internal.trac.ui.editor.TracWikiPageEditor;
+import org.eclipse.mylyn.internal.trac.ui.editor.TracWikiPageEditorInput;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -32,9 +35,11 @@ import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.FilteredItemsSelectionDialog;
 
@@ -217,7 +222,8 @@ public class OpenWikiPageAction extends Action implements IViewActionDelegate {
 			Object[] selections = openDialog.getResult();
 			if (selections != null) {
 				for (int i = 0; i < selections.length; i++) {
-					openWikiPage(wikiHandler.getWikiUrl(repository) + (String) selections[i]);
+					OpenWikiPageJob job = new OpenWikiPageJob((String) selections[i]);
+					job.schedule();
 				}
 			}
 		}
@@ -252,7 +258,42 @@ public class OpenWikiPageAction extends Action implements IViewActionDelegate {
 		return null;
 	}
 
-	private void openWikiPage(String pageUrl) {
-		TasksUiUtil.openUrl(pageUrl, false);
+	private class OpenWikiPageJob extends Job {
+		private String pageName;
+
+		public OpenWikiPageJob(String pageName) {
+			super("Opening Wiki Page");
+			this.pageName = pageName;
+		}
+
+		@Override
+		protected IStatus run(IProgressMonitor monitor) {
+			try {
+				final TracWikiPage page = wikiHandler.getWikiPage(repository, pageName, monitor);
+				if (page != null) {
+					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+
+						public void run() {
+							openWikiPageEditor(repository, page, wikiHandler.getWikiUrl(repository) + pageName);
+						}
+					});
+				} else {
+					StatusHandler.fail(null, "Unable to retrieve wiki page " + pageName, true, IStatus.ERROR);
+				}
+			} catch (final CoreException e) {
+				StatusHandler.displayStatus("Unable to open wiki page", e.getStatus());
+			} finally {
+				monitor.done();
+			}
+			return Status.OK_STATUS;
+		}
+
 	}
+
+	private static void openWikiPageEditor(TaskRepository repository, TracWikiPage wikiPage, String pageUrl) {
+		IEditorInput editorInput = new TracWikiPageEditorInput(repository, wikiPage, pageUrl);
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		TasksUiUtil.openEditor(editorInput, TracWikiPageEditor.ID_EDITOR, window.getActivePage());
+	}
+
 }

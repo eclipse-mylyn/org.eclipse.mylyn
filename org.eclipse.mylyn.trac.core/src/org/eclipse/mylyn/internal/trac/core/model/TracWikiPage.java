@@ -14,7 +14,7 @@ package org.eclipse.mylyn.internal.trac.core.model;
  * @author Xiaoyang Guan
  */
 public class TracWikiPage {
-	
+
 	private TracWikiPageInfo pageInfo;
 
 	private String content;
@@ -23,7 +23,7 @@ public class TracWikiPage {
 
 	public TracWikiPage() {
 	}
-	
+
 	public TracWikiPageInfo getPageInfo() {
 		return pageInfo;
 	}
@@ -46,5 +46,19 @@ public class TracWikiPage {
 
 	public void setPageHTML(String pageHTML) {
 		this.pageHTML = pageHTML;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		} else if (this == obj) {
+			return true;
+		} else if (getClass() != obj.getClass()) {
+			return false;
+		} else {
+			TracWikiPage other = (TracWikiPage) obj;
+			return content.equals(other.content) && pageInfo.toString().equals(other.pageInfo.toString());
+		}
 	}
 }
