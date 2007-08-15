@@ -185,7 +185,10 @@ public class TracWikiPageEditor extends FormEditor {
 			sourceEditor.getTextWidget().addModifyListener(new ModifyListener() {
 
 				public void modifyText(ModifyEvent e) {
-					markDirty(true);
+					if (!isDirty()) {
+						markDirty(true);
+						setSubmitEnabled(true);
+					}
 				}
 			});
 
@@ -242,7 +245,7 @@ public class TracWikiPageEditor extends FormEditor {
 				}
 			});
 
-			setSubmitEnabled(true);
+			setSubmitEnabled(false);
 		}
 
 		/**
@@ -303,6 +306,7 @@ public class TracWikiPageEditor extends FormEditor {
 								browserPage.refresh();
 								setActivePage(BrowserFormPage.ID_EDITOR);
 								markDirty(false);
+								setSubmitEnabled(false);
 							}
 						});
 					}
@@ -507,6 +511,7 @@ public class TracWikiPageEditor extends FormEditor {
 	public void doSave(IProgressMonitor monitor) {
 		MessageDialog.openInformation(getSite().getShell(), "Changes cannot be saved",
 				"Offline editting on wiki pages not supported yet.");
+		monitor.setCanceled(true);
 	}
 
 	@Override
