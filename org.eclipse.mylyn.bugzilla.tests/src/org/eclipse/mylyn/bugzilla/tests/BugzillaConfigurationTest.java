@@ -127,13 +127,13 @@ public class BugzillaConfigurationTest extends TestCase {
 		assertEquals(7, config.getStatusValues().size());
 		assertEquals(8, config.getResolutions().size());
 		assertEquals(6, config.getPlatforms().size());
-		assertEquals(29, config.getOSs().size());
+		assertEquals(28, config.getOSs().size());
 		assertEquals(5, config.getPriorities().size());
 		assertEquals(7, config.getSeverities().size());
 		assertTrue(config.getProducts().size() > 50);
 		assertEquals(4, config.getOpenStatusValues().size());
 		assertEquals(13, config.getComponents("Mylyn").size());
-		assertEquals(24, config.getKeywords().size());
+		assertEquals(25, config.getKeywords().size());
 		// assertEquals(10, config.getComponents("Hyades").size());
 		// assertEquals(1, config.getTargetMilestones("TestProduct").size());
 	}

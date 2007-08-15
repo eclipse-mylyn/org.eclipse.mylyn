@@ -1274,22 +1274,23 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(summaryComposite);
 
 		if (taskData != null) {
-			final RepositoryTaskAttribute attribute = taskData.getAttribute(RepositoryTaskAttribute.SUMMARY);
-			if (attribute != null) {
-
-				summaryTextViewer = addTextEditor(repository, summaryComposite, attribute.getValue(), true, SWT.FLAT);
-				summaryTextViewer.setEditable(true);
-
-				GridDataFactory.fillDefaults().grab(true, false).hint(DESCRIPTION_WIDTH, SUMMARY_HEIGHT).applyTo(
-						summaryTextViewer.getControl());
-
-				if (hasChanged(attribute)) {
-					summaryTextViewer.getTextWidget().setBackground(colorIncoming);
-				}
-				summaryTextViewer.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+			RepositoryTaskAttribute attribute = taskData.getAttribute(RepositoryTaskAttribute.SUMMARY);
+			if (attribute == null) {
+				taskData.setAttributeValue(RepositoryTaskAttribute.SUMMARY, "");
+				attribute = taskData.getAttribute(RepositoryTaskAttribute.SUMMARY);
 			}
+
+			summaryTextViewer = addTextEditor(repository, summaryComposite, attribute.getValue(), true, SWT.FLAT);
+			summaryTextViewer.setEditable(true);
+			summaryText = summaryTextViewer.getTextWidget();
+			GridDataFactory.fillDefaults().grab(true, false).hint(DESCRIPTION_WIDTH, SUMMARY_HEIGHT).applyTo(
+					summaryTextViewer.getControl());
+
+			if (hasChanged(attribute)) {
+				summaryTextViewer.getTextWidget().setBackground(colorIncoming);
+			}
+			summaryTextViewer.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		}
-		summaryText = summaryTextViewer.getTextWidget();
 		toolkit.paintBordersFor(summaryComposite);
 	}
 
@@ -2852,7 +2853,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	public void setSummaryText(String text) {
-		this.summaryText.setText(text);
+		if (summaryText != null) {
+			this.summaryText.setText(text);
+		}
 	}
 
 	public void setDescriptionText(String text) {
