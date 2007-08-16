@@ -17,11 +17,13 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -46,17 +48,22 @@ public class InteractionContextManager {
 
 	// TODO: move constants
 
+	private static final String PREFERENCE_ATTENTION_MIGRATED = "mylyn.attention.migrated";
+
 	public static final String CONTEXT_FILENAME_ENCODING = "UTF-8";
 
 	public static final String ACTIVITY_DELTA_DEACTIVATED = "deactivated";
 
 	public static final String ACTIVITY_DELTA_ACTIVATED = "activated";
 
+	public static final String ACTIVITY_DELTA_ATTENTION_ADD = "add";
+
+	//public static final String ACTIVITY_DELTA_ATTENTION_REMOVE = "remove";
+	//public static final String ACTIVITY_DELTA_ATTENTION_LOST = "lost";
+
 	public static final String ACTIVITY_DELTA_PULSE = "pulse";
 
 	public static final String ACTIVITY_ORIGIN_ID = "org.eclipse.mylyn.core";
-
-	public static final String ACTIVITY_HANDLE_ATTENTION = "attention";
 
 	public static final String ACTIVITY_HANDLE_LIFECYCLE = "lifecycle";
 
@@ -131,6 +138,10 @@ public class InteractionContextManager {
 			activityMetaContext = externalizer.readContextFromXML(CONTEXT_HISTORY_FILE_NAME, contextActivityFile);
 			if (activityMetaContext == null) {
 				resetActivityHistory();
+			} else if (!ContextCorePlugin.getDefault().getPluginPreferences().getBoolean(PREFERENCE_ATTENTION_MIGRATED)) {
+				activityMetaContext = migrateLegacyActivity(activityMetaContext);
+				saveActivityContext();
+				ContextCorePlugin.getDefault().getPluginPreferences().setValue(PREFERENCE_ATTENTION_MIGRATED, true);
 			}
 			for (IInteractionContextListener listener : activityMetaContextListeners) {
 				listener.contextActivated(activityMetaContext);
@@ -139,6 +150,24 @@ public class InteractionContextManager {
 			resetActivityHistory();
 			StatusHandler.log("No context store installed, not restoring activity context.", this);
 		}
+	}
+
+	/**
+	 * Used to migrate old activity to new activity events
+	 * 
+	 * @since 2.1
+	 */
+	private InteractionContext migrateLegacyActivity(InteractionContext context) {
+		LegacyActivityAdaptor adaptor = new LegacyActivityAdaptor();
+		InteractionContext newMetaContext = new InteractionContext(context.getHandleIdentifier(),
+				InteractionContextManager.getScalingFactors());
+		for (InteractionEvent event : context.getInteractionHistory()) {
+			InteractionEvent temp = adaptor.parseInteractionEvent(event);
+			if (temp != null) {
+				newMetaContext.parseEvent(temp);
+			}
+		}
+		return newMetaContext;
 	}
 
 	public void processActivityMetaContextEvent(InteractionEvent event) {
@@ -454,7 +483,7 @@ public class InteractionContextManager {
 	}
 
 	/**
-	 * Public for testing, activiate via handle
+	 * Public for testing, activate via handle
 	 */
 	public void activateContext(InteractionContext context) {
 		activeContext.getContextMap().put(context.getHandleIdentifier(), context);
@@ -647,26 +676,9 @@ public class InteractionContextManager {
 				setContextCapturePaused(true);
 			}
 
-			List<InteractionEvent> attention = new ArrayList<InteractionEvent>();
-
 			InteractionContext context = getActivityMetaContext();
-			InteractionContext tempContext = new InteractionContext(CONTEXT_HISTORY_FILE_NAME,
-					InteractionContextManager.getScalingFactors());
-			for (InteractionEvent event : context.getInteractionHistory()) {
-				if (event.getDelta().equals(InteractionContextManager.ACTIVITY_DELTA_ACTIVATED)
-						&& event.getStructureHandle().equals(InteractionContextManager.ACTIVITY_HANDLE_ATTENTION)) {
-					attention.add(event);
-				} else {
-					addAttentionEvents(attention, tempContext);
-					tempContext.parseEvent(event);
-				}
-			}
-
-			if (!attention.isEmpty()) {
-				addAttentionEvents(attention, tempContext);
-			}
-
-			externalizer.writeContextToXml(tempContext, getFileForContext(CONTEXT_HISTORY_FILE_NAME));
+			externalizer.writeContextToXml(collapseActivityMetaContext(context),
+					getFileForContext(CONTEXT_HISTORY_FILE_NAME));
 		} catch (Throwable t) {
 			StatusHandler.fail(t, "could not save activity history", false);
 		} finally {
@@ -676,33 +688,127 @@ public class InteractionContextManager {
 		}
 	}
 
-	private void addAttentionEvents(List<InteractionEvent> attention, InteractionContext temp) {
-		InteractionEvent aggregateEvent = null;
+	public InteractionContext collapseActivityMetaContext(InteractionContext context) {
+		Map<String, List<InteractionEvent>> attention = new HashMap<String, List<InteractionEvent>>();
+		InteractionContext tempContext = new InteractionContext(CONTEXT_HISTORY_FILE_NAME,
+				InteractionContextManager.getScalingFactors());
+		for (InteractionEvent event : context.getInteractionHistory()) {
+
+			if (event.getKind().equals(InteractionEvent.Kind.ATTENTION)
+					&& event.getDelta().equals(ACTIVITY_DELTA_ATTENTION_ADD)) {
+				if (event.getStructureHandle() == null || event.getStructureHandle().equals("")) {
+					continue;
+				}
+				List<InteractionEvent> interactionEvents = attention.get(event.getStructureHandle());
+				if (interactionEvents == null) {
+					interactionEvents = new ArrayList<InteractionEvent>();
+					attention.put(event.getStructureHandle(), interactionEvents);
+				}
+				interactionEvents.add(event);
+			} else {
+				if (!attention.isEmpty()) {
+					addAttentionEvents(attention, tempContext);
+					attention.clear();
+				}
+				tempContext.parseEvent(event);
+			}
+		}
+
+		if (!attention.isEmpty()) {
+			addAttentionEvents(attention, tempContext);
+		}
+
+		return tempContext;
+	}
+
+	/**
+	 * Collapse activity events of like handle into one event Grouped by hour.
+	 */
+	private void addAttentionEvents(Map<String, List<InteractionEvent>> attention, InteractionContext temp) {
 		try {
-			if (attention.size() > 1) {
-				InteractionEvent firstEvent = attention.get(0);
-				long totalTime = 0;
-				for (InteractionEvent interactionEvent : attention) {
-					totalTime += interactionEvent.getEndDate().getTime() - interactionEvent.getDate().getTime();
+			for (String handle : attention.keySet()) {
+				List<InteractionEvent> activityEvents = attention.get(handle);
+				List<InteractionEvent> collapsedEvents = new ArrayList<InteractionEvent>();
+				if (activityEvents.size() > 1) {
+					collapsedEvents = collapseEventsByHour(activityEvents);
+				} else if (activityEvents.size() == 1) {
+					if (activityEvents.get(0).getEndDate().getTime() - activityEvents.get(0).getDate().getTime() > 0) {
+						collapsedEvents.add(activityEvents.get(0));
+					}
 				}
-				if (totalTime != 0) {
-					Date newEndDate = new Date(firstEvent.getDate().getTime() + totalTime);
-					aggregateEvent = new InteractionEvent(firstEvent.getKind(), firstEvent.getStructureKind(),
-							firstEvent.getStructureHandle(), firstEvent.getOriginId(), firstEvent.getNavigation(),
-							firstEvent.getDelta(), 1f, firstEvent.getDate(), newEndDate);
+				if (!collapsedEvents.isEmpty()) {
+					for (InteractionEvent collapsedEvent : collapsedEvents) {
+						temp.parseEvent(collapsedEvent);
+					}
 				}
-			} else if (attention.size() == 1) {
-				if (attention.get(0).getEndDate().getTime() - attention.get(0).getDate().getTime() > 0) {
-					aggregateEvent = attention.get(0);
-				}
+				activityEvents.clear();
 			}
-			if (aggregateEvent != null) {
-				temp.parseEvent(aggregateEvent);
-			}
-			attention.clear();
 		} catch (Exception e) {
 			StatusHandler.fail(e, "Error during meta activity collapse", false);
 		}
+	}
+
+	/** public for testing * */
+	// TODO: simplify
+	public List<InteractionEvent> collapseEventsByHour(List<InteractionEvent> eventsToCollapse) {
+		List<InteractionEvent> collapsedEvents = new ArrayList<InteractionEvent>();
+		Iterator<InteractionEvent> itr = eventsToCollapse.iterator();
+		InteractionEvent firstEvent = itr.next();
+		long total = 0;
+		Calendar t0 = Calendar.getInstance();
+		Calendar t1 = Calendar.getInstance();
+		while (itr.hasNext()) {
+
+			t0.setTime(firstEvent.getDate());
+			t0.set(Calendar.MINUTE, 0);
+			t0.set(Calendar.MILLISECOND, 0);
+
+			t1.setTime(firstEvent.getDate());
+			t1.set(Calendar.MINUTE, t1.getMaximum(Calendar.MINUTE));
+			t1.set(Calendar.MILLISECOND, t1.getMaximum(Calendar.MILLISECOND));
+
+			InteractionEvent nextEvent = itr.next();
+			if (t0.getTime().compareTo(nextEvent.getDate()) <= 0 && t1.getTime().compareTo(nextEvent.getDate()) >= 0) {
+				// Collapsible event
+				if (total == 0) {
+					total += firstEvent.getEndDate().getTime() - firstEvent.getDate().getTime();
+				}
+				total += nextEvent.getEndDate().getTime() - nextEvent.getDate().getTime();
+
+				if (!itr.hasNext()) {
+					if (total != 0) {
+						Date newEndDate = new Date(firstEvent.getDate().getTime() + total);
+						InteractionEvent aggregateEvent = new InteractionEvent(firstEvent.getKind(),
+								firstEvent.getStructureKind(), firstEvent.getStructureHandle(),
+								firstEvent.getOriginId(), firstEvent.getNavigation(), firstEvent.getDelta(), 1f,
+								firstEvent.getDate(), newEndDate);
+						collapsedEvents.add(aggregateEvent);
+						total = 0;
+					}
+				}
+
+			} else {
+				// Next event isn't collapsible, add collapsed if exists
+				if (total != 0) {
+					Date newEndDate = new Date(firstEvent.getDate().getTime() + total);
+					InteractionEvent aggregateEvent = new InteractionEvent(firstEvent.getKind(),
+							firstEvent.getStructureKind(), firstEvent.getStructureHandle(), firstEvent.getOriginId(),
+							firstEvent.getNavigation(), firstEvent.getDelta(), 1f, firstEvent.getDate(), newEndDate);
+					collapsedEvents.add(aggregateEvent);
+					total = 0;
+				} else {
+					collapsedEvents.add(firstEvent);
+					if (!itr.hasNext()) {
+						collapsedEvents.add(nextEvent);
+					}
+				}
+
+				firstEvent = nextEvent;
+			}
+
+		}
+
+		return collapsedEvents;
 	}
 
 	public File getFileForContext(String handleIdentifier) {
