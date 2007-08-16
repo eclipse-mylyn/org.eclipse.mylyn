@@ -195,6 +195,12 @@ public class TasksUiImages {
 	public static final ImageDescriptor REPOSITORY_SYNCHRONIZE = create(T_TOOL, "repository-synchronize.gif");
 
 	public static final ImageDescriptor NAVIGATE_PREVIOUS = create(T_TOOL, "navigate-previous.gif");
+	
+	public static final ImageDescriptor NAVIGATE_PREVIOUS_PAUSE = create(T_TOOL, "navigate-previous-pause.gif");
+
+	public static final ImageDescriptor NAVIGATE_PREVIOUS_ACTIVE = create(T_TOOL, "navigate-previous-active.gif");
+
+	public static final ImageDescriptor CAPTURE_PAUSE = create(T_TOOL, "capture-pause.gif");
 
 	public static final ImageDescriptor NAVIGATE_NEXT = create(T_TOOL, "navigate-next.gif");
 

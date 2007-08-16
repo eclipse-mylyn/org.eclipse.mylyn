@@ -679,8 +679,46 @@
       </actionSet>
    </extension>
    
-      <extension
-         point="org.eclipse.ui.actionSets">
+   <extension point="org.eclipse.ui.commands">
+      <command id="org.eclipse.mylyn.tasks.ui.command.previousTask"
+               defaultHandler="org.eclipse.mylyn.internal.tasks.ui.TaskHistoryHandler"
+               name="Previous Task Command"/>
+      <command id="org.eclipse.mylyn.ui.context.capture.pause.command"
+               name="Pause Capturing Context Command"
+               defaultHandler="org.eclipse.mylyn.internal.tasks.ui.ContextCapturePauseHandler"/>
+   </extension>
+
+  <!-- command-based implementation of the previousTask/history dropdown, 
+       the problem is that it doesn't work well with the actionSet  
+  <extension point="org.eclipse.ui.menus">
+    <menuContribution locationURI="menu:org.eclipse.mylyn.tasks.ui.previous.task">
+      <dynamic
+         class="org.eclipse.mylyn.internal.tasks.ui.TaskHistoryDropDown"
+         id="org.eclipse.mylyn.tasks.ui.previous.task.dropdown"/>
+    </menuContribution>
+  </extension>  
+   
+  <extension point="org.eclipse.ui.menus">
+    <menuContribution locationURI="toolbar:org.eclipse.ui.workbench.navigate">
+        <command id="org.eclipse.mylyn.tasks.ui.previous.task"
+                 commandId="org.eclipse.mylyn.tasks.ui.command.previousTask"
+                 icon="icons/etool16/navigate-previous.gif"
+                 label="Activate Previous Task"
+                 tooltip="Activate Previous Task"
+                 style="pulldown">
+          <visibleWhen>
+            <with variable="activeContexts">
+              <iterate operator="or">
+                <equals value="org.eclipse.mylyn.tasks.ui.navigation.additions"/>
+              </iterate>
+            </with>              
+          </visibleWhen>
+        </command>
+    </menuContribution>
+  </extension>
+  -->
+
+   <extension point="org.eclipse.ui.actionSets">
       <actionSet
             id="org.eclipse.mylyn.tasks.ui.navigation.additions"
             label="Mylyn Task Navigation Extras"
