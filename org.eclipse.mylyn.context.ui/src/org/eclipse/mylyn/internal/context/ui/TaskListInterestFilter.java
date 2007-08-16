@@ -16,6 +16,7 @@ import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
@@ -132,20 +133,42 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 				return false;
 			}
 		}
-		if (task != null) {
-			AbstractTask repositoryTask = task;
 
-			if (repositoryTask.getLastReadTimeStamp() == null) {
+		boolean result = false;
+		if (task != null) {
+			if (task.getLastReadTimeStamp() == null) {
 				return true;
-			} else if (repositoryTask.getSynchronizationState() == RepositoryTaskSyncState.OUTGOING) {
+			} else if (task.getSynchronizationState() == RepositoryTaskSyncState.OUTGOING) {
 				return true;
-			} else if (repositoryTask.getSynchronizationState() == RepositoryTaskSyncState.INCOMING
+			} else if (task.getSynchronizationState() == RepositoryTaskSyncState.INCOMING
 					&& !(parent instanceof ScheduledTaskContainer)) {
 				return true;
-			} else if (repositoryTask.getSynchronizationState() == RepositoryTaskSyncState.CONFLICT) {
+			} else if (task.getSynchronizationState() == RepositoryTaskSyncState.CONFLICT) {
 				return true;
 			}
+			return hasChanges(parent, (AbstractTaskContainer) task);
 		}
-		return false;
+		return result;
+	}
+
+	private static boolean hasChanges(Object parent, AbstractTaskContainer container) {
+		boolean result = false;
+		for (AbstractTask task : container.getChildren()) {
+			if (task != null) {
+				if (task.getLastReadTimeStamp() == null) {
+					result = true;
+				} else if (task.getSynchronizationState() == RepositoryTaskSyncState.OUTGOING) {
+					result = true;
+				} else if (task.getSynchronizationState() == RepositoryTaskSyncState.INCOMING
+						&& !(parent instanceof ScheduledTaskContainer)) {
+					result = true;
+				} else if (task.getSynchronizationState() == RepositoryTaskSyncState.CONFLICT) {
+					result = true;
+				} else if (task.getChildren() != null && task.getChildren().size() > 0) {
+					result = hasChanges(parent, task);
+				}
+			}
+		}
+		return result;
 	}
 }
