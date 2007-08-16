@@ -35,7 +35,7 @@ public class UrlConnectionUtilTest extends TestCase {
 		assertEquals(80, WebClientUtil.getPort(url));
 		assertEquals("example.com", WebClientUtil.getDomain(url));
 		assertEquals("", WebClientUtil.getRequestPath(url));
-		
+
 		url = "https://example.com:321";
 		assertEquals(321, WebClientUtil.getPort(url));
 		assertEquals("example.com", WebClientUtil.getDomain(url));
@@ -61,7 +61,8 @@ public class UrlConnectionUtilTest extends TestCase {
 		url = "https://jira.codehaus.org/sr/jira.issueviews:searchrequest-xml/temp/SearchRequest.xml?&pid=11093&resolution=-1&sorter/field=updated&sorter/order=DESC&tempMax=1000";
 		assertEquals(443, WebClientUtil.getPort(url));
 		assertEquals("jira.codehaus.org", WebClientUtil.getDomain(url));
-		assertEquals("/sr/jira.issueviews:searchrequest-xml/temp/SearchRequest.xml?&pid=11093&resolution=-1&sorter/field=updated&sorter/order=DESC&tempMax=1000",
+		assertEquals(
+				"/sr/jira.issueviews:searchrequest-xml/temp/SearchRequest.xml?&pid=11093&resolution=-1&sorter/field=updated&sorter/order=DESC&tempMax=1000",
 				WebClientUtil.getRequestPath(url));
 	}
 
@@ -73,12 +74,12 @@ public class UrlConnectionUtilTest extends TestCase {
 		assertEquals("password", credentials.getPassword());
 
 		proxy = new AuthenticatedProxy(Type.HTTP, new InetSocketAddress(4567), "domain\\user", "password");
-		NTCredentials ntCredentials = (NTCredentials) WebClientUtil.getCredentials(proxy, new InetSocketAddress(
-				"mylar.eclipse.org", 1234));
+		InetSocketAddress testAddress = new InetSocketAddress("mylyn.eclipse.org", 1234);
+		NTCredentials ntCredentials = (NTCredentials) WebClientUtil.getCredentials(proxy, testAddress);
 		assertEquals("user", ntCredentials.getUserName());
 		assertEquals("password", ntCredentials.getPassword());
 		assertEquals("domain", ntCredentials.getDomain());
-		assertEquals("mylar.eclipse.org", ntCredentials.getHost());
+		assertEquals("mylyn.eclipse.org", ntCredentials.getHost());
 	}
 
 }
