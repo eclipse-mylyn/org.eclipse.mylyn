@@ -44,7 +44,8 @@ public class AllTasksTests {
 		suite.addTestSuite(TaskDataExportTest.class);
 		// XXX: Put back
 		//suite.addTestSuite(TaskDataImportTest.class);
-		suite.addTestSuite(TaskActivityTest.class);
+		suite.addTestSuite(ScheduledPresentationTest.class);
+		suite.addTestSuite(TaskActivityTimingTest.class);
 		suite.addTestSuite(AttachmentJobTest.class);
 		suite.addTestSuite(RepositorySettingsPageTest.class);
 		suite.addTestSuite(TaskHistoryTest.class);

@@ -7,20 +7,18 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.ui.planner;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.mylyn.context.core.IInteractionContext;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
- * Collects tasks that are not complete but have been worked on during the specified number of previous days.
+ * Collects tasks that are not complete but have been worked on during the specified date range.
  * 
  * @author Wesley Coelho (Adapted from CompletedTaskCollector by Key Sueda)
  * @author Mik Kersten
@@ -31,23 +29,33 @@ public class InProgressTaskCollector implements ITaskCollector {
 
 	private Date periodStartDate;
 
-	protected static boolean hasActivitySince(AbstractTask task, Date startDate) {
-		IInteractionContext interactionContext = ContextCorePlugin.getContextManager()
-				.loadContext(task.getHandleIdentifier());
-		if (interactionContext != null) {
-			List<InteractionEvent> events = interactionContext.getInteractionHistory();
-			if (events.size() > 0) {
-				InteractionEvent latestEvent = events.get(events.size() - 1);
-				if (latestEvent.getDate().compareTo(startDate) > 0) {
-					return true;
-				}
-			}
-		}
-		return false;
+	private Date periodEndDate;
+
+	protected static boolean hasActivity(AbstractTask task, Date startDate, Date endDate) {
+		Calendar startCal = Calendar.getInstance();
+		startCal.setTime(startDate);
+
+		Calendar endCal = Calendar.getInstance();
+		endCal.setTime(endDate);
+
+		return TasksUiPlugin.getTaskListManager().getElapsedTime(task, startCal, endCal) > 0;
+//		IInteractionContext interactionContext = ContextCorePlugin.getContextManager().loadContext(
+//				task.getHandleIdentifier());
+//		if (interactionContext != null) {
+//			List<InteractionEvent> events = interactionContext.getInteractionHistory();
+//			if (events.size() > 0) {
+//				InteractionEvent latestEvent = events.get(events.size() - 1);
+//				if (latestEvent.getDate().compareTo(startDate) > 0) {
+//					return true;
+//				}
+//			}
+//		}
+//		return false;
 	}
 
-	public InProgressTaskCollector(Date periodStartDate) {
+	public InProgressTaskCollector(Date periodStartDate, Date periodEndDate) {
 		this.periodStartDate = periodStartDate;
+		this.periodEndDate = periodEndDate;
 	}
 
 	public String getLabel() {
@@ -55,7 +63,7 @@ public class InProgressTaskCollector implements ITaskCollector {
 	}
 
 	public void consumeTask(AbstractTask task) {
-		if (!task.isCompleted() && hasActivitySince(task, periodStartDate)
+		if (!task.isCompleted() && hasActivity(task, periodStartDate, periodEndDate)
 				&& !inProgressTasks.containsKey(task.getHandleIdentifier())) {
 			inProgressTasks.put(task.getHandleIdentifier(), task);
 		}

@@ -551,11 +551,13 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	}
 
 	public static TaskListView getFromActivePerspective() {
-		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		if (activePage != null) {
-			IViewPart view = activePage.findView(ID);
-			if (view instanceof TaskListView) {
-				return (TaskListView) view;
+		if (PlatformUI.isWorkbenchRunning()) {
+			IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+			if (activePage != null) {
+				IViewPart view = activePage.findView(ID);
+				if (view instanceof TaskListView) {
+					return (TaskListView) view;
+				}
 			}
 		}
 		return null;

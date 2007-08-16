@@ -8,15 +8,19 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.planner;
 
-import org.eclipse.jface.viewers.IStructuredContentProvider;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 
 /**
  * @author Rob Elves
  * @author Ken Sueda
  */
-public class PlannedTasksContentProvider implements IStructuredContentProvider, ITaskPlannerContentProvider {
+public class PlannedTasksContentProvider implements ITreeContentProvider, ITaskPlannerContentProvider {
 
 	TaskActivityEditorInput editorInput;
 
@@ -25,7 +29,7 @@ public class PlannedTasksContentProvider implements IStructuredContentProvider, 
 	}
 
 	public Object[] getElements(Object inputElement) {
-		return editorInput.getPlannedTasks().toArray();
+		return editorInput.getCategories().toArray();
 	}
 
 	public void dispose() {
@@ -40,6 +44,25 @@ public class PlannedTasksContentProvider implements IStructuredContentProvider, 
 
 	public void removeTask(AbstractTask task) {
 		editorInput.removePlannedTask(task);
+	}
+
+	public Object[] getChildren(Object parentElement) {
+		Set<AbstractTask> plannedChildren = new HashSet<AbstractTask>();
+		if (parentElement instanceof AbstractTaskContainer) {
+			AbstractTaskContainer parent = (AbstractTaskContainer) parentElement;
+			plannedChildren.addAll(editorInput.getPlannedTasks());
+			plannedChildren.retainAll(parent.getChildren());
+		}
+		return plannedChildren.toArray();
+	}
+
+	public Object getParent(Object element) {
+		// ignore
+		return null;
+	}
+
+	public boolean hasChildren(Object element) {
+		return (getChildren(element).length > 0);
 	}
 
 }

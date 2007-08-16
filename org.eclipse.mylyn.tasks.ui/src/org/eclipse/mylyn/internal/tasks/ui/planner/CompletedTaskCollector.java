@@ -25,8 +25,12 @@ public class CompletedTaskCollector implements ITaskCollector {
 
 	private Date periodStartDate;
 
-	public CompletedTaskCollector(Date periodStartDate) {
+	private Date periodEndDate;
+
+	public CompletedTaskCollector(Date periodStartDate, Date periodEndDate) {
 		this.periodStartDate = periodStartDate;
+		this.periodEndDate = periodEndDate;
+
 	}
 
 	public String getLabel() {
@@ -35,7 +39,8 @@ public class CompletedTaskCollector implements ITaskCollector {
 
 	public void consumeTask(AbstractTask task) {
 		if (task.isCompleted() && task.getCompletionDate() != null
-				&& task.getCompletionDate().compareTo(periodStartDate) > 0
+				&& task.getCompletionDate().compareTo(periodStartDate) >= 0
+				&& task.getCompletionDate().compareTo(periodEndDate) <= 0
 				&& !completedTasks.containsKey(task.getHandleIdentifier())) {
 			completedTasks.put(task.getHandleIdentifier(), task);
 		}

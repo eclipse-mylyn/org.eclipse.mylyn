@@ -31,6 +31,10 @@ public class ScheduledTaskContainer extends AbstractTaskCategory {
 
 	private Map<ScheduledTaskDelegate, Long> taskToDuration = new HashMap<ScheduledTaskDelegate, Long>();
 
+	private Map<ScheduledTaskDelegate, Long> taskToStart = new HashMap<ScheduledTaskDelegate, Long>();
+
+	private Map<ScheduledTaskDelegate, Long> taskToEnd = new HashMap<ScheduledTaskDelegate, Long>();
+
 	private Calendar startDate;
 
 	private Calendar endDate;
@@ -101,6 +105,13 @@ public class ScheduledTaskContainer extends AbstractTaskCategory {
 		} else {
 			taskToDuration.put(taskWrapper, taskActivity);
 		}
+
+		if (!taskToStart.containsKey(taskWrapper)) {
+			taskToStart.put(taskWrapper, taskWrapper.getStart());
+		}
+
+		taskToEnd.put(taskWrapper, taskWrapper.getEnd());
+
 		super.internalAddChild(taskWrapper.getCorrespondingTask());
 	}
 

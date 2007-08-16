@@ -40,18 +40,23 @@ public class TaskActivityEditorInput implements IEditorInput {
 
 	private TaskReportGenerator taskReportGenerator = null;
 
-	// private int prevDaysToReport = -1;
-
 	private Date reportStartDate = null;
 
-	public TaskActivityEditorInput(Date reportStartDate, Set<AbstractTaskContainer> chosenCategories, TaskList tlist) {
+	private Date reportEndDate = null;
+
+	private Set<AbstractTaskContainer> categories;
+
+	public TaskActivityEditorInput(Date reportStartDate, Date reportEndDate,
+			Set<AbstractTaskContainer> chosenCategories, TaskList tlist) {
 		this.reportStartDate = reportStartDate;
+		this.reportEndDate = reportEndDate;
+		this.categories = chosenCategories;
 		taskReportGenerator = new TaskReportGenerator(tlist, chosenCategories);
 
-		ITaskCollector completedTaskCollector = new CompletedTaskCollector(reportStartDate);
+		ITaskCollector completedTaskCollector = new CompletedTaskCollector(reportStartDate, reportEndDate);
 		taskReportGenerator.addCollector(completedTaskCollector);
 
-		ITaskCollector inProgressTaskCollector = new InProgressTaskCollector(reportStartDate);
+		ITaskCollector inProgressTaskCollector = new InProgressTaskCollector(reportStartDate, reportEndDate);
 		taskReportGenerator.addCollector(inProgressTaskCollector);
 
 		try {
@@ -68,8 +73,8 @@ public class TaskActivityEditorInput implements IEditorInput {
 		completedTasks = completedTaskCollector.getTasks();
 		inProgressTasks = inProgressTaskCollector.getTasks();
 
+		plannedTasks.addAll(TasksUiPlugin.getTaskListManager().getActivityThisWeek().getChildren());
 		plannedTasks.addAll(TasksUiPlugin.getTaskListManager().getActivityNextWeek().getChildren());
-
 		plannedTasks.addAll(TasksUiPlugin.getTaskListManager().getActivityFuture().getChildren());
 
 		//plannedTasks = new HashSet<ITask>();
@@ -141,10 +146,6 @@ public class TaskActivityEditorInput implements IEditorInput {
 		}
 	}
 
-	public Date getReportStartDate() {
-		return reportStartDate;
-	}
-
 	public int getTotalTimeEstimated() {
 		int duration = 0;
 		for (AbstractTask task : inProgressTasks) {
@@ -177,4 +178,15 @@ public class TaskActivityEditorInput implements IEditorInput {
 		return estimated;
 	}
 
+	public Date getReportStartDate() {
+		return reportStartDate;
+	}
+
+	public Date getReportEndDate() {
+		return reportEndDate;
+	}
+
+	public Set<AbstractTaskContainer> getCategories() {
+		return categories;
+	}
 }

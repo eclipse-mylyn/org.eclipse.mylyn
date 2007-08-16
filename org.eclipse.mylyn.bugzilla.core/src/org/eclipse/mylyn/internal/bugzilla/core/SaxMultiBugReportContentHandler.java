@@ -199,13 +199,6 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			}
 			break;
 		case DATA:
-			// TODO: Need to figure out under what circumstanceswhen attachments
-			// are inline and
-			// what to do with them.
-			// jpound - if data gets stored here, the attachment actions in the
-			// task editor
-			// should be updated to use this data instead of retrieving from
-			// server.
 			break;
 		case ATTACHMENT:
 			if (attachment != null) {
@@ -221,6 +214,15 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		// case EVERCONFIRMED:
 		case BUGZILLA:
 			break;
+// Considering solution for bug#198714			
+//		case DELTA_TS:
+//			RepositoryTaskAttribute delta_ts_attribute = repositoryTaskData.getAttribute(tag.getKeyString());
+//			if (delta_ts_attribute == null) {
+//				delta_ts_attribute = attributeFactory.createAttribute(tag.getKeyString());
+//				repositoryTaskData.addAttribute(tag.getKeyString(), delta_ts_attribute);
+//			}
+//			delta_ts_attribute.setValue(BugzillaClient.stripTimeZone(parsedText));
+//			break;
 		case BUG:
 			// Reached end of bug. Need to set LONGDESCLENGTH to number of
 			// comments

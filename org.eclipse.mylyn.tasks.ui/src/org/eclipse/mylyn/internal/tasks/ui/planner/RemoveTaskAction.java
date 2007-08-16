@@ -10,7 +10,7 @@ package org.eclipse.mylyn.internal.tasks.ui.planner;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 
@@ -20,9 +20,9 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 public class RemoveTaskAction extends Action {
 	public static final String ID = "org.eclipse.mylyn.taskplannereditor.actions.remove";
 
-	private final TableViewer viewer;
+	private final TreeViewer viewer;
 
-	public RemoveTaskAction(TableViewer view) {
+	public RemoveTaskAction(TreeViewer view) {
 		this.viewer = view;
 		setText("Remove Selected");
 		setId(ID);

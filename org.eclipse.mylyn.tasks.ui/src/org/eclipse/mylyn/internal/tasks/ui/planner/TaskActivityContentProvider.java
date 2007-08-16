@@ -8,17 +8,18 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.planner;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 
 /**
  * @author Rob Elves
  */
-public class TaskActivityContentProvider implements IStructuredContentProvider, ITaskPlannerContentProvider {
+public class TaskActivityContentProvider implements ITreeContentProvider, ITaskPlannerContentProvider {
 
 	private TaskActivityEditorInput editorInput;
 
@@ -27,19 +28,11 @@ public class TaskActivityContentProvider implements IStructuredContentProvider, 
 	}
 
 	public Object[] getElements(Object inputElement) {
-		List<AbstractTask> allTasks = new ArrayList<AbstractTask>();
-		allTasks.addAll(editorInput.getCompletedTasks());
-		allTasks.addAll(editorInput.getInProgressTasks());
-		return allTasks.toArray();
-	}
-
-	public void dispose() {
-		// ignore
-
-	}
-
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		// ignore
+		return editorInput.getCategories().toArray();
+//		List<AbstractTask> allTasks = new ArrayList<AbstractTask>();
+//		allTasks.addAll(editorInput.getCompletedTasks());
+//		allTasks.addAll(editorInput.getInProgressTasks());
+//		return allTasks.toArray();
 	}
 
 	public void removeTask(AbstractTask task) {
@@ -48,6 +41,40 @@ public class TaskActivityContentProvider implements IStructuredContentProvider, 
 	}
 
 	public void addTask(AbstractTask task) {
+		// ignore
+	}
+
+	public Object[] getChildren(Object parentElement) {
+		Set<AbstractTask> result = new HashSet<AbstractTask>();
+		if (parentElement instanceof AbstractTaskContainer) {
+			AbstractTaskContainer parent = (AbstractTaskContainer) parentElement;
+			Set<AbstractTask> completedChildren = new HashSet<AbstractTask>();
+			completedChildren.addAll(editorInput.getCompletedTasks());
+			completedChildren.retainAll(parent.getChildren());
+			result.addAll(completedChildren);
+
+			Set<AbstractTask> inProgressChildren = new HashSet<AbstractTask>();
+			inProgressChildren.addAll(editorInput.getInProgressTasks());
+			inProgressChildren.retainAll(parent.getChildren());
+			result.addAll(inProgressChildren);
+		}
+		return result.toArray();
+	}
+
+	public Object getParent(Object element) {
+		// ignore
+		return null;
+	}
+
+	public boolean hasChildren(Object element) {
+		return (getChildren(element).length > 0);
+	}
+
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		// ignore
+	}
+
+	public void dispose() {
 		// ignore
 	}
 

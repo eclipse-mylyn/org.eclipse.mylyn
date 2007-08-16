@@ -55,13 +55,16 @@ public class TaskReportGeneratorTest extends TestCase {
 		AbstractTask task1 = manager.createNewLocalTask("task 1");
 		manager.getTaskList().moveToContainer(task1, manager.getTaskList().getDefaultCategory());
 
-		CompletedTaskCollector collector = new CompletedTaskCollector(new Date(0));
+		CompletedTaskCollector collector = new CompletedTaskCollector(new Date(0), new Date());
 		TaskReportGenerator generator = new TaskReportGenerator(manager.getTaskList());
 		generator.addCollector(collector);
 		generator.run(new NullProgressMonitor());
 		assertEquals(0, generator.getAllCollectedTasks().size());
 
 		task1.setCompleted(true);
+		collector = new CompletedTaskCollector(new Date(0), new Date());
+		generator = new TaskReportGenerator(manager.getTaskList());
+		generator.addCollector(collector);
 		generator.run(new NullProgressMonitor());
 		assertEquals(1, generator.getAllCollectedTasks().size());
 		assertEquals(task1, generator.getAllCollectedTasks().get(0));
@@ -74,14 +77,14 @@ public class TaskReportGeneratorTest extends TestCase {
 		Thread.sleep(1000);
 		long now = new Date().getTime();
 
-		CompletedTaskCollector collector = new CompletedTaskCollector(new Date(now));
+		CompletedTaskCollector collector = new CompletedTaskCollector(new Date(now), new Date());
 		TaskReportGenerator generator = new TaskReportGenerator(manager.getTaskList());
 		generator.addCollector(collector);
 		generator.run(new NullProgressMonitor());
 		assertEquals(0, generator.getAllCollectedTasks().size());
 
 		generator = new TaskReportGenerator(manager.getTaskList());
-		collector = new CompletedTaskCollector(new Date(now - 8000));
+		collector = new CompletedTaskCollector(new Date(now - 8000), new Date());
 		generator.addCollector(collector);
 		generator.run(new NullProgressMonitor());
 		assertEquals(1, generator.getAllCollectedTasks().size());
@@ -92,7 +95,7 @@ public class TaskReportGeneratorTest extends TestCase {
 		BugzillaTask task1 = new BugzillaTask("repo", "1", "bugzillatask 1");
 		manager.getTaskList().moveToContainer(task1, manager.getTaskList().getDefaultCategory());
 
-		CompletedTaskCollector collector = new CompletedTaskCollector(new Date(0));
+		CompletedTaskCollector collector = new CompletedTaskCollector(new Date(0), new Date());
 		TaskReportGenerator generator = new TaskReportGenerator(manager.getTaskList());
 		generator.addCollector(collector);
 		generator.run(new NullProgressMonitor());
@@ -114,7 +117,7 @@ public class TaskReportGeneratorTest extends TestCase {
 		Set<AbstractTaskContainer> catagories = new HashSet<AbstractTaskContainer>();
 		catagories.add(cat1);
 
-		CompletedTaskCollector collector = new CompletedTaskCollector(new Date(0));
+		CompletedTaskCollector collector = new CompletedTaskCollector(new Date(0), new Date());
 		TaskReportGenerator generator = new TaskReportGenerator(manager.getTaskList(), catagories);
 		generator.addCollector(collector);
 		generator.run(new NullProgressMonitor());
@@ -138,7 +141,7 @@ public class TaskReportGeneratorTest extends TestCase {
 		Set<AbstractTaskContainer> catagories = new HashSet<AbstractTaskContainer>();
 		catagories.add(cat1);
 
-		CompletedTaskCollector collector = new CompletedTaskCollector(new Date(0));
+		CompletedTaskCollector collector = new CompletedTaskCollector(new Date(0), new Date());
 		TaskReportGenerator generator = new TaskReportGenerator(manager.getTaskList(), catagories);
 		generator.addCollector(collector);
 		generator.run(new NullProgressMonitor());
@@ -165,7 +168,7 @@ public class TaskReportGeneratorTest extends TestCase {
 		Set<AbstractTaskContainer> catagories = new HashSet<AbstractTaskContainer>();
 		catagories.add(bugQuery);
 
-		CompletedTaskCollector collector = new CompletedTaskCollector(new Date(0));
+		CompletedTaskCollector collector = new CompletedTaskCollector(new Date(0), new Date());
 		TaskReportGenerator generator = new TaskReportGenerator(manager.getTaskList(), catagories);
 		generator.addCollector(collector);
 		generator.run(new NullProgressMonitor());

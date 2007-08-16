@@ -11,7 +11,7 @@ package org.eclipse.mylyn.internal.tasks.ui.planner;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 
@@ -24,12 +24,12 @@ public class OpenTaskEditorAction extends Action {
 
 	public static final String ID = "org.eclipse.mylyn.taskplannereditor.actions.open";
 
-	private final TableViewer viewer;
+	private final TreeViewer viewer;
 
 	/**
 	 * @param view
 	 */
-	public OpenTaskEditorAction(TableViewer view) {
+	public OpenTaskEditorAction(TreeViewer view) {
 		this.viewer = view;
 		setText("Open");
 		setToolTipText("Open Element");

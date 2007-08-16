@@ -28,7 +28,7 @@ import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.monitor.core.DateUtil;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -44,8 +44,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IWorkbenchActionConstants;
@@ -78,23 +78,23 @@ public class TaskActivityEditorPart extends EditorPart {
 
 	private TaskActivityEditorInput editorInput = null;
 
-	private String[] activityColumnNames = new String[] { " ", " !", "Description", "Created", "Completed", "Elapsed",
-			"Estimated" };
+	private String[] activityColumnNames = new String[] { " ", " !", "Description", "Elapsed", "Estimated", "Created",
+			"Completed" };
 
-	private int[] activityColumnWidths = new int[] { 20, 30, 300, 90, 90, 70, 70 };
+	private int[] activityColumnWidths = new int[] { 100, 30, 200, 70, 70, 90, 90 };
 
 	private int[] activitySortConstants = new int[] { TaskActivitySorter.ICON, TaskActivitySorter.PRIORITY,
-			TaskActivitySorter.DESCRIPTION, TaskActivitySorter.CREATION_DATE, TaskActivitySorter.COMPLETED_DATE,
-			TaskActivitySorter.DURATION, TaskActivitySorter.ESTIMATED };
+			TaskActivitySorter.DESCRIPTION, TaskActivitySorter.DURATION, TaskActivitySorter.ESTIMATED,
+			TaskActivitySorter.CREATION_DATE, TaskActivitySorter.COMPLETED_DATE };
 
-	private String[] planColumnNames = new String[] { " ", " !", "Description", "Elapsed", "Estimated", "Reminder" };
+//	private String[] planColumnNames = new String[] { " ", " !", "Description", "Elapsed", "Estimated", "Reminder" };
+//
+//	private int[] planSortConstants = new int[] { TaskPlanSorter.ICON, TaskPlanSorter.PRIORITY,
+//			TaskPlanSorter.DESCRIPTION, TaskPlanSorter.DURATION, TaskPlanSorter.ESTIMATED, TaskPlanSorter.REMINDER };
+//
+//	private int[] planColumnWidths = new int[] { 100, 30, 200, 90, 90, 100 };
 
-	private int[] planSortConstants = new int[] { TaskPlanSorter.ICON, TaskPlanSorter.PRIORITY,
-			TaskPlanSorter.DESCRIPTION, TaskPlanSorter.DURATION, TaskPlanSorter.ESTIMATED, TaskPlanSorter.REMINDER };
-
-	private int[] planColumnWidths = new int[] { 20, 30, 340, 90, 90, 100 };
-
-	private static final String LABEL_ESTIMATED = "Total estimatedTime: ";
+	private static final String LABEL_ESTIMATED = "Total estimated time: ";
 
 	private static final String NO_TIME_ELAPSED = "&nbsp;";
 
@@ -159,7 +159,7 @@ public class TaskActivityEditorPart extends EditorPart {
 		gridData.grabExcessVerticalSpace = true;
 		editorComposite.setLayoutData(gridData);
 
-		createSummarySection(editorComposite, toolkit, editorInput.getReportStartDate());
+		createSummarySection(editorComposite, toolkit, editorInput.getReportStartDate(), editorInput.getReportEndDate());
 		String label = LABEL_PAST_ACTIVITY;
 
 		List<AbstractTask> allTasks = new ArrayList<AbstractTask>();
@@ -173,13 +173,13 @@ public class TaskActivityEditorPart extends EditorPart {
 
 		activityContentProvider = new TaskActivityContentProvider(editorInput);
 
-		final TableViewer activityViewer = createTableSection(sashForm, toolkit, label, activityColumnNames,
+		final TreeViewer activityViewer = createTableSection(sashForm, toolkit, label, activityColumnNames,
 				activityColumnWidths, activitySortConstants);
 		activityViewer.setContentProvider(activityContentProvider);
-		activityViewer.setLabelProvider(new TaskPlannerLabelProvider());
-		setSorters(activityColumnNames, activitySortConstants, activityViewer.getTable(), activityViewer, false);
+		activityViewer.setLabelProvider(new TaskPlannerLabelProvider(activityViewer, editorInput.getReportStartDate(),
+				editorInput.getReportEndDate()));
+		setSorters(activityColumnNames, activitySortConstants, activityViewer.getTree(), activityViewer, false);
 		activityViewer.setInput(editorInput);
-
 		activityViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				updateLabels();
@@ -199,14 +199,16 @@ public class TaskActivityEditorPart extends EditorPart {
 		getSite().registerContextMenu(activityContextMenuMgr, activityViewer);
 
 		planContentProvider = new PlannedTasksContentProvider(editorInput);
-		final TableViewer planViewer = createTableSection(sashForm, toolkit, LABEL_PLANNED_ACTIVITY, planColumnNames,
-				planColumnWidths, planSortConstants);
+		final TreeViewer planViewer = createTableSection(sashForm, toolkit, LABEL_PLANNED_ACTIVITY,
+				activityColumnNames, activityColumnWidths, activitySortConstants);
 		planViewer.setContentProvider(planContentProvider);
-		planViewer.setLabelProvider(new TaskPlanLabelProvider());
+		planViewer.setLabelProvider(new TaskPlannerLabelProvider(planViewer, editorInput.getReportStartDate(),
+				editorInput.getReportEndDate()));
+		// planViewer.setLabelProvider(new TaskPlanLabelProvider());
 		// createPlanCellEditorListener(planViewer.getTable(), planViewer);
 		// planViewer.setCellModifier(new PlannedTasksCellModifier(planViewer));
 		// initDrop(planViewer, planContentProvider);
-		setSorters(planColumnNames, planSortConstants, planViewer.getTable(), planViewer, true);
+		setSorters(activityColumnNames, activitySortConstants, planViewer.getTree(), planViewer, true);
 		planViewer.setInput(editorInput);
 
 		// planViewer.addSelectionChangedListener(new
@@ -234,7 +236,7 @@ public class TaskActivityEditorPart extends EditorPart {
 		updateLabels();
 	}
 
-	private void fillContextMenu(TableViewer viewer, IMenuManager manager) {
+	private void fillContextMenu(TreeViewer viewer, IMenuManager manager) {
 		if (!viewer.getSelection().isEmpty()) {
 			manager.add(new OpenTaskEditorAction(viewer));
 			manager.add(new RemoveTaskAction(viewer));
@@ -248,7 +250,7 @@ public class TaskActivityEditorPart extends EditorPart {
 	public void setFocus() {
 	}
 
-	private void createSummarySection(Composite parent, FormToolkit toolkit, Date startDate) {
+	private void createSummarySection(Composite parent, FormToolkit toolkit, Date startDate, Date endDate) {
 		Section summarySection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
 		summarySection.setText(LABEL_DIALOG);
 		summarySection.setLayout(new GridLayout());
@@ -260,14 +262,16 @@ public class TaskActivityEditorPart extends EditorPart {
 		summaryContainer.setLayout(layout);
 
 		String formatString = "yyyy-MM-dd, h:mm a";
-		SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.ENGLISH);
+		SimpleDateFormat formater = new SimpleDateFormat(formatString, Locale.ENGLISH);
 
 		if (startDate != null) {
-			String dateLabel = "Activity since " + format.format(startDate);
-			// DateFormat.getDateInstance(DateFormat.MEDIUM).format(reportStartDate)
+			String dateLabel = "Date start: " + formater.format(startDate);
 			toolkit.createLabel(summaryContainer, dateLabel, SWT.NULL);
-//			startLabel.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-			toolkit.createLabel(summaryContainer, "", SWT.NULL);
+		}
+
+		if (endDate != null) {
+			String dateLabel = "Date end: " + formater.format(endDate);
+			toolkit.createLabel(summaryContainer, dateLabel, SWT.NULL);
 		}
 
 		String numComplete = "Number completed: " + editorInput.getCompletedTasks().size();
@@ -289,7 +293,7 @@ public class TaskActivityEditorPart extends EditorPart {
 //		totalTimeOnIncomplete.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
 		String spacer = "        ";
-		String totalEstimated = "Total estimatedTime time: " + editorInput.getTotalTimeEstimated() + " hours" + spacer;
+		String totalEstimated = "Total estimated time: " + editorInput.getTotalTimeEstimated() + " hours" + spacer;
 		totalEstimatedTime = toolkit.createLabel(summaryContainer, totalEstimated, SWT.NULL);
 //		totalEstimatedTime.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
@@ -315,7 +319,7 @@ public class TaskActivityEditorPart extends EditorPart {
 		totalTimeOnIncomplete.setText(totalInProgressTaskTime);
 
 		String spacer = "        ";
-		String totalEstimated = "Total estimatedTime time: " + editorInput.getTotalTimeEstimated() + " hours" + spacer;
+		String totalEstimated = "Total estimated time: " + editorInput.getTotalTimeEstimated() + " hours" + spacer;
 		totalEstimatedTime.setText(totalEstimated);
 
 		String grandTotalTime = "Total time: " + getTotalTime();
@@ -387,7 +391,7 @@ public class TaskActivityEditorPart extends EditorPart {
 				+ editorInput.getTotalTimeSpentOnInProgressTasks(), false);
 	}
 
-	private TableViewer createTableSection(Composite parent, FormToolkit toolkit, String title, String[] columnNames,
+	private TreeViewer createTableSection(Composite parent, FormToolkit toolkit, String title, String[] columnNames,
 			int[] columnWidths, int[] sortConstants) {
 		Section tableSection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR); // |
 		// ExpandableComposite.TWISTIE
@@ -405,64 +409,62 @@ public class TaskActivityEditorPart extends EditorPart {
 		return createTable(detailContainer, toolkit, columnNames, columnWidths, sortConstants);
 	}
 
-	private TableViewer createTable(Composite parent, FormToolkit toolkit, String[] columnNames, int[] columnWidths,
+	private TreeViewer createTable(Composite parent, FormToolkit toolkit, String[] columnNames, int[] columnWidths,
 			int[] sortConstants) {
 		int style = SWT.MULTI | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION;
-		Table table = toolkit.createTable(parent, style);
+		Tree tree = toolkit.createTree(parent, style);
 
-		table.setLayout(new GridLayout());
+		tree.setLayout(new GridLayout());
 		GridData tableGridData = new GridData(GridData.FILL_BOTH);
 		tableGridData.heightHint = 100;
-		table.setLayoutData(tableGridData);
-
-		table.setLinesVisible(true);
-		table.setHeaderVisible(true);
-		table.setEnabled(true);
+		tree.setLayoutData(tableGridData);
+		tree.setLinesVisible(true);
+		tree.setHeaderVisible(true);
+		tree.setEnabled(true);
 
 		for (int i = 0; i < columnNames.length; i++) {
-			TableColumn column = new TableColumn(table, SWT.LEFT, i);
+			TreeColumn column = new TreeColumn(tree, SWT.LEFT, i);
 			column.setText(columnNames[i]);
 			column.setWidth(columnWidths[i]);
 		}
 
-		TableViewer tableViewer = new TableViewer(table);
-		tableViewer.setUseHashlookup(true);
-		tableViewer.setColumnProperties(columnNames);
+		TreeViewer treeViewer = new TreeViewer(tree);
+		treeViewer.setUseHashlookup(true);
+		treeViewer.setColumnProperties(columnNames);
 
-		final OpenTaskEditorAction openAction = new OpenTaskEditorAction(tableViewer);
-		tableViewer.addDoubleClickListener(new IDoubleClickListener() {
+		final OpenTaskEditorAction openAction = new OpenTaskEditorAction(treeViewer);
+		treeViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				openAction.run();
 			}
 		});
 
-		return tableViewer;
+		return treeViewer;
 	}
 
-	private void setSorters(String[] columnNames, int[] sortConstants, Table table, TableViewer tableViewer,
-			boolean plan) {
+	private void setSorters(String[] columnNames, int[] sortConstants, Tree tree, TreeViewer treeViewer, boolean plan) {
 		for (int i = 0; i < columnNames.length; i++) {
-			TableColumn column = table.getColumn(i);
-			addColumnSelectionListener(tableViewer, column, sortConstants[i], plan);
+			TreeColumn column = tree.getColumn(i);
+			addColumnSelectionListener(treeViewer, column, sortConstants[i], plan);
 		}
 	}
 
-	private void addColumnSelectionListener(final TableViewer tableViewer, TableColumn column,
-			final int sorterConstant, final boolean plan) {
+	private void addColumnSelectionListener(final TreeViewer tableViewer, TreeColumn column, final int sorterConstant,
+			final boolean plan) {
 		column.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (plan) { // TODO: bad modularity
-					tableViewer.setSorter(new TaskPlanSorter(sorterConstant));
-				} else {
-					tableViewer.setSorter(new TaskActivitySorter(sorterConstant));
-				}
+//				if (plan) { // TODO: bad modularity
+//					tableViewer.setSorter(new TaskPlanSorter(sorterConstant));
+//				} else {
+//					tableViewer.setSorter(new TaskActivitySorter(sorterConstant));
+//				}
 			}
 		});
 	}
 
-	private void createButtons(Composite parent, FormToolkit toolkit, final TableViewer viewer,
+	private void createButtons(Composite parent, FormToolkit toolkit, final TreeViewer viewer,
 			final PlannedTasksContentProvider contentProvider) {
 		Composite container = new Composite(parent, SWT.NULL);
 		container.setBackground(parent.getBackground());
@@ -523,8 +525,7 @@ public class TaskActivityEditorPart extends EditorPart {
 			outputFile = new File(filename);
 			// outputStream = new FileOutputStream(outputFile, true);
 			BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
-			writer.write("<html><head></head><body>"
-			);
+			writer.write("<html><head></head><body>");
 
 			exportSummarySection(writer);
 
@@ -646,19 +647,27 @@ public class TaskActivityEditorPart extends EditorPart {
 
 	private void exportSummarySection(BufferedWriter writer) throws IOException {
 		Date startDate = editorInput.getReportStartDate();
+		Date endDate = editorInput.getReportEndDate();
 		writer.write("<H2>" + LABEL_DIALOG + "</H2>");
 
 		String formatString = "yyyy-MM-dd, h:mm a";
 		SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.ENGLISH);
 
 		writer.write("<table border=\"0\" width=\"75%\" id=\"table1\">\n<tr>\n");
-		writer.write("<td width=\"138\">Activity since:</td> ");
+		writer.write("<td width=\"138\">Date start:</td> ");
 		String dateLabel = "Not Available";
 		if (startDate != null) {
 			dateLabel = format.format(startDate);
 		}
 		writer.write("<td>" + dateLabel + "</td>");
-		writer.write("<td width=\"169\">&nbsp;</td><td width=\"376\">&nbsp;</td>\n</tr>");
+
+		writer.write("<td width=\"138\">Date end:</td> ");
+		String endLabel = "Not Available";
+		if (endDate != null) {
+			endLabel = format.format(endDate);
+		}
+		writer.write("<td>" + endLabel + "</td>");
+		//writer.write("<td width=\"169\">&nbsp;</td></tr>");
 
 		writer.write("<tr><td width=\"138\">Number Completed:</td><td>" + editorInput.getCompletedTasks().size()
 				+ "</td>");
@@ -673,8 +682,8 @@ public class TaskActivityEditorPart extends EditorPart {
 				+ DateUtil.getFormattedDuration(editorInput.getTotalTimeSpentOnInProgressTasks(), false) + "</td>");
 		writer.write("</tr>");
 
-		writer.write("<tr><td width=\"138\">Total estimatedTime time:</td><td>" + totalEstimatedHoursLabel.getText()
-				+ "</td>");
+		writer.write("<tr><td width=\"138\">Outstanding estimated hours:</td><td>"
+				+ editorInput.getTotalTimeEstimated() + "</td>");
 		writer.write("<td width=\"169\">Total time:</td><td width=\"376\">" + getTotalTime() + "</td>");
 		writer.write("</tr>");
 

@@ -16,6 +16,7 @@ import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskDelegate;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
@@ -25,6 +26,8 @@ import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
+import org.eclipse.mylyn.tasks.ui.TaskListManager;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -39,11 +42,18 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 
 	private static final String NO_MINUTES = "0 minutes";
 
+	private TaskListManager manager;
+
 	private Color categoryBackgroundColor;
 
-	public TaskActivityLabelProvider(ILabelProvider provider, ILabelDecorator decorator, Color parentBacground) {
+	private ITreeContentProvider contentProvider;
+
+	public TaskActivityLabelProvider(ILabelProvider provider, ILabelDecorator decorator, Color parentBacground,
+			ITreeContentProvider contentProvider) {
 		super(provider, decorator);
 		this.categoryBackgroundColor = parentBacground;
+		this.manager = TasksUiPlugin.getTaskListManager();
+		this.contentProvider = contentProvider;
 	}
 
 	public Image getColumnImage(Object element, int columnIndex) {
@@ -71,11 +81,12 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 			switch (columnIndex) {
 			case 2:
 				if (task != null) {
-					return task.getTaskKey() + ": " + task.getSummary();
+					return task.getSummary();
 				}
 			case 3:
-				return DateUtil.getFormattedDurationShort(activityDelegate.getDateRangeContainer().getElapsed(
-						activityDelegate));
+				return DateUtil.getFormattedDurationShort(manager.getElapsedTime(task,
+						activityDelegate.getDateRangeContainer().getStart(), activityDelegate.getDateRangeContainer()
+								.getEnd()));
 			case 4:
 				return task.getEstimateTimeHours() + UNITS_HOURS;
 			case 5:
@@ -84,23 +95,36 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 				} else {
 					return "";
 				}
-			case 6:
-				if (activityDelegate.getStart() > 0
-						&& activityDelegate.getDateRangeContainer().getElapsed(activityDelegate) > 0) {
-					return DateFormat.getDateInstance(DateFormat.MEDIUM).format(activityDelegate.getStart());
-				} else {
-					return "";
-				}
+//			case 6:
+//				if (activityDelegate.getStart() > 0
+//						&& activityDelegate.getDateRangeContainer().getElapsed(activityDelegate) > 0) {
+//					return DateFormat.getDateInstance(DateFormat.MEDIUM).format(activityDelegate.getStart());
+//				} else {
+//					return "";
+//				}
 			}
 		} else if (element instanceof ScheduledTaskContainer) {
 			ScheduledTaskContainer taskCategory = (ScheduledTaskContainer) element;
 			switch (columnIndex) {
 			case 2:
+				if (taskCategory.isPresent()) {
+					return taskCategory.getSummary() + " - Today";
+				}
+
 				return taskCategory.getSummary();
 			case 3:
 				String elapsedTimeString = NO_MINUTES;
 				try {
-					elapsedTimeString = DateUtil.getFormattedDurationShort(taskCategory.getTotalElapsed());
+
+					long elapsed = 0;
+					for (Object o : contentProvider.getChildren(taskCategory)) {
+						if (o instanceof ScheduledTaskDelegate) {
+							elapsed += manager.getElapsedTime(((ScheduledTaskDelegate) o).getCorrespondingTask(),
+									taskCategory.getStart(), taskCategory.getEnd());
+						}
+					}
+
+					elapsedTimeString = DateUtil.getFormattedDurationShort(elapsed);
 					if (elapsedTimeString.equals(""))
 						elapsedTimeString = NO_MINUTES;
 				} catch (RuntimeException e) {
@@ -108,7 +132,13 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 				}
 				return elapsedTimeString;
 			case 4:
-				return taskCategory.getTotalEstimated() + UNITS_HOURS;
+				long estimated = 0;
+				for (Object o : contentProvider.getChildren(taskCategory)) {
+					if (o instanceof AbstractTask) {
+						estimated += ((AbstractTask) o).getEstimateTimeHours();
+					}
+				}
+				return estimated + UNITS_HOURS;
 			}
 		}
 		return null;
