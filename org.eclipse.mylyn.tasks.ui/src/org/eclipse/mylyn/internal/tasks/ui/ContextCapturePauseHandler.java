@@ -38,7 +38,7 @@ public class ContextCapturePauseHandler extends AbstractHandler //
 		ContextCorePlugin.getContextManager().removeListener(this);
 		super.dispose();
 	}
-	
+
 	public Object execute(ExecutionEvent e) throws ExecutionException {
 		if (ContextCorePlugin.getContextManager().isContextCapturePaused()) {
 			resume();
@@ -65,8 +65,10 @@ public class ContextCapturePauseHandler extends AbstractHandler //
 
 	private void refreshCommands() {
 		ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
-		service.refreshElements("org.eclipse.mylyn.tasks.ui.command.previousTask", null);
-		service.refreshElements("org.eclipse.mylyn.ui.context.capture.pause.command", null);
+		if (service != null) {
+			service.refreshElements("org.eclipse.mylyn.tasks.ui.command.previousTask", null);
+			service.refreshElements("org.eclipse.mylyn.ui.context.capture.pause.command", null);
+		}
 	}
 
 	// IElementUpdater
@@ -77,7 +79,7 @@ public class ContextCapturePauseHandler extends AbstractHandler //
 	}
 
 	// IInteractionContextListener
-	
+
 	public void contextActivated(IInteractionContext context) {
 		resume();
 	}
@@ -85,7 +87,7 @@ public class ContextCapturePauseHandler extends AbstractHandler //
 	public void contextDeactivated(IInteractionContext context) {
 		resume();
 	}
-	
+
 	public void contextCleared(IInteractionContext context) {
 		// ignore
 	}
