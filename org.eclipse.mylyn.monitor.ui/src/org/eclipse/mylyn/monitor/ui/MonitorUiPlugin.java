@@ -43,7 +43,7 @@ import org.osgi.framework.BundleContext;
  */
 public class MonitorUiPlugin extends AbstractUIPlugin {
 
-	public static final int TIMEOUT_INACTIVITY_MILLIS = 1 * 60 * 1000;
+	public static final int TIMEOUT_INACTIVITY_MILLIS = 60 * 1000;
 
 	private int inactivityTimeout = TIMEOUT_INACTIVITY_MILLIS;
 
@@ -140,16 +140,20 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 				}
 				if (getWorkbench() != null && !getWorkbench().isClosing()) {
 					getWorkbench().removeWindowListener(WINDOW_LISTENER);
-					
-					if(getWorkbench().getActiveWorkbenchWindow() != null && getWorkbench().getActiveWorkbenchWindow().getShell() != null && !getWorkbench().getActiveWorkbenchWindow().getShell().isDisposed()){
-						getWorkbench().getActiveWorkbenchWindow().getShell().removeShellListener(shellLifecycleListener);
+
+					if (getWorkbench().getActiveWorkbenchWindow() != null
+							&& getWorkbench().getActiveWorkbenchWindow().getShell() != null
+							&& !getWorkbench().getActiveWorkbenchWindow().getShell().isDisposed()) {
+						getWorkbench().getActiveWorkbenchWindow()
+								.getShell()
+								.removeShellListener(shellLifecycleListener);
 					}
-					
+
 					if (launchingWorkbenchWindow != null) {
 						removeListenersFromWindow(launchingWorkbenchWindow);
 					}
 				}
-				
+
 			}
 		} catch (Exception e) {
 			StatusHandler.fail(e, "Mylyn Monitor stop failed", false);

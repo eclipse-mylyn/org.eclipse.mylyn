@@ -24,21 +24,21 @@ public class ShellLifecycleListener implements ShellListener {
 
 	public ShellLifecycleListener(InteractionContextManager manager) {
 		this.manager = manager;
-		manager.processActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND,
+		manager.processActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.ATTENTION,
 				InteractionContextManager.ACTIVITY_STRUCTURE_KIND, InteractionContextManager.ACTIVITY_HANDLE_LIFECYCLE,
 				InteractionContextManager.ACTIVITY_ORIGIN_ID, null, InteractionContextManager.ACTIVITY_DELTA_STARTED,
 				1f));
 	}
 
 	public void shellClosed(ShellEvent shellEvent) {
-		manager.processActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND,
-				InteractionContextManager.ACTIVITY_STRUCTURE_KIND, InteractionContextManager.ACTIVITY_HANDLE_ATTENTION,
-				InteractionContextManager.ACTIVITY_ORIGIN_ID, null,
-				InteractionContextManager.ACTIVITY_DELTA_DEACTIVATED, 1f));
+//		manager.processActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND,
+//				InteractionContextManager.ACTIVITY_STRUCTURE_KIND, InteractionContextManager.ACTIVITY_HANDLE_ATTENTION,
+//				InteractionContextManager.ACTIVITY_ORIGIN_ID, null,
+//				InteractionContextManager.ACTIVITY_DELTA_DEACTIVATED, 1f));
 
 		manager.deactivateAllContexts();
 
-		manager.processActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND,
+		manager.processActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.ATTENTION,
 				InteractionContextManager.ACTIVITY_STRUCTURE_KIND, InteractionContextManager.ACTIVITY_HANDLE_LIFECYCLE,
 				InteractionContextManager.ACTIVITY_ORIGIN_ID, null, InteractionContextManager.ACTIVITY_DELTA_STOPPED,
 				1f));

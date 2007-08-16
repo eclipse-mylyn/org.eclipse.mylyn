@@ -20,7 +20,7 @@ import java.util.Date;
 public class InteractionEvent {
 
 	public enum Kind {
-		SELECTION, EDIT, COMMAND, PREFERENCE, PREDICTION, PROPAGATION, MANIPULATION;
+		SELECTION, EDIT, COMMAND, PREFERENCE, PREDICTION, PROPAGATION, MANIPULATION, ATTENTION;
 
 		/**
 		 * TODO: add PREFERENCE?
@@ -46,6 +46,8 @@ public class InteractionEvent {
 				return "propagation";
 			case MANIPULATION:
 				return "manipulation";
+			case ATTENTION:
+				return "attention";
 			default:
 				return "null";
 			}
@@ -68,6 +70,8 @@ public class InteractionEvent {
 				return PROPAGATION;
 			if (string.equals("manipulation"))
 				return MANIPULATION;
+			if (string.equals("attention"))
+				return ATTENTION;
 			return null;
 		}
 	}
