@@ -65,6 +65,10 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 		for (AbstractTask child : children) {
 			if (handle.equals(child.getHandleIdentifier())) {
 				return true;
+			} else if(child.getChildren() != null && child.getChildren().size() > 0){
+				if(child.contains(handle)){
+					return true;
+				}
 			}
 		}
 		return false;
