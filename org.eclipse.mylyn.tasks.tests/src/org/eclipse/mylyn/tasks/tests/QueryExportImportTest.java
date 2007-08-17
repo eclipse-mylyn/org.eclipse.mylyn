@@ -64,10 +64,14 @@ public class QueryExportImportTest extends TestCase {
 		removeFiles(dest);
 		dest.delete();
 		assertFalse(dest.exists());
-		TasksUiPlugin.getSynchronizationManager().setForceSyncExec(false);
+		// Don't want synch manager to be in asynch mode for tests so commented out:
+		//TasksUiPlugin.getSynchronizationManager().setForceSyncExec(false);
 	}
 
 	public void testExportImportQuery() {
+		List<AbstractTaskListFactory> oldExternalizers = TasksUiPlugin.getTaskListManager()
+				.getTaskListWriter()
+				.getExternalizers();
 		List<AbstractTaskListFactory> externalizers = new ArrayList<AbstractTaskListFactory>();
 		externalizers.add(new MockTaskListFactory());
 		TasksUiPlugin.getTaskListManager().getTaskListWriter().setDelegateExternalizers(externalizers);
@@ -91,6 +95,7 @@ public class QueryExportImportTest extends TestCase {
 				.getTaskListWriter()
 				.readQueries(inFile);
 		assertEquals("2 Queries is imported", 2, resultQueries.size());
+		TasksUiPlugin.getTaskListManager().getTaskListWriter().setDelegateExternalizers(oldExternalizers);
 	}
 
 	public void testImportedQueriesNameConflictResolving1() {
@@ -254,7 +259,9 @@ public class QueryExportImportTest extends TestCase {
 	public void testExportImportQueryWithRepositoryInfo() throws Exception {
 		// prepare for test
 		TasksUiPlugin.getTaskListManager().resetTaskList();
-
+		List<AbstractTaskListFactory> oldExternalizers = TasksUiPlugin.getTaskListManager()
+				.getTaskListWriter()
+				.getExternalizers();
 		List<AbstractTaskListFactory> externalizers = new ArrayList<AbstractTaskListFactory>();
 		externalizers.add(new MockTaskListFactory());
 		TasksUiPlugin.getTaskListManager().getTaskListWriter().setDelegateExternalizers(externalizers);
@@ -313,6 +320,7 @@ public class QueryExportImportTest extends TestCase {
 		assertTrue("'Test Query' query inserted", queriesMap.containsKey("Test Query"));
 		assertTrue("1 repository is loaded", TasksUiPlugin.getRepositoryManager().getRepository(
 				MockRepositoryConnector.REPOSITORY_URL) != null);
+		TasksUiPlugin.getTaskListManager().getTaskListWriter().setDelegateExternalizers(oldExternalizers);
 
 	}
 

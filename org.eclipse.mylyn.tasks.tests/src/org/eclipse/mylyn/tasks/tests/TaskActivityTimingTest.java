@@ -167,8 +167,7 @@ public class TaskActivityTimingTest extends TestCase {
 		InteractionEvent activityEvent3 = new InteractionEvent(InteractionEvent.Kind.ATTENTION,
 				InteractionContextManager.ACTIVITY_STRUCTURE_KIND, task2.getHandleIdentifier(),
 				InteractionContextManager.ACTIVITY_ORIGIN_ID, null,
-				InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 1f, startTime1.getTime(),
-				startTime1.getTime());
+				InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 1f, startTime1.getTime(), startTime1.getTime());
 
 		// to activity events both within same hour will get collapsed
 		metaContext.parseEvent(activityEvent1);
@@ -190,9 +189,11 @@ public class TaskActivityTimingTest extends TestCase {
 			endActiveTime.add(Calendar.SECOND, 20);
 
 			Calendar startTime = Calendar.getInstance();
-			startTime.setTimeInMillis(startActiveTime.getTimeInMillis() + 2000);
+			startTime.setTime(startActiveTime.getTime());
+			startTime.add(Calendar.SECOND, 5);
 			Calendar endTime = Calendar.getInstance();
-			endTime.setTimeInMillis(endActiveTime.getTimeInMillis() - 2000);
+			endTime.setTime(endActiveTime.getTime());
+			endTime.add(Calendar.SECOND, -5);
 
 			InteractionEvent event1 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind",
 					task1.getHandleIdentifier(), "originId", "navigatedRelation",
@@ -206,8 +207,7 @@ public class TaskActivityTimingTest extends TestCase {
 			InteractionEvent activityEvent1 = new InteractionEvent(InteractionEvent.Kind.ATTENTION,
 					InteractionContextManager.ACTIVITY_STRUCTURE_KIND, task1.getHandleIdentifier(),
 					InteractionContextManager.ACTIVITY_ORIGIN_ID, null,
-					InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 1f, startTime.getTime(),
-					endTime.getTime());
+					InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 1f, startTime.getTime(), endTime.getTime());
 
 			ContextCorePlugin.getContextManager().getActivityMetaContext().parseEvent(event1);
 			TasksUiPlugin.getTaskListManager().parseInteractionEvent(event1);
@@ -217,7 +217,7 @@ public class TaskActivityTimingTest extends TestCase {
 			TasksUiPlugin.getTaskListManager().parseInteractionEvent(event2);
 
 			long elapsed = TasksUiPlugin.getTaskListManager().getElapsedTime(task1);
-			assertEquals(16000, elapsed);
+			assertEquals(10000, elapsed);
 
 			// 2nd activation - no activity
 			ContextCorePlugin.getContextManager().getActivityMetaContext().parseEvent(event1);
@@ -226,11 +226,11 @@ public class TaskActivityTimingTest extends TestCase {
 			TasksUiPlugin.getTaskListManager().parseInteractionEvent(event2);
 
 			elapsed = TasksUiPlugin.getTaskListManager().getElapsedTime(task1);
-			assertEquals(16000, elapsed);
+			assertEquals(10000, elapsed);
 			assertTrue(TasksUiPlugin.getTaskListManager().isActiveThisWeek(task1));
 		}
 
-		assertEquals(16000, TasksUiPlugin.getTaskListManager().getElapsedTime(task1));
+		assertEquals(10000, TasksUiPlugin.getTaskListManager().getElapsedTime(task1));
 		///--- 2nd activity on same task
 		{
 			Calendar startActiveTime2 = Calendar.getInstance();
@@ -265,13 +265,13 @@ public class TaskActivityTimingTest extends TestCase {
 			TasksUiPlugin.getTaskListManager().parseInteractionEvent(event2);
 		}
 
-		assertEquals(32000, TasksUiPlugin.getTaskListManager().getElapsedTime(task1));
+		assertEquals(26000, TasksUiPlugin.getTaskListManager().getElapsedTime(task1));
 
 		ContextCorePlugin.getContextManager().saveActivityContext();
 		ContextCorePlugin.getContextManager().loadActivityMetaContext();
 		TasksUiPlugin.getTaskListManager().resetAndRollOver();
 
-		assertEquals(32000, TasksUiPlugin.getTaskListManager().getElapsedTime(task1));
+		assertEquals(26000, TasksUiPlugin.getTaskListManager().getElapsedTime(task1));
 
 	}
 

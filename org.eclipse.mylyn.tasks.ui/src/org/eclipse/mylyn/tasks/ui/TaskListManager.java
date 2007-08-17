@@ -243,8 +243,13 @@ public class TaskListManager implements IPropertyChangeListener {
 	}
 
 	private void resetActivity() {
+		tasksWithReminders.clear();
+		tasksWithDueDates.clear();
 		taskElapsedTimeMap.clear();
 		scheduleContainers.clear();
+		if (scheduledThisWeek != null) {
+			scheduledThisWeek.clear();
+		}
 		setupCalendarRanges();
 	}
 
@@ -268,34 +273,35 @@ public class TaskListManager implements IPropertyChangeListener {
 	public void parseFutureReminders() {
 		scheduledPast.clear();
 		scheduledPrevious.clear();
+		scheduledThisWeek.clear();//
 		scheduledNextWeek.clear();
 		scheduledFuture.clear();
 		for (ScheduledTaskContainer day : scheduleWeekDays) {
 			day.clear();
 		}
 
-		HashSet<AbstractTask> toRemove = new HashSet<AbstractTask>();
-		toRemove.addAll(scheduledThisWeek.getDateRangeDelegates());
-		for (AbstractTask activity : toRemove) {
-			ScheduledTaskDelegate delegate = (ScheduledTaskDelegate) activity;
-			Calendar calendar = GregorianCalendar.getInstance();
-
-			Date schedDate = delegate.getScheduledForDate();
-			if (schedDate == null) {
-				schedDate = delegate.getDueDate();
-			}
-
-			if (schedDate != null) {
-				calendar.setTime(schedDate);
-				if (!scheduledThisWeek.includes(calendar) && scheduledThisWeek.getElapsed(delegate) == 0) {
-					scheduledThisWeek.remove(delegate);
-				}
-			} else {
-				if (scheduledThisWeek.getElapsed(delegate) == 0) {
-					scheduledThisWeek.remove(delegate);
-				}
-			}
-		}
+//		HashSet<AbstractTask> toRemove = new HashSet<AbstractTask>();
+//		toRemove.addAll(scheduledThisWeek.getDateRangeDelegates());
+//		for (AbstractTask activity : toRemove) {
+//			ScheduledTaskDelegate delegate = (ScheduledTaskDelegate) activity;
+//			Calendar calendar = GregorianCalendar.getInstance();
+//
+//			Date schedDate = delegate.getScheduledForDate();
+//			if (schedDate == null) {
+//				schedDate = delegate.getDueDate();
+//			}
+//
+//			if (schedDate != null) {
+//				calendar.setTime(schedDate);
+//				if (!scheduledThisWeek.includes(calendar) && scheduledThisWeek.getElapsed(delegate) == 0) {
+//					scheduledThisWeek.remove(delegate);
+//				}
+//			} else {
+//				if (scheduledThisWeek.getElapsed(delegate) == 0) {
+//					scheduledThisWeek.remove(delegate);
+//				}
+//			}
+//		}
 		GregorianCalendar tempCalendar = new GregorianCalendar();
 		tempCalendar.setFirstDayOfWeek(startDay);
 
@@ -1032,8 +1038,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	/** public for testing */
 	public void resetAndRollOver() {
 		taskActivityHistoryInitialized = false;
-		tasksWithReminders.clear();
-		tasksWithDueDates.clear();
+		resetActivity();
 		for (AbstractTask task : taskList.getAllTasks()) {
 			if (task.getScheduledForDate() != null) {
 				tasksWithReminders.add(task);
@@ -1042,7 +1047,6 @@ public class TaskListManager implements IPropertyChangeListener {
 				tasksWithDueDates.add(task);
 			}
 		}
-		resetActivity();
 		parseTaskActivityInteractionHistory();
 		for (ITaskActivityListener listener : activityListeners) {
 			listener.activityChanged(null);

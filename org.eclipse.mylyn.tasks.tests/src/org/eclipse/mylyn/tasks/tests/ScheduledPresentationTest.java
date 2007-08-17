@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.tasks.tests;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -30,13 +31,13 @@ public class ScheduledPresentationTest extends TestCase {
 	private long currentEndMili = 1900;
 
 	protected void setUp() throws Exception {
-		super.setUp();
+		TasksUiPlugin.getTaskListManager().resetTaskList();
+		TasksUiPlugin.getTaskListManager().saveTaskList();
 	}
 
 	protected void tearDown() throws Exception {
 		TasksUiPlugin.getTaskListManager().resetTaskList();
 		TasksUiPlugin.getTaskListManager().saveTaskList();
-		super.tearDown();
 	}
 
 	// TODO: Test scheduling into day bins
@@ -44,6 +45,84 @@ public class ScheduledPresentationTest extends TestCase {
 		List<ScheduledTaskContainer> days = TasksUiPlugin.getTaskListManager().getActivityWeekDays();
 		assertNotNull(days);
 		assertEquals(7, days.size());
+	}
+
+	public void testResetAndRollOver() {
+
+		ScheduledTaskContainer pastWeeks = TasksUiPlugin.getTaskListManager().getActivityPast();
+		ScheduledTaskContainer thisWeek = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
+		ScheduledTaskContainer nextWeek = TasksUiPlugin.getTaskListManager().getActivityNextWeek();
+		ScheduledTaskContainer futureWeeks = TasksUiPlugin.getTaskListManager().getActivityFuture();
+
+		assertEquals(0, thisWeek.getChildren().size());
+		assertTrue(thisWeek.isPresent());
+		assertTrue(nextWeek.isFuture());
+
+		long pastStartTime = pastWeeks.getEnd().getTimeInMillis();
+		long thisWeekStartTime = thisWeek.getStart().getTimeInMillis();
+		long nextStartTime = nextWeek.getStart().getTimeInMillis();
+		long futureStartTime = futureWeeks.getStart().getTimeInMillis();
+
+		Calendar pastWeeksTaskStart = Calendar.getInstance();
+		pastWeeksTaskStart.setTimeInMillis(pastStartTime - 10);
+		assertTrue(pastWeeks.includes(pastWeeksTaskStart));
+
+		Calendar thisWeekTaskStart = Calendar.getInstance();
+		thisWeekTaskStart.setTimeInMillis(thisWeekStartTime + 10);
+		assertTrue(thisWeek.includes(thisWeekTaskStart));
+
+		Calendar thisWeekTaskStop = Calendar.getInstance();
+		thisWeekTaskStop.setTimeInMillis(thisWeek.getEnd().getTimeInMillis() - 10);
+		assertTrue(thisWeek.includes(thisWeekTaskStop));
+
+		Calendar nextWeekTaskStart = Calendar.getInstance();
+		nextWeekTaskStart.setTimeInMillis(nextStartTime + 10);
+		assertTrue(nextWeek.includes(nextWeekTaskStart));
+
+		Calendar futureWeekTaskStart = Calendar.getInstance();
+		futureWeekTaskStart.setTimeInMillis(futureStartTime + 10);
+		assertTrue(futureWeeks.includes(futureWeekTaskStart));
+
+		AbstractTask task1 = new LocalTask("task 1", "Task 1");
+		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
+		assertEquals(0, thisWeek.getChildren().size());
+		TasksUiPlugin.getTaskListManager().setScheduledFor(task1, thisWeek.getStart().getTime());
+
+//		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event2);
+		assertEquals(1, thisWeek.getChildren().size());
+		// assertEquals(thisWeekTaskStop.getTime().getTime() -
+		// thisWeekTaskStart.getTime().getTime(), thisWeek
+		// .getTotalElapsed());
+
+		// ROLL OVER
+		Date oldStart = TasksUiPlugin.getTaskListManager().startTime;
+		Calendar newStart = Calendar.getInstance();
+		newStart.add(Calendar.WEEK_OF_MONTH, 1);
+		//TasksUiPlugin.getTaskListManager().snapToStartOfWeek(newStart);
+
+		TasksUiPlugin.getTaskListManager().startTime = newStart.getTime();
+		TasksUiPlugin.getTaskListManager().resetAndRollOver();
+
+		//ScheduledTaskContainer newPastWeeks = TasksUiPlugin.getTaskListManager().getActivityPast();
+		ScheduledTaskContainer newPreviousWeek = TasksUiPlugin.getTaskListManager().getActivityPrevious();
+		ScheduledTaskContainer newThisWeek = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
+		ScheduledTaskContainer newNextWeek = TasksUiPlugin.getTaskListManager().getActivityNextWeek();
+		// DateRangeContainer newFutureWeeks =
+		// MylarTaskListPlugin.getTaskListManager().getActivityFuture();
+
+		assertTrue(newPreviousWeek.includes(thisWeekTaskStart));
+		assertTrue(newThisWeek.includes(nextWeekTaskStart));
+		assertTrue(newNextWeek.includes(futureWeekTaskStart));
+
+		assertFalse(newThisWeek.includes(thisWeekTaskStart));
+		assertFalse(newThisWeek.isPresent());
+		assertTrue(newThisWeek.isFuture());
+
+		assertEquals(0, newThisWeek.getChildren().size());
+		assertEquals(1, newPreviousWeek.getChildren().size());
+
+		TasksUiPlugin.getTaskListManager().startTime = oldStart;
+		TasksUiPlugin.getTaskListManager().resetAndRollOver();
 	}
 
 	public void testScheduledTaskContainer() {
@@ -81,79 +160,6 @@ public class ScheduledPresentationTest extends TestCase {
 		assertEquals(20, testContainer.getElapsed(new ScheduledTaskDelegate(testContainer, task2, currentTaskStart,
 				currentTaskEnd)));
 		assertEquals(2, testContainer.getDateRangeDelegates().size());
-	}
-
-	public void testResetAndRollOver() {
-
-		ScheduledTaskContainer pastWeeks = TasksUiPlugin.getTaskListManager().getActivityPast();
-		ScheduledTaskContainer thisWeek = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
-		ScheduledTaskContainer nextWeek = TasksUiPlugin.getTaskListManager().getActivityNextWeek();
-		ScheduledTaskContainer futureWeeks = TasksUiPlugin.getTaskListManager().getActivityFuture();
-
-		assertTrue(thisWeek.isPresent());
-		assertTrue(nextWeek.isFuture());
-
-		long pastStartTime = pastWeeks.getEnd().getTimeInMillis();
-		long thisWeekStartTime = thisWeek.getStart().getTimeInMillis();
-		long nextStartTime = nextWeek.getStart().getTimeInMillis();
-		long futureStartTime = futureWeeks.getStart().getTimeInMillis();
-
-		Calendar pastWeeksTaskStart = Calendar.getInstance();
-		pastWeeksTaskStart.setTimeInMillis(pastStartTime - 10);
-		assertTrue(pastWeeks.includes(pastWeeksTaskStart));
-
-		Calendar thisWeekTaskStart = Calendar.getInstance();
-		thisWeekTaskStart.setTimeInMillis(thisWeekStartTime + 10);
-		assertTrue(thisWeek.includes(thisWeekTaskStart));
-
-		Calendar thisWeekTaskStop = Calendar.getInstance();
-		thisWeekTaskStop.setTimeInMillis(thisWeek.getEnd().getTimeInMillis() - 10);
-		assertTrue(thisWeek.includes(thisWeekTaskStop));
-
-		Calendar nextWeekTaskStart = Calendar.getInstance();
-		nextWeekTaskStart.setTimeInMillis(nextStartTime + 10);
-		assertTrue(nextWeek.includes(nextWeekTaskStart));
-
-		Calendar futureWeekTaskStart = Calendar.getInstance();
-		futureWeekTaskStart.setTimeInMillis(futureStartTime + 10);
-		assertTrue(futureWeeks.includes(futureWeekTaskStart));
-
-		AbstractTask task1 = new LocalTask("task 1", "Task 1");
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
-		TasksUiPlugin.getTaskListManager().setScheduledFor(task1, thisWeek.getStart().getTime());
-
-//		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event2);
-		assertEquals(1, thisWeek.getChildren().size());
-		// assertEquals(thisWeekTaskStop.getTime().getTime() -
-		// thisWeekTaskStart.getTime().getTime(), thisWeek
-		// .getTotalElapsed());
-
-		// ROLL OVER
-
-		Calendar newStart = Calendar.getInstance();
-		newStart.add(Calendar.WEEK_OF_MONTH, 1);
-		//TasksUiPlugin.getTaskListManager().snapToStartOfWeek(newStart);
-
-		TasksUiPlugin.getTaskListManager().startTime = newStart.getTime();
-		TasksUiPlugin.getTaskListManager().resetAndRollOver();
-
-		//ScheduledTaskContainer newPastWeeks = TasksUiPlugin.getTaskListManager().getActivityPast();
-		ScheduledTaskContainer newPreviousWeek = TasksUiPlugin.getTaskListManager().getActivityPrevious();
-		ScheduledTaskContainer newThisWeek = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
-		ScheduledTaskContainer newNextWeek = TasksUiPlugin.getTaskListManager().getActivityNextWeek();
-		// DateRangeContainer newFutureWeeks =
-		// MylarTaskListPlugin.getTaskListManager().getActivityFuture();
-
-		assertTrue(newPreviousWeek.includes(thisWeekTaskStart));
-		assertTrue(newThisWeek.includes(nextWeekTaskStart));
-		assertTrue(newNextWeek.includes(futureWeekTaskStart));
-
-		assertFalse(newThisWeek.includes(thisWeekTaskStart));
-		assertFalse(newThisWeek.isPresent());
-		assertTrue(newThisWeek.isFuture());
-
-		assertEquals(0, newThisWeek.getChildren().size());
-		assertEquals(1, newPreviousWeek.getChildren().size());
 	}
 
 }
