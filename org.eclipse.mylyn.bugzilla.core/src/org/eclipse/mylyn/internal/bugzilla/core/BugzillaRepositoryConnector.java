@@ -578,7 +578,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		for (String option : optionValues) {
 			a.addOption(option, option);
 		}
-		if (optionValues.size() > 0) {
+		if (optionValues.size() == 1) {
 			a.setValue(optionValues.get(0));
 		}
 

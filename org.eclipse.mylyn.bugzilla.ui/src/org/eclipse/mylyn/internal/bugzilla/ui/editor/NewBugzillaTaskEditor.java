@@ -15,6 +15,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.ui.AbstractDuplicateDetector;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -144,6 +145,15 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 			descriptionTextViewer.getTextWidget().setFocus();
 			return;
 		}
+		RepositoryTaskAttribute attribute = taskData.getAttribute(BugzillaReportElement.COMPONENT.getKeyString());
+		String componentValue = attribute.getValue();
+		if (componentValue.equals(""))
+		{
+			MessageDialog.openInformation(this.getSite().getShell(), "Submit Error",
+					"Please select a component with new reports");
+			descriptionTextViewer.getTextWidget().setFocus();
+			return;
+		}			
 		super.submitToRepository();
 	}
 
