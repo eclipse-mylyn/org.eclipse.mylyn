@@ -1270,11 +1270,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				attribute = taskData.getAttribute(RepositoryTaskAttribute.SUMMARY);
 			}
 
-			summaryTextViewer = addTextEditor(repository, summaryComposite, attribute.getValue(), true, SWT.FLAT);
+			summaryTextViewer = addTextEditor(repository, summaryComposite, attribute.getValue(), true, SWT.FLAT
+					| SWT.SINGLE);
 			summaryTextViewer.setEditable(true);
 			summaryText = summaryTextViewer.getTextWidget();
-			GridDataFactory.fillDefaults().grab(true, false).hint(DESCRIPTION_WIDTH, SUMMARY_HEIGHT).applyTo(
-					summaryTextViewer.getControl());
+			summaryText.setIndent(2);
+			GridDataFactory.fillDefaults().grab(true, false).applyTo(summaryTextViewer.getControl());
 
 			if (hasChanged(attribute)) {
 				summaryTextViewer.getTextWidget().setBackground(colorIncoming);
