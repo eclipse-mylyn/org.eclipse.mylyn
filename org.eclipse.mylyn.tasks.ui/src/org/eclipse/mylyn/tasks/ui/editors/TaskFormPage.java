@@ -335,6 +335,7 @@ public class TaskFormPage extends FormPage {
 
 		support.install(EditorsUI.getPreferenceStore());
 
+		commentViewer.getTextWidget().setIndent(2);
 		commentViewer.getTextWidget().addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(DisposeEvent e) {
 				support.uninstall();
