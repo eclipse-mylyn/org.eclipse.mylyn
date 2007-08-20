@@ -838,16 +838,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected void createSummaryLayout(Composite composite) {
 		addSummaryText(composite);
 		if (summaryTextViewer != null) {
-			summaryTextViewer.getTextWidget().addModifyListener(new ModifyListener() {
-				public void modifyText(ModifyEvent e) {
-					String sel = summaryText.getText();
-					RepositoryTaskAttribute a = taskData.getAttribute(RepositoryTaskAttribute.SUMMARY);
-					if (!(a.getValue().equals(sel))) {
-						a.setValue(sel);
-						markDirty(true);
-					}
-				}
-			});
 			summaryTextViewer.prependVerifyKeyListener(new TabVerifyKeyListener());
 		}
 
@@ -1290,6 +1280,18 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				summaryTextViewer.getTextWidget().setBackground(colorIncoming);
 			}
 			summaryTextViewer.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+
+			final RepositoryTaskAttribute summaryAttribute = attribute;
+
+			summaryTextViewer.getTextWidget().addModifyListener(new ModifyListener() {
+
+				public void modifyText(ModifyEvent e) {
+					String newValue = summaryTextViewer.getTextWidget().getText();
+					summaryAttribute.setValue(newValue);
+					attributeChanged(summaryAttribute);
+				}
+			});
+
 		}
 		toolkit.paintBordersFor(summaryComposite);
 	}
