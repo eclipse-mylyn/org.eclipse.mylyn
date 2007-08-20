@@ -318,7 +318,9 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	 */
 	@Override
 	public void setFocus() {
-		summaryText.setFocus();
+		if (summaryText != null) {
+			summaryText.setFocus();
+		}
 	}
 
 	@Override
