@@ -34,6 +34,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
@@ -628,92 +629,80 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		};
 
 		if (parentEditor.getTopForm() != null) {
-
+			IToolBarManager toolBarManager = parentEditor.getTopForm().getToolBarManager();
+			
 			// TODO: Remove? Added to debug bug#197355
-			parentEditor.getTopForm().getToolBarManager().removeAll();
-
-			parentEditor.getTopForm().getToolBarManager().add(repositoryLabelControl);
-
-			if (taskData != null && !taskData.isNew()) {
-
-				if (repositoryTask != null) {
-					synchronizeEditorAction = new SynchronizeEditorAction();
-					synchronizeEditorAction.selectionChanged(new StructuredSelection(this));
-					parentEditor.getTopForm().getToolBarManager().add(synchronizeEditorAction);
-				}
-
-				if (getHistoryUrl() != null) {
-					historyAction = new Action() {
-						@Override
-						public void run() {
-							TasksUiUtil.openUrl(getHistoryUrl(), false);
+			toolBarManager.removeAll();
+			
+			toolBarManager.add(repositoryLabelControl);
+			fillToolBar(parentEditor.getTopForm().getToolBarManager());
+			
+			if (repositoryTask != null) {
+				activateAction = new Action() {
+					@Override
+					public void run() {
+						if (!repositoryTask.isActive()) {
+							setChecked(true);
+							new TaskActivateAction().run(repositoryTask);
+						} else {
+							setChecked(false);
+							new TaskDeactivateAction().run(repositoryTask);
 						}
-					};
-
-					historyAction.setImageDescriptor(TasksUiImages.TASK_REPOSITORY_HISTORY);
-					historyAction.setToolTipText(LABEL_HISTORY);
-					parentEditor.getTopForm().getToolBarManager().add(historyAction);
-				}
-
-				if (connector != null) {
-					final String taskUrl = connector.getTaskUrl(taskData.getRepositoryUrl(), taskData.getTaskKey());
-					if (taskUrl != null) {
-						openBrowserAction = new Action() {
-							@Override
-							public void run() {
-								TasksUiUtil.openUrl(taskUrl, false);
-							}
-						};
-
-						openBrowserAction.setImageDescriptor(TasksUiImages.BROWSER_OPEN_TASK);
-						openBrowserAction.setToolTipText("Open with Web Browser");
-						parentEditor.getTopForm().getToolBarManager().add(openBrowserAction);
 					}
-				}
 
-				if (repositoryTask != null) {
-					activateAction = new Action() {
+				};
+				activateAction.setImageDescriptor(TasksUiImages.TASK_ACTIVE_CENTERED);
+				activateAction.setToolTipText("Toggle Activation");
+				activateAction.setChecked(repositoryTask.isActive());
+				toolBarManager.add(activateAction);
+			}
+			
+			toolBarManager.update(true);
+		}
+	}
+
+	/**
+	 * Override for customizing the toolbar.
+	 * 
+	 * @since 2.1 (NOTE: likely to change for 3.0)
+	 */
+	protected void fillToolBar(IToolBarManager toolBarManager) {
+		if (taskData != null && !taskData.isNew()) {
+			if (repositoryTask != null) {
+				synchronizeEditorAction = new SynchronizeEditorAction();
+				synchronizeEditorAction.selectionChanged(new StructuredSelection(this));
+				toolBarManager.add(synchronizeEditorAction);
+			}
+
+			if (getHistoryUrl() != null) {
+				historyAction = new Action() {
+					@Override
+					public void run() {
+						TasksUiUtil.openUrl(getHistoryUrl(), false);
+					}
+				};
+
+				historyAction.setImageDescriptor(TasksUiImages.TASK_REPOSITORY_HISTORY);
+				historyAction.setToolTipText(LABEL_HISTORY);
+				toolBarManager.add(historyAction);
+			}
+
+			if (connector != null) {
+				final String taskUrl = connector.getTaskUrl(taskData.getRepositoryUrl(), taskData.getTaskKey());
+				if (taskUrl != null) {
+					openBrowserAction = new Action() {
 						@Override
 						public void run() {
-							if (!repositoryTask.isActive()) {
-								setChecked(true);
-								new TaskActivateAction().run(repositoryTask);
-							} else {
-								setChecked(false);
-								new TaskDeactivateAction().run(repositoryTask);
-							}
-//						submitToRepository();
+							TasksUiUtil.openUrl(taskUrl, false);
 						}
-
 					};
-					activateAction.setImageDescriptor(TasksUiImages.TASK_ACTIVE_CENTERED);
-					activateAction.setToolTipText("Toggle Activation");
-					activateAction.setChecked(repositoryTask.isActive());
-					parentEditor.getTopForm().getToolBarManager().add(activateAction);
-				}
-				// Header drop down menu additions:
-				// form.getForm().getMenuManager().add(new
-				// SynchronizeSelectedAction());
-			}
-			parentEditor.getTopForm().getToolBarManager().update(true);
-		}
 
-		// if (form.getToolBarManager() != null) {
-		// form.getToolBarManager().add(repositoryLabelControl);
-		// if (repositoryTask != null) {
-		// SynchronizeEditorAction synchronizeEditorAction = new
-		// SynchronizeEditorAction();
-		// synchronizeEditorAction.selectionChanged(new
-		// StructuredSelection(this));
-		// form.getToolBarManager().add(synchronizeEditorAction);
-		// }
-		//
-		// // Header drop down menu additions:
-		// // form.getForm().getMenuManager().add(new
-		// // SynchronizeSelectedAction());
-		//
-		// form.getToolBarManager().update(true);
-		// }
+					openBrowserAction.setImageDescriptor(TasksUiImages.BROWSER_OPEN_TASK);
+					openBrowserAction.setToolTipText("Open with Web Browser");
+					toolBarManager.add(openBrowserAction);
+				}
+			}
+		}
 	}
 
 	private void createSections() {
