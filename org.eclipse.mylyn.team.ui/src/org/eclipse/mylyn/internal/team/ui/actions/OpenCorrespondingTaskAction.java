@@ -285,7 +285,12 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 				}
 				final String taskFullUrl = info.getTaskUrl();
 				if (taskFullUrl != null) {
-					TasksUiUtil.openUrl(taskFullUrl, false);
+					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+						public void run() {
+							TasksUiUtil.openUrl(taskFullUrl, false);		
+						}	
+					});
+					
 					return Status.OK_STATUS;
 				}
 			}
