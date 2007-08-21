@@ -38,6 +38,8 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.VerifyKeyListener;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.VerifyEvent;
@@ -81,6 +83,9 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 
 	protected Spinner estimatedTime;
 
+	@Deprecated
+	protected String newSummary = "";
+
 	protected Button addToCategory;
 
 	protected CCombo categoryChooser;
@@ -112,6 +117,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		initTaskEditor(site, (RepositoryTaskEditorInput) input);
 
 		setTaskOutlineModel(RepositoryTaskOutlineNode.parseBugReport(taskData, false));
+		newSummary = taskData.getSummary();
 	}
 
 	@Override
@@ -155,6 +161,15 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		addSummaryText(composite);
 		if (summaryTextViewer != null) {
 			summaryTextViewer.prependVerifyKeyListener(new TabVerifyKeyListener());
+			// TODO: Eliminate this and newSummary field when api can be changed
+			summaryTextViewer.getTextWidget().addModifyListener(new ModifyListener() {
+				public void modifyText(ModifyEvent e) {
+					String sel = summaryText.getText();
+					if (!(newSummary.equals(sel))) {
+						newSummary = sel;
+					}
+				}
+			});
 		}
 	}
 
@@ -273,6 +288,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 
 	@Override
 	protected void saveTaskOffline(IProgressMonitor progressMonitor) {
+		taskData.setSummary(newSummary);
 		taskData.setDescription(descriptionTextViewer.getTextWidget().getText());
 		updateEditorTitle();
 	}
