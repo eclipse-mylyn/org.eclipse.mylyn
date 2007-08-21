@@ -36,6 +36,7 @@ import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
@@ -683,6 +684,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		}
 		refactorOfflineHandles(oldUrl, newUrl);
 		taskList.refactorRepositoryUrl(oldUrl, newUrl);
+		refactorMetaContextHandles(oldUrl, newUrl);
 
 		File dataDir = new File(TasksUiPlugin.getDefault().getDataDirectory(),
 				WorkspaceAwareContextStore.CONTEXTS_DIRECTORY);
@@ -712,6 +714,31 @@ public class TaskListManager implements IPropertyChangeListener {
 		}
 
 		saveTaskList();
+	}
+
+	private void refactorMetaContextHandles(String oldRepositoryUrl, String newRepositoryUrl) {
+		InteractionContext metaContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
+		ContextCorePlugin.getContextManager().resetActivityHistory();
+		InteractionContext newMetaContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
+		for (InteractionEvent event : metaContext.getInteractionHistory()) {
+			if (event.getStructureHandle() != null) {
+				String storedUrl = RepositoryTaskHandleUtil.getRepositoryUrl(event.getStructureHandle());
+				if (storedUrl != null) {
+					if (oldRepositoryUrl.equals(storedUrl)) {
+						String taskId = RepositoryTaskHandleUtil.getTaskId(event.getStructureHandle());
+						if (taskId != null) {
+							String newHandle = RepositoryTaskHandleUtil.getHandle(newRepositoryUrl, taskId);
+							event = new InteractionEvent(event.getKind(), event.getStructureKind(), newHandle,
+									event.getOriginId(), event.getNavigation(), event.getDelta(),
+									event.getInterestContribution(), event.getDate(), event.getEndDate());
+						}
+					}
+				}
+			}
+			newMetaContext.parseEvent(event);
+		}
+		ContextCorePlugin.getContextManager().saveActivityContext();
+		initActivityHistory();
 	}
 
 	private void refactorOfflineHandles(String oldRepositoryUrl, String newRepositoryUrl) {

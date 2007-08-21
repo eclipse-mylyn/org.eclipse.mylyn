@@ -22,6 +22,8 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.internal.context.core.InteractionContext;
+import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
@@ -31,6 +33,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TaskListSynchronizationScheduler;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskReadAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskUnreadAction;
+import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
@@ -214,6 +217,49 @@ public class TaskListManagerTest extends TestCase {
 		assertNull(manager.getTaskList().getTask("http://a-123"));
 		assertNotNull(manager.getTaskList().getTask("http://b-123"));
 		assertEquals("http://b/task/123", task.getUrl());
+	}
+
+	public void testRefactorMetaContextHandles() {
+		String firstUrl = "http://repository1.com/bugs";
+		String secondUrl = "http://repository2.com/bugs";
+		AbstractTask task1 = new MockRepositoryTask(firstUrl, "1");
+		AbstractTask task2 = new MockRepositoryTask(firstUrl, "2");
+		manager.getTaskList().addTask(task1);
+		manager.getTaskList().addTask(task2);
+		Calendar startDate = Calendar.getInstance();
+		Calendar endDate = Calendar.getInstance();
+		endDate.add(Calendar.MINUTE, 5);
+
+		Calendar startDate2 = Calendar.getInstance();
+		startDate2.add(Calendar.MINUTE, 15);
+		Calendar endDate2 = Calendar.getInstance();
+		endDate2.add(Calendar.MINUTE, 25);
+
+		ContextCorePlugin.getContextManager().resetActivityHistory();
+		InteractionContext metaContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
+		assertEquals(0, metaContext.getInteractionHistory().size());
+
+		ContextCorePlugin.getContextManager().processActivityMetaContextEvent(
+				new InteractionEvent(InteractionEvent.Kind.ATTENTION,
+						InteractionContextManager.ACTIVITY_STRUCTURE_KIND, task1.getHandleIdentifier(), "origin", null,
+						InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 1f, startDate.getTime(),
+						endDate.getTime()));
+
+		ContextCorePlugin.getContextManager().processActivityMetaContextEvent(
+				new InteractionEvent(InteractionEvent.Kind.ATTENTION,
+						InteractionContextManager.ACTIVITY_STRUCTURE_KIND, task2.getHandleIdentifier(), "origin", null,
+						InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 1f, startDate2.getTime(),
+						endDate2.getTime()));
+
+		assertEquals(2, metaContext.getInteractionHistory().size());
+		assertEquals(60 * 1000 * 5, manager.getElapsedTime(task1));
+		assertEquals(2 * 60 * 1000 * 5, manager.getElapsedTime(task2));
+		manager.refactorRepositoryUrl(firstUrl, secondUrl);
+		metaContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
+		assertEquals(2, metaContext.getInteractionHistory().size());
+		assertEquals(60 * 1000 * 5, manager.getElapsedTime(new MockRepositoryTask(secondUrl, "1")));
+		assertEquals(2 * 60 * 1000 * 5, manager.getElapsedTime(new MockRepositoryTask(secondUrl, "2")));
+		assertEquals(secondUrl + "-1", metaContext.getInteractionHistory().get(0).getStructureHandle());
 	}
 
 	public void testIsActiveToday() {
