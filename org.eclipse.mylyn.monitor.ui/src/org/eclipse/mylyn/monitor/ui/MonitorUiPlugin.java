@@ -113,7 +113,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 					new MonitorUiExtensionPointReader().initExtensions();
 
 					AbstractUserActivityMonitor activityMonitor = null;
-					if (osActivityTimer != null) {
+					if (osActivityTimer != null && osActivityTimer.isEnabled()) {
 						activityMonitor = osActivityTimer;
 					} else {
 						activityMonitor = new WorkbenchUserActivityMonitor();
@@ -332,7 +332,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 			window.getSelectionService().removePostSelectionListener(listener);
 		}
 	}
-	
+
 	// TODO: consider making API
 	private void addListenersToWindow(IWorkbenchWindow window) {
 		for (IPageListener listener : pageListeners) {

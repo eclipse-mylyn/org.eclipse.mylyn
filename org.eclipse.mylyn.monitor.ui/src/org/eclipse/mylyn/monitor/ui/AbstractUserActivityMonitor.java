@@ -34,4 +34,11 @@ public abstract class AbstractUserActivityMonitor {
 	public abstract void start();
 
 	public abstract void stop();
+
+	/**
+	 * @return false if monitor unable to run (i.e. startup failures of any kind)
+	 */
+	public boolean isEnabled() {
+		return true;
+	}
 }
