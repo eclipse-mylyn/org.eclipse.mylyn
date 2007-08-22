@@ -42,8 +42,7 @@ public class TaskRepositoryLabelProvider implements ILabelProvider {
 			}
 		} else if (object instanceof TaskRepository) {
 			if (((TaskRepository) object).isOffline()) {
-				return TasksUiImages.getImageWithOverlay(TasksUiImages.REPOSITORY, TasksUiImages.OVERLAY_OFFLINE, true,
-						false);
+				return TasksUiImages.getImage(TasksUiImages.REPOSITORY_OFFLINE);
 			} else {
 				return TasksUiImages.getImage(TasksUiImages.REPOSITORY);
 			}
@@ -52,9 +51,15 @@ public class TaskRepositoryLabelProvider implements ILabelProvider {
 	}
 
 	public String getText(Object object) {
+		
 		if (object instanceof TaskRepository) {
 			TaskRepository repository = (TaskRepository) object;
-			return repository.getRepositoryLabel();
+			StringBuilder label = new StringBuilder();
+			label.append(repository.getRepositoryLabel());
+			if (repository.isOffline()) {
+				label.append(" [" + DisconnectRepositoryAction.LABEL + "]");
+			}
+			return label.toString();
 		} else if (object instanceof AbstractRepositoryConnector) {
 			return ((AbstractRepositoryConnector) object).getLabel();
 		} else {

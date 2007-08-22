@@ -241,7 +241,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			List<TaskRepository> searchableRepositories = new ArrayList<TaskRepository>();
 			for (TaskRepository repository : repositories) {
 				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
-				if (connectorUi != null && connectorUi.hasSearchPage()) {
+				if (connectorUi != null && connectorUi.hasSearchPage() && !repository.isOffline()) {
 					searchableRepositories.add(repository);
 				}
 			}

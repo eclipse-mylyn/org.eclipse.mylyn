@@ -53,7 +53,7 @@ public class TaskRepositoriesView extends ViewPart {
 
 	private BaseSelectionListenerAction resetConfigurationAction;
 
-	private RepositoryOfflineAction offlineAction;
+	private DisconnectRepositoryAction offlineAction;
 
 	private final ITaskRepositoryListener REPOSITORY_LISTENER = new ITaskRepositoryListener() {
 
@@ -164,7 +164,7 @@ public class TaskRepositoriesView extends ViewPart {
 		resetConfigurationAction = new ResetRepositoryConfigurationAction();
 		viewer.addSelectionChangedListener(resetConfigurationAction);
 
-		offlineAction = new RepositoryOfflineAction();
+		offlineAction = new DisconnectRepositoryAction();
 		viewer.addSelectionChangedListener(offlineAction);
 	}
 

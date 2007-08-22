@@ -17,6 +17,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -76,6 +77,8 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor REPOSITORY = create("eview16", "repository.gif");
 
+	public static final ImageDescriptor REPOSITORY_OFFLINE = ImageDescriptor.createWithFlags(TasksUiImages.REPOSITORY, SWT.IMAGE_GRAY);
+	
 	public static final ImageDescriptor REPOSITORY_SUBMIT = create(T_TOOL, "repository-submit.gif");
 
 	public static final ImageDescriptor REPOSITORY_SMALL = create(T_OBJ, "repository-small.gif");
@@ -291,7 +294,12 @@ public class TasksUiImages {
 		Image image = getImageRegistry().get(key);
 
 		if (image == null) {
-			TaskListImageDescriptor imageDescriptor = new TaskListImageDescriptor(icon, overlay, top, left);
+//			TaskListImageDescriptor imageDescriptor = new TaskListImageDescriptor(icon, overlay, top, left);
+			
+			ImageDescriptor imageDescriptor = ImageDescriptor.createWithFlags(CALENDAR, SWT.IMAGE_GRAY);
+			
+			
+			
 			image = imageDescriptor.createImage(true);
 			getImageRegistry().put(key, image);
 		}

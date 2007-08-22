@@ -27,19 +27,19 @@ public interface TaskRepositoryFilter {
 
 	public static TaskRepositoryFilter CAN_QUERY = new TaskRepositoryFilter() {
 		public boolean accept(TaskRepository repository, AbstractRepositoryConnector connector) {
-			return !(connector instanceof LocalRepositoryConnector);
+			return !(connector instanceof LocalRepositoryConnector) && !repository.isOffline();
 		}
 	};
 
 	public static TaskRepositoryFilter CAN_CREATE_NEW_TASK = new TaskRepositoryFilter() {
 		public boolean accept(TaskRepository repository, AbstractRepositoryConnector connector) {
-			return connector.canCreateNewTask(repository);
+			return connector.canCreateNewTask(repository) && !repository.isOffline();
 		}
 	};
 
 	public static TaskRepositoryFilter CAN_CREATE_TASK_FROM_KEY = new TaskRepositoryFilter() {
 		public boolean accept(TaskRepository repository, AbstractRepositoryConnector connector) {
-			return connector.canCreateTaskFromKey(repository);
+			return connector.canCreateTaskFromKey(repository) && !repository.isOffline();
 		}
 	};
 
