@@ -15,6 +15,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.internal.trac.core.model.TracWikiPage;
+import org.eclipse.mylyn.internal.trac.core.model.TracWikiPageInfo;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
@@ -71,6 +72,19 @@ public class TracWikiHandler extends AbstractWikiHandler {
 				throw new CoreException(TracCorePlugin.toStatus(new TracException(
 						"Failed to upload wiki page. No further information available."), repository));
 			}
+		} catch (TracException e) {
+			throw new CoreException(TracCorePlugin.toStatus(e, repository));
+		} finally {
+			monitor.done();
+		}
+	}
+
+	public TracWikiPageInfo[] getPageHistory(TaskRepository repository, String pageName, IProgressMonitor monitor)
+			throws CoreException {
+		monitor.beginTask("Retrieve Wiki Page History", IProgressMonitor.UNKNOWN);
+		try {
+			TracWikiPageInfo[] versions = getTracWikiClient(repository).getWikiPageInfoAllVersions(pageName);
+			return versions;
 		} catch (TracException e) {
 			throw new CoreException(TracCorePlugin.toStatus(e, repository));
 		} finally {

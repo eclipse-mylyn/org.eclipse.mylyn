@@ -34,28 +34,5 @@
          point="org.eclipse.mylyn.tasks.ui.editors">
       <editorFactory class="org.eclipse.mylyn.internal.trac.ui.editor.TracTaskEditorFactory"/>
    </extension>
-   <extension
-         point="org.eclipse.ui.popupMenus">
-      <viewerContribution
-            id="org.eclipse.mylyn.trac.ui.viewerContribution"
-            targetID="org.eclipse.mylyn.tasks.ui.views.repositories">
-         <action
-               class="org.eclipse.mylyn.internal.trac.ui.actions.OpenWikiPageAction"
-               id="org.eclipse.mylyn.trac.ui.open.wikipage"
-               label="Open Wiki Page..."
-               menubarPath="additions"
-               tooltip="Open Wiki Page">
-         </action>
-      </viewerContribution>
-   </extension>
-   <extension
-         point="org.eclipse.ui.editors">
-      <editor
-            class="org.eclipse.mylyn.internal.trac.ui.editor.TracWikiPageEditor"
-            icon="icons/eview16/trac-icon.gif"
-            id="org.eclipse.mylyn.trac.ui.editor.wikipage"
-            name="Wiki Page Editor">
-      </editor>
-   </extension>
 
 </plugin>
