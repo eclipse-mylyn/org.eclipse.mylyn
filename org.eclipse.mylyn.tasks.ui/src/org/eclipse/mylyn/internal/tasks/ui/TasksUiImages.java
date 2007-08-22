@@ -294,12 +294,7 @@ public class TasksUiImages {
 		Image image = getImageRegistry().get(key);
 
 		if (image == null) {
-//			TaskListImageDescriptor imageDescriptor = new TaskListImageDescriptor(icon, overlay, top, left);
-			
-			ImageDescriptor imageDescriptor = ImageDescriptor.createWithFlags(CALENDAR, SWT.IMAGE_GRAY);
-			
-			
-			
+			TaskListImageDescriptor imageDescriptor = new TaskListImageDescriptor(icon, overlay, top, left);
 			image = imageDescriptor.createImage(true);
 			getImageRegistry().put(key, image);
 		}

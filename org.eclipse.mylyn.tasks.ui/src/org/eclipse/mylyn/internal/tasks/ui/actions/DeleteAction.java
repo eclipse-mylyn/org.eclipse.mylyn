@@ -45,20 +45,45 @@ public class DeleteAction extends Action {
 
 		List<?> toDelete = ((IStructuredSelection) selection).toList();
 
-		String message = "Delete the elements listed?  If categories or queries are selected contained tasks"
-				+ " will not be deleted.  Contexts will be deleted for selected tasks.\n\n";
+		String elements = "";
 		int i = 0;
 		for (Object object : toDelete) {
 			i++;
 			if (i < 20) {
 				if (object instanceof AbstractTaskContainer) {
-					message += "    " + ((AbstractTaskContainer) object).getSummary() + "\n";
+					elements += "    " + ((AbstractTaskContainer) object).getSummary() + "\n";
 				}
 			} else {
-				message += "...";
+				elements += "...";
 				break;
 			}
 		}
+	
+		String message;
+		
+		if (toDelete.size() == 1) {
+			Object object = toDelete.get(0);
+			if (object instanceof AbstractTask) {
+				if (((AbstractTask)object).isLocal()) {
+					message = "Permanently delete the task listed below?";
+				} else {
+					message = "Delete the planning information and context for the repository task?  The server" +
+							" copy will not be deleted and the task will remain in queries that match it.";
+				}
+			} else if (object instanceof TaskCategory) {
+				message = "Permanently delete the category?  Contained tasks will still be available in the Archive";
+			} else if (object instanceof AbstractRepositoryQuery) {
+				message = "Permanently delete the query?  Matching tasks will still be available in the Archive";
+			} else {
+				message = "Permanently delete the element listed below?";
+			}
+		} else {
+			message = "Delete the elements listed below?  If categories or queries are selected contained tasks"
+			+ " will not be deleted.  Contexts will be deleted for selected tasks.";
+		}
+		
+		message += "\n\n" + elements;
+		
 		boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench()
 				.getActiveWorkbenchWindow()
 				.getShell(), "Confirm Delete", message);
