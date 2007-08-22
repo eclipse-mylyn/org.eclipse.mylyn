@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.tasks.ui.editors;
+package org.eclipse.mylyn.tasks.ui.editors;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +29,7 @@ import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
+import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTextViewer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -42,14 +43,15 @@ import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 
 /**
  * @author Rob Elves
+ * @since 2.1
  */
-public class RepositoryViewerConfig extends TextSourceViewerConfiguration {
+public class TaskTextViewerConfig extends TextSourceViewerConfiguration {
 
 	private RepositoryTextScanner scanner = null;
 
 	private boolean spellcheck = false;
 
-	public RepositoryViewerConfig(boolean spellchecking) {
+	public TaskTextViewerConfig(boolean spellchecking) {
 		super(EditorsUI.getPreferenceStore());
 		this.spellcheck = spellchecking;
 	}
@@ -79,21 +81,21 @@ public class RepositoryViewerConfig extends TextSourceViewerConfiguration {
 //		detectors.addAll(Arrays.asList(TasksUiPlugin.getDefault().getTaskHyperlinkDetectors()));
 //		return detectors.toArray(new IHyperlinkDetector[detectors.size()]);
 //	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
 	protected Map getHyperlinkDetectorTargets(final ISourceViewer sourceViewer) {
 		IAdaptable context = new IAdaptable() {
 			public Object getAdapter(Class adapter) {
-				if(adapter==TaskRepository.class) {
-					if(sourceViewer instanceof RepositoryTextViewer) {
+				if (adapter == TaskRepository.class) {
+					if (sourceViewer instanceof RepositoryTextViewer) {
 						return ((RepositoryTextViewer) sourceViewer).getRepository();
 					}
 				}
 				return null;
 			}
 		};
-		
+
 		Map targets = new HashMap();
 		targets.put("org.eclipse.ui.DefaultTextEditor", context);
 		targets.put("org.eclipse.mylyn.tasks.ui.TaskEditor", context);
@@ -160,7 +162,7 @@ public class RepositoryViewerConfig extends TextSourceViewerConfiguration {
 		}
 	}
 
-	static class RepositoryTextScanner extends RuleBasedScanner {
+	private static class RepositoryTextScanner extends RuleBasedScanner {
 
 		public RepositoryTextScanner() {
 			IToken bugToken = new Token(new TextAttribute(TaskListColorsAndFonts.COLOR_HYPERLINK_TEXT));

@@ -39,7 +39,6 @@ import org.eclipse.jface.text.source.ImageUtilities;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTextViewer;
-import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryViewerConfig;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionContributor;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.swt.SWT;
@@ -266,7 +265,7 @@ public class TaskFormPage extends FormPage {
 		// order for
 		// Hyperlink colouring to work. (Presenter needs document object up
 		// front)
-		RepositoryViewerConfig repositoryViewerConfig = new RepositoryViewerConfig(false);
+		TaskTextViewerConfig repositoryViewerConfig = new TaskTextViewerConfig(false);
 		commentViewer.configure(repositoryViewerConfig);
 
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
@@ -386,7 +385,7 @@ public class TaskFormPage extends FormPage {
 
 		// NOTE: Configuration must be applied before the document is set in order for
 		// Hyperlink coloring to work. (Presenter needs document object up front)
-		TextSourceViewerConfiguration viewerConfig = new RepositoryViewerConfig(spellCheck);
+		TextSourceViewerConfiguration viewerConfig = new TaskTextViewerConfig(spellCheck);
 		commentViewer.configure(viewerConfig);
 
 		commentViewer.setDocument(document, annotationModel);
