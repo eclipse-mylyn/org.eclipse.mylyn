@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -87,6 +88,8 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 	protected DatePicker deadlinePicker;
 
 	protected Text votesText;
+
+	protected Text assignedTo;
 
 	/**
 	 * Creates a new <code>ExistingBugEditor</code>.
@@ -633,5 +636,50 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			}
 		}
 		return bugzillaDuplicateDetectors;
+	}
+
+	/**
+	 * @author Frank Becker (bug 198027)
+	 */
+	@Override
+	protected void addAssignedTo(Composite peopleComposite) {
+		RepositoryTaskAttribute assignedAttribute = taskData.getAttribute(RepositoryTaskAttribute.USER_ASSIGNED);
+		if (assignedAttribute != null) {
+			String bugzillaVersion;
+			try {
+				bugzillaVersion = BugzillaCorePlugin.getRepositoryConfiguration(repository, false).getInstallVersion();
+			} catch (CoreException e1) {
+				// ignore
+				bugzillaVersion = "2.18";
+			}
+			if (bugzillaVersion.compareTo("3.1")<0) {
+				// old bugzilla workflow is used
+				super.addAssignedTo(peopleComposite);
+				return;
+			}
+			Label label = createLabel(peopleComposite, assignedAttribute);
+			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
+			assignedTo = createTextField(peopleComposite, assignedAttribute, SWT.FLAT);
+			GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).applyTo(assignedTo);
+			assignedTo.addModifyListener(new ModifyListener() {
+				public void modifyText(ModifyEvent e) {
+					String sel = assignedTo.getText();
+					RepositoryTaskAttribute a = taskData.getAttribute(RepositoryTaskAttribute.USER_ASSIGNED);
+					if (!(a.getValue().equals(sel))) {
+						a.setValue(sel);
+						markDirty(true);
+					}
+				}
+			});
+			FormToolkit toolkit = getManagedForm().getToolkit();
+			Label dummylabel = toolkit.createLabel(peopleComposite, "");
+			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(dummylabel);
+			RepositoryTaskAttribute attribute = taskData.getAttribute(BugzillaReportElement.SET_DEFAULT_ASSIGNEE.getKeyString());
+			if (attribute == null) {
+				taskData.setAttributeValue(BugzillaReportElement.SET_DEFAULT_ASSIGNEE.getKeyString(), "0");
+				attribute = taskData.getAttribute(BugzillaReportElement.SET_DEFAULT_ASSIGNEE.getKeyString());
+			}
+			addButtonField(peopleComposite, attribute, SWT.CHECK);
+		}
 	}
 }

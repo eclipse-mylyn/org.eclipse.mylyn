@@ -1791,14 +1791,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		peopleComposite.setLayout(layout);
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(peopleComposite);
 
-		RepositoryTaskAttribute assignedAttribute = taskData.getAttribute(RepositoryTaskAttribute.USER_ASSIGNED);
-		if (assignedAttribute != null) {
-			Label label = createLabel(peopleComposite, assignedAttribute);
-			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
-			Text textField = createTextField(peopleComposite, assignedAttribute, SWT.FLAT | SWT.READ_ONLY);
-			GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).applyTo(textField);
-		}
-
+		addAssignedTo(peopleComposite);
+		
 		RepositoryTaskAttribute reporterAttribute = taskData.getAttribute(RepositoryTaskAttribute.USER_REPORTER);
 		if (reporterAttribute != null) {
 
@@ -3474,4 +3468,19 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		controlBySelectableObject.remove(item);
 	}
 
+	/**
+	 * This method allow you to overwrite the generation of the form area for "assigned to" in the peopleLayout.<br><br>
+	 * The overwrite is used for Bugzilla Versions > 3.0
+	 * @since 2.1
+	 * @author Frank Becker (bug 198027)
+	 */
+	protected void addAssignedTo(Composite peopleComposite) {
+		RepositoryTaskAttribute assignedAttribute = taskData.getAttribute(RepositoryTaskAttribute.USER_ASSIGNED);
+		if (assignedAttribute != null) {
+			Label label = createLabel(peopleComposite, assignedAttribute);
+			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
+			Text textField = createTextField(peopleComposite, assignedAttribute, SWT.FLAT | SWT.READ_ONLY);
+			GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).applyTo(textField);			
+		}
+	}
 }

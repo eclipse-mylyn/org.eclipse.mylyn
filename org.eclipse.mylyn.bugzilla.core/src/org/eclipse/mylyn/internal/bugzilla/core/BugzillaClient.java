@@ -886,7 +886,7 @@ public class BugzillaClient {
 			} else if (a.getId().equals(BugzillaReportElement.CC.getKeyString())
 					|| a.getId().equals(RepositoryTaskAttribute.REMOVE_CC)
 					|| a.getId().equals(BugzillaReportElement.REPORTER.getKeyString())
-					|| a.getId().equals(BugzillaReportElement.ASSIGNED_TO.getKeyString())
+//					|| a.getId().equals(BugzillaReportElement.ASSIGNED_TO.getKeyString())
 					|| a.getId().equals(BugzillaReportElement.CREATION_TS.getKeyString())) {
 				continue;
 			} else if (a.getId() != null && a.getId().compareTo("") != 0) {

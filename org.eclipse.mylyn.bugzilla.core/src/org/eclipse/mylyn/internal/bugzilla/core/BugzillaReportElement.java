@@ -35,7 +35,7 @@ public enum BugzillaReportElement {
 			false), PRIORITY("Priority:", "priority", false, false), PRODUCT("Product:", "product", false), REP_PLATFORM(
 			"Platform:", "rep_platform", false), REPORTER("Reporter:", "reporter", true, true), REPORTER_ACCESSIBLE(
 			"Reporter", "reporter_accessible", true), RESOLUTION("Resolution:", "resolution", false, true), // Exiting bug field, new cc
-	REMAINING_TIME("Hours Left:", "remaining_time", true), SHORT_DESC("Summary:", "short_desc", true), TARGET_MILESTONE(
+	REMAINING_TIME("Hours Left:", "remaining_time", true), SET_DEFAULT_ASSIGNEE("Reassign to default assignee", "set_default_assignee", false), SHORT_DESC("Summary:", "short_desc", true), TARGET_MILESTONE(
 			"Target milestone:", "target_milestone", false), THETEXT("thetext", "thetext", false, true), TYPE("type",
 			"type"), UNKNOWN("UNKNOWN", "UNKNOWN"), VERSION("Version:", "version", false), INSTALL_VERSION(
 			"version of bugzilla installed", "install_version", true), VOTES("Votes:", "votes", true, true), WORK_TIME(

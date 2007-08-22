@@ -179,10 +179,11 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 	public void configureTaskData(TaskRepository repository, RepositoryTaskData taskData) throws CoreException {
 		connector.updateAttributeOptions(repository, taskData);
-		addValidOperations(taskData, repository.getUserName());
+		addValidOperations(taskData, repository.getUserName(), repository);
 	}
 
-	private void addValidOperations(RepositoryTaskData bugReport, String userName) throws CoreException {
+	private void addValidOperations(RepositoryTaskData bugReport, String userName, TaskRepository repository)
+			throws CoreException {
 		BUGZILLA_REPORT_STATUS status;
 		try {
 			status = BUGZILLA_REPORT_STATUS.valueOf(bugReport.getStatus());
@@ -198,15 +199,11 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			addOperation(bugReport, BUGZILLA_OPERATION.accept, userName);
 			addOperation(bugReport, BUGZILLA_OPERATION.resolve, userName);
 			addOperation(bugReport, BUGZILLA_OPERATION.duplicate, userName);
-			addOperation(bugReport, BUGZILLA_OPERATION.reassign, userName);
-			addOperation(bugReport, BUGZILLA_OPERATION.reassignbycomponent, userName);
 			break;
 		case ASSIGNED:
 			addOperation(bugReport, BUGZILLA_OPERATION.none, userName);
 			addOperation(bugReport, BUGZILLA_OPERATION.resolve, userName);
 			addOperation(bugReport, BUGZILLA_OPERATION.duplicate, userName);
-			addOperation(bugReport, BUGZILLA_OPERATION.reassign, userName);
-			addOperation(bugReport, BUGZILLA_OPERATION.reassignbycomponent, userName);
 			break;
 		case RESOLVED:
 			addOperation(bugReport, BUGZILLA_OPERATION.none, userName);
@@ -222,6 +219,19 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			addOperation(bugReport, BUGZILLA_OPERATION.none, userName);
 			addOperation(bugReport, BUGZILLA_OPERATION.reopen, userName);
 			addOperation(bugReport, BUGZILLA_OPERATION.close, userName);
+		}
+		String bugzillaVersion;
+		try {
+			bugzillaVersion = BugzillaCorePlugin.getRepositoryConfiguration(repository, false).getInstallVersion();
+		} catch (CoreException e1) {
+			// ignore
+			bugzillaVersion = "2.18";
+		}
+		if (bugzillaVersion.compareTo("3.1") < 0
+				&& (status == BUGZILLA_REPORT_STATUS.NEW || status == BUGZILLA_REPORT_STATUS.ASSIGNED)) {
+			// old bugzilla workflow is used
+			addOperation(bugReport, BUGZILLA_OPERATION.reassign, userName);
+			addOperation(bugReport, BUGZILLA_OPERATION.reassignbycomponent, userName);
 		}
 	}
 
