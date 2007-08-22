@@ -244,7 +244,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private FilterCompletedTasksAction filterCompleteTask;
 
-	private FilterSubTasksAction showSubTasksAction;
+	private FilterSubTasksAction filterSubTasksAction;
 
 	private SynchronizeAutomaticallyAction synchronizeAutomatically;
 
@@ -1048,7 +1048,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		manager.add(filterOnPriorityAction);
 		manager.add(filterCompleteTask);
 		manager.add(filterArchiveCategory);
-		manager.add(showSubTasksAction);
+		manager.add(filterSubTasksAction);
 
 		manager.add(new Separator(ID_SEPARATOR_TASKS));
 		manager.add(synchronizeAutomatically);
@@ -1256,7 +1256,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		propertiesAction = new TaskListElementPropertiesAction(this.getViewer());
 		openWithBrowser = new OpenWithBrowserAction();
 		filterCompleteTask = new FilterCompletedTasksAction(this);
-		showSubTasksAction = new FilterSubTasksAction(this);
+		filterSubTasksAction = new FilterSubTasksAction(this);
 		synchronizeAutomatically = new SynchronizeAutomaticallyAction();
 		openPreferencesAction = new OpenTasksUiPreferencesAction();
 		filterArchiveCategory = new FilterArchiveContainerAction(this);

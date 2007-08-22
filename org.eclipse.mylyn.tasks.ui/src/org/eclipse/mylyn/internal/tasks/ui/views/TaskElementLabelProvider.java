@@ -21,9 +21,11 @@ import org.eclipse.mylyn.internal.tasks.core.UnfiledCategory;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskHighlighter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.TaskGroup;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
@@ -86,7 +88,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		if (object instanceof TaskArchive || object instanceof UnfiledCategory) {
 			compositeDescriptor.icon = TasksUiImages.CATEGORY_ARCHIVE;
 			return compositeDescriptor;
-		} else if (object instanceof TaskCategory || object instanceof UnfiledCategory) {
+		} else if (object instanceof TaskCategory || object instanceof UnfiledCategory || object instanceof TaskGroup) {
 			compositeDescriptor.icon = TasksUiImages.CATEGORY;
 		}
 
@@ -238,9 +240,9 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			}
 		} else if (object instanceof AbstractTaskContainer) {
 			for (AbstractTask child : ((AbstractTaskContainer) object).getChildren()) {
-				if (child.isActive()) {
+				if (child.isActive() || showHasActiveChild(child)) {
 					return TaskListColorsAndFonts.COLOR_TASK_ACTIVE;
-				} else if (child.isPastReminder() && !child.isCompleted()) {
+				} else if ((child.isPastReminder() && !child.isCompleted()) || showHasChildrenPastDue(child)) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(
 							TaskListColorsAndFonts.THEME_COLOR_TASK_OVERDUE);
 				}
@@ -288,8 +290,9 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 					return TaskListColorsAndFonts.ITALIC;
 				}
 			}
+			
 			for (AbstractTask child : ((AbstractTaskContainer) element).getChildren()) {
-				if (child.isActive()) {
+				if (child.isActive() || showHasActiveChild(child)) {
 					return TaskListColorsAndFonts.BOLD;
 				}
 			}
@@ -300,12 +303,46 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			} else if (task.isCompleted()) {
 				return TaskListColorsAndFonts.STRIKETHROUGH;
 			}
-			for (AbstractTask child : task.getChildren()) {
-				if (child.isActive()) {
+			for (AbstractTask child : ((AbstractTaskContainer) element).getChildren()) {
+				if (child.isActive() || showHasActiveChild(child)) {
 					return TaskListColorsAndFonts.BOLD;
 				}
 			}
 		}
 		return null;
+	}
+	
+	private boolean showHasActiveChild(AbstractTaskContainer container) {
+		if (TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(TasksUiPreferenceConstants.FILTER_SUBTASKS)) {
+			return false;
+		}
+		
+		for (AbstractTaskContainer child : container.getChildren()) {
+			if (child instanceof AbstractTask && ((AbstractTask)child).isActive()) {
+				return true;
+			} else {
+				if(showHasActiveChild(child)){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	private boolean showHasChildrenPastDue(AbstractTaskContainer container) {
+		if (TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(TasksUiPreferenceConstants.FILTER_SUBTASKS)) {
+			return false;
+		}
+		
+		for (AbstractTaskContainer child : container.getChildren()) {
+			if (child instanceof AbstractTask && ((AbstractTask)child).isPastReminder() && !((AbstractTask)child).isCompleted()) {
+				return true;
+			} else {
+				if(showHasChildrenPastDue(child)){
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }
