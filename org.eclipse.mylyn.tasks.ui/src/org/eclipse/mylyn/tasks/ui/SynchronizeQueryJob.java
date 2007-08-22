@@ -92,6 +92,10 @@ class SynchronizeQueryJob extends Job {
 
 			Set<AbstractTask> allTasks = Collections.unmodifiableSet(taskList.getRepositoryTasks(repository.getUrl()));
 
+			for (AbstractTask task : allTasks) {
+				task.setStale(false);
+			}
+
 			// check if the repository has changed at all and have the connector mark tasks that need synchronization 
 			try {
 				monitor.subTask("Checking for changed tasks");
