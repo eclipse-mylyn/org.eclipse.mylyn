@@ -265,7 +265,7 @@ public class TaskFormPage extends FormPage {
 		// order for
 		// Hyperlink colouring to work. (Presenter needs document object up
 		// front)
-		TaskTextViewerConfig repositoryViewerConfig = new TaskTextViewerConfig(false);
+		TaskTextViewerConfiguration repositoryViewerConfig = new TaskTextViewerConfiguration(false);
 		commentViewer.configure(repositoryViewerConfig);
 
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
@@ -385,7 +385,7 @@ public class TaskFormPage extends FormPage {
 
 		// NOTE: Configuration must be applied before the document is set in order for
 		// Hyperlink coloring to work. (Presenter needs document object up front)
-		TextSourceViewerConfiguration viewerConfig = new TaskTextViewerConfig(spellCheck);
+		TextSourceViewerConfiguration viewerConfig = new TaskTextViewerConfiguration(spellCheck);
 		commentViewer.configure(viewerConfig);
 
 		commentViewer.setDocument(document, annotationModel);

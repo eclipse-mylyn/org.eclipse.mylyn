@@ -45,13 +45,13 @@ import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
  * @author Rob Elves
  * @since 2.1
  */
-public class TaskTextViewerConfig extends TextSourceViewerConfiguration {
+public class TaskTextViewerConfiguration extends TextSourceViewerConfiguration {
 
 	private RepositoryTextScanner scanner = null;
 
 	private boolean spellcheck = false;
 
-	public TaskTextViewerConfig(boolean spellchecking) {
+	public TaskTextViewerConfiguration(boolean spellchecking) {
 		super(EditorsUI.getPreferenceStore());
 		this.spellcheck = spellchecking;
 	}
