@@ -72,8 +72,6 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 	public static final String OBFUSCATED_LABEL = "[obfuscated]";
 
-	private IWorkbenchWindow launchingWorkbenchWindow = null;
-
 	protected IWindowListener WINDOW_LISTENER = new IWindowListener() {
 		public void windowActivated(IWorkbenchWindow window) {
 			// ignore
@@ -88,7 +86,6 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 				return;
 			}
 			addListenersToWindow(window);
-
 		}
 
 		public void windowClosed(IWorkbenchWindow window) {
@@ -107,8 +104,9 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 			public void run() {
 				try {
 					getWorkbench().addWindowListener(WINDOW_LISTENER);
-					launchingWorkbenchWindow = getWorkbench().getActiveWorkbenchWindow();
-					addListenersToWindow(launchingWorkbenchWindow);
+					for (IWorkbenchWindow window : getWorkbench().getWorkbenchWindows()) {
+						addListenersToWindow(window);
+					}
 					shellLifecycleListener = new ShellLifecycleListener(ContextCorePlugin.getContextManager());
 					getWorkbench().getActiveWorkbenchWindow().getShell().addShellListener(shellLifecycleListener);
 
@@ -149,8 +147,8 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 								.removeShellListener(shellLifecycleListener);
 					}
 
-					if (launchingWorkbenchWindow != null) {
-						removeListenersFromWindow(launchingWorkbenchWindow);
+					for (IWorkbenchWindow window : getWorkbench().getWorkbenchWindows()) {
+						removeListenersFromWindow(window);
 					}
 				}
 
@@ -334,7 +332,8 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 			window.getSelectionService().removePostSelectionListener(listener);
 		}
 	}
-
+	
+	// TODO: consider making API
 	private void addListenersToWindow(IWorkbenchWindow window) {
 		for (IPageListener listener : pageListeners) {
 			window.addPageListener(listener);
