@@ -279,7 +279,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 							IConfigurationElement[] elements = extensions[i].getConfigurationElements();
 							for (int j = 0; j < elements.length; j++) {
 								if (elements[j].getName().compareTo(ELEMENT_ACTIVITY_TIMER) == 0) {
-									readActivityTimer(elements[j]);
+									readActivityMonitor(elements[j]);
 								}
 							}
 						}
@@ -291,7 +291,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 			}
 		}
 
-		private void readActivityTimer(IConfigurationElement element) throws CoreException {
+		private void readActivityMonitor(IConfigurationElement element) throws CoreException {
 			try {
 				if (element.getAttribute(ELEMENT_CLASS) != null) {
 					Object activityTimer = element.createExecutableExtension(ELEMENT_CLASS);

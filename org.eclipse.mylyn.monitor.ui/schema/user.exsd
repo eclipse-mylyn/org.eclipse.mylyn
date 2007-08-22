@@ -55,7 +55,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.monitor.ui.AbstractUserActivityTimer"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.monitor.ui.AbstractUserActivityMonitor:"/>
                </appInfo>
             </annotation>
          </attribute>
