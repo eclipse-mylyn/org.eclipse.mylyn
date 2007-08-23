@@ -10,7 +10,6 @@ package org.eclipse.mylyn.internal.tasks.ui.workingsets;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -19,8 +18,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
-import org.eclipse.mylyn.internal.tasks.ui.actions.ToggleAllWorkingSetsAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.ToggleWorkingSetAction;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
@@ -130,51 +127,52 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 		// ignore
 	}
 
+	// TODO: consider putting back, but evaluate policy and note bug 197257
 	public void taskActivated(AbstractTask task) {
-		Set<AbstractTaskContainer> taskContainers = new HashSet<AbstractTaskContainer>(
-				TasksUiPlugin.getTaskListManager().getTaskList().getQueriesForHandle(task.getHandleIdentifier()));
-		taskContainers.addAll(task.getParentContainers());
-
-		Set<AbstractTaskContainer> allActiveWorkingSetContainers = new HashSet<AbstractTaskContainer>();
-		for (IWorkingSet workingSet : PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow()
-				.getActivePage()
-				.getWorkingSets()) {
-			ArrayList<IAdaptable> elements = new ArrayList<IAdaptable>(Arrays.asList(workingSet.getElements()));
-			for (IAdaptable adaptable : elements) {
-				if (adaptable instanceof AbstractTaskContainer) {
-					allActiveWorkingSetContainers.add((AbstractTaskContainer) adaptable);
-				}
-			}
-		}
-		boolean isContained = false;
-		for (AbstractTaskContainer taskContainer : allActiveWorkingSetContainers) {
-			if (taskContainers.contains(taskContainer)) {
-				isContained = true;
-				break;
-			}
-		}
-
-		;
-		if (!isContained) {
-			IWorkingSet matchingWorkingSet = null;
-			for (IWorkingSet workingSet : PlatformUI.getWorkbench().getWorkingSetManager().getAllWorkingSets()) {
-				ArrayList<IAdaptable> elements = new ArrayList<IAdaptable>(Arrays.asList(workingSet.getElements()));
-				for (IAdaptable adaptable : elements) {
-					if (adaptable instanceof AbstractTaskContainer) {
-						if (((AbstractTaskContainer)adaptable).contains(task.getHandleIdentifier())) {
-							matchingWorkingSet = workingSet;
-						}
-					}
-				}
-			}
-
-			if (matchingWorkingSet != null) {
-				new ToggleWorkingSetAction(matchingWorkingSet).run();
-			} else { 
-				new ToggleAllWorkingSetsAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow()).run();
-			}
-		}
+//		Set<AbstractTaskContainer> taskContainers = new HashSet<AbstractTaskContainer>(
+//				TasksUiPlugin.getTaskListManager().getTaskList().getQueriesForHandle(task.getHandleIdentifier()));
+//		taskContainers.addAll(task.getParentContainers());
+//
+//		Set<AbstractTaskContainer> allActiveWorkingSetContainers = new HashSet<AbstractTaskContainer>();
+//		for (IWorkingSet workingSet : PlatformUI.getWorkbench()
+//				.getActiveWorkbenchWindow()
+//				.getActivePage()
+//				.getWorkingSets()) {
+//			ArrayList<IAdaptable> elements = new ArrayList<IAdaptable>(Arrays.asList(workingSet.getElements()));
+//			for (IAdaptable adaptable : elements) {
+//				if (adaptable instanceof AbstractTaskContainer) {
+//					allActiveWorkingSetContainers.add((AbstractTaskContainer) adaptable);
+//				}
+//			}
+//		}
+//		boolean isContained = false;
+//		for (AbstractTaskContainer taskContainer : allActiveWorkingSetContainers) {
+//			if (taskContainers.contains(taskContainer)) {
+//				isContained = true;
+//				break;
+//			}
+//		}
+//
+//		;
+//		if (!isContained) {
+//			IWorkingSet matchingWorkingSet = null;
+//			for (IWorkingSet workingSet : PlatformUI.getWorkbench().getWorkingSetManager().getAllWorkingSets()) {
+//				ArrayList<IAdaptable> elements = new ArrayList<IAdaptable>(Arrays.asList(workingSet.getElements()));
+//				for (IAdaptable adaptable : elements) {
+//					if (adaptable instanceof AbstractTaskContainer) {
+//						if (((AbstractTaskContainer)adaptable).contains(task.getHandleIdentifier())) {
+//							matchingWorkingSet = workingSet;
+//						}
+//					}
+//				}
+//			}
+//
+//			if (matchingWorkingSet != null) {
+//				new ToggleWorkingSetAction(matchingWorkingSet).run();
+//			} else { 
+//				new ToggleAllWorkingSetsAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow()).run();
+//			}
+//		}
 	}
 
 	public void taskDeactivated(AbstractTask task) {

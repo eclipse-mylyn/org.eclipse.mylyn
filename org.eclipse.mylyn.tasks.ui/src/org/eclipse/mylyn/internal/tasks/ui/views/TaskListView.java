@@ -656,9 +656,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		}
 
 		m.putInteger(MEMENTO_KEY_SORT_DIRECTION, sortDirection);
-
 		memento.putString(MEMENTO_LINK_WITH_EDITOR, Boolean.toString(linkWithEditor));
-
 		memento.putString(MEMENTO_PRESENTATION, currentPresentation.getId());
 	}
 
@@ -697,7 +695,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			applyPresentation(taskListMemento.getString(MEMENTO_PRESENTATION));
 		}
 
-		filterWorkingSet.setCurrentWorkingSet(getSite().getPage().getAggregateWorkingSet());
 		addFilter(filterWorkingSet);
 		addFilter(filterPriority);
 		if (TasksUiPlugin.getDefault().getPreferenceStore().contains(TasksUiPreferenceConstants.FILTER_COMPLETE_MODE)) {
