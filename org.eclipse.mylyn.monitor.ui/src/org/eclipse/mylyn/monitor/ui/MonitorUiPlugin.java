@@ -113,7 +113,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 					new MonitorUiExtensionPointReader().initExtensions();
 
 					AbstractUserActivityMonitor activityMonitor = null;
-					if (osActivityTimer != null && osActivityTimer.isEnabled()) {
+					if (osActivityTimer != null) {
 						activityMonitor = osActivityTimer;
 					} else {
 						activityMonitor = new WorkbenchUserActivityMonitor();
@@ -296,7 +296,13 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 				if (element.getAttribute(ELEMENT_CLASS) != null) {
 					Object activityTimer = element.createExecutableExtension(ELEMENT_CLASS);
 					if (activityTimer instanceof AbstractUserActivityMonitor) {
-						osActivityTimer = (AbstractUserActivityMonitor) activityTimer;
+						if (((AbstractUserActivityMonitor) activityTimer).isEnabled()) {
+							if (osActivityTimer != null) {
+								StatusHandler.log("Monitor discarded: " + osActivityTimer.getClass().getSimpleName(),
+										this);
+							}
+							osActivityTimer = (AbstractUserActivityMonitor) activityTimer;
+						}
 					}
 				}
 			} catch (CoreException throwable) {
