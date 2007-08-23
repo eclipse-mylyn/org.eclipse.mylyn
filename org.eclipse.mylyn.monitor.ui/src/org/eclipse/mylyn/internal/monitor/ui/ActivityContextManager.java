@@ -59,28 +59,12 @@ public class ActivityContextManager {
 	}
 
 	public void fireActive(long start, long end) {
-		if (ContextCorePlugin.getContextManager().getActiveContext() != null && (end > start)) {
-
-			if (ContextCorePlugin.getContextManager().getActiveContext().getHandleIdentifier() == null) {
-				// TODO: use previously active context handle instead
-				return;
-			}
-
-			String originHandle = InteractionContextManager.ACTIVITY_ORIGIN_ID;
-			if (ContextCorePlugin.getContextManager().getActiveContext().getActiveNode() != null) {
-				originHandle = ContextCorePlugin.getContextManager()
-						.getActiveContext()
-						.getActiveNode()
-						.getHandleIdentifier();
-			}
-
-			ContextCorePlugin.getContextManager()
-					.processActivityMetaContextEvent(
-							new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-									InteractionContextManager.ACTIVITY_STRUCTURE_KIND,
-									ContextCorePlugin.getContextManager().getActiveContext().getHandleIdentifier(),
-									originHandle, null, InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 1f,
-									new Date(start), new Date(end)));
+		if (end > start) {
+			ContextCorePlugin.getContextManager().processActivityMetaContextEvent(
+					new InteractionEvent(InteractionEvent.Kind.ATTENTION, userActivityMonitor.getStructureKind(),
+							userActivityMonitor.getStructureHandle(), userActivityMonitor.getOriginId(), null,
+							InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, new Date(start),
+							new Date(end)));
 			for (IUserAttentionListener attentionListener : attentionListeners) {
 				attentionListener.userAttentionGained();
 			}

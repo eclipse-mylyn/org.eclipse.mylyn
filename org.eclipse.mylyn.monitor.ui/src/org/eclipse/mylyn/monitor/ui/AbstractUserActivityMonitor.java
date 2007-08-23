@@ -8,6 +8,9 @@
 
 package org.eclipse.mylyn.monitor.ui;
 
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
+
 /**
  * Extend to monitor periods of user activity and inactivity.
  * 
@@ -41,4 +44,21 @@ public abstract class AbstractUserActivityMonitor {
 	public boolean isEnabled() {
 		return true;
 	}
+
+	public String getOriginId() {
+		return InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH;
+	}
+
+	public String getStructureKind() {
+		return InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING;
+	}
+
+	public String getStructureHandle() {
+		if (ContextCorePlugin.getContextManager().getActiveContext() != null) {
+			return ContextCorePlugin.getContextManager().getActiveContext().getHandleIdentifier();
+		} else {
+			return null;
+		}
+	}
+
 }
