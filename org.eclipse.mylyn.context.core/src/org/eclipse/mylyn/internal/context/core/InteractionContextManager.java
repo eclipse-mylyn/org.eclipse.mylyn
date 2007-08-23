@@ -56,22 +56,29 @@ public class InteractionContextManager {
 
 	public static final String ACTIVITY_DELTA_ACTIVATED = "activated";
 
-	public static final String ACTIVITY_DELTA_ATTENTION_ADD = "add";
-
-	//public static final String ACTIVITY_DELTA_ATTENTION_REMOVE = "remove";
-	//public static final String ACTIVITY_DELTA_ATTENTION_LOST = "lost";
-
-	public static final String ACTIVITY_DELTA_PULSE = "pulse";
-
-	public static final String ACTIVITY_ORIGIN_ID = "org.eclipse.mylyn.core";
-
-	public static final String ACTIVITY_HANDLE_LIFECYCLE = "lifecycle";
+	public static final String ACTIVITY_DELTA_ADDED = "added";
 
 	public static final String ACTIVITY_DELTA_STARTED = "started";
 
 	public static final String ACTIVITY_DELTA_STOPPED = "stopped";
 
-	public static final String ACTIVITY_STRUCTURE_KIND = "context";
+	public static final String ACTIVITY_ORIGINID_WORKBENCH = "org.eclipse.ui.workbench";
+
+	public static final String ACTIVITY_ORIGINID_OS = "os";
+
+//	public static final String ACTIVITY_STRUCTUREKIND_TASK = "task";
+
+	public static final String ACTIVITY_STRUCTUREKIND_LIFECYCLE = "lifecycle";
+
+	public static final String ACTIVITY_STRUCTUREKIND_TIMING = "timing";
+
+	public static final String ACTIVITY_STRUCTUREKIND_ACTIVATION = "activation";
+
+//	public static final String ACTIVITY_ORIGIN_ID = "org.eclipse.mylyn.core";
+
+//	public static final String ACTIVITY_HANDLE_LIFECYCLE = "lifecycle";
+
+	//public static final String ACTIVITY_STRUCTUREKIND_TASK = "context";
 
 	public static final String CONTEXT_HISTORY_FILE_NAME = "activity";
 
@@ -492,8 +499,8 @@ public class InteractionContextManager {
 		}
 		if (!activationHistorySuppressed) {
 			processActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND,
-					ACTIVITY_STRUCTURE_KIND, context.getHandleIdentifier(), ACTIVITY_ORIGIN_ID, null,
-					ACTIVITY_DELTA_ACTIVATED, 1f));
+					ACTIVITY_STRUCTUREKIND_ACTIVATION, context.getHandleIdentifier(), ACTIVITY_ORIGINID_WORKBENCH,
+					null, ACTIVITY_DELTA_ACTIVATED, 1f));
 		}
 	}
 
@@ -581,7 +588,7 @@ public class InteractionContextManager {
 			}
 			if (!activationHistorySuppressed) {
 				processActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND,
-						ACTIVITY_STRUCTURE_KIND, handleIdentifier, ACTIVITY_ORIGIN_ID, null,
+						ACTIVITY_STRUCTUREKIND_ACTIVATION, handleIdentifier, ACTIVITY_ORIGINID_WORKBENCH, null,
 						ACTIVITY_DELTA_DEACTIVATED, 1f));
 			}
 			saveActivityContext();
@@ -695,7 +702,7 @@ public class InteractionContextManager {
 		for (InteractionEvent event : context.getInteractionHistory()) {
 
 			if (event.getKind().equals(InteractionEvent.Kind.ATTENTION)
-					&& event.getDelta().equals(ACTIVITY_DELTA_ATTENTION_ADD)) {
+					&& event.getDelta().equals(ACTIVITY_DELTA_ADDED)) {
 				if (event.getStructureHandle() == null || event.getStructureHandle().equals("")) {
 					continue;
 				}

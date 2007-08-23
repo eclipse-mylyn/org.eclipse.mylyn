@@ -35,10 +35,9 @@ public class LegacyActivityAdaptor {
 						&& event.getStructureHandle().equals(LEGACY_HANDLE_ATTENTION)) {
 					if (currentTask != null && !currentTask.equals("")) {
 						return new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-								InteractionContextManager.ACTIVITY_STRUCTURE_KIND, currentTask,
-								InteractionContextManager.ACTIVITY_ORIGIN_ID, null,
-								InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 1f, event.getDate(),
-								event.getEndDate());
+								InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, currentTask,
+								InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
+								InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, event.getDate(), event.getEndDate());
 					} else if (currentTask == null) {
 						// bogus event remove.
 						return null;
