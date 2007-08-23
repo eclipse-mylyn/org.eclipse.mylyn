@@ -314,7 +314,7 @@
      <objectContribution
            adaptable="false"
            id="org.eclipse.mylyn.java.ui.interest.remove.contribution.elements"
-           objectClass="java.lang.Object">
+           objectClass="org.eclipse.jdt.core.IJavaElement">
      	<action
             class="org.eclipse.mylyn.internal.context.ui.actions.InterestDecrementAction"
             definitionId="org.eclipse.mylyn.context.ui.commands.interest.decrement"
@@ -326,7 +326,6 @@
             tooltip="Mark selected element as uninteresting">
       </action>
       <visibility>
-		<and>
             <or>
                <objectClass
                      name="org.eclipse.jdt.core.IMember">
@@ -344,20 +343,6 @@
                      name="org.eclipse.jdt.internal.core.JarPackageFragmentRoot">
                </objectClass>
             </or>
-            <not>
-               <or>
-                  <objectClass
-                        name="org.eclipse.jdt.core.IType">
-                  </objectClass>
-                  <objectClass
-                        name="org.eclipse.jdt.core.IPackageFragment">
-                  </objectClass>
-                  <objectClass
-                        name="org.eclipse.jdt.core.IPackageFragmentRoot">
-                  </objectClass>
-               </or>
-            </not>
-         </and>
       </visibility>
      </objectContribution>
   </extension>   
