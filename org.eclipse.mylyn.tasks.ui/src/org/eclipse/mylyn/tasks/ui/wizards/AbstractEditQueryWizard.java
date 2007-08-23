@@ -59,4 +59,11 @@ public abstract class AbstractEditQueryWizard extends Wizard {
 
 		return true;
 	}
+
+	public String getQuerySummary() {
+		if (query != null) {
+			return query.getSummary();
+		}
+		return null;
+	}
 }

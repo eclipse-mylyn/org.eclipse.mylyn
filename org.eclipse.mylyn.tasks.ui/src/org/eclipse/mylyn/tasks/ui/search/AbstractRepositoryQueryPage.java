@@ -21,6 +21,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.ui.TaskFactory;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.wizards.AbstractEditQueryWizard;
 import org.eclipse.search.ui.ISearchPage;
 import org.eclipse.search.ui.ISearchPageContainer;
 import org.eclipse.search.ui.NewSearchUI;
@@ -104,11 +105,18 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 	public boolean isPageComplete() {
 		Set<AbstractRepositoryQuery> queries = TasksUiPlugin.getTaskListManager().getTaskList().getQueries();
 		Set<AbstractTaskCategory> categories = TasksUiPlugin.getTaskListManager().getTaskList().getCategories();
-		
+
 		if (title == null || title.getText().equals("")) {
 			setErrorMessage("Please specify a title for the query.");
 			return false;
 		} else {
+			if (getWizard() instanceof AbstractEditQueryWizard) {
+				String oldSummary = ((AbstractEditQueryWizard) getWizard()).getQuerySummary();
+				if (oldSummary != null && title.getText().equals(oldSummary)) {
+					setErrorMessage(null);
+					return true;
+				}
+			}
 			for (AbstractTaskCategory category : categories) {
 				if (title.getText().equals(category.getSummary())) {
 					setErrorMessage("A category with this name already exists, please choose another name.");
