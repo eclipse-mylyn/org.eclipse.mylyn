@@ -122,7 +122,13 @@ public class ActivateTaskHistoryDropDownAction extends TaskNavigateDropDownActio
 	public void run() {
 		if (taskHistory.hasPrevious()) {
 			AbstractTask previousTask = taskHistory.getPreviousTask();
-			new TaskActivateAction().run(previousTask);
+			if (previousTask != null && !previousTask.isActive()) {
+				TasksUiPlugin.getTaskListManager().activateTask(previousTask, false);
+				if (TaskListView.getFromActivePerspective() != null) {
+					TaskListView.getFromActivePerspective().refreshAndFocus(false);
+				}
+			}
+			
 			setButtonStatus();
 			// view.refreshAndFocus(false);
 			// TasksUiUtil.refreshAndOpenTaskListElement(previousTask);

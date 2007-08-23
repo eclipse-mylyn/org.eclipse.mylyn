@@ -840,11 +840,16 @@ public class TaskListManager implements IPropertyChangeListener {
 	}
 
 	public void activateTask(AbstractTask task) {
+		activateTask(task, true);
+	}
+	
+	public void activateTask(AbstractTask task, boolean addToHistory) {
 		deactivateAllTasks();
 		try {
-			taskActivityHistory.addTask(task);
-			
 			taskList.setActive(task, true);
+			if (addToHistory) {
+				taskActivityHistory.addTask(task);
+			}
 			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
 				try {
 					listener.taskActivated(task);

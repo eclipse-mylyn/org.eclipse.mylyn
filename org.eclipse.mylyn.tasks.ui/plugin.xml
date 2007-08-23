@@ -727,7 +727,7 @@
 	          allowLabelUpdate="true"
 	          class="org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskHistoryDropDownAction"
 	          icon="icons/etool16/navigate-previous.gif"
-	          id="org.eclipse.mylyn.java.ui.editor.folding.auto"
+	          id="org.eclipse.mylyn.tasks.ui.navigate.task.history"
 	          label="Activate Previous Task"
 	          pulldown="true"
 	          style="pulldown"

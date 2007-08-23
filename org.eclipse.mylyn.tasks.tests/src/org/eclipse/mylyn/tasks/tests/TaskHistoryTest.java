@@ -75,6 +75,7 @@ public class TaskHistoryTest extends TestCase {
 	}
 
 	private void resetHistory() {
+		manager.deactivateAllTasks();
 		manager.getTaskActivationHistory().clear();
 		ContextCorePlugin.getContextManager().resetActivityHistory();
 	}
@@ -93,7 +94,8 @@ public class TaskHistoryTest extends TestCase {
 
 		assertTrue(task3.isActive());
 		assertFalse(task2.isActive());
-
+		assertFalse(task1.isActive());
+		
 		previousTaskAction.run();
 		assertTrue(task2.isActive());
 
