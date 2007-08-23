@@ -294,51 +294,71 @@
   <extension point="org.eclipse.ui.popupMenus"> 
      <objectContribution
      	   adaptable="false"
-           id="org.eclipse.mylyn.java.ui.interest"
-           objectClass="org.eclipse.jdt.core.IMember">
-     	<action
-            class="org.eclipse.mylyn.internal.context.ui.actions.InterestDecrementAction"
-            definitionId="org.eclipse.mylyn.context.ui.commands.interest.decrement"
-            enablesFor="*"
-            icon="icons/elcl16/interest-decrease.gif"
-            id="org.eclipse.mylyn.java.ui.actions.interest.decrement"
-            label="Remove from Context"
-            menubarPath="additions"
-            tooltip="Mark selected element as uninteresting">
-        </action>
+           id="org.eclipse.mylyn.java.ui.interest.increase.contribution"
+           objectClass="org.eclipse.jdt.core.IJavaElement">
 	    <action
            class="org.eclipse.mylyn.internal.context.ui.actions.InterestIncrementAction"
            definitionId="org.eclipse.mylyn.context.ui.commands.interest.increment"
            enablesFor="*"
            icon="icons/elcl16/interest-increase.gif"
-           id="org.eclipse.mylyn.ui.actions.InterestIncrementAction"
+           id="org.eclipse.mylyn.java.ui.interest.increase.element"
            label="Mark as Landmark"
-           menubarPath="additions"
+           menubarPath="group.reorganize"
            tooltip="Mark the selected element as a landmark"/>
      <visibility>
-        <or>
            <objectClass
-                 name="org.eclipse.jdt.core.IMethod">
+                 name="org.eclipse.jdt.core.IMember">
            </objectClass>
-           <objectClass
-                 name="org.eclipse.jdt.core.IField">
-           </objectClass>
-        </or>
      </visibility>
 	 </objectContribution>
      <objectContribution
            adaptable="false"
-           id="org.eclipse.mylyn.java.ui.interest.contribution.container"
-           objectClass="org.eclipse.jdt.internal.ui.packageview.ClassPathContainer">
+           id="org.eclipse.mylyn.java.ui.interest.remove.contribution.elements"
+           objectClass="java.lang.Object">
      	<action
             class="org.eclipse.mylyn.internal.context.ui.actions.InterestDecrementAction"
+            definitionId="org.eclipse.mylyn.context.ui.commands.interest.decrement"
             enablesFor="*"
             icon="icons/elcl16/interest-decrease.gif"
-            id="org.eclipse.mylyn.java.ui.actions.interest.decrement.container"
+            id="org.eclipse.mylyn.java.ui.interest.remove.element"
             label="Remove from Context"
-            menubarPath="additions"
+            menubarPath="group.reorganize"
             tooltip="Mark selected element as uninteresting">
       </action>
+      <visibility>
+		<and>
+            <or>
+               <objectClass
+                     name="org.eclipse.jdt.core.IMember">
+               </objectClass>
+               <objectClass
+                     name="org.eclipse.jdt.core.IClassFile">
+               </objectClass>
+               <objectClass
+                     name="org.eclipse.jdt.internal.compiler.env.IBinaryType">
+               </objectClass>
+               <objectClass
+                     name="org.eclipse.jdt.internal.core.JarPackageFragment">
+               </objectClass>
+               <objectClass
+                     name="org.eclipse.jdt.internal.core.JarPackageFragmentRoot">
+               </objectClass>
+            </or>
+            <not>
+               <or>
+                  <objectClass
+                        name="org.eclipse.jdt.core.IType">
+                  </objectClass>
+                  <objectClass
+                        name="org.eclipse.jdt.core.IPackageFragment">
+                  </objectClass>
+                  <objectClass
+                        name="org.eclipse.jdt.core.IPackageFragmentRoot">
+                  </objectClass>
+               </or>
+            </not>
+         </and>
+      </visibility>
      </objectContribution>
   </extension>   
 
