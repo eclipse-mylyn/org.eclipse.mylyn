@@ -41,14 +41,14 @@ public class ToggleAllWorkingSetsAction extends Action {
 		Iterator<IWorkingSet> iter = newList.iterator();
 		while (iter.hasNext()) {
 			IWorkingSet workingSet = iter.next();
-			if (workingSet != null && workingSet.getId().equalsIgnoreCase(TaskWorkingSetUpdater.ID_TASK_WORKING_SET)) {
+			if (workingSet != null && workingSet.getId() != null && workingSet.getId().equalsIgnoreCase(TaskWorkingSetUpdater.ID_TASK_WORKING_SET)) {
 				tempList.add(workingSet);
 			}
 		}
 		newList.removeAll(tempList);
 		window.getActivePage().setWorkingSets(newList.toArray(new IWorkingSet[newList.size()]));
 	}
-	
+
 	@Override
 	public void runWithEvent(Event event) {
 		run();
