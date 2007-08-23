@@ -351,7 +351,8 @@ public class TaskListManager implements IPropertyChangeListener {
 	public void parseInteractionEvent(InteractionEvent event) {
 		try {
 			if (event.getKind().equals(InteractionEvent.Kind.ATTENTION)
-					&& event.getDelta().equals(InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD)) {
+					&& (event.getDelta().equals(InteractionContextManager.ACTIVITY_DELTA_ADDED) || event.getDelta()
+							.equals("add"))) {
 				AbstractTask activatedTask = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
 						event.getStructureHandle());
 
@@ -842,7 +843,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	public void activateTask(AbstractTask task) {
 		activateTask(task, true);
 	}
-	
+
 	public void activateTask(AbstractTask task, boolean addToHistory) {
 		deactivateAllTasks();
 		try {

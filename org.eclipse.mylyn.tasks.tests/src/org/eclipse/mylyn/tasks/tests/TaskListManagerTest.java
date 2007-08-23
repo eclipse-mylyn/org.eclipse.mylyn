@@ -87,15 +87,15 @@ public class TaskListManagerTest extends TestCase {
 		manager.getTaskList().addCategory(category);
 		assertTrue(manager.getTaskList().getCategories().contains(category));
 		assertEquals(3, manager.getTaskList().getCategories().size());
-		
+
 		MockRepositoryQuery query = new MockRepositoryQuery("TestClash");
 		manager.getTaskList().addQuery(query);
 		assertTrue(manager.getTaskList().getCategories().contains(category));
 		assertEquals(3, manager.getTaskList().getCategories().size());
-		
+
 		manager.getTaskList().deleteCategory(category);
 	}
-	
+
 	public void testUniqueTaskID() {
 		LocalTask task1 = manager.createNewLocalTask("label");
 		manager.getTaskList().addTask(task1);
@@ -255,14 +255,14 @@ public class TaskListManagerTest extends TestCase {
 
 		ContextCorePlugin.getContextManager().processActivityMetaContextEvent(
 				new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-						InteractionContextManager.ACTIVITY_STRUCTURE_KIND, task1.getHandleIdentifier(), "origin", null,
-						InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 1f, startDate.getTime(),
+						InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task1.getHandleIdentifier(), "origin",
+						null, InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startDate.getTime(),
 						endDate.getTime()));
 
 		ContextCorePlugin.getContextManager().processActivityMetaContextEvent(
 				new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-						InteractionContextManager.ACTIVITY_STRUCTURE_KIND, task2.getHandleIdentifier(), "origin", null,
-						InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 1f, startDate2.getTime(),
+						InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task2.getHandleIdentifier(), "origin",
+						null, InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startDate2.getTime(),
 						endDate2.getTime()));
 
 		assertEquals(2, metaContext.getInteractionHistory().size());

@@ -63,10 +63,10 @@ public class TaskActivityTimingTest extends TestCase {
 
 		InteractionEvent event1 = new InteractionEvent(InteractionEvent.Kind.ATTENTION, "structureKind",
 				task1.getHandleIdentifier(), "originId", "navigatedRelation",
-				InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 2f, start.getTime(), end.getTime());
+				InteractionContextManager.ACTIVITY_DELTA_ADDED, 2f, start.getTime(), end.getTime());
 		InteractionEvent event2 = new InteractionEvent(InteractionEvent.Kind.ATTENTION, "structureKind",
 				task1.getHandleIdentifier(), "originId", "navigatedRelation",
-				InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 2f, start2.getTime(), end2.getTime());
+				InteractionContextManager.ACTIVITY_DELTA_ADDED, 2f, start2.getTime(), end2.getTime());
 
 		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event1);
 		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event2);
@@ -96,10 +96,10 @@ public class TaskActivityTimingTest extends TestCase {
 
 		InteractionEvent event1 = new InteractionEvent(InteractionEvent.Kind.ATTENTION, "structureKind",
 				task1.getHandleIdentifier(), "originId", "navigatedRelation",
-				InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 2f, end.getTime(), start.getTime());
+				InteractionContextManager.ACTIVITY_DELTA_ADDED, 2f, end.getTime(), start.getTime());
 		InteractionEvent event2 = new InteractionEvent(InteractionEvent.Kind.ATTENTION, "structureKind",
 				task1.getHandleIdentifier(), "originId", "navigatedRelation",
-				InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 2f, end2.getTime(), start2.getTime());
+				InteractionContextManager.ACTIVITY_DELTA_ADDED, 2f, end2.getTime(), start2.getTime());
 
 		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event1);
 		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event2);
@@ -121,11 +121,11 @@ public class TaskActivityTimingTest extends TestCase {
 		end.add(Calendar.HOUR_OF_DAY, 2);
 
 		InteractionEvent event1 = new InteractionEvent(InteractionEvent.Kind.ATTENTION, "structureKind", null,
-				"originId", "navigatedRelation", InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 2f,
-				start.getTime(), end.getTime());
+				"originId", "navigatedRelation", InteractionContextManager.ACTIVITY_DELTA_ADDED, 2f, start.getTime(),
+				end.getTime());
 		InteractionEvent event2 = new InteractionEvent(InteractionEvent.Kind.ATTENTION, "structureKind", "",
-				"originId", "navigatedRelation", InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 2f,
-				start.getTime(), end.getTime());
+				"originId", "navigatedRelation", InteractionContextManager.ACTIVITY_DELTA_ADDED, 2f, start.getTime(),
+				end.getTime());
 
 		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event1);
 		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event2);
@@ -155,19 +155,19 @@ public class TaskActivityTimingTest extends TestCase {
 		endTime2.add(Calendar.MINUTE, 2);
 
 		InteractionEvent activityEvent1 = new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-				InteractionContextManager.ACTIVITY_STRUCTURE_KIND, task1.getHandleIdentifier(),
-				InteractionContextManager.ACTIVITY_ORIGIN_ID, null,
-				InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 1f, startTime1.getTime(), endTime1.getTime());
+				InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task1.getHandleIdentifier(),
+				InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
+				InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startTime1.getTime(), endTime1.getTime());
 
 		InteractionEvent activityEvent2 = new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-				InteractionContextManager.ACTIVITY_STRUCTURE_KIND, task1.getHandleIdentifier(),
-				InteractionContextManager.ACTIVITY_ORIGIN_ID, null,
-				InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 1f, startTime2.getTime(), endTime2.getTime());
+				InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task1.getHandleIdentifier(),
+				InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
+				InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startTime2.getTime(), endTime2.getTime());
 
 		InteractionEvent activityEvent3 = new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-				InteractionContextManager.ACTIVITY_STRUCTURE_KIND, task2.getHandleIdentifier(),
-				InteractionContextManager.ACTIVITY_ORIGIN_ID, null,
-				InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 1f, startTime1.getTime(), startTime1.getTime());
+				InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task2.getHandleIdentifier(),
+				InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
+				InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startTime1.getTime(), startTime1.getTime());
 
 		// to activity events both within same hour will get collapsed
 		metaContext.parseEvent(activityEvent1);
@@ -196,18 +196,18 @@ public class TaskActivityTimingTest extends TestCase {
 			endTime.add(Calendar.SECOND, -5);
 
 			InteractionEvent event1 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind",
-					task1.getHandleIdentifier(), "originId", "navigatedRelation",
-					InteractionContextManager.ACTIVITY_DELTA_ACTIVATED, 2f, startActiveTime.getTime(),
-					startActiveTime.getTime());
+					task1.getHandleIdentifier(), InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH,
+					"navigatedRelation", InteractionContextManager.ACTIVITY_DELTA_ACTIVATED, 2f,
+					startActiveTime.getTime(), startActiveTime.getTime());
 			InteractionEvent event2 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind",
-					task1.getHandleIdentifier(), "originId", "navigatedRelation",
-					InteractionContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f, endActiveTime.getTime(),
-					endActiveTime.getTime());
+					task1.getHandleIdentifier(), InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH,
+					"navigatedRelation", InteractionContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f,
+					endActiveTime.getTime(), endActiveTime.getTime());
 
 			InteractionEvent activityEvent1 = new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-					InteractionContextManager.ACTIVITY_STRUCTURE_KIND, task1.getHandleIdentifier(),
-					InteractionContextManager.ACTIVITY_ORIGIN_ID, null,
-					InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 1f, startTime.getTime(), endTime.getTime());
+					InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task1.getHandleIdentifier(),
+					InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
+					InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startTime.getTime(), endTime.getTime());
 
 			ContextCorePlugin.getContextManager().getActivityMetaContext().parseEvent(event1);
 			TasksUiPlugin.getTaskListManager().parseInteractionEvent(event1);
@@ -243,19 +243,18 @@ public class TaskActivityTimingTest extends TestCase {
 			endTime2.setTimeInMillis(endActiveTime2.getTimeInMillis() - 2000);
 
 			InteractionEvent event1 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind",
-					task1.getHandleIdentifier(), "originId", "navigatedRelation",
-					InteractionContextManager.ACTIVITY_DELTA_ACTIVATED, 2f, startActiveTime2.getTime(),
-					startActiveTime2.getTime());
+					task1.getHandleIdentifier(), InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH,
+					"navigatedRelation", InteractionContextManager.ACTIVITY_DELTA_ACTIVATED, 2f,
+					startActiveTime2.getTime(), startActiveTime2.getTime());
 			InteractionEvent event2 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind",
-					task1.getHandleIdentifier(), "originId", "navigatedRelation",
-					InteractionContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f, endActiveTime2.getTime(),
-					endActiveTime2.getTime());
+					task1.getHandleIdentifier(), InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH,
+					"navigatedRelation", InteractionContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f,
+					endActiveTime2.getTime(), endActiveTime2.getTime());
 
 			InteractionEvent activityEvent1 = new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-					InteractionContextManager.ACTIVITY_STRUCTURE_KIND, task1.getHandleIdentifier(),
-					InteractionContextManager.ACTIVITY_ORIGIN_ID, null,
-					InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 1f, startTime2.getTime(),
-					endTime2.getTime());
+					InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task1.getHandleIdentifier(),
+					InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
+					InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startTime2.getTime(), endTime2.getTime());
 
 			ContextCorePlugin.getContextManager().getActivityMetaContext().parseEvent(event1);
 			TasksUiPlugin.getTaskListManager().parseInteractionEvent(event1);
@@ -291,9 +290,9 @@ public class TaskActivityTimingTest extends TestCase {
 				InteractionContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f, startTime.getTime(), startTime.getTime());
 
 		InteractionEvent activityEvent1 = new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-				InteractionContextManager.ACTIVITY_STRUCTURE_KIND, task1.getHandleIdentifier(),
-				InteractionContextManager.ACTIVITY_ORIGIN_ID, null,
-				InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 1f, startTime.getTime(), endTime.getTime());
+				InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task1.getHandleIdentifier(),
+				InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
+				InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startTime.getTime(), endTime.getTime());
 
 		ContextCorePlugin.getContextManager().getActivityMetaContext().parseEvent(event1);
 		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event1);
@@ -328,19 +327,19 @@ public class TaskActivityTimingTest extends TestCase {
 
 		InteractionContext mockContext = new InteractionContext("doitest", new ScalingFactors());
 		InteractionEvent activityEvent1 = new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-				InteractionContextManager.ACTIVITY_STRUCTURE_KIND, "handle",
-				InteractionContextManager.ACTIVITY_ORIGIN_ID, null,
-				InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 1f, startTime1.getTime(), endTime1.getTime());
+				InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, "handle",
+				InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
+				InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startTime1.getTime(), endTime1.getTime());
 
 		InteractionEvent activityEvent2 = new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-				InteractionContextManager.ACTIVITY_STRUCTURE_KIND, "handle",
-				InteractionContextManager.ACTIVITY_ORIGIN_ID, null,
-				InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 1f, startTime2.getTime(), endTime2.getTime());
+				InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, "handle",
+				InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
+				InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startTime2.getTime(), endTime2.getTime());
 
 		InteractionEvent activityEvent3 = new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-				InteractionContextManager.ACTIVITY_STRUCTURE_KIND, "handle",
-				InteractionContextManager.ACTIVITY_ORIGIN_ID, null,
-				InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 1f, startTime3.getTime(), endTime3.getTime());
+				InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, "handle",
+				InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
+				InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startTime3.getTime(), endTime3.getTime());
 
 		mockContext.parseEvent(activityEvent1);
 		mockContext.parseEvent(activityEvent2);
@@ -373,14 +372,14 @@ public class TaskActivityTimingTest extends TestCase {
 
 		InteractionContext mockContext = new InteractionContext("doitest", new ScalingFactors());
 		InteractionEvent activityEvent1 = new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-				InteractionContextManager.ACTIVITY_STRUCTURE_KIND, "handle",
-				InteractionContextManager.ACTIVITY_ORIGIN_ID, null,
-				InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 1f, startTime1.getTime(), endTime1.getTime());
+				InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, "handle",
+				InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
+				InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startTime1.getTime(), endTime1.getTime());
 
 		InteractionEvent activityEvent3 = new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-				InteractionContextManager.ACTIVITY_STRUCTURE_KIND, "handle",
-				InteractionContextManager.ACTIVITY_ORIGIN_ID, null,
-				InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 1f, startTime3.getTime(), endTime3.getTime());
+				InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, "handle",
+				InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
+				InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startTime3.getTime(), endTime3.getTime());
 
 		mockContext.parseEvent(activityEvent1);
 		mockContext.parseEvent(activityEvent3);
@@ -413,14 +412,14 @@ public class TaskActivityTimingTest extends TestCase {
 		TasksUiPlugin.getTaskListManager().activateTask(task1);
 
 		InteractionEvent activityEvent1 = new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-				InteractionContextManager.ACTIVITY_STRUCTURE_KIND, task1.getHandleIdentifier(),
-				InteractionContextManager.ACTIVITY_ORIGIN_ID, null,
-				InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 1f, startTime1.getTime(), endTime1.getTime());
+				InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task1.getHandleIdentifier(),
+				InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
+				InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startTime1.getTime(), endTime1.getTime());
 
 		InteractionEvent activityEvent2 = new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-				InteractionContextManager.ACTIVITY_STRUCTURE_KIND, task1.getHandleIdentifier(),
-				InteractionContextManager.ACTIVITY_ORIGIN_ID, null,
-				InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 1f, startTime2.getTime(), endTime2.getTime());
+				InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task1.getHandleIdentifier(),
+				InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
+				InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startTime2.getTime(), endTime2.getTime());
 
 		metaContext.parseEvent(activityEvent1);
 		metaContext.parseEvent(activityEvent2);
@@ -457,14 +456,14 @@ public class TaskActivityTimingTest extends TestCase {
 
 		InteractionContext mockContext = new InteractionContext("doitest", new ScalingFactors());
 		InteractionEvent activityEvent1 = new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-				InteractionContextManager.ACTIVITY_STRUCTURE_KIND, "handle1",
-				InteractionContextManager.ACTIVITY_ORIGIN_ID, null,
-				InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 1f, startTime1.getTime(), endTime1.getTime());
+				InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, "handle1",
+				InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
+				InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startTime1.getTime(), endTime1.getTime());
 
 		InteractionEvent activityEvent2 = new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-				InteractionContextManager.ACTIVITY_STRUCTURE_KIND, "handle2",
-				InteractionContextManager.ACTIVITY_ORIGIN_ID, null,
-				InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 1f, startTime2.getTime(), endTime2.getTime());
+				InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, "handle2",
+				InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
+				InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startTime2.getTime(), endTime2.getTime());
 
 		mockContext.parseEvent(activityEvent1);
 		mockContext.parseEvent(activityEvent2);
@@ -511,19 +510,19 @@ public class TaskActivityTimingTest extends TestCase {
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
 
 		InteractionEvent activityEvent1 = new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-				InteractionContextManager.ACTIVITY_STRUCTURE_KIND, task1.getHandleIdentifier(),
-				InteractionContextManager.ACTIVITY_ORIGIN_ID, null,
-				InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 1f, startTime1.getTime(), endTime1.getTime());
+				InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task1.getHandleIdentifier(),
+				InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
+				InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startTime1.getTime(), endTime1.getTime());
 
 		InteractionEvent activityEvent2 = new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-				InteractionContextManager.ACTIVITY_STRUCTURE_KIND, task1.getHandleIdentifier(),
-				InteractionContextManager.ACTIVITY_ORIGIN_ID, null,
-				InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 1f, startTime2.getTime(), endTime2.getTime());
+				InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task1.getHandleIdentifier(),
+				InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
+				InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startTime2.getTime(), endTime2.getTime());
 
 		InteractionEvent activityEvent3 = new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-				InteractionContextManager.ACTIVITY_STRUCTURE_KIND, task1.getHandleIdentifier(),
-				InteractionContextManager.ACTIVITY_ORIGIN_ID, null,
-				InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 1f, startTime3.getTime(), endTime3.getTime());
+				InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task1.getHandleIdentifier(),
+				InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
+				InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startTime3.getTime(), endTime3.getTime());
 
 		List<InteractionEvent> events = new ArrayList<InteractionEvent>();
 		events.add(activityEvent1);
@@ -557,10 +556,9 @@ public class TaskActivityTimingTest extends TestCase {
 		activityEnd.add(Calendar.HOUR_OF_DAY, 1);
 
 		InteractionEvent activityEvent = new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-				InteractionContextManager.ACTIVITY_STRUCTURE_KIND, task1.getHandleIdentifier(),
-				InteractionContextManager.ACTIVITY_ORIGIN_ID, null,
-				InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 1f, activityStart.getTime(),
-				activityEnd.getTime());
+				InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task1.getHandleIdentifier(),
+				InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
+				InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, activityStart.getTime(), activityEnd.getTime());
 
 		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event1);
 		TasksUiPlugin.getTaskListManager().parseInteractionEvent(activityEvent);
@@ -611,19 +609,19 @@ public class TaskActivityTimingTest extends TestCase {
 		assertEquals(0, metaContext.getInteractionHistory().size());
 
 		InteractionEvent activityEvent1 = new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-				InteractionContextManager.ACTIVITY_STRUCTURE_KIND, task1.getHandleIdentifier(),
-				InteractionContextManager.ACTIVITY_ORIGIN_ID, null,
-				InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 1f, startTime1.getTime(), endTime1.getTime());
+				InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task1.getHandleIdentifier(),
+				InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
+				InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startTime1.getTime(), endTime1.getTime());
 
 		InteractionEvent activityEvent2 = new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-				InteractionContextManager.ACTIVITY_STRUCTURE_KIND, task1.getHandleIdentifier(),
-				InteractionContextManager.ACTIVITY_ORIGIN_ID, null,
-				InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 1f, startTime2.getTime(), endTime2.getTime());
+				InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task1.getHandleIdentifier(),
+				InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
+				InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startTime2.getTime(), endTime2.getTime());
 
 		InteractionEvent activityEvent3 = new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-				InteractionContextManager.ACTIVITY_STRUCTURE_KIND, task1.getHandleIdentifier(),
-				InteractionContextManager.ACTIVITY_ORIGIN_ID, null,
-				InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 1f, startTime3.getTime(), endTime3.getTime());
+				InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task1.getHandleIdentifier(),
+				InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
+				InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startTime3.getTime(), endTime3.getTime());
 
 		metaContext.parseEvent(activityEvent1);
 		manager.parseInteractionEvent(activityEvent1);
@@ -817,7 +815,7 @@ public class TaskActivityTimingTest extends TestCase {
 //
 //		InteractionEvent inactivityEvent1 = new InteractionEvent(InteractionEvent.Kind.COMMAND, "structureKind",
 //				task1.getHandleIdentifier(), "originId", "navigatedRelation",
-//				InteractionContextManager.ACTIVITY_DELTA_ATTENTION_ADD, 2f, inactivityStart.getTime(),
+//				InteractionContextManager.ACTIVITY_DELTA_ADDED, 2f, inactivityStart.getTime(),
 //				inactivityStop.getTime());
 //
 //		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event1);
