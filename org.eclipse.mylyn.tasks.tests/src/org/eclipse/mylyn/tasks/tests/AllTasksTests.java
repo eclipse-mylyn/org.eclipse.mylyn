@@ -8,7 +8,6 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
-import org.eclipse.mylyn.internal.tasks.ui.PersonProposalProviderTest;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;

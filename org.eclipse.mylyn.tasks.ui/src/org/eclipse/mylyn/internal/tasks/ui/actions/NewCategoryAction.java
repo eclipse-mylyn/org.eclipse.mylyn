@@ -8,13 +8,18 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
+import java.util.Set;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -51,7 +56,26 @@ public class NewCategoryAction extends Action implements IViewActionDelegate {
 				"Enter name", "Enter a name for the Category: ", "", null);
 		int dialogResult = dialog.open();
 		if (dialogResult == Window.OK) {
-			this.cat = new TaskCategory(dialog.getValue());
+			String name = dialog.getValue();
+			Set<AbstractRepositoryQuery> queries = TasksUiPlugin.getTaskListManager().getTaskList().getQueries();
+			Set<AbstractTaskCategory> categories = TasksUiPlugin.getTaskListManager().getTaskList().getCategories();
+
+			for (AbstractTaskCategory category : categories) {
+				if (name != null && name.equals(category.getSummary())) {
+					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
+							"New Category", "A category with this name already exists, please choose another name.");
+					return;
+				}
+			}
+			for (AbstractRepositoryQuery query : queries) {
+				if (name != null && name.equals(query.getSummary())) {
+					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
+							"New Category", "A query with this name already exists, please choose another name.");
+					return;
+				}
+			}
+
+			this.cat = new TaskCategory(name);
 			TasksUiPlugin.getTaskListManager().getTaskList().addCategory(cat);
 //			this.view.getViewer().refresh();
 		}

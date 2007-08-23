@@ -82,6 +82,20 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(0, manager.getTaskList().getAllTasks().size());
 	}
 
+	public void testQueryAndCategoryNameClash() {
+		TaskCategory category = new TaskCategory("TestClash");
+		manager.getTaskList().addCategory(category);
+		assertTrue(manager.getTaskList().getCategories().contains(category));
+		assertEquals(3, manager.getTaskList().getCategories().size());
+		
+		MockRepositoryQuery query = new MockRepositoryQuery("TestClash");
+		manager.getTaskList().addQuery(query);
+		assertTrue(manager.getTaskList().getCategories().contains(category));
+		assertEquals(3, manager.getTaskList().getCategories().size());
+		
+		manager.getTaskList().deleteCategory(category);
+	}
+	
 	public void testUniqueTaskID() {
 		LocalTask task1 = manager.createNewLocalTask("label");
 		manager.getTaskList().addTask(task1);

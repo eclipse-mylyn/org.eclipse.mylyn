@@ -8,12 +8,15 @@
 
 package org.eclipse.mylyn.tasks.ui.search;
 
+import java.util.Set;
+
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.ui.TaskFactory;
@@ -99,12 +102,28 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 
 	@Override
 	public boolean isPageComplete() {
-		if (title != null && !title.getText().equals("")) {
-			setErrorMessage(null);
-			return true;
+		Set<AbstractRepositoryQuery> queries = TasksUiPlugin.getTaskListManager().getTaskList().getQueries();
+		Set<AbstractTaskCategory> categories = TasksUiPlugin.getTaskListManager().getTaskList().getCategories();
+		
+		if (title == null || title.getText().equals("")) {
+			setErrorMessage("Please specify a title for the query.");
+			return false;
+		} else {
+			for (AbstractTaskCategory category : categories) {
+				if (title.getText().equals(category.getSummary())) {
+					setErrorMessage("A category with this name already exists, please choose another name.");
+					return false;
+				}
+			}
+			for (AbstractRepositoryQuery query : queries) {
+				if (title.getText().equals(query.getSummary())) {
+					setErrorMessage("A query with this name already exists, please choose another name.");
+					return false;
+				}
+			}
 		}
-		setErrorMessage("Query title is mandatory");
-		return false;
+		setErrorMessage(null);
+		return true;
 	}
 
 	public String getQueryTitle() {
