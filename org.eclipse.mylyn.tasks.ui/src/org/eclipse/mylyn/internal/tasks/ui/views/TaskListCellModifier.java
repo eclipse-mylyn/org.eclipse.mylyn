@@ -104,11 +104,11 @@ class TaskListCellModifier implements ICellModifier {
 		if (task != null) {
 			if (task.isActive()) {
 				new TaskDeactivateAction().run(task);
-				this.taskListView.previousTaskAction.setButtonStatus();
+//				this.taskListView.previousTaskAction.setButtonStatus();
 			} else {
 				new TaskActivateAction().run(task);
-				this.taskListView.addTaskToHistory(task);
-				this.taskListView.previousTaskAction.setButtonStatus();
+//				this.taskListView.addTaskToHistory(task);
+//				this.taskListView.previousTaskAction.setButtonStatus();
 			}
 		}
 	}

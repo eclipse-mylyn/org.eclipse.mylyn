@@ -61,7 +61,6 @@ import org.eclipse.mylyn.internal.tasks.ui.TaskTransfer;
 import org.eclipse.mylyn.internal.tasks.ui.TaskWorkingSetFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
-import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskHistoryDropDownAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CollapseAllAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.DeleteAction;
@@ -256,7 +255,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private SortyByDropDownAction sortByAction;
 
-	ActivateTaskHistoryDropDownAction previousTaskAction;
+//	ActivateTaskHistoryDropDownAction previousTaskAction;
 
 	private PresentationDropDownSelectionAction presentationDropDownSelectionAction;
 
@@ -633,10 +632,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				setContentDescription("");
 			}
 		}
-	}
-
-	public void addTaskToHistory(AbstractTask task) {
-		TasksUiPlugin.getTaskListManager().getTaskActivationHistory().addTask(task);
 	}
 
 	@Override
@@ -1262,8 +1257,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		filterArchiveCategory = new FilterArchiveContainerAction(this);
 		sortByAction = new SortyByDropDownAction(this);
 		filterOnPriorityAction = new PriorityDropDownAction(this);
-		previousTaskAction = new ActivateTaskHistoryDropDownAction(TasksUiPlugin.getTaskListManager()
-				.getTaskActivationHistory(), false);
+//		previousTaskAction = new ActivateTaskHistoryDropDownAction(TasksUiPlugin.getTaskListManager()
+//				.getTaskActivationHistory(), false);
 		linkWithEditorAction = new LinkWithEditorAction(this);
 		presentationDropDownSelectionAction = new PresentationDropDownSelectionAction(this);
 
@@ -1283,13 +1278,13 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	// return nextTaskAction;
 	// }
 
-	public void togglePreviousAction(boolean enable) {
-		previousTaskAction.setEnabled(enable);
-	}
-
-	public ActivateTaskHistoryDropDownAction getPreviousTaskAction() {
-		return previousTaskAction;
-	}
+//	public void togglePreviousAction(boolean enable) {
+//		previousTaskAction.setEnabled(enable);
+//	}
+//
+//	public ActivateTaskHistoryDropDownAction getPreviousTaskAction() {
+//		return previousTaskAction;
+//	}
 
 	/**
 	 * Recursive function that checks for the occurrence of a certain task taskId. All children of the supplied node
@@ -1321,10 +1316,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 						TasksUiPreferenceConstants.ACTIVATE_WHEN_OPENED)) {
 					AbstractTask selectedTask = TaskListView.getFromActivePerspective().getSelectedTask();
 					if (selectedTask != null) {
-						// TODO: move history stuff
 						activateAction.run(selectedTask);
-						addTaskToHistory(selectedTask);
-						previousTaskAction.setButtonStatus();
+//						addTaskToHistory(selectedTask);
+//						previousTaskAction.setButtonStatus();
 					}
 				}
 				if (object instanceof TaskCategory || object instanceof AbstractRepositoryQuery) {

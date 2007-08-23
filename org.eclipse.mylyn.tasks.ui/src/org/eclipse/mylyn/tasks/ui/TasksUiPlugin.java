@@ -56,7 +56,6 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskListSaveManager;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskListWriter;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiExtensionReader;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.EditRepositoryWizard;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
@@ -276,12 +275,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	private final IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
 
 		public void propertyChange(PropertyChangeEvent event) {
-			if (event.getProperty().equals(TasksUiPreferenceConstants.ACTIVATE_MULTIPLE)) {
-				TaskListView.getFromActivePerspective().togglePreviousAction(
-						!getPreferenceStore().getBoolean(TasksUiPreferenceConstants.ACTIVATE_MULTIPLE));
-				getTaskListManager().getTaskActivationHistory().clear();
-
-			}
 			// TODO: do we ever get here?
 			if (event.getProperty().equals(ContextPreferenceContstants.PREF_DATA_DIR)) {
 				if (event.getOldValue() instanceof String) {

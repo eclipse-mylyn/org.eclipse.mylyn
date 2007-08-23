@@ -55,7 +55,7 @@ public class ActivateTaskDialogAction extends ActionDelegate implements IWorkben
 		if (result instanceof AbstractTask) {
 			AbstractTask task = (AbstractTask) result;
 			manager.activateTask(task);
-			manager.getTaskActivationHistory().addTask(task);
+//			manager.getTaskActivationHistory().addTask(task);
 		}
 		if (TaskListView.getFromActivePerspective() != null) {
 			TaskListView.getFromActivePerspective().refreshAndFocus(false);

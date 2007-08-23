@@ -156,11 +156,7 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 				return;
 			}
 			new TaskActivateAction().run(targetTask);
-			// taskHistory.navigatedToTask(targetTask);
-			taskHistory.addTask(targetTask);
-//			setButtonStatus();
-//			view.refreshAndFocus(false);
-//			TasksUiUtil.refreshAndOpenTaskListElement(targetTask);
+//			taskHistory.addTask(targetTask);
 		}
 	}
 

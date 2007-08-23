@@ -45,6 +45,9 @@ public class TaskHistoryTest extends TestCase {
 
 	protected AbstractTask task5 = null;
 
+	private ActivateTaskHistoryDropDownAction previousTaskAction = new ActivateTaskHistoryDropDownAction(TasksUiPlugin.getTaskListManager()
+			.getTaskActivationHistory(), false);
+	
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -80,6 +83,7 @@ public class TaskHistoryTest extends TestCase {
 	 * Tests the next task and previous task navigation.
 	 */
 	public void testBasicHistoryNavigation() {
+		// NOTE: legacy test
 		(new TaskActivateAction()).run(task1);
 		history.addTask(task1);
 		(new TaskActivateAction()).run(task2);
@@ -90,13 +94,13 @@ public class TaskHistoryTest extends TestCase {
 		assertTrue(task3.isActive());
 		assertFalse(task2.isActive());
 
-		taskView.getPreviousTaskAction().run();
+		previousTaskAction.run();
 		assertTrue(task2.isActive());
 
-		taskView.getPreviousTaskAction().run();
+		previousTaskAction.run();
 		assertTrue(task1.isActive());
 
-		taskView.getPreviousTaskAction().run();
+		previousTaskAction.run();
 		assertTrue(task1.isActive());
 
 		// taskView.getPreviousTaskAction().run();
@@ -195,7 +199,7 @@ public class TaskHistoryTest extends TestCase {
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 4) == task1);
 
 		// Hit previous task button
-		taskView.getPreviousTaskAction().run();
+		previousTaskAction.run();
 		assertTrue(task3.isActive());
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 1) == task4);
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 2) == task3);

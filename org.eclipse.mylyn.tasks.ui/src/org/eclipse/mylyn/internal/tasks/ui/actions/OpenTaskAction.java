@@ -60,11 +60,9 @@ public class OpenTaskAction extends ActionDelegate implements IWorkbenchWindowAc
 			if (dlg.getOpenInBrowser()) {
 				if (task.hasValidUrl()) {
 					TasksUiUtil.openUrl(task.getUrl(), false);
-					TasksUiPlugin.getTaskListManager().getTaskActivationHistory().addTask(task);
 				}
 			} else {
 				TasksUiUtil.refreshAndOpenTaskListElement(task);
-				TasksUiPlugin.getTaskListManager().getTaskActivationHistory().addTask(task);
 			}
 		}
 	}

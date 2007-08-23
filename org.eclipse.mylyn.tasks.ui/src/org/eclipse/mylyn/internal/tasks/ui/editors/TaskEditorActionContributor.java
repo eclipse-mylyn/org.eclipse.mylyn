@@ -224,7 +224,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 				manager.add(new TaskActivateAction() {
 					@Override
 					public void run() {
-						TasksUiPlugin.getTaskListManager().getTaskActivationHistory().addTask(task);
+//						TasksUiPlugin.getTaskListManager().getTaskActivationHistory().addTask(task);
 						super.run(task);
 					}
 				});

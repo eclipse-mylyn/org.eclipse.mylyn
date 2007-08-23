@@ -427,7 +427,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 				manager.add(new TaskActivateAction() {
 					@Override
 					public void run() {
-						TasksUiPlugin.getTaskListManager().getTaskActivationHistory().addTask(activeTask);
+//						TasksUiPlugin.getTaskListManager().getTaskActivationHistory().addTask(activeTask);
 						super.run(activeTask);
 					}
 				});
