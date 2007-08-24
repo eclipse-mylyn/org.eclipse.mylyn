@@ -75,7 +75,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 
 	private static final int DEFAULT_ESTIMATED_TIME = 1;
 
-	private static final String LABEL_CREATE = "Create New";
+	private static final String LABEL_SUMBIT = "Submit";
 
 	private static final String ERROR_CREATING_BUG_REPORT = "Error creating bug report";
 
@@ -414,8 +414,10 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	@Override
 	protected void addActionButtons(Composite buttonComposite) {
 		FormToolkit toolkit = new FormToolkit(buttonComposite.getDisplay());
-		submitButton = toolkit.createButton(buttonComposite, LABEL_CREATE, SWT.NONE);
+		submitButton = toolkit.createButton(buttonComposite, LABEL_SUMBIT, SWT.NONE);
 		GridData submitButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+		submitButtonData.widthHint = 100;
+		submitButton.setImage(TasksUiImages.getImage(TasksUiImages.REPOSITORY_SUBMIT));
 		submitButton.setLayoutData(submitButtonData);
 		submitButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event e) {
