@@ -690,12 +690,18 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			}
 
 			if (connector != null) {
-				final String taskUrl = connector.getTaskUrl(taskData.getRepositoryUrl(), taskData.getTaskKey());
-				if (taskUrl != null) {
+				String taskUrl = connector.getTaskUrl(taskData.getRepositoryUrl(), taskData.getTaskKey());
+				if(taskUrl == null && repositoryTask != null && repositoryTask.hasValidUrl()){
+					taskUrl = repositoryTask.getUrl();
+				}
+				
+				final String taskUrlToOpen = taskUrl;
+				
+				if (taskUrlToOpen != null) {
 					openBrowserAction = new Action() {
 						@Override
 						public void run() {
-							TasksUiUtil.openUrl(taskUrl, false);
+							TasksUiUtil.openUrl(taskUrlToOpen, false);
 						}
 					};
 
