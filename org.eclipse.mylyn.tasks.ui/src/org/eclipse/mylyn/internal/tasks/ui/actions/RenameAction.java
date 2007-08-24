@@ -10,6 +10,8 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.swt.SWT;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
@@ -45,6 +47,13 @@ public class RenameAction extends BaseSelectionListenerAction {
 
 	@Override
 	protected boolean updateSelection(IStructuredSelection selection) {
-		return selection.getFirstElement() instanceof LocalTask;
+		Object selectedObject = selection.getFirstElement();
+		if (selectedObject instanceof AbstractTaskCategory) {
+			AbstractTaskCategory container = (AbstractTaskCategory) selectedObject;
+			return container.isUserDefined();
+		} else if (selectedObject instanceof AbstractRepositoryQuery) {
+			return true;
+		}
+		return (selectedObject instanceof LocalTask);
 	}
 }
