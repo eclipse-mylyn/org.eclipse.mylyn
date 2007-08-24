@@ -105,17 +105,17 @@ public class TracTaskDataHandlerTest extends TestCase {
 		assertFalse(task.isStale());
 	}
 
-	public void testGetChangedSinceLastSyncXmlRpc010() throws Exception {
+	public void testMarkStaleTasksXmlRpc010() throws Exception {
 		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
-		getChangedSinceLastSync();
+		markStaleTasks();
 	}
 
-	public void testGetChangedSinceLastSyncXmlRpc011() throws Exception {
+	public void testMarkStaleTasksXmlRpc011() throws Exception {
 		init(TracTestConstants.TEST_TRAC_011_URL, Version.XML_RPC);
-		getChangedSinceLastSync();
+		markStaleTasks();
 	}
 
-	private void getChangedSinceLastSync() throws Exception {
+	private void markStaleTasks() throws Exception {
 		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.offlineHandlerTicketId + "",
 				new NullProgressMonitor());
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
@@ -127,7 +127,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 		Set<AbstractTask> tasks = new HashSet<AbstractTask>();
 		tasks.add(task);
 
-		assertEquals(null, repository.getSynchronizationTimeStamp());
+		repository.setSynchronizationTimeStamp(null);
 		boolean changed = connector.markStaleTasks(repository, tasks, new NullProgressMonitor());
 		assertTrue(changed);
 		assertTrue(task.isStale());
@@ -136,13 +136,15 @@ public class TracTaskDataHandlerTest extends TestCase {
 		task.setStale(false);
 		repository.setSynchronizationTimeStamp(lastModified + "");
 		changed = connector.markStaleTasks(repository, tasks, new NullProgressMonitor());
-		assertTrue(changed);
-		assertTrue(task.isStale());
+		// TODO this was fixed so it returns false now but only if the 
+		// query returns a single task
+		assertFalse(changed);
+		assertFalse(task.isStale());
 
 		task.setStale(false);
 		repository.setSynchronizationTimeStamp((lastModified + 1) + "");
 		changed = connector.markStaleTasks(repository, tasks, new NullProgressMonitor());
-		assertTrue(changed);
+		assertFalse(changed);
 		assertFalse(task.isStale());
 
 		// change ticket making sure it gets a new change time
@@ -158,6 +160,47 @@ public class TracTaskDataHandlerTest extends TestCase {
 
 		task.setStale(false);
 		repository.setSynchronizationTimeStamp((lastModified + 1) + "");
+		changed = connector.markStaleTasks(repository, tasks, new NullProgressMonitor());
+		assertTrue(changed);
+		assertTrue(task.isStale());
+	}
+
+	public void testMarkStaleTasksNoTimeStampXmlRpc010() throws Exception {
+		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
+		markStaleTasksNoTimeStamp();
+	}
+
+	public void testMarkStaleTasksNoTimeStampXmlRpc011() throws Exception {
+		init(TracTestConstants.TEST_TRAC_011_URL, Version.XML_RPC);
+		markStaleTasksNoTimeStamp();
+	}
+
+	private void markStaleTasksNoTimeStamp() throws Exception {
+		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.offlineHandlerTicketId + "",
+				new NullProgressMonitor());
+		Set<AbstractTask> tasks = new HashSet<AbstractTask>();
+		tasks.add(task);
+
+		task.setStale(false);
+		repository.setSynchronizationTimeStamp(null);
+		boolean changed = connector.markStaleTasks(repository, tasks, new NullProgressMonitor());
+		assertTrue(changed);
+		assertTrue(task.isStale());
+
+		task.setStale(false);
+		repository.setSynchronizationTimeStamp("");
+		changed = connector.markStaleTasks(repository, tasks, new NullProgressMonitor());
+		assertTrue(changed);
+		assertTrue(task.isStale());
+
+		task.setStale(false);
+		repository.setSynchronizationTimeStamp("0");
+		changed = connector.markStaleTasks(repository, tasks, new NullProgressMonitor());
+		assertTrue(changed);
+		assertTrue(task.isStale());
+
+		task.setStale(false);
+		repository.setSynchronizationTimeStamp("abc");
 		changed = connector.markStaleTasks(repository, tasks, new NullProgressMonitor());
 		assertTrue(changed);
 		assertTrue(task.isStale());

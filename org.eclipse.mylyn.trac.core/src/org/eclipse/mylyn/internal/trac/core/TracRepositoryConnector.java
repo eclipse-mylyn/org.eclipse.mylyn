@@ -175,7 +175,8 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 				return true;
 			}
 
-			if (repository.getSynchronizationTimeStamp() == null) {
+			if (repository.getSynchronizationTimeStamp() == null
+					|| repository.getSynchronizationTimeStamp().length() == 0) {
 				for (AbstractTask task : tasks) {
 					task.setStale(true);
 				}
