@@ -55,7 +55,9 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 		String text = getTextForTask(object);
 
 		TextTransfer textTransfer = TextTransfer.getInstance();
-		clipboard.setContents(new Object[] { text }, new Transfer[] { textTransfer });
+		if (text != null &&  !text.equals("")) {
+			clipboard.setContents(new Object[] { text }, new Transfer[] { textTransfer });
+		}
 	}
 
 	public static String getTextForTask(Object object) {
