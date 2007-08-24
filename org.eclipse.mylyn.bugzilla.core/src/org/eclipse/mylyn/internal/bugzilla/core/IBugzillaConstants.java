@@ -227,8 +227,12 @@ public interface IBugzillaConstants {
 		UNCONFIRMED, NEW, ASSIGNED, REOPENED, RESOLVED, VERIFIED, CLOSED, SCHEDULED;
 	}
 
-	public static enum BUGZILLA_RESOLUTION {
+	public static enum BUGZILLA_RESOLUTION_2_0 {
 		FIXED, INVALID, WONTFIX, LATER, REMIND, WORKSFORME;
+	}
+
+	public static enum BUGZILLA_RESOLUTION_3_0 {
+		FIXED, INVALID, WONTFIX, WORKSFORME;
 	}
 
 	public static final String ERROR_MSG_OP_NOT_PERMITTED = "The requested operation is not permitted.";

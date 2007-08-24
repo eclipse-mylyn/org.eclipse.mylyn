@@ -18,7 +18,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_OPERATION;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPORT_STATUS;
-import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_RESOLUTION;
+import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_RESOLUTION_2_0;
+import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_RESOLUTION_3_0;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
@@ -195,30 +196,30 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		case UNCONFIRMED:
 		case REOPENED:
 		case NEW:
-			addOperation(bugReport, BUGZILLA_OPERATION.none, userName);
-			addOperation(bugReport, BUGZILLA_OPERATION.accept, userName);
-			addOperation(bugReport, BUGZILLA_OPERATION.resolve, userName);
-			addOperation(bugReport, BUGZILLA_OPERATION.duplicate, userName);
+			addOperation(repository, bugReport, BUGZILLA_OPERATION.none, userName);
+			addOperation(repository, bugReport, BUGZILLA_OPERATION.accept, userName);
+			addOperation(repository, bugReport, BUGZILLA_OPERATION.resolve, userName);
+			addOperation(repository, bugReport, BUGZILLA_OPERATION.duplicate, userName);
 			break;
 		case ASSIGNED:
-			addOperation(bugReport, BUGZILLA_OPERATION.none, userName);
-			addOperation(bugReport, BUGZILLA_OPERATION.resolve, userName);
-			addOperation(bugReport, BUGZILLA_OPERATION.duplicate, userName);
+			addOperation(repository, bugReport, BUGZILLA_OPERATION.none, userName);
+			addOperation(repository, bugReport, BUGZILLA_OPERATION.resolve, userName);
+			addOperation(repository, bugReport, BUGZILLA_OPERATION.duplicate, userName);
 			break;
 		case RESOLVED:
-			addOperation(bugReport, BUGZILLA_OPERATION.none, userName);
-			addOperation(bugReport, BUGZILLA_OPERATION.reopen, userName);
-			addOperation(bugReport, BUGZILLA_OPERATION.verify, userName);
-			addOperation(bugReport, BUGZILLA_OPERATION.close, userName);
+			addOperation(repository, bugReport, BUGZILLA_OPERATION.none, userName);
+			addOperation(repository, bugReport, BUGZILLA_OPERATION.reopen, userName);
+			addOperation(repository, bugReport, BUGZILLA_OPERATION.verify, userName);
+			addOperation(repository, bugReport, BUGZILLA_OPERATION.close, userName);
 			break;
 		case CLOSED:
-			addOperation(bugReport, BUGZILLA_OPERATION.none, userName);
-			addOperation(bugReport, BUGZILLA_OPERATION.reopen, userName);
+			addOperation(repository, bugReport, BUGZILLA_OPERATION.none, userName);
+			addOperation(repository, bugReport, BUGZILLA_OPERATION.reopen, userName);
 			break;
 		case VERIFIED:
-			addOperation(bugReport, BUGZILLA_OPERATION.none, userName);
-			addOperation(bugReport, BUGZILLA_OPERATION.reopen, userName);
-			addOperation(bugReport, BUGZILLA_OPERATION.close, userName);
+			addOperation(repository, bugReport, BUGZILLA_OPERATION.none, userName);
+			addOperation(repository, bugReport, BUGZILLA_OPERATION.reopen, userName);
+			addOperation(repository, bugReport, BUGZILLA_OPERATION.close, userName);
 		}
 		String bugzillaVersion;
 		try {
@@ -230,12 +231,13 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		if (bugzillaVersion.compareTo("3.1") < 0
 				&& (status == BUGZILLA_REPORT_STATUS.NEW || status == BUGZILLA_REPORT_STATUS.ASSIGNED)) {
 			// old bugzilla workflow is used
-			addOperation(bugReport, BUGZILLA_OPERATION.reassign, userName);
-			addOperation(bugReport, BUGZILLA_OPERATION.reassignbycomponent, userName);
+			addOperation(repository, bugReport, BUGZILLA_OPERATION.reassign, userName);
+			addOperation(repository, bugReport, BUGZILLA_OPERATION.reassignbycomponent, userName);
 		}
 	}
 
-	private void addOperation(RepositoryTaskData bugReport, BUGZILLA_OPERATION opcode, String userName) {
+	private void addOperation(TaskRepository repository, RepositoryTaskData bugReport, BUGZILLA_OPERATION opcode,
+			String userName) {
 		RepositoryOperation newOperation = null;
 		switch (opcode) {
 		case none:
@@ -249,8 +251,30 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		case resolve:
 			newOperation = new RepositoryOperation(opcode.toString(), OPERATION_LABEL_RESOLVE);
 			newOperation.setUpOptions(OPERATION_OPTION_RESOLUTION);
-			for (BUGZILLA_RESOLUTION resolution : BUGZILLA_RESOLUTION.values()) {
-				newOperation.addOption(resolution.toString(), resolution.toString());
+			RepositoryConfiguration config;
+			try {
+				config = BugzillaCorePlugin.getRepositoryConfiguration(repository, false);
+			} catch (CoreException e) {
+				config = null;
+			}
+			if (config != null) {
+				for (String resolution : config.getResolutions()) {
+					// DUPLICATE and MOVED have special meanings so do not show as resolution
+					if (resolution.compareTo("DUPLICATE")!= 0 && resolution.compareTo("MOVED")!= 0)
+						newOperation.addOption(resolution, resolution);
+				}
+			} else {
+				// LATER and REMIND must not be there in Bugzilla >= 3.0 is used
+				//If getVersion() returns "Automatic (Use Validate Settings)" we use the Version 3 Resolution 
+				if (repository.getVersion().compareTo("3.0")>= 0) {
+					for (BUGZILLA_RESOLUTION_3_0 resolution : BUGZILLA_RESOLUTION_3_0.values()) {
+						newOperation.addOption(resolution.toString(), resolution.toString());
+					}
+				} else {
+					for (BUGZILLA_RESOLUTION_2_0 resolution : BUGZILLA_RESOLUTION_2_0.values()) {
+						newOperation.addOption(resolution.toString(), resolution.toString());
+					}
+				}
 			}
 			break;
 		case duplicate:
