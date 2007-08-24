@@ -16,6 +16,8 @@ import java.util.Set;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.text.ITextListener;
+import org.eclipse.jface.text.TextEvent;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
@@ -841,9 +843,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 		noteEditor.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		noteEditor.setEditable(true);
 
-		noteEditor.getTextWidget().addModifyListener(new ModifyListener() {
-
-			public void modifyText(ModifyEvent e) {
+		noteEditor.addTextListener(new ITextListener() {
+			public void textChanged(TextEvent event) {
 				markDirty(true);
 			}
 		});

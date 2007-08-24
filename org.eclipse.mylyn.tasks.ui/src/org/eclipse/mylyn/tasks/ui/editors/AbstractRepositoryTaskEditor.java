@@ -48,7 +48,9 @@ import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.text.ITextListener;
 import org.eclipse.jface.text.Region;
+import org.eclipse.jface.text.TextEvent;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.util.SafeRunnable;
@@ -1273,9 +1275,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 			final RepositoryTaskAttribute summaryAttribute = attribute;
 
-			summaryTextViewer.getTextWidget().addModifyListener(new ModifyListener() {
-
-				public void modifyText(ModifyEvent e) {
+			summaryTextViewer.addTextListener(new ITextListener() {
+				public void textChanged(TextEvent event) {
 					String newValue = summaryTextViewer.getTextWidget().getText();
 					summaryAttribute.setValue(newValue);
 					attributeChanged(summaryAttribute);
@@ -1648,8 +1649,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			gd.grabExcessHorizontalSpace = true;
 			descriptionTextViewer.getControl().setLayoutData(gd);
 			descriptionTextViewer.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-			descriptionTextViewer.getTextWidget().addModifyListener(new ModifyListener() {
-				public void modifyText(ModifyEvent e) {
+			descriptionTextViewer.addTextListener(new ITextListener() {
+				public void textChanged(TextEvent event) {
 					String newValue = descriptionTextViewer.getTextWidget().getText();
 					RepositoryTaskAttribute attribute = taskData.getAttribute(RepositoryTaskAttribute.DESCRIPTION);
 					attribute.setValue(newValue);
@@ -2240,9 +2241,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		newCommentTextViewer.getControl().setLayoutData(addCommentsTextData);
 		newCommentTextViewer.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 
-		newCommentTextViewer.getTextWidget().addModifyListener(new ModifyListener() {
-
-			public void modifyText(ModifyEvent e) {
+		newCommentTextViewer.addTextListener(new ITextListener() {
+			public void textChanged(TextEvent event) {
 				String newValue = addCommentsTextBox.getText();
 				attribute.setValue(newValue);
 				attributeChanged(attribute);
