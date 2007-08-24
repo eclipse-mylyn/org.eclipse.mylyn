@@ -2274,7 +2274,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					return;
 				}
 
-				if (event.location != null) {
+				if (event.location != null && !event.location.startsWith("about")) {
 					event.doit = false;
 					IHyperlink link = new TaskUrlHyperlink(
 							new Region(0, 0)/* a fake region just to make constructor happy */, event.location);
