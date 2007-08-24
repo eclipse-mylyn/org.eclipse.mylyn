@@ -80,9 +80,6 @@ import org.eclipse.swt.widgets.Display;
  */
 public class TaskListManager implements IPropertyChangeListener {
 
-	// Did have preference for this so should re-enable
-	private static final int START_HOUR = 8;
-
 	private static final long SECOND = 1000;
 
 	private static final long MINUTE = 60 * SECOND;
@@ -1148,7 +1145,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	}
 
 	public int getStartHour() {
-		return START_HOUR;
+		return TasksUiPlugin.getDefault().getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR);
 	}
 
 	public static void scheduleNewTask(AbstractTask newTask) {

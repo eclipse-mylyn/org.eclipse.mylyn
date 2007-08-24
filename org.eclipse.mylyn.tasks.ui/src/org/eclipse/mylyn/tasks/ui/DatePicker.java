@@ -18,6 +18,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.jface.window.Window;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.planner.DateSelectionDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
@@ -128,7 +129,10 @@ public class DatePicker extends Composite {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				Calendar newCalendar = GregorianCalendar.getInstance();
-				newCalendar.set(Calendar.HOUR_OF_DAY, TasksUiPlugin.getTaskListManager().getStartHour());
+				newCalendar.set(Calendar.HOUR_OF_DAY, TasksUiPlugin.getDefault().getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
+				newCalendar.set(Calendar.MINUTE, 0);
+				newCalendar.set(Calendar.SECOND, 0);
+				newCalendar.set(Calendar.MILLISECOND, 0);
 				if (date != null) {
 					newCalendar.setTime(date.getTime());
 				}
