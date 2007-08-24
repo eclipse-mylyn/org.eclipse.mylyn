@@ -61,23 +61,27 @@ public class ActiveFoldingListener implements IInteractionContextListener {
 
 	public ActiveFoldingListener(JavaEditor editor) {
 		this.editor = editor;
-		ContextCorePlugin.getContextManager().addListener(this);
-		ContextUiPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
+		if (ContextUiPlugin.getDefault() == null) {
+			StatusHandler.fail(null, "Could not update folding, Mylyn is not correctly installed", false);
+		} else { 
+			ContextCorePlugin.getContextManager().addListener(this);
+			ContextUiPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
 
-		enabled = ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED);
-		try {
-			Object adapter = editor.getAdapter(IJavaFoldingStructureProvider.class);
-			if (adapter instanceof IJavaFoldingStructureProviderExtension) {
-				updater = (IJavaFoldingStructureProviderExtension) adapter;
-			} else {
-				StatusHandler.log("Could not install active folding on provider: " + adapter + ", must extend "
-						+ IJavaFoldingStructureProviderExtension.class.getName(), this);
+			enabled = ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
+					ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED);
+			try {
+				Object adapter = editor.getAdapter(IJavaFoldingStructureProvider.class);
+				if (adapter instanceof IJavaFoldingStructureProviderExtension) {
+					updater = (IJavaFoldingStructureProviderExtension) adapter;
+				} else {
+					StatusHandler.log("Could not install active folding on provider: " + adapter + ", must extend "
+							+ IJavaFoldingStructureProviderExtension.class.getName(), this);
+				}
+			} catch (Exception e) {
+				StatusHandler.fail(e, "could not install auto folding, reflection denied", false);
 			}
-		} catch (Exception e) {
-			StatusHandler.fail(e, "could not install auto folding, reflection denied", false);
+			updateFolding();
 		}
-		updateFolding();
 	}
 
 	public void dispose() {
