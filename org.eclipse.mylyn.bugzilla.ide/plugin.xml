@@ -19,7 +19,7 @@
             label="Eclipse.org"
             repositoryKind="bugzilla"
             urlRepository="https://bugs.eclipse.org/bugs"
-            version="2.22"/>
+            version="3.0"/>
    </extension>    
   
    <extension point="org.eclipse.ui.popupMenus">
