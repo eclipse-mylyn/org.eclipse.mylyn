@@ -40,6 +40,11 @@ public abstract class AbstractTaskRepositoryLinkProvider implements IExecutableE
 		}
 	}
 
+	/**
+	 * This operation is invoked frequently by hyperlink detectors and needs to be fast (i.e. cannot do network access
+	 * or invoke long-running refreshes).  Return null if the repository cannot be resolved without excessive
+	 * file I/O.
+	 */
 	public abstract TaskRepository getTaskRepository(IResource resource, TaskRepositoryManager repositoryManager);
 
 	public boolean canSetTaskRepository(IResource resource) {
