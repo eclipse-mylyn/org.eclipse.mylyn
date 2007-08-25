@@ -26,16 +26,28 @@ public class ShellLifecycleListener implements ShellListener {
 
 	public ShellLifecycleListener(InteractionContextManager manager) {
 		this.manager = manager;
+
+		String productId = InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH;
+		if (Platform.getProduct() != null) {
+			productId = Platform.getProduct().getId();
+		}
+
 		manager.processActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-				InteractionContextManager.ACTIVITY_STRUCTUREKIND_LIFECYCLE, Platform.getProduct().getId(),
+				InteractionContextManager.ACTIVITY_STRUCTUREKIND_LIFECYCLE, productId,
 				InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
 				InteractionContextManager.ACTIVITY_DELTA_STARTED, 1f));
 	}
 
 	public void shellClosed(ShellEvent shellEvent) {
 		manager.deactivateAllContexts();
+
+		String productId = InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH;
+		if (Platform.getProduct() != null) {
+			productId = Platform.getProduct().getId();
+		}
+
 		manager.processActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-				InteractionContextManager.ACTIVITY_STRUCTUREKIND_LIFECYCLE, Platform.getProduct().getId(),
+				InteractionContextManager.ACTIVITY_STRUCTUREKIND_LIFECYCLE, productId,
 				InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
 				InteractionContextManager.ACTIVITY_DELTA_STOPPED, 1f));
 		ContextCorePlugin.getContextManager().saveActivityContext();
