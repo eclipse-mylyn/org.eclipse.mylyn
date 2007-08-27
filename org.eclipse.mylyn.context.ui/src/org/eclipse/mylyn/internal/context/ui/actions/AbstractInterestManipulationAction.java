@@ -61,14 +61,7 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 		if (selection instanceof StructuredSelection) {
 			StructuredSelection structuredSelection = (StructuredSelection) selection;
 			for (Object object : structuredSelection.toList()) {
-				IInteractionElement node = null;
-				if (object instanceof IInteractionElement) {
-					node = (IInteractionElement) object;
-				} else {
-					AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(object);
-					String handle = bridge.getHandleIdentifier(object);
-					node = ContextCorePlugin.getContextManager().getElement(handle);
-				}
+				IInteractionElement node = convertSelectionToInteractionElement(object);
 				if (node != null) {
 					if (!increment) {
 						try {
@@ -105,6 +98,21 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 						MESSAGE_NO_CONTEXT);
 			}
 		}
+	}
+
+	/**
+	 * TODO: consider moving this extensibility to the UI Bridge
+	 */
+	protected IInteractionElement convertSelectionToInteractionElement(Object object) {
+		IInteractionElement node = null;
+		if (object instanceof IInteractionElement) {
+			node = (IInteractionElement) object;
+		} else {
+			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(object);
+			String handle = bridge.getHandleIdentifier(object);
+			node = ContextCorePlugin.getContextManager().getElement(handle);
+		}
+		return node;
 	}
 
 	public void dispose() {
