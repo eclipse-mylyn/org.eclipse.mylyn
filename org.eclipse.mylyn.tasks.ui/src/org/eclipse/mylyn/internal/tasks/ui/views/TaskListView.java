@@ -695,6 +695,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			applyPresentation(taskListMemento.getString(MEMENTO_PRESENTATION));
 		}
 
+		filterWorkingSet.setCurrentWorkingSet(getSite().getPage().getAggregateWorkingSet());
 		addFilter(filterWorkingSet);
 		addFilter(filterPriority);
 		if (TasksUiPlugin.getDefault().getPreferenceStore().contains(TasksUiPreferenceConstants.FILTER_COMPLETE_MODE)) {
@@ -1602,8 +1603,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		filterPriority.displayPrioritiesAbove(priority);
 		getViewer().refresh();
 	}
-
-	// IPropertyChangeListener
 
 	public void propertyChange(PropertyChangeEvent event) {
 		String property = event.getProperty();
