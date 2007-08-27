@@ -54,7 +54,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 	}
 
 	private boolean isDateRangeInteresting(ScheduledTaskContainer container) {
-		return (TasksUiPlugin.getTaskListManager().isWeekDay(container));// ||dateRangeTaskContainer.isFuture();
+		return (TasksUiPlugin.getTaskListManager().isWeekDay(container) && (container.isPresent() || container.isFuture()));
 	}
 
 	protected boolean isUninteresting(Object parent, AbstractTask task) {
