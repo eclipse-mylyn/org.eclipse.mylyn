@@ -41,6 +41,7 @@ public class TaskActivityTimingTest extends TestCase {
 	}
 
 	protected void tearDown() throws Exception {
+		ContextCorePlugin.getContextManager().getActivityMetaContext().reset();
 		TasksUiPlugin.getTaskListManager().resetTaskList();
 		TasksUiPlugin.getTaskListManager().saveTaskList();
 		super.tearDown();

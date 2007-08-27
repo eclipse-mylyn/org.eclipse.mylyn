@@ -54,16 +54,15 @@ public class TaskListTableSorter extends ViewerSorter {
 	 */
 	@Override
 	public int compare(Viewer compareViewer, Object o1, Object o2) {
-		if (o1 instanceof ScheduledTaskContainer) {
-			if (o2 instanceof ScheduledTaskContainer) {
-				ScheduledTaskContainer dateRangeTaskContainer1 = (ScheduledTaskContainer) o1;
-				ScheduledTaskContainer dateRangeTaskContainer2 = (ScheduledTaskContainer) o2;
-				return -1 * dateRangeTaskContainer2.getStart().compareTo(dateRangeTaskContainer1.getStart());
-			} else if (o2 instanceof AbstractTask) {
-				return 1;
-			} else {
-				return -1;
-			}
+
+		if (o1 instanceof ScheduledTaskContainer && o2 instanceof ScheduledTaskContainer) {
+			ScheduledTaskContainer dateRangeTaskContainer1 = (ScheduledTaskContainer) o1;
+			ScheduledTaskContainer dateRangeTaskContainer2 = (ScheduledTaskContainer) o2;
+			return -1 * dateRangeTaskContainer2.getStart().compareTo(dateRangeTaskContainer1.getStart());
+		} else if (o1 instanceof AbstractTaskContainer && o2 instanceof ScheduledTaskContainer) {
+			return -1;
+		} else if (o1 instanceof ScheduledTaskContainer && o2 instanceof AbstractTaskContainer) {
+			return 1;
 		}
 
 		if (o1 instanceof UnfiledCategory && o2 instanceof AbstractTaskContainer) {

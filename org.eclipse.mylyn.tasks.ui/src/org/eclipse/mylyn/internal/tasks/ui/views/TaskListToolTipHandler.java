@@ -18,7 +18,9 @@ import java.util.Date;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskDelegate;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskListNotification;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.monitor.core.DateUtil;
@@ -101,20 +103,36 @@ public class TaskListToolTipHandler {
 	}
 
 	private String getDetailsText(AbstractTaskContainer element) {
+		TreeViewer viewer = TaskListView.getFromActivePerspective().getViewer();
+
 		if (element instanceof ScheduledTaskContainer) {
 			ScheduledTaskContainer container = (ScheduledTaskContainer) element;
+			int estimateTotal = 0;
+			long elapsedTotal = 0;
+			if (viewer != null) {
+				Object[] children = ((TaskListContentProvider) viewer.getContentProvider()).getChildren(element);
+				for (Object object : children) {
+					if (object instanceof AbstractTask) {
+						estimateTotal += ((AbstractTask) object).getEstimateTimeHours();
+						elapsedTotal += TasksUiPlugin.getTaskListManager().getElapsedTime(
+								((ScheduledTaskDelegate) object).getCorrespondingTask(), container.getStart(),
+								container.getEnd());
+					}
+				}
+			}
+
 			StringBuilder sb = new StringBuilder();
 			sb.append("Estimate: ");
-			sb.append(container.getTotalEstimated());
+			sb.append(estimateTotal);
 			sb.append(" hours");
 			sb.append("\n");
 			sb.append("Elapsed: ");
-			sb.append(DateUtil.getFormattedDurationShort(container.getTotalElapsed()));
+			sb.append(DateUtil.getFormattedDurationShort(elapsedTotal));
 			sb.append("\n");
 			return sb.toString();
 		} else if (element instanceof AbstractTask) {
 			AbstractTask task = (AbstractTask) element;
-			StringBuilder sb = new StringBuilder();			
+			StringBuilder sb = new StringBuilder();
 			sb.append(TasksUiPlugin.getConnectorUi(task.getConnectorKind()).getTaskKindLabel(task));
 			String key = task.getTaskKey();
 			if (key != null) {
@@ -146,7 +164,27 @@ public class TaskListToolTipHandler {
 	}
 
 	private String getActivityText(AbstractTaskContainer element) {
-		if (element instanceof AbstractTask) {
+		if (element instanceof ScheduledTaskDelegate) {
+			ScheduledTaskDelegate task = (ScheduledTaskDelegate) element;
+
+			StringBuilder sb = new StringBuilder();
+			Date date = task.getScheduledForDate();
+			if (date != null) {
+				sb.append("Scheduled for: ");
+				sb.append(new SimpleDateFormat("E").format(date)).append(", ");
+				sb.append(DateFormat.getDateInstance(DateFormat.LONG).format(date));
+				sb.append(" (").append(DateFormat.getTimeInstance(DateFormat.SHORT).format(date)).append(")\n");
+			}
+
+			long elapsed = TasksUiPlugin.getTaskListManager().getElapsedTime(task.getCorrespondingTask(),
+					task.getDateRangeContainer().getStart(), task.getDateRangeContainer().getEnd());
+			String elapsedTimeString = DateUtil.getFormattedDurationShort(elapsed);
+			sb.append("Elapsed: ");
+			sb.append(elapsedTimeString);
+			sb.append("\n");
+
+			return sb.toString();
+		} else if (element instanceof AbstractTask) {
 			AbstractTask task = (AbstractTask) element;
 
 			StringBuilder sb = new StringBuilder();
@@ -176,7 +214,8 @@ public class TaskListToolTipHandler {
 				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 						task);
 				if (connector != null) {
-					ITaskListNotification notification = TasksUiPlugin.getDefault().getIncommingNotification(connector, task);
+					ITaskListNotification notification = TasksUiPlugin.getDefault().getIncommingNotification(connector,
+							task);
 					if (notification != null) {
 						String res = null;
 						if (notification.getDescription() != null) {
@@ -185,10 +224,10 @@ public class TaskListToolTipHandler {
 								res = descriptionText;
 							}
 						}
-						if(notification.getDetails() !=null) {
+						if (notification.getDetails() != null) {
 							String details = notification.getDetails();
 							if (details != null && details.length() > 0) {
-								res = res==null ? details : res + "\n" + details;
+								res = res == null ? details : res + "\n" + details;
 							}
 						}
 						return res;
@@ -208,7 +247,7 @@ public class TaskListToolTipHandler {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
 			status = query.getSynchronizationStatus();
 		}
-		
+
 		if (status != null) {
 			StringBuilder sb = new StringBuilder();
 			sb.append(status.getMessage());
@@ -216,8 +255,8 @@ public class TaskListToolTipHandler {
 				sb.append(" Please synchronize manually for full error message.");
 			}
 			return sb.toString();
-		} 
-		
+		}
+
 		return null;
 	}
 
@@ -225,8 +264,17 @@ public class TaskListToolTipHandler {
 		if (element instanceof AbstractTask) {
 			return null;
 		}
+		Object[] children = new Object[0];
 
-		int total = element.getChildren().size();
+		TreeViewer viewer = TaskListView.getFromActivePerspective().getViewer();
+
+		if (element instanceof ScheduledTaskContainer && viewer != null) {
+			children = ((TaskListContentProvider) viewer.getContentProvider()).getChildren(element);
+		} else {
+			children = element.getChildren().toArray();
+		}
+
+		int total = children.length;
 		int completed = 0;
 		for (AbstractTask task : element.getChildren()) {
 			if (task.isCompleted()) {
@@ -320,13 +368,13 @@ public class TaskListToolTipHandler {
 					Tree w = (Tree) widget;
 					widget = w.getItem(widgetPosition);
 				}
-				
+
 				if (widget == null) {
 					hideTooltip();
 					tipWidget = null;
 					return;
 				}
-				
+
 				if (widget == tipWidget) {
 					// already displaying tooltip
 					return;
@@ -389,7 +437,7 @@ public class TaskListToolTipHandler {
 		if (element == null) {
 			return;
 		}
-		
+
 		Shell parent = PlatformUI.getWorkbench().getDisplay().getActiveShell();
 		if (parent == null) {
 			return;
@@ -439,7 +487,7 @@ public class TaskListToolTipHandler {
 			GridData labelGridData = new GridData(SWT.FILL, SWT.TOP, true, false);
 			labelGridData.heightHint = 0;
 			label.setLayoutData(labelGridData);
-			
+
 			Composite progressComposite = new Composite(tipShell, SWT.NONE);
 			GridLayout progressLayout = new GridLayout(1, false);
 			progressLayout.marginWidth = 0;
@@ -467,7 +515,7 @@ public class TaskListToolTipHandler {
 		if (statusText != null) {
 			addIconAndLabel(tipShell, TasksUiImages.getImage(TasksUiImages.WARNING), statusText);
 		}
-		
+
 		tipShell.pack();
 		setHoverLocation(tipShell, location);
 		tipShell.setVisible(true);

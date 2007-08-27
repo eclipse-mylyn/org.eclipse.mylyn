@@ -24,6 +24,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,7 +43,6 @@ import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
-import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskDelegate;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
@@ -126,9 +126,11 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	private ArrayList<ScheduledTaskContainer> scheduleContainers = new ArrayList<ScheduledTaskContainer>();
 
-	private Set<AbstractTask> tasksWithReminders = new HashSet<AbstractTask>();
+	private SortedMap<Calendar, Set<AbstractTask>> scheduledTasks = new TreeMap<Calendar, Set<AbstractTask>>();
 
-	private Set<AbstractTask> tasksWithDueDates = new HashSet<AbstractTask>();
+	private SortedMap<Calendar, Set<AbstractTask>> dueTasks = new TreeMap<Calendar, Set<AbstractTask>>();
+
+	private SortedMap<Calendar, Set<AbstractTask>> activeTasks = new TreeMap<Calendar, Set<AbstractTask>>();
 
 	private Map<AbstractTask, SortedMap<Calendar, Long>> taskElapsedTimeMap = new ConcurrentHashMap<AbstractTask, SortedMap<Calendar, Long>>();
 
@@ -234,21 +236,12 @@ public class TaskListManager implements IPropertyChangeListener {
 	}
 
 	public TaskList resetTaskList() {
-		resetActivity();
+		resetAndRollOver();
+		dueTasks.clear();
+		scheduledTasks.clear();
 		taskList.reset();
 		taskListInitialized = true;
 		return taskList;
-	}
-
-	private void resetActivity() {
-		tasksWithReminders.clear();
-		tasksWithDueDates.clear();
-		taskElapsedTimeMap.clear();
-		scheduleContainers.clear();
-		if (scheduledThisWeek != null) {
-			scheduledThisWeek.clear();
-		}
-		setupCalendarRanges();
 	}
 
 	/**
@@ -265,83 +258,61 @@ public class TaskListManager implements IPropertyChangeListener {
 			parseInteractionEvent(event);
 		}
 		taskActivityHistoryInitialized = true;
-		parseFutureReminders();
 	}
 
+	@Deprecated
 	public void parseFutureReminders() {
-		scheduledPast.clear();
-		scheduledPrevious.clear();
-		scheduledThisWeek.clear();//
-		scheduledNextWeek.clear();
-		scheduledFuture.clear();
-		for (ScheduledTaskContainer day : scheduleWeekDays) {
-			day.clear();
-		}
-
-//		HashSet<AbstractTask> toRemove = new HashSet<AbstractTask>();
-//		toRemove.addAll(scheduledThisWeek.getDateRangeDelegates());
-//		for (AbstractTask activity : toRemove) {
-//			ScheduledTaskDelegate delegate = (ScheduledTaskDelegate) activity;
-//			Calendar calendar = GregorianCalendar.getInstance();
+//		scheduledPast.clear();
+//		scheduledPrevious.clear();
+//		scheduledThisWeek.clear();//
+//		scheduledNextWeek.clear();
+//		scheduledFuture.clear();
+//		for (ScheduledTaskContainer day : scheduleWeekDays) {
+//			day.clear();
+//		}
 //
-//			Date schedDate = delegate.getScheduledForDate();
-//			if (schedDate == null) {
-//				schedDate = delegate.getDueDate();
+//		GregorianCalendar tempCalendar = new GregorianCalendar();
+//		tempCalendar.setFirstDayOfWeek(startDay);
+//
+//		Set<AbstractTask> allScheduledTasks = new HashSet<AbstractTask>();
+//		allScheduledTasks.addAll(tasksWithReminders);
+//		allScheduledTasks.addAll(tasksWithDueDates);
+//
+//		for (AbstractTask task : allScheduledTasks) {
+//			if (task instanceof ScheduledTaskDelegate) {
+//				task = ((ScheduledTaskDelegate) task).getCorrespondingTask();
+//			}
+//
+//			Date schedDate = task.getScheduledForDate();
+//			if (schedDate == null || isOverdue(task)) {
+//				schedDate = task.getDueDate();
 //			}
 //
 //			if (schedDate != null) {
-//				calendar.setTime(schedDate);
-//				if (!scheduledThisWeek.includes(calendar) && scheduledThisWeek.getElapsed(delegate) == 0) {
-//					scheduledThisWeek.remove(delegate);
+//				tempCalendar.setTime(schedDate);
+//				if (scheduledNextWeek.includes(tempCalendar)) {
+//					scheduledNextWeek.addTask(new ScheduledTaskDelegate(scheduledNextWeek, task, tempCalendar,
+//							tempCalendar));
+//				} else if (scheduledFuture.includes(tempCalendar)) {
+//					scheduledFuture.addTask(new ScheduledTaskDelegate(scheduledFuture, task, tempCalendar, tempCalendar));
+//				} else if (scheduledThisWeek.includes(tempCalendar) && !scheduledThisWeek.getChildren().contains(task)) {
+//					scheduledThisWeek.addTask(new ScheduledTaskDelegate(scheduledThisWeek, task, tempCalendar,
+//							tempCalendar));
+//				} else if (scheduledPrevious.includes(tempCalendar) && !scheduledPrevious.getChildren().contains(task)) {
+//					scheduledPrevious.addTask(new ScheduledTaskDelegate(scheduledPrevious, task, tempCalendar,
+//							tempCalendar));
+//				} else if (scheduledPast.includes(tempCalendar) && !scheduledPast.getChildren().contains(task)) {
+//					scheduledPast.addTask(new ScheduledTaskDelegate(scheduledPast, task, tempCalendar, tempCalendar));
 //				}
-//			} else {
-//				if (scheduledThisWeek.getElapsed(delegate) == 0) {
-//					scheduledThisWeek.remove(delegate);
+//
+//				for (ScheduledTaskContainer day : scheduleWeekDays) {
+//					if (day.includes(tempCalendar) && !day.getChildren().contains(task)) {
+//						day.addTask(new ScheduledTaskDelegate(day, task, tempCalendar, tempCalendar,
+//								this.getElapsedTime(task)));
+//					}
 //				}
 //			}
 //		}
-		GregorianCalendar tempCalendar = new GregorianCalendar();
-		tempCalendar.setFirstDayOfWeek(startDay);
-
-		Set<AbstractTask> allScheduledTasks = new HashSet<AbstractTask>();
-		allScheduledTasks.addAll(tasksWithReminders);
-		allScheduledTasks.addAll(tasksWithDueDates);
-
-		for (AbstractTask task : allScheduledTasks) {
-			if (task instanceof ScheduledTaskDelegate) {
-				task = ((ScheduledTaskDelegate) task).getCorrespondingTask();
-			}
-
-			Date schedDate = task.getScheduledForDate();
-			if (schedDate == null || isOverdue(task)) {
-				schedDate = task.getDueDate();
-			}
-
-			if (schedDate != null) {
-				tempCalendar.setTime(schedDate);
-				if (scheduledNextWeek.includes(tempCalendar)) {
-					scheduledNextWeek.addTask(new ScheduledTaskDelegate(scheduledNextWeek, task, tempCalendar,
-							tempCalendar));
-				} else if (scheduledFuture.includes(tempCalendar)) {
-					scheduledFuture.addTask(new ScheduledTaskDelegate(scheduledFuture, task, tempCalendar, tempCalendar));
-				} else if (scheduledThisWeek.includes(tempCalendar) && !scheduledThisWeek.getChildren().contains(task)) {
-					scheduledThisWeek.addTask(new ScheduledTaskDelegate(scheduledThisWeek, task, tempCalendar,
-							tempCalendar));
-				} else if (scheduledPrevious.includes(tempCalendar) && !scheduledPrevious.getChildren().contains(task)) {
-					scheduledPrevious.addTask(new ScheduledTaskDelegate(scheduledPrevious, task, tempCalendar,
-							tempCalendar));
-				} else if (scheduledPast.includes(tempCalendar) && !scheduledPast.getChildren().contains(task)) {
-					scheduledPast.addTask(new ScheduledTaskDelegate(scheduledPast, task, tempCalendar, tempCalendar));
-				}
-
-				for (ScheduledTaskContainer day : scheduleWeekDays) {
-					if (day.includes(tempCalendar) && !day.getChildren().contains(task)) {
-						day.addTask(new ScheduledTaskDelegate(day, task, tempCalendar, tempCalendar,
-								this.getElapsedTime(task)));
-					}
-				}
-			}
-		}
 	}
 
 	/** public for testing * */
@@ -397,6 +368,14 @@ public class TaskListManager implements IPropertyChangeListener {
 		daysActivity = daysActivity.longValue() + attentionSpan;
 
 		activityMap.put(hourOfDay, daysActivity);
+
+		Set<AbstractTask> active = activeTasks.get(hourOfDay);
+		if (active == null) {
+			active = new HashSet<AbstractTask>();
+			activeTasks.put(hourOfDay, active);
+		}
+		active.add(activatedTask);
+
 	}
 
 	/** public for testing * */
@@ -422,6 +401,33 @@ public class TaskListManager implements IPropertyChangeListener {
 	/** public for testing * */
 	public ScheduledTaskContainer getActivityPrevious() {
 		return scheduledPrevious;
+	}
+
+	public Set<AbstractTask> getActiveTasks(Calendar start, Calendar end) {
+		Set<AbstractTask> resultingTasks = new HashSet<AbstractTask>();
+		SortedMap<Calendar, Set<AbstractTask>> result = activeTasks.subMap(start, end);
+		for (Set<AbstractTask> set : result.values()) {
+			resultingTasks.addAll(set);
+		}
+		return resultingTasks;
+	}
+
+	public Set<AbstractTask> getScheduledTasks(Calendar start, Calendar end) {
+		Set<AbstractTask> resultingTasks = new HashSet<AbstractTask>();
+		SortedMap<Calendar, Set<AbstractTask>> result = scheduledTasks.subMap(start, end);
+		for (Set<AbstractTask> set : result.values()) {
+			resultingTasks.addAll(set);
+		}
+		return resultingTasks;
+	}
+
+	public Set<AbstractTask> getDueTasks(Calendar start, Calendar end) {
+		Set<AbstractTask> resultingTasks = new HashSet<AbstractTask>();
+		SortedMap<Calendar, Set<AbstractTask>> result = dueTasks.subMap(start, end);
+		for (Set<AbstractTask> set : result.values()) {
+			resultingTasks.addAll(set);
+		}
+		return resultingTasks;
 	}
 
 	/** total elapsed time based on activation history */
@@ -780,16 +786,15 @@ public class TaskListManager implements IPropertyChangeListener {
 
 			for (AbstractTask task : taskList.getAllTasks()) {
 				if (task.getScheduledForDate() != null) {
-					tasksWithReminders.add(task);
+					addScheduledTask(task);
 				}
 				if (task.getDueDate() != null) {
-					tasksWithDueDates.add(task);
+					addDueTask(task);
 				}
 			}
 
-			resetActivity();
-			// parseFutureReminders();
 			taskListInitialized = true;
+			resetAndRollOver();
 			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
 				listener.taskListRead();
 			}
@@ -798,6 +803,42 @@ public class TaskListManager implements IPropertyChangeListener {
 			return false;
 		}
 		return true;
+	}
+
+	private void addScheduledTask(AbstractTask task) {
+		Calendar time = Calendar.getInstance();
+		time.setTime(task.getScheduledForDate());
+		snapToStartOfHour(time);
+		Set<AbstractTask> tasks = scheduledTasks.get(time);
+		if (tasks == null) {
+			tasks = new CopyOnWriteArraySet<AbstractTask>();
+			scheduledTasks.put(time, tasks);
+		}
+		tasks.add(task);
+	}
+
+	private void removeScheduledTask(AbstractTask task) {
+		for (Set<AbstractTask> setOfTasks : scheduledTasks.values()) {
+			setOfTasks.remove(task);
+		}
+	}
+
+	private void addDueTask(AbstractTask task) {
+		Calendar time = Calendar.getInstance();
+		time.setTime(task.getDueDate());
+		snapToStartOfHour(time);
+		Set<AbstractTask> tasks = dueTasks.get(time);
+		if (tasks == null) {
+			tasks = new CopyOnWriteArraySet<AbstractTask>();
+			dueTasks.put(time, tasks);
+		}
+		tasks.add(task);
+	}
+
+	private void removeDueTask(AbstractTask task) {
+		for (Set<AbstractTask> setOfTasks : dueTasks.values()) {
+			setOfTasks.remove(task);
+		}
 	}
 
 	/**
@@ -950,21 +991,6 @@ public class TaskListManager implements IPropertyChangeListener {
 		}
 
 		return false;
-
-		// if (task instanceof AbstractTask && !(task instanceof
-		// WebTask)) {
-		// AbstractTask repositoryTask = (AbstractTask)
-		// task;
-		// TaskRepository repository =
-		// TasksUiPlugin.getRepositoryManager().getRepository(
-		// repositoryTask.getRepositoryKind(),
-		// repositoryTask.getRepositoryUrl());
-		// if (repository != null && repositoryTask.getOwner() != null
-		// && !repositoryTask.getOwner().equals(repository.getUserName())) {
-		// return false;
-		// }
-		// }
-		// return true;
 	}
 
 	public boolean isScheduledAfterThisWeek(AbstractTask task) {
@@ -1026,24 +1052,22 @@ public class TaskListManager implements IPropertyChangeListener {
 		task.setScheduledForDate(reminderDate);
 		task.setReminded(false);
 		if (reminderDate == null) {
-			tasksWithReminders.remove(task);
+			removeScheduledTask(task);//scheduledTasks.remove(task);
 		} else {
-			tasksWithReminders.remove(task);
-			tasksWithReminders.add(task);
+			removeScheduledTask(task);//scheduledTasks.remove(task);
+			addScheduledTask(task);//scheduledTasks.put(task, task.getScheduledForDate().getTime());
 		}
-		parseFutureReminders();
 		taskList.notifyTaskChanged(task, false);
 	}
 
 	public void setDueDate(AbstractTask task, Date dueDate) {
 		task.setDueDate(dueDate);
 		if (dueDate == null) {
-			tasksWithDueDates.remove(task);
+			removeDueTask(task);//dueTasks.remove(task);
 		} else {
-			tasksWithDueDates.remove(task);
-			tasksWithDueDates.add(task);
+			removeDueTask(task);//dueTasks.remove(task);
+			addDueTask(task);//dueTasks.put(task, task.getDueDate().getTime());
 		}
-		parseFutureReminders();
 		taskList.notifyTaskChanged(task, false);
 	}
 
@@ -1069,16 +1093,16 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	/** public for testing */
 	public void resetAndRollOver() {
+		resetAndRollOver(new Date());
+	}
+
+	/** public for testing */
+	public void resetAndRollOver(Date startDate) {
+		startTime = startDate;
 		taskActivityHistoryInitialized = false;
-		resetActivity();
-		for (AbstractTask task : taskList.getAllTasks()) {
-			if (task.getScheduledForDate() != null) {
-				tasksWithReminders.add(task);
-			}
-			if (task.getDueDate() != null) {
-				tasksWithDueDates.add(task);
-			}
-		}
+		activeTasks.clear();
+		taskElapsedTimeMap.clear();
+		setupCalendarRanges();
 		parseTaskActivityInteractionHistory();
 		for (ITaskActivityListener listener : activityListeners) {
 			listener.activityChanged(null);
@@ -1095,7 +1119,6 @@ public class TaskListManager implements IPropertyChangeListener {
 				Calendar now = GregorianCalendar.getInstance();
 				ScheduledTaskContainer thisWeek = getActivityThisWeek();
 				if (!thisWeek.includes(now)) {
-					startTime = new Date();
 					resetAndRollOver();
 				}
 			}
