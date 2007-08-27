@@ -23,22 +23,6 @@
 	<extension
          point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
-            name="Task Context Test"
-            delegate="org.eclipse.mylyn.internal.java.ui.junit.TaskContextJUnitLaunchConfiguration"
-            modes="run, debug"
-            id="org.eclipse.mylyn.java.junit.launchconfig"
-            sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
-            sourcePathComputerId="org.eclipse.jdt.launching.sourceLookup.javaSourcePathComputer">
-         <fileExtension
-               default="false"
-               extension="java">
-         </fileExtension>
-         <fileExtension
-               default="false"
-               extension="class">
-         </fileExtension>
-      </launchConfigurationType>
-         <launchConfigurationType
             sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
             name="Task Context Plug-in Test"
             sourcePathComputerId="org.eclipse.jdt.launching.sourceLookup.javaSourcePathComputer"
