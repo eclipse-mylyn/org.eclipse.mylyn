@@ -25,4 +25,14 @@ public abstract class AbstractTaskCategory extends AbstractTaskContainer {
 	 * that are managed
 	 */
 	public abstract boolean isUserDefined();
+
+	@Override
+	public boolean equals(Object object) {
+		return super.equals(object);
+	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
 }

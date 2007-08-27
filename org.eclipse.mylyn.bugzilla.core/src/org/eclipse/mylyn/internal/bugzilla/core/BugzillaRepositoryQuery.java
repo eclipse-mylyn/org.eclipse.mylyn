@@ -22,11 +22,6 @@ public class BugzillaRepositoryQuery extends AbstractRepositoryQuery {
 		super(description);
 		this.url = queryUrl;
 		this.repositoryUrl = repositoryUrl;
-//		try {
-//			this.maxHits = Integer.parseInt(maxHits);
-//		} catch (Exception e) {
-//			this.maxHits = -1;
-//		}
 	}
 
 	@Override

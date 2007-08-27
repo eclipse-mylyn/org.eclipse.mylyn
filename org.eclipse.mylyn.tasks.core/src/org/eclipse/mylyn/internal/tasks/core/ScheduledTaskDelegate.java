@@ -67,10 +67,12 @@ public class ScheduledTaskDelegate extends AbstractTask {
 
 	@Override
 	public int hashCode() {
-		final int PRIME = 31;
-		int result = 1;
-		result = PRIME * result + ((task == null) ? 0 : task.hashCode());
-		result = PRIME * result + ((parent == null) ? 0 : parent.hashCode());
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + (int) (endMili ^ (endMili >>> 32));
+		result = prime * result + ((parent == null) ? 0 : parent.hashCode());
+		result = prime * result + (int) (startMili ^ (startMili >>> 32));
+		result = prime * result + ((task == null) ? 0 : task.hashCode());
 		return result;
 	}
 
@@ -78,20 +80,24 @@ public class ScheduledTaskDelegate extends AbstractTask {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		final ScheduledTaskDelegate other = (ScheduledTaskDelegate) obj;
-		if (task == null) {
-			if (other.task != null)
-				return false;
-		} else if (!task.equals(other.task))
+		ScheduledTaskDelegate other = (ScheduledTaskDelegate) obj;
+		if (endMili != other.endMili)
 			return false;
 		if (parent == null) {
 			if (other.parent != null)
 				return false;
 		} else if (!parent.equals(other.parent))
+			return false;
+		if (startMili != other.startMili)
+			return false;
+		if (task == null) {
+			if (other.task != null)
+				return false;
+		} else if (!task.equals(other.task))
 			return false;
 		return true;
 	}

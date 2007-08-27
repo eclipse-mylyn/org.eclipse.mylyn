@@ -283,7 +283,7 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof AbstractTask) {
-			return this.getHandleIdentifier().compareTo(((AbstractTask) obj).getHandleIdentifier()) == 0;
+			return this.getHandleIdentifier().equals(((AbstractTask) obj).getHandleIdentifier());
 		} else {
 			return false;
 		}
