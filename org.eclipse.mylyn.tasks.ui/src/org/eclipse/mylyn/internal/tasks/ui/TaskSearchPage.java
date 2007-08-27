@@ -16,18 +16,25 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylyn.internal.tasks.ui.actions.OpenRepositoryTask;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.search.AbstractRepositoryQueryPage;
 import org.eclipse.search.ui.ISearchPage;
 import org.eclipse.search.ui.ISearchPageContainer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -37,9 +44,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
-import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 
@@ -61,6 +70,8 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 
 	private Combo repositoryCombo;
 
+	private Text keyText;
+
 	private TaskRepository repository;
 
 	private Composite fParentComposite;
@@ -77,8 +88,19 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 
 	public boolean performAction() {
 		saveDialogSettings();
-		ISearchPage page = (ISearchPage) queryPages[currentPageIndex].getData(PAGE_KEY);
-		return page.performAction();
+		String key = keyText.getText();
+		if (key != null && key.trim().length() > 0) {
+			boolean openSuccessful = TasksUiUtil.openRepositoryTask(repository, key);
+			if (!openSuccessful) {
+				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+						ITasksUiConstants.TITLE_DIALOG, "No task found matching key: " + key);
+//				new SearchDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), TaskSearchPage.ID).open();
+			}
+			return openSuccessful;
+		} else {
+			ISearchPage page = (ISearchPage) queryPages[currentPageIndex].getData(PAGE_KEY);
+			return page.performAction();			
+		}
 	}
 
 	public void setContainer(ISearchPageContainer container) {
@@ -111,12 +133,9 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 
 	private void createRepositoryGroup(Composite control) {
 		Composite group = new Composite(control, SWT.NONE);
-//		 group.setText("Repository");
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 4;
+		GridLayout layout = new GridLayout(6, false);
 		group.setLayout(layout);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.horizontalSpan = 1;
 		group.setLayoutData(gd);
 
 		Label label = new Label(group, SWT.NONE);
@@ -129,33 +148,65 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 				displayQueryPage(repositoryCombo.getSelectionIndex());
 			}
 		});
-		repositoryCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
-
+//		repositoryCombo.setLayoutData(new GridData(GridData));
 		label = new Label(group, SWT.NONE);
 		label.setText("  ");
 
-		ImageHyperlink openHyperlink = new ImageHyperlink(group, SWT.NONE);
-		openHyperlink.setText("Open Repository Task by Key/ID...");
-		openHyperlink.setForeground(TaskListColorsAndFonts.COLOR_HYPERLINK_WIDGET);
-		openHyperlink.setUnderlined(true);
-		openHyperlink.addHyperlinkListener(new IHyperlinkListener() {
-
-			public void linkActivated(HyperlinkEvent e) {
-				getShell().close();
-				new OpenRepositoryTask().run(null);
+		Label labelKey = new Label(group, SWT.NONE);
+		labelKey.setText("Task Key/ID: ");
+		keyText = new Text(group, SWT.BORDER);
+		keyText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
+		
+		String findText = null;
+		TaskListView taskListView = TaskListView.getFromActivePerspective();
+		if (taskListView != null) {
+			findText = taskListView.getFilteredTree().getFilterControl().getText();
+			if (findText != null && findText.trim().length() > 0 && isTaskKeyCandidate(findText)) {
+				keyText.setText(findText);
+				keyText.setFocus();
 			}
+		}
+		
+		keyText.addKeyListener(new KeyListener() {
 
-			public void linkEntered(HyperlinkEvent e) {
+			public void keyPressed(KeyEvent e) {
 				// ignore
 			}
 
-			public void linkExited(HyperlinkEvent e) {
-				// ignore
+			public void keyReleased(KeyEvent e) {
+				updatePageEnablement();
 			}
-
 		});
-//		openHyperlink.set
-//		openHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.QUERY));
+		
+		ImageHyperlink clearKey = new ImageHyperlink(group, SWT.NONE);
+		clearKey.setImage(TasksUiImages.getImage(TasksUiImages.REMOVE));
+		clearKey.addHyperlinkListener(new HyperlinkAdapter() {
+
+			@Override
+			public void linkActivated(HyperlinkEvent e) {
+				keyText.setText("");
+				updatePageEnablement();
+			}
+		});
+	}
+
+	private void updatePageEnablement() {
+		if (keyText.getText() != null && keyText.getText().trim().length() > 0) {
+			setControlsEnabled(queryPages[currentPageIndex], false);
+		} else {
+			setControlsEnabled(queryPages[currentPageIndex], true);
+		}
+	}
+	
+	// TODO: make reusable or find better API, task editor has similar functionality
+	private void setControlsEnabled(Control control, boolean enabled) {
+		control.setEnabled(enabled);
+		if (control instanceof Composite) {
+			for (Control childControl : ((Composite) control).getChildren()) {
+				childControl.setEnabled(enabled);
+				setControlsEnabled(childControl, enabled);
+			}
+		}
 	}
 
 	private Control createPage(TaskRepository repository, ISearchPage searchPage) {
@@ -230,6 +281,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 
 		currentPageIndex = pageIndex;
 		fParentComposite.getParent().layout(true, true);
+		updatePageEnablement();
 	}
 
 	@Override
@@ -276,8 +328,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 						repositoryCombo.select(indexToSelect);
 					}
 
-					// TODO: Create one page per connector and repopulate based
-					// on repository
+					// TODO: Create one page per connector and repopulate based on repository
 					queryPages = new Control[repositoryUrls.length];
 					displayQueryPage(repositoryCombo.getSelectionIndex());
 					// updateAttributesFromRepository(repositoryCombo.getText(),
@@ -292,6 +343,70 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		}
 
 		super.setVisible(visible);
+		
+		setDefaultValuesAndFocus();
+	}
+
+	private void setDefaultValuesAndFocus() {
+		// TODO: generalize selection resolution
+		IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+		AbstractTask selectedTask = null;
+		if (editor instanceof TaskEditor) {
+			selectedTask = ((TaskEditorInput)((TaskEditor)editor).getEditorInput()).getTask();
+		}
+		if (selectedTask == null) {
+			TaskListView taskListView = TaskListView.getFromActivePerspective();
+			if (taskListView != null) {
+				selectedTask = taskListView.getSelectedTask();
+			}
+		}
+		
+		if (selectedTask != null) {
+			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(selectedTask.getRepositoryUrl());
+			if (repository != null) {
+				int index = 0;
+				for (String repositoryUrl : repositoryCombo.getItems()) {
+					if (repositoryUrl.equals(repository.getUrl())) {
+						repositoryCombo.select(index);
+					}
+					index++;
+				}
+			}
+		}
+		
+		if (keyText.getText() != null && keyText.getText().trim().length() > 0) {
+			keyText.setFocus();
+			keyText.setSelection(0, keyText.getText().length());
+		} else {
+			Clipboard clipboard = new Clipboard(Display.getDefault());
+			TextTransfer transfer = TextTransfer.getInstance();
+			String contents = (String) clipboard.getContents(transfer);
+			if (contents != null) {
+				if (isTaskKeyCandidate(contents)) {
+					keyText.setText(contents);
+					keyText.setFocus();
+					keyText.setSelection(0, keyText.getText().length());
+				}
+			} 
+//			repositoryCombo.setFocus();
+		}
+	}
+
+	private boolean isTaskKeyCandidate(String contents) {
+		boolean looksLikeKey = false;
+		try {
+			Integer.parseInt(contents);
+			looksLikeKey = true;
+		} catch (NumberFormatException nfe) {
+		}
+		if (!looksLikeKey) {
+			try {
+				Integer.parseInt(contents.substring(contents.lastIndexOf('-')));
+				looksLikeKey = true;
+			} catch (Exception e) {
+			}
+		}
+		return looksLikeKey;
 	}
 
 	public IDialogSettings getDialogSettings() {

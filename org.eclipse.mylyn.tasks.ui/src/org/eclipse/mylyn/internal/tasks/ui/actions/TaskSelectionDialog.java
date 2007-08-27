@@ -27,12 +27,16 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
+import org.eclipse.mylyn.internal.tasks.ui.TaskSearchPage;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListFilteredTree;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.search.internal.ui.SearchDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -48,6 +52,9 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.SelectionStatusDialog;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.events.IHyperlinkListener;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
 
 /**
  * @author Willian Mitsuda
@@ -146,6 +153,27 @@ public class TaskSelectionDialog extends SelectionStatusDialog {
 			openInBrowserCheck.setSelection(openInBrowser);
 		}
 
+		ImageHyperlink openHyperlink = new ImageHyperlink(area, SWT.NONE);
+		openHyperlink.setText(TaskListFilteredTree.LABEL_SEARCH);
+		openHyperlink.setForeground(TaskListColorsAndFonts.COLOR_HYPERLINK_WIDGET);
+		openHyperlink.setUnderlined(true);
+		openHyperlink.addHyperlinkListener(new IHyperlinkListener() {
+
+			public void linkActivated(HyperlinkEvent e) {
+				getShell().close();
+				new SearchDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), TaskSearchPage.ID).open();
+			}
+
+			public void linkEntered(HyperlinkEvent e) {
+				// ignore
+			}
+
+			public void linkExited(HyperlinkEvent e) {
+				// ignore
+			}
+
+		});
+		
 		final TaskElementLabelProvider labelProvider = new TaskElementLabelProvider(true);
 		viewer.setLabelProvider(labelProvider);
 		viewer.setContentProvider(new ArrayContentProvider());

@@ -45,6 +45,8 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 
 	private Composite progressComposite;
 
+	private Composite searchComposite;
+
 	private boolean showProgress = false;
 
 	private boolean eclipse_3_3_workbench = false;
@@ -86,6 +88,13 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 		progressComposite = createProgressComposite(parent);
 		progressComposite.setVisible(false);
 		((GridData) progressComposite.getLayoutData()).exclude = true;
+
+		searchComposite = createSearchComposite(parent);
+		if (searchComposite != null) {
+			searchComposite.setVisible(false);
+			((GridData) searchComposite.getLayoutData()).exclude = true;
+		}
+
 		return super.createTreeControl(parent, style);
 	}
 
@@ -169,6 +178,10 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 
 	protected abstract Composite createActiveTaskComposite(Composite container);
 
+	protected Composite createSearchComposite(Composite container) {
+		return null;
+	}
+
 	@Override
 	protected void textChanged() {
 		if (refreshPolicy != null) {
@@ -199,5 +212,13 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 		progressComposite.setVisible(showProgress);
 		((GridData) progressComposite.getLayoutData()).exclude = !showProgress;
 		getParent().getParent().layout(true, true);
+	}
+
+	public void setShowSearch(boolean showSearch) {
+		if (searchComposite != null) {
+			searchComposite.setVisible(showSearch);
+			((GridData) searchComposite.getLayoutData()).exclude = !showSearch;
+			getParent().getParent().layout(true, true);
+		}
 	}
 }

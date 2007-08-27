@@ -26,6 +26,7 @@ import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListHyperlink;
+import org.eclipse.mylyn.internal.tasks.ui.TaskSearchPage;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskDialogAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskHistoryDropDownAction;
@@ -41,6 +42,7 @@ import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.search.internal.ui.SearchDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MenuDetectEvent;
 import org.eclipse.swt.events.MenuDetectListener;
@@ -70,6 +72,8 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 	private static final String LABEL_SETS_MULTIPLE = "<multiple>";
 
+	public static final String LABEL_SEARCH = "Search repository for key or summary...";
+	
 	private TaskListHyperlink workingSetLink;
 
 	private TaskListHyperlink activeTaskLink;
@@ -166,6 +170,40 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		return progressComposite;
 	}
 
+	@Override
+	protected Composite createSearchComposite(Composite container) {
+		Composite searchComposite = new Composite(container, SWT.NONE);
+		GridLayout searchLayout = new GridLayout(1, false);
+		searchLayout.marginWidth = 8;
+		searchLayout.marginHeight = 0;
+		searchLayout.marginBottom = 0;
+		searchLayout.horizontalSpacing = 0;
+		searchLayout.verticalSpacing = 0;
+		searchComposite.setLayout(searchLayout);
+		searchComposite.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false, 4, 1));
+
+		final TaskListHyperlink searchLink = new TaskListHyperlink(searchComposite, SWT.LEFT);
+		searchLink.setText(LABEL_SEARCH);
+		searchLink.setForeground(TaskListColorsAndFonts.COLOR_HYPERLINK_WIDGET);
+		
+		searchLink.addHyperlinkListener(new IHyperlinkListener() {
+
+			public void linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent e) {
+				new SearchDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), TaskSearchPage.ID).open();
+			}
+
+			public void linkEntered(org.eclipse.ui.forms.events.HyperlinkEvent e) {
+				searchLink.setUnderlined(true);
+			}
+
+			public void linkExited(org.eclipse.ui.forms.events.HyperlinkEvent e) {
+				searchLink.setUnderlined(false);
+			}
+		});
+		
+		return searchComposite;
+	}
+	
 	private void updateTaskProgressBar() {
 		if (taskProgressBar.isDisposed()) {
 			return;
@@ -332,6 +370,16 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		return activeTaskLink;
 	}
 
+	@Override
+	protected void textChanged() {
+		super.textChanged();
+		if (getFilterString() != null && !getFilterString().trim().equals("")) {
+			setShowSearch(true);
+		} else {
+			setShowSearch(false);
+		}
+	} 
+	
 	public void indicateActiveTaskWorkingSet() {
 		Set<IWorkingSet> activeSets = TaskListView.getActiveWorkingSets();
 		if (filterComposite.isDisposed() || activeSets == null) {

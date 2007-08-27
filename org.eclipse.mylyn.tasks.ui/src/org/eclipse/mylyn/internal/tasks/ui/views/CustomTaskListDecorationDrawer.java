@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Listener;
 class CustomTaskListDecorationDrawer implements Listener {
 
 	private final TaskListView taskListView;
-
+	
 	private int activationImageOffset;
 
 	private Image taskActive = TasksUiImages.getImage(TasksUiImages.TASK_ACTIVE);
@@ -86,6 +86,15 @@ class CustomTaskListDecorationDrawer implements Listener {
 						drawSyncronizationImage((AbstractTaskContainer) data, event);
 					}
 				}
+				
+				// TODO: would be nice not to do this on each item's painting
+//				String text = tree.getFilterControl().getText();
+//				System.err.println(">>>>>> " + tree.getViewer().getExpandedElements().length);
+//				if (text != null && !text.equals("") && tree.getViewer().getExpandedElements().length <= 12) {
+//					int offsetY = tree.getViewer().getExpandedElements().length * tree.getViewer().getTree().getItemHeight();
+//					event.gc.drawText("Open search dialog...", 20, offsetY - 10);
+//				}
+				
 				break;
 			}
 			case SWT.PaintItem: {
@@ -95,6 +104,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 				if (data instanceof AbstractTaskContainer) {
 					drawSyncronizationImage((AbstractTaskContainer) data, event);
 				}
+								
 				break;
 			}
 			}
@@ -150,14 +160,6 @@ class CustomTaskListDecorationDrawer implements Listener {
 				}
 			}
 		}
-// if (container instanceof AbstractRepositoryQuery) {
-// AbstractRepositoryQuery query = (AbstractRepositoryQuery) container;
-// for (AbstractTask hit : query.getHits()) {
-// if (hit.getSyncState() == RepositoryTaskSyncState.INCOMING) {
-// return true;
-// }
-// }
-// }
 		return false;
 	}
 

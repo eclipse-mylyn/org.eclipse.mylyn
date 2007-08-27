@@ -676,6 +676,14 @@
                style="push"
                toolbarPath="org.eclipse.search.searchActionSet/Search"
                tooltip="Open Task"/>
+		<action
+               class="org.eclipse.mylyn.internal.tasks.ui.actions.SearchForRepositoryTask"
+               definitionId="org.eclipse.mylyn.tasks.ui.command.searchForTask"
+               icon="icons/etool16/open-repository-task.gif"
+               id="org.eclipse.mylyn.tasks.ui.open.task.remote"
+               label="Search for Repository Task..."
+               style="push"
+               tooltip="Search for Repository Task"/> 
       </actionSet>
    </extension>
    
@@ -741,8 +749,8 @@
                id="org.eclipse.mylyn.tasks.ui.open.task.remote"
                label="Open &amp;Repository Task..."
                menubarPath="navigate/open.ext3"
-               style="push"
-               tooltip="Open Repository Task"/>     
+               style="push" 
+               tooltip="Open Repository Task"/>  
       </actionSet>
    </extension>
    
@@ -752,6 +760,10 @@
             categoryId="org.eclipse.ui.category.navigate"
             id="org.eclipse.mylyn.tasks.ui.command.openTask"
             name="Open Task"/>
+      <command
+            categoryId="org.eclipse.ui.category.navigate"
+            id="org.eclipse.mylyn.tasks.ui.command.searchForTask"
+            name="Search Repository for Task"/>
       <command
             categoryId="org.eclipse.ui.category.navigate"
             id="org.eclipse.mylyn.tasks.ui.command.openRemoteTask"
@@ -772,9 +784,13 @@
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M1+F12"/>
       <key
-            commandId="org.eclipse.mylyn.tasks.ui.command.openRemoteTask"
+            commandId="org.eclipse.mylyn.tasks.ui.command.searchForTask"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M1+M2+F12"/>
+      <key
+            commandId="org.eclipse.mylyn.tasks.ui.command.openRemoteTask"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M2+M3+F12"/>
       <key
             commandId="org.eclipse.mylyn.tasks.ui.command.activateTask"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
