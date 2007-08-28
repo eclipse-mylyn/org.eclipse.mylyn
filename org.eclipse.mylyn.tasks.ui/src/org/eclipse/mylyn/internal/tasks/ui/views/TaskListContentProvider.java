@@ -16,6 +16,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
@@ -174,6 +175,15 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	}
 
 	private boolean selectContainer(AbstractTaskContainer container) {
+		// TODO: move to interest filter
+		if (/*taskListView.isFocusedMode() && */ container instanceof ScheduledTaskContainer) {
+			 if (TasksUiPlugin.getTaskListManager().isWeekDay((ScheduledTaskContainer)container)) {
+				 return true;
+			 } else if (taskListView.isFocusedMode()) {
+				 return false;
+			 }
+		}
+		
 		if (filter(null, container) && !shouldAlwaysShow(container)) {
 			return false;
 		}
