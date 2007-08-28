@@ -32,6 +32,9 @@ public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 
 	@Override
 	public boolean select(Object parent, Object element) {
+		if (parent instanceof ScheduledTaskContainer || element instanceof ScheduledTaskContainer) {
+			return true;
+		}
 		if (parent instanceof AbstractTaskContainer && !(parent instanceof ScheduledTaskContainer)) {
 			return selectWorkingSet((AbstractTaskContainer) parent);
 		}
