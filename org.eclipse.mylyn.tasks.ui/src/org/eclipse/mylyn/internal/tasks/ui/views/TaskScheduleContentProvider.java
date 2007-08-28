@@ -38,8 +38,9 @@ public class TaskScheduleContentProvider extends TaskListContentProvider {
 			Set<AbstractTaskContainer> ranges = new HashSet<AbstractTaskContainer>();
 
 			ranges.addAll(taskListManager.getDateRanges());
-			ranges.add(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer());
-//			AbstractTask activeTask = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
+//			ranges.add(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer());
+
+			//			AbstractTask activeTask = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
 //			boolean containsActiveTask = false;
 //			if (activeTask != null) {
 //				for (AbstractTaskContainer taskListElement : ranges) {
