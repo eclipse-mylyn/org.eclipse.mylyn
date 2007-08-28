@@ -177,7 +177,9 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	private boolean selectContainer(AbstractTaskContainer container) {
 		// TODO: move to interest filter
 		if (/*taskListView.isFocusedMode() && */container instanceof ScheduledTaskContainer) {
-			if (TasksUiPlugin.getTaskListManager().isWeekDay((ScheduledTaskContainer) container)) {
+			ScheduledTaskContainer scheduleContainer = (ScheduledTaskContainer) container;
+			if (TasksUiPlugin.getTaskListManager().isWeekDay(scheduleContainer)
+					&& (scheduleContainer.isPresent() || scheduleContainer.isFuture())) {
 				return true;
 			} else if (taskListView.isFocusedMode()) {
 				return false;
