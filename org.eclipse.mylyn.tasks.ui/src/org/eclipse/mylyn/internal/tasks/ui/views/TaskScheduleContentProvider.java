@@ -13,6 +13,7 @@ import java.util.Set;
 
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskDelegate;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -76,15 +77,19 @@ public class TaskScheduleContentProvider extends TaskListContentProvider {
 
 	@Override
 	public Object[] getChildren(Object parent) {
+		Set<AbstractTask> result = new HashSet<AbstractTask>();
 		if (parent instanceof ScheduledTaskContainer) {
-			return ((ScheduledTaskContainer) parent).getChildren().toArray();
+			for (AbstractTask child : ((ScheduledTaskContainer) parent).getChildren()) {
+				if (!filter(parent, child)) {
+					result.add(child);
+				}
+			}
 
 		} else if (parent instanceof AbstractTaskContainer) {
-			return ((AbstractTaskContainer) parent).getChildren().toArray();
+			for (AbstractTask child : ((AbstractTaskContainer) parent).getChildren()) {
+				result.add(child);
+			}
 		}
-//		else if (parent.equals(unscheduledCategory)) {
-//			return unscheduledCategory.getChildren().toArray();
-//		}
-		return new Object[0];
+		return result.toArray();
 	}
 }

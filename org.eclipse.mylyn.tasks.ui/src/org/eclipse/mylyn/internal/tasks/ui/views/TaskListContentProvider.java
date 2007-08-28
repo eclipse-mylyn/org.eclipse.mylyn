@@ -40,7 +40,7 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	public TaskListContentProvider(TaskListView taskListView) {
 		super(taskListView);
 	}
-	
+
 	public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 		this.taskListView.expandToActiveTasks();
 	}
@@ -176,14 +176,14 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 
 	private boolean selectContainer(AbstractTaskContainer container) {
 		// TODO: move to interest filter
-		if (/*taskListView.isFocusedMode() && */ container instanceof ScheduledTaskContainer) {
-			 if (TasksUiPlugin.getTaskListManager().isWeekDay((ScheduledTaskContainer)container)) {
-				 return true;
-			 } else if (taskListView.isFocusedMode()) {
-				 return false;
-			 }
+		if (/*taskListView.isFocusedMode() && */container instanceof ScheduledTaskContainer) {
+			if (TasksUiPlugin.getTaskListManager().isWeekDay((ScheduledTaskContainer) container)) {
+				return true;
+			} else if (taskListView.isFocusedMode()) {
+				return false;
+			}
 		}
-		
+
 		if (filter(null, container) && !shouldAlwaysShow(container)) {
 			return false;
 		}
@@ -280,7 +280,7 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 		return Collections.emptyList();
 	}
 
-	private boolean filter(Object parent, Object object) {
+	protected boolean filter(Object parent, Object object) {
 		for (AbstractTaskListFilter filter : this.taskListView.getFilters()) {
 			if (!filter.select(parent, object)) {
 				return true;
