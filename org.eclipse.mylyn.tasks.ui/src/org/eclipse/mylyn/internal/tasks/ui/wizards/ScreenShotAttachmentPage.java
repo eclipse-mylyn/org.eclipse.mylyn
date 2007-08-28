@@ -103,7 +103,7 @@ public class ScreenShotAttachmentPage extends WizardPage {
 		});
 
 		fitButton = new Button(buttonsComposite, SWT.TOGGLE);
-		fitButton.setText("Fit image");
+		fitButton.setText("Fit Image");
 		fitButton.setImage(TasksUiPlugin.imageDescriptorFromPlugin(TasksUiPlugin.ID_PLUGIN, "icons/etool16/capture-fit.png")
 				.createImage());
 		fitButton.addSelectionListener(new SelectionListener() {

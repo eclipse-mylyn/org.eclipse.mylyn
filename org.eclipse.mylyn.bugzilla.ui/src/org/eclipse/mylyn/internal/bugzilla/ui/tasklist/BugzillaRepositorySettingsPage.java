@@ -46,6 +46,8 @@ import org.eclipse.swt.widgets.Label;
  */
 public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
+	private static final String TOOLTIP_CACHED_CONFIGURATION = "Use for repositories that explicitly state that they support this customization.";
+
 	private static final String LABEL_CACHED_CONFIGURATION = "Cached Configuration:";
 
 	private static final String LABEL_SHORT_LOGINS = "Local users enabled:";
@@ -135,6 +137,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 		Label cachedConfigLabel = new Label(parent, SWT.NONE);
 		cachedConfigLabel.setText(LABEL_CACHED_CONFIGURATION);
+		cachedConfigLabel.setToolTipText(TOOLTIP_CACHED_CONFIGURATION);
 		cachedConfigButton = new Button(parent, SWT.CHECK | SWT.LEFT);
 		if (repository != null) {
 			boolean isCached = true;
