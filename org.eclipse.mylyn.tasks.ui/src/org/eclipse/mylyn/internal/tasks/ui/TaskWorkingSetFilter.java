@@ -29,7 +29,7 @@ public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 	public TaskWorkingSetFilter(TaskList taskList) {
 		this.taskList = taskList;
 	}
-	
+
 	@Override
 	public boolean select(Object parent, Object element) {
 		if (parent instanceof AbstractTaskContainer && !(parent instanceof ScheduledTaskContainer)) {
@@ -39,6 +39,8 @@ public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 			AbstractRepositoryQuery query = taskList.getQueryForHandle(((AbstractTask) element).getHandleIdentifier());
 			if (query != null) {
 				return selectWorkingSet(query);
+			} else {
+				return false;
 			}
 		}
 		return true;
