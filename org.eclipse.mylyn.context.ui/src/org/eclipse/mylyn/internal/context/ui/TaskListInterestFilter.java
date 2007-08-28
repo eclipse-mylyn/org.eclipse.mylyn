@@ -12,6 +12,7 @@ import java.util.Calendar;
 
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
@@ -54,14 +55,15 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 	}
 
 	private boolean isDateRangeInteresting(ScheduledTaskContainer container) {
-		return (TasksUiPlugin.getTaskListManager().isWeekDay(container) && (container.isPresent() || container.isFuture()));
+		return TasksUiPlugin.getTaskListManager().isWeekDay(container);
+//		return (TasksUiPlugin.getTaskListManager().isWeekDay(container) && (container.isPresent() || container.isFuture()));
 	}
 
 	protected boolean isUninteresting(Object parent, AbstractTask task) {
 		return !task.isActive()
 				&& !hasInterestingSubTasks(parent, task, true)
-				&& ((task.isCompleted() && !TasksUiPlugin.getTaskListManager().isCompletedToday(task) && !hasChanges(
-						parent, task)) || (TasksUiPlugin.getTaskListManager().isScheduledAfterThisWeek(task))
+				&& ((task.isCompleted() && !TaskActivityManager.getInstance().isCompletedToday(task) && !hasChanges(
+						parent, task)) || (TaskActivityManager.getInstance().isScheduledAfterThisWeek(task))
 						&& !hasChanges(parent, task));
 	}
 
@@ -74,10 +76,10 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 	@Override
 	public boolean shouldAlwaysShow(Object parent, AbstractTask task, boolean checkSubTasks) {
 		return super.shouldAlwaysShow(parent, task, checkSubTasks) || hasChanges(parent, task)
-				|| (TasksUiPlugin.getTaskListManager().isCompletedToday(task))
+				|| (TaskActivityManager.getInstance().isCompletedToday(task))
 				|| shouldShowInFocusedWorkweekDateContainer(parent, task)
 				|| (isInterestingForThisWeek(parent, task) && !task.isCompleted())
-				|| (TasksUiPlugin.getTaskListManager().isOverdue(task))
+				|| (TaskActivityManager.getInstance().isOverdue(task))
 				|| hasInterestingSubTasks(parent, task, checkSubTasks)
 				|| LocalRepositoryConnector.DEFAULT_SUMMARY.equals(task.getSummary());
 		// || isCurrentlySelectedInEditor(task);
@@ -103,7 +105,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 	private static boolean shouldShowInFocusedWorkweekDateContainer(Object parent, AbstractTask task) {
 		if (parent instanceof ScheduledTaskContainer) {
 
-			if (TasksUiPlugin.getTaskListManager().isOverdue(task) || task.isPastReminder())
+			if (TaskActivityManager.getInstance().isOverdue(task) || task.isPastReminder())
 				return true;
 
 			ScheduledTaskContainer container = (ScheduledTaskContainer) parent;
@@ -122,8 +124,8 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		if (parent instanceof ScheduledTaskContainer) {
 			return shouldShowInFocusedWorkweekDateContainer(parent, task);
 		} else {
-			return TasksUiPlugin.getTaskListManager().isScheduledForThisWeek(task)
-					|| TasksUiPlugin.getTaskListManager().isScheduledForToday(task) || task.isPastReminder();
+			return TaskActivityManager.getInstance().isScheduledForThisWeek(task)
+					|| TaskActivityManager.getInstance().isScheduledForToday(task) || task.isPastReminder();
 		}
 	}
 
