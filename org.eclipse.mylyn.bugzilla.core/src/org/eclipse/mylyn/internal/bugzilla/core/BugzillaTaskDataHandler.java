@@ -229,7 +229,8 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			bugzillaVersion = "2.18";
 		}
 		if (bugzillaVersion.compareTo("3.1") < 0
-				&& (status == BUGZILLA_REPORT_STATUS.NEW || status == BUGZILLA_REPORT_STATUS.ASSIGNED)) {
+				&& (status == BUGZILLA_REPORT_STATUS.NEW || status == BUGZILLA_REPORT_STATUS.ASSIGNED
+						|| status == BUGZILLA_REPORT_STATUS.REOPENED || status == BUGZILLA_REPORT_STATUS.UNCONFIRMED)) {
 			// old bugzilla workflow is used
 			addOperation(repository, bugReport, BUGZILLA_OPERATION.reassign, userName);
 			addOperation(repository, bugReport, BUGZILLA_OPERATION.reassignbycomponent, userName);
@@ -260,13 +261,13 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			if (config != null) {
 				for (String resolution : config.getResolutions()) {
 					// DUPLICATE and MOVED have special meanings so do not show as resolution
-					if (resolution.compareTo("DUPLICATE")!= 0 && resolution.compareTo("MOVED")!= 0)
+					if (resolution.compareTo("DUPLICATE") != 0 && resolution.compareTo("MOVED") != 0)
 						newOperation.addOption(resolution, resolution);
 				}
 			} else {
 				// LATER and REMIND must not be there in Bugzilla >= 3.0 is used
 				//If getVersion() returns "Automatic (Use Validate Settings)" we use the Version 3 Resolution 
-				if (repository.getVersion().compareTo("3.0")>= 0) {
+				if (repository.getVersion().compareTo("3.0") >= 0) {
 					for (BUGZILLA_RESOLUTION_3_0 resolution : BUGZILLA_RESOLUTION_3_0.values()) {
 						newOperation.addOption(resolution.toString(), resolution.toString());
 					}
