@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
-import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskDelegate;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskListNotification;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.monitor.core.DateUtil;
@@ -114,9 +113,8 @@ public class TaskListToolTipHandler {
 				for (Object object : children) {
 					if (object instanceof AbstractTask) {
 						estimateTotal += ((AbstractTask) object).getEstimateTimeHours();
-						elapsedTotal += TasksUiPlugin.getTaskActivityManager().getElapsedTime(
-								((ScheduledTaskDelegate) object).getCorrespondingTask(), container.getStart(),
-								container.getEnd());
+						elapsedTotal += TasksUiPlugin.getTaskActivityManager().getElapsedTime((AbstractTask) object,
+								container.getStart(), container.getEnd());
 					}
 				}
 			}
@@ -164,27 +162,29 @@ public class TaskListToolTipHandler {
 	}
 
 	private String getActivityText(AbstractTaskContainer element) {
-		if (element instanceof ScheduledTaskDelegate) {
-			ScheduledTaskDelegate task = (ScheduledTaskDelegate) element;
-
-			StringBuilder sb = new StringBuilder();
-			Date date = task.getScheduledForDate();
-			if (date != null) {
-				sb.append("Scheduled for: ");
-				sb.append(new SimpleDateFormat("E").format(date)).append(", ");
-				sb.append(DateFormat.getDateInstance(DateFormat.LONG).format(date));
-				sb.append(" (").append(DateFormat.getTimeInstance(DateFormat.SHORT).format(date)).append(")\n");
-			}
-
-			long elapsed = TasksUiPlugin.getTaskActivityManager().getElapsedTime(task.getCorrespondingTask(),
-					task.getDateRangeContainer().getStart(), task.getDateRangeContainer().getEnd());
-			String elapsedTimeString = DateUtil.getFormattedDurationShort(elapsed);
-			sb.append("Elapsed: ");
-			sb.append(elapsedTimeString);
-			sb.append("\n");
-
-			return sb.toString();
-		} else if (element instanceof AbstractTask) {
+//		if (element instanceof ScheduledTaskDelegate) {
+//			ScheduledTaskDelegate task = (ScheduledTaskDelegate) element;
+//
+//			StringBuilder sb = new StringBuilder();
+//			Date date = task.getScheduledForDate();
+//			if (date != null) {
+//				sb.append("Scheduled for: ");
+//				sb.append(new SimpleDateFormat("E").format(date)).append(", ");
+//				sb.append(DateFormat.getDateInstance(DateFormat.LONG).format(date));
+//				sb.append(" (").append(DateFormat.getTimeInstance(DateFormat.SHORT).format(date)).append(")\n");
+//			}
+//
+//			long elapsed = TasksUiPlugin.getTaskActivityManager().getElapsedTime(task.getCorrespondingTask(),
+//					task.getDateRangeContainer().getStart(), task.getDateRangeContainer().getEnd());
+//			String elapsedTimeString = DateUtil.getFormattedDurationShort(elapsed);
+//			sb.append("Elapsed: ");
+//			sb.append(elapsedTimeString);
+//			sb.append("\n");
+//
+//			return sb.toString();
+//		} else 
+//			
+		if (element instanceof AbstractTask) {
 			AbstractTask task = (AbstractTask) element;
 
 			StringBuilder sb = new StringBuilder();

@@ -200,27 +200,14 @@ public class ScheduledTaskContainer extends AbstractTaskCategory {
 					children.add(activeTask);
 				}
 			}
-
-			Set<AbstractTask> delegates = new HashSet<AbstractTask>();
-			for (AbstractTask abstractTask : children) {
-				delegates.add(new ScheduledTaskDelegate(this, abstractTask, getStart(), getEnd(), 0));
-			}
-			return delegates;
+			return children;
 		} else if (isFuture()) {
 			children.addAll(activityManager.getScheduledTasks(getStart(), getEnd()));
 			children.addAll(activityManager.getDueTasks(getStart(), getEnd()));
-			Set<AbstractTask> delegates = new HashSet<AbstractTask>();
-			for (AbstractTask abstractTask : children) {
-				delegates.add(new ScheduledTaskDelegate(this, abstractTask, getStart(), getEnd(), 0));
-			}
-			return delegates;
+			return children;
 		} else {
 			children.addAll(activityManager.getActiveTasks(getStart(), getEnd()));
-			Set<AbstractTask> delegates = new HashSet<AbstractTask>();
-			for (AbstractTask abstractTask : children) {
-				delegates.add(new ScheduledTaskDelegate(this, abstractTask, getStart(), getEnd(), 0));
-			}
-			return delegates;
+			return children;
 
 		}
 	}

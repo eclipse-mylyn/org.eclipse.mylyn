@@ -32,6 +32,9 @@ import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 
 /**
+ * Manager for Task timing and scheduling including due dates
+ * 
+ * @since 2.1
  * @author Rob Elves
  */
 public class TaskActivityManager {
@@ -442,6 +445,52 @@ public class TaskActivityManager {
 		Calendar calEnd = Calendar.getInstance();
 		TaskActivityUtil.snapEndOfWeek(calEnd);
 		return getElapsedTime(task, calStart, calEnd) > 0;
+	}
+
+	public boolean isScheduledForToday(AbstractTask task) {
+		if (task != null) {
+			Date reminder = task.getScheduledForDate();
+			if (reminder != null) {
+				Calendar time = TaskActivityUtil.getCalendar();
+				time.setTime(reminder);
+				return TaskActivityUtil.isToday(time);
+			}
+		}
+		return false;
+	}
+
+	public boolean isScheduledAfterThisWeek(AbstractTask task) {
+		Calendar cal = TaskActivityUtil.getCalendar();
+		if (task.getScheduledForDate() != null) {
+			cal.setTime(task.getScheduledForDate());
+			return TaskActivityUtil.isAfterCurrentWeek(cal);
+		}
+
+		return false;
+	}
+
+	public boolean isScheduledForLater(AbstractTask task) {
+		if (task != null) {
+			Date reminder = task.getScheduledForDate();
+			if (reminder != null) {
+				Calendar cal = TaskActivityUtil.getCalendar();
+				cal.setTime(reminder);
+				return TaskActivityUtil.isFuture(cal);
+			}
+		}
+		return false;
+	}
+
+	public boolean isScheduledForThisWeek(AbstractTask task) {
+		if (task != null) {
+			Date reminder = task.getScheduledForDate();
+			if (reminder != null) {
+				Calendar time = TaskActivityUtil.getCalendar();
+				time.setTime(reminder);
+				return TaskActivityUtil.isThisWeek(time);
+			}
+		}
+		return false;
 	}
 
 }

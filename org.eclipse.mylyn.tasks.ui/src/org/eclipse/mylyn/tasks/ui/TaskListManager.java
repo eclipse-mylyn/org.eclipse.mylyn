@@ -638,61 +638,31 @@ public class TaskListManager implements IPropertyChangeListener {
 	}
 
 	/**
-	 * @deprecated use TaskActivityUtil.isAfterThisWeek
+	 * @deprecated use TaskActivityUtil.isScheduledAfterThisWeek
 	 */
 	public boolean isScheduledAfterThisWeek(AbstractTask task) {
-		Calendar cal = TaskActivityUtil.getCalendar();
-		if (task.getScheduledForDate() != null) {
-			cal.setTime(task.getScheduledForDate());
-			return TaskActivityUtil.isAfterCurrentWeek(cal);
-		}
-
-		return false;
+		return TaskActivityManager.getInstance().isScheduledAfterThisWeek(task);
 	}
 
 	/**
-	 * @deprecated use TaskActivityUtil.isFuture
+	 * @deprecated use TaskActivityUtil.isScheduledForLater
 	 */
 	public boolean isScheduledForLater(AbstractTask task) {
-		if (task != null) {
-			Date reminder = task.getScheduledForDate();
-			if (reminder != null) {
-				Calendar cal = TaskActivityUtil.getCalendar();
-				cal.setTime(reminder);
-				return TaskActivityUtil.isFuture(cal);
-			}
-		}
-		return false;
+		return TaskActivityManager.getInstance().isScheduledForLater(task);
 	}
 
 	/**
-	 * @deprecated use TaskActivityUtil.isThisWeek
+	 * @deprecated use TaskActivityUtil.isScheduledForThisWeek
 	 */
 	public boolean isScheduledForThisWeek(AbstractTask task) {
-		if (task != null) {
-			Date reminder = task.getScheduledForDate();
-			if (reminder != null) {
-				Calendar time = TaskActivityUtil.getCalendar();
-				time.setTime(reminder);
-				return TaskActivityUtil.isThisWeek(time);
-			}
-		}
-		return false;
+		return TaskActivityManager.getInstance().isScheduledForThisWeek(task);
 	}
 
 	/**
-	 * @deprecated use TaskActivityUtil.isToday
+	 * @deprecated use TaskActivityManager.isScheduledForToday
 	 */
 	public boolean isScheduledForToday(AbstractTask task) {
-		if (task != null) {
-			Date reminder = task.getScheduledForDate();
-			if (reminder != null) {
-				Calendar time = TaskActivityUtil.getCalendar();
-				time.setTime(reminder);
-				return TaskActivityUtil.isToday(time);
-			}
-		}
-		return false;
+		return TaskActivityManager.getInstance().isScheduledForToday(task);
 	}
 
 	/**
@@ -706,22 +676,22 @@ public class TaskListManager implements IPropertyChangeListener {
 	 * @deprecated use ActivityManager
 	 */
 	public void setScheduledFor(AbstractTask task, Date reminderDate) {
-		TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, reminderDate);
+		TaskActivityManager.getInstance().setScheduledFor(task, reminderDate);
 	}
 
 	/**
-	 * @deprecated use activity manager
+	 * @deprecated use TaskActivityManager.setDueDate
 	 */
 	public void setDueDate(AbstractTask task, Date dueDate) {
-		TasksUiPlugin.getTaskActivityManager().setDueDate(task, dueDate);
+		TaskActivityManager.getInstance().setDueDate(task, dueDate);
 	}
 
 	/**
-	 * @deprecated use activityManager
+	 * @deprecated use TaskActivityManager
 	 * @return true if task due date != null and has past
 	 */
 	public boolean isOverdue(AbstractTask task) {
-		return TasksUiPlugin.getTaskActivityManager().isOverdue(task);
+		return TaskActivityManager.getInstance().isOverdue(task);
 	}
 
 	/**
