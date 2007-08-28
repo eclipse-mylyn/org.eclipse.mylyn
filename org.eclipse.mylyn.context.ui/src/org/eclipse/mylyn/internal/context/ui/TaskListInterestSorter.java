@@ -127,11 +127,11 @@ public class TaskListInterestSorter extends ViewerSorter {
 	}
 
 	private int compareToday(AbstractTask task1, AbstractTask task2) {
-		if (TasksUiPlugin.getTaskListManager().isScheduledForToday(task1)
-				&& !TasksUiPlugin.getTaskListManager().isScheduledForToday(task2)) {
+		if (TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task1)
+				&& !TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task2)) {
 			return -1;
-		} else if (!TasksUiPlugin.getTaskListManager().isScheduledForToday(task1)
-				&& TasksUiPlugin.getTaskListManager().isScheduledForToday(task2)) {
+		} else if (!TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task1)
+				&& TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task2)) {
 			return 1;
 		} else {
 			return 0;
@@ -151,11 +151,11 @@ public class TaskListInterestSorter extends ViewerSorter {
 	// }
 
 	private int compareThisWeek(AbstractTask task1, AbstractTask task2) {
-		if (TasksUiPlugin.getTaskListManager().isScheduledForThisWeek(task1)
-				&& !TasksUiPlugin.getTaskListManager().isScheduledForThisWeek(task2)) {
+		if (TasksUiPlugin.getTaskActivityManager().isScheduledForThisWeek(task1)
+				&& !TasksUiPlugin.getTaskActivityManager().isScheduledForThisWeek(task2)) {
 			return 1;
-		} else if (!TasksUiPlugin.getTaskListManager().isScheduledForThisWeek(task1)
-				&& TasksUiPlugin.getTaskListManager().isScheduledForThisWeek(task2)) {
+		} else if (!TasksUiPlugin.getTaskActivityManager().isScheduledForThisWeek(task1)
+				&& TasksUiPlugin.getTaskActivityManager().isScheduledForThisWeek(task2)) {
 			return -1;
 		} else {
 			return 0;
