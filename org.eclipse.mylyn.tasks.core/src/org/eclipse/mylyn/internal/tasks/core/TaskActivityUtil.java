@@ -6,11 +6,10 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.core;
+package org.eclipse.mylyn.internal.tasks.core;
 
 import java.util.Calendar;
 
-import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 
 /**
  * @author Rob Elves

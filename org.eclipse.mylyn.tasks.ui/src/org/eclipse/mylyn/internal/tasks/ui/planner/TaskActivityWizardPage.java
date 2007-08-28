@@ -19,6 +19,7 @@ import java.util.Set;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.ui.DatePicker;
@@ -139,7 +140,7 @@ public class TaskActivityWizardPage extends WizardPage {
 		final DatePicker datePicker = new DatePicker(reportPeriodGroup, SWT.BORDER, "<start date>");
 		datePicker.setEnabled(false);
 		Calendar startCal = Calendar.getInstance();
-		TasksUiPlugin.getTaskListManager().snapToStartOfDay(startCal);
+		TaskActivityUtil.snapStartOfDay(startCal);
 		reportStartDate = startCal.getTime();
 		datePicker.setDate(startCal);
 		datePicker.addPickerSelectionListener(new SelectionListener() {
@@ -159,7 +160,7 @@ public class TaskActivityWizardPage extends WizardPage {
 		final DatePicker endDatePicker = new DatePicker(reportPeriodGroup, SWT.BORDER, "<end date>");
 		endDatePicker.setEnabled(false);
 		Calendar endCal = Calendar.getInstance();
-		TasksUiPlugin.getTaskListManager().snapToEndOfDay(endCal);
+		TaskActivityUtil.snapEndOfWorkDay(endCal);
 		reportEndDate = endCal.getTime();
 		endDatePicker.setDate(endCal);
 		endDatePicker.addPickerSelectionListener(new SelectionAdapter() {

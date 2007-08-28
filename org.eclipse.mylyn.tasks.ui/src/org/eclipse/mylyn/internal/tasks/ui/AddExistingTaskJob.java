@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
@@ -72,8 +73,8 @@ public class AddExistingTaskJob extends Job {
 			final AbstractTask newTask = connector.createTaskFromExistingId(repository, taskId, monitor);
 			if (newTask != null) {
 				Calendar newSchedule = Calendar.getInstance();
-				TasksUiPlugin.getTaskListManager().setScheduledEndOfDay(newSchedule);
-				TasksUiPlugin.getTaskListManager().setScheduledFor(newTask, newSchedule.getTime());
+				TaskActivityUtil.snapEndOfWorkDay(newSchedule);
+				TasksUiPlugin.getTaskActivityManager().setScheduledFor(newTask, newSchedule.getTime());
 
 				TasksUiUtil.refreshAndOpenTaskListElement(newTask);
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {

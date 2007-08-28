@@ -23,6 +23,7 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
@@ -214,9 +215,9 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 				TasksUiPreferenceConstants.PLANNING_ENDHOUR);
 		// If past scheduledEndHour set for following day
 		if (newTaskSchedule.get(Calendar.HOUR_OF_DAY) >= scheduledEndHour) {
-			TasksUiPlugin.getTaskListManager().setSecheduledIn(newTaskSchedule, 1);
+			TaskActivityUtil.snapForwardNumDays(newTaskSchedule, 1);
 		} else {
-			TasksUiPlugin.getTaskListManager().setScheduledEndOfDay(newTaskSchedule);
+			TaskActivityUtil.snapEndOfWorkDay(newTaskSchedule);
 		}
 		scheduledForDate.setDate(newTaskSchedule);
 //		Button removeReminder = getManagedForm().getToolkit().createButton(sectionClient, "Clear",
@@ -475,7 +476,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 					Calendar selectedDate = scheduledForDate.getDate();
 					if (selectedDate != null) {
 						// NewLocalTaskAction.scheduleNewTask(newTask);
-						TasksUiPlugin.getTaskListManager().setScheduledFor(newTask, selectedDate.getTime());
+						TasksUiPlugin.getTaskActivityManager().setScheduledFor(newTask, selectedDate.getTime());
 					}
 
 					newTask.setEstimatedTimeHours(estimatedTime.getSelection());

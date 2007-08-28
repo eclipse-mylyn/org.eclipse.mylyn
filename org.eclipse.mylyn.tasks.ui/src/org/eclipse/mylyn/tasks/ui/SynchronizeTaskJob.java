@@ -278,10 +278,10 @@ class SynchronizeTaskJob extends Job {
 		// TaskDataManager and do this themselves
 		if ((oldDueDate == null && repositoryTask.getDueDate() != null)
 				|| (oldDueDate != null && repositoryTask.getDueDate() == null)) {
-			TasksUiPlugin.getTaskListManager().setDueDate(repositoryTask, repositoryTask.getDueDate());
+			TasksUiPlugin.getTaskActivityManager().setDueDate(repositoryTask, repositoryTask.getDueDate());
 		} else if (oldDueDate != null && repositoryTask.getDueDate() != null
 				&& oldDueDate.compareTo(repositoryTask.getDueDate()) != 0) {
-			TasksUiPlugin.getTaskListManager().setDueDate(repositoryTask, repositoryTask.getDueDate());
+			TasksUiPlugin.getTaskActivityManager().setDueDate(repositoryTask, repositoryTask.getDueDate());
 		}
 
 		repositoryTask.setSynchronizing(false);

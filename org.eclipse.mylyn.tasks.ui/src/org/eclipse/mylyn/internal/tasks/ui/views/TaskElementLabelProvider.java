@@ -15,6 +15,7 @@ import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskGroup;
@@ -220,7 +221,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		if (object instanceof AbstractTaskContainer && object instanceof AbstractTask) {
 			AbstractTask task = getCorrespondingTask((AbstractTaskContainer) object);
 			if (task != null) {
-				if (TasksUiPlugin.getTaskListManager().isCompletedToday(task)) {
+				if (TaskActivityManager.getInstance().isCompletedToday(task)) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(
 							TaskListColorsAndFonts.THEME_COLOR_TASK_TODAY_COMPLETED);
 				} else if (task.isCompleted()) {
@@ -231,10 +232,10 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				} else if (task.isPastReminder()) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(
 							TaskListColorsAndFonts.THEME_COLOR_TASK_OVERDUE);
-				} else if (TasksUiPlugin.getTaskListManager().isScheduledForToday(task)) {
+				} else if (TaskActivityManager.getInstance().isScheduledForToday(task)) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(
 							TaskListColorsAndFonts.THEME_COLOR_TASK_TODAY_SCHEDULED);
-				} else if (TasksUiPlugin.getTaskListManager().isScheduledForThisWeek(task)) {
+				} else if (TaskActivityManager.getInstance().isScheduledForThisWeek(task)) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(
 							TaskListColorsAndFonts.THEME_COLOR_TASK_THISWEEK_SCHEDULED);
 				}

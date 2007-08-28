@@ -26,6 +26,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UnfiledCategory;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
@@ -117,7 +118,8 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 					File file = new File(path);
 					if (file.isFile()) {
 						queries.addAll(TasksUiPlugin.getTaskListManager().getTaskListWriter().readQueries(file));
-						repositories.addAll(TasksUiPlugin.getTaskListManager().getTaskListWriter().readRepositories(file));
+						repositories.addAll(TasksUiPlugin.getTaskListManager().getTaskListWriter().readRepositories(
+								file));
 					}
 				}
 				if (queries.size() > 0) {
@@ -128,7 +130,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 
 		for (AbstractTask task : tasksToMove) {
 			if (currentTarget instanceof UnfiledCategory) {
-				TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task, (UnfiledCategory)currentTarget);
+				TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task, (UnfiledCategory) currentTarget);
 			} else if (currentTarget instanceof TaskCategory) {
 				TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task, (TaskCategory) currentTarget);
 			} else if (currentTarget instanceof AbstractTask) {
@@ -151,8 +153,8 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 				ScheduledTaskContainer container = (ScheduledTaskContainer) currentTarget;
 				Calendar newSchedule = Calendar.getInstance();
 				newSchedule.setTimeInMillis(container.getStart().getTimeInMillis());
-				TasksUiPlugin.getTaskListManager().setScheduledEndOfDay(newSchedule);
-				TasksUiPlugin.getTaskListManager().setScheduledFor(task, newSchedule.getTime());
+				TaskActivityUtil.snapEndOfWorkDay(newSchedule);
+				TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, newSchedule.getTime());
 			} else if (currentTarget == null) {
 				TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(newTask,
 						TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
