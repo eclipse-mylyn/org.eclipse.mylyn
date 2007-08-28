@@ -193,8 +193,10 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 	private void updatePageEnablement() {
 		if (keyText.getText() != null && keyText.getText().trim().length() > 0) {
 			setControlsEnabled(queryPages[currentPageIndex], false);
+			pageContainer.setPerformActionEnabled(true);
 		} else {
 			setControlsEnabled(queryPages[currentPageIndex], true);
+			pageContainer.setPerformActionEnabled(false);
 		}
 	}
 
