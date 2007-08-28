@@ -162,6 +162,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		if (taskListView != null) {
 			findText = taskListView.getFilteredTree().getFilterControl().getText();
 			if (findText != null && findText.trim().length() > 0 && isTaskKeyCandidate(findText)) {
+				pageContainer.setPerformActionEnabled(true); 
 				keyText.setText(findText);
 				keyText.setFocus();
 			}
@@ -353,7 +354,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		// TODO: generalize selection resolution
 		IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 		AbstractTask selectedTask = null;
-		if (editor instanceof TaskEditor) {
+		if (editor instanceof TaskEditor && ((TaskEditor) editor).getEditorInput() instanceof TaskEditorInput) {
 			selectedTask = ((TaskEditorInput) ((TaskEditor) editor).getEditorInput()).getTask();
 		}
 		if (selectedTask == null) {
