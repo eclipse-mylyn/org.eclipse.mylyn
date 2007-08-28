@@ -11,7 +11,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.internal.tasks.ui.views.ITaskListPresentation;
+import org.eclipse.mylyn.internal.tasks.ui.views.AbstractTaskListPresentation;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
@@ -41,10 +41,10 @@ public class PresentationDropDownSelectionAction extends Action implements IMenu
 	}
 
 	protected void addActionsToMenu() {
-		for (ITaskListPresentation presentation : TaskListView.getPresentations()) {
+		for (AbstractTaskListPresentation presentation : TaskListView.getPresentations()) {
 			PresentationSelectionAction action = new PresentationSelectionAction(presentation);
 			ActionContributionItem item = new ActionContributionItem(action);
-			action.setText(presentation.getPresentationName());
+			action.setText(presentation.getName());
 			action.setImageDescriptor(presentation.getImageDescriptor());
 			action.setChecked(view.getCurrentPresentation().getId().equals(presentation.getId()));
 			item.fill(dropDownMenu, -1);
@@ -83,11 +83,11 @@ public class PresentationDropDownSelectionAction extends Action implements IMenu
 
 	private class PresentationSelectionAction extends Action {
 
-		private ITaskListPresentation presentation;
+		private AbstractTaskListPresentation presentation;
 
-		public PresentationSelectionAction(ITaskListPresentation presentation) {
+		public PresentationSelectionAction(AbstractTaskListPresentation presentation) {
 			this.presentation = presentation;
-			setText(presentation.getPresentationName());
+			setText(presentation.getName());
 		}
 
 		@Override

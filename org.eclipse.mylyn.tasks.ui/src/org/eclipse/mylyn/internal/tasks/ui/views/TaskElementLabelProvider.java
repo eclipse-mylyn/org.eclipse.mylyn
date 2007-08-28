@@ -17,6 +17,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
+import org.eclipse.mylyn.internal.tasks.core.TaskGroup;
 import org.eclipse.mylyn.internal.tasks.core.UnfiledCategory;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskHighlighter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
@@ -87,7 +88,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		if (object instanceof TaskArchive || object instanceof UnfiledCategory) {
 			compositeDescriptor.icon = TasksUiImages.CATEGORY_ARCHIVE;
 			return compositeDescriptor;
-		} else if (object instanceof TaskCategory || object instanceof UnfiledCategory) {
+		} else if (object instanceof TaskCategory || object instanceof UnfiledCategory || object instanceof TaskGroup) {
 			compositeDescriptor.icon = TasksUiImages.CATEGORY;
 		}
 

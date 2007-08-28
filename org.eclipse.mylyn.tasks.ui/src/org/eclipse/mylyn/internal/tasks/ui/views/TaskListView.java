@@ -51,7 +51,9 @@ import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UnfiledCategory;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
+import org.eclipse.mylyn.internal.tasks.ui.CategorizedPresentation;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
+import org.eclipse.mylyn.internal.tasks.ui.ScheduledPresentation;
 import org.eclipse.mylyn.internal.tasks.ui.TaskArchiveFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskCompletionFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
@@ -159,10 +161,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	public static final String ID = "org.eclipse.mylyn.tasks.ui.views.tasks";
 
-	private static final String PRESENTATION_CATEGORIZED_ID = "org.eclipse.mylyn.tasks.ui.categorized";
-
-	private static final String PRESENTATION_SCHEDULED_ID = "org.eclipse.mylyn.tasks.ui.scheduled";
-
 	public static final String LABEL_VIEW = "Task List";
 
 	private static final String MEMENTO_KEY_SORT_DIRECTION = "sortDirection";
@@ -171,6 +169,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private static final String MEMENTO_KEY_SORT_INDEX = "sortIndex";
 
+	private static final String MEMENTO_SORT_INDEX = "org.eclipse.mylyn.tasklist.ui.views.tasklist.sortIndex";
+	
 	private static final String MEMENTO_LINK_WITH_EDITOR = "linkWithEditor";
 
 	private static final String MEMENTO_PRESENTATION = "presentation";
@@ -186,18 +186,22 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	private static final String ID_SEPARATOR_REPOSITORY = "repository";
 
 	private static final String LABEL_NO_TASKS = "no task active";
+	
+	private final static int SIZE_MAX_SELECTION_HISTORY = 10;
 
+	private static final String PART_NAME = "Task List";
+	
+	private static final int DEFAULT_SORT_DIRECTION = 1;
+	
 	static final String[] PRIORITY_LEVELS = { PriorityLevel.P1.toString(), PriorityLevel.P2.toString(),
 			PriorityLevel.P3.toString(), PriorityLevel.P4.toString(), PriorityLevel.P5.toString() };
 
 	public static final String[] PRIORITY_LEVEL_DESCRIPTIONS = { PriorityLevel.P1.getDescription(),
 			PriorityLevel.P2.getDescription(), PriorityLevel.P3.getDescription(), PriorityLevel.P4.getDescription(),
 			PriorityLevel.P5.getDescription() };
-
-	private static final String PART_NAME = "Task List";
-
-	// TODO: extract to extension points?
-	private static List<ITaskListPresentation> presentations = new ArrayList<ITaskListPresentation>();
+	
+	// TODO: extract to extension pointS
+	private static List<AbstractTaskListPresentation> presentations = new ArrayList<AbstractTaskListPresentation>();
 
 	private boolean focusedMode = false;
 
@@ -224,8 +228,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	private TaskListElementPropertiesAction propertiesAction;
 
 	private OpenWithBrowserAction openWithBrowser;
-
-	//private NewLocalTaskAction newLocalTaskAction;
 
 	private RenameAction renameAction;
 
@@ -255,8 +257,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private SortyByDropDownAction sortByAction;
 
-//	ActivateTaskHistoryDropDownAction previousTaskAction;
-
 	private PresentationDropDownSelectionAction presentationDropDownSelectionAction;
 
 	private LinkWithEditorAction linkWithEditorAction;
@@ -267,7 +267,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private TaskArchiveFilter filterArchive = new TaskArchiveFilter();
 
-	private TaskWorkingSetFilter filterWorkingSet = new TaskWorkingSetFilter();
+	private TaskWorkingSetFilter filterWorkingSet;
 
 	private Set<AbstractTaskListFilter> filters = new HashSet<AbstractTaskListFilter>();
 
@@ -279,15 +279,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private IMemento taskListMemento;
 
-	public static final String columnWidthIdentifier = "org.eclipse.mylyn.tasklist.ui.views.tasklist.columnwidth";
-
-	public static final String tableSortIdentifier = "org.eclipse.mylyn.tasklist.ui.views.tasklist.sortIndex";
-
-	private static final int DEFAULT_SORT_DIRECTION = 1;
-
 	private SortByIndex sortByIndex = SortByIndex.PRIORITY;
 
-	private ITaskListPresentation currentPresentation;
+	private AbstractTaskListPresentation currentPresentation;
 
 	private TaskTableLabelProvider taskListTableLabelProvider;
 
@@ -299,10 +293,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private Color categoryGradientEnd;
 
-	private final static int MAX_SELECTION_HISTORY_SIZE = 10;
-
 	private LinkedHashMap<String, IStructuredSelection> lastSelectionByTaskHandle = new LinkedHashMap<String, IStructuredSelection>(
-			MAX_SELECTION_HISTORY_SIZE);
+			SIZE_MAX_SELECTION_HISTORY);
 
 	/**
 	 * True if the view should indicate that interaction monitoring is paused
@@ -400,7 +392,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		public void activityChanged(final ScheduledTaskContainer week) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					if (PRESENTATION_SCHEDULED_ID.equals(getCurrentPresentation().getId())) {
+					if (ScheduledPresentation.ID.equals(getCurrentPresentation().getId())) {
 						refresh(week);
 					}
 				}
@@ -422,7 +414,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					for (TaskContainerDelta taskContainerDelta : containers) {
-						if (PRESENTATION_SCHEDULED_ID.equals(getCurrentPresentation().getId())) {
+						if (ScheduledPresentation.ID.equals(getCurrentPresentation().getId())) {
 							// TODO: implement refresh policy for scheduled presentation
 							refresh(null);
 						} else {
@@ -642,7 +634,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	@Override
 	public void saveState(IMemento memento) {
-		IMemento sorter = memento.createChild(tableSortIdentifier);
+		IMemento sorter = memento.createChild(MEMENTO_SORT_INDEX);
 		IMemento m = sorter.createChild(MEMENTO_KEY_SORTER);
 		switch (sortByIndex) {
 		case SUMMARY:
@@ -662,7 +654,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private void restoreState() {
 		if (taskListMemento != null) {
-			IMemento sorterMemento = taskListMemento.getChild(tableSortIdentifier);
+			IMemento sorterMemento = taskListMemento.getChild(MEMENTO_SORT_INDEX);
 			int restoredSortIndex = 0;
 			if (sorterMemento != null) {
 				IMemento m = sorterMemento.getChild(MEMENTO_KEY_SORTER);
@@ -695,6 +687,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			applyPresentation(taskListMemento.getString(MEMENTO_PRESENTATION));
 		}
 
+		filterWorkingSet = new TaskWorkingSetFilter(TasksUiPlugin.getTaskListManager().getTaskList());
 		filterWorkingSet.setCurrentWorkingSet(getSite().getPage().getAggregateWorkingSet());
 		addFilter(filterWorkingSet);
 		addFilter(filterPriority);
@@ -750,7 +743,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		tableSorter = new TaskListTableSorter(this, TaskListTableSorter.SortByIndex.PRIORITY);
 		getViewer().setSorter(tableSorter);
 
-		applyPresentation(PRESENTATION_CATEGORIZED_ID);
+		applyPresentation(CategorizedPresentation.ID);
 
 		drillDownAdapter = new DrillDownAdapter(getViewer());
 		getViewer().setInput(getViewSite());
@@ -875,7 +868,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private void applyPresentation(String id) {
 		if (id != null) {
-			for (ITaskListPresentation presentation : presentations) {
+			for (AbstractTaskListPresentation presentation : presentations) {
 				if (id.equals(presentation.getId())) {
 					applyPresentation(presentation);
 					break;
@@ -884,15 +877,13 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		}
 	}
 
-	public void applyPresentation(ITaskListPresentation presentation) {
+	public void applyPresentation(AbstractTaskListPresentation presentation) {
 		try {
 			getViewer().getControl().setRedraw(false);
 			if (!filteredTree.getFilterControl().getText().equals("")) {
 				filteredTree.getFilterControl().setText("");
 			}
-			AbstractTaskListContentProvider contentProvider = presentation.getContentProvider();
-			contentProvider.setView(this);
-
+			AbstractTaskListContentProvider contentProvider = presentation.getContentProvider(this);
 			getViewer().setContentProvider(contentProvider);
 			refreshAndFocus(isFocusedMode());
 
@@ -902,7 +893,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		}
 	}
 
-	public ITaskListPresentation getCurrentPresentation() {
+	public AbstractTaskListPresentation getCurrentPresentation() {
 		return currentPresentation;
 	}
 
@@ -920,14 +911,11 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				layout.setColumnData(columns[i], new ColumnPixelData(columnWidths[i]));
 			}
 
-// final int index = i;
 			columns[i].addSelectionListener(new SelectionAdapter() {
 
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-// sortByIndex = index;
 					sortDirection *= DEFAULT_SORT_DIRECTION;
-// tableSorter.setColumn(columnNames[sortByIndex]);
 					getViewer().refresh(false);
 				}
 			});
@@ -1498,7 +1486,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				lastSelectionByTaskHandle.remove(handle);
 				lastSelectionByTaskHandle.put(handle, selection);
 
-				if (lastSelectionByTaskHandle.size() > MAX_SELECTION_HISTORY_SIZE) {
+				if (lastSelectionByTaskHandle.size() > SIZE_MAX_SELECTION_HISTORY) {
 					Iterator<String> it = lastSelectionByTaskHandle.keySet().iterator();
 					it.next();
 					it.remove();
@@ -1676,11 +1664,11 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	 * This can be used for experimentally adding additional presentations, but note that this convention is extremely
 	 * likely to change in the Mylyn 3.0 cycle.
 	 */
-	public static List<ITaskListPresentation> getPresentations() {
+	public static List<AbstractTaskListPresentation> getPresentations() {
 		return presentations;
 	}
 
-	public static void addPresentation(ITaskListPresentation presentation) {
+	public static void addPresentation(AbstractTaskListPresentation presentation) {
 		presentations.add(presentation);
 	}
 }

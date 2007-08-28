@@ -13,6 +13,8 @@ package org.eclipse.mylyn.internal.tasks.core;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 
 /**
+ * NOTE: this class is likely to change or become API for 3.0
+ * 
  * @author Mik Kersten
  */
 public final class TaskCategory extends AbstractTaskCategory {

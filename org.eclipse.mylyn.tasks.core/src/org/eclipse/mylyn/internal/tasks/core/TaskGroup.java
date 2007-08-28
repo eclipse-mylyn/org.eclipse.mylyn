@@ -7,12 +7,11 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.core;
 
-import java.util.Set;
-
-import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 
 /**
+ * NOTE: this class is likely to change or become API for 3.0
+ * 
  * @author Eugene Kuleshov
  * @since 2.1
  */
@@ -29,14 +28,9 @@ public class TaskGroup extends AbstractTaskCategory {
 	}
 
 	@Override
-	public Set<AbstractTask> getChildren() {
-		return super.getChildren();
-	}
-
-	@Override
 	public String getSummary() {
-		return summary + " / " + super.getChildren().size();
-	}
+		return summary; // + " / " + super.getChildren().size();
+	} 
 
 	public boolean isUserDefined() {
 		return false;
