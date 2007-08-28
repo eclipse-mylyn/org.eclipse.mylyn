@@ -38,7 +38,7 @@ public class InProgressTaskCollector implements ITaskCollector {
 		Calendar endCal = Calendar.getInstance();
 		endCal.setTime(endDate);
 
-		return TasksUiPlugin.getTaskListManager().getElapsedTime(task, startCal, endCal) > 0;
+		return TasksUiPlugin.getTaskActivityManager().getElapsedTime(task, startCal, endCal) > 0;
 //		IInteractionContext interactionContext = ContextCorePlugin.getContextManager().loadContext(
 //				task.getHandleIdentifier());
 //		if (interactionContext != null) {

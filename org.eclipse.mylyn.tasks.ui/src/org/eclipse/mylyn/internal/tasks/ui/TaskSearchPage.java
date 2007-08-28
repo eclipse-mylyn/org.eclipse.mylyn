@@ -99,7 +99,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			return openSuccessful;
 		} else {
 			ISearchPage page = (ISearchPage) queryPages[currentPageIndex].getData(PAGE_KEY);
-			return page.performAction();			
+			return page.performAction();
 		}
 	}
 
@@ -156,7 +156,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		labelKey.setText("Task Key/ID: ");
 		keyText = new Text(group, SWT.BORDER);
 		keyText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
-		
+
 		String findText = null;
 		TaskListView taskListView = TaskListView.getFromActivePerspective();
 		if (taskListView != null) {
@@ -166,7 +166,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 				keyText.setFocus();
 			}
 		}
-		
+
 		keyText.addKeyListener(new KeyListener() {
 
 			public void keyPressed(KeyEvent e) {
@@ -177,7 +177,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 				updatePageEnablement();
 			}
 		});
-		
+
 		ImageHyperlink clearKey = new ImageHyperlink(group, SWT.NONE);
 		clearKey.setImage(TasksUiImages.getImage(TasksUiImages.REMOVE));
 		clearKey.addHyperlinkListener(new HyperlinkAdapter() {
@@ -197,7 +197,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			setControlsEnabled(queryPages[currentPageIndex], true);
 		}
 	}
-	
+
 	// TODO: make reusable or find better API, task editor has similar functionality
 	private void setControlsEnabled(Control control, boolean enabled) {
 		control.setEnabled(enabled);
@@ -234,7 +234,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			return searchPage.getControl();
 		}
 
-		fParentComposite.getParent().getShell().pack();
+		//fParentComposite.getParent().getShell().pack();
 		pageWrapper.setData(PAGE_KEY, searchPage);
 		return pageWrapper;
 	}
@@ -343,7 +343,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		}
 
 		super.setVisible(visible);
-		
+
 		setDefaultValuesAndFocus();
 	}
 
@@ -352,7 +352,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 		AbstractTask selectedTask = null;
 		if (editor instanceof TaskEditor) {
-			selectedTask = ((TaskEditorInput)((TaskEditor)editor).getEditorInput()).getTask();
+			selectedTask = ((TaskEditorInput) ((TaskEditor) editor).getEditorInput()).getTask();
 		}
 		if (selectedTask == null) {
 			TaskListView taskListView = TaskListView.getFromActivePerspective();
@@ -360,9 +360,10 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 				selectedTask = taskListView.getSelectedTask();
 			}
 		}
-		
+
 		if (selectedTask != null) {
-			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(selectedTask.getRepositoryUrl());
+			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+					selectedTask.getRepositoryUrl());
 			if (repository != null) {
 				int index = 0;
 				for (String repositoryUrl : repositoryCombo.getItems()) {
@@ -373,7 +374,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 				}
 			}
 		}
-		
+
 		if (keyText.getText() != null && keyText.getText().trim().length() > 0) {
 			keyText.setFocus();
 			keyText.setSelection(0, keyText.getText().length());
@@ -387,7 +388,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 					keyText.setFocus();
 					keyText.setSelection(0, keyText.getText().length());
 				}
-			} 
+			}
 //			repositoryCombo.setFocus();
 		}
 	}

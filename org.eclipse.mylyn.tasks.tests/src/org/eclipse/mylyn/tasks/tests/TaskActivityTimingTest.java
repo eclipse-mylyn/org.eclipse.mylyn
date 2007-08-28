@@ -23,8 +23,10 @@ import org.eclipse.mylyn.internal.context.core.LegacyActivityAdaptor;
 import org.eclipse.mylyn.internal.context.core.ScalingFactors;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
@@ -35,9 +37,12 @@ public class TaskActivityTimingTest extends TestCase {
 
 	TaskListManager manager = null;
 
+	TaskActivityManager activityManager = null;
+
 	protected void setUp() throws Exception {
 		super.setUp();
 		manager = TasksUiPlugin.getTaskListManager();
+		activityManager = TasksUiPlugin.getTaskActivityManager();
 	}
 
 	protected void tearDown() throws Exception {
@@ -50,7 +55,7 @@ public class TaskActivityTimingTest extends TestCase {
 	public void testActivityCaptured() {
 		AbstractTask task1 = new LocalTask("task 1", "Task 1");
 		manager.getTaskList().addTask(task1);
-		assertEquals(0, manager.getElapsedTime(task1));
+		assertEquals(0, activityManager.getElapsedTime(task1));
 
 		Calendar start = Calendar.getInstance();
 		Calendar end = Calendar.getInstance();
@@ -69,21 +74,21 @@ public class TaskActivityTimingTest extends TestCase {
 				task1.getHandleIdentifier(), "originId", "navigatedRelation",
 				InteractionContextManager.ACTIVITY_DELTA_ADDED, 2f, start2.getTime(), end2.getTime());
 
-		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event1);
-		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event2);
+		TaskActivityManager.getInstance().parseInteractionEvent(event1);
+		TaskActivityManager.getInstance().parseInteractionEvent(event2);
 
 		long expectedTotalTime = end.getTime().getTime() - start.getTime().getTime();
-		assertEquals(2 * expectedTotalTime, TasksUiPlugin.getTaskListManager().getElapsedTime(task1));
-		assertEquals(expectedTotalTime, TasksUiPlugin.getTaskListManager().getElapsedTime(task1, start, end));
-		assertEquals(expectedTotalTime, TasksUiPlugin.getTaskListManager().getElapsedTime(task1, start2, end2));
-		assertEquals(2 * expectedTotalTime, TasksUiPlugin.getTaskListManager().getElapsedTime(task1, start, end2));
+		assertEquals(2 * expectedTotalTime, activityManager.getElapsedTime(task1));
+		assertEquals(expectedTotalTime, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1, start, end));
+		assertEquals(expectedTotalTime, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1, start2, end2));
+		assertEquals(2 * expectedTotalTime, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1, start, end2));
 	}
 
 	public void testNegativeActivity() {
 
 		AbstractTask task1 = new LocalTask("task 1", "Task 1");
 		manager.getTaskList().addTask(task1);
-		assertEquals(0, manager.getElapsedTime(task1));
+		assertEquals(0, activityManager.getElapsedTime(task1));
 
 		Calendar start = Calendar.getInstance();
 		Calendar end = Calendar.getInstance();
@@ -102,20 +107,20 @@ public class TaskActivityTimingTest extends TestCase {
 				task1.getHandleIdentifier(), "originId", "navigatedRelation",
 				InteractionContextManager.ACTIVITY_DELTA_ADDED, 2f, end2.getTime(), start2.getTime());
 
-		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event1);
-		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event2);
+		TaskActivityManager.getInstance().parseInteractionEvent(event1);
+		TaskActivityManager.getInstance().parseInteractionEvent(event2);
 
-		assertEquals(0, TasksUiPlugin.getTaskListManager().getElapsedTime(task1));
-		assertEquals(0, TasksUiPlugin.getTaskListManager().getElapsedTime(task1, start, end));
-		assertEquals(0, TasksUiPlugin.getTaskListManager().getElapsedTime(task1, start2, end2));
-		assertEquals(0, TasksUiPlugin.getTaskListManager().getElapsedTime(task1, start, end2));
+		assertEquals(0, TaskActivityManager.getInstance().getElapsedTime(task1));
+		assertEquals(0, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1, start, end));
+		assertEquals(0, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1, start2, end2));
+		assertEquals(0, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1, start, end2));
 
 	}
 
 	public void testNullTaskHandle() {
 		AbstractTask task1 = new LocalTask("task 1", "Task 1");
 		manager.getTaskList().addTask(task1);
-		assertEquals(0, manager.getElapsedTime(task1));
+		assertEquals(0, activityManager.getElapsedTime(task1));
 
 		Calendar start = Calendar.getInstance();
 		Calendar end = Calendar.getInstance();
@@ -128,9 +133,9 @@ public class TaskActivityTimingTest extends TestCase {
 				"originId", "navigatedRelation", InteractionContextManager.ACTIVITY_DELTA_ADDED, 2f, start.getTime(),
 				end.getTime());
 
-		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event1);
-		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event2);
-		assertEquals(0, TasksUiPlugin.getTaskListManager().getElapsedTime(task1));
+		TaskActivityManager.getInstance().parseInteractionEvent(event1);
+		TaskActivityManager.getInstance().parseInteractionEvent(event2);
+		assertEquals(0, TaskActivityManager.getInstance().getElapsedTime(task1));
 	}
 
 	public void testActivityNotLoggedTwice() {
@@ -143,7 +148,7 @@ public class TaskActivityTimingTest extends TestCase {
 		AbstractTask task2 = new LocalTask("local 2", "Task 2");
 
 		Calendar startTime1 = Calendar.getInstance();
-		manager.snapToStartOfHour(startTime1);
+		TaskActivityUtil.snapStartOfHour(startTime1);
 		Calendar endTime1 = Calendar.getInstance();
 		endTime1.setTime(startTime1.getTime());
 		endTime1.add(Calendar.SECOND, 20);
@@ -211,27 +216,27 @@ public class TaskActivityTimingTest extends TestCase {
 					InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startTime.getTime(), endTime.getTime());
 
 			ContextCorePlugin.getContextManager().getActivityMetaContext().parseEvent(event1);
-			TasksUiPlugin.getTaskListManager().parseInteractionEvent(event1);
+			TaskActivityManager.getInstance().parseInteractionEvent(event1);
 			ContextCorePlugin.getContextManager().getActivityMetaContext().parseEvent(activityEvent1);
-			TasksUiPlugin.getTaskListManager().parseInteractionEvent(activityEvent1);
+			TaskActivityManager.getInstance().parseInteractionEvent(activityEvent1);
 			ContextCorePlugin.getContextManager().getActivityMetaContext().parseEvent(event2);
-			TasksUiPlugin.getTaskListManager().parseInteractionEvent(event2);
+			TaskActivityManager.getInstance().parseInteractionEvent(event2);
 
-			long elapsed = TasksUiPlugin.getTaskListManager().getElapsedTime(task1);
+			long elapsed = TaskActivityManager.getInstance().getElapsedTime(task1);
 			assertEquals(10000, elapsed);
 
 			// 2nd activation - no activity
 			ContextCorePlugin.getContextManager().getActivityMetaContext().parseEvent(event1);
-			TasksUiPlugin.getTaskListManager().parseInteractionEvent(event1);
+			TaskActivityManager.getInstance().parseInteractionEvent(event1);
 			ContextCorePlugin.getContextManager().getActivityMetaContext().parseEvent(event2);
-			TasksUiPlugin.getTaskListManager().parseInteractionEvent(event2);
+			TaskActivityManager.getInstance().parseInteractionEvent(event2);
 
-			elapsed = TasksUiPlugin.getTaskListManager().getElapsedTime(task1);
+			elapsed = TaskActivityManager.getInstance().getElapsedTime(task1);
 			assertEquals(10000, elapsed);
-			assertTrue(TasksUiPlugin.getTaskListManager().isActiveThisWeek(task1));
+			assertTrue(TaskActivityManager.getInstance().isActiveThisWeek(task1));
 		}
 
-		assertEquals(10000, TasksUiPlugin.getTaskListManager().getElapsedTime(task1));
+		assertEquals(10000, TaskActivityManager.getInstance().getElapsedTime(task1));
 		///--- 2nd activity on same task
 		{
 			Calendar startActiveTime2 = Calendar.getInstance();
@@ -258,20 +263,20 @@ public class TaskActivityTimingTest extends TestCase {
 					InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startTime2.getTime(), endTime2.getTime());
 
 			ContextCorePlugin.getContextManager().getActivityMetaContext().parseEvent(event1);
-			TasksUiPlugin.getTaskListManager().parseInteractionEvent(event1);
+			TaskActivityManager.getInstance().parseInteractionEvent(event1);
 			ContextCorePlugin.getContextManager().getActivityMetaContext().parseEvent(activityEvent1);
-			TasksUiPlugin.getTaskListManager().parseInteractionEvent(activityEvent1);
+			TaskActivityManager.getInstance().parseInteractionEvent(activityEvent1);
 			ContextCorePlugin.getContextManager().getActivityMetaContext().parseEvent(event2);
-			TasksUiPlugin.getTaskListManager().parseInteractionEvent(event2);
+			TaskActivityManager.getInstance().parseInteractionEvent(event2);
 		}
 
-		assertEquals(26000, TasksUiPlugin.getTaskListManager().getElapsedTime(task1));
+		assertEquals(26000, TaskActivityManager.getInstance().getElapsedTime(task1));
 
 		ContextCorePlugin.getContextManager().saveActivityContext();
 		ContextCorePlugin.getContextManager().loadActivityMetaContext();
 		TasksUiPlugin.getTaskListManager().resetAndRollOver();
 
-		assertEquals(26000, TasksUiPlugin.getTaskListManager().getElapsedTime(task1));
+		assertEquals(26000, TaskActivityManager.getInstance().getElapsedTime(task1));
 
 	}
 
@@ -296,18 +301,18 @@ public class TaskActivityTimingTest extends TestCase {
 				InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startTime.getTime(), endTime.getTime());
 
 		ContextCorePlugin.getContextManager().getActivityMetaContext().parseEvent(event1);
-		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event1);
+		TaskActivityManager.getInstance().parseInteractionEvent(event1);
 		ContextCorePlugin.getContextManager().getActivityMetaContext().parseEvent(activityEvent1);
-		TasksUiPlugin.getTaskListManager().parseInteractionEvent(activityEvent1);
+		TaskActivityManager.getInstance().parseInteractionEvent(activityEvent1);
 		ContextCorePlugin.getContextManager().getActivityMetaContext().parseEvent(event2);
-		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event2);
-		assertEquals(20000, TasksUiPlugin.getTaskListManager().getElapsedTime(task1));
+		TaskActivityManager.getInstance().parseInteractionEvent(event2);
+		assertEquals(20000, TaskActivityManager.getInstance().getElapsedTime(task1));
 
 		ContextCorePlugin.getContextManager().saveActivityContext();
 		ContextCorePlugin.getContextManager().loadActivityMetaContext();
 		TasksUiPlugin.getTaskListManager().resetAndRollOver();
 
-		assertEquals(20000, TasksUiPlugin.getTaskListManager().getElapsedTime(task1));
+		assertEquals(20000, TaskActivityManager.getInstance().getElapsedTime(task1));
 
 	}
 
@@ -433,11 +438,11 @@ public class TaskActivityTimingTest extends TestCase {
 		ContextCorePlugin.getContextManager().loadActivityMetaContext();
 
 		assertEquals(4, ContextCorePlugin.getContextManager().getActivityMetaContext().getInteractionHistory().size());
-		assertEquals(0, TasksUiPlugin.getTaskListManager().getElapsedTime(task1));
+		assertEquals(0, TaskActivityManager.getInstance().getElapsedTime(task1));
 
 		TasksUiPlugin.getTaskListManager().resetAndRollOver();
 		assertEquals((endTime1.getTimeInMillis() - startTime1.getTimeInMillis())
-				+ (endTime2.getTimeInMillis() - startTime2.getTimeInMillis()), TasksUiPlugin.getTaskListManager()
+				+ (endTime2.getTimeInMillis() - startTime2.getTimeInMillis()), TaskActivityManager.getInstance()
 				.getElapsedTime(task1));
 	}
 
@@ -561,12 +566,12 @@ public class TaskActivityTimingTest extends TestCase {
 				InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
 				InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, activityStart.getTime(), activityEnd.getTime());
 
-		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event1);
-		TasksUiPlugin.getTaskListManager().parseInteractionEvent(activityEvent);
-		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event2);
+		TaskActivityManager.getInstance().parseInteractionEvent(event1);
+		TaskActivityManager.getInstance().parseInteractionEvent(activityEvent);
+		TaskActivityManager.getInstance().parseInteractionEvent(event2);
 
 		long expectedTotalTime = (activityEnd.getTime().getTime() - activityStart.getTime().getTime());
-		assertEquals(expectedTotalTime, TasksUiPlugin.getTaskListManager().getElapsedTime(task1));
+		assertEquals(expectedTotalTime, TaskActivityManager.getInstance().getElapsedTime(task1));
 	}
 
 	public void testElapsedSameAfterRead() {
@@ -625,15 +630,15 @@ public class TaskActivityTimingTest extends TestCase {
 				InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startTime3.getTime(), endTime3.getTime());
 
 		metaContext.parseEvent(activityEvent1);
-		manager.parseInteractionEvent(activityEvent1);
+		TaskActivityManager.getInstance().parseInteractionEvent(activityEvent1);
 		metaContext.parseEvent(activityEvent2);
-		manager.parseInteractionEvent(activityEvent2);
+		TaskActivityManager.getInstance().parseInteractionEvent(activityEvent2);
 		metaContext.parseEvent(activityEvent3);
-		manager.parseInteractionEvent(activityEvent3);
+		TaskActivityManager.getInstance().parseInteractionEvent(activityEvent3);
 
-		assertEquals(1000 * 60 * 10, manager.getElapsedTime(task1));
-		assertEquals(1000 * 60 * 2, manager.getElapsedTime(task1, startTime1, endTime1));
-		assertEquals(1000 * 60 * 8, manager.getElapsedTime(task1, startTime2, endTime2));
+		assertEquals(1000 * 60 * 10, TaskActivityManager.getInstance().getElapsedTime(task1));
+		assertEquals(1000 * 60 * 2, activityManager.getElapsedTime(task1, startTime1, endTime1));
+		assertEquals(1000 * 60 * 8, activityManager.getElapsedTime(task1, startTime2, endTime2));
 
 		TasksUiPlugin.getTaskListManager().deactivateAllTasks();
 		assertEquals(4, ContextCorePlugin.getContextManager().getActivityMetaContext().getInteractionHistory().size());
@@ -642,9 +647,9 @@ public class TaskActivityTimingTest extends TestCase {
 		ContextCorePlugin.getContextManager().getActivityMetaContext().reset();
 		assertEquals(0, ContextCorePlugin.getContextManager().getActivityMetaContext().getInteractionHistory().size());
 		TasksUiPlugin.getTaskListManager().resetAndRollOver();
-		assertEquals(0, manager.getElapsedTime(task1));
-		assertEquals(0, manager.getElapsedTime(task1, startTime1, endTime1));
-		assertEquals(0, manager.getElapsedTime(task1, startTime2, endTime2));
+		assertEquals(0, activityManager.getElapsedTime(task1));
+		assertEquals(0, activityManager.getElapsedTime(task1, startTime1, endTime1));
+		assertEquals(0, activityManager.getElapsedTime(task1, startTime2, endTime2));
 
 		ContextCorePlugin.getContextManager().loadActivityMetaContext();
 		assertEquals(3, ContextCorePlugin.getContextManager().getActivityMetaContext().getInteractionHistory().size());
@@ -655,9 +660,9 @@ public class TaskActivityTimingTest extends TestCase {
 		startTime1.set(Calendar.SECOND, 0);
 		startTime1.set(Calendar.MILLISECOND, 0);
 
-		assertEquals(1000 * 60 * 10, manager.getElapsedTime(task1));
-		assertEquals(1000 * 60 * 2, manager.getElapsedTime(task1, startTime1, endTime1));
-		assertEquals(1000 * 60 * 8, manager.getElapsedTime(task1, startTime2, endTime2));
+		assertEquals(1000 * 60 * 10, activityManager.getElapsedTime(task1));
+		assertEquals(1000 * 60 * 2, activityManager.getElapsedTime(task1, startTime1, endTime1));
+		assertEquals(1000 * 60 * 8, activityManager.getElapsedTime(task1, startTime2, endTime2));
 	}
 
 	/**
@@ -717,16 +722,16 @@ public class TaskActivityTimingTest extends TestCase {
 				"originId", "navigatedRelation", InteractionContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f, time7, time7);
 
 		LegacyActivityAdaptor legacyAdaptor = new LegacyActivityAdaptor();
-		TasksUiPlugin.getTaskListManager().parseInteractionEvent(legacyAdaptor.parseInteractionEvent(event1));
-		TasksUiPlugin.getTaskListManager().parseInteractionEvent(legacyAdaptor.parseInteractionEvent(event2));
-		TasksUiPlugin.getTaskListManager().parseInteractionEvent(legacyAdaptor.parseInteractionEvent(event3));
+		TaskActivityManager.getInstance().parseInteractionEvent(legacyAdaptor.parseInteractionEvent(event1));
+		TaskActivityManager.getInstance().parseInteractionEvent(legacyAdaptor.parseInteractionEvent(event2));
+		TaskActivityManager.getInstance().parseInteractionEvent(legacyAdaptor.parseInteractionEvent(event3));
 		// TasksUiPlugin.getTaskListManager().parseInteractionEvent(event4);
-		TasksUiPlugin.getTaskListManager().parseInteractionEvent(legacyAdaptor.parseInteractionEvent(event5));
-		// TasksUiPlugin.getTaskListManager().parseInteractionEvent(event6);
-		TasksUiPlugin.getTaskListManager().parseInteractionEvent(legacyAdaptor.parseInteractionEvent(event7));
+		TaskActivityManager.getInstance().parseInteractionEvent(legacyAdaptor.parseInteractionEvent(event5));
+		// TaskActivityManager.getInstance().parseInteractionEvent(event6);
+		TaskActivityManager.getInstance().parseInteractionEvent(legacyAdaptor.parseInteractionEvent(event7));
 		long expectedTotalTime = time6.getTime() - time5.getTime() + time4.getTime() - time3.getTime()
 				+ time2.getTime() - time1.getTime();
-		assertEquals(expectedTotalTime, manager.getElapsedTime(task1));
+		assertEquals(expectedTotalTime, TaskActivityManager.getInstance().getElapsedTime(task1));
 	}
 
 // DND: OLD ACTIVITY TESTS - Will be using to test activity report/view 

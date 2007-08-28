@@ -10,7 +10,6 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import java.text.DateFormat;
 
-import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.ILabelDecorator;
@@ -19,6 +18,7 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskDelegate;
+import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.monitor.core.DateUtil;
@@ -26,7 +26,6 @@ import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
-import org.eclipse.mylyn.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -35,14 +34,14 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author Rob Elves
  */
-public class TaskActivityLabelProvider extends DecoratingLabelProvider implements ITableLabelProvider, IColorProvider,
+public class TaskActivityLabelProvider extends TaskElementLabelProvider implements ITableLabelProvider, IColorProvider,
 		IFontProvider {
 
 	private static final String UNITS_HOURS = " hours";
 
 	private static final String NO_MINUTES = "0 minutes";
 
-	private TaskListManager manager;
+	private TaskActivityManager activityManager;
 
 	private Color categoryBackgroundColor;
 
@@ -50,9 +49,9 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 
 	public TaskActivityLabelProvider(ILabelProvider provider, ILabelDecorator decorator, Color parentBacground,
 			ITreeContentProvider contentProvider) {
-		super(provider, decorator);
+		super(true);
 		this.categoryBackgroundColor = parentBacground;
-		this.manager = TasksUiPlugin.getTaskListManager();
+		this.activityManager = TasksUiPlugin.getTaskActivityManager();
 		this.contentProvider = contentProvider;
 	}
 
@@ -84,7 +83,7 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 					return task.getSummary();
 				}
 			case 3:
-				return DateUtil.getFormattedDurationShort(manager.getElapsedTime(task,
+				return DateUtil.getFormattedDurationShort(activityManager.getElapsedTime(task,
 						activityDelegate.getDateRangeContainer().getStart(), activityDelegate.getDateRangeContainer()
 								.getEnd()));
 			case 4:
@@ -119,8 +118,9 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 					long elapsed = 0;
 					for (Object o : contentProvider.getChildren(taskCategory)) {
 						if (o instanceof ScheduledTaskDelegate) {
-							elapsed += manager.getElapsedTime(((ScheduledTaskDelegate) o).getCorrespondingTask(),
-									taskCategory.getStart(), taskCategory.getEnd());
+							elapsed += activityManager.getElapsedTime(
+									((ScheduledTaskDelegate) o).getCorrespondingTask(), taskCategory.getStart(),
+									taskCategory.getEnd());
 						}
 					}
 

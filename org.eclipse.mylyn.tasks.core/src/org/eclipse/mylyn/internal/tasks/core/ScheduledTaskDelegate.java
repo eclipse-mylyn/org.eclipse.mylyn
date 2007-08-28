@@ -65,43 +65,6 @@ public class ScheduledTaskDelegate extends AbstractTask {
 		return task;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + (int) (endMili ^ (endMili >>> 32));
-		result = prime * result + ((parent == null) ? 0 : parent.hashCode());
-		result = prime * result + (int) (startMili ^ (startMili >>> 32));
-		result = prime * result + ((task == null) ? 0 : task.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ScheduledTaskDelegate other = (ScheduledTaskDelegate) obj;
-		if (endMili != other.endMili)
-			return false;
-		if (parent == null) {
-			if (other.parent != null)
-				return false;
-		} else if (!parent.equals(other.parent))
-			return false;
-		if (startMili != other.startMili)
-			return false;
-		if (task == null) {
-			if (other.task != null)
-				return false;
-		} else if (!task.equals(other.task))
-			return false;
-		return true;
-	}
-
 	public ScheduledTaskContainer getDateRangeContainer() {
 		return parent;
 	}
@@ -283,5 +246,27 @@ public class ScheduledTaskDelegate extends AbstractTask {
 	@Override
 	public String getConnectorKind() {
 		return task.getConnectorKind();
+	}
+
+	@Override
+	public int hashCode() {
+		return task.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final ScheduledTaskDelegate other = (ScheduledTaskDelegate) obj;
+		if (task == null) {
+			if (other.task != null)
+				return false;
+		} else if (!task.equals(other.task))
+			return false;
+		return true;
 	}
 }

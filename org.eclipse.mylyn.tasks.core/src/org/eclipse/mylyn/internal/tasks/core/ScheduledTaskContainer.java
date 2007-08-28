@@ -8,13 +8,10 @@
 
 package org.eclipse.mylyn.internal.tasks.core;
 
-import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -29,47 +26,31 @@ public class ScheduledTaskContainer extends AbstractTaskCategory {
 
 	private Set<ScheduledTaskDelegate> dateRangeDelegates = new HashSet<ScheduledTaskDelegate>();
 
-	private Map<ScheduledTaskDelegate, Long> taskToDuration = new HashMap<ScheduledTaskDelegate, Long>();
-
-	private Map<ScheduledTaskDelegate, Long> taskToStart = new HashMap<ScheduledTaskDelegate, Long>();
-
-	private Map<ScheduledTaskDelegate, Long> taskToEnd = new HashMap<ScheduledTaskDelegate, Long>();
-
 	private Calendar startDate;
 
 	private Calendar endDate;
 
-	private long totalElapsed = 0;
+	private TaskActivityManager activityManager;
 
-	private long totalEstimated = 0;
-
-	public ScheduledTaskContainer(GregorianCalendar startDate, GregorianCalendar endDate, String description) {
+	public ScheduledTaskContainer(TaskActivityManager activityManager, GregorianCalendar startDate,
+			GregorianCalendar endDate, String description) {
 		super(description);
+		this.activityManager = activityManager;
 		this.startDate = startDate;
 		this.endDate = endDate;
 	}
 
-	public ScheduledTaskContainer(Calendar startDate, Calendar endDate, String description) {
+	public ScheduledTaskContainer(TaskActivityManager activityManager, Calendar startDate, Calendar endDate,
+			String description) {
 		super(description);
+		this.activityManager = activityManager;
 		this.startDate = startDate;
 		this.endDate = endDate;
 	}
 
-	public ScheduledTaskContainer(GregorianCalendar startDate, GregorianCalendar endDate) {
-		super(DateFormat.getDateInstance(DateFormat.FULL).format(startDate.getTime()) + " to "
-				+ DateFormat.getDateInstance(DateFormat.FULL).format(endDate.getTime()));
-		// super(startDate.hashCode() + endDate.hashCode() + "");
-		// String start =
-		// DateFormat.getDateInstance(DateFormat.FULL).format(startDate.getTime());
-		// String end =
-		// DateFormat.getDateInstance(DateFormat.FULL).format(endDate.getTime());
-		// this.description = start + " to " + end;
-		this.startDate = startDate;
-		this.endDate = endDate;
-	}
-
-	public ScheduledTaskContainer(Date time, Date time2, String description) {
+	public ScheduledTaskContainer(TaskActivityManager activityManager, Date time, Date time2, String description) {
 		super(description);
+		this.activityManager = activityManager;
 		startDate = new GregorianCalendar();
 		startDate.setTime(time);
 		endDate = new GregorianCalendar();
@@ -82,44 +63,6 @@ public class ScheduledTaskContainer extends AbstractTaskCategory {
 				&& (endDate.getTimeInMillis() >= cal.getTimeInMillis());
 	}
 
-	@Override
-	public void clear() {
-		totalEstimated = 0;
-		totalElapsed = 0;
-		taskToDuration.clear();
-		dateRangeDelegates.clear();
-		super.clear();
-	}
-
-	public void addTask(ScheduledTaskDelegate taskWrapper) {
-		long taskActivity = taskWrapper.getActivity();
-		if (taskActivity < 0)
-			taskActivity = 0;
-		totalElapsed += taskActivity;
-		dateRangeDelegates.remove(taskWrapper);
-		dateRangeDelegates.add(taskWrapper);
-		if (taskToDuration.containsKey(taskWrapper)) {
-			long previous = taskToDuration.get(taskWrapper);
-			long newDuration = previous + taskActivity;
-			taskToDuration.put(taskWrapper, newDuration);
-		} else {
-			taskToDuration.put(taskWrapper, taskActivity);
-		}
-
-		if (!taskToStart.containsKey(taskWrapper)) {
-			taskToStart.put(taskWrapper, taskWrapper.getStart());
-		}
-
-		taskToEnd.put(taskWrapper, taskWrapper.getEnd());
-
-		super.internalAddChild(taskWrapper.getCorrespondingTask());
-	}
-
-	public void remove(ScheduledTaskDelegate taskWrapper) {
-		dateRangeDelegates.remove(taskWrapper);
-		super.internalRemoveChild(taskWrapper.getCorrespondingTask());
-	}
-
 	public Calendar getStart() {
 		return startDate;
 	}
@@ -129,19 +72,19 @@ public class ScheduledTaskContainer extends AbstractTaskCategory {
 	}
 
 	public long getTotalElapsed() {
-		return totalElapsed;
+		long elapsed = 0;
+		for (AbstractTask task : getChildren()) {
+			elapsed += activityManager.getElapsedTime(task, getStart(), getEnd());
+		}
+		return elapsed;
 	}
 
-	public long getElapsed(ScheduledTaskDelegate taskWrapper) {
-		if (taskToDuration.containsKey(taskWrapper)) {
-			return taskToDuration.get(taskWrapper);
-		} else {
-			return 0;
-		}
+	public long getElapsed(AbstractTask task) {
+		return activityManager.getElapsedTime(task, getStart(), getEnd());
 	}
 
 	public long getTotalEstimated() {
-		totalEstimated = 0;
+		long totalEstimated = 0;
 		for (AbstractTask task : dateRangeDelegates) {
 			totalEstimated += task.getEstimateTimeHours();
 		}
@@ -220,5 +163,65 @@ public class ScheduledTaskContainer extends AbstractTaskCategory {
 	@Override
 	public boolean isUserDefined() {
 		return false;
+	}
+
+	@Override
+	public Set<AbstractTask> getChildren() {
+		Set<AbstractTask> children = new HashSet<AbstractTask>();
+		if (isPresent()) {
+			// add all overdue
+			Calendar beginning = Calendar.getInstance();
+			beginning.setTimeInMillis(0);
+			Calendar end = Calendar.getInstance();
+			end.set(5000, 12, 1);
+			for (AbstractTask task : activityManager.getDueTasks(beginning, getStart())) {
+				// TODO: Where to get this answer without relying on ui?
+				if (activityManager.isOverdue(task)) {
+					children.add(task);
+				}
+			}
+
+			// add all over scheduled
+			for (AbstractTask task : activityManager.getScheduledTasks(beginning, getStart())) {
+				if (task.isPastReminder() && !task.isCompleted()) {
+					children.add(task);
+				}
+			}
+			children.addAll(activityManager.getActiveTasks(getStart(), getEnd()));
+			children.addAll(activityManager.getScheduledTasks(getStart(), getEnd()));
+			children.addAll(activityManager.getDueTasks(getStart(), getEnd()));
+
+			// if not scheduled or due in future, and is active, place in today bin
+			AbstractTask activeTask = activityManager.getActiveTask();
+			if (activeTask != null && !children.contains(activeTask)) {
+				Set<AbstractTask> futureScheduled = activityManager.getDueTasks(getStart(), end);
+				futureScheduled.addAll(activityManager.getScheduledTasks(getStart(), end));
+				if (!futureScheduled.contains(activeTask)) {
+					children.add(activeTask);
+				}
+			}
+
+			Set<AbstractTask> delegates = new HashSet<AbstractTask>();
+			for (AbstractTask abstractTask : children) {
+				delegates.add(new ScheduledTaskDelegate(this, abstractTask, getStart(), getEnd(), 0));
+			}
+			return delegates;
+		} else if (isFuture()) {
+			children.addAll(activityManager.getScheduledTasks(getStart(), getEnd()));
+			children.addAll(activityManager.getDueTasks(getStart(), getEnd()));
+			Set<AbstractTask> delegates = new HashSet<AbstractTask>();
+			for (AbstractTask abstractTask : children) {
+				delegates.add(new ScheduledTaskDelegate(this, abstractTask, getStart(), getEnd(), 0));
+			}
+			return delegates;
+		} else {
+			children.addAll(activityManager.getActiveTasks(getStart(), getEnd()));
+			Set<AbstractTask> delegates = new HashSet<AbstractTask>();
+			for (AbstractTask abstractTask : children) {
+				delegates.add(new ScheduledTaskDelegate(this, abstractTask, getStart(), getEnd(), 0));
+			}
+			return delegates;
+
+		}
 	}
 }

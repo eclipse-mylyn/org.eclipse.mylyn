@@ -13,7 +13,6 @@ import java.util.Set;
 
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskDelegate;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -128,66 +127,11 @@ public class TaskScheduleContentProvider extends TaskListContentProvider {
 
 	@Override
 	public Object[] getChildren(Object parent) {
-		Set<AbstractTask> children = new HashSet<AbstractTask>();
 		if (parent instanceof ScheduledTaskContainer) {
-			ScheduledTaskContainer container = (ScheduledTaskContainer) parent;
-			if (container.isPresent()) {
-				// add all overdue
-				for (AbstractTask task : taskListManager.getDueTasks(taskListManager.getActivityPast().getStart(),
-						container.getStart())) {
-					if (taskListManager.isOverdue(task)) {
-						children.add(task);
-					}
-				}
+			return ((ScheduledTaskContainer) parent).getChildren().toArray();
 
-				// add all over scheduled
-				for (AbstractTask task : taskListManager.getScheduledTasks(
-						taskListManager.getActivityPast().getStart(), container.getStart())) {
-					if (task.isPastReminder() && !task.isCompleted()) {
-						children.add(task);
-					}
-				}
-				children.addAll(taskListManager.getActiveTasks(container.getStart(), container.getEnd()));
-				children.addAll(taskListManager.getScheduledTasks(container.getStart(), container.getEnd()));
-				children.addAll(taskListManager.getDueTasks(container.getStart(), container.getEnd()));
-
-				// if not scheduled or due in future, and is active, place in today bin
-				AbstractTask activeTask = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
-				if (activeTask != null && !children.contains(activeTask)) {
-					Set<AbstractTask> futureScheduled = taskListManager.getDueTasks(container.getStart(),
-							taskListManager.getActivityFuture().getEnd());
-					futureScheduled.addAll(taskListManager.getScheduledTasks(container.getStart(),
-							taskListManager.getActivityFuture().getEnd()));
-					if (!futureScheduled.contains(activeTask)) {
-						children.add(activeTask);
-					}
-				}
-
-				Set<ScheduledTaskDelegate> delegates = new HashSet<ScheduledTaskDelegate>();
-				for (AbstractTask abstractTask : children) {
-					delegates.add(new ScheduledTaskDelegate(container, abstractTask, container.getStart(),
-							container.getEnd(), 0));
-				}
-				return delegates.toArray();
-			} else if (container.isFuture()) {
-				children.addAll(taskListManager.getScheduledTasks(container.getStart(), container.getEnd()));
-				children.addAll(taskListManager.getDueTasks(container.getStart(), container.getEnd()));
-				Set<ScheduledTaskDelegate> delegates = new HashSet<ScheduledTaskDelegate>();
-				for (AbstractTask abstractTask : children) {
-					delegates.add(new ScheduledTaskDelegate(container, abstractTask, container.getStart(),
-							container.getEnd(), 0));
-				}
-				return delegates.toArray();
-			} else {
-				children.addAll(taskListManager.getActiveTasks(container.getStart(), container.getEnd()));
-				Set<ScheduledTaskDelegate> delegates = new HashSet<ScheduledTaskDelegate>();
-				for (AbstractTask abstractTask : children) {
-					delegates.add(new ScheduledTaskDelegate(container, abstractTask, container.getStart(),
-							container.getEnd(), 0));
-				}
-				return delegates.toArray();
-
-			}
+		} else if (parent instanceof AbstractTaskContainer) {
+			return ((AbstractTaskContainer) parent).getChildren().toArray();
 		}
 //		else if (parent.equals(unscheduledCategory)) {
 //			return unscheduledCategory.getChildren().toArray();

@@ -377,10 +377,25 @@ public class TaskRepositoryManager {
 	}
 
 	public void insertRepositories(Set<TaskRepository> repositories, String repositoryFilePath) {
-		for(TaskRepository repository : repositories) {
+		for (TaskRepository repository : repositories) {
 			if (getRepository(repository.getConnectorKind(), repository.getUrl()) == null) {
 				addRepository(repository, repositoryFilePath);
 			}
 		}
 	}
+
+	public boolean isOwnedByUser(AbstractTask task) {
+		if (task.isLocal()) {
+			return true;
+		}
+
+		AbstractTask repositoryTask = task;
+		TaskRepository repository = getRepository(repositoryTask.getConnectorKind(), repositoryTask.getRepositoryUrl());
+		if (repository != null && repositoryTask.getOwner() != null) {
+			return repositoryTask.getOwner().equals(repository.getUserName());
+		}
+
+		return false;
+	}
+
 }

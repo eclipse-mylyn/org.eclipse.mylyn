@@ -66,8 +66,8 @@ public class TaskPlannerLabelProvider extends TaskElementLabelProvider implement
 				case 2:
 					return task.getSummary();
 				case 3:
-					return DateUtil.getFormattedDurationShort(TasksUiPlugin.getTaskListManager().getElapsedTime(task,
-							startDate, endDate));
+					return DateUtil.getFormattedDurationShort(TasksUiPlugin.getTaskActivityManager().getElapsedTime(
+							task, startDate, endDate));
 				case 4:
 					return task.getEstimateTimeHours() + " hours";
 				case 5:
@@ -96,8 +96,8 @@ public class TaskPlannerLabelProvider extends TaskElementLabelProvider implement
 					long duration = 0;
 					for (Object o : contentProvider.getChildren(container)) {
 						if (o instanceof AbstractTask) {
-							duration += TasksUiPlugin.getTaskListManager().getElapsedTime((AbstractTask) o, startDate,
-									endDate);
+							duration += TasksUiPlugin.getTaskActivityManager().getElapsedTime((AbstractTask) o,
+									startDate, endDate);
 						}
 					}
 					return DateUtil.getFormattedDurationShort(duration);

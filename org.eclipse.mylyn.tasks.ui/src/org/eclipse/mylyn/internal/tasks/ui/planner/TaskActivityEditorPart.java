@@ -559,7 +559,7 @@ public class TaskActivityEditorPart extends EditorPart {
 				String formatString = "dd-MM-yyyy";
 				SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.ENGLISH);
 
-				String elapsedTimeString = DateUtil.getFormattedDuration(TasksUiPlugin.getTaskListManager()
+				String elapsedTimeString = DateUtil.getFormattedDuration(TasksUiPlugin.getTaskActivityManager()
 						.getElapsedTime(currentTask), false);
 				String estimatedTimeString = currentTask.getEstimateTimeHours() + " hours";
 				if (elapsedTimeString.equals(""))
@@ -608,7 +608,7 @@ public class TaskActivityEditorPart extends EditorPart {
 				String formatString = "dd-MM-yyyy";
 				SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.ENGLISH);
 
-				String elapsedTimeString = DateUtil.getFormattedDuration(TasksUiPlugin.getTaskListManager()
+				String elapsedTimeString = DateUtil.getFormattedDuration(TasksUiPlugin.getTaskActivityManager()
 						.getElapsedTime(currentTask), false);
 				String estimatedTimeString = currentTask.getEstimateTimeHours() + " hours";
 				if (elapsedTimeString.equals(""))

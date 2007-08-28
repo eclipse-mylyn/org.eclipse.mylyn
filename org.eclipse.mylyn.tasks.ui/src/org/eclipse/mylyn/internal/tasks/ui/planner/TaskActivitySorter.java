@@ -89,7 +89,7 @@ public class TaskActivitySorter extends ViewerSorter {
 	}
 
 	protected int compareDuration(AbstractTask task1, AbstractTask task2) {
-		return TasksUiPlugin.getTaskListManager().getElapsedTime(task1) < TasksUiPlugin.getTaskListManager()
+		return TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1) < TasksUiPlugin.getTaskActivityManager()
 				.getElapsedTime(task2) ? 1 : -1;
 	}
 }

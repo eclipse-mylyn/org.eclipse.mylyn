@@ -36,6 +36,7 @@ import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.ContextPreferenceContstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskHighlighter;
@@ -106,6 +107,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	private static TasksUiPlugin INSTANCE;
 
 	private static TaskListManager taskListManager;
+
+	private static TaskActivityManager taskActivityManager;
 
 	private static TaskRepositoryManager taskRepositoryManager;
 
@@ -318,6 +321,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 			File taskListFile = new File(path);
 			taskListManager = new TaskListManager(taskListWriter, taskListFile);
+			taskActivityManager = TaskActivityManager.getInstance();
 			taskRepositoryManager = new TaskRepositoryManager(taskListManager.getTaskList());
 			synchronizationManager = new RepositorySynchronizationManager();
 
@@ -338,6 +342,12 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			taskListManager.addActivityListener(CONTEXT_TASK_ACTIVITY_LISTENER);
 			taskListManager.readExistingOrCreateNewList();
 			initialized = true;
+
+			// if the taskListManager didn't initialize do it here
+			if (!taskActivityManager.isInitialized()) {
+				taskActivityManager.init(taskRepositoryManager, taskListManager.getTaskList());
+				taskActivityManager.setEndHour(getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
+			}
 
 			saveParticipant = new ISaveParticipant() {
 
@@ -624,6 +634,10 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	public static TaskListManager getTaskListManager() {
 		return taskListManager;
+	}
+
+	public static TaskActivityManager getTaskActivityManager() {
+		return taskActivityManager;
 	}
 
 	public static TaskListNotificationManager getTaskListNotificationManager() {
@@ -1023,4 +1037,5 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			this.added = new ArrayList<String>(newValues);
 		}
 	}
+
 }

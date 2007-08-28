@@ -114,7 +114,7 @@ public class TaskListToolTipHandler {
 				for (Object object : children) {
 					if (object instanceof AbstractTask) {
 						estimateTotal += ((AbstractTask) object).getEstimateTimeHours();
-						elapsedTotal += TasksUiPlugin.getTaskListManager().getElapsedTime(
+						elapsedTotal += TasksUiPlugin.getTaskActivityManager().getElapsedTime(
 								((ScheduledTaskDelegate) object).getCorrespondingTask(), container.getStart(),
 								container.getEnd());
 					}
@@ -176,7 +176,7 @@ public class TaskListToolTipHandler {
 				sb.append(" (").append(DateFormat.getTimeInstance(DateFormat.SHORT).format(date)).append(")\n");
 			}
 
-			long elapsed = TasksUiPlugin.getTaskListManager().getElapsedTime(task.getCorrespondingTask(),
+			long elapsed = TasksUiPlugin.getTaskActivityManager().getElapsedTime(task.getCorrespondingTask(),
 					task.getDateRangeContainer().getStart(), task.getDateRangeContainer().getEnd());
 			String elapsedTimeString = DateUtil.getFormattedDurationShort(elapsed);
 			sb.append("Elapsed: ");
@@ -196,7 +196,7 @@ public class TaskListToolTipHandler {
 				sb.append(" (").append(DateFormat.getTimeInstance(DateFormat.SHORT).format(date)).append(")\n");
 			}
 
-			long elapsed = TasksUiPlugin.getTaskListManager().getElapsedTime(task);
+			long elapsed = TasksUiPlugin.getTaskActivityManager().getElapsedTime(task);
 			String elapsedTimeString = DateUtil.getFormattedDurationShort(elapsed);
 			sb.append("Elapsed: ");
 			sb.append(elapsedTimeString);

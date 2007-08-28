@@ -240,14 +240,14 @@ public class TaskPlanningEditor extends TaskFormPage {
 		task.setNotes(note);
 		task.setEstimatedTimeHours(estimated.getSelection());
 		if (datePicker != null && datePicker.getDate() != null) {
-			TasksUiPlugin.getTaskListManager().setScheduledFor(task, datePicker.getDate().getTime());
+			TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, datePicker.getDate().getTime());
 		} else {
-			TasksUiPlugin.getTaskListManager().setScheduledFor(task, null);
+			TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, null);
 		}
 		if (dueDatePicker != null && dueDatePicker.getDate() != null) {
-			TasksUiPlugin.getTaskListManager().setDueDate(task, dueDatePicker.getDate().getTime());
+			TasksUiPlugin.getTaskActivityManager().setDueDate(task, dueDatePicker.getDate().getTime());
 		} else {
-			TasksUiPlugin.getTaskListManager().setDueDate(task, null);
+			TasksUiPlugin.getTaskActivityManager().setDueDate(task, null);
 		}
 //		if (parentEditor != null) {
 //			parentEditor.notifyTaskChanged();
@@ -750,7 +750,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 				TaskPlanningEditor.this.markDirty(true);
 			}
 		});
-		
+
 		// Active Time
 		nameValueComp = makeComposite(sectionClient, 3);
 		// GridDataFactory.fillDefaults().span(2, 1).align(SWT.LEFT,
@@ -761,8 +761,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		String elapsedTimeString = NO_TIME_ELAPSED;
 		try {
-			elapsedTimeString = DateUtil.getFormattedDuration(TasksUiPlugin.getTaskListManager().getElapsedTime(task),
-					true);
+			elapsedTimeString = DateUtil.getFormattedDuration(TasksUiPlugin.getTaskActivityManager().getElapsedTime(
+					task), true);
 			if (elapsedTimeString.equals(""))
 				elapsedTimeString = NO_TIME_ELAPSED;
 		} catch (RuntimeException e) {
@@ -785,7 +785,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 			public void widgetSelected(SelectionEvent e) {
 				String elapsedTimeString = NO_TIME_ELAPSED;
 				try {
-					elapsedTimeString = DateUtil.getFormattedDuration(TasksUiPlugin.getTaskListManager()
+					elapsedTimeString = DateUtil.getFormattedDuration(TasksUiPlugin.getTaskActivityManager()
 							.getElapsedTime(task), true);
 					if (elapsedTimeString.equals("")) {
 						elapsedTimeString = NO_TIME_ELAPSED;
