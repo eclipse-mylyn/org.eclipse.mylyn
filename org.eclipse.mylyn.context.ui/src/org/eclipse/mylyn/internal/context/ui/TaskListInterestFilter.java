@@ -104,7 +104,9 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 
 	private static boolean shouldShowInFocusedWorkweekDateContainer(Object parent, AbstractTask task) {
 		if (parent instanceof ScheduledTaskContainer) {
-
+			if (!TasksUiPlugin.getTaskListManager().isWeekDay((ScheduledTaskContainer) parent)) {
+				return false;
+			}
 			if (TaskActivityManager.getInstance().isOverdue(task) || task.isPastReminder())
 				return true;
 
