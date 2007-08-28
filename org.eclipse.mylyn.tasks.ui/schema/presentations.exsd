@@ -51,13 +51,13 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="contentProvider" type="string" use="required">
+         <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.internal.tasks.ui.views.AbstractTaskListContentProvider:"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.internal.tasks.ui.views.AbstractTaskListPresentation:"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -117,13 +117,5 @@
       </documentation>
    </annotation>
 
-   <annotation>
-      <appInfo>
-         <meta.section type="copyright"/>
-      </appInfo>
-      <documentation>
-         
-      </documentation>
-   </annotation>
 
 </schema>

@@ -20,8 +20,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.internal.tasks.ui.views.AbstractTaskListContentProvider;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskListPresentation;
+import org.eclipse.mylyn.internal.tasks.ui.views.AbstractTaskListPresentation;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -122,8 +121,6 @@ public class TasksUiExtensionReader {
 	private static final String EXTENSION_PRESENTATIONS = "org.eclipse.mylyn.tasks.ui.presentations";
 
 	public static final String ELMNT_PRESENTATION = "presentation";
-
-	public static final String ATTR_CONTENT_PROVIDER = "contentProvider";
 
 	public static final String ATTR_ICON = "icon";
 
@@ -239,17 +236,17 @@ public class TasksUiExtensionReader {
 
 	private static void readPresentation(IConfigurationElement element) {
 		try {
-			String id = element.getAttribute(ATTR_ID);
 			String name = element.getAttribute(ATTR_NAME);
 
 			String iconPath = element.getAttribute(ATTR_ICON);
-			ImageDescriptor iconDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin( // 
+			ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin( // 
 					element.getContributor().getName(), iconPath);
 			
-			AbstractTaskListContentProvider contentProvider;
-			contentProvider = (AbstractTaskListContentProvider) element.createExecutableExtension(ATTR_CONTENT_PROVIDER);
+			AbstractTaskListPresentation presentation = (AbstractTaskListPresentation)element.createExecutableExtension(ATTR_CLASS);
+			presentation.setImageDescriptor(imageDescriptor);
+			presentation.setName(name);
 			
-			TaskListView.addPresentation(new TaskListPresentation(id, name, iconDescriptor, contentProvider));
+			TaskListView.addPresentation(presentation);
 		} catch (CoreException e) {
 			StatusHandler.log(e, "Could not load presentation extension");
 		}

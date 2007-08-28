@@ -204,6 +204,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		return searchComposite;
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void updateTaskProgressBar() {
 		if (taskProgressBar.isDisposed()) {
 			return;

@@ -6,19 +6,24 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.tasks.ui.views;
+package org.eclipse.mylyn.tasks.tests;
 
-import org.eclipse.jface.viewers.ITreeContentProvider;
+import java.util.List;
+
+import org.eclipse.mylyn.internal.tasks.ui.views.AbstractTaskListPresentation;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+
+import junit.framework.TestCase;
 
 /**
- * @author Eugene Kuleshov
  * @author Mik Kersten
  */
-public abstract class AbstractTaskListContentProvider implements ITreeContentProvider {
+public class TaskListPresentationTest extends TestCase {
 
-	protected TaskListView taskListView;
-
-	public AbstractTaskListContentProvider(TaskListView view) {
-		this.taskListView = view;
+	public void testDefaultPresentations() {
+		
+		List<AbstractTaskListPresentation> presentations = TaskListView.getPresentations();
+		assertEquals(2, presentations.size());
 	}
+	
 }

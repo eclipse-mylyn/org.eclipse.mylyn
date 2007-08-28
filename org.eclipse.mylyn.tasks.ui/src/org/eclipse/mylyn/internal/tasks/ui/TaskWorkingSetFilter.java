@@ -10,10 +10,9 @@ package org.eclipse.mylyn.internal.tasks.ui;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.TaskList;
-import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IWorkingSet;
 
 /**
@@ -23,10 +22,14 @@ import org.eclipse.ui.IWorkingSet;
  */
 public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 
-	private final TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+	private final TaskList taskList;
 
 	private IWorkingSet currentWorkingSet;
 
+	public TaskWorkingSetFilter(TaskList taskList) {
+		this.taskList = taskList;
+	}
+	
 	@Override
 	public boolean select(Object parent, Object element) {
 		if (parent instanceof AbstractTaskContainer && !(parent instanceof ScheduledTaskContainer)) {
@@ -61,5 +64,4 @@ public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 	public void setCurrentWorkingSet(IWorkingSet currentWorkingSet) {
 		this.currentWorkingSet = currentWorkingSet;
 	}
-
 }

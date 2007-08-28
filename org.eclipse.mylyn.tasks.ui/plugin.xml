@@ -947,16 +947,16 @@
    </extension>
 
    <extension point="org.eclipse.mylyn.tasks.ui.presentations">
-      <presentation 
-            id="org.eclipse.mylyn.tasks.ui.categorized"
-            name="Categorized"
-            icon="icons/etool16/category.gif"
-            contentProvider="org.eclipse.mylyn.internal.tasks.ui.views.TaskListContentProvider"/>
       <presentation
-            id="org.eclipse.mylyn.tasks.ui.scheduled"
-            name="Scheduled"
+            class="org.eclipse.mylyn.internal.tasks.ui.CategorizedPresentation"
+            icon="icons/etool16/category.gif"
+            id="org.eclipse.mylyn.tasks.ui.categorized"
+            name="Categorized"/>
+      <presentation
+            class="org.eclipse.mylyn.internal.tasks.ui.ScheduledPresentation"
             icon="icons/etool16/calendar.gif"
-            contentProvider="org.eclipse.mylyn.internal.tasks.ui.views.TaskScheduleContentProvider"/>
+            id="org.eclipse.mylyn.tasks.ui.scheduled"
+            name="Scheduled"/>
    </extension>
    
 </plugin>

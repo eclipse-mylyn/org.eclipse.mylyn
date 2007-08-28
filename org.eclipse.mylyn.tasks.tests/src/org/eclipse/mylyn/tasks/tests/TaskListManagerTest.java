@@ -233,6 +233,7 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals("http://b/task/123", task.getUrl());
 	}
 
+	@SuppressWarnings("deprecation")
 	public void testRefactorMetaContextHandles() {
 		String firstUrl = "http://repository1.com/bugs";
 		String secondUrl = "http://repository2.com/bugs";
@@ -276,6 +277,7 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(secondUrl + "-1", metaContext.getInteractionHistory().get(0).getStructureHandle());
 	}
 
+	@SuppressWarnings("deprecation")
 	public void testIsActiveToday() {
 		AbstractTask task = new LocalTask("1", "task-1");
 		assertFalse(manager.isScheduledForToday(task));
@@ -298,6 +300,7 @@ public class TaskListManagerTest extends TestCase {
 		assertTrue(manager.isScheduledForToday(task));
 	}
 
+	@SuppressWarnings("deprecation")
 	public void testScheduledForToday() {
 		AbstractTask task = new LocalTask("1", "task-1");
 		Calendar cal = Calendar.getInstance();
@@ -313,6 +316,7 @@ public class TaskListManagerTest extends TestCase {
 		assertTrue(manager.isScheduledForToday(task));
 	}
 
+	@SuppressWarnings("deprecation")
 	public void testSchedulePastEndOfMonth() {
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(Calendar.MONTH, Calendar.SEPTEMBER);
@@ -321,6 +325,7 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals("Should be October", Calendar.OCTOBER, calendar.get(Calendar.MONTH));
 	}
 
+	@SuppressWarnings("deprecation")
 	public void testIsCompletedToday() {
 		AbstractTask task = new LocalTask("1", "task 1");
 		task.setCompleted(true);

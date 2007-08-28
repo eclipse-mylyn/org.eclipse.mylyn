@@ -36,15 +36,19 @@ import org.eclipse.ui.IWorkingSet;
  */
 public class TaskListContentProvider extends AbstractTaskListContentProvider {
 
+	public TaskListContentProvider(TaskListView taskListView) {
+		super(taskListView);
+	}
+	
 	public void inputChanged(Viewer v, Object oldInput, Object newInput) {
-		this.view.expandToActiveTasks();
+		this.taskListView.expandToActiveTasks();
 	}
 
 	public void dispose() {
 	}
 
 	public Object[] getElements(Object parent) {
-		if (parent.equals(this.view.getViewSite())) {
+		if (parent.equals(this.taskListView.getViewSite())) {
 			return applyFilter(TasksUiPlugin.getTaskListManager().getTaskList().getRootElements()).toArray();
 		}
 		return getChildren(parent);
@@ -112,7 +116,7 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	}
 
 	protected List<AbstractTaskContainer> applyFilter(Set<AbstractTaskContainer> roots) {
-		String filterText = (view.getFilteredTree().getFilterControl()).getText();
+		String filterText = (taskListView.getFilteredTree().getFilterControl()).getText();
 		if (containsNoFilterText(filterText)) {
 			List<AbstractTaskContainer> filteredRoots = new ArrayList<AbstractTaskContainer>();
 			for (AbstractTaskContainer element : roots) {
@@ -205,7 +209,7 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	}
 
 	private boolean shouldAlwaysShow(Object parent, AbstractTask task) {
-		for (AbstractTaskListFilter filter : this.view.getFilters()) {
+		for (AbstractTaskListFilter filter : this.taskListView.getFilters()) {
 			if (filter.shouldAlwaysShow(parent, task, !TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
 					TasksUiPreferenceConstants.FILTER_SUBTASKS))) {
 				return true;
@@ -216,7 +220,7 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 
 	// TODO: This can be simplified post bug#124321
 	private List<AbstractTaskContainer> getFilteredChildrenFor(Object parent) {
-		if (containsNoFilterText((this.view.getFilteredTree().getFilterControl()).getText())) {
+		if (containsNoFilterText((this.taskListView.getFilteredTree().getFilterControl()).getText())) {
 			List<AbstractTaskContainer> children = new ArrayList<AbstractTaskContainer>();
 			if (parent instanceof AbstractTaskCategory) {
 				if (filter(null, parent)) {
@@ -267,7 +271,7 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	}
 
 	private boolean filter(Object parent, Object object) {
-		for (AbstractTaskListFilter filter : this.view.getFilters()) {
+		for (AbstractTaskListFilter filter : this.taskListView.getFilters()) {
 			if (!filter.select(parent, object)) {
 				return true;
 			}
