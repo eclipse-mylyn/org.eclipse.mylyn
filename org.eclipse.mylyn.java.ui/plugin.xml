@@ -328,7 +328,10 @@
       <visibility>
             <or>
                <objectClass
-                     name="org.eclipse.jdt.core.IMember">
+                     name="org.eclipse.jdt.core.IMethod">
+               </objectClass>
+               <objectClass
+                     name="org.eclipse.jdt.core.IField">
                </objectClass>
                <objectClass
                      name="org.eclipse.jdt.core.IClassFile">
