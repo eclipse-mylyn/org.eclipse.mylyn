@@ -17,6 +17,7 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.context.tests.UiTestUtil;
 import org.eclipse.mylyn.internal.context.ui.TaskListInterestFilter;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
+import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -57,22 +58,22 @@ public class TaskListFilterTest extends TestCase {
 
 		taskCompleted = new LocalTask("1", "completed");
 		taskCompleted.setCompleted(true);
-		taskCompleted.setCompletionDate(manager.setSecheduledIn(Calendar.getInstance(), -1).getTime());
+		taskCompleted.setCompletionDate(TaskActivityUtil.snapForwardNumDays(Calendar.getInstance(), -1).getTime());
 		manager.getTaskList().addTask(taskCompleted, manager.getTaskList().getDefaultCategory());
 
 		taskIncomplete = new LocalTask("2", "t-incomplete");
 		manager.getTaskList().addTask(taskIncomplete, manager.getTaskList().getDefaultCategory());
 
 		taskOverdue = new LocalTask("3", "t-overdue");
-		taskOverdue.setScheduledForDate(manager.setSecheduledIn(Calendar.getInstance(), -1).getTime());
+		taskOverdue.setScheduledForDate(TaskActivityUtil.snapForwardNumDays(Calendar.getInstance(), -1).getTime());
 		manager.getTaskList().addTask(taskOverdue, manager.getTaskList().getDefaultCategory());
 
 		taskDueToday = new LocalTask("4", "t-today");
-		taskDueToday.setScheduledForDate(manager.setScheduledEndOfDay(Calendar.getInstance()).getTime());
+		taskDueToday.setScheduledForDate(TaskActivityUtil.snapEndOfWorkDay(Calendar.getInstance()).getTime());
 		manager.getTaskList().addTask(taskDueToday, manager.getTaskList().getDefaultCategory());
 
 		taskCompletedToday = new LocalTask("5", "t-donetoday");
-		taskCompletedToday.setScheduledForDate(manager.setScheduledEndOfDay(Calendar.getInstance()).getTime());
+		taskCompletedToday.setScheduledForDate(TaskActivityUtil.snapEndOfWorkDay(Calendar.getInstance()).getTime());
 		taskCompletedToday.setCompleted(true);
 		manager.getTaskList().addTask(taskCompletedToday, manager.getTaskList().getDefaultCategory());
 	}
