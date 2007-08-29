@@ -518,12 +518,12 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	/**
 	 * Adds bug attributes to new bug model and sets defaults
-	 * 
+	 *
 	 * @param proxySettings
 	 *            TODO
 	 * @param characterEncoding
 	 *            TODO
-	 * 
+	 *
 	 */
 	public static void setupNewBugAttributes(TaskRepository taskRepository, RepositoryTaskData newTaskData)
 			throws CoreException {
@@ -586,11 +586,11 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.REP_PLATFORM);
 		optionValues = repositoryConfiguration.getPlatforms();
-		Collections.sort(optionValues);
 		for (String option : optionValues) {
 			a.addOption(option, option);
 		}
 		if (optionValues.size() > 0) {
+			// bug 159397 choose first platform: All
 			a.setValue(optionValues.get(0));
 		}
 
@@ -603,7 +603,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			a.addOption(option, option);
 		}
 		if (optionValues.size() > 0) {
-			a.setValue(optionValues.get(optionValues.size() - 1));
+			// bug 159397 change to choose first op_sys All
+			a.setValue(optionValues.get(0));
 		}
 
 		newTaskData.addAttribute(BugzillaReportElement.OP_SYS.getKeyString(), a);
@@ -614,7 +615,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		for (String option : optionValues) {
 			a.addOption(option, option);
 		}
-		a.setValue(optionValues.get((optionValues.size() / 2)));
+		a.setValue(optionValues.get((optionValues.size() / 2))); // choose middle priority
 
 		newTaskData.addAttribute(BugzillaReportElement.PRIORITY.getKeyString(), a);
 		// attributes.put(a.getName(), a);
@@ -624,7 +625,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		for (String option : optionValues) {
 			a.addOption(option, option);
 		}
-		a.setValue(optionValues.get((optionValues.size() / 2)));
+		a.setValue(optionValues.get((optionValues.size() / 2))); // choose middle severity
 
 		newTaskData.addAttribute(BugzillaReportElement.BUG_SEVERITY.getKeyString(), a);
 		// attributes.put(a.getName(), a);
