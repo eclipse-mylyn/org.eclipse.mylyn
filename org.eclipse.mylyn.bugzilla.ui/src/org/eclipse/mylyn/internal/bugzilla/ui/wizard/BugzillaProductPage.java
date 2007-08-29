@@ -72,7 +72,7 @@ import org.eclipse.ui.progress.UIJob;
  * @author Mik Kersten
  * @author Eugene Kuleshov
  * @author Willian Mitsuda
- * 
+ *
  * Product selection page of new bug wizard
  */
 public class BugzillaProductPage extends WizardPage {
@@ -106,7 +106,7 @@ public class BugzillaProductPage extends WizardPage {
 
 	/**
 	 * Constructor for BugzillaProductPage
-	 * 
+	 *
 	 * @param workbench
 	 *            The instance of the workbench
 	 * @param bugWiz
@@ -355,7 +355,7 @@ public class BugzillaProductPage extends WizardPage {
 
 	/**
 	 * Applies the status to the status line of a dialog page.
-	 * 
+	 *
 	 * @param status
 	 *            The status to apply to the status line
 	 */
@@ -391,7 +391,8 @@ public class BugzillaProductPage extends WizardPage {
 		model.setAttributeValue(BugzillaReportElement.PRODUCT.getKeyString(),
 				(String) ((IStructuredSelection) productList.getViewer().getSelection()).getFirstElement());
 		BugzillaRepositoryConnector.setupNewBugAttributes(repository, model);
-		BugzillaCorePlugin.getDefault().setPlatformOptions(model);
+		// platform/os are now set to All/All
+		BugzillaCorePlugin.getDefault().setPlatformDefaultsOrGuess(repository, model);
 	}
 
 	@Override

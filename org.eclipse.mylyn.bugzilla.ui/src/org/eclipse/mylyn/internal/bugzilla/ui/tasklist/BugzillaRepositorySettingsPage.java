@@ -9,15 +9,18 @@
 package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
+import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClientFactory;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
@@ -35,16 +38,22 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
  * @author Rob Elves
  */
 public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPage {
+
+	private static final String TOOLTIP_AUTODETECTION_ENABLED = "Override auto detection of Platform and OS for new bug reports.";
+
+	private static final String TOOLTIP_AUTODETECTION_DISABLED = "Available once repository has been created.";
 
 	private static final String TOOLTIP_CACHED_CONFIGURATION = "Use for repositories that explicitly state that they support this customization.";
 
@@ -60,9 +69,21 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 	protected Combo repositoryVersionCombo;
 
+	protected Button autodetectPlatformOS;
+
+	protected Combo defaultPlatformCombo;
+
+	protected Combo defaultOSCombo;
+
 	private Button cleanQAContact;
 
 	private Button cachedConfigButton;
+
+	private RepositoryConfiguration repositoryConfiguration = null;
+
+	private String platform = null;
+
+	private String os = null;
 
 	public BugzillaRepositorySettingsPage(AbstractRepositoryConnectorUi repositoryUi) {
 		super(TITLE, DESCRIPTION, repositoryUi);
@@ -148,6 +169,132 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 			cachedConfigButton.setSelection(isCached);
 		}
 
+		if (null != repository) {
+			repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository.getUrl());
+			platform = repository.getProperty(IBugzillaConstants.BUGZILLA_DEF_PLATFORM);
+			os = repository.getProperty(IBugzillaConstants.BUGZILLA_DEF_OS);
+		}
+
+		Label defaultPlatformLabel = new Label(parent, SWT.NONE);
+		defaultPlatformLabel.setText("Autodetect Platform and OS");
+		if (null == repository)
+			defaultPlatformLabel.setToolTipText(TOOLTIP_AUTODETECTION_DISABLED);
+		else
+			defaultPlatformLabel.setToolTipText(TOOLTIP_AUTODETECTION_ENABLED);
+
+		Composite platformOSContainer = new Composite(parent, SWT.NONE);
+		GridLayout gridLayout = new GridLayout(3, false);
+		gridLayout.marginWidth = 0;
+		gridLayout.marginHeight = 0;
+		platformOSContainer.setLayout(gridLayout);
+
+		autodetectPlatformOS = new Button(platformOSContainer, SWT.CHECK);
+		autodetectPlatformOS.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (autodetectPlatformOS.isEnabled() && repositoryConfiguration == null
+						&& !autodetectPlatformOS.getSelection()) {
+					try {
+						getWizard().getContainer().run(true, false, new IRunnableWithProgress() {
+
+							public void run(IProgressMonitor monitor) throws InvocationTargetException,
+									InterruptedException {
+								try {
+									System.err.println(">>>>");
+									monitor.beginTask("Retrieving repository configuration", IProgressMonitor.UNKNOWN);
+									repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository,
+											false);
+									if (repositoryConfiguration != null) {
+										platform = repository.getProperty(IBugzillaConstants.BUGZILLA_DEF_PLATFORM);
+										os = repository.getProperty(IBugzillaConstants.BUGZILLA_DEF_OS);
+										PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+
+											public void run() {
+												populatePlatformCombo();
+												populateOsCombo();
+											}
+										});
+									}
+								} catch (CoreException e) {
+									throw new InvocationTargetException(e);
+								} finally {
+									monitor.done();
+								}
+
+							}
+
+						});
+					} catch (InvocationTargetException e1) {
+						if (e1.getCause() != null) {
+							setErrorMessage(e1.getCause().getMessage());
+						}
+					} catch (InterruptedException e1) {
+						// ignore
+					}
+				}
+				defaultPlatformCombo.setEnabled(!autodetectPlatformOS.getSelection());
+				defaultOSCombo.setEnabled(!autodetectPlatformOS.getSelection());
+			}
+
+		});
+		autodetectPlatformOS.setEnabled(null != repository);
+		if (null == repository)
+			autodetectPlatformOS.setToolTipText(TOOLTIP_AUTODETECTION_DISABLED);
+		else
+			autodetectPlatformOS.setToolTipText(TOOLTIP_AUTODETECTION_ENABLED);
+		autodetectPlatformOS.setSelection(null == platform && null == os);
+
+		defaultPlatformCombo = new Combo(platformOSContainer, SWT.READ_ONLY);
+		populatePlatformCombo();
+
+		defaultOSCombo = new Combo(platformOSContainer, SWT.READ_ONLY);
+		populateOsCombo();
+
+	}
+
+	private void populateOsCombo() {
+		if (null != repositoryConfiguration && defaultOSCombo != null) {
+			defaultOSCombo.removeAll();
+			List<String> optionValues = repositoryConfiguration.getOSs();
+			for (String option : optionValues) {
+				defaultOSCombo.add(option.toString());
+			}
+			if (null != os && defaultOSCombo.indexOf(os) >= 0) {
+				defaultOSCombo.select(defaultOSCombo.indexOf(os));
+			} else {
+				// remove value if no longer exists and set to All!
+				repository.removeProperty(IBugzillaConstants.BUGZILLA_DEF_OS);
+				defaultOSCombo.select(0);
+			}
+		} else {
+			defaultOSCombo.add("All");
+			defaultOSCombo.select(0);
+		}
+		defaultOSCombo.getParent().pack(true);
+		defaultOSCombo.setEnabled(!autodetectPlatformOS.getSelection());
+	}
+
+	private void populatePlatformCombo() {
+		if (null != repositoryConfiguration && defaultPlatformCombo != null) {
+			defaultPlatformCombo.removeAll();
+			List<String> optionValues = repositoryConfiguration.getPlatforms();
+			for (String option : optionValues) {
+				defaultPlatformCombo.add(option.toString());
+			}
+			if (null != platform && defaultPlatformCombo.indexOf(platform) >= 0) {
+				defaultPlatformCombo.select(defaultPlatformCombo.indexOf(platform));
+			} else {
+				// remove value if no longer exists and set to All!
+				repository.removeProperty(IBugzillaConstants.BUGZILLA_DEF_PLATFORM);
+				defaultPlatformCombo.select(0);
+			}
+		} else {
+			defaultPlatformCombo.add("All");
+			defaultPlatformCombo.select(0);
+		}
+		defaultPlatformCombo.getParent().pack(true);
+		defaultPlatformCombo.setEnabled(!autodetectPlatformOS.getSelection());
 	}
 
 	public void setBugzillaVersion(String version) {
@@ -187,6 +334,15 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 			repository.setProperty(IBugzillaConstants.PROPERTY_CONFIGTIMESTAMP,
 					IBugzillaConstants.TIMESTAMP_NOT_AVAILABLE);
 		}
+		if (!autodetectPlatformOS.getSelection()) {
+			repository.setProperty(IBugzillaConstants.BUGZILLA_DEF_PLATFORM,
+					String.valueOf(defaultPlatformCombo.getItem(defaultPlatformCombo.getSelectionIndex())));
+			repository.setProperty(IBugzillaConstants.BUGZILLA_DEF_OS,
+					String.valueOf(defaultOSCombo.getItem(defaultOSCombo.getSelectionIndex())));
+		} else {
+			repository.removeProperty(IBugzillaConstants.BUGZILLA_DEF_PLATFORM);
+			repository.removeProperty(IBugzillaConstants.BUGZILLA_DEF_OS);
+		}
 	}
 
 	@Override
@@ -206,80 +362,6 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		return false;
 	}
 
-//	/* public for testing */
-//	@Override
-//	public void validateSettings() {
-//
-//		final String serverUrl = getServerUrl();
-//		final String newUserId = getUserName();
-//		final String newPassword = getPassword();
-//		final boolean isAnonymous = isAnonymousAccess();
-//		final String newEncoding = getCharacterEncoding();
-//		final String httpAuthUser = getHttpAuthUserId();
-//		final String httpAuthPass = getHttpAuthPassword();
-//		final Proxy tempProxy;
-//		try {
-//			setMessage("Validating server settings...");
-//			setErrorMessage(null);
-//			if (getUseDefaultProxy()) {
-//				tempProxy = TaskRepository.getSystemProxy();
-//			} else {
-//				tempProxy = WebClientUtil.getProxy(getProxyHostname(), getProxyPort(), getProxyUsername(),
-//						getProxyPassword());
-//			}
-//			final boolean checkVersion = repositoryVersionCombo.getSelectionIndex() == 0;
-//			final String[] version = new String[1];
-//			getWizard().getContainer().run(true, false, new IRunnableWithProgress() {
-//				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-//					if (monitor == null) {
-//						monitor = new NullProgressMonitor();
-//					}
-//					try {
-//						monitor.beginTask("Validating server settings", IProgressMonitor.UNKNOWN);
-//						BugzillaClient client = null;
-//						if (isAnonymous) {
-//							client = BugzillaClientFactory.createClient(serverUrl, newUserId, newPassword,
-//									httpAuthUser, httpAuthPass, tempProxy, newEncoding);
-//							client.logout();
-//						} else if (version != null) {
-//							client = BugzillaClientFactory.createClient(serverUrl, newUserId, newPassword,
-//									httpAuthUser, httpAuthPass, tempProxy, newEncoding);
-//							client.validate();
-//						}
-//						if (checkVersion && client != null) {
-//							RepositoryConfiguration config = client.getRepositoryConfiguration();
-//							if (config != null) {
-//								version[0] = config.getInstallVersion();
-//							}
-//						}
-//
-//					} catch (Exception ex) {
-//						throw new InvocationTargetException(ex);
-//
-//					} finally {
-//						monitor.done();
-//					}
-//				}
-//			});
-//
-//			if (version[0] != null) {
-//				setBugzillaVersion(version[0]);
-//			}
-//
-//			if (!isAnonymous) {
-//				setMessage("Valid Bugzilla server found and your login was accepted");
-//			} else {
-//				setMessage("Valid Bugzilla server found");
-//			}
-//		} catch (InvocationTargetException e) {
-//			setMessage(null);
-//			displayError(serverUrl, e.getTargetException());
-//
-//		} catch (InterruptedException e) {
-//			setErrorMessage("Could not connect to Bugzilla server or authentication failed");
-//		}
-//	}
-
 	@Override
 	protected Validator getValidator(TaskRepository repository) {
 
@@ -290,14 +372,6 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 			return new BugzillaValidator(repository, null);
 		}
 	}
-
-//	public String getBugzillaVersion() {
-//		if (repositoryVersionCombo.getSelectionIndex() == 0) {
-//			return null;
-//		} else {
-//			return repositoryVersionCombo.getItem(repositoryVersionCombo.getSelectionIndex());
-//		}
-//	}
 
 	@Override
 	protected void applyValidatorResult(Validator validator) {

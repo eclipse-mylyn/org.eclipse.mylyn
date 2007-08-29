@@ -58,12 +58,12 @@ public class BugzillaCorePlugin extends Plugin {
 
 	public BugzillaCorePlugin() {
 		super();
-		java2buzillaPlatformMap.put("x86", "PC");
+		java2buzillaPlatformMap.put("x86", "PC"); // can be PC or Macintosh!
 		java2buzillaPlatformMap.put("x86_64", "PC");
 		java2buzillaPlatformMap.put("ia64", "PC");
 		java2buzillaPlatformMap.put("ia64_32", "PC");
 		java2buzillaPlatformMap.put("sparc", "Sun");
-		java2buzillaPlatformMap.put("ppc", "Power");
+		java2buzillaPlatformMap.put("ppc", "Power PC"); // not Power!
 
 	}
 
@@ -103,7 +103,8 @@ public class BugzillaCorePlugin extends Plugin {
 	}
 
 	/**
-	 * for testing purposes
+	 * @since 2.1
+	 * @return cached repository configuration. If not already cached, null is returned.
 	 */
 	public static RepositoryConfiguration getRepositoryConfiguration(String repositoryUrl) {
 		return repositoryConfigurations.get(repositoryUrl);
@@ -259,11 +260,31 @@ public class BugzillaCorePlugin extends Plugin {
 		return bugFile;
 	}
 
+	public void setPlatformDefaultsOrGuess(TaskRepository repository, RepositoryTaskData newBugModel) {
+
+		String platform = repository.getProperty(IBugzillaConstants.BUGZILLA_DEF_PLATFORM);
+		String os = repository.getProperty(IBugzillaConstants.BUGZILLA_DEF_OS);
+
+		// set both or none
+		if (null != os && null != platform) {
+			RepositoryTaskAttribute opSysAttribute = newBugModel.getAttribute(BugzillaReportElement.OP_SYS.getKeyString());
+			RepositoryTaskAttribute platformAttribute = newBugModel.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString());
+
+			// TODO something can still go wrong when the allowed values on the repository change...
+			opSysAttribute.setValue(os);
+			platformAttribute.setValue(platform);
+			return;
+		}
+		// fall through to old code
+		setPlatformOptions(newBugModel);
+	}
+
 	public void setPlatformOptions(RepositoryTaskData newBugModel) {
 		try {
 
 			// Get OS Lookup Map
 			// Check that the result is in Values, if it is not, set it to other
+			// Defaults to the first of each (sorted) list All, All
 			RepositoryTaskAttribute opSysAttribute = newBugModel.getAttribute(BugzillaReportElement.OP_SYS.getKeyString());
 			RepositoryTaskAttribute platformAttribute = newBugModel.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString());
 
@@ -272,13 +293,20 @@ public class BugzillaCorePlugin extends Plugin {
 
 			String bugzillaOS = null; // Bugzilla String for OS
 			String bugzillaPlatform = null; // Bugzilla String for Platform
+/*
+			AIX -> AIX
+			Linux -> Linux
+			HP-UX -> HP-UX
+			Solaris -> Solaris
+			MacOS X -> Mac OS X
+ */
 
 			bugzillaOS = System.getProperty("os.name") + " " + System.getProperty("os.version");
 			// We start with the most specific Value as the Search String.
 			// If we didn't find it we remove the last part of the version String or the OS Name from
 			// the Search String and continue with the test until we found it or the Search String is empty.
-			// 
-			// The search in casesensitive.	
+			//
+			// The search in casesensitive.
 			if (opSysAttribute != null) {
 				while (bugzillaOS != null && opSysAttribute.getOptionParameter(bugzillaOS) == null) {
 					int dotindex = bugzillaOS.lastIndexOf('.');
@@ -298,7 +326,7 @@ public class BugzillaCorePlugin extends Plugin {
 
 			if (platform != null && java2buzillaPlatformMap.containsKey(platform)) {
 				bugzillaPlatform = java2buzillaPlatformMap.get(platform);
-				// Bugzilla knows the following Platforms [All, PC, Macintosh, Other]
+				// Bugzilla knows the following Platforms [All, Macintosh, Other, PC, Power PC, Sun]
 				// Platform.getOSArch() returns "x86" on Intel Mac's and "ppc" on Power Mac's
 				// so bugzillaPlatform is "Power" or "PC".
 				//
@@ -307,6 +335,7 @@ public class BugzillaCorePlugin extends Plugin {
 				if (bugzillaPlatform != null
 						&& (bugzillaPlatform.compareTo("Power") == 0 || bugzillaPlatform.compareTo("PC") == 0)
 						&& OS != null && OS.compareTo("macosx") == 0) {
+					// TODO: this may not even be a legal value in another repository!
 					bugzillaPlatform = "Macintosh";
 				} else if (platformAttribute != null && platformAttribute.getOptionParameter(bugzillaPlatform) == null) {
 					// If the platform we found is not int the list of available

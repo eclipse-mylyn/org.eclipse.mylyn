@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.bugzilla.core;
 public interface IBugzillaConstants {
 
 	//public static final String POST_ARGS_PASSWORD = "&Bugzilla_password=";
-	//public static final String POST_ARGS_LOGIN = "GoAheadAndLogIn=1&Bugzilla_login=";	
+	//public static final String POST_ARGS_LOGIN = "GoAheadAndLogIn=1&Bugzilla_login=";
 
 	public static final String PROPERTY_CONFIGTIMESTAMP = "org.eclipse.mylyn.tasklist.repositories.config.timestamp";
 
@@ -73,12 +73,12 @@ public interface IBugzillaConstants {
 
 	public static final String URL_GET_CONFIG_RDF = "/config.cgi?ctype=rdf";
 
-	//For including fields in the xml (XML Summary mode as they like to call it) 
-	//use &field=fieldname for example to only reveal the product information append &field=product 
+	//For including fields in the xml (XML Summary mode as they like to call it)
+	//use &field=fieldname for example to only reveal the product information append &field=product
 	//to exclude from the xml use excludefield=fieldname. See bugzilla QuckSearch for a list of
-	//fields that can be used (repositoryurl/quicksearchhack.html). 
+	//fields that can be used (repositoryurl/quicksearchhack.html).
 	//If somebody knows where this is officially documented I'd appreciate it if they would post a link here
-	// and on bug#161321. Thanks -relves 
+	// and on bug#161321. Thanks -relves
 	// (see also: https://bugzilla.mozilla.org/show_bug.cgi?id=136603https://bugzilla.mozilla.org/show_bug.cgi?id=136603)
 	public static final String URL_GET_SHOW_BUG_XML = "/show_bug.cgi?ctype=xml&excludefield=attachmentdata&id=";
 
@@ -260,5 +260,9 @@ public interface IBugzillaConstants {
 	static final int MAX_URL_LENGTH = 2000;
 
 	public static final String TIMESTAMP_NOT_AVAILABLE = "n/a";
+
+	public static final String BUGZILLA_DEF_OS = "bugzilla.default.os";
+
+	public static final String BUGZILLA_DEF_PLATFORM = "bugzilla.default.platform";
 
 }
