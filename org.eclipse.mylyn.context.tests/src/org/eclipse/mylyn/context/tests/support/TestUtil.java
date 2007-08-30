@@ -68,11 +68,11 @@ public class TestUtil {
 		case ANONYMOUS:
 			return createCredentials(properties, realm + "anon.", "", "");
 		case GUEST:
-			return createCredentials(properties, realm + "guest.", "guest@mylar.eclipse.org", defaultPassword);
+			return createCredentials(properties, realm + "guest.", "guest@mylyn.eclipse.org", defaultPassword);
 		case USER:
-			return createCredentials(properties, realm, "tests@mylar.eclipse.org", defaultPassword);
+			return createCredentials(properties, realm, "tests@mylyn.eclipse.org", defaultPassword);
 		case ADMIN:
-			return createCredentials(properties, realm + "admin.", "admin@mylar.eclipse.org", null);
+			return createCredentials(properties, realm + "admin.", "admin@mylyn.eclipse.org", null);
 		}
 
 		throw new AssertionFailedError("invalid privilege level");
