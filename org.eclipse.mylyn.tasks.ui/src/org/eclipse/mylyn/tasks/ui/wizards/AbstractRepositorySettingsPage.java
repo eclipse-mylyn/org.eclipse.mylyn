@@ -427,7 +427,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 		if (needsEncoding()) {
 			Label encodingLabel = new Label(advancedComp, SWT.HORIZONTAL);
-			encodingLabel.setText("Character Encoding:");
+			encodingLabel.setText("Character encoding:");
 			GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.TOP).applyTo(encodingLabel);
 
 			Composite encodingContainer = new Composite(advancedComp, SWT.NONE);

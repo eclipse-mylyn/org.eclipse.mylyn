@@ -57,7 +57,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 	private static final String TOOLTIP_CACHED_CONFIGURATION = "Use for repositories that explicitly state that they support this customization.";
 
-	private static final String LABEL_CACHED_CONFIGURATION = "Cached Configuration:";
+	private static final String LABEL_CACHED_CONFIGURATION = "Cached configuration:";
 
 	private static final String LABEL_SHORT_LOGINS = "Local users enabled:";
 
@@ -119,7 +119,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		});
 
 		Label repositoryVersionLabel = new Label(parent, SWT.NONE);
-		repositoryVersionLabel.setText("Repository Version: ");
+		repositoryVersionLabel.setText("Repository version: ");
 		repositoryVersionCombo = new Combo(parent, SWT.READ_ONLY);
 
 		repositoryVersionCombo.add(LABEL_AUTOMATIC_VERSION);
@@ -130,9 +130,20 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		if (repository != null && repositoryVersionCombo.indexOf(repository.getVersion()) >= 0) {
 			repositoryVersionCombo.select(repositoryVersionCombo.indexOf(repository.getVersion()));
 		} else {
-			int defaultIndex = repositoryVersionCombo.getItemCount() - 1;
+
+			int defaultIndex = repositoryVersionCombo.indexOf(IBugzillaConstants.SERVER_VERSION_DEFAULT.toString());
+			if (defaultIndex != -1) {
+				repositoryVersionCombo.select(defaultIndex);
+				setVersion(IBugzillaConstants.SERVER_VERSION_DEFAULT.toString());
+			} else {
+				defaultIndex = repositoryVersionCombo.getItemCount() - 1;
+			}
 			repositoryVersionCombo.select(defaultIndex);
 			setVersion(repositoryVersionCombo.getItem(defaultIndex));
+			isPageComplete();
+			if (getWizard() != null) {
+				getWizard().getContainer().updateButtons();
+			}
 		}
 
 		repositoryVersionCombo.addSelectionListener(new SelectionListener() {
@@ -140,6 +151,10 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 			public void widgetSelected(SelectionEvent e) {
 				if (repositoryVersionCombo.getSelectionIndex() >= 0) {
 					setVersion(repositoryVersionCombo.getItem(repositoryVersionCombo.getSelectionIndex()));
+					isPageComplete();
+					if (getWizard() != null) {
+						getWizard().getContainer().updateButtons();
+					}
 				}
 			}
 
@@ -176,7 +191,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		}
 
 		Label defaultPlatformLabel = new Label(parent, SWT.NONE);
-		defaultPlatformLabel.setText("Autodetect Platform and OS");
+		defaultPlatformLabel.setText("Autodetect platform and os");
 		if (null == repository)
 			defaultPlatformLabel.setToolTipText(TOOLTIP_AUTODETECTION_DISABLED);
 		else
@@ -201,7 +216,6 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 							public void run(IProgressMonitor monitor) throws InvocationTargetException,
 									InterruptedException {
 								try {
-									System.err.println(">>>>");
 									monitor.beginTask("Retrieving repository configuration", IProgressMonitor.UNKNOWN);
 									repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository,
 											false);
@@ -318,7 +332,11 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 				}
 				if (i == -1) {
 					StatusHandler.log("Could not resolve repository version: " + version, this);
-					setVersion(IBugzillaConstants.BugzillaServerVersion.SERVER_218.toString());
+					i = repositoryVersionCombo.indexOf(IBugzillaConstants.SERVER_VERSION_DEFAULT.toString());
+					if (i != -1) {
+						repositoryVersionCombo.select(i);
+						setVersion(IBugzillaConstants.SERVER_VERSION_DEFAULT.toString());
+					}
 				}
 			}
 		}
@@ -347,7 +365,14 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 	@Override
 	public boolean isPageComplete() {
-		return super.isPageComplete();
+		boolean erg = super.isPageComplete();
+		if (erg) {
+			if (getVersion().compareTo(LABEL_AUTOMATIC_VERSION) == 0) {
+				setErrorMessage("Validate Settings or select repository version under Additional Settings section.");
+				erg = false;
+			}
+		}
+		return erg;
 	}
 
 	@Override

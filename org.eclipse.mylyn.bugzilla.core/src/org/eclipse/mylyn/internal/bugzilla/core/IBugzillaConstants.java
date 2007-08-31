@@ -128,6 +128,11 @@ public interface IBugzillaConstants {
 		}
 	}
 
+	/**
+	 * Current Stable Major Release
+	 */
+	public static final BugzillaServerVersion SERVER_VERSION_DEFAULT = BugzillaServerVersion.SERVER_30;
+
 	static final String REFRESH_QUERY = "org.eclipse.mylyn.bugzilla.query.refresh";
 
 	static final String MAX_RESULTS = "org.eclipse.mylyn.bugzilla.search.results.max";
@@ -156,7 +161,7 @@ public interface IBugzillaConstants {
 	static final String VALUES_TARGET = "org.eclipse.mylyn.bugzilla.values.target";
 
 	static final String VALUES_KEYWORDS = "org.eclipse.mylyn.bugzilla.values.keywords";
-	
+
 	static final String ECLIPSE_BUGZILLA_URL = "https://bugs.eclipse.org/bugs";
 
 	static final String TEST_BUGZILLA_216_URL = "http://mylyn.eclipse.org/bugs216";
