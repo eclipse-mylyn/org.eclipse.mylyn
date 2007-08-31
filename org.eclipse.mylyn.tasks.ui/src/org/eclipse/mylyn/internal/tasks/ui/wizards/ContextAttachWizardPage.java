@@ -47,8 +47,13 @@ public class ContextAttachWizardPage extends WizardPage {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout());
 
-		new Label(composite, SWT.NONE).setText("Task: " + task.getSummary());
-		new Label(composite, SWT.NONE).setText("Repository: " + repository.getUrl());
+		Text summary = new Text(composite, SWT.NONE);
+		summary.setText("Task: " + task.getSummary());
+		summary.setEditable(false);
+		Text repositoryText = new Text(composite, SWT.NONE);
+		repositoryText.setText("Repository: " + repository.getUrl());
+		repositoryText.setEditable(false);
+
 		new Label(composite, SWT.NONE).setText("Comment: ");
 		commentText = new Text(composite, SWT.V_SCROLL | SWT.MULTI | SWT.BORDER | SWT.WRAP);
 		commentText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -70,6 +75,7 @@ public class ContextAttachWizardPage extends WizardPage {
 			complete = false;
 			getWizard().getContainer().updateButtons();
 		}
+		commentText.setFocus();
 	}
 
 	public String getComment() {

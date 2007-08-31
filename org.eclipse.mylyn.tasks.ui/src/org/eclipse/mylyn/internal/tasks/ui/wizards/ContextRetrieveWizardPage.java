@@ -32,10 +32,10 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Text;
 
 /**
  * @author Rob Elves
@@ -70,7 +70,9 @@ public class ContextRetrieveWizardPage extends WizardPage {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
 
-		new Label(composite, SWT.NONE).setText(labelProvider.getText(task));
+		Text summary = new Text(composite, SWT.NONE);
+		summary.setText("Task: " + labelProvider.getText(task));
+		summary.setEditable(false);
 		// new Label(composite, SWT.NONE).setText("Repository: " +
 		// repository.getUrl());
 		// new Label(composite, SWT.NONE).setText("Select context below:");
@@ -177,6 +179,7 @@ public class ContextRetrieveWizardPage extends WizardPage {
 			selectedContextAttachment = contextAttachments.get(0);
 			getWizard().getContainer().updateButtons();
 		}
+		contextTable.setFocus();
 	}
 
 	public RepositoryAttachment getSelectedContext() {
