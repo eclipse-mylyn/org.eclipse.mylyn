@@ -3245,7 +3245,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 				// Note: Marking read must run synchronously
 				// If not, incomings resulting from subsequent synchronization
-				// can get marked as read (without having been viewd by user
+				// can get marked as read (without having been viewed by user
 				if (repositoryTask != null) {
 					TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
 				}
@@ -3294,6 +3294,15 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					}
 				});
 
+			} else {
+				// Editor possibly closed as part of submit, mark read
+
+				// Note: Marking read must run synchronously
+				// If not, incomings resulting from subsequent synchronization
+				// can get marked as read (without having been viewed by user
+				if (repositoryTask != null) {
+					TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
+				}
 			}
 		} finally {
 			if (!getManagedForm().getForm().isDisposed()) {
