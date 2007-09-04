@@ -10,7 +10,6 @@ package org.eclipse.mylyn.internal.tasks.core;
 
 import java.util.Calendar;
 
-
 /**
  * @author Rob Elves
  */
@@ -102,10 +101,14 @@ public class TaskActivityUtil {
 		return false;
 	}
 
+	/**
+	 * @return true if time is in or past Future bin
+	 */
 	public static boolean isFuture(Calendar time) {
 		if (time != null) {
 			Calendar cal = getCalendar();
 			cal.add(Calendar.WEEK_OF_MONTH, 2);
+			snapStartOfWorkWeek(cal);
 			return time.compareTo(cal) > -1;
 		}
 		return false;

@@ -645,10 +645,10 @@ public class TaskListManager implements IPropertyChangeListener {
 	}
 
 	/**
-	 * @deprecated use TaskActivityUtil.isScheduledForLater
+	 * @deprecated use TaskActivityUtil.isScheduledForFuture
 	 */
 	public boolean isScheduledForLater(AbstractTask task) {
-		return TaskActivityManager.getInstance().isScheduledForLater(task);
+		return TaskActivityManager.getInstance().isScheduledForFuture(task);
 	}
 
 	/**

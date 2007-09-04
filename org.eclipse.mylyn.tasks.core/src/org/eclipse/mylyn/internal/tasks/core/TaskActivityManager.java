@@ -468,7 +468,7 @@ public class TaskActivityManager {
 		return false;
 	}
 
-	public boolean isScheduledForLater(AbstractTask task) {
+	public boolean isScheduledForFuture(AbstractTask task) {
 		if (task != null) {
 			Date reminder = task.getScheduledForDate();
 			if (reminder != null) {
