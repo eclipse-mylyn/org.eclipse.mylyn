@@ -845,7 +845,9 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		noteEditor.addTextListener(new ITextListener() {
 			public void textChanged(TextEvent event) {
-				markDirty(true);
+				if (!task.getNotes().equals(noteEditor.getTextWidget().getText())) {
+					markDirty(true);
+				}
 			}
 		});
 

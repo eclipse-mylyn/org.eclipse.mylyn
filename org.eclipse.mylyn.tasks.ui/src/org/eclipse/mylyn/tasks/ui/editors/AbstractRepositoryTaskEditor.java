@@ -632,13 +632,13 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		if (parentEditor.getTopForm() != null) {
 			IToolBarManager toolBarManager = parentEditor.getTopForm().getToolBarManager();
-			
+
 			// TODO: Remove? Added to debug bug#197355
 			toolBarManager.removeAll();
-			
+
 			toolBarManager.add(repositoryLabelControl);
 			fillToolBar(parentEditor.getTopForm().getToolBarManager());
-			
+
 			if (repositoryTask != null) {
 				activateAction = new Action() {
 					@Override
@@ -658,7 +658,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				activateAction.setChecked(repositoryTask.isActive());
 				toolBarManager.add(activateAction);
 			}
-			
+
 			toolBarManager.update(true);
 		}
 	}
@@ -691,12 +691,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 			if (connector != null) {
 				String taskUrl = connector.getTaskUrl(taskData.getRepositoryUrl(), taskData.getTaskKey());
-				if(taskUrl == null && repositoryTask != null && repositoryTask.hasValidUrl()){
+				if (taskUrl == null && repositoryTask != null && repositoryTask.hasValidUrl()) {
 					taskUrl = repositoryTask.getUrl();
 				}
-				
+
 				final String taskUrlToOpen = taskUrl;
-				
+
 				if (taskUrlToOpen != null) {
 					openBrowserAction = new Action() {
 						@Override
@@ -1284,8 +1284,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			summaryTextViewer.addTextListener(new ITextListener() {
 				public void textChanged(TextEvent event) {
 					String newValue = summaryTextViewer.getTextWidget().getText();
-					summaryAttribute.setValue(newValue);
-					attributeChanged(summaryAttribute);
+					if (!newValue.equals(summaryAttribute.getValue())) {
+						summaryAttribute.setValue(newValue);
+						attributeChanged(summaryAttribute);
+					}
 				}
 			});
 
@@ -1659,9 +1661,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				public void textChanged(TextEvent event) {
 					String newValue = descriptionTextViewer.getTextWidget().getText();
 					RepositoryTaskAttribute attribute = taskData.getAttribute(RepositoryTaskAttribute.DESCRIPTION);
-					attribute.setValue(newValue);
-					attributeChanged(attribute);
-					taskData.setDescription(newValue);
+					if (attribute != null && !newValue.equals(attribute.getValue())) {
+						attribute.setValue(newValue);
+						attributeChanged(attribute);
+						taskData.setDescription(newValue);
+					}
 				}
 			});
 			controlBySelectableObject.put(taskData.getDescription(), styledText);
@@ -1799,7 +1803,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(peopleComposite);
 
 		addAssignedTo(peopleComposite);
-		
+
 		RepositoryTaskAttribute reporterAttribute = taskData.getAttribute(RepositoryTaskAttribute.USER_REPORTER);
 		if (reporterAttribute != null) {
 
@@ -2250,8 +2254,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		newCommentTextViewer.addTextListener(new ITextListener() {
 			public void textChanged(TextEvent event) {
 				String newValue = addCommentsTextBox.getText();
-				attribute.setValue(newValue);
-				attributeChanged(attribute);
+				if (!newValue.equals(attribute.getValue())) {
+					attribute.setValue(newValue);
+					attributeChanged(attribute);
+				}
 			}
 		});
 
@@ -3475,8 +3481,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	/**
-	 * This method allow you to overwrite the generation of the form area for "assigned to" in the peopleLayout.<br><br>
+	 * This method allow you to overwrite the generation of the form area for "assigned to" in the peopleLayout.<br>
+	 * <br>
 	 * The overwrite is used for Bugzilla Versions > 3.0
+	 * 
 	 * @since 2.1
 	 * @author Frank Becker (bug 198027)
 	 */
@@ -3486,7 +3494,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			Label label = createLabel(peopleComposite, assignedAttribute);
 			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
 			Text textField = createTextField(peopleComposite, assignedAttribute, SWT.FLAT | SWT.READ_ONLY);
-			GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).applyTo(textField);			
+			GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).applyTo(textField);
 		}
 	}
 }
