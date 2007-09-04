@@ -603,7 +603,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	// }
 	// }
 
-	private void addHeaderControls() {
+	// synchronizing to investigate possible resolution to bug#197355
+	private synchronized void addHeaderControls() {
 		ControlContribution repositoryLabelControl = new ControlContribution("Title") { //$NON-NLS-1$
 			protected Control createControl(Composite parent) {
 				Composite composite = toolkit.createComposite(parent);
