@@ -70,6 +70,14 @@ public abstract class AbstractBugzillaTest extends TestCase {
 		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 	}
 
+	protected void init31() {
+		init(IBugzillaConstants.TEST_BUGZILLA_31_URL);
+	}
+
+	protected void init30() {
+		init(IBugzillaConstants.TEST_BUGZILLA_30_URL);
+	}
+
 	protected void init222() {
 		init(IBugzillaConstants.TEST_BUGZILLA_222_URL);
 	}

@@ -29,6 +29,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.tasks.core.LocalAttachment;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
+import org.eclipse.mylyn.tasks.core.RepositoryOperation;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
@@ -42,6 +43,139 @@ import org.eclipse.mylyn.tasks.ui.search.SearchHitCollector;
  * @author Nathan Hapke
  */
 public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
+
+//  testReassign Bugs 
+//	Version	BugNr	assigned				reporter     
+//	2.22	92		user@mylar.eclipse.org	tests@mylar.eclipse.org
+//	3.0		 5		tests@mylar.eclipse.org	tests2@mylar.eclipse.org
+//	3.1		 1		rob.elves@eclipse.org	tests@mylar.eclipse.org
+
+	public void testReassign222() throws CoreException {
+		init222();
+		String taskNumber = "92";
+		doReassignOld(taskNumber, "user@mylar.eclipse.org");
+	}
+
+	public void testReassign30() throws CoreException {
+		init30();
+		String taskNumber = "5";
+		doReassignOld(taskNumber, "tests@mylyn.eclipse.org");
+	}
+
+	public void testReassign31() throws CoreException {
+		init31();
+		String taskNumber = "1";
+
+		TasksUiPlugin.getTaskDataManager().clear();
+
+		// Get the task
+		BugzillaTask task = generateLocalTaskAndDownload(taskNumber);
+
+		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getEditableCopy(task.getRepositoryUrl(),
+				task.getTaskId());
+		assertNotNull(taskData);
+
+		TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task,
+				TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
+
+		assertEquals("rob.elves@eclipse.org", taskData.getAssignedTo());
+		// Modify it (reassign to tests2@mylyn.eclipse.org)
+		String newCommentText = "BugzillaRepositoryClientTest.testReassign31(): reassign " + (new Date()).toString();
+		taskData.setNewComment(newCommentText);
+		Set<RepositoryTaskAttribute> changed = new HashSet<RepositoryTaskAttribute>();
+		changed.add(taskData.getAttribute(RepositoryTaskAttribute.COMMENT_NEW));
+
+		taskData.setAttributeValue(RepositoryTaskAttribute.USER_ASSIGNED, "tests2@mylyn.eclipse.org");
+		changed.add(taskData.getAttribute(RepositoryTaskAttribute.USER_ASSIGNED));
+		TasksUiPlugin.getTaskDataManager().saveEdits(task.getRepositoryUrl(), task.getTaskId(), changed);
+
+		// Submit changes
+		submit(task, taskData);
+
+		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+		taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
+		assertEquals("tests2@mylyn.eclipse.org", taskData.getAssignedTo());
+
+		// Modify it (reassignbycomponent)
+		newCommentText = "BugzillaRepositoryClientTest.testReassign31(): reassignbycomponent "
+				+ (new Date()).toString();
+		taskData.setNewComment(newCommentText);
+		changed = new HashSet<RepositoryTaskAttribute>();
+		changed.add(taskData.getAttribute(RepositoryTaskAttribute.COMMENT_NEW));
+
+		taskData.setAttributeValue(BugzillaReportElement.SET_DEFAULT_ASSIGNEE.getKeyString(), "1");
+		changed.add(taskData.getAttribute(BugzillaReportElement.SET_DEFAULT_ASSIGNEE.getKeyString()));
+
+		TasksUiPlugin.getTaskDataManager().saveEdits(task.getRepositoryUrl(), task.getTaskId(), changed);
+
+		// Submit changes
+		submit(task, taskData);
+		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+		taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
+		assertEquals("rob.elves@eclipse.org", taskData.getAssignedTo());
+	}
+
+	private void doReassignOld(String taskNumber, String defaultAssignee) throws CoreException {
+		TasksUiPlugin.getTaskDataManager().clear();
+
+		// Get the task
+		BugzillaTask task = generateLocalTaskAndDownload(taskNumber);
+
+		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getEditableCopy(task.getRepositoryUrl(),
+				task.getTaskId());
+		assertNotNull(taskData);
+
+		TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task,
+				TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
+
+		assertEquals(defaultAssignee, taskData.getAssignedTo());
+		// Modify it (reassign to tests2@mylyn.eclipse.org)
+		String newCommentText = "BugzillaRepositoryClientTest.testReassignOld(): reassign " + (new Date()).toString();
+		taskData.setNewComment(newCommentText);
+		Set<RepositoryTaskAttribute> changed = new HashSet<RepositoryTaskAttribute>();
+		changed.add(taskData.getAttribute(RepositoryTaskAttribute.COMMENT_NEW));
+		for (Iterator<RepositoryOperation> it = taskData.getOperations().iterator(); it.hasNext();) {
+			RepositoryOperation o = it.next();
+			if (o.isChecked())
+				o.setChecked(false);
+			if (o.getKnobName().compareTo("reassign") == 0) {
+				o.setInputValue("tests2@mylyn.eclipse.org");
+				o.setChecked(true);
+				taskData.setSelectedOperation(o);
+			}
+		}
+		TasksUiPlugin.getTaskDataManager().saveEdits(task.getRepositoryUrl(), task.getTaskId(), changed);
+
+		// Submit changes
+		submit(task, taskData);
+
+		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+		taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
+		assertEquals("tests2@mylyn.eclipse.org", taskData.getAssignedTo());
+
+		// Modify it (reassignbycomponent)
+		newCommentText = "BugzillaRepositoryClientTest.testReassignOld(): reassignbycomponent "
+				+ (new Date()).toString();
+		taskData.setNewComment(newCommentText);
+		changed = new HashSet<RepositoryTaskAttribute>();
+		changed.add(taskData.getAttribute(RepositoryTaskAttribute.COMMENT_NEW));
+		for (Iterator<RepositoryOperation> it = taskData.getOperations().iterator(); it.hasNext();) {
+			RepositoryOperation o = it.next();
+			if (o.isChecked())
+				o.setChecked(false);
+			if (o.getKnobName().compareTo("reassignbycomponent") == 0) {
+				o.setChecked(true);
+				taskData.setSelectedOperation(o);
+			}
+		}
+		TasksUiPlugin.getTaskDataManager().saveEdits(task.getRepositoryUrl(), task.getTaskId(), changed);
+
+		// Submit changes
+		submit(task, taskData);
+		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+		taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
+		assertEquals(defaultAssignee, taskData.getAssignedTo());
+	}
 
 	public void testFocedQuerySynchronization() throws CoreException {
 		init222();
