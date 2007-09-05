@@ -43,17 +43,17 @@ public class ScheduledPresentationTest extends TestCase {
 
 	// TODO: Test scheduling into day bins
 	public void testDaysOfWeek() {
-		List<ScheduledTaskContainer> days = TasksUiPlugin.getTaskListManager().getActivityWeekDays();
+		List<ScheduledTaskContainer> days = TasksUiPlugin.getTaskActivityManager().getActivityWeekDays();
 		assertNotNull(days);
 		assertEquals(7, days.size());
 	}
 
 	public void testResetAndRollOver() {
 
-		ScheduledTaskContainer pastWeeks = TasksUiPlugin.getTaskListManager().getActivityPast();
-		ScheduledTaskContainer thisWeek = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
-		ScheduledTaskContainer nextWeek = TasksUiPlugin.getTaskListManager().getActivityNextWeek();
-		ScheduledTaskContainer futureWeeks = TasksUiPlugin.getTaskListManager().getActivityFuture();
+		ScheduledTaskContainer pastWeeks = TasksUiPlugin.getTaskActivityManager().getActivityPast();
+		ScheduledTaskContainer thisWeek = TasksUiPlugin.getTaskActivityManager().getActivityThisWeek();
+		ScheduledTaskContainer nextWeek = TasksUiPlugin.getTaskActivityManager().getActivityNextWeek();
+		ScheduledTaskContainer futureWeeks = TasksUiPlugin.getTaskActivityManager().getActivityFuture();
 
 		assertEquals(0, thisWeek.getChildren().size());
 		assertTrue(thisWeek.isPresent());
@@ -102,7 +102,7 @@ public class ScheduledPresentationTest extends TestCase {
 		// .getTotalElapsed());
 
 		// ROLL OVER
-		Date oldStart = TasksUiPlugin.getTaskListManager().startTime;
+		Date oldStart = TasksUiPlugin.getTaskActivityManager().getStartTime();
 		Calendar newStart = Calendar.getInstance();
 		newStart.setTime(oldStart);
 		newStart.add(Calendar.WEEK_OF_MONTH, 1);
@@ -111,9 +111,9 @@ public class ScheduledPresentationTest extends TestCase {
 		TasksUiPlugin.getTaskListManager().resetAndRollOver(newStart.getTime());
 
 		//ScheduledTaskContainer newPastWeeks = TasksUiPlugin.getTaskListManager().getActivityPast();
-		ScheduledTaskContainer newPreviousWeek = TasksUiPlugin.getTaskListManager().getActivityPrevious();
-		ScheduledTaskContainer newThisWeek = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
-		ScheduledTaskContainer newNextWeek = TasksUiPlugin.getTaskListManager().getActivityNextWeek();
+		ScheduledTaskContainer newPreviousWeek = TasksUiPlugin.getTaskActivityManager().getActivityPrevious();
+		ScheduledTaskContainer newThisWeek = TasksUiPlugin.getTaskActivityManager().getActivityThisWeek();
+		ScheduledTaskContainer newNextWeek = TasksUiPlugin.getTaskActivityManager().getActivityNextWeek();
 		// DateRangeContainer newFutureWeeks =
 		// MylarTaskListPlugin.getTaskListManager().getActivityFuture();
 
@@ -158,7 +158,7 @@ public class ScheduledPresentationTest extends TestCase {
 		TaskActivityManager.getInstance().parseInteractionEvent(event1);
 		TaskActivityManager.getInstance().parseInteractionEvent(event2);
 
-		ScheduledTaskContainer container = TasksUiPlugin.getTaskListManager().getActivityPast();
+		ScheduledTaskContainer container = TasksUiPlugin.getTaskActivityManager().getActivityPast();
 		assertEquals(2, container.getChildren().size());
 		assertEquals(1000, container.getElapsed(task1));
 		assertEquals(1000, container.getElapsed(task2));

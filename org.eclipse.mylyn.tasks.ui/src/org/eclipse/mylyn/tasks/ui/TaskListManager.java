@@ -80,45 +80,26 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	private static final long ROLLOVER_DELAY = 30 * MINUTE;
 
-	private static final int NUM_WEEKS_PREVIOUS_START = -1;
-
-	private static final int NUM_WEEKS_PREVIOUS_END = -1;
-
-	private static final int NUM_WEEKS_NEXT = 1;
-
-	private static final int NUM_WEEKS_FUTURE_START = 2;
-
-	private static final int NUM_WEEKS_PAST_END = -2;
-
 	// TODO: Remove
 	public static final String ARCHIVE_CATEGORY_DESCRIPTION = "Archive";
 
-	private static final String DESCRIPTION_THIS_WEEK = "This Week";
-
-	private static final String DESCRIPTION_PREVIOUS_WEEK = "Previous Week";
-
-	private static final String DESCRIPTION_NEXT_WEEK = "Next Week";
-
-	private static final String DESCRIPTION_FUTURE = "Future";
-
-	private static final String DESCRIPTION_PAST = "Past";
-
+	@Deprecated
 	public static final String[] ESTIMATE_TIMES = new String[] { "0 Hours", "1 Hours", "2 Hours", "3 Hours", "4 Hours",
 			"5 Hours", "6 Hours", "7 Hours", "8 Hours", "9 Hours", "10 Hours" };
 
-	private ScheduledTaskContainer scheduledThisWeek;
+	//private ScheduledTaskContainer scheduledThisWeek;
 
-	private List<ScheduledTaskContainer> scheduleWeekDays = new ArrayList<ScheduledTaskContainer>();
+	//private List<ScheduledTaskContainer> scheduleWeekDays = new ArrayList<ScheduledTaskContainer>();
+//
+//	private ScheduledTaskContainer scheduledNextWeek;
+//
+//	private ScheduledTaskContainer scheduledFuture;
+//
+//	private ScheduledTaskContainer scheduledPast;
+//
+//	private ScheduledTaskContainer scheduledPrevious;
 
-	private ScheduledTaskContainer scheduledNextWeek;
-
-	private ScheduledTaskContainer scheduledFuture;
-
-	private ScheduledTaskContainer scheduledPast;
-
-	private ScheduledTaskContainer scheduledPrevious;
-
-	private ArrayList<ScheduledTaskContainer> scheduleContainers = new ArrayList<ScheduledTaskContainer>();
+	//private ArrayList<ScheduledTaskContainer> scheduleContainers = new ArrayList<ScheduledTaskContainer>();
 
 	private List<ITaskActivityListener> activityListeners = new ArrayList<ITaskActivityListener>();
 
@@ -137,7 +118,11 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	private Timer timer;
 
-	/** public for testing */
+	/**
+	 * public for testing
+	 * 
+	 * @deprecated use TaskActivityManager.getStartTime()
+	 */
 	public Date startTime = new Date();
 
 	private final ITaskListChangeListener CHANGE_LISTENER = new ITaskListChangeListener() {
@@ -411,12 +396,16 @@ public class TaskListManager implements IPropertyChangeListener {
 		}
 	}
 
-	/** public for testing */
+	/**
+	 * public for testing TODO: Move to TaskActivityManager
+	 */
 	public void resetAndRollOver() {
 		resetAndRollOver(new Date());
 	}
 
-	/** public for testing */
+	/**
+	 * public for testing TODO: Move to TaskActivityManager
+	 */
 	public void resetAndRollOver(Date startDate) {
 		if (!TaskActivityManager.getInstance().isInitialized()) {
 			TaskActivityManager.getInstance().init(TasksUiPlugin.getRepositoryManager(), taskList);
@@ -426,9 +415,8 @@ public class TaskListManager implements IPropertyChangeListener {
 									TasksUiPreferenceConstants.PLANNING_ENDHOUR));
 		}
 		startTime = startDate;
-		setupCalendarRanges();
 		if (isTaskListInitialized()) {
-			TaskActivityManager.getInstance().reloadTimingData();
+			TaskActivityManager.getInstance().reloadTimingData(startDate);
 		}
 		for (ITaskActivityListener listener : activityListeners) {
 			listener.activityChanged(null);
@@ -443,7 +431,7 @@ public class TaskListManager implements IPropertyChangeListener {
 				return;
 			} else {
 				Calendar now = GregorianCalendar.getInstance();
-				ScheduledTaskContainer thisWeek = getActivityThisWeek();
+				ScheduledTaskContainer thisWeek = TasksUiPlugin.getTaskActivityManager().getActivityThisWeek();
 				if (!thisWeek.includes(now)) {
 					resetAndRollOver();
 				}
@@ -475,33 +463,6 @@ public class TaskListManager implements IPropertyChangeListener {
 		this.taskList.addChangeListener(taskListSaveManager);
 	}
 
-	public List<ScheduledTaskContainer> getActivityWeekDays() {
-		return scheduleWeekDays;
-	}
-
-	public boolean isWeekDay(ScheduledTaskContainer dateRangeTaskContainer) {
-		return scheduleWeekDays.contains(dateRangeTaskContainer);
-	}
-
-	public int getStartHour() {
-		return TasksUiPlugin.getDefault().getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR);
-	}
-
-	public static void scheduleNewTask(AbstractTask newTask) {
-		newTask.setCreationDate(new Date());
-
-		Calendar newTaskSchedule = Calendar.getInstance();
-		int scheduledEndHour = TasksUiPlugin.getDefault().getPreferenceStore().getInt(
-				TasksUiPreferenceConstants.PLANNING_ENDHOUR);
-		// If past scheduledEndHour set for following day
-		if (newTaskSchedule.get(Calendar.HOUR_OF_DAY) >= scheduledEndHour) {
-			TasksUiPlugin.getTaskListManager().setSecheduledIn(newTaskSchedule, 1);
-		} else {
-			TasksUiPlugin.getTaskListManager().setScheduledEndOfDay(newTaskSchedule);
-		}
-		TasksUiPlugin.getTaskListManager().setScheduledFor(newTask, newTaskSchedule.getTime());
-	}
-
 	/**
 	 * Creates a new local task and schedules for today
 	 * 
@@ -515,7 +476,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		LocalTask newTask = new LocalTask("" + taskList.getNextLocalTaskId(), summary);
 		newTask.setPriority(PriorityLevel.P3.toString());
 
-		scheduleNewTask(newTask);
+		TasksUiPlugin.getTaskActivityManager().scheduleNewTask(newTask);
 
 		Object selectedObject = null;
 		TaskListView view = TaskListView.getFromActivePerspective();
@@ -711,32 +672,7 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	@Deprecated
 	public void parseFutureReminders() {
-		// no lonhger required
-	}
-
-	/** public for testing * */
-	public ScheduledTaskContainer getActivityThisWeek() {
-		return scheduledThisWeek;
-	}
-
-	/** public for testing * */
-	public ScheduledTaskContainer getActivityPast() {
-		return scheduledPast;
-	}
-
-	/** public for testing * */
-	public ScheduledTaskContainer getActivityFuture() {
-		return scheduledFuture;
-	}
-
-	/** public for testing * */
-	public ScheduledTaskContainer getActivityNextWeek() {
-		return scheduledNextWeek;
-	}
-
-	/** public for testing * */
-	public ScheduledTaskContainer getActivityPrevious() {
-		return scheduledPrevious;
+		// no longer required
 	}
 
 	/**
@@ -744,150 +680,6 @@ public class TaskListManager implements IPropertyChangeListener {
 	 */
 	public long getElapsedTime(AbstractTask task) {
 		return TasksUiPlugin.getTaskActivityManager().getElapsedTime(task);
-	}
-
-	/**
-	 * TODO: move to activity manager
-	 */
-	private void setupCalendarRanges() {
-
-		scheduleContainers.clear();
-		scheduleWeekDays.clear();
-
-		int startDay = TaskActivityManager.getInstance().getStartDay();
-		//int endDay = TaskActivityManager.getInstance().getEndDay();
-		// scheduledStartHour =
-		// TasksUiPlugin.getDefault().getPreferenceStore().getInt(
-		// TaskListPreferenceConstants.PLANNING_STARTHOUR);
-
-//		scheduledEndHour = TasksUiPlugin.getDefault().getPreferenceStore().getInt(
-//				TasksUiPreferenceConstants.PLANNING_ENDHOUR);
-
-		Calendar pastStart = GregorianCalendar.getInstance();
-		pastStart.setTimeInMillis(0);
-//		pastStart.setFirstDayOfWeek(startDay);
-//		pastStart.setTime(startTime);
-//		pastStart.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_PAST_START);
-//		snapToStartOfWeek(pastStart);
-		GregorianCalendar pastEnd = new GregorianCalendar();
-		pastEnd.setFirstDayOfWeek(startDay);
-		pastEnd.setTime(startTime);
-		pastEnd.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_PAST_END);
-		snapToEndOfWeek(pastEnd);
-		scheduledPast = new ScheduledTaskContainer(TasksUiPlugin.getTaskActivityManager(), pastStart.getTime(),
-				pastEnd.getTime(), DESCRIPTION_PAST);
-		scheduleContainers.add(scheduledPast);
-
-		scheduleWeekDays.clear();
-		for (int x = startDay; x < (startDay + 7); x++) {
-			GregorianCalendar dayStart = new GregorianCalendar();
-			GregorianCalendar dayEnd = new GregorianCalendar();
-			dayStart.setFirstDayOfWeek(startDay);
-			dayEnd.setFirstDayOfWeek(startDay);
-			if (x > 7) {
-				dayStart.set(Calendar.DAY_OF_WEEK, x % 7);
-				dayEnd.set(Calendar.DAY_OF_WEEK, x % 7);
-			} else {
-				dayStart.set(Calendar.DAY_OF_WEEK, x);
-				dayEnd.set(Calendar.DAY_OF_WEEK, x);
-			}
-
-			dayStart.set(Calendar.HOUR_OF_DAY, 0);
-			dayStart.set(Calendar.MINUTE, 0);
-			dayStart.set(Calendar.SECOND, 0);
-			dayStart.set(Calendar.MILLISECOND, 0);
-			dayStart.getTime();
-
-			dayEnd.set(Calendar.HOUR_OF_DAY, dayEnd.getMaximum(Calendar.HOUR_OF_DAY));
-			dayEnd.set(Calendar.MINUTE, dayEnd.getMaximum(Calendar.MINUTE));
-			dayEnd.set(Calendar.SECOND, dayEnd.getMaximum(Calendar.SECOND));
-			dayEnd.set(Calendar.MILLISECOND, dayEnd.getMaximum(Calendar.MILLISECOND));
-			dayEnd.getTime();
-
-			String summary = "<unknown>";
-			switch (dayStart.get(Calendar.DAY_OF_WEEK)) {
-			case Calendar.MONDAY:
-				summary = "Monday";
-				break;
-			case Calendar.TUESDAY:
-				summary = "Tuesday";
-				break;
-			case Calendar.WEDNESDAY:
-				summary = "Wednesday";
-				break;
-			case Calendar.THURSDAY:
-				summary = "Thursday";
-				break;
-			case Calendar.FRIDAY:
-				summary = "Friday";
-				break;
-			case Calendar.SATURDAY:
-				summary = "Saturday";
-				break;
-			case Calendar.SUNDAY:
-				summary = "Sunday";
-				break;
-			}
-			ScheduledTaskContainer day = new ScheduledTaskContainer(TasksUiPlugin.getTaskActivityManager(), dayStart,
-					dayEnd, summary);
-			scheduleWeekDays.add(day);
-			scheduleContainers.add(day);
-		}
-
-		GregorianCalendar currentBegin = new GregorianCalendar();
-		currentBegin.setFirstDayOfWeek(startDay);
-		currentBegin.setTime(startTime);
-		snapToStartOfWeek(currentBegin);
-		GregorianCalendar currentEnd = new GregorianCalendar();
-		currentEnd.setFirstDayOfWeek(startDay);
-		currentEnd.setTime(startTime);
-		snapToEndOfWeek(currentEnd);
-		scheduledThisWeek = new ScheduledTaskContainer(TasksUiPlugin.getTaskActivityManager(), currentBegin,
-				currentEnd, DESCRIPTION_THIS_WEEK);
-		// dateRangeContainers.add(activityThisWeek);
-
-		GregorianCalendar nextStart = new GregorianCalendar();
-		nextStart.setFirstDayOfWeek(startDay);
-		nextStart.setTime(startTime);
-		nextStart.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_NEXT);
-		snapToStartOfWeek(nextStart);
-		GregorianCalendar nextEnd = new GregorianCalendar();
-		nextEnd.setFirstDayOfWeek(startDay);
-		nextEnd.setTime(startTime);
-		nextEnd.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_NEXT);
-		snapToEndOfWeek(nextEnd);
-		scheduledNextWeek = new ScheduledTaskContainer(TasksUiPlugin.getTaskActivityManager(), nextStart.getTime(),
-				nextEnd.getTime(), DESCRIPTION_NEXT_WEEK);
-		scheduleContainers.add(scheduledNextWeek);
-
-		GregorianCalendar futureStart = new GregorianCalendar();
-		futureStart.setFirstDayOfWeek(startDay);
-		futureStart.setTime(startTime);
-		futureStart.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_FUTURE_START);
-		snapToStartOfWeek(futureStart);
-		GregorianCalendar futureEnd = new GregorianCalendar();
-		futureEnd.setFirstDayOfWeek(startDay);
-		futureEnd.setTime(startTime);
-		futureEnd.add(Calendar.YEAR, 1);
-		snapToEndOfWeek(futureEnd);
-		scheduledFuture = new ScheduledTaskContainer(TasksUiPlugin.getTaskActivityManager(), futureStart.getTime(),
-				futureEnd.getTime(), DESCRIPTION_FUTURE);
-		scheduleContainers.add(scheduledFuture);
-
-		GregorianCalendar previousStart = new GregorianCalendar();
-		previousStart.setFirstDayOfWeek(startDay);
-		previousStart.setTime(startTime);
-		previousStart.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_PREVIOUS_START);
-		snapToStartOfWeek(previousStart);
-		GregorianCalendar previousEnd = new GregorianCalendar();
-		previousEnd.setFirstDayOfWeek(startDay);
-		previousEnd.setTime(startTime);
-		previousEnd.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_PREVIOUS_END);
-		snapToEndOfWeek(previousEnd);
-		scheduledPrevious = new ScheduledTaskContainer(TasksUiPlugin.getTaskActivityManager(), previousStart.getTime(),
-				previousEnd.getTime(), DESCRIPTION_PREVIOUS_WEEK);
-		scheduleContainers.add(scheduledPrevious);
-
 	}
 
 	/**
@@ -960,8 +752,98 @@ public class TaskListManager implements IPropertyChangeListener {
 		TaskActivityUtil.snapNextWorkWeek(calendar);
 	}
 
+	/**
+	 * @deprecated use TaskActivityManager.getDateRanges()
+	 */
 	public List<ScheduledTaskContainer> getDateRanges() {
-		return scheduleContainers;
+		return TasksUiPlugin.getTaskActivityManager().getDateRanges();
 	}
 
+	/**
+	 * @deprecated use TaskActivityManager.getActivityWeekDays()
+	 */
+	public List<ScheduledTaskContainer> getActivityWeekDays() {
+		return TasksUiPlugin.getTaskActivityManager().getActivityWeekDays();
+	}
+
+	/**
+	 * @deprecated use TaskActivityManager.isWeekDay()
+	 */
+	public boolean isWeekDay(ScheduledTaskContainer dateRangeTaskContainer) {
+		return TasksUiPlugin.getTaskActivityManager().isWeekDay(dateRangeTaskContainer);
+	}
+
+	/**
+	 * public for testing
+	 * 
+	 * @deprecated
+	 */
+	public ScheduledTaskContainer getActivityThisWeek() {
+		return TasksUiPlugin.getTaskActivityManager().getActivityThisWeek();
+	}
+
+	/**
+	 * public for testing
+	 * 
+	 * @deprecated
+	 */
+	public ScheduledTaskContainer getActivityPast() {
+		return TasksUiPlugin.getTaskActivityManager().getActivityPast();
+	}
+
+	/**
+	 * public for testing
+	 * 
+	 * @deprecated
+	 */
+	public ScheduledTaskContainer getActivityFuture() {
+		return TasksUiPlugin.getTaskActivityManager().getActivityFuture();
+	}
+
+	/**
+	 * public for testing
+	 * 
+	 * @deprecated
+	 */
+	public ScheduledTaskContainer getActivityNextWeek() {
+		return TasksUiPlugin.getTaskActivityManager().getActivityNextWeek();
+	}
+
+	/**
+	 * public for testing
+	 * 
+	 * @deprecated
+	 */
+	public ScheduledTaskContainer getActivityPrevious() {
+		return TasksUiPlugin.getTaskActivityManager().getActivityPrevious();
+	}
+
+	/**
+	 * Use TaskActivityManager.getStartHour()
+	 * 
+	 * @deprecated
+	 */
+	public int getStartHour() {
+		return TasksUiPlugin.getDefault().getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR);
+	}
+
+	/**
+	 * Use TaskActivityManager.scheduleNewTask()
+	 * 
+	 * @deprecated
+	 */
+	public static void scheduleNewTask(AbstractTask newTask) {
+		newTask.setCreationDate(new Date());
+
+		Calendar newTaskSchedule = Calendar.getInstance();
+		int scheduledEndHour = TasksUiPlugin.getDefault().getPreferenceStore().getInt(
+				TasksUiPreferenceConstants.PLANNING_ENDHOUR);
+		// If past scheduledEndHour set for following day
+		if (newTaskSchedule.get(Calendar.HOUR_OF_DAY) >= scheduledEndHour) {
+			TasksUiPlugin.getTaskListManager().setSecheduledIn(newTaskSchedule, 1);
+		} else {
+			TasksUiPlugin.getTaskListManager().setScheduledEndOfDay(newTaskSchedule);
+		}
+		TasksUiPlugin.getTaskListManager().setScheduledFor(newTask, newTaskSchedule.getTime());
+	}
 }

@@ -13,9 +13,9 @@ import java.util.Set;
 
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskDelegate;
+import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
@@ -25,11 +25,11 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
  */
 public class TaskScheduleContentProvider extends TaskListContentProvider {
 
-	private TaskListManager taskListManager;
+	private TaskActivityManager taskActivityManager;
 
 	public TaskScheduleContentProvider(TaskListView taskListView) {
 		super(taskListView);
-		this.taskListManager = TasksUiPlugin.getTaskListManager();
+		this.taskActivityManager = TasksUiPlugin.getTaskActivityManager();
 	}
 
 	@Override
@@ -38,7 +38,7 @@ public class TaskScheduleContentProvider extends TaskListContentProvider {
 			//unscheduledCategory.activeTask = null;
 			Set<AbstractTaskContainer> ranges = new HashSet<AbstractTaskContainer>();
 
-			ranges.addAll(taskListManager.getDateRanges());
+			ranges.addAll(taskActivityManager.getDateRanges());
 //			ranges.add(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer());
 
 			//			AbstractTask activeTask = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();

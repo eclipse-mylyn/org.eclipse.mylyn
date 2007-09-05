@@ -73,9 +73,9 @@ public class TaskActivityEditorInput implements IEditorInput {
 		completedTasks = completedTaskCollector.getTasks();
 		inProgressTasks = inProgressTaskCollector.getTasks();
 
-		plannedTasks.addAll(TasksUiPlugin.getTaskListManager().getActivityThisWeek().getChildren());
-		plannedTasks.addAll(TasksUiPlugin.getTaskListManager().getActivityNextWeek().getChildren());
-		plannedTasks.addAll(TasksUiPlugin.getTaskListManager().getActivityFuture().getChildren());
+		plannedTasks.addAll(TasksUiPlugin.getTaskActivityManager().getActivityThisWeek().getChildren());
+		plannedTasks.addAll(TasksUiPlugin.getTaskActivityManager().getActivityNextWeek().getChildren());
+		plannedTasks.addAll(TasksUiPlugin.getTaskActivityManager().getActivityFuture().getChildren());
 
 		//plannedTasks = new HashSet<ITask>();
 	}

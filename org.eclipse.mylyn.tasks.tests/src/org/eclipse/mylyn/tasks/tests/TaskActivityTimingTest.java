@@ -544,7 +544,7 @@ public class TaskActivityTimingTest extends TestCase {
 		AbstractTask task1 = new LocalTask("task 1", "Task 1");
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
 
-		ScheduledTaskContainer activityThisWeek = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
+		ScheduledTaskContainer activityThisWeek = TasksUiPlugin.getTaskActivityManager().getActivityThisWeek();
 		assertNotNull(activityThisWeek);
 		assertEquals(0, activityThisWeek.getChildren().size());
 
@@ -672,7 +672,7 @@ public class TaskActivityTimingTest extends TestCase {
 	public void testLegacyTimingMigration() {
 		AbstractTask task1 = new LocalTask("task 1", "Task 1");
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
-		ScheduledTaskContainer thisWeekActivity = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
+		ScheduledTaskContainer thisWeekActivity = TasksUiPlugin.getTaskActivityManager().getActivityThisWeek();
 		assertNotNull(thisWeekActivity);
 		assertEquals(0, thisWeekActivity.getChildren().size());
 		assertEquals(0, thisWeekActivity.getTotalElapsed());
