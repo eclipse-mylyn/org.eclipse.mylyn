@@ -486,7 +486,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 			if (getHeaderForm().getForm() != null) {
 				getHeaderForm().getForm().setText(kindLabel + " " + idLabel);
 			}
-		} else if (getHeaderForm().getForm() != null) {
+		} else if (getHeaderForm() != null && getHeaderForm().getForm() != null) {
 			getHeaderForm().getForm().setText(kindLabel);
 		}
 	}
