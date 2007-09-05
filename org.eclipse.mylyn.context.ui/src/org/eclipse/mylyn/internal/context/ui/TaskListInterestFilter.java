@@ -10,8 +10,8 @@ package org.eclipse.mylyn.internal.context.ui;
 
 import java.util.Calendar;
 
-import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
@@ -55,7 +55,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 	}
 
 	private boolean isDateRangeInteresting(ScheduledTaskContainer container) {
-		return TasksUiPlugin.getTaskListManager().isWeekDay(container);
+		return TasksUiPlugin.getTaskActivityManager().isWeekDay(container);
 //		return (TasksUiPlugin.getTaskListManager().isWeekDay(container) && (container.isPresent() || container.isFuture()));
 	}
 
@@ -104,15 +104,15 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 
 	private static boolean shouldShowInFocusedWorkweekDateContainer(Object parent, AbstractTask task) {
 		if (parent instanceof ScheduledTaskContainer) {
-			if (!TasksUiPlugin.getTaskListManager().isWeekDay((ScheduledTaskContainer) parent)) {
+			if (!TasksUiPlugin.getTaskActivityManager().isWeekDay((ScheduledTaskContainer) parent)) {
 				return false;
 			}
 			if (TaskActivityManager.getInstance().isOverdue(task) || task.isPastReminder())
 				return true;
 
 			ScheduledTaskContainer container = (ScheduledTaskContainer) parent;
-			Calendar previousCal = TasksUiPlugin.getTaskListManager().getActivityPrevious().getEnd();
-			Calendar nextCal = TasksUiPlugin.getTaskListManager().getActivityNextWeek().getStart();
+			Calendar previousCal = TasksUiPlugin.getTaskActivityManager().getActivityPrevious().getEnd();
+			Calendar nextCal = TasksUiPlugin.getTaskActivityManager().getActivityNextWeek().getStart();
 			if (container.getEnd().compareTo(previousCal) > 0 && container.getStart().compareTo(nextCal) < 0) {
 				// within workweek
 				return true;
