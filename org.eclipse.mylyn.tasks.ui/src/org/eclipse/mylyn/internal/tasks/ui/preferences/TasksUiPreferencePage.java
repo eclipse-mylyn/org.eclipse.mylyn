@@ -16,6 +16,8 @@ import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -50,12 +52,6 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
 	public static final String ID = "org.eclipse.mylyn.tasks.ui.preferences";
-
-	private static final int OVERWRITE = 0;
-
-	private static final int LOAD_EXISTING = 1;
-
-	private static final int CANCEL = 2;
 
 	private static final String FOLDER_SELECTION_MESSAGE = "Specify the folder for tasks";
 
@@ -139,13 +135,16 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		taskDirectory = taskDirectory.replaceAll(BACKSLASH_MULTI, FORWARDSLASH);
 
 		if (!taskDirectory.equals(TasksUiPlugin.getDefault().getDataDirectory())) {
-			if (taskDataDirectoryAction == OVERWRITE) {
-//				TasksUiPlugin.getTaskListManager().saveTaskList();
-				TasksUiPlugin.getTaskListManager().copyDataDirContentsTo(taskDirectory);
+			if (taskDataDirectoryAction == IDialogConstants.OK_ID) {
+//				TasksUiPlugin.getDefault().getBackupManager().backupNow(true);
+////				TasksUiPlugin.getTaskListManager().saveTaskList();
+//				TasksUiPlugin.getTaskListManager().copyDataDirContentsTo(taskDirectory);
+//				TasksUiPlugin.getDefault().setDataDirectory(taskDirectory);
+//			} else if (taskDataDirectoryAction == LOAD_EXISTING) {
+				TasksUiPlugin.getDefault().getBackupManager().backupNow(true);
 				TasksUiPlugin.getDefault().setDataDirectory(taskDirectory);
-			} else if (taskDataDirectoryAction == LOAD_EXISTING) {
-				TasksUiPlugin.getDefault().setDataDirectory(taskDirectory);
-			} else if (taskDataDirectoryAction == CANCEL) {
+
+			} else if (taskDataDirectoryAction == IDialogConstants.CANCEL_ID) {
 				// shouldn't get here
 			}
 		}
@@ -194,7 +193,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		String taskDirectory = TasksUiPlugin.getDefault().getDefaultDataDirectory();
 		if (!taskDirectory.equals(TasksUiPlugin.getDefault().getDataDirectory())) {
 			checkForExistingTasklist(taskDirectory);
-			if (taskDataDirectoryAction != CANCEL) {
+			if (taskDataDirectoryAction != IDialogConstants.CANCEL_ID) {
 				taskDirectoryText.setText(taskDirectory);
 				backupFolderText.setText(taskDirectory + FORWARDSLASH + ITasksUiConstants.DEFAULT_BACKUP_FOLDER_NAME);
 				backupNow.setEnabled(false);
@@ -349,7 +348,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 				dir = dir.replaceAll(BACKSLASH_MULTI, FORWARDSLASH);
 				checkForExistingTasklist(dir);
 
-				if (taskDataDirectoryAction != CANCEL) {
+				if (taskDataDirectoryAction != IDialogConstants.CANCEL_ID) {
 					taskDirectoryText.setText(dir);
 					backupFolderText.setText(dir + FORWARDSLASH + ITasksUiConstants.DEFAULT_BACKUP_FOLDER_NAME);
 					backupNow.setEnabled(false);
@@ -520,20 +519,23 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 	private void checkForExistingTasklist(String dir) {
 		File newDataFolder = new File(dir);
 		if (newDataFolder.exists()) {
-			for (String filename : newDataFolder.list()) {
-				if (filename.equals(ITasksUiConstants.DEFAULT_TASK_LIST_FILE)) {
 
-					MessageDialog dialogConfirm = new MessageDialog(null, "Tasklist found at destination", null,
-							"Overwrite existing task data with current data or load from new destination?",
-							MessageDialog.WARNING, new String[] { "Overwrite", "Load", IDialogConstants.CANCEL_LABEL },
-							CANCEL);
-					taskDataDirectoryAction = dialogConfirm.open();
-					break;
-				}
+			MessageDialog dialogConfirm = new MessageDialog(
+					null,
+					"Change data directory",
+					null,
+					"Your Task List will be backed up to the previous data directory and can be restored via:\n\n\tFile > Import > Mylyn > Task Data\n\nProceed to overwrite with Task List from:\n\n\t "
+							+ dir, MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL,
+							IDialogConstants.CANCEL_LABEL }, IDialogConstants.CANCEL_ID);
+			taskDataDirectoryAction = dialogConfirm.open();
+
+			for (TaskEditor taskEditor : TasksUiUtil.getActiveRepositoryTaskEditors()) {
+				TasksUiUtil.closeEditorInActivePage(taskEditor.getTaskEditorInput().getTask(), true);
 			}
-			if (taskDataDirectoryAction == -1) {
-				taskDataDirectoryAction = OVERWRITE;
-			}
+
+		} else {
+			MessageDialog.openWarning(getControl().getShell(), "Change data directory",
+					"Destination folder does not exist.");
 		}
 	}
 
