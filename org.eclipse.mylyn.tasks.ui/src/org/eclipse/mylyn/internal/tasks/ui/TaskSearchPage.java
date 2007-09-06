@@ -28,6 +28,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.search.AbstractRepositoryQueryPage;
+import org.eclipse.search.internal.ui.SearchPlugin;
 import org.eclipse.search.ui.ISearchPage;
 import org.eclipse.search.ui.ISearchPageContainer;
 import org.eclipse.swt.SWT;
@@ -162,7 +163,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		if (taskListView != null) {
 			findText = taskListView.getFilteredTree().getFilterControl().getText();
 			if (findText != null && findText.trim().length() > 0 && isTaskKeyCandidate(findText)) {
-				pageContainer.setPerformActionEnabled(true); 
+				pageContainer.setPerformActionEnabled(true);
 				keyText.setText(findText);
 				keyText.setFocus();
 			}
@@ -237,7 +238,12 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			return searchPage.getControl();
 		}
 
-		//fParentComposite.getParent().getShell().pack();
+		// XXX: work around for initial search page size issue bug#198493
+		IDialogSettings searchDialogSettings = SearchPlugin.getDefault().getDialogSettingsSection(
+				"DialogBounds_SearchDialog");
+		if (searchDialogSettings.get("DIALOG_WIDTH") == null) {
+			fParentComposite.getParent().getShell().pack();
+		}
 		pageWrapper.setData(PAGE_KEY, searchPage);
 		return pageWrapper;
 	}
