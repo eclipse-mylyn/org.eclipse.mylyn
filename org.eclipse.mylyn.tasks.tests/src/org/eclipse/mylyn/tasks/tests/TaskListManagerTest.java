@@ -21,6 +21,7 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
@@ -61,10 +62,12 @@ public class TaskListManagerTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		TasksUiPlugin.getDefault().getPreferenceStore().setValue(
+				TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
+		TasksUiPlugin.getSynchronizationManager().setForceSyncExec(true);
 		manager = TasksUiPlugin.getTaskListManager();
 		manager.resetTaskList();
 		manager.readExistingOrCreateNewList();
-
 		repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, MockRepositoryConnector.REPOSITORY_URL);
 		TasksUiPlugin.getRepositoryManager().addRepository(repository,
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
@@ -742,11 +745,11 @@ public class TaskListManagerTest extends TestCase {
 	public void testScheduledRefreshJob() throws InterruptedException {
 		int counter = 3;
 		ScheduledTaskListSynchJob.resetCount();
+		assertEquals(0, ScheduledTaskListSynchJob.getCount());
 		TasksUiPlugin.getDefault().getPreferenceStore().setValue(
 				TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, true);
 		TasksUiPlugin.getDefault().getPreferenceStore().setValue(
 				TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS, 1000L);
-		assertEquals(0, ScheduledTaskListSynchJob.getCount());
 		TaskListSynchronizationScheduler manager = new TaskListSynchronizationScheduler(false);
 		manager.startSynchJob();
 		Thread.sleep(3000);
@@ -980,4 +983,26 @@ public class TaskListManagerTest extends TestCase {
 			}
 		}
 	}
+
+	public void testQueryHitsNotDropped() {
+		MockRepositoryTask task1 = new MockRepositoryTask("1");
+		MockRepositoryTask task2 = new MockRepositoryTask("2");
+		task1.setLastReadTimeStamp("today");
+		task2.setLastReadTimeStamp("today");
+		MockRepositoryQuery query = new MockRepositoryQuery("summary");
+		manager.getTaskList().addQuery(query);
+		manager.getTaskList().addTask(task1, query);
+		manager.getTaskList().addTask(task2, query);
+		assertEquals(0, manager.getTaskList().getArchiveContainer().getChildren().size());
+		assertEquals(2, query.getChildren().size());
+		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+				MockRepositoryConnector.REPOSITORY_URL);
+		Set<AbstractRepositoryQuery> queries = new HashSet<AbstractRepositoryQuery>();
+		queries.add(query);
+		TasksUiPlugin.getSynchronizationManager().synchronize(new MockRepositoryConnector(), repository, queries, null,
+				Job.INTERACTIVE, 0, true);
+		assertEquals(2, manager.getTaskList().getArchiveContainer().getChildren().size());
+		assertEquals(0, query.getChildren().size());
+	}
+
 }

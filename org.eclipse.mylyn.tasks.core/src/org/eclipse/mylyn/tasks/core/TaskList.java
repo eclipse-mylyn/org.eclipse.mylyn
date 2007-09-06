@@ -151,7 +151,7 @@ public class TaskList {
 				}
 				task.removeParentContainer(taskContainer);
 				delta.add(new TaskContainerDelta(taskContainer, TaskContainerDelta.Kind.CHANGED));
-			} 
+			}
 		}
 		if (container != null) {
 			internalAddTask(task, container);
@@ -212,6 +212,19 @@ public class TaskList {
 		moveToContainer(task, archiveContainer);
 	}
 
+	/**
+	 * TODO: merge this and removeFromCategory() into single removeFromContainer?
+	 * 
+	 * @since 2.1
+	 */
+	public void removeFromQuery(AbstractRepositoryQuery query, AbstractTask task) {
+		query.internalRemoveChild(task);
+		if (task.getParentContainers().size() == 0 && task.getLastReadTimeStamp() != null) {
+			task.addParentContainer(archiveContainer);
+			archiveContainer.internalAddChild(task);
+		}
+	}
+
 	public void renameTask(AbstractTask task, String description) {
 		task.setSummary(description);
 
@@ -234,13 +247,14 @@ public class TaskList {
 				if (container instanceof AbstractTaskCategory) {
 					((AbstractTaskCategory) container).setHandleIdentifier(newDescription);
 				} else if (container instanceof AbstractRepositoryQuery) {
-					((AbstractRepositoryQuery)container).setHandleIdentifier(newDescription);
-					queries.put(((AbstractRepositoryQuery)container).getHandleIdentifier(), ((AbstractRepositoryQuery)container));
+					((AbstractRepositoryQuery) container).setHandleIdentifier(newDescription);
+					queries.put(((AbstractRepositoryQuery) container).getHandleIdentifier(),
+							((AbstractRepositoryQuery) container));
 				}
 			} else if (container instanceof TaskCategory && categories.remove(container.getHandleIdentifier()) != null) {
 				((TaskCategory) container).setHandleIdentifier(newDescription);
-				categories.put(((TaskCategory)container).getHandleIdentifier(), (TaskCategory) container);
-			} 
+				categories.put(((TaskCategory) container).getHandleIdentifier(), (TaskCategory) container);
+			}
 		}
 		// TODO: make this delta policy symmetrical with tasks
 		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
@@ -447,9 +461,8 @@ public class TaskList {
 	}
 
 	public boolean isEmpty() {
-		boolean archiveIsEmpty = getCategories().size() == 2
-				&& getCategories().contains(archiveContainer) && getCategories().contains(defaultCategory)
-				&& archiveContainer.getChildren().isEmpty();
+		boolean archiveIsEmpty = getCategories().size() == 2 && getCategories().contains(archiveContainer)
+				&& getCategories().contains(defaultCategory) && archiveContainer.getChildren().isEmpty();
 		return getAllTasks().size() == 0 && archiveIsEmpty && getQueries().size() == 0;
 	}
 

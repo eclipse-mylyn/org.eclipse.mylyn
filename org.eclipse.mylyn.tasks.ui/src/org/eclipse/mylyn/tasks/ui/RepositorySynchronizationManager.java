@@ -319,6 +319,13 @@ public final class RepositorySynchronizationManager {
 		this.forceSyncExecForTesting = forceSyncExec;
 	}
 
+	/**
+	 * For testing
+	 */
+	public final boolean isForcedSyncExec() {
+		return this.forceSyncExecForTesting;
+	}
+
 	private static class MutexRule implements ISchedulingRule {
 		public boolean isConflicting(ISchedulingRule rule) {
 			return rule == this;

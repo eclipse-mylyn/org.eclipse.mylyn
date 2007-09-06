@@ -154,7 +154,16 @@ public class ScheduledTaskListSynchJob extends Job {
 
 	/** for testing */
 	public static void resetCount() {
-		count = 0;
+		try {
+			if (TasksUiPlugin.getSynchronizationScheduler().getRefreshJob() != null) {
+				TasksUiPlugin.getSynchronizationScheduler().getRefreshJob().join();
+			}
+			TasksUiPlugin.getSynchronizationScheduler().cancelAll();
+			TasksUiPlugin.getSynchronizationScheduler().startSynchJob();
+			count = 0;
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public long getScheduleDelay() {

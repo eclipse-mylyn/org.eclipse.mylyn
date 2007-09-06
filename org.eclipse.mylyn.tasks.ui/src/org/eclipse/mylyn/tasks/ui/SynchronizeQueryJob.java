@@ -184,7 +184,10 @@ class SynchronizeQueryJob extends Job {
 				StatusHandler.log(QueryHitCollector.MAX_HITS_REACHED + "\n" + repositoryQuery.getSummary(), this);
 			}
 
-			repositoryQuery.clear();
+			// bug#195485 - tasks dissappear form tasklist
+			for (AbstractTask removedTask : repositoryQuery.getChildren()) {
+				taskList.removeFromQuery(repositoryQuery, removedTask);
+			}
 
 			for (AbstractTask hit : collector.getTasks()) {
 				AbstractTask task = taskList.getTask(hit.getHandleIdentifier());

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
@@ -20,6 +21,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Rob Elves
@@ -52,7 +54,15 @@ public class TaskListSynchronizationScheduler implements IPropertyChangeListener
 		}
 		if (jobsQueue.size() > 0) {
 			refreshJob = jobsQueue.remove(0);
-			refreshJob.schedule(refreshJob.getScheduleDelay());
+			if (!TasksUiPlugin.getSynchronizationManager().isForcedSyncExec()) {
+				refreshJob.schedule(refreshJob.getScheduleDelay());
+			} else {
+				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+					public void run() {
+						refreshJob.run(new NullProgressMonitor());
+					}
+				});
+			}
 		}
 	}
 
@@ -108,6 +118,9 @@ public class TaskListSynchronizationScheduler implements IPropertyChangeListener
 		}
 	}
 
+	/**
+	 * for testing
+	 */
 	public ScheduledTaskListSynchJob getRefreshJob() {
 		return refreshJob;
 	}
