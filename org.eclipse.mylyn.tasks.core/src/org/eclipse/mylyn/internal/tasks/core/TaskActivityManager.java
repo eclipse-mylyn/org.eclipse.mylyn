@@ -10,6 +10,7 @@ package org.eclipse.mylyn.internal.tasks.core;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
@@ -62,11 +63,11 @@ public class TaskActivityManager {
 
 	private static final String DESCRIPTION_PAST = "Past";
 
-	private SortedMap<Calendar, Set<AbstractTask>> scheduledTasks = new TreeMap<Calendar, Set<AbstractTask>>();
+	private SortedMap<Calendar, Set<AbstractTask>> scheduledTasks = Collections.synchronizedSortedMap(new TreeMap<Calendar, Set<AbstractTask>>());
 
-	private SortedMap<Calendar, Set<AbstractTask>> dueTasks = new TreeMap<Calendar, Set<AbstractTask>>();
+	private SortedMap<Calendar, Set<AbstractTask>> dueTasks = Collections.synchronizedSortedMap(new TreeMap<Calendar, Set<AbstractTask>>());
 
-	private SortedMap<Calendar, Set<AbstractTask>> activeTasks = new TreeMap<Calendar, Set<AbstractTask>>();
+	private SortedMap<Calendar, Set<AbstractTask>> activeTasks = Collections.synchronizedSortedMap(new TreeMap<Calendar, Set<AbstractTask>>());
 
 	private Map<AbstractTask, SortedMap<Calendar, Long>> taskElapsedTimeMap = new ConcurrentHashMap<AbstractTask, SortedMap<Calendar, Long>>();
 
@@ -212,7 +213,7 @@ public class TaskActivityManager {
 	private void addElapsedTimeForEvent(AbstractTask activatedTask, InteractionEvent event) {
 		SortedMap<Calendar, Long> activityMap = taskElapsedTimeMap.get(activatedTask);
 		if (activityMap == null) {
-			activityMap = new TreeMap<Calendar, Long>();
+			activityMap = Collections.synchronizedSortedMap(new TreeMap<Calendar, Long>());
 			taskElapsedTimeMap.put(activatedTask, activityMap);
 		}
 
@@ -256,8 +257,10 @@ public class TaskActivityManager {
 	}
 
 	private void removeScheduledTask(AbstractTask task) {
-		for (Set<AbstractTask> setOfTasks : scheduledTasks.values()) {
-			setOfTasks.remove(task);
+		synchronized (scheduledTasks) {
+			for (Set<AbstractTask> setOfTasks : scheduledTasks.values()) {
+				setOfTasks.remove(task);
+			}
 		}
 	}
 
@@ -274,16 +277,21 @@ public class TaskActivityManager {
 	}
 
 	private void removeDueTask(AbstractTask task) {
-		for (Set<AbstractTask> setOfTasks : dueTasks.values()) {
-			setOfTasks.remove(task);
+		synchronized (dueTasks) {
+			for (Set<AbstractTask> setOfTasks : dueTasks.values()) {
+				setOfTasks.remove(task);
+			}
 		}
 	}
 
 	public Set<AbstractTask> getActiveTasks(Calendar start, Calendar end) {
 		Set<AbstractTask> resultingTasks = new HashSet<AbstractTask>();
+
 		SortedMap<Calendar, Set<AbstractTask>> result = activeTasks.subMap(start, end);
-		for (Set<AbstractTask> set : result.values()) {
-			resultingTasks.addAll(set);
+		synchronized (activeTasks) {
+			for (Set<AbstractTask> set : result.values()) {
+				resultingTasks.addAll(set);
+			}
 		}
 		return resultingTasks;
 	}
@@ -291,8 +299,10 @@ public class TaskActivityManager {
 	public Set<AbstractTask> getScheduledTasks(Calendar start, Calendar end) {
 		Set<AbstractTask> resultingTasks = new HashSet<AbstractTask>();
 		SortedMap<Calendar, Set<AbstractTask>> result = scheduledTasks.subMap(start, end);
-		for (Set<AbstractTask> set : result.values()) {
-			resultingTasks.addAll(set);
+		synchronized (scheduledTasks) {
+			for (Set<AbstractTask> set : result.values()) {
+				resultingTasks.addAll(set);
+			}
 		}
 		return resultingTasks;
 	}
@@ -300,8 +310,10 @@ public class TaskActivityManager {
 	public Set<AbstractTask> getDueTasks(Calendar start, Calendar end) {
 		Set<AbstractTask> resultingTasks = new HashSet<AbstractTask>();
 		SortedMap<Calendar, Set<AbstractTask>> result = dueTasks.subMap(start, end);
-		for (Set<AbstractTask> set : result.values()) {
-			resultingTasks.addAll(set);
+		synchronized (activeTasks) {
+			for (Set<AbstractTask> set : result.values()) {
+				resultingTasks.addAll(set);
+			}
 		}
 		return resultingTasks;
 	}
@@ -311,9 +323,11 @@ public class TaskActivityManager {
 		long result = 0;
 		SortedMap<Calendar, Long> activityMap = taskElapsedTimeMap.get(task);
 		if (activityMap != null) {
-			for (Long time : activityMap.values()) {
-				if (time != null) {
-					result += time.longValue();
+			synchronized (activityMap) {
+				for (Long time : activityMap.values()) {
+					if (time != null) {
+						result += time.longValue();
+					}
 				}
 			}
 		}
@@ -334,10 +348,12 @@ public class TaskActivityManager {
 
 		SortedMap<Calendar, Long> activityMap = taskElapsedTimeMap.get(task);
 		if (activityMap != null) {
-			activityMap = activityMap.subMap(startRange, endRange);
-			for (Long time : activityMap.values()) {
-				if (time != null) {
-					result += time.longValue();
+			synchronized (activityMap) {
+				activityMap = activityMap.subMap(startRange, endRange);
+				for (Long time : activityMap.values()) {
+					if (time != null) {
+						result += time.longValue();
+					}
 				}
 			}
 		}
