@@ -375,6 +375,16 @@
                tooltip="Import Repository Query">
          </action>
 
+
+  		<action
+	        class="org.eclipse.mylyn.internal.tasks.ui.actions.NewTaskAction:local"
+	        enablesFor="*"
+	        icon="icons/etool16/task-new.gif"
+	        id="org.eclipse.mylyn.tasks.ui.new.local.task"
+	        label="Local Task"
+	        menubarPath="org.eclipse.mylyn.tasks.ui.menu.new/local"
+	        tooltip="New Task"/>
+
   		<action
 	        class="org.eclipse.mylyn.internal.tasks.ui.actions.NewTaskAction"
 	        enablesFor="*"

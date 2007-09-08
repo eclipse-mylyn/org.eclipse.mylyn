@@ -128,7 +128,8 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 				viewer.setInput(TasksUiPlugin.getRepositoryManager().getRepositoryConnectors());
 			}
 		});
-
+		viewer.setSelection(new StructuredSelection(viewer.getElementAt(0)));
+		
 		setControl(container);
 	}
 

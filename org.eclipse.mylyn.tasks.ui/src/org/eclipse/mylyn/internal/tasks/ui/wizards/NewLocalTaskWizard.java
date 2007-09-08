@@ -50,7 +50,6 @@ public class NewLocalTaskWizard extends Wizard implements INewWizard {
 		} else {
 			return false;
 		}
-
 	}
 
 }
