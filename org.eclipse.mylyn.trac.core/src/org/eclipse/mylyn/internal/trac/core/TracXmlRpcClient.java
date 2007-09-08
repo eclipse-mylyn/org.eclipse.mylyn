@@ -66,6 +66,8 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 
 	public static final String REQUIRED_REVISION = "1950";
 
+	public static final int REQUIRED_EPOCH = 0;
+
 	public static final int REQUIRED_MAJOR = 0;
 
 	public static final int REQUIRED_MINOR = 1;
@@ -83,6 +85,8 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 	private int majorAPIVersion = -1;
 
 	private int minorAPIVersion = -1;
+
+	private int epochAPIVersion = -1;
 
 	private boolean accountMangerAuthenticationFailed;
 
@@ -233,15 +237,25 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 	public void validate() throws TracException {
 		try {
 			Object[] result = (Object[]) call("system.getAPIVersion");
-			majorAPIVersion = (Integer) result[0];
-			minorAPIVersion = (Integer) result[1];
+			if (result.length >= 3) {
+				epochAPIVersion = (Integer) result[0];
+				majorAPIVersion = (Integer) result[1];
+				minorAPIVersion = (Integer) result[2];
+			} else if (result.length >= 2) {
+				epochAPIVersion = 0;
+				majorAPIVersion = (Integer) result[0];
+				minorAPIVersion = (Integer) result[1];				
+			} else {
+				throw new TracException("The API version is unsupported, please update your Trac XML-RPC Plugin to revision " + REQUIRED_REVISION
+						+ " or later");
+			}
 		} catch (TracNoSuchMethodException e) {
 			throw new TracException(
 					"Required API calls are missing, please update your Trac XML-RPC Plugin to revision "
 							+ REQUIRED_REVISION + " or later");
 		}
 
-		if (!isAPIVersionOrHigher(REQUIRED_MAJOR, REQUIRED_MINOR)) {
+		if (!isAPIVersionOrHigher(REQUIRED_EPOCH, REQUIRED_MAJOR, REQUIRED_MINOR)) {
 			throw new TracException("The API version " + majorAPIVersion + "." + minorAPIVersion
 					+ " is unsupported, please update your Trac XML-RPC Plugin to revision " + REQUIRED_REVISION
 					+ " or later");
@@ -249,14 +263,14 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 	}
 
 	private void updateAPIVersion() throws TracException {
-		if (majorAPIVersion == -1 || minorAPIVersion == -1) {
+		if (epochAPIVersion == -1 || majorAPIVersion == -1 || minorAPIVersion == -1) {
 			validate();
 		}
 	}
 
-	private boolean isAPIVersionOrHigher(int major, int minor) throws TracException {
+	private boolean isAPIVersionOrHigher(int epoch, int major, int minor) throws TracException {
 		updateAPIVersion();
-		return (majorAPIVersion > major || (majorAPIVersion == major && minorAPIVersion >= minor));
+		return (epochAPIVersion > epoch || (epochAPIVersion == epoch && majorAPIVersion > major || (majorAPIVersion == major && minorAPIVersion >= minor)));
 	}
 
 	public TracTicket getTicket(int id) throws TracException {
@@ -409,7 +423,8 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		Collections.sort(data.severities);
 		advance(monitor, 1);
 
-		attributes = getTicketAttributes("ticket.status");
+		boolean trac011 = isAPIVersionOrHigher(1, 0, 0);
+		attributes = getTicketAttributes("ticket.status", trac011);
 		data.ticketStatus = new ArrayList<TracTicketStatus>(result.length);
 		for (TicketAttributeResult attribute : attributes) {
 			data.ticketStatus.add(new TracTicketStatus(attribute.name, attribute.value));
@@ -514,8 +529,13 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		return result;
 	}
 
-	@SuppressWarnings("unchecked")
 	private List<TicketAttributeResult> getTicketAttributes(String attributeType) throws TracException {
+		return getTicketAttributes(attributeType, false);
+	}
+
+	@SuppressWarnings("unchecked")
+	private List<TicketAttributeResult> getTicketAttributes(String attributeType, boolean assignValues)
+			throws TracException {
 		// get list of attribute ids first
 		Object[] ids = (Object[]) call(attributeType + ".getAll");
 		// fetch all attributes in a single call
@@ -533,7 +553,11 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 				TicketAttributeResult attribute = new TicketAttributeResult();
 				attribute.name = (String) ids[i];
 				Object value = getMultiCallResult(result[i]);
-				attribute.value = (value instanceof Integer) ? (Integer) value : Integer.parseInt((String) value);
+				if (assignValues) {
+					attribute.value = i;
+				} else {
+					attribute.value = (value instanceof Integer) ? (Integer) value : Integer.parseInt((String) value);
+				}
 				attributes.add(attribute);
 			} catch (ClassCastException e) {
 				StatusHandler.log(e, "Invalid response from Trac repository for attribute type: '" + attributeType
@@ -608,7 +632,7 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		if (summary == null || description == null) {
 			throw new InvalidTicketException();
 		}
-		if (isAPIVersionOrHigher(0, 2)) {
+		if (isAPIVersionOrHigher(0, 0, 2)) {
 			return (Integer) call("ticket.create", summary, description, attributes, true);
 		} else {
 			return (Integer) call("ticket.create", summary, description, attributes);
@@ -619,7 +643,7 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		updateAPIVersion();
 
 		Map<String, String> attributes = ticket.getValues();
-		if (isAPIVersionOrHigher(0, 2)) {
+		if (isAPIVersionOrHigher(0, 0, 2)) {
 			call("ticket.update", ticket.getId(), comment, attributes, true);
 		} else {
 			call("ticket.update", ticket.getId(), comment, attributes);
