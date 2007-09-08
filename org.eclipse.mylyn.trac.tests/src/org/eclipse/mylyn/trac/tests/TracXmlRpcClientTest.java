@@ -90,7 +90,7 @@ public class TracXmlRpcClientTest extends AbstractTracClientRepositoryTest {
 
 	public void testWikiToHtml011() throws Exception {
 		connect011();
-		wikiToHtml(TracTestConstants.TEST_TRAC_011_URL);
+		wikiToHtml("/trac011");
 	}
 
 	public void wikiToHtml(String tracUrl) throws Exception {
