@@ -158,10 +158,15 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 		viewer.addOpenListener(new IOpenListener() {
 
 			public void open(OpenEvent event) {
-				getContainer().showPage(getNextPage());
+				if (getNextPage() == null) {
+					performFinish();
+					getContainer().getShell().close();
+				} else {
+					getContainer().showPage(getNextPage());
+				}
 			}
-
 		});
+		
 		viewer.getTable().showSelection();
 		viewer.getTable().setFocus();
 		return viewer.getTable();
