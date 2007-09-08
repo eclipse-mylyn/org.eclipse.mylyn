@@ -65,7 +65,7 @@ import org.eclipse.mylyn.web.core.HtmlStreamTokenizer.Token;
  */
 public class TracWebClient extends AbstractTracClient {
 
-	private HttpClient httpClient;
+	private final HttpClient httpClient;
 
 	private boolean authenticated;
 
@@ -74,6 +74,7 @@ public class TracWebClient extends AbstractTracClient {
 
 		httpClient = new HttpClient();
 		httpClient.setHttpConnectionManager(new MultiThreadedHttpConnectionManager());
+		httpClient.getParams().setCookiePolicy(CookiePolicy.RFC_2109);
 	}
 
 	private synchronized GetMethod connect(String serverURL) throws TracException {
@@ -96,7 +97,6 @@ public class TracWebClient extends AbstractTracClient {
 			}
 
 			GetMethod method = new GetMethod(WebClientUtil.getRequestPath(serverURL));
-			method.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
 			int code;
 			try {
 				code = httpClient.executeMethod(method);

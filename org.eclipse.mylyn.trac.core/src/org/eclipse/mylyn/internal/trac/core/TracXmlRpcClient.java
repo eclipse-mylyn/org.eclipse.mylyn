@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.TimeZone;
 
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
@@ -142,6 +143,7 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 			// try form-based authentication via AccountManagerPlugin as a
 			// fall-back
 			HttpClient httpClient = new HttpClient();
+			httpClient.getParams().setCookiePolicy(CookiePolicy.RFC_2109);
 			WebClientUtil.setupHttpClient(httpClient, proxy, repositoryUrl.toString(), null, null);
 			try {
 				authenticateAccountManager(httpClient);
