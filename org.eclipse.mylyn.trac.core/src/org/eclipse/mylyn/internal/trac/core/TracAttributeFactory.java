@@ -37,7 +37,7 @@ public class TracAttributeFactory extends AbstractAttributeFactory {
 				RepositoryTaskAttribute.DESCRIPTION, true, false), ID(Key.ID, "<used by search engine>", null, true), KEYWORDS(
 				Key.KEYWORDS, "Keywords:", RepositoryTaskAttribute.KEYWORDS), MILESTONE(Key.MILESTONE, "Milestone:",
 				null), NEW_CC(RepositoryTaskAttribute.NEW_CC, "Add CC:"), OWNER(Key.OWNER, "Assigned to:",
-				RepositoryTaskAttribute.USER_ASSIGNED, true, true), PRIORITY(Key.PRIORITY, "Priority:", null), REPORTER(
+				RepositoryTaskAttribute.USER_ASSIGNED, true, false), PRIORITY(Key.PRIORITY, "Priority:", null), REPORTER(
 				Key.REPORTER, "Reporter:", RepositoryTaskAttribute.USER_REPORTER, true, true), RESOLUTION(
 				Key.RESOLUTION, "Resolution:", RepositoryTaskAttribute.RESOLUTION, false, true), SEVERITY(Key.SEVERITY,
 				"Severity:", null), STATUS(Key.STATUS, "Status:", RepositoryTaskAttribute.STATUS, false, true), SUMMARY(
