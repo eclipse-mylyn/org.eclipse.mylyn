@@ -63,8 +63,11 @@ public class TaskActivityUtil {
 	}
 
 	public static Calendar snapEndOfWeek(Calendar cal) {
-		cal.setFirstDayOfWeek(TaskActivityManager.getInstance().getStartDay());
-		cal.set(Calendar.DAY_OF_WEEK, cal.getActualMaximum(Calendar.DAY_OF_WEEK));
+		if (cal.getFirstDayOfWeek() == Calendar.MONDAY) {
+			cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+		} else {
+			cal.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+		}
 		snapEndOfDay(cal);
 		return cal;
 	}
@@ -131,7 +134,7 @@ public class TaskActivityUtil {
 			snapStartOfDay(dayStart);
 			Calendar midnight = getCalendar();
 			snapEndOfDay(midnight);
-			return (time.compareTo(dayStart) >= 0 && time.compareTo(midnight) == -1);
+			return (time.compareTo(dayStart) >= 0 && time.compareTo(midnight) <= 0);
 		}
 		return false;
 	}
@@ -151,6 +154,10 @@ public class TaskActivityUtil {
 	public static Calendar getEndOfCurrentWeek() {
 		Calendar cal = getCalendar();
 		return snapEndOfWeek(cal);
+	}
+
+	public static boolean isBetween(Calendar time, Calendar start, Calendar end) {
+		return (time.compareTo(start) >= 0 && time.compareTo(end) <= 0);
 	}
 
 }

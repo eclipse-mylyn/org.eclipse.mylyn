@@ -17,6 +17,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.window.Window;
+import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.ui.planner.DateSelectionDialog;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
@@ -39,11 +40,13 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 
 	private static final String LABEL_NEXT_WEEK = "Next Week";
 
-	private static final String LABEL_FUTURE = "Two Weeks";
+	private static final String LABEL_TWO_WEEKS = "Two Weeks";
+
+	private static final String LABEL_FUTURE = "Future";
 
 	private static final String LABEL_CALENDAR = "Choose Date...";
 
-	private static final String LABEL_CLEAR = "Clear";
+	private static final String LABEL_NOT_SCHEDULED = "Not Scheduled";
 
 	@SuppressWarnings("deprecation")
 	public MenuManager getSubMenuManager(final List<AbstractTaskContainer> selectedElements) {
@@ -155,6 +158,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 
 		subMenuManager.add(action);
 
+		// 2 weeks
 		action = new Action() {
 			@Override
 			public void run() {
@@ -165,13 +169,51 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 				}
 			}
 		};
-		action.setText(LABEL_FUTURE);
+		action.setText(LABEL_TWO_WEEKS);
 		action.setEnabled(canSchedule(singleSelection, taskListElementsToSchedule));
 
-		if (singleTaskSelection != null && TasksUiPlugin.getTaskListManager().isScheduledForLater(singleTaskSelection)) {
-			action.setChecked(true);
+		if (singleTaskSelection != null && singleTaskSelection.getScheduledForDate() != null) {
+
+			Calendar time = TaskActivityUtil.getCalendar();
+			time.setTime(singleTaskSelection.getScheduledForDate());
+
+			Calendar start = TaskActivityUtil.getCalendar();
+			start.setTime(TasksUiPlugin.getTaskActivityManager().getActivityFuture().getStart().getTime());
+
+			Calendar end = TaskActivityUtil.getCalendar();
+			end.setTime(TasksUiPlugin.getTaskActivityManager().getActivityFuture().getStart().getTime());
+			TaskActivityUtil.snapEndOfWeek(end);
+
+			if (TaskActivityUtil.isBetween(time, start, end)) {
+				action.setChecked(true);
+			}
 		}
 
+		subMenuManager.add(action);
+
+		// future
+		action = new Action() {
+			@Override
+			public void run() {
+				// ignore
+			}
+		};
+
+		if (singleTaskSelection != null && singleTaskSelection.getScheduledForDate() != null) {
+
+			Calendar time = TaskActivityUtil.getCalendar();
+			time.setTime(singleTaskSelection.getScheduledForDate());
+
+			Calendar start = TaskActivityUtil.getCalendar();
+			start.setTime(TasksUiPlugin.getTaskActivityManager().getActivityFuture().getStart().getTime());
+			start.add(Calendar.WEEK_OF_MONTH, 1);
+
+			if (time.compareTo(start) >= 0) {
+				action.setChecked(true);
+			}
+		}
+		action.setText(LABEL_FUTURE);
+		action.setEnabled(false);
 		subMenuManager.add(action);
 
 		subMenuManager.add(new Separator());
@@ -211,8 +253,14 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 				}
 			}
 		};
-		action.setText(LABEL_CLEAR);
+		action.setText(LABEL_NOT_SCHEDULED);
 		action.setEnabled(taskListElementsToSchedule.size() > 0);
+		if (singleTaskSelection != null) {
+			if (singleTaskSelection.getScheduledForDate() == null) {
+				action.setChecked(true);
+			}
+			action.setEnabled(singleTaskSelection.getScheduledForDate() != null);
+		}
 		subMenuManager.add(action);
 		return subMenuManager;
 	}
