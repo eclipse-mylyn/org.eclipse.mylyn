@@ -25,8 +25,10 @@ public abstract class AbstractTaskListPresentation {
 
 	private ImageDescriptor imageDescriptor;
 	
+	private boolean primary = false;
+	
 	private Map<TaskListView, AbstractTaskListContentProvider> contentProviders = new HashMap<TaskListView, AbstractTaskListContentProvider>();
-
+	
 	public AbstractTaskListPresentation(String id) {
 		this.id = id;
 	}
@@ -61,6 +63,14 @@ public abstract class AbstractTaskListPresentation {
 
 	public void setImageDescriptor(ImageDescriptor imageDescriptor) {
 		this.imageDescriptor = imageDescriptor;
+	}
+	
+	public boolean isPrimary() {
+		return primary;
+	}
+
+	public void setPrimary(boolean primary) {
+		this.primary = primary;
 	}
 
 	public String getId() {

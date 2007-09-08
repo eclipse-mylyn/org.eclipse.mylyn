@@ -951,12 +951,14 @@
             class="org.eclipse.mylyn.internal.tasks.ui.CategorizedPresentation"
             icon="icons/etool16/category.gif"
             id="org.eclipse.mylyn.tasks.ui.categorized"
-            name="Categorized"/>
+            name="Categorized"
+            primary="true"/>
       <presentation
             class="org.eclipse.mylyn.internal.tasks.ui.ScheduledPresentation"
             icon="icons/etool16/calendar.gif"
             id="org.eclipse.mylyn.tasks.ui.scheduled"
-            name="Scheduled"/>
+            name="Scheduled"
+            primary="true"/>
    </extension>
    
 </plugin>

@@ -200,9 +200,10 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			PriorityLevel.P2.getDescription(), PriorityLevel.P3.getDescription(), PriorityLevel.P4.getDescription(),
 			PriorityLevel.P5.getDescription() };
 	
-	// TODO: extract to extension pointS
-	private static List<AbstractTaskListPresentation> presentations = new ArrayList<AbstractTaskListPresentation>();
+	private static List<AbstractTaskListPresentation> presentationsPrimary = new ArrayList<AbstractTaskListPresentation>();
 
+	private static List<AbstractTaskListPresentation> presentationsSecondary = new ArrayList<AbstractTaskListPresentation>();	
+	
 	private boolean focusedMode = false;
 
 	private boolean linkWithEditor;
@@ -868,10 +869,16 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private void applyPresentation(String id) {
 		if (id != null) {
-			for (AbstractTaskListPresentation presentation : presentations) {
+			for (AbstractTaskListPresentation presentation : presentationsPrimary) {
 				if (id.equals(presentation.getId())) {
 					applyPresentation(presentation);
-					break;
+					return;
+				}
+			}
+			for (AbstractTaskListPresentation presentation : presentationsSecondary) {
+				if (id.equals(presentation.getId())) {
+					applyPresentation(presentation);
+					return;
 				}
 			}
 		}
@@ -1665,10 +1672,17 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	 * likely to change in the Mylyn 3.0 cycle.
 	 */
 	public static List<AbstractTaskListPresentation> getPresentations() {
+		List<AbstractTaskListPresentation> presentations = new ArrayList<AbstractTaskListPresentation>();
+		presentations.addAll(presentationsPrimary);
+		presentations.addAll(presentationsSecondary);
 		return presentations;
 	}
 
 	public static void addPresentation(AbstractTaskListPresentation presentation) {
-		presentations.add(presentation);
+		if (presentation.isPrimary()) {
+			presentationsPrimary.add(presentation);
+		} else {
+			presentationsSecondary.add(presentation);
+		}
 	}
 }

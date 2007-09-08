@@ -78,6 +78,13 @@
                </documentation>
             </annotation>
          </attribute>
+         <attribute name="primary" type="boolean">
+            <annotation>
+               <documentation>
+                  True for presentations that are intended to be primary and required for typical usage, false for additional presentations that are secondary.  Reflected in the UI, e.g. by ordering secondary presentations below primary ones.
+               </documentation>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 

@@ -124,6 +124,8 @@ public class TasksUiExtensionReader {
 
 	public static final String ATTR_ICON = "icon";
 
+	public static final String ATTR_PRIMARY = "primary";
+	
 	public static final String ATTR_ID = "id";
 
 	
@@ -245,6 +247,11 @@ public class TasksUiExtensionReader {
 			AbstractTaskListPresentation presentation = (AbstractTaskListPresentation)element.createExecutableExtension(ATTR_CLASS);
 			presentation.setImageDescriptor(imageDescriptor);
 			presentation.setName(name);
+			
+			String primary = element.getAttribute(ATTR_PRIMARY);
+			if (primary != null && primary.equals("true")) {
+				presentation.setPrimary(true);
+			}
 			
 			TaskListView.addPresentation(presentation);
 		} catch (CoreException e) {

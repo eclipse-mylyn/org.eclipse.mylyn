@@ -29,7 +29,7 @@ public class TaskGroup extends AbstractTaskCategory {
 
 	@Override
 	public String getSummary() {
-		return summary; // + " / " + super.getChildren().size();
+		return summary; 
 	} 
 
 	public boolean isUserDefined() {

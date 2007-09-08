@@ -207,7 +207,7 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor NAVIGATE_NEXT = create(T_TOOL, "navigate-next.gif");
 
-	public static final ImageDescriptor TASKLIST_MODE = create(T_TOOL, "tasklist-mode.gif");
+	public static final ImageDescriptor TASKLIST_MODE = create(T_TOOL, "presentation.gif");
 
 	public static final ImageDescriptor COPY = create(T_TOOL, "copy.png");
 
