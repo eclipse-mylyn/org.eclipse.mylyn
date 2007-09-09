@@ -150,29 +150,21 @@ public class TracXmlRpcClientTest extends AbstractTracClientRepositoryTest {
 	}
 
 	private void getWikiPage() throws Exception {
-		String pageName = "Test";
-		String author = "admin@mylar.eclipse.org";
-		int version = 1;
-
-		TracWikiPage page = ((TracXmlRpcClient) repository).getWikiPage(pageName);
-		assertEquals(pageName, page.getPageInfo().getPageName());
-		assertEquals(author, page.getPageInfo().getAuthor());
-		assertEquals(version, page.getPageInfo().getVersion());
+		TracWikiPage page = ((TracXmlRpcClient) repository).getWikiPage("TestGetPage");
+		assertEquals("TestGetPage", page.getPageInfo().getPageName());
+		assertEquals("tests@mylyn.eclipse.org", page.getPageInfo().getAuthor());
+		assertEquals(2, page.getPageInfo().getVersion());
 		// XXX: The Date returned from Wiki API seems to have a problem with the Time Zone
 		//String date = "Sat Nov 11 18:10:56 EST 2006";
 		//assertEquals(date, page.getPageVersion().getLastModified().toString());
-		assertTrue(page.getContent() != null);
+		assertEquals("Version 2", page.getContent());
 		assertTrue(page.getPageHTML().startsWith("<html>"));
 
-		pageName = "WikiStart";
-		author = "trac";
-		version = 1;
-
-		page = ((TracXmlRpcClient) repository).getWikiPage("WikiStart", 1);
-		assertEquals(pageName, page.getPageInfo().getPageName());
-		assertEquals(author, page.getPageInfo().getAuthor());
-		assertEquals(version, page.getPageInfo().getVersion());
-		assertTrue(page.getContent() != null);
+		page = ((TracXmlRpcClient) repository).getWikiPage("TestGetPage", 1);
+		assertEquals("TestGetPage", page.getPageInfo().getPageName());
+		assertEquals("anonymous", page.getPageInfo().getAuthor());
+		assertEquals(1, page.getPageInfo().getVersion());
+		assertEquals("Version 1", page.getContent());
 		assertTrue(page.getPageHTML().startsWith("<html>"));
 	}
 
