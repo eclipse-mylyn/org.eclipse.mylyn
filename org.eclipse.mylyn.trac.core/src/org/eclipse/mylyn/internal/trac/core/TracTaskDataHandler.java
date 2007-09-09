@@ -295,7 +295,7 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 				attr.addOption(values[i].toString(), values[i].toString());
 			}
 		} else {
-			// attr.setHidden(true);
+			attr.setHidden(true);
 			attr.setReadOnly(true);
 		}
 		data.addAttribute(attribute.getTracKey(), attr);
