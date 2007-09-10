@@ -361,7 +361,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 		AbstractTask selectedTask = null;
 		if (editor instanceof TaskEditor && ((TaskEditor) editor).getEditorInput() instanceof TaskEditorInput) {
-			selectedTask = ((TaskEditorInput) ((TaskEditor) editor).getEditorInput()).getTask();
+			selectedTask = ((TaskEditorInput) ((TaskEditor) editor).getEditorInput()).getTask(); 
 		}
 		if (selectedTask == null) {
 			TaskListView taskListView = TaskListView.getFromActivePerspective();
