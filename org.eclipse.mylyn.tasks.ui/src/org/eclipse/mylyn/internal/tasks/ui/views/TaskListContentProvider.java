@@ -249,20 +249,22 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 						return children;
 					}
 				}
-				Set<AbstractTask> parentsTasks = ((AbstractTaskContainer) parent).getChildren();
-				for (AbstractTaskContainer element : parentsTasks) {
-					if (!filter(parent, element)) {
-						children.add(element);
-					}
-				}
+				children = getFilteredRootChildren((AbstractTaskContainer) parent);
+//				Set<AbstractTask> parentsTasks = ((AbstractTaskContainer) parent).getChildren();
+//				for (AbstractTaskContainer element : parentsTasks) {
+//					if (!filter(parent, element)) {
+//						children.add(element);
+//					}
+//				}
 				return children;
 			} else if (parent instanceof AbstractRepositoryQuery) {
-				for (AbstractTaskContainer element : ((AbstractRepositoryQuery) parent).getChildren()) {
-					if (!filter(parent, element)) {
-						children.add(element);
-					}
-				}
-				return children;
+				return getFilteredRootChildren((AbstractTaskContainer) parent);
+//				for (AbstractTaskContainer element : ((AbstractRepositoryQuery) parent).getChildren()) {
+//					if (!filter(parent, element)) {
+//						children.add(element);
+//					}
+//				}
+//				return children;
 			} else if (parent instanceof AbstractTask) {
 				Set<AbstractTask> subTasks = ((AbstractTask) parent).getChildren();
 				for (AbstractTask t : subTasks) {
@@ -280,6 +282,31 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 			}
 		}
 		return Collections.emptyList();
+	}
+
+	/**
+	 * @return all children who aren't already revealed as a sub task
+	 */
+	private List<AbstractTaskContainer> getFilteredRootChildren(AbstractTaskContainer parent) {
+		Set<AbstractTask> parentTasks = parent.getChildren();
+		Set<AbstractTaskContainer> parents = new HashSet<AbstractTaskContainer>();
+		Set<AbstractTask> children = new HashSet<AbstractTask>();
+		// get all children
+		for (AbstractTask element : parentTasks) {
+			for (AbstractTask abstractTask : element.getChildren()) {
+				if (!filter(element, abstractTask)) {
+					children.add(abstractTask);
+				}
+			}
+		}
+		for (AbstractTask task : parentTasks) {
+			if (!filter(parent, task) && !children.contains(task)) {
+				parents.add(task);
+			}
+		}
+		List<AbstractTaskContainer> result = new ArrayList<AbstractTaskContainer>();
+		result.addAll(parents);
+		return result;
 	}
 
 	protected boolean filter(Object parent, Object object) {

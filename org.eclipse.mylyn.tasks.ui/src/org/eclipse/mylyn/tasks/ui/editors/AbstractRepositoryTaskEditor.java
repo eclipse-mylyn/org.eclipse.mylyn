@@ -640,7 +640,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			toolBarManager.add(repositoryLabelControl);
 			fillToolBar(parentEditor.getTopForm().getToolBarManager());
 
-			if (repositoryTask != null) {
+			if (repositoryTask != null && taskData != null && !taskData.isNew()) {
 				activateAction = new Action() {
 					@Override
 					public void run() {
