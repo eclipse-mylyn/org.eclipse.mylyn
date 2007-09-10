@@ -191,14 +191,6 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 
 		subMenuManager.add(action);
 
-		// future
-		action = new Action() {
-			@Override
-			public void run() {
-				// ignore
-			}
-		};
-
 		if (singleTaskSelection != null && singleTaskSelection.getScheduledForDate() != null) {
 
 			Calendar time = TaskActivityUtil.getCalendar();
@@ -209,12 +201,18 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 			start.add(Calendar.WEEK_OF_MONTH, 1);
 
 			if (time.compareTo(start) >= 0) {
+				// future
+				action = new Action() {
+					@Override
+					public void run() {
+						// ignore
+					}
+				};
 				action.setChecked(true);
+				action.setText(LABEL_FUTURE);
+				subMenuManager.add(action);
 			}
 		}
-		action.setText(LABEL_FUTURE);
-		action.setEnabled(false);
-		subMenuManager.add(action);
 
 		subMenuManager.add(new Separator());
 
@@ -254,12 +252,10 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 			}
 		};
 		action.setText(LABEL_NOT_SCHEDULED);
-		action.setEnabled(taskListElementsToSchedule.size() > 0);
 		if (singleTaskSelection != null) {
 			if (singleTaskSelection.getScheduledForDate() == null) {
 				action.setChecked(true);
 			}
-			action.setEnabled(singleTaskSelection.getScheduledForDate() != null);
 		}
 		subMenuManager.add(action);
 		return subMenuManager;
