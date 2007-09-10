@@ -78,7 +78,9 @@ public class TaskScheduleContentProvider extends TaskListContentProvider {
 	@Override
 	public Object[] getChildren(Object parent) {
 		Set<AbstractTask> result = new HashSet<AbstractTask>();
-		if (parent instanceof ScheduledTaskContainer) {
+		if (parent instanceof AbstractTask) {
+			// flat presentation (no subtasks revealed in Scheduled mode)
+		} else if (parent instanceof ScheduledTaskContainer) {
 			for (AbstractTask child : ((ScheduledTaskContainer) parent).getChildren()) {
 				if (!filter(parent, child)) {
 					result.add(child);
