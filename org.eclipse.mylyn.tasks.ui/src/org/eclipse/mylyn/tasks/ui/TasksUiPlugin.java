@@ -19,6 +19,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.eclipse.core.internal.net.ProxyManager;
+import org.eclipse.core.net.proxy.IProxyChangeListener;
+import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ISaveContext;
 import org.eclipse.core.resources.ISaveParticipant;
@@ -323,6 +326,11 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			taskListManager = new TaskListManager(taskListWriter, taskListFile);
 			taskActivityManager = TaskActivityManager.getInstance();
 			taskRepositoryManager = new TaskRepositoryManager(taskListManager.getTaskList());
+			
+			IProxyService proxyService = ProxyManager.getProxyManager();
+			IProxyChangeListener proxyChangeListener = new TasksUiProxyChangeListener(taskRepositoryManager);
+			proxyService.addProxyChangeListener(proxyChangeListener);
+			
 			synchronizationManager = new RepositorySynchronizationManager();
 
 			// NOTE: initializing extensions in start(..) has caused race
