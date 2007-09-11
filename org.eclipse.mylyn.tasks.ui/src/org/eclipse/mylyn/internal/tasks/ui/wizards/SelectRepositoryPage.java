@@ -24,6 +24,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardNode;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardSelectionPage;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryFilter;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AddRepositoryAction;
@@ -158,11 +159,12 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 		viewer.addOpenListener(new IOpenListener() {
 
 			public void open(OpenEvent event) {
-				if (getNextPage() == null) {
-					performFinish();
-					getContainer().getShell().close();
-				} else {
+				if(canFlipToNextPage()) {
 					getContainer().showPage(getNextPage());
+				} else if(canFinish()) {
+					if (getWizard().performFinish()) {
+						((WizardDialog)getContainer()).close();
+					}
 				}
 			}
 		});
