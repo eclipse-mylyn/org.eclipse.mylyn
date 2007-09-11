@@ -91,8 +91,10 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		if (object instanceof TaskArchive || object instanceof UnfiledCategory) {
 			compositeDescriptor.icon = TasksUiImages.CATEGORY_ARCHIVE;
 			return compositeDescriptor;
-		} else if (object instanceof TaskCategory || object instanceof UnfiledCategory || object instanceof TaskGroup) {
+		} else if (object instanceof TaskCategory || object instanceof UnfiledCategory) {
 			compositeDescriptor.icon = TasksUiImages.CATEGORY;
+		} else if (object instanceof TaskGroup) {
+			compositeDescriptor.icon = TasksUiImages.TASKLIST_MODE;
 		}
 
 		if (object instanceof AbstractTaskContainer) {
@@ -222,7 +224,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			}
 		} else if (object instanceof TaskGroup) {
 			TaskGroup element = (TaskGroup) object;
-			return element.getSummary() + " / " + element.getChildren().size();
+			return element.getSummary();// + " / " + element.getChildren().size();
 		} else if (object instanceof AbstractTaskContainer) {
 			AbstractTaskContainer element = (AbstractTaskContainer) object;
 			return element.getSummary();
