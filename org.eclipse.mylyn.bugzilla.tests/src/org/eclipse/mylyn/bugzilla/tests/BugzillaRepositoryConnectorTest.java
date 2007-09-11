@@ -177,6 +177,16 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		assertEquals(defaultAssignee, taskData.getAssignedTo());
 	}
 
+	public void testSubTaskHasIncoming() throws CoreException {
+		init30();
+		String taskNumber = "6";
+		BugzillaTask task = generateLocalTaskAndDownload(taskNumber);
+		assertNotNull(task);
+		assertEquals(1, task.getChildren().size());
+		AbstractTask child = task.getChildren().iterator().next();
+		assertEquals(RepositoryTaskSyncState.INCOMING, child.getSynchronizationState());
+	}
+
 	public void testFocedQuerySynchronization() throws CoreException {
 		init222();
 		TasksUiPlugin.getSynchronizationManager().setForceSyncExec(true);
