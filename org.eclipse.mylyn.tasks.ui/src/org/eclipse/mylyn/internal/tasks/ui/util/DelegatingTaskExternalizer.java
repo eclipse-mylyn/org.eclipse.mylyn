@@ -310,7 +310,9 @@ final class DelegatingTaskExternalizer {
 			Node child = list.item(i);
 			try {
 				// LEGACY: categories used to contain tasks?
-				category.internalAddChild(readTask(child, taskList, category, null));
+				AbstractTask task = readTask(child, category, null);
+				category.internalAddChild(task);
+				taskList.insertTask(task, category, null);
 			} catch (Throwable t) {
 				hasCaughtException = true;
 			}
@@ -320,7 +322,7 @@ final class DelegatingTaskExternalizer {
 		}
 	}
 
-	public final AbstractTask readTask(Node node, TaskList taskList, AbstractTaskCategory category, AbstractTask parent)
+	public final AbstractTask readTask(Node node, AbstractTaskCategory legacyCategory, AbstractTask parent)
 			throws TaskExternalizationException {
 		AbstractTask task = null;
 		String taskId = null;
@@ -352,7 +354,7 @@ final class DelegatingTaskExternalizer {
 //			alreadyRead = true;
 //		}
 		if (task != null) {
-			readTaskInfo(task, taskList, element, parent, category);
+			readTaskInfo(task, element, parent, legacyCategory);
 		}
 
 		return task;
@@ -377,33 +379,32 @@ final class DelegatingTaskExternalizer {
 //		return task;
 //	}
 
-	private void readTaskInfo(AbstractTask task, TaskList taskList, Element element, AbstractTask parent,
-			AbstractTaskCategory legacyCategory) throws TaskExternalizationException {
+	private void readTaskInfo(AbstractTask task, Element element, AbstractTask parent, AbstractTaskCategory legacyCategory) throws TaskExternalizationException {
 		if (task == null) {
 			return;
 		}
 
-		String categoryHandle = null;
-		if (element.hasAttribute(KEY_CATEGORY)) {
-			categoryHandle = element.getAttribute(KEY_CATEGORY);
-			AbstractTaskCategory category = null;
-			if (categoryHandle != null) {
-				category = taskList.getContainerForHandle(categoryHandle);
-			}
-
-			if (category != null) {
-				taskList.internalAddTask(task, category);
-			} else if (parent == null) {
-				taskList.internalAddRootTask(task);
-			}
-		} else if (legacyCategory != null && !(legacyCategory instanceof TaskArchive)) {
-			task.addParentContainer(legacyCategory);
-			legacyCategory.internalAddChild(task);
-		} else if (legacyCategory == null && parent == null) {
-			taskList.internalAddTask(task, taskList.getArchiveContainer());
-		} else {
-			taskList.internalAddTask(task, taskList.getArchiveContainer());
-		}
+//		String categoryHandle = null;
+//		if (element.hasAttribute(KEY_CATEGORY)) {
+//			categoryHandle = element.getAttribute(KEY_CATEGORY);
+//			AbstractTaskCategory category = null;
+//			if (categoryHandle != null) {
+//				category = taskList.getContainerForHandle(categoryHandle);
+//			}
+//
+//			if (category != null) {
+//				taskList.internalAddTask(task, category);
+//			} else if (parent == null) {
+//				taskList.internalAddRootTask(task);
+//			}
+//		} else if (legacyCategory != null && !(legacyCategory instanceof TaskArchive)) {
+//			task.addParentContainer(legacyCategory);
+//			legacyCategory.internalAddChild(task);
+//		} else {
+//			taskList.internalAddTask(task, taskList.getArchiveContainer());
+//		}
+		task.setCategoryHandle(element.getAttribute(KEY_CATEGORY));
+		
 		if (element.hasAttribute(KEY_PRIORITY)) {
 			task.setPriority(element.getAttribute(KEY_PRIORITY));
 		} else {
@@ -416,7 +417,6 @@ final class DelegatingTaskExternalizer {
 
 		if (element.getAttribute(KEY_ACTIVE).compareTo(VAL_TRUE) == 0) {
 			task.setActive(true);
-			taskList.setActive(task, true);
 		} else {
 			task.setActive(false);
 		}

@@ -8,7 +8,6 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
-
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -54,6 +53,7 @@ public class AllTasksTests {
 		suite.addTestSuite(OfflineStorageTest.class);
 		suite.addTestSuite(OfflineCachingStorageTest.class);
 		suite.addTestSuite(QueryExportImportTest.class);
+		suite.addTestSuite(TaskExportImportTest.class);
 		suite.addTestSuite(PersonProposalProviderTest.class);
 		// $JUnit-END$
 

@@ -375,6 +375,15 @@
                tooltip="Import Repository Query">
          </action>
 
+         <action
+               class="org.eclipse.mylyn.internal.tasks.ui.actions.TaskExportAction"
+               definitionId="org.eclipse.ui.task.export"
+               enablesFor="org.eclipse.mylyn.tasks.core.AbstractTask"
+               id="org.eclipse.mylyn.tasks.ui.actions.export.task"
+               label="Export Task..."
+               menubarPath="repository"
+               tooltip="Export Task">
+         </action>
 
   		<action
 	        class="org.eclipse.mylyn.internal.tasks.ui.actions.NewTaskAction:local"

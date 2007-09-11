@@ -18,7 +18,6 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TaskTransfer;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
@@ -43,6 +42,7 @@ class TaskListDragSourceListener implements DragSourceListener {
 	private final TaskListView view;
 
 	private File[] queryTempFiles;
+	private File[] taskTempFiles;
 
 //	static final String ID_DATA_TASK_DRAG = "task-drag";
 
@@ -66,34 +66,63 @@ class TaskListDragSourceListener implements DragSourceListener {
 			
 			// prepare query files
 			List<AbstractRepositoryQuery> queries = new ArrayList<AbstractRepositoryQuery>();
+			List<AbstractTask> tasks = new ArrayList<AbstractTask>();
+			
 			for (Iterator<?> it = selection.iterator(); it.hasNext();) {
 				Object element = it.next();
 				if (element instanceof AbstractRepositoryQuery) {
 					queries.add((AbstractRepositoryQuery) element);
+				} else if (element instanceof AbstractTask) {
+					tasks.add((AbstractTask) element);
 				}
 			}
 
 			try {
-				int counter = 0;
-				queryTempFiles = new File[queries.size()];
-				for (AbstractRepositoryQuery query : queries) {
-					List<AbstractRepositoryQuery> queryList = new ArrayList<AbstractRepositoryQuery>();
-					queryList.add(query);
-					
-					String encodedName = "query";
-					try {
-						encodedName = URLEncoder.encode(query.getHandleIdentifier(),
-								ITasksUiConstants.FILENAME_ENCODING);
-					} catch (UnsupportedEncodingException e) {
-						StatusHandler.fail(e, "Could not determine path for context", false);
+				
+				// queries
+				{
+					int counter = 0;
+					queryTempFiles = new File[queries.size()];
+					for (AbstractRepositoryQuery query : queries) {
+						List<AbstractRepositoryQuery> queryList = new ArrayList<AbstractRepositoryQuery>();
+						queryList.add(query);
+
+						String encodedName = "query";
+						try {
+							encodedName = URLEncoder.encode(query.getHandleIdentifier(),
+									ITasksUiConstants.FILENAME_ENCODING);
+						} catch (UnsupportedEncodingException e) {
+							StatusHandler.fail(e, "Could not determine path for context", false);
+						}
+
+						queryTempFiles[counter] = File.createTempFile(encodedName, ITasksUiConstants.FILE_EXTENSION,
+								tempDir);
+						queryTempFiles[counter].deleteOnExit();
+						TasksUiPlugin.getTaskListManager().getTaskListWriter().writeQueries(queryList,
+								queryTempFiles[counter]);
+						counter++;
 					}
-					
-					queryTempFiles[counter] = File.createTempFile(encodedName, ITasksUiConstants.FILE_EXTENSION,
-							tempDir);
-					queryTempFiles[counter].deleteOnExit();
-					TasksUiPlugin.getTaskListManager().getTaskListWriter().writeQueries(queryList,
-							queryTempFiles[counter]);
-					counter++;
+				}
+
+				// tasks
+				{
+					int counter = 0;
+					taskTempFiles = new File[tasks.size()];
+					for (AbstractTask task : tasks) {
+						String encodedName = "task" + counter;
+						try {
+							encodedName = URLEncoder.encode(task.getHandleIdentifier(),
+									ITasksUiConstants.FILENAME_ENCODING);
+						} catch (UnsupportedEncodingException e) {
+							StatusHandler.fail(e, "Could not determine path for context", false);
+						}
+
+						taskTempFiles[counter] = File.createTempFile(encodedName, ITasksUiConstants.FILE_EXTENSION,
+								tempDir);
+						taskTempFiles[counter].deleteOnExit();
+						TasksUiPlugin.getTaskListManager().getTaskListWriter().writeTask(task, taskTempFiles[counter]);
+						counter++;
+					}
 				}
 			} catch (IOException e) {
 				StatusHandler.fail(e, "Cannot create a temp query file for Drag&Drop", true);
@@ -119,16 +148,9 @@ class TaskListDragSourceListener implements DragSourceListener {
 			event.data = tasks.toArray();
 		} else if (FileTransfer.getInstance().isSupportedType(event.dataType)) {
 			// detect context paths
-			List<String> contextPaths = new ArrayList<String>();
-			for (Iterator<?> it = selection.iterator(); it.hasNext();) {
-				Object element = it.next();
-				if (element instanceof AbstractTask) {
-					File file = ContextCorePlugin.getContextManager().getFileForContext(
-							((AbstractTask) element).getHandleIdentifier());
-					if (file != null) {
-						contextPaths.add(file.getAbsolutePath());
-					}
-				}
+			String[] taskPaths = new String[taskTempFiles.length];
+			for (int i = 0; i < taskTempFiles.length; i++) {
+				taskPaths[i] = taskTempFiles[i].getAbsolutePath();
 			}
 
 			// detect query paths
@@ -138,9 +160,9 @@ class TaskListDragSourceListener implements DragSourceListener {
 			}
 			
 			// combine paths if needed
-			String[] paths = new String[contextPaths.size() + queryTempFiles.length];
-			System.arraycopy(contextPaths.toArray(), 0, paths, 0, contextPaths.size());
-			System.arraycopy(queryPaths, 0, paths, contextPaths.size(), queryTempFiles.length);
+			String[] paths = new String[taskTempFiles.length + queryTempFiles.length];
+			System.arraycopy(taskPaths, 0, paths, 0, taskTempFiles.length);
+			System.arraycopy(queryPaths, 0, paths, taskTempFiles.length, queryTempFiles.length);
 			
 			if (paths.length > 0) {
 				event.data = paths;

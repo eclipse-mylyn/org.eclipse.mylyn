@@ -47,7 +47,7 @@ public class TaskRepositoriesExternalizer {
 				file.createNewFile();
 
 			outputStream = new ZipOutputStream(new FileOutputStream(file));
-			writeRepositoriesToZipEntry(repositories, outputStream);
+			writeRepositories(repositories, outputStream);
 			outputStream.close();
 
 		} catch (IOException e) {
@@ -68,7 +68,7 @@ public class TaskRepositoriesExternalizer {
 	 * @param outputStream
 	 * @throws IOException
 	 */
-	public void writeRepositoriesToZipEntry(Collection<TaskRepository> repositories, ZipOutputStream outputStream)
+	public void writeRepositories(Collection<TaskRepository> repositories, ZipOutputStream outputStream)
 			throws IOException {
 		ZipEntry zipEntry = new ZipEntry(TaskRepositoryManager.OLD_REPOSITORIES_FILE);
 		outputStream.putNextEntry(zipEntry);

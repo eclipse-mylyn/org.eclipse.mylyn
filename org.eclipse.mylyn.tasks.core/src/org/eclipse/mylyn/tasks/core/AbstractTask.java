@@ -49,6 +49,8 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 
 	private boolean reminded = false;
 
+	private String categoryHandle = "";
+
 	private Set<AbstractTaskContainer> containers = new HashSet<AbstractTaskContainer>();
 
 	// ************ Synch ****************
@@ -448,6 +450,20 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 
 	public void setStale(boolean stale) {
 		this.stale = stale;
+	}
+
+	/**
+	 * deprecated
+	 */
+	public String getCategoryHandle() {
+		return categoryHandle;
+	}
+
+	/**
+	 * deprecated
+	 */
+	public void setCategoryHandle(String categoryHandle) {
+		this.categoryHandle = categoryHandle;
 	}
 
 }

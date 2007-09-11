@@ -11,8 +11,10 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -25,6 +27,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
@@ -39,6 +42,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -75,6 +79,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 
 	@Override
 	public boolean performDrop(Object data) {
+		boolean refreshView = false;
 		Object currentTarget = getCurrentTarget();
 		List<AbstractTask> tasksToMove = new ArrayList<AbstractTask>();
 		ISelection selection = ((TreeViewer) getViewer()).getSelection();
@@ -112,16 +117,52 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 				// otherwise it is queries
 				final String[] names = (String[]) data;
 				List<AbstractRepositoryQuery> queries = new ArrayList<AbstractRepositoryQuery>();
+				Map<AbstractTask, InteractionContext> taskContexts = new HashMap<AbstractTask, InteractionContext>();
 				Set<TaskRepository> repositories = new HashSet<TaskRepository>();
+
 				for (int i = 0; i < names.length; i++) {
 					String path = names[i];
 					File file = new File(path);
 					if (file.isFile()) {
-						queries.addAll(TasksUiPlugin.getTaskListManager().getTaskListWriter().readQueries(file));
-						repositories.addAll(TasksUiPlugin.getTaskListManager().getTaskListWriter().readRepositories(
-								file));
+						List<AbstractRepositoryQuery> readQueries = TasksUiPlugin.getTaskListManager()
+								.getTaskListWriter()
+								.readQueries(file);
+
+						if (readQueries.size() > 0) {
+							queries.addAll(readQueries);
+							repositories.addAll(TasksUiPlugin.getTaskListManager()
+									.getTaskListWriter()
+									.readRepositories(file));
+						} else {
+							List<AbstractTask> readTasks = TasksUiPlugin.getTaskListManager()
+									.getTaskListWriter()
+									.readTasks(file);
+							for (AbstractTask task : readTasks) {
+								taskContexts.put(task, ContextCorePlugin.getContextManager().loadContext(
+										task.getHandleIdentifier(), file));
+							}
+						}
+					}
+
+				}
+
+				// import data
+				for (AbstractTask loadedTask : taskContexts.keySet()) {
+					TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+					if (taskList.getTask(loadedTask.getHandleIdentifier()) != null) {
+						boolean confirmed = MessageDialog.openConfirm(getViewer().getControl().getShell(),
+								ITasksUiConstants.TITLE_DIALOG, "Task '" + loadedTask.getSummary()
+										+ "' already exists. Do you want to override it's context with the source?");
+						if (confirmed) {
+							ContextCorePlugin.getContextManager().importContext(taskContexts.get(loadedTask));
+						}
+					} else {
+						TasksUiPlugin.getTaskListManager().getTaskList().insertTask(loadedTask, null, null);
+						ContextCorePlugin.getContextManager().importContext(taskContexts.get(loadedTask));
+						refreshView = true;
 					}
 				}
+
 				if (queries.size() > 0) {
 					new QueryImportAction().importQueries(queries, repositories, getViewer().getControl().getShell());
 				}
@@ -165,6 +206,10 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 		if (newTask != null) {
 			StructuredSelection ss = new StructuredSelection(newTask);
 			getViewer().setSelection(ss);
+			refreshView = true;
+		}
+
+		if (refreshView) {
 			getViewer().refresh();
 		}
 

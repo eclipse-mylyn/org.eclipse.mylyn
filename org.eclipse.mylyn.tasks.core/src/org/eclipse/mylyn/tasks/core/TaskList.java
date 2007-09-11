@@ -714,6 +714,29 @@ public class TaskList {
 		return max;
 	}
 
+	/**
+	 * @since 2.1
+	 */
+	public final void insertTask(AbstractTask task, AbstractTaskCategory legacyCategory, AbstractTask parent) {
+		if (task.getCategoryHandle().length() > 0) {
+			AbstractTaskCategory category = this.getContainerForHandle(task.getCategoryHandle());
+
+			if (category != null) {
+				this.internalAddTask(task, category);
+			} else if (parent == null) {
+				this.internalAddRootTask(task);
+			}
+		} else if (legacyCategory != null && !(legacyCategory instanceof TaskArchive)
+				&& getCategories().contains(legacyCategory)) {
+			task.addParentContainer(legacyCategory);
+			legacyCategory.internalAddChild(task);
+		} else {
+			this.internalAddTask(task, this.getArchiveContainer());
+		}
+
+		this.setActive(task, task.isActive());
+	}
+
 // /**
 // * Orphaned hits arise when no query in the tasklist references a hit in the
 // * master list maintained by the tasklist. Orphaned hits don't span
