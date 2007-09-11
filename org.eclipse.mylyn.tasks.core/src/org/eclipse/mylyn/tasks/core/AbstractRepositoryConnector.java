@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
+import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 
 /**
  * Encapsulates common operations that can be performed on a task repository. Extend to connect with a Java API or WS
@@ -98,6 +99,7 @@ public abstract class AbstractRepositoryConnector {
 				repositoryTask = createTaskFromTaskData(repository, taskData, retrieveSubTasks, new SubProgressMonitor(
 						monitor, 1));
 				if (repositoryTask != null) {
+					repositoryTask.setSynchronizationState(RepositoryTaskSyncState.INCOMING);
 					taskList.addTask(repositoryTask);
 				}
 			}
