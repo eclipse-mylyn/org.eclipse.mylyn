@@ -14,6 +14,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.mylyn.internal.tasks.core.Person;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
@@ -27,6 +28,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
@@ -117,6 +119,15 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 					compositeDescriptor.icon = TasksUiImages.TASK;
 				} else if (element instanceof ScheduledTaskContainer) {
 					compositeDescriptor.icon = TasksUiImages.CALENDAR;
+				} else if (element instanceof Person) {
+					compositeDescriptor.icon = TasksUiImages.PERSON;
+					for (TaskRepository repository : TasksUiPlugin.getRepositoryManager().getAllRepositories()) {
+						if (!repository.isAnonymous()
+								&& repository.getUserName().equalsIgnoreCase(element.getHandleIdentifier())) {
+							compositeDescriptor.icon = TasksUiImages.PERSON_ME;
+							break;
+						}
+					}
 				}
 				return compositeDescriptor;
 			}
