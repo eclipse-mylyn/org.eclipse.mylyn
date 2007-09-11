@@ -11,6 +11,8 @@ package org.eclipse.mylyn.internal.context.core;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.eclipse.mylyn.context.core.IInteractionContextReader;
@@ -22,6 +24,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
 /**
  * @author Brock Janiczak
  * @author Mik Kersten (minor refactoring)
+ * @author Jevgeni Holodkov
  */
 public class SaxContextReader implements IInteractionContextReader {
 
@@ -31,7 +34,22 @@ public class SaxContextReader implements IInteractionContextReader {
 		ZipInputStream inputStream = null;
 		try {
 			inputStream = new ZipInputStream(new FileInputStream(file));
-			inputStream.getNextEntry();
+
+			// search for context entry
+			String encoded = URLEncoder.encode(handleIdentifier, InteractionContextManager.CONTEXT_FILENAME_ENCODING);
+			String contextFileName = encoded + InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD;
+			ZipEntry entry = inputStream.getNextEntry();
+			while (entry != null) {
+				if (contextFileName.equals(entry.getName())) {
+					break;
+				}
+				entry = inputStream.getNextEntry();
+			}
+
+			if (entry == null) {
+				return null;
+			}
+			
 			SaxContextContentHandler contentHandler = new SaxContextContentHandler(handleIdentifier);
 			XMLReader reader = XMLReaderFactory.createXMLReader();
 			reader.setContentHandler(contentHandler);

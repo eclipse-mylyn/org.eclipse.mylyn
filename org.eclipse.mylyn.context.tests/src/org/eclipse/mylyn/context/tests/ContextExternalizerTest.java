@@ -28,6 +28,8 @@ import org.eclipse.mylyn.internal.context.core.ScalingFactors;
  */
 public class ContextExternalizerTest extends AbstractContextTest {
 
+	private static final String CONTEXT_HANDLE = "context-externalization";
+
 	private InteractionContext context;
 
 	private ScalingFactors scaling;
@@ -36,7 +38,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		scaling = new ScalingFactors();
-		context = new InteractionContext("context-externalization", new ScalingFactors());
+		context = new InteractionContext(CONTEXT_HANDLE, new ScalingFactors());
 	}
 
 	@Override
@@ -59,7 +61,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		File zippedContextFile = new File(contextsDirectory, context.getHandleIdentifier()
 				+ InteractionContextManager.CONTEXT_FILE_EXTENSION);
 		assertTrue(zippedContextFile.exists());
-		InteractionContext loaded = externalizer.readContextFromXML("handle", zippedContextFile);
+		InteractionContext loaded = externalizer.readContextFromXML(CONTEXT_HANDLE, zippedContextFile);
 		assertNotNull(loaded);
 
 		assertEquals("foobar", loaded.getContentLimitedTo());
@@ -71,10 +73,10 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		assertTrue(file.getAbsolutePath(), file.exists());
 		InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
 		externalizer.setReader(new DomContextReader());
-		InteractionContext domReadContext = externalizer.readContextFromXML("handle", file);
+		InteractionContext domReadContext = externalizer.readContextFromXML(CONTEXT_HANDLE, file);
 
 		externalizer.setReader(new SaxContextReader());
-		InteractionContext saxReadContext = externalizer.readContextFromXML("handle", file);
+		InteractionContext saxReadContext = externalizer.readContextFromXML(CONTEXT_HANDLE, file);
 		assertEquals(284, saxReadContext.getInteractionHistory().size()); // known
 		// from
 		// testdata
@@ -92,9 +94,9 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		assertEquals(domOut.length(), saxOut.length());
 
 		externalizer.setReader(new DomContextReader());
-		InteractionContext domReadAfterWrite = externalizer.readContextFromXML("handle", file);
+		InteractionContext domReadAfterWrite = externalizer.readContextFromXML(CONTEXT_HANDLE, file);
 		externalizer.setReader(new SaxContextReader());
-		InteractionContext saxReadAfterWrite = externalizer.readContextFromXML("handle", file);
+		InteractionContext saxReadAfterWrite = externalizer.readContextFromXML(CONTEXT_HANDLE, file);
 
 		assertEquals(domReadAfterWrite, saxReadAfterWrite);
 	}
@@ -153,7 +155,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		File zippedContextFile = new File(contextsDirectory, context.getHandleIdentifier()
 				+ InteractionContextManager.CONTEXT_FILE_EXTENSION);
 		assertTrue(zippedContextFile.exists());
-		InteractionContext loaded = externalizer.readContextFromXML("handle", zippedContextFile);
+		InteractionContext loaded = externalizer.readContextFromXML(CONTEXT_HANDLE, zippedContextFile);
 		assertNotNull(loaded);
 		assertEquals(3, loaded.getInteractionHistory().size());
 		IInteractionElement loadedNode = loaded.get("1");

@@ -43,6 +43,7 @@ import org.eclipse.mylyn.monitor.core.StatusHandler;
  * This is the core class resposible for context management.
  * 
  * @author Mik Kersten
+ * @author Jevgeni Holodkov
  */
 public class InteractionContextManager {
 
@@ -633,8 +634,11 @@ public class InteractionContextManager {
 	 * @return false if the map could not be read for any reason
 	 */
 	public InteractionContext loadContext(String handleIdentifier) {
-		InteractionContext loadedContext = externalizer.readContextFromXML(handleIdentifier,
-				getFileForContext(handleIdentifier));
+		return loadContext(handleIdentifier, getFileForContext(handleIdentifier));
+	}
+
+	public InteractionContext loadContext(String handleIdentifier, File file) {
+		InteractionContext loadedContext = externalizer.readContextFromXML(handleIdentifier, file);
 		if (loadedContext == null) {
 			return new InteractionContext(handleIdentifier, InteractionContextManager.getScalingFactors());
 		} else {
@@ -670,6 +674,24 @@ public class InteractionContextManager {
 			if (!wasPaused) {
 				setContextCapturePaused(false);
 			}
+		}
+	}
+
+	/**
+	 * Creates a file for specified context and activates it
+	 */
+	public void importContext(InteractionContext context) {
+		externalizer.writeContextToXml(context, getFileForContext(context.getHandleIdentifier()));
+		if (contextFiles == null) {
+			contextFiles = new HashSet<File>();
+		}
+		contextFiles.add(getFileForContext(context.getHandleIdentifier()));
+		activeContext.getContextMap().put(context.getHandleIdentifier(), context);
+
+		if (!activationHistorySuppressed) {
+			processActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND,
+					ACTIVITY_STRUCTUREKIND_ACTIVATION, context.getHandleIdentifier(), ACTIVITY_ORIGINID_WORKBENCH,
+					null, ACTIVITY_DELTA_ACTIVATED, 1f));
 		}
 	}
 

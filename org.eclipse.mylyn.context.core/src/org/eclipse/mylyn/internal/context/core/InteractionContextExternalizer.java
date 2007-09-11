@@ -25,6 +25,7 @@ import org.eclipse.mylyn.monitor.core.StatusHandler;
 
 /**
  * @author Mik Kersten
+ * @author Jevgeni Holodkov
  */
 public class InteractionContextExternalizer {
 
@@ -69,22 +70,27 @@ public class InteractionContextExternalizer {
 			if (!file.exists()) {
 				file.createNewFile();
 			}
-			String handleIdentifier = context.getHandleIdentifier();
-			String encoded = URLEncoder.encode(handleIdentifier, InteractionContextManager.CONTEXT_FILENAME_ENCODING);
 			ZipOutputStream outputStream = new ZipOutputStream(new FileOutputStream(file));
-			ZipEntry zipEntry = new ZipEntry(encoded + InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD);
-			outputStream.putNextEntry(zipEntry);
-			outputStream.setMethod(ZipOutputStream.DEFLATED);
-
-			// OutputStream stream = new FileOutputStream(file);
-			writer.setOutputStream(outputStream);
-			writer.writeContextToStream(context);
-			outputStream.closeEntry();
-			outputStream.flush();
+			writeContext(context, outputStream);
 			outputStream.close();
 		} catch (IOException e) {
 			StatusHandler.fail(e, "Could not write: " + file.getAbsolutePath(), true);
 		}
+	}
+	
+
+	public void writeContext(InteractionContext context, ZipOutputStream outputStream) throws IOException {
+		String handleIdentifier = context.getHandleIdentifier();
+		String encoded = URLEncoder.encode(handleIdentifier, InteractionContextManager.CONTEXT_FILENAME_ENCODING);
+		ZipEntry zipEntry = new ZipEntry(encoded + InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD);
+		outputStream.putNextEntry(zipEntry);
+		outputStream.setMethod(ZipOutputStream.DEFLATED);
+
+		// OutputStream stream = new FileOutputStream(file);
+		writer.setOutputStream(outputStream);
+		writer.writeContextToStream(context);
+		outputStream.flush();
+		outputStream.closeEntry();
 	}
 
 	public InteractionContext readContextFromXML(String handleIdentifier, File file) {
@@ -115,4 +121,5 @@ public class InteractionContextExternalizer {
 	public void setWriter(IInteractionContextWriter writer) {
 		this.writer = writer;
 	}
+
 }
