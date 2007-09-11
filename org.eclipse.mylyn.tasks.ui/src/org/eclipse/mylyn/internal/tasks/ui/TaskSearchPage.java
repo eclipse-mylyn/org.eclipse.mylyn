@@ -381,6 +381,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 					}
 					index++;
 				}
+				displayQueryPage(repositoryCombo.getSelectionIndex());
 			}
 		}
 
