@@ -42,6 +42,8 @@ public class WebClientUtil {
 
 	private static final int HTTPS_PORT = 443;
 
+	private static final int SOCKS_PORT = 1080;
+
 	public static void initCommonsLoggingSettings() {
 		// TODO: move?
 		System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
@@ -202,7 +204,9 @@ public class WebClientUtil {
 	}
 
 	/**
-	 * utility method, proxy should be obtained via TaskRepository.getProxy() *
+	 * utility method, proxy should be obtained via TaskRepository.getProxy()
+	 * 
+	 * TODO: deprecate
 	 * 
 	 * @return proxy as defined in platform proxy settings property page, Proxy.NO_PROXY otherwise
 	 */
@@ -225,4 +229,85 @@ public class WebClientUtil {
 		return proxy;
 	}
 
+	/**
+	 * utility method, proxy should be obtained via TaskRepository.getProxy()
+	 * 
+	 * @return proxy as defined in platform proxy settings property page, Proxy.NO_PROXY otherwise
+	 */
+	public static Proxy getPlatformProxy(String host) {
+		Proxy proxy = Proxy.NO_PROXY;
+		Type proxyType = Type.DIRECT;
+		IProxyService service = WebCorePlugin.getProxyService();
+		if (service != null && service.isProxiesEnabled()) {
+			IProxyData proxyDataInUse = null;
+
+			IProxyData httpProxy = service.getProxyDataForHost(host, IProxyData.HTTP_PROXY_TYPE);
+			IProxyData httpsProxy = service.getProxyDataForHost(host, IProxyData.HTTPS_PROXY_TYPE);
+			// See TODO below regarding socks
+			//IProxyData socksProxy = service.getProxyDataForHost(host, IProxyData.SOCKS_PROXY_TYPE);
+
+			if (host.startsWith("https")) {
+				if (httpsProxy != null) {
+					proxyDataInUse = httpsProxy;
+				} else if (httpProxy != null) {
+					proxyDataInUse = httpProxy;
+				}
+			} else if (host.startsWith("http")) {
+				if (httpProxy != null) {
+					proxyDataInUse = httpProxy;
+				}
+			}
+			// TODO: Support for SOCKS handled by Eclipse platform
+			// currently hosts in exception list may not be excluded so will require custom socket construction in httpclient.
+//			else {
+//				if (socksProxy != null) {
+//					proxyDataInUse = socksProxy;
+//				}
+//				if (httpsProxy != null) {
+//					proxyDataInUse = httpsProxy;
+//				} else if (httpProxy != null) {
+//					proxyDataInUse = httpProxy;
+//				}
+//			}
+
+			if (proxyDataInUse != null) {
+				int proxyPort = proxyDataInUse.getPort();
+				if (proxyDataInUse.getType().equals(IProxyData.HTTP_PROXY_TYPE)) {
+					proxyType = Type.HTTP;
+					if (proxyPort == -1) {
+						proxyPort = HTTP_PORT;
+					}
+				} else if (proxyDataInUse.getType().equals(IProxyData.HTTPS_PROXY_TYPE)) {
+					proxyType = Type.HTTP;
+					if (proxyPort == -1) {
+						proxyPort = HTTPS_PORT;
+					}
+				} else {
+					proxyType = Type.SOCKS;
+					if (proxyPort == -1) {
+						proxyPort = SOCKS_PORT;
+					}
+				}
+
+				String proxyHost = proxyDataInUse.getHost();
+
+				String proxyUserName = proxyDataInUse.getUserId();
+				String proxyPassword = proxyDataInUse.getPassword();
+
+				// Change the IProxyData default port to the Java default port
+				//if (proxyPort == -1)
+				//	proxyPort = 0;
+
+				InetSocketAddress sockAddr = new InetSocketAddress(proxyHost, proxyPort);
+				if (proxyUserName != null && proxyUserName.length() > 0 && proxyPassword != null
+						&& proxyPassword.length() > 0) {
+					proxy = new AuthenticatedProxy(proxyType, sockAddr, proxyUserName, proxyPassword);
+				} else {
+					proxy = new Proxy(proxyType, sockAddr);
+				}
+
+			}
+		}
+		return proxy;
+	}
 }
