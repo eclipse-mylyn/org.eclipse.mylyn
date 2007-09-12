@@ -18,7 +18,6 @@ import java.util.Date;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskListNotification;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
@@ -101,15 +100,13 @@ public class TaskListToolTipHandler {
 		}
 	}
 
-	private String getDetailsText(AbstractTaskContainer element) {
-		TreeViewer viewer = TaskListView.getFromActivePerspective().getViewer();
-
+	private String getDetailsText(AbstractTaskContainer element, TaskListView taskListView) {
 		if (element instanceof ScheduledTaskContainer) {
 			ScheduledTaskContainer container = (ScheduledTaskContainer) element;
 			int estimateTotal = 0;
 			long elapsedTotal = 0;
-			if (viewer != null) {
-				Object[] children = ((TaskListContentProvider) viewer.getContentProvider()).getChildren(element);
+			if (taskListView != null) {
+				Object[] children = ((TaskListContentProvider)taskListView.getViewer().getContentProvider()).getChildren(element);
 				for (Object object : children) {
 					if (object instanceof AbstractTask) {
 						estimateTotal += ((AbstractTask) object).getEstimateTimeHours();
@@ -260,16 +257,14 @@ public class TaskListToolTipHandler {
 		return null;
 	}
 
-	private ProgressData getProgressData(AbstractTaskContainer element) {
+	private ProgressData getProgressData(AbstractTaskContainer element, TaskListView taskListView) {
 		if (element instanceof AbstractTask) {
 			return null;
 		}
 		Object[] children = new Object[0];
 
-		TreeViewer viewer = TaskListView.getFromActivePerspective().getViewer();
-
-		if (element instanceof ScheduledTaskContainer && viewer != null) {
-			children = ((TaskListContentProvider) viewer.getContentProvider()).getChildren(element);
+		if (element instanceof ScheduledTaskContainer && taskListView != null) {
+			children = ((TaskListContentProvider)taskListView.getViewer().getContentProvider()).getChildren(element);
 		} else {
 			children = element.getChildren().toArray();
 		}
@@ -381,7 +376,10 @@ public class TaskListToolTipHandler {
 				}
 
 				tipWidget = widget;
-				showTooltip(control.toDisplay(widgetPosition));
+				
+				TaskListView taskListView = TaskListView.getFromActivePerspective();
+				
+				showTooltip(control.toDisplay(widgetPosition), taskListView);
 			}
 
 		});
@@ -430,7 +428,7 @@ public class TaskListToolTipHandler {
 		}
 	}
 
-	private void showTooltip(Point location) {
+	private void showTooltip(Point location, TaskListView taskListView) {
 		hideTooltip();
 
 		AbstractTaskContainer element = getTaskListElement(tipWidget);
@@ -458,7 +456,7 @@ public class TaskListToolTipHandler {
 
 		addIconAndLabel(tipShell, getImage(element), getTitleText(element));
 
-		String detailsText = getDetailsText(element);
+		String detailsText = getDetailsText(element, taskListView);
 		if (detailsText != null) {
 			addIconAndLabel(tipShell, null, detailsText);
 		}
@@ -478,7 +476,7 @@ public class TaskListToolTipHandler {
 			addIconAndLabel(tipShell, TasksUiImages.getImage(TasksUiImages.OVERLAY_INCOMMING), incommingText);
 		}
 
-		ProgressData progress = getProgressData(element);
+		ProgressData progress = getProgressData(element, taskListView);
 		if (progress != null) {
 			addIconAndLabel(tipShell, null, progress.text);
 
