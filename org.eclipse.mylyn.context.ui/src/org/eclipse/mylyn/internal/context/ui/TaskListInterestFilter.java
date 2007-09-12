@@ -69,8 +69,8 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 
 	// TODO: make meta-context more explicit
 	protected boolean isInteresting(Object parent, AbstractTask task) {
-		return shouldAlwaysShow(parent, task, !TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				TasksUiPreferenceConstants.FILTER_SUBTASKS));
+		return shouldAlwaysShow(parent, task, TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
+				TasksUiPreferenceConstants.GROUP_SUBTASKS));
 	}
 
 	@Override
@@ -89,7 +89,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		if (!checkSubTasks) {
 			return false;
 		}
-		if (TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(TasksUiPreferenceConstants.FILTER_SUBTASKS)) {
+		if (!TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(TasksUiPreferenceConstants.GROUP_SUBTASKS)) {
 			return false;
 		}
 		if (task.getChildren() != null && task.getChildren().size() > 0) {
