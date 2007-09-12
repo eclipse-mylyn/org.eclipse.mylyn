@@ -234,25 +234,25 @@ public class WebClientUtil {
 	 * 
 	 * @return proxy as defined in platform proxy settings property page, Proxy.NO_PROXY otherwise
 	 */
-	public static Proxy getPlatformProxy(String host) {
+	public static Proxy getPlatformProxy(String url) {
 		Proxy proxy = Proxy.NO_PROXY;
 		Type proxyType = Type.DIRECT;
 		IProxyService service = WebCorePlugin.getProxyService();
 		if (service != null && service.isProxiesEnabled()) {
 			IProxyData proxyDataInUse = null;
 
-			IProxyData httpProxy = service.getProxyDataForHost(host, IProxyData.HTTP_PROXY_TYPE);
-			IProxyData httpsProxy = service.getProxyDataForHost(host, IProxyData.HTTPS_PROXY_TYPE);
+			IProxyData httpProxy = service.getProxyDataForHost(getDomain(url), IProxyData.HTTP_PROXY_TYPE);
+			IProxyData httpsProxy = service.getProxyDataForHost(getDomain(url), IProxyData.HTTPS_PROXY_TYPE);
 			// See TODO below regarding socks
-			//IProxyData socksProxy = service.getProxyDataForHost(host, IProxyData.SOCKS_PROXY_TYPE);
+			//IProxyData socksProxy = service.getProxyDataForHost(getDomain(url), IProxyData.SOCKS_PROXY_TYPE);
 
-			if (host.startsWith("https")) {
+			if (url.startsWith("https")) {
 				if (httpsProxy != null) {
 					proxyDataInUse = httpsProxy;
 				} else if (httpProxy != null) {
 					proxyDataInUse = httpProxy;
 				}
-			} else if (host.startsWith("http")) {
+			} else if (url.startsWith("http")) {
 				if (httpProxy != null) {
 					proxyDataInUse = httpProxy;
 				}
@@ -290,7 +290,6 @@ public class WebClientUtil {
 				}
 
 				String proxyHost = proxyDataInUse.getHost();
-
 				String proxyUserName = proxyDataInUse.getUserId();
 				String proxyPassword = proxyDataInUse.getPassword();
 
