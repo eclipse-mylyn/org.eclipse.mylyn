@@ -15,28 +15,29 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Rob Elves
+ * @author Mik Kersten
  */
-public class FilterSubTasksAction extends Action {
+public class GroupSubTasksAction extends Action {
 
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.filter.subtasks";
 
-	private static final String LABEL = "Filter SubTasks";
+	private static final String LABEL = "Group Subtasks";
 
 	private final TaskListView view;
 
-	public FilterSubTasksAction(TaskListView view) {
+	public GroupSubTasksAction(TaskListView view) {
 		this.view = view;
 		setText(LABEL);
 		setToolTipText(LABEL);
 		setId(ID);
 		// setImageDescriptor(TasksUiImages.FILTER_COMPLETE);
 		setChecked(TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				TasksUiPreferenceConstants.FILTER_SUBTASKS));
+				TasksUiPreferenceConstants.GROUP_SUBTASKS));
 	}
 
 	@Override
 	public void run() {
-		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TasksUiPreferenceConstants.FILTER_SUBTASKS,
+		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TasksUiPreferenceConstants.GROUP_SUBTASKS,
 				isChecked());
 		// TODO: refresh not getting rid of subtasks
 		try {

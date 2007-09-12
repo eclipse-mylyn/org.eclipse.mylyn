@@ -31,7 +31,7 @@ public final class TasksUiPreferenceConstants {
 
 	public static final String FILTER_PRIORITY = "org.eclipse.mylyn.tasks.ui.filters.priority";
 
-	public static final String FILTER_SUBTASKS = "org.eclipse.mylyn.tasks.ui.filters.subtasks";
+	public static final String GROUP_SUBTASKS = "org.eclipse.mylyn.tasks.ui.group.subtasks";
 
 	public static final String OVERLAYS_INCOMING_TIGHT = "org.eclipse.mylyn.tasks.ui.overlays.incoming.tight";
 

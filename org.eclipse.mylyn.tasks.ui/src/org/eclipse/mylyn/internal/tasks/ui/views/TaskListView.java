@@ -69,7 +69,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.DeleteAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ExpandAllAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.FilterArchiveContainerAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.FilterCompletedTasksAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.FilterSubTasksAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.GroupSubTasksAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.GoIntoAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.GoUpAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.LinkWithEditorAction;
@@ -246,7 +246,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private FilterCompletedTasksAction filterCompleteTask;
 
-	private FilterSubTasksAction filterSubTasksAction;
+	private GroupSubTasksAction filterSubTasksAction;
 
 	private SynchronizeAutomaticallyAction synchronizeAutomatically;
 
@@ -1244,7 +1244,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		propertiesAction = new TaskListElementPropertiesAction(this.getViewer());
 		openWithBrowser = new OpenWithBrowserAction();
 		filterCompleteTask = new FilterCompletedTasksAction(this);
-		filterSubTasksAction = new FilterSubTasksAction(this);
+		filterSubTasksAction = new GroupSubTasksAction(this);
 		synchronizeAutomatically = new SynchronizeAutomaticallyAction();
 		openPreferencesAction = new OpenTasksUiPreferencesAction();
 		filterArchiveCategory = new FilterArchiveContainerAction(this);

@@ -17,8 +17,8 @@ public class TaskCompletionFilter extends AbstractTaskListFilter {
 
 	@Override
 	public boolean select(Object parent, Object element) {
-		boolean exposeSubTasks = !TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				TasksUiPreferenceConstants.FILTER_SUBTASKS);
+		boolean exposeSubTasks = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
+				TasksUiPreferenceConstants.GROUP_SUBTASKS);
 		if (element instanceof AbstractTask) {
 			AbstractTask task = (AbstractTask) element;
 			if (shouldAlwaysShow(parent, task, exposeSubTasks)) {

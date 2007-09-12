@@ -331,7 +331,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 	}
 
 	private boolean showHasActiveChild(AbstractTaskContainer container) {
-		if (TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(TasksUiPreferenceConstants.FILTER_SUBTASKS)) {
+		if (!TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(TasksUiPreferenceConstants.GROUP_SUBTASKS)) {
 			return false;
 		}
 
@@ -348,7 +348,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 	}
 
 	private boolean showHasChildrenPastDue(AbstractTaskContainer container) {
-		if (TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(TasksUiPreferenceConstants.FILTER_SUBTASKS)) {
+		if (!TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(TasksUiPreferenceConstants.GROUP_SUBTASKS)) {
 			return false;
 		}
 

@@ -101,9 +101,9 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	}
 
 	private boolean taskHasUnfilteredChildren(AbstractTask parent) {
-		boolean filterSubtasks = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				TasksUiPreferenceConstants.FILTER_SUBTASKS);
-		if (filterSubtasks)
+		boolean groupSubtasks = !TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
+				TasksUiPreferenceConstants.GROUP_SUBTASKS);
+		if (groupSubtasks)
 			return false;
 		Set<AbstractTask> children = parent.getChildren();
 		if (children != null) {
@@ -222,8 +222,8 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 
 	private boolean shouldAlwaysShow(Object parent, AbstractTask task) {
 		for (AbstractTaskListFilter filter : this.taskListView.getFilters()) {
-			if (filter.shouldAlwaysShow(parent, task, !TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-					TasksUiPreferenceConstants.FILTER_SUBTASKS))) {
+			if (filter.shouldAlwaysShow(parent, task, TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
+					TasksUiPreferenceConstants.GROUP_SUBTASKS))) {
 				return true;
 			}
 		}

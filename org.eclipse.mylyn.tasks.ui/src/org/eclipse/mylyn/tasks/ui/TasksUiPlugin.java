@@ -618,7 +618,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	@Override
 	protected void initializeDefaultPreferences(IPreferenceStore store) {
 		store.setDefault(ContextPreferenceContstants.PREF_DATA_DIR, getDefaultDataDirectory());
-		store.setDefault(TasksUiPreferenceConstants.FILTER_SUBTASKS, true);
+		store.setDefault(TasksUiPreferenceConstants.GROUP_SUBTASKS, true);
 		store.setDefault(TasksUiPreferenceConstants.NOTIFICATIONS_ENABLED, true);
 		store.setDefault(TasksUiPreferenceConstants.FILTER_PRIORITY, PriorityLevel.P5.toString());
 		store.setDefault(TasksUiPreferenceConstants.EDITOR_TASKS_RICH, true);
