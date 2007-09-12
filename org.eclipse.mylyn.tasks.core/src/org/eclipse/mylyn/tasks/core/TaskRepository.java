@@ -420,7 +420,7 @@ public class TaskRepository {
 	public Proxy getProxy() {
 		Proxy proxy = Proxy.NO_PROXY;
 		if (isDefaultProxyEnabled()) {
-			proxy = WebClientUtil.getPlatformProxy();
+			proxy = WebClientUtil.getPlatformProxy(getUrl());
 		} else {
 
 			String proxyHost = getProperty(PROXY_HOSTNAME);
