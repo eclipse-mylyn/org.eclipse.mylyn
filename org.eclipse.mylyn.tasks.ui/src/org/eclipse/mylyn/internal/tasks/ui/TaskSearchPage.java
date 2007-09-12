@@ -91,6 +91,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		saveDialogSettings();
 		String key = keyText.getText();
 		if (key != null && key.trim().length() > 0) {
+			key = key.trim();
 			boolean openSuccessful = TasksUiUtil.openRepositoryTask(repository, key);
 			if (!openSuccessful) {
 				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
@@ -162,9 +163,9 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		TaskListView taskListView = TaskListView.getFromActivePerspective();
 		if (taskListView != null) {
 			findText = taskListView.getFilteredTree().getFilterControl().getText();
-			if (findText != null && findText.trim().length() > 0 && isTaskKeyCandidate(findText)) {
+			if (findText != null && findText.trim().length() > 0 && isTaskKeyCandidate(findText.trim())) {
 				pageContainer.setPerformActionEnabled(true);
-				keyText.setText(findText);
+				keyText.setText(findText.trim());
 				keyText.setFocus();
 			}
 		}
@@ -361,7 +362,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 		AbstractTask selectedTask = null;
 		if (editor instanceof TaskEditor && ((TaskEditor) editor).getEditorInput() instanceof TaskEditorInput) {
-			selectedTask = ((TaskEditorInput) ((TaskEditor) editor).getEditorInput()).getTask(); 
+			selectedTask = ((TaskEditorInput) ((TaskEditor) editor).getEditorInput()).getTask();
 		}
 		if (selectedTask == null) {
 			TaskListView taskListView = TaskListView.getFromActivePerspective();
@@ -393,8 +394,8 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			TextTransfer transfer = TextTransfer.getInstance();
 			String contents = (String) clipboard.getContents(transfer);
 			if (contents != null) {
-				if (isTaskKeyCandidate(contents)) {
-					keyText.setText(contents);
+				if (isTaskKeyCandidate(contents.trim())) {
+					keyText.setText(contents.trim());
 					keyText.setFocus();
 					keyText.setSelection(0, keyText.getText().length());
 				}
