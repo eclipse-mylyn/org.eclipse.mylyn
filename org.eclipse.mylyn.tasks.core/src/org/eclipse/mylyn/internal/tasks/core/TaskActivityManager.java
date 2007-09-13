@@ -744,4 +744,14 @@ public class TaskActivityManager {
 		}
 		setScheduledFor(newTask, newTaskSchedule.getTime());
 	}
+
+	public boolean isDueThisWeek(AbstractTask task) {
+		Date due = task.getDueDate();
+		if (due != null && repositoryManager.isOwnedByUser(task)) {
+			Calendar cal = TaskActivityUtil.getCalendar();
+			cal.setTime(due);
+			return TaskActivityUtil.isThisWeek(cal);
+		}
+		return false;
+	}
 }

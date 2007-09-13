@@ -56,7 +56,6 @@ public class TaskActivityUtil {
 	}
 
 	public static Calendar snapStartOfWorkWeek(Calendar cal) {
-		cal.setFirstDayOfWeek(TaskActivityManager.getInstance().getStartDay());
 		cal.set(Calendar.DAY_OF_WEEK, TaskActivityManager.getInstance().getStartDay());
 		snapStartOfDay(cal);
 		return cal;
