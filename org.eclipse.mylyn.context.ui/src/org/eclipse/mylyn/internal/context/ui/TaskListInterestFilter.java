@@ -126,8 +126,9 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		if (parent instanceof ScheduledTaskContainer) {
 			return shouldShowInFocusedWorkweekDateContainer(parent, task);
 		} else {
-			return TaskActivityManager.getInstance().isScheduledForThisWeek(task)
-					|| TaskActivityManager.getInstance().isScheduledForToday(task) || task.isPastReminder();
+			return TasksUiPlugin.getTaskActivityManager().isScheduledForThisWeek(task)
+					|| TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task) || task.isPastReminder()
+					|| TasksUiPlugin.getTaskActivityManager().isDueThisWeek(task);
 		}
 	}
 
