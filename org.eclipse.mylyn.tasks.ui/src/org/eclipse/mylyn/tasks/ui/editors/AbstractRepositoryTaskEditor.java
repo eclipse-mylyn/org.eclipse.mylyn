@@ -1982,7 +1982,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 			expandableComposite.addExpansionListener(new ExpansionAdapter() {
 				public void expansionStateChanged(ExpansionEvent e) {
-					form.reflow(true);
+					resetLayout();
 				}
 			});
 
@@ -2052,7 +2052,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				public void linkActivated(HyperlinkEvent e) {
 					expandableComposite.setExpanded(!expandableComposite.isExpanded());
 					toolbarButtonComp.setVisible(expandableComposite.isExpanded());
-					form.reflow(true);
+					resetLayout();
 				}
 
 				@Override
@@ -2660,8 +2660,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				comp = comp.getParent();
 			}
 		}
-
-		form.reflow(true);
+		resetLayout();
 	}
 
 	/**
@@ -3507,5 +3506,13 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			Text textField = createTextField(peopleComposite, assignedAttribute, SWT.FLAT | SWT.READ_ONLY);
 			GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).applyTo(textField);
 		}
+	}
+
+	/**
+	 * force a re-layout of entire form
+	 */
+	protected void resetLayout() {
+		form.layout(true, true);
+		form.reflow(false);
 	}
 }
