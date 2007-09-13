@@ -288,24 +288,32 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	 * @return all children who aren't already revealed as a sub task
 	 */
 	private List<AbstractTaskContainer> getFilteredRootChildren(AbstractTaskContainer parent) {
-		Set<AbstractTask> parentTasks = parent.getChildren();
-		Set<AbstractTaskContainer> parents = new HashSet<AbstractTaskContainer>();
-		Set<AbstractTask> children = new HashSet<AbstractTask>();
-		// get all children
-		for (AbstractTask element : parentTasks) {
-			for (AbstractTask abstractTask : element.getChildren()) {
-				if (!filter(element, abstractTask)) {
-					children.add(abstractTask);
+		List<AbstractTaskContainer> result = new ArrayList<AbstractTaskContainer>();
+		if (TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(TasksUiPreferenceConstants.GROUP_SUBTASKS)) {
+			Set<AbstractTask> parentTasks = parent.getChildren();
+			Set<AbstractTaskContainer> parents = new HashSet<AbstractTaskContainer>();
+			Set<AbstractTask> children = new HashSet<AbstractTask>();
+			// get all children
+			for (AbstractTask element : parentTasks) {
+				for (AbstractTask abstractTask : element.getChildren()) {
+					if (!filter(element, abstractTask)) {
+						children.add(abstractTask);
+					}
+				}
+			}
+			for (AbstractTask task : parentTasks) {
+				if (!filter(parent, task) && !children.contains(task)) {
+					parents.add(task);
+				}
+			}
+			result.addAll(parents);
+		} else {
+			for (AbstractTaskContainer element : parent.getChildren()) {
+				if (!filter(parent, element)) {
+					result.add(element);
 				}
 			}
 		}
-		for (AbstractTask task : parentTasks) {
-			if (!filter(parent, task) && !children.contains(task)) {
-				parents.add(task);
-			}
-		}
-		List<AbstractTaskContainer> result = new ArrayList<AbstractTaskContainer>();
-		result.addAll(parents);
 		return result;
 	}
 
