@@ -175,7 +175,6 @@ public class ScheduledTaskContainer extends AbstractTaskCategory {
 			Calendar end = Calendar.getInstance();
 			end.set(5000, 12, 1);
 			for (AbstractTask task : activityManager.getDueTasks(beginning, getStart())) {
-				// TODO: Where to get this answer without relying on ui?
 				if (activityManager.isOverdue(task)) {
 					children.add(task);
 				}
@@ -189,13 +188,21 @@ public class ScheduledTaskContainer extends AbstractTaskCategory {
 			}
 			children.addAll(activityManager.getActiveTasks(getStart(), getEnd()));
 			children.addAll(activityManager.getScheduledTasks(getStart(), getEnd()));
-			children.addAll(activityManager.getDueTasks(getStart(), getEnd()));
+			for (AbstractTask task : activityManager.getDueTasks(getStart(), getEnd())) {
+				if (activityManager.isOwnedByUser(task)) {
+					children.add(task);
+				}
+			}
 
 			// if not scheduled or due in future, and is active, place in today bin
 			AbstractTask activeTask = activityManager.getActiveTask();
 			if (activeTask != null && !children.contains(activeTask)) {
-				Set<AbstractTask> futureScheduled = activityManager.getDueTasks(getStart(), end);
-				futureScheduled.addAll(activityManager.getScheduledTasks(getStart(), end));
+				Set<AbstractTask> futureScheduled = activityManager.getScheduledTasks(getStart(), end);
+				for (AbstractTask task : activityManager.getDueTasks(getStart(), end)) {
+					if (activityManager.isOwnedByUser(task)) {
+						futureScheduled.add(task);
+					}
+				}
 				if (!futureScheduled.contains(activeTask)) {
 					children.add(activeTask);
 				}
@@ -203,7 +210,11 @@ public class ScheduledTaskContainer extends AbstractTaskCategory {
 			return children;
 		} else if (isFuture()) {
 			children.addAll(activityManager.getScheduledTasks(getStart(), getEnd()));
-			children.addAll(activityManager.getDueTasks(getStart(), getEnd()));
+			for (AbstractTask task : activityManager.getDueTasks(getStart(), getEnd())) {
+				if (activityManager.isOwnedByUser(task)) {
+					children.add(task);
+				}
+			}
 			return children;
 		} else {
 			children.addAll(activityManager.getActiveTasks(getStart(), getEnd()));
@@ -211,4 +222,5 @@ public class ScheduledTaskContainer extends AbstractTaskCategory {
 
 		}
 	}
+
 }

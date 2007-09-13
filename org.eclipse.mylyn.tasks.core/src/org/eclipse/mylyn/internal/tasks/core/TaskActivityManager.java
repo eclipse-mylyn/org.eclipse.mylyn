@@ -494,6 +494,10 @@ public class TaskActivityManager {
 				&& repositoryManager.isOwnedByUser(task);
 	}
 
+	public boolean isOwnedByUser(AbstractTask task) {
+		return repositoryManager.isOwnedByUser(task);
+	}
+
 	public boolean isActiveThisWeek(AbstractTask task) {
 		Calendar calStart = Calendar.getInstance();
 		TaskActivityUtil.snapStartOfWorkWeek(calStart);
