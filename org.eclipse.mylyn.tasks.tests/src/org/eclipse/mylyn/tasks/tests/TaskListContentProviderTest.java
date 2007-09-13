@@ -35,7 +35,7 @@ public class TaskListContentProviderTest extends TestCase {
 		TaskListView.openInActivePerspective();
 		view = TaskListView.getFromActivePerspective();
 		provider = (TaskListContentProvider) view.getViewer().getContentProvider();
-		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TasksUiPreferenceConstants.GROUP_SUBTASKS, false);
+		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TasksUiPreferenceConstants.GROUP_SUBTASKS, true);
 		view.clearFilters(true);
 		view.addFilter(view.getCompleteFilter());
 		taskList = TasksUiPlugin.getTaskListManager().getTaskList();
