@@ -233,6 +233,7 @@ public class WebClientUtil {
 	 * utility method, proxy should be obtained via TaskRepository.getProxy()
 	 * 
 	 * @return proxy as defined in platform proxy settings property page, Proxy.NO_PROXY otherwise
+	 * @since 2.1
 	 */
 	public static Proxy getPlatformProxy(String url) {
 		Proxy proxy = Proxy.NO_PROXY;
