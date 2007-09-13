@@ -655,8 +655,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 				};
 				activateAction.setImageDescriptor(TasksUiImages.TASK_ACTIVE_CENTERED);
-				activateAction.setToolTipText("Toggle Activation");
+				activateAction.setToolTipText("Activate/Deactivate Task");
 				activateAction.setChecked(repositoryTask.isActive());
+				toolBarManager.add(new Separator("activation"));
 				toolBarManager.add(activateAction);
 			}
 
