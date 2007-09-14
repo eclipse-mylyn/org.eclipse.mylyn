@@ -1629,36 +1629,33 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				Composite descriptionComposite = toolkit.createComposite(sectionComposite);
 				descriptionComposite.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 				GridData descriptionGridData = new GridData(GridData.FILL_BOTH);
-				descriptionGridData.heightHint = SWT.DEFAULT;
+				descriptionGridData.widthHint = DESCRIPTION_WIDTH;
+				descriptionGridData.minimumHeight = DESCRIPTION_HEIGHT;
+				descriptionGridData.grabExcessHorizontalSpace = true;
 				descriptionComposite.setLayoutData(descriptionGridData);
 				final StackLayout descriptionLayout = new StackLayout();
 				descriptionComposite.setLayout(descriptionLayout);
 
-				Browser descriptionWikiBrowser = addBrowser(descriptionComposite, SWT.NONE);
-
 				descriptionTextViewer = addTextEditor(repository, descriptionComposite, taskData.getDescription(),
 						true, SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-
 				descriptionLayout.topControl = descriptionTextViewer.getControl();
 				descriptionComposite.layout();
 
 				// composite for edit/preview button
 				Composite buttonComposite = toolkit.createComposite(sectionComposite);
 				buttonComposite.setLayout(new GridLayout());
-				createPreviewButton(buttonComposite, descriptionTextViewer, descriptionWikiBrowser, descriptionLayout,
-						descriptionComposite);
+				createPreviewButton(buttonComposite, descriptionTextViewer, descriptionComposite, descriptionLayout);
 			} else {
 				descriptionTextViewer = addTextEditor(repository, sectionComposite, taskData.getDescription(), true,
 						SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+				GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+				gd.widthHint = DESCRIPTION_WIDTH;
+				gd.minimumHeight = DESCRIPTION_HEIGHT;
+				gd.grabExcessHorizontalSpace = true;
+				descriptionTextViewer.getControl().setLayoutData(gd);
+				descriptionTextViewer.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 			}
 			descriptionTextViewer.setEditable(true);
-			StyledText styledText = descriptionTextViewer.getTextWidget();
-			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-			gd.widthHint = DESCRIPTION_WIDTH;
-			gd.heightHint = SWT.DEFAULT;
-			gd.grabExcessHorizontalSpace = true;
-			descriptionTextViewer.getControl().setLayoutData(gd);
-			descriptionTextViewer.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 			descriptionTextViewer.addTextListener(new ITextListener() {
 				public void textChanged(TextEvent event) {
 					String newValue = descriptionTextViewer.getTextWidget().getText();
@@ -1670,6 +1667,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					}
 				}
 			});
+			StyledText styledText = descriptionTextViewer.getTextWidget();
 			controlBySelectableObject.put(taskData.getDescription(), styledText);
 		} else {
 			String text = taskData.getDescription();
@@ -2219,14 +2217,14 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			// composite with StackLayout to hold text editor and preview widget
 			Composite editPreviewComposite = toolkit.createComposite(newCommentsComposite);
 			GridData editPreviewData = new GridData(GridData.FILL_BOTH);
-			editPreviewData.heightHint = DESCRIPTION_HEIGHT;
+			editPreviewData.widthHint = DESCRIPTION_WIDTH;
+			editPreviewData.minimumHeight = DESCRIPTION_HEIGHT;
+			editPreviewData.grabExcessHorizontalSpace = true;
 			editPreviewComposite.setLayoutData(editPreviewData);
 			editPreviewComposite.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 
 			final StackLayout editPreviewLayout = new StackLayout();
 			editPreviewComposite.setLayout(editPreviewLayout);
-
-			Browser newCommentBrowser = addBrowser(editPreviewComposite, SWT.NONE);
 
 			newCommentTextViewer = addTextEditor(repository, editPreviewComposite, attribute.getValue(), true, SWT.FLAT
 					| SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
@@ -2237,22 +2235,18 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			// composite for edit/preview button
 			Composite buttonComposite = toolkit.createComposite(newCommentsComposite);
 			buttonComposite.setLayout(new GridLayout());
-			createPreviewButton(buttonComposite, newCommentTextViewer, newCommentBrowser, editPreviewLayout,
-					editPreviewComposite);
+			createPreviewButton(buttonComposite, newCommentTextViewer, editPreviewComposite, editPreviewLayout);
 		} else {
 			newCommentTextViewer = addTextEditor(repository, newCommentsComposite, attribute.getValue(), true, SWT.FLAT
 					| SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+			GridData addCommentsTextData = new GridData(GridData.FILL_BOTH);
+			addCommentsTextData.widthHint = DESCRIPTION_WIDTH;
+			addCommentsTextData.minimumHeight = DESCRIPTION_HEIGHT;
+			addCommentsTextData.grabExcessHorizontalSpace = true;
+			newCommentTextViewer.getControl().setLayoutData(addCommentsTextData);
+			newCommentTextViewer.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		}
 		newCommentTextViewer.setEditable(true);
-
-		GridData addCommentsTextData = new GridData(GridData.FILL_BOTH);
-		addCommentsTextData.widthHint = DESCRIPTION_WIDTH;
-		// addCommentsTextData.heightHint = DESCRIPTION_HEIGHT;
-		addCommentsTextData.minimumHeight = DESCRIPTION_HEIGHT;
-		addCommentsTextData.grabExcessHorizontalSpace = true;
-		newCommentTextViewer.getControl().setLayoutData(addCommentsTextData);
-		newCommentTextViewer.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-
 		newCommentTextViewer.addTextListener(new ITextListener() {
 			public void textChanged(TextEvent event) {
 				String newValue = addCommentsTextBox.getText();
@@ -2312,7 +2306,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * @since 2.1
 	 */
 	private void createPreviewButton(final Composite buttonComposite, final TextViewer editor,
-			final Browser previewBrowser, final StackLayout editorLayout, final Composite editorComposite) {
+			final Composite editorComposite, final StackLayout editorLayout) {
 		// create an anonymous object that encapsulates the edit/preview button together with
 		// its state and String constants for button text;
 		// this implementation keeps all information needed to set up the button 
@@ -2327,6 +2321,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 			private Button previewButton;
 
+			private Browser previewBrowser;
+			
 			{
 				previewButton = toolkit.createButton(buttonComposite, LABEL_BUTTON_PREVIEW, SWT.PUSH);
 				GridData previewButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
@@ -2335,9 +2331,13 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				previewButton.setLayoutData(previewButtonData);
 				previewButton.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
+						if (previewBrowser == null) {
+							previewBrowser = addBrowser(editorComposite, SWT.NONE);
+						}
+						
 						buttonState = ++buttonState % 2;
 						if (buttonState == 1) {
-							setText(previewBrowser, "loading preview...");
+							setText(previewBrowser, "Loading preview...");
 							previewWiki(previewBrowser, editor.getTextWidget().getText());
 						}
 						previewButton.setText(buttonState == 0 ? LABEL_BUTTON_PREVIEW : LABEL_BUTTON_EDIT);
@@ -2345,7 +2345,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						editorComposite.layout();
 					}
 				});
-			}
+			}			
+
 		};
 	}
 
