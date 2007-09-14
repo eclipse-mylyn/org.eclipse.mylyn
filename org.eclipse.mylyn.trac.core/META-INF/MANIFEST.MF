@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Trac Connector Core
 Bundle-SymbolicName: org.eclipse.mylyn.trac.core;singleton:=true
-Bundle-Version: 2.0.0.v20070910-1300
+Bundle-Version: 2.0.0.v20070913-1900
 Bundle-Vendor: Eclipse.org
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn.context.core,
