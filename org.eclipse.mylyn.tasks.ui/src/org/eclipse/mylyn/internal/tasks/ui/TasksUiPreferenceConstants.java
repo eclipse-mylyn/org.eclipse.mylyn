@@ -33,6 +33,12 @@ public final class TasksUiPreferenceConstants {
 
 	public static final String GROUP_SUBTASKS = "org.eclipse.mylyn.tasks.ui.group.subtasks";
 
+	/**
+	 * Use GROUP_SUBTASKS instead, this option is no longer set or references.
+	 */
+	@Deprecated
+	public static final String FILTER_SUBTASKS = "org.eclipse.mylyn.tasks.ui.filters.subtasks";
+	
 	public static final String OVERLAYS_INCOMING_TIGHT = "org.eclipse.mylyn.tasks.ui.overlays.incoming.tight";
 
 	public static final String NOTIFICATIONS_ENABLED = "org.eclipse.mylyn.tasks.ui.notifications.enabled";
