@@ -150,6 +150,7 @@ public class InteractionContextManager {
 				activityMetaContext = migrateLegacyActivity(activityMetaContext);
 				saveActivityContext();
 				ContextCorePlugin.getDefault().getPluginPreferences().setValue(PREFERENCE_ATTENTION_MIGRATED, true);
+				ContextCorePlugin.getDefault().savePluginPreferences();
 			}
 			for (IInteractionContextListener listener : activityMetaContextListeners) {
 				listener.contextActivated(activityMetaContext);
