@@ -124,8 +124,8 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				} else if (element instanceof Person) {
 					compositeDescriptor.icon = TasksUiImages.PERSON;
 					for (TaskRepository repository : TasksUiPlugin.getRepositoryManager().getAllRepositories()) {
-						if (!repository.isAnonymous()
-								&& repository.getUserName().equalsIgnoreCase(element.getHandleIdentifier())) {
+						if (!repository.isAnonymous() && (repository.getUserName() == null || repository.getUserName().equalsIgnoreCase(
+										element.getHandleIdentifier()))) {
 							compositeDescriptor.icon = TasksUiImages.PERSON_ME;
 							break;
 						}
