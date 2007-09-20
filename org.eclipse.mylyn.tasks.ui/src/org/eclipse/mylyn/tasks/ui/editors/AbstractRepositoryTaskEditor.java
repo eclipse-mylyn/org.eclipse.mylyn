@@ -77,8 +77,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.AttachFileAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyAttachmentToClipboardJob;
 import org.eclipse.mylyn.internal.tasks.ui.actions.DownloadAttachmentJob;
 import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeEditorAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.ToggleTaskActivationAction;
 import org.eclipse.mylyn.internal.tasks.ui.editors.AttachmentTableLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.editors.AttachmentsTableContentProvider;
 import org.eclipse.mylyn.internal.tasks.ui.editors.ContentOutlineTools;
@@ -442,7 +441,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private SynchronizeEditorAction synchronizeEditorAction;
 
-	private Action activateAction;
+	private ToggleTaskActivationAction activateAction;
 
 	private Action historyAction;
 
@@ -577,34 +576,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 	}
 
-	// private void setFormHeaderLabel() {
-	//
-	// AbstractRepositoryConnectorUi connectorUi =
-	// TasksUiPlugin.getRepositoryUi(repository.getKind());
-	// kindLabel = "";
-	// if (connectorUi != null) {
-	// kindLabel = connectorUi.getTaskKindLabel(repositoryTask);
-	// }
-	//
-	// String idLabel = "";
-	//
-	// if (repositoryTask != null) {
-	// idLabel = repositoryTask.getTaskKey();
-	// } else if (taskData != null) {
-	// idLabel = taskData.getId();
-	// }
-	//
-	// if (taskData != null && taskData.isNew()) {
-	// form.setText("New " + kindLabel);
-	// } else if (idLabel != null) {
-	// form.setText(kindLabel + " " + idLabel);
-	// } else {
-	// form.setText(kindLabel);
-	// }
-	// }
-
-	// synchronizing to investigate possible resolution to bug#197355
-	private synchronized void addHeaderControls() {
+	private void addHeaderControls() {
 		ControlContribution repositoryLabelControl = new ControlContribution("Title") { //$NON-NLS-1$
 			protected Control createControl(Composite parent) {
 				Composite composite = toolkit.createComposite(parent);
@@ -636,28 +608,14 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 			// TODO: Remove? Added to debug bug#197355
 			toolBarManager.removeAll();
+			toolBarManager.update(true);
 
 			toolBarManager.add(repositoryLabelControl);
 			fillToolBar(parentEditor.getTopForm().getToolBarManager());
 
 			if (repositoryTask != null && taskData != null && !taskData.isNew()) {
-				activateAction = new Action() {
-					@Override
-					public void run() {
-						if (!repositoryTask.isActive()) {
-							setChecked(true);
-							new TaskActivateAction().run(repositoryTask);
-						} else {
-							setChecked(false);
-							new TaskDeactivateAction().run(repositoryTask);
-						}
-					}
-
-				};
-				activateAction.setImageDescriptor(TasksUiImages.TASK_ACTIVE_CENTERED);
-				activateAction.setToolTipText("Activate/Deactivate Task");
-				activateAction.setChecked(repositoryTask.isActive());
-				toolBarManager.add(new Separator("activation"));
+				activateAction = new ToggleTaskActivationAction(repositoryTask, toolBarManager);
+				toolBarManager.add(new Separator("activation")); 
 				toolBarManager.add(activateAction);
 			}
 
@@ -2621,7 +2579,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		// TasksUiPlugin.getSynchronizationManager().discardOutgoing(repositoryTask);
 		// repositoryTask.setDirty(false);
 		// }
-
+		activateAction.dispose();
 		super.dispose();
 	}
 

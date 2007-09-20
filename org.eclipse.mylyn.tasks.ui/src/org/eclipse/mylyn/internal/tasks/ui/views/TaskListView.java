@@ -371,6 +371,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	private boolean gradientListenerAdded = false;
 
 	private final ITaskActivityListener TASK_ACTIVITY_LISTENER = new ITaskActivityListener() {
+		
 		public void taskActivated(final AbstractTask task) {
 			if (task != null) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -378,6 +379,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 						updateDescription(task);
 						selectedAndFocusTask(task);
 						filteredTree.indicateActiveTask(task);
+						refreshAndFocus(false);
 					}
 				});
 			}
@@ -386,7 +388,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		public void taskDeactivated(final AbstractTask task) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					refresh(task);
+					refreshTask(new TaskContainerDelta(task, TaskContainerDelta.Kind.CHANGED));
 					updateDescription(null);
 					filteredTree.indicateNoActiveTask();
 				}
@@ -423,35 +425,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 							refresh(null);
 						} else {
 							if (taskContainerDelta.getContainer() instanceof AbstractTask) {
-								AbstractTask task = (AbstractTask) taskContainerDelta.getContainer();
-								switch (taskContainerDelta.getKind()) {
-								case ROOT:
-									refresh(null);
-									break;
-								case ADDED:
-									refresh(null);
-									break;
-								case REMOVED:
-									refresh(null);
-									break;
-								default:
-									// TODO: move logic into deltas
-									refresh(task);
-									Set<AbstractTaskContainer> containers = new HashSet<AbstractTaskContainer>(
-											TasksUiPlugin.getTaskListManager().getTaskList().getQueriesForHandle(
-													task.getHandleIdentifier()));
-									containers.addAll(task.getParentContainers());
-									containers.add(TasksUiPlugin.getTaskListManager()
-											.getTaskList()
-											.getArchiveContainer());
-									containers.add(TasksUiPlugin.getTaskListManager()
-											.getTaskList()
-											.getDefaultCategory());
-									for (AbstractTaskContainer container : containers) {
-										refresh(container);
-									}
-									break;
-								}
+								refreshTask(taskContainerDelta);
 							} else { // category or query
 								switch (taskContainerDelta.getKind()) {
 								case ROOT:
@@ -1647,6 +1621,38 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			if (selected == null || !selected.equals(task)) {
 				selectedAndFocusTask(task);
 			}
+		}
+	}
+
+	private void refreshTask(TaskContainerDelta taskContainerDelta) {
+		AbstractTask task = (AbstractTask) taskContainerDelta.getContainer();
+		switch (taskContainerDelta.getKind()) {
+		case ROOT:
+			refresh(null);
+			break;
+		case ADDED:
+			refresh(null);
+			break;
+		case REMOVED:
+			refresh(null);
+			break;
+		default:
+			// TODO: move logic into deltas
+			refresh(task);
+			Set<AbstractTaskContainer> containers = new HashSet<AbstractTaskContainer>(
+					TasksUiPlugin.getTaskListManager().getTaskList().getQueriesForHandle(
+							task.getHandleIdentifier()));
+			containers.addAll(task.getParentContainers());
+			containers.add(TasksUiPlugin.getTaskListManager()
+					.getTaskList()
+					.getArchiveContainer());
+			containers.add(TasksUiPlugin.getTaskListManager()
+					.getTaskList()
+					.getDefaultCategory());
+			for (AbstractTaskContainer container : containers) {
+				refresh(container);
+			}
+			break;
 		}
 	}
 

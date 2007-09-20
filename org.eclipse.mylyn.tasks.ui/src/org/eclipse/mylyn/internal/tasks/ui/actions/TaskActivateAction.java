@@ -43,9 +43,6 @@ public class TaskActivateAction extends Action implements IViewActionDelegate {
 	public void run(AbstractTask task) {
 		if (task != null && !task.isActive()) {
 			TasksUiPlugin.getTaskListManager().activateTask(task);
-			if (TaskListView.getFromActivePerspective() != null) {
-				TaskListView.getFromActivePerspective().refreshAndFocus(false);
-			}
 		}
 	}
 
@@ -54,6 +51,6 @@ public class TaskActivateAction extends Action implements IViewActionDelegate {
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
-		// TODO Auto-generated method stub
+		// ignore
 	}
 }

@@ -20,6 +20,7 @@ public class AllTasksTests {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.tasks.tests");
 
 		// $JUnit-BEGIN$
+		suite.addTestSuite(TaskActivationActionTest.class);
 		suite.addTestSuite(TaskListPresentationTest.class);
 		suite.addTestSuite(TaskRepositoryTest.class);
 		suite.addTestSuite(TaskRepositorySorterTest.class);
