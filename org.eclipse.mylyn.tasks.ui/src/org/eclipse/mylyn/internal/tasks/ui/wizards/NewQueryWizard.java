@@ -9,7 +9,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryFilter;
+import org.eclipse.mylyn.internal.tasks.core.ITaskRepositoryFilter;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -28,7 +28,7 @@ public class NewQueryWizard extends MultiRepositoryAwareWizard {
 
 	private static final class SelectRepositoryPageForNewQuery extends SelectRepositoryPage {
 		public SelectRepositoryPageForNewQuery() {
-			super(TaskRepositoryFilter.CAN_QUERY);
+			super(ITaskRepositoryFilter.CAN_QUERY);
 		}
 
 		@Override

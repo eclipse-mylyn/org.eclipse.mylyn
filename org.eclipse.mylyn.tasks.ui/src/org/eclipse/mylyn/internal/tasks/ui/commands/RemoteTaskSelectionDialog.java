@@ -32,7 +32,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryFilter;
+import org.eclipse.mylyn.internal.tasks.core.ITaskRepositoryFilter;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskCommandIds;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoryLabelProvider;
@@ -93,7 +93,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 		for (AbstractRepositoryConnector connector : repositoryManager.getRepositoryConnectors()) {
 			Set<TaskRepository> connectorRepositories = repositoryManager.getRepositories(connector.getConnectorKind());
 			for (TaskRepository repository : connectorRepositories) {
-				if (TaskRepositoryFilter.CAN_CREATE_TASK_FROM_KEY.accept(repository, connector)) {
+				if (ITaskRepositoryFilter.CAN_CREATE_TASK_FROM_KEY.accept(repository, connector)) {
 					repositories.add(repository);
 				}
 			}

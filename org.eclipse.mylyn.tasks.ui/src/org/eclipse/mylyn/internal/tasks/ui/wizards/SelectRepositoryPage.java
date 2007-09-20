@@ -26,7 +26,8 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardNode;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardSelectionPage;
-import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryFilter;
+import org.eclipse.mylyn.internal.tasks.core.ITaskRepositoryFilter;
+import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AddRepositoryAction;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesSorter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoryLabelProvider;
@@ -65,7 +66,7 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 
 	private List<TaskRepository> repositories = new ArrayList<TaskRepository>();
 
-	private final TaskRepositoryFilter taskRepositoryFilter;
+	private final ITaskRepositoryFilter taskRepositoryFilter;
 
 	class RepositoryContentProvider implements IStructuredContentProvider {
 
@@ -80,7 +81,7 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 		}
 	}
 
-	public SelectRepositoryPage(TaskRepositoryFilter taskRepositoryFilter) {
+	public SelectRepositoryPage(ITaskRepositoryFilter taskRepositoryFilter) {
 		super(TITLE);
 
 		setTitle(TITLE);
@@ -129,7 +130,6 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 				viewer.setInput(TasksUiPlugin.getRepositoryManager().getRepositoryConnectors());
 			}
 		});
-		viewer.setSelection(new StructuredSelection(viewer.getElementAt(0)));
 		
 		setControl(container);
 	}
@@ -154,8 +154,15 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 			}
 		});
 
-		viewer.setSelection(new StructuredSelection(new Object[] { TasksUiUtil.getSelectedRepository(viewer) }));
-
+		TaskRepository selectedRepository = TasksUiUtil.getSelectedRepository(null);
+		if (selectedRepository != null) {
+			viewer.setSelection(new StructuredSelection(selectedRepository));
+		} else {
+			TaskRepository localRepository = TasksUiPlugin.getRepositoryManager().getRepository(
+					LocalRepositoryConnector.REPOSITORY_KIND, LocalRepositoryConnector.REPOSITORY_URL);
+			viewer.setSelection(new StructuredSelection(localRepository));
+		}
+		
 		viewer.addOpenListener(new IOpenListener() {
 
 			public void open(OpenEvent event) {
@@ -246,6 +253,20 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 			return 31 * this.repository.getUrl().hashCode() + this.repository.getConnectorKind().hashCode();
 		}
 
+	}
+
+	/**
+	 * Public for testing.
+	 */
+	public TableViewer getViewer() {
+		return viewer;
+	}
+
+	/**
+	 * Public for testing.
+	 */
+	public List<TaskRepository> getRepositories() {
+		return repositories;
 	}
 
 }

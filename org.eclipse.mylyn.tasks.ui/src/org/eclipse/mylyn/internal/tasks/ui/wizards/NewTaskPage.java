@@ -9,7 +9,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryFilter;
+import org.eclipse.mylyn.internal.tasks.core.ITaskRepositoryFilter;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -20,7 +20,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
  */
 public class NewTaskPage extends SelectRepositoryPage {
 
-	public NewTaskPage(TaskRepositoryFilter taskRepositoryFilter) {
+	public NewTaskPage(ITaskRepositoryFilter taskRepositoryFilter) {
 		super(taskRepositoryFilter);
 	}
 

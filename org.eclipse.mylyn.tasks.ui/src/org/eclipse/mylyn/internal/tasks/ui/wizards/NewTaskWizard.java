@@ -8,7 +8,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
-import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryFilter;
+import org.eclipse.mylyn.internal.tasks.core.ITaskRepositoryFilter;
 
 /**
  * @author Mik Kersten
@@ -20,7 +20,7 @@ public class NewTaskWizard extends MultiRepositoryAwareWizard {
 	private static final String TITLE = "New Task";
 
 	public NewTaskWizard() {
-		super(new NewTaskPage(TaskRepositoryFilter.CAN_CREATE_NEW_TASK), TITLE);
+		super(new NewTaskPage(ITaskRepositoryFilter.CAN_CREATE_NEW_TASK), TITLE);
 		setNeedsProgressMonitor(true);
 	}
 

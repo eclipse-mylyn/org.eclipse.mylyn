@@ -9,7 +9,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryFilter;
+import org.eclipse.mylyn.internal.tasks.core.ITaskRepositoryFilter;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -25,12 +25,12 @@ public class AddExistingTaskWizard extends MultiRepositoryAwareWizard {
 	public static final String TITLE = "Add Existing Repository Task";
 
 	public AddExistingTaskWizard() {
-		super(new SelectRepositoryPageForAddExistingTask(TaskRepositoryFilter.CAN_CREATE_TASK_FROM_KEY), TITLE);
+		super(new SelectRepositoryPageForAddExistingTask(ITaskRepositoryFilter.CAN_CREATE_TASK_FROM_KEY), TITLE);
 	}
 
 	private static final class SelectRepositoryPageForAddExistingTask extends SelectRepositoryPage {
 
-		public SelectRepositoryPageForAddExistingTask(TaskRepositoryFilter filter) {
+		public SelectRepositoryPageForAddExistingTask(ITaskRepositoryFilter filter) {
 			super(filter);
 		}
 

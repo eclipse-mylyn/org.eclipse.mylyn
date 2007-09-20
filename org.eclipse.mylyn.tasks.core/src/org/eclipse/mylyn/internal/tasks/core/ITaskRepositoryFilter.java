@@ -17,33 +17,33 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  * @author Eugene Kleshov
  * @since 2.0
  */
-public interface TaskRepositoryFilter {
+public interface ITaskRepositoryFilter {
 
-	public static TaskRepositoryFilter ALL = new TaskRepositoryFilter() {
+	public static ITaskRepositoryFilter ALL = new ITaskRepositoryFilter() {
 		public boolean accept(TaskRepository repository, AbstractRepositoryConnector connector) {
 			return true;
 		}
 	};
 
-	public static TaskRepositoryFilter CAN_QUERY = new TaskRepositoryFilter() {
+	public static ITaskRepositoryFilter CAN_QUERY = new ITaskRepositoryFilter() {
 		public boolean accept(TaskRepository repository, AbstractRepositoryConnector connector) {
 			return !(connector instanceof LocalRepositoryConnector) && !repository.isOffline();
 		}
 	};
 
-	public static TaskRepositoryFilter CAN_CREATE_NEW_TASK = new TaskRepositoryFilter() {
+	public static ITaskRepositoryFilter CAN_CREATE_NEW_TASK = new ITaskRepositoryFilter() {
 		public boolean accept(TaskRepository repository, AbstractRepositoryConnector connector) {
 			return connector.canCreateNewTask(repository) && !repository.isOffline();
 		}
 	};
 
-	public static TaskRepositoryFilter CAN_CREATE_TASK_FROM_KEY = new TaskRepositoryFilter() {
+	public static ITaskRepositoryFilter CAN_CREATE_TASK_FROM_KEY = new ITaskRepositoryFilter() {
 		public boolean accept(TaskRepository repository, AbstractRepositoryConnector connector) {
 			return connector.canCreateTaskFromKey(repository) && !repository.isOffline();
 		}
 	};
 
-	public static TaskRepositoryFilter IS_USER_MANAGED = new TaskRepositoryFilter() {
+	public static ITaskRepositoryFilter IS_USER_MANAGED = new ITaskRepositoryFilter() {
 		public boolean accept(TaskRepository repository, AbstractRepositoryConnector connector) {
 			return connector.isUserManaged();
 		}

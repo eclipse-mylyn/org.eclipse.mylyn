@@ -39,13 +39,11 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public boolean canCreateNewTask(TaskRepository repository) {
-		// ignore
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean canCreateTaskFromKey(TaskRepository repository) {
-		// ignore
 		return false;
 	}
 
