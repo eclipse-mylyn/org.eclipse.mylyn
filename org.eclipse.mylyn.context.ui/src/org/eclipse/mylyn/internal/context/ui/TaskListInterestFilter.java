@@ -14,7 +14,6 @@ import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
@@ -69,8 +68,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 
 	// TODO: make meta-context more explicit
 	protected boolean isInteresting(Object parent, AbstractTask task) {
-		return shouldAlwaysShow(parent, task, TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				TasksUiPreferenceConstants.GROUP_SUBTASKS));
+		return shouldAlwaysShow(parent, task, TasksUiPlugin.getDefault().groupSubtasks(task));
 	}
 
 	@Override
@@ -89,7 +87,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		if (!checkSubTasks) {
 			return false;
 		}
-		if (!TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(TasksUiPreferenceConstants.GROUP_SUBTASKS)) {
+		if (!TasksUiPlugin.getDefault().groupSubtasks(task)) {
 			return false;
 		}
 		if (task.getChildren() != null && task.getChildren().size() > 0) {
