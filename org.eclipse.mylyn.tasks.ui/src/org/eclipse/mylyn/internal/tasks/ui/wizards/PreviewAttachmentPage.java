@@ -47,8 +47,10 @@ public class PreviewAttachmentPage extends WizardPage {
 
 	private static final String PAGE_NAME = "PreviewAttachmentPage";
 
-	private static final String PAGE_DESCRIPTION = "Attachment preview";
+	private static final String TITLE = "Attachment Preview";
 
+	private static final String DESCRIPTION = "Review the attachment before submitting";
+	
 	private LocalAttachment attachment;
 
 	private static HashMap<String, String> textTypes;
@@ -69,8 +71,6 @@ public class PreviewAttachmentPage extends WizardPage {
 		imageTypes.put("image/jpeg", "");
 		imageTypes.put("image/gif", "");
 		imageTypes.put("image/png", "");
-
-		// ("application/octet-stream", );
 	}
 
 	private static boolean isTextAttachment(String contentType) {
@@ -83,7 +83,8 @@ public class PreviewAttachmentPage extends WizardPage {
 
 	protected PreviewAttachmentPage(LocalAttachment attachment) {
 		super(PAGE_NAME);
-		setDescription(PAGE_DESCRIPTION);
+		setTitle(TITLE);
+		setDescription(DESCRIPTION);
 		this.attachment = attachment;
 	}
 
