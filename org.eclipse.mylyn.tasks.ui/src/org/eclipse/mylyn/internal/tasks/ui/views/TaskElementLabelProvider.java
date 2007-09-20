@@ -123,13 +123,18 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 					compositeDescriptor.icon = TasksUiImages.CALENDAR;
 				} else if (element instanceof Person) {
 					compositeDescriptor.icon = TasksUiImages.PERSON;
-					for (TaskRepository repository : TasksUiPlugin.getRepositoryManager().getAllRepositories()) {
-						if (!repository.isAnonymous() && (repository.getUserName() == null || repository.getUserName().equalsIgnoreCase(
-										element.getHandleIdentifier()))) {
-							compositeDescriptor.icon = TasksUiImages.PERSON_ME;
-							break;
-						}
+					TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+							((Person) element).getRepositoryUrl());
+
+//					for (TaskRepository repository : TasksUiPlugin.getRepositoryManager().getAllRepositories()) {
+					if (repository != null && 
+							!repository.isAnonymous()
+							&& (repository.getUserName() != null && repository.getUserName().equalsIgnoreCase(
+									element.getHandleIdentifier()))) {
+						compositeDescriptor.icon = TasksUiImages.PERSON_ME;
+//						break;
 					}
+//					}
 				}
 				return compositeDescriptor;
 			}
