@@ -230,7 +230,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 		private Set<String> taskWorkingSetIds;
 
 		protected ConfigureWindowWorkingSetsDialog(IWorkbenchWindow window, String[] workingSetIds) {
-			super(window.getShell(), workingSetIds);
+			super(window.getShell(), workingSetIds, true);
 			setShellStyle(getShellStyle() | SWT.RESIZE);
 			this.window = window;
 			//setTitle(WorkbenchMessages.WorkingSetSelectionDialog_title_multiSelect);
