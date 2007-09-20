@@ -66,6 +66,7 @@ import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
@@ -657,6 +658,31 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	 */
 	public static TasksUiPlugin getDefault() {
 		return INSTANCE;
+	}
+	
+	public boolean groupSubtasks(AbstractTaskContainer container){
+		boolean groupSubtasks = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
+				TasksUiPreferenceConstants.GROUP_SUBTASKS);
+		
+		if(container instanceof AbstractTask){
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(((AbstractTask)container).getConnectorKind());
+			if (connectorUi != null) {
+				if (connectorUi.forceSubtaskHierarchy()) {
+					groupSubtasks = true;
+				}
+			}
+		}
+		
+		if(container instanceof AbstractRepositoryQuery){
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(((AbstractRepositoryQuery)container).getRepositoryKind());
+			if (connectorUi != null) {
+				if (connectorUi.forceSubtaskHierarchy()) {
+					groupSubtasks = true;
+				}
+			}
+		}
+		
+		return groupSubtasks;
 	}
 
 	private Map<String, List<IDynamicSubMenuContributor>> menuContributors = new HashMap<String, List<IDynamicSubMenuContributor>>();

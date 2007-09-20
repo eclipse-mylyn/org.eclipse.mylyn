@@ -19,7 +19,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
@@ -101,8 +100,7 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	}
 
 	private boolean taskHasUnfilteredChildren(AbstractTask parent) {
-		boolean groupSubtasks = !TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				TasksUiPreferenceConstants.GROUP_SUBTASKS);
+		boolean groupSubtasks = !TasksUiPlugin.getDefault().groupSubtasks(parent);
 		if (groupSubtasks)
 			return false;
 		Set<AbstractTask> children = parent.getChildren();
@@ -222,8 +220,7 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 
 	private boolean shouldAlwaysShow(Object parent, AbstractTask task) {
 		for (AbstractTaskListFilter filter : this.taskListView.getFilters()) {
-			if (filter.shouldAlwaysShow(parent, task, TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-					TasksUiPreferenceConstants.GROUP_SUBTASKS))) {
+			if (filter.shouldAlwaysShow(parent, task, TasksUiPlugin.getDefault().groupSubtasks(task))) {
 				return true;
 			}
 		}
@@ -289,7 +286,7 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	 */
 	private List<AbstractTaskContainer> getFilteredRootChildren(AbstractTaskContainer parent) {
 		List<AbstractTaskContainer> result = new ArrayList<AbstractTaskContainer>();
-		if (TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(TasksUiPreferenceConstants.GROUP_SUBTASKS)) {
+		if (TasksUiPlugin.getDefault().groupSubtasks(parent)) {
 			Set<AbstractTask> parentTasks = parent.getChildren();
 			Set<AbstractTaskContainer> parents = new HashSet<AbstractTaskContainer>();
 			Set<AbstractTask> children = new HashSet<AbstractTask>();

@@ -237,4 +237,12 @@ public abstract class AbstractRepositoryConnectorUi {
 	public String getKindLabel(String kindLabel) {
 		return null;
 	}
+
+	/**
+	 * @since 2.1
+	 * @return true if connector doesn't support non-grouping (flattening) of subtasks
+	 */
+	public boolean forceSubtaskHierarchy() {
+		return false;
+	}
 }

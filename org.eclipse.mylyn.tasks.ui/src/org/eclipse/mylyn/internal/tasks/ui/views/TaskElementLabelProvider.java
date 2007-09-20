@@ -24,7 +24,6 @@ import org.eclipse.mylyn.internal.tasks.core.UnfiledCategory;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskHighlighter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
@@ -336,7 +335,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 	}
 
 	private boolean showHasActiveChild(AbstractTaskContainer container) {
-		if (!TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(TasksUiPreferenceConstants.GROUP_SUBTASKS)) {
+		if (!TasksUiPlugin.getDefault().groupSubtasks(container)) {
 			return false;
 		}
 
@@ -353,7 +352,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 	}
 
 	private boolean showHasChildrenPastDue(AbstractTaskContainer container) {
-		if (!TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(TasksUiPreferenceConstants.GROUP_SUBTASKS)) {
+		if (!TasksUiPlugin.getDefault().groupSubtasks(container)) {
 			return false;
 		}
 
