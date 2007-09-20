@@ -63,6 +63,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TaskTransfer;
 import org.eclipse.mylyn.internal.tasks.ui.TaskWorkingSetFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.actions.CloneTaskAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CollapseAllAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.DeleteAction;
@@ -170,7 +171,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	private static final String MEMENTO_KEY_SORT_INDEX = "sortIndex";
 
 	private static final String MEMENTO_SORT_INDEX = "org.eclipse.mylyn.tasklist.ui.views.tasklist.sortIndex";
-	
+
 	private static final String MEMENTO_LINK_WITH_EDITOR = "linkWithEditor";
 
 	private static final String MEMENTO_PRESENTATION = "presentation";
@@ -186,24 +187,24 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	private static final String ID_SEPARATOR_REPOSITORY = "repository";
 
 	private static final String LABEL_NO_TASKS = "no task active";
-	
+
 	private final static int SIZE_MAX_SELECTION_HISTORY = 10;
 
 	private static final String PART_NAME = "Task List";
-	
+
 	private static final int DEFAULT_SORT_DIRECTION = 1;
-	
+
 	static final String[] PRIORITY_LEVELS = { PriorityLevel.P1.toString(), PriorityLevel.P2.toString(),
 			PriorityLevel.P3.toString(), PriorityLevel.P4.toString(), PriorityLevel.P5.toString() };
 
 	public static final String[] PRIORITY_LEVEL_DESCRIPTIONS = { PriorityLevel.P1.getDescription(),
 			PriorityLevel.P2.getDescription(), PriorityLevel.P3.getDescription(), PriorityLevel.P4.getDescription(),
 			PriorityLevel.P5.getDescription() };
-	
+
 	private static List<AbstractTaskListPresentation> presentationsPrimary = new ArrayList<AbstractTaskListPresentation>();
 
-	private static List<AbstractTaskListPresentation> presentationsSecondary = new ArrayList<AbstractTaskListPresentation>();	
-	
+	private static List<AbstractTaskListPresentation> presentationsSecondary = new ArrayList<AbstractTaskListPresentation>();
+
 	private boolean focusedMode = false;
 
 	private boolean linkWithEditor;
@@ -223,6 +224,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	private GoUpAction goUpAction;
 
 	private CopyTaskDetailsAction copyDetailsAction;
+
+	private CloneTaskAction cloneThisBugAction;
 
 	private OpenTaskListElementAction openAction;
 
@@ -794,6 +797,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 					// Do nothing here since it is key code
 				} else if (e.keyCode == 'c' && e.stateMask == SWT.MOD1) {
 					copyDetailsAction.run();
+				} else if (e.keyCode == 'd' && e.stateMask == SWT.MOD1) {
+					cloneThisBugAction.run();
 				} else if (e.keyCode == SWT.DEL) {
 					deleteAction.run();
 				} else if (e.keyCode == 'f' && e.stateMask == SWT.MOD1) {
@@ -1119,9 +1124,11 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		manager.add(new Separator());
 
 		addAction(copyDetailsAction, manager, element);
-		if (task != null) {
+		if (task != null && !task.isLocal()) {
+			addAction(cloneThisBugAction, manager, element);
 			addAction(removeFromCategoryAction, manager, element);
 		}
+		// This should also test for null, or else nothing to delete!
 		addAction(deleteAction, manager, element);
 		if (!(element instanceof AbstractTask)) {
 			addAction(renameAction, manager, element);
@@ -1228,6 +1235,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	private void makeActions() {
 
 		copyDetailsAction = new CopyTaskDetailsAction(true);
+		cloneThisBugAction = new CloneTaskAction();
 
 		goIntoAction = new GoIntoAction();
 		goUpAction = new GoUpAction(drillDownAdapter);
@@ -1250,18 +1258,12 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		filterArchiveCategory = new FilterArchiveContainerAction(this);
 		sortByAction = new SortyByDropDownAction(this);
 		filterOnPriorityAction = new PriorityDropDownAction(this);
-//		previousTaskAction = new ActivateTaskHistoryDropDownAction(TasksUiPlugin.getTaskListManager()
-//				.getTaskActivationHistory(), false);
 		linkWithEditorAction = new LinkWithEditorAction(this);
 		presentationDropDownSelectionAction = new PresentationDropDownSelectionAction(this);
 
 		filteredTree.getViewer().addSelectionChangedListener(openWithBrowser);
 		filteredTree.getViewer().addSelectionChangedListener(copyDetailsAction);
-		// openWithBrowser.selectionChanged((StructuredSelection)
-		// getViewer().getSelection());
-		// copyDetailsAction.selectionChanged((StructuredSelection)
-		// getViewer().getSelection());
-		//
+		filteredTree.getViewer().addSelectionChangedListener(cloneThisBugAction);
 	}
 
 	// public void toggleNextAction(boolean enable) {
@@ -1282,7 +1284,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	/**
 	 * Recursive function that checks for the occurrence of a certain task taskId. All children of the supplied node
 	 * will be checked.
-	 * 
+	 *
 	 * @param task
 	 *            The <code>ITask</code> object that is to be searched.
 	 * @param taskId
