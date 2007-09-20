@@ -646,6 +646,11 @@ public class TaskListWriter {
 	}
 
 	public void writeTask(AbstractTask task, File outFile) {
+		Set<TaskRepository> repositories = new HashSet<TaskRepository>();
+		if (!task.isLocal()) {
+			repositories.add(TasksUiPlugin.getRepositoryManager().getRepository(task.getRepositoryUrl()));
+		}
+		
 		Document doc = createTaskListDocument();
 		if (doc == null) {
 			return;
@@ -662,7 +667,10 @@ public class TaskListWriter {
 			// write context data
 			InteractionContext context = ContextCorePlugin.getContextManager().loadContext(task.getHandleIdentifier());
 			contextExternalizer.writeContext(context, outputStream);
-
+			if (repositories.size() > 0) {
+				repositoriesExternalizer.writeRepositories(repositories, outputStream);
+			}
+			
 			outputStream.close();
 		} catch (Exception e) {
 			StatusHandler.log(e, "Task data was not written");

@@ -385,6 +385,17 @@
                tooltip="Export Task">
          </action>
 
+		  <action
+               class="org.eclipse.mylyn.internal.tasks.ui.actions.TaskImportAction"
+               definitionId="org.eclipse.ui.task.import"
+               enablesFor="*"
+               icon="icons/etool16/import.gif"
+               id="org.eclipse.mylyn.tasks.ui.actions.import.task"
+               label="Import Task..."
+               menubarPath="repository"
+               tooltip="Import Task">
+         </action>
+
   		<action
 	        class="org.eclipse.mylyn.internal.tasks.ui.actions.NewTaskAction:local"
 	        enablesFor="*"

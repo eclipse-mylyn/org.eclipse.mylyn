@@ -37,12 +37,12 @@ import org.eclipse.mylyn.internal.tasks.ui.RetrieveTitleFromUrlJob;
 import org.eclipse.mylyn.internal.tasks.ui.TaskTransfer;
 import org.eclipse.mylyn.internal.tasks.ui.actions.QueryImportAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.TaskImportAction;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -79,7 +79,6 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 
 	@Override
 	public boolean performDrop(Object data) {
-		boolean refreshView = false;
 		Object currentTarget = getCurrentTarget();
 		List<AbstractTask> tasksToMove = new ArrayList<AbstractTask>();
 		ISelection selection = ((TreeViewer) getViewer()).getSelection();
@@ -114,7 +113,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 					}
 				}
 			} else {
-				// otherwise it is queries
+				// otherwise it is queries or tasks
 				final String[] names = (String[]) data;
 				List<AbstractRepositoryQuery> queries = new ArrayList<AbstractRepositoryQuery>();
 				Map<AbstractTask, InteractionContext> taskContexts = new HashMap<AbstractTask, InteractionContext>();
@@ -141,30 +140,20 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 								taskContexts.put(task, ContextCorePlugin.getContextManager().loadContext(
 										task.getHandleIdentifier(), file));
 							}
+							repositories.addAll(TasksUiPlugin.getTaskListManager()
+									.getTaskListWriter()
+									.readRepositories(file));
 						}
 					}
 
-				}
-
-				// import data
-				for (AbstractTask loadedTask : taskContexts.keySet()) {
-					TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
-					if (taskList.getTask(loadedTask.getHandleIdentifier()) != null) {
-						boolean confirmed = MessageDialog.openConfirm(getViewer().getControl().getShell(),
-								ITasksUiConstants.TITLE_DIALOG, "Task '" + loadedTask.getSummary()
-										+ "' already exists. Do you want to override it's context with the source?");
-						if (confirmed) {
-							ContextCorePlugin.getContextManager().importContext(taskContexts.get(loadedTask));
-						}
-					} else {
-						TasksUiPlugin.getTaskListManager().getTaskList().insertTask(loadedTask, null, null);
-						ContextCorePlugin.getContextManager().importContext(taskContexts.get(loadedTask));
-						refreshView = true;
-					}
 				}
 
 				if (queries.size() > 0) {
 					new QueryImportAction().importQueries(queries, repositories, getViewer().getControl().getShell());
+				} else {
+					TaskImportAction action = new TaskImportAction();
+					action.importTasks(taskContexts, repositories, getViewer().getControl().getShell());
+					action.refreshTaskListView();
 				}
 			}
 		}
@@ -206,10 +195,6 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 		if (newTask != null) {
 			StructuredSelection ss = new StructuredSelection(newTask);
 			getViewer().setSelection(ss);
-			refreshView = true;
-		}
-
-		if (refreshView) {
 			getViewer().refresh();
 		}
 
