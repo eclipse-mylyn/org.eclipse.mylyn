@@ -1932,16 +1932,38 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		commentsSection.setText(commentsSection.getText() + " (" + taskData.getComments().size() + ")");
 		if (taskData.getComments().size() > 0) {
 			commentsSection.setEnabled(true);
-			ImageHyperlink hyperlink = new ImageHyperlink(commentsSection, SWT.NONE);
-			toolkit.adapt(hyperlink, true, true);
-			hyperlink.setBackground(null);
-			hyperlink.setImage(TasksUiImages.getImage(TasksUiImages.EXPAND_ALL));
-			hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+			
+			final Composite commentsSectionClient = toolkit.createComposite(commentsSection);
+			RowLayout rowLayout = new RowLayout();
+			rowLayout.pack = true;
+			rowLayout.marginLeft = 0;
+			rowLayout.marginBottom = 0;
+			rowLayout.marginTop = 0;
+			commentsSectionClient.setLayout(rowLayout);
+			commentsSectionClient.setBackground(null);
+			
+			ImageHyperlink collapseAllHyperlink = new ImageHyperlink(commentsSectionClient, SWT.NONE);
+			collapseAllHyperlink.setToolTipText("Collapse All Comments");
+			toolkit.adapt(collapseAllHyperlink, true, true);
+			collapseAllHyperlink.setBackground(null);
+			collapseAllHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.COLLAPSE_ALL));
+			collapseAllHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+				public void linkActivated(HyperlinkEvent e) {
+					hideAllComments();
+				}
+			});
+			
+			ImageHyperlink expandAllHyperlink = new ImageHyperlink(commentsSectionClient, SWT.NONE);
+			expandAllHyperlink.setToolTipText("Expand All Comments");
+			toolkit.adapt(expandAllHyperlink, true, true);
+			expandAllHyperlink.setBackground(null);
+			expandAllHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.EXPAND_ALL));
+			expandAllHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 				public void linkActivated(HyperlinkEvent e) {
 					revealAllComments();
 				}
 			});
-			commentsSection.setTextClient(hyperlink);
+			commentsSection.setTextClient(commentsSectionClient);
 		} else {
 			commentsSection.setEnabled(false);
 		}
@@ -2661,6 +2683,37 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				comp = comp.getParent();
 			}
 		}
+		resetLayout();
+	}
+	
+	private void hideAllComments() {
+		for (StyledText text : commentStyleText) {
+			if (text.isDisposed())
+				continue;
+			Composite comp = text.getParent();
+			while (comp != null && !comp.isDisposed()) {
+				if (comp instanceof ExpandableComposite && !comp.isDisposed()) {
+					ExpandableComposite ex = (ExpandableComposite) comp;
+					ex.setExpanded(false);
+
+					// HACK: This is necessary
+					// due to a bug in SWT's ExpandableComposite.
+					// 165803: Expandable bars should expand when clicking anywhere
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?taskId=165803
+					if (ex.getData() != null && ex.getData() instanceof Composite) {
+						((Composite) ex.getData()).setVisible(false);
+					}
+
+					break;
+				}
+				comp = comp.getParent();
+			}
+		}
+		
+//		if (commentsSection != null) {
+//			commentsSection.setExpanded(false);
+//		}
+		
 		resetLayout();
 	}
 
