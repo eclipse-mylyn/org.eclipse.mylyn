@@ -40,11 +40,11 @@ public class AllTests {
 		// TODO: the order of these tests might still matter, but shouldn't
 
 		// $JUnit-BEGIN$
+		suite.addTest(AllJavaTests.suite());
 		suite.addTest(AllMonitorTests.suite());
 		suite.addTest(AllIntegrationTests.suite());
 		suite.addTest(AllContextTests.suite());
 		suite.addTest(AllIdeTests.suite());
-		suite.addTest(AllJavaTests.suite());
 		suite.addTest(AllTasksTests.suite());
 		suite.addTest(AllResourcesTests.suite());
 		suite.addTest(AllBugzillaTests.suite());
