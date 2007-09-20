@@ -326,11 +326,11 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			taskListManager = new TaskListManager(taskListWriter, taskListFile);
 			taskActivityManager = TaskActivityManager.getInstance();
 			taskRepositoryManager = new TaskRepositoryManager(taskListManager.getTaskList());
-			
+
 			IProxyService proxyService = ProxyManager.getProxyManager();
 			IProxyChangeListener proxyChangeListener = new TasksUiProxyChangeListener(taskRepositoryManager);
 			proxyService.addProxyChangeListener(proxyChangeListener);
-			
+
 			synchronizationManager = new RepositorySynchronizationManager();
 
 			// NOTE: initializing extensions in start(..) has caused race
@@ -935,14 +935,16 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				continue;
 			}
 			List<String> newValues = newAttribute.getValues();
-			RepositoryTaskAttribute oldAttribute = oldTaskData.getAttribute(newAttribute.getId());
-			if (oldAttribute == null) {
-				changes.add(getDiff(newAttribute.getName(), null, newValues));
-			}
-			if (oldAttribute != null) {
-				List<String> oldValues = oldAttribute.getValues();
-				if (!oldValues.equals(newValues)) {
-					changes.add(getDiff(newAttribute.getName(), oldValues, newValues));
+			if (newValues != null) {
+				RepositoryTaskAttribute oldAttribute = oldTaskData.getAttribute(newAttribute.getId());
+				if (oldAttribute == null) {
+					changes.add(getDiff(newAttribute.getName(), null, newValues));
+				}
+				if (oldAttribute != null) {
+					List<String> oldValues = oldAttribute.getValues();
+					if (!oldValues.equals(newValues)) {
+						changes.add(getDiff(newAttribute.getName(), oldValues, newValues));
+					}
 				}
 			}
 		}
