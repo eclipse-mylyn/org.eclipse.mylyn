@@ -30,6 +30,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.internal.tasks.ui.dialogs.AbstractWorkingSetDialogCOPY;
 import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -47,7 +48,6 @@ import org.eclipse.ui.dialogs.IWorkingSetEditWizard;
 import org.eclipse.ui.internal.WorkbenchMessages;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.WorkingSetComparator;
-import org.eclipse.ui.internal.dialogs.AbstractWorkingSetDialog;
 import org.eclipse.ui.internal.dialogs.WorkingSetFilter;
 import org.eclipse.ui.internal.dialogs.WorkingSetLabelProvider;
 
@@ -217,7 +217,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 
 	}
 
-	class ConfigureWindowWorkingSetsDialog extends AbstractWorkingSetDialog {
+	class ConfigureWindowWorkingSetsDialog extends AbstractWorkingSetDialogCOPY {
 
 		private final static int SIZING_SELECTION_WIDGET_HEIGHT = 200;
 
