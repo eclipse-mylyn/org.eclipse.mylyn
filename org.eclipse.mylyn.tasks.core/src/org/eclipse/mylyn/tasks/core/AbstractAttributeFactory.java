@@ -17,6 +17,7 @@ import java.util.Date;
  * @author Rob Elves
  * @since 2.0
  */
+@SuppressWarnings("serial")
 public abstract class AbstractAttributeFactory implements Serializable {
 
 	public RepositoryTaskAttribute createAttribute(String key) {
