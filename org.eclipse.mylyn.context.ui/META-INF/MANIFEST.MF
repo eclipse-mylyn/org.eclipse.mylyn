@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Context UI
 Bundle-SymbolicName: org.eclipse.mylyn.context.ui;singleton:=true
-Bundle-Version: 2.1.0.I20070921-1200
+Bundle-Version: 2.1.0.I20070921-1830
 Bundle-Activator: org.eclipse.mylyn.context.ui.ContextUiPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
