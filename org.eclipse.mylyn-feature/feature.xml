@@ -214,7 +214,7 @@ litigation.
    </license>
 
    <url>
-      <update label="Mylyn for Eclipse 3.3" url="http://download.eclipse.org/tools/mylyn/update/e3.3"/>
+      <update label="Mylyn for Eclipse 3.4" url="http://download.eclipse.org/tools/mylyn/update/e3.4"/>
       <discovery label="Mylyn Extras" url="http://download.eclipse.org/tools/mylyn/update/extras"/>
       <discovery label="Mylyn" url="http://download.eclipse.org/tools/mylyn/update/e3.3"/>
    </url>
