@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.mylyn.pde_feature"
-      label="Mylyn Bridge: Eclipse SDK"
+      label="Mylyn Bridge: PDE, CVS and Ant"
       version="2.1.0.I20070921-1830"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylyn">
@@ -214,7 +214,7 @@ litigation.
    </license>
 
    <url>
-      <update label="Mylyn for Eclipse 3.3" url="http://download.eclipse.org/tools/mylyn/update/e3.3"/>
+      <update label="Mylyn for Eclipse 3.4" url="http://download.eclipse.org/tools/mylyn/update/e3.4"/>
    </url>
 
    <requires>
