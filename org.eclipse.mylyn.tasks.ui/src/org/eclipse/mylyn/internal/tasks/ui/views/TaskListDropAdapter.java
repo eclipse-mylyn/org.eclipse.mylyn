@@ -309,7 +309,8 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			// handle all files
 			return true;
 		} else if (selectedObject != null && !(selectedObject instanceof AbstractRepositoryQuery)) {
-			if (getCurrentTarget() instanceof TaskCategory || getCurrentTarget() instanceof UnfiledCategory) {
+			if (getCurrentTarget() instanceof TaskCategory || getCurrentTarget() instanceof UnfiledCategory
+					|| getCurrentTarget() instanceof ScheduledTaskContainer) {
 				return true;
 			} else if (getCurrentTarget() instanceof AbstractTaskContainer
 					&& (getCurrentLocation() == ViewerDropAdapter.LOCATION_AFTER || getCurrentLocation() == ViewerDropAdapter.LOCATION_BEFORE)) {
