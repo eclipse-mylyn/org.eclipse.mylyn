@@ -688,30 +688,36 @@ public class TaskList {
 	/** Note: use getNextTaskNum for new task construction */
 	public int findLargestTaskId() {
 		int max = 0;
-		max = Math.max(largestTaskIdHelper(tasks.values()), max);
+		max = Math.max(largestTaskIdHelper(tasks.values(), 0, 0), max);
 		for (AbstractTaskCategory cat : getTaskContainers()) {
-			max = Math.max(largestTaskIdHelper(cat.getChildren()), max);
+			max = Math.max(largestTaskIdHelper(cat.getChildren(), 0, 0), max);
 		}
 		return max;
 	}
 
-	private int largestTaskIdHelper(Collection<AbstractTask> tasks) {
-		int ihandle = 0;
-		int max = 0;
-		for (AbstractTask task : tasks) {
-			if (task instanceof LocalTask) {
-				String string = task.getHandleIdentifier().substring(task.getHandleIdentifier().lastIndexOf('-') + 1,
-						task.getHandleIdentifier().length());
-				try {
-					ihandle = Integer.parseInt(string);
-				} catch (NumberFormatException nfe) {
+	private int largestTaskIdHelper(Collection<AbstractTask> tasks, int lastMax, int depth) {
+		if (depth >= AbstractTaskContainer.MAX_SUBTASK_DEPTH) {
+			return lastMax;
+		} else {
+			depth++;
+			int ihandle = 0;
+			int max = 0;
+			for (AbstractTask task : tasks) {
+				if (task instanceof LocalTask) {
+					String string = task.getHandleIdentifier().substring(task.getHandleIdentifier().lastIndexOf('-') + 1,
+							task.getHandleIdentifier().length());
+					try {
+						ihandle = Integer.parseInt(string);
+					} catch (NumberFormatException nfe) {
+						// ignore
+					}
+					max = Math.max(ihandle, max);
+					ihandle = largestTaskIdHelper(task.getChildren(), max, depth);
+					max = Math.max(ihandle, max);
 				}
 			}
-			max = Math.max(ihandle, max);
-			ihandle = largestTaskIdHelper(task.getChildren());
-			max = Math.max(ihandle, max);
+			return max;
 		}
-		return max;
 	}
 
 	/**

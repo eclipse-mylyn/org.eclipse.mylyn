@@ -126,8 +126,8 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 							((Person) element).getRepositoryUrl());
 
 //					for (TaskRepository repository : TasksUiPlugin.getRepositoryManager().getAllRepositories()) {
-					if (repository != null && 
-							!repository.isAnonymous()
+					if (repository != null
+							&& !repository.isAnonymous()
 							&& (repository.getUserName() != null && repository.getUserName().equalsIgnoreCase(
 									element.getHandleIdentifier()))) {
 						compositeDescriptor.icon = TasksUiImages.PERSON_ME;
@@ -339,16 +339,25 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			return false;
 		}
 
-		for (AbstractTaskContainer child : container.getChildren()) {
-			if (child instanceof AbstractTask && ((AbstractTask) child).isActive()) {
-				return true;
-			} else {
-				if (showHasActiveChild(child)) {
+		return showHasActiveChildHelper(container, 0);
+	}
+
+	private boolean showHasActiveChildHelper(AbstractTaskContainer container, int depth) {
+		if (depth >= AbstractTaskContainer.MAX_SUBTASK_DEPTH) {
+			return false;
+		} else {
+			depth++;
+			for (AbstractTaskContainer child : container.getChildren()) {
+				if (child instanceof AbstractTask && ((AbstractTask) child).isActive()) {
 					return true;
+				} else {
+					if (showHasActiveChildHelper(child, depth)) {
+						return true;
+					}
 				}
 			}
+			return false;
 		}
-		return false;
 	}
 
 	private boolean showHasChildrenPastDue(AbstractTaskContainer container) {
@@ -356,16 +365,25 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			return false;
 		}
 
-		for (AbstractTaskContainer child : container.getChildren()) {
-			if (child instanceof AbstractTask && ((AbstractTask) child).isPastReminder()
-					&& !((AbstractTask) child).isCompleted()) {
-				return true;
-			} else {
-				if (showHasChildrenPastDue(child)) {
+		return showHasChildrenPastDueHelper(container, 0);
+	}
+
+	private boolean showHasChildrenPastDueHelper(AbstractTaskContainer container, int depth) {
+		if (depth >= AbstractTaskContainer.MAX_SUBTASK_DEPTH) {
+			return false;
+		} else {
+			depth++;
+			for (AbstractTaskContainer child : container.getChildren()) {
+				if (child instanceof AbstractTask && ((AbstractTask) child).isPastReminder()
+						&& !((AbstractTask) child).isCompleted()) {
 					return true;
+				} else {
+					if (showHasChildrenPastDueHelper(child, depth)) {
+						return true;
+					}
 				}
 			}
+			return false;
 		}
-		return false;
 	}
 }

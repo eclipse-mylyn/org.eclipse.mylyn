@@ -150,17 +150,26 @@ class CustomTaskListDecorationDrawer implements Listener {
 	}
 
 	private boolean hasIncoming(AbstractTaskContainer container) {
-		for (AbstractTask task : container.getChildren()) {
-			if (task != null) {
-				AbstractTask containedRepositoryTask = task;
-				if (containedRepositoryTask.getSynchronizationState() == RepositoryTaskSyncState.INCOMING) {
-					return true;
-				} else if (task.getChildren() != null && task.getChildren().size() > 0 && hasIncoming(task)) {
-					return true;
+		return hasIncomingHelper(container, 0);
+	}
+
+	private boolean hasIncomingHelper(AbstractTaskContainer container, int depth) {
+		if (depth >= AbstractTaskContainer.MAX_SUBTASK_DEPTH) {
+			return false;
+		} else {
+			depth++;
+			for (AbstractTask task : container.getChildren()) {
+				if (task != null) {
+					AbstractTask containedRepositoryTask = task;
+					if (containedRepositoryTask.getSynchronizationState() == RepositoryTaskSyncState.INCOMING) {
+						return true;
+					} else if (task.getChildren() != null && task.getChildren().size() > 0 && hasIncomingHelper(task, depth)) {
+						return true;
+					}
 				}
 			}
+			return false;
 		}
-		return false;
 	}
 
 	private void drawActivationImage(final int activationImageOffset, Event event, Image image) {
