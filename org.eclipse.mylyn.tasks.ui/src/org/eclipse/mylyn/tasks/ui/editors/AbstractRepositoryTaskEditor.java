@@ -2573,13 +2573,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		if (waitCursor != null) {
 			waitCursor.dispose();
 		}
-		// if (repositoryTask != null && repositoryTask.isDirty()) {
-		// // Edits are being made to the outgoing object
-		// // Must discard these unsaved changes
-		// TasksUiPlugin.getSynchronizationManager().discardOutgoing(repositoryTask);
-		// repositoryTask.setDirty(false);
-		// }
-		activateAction.dispose();
+		if (activateAction != null) {
+			activateAction.dispose();
+		} 
 		super.dispose();
 	}
 
