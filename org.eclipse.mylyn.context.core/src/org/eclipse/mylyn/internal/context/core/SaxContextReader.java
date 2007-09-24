@@ -31,9 +31,11 @@ public class SaxContextReader implements IInteractionContextReader {
 	public InteractionContext readContext(String handleIdentifier, File file) {
 		if (!file.exists())
 			return null;
+		FileInputStream fileInputStream = null;
 		ZipInputStream inputStream = null;
 		try {
-			inputStream = new ZipInputStream(new FileInputStream(file));
+			fileInputStream = new FileInputStream(file);
+			inputStream = new ZipInputStream(fileInputStream);
 
 			// search for context entry
 			String encoded = URLEncoder.encode(handleIdentifier, InteractionContextManager.CONTEXT_FILENAME_ENCODING);
@@ -49,16 +51,37 @@ public class SaxContextReader implements IInteractionContextReader {
 			if (entry == null) {
 				return null;
 			}
-			
+
 			SaxContextContentHandler contentHandler = new SaxContextContentHandler(handleIdentifier);
 			XMLReader reader = XMLReaderFactory.createXMLReader();
 			reader.setContentHandler(contentHandler);
 			reader.parse(new InputSource(inputStream));
 			return contentHandler.getContext();
 		} catch (Throwable t) {
+			if (fileInputStream != null) {
+				try {
+					fileInputStream.close();
+				} catch (IOException e) {
+					StatusHandler.fail(e, "Failed to close context input stream.", false);
+				}
+			}
+			if (inputStream != null) {
+				try {
+					inputStream.close();
+				} catch (IOException e) {
+					StatusHandler.fail(e, "Failed to close context input stream.", false);
+				}
+			}
 			file.renameTo(new File(file.getAbsolutePath() + "-save"));
 			return null;
 		} finally {
+			if (fileInputStream != null) {
+				try {
+					fileInputStream.close();
+				} catch (IOException e) {
+					StatusHandler.fail(e, "Failed to close context input stream.", false);
+				}
+			}
 			if (inputStream != null) {
 				try {
 					inputStream.close();

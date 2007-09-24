@@ -69,15 +69,30 @@ public class InteractionContextExternalizer {
 	public void writeContextToXml(InteractionContext context, File file, IInteractionContextWriter writer) {
 		if (context.getInteractionHistory().isEmpty())
 			return;
+
+		FileOutputStream fileOutputStream = null;
+		ZipOutputStream outputStream = null;
 		try {
 			if (!file.exists()) {
 				file.createNewFile();
 			}
-			ZipOutputStream outputStream = new ZipOutputStream(new FileOutputStream(file));
+			fileOutputStream = new FileOutputStream(file);
+			outputStream = new ZipOutputStream(fileOutputStream);
 			writeContext(context, outputStream, writer);
-			outputStream.close();
+
 		} catch (IOException e) {
 			StatusHandler.fail(e, "Could not write: " + file.getAbsolutePath(), true);
+		} finally {
+			try {
+				if (fileOutputStream != null) {
+					fileOutputStream.close();
+				}
+				if (outputStream != null) {
+					outputStream.close();
+				}
+			} catch (IOException e) {
+				StatusHandler.fail(e, "Unable to write context " + context.getHandleIdentifier(), false);
+			}
 		}
 	}
 
