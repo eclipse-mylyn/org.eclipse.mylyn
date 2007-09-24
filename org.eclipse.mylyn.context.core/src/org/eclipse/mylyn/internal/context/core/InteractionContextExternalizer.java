@@ -29,10 +29,6 @@ import org.eclipse.mylyn.monitor.core.StatusHandler;
  */
 public class InteractionContextExternalizer {
 
-	private IInteractionContextReader reader = new SaxContextReader();
-
-	private IInteractionContextWriter writer = new SaxContextWriter();
-
 	public static final String ELMNT_INTERACTION_HISTORY_OLD = "interactionEvent";
 
 	public static final String ELMNT_INTERACTION_HISTORY = "InteractionHistory";
@@ -64,6 +60,13 @@ public class InteractionContextExternalizer {
 	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DATE_FORMAT_STRING, Locale.ENGLISH);
 
 	public void writeContextToXml(InteractionContext context, File file) {
+		writeContextToXml(context, file, new SaxContextWriter());
+	}
+
+	/**
+	 * For testing
+	 */
+	public void writeContextToXml(InteractionContext context, File file, IInteractionContextWriter writer) {
 		if (context.getInteractionHistory().isEmpty())
 			return;
 		try {
@@ -71,22 +74,28 @@ public class InteractionContextExternalizer {
 				file.createNewFile();
 			}
 			ZipOutputStream outputStream = new ZipOutputStream(new FileOutputStream(file));
-			writeContext(context, outputStream);
+			writeContext(context, outputStream, writer);
 			outputStream.close();
 		} catch (IOException e) {
 			StatusHandler.fail(e, "Could not write: " + file.getAbsolutePath(), true);
 		}
 	}
-	
 
 	public void writeContext(InteractionContext context, ZipOutputStream outputStream) throws IOException {
+		writeContext(context, outputStream, new SaxContextWriter());
+	}
+
+	/**
+	 * For testing
+	 */
+	public void writeContext(InteractionContext context, ZipOutputStream outputStream, IInteractionContextWriter writer)
+			throws IOException {
 		String handleIdentifier = context.getHandleIdentifier();
 		String encoded = URLEncoder.encode(handleIdentifier, InteractionContextManager.CONTEXT_FILENAME_ENCODING);
 		ZipEntry zipEntry = new ZipEntry(encoded + InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD);
 		outputStream.putNextEntry(zipEntry);
 		outputStream.setMethod(ZipOutputStream.DEFLATED);
 
-		// OutputStream stream = new FileOutputStream(file);
 		writer.setOutputStream(outputStream);
 		writer.writeContextToStream(context);
 		outputStream.flush();
@@ -94,6 +103,13 @@ public class InteractionContextExternalizer {
 	}
 
 	public InteractionContext readContextFromXML(String handleIdentifier, File file) {
+		return readContextFromXML(handleIdentifier, file, new SaxContextReader());
+	}
+
+	/**
+	 * For testing
+	 */
+	public InteractionContext readContextFromXML(String handleIdentifier, File file, IInteractionContextReader reader) {
 		try {
 			if (!file.exists()) {
 				return null;
@@ -106,20 +122,20 @@ public class InteractionContextExternalizer {
 		return null;
 	}
 
-	public IInteractionContextReader getReader() {
-		return reader;
-	}
-
-	public void setReader(IInteractionContextReader reader) {
-		this.reader = reader;
-	}
-
-	public IInteractionContextWriter getWriter() {
-		return writer;
-	}
-
-	public void setWriter(IInteractionContextWriter writer) {
-		this.writer = writer;
-	}
+//	public IInteractionContextReader getReader() {
+//		return reader;
+//	}
+//
+//	public void setReader(IInteractionContextReader reader) {
+//		this.reader = reader;
+//	}
+//
+//	public IInteractionContextWriter getWriter() {
+//		return writer;
+//	}
+//
+//	public void setWriter(IInteractionContextWriter writer) {
+//		this.writer = writer;
+//	}
 
 }

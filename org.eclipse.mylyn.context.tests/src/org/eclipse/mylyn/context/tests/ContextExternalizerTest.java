@@ -72,31 +72,35 @@ public class ContextExternalizerTest extends AbstractContextTest {
 				"testdata/externalizer/testcontext.xml.zip"));
 		assertTrue(file.getAbsolutePath(), file.exists());
 		InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
-		externalizer.setReader(new DomContextReader());
-		InteractionContext domReadContext = externalizer.readContextFromXML(CONTEXT_HANDLE, file);
+//		externalizer.setReader(new DomContextReader());
+		InteractionContext domReadContext = externalizer.readContextFromXML(CONTEXT_HANDLE, file,
+				new DomContextReader());
 
-		externalizer.setReader(new SaxContextReader());
-		InteractionContext saxReadContext = externalizer.readContextFromXML(CONTEXT_HANDLE, file);
+//		externalizer.setReader(new SaxContextReader());
+		InteractionContext saxReadContext = externalizer.readContextFromXML(CONTEXT_HANDLE, file,
+				new SaxContextReader());
 		assertEquals(284, saxReadContext.getInteractionHistory().size()); // known
 		// from
 		// testdata
 		assertEquals(domReadContext, saxReadContext);
 
-		externalizer.setWriter(new DomContextWriter());
+//		externalizer.setWriter(new DomContextWriter());
 		File domOut = new File("dom-out.xml");
 		domOut.deleteOnExit();
-		externalizer.writeContextToXml(saxReadContext, domOut);
+		externalizer.writeContextToXml(saxReadContext, domOut, new DomContextWriter());
 
-		externalizer.setWriter(new DomContextWriter());
+		//externalizer.setWriter(new DomContextWriter());
 		File saxOut = new File("sax-out.xml");
 		saxOut.deleteOnExit();
-		externalizer.writeContextToXml(saxReadContext, saxOut);
+		externalizer.writeContextToXml(saxReadContext, saxOut, new DomContextWriter());
 		assertEquals(domOut.length(), saxOut.length());
 
-		externalizer.setReader(new DomContextReader());
-		InteractionContext domReadAfterWrite = externalizer.readContextFromXML(CONTEXT_HANDLE, file);
-		externalizer.setReader(new SaxContextReader());
-		InteractionContext saxReadAfterWrite = externalizer.readContextFromXML(CONTEXT_HANDLE, file);
+		//externalizer.setReader(new DomContextReader());
+		InteractionContext domReadAfterWrite = externalizer.readContextFromXML(CONTEXT_HANDLE, file,
+				new DomContextReader());
+		//externalizer.setReader(new SaxContextReader());
+		InteractionContext saxReadAfterWrite = externalizer.readContextFromXML(CONTEXT_HANDLE, file,
+				new SaxContextReader());
 
 		assertEquals(domReadAfterWrite, saxReadAfterWrite);
 	}
