@@ -383,6 +383,8 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 	
 	public void indicateActiveTaskWorkingSet() {
 		Set<IWorkingSet> activeSets = TaskListView.getActiveWorkingSets();
+		System.err.println(">>>>> " + activeSets);
+		
 		if (filterComposite.isDisposed() || activeSets == null) {
 			return;
 		}

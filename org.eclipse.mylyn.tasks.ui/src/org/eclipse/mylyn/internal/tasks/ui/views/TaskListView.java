@@ -371,7 +371,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	private boolean gradientListenerAdded = false;
 
 	private final ITaskActivityListener TASK_ACTIVITY_LISTENER = new ITaskActivityListener() {
-		
+
 		public void taskActivated(final AbstractTask task) {
 			if (task != null) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -543,12 +543,10 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	}
 
 	public TaskListView() {
+		PlatformUI.getWorkbench().getWorkingSetManager().addPropertyChangeListener(this);
+
 		TasksUiPlugin.getTaskListManager().addActivityListener(TASK_ACTIVITY_LISTENER);
 		TasksUiPlugin.getTaskListManager().getTaskList().addChangeListener(TASK_REFERESH_LISTENER);
-
-		PlatformUI.getWorkbench().getWorkingSetManager().addPropertyChangeListener(this);
-//		addPresentation(categorizedPresentation);
-//		addPresentation(scheduledPresentation);
 	}
 
 	@Override
@@ -844,6 +842,13 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 		getSite().setSelectionProvider(getViewer());
 		getSite().getPage().addPartListener(editorListener);
+
+		// Need to do this because the page, which holds the active working set is not around on creation, see bug 203179
+		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				filteredTree.indicateActiveTaskWorkingSet();
+			}
+		});
 	}
 
 	private void applyPresentation(String id) {
@@ -1258,7 +1263,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	/**
 	 * Recursive function that checks for the occurrence of a certain task taskId. All children of the supplied node
 	 * will be checked.
-	 *
+	 * 
 	 * @param task
 	 *            The <code>ITask</code> object that is to be searched.
 	 * @param taskId
@@ -1640,15 +1645,10 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			// TODO: move logic into deltas
 			refresh(task);
 			Set<AbstractTaskContainer> containers = new HashSet<AbstractTaskContainer>(
-					TasksUiPlugin.getTaskListManager().getTaskList().getQueriesForHandle(
-							task.getHandleIdentifier()));
+					TasksUiPlugin.getTaskListManager().getTaskList().getQueriesForHandle(task.getHandleIdentifier()));
 			containers.addAll(task.getParentContainers());
-			containers.add(TasksUiPlugin.getTaskListManager()
-					.getTaskList()
-					.getArchiveContainer());
-			containers.add(TasksUiPlugin.getTaskListManager()
-					.getTaskList()
-					.getDefaultCategory());
+			containers.add(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer());
+			containers.add(TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 			for (AbstractTaskContainer container : containers) {
 				refresh(container);
 			}
