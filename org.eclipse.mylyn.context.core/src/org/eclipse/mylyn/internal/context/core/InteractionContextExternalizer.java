@@ -84,11 +84,11 @@ public class InteractionContextExternalizer {
 			StatusHandler.fail(e, "Could not write: " + file.getAbsolutePath(), true);
 		} finally {
 			try {
-				if (fileOutputStream != null) {
-					fileOutputStream.close();
-				}
 				if (outputStream != null) {
 					outputStream.close();
+				}
+				if (fileOutputStream != null) {
+					fileOutputStream.close();
 				}
 			} catch (IOException e) {
 				StatusHandler.fail(e, "Unable to write context " + context.getHandleIdentifier(), false);
