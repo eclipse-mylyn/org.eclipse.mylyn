@@ -8,6 +8,7 @@
 
 package org.eclipse.mylyn.internal.context.core;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -32,20 +33,20 @@ public class SaxContextReader implements IInteractionContextReader {
 		if (!file.exists())
 			return null;
 		FileInputStream fileInputStream = null;
-		ZipInputStream inputStream = null;
+		ZipInputStream zipInputStream = null;
 		try {
 			fileInputStream = new FileInputStream(file);
-			inputStream = new ZipInputStream(fileInputStream);
+			zipInputStream = new ZipInputStream(fileInputStream);
 
 			// search for context entry
 			String encoded = URLEncoder.encode(handleIdentifier, InteractionContextManager.CONTEXT_FILENAME_ENCODING);
 			String contextFileName = encoded + InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD;
-			ZipEntry entry = inputStream.getNextEntry();
+			ZipEntry entry = zipInputStream.getNextEntry();
 			while (entry != null) {
 				if (contextFileName.equals(entry.getName())) {
 					break;
 				}
-				entry = inputStream.getNextEntry();
+				entry = zipInputStream.getNextEntry();
 			}
 
 			if (entry == null) {
@@ -55,40 +56,27 @@ public class SaxContextReader implements IInteractionContextReader {
 			SaxContextContentHandler contentHandler = new SaxContextContentHandler(handleIdentifier);
 			XMLReader reader = XMLReaderFactory.createXMLReader();
 			reader.setContentHandler(contentHandler);
-			reader.parse(new InputSource(inputStream));
+			reader.parse(new InputSource(zipInputStream));
 			return contentHandler.getContext();
 		} catch (Throwable t) {
-			if (fileInputStream != null) {
-				try {
-					fileInputStream.close();
-				} catch (IOException e) {
-					StatusHandler.fail(e, "Failed to close context input stream.", false);
-				}
-			}
-			if (inputStream != null) {
-				try {
-					inputStream.close();
-				} catch (IOException e) {
-					StatusHandler.fail(e, "Failed to close context input stream.", false);
-				}
-			}
+			closeStream(zipInputStream);
+			closeStream(fileInputStream);
 			file.renameTo(new File(file.getAbsolutePath() + "-save"));
 			return null;
 		} finally {
-			if (fileInputStream != null) {
-				try {
-					fileInputStream.close();
-				} catch (IOException e) {
-					StatusHandler.fail(e, "Failed to close context input stream.", false);
-				}
-			}
-			if (inputStream != null) {
-				try {
-					inputStream.close();
-				} catch (IOException e) {
-					StatusHandler.fail(e, "Failed to close context input stream.", false);
-				}
+			closeStream(zipInputStream);
+			closeStream(fileInputStream);
+		}
+	}
+
+	private static final void closeStream(Closeable closeable) {
+		if (closeable != null) {
+			try {
+				closeable.close();
+			} catch (IOException e) {
+				StatusHandler.fail(e, "Failed to close context input stream.", false);
 			}
 		}
 	}
+
 }

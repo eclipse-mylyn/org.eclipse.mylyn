@@ -8,6 +8,7 @@
 
 package org.eclipse.mylyn.context.tests.support;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -40,8 +41,6 @@ import org.xml.sax.SAXException;
  */
 public class DomContextReader implements IInteractionContextReader {
 
-	// private int readVersion;
-
 	public InteractionContext readContext(String handle, File file) {
 		if (!file.exists())
 			return null;
@@ -72,24 +71,21 @@ public class DomContextReader implements IInteractionContextReader {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = null;
 		Document document = null;
-		ZipInputStream inputStream = null;
+		ZipInputStream zipInputStream = null;
+		FileInputStream fileInputStream = null;
 		try {
-			inputStream = new ZipInputStream(new FileInputStream(inputFile));
-			inputStream.getNextEntry();
+			fileInputStream = new FileInputStream(inputFile);
+			zipInputStream = new ZipInputStream(fileInputStream);
+			zipInputStream.getNextEntry();
 			builder = factory.newDocumentBuilder();
-			document = builder.parse(inputStream);
+			document = builder.parse(zipInputStream);
 		} catch (SAXException se) {
 			StatusHandler.log(se, "could not build");
 		} catch (ParserConfigurationException e) {
 			StatusHandler.log(e, "could not parse");
 		} finally {
-			if (inputStream != null) {
-				try {
-					inputStream.close();
-				} catch (IOException e) {
-					StatusHandler.fail(e, "Failed to close context input stream.", false);
-				}
-			}
+			closeStream(zipInputStream);
+			closeStream(fileInputStream);
 		}
 		return document;
 	}
@@ -116,5 +112,15 @@ public class DomContextReader implements IInteractionContextReader {
 			StatusHandler.log(e, "could not read interaction event");
 		}
 		return null;
+	}
+
+	private static final void closeStream(Closeable closeable) {
+		if (closeable != null) {
+			try {
+				closeable.close();
+			} catch (IOException e) {
+				StatusHandler.fail(e, "Failed to close context input stream.", false);
+			}
+		}
 	}
 }
