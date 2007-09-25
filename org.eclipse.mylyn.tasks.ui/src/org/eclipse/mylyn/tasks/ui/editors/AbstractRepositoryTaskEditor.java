@@ -615,7 +615,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 			if (repositoryTask != null && taskData != null && !taskData.isNew()) {
 				activateAction = new ToggleTaskActivationAction(repositoryTask, toolBarManager);
-				toolBarManager.add(new Separator("activation")); 
+				toolBarManager.add(new Separator("activation"));
 				toolBarManager.add(activateAction);
 			}
 
@@ -1890,7 +1890,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		commentsSection.setText(commentsSection.getText() + " (" + taskData.getComments().size() + ")");
 		if (taskData.getComments().size() > 0) {
 			commentsSection.setEnabled(true);
-			
+
 			final Composite commentsSectionClient = toolkit.createComposite(commentsSection);
 			RowLayout rowLayout = new RowLayout();
 			rowLayout.pack = true;
@@ -1899,7 +1899,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			rowLayout.marginTop = 0;
 			commentsSectionClient.setLayout(rowLayout);
 			commentsSectionClient.setBackground(null);
-			
+
 			ImageHyperlink collapseAllHyperlink = new ImageHyperlink(commentsSectionClient, SWT.NONE);
 			collapseAllHyperlink.setToolTipText("Collapse All Comments");
 			toolkit.adapt(collapseAllHyperlink, true, true);
@@ -1910,7 +1910,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					hideAllComments();
 				}
 			});
-			
+
 			ImageHyperlink expandAllHyperlink = new ImageHyperlink(commentsSectionClient, SWT.NONE);
 			expandAllHyperlink.setToolTipText("Expand All Comments");
 			toolkit.adapt(expandAllHyperlink, true, true);
@@ -2302,7 +2302,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			private Button previewButton;
 
 			private Browser previewBrowser;
-			
+
 			{
 				previewButton = toolkit.createButton(buttonComposite, LABEL_BUTTON_PREVIEW, SWT.PUSH);
 				GridData previewButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
@@ -2314,7 +2314,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						if (previewBrowser == null) {
 							previewBrowser = addBrowser(editorComposite, SWT.NONE);
 						}
-						
+
 						buttonState = ++buttonState % 2;
 						if (buttonState == 1) {
 							setText(previewBrowser, "Loading preview...");
@@ -2325,7 +2325,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						editorComposite.layout();
 					}
 				});
-			}			
+			}
 
 		};
 	}
@@ -2639,7 +2639,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 		resetLayout();
 	}
-	
+
 	private void hideAllComments() {
 		for (StyledText text : commentStyleText) {
 			if (text.isDisposed())
@@ -2663,11 +2663,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				comp = comp.getParent();
 			}
 		}
-		
+
 //		if (commentsSection != null) {
 //			commentsSection.setExpanded(false);
 //		}
-		
+
 		resetLayout();
 	}
 
@@ -3521,6 +3521,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 */
 	protected void resetLayout() {
 		form.layout(true, true);
-		form.reflow(false);
+		form.reflow(true);
 	}
 }
