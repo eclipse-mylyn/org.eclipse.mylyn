@@ -149,35 +149,29 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 			} else if (task.getSynchronizationState() == RepositoryTaskSyncState.CONFLICT) {
 				return true;
 			}
-			return hasChangesHelper(parent, task, 0);
+			return hasChangesHelper(parent, task);
 		}
 		return result;
 	}
 
-	private static boolean hasChangesHelper(Object parent, AbstractTaskContainer container, int depth) {
-		if (depth >= AbstractTaskContainer.MAX_SUBTASK_DEPTH) {
-//			StatusHandler.fail(new Throwable("Max child depth reached for task: " + container.getHandleIdentifier()), "", false);
-			return false;
-		} else {
-			depth++;
-			boolean result = false;
-			for (AbstractTask task : container.getChildren()) {
-				if (task != null) {
-					if (task.getLastReadTimeStamp() == null) {
-						result = true;
-					} else if (task.getSynchronizationState() == RepositoryTaskSyncState.OUTGOING) {
-						result = true;
-					} else if (task.getSynchronizationState() == RepositoryTaskSyncState.INCOMING
-							&& !(parent instanceof ScheduledTaskContainer)) {
-						result = true;
-					} else if (task.getSynchronizationState() == RepositoryTaskSyncState.CONFLICT) {
-						result = true;
-					} else if (task.getChildren() != null && task.getChildren().size() > 0) {
-						result = hasChangesHelper(parent, task, depth);
-					}
+	private static boolean hasChangesHelper(Object parent, AbstractTaskContainer container) {
+		boolean result = false;
+		for (AbstractTask task : container.getChildren()) {
+			if (task != null) {
+				if (task.getLastReadTimeStamp() == null) {
+					result = true;
+				} else if (task.getSynchronizationState() == RepositoryTaskSyncState.OUTGOING) {
+					result = true;
+				} else if (task.getSynchronizationState() == RepositoryTaskSyncState.INCOMING
+						&& !(parent instanceof ScheduledTaskContainer)) {
+					result = true;
+				} else if (task.getSynchronizationState() == RepositoryTaskSyncState.CONFLICT) {
+					result = true;
+				} else if (task.getChildren() != null && task.getChildren().size() > 0) {
+					result = hasChangesHelper(parent, task);
 				}
 			}
-			return result;
 		}
+		return result;
 	}
 }
