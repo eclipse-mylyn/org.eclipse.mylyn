@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Listener;
 class CustomTaskListDecorationDrawer implements Listener {
 
 	private final TaskListView taskListView;
-	
+
 	private int activationImageOffset;
 
 	private Image taskActive = TasksUiImages.getImage(TasksUiImages.TASK_ACTIVE);
@@ -86,7 +86,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 						drawSyncronizationImage((AbstractTaskContainer) data, event);
 					}
 				}
-				
+
 				// TODO: would be nice not to do this on each item's painting
 //				String text = tree.getFilterControl().getText();
 //				System.err.println(">>>>>> " + tree.getViewer().getExpandedElements().length);
@@ -94,7 +94,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 //					int offsetY = tree.getViewer().getExpandedElements().length * tree.getViewer().getTree().getItemHeight();
 //					event.gc.drawText("Open search dialog...", 20, offsetY - 10);
 //				}
-				
+
 				break;
 			}
 			case SWT.PaintItem: {
@@ -104,7 +104,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 				if (data instanceof AbstractTaskContainer) {
 					drawSyncronizationImage((AbstractTaskContainer) data, event);
 				}
-								
+
 				break;
 			}
 			}
@@ -150,26 +150,18 @@ class CustomTaskListDecorationDrawer implements Listener {
 	}
 
 	private boolean hasIncoming(AbstractTaskContainer container) {
-		return hasIncomingHelper(container, 0);
-	}
-
-	private boolean hasIncomingHelper(AbstractTaskContainer container, int depth) {
-		if (depth >= AbstractTaskContainer.MAX_SUBTASK_DEPTH) {
-			return false;
-		} else {
-			depth++;
-			for (AbstractTask task : container.getChildren()) {
-				if (task != null) {
-					AbstractTask containedRepositoryTask = task;
-					if (containedRepositoryTask.getSynchronizationState() == RepositoryTaskSyncState.INCOMING) {
-						return true;
-					} else if (task.getChildren() != null && task.getChildren().size() > 0 && hasIncomingHelper(task, depth)) {
-						return true;
-					}
+		for (AbstractTask task : container.getChildren()) {
+			if (task != null) {
+				AbstractTask containedRepositoryTask = task;
+				if (containedRepositoryTask.getSynchronizationState() == RepositoryTaskSyncState.INCOMING) {
+					return true;
+				} else if (task.getChildren() != null && task.getChildren().size() > 0
+						&& hasIncoming(task)) {
+					return true;
 				}
 			}
-			return false;
 		}
+		return false;
 	}
 
 	private void drawActivationImage(final int activationImageOffset, Event event, Image image) {

@@ -339,25 +339,20 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			return false;
 		}
 
-		return showHasActiveChildHelper(container, 0);
+		return showHasActiveChildHelper(container);
 	}
 
-	private boolean showHasActiveChildHelper(AbstractTaskContainer container, int depth) {
-		if (depth >= AbstractTaskContainer.MAX_SUBTASK_DEPTH) {
-			return false;
-		} else {
-			depth++;
-			for (AbstractTaskContainer child : container.getChildren()) {
-				if (child instanceof AbstractTask && ((AbstractTask) child).isActive()) {
+	private boolean showHasActiveChildHelper(AbstractTaskContainer container) {
+		for (AbstractTaskContainer child : container.getChildren()) {
+			if (child instanceof AbstractTask && ((AbstractTask) child).isActive()) {
+				return true;
+			} else {
+				if (showHasActiveChildHelper(child)) {
 					return true;
-				} else {
-					if (showHasActiveChildHelper(child, depth)) {
-						return true;
-					}
 				}
 			}
-			return false;
 		}
+		return false;
 	}
 
 	private boolean showHasChildrenPastDue(AbstractTaskContainer container) {
@@ -365,25 +360,20 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			return false;
 		}
 
-		return showHasChildrenPastDueHelper(container, 0);
+		return showHasChildrenPastDueHelper(container);
 	}
 
-	private boolean showHasChildrenPastDueHelper(AbstractTaskContainer container, int depth) {
-		if (depth >= AbstractTaskContainer.MAX_SUBTASK_DEPTH) {
-			return false;
-		} else {
-			depth++;
-			for (AbstractTaskContainer child : container.getChildren()) {
-				if (child instanceof AbstractTask && ((AbstractTask) child).isPastReminder()
-						&& !((AbstractTask) child).isCompleted()) {
+	private boolean showHasChildrenPastDueHelper(AbstractTaskContainer container) {
+		for (AbstractTaskContainer child : container.getChildren()) {
+			if (child instanceof AbstractTask && ((AbstractTask) child).isPastReminder()
+					&& !((AbstractTask) child).isCompleted()) {
+				return true;
+			} else {
+				if (showHasChildrenPastDueHelper(child)) {
 					return true;
-				} else {
-					if (showHasChildrenPastDueHelper(child, depth)) {
-						return true;
-					}
 				}
 			}
-			return false;
 		}
+		return false;
 	}
 }

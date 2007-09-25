@@ -695,8 +695,11 @@ public class TaskList {
 		return max;
 	}
 
+	/**
+	 * Maxes out at 20 recursions for safety.
+	 */
 	private int largestTaskIdHelper(Collection<AbstractTask> tasks, int lastMax, int depth) {
-		if (depth >= AbstractTaskContainer.MAX_SUBTASK_DEPTH) {
+		if (depth >= 20) {
 			return lastMax;
 		} else {
 			depth++;

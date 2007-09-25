@@ -8,6 +8,7 @@
 package org.eclipse.mylyn.tasks.core;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -23,11 +24,9 @@ import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 public abstract class AbstractTaskContainer extends PlatformObject implements Comparable<AbstractTaskContainer> {
 
 	/**
-	 * @since 2.1
-	 * 
 	 * TODO: consider removing in 3.0 if handled by content provider
 	 */
-	public static final int MAX_SUBTASK_DEPTH = 10;
+	private static final int MAX_SUBTASK_DEPTH = 10;
 	
 	private String handleIdentifier = "";
 
@@ -64,8 +63,20 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 		children.clear();
 	}
 
+	/**
+	 * Removes any cyclic dependencies in children.
+	 * 
+	 * TODO: review to make sure that this is too expensive, or move to creation.
+	 */
 	public Set<AbstractTask> getChildren() {
-		return Collections.unmodifiableSet(children);
+		Set<AbstractTask> childrenWithoutCycles = new HashSet<AbstractTask>();
+		for (AbstractTask child : children) {
+			if (!child.contains(this.getHandleIdentifier())) {
+				childrenWithoutCycles.add(child);
+			}
+		}
+		return Collections.unmodifiableSet(childrenWithoutCycles);
+//		return Collections.unmodifiableSet(children);
 	}
 
 	/**
@@ -79,7 +90,6 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 
 	private boolean containsHelper(String handle, int depth) {
 		if (depth >= MAX_SUBTASK_DEPTH) {
-//			StatusHandler.fail(new Throwable("Max child depth reached for task: " + handle), "", false);
 			return false;
 		} else {
 			depth++;

@@ -55,7 +55,7 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	}
 
 	/**
-	 * returns first parent found
+	 * @return	 first parent found
 	 */
 	public Object getParent(Object child) {
 		// Return first parent found, first search within queries then categories.
@@ -88,8 +88,8 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	 */
 	public boolean hasChildren(Object parent) {
 		if (parent instanceof AbstractRepositoryQuery) {
-			AbstractRepositoryQuery t = (AbstractRepositoryQuery) parent;
-			return !t.isEmpty();
+			AbstractRepositoryQuery query = (AbstractRepositoryQuery) parent;
+			return !query.isEmpty();
 		} else if (parent instanceof AbstractTask) {
 			return taskHasUnfilteredChildren((AbstractTask) parent);
 		} else if (parent instanceof AbstractTaskContainer) {
