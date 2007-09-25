@@ -22,24 +22,26 @@ import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetUpdater;
 
 /**
+ * TODO: consider removing
+ * 
  * @author Shawn Minto
  * @author Mik Kersten
  */
-public class TaskContextWorkingSetManager implements IWorkingSetUpdater, IInteractionContextListener {
+public class ContextWorkingSetManager implements IWorkingSetUpdater, IInteractionContextListener {
 
-	private static TaskContextWorkingSetManager INSTANCE = new TaskContextWorkingSetManager();
+	private static ContextWorkingSetManager INSTANCE = new ContextWorkingSetManager();
 
-	private List<TaskContextWorkingSetManager> workingSetUpdaters = null;
+	private List<ContextWorkingSetManager> workingSetUpdaters = null;
 
-	public void addWorkingSetManager(TaskContextWorkingSetManager updater) {
+	public void addWorkingSetManager(ContextWorkingSetManager updater) {
 		if (workingSetUpdaters == null) {
-			workingSetUpdaters = new ArrayList<TaskContextWorkingSetManager>();
+			workingSetUpdaters = new ArrayList<ContextWorkingSetManager>();
 		}
 		workingSetUpdaters.add(updater);
 		ContextCorePlugin.getContextManager().addListener(updater);
 	}
 
-	public TaskContextWorkingSetManager getWorkingSetUpdater() {
+	public ContextWorkingSetManager getWorkingSetUpdater() {
 		if (workingSetUpdaters == null)
 			return null;
 		else
@@ -139,7 +141,7 @@ public class TaskContextWorkingSetManager implements IWorkingSetUpdater, IIntera
 		return workingSets.get(0);
 	}
 
-	public static TaskContextWorkingSetManager getDefault() {
+	public static ContextWorkingSetManager getDefault() {
 		return INSTANCE;
 	}
 }

@@ -20,7 +20,7 @@ import org.eclipse.jdt.ui.search.ElementQuerySpecification;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylyn.internal.context.ui.TaskContextWorkingSetManager;
+import org.eclipse.mylyn.internal.context.ui.ContextWorkingSetManager;
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -42,7 +42,7 @@ public class FindReferencesInContextAction extends Action implements IWorkbenchW
 				if (resolved != null && resolved.length == 1 && resolved[0] != null) {
 					IJavaElement element = resolved[0];
 
-					TaskContextWorkingSetManager updater = TaskContextWorkingSetManager.getDefault()
+					ContextWorkingSetManager updater = ContextWorkingSetManager.getDefault()
 							.getWorkingSetUpdater();
 					if (updater != null && updater.getWorkingSet() != null) {
 						IJavaSearchScope scope = JavaSearchScopeFactory.getInstance().createJavaSearchScope(
