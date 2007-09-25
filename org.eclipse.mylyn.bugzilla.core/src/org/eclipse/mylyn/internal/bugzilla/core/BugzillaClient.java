@@ -156,6 +156,8 @@ public class BugzillaClient {
 
 	private HttpClient httpClient = new HttpClient(new MultiThreadedHttpConnectionManager());
 
+	private boolean isValidation = false;
+
 	private class BugzillaRetryHandler extends DefaultHttpMethodRetryHandler {
 		public BugzillaRetryHandler() {
 			super(MAX_RETRY, false);
@@ -193,9 +195,11 @@ public class BugzillaClient {
 	public void validate() throws IOException, CoreException {
 		GetMethod method = null;
 		try {
+			isValidation = true;
 			logout();
 			method = getConnect(repositoryUrl + "/");
 		} finally {
+			isValidation = false;
 			if (method != null) {
 				method.releaseConnection();
 			}
@@ -236,7 +240,9 @@ public class BugzillaClient {
 			// getMethod.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
 			// getMethod.getParams().setCookiePolicy(CookiePolicy.RFC_2109);
 
-			getMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new BugzillaRetryHandler());
+			if (!isValidation) {
+				getMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new BugzillaRetryHandler());
+			}
 			getMethod.setDoAuthentication(true);
 
 			int code;
@@ -345,7 +351,9 @@ public class BugzillaClient {
 					+ characterEncoding);
 			postMethod.setRequestBody(formData);
 			postMethod.setDoAuthentication(true);
-			postMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new BugzillaRetryHandler());
+			if (!isValidation) {
+				postMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new BugzillaRetryHandler());
+			}
 			// httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(WebClientUtil.CONNNECT_TIMEOUT);
 			postMethod.setFollowRedirects(false);
 

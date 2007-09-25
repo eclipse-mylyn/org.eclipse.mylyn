@@ -485,11 +485,12 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 //				}
 				boolean checkVersion = versions[0] == null;
 
-				if (isAnonymous) {
-					client = BugzillaClientFactory.createClient(serverUrl, newUserId, newPassword, httpAuthUser,
-							httpAuthPass, proxy, newEncoding);
-					client.logout();
-				} else if (versions != null) {
+//				if (isAnonymous) {
+//					client = BugzillaClientFactory.createClient(serverUrl, newUserId, newPassword, httpAuthUser,
+//							httpAuthPass, proxy, newEncoding);
+//					client.logout();
+//				} else 
+				if (versions != null) {
 					client = BugzillaClientFactory.createClient(serverUrl, newUserId, newPassword, httpAuthUser,
 							httpAuthPass, proxy, newEncoding);
 					client.validate();
