@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.action.ActionContributionItem;
+import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -23,6 +25,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.internal.navigator.NavigatorContentService;
+import org.eclipse.ui.internal.navigator.actions.LinkEditorAction;
 import org.eclipse.ui.internal.navigator.extensions.LinkHelperService;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.ILinkHelper;
@@ -80,6 +83,21 @@ public abstract class FocusCommonNavigatorAction extends AbstractAutoFocusViewAc
 		}
 	}
 
+	// TODO: should have better way of doing this
+	protected void setLinkingActionEnabled(boolean on) {
+		IViewPart part = super.getPartForAction();
+		if (part instanceof CommonNavigator) {
+			for (IContributionItem item : ((CommonNavigator) part).getViewSite().getActionBars().getToolBarManager().getItems()) {
+				if (item instanceof ActionContributionItem) {
+					ActionContributionItem actionItem = (ActionContributionItem)item;
+					if (actionItem.getAction() instanceof LinkEditorAction) {
+						actionItem.getAction().setEnabled(on);
+					}
+				}
+			}
+		}
+	}
+	
 	@Override
 	protected void setDefaultLinkingEnabled(boolean on) {
 		IViewPart part = super.getPartForAction();

@@ -18,6 +18,9 @@ import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.internal.ui.actions.SelectionConverter;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
+import org.eclipse.jdt.internal.ui.packageview.ToggleLinkingAction;
+import org.eclipse.jface.action.ActionContributionItem;
+import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
@@ -64,6 +67,21 @@ public class FocusPackageExplorerAction extends AbstractAutoFocusViewAction {
 		return new StructuredSelection(elementToSelect);
 	}
 
+	// TODO: should have better way of doing this
+	protected void setLinkingActionEnabled(boolean on) {
+		IViewPart part = super.getPartForAction();
+		if (part instanceof PackageExplorerPart) {
+			for (IContributionItem item : ((PackageExplorerPart) part).getViewSite().getActionBars().getToolBarManager().getItems()) {
+				if (item instanceof ActionContributionItem) {
+					ActionContributionItem actionItem = (ActionContributionItem)item;
+					if (actionItem.getAction() instanceof ToggleLinkingAction) {
+						actionItem.getAction().setEnabled(on);
+					}
+				}
+			}
+		}
+	}
+	
 	@Override
 	protected void setDefaultLinkingEnabled(boolean on) {
 		IViewPart part = super.getPartForAction();

@@ -140,7 +140,7 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 	class InterestManipulationAction extends AbstractInterestManipulationAction {
 
 		@Override
-		protected boolean isRemove() {
+		protected boolean isIncrement() {
 			return true;
 		}
 

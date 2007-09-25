@@ -28,7 +28,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewAction implements
 		IInteractionContextListener {
-
+ 
 	public AbstractAutoFocusViewAction(InterestFilter interestFilter, boolean manageViewer, boolean manageFilters,
 			boolean manageLinking) {
 		super(interestFilter, manageViewer, manageFilters, manageLinking);

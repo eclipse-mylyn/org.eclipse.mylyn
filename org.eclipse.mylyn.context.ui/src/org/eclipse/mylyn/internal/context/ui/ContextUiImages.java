@@ -53,9 +53,9 @@ public class ContextUiImages {
 
 	public static final ImageDescriptor INTEREST_LANDMARK = create(T_ELCL, "interest-landmark.gif");
 
-	public static final ImageDescriptor INTEREST_FILTERING = create(T_ELCL, "interest-filtering.gif");
+	public static final ImageDescriptor INTEREST_FILTERING = create(T_ELCL, "focus.gif");
 
-	public static final ImageDescriptor INTEREST_FOLDING = create(T_ELCL, "interest-filtering.gif");
+	public static final ImageDescriptor INTEREST_FOLDING = create(T_ELCL, "focus.gif");
 
 	public static final ImageDescriptor CAPTURE_PAUSE = create(T_ELCL, "capture-pause.gif");
 

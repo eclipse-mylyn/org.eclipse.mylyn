@@ -152,7 +152,7 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 				ContextUiPrefContstants.AUTO_MANAGE_PERSPECTIVES));
 
 		autoEnableExplorerFilter = new Button(group, SWT.CHECK);
-		autoEnableExplorerFilter.setText("Toggle focused mode on navigator views when task activated");
+		autoEnableExplorerFilter.setText("Auto toggle Focus on navigator views (Recommended)");
 		autoEnableExplorerFilter.setSelection(getPreferenceStore().getBoolean(
 				ContextUiPrefContstants.NAVIGATORS_AUTO_FILTER_ENABLE));
 

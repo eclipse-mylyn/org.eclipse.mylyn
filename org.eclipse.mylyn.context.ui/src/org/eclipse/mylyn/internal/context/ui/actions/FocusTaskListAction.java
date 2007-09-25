@@ -52,15 +52,13 @@ public class FocusTaskListAction extends AbstractFocusViewAction implements IFil
 		if (part instanceof TaskListView) {
 			((TaskListView) part).getFilteredTree().getRefreshPolicy().addListener(this);
 		}
-		// NOTE: if re-enabling this, ensure that two filters can not get added
-		// on startup
-		// if
-		// (!TasksUiPlugin.getTaskListManager().getActivityThisWeek().getChildren().isEmpty())
-		// {
-		// update(true);
-		// }
 	}
 
+	@Override
+	protected boolean updateEnablementWithContextActivation() {
+		return false;
+	}
+	
 	@Override
 	public void dispose() {
 		super.dispose();

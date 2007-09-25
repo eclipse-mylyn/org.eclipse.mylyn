@@ -73,11 +73,13 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 
 	private boolean wasLinkingEnabled = false;
 
+	private boolean wasRun = false;
+
 	private final IWorkbenchListener WORKBENCH_LISTENER = new IWorkbenchListener() {
 
 		public boolean preShutdown(IWorkbench workbench, boolean forced) {
 			// restore the viewers' previous state
-			if (manageLinking) {
+			if (wasRun && manageLinking) {
 				setDefaultLinkingEnabled(wasLinkingEnabled);
 			}
 
@@ -152,7 +154,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 
 	public void init(IAction action) {
 		initAction = action;
-		setChecked(action.isChecked());
+		initAction.setChecked(action.isChecked());
 	}
 
 	public void init(IViewPart view) {
@@ -160,11 +162,21 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 		globalPrefId = PREF_ID_PREFIX + id;
 		viewPart = view;
 		partMap.put(view, this);
+		wasLinkingEnabled = isDefaultLinkingEnabled();
+	}
+
+	protected boolean updateEnablementWithContextActivation() {
+		return true;
 	}
 
 	public void run(IAction action) {
 		setChecked(action.isChecked());
 		valueChanged(action, action.isChecked(), true);
+		wasRun = true;
+	}
+
+	public void runWithEvent(IAction action, Event event) {
+		run(action);
 	}
 
 	/**
@@ -187,6 +199,8 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 		if (PlatformUI.getWorkbench().isClosing()) {
 			return;
 		}
+		updateEnablement(action);
+
 		boolean wasPaused = ContextCorePlugin.getContextManager().isContextCapturePaused();
 		try {
 			if (!wasPaused) {
@@ -206,6 +220,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 				updateInterestFilter(on, viewer);
 			}
 
+			setLinkingActionEnabled(!on);
 			if (manageLinking) {
 				updateLinking(on);
 			}
@@ -214,6 +229,16 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 		} finally {
 			if (!wasPaused) {
 				ContextCorePlugin.getContextManager().setContextCapturePaused(false);
+			}
+		}
+	}
+
+	protected void updateEnablement(IAction action) {
+		if (updateEnablementWithContextActivation()) {
+			if (ContextCorePlugin.getContextManager().isContextActive()) {
+				action.setEnabled(true);
+			} else {
+				action.setEnabled(false);
 			}
 		}
 	}
@@ -274,6 +299,10 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 	 */
 	protected boolean isDefaultLinkingEnabled() {
 		return false;
+	}
+
+	protected void setLinkingActionEnabled(boolean on) {
+		// ignore
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
@@ -385,10 +414,6 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 			}
 		}
 		viewer.getControl().setRedraw(true);
-	}
-
-	public void runWithEvent(IAction action, Event event) {
-		run(action);
 	}
 
 	public String getGlobalPrefId() {

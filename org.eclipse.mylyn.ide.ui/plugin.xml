@@ -26,14 +26,21 @@
    		targetID="org.eclipse.ui.navigator.ProjectExplorer">
     	<action
            class="org.eclipse.mylyn.internal.ide.ui.actions.FocusProjectExplorerAction"
+           disabledIcon="icons/elcl16/focus-disabled.gif"
            enablesFor="*"
-           icon="icons/elcl16/interest-filtering.gif"
+           icon="icons/elcl16/focus.gif"
            id="org.eclipse.mylyn.ui.actions.FilterResourceNavigatorAction"
            label="Focus on Active Task"
            menubarPath="mylyn"
            style="toggle"
            toolbarPath="mylyn"
-           tooltip="Focus on Active Task (Alt+click to reveal filtered elements)"> 
+           tooltip="Focus on Active Task (Alt+click to reveal filtered elements)">
+        <enablement>
+           <systemProperty
+                 name="org.eclipse.mylyn.context.core.context.active"
+                 value="true">
+           </systemProperty>
+        </enablement> 
   		</action> 
       </viewContribution> 
       
@@ -42,14 +49,21 @@
    		targetID="org.eclipse.ui.views.ResourceNavigator">
     	<action
            class="org.eclipse.mylyn.internal.ide.ui.actions.FocusResourceNavigatorAction"
+           disabledIcon="icons/elcl16/focus-disabled.gif"
            enablesFor="*"
-           icon="icons/elcl16/interest-filtering.gif"
+           icon="icons/elcl16/focus.gif"
            id="org.eclipse.mylyn.ui.actions.FilterResourceNavigatorAction"
            label="Focus on Active Task"
            menubarPath="mylyn"
            style="toggle"
            toolbarPath="mylyn"
-           tooltip="Focus on Active Task (Alt+click to reveal filtered elements)"> 
+           tooltip="Focus on Active Task (Alt+click to reveal filtered elements)">
+        <enablement>
+           <systemProperty
+                 name="org.eclipse.mylyn.context.core.context.active"
+                 value="true">
+           </systemProperty>
+        </enablement> 
   		</action> 
       </viewContribution> 
       <viewContribution 
@@ -57,14 +71,15 @@
    		targetID="org.eclipse.ui.views.ProblemView">
     	<action
            class="org.eclipse.mylyn.internal.ide.ui.actions.FocusProblemsListAction"
+           disabledIcon="icons/elcl16/focus-disabled.gif"
            enablesFor="*"
-           icon="icons/elcl16/interest-filtering.gif"
+           icon="icons/elcl16/focus.gif"
            id="org.eclipse.mylyn.ide.ui.actions.focus.view.markers"
            label="Focus on Active Task"
            menubarPath="mylyn"
            style="toggle"
            toolbarPath="mylyn"
-           tooltip="Focus on Active Task"> 
+           tooltip="Focus on Active Task">
   		</action>  
       </viewContribution> 
 	  <viewContribution 
@@ -72,14 +87,15 @@
    		targetID="org.eclipse.ui.views.TaskList">
     	<action
            class="org.eclipse.mylyn.internal.ide.ui.actions.FocusTaskMarkersViewAction"
+           disabledIcon="icons/elcl16/focus-disabled.gif"
            enablesFor="*"
-           icon="icons/elcl16/interest-filtering.gif"
+           icon="icons/elcl16/focus.gif"
            id="org.eclipse.mylyn.ide.ui.actions.focus.view.markers"
            label="Focus on Active Task"
            menubarPath="mylyn"
            style="toggle"
            toolbarPath="mylyn"
-           tooltip="Focus on Active Task"> 
+           tooltip="Focus on Active Task">
   		</action>  
       </viewContribution> 
     </extension>

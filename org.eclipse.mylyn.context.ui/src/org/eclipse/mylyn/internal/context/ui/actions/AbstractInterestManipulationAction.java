@@ -47,7 +47,12 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 		this.view = view;
 	}
 
-	protected abstract boolean isRemove();
+	@Deprecated
+	protected boolean isRemove() {
+		return !isIncrement();
+	}
+	
+	protected abstract boolean isIncrement();
 
 	public void run(IAction action) {
 		if (!ContextCorePlugin.getContextManager().isContextActive()) {
@@ -56,7 +61,7 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 			return;
 		}
 
-		boolean increment = isRemove();
+		boolean increment = !isRemove();
 		
 		if (selection instanceof StructuredSelection) {
 			StructuredSelection structuredSelection = (StructuredSelection) selection;

@@ -54,6 +54,12 @@
               menubarPath="group.reorganize"
               tooltip="Mark selected element as uninteresting">
         </action>
+        <visibility>
+           <systemProperty
+                 name="org.eclipse.mylyn.context.core.context.active"
+                 value="true">
+           </systemProperty>
+        </visibility>
      </objectContribution>
      <objectContribution
      	adaptable="false"
@@ -68,6 +74,12 @@
 	  		class="org.eclipse.mylyn.internal.context.ui.actions.InterestIncrementAction"
 	  		icon="icons/elcl16/interest-increase.gif"
 	  		enablesFor="*"/>
+     <visibility>
+        <systemProperty
+              name="org.eclipse.mylyn.context.core.context.active"
+              value="true">
+        </systemProperty>
+     </visibility>
 	 </objectContribution>
    </extension>
    

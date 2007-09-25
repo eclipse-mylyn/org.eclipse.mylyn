@@ -339,18 +339,25 @@
            tooltip="Focus on Workweek"/> 
   	</viewContribution>
 	<viewContribution 
-		id="org.eclipse.mylyn..context.ui.outline.contribution" 
+		id="org.eclipse.mylyn.context.ui.outline.contribution" 
    		targetID="org.eclipse.ui.views.ContentOutline">
     	<action
            class="org.eclipse.mylyn.internal.context.ui.actions.FocusOutlineAction"
+           disabledIcon="icons/elcl16/focus-disabled.gif"
            enablesFor="*"
-           icon="icons/elcl16/interest-filtering.gif"
+           icon="icons/elcl16/focus.gif"
            id="org.eclipse.mylyn.context.ui.contentOutline.focus"
            label="Focus on Active Task"
            menubarPath="mylyn"
            style="toggle"
            toolbarPath="mylyn"
-           tooltip="Focus on Active Task (Alt+click to reveal filtered elements)"> 
+           tooltip="Focus on Active Task (Alt+click to reveal filtered elements)">
+        <enablement>
+           <systemProperty
+                 name="org.eclipse.mylyn.context.core.context.active"
+                 value="true">
+           </systemProperty>
+        </enablement>
   		</action> 
   	</viewContribution>
    </extension>

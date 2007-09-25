@@ -49,6 +49,8 @@ public class InteractionContextManager {
 
 	// TODO: move constants
 
+	private static final String PROPERTY_CONTEXT_ACTIVE = "org.eclipse.mylyn.context.core.context.active";
+
 	private static final String PREFERENCE_ATTENTION_MIGRATED = "mylyn.attention.migrated";
 
 	public static final String CONTEXT_FILENAME_ENCODING = "UTF-8";
@@ -67,19 +69,11 @@ public class InteractionContextManager {
 
 	public static final String ACTIVITY_ORIGINID_OS = "os";
 
-//	public static final String ACTIVITY_STRUCTUREKIND_TASK = "task";
-
 	public static final String ACTIVITY_STRUCTUREKIND_LIFECYCLE = "lifecycle";
 
 	public static final String ACTIVITY_STRUCTUREKIND_TIMING = "timing";
 
 	public static final String ACTIVITY_STRUCTUREKIND_ACTIVATION = "activation";
-
-//	public static final String ACTIVITY_ORIGIN_ID = "org.eclipse.mylyn.core";
-
-//	public static final String ACTIVITY_HANDLE_LIFECYCLE = "lifecycle";
-
-	//public static final String ACTIVITY_STRUCTUREKIND_TASK = "context";
 
 	public static final String CONTEXT_HISTORY_FILE_NAME = "activity";
 
@@ -495,6 +489,8 @@ public class InteractionContextManager {
 	 * Public for testing, activate via handle
 	 */
 	public void activateContext(InteractionContext context) {
+		System.setProperty(PROPERTY_CONTEXT_ACTIVE, Boolean.TRUE.toString());
+				
 		activeContext.getContextMap().put(context.getHandleIdentifier(), context);
 		if (contextFiles != null) {
 			contextFiles.add(getFileForContext(context.getHandleIdentifier()));
@@ -570,6 +566,8 @@ public class InteractionContextManager {
 
 	public void deactivateContext(String handleIdentifier) {
 		try {
+			System.setProperty(PROPERTY_CONTEXT_ACTIVE, Boolean.FALSE.toString());
+			
 			IInteractionContext context = activeContext.getContextMap().get(handleIdentifier);
 			if (context != null) {
 				saveContext(handleIdentifier);

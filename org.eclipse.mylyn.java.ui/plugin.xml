@@ -259,14 +259,21 @@
    		targetID="org.eclipse.jdt.ui.PackageExplorer">
     	<action
            class="org.eclipse.mylyn.internal.java.ui.actions.FocusPackageExplorerAction"
+           disabledIcon="icons/elcl16/focus-disabled.gif"
            enablesFor="*"
-           icon="icons/elcl16/interest-filtering.gif"
+           icon="icons/elcl16/focus.gif"
            id="org.eclipse.mylyn.actions.filter.packageExplorer"
            label="Focus on Active Task"
            menubarPath="mylyn"
            style="toggle"
            toolbarPath="mylyn"
-           tooltip="Focus on Active Task (Alt+click to reveal filtered elements)"> 
+           tooltip="Focus on Active Task (Alt+click to reveal filtered elements)">
+        <enablement>
+           <systemProperty
+                 name="org.eclipse.mylyn.context.core.context.active"
+                 value="true">
+           </systemProperty>
+        </enablement>
   		</action> 
       </viewContribution>
  	  <viewContribution
@@ -279,14 +286,21 @@
    		targetID="org.eclipse.debug.ui.DebugView">
     	<action
            class="org.eclipse.mylyn.internal.java.ui.actions.FocusDebugViewAction"
+           disabledIcon="icons/elcl16/focus-disabled.gif"
            enablesFor="*"
-           icon="icons/elcl16/interest-filtering.gif"
+           icon="icons/elcl16/focus.gif"
            id="org.eclipse.mylyn.ui.actions.FilterResourceNavigatorAction"
            label="Focus on Active Task (Experimental)"
            menubarPath="mylyn"
            style="toggle"
            toolbarPath="mylyn"
-           tooltip="Focus on Active Task (Experimental)"> 
+           tooltip="Focus on Active Task (Experimental)">
+        <enablement>
+           <systemProperty
+                 name="org.eclipse.mylyn.context.core.context.active"
+                 value="true">
+           </systemProperty>
+        </enablement> 
   		</action> 
       </viewContribution> 
 	</extension>
@@ -304,11 +318,18 @@
            id="org.eclipse.mylyn.java.ui.interest.increase.element"
            label="Mark as Landmark"
            menubarPath="group.reorganize"
-           tooltip="Mark the selected element as a landmark"/>
+           tooltip="Mark the selected element as a landmark">
+     </action>
      <visibility>
+     	<and>
+	     	<systemProperty
+	               name="org.eclipse.mylyn.context.core.context.active"
+    	           value="true">
+    	    </systemProperty>
            <objectClass
                  name="org.eclipse.jdt.core.IMember">
            </objectClass>
+        </and>
      </visibility>
 	 </objectContribution>
      <objectContribution
@@ -326,26 +347,32 @@
             tooltip="Mark selected element as uninteresting">
       </action>
       <visibility>
-            <or>
-               <objectClass
-                     name="org.eclipse.jdt.core.IMethod">
-               </objectClass>
-               <objectClass
-                     name="org.eclipse.jdt.core.IField">
-               </objectClass>
-               <objectClass
-                     name="org.eclipse.jdt.core.IClassFile">
-               </objectClass>
-               <objectClass
-                     name="org.eclipse.jdt.internal.compiler.env.IBinaryType">
-               </objectClass>
-               <objectClass
-                     name="org.eclipse.jdt.internal.core.JarPackageFragment">
-               </objectClass>
-               <objectClass
-                     name="org.eclipse.jdt.internal.core.JarPackageFragmentRoot">
-               </objectClass>
-            </or>
+      		<and>
+      			<systemProperty
+	               name="org.eclipse.mylyn.context.core.context.active"
+    	           value="true">
+      			</systemProperty>
+      			<or>
+	               <objectClass
+	                     name="org.eclipse.jdt.core.IMethod">
+	               </objectClass>
+	               <objectClass
+	                     name="org.eclipse.jdt.core.IField">
+	               </objectClass>
+	               <objectClass
+	                     name="org.eclipse.jdt.core.IClassFile">
+	               </objectClass>
+	               <objectClass
+	                     name="org.eclipse.jdt.internal.compiler.env.IBinaryType">
+	               </objectClass>
+	               <objectClass
+	                     name="org.eclipse.jdt.internal.core.JarPackageFragment">
+	               </objectClass>
+	               <objectClass
+	                     name="org.eclipse.jdt.internal.core.JarPackageFragmentRoot">
+	               </objectClass>
+	            </or>
+      		</and>
       </visibility>
      </objectContribution>
   </extension>   
@@ -399,7 +426,7 @@
            id="org.eclipse.mylyn.java.ui.actions.ApplyMylynToBrowsingPerspectiveAction"
            style="toggle"
 	       label="Focus Browsing Perspective" 
-	       icon="icons/elcl16/interest-filtering-browsing.gif"
+	       icon="icons/elcl16/focus-browsing.gif"
 	       tooltip="Focus Java Browsing Views on Active Task"
 	       toolbarPath="mylyn"
 	       enablesFor="*">

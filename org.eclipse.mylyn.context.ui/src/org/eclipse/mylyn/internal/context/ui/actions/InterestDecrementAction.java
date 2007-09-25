@@ -14,7 +14,7 @@ package org.eclipse.mylyn.internal.context.ui.actions;
 public class InterestDecrementAction extends AbstractInterestManipulationAction {
 
 	@Override
-	protected boolean isRemove() {
+	protected boolean isIncrement() {
 		return false;
 	}
 }

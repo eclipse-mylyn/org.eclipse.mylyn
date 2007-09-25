@@ -20,7 +20,7 @@ import org.eclipse.ui.navigator.CommonNavigator;
 /**
  * @author Mik Kersten
  */
-public class FocusProjectExplorerAction extends FocusCommonNavigatorAction {
+public class FocusProjectExplorerAction extends FocusCommonNavigatorAction { 
 
 	public FocusProjectExplorerAction() {
 		super(new InterestFilter(), true, true, true);

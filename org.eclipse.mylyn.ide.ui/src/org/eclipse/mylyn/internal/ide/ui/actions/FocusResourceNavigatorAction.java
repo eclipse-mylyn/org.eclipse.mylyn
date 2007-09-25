@@ -13,6 +13,8 @@ import java.util.List;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.action.ActionContributionItem;
+import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -24,6 +26,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.views.navigator.IResourceNavigator;
 import org.eclipse.ui.views.navigator.ResourceNavigator;
+import org.eclipse.ui.views.navigator.ToggleLinkingAction;
 
 /**
  * @author Mik Kersten
@@ -56,6 +59,21 @@ public class FocusResourceNavigatorAction extends AbstractAutoFocusViewAction {
 		}
 	}
 
+	// TODO: should have better way of doing this
+	protected void setLinkingActionEnabled(boolean on) {
+		IViewPart part = super.getPartForAction();
+		if (part instanceof IResourceNavigator) {
+			for (IContributionItem item : ((IResourceNavigator) part).getViewSite().getActionBars().getToolBarManager().getItems()) {
+				if (item instanceof ActionContributionItem) {
+					ActionContributionItem actionItem = (ActionContributionItem)item;
+					if (actionItem.getAction() instanceof ToggleLinkingAction) {
+						actionItem.getAction().setEnabled(on);
+					}
+				}
+			}
+		}
+	}
+	
 	@Override
 	protected void setDefaultLinkingEnabled(boolean on) {
 		IViewPart part = super.getPartForAction();
