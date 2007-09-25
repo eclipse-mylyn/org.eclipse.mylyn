@@ -73,6 +73,8 @@ public class DeleteTaskRepositoryAction extends AbstractTaskRepositoryAction {
 				for (TaskRepository taskRepository : repositoriesToDelete) {
 					TasksUiPlugin.getRepositoryManager().removeRepository(taskRepository,
 							TasksUiPlugin.getDefault().getRepositoriesFilePath());
+					// if repository is contributed via template, ensure it isn't added again
+					TasksUiPlugin.getDefault().deleteTemplate(taskRepository.getUrl());
 				}
 
 				if (repositoriesInUse.size() > 0) {

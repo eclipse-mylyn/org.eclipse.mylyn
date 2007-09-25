@@ -12,6 +12,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -128,6 +129,12 @@ public class RepositorySettingsPageTest extends TestCase {
 		assertEquals("password", page.getPasswordEditor().getStringValue());
 		assertEquals("user", page.getUserName());
 		assertEquals("password", page.getPassword());
+	}
+
+	public void testTemplateDeletion() {
+		assertFalse(TasksUiPlugin.getDefault().isTemplateDeleted(MockRepositoryConnector.REPOSITORY_URL));
+		TasksUiPlugin.getDefault().deleteTemplate(MockRepositoryConnector.REPOSITORY_URL);
+		assertTrue(TasksUiPlugin.getDefault().isTemplateDeleted(MockRepositoryConnector.REPOSITORY_URL));
 	}
 
 	private class MockRepositorySettingsPage extends AbstractRepositorySettingsPage {

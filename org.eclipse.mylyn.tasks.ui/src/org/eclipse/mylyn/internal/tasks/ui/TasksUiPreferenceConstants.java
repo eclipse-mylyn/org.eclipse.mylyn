@@ -38,7 +38,7 @@ public final class TasksUiPreferenceConstants {
 	 */
 	@Deprecated
 	public static final String FILTER_SUBTASKS = "org.eclipse.mylyn.tasks.ui.filters.subtasks";
-	
+
 	public static final String OVERLAYS_INCOMING_TIGHT = "org.eclipse.mylyn.tasks.ui.overlays.incoming.tight";
 
 	public static final String NOTIFICATIONS_ENABLED = "org.eclipse.mylyn.tasks.ui.notifications.enabled";
@@ -58,5 +58,9 @@ public final class TasksUiPreferenceConstants {
 	public static final String REPOSITORY_SYNCH_SCHEDULE_ENABLED = "org.eclipse.mylyn.tasks.ui.repositories.synch.schedule";
 
 	public static final String REPOSITORY_SYNCH_SCHEDULE_MILISECONDS = "org.eclipse.mylyn.tasks.ui.repositories.synch.schedule.miliseconds";
+
+	public static final String TEMPLATES_DELETED = "org.eclipse.mylyn.tasks.ui.templates.deleted";
+
+	public static final String TEMPLATES_DELETED_DELIM = "|";
 
 }

@@ -461,7 +461,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			connector.setTaskDataManager(taskDataManager);
 
 			for (RepositoryTemplate template : connector.getTemplates()) {
-				if (template.addAutomatically) {
+
+				if (template.addAutomatically && !isTemplateDeleted(template.repositoryUrl)) {
 					try {
 						TaskRepository taskRepository = taskRepositoryManager.getRepository(
 								connector.getConnectorKind(), template.repositoryUrl);
@@ -478,6 +479,47 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				}
 			}
 		}
+	}
+
+	/**
+	 * @since 2.1
+	 */
+	public boolean isTemplateDeleted(String repositoryUrl) {
+		String deletedTemplates = getPreferenceStore().getString(TasksUiPreferenceConstants.TEMPLATES_DELETED);
+		String[] templateUrls = deletedTemplates.split("\\" + TasksUiPreferenceConstants.TEMPLATES_DELETED_DELIM);
+		for (String deletedUrl : templateUrls) {
+			if (deletedUrl.equalsIgnoreCase(repositoryUrl)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * @since 2.1
+	 */
+	public void deleteTemplate(String repositoryUrl) {
+		if (!isTemplateDeleted(repositoryUrl) && templateExists(repositoryUrl)) {
+			String deletedTemplates = getPreferenceStore().getString(TasksUiPreferenceConstants.TEMPLATES_DELETED);
+			deletedTemplates += TasksUiPreferenceConstants.TEMPLATES_DELETED_DELIM + repositoryUrl;
+			getPreferenceStore().setValue(TasksUiPreferenceConstants.TEMPLATES_DELETED, deletedTemplates);
+			savePluginPreferences();
+		}
+	}
+
+	/**
+	 * Template exists and is auto add enabled
+	 */
+	private boolean templateExists(String repositoryUrl) {
+		for (AbstractRepositoryConnector connector : taskRepositoryManager.getRepositoryConnectors()) {
+			for (RepositoryTemplate template : connector.getTemplates()) {
+				if (template.repositoryUrl != null && template.repositoryUrl.equalsIgnoreCase(repositoryUrl)
+						&& template.addAutomatically) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	private void checkForCredentials() {
@@ -659,29 +701,29 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	public static TasksUiPlugin getDefault() {
 		return INSTANCE;
 	}
-	
-	public boolean groupSubtasks(AbstractTaskContainer container){
+
+	public boolean groupSubtasks(AbstractTaskContainer container) {
 		boolean groupSubtasks = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
 				TasksUiPreferenceConstants.GROUP_SUBTASKS);
-		
-		if(container instanceof AbstractTask){
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(((AbstractTask)container).getConnectorKind());
+
+		if (container instanceof AbstractTask) {
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(((AbstractTask) container).getConnectorKind());
 			if (connectorUi != null) {
 				if (connectorUi.forceSubtaskHierarchy()) {
 					groupSubtasks = true;
 				}
 			}
 		}
-		
-		if(container instanceof AbstractRepositoryQuery){
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(((AbstractRepositoryQuery)container).getRepositoryKind());
+
+		if (container instanceof AbstractRepositoryQuery) {
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(((AbstractRepositoryQuery) container).getRepositoryKind());
 			if (connectorUi != null) {
 				if (connectorUi.forceSubtaskHierarchy()) {
 					groupSubtasks = true;
 				}
 			}
 		}
-		
+
 		return groupSubtasks;
 	}
 

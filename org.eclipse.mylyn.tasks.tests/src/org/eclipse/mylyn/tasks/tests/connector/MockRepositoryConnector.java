@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.tasks.tests.connector;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -23,6 +24,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.ITaskCollector;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
@@ -164,5 +166,13 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 
 	public void setAttachmentHandler(AbstractAttachmentHandler attachmentHandler) {
 		this.attachmentHandler = attachmentHandler;
+	}
+
+	public Set<RepositoryTemplate> getTemplates() {
+		Set<RepositoryTemplate> templates = new HashSet<RepositoryTemplate>();
+		RepositoryTemplate template = new RepositoryTemplate("Mock Template", REPOSITORY_URL, "utf-8", "1", "new",
+				"prefix", "query", "newAccountUrl", false, true);
+		templates.add(template);
+		return templates;
 	}
 }
