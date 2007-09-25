@@ -70,9 +70,9 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.DeleteAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ExpandAllAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.FilterArchiveContainerAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.FilterCompletedTasksAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.GroupSubTasksAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.GoIntoAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.GoUpAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.GroupSubTasksAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.LinkWithEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskCompleteAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskIncompleteAction;
@@ -137,6 +137,7 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IMemento;
+import org.eclipse.ui.IPageListener;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
@@ -297,6 +298,21 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private Color categoryGradientEnd;
 
+	private final IPageListener PAGE_LISTENER = new IPageListener() {
+		public void pageActivated(IWorkbenchPage page) {
+			filteredTree.indicateActiveTaskWorkingSet();
+		}
+
+		public void pageClosed(IWorkbenchPage page) {
+			// ignore
+			
+		}
+
+		public void pageOpened(IWorkbenchPage page) {
+			// ignore
+		}
+	};
+	
 	private LinkedHashMap<String, IStructuredSelection> lastSelectionByTaskHandle = new LinkedHashMap<String, IStructuredSelection>(
 			SIZE_MAX_SELECTION_HISTORY);
 
@@ -556,7 +572,10 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		TasksUiPlugin.getTaskListManager().removeActivityListener(TASK_ACTIVITY_LISTENER);
 
 		PlatformUI.getWorkbench().getWorkingSetManager().removePropertyChangeListener(this);
-
+		if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().removePageListener(PAGE_LISTENER);
+		}
+		
 		final IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		if (themeManager != null) {
 			themeManager.removePropertyChangeListener(THEME_CHANGE_LISTENER);
@@ -844,11 +863,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		getSite().getPage().addPartListener(editorListener);
 
 		// Need to do this because the page, which holds the active working set is not around on creation, see bug 203179
-		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				filteredTree.indicateActiveTaskWorkingSet();
-			}
-		});
+		PlatformUI.getWorkbench().getActiveWorkbenchWindow().addPageListener(PAGE_LISTENER);
 	}
 
 	private void applyPresentation(String id) {
