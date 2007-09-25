@@ -11,6 +11,7 @@ package org.eclipse.mylyn.tasks.tests;
 import junit.framework.TestCase;
 
 import org.eclipse.jface.preference.StringFieldEditor;
+import org.eclipse.mylyn.internal.tasks.ui.TaskRepositoryUtil;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnectorUi;
@@ -132,9 +133,9 @@ public class RepositorySettingsPageTest extends TestCase {
 	}
 
 	public void testTemplateDeletion() {
-		assertFalse(TasksUiPlugin.getDefault().isTemplateDeleted(MockRepositoryConnector.REPOSITORY_URL));
-		TasksUiPlugin.getDefault().deleteTemplate(MockRepositoryConnector.REPOSITORY_URL);
-		assertTrue(TasksUiPlugin.getDefault().isTemplateDeleted(MockRepositoryConnector.REPOSITORY_URL));
+		assertFalse(TaskRepositoryUtil.isAddAutomaticallyDisabled(MockRepositoryConnector.REPOSITORY_URL));
+		TaskRepositoryUtil.disableAddAutomatically(MockRepositoryConnector.REPOSITORY_URL);
+		assertTrue(TaskRepositoryUtil.isAddAutomaticallyDisabled(MockRepositoryConnector.REPOSITORY_URL));
 	}
 
 	private class MockRepositorySettingsPage extends AbstractRepositorySettingsPage {

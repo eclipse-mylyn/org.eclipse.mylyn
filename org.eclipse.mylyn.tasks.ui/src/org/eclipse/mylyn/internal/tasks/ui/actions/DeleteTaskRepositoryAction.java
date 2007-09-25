@@ -14,6 +14,7 @@ import java.util.Set;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.mylyn.internal.tasks.ui.TaskRepositoryUtil;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -74,7 +75,7 @@ public class DeleteTaskRepositoryAction extends AbstractTaskRepositoryAction {
 					TasksUiPlugin.getRepositoryManager().removeRepository(taskRepository,
 							TasksUiPlugin.getDefault().getRepositoriesFilePath());
 					// if repository is contributed via template, ensure it isn't added again
-					TasksUiPlugin.getDefault().deleteTemplate(taskRepository.getUrl());
+					TaskRepositoryUtil.disableAddAutomatically(taskRepository.getUrl());
 				}
 
 				if (repositoriesInUse.size() > 0) {

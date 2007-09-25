@@ -56,6 +56,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TaskListNotificationManager;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListNotificationQueryIncoming;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListNotificationReminder;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListSynchronizationScheduler;
+import org.eclipse.mylyn.internal.tasks.ui.TaskRepositoryUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskListSaveManager;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskListWriter;
@@ -462,7 +463,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 			for (RepositoryTemplate template : connector.getTemplates()) {
 
-				if (template.addAutomatically && !isTemplateDeleted(template.repositoryUrl)) {
+				if (template.addAutomatically && !TaskRepositoryUtil.isAddAutomaticallyDisabled(template.repositoryUrl)) {
 					try {
 						TaskRepository taskRepository = taskRepositoryManager.getRepository(
 								connector.getConnectorKind(), template.repositoryUrl);
@@ -479,47 +480,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				}
 			}
 		}
-	}
-
-	/**
-	 * @since 2.1
-	 */
-	public boolean isTemplateDeleted(String repositoryUrl) {
-		String deletedTemplates = getPreferenceStore().getString(TasksUiPreferenceConstants.TEMPLATES_DELETED);
-		String[] templateUrls = deletedTemplates.split("\\" + TasksUiPreferenceConstants.TEMPLATES_DELETED_DELIM);
-		for (String deletedUrl : templateUrls) {
-			if (deletedUrl.equalsIgnoreCase(repositoryUrl)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * @since 2.1
-	 */
-	public void deleteTemplate(String repositoryUrl) {
-		if (!isTemplateDeleted(repositoryUrl) && templateExists(repositoryUrl)) {
-			String deletedTemplates = getPreferenceStore().getString(TasksUiPreferenceConstants.TEMPLATES_DELETED);
-			deletedTemplates += TasksUiPreferenceConstants.TEMPLATES_DELETED_DELIM + repositoryUrl;
-			getPreferenceStore().setValue(TasksUiPreferenceConstants.TEMPLATES_DELETED, deletedTemplates);
-			savePluginPreferences();
-		}
-	}
-
-	/**
-	 * Template exists and is auto add enabled
-	 */
-	private boolean templateExists(String repositoryUrl) {
-		for (AbstractRepositoryConnector connector : taskRepositoryManager.getRepositoryConnectors()) {
-			for (RepositoryTemplate template : connector.getTemplates()) {
-				if (template.repositoryUrl != null && template.repositoryUrl.equalsIgnoreCase(repositoryUrl)
-						&& template.addAutomatically) {
-					return true;
-				}
-			}
-		}
-		return false;
 	}
 
 	private void checkForCredentials() {
