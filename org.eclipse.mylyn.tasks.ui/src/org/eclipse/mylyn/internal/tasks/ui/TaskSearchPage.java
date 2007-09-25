@@ -150,7 +150,6 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 				displayQueryPage(repositoryCombo.getSelectionIndex());
 			}
 		});
-//		repositoryCombo.setLayoutData(new GridData(GridData));
 		label = new Label(group, SWT.NONE);
 		label.setText("  ");
 
@@ -264,8 +263,8 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		}
 
 		if (queryPages[pageIndex] == null) {
-			String repositoryUrl = repositoryCombo.getItem(pageIndex);
-			repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryUrl);
+			String repositoryLabel = repositoryCombo.getItem(pageIndex);
+			repository = (TaskRepository) repositoryCombo.getData(repositoryLabel);
 			if (repository != null) {
 				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
 				if (connectorUi != null) {
@@ -322,7 +321,11 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 
 			IDialogSettings settings = getDialogSettings();
 			if (repositoryCombo != null) {
-				repositoryCombo.setItems(repositoryUrls);
+				for (int x = 0; x < searchableRepositories.size(); x++) {
+					repositoryCombo.add(searchableRepositories.get(x).getRepositoryLabel());
+					repositoryCombo.setData(searchableRepositories.get(x).getRepositoryLabel(),
+							searchableRepositories.get(x));
+				}
 				if (repositoryUrls.length == 0) {
 					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), TITLE_REPOSITORY_SEARCH,
 							TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
@@ -330,7 +333,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 					String selectRepo = settings.get(STORE_REPO_ID);
 					if (selectRepo != null && repositoryCombo.indexOf(selectRepo) > -1) {
 						repositoryCombo.select(repositoryCombo.indexOf(selectRepo));
-						repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryCombo.getText());
+						repository = (TaskRepository) repositoryCombo.getData(selectRepo);
 						if (repository == null) {
 							// TODO: Display no repository error
 						}
@@ -376,8 +379,8 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 					selectedTask.getRepositoryUrl());
 			if (repository != null) {
 				int index = 0;
-				for (String repositoryUrl : repositoryCombo.getItems()) {
-					if (repositoryUrl.equals(repository.getUrl())) {
+				for (String repositoryLabel : repositoryCombo.getItems()) {
+					if (repositoryLabel.equals(repository.getRepositoryLabel())) {
 						repositoryCombo.select(index);
 					}
 					index++;
