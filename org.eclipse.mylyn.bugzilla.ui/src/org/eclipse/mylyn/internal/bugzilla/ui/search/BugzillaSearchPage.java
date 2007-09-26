@@ -97,8 +97,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	private static final String[] emailRoleValues = { "emailassigned_to1", "emailreporter1", "emailcc1",
 			"emaillongdesc1" };
 
-	// protected IPreferenceStore prefs = BugzillaUiPlugin.getDefault().getPreferenceStore();
-
 	private BugzillaRepositoryQuery originalQuery = null;
 
 	protected boolean restoring = false;
@@ -108,19 +106,25 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	private SelectionAdapter updateActionSelectionAdapter = new SelectionAdapter() {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
-			if (scontainer != null) {
-				scontainer.setPerformActionEnabled(canQuery());
+			if (isControlCreated()) {
+				setPageComplete(isPageComplete());
 			}
 		}
 	};
 
-	// private TaskRepository selectedRepository = null;
-
 	private final class ModifyListenerImplementation implements ModifyListener {
 		public void modifyText(ModifyEvent e) {
-			if (scontainer != null) {
-				scontainer.setPerformActionEnabled(canQuery());
+			if (isControlCreated()) {
+				setPageComplete(isPageComplete());
 			}
+		}
+	}
+
+	@Override
+	public void setPageComplete(boolean complete) {
+		super.setPageComplete(complete);
+		if (scontainer != null) {
+			scontainer.setPerformActionEnabled(complete);
 		}
 	}
 
@@ -235,14 +239,10 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 			Text queryTitle = new Text(composite, SWT.BORDER);
 			queryTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-			queryTitle.addModifyListener(new ModifyListener() {
-				public void modifyText(ModifyEvent e) {
-					setPageComplete(isPageComplete());
-				}
-			});
 			if (originalQuery != null) {
 				queryTitle.setText(originalQuery.getSummary());
 			}
+			queryTitle.addModifyListener(new ModifyListenerImplementation());
 			title = queryTitle;
 			title.setFocus();
 		}
@@ -428,9 +428,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 					restoring = false;
 					restoreWidgetValues();
 				}
-				if (scontainer != null) {
-					scontainer.setPerformActionEnabled(canQuery());
-				}
+				setPageComplete(isPageComplete());
 			}
 		});
 
@@ -837,10 +835,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 					restoreWidgetValues();
 				}
 			}
-
-			if (scontainer != null) {
-				scontainer.setPerformActionEnabled(canQuery());
-			}
+			setPageComplete(isPageComplete());
 			if (getWizard() == null) {
 				// TODO: wierd check
 				summaryPattern.setFocus();
@@ -859,6 +854,11 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				|| priority.getSelectionCount() > 0 || hardware.getSelectionCount() > 0 || os.getSelectionCount() > 0
 				|| summaryPattern.getText().length() > 0 || commentPattern.getText().length() > 0
 				|| emailPattern.getText().length() > 0 || keywords.getText().length() > 0;
+	}
+
+	@Override
+	public boolean isPageComplete() {
+		return getWizard() == null ? canQuery() : canQuery() && super.isPageComplete();
 	}
 
 	/**

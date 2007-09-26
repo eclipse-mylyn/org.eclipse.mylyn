@@ -194,22 +194,18 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 
 	private void updatePageEnablement() {
 		if (keyText.getText() != null && keyText.getText().trim().length() > 0) {
-			setControlsEnabled(queryPages[currentPageIndex], false);
+			//setControlsEnabled(queryPages[currentPageIndex], false);
+			if (queryPages[currentPageIndex].getData(PAGE_KEY) instanceof AbstractRepositoryQueryPage) {
+				((AbstractRepositoryQueryPage) queryPages[currentPageIndex].getData(PAGE_KEY)).setControlsEnabled(false);
+			}
 			pageContainer.setPerformActionEnabled(true);
 		} else {
-			setControlsEnabled(queryPages[currentPageIndex], true);
-			pageContainer.setPerformActionEnabled(false);
-		}
-	}
-
-	// TODO: make reusable or find better API, task editor has similar functionality
-	private void setControlsEnabled(Control control, boolean enabled) {
-		control.setEnabled(enabled);
-		if (control instanceof Composite) {
-			for (Control childControl : ((Composite) control).getChildren()) {
-				childControl.setEnabled(enabled);
-				setControlsEnabled(childControl, enabled);
+//			setControlsEnabled(queryPages[currentPageIndex], true);
+			if (queryPages[currentPageIndex].getData(PAGE_KEY) instanceof AbstractRepositoryQueryPage) {
+				((AbstractRepositoryQueryPage) queryPages[currentPageIndex].getData(PAGE_KEY)).setControlsEnabled(true);
 			}
+			//setControlsEnabled(queryPages[currentPageIndex], true);
+			//pageContainer.setPerformActionEnabled(false);
 		}
 	}
 
@@ -291,6 +287,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		currentPageIndex = pageIndex;
 		fParentComposite.getParent().layout(true, true);
 		updatePageEnablement();
+
 	}
 
 	@Override
