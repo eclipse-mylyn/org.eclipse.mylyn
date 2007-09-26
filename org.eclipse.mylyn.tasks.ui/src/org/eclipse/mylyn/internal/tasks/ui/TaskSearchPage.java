@@ -402,6 +402,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			}
 //			repositoryCombo.setFocus();
 		}
+		updatePageEnablement();
 	}
 
 	private boolean isTaskKeyCandidate(String contents) {
