@@ -146,9 +146,7 @@ class SynchronizeQueryJob extends Job {
 							TasksUiPlugin.getDefault().getRepositoriesFilePath());
 				}
 			}
-
 			taskList.notifyContainersUpdated(null);
-
 			return Status.OK_STATUS;
 		} finally {
 			monitor.done();
