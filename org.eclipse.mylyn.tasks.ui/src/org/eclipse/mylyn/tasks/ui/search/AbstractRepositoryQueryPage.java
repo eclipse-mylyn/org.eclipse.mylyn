@@ -31,6 +31,7 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -169,6 +170,24 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 			NewSearchUI.runQueryInBackground(collector);
 		}
 		return true;
+	}
+
+	/**
+	 * @since 2.1
+	 */
+	public void setControlsEnabled(boolean enabled) {
+		setControlsEnabled(getControl(), enabled);
+	}
+
+	// TODO: make reusable or find better API, task editor has similar functionality
+	private void setControlsEnabled(Control control, boolean enabled) {
+		if (control instanceof Composite) {
+			for (Control childControl : ((Composite) control).getChildren()) {
+				childControl.setEnabled(enabled);
+				setControlsEnabled(childControl, enabled);
+			}
+		}
+		setPageComplete(isPageComplete());
 	}
 
 }
