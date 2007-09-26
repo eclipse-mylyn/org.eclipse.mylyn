@@ -19,23 +19,24 @@ public enum BugzillaReportElement {
 	STATUS_WHITEBOARD("Status Whiteboard:", "status_whiteboard", true, false), ACTUAL_TIME("Hours Worked:",
 			"actual_time", true), ADD_COMMENT("Additional Comments:", "comment", true, false), ASSIGNED_TO(
 			"Assigned to:", "assigned_to", true, true), ATTACHID("attachid", "attachid"), ATTACHMENT("attachment",
-			"attachment"), BLOCKED("Bug blocks:", "blocked", true, false), BUG("bug", "bug", true), BUG_FILE_LOC(
-			"URL:", "bug_file_loc", true, false), BUG_ID("Bug:", "bug_id", true), BUG_SEVERITY("Severity:",
-			"bug_severity", false), BUG_STATUS("Status:", "bug_status", true, true), BUG_WHEN("bug_when", "bug_when",
-			true, true), BUGZILLA("bugzilla", "bugzilla", true), CC("CC:", "cc", true, true), CCLIST_ACCESSIBLE(
-			"CC List", "cclist_accessible", true), CLASSIFICATION("Classification:", "classification", true), CLASSIFICATION_ID(
+			"attachment"), BLOCKED("Blocks:", "blocked", true, false), BUG("bug", "bug", true), BUG_FILE_LOC("URL:",
+			"bug_file_loc", true, false), BUG_ID("Bug:", "bug_id", true), BUG_SEVERITY("Severity:", "bug_severity",
+			false), BUG_STATUS("Status:", "bug_status", true, true), BUG_WHEN("bug_when", "bug_when", true, true), BUGZILLA(
+			"bugzilla", "bugzilla", true), CC("CC:", "cc", true, true), CCLIST_ACCESSIBLE("CC List",
+			"cclist_accessible", true), CLASSIFICATION("Classification:", "classification", true), CLASSIFICATION_ID(
 			"Classification ID:", "classification_id", true), COMPONENT("Component:", "component", false), CREATION_TS(
 			"Opened:", "creation_ts", true), CTYPE("Content Type", "ctype"), DATA("data", "data"), DATE("Date", "date"), DEADLINE(
-			"Deadline:", "deadline", true, true), DELTA_TS("Modified:", "delta_ts", true), DEPENDSON("Bug depends on:",
-			"dependson", true, false), DESC("desc", "desc", true, true), EVERCONFIRMED("everconfirmed",
-			"everconfirmed", true), ESTIMATED_TIME("Estimated Time:", "estimated_time", true), FILENAME("filename",
-			"filename"), GROUP("Group", "group", true, true), IS_OBSOLETE("Obsolete", "isobsolete", true), IS_PATCH(
+			"Deadline:", "deadline", true, true), DELTA_TS("Modified:", "delta_ts", true), DEPENDSON(
+			"Depends on (Subtasks):", "dependson", true, false), DESC("desc", "desc", true, true), EVERCONFIRMED(
+			"everconfirmed", "everconfirmed", true), ESTIMATED_TIME("Estimated Time:", "estimated_time", true), FILENAME(
+			"filename", "filename"), GROUP("Group", "group", true, true), IS_OBSOLETE("Obsolete", "isobsolete", true), IS_PATCH(
 			"Patch", "ispatch", true), KEYWORDS("Keywords:", "keywords", true), LONG_DESC("Description:", "long_desc"), LONGDESCLENGTH(
 			"Number of comments", "longdesclength", true), NEWCC("Add CC:", "newcc", true), OP_SYS("OS:", "op_sys",
 			false), PRIORITY("Priority:", "priority", false, false), PRODUCT("Product:", "product", false), REP_PLATFORM(
 			"Platform:", "rep_platform", false), REPORTER("Reporter:", "reporter", true, true), REPORTER_ACCESSIBLE(
 			"Reporter", "reporter_accessible", true), RESOLUTION("Resolution:", "resolution", false, true), // Exiting bug field, new cc
-	REMAINING_TIME("Hours Left:", "remaining_time", true), SET_DEFAULT_ASSIGNEE("Reassign to default assignee", "set_default_assignee", false), SHORT_DESC("Summary:", "short_desc", true), TARGET_MILESTONE(
+	REMAINING_TIME("Hours Left:", "remaining_time", true), SET_DEFAULT_ASSIGNEE("Reassign to default assignee",
+			"set_default_assignee", false), SHORT_DESC("Summary:", "short_desc", true), TARGET_MILESTONE(
 			"Target milestone:", "target_milestone", false), THETEXT("thetext", "thetext", false, true), TYPE("type",
 			"type"), UNKNOWN("UNKNOWN", "UNKNOWN"), VERSION("Version:", "version", false), INSTALL_VERSION(
 			"version of bugzilla installed", "install_version", true), VOTES("Votes:", "votes", true, true), WORK_TIME(
