@@ -107,7 +107,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 					String path = names[0];
 					File file = new File(path);
 					if (ContextCorePlugin.getContextManager().isValidContextFile(file)) {
-						ContextCorePlugin.getContextManager().transferContextAndActivate(
+						ContextCorePlugin.getContextManager().copyContext(
 								targetTask.getHandleIdentifier(), file);
 						new TaskActivateAction().run(targetTask);
 					}
