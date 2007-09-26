@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.tasks.ui;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -298,10 +299,10 @@ public final class RepositorySynchronizationManager {
 			TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(repositoryTask, false);
 		}
 
-		// for repositories that don't support task data or if no task data is available
-		//if (read && taskData == null) {
-		//	repositoryTask.setLastReadTimeStamp(LocalTask.SYNC_DATE_NOW);
-		//}
+		// for connectors that don't support task data set read date to now (bug#204741)
+		if (read && taskData == null && repositoryTask.isLocal()) {
+			repositoryTask.setLastReadTimeStamp((new Date()).toString());
+		}
 	}
 
 	public void discardOutgoing(AbstractTask repositoryTask) {
