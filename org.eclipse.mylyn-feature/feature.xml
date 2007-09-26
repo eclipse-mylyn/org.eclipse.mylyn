@@ -220,7 +220,7 @@ litigation.
    </url>
 
    <requires>
-      <import plugin="org.eclipse.ui" version="3.3.0.I20070921" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui" version="3.4.0.I20070921" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui.forms"/>
       <import plugin="org.eclipse.mylyn.tasks.core"/>
       <import plugin="org.eclipse.mylyn.tasks.ui"/>
