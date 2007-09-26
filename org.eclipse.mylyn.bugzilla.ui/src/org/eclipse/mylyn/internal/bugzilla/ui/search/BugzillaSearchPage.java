@@ -848,12 +848,17 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	 * Returns <code>true</code> if at least some parameter is given to query on.
 	 */
 	private boolean canQuery() {
-		return product.getSelectionCount() > 0 || component.getSelectionCount() > 0 || version.getSelectionCount() > 0
-				|| target.getSelectionCount() > 0 || status.getSelectionCount() > 0
-				|| resolution.getSelectionCount() > 0 || severity.getSelectionCount() > 0
-				|| priority.getSelectionCount() > 0 || hardware.getSelectionCount() > 0 || os.getSelectionCount() > 0
-				|| summaryPattern.getText().length() > 0 || commentPattern.getText().length() > 0
-				|| emailPattern.getText().length() > 0 || keywords.getText().length() > 0;
+		if (isControlCreated()) {
+			return product.getSelectionCount() > 0 || component.getSelectionCount() > 0
+					|| version.getSelectionCount() > 0 || target.getSelectionCount() > 0
+					|| status.getSelectionCount() > 0 || resolution.getSelectionCount() > 0
+					|| severity.getSelectionCount() > 0 || priority.getSelectionCount() > 0
+					|| hardware.getSelectionCount() > 0 || os.getSelectionCount() > 0
+					|| summaryPattern.getText().length() > 0 || commentPattern.getText().length() > 0
+					|| emailPattern.getText().length() > 0 || keywords.getText().length() > 0;
+		} else {
+			return false;
+		}
 	}
 
 	@Override
