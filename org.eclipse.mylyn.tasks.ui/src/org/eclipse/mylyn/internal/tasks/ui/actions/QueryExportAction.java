@@ -78,12 +78,12 @@ public class QueryExportAction extends Action implements IViewActionDelegate {
 		FileDialog dialog = new FileDialog(shell, SWT.PRIMARY_MODAL | SWT.SAVE);
 		dialog.setFilterExtensions(new String[] { "*" + ITasksUiConstants.FILE_EXTENSION });
 		if (queries.size() == 1) {
-			dialog.setFileName(queries.get(0).getHandleIdentifier());
+			dialog.setFileName(queries.get(0).getHandleIdentifier() + ITasksUiConstants.FILE_EXTENSION);
 		} else {
 			String fomratString = "yyyy-MM-dd";
 			SimpleDateFormat format = new SimpleDateFormat(fomratString, Locale.ENGLISH);
 			String date = format.format(new Date());
-			dialog.setFileName(date + "-exported-queries");
+			dialog.setFileName(date + "-exported-queries" + ITasksUiConstants.FILE_EXTENSION);
 		}
 		
 		String path = dialog.open();

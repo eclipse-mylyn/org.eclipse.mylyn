@@ -85,7 +85,7 @@ public class TaskExportAction extends Action implements IViewActionDelegate {
 			dialog.setFilterExtensions(new String[] { "*" + ITasksUiConstants.FILE_EXTENSION });
 
 			AbstractTask task = tasks.get(0);
-			dialog.setFileName(encodeName(task));
+			dialog.setFileName(encodeName(task) + ITasksUiConstants.FILE_EXTENSION);
 			String path = dialog.open();
 
 			if (path != null) {
