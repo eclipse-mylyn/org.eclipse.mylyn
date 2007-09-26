@@ -27,6 +27,7 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.internal.navigator.NavigatorContentService;
 import org.eclipse.ui.internal.navigator.actions.LinkEditorAction;
 import org.eclipse.ui.internal.navigator.extensions.LinkHelperService;
+import org.eclipse.ui.internal.navigator.filters.SelectFiltersAction;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.ILinkHelper;
 
@@ -84,13 +85,21 @@ public abstract class FocusCommonNavigatorAction extends AbstractAutoFocusViewAc
 	}
 
 	// TODO: should have better way of doing this
-	protected void setLinkingActionEnabled(boolean on) {
+	protected void setManualFilteringAndLinkingEnabled(boolean on) {
 		IViewPart part = super.getPartForAction();
 		if (part instanceof CommonNavigator) {
 			for (IContributionItem item : ((CommonNavigator) part).getViewSite().getActionBars().getToolBarManager().getItems()) {
 				if (item instanceof ActionContributionItem) {
 					ActionContributionItem actionItem = (ActionContributionItem)item;
 					if (actionItem.getAction() instanceof LinkEditorAction) {
+						actionItem.getAction().setEnabled(on);
+					}
+				}
+			}
+			for (IContributionItem item : ((CommonNavigator) part).getViewSite().getActionBars().getMenuManager().getItems()) {
+				if (item instanceof ActionContributionItem) {
+					ActionContributionItem actionItem = (ActionContributionItem)item;
+					if (actionItem.getAction() instanceof SelectFiltersAction) {
 						actionItem.getAction().setEnabled(on);
 					}
 				}

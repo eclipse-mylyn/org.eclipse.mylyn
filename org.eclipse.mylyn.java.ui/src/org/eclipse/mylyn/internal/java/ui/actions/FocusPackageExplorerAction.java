@@ -68,20 +68,55 @@ public class FocusPackageExplorerAction extends AbstractAutoFocusViewAction {
 	}
 
 	// TODO: should have better way of doing this
-	protected void setLinkingActionEnabled(boolean on) {
+	protected void setManualFilteringAndLinkingEnabled(boolean enabled) {
 		IViewPart part = super.getPartForAction();
 		if (part instanceof PackageExplorerPart) {
-			for (IContributionItem item : ((PackageExplorerPart) part).getViewSite().getActionBars().getToolBarManager().getItems()) {
+			for (IContributionItem item : ((PackageExplorerPart) part).getViewSite()
+					.getActionBars()
+					.getToolBarManager()
+					.getItems()) {
 				if (item instanceof ActionContributionItem) {
-					ActionContributionItem actionItem = (ActionContributionItem)item;
+					ActionContributionItem actionItem = (ActionContributionItem) item;
 					if (actionItem.getAction() instanceof ToggleLinkingAction) {
-						actionItem.getAction().setEnabled(on);
+						actionItem.getAction().setEnabled(enabled);
 					}
 				}
 			}
+			for (IContributionItem item : ((PackageExplorerPart) part).getViewSite()
+					.getActionBars()
+					.getMenuManager()
+					.getItems()) {
+				if (item instanceof ActionContributionItem) {
+					ActionContributionItem actionItem = (ActionContributionItem) item;
+					// TODO: file bug asking for extensibility
+					if (actionItem.getAction().getClass().getSimpleName().equals("ShowFilterDialogAction")) {
+						actionItem.getAction().setEnabled(enabled);
+					}
+				}
+				// NOTE: turning off dynamically contributed filter items is not currently feasible
+//				else if (item instanceof ContributionItem) {
+//					ContributionItem contributionItem = (ContributionItem) item;
+//					
+//					if (contributionItem.getClass().getSimpleName().equals("FilterActionMenuContributionItem")) {
+//						try {
+//							Class<?> clazz = contributionItem.getClass();
+//							Field field = clazz.getDeclaredField("fActionGroup");
+//							field.setAccessible(true);
+//							Object object = field.get(contributionItem);
+//							if (object instanceof CustomFiltersActionGroup) {
+//								CustomFiltersActionGroup group = (CustomFiltersActionGroup) object;
+//								System.err.println(">>>> " + group);
+//								group.setFilters(new String[] { });
+//							}
+//						} catch (Exception e) {
+//							e.printStackTrace();
+//						}
+//					}
+//				}
+			}
 		}
 	}
-	
+
 	@Override
 	protected void setDefaultLinkingEnabled(boolean on) {
 		IViewPart part = super.getPartForAction();

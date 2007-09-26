@@ -24,6 +24,7 @@ import org.eclipse.mylyn.context.ui.InterestFilter;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.views.navigator.FilterSelectionAction;
 import org.eclipse.ui.views.navigator.IResourceNavigator;
 import org.eclipse.ui.views.navigator.ResourceNavigator;
 import org.eclipse.ui.views.navigator.ToggleLinkingAction;
@@ -60,13 +61,22 @@ public class FocusResourceNavigatorAction extends AbstractAutoFocusViewAction {
 	}
 
 	// TODO: should have better way of doing this
-	protected void setLinkingActionEnabled(boolean on) {
+	protected void setManualFilteringAndLinkingEnabled(boolean on) {
 		IViewPart part = super.getPartForAction();
 		if (part instanceof IResourceNavigator) {
 			for (IContributionItem item : ((IResourceNavigator) part).getViewSite().getActionBars().getToolBarManager().getItems()) {
 				if (item instanceof ActionContributionItem) {
 					ActionContributionItem actionItem = (ActionContributionItem)item;
 					if (actionItem.getAction() instanceof ToggleLinkingAction) {
+						actionItem.getAction().setEnabled(on);
+					}
+				}
+			}
+			for (IContributionItem item : ((IResourceNavigator) part).getViewSite().getActionBars().getMenuManager().getItems()) {
+				if (item instanceof ActionContributionItem) {
+					ActionContributionItem actionItem = (ActionContributionItem)item;
+					// TODO: consider filing bug asking for extensibility
+					if (actionItem.getAction() instanceof FilterSelectionAction) {
 						actionItem.getAction().setEnabled(on);
 					}
 				}

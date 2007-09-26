@@ -220,7 +220,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 				updateInterestFilter(on, viewer);
 			}
 
-			setLinkingActionEnabled(!on);
+			setManualFilteringAndLinkingEnabled(!on);
 			if (manageLinking) {
 				updateLinking(on);
 			}
@@ -301,7 +301,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 		return false;
 	}
 
-	protected void setLinkingActionEnabled(boolean on) {
+	protected void setManualFilteringAndLinkingEnabled(boolean on) {
 		// ignore
 	}
 
