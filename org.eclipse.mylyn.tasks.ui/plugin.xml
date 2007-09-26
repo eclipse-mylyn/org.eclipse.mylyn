@@ -358,7 +358,7 @@
         enablesFor="1"
         icon="icons/etool16/task-new.gif"
         id="org.eclipse.mylyn.tasks.ui.actions.task.query"
-        label="Clone Task"
+        label="Clone Task..."
         menubarPath="org.eclipse.mylyn.tasks.ui.menu.operations/clone"
         tooltip="Clone Task">
      <enablement>
