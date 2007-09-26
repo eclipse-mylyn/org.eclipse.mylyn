@@ -490,7 +490,7 @@ public class InteractionContextManager {
 	 */
 	public void activateContext(InteractionContext context) {
 		System.setProperty(PROPERTY_CONTEXT_ACTIVE, Boolean.TRUE.toString());
-				
+
 		activeContext.getContextMap().put(context.getHandleIdentifier(), context);
 		if (contextFiles != null) {
 			contextFiles.add(getFileForContext(context.getHandleIdentifier()));
@@ -559,7 +559,8 @@ public class InteractionContextManager {
 	}
 
 	public void deactivateAllContexts() {
-		for (String handleIdentifier : activeContext.getContextMap().keySet()) {
+		Set<String> handles = new HashSet<String>(activeContext.getContextMap().keySet());
+		for (String handleIdentifier : handles) {
 			deactivateContext(handleIdentifier);
 		}
 	}
@@ -567,7 +568,7 @@ public class InteractionContextManager {
 	public void deactivateContext(String handleIdentifier) {
 		try {
 			System.setProperty(PROPERTY_CONTEXT_ACTIVE, Boolean.FALSE.toString());
-			
+
 			IInteractionContext context = activeContext.getContextMap().get(handleIdentifier);
 			if (context != null) {
 				saveContext(handleIdentifier);
@@ -1083,6 +1084,19 @@ public class InteractionContextManager {
 			contextFiles.add(targetContextFile);
 		} catch (IOException e) {
 			StatusHandler.fail(e, "Cold not transfer context: " + targetcontextHandle, false);
+		}
+	}
+
+	/**
+	 * clones context from source to destination
+	 * 
+	 * @since 2.1
+	 */
+	public void cloneContext(String sourceContextHandle, String destinationContextHandle) {
+		InteractionContext source = loadContext(sourceContextHandle);
+		if (source != null) {
+			source.setHandleIdentifier(destinationContextHandle);
+			saveContext(source);
 		}
 	}
 

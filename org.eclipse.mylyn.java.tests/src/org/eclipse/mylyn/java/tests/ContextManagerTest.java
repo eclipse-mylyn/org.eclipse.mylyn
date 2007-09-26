@@ -32,6 +32,7 @@ import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.internal.context.core.CompositeInteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.java.ui.InterestInducingProblemListener;
@@ -161,22 +162,22 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 		context.parseEvent(mockSelection("1"));
 		manager.saveContext(context.getHandleIdentifier());
 		assertTrue(sourceFile.exists());
-		
 
 		InteractionContext toContext = new InteractionContext("toContext", scaling);
 		File toFile = ContextCorePlugin.getContextManager().getFileForContext(toContext.getHandleIdentifier());
 		assertFalse(toFile.exists());
-		
+
 		manager.copyContext(toContext.getHandleIdentifier(), sourceFile);
 		manager.saveContext(toContext.getHandleIdentifier());
 		manager.activateContext(toContext.getHandleIdentifier());
-		assertEquals(manager.getActiveContext().getHandleIdentifier(), toContext.getHandleIdentifier());
+		assertEquals(((CompositeInteractionContext) manager.getActiveContext()).get("toContext").getHandleIdentifier(),
+				toContext.getHandleIdentifier());
 		assertTrue(toFile.exists());
 		toFile.delete();
 		assertFalse(toFile.delete());
 		manager.deactivateAllContexts();
 	}
-	
+
 	public void testHasContext() {
 		manager.getFileForContext("1").delete();
 		assertFalse(manager.getFileForContext("1").exists());

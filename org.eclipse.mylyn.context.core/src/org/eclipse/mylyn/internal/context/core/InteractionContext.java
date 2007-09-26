@@ -176,6 +176,13 @@ public class InteractionContext implements IInteractionContext {
 		return handleIdentifier;
 	}
 
+	/**
+	 * @since 2.1
+	 */
+	public void setHandleIdentifier(String handle) {
+		this.handleIdentifier = handle;
+	}
+
 	@Override
 	public String toString() {
 		return handleIdentifier;

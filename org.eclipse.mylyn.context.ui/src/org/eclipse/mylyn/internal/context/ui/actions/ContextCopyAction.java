@@ -8,14 +8,13 @@
 
 package org.eclipse.mylyn.internal.context.ui.actions;
 
-import java.io.File;
-
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskSelectionDialog;
@@ -87,18 +86,20 @@ public class ContextCopyAction extends TaskContextAction {
 
 		if (targetTask != null) {
 			TasksUiPlugin.getTaskListManager().deactivateAllTasks();
-			File contextFile = ContextCorePlugin.getContextManager()
-					.getFileForContext(sourceTask.getHandleIdentifier());
+			InteractionContext source = ContextCorePlugin.getContextManager().loadContext(
+					sourceTask.getHandleIdentifier());
 
 			if (targetTask.equals(sourceTask)) {
 				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 						ITasksUiConstants.TITLE_DIALOG, "Target task can not be the same as source task.");
-			} else if (!contextFile.exists()) {
+			} else if (source == null /*!contextFile.exists()*/) {
 				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 						ITasksUiConstants.TITLE_DIALOG, "Source task does not have a context.");
 			} else {
-				ContextCorePlugin.getContextManager().copyContext(targetTask.getHandleIdentifier(),
-						contextFile);
+
+				ContextCorePlugin.getContextManager().cloneContext(sourceTask.getHandleIdentifier(),
+						targetTask.getHandleIdentifier());
+
 				TasksUiPlugin.getTaskListManager().activateTask(targetTask);
 				TaskListView view = TaskListView.getFromActivePerspective();
 				if (view != null) {
