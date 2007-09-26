@@ -138,6 +138,16 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				bugzillaTask.setOwner(owner);
 			}
 
+			// Creation Date
+			String createdString = taskData.getCreated();
+			if (createdString != null && createdString.length() > 0) {
+				Date dateCreated = taskData.getAttributeFactory().getDateForAttributeType(
+						RepositoryTaskAttribute.DATE_CREATION, taskData.getCreated());
+				if (dateCreated != null) {
+					bugzillaTask.setCreationDate(dateCreated);
+				}
+			}
+
 			// Completed
 			boolean isComplete = false;
 			// TODO: use repository configuration to determine what -completed-
@@ -518,12 +528,12 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	/**
 	 * Adds bug attributes to new bug model and sets defaults
-	 *
+	 * 
 	 * @param proxySettings
 	 *            TODO
 	 * @param characterEncoding
 	 *            TODO
-	 *
+	 * 
 	 */
 	public static void setupNewBugAttributes(TaskRepository taskRepository, RepositoryTaskData newTaskData)
 			throws CoreException {
