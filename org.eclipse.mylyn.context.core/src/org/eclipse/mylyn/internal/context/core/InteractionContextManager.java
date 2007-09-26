@@ -510,8 +510,9 @@ public class InteractionContextManager {
 		try {
 			suppressListenerNotification = true;
 			InteractionContext context = activeContext.getContextMap().get(handleIdentifier);
-			if (context == null)
+			if (context == null) {
 				context = loadContext(handleIdentifier);
+			}
 			if (context != null) {
 				activateContext(context);
 				for (IInteractionContextListener listener : listeners) {
@@ -521,7 +522,6 @@ public class InteractionContextManager {
 						StatusHandler.fail(e, "context listener failed", false);
 					}
 				}
-				// refreshRelatedElements();
 			} else {
 				StatusHandler.log("Could not load context", this);
 			}
@@ -1075,13 +1075,14 @@ public class InteractionContextManager {
 		return false;
 	}
 
-	public void transferContextAndActivate(String handleIdentifier, File file) {
-		File contextFile = getFileForContext(handleIdentifier);
-		contextFile.delete();
+	public void copyContext(String targetcontextHandle, File sourceContextFile) {
+		File targetContextFile = getFileForContext(targetcontextHandle);
+		targetContextFile.delete();
 		try {
-			copy(file, contextFile);
+			copy(sourceContextFile, targetContextFile);
+			contextFiles.add(targetContextFile);
 		} catch (IOException e) {
-			StatusHandler.fail(e, "Cold not transfer context", false);
+			StatusHandler.fail(e, "Cold not transfer context: " + targetcontextHandle, false);
 		}
 	}
 

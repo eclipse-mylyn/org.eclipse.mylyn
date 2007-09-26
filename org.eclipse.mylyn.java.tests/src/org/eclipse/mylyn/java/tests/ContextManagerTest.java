@@ -156,6 +156,27 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 		assertTrue(changed.getInterest().isInteresting());
 	}
 
+	public void testCopyContext() {
+		File sourceFile = ContextCorePlugin.getContextManager().getFileForContext(context.getHandleIdentifier());
+		context.parseEvent(mockSelection("1"));
+		manager.saveContext(context.getHandleIdentifier());
+		assertTrue(sourceFile.exists());
+		
+
+		InteractionContext toContext = new InteractionContext("toContext", scaling);
+		File toFile = ContextCorePlugin.getContextManager().getFileForContext(toContext.getHandleIdentifier());
+		assertFalse(toFile.exists());
+		
+		manager.copyContext(toContext.getHandleIdentifier(), sourceFile);
+		manager.saveContext(toContext.getHandleIdentifier());
+		manager.activateContext(toContext.getHandleIdentifier());
+		assertEquals(manager.getActiveContext().getHandleIdentifier(), toContext.getHandleIdentifier());
+		assertTrue(toFile.exists());
+		toFile.delete();
+		assertFalse(toFile.delete());
+		manager.deactivateAllContexts();
+	}
+	
 	public void testHasContext() {
 		manager.getFileForContext("1").delete();
 		assertFalse(manager.getFileForContext("1").exists());

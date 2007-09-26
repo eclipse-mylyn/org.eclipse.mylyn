@@ -97,7 +97,7 @@ public class ContextCopyAction extends TaskContextAction {
 				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 						ITasksUiConstants.TITLE_DIALOG, "Source task does not have a context.");
 			} else {
-				ContextCorePlugin.getContextManager().transferContextAndActivate(targetTask.getHandleIdentifier(),
+				ContextCorePlugin.getContextManager().copyContext(targetTask.getHandleIdentifier(),
 						contextFile);
 				TasksUiPlugin.getTaskListManager().activateTask(targetTask);
 				TaskListView view = TaskListView.getFromActivePerspective();
