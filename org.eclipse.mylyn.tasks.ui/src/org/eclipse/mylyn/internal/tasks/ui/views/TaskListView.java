@@ -63,7 +63,6 @@ import org.eclipse.mylyn.internal.tasks.ui.TaskTransfer;
 import org.eclipse.mylyn.internal.tasks.ui.TaskWorkingSetFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
-import org.eclipse.mylyn.internal.tasks.ui.actions.CloneTaskAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CollapseAllAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.DeleteAction;
@@ -179,6 +178,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private static final String ID_SEPARATOR_NEW = "new";
 
+	private static final String ID_SEPARATOR_OPERATIONS = "operations";
+	
 	private static final String ID_SEPARATOR_CONTEXT = "context";
 
 	public static final String ID_SEPARATOR_TASKS = "tasks";
@@ -225,8 +226,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	private GoUpAction goUpAction;
 
 	private CopyTaskDetailsAction copyDetailsAction;
-
-	private CloneTaskAction cloneThisBugAction;
 
 	private OpenTaskListElementAction openAction;
 
@@ -788,8 +787,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 					// Do nothing here since it is key code
 				} else if (e.keyCode == 'c' && e.stateMask == SWT.MOD1) {
 					copyDetailsAction.run();
-				} else if (e.keyCode == 'd' && e.stateMask == SWT.MOD1) {
-					cloneThisBugAction.run();
+//				} else if (e.keyCode == 'd' && e.stateMask == SWT.MOD1) {
+//					cloneThisBugAction.run();
 				} else if (e.keyCode == SWT.DEL) {
 					deleteAction.run();
 				} else if (e.keyCode == 'f' && e.stateMask == SWT.MOD1) {
@@ -1089,8 +1088,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		manager.add(new Separator(ID_SEPARATOR_NEW));
 		manager.add(new Separator());
 
-		Map<String, List<IDynamicSubMenuContributor>> dynamicMenuMap = TasksUiPlugin.getDefault().getDynamicMenuMap();
-
 		if (element instanceof AbstractTask) {
 			addAction(openAction, manager, element);
 		}
@@ -1105,6 +1102,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 		manager.add(new Separator());
 
+		Map<String, List<IDynamicSubMenuContributor>> dynamicMenuMap = TasksUiPlugin.getDefault().getDynamicMenuMap();
 		for (String menuPath : dynamicMenuMap.keySet()) {
 			if (!ID_SEPARATOR_CONTEXT.equals(menuPath)) {
 				for (IDynamicSubMenuContributor contributor : dynamicMenuMap.get(menuPath)) {
@@ -1115,11 +1113,12 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				}
 			}
 		}
+//		manager.add(new Separator(ID_SEPARATOR_OPERATIONS));
 		manager.add(new Separator());
 
 		addAction(copyDetailsAction, manager, element);
 		if (task != null && !task.isLocal()) {
-			addAction(cloneThisBugAction, manager, element);
+//			addAction(cloneThisBugAction, manager, element);
 			addAction(removeFromCategoryAction, manager, element);
 		}
 		// This should also test for null, or else nothing to delete!
@@ -1135,7 +1134,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			manager.add(goUpAction);
 		}
 		manager.add(new Separator(ID_SEPARATOR_CONTEXT));
-
+		manager.add(new Separator(ID_SEPARATOR_OPERATIONS));
+		
 		if (element instanceof AbstractTask) {
 			for (String menuPath : dynamicMenuMap.keySet()) {
 				if (ID_SEPARATOR_CONTEXT.equals(menuPath)) {
@@ -1148,9 +1148,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				}
 			}
 		}
-
 		manager.add(new Separator(ID_SEPARATOR_REPOSITORY));
-
+		
 		if (element instanceof AbstractRepositoryQuery || element instanceof TaskCategory) {
 			manager.add(new Separator());
 			addAction(propertiesAction, manager, element);
@@ -1229,7 +1228,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	private void makeActions() {
 
 		copyDetailsAction = new CopyTaskDetailsAction(true);
-		cloneThisBugAction = new CloneTaskAction();
 
 		goIntoAction = new GoIntoAction();
 		goUpAction = new GoUpAction(drillDownAdapter);
@@ -1257,7 +1255,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 		filteredTree.getViewer().addSelectionChangedListener(openWithBrowser);
 		filteredTree.getViewer().addSelectionChangedListener(copyDetailsAction);
-		filteredTree.getViewer().addSelectionChangedListener(cloneThisBugAction);
 	}
 
 	// public void toggleNextAction(boolean enable) {

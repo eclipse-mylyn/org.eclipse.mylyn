@@ -346,21 +346,43 @@
          
          <action
                class="org.eclipse.mylyn.internal.tasks.ui.actions.QueryCloneAction"
-               definitionId="org.eclipse.ui.query.clone"
                enablesFor="org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery"
+               icon="icons/etool16/query-new.gif"
                id="org.eclipse.mylyn.tasks.ui.actions.clone.query"
                label="Clone Query..."
-               menubarPath="repository"
+               menubarPath="org.eclipse.mylyn.tasks.ui.menu.operations/clone"
                tooltip="Clone Repository Query">
          </action>
+  <action
+        class="org.eclipse.mylyn.internal.tasks.ui.actions.CloneTaskAction"
+        enablesFor="1"
+        icon="icons/etool16/task-new.gif"
+        id="org.eclipse.mylyn.tasks.ui.actions.task.query"
+        label="Clone Task"
+        menubarPath="org.eclipse.mylyn.tasks.ui.menu.operations/clone"
+        tooltip="Clone Task">
+     <enablement>
+        <and>
+           <objectClass
+                 name="org.eclipse.mylyn.tasks.core.AbstractTask">
+           </objectClass>
+           <not>
+              <objectClass
+                    name="org.eclipse.mylyn.internal.tasks.core.LocalTask">
+              </objectClass>
+           </not>
+        </and>
+     </enablement>
+  </action>
          
          <action
                class="org.eclipse.mylyn.internal.tasks.ui.actions.QueryExportAction"
                definitionId="org.eclipse.ui.query.export"
                enablesFor="org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery"
+               icon="icons/etool16/export.gif"
                id="org.eclipse.mylyn.tasks.ui.actions.export.query"
                label="Export Query..."
-               menubarPath="repository"
+               menubarPath="org.eclipse.mylyn.tasks.ui.menu.operations/importexport"
                tooltip="Export Repository Query">
          </action>
   		
@@ -371,7 +393,7 @@
                icon="icons/etool16/import.gif"
                id="org.eclipse.mylyn.tasks.ui.actions.import.query"
                label="Import Query..."
-               menubarPath="repository"
+               menubarPath="org.eclipse.mylyn.tasks.ui.menu.operations/importexport"
                tooltip="Import Repository Query">
          </action>
 
@@ -379,9 +401,10 @@
                class="org.eclipse.mylyn.internal.tasks.ui.actions.TaskExportAction"
                definitionId="org.eclipse.ui.task.export"
                enablesFor="org.eclipse.mylyn.tasks.core.AbstractTask"
+               icon="icons/etool16/export.gif"
                id="org.eclipse.mylyn.tasks.ui.actions.export.task"
                label="Export Task..."
-               menubarPath="repository"
+               menubarPath="org.eclipse.mylyn.tasks.ui.menu.operations/importexport"
                tooltip="Export Task">
          </action>
 
@@ -392,7 +415,7 @@
                icon="icons/etool16/import.gif"
                id="org.eclipse.mylyn.tasks.ui.actions.import.task"
                label="Import Task..."
-               menubarPath="repository"
+               menubarPath="org.eclipse.mylyn.tasks.ui.menu.operations/importexport"
                tooltip="Import Task">
          </action>
 
@@ -424,6 +447,7 @@
               style="push"
               tooltip="New Query"> 
   		</action>
+  		
   <menu
         id="org.eclipse.mylyn.tasks.ui.menu.new"
         label="New"
@@ -435,6 +459,23 @@
            name="repository">
      </separator>
   </menu>
+
+  <menu
+        id="org.eclipse.mylyn.tasks.ui.menu.operations"
+        label="Operations"
+        path="operations">
+    <separator
+           name="clone">
+    </separator>
+    <separator
+           name="import">
+    </separator>
+	<separator
+           name="export">
+    </separator>
+  </menu>
+ 
+  
   <!--<action
         class="org.eclipse.mylyn.internal.tasks.ui.actions.NewLocalTaskAction"
         icon="icons/etool16/task-new.gif"

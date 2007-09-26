@@ -8,7 +8,10 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
@@ -24,19 +27,24 @@ import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IViewActionDelegate;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
 /**
  * @author Maarten Meijer
+ * @author Mik Kersten
  */
-public class CloneTaskAction extends BaseSelectionListenerAction {
+public class CloneTaskAction extends BaseSelectionListenerAction implements IViewActionDelegate {
 	
 	private static final String LABEL = "Clone This Task";
 
 	private static final String ID = "org.eclipse.mylyn.tasklist.actions.clone";
 
+	protected ISelection selection;
+	
 	public CloneTaskAction() {
 		super(LABEL);
 		setId(ID);
@@ -45,6 +53,16 @@ public class CloneTaskAction extends BaseSelectionListenerAction {
 		setAccelerator(SWT.MOD1 + 'd');
 	}
 
+	public void selectionChanged(IAction action, ISelection selection) {
+		if (selection instanceof IStructuredSelection) {
+			super.selectionChanged((IStructuredSelection)selection);
+		}
+	}
+	
+	public void run(IAction action) {
+		run();
+	}
+	
 	@Override
 	public void run() {
 		try {
@@ -105,6 +123,10 @@ public class CloneTaskAction extends BaseSelectionListenerAction {
 		} catch (NullPointerException npe) {
 			StatusHandler.fail(npe, "Could not remove task from category, it may still be refreshing.", true);
 		}
+	}
+
+	public void init(IViewPart view) {
+		// ignore
 	}
 
 }
