@@ -334,9 +334,9 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 		store.setDefault(ContextUiPrefContstants.AUTO_MANAGE_PERSPECTIVES, false);
 		store.setDefault(ContextUiPrefContstants.AUTO_MANAGE_EDITORS, true);
-		store.setDefault(ContextUiPrefContstants.AUTO_MANAGE_EDITORS_OPEN_NUM, 4);
 		store.setDefault(ContextUiPrefContstants.AUTO_MANAGE_EXPANSION, true);
-
+		store.setDefault(ContextUiPrefContstants.AUTO_MANAGE_EDITOR_CLOSE_ACTION, false);
+		
 		store.setDefault(ContextUiPrefContstants.GAMMA_SETTING_LIGHTENED, false);
 		store.setDefault(ContextUiPrefContstants.GAMMA_SETTING_STANDARD, true);
 		store.setDefault(ContextUiPrefContstants.GAMMA_SETTING_DARKENED, false);

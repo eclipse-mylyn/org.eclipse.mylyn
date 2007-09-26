@@ -34,10 +34,12 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
  */
 public class ContextUiPreferencePage extends PreferencePage implements IWorkbenchPreferencePage, SelectionListener {
 
-	private Button autoEnableExplorerFilter = null;
+	private Button autoFocusNavigatorsButton = null;
 
 	private Button manageEditorsButton = null;
 
+	private Button mapCloseToRemoveButton = null;
+	
 	private Button managePerspectivesButton = null;
 
 	private Button manageExpansionButton = null;
@@ -51,6 +53,7 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 		super();
 		setPreferenceStore(ContextUiPlugin.getDefault().getPreferenceStore());
 		setTitle("Context");
+		setDescription("Configure the Task-Focused UI management and automation.");
 	}
 
 	@Override
@@ -84,7 +87,7 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 	@Override
 	public boolean performOk() {
 		getPreferenceStore().setValue(ContextUiPrefContstants.NAVIGATORS_AUTO_FILTER_ENABLE,
-				autoEnableExplorerFilter.getSelection());
+				autoFocusNavigatorsButton.getSelection());
 
 		getPreferenceStore().setValue(ContextUiPrefContstants.HIGHLIGHTER_PREFIX,
 				ContextUiPlugin.getDefault().getHighlighterList().externalizeToString());
@@ -96,7 +99,9 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 				managePerspectivesButton.getSelection());
 		getPreferenceStore().setValue(ContextUiPrefContstants.AUTO_MANAGE_EXPANSION,
 				manageExpansionButton.getSelection());
-
+		getPreferenceStore().setValue(ContextUiPrefContstants.AUTO_MANAGE_EDITOR_CLOSE_ACTION,
+				mapCloseToRemoveButton.getSelection());
+		
 		return true;
 	}
 
@@ -105,7 +110,7 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 	 */
 	@Override
 	public boolean performCancel() {
-		autoEnableExplorerFilter.setSelection(getPreferenceStore().getBoolean(
+		autoFocusNavigatorsButton.setSelection(getPreferenceStore().getBoolean(
 				ContextUiPrefContstants.NAVIGATORS_AUTO_FILTER_ENABLE));
 		return true;
 	}
@@ -117,6 +122,14 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 	@Override
 	public void performDefaults() {
 		super.performDefaults();
+		
+		// NOTE: duplicated policy from ContextUiPlugin.initializeDefaultPreferences
+		autoFocusNavigatorsButton.setSelection(true);
+		manageEditorsButton.setSelection(true);
+		manageExpansionButton.setSelection(true);
+		
+		managePerspectivesButton.setSelection(false);
+		mapCloseToRemoveButton.setSelection(false);
 		return;
 	}
 
@@ -140,37 +153,53 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 //	}
 
 	private void createUiManagementSection(Composite parent) {
-		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
+		Group groupViews = new Group(parent, SWT.SHADOW_ETCHED_IN);
+		groupViews.setLayout(new GridLayout(1, false));
+		groupViews.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		groupViews.setText("Views");
 
-		group.setLayout(new GridLayout(1, false));
-		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		group.setText("UI Management");
+		autoFocusNavigatorsButton = new Button(groupViews, SWT.CHECK);
+		autoFocusNavigatorsButton.setText("Auto focus navigator views on task activation");
+		autoFocusNavigatorsButton.setSelection(getPreferenceStore().getBoolean(
+				ContextUiPrefContstants.NAVIGATORS_AUTO_FILTER_ENABLE));
+		
+		manageExpansionButton = new Button(groupViews, SWT.CHECK);
+		manageExpansionButton.setText("Auto expand tree views when focused");
+		manageExpansionButton.setSelection(getPreferenceStore().getBoolean(
+				ContextUiPrefContstants.AUTO_MANAGE_EXPANSION));
 
-		managePerspectivesButton = new Button(group, SWT.CHECK);
+		
+		Group groupEditors = new Group(parent, SWT.SHADOW_ETCHED_IN);
+		groupEditors.setLayout(new GridLayout(1, false));
+		groupEditors.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		groupEditors.setText("Editors");
+		
+		manageEditorsButton = new Button(groupEditors, SWT.CHECK);
+		manageEditorsButton.setText("Manage open editors to match task context");
+		manageEditorsButton.setSelection(getPreferenceStore().getBoolean(ContextUiPrefContstants.AUTO_MANAGE_EDITORS));
+		
+		String prefName = WorkbenchMessages.WorkbenchPreference_reuseEditors;
+		if (getContainer() instanceof IWorkbenchPreferenceContainer) {
+			String message = "<a>''{0}''</a> \"" + prefName + "\" will be toggled with activation";
+			new PreferenceLinkArea(groupEditors, SWT.NONE, "org.eclipse.ui.preferencePages.Editors", message,
+					(IWorkbenchPreferenceContainer) getContainer(), null);
+		}
+		
+		mapCloseToRemoveButton = new Button(groupEditors, SWT.CHECK);
+		mapCloseToRemoveButton.setText("Map editor close to Remove from Context");
+		mapCloseToRemoveButton.setSelection(getPreferenceStore().getBoolean(
+				ContextUiPrefContstants.AUTO_MANAGE_EDITOR_CLOSE_ACTION));
+		
+		
+		Group groupPerspectives = new Group(parent, SWT.SHADOW_ETCHED_IN);
+		groupPerspectives.setLayout(new GridLayout(1, false));
+		groupPerspectives.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		groupPerspectives.setText("Perspectives");
+		
+		managePerspectivesButton = new Button(groupPerspectives, SWT.CHECK);
 		managePerspectivesButton.setText("Open last used perspective on task activation");
 		managePerspectivesButton.setSelection(getPreferenceStore().getBoolean(
 				ContextUiPrefContstants.AUTO_MANAGE_PERSPECTIVES));
-
-		autoEnableExplorerFilter = new Button(group, SWT.CHECK);
-		autoEnableExplorerFilter.setText("Auto toggle Focus on navigator views (Recommended)");
-		autoEnableExplorerFilter.setSelection(getPreferenceStore().getBoolean(
-				ContextUiPrefContstants.NAVIGATORS_AUTO_FILTER_ENABLE));
-
-		manageEditorsButton = new Button(group, SWT.CHECK);
-		manageEditorsButton.setText("Manage open editors with task context (Recommended)");
-		manageEditorsButton.setSelection(getPreferenceStore().getBoolean(ContextUiPrefContstants.AUTO_MANAGE_EDITORS));
-
-		String prefName = WorkbenchMessages.WorkbenchPreference_reuseEditors;
-		if (getContainer() instanceof IWorkbenchPreferenceContainer) {
-			String message = "<a>''{0}''</a> \"" + prefName + "\" will turn off when task activated";
-			new PreferenceLinkArea(group, SWT.NONE, "org.eclipse.ui.preferencePages.Editors", message,
-					(IWorkbenchPreferenceContainer) getContainer(), null);
-		}
-
-		manageExpansionButton = new Button(group, SWT.CHECK);
-		manageExpansionButton.setText("Automatically maintain expansion of focused tree views (Recommended)");
-		manageExpansionButton.setSelection(getPreferenceStore().getBoolean(
-				ContextUiPrefContstants.AUTO_MANAGE_EXPANSION));
 
 		return;
 	}
