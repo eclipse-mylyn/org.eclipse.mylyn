@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Bugzilla Connector UI
 Bundle-SymbolicName: org.eclipse.mylyn.bugzilla.ui; singleton:=true
-Bundle-Version: 2.1.0.v20070924-2200
+Bundle-Version: 2.1.0.v20070926-1230
 Bundle-Activator: org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin
 Bundle-Vendor: Eclipse.org
 Require-Bundle: org.eclipse.ui,
