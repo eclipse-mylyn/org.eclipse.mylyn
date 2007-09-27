@@ -186,7 +186,7 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 		}
 		
 		mapCloseToRemoveButton = new Button(groupEditors, SWT.CHECK);
-		mapCloseToRemoveButton.setText("Map editor close to Remove from Context");
+		mapCloseToRemoveButton.setText("Remove file from context when editor is closed");
 		mapCloseToRemoveButton.setSelection(getPreferenceStore().getBoolean(
 				ContextUiPrefContstants.AUTO_MANAGE_EDITOR_CLOSE_ACTION));
 		

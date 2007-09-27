@@ -11,6 +11,7 @@ package org.eclipse.mylyn.internal.resources.ui;
 import org.eclipse.compare.internal.CompareEditor;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionElement;
@@ -84,6 +85,23 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 				&& !otherEditorsOpenForResource(editorPart)
 				&& !(editorPart instanceof CompareEditor)
 				&& !(editorPart instanceof IContextAwareEditor)) {
+			
+			if (ContextCorePlugin.getContextManager().isContextActive() 
+					&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
+					ContextUiPrefContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING)) {
+				try {
+					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
+							"Mylyn", 
+							"Closing a file automatically removes it from the Task Context. " +
+							"This is recommended in order to make the open editors match " +
+							"the focused views. It can be disabled via Preferences -> Mylyn -> Context.\n\n" +
+							"This dialog will show again.");
+				} finally {
+					ContextUiPlugin.getDefault().getPreferenceStore().setValue(
+							ContextUiPrefContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING, false);
+				}
+			}
+			
 			IInteractionElement element = null;
 			AbstractContextUiBridge uiBridge = ContextUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
 			Object object = uiBridge.getObjectForTextSelection(null, editorPart);

@@ -30,6 +30,8 @@ public class ContextUiPrefContstants {
 
 	public static final String AUTO_MANAGE_EDITOR_CLOSE_ACTION = "org.eclipse.mylyn.context.ui.close.action.manage";
 	
+	public static final String AUTO_MANAGE_EDITOR_CLOSE_WARNING = "org.eclipse.mylyn.context.ui.close.action.manage.warning";
+	
 	public static final String AUTO_MANAGE_PERSPECTIVES = "org.eclipse.mylyn.ide.ui.perspectives.auto.manage";
 
 	public static final String AUTO_MANAGE_EXPANSION = "org.eclipse.mylyn.ide.ui.expansion.auto.manage";
