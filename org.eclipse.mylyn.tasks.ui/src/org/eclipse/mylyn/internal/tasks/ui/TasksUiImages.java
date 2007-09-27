@@ -165,6 +165,8 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor TASK_RETRIEVE = create(T_TOOL, "task-retrieve.gif");
 
+	public static final ImageDescriptor OVERLAY_LOCAL_TASK = create(T_OVR, "overlay-local-task.gif");
+	
 	public static final ImageDescriptor OVERLAY_INCOMMING = create(T_EVIEW, "overlay-incoming.gif");
 
 	public static final ImageDescriptor OVERLAY_INCOMMING_NEW = create(T_EVIEW, "overlay-incoming-new.gif");

@@ -321,12 +321,17 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 			}
 
 			if (task != null) {
-				setTitleImage(TasksUiImages.getImage(TasksUiImages.TASK_REPOSITORY));
+				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(task.getConnectorKind());
+				if (connectorUi != null) {
+					ImageDescriptor overlayDescriptor = connectorUi.getTaskKindOverlay(task);
+					setTitleImage(TasksUiImages.getCompositeTaskImage(TasksUiImages.TASK, overlayDescriptor, false));
+				} else {
+					setTitleImage(TasksUiImages.getImage(TasksUiImages.TASK));
+				}
 			} else if (getEditorInput() instanceof AbstractRepositoryTaskEditorInput) {
 				this.setTitleImage(TasksUiImages.getImage(TasksUiImages.TASK_REMOTE));
-			} else { //if (getUrl() != null) {
-				setTitleImage(TasksUiImages.getImage(TasksUiImages.TASK_REPOSITORY));
-//				setTitleImage(TasksUiImages.getImage(TasksUiImages.TASK_WEB));
+			} else { 
+				setTitleImage(TasksUiImages.getImage(TasksUiImages.TASK));
 			}
 
 		} catch (PartInitException e) {

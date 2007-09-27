@@ -8,19 +8,33 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewLocalTaskWizard;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
 
 /**
  * @author Rob Elves
+ * @author Mik Kersten
  */
 public class LocalTaskConnectorUi extends AbstractRepositoryConnectorUi {
 
+	@Override
+	public ImageDescriptor getTaskKindOverlay(AbstractTask task) {
+		if (task instanceof LocalTask) {
+			return TasksUiImages.OVERLAY_LOCAL_TASK;
+		} else {
+			return super.getTaskKindOverlay(task);
+		}
+	}
+
+	
 	@Override
 	public IWizard getNewTaskWizard(TaskRepository taskRepository) {
 		return new NewLocalTaskWizard();

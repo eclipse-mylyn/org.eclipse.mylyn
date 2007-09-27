@@ -84,7 +84,7 @@ public class RepositoryTaskOutlinePage extends ContentOutlinePage {
 					} else if (node.getComment() != null) {
 						return TasksUiImages.getImage(TasksUiImages.PERSON);
 					} else {
-						return TasksUiImages.getImage(TasksUiImages.TASK_REPOSITORY);
+						return TasksUiImages.getImage(TasksUiImages.TASK);
 					}
 				} else {
 					return super.getImage(element);
