@@ -53,34 +53,34 @@
               label="Remove from Context"
               menubarPath="group.reorganize"
               tooltip="Mark selected element as uninteresting">
+           <enablement>
+              <systemProperty
+                    name="org.eclipse.mylyn.context.core.context.active"
+                    value="true">
+              </systemProperty>
+           </enablement>
         </action>
-        <visibility>
-           <systemProperty
-                 name="org.eclipse.mylyn.context.core.context.active"
-                 value="true">
-           </systemProperty>
-        </visibility>
      </objectContribution>
      <objectContribution
      	adaptable="false"
         id="org.eclipse.mylyn.ui.interest"
         objectClass="org.eclipse.core.resources.IFile">
-	    <action  
-  		  	label="Mark as Landmark" 
-	  		tooltip="Make selected element a landmark"
-	  		menubarPath="group.reorganize" 
-	  		id="org.eclipse.mylyn.resources.ui.interest.increase.element" 
-	  		definitionId="org.eclipse.mylyn.context.ui.commands.interest.increment"
-	  		class="org.eclipse.mylyn.internal.context.ui.actions.InterestIncrementAction"
-	  		icon="icons/elcl16/interest-increase.gif"
-	  		enablesFor="*"/>
-     <visibility>
-        <systemProperty
-              name="org.eclipse.mylyn.context.core.context.active"
-              value="true">
-        </systemProperty>
-     </visibility>
+	    <action
+           class="org.eclipse.mylyn.internal.context.ui.actions.InterestIncrementAction"
+           definitionId="org.eclipse.mylyn.context.ui.commands.interest.increment"
+           enablesFor="*"
+           icon="icons/elcl16/interest-increase.gif"
+           id="org.eclipse.mylyn.resources.ui.interest.increase.element"
+           label="Mark as Landmark"
+           menubarPath="group.reorganize"
+           tooltip="Make selected element a landmark">
+        <enablement>
+           <systemProperty
+                 name="org.eclipse.mylyn.context.core.context.active"
+                 value="true">
+           </systemProperty>
+        </enablement>
+     </action>
 	 </objectContribution>
    </extension>
-   
 </plugin>
