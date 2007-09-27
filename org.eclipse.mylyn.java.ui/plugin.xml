@@ -304,8 +304,27 @@
   		</action> 
       </viewContribution> 
 	</extension>
+
 	
-  <extension point="org.eclipse.ui.popupMenus"> 
+  <extension point="org.eclipse.ui.popupMenus">
+     <viewerContribution
+           id="org.eclipse.mylyn.context.ui.browse.filtered.contribution"
+           targetID="org.eclipse.jdt.ui.PackageExplorer">
+        <action
+              class="org.eclipse.mylyn.java.ui.BrowseFilteredAction"
+              enablesFor="1"
+              icon="icons/etool16/browse-filtered.gif"
+              id="org.eclipse.mylyn.java.ui.action.browse.filtered"
+              label="Show Filtered Children (Alt+click)"
+              menubarPath="group.reorganize">
+        </action>
+        <visibility>
+           <systemProperty
+                 name="org.eclipse.mylyn.context.core.context.active"
+                 value="true">
+           </systemProperty>
+        </visibility>
+     </viewerContribution> 
      <objectContribution
      	   adaptable="false"
            id="org.eclipse.mylyn.java.ui.interest.increase.contribution"

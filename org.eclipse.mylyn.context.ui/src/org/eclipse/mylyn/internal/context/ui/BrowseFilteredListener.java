@@ -38,6 +38,24 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 		this.viewer = viewer;
 	}
 
+	/**
+	 * @param treeViewer	cannot be null
+	 * @param targetSelection cannot be null
+	 */
+	public void unfilterSelection(TreeViewer treeViewer, IStructuredSelection targetSelection) {
+		InterestFilter filter = getInterestFilter(treeViewer);
+		Object targetObject =  targetSelection.getFirstElement();
+		if (targetObject != null) {
+			filter.setTemporarilyUnfiltered(targetObject);
+			if (targetObject instanceof Tree) {
+				treeViewer.refresh();
+			} else {
+				treeViewer.refresh(targetObject, true);
+				treeViewer.expandToLevel(targetObject, 1);
+			}
+		}
+	}
+	
 	private void unfilter(final InterestFilter filter, final TreeViewer treeViewer, Object targetObject) {
 		if (targetObject != null) {
 			filter.setTemporarilyUnfiltered(targetObject);

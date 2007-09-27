@@ -55,7 +55,6 @@
                menubarPath="actions">
          </action>
       </objectContribution>
-
 	 <!--
 	 <objectContribution
            adaptable="false"
