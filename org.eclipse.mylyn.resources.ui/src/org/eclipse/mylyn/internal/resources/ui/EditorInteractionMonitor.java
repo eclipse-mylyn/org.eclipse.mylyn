@@ -95,7 +95,7 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 							"Closing a file automatically removes it from the Task Context. " +
 							"This is recommended in order to make the open editors match " +
 							"the focused views. It can be disabled via Preferences -> Mylyn -> Context.\n\n" +
-							"This dialog will show again.");
+							"This dialog will not show again.");
 				} finally {
 					ContextUiPlugin.getDefault().getPreferenceStore().setValue(
 							ContextUiPrefContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING, false);
