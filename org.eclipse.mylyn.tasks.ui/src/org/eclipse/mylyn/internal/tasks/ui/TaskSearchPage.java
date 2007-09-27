@@ -196,13 +196,17 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 	private void updatePageEnablement() {
 		if (keyText.getText() != null && keyText.getText().trim().length() > 0) {
 			//setControlsEnabled(queryPages[currentPageIndex], false);
-			if (queryPages[currentPageIndex].getData(PAGE_KEY) instanceof AbstractRepositoryQueryPage) {
+			if (queryPages != null && queryPages[currentPageIndex] != null
+					&& queryPages[currentPageIndex].getData(PAGE_KEY) instanceof AbstractRepositoryQueryPage) {
 				((AbstractRepositoryQueryPage) queryPages[currentPageIndex].getData(PAGE_KEY)).setControlsEnabled(false);
 			}
-			pageContainer.setPerformActionEnabled(true);
+			if (repositoryCombo.getSelectionIndex() > -1) {
+				pageContainer.setPerformActionEnabled(true);
+			}
 		} else {
 			//setControlsEnabled(queryPages[currentPageIndex], true);
-			if (queryPages[currentPageIndex].getData(PAGE_KEY) instanceof AbstractRepositoryQueryPage) {
+			if (queryPages != null && queryPages[currentPageIndex] != null
+					&& queryPages[currentPageIndex].getData(PAGE_KEY) instanceof AbstractRepositoryQueryPage) {
 				((AbstractRepositoryQueryPage) queryPages[currentPageIndex].getData(PAGE_KEY)).setControlsEnabled(true);
 			}
 			//setControlsEnabled(queryPages[currentPageIndex], true);
@@ -248,7 +252,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 	private void displayQueryPage(int pageIndex) {
 		if (currentPageIndex == pageIndex || pageIndex < 0)
 			return;
-		
+
 		// TODO: if repository == null display invalid page?
 		if (currentPageIndex != -1 && queryPages[currentPageIndex] != null) {
 			queryPages[currentPageIndex].setVisible(false);
@@ -259,10 +263,9 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			queryPages[currentPageIndex].setLayoutData(data);
 		}
 
-		
 		String repositoryLabel = repositoryCombo.getItem(pageIndex);
 		repository = (TaskRepository) repositoryCombo.getData(repositoryLabel);
-		
+
 		if (queryPages[pageIndex] == null) {
 			if (repository != null) {
 				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
@@ -273,16 +276,15 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 						queryPages[pageIndex] = createPage(repository, (ISearchPage) searchPage);
 					} else {
 						AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
-						.getRepositoryConnector(repository.getConnectorKind());
+								.getRepositoryConnector(repository.getConnectorKind());
 						if (connector.canCreateTaskFromKey(repository)) {
 							queryPages[pageIndex] = createPage(repository, new NoSearchPage(repository));
 						}
 					}
 				}
-				
+
 			}
 		}
-
 
 		// update enablement of the task id field
 		if (repository != null) {
@@ -294,7 +296,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 				keyText.setEnabled(false);
 			}
 		}
-		
+
 		if (queryPages[pageIndex] != null) {
 			GridData data = (GridData) queryPages[pageIndex].getLayoutData();
 			if (data == null) {
