@@ -18,6 +18,7 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -267,6 +268,12 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 					WizardPage searchPage = connectorUi.getSearchPage(repository, null);
 					if (searchPage != null && searchPage instanceof ISearchPage) {
 						queryPages[pageIndex] = createPage(repository, (ISearchPage) searchPage);
+					} else {
+						AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
+								.getRepositoryConnector(repository.getConnectorKind());
+						if (connector.canCreateTaskFromKey(repository) && connectorUi.hasSearchPage() == false) {
+							queryPages[pageIndex] = createPage(repository, new NoSearchPage(repository));
+						}
 					}
 				}
 			}
@@ -299,7 +306,10 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			List<TaskRepository> searchableRepositories = new ArrayList<TaskRepository>();
 			for (TaskRepository repository : repositories) {
 				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
-				if (connectorUi != null && connectorUi.hasSearchPage() && !repository.isOffline()) {
+				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+						repository.getConnectorKind());
+				if ((connectorUi != null && connectorUi.hasSearchPage() && !repository.isOffline())
+						|| connector.canCreateTaskFromKey(repository)) {
 					searchableRepositories.add(repository);
 				}
 			}
@@ -475,6 +485,47 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 
 			GridDataFactory.fillDefaults().applyTo(hyperlink);
 			setControl(hyperlink);
+		}
+
+		@Override
+		public AbstractRepositoryQuery getQuery() {
+			return null;
+		}
+
+		@Override
+		public boolean isPageComplete() {
+			return false;
+		}
+
+		public TaskRepository getRepository() {
+			return taskRepository;
+		}
+
+		@Override
+		public void setVisible(boolean visible) {
+			super.setVisible(visible);
+
+			if (visible) {
+				scontainer.setPerformActionEnabled(false);
+			}
+		}
+
+	}
+
+	private class NoSearchPage extends AbstractRepositoryQueryPage {
+
+		private TaskRepository taskRepository;
+
+		public NoSearchPage(TaskRepository rep) {
+			super("No search page");
+			this.taskRepository = rep;
+		}
+
+		@Override
+		public void createControl(Composite parent) {
+			Composite composite = new Composite(parent, SWT.NONE);
+			composite.setLayout(new GridLayout());
+			setControl(composite);
 		}
 
 		@Override
