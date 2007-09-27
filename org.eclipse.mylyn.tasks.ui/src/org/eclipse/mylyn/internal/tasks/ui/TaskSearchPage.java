@@ -265,13 +265,14 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			if (repository != null) {
 				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
 				if (connectorUi != null) {
+					boolean hasSearchPage = connectorUi.hasSearchPage();
 					WizardPage searchPage = connectorUi.getSearchPage(repository, null);
-					if (searchPage != null && searchPage instanceof ISearchPage) {
+					if (hasSearchPage && searchPage != null && searchPage instanceof ISearchPage) {
 						queryPages[pageIndex] = createPage(repository, (ISearchPage) searchPage);
 					} else {
 						AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
 								.getRepositoryConnector(repository.getConnectorKind());
-						if (connector.canCreateTaskFromKey(repository) && connectorUi.hasSearchPage() == false) {
+						if (connector.canCreateTaskFromKey(repository)) {
 							queryPages[pageIndex] = createPage(repository, new NoSearchPage(repository));
 						}
 					}
