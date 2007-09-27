@@ -98,7 +98,7 @@ public class TaskActivationHistory {
 			}
 
 			if (hasPrevious()) {
-				if ((currentIndex == 0 && !history.get(currentIndex).isActive()) || !active) {
+				if (currentIndex < history.size()-1 && ((currentIndex == 0 && !history.get(currentIndex).isActive()) || !active)) {
 					return history.get(currentIndex);
 				} else {
 					return history.get(--currentIndex);
