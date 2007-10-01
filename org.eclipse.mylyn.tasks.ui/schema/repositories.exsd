@@ -102,7 +102,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.provisional.tasklist.AbstractRepositoryClient"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -150,7 +150,7 @@
                   (no description available)
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.tasks.ui.AbstractConnectorUi"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -234,13 +234,5 @@
       </documentation>
    </annotation>
 
-   <annotation>
-      <appInfo>
-         <meta.section type="copyright"/>
-      </appInfo>
-      <documentation>
-         
-      </documentation>
-   </annotation>
 
 </schema>
