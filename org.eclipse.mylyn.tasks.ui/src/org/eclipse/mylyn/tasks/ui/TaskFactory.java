@@ -8,6 +8,8 @@
 
 package org.eclipse.mylyn.tasks.ui;
 
+import java.util.Set;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
@@ -84,14 +86,17 @@ public class TaskFactory implements ITaskFactory {
 				connector.updateTaskFromTaskData(repository, repositoryTask, taskData);
 				if (dataHandler != null) {
 					repositoryTask.clear();
-					for (String subId : dataHandler.getSubTaskIds(taskData)) {
-						if (subId == null || subId.trim().equals("")) {
-							continue;
-						}
-						AbstractTask subTask = connector.createTaskFromExistingId(repository, subId, false,
-								new SubProgressMonitor(monitor, 1));
-						if (subTask != null) {
-							taskList.addTask(subTask, repositoryTask);
+					Set<String> subTaskIds = dataHandler.getSubTaskIds(taskData);
+					if (subTaskIds != null){
+						for (String subId : subTaskIds) {
+							if (subId == null || subId.trim().equals("")) {
+								continue;
+							}
+							AbstractTask subTask = connector.createTaskFromExistingId(repository, subId, false,
+									new SubProgressMonitor(monitor, 1));
+							if (subTask != null) {
+								taskList.addTask(subTask, repositoryTask);
+							}
 						}
 					}
 				}

@@ -8,6 +8,7 @@
 
 package org.eclipse.mylyn.tasks.core;
 
+import java.util.Collections;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -68,7 +69,9 @@ public abstract class AbstractTaskDataHandler {
 	/**
 	 * @return Task id for any sub tasks referenced by the provided task data
 	 */
-	public abstract Set<String> getSubTaskIds(RepositoryTaskData taskData);
+	public Set<String> getSubTaskIds(RepositoryTaskData taskData) {
+		return Collections.emptySet();
+	}
 
 	/**
 	 * @return true if connector support downloading multiple task data in single request, false otherwise. If true,
