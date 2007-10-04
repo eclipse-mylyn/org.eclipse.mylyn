@@ -32,9 +32,33 @@ import org.eclipse.core.net.proxy.IProxyService;
  */
 public class WebClientUtil {
 
-	public static final String CONTENT_ENCODING_GZIP = "gzip";
+	public static final String USER_AGENT;
 
-	public static final String USER_AGENT = "Eclipse Mylyn (HttpClient/3.0.1)";
+	static {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Java/");
+		sb.append(System.getProperty("java.version"));
+		sb.append(" (");
+		sb.append(System.getProperty("os.name"));
+		sb.append(" ");
+		sb.append(System.getProperty("os.version"));
+		sb.append("; ");
+		sb.append(System.getProperty("os.arch"));
+		sb.append(")");
+
+		sb.append(" Eclipse Mylyn");
+		Object bundleVersion = WebCorePlugin.getDefault().getBundle().getHeaders().get("Bundle-Version");
+		if (bundleVersion != null) {
+			sb.append("/");
+			sb.append(bundleVersion.toString());
+		}
+
+		sb.append(" HttpClient/3.0.1");
+
+		USER_AGENT = sb.toString();
+	}
+
+	public static final String CONTENT_ENCODING_GZIP = "gzip";
 
 	public static final int CONNNECT_TIMEOUT = 60000;
 
