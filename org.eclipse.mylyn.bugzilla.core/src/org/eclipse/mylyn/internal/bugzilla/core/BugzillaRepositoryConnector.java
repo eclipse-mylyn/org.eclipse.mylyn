@@ -465,24 +465,18 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	public boolean isRepositoryConfigurationStale(TaskRepository repository) throws CoreException {
+
 		boolean result = true;
 		try {
-
-			String oldTimestamp = repository.getProperty(IBugzillaConstants.PROPERTY_CONFIGTIMESTAMP);
-			if (oldTimestamp != null && oldTimestamp.equals(IBugzillaConstants.TIMESTAMP_NOT_AVAILABLE)) {
-				result = true;
-			} else {
-				BugzillaClient client = getClientManager().getClient(repository);
-				if (client != null) {
-					String timestamp = client.getConfigurationTimestamp();
-					if (timestamp == null) {
-						repository.setProperty(IBugzillaConstants.PROPERTY_CONFIGTIMESTAMP,
-								IBugzillaConstants.TIMESTAMP_NOT_AVAILABLE);
-						result = true;
-					} else {
+			BugzillaClient client = getClientManager().getClient(repository);
+			if (client != null) {
+				String timestamp = client.getConfigurationTimestamp();
+				if (timestamp != null) {
+					String oldTimestamp = repository.getProperty(IBugzillaConstants.PROPERTY_CONFIGTIMESTAMP);
+					if (oldTimestamp != null) {
 						result = !timestamp.equals(oldTimestamp);
-						repository.setProperty(IBugzillaConstants.PROPERTY_CONFIGTIMESTAMP, timestamp);
 					}
+					repository.setProperty(IBugzillaConstants.PROPERTY_CONFIGTIMESTAMP, timestamp);
 				}
 			}
 		} catch (MalformedURLException e) {

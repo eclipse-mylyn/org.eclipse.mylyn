@@ -420,9 +420,9 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			public void widgetSelected(SelectionEvent e) {
 				if (product.getSelectionIndex() != -1) {
 					String[] selectedProducts = product.getSelection();
-					updateAttributesFromRepository(repository.getUrl(), selectedProducts, false);
+					updateAttributesFromRepository(repository.getUrl(), selectedProducts, false, false);
 				} else {
-					updateAttributesFromRepository(repository.getUrl(), null, false);
+					updateAttributesFromRepository(repository.getUrl(), null, false, false);
 				}
 				if (restoring) {
 					restoring = false;
@@ -630,7 +630,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (repository != null) {
-					updateAttributesFromRepository(repository.getUrl(), null, true);
+					updateAttributesFromRepository(repository.getUrl(), null, true, true);
 				} else {
 					MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
 							IBugzillaConstants.TITLE_MESSAGE_DIALOG, TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
@@ -804,9 +804,9 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 				// TODO: update status, resolution, severity etc if possible...
 				if (repository != null) {
-					updateAttributesFromRepository(repository.getUrl(), null, false);
+					updateAttributesFromRepository(repository.getUrl(), null, false, false);
 					if (product.getItemCount() == 0) {
-						updateAttributesFromRepository(repository.getUrl(), null, true);
+						updateAttributesFromRepository(repository.getUrl(), null, true, false);
 					}
 				}
 				if (originalQuery != null) {
@@ -830,7 +830,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 						&& product != null) {
 					product.setSelection(nonNullArray(settings, STORE_PRODUCT_ID + repoId));
 					if (product.getSelection().length > 0) {
-						updateAttributesFromRepository(repository.getUrl(), product.getSelection(), false);
+						updateAttributesFromRepository(repository.getUrl(), product.getSelection(), false, false);
 					}
 					restoreWidgetValues();
 				}
@@ -1186,9 +1186,13 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		getDialogSettings();
 	}
 
-	private void updateAttributesFromRepository(String repositoryUrl, String[] selectedProducts, boolean connect) {
+	private void updateAttributesFromRepository(final String repositoryUrl, String[] selectedProducts,
+			boolean updateAttributes, final boolean userFoced) {
 
-		if (connect) {
+		// no info, do update but not forced, if still no data force
+		// if user initiated, force update
+
+		if (updateAttributes) {
 			final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 					repository.getConnectorKind());
 
@@ -1199,8 +1203,16 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 					}
 					try {
 						monitor.beginTask("Updating search options...", IProgressMonitor.UNKNOWN);
-						connector.updateAttributes(repository, monitor);
+						if (userFoced) {
+							connector.updateAttributes(repository, monitor);
+						}
 						BugzillaUiPlugin.updateQueryOptions(repository, monitor);
+						String[] productsList = BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_PRODUCT,
+								null, repositoryUrl);
+						if (productsList == null || productsList.length == 0) {
+							connector.updateAttributes(repository, monitor);
+							BugzillaUiPlugin.updateQueryOptions(repository, monitor);
+						}
 					} catch (final CoreException ce) {
 						StatusHandler.displayStatus("Update failed", ce.getStatus());
 					} finally {
@@ -1344,7 +1356,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				selList.add(value);
 				sel = new String[selList.size()];
 				product.setSelection(selList.toArray(sel));
-				updateAttributesFromRepository(repository.getUrl(), selList.toArray(sel), false);
+				updateAttributesFromRepository(repository.getUrl(), selList.toArray(sel), false, false);
 			} else if (key.equals("component")) {
 				String[] sel = component.getSelection();
 				java.util.List<String> selList = Arrays.asList(sel);

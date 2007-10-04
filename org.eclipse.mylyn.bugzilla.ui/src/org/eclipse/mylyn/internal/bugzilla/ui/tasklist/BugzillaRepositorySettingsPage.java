@@ -55,9 +55,9 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 	private static final String TOOLTIP_AUTODETECTION_DISABLED = "Available once repository has been created.";
 
-	private static final String TOOLTIP_CACHED_CONFIGURATION = "Use for repositories that explicitly state that they support this customization.";
+	//private static final String TOOLTIP_CACHED_CONFIGURATION = "Use for repositories that explicitly state that they support this customization.";
 
-	private static final String LABEL_CACHED_CONFIGURATION = "Cached configuration:";
+	//private static final String LABEL_CACHED_CONFIGURATION = "Cached configuration:";
 
 	private static final String LABEL_SHORT_LOGINS = "Local users enabled:";
 
@@ -77,7 +77,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 	private Button cleanQAContact;
 
-	private Button cachedConfigButton;
+	//private Button cachedConfigButton;
 
 	private RepositoryConfiguration repositoryConfiguration = null;
 
@@ -171,18 +171,18 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 			cleanQAContact.setSelection(shortLogin);
 		}
 
-		Label cachedConfigLabel = new Label(parent, SWT.NONE);
-		cachedConfigLabel.setText(LABEL_CACHED_CONFIGURATION);
-		cachedConfigLabel.setToolTipText(TOOLTIP_CACHED_CONFIGURATION);
-		cachedConfigButton = new Button(parent, SWT.CHECK | SWT.LEFT);
-		if (repository != null) {
-			boolean isCached = true;
-			String oldTimestamp = repository.getProperty(IBugzillaConstants.PROPERTY_CONFIGTIMESTAMP);
-			if (oldTimestamp != null && oldTimestamp.equals(IBugzillaConstants.TIMESTAMP_NOT_AVAILABLE)) {
-				isCached = false;
-			}
-			cachedConfigButton.setSelection(isCached);
-		}
+//		Label cachedConfigLabel = new Label(parent, SWT.NONE);
+//		cachedConfigLabel.setText(LABEL_CACHED_CONFIGURATION);
+//		cachedConfigLabel.setToolTipText(TOOLTIP_CACHED_CONFIGURATION);
+//		cachedConfigButton = new Button(parent, SWT.CHECK | SWT.LEFT);
+//		if (repository != null) {
+//			boolean isCached = true;
+//			String oldTimestamp = repository.getProperty(IBugzillaConstants.PROPERTY_CONFIGTIMESTAMP);
+//			if (oldTimestamp != null && oldTimestamp.equals(IBugzillaConstants.TIMESTAMP_NOT_AVAILABLE)) {
+//				isCached = false;
+//			}
+//			cachedConfigButton.setSelection(isCached);
+//		}
 
 		if (null != repository) {
 			repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository.getUrl());
@@ -346,12 +346,12 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 	public void updateProperties(TaskRepository repository) {
 		repository.setProperty(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN,
 				String.valueOf(cleanQAContact.getSelection()));
-		if (cachedConfigButton.getSelection()) {
-			repository.setProperty(IBugzillaConstants.PROPERTY_CONFIGTIMESTAMP, "");
-		} else {
-			repository.setProperty(IBugzillaConstants.PROPERTY_CONFIGTIMESTAMP,
-					IBugzillaConstants.TIMESTAMP_NOT_AVAILABLE);
-		}
+//		if (cachedConfigButton.getSelection()) {
+//			repository.setProperty(IBugzillaConstants.PROPERTY_CONFIGTIMESTAMP, "");
+//		} else {
+//			repository.setProperty(IBugzillaConstants.PROPERTY_CONFIGTIMESTAMP,
+//					IBugzillaConstants.TIMESTAMP_NOT_AVAILABLE);
+//		}
 		if (!autodetectPlatformOS.getSelection()) {
 			repository.setProperty(IBugzillaConstants.BUGZILLA_DEF_PLATFORM,
 					String.valueOf(defaultPlatformCombo.getItem(defaultPlatformCombo.getSelectionIndex())));

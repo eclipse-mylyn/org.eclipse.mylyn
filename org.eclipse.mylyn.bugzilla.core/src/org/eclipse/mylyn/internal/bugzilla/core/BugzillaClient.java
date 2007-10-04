@@ -158,6 +158,8 @@ public class BugzillaClient {
 
 	private boolean isValidation = false;
 
+	private boolean lastModifiedSupported = true;
+
 	private class BugzillaRetryHandler extends DefaultHttpMethodRetryHandler {
 		public BugzillaRetryHandler() {
 			super(MAX_RETRY, false);
@@ -217,12 +219,13 @@ public class BugzillaClient {
 	}
 
 	/**
-	 * in order to provide an even better solution for bug 196056 the size of the bugzilla configuration downloaded must be reduced.
-	 * By using a cached version of the config.cgi this can reduce traffic considerably:
+	 * in order to provide an even better solution for bug 196056 the size of the bugzilla configuration downloaded must
+	 * be reduced. By using a cached version of the config.cgi this can reduce traffic considerably:
 	 * http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.phoenix/infra-scripts/bugzilla/?root=Technology_Project
-	 *
+	 * 
 	 * @param serverURL
-	 * @return a GetMethod with possibly gzip encoded response body, so caller MUST check with "gzip".equals(method.getResponseHeader("Content-encoding")
+	 * @return a GetMethod with possibly gzip encoded response body, so caller MUST check with
+	 *         "gzip".equals(method.getResponseHeader("Content-encoding")
 	 * @throws IOException
 	 * @throws CoreException
 	 */
@@ -248,7 +251,7 @@ public class BugzillaClient {
 			getMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset="
 					+ characterEncoding);
 
-			if(gzip) {
+			if (gzip) {
 				getMethod.setRequestHeader("Accept-encoding", WebClientUtil.CONTENT_ENCODING_GZIP);
 			}
 
@@ -619,13 +622,12 @@ public class BugzillaClient {
 			// provide a solution for bug 196056 by allowing a (cached) gzipped configuration to be sent
 			InputStream stream;
 			Header zipped = method.getResponseHeader("Content-encoding");
-			if(null != zipped && zipped.getValue().equals(WebClientUtil.CONTENT_ENCODING_GZIP)) {
+			if (null != zipped && zipped.getValue().equals(WebClientUtil.CONTENT_ENCODING_GZIP)) {
 				stream = new java.util.zip.GZIPInputStream(method.getResponseBodyAsStream());
 			} else {
 				stream = method.getResponseBodyAsStream();
 			}
-			RepositoryConfigurationFactory configFactory = new RepositoryConfigurationFactory(
-					stream, characterEncoding);
+			RepositoryConfigurationFactory configFactory = new RepositoryConfigurationFactory(stream, characterEncoding);
 
 			RepositoryConfiguration configuration = configFactory.getConfiguration();
 			if (configuration != null) {
@@ -722,7 +724,7 @@ public class BugzillaClient {
 
 	/**
 	 * calling method must release the connection on the returned PostMethod once finished. TODO: refactor
-	 *
+	 * 
 	 * @throws CoreException
 	 */
 	private PostMethod postFormData(String formUrl, NameValuePair[] formData) throws IOException, CoreException {
@@ -1166,17 +1168,27 @@ public class BugzillaClient {
 	}
 
 	public String getConfigurationTimestamp() throws CoreException {
+		if (!lastModifiedSupported) {
+			return null;
+		}
 		String lastModified = null;
 		HeadMethod method = null;
+
 		try {
-			method = connectHead(repositoryUrl + "/config.cgi?ctype=rdf");
+			method = connectHead(repositoryUrl + IBugzillaConstants.URL_GET_CONFIG_RDF);
 
 			Header lastModifiedHeader = method.getResponseHeader("Last-Modified");
-			if (lastModifiedHeader != null) {
+			if (lastModifiedHeader != null && lastModifiedHeader.getValue() != null
+					&& lastModifiedHeader.getValue().length() > 0) {
 				lastModified = lastModifiedHeader.getValue();
+			} else {
+				lastModifiedSupported = false;
 			}
 
 		} catch (Exception e) {
+
+			lastModifiedSupported = false;
+
 			throw new CoreException(new Status(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 					"Error retrieving configuration timestamp", e));
 		} finally {
