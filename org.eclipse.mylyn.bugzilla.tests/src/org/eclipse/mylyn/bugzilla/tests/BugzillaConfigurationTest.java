@@ -45,7 +45,7 @@ public class BugzillaConfigurationTest extends TestCase {
 	}
 
 	public void test222RDFProductConfig() throws Exception {
-		
+
 		BugzillaClient client = BugzillaClientFactory.createClient(IBugzillaConstants.TEST_BUGZILLA_222_URL, "", "",
 				"", "", WebClientUtil.getPlatformProxy(), "UTF-8");
 		RepositoryConfiguration config = client.getRepositoryConfiguration();
@@ -122,15 +122,15 @@ public class BugzillaConfigurationTest extends TestCase {
 	}
 
 	public void testEclipseRDFProductConfig() throws Exception {
-		BugzillaClient client = BugzillaClientFactory.createClient(IBugzillaConstants.ECLIPSE_BUGZILLA_URL, "", "",
-				"", "", WebClientUtil.getPlatformProxy(), "UTF-8");
+		BugzillaClient client = BugzillaClientFactory.createClient(IBugzillaConstants.ECLIPSE_BUGZILLA_URL, "", "", "",
+				"", WebClientUtil.getPlatformProxy(), "UTF-8");
 		RepositoryConfiguration config = client.getRepositoryConfiguration();
 		assertNotNull(config);
 		assertEquals("3.0.1", config.getInstallVersion());
 		assertEquals(7, config.getStatusValues().size());
 		assertEquals(9, config.getResolutions().size());
 		assertEquals(6, config.getPlatforms().size());
-		assertEquals(28, config.getOSs().size());
+		assertEquals(29, config.getOSs().size());
 		assertEquals(5, config.getPriorities().size());
 		assertEquals(7, config.getSeverities().size());
 		assertTrue(config.getProducts().size() > 50);

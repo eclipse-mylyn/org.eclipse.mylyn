@@ -212,11 +212,27 @@ public class BugzillaClient {
 
 	private GetMethod getConnect(String serverURL) throws IOException, CoreException {
 
-		return connectInternal(serverURL);
+		return connectInternal(serverURL, false);
 
 	}
 
-	private GetMethod connectInternal(String requestURL) throws IOException, CoreException {
+	/**
+	 * in order to provide an even better solution for bug 196056 the size of the bugzilla configuration downloaded must be reduced.
+	 * By using a cached version of the config.cgi this can reduce traffic considerably:
+	 * http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.phoenix/infra-scripts/bugzilla/?root=Technology_Project
+	 *
+	 * @param serverURL
+	 * @return a GetMethod with possibly gzip encoded response body, so caller MUST check with "gzip".equals(method.getResponseHeader("Content-encoding")
+	 * @throws IOException
+	 * @throws CoreException
+	 */
+	private GetMethod getConnectGzip(String serverURL) throws IOException, CoreException {
+
+		return connectInternal(serverURL, true);
+
+	}
+
+	private GetMethod connectInternal(String requestURL, boolean gzip) throws IOException, CoreException {
 		WebClientUtil.setupHttpClient(httpClient, proxy, requestURL, htAuthUser, htAuthPass);
 		for (int attempt = 0; attempt < 2; attempt++) {
 			// force authentication
@@ -231,6 +247,10 @@ public class BugzillaClient {
 
 			getMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset="
 					+ characterEncoding);
+
+			if(gzip) {
+				getMethod.setRequestHeader("Accept-encoding", WebClientUtil.CONTENT_ENCODING_GZIP);
+			}
 
 			// Resolves bug#195113
 			httpClient.getParams().setParameter("http.protocol.single-cookie-header", true);
@@ -595,9 +615,18 @@ public class BugzillaClient {
 	public RepositoryConfiguration getRepositoryConfiguration() throws IOException, CoreException {
 		GetMethod method = null;
 		try {
-			method = getConnect(repositoryUrl + IBugzillaConstants.URL_GET_CONFIG_RDF);
+			method = getConnectGzip(repositoryUrl + IBugzillaConstants.URL_GET_CONFIG_RDF);
+			// provide a solution for bug 196056 by allowing a (cached) gzipped configuration to be sent
+			InputStream stream;
+			Header zipped = method.getResponseHeader("Content-encoding");
+			if(null != zipped && zipped.getValue().equals(WebClientUtil.CONTENT_ENCODING_GZIP)) {
+				stream = new java.util.zip.GZIPInputStream(method.getResponseBodyAsStream());
+			} else {
+				stream = method.getResponseBodyAsStream();
+			}
 			RepositoryConfigurationFactory configFactory = new RepositoryConfigurationFactory(
-					method.getResponseBodyAsStream(), characterEncoding);
+					stream, characterEncoding);
+
 			RepositoryConfiguration configuration = configFactory.getConfiguration();
 			if (configuration != null) {
 				configuration.setRepositoryUrl(repositoryUrl.toString());
@@ -693,7 +722,7 @@ public class BugzillaClient {
 
 	/**
 	 * calling method must release the connection on the returned PostMethod once finished. TODO: refactor
-	 * 
+	 *
 	 * @throws CoreException
 	 */
 	private PostMethod postFormData(String formUrl, NameValuePair[] formData) throws IOException, CoreException {
