@@ -222,7 +222,7 @@ public class BugzillaClient {
 	 * in order to provide an even better solution for bug 196056 the size of the bugzilla configuration downloaded must
 	 * be reduced. By using a cached version of the config.cgi this can reduce traffic considerably:
 	 * http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.phoenix/infra-scripts/bugzilla/?root=Technology_Project
-	 * 
+	 *
 	 * @param serverURL
 	 * @return a GetMethod with possibly gzip encoded response body, so caller MUST check with
 	 *         "gzip".equals(method.getResponseHeader("Content-encoding")
@@ -251,7 +251,7 @@ public class BugzillaClient {
 			getMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset="
 					+ characterEncoding);
 
-			if (gzip) {
+			if(gzip) {
 				getMethod.setRequestHeader("Accept-encoding", WebClientUtil.CONTENT_ENCODING_GZIP);
 			}
 
@@ -620,9 +620,15 @@ public class BugzillaClient {
 		try {
 			method = getConnectGzip(repositoryUrl + IBugzillaConstants.URL_GET_CONFIG_RDF);
 			// provide a solution for bug 196056 by allowing a (cached) gzipped configuration to be sent
+			// modified to also accept "application/x-gzip" as results from a 302 redirect to a previously gzipped file.
 			InputStream stream;
-			Header zipped = method.getResponseHeader("Content-encoding");
-			if (null != zipped && zipped.getValue().equals(WebClientUtil.CONTENT_ENCODING_GZIP)) {
+					// content-encoding:gzip can be set by a dedicated perl script or mod_gzip
+			boolean zipped = (null != method.getResponseHeader("Content-encoding") &&
+					method.getResponseHeader("Content-encoding").getValue().equals(WebClientUtil.CONTENT_ENCODING_GZIP)) ||
+					// content-type: application/x-gzip can be set by any apache after 302 redirect, based on .gz suffix
+				(null != method.getResponseHeader("Content-Type") &&
+					method.getResponseHeader("Content-Type").getValue().equals("application/x-gzip"));
+			if(zipped) {
 				stream = new java.util.zip.GZIPInputStream(method.getResponseBodyAsStream());
 			} else {
 				stream = method.getResponseBodyAsStream();
@@ -724,7 +730,7 @@ public class BugzillaClient {
 
 	/**
 	 * calling method must release the connection on the returned PostMethod once finished. TODO: refactor
-	 * 
+	 *
 	 * @throws CoreException
 	 */
 	private PostMethod postFormData(String formUrl, NameValuePair[] formData) throws IOException, CoreException {
@@ -1173,7 +1179,6 @@ public class BugzillaClient {
 		}
 		String lastModified = null;
 		HeadMethod method = null;
-
 		try {
 			method = connectHead(repositoryUrl + IBugzillaConstants.URL_GET_CONFIG_RDF);
 
