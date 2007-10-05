@@ -7,9 +7,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.bugzilla.ui.editor;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
@@ -17,10 +14,7 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
-import org.eclipse.mylyn.tasks.ui.AbstractDuplicateDetector;
-import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractNewRepositoryTaskEditor;
-import org.eclipse.mylyn.tasks.ui.search.SearchHitCollector;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -98,39 +92,6 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 		toolkit.paintBordersFor(peopleComposite);
 	}
 
-	@Override
-	/**
-	 * This method is duplicated in BugzillaTaskEditor for now.
-	 */
-	public SearchHitCollector getDuplicateSearchCollector(String name) {
-		String duplicateDetectorName = name.equals("default") ? "Stack Trace" : name;
-		Set<AbstractDuplicateDetector> allDetectors = getDuplicateSearchCollectorsList();
-
-		for (AbstractDuplicateDetector detector : allDetectors) {
-			if (detector.getName().equals(duplicateDetectorName)) {
-				return detector.getSearchHitCollector(repository, taskData);
-			}
-		}
-		// didn't find it
-		return null;
-	}
-
-	@Override
-	/**
-	 * This method is duplicated in BugzillaTaskEditor for now.
-	 */
-	protected Set<AbstractDuplicateDetector> getDuplicateSearchCollectorsList() {
-		Set<AbstractDuplicateDetector> bugzillaDuplicateDetectors = new HashSet<AbstractDuplicateDetector>();
-		for (AbstractDuplicateDetector abstractDuplicateDetector : TasksUiPlugin.getDefault()
-				.getDuplicateSearchCollectorsList()) {
-
-			if (abstractDuplicateDetector.getKind() == null
-					|| abstractDuplicateDetector.getKind().equals(getConnector().getConnectorKind())) {
-				bugzillaDuplicateDetectors.add(abstractDuplicateDetector);
-			}
-		}
-		return bugzillaDuplicateDetectors;
-	}
 
 	@Override
 	public void submitToRepository() {

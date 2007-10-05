@@ -12,9 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.Dialog;
@@ -29,13 +27,11 @@ import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryOperation;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
-import org.eclipse.mylyn.tasks.ui.AbstractDuplicateDetector;
 import org.eclipse.mylyn.tasks.ui.DatePicker;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
-import org.eclipse.mylyn.tasks.ui.search.SearchHitCollector;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -603,39 +599,6 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		} else {
 			return null;
 		}
-	}
-
-	/**
-	 * This method is duplicated in NewBugzillaTaskEditor for now.
-	 */
-	@Override
-	public SearchHitCollector getDuplicateSearchCollector(String name) {
-		String duplicateDetectorName = name.equals("default") ? "Stack Trace" : name;
-		Set<AbstractDuplicateDetector> allDetectors = getDuplicateSearchCollectorsList();
-
-		for (AbstractDuplicateDetector detector : allDetectors) {
-			if (detector.getName().equals(duplicateDetectorName)) {
-				return detector.getSearchHitCollector(repository, taskData);
-			}
-		}
-		// didn't find it
-		return null;
-	}
-
-	/**
-	 * This method is duplicated in BugzillaTaskEditor for now.
-	 */
-	@Override
-	protected Set<AbstractDuplicateDetector> getDuplicateSearchCollectorsList() {
-		Set<AbstractDuplicateDetector> bugzillaDuplicateDetectors = new HashSet<AbstractDuplicateDetector>();
-		for (AbstractDuplicateDetector abstractDuplicateDetector : TasksUiPlugin.getDefault()
-				.getDuplicateSearchCollectorsList()) {
-			if (abstractDuplicateDetector.getKind() == null
-					|| abstractDuplicateDetector.getKind().equals(getConnector().getConnectorKind())) {
-				bugzillaDuplicateDetectors.add(abstractDuplicateDetector);
-			}
-		}
-		return bugzillaDuplicateDetectors;
 	}
 
 	/**

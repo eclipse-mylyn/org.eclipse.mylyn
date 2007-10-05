@@ -1101,11 +1101,28 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	protected SearchHitCollector getDuplicateSearchCollector(String name) {
+		String duplicateDetectorName = name.equals("default") ? "Stack Trace" : name;
+		Set<AbstractDuplicateDetector> allDetectors = getDuplicateSearchCollectorsList();
+
+		for (AbstractDuplicateDetector detector : allDetectors) {
+			if (detector.getName().equals(duplicateDetectorName)) {
+				return detector.getSearchHitCollector(repository, taskData);
+			}
+		}
+		// didn't find it
 		return null;
 	}
 
 	protected Set<AbstractDuplicateDetector> getDuplicateSearchCollectorsList() {
-		return null;
+		Set<AbstractDuplicateDetector> duplicateDetectors = new HashSet<AbstractDuplicateDetector>();
+		for (AbstractDuplicateDetector abstractDuplicateDetector : TasksUiPlugin.getDefault()
+				.getDuplicateSearchCollectorsList()) {
+			if (abstractDuplicateDetector.getKind() == null
+					|| abstractDuplicateDetector.getKind().equals(getConnector().getConnectorKind())) {
+				duplicateDetectors.add(abstractDuplicateDetector);
+			}
+		}
+		return duplicateDetectors;
 	}
 
 	public boolean searchForDuplicates() {
