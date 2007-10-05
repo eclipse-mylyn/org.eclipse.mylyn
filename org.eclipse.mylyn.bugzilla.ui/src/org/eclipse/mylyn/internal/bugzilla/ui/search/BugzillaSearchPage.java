@@ -1215,6 +1215,9 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 						}
 					} catch (final CoreException ce) {
 						StatusHandler.displayStatus("Update failed", ce.getStatus());
+						if (ce.getCause() != null) {
+							StatusHandler.fail(ce.getCause(), ce.getCause().getMessage(), false);
+						}
 					} finally {
 						monitor.done();
 					}
