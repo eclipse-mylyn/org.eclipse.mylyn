@@ -107,7 +107,10 @@ public class TasksUiUtil {
 			MessageDialog.openError(Display.getDefault().getActiveShell(), "Browser init error",
 					"Browser could not be initiated");
 		} catch (MalformedURLException e) {
-			MessageDialog.openError(Display.getDefault().getActiveShell(), "URL not found", "URL Could not be opened");
+			if (url != null && url.trim().equals("")) {
+				url = "<empty>";
+			}
+			MessageDialog.openInformation(Display.getDefault().getActiveShell(), "Open URL", "Could not open URL: " + url);
 		}
 	}
 
