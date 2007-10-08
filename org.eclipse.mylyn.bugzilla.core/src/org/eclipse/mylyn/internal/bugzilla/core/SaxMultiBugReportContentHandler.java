@@ -29,6 +29,8 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class SaxMultiBugReportContentHandler extends DefaultHandler {
 
+	private static final String ATTRIBUTE_NAME = "name";
+
 	private static final String COMMENT_ATTACHMENT_STRING = "Created an attachment (id=";
 
 	private StringBuffer characters;
@@ -71,6 +73,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 	@Override
 	public void characters(char[] ch, int start, int length) throws SAXException {
 		characters.append(ch, start, length);
+		//System.err.println(String.copyValueOf(ch, start, length));
 		// if (monitor.isCanceled()) {
 		// throw new OperationCanceledException("Search cancelled");
 		// }
@@ -103,6 +106,36 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			break;
 		case LONG_DESC:
 			taskComment = new TaskComment(attributeFactory, commentNum++);
+			break;
+		case WHO:
+			if (taskComment != null) {
+				if (attributes != null && attributes.getLength() > 0) {
+					String name = attributes.getValue(ATTRIBUTE_NAME);
+					if (name != null) {
+						taskComment.setAttributeValue(BugzillaReportElement.WHO_NAME.getKeyString(), name);
+					}
+				}
+			}
+			break;
+		case REPORTER:
+			if (attributes != null && attributes.getLength() > 0) {
+				String name = attributes.getValue(ATTRIBUTE_NAME);
+				if (name != null) {
+					RepositoryTaskAttribute attr = attributeFactory.createAttribute(BugzillaReportElement.REPORTER_NAME.getKeyString());
+					attr.setValue(name);
+					repositoryTaskData.addAttribute(BugzillaReportElement.REPORTER_NAME.getKeyString(), attr);
+				}
+			}
+			break;
+		case ASSIGNED_TO:
+			if (attributes != null && attributes.getLength() > 0) {
+				String name = attributes.getValue(ATTRIBUTE_NAME);
+				if (name != null) {
+					RepositoryTaskAttribute attr = attributeFactory.createAttribute(BugzillaReportElement.ASSIGNED_TO_NAME.getKeyString());
+					attr.setValue(name);
+					repositoryTaskData.addAttribute(BugzillaReportElement.ASSIGNED_TO_NAME.getKeyString(), attr);
+				}
+			}
 			break;
 		case ATTACHMENT:
 			attachment = new RepositoryAttachment(attributeFactory);
@@ -158,6 +191,12 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 
 			// Comment attributes
 		case WHO:
+			if (taskComment != null) {
+				RepositoryTaskAttribute attr = attributeFactory.createAttribute(tag.getKeyString());
+				attr.setValue(parsedText);
+				taskComment.addAttribute(tag.getKeyString(), attr);
+			}
+			break;
 		case BUG_WHEN:
 			if (taskComment != null) {
 				RepositoryTaskAttribute attr = attributeFactory.createAttribute(tag.getKeyString());

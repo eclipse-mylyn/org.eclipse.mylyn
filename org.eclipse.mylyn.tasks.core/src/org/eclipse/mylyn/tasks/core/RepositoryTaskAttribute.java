@@ -37,6 +37,8 @@ public class RepositoryTaskAttribute implements Serializable {
 
 	public static final String USER_REPORTER = "task.common.user.reporter";
 
+	public static final String USER_REPORTER_NAME = "task.common.user.reporter.name";
+
 	public static final String COMMENT_NEW = "task.common.comment.new";
 
 	public static final String COMMENT_TEXT = "task.common.comment.text";
@@ -44,6 +46,8 @@ public class RepositoryTaskAttribute implements Serializable {
 	public static final String COMMENT_DATE = "task.common.comment.date";
 
 	public static final String COMMENT_AUTHOR = "task.common.comment.author";
+
+	public static final String COMMENT_AUTHOR_NAME = "task.common.comment.author.name";
 
 	public static final String DESCRIPTION = "task.common.description";
 
@@ -60,6 +64,8 @@ public class RepositoryTaskAttribute implements Serializable {
 	public static final String ATTACHMENT_FILENAME = "filename";
 
 	public static final String USER_ASSIGNED = "task.common.user.assigned";
+
+	public static final String USER_ASSIGNED_NAME = "task.common.user.assigned.name";
 
 	public static final String RESOLUTION = "task.common.resolution";
 

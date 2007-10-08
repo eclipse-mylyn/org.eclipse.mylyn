@@ -1778,14 +1778,22 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(peopleComposite);
 
 		addAssignedTo(peopleComposite);
-
-		RepositoryTaskAttribute reporterAttribute = taskData.getAttribute(RepositoryTaskAttribute.USER_REPORTER);
+		boolean haveRealName = false;
+		RepositoryTaskAttribute reporterAttribute = taskData.getAttribute(RepositoryTaskAttribute.USER_REPORTER_NAME);
+		if (reporterAttribute == null) {
+			reporterAttribute = taskData.getAttribute(RepositoryTaskAttribute.USER_REPORTER);
+		} else {
+			haveRealName = true;
+		}
 		if (reporterAttribute != null) {
-
 			Label label = createLabel(peopleComposite, reporterAttribute);
 			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
 			Text textField = createTextField(peopleComposite, reporterAttribute, SWT.FLAT | SWT.READ_ONLY);
-			GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).applyTo(textField);
+			GridDataFactory.fillDefaults().hint(200, SWT.DEFAULT).applyTo(textField);
+			if (haveRealName) {
+				textField.setText(textField.getText() + " <"
+						+ taskData.getAttributeValue(RepositoryTaskAttribute.USER_REPORTER) + ">");
+			}
 		}
 		addSelfToCC(peopleComposite);
 		addCCList(peopleComposite);
@@ -1994,14 +2002,24 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			formHyperlink.setBackground(null);
 			formHyperlink.setFont(expandableComposite.getFont());
 			formHyperlink.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-			if (taskComment.getAuthor().equalsIgnoreCase(repository.getUserName())) {
+			if (taskComment.getAuthor() != null && taskComment.getAuthor().equalsIgnoreCase(repository.getUserName())) {
 				formHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.PERSON_ME_NARROW));
 			} else {
 				formHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.PERSON_NARROW));
 			}
 
-			formHyperlink.setText(taskComment.getNumber() + ": " + taskComment.getAuthorName() + ", "
+			String authorName = taskComment.getAuthorName();
+			String tooltipText = taskComment.getAuthor();
+			if (authorName.length() == 0) {
+				authorName = taskComment.getAuthor();
+				tooltipText = null;
+			}
+
+			formHyperlink.setText(taskComment.getNumber() + ": " + authorName + ", "
 					+ formatDate(taskComment.getCreated()));
+
+			formHyperlink.setToolTipText(tooltipText);
+			formHyperlink.setEnabled(true);
 			formHyperlink.setUnderlined(false);
 
 			final Composite toolbarButtonComp = toolkit.createComposite(toolbarComp);
@@ -2592,7 +2610,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 		if (activateAction != null) {
 			activateAction.dispose();
-		} 
+		}
 		super.dispose();
 	}
 
@@ -3524,12 +3542,22 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * @author Frank Becker (bug 198027)
 	 */
 	protected void addAssignedTo(Composite peopleComposite) {
-		RepositoryTaskAttribute assignedAttribute = taskData.getAttribute(RepositoryTaskAttribute.USER_ASSIGNED);
+		boolean haveRealName = false;
+		RepositoryTaskAttribute assignedAttribute = taskData.getAttribute(RepositoryTaskAttribute.USER_ASSIGNED_NAME);
+		if (assignedAttribute == null) {
+			assignedAttribute = taskData.getAttribute(RepositoryTaskAttribute.USER_ASSIGNED);
+		} else {
+			haveRealName = true;
+		}
 		if (assignedAttribute != null) {
 			Label label = createLabel(peopleComposite, assignedAttribute);
 			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
 			Text textField = createTextField(peopleComposite, assignedAttribute, SWT.FLAT | SWT.READ_ONLY);
-			GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).applyTo(textField);
+			GridDataFactory.fillDefaults().hint(200, SWT.DEFAULT).applyTo(textField);
+			if (haveRealName) {
+				textField.setText(textField.getText() + " <"
+						+ taskData.getAttributeValue(RepositoryTaskAttribute.USER_ASSIGNED) + ">");
+			}
 		}
 	}
 

@@ -62,12 +62,10 @@ public class TaskComment extends AttributeContainer implements Serializable {
 	/**
 	 * Get the authors real name
 	 * 
-	 * @return Returns author's name, or <code>null</code> if not known
+	 * @return Returns author's name, or an empty string
 	 */
 	public String getAuthorName() {
-		// TODO: Currently we don't get the real name from the xml.
-		// Need retrieve these names somehow
-		return getAuthor();
+		return getAttributeValue(RepositoryTaskAttribute.COMMENT_AUTHOR_NAME);
 	}
 
 	/**

@@ -45,8 +45,10 @@ public class BugzillaAttributeFactory extends AbstractAttributeFactory {
 			return BugzillaReportElement.NEWCC.getKeyString();
 		} else if (key.equals(RepositoryTaskAttribute.COMMENT_DATE)) {
 			return BugzillaReportElement.BUG_WHEN.getKeyString();
-		} else if (key.equals(RepositoryTaskAttribute.COMMENT_AUTHOR)) { // was USER_OWNER
+		} else if (key.equals(RepositoryTaskAttribute.COMMENT_AUTHOR)) {
 			return BugzillaReportElement.WHO.getKeyString();
+		} else if (key.equals(RepositoryTaskAttribute.COMMENT_AUTHOR_NAME)) {
+			return BugzillaReportElement.WHO_NAME.getKeyString();
 		} else if (key.equals(RepositoryTaskAttribute.USER_CC)) {
 			return BugzillaReportElement.CC.getKeyString();
 		} else if (key.equals(RepositoryTaskAttribute.COMMENT_TEXT)) {
@@ -63,6 +65,8 @@ public class BugzillaAttributeFactory extends AbstractAttributeFactory {
 			return BugzillaReportElement.CTYPE.getKeyString();
 		} else if (key.equals(RepositoryTaskAttribute.USER_ASSIGNED)) {
 			return BugzillaReportElement.ASSIGNED_TO.getKeyString();
+		} else if (key.equals(RepositoryTaskAttribute.USER_ASSIGNED_NAME)) {
+			return BugzillaReportElement.ASSIGNED_TO_NAME.getKeyString();
 		} else if (key.equals(RepositoryTaskAttribute.RESOLUTION)) {
 			return BugzillaReportElement.RESOLUTION.getKeyString();
 		} else if (key.equals(RepositoryTaskAttribute.STATUS)) {
@@ -71,6 +75,8 @@ public class BugzillaAttributeFactory extends AbstractAttributeFactory {
 			return BugzillaReportElement.DELTA_TS.getKeyString();
 		} else if (key.equals(RepositoryTaskAttribute.USER_REPORTER)) {
 			return BugzillaReportElement.REPORTER.getKeyString();
+		} else if (key.equals(RepositoryTaskAttribute.USER_REPORTER_NAME)) {
+			return BugzillaReportElement.REPORTER_NAME.getKeyString();
 		} else if (key.equals(RepositoryTaskAttribute.SUMMARY)) {
 			return BugzillaReportElement.SHORT_DESC.getKeyString();
 		} else if (key.equals(RepositoryTaskAttribute.PRODUCT)) {
