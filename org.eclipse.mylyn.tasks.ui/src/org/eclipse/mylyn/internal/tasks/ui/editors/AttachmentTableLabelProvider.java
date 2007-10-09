@@ -36,6 +36,8 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 
 	private IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
 
+	private static final String[] IMAGE_EXTENSIONS = { "jpg", "gif", "png", "tiff", "tif", "bmp" };
+	
 	public AttachmentTableLabelProvider(AbstractRepositoryTaskEditor AbstractTaskEditor, ILabelProvider provider,
 			ILabelDecorator decorator) {
 		this.AbstractTaskEditor = AbstractTaskEditor;
@@ -44,17 +46,33 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 	public Image getColumnImage(Object element, int columnIndex) {
 		RepositoryAttachment attachment = (RepositoryAttachment) element;
 		if (columnIndex == 0) {
-			if (AbstractAttachmentHandler.MYLAR_CONTEXT_DESCRIPTION.equals(attachment.getDescription())
-					|| AbstractAttachmentHandler.MYLAR_CONTEXT_DESCRIPTION_LEGACY.equals(attachment.getDescription())) {
+			if (isContext(attachment)) {
 				return TasksUiImages.getImage(TasksUiImages.CONTEXT_TRANSFER);
 			} else if (attachment.isPatch()) {
 				return TasksUiImages.getImage(TasksUiImages.ATTACHMENT_PATCH);
 			} else {
+				String filename = attachment.getFilename();
+				if (filename != null) {
+					int dotIndex = filename.lastIndexOf('.');
+					if (dotIndex != -1) {
+						String fileType = filename.substring(dotIndex+1);
+						for (int i = 0; i < IMAGE_EXTENSIONS.length; i++) {
+							if (IMAGE_EXTENSIONS[i].equalsIgnoreCase(fileType)) {
+								return TasksUiImages.getImage(TasksUiImages.IMAGE_FILE);
+							}
+						}
+					}
+				}
 				return WorkbenchImages.getImage(ISharedImages.IMG_OBJ_FILE);
 			}
 		} else {
 		}
 		return null;
+	}
+
+	private boolean isContext(RepositoryAttachment attachment) {
+		return AbstractAttachmentHandler.MYLAR_CONTEXT_DESCRIPTION.equals(attachment.getDescription())
+				|| AbstractAttachmentHandler.MYLAR_CONTEXT_DESCRIPTION_LEGACY.equals(attachment.getDescription());
 	}
 
 	public String getColumnText(Object element, int columnIndex) {
@@ -63,14 +81,20 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 		case 0:
 			return " " + attachment.getDescription();
 		case 1:
+			if (isContext(attachment)) {
+				return "Task Context";
+			} else {
+				return attachment.getFilename();
+			}
+		case 2:
 			if (attachment.isPatch()) {
 				return "patch";
 			} else {
 				return attachment.getContentType();
 			}
-		case 2:
-			return attachment.getCreator();
 		case 3:
+			return attachment.getCreator();
+		case 4:
 			// TODO should retrieve Date object from IOfflineTaskHandler
 			return this.AbstractTaskEditor.formatDate(attachment.getDateCreated());
 		}

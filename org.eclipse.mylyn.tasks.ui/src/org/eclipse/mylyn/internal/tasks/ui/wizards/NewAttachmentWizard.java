@@ -69,7 +69,7 @@ public class NewAttachmentWizard extends Wizard {
 
 	private NewAttachmentWizardDialog dialog;
 
-	private ScreenShotAttachmentPage shotPage;
+	private ScreenshotAttachmentPage shotPage;
 
 	private boolean hasNewDialogSettings;
 
@@ -77,17 +77,26 @@ public class NewAttachmentWizard extends Wizard {
 
 	private AbstractTask task;
 
-	public NewAttachmentWizard(TaskRepository repository, AbstractTask task) {
+	private boolean screenshotMode;
+	
+	public NewAttachmentWizard(TaskRepository repository, AbstractTask task, boolean screenshotMode) {
 		super();
 		this.task = task;
 		this.repository = repository;
-		setNeedsProgressMonitor(true);
-		setWindowTitle("Add Attachment");
-		setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
+		this.screenshotMode = screenshotMode;
+
+		if (screenshotMode) {
+			setWindowTitle("Attach Screenshot");
+			setDefaultPageImageDescriptor(TasksUiImages.BANNER_SCREENSHOT);
+		} else {
+			setWindowTitle("Add Attachment");
+			setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
+		}
+		
+		inputPage = new InputAttachmentSourcePage(this);
 		attachment = new LocalAttachment();
 		attachment.setFilePath("");
-		inputPage = new InputAttachmentSourcePage(this);
-
+		setNeedsProgressMonitor(true);
 		IDialogSettings workbenchSettings = TasksUiPlugin.getDefault().getDialogSettings();
 		IDialogSettings section = workbenchSettings.getSection(DIALOG_SETTINGS_KEY);
 		if (section == null) {
@@ -98,13 +107,17 @@ public class NewAttachmentWizard extends Wizard {
 		}
 	}
 
+	public NewAttachmentWizard(TaskRepository repository, AbstractTask task) {
+		this(repository, task, false);
+	}
+	
 	public NewAttachmentWizard(TaskRepository repository, AbstractTask task, File attachFile) {
-		this(repository, task);
+		this(repository, task, false);
 		attachment.setFilePath(attachFile.getAbsolutePath());
 	}
 
 	public NewAttachmentWizard(TaskRepository repository, AbstractTask task, String attachContents) {
-		this(repository, task);
+		this(repository, task, false);
 		inputPage.setUseClipboard(true);
 		inputPage.setClipboardContents(attachContents);
 		attachment.setFilePath(InputAttachmentSourcePage.CLIPBOARD_LABEL);
@@ -144,16 +157,7 @@ public class NewAttachmentWizard extends Wizard {
 					task.setSubmitting(true);
 					task.setSynchronizationState(RepositoryTaskSyncState.OUTGOING);
 
-					if (InputAttachmentSourcePage.CLIPBOARD_LABEL.equals(path)) {
-						String contents = inputPage.getClipboardContents();
-						if (contents == null) {
-							throw new InvocationTargetException(new CoreException(new RepositoryStatus(IStatus.ERROR,
-									TasksUiPlugin.ID_PLUGIN, RepositoryStatus.ERROR_INTERNAL, "Clipboard is empty",
-									null)));
-						}
-						attachment.setContent(contents.getBytes());
-						attachment.setFilename(CLIPBOARD_FILENAME);
-					} else if (InputAttachmentSourcePage.SCREENSHOT_LABEL.equals(path)) {
+					if (screenshotMode || InputAttachmentSourcePage.SCREENSHOT_LABEL.equals(path)) {
 						Image image = shotPage.getScreenshotImage();
 						if (image == null) {
 							throw new InvocationTargetException(new CoreException(new RepositoryStatus(IStatus.ERROR,
@@ -167,6 +171,15 @@ public class NewAttachmentWizard extends Wizard {
 						loader.save(fileName, SWT.IMAGE_JPEG);
 						attachment.setFile(new File(fileName));
 						attachment.setFilename(SCREENSHOT_FILENAME);
+					} else if (InputAttachmentSourcePage.CLIPBOARD_LABEL.equals(path)) {
+						String contents = inputPage.getClipboardContents();
+						if (contents == null) {
+							throw new InvocationTargetException(new CoreException(new RepositoryStatus(IStatus.ERROR,
+									TasksUiPlugin.ID_PLUGIN, RepositoryStatus.ERROR_INTERNAL, "Clipboard is empty",
+									null)));
+						}
+						attachment.setContent(contents.getBytes());
+						attachment.setFilename(CLIPBOARD_FILENAME);
 					} else {
 						File file = new File(path);
 						attachment.setFile(file);
@@ -279,17 +292,26 @@ public class NewAttachmentWizard extends Wizard {
 
 	@Override
 	public boolean canFinish() {
-		return attachPage.isPageComplete();
+		if (screenshotMode) {
+			return shotPage.isPageComplete();
+		} else {
+			return attachPage.isPageComplete();
+		}
 	}
 
 	@Override
 	public void addPages() {
 		super.addPages();
-		if ("".equals(attachment.getFilePath())) {
-			addPage(inputPage);
+		if (screenshotMode) {
+			addPage((shotPage = new ScreenshotAttachmentPage(attachment)));
+			addPage((attachPage = new NewAttachmentPage(attachment)));
+		} else {
+			if ("".equals(attachment.getFilePath())) {
+				addPage(inputPage);
+			}
+			addPage((attachPage = new NewAttachmentPage(attachment)));
+//			addPage((shotPage = new ScreenshotAttachmentPage(attachment)));
 		}
-		addPage((attachPage = new NewAttachmentPage(attachment)));
-		addPage((shotPage = new ScreenShotAttachmentPage(attachment)));
 	}
 
 	public LocalAttachment getAttachment() {

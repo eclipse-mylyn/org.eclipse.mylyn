@@ -21,15 +21,15 @@ import org.eclipse.ui.actions.BaseSelectionListenerAction;
 /**
  * @author Mik Kersten
  */
-public class AttachFileAction extends BaseSelectionListenerAction {
+public class AttachScreenshotAction extends BaseSelectionListenerAction {
 
-	public static final String LABEL = "Attach File...";
+	public static final String LABEL = "Attach Screenshot...";
 	
 	private TaskEditor editor;
 
-	public AttachFileAction() {
+	public AttachScreenshotAction() {
 		super(LABEL);
-		setId("org.eclipse.mylyn.tasks.ui.actions.add.attachment");
+		setId("org.eclipse.mylyn.tasks.ui.actions.add.screenshot");
 	}
 
 	@Override
@@ -43,10 +43,10 @@ public class AttachFileAction extends BaseSelectionListenerAction {
 			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 					repositoryTask.getConnectorKind(), repositoryTask.getRepositoryUrl());
 
-			NewAttachmentWizard attachmentWizard = new NewAttachmentWizard(repository, repositoryTask);
+			NewAttachmentWizard attachmentWizard = new NewAttachmentWizard(repository, repositoryTask, true);
 			NewAttachmentWizardDialog dialog = new NewAttachmentWizardDialog(PlatformUI.getWorkbench()
 					.getActiveWorkbenchWindow()
-					.getShell(), attachmentWizard, true);
+					.getShell(), attachmentWizard, false);
 			attachmentWizard.setDialog(dialog);
 			dialog.create();
 			int result = dialog.open();

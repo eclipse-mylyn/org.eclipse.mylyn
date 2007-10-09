@@ -62,6 +62,14 @@ public class RepositoryAttachment extends AttributeContainer implements Serializ
 		this.creator = creator;
 	}
 
+	/**
+	 * @since 	2.2
+	 * @return	The name of the file, e.g. screenshot.jpg.
+	 */
+	public String getFilename() {
+		return getAttributeValue(RepositoryTaskAttribute.ATTACHMENT_FILENAME);
+	}
+	
 	public String getDescription() {
 		return getAttributeValue(RepositoryTaskAttribute.DESCRIPTION);
 	}

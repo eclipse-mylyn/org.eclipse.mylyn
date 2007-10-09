@@ -22,10 +22,14 @@ public class NewAttachmentWizardDialog extends WizardDialog {
 
 	private static final String ATTACHMENT_WIZARD_SETTINGS_SECTION = "PatchWizard"; 
 
-	public NewAttachmentWizardDialog(Shell parent, IWizard wizard) {
+	public NewAttachmentWizardDialog(Shell parent, IWizard wizard, boolean modal) {
 		super(parent, wizard);
 
-		setShellStyle(getShellStyle() | SWT.RESIZE);
+		if (modal) {
+			setShellStyle(getShellStyle() | SWT.RESIZE);
+		} else {
+			setShellStyle(SWT.MODELESS | SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.RESIZE);			
+		}
 		setMinimumPageSize(600, 300);
 		setPageSize(600, 300);
 	}

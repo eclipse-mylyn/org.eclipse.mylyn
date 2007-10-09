@@ -12,7 +12,7 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.tasks.core.LocalAttachment;
-import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ControlAdapter;
@@ -41,10 +41,11 @@ import org.eclipse.ui.PlatformUI;
  * A wizard page to create a screenshot from the display.
  * 
  * @author Balazs Brinkus (bug 160572)
+ * @author Mik Kersten
  */
-public class ScreenShotAttachmentPage extends WizardPage {
+public class ScreenshotAttachmentPage extends WizardPage {
 
-	private ScreenShotAttachmentPage page;
+	private ScreenshotAttachmentPage page;
 
 	private LocalAttachment attachment;
 
@@ -68,10 +69,11 @@ public class ScreenShotAttachmentPage extends WizardPage {
 
 	private Rectangle scrolledBounds;
 
-	protected ScreenShotAttachmentPage(LocalAttachment attachment) {
+	protected ScreenshotAttachmentPage(LocalAttachment attachment) {
 		super("ScreenShotAttachment");
-		setTitle("Create Screenshot");
-		setDescription("After capturing the screenshot, drag the mouse to crop.");
+		setTitle("Capture Screenshot");
+		setDescription("After capturing, drag the mouse to crop. This window will not be captured. " +
+				"Note that you can continue to prepare the screenshot.");
 		this.attachment = attachment;
 		this.page = this;
 	}
@@ -83,15 +85,14 @@ public class ScreenShotAttachmentPage extends WizardPage {
 		setControl(composite);
 
 		Composite buttonsComposite = new Composite(composite, SWT.NONE);
-		buttonsComposite.setLayout(new GridLayout(2, false));
+		buttonsComposite.setLayout(new GridLayout(3, false));
 		captureButton = new Button(buttonsComposite, SWT.PUSH);
-		captureButton.setText("Capture");
-		captureButton.setImage(TasksUiPlugin.imageDescriptorFromPlugin(TasksUiPlugin.ID_PLUGIN,
-				"icons/etool16/capture-screen.png").createImage());
+		captureButton.setText("Capture Desktop");
+		captureButton.setImage(TasksUiImages.getImage(TasksUiImages.IMAGE_CAPTURE));
 		captureButton.addSelectionListener(new SelectionListener() {
 
 			public void widgetSelected(SelectionEvent e) {
-				storeScreenshotContent();
+				captureScreenshotContent();
 				page.setErrorMessage(null);
 				fitButton.setEnabled(true);
 			}
@@ -101,11 +102,44 @@ public class ScreenShotAttachmentPage extends WizardPage {
 			}
 
 		});
+		
+//		captureDelayedButton = new Button(buttonsComposite, SWT.PUSH);
+//		final String captureIn = "Capture in ";
+//		final int secondsDelay = 1;
+//		captureDelayedButton.setText(captureIn + secondsDelay +" seconds");
+//		captureDelayedButton.setImage(TasksUiImages.getImage(TasksUiImages.IMAGE_CAPTURE));
+//		captureDelayedButton.addSelectionListener(new SelectionListener() {
+//
+//			public void widgetSelected(SelectionEvent e) {
+//				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+//					public void run() {
+//						getShell().setVisible(false);
+//						for (int i = 1; i <= secondsDelay; i++) {
+//							try {
+//								Thread.sleep(1000);
+////								captureDelayedButton.setText("Capture in " + (secondsDelay-i) + " seconds");
+//							} catch (InterruptedException e1) {
+//								// ignore
+//							}	
+//						}
+//						captureScreenshotContent();
+//						page.setErrorMessage(null);
+//						fitButton.setEnabled(true);
+//						captureDelayedButton.setText(captureIn + secondsDelay +" seconds");			
+//						getShell().setVisible(true);
+//					}
+//				});
+//			}
+//
+//			public void widgetDefaultSelected(SelectionEvent e) {
+//				//ignore
+//			}
+//		});
+		
 
 		fitButton = new Button(buttonsComposite, SWT.TOGGLE);
 		fitButton.setText("Fit Image");
-		fitButton.setImage(TasksUiPlugin.imageDescriptorFromPlugin(TasksUiPlugin.ID_PLUGIN, "icons/etool16/capture-fit.png")
-				.createImage());
+		fitButton.setImage(TasksUiImages.getImage(TasksUiImages.IMAGE_FIT));
 		fitButton.addSelectionListener(new SelectionListener() {
 
 			public void widgetSelected(SelectionEvent e) {
@@ -146,7 +180,7 @@ public class ScreenShotAttachmentPage extends WizardPage {
 						drawRegion(e.gc);
 
 				} else {
-					page.setErrorMessage("Screenshot required");
+//					page.setErrorMessage("Screenshot required");
 					fitButton.setEnabled(false);
 				}
 			}
@@ -192,12 +226,19 @@ public class ScreenShotAttachmentPage extends WizardPage {
 		return isPageComplete();
 	}
 
-	private void storeScreenshotContent() {
+	private void captureScreenshotContent() {
 
 		final Display display = Display.getDefault();
 		final Shell wizardShell = getWizard().getContainer().getShell();
 		wizardShell.setVisible(false);
 		isCropFit = fitButton.getSelection();
+		
+		// NOTE: need a wait since the shell can take time to disappear (e.g. fade on Vista)
+		try {
+			Thread.sleep(400);
+		} catch (InterruptedException e) {
+			// ignore
+		}
 
 		display.asyncExec(new Runnable() {
 			public void run() {
@@ -209,8 +250,9 @@ public class ScreenShotAttachmentPage extends WizardPage {
 				gc.dispose();
 				drawCanvas();
 				wizardShell.setVisible(true);
-				if (screenshotImage != null)
+				if (screenshotImage != null) {
 					setPageComplete(true);
+				}
 			}
 		});
 	}

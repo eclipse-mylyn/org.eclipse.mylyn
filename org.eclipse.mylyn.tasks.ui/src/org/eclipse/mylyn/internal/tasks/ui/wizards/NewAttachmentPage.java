@@ -36,6 +36,7 @@ import org.eclipse.swt.widgets.Text;
  * A wizard page to enter details of a new attachment.
  * 
  * @author Jeff Pound
+ * @author Mik Kersten
  */
 public class NewAttachmentPage extends WizardPage {
 

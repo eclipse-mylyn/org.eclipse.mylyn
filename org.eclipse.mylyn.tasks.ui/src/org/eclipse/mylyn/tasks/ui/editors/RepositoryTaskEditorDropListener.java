@@ -132,7 +132,7 @@ class RepositoryTaskEditorDropListener implements DropTargetListener {
 
 	private void openDialog(NewAttachmentWizard naw) {
 		AbstractTaskEditor.setGlobalBusy(true);
-		NewAttachmentWizardDialog dialog = new NewAttachmentWizardDialog(control.getShell(), naw);
+		NewAttachmentWizardDialog dialog = new NewAttachmentWizardDialog(control.getShell(), naw, true);
 		naw.setDialog(dialog);
 		dialog.create();
 		int result = dialog.open();

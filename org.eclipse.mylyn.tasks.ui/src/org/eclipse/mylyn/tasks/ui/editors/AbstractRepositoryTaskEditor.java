@@ -74,6 +74,7 @@ import org.eclipse.mylyn.internal.tasks.ui.PersonProposalProvider;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AttachFileAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.AttachScreenshotAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyAttachmentToClipboardJob;
 import org.eclipse.mylyn.internal.tasks.ui.actions.DownloadAttachmentJob;
 import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeEditorAction;
@@ -152,6 +153,7 @@ import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
@@ -173,6 +175,7 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.internal.ObjectActionContributorManager;
+import org.eclipse.ui.internal.WorkbenchImages;
 import org.eclipse.ui.keys.IBindingService;
 import org.eclipse.ui.themes.IThemeManager;
 import org.eclipse.ui.views.contentoutline.ContentOutline;
@@ -191,6 +194,8 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  * @since 2.0
  */
 public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
+
+	private static final String LABEL_EDITOR = "Task Editor";
 
 	private static final String ERROR_NOCONNECTIVITY = "Unable to submit at this time. Check connectivity and retry.";
 
@@ -266,9 +271,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private TableViewer attachmentsTableViewer;
 
-	private String[] attachmentsColumns = { "Description", "Type", "Creator", "Created" };
+	private String[] attachmentsColumns = { "Description", "Name", "Type", "Creator", "Created" };
 
-	private int[] attachmentsColumnWidths = { 200, 100, 100, 200 };
+	private int[] attachmentsColumnWidths = { 160, 140, 100, 100, 100 };
 
 	private Composite editorComposite;
 
@@ -1496,38 +1501,55 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		attachmentControlsComposite.setLayout(new GridLayout(2, false));
 		attachmentControlsComposite.setLayoutData(new GridData(GridData.BEGINNING));
 
-		/* Launch a NewAttachemntWizard */
-		Button addAttachmentButton = toolkit.createButton(attachmentControlsComposite, "Attach File...", SWT.PUSH);
-
-		AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(),
+		Button attachFileButton = toolkit.createButton(attachmentControlsComposite, AttachFileAction.LABEL, SWT.PUSH);
+		attachFileButton.setImage(WorkbenchImages.getImage(ISharedImages.IMG_OBJ_FILE));
+		
+		Button attachScreenshotButton = toolkit.createButton(attachmentControlsComposite, AttachScreenshotAction.LABEL, SWT.PUSH);
+		attachScreenshotButton.setImage(TasksUiImages.getImage(TasksUiImages.IMAGE_CAPTURE));
+		
+		final AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(),
 				taskData.getId());
 		if (task == null) {
-			addAttachmentButton.setEnabled(false);
+			attachFileButton.setEnabled(false);
+			attachScreenshotButton.setEnabled(false);
 		}
 
-		addAttachmentButton.addSelectionListener(new SelectionListener() {
+		attachFileButton.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {
 				// ignore
 			}
 
 			public void widgetSelected(SelectionEvent e) {
-				AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(),
-						taskData.getId());
-				if (!(task != null)) {
-					// Should not happen
-					return;
-				}
-				if (AbstractRepositoryTaskEditor.this.isDirty
-						|| task.getSynchronizationState().equals(RepositoryTaskSyncState.OUTGOING)) {
+				if (canAttach(task)) {
 					MessageDialog.openInformation(attachmentsComposite.getShell(),
-							"Task not synchronized or dirty editor",
-							"Commit edits or synchronize task before adding attachments.");
+							LABEL_EDITOR,
+							"Submit changes or synchronize task before adding attachments.");
 					return;
 				} else {
 					AttachFileAction attachFileAction = new AttachFileAction();
 					attachFileAction.selectionChanged(new StructuredSelection(task));
 					attachFileAction.setEditor(parentEditor);
 					attachFileAction.run();
+				}
+			}
+		});
+		
+		attachScreenshotButton.addSelectionListener(new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// ignore
+			}
+
+			public void widgetSelected(SelectionEvent e) {
+				if (canAttach(task)) {
+					MessageDialog.openInformation(attachmentsComposite.getShell(),
+							LABEL_EDITOR,
+							"Submit changes or synchronize task before adding attachments.");
+					return;
+				} else {
+					AttachScreenshotAction attachScreenshotAction = new AttachScreenshotAction();
+					attachScreenshotAction.selectionChanged(new StructuredSelection(task));
+					attachScreenshotAction.setEditor(parentEditor);
+					attachScreenshotAction.run();
 				}
 			}
 		});
@@ -1569,12 +1591,17 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 		registerDropListener(section);
 		registerDropListener(attachmentsComposite);
-		registerDropListener(addAttachmentButton);
+		registerDropListener(attachFileButton);
 		if (supportsAttachmentDelete()) {
 			registerDropListener(deleteAttachmentButton);
 		}
 	}
 
+	private boolean canAttach(AbstractTask task) {
+		return AbstractRepositoryTaskEditor.this.isDirty
+				|| task.getSynchronizationState().equals(RepositoryTaskSyncState.OUTGOING);
+	}
+	
 	private void registerDropListener(final Control control) {
 		DropTarget target = new DropTarget(control, DND.DROP_COPY | DND.DROP_DEFAULT);
 		final TextTransfer textTransfer = TextTransfer.getInstance();

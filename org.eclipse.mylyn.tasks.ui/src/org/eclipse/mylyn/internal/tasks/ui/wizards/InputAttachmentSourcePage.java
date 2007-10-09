@@ -98,7 +98,7 @@ public class InputAttachmentSourcePage extends WizardPage {
 	// SWT widgets
 	private Button useClipboardButton;
 
-	private Button useScreenshotButton;
+//	private Button useScreenshotButton;
 
 	private Combo fileNameField;
 
@@ -140,7 +140,7 @@ public class InputAttachmentSourcePage extends WizardPage {
 	public InputAttachmentSourcePage(NewAttachmentWizard wizard) {
 		super("InputAttachmentPage");
 		this.wizard = wizard;
-		setTitle("Select source");
+		setTitle("Select attachment source");
 		setDescription("Clipboard contents are for text attachments only.");
 		// setMessage("Please select the source for the attachment");
 	}
@@ -224,22 +224,15 @@ public class InputAttachmentSourcePage extends WizardPage {
 		composite.setLayout(gridLayout);
 		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		// 1st row
+//		// 2nd row
+//		gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+//		gd.horizontalSpan = 3;
+//		useScreenshotButton = new Button(composite, SWT.RADIO);
+//		useScreenshotButton.setText("Screenshot");
+//		useScreenshotButton.setLayoutData(gd);
+
+		// new row
 		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-		gd.horizontalSpan = 3;
-		useClipboardButton = new Button(composite, SWT.RADIO);
-		useClipboardButton.setText("Clipboard");
-		useClipboardButton.setLayoutData(gd);
-		useClipboardButton.setSelection(initUseClipboard);
-
-		// 2nd row
-		gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-		gd.horizontalSpan = 3;
-		useScreenshotButton = new Button(composite, SWT.RADIO);
-		useScreenshotButton.setText("Screenshot");
-		useScreenshotButton.setLayoutData(gd);
-
-		// 3rd row
 		useFileButton = new Button(composite, SWT.RADIO);
 		useFileButton.setText("File");
 
@@ -257,7 +250,15 @@ public class InputAttachmentSourcePage extends WizardPage {
 		data.widthHint = Math.max(widthHint, minSize.x);
 		fileBrowseButton.setLayoutData(data);
 
-		// 4th row
+		// new row		
+		gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+		gd.horizontalSpan = 3;
+		useClipboardButton = new Button(composite, SWT.RADIO);
+		useClipboardButton.setText("Clipboard");
+		useClipboardButton.setLayoutData(gd);
+		useClipboardButton.setSelection(initUseClipboard);
+		
+		// new row
 		useWorkspaceButton = new Button(composite, SWT.RADIO);
 		useWorkspaceButton.setText("Workspace");
 		gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
@@ -282,20 +283,20 @@ public class InputAttachmentSourcePage extends WizardPage {
 			}
 		});
 
-		useScreenshotButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if (!useScreenshotButton.getSelection())
-					return;
-
-				clearErrorMessage();
-				showError = true;
-				int state = getInputMethod();
-				setEnableAttachmentFile(state == FILE);
-				setEnableWorkspaceAttachment(state == WORKSPACE);
-				updateWidgetEnablements();
-			}
-		});
+//		useScreenshotButton.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				if (!useScreenshotButton.getSelection())
+//					return;
+//
+//				clearErrorMessage();
+//				showError = true;
+//				int state = getInputMethod();
+//				setEnableAttachmentFile(state == FILE);
+//				setEnableWorkspaceAttachment(state == WORKSPACE);
+//				updateWidgetEnablements();
+//			}
+//		});
 
 		useFileButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -531,9 +532,9 @@ public class InputAttachmentSourcePage extends WizardPage {
 			}
 			return FILE;
 		}
-		if (useScreenshotButton.getSelection()) {
-			return SCREENSHOT;
-		}
+//		if (useScreenshotButton.getSelection()) {
+//			return SCREENSHOT;
+//		}
 		if (useClipboardButton.getSelection()) {
 			return CLIPBOARD;
 		}

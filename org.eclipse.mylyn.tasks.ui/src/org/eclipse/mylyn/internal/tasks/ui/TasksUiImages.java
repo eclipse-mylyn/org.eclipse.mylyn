@@ -245,6 +245,8 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor BANNER_REPOSITORY = create(T_WIZBAN, "banner-repository.gif");
 
+	public static final ImageDescriptor BANNER_SCREENSHOT = create(T_WIZBAN, "banner-screenshot.png");
+
 	public static final ImageDescriptor BANNER_WORKING_SET = create(T_WIZBAN, "workset_wiz.png");
 
 	public static final ImageDescriptor BANNER_REPOSITORY_SETTINGS = create(T_WIZBAN, "banner-repository-settings.gif");
@@ -257,6 +259,12 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor BLANK = create(T_ELCL, "blank.gif");
 
+	public static final ImageDescriptor IMAGE_CAPTURE = create(T_TOOL, "capture-screen.png");
+
+	public static final ImageDescriptor IMAGE_FIT = create(T_TOOL, "capture-fit.png");
+	
+	public static final ImageDescriptor IMAGE_FILE = create(T_OBJ, "file-image.gif");
+	
 	private static ImageDescriptor create(String prefix, String name) {
 		try {
 			return ImageDescriptor.createFromURL(makeIconFileURL(prefix, name));
