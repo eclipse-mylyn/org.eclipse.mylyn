@@ -11,16 +11,19 @@ package org.eclipse.mylyn.monitor.ui;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.internal.monitor.ui.IMonitoredWindow;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.monitor.core.InteractionEvent.Kind;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
 
 /**
  * Self-registering on construction. Encapsulates users' interaction with the context model.
  * 
  * @author Mik Kersten
+ * @author Shawn Minto
  * @since 2.0
  */
 public abstract class AbstractUserInteractionMonitor implements ISelectionListener {
@@ -47,6 +50,12 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 	}
 
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+		if (part.getSite() != null && part.getSite().getWorkbenchWindow() != null) {
+			IWorkbenchWindow window = part.getSite().getWorkbenchWindow();
+			if (window instanceof IMonitoredWindow && !((IMonitoredWindow) window).isMonitored()) {
+				return;
+			}
+		}
 		if (selection == null || selection.isEmpty())
 			return;
 		if (!ContextCorePlugin.getContextManager().isContextActive()) {

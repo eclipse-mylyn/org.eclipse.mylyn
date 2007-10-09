@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.monitor.ui.ActivityContextManager;
+import org.eclipse.mylyn.internal.monitor.ui.IMonitoredWindow;
 import org.eclipse.mylyn.internal.monitor.ui.ShellLifecycleListener;
 import org.eclipse.mylyn.internal.monitor.ui.WorkbenchUserActivityMonitor;
 import org.eclipse.mylyn.monitor.core.IInteractionEventListener;
@@ -40,6 +41,7 @@ import org.osgi.framework.BundleContext;
 
 /**
  * @author Mik Kersten
+ * @author Shawn Minto
  */
 public class MonitorUiPlugin extends AbstractUIPlugin {
 
@@ -70,6 +72,8 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 	protected Set<ISelectionListener> postSelectionListeners = new HashSet<ISelectionListener>();
 
+	private Set<IWorkbenchWindow> monitoredWindows = new HashSet<IWorkbenchWindow>();
+
 	public static final String OBFUSCATED_LABEL = "[obfuscated]";
 
 	protected IWindowListener WINDOW_LISTENER = new IWindowListener() {
@@ -85,6 +89,14 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 			if (getWorkbench().isClosing()) {
 				return;
 			}
+
+			if (window instanceof IMonitoredWindow) {
+				IMonitoredWindow awareWindow = (IMonitoredWindow) window;
+				if (!awareWindow.isMonitored()) {
+					return;
+				}
+			}
+
 			addListenersToWindow(window);
 		}
 
@@ -147,7 +159,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 								.removeShellListener(shellLifecycleListener);
 					}
 
-					for (IWorkbenchWindow window : getWorkbench().getWorkbenchWindows()) {
+					for (IWorkbenchWindow window : monitoredWindows) {
 						removeListenersFromWindow(window);
 					}
 				}
@@ -172,49 +184,49 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 	public void addWindowPartListener(IPartListener listener) {
 		partListeners.add(listener);
-		for (IWorkbenchWindow window : getWorkbench().getWorkbenchWindows()) {
+		for (IWorkbenchWindow window : monitoredWindows) {
 			window.getPartService().addPartListener(listener);
 		}
 	}
 
 	public void removeWindowPartListener(IPartListener listener) {
 		partListeners.remove(listener);
-		for (IWorkbenchWindow window : getWorkbench().getWorkbenchWindows()) {
+		for (IWorkbenchWindow window : monitoredWindows) {
 			window.getPartService().removePartListener(listener);
 		}
 	}
 
 	public void addWindowPageListener(IPageListener listener) {
 		pageListeners.add(listener);
-		for (IWorkbenchWindow window : getWorkbench().getWorkbenchWindows()) {
+		for (IWorkbenchWindow window : monitoredWindows) {
 			window.addPageListener(listener);
 		}
 	}
 
 	public void removeWindowPageListener(IPageListener listener) {
 		pageListeners.remove(listener);
-		for (IWorkbenchWindow window : getWorkbench().getWorkbenchWindows()) {
+		for (IWorkbenchWindow window : monitoredWindows) {
 			window.removePageListener(listener);
 		}
 	}
 
 	public void addWindowPerspectiveListener(IPerspectiveListener listener) {
 		perspectiveListeners.add(listener);
-		for (IWorkbenchWindow window : getWorkbench().getWorkbenchWindows()) {
+		for (IWorkbenchWindow window : monitoredWindows) {
 			window.addPerspectiveListener(listener);
 		}
 	}
 
 	public void removeWindowPerspectiveListener(IPerspectiveListener listener) {
 		perspectiveListeners.remove(listener);
-		for (IWorkbenchWindow window : getWorkbench().getWorkbenchWindows()) {
+		for (IWorkbenchWindow window : monitoredWindows) {
 			window.removePerspectiveListener(listener);
 		}
 	}
 
 	public void addWindowPostSelectionListener(ISelectionListener listener) {
 		postSelectionListeners.add(listener);
-		for (IWorkbenchWindow window : getWorkbench().getWorkbenchWindows()) {
+		for (IWorkbenchWindow window : monitoredWindows) {
 			ISelectionService service = window.getSelectionService();
 			service.addPostSelectionListener(listener);
 		}
@@ -222,7 +234,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 	public void removeWindowPostSelectionListener(ISelectionListener listener) {
 		getDefault().postSelectionListeners.remove(listener);
-		for (IWorkbenchWindow window : getDefault().getWorkbench().getWorkbenchWindows()) {
+		for (IWorkbenchWindow window : monitoredWindows) {
 			ISelectionService service = window.getSelectionService();
 			service.removePostSelectionListener(listener);
 		}
@@ -337,6 +349,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 		for (ISelectionListener listener : postSelectionListeners) {
 			window.getSelectionService().removePostSelectionListener(listener);
 		}
+		monitoredWindows.remove(window);
 	}
 
 	// TODO: consider making API
@@ -353,5 +366,11 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 		for (ISelectionListener listener : postSelectionListeners) {
 			window.getSelectionService().addPostSelectionListener(listener);
 		}
+
+		monitoredWindows.add(window);
+	}
+
+	public Set<IWorkbenchWindow> getMonitoredWindows() {
+		return monitoredWindows;
 	}
 }

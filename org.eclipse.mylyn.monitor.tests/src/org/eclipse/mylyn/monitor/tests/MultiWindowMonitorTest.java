@@ -10,14 +10,19 @@ package org.eclipse.mylyn.monitor.tests;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.window.Window;
+import org.eclipse.jface.window.WindowManager;
+import org.eclipse.mylyn.internal.monitor.ui.IMonitoredWindow;
 import org.eclipse.mylyn.internal.monitor.usage.InteractionEventLogger;
 import org.eclipse.mylyn.internal.monitor.usage.UiUsageMonitorPlugin;
+import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -29,9 +34,92 @@ import org.eclipse.ui.internal.WorkbenchWindow;
 /**
  * @author Brian de Alwis
  * @author Mik Kersten
+ * @author Shawn Minto
  */
 public class MultiWindowMonitorTest extends TestCase {
 
+	private class ContextAwareWorkbenchWindow extends WorkbenchWindow implements IMonitoredWindow {
+
+		private boolean monitored = true;
+
+		public ContextAwareWorkbenchWindow(int number, boolean monitored) {
+			super(number);
+			this.monitored  = monitored;
+		}
+
+		public boolean isMonitored() {
+			return monitored;
+		}	
+	}
+	
+	private class MockWorkbench {
+		private Workbench wBench;
+		private WindowManager parentManager = null;
+		
+		private MockWorkbench() {
+			wBench = Workbench.getInstance();
+
+			Field wManagerField;
+			try {
+				wManagerField = Workbench.class.getDeclaredField("windowManager");
+				wManagerField.setAccessible(true);
+				parentManager = (WindowManager) wManagerField.get(wBench);
+
+			} catch (Exception e) {
+			}
+		}
+
+		private int getNewWindowNumber() {
+			Window[] windows = parentManager.getWindows();
+			int count = windows.length;
+
+			boolean checkArray[] = new boolean[count];
+			for (int nX = 0; nX < count; nX++) {
+				if(windows[nX] instanceof WorkbenchWindow) {
+					WorkbenchWindow ww = (WorkbenchWindow) windows[nX];
+					int index = ww.getNumber() - 1;
+					if (index >= 0 && index < count) {
+						checkArray[index] = true;
+					}
+				}
+			}
+
+			for (int index = 0; index < count; index++) {
+				if (!checkArray[index]) {
+					return index + 1;
+				}
+			}
+			return count + 1;
+		}
+
+		private ContextAwareWorkbenchWindow newWorkbenchWindow(boolean isMonitored) {
+			return new ContextAwareWorkbenchWindow(getNewWindowNumber(), isMonitored);
+		}
+
+
+		public ContextAwareWorkbenchWindow restoreState(IMemento memento, boolean isMonitored) {
+
+			ContextAwareWorkbenchWindow newWindow = newWorkbenchWindow(isMonitored);
+			newWindow.create();
+
+			parentManager.add(newWindow);
+
+			boolean opened = false;
+
+			try {
+				newWindow.restoreState(memento, null);
+				newWindow.open();
+				opened = true;
+			} finally {
+				if (!opened) {
+					newWindow.close();
+				}
+			}
+
+			return newWindow;
+		}
+	}
+	
 	private InteractionEventLogger logger = UiUsageMonitorPlugin.getDefault().getInteractionLogger();
 
 	private MockSelectionMonitor selectionMonitor = new MockSelectionMonitor();
@@ -39,6 +127,8 @@ public class MultiWindowMonitorTest extends TestCase {
 	private IWorkbenchWindow window1;
 
 	private IWorkbenchWindow window2;
+	private IWorkbenchWindow window3;
+	private IWorkbenchWindow window4;
 
 	private boolean monitoringWasEnabled;
 
@@ -48,14 +138,24 @@ public class MultiWindowMonitorTest extends TestCase {
 		monitoringWasEnabled = UiUsageMonitorPlugin.getDefault().isMonitoringEnabled();
 		UiUsageMonitorPlugin.getDefault().stopMonitoring();
 		window1 = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		assertTrue(MonitorUiPlugin.getDefault().getMonitoredWindows().contains(window1));
 		window2 = duplicateWindow(window1);
 		assertNotNull(window2);
+		assertTrue(MonitorUiPlugin.getDefault().getMonitoredWindows().contains(window2));
+		window3 = createContextAwareWindow(true, window1);
+		assertNotNull(window3);
+		assertTrue(MonitorUiPlugin.getDefault().getMonitoredWindows().contains(window3));
+		window4 = createContextAwareWindow(false, window1);
+		assertNotNull(window4);
+		assertFalse(MonitorUiPlugin.getDefault().getMonitoredWindows().contains(window4));
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		window2.close();
+		window3.close();
+		window4.close();
 		if (monitoringWasEnabled) {
 			UiUsageMonitorPlugin.getDefault().startMonitoring();
 		}
@@ -76,7 +176,9 @@ public class MultiWindowMonitorTest extends TestCase {
 		UiUsageMonitorPlugin.getDefault().startMonitoring();
 		generateSelection(window1);
 		generateSelection(window2);
-		assertEquals(2, logger.getHistoryFromFile(monitorFile).size());
+		generateSelection(window3);
+		generateSelection(window4);
+		assertEquals(3, logger.getHistoryFromFile(monitorFile).size());
 	}
 
 	protected IWorkbenchWindow duplicateWindow(IWorkbenchWindow window) {
@@ -88,7 +190,18 @@ public class MultiWindowMonitorTest extends TestCase {
 		}
 		return restoreWorkbenchWindow((Workbench) w.getWorkbench(), memento);
 	}
+	
+	private IWorkbenchWindow createContextAwareWindow(boolean monitored, IWorkbenchWindow window) {
+		WorkbenchWindow w = (WorkbenchWindow) window;
+		XMLMemento memento = XMLMemento.createWriteRoot(IWorkbenchConstants.TAG_WINDOW);
+		IStatus status = w.saveState(memento);
+		if (!status.isOK()) {
+			fail("failed to duplicate window: " + status);
+		}
+		return new MockWorkbench().restoreState(memento, monitored);
+	}
 
+	
 	protected IWorkbenchWindow restoreWorkbenchWindow(Workbench workbench, IMemento memento) {
 		return (IWorkbenchWindow) invokeMethod(workbench, "restoreWorkbenchWindow", new Class[] { IMemento.class },
 				new Object[] { memento });
