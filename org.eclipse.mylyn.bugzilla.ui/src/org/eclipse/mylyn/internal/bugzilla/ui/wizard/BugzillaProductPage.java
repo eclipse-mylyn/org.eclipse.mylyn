@@ -72,7 +72,7 @@ import org.eclipse.ui.progress.UIJob;
  * @author Mik Kersten
  * @author Eugene Kuleshov
  * @author Willian Mitsuda
- *
+ * 
  * Product selection page of new bug wizard
  */
 public class BugzillaProductPage extends WizardPage {
@@ -106,7 +106,7 @@ public class BugzillaProductPage extends WizardPage {
 
 	/**
 	 * Constructor for BugzillaProductPage
-	 *
+	 * 
 	 * @param workbench
 	 *            The instance of the workbench
 	 * @param bugWiz
@@ -167,7 +167,7 @@ public class BugzillaProductPage extends WizardPage {
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			}
 		});
-		
+
 		productViewer.addOpenListener(new IOpenListener() {
 			public void open(OpenEvent event) {
 				if (getWizard().canFinish()) {
@@ -177,7 +177,7 @@ public class BugzillaProductPage extends WizardPage {
 				}
 			}
 		});
-		
+
 		initProducts();
 		productViewer.setInput(products);
 		productViewer.addPostSelectionChangedListener(new ISelectionChangedListener() {
@@ -203,6 +203,10 @@ public class BugzillaProductPage extends WizardPage {
 			new UIJob("") {
 				@Override
 				public IStatus runInUIThread(IProgressMonitor monitor) {
+					if (BugzillaProductPage.this.getControl() != null
+							&& BugzillaProductPage.this.getControl().isDisposed()) {
+						return Status.OK_STATUS;
+					}
 					productViewer.setSelection(new StructuredSelection(selectedProducts), true);
 					productViewer.getControl().setFocus();
 					return Status.OK_STATUS;
@@ -355,7 +359,7 @@ public class BugzillaProductPage extends WizardPage {
 
 	/**
 	 * Applies the status to the status line of a dialog page.
-	 *
+	 * 
 	 * @param status
 	 *            The status to apply to the status line
 	 */
