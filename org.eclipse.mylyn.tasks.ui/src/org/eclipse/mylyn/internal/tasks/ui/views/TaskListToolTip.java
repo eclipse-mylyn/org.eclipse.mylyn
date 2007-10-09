@@ -18,6 +18,7 @@ import java.util.Date;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.window.ToolTip;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskListNotification;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
@@ -31,26 +32,18 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Monitor;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.Widget;
-import org.eclipse.ui.IWindowListener;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
@@ -58,11 +51,13 @@ import org.eclipse.ui.PlatformUI;
  * @author Leo Dos Santos - multi-monitor support
  * @author Steffen Pingel
  */
-public class TaskListToolTipHandler {
+public class TaskListToolTip extends ToolTip {
 
-	private Shell tipShell;
+	private AbstractTaskContainer currentTipElement;
 
-	private Widget tipWidget;
+	public TaskListToolTip(Control control) {
+		super(control);
+	}
 
 	private AbstractTaskContainer getTaskListElement(Object hoverObject) {
 		if (hoverObject instanceof Widget) {
@@ -302,191 +297,86 @@ public class TaskListToolTipHandler {
 		return null;
 	}
 
-	/**
-	 * Enables customized hover help for a specified control
-	 * 
-	 * @control the control on which to enable hoverhelp
-	 */
-	public void activateHoverHelp(final Control control) {
-		// hide tooltip if any window is deactivated 
-		PlatformUI.getWorkbench().addWindowListener(new IWindowListener() {
+	private Widget getTipWidget(Event event) {
+		Point widgetPosition = new Point(event.x, event.y);
+		Widget widget = event.widget;
+		if (widget instanceof ToolBar) {
+			ToolBar w = (ToolBar) widget;
+			return w.getItem(widgetPosition);
+		}
+		if (widget instanceof Table) {
+			Table w = (Table) widget;
+			return w.getItem(widgetPosition);
+		}
+		if (widget instanceof Tree) {
+			Tree w = (Tree) widget;
+			return w.getItem(widgetPosition);
+		}
 
-			public void windowActivated(IWorkbenchWindow window) {
-			}
-
-			public void windowClosed(IWorkbenchWindow window) {
-			}
-
-			public void windowDeactivated(IWorkbenchWindow window) {
-				hideTooltip();
-			}
-
-			public void windowOpened(IWorkbenchWindow window) {
-			}
-		});
-
-		// hide tooltip if control underneath is activated 
-		control.addMouseListener(new MouseAdapter() {
-
-			@Override
-			public void mouseDown(MouseEvent e) {
-				hideTooltip();
-			}
-		});
-
-		// trap hover events to pop-up tooltip
-		control.addMouseTrackListener(new MouseTrackAdapter() {
-
-			@Override
-			public void mouseExit(MouseEvent e) {
-				// TODO can these conditions be simplified? see bug 131776
-				if (tipShell != null && !tipShell.isDisposed() && tipShell.getDisplay() != null
-						&& !tipShell.getDisplay().isDisposed() && tipShell.isVisible()) {
-					tipShell.setVisible(false);
-				}
-				tipWidget = null;
-			}
-
-			@Override
-			public void mouseHover(MouseEvent event) {
-				Point widgetPosition = new Point(event.x, event.y);
-				Widget widget = event.widget;
-				if (widget instanceof ToolBar) {
-					ToolBar w = (ToolBar) widget;
-					widget = w.getItem(widgetPosition);
-				}
-				if (widget instanceof Table) {
-					Table w = (Table) widget;
-					widget = w.getItem(widgetPosition);
-				}
-				if (widget instanceof Tree) {
-					Tree w = (Tree) widget;
-					widget = w.getItem(widgetPosition);
-				}
-
-				if (widget == null) {
-					hideTooltip();
-					tipWidget = null;
-					return;
-				}
-
-				if (widget == tipWidget) {
-					// already displaying tooltip
-					return;
-				}
-
-				tipWidget = widget;
-				
-				TaskListView taskListView = TaskListView.getFromActivePerspective();
-				
-				showTooltip(control.toDisplay(widgetPosition), taskListView);
-			}
-
-		});
+		return null;
 	}
 
-	/**
-	 * Sets the location for a hovering shell
-	 * 
-	 * @param shell
-	 *            the object that is to hover
-	 * @param position
-	 *            the position of a widget to hover over
-	 * @return the top-left location for a hovering box
-	 */
-	private void setHoverLocation(Shell shell, Point position) {
-		Rectangle displayBounds = shell.getMonitor().getClientArea();
-		Rectangle shellBounds = shell.getBounds();
+	@Override
+	protected boolean shouldCreateToolTip(Event event) {
+		currentTipElement = null;
 
-		// We need to find the exact monitor we're mousing over
-		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=166990
-		Monitor[] array = PlatformUI.getWorkbench().getDisplay().getMonitors();
-		for (Monitor m : array) {
-			Rectangle monitorBounds = m.getBounds();
-			if ((position.x >= monitorBounds.x) && (position.x < (monitorBounds.x + monitorBounds.width))
-					&& (position.y >= monitorBounds.y) && (position.y < (monitorBounds.y + monitorBounds.height))) {
-				displayBounds = m.getClientArea();
+		if (super.shouldCreateToolTip(event)) {
+			Widget tipWidget = getTipWidget(event);
+			if (tipWidget != null) {
+				currentTipElement = getTaskListElement(tipWidget);
 			}
-		}
-
-		if ((position.x + shellBounds.width) > (displayBounds.x + displayBounds.width))
-			shellBounds.x = displayBounds.x + displayBounds.width - shellBounds.width;
-		else
-			shellBounds.x = position.x;
-
-		if ((position.y + 10 + shellBounds.height) > (displayBounds.y + displayBounds.height))
-			shellBounds.y = displayBounds.y + displayBounds.height - shellBounds.height;
-		else
-			shellBounds.y = position.y + 10;
-
-		shell.setBounds(shellBounds);
+		}			
+		
+		return currentTipElement != null;
 	}
+	
+	@Override
+	protected Composite createToolTipContentArea(Event event, Composite parent) {
+		assert currentTipElement != null;
+			
+		TaskListView taskListView = TaskListView.getFromActivePerspective();
 
-	private void hideTooltip() {
-		if (tipShell != null && !tipShell.isDisposed() && tipShell.isVisible()) {
-			tipShell.setVisible(false);
-		}
-	}
-
-	private void showTooltip(Point location, TaskListView taskListView) {
-		hideTooltip();
-
-		AbstractTaskContainer element = getTaskListElement(tipWidget);
-		if (element == null) {
-			return;
-		}
-
-		Shell parent = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-		if (parent == null) {
-			return;
-		}
-
-		// dispose old tooltip
-		if (tipShell != null && !tipShell.isDisposed() && tipShell.getShell() != null) {
-			tipShell.close();
-		}
-
-		tipShell = new Shell(parent.getDisplay(), SWT.TOOL | SWT.NO_FOCUS | SWT.MODELESS | SWT.ON_TOP);
+		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 2;
 		gridLayout.marginWidth = 5;
 		gridLayout.marginHeight = 2;
-		tipShell.setLayout(gridLayout);
-		tipShell.setBackground(tipShell.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+		composite.setLayout(gridLayout);
+		composite.setBackground(composite.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
 
-		addIconAndLabel(tipShell, getImage(element), getTitleText(element));
+		addIconAndLabel(composite, getImage(currentTipElement), getTitleText(currentTipElement));
 
-		String detailsText = getDetailsText(element, taskListView);
+		String detailsText = getDetailsText(currentTipElement, taskListView);
 		if (detailsText != null) {
-			addIconAndLabel(tipShell, null, detailsText);
+			addIconAndLabel(composite, null, detailsText);
 		}
 
-		String synchText = getSynchText(element);
+		String synchText = getSynchText(currentTipElement);
 		if (synchText != null) {
-			addIconAndLabel(tipShell, TasksUiImages.getImage(TasksUiImages.REPOSITORY_SYNCHRONIZE), synchText);
+			addIconAndLabel(composite, TasksUiImages.getImage(TasksUiImages.REPOSITORY_SYNCHRONIZE), synchText);
 		}
 
-		String activityText = getActivityText(element);
+		String activityText = getActivityText(currentTipElement);
 		if (activityText != null) {
-			addIconAndLabel(tipShell, TasksUiImages.getImage(TasksUiImages.CALENDAR), activityText);
+			addIconAndLabel(composite, TasksUiImages.getImage(TasksUiImages.CALENDAR), activityText);
 		}
 
-		String incommingText = getIncommingText(element);
+		String incommingText = getIncommingText(currentTipElement);
 		if (incommingText != null) {
-			addIconAndLabel(tipShell, TasksUiImages.getImage(TasksUiImages.OVERLAY_INCOMMING), incommingText);
+			addIconAndLabel(composite, TasksUiImages.getImage(TasksUiImages.OVERLAY_INCOMMING), incommingText);
 		}
 
-		ProgressData progress = getProgressData(element, taskListView);
+		ProgressData progress = getProgressData(currentTipElement, taskListView);
 		if (progress != null) {
-			addIconAndLabel(tipShell, null, progress.text);
+			addIconAndLabel(composite, null, progress.text);
 
 			// label height need to be set to 0 to remove gap below the progress bar 
-			Label label = new Label(tipShell, SWT.NONE);
+			Label label = new Label(composite, SWT.NONE);
 			GridData labelGridData = new GridData(SWT.FILL, SWT.TOP, true, false);
 			labelGridData.heightHint = 0;
 			label.setLayoutData(labelGridData);
 
-			Composite progressComposite = new Composite(tipShell, SWT.NONE);
+			Composite progressComposite = new Composite(composite, SWT.NONE);
 			GridLayout progressLayout = new GridLayout(1, false);
 			progressLayout.marginWidth = 0;
 			progressLayout.marginHeight = 0;
@@ -509,14 +399,12 @@ public class TaskListToolTipHandler {
 //			bar.setLayoutData(gridData);
 		}
 
-		String statusText = getStatusText(element);
+		String statusText = getStatusText(currentTipElement);
 		if (statusText != null) {
-			addIconAndLabel(tipShell, TasksUiImages.getImage(TasksUiImages.WARNING), statusText);
+			addIconAndLabel(composite, TasksUiImages.getImage(TasksUiImages.WARNING), statusText);
 		}
-
-		tipShell.pack();
-		setHoverLocation(tipShell, location);
-		tipShell.setVisible(true);
+		
+		return composite;
 	}
 
 	private String getSynchText(AbstractTaskContainer element) {
