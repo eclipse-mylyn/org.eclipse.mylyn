@@ -14,18 +14,14 @@ import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
 /**
  * @author Mik Kersten
  */
-public class AttachFileAction extends BaseSelectionListenerAction {
+public class AttachFileAction extends AbstractTaskEditorAction {
 
 	public static final String LABEL = "Attach File...";
-	
-	private TaskEditor editor;
 
 	public AttachFileAction() {
 		super(LABEL);
@@ -37,8 +33,13 @@ public class AttachFileAction extends BaseSelectionListenerAction {
 		if (editor != null) {
 			editor.showBusy(true);
 		}
-		Object selection = super.getStructuredSelection().getFirstElement();
+		Object selection = this.getStructuredSelection().getFirstElement();
 		if (selection instanceof AbstractTask) {
+			if (taskDirty((AbstractTask) selection)) {
+				openInformationDialog(LABEL, "Submit changes or synchronize task before adding attachments.");
+				return;
+			}
+
 			AbstractTask repositoryTask = (AbstractTask) selection;
 			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 					repositoryTask.getConnectorKind(), repositoryTask.getRepositoryUrl());
@@ -56,7 +57,4 @@ public class AttachFileAction extends BaseSelectionListenerAction {
 		}
 	}
 
-	public void setEditor(TaskEditor taskEditor) {
-		this.editor = taskEditor;
-	}
 }

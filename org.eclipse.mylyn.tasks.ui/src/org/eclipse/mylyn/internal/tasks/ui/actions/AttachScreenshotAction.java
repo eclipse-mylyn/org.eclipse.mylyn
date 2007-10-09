@@ -14,18 +14,14 @@ import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
 /**
  * @author Mik Kersten
  */
-public class AttachScreenshotAction extends BaseSelectionListenerAction {
+public class AttachScreenshotAction extends AbstractTaskEditorAction {
 
 	public static final String LABEL = "Attach Screenshot...";
-	
-	private TaskEditor editor;
 
 	public AttachScreenshotAction() {
 		super(LABEL);
@@ -39,6 +35,10 @@ public class AttachScreenshotAction extends BaseSelectionListenerAction {
 		}
 		Object selection = super.getStructuredSelection().getFirstElement();
 		if (selection instanceof AbstractTask) {
+			if (taskDirty((AbstractTask) selection)) {
+				openInformationDialog(LABEL, "Submit changes or synchronize task before adding attachments.");
+				return;
+			}
 			AbstractTask repositoryTask = (AbstractTask) selection;
 			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 					repositoryTask.getConnectorKind(), repositoryTask.getRepositoryUrl());
@@ -56,7 +56,4 @@ public class AttachScreenshotAction extends BaseSelectionListenerAction {
 		}
 	}
 
-	public void setEditor(TaskEditor taskEditor) {
-		this.editor = taskEditor;
-	}
 }

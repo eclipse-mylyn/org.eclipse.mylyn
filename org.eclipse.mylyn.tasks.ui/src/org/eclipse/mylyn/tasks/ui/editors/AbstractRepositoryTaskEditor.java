@@ -73,6 +73,7 @@ import org.eclipse.mylyn.internal.tasks.ui.PersonProposalLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalProvider;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.internal.tasks.ui.actions.AbstractTaskEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AttachFileAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AttachScreenshotAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyAttachmentToClipboardJob;
@@ -194,8 +195,6 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  * @since 2.0
  */
 public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
-
-	private static final String LABEL_EDITOR = "Task Editor";
 
 	private static final String ERROR_NOCONNECTIVITY = "Unable to submit at this time. Check connectivity and retry.";
 
@@ -1503,10 +1502,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		Button attachFileButton = toolkit.createButton(attachmentControlsComposite, AttachFileAction.LABEL, SWT.PUSH);
 		attachFileButton.setImage(WorkbenchImages.getImage(ISharedImages.IMG_OBJ_FILE));
-		
-		Button attachScreenshotButton = toolkit.createButton(attachmentControlsComposite, AttachScreenshotAction.LABEL, SWT.PUSH);
+
+		Button attachScreenshotButton = toolkit.createButton(attachmentControlsComposite, AttachScreenshotAction.LABEL,
+				SWT.PUSH);
 		attachScreenshotButton.setImage(TasksUiImages.getImage(TasksUiImages.IMAGE_CAPTURE));
-		
+
 		final AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(),
 				taskData.getId());
 		if (task == null) {
@@ -1520,37 +1520,23 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			}
 
 			public void widgetSelected(SelectionEvent e) {
-				if (canAttach(task)) {
-					MessageDialog.openInformation(attachmentsComposite.getShell(),
-							LABEL_EDITOR,
-							"Submit changes or synchronize task before adding attachments.");
-					return;
-				} else {
-					AttachFileAction attachFileAction = new AttachFileAction();
-					attachFileAction.selectionChanged(new StructuredSelection(task));
-					attachFileAction.setEditor(parentEditor);
-					attachFileAction.run();
-				}
+				AbstractTaskEditorAction attachFileAction = new AttachFileAction();
+				attachFileAction.selectionChanged(new StructuredSelection(task));
+				attachFileAction.setEditor(parentEditor);
+				attachFileAction.run();
 			}
 		});
-		
+
 		attachScreenshotButton.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {
 				// ignore
 			}
 
 			public void widgetSelected(SelectionEvent e) {
-				if (canAttach(task)) {
-					MessageDialog.openInformation(attachmentsComposite.getShell(),
-							LABEL_EDITOR,
-							"Submit changes or synchronize task before adding attachments.");
-					return;
-				} else {
-					AttachScreenshotAction attachScreenshotAction = new AttachScreenshotAction();
-					attachScreenshotAction.selectionChanged(new StructuredSelection(task));
-					attachScreenshotAction.setEditor(parentEditor);
-					attachScreenshotAction.run();
-				}
+				AttachScreenshotAction attachScreenshotAction = new AttachScreenshotAction();
+				attachScreenshotAction.selectionChanged(new StructuredSelection(task));
+				attachScreenshotAction.setEditor(parentEditor);
+				attachScreenshotAction.run();
 			}
 		});
 
@@ -1597,11 +1583,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 	}
 
-	private boolean canAttach(AbstractTask task) {
-		return AbstractRepositoryTaskEditor.this.isDirty
-				|| task.getSynchronizationState().equals(RepositoryTaskSyncState.OUTGOING);
-	}
-	
 	private void registerDropListener(final Control control) {
 		DropTarget target = new DropTarget(control, DND.DROP_COPY | DND.DROP_DEFAULT);
 		final TextTransfer textTransfer = TextTransfer.getInstance();

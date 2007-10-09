@@ -29,6 +29,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.tasks.ui.AddExistingTaskJob;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.internal.tasks.ui.actions.AbstractTaskEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AttachFileAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenWithBrowserAction;
@@ -77,7 +78,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 
 	private CopyTaskDetailsAction copyTaskDetailsAction = new CopyTaskDetailsAction(false);
 
-	private AttachFileAction attachFileAction = new AttachFileAction();
+	private AbstractTaskEditorAction attachFileAction = new AttachFileAction();
 
 	private SynchronizeEditorAction synchronizeEditorAction = new SynchronizeEditorAction();
 
