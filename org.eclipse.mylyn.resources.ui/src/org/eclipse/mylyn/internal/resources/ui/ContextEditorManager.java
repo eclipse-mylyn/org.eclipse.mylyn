@@ -28,6 +28,7 @@ import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -53,6 +54,7 @@ import org.eclipse.ui.internal.WorkbenchPage;
 
 /**
  * @author Mik Kersten
+ * @author Shawn Minto
  */
 public class ContextEditorManager implements IInteractionContextListener {
 
@@ -219,7 +221,7 @@ public class ContextEditorManager implements IInteractionContextListener {
 			if (PlatformUI.getWorkbench().isClosing()) {
 				return;
 			}
-			for (IWorkbenchWindow window : PlatformUI.getWorkbench().getWorkbenchWindows()) {
+			for (IWorkbenchWindow window : MonitorUiPlugin.getDefault().getMonitoredWindows()) {
 				IWorkbenchPage page = window.getActivePage();
 				if (page != null) {
 					IEditorReference[] references = page.getEditorReferences();
@@ -258,7 +260,7 @@ public class ContextEditorManager implements IInteractionContextListener {
 			if (PlatformUI.getWorkbench().isClosing()) {
 				return;
 			}
-			for (IWorkbenchWindow window : PlatformUI.getWorkbench().getWorkbenchWindows()) {
+			for (IWorkbenchWindow window : MonitorUiPlugin.getDefault().getMonitoredWindows()) {
 				IWorkbenchPage page = window.getActivePage();
 				if (page != null) {
 					IEditorReference[] references = page.getEditorReferences();
