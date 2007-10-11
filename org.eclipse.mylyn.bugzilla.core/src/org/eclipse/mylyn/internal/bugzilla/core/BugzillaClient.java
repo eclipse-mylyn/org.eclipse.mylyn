@@ -35,9 +35,7 @@ import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.NameValuePair;
-import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.HeadMethod;
-import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.multipart.FilePart;
 import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
@@ -57,6 +55,8 @@ import org.eclipse.mylyn.tasks.core.RepositoryOperation;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.web.core.GzipGetMethod;
+import org.eclipse.mylyn.web.core.GzipPostMethod;
 import org.eclipse.mylyn.web.core.HtmlStreamTokenizer;
 import org.eclipse.mylyn.web.core.HtmlTag;
 import org.eclipse.mylyn.web.core.WebClientUtil;
@@ -198,7 +198,7 @@ public class BugzillaClient {
 	}
 
 	public void validate() throws IOException, CoreException {
-		GetMethod method = null;
+		GzipGetMethod method = null;
 		try {
 			isValidation = true;
 			logout();
@@ -215,7 +215,7 @@ public class BugzillaClient {
 		return username != null && username.length() > 0;
 	}
 
-	private GetMethod getConnect(String serverURL) throws IOException, CoreException {
+	private GzipGetMethod getConnect(String serverURL) throws IOException, CoreException {
 
 		return connectInternal(serverURL, false);
 
@@ -228,17 +228,18 @@ public class BugzillaClient {
 	 *
 	 * @param serverURL
 	 * @return a GetMethod with possibly gzip encoded response body, so caller MUST check with
-	 *         "gzip".equals(method.getResponseHeader("Content-encoding")
+	 *         "gzip".equals(method.getResponseHeader("Content-encoding") or use the utility method
+	 *         getResponseBodyAsUnzippedStream().
 	 * @throws IOException
 	 * @throws CoreException
 	 */
-	private GetMethod getConnectGzip(String serverURL) throws IOException, CoreException {
+	private GzipGetMethod getConnectGzip(String serverURL) throws IOException, CoreException {
 
 		return connectInternal(serverURL, true);
 
 	}
 
-	private GetMethod connectInternal(String requestURL, boolean gzip) throws IOException, CoreException {
+	private GzipGetMethod connectInternal(String requestURL, boolean gzip) throws IOException, CoreException {
 		WebClientUtil.setupHttpClient(httpClient, proxy, requestURL, htAuthUser, htAuthPass);
 		for (int attempt = 0; attempt < 2; attempt++) {
 			// force authentication
@@ -246,7 +247,7 @@ public class BugzillaClient {
 				authenticate();
 			}
 
-			GetMethod getMethod = new GetMethod(WebClientUtil.getRequestPath(requestURL));
+			GzipGetMethod getMethod = new GzipGetMethod(WebClientUtil.getRequestPath(requestURL), gzip);
 			if (requestURL.contains(QUERY_DELIMITER)) {
 				getMethod.setQueryString(requestURL.substring(requestURL.indexOf(QUERY_DELIMITER)));
 			}
@@ -275,7 +276,7 @@ public class BugzillaClient {
 			try {
 				code = httpClient.executeMethod(getMethod);
 			} catch (IOException e) {
-				getMethod.getResponseBody();
+				getMethod.getResponseBodyNoop();
 				getMethod.releaseConnection();
 				throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 						RepositoryStatus.ERROR_IO, repositoryUrl.toString(), e));
@@ -284,7 +285,7 @@ public class BugzillaClient {
 			if (code == HttpURLConnection.HTTP_OK) {
 				return getMethod;
 			} else if (code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN) {
-				getMethod.getResponseBody();
+				getMethod.getResponseBodyNoop();
 				// login or reauthenticate due to an expired session
 				getMethod.releaseConnection();
 				authenticated = false;
@@ -292,13 +293,13 @@ public class BugzillaClient {
 			} else if (code == HttpURLConnection.HTTP_PROXY_AUTH) {
 				// throw new LoginException("Proxy Authentication Required");
 				authenticated = false;
-				getMethod.getResponseBody();
+				getMethod.getResponseBodyNoop();
 				getMethod.releaseConnection();
 				throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 						RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(),
 						"Proxy authentication required"));
 			} else {
-				getMethod.getResponseBody();
+				getMethod.getResponseBodyNoop();
 				getMethod.releaseConnection();
 				throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 						RepositoryStatus.ERROR_NETWORK, "Http error: " + HttpStatus.getStatusText(code)));
@@ -315,7 +316,7 @@ public class BugzillaClient {
 	public void logout() throws IOException, CoreException {
 		authenticated = true;
 		String loginUrl = repositoryUrl + "/relogin.cgi";
-		GetMethod method = null;
+		GzipGetMethod method = null;
 		try {
 			method = getConnect(loginUrl);
 			BufferedReader responseReader = new BufferedReader(new InputStreamReader(method.getResponseBodyAsStream(),
@@ -360,7 +361,7 @@ public class BugzillaClient {
 					"Authentication credentials missing."));
 		}
 
-		PostMethod postMethod = null;
+		GzipPostMethod postMethod = null;
 
 		try {
 
@@ -370,8 +371,8 @@ public class BugzillaClient {
 			formData[0] = new NameValuePair(IBugzillaConstants.POST_INPUT_BUGZILLA_LOGIN, username);
 			formData[1] = new NameValuePair(IBugzillaConstants.POST_INPUT_BUGZILLA_PASSWORD, password);
 
-			postMethod = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl.toString()
-					+ IBugzillaConstants.URL_POST_LOGIN));
+			postMethod = new GzipPostMethod(WebClientUtil.getRequestPath(repositoryUrl.toString()
+					+ IBugzillaConstants.URL_POST_LOGIN), true);
 
 			postMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset="
 					+ characterEncoding);
@@ -387,7 +388,7 @@ public class BugzillaClient {
 			int code = httpClient.executeMethod(postMethod);
 			if (code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN) {
 				authenticated = false;
-				postMethod.getResponseBody();
+				postMethod.getResponseBodyNoop();
 				postMethod.releaseConnection();
 				throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 						RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(),
@@ -395,7 +396,7 @@ public class BugzillaClient {
 
 			} else if (code == HttpURLConnection.HTTP_PROXY_AUTH) {
 				authenticated = false;
-				postMethod.getResponseBody();
+				postMethod.getResponseBodyNoop();
 				postMethod.releaseConnection();
 				throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 						RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(),
@@ -403,7 +404,7 @@ public class BugzillaClient {
 
 			} else if (code != HttpURLConnection.HTTP_OK) {
 				authenticated = false;
-				postMethod.getResponseBody();
+				postMethod.getResponseBodyNoop();
 				postMethod.releaseConnection();
 				throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 						RepositoryStatus.ERROR_NETWORK, "Http error: " + HttpStatus.getStatusText(code)));
@@ -411,7 +412,7 @@ public class BugzillaClient {
 
 			if (hasAuthenticationCredentials()) {
 				BufferedReader responseReader = new BufferedReader(new InputStreamReader(
-						postMethod.getResponseBodyAsStream(), characterEncoding));
+						postMethod.getResponseBodyAsUnzippedStream(), characterEncoding));
 
 				HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(responseReader, null);
 				for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
@@ -493,7 +494,7 @@ public class BugzillaClient {
 
 	public boolean getSearchHits(AbstractRepositoryQuery query, ITaskCollector collector) throws IOException,
 			CoreException {
-		GetMethod method = null;
+		GzipGetMethod method = null;
 		try {
 			String queryUrl = query.getUrl();
 			// Test that we don't specify content type twice.
@@ -502,20 +503,20 @@ public class BugzillaClient {
 				queryUrl = queryUrl.concat(IBugzillaConstants.CONTENT_TYPE_RDF);
 			}
 
-			method = getConnect(queryUrl);
+			method = getConnectGzip(queryUrl);
 			if (method.getResponseHeader("Content-Type") != null) {
 				Header responseTypeHeader = method.getResponseHeader("Content-Type");
 				for (String type : VALID_CONFIG_CONTENT_TYPES) {
 					if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
 						RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory(
-								method.getResponseBodyAsStream(), characterEncoding);
+								method.getResponseBodyAsUnzippedStream(), characterEncoding);
 						queryFactory.performQuery(repositoryUrl.toString(), collector, QueryHitCollector.MAX_HITS);
 						return !collector.getTasks().isEmpty();
 					}
 				}
 			}
 			parseHtmlError(new BufferedReader(
-					new InputStreamReader(method.getResponseBodyAsStream(), characterEncoding)));
+					new InputStreamReader(method.getResponseBodyAsUnzippedStream(), characterEncoding)));
 		} finally {
 			if (method != null) {
 				method.releaseConnection();
@@ -619,23 +620,12 @@ public class BugzillaClient {
 	}
 
 	public RepositoryConfiguration getRepositoryConfiguration() throws IOException, CoreException {
-		GetMethod method = null;
+		GzipGetMethod method = null;
 		try {
 			method = getConnectGzip(repositoryUrl + IBugzillaConstants.URL_GET_CONFIG_RDF);
 			// provide a solution for bug 196056 by allowing a (cached) gzipped configuration to be sent
 			// modified to also accept "application/x-gzip" as results from a 302 redirect to a previously gzipped file.
-			InputStream stream;
-					// content-encoding:gzip can be set by a dedicated perl script or mod_gzip
-			boolean zipped = (null != method.getResponseHeader("Content-encoding") &&
-					method.getResponseHeader("Content-encoding").getValue().equals(WebClientUtil.CONTENT_ENCODING_GZIP)) ||
-					// content-type: application/x-gzip can be set by any apache after 302 redirect, based on .gz suffix
-				(null != method.getResponseHeader("Content-Type") &&
-					method.getResponseHeader("Content-Type").getValue().equals("application/x-gzip"));
-			if(zipped) {
-				stream = new java.util.zip.GZIPInputStream(method.getResponseBodyAsStream());
-			} else {
-				stream = method.getResponseBodyAsStream();
-			}
+			InputStream stream = method.getResponseBodyAsUnzippedStream();
 			RepositoryConfigurationFactory configFactory = new RepositoryConfigurationFactory(stream, characterEncoding);
 
 			RepositoryConfiguration configuration = configFactory.getConfiguration();
@@ -653,9 +643,9 @@ public class BugzillaClient {
 
 	public InputStream getAttachmentData(String attachmentId) throws IOException, CoreException {
 		String url = repositoryUrl + IBugzillaConstants.URL_GET_ATTACHMENT_DOWNLOAD + attachmentId;
-		GetMethod method = getConnect(url);
+		GzipGetMethod method = getConnectGzip(url);
 		try {
-			return method.getResponseBodyAsStream();
+			return method.getResponseBodyAsUnzippedStream();
 		} catch (IOException e) {
 			method.releaseConnection();
 			throw e;
@@ -671,11 +661,11 @@ public class BugzillaClient {
 		if (!authenticated && hasAuthenticationCredentials()) {
 			authenticate();
 		}
-		PostMethod postMethod = null;
+		GzipPostMethod postMethod = null;
 
 		try {
-			postMethod = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl
-					+ IBugzillaConstants.URL_POST_ATTACHMENT_UPLOAD));
+			postMethod = new GzipPostMethod(WebClientUtil.getRequestPath(repositoryUrl
+					+ IBugzillaConstants.URL_POST_ATTACHMENT_UPLOAD), true);
 			// This option causes the client to first
 			// check
 			// with the server to see if it will in fact receive the post before
@@ -709,14 +699,14 @@ public class BugzillaClient {
 			// httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(CONNECT_TIMEOUT);
 			int status = httpClient.executeMethod(postMethod);
 			if (status == HttpStatus.SC_OK) {
-				InputStreamReader reader = new InputStreamReader(postMethod.getResponseBodyAsStream(),
+				InputStreamReader reader = new InputStreamReader(postMethod.getResponseBodyAsUnzippedStream(),
 						postMethod.getResponseCharSet());
 				BufferedReader bufferedReader = new BufferedReader(reader);
 
 				parseHtmlError(bufferedReader);
 
 			} else {
-				postMethod.getResponseBody();
+				postMethod.getResponseBodyNoop();
 				throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 						RepositoryStatus.ERROR_NETWORK, repositoryUrl.toString(), "Http error: "
 								+ HttpStatus.getStatusText(status)));
@@ -736,16 +726,16 @@ public class BugzillaClient {
 	 *
 	 * @throws CoreException
 	 */
-	private PostMethod postFormData(String formUrl, NameValuePair[] formData) throws IOException, CoreException {
+	private GzipPostMethod postFormData(String formUrl, NameValuePair[] formData) throws IOException, CoreException {
 
-		PostMethod postMethod = null;
+		GzipPostMethod postMethod = null;
 
 		WebClientUtil.setupHttpClient(httpClient, proxy, repositoryUrl.toString(), htAuthUser, htAuthPass);
 		if (!authenticated && hasAuthenticationCredentials()) {
 			authenticate();
 		}
 
-		postMethod = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl.toString() + formUrl));
+		postMethod = new GzipPostMethod(WebClientUtil.getRequestPath(repositoryUrl.toString() + formUrl), true);
 		postMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=" + characterEncoding);
 
 		// Up the timout on sockets for posts
@@ -760,7 +750,7 @@ public class BugzillaClient {
 		if (status == HttpStatus.SC_OK) {
 			return postMethod;
 		} else {
-			postMethod.getResponseBody();
+			postMethod.getResponseBodyNoop();
 			postMethod.releaseConnection();
 			//StatusManager.log("Post failed: " + HttpStatus.getStatusText(status), this);
 			throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
@@ -791,7 +781,7 @@ public class BugzillaClient {
 		}
 
 		String result = null;
-		PostMethod method = null;
+		GzipPostMethod method = null;
 		try {
 			if (taskData.isNew()) {
 				method = postFormData(POST_BUG_CGI, formData);
@@ -802,7 +792,7 @@ public class BugzillaClient {
 			if (method == null) {
 				throw new IOException("Could not post form, client returned null method.");
 			}
-			BufferedReader in = new BufferedReader(new InputStreamReader(method.getResponseBodyAsStream(),
+			BufferedReader in = new BufferedReader(new InputStreamReader(method.getResponseBodyAsUnzippedStream(),
 					method.getRequestCharSet()));
 			in.mark(1028);
 			HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(in, null);
@@ -1088,12 +1078,12 @@ public class BugzillaClient {
 		if (!authenticated && hasAuthenticationCredentials()) {
 			authenticate();
 		}
-		GetMethod method = null;
+		GzipGetMethod method = null;
 		try {
 			String url = repositoryUrl + IBugzillaConstants.SHOW_ACTIVITY + taskId;
-			method = getConnect(url);
+			method = getConnectGzip(url);
 			if (method != null) {
-				BugzillaTaskHistoryParser parser = new BugzillaTaskHistoryParser(method.getResponseBodyAsStream(),
+				BugzillaTaskHistoryParser parser = new BugzillaTaskHistoryParser(method.getResponseBodyAsUnzippedStream(),
 						characterEncoding);
 				try {
 					return parser.retrieveHistory();
@@ -1119,7 +1109,7 @@ public class BugzillaClient {
 	}
 
 	public Map<String, RepositoryTaskData> getTaskData(Set<String> taskIds) throws IOException, CoreException {
-		PostMethod method = null;
+		GzipPostMethod method = null;
 		HashMap<String, RepositoryTaskData> taskDataMap = new HashMap<String, RepositoryTaskData>();
 		while (taskIds.size() > 0) {
 
@@ -1159,7 +1149,7 @@ public class BugzillaClient {
 					Header responseTypeHeader = method.getResponseHeader("Content-Type");
 					for (String type : VALID_CONFIG_CONTENT_TYPES) {
 						if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
-							MultiBugReportFactory factory = new MultiBugReportFactory(method.getResponseBodyAsStream(),
+							MultiBugReportFactory factory = new MultiBugReportFactory(method.getResponseBodyAsUnzippedStream(),
 									characterEncoding);
 							factory.populateReport(taskDataMap);
 							taskIds.removeAll(idsToRetrieve);
@@ -1167,7 +1157,7 @@ public class BugzillaClient {
 					}
 				} else {
 
-					parseHtmlError(new BufferedReader(new InputStreamReader(method.getResponseBodyAsStream(),
+					parseHtmlError(new BufferedReader(new InputStreamReader(method.getResponseBodyAsUnzippedStream(),
 							characterEncoding)));
 				}
 			} finally {
