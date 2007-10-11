@@ -37,6 +37,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskDelegate;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiMessages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.editors.CategoryEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.CategoryEditorInput;
@@ -96,29 +97,30 @@ public class TasksUiUtil {
 						opened = openRepositoryTask(repository, id);
 					}
 					if (!opened) {
-						openUrl(url, 0);
+						openUrl(new URL(url), 0);
 					}
 
 				}
 			} else {
-				openUrl(url, FLAG_NO_RICH_EDITOR);
+				openUrl(new URL(url), FLAG_NO_RICH_EDITOR);
 			}
 		} catch (PartInitException e) {
 			MessageDialog.openError(Display.getDefault().getActiveShell(), "Browser init error",
 					"Browser could not be initiated");
 		} catch (MalformedURLException e) {
 			if (url != null && url.trim().equals("")) {
-				url = "<empty>";
+				MessageDialog.openInformation(Display.getDefault().getActiveShell(), TasksUiMessages.DIALOG_EDITOR, "No URL to open." + url);
+			} else {
+				MessageDialog.openInformation(Display.getDefault().getActiveShell(), TasksUiMessages.DIALOG_EDITOR, "Could not open URL: " + url);
 			}
-			MessageDialog.openInformation(Display.getDefault().getActiveShell(), "Open URL", "Could not open URL: " + url);
 		}
 	}
 
-	private static void openUrl(String url, int customFlags) throws PartInitException, MalformedURLException {
+	private static void openUrl(URL url, int customFlags) throws PartInitException {
 		if (WebBrowserPreference.getBrowserChoice() == WebBrowserPreference.EXTERNAL) {
 			try {
 				IWorkbenchBrowserSupport support = PlatformUI.getWorkbench().getBrowserSupport();
-				support.getExternalBrowser().openURL(new URL(url));
+				support.getExternalBrowser().openURL(url);
 			} catch (Exception e) {
 				StatusHandler.fail(e, "could not open task url", true);
 			}
@@ -135,7 +137,7 @@ public class TasksUiUtil {
 
 			String generatedId = "org.eclipse.mylyn.web.browser-" + Calendar.getInstance().getTimeInMillis();
 			browser = WorkbenchBrowserSupport.getInstance().createBrowser(flags, generatedId, null, null);
-			browser.openURL(new URL(url));
+			browser.openURL(url);
 		}
 	}
 
