@@ -79,19 +79,21 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 		RepositoryAttachment attachment = (RepositoryAttachment) element;
 		switch (columnIndex) {
 		case 0:
-			return " " + attachment.getDescription();
-		case 1:
 			if (isContext(attachment)) {
-				return "Task Context";
+				return " Task Context";
+			} else if (attachment.isPatch()) {
+				return " Patch";
 			} else {
-				return attachment.getFilename();
+				return " " + attachment.getFilename();
 			}
+		case 1:
+			return attachment.getDescription();
 		case 2:
-			if (attachment.isPatch()) {
-				return "patch";
-			} else {
+//			if (attachment.isPatch()) {
+//				return "patch";
+//			} else {
 				return attachment.getContentType();
-			}
+//			}
 		case 3:
 			return attachment.getCreator();
 		case 4:

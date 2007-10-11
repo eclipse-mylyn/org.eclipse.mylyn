@@ -270,9 +270,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private TableViewer attachmentsTableViewer;
 
-	private String[] attachmentsColumns = { "Description", "Name", "Type", "Creator", "Created" };
+	private String[] attachmentsColumns = { "Name", "Description", "Type", "Creator", "Created" };
 
-	private int[] attachmentsColumnWidths = { 160, 140, 100, 100, 100 };
+	private int[] attachmentsColumnWidths = { 140, 160, 100, 100, 100 };
 
 	private Composite editorComposite;
 
@@ -1504,10 +1504,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		attachmentControlsComposite.setLayout(new GridLayout(2, false));
 		attachmentControlsComposite.setLayoutData(new GridData(GridData.BEGINNING));
 
-		Button attachFileButton = toolkit.createButton(attachmentControlsComposite, AttachFileAction.LABEL, SWT.PUSH);
+		Button attachFileButton = toolkit.createButton(attachmentControlsComposite, "Add File...", SWT.PUSH);
 		attachFileButton.setImage(WorkbenchImages.getImage(ISharedImages.IMG_OBJ_FILE));
 
-		Button attachScreenshotButton = toolkit.createButton(attachmentControlsComposite, AttachScreenshotAction.LABEL,
+		Button attachScreenshotButton = toolkit.createButton(attachmentControlsComposite, "Add Screenshot...",
 				SWT.PUSH);
 		attachScreenshotButton.setImage(TasksUiImages.getImage(TasksUiImages.IMAGE_CAPTURE));
 
