@@ -1225,7 +1225,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	}
 
 	private void makeActions() {
-
 		copyDetailsAction = new CopyTaskDetailsAction(true);
 
 		goIntoAction = new GoIntoAction();
@@ -1255,21 +1254,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		filteredTree.getViewer().addSelectionChangedListener(openWithBrowser);
 		filteredTree.getViewer().addSelectionChangedListener(copyDetailsAction);
 	}
-
-	// public void toggleNextAction(boolean enable) {
-	// nextTaskAction.setEnabled(enable);
-	// }
-	// public NextTaskDropDownAction getNextTaskAction() {
-	// return nextTaskAction;
-	// }
-
-//	public void togglePreviousAction(boolean enable) {
-//		previousTaskAction.setEnabled(enable);
-//	}
-//
-//	public ActivateTaskHistoryDropDownAction getPreviousTaskAction() {
-//		return previousTaskAction;
-//	}
 
 	/**
 	 * Recursive function that checks for the occurrence of a certain task taskId. All children of the supplied node
@@ -1302,18 +1286,10 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 					AbstractTask selectedTask = TaskListView.getFromActivePerspective().getSelectedTask();
 					if (selectedTask != null) {
 						activateAction.run(selectedTask);
-//						addTaskToHistory(selectedTask);
-//						previousTaskAction.setButtonStatus();
 					}
 				}
 				if (object instanceof TaskCategory || object instanceof AbstractRepositoryQuery) {
 					TasksUiUtil.refreshAndOpenTaskListElement((AbstractTaskContainer) object);
-					// if(getViewer().getExpandedState(object)){
-					// getViewer().collapseToLevel(object,
-					// TreeViewer.ALL_LEVELS);
-					// } else {
-					// getViewer().expandToLevel(object, TreeViewer.ALL_LEVELS);
-					// }
 				}
 			}
 		});
@@ -1517,6 +1493,10 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 						getViewer().refresh(task, true);
 					} else {
 						getViewer().refresh(element, true);
+					}
+					// TODO: consider moving expansion logic into viewer manager
+					if (isFocusedMode()) {
+						getViewer().expandToLevel(element, 3);
 					}
 				} catch (SWTException e) {
 					StatusHandler.log(e, "Failed to refresh Task List");
