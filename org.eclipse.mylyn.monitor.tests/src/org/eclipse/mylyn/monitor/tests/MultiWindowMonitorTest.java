@@ -49,6 +49,10 @@ public class MultiWindowMonitorTest extends TestCase {
 
 		public boolean isMonitored() {
 			return monitored;
+		}
+
+		public boolean isPerspectiveManaged() {
+			return false;
 		}	
 	}
 	

@@ -9,10 +9,14 @@
 package org.eclipse.mylyn.internal.monitor.ui;
 
 /**
+ * TODO: consider changing to abstract class
+ * 
  * @author Shawn Minto
  */
 public interface IMonitoredWindow {
 
 	public boolean isMonitored();
+	
+	public boolean isPerspectiveManaged();
 	
 }
