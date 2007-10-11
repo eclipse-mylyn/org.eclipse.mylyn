@@ -619,7 +619,9 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		for (String option : optionValues) {
 			a.addOption(option, option);
 		}
-		a.setValue(optionValues.get((optionValues.size() / 2))); // choose middle priority
+		if (optionValues.size() > 0) {
+			a.setValue(optionValues.get((optionValues.size() / 2))); // choose middle priority
+		}
 
 		newTaskData.addAttribute(BugzillaReportElement.PRIORITY.getKeyString(), a);
 		// attributes.put(a.getName(), a);
@@ -629,7 +631,9 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		for (String option : optionValues) {
 			a.addOption(option, option);
 		}
-		a.setValue(optionValues.get((optionValues.size() / 2))); // choose middle severity
+		if (optionValues.size() > 0) {
+			a.setValue(optionValues.get((optionValues.size() / 2))); // choose middle severity
+		}
 
 		newTaskData.addAttribute(BugzillaReportElement.BUG_SEVERITY.getKeyString(), a);
 		// attributes.put(a.getName(), a);
