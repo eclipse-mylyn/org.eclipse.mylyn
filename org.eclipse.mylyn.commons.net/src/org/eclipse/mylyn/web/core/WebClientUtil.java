@@ -68,6 +68,10 @@ public class WebClientUtil {
 	}
 
 	static {
+		System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
+		System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header", "off");
+		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "off");
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("Mylyn");
 		sb.append(shortVersion(WebCorePlugin.getDefault()));
@@ -111,11 +115,10 @@ public class WebClientUtil {
 
 	private static final int SOCKS_PORT = 1080;
 
+	/**
+	 * @deprecated 2.2
+	 */
 	public static void initCommonsLoggingSettings() {
-		// TODO: move?
-		System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
-		System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header", "off");
-		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "off");
 	}
 
 	static boolean isRepositoryHttps(String repositoryUrl) {
@@ -272,9 +275,9 @@ public class WebClientUtil {
 
 	/**
 	 * utility method, proxy should be obtained via TaskRepository.getProxy()
-	 *
+	 * 
 	 * TODO: deprecate
-	 *
+	 * 
 	 * @return proxy as defined in platform proxy settings property page, Proxy.NO_PROXY otherwise
 	 */
 	public static Proxy getPlatformProxy() {
@@ -298,7 +301,7 @@ public class WebClientUtil {
 
 	/**
 	 * utility method, proxy should be obtained via TaskRepository.getProxy()
-	 *
+	 * 
 	 * @return proxy as defined in platform proxy settings property page, Proxy.NO_PROXY otherwise
 	 * @since 2.1
 	 */
