@@ -24,6 +24,7 @@ import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 import org.eclipse.core.net.proxy.IProxyData;
 import org.eclipse.core.net.proxy.IProxyService;
+import org.eclipse.core.runtime.Plugin;
 
 /**
  * @author Mik Kersten
@@ -32,28 +33,68 @@ import org.eclipse.core.net.proxy.IProxyService;
  */
 public class WebClientUtil {
 
+	/**
+	 * like Mylyn/2.1.0 (Rally Connector 1.0) Eclipse/3.3.0 (JBuilder 2007) HttpClient/3.0.1 Java/1.5.0_11 (Sun)
+	 * Linux/2.6.20-16-lowlatency (i386; en)
+	 */
 	public static final String USER_AGENT;
+
+	private static String firstThree(String longVersion) {
+		String parts[] = longVersion.split("\\.");
+		StringBuilder version = new StringBuilder();
+		if (parts.length > 0) {
+			version.append("/");
+			version.append(parts[0]);
+		}
+		if (parts.length > 1) {
+			version.append(".");
+			version.append(parts[1]);
+		}
+		if (parts.length > 2) {
+			version.append(".");
+			version.append(parts[2]);
+		}
+		return version.toString();
+
+	}
+
+	private static String shortVersion(Plugin plugin) {
+		if (null == plugin)
+			return "";
+		Object bundleVersion = plugin.getBundle().getHeaders().get("Bundle-Version");
+		if (null == bundleVersion)
+			return "";
+		return firstThree((String) bundleVersion);
+	}
 
 	static {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Java/");
+		sb.append("Mylyn");
+		sb.append(shortVersion(WebCorePlugin.getDefault()));
+		// TODO insert (client)
+
+		sb.append(" ");
+		sb.append("Eclipse");
+		sb.append(firstThree(System.getProperty("osgi.framework.version")));
+		// TODO insert (redistribution)
+
+		sb.append(" ");
+		sb.append(HttpClientParams.getDefaultParams().getParameter(HttpClientParams.USER_AGENT).toString().split("-")[1]);
+
+		sb.append(" Java/");
 		sb.append(System.getProperty("java.version"));
 		sb.append(" (");
+		sb.append(System.getProperty("java.vendor").split(" ")[0]);
+		sb.append(") ");
+
 		sb.append(System.getProperty("os.name"));
-		sb.append(" ");
+		sb.append("/");
 		sb.append(System.getProperty("os.version"));
-		sb.append("; ");
+		sb.append(" (");
 		sb.append(System.getProperty("os.arch"));
+		sb.append("; ");
+		sb.append(System.getProperty("osgi.nl"));
 		sb.append(")");
-
-		sb.append(" Eclipse Mylyn");
-		Object bundleVersion = WebCorePlugin.getDefault().getBundle().getHeaders().get("Bundle-Version");
-		if (bundleVersion != null) {
-			sb.append("/");
-			sb.append(bundleVersion.toString());
-		}
-
-		sb.append(" HttpClient/3.0.1");
 
 		USER_AGENT = sb.toString();
 	}
@@ -231,9 +272,9 @@ public class WebClientUtil {
 
 	/**
 	 * utility method, proxy should be obtained via TaskRepository.getProxy()
-	 * 
+	 *
 	 * TODO: deprecate
-	 * 
+	 *
 	 * @return proxy as defined in platform proxy settings property page, Proxy.NO_PROXY otherwise
 	 */
 	public static Proxy getPlatformProxy() {
@@ -257,7 +298,7 @@ public class WebClientUtil {
 
 	/**
 	 * utility method, proxy should be obtained via TaskRepository.getProxy()
-	 * 
+	 *
 	 * @return proxy as defined in platform proxy settings property page, Proxy.NO_PROXY otherwise
 	 * @since 2.1
 	 */
