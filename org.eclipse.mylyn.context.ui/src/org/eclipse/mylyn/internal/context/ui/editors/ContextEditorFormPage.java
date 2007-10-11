@@ -63,6 +63,8 @@ import org.eclipse.ui.navigator.INavigatorContentExtension;
  */
 public class ContextEditorFormPage extends FormPage {
 
+	private static final int SCALE_STEPS = 14;
+
 	public static final String ID_VIEWER = "org.eclipse.mylyn.context.ui.navigator.context";
 
 	private ScrolledForm form;
@@ -176,9 +178,9 @@ public class ContextEditorFormPage extends FormPage {
 		scaleGridData.widthHint = 80;
 		doiScale.setLayoutData(scaleGridData);
 		doiScale.setPageIncrement(1);
-		doiScale.setSelection(0);
-		doiScale.setMinimum(0);
-		doiScale.setMaximum(10);
+		doiScale.setMinimum(0); 
+		doiScale.setSelection(SCALE_STEPS/2);
+		doiScale.setMaximum(SCALE_STEPS); 
 		doiScale.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 				setFilterThreshold();
@@ -267,11 +269,14 @@ public class ContextEditorFormPage extends FormPage {
 		section.setExpanded(true);
 	}
 
+	/**
+	 * Scales logarithmically to a reasonable interest threshold range (e.g. -10000..10000).
+	 */
 	protected void setFilterThreshold() {
-		int setting = doiScale.getSelection();
-		int threshold = setting * setting * setting;
+		double setting = doiScale.getSelection() - (SCALE_STEPS/2);
+		double threshold = Math.signum(setting) * Math.pow(Math.exp(Math.abs(setting)), 1.5);
 
-		interestFilter.setThreshold(threshold);
+		interestFilter.setThreshold(threshold); 
 		commonViewer.refresh();
 		commonViewer.expandAll();
 	}
@@ -324,9 +329,6 @@ public class ContextEditorFormPage extends FormPage {
 
 			commonViewer.setInput(getSite().getPage().getInput());
 			getSite().setSelectionProvider(commonViewer);
-			// ContextUiPlugin.getViewerManager().addManagedViewer(commonViewer,
-			// this);
-			// makeContextMenuActions();
 			hookContextMenu();
 			commonViewer.expandAll();
 		} finally {
@@ -359,11 +361,6 @@ public class ContextEditorFormPage extends FormPage {
 		CommonViewer viewer = new CommonViewer(ID_VIEWER, parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		return viewer;
 	}
-
-//	private void makeContextMenuActions() {
-//		removeFromContextAction = new RemoveFromContextAction(commonViewer, interestFilter);
-//		commonViewer.addSelectionChangedListener(removeFromContextAction);
-//	}
 
 	private void hookContextMenu() {
 		MenuManager menuManager = new MenuManager("#PopupMenu");

@@ -19,19 +19,18 @@ import org.eclipse.mylyn.context.ui.InterestFilter;
  */
 public class ScalableInterestFilter extends InterestFilter {
 
-	private float threshold = 0;
+	private double threshold = 0;
 
 	@Override
 	protected boolean isInteresting(IInteractionElement element) {
-		if (element.getInterest().getValue() == 0) {
-			// TOD: parametrize default value
+		if (element.getInterest().getEvents().isEmpty()) {
 			return false;
 		} else {
-			return element.getInterest().getValue() > threshold;
+			return element.getInterest().getValue() >= threshold;
 		}
 	}
 
-	public void setThreshold(float threshold) {
+	public void setThreshold(double threshold) {
 		this.threshold = threshold;
 	}
 
