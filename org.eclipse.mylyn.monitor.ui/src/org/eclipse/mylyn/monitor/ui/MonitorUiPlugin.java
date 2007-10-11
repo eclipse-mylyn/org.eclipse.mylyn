@@ -76,6 +76,8 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 	public static final String OBFUSCATED_LABEL = "[obfuscated]";
 
+	private IWorkbenchWindow launchingWorkbenchWindow = null;
+
 	protected IWindowListener WINDOW_LISTENER = new IWindowListener() {
 		public void windowActivated(IWorkbenchWindow window) {
 			// ignore
@@ -102,6 +104,9 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 		public void windowClosed(IWorkbenchWindow window) {
 			removeListenersFromWindow(window);
+			if (window == launchingWorkbenchWindow) {
+				launchingWorkbenchWindow = null;
+			}
 		}
 	};
 
@@ -116,9 +121,12 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 			public void run() {
 				try {
 					getWorkbench().addWindowListener(WINDOW_LISTENER);
+					launchingWorkbenchWindow = getWorkbench().getActiveWorkbenchWindow();
+
 					for (IWorkbenchWindow window : getWorkbench().getWorkbenchWindows()) {
 						addListenersToWindow(window);
 					}
+
 					shellLifecycleListener = new ShellLifecycleListener(ContextCorePlugin.getContextManager());
 					getWorkbench().getActiveWorkbenchWindow().getShell().addShellListener(shellLifecycleListener);
 
@@ -372,5 +380,9 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 	public Set<IWorkbenchWindow> getMonitoredWindows() {
 		return monitoredWindows;
+	}
+
+	public IWorkbenchWindow getLaunchingWorkbenchWindow() {
+		return launchingWorkbenchWindow;
 	}
 }
