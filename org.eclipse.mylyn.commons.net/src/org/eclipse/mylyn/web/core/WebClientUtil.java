@@ -68,10 +68,7 @@ public class WebClientUtil {
 	}
 
 	static {
-		System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
-		System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header", "off");
-		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "off");
-
+		initCommonsLoggingSettings();
 		StringBuilder sb = new StringBuilder();
 		sb.append("Mylyn");
 		sb.append(shortVersion(WebCorePlugin.getDefault()));
@@ -115,10 +112,11 @@ public class WebClientUtil {
 
 	private static final int SOCKS_PORT = 1080;
 
-	/**
-	 * @deprecated 2.2
-	 */
 	public static void initCommonsLoggingSettings() {
+		// TODO: move?
+		System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
+		System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header", "off");
+		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "off");
 	}
 
 	static boolean isRepositoryHttps(String repositoryUrl) {
