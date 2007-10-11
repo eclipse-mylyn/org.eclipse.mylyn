@@ -21,17 +21,18 @@ public class BugzillaClientFactory {
 
 	public static BugzillaClient createClient(String hostUrl, String username, String password, String htAuthUser,
 			String htAuthPass, Proxy proxy, String encoding) throws MalformedURLException {
+		BugzillaLanguageSettings languageSettings = BugzillaCorePlugin.getLanguageSettings("en");
 		return createClient(hostUrl, username, password, htAuthUser, htAuthPass, proxy, encoding,
-				new HashMap<String, String>());
+				new HashMap<String, String>(), languageSettings);
 	}
 
 	public static BugzillaClient createClient(String hostUrl, String username, String password, String htAuthUser,
-			String htAuthPass, Proxy proxy, String encoding, Map<String, String> configParameters)
+			String htAuthPass, Proxy proxy, String encoding, Map<String, String> configParameters, BugzillaLanguageSettings bugzillaLanguageSettings)
 			throws MalformedURLException {
 		URL url = new URL(hostUrl);
 
 		BugzillaClient client = new BugzillaClient(url, username, password, htAuthUser, htAuthPass, encoding,
-				configParameters);
+				configParameters, bugzillaLanguageSettings);
 		client.setProxy(proxy);
 		return client;
 	}

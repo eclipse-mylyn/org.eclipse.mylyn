@@ -159,6 +159,8 @@ public class BugzillaClient {
 	private boolean isValidation = false;
 
 	private boolean lastModifiedSupported = true;
+	
+	private BugzillaLanguageSettings languageSettings;
 
 	private class BugzillaRetryHandler extends DefaultHttpMethodRetryHandler {
 		public BugzillaRetryHandler() {
@@ -180,11 +182,11 @@ public class BugzillaClient {
 
 	public BugzillaClient(URL url, String username, String password, String htAuthUser, String htAuthPass,
 			String characterEncoding) {
-		this(url, username, password, htAuthUser, htAuthPass, characterEncoding, new HashMap<String, String>());
+		this(url, username, password, htAuthUser, htAuthPass, characterEncoding, new HashMap<String, String>(), BugzillaCorePlugin.getLanguageSettings("en"));
 	}
 
 	public BugzillaClient(URL url, String username, String password, String htAuthUser, String htAuthPass,
-			String characterEncoding, Map<String, String> configParameters) {
+			String characterEncoding, Map<String, String> configParameters, BugzillaLanguageSettings languageSettings) {
 		this.username = username;
 		this.password = password;
 		this.repositoryUrl = url;
@@ -192,6 +194,7 @@ public class BugzillaClient {
 		this.htAuthPass = htAuthPass;
 		this.characterEncoding = characterEncoding;
 		this.configParameters = configParameters;
+		this.languageSettings = languageSettings;
 	}
 
 	public void validate() throws IOException, CoreException {
@@ -807,6 +810,7 @@ public class BugzillaClient {
 			boolean existingBugPosted = false;
 			boolean isTitle = false;
 			String title = "";
+
 			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
 
 				if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == HtmlTag.Type.TITLE
@@ -823,7 +827,10 @@ public class BugzillaClient {
 					} else if (token.getType() == Token.TAG
 							&& ((HtmlTag) token.getValue()).getTagType() == HtmlTag.Type.TITLE
 							&& ((HtmlTag) token.getValue()).isEndTag()) {
-						if (!taskData.isNew() && (title.toLowerCase(Locale.ENGLISH).indexOf("processed") != -1)) {
+
+												
+						
+						if (!taskData.isNew() && (title.toLowerCase(Locale.ENGLISH).indexOf(languageSettings.getProcessed()) != -1)) {
 							existingBugPosted = true;
 						} else if (taskData.isNew() && prefix != null && prefix2 != null && postfix != null
 								&& postfix2 != null) {
@@ -1019,7 +1026,6 @@ public class BugzillaClient {
 		String body = "";
 
 		try {
-
 			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
 				body += token.toString();
 				if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == HtmlTag.Type.TITLE
@@ -1037,19 +1043,20 @@ public class BugzillaClient {
 							&& ((HtmlTag) token.getValue()).getTagType() == HtmlTag.Type.TITLE
 							&& ((HtmlTag) token.getValue()).isEndTag()) {
 
-						if (title.indexOf("login") != -1 || title.indexOf("log in") != -1
-								|| (title.indexOf("invalid") != -1 && title.indexOf("password") != -1)
-								|| title.indexOf("check e-mail") != -1) {
+						languageSettings.getProcessed();
+						if (title.indexOf(languageSettings.getLogin()) != -1
+								|| (title.indexOf(languageSettings.getInvalid()) != -1 && title.indexOf(languageSettings.getPassword()) != -1)
+								|| title.indexOf(languageSettings.getCheckEmail()) != -1) {
 							authenticated = false;
 							throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 									RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(), title));
-						} else if (title.indexOf(IBugzillaConstants.ERROR_MIDAIR_COLLISION) != -1) {
+						} else if (title.indexOf(languageSettings.getMidairCollision()) != -1) {
 							throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 									RepositoryStatus.REPOSITORY_COLLISION, repositoryUrl.toString()));
-						} else if (title.indexOf(IBugzillaConstants.ERROR_COMMENT_REQUIRED) != -1) {
+						} else if (title.indexOf(languageSettings.getCommentRequired()) != -1) {
 							throw new CoreException(new BugzillaStatus(Status.INFO, BugzillaCorePlugin.PLUGIN_ID,
 									RepositoryStatus.REPOSITORY_COMMENT_REQUIRED));
-						} else if (title.indexOf(IBugzillaConstants.LOGGED_OUT) != -1) {
+						} else if (title.indexOf(languageSettings.getLoggedOut()) != -1) {
 							authenticated = false;
 							// throw new
 							// BugzillaException(IBugzillaConstants.LOGGED_OUT);

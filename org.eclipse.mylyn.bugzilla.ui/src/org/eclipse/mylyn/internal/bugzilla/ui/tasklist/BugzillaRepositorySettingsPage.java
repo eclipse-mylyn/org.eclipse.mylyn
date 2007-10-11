@@ -84,6 +84,8 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 	private String platform = null;
 
 	private String os = null;
+	
+	private Combo languageSettingCombo;
 
 	public BugzillaRepositorySettingsPage(AbstractRepositoryConnectorUi repositoryUi) {
 		super(TITLE, DESCRIPTION, repositoryUi);
@@ -265,6 +267,36 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		defaultOSCombo = new Combo(platformOSContainer, SWT.READ_ONLY);
 		populateOsCombo();
 
+		new Label(parent, SWT.NONE).setText("Language : ");
+		languageSettingCombo = new Combo(parent, SWT.DROP_DOWN);
+
+		for (String languageSettings : BugzillaCorePlugin.getLanguageSettings().keySet()) {
+			languageSettingCombo.add(languageSettings);
+		}
+//		languageSettingCombo.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				String text = languageSettingCombo.getText();
+////				RepositoryTemplate template = connector.getTemplate(text);
+////				if (template != null) {
+////					repositoryLabelEditor.setStringValue(template.label);
+////					setUrl(template.repositoryUrl);
+////					// setAnonymous(info.anonymous);
+////					setBugzillaVersion(template.version);
+////					if (template.characterEncoding != null) {
+////						setEncoding(template.characterEncoding);
+////					}
+//					getContainer().updateButtons();
+//					return;
+////				}
+//			}
+//		});
+		if (repository != null) {
+			String language = repository.getProperty(IBugzillaConstants.BUGZILLA_LANGUAGE_SETTING);
+			if (language != null && !language.equals(""))
+				languageSettingCombo.select(languageSettingCombo.indexOf(language));
+		}
+
 	}
 
 	private void populateOsCombo() {
@@ -346,6 +378,9 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 	public void updateProperties(TaskRepository repository) {
 		repository.setProperty(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN,
 				String.valueOf(cleanQAContact.getSelection()));
+		repository.setProperty(IBugzillaConstants.BUGZILLA_LANGUAGE_SETTING,
+				languageSettingCombo.getText());
+		
 //		if (cachedConfigButton.getSelection()) {
 //			repository.setProperty(IBugzillaConstants.PROPERTY_CONFIGTIMESTAMP, "");
 //		} else {

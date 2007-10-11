@@ -88,6 +88,10 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 		if (repConfigCacheFile != null) {
 			BugzillaCorePlugin.setConfigurationCacheFile(repConfigCacheFile.toFile());
 		}
+		IPath languagesFile = getLanguagesPath();
+		if (languagesFile != null) {
+			BugzillaCorePlugin.setLanguagesFile(languagesFile.toFile());
+		}
 
 		BugzillaRepositoryConnector bugzillaConnector = (BugzillaRepositoryConnector) TasksUiPlugin.getRepositoryManager()
 				.getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
@@ -101,6 +105,15 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	private static IPath getProductConfigurationCachePath() {
 		IPath stateLocation = Platform.getStateLocation(BugzillaCorePlugin.getDefault().getBundle());
 		IPath configFile = stateLocation.append("repositoryConfigurations");
+		return configFile;
+	}
+
+	/**
+	 * Returns the path to the file cacheing the product configuration.
+	 */
+	private static IPath getLanguagesPath() {
+		IPath stateLocation = Platform.getStateLocation(BugzillaCorePlugin.getDefault().getBundle());
+		IPath configFile = stateLocation.append("languageSettings");
 		return configFile;
 	}
 
@@ -272,7 +285,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 		prefs.setValue(IBugzillaConstants.VALUES_KEYWORDS + PREF_DELIM_REPOSITORY + repositoryUrl,
 				queryOptionsToString(config.getKeywords()));
 		monitor.worked(1);
-		
+
 		for (String product : config.getProducts()) {
 			prefs.setValue(IBugzillaConstants.VALUES_COMPONENT + PREF_DELIM_REPOSITORY + repositoryUrl
 					+ PREF_DELIM_REPOSITORY + product, queryOptionsToString(config.getComponents(product)));

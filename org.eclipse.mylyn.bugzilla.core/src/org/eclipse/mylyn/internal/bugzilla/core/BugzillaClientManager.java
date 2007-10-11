@@ -33,9 +33,16 @@ public class BugzillaClientManager implements ITaskRepositoryListener {
 			String htUser = taskRepository.getHttpUser() != null ? taskRepository.getHttpUser() : "";
 			String htPass = taskRepository.getHttpPassword() != null ? taskRepository.getHttpPassword() : "";
 
+			String language = taskRepository.getProperty(IBugzillaConstants.BUGZILLA_LANGUAGE_SETTING);
+			if (language == null || language.equals("")) {
+				language = "en";
+			}
+			BugzillaLanguageSettings languageSettings = BugzillaCorePlugin.getLanguageSettings(language);
+
+			
 			client = BugzillaClientFactory.createClient(taskRepository.getUrl(), taskRepository.getUserName(),
 					taskRepository.getPassword(), htUser, htPass, taskRepository.getProxy(),
-					taskRepository.getCharacterEncoding(), taskRepository.getProperties());
+					taskRepository.getCharacterEncoding(), taskRepository.getProperties(),languageSettings);
 			clientByUrl.put(taskRepository.getUrl(), client);
 		}
 		return client;

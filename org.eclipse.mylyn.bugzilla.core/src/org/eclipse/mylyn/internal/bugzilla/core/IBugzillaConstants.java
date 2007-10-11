@@ -274,4 +274,7 @@ public interface IBugzillaConstants {
 
 	public static final String BUGZILLA_DEF_PLATFORM = "bugzilla.default.platform";
 
+	public static final String BUGZILLA_LANGUAGE_SETTING = "bugzilla.languageSetting";
+
+
 }
