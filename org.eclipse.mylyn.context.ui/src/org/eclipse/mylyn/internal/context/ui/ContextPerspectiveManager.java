@@ -13,13 +13,16 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
+import org.eclipse.mylyn.internal.monitor.ui.IMonitoredWindow;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
+import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IPerspectiveListener4;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartReference;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Perspective;
 import org.eclipse.ui.internal.WorkbenchPage;
@@ -50,10 +53,8 @@ public class ContextPerspectiveManager implements ITaskActivityListener, IPerspe
 
 	public void taskActivated(AbstractTask task) {
 		try {
-			IPerspectiveDescriptor descriptor = PlatformUI.getWorkbench()
-					.getActiveWorkbenchWindow()
-					.getActivePage()
-					.getPerspective();
+
+			IPerspectiveDescriptor descriptor = getPerspectiveToRestore();
 			ContextUiPlugin.getDefault().setPerspectiveIdFor(null, descriptor.getId());
 
 			String perspectiveId = ContextUiPlugin.getDefault().getPerspectiveIdFor(task);
@@ -63,15 +64,33 @@ public class ContextPerspectiveManager implements ITaskActivityListener, IPerspe
 		}
 	}
 
+	/**
+	 * Note the policy implemented here for the case where multiple windows are present.
+	 */
+	private IPerspectiveDescriptor getPerspectiveToRestore() {
+		Set<IWorkbenchWindow> monitoredWindows = MonitorUiPlugin.getDefault().getMonitoredWindows();
+		IWorkbenchWindow sourceWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		for (IWorkbenchWindow workbenchWindow : monitoredWindows) {
+			if (workbenchWindow instanceof IMonitoredWindow) {
+				if (((IMonitoredWindow) workbenchWindow).isPerspectiveManaged()) {
+					sourceWindow = workbenchWindow;
+				}
+			} else {
+				// NOTE: the default workbench window does not implement IMonitoredWindow, so the first will be used
+				sourceWindow = workbenchWindow;
+				break;
+			}
+		}
+		IPerspectiveDescriptor descriptor = sourceWindow.getActivePage().getPerspective();
+		return descriptor;
+	}
+
 	public void taskDeactivated(AbstractTask task) {
 		try {
 			if (PlatformUI.isWorkbenchRunning()
 					&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
 							ContextUiPrefContstants.AUTO_MANAGE_PERSPECTIVES)) {
-				IPerspectiveDescriptor descriptor = PlatformUI.getWorkbench()
-						.getActiveWorkbenchWindow()
-						.getActivePage()
-						.getPerspective();
+				IPerspectiveDescriptor descriptor = getPerspectiveToRestore();
 				ContextUiPlugin.getDefault().setPerspectiveIdFor(task, descriptor.getId());
 
 				String previousPerspectiveId = ContextUiPlugin.getDefault().getPerspectiveIdFor(null);
