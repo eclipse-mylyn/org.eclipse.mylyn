@@ -40,9 +40,6 @@ public class WebClientUtilTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-
-		WebClientUtil.initCommonsLoggingSettings();
-
 		testProxy = new TestProxy();
 		int proxyPort = testProxy.startAndWait();
 		assert proxyPort > 0;
