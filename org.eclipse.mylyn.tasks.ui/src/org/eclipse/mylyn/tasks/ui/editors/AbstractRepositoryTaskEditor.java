@@ -678,90 +678,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	private void createSections() {
-
 		createSummaryLayout(editorComposite);
 
-		attributesSection = createSection(editorComposite, getSectionLabel(SECTION_NAME.ATTRIBTUES_SECTION));
-		attributesSection.setExpanded(expandedStateAttributes || hasAttributeChanges);
-
-		Composite toolbarComposite = toolkit.createComposite(attributesSection);
-		toolbarComposite.setBackground(null);
-		RowLayout rowLayout = new RowLayout();
-		rowLayout.marginTop = 0;
-		rowLayout.marginBottom = 0;
-		toolbarComposite.setLayout(rowLayout);
-		ResetRepositoryConfigurationAction repositoryConfigRefresh = new ResetRepositoryConfigurationAction() {
-			@Override
-			public void performUpdate(TaskRepository repository, AbstractRepositoryConnector connector,
-					IProgressMonitor monitor) {
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-
-					public void run() {
-						setGlobalBusy(true);
-
-					}
-				});
-				try {
-					super.performUpdate(repository, connector, monitor);
-					if (connector != null) {
-						TasksUiPlugin.getSynchronizationManager().synchronize(connector, repositoryTask, true,
-								new JobChangeAdapter() {
-
-									@Override
-									public void done(IJobChangeEvent event) {
-										PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-
-											public void run() {
-												refreshEditor();
-											}
-										});
-
-									}
-								});
-					}
-				} catch (Exception e) {
-					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-
-						public void run() {
-							refreshEditor();
-						}
-					});
-				}
-			}
-		};
-		repositoryConfigRefresh.setImageDescriptor(TasksUiImages.REPOSITORY_SYNCHRONIZE);
-		repositoryConfigRefresh.selectionChanged(new StructuredSelection(repository));
-		repositoryConfigRefresh.setToolTipText("Refresh attributes");
-
-		ToolBarManager barManager = new ToolBarManager(SWT.FLAT);
-		barManager.add(repositoryConfigRefresh);
-		barManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-		barManager.createControl(toolbarComposite);
-		attributesSection.setTextClient(toolbarComposite);
-
-		// Attributes Composite- this holds all the combo fields and text fields
-		final Composite attribComp = toolkit.createComposite(attributesSection);
-		attribComp.addListener(SWT.MouseDown, new Listener() {
-			public void handleEvent(Event event) {
-				Control focus = event.display.getFocusControl();
-				if (focus instanceof Text && ((Text) focus).getEditable() == false) {
-					form.setFocus();
-				}
-			}
-		});
-		attributesSection.setClient(attribComp);
-
-		GridLayout attributesLayout = new GridLayout();
-		attributesLayout.numColumns = 4;
-		attributesLayout.horizontalSpacing = 5;
-		attributesLayout.verticalSpacing = 4;
-		attribComp.setLayout(attributesLayout);
-
-		GridData attributesData = new GridData(GridData.FILL_BOTH);
-		attributesData.horizontalSpan = 1;
-		attributesData.grabExcessVerticalSpace = false;
-		attribComp.setLayoutData(attributesData);
-
+		Composite attribComp = createAttributeSection();
 		createAttributeLayout(attribComp);
 		createCustomAttributeLayout(attribComp);
 
@@ -937,6 +856,91 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		return labelName.getPrettyName();
 	}
 
+	protected Composite createAttributeSection() {
+		attributesSection = createSection(editorComposite, getSectionLabel(SECTION_NAME.ATTRIBTUES_SECTION));
+		attributesSection.setExpanded(expandedStateAttributes || hasAttributeChanges);
+		
+		Composite toolbarComposite = toolkit.createComposite(attributesSection);
+		toolbarComposite.setBackground(null);
+		RowLayout rowLayout = new RowLayout();
+		rowLayout.marginTop = 0;
+		rowLayout.marginBottom = 0;
+		toolbarComposite.setLayout(rowLayout);
+		ResetRepositoryConfigurationAction repositoryConfigRefresh = new ResetRepositoryConfigurationAction() {
+			@Override
+			public void performUpdate(TaskRepository repository, AbstractRepositoryConnector connector,
+					IProgressMonitor monitor) {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+
+					public void run() {
+						setGlobalBusy(true);
+
+					}
+				});
+				try {
+					super.performUpdate(repository, connector, monitor);
+					if (connector != null) {
+						TasksUiPlugin.getSynchronizationManager().synchronize(connector, repositoryTask, true,
+								new JobChangeAdapter() {
+
+									@Override
+									public void done(IJobChangeEvent event) {
+										PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+
+											public void run() {
+												refreshEditor();
+											}
+										});
+
+									}
+								});
+					}
+				} catch (Exception e) {
+					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+
+						public void run() {
+							refreshEditor();
+						}
+					});
+				}
+			}
+		};
+		repositoryConfigRefresh.setImageDescriptor(TasksUiImages.REPOSITORY_SYNCHRONIZE);
+		repositoryConfigRefresh.selectionChanged(new StructuredSelection(repository));
+		repositoryConfigRefresh.setToolTipText("Refresh attributes");
+
+		ToolBarManager barManager = new ToolBarManager(SWT.FLAT);
+		barManager.add(repositoryConfigRefresh);
+		barManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+		barManager.createControl(toolbarComposite);
+		attributesSection.setTextClient(toolbarComposite);
+
+		// Attributes Composite- this holds all the combo fields and text fields
+		final Composite attribComp = toolkit.createComposite(attributesSection);
+		attribComp.addListener(SWT.MouseDown, new Listener() {
+			public void handleEvent(Event event) {
+				Control focus = event.display.getFocusControl();
+				if (focus instanceof Text && ((Text) focus).getEditable() == false) {
+					form.setFocus();
+				}
+			}
+		});
+		attributesSection.setClient(attribComp);
+
+		GridLayout attributesLayout = new GridLayout();
+		attributesLayout.numColumns = 4;
+		attributesLayout.horizontalSpacing = 5;
+		attributesLayout.verticalSpacing = 4;
+		attribComp.setLayout(attributesLayout);
+
+		GridData attributesData = new GridData(GridData.FILL_BOTH);
+		attributesData.horizontalSpan = 1;
+		attributesData.grabExcessVerticalSpace = false;
+		attribComp.setLayoutData(attributesData);
+		
+		return attribComp;
+	}
+	
 	/**
 	 * Creates the attribute section, which contains most of the basic attributes of the task (some of which are
 	 * editable).
