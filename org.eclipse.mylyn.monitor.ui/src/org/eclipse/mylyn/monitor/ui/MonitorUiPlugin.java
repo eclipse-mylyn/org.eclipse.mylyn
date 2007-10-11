@@ -378,10 +378,16 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 		monitoredWindows.add(window);
 	}
 
+	/**
+	 * @since 2.2
+	 */
 	public Set<IWorkbenchWindow> getMonitoredWindows() {
 		return monitoredWindows;
 	}
 
+	/**
+	 * @since 2.2
+	 */
 	public IWorkbenchWindow getLaunchingWorkbenchWindow() {
 		return launchingWorkbenchWindow;
 	}
