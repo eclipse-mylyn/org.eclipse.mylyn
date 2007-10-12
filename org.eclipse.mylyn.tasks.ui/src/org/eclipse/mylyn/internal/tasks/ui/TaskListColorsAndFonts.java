@@ -51,6 +51,8 @@ public class TaskListColorsAndFonts {
 
 	public static final Color COLOR_SPELLING_ERROR = new Color(Display.getDefault(), 255, 0, 0);
 
+	public static final Color GRAY = new Color(Display.getDefault(), 100, 100, 100);
+	
 	public static final Font BOLD = JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT);
 
 	public static final Font ITALIC = JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT);
