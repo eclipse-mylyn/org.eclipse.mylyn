@@ -98,7 +98,7 @@
      <wizard
            category="org.eclipse.mylyn.tasks.ui.wizards.import.category"
            class="org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataImportWizard"
-           icon="icons/eview16/task-list.gif"
+           icon="icons/etool16/tasklist-import.png"
            id="org.eclipse.mylyn.tasks.ui.wizards.import"
            name="Task Data">
         <description>
@@ -114,7 +114,7 @@
       <wizard
             category="org.eclipse.mylyn.tasks.ui.wizards.export.category"
             class="org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataExportWizard"
-            icon="icons/eview16/task-list.gif"
+            icon="icons/etool16/tasklist-export.png"
             id="org.eclipse.mylyn.tasks.ui.wizards.export"
             name="Task Data"> 
          <description> 
