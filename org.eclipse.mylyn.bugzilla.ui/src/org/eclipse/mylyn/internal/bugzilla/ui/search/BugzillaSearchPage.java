@@ -17,6 +17,7 @@ import java.util.Arrays;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -26,8 +27,10 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylyn.internal.bugzilla.ui.editor.KeywordsDialog;
+import org.eclipse.mylyn.internal.tasks.ui.util.WebBrowserDialog;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -50,6 +53,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.help.WorkbenchHelpSystem;
@@ -60,6 +64,7 @@ import org.eclipse.ui.progress.IProgressService;
  * 
  * @author Mik Kersten (hardening of prototype)
  */
+@SuppressWarnings("restriction")
 public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements Listener {
 
 	private static final String NUM_DAYS_POSITIVE = "Number of days must be a positive integer. ";
@@ -1186,6 +1191,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		getDialogSettings();
 	}
 
+	@SuppressWarnings("restriction")
 	private void updateAttributesFromRepository(final String repositoryUrl, String[] selectedProducts,
 			boolean updateAttributes, final boolean userFoced) {
 
@@ -1213,11 +1219,13 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 							connector.updateAttributes(repository, monitor);
 							BugzillaUiPlugin.updateQueryOptions(repository, monitor);
 						}
-					} catch (final CoreException ce) {
-						StatusHandler.displayStatus("Update failed", ce.getStatus());
-						if (ce.getCause() != null) {
-							StatusHandler.fail(ce.getCause(), ce.getCause().getMessage(), false);
-						}
+					} catch (final Exception e) {
+						throw new InvocationTargetException(e);
+						/*catch (final CoreException ce) {
+							StatusHandler.displayStatus("Update failed", ce.getStatus());
+							if (ce.getCause() != null) {
+								StatusHandler.fail(ce.getCause(), ce.getCause().getMessage(), false);
+							}*/
 					} finally {
 						monitor.done();
 					}
@@ -1234,10 +1242,46 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				}
 
 			} catch (InvocationTargetException e) {
-				MessageDialog.openError(null, "Error updating search options", "Error was : "
+				Shell shell = null;
+				if (getWizard() != null && getWizard().getContainer() != null) {
+					shell = getWizard().getContainer().getShell();
+				}
+				if (shell == null && getControl() != null) {
+					shell = getControl().getShell();
+				}
+				if (e.getCause() instanceof CoreException) {
+					CoreException cause = ((CoreException) e.getCause());
+					if (cause.getStatus() instanceof RepositoryStatus
+							&& ((RepositoryStatus) cause.getStatus()).isHtmlMessage()) {
+						// TOOD: use StatusManager
+
+//						this.setControlsEnabled(false);
+//						scontainer.setPerformActionEnabled(false);
+						if (shell != null) {
+							shell.setEnabled(false);
+						}
+						WebBrowserDialog dialog = new WebBrowserDialog(shell, "Error updating search options",
+								null, cause.getStatus().getMessage(), NONE, new String[] { IDialogConstants.OK_LABEL }, 0,
+								((RepositoryStatus) cause.getStatus()).getHtmlMessage());
+						dialog.setBlockOnOpen(true);
+						dialog.open();
+						if (shell != null) {
+							shell.setEnabled(true);
+						}
+						return;
+//						this.setPageComplete(this.isPageComplete());
+//						this.setControlsEnabled(true);
+					} else {
+						StatusHandler.fail(cause, cause.getMessage(), false);
+					}
+				}
+
+				MessageDialog.openError(shell, "Error updating search options", "Error was: "
 						+ e.getCause().getMessage());
+				return;
+
 			} catch (InterruptedException e) {
-				// Was cancelled...
+				return;
 			}
 		}
 

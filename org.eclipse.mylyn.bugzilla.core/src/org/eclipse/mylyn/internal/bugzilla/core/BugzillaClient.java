@@ -159,7 +159,7 @@ public class BugzillaClient {
 	private boolean isValidation = false;
 
 	private boolean lastModifiedSupported = true;
-	
+
 	private BugzillaLanguageSettings languageSettings;
 
 	private class BugzillaRetryHandler extends DefaultHttpMethodRetryHandler {
@@ -182,7 +182,8 @@ public class BugzillaClient {
 
 	public BugzillaClient(URL url, String username, String password, String htAuthUser, String htAuthPass,
 			String characterEncoding) {
-		this(url, username, password, htAuthUser, htAuthPass, characterEncoding, new HashMap<String, String>(), BugzillaCorePlugin.getLanguageSettings("en"));
+		this(url, username, password, htAuthUser, htAuthPass, characterEncoding, new HashMap<String, String>(),
+				BugzillaCorePlugin.getLanguageSettings("en"));
 	}
 
 	public BugzillaClient(URL url, String username, String password, String htAuthUser, String htAuthPass,
@@ -225,7 +226,7 @@ public class BugzillaClient {
 	 * in order to provide an even better solution for bug 196056 the size of the bugzilla configuration downloaded must
 	 * be reduced. By using a cached version of the config.cgi this can reduce traffic considerably:
 	 * http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.phoenix/infra-scripts/bugzilla/?root=Technology_Project
-	 *
+	 * 
 	 * @param serverURL
 	 * @return a GetMethod with possibly gzip encoded response body, so caller MUST check with
 	 *         "gzip".equals(method.getResponseHeader("Content-encoding") or use the utility method
@@ -255,7 +256,7 @@ public class BugzillaClient {
 			getMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset="
 					+ characterEncoding);
 
-			if(gzip) {
+			if (gzip) {
 				getMethod.setRequestHeader("Accept-encoding", WebClientUtil.CONTENT_ENCODING_GZIP);
 			}
 
@@ -515,8 +516,8 @@ public class BugzillaClient {
 					}
 				}
 			}
-			parseHtmlError(new BufferedReader(
-					new InputStreamReader(method.getResponseBodyAsUnzippedStream(), characterEncoding)));
+			parseHtmlError(new BufferedReader(new InputStreamReader(method.getResponseBodyAsUnzippedStream(),
+					characterEncoding)));
 		} finally {
 			if (method != null) {
 				method.releaseConnection();
@@ -625,14 +626,30 @@ public class BugzillaClient {
 			method = getConnectGzip(repositoryUrl + IBugzillaConstants.URL_GET_CONFIG_RDF);
 			// provide a solution for bug 196056 by allowing a (cached) gzipped configuration to be sent
 			// modified to also accept "application/x-gzip" as results from a 302 redirect to a previously gzipped file.
-			InputStream stream = method.getResponseBodyAsUnzippedStream();
-			RepositoryConfigurationFactory configFactory = new RepositoryConfigurationFactory(stream, characterEncoding);
 
-			RepositoryConfiguration configuration = configFactory.getConfiguration();
-			if (configuration != null) {
-				configuration.setRepositoryUrl(repositoryUrl.toString());
-				return configuration;
+			if (method == null) {
+				throw new IOException("Could not retrieve configuratoin. HttpClient return null method.");
 			}
+
+			if (method.getResponseHeader("Content-Type") != null) {
+				Header responseTypeHeader = method.getResponseHeader("Content-Type");
+				for (String type : VALID_CONFIG_CONTENT_TYPES) {
+					if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
+						InputStream stream = method.getResponseBodyAsUnzippedStream();
+						RepositoryConfigurationFactory configFactory = new RepositoryConfigurationFactory(stream,
+								characterEncoding);
+
+						RepositoryConfiguration configuration = configFactory.getConfiguration();
+						if (configuration != null) {
+							configuration.setRepositoryUrl(repositoryUrl.toString());
+							return configuration;
+						}
+					}
+				}
+
+			}
+			parseHtmlError(new BufferedReader(new InputStreamReader(method.getResponseBodyAsUnzippedStream(),
+					characterEncoding)));
 			return null;
 		} finally {
 			if (method != null) {
@@ -723,7 +740,7 @@ public class BugzillaClient {
 
 	/**
 	 * calling method must release the connection on the returned PostMethod once finished. TODO: refactor
-	 *
+	 * 
 	 * @throws CoreException
 	 */
 	private GzipPostMethod postFormData(String formUrl, NameValuePair[] formData) throws IOException, CoreException {
@@ -818,9 +835,8 @@ public class BugzillaClient {
 							&& ((HtmlTag) token.getValue()).getTagType() == HtmlTag.Type.TITLE
 							&& ((HtmlTag) token.getValue()).isEndTag()) {
 
-												
-						
-						if (!taskData.isNew() && (title.toLowerCase(Locale.ENGLISH).indexOf(languageSettings.getProcessed()) != -1)) {
+						if (!taskData.isNew()
+								&& (title.toLowerCase(Locale.ENGLISH).indexOf(languageSettings.getProcessed()) != -1)) {
 							existingBugPosted = true;
 						} else if (taskData.isNew() && prefix != null && prefix2 != null && postfix != null
 								&& postfix2 != null) {
@@ -1083,8 +1099,8 @@ public class BugzillaClient {
 			String url = repositoryUrl + IBugzillaConstants.SHOW_ACTIVITY + taskId;
 			method = getConnectGzip(url);
 			if (method != null) {
-				BugzillaTaskHistoryParser parser = new BugzillaTaskHistoryParser(method.getResponseBodyAsUnzippedStream(),
-						characterEncoding);
+				BugzillaTaskHistoryParser parser = new BugzillaTaskHistoryParser(
+						method.getResponseBodyAsUnzippedStream(), characterEncoding);
 				try {
 					return parser.retrieveHistory();
 				} catch (LoginException e) {
@@ -1149,8 +1165,8 @@ public class BugzillaClient {
 					Header responseTypeHeader = method.getResponseHeader("Content-Type");
 					for (String type : VALID_CONFIG_CONTENT_TYPES) {
 						if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
-							MultiBugReportFactory factory = new MultiBugReportFactory(method.getResponseBodyAsUnzippedStream(),
-									characterEncoding);
+							MultiBugReportFactory factory = new MultiBugReportFactory(
+									method.getResponseBodyAsUnzippedStream(), characterEncoding);
 							factory.populateReport(taskDataMap);
 							taskIds.removeAll(idsToRetrieve);
 						}

@@ -144,7 +144,7 @@ public class BugzillaCorePlugin extends Plugin {
 
 			}
 			return repositoryConfigurations.get(repository.getUrl());
-		} catch (Exception e) {
+		} catch (IOException e) {
 			throw new CoreException(new Status(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID, 1,
 					"Error updating attributes.\n\n" + e.getMessage(), e));
 		}
