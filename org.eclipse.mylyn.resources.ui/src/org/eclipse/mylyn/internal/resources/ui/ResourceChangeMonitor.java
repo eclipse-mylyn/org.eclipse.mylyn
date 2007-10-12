@@ -41,6 +41,7 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 		final Set<IResource> addedResources = new HashSet<IResource>();
 		final Set<IResource> changedResources = new HashSet<IResource>();
 		final Set<String> excludedPatterns = ResourcesUiPreferenceInitializer.getExcludedResourcePatterns();
+		excludedPatterns.addAll(ResourcesUiPreferenceInitializer.getForcedExcludedResourcePatterns());
 		IResourceDelta rootDelta = event.getDelta();
 		IResourceDeltaVisitor visitor = new IResourceDeltaVisitor() {
 			public boolean visit(IResourceDelta delta) {
@@ -48,7 +49,7 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 				for (int i = 0; i < added.length; i++) {
 					IResource resource = added[i].getResource();
 					if ((resource instanceof IFile || resource instanceof IFolder)
-							&& !isExcluded(resource.getProjectRelativePath(), excludedPatterns)) {
+							&& !isExcluded(resource.getProjectRelativePath(), resource, excludedPatterns)) {
 						addedResources.add(resource);
 					}
 				}
@@ -76,23 +77,36 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 
 	/**
 	 * Public for testing.
+	 * 
+	 * @param resource can be null
 	 */
-	public boolean isExcluded(IPath path, Set<String> excludedPatterns) {
-		if (path == null) {
-			return false;
-		}
-		// NOTE: n^2 time complexity, but should not be a bottleneck
+	public boolean isExcluded(IPath path, IResource resource, Set<String> excludedPatterns) {
 		boolean excluded = false;
+		// NOTE: n^2 time complexity, but should not be a bottleneck
 		for (String pattern : excludedPatterns) {
-			for (String segment : path.segments()) {
-				boolean matches = segment.matches(pattern.replaceAll("\\.", "\\\\.").replaceAll("\\*", ".*"));
-				if (matches) {
-					excluded = true;
+			if (resource != null && pattern.startsWith("file:/")) {
+				return isUriExcluded(resource.getLocationURI().toString(), pattern);
+			} else {
+				for (String segment : path.segments()) {
+					boolean matches = segment.matches(pattern.replaceAll("\\.", "\\\\.").replaceAll("\\*", ".*"));
+					if (matches) {
+						excluded = true;
+					}
 				}
 			}
 		}
-
 		return excluded;
+	}
+
+	/**
+	 * Public for testing.
+	 */
+	public boolean isUriExcluded(String uri, String pattern) {
+		if (uri != null && uri.startsWith(pattern)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public boolean isEnabled() {

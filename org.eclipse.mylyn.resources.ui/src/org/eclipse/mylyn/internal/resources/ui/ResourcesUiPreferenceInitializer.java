@@ -30,6 +30,8 @@ public class ResourcesUiPreferenceInitializer extends AbstractPreferenceInitiali
 
 	public static final String PREF_RESOURCES_IGNORED = PREF_DEFAULT_SCOPE + ".ignored.pattern";
 
+	public static Set<String> forcedExclusionPatterns = new HashSet<String>();
+	
 	@Override
 	public void initializeDefaultPreferences() {
 		// ignore, default comes from extension point
@@ -52,14 +54,29 @@ public class ResourcesUiPreferenceInitializer extends AbstractPreferenceInitiali
 	}
 
 	public static Set<String> getExcludedResourcePatterns() {
-		Set<String> ignored = new HashSet<String>();
+		Set<String> exclusions = new HashSet<String>();
 		String read = ResourcesUiBridgePlugin.getDefault().getPreferenceStore().getString(PREF_RESOURCES_IGNORED);
 		if (read != null) {
 			StringTokenizer st = new StringTokenizer(read, PREF_STORE_DELIM);
 			while (st.hasMoreTokens()) {
-				ignored.add(st.nextToken());
+				exclusions.add(st.nextToken());
 			}
 		}
-		return ignored;
+		return exclusions;
 	}
+	
+	public static Set<String> getForcedExcludedResourcePatterns() {
+		return forcedExclusionPatterns;
+	}
+	
+	/**
+	 * TODO: move and consider for API
+	 */
+	public static void addForcedExclusionPattern(String pattern) {
+		forcedExclusionPatterns.add(pattern);
+	}
+	
+	public static void removeForcedExclusionPattern(String pattern) {
+		forcedExclusionPatterns.remove(pattern);
+	}	
 }

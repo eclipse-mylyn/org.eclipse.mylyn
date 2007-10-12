@@ -23,7 +23,7 @@
          <attribute name="pattern" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  Pattern can include URI syntax su
                </documentation>
             </annotation>
          </attribute>
@@ -53,14 +53,6 @@
       </documentation>
    </annotation>
 
-   <annotation>
-      <appInfo>
-         <meta.section type="apiInfo"/>
-      </appInfo>
-      <documentation>
-         
-      </documentation>
-   </annotation>
 
    <annotation>
       <appInfo>
@@ -71,13 +63,5 @@
       </documentation>
    </annotation>
 
-   <annotation>
-      <appInfo>
-         <meta.section type="copyright"/>
-      </appInfo>
-      <documentation>
-         
-      </documentation>
-   </annotation>
 
 </schema>
