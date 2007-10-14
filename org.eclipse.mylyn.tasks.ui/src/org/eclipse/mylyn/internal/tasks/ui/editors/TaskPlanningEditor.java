@@ -305,8 +305,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private void addHeaderControls() {
 
-		if (parentEditor.getTopForm() != null) {
-
+		if (parentEditor.getTopForm() != null && parentEditor.getTopForm().getToolBarManager().isEmpty()) {
 			activateAction = new Action() {
 				@Override
 				public void run() {
@@ -318,7 +317,6 @@ public class TaskPlanningEditor extends TaskFormPage {
 						new TaskDeactivateAction().run(task);
 					}
 				}
-
 			};
 
 			activateAction.setImageDescriptor(TasksUiImages.TASK_ACTIVE_CENTERED);
