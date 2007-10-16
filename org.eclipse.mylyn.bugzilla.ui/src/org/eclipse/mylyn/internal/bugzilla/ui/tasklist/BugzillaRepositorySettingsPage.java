@@ -273,24 +273,6 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		for (String languageSettings : BugzillaCorePlugin.getLanguageSettings().keySet()) {
 			languageSettingCombo.add(languageSettings);
 		}
-//		languageSettingCombo.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				String text = languageSettingCombo.getText();
-////				RepositoryTemplate template = connector.getTemplate(text);
-////				if (template != null) {
-////					repositoryLabelEditor.setStringValue(template.label);
-////					setUrl(template.repositoryUrl);
-////					// setAnonymous(info.anonymous);
-////					setBugzillaVersion(template.version);
-////					if (template.characterEncoding != null) {
-////						setEncoding(template.characterEncoding);
-////					}
-//					getContainer().updateButtons();
-//					return;
-////				}
-//			}
-//		});
 		if (repository != null) {
 			String language = repository.getProperty(IBugzillaConstants.BUGZILLA_LANGUAGE_SETTING);
 			if (language != null && !language.equals(""))

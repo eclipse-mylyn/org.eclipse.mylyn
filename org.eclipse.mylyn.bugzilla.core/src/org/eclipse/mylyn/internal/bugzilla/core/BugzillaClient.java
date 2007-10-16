@@ -1049,7 +1049,6 @@ public class BugzillaClient {
 							&& ((HtmlTag) token.getValue()).getTagType() == HtmlTag.Type.TITLE
 							&& ((HtmlTag) token.getValue()).isEndTag()) {
 
-						languageSettings.getProcessed();
 						if (title.indexOf(languageSettings.getLogin()) != -1
 								|| (title.indexOf(languageSettings.getInvalid()) != -1 && title.indexOf(languageSettings.getPassword()) != -1)
 								|| title.indexOf(languageSettings.getCheckEmail()) != -1) {
