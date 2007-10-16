@@ -109,9 +109,11 @@ public class TasksUiUtil {
 					"Browser could not be initiated");
 		} catch (MalformedURLException e) {
 			if (url != null && url.trim().equals("")) {
-				MessageDialog.openInformation(Display.getDefault().getActiveShell(), TasksUiMessages.DIALOG_EDITOR, "No URL to open." + url);
+				MessageDialog.openInformation(Display.getDefault().getActiveShell(), TasksUiMessages.DIALOG_EDITOR,
+						"No URL to open." + url);
 			} else {
-				MessageDialog.openInformation(Display.getDefault().getActiveShell(), TasksUiMessages.DIALOG_EDITOR, "Could not open URL: " + url);
+				MessageDialog.openInformation(Display.getDefault().getActiveShell(), TasksUiMessages.DIALOG_EDITOR,
+						"Could not open URL: " + url);
 			}
 		}
 	}
@@ -248,7 +250,14 @@ public class TasksUiUtil {
 								repositoryTask, true, new JobChangeAdapter() {
 									@Override
 									public void done(IJobChangeEvent event) {
-										TasksUiUtil.openEditor(task, false);
+										RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager()
+												.getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
+										if (taskData != null) {
+											TasksUiUtil.openEditor(task, false);
+										} else {
+											StatusHandler.fail(null, "Unable to retrieve data for requested task"
+													+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".", true);
+										}
 									}
 								});
 						if (refreshJob == null) {
