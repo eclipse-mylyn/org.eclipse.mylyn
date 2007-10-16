@@ -38,6 +38,8 @@ public class SslProtocolSocketFactory implements SecureProtocolSocketFactory {
 
 	private static final String KEY_STORE = "javax.net.ssl.keyStore";
 
+	private static final String KEY_STORE_TYPE = "javax.net.ssl.keyStoreType";
+
 	private static final String KEY_STORE_PASSWORD = "javax.net.ssl.keyStorePassword";
 
 	static SslProtocolSocketFactory factory = new SslProtocolSocketFactory();
@@ -54,7 +56,8 @@ public class SslProtocolSocketFactory implements SecureProtocolSocketFactory {
 		KeyManager[] keymanagers = null;
 		if (System.getProperty(KEY_STORE) != null && System.getProperty(KEY_STORE_PASSWORD) != null) {
 			try {
-				KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+				String type = System.getProperty(KEY_STORE_TYPE, KeyStore.getDefaultType());
+				KeyStore keyStore = KeyStore.getInstance(type);
 				char[] password = System.getProperty(KEY_STORE_PASSWORD).toCharArray();
 				keyStore.load(new FileInputStream(System.getProperty(KEY_STORE)), password);
 				KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
