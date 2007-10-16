@@ -2735,6 +2735,14 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				if (comp instanceof ExpandableComposite) {
 					ExpandableComposite ex = (ExpandableComposite) comp;
 					ex.setExpanded(true);
+
+					// HACK: This is necessary
+					// due to a bug in SWT's ExpandableComposite.
+					// 165803: Expandable bars should expand when clicking anywhere
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?taskId=165803
+					if (ex.getData() != null && ex.getData() instanceof Composite) {
+						((Composite) ex.getData()).setVisible(true);
+					}
 				}
 				comp = comp.getParent();
 			}
