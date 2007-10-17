@@ -57,6 +57,7 @@ public class TaskListToolTip extends ToolTip {
 
 	public TaskListToolTip(Control control) {
 		super(control);
+		this.setShift(new Point(0, 1));
 	}
 
 	private AbstractTaskContainer getTaskListElement(Object hoverObject) {
@@ -101,7 +102,7 @@ public class TaskListToolTip extends ToolTip {
 			int estimateTotal = 0;
 			long elapsedTotal = 0;
 			if (taskListView != null) {
-				Object[] children = ((TaskListContentProvider)taskListView.getViewer().getContentProvider()).getChildren(element);
+				Object[] children = ((TaskListContentProvider) taskListView.getViewer().getContentProvider()).getChildren(element);
 				for (Object object : children) {
 					if (object instanceof AbstractTask) {
 						estimateTotal += ((AbstractTask) object).getEstimateTimeHours();
@@ -259,7 +260,7 @@ public class TaskListToolTip extends ToolTip {
 		Object[] children = new Object[0];
 
 		if (element instanceof ScheduledTaskContainer && taskListView != null) {
-			children = ((TaskListContentProvider)taskListView.getViewer().getContentProvider()).getChildren(element);
+			children = ((TaskListContentProvider) taskListView.getViewer().getContentProvider()).getChildren(element);
 		} else {
 			children = element.getChildren().toArray();
 		}
@@ -325,15 +326,15 @@ public class TaskListToolTip extends ToolTip {
 			if (tipWidget != null) {
 				currentTipElement = getTaskListElement(tipWidget);
 			}
-		}			
-		
+		}
+
 		return currentTipElement != null;
 	}
-	
+
 	@Override
 	protected Composite createToolTipContentArea(Event event, Composite parent) {
 		assert currentTipElement != null;
-			
+
 		TaskListView taskListView = TaskListView.getFromActivePerspective();
 
 		Composite composite = new Composite(parent, SWT.NONE);
@@ -403,7 +404,7 @@ public class TaskListToolTip extends ToolTip {
 		if (statusText != null) {
 			addIconAndLabel(composite, TasksUiImages.getImage(TasksUiImages.WARNING), statusText);
 		}
-		
+
 		return composite;
 	}
 
