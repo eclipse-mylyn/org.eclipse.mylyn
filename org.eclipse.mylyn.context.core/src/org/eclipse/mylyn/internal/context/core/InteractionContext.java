@@ -45,7 +45,7 @@ public class InteractionContext implements IInteractionContext {
 
 	private int numUserEvents = 0;
 
-	protected InteractionContextScaling scalingFactors;
+	protected InteractionContextScaling contextScaling;
 
 	void parseInteractionHistory() {
 		elementMap = new ConcurrentHashMap<String, InteractionContextElement>();
@@ -58,7 +58,7 @@ public class InteractionContext implements IInteractionContext {
 
 	public InteractionContext(String id, InteractionContextScaling scaling) {
 		this.handleIdentifier = id;
-		this.scalingFactors = scaling;
+		this.contextScaling = scaling;
 		parseInteractionHistory();
 	}
 
@@ -238,8 +238,8 @@ public class InteractionContext implements IInteractionContext {
 				&& (elementMap == null ? context.elementMap == null : elementMap.equals(context.elementMap))
 				&& (activeNode == null ? context.activeNode == null : activeNode.equals(context.activeNode))
 				&& (landmarkMap == null ? context.landmarkMap == null : landmarkMap.equals(context.landmarkMap))
-				&& (scalingFactors == null ? context.scalingFactors == null
-						: scalingFactors.equals(context.scalingFactors)) && (numUserEvents == context.numUserEvents);
+				&& (contextScaling == null ? context.contextScaling == null
+						: contextScaling.equals(context.contextScaling)) && (numUserEvents == context.numUserEvents);
 	}
 
 	@Override
@@ -255,14 +255,14 @@ public class InteractionContext implements IInteractionContext {
 			hashCode += activeNode.hashCode();
 		if (landmarkMap != null)
 			hashCode += landmarkMap.hashCode();
-		if (scalingFactors != null)
-			hashCode += scalingFactors.hashCode();
+		if (contextScaling != null)
+			hashCode += contextScaling.hashCode();
 		hashCode += 37 * numUserEvents;
 		return hashCode;
 	}
 
-	public InteractionContextScaling getScalingFactors() {
-		return scalingFactors;
+	public InteractionContextScaling getContextScaling() {
+		return contextScaling;
 	}
 
 	public String getContentLimitedTo() {
@@ -271,5 +271,9 @@ public class InteractionContext implements IInteractionContext {
 
 	public void setContentLimitedTo(String contentLimitedTo) {
 		this.contentLimitedTo = contentLimitedTo;
+	}
+
+	public void setContextScaling(InteractionContextScaling contextScaling) {
+		this.contextScaling = contextScaling;
 	}
 }

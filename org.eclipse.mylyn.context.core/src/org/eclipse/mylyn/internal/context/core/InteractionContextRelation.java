@@ -31,7 +31,7 @@ public class InteractionContextRelation implements IInteractionRelation {
 
 	public InteractionContextRelation(String kind, String edgeKind, IInteractionElement source,
 			IInteractionElement target, InteractionContext context) {
-		interest = new DegreeOfInterest(context, context.getScalingFactors());
+		interest = new DegreeOfInterest(context, context.getContextScaling());
 		this.structureKind = kind;
 		this.relationshipHandle = edgeKind;
 		this.target = target;

@@ -19,7 +19,7 @@ public class ScalingFactorsTest extends TestCase {
 
 	public void testLandmarkDefaults() {
 		InteractionContextScaling scalingFactors = new InteractionContextScaling();
-		assertEquals(10 * scalingFactors.getLandmark(), scalingFactors.getForcedLandmark());
+		assertEquals(7 * scalingFactors.getLandmark(), scalingFactors.getForcedLandmark());
 	}
 	
 }
