@@ -58,6 +58,7 @@ public class BugzillaCorePlugin extends Plugin {
 
 	private static boolean cacheLanguageSettingsFileRead = false;
 
+	@SuppressWarnings("unused")
 	private static File languageSettingsFile = null;
 
 	private static Map<String, BugzillaLanguageSettings> bugzillaLanguageSettings = new HashMap<String, BugzillaLanguageSettings>();
@@ -392,72 +393,74 @@ public class BugzillaCorePlugin extends Plugin {
 	}
 
 	private static void readBugzillaLanguageSettingsFile() {
-		if (!languageSettingsFile.exists()) {
-			setDefaultBugzillaLanguageSettings();
-			return;
-		}
-		ObjectInputStream in = null;
-		try {
-			in = new ObjectInputStream(new FileInputStream(languageSettingsFile));
-			int size = in.readInt();
-			for (int nX = 0; nX < size; nX++) {
-				BugzillaLanguageSettings item = (BugzillaLanguageSettings) in.readObject();
-				if (item != null) {
-					bugzillaLanguageSettings.put(item.getLanguageName(), item);
-				}
-			}
-		} catch (Exception e) {
-			log(e);
-			try {
-				if (in != null) {
-					in.close();
-				}
-				if (languageSettingsFile != null && languageSettingsFile.exists()) {
-					if (languageSettingsFile.delete()) {
-						// successfully deleted
-					} else {
-						log(new Status(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, ERROR_DELETING_CONFIGURATION, e));
-					}
-				}
-
-			} catch (Exception ex) {
-				log(new Status(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, ERROR_DELETING_CONFIGURATION, e));
-			}
-		} finally {
-			if (in != null) {
-				try {
-					in.close();
-				} catch (IOException e) {
-					// ignore
-				}
-			}
-		}
+		setDefaultBugzillaLanguageSettings();
+//		
+//		if (!languageSettingsFile.exists()) {
+//			setDefaultBugzillaLanguageSettings();
+//			return;
+//		}
+//		ObjectInputStream in = null;
+//		try {
+//			in = new ObjectInputStream(new FileInputStream(languageSettingsFile));
+//			int size = in.readInt();
+//			for (int nX = 0; nX < size; nX++) {
+//				BugzillaLanguageSettings item = (BugzillaLanguageSettings) in.readObject();
+//				if (item != null) {
+//					bugzillaLanguageSettings.put(item.getLanguageName(), item);
+//				}
+//			}
+//		} catch (Exception e) {
+//			log(e);
+//			try {
+//				if (in != null) {
+//					in.close();
+//				}
+//				if (languageSettingsFile != null && languageSettingsFile.exists()) {
+//					if (languageSettingsFile.delete()) {
+//						// successfully deleted
+//					} else {
+//						log(new Status(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, ERROR_DELETING_CONFIGURATION, e));
+//					}
+//				}
+//
+//			} catch (Exception ex) {
+//				log(new Status(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, ERROR_DELETING_CONFIGURATION, e));
+//			}
+//		} finally {
+//			if (in != null) {
+//				try {
+//					in.close();
+//				} catch (IOException e) {
+//					// ignore
+//				}
+//			}
+//		}
 	}
 
 	private static void writeBugzillaLanguageSettingsFile() {
-		if (languageSettingsFile != null) {
-			ObjectOutputStream out = null;
-			try {
-				out = new ObjectOutputStream(new FileOutputStream(languageSettingsFile));
-				out.writeInt(bugzillaLanguageSettings.size());
-				for (String key : bugzillaLanguageSettings.keySet()) {
-					BugzillaLanguageSettings item = bugzillaLanguageSettings.get(key);
-					if (item != null) {
-						out.writeObject(item);
-					}
-				}
-			} catch (IOException e) {
-				log(e);
-			} finally {
-				if (out != null) {
-					try {
-						out.close();
-					} catch (IOException e) {
-						// ignore
-					}
-				}
-			}
-		}
+//		if (languageSettingsFile != null) {
+//			ObjectOutputStream out = null;
+//			try {
+//				out = new ObjectOutputStream(new FileOutputStream(languageSettingsFile));
+//				out.writeInt(bugzillaLanguageSettings.size());
+//				for (String key : bugzillaLanguageSettings.keySet()) {
+//					BugzillaLanguageSettings item = bugzillaLanguageSettings.get(key);
+//					if (item != null) {
+//						out.writeObject(item);
+//					}
+//				}
+//			} catch (IOException e) {
+//				log(e);
+//			} finally {
+//				if (out != null) {
+//					try {
+//						out.close();
+//					} catch (IOException e) {
+//						// ignore
+//					}
+//				}
+//			}
+//		}
 	}
 
 	public static Map<String, BugzillaLanguageSettings> getLanguageSettings() {
