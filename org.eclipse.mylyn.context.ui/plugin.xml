@@ -118,7 +118,7 @@
             class="org.eclipse.mylyn.internal.context.ui.preferences.ContextUiPreferencePage"
             id="org.eclipse.mylyn.context.ui.preferences"
             category="org.eclipse.mylyn.ui.preferences">
-         <keywordReference id="org.eclipse.mylyn.context.keywords"/>
+         <keywordReference id="org.eclipse.mylyn.context.ui.keywords"/>
       </page> 
    </extension>
    
