@@ -121,7 +121,7 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 				}
 			}
 			if (element != null) {
-				ContextCorePlugin.getContextManager().manipulateInterestForElement(element, false, false, SOURCE_ID);
+				ContextCorePlugin.getContextManager().manipulateInterestForElement(element, false, false, false, SOURCE_ID);
 			}
 		}
 	}

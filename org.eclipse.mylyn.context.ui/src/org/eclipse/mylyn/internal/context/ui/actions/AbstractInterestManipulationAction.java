@@ -92,7 +92,7 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 						}
 					}
 					boolean manipulated = ContextCorePlugin.getContextManager().manipulateInterestForElement(node,
-							increment, false, SOURCE_ID, getContext());
+							increment, false, false, SOURCE_ID, getContext());
 					if (!manipulated) {
 						UiUtil.displayInterestManipulationFailure();
 					}
@@ -102,7 +102,7 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 			IInteractionElement node = ContextCorePlugin.getContextManager().getActiveElement();
 			if (node != null) {
 				boolean manipulated = ContextCorePlugin.getContextManager().manipulateInterestForElement(node,
-						increment, false, SOURCE_ID, getContext());
+						increment, false, false, SOURCE_ID, getContext());
 				if (!manipulated) {
 					UiUtil.displayInterestManipulationFailure();
 				}

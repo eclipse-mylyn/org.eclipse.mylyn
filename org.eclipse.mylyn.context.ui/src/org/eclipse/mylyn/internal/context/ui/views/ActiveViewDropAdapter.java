@@ -37,7 +37,7 @@ public class ActiveViewDropAdapter extends ViewerDropAdapter {
 			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(firstElement);
 			String handle = bridge.getHandleIdentifier(firstElement);
 			IInteractionElement node = ContextCorePlugin.getContextManager().getElement(handle);
-			boolean manipulated = ContextCorePlugin.getContextManager().manipulateInterestForElement(node, true, true,
+			boolean manipulated = ContextCorePlugin.getContextManager().manipulateInterestForElement(node, true, true, false,
 					ID_MANIPULATION);
 			if (!manipulated) {
 				UiUtil.displayInterestManipulationFailure();

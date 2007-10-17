@@ -938,11 +938,11 @@ public class InteractionContextManager {
 	 * Manipulates interest for the active context.
 	 */
 	public boolean manipulateInterestForElement(IInteractionElement element, boolean increment, boolean forceLandmark,
-			String sourceId) {
+			boolean preserveUninteresting, String sourceId) {
 		if (!isContextActive()) {
 			return false;
 		} else {
-			return manipulateInterestForElement(element, increment, forceLandmark, sourceId, activeContext);
+			return manipulateInterestForElement(element, increment, forceLandmark, preserveUninteresting, sourceId, activeContext);
 		}
 	}
 	
@@ -950,7 +950,7 @@ public class InteractionContextManager {
 	 * @return true if interest was manipulated successfully
 	 */
 	public boolean manipulateInterestForElement(IInteractionElement element, boolean increment, boolean forceLandmark,
-			String sourceId, IInteractionContext context) {
+			boolean preserveUninteresting, String sourceId, IInteractionContext context) {
 		if (element == null || context == null) {
 			return false;
 		}
@@ -973,7 +973,7 @@ public class InteractionContextManager {
 					IInteractionElement childElement = getElement(childHandle);
 					if (childElement != null && childElement.getInterest().isInteresting()
 							&& !childElement.equals(element)) {
-						manipulateInterestForElement(childElement, increment, forceLandmark, sourceId, context);
+						manipulateInterestForElement(childElement, increment, forceLandmark, preserveUninteresting, sourceId, context);
 					}
 				}
 			}
@@ -989,18 +989,17 @@ public class InteractionContextManager {
 				}
 			}
 		}
-		if (changeValue > 0) {
+		if (changeValue > context.getScaling().getInteresting() || preserveUninteresting) {
 			InteractionEvent interactionEvent = new InteractionEvent(InteractionEvent.Kind.MANIPULATION,
 					element.getContentType(), element.getHandleIdentifier(), sourceId, changeValue);
-//			processInteractionEvent(interactionEvent);
 			List<IInteractionElement> interestDelta = internalProcessInteractionEvent(interactionEvent, context, true);
 			notifyInterestDelta(interestDelta);
-		} else if (changeValue < 0) {
-			delete(element);
+		} else if (changeValue < context.getScaling().getInteresting()) {
+			delete(element, context);
+			// TODO: batch this into a delta
 			for (IInteractionContextListener listener : listeners) {
 				listener.elementDeleted(element);
 			}
-			// TODO: consider batching into a delta
 		}
 		return true;
 	}
@@ -1057,9 +1056,14 @@ public class InteractionContextManager {
 	}
 
 	public void delete(IInteractionElement element) {
-		if (element == null)
+		delete(element, getActiveContext());
+	}
+	
+	private void delete(IInteractionElement element, IInteractionContext context) {
+		if (element == null || context == null) {
 			return;
-		getActiveContext().delete(element);
+		}
+		context.delete(element);
 		for (IInteractionContextListener listener : listeners) {
 			listener.elementDeleted(element);
 		}

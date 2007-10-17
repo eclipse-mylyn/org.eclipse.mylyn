@@ -81,7 +81,7 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 		assertTrue(method.getInterest().isInteresting());
 
 		assertTrue(ContextCorePlugin.getContextManager().manipulateInterestForElement(projectElement, false, false,
-				"test"));
+				false, "test"));
 
 		assertFalse(fileElement.getInterest().isInteresting());
 		// TODO: re-enable, fails in AllTests
@@ -103,7 +103,7 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 		assertTrue(cu.getInterest().isInteresting());
 
 		assertTrue(ContextCorePlugin.getContextManager()
-				.manipulateInterestForElement(packageNode, false, false, "test"));
+				.manipulateInterestForElement(packageNode, false, false, false, "test"));
 		assertFalse(packageNode.getInterest().isInteresting());
 		assertFalse(cu.getInterest().isInteresting());
 		assertFalse(clazz.getInterest().isInteresting());
@@ -146,7 +146,7 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 
 		public void changeInterestForSelected(boolean increment) {
 			assertTrue(ContextCorePlugin.getContextManager().manipulateInterestForElement(
-					ContextCorePlugin.getContextManager().getActiveElement(), increment, false, ""));
+					ContextCorePlugin.getContextManager().getActiveElement(), increment, false, false, ""));
 		}
 	}
 }
