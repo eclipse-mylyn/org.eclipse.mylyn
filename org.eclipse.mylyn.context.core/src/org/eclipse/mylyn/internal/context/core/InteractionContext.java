@@ -261,7 +261,7 @@ public class InteractionContext implements IInteractionContext {
 		return hashCode;
 	}
 
-	public InteractionContextScaling getContextScaling() {
+	public InteractionContextScaling getScaling() {
 		return contextScaling;
 	}
 

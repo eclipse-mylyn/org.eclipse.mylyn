@@ -951,7 +951,7 @@ public class InteractionContextManager {
 	 */
 	public boolean manipulateInterestForElement(IInteractionElement element, boolean increment, boolean forceLandmark,
 			String sourceId, IInteractionContext context) {
-		if (element == null) {
+		if (element == null || context == null) {
 			return false;
 		}
 		float originalValue = element.getInterest().getValue();
@@ -978,11 +978,11 @@ public class InteractionContextManager {
 				}
 			}
 		} else {
-			if (!forceLandmark && (originalValue > InteractionContextManager.getCommonContextScaling().getLandmark())) {
+			if (!forceLandmark && (originalValue > context.getScaling().getLandmark())) {
 				changeValue = 0;
 			} else {
 				if (bridge.canBeLandmark(element.getHandleIdentifier())) {
-					changeValue = (InteractionContextManager.getCommonContextScaling().getForcedLandmark())
+					changeValue = (context.getScaling().getForcedLandmark())
 							- originalValue + 1;
 				} else {
 					return false;

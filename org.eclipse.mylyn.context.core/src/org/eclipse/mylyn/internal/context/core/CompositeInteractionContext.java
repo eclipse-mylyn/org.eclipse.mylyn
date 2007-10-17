@@ -147,4 +147,8 @@ public class CompositeInteractionContext implements IInteractionContext {
 			return null;
 		}
 	}
+	
+	public InteractionContextScaling getScaling() {
+		return contextScaling;
+	}
 }
