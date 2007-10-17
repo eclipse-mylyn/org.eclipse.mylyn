@@ -935,10 +935,22 @@ public class InteractionContextManager {
 	}
 
 	/**
-	 * @return true if interest was manipulated successfully
+	 * Manipulates interest for the active context.
 	 */
 	public boolean manipulateInterestForElement(IInteractionElement element, boolean increment, boolean forceLandmark,
 			String sourceId) {
+		if (!isContextActive()) {
+			return false;
+		} else {
+			return manipulateInterestForElement(element, increment, forceLandmark, sourceId, activeContext);
+		}
+	}
+	
+	/**
+	 * @return true if interest was manipulated successfully
+	 */
+	public boolean manipulateInterestForElement(IInteractionElement element, boolean increment, boolean forceLandmark,
+			String sourceId, IInteractionContext context) {
 		if (element == null) {
 			return false;
 		}
@@ -961,7 +973,7 @@ public class InteractionContextManager {
 					IInteractionElement childElement = getElement(childHandle);
 					if (childElement != null && childElement.getInterest().isInteresting()
 							&& !childElement.equals(element)) {
-						manipulateInterestForElement(childElement, increment, forceLandmark, sourceId);
+						manipulateInterestForElement(childElement, increment, forceLandmark, sourceId, context);
 					}
 				}
 			}
@@ -970,7 +982,8 @@ public class InteractionContextManager {
 				changeValue = 0;
 			} else {
 				if (bridge.canBeLandmark(element.getHandleIdentifier())) {
-					changeValue = (InteractionContextManager.getCommonContextScaling().getForcedLandmark()) - originalValue + 1;
+					changeValue = (InteractionContextManager.getCommonContextScaling().getForcedLandmark())
+							- originalValue + 1;
 				} else {
 					return false;
 				}
@@ -979,7 +992,9 @@ public class InteractionContextManager {
 		if (changeValue > 0) {
 			InteractionEvent interactionEvent = new InteractionEvent(InteractionEvent.Kind.MANIPULATION,
 					element.getContentType(), element.getHandleIdentifier(), sourceId, changeValue);
-			processInteractionEvent(interactionEvent);
+//			processInteractionEvent(interactionEvent);
+			List<IInteractionElement> interestDelta = internalProcessInteractionEvent(interactionEvent, context, true);
+			notifyInterestDelta(interestDelta);
 		} else if (changeValue < 0) {
 			delete(element);
 			for (IInteractionContextListener listener : listeners) {
