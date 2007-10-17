@@ -20,7 +20,7 @@ import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.context.core.LegacyActivityAdaptor;
-import org.eclipse.mylyn.internal.context.core.ScalingFactors;
+import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
@@ -331,7 +331,7 @@ public class TaskActivityTimingTest extends TestCase {
 		Calendar endTime3 = Calendar.getInstance();
 		endTime3.setTimeInMillis(startTime3.getTimeInMillis() + 20 * 1000);
 
-		InteractionContext mockContext = new InteractionContext("doitest", new ScalingFactors());
+		InteractionContext mockContext = new InteractionContext("doitest", new InteractionContextScaling());
 		InteractionEvent activityEvent1 = new InteractionEvent(InteractionEvent.Kind.ATTENTION,
 				InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, "handle",
 				InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
@@ -376,7 +376,7 @@ public class TaskActivityTimingTest extends TestCase {
 		Calendar endTime3 = Calendar.getInstance();
 		endTime3.setTimeInMillis(startTime3.getTimeInMillis() + 50 * 1000);
 
-		InteractionContext mockContext = new InteractionContext("doitest", new ScalingFactors());
+		InteractionContext mockContext = new InteractionContext("doitest", new InteractionContextScaling());
 		InteractionEvent activityEvent1 = new InteractionEvent(InteractionEvent.Kind.ATTENTION,
 				InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, "handle",
 				InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
@@ -460,7 +460,7 @@ public class TaskActivityTimingTest extends TestCase {
 		endTime2.setTime(startTime2.getTime());
 		endTime2.add(Calendar.SECOND, 20);
 
-		InteractionContext mockContext = new InteractionContext("doitest", new ScalingFactors());
+		InteractionContext mockContext = new InteractionContext("doitest", new InteractionContextScaling());
 		InteractionEvent activityEvent1 = new InteractionEvent(InteractionEvent.Kind.ATTENTION,
 				InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, "handle1",
 				InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
