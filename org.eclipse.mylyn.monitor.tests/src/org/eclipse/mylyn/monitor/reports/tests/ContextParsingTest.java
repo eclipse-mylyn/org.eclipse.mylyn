@@ -93,6 +93,6 @@ public class ContextParsingTest extends TestCase {
 		InteractionContextScaling scalingFactors = new InteractionContextScaling();
 		scalingFactors.setDecay(new InteractionEventScalingFactor("decay", 0f));
 		InteractionContext context = new InteractionContext("test", scalingFactors);
-		assertEquals(0f, context.getScalingFactors().getDecay().getValue());
+		assertEquals(0f, context.getContextScaling().getDecay().getValue());
 	}
 }
