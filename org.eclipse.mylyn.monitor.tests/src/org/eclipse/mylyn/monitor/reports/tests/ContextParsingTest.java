@@ -16,8 +16,8 @@ import junit.framework.TestCase;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
-import org.eclipse.mylyn.internal.context.core.ScalingFactor;
-import org.eclipse.mylyn.internal.context.core.ScalingFactors;
+import org.eclipse.mylyn.internal.context.core.InteractionEventScalingFactor;
+import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
 import org.eclipse.mylyn.internal.monitor.usage.InteractionEventLogger;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.tests.MonitorTestsPlugin;
@@ -59,7 +59,7 @@ public class ContextParsingTest extends TestCase {
 	}
 
 	public void testHistoryParsingWithDecayReset() {
-		ScalingFactors scalingFactors = new ScalingFactors();
+		InteractionContextScaling scalingFactors = new InteractionContextScaling();
 		// scalingFactors.setDecay(new ScalingFactor("decay", .05f));
 		InteractionContext context = new InteractionContext("test", scalingFactors);
 		int numEvents = 0;
@@ -90,8 +90,8 @@ public class ContextParsingTest extends TestCase {
 	}
 
 	public void testScalingVactorSet() {
-		ScalingFactors scalingFactors = new ScalingFactors();
-		scalingFactors.setDecay(new ScalingFactor("decay", 0f));
+		InteractionContextScaling scalingFactors = new InteractionContextScaling();
+		scalingFactors.setDecay(new InteractionEventScalingFactor("decay", 0f));
 		InteractionContext context = new InteractionContext("test", scalingFactors);
 		assertEquals(0f, context.getScalingFactors().getDecay().getValue());
 	}
