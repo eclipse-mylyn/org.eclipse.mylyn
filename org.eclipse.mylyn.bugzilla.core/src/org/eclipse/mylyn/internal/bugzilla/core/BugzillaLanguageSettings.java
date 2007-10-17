@@ -20,24 +20,26 @@ import java.io.Serializable;
 
 public class BugzillaLanguageSettings implements Serializable {
 
-	private static final long serialVersionUID = 5181964115189805497L;
+	private static final long serialVersionUID = 5181964115189805498L;
 
 	private String languageName = "<unknown>";
 
 	private String login;
-	
+
+	private String login2;
+
 	private String invalid;
-	
+
 	private String password;
-	
+
 	private String checkEmail;
-	
+
 	private String midairCollision;
-	
+
 	private String commentRequired;
-	
+
 	private String loggedOut;
-	
+
 	private String processed;
 
 	public BugzillaLanguageSettings(String languageName, String checkEmail, String commentRequired, String invalid,
@@ -124,5 +126,13 @@ public class BugzillaLanguageSettings implements Serializable {
 
 	public void setProcessed(String processed) {
 		this.processed = processed;
+	}
+
+	public String getLogin2() {
+		return login2;
+	}
+
+	public void setLogin2(String login2) {
+		this.login2 = login2;
 	}
 }

@@ -1051,7 +1051,8 @@ public class BugzillaClient {
 
 						if (title.indexOf(languageSettings.getLogin()) != -1
 								|| (title.indexOf(languageSettings.getInvalid()) != -1 && title.indexOf(languageSettings.getPassword()) != -1)
-								|| title.indexOf(languageSettings.getCheckEmail()) != -1) {
+								|| title.indexOf(languageSettings.getCheckEmail()) != -1
+								|| (languageSettings.getLogin2() != null && title.indexOf(languageSettings.getLogin2()) != -1)) {
 							authenticated = false;
 							throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 									RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(), title));

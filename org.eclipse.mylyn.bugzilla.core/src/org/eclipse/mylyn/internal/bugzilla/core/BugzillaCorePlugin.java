@@ -380,8 +380,11 @@ public class BugzillaCorePlugin extends Plugin {
 
 	private static void setDefaultBugzillaLanguageSettings() {
 		bugzillaLanguageSettings.clear();
-		bugzillaLanguageSettings.put("en", new BugzillaLanguageSettings("en", "check e-mail", "comment required",
-				"invalid", "logged out", "login", "collision", "password", "processed"));
+		BugzillaLanguageSettings english = new BugzillaLanguageSettings("en", "check e-mail", "comment required",
+				"invalid", "logged out", "login", "collision", "password", "processed");
+		english.setLogin2("log in");
+
+		bugzillaLanguageSettings.put("en", english);
 
 		bugzillaLanguageSettings.put("de", new BugzillaLanguageSettings("de", "check e-mail", "Kommentar erforderlich",
 				"Ungültig", "logged out", "login", "Kollision", "password", "bearbeitet"));
