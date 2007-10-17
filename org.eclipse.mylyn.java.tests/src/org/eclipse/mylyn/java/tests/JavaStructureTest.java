@@ -21,7 +21,7 @@ import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
-import org.eclipse.mylyn.internal.context.core.ScalingFactors;
+import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
 import org.eclipse.mylyn.internal.java.ui.JavaEditingMonitor;
 import org.eclipse.mylyn.resources.tests.ResourceTestUtil;
 import org.eclipse.ui.IWorkbenchPart;
@@ -51,7 +51,7 @@ public class JavaStructureTest extends AbstractJavaContextTest {
 
 	private InteractionContext taskscape;
 
-	private ScalingFactors scaling = new ScalingFactors();
+	private InteractionContextScaling scaling = new InteractionContextScaling();
 
 	@Override
 	protected void setUp() throws Exception {

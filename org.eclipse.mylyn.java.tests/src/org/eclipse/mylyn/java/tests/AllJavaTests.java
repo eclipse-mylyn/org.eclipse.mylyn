@@ -24,7 +24,7 @@ import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
  */
 public class AllJavaTests {
 
-	public static Test suite() {
+	public static Test suite() {		
 		TestSuite suite = new TestSuite("Tests for org.eclipse.mylyn.java.tests");
 
 		// $JUnit-BEGIN$

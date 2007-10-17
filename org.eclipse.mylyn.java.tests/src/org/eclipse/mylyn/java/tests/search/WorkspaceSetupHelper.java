@@ -23,7 +23,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.tests.support.ResourceHelper;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
-import org.eclipse.mylyn.internal.context.core.ScalingFactors;
+import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
 import org.eclipse.mylyn.java.tests.TestJavaProject;
 
 public class WorkspaceSetupHelper {
@@ -54,7 +54,7 @@ public class WorkspaceSetupHelper {
 			clearDoiModel();
 			return workspaceRoot;
 		}
-		taskscape = new InteractionContext(HELPER_CONTEXT_ID, new ScalingFactors());
+		taskscape = new InteractionContext(HELPER_CONTEXT_ID, new InteractionContextScaling());
 
 		workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 
@@ -77,7 +77,7 @@ public class WorkspaceSetupHelper {
 
 	public static void clearDoiModel() throws CoreException {
 		ContextCorePlugin.getContextManager().deleteContext(HELPER_CONTEXT_ID);
-		taskscape = new InteractionContext(HELPER_CONTEXT_ID, new ScalingFactors());
+		taskscape = new InteractionContext(HELPER_CONTEXT_ID, new InteractionContextScaling());
 	}
 
 	public static InteractionContext getContext() throws CoreException, IOException, InvocationTargetException,

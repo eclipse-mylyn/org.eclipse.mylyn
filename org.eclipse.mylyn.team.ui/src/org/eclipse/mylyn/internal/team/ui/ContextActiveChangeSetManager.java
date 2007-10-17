@@ -257,7 +257,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 	 */
 	private boolean shouldRemove(IInteractionElement element) {
 		// TODO: generalize this logic?
-		return (element.getInterest().getValue() + element.getInterest().getDecayValue()) < InteractionContextManager.getScalingFactors()
+		return (element.getInterest().getValue() + element.getInterest().getDecayValue()) < InteractionContextManager.getCommonContextScaling()
 				.getInteresting();
 	}
 }

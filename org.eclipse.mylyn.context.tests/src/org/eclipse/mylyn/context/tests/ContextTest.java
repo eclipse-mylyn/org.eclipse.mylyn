@@ -11,7 +11,7 @@ package org.eclipse.mylyn.context.tests;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
-import org.eclipse.mylyn.internal.context.core.ScalingFactors;
+import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
 
 /**
  * @author Mik Kersten
@@ -20,12 +20,12 @@ public class ContextTest extends AbstractContextTest {
 
 	private InteractionContext context;
 
-	private ScalingFactors scaling;
+	private InteractionContextScaling scaling;
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		scaling = new ScalingFactors();
+		scaling = new InteractionContextScaling();
 		context = new InteractionContext("0", scaling);
 	}
 

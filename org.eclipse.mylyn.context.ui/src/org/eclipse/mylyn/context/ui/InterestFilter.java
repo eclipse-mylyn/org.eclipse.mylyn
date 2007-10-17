@@ -22,7 +22,6 @@ import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IImplicitlyIntersting;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.swt.widgets.Tree;
 
@@ -100,7 +99,8 @@ public class InterestFilter extends ViewerFilter {
 		if (element.getInterest().isPredicted()) {
 			return false;
 		} else {
-			return element.getInterest().getValue() > InteractionContextManager.getScalingFactors().getInteresting();
+			return element.getInterest().isInteresting();
+//			return element.getInterest().getValue() > InteractionContextManager.getScalingFactors().getInteresting();
 		}
 	}
 

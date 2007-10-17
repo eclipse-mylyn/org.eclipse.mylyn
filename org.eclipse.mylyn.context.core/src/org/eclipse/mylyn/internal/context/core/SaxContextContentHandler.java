@@ -50,7 +50,7 @@ public class SaxContextContentHandler extends DefaultHandler {
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		switch (state) {
 		case EXPECTING_ROOT:
-			context = new InteractionContext(contextHandleIdentifier, InteractionContextManager.getScalingFactors());
+			context = new InteractionContext(contextHandleIdentifier, InteractionContextManager.getCommonContextScaling());
 			String limitContentTo = attributes.getValue(ATTRIBUTE_CONTENT);
 			if (limitContentTo != null) {
 				context.setContentLimitedTo(limitContentTo);

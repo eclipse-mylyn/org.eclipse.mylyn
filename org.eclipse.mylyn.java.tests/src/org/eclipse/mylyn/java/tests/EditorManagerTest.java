@@ -57,12 +57,18 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 		assertNotNull(view);
 		assertTrue(ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
 				ContextUiPrefContstants.AUTO_MANAGE_EDITORS));
+		
+		ContextUiPlugin.getDefault().getPreferenceStore().setValue(
+				ContextUiPrefContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING, false);
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		ResourcesUiBridgePlugin.getEditorManager().closeAllEditors();
+		
+		ContextUiPlugin.getDefault().getPreferenceStore().setValue(
+				ContextUiPrefContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING, ContextUiPlugin.getDefault().getPreferenceStore().getDefaultBoolean(ContextUiPrefContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING));
 	}
 
 	// XXX: Put back
@@ -126,7 +132,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 
 		IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), fileA, true);
 		elementA = ContextCorePlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(fileA));
-		float selectionFactor = InteractionContextManager.getScalingFactors()
+		float selectionFactor = InteractionContextManager.getCommonContextScaling()
 				.get(InteractionEvent.Kind.SELECTION)
 				.getValue();
 		// TODO: should use selectionFactor test instead

@@ -9,7 +9,7 @@
 package org.eclipse.mylyn.context.tests;
 
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
-import org.eclipse.mylyn.internal.context.core.ScalingFactors;
+import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
 /**
@@ -19,7 +19,7 @@ public class InteractionContextTest extends AbstractContextTest {
 
 	public void testParseEventWithNullHandle() {
 		InteractionEvent event = mockSelection(null);
-		InteractionContext context = new InteractionContext("test", new ScalingFactors());
+		InteractionContext context = new InteractionContext("test", new InteractionContextScaling());
 		assertNull(context.parseEvent(event));
 	}
 

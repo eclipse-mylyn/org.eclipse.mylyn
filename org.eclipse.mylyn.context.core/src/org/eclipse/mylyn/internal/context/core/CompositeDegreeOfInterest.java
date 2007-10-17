@@ -22,7 +22,13 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
 public class CompositeDegreeOfInterest implements IDegreeOfInterest {
 
 	private Set<IDegreeOfInterest> composed = new HashSet<IDegreeOfInterest>();
-
+	
+	protected InteractionContextScaling contextScaling;
+	
+	public CompositeDegreeOfInterest(InteractionContextScaling contextScaling) {
+		this.contextScaling = contextScaling;
+	}
+	
 	public void addEvent(InteractionEvent event) {
 		for (IDegreeOfInterest info : composed) {
 			((DegreeOfInterest) info).addEvent(event);
@@ -104,7 +110,7 @@ public class CompositeDegreeOfInterest implements IDegreeOfInterest {
 	}
 
 	public boolean isLandmark() {
-		return getValue() >= InteractionContextManager.getScalingFactors().getLandmark();
+		return getValue() >= contextScaling.getLandmark();
 	}
 
 	public Set<IDegreeOfInterest> getComposedDegreesOfInterest() {

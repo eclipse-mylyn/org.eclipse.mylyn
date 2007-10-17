@@ -56,7 +56,7 @@ public class ActiveSearchNotifier extends AbstractContextTest {
 	public IInteractionElement getElement(String handle, String kind) {
 		IInteractionElement node = context.addEvent(mockSelection(handle, kind, source));
 		ContextCorePlugin.getContextManager().processInteractionEvent(
-				mockUserEvent(handle, kind, source, (1 / InteractionContextManager.getScalingFactors().getLandmark())
+				mockUserEvent(handle, kind, source, (1 / InteractionContextManager.getCommonContextScaling().getLandmark())
 						* -2), true);
 		return node;
 	}
@@ -78,7 +78,7 @@ public class ActiveSearchNotifier extends AbstractContextTest {
 
 	private InteractionEvent mockUserEvent(String handle, String kind, String origin, float scale) {
 		InteractionEvent e = new InteractionEvent(InteractionEvent.Kind.MANIPULATION, kind, handle, origin, scale
-				* InteractionContextManager.getScalingFactors().getLandmark());
+				* InteractionContextManager.getCommonContextScaling().getLandmark());
 		e.getInterestContribution();
 		return e;
 	}

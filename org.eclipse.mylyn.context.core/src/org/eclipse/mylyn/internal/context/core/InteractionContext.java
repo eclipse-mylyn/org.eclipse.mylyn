@@ -45,7 +45,7 @@ public class InteractionContext implements IInteractionContext {
 
 	private int numUserEvents = 0;
 
-	protected ScalingFactors scalingFactors;
+	protected InteractionContextScaling scalingFactors;
 
 	void parseInteractionHistory() {
 		elementMap = new ConcurrentHashMap<String, InteractionContextElement>();
@@ -56,7 +56,7 @@ public class InteractionContext implements IInteractionContext {
 		activeNode = lastEdgeNode;
 	}
 
-	public InteractionContext(String id, ScalingFactors scaling) {
+	public InteractionContext(String id, InteractionContextScaling scaling) {
 		this.handleIdentifier = id;
 		this.scalingFactors = scaling;
 		parseInteractionHistory();
@@ -261,7 +261,7 @@ public class InteractionContext implements IInteractionContext {
 		return hashCode;
 	}
 
-	public ScalingFactors getScalingFactors() {
+	public InteractionContextScaling getScalingFactors() {
 		return scalingFactors;
 	}
 

@@ -28,13 +28,17 @@ public class CompositeContextElement implements IInteractionElement {
 
 	private String handle = "<no handle>";
 
-	public CompositeContextElement(String handle, Set<InteractionContextElement> nodes) {
+	private InteractionContextScaling contextScaling;
+	
+	public CompositeContextElement(String handle, Set<InteractionContextElement> nodes, InteractionContextScaling contextScaling) {
 		this.nodes = nodes;
 		this.handle = handle;
+		this.contextScaling = contextScaling;
 	}
 
 	/**
-	 * @return the taskscape with the hightest value TODO: is this always best?
+	 * @return the context with the highest value 
+	 * TODO: is this always best?
 	 */
 	public IInteractionContext getContext() {
 		IInteractionElement highestValueNode = null;
@@ -53,7 +57,8 @@ public class CompositeContextElement implements IInteractionElement {
 		if (nodes.size() == 1) {
 			return nodes.iterator().next().getInterest();
 		} else {
-			CompositeDegreeOfInterest degreeOfInterest = new CompositeDegreeOfInterest();
+			// TODO: fix this inefficiency, but not currently used by existing code
+			CompositeDegreeOfInterest degreeOfInterest = new CompositeDegreeOfInterest(contextScaling);
 			for (IInteractionElement node : nodes) {
 				degreeOfInterest.getComposedDegreesOfInterest().add(node.getInterest());
 			}

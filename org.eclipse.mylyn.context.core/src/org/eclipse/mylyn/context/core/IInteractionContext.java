@@ -39,5 +39,4 @@ public interface IInteractionContext {
 	public abstract void updateElementHandle(IInteractionElement element, String newHandle);
 
 	public abstract List<IInteractionElement> getAllElements();
-
 }

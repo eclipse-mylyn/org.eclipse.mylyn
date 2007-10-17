@@ -13,7 +13,7 @@ import org.eclipse.mylyn.context.tests.AbstractContextTest;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
-import org.eclipse.mylyn.internal.context.core.ScalingFactors;
+import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
 import org.eclipse.mylyn.internal.ide.ui.IdeUiBridgePlugin;
 import org.eclipse.mylyn.internal.ide.ui.IdeUiUtil;
 import org.eclipse.mylyn.internal.resources.ui.ResourceInteractionMonitor;
@@ -35,7 +35,7 @@ public abstract class AbstractResourceContextTest extends AbstractContextTest {
 
 	protected InteractionContext context;
 
-	protected ScalingFactors scaling = new ScalingFactors();
+	protected InteractionContextScaling scaling = new InteractionContextScaling();
 
 	protected String taskId = this.getClass().getName();
 

@@ -32,13 +32,19 @@ public class CompositeInteractionContext implements IInteractionContext {
 
 	protected IInteractionElement activeNode = null;
 
+	private InteractionContextScaling contextScaling;
+
+	public CompositeInteractionContext(InteractionContextScaling contextScaling) {
+		this.contextScaling = contextScaling;
+	}
+	
 	public IInteractionElement addEvent(InteractionEvent event) {
 		Set<InteractionContextElement> nodes = new HashSet<InteractionContextElement>();
 		for (InteractionContext context : contexts.values()) {
 			InteractionContextElement info = (InteractionContextElement) context.parseEvent(event);
 			nodes.add(info);
 		}
-		CompositeContextElement compositeNode = new CompositeContextElement(event.getStructureHandle(), nodes);
+		CompositeContextElement compositeNode = new CompositeContextElement(event.getStructureHandle(), nodes, contextScaling);
 		return compositeNode;
 	}
 
@@ -52,7 +58,7 @@ public class CompositeInteractionContext implements IInteractionContext {
 				nodes.add(node);
 			}
 		}
-		CompositeContextElement composite = new CompositeContextElement(handle, nodes);
+		CompositeContextElement composite = new CompositeContextElement(handle, nodes, contextScaling);
 		return composite;
 	}
 

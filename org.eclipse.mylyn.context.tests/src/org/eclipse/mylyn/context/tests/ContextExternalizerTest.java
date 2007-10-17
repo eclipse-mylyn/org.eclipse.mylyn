@@ -21,7 +21,7 @@ import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextExternalizer;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.context.core.SaxContextReader;
-import org.eclipse.mylyn.internal.context.core.ScalingFactors;
+import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
 
 /**
  * @author Mik Kersten
@@ -32,13 +32,13 @@ public class ContextExternalizerTest extends AbstractContextTest {
 
 	private InteractionContext context;
 
-	private ScalingFactors scaling;
+	private InteractionContextScaling scaling;
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		scaling = new ScalingFactors();
-		context = new InteractionContext(CONTEXT_HANDLE, new ScalingFactors());
+		scaling = new InteractionContextScaling();
+		context = new InteractionContext(CONTEXT_HANDLE, new InteractionContextScaling());
 	}
 
 	@Override

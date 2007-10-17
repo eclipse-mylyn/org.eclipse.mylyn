@@ -12,7 +12,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
-import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 
@@ -35,8 +34,9 @@ public class UiUtil {
 			return null;
 		} else if (!resolveContextColor && (node.getInterest().isPropagated() || node.getInterest().isPredicted())) {
 			return null;
-		} else if (node.getInterest().getEncodedValue() <= InteractionContextManager.getScalingFactors()
-				.getInteresting()) {
+		} else if (!node.getInterest().isInteresting()) {
+//		} else if (node.getInterest().getEncodedValue() <= InteractionContextManager.getScalingFactors()
+//				.getInteresting()) {
 			return null;
 		}
 
@@ -51,7 +51,6 @@ public class UiUtil {
 					ContextUiPrefContstants.INTERSECTION_MODE)) {
 				if (isMultiple) {
 					return null;
-//					return ContextUiPlugin.getDefault().getIntersectionHighlighter().getHighlightColor();
 				} else {
 					return null;
 				}
@@ -67,13 +66,13 @@ public class UiUtil {
 		if (node == null)
 			return null;
 		if (node.getInterest().isPredicted() || node.getInterest().isPropagated()) {
-			if (node.getInterest().getValue() >= InteractionContextManager.getScalingFactors().getLandmark() / 3) {
-				return ColorMap.GRAY_DARK;
-			} else if (node.getInterest().getValue() >= 10) {
-				return ColorMap.GRAY_MEDIUM;
-			} else {
-				return ColorMap.GRAY_LIGHT;
-			}
+//			if (node.getInterest().getValue() >= InteractionContextManager.getScalingFactors().getLandmark() / 3) {
+//				return ColorMap.GRAY_DARK;
+//			} else if (node.getInterest().getValue() >= 10) {
+//				return ColorMap.GRAY_MEDIUM;
+//			} else {
+			return ColorMap.GRAY_MEDIUM;
+//			}
 		} else if (node.getInterest().isLandmark()) {
 			return ColorMap.LANDMARK;
 		} else if (node.getInterest().isInteresting()) {

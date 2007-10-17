@@ -49,7 +49,7 @@ public class DomContextReader implements IInteractionContextReader {
 			Element root = doc.getDocumentElement();
 			// readVersion = Integer.parseInt(root.getAttribute("Version"));
 			// String id = root.getAttribute("Id");
-			InteractionContext t = new InteractionContext(handle, InteractionContextManager.getScalingFactors());
+			InteractionContext t = new InteractionContext(handle, InteractionContextManager.getCommonContextScaling());
 			NodeList list = root.getChildNodes();
 			for (int i = 0; i < list.getLength(); i++) {
 				Node child = list.item(i);

@@ -6,38 +6,20 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.context.core;
+package org.eclipse.mylyn.context.tests;
+
+import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
+
+import junit.framework.TestCase;
 
 /**
  * @author Mik Kersten
  */
-public class ScalingFactor {
+public class ScalingFactorsTest extends TestCase {
 
-	private static final long serialVersionUID = 1L;
-
-	private String name = "";
-
-	private float value = 1;
-
-	public ScalingFactor(String name, float value) {
-		this.name = name;
-		this.value = value;
+	public void testLandmarkDefaults() {
+		InteractionContextScaling scalingFactors = new InteractionContextScaling();
+		assertEquals(10 * scalingFactors.getLandmark(), scalingFactors.getForcedLandmark());
 	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public float getValue() {
-		return value;
-	}
-
-	public void setValue(float value) {
-		this.value = value;
-	}
-
+	
 }

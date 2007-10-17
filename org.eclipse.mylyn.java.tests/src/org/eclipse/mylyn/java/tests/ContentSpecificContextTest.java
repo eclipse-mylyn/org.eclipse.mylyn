@@ -11,7 +11,7 @@ package org.eclipse.mylyn.java.tests;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.tests.AbstractContextTest;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
-import org.eclipse.mylyn.internal.context.core.ScalingFactors;
+import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
 import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
@@ -21,7 +21,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
 public class ContentSpecificContextTest extends AbstractContextTest {
 
 	public void testEventProcessing() {
-		InteractionContext context = new InteractionContext("global-id", new ScalingFactors());
+		InteractionContext context = new InteractionContext("global-id", new InteractionContextScaling());
 		context.setContentLimitedTo(JavaStructureBridge.CONTENT_TYPE);
 		ContextCorePlugin.getContextManager().addGlobalContext(context);
 

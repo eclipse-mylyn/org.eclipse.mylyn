@@ -20,7 +20,7 @@ import org.eclipse.mylyn.context.tests.AbstractContextTest;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
-import org.eclipse.mylyn.internal.context.core.ScalingFactors;
+import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
 import org.eclipse.mylyn.internal.java.ui.JavaEditingMonitor;
 import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
 import org.eclipse.mylyn.internal.java.ui.JavaUiBridgePlugin;
@@ -46,7 +46,7 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
 
 	protected InteractionContext context;
 
-	protected ScalingFactors scaling = new ScalingFactors();
+	protected InteractionContextScaling scaling = new InteractionContextScaling();
 
 	@Override
 	protected void setUp() throws Exception {
