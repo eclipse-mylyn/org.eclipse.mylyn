@@ -7,6 +7,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.ui;
 
+import java.util.Set;
+
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
@@ -43,9 +45,13 @@ public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 			}
 		}
 		if (element instanceof AbstractTask) {
-			AbstractRepositoryQuery query = taskList.getQueryForHandle(((AbstractTask) element).getHandleIdentifier());
-			if (query != null) {
-				return selectWorkingSet(query);
+			Set<AbstractRepositoryQuery> queries = taskList.getQueriesForHandle(((AbstractTask) element).getHandleIdentifier());
+			if (!queries.isEmpty()) {
+				for (AbstractRepositoryQuery query : queries) {
+					if (selectWorkingSet(query)) {
+						return true;
+					}
+				}
 			}
 		}
 		return true;
