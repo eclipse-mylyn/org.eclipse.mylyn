@@ -1787,7 +1787,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		GridLayout layout = new GridLayout(2, false);
 		layout.marginWidth = 5;
 		peopleComposite.setLayout(layout);
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(peopleComposite);
 
 		addAssignedTo(peopleComposite);
 		boolean haveRealName = false;
@@ -1801,7 +1800,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			Label label = createLabel(peopleComposite, reporterAttribute);
 			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
 			Text textField = createTextField(peopleComposite, reporterAttribute, SWT.FLAT | SWT.READ_ONLY);
-			GridDataFactory.fillDefaults().hint(200, SWT.DEFAULT).applyTo(textField);
+			GridDataFactory.fillDefaults().grab(true, false).applyTo(textField);
 			if (haveRealName) {
 				textField.setText(textField.getText() + " <"
 						+ taskData.getAttributeValue(RepositoryTaskAttribute.USER_REPORTER) + ">");
@@ -3573,7 +3572,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			Label label = createLabel(peopleComposite, assignedAttribute);
 			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
 			Text textField = createTextField(peopleComposite, assignedAttribute, SWT.FLAT | SWT.READ_ONLY);
-			GridDataFactory.fillDefaults().hint(200, SWT.DEFAULT).applyTo(textField);
+			GridDataFactory.fillDefaults().grab(true, false).applyTo(textField);
 			if (haveRealName) {
 				textField.setText(textField.getText() + " <"
 						+ taskData.getAttributeValue(RepositoryTaskAttribute.USER_ASSIGNED) + ">");

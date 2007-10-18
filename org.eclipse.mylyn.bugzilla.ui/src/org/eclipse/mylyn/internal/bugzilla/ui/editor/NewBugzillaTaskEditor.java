@@ -71,6 +71,7 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 		Label label = toolkit.createLabel(peopleComposite, "Assign to:");
 		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
 		Composite textFieldComposite = toolkit.createComposite(peopleComposite);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(textFieldComposite);
 		GridLayout textLayout = new GridLayout();
 		textFieldComposite.setLayout(textLayout);
 
@@ -78,7 +79,7 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 
 		Text textField = createTextField(textFieldComposite, attribute, SWT.FLAT);
 		toolkit.paintBordersFor(textFieldComposite);
-		GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).applyTo(textField);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(textField);
 		peopleSection.setClient(peopleComposite);
 
 		ContentAssistCommandAdapter adapter = applyContentAssist(textField, createContentProposalProvider(attribute));
