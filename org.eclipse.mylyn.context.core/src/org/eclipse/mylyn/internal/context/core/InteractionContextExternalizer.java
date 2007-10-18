@@ -117,18 +117,21 @@ public class InteractionContextExternalizer {
 		outputStream.closeEntry();
 	}
 
-	public InteractionContext readContextFromXML(String handleIdentifier, File file) {
-		return readContextFromXML(handleIdentifier, file, new SaxContextReader());
+	public InteractionContext readContextFromXML(String handleIdentifier, File file, InteractionContextScaling scaling) {
+		return readContextFromXML(handleIdentifier, file, new SaxContextReader(), scaling);
 	}
-
+	
 	/**
-	 * For testing
+	 * Public for testing
 	 */
-	public InteractionContext readContextFromXML(String handleIdentifier, File file, IInteractionContextReader reader) {
+	public InteractionContext readContextFromXML(String handleIdentifier, File file, IInteractionContextReader reader, InteractionContextScaling scaling) {
 		try {
 			if (!file.exists()) {
 				return null;
 			} else {
+				if (reader instanceof SaxContextReader) {
+					((SaxContextReader)reader).setContextScaling(scaling);
+				}
 				return reader.readContext(handleIdentifier, file);
 			}
 		} catch (Exception e) {

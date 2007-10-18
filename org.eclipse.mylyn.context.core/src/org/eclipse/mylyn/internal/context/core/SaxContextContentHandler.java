@@ -20,7 +20,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * @author Brock Janiczak
- * @author Mik Kersten (minor refactoring)
+ * @author Mik Kersten
  */
 public class SaxContextContentHandler extends DefaultHandler {
 
@@ -32,14 +32,17 @@ public class SaxContextContentHandler extends DefaultHandler {
 
 	private InteractionContext context;
 
+	private InteractionContextScaling contextScaling;
+	
 	private String contextHandleIdentifier;
 
 	static final String ATTRIBUTE_INTERACTION_EVENT = "InteractionEvent";
 
 	static final String ATTRIBUTE_CONTENT = "Content";
-
-	public SaxContextContentHandler(String contextHandleIdentifier) {
+	
+	public SaxContextContentHandler(String contextHandleIdentifier, InteractionContextScaling contextScaling) {
 		this.contextHandleIdentifier = contextHandleIdentifier;
+		this.contextScaling = contextScaling;
 	}
 
 	public InteractionContext getContext() {
@@ -50,7 +53,7 @@ public class SaxContextContentHandler extends DefaultHandler {
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		switch (state) {
 		case EXPECTING_ROOT:
-			context = new InteractionContext(contextHandleIdentifier, InteractionContextManager.getCommonContextScaling());
+			context = new InteractionContext(contextHandleIdentifier, contextScaling);
 			String limitContentTo = attributes.getValue(ATTRIBUTE_CONTENT);
 			if (limitContentTo != null) {
 				context.setContentLimitedTo(limitContentTo);

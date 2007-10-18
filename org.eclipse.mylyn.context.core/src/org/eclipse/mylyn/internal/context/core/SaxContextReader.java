@@ -29,6 +29,12 @@ import org.xml.sax.helpers.XMLReaderFactory;
  */
 public class SaxContextReader implements IInteractionContextReader {
 
+	private InteractionContextScaling contextScaling;
+	
+	public void setContextScaling(InteractionContextScaling contextScaling) {
+		this.contextScaling = contextScaling;
+	}
+	
 	public InteractionContext readContext(String handleIdentifier, File file) {
 		if (!file.exists())
 			return null;
@@ -53,7 +59,7 @@ public class SaxContextReader implements IInteractionContextReader {
 				return null;
 			}
 
-			SaxContextContentHandler contentHandler = new SaxContextContentHandler(handleIdentifier);
+			SaxContextContentHandler contentHandler = new SaxContextContentHandler(handleIdentifier, contextScaling);
 			XMLReader reader = XMLReaderFactory.createXMLReader();
 			reader.setContentHandler(contentHandler);
 			reader.parse(new InputSource(zipInputStream));

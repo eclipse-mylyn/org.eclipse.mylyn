@@ -125,7 +125,7 @@ public class InteractionContextManager {
 
 	private boolean activationHistorySuppressed = false;
 
-	private static InteractionContextScaling contextScaling = new InteractionContextScaling();
+	private static InteractionContextScaling commonContextScaling = new InteractionContextScaling();
 
 	public InteractionContext getActivityMetaContext() {
 		if (activityMetaContext == null) {
@@ -137,7 +137,7 @@ public class InteractionContextManager {
 	public void loadActivityMetaContext() {
 		if (ContextCorePlugin.getDefault().getContextStore() != null) {
 			File contextActivityFile = getFileForContext(CONTEXT_HISTORY_FILE_NAME);
-			activityMetaContext = externalizer.readContextFromXML(CONTEXT_HISTORY_FILE_NAME, contextActivityFile);
+			activityMetaContext = externalizer.readContextFromXML(CONTEXT_HISTORY_FILE_NAME, contextActivityFile, commonContextScaling);
 			if (activityMetaContext == null) {
 				resetActivityHistory();
 			} else if (!ContextCorePlugin.getDefault().getPluginPreferences().getBoolean(PREFERENCE_ATTENTION_MIGRATED)) {
@@ -202,11 +202,11 @@ public class InteractionContextManager {
 
 	@SuppressWarnings("deprecation")
 	public void addErrorPredictedInterest(String handle, String kind, boolean notify) {
-		if (numInterestingErrors > contextScaling.getMaxNumInterestingErrors()
+		if (numInterestingErrors > commonContextScaling.getMaxNumInterestingErrors()
 				|| activeContext.getContextMap().isEmpty())
 			return;
 		InteractionEvent errorEvent = new InteractionEvent(InteractionEvent.Kind.PROPAGATION, kind, handle,
-				SOURCE_ID_MODEL_ERROR, contextScaling.getErrorInterest());
+				SOURCE_ID_MODEL_ERROR, commonContextScaling.getErrorInterest());
 		processInteractionEvent(errorEvent, true);
 		errorElementHandles.add(handle);
 		numInterestingErrors++;
@@ -224,7 +224,7 @@ public class InteractionContextManager {
 		IInteractionElement element = activeContext.get(handle);
 		if (element != null && element.getInterest().isInteresting() && errorElementHandles.contains(handle)) {
 			InteractionEvent errorEvent = new InteractionEvent(InteractionEvent.Kind.MANIPULATION, kind, handle,
-					SOURCE_ID_MODEL_ERROR, -contextScaling.getErrorInterest());
+					SOURCE_ID_MODEL_ERROR, -commonContextScaling.getErrorInterest());
 			processInteractionEvent(errorEvent, true);
 			numInterestingErrors--;
 			errorElementHandles.remove(handle);
@@ -381,10 +381,10 @@ public class InteractionContextManager {
 		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault()
 				.getStructureBridge(node.getContentType());
 		if (bridge.canBeLandmark(node.getHandleIdentifier())) {
-			if (previousInterest >= contextScaling.getLandmark() && !node.getInterest().isLandmark()) {
+			if (previousInterest >= commonContextScaling.getLandmark() && !node.getInterest().isLandmark()) {
 				for (IInteractionContextListener listener : listeners)
 					listener.landmarkRemoved(node);
-			} else if (previousInterest < contextScaling.getLandmark() && node.getInterest().isLandmark()) {
+			} else if (previousInterest < commonContextScaling.getLandmark() && node.getInterest().isLandmark()) {
 				for (IInteractionContextListener listener : listeners)
 					listener.landmarkAdded(node);
 			}
@@ -433,7 +433,7 @@ public class InteractionContextManager {
 				previousInterest = previous.getInterest().getValue();
 			}
 			IInteractionElement parentNode = addInteractionEvent(interactionContext, propagationEvent);
-			if (kind.isUserEvent() && parentNode.getInterest().getEncodedValue() < contextScaling.getInteresting()) {
+			if (kind.isUserEvent() && parentNode.getInterest().getEncodedValue() < commonContextScaling.getInteresting()) {
 				float parentOffset = ((-1) * parentNode.getInterest().getEncodedValue()) + 1;
 				addInteractionEvent(interactionContext, new InteractionEvent(InteractionEvent.Kind.MANIPULATION,
 						parentNode.getContentType(), parentNode.getHandleIdentifier(), SOURCE_ID_DECAY_CORRECTION,
@@ -639,12 +639,16 @@ public class InteractionContextManager {
 		return loadContext(handleIdentifier, getFileForContext(handleIdentifier));
 	}
 
+	public InteractionContext loadContext(String handleIdentifier, InteractionContextScaling contextScaling) {
+		return loadContext(handleIdentifier, getFileForContext(handleIdentifier), contextScaling);
+	}
+	
 	public InteractionContext loadContext(String handleIdentifier, File file) {
 		return loadContext(handleIdentifier, file, InteractionContextManager.getCommonContextScaling());
 	}
 	
-	public InteractionContext loadContext(String handleIdentifier, File file, InteractionContextScaling contextScaling) {
-		InteractionContext loadedContext = externalizer.readContextFromXML(handleIdentifier, file);
+	private InteractionContext loadContext(String handleIdentifier, File file, InteractionContextScaling contextScaling) {
+		InteractionContext loadedContext = externalizer.readContextFromXML(handleIdentifier, file, contextScaling);
 		if (loadedContext == null) {
 			return new InteractionContext(handleIdentifier, contextScaling);
 		} else {
@@ -889,7 +893,7 @@ public class InteractionContextManager {
 	}
 
 	public static InteractionContextScaling getCommonContextScaling() {
-		return contextScaling;
+		return commonContextScaling;
 	}
 
 	public boolean isContextActive() {
@@ -1093,7 +1097,7 @@ public class InteractionContextManager {
 
 	public boolean isValidContextFile(File file) {
 		if (file.exists() && file.getName().endsWith(InteractionContextManager.CONTEXT_FILE_EXTENSION)) {
-			InteractionContext context = externalizer.readContextFromXML("temp", file);
+			InteractionContext context = externalizer.readContextFromXML("temp", file, commonContextScaling);
 			return context != null;
 		}
 		return false;
