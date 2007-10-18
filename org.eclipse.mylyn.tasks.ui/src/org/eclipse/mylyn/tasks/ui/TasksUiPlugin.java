@@ -95,7 +95,7 @@ import org.osgi.framework.BundleContext;
  */
 public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
-	public static final String LABEL_VIEW_REPOSITORIES = "Task Repositories view";
+	public static final String LABEL_VIEW_REPOSITORIES = "Task Repositories";
 
 	public static final String ID_PLUGIN = "org.eclipse.mylyn.tasks.ui";
 
