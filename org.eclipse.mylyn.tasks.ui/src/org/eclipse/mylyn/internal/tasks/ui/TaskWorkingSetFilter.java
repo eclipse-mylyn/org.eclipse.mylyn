@@ -52,6 +52,7 @@ public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 						return true;
 					}
 				}
+				return false;
 			}
 		}
 		return true;
