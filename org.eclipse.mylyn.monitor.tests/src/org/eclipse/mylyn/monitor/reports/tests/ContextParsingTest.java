@@ -16,7 +16,6 @@ import junit.framework.TestCase;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
-import org.eclipse.mylyn.internal.context.core.InteractionEventScalingFactor;
 import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
 import org.eclipse.mylyn.internal.monitor.usage.InteractionEventLogger;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
@@ -87,12 +86,5 @@ public class ContextParsingTest extends TestCase {
 				}
 			}
 		}
-	}
-
-	public void testScalingVactorSet() {
-		InteractionContextScaling scalingFactors = new InteractionContextScaling();
-		scalingFactors.setDecay(new InteractionEventScalingFactor("decay", 0f));
-		InteractionContext context = new InteractionContext("test", scalingFactors);
-		assertEquals(0f, context.getScaling().getDecay().getValue());
 	}
 }
