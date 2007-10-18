@@ -23,28 +23,30 @@ public class InteractionContextScaling {
 	private static final float DEFAULT_INTERESTING = 0f;
 
 	private static final float DEFAULT_EVENT = 1f;	
-	
-	private static final float DEFAULT_EVENT_DECAY = .017f;
 
 	private static final float DEFAULT_EVENT_EDIT = .7f;
+	
+	private static final float DEFAULT_DECAY = .017f;
 
 	private static final float DEFAULT_LANDMARK = 30f;
 	
 	private static final float DEFAULT_FORCED_LANDMARK = 7 * DEFAULT_LANDMARK;
 	
-	private static final InteractionEventScalingFactor DEFAULT_SCALING_FACTOR = new InteractionEventScalingFactor("<default>", DEFAULT_EVENT);
+//	private static final InteractionEventScalingFactor DEFAULT_SCALING_FACTOR = new InteractionEventScalingFactor("<default>", DEFAULT_EVENT);
 	
-	private Map<InteractionEvent.Kind, InteractionEventScalingFactor> interactionScalingFactors = new HashMap<InteractionEvent.Kind, InteractionEventScalingFactor>();
+	private Map<InteractionEvent.Kind, Float> interactionScalingFactors = new HashMap<InteractionEvent.Kind, Float>();
 	
-	private InteractionEventScalingFactor defaultDecay = new InteractionEventScalingFactor("decay", DEFAULT_EVENT_DECAY);
+//	private InteractionEventScalingFactor defaultDecay = new InteractionEventScalingFactor("decay", DEFAULT_EVENT_DECAY);
 
-	private InteractionEventScalingFactor defaultEdit = new InteractionEventScalingFactor("edit", DEFAULT_EVENT_EDIT);
+//	private InteractionEventScalingFactor defaultEdit = new InteractionEventScalingFactor("edit", DEFAULT_EVENT_EDIT);
 	
 	private float interesting = DEFAULT_INTERESTING;
 	
 	private float landmark = DEFAULT_LANDMARK;
 
 	private float forcedLandmark = DEFAULT_FORCED_LANDMARK;
+	
+	private float decay = DEFAULT_DECAY;
 
 	@Deprecated
 	private float errorInterest = .3f;
@@ -53,24 +55,27 @@ public class InteractionContextScaling {
 	private int maxNumInterestingErrors = 20;
 
 	public InteractionContextScaling() {
-		interactionScalingFactors.put(InteractionEvent.Kind.EDIT, defaultEdit);		
+		interactionScalingFactors.put(InteractionEvent.Kind.EDIT, DEFAULT_EVENT_EDIT);		
 	}
 
-	public InteractionEventScalingFactor get(InteractionEvent.Kind kind) {
-		InteractionEventScalingFactor factor = interactionScalingFactors.get(kind);
-		if (factor != null) {
-			return factor;
+	public float get(InteractionEvent.Kind kind) {
+		if (interactionScalingFactors.containsKey(kind)) {
+			return  interactionScalingFactors.get(kind);
 		} else {
-			return DEFAULT_SCALING_FACTOR;
+			return DEFAULT_EVENT;
 		}
 	}
-
-	public InteractionEventScalingFactor getDecay() {
-		return defaultDecay;
+	
+	public void set(InteractionEvent.Kind kind, float value) {
+		interactionScalingFactors.put(kind, value);
 	}
 
-	public void setDecay(InteractionEventScalingFactor decay) {
-		this.defaultDecay = decay;
+	public float getDecay() {
+		return decay;
+	}
+
+	public void setDecay(float decay) {
+		this.decay = decay;
 	}
 
 	public float getInteresting() {

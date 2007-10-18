@@ -291,7 +291,7 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 		assertTrue(parent.getInterest().isInteresting());
 		assertTrue(parent.getInterest().isPropagated());
 
-		for (int i = 0; i < 1 / (scaling.getDecay().getValue()) * 3; i++) {
+		for (int i = 0; i < 1 / (scaling.getDecay()) * 3; i++) {
 			ContextCorePlugin.getContextManager().processInteractionEvent(mockSelection());
 		}
 

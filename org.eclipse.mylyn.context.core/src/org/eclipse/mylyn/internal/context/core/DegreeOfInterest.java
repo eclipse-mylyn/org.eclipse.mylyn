@@ -101,9 +101,9 @@ public class DegreeOfInterest implements IDegreeOfInterest {
 
 	public float getEncodedValue() {
 		float value = 0;
-		value += selections * contextScaling.get(InteractionEvent.Kind.SELECTION).getValue();
-		value += edits * contextScaling.get(InteractionEvent.Kind.EDIT).getValue();
-		value += commands * contextScaling.get(InteractionEvent.Kind.COMMAND).getValue();
+		value += selections * contextScaling.get(InteractionEvent.Kind.SELECTION);
+		value += edits * contextScaling.get(InteractionEvent.Kind.EDIT);
+		value += commands * contextScaling.get(InteractionEvent.Kind.COMMAND);
 		value += manipulationBias;
 		value -= getDecayValue();
 		return value;
@@ -114,7 +114,7 @@ public class DegreeOfInterest implements IDegreeOfInterest {
 	 */
 	public float getDecayValue() {
 		if (context != null) {
-			return (context.getUserEventCount() - eventCountOnCreation) * contextScaling.getDecay().getValue();
+			return (context.getUserEventCount() - eventCountOnCreation) * contextScaling.getDecay();
 		} else {
 			return 0;
 		}
@@ -124,8 +124,8 @@ public class DegreeOfInterest implements IDegreeOfInterest {
 	 * Sums predicted and propagated values
 	 */
 	public boolean isPropagated() {
-		float value = selections * contextScaling.get(InteractionEvent.Kind.SELECTION).getValue() + edits
-				* contextScaling.get(InteractionEvent.Kind.EDIT).getValue();
+		float value = selections * contextScaling.get(InteractionEvent.Kind.SELECTION) + edits
+				* contextScaling.get(InteractionEvent.Kind.EDIT);
 		return value <= 0 && propagatedBias > 0;
 	}
 

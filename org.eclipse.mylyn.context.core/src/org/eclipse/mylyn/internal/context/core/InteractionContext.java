@@ -272,8 +272,4 @@ public class InteractionContext implements IInteractionContext {
 	public void setContentLimitedTo(String contentLimitedTo) {
 		this.contentLimitedTo = contentLimitedTo;
 	}
-
-	public void setContextScaling(InteractionContextScaling contextScaling) {
-		this.contextScaling = contextScaling;
-	}
 }

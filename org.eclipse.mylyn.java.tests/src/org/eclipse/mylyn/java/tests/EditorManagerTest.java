@@ -133,8 +133,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 		IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), fileA, true);
 		elementA = ContextCorePlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(fileA));
 		float selectionFactor = InteractionContextManager.getCommonContextScaling()
-				.get(InteractionEvent.Kind.SELECTION)
-				.getValue();
+				.get(InteractionEvent.Kind.SELECTION);
 		// TODO: should use selectionFactor test instead
 		assertTrue(elementA.getInterest().getValue() <= selectionFactor && elementA.getInterest().isInteresting());
 //		assertEquals(selectionFactor, elementA.getInterest().getValue());
@@ -225,7 +224,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 		bridge.open(elementA);
 
 		assertEquals(2, page.getEditors().length);
-		for (int i = 0; i < 1 / (scaling.getDecay().getValue()) * 3; i++) {
+		for (int i = 0; i < 1 / (scaling.getDecay()) * 3; i++) {
 			ContextCorePlugin.getContextManager().processInteractionEvent(mockSelection());
 		}
 		assertFalse(element.getInterest().isInteresting());

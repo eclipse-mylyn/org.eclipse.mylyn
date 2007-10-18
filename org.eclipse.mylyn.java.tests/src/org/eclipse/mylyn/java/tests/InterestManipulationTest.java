@@ -124,7 +124,7 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 		assertTrue(node.getInterest().isLandmark());
 		action.changeInterestForSelected(true);
 
-		assertEquals((2 * scaling.getLandmark()) + scaling.get(InteractionEvent.Kind.SELECTION).getValue(),
+		assertEquals((2 * scaling.getLandmark()) + scaling.get(InteractionEvent.Kind.SELECTION),
 				node.getInterest().getValue());
 
 		action.changeInterestForSelected(false);
@@ -132,9 +132,9 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 		assertTrue(node.getInterest().isInteresting());
 		action.changeInterestForSelected(false);
 		assertFalse(node.getInterest().isInteresting());
-		assertEquals(node.getInterest().getValue(), -scaling.get(InteractionEvent.Kind.SELECTION).getValue());
+		assertEquals(node.getInterest().getValue(), -scaling.get(InteractionEvent.Kind.SELECTION));
 		action.changeInterestForSelected(false);
-		assertEquals(node.getInterest().getValue(), -scaling.get(InteractionEvent.Kind.SELECTION).getValue());
+		assertEquals(node.getInterest().getValue(), -scaling.get(InteractionEvent.Kind.SELECTION));
 	}
 
 	class InterestManipulationAction extends AbstractInterestManipulationAction {

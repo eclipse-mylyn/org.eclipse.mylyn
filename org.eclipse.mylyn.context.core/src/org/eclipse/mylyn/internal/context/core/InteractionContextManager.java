@@ -640,9 +640,13 @@ public class InteractionContextManager {
 	}
 
 	public InteractionContext loadContext(String handleIdentifier, File file) {
+		return loadContext(handleIdentifier, file, InteractionContextManager.getCommonContextScaling());
+	}
+	
+	public InteractionContext loadContext(String handleIdentifier, File file, InteractionContextScaling contextScaling) {
 		InteractionContext loadedContext = externalizer.readContextFromXML(handleIdentifier, file);
 		if (loadedContext == null) {
-			return new InteractionContext(handleIdentifier, InteractionContextManager.getCommonContextScaling());
+			return new InteractionContext(handleIdentifier, contextScaling);
 		} else {
 			return loadedContext;
 		}

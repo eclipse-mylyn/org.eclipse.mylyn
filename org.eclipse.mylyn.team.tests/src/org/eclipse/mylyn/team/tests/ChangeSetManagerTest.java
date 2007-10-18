@@ -121,7 +121,7 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 		// can have .project file in there
 		assertTrue("length: " + resources.length, resources.length <= 2);
 
-		for (int i = 0; i < 1 / (scaling.getDecay().getValue()) * 3; i++) {
+		for (int i = 0; i < 1 / (scaling.getDecay()) * 3; i++) {
 			ContextCorePlugin.getContextManager().processInteractionEvent(mockSelection());
 		}
 		assertTrue("" + fileElement.getInterest().getValue(), fileElement.getInterest().getValue() < 0);

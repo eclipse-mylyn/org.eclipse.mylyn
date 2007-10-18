@@ -25,13 +25,20 @@ public class InteractionContextTest extends AbstractContextTest {
 
 	public void testSetScalingFactors(){
 		InteractionContextScaling oldScalingFactors = new InteractionContextScaling();
-		InteractionContextScaling newScalingFactors = new InteractionContextScaling();
-		newScalingFactors.get(InteractionEvent.Kind.EDIT).setValue(10f);
+//		InteractionContextScaling newScalingFactors = new InteractionContextScaling();
+//		newScalingFactors.get(InteractionEvent.Kind.EDIT).setValue(10f);
 		InteractionContext globalContext = new InteractionContext("global", oldScalingFactors);
 		assertEquals(oldScalingFactors, globalContext.getScaling());
-		globalContext.setContextScaling(newScalingFactors);
-		assertEquals(newScalingFactors, globalContext.getScaling());
-		assertEquals(10f, globalContext.getScaling().get(InteractionEvent.Kind.EDIT).getValue());
+//		globalContext.setScaling(newScalingFactors);
+		globalContext.getScaling().set(InteractionEvent.Kind.EDIT, 10f);
+//		assertEquals(newScalingFactors, globalContext.getScaling());
+		assertEquals(10f, globalContext.getScaling().get(InteractionEvent.Kind.EDIT));
 	}
 	
+	public void testScalingFactorSet() {
+		InteractionContextScaling scalingFactors = new InteractionContextScaling();
+		scalingFactors.setDecay(0f);
+		InteractionContext context = new InteractionContext("test", scalingFactors);
+		assertEquals(0f, context.getScaling().getDecay());
+	}
 }

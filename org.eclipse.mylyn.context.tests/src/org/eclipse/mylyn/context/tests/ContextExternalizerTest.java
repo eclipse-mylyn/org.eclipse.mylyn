@@ -142,7 +142,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		IInteractionRelation edge = node.getRelation("2");
 		assertNotNull(edge);
 		assertEquals(1, node.getRelations().size());
-		context.parseEvent(mockInterestContribution("3", scaling.getLandmark() + scaling.getDecay().getValue() * 3));
+		context.parseEvent(mockInterestContribution("3", scaling.getLandmark() + scaling.getDecay() * 3));
 		assertTrue("interest: " + context.get("3").getInterest().getValue(), context.get("3")
 				.getInterest()
 				.isLandmark());

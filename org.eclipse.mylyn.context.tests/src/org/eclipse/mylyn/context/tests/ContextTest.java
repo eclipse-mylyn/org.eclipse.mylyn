@@ -54,10 +54,10 @@ public class ContextTest extends AbstractContextTest {
 		IInteractionElement node = context.parseEvent(mockSelection("1"));
 		context.parseEvent(mockSelection("1"));
 		context.parseEvent(mockInterestContribution("1", 40));
-		assertEquals(42 - (scaling.getDecay().getValue() * 1), node.getInterest().getValue());
+		assertEquals(42 - (scaling.getDecay() * 1), node.getInterest().getValue());
 
 		context.parseEvent(mockInterestContribution("1", -20));
-		assertEquals(22 - (scaling.getDecay().getValue() * 1), node.getInterest().getValue());
+		assertEquals(22 - (scaling.getDecay() * 1), node.getInterest().getValue());
 	}
 
 	public void testPropagatedInterest() {
@@ -80,7 +80,7 @@ public class ContextTest extends AbstractContextTest {
 	}
 
 	public void testDecay() {
-		float decay = scaling.getDecay().getValue();
+		float decay = scaling.getDecay();
 		IInteractionElement node1 = context.parseEvent(mockSelection("1"));
 
 		context.parseEvent(mockSelection("2"));
@@ -91,7 +91,7 @@ public class ContextTest extends AbstractContextTest {
 
 	public void testLandmarkScaling() {
 		IInteractionElement node1 = context.parseEvent(mockSelection("1"));
-		for (int i = 0; i < scaling.getLandmark() - 2 + (scaling.getLandmark() * scaling.getDecay().getValue()); i++) {
+		for (int i = 0; i < scaling.getLandmark() - 2 + (scaling.getLandmark() * scaling.getDecay()); i++) {
 			context.parseEvent(mockSelection("1"));
 		}
 		assertTrue(node1.getInterest().isInteresting());
@@ -112,6 +112,6 @@ public class ContextTest extends AbstractContextTest {
 		context.parseEvent(mockSelection());
 
 		float doi = node.getInterest().getEncodedValue();
-		assertEquals(3.0f - (2 * scaling.getDecay().getValue()), doi);
+		assertEquals(3.0f - (2 * scaling.getDecay()), doi);
 	}
 }
