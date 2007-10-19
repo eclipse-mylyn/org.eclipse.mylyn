@@ -8,6 +8,7 @@
 
 package org.eclipse.mylyn.web.core;
 
+import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -30,6 +31,7 @@ import org.eclipse.core.runtime.Plugin;
  * @author Mik Kersten
  * @author Steffen Pingel
  * @author Leo Dos Santos - getFaviconForUrl
+ * @author Rob Elves
  */
 public class WebClientUtil {
 
@@ -112,11 +114,21 @@ public class WebClientUtil {
 
 	private static final int SOCKS_PORT = 1080;
 
+	private static OutputStream logOutputStream = System.err;
+
 	public static void initCommonsLoggingSettings() {
 		// TODO: move?
-		System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
+		System.setProperty("org.apache.commons.logging.Log", "org.eclipse.mylyn.web.core.WebClientLog"/*"org.apache.commons.logging.impl.SimpleLog"*/);
 		System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header", "off");
 		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "off");
+	}
+
+	public static OutputStream getLogStream() {
+		return logOutputStream;
+	}
+
+	public void setLogStream(OutputStream stream) {
+		logOutputStream = stream;
 	}
 
 	static boolean isRepositoryHttps(String repositoryUrl) {
