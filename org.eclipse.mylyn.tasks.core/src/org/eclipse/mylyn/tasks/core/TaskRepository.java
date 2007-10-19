@@ -18,6 +18,7 @@ import java.util.TimeZone;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.web.core.WebClientUtil;
@@ -39,7 +40,7 @@ import org.eclipse.mylyn.web.core.WebClientUtil;
  * @author Eugene Kuleshov
  * @since 2.0
  */
-public class TaskRepository {
+public class TaskRepository extends PlatformObject {
 
 	public static final String DEFAULT_CHARACTER_ENCODING = "UTF-8";
 
