@@ -121,6 +121,7 @@ import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.custom.VerifyKeyListener;
+import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.dnd.FileTransfer;
@@ -245,8 +246,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected static final int SUMMARY_HEIGHT = 20;
 
 	private static final String LABEL_BUTTON_SUBMIT = "Submit";
+	
+	private static final String LABEL_COPY_URL_TO_CLIPBOARD = "Copy &URL";
 
-	private static final String LABEL_COPY_TO_CLIPBOARD = "Copy to Clipboard";
+	private static final String LABEL_COPY_TO_CLIPBOARD = "Copy Contents";
 
 	private static final String LABEL_SAVE = "Save...";
 
@@ -1445,6 +1448,15 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					job.schedule();
 				}
 			};
+			
+			final Action copyURLToClipAction = new Action(LABEL_COPY_URL_TO_CLIPBOARD) {
+				public void run() {
+					RepositoryAttachment attachment = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer.getSelection()).getFirstElement());
+					Clipboard clip = new Clipboard(PlatformUI.getWorkbench().getDisplay());
+					clip.setContents(new Object[] { attachment.getUrl() }, new Transfer[] { TextTransfer.getInstance() });
+					clip.dispose();
+				}
+			};
 
 			final Action copyToClipAction = new Action(LABEL_COPY_TO_CLIPBOARD) {
 				public void run() {
@@ -1485,6 +1497,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					popupMenu.add(new Separator());
 					popupMenu.add(saveAction);
 
+					popupMenu.add(copyURLToClipAction);
 					if (att.getContentType().startsWith(CTYPE_TEXT) || att.getContentType().endsWith("xml")) {
 						popupMenu.add(copyToClipAction);
 					}
