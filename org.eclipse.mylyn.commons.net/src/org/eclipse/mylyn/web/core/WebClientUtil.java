@@ -116,19 +116,35 @@ public class WebClientUtil {
 
 	private static OutputStream logOutputStream = System.err;
 
+	private static boolean loggingEnabled = false;
+
 	public static void initCommonsLoggingSettings() {
 		// TODO: move?
 		System.setProperty("org.apache.commons.logging.Log", "org.eclipse.mylyn.web.core.WebClientLog"/*"org.apache.commons.logging.impl.SimpleLog"*/);
-		System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header", "off");
-		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "off");
+
+		if (!loggingEnabled) {
+			System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header", "off");
+			System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "off");
+		} else {
+			System.setProperty("org.apache.commons.logging.simplelog.showdatetime", "true");
+			System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire", "debug");
+			System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header", "debug");
+			System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "debug");
+			System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient.HttpConnection",
+					"trace");
+		}
 	}
 
 	public static OutputStream getLogStream() {
 		return logOutputStream;
 	}
 
-	public void setLogStream(OutputStream stream) {
+	public static void setLogStream(OutputStream stream) {
 		logOutputStream = stream;
+	}
+
+	public static void setLoggingEnabled(boolean enabled) {
+		loggingEnabled = enabled;
 	}
 
 	static boolean isRepositoryHttps(String repositoryUrl) {
@@ -195,21 +211,6 @@ public class WebClientUtil {
 
 	public static void setupHttpClient(HttpClient client, Proxy proxySettings, String repositoryUrl, String user,
 			String password) {
-
-		// Note: The following debug code requires http commons-logging and
-		// commons-logging-api jars
-		// System.setProperty("org.apache.commons.logging.Log",
-		// "org.apache.commons.logging.impl.SimpleLog");
-		// System.setProperty("org.apache.commons.logging.simplelog.showdatetime",
-		// "true");
-		// System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire",
-		// "debug");
-		// System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header",
-		// "debug");
-		// System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient",
-		// "debug");
-		// System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient.HttpConnection",
-		// "trace");
 
 		client.getParams().setBooleanParameter(HttpClientParams.ALLOW_CIRCULAR_REDIRECTS, true);
 		client.getParams().setParameter(HttpClientParams.USER_AGENT, USER_AGENT);
