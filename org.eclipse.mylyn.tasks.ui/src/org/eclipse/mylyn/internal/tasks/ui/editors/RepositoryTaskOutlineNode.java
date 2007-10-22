@@ -33,6 +33,9 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 	/** The server of the Bugzilla object that the selection was on. */
 	protected String server;
 
+	/** connector kind */
+	private String kind;
+
 	/** The label for this piece of data. */
 	private String key;
 
@@ -68,9 +71,10 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 	 * @param parent
 	 *            The parent of this node
 	 */
-	public RepositoryTaskOutlineNode(String id, String server, String key, Object data, String summary) {
+	public RepositoryTaskOutlineNode(String id, String server, String kind, String key, Object data, String summary) {
 		this.id = id;
 		this.server = server;
+		this.kind = kind;
 		this.key = key;
 		this.nodeChildren = null;
 		this.data = data;
@@ -217,11 +221,11 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 
 		String bugId = bug.getId();
 		String bugServer = bug.getRepositoryUrl();
-		RepositoryTaskOutlineNode topNode = new RepositoryTaskOutlineNode(bugId, bugServer, bug.getLabel(), bug,
-				bug.getSummary());
+		RepositoryTaskOutlineNode topNode = new RepositoryTaskOutlineNode(bugId, bugServer, bug.getRepositoryKind(),
+				bug.getLabel(), bug, bug.getSummary());
 
-		RepositoryTaskOutlineNode desc = new RepositoryTaskOutlineNode(bugId, bugServer, LABEL_DESCRIPTION,
-				bug.getDescription(), bug.getSummary());
+		RepositoryTaskOutlineNode desc = new RepositoryTaskOutlineNode(bugId, bugServer, bug.getRepositoryKind(),
+				LABEL_DESCRIPTION, bug.getDescription(), bug.getSummary());
 		desc.setIsDescription(true);
 
 		topNode.addChild(desc);
@@ -233,23 +237,24 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 			if (taskComment.getNumber() == 0)
 				continue;
 			if (comments == null) {
-				comments = new RepositoryTaskOutlineNode(bugId, bugServer, LABEL_COMMENTS, taskComment,
-						bug.getSummary());
+				comments = new RepositoryTaskOutlineNode(bugId, bugServer, bug.getRepositoryKind(), LABEL_COMMENTS,
+						taskComment, bug.getSummary());
 				comments.setIsCommentHeader(true);
 			}
-			comments.addChild(new RepositoryTaskOutlineNode(bugId, bugServer, taskComment.getCreated(), taskComment,
-					bug.getSummary()));
+			comments.addChild(new RepositoryTaskOutlineNode(bugId, bugServer, bug.getRepositoryKind(),
+					taskComment.getCreated(), taskComment, bug.getSummary()));
 		}
 		if (comments != null) {
 			topNode.addChild(comments);
 		}
 
 		if (hasNewComment) {
-			topNode.addChild(new RepositoryTaskOutlineNode(bugId, bugServer, LABEL_NEW_COMMENT, null, bug.getSummary()));
+			topNode.addChild(new RepositoryTaskOutlineNode(bugId, bugServer, bug.getRepositoryKind(),
+					LABEL_NEW_COMMENT, null, bug.getSummary()));
 		}
 
-		RepositoryTaskOutlineNode titleNode = new RepositoryTaskOutlineNode(bugId, bugServer, "BugReport Object", null,
-				bug.getSummary());
+		RepositoryTaskOutlineNode titleNode = new RepositoryTaskOutlineNode(bugId, bugServer, bug.getRepositoryKind(),
+				"BugReport Object", null, bug.getSummary());
 		titleNode.addChild(topNode);
 
 		return titleNode;
@@ -288,6 +293,10 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 
 	public String getRepositoryUrl() {
 		return server;
+	}
+
+	public String getConnectorKind() {
+		return kind;
 	}
 
 	public void setServer(String server) {

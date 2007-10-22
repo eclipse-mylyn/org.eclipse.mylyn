@@ -16,6 +16,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.TaskComment;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
@@ -29,6 +31,8 @@ import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 public class RepositoryTaskOutlinePage extends ContentOutlinePage {
 
 	private RepositoryTaskOutlineNode topTreeNode;
+
+	private TaskRepository repository;
 
 	protected final ISelectionListener selectionListener = new ISelectionListener() {
 		public void selectionChanged(IWorkbenchPart part, ISelection selection) {
@@ -62,6 +66,8 @@ public class RepositoryTaskOutlinePage extends ContentOutlinePage {
 	public RepositoryTaskOutlinePage(RepositoryTaskOutlineNode topTreeNode) {
 		super();
 		this.topTreeNode = topTreeNode;
+		repository = TasksUiPlugin.getRepositoryManager().getRepository(topTreeNode.getConnectorKind(),
+				topTreeNode.getRepositoryUrl());
 	}
 
 	@Override
@@ -82,7 +88,11 @@ public class RepositoryTaskOutlinePage extends ContentOutlinePage {
 					if (RepositoryTaskOutlineNode.LABEL_DESCRIPTION.equals(node.getContents())) {
 						return TasksUiImages.getImage(TasksUiImages.TASK_NOTES);
 					} else if (node.getComment() != null) {
-						return TasksUiImages.getImage(TasksUiImages.PERSON);
+						if (repository != null && node.getComment().getAuthor().equals(repository.getUserName())) {
+							return TasksUiImages.getImage(TasksUiImages.PERSON_ME);
+						} else {
+							return TasksUiImages.getImage(TasksUiImages.PERSON);
+						}
 					} else {
 						return TasksUiImages.getImage(TasksUiImages.TASK);
 					}
@@ -103,7 +113,18 @@ public class RepositoryTaskOutlinePage extends ContentOutlinePage {
 //					if (n == 0) {
 //						return comment.getAuthorName() + " (" + node.getName() + ")";
 //					}
-					return n + ": " + comment.getAuthorName() + " (" + node.getName() + ")";
+
+					String name = comment.getAuthorName();
+					if (name != null) {
+						String id = comment.getAuthor();
+						if (id != null) {
+							name += " <" + id + ">";
+						}
+					} else {
+						name = comment.getAuthor();
+					}
+
+					return n + ": " + name + " (" + node.getName() + ")";
 				}
 				return super.getText(element);
 			}
