@@ -246,7 +246,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected static final int SUMMARY_HEIGHT = 20;
 
 	private static final String LABEL_BUTTON_SUBMIT = "Submit";
-	
+
 	private static final String LABEL_COPY_URL_TO_CLIPBOARD = "Copy &URL";
 
 	private static final String LABEL_COPY_TO_CLIPBOARD = "Copy Contents";
@@ -862,7 +862,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected Composite createAttributeSection() {
 		attributesSection = createSection(editorComposite, getSectionLabel(SECTION_NAME.ATTRIBTUES_SECTION));
 		attributesSection.setExpanded(expandedStateAttributes || hasAttributeChanges);
-		
+
 		Composite toolbarComposite = toolkit.createComposite(attributesSection);
 		toolbarComposite.setBackground(null);
 		RowLayout rowLayout = new RowLayout();
@@ -940,10 +940,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		attributesData.horizontalSpan = 1;
 		attributesData.grabExcessVerticalSpace = false;
 		attribComp.setLayoutData(attributesData);
-		
+
 		return attribComp;
 	}
-	
+
 	/**
 	 * Creates the attribute section, which contains most of the basic attributes of the task (some of which are
 	 * editable).
@@ -1448,12 +1448,13 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					job.schedule();
 				}
 			};
-			
+
 			final Action copyURLToClipAction = new Action(LABEL_COPY_URL_TO_CLIPBOARD) {
 				public void run() {
 					RepositoryAttachment attachment = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer.getSelection()).getFirstElement());
 					Clipboard clip = new Clipboard(PlatformUI.getWorkbench().getDisplay());
-					clip.setContents(new Object[] { attachment.getUrl() }, new Transfer[] { TextTransfer.getInstance() });
+					clip.setContents(new Object[] { attachment.getUrl() },
+							new Transfer[] { TextTransfer.getInstance() });
 					clip.dispose();
 				}
 			};
@@ -1520,8 +1521,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		Button attachFileButton = toolkit.createButton(attachmentControlsComposite, "Add File...", SWT.PUSH);
 		attachFileButton.setImage(WorkbenchImages.getImage(ISharedImages.IMG_OBJ_FILE));
 
-		Button attachScreenshotButton = toolkit.createButton(attachmentControlsComposite, "Add Screenshot...",
-				SWT.PUSH);
+		Button attachScreenshotButton = toolkit.createButton(attachmentControlsComposite, "Add Screenshot...", SWT.PUSH);
 		attachScreenshotButton.setImage(TasksUiImages.getImage(TasksUiImages.IMAGE_CAPTURE));
 
 		final AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(),
@@ -3310,7 +3310,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	public void refreshEditor() {
 		try {
 			if (!getManagedForm().getForm().isDisposed()) {
-				if (this.isDirty) {
+				if (this.isDirty && !taskData.isNew()) {
 					this.doSave(new NullProgressMonitor());
 				}
 				setGlobalBusy(true);

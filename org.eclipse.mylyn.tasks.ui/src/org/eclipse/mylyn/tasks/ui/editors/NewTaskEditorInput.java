@@ -8,6 +8,10 @@
 
 package org.eclipse.mylyn.tasks.ui.editors;
 
+import java.util.Collections;
+import java.util.Set;
+
+import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
@@ -21,8 +25,10 @@ public class NewTaskEditorInput extends RepositoryTaskEditorInput {
 
 	public NewTaskEditorInput(TaskRepository repository, RepositoryTaskData taskData) {
 		super(repository, taskData.getId(), "");
-		super.setOldTaskData(taskData);
-		super.setEditableTaskData(taskData);
+		setOldTaskData(taskData);
+		Set<RepositoryTaskAttribute> edits = Collections.emptySet();
+		setOldEdits(edits);
+		setEditableTaskData(taskData);
 	}
 
 	@Override
@@ -39,4 +45,9 @@ public class NewTaskEditorInput extends RepositoryTaskEditorInput {
 		return false;
 	}
 
+	@Override
+	public void refreshInput() {
+		// does nothing
+	}
+	
 }

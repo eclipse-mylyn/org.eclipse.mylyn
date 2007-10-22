@@ -108,6 +108,9 @@ public abstract class AbstractRepositoryTaskEditorInput implements IEditorInput 
 	}
 
 	protected void setEditableTaskData(RepositoryTaskData editableTaskData) {
+//		if (editableTaskData == null) {
+//			throw new IllegalArgumentException();
+//		}
 		this.editableTaskData = editableTaskData;
 	}
 
@@ -115,9 +118,16 @@ public abstract class AbstractRepositoryTaskEditorInput implements IEditorInput 
 		this.oldTaskData = oldTaskData;
 	}
 
+	/**
+	 * @since 2.2
+	 */
+	protected void setOldEdits(Set<RepositoryTaskAttribute> oldEdits) {
+		this.oldEdits = oldEdits;
+	}
+	
 	public void refreshInput() {
-		this.editableTaskData = TasksUiPlugin.getTaskDataManager().getEditableCopy(repository.getUrl(), taskId);
-		this.oldTaskData = TasksUiPlugin.getTaskDataManager().getOldTaskData(repository.getUrl(), taskId);
-		this.oldEdits = TasksUiPlugin.getTaskDataManager().getEdits(repository.getUrl(), taskId);
+		setEditableTaskData(TasksUiPlugin.getTaskDataManager().getEditableCopy(repository.getUrl(), taskId));
+		setOldTaskData(TasksUiPlugin.getTaskDataManager().getOldTaskData(repository.getUrl(), taskId));
+		setOldEdits(TasksUiPlugin.getTaskDataManager().getEdits(repository.getUrl(), taskId));
 	}
 }
