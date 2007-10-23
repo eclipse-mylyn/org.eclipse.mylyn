@@ -13,6 +13,7 @@ import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaReportElement;
+import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractNewRepositoryTaskEditor;
 import org.eclipse.swt.SWT;
@@ -34,8 +35,6 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 
-	private static final int WRAP_LENGTH = 90;
-
 	public NewBugzillaTaskEditor(FormEditor editor) {
 		super(editor);
 	}
@@ -51,7 +50,7 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 	protected void saveTaskOffline(IProgressMonitor progressMonitor) {
 		String text = descriptionTextViewer.getTextWidget().getText();
 		if (repository.getVersion().startsWith("2.18")) {
-			text = formatTextToLineWrap(text, true);
+			text = BugzillaUiPlugin.formatTextToLineWrap(text, true);
 			descriptionTextViewer.getTextWidget().setText(text);
 		}
 		super.saveTaskOffline(progressMonitor);
@@ -93,7 +92,6 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 		toolkit.paintBordersFor(peopleComposite);
 	}
 
-
 	@Override
 	public void submitToRepository() {
 		if (summaryText.getText().equals("")) {
@@ -109,53 +107,13 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 		}
 		RepositoryTaskAttribute attribute = taskData.getAttribute(BugzillaReportElement.COMPONENT.getKeyString());
 		String componentValue = attribute.getValue();
-		if (componentValue.equals(""))
-		{
+		if (componentValue.equals("")) {
 			MessageDialog.openInformation(this.getSite().getShell(), "Submit Error",
 					"Please select a component with new reports");
 			descriptionTextViewer.getTextWidget().setFocus();
 			return;
-		}			
+		}
 		super.submitToRepository();
 	}
 
-	/**
-	 * Break text up into lines so that it is displayed properly in bugzilla
-	 */
-	private static String formatTextToLineWrap(String origText, boolean hardWrap) {
-		// BugzillaServerVersion bugzillaServerVersion =
-		// IBugzillaConstants.BugzillaServerVersion.fromString(repository
-		// .getVersion());
-		// if (bugzillaServerVersion != null &&
-		// bugzillaServerVersion.compareTo(BugzillaServerVersion.SERVER_220) >=
-		// 0) {
-		// return origText;
-		if (!hardWrap) {
-			return origText;
-		} else {
-			String[] textArray = new String[(origText.length() / WRAP_LENGTH + 1) * 2];
-			for (int i = 0; i < textArray.length; i++)
-				textArray[i] = null;
-			int j = 0;
-			while (true) {
-				int spaceIndex = origText.indexOf(" ", WRAP_LENGTH - 5);
-				if (spaceIndex == origText.length() || spaceIndex == -1) {
-					textArray[j] = origText;
-					break;
-				}
-				textArray[j] = origText.substring(0, spaceIndex);
-				origText = origText.substring(spaceIndex + 1, origText.length());
-				j++;
-			}
-
-			String newText = "";
-
-			for (int i = 0; i < textArray.length; i++) {
-				if (textArray[i] == null)
-					break;
-				newText += textArray[i] + "\n";
-			}
-			return newText;
-		}
-	}
 }

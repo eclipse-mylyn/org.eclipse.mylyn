@@ -75,6 +75,8 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 
 	public static final char PREF_DELIM_REPOSITORY = ':';
 
+	private static final int WRAP_LENGTH = 90;
+
 	public BugzillaUiPlugin() {
 		plugin = this;
 	}
@@ -298,6 +300,46 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 			prefs.setValue(IBugzillaConstants.VALUES_TARGET + PREF_DELIM_REPOSITORY + repositoryUrl
 					+ PREF_DELIM_REPOSITORY + product, queryOptionsToString(config.getTargetMilestones(product)));
 			monitor.worked(1);
+		}
+	}
+
+	/**
+	 * Break text up into lines so that it is displayed properly in bugzilla
+	 */
+	public static String formatTextToLineWrap(String origText, boolean hardWrap) {
+		// BugzillaServerVersion bugzillaServerVersion =
+		// IBugzillaConstants.BugzillaServerVersion.fromString(repository
+		// .getVersion());
+		// if (bugzillaServerVersion != null &&
+		// bugzillaServerVersion.compareTo(BugzillaServerVersion.SERVER_220) >=
+		// 0) {
+		// return origText;
+		if (!hardWrap) {
+			return origText;
+		} else {
+			String[] textArray = new String[(origText.length() / WRAP_LENGTH + 1) * 2];
+			for (int i = 0; i < textArray.length; i++)
+				textArray[i] = null;
+			int j = 0;
+			while (true) {
+				int spaceIndex = origText.indexOf(" ", WRAP_LENGTH - 5);
+				if (spaceIndex == origText.length() || spaceIndex == -1) {
+					textArray[j] = origText;
+					break;
+				}
+				textArray[j] = origText.substring(0, spaceIndex);
+				origText = origText.substring(spaceIndex + 1, origText.length());
+				j++;
+			}
+
+			String newText = "";
+
+			for (int i = 0; i < textArray.length; i++) {
+				if (textArray[i] == null)
+					break;
+				newText += textArray[i] + "\n";
+			}
+			return newText;
 		}
 	}
 }

@@ -22,6 +22,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_OPERATION;
+import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -615,7 +616,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 				// ignore
 				bugzillaVersion = "2.18";
 			}
-			if (bugzillaVersion.compareTo("3.1")<0) {
+			if (bugzillaVersion.compareTo("3.1") < 0) {
 				// old bugzilla workflow is used
 				super.addAssignedTo(peopleComposite);
 				return;
@@ -644,5 +645,19 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			}
 			addButtonField(peopleComposite, attribute, SWT.CHECK);
 		}
+	}
+
+	protected boolean attributeChanged(RepositoryTaskAttribute attribute) {
+		if (attribute == null) {
+			return false;
+		}
+
+		// Support comment wrapping for bugzilla 2.18
+		if (attribute.getId().equals(BugzillaReportElement.NEW_COMMENT.getKeyString())) {
+			if (repository.getVersion().startsWith("2.18")) {
+				attribute.setValue(BugzillaUiPlugin.formatTextToLineWrap(attribute.getValue(), true));
+			}
+		}
+		return super.attributeChanged(attribute);
 	}
 }
