@@ -105,7 +105,7 @@ public class TaskTextViewerConfiguration extends TextSourceViewerConfiguration {
 	@Override
 	public IHyperlinkPresenter getHyperlinkPresenter(final ISourceViewer sourceViewer) {
 		return new TaskTextViewerHyperlinkPresenter(JFaceResources.getColorRegistry().get(
-                JFacePreferences.HYPERLINK_COLOR), sourceViewer);
+                JFacePreferences.ACTIVE_HYPERLINK_COLOR), sourceViewer);
 	}
 
 	@Override
@@ -176,7 +176,7 @@ public class TaskTextViewerConfiguration extends TextSourceViewerConfiguration {
 
 		public RepositoryTextScanner() {
 			IToken bugToken = new Token(new TextAttribute(JFaceResources.getColorRegistry().get(
-	                JFacePreferences.HYPERLINK_COLOR)));
+	                JFacePreferences.ACTIVE_HYPERLINK_COLOR)));
 			IToken quoteToken = new Token(new TextAttribute(TaskListColorsAndFonts.COLOR_QUOTED_TEXT));
 			IRule[] rules = new IRule[16];
 			rules[0] = (new SingleLineRule("http://", " ", bugToken));
