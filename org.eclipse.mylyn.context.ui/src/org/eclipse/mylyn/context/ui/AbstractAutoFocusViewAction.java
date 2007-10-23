@@ -37,6 +37,7 @@ public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewActio
 
 	@Override
 	public void dispose() {
+		super.dispose();
 		ContextCorePlugin.getContextManager().removeListener(this);
 	}
 
