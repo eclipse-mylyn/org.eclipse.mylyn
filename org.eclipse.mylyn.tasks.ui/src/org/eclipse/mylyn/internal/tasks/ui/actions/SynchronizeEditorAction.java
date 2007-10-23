@@ -65,7 +65,7 @@ public class SynchronizeEditorAction extends BaseSelectionListenerAction {
 			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 					repositoryTask.getConnectorKind());
 			if (connector != null) {
-				TasksUiPlugin.getSynchronizationManager().synchronize(connector, repositoryTask, false,
+				TasksUiPlugin.getSynchronizationManager().synchronize(connector, repositoryTask, true,
 						new JobChangeAdapter() {
 
 							@Override
