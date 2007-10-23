@@ -1690,7 +1690,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		createReplyHyperlink(0, replyComp, taskData.getDescription());
 		descriptionSection.setTextClient(replyComp);
-//		duplicatesSection.setBackground(new Color(form.getDisplay(), 123, 22, 45));
 		addDuplicateDetection(sectionComposite);
 		toolkit.paintBordersFor(sectionComposite);
 	}

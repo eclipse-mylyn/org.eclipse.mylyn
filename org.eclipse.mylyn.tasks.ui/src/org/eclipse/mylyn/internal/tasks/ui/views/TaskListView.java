@@ -347,7 +347,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 				// gc.setForeground(categoryGradientStart);
 				// gc.setBackground(categoryGradientEnd);
-				// gc.setForeground(new Color(Display.getCurrent(), 255, 0, 0));
+				// gc.setForeground(new Clr(Display.getCurrent(), 255, 0, 0));
 
 				gc.fillGradientRectangle(0, rect.y + 1, area.width, rect.height, true);
 

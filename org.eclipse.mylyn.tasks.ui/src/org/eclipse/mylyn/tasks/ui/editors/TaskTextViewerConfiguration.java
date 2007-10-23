@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.jface.preference.JFacePreferences;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.hyperlink.DefaultHyperlinkPresenter;
@@ -37,7 +39,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
@@ -47,6 +49,10 @@ import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
  * @since 2.1
  */
 public class TaskTextViewerConfiguration extends TextSourceViewerConfiguration {
+
+	private static final String ID_CONTEXT_EDITOR_TASK = "org.eclipse.mylyn.tasks.ui.TaskEditor";
+
+	private static final String ID_CONTEXT_EDITOR_TEXT = "org.eclipse.ui.DefaultTextEditor";
 
 	private RepositoryTextScanner scanner = null;
 
@@ -76,13 +82,6 @@ public class TaskTextViewerConfiguration extends TextSourceViewerConfiguration {
 		return scanner;
 	}
 
-//	@Override
-//	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
-//		List<IHyperlinkDetector> detectors = new ArrayList<IHyperlinkDetector>();
-//		detectors.addAll(Arrays.asList(TasksUiPlugin.getDefault().getTaskHyperlinkDetectors()));
-//		return detectors.toArray(new IHyperlinkDetector[detectors.size()]);
-//	}
-
 	@Override
 	@SuppressWarnings("unchecked")
 	protected Map getHyperlinkDetectorTargets(final ISourceViewer sourceViewer) {
@@ -98,55 +97,15 @@ public class TaskTextViewerConfiguration extends TextSourceViewerConfiguration {
 		};
 
 		Map targets = new HashMap();
-		targets.put("org.eclipse.ui.DefaultTextEditor", context);
-		targets.put("org.eclipse.mylyn.tasks.ui.TaskEditor", context);
+		targets.put(ID_CONTEXT_EDITOR_TEXT, context);
+		targets.put(ID_CONTEXT_EDITOR_TASK, context);
 		return targets;
 	}
 
 	@Override
 	public IHyperlinkPresenter getHyperlinkPresenter(final ISourceViewer sourceViewer) {
-		return new DefaultHyperlinkPresenter(new RGB(0, 0, 200)) {
-			@Override
-			public void showHyperlinks(IHyperlink[] hyperlinks) {
-				super.showHyperlinks(hyperlinks);
-
-				if (hyperlinks != null && hyperlinks.length > 0 && hyperlinks[0] instanceof TaskHyperlink) {
-					TaskHyperlink hyperlink = (TaskHyperlink) hyperlinks[0];
-
-					TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
-					String repositoryUrl = hyperlink.getRepository().getUrl();
-
-					AbstractTask task = taskList.getTask(repositoryUrl, hyperlink.getTaskId());
-					if (task == null) {
-						task = taskList.getTaskByKey(repositoryUrl, hyperlink.getTaskId());
-					}
-
-					if (task != null) {
-						Control cursorControl = sourceViewer.getTextWidget().getDisplay().getCursorControl();
-						if (task.getTaskKey() == null) {
-							cursorControl.setToolTipText(task.getSummary());
-						} else {
-							cursorControl.setToolTipText(task.getTaskKey() + ": " + task.getSummary());
-						}
-					}
-				}
-			}
-
-			@Override
-			public void hideHyperlinks() {
-				Control cursorControl = sourceViewer.getTextWidget().getDisplay().getCursorControl();
-				if (cursorControl != null) {
-					cursorControl.setToolTipText(null);
-				}
-
-				super.hideHyperlinks();
-			}
-
-			public void uninstall() {
-				// ignore
-				super.uninstall();
-			}
-		};
+		return new TaskTextViewerHyperlinkPresenter(JFaceResources.getColorRegistry().get(
+                JFacePreferences.HYPERLINK_COLOR), sourceViewer);
 	}
 
 	@Override
@@ -163,10 +122,61 @@ public class TaskTextViewerConfiguration extends TextSourceViewerConfiguration {
 		}
 	}
 
+	private final class TaskTextViewerHyperlinkPresenter extends DefaultHyperlinkPresenter {
+		private final ISourceViewer sourceViewer;
+
+		private TaskTextViewerHyperlinkPresenter(Color color, ISourceViewer sourceViewer) {
+			super(color);
+			this.sourceViewer = sourceViewer;
+		}
+
+		@Override
+		public void showHyperlinks(IHyperlink[] hyperlinks) {
+			super.showHyperlinks(hyperlinks);
+
+			if (hyperlinks != null && hyperlinks.length > 0 && hyperlinks[0] instanceof TaskHyperlink) {
+				TaskHyperlink hyperlink = (TaskHyperlink) hyperlinks[0];
+
+				TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+				String repositoryUrl = hyperlink.getRepository().getUrl();
+
+				AbstractTask task = taskList.getTask(repositoryUrl, hyperlink.getTaskId());
+				if (task == null) {
+					task = taskList.getTaskByKey(repositoryUrl, hyperlink.getTaskId());
+				}
+
+				if (task != null) {
+					Control cursorControl = sourceViewer.getTextWidget().getDisplay().getCursorControl();
+					if (task.getTaskKey() == null) {
+						cursorControl.setToolTipText(task.getSummary());
+					} else {
+						cursorControl.setToolTipText(task.getTaskKey() + ": " + task.getSummary());
+					}
+				}
+			}
+		}
+
+		@Override
+		public void hideHyperlinks() {
+			Control cursorControl = sourceViewer.getTextWidget().getDisplay().getCursorControl();
+			if (cursorControl != null) {
+				cursorControl.setToolTipText(null);
+			}
+
+			super.hideHyperlinks();
+		}
+
+		public void uninstall() {
+			// ignore
+			super.uninstall();
+		}
+	}
+
 	private static class RepositoryTextScanner extends RuleBasedScanner {
 
 		public RepositoryTextScanner() {
-			IToken bugToken = new Token(new TextAttribute(TaskListColorsAndFonts.COLOR_HYPERLINK_TEXT));
+			IToken bugToken = new Token(new TextAttribute(JFaceResources.getColorRegistry().get(
+	                JFacePreferences.HYPERLINK_COLOR)));
 			IToken quoteToken = new Token(new TextAttribute(TaskListColorsAndFonts.COLOR_QUOTED_TEXT));
 			IRule[] rules = new IRule[16];
 			rules[0] = (new SingleLineRule("http://", " ", bugToken));
@@ -174,9 +184,6 @@ public class TaskTextViewerConfiguration extends TextSourceViewerConfiguration {
 			rules[2] = (new SingleLineRule("bug#", " ", bugToken));
 			rules[3] = (new SingleLineRule("bug#", "", bugToken));
 			rules[4] = (new SingleLineRule("bug #", "", bugToken));
-//			rules[2] = (new MultiLineRule("bug#", " ", bugToken));
-//			rules[3] = (new MultiLineRule("bug #", " ", bugToken));
-//			rules[4] = (new SingleLineRule("bug #", "\n", bugToken));
 			rules[5] = (new SingleLineRule("http://", "\n", bugToken));
 			rules[6] = (new SingleLineRule("https://", "\n", bugToken));
 			rules[7] = (new SingleLineRule("task#", " ", bugToken));

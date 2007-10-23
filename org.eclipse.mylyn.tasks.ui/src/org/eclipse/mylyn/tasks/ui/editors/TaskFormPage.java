@@ -636,7 +636,7 @@ public class TaskFormPage extends FormPage {
 	//
 	// Color color = (Color) colorTable.get(rgb);
 	// if (color == null) {
-	// color = new Color(display, rgb);
+	// color = new Clr(display, rgb);
 	// colorTable.put(rgb, color);
 	// }
 	//
