@@ -49,7 +49,7 @@ public class TaskListColorsAndFonts {
 
 	public static final Color COLOR_HYPERLINK_TEXT = new Color(Display.getDefault(), 0, 0, 255);
 
-	public static final Color COLOR_QUOTED_TEXT = new Color(Display.getDefault(), 128, 0, 128);
+	public static final Color COLOR_QUOTED_TEXT = new Color(Display.getDefault(), 38, 86, 145);
 	
 	public static final Color COLOR_SPELLING_ERROR = new Color(Display.getDefault(), 255, 0, 0);
 
