@@ -49,6 +49,8 @@ public class TaskListColorsAndFonts {
 
 	public static final Color COLOR_HYPERLINK_TEXT = new Color(Display.getDefault(), 0, 0, 255);
 
+	public static final Color COLOR_QUOTED_TEXT = new Color(Display.getDefault(), 128, 0, 128);
+	
 	public static final Color COLOR_SPELLING_ERROR = new Color(Display.getDefault(), 255, 0, 0);
 
 	public static final Color GRAY = new Color(Display.getDefault(), 100, 100, 100);
@@ -94,6 +96,7 @@ public class TaskListColorsAndFonts {
 		COLOR_LABEL_CAUTION.dispose();
 		COLOR_TASK_ACTIVE.dispose();
 		COLOR_HYPERLINK_WIDGET.dispose();
+		COLOR_QUOTED_TEXT.dispose();
 		COLOR_SPELLING_ERROR.dispose();
 	}
 
