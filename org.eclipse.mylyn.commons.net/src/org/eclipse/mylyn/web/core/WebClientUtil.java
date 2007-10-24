@@ -129,12 +129,13 @@ public class WebClientUtil {
 		// Update our assigned logger to use custom WebClientLog
 		LogFactory logFactory = LogFactory.getFactory();
 		logFactory.setAttribute("org.apache.commons.logging.Log", "org.eclipse.mylyn.web.core.WebClientLog");
-		logFactory.setAttribute("org.apache.commons.logging.simplelog.showdatetime", "true");
-		logFactory.setAttribute("org.apache.commons.logging.simplelog.log.httpclient.wire", "debug");
-		logFactory.setAttribute("org.apache.commons.logging.simplelog.log.httpclient.wire.header", "debug");
-		logFactory.setAttribute("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "debug");
-		logFactory.setAttribute(
-				"org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient.HttpConnection", "trace");
+		// Note: level being set by Web
+//		logFactory.setAttribute("org.apache.commons.logging.simplelog.showdatetime", "true");
+//		logFactory.setAttribute("org.apache.commons.logging.simplelog.log.httpclient.wire", "debug");
+//		logFactory.setAttribute("org.apache.commons.logging.simplelog.log.httpclient.wire.header", "debug");
+//		logFactory.setAttribute("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "debug");
+//		logFactory.setAttribute(
+//				"org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient.HttpConnection", "trace");
 		logFactory.release();
 	}
 
