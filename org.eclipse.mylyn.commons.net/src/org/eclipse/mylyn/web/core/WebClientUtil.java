@@ -23,6 +23,7 @@ import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.params.HttpClientParams;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
+import org.apache.commons.logging.LogFactory;
 import org.eclipse.core.net.proxy.IProxyData;
 import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.core.runtime.Plugin;
@@ -40,6 +41,22 @@ public class WebClientUtil {
 	 * Linux/2.6.20-16-lowlatency (i386; en)
 	 */
 	public static final String USER_AGENT;
+
+	public static final String CONTENT_ENCODING_GZIP = "gzip";
+
+	public static final int CONNNECT_TIMEOUT = 60000;
+
+	public static final int SOCKET_TIMEOUT = 60000;
+
+	private static final int HTTP_PORT = 80;
+
+	private static final int HTTPS_PORT = 443;
+
+	private static final int SOCKS_PORT = 1080;
+
+	private static OutputStream logOutputStream = System.err;
+
+	private static boolean loggingEnabled = false;
 
 	private static String firstThree(String longVersion) {
 		String parts[] = longVersion.split("\\.");
@@ -102,37 +119,23 @@ public class WebClientUtil {
 		USER_AGENT = sb.toString();
 	}
 
-	public static final String CONTENT_ENCODING_GZIP = "gzip";
-
-	public static final int CONNNECT_TIMEOUT = 60000;
-
-	public static final int SOCKET_TIMEOUT = 60000;
-
-	private static final int HTTP_PORT = 80;
-
-	private static final int HTTPS_PORT = 443;
-
-	private static final int SOCKS_PORT = 1080;
-
-	private static OutputStream logOutputStream = System.err;
-
-	private static boolean loggingEnabled = false;
-
 	public static void initCommonsLoggingSettings() {
-		// TODO: move?
-		System.setProperty("org.apache.commons.logging.Log", "org.eclipse.mylyn.web.core.WebClientLog"/*"org.apache.commons.logging.impl.SimpleLog"*/);
+		// Remove?
+		System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
+		System.setProperty("org.apache.commons.logging.simplelog.defaultlog", "off");
+		System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header", "off");
+		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "off");
 
-		if (!loggingEnabled) {
-			System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header", "off");
-			System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "off");
-		} else {
-			System.setProperty("org.apache.commons.logging.simplelog.showdatetime", "true");
-			System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire", "debug");
-			System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header", "debug");
-			System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "debug");
-			System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient.HttpConnection",
-					"trace");
-		}
+		// Update our assigned logger to use custom WebClientLog
+		LogFactory logFactory = LogFactory.getFactory();
+		logFactory.setAttribute("org.apache.commons.logging.Log", "org.eclipse.mylyn.web.core.WebClientLog");
+		logFactory.setAttribute("org.apache.commons.logging.simplelog.showdatetime", "true");
+		logFactory.setAttribute("org.apache.commons.logging.simplelog.log.httpclient.wire", "debug");
+		logFactory.setAttribute("org.apache.commons.logging.simplelog.log.httpclient.wire.header", "debug");
+		logFactory.setAttribute("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "debug");
+		logFactory.setAttribute(
+				"org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient.HttpConnection", "trace");
+		logFactory.release();
 	}
 
 	public static OutputStream getLogStream() {
@@ -390,6 +393,10 @@ public class WebClientUtil {
 			}
 		}
 		return proxy;
+	}
+
+	public static boolean isLoggingEnabled() {
+		return loggingEnabled;
 	}
 
 }

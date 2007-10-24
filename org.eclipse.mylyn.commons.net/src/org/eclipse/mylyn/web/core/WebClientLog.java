@@ -22,12 +22,14 @@ public class WebClientLog extends SimpleLog {
 
 	public WebClientLog(String name) {
 		super(name);
+		setLevel(LOG_LEVEL_ALL);
 	}
 
 	@Override
 	protected void write(StringBuffer buffer) {
-		OutputStream out = WebClientUtil.getLogStream();
-		new PrintStream(out).println(buffer);
+		if (WebClientUtil.isLoggingEnabled()) {
+			OutputStream out = WebClientUtil.getLogStream();
+			new PrintStream(out).println(buffer);
+		}
 	}
-
 }
