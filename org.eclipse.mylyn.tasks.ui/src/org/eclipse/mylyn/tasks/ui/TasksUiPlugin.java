@@ -27,6 +27,7 @@ import org.eclipse.core.resources.ISaveContext;
 import org.eclipse.core.resources.ISaveParticipant;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.dialogs.Dialog;
@@ -151,6 +152,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	private Set<AbstractDuplicateDetector> duplicateDetectors = new HashSet<AbstractDuplicateDetector>();
 
 	private ISaveParticipant saveParticipant;
+
+	private static final boolean DEBUG_HTTPCLIENT = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.mylyn.tasks.ui/debug/httpclient"));
 
 	private static final class OrderComparator implements Comparator<AbstractTaskRepositoryLinkProvider> {
 		public int compare(AbstractTaskRepositoryLinkProvider p1, AbstractTaskRepositoryLinkProvider p2) {
@@ -316,7 +319,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		// NOTE: startup order is very sensitive
 		try {
 			StatusHandler.addStatusHandler(new RepositoryAwareStatusHandler());
-			WebClientUtil.initCommonsLoggingSettings();
+			WebClientUtil.setLoggingEnabled(DEBUG_HTTPCLIENT);
 			initializeDefaultPreferences(getPreferenceStore());
 			taskListWriter = new TaskListWriter();
 
