@@ -38,6 +38,7 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.monitor.core.InteractionEvent.Kind;
 
 /**
  * This is the core class resposible for context management.
@@ -137,7 +138,8 @@ public class InteractionContextManager {
 	public void loadActivityMetaContext() {
 		if (ContextCorePlugin.getDefault().getContextStore() != null) {
 			File contextActivityFile = getFileForContext(CONTEXT_HISTORY_FILE_NAME);
-			activityMetaContext = externalizer.readContextFromXML(CONTEXT_HISTORY_FILE_NAME, contextActivityFile, commonContextScaling);
+			activityMetaContext = externalizer.readContextFromXML(CONTEXT_HISTORY_FILE_NAME, contextActivityFile,
+					commonContextScaling);
 			if (activityMetaContext == null) {
 				resetActivityHistory();
 			} else if (!ContextCorePlugin.getDefault().getPluginPreferences().getBoolean(PREFERENCE_ATTENTION_MIGRATED)) {
@@ -244,6 +246,27 @@ public class InteractionContextManager {
 		} else {
 			return null;
 		}
+	}
+
+	/**
+	 * TODO: consider using IInteractionElement instead, or making other methods consistent
+	 */
+	public IInteractionElement processInteractionEvent(Object object, Kind eventKind, String origin,
+			IInteractionContext context) {
+		AbstractContextStructureBridge structureBridge = ContextCorePlugin.getDefault().getStructureBridge(object);
+		if (structureBridge != null) {
+			String structureKind = structureBridge.getContentType();
+			String handle = structureBridge.getHandleIdentifier(object);
+			if (structureKind != null && handle != null) {
+				InteractionEvent event = new InteractionEvent(eventKind, structureKind, handle, origin);
+				List<IInteractionElement> interestDelta = internalProcessInteractionEvent(event, context, true);
+
+				notifyInterestDelta(interestDelta);
+
+				return context.get(event.getStructureHandle());
+			}
+		}
+		return null;
 	}
 
 	public IInteractionElement processInteractionEvent(InteractionEvent event) {
@@ -433,7 +456,8 @@ public class InteractionContextManager {
 				previousInterest = previous.getInterest().getValue();
 			}
 			IInteractionElement parentNode = addInteractionEvent(interactionContext, propagationEvent);
-			if (kind.isUserEvent() && parentNode.getInterest().getEncodedValue() < commonContextScaling.getInteresting()) {
+			if (kind.isUserEvent()
+					&& parentNode.getInterest().getEncodedValue() < commonContextScaling.getInteresting()) {
 				float parentOffset = ((-1) * parentNode.getInterest().getEncodedValue()) + 1;
 				addInteractionEvent(interactionContext, new InteractionEvent(InteractionEvent.Kind.MANIPULATION,
 						parentNode.getContentType(), parentNode.getHandleIdentifier(), SOURCE_ID_DECAY_CORRECTION,
@@ -642,11 +666,11 @@ public class InteractionContextManager {
 	public InteractionContext loadContext(String handleIdentifier, InteractionContextScaling contextScaling) {
 		return loadContext(handleIdentifier, getFileForContext(handleIdentifier), contextScaling);
 	}
-	
+
 	public InteractionContext loadContext(String handleIdentifier, File file) {
 		return loadContext(handleIdentifier, file, InteractionContextManager.getCommonContextScaling());
 	}
-	
+
 	private InteractionContext loadContext(String handleIdentifier, File file, InteractionContextScaling contextScaling) {
 		InteractionContext loadedContext = externalizer.readContextFromXML(handleIdentifier, file, contextScaling);
 		if (loadedContext == null) {
@@ -950,10 +974,11 @@ public class InteractionContextManager {
 		if (!isContextActive()) {
 			return false;
 		} else {
-			return manipulateInterestForElement(element, increment, forceLandmark, preserveUninteresting, sourceId, activeContext);
+			return manipulateInterestForElement(element, increment, forceLandmark, preserveUninteresting, sourceId,
+					activeContext);
 		}
 	}
-	
+
 	/**
 	 * @return true if interest was manipulated successfully
 	 */
@@ -981,7 +1006,8 @@ public class InteractionContextManager {
 					IInteractionElement childElement = getElement(childHandle);
 					if (childElement != null && childElement.getInterest().isInteresting()
 							&& !childElement.equals(element)) {
-						manipulateInterestForElement(childElement, increment, forceLandmark, preserveUninteresting, sourceId, context);
+						manipulateInterestForElement(childElement, increment, forceLandmark, preserveUninteresting,
+								sourceId, context);
 					}
 				}
 			}
@@ -990,8 +1016,7 @@ public class InteractionContextManager {
 				changeValue = 0;
 			} else {
 				if (bridge.canBeLandmark(element.getHandleIdentifier())) {
-					changeValue = (context.getScaling().getForcedLandmark())
-							- originalValue + 1;
+					changeValue = (context.getScaling().getForcedLandmark()) - originalValue + 1;
 				} else {
 					return false;
 				}
@@ -1066,7 +1091,7 @@ public class InteractionContextManager {
 	public void delete(IInteractionElement element) {
 		delete(element, getActiveContext());
 	}
-	
+
 	private void delete(IInteractionElement element, IInteractionContext context) {
 		if (element == null || context == null) {
 			return;

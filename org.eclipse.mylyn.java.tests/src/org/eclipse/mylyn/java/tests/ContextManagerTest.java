@@ -35,6 +35,7 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.core.CompositeInteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
+import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
 import org.eclipse.mylyn.internal.java.ui.InterestInducingProblemListener;
 import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
@@ -441,6 +442,34 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 
 		manager.processInteractionEvent(mockInterestContribution(m1.getHandleIdentifier(), -scaling.getLandmark()));
 		assertEquals(1, listener.numDeletions);
+	}
+
+	public void testEventProcessWithObject() throws JavaModelException {
+		InteractionContext context = new InteractionContext("global-id", new InteractionContextScaling());
+		context.setContentLimitedTo(JavaStructureBridge.CONTENT_TYPE);
+		ContextCorePlugin.getContextManager().addGlobalContext(context);
+
+		assertEquals(0, ContextCorePlugin.getContextManager().getActiveContext().getAllElements().size());
+		assertEquals(0, context.getAllElements().size());
+		ContextCorePlugin.getContextManager().processInteractionEvent(type1, InteractionEvent.Kind.SELECTION, MOCK_ORIGIN,
+				context);
+		assertEquals(6, context.getAllElements().size());
+		assertEquals(0, ContextCorePlugin.getContextManager().getActiveContext().getAllElements().size());
+		ContextCorePlugin.getContextManager().removeGlobalContext(context);
+	}
+
+	public void testEventProcessWithNonExistentObject() throws JavaModelException {
+		InteractionContext context = new InteractionContext("global-id", new InteractionContextScaling());
+		context.setContentLimitedTo(JavaStructureBridge.CONTENT_TYPE);
+		ContextCorePlugin.getContextManager().addGlobalContext(context);
+
+		assertEquals(0, ContextCorePlugin.getContextManager().getActiveContext().getAllElements().size());
+		assertEquals(0, context.getAllElements().size());
+		ContextCorePlugin.getContextManager().processInteractionEvent(new String("non existent"), InteractionEvent.Kind.SELECTION, MOCK_ORIGIN,
+				context);
+		assertEquals(0, context.getAllElements().size());
+		assertEquals(0, ContextCorePlugin.getContextManager().getActiveContext().getAllElements().size());
+		ContextCorePlugin.getContextManager().removeGlobalContext(context);
 	}
 
 }
