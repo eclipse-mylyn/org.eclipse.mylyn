@@ -839,7 +839,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		httpAuthButton.setSelection(selected);
 		if (!selected) {
 			oldHttpAuthUserId = httpAuthUserNameEditor.getStringValue();
-			oldHttpAuthPassword = (httpAuthPasswordEditor).getStringValue();
+			oldHttpAuthPassword = httpAuthPasswordEditor.getStringValue();
 			httpAuthUserNameEditor.setStringValue(null);
 			httpAuthPasswordEditor.setStringValue(null);
 		} else {
@@ -878,9 +878,9 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		proxyAuthButton.setEnabled(!systemProxyButton.getSelection());
 		if (!selected) {
 			oldProxyUsername = proxyUserNameEditor.getStringValue();
-			oldProxyPassword = (proxyPasswordEditor).getStringValue();
+			oldProxyPassword = proxyPasswordEditor.getStringValue();
 			proxyUserNameEditor.setStringValue(null);
-			(proxyPasswordEditor).setStringValue(null);
+			proxyPasswordEditor.setStringValue(null);
 		} else {
 			proxyUserNameEditor.setStringValue(oldProxyUsername);
 			proxyPasswordEditor.setStringValue(oldProxyPassword);
