@@ -141,7 +141,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	private boolean needsHttpAuth;
 
 	private boolean needsValidation;
-	
+
 	private boolean needsAdvanced;
 
 	protected Composite compositeContainer;
@@ -400,10 +400,10 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		// }
 		// }
 
-		if(needsAdvanced() || needsEncoding()){
-		
-			advancedExpComposite = toolkit.createExpandableComposite(compositeContainer, Section.COMPACT | Section.TWISTIE
-					| Section.TITLE_BAR);
+		if (needsAdvanced() || needsEncoding()) {
+
+			advancedExpComposite = toolkit.createExpandableComposite(compositeContainer, Section.COMPACT
+					| Section.TWISTIE | Section.TITLE_BAR);
 			advancedExpComposite.clientVerticalSpacing = 0;
 			GridData gridData_2 = new GridData(SWT.FILL, SWT.FILL, true, false);
 			gridData_2.horizontalIndent = -5;
@@ -417,9 +417,9 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 					getControl().getShell().pack();
 				}
 			});
-	
+
 			GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(advancedExpComposite);
-	
+
 			advancedComp = toolkit.createComposite(advancedExpComposite, SWT.NONE);
 			GridLayout gridLayout2 = new GridLayout();
 			gridLayout2.numColumns = 2;
@@ -427,25 +427,25 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			advancedComp.setLayout(gridLayout2);
 			advancedComp.setBackground(compositeContainer.getBackground());
 			advancedExpComposite.setClient(advancedComp);
-	
+
 			createAdditionalControls(advancedComp);
-	
+
 			if (needsEncoding()) {
 				Label encodingLabel = new Label(advancedComp, SWT.HORIZONTAL);
 				encodingLabel.setText("Character encoding:");
 				GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.TOP).applyTo(encodingLabel);
-	
+
 				Composite encodingContainer = new Composite(advancedComp, SWT.NONE);
 				GridLayout gridLayout = new GridLayout(2, false);
 				gridLayout.marginWidth = 0;
 				gridLayout.marginHeight = 0;
 				encodingContainer.setLayout(gridLayout);
-	
+
 				defaultEncoding = new Button(encodingContainer, SWT.RADIO);
 				defaultEncoding.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 				defaultEncoding.setText("Default (" + TaskRepository.DEFAULT_CHARACTER_ENCODING + ")");
 				defaultEncoding.setSelection(true);
-	
+
 				otherEncoding = new Button(encodingContainer, SWT.RADIO);
 				otherEncoding.setText("Other:");
 				otherEncodingCombo = new Combo(encodingContainer, SWT.READ_ONLY);
@@ -454,11 +454,11 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 						otherEncodingCombo.add(encoding);
 					}
 				}
-	
+
 				setDefaultEncoding();
-	
+
 				otherEncoding.addSelectionListener(new SelectionAdapter() {
-	
+
 					@Override
 					public void widgetSelected(SelectionEvent e) {
 						if (otherEncoding.getSelection()) {
@@ -470,7 +470,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 						}
 					}
 				});
-	
+
 				if (repository != null) {
 					try {
 						String repositoryEncoding = repository.getCharacterEncoding();
@@ -1166,15 +1166,14 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		return needsAnonymousLogin;
 	}
 
-
-	public boolean needsAdvanced(){
+	public boolean needsAdvanced() {
 		return needsAdvanced;
 	}
-	
+
 	public void setNeedsEncoding(boolean needsEncoding) {
 		this.needsEncoding = needsEncoding;
 	}
-	
+
 	public void setNeedsTimeZone(boolean needsTimeZone) {
 		this.needsTimeZone = needsTimeZone;
 	}
@@ -1182,7 +1181,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	public void setNeedsAdvanced(boolean needsAdvanced) {
 		this.needsAdvanced = needsAdvanced;
 	}
-	
+
 	public boolean needsHttpAuth() {
 		return this.needsHttpAuth;
 	}
