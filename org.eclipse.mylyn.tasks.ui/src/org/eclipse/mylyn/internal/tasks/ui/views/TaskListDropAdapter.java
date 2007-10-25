@@ -42,6 +42,7 @@ import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -165,18 +166,15 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 				TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task, (TaskCategory) currentTarget);
 			} else if (currentTarget instanceof AbstractTask) {
 				AbstractTask targetTask = (AbstractTask) currentTarget;
-				TaskCategory targetCategory = null;
+				AbstractTaskCategory targetCategory = null;
 				// TODO: just look for categories?
 				if (targetTask.getParentContainers().size() > 0) {
 					AbstractTaskContainer container = targetTask.getParentContainers().iterator().next();
-					if (container instanceof TaskCategory) {
-						targetCategory = (TaskCategory) container;
+					if (container instanceof TaskCategory || container instanceof UnfiledCategory) {
+						targetCategory = (AbstractTaskCategory) container;
 					}
 				}
-				if (targetCategory == null) {
-					TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task,
-							TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
-				} else {
+				if (targetCategory != null) {
 					TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task, targetCategory);
 				}
 			} else if (currentTarget instanceof ScheduledTaskContainer) {
