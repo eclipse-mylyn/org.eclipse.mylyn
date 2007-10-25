@@ -31,7 +31,6 @@ import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
-import org.eclipse.mylyn.internal.tasks.ui.editors.QuotedCommentRule;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTextViewer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskList;
@@ -194,7 +193,9 @@ public class TaskTextViewerConfiguration extends TextSourceViewerConfiguration {
 			rules[12] = (new SingleLineRule("http://", "", bugToken));
 			rules[13] = (new SingleLineRule("https://", "", bugToken));
 			rules[14] = (new MultiLineRule("task #", " ", bugToken));
-			rules[15] = new QuotedCommentRule(quoteToken);
+			SingleLineRule quoteRule = new SingleLineRule(">", null, quoteToken, (char) 0, true);
+			quoteRule.setColumnConstraint(0);
+			rules[15] = quoteRule;
 			setRules(rules);
 		}
 
