@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Ant UI Plug-in
 Bundle-SymbolicName: org.eclipse.mylyn.ide.ant;singleton:=true
-Bundle-Version: 2.2.0.I20071018-2100
+Bundle-Version: 2.2.0.I20071024-2200
 Bundle-Vendor: Eclipse.org
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,

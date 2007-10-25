@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.mylyn.pde_feature"
       label="Mylyn Bridge: PDE, CVS and Ant"
-      version="2.2.0.I20071018-2100"
+      version="2.2.0.I20071024-2200"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylyn">
 
@@ -267,35 +267,35 @@ litigation.
          id="org.eclipse.mylyn.pde.ui"
          download-size="0"
          install-size="0"
-         version="2.2.0.I20071018-2100"
+         version="2.2.0.I20071024-2200"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn.ide.ant"
          download-size="0"
          install-size="0"
-         version="2.2.0.I20071018-2100"
+         version="2.2.0.I20071024-2200"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn.team.cvs"
          download-size="0"
          install-size="0"
-         version="2.2.0.I20071018-2100"
+         version="2.2.0.I20071024-2200"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn.bugzilla.ide"
          download-size="0"
          install-size="0"
-         version="2.2.0.I20071018-2100"
+         version="2.2.0.I20071024-2200"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn.team.ui"
          download-size="0"
          install-size="0"
-         version="2.2.0.I20071018-2100"
+         version="2.2.0.I20071024-2200"
          unpack="false"/>
 
 </feature>
