@@ -280,6 +280,7 @@ public class TaskRepositoryManager {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	private boolean removeHttpAuthMigration(TaskRepository repository) {
 		String httpusername = repository.getProperty(TaskRepository.AUTH_HTTP_USERNAME);
 		String httppassword = repository.getProperty(TaskRepository.AUTH_HTTP_PASSWORD);

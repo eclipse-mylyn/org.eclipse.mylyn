@@ -67,6 +67,7 @@ import org.eclipse.ui.forms.widgets.Section;
  * @author Mik Kersten
  * @author Rob Elves
  * @author Steffen Pingel
+ * @author Frank Becker
  */
 public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
@@ -187,6 +188,12 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	private Hyperlink createAccountHyperlink;
 
 	private Hyperlink manageAccountHyperlink;
+
+	private Button savePasswordButton;
+
+	private Button saveHttpPasswordButton;
+
+	private Button saveProxyPasswordButton;
 
 	public AbstractRepositorySettingsPage(String title, String description, AbstractRepositoryConnectorUi repositoryUi) {
 		super(title);
@@ -354,6 +361,10 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			}
 		};
 
+		savePasswordButton = new Button(compositeContainer, SWT.CHECK);
+		GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(savePasswordButton);
+		savePasswordButton.setText("Save Password");
+
 		if (repository != null) {
 			try {
 				String repositoryLabel = repository.getProperty(IRepositoryConstants.PROPERTY_LABEL);
@@ -376,6 +387,12 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			} else {
 				setAnonymous(true);
 			}
+		}
+
+		if (repository != null) {
+			savePasswordButton.setSelection(repository.getSavePassword(TaskRepository.AUTH_DEFAULT));
+		} else {
+			savePasswordButton.setSelection(false);
 		}
 
 		// TODO: put this back if we can't get the info from all connectors
@@ -555,11 +572,20 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 					httpAuthComp);
 			((RepositoryStringFieldEditor) httpAuthPasswordEditor).getTextControl().setEchoChar('*');
 
+			saveHttpPasswordButton = new Button(httpAuthComp, SWT.CHECK);
+			GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(saveHttpPasswordButton);
+			saveHttpPasswordButton.setText("Save Http Password");
+
 			httpAuthUserNameEditor.setEnabled(httpAuthButton.getSelection(), httpAuthComp);
 			httpAuthPasswordEditor.setEnabled(httpAuthButton.getSelection(), httpAuthComp);
+			saveHttpPasswordButton.setEnabled(httpAuthButton.getSelection());
 
-			setHttpAuth(oldHttpAuthPassword != null && oldHttpAuthUserId != null && !oldHttpAuthPassword.equals("")
-					&& !oldHttpAuthUserId.equals(""));
+			if (repository != null) {
+				saveHttpPasswordButton.setSelection(repository.getSavePassword(TaskRepository.AUTH_HTTP));
+			} else {
+				saveHttpPasswordButton.setSelection(false);
+			}
+			setHttpAuth(oldHttpAuthPassword != null && oldHttpAuthUserId != null && !oldHttpAuthUserId.equals(""));
 
 			httpAuthExpComposite.setExpanded(httpAuthButton.getSelection());
 		}
@@ -777,8 +803,18 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		// httpAuthPasswordEditor).setEnabled(httpAuthButton.getSelection(),
 		// advancedComp);
 
-		setProxyAuth(oldProxyUsername != null && oldProxyPassword != null && !oldProxyUsername.equals("")
-				&& !oldProxyPassword.equals(""));
+		saveProxyPasswordButton = new Button(proxyAuthComp, SWT.CHECK);
+		GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(saveProxyPasswordButton);
+		saveProxyPasswordButton.setText("Save Proxy Password");
+		saveProxyPasswordButton.setEnabled(proxyAuthButton.getSelection());
+
+		if (repository != null) {
+			saveProxyPasswordButton.setSelection(repository.getSavePassword(TaskRepository.AUTH_PROXY));
+		} else {
+			saveProxyPasswordButton.setSelection(false);
+		}
+
+		setProxyAuth(oldProxyUsername != null && oldProxyPassword != null && !oldProxyUsername.equals(""));
 
 		setUseDefaultProxy(repository != null ? repository.isDefaultProxyEnabled() : true);
 		proxyExpComposite.setExpanded(!systemProxyButton.getSelection());
@@ -827,6 +863,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 		repositoryUserNameEditor.setEnabled(!selected, compositeContainer);
 		repositoryPasswordEditor.setEnabled(!selected, compositeContainer);
+		savePasswordButton.setEnabled(!selected);
 		if (getWizard() != null) {
 			getWizard().getContainer().updateButtons();
 		}
@@ -848,6 +885,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		}
 		httpAuthUserNameEditor.setEnabled(selected, httpAuthComp);
 		httpAuthPasswordEditor.setEnabled(selected, httpAuthComp);
+		saveHttpPasswordButton.setEnabled(selected);
 	}
 
 	public void setUseDefaultProxy(boolean selected) {
@@ -888,6 +926,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 		proxyUserNameEditor.setEnabled(selected && !systemProxyButton.getSelection(), proxyAuthComp);
 		proxyPasswordEditor.setEnabled(selected && !systemProxyButton.getSelection(), proxyAuthComp);
+		saveProxyPasswordButton.setEnabled(selected && !systemProxyButton.getSelection());
 	}
 
 	protected abstract void createAdditionalControls(Composite parent);
@@ -1042,9 +1081,8 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	private String credentialsComplete() {
 		if ((needsAnonymousLogin() && !anonymousButton.getSelection())
-				&& (repositoryUserNameEditor.getStringValue().trim().equals("") || repositoryPasswordEditor.getStringValue()
-						.trim()
-						.equals(""))) {
+				&& (repositoryUserNameEditor.getStringValue().trim().equals("") || (repositoryPasswordEditor.getStringValue()
+						.trim().equals("")))) {
 			return "Repository user name and password must not be blank";
 		}
 		return null;
@@ -1118,24 +1156,32 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		TaskRepository repository = new TaskRepository(connector.getConnectorKind(), getServerUrl(), getVersion(),
 				getCharacterEncoding(), "");
 		repository.setRepositoryLabel(getRepositoryLabel());
+		repository.setSavePassword(TaskRepository.AUTH_DEFAULT, savePasswordButton.getSelection());
 		repository.setAuthenticationCredentials(getUserName(), getPassword());
 		if (needsAnonymousLogin()) {
 			repository.setAnonymous(anonymousButton.getSelection());
 		}
+
 		// repository.setProperty(TaskRepository.AUTH_HTTP_USERNAME,
 		// getHttpAuthUserId());
 		// repository.setProperty(TaskRepository.AUTH_HTTP_PASSWORD,
 		// getHttpAuthPassword());
-		if (getHttpAuthUserId().length() > 0 && getHttpAuthPassword().length() > 0) {
-			repository.setHttpAuthenticationCredentials(getHttpAuthUserId(), getHttpAuthPassword());
+		if (needsHttpAuth()) {
+			repository.setSavePassword(TaskRepository.AUTH_HTTP, saveHttpPasswordButton.getSelection());
+			if (getHttpAuthUserId().length() > 0) {
+				repository.setHttpAuthenticationCredentials(getHttpAuthUserId(), getHttpAuthPassword());
+			}
 		}
 
-		repository.setProperty(TaskRepository.PROXY_USEDEFAULT, String.valueOf(getUseDefaultProxy()));
-		repository.setProperty(TaskRepository.PROXY_HOSTNAME, getProxyHostname());
-		repository.setProperty(TaskRepository.PROXY_PORT, getProxyPort());
+		if (needsProxy()) {
+			repository.setProperty(TaskRepository.PROXY_USEDEFAULT, String.valueOf(getUseDefaultProxy()));
+			repository.setProperty(TaskRepository.PROXY_HOSTNAME, getProxyHostname());
+			repository.setProperty(TaskRepository.PROXY_PORT, getProxyPort());
 
-		if (getProxyUserName().length() > 0 && getProxyPassword().length() > 0) {
-			repository.setProxyAuthenticationCredentials(getProxyUserName(), getProxyPassword());
+			repository.setSavePassword(TaskRepository.AUTH_PROXY, saveProxyPasswordButton.getSelection());
+			if (getProxyUserName().length() > 0) {
+				repository.setProxyAuthenticationCredentials(getProxyUserName(), getProxyPassword());
+			}
 		}
 		// repository.setProperty(TaskRepository.PROXY_USERNAME,
 		// getProxyUsername());
@@ -1227,6 +1273,35 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	/** for testing */
 	public void setPassword(String pass) {
 		repositoryPasswordEditor.setStringValue(pass);
+	}
+
+	/**
+	 * @since 2.2
+	 */
+	public Boolean getSavePassword() {
+		return savePasswordButton.getSelection();
+	}
+
+	/**
+	 * @since 2.2
+	 */
+	public Boolean getSaveProxyPassword() {
+		if (needsProxy()) {
+			return saveProxyPasswordButton.getSelection();
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * @since 2.2
+	 */
+	public Boolean getSaveHttpPassword() {
+		if (needsHttpAuth()) {
+			return saveHttpPasswordButton.getSelection();
+		} else {
+			return false;
+		}
 	}
 
 	protected void validateSettings() {

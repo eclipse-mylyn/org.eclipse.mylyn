@@ -38,21 +38,50 @@ import org.eclipse.mylyn.web.core.WebClientUtil;
  * @author Mik Kersten
  * @author Rob Elves
  * @author Eugene Kuleshov
+ * @author Steffen Pingel
  * @since 2.0
  */
 public class TaskRepository extends PlatformObject {
 
 	public static final String DEFAULT_CHARACTER_ENCODING = "UTF-8";
 
-	public static final String AUTH_PASSWORD = "org.eclipse.mylyn.tasklist.repositories.password"; //$NON-NLS-1$ 
+	private static final String USERNAME = ".username";
 
-	public static final String AUTH_USERNAME = "org.eclipse.mylyn.tasklist.repositories.username"; //$NON-NLS-1$ 
+	private static final String PASSWORD = ".password";
+
+	private static final String SAVE_PASSWORD = ".savePassword";
+
+	/**
+	 * @since 2.2
+	 */
+	public static final String AUTH_DEFAULT = "org.eclipse.mylyn.tasklist.repositories";
+
+	/**
+	 * @deprecated
+	 */
+	public static final String AUTH_PASSWORD = AUTH_DEFAULT + PASSWORD;
+
+	/**
+	 * @deprecated
+	 */
+	public static final String AUTH_USERNAME = AUTH_DEFAULT + USERNAME;
 
 	public static final String ANONYMOUS_LOGIN = "org.eclipse.mylyn.tasklist.repositories.anonymous";
 
-	public static final String AUTH_HTTP_PASSWORD = "org.eclipse.mylyn.tasklist.repositories.httpauth.password"; //$NON-NLS-1$ 
+	/**
+	 * @since 2.2
+	 */
+	public static final String AUTH_HTTP = "org.eclipse.mylyn.tasklist.repositories.httpauth";
 
-	public static final String AUTH_HTTP_USERNAME = "org.eclipse.mylyn.tasklist.repositories.httpauth.username"; //$NON-NLS-1$ 
+	/**
+	 * @deprecated
+	 */
+	public static final String AUTH_HTTP_PASSWORD = AUTH_HTTP + PASSWORD;
+
+	/**
+	 * @deprecated
+	 */
+	public static final String AUTH_HTTP_USERNAME = AUTH_HTTP + USERNAME;
 
 	public static final String NO_VERSION_SPECIFIED = "unknown";
 
@@ -68,9 +97,20 @@ public class TaskRepository extends PlatformObject {
 
 	public static final String PROXY_PORT = "org.eclipse.mylyn.tasklist.repositories.proxy.port";
 
-	public static final String PROXY_USERNAME = "org.eclipse.mylyn.tasklist.repositories.proxy.username";
+	/**
+	 * @since 2.2
+	 */
+	public static final String AUTH_PROXY = "org.eclipse.mylyn.tasklist.repositories.proxy";
 
-	public static final String PROXY_PASSWORD = "org.eclipse.mylyn.tasklist.repositories.proxy.password";
+	/**
+	 * @deprecated
+	 */
+	public static final String PROXY_USERNAME = AUTH_PROXY + USERNAME;
+
+	/**
+	 * @deprecated
+	 */
+	public static final String PROXY_PASSWORD = AUTH_PROXY + PASSWORD;
 
 	public static final String OFFLINE = "org.eclipse.mylyn.tasklist.repositories.offline";
 
@@ -96,6 +136,12 @@ public class TaskRepository extends PlatformObject {
 	}
 
 	private Map<String, String> properties = new LinkedHashMap<String, String>();
+
+	/**
+	 * Stores properties that are not persisted. Note that this map is currently cleared when flushCredentials() is
+	 * invoked.
+	 */
+	private Map<String, String> transientProperties = new HashMap<String, String>();
 
 	/*
 	 * TODO: should be externalized and added to extension point, see bug 183606 
@@ -125,8 +171,16 @@ public class TaskRepository extends PlatformObject {
 		this.properties.put(IRepositoryConstants.PROPERTY_TIMEZONE, timeZoneId);
 		// use platform proxy by default (headless will need to set this to false)
 		this.setProperty(TaskRepository.PROXY_USEDEFAULT, new Boolean(true).toString());
+
+		// for backwards compatibility to versions prior to 2.2
+		setSavePassword(AUTH_DEFAULT, true);
+		setSavePassword(AUTH_HTTP, true);
+		setSavePassword(AUTH_PROXY, true);
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public TaskRepository(String kind, String serverUrl, Map<String, String> properties) {
 		this.properties.put(IRepositoryConstants.PROPERTY_CONNECTOR_KIND, kind);
 		this.properties.put(IRepositoryConstants.PROPERTY_URL, serverUrl);
@@ -159,51 +213,45 @@ public class TaskRepository extends PlatformObject {
 	public String getUserName() {
 		// NOTE: if anonymous, user name is "" string so we won't go to keyring
 		if (!isCachedUserName) {
-			cachedUserName = getUserNameFromKeyRing();
+			cachedUserName = getUserName(AUTH_DEFAULT);
 			isCachedUserName = true;
 		}
 		return cachedUserName;
 	}
 
-	private String getUserNameFromKeyRing() {
-		return getAuthInfo(AUTH_USERNAME);
-	}
-
 	public String getPassword() {
-		return getAuthInfo(AUTH_PASSWORD);
+		return getPassword(AUTH_DEFAULT);
 	}
 
 	public String getProxyUsername() {
-		return getAuthInfo(PROXY_USERNAME);
+		return getUserName(AUTH_PROXY);
 	}
 
 	public String getProxyPassword() {
-		return getAuthInfo(PROXY_PASSWORD);
+		return getPassword(AUTH_PROXY);
 	}
 
 	public String getHttpUser() {
-		return getAuthInfo(AUTH_HTTP_USERNAME);
+		return getUserName(AUTH_HTTP);
 	}
 
 	public String getHttpPassword() {
-		return getAuthInfo(AUTH_HTTP_PASSWORD);
+		return getPassword(AUTH_HTTP);
 	}
 
 	public void setAuthenticationCredentials(String username, String password) {
-		setCredentials(username, password, AUTH_USERNAME, AUTH_PASSWORD);
-		cachedUserName = username;
-		isCachedUserName = true;
+		setCredentials(AUTH_DEFAULT, username, password);
 	}
 
 	public void setProxyAuthenticationCredentials(String username, String password) {
-		setCredentials(username, password, PROXY_USERNAME, PROXY_PASSWORD);
+		setCredentials(AUTH_PROXY, username, password);
 	}
 
 	public void setHttpAuthenticationCredentials(String username, String password) {
-		setCredentials(username, password, AUTH_HTTP_USERNAME, AUTH_HTTP_PASSWORD);
+		setCredentials(AUTH_HTTP, username, password);
 	}
 
-	private void setCredentials(String username, String password, String userProperty, String passwordProperty) {
+	private void setCredentialsInternal(String username, String password, String userProperty, String passwordProperty) {
 		Map<String, String> map = getAuthInfo();
 		if (map == null) {
 			map = new HashMap<String, String>();
@@ -220,6 +268,10 @@ public class TaskRepository extends PlatformObject {
 
 	public void flushAuthenticationCredentials() {
 		synchronized (LOCK) {
+			isCachedUserName = false;
+
+			transientProperties.clear();
+
 			try {
 				if (Platform.isRunning()) {
 					try {
@@ -231,7 +283,6 @@ public class TaskRepository extends PlatformObject {
 					Map<String, String> headlessCreds = getAuthInfo();
 					headlessCreds.clear();
 				}
-				isCachedUserName = false;
 			} catch (CoreException e) {
 				StatusHandler.fail(e, "could not flush authorization credentials", true);
 			}
@@ -466,6 +517,56 @@ public class TaskRepository extends PlatformObject {
 
 	public boolean isOffline() {
 		return getProperty(OFFLINE) != null && "true".equals(getProperty(OFFLINE));
+	}
+
+	/**
+	 * @since 2.2
+	 */
+	public void setCredentials(String authType, String username, String password) {
+		if (getSavePassword(authType)) {
+			setCredentialsInternal(username, password, authType + USERNAME, authType + PASSWORD);
+			transientProperties.remove(authType + PASSWORD);
+		} else {
+			setCredentialsInternal(username, "", authType + USERNAME, authType + PASSWORD);
+			transientProperties.put(authType + PASSWORD, password);
+		}
+
+		if (AUTH_DEFAULT.equals(authType)) {
+			this.cachedUserName = username;
+			this.isCachedUserName = true;
+		}
+	}
+
+	/**
+	 * @since 2.2
+	 */
+	public boolean getSavePassword(String authType) {
+		String value = getProperty(authType + SAVE_PASSWORD);
+		return value != null && "true".equals(value);
+	}
+
+	/**
+	 * @since 2.2
+	 */
+	public void setSavePassword(String authType, boolean savePassword) {
+		setProperty(authType + SAVE_PASSWORD, String.valueOf(savePassword));
+	}
+
+	/**
+	 * @since 2.2
+	 */
+	public String getUserName(String authType) {
+		return getAuthInfo(authType + USERNAME);
+	}
+
+	/**
+	 * @since 2.2
+	 */
+	public String getPassword(String authType) {
+		if (getSavePassword(authType)) {
+			return getAuthInfo(authType + PASSWORD);
+		}
+		return transientProperties.get(authType + PASSWORD);
 	}
 
 }

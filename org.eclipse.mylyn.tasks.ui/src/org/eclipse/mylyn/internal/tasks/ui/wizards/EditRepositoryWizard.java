@@ -56,10 +56,12 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 			repository.setUrl(newUrl);
 			repository.setVersion(abstractRepositorySettingsPage.getVersion());
 			repository.setCharacterEncoding(abstractRepositorySettingsPage.getCharacterEncoding());
+			repository.setSavePassword(TaskRepository.AUTH_DEFAULT, abstractRepositorySettingsPage.getSavePassword());
 			repository.setAuthenticationCredentials(abstractRepositorySettingsPage.getUserName(),
 					abstractRepositorySettingsPage.getPassword());
 			repository.setRepositoryLabel(abstractRepositorySettingsPage.getRepositoryLabel());
 			repository.setAnonymous(abstractRepositorySettingsPage.isAnonymousAccess());
+			repository.setSavePassword(TaskRepository.AUTH_HTTP, abstractRepositorySettingsPage.getSaveHttpPassword());
 			repository.setHttpAuthenticationCredentials(abstractRepositorySettingsPage.getHttpAuthUserId(),
 					abstractRepositorySettingsPage.getHttpAuthPassword());
 
@@ -67,6 +69,7 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 					String.valueOf(abstractRepositorySettingsPage.getUseDefaultProxy()));
 			repository.setProperty(TaskRepository.PROXY_HOSTNAME, abstractRepositorySettingsPage.getProxyHostname());
 			repository.setProperty(TaskRepository.PROXY_PORT, abstractRepositorySettingsPage.getProxyPort());
+			repository.setSavePassword(TaskRepository.AUTH_PROXY, abstractRepositorySettingsPage.getSaveProxyPassword());
 			repository.setProxyAuthenticationCredentials(abstractRepositorySettingsPage.getProxyUserName(),
 					abstractRepositorySettingsPage.getProxyPassword());
 
