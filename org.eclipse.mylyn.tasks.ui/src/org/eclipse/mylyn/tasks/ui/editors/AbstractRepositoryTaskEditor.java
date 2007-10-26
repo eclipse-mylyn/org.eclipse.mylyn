@@ -74,7 +74,7 @@ import org.eclipse.mylyn.internal.tasks.ui.PersonProposalProvider;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AbstractTaskEditorAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.AttachFileAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.AttachAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AttachScreenshotAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyAttachmentToClipboardJob;
 import org.eclipse.mylyn.internal.tasks.ui.actions.DownloadAttachmentJob;
@@ -1518,10 +1518,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		attachmentControlsComposite.setLayout(new GridLayout(2, false));
 		attachmentControlsComposite.setLayoutData(new GridData(GridData.BEGINNING));
 
-		Button attachFileButton = toolkit.createButton(attachmentControlsComposite, "Add File...", SWT.PUSH);
+		Button attachFileButton = toolkit.createButton(attachmentControlsComposite, AttachAction.LABEL, SWT.PUSH);
 		attachFileButton.setImage(WorkbenchImages.getImage(ISharedImages.IMG_OBJ_FILE));
 
-		Button attachScreenshotButton = toolkit.createButton(attachmentControlsComposite, "Add Screenshot...", SWT.PUSH);
+		Button attachScreenshotButton = toolkit.createButton(attachmentControlsComposite, AttachScreenshotAction.LABEL, SWT.PUSH);
 		attachScreenshotButton.setImage(TasksUiImages.getImage(TasksUiImages.IMAGE_CAPTURE));
 
 		final AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(),
@@ -1537,7 +1537,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			}
 
 			public void widgetSelected(SelectionEvent e) {
-				AbstractTaskEditorAction attachFileAction = new AttachFileAction();
+				AbstractTaskEditorAction attachFileAction = new AttachAction();
 				attachFileAction.selectionChanged(new StructuredSelection(task));
 				attachFileAction.setEditor(parentEditor);
 				attachFileAction.run();

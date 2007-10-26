@@ -14,18 +14,21 @@ import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.WorkbenchImages;
 
 /**
  * @author Mik Kersten
  */
-public class AttachFileAction extends AbstractTaskEditorAction {
+public class AttachAction extends AbstractTaskEditorAction {
 
-	public static final String LABEL = "Attach File...";
+	public static final String LABEL = "Attach...";
 
-	public AttachFileAction() {
+	public AttachAction() {
 		super(LABEL);
 		setId("org.eclipse.mylyn.tasks.ui.actions.add.attachment");
+		setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_OBJ_FILE));
 	}
 
 	@Override

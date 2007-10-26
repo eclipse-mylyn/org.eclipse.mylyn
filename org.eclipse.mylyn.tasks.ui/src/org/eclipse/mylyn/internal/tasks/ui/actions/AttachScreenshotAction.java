@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -26,6 +27,7 @@ public class AttachScreenshotAction extends AbstractTaskEditorAction {
 	public AttachScreenshotAction() {
 		super(LABEL);
 		setId("org.eclipse.mylyn.tasks.ui.actions.add.screenshot");
+		setImageDescriptor(TasksUiImages.IMAGE_CAPTURE);
 	}
 
 	@Override

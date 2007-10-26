@@ -30,7 +30,8 @@ import org.eclipse.mylyn.internal.tasks.ui.AddExistingTaskJob;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AbstractTaskEditorAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.AttachFileAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.AttachAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.AttachScreenshotAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenWithBrowserAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ShowInTaskListAction;
@@ -78,8 +79,10 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 
 	private CopyTaskDetailsAction copyTaskDetailsAction = new CopyTaskDetailsAction(false);
 
-	private AbstractTaskEditorAction attachFileAction = new AttachFileAction();
+	private AbstractTaskEditorAction attachAction = new AttachAction();
 
+	private AbstractTaskEditorAction attachScreenshotAction = new AttachScreenshotAction();
+	
 	private SynchronizeEditorAction synchronizeEditorAction = new SynchronizeEditorAction();
 
 	private ShowInTaskListAction showInTaskListAction = new ShowInTaskListAction();
@@ -205,15 +208,21 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 			IStructuredSelection selection = new StructuredSelection(task);
 			openWithBrowserAction.selectionChanged(selection);
 			copyTaskDetailsAction.selectionChanged(selection);
-			attachFileAction.selectionChanged(selection);
-			attachFileAction.setEditor(editor);
+			attachAction.selectionChanged(selection);
+			attachAction.setEditor(editor);
+			attachScreenshotAction.selectionChanged(selection);
+			attachScreenshotAction.setEditor(editor);
+			
 			synchronizeEditorAction.selectionChanged(new StructuredSelection(this.getEditor()));
 			showInTaskListAction.selectionChanged(selection);
 
-			manager.add(openWithBrowserAction);
-			manager.add(attachFileAction);
+			manager.add(attachAction);
+			manager.add(attachScreenshotAction);
+			manager.add(new Separator());
 			manager.add(synchronizeEditorAction);
-
+			manager.add(openWithBrowserAction);
+			
+			
 			if (task.isActive()) {
 				manager.add(new TaskDeactivateAction() {
 					@Override
