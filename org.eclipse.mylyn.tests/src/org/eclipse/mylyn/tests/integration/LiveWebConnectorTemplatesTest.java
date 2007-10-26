@@ -62,15 +62,13 @@ public class LiveWebConnectorTemplatesTest extends TestCase {
 			}
 		};
 
-		Map<String, String> params = new HashMap<String, String>();
-		Map<String, String> attributes = new HashMap<String, String>(template.getAttributes());
-		for (Map.Entry<String, String> e : attributes.entrySet()) {
-			String key = e.getKey();
-			params.put(key, e.getValue());
-		}
+		Map<String, String> params = new HashMap<String, String>(template.getAttributes());
 
 		String repositoryUrl = template.repositoryUrl;
-		TaskRepository repository = new TaskRepository(WebRepositoryConnector.REPOSITORY_TYPE, repositoryUrl, params);
+		TaskRepository repository = new TaskRepository(WebRepositoryConnector.REPOSITORY_TYPE, repositoryUrl);
+		for (Map.Entry<String, String> e : template.getAttributes().entrySet()) {
+			repository.setProperty(e.getKey(), e.getValue());
+		}
 		
 		String url = repository.getUrl();
 		// HACK: repositories that require auth
