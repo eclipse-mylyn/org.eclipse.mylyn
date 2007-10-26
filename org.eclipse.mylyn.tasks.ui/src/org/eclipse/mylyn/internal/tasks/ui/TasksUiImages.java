@@ -211,6 +211,8 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor TASKLIST_MODE = create(T_TOOL, "presentation.gif");
 
+	public static final ImageDescriptor TASK_GROUPING = create(T_TOOL, "grouping.gif");
+	
 	public static final ImageDescriptor COPY = create(T_TOOL, "copy.png");
 
 	public static final ImageDescriptor GO_UP = create(T_TOOL, "go-up.gif");

@@ -93,7 +93,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		} else if (object instanceof TaskCategory || object instanceof UnfiledCategory) {
 			compositeDescriptor.icon = TasksUiImages.CATEGORY;
 		} else if (object instanceof TaskGroup) {
-			compositeDescriptor.icon = TasksUiImages.TASKLIST_MODE;
+			compositeDescriptor.icon = TasksUiImages.TASK_GROUPING;
 		}
 
 		if (object instanceof AbstractTaskContainer) {
