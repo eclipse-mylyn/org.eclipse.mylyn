@@ -8,20 +8,19 @@
 
 package org.eclipse.mylyn.trac.tests;
 
-import java.net.Proxy;
-
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.context.tests.support.TestUtil;
 import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
 import org.eclipse.mylyn.context.tests.support.TestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
-import org.eclipse.mylyn.internal.trac.core.TracWebClient;
 import org.eclipse.mylyn.internal.trac.core.TracClientFactory;
 import org.eclipse.mylyn.internal.trac.core.TracException;
 import org.eclipse.mylyn.internal.trac.core.TracLoginException;
+import org.eclipse.mylyn.internal.trac.core.TracWebClient;
 import org.eclipse.mylyn.internal.trac.core.TracXmlRpcClient;
 import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
+import org.eclipse.mylyn.web.core.WebLocation;
 
 /**
  * @author Steffen Pingel
@@ -29,25 +28,27 @@ import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
 public class TracClientFactoryTest extends TestCase {
 
 	public void testCreateClient() throws Exception {
-		ITracClient client = TracClientFactory.createClient(TracTestConstants.TEST_TRAC_010_URL, Version.TRAC_0_9,
-				"user", "password", Proxy.NO_PROXY);
-		assertTrue(client instanceof TracWebClient);
-		client = TracClientFactory.createClient(TracTestConstants.TEST_TRAC_010_SSL_URL, Version.TRAC_0_9, "user",
-				"password", Proxy.NO_PROXY);
+		WebLocation location = new WebLocation(TracTestConstants.TEST_TRAC_010_URL, "user", "password");
+		ITracClient client = TracClientFactory.createClient(location, Version.TRAC_0_9);
 		assertTrue(client instanceof TracWebClient);
 
-		client = TracClientFactory.createClient(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC, "user",
-				"password", Proxy.NO_PROXY);
+		location = new WebLocation(TracTestConstants.TEST_TRAC_010_SSL_URL, "user", "password");
+		client = TracClientFactory.createClient(location, Version.TRAC_0_9);
+		assertTrue(client instanceof TracWebClient);
+
+		location = new WebLocation(TracTestConstants.TEST_TRAC_010_URL, "user", "password");
+		client = TracClientFactory.createClient(location, Version.XML_RPC);
 		assertTrue(client instanceof TracXmlRpcClient);
-		client = TracClientFactory.createClient(TracTestConstants.TEST_TRAC_010_SSL_URL, Version.XML_RPC, "user",
-				"password", Proxy.NO_PROXY);
+
+		location = new WebLocation(TracTestConstants.TEST_TRAC_010_SSL_URL, "user", "password");
+		client = TracClientFactory.createClient(location, Version.XML_RPC);
 		assertTrue(client instanceof TracXmlRpcClient);
 	}
 
 	public void testCreateClientNull() throws Exception {
 		try {
-			TracClientFactory.createClient(TracTestConstants.TEST_TRAC_010_URL, null, "user", "password",
-					Proxy.NO_PROXY);
+			WebLocation location = new WebLocation(TracTestConstants.TEST_TRAC_010_URL, "user", "password");
+			TracClientFactory.createClient(location, null);
 			fail("Expected Exception");
 		} catch (Exception e) {
 		}
@@ -67,24 +68,28 @@ public class TracClientFactoryTest extends TestCase {
 
 	protected void probeClient(String url, boolean xmlrpcInstalled) throws Exception {
 		Credentials credentials = TestUtil.readCredentials(PrivilegeLevel.USER);
-		Version version = TracClientFactory.probeClient(url, credentials.username, credentials.password, Proxy.NO_PROXY);
+		WebLocation location = new WebLocation(url, credentials.username, credentials.password);
+		Version version = TracClientFactory.probeClient(location);
 		if (xmlrpcInstalled) {
 			assertEquals(Version.XML_RPC, version);
 		} else {
 			assertEquals(Version.TRAC_0_9, version);
 		}
 
-		version = TracClientFactory.probeClient(url, "", "", Proxy.NO_PROXY);
+		location = new WebLocation(url, "", "");
+		version = TracClientFactory.probeClient(location);
 		assertEquals(Version.TRAC_0_9, version);
 
 		try {
-			version = TracClientFactory.probeClient(url, "invaliduser", "password", Proxy.NO_PROXY);
+			location = new WebLocation(url, "invaliduser", "password");
+			version = TracClientFactory.probeClient(location);
 			fail("Expected TracLoginException, got " + version);
 		} catch (TracLoginException e) {
 		}
 
 		try {
-			version = TracClientFactory.probeClient(url + "/nonexistant", "", "", Proxy.NO_PROXY);
+			location = new WebLocation(url + "/nonexistant", "", "");
+			version = TracClientFactory.probeClient(location);
 			fail("Expected TracException, got " + version);
 		} catch (TracException e) {
 		}

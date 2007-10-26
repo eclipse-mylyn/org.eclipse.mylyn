@@ -43,6 +43,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.QueryHitCollector;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.ui.TaskFactory;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -68,6 +69,8 @@ public class TracRepositoryConnectorTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 
+		TracCorePlugin.getDefault().getConnector().setTaskRepositoryLocationFactory(new TaskRepositoryLocationFactory());
+		
 		manager = TasksUiPlugin.getRepositoryManager();
 		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
@@ -164,13 +167,17 @@ public class TracRepositoryConnectorTest extends TestCase {
 		EditRepositoryWizard wizard = new EditRepositoryWizard(repository);
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		WizardDialog dialog = new WizardDialog(shell, wizard);
-		dialog.create();
+		try {
+			dialog.create();
 
-		((TracRepositorySettingsPage) wizard.getSettingsPage()).setTracVersion(Version.XML_RPC);
-		assertTrue(wizard.performFinish());
+			((TracRepositorySettingsPage) wizard.getSettingsPage()).setTracVersion(Version.XML_RPC);
+			assertTrue(wizard.performFinish());
 
-		client = connector.getClientManager().getRepository(repository);
-		assertEquals(Version.XML_RPC, client.getVersion());
+			client = connector.getClientManager().getRepository(repository);
+			assertEquals(Version.XML_RPC, client.getVersion());
+		} finally {
+			dialog.close();
+		}
 	}
 
 	public void testPerformQueryXmlRpc011() {

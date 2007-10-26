@@ -40,7 +40,7 @@ public class TracWebClientTest extends AbstractTracClientRepositoryTest {
 	public void testValidateAnyPage() throws Exception {
 		connect("http://mylyn.eclipse.org/");
 		try {
-			repository.validate();
+			repository.validate(callback);
 			fail("Expected TracException");
 		} catch (TracException e) {
 		}
@@ -48,10 +48,10 @@ public class TracWebClientTest extends AbstractTracClientRepositoryTest {
 
 	public void testValidateAnonymousLogin() throws Exception {
 		connect(TracTestConstants.TEST_TRAC_010_URL, "", "");
-		repository.validate();
+		repository.validate(callback);
 
 		connect(TracTestConstants.TEST_TRAC_096_URL, "", "");
-		repository.validate();
+		repository.validate(callback);
 	}
 
 	public void testUpdateAttributesAnonymous096() throws Exception {

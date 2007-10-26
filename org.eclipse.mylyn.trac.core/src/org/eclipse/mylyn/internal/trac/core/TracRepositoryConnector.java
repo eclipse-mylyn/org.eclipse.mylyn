@@ -36,6 +36,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 
 /**
  * @author Steffen Pingel
@@ -50,6 +51,8 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	private TracAttachmentHandler attachmentHandler = new TracAttachmentHandler(this);
 
+	private TaskRepositoryLocationFactory taskRepositoryLocationFactory = new TaskRepositoryLocationFactory();
+	
 	public TracRepositoryConnector() {
 		TracCorePlugin.getDefault().setConnector(this);
 	}
@@ -283,7 +286,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			if (TracCorePlugin.getDefault().getRepostioryAttributeCachePath() != null) {
 				cacheFile = TracCorePlugin.getDefault().getRepostioryAttributeCachePath().toFile();
 			}
-			clientManager = new TracClientManager(cacheFile);
+			clientManager = new TracClientManager(cacheFile, taskRepositoryLocationFactory);
 		}
 		return clientManager;
 	}
@@ -417,4 +420,15 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		return ticket;
 	}
 
+	public TaskRepositoryLocationFactory getTaskRepositoryLocationFactory() {
+		return taskRepositoryLocationFactory;
+	}
+	
+	public synchronized void setTaskRepositoryLocationFactory(TaskRepositoryLocationFactory taskRepositoryLocationFactory) {
+		this.taskRepositoryLocationFactory = taskRepositoryLocationFactory;
+		if (this.clientManager != null) {
+			clientManager.setTaskRepositoryLocationFactory(taskRepositoryLocationFactory);
+		}
+	}
+	
 }

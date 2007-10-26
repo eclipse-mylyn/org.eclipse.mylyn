@@ -40,8 +40,8 @@ public class TracXmlRpcClientTest extends AbstractTracClientRepositoryTest {
 	public void testValidateFailNoAuth() throws Exception {
 		connect(TracTestConstants.TEST_TRAC_010_URL, "", "");
 		try {
-			repository.validate();
-			fail("Expected TracLoginException");
+			repository.validate(callback);
+			fail("Expected TracPermissiongDeniedException");
 		} catch (TracPermissionDeniedException e) {
 		}
 	}

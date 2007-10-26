@@ -11,7 +11,9 @@ package org.eclipse.mylyn.trac.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.ui.TracHyperlinkUtilTest;
+import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 
 /**
  * @author Mik Kersten
@@ -22,6 +24,8 @@ public class AllTracTests {
 	public static Test suite() {
 //		UrlConnectionUtil.initCommonsLoggingSettings();
 
+		TracCorePlugin.getDefault().getConnector().setTaskRepositoryLocationFactory(new TaskRepositoryLocationFactory());
+		
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.trac.tests");
 		// $JUnit-BEGIN$
 		// suite.addTestSuite(TracXmlRpcTest.class);

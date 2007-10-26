@@ -13,18 +13,20 @@ package org.eclipse.mylyn.trac.tests;
  */
 public class TracTestConstants {
 
-	public static final String TEST_TRAC_096_URL = "http://mylyn.eclipse.org/trac096";
+	public static final String SERVER = System.getProperty("mylyn.trac.server", "mylyn.eclipse.org");
+	
+	public static final String TEST_TRAC_096_URL = "http://" + SERVER + "/trac096";
 
-	public static final String TEST_TRAC_010_URL = "http://mylyn.eclipse.org/trac010";
+	public static final String TEST_TRAC_010_URL = "http://" + SERVER + "/trac010";
 
-	public static final String TEST_TRAC_010_SSL_URL = "https://mylyn.eclipse.org/trac010";
+	public static final String TEST_TRAC_010_SSL_URL = "https://" + SERVER + "/trac010";
 
-	public static final String TEST_TRAC_010_DIGEST_AUTH_URL = "http://mylyn.eclipse.org/trac010digest";
+	public static final String TEST_TRAC_010_DIGEST_AUTH_URL = "http://" + SERVER + "/trac010digest";
 
-	public static final String TEST_TRAC_010_FORM_AUTH_URL = "http://mylyn.eclipse.org/trac010formauth";
+	public static final String TEST_TRAC_010_FORM_AUTH_URL = "http://" + SERVER + "/trac010formauth";
 
-	public static final String TEST_TRAC_011_URL = "http://mylyn.eclipse.org/trac011";
+	public static final String TEST_TRAC_011_URL = "http://" + SERVER + "/trac011";
 
-	public static final String TEST_TRAC_INVALID_URL = "http://mylyn.eclipse.org/doesnotexist";
+	public static final String TEST_TRAC_INVALID_URL = "http://" + SERVER + "/doesnotexist";
 
 }

@@ -11,8 +11,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.Proxy;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,6 +23,8 @@ import java.util.Set;
 import java.util.TimeZone;
 
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
@@ -52,7 +52,10 @@ import org.eclipse.mylyn.internal.trac.core.util.TracHttpClientTransportFactory;
 import org.eclipse.mylyn.internal.trac.core.util.TracUtils;
 import org.eclipse.mylyn.internal.trac.core.util.TracHttpClientTransportFactory.TracHttpException;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.web.core.AbstractWebLocation;
 import org.eclipse.mylyn.web.core.WebClientUtil;
+import org.eclipse.mylyn.web.core.AbstractWebLocation.ResultType;
 
 /**
  * Represents a Trac repository that is accessed through the Trac XmlRpcPlugin.
@@ -90,39 +93,47 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 
 	private boolean accountMangerAuthenticationFailed;
 
-	public TracXmlRpcClient(URL url, Version version, String username, String password, Proxy proxy) {
-		super(url, version, username, password, proxy);
+	private XmlRpcClientConfigImpl config;
+
+	public TracXmlRpcClient(AbstractWebLocation location, Version version) {
+		super(location, version);
 	}
 
 	public synchronized XmlRpcClient getClient() throws TracException {
-		if (xmlrpc != null) {
-			return xmlrpc;
+		if (xmlrpc == null) {
+			config = new XmlRpcClientConfigImpl();
+			config.setEncoding(ITracClient.CHARSET);
+			config.setTimeZone(TimeZone.getTimeZone(ITracClient.TIME_ZONE));
+			config.setContentLengthOptional(false);
+			config.setConnectionTimeout(WebClientUtil.CONNNECT_TIMEOUT);
+			config.setReplyTimeout(WebClientUtil.SOCKET_TIMEOUT);
+
+			xmlrpc = new XmlRpcClient();
+			xmlrpc.setConfig(config);
+
+			factory = new TracHttpClientTransportFactory(xmlrpc);
+			factory.setLocation(location);
+			xmlrpc.setTransportFactory(factory);			
 		}
-
-		XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
-		config.setEncoding(ITracClient.CHARSET);
-		config.setBasicUserName(username);
-		config.setBasicPassword(password);
-		config.setServerURL(getXmlRpcUrl());
-		config.setTimeZone(TimeZone.getTimeZone(ITracClient.TIME_ZONE));
-		config.setContentLengthOptional(false);
-		config.setConnectionTimeout(WebClientUtil.CONNNECT_TIMEOUT);
-		config.setReplyTimeout(WebClientUtil.SOCKET_TIMEOUT);
-
-		xmlrpc = new XmlRpcClient();
-		xmlrpc.setConfig(config);
-
-		factory = new TracHttpClientTransportFactory(xmlrpc);
-		factory.setProxy(proxy);
-		xmlrpc.setTransportFactory(factory);
+		
+		// update configuration with latest values
+		UsernamePasswordCredentials credentials = location.getCredentials(TaskRepository.AUTH_DEFAULT);
+		if (credentialsValid(credentials)) {
+			config.setBasicUserName(credentials.getUserName());
+			config.setBasicPassword(credentials.getPassword());
+		} else {
+			config.setBasicUserName(null);
+			config.setBasicPassword(null);
+		}
+		config.setServerURL(getXmlRpcUrl(credentials));
 
 		return xmlrpc;
 	}
 
-	private URL getXmlRpcUrl() throws TracException {
+	private URL getXmlRpcUrl(UsernamePasswordCredentials credentials) throws TracException {
 		try {
 			String location = repositoryUrl.toString();
-			if (hasAuthenticationCredentials()) {
+			if (credentialsValid(credentials)) {
 				location += LOGIN_URL;
 			}
 			location += XMLRPC_URL;
@@ -134,9 +145,31 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 	}
 
 	private Object call(String method, Object... parameters) throws TracException {
+		while (true) {
+			getClient();
+						
+			try {
+				return executeCall(method, parameters);
+			} catch (TracLoginException e) {
+				if (location.requestCredentials(TaskRepository.AUTH_DEFAULT, null) == ResultType.NOT_SUPPORTED) {
+					throw e;
+				}
+			} catch (TracPermissionDeniedException e) {
+				if (location.requestCredentials(TaskRepository.AUTH_DEFAULT, null) == ResultType.NOT_SUPPORTED) {
+					throw e;
+				}
+			} catch (TracProxyAuthenticationException e) {
+				if (location.requestCredentials(TaskRepository.AUTH_PROXY, null) == ResultType.NOT_SUPPORTED) {
+					throw e;
+				}
+			}
+		}
+	}
+		
+	private Object executeCall(String method, Object... parameters) throws TracException {
 		try {
 			// first attempt
-			return callInternal(method, parameters);
+			return executeCallInternal(method, parameters);
 		} catch (TracPermissionDeniedException e) {
 			if (accountMangerAuthenticationFailed) {
 				// do not try again if this has failed in the past since it
@@ -144,13 +177,18 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 				throw e;
 			}
 
+			UsernamePasswordCredentials credentials = location.getCredentials(TaskRepository.AUTH_DEFAULT);
+			if (!credentialsValid(credentials)) {
+				throw e;
+			}
+			
 			// try form-based authentication via AccountManagerPlugin as a
 			// fall-back
 			HttpClient httpClient = new HttpClient();
 			httpClient.getParams().setCookiePolicy(CookiePolicy.RFC_2109);
-			WebClientUtil.setupHttpClient(httpClient, proxy, repositoryUrl.toString(), null, null);
+			WebClientUtil.setupHttpClient(httpClient, USER_AGENT, location);
 			try {
-				authenticateAccountManager(httpClient);
+				authenticateAccountManager(httpClient, credentials);
 			} catch (TracLoginException loginException) {
 				// caused by wrong username or password
 				throw loginException;
@@ -172,19 +210,19 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		}
 
 		// second attempt
-		return callInternal(method, parameters);
+		return executeCallInternal(method, parameters);
 	}
 
-	private Object callInternal(String method, Object... parameters) throws TracException {
-		getClient();
-
+	private Object executeCallInternal(String method, Object... parameters) throws TracException {
 		try {
 			return xmlrpc.execute(method, parameters);
 		} catch (TracHttpException e) {
-			if (e.code == HttpURLConnection.HTTP_UNAUTHORIZED) {
+			if (e.code == HttpStatus.SC_UNAUTHORIZED) {
 				throw new TracLoginException();
-			} else if (e.code == HttpURLConnection.HTTP_FORBIDDEN) {
+			} else if (e.code == HttpStatus.SC_FORBIDDEN) {
 				throw new TracPermissionDeniedException();
+			} else if (e.code == HttpStatus.SC_PROXY_AUTHENTICATION_REQUIRED) {
+				throw new TracProxyAuthenticationException();
 			} else {
 				throw new TracException(e);
 			}
@@ -234,7 +272,7 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		return ((Object[]) item)[0];
 	}
 
-	public void validate() throws TracException {
+	public void validate(IProgressMonitor monitor) throws TracException {
 		try {
 			Object[] result = (Object[]) call("system.getAPIVersion");
 			if (result.length >= 3) {
@@ -264,7 +302,8 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 
 	private void updateAPIVersion() throws TracException {
 		if (epochAPIVersion == -1 || majorAPIVersion == -1 || minorAPIVersion == -1) {
-			validate();
+			// TODO
+			validate(DEFAULT_MONITOR);
 		}
 	}
 
@@ -669,25 +708,15 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		return result;
 	}
 
-	@Override
-	public void setProxy(Proxy proxy) {
-		super.setProxy(proxy);
-
-		synchronized (this) {
-			if (factory != null) {
-				factory.setProxy(proxy);
-			}
-		}
-	}
-
 	public Date getTicketLastChanged(Integer id) throws TracException {
 		Object[] result = (Object[]) call("ticket.get", id);
 		return parseDate(result[2]);
 	}
 
 	public void validateWikiRpcApi() throws TracException {
-		if (((Integer) call("wiki.getRPCVersionSupported")) < 2)
-			validate();
+		if (((Integer) call("wiki.getRPCVersionSupported")) < 2) {
+			validate(new NullProgressMonitor());
+		}
 	}
 
 	public String wikiToHtml(String sourceText) throws TracException {

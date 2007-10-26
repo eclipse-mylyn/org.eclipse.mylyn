@@ -9,24 +9,21 @@
 package org.eclipse.mylyn.internal.trac.core;
 
 import java.net.MalformedURLException;
-import java.net.Proxy;
-import java.net.URL;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
+import org.eclipse.mylyn.web.core.AbstractWebLocation;
 
 /**
  * @author Steffen Pingel
  */
 public class TracClientFactory {
 
-	public static ITracClient createClient(String location, Version version, String username, String password,
-			Proxy proxy) throws MalformedURLException {
-		URL url = new URL(location);
-
+	public static ITracClient createClient(AbstractWebLocation location, Version version) {
 		if (version == Version.TRAC_0_9) {
-			return new TracWebClient(url, version, username, password, proxy);
+			return new TracWebClient(location, version);
 		} else if (version == Version.XML_RPC) {
-			return new TracXmlRpcClient(url, version, username, password, proxy);
+			return new TracXmlRpcClient(location, version);
 		}
 
 		throw new RuntimeException("Invalid repository version: " + version);
@@ -39,17 +36,15 @@ public class TracClientFactory {
 	 * <p>
 	 * Order of the tried access types: XML-RPC, Trac 0.9
 	 */
-	public static Version probeClient(String location, String username, String password, Proxy proxy)
-			throws MalformedURLException, TracException {
-		URL url = new URL(location);
+	public static Version probeClient(AbstractWebLocation location) throws MalformedURLException, TracException {
 		try {
-			ITracClient repository = new TracXmlRpcClient(url, Version.XML_RPC, username, password, proxy);
-			repository.validate();
+			ITracClient repository = new TracXmlRpcClient(location, Version.XML_RPC);
+			repository.validate(new NullProgressMonitor());
 			return Version.XML_RPC;
 		} catch (TracException e) {
 			try {
-				ITracClient repository = new TracWebClient(url, Version.TRAC_0_9, username, password, proxy);
-				repository.validate();
+				ITracClient repository = new TracWebClient(location, Version.TRAC_0_9);
+				repository.validate(new NullProgressMonitor());
 				return Version.TRAC_0_9;
 			} catch (TracLoginException e2) {
 				throw e;

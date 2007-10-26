@@ -12,12 +12,16 @@ import java.net.Proxy;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.context.tests.support.TestUtil;
 import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
 import org.eclipse.mylyn.context.tests.support.TestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.TracClientFactory;
 import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
+import org.eclipse.mylyn.web.core.IProxyProvider;
+import org.eclipse.mylyn.web.core.WebLocation;
 
 /**
  * Provides a base implementation for test cases that access trac repositories.
@@ -38,6 +42,8 @@ public abstract class AbstractTracClientTest extends TestCase {
 
 	private PrivilegeLevel level;
 
+	final IProgressMonitor callback = new NullProgressMonitor();
+	
 	public AbstractTracClientTest(Version version, PrivilegeLevel level) {
 		this.version = version;
 		this.level = level;
@@ -84,12 +90,18 @@ public abstract class AbstractTracClientTest extends TestCase {
 		return connect(url, username, password, proxy, version);
 	}
 
-	public ITracClient connect(String url, String username, String password, Proxy proxy, Version version)
+	public ITracClient connect(String url, String username, String password, final Proxy proxy, Version version)
 			throws Exception {
 		this.repositoryUrl = url;
 		this.username = username;
 		this.password = password;
-		this.repository = TracClientFactory.createClient(url, version, username, password, proxy);
+		
+		WebLocation location = new WebLocation(url, username, password, new IProxyProvider() {
+			public Proxy getProxyForHost(String host, String proxyType) {
+				return proxy;
+			}		
+		});
+		this.repository = TracClientFactory.createClient(location, version);
 
 		return this.repository;
 	}

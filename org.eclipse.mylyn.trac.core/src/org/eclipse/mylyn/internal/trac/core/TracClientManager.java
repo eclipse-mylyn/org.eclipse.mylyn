@@ -21,6 +21,8 @@ import java.util.Map;
 import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryListener;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
+import org.eclipse.mylyn.web.core.AbstractWebLocation;
 
 /**
  * Caches {@link ITracClient} objects.
@@ -35,8 +37,11 @@ public class TracClientManager implements ITaskRepositoryListener {
 
 	private File cacheFile;
 
-	public TracClientManager(File cacheFile) {
+	private TaskRepositoryLocationFactory taskRepositoryLocationFactory;
+
+	public TracClientManager(File cacheFile, TaskRepositoryLocationFactory taskRepositoryLocationFactory) {
 		this.cacheFile = cacheFile;
+		this.taskRepositoryLocationFactory = taskRepositoryLocationFactory;
 
 		readCache();
 	}
@@ -44,9 +49,8 @@ public class TracClientManager implements ITaskRepositoryListener {
 	public synchronized ITracClient getRepository(TaskRepository taskRepository) throws MalformedURLException {
 		ITracClient repository = clientByUrl.get(taskRepository.getUrl());
 		if (repository == null) {
-			repository = TracClientFactory.createClient(taskRepository.getUrl(),
-					Version.fromVersion(taskRepository.getVersion()), taskRepository.getUserName(),
-					taskRepository.getPassword(), taskRepository.getProxy());
+			AbstractWebLocation location = taskRepositoryLocationFactory.createWebLocation(taskRepository);
+			repository = TracClientFactory.createClient(location, Version.fromVersion(taskRepository.getVersion()));
 			clientByUrl.put(taskRepository.getUrl(), repository);
 
 			TracClientData data = clientDataByUrl.get(taskRepository.getUrl());
@@ -137,4 +141,12 @@ public class TracClientManager implements ITaskRepositoryListener {
 		}
 	}
 
+	public TaskRepositoryLocationFactory getTaskRepositoryLocationFactory() {
+		return taskRepositoryLocationFactory;
+	}
+	
+	public void setTaskRepositoryLocationFactory(TaskRepositoryLocationFactory taskRepositoryLocationFactory) {
+		this.taskRepositoryLocationFactory = taskRepositoryLocationFactory;
+	}
+	
 }

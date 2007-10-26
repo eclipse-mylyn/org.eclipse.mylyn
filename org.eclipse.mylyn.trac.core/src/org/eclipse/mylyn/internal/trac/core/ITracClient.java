@@ -9,7 +9,6 @@
 package org.eclipse.mylyn.internal.trac.core;
 
 import java.io.InputStream;
-import java.net.Proxy;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -125,7 +124,7 @@ public interface ITracClient {
 	 * @throws TracException
 	 *             thrown in case of a connection error
 	 */
-	void validate() throws TracException;
+	void validate(IProgressMonitor callback) throws TracException;
 
 	/**
 	 * Returns true, if the repository details are cached. If this method returns true, invoking
@@ -183,8 +182,6 @@ public interface ITracClient {
 	void setData(TracClientData data);
 
 	Set<Integer> getChangedTickets(Date since) throws TracException;
-
-	void setProxy(Proxy proxy);
 
 	Date getTicketLastChanged(Integer id) throws TracException;
 

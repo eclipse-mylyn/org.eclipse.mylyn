@@ -16,8 +16,10 @@ import java.net.URL;
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.internal.trac.core.model.TracComponent;
 import org.eclipse.mylyn.internal.trac.core.model.TracMilestone;
 import org.eclipse.mylyn.internal.trac.core.model.TracPriority;
@@ -27,6 +29,7 @@ import org.eclipse.mylyn.internal.trac.core.model.TracTicketResolution;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicketStatus;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicketType;
 import org.eclipse.mylyn.internal.trac.core.model.TracVersion;
+import org.eclipse.mylyn.web.core.AbstractWebLocation;
 import org.eclipse.mylyn.web.core.WebClientUtil;
 
 /**
@@ -34,27 +37,34 @@ import org.eclipse.mylyn.web.core.WebClientUtil;
  */
 public abstract class AbstractTracClient implements ITracClient {
 
+	protected static final String USER_AGENT = "TracConnector";
+
 	private static final String LOGIN_COOKIE_NAME = "trac_auth";
 
-	protected String username;
+	protected static final IProgressMonitor DEFAULT_MONITOR = new NullProgressMonitor();
+	
+	protected final String repositoryUrl;
 
-	protected String password;
+	protected final Version version;
 
-	protected URL repositoryUrl;
-
-	protected Version version;
+	protected final AbstractWebLocation location;
 
 	protected TracClientData data;
 
-	protected Proxy proxy;
-
 	public AbstractTracClient(URL repositoryUrl, Version version, String username, String password, Proxy proxy) {
-		this.repositoryUrl = repositoryUrl;
+		this.repositoryUrl = repositoryUrl.toString();
 		this.version = version;
-		this.username = username;
-		this.password = password;
-		this.proxy = proxy;
 
+		this.location = null;
+		
+		this.data = new TracClientData();
+	}
+
+	public AbstractTracClient(AbstractWebLocation location, Version version) {
+		this.location = location;
+		this.version = version;
+		this.repositoryUrl = location.getUrl();
+		
 		this.data = new TracClientData();
 	}
 
@@ -62,15 +72,15 @@ public abstract class AbstractTracClient implements ITracClient {
 		return version;
 	}
 
-	protected boolean hasAuthenticationCredentials() {
-		return username != null && username.length() > 0;
+	protected boolean credentialsValid(UsernamePasswordCredentials credentials) {
+		return credentials != null && credentials.getUserName().length() > 0;
 	}
 
-	protected void authenticateAccountManager(HttpClient httpClient) throws IOException, TracLoginException {
+	protected void authenticateAccountManager(HttpClient httpClient, UsernamePasswordCredentials credentials) throws IOException, TracLoginException {
 		PostMethod post = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl + LOGIN_URL));
 		post.setFollowRedirects(false);
-		NameValuePair[] data = { new NameValuePair("referer", ""), new NameValuePair("user", username),
-				new NameValuePair("password", password) };
+		NameValuePair[] data = { new NameValuePair("referer", ""), new NameValuePair("user", credentials.getUserName()),
+				new NameValuePair("password", credentials.getPassword()) };
 		post.setRequestBody(data);
 		try {
 			int code = httpClient.executeMethod(post);
@@ -168,14 +178,6 @@ public abstract class AbstractTracClient implements ITracClient {
 			return new String[] { "leave", "reopen" };
 		}
 		return null;
-	}
-
-	public void setProxy(Proxy proxy) {
-		this.proxy = proxy;
-	}
-
-	public Proxy getProxy() {
-		return proxy;
 	}
 
 }

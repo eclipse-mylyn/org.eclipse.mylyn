@@ -9,7 +9,6 @@
 package org.eclipse.mylyn.internal.trac.ui.wizard;
 
 import java.net.MalformedURLException;
-import java.net.Proxy;
 import java.net.URL;
 
 import org.eclipse.core.runtime.CoreException;
@@ -25,8 +24,10 @@ import org.eclipse.mylyn.internal.trac.ui.TracUiPlugin;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
+import org.eclipse.mylyn.web.core.AbstractWebLocation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -165,30 +166,25 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 	// public for testing
 	public class TracValidator extends Validator {
 
-		final String repositoryUrl;
+		private final String repositoryUrl;
 
-		final Version version;
+		private final TaskRepository taskRepository;
 
-		final String username;
-
-		final String password;
-
-		final Proxy proxy;
+		private final Version version;
 
 		private Version result;
 
-		public TracValidator(TaskRepository repository, Version version) {
-			this.repositoryUrl = repository.getUrl();
-			this.username = repository.getUserName();
-			this.password = repository.getPassword();
-			this.proxy = repository.getProxy();
+		public TracValidator(TaskRepository taskRepository, Version version) {
+			this.repositoryUrl = taskRepository.getUrl();
+			this.taskRepository = taskRepository;
 			this.version = version;
 		}
 
 		@Override
 		public void run(IProgressMonitor monitor) throws CoreException {
 			try {
-				validate();
+				//validate(Provider.of(monitor));
+				validate(monitor);
 			} catch (MalformedURLException e) {
 				throw new CoreException(RepositoryStatus.createStatus(repositoryUrl, IStatus.ERROR,
 						TracUiPlugin.PLUGIN_ID, INVALID_REPOSITORY_URL));
@@ -208,23 +204,23 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 			}
 		}
 
-		public void validate() throws MalformedURLException, TracException {
+		public void validate(IProgressMonitor monitor) throws MalformedURLException, TracException {
+			AbstractWebLocation location = new TaskRepositoryLocationFactory().createWebLocation(taskRepository);
+
 			if (version != null) {
-				ITracClient client = TracClientFactory.createClient(repositoryUrl, version, username, password, proxy);
-				client.validate();
+				ITracClient client = TracClientFactory.createClient(location, version);
+				client.validate(monitor);
 			} else {
 				// probe version: XML-RPC access first, then web
 				// access
 				try {
-					ITracClient client = TracClientFactory.createClient(repositoryUrl, Version.XML_RPC, username,
-							password, proxy);
-					client.validate();
+					ITracClient client = TracClientFactory.createClient(location, Version.XML_RPC);
+					client.validate(monitor);
 					result = Version.XML_RPC;
 				} catch (TracException e) {
 					try {
-						ITracClient client = TracClientFactory.createClient(repositoryUrl, Version.TRAC_0_9, username,
-								password, proxy);
-						client.validate();
+						ITracClient client = TracClientFactory.createClient(location, Version.TRAC_0_9);
+						client.validate(monitor);
 						result = Version.TRAC_0_9;
 
 						if (e instanceof TracPermissionDeniedException) {

@@ -10,7 +10,6 @@ package org.eclipse.mylyn.trac.tests.support;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
@@ -22,6 +21,7 @@ import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.eclipse.mylyn.internal.trac.core.TracXmlRpcClient;
 import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
+import org.eclipse.mylyn.web.core.WebLocation;
 
 /**
  * @author Steffen Pingel
@@ -291,7 +291,7 @@ public class XmlRpcServer {
 
 		this.data = new TestData();
 
-		this.repository = new TracXmlRpcClient(new URL(url), Version.XML_RPC, username, password, null);
+		this.repository = new TracXmlRpcClient(new WebLocation(url, username, password), Version.XML_RPC);
 		this.client = repository.getClient();
 	}
 

@@ -11,7 +11,6 @@ package org.eclipse.mylyn.internal.trac.core.util;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
-import java.net.Proxy;
 
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpClient;
@@ -25,6 +24,7 @@ import org.apache.xmlrpc.client.XmlRpcCommonsTransport;
 import org.apache.xmlrpc.client.XmlRpcHttpClientConfig;
 import org.apache.xmlrpc.client.XmlRpcTransport;
 import org.apache.xmlrpc.client.XmlRpcTransportFactory;
+import org.eclipse.mylyn.web.core.AbstractWebLocation;
 import org.eclipse.mylyn.web.core.WebClientUtil;
 
 /**
@@ -34,6 +34,8 @@ import org.eclipse.mylyn.web.core.WebClientUtil;
  */
 public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 
+	protected static final String USER_AGENT = "TracConnector, XmlRpcClient/3.0";
+	
 	public static class TracHttpException extends XmlRpcException {
 
 		private static final long serialVersionUID = 9032521978140685830L;
@@ -49,14 +51,14 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 	 */
 	public static class TracHttpClientTransport extends XmlRpcCommonsTransport {
 
-		private Proxy proxy;
+		private AbstractWebLocation location;
 
 		private Cookie[] cookies;
 
-		public TracHttpClientTransport(XmlRpcClient client, Proxy proxy, Cookie[] cookies) {
+		public TracHttpClientTransport(XmlRpcClient client, AbstractWebLocation location, Cookie[] cookies) {
 			super(client);
 
-			this.proxy = proxy;
+			this.location = location;
 			this.cookies = cookies;
 
 			XmlRpcHttpClientConfig config = (XmlRpcHttpClientConfig) client.getConfig();
@@ -125,7 +127,7 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 			XmlRpcHttpClientConfig config = (XmlRpcHttpClientConfig) request.getConfig();
 
 			String url = config.getServerURL().toString();
-			WebClientUtil.setupHttpClient(getHttpClient(), proxy, url, null, null);
+			WebClientUtil.setupHttpClient(getHttpClient(), USER_AGENT, location);
 			if (cookies != null) {
 				getHttpClient().getState().addCookies(cookies);
 			}
@@ -152,24 +154,16 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 
 	private XmlRpcClient client;
 
-	private Proxy proxy;
-
 	private Cookie[] cookies;
+
+	private AbstractWebLocation location;
 
 	public TracHttpClientTransportFactory(XmlRpcClient client) {
 		this.client = client;
 	}
 
 	public XmlRpcTransport getTransport() {
-		return new TracHttpClientTransport(client, proxy, cookies);
-	}
-
-	public Proxy getProxy() {
-		return proxy;
-	}
-
-	public void setProxy(Proxy proxy) {
-		this.proxy = proxy;
+		return new TracHttpClientTransport(client, location, cookies);
 	}
 
 	public Cookie[] getCookies() {
@@ -178,6 +172,14 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 
 	public void setCookies(Cookie[] cookies) {
 		this.cookies = cookies;
+	}
+
+	public void setLocation(AbstractWebLocation location) {
+		this.location = location;
+	}
+	
+	public AbstractWebLocation getLocation() {
+		return location;
 	}
 
 }

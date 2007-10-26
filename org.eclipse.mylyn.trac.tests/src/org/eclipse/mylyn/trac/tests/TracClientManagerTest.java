@@ -20,6 +20,7 @@ import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.model.TracMilestone;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 
 /**
  * @author Steffen Pingel
@@ -31,7 +32,7 @@ public class TracClientManagerTest extends TestCase {
 				TracTestConstants.TEST_TRAC_096_URL);
 		taskRepository.setVersion(Version.TRAC_0_9.name());
 
-		TracClientManager manager = new TracClientManager(null);
+		TracClientManager manager = new TracClientManager(null, new TaskRepositoryLocationFactory());
 		ITracClient client = manager.getRepository(taskRepository);
 		assertNull(client.getMilestones());
 
@@ -47,7 +48,7 @@ public class TracClientManagerTest extends TestCase {
 		File file = File.createTempFile("mylyn", null);
 		file.deleteOnExit();
 
-		TracClientManager manager = new TracClientManager(file);
+		TracClientManager manager = new TracClientManager(file, new TaskRepositoryLocationFactory());
 		ITracClient client = manager.getRepository(taskRepository);
 		assertNull(client.getMilestones());
 	}
@@ -60,7 +61,7 @@ public class TracClientManagerTest extends TestCase {
 		File file = File.createTempFile("mylyn", null);
 		file.deleteOnExit();
 
-		TracClientManager manager = new TracClientManager(file);
+		TracClientManager manager = new TracClientManager(file, new TaskRepositoryLocationFactory());
 		ITracClient client = manager.getRepository(taskRepository);
 		assertNull(client.getMilestones());
 
@@ -69,7 +70,7 @@ public class TracClientManagerTest extends TestCase {
 		TracMilestone[] milestones = client.getMilestones();
 
 		manager.writeCache();
-		manager = new TracClientManager(file);
+		manager = new TracClientManager(file, new TaskRepositoryLocationFactory());
 		assertEquals(Arrays.asList(milestones), Arrays.asList(client.getMilestones()));
 	}
 

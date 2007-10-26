@@ -65,7 +65,7 @@ public class TracClientProxyTest extends AbstractTracClientTest {
 		proxy = WebClientUtil.getProxy("localhost", proxyPort + "", "", "");
 		ITracClient client = connect(url, proxy);
 		try {
-			client.validate();
+			client.validate(callback);
 		} catch (TracException e) {
 		}
 

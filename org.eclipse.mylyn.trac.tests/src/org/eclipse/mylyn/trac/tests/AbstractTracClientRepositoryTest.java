@@ -52,12 +52,12 @@ public class AbstractTracClientRepositoryTest extends AbstractTracClientTest {
 
 		// standard connect
 		connect(url);
-		repository.validate();
+		repository.validate(callback);
 
 		// invalid url
 		connect("http://non.existant/repository");
 		try {
-			repository.validate();
+			repository.validate(callback);
 			fail("Expected TracException");
 		} catch (TracException e) {
 		}
@@ -65,7 +65,7 @@ public class AbstractTracClientRepositoryTest extends AbstractTracClientTest {
 		// invalid password
 		connect(url, credentials.username, "wrongpassword");
 		try {
-			repository.validate();
+			repository.validate(callback);
 			fail("Expected TracLoginException");
 		} catch (TracLoginException e) {
 		}
@@ -73,7 +73,7 @@ public class AbstractTracClientRepositoryTest extends AbstractTracClientTest {
 		// invalid username
 		connect(url, "wrongusername", credentials.password);
 		try {
-			repository.validate();
+			repository.validate(callback);
 			fail("Expected TracLoginException");
 		} catch (TracLoginException e) {
 		}
@@ -83,28 +83,10 @@ public class AbstractTracClientRepositoryTest extends AbstractTracClientTest {
 		connect(TracTestConstants.TEST_TRAC_010_URL, "", "", new Proxy(Type.HTTP, new InetSocketAddress(
 				"invalidhostname", 8080)));
 		try {
-			repository.validate();
+			repository.validate(callback);
 			fail("Expected IOException");
 		} catch (TracException e) {
 		}
-
-		connect(TracTestConstants.TEST_TRAC_010_URL, "", "", null);
-		repository.setProxy(new Proxy(Type.HTTP, new InetSocketAddress("invalidhostname", 8080)));
-		try {
-			repository.validate();
-			fail("Expected IOException");
-		} catch (TracException e) {
-		}
-
-		connect(TracTestConstants.TEST_TRAC_010_URL);
-		repository.validate();
-		repository.setProxy(new Proxy(Type.HTTP, new InetSocketAddress("invalidhostname", 8080)));
-		try {
-			repository.validate();
-			fail("Expected IOException");
-		} catch (TracException e) {
-		}
-
 	}
 
 }
