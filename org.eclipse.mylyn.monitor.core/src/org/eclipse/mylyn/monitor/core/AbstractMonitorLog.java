@@ -43,7 +43,7 @@ public abstract class AbstractMonitorLog {
 				outputFile.createNewFile();
 			outputStream = new FileOutputStream(outputFile, true);
 		} catch (Exception e) {
-			StatusHandler.fail(e, "could not resolve log to file: " + outputFile.getAbsolutePath(), true);
+			StatusHandler.fail(e, "Could not log to file: " + outputFile.getAbsolutePath(), true);
 		}
 	}
 
