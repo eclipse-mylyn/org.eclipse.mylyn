@@ -71,12 +71,12 @@ public class TaskRepositoryLocation extends AbstractWebLocation {
 
 	@Override
 	public UsernamePasswordCredentials getCredentials(String authType) {
-		if (TaskRepository.AUTH_DEFAULT.equals(authType) && taskRepository.isAnonymous()) {
-			return null;
-		}
+//		if (TaskRepository.AUTH_DEFAULT.equals(authType) && taskRepository.isAnonymous()) {
+//			return null;
+//		}
 
 		String userName = taskRepository.getUserName(authType);
-		if (userName == null) {
+		if (userName == null || userName.length() == 0) {
 			return null;
 		}
 
