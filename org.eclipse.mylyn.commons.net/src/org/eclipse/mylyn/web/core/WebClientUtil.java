@@ -58,7 +58,14 @@ public class WebClientUtil {
 
 	private static boolean loggingEnabled = false;
 
-	private static String firstThree(String longVersion) {
+	private static final String USER_AGENT_PREFIX;
+
+	private static final String USER_AGENT_POSTFIX;
+
+	// XXX this was copied from TaskRepository
+	public static final String AUTH_HTTP = "org.eclipse.mylyn.tasklist.repositories.httpauth";
+
+	private static String stripQualifier(String longVersion) {
 		String parts[] = longVersion.split("\\.");
 		StringBuilder version = new StringBuilder();
 		if (parts.length > 0) {
@@ -77,25 +84,28 @@ public class WebClientUtil {
 
 	}
 
-	private static String shortVersion(Plugin plugin) {
+	private static String getBundleVersion(Plugin plugin) {
 		if (null == plugin)
 			return "";
 		Object bundleVersion = plugin.getBundle().getHeaders().get("Bundle-Version");
 		if (null == bundleVersion)
 			return "";
-		return firstThree((String) bundleVersion);
+		return stripQualifier((String) bundleVersion);
 	}
 
 	static {
 		initCommonsLoggingSettings();
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("Mylyn");
-		sb.append(shortVersion(WebCorePlugin.getDefault()));
-		// TODO insert (client)
+		sb.append(getBundleVersion(WebCorePlugin.getDefault()));
+
+		USER_AGENT_PREFIX = sb.toString();
+		sb.setLength(0);
 
 		sb.append(" ");
 		sb.append("Eclipse");
-		sb.append(firstThree(System.getProperty("osgi.framework.version")));
+		sb.append(stripQualifier(System.getProperty("osgi.framework.version")));
 		// TODO insert (redistribution)
 
 		sb.append(" ");
@@ -116,7 +126,9 @@ public class WebClientUtil {
 		sb.append(System.getProperty("osgi.nl"));
 		sb.append(")");
 
-		USER_AGENT = sb.toString();
+		USER_AGENT_POSTFIX = sb.toString();
+
+		USER_AGENT = USER_AGENT_PREFIX + USER_AGENT_POSTFIX;
 	}
 
 	public static void initCommonsLoggingSettings() {
@@ -216,11 +228,7 @@ public class WebClientUtil {
 	public static void setupHttpClient(HttpClient client, Proxy proxySettings, String repositoryUrl, String user,
 			String password) {
 
-		client.getParams().setBooleanParameter(HttpClientParams.ALLOW_CIRCULAR_REDIRECTS, true);
-		client.getParams().setParameter(HttpClientParams.USER_AGENT, USER_AGENT);
-
-		client.getHttpConnectionManager().getParams().setSoTimeout(WebClientUtil.SOCKET_TIMEOUT);
-		client.getHttpConnectionManager().getParams().setConnectionTimeout(WebClientUtil.CONNNECT_TIMEOUT);
+		setupHttpClientParams(client, null);
 
 		if (proxySettings != null && !Proxy.NO_PROXY.equals(proxySettings)
 		/* && !WebClientUtil.repositoryUsesHttps(repositoryUrl) */
@@ -396,8 +404,84 @@ public class WebClientUtil {
 		return proxy;
 	}
 
+	/**
+	 * @since 2.2 
+	 */
 	public static boolean isLoggingEnabled() {
 		return loggingEnabled;
+	}
+
+	/**
+	 * @since 2.2 
+	 */
+	public static void setupHttpClient(HttpClient client, String userAgent, AbstractWebLocation location) {
+		if (client == null || location == null) {
+			throw new IllegalArgumentException();
+		}
+
+		String url = location.getUrl();
+		String host = WebClientUtil.getDomain(url);
+		int port = WebClientUtil.getPort(url);
+
+		setupHttpClientParams(client, userAgent);
+		setupHttpClientProxy(client, location);
+
+		Credentials credentials = location.getCredentials(AUTH_HTTP);
+		if (credentials != null) {
+			AuthScope authScope = new AuthScope(host, port, AuthScope.ANY_REALM);
+			client.getState().setCredentials(authScope, credentials);
+		}
+
+		if (WebClientUtil.isRepositoryHttps(url)) {
+			Protocol acceptAllSsl = new Protocol("https",
+					(ProtocolSocketFactory) SslProtocolSocketFactory.getInstance(), port);
+			client.getHostConfiguration().setHost(host, port, acceptAllSsl);
+
+			// globally register handler, unfortunately Axis requires this 
+			Protocol.registerProtocol("https", acceptAllSsl);
+		} else {
+			client.getHostConfiguration().setHost(host, port);
+		}
+	}
+
+	private static void setupHttpClientProxy(HttpClient client, AbstractWebLocation location) {
+		String host = WebClientUtil.getDomain(location.getUrl());
+
+		Proxy proxy;
+		if (WebClientUtil.isRepositoryHttps(location.getUrl())) {
+			proxy = location.getProxyForHost(host, IProxyData.HTTP_PROXY_TYPE);
+		} else {
+			proxy = location.getProxyForHost(host, IProxyData.HTTPS_PROXY_TYPE);
+		}
+
+		if (proxy != null && !Proxy.NO_PROXY.equals(proxy)) {
+			InetSocketAddress address = (InetSocketAddress) proxy.address();
+			client.getHostConfiguration().setProxy(address.getHostName(), address.getPort());
+			if (proxy instanceof AuthenticatedProxy) {
+				AuthenticatedProxy authProxy = (AuthenticatedProxy) proxy;
+				Credentials credentials = getCredentials(authProxy.getUserName(), authProxy.getPassword(),
+						address.getAddress());
+				AuthScope proxyAuthScope = new AuthScope(address.getHostName(), address.getPort(), AuthScope.ANY_REALM);
+				client.getState().setProxyCredentials(proxyAuthScope, credentials);
+			}
+		} else {
+			client.getHostConfiguration().setProxyHost(null);
+		}
+	}
+
+	private static void setupHttpClientParams(HttpClient client, String userAgent) {
+		client.getParams().setBooleanParameter(HttpClientParams.ALLOW_CIRCULAR_REDIRECTS, true);
+		if (userAgent != null) {
+			StringBuilder sb = new StringBuilder();
+			sb.append(USER_AGENT_PREFIX);
+			sb.append(userAgent);
+			sb.append(USER_AGENT_POSTFIX);
+			client.getParams().setParameter(HttpClientParams.USER_AGENT, sb.toString());
+		} else {
+			client.getParams().setParameter(HttpClientParams.USER_AGENT, USER_AGENT);
+		}
+		client.getHttpConnectionManager().getParams().setSoTimeout(WebClientUtil.SOCKET_TIMEOUT);
+		client.getHttpConnectionManager().getParams().setConnectionTimeout(WebClientUtil.CONNNECT_TIMEOUT);
 	}
 
 }
