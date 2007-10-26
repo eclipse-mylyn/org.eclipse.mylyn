@@ -38,11 +38,13 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Scale;
 import org.eclipse.ui.IWorkbenchActionConstants;
@@ -139,7 +141,6 @@ public class ContextEditorFormPage extends FormPage {
 		//toolkit.decorateFormHeading(form.getForm());
 
 		form.getBody().setLayout(new GridLayout(2, false));
-		form.getBody().setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		createActionsSection(form.getBody());
 		createDisplaySection(form.getBody());
@@ -178,9 +179,9 @@ public class ContextEditorFormPage extends FormPage {
 		scaleGridData.widthHint = 80;
 		doiScale.setLayoutData(scaleGridData);
 		doiScale.setPageIncrement(1);
-		doiScale.setMinimum(0); 
-		doiScale.setSelection(SCALE_STEPS/2);
-		doiScale.setMaximum(SCALE_STEPS); 
+		doiScale.setMinimum(0);
+		doiScale.setSelection(SCALE_STEPS / 2);
+		doiScale.setMaximum(SCALE_STEPS);
 		doiScale.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 				setFilterThreshold();
@@ -273,10 +274,10 @@ public class ContextEditorFormPage extends FormPage {
 	 * Scales logarithmically to a reasonable interest threshold range (e.g. -10000..10000).
 	 */
 	protected void setFilterThreshold() {
-		double setting = doiScale.getSelection() - (SCALE_STEPS/2);
+		double setting = doiScale.getSelection() - (SCALE_STEPS / 2);
 		double threshold = Math.signum(setting) * Math.pow(Math.exp(Math.abs(setting)), 1.5);
 
-		interestFilter.setThreshold(threshold); 
+		interestFilter.setThreshold(threshold);
 		commonViewer.refresh();
 		commonViewer.expandAll();
 	}
@@ -284,16 +285,30 @@ public class ContextEditorFormPage extends FormPage {
 	private void createDisplaySection(Composite composite) {
 		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
 		section.setText("Elements");
-		section.setLayout(new GridLayout());
 		section.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		Composite sectionClient = toolkit.createComposite(section);
 		section.setClient(sectionClient);
-		sectionClient.setLayout(new FillLayout());
 
 		if (task.equals(TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask())) {
+			sectionClient.setLayout(new Layout() {
+
+				@Override
+				protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {
+					return new Point(0, 0);
+				}
+
+				@Override
+				protected void layout(Composite composite, boolean flushCache) {
+					Rectangle clientArea = composite.getClientArea();
+					commonViewer.getControl()
+							.setBounds(clientArea.x, clientArea.y, clientArea.width, clientArea.height);
+				}
+
+			});
 			createViewer(sectionClient);
 		} else {
+			sectionClient.setLayout(new GridLayout());
 			Hyperlink retrieveHyperlink = toolkit.createHyperlink(sectionClient, "Activate task to edit context",
 					SWT.NONE);
 			retrieveHyperlink.addMouseListener(new MouseListener() {
@@ -316,7 +331,6 @@ public class ContextEditorFormPage extends FormPage {
 	}
 
 	private void createViewer(Composite aParent) {
-
 		commonViewer = createCommonViewer(aParent);
 		commonViewer.addFilter(interestFilter);
 
