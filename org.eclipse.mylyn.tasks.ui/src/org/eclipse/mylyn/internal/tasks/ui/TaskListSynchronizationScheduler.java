@@ -29,7 +29,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class TaskListSynchronizationScheduler implements IPropertyChangeListener {
 
-	private static final int DELAY_QUERY_REFRESH_ON_STARTUP = 10000;
+	private static final int DELAY_QUERY_REFRESH_ON_STARTUP = 25000;
 
 	private ScheduledTaskListSynchJob refreshJob;
 
