@@ -250,14 +250,7 @@ public class TasksUiUtil {
 								repositoryTask, true, new JobChangeAdapter() {
 									@Override
 									public void done(IJobChangeEvent event) {
-										RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager()
-												.getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
-										if (taskData != null) {
-											TasksUiUtil.openEditor(task, false);
-										} else {
-											StatusHandler.fail(null, "Unable to retrieve data for requested task"
-													+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".", true);
-										}
+										TasksUiUtil.openEditor(task, false);
 									}
 								});
 						if (refreshJob == null) {
