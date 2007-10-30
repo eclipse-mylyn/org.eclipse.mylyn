@@ -114,12 +114,9 @@ public class WebClientUtilTest extends TestCase {
 
 		GetMethod method = new GetMethod(url);
 		int statusCode = client.executeMethod(method);
-		assertEquals(200, statusCode);
+		assertEquals(401, statusCode);
 
 		Message request = testProxy.getRequest();
-		assertEquals("GET http://foo/bar HTTP/1.1", request.request);
-
-		request = testProxy.getRequest();
 		assertEquals("GET http://foo/bar HTTP/1.1", request.request);
 		assertEquals("Basic dXNlcjpwYXNz", request.getHeaderValue("Authorization"));
 	}
@@ -156,12 +153,9 @@ public class WebClientUtilTest extends TestCase {
 
 		GetMethod method = new GetMethod(url);
 		int statusCode = client.executeMethod(method);
-		assertEquals(200, statusCode);
+		assertEquals(407, statusCode);
 
 		Message request = testProxy.getRequest();
-		assertEquals("GET http://foo/bar HTTP/1.1", request.request);
-
-		request = testProxy.getRequest();
 		assertEquals("GET http://foo/bar HTTP/1.1", request.request);
 		assertEquals("Basic cHJveHlVc2VyOnByb3h5UGFzcw==", request.getHeaderValue("Proxy-Authorization"));
 	}
@@ -171,12 +165,6 @@ public class WebClientUtilTest extends TestCase {
 		Proxy proxy = new AuthenticatedProxy(Type.HTTP, proxyAddress, "proxyUser", "proxyPass");
 		WebClientUtil.setupHttpClient(client, proxy, url, "user", "pass");
 
-		Message response = new Message("HTTP/1.1 407 Proxy authentication required");
-		response.headers.add("Proxy-Authenticate: Basic realm=\"Foo\"");
-		testProxy.addResponse(response);
-		response = new Message("HTTP/1.1 401 Authentication required");
-		response.headers.add("WWW-Authenticate: Basic realm=\"Foo\"");
-		testProxy.addResponse(response);
 		testProxy.addResponse(TestProxy.OK);
 
 		GetMethod method = new GetMethod(url);
@@ -185,13 +173,7 @@ public class WebClientUtilTest extends TestCase {
 
 		Message request = testProxy.getRequest();
 		assertEquals("GET http://foo/bar HTTP/1.1", request.request);
-
-		request = testProxy.getRequest();
-		assertEquals("GET http://foo/bar HTTP/1.1", request.request);
 		assertEquals("Basic cHJveHlVc2VyOnByb3h5UGFzcw==", request.getHeaderValue("Proxy-Authorization"));
-
-		request = testProxy.getRequest();
-		assertEquals("GET http://foo/bar HTTP/1.1", request.request);
 		assertEquals("Basic dXNlcjpwYXNz", request.getHeaderValue("Authorization"));
 	}
 
@@ -215,9 +197,6 @@ public class WebClientUtilTest extends TestCase {
 		Proxy proxy = new AuthenticatedProxy(Type.HTTP, proxyAddress, "proxyUser", "proxyPass");
 		WebClientUtil.setupHttpClient(client, proxy, url, "", "");
 
-		Message response = new Message("HTTP/1.1 407 Proxy authentication required");
-		response.headers.add("Proxy-Authenticate: Basic realm=\"Foo\"");
-		testProxy.addResponse(response);
 		testProxy.addResponse(TestProxy.SERVICE_UNVAILABLE);
 
 		GetMethod method = new GetMethod("/");
@@ -225,9 +204,6 @@ public class WebClientUtilTest extends TestCase {
 		assertEquals(503, statusCode);
 
 		Message request = testProxy.getRequest();
-		assertEquals("CONNECT foo:443 HTTP/1.1", request.request);
-
-		request = testProxy.getRequest();
 		assertEquals("CONNECT foo:443 HTTP/1.1", request.request);
 		assertEquals("Basic cHJveHlVc2VyOnByb3h5UGFzcw==", request.getHeaderValue("Proxy-Authorization"));
 	}
@@ -365,12 +341,9 @@ public class WebClientUtilTest extends TestCase {
 
 		GetMethod method = new GetMethod(url);
 		int statusCode = client.executeMethod(method);
-		assertEquals(200, statusCode);
+		assertEquals(401, statusCode);
 
 		Message request = testProxy.getRequest();
-		assertEquals("GET http://foo/bar HTTP/1.1", request.request);
-
-		request = testProxy.getRequest();
 		assertEquals("GET http://foo/bar HTTP/1.1", request.request);
 		assertEquals("Basic dXNlcjpwYXNz", request.getHeaderValue("Authorization"));
 	}
@@ -417,12 +390,9 @@ public class WebClientUtilTest extends TestCase {
 
 		GetMethod method = new GetMethod(url);
 		int statusCode = client.executeMethod(method);
-		assertEquals(200, statusCode);
+		assertEquals(407, statusCode);
 
 		Message request = testProxy.getRequest();
-		assertEquals("GET http://foo/bar HTTP/1.1", request.request);
-
-		request = testProxy.getRequest();
 		assertEquals("GET http://foo/bar HTTP/1.1", request.request);
 		assertEquals("Basic cHJveHlVc2VyOnByb3h5UGFzcw==", request.getHeaderValue("Proxy-Authorization"));
 	}
@@ -437,12 +407,6 @@ public class WebClientUtilTest extends TestCase {
 		});
 		WebClientUtil.setupHttpClient(client, null, location);
 
-		Message response = new Message("HTTP/1.1 407 Proxy authentication required");
-		response.headers.add("Proxy-Authenticate: Basic realm=\"Foo\"");
-		testProxy.addResponse(response);
-		response = new Message("HTTP/1.1 401 Authentication required");
-		response.headers.add("WWW-Authenticate: Basic realm=\"Foo\"");
-		testProxy.addResponse(response);
 		testProxy.addResponse(TestProxy.OK);
 
 		GetMethod method = new GetMethod(url);
@@ -451,13 +415,7 @@ public class WebClientUtilTest extends TestCase {
 
 		Message request = testProxy.getRequest();
 		assertEquals("GET http://foo/bar HTTP/1.1", request.request);
-
-		request = testProxy.getRequest();
-		assertEquals("GET http://foo/bar HTTP/1.1", request.request);
 		assertEquals("Basic cHJveHlVc2VyOnByb3h5UGFzcw==", request.getHeaderValue("Proxy-Authorization"));
-
-		request = testProxy.getRequest();
-		assertEquals("GET http://foo/bar HTTP/1.1", request.request);
 		assertEquals("Basic dXNlcjpwYXNz", request.getHeaderValue("Authorization"));
 	}
 
@@ -491,9 +449,6 @@ public class WebClientUtilTest extends TestCase {
 		});
 		WebClientUtil.setupHttpClient(client, null, location);
 
-		Message response = new Message("HTTP/1.1 407 Proxy authentication required");
-		response.headers.add("Proxy-Authenticate: Basic realm=\"Foo\"");
-		testProxy.addResponse(response);
 		testProxy.addResponse(TestProxy.SERVICE_UNVAILABLE);
 
 		GetMethod method = new GetMethod("/");
@@ -501,9 +456,6 @@ public class WebClientUtilTest extends TestCase {
 		assertEquals(503, statusCode);
 
 		Message request = testProxy.getRequest();
-		assertEquals("CONNECT foo:443 HTTP/1.1", request.request);
-
-		request = testProxy.getRequest();
 		assertEquals("CONNECT foo:443 HTTP/1.1", request.request);
 		assertEquals("Basic cHJveHlVc2VyOnByb3h5UGFzcw==", request.getHeaderValue("Proxy-Authorization"));
 	}
