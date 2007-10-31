@@ -390,9 +390,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			} finally {
 				monitor.done();
 			}
-			
-			System.err.println("!!!!!!!!!!!!!!!!!!!!!");
-			
 			return new Status(IStatus.OK, TasksUiPlugin.ID_PLUGIN, IStatus.OK, "", null);
 		} 
 	}

@@ -71,7 +71,7 @@ public class TaskExportImportTest extends AbstractContextTest {
 		
 		InteractionContext mockContext = ContextCorePlugin.getContextManager().loadContext(task.getHandleIdentifier());
 		
-		ContextCorePlugin.getContextManager().activateContext(mockContext);
+		ContextCorePlugin.getContextManager().internalActivateContext(mockContext);
 		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.EDIT, "structureKind", "handle", "originId");
 		mockContext.parseEvent(event);
 		ContextCorePlugin.getContextManager().deactivateContext(mockContext.getHandleIdentifier());
