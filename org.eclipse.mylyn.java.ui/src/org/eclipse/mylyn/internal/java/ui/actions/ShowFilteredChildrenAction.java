@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.java.ui;
+package org.eclipse.mylyn.internal.java.ui.actions;
 
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.action.Action;
@@ -21,14 +21,9 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
 
 /**
- * Do not use.
- * 
- * Moved to internal package, unintentionally to API added as part of 2.1.
- * 
- * API-3.0: delete
+ * @author Mik Kersten
  */
-@Deprecated
-public class BrowseFilteredAction extends Action implements IObjectActionDelegate, IViewActionDelegate {
+public class ShowFilteredChildrenAction extends Action implements IObjectActionDelegate, IViewActionDelegate {
 
 	private BrowseFilteredListener browseFilteredListener;
 
@@ -36,7 +31,6 @@ public class BrowseFilteredAction extends Action implements IObjectActionDelegat
 
 	private IStructuredSelection selection;
 
-	@Deprecated
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 		if (targetPart instanceof PackageExplorerPart) {
 			treeViewer = ((PackageExplorerPart)targetPart).getTreeViewer();
@@ -44,7 +38,6 @@ public class BrowseFilteredAction extends Action implements IObjectActionDelegat
 		}
 	} 
 	
-	@Deprecated
 	public void init(IViewPart targetPart) {
 		if (targetPart instanceof PackageExplorerPart) {
 			treeViewer = ((PackageExplorerPart)targetPart).getTreeViewer();
@@ -52,14 +45,14 @@ public class BrowseFilteredAction extends Action implements IObjectActionDelegat
 		}
 	}
 
-	@Deprecated
 	public void run(IAction action) {
-		if (selection != null) {
-			browseFilteredListener.unfilterSelection(treeViewer, selection);
-		}
+		if (!browseFilteredListener.resetIfTemporarilyUnfiltered(treeViewer)) {
+			if (selection != null) {
+				browseFilteredListener.unfilterSelection(treeViewer, selection);
+			}
+		} 
 	}
 
-	@Deprecated
 	public void selectionChanged(IAction action, ISelection selection) {
 		if (selection instanceof IStructuredSelection) {
 			this.selection = (IStructuredSelection) selection;

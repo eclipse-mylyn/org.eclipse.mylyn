@@ -99,7 +99,7 @@
   	<!-- ==================== Editors ==================== -->
 
 	<extension
-          point="org.eclipse.mylyn.tasks.ui.editors">
+          point="org.eclipse.mylyn.tasks.ui.editors"> 
        <hyperlinkDetector
              class="org.eclipse.mylyn.internal.java.ui.JavaStackTraceHyperlinkDetector"
              id="org.eclipse.mylyn.java.hyperlink.detector.stack"/>
@@ -380,7 +380,7 @@
            id="org.eclipse.mylyn.context.ui.browse.filtered.contribution"
            targetID="org.eclipse.jdt.ui.PackageExplorer">
         <action
-              class="org.eclipse.mylyn.java.ui.BrowseFilteredAction"
+              class="org.eclipse.mylyn.internal.java.ui.actions.ShowFilteredChildrenAction"
               enablesFor="1"
               icon="icons/etool16/browse-filtered.gif"
               id="org.eclipse.mylyn.java.ui.action.browse.filtered"

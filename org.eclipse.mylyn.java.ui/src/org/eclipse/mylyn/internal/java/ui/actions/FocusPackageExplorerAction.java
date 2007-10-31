@@ -105,7 +105,6 @@ public class FocusPackageExplorerAction extends AbstractAutoFocusViewAction {
 //							Object object = field.get(contributionItem);
 //							if (object instanceof CustomFiltersActionGroup) {
 //								CustomFiltersActionGroup group = (CustomFiltersActionGroup) object;
-//								System.err.println(">>>> " + group);
 //								group.setFilters(new String[] { });
 //							}
 //						} catch (Exception e) {
