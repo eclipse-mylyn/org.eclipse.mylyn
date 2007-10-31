@@ -11,6 +11,7 @@ package org.eclipse.mylyn.internal.tasks.ui;
 import java.lang.reflect.Field;
 
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
@@ -51,16 +52,16 @@ public class TaskListColorsAndFonts {
 	public static final Color COLOR_HYPERLINK_TEXT = new Color(Display.getDefault(), 0, 0, 200);
 
 	public static final Color COLOR_QUOTED_TEXT = new Color(Display.getDefault(), 38, 86, 145);
-	
+
 	public static final Color COLOR_SPELLING_ERROR = new Color(Display.getDefault(), 255, 0, 0);
 
 	public static final Color GRAY = new Color(Display.getDefault(), 100, 100, 100);
-	
+
 	public static final Font BOLD = JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT);
 
 	public static final Font ITALIC = JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT);
 
-	public static Font STRIKETHROUGH;
+	public static Font STRIKETHROUGH = null;
 
 	static {
 		Font defaultFont = JFaceResources.getFontRegistry().get(JFaceResources.DEFAULT_FONT);
@@ -69,19 +70,21 @@ public class TaskListColorsAndFonts {
 			FontData data = new FontData(defaultData[0].getName(), defaultData[0].getHeight(),
 					defaultData[0].getStyle());
 
-			// NOTE: Windows XP only, for: data.data.lfStrikeOut = 1;
-			try {
-				Field dataField = data.getClass().getDeclaredField("data");
-				Object dataObject = dataField.get(data);
-				Class<?> clazz = dataObject.getClass().getSuperclass();
-				Field strikeOutFiled = clazz.getDeclaredField("lfStrikeOut");
-				strikeOutFiled.set(dataObject, (byte) 1);
-				STRIKETHROUGH = new Font(Display.getCurrent(), data);
-			} catch (Throwable t) {
-				// Linux or other platform
-				STRIKETHROUGH = defaultFont;
-			}
-		} else {
+			if ("win32".equals(SWT.getPlatform())) {
+				// NOTE: Windows only, for: data.data.lfStrikeOut = 1;
+				try {
+					Field dataField = data.getClass().getDeclaredField("data");
+					Object dataObject = dataField.get(data);
+					Class<?> clazz = dataObject.getClass().getSuperclass();
+					Field strikeOutFiled = clazz.getDeclaredField("lfStrikeOut");
+					strikeOutFiled.set(dataObject, (byte) 1);
+					STRIKETHROUGH = new Font(Display.getCurrent(), data);
+				} catch (Throwable t) {
+					// ignore
+				}
+			} 
+		} 
+		if (STRIKETHROUGH == null) {
 			STRIKETHROUGH = defaultFont;
 		}
 	}

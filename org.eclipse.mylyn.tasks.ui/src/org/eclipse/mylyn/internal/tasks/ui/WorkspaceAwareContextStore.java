@@ -21,12 +21,13 @@ public class WorkspaceAwareContextStore extends AbstractContextStore {
 	public static final String CONTEXTS_DIRECTORY = "contexts";
 
 	private File rootDirectory;
-
+ 
 	private File contextDirectory;
 
 	@Override
 	public synchronized void init() {
-
+		System.err.println(">>>>>> workspace store started");
+		
 		rootDirectory = new File(TasksUiPlugin.getDefault().getDataDirectory());
 		if (!rootDirectory.exists()) {
 			rootDirectory.mkdir();

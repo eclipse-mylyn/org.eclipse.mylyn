@@ -27,7 +27,10 @@ import org.eclipse.core.resources.ISaveContext;
 import org.eclipse.core.resources.ISaveParticipant;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.dialogs.Dialog;
@@ -86,6 +89,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.ui.progress.UIJob;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -308,6 +312,91 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	};
 
+	private class TasksUiInitializationJob extends UIJob {
+
+		public TasksUiInitializationJob() {
+			super("Initializing Task List");
+			setSystem(true);
+		}
+//		public IStatus runInUIThread(IProgressMonitor monitor) {
+//			Job job = new RealJob(JavaUIMessages.JavaPlugin_initializing_ui);
+//			job.setPriority(Job.SHORT);
+//			job.schedule();
+//			return new Status(IStatus.OK, JavaPlugin.getPluginId(), IStatus.OK, "", null); //$NON-NLS-1$
+//		}
+		
+		@Override
+		public IStatus runInUIThread(IProgressMonitor monitor) {
+			// NOTE: failure in one part of the initialization should
+			// not prevent others
+			monitor.beginTask("Initializing Task List", 5);
+			try {
+				// Needs to run after workbench is loaded because it
+				// relies on images.
+				TasksUiExtensionReader.initWorkbenchUiExtensions();
+
+				// Needs to happen asynchronously to avoid bug 159706
+				if (taskListManager.getTaskList().getActiveTask() != null) {
+					taskListManager.activateTask(taskListManager.getTaskList().getActiveTask());
+				}
+				taskListManager.initActivityHistory();
+			} catch (Throwable t) {
+				StatusHandler.fail(t, "Could not initialize task activity", false);
+			}
+			monitor.worked(1);
+			
+			try {
+				taskListNotificationManager = new TaskListNotificationManager();
+				taskListNotificationManager.addNotificationProvider(REMINDER_NOTIFICATION_PROVIDER);
+				taskListNotificationManager.addNotificationProvider(INCOMING_NOTIFICATION_PROVIDER);
+				taskListNotificationManager.startNotification(NOTIFICATION_DELAY);
+				getPreferenceStore().addPropertyChangeListener(taskListNotificationManager);
+			} catch (Throwable t) {
+				StatusHandler.fail(t, "Could not initialize notifications", false);
+			}
+			monitor.worked(1);
+			
+			try {
+				taskListBackupManager = new TaskListBackupManager();
+				getPreferenceStore().addPropertyChangeListener(taskListBackupManager);
+
+				synchronizationScheduler = new TaskListSynchronizationScheduler(true);
+				synchronizationScheduler.startSynchJob();
+			} catch (Throwable t) {
+				StatusHandler.fail(t, "Could not initialize task list backup and synchronization", false);
+			}
+			monitor.worked(1);
+
+			try {
+				taskListSaveManager = new TaskListSaveManager();
+				taskListManager.setTaskListSaveManager(taskListSaveManager);
+
+				ContextCorePlugin.getDefault().getPluginPreferences().addPropertyChangeListener(
+						PREFERENCE_LISTENER);
+
+				getPreferenceStore().addPropertyChangeListener(PROPERTY_LISTENER);
+				getPreferenceStore().addPropertyChangeListener(synchronizationScheduler);
+				getPreferenceStore().addPropertyChangeListener(taskListManager);
+
+				// TODO: get rid of this, hack to make decorators show
+				// up on startup
+				TaskRepositoriesView repositoriesView = TaskRepositoriesView.getFromActivePerspective();
+				if (repositoriesView != null) {
+					repositoriesView.getViewer().refresh();
+				}
+				checkForCredentials();
+			} catch (Throwable t) {
+				StatusHandler.fail(t, "Could not finish Tasks UI initialization", false);
+			} finally {
+				monitor.done();
+			}
+			
+			System.err.println("!!!!!!!!!!!!!!!!!!!!!");
+			
+			return new Status(IStatus.OK, TasksUiPlugin.ID_PLUGIN, IStatus.OK, "", null);
+		} 
+	}
+	
 	public TasksUiPlugin() {
 		super();
 		INSTANCE = this;
@@ -318,6 +407,9 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		super.start(context);
 		// NOTE: startup order is very sensitive
 		try {
+			System.err.println(">>> Tasks UI starting");
+//			Thread.sleep(5000);
+			
 			StatusHandler.addStatusHandler(new RepositoryAwareStatusHandler());
 			WebClientUtil.setLoggingEnabled(DEBUG_HTTPCLIENT);
 			initializeDefaultPreferences(getPreferenceStore());
@@ -382,67 +474,9 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			};
 			ResourcesPlugin.getWorkspace().addSaveParticipant(this, saveParticipant);
 
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					// NOTE: failure in one part of the initialization should
-					// not prevent others
-					try {
-						// Needs to run after workbench is loaded because it
-						// relies on images.
-						TasksUiExtensionReader.initWorkbenchUiExtensions();
-
-						// Needs to happen asynchronously to avoid bug 159706
-						if (taskListManager.getTaskList().getActiveTask() != null) {
-							taskListManager.activateTask(taskListManager.getTaskList().getActiveTask());
-						}
-						taskListManager.initActivityHistory();
-					} catch (Throwable t) {
-						StatusHandler.fail(t, "Could not initialize task activity", false);
-					}
-
-					try {
-						taskListNotificationManager = new TaskListNotificationManager();
-						taskListNotificationManager.addNotificationProvider(REMINDER_NOTIFICATION_PROVIDER);
-						taskListNotificationManager.addNotificationProvider(INCOMING_NOTIFICATION_PROVIDER);
-						taskListNotificationManager.startNotification(NOTIFICATION_DELAY);
-						getPreferenceStore().addPropertyChangeListener(taskListNotificationManager);
-					} catch (Throwable t) {
-						StatusHandler.fail(t, "Could not initialize notifications", false);
-					}
-
-					try {
-						taskListBackupManager = new TaskListBackupManager();
-						getPreferenceStore().addPropertyChangeListener(taskListBackupManager);
-
-						synchronizationScheduler = new TaskListSynchronizationScheduler(true);
-						synchronizationScheduler.startSynchJob();
-					} catch (Throwable t) {
-						StatusHandler.fail(t, "Could not initialize task list backup and synchronization", false);
-					}
-
-					try {
-						taskListSaveManager = new TaskListSaveManager();
-						taskListManager.setTaskListSaveManager(taskListSaveManager);
-
-						ContextCorePlugin.getDefault().getPluginPreferences().addPropertyChangeListener(
-								PREFERENCE_LISTENER);
-
-						getPreferenceStore().addPropertyChangeListener(PROPERTY_LISTENER);
-						getPreferenceStore().addPropertyChangeListener(synchronizationScheduler);
-						getPreferenceStore().addPropertyChangeListener(taskListManager);
-
-						// TODO: get rid of this, hack to make decorators show
-						// up on startup
-						TaskRepositoriesView repositoriesView = TaskRepositoriesView.getFromActivePerspective();
-						if (repositoriesView != null) {
-							repositoriesView.getViewer().refresh();
-						}
-						checkForCredentials();
-					} catch (Throwable t) {
-						StatusHandler.fail(t, "Could not finish Tasks UI initialization", false);
-					}
-				}
-			});
+			System.err.println(">>>>> Tasks UI started");
+			
+			new TasksUiInitializationJob().schedule();
 		} catch (Exception e) {
 			e.printStackTrace();
 			StatusHandler.fail(e, "Mylyn Task List initialization failed", false);
@@ -571,6 +605,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		return getPreferenceStore().getString(ContextPreferenceContstants.PREF_DATA_DIR);
 	}
 
+	@Deprecated
 	private void migrateFromLegacyDirectory() {
 		// Migrate .mylar data folder to .metadata/.mylyn
 		String oldDefaultDataPath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toString() + '/' + ".mylar";

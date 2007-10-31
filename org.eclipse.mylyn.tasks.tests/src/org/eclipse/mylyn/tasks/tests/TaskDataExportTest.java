@@ -73,7 +73,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 		mockContext = ContextCorePlugin.getContextManager().loadContext(task1.getHandleIdentifier());
 		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.EDIT, "structureKind", "handle", "originId");
 		mockContext.parseEvent(event);
-		ContextCorePlugin.getContextManager().activateContext(mockContext);
+		ContextCorePlugin.getContextManager().internalActivateContext(mockContext);
 
 		// Save the context file and check that it exists
 		assertTrue(ContextCorePlugin.getDefault().getContextStore().getContextDirectory().exists());

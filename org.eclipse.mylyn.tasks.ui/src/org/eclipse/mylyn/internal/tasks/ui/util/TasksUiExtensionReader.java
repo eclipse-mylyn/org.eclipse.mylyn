@@ -136,7 +136,7 @@ public class TasksUiExtensionReader {
 		if (!coreExtensionsRead) {
 			IExtensionRegistry registry = Platform.getExtensionRegistry();
 
-			// HACK: has to be read first
+			// NOTE: has to be read first, consider improving
 			IExtensionPoint repositoriesExtensionPoint = registry.getExtensionPoint(EXTENSION_REPOSITORIES);
 			IExtension[] repositoryExtensions = repositoriesExtensionPoint.getExtensions();
 			for (int i = 0; i < repositoryExtensions.length; i++) {
@@ -149,17 +149,7 @@ public class TasksUiExtensionReader {
 					}
 				}
 			}
-
-			IExtensionPoint extensionPoint = registry.getExtensionPoint(EXTENSION_TASK_CONTRIBUTOR);
-			IExtension[] extensions = extensionPoint.getExtensions();
-			for (int i = 0; i < extensions.length; i++) {
-				IConfigurationElement[] elements = extensions[i].getConfigurationElements();
-				for (int j = 0; j < elements.length; j++) {
-					if (elements[j].getName().equals(DYNAMIC_POPUP_ELEMENT)) {
-						readDynamicPopupContributor(elements[j]);
-					}
-				}
-			}
+			delegatingExternalizer.setDelegateExternalizers(externalizers);
 
 			IExtensionPoint templatesExtensionPoint = registry.getExtensionPoint(EXTENSION_TEMPLATES);
 			IExtension[] templateExtensions = templatesExtensionPoint.getExtensions();
@@ -171,20 +161,6 @@ public class TasksUiExtensionReader {
 					}
 				}
 			}
-
-			IExtensionPoint editorsExtensionPoint = registry.getExtensionPoint(EXTENSION_EDITORS);
-			IExtension[] editors = editorsExtensionPoint.getExtensions();
-			for (int i = 0; i < editors.length; i++) {
-				IConfigurationElement[] elements = editors[i].getConfigurationElements();
-				for (int j = 0; j < elements.length; j++) {
-					if (elements[j].getName().equals(ELMNT_EDITOR_FACTORY)) {
-						readEditorFactory(elements[j]);
-					} else if (elements[j].getName().equals(ELMNT_HYPERLINK_DETECTOR)) {
-						readHyperlinkDetector(elements[j]);
-					}
-				}
-			}
-			delegatingExternalizer.setDelegateExternalizers(externalizers);
 
 			IExtensionPoint presentationsExtensionPoint = registry.getExtensionPoint(EXTENSION_PRESENTATIONS);
 			IExtension[] presentations = presentationsExtensionPoint.getExtensions();
@@ -202,6 +178,20 @@ public class TasksUiExtensionReader {
 	public static void initWorkbenchUiExtensions() {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 
+		// NOTE: causes ..mylyn.java.ui to load
+		IExtensionPoint editorsExtensionPoint = registry.getExtensionPoint(EXTENSION_EDITORS);
+		IExtension[] editors = editorsExtensionPoint.getExtensions();
+		for (int i = 0; i < editors.length; i++) {
+			IConfigurationElement[] elements = editors[i].getConfigurationElements();
+			for (int j = 0; j < elements.length; j++) {
+				if (elements[j].getName().equals(ELMNT_EDITOR_FACTORY)) {
+					readEditorFactory(elements[j]);
+				} else if (elements[j].getName().equals(ELMNT_HYPERLINK_DETECTOR)) {
+					readHyperlinkDetector(elements[j]);
+				}
+			}
+		}
+		
 		IExtensionPoint repositoriesExtensionPoint = registry.getExtensionPoint(EXTENSION_REPOSITORIES);
 		IExtension[] repositoryExtensions = repositoriesExtensionPoint.getExtensions();
 		for (int i = 0; i < repositoryExtensions.length; i++) {
@@ -231,6 +221,17 @@ public class TasksUiExtensionReader {
 			for (int j = 0; j < elements.length; j++) {
 				if (elements[j].getName().equals(ELMNT_DUPLICATE_DETECTOR)) {
 					readDuplicateDetector(elements[j]);
+				}
+			}
+		}
+		
+		IExtensionPoint extensionPoint = registry.getExtensionPoint(EXTENSION_TASK_CONTRIBUTOR);
+		IExtension[] extensions = extensionPoint.getExtensions();
+		for (int i = 0; i < extensions.length; i++) {
+			IConfigurationElement[] elements = extensions[i].getConfigurationElements();
+			for (int j = 0; j < elements.length; j++) {
+				if (elements[j].getName().equals(DYNAMIC_POPUP_ELEMENT)) {
+					readDynamicPopupContributor(elements[j]);
 				}
 			}
 		}
