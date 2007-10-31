@@ -55,7 +55,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 	public TaskListBackupManager() {
 		int days = TasksUiPlugin.getDefault().getPreferenceStore().getInt(TasksUiPreferenceConstants.BACKUP_SCHEDULE);
 		if (days > 0) {
-			start(MINUTE);
+			start(2 * MINUTE);
 		}
 	}
 
