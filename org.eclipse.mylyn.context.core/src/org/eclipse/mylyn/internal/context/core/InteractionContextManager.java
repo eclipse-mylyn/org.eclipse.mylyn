@@ -514,7 +514,7 @@ public class InteractionContextManager {
 	/**
 	 * Public for testing, activate via handle
 	 */
-	public void activateContext(InteractionContext context) {
+	public void internalActivateContext(InteractionContext context) {
 		System.setProperty(PROPERTY_CONTEXT_ACTIVE, Boolean.TRUE.toString());
 
 		activeContext.getContextMap().put(context.getHandleIdentifier(), context);
@@ -525,6 +525,14 @@ public class InteractionContextManager {
 			processActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND,
 					ACTIVITY_STRUCTUREKIND_ACTIVATION, context.getHandleIdentifier(), ACTIVITY_ORIGINID_WORKBENCH,
 					null, ACTIVITY_DELTA_ACTIVATED, 1f));
+		}
+		
+		for (IInteractionContextListener listener : listeners) {
+			try {
+				listener.contextActivated(context);
+			} catch (Exception e) {
+				StatusHandler.fail(e, "context listener failed", false);
+			}
 		}
 	}
 
@@ -540,14 +548,7 @@ public class InteractionContextManager {
 				context = loadContext(handleIdentifier);
 			}
 			if (context != null) {
-				activateContext(context);
-				for (IInteractionContextListener listener : listeners) {
-					try {
-						listener.contextActivated(context);
-					} catch (Exception e) {
-						StatusHandler.fail(e, "context listener failed", false);
-					}
-				}
+				internalActivateContext(context);
 			} else {
 				StatusHandler.log("Could not load context", this);
 			}

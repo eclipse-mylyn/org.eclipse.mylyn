@@ -21,6 +21,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.mylyn.java.ui,
  org.eclipse.jdt.launching,
  org.eclipse.jdt.junit,
+ org.eclipse.mylyn.tasks.core,
  org.eclipse.mylyn.context.ui,
  org.eclipse.mylyn.ide.ui,
  org.eclipse.mylyn.java.ui,
@@ -28,7 +29,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.mylyn.monitor.core,
  org.eclipse.mylyn.resources.ui,
  org.eclipse.mylyn.context.core,
- org.eclipse.mylyn,
  org.eclipse.jdt.debug.ui
 Bundle-Activator: org.eclipse.mylyn.internal.pde.ui.PdeUiBridgePlugin
 Eclipse-LazyStart: true

@@ -6,7 +6,6 @@ Bundle-Version: 2.2.0.I20071024-2200
 Bundle-Activator: org.eclipse.mylyn.context.core.ContextCorePlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.mylyn,
  org.eclipse.mylyn.monitor.core
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org

@@ -27,7 +27,7 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		ResourcesUiBridgePlugin.getDefault().setResourceMonitoringEnabled(true);
+//		ResourcesUiBridgePlugin.getDefault().setResourceMonitoringEnabled(true);
 		ResourcesUiBridgePlugin.getInterestUpdater().setSyncExec(true);
 	}
 

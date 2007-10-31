@@ -21,4 +21,5 @@ Require-Bundle: org.eclipse.mylyn.team.ui,
  org.eclipse.mylyn.resources.ui,
  org.eclipse.mylyn.monitor.ui,
  org.eclipse.ui.ide,
- org.eclipse.mylyn.tasks.tests
+ org.eclipse.mylyn.tasks.tests,
+ org.eclipse.mylyn.context.ui

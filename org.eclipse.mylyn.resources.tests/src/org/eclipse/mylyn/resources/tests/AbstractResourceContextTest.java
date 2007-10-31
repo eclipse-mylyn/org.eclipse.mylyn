@@ -48,7 +48,7 @@ public abstract class AbstractResourceContextTest extends AbstractContextTest {
 		project = new TestProject(this.getClass().getName());
 		context = new InteractionContext(taskId, scaling);
 		context.reset();
-		manager.activateContext(context);
+		manager.internalActivateContext(context);
 		ContextUiPlugin.getViewerManager().setSyncRefreshMode(true);
 		navigator = (ResourceNavigator) openView(IdeUiUtil.ID_NAVIGATOR);
 		assertNotNull(navigator);

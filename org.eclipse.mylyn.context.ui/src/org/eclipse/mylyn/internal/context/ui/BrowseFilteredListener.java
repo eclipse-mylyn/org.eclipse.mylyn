@@ -39,12 +39,14 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 	}
 
 	/**
-	 * @param treeViewer	cannot be null
-	 * @param targetSelection cannot be null
+	 * @param treeViewer
+	 *            cannot be null
+	 * @param targetSelection
+	 *            cannot be null
 	 */
 	public void unfilterSelection(TreeViewer treeViewer, IStructuredSelection targetSelection) {
 		InterestFilter filter = getInterestFilter(treeViewer);
-		Object targetObject =  targetSelection.getFirstElement();
+		Object targetObject = targetSelection.getFirstElement();
 		if (targetObject != null) {
 			filter.setTemporarilyUnfiltered(targetObject);
 			if (targetObject instanceof Tree) {
@@ -55,7 +57,25 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 			}
 		}
 	}
-	
+
+	/**
+	 * @return true if an object was temporarily unfiltered and reset
+	 */
+	public boolean resetIfTemporarilyUnfiltered(TreeViewer treeViewer) {
+		InterestFilter filter = getInterestFilter(treeViewer);
+		if (filter != null) {
+			Object unfiltered = filter.getTemporarilyUnfiltered();
+
+			System.err.println(">>>>>>>>> " + unfiltered);
+
+//			if (unfiltered != null) {
+//				filter.resetTemporarilyUnfiltered();
+//				return true;
+//			}
+		}
+		return false;
+	}
+
 	private void unfilter(final InterestFilter filter, final TreeViewer treeViewer, Object targetObject) {
 		if (targetObject != null) {
 			filter.setTemporarilyUnfiltered(targetObject);
@@ -114,31 +134,35 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 			return;
 		}
 
+		final TreeViewer treeViewer = (TreeViewer) viewer;
+		IStructuredSelection selection = (IStructuredSelection) treeViewer.getSelection();
+
 		if (isUnfilterEvent(event)) {
-			final TreeViewer treeViewer = (TreeViewer) viewer;
-			ISelection selection = treeViewer.getSelection();
-			if (selection instanceof IStructuredSelection) {
-				Object selectedObject = null;
-				Object clickedObject = getClickedItem(event);
-				if (clickedObject != null) {
-					selectedObject = clickedObject;
-					// selectedObject = ((IStructuredSelection)selection).getFirstElement();
-				} else {
-					selectedObject = treeViewer.getTree();
-				}
-
-				if (treeViewer instanceof CommonViewer) {
-					CommonViewer commonViewer = (CommonViewer) treeViewer;
-					commonViewer.setSelection(new StructuredSelection(selectedObject), true);
-				}
-
-				unfilter(filter, treeViewer, selectedObject);
+			Object selectedObject = null;
+			Object clickedObject = getClickedItem(event);
+			if (clickedObject != null) {
+				selectedObject = clickedObject;
+				// selectedObject = ((IStructuredSelection)selection).getFirstElement();
+			} else {
+				selectedObject = treeViewer.getTree();
 			}
+
+			if (treeViewer instanceof CommonViewer) {
+				CommonViewer commonViewer = (CommonViewer) treeViewer;
+				commonViewer.setSelection(new StructuredSelection(selectedObject), true);
+			}
+
+			unfilter(filter, treeViewer, selectedObject);
 		} else {
-			filter.resetTemporarilyUnfiltered();
-			// if (filter.resetTemporarilyUnfiltered()) {
-			// viewer.refresh(false);
-			// }
+			Object unfiltered = filter.getTemporarilyUnfiltered();
+			if (unfiltered != null) {
+				filter.resetTemporarilyUnfiltered();
+
+				// NOTE: need to set selection otherwise it will be missed
+				viewer.setSelection(selection);
+				viewer.refresh(unfiltered);
+			}
+
 		}
 	}
 

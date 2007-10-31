@@ -87,7 +87,7 @@ public class InterestFilterTest extends AbstractJavaContextTest {
 
 		assertFalse(filter.select(explorer.getTreeViewer(), null, type1));
 		monitor.selectionChanged(PackageExplorerPart.getFromActivePerspective(), new StructuredSelection(type1));
-		manager.activateContext(context);
+		manager.internalActivateContext(context);
 
 		monitor.selectionChanged(PackageExplorerPart.getFromActivePerspective(), new StructuredSelection(type1));
 		assertTrue(filter.select(explorer.getTreeViewer(), null, type1));

@@ -13,6 +13,7 @@ import java.util.Date;
 
 import org.eclipse.mylyn.internal.monitor.core.util.XmlStringConverter;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.monitor.core.InteractionEvent.Kind;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -65,7 +66,7 @@ public class SaxContextContentHandler extends DefaultHandler {
 				InteractionEvent ie = createEventFromAttributes(attributes);
 				context.parseEvent(ie);
 			} catch (Exception e) {
-				e.printStackTrace();
+				StatusHandler.fail(e, "Could not process activity event", false);
 			}
 			break;
 		}

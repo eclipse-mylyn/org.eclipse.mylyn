@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -24,40 +23,38 @@ import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.internal.context.ui.AbstractContextUiPlugin;
 import org.eclipse.mylyn.internal.resources.ui.ContextEditorManager;
 import org.eclipse.mylyn.internal.resources.ui.EditorInteractionMonitor;
 import org.eclipse.mylyn.internal.resources.ui.ResourceChangeMonitor;
 import org.eclipse.mylyn.internal.resources.ui.ResourceInteractionMonitor;
 import org.eclipse.mylyn.internal.resources.ui.ResourceInterestUpdater;
-import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
- * Main entry point for the Resource Structure Bridge.
+ * Main entry point for the Resource Structure Bridge. Initialization order is very important.
  * 
  * @author Mik Kersten
  * @since 2.0
  */
-public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
+public class ResourcesUiBridgePlugin extends AbstractContextUiPlugin {
 
 	public static final String PLUGIN_ID = "org.eclipse.mylyn.resources.ui";
 
 	private static ResourcesUiBridgePlugin INSTANCE;
 
-	private ResourceChangeMonitor resourceChangeMonitor = new ResourceChangeMonitor();
+	private ResourceChangeMonitor resourceChangeMonitor;
 
-	private ContextEditorManager editorManager = new ContextEditorManager();
+	private ContextEditorManager editorManager;
 
 	private ResourceInteractionMonitor resourceInteractionMonitor;
 
-	private EditorInteractionMonitor interestEditorTracker = new EditorInteractionMonitor();
+	private EditorInteractionMonitor interestEditorTracker;
 
-	private ResourceInterestUpdater interestUpdater = new ResourceInterestUpdater();
-
-	private ResourceBundle resourceBundle;
+	private ResourceInterestUpdater interestUpdater;
 
 	private static final String PREF_STORE_DELIM = ", ";
 
@@ -68,7 +65,6 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 	public ResourcesUiBridgePlugin() {
 		super();
 		INSTANCE = this;
-		resourceInteractionMonitor = new ResourceInteractionMonitor();
 	}
 
 	/**
@@ -77,8 +73,17 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-
 		initPreferenceDefaults();
+		System.err.println(">>> Resource UI Started");
+	}
+
+	@Override
+	protected void lazyStart(IWorkbench workbench) {
+		resourceChangeMonitor = new ResourceChangeMonitor();
+		editorManager = new ContextEditorManager();
+		resourceInteractionMonitor = new ResourceInteractionMonitor();
+		interestUpdater = new ResourceInterestUpdater();
+		interestEditorTracker = new EditorInteractionMonitor();
 
 		ContextCorePlugin.getContextManager().addListener(editorManager);
 		MonitorUiPlugin.getDefault().getSelectionMonitors().add(resourceInteractionMonitor);
@@ -87,6 +92,15 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 				IResourceChangeEvent.POST_CHANGE);
 
 		interestEditorTracker.install(PlatformUI.getWorkbench());
+
+		System.err.println(">>>> Resource UI Lazy Started");
+	}
+
+	@Override
+	protected void lazyStop() {
+		ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceChangeMonitor);
+		ContextCorePlugin.getContextManager().removeListener(editorManager);
+		MonitorUiPlugin.getDefault().getSelectionMonitors().remove(resourceInteractionMonitor);
 	}
 
 	/**
@@ -94,17 +108,8 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		try {
-			super.stop(context);
-			INSTANCE = null;
-			resourceBundle = null;
-
-			ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceChangeMonitor);
-			ContextCorePlugin.getContextManager().removeListener(editorManager);
-			MonitorUiPlugin.getDefault().getSelectionMonitors().remove(resourceInteractionMonitor);
-		} catch (Exception e) {
-			StatusHandler.fail(e, "Mylyn XML stop failed", false);
-		}
+		super.stop(context);
+		INSTANCE = null;
 	}
 
 	private void initPreferenceDefaults() {
@@ -187,13 +192,9 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 		return INSTANCE;
 	}
 
+	@Deprecated
 	public ResourceBundle getResourceBundle() {
-		try {
-			if (resourceBundle == null)
-				resourceBundle = ResourceBundle.getBundle("org.eclipse.mylyn.xml.XmlPluginResources");
-		} catch (MissingResourceException x) {
-			resourceBundle = null;
-		}
-		return resourceBundle;
+		return null;
 	}
+
 }

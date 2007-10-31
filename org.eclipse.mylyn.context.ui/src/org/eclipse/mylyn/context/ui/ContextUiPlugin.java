@@ -35,8 +35,7 @@ import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
 import org.eclipse.mylyn.internal.context.ui.AbstractContextLabelProvider;
-import org.eclipse.mylyn.internal.context.ui.ActiveSearchViewTracker;
-import org.eclipse.mylyn.internal.context.ui.ColorMap;
+import org.eclipse.mylyn.internal.context.ui.AbstractContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.ContentOutlineManager;
 import org.eclipse.mylyn.internal.context.ui.ContextPerspectiveManager;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
@@ -60,8 +59,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -72,7 +69,7 @@ import org.osgi.framework.BundleContext;
  * @author Mik Kersten
  * @since 2.0
  */
-public class ContextUiPlugin extends AbstractUIPlugin {
+public class ContextUiPlugin extends AbstractContextUiPlugin {
 
 	private Map<String, AbstractContextUiBridge> bridges = new HashMap<String, AbstractContextUiBridge>();
 
@@ -80,19 +77,13 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	private static ContextUiPlugin INSTANCE;
 
-//	private ResourceBundle resourceBundle;
-
 	private HighlighterList highlighters = null;
-
-	private ColorMap colorMap = new ColorMap();
 
 	private FocusedViewerManager viewerManager;
 
 	private ContextPerspectiveManager perspectiveManager = new ContextPerspectiveManager();
 
 	private ContentOutlineManager contentOutlineManager = new ContentOutlineManager();
-
-	private ActiveSearchViewTracker activeSearchViewTracker = new ActiveSearchViewTracker();
 
 	private Map<AbstractContextUiBridge, ImageDescriptor> activeSearchIcons = new HashMap<AbstractContextUiBridge, ImageDescriptor>();
 
@@ -239,41 +230,40 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-
 		initializeDefaultPreferences(getPreferenceStore());
 		initializeHighlighters();
-		initializeActions();
 
 		viewerManager = new FocusedViewerManager();
 		perspectiveManager.addManagedPerspective(PlanningPerspectiveFactory.ID_PERSPECTIVE);
 
-		final IWorkbench workbench = PlatformUI.getWorkbench();
-		workbench.getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				try {
-					ContextCorePlugin.getContextManager().addListener(viewerManager);
-					MonitorUiPlugin.getDefault().addWindowPartListener(contentOutlineManager);
+		System.err.println(">>>>>>> Context UI done");
+	}
 
-					// NOTE: task list must have finished initializing
-					TasksUiPlugin.getDefault().setHighlighter(DEFAULT_HIGHLIGHTER);
-					TasksUiPlugin.getTaskListManager().addActivityListener(perspectiveManager);
-					MonitorUiPlugin.getDefault().addWindowPerspectiveListener(perspectiveManager);
-					TasksUiPlugin.getTaskListManager().addActivityListener(TASK_ACTIVATION_LISTENER);
+	protected void lazyStart(IWorkbench workbench) {
+		try {
+			ContextCorePlugin.getContextManager().addListener(viewerManager);
+			MonitorUiPlugin.getDefault().addWindowPartListener(contentOutlineManager);
 
-					workbench.addWindowListener(activeSearchViewTracker);
-					IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
-					for (int i = 0; i < windows.length; i++) {
-						windows[i].addPageListener(activeSearchViewTracker);
-						IWorkbenchPage[] pages = windows[i].getPages();
-						for (int j = 0; j < pages.length; j++) {
-							pages[j].addPartListener(activeSearchViewTracker);
-						}
-					}
-				} catch (Exception e) {
-					StatusHandler.fail(e, "Context UI initialization failed", true);
-				}
-			}
-		});
+			// NOTE: task list must have finished initializing
+			TasksUiPlugin.getDefault().setHighlighter(DEFAULT_HIGHLIGHTER);
+			TasksUiPlugin.getTaskListManager().addActivityListener(perspectiveManager);
+			MonitorUiPlugin.getDefault().addWindowPerspectiveListener(perspectiveManager);
+			TasksUiPlugin.getTaskListManager().addActivityListener(TASK_ACTIVATION_LISTENER);
+
+			System.err.println(">>>>>>> Context UI Lazy Start Done");
+		} catch (Exception e) {
+			StatusHandler.fail(e, "Context UI initialization failed", true);
+		}
+	}
+
+	@Override
+	protected void lazyStop() {
+		ContextCorePlugin.getContextManager().removeListener(viewerManager);
+		MonitorUiPlugin.getDefault().removeWindowPartListener(contentOutlineManager);
+
+		TasksUiPlugin.getTaskListManager().removeActivityListener(perspectiveManager);
+		MonitorUiPlugin.getDefault().removeWindowPerspectiveListener(perspectiveManager);
+		TasksUiPlugin.getTaskListManager().removeActivityListener(TASK_ACTIVATION_LISTENER);
 	}
 
 	/**
@@ -281,39 +271,10 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		try {
-			super.stop(context);
-			perspectiveManager.removeManagedPerspective(PlanningPerspectiveFactory.ID_PERSPECTIVE);
-			ContextCorePlugin.getContextManager().removeListener(viewerManager);
-			MonitorUiPlugin.getDefault().removeWindowPartListener(contentOutlineManager);
-
-			TasksUiPlugin.getTaskListManager().removeActivityListener(perspectiveManager);
-			MonitorUiPlugin.getDefault().removeWindowPerspectiveListener(perspectiveManager);
-			TasksUiPlugin.getTaskListManager().removeActivityListener(TASK_ACTIVATION_LISTENER);
-
-			IWorkbench workbench = PlatformUI.getWorkbench();
-			if (workbench != null) {
-				workbench.removeWindowListener(activeSearchViewTracker);
-				IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
-				for (int i = 0; i < windows.length; i++) {
-					IWorkbenchPage[] pages = windows[i].getPages();
-					windows[i].removePageListener(activeSearchViewTracker);
-					for (int j = 0; j < pages.length; j++) {
-						pages[j].removePartListener(activeSearchViewTracker);
-					}
-				}
-			}
-
-			viewerManager.dispose();
-			colorMap.dispose();
-			highlighters.dispose();
-		} catch (Exception e) {
-			StatusHandler.fail(e, "Context UI stop failed", false);
-		}
-	}
-
-	private void initializeActions() {
-		// don't have any actions to initialize
+		super.stop(context);
+		perspectiveManager.removeManagedPerspective(PlanningPerspectiveFactory.ID_PERSPECTIVE);
+		viewerManager.dispose();
+		highlighters.dispose();
 	}
 
 	private void initializeHighlighters() {
@@ -337,7 +298,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		store.setDefault(ContextUiPrefContstants.AUTO_MANAGE_EXPANSION, true);
 		store.setDefault(ContextUiPrefContstants.AUTO_MANAGE_EDITOR_CLOSE_ACTION, true);
 		store.setDefault(ContextUiPrefContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING, true);
-		
+
 		store.setDefault(ContextUiPrefContstants.GAMMA_SETTING_LIGHTENED, false);
 		store.setDefault(ContextUiPrefContstants.GAMMA_SETTING_STANDARD, true);
 		store.setDefault(ContextUiPrefContstants.GAMMA_SETTING_DARKENED, false);

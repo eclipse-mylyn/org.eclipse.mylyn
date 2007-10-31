@@ -8,14 +8,15 @@
 
 package org.eclipse.mylyn.internal.ide.ant;
 
+import org.eclipse.mylyn.internal.context.ui.AbstractContextUiPlugin;
 import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.ui.IWorkbench;
 import org.osgi.framework.BundleContext;
 
 /**
  * @author Mik Kersten
  */
-public class AntUiBridgePlugin extends AbstractUIPlugin {
+public class AntUiBridgePlugin extends AbstractContextUiPlugin {
 
 	private AntEditingMonitor antEditingMonitor;
 
@@ -26,14 +27,21 @@ public class AntUiBridgePlugin extends AbstractUIPlugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+	}
+
+	@Override
+	protected void lazyStart(IWorkbench workbench) {
 		antEditingMonitor = new AntEditingMonitor();
 		MonitorUiPlugin.getDefault().getSelectionMonitors().add(antEditingMonitor);
 	}
 
 	@Override
-	public void stop(BundleContext context) throws Exception {
-		super.stop(context);
+	protected void lazyStop() {
 		MonitorUiPlugin.getDefault().getSelectionMonitors().remove(antEditingMonitor);
 	}
-
+	
+	@Override
+	public void stop(BundleContext context) throws Exception {
+		super.stop(context);
+	}
 }

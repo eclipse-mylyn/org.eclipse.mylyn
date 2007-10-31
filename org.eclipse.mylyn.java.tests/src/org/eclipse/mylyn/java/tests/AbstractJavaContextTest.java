@@ -58,7 +58,7 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
 		type1 = project.createType(p1, "Type1.java", "public class Type1 { }");
 		context = new InteractionContext(contextId, scaling);
 		context.reset();
-		manager.activateContext(context);
+		manager.internalActivateContext(context);
 		assertNotNull(JavaUiBridgePlugin.getDefault());
 		assertTrue(ContextCorePlugin.getDefault().getStructureBridges().toString().indexOf(
 				JavaStructureBridge.class.getCanonicalName()) != -1);
@@ -84,6 +84,7 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
 			System.err.println("> still active: " + manager.getActiveContext().getInteresting());
 		assertFalse(manager.isContextActive());
 		waitForAutoBuild();
+		ResourcesUiBridgePlugin.getDefault().setResourceMonitoringEnabled(false);
 		super.tearDown();
 	}
 

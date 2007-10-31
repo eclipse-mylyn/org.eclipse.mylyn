@@ -62,7 +62,7 @@ public class JavaStructureTest extends AbstractJavaContextTest {
 		callee = typeFoo.createMethod("void callee() { }", callee, true, null);
 
 		taskscape = new InteractionContext("12312", scaling);
-		manager.activateContext(taskscape);
+		manager.internalActivateContext(taskscape);
 	}
 
 	@Override

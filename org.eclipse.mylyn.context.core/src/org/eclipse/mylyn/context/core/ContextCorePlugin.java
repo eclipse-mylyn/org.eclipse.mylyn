@@ -125,8 +125,10 @@ public class ContextCorePlugin extends Plugin {
 
 	@Override
 	public void start(BundleContext context) throws Exception {
-		super.start(context);
+		super.start(context);  
+
 		contextManager = new InteractionContextManager();
+		System.err.println(">>> Context started");
 	}
 
 	@Override
@@ -280,7 +282,6 @@ public class ContextCorePlugin extends Plugin {
 			// Currently disabled
 			try {
 				Object object = element.createExecutableExtension(BridgesExtensionPointReader.ATTR_CLASS);
-
 				if (!(object instanceof AbstractContextStore)) {
 					StatusHandler.log("Could not load bridge: " + object.getClass().getCanonicalName()
 							+ " must implement " + AbstractContextStructureBridge.class.getCanonicalName(), null);

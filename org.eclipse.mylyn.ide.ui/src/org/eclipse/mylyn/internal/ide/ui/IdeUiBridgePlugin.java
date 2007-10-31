@@ -8,12 +8,15 @@
 package org.eclipse.mylyn.internal.ide.ui;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylyn.internal.context.ui.AbstractContextUiPlugin;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.osgi.framework.BundleContext;
 
 /**
  * @author Mik Kersten
  */
-public class IdeUiBridgePlugin extends AbstractUIPlugin {
+public class IdeUiBridgePlugin extends AbstractContextUiPlugin {
 
 	public static final String PLUGIN_ID = "org.eclipse.mylyn.ide";
 
@@ -25,6 +28,26 @@ public class IdeUiBridgePlugin extends AbstractUIPlugin {
 		INSTANCE = this;
 	}
 
+	@Override
+	public void start(BundleContext context) throws Exception {
+		super.start(context);
+	}
+	
+	@Override
+	protected void lazyStart(IWorkbench workbench) {
+		// ignore		
+	}
+	
+	@Override
+	protected void lazyStop() {
+		// ignore	
+	}
+
+	@Override
+	public void stop(BundleContext context) throws Exception {
+		super.stop(context);
+	}
+	
 	public static IdeUiBridgePlugin getDefault() {
 		return INSTANCE;
 	}

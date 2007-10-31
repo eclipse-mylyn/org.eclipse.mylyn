@@ -8,14 +8,15 @@
 
 package org.eclipse.mylyn.internal.pde.ui;
 
+import org.eclipse.mylyn.internal.context.ui.AbstractContextUiPlugin;
 import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.ui.IWorkbench;
 import org.osgi.framework.BundleContext;
 
 /**
  * @author Mik Kersten
  */
-public class PdeUiBridgePlugin extends AbstractUIPlugin {
+public class PdeUiBridgePlugin extends AbstractContextUiPlugin {
 
 	private PdeEditingMonitor pdeEditingMonitor;
 
@@ -26,15 +27,22 @@ public class PdeUiBridgePlugin extends AbstractUIPlugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+	}
 
+	@Override
+	protected void lazyStart(IWorkbench workbench) {
 		pdeEditingMonitor = new PdeEditingMonitor();
 		MonitorUiPlugin.getDefault().getSelectionMonitors().add(pdeEditingMonitor);
 	}
 
 	@Override
+	protected void lazyStop() {
+		MonitorUiPlugin.getDefault().getSelectionMonitors().remove(pdeEditingMonitor);
+	}
+	
+	@Override
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
-		MonitorUiPlugin.getDefault().getSelectionMonitors().remove(pdeEditingMonitor);
 	}
 
 }

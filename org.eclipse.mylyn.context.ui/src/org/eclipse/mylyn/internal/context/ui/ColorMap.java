@@ -10,7 +10,6 @@
  */
 package org.eclipse.mylyn.internal.context.ui;
 
-import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 
@@ -20,7 +19,7 @@ import org.eclipse.swt.widgets.Display;
 public class ColorMap {
 
 	// TODO: use themes?
-	public static final Color LANDMARK = TaskListColorsAndFonts.COLOR_TASK_ACTIVE;
+	public static final Color LANDMARK = new Color(Display.getDefault(), 36, 22, 50);//TaskListColorsAndFonts.COLOR_TASK_ACTIVE;
 
 	public static final Color BACKGROUND_COLOR = new Color(Display.getDefault(), 255, 255, 255);
 

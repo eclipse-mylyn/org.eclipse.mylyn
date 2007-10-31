@@ -7,7 +7,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.java.ui;
 
-import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
@@ -16,9 +15,7 @@ import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.context.core.IInteractionContext;
-import org.eclipse.mylyn.context.core.IInteractionContextListener;
-import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.internal.context.ui.AbstractContextUiPlugin;
 import org.eclipse.mylyn.internal.java.ui.editor.ActiveFoldingListener;
 import org.eclipse.mylyn.internal.java.ui.wizards.RecommendedPreferencesWizard;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
@@ -35,7 +32,7 @@ import org.osgi.framework.BundleContext;
 /**
  * @author Mik Kersten
  */
-public class JavaUiBridgePlugin extends AbstractUIPlugin {
+public class JavaUiBridgePlugin extends AbstractContextUiPlugin {
 
 	public static final String PLUGIN_ID = "org.eclipse.mylyn.java.ui";
 
@@ -57,55 +54,6 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 
 	private InterestUpdateDeltaListener javaElementChangeListener = new InterestUpdateDeltaListener();
 
-	// TODO: remove
-	final IInteractionContextListener PREFERENCES_WIZARD_LISTENER = new IInteractionContextListener() {
-
-		public void contextActivated(IInteractionContext context) {
-//			if (getPreferenceStore().getBoolean(RecommendedPreferencesWizard.MYLYN_FIRST_RUN)) {
-//				getPreferenceStore().setValue(RecommendedPreferencesWizard.MYLYN_FIRST_RUN, false);
-//				getDefault().savePluginPreferences();
-//				JavaUiUtil.installContentAssist(JavaPlugin.getDefault().getPreferenceStore(), true);
-//				if (!MonitorUiPlugin.getDefault().suppressConfigurationWizards()) {
-//					RecommendedPreferencesWizard wizard = new RecommendedPreferencesWizard();
-//					Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-//					if (shell != null && !shell.isDisposed()) {
-//						WizardDialog dialog = new WizardDialog(shell, wizard);
-//						dialog.create();
-//						dialog.open();
-//					}
-//				}
-//			}
-		}
-
-		public void contextCleared(IInteractionContext context) {
-			// ignore
-		}
-
-		public void contextDeactivated(IInteractionContext context) {
-			// ignore
-		}
-
-		public void elementDeleted(IInteractionElement element) {
-			// ignore
-		}
-
-		public void interestChanged(List<IInteractionElement> elements) {
-			// ignore
-		}
-
-		public void landmarkAdded(IInteractionElement element) {
-			// ignore
-		}
-
-		public void landmarkRemoved(IInteractionElement element) {
-			// ignore
-		}
-
-		public void relationsChanged(IInteractionElement element) {
-			// ignore
-		}
-	};
-
 	public JavaUiBridgePlugin() {
 		super();
 		INSTANCE = this;
@@ -124,37 +72,31 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 			getPreferenceStore().setValue(RecommendedPreferencesWizard.MYLYN_FIRST_RUN, false);
 			JavaUiUtil.installContentAssist(JavaPlugin.getDefault().getPreferenceStore(), true);
 		}
-		
-		final IWorkbench workbench = PlatformUI.getWorkbench();
-		workbench.getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				try {
-//					ContextCorePlugin.getContextManager().addListener(PREFERENCES_WIZARD_LISTENER);
-					ContextCorePlugin.getContextManager().addListener(landmarkMarkerManager);
 
-					try {
-						typeHistoryManager = new TypeHistoryManager();
-						ContextCorePlugin.getContextManager().addListener(typeHistoryManager);
-					} catch (Throwable t) {
-						StatusHandler.log(t, "Could not install type history manager, incompatible Eclipse version.");
-					}
+		System.err.println(">>>> Java UI started");
+	}
 
-					if (getPreferenceStore().getBoolean(InterestInducingProblemListener.PREDICTED_INTEREST_ERRORS)) {
-						problemListener.enable();
-					}
+	@Override
+	protected void lazyStart(IWorkbench workbench) {
+		ContextCorePlugin.getContextManager().addListener(landmarkMarkerManager);
+		javaEditingMonitor = new JavaEditingMonitor();
+		MonitorUiPlugin.getDefault().getSelectionMonitors().add(javaEditingMonitor);
+		installEditorTracker(workbench);
+		JavaCore.addElementChangedListener(javaElementChangeListener);
 
-					getPreferenceStore().addPropertyChangeListener(problemListener);
+		getPreferenceStore().addPropertyChangeListener(problemListener);
+		if (getPreferenceStore().getBoolean(InterestInducingProblemListener.PREDICTED_INTEREST_ERRORS)) {
+			problemListener.enable();
+		}
 
-					javaEditingMonitor = new JavaEditingMonitor();
-					MonitorUiPlugin.getDefault().getSelectionMonitors().add(javaEditingMonitor);
-					installEditorTracker(workbench);
+		try {
+			typeHistoryManager = new TypeHistoryManager();
+			ContextCorePlugin.getContextManager().addListener(typeHistoryManager);
+		} catch (Throwable t) {
+			StatusHandler.log(t, "Could not install type history manager, incompatible Eclipse version.");
+		}
 
-					JavaCore.addElementChangedListener(javaElementChangeListener);
-				} catch (Throwable t) {
-					StatusHandler.fail(t, "Mylyn Java plug-in initialization failed", true);
-				}
-			}
-		});
+		System.err.println(">>>> Java UI Lazy start done");
 	}
 
 	private void initDefaultPrefs() {
@@ -163,24 +105,19 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 	}
 
 	@Override
+	protected void lazyStop() {
+		ContextCorePlugin.getContextManager().removeListener(typeHistoryManager);
+		ContextCorePlugin.getContextManager().removeListener(landmarkMarkerManager);
+		MonitorUiPlugin.getDefault().getSelectionMonitors().remove(javaEditingMonitor);
+		JavaCore.removeElementChangedListener(javaElementChangeListener);
+		// TODO: uninstall editor tracker
+	}
+
+	@Override
 	public void stop(BundleContext context) throws Exception {
-		try {
-			super.stop(context);
-			INSTANCE = null;
-			resourceBundle = null;
-
-//			ContextCorePlugin.getContextManager().removeListener(PREFERENCES_WIZARD_LISTENER);
-			ContextCorePlugin.getContextManager().removeListener(typeHistoryManager);
-			ContextCorePlugin.getContextManager().removeListener(landmarkMarkerManager);
-
-			MonitorUiPlugin.getDefault().getSelectionMonitors().remove(javaEditingMonitor);
-
-			JavaCore.removeElementChangedListener(javaElementChangeListener);
-			// CVSUIPlugin.getPlugin().getChangeSetManager().remove(changeSetManager);
-			// TODO: uninstall editor tracker
-		} catch (Exception e) {
-			StatusHandler.fail(e, "Mylyn Java stop terminated abnormally", false);
-		}
+		super.stop(context);
+		INSTANCE = null;
+		resourceBundle = null;
 	}
 
 	private void installEditorTracker(IWorkbench workbench) {
@@ -223,6 +160,7 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 	/**
 	 * Returns the string from the plugin's resource bundle, or 'key' if not found.
 	 */
+	@Deprecated
 	public static String getResourceString(String key) {
 		ResourceBundle bundle = JavaUiBridgePlugin.getDefault().getResourceBundle();
 		try {
@@ -235,6 +173,7 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 	/**
 	 * Returns the plugin's resource bundle,
 	 */
+	@Deprecated
 	public ResourceBundle getResourceBundle() {
 		try {
 			if (resourceBundle == null)
@@ -262,4 +201,5 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 	public ActiveFoldingEditorTracker getEditorTracker() {
 		return editorTracker;
 	}
+
 }
