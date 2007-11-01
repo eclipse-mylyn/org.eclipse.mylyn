@@ -13,6 +13,7 @@ import java.util.Arrays;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
@@ -61,12 +62,9 @@ class CustomTaskListDecorationDrawer implements Listener {
 	 */
 	public void handleEvent(Event event) {
 		Object data = event.item.getData();
-		AbstractTask task = null;
 		Image activationImage = null;
 		if (data instanceof AbstractTask) {
-			task = (AbstractTask) data;
-		}
-		if (task != null) {
+			AbstractTask task = (AbstractTask) data;
 			if (task.isActive()) {
 				activationImage = taskActive;
 			} else if (ContextCorePlugin.getContextManager().hasContext(task.getHandleIdentifier())) {
@@ -118,8 +116,23 @@ class CustomTaskListDecorationDrawer implements Listener {
 			offsetX = event.x + 18 - platformSpecificSquish;
 			offsetY += 2;
 		}
-		if (element != null && !(element instanceof AbstractTask)) {
-			if (!hideDecorationOnContainer(element) && hasIncoming(element)) {
+		if (element != null) {
+			if (element instanceof AbstractTask) {
+				image = TasksUiImages.getImage(TaskElementLabelProvider.getSynchronizationImageDescriptor(element,
+						taskListView.synchronizationOverlaid));
+			} else {
+				int imageOffset = 0;
+				if (!hideDecorationOnContainer(element) && hasIncoming(element)) {
+					image = TasksUiImages.getImage(TasksUiImages.OVERLAY_SYNCH_INCOMMING);
+					image = TasksUiImages.getImage(TasksUiImages.OVERLAY_INCOMMING);
+				} else if (element instanceof AbstractRepositoryQuery) {
+					AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
+					if (query.getSynchronizationStatus() != null) {
+						image = TasksUiImages.getImage(TasksUiImages.OVERLAY_WARNING);
+						imageOffset = 3;
+					}
+				}
+
 				int additionalSquish = 0;
 				if (platformSpecificSquish > 0 && taskListView.synchronizationOverlaid) {
 					additionalSquish = platformSpecificSquish + 3;
@@ -127,17 +140,13 @@ class CustomTaskListDecorationDrawer implements Listener {
 					additionalSquish = platformSpecificSquish / 2;
 				}
 				if (taskListView.synchronizationOverlaid) {
-					image = TasksUiImages.getImage(TasksUiImages.OVERLAY_SYNCH_INCOMMING);
-					offsetX = 42 - additionalSquish;
+					offsetX = 42 - imageOffset - additionalSquish;
 				} else {
-					image = TasksUiImages.getImage(TasksUiImages.OVERLAY_INCOMMING);
-					offsetX = 24 - additionalSquish;
+					offsetX = 24 - imageOffset - additionalSquish;
 				}
 			}
-		} else {
-			image = TasksUiImages.getImage(TaskElementLabelProvider.getSynchronizationImageDescriptor(element,
-					taskListView.synchronizationOverlaid));
 		}
+
 		if (image != null) {
 			event.gc.drawImage(image, offsetX, event.y + offsetY);
 		}
@@ -154,8 +163,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 				AbstractTask containedRepositoryTask = task;
 				if (containedRepositoryTask.getSynchronizationState() == RepositoryTaskSyncState.INCOMING) {
 					return true;
-				} else if (task.getChildren() != null && task.getChildren().size() > 0
-						&& hasIncoming(task)) {
+				} else if (task.getChildren() != null && task.getChildren().size() > 0 && hasIncoming(task)) {
 					return true;
 				}
 			}

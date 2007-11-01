@@ -142,12 +142,8 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 	}
 
 	public static ImageDescriptor getSynchronizationImageDescriptor(Object element, boolean synchViewStyle) {
-		AbstractTask repositoryTask = null;
-		ImageDescriptor imageDescriptor = null;
 		if (element instanceof AbstractTask) {
-			repositoryTask = (AbstractTask) element;
-		}
-		if (repositoryTask != null) {
+			AbstractTask repositoryTask = (AbstractTask) element;
 			if (repositoryTask.getSynchronizationState() == RepositoryTaskSyncState.INCOMING
 					&& repositoryTask.getLastReadTimeStamp() == null) {
 				if (synchViewStyle) {
@@ -156,6 +152,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 					return TasksUiImages.OVERLAY_INCOMMING_NEW;
 				}
 			}
+			ImageDescriptor imageDescriptor = null;
 			if (repositoryTask.getSynchronizationState() == RepositoryTaskSyncState.OUTGOING) {
 				if (synchViewStyle) {
 					imageDescriptor = TasksUiImages.OVERLAY_SYNCH_OUTGOING;
@@ -176,13 +173,10 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			} else if (imageDescriptor != null) {
 				return imageDescriptor;
 			}
-		} else if (element instanceof AbstractTaskContainer) {
-			AbstractTaskContainer container = (AbstractTaskContainer) element;
-			if (container instanceof AbstractRepositoryQuery) {
-				AbstractRepositoryQuery query = (AbstractRepositoryQuery) container;
-				if (query.getSynchronizationStatus() != null) {
-					return TasksUiImages.OVERLAY_WARNING;
-				}
+		} else if (element instanceof AbstractRepositoryQuery) {
+			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
+			if (query.getSynchronizationStatus() != null) {
+				return TasksUiImages.OVERLAY_WARNING;
 			}
 		}
 		// HACK: need a proper blank image
