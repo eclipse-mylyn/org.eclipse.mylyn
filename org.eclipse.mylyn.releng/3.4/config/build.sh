@@ -1,5 +1,8 @@
 #!/bin/sh
 
+mkdir ../build
+cp -R ../../maps ../build/
+
 BUILD_HOME=/path/to/base/dir/3.4
 
 export JAVA_HOME=/path/to/jdk/jdk1.6.0_03
