@@ -216,8 +216,6 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 			synchronizeEditorAction.selectionChanged(new StructuredSelection(this.getEditor()));
 			showInTaskListAction.selectionChanged(selection);
 
-			manager.add(attachAction);
-			manager.add(attachScreenshotAction);
 			manager.add(new Separator());
 			manager.add(synchronizeEditorAction);
 			manager.add(openWithBrowserAction);
@@ -258,6 +256,10 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 			}
 
 			manager.add(new Separator());
+			manager.add(attachAction);
+			manager.add(attachScreenshotAction);
+			
+			manager.add(new Separator());
 			// HACK: there should be a saner way of doing this
 			ObjectActionContributorManager.getManager().contributeObjectActions(editor, manager,
 					new ISelectionProvider() {
@@ -272,15 +274,14 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 
 						public void removeSelectionChangedListener(ISelectionChangedListener listener) {
 							// ignore
-
 						}
 
 						public void setSelection(ISelection selection) {
 							// ignore
-
 						}
 					});
 		}
+		
 		manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
