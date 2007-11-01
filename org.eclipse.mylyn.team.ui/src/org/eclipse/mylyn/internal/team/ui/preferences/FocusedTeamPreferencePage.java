@@ -33,6 +33,8 @@ import org.eclipse.ui.fieldassist.*;
  */
 public class FocusedTeamPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
+	public final static String PAGE_ID = "org.eclipse.mylyn.team.ui.ui.preferences";
+
 	private Button manageChangeSets;
 
 	private Text commitTemplate = null;

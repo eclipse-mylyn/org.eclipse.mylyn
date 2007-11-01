@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.resources.mapping.ResourceMapping;
@@ -21,6 +22,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.internal.team.ui.properties.TeamPropertiesLinkProvider;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -36,6 +38,7 @@ import org.osgi.service.prefs.Preferences;
 
 /**
  * @author Mik Kersten
+ * @author Steffen Pingel
  */
 public class ContextChangeSet extends CVSActiveChangeSet/*ActiveChangeSet*/implements IAdaptable {
 
@@ -89,8 +92,25 @@ public class ContextChangeSet extends CVSActiveChangeSet/*ActiveChangeSet*/imple
 
 	@Override
 	public String getComment() {
-		String template = FocusedTeamUiPlugin.getDefault().getPreferenceStore().getString(
-				FocusedTeamUiPlugin.COMMIT_TEMPLATE);
+		String template = null;
+		Set<IProject> projects = new HashSet<IProject>(); 
+		IResource[] resources = getResources();
+		for (IResource resource : resources) {
+			IProject project = resource.getProject();
+			if (project != null && project.isAccessible() && !projects.contains(project)) {
+				TeamPropertiesLinkProvider provider = new TeamPropertiesLinkProvider();
+				template = provider.getCommitCommentTemplate(project);
+				if (template != null) {
+					break;
+				}
+				projects.add(project);
+			}			
+		}
+
+		if (template == null) {
+			template = FocusedTeamUiPlugin.getDefault().getPreferenceStore().getString(
+					FocusedTeamUiPlugin.COMMIT_TEMPLATE);
+		}
 		return FocusedTeamUiPlugin.getDefault().getCommitTemplateManager().generateComment(task, template);
 	}
 
