@@ -117,8 +117,6 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context); 
-		System.err.println(">>>> Monitor UI Started");
-		
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				try {
