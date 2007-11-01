@@ -471,7 +471,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			};
 			ResourcesPlugin.getWorkspace().addSaveParticipant(this, saveParticipant);
 
-			System.err.println(">>>>> Tasks UI started");
+			System.err.println(">>>> Tasks UI started");
 			
 			new TasksUiInitializationJob().schedule();
 		} catch (Exception e) {

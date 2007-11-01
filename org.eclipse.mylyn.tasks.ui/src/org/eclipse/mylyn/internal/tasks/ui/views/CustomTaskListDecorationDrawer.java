@@ -89,7 +89,6 @@ class CustomTaskListDecorationDrawer implements Listener {
 
 				// TODO: would be nice not to do this on each item's painting
 //				String text = tree.getFilterControl().getText();
-//				System.err.println(">>>>>> " + tree.getViewer().getExpandedElements().length);
 //				if (text != null && !text.equals("") && tree.getViewer().getExpandedElements().length <= 12) {
 //					int offsetY = tree.getViewer().getExpandedElements().length * tree.getViewer().getTree().getItemHeight();
 //					event.gc.drawText("Open search dialog...", 20, offsetY - 10);
