@@ -490,6 +490,10 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		}
 	};
 
+	private TaskListToolTip taskListToolTip;
+
+	private TaskListViewCommands commands;
+
 	private void configureGradientColors() {
 		categoryGradientStart = themeManager.getCurrentTheme().getColorRegistry().get(
 				TaskListColorsAndFonts.THEME_COLOR_CATEGORY_GRADIENT_START);
@@ -591,6 +595,10 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 		categoryGradientStart.dispose();
 		categoryGradientEnd.dispose();
+
+		if (commands != null) {
+			commands.dispose();
+		}
 	}
 
 	private void updateDescription() {
@@ -800,6 +808,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 //					cloneThisBugAction.run();
 				} else if (e.keyCode == SWT.DEL) {
 					deleteAction.run();
+				} else if (e.keyCode == SWT.ESC) {
+					taskListToolTip.hide();
 				} else if (e.keyCode == 'f' && e.stateMask == SWT.MOD1) {
 					filteredTree.getFilterControl().setFocus();
 				} else if (e.stateMask == 0) {
@@ -842,6 +852,10 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				Object selectedObject = ((IStructuredSelection) getViewer().getSelection()).getFirstElement();
 				if (selectedObject instanceof AbstractTaskContainer) {
 					updateActionEnablement(renameAction, (AbstractTaskContainer) selectedObject);
+
+					if (taskListToolTip.isVisible()) {
+						taskListToolTip.update((AbstractTaskContainer) selectedObject);
+					}
 				}
 			}
 		});
@@ -851,7 +865,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		hookOpenAction();
 		contributeToActionBars();
 
-		new TaskListToolTip(getViewer().getControl());
+		taskListToolTip = new TaskListToolTip(getViewer().getControl());
 
 		// Set to empty string to disable native tooltips (windows only?)
 		// bug#160897
@@ -865,6 +879,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		restoreState();
 
 		updateDescription();
+
+		commands = new TaskListViewCommands(this);
+		commands.activateHandlers();
 
 		getSite().setSelectionProvider(getViewer());
 		getSite().getPage().addPartListener(editorListener);
@@ -1081,13 +1098,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		if (firstSelectedObject instanceof AbstractTaskContainer) {
 			element = (AbstractTaskContainer) firstSelectedObject;
 		}
-		List<AbstractTaskContainer> selectedElements = new ArrayList<AbstractTaskContainer>();
-		for (Iterator<?> i = ((IStructuredSelection) getViewer().getSelection()).iterator(); i.hasNext();) {
-			Object object = i.next();
-			if (object instanceof AbstractTaskContainer) {
-				selectedElements.add((AbstractTaskContainer) object);
-			}
-		}
+		List<AbstractTaskContainer> selectedElements = getSelectedTaskContainers();
 		AbstractTask task = null;
 		if ((element instanceof AbstractTask)) {
 			task = (AbstractTask) element;
@@ -1164,6 +1175,17 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		}
 
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+	}
+
+	public List<AbstractTaskContainer> getSelectedTaskContainers() {
+		List<AbstractTaskContainer> selectedElements = new ArrayList<AbstractTaskContainer>();
+		for (Iterator<?> i = ((IStructuredSelection) getViewer().getSelection()).iterator(); i.hasNext();) {
+			Object object = i.next();
+			if (object instanceof AbstractTaskContainer) {
+				selectedElements.add((AbstractTaskContainer) object);
+			}
+		}
+		return selectedElements;
 	}
 
 	private void addMenuManager(IMenuManager menuToAdd, IMenuManager manager, AbstractTaskContainer element) {
@@ -1329,6 +1351,10 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		}
 		refresh(null);
 		selectedAndFocusTask(TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask());
+	}
+
+	public TaskListToolTip getToolTip() {
+		return taskListToolTip;
 	}
 
 	public TreeViewer getViewer() {

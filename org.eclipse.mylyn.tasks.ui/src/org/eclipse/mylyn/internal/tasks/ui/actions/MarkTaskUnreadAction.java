@@ -24,12 +24,15 @@ public class MarkTaskUnreadAction extends AbstractTaskAction {
 
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.mark.unread";
 
+	public static final String DEFINITION_ID = "org.eclipse.mylyn.tasks.ui.command.markTaskUnread";
+
 	public MarkTaskUnreadAction(List<AbstractTaskContainer> selectedElements) {
 		this.selectedElements = selectedElements;
 		setText(ACTION_NAME);
 		setToolTipText(ACTION_NAME);
 		setToolTipText("Mark " + ACTION_NAME);
 		setId(ID);
+		setActionDefinitionId(DEFINITION_ID);
 		setImageDescriptor(TasksUiImages.OVERLAY_INCOMMING);
 		if (containsArchiveContainer(selectedElements)) {
 			setEnabled(false);

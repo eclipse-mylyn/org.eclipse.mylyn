@@ -474,6 +474,14 @@
            name="export">
     </separator>
   </menu>
+  <menu
+        id="org.eclipse.mylyn.tasks.ui.menu.navigate"
+        label="Navigate"
+        path="navigate">
+     <separator
+           name="goTo">
+     </separator>
+  </menu>
  
   
   <!--<action
@@ -492,6 +500,14 @@
         label="Category"
         menubarPath="org.eclipse.mylyn.tasks.ui.menu.new/local"
         tooltip="New Category">
+  </action>
+  <action
+        class="org.eclipse.mylyn.internal.tasks.ui.actions.GoToUnreadTaskAction"
+        definitionId="org.eclipse.mylyn.tasks.ui.command.goToNextUnread"
+        id="org.eclipse.mylyn.tasklist.actions.goToNextUnread"
+        label="Next Unread Task"
+        menubarPath="org.eclipse.mylyn.tasks.ui.menu.navigate/goTo"
+        style="push">
   </action>
       </viewerContribution>
       <viewerContribution
@@ -754,7 +770,7 @@
                id="org.eclipse.mylyn.tasks.ui.open.task.remote"
                label="Search for Repository Task..."
                style="push"
-               tooltip="Search for Repository Task"/> 
+               tooltip="Search for Repository Task"/>
       </actionSet>
    </extension>
    
@@ -1030,6 +1046,100 @@
             id="org.eclipse.mylyn.tasks.ui.scheduled"
             name="Scheduled"
             primary="true"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            categoryId="org.eclipse.ui.category.navigate"
+            id="org.eclipse.mylyn.tasks.ui.command.goToPreviousUnread"
+            name="Go To Previous Unread Task">
+      </command>
+      <command
+            categoryId="org.eclipse.ui.category.navigate"
+            id="org.eclipse.mylyn.tasks.ui.command.goToNextUnread"
+            name="Go To Next Unread Task">
+      </command>
+      <command
+            category="org.eclipse.mylyn.tasks.ui.commands"
+            categoryId="org.eclipse.mylyn.tasks.ui.tasklist"
+            id="org.eclipse.mylyn.tasks.ui.command.showToolTip"
+            name="Show Tooltip Description">
+      </command>
+      <command
+            category="org.eclipse.mylyn.tasks.ui.commands"
+            categoryId="org.eclipse.mylyn.tasks.ui.tasklist"
+            id="org.eclipse.mylyn.tasks.ui.command.markTaskRead"
+            name="Mark Task Read">
+      </command>
+      <command
+            category="org.eclipse.mylyn.tasks.ui.commands"
+            categoryId="org.eclipse.mylyn.tasks.ui.tasklist"
+            id="org.eclipse.mylyn.tasks.ui.command.markTaskReadGoToNext"
+            name="Mark Task Read and Go To Next Unread Task">
+      </command>
+      <category
+            id="org.eclipse.mylyn.tasks.ui.tasklist"
+            name="Task List">
+      </category>
+      <command
+            category="org.eclipse.mylyn.tasks.ui.commands"
+            categoryId="org.eclipse.mylyn.tasks.ui.tasklist"
+            id="org.eclipse.mylyn.tasks.ui.command.markTaskReadGoToNextUnread"
+            name="Mark Task Read and Go To Next Unread Task">
+      </command>
+      <command
+            category="org.eclipse.mylyn.tasks.ui.commands"
+            categoryId="org.eclipse.mylyn.tasks.ui.tasklist"
+            id="org.eclipse.mylyn.tasks.ui.command.markTaskUnread"
+            name="Mark Task Unread">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="org.eclipse.mylyn.tasks.ui.command.goToPreviousUnread"
+            contextId="org.eclipse.mylyn.tasks.ui.views.tasks"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="SHIFT+F6">
+      </key>
+      <key
+            commandId="org.eclipse.mylyn.tasks.ui.command.goToNextUnread"
+            contextId="org.eclipse.mylyn.tasks.ui.views.tasks"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="F6">
+      </key>
+      <key
+            commandId="org.eclipse.mylyn.tasks.ui.command.showToolTip"
+            contextId="org.eclipse.mylyn.tasks.ui.views.tasks"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="F4">
+      </key>
+      <key
+            commandId="org.eclipse.mylyn.tasks.ui.command.markTaskRead"
+            contextId="org.eclipse.mylyn.tasks.ui.views.tasks"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="F7">
+      </key>
+      <key
+            commandId="org.eclipse.mylyn.tasks.ui.command.markTaskReadGoToNextUnread"
+            contextId="org.eclipse.mylyn.tasks.ui.views.tasks"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="F8">
+      </key>
+      <key
+            commandId="org.eclipse.mylyn.tasks.ui.command.markTaskUnread"
+            contextId="org.eclipse.mylyn.tasks.ui.views.tasks"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="SHIFT+F7">
+      </key>
+   </extension>
+   <extension
+         point="org.eclipse.ui.contexts">
+      <context
+            id="org.eclipse.mylyn.tasks.ui.views.tasks"
+            name="In Task List View"
+            parentId="org.eclipse.ui.contexts.window">
+      </context>
    </extension>
    
 </plugin>

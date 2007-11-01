@@ -13,8 +13,10 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
@@ -55,9 +57,33 @@ public class TaskListToolTip extends ToolTip {
 
 	private AbstractTaskContainer currentTipElement;
 
+	private List<TaskListToolTipListener> listeners = new ArrayList<TaskListToolTipListener>();
+
+	private boolean visible;
+
+	private Point lastLocation;
+
+	private boolean forced;
+	
 	public TaskListToolTip(Control control) {
 		super(control);
 		this.setShift(new Point(0, 1));
+	}
+
+	@Override
+	protected void afterHideToolTip(Event event) {
+		visible = false;
+		for (TaskListToolTipListener listener : listeners.toArray(new TaskListToolTipListener[0])) {
+			listener.toolTipHidden(event);
+		}
+	}
+	
+	public void addTaskListToolTipListener(TaskListToolTipListener listener) {
+		listeners.add(listener);
+	}
+
+	public void removeTaskListToolTipListener(TaskListToolTipListener listener) {
+		listeners.remove(listener);
 	}
 
 	private AbstractTaskContainer getTaskListElement(Object hoverObject) {
@@ -319,6 +345,11 @@ public class TaskListToolTip extends ToolTip {
 
 	@Override
 	protected boolean shouldCreateToolTip(Event event) {
+		if (forced) {
+			forced = false;
+			return true;
+		}
+		
 		currentTipElement = null;
 
 		if (super.shouldCreateToolTip(event)) {
@@ -327,7 +358,7 @@ public class TaskListToolTip extends ToolTip {
 				currentTipElement = getTaskListElement(tipWidget);
 			}
 		}
-
+		
 		return currentTipElement != null;
 	}
 
@@ -405,6 +436,9 @@ public class TaskListToolTip extends ToolTip {
 			addIconAndLabel(composite, TasksUiImages.getImage(TasksUiImages.WARNING), statusText);
 		}
 
+		visible = true;
+		lastLocation = composite.getShell().getLocation();
+
 		return composite;
 	}
 
@@ -455,4 +489,27 @@ public class TaskListToolTip extends ToolTip {
 
 	}
 
+	public static interface TaskListToolTipListener {
+	
+		void toolTipHidden(Event event);
+		
+	}
+
+	public boolean isVisible() {
+		return visible;
+	}
+
+	public void update(AbstractTaskContainer item) {
+		if (!isVisible()) {
+			throw new IllegalStateException();
+		}
+
+		hide();
+
+		this.forced = true;
+		this.currentTipElement = item;
+		
+		show(lastLocation);
+	}
+	
 }
