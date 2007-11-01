@@ -14,10 +14,14 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -151,6 +155,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.progress.WorkbenchJob;
 import org.eclipse.ui.themes.IThemeManager;
 
 /**
@@ -179,7 +184,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	private static final String ID_SEPARATOR_NEW = "new";
 
 	private static final String ID_SEPARATOR_OPERATIONS = "operations";
-	
+
 	private static final String ID_SEPARATOR_CONTEXT = "context";
 
 	public static final String ID_SEPARATOR_TASKS = "tasks";
@@ -202,6 +207,10 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	public static final String[] PRIORITY_LEVEL_DESCRIPTIONS = { PriorityLevel.P1.getDescription(),
 			PriorityLevel.P2.getDescription(), PriorityLevel.P3.getDescription(), PriorityLevel.P4.getDescription(),
 			PriorityLevel.P5.getDescription() };
+
+	private static final long REFRESH_DELAY_DEFAULT = 200;
+
+	private static final long REFRESH_DELAY_MAX = 500;
 
 	private static List<AbstractTaskListPresentation> presentationsPrimary = new ArrayList<AbstractTaskListPresentation>();
 
@@ -304,14 +313,14 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 		public void pageClosed(IWorkbenchPage page) {
 			// ignore
-			
+
 		}
 
 		public void pageOpened(IWorkbenchPage page) {
 			// ignore
 		}
 	};
-	
+
 	private LinkedHashMap<String, IStructuredSelection> lastSelectionByTaskHandle = new LinkedHashMap<String, IStructuredSelection>(
 			SIZE_MAX_SELECTION_HISTORY);
 
@@ -574,7 +583,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().removePageListener(PAGE_LISTENER);
 		}
-		
+
 		final IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		if (themeManager != null) {
 			themeManager.removePropertyChangeListener(THEME_CHANGE_LISTENER);
@@ -1134,7 +1143,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		}
 		manager.add(new Separator(ID_SEPARATOR_CONTEXT));
 		manager.add(new Separator(ID_SEPARATOR_OPERATIONS));
-		
+
 		if (element instanceof AbstractTask) {
 			for (String menuPath : dynamicMenuMap.keySet()) {
 				if (ID_SEPARATOR_CONTEXT.equals(menuPath)) {
@@ -1148,7 +1157,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			}
 		}
 		manager.add(new Separator(ID_SEPARATOR_REPOSITORY));
-		
+
 		if (element instanceof AbstractRepositoryQuery || element instanceof TaskCategory) {
 			manager.add(new Separator());
 			addAction(propertiesAction, manager, element);
@@ -1362,6 +1371,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	boolean isInRenameAction = false;
 
+	private DelayedRefreshJob refreshJob = new DelayedRefreshJob("TaskList Refresh");
+
 	public void setInRenameAction(boolean b) {
 		isInRenameAction = b;
 	}
@@ -1483,26 +1494,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	 * Encapsulates refresh policy.
 	 */
 	private void refresh(final AbstractTaskContainer element) {
-		if (getViewer().getControl() != null && !getViewer().getControl().isDisposed()) {
-			if (element == null) {
-				getViewer().refresh(true);
-			} else {
-				try {
-					if (element instanceof AbstractTask) {
-						AbstractTask task = (AbstractTask) element;
-						getViewer().refresh(task, true);
-					} else {
-						getViewer().refresh(element, true);
-					}
-					// TODO: consider moving expansion logic into viewer manager
-					if (isFocusedMode()) {
-						getViewer().expandToLevel(element, 3);
-					}
-				} catch (SWTException e) {
-					StatusHandler.log(e, "Failed to refresh Task List");
-				}
-			}
-		}
+		refreshJob.refreshTask(element);
 	}
 
 	public Image[] getPirorityImages() {
@@ -1684,4 +1676,74 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			presentationsSecondary.add(presentation);
 		}
 	}
+
+	private final class DelayedRefreshJob extends WorkbenchJob {
+
+		private static final int NOT_SCHEDULED = -1;
+
+		private LinkedHashSet<AbstractTaskContainer> queue = new LinkedHashSet<AbstractTaskContainer>();
+
+		private long scheduleTime = NOT_SCHEDULED;
+
+		private DelayedRefreshJob(String name) {
+			super(name);
+
+			setSystem(true);
+		}
+
+		public synchronized void refreshTask(AbstractTaskContainer element) {
+			queue.add(element);
+
+			if (scheduleTime == NOT_SCHEDULED) {
+				scheduleTime = System.currentTimeMillis();
+				schedule(REFRESH_DELAY_DEFAULT);
+			} else if (System.currentTimeMillis() - scheduleTime < REFRESH_DELAY_MAX - REFRESH_DELAY_DEFAULT) {
+				// reschedule to aggregate more refreshes
+				cancel();
+				schedule(REFRESH_DELAY_DEFAULT);
+			}
+		}
+
+		public IStatus runInUIThread(IProgressMonitor monitor) {
+			if (getViewer().getControl() == null || getViewer().getControl().isDisposed()) {
+				return Status.CANCEL_STATUS;
+			}
+
+			final AbstractTaskContainer[] items;
+			synchronized (this) {
+				if (queue.contains(null)) {
+					items = null;
+				} else {
+					items = queue.toArray(new AbstractTaskContainer[0]);
+				}
+				queue.clear();
+
+				scheduleTime = NOT_SCHEDULED;
+			}
+
+			if (items == null) {
+				getViewer().refresh(true);
+			} else if (items.length > 0) {
+				try {
+					for (AbstractTaskContainer item : items) {
+						if (item instanceof AbstractTask) {
+							AbstractTask task = (AbstractTask) item;
+							getViewer().refresh(task, true);
+						} else {
+							getViewer().refresh(item, true);
+						}
+						// TODO: consider moving expansion logic into viewer manager
+						if (isFocusedMode()) {
+							getViewer().expandToLevel(item, 3);
+						}
+					}
+				} catch (SWTException e) {
+					StatusHandler.log(e, "Failed to refresh Task List");
+				}
+			}
+
+			return Status.OK_STATUS;
+		}
+	}
+
 }

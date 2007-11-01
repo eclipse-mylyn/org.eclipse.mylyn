@@ -75,8 +75,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 				childrenWithoutCycles.add(child);
 			}
 		}
-		return Collections.unmodifiableSet(childrenWithoutCycles);
-//		return Collections.unmodifiableSet(children);
+		return Collections.unmodifiableSet(childrenWithoutCycles); 
 	}
 
 	/**
