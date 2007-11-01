@@ -53,5 +53,4 @@ public abstract class AbstractFocusMarkerViewAction extends AbstractFocusViewAct
 			}
 		}
 	}
-
 }

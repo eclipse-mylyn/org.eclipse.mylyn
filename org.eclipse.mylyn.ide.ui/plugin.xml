@@ -97,7 +97,23 @@
            toolbarPath="mylyn"
            tooltip="Focus on Active Task">
   		</action>  
-      </viewContribution> 
+      </viewContribution>
+   <viewContribution
+         id="org.eclipse.mylyn.markers.bookmarks.contribution"
+         targetID="org.eclipse.ui.views.BookmarkView">
+      <action
+            class="org.eclipse.mylyn.internal.ide.ui.actions.FocusBookmarkMarkersViewAction"
+            disabledIcon="icons/elcl16/focus-disabled.gif"
+            enablesFor="*"
+            icon="icons/elcl16/focus.gif"
+            id="org.eclipse.mylyn.ide.ui.actions.focus.view.markers"
+            label="Focus on Active Task"
+            menubarPath="mylyn"
+            style="toggle"
+            toolbarPath="mylyn"
+            tooltip="Focus on Active Task">
+      </action>
+   </viewContribution> 
     </extension>
 
 </plugin>
