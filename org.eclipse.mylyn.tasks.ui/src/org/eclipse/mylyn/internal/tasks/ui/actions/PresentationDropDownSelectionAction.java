@@ -7,6 +7,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
+import java.util.List;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IMenuCreator;
@@ -72,8 +74,15 @@ public class PresentationDropDownSelectionAction extends Action implements IMenu
 	}
 
 	@Override
-	public void run() {
-		// ignore
+	public void run() { 
+		AbstractTaskListPresentation current = view.getCurrentPresentation();
+		List<AbstractTaskListPresentation> all = TaskListView.getPresentations();
+		int index = all.indexOf(current)+1;
+		if (index < all.size()) {
+			view.applyPresentation(all.get(index));
+		} else {
+			view.applyPresentation(all.get(0));
+		}
 	}
 
 	public void dispose() {
