@@ -26,8 +26,6 @@ public class WorkspaceAwareContextStore extends AbstractContextStore {
 
 	@Override
 	public synchronized void init() {
-		System.err.println(">>>>>>> workspace store started");
-		
 		rootDirectory = new File(TasksUiPlugin.getDefault().getDataDirectory());
 		if (!rootDirectory.exists()) {
 			rootDirectory.mkdir();

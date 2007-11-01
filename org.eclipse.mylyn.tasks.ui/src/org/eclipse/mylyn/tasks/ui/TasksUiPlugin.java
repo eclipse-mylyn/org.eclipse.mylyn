@@ -404,9 +404,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		super.start(context);
 		// NOTE: startup order is very sensitive
 		try {
-			System.err.println(">>> Tasks UI starting");
-//			Thread.sleep(5000);
-			
 			StatusHandler.addStatusHandler(new RepositoryAwareStatusHandler());
 			WebClientUtil.setLoggingEnabled(DEBUG_HTTPCLIENT);
 			initializeDefaultPreferences(getPreferenceStore());
@@ -470,8 +467,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				}
 			};
 			ResourcesPlugin.getWorkspace().addSaveParticipant(this, saveParticipant);
-
-			System.err.println(">>>> Tasks UI started");
 			
 			new TasksUiInitializationJob().schedule();
 		} catch (Exception e) {
