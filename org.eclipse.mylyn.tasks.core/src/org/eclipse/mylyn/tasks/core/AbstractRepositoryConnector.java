@@ -308,7 +308,7 @@ public abstract class AbstractRepositoryConnector {
 	/**
 	 * Reset and update the repository attributes from the server (e.g. products, components)
 	 * 
-	 * TODO: remove?
+	 * API-3.0: Rename to updateRepositoryConfiguration()
 	 */
 	public abstract void updateAttributes(TaskRepository repository, IProgressMonitor monitor) throws CoreException;
 
