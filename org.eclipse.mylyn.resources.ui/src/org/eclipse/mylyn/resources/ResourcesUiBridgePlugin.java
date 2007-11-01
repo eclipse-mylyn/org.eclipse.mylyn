@@ -74,7 +74,7 @@ public class ResourcesUiBridgePlugin extends AbstractContextUiPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		initPreferenceDefaults();
-		System.err.println(">>> Resource UI Started");
+		interestUpdater = new ResourceInterestUpdater();
 	}
 
 	@Override
@@ -82,7 +82,6 @@ public class ResourcesUiBridgePlugin extends AbstractContextUiPlugin {
 		resourceChangeMonitor = new ResourceChangeMonitor();
 		editorManager = new ContextEditorManager();
 		resourceInteractionMonitor = new ResourceInteractionMonitor();
-		interestUpdater = new ResourceInterestUpdater();
 		interestEditorTracker = new EditorInteractionMonitor();
 
 		ContextCorePlugin.getContextManager().addListener(editorManager);
@@ -92,8 +91,6 @@ public class ResourcesUiBridgePlugin extends AbstractContextUiPlugin {
 				IResourceChangeEvent.POST_CHANGE);
 
 		interestEditorTracker.install(PlatformUI.getWorkbench());
-
-		System.err.println(">>>> Resource UI Lazy Started");
 	}
 
 	@Override

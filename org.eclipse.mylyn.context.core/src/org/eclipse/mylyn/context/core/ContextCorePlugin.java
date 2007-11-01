@@ -128,7 +128,6 @@ public class ContextCorePlugin extends Plugin {
 		super.start(context);  
 
 		contextManager = new InteractionContextManager();
-		System.err.println(">>> Context started");
 	}
 
 	@Override

@@ -72,8 +72,6 @@ public class JavaUiBridgePlugin extends AbstractContextUiPlugin {
 			getPreferenceStore().setValue(RecommendedPreferencesWizard.MYLYN_FIRST_RUN, false);
 			JavaUiUtil.installContentAssist(JavaPlugin.getDefault().getPreferenceStore(), true);
 		}
-
-		System.err.println(">>>> Java UI started");
 	}
 
 	@Override
@@ -95,8 +93,6 @@ public class JavaUiBridgePlugin extends AbstractContextUiPlugin {
 		} catch (Throwable t) {
 			StatusHandler.log(t, "Could not install type history manager, incompatible Eclipse version.");
 		}
-
-		System.err.println(">>>> Java UI Lazy start done");
 	}
 
 	private void initDefaultPrefs() {
