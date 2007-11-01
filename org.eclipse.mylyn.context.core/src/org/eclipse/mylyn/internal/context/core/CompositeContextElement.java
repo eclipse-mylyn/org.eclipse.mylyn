@@ -12,6 +12,7 @@ package org.eclipse.mylyn.internal.context.core;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.mylyn.context.core.IDegreeOfInterest;
@@ -21,16 +22,17 @@ import org.eclipse.mylyn.monitor.core.StatusHandler;
 
 /**
  * @author Mik Kersten
+ * @author Shawn Minto
  */
 public class CompositeContextElement implements IInteractionElement {
 
-	private Set<InteractionContextElement> nodes = null;
+	private List<InteractionContextElement> nodes = null;
 
 	private String handle = "<no handle>";
 
 	private InteractionContextScaling contextScaling;
 	
-	public CompositeContextElement(String handle, Set<InteractionContextElement> nodes, InteractionContextScaling contextScaling) {
+	public CompositeContextElement(String handle, List<InteractionContextElement> nodes, InteractionContextScaling contextScaling) {
 		this.nodes = nodes;
 		this.handle = handle;
 		this.contextScaling = contextScaling;
@@ -77,7 +79,7 @@ public class CompositeContextElement implements IInteractionElement {
 		}
 	}
 
-	public Set<InteractionContextElement> getNodes() {
+	public List<InteractionContextElement> getNodes() {
 		return nodes;
 	}
 

@@ -25,6 +25,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
  * TODO: should info be propagated proportionally to number of taskscapes?
  * 
  * @author Mik Kersten
+ * @author Shawn Minto
  */
 public class CompositeInteractionContext implements IInteractionContext {
 
@@ -34,12 +35,14 @@ public class CompositeInteractionContext implements IInteractionContext {
 
 	private InteractionContextScaling contextScaling;
 
+	public String contentLimitedTo = null;
+	
 	public CompositeInteractionContext(InteractionContextScaling contextScaling) {
 		this.contextScaling = contextScaling;
 	}
 	
 	public IInteractionElement addEvent(InteractionEvent event) {
-		Set<InteractionContextElement> nodes = new HashSet<InteractionContextElement>();
+		List<InteractionContextElement> nodes = new ArrayList<InteractionContextElement>();
 		for (InteractionContext context : contexts.values()) {
 			InteractionContextElement info = (InteractionContextElement) context.parseEvent(event);
 			nodes.add(info);
@@ -51,7 +54,7 @@ public class CompositeInteractionContext implements IInteractionContext {
 	public IInteractionElement get(String handle) {
 		if (contexts.values().size() == 0)
 			return null;
-		Set<InteractionContextElement> nodes = new HashSet<InteractionContextElement>();
+		List<InteractionContextElement> nodes = new ArrayList<InteractionContextElement>();
 		for (InteractionContext taskscape : contexts.values()) {
 			InteractionContextElement node = (InteractionContextElement) taskscape.get(handle);
 			if (node != null) {
@@ -65,7 +68,7 @@ public class CompositeInteractionContext implements IInteractionContext {
 	public List<IInteractionElement> getLandmarks() {
 		Set<IInteractionElement> landmarks = new HashSet<IInteractionElement>();
 		for (InteractionContext taskscape : contexts.values()) {
-			for (IInteractionElement concreteNode : taskscape.getLandmarkMap()) {
+			for (IInteractionElement concreteNode : taskscape.getLandmarks()) {
 				if (concreteNode != null)
 					landmarks.add(get(concreteNode.getHandleIdentifier()));
 			}
@@ -104,7 +107,7 @@ public class CompositeInteractionContext implements IInteractionContext {
 		}
 	}
 
-	Map<String, InteractionContext> getContextMap() {
+	public Map<String, InteractionContext> getContextMap() {
 		return contexts;
 	}
 
@@ -150,5 +153,13 @@ public class CompositeInteractionContext implements IInteractionContext {
 	
 	public InteractionContextScaling getScaling() {
 		return contextScaling;
+	}
+	
+	public String getContentLimitedTo() {
+		return contentLimitedTo;
+	}
+
+	public void setContentLimitedTo(String contentLimitedTo) {
+		this.contentLimitedTo = contentLimitedTo;
 	}
 }

@@ -24,6 +24,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
 /**
  * @author Mik Kersten
+ * @author Shawn Minto
  */
 public class InteractionContext implements IInteractionContext {
 
@@ -147,7 +148,7 @@ public class InteractionContext implements IInteractionContext {
 		return elements;
 	}
 
-	public List<IInteractionElement> getLandmarkMap() {
+	public List<IInteractionElement> getLandmarks() {
 		return Collections.unmodifiableList(new ArrayList<IInteractionElement>(landmarkMap.values()));
 	}
 
@@ -226,39 +227,34 @@ public class InteractionContext implements IInteractionContext {
 	}
 
 	@Override
-	public boolean equals(Object object) {
-		if (object == null || !(object instanceof InteractionContext))
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
 			return false;
-		InteractionContext context = (InteractionContext) object;
-
-		return (handleIdentifier == null ? context.handleIdentifier == null
-				: handleIdentifier.equals(context.handleIdentifier))
-				&& (interactionHistory == null ? context.interactionHistory == null
-						: interactionHistory.equals(context.interactionHistory))
-				&& (elementMap == null ? context.elementMap == null : elementMap.equals(context.elementMap))
-				&& (activeNode == null ? context.activeNode == null : activeNode.equals(context.activeNode))
-				&& (landmarkMap == null ? context.landmarkMap == null : landmarkMap.equals(context.landmarkMap))
-				&& (contextScaling == null ? context.contextScaling == null
-						: contextScaling.equals(context.contextScaling)) && (numUserEvents == context.numUserEvents);
+		if (getClass() != obj.getClass())
+			return false;
+		InteractionContext other = (InteractionContext) obj;
+		if (contentLimitedTo == null) {
+			if (other.contentLimitedTo != null)
+				return false;
+		} else if (!contentLimitedTo.equals(other.contentLimitedTo))
+			return false;
+		if (handleIdentifier == null) {
+			if (other.handleIdentifier != null)
+				return false;
+		} else if (!handleIdentifier.equals(other.handleIdentifier))
+			return false;
+		return true;
 	}
 
 	@Override
 	public int hashCode() {
-		int hashCode = 0;
-		if (handleIdentifier != null)
-			hashCode += handleIdentifier.hashCode();
-		if (interactionHistory != null)
-			hashCode += interactionHistory.hashCode();
-		if (elementMap != null)
-			hashCode += elementMap.hashCode();
-		if (activeNode != null)
-			hashCode += activeNode.hashCode();
-		if (landmarkMap != null)
-			hashCode += landmarkMap.hashCode();
-		if (contextScaling != null)
-			hashCode += contextScaling.hashCode();
-		hashCode += 37 * numUserEvents;
-		return hashCode;
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((contentLimitedTo == null) ? 0 : contentLimitedTo.hashCode());
+		result = prime * result + ((handleIdentifier == null) ? 0 : handleIdentifier.hashCode());
+		return result;
 	}
 
 	public InteractionContextScaling getScaling() {

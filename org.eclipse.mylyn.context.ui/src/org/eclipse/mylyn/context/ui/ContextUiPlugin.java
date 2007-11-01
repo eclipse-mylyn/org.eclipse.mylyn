@@ -236,7 +236,7 @@ public class ContextUiPlugin extends AbstractContextUiPlugin {
 		viewerManager = new FocusedViewerManager();
 		perspectiveManager.addManagedPerspective(PlanningPerspectiveFactory.ID_PERSPECTIVE);
 
-		System.err.println(">>>>>>> Context UI done");
+		System.err.println(">>>> Context UI started");
 	}
 
 	protected void lazyStart(IWorkbench workbench) {
@@ -250,7 +250,7 @@ public class ContextUiPlugin extends AbstractContextUiPlugin {
 			MonitorUiPlugin.getDefault().addWindowPerspectiveListener(perspectiveManager);
 			TasksUiPlugin.getTaskListManager().addActivityListener(TASK_ACTIVATION_LISTENER);
 
-			System.err.println(">>>>>>> Context UI Lazy Start Done");
+			System.err.println(">>>>>> Context UI lazy started");
 		} catch (Exception e) {
 			StatusHandler.fail(e, "Context UI initialization failed", true);
 		}

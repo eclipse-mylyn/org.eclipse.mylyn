@@ -58,24 +58,6 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 		}
 	}
 
-	/**
-	 * @return true if an object was temporarily unfiltered and reset
-	 */
-	public boolean resetIfTemporarilyUnfiltered(TreeViewer treeViewer) {
-		InterestFilter filter = getInterestFilter(treeViewer);
-		if (filter != null) {
-			Object unfiltered = filter.getTemporarilyUnfiltered();
-
-			System.err.println(">>>>>>>>> " + unfiltered);
-
-//			if (unfiltered != null) {
-//				filter.resetTemporarilyUnfiltered();
-//				return true;
-//			}
-		}
-		return false;
-	}
-
 	private void unfilter(final InterestFilter filter, final TreeViewer treeViewer, Object targetObject) {
 		if (targetObject != null) {
 			filter.setTemporarilyUnfiltered(targetObject);

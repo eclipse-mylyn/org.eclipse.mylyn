@@ -33,24 +33,22 @@ public class ShowFilteredChildrenAction extends Action implements IObjectActionD
 
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 		if (targetPart instanceof PackageExplorerPart) {
-			treeViewer = ((PackageExplorerPart)targetPart).getTreeViewer();
+			treeViewer = ((PackageExplorerPart) targetPart).getTreeViewer();
 			browseFilteredListener = new BrowseFilteredListener(treeViewer);
 		}
-	} 
-	
+	}
+
 	public void init(IViewPart targetPart) {
 		if (targetPart instanceof PackageExplorerPart) {
-			treeViewer = ((PackageExplorerPart)targetPart).getTreeViewer();
+			treeViewer = ((PackageExplorerPart) targetPart).getTreeViewer();
 			browseFilteredListener = new BrowseFilteredListener(treeViewer);
 		}
 	}
 
 	public void run(IAction action) {
-		if (!browseFilteredListener.resetIfTemporarilyUnfiltered(treeViewer)) {
-			if (selection != null) {
-				browseFilteredListener.unfilterSelection(treeViewer, selection);
-			}
-		} 
+		if (selection != null) {
+			browseFilteredListener.unfilterSelection(treeViewer, selection);
+		}
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {

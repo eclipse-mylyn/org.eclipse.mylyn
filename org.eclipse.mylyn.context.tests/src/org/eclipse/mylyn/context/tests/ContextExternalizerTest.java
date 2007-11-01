@@ -25,6 +25,7 @@ import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
 
 /**
  * @author Mik Kersten
+ * @author Shawn Minto
  */
 public class ContextExternalizerTest extends AbstractContextTest {
 
@@ -147,7 +148,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 				.getInterest()
 				.isLandmark());
 		float doi = node.getInterest().getValue();
-		assertNotNull(context.getLandmarkMap());
+		assertNotNull(context.getLandmarks());
 
 		// "3" not a user event
 		assertEquals("2", context.getActiveNode().getHandleIdentifier());
@@ -171,7 +172,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		assertNotNull(loadedNode);
 		assertEquals(doi, loadedNode.getInterest().getValue());
 		assertTrue(landmark.getInterest().isLandmark());
-		assertNotNull(loaded.getLandmarkMap());
+		assertNotNull(loaded.getLandmarks());
 
 		assertEquals("2", loaded.getActiveNode().getHandleIdentifier());
 	}

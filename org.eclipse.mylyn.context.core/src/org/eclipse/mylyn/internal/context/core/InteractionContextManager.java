@@ -45,6 +45,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent.Kind;
  * 
  * @author Mik Kersten
  * @author Jevgeni Holodkov
+ * @author Shawn Minto
  */
 public class InteractionContextManager {
 
@@ -110,7 +111,7 @@ public class InteractionContextManager {
 	 * Global contexts do not participate in the regular activation lifecycle but are instead activated and deactivated
 	 * by clients.
 	 */
-	private Map<String, InteractionContext> globalContexts = new HashMap<String, InteractionContext>();
+	private Collection<IInteractionContext> globalContexts = new HashSet<IInteractionContext>();
 
 	private InteractionContext activityMetaContext = null;
 
@@ -283,7 +284,7 @@ public class InteractionContextManager {
 			if (isContextActive()) {
 				compositeDelta.addAll(internalProcessInteractionEvent(event, activeContext, propagateToParents));
 			}
-			for (InteractionContext globalContext : globalContexts.values()) {
+			for (IInteractionContext globalContext : globalContexts) {
 				if (globalContext.getContentLimitedTo().equals(event.getStructureKind())) {
 					internalProcessInteractionEvent(event, globalContext, propagateToParents);
 				}
@@ -302,7 +303,7 @@ public class InteractionContextManager {
 				notifyInterestDelta(interestDelta);
 			}
 		}
-		for (InteractionContext globalContext : globalContexts.values()) {
+		for (IInteractionContext globalContext : globalContexts) {
 			if (globalContext.getContentLimitedTo().equals(event.getStructureKind())) {
 				List<IInteractionElement> interestDelta = internalProcessInteractionEvent(event, globalContext,
 						propagateToParents);
@@ -1165,15 +1166,15 @@ public class InteractionContextManager {
 		out.close();
 	}
 
-	public void addGlobalContext(InteractionContext context) {
-		globalContexts.put(context.getHandleIdentifier(), context);
+	public void addGlobalContext(IInteractionContext context) {
+		globalContexts.add(context);
 	}
 
-	public void removeGlobalContext(InteractionContext context) {
-		globalContexts.remove(context.getHandleIdentifier());
+	public void removeGlobalContext(IInteractionContext context) {
+		globalContexts.remove(context);
 	}
 
-	public Collection<InteractionContext> getGlobalContexts() {
-		return globalContexts.values();
+	public Collection<IInteractionContext> getGlobalContexts() {
+		return globalContexts;
 	}
 }

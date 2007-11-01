@@ -18,6 +18,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
  * degree-of-interest weighting mechanism.
  * 
  * @author Mik Kersten
+ * @author Shawn Minto
  * @since 2.0
  */
 public interface IInteractionContext {
@@ -30,7 +31,14 @@ public interface IInteractionContext {
 	public abstract List<InteractionEvent> getInteractionHistory();
 
 	public List<IInteractionElement> getInteresting();
-
+	
+	/**
+	 * @since 2.2
+	 * 
+	 * API-3.0: this might get changed or removed
+	 */
+	public List<IInteractionElement> getLandmarks();
+	
 	public abstract IInteractionElement get(String element);
 
 	public abstract IInteractionElement getActiveNode();
@@ -42,4 +50,18 @@ public interface IInteractionContext {
 	public abstract List<IInteractionElement> getAllElements();
 	
 	public InteractionContextScaling getScaling();
+	
+	/**
+	 * @since 2.2
+	 * 
+	 * API-3.0: this might get changed or removed for 3.0
+	 */
+	public String getContentLimitedTo();
+
+	/**
+	 * @since 2.2
+	 * 
+	 * API-3.0: this might get changed or removed for 3.0
+	 */
+	public void setContentLimitedTo(String contentLimitedTo);
 }
