@@ -21,12 +21,15 @@ Require-Bundle: org.eclipse.team.core,
  org.eclipse.compare,
  org.eclipse.mylyn.monitor.core,
  org.eclipse.mylyn,
- org.eclipse.ui.navigator.resources
+ org.eclipse.ui.navigator.resources,
+ org.eclipse.ui,
+ org.eclipse.ui.forms
 Eclipse-LazyStart: true
 Export-Package: org.eclipse.mylyn.internal.team.ui,
  org.eclipse.mylyn.internal.team.ui.actions,
  org.eclipse.mylyn.internal.team.ui.preferences,
  org.eclipse.mylyn.internal.team.ui.preferences.workaround,
+ org.eclipse.mylyn.internal.team.ui.properties,
  org.eclipse.mylyn.internal.team.ui.templates,
  org.eclipse.mylyn.team.ui
 Bundle-ClassPath: .
