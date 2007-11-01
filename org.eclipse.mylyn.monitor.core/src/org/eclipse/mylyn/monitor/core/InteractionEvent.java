@@ -12,15 +12,61 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Immutable. Encapsulates interaction between the user and structured elements.
+ * Immutable.  Encapsulates interaction made by the user or on behalf of the user.
+ * 
+ * Also see: http://wiki.eclipse.org/index.php/Mylyn_Integrator_Reference#Monitor_API
  * 
  * @author Mik Kersten
  * @since 2.0
  */
 public class InteractionEvent {
 
+	/**
+	 * Determines the type of interaction that took place, either initiated by the user
+	 * or done on behalf of the user.
+	 */
 	public enum Kind {
-		SELECTION, EDIT, COMMAND, PREFERENCE, PREDICTION, PROPAGATION, MANIPULATION, ATTENTION;
+		/**
+		 * User selection of elements, issued by the Eclipse post-selection mechanism.
+		 */
+		SELECTION, 
+		
+		/**
+		 * Edit events that are created by text selections in an editor.
+		 */
+		EDIT, 
+		
+		/**
+		 * Commands and actions invoked via buttons, menus, and keyboard shortcuts.
+		 */
+		COMMAND, 
+		
+		/**
+		 * Workbench preference changes, sometimes made by the user, sometimes automatically
+		 * on behalf of the user.
+		 */
+		PREFERENCE, 
+		
+		/**
+		 * Candidates for future interaction.
+		 */
+		PREDICTION, 
+		
+		/**
+		 * Indirect user interaction with elements (e.g. parent gets implicitly selected when element is selected).
+		 */
+		PROPAGATION, 
+		
+		/**
+		 * Direct manipulation of interest via actions such as "Mark as Landmark" and "Mark Less Interesting". 
+		 */
+		MANIPULATION, 
+		
+		/**
+		 * Capture interaction with tasks, the workbench, and lifecycle events that define where the user's
+		 * attention is directed.
+		 */
+		ATTENTION;
 
 		/**
 		 * TODO: add PREFERENCE?
@@ -29,6 +75,9 @@ public class InteractionEvent {
 			return this == SELECTION || this == EDIT || this == COMMAND || this == PREFERENCE;
 		}
 
+		/**
+		 * @return	Simple string representation of the event kind or "null" if no such kind. 
+		 */
 		@Override
 		public String toString() {
 			switch (this) {
@@ -53,6 +102,9 @@ public class InteractionEvent {
 			}
 		}
 
+		/**
+		 * @return	The corresponding event based on the string provided, or null if no such STring.
+		 */
 		public static Kind fromString(String string) {
 			if (string == null)
 				return null;
@@ -94,33 +146,42 @@ public class InteractionEvent {
 
 	private float interestContribution;
 
+	/**
+	 * Use to specify an uknown identifier, e.g. for an originId.
+	 */
 	public static final String ID_UNKNOWN = "?";
 
+	/**
+	 * For parameter description see this class's getters.
+	 */
 	public InteractionEvent(Kind kind, String structureKind, String handle, String originId) {
-		this(kind, structureKind, handle, originId, 1f); // default
-		// contribution
-	}
-
-	public InteractionEvent(Kind kind, String structureKind, String handle, String originId, String navigatedRelation) {
-		this(kind, structureKind, handle, originId, navigatedRelation, "null", 1f); // default
-		// contribution
-	}
-
-	public InteractionEvent(Kind kind, String structureKind, String handle, String originId, String navigatedRelation,
-			float interestContribution) {
-		this(kind, structureKind, handle, originId, navigatedRelation, "null", interestContribution); // default
-		// contribution
+		this(kind, structureKind, handle, originId, 1f); 
 	}
 
 	/**
-	 * Factory method.
+	 * For parameter description see this class's getters.
+	 */
+	public InteractionEvent(Kind kind, String structureKind, String handle, String originId, String navigatedRelation) {
+		this(kind, structureKind, handle, originId, navigatedRelation, "null", 1f); 
+	}
+
+	/**
+	 * For parameter description see this class's getters.
+	 */
+	public InteractionEvent(Kind kind, String structureKind, String handle, String originId, String navigatedRelation,
+			float interestContribution) {
+		this(kind, structureKind, handle, originId, navigatedRelation, "null", interestContribution); 
+	}
+
+	/**
+	 * For parameter description see this class's getters.
 	 */
 	public static InteractionEvent makeCommand(String originId, String delta) {
 		return new InteractionEvent(InteractionEvent.Kind.COMMAND, "null", "null", originId, "null", delta, 1);
 	}
 
-	/**
-	 * Factory method.
+	/** 
+	 * For parameter description see this class's getters.
 	 */
 	public static InteractionEvent makeCopy(InteractionEvent originalEvent, float newInterestContribution) {
 		return new InteractionEvent(originalEvent.getKind(), originalEvent.getStructureKind(),
@@ -129,18 +190,24 @@ public class InteractionEvent {
 	}
 
 	/**
-	 * Factory method.
+	 * For parameter description see this class's getters.
 	 */
 	public static InteractionEvent makePreference(String originId, String delta) {
 		return new InteractionEvent(InteractionEvent.Kind.PREFERENCE, "null", "null", originId, "null", delta, 1); // default
 		// contribution
 	}
 
+	/**
+	 * For parameter description see this class's getters.
+	 */
 	public InteractionEvent(Kind kind, String structureKind, String handle, String originId, float interestContribution) {
 		this(kind, structureKind, handle, originId, "null", "null", interestContribution); // default
 		// contribution
 	}
 
+	/**
+	 * For parameter description see this class's getters.
+	 */
 	public InteractionEvent(Kind kind, String structureKind, String handle, String originId, String navigatedRelation,
 			String delta, float interestContribution) {
 		this.date = Calendar.getInstance().getTime();
@@ -154,6 +221,9 @@ public class InteractionEvent {
 		this.interestContribution = interestContribution;
 	}
 
+	/**
+	 * For parameter description see this class's getters.
+	 */
 	public InteractionEvent(Kind kind, String structureKind, String handle, String originId, String navigatedRelation,
 			String delta, float interestContribution, Date startDate, Date endDate) {
 		this.date = startDate;
@@ -222,34 +292,62 @@ public class InteractionEvent {
 		return structureHandle;
 	}
 
+	/**
+	 * @return	The content type of the element being interacted with.
+	 */
 	public String getStructureKind() {
 		return structureKind;
 	}
 
+	/**
+	 * @return	Time stamp for the occurrence of the event.
+	 */
 	public Date getDate() {
 		return date;
 	}
 
+	/**
+	 * Can be used for extensibility, e.g. by adding an XML-encoded String.
+	 * 
+	 * @return	Additional information relevant to interaction monitoring.
+	 */
 	public String getDelta() {
 		return delta;
 	}
 
+	/**
+	 * @return	Defines the kind of interaction that took place.
+	 */
 	public Kind getKind() {
 		return kind;
 	}
 
+	/**
+	 * @return	The UI affordance that the event was issued from.
+	 */
 	public String getOriginId() {
 		return originId;
 	}
 
+	/**
+	 * API-3.0: consider refactoring in order to de-couple events from interest.
+	 * 
+	 * @return	If an aggregate event, amount of interest of all contained events.
+	 */
 	public float getInterestContribution() {
 		return interestContribution;
 	}
 
+	/**
+	 * @return	 If an aggregate event, time stamp of the last occurrence.
+	 */
 	public Date getEndDate() {
 		return endDate;
 	}
 
+	/**
+	 * @return	An identifier for the kind of relation that corresponds to the navigation to this element. 
+	 */
 	public String getNavigation() {
 		return navigation;
 	}
