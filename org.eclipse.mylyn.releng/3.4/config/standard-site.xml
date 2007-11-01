@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <description url="http://download.eclipse.org/tools/mylyn/update/weekly/e3.4">
+      Mylyn Update for Eclipse 3.4
+   </description>
+   <feature url="features/org.eclipse.mylyn_feature_@core@.jar" id="org.eclipse.mylyn_feature" version="@core@">
+      <category name="Features"/>
+   </feature>
+   <feature url="features/org.eclipse.mylyn.context_feature_@core@.jar" id="org.eclipse.mylyn.context_feature" version="@core@">
+      <category name="Features"/>
+   </feature>
+   <feature url="features/org.eclipse.mylyn.ide_feature_@core@.jar" id="org.eclipse.mylyn.ide_feature" version="@core@">
+      <category name="Integration"/>
+   </feature>
+   <feature url="features/org.eclipse.mylyn.java_feature_@core@.jar" id="org.eclipse.mylyn.java_feature" version="@core@">
+      <category name="Integration"/>
+   </feature>
+   <feature url="features/org.eclipse.mylyn.pde_feature_@core@.jar" id="org.eclipse.mylyn.pde_feature" version="@core@">
+      <category name="Integration"/>
+   </feature>
+   <feature url="features/org.eclipse.mylyn.bugzilla_feature_@core@.jar" id="org.eclipse.mylyn.bugzilla_feature" version="@core@">
+      <category name="Integration"/>
+   </feature>
+   <feature url="features/org.eclipse.mylyn.trac_feature_@core@.jar" id="org.eclipse.mylyn.trac_feature" version="@core@">
+      <category name="Integration"/>
+   </feature>
+   <category-def name="Features" label="Features"/>
+   <category-def name="Integration" label="Integration"/>
+</site>
+

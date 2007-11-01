@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <description url="http://download.eclipse.org/tools/mylyn/update/weekly/extras">
+      Mylyn Extras for Eclipse 3.3 and 3.4
+   </description>
+   <feature url="features/org.eclipse.mylyn.jira_feature_@core@.jar" id="org.eclipse.mylyn.jira_feature" version="@core@">
+      <category name="Integration"/>
+   </feature>
+   <feature url="features/org.eclipse.mylyn.xplanner_feature_@core@.jar" id="org.eclipse.mylyn.xplanner_feature" version="@core@">
+      <category name="Integration"/>
+   </feature>
+   <feature url="features/org.eclipse.mylyn.web.tasks_feature_@core@.jar" id="org.eclipse.mylyn.web.tasks_feature" version="@core@">
+      <category name="Integration"/>
+   </feature>
+   <feature url="features/org.eclipse.mylyn.monitor_feature_@core@.jar" id="org.eclipse.mylyn.monitor_feature" version="@core@">
+      <category name="Feedback"/>
+   </feature>
+   <category-def name="Integration" label="Integration"/>
+   <category-def name="Feedback" label="Feedback"/>
+</site>
