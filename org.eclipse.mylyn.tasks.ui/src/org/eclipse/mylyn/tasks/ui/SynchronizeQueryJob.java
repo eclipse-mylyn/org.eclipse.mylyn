@@ -158,7 +158,7 @@ class SynchronizeQueryJob extends Job {
 				job.setForced(forced);
 				job.run(new SubProgressMonitor(monitor, 40));
 
-				if (Platform.isRunning() && !(TasksUiPlugin.getRepositoryManager() == null)) {
+				if (Platform.isRunning() && !(TasksUiPlugin.getRepositoryManager() == null) && isFullSynchronization()) {
 					TasksUiPlugin.getRepositoryManager().setSynchronizationTime(repository,
 							connector.getSynchronizationTimestamp(repository, tasksToBeSynchronized),
 							TasksUiPlugin.getDefault().getRepositoriesFilePath());
