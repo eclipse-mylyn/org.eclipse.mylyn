@@ -89,25 +89,6 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 				unfilter(filter, treeViewer, targetObject);
 			}
 		}
-		// final InterestFilter filter = getFilter(viewer);
-		// if (filter == null || !(viewer instanceof TreeViewer)) {
-		// return;
-		// }
-		//
-		// if (isUnfilterEvent(event)) {
-		// final TreeViewer treeViewer = (TreeViewer) viewer;
-		// ISelection selection = treeViewer.getSelection();
-		// if (selection instanceof IStructuredSelection) {
-		// Object targetObject = ((IStructuredSelection)
-		// selection).getFirstElement();
-		// unfilter(filter, treeViewer, targetObject);
-		// }
-		// } else if (event.keyCode != SWT.ARROW_DOWN && event.keyCode !=
-		// SWT.ARROW_UP) {
-		// if (filter.resetTemporarilyUnfiltered()) {
-		// viewer.refresh(false);
-		// }
-		// }
 	}
 
 	public void mouseDown(MouseEvent event) {
@@ -116,19 +97,16 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 			return;
 		}
 
-		final TreeViewer treeViewer = (TreeViewer) viewer;
-		IStructuredSelection selection = (IStructuredSelection) treeViewer.getSelection();
-
+		TreeViewer treeViewer = (TreeViewer) viewer;
+		Object selectedObject = null;
+		Object clickedObject = getClickedItem(event);
+		if (clickedObject != null) {
+			selectedObject = clickedObject;
+		} else {
+			selectedObject = treeViewer.getTree();
+		}
+		
 		if (isUnfilterEvent(event)) {
-			Object selectedObject = null;
-			Object clickedObject = getClickedItem(event);
-			if (clickedObject != null) {
-				selectedObject = clickedObject;
-				// selectedObject = ((IStructuredSelection)selection).getFirstElement();
-			} else {
-				selectedObject = treeViewer.getTree();
-			}
-
 			if (treeViewer instanceof CommonViewer) {
 				CommonViewer commonViewer = (CommonViewer) treeViewer;
 				commonViewer.setSelection(new StructuredSelection(selectedObject), true);
@@ -141,10 +119,9 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 				filter.resetTemporarilyUnfiltered();
 
 				// NOTE: need to set selection otherwise it will be missed
-				viewer.setSelection(selection);
+				viewer.setSelection(new StructuredSelection(selectedObject));
 				viewer.refresh(unfiltered);
 			}
-
 		}
 	}
 
