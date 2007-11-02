@@ -115,6 +115,9 @@
 	<!-- Steps to do after running the build.xmls for the elements being built. -->
 	<!-- ===================================================================== -->
 	<target name="postProcess">
+        <replace dir="${buildDirectory}/features" value="${majorVersion}.${forceContextQualifier}" token="${majorVersion}.qualifier">
+			<include name="**/feature.xml"/>
+		</replace>
 	</target>
 
 	<!-- ===================================================================== -->
