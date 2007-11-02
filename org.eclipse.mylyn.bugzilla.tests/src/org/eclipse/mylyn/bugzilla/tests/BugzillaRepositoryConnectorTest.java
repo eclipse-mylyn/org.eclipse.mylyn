@@ -182,7 +182,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		String taskNumber = "6";
 		BugzillaTask task = generateLocalTaskAndDownload(taskNumber);
 		assertNotNull(task);
-		assertEquals(1, task.getChildren().size());
+		assertEquals(2, task.getChildren().size());
 		AbstractTask child = task.getChildren().iterator().next();
 		assertEquals(RepositoryTaskSyncState.INCOMING, child.getSynchronizationState());
 	}
