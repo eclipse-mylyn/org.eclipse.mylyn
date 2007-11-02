@@ -28,6 +28,8 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Rob Elves
+ * 
+ * API-3.0 rename to TaskRepositorySynchronizationJob (?)
  */
 public class ScheduledTaskListSynchJob extends Job {
 
@@ -49,6 +51,8 @@ public class ScheduledTaskListSynchJob extends Job {
 
 	private List<TaskRepository> repositories = null;
 
+	private boolean fullSynchronization;
+
 	public ScheduledTaskListSynchJob(long schedule, TaskListManager taskListManager) {
 		super(JOB_NAME);
 		this.scheduleDelay = schedule;
@@ -62,6 +66,20 @@ public class ScheduledTaskListSynchJob extends Job {
 		this.taskListManager = taskListManager;
 		this.setPriority(Job.BUILD);
 		this.scheduleDelay = -1;
+	}
+
+	/**
+	 * @since 2.2
+	 */
+	public boolean isFullSynchronization() {
+		return fullSynchronization;
+	}
+
+	/**
+	 * @since 2.2
+	 */
+	public void setFullSynchronization(boolean fullSynchronization) {
+		this.fullSynchronization = fullSynchronization;
 	}
 
 	@Override
@@ -121,7 +139,8 @@ public class ScheduledTaskListSynchJob extends Job {
 					lastRepositoryRefresh = null;
 				}
 
-				synchronizationManager.synchronize(connector, repository, queries, null, Job.DECORATE, 0, false);
+				synchronizationManager.synchronize(connector, repository, queries, null, Job.DECORATE, 0, false,
+						fullSynchronization);
 
 				monitor.worked(1);
 			}

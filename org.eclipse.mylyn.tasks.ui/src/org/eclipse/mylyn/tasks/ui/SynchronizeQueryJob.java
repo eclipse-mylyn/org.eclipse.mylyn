@@ -56,6 +56,8 @@ class SynchronizeQueryJob extends Job {
 
 	private HashSet<AbstractTask> tasksToBeSynchronized = new HashSet<AbstractTask>();
 
+	private boolean fullSynchronization;
+
 	public SynchronizeQueryJob(AbstractRepositoryConnector connector, TaskRepository repository,
 			Set<AbstractRepositoryQuery> queries, TaskList taskList) {
 		super("Synchronizing queries for " + repository.getRepositoryLabel());
@@ -68,6 +70,20 @@ class SynchronizeQueryJob extends Job {
 
 	public void setSynchronizeChangedTasks(boolean synchronizeChangedTasks) {
 		this.synchronizeChangedTasks = synchronizeChangedTasks;
+	}
+
+	/**
+	 * @since 2.2
+	 */
+	public boolean isFullSynchronization() {
+		return fullSynchronization;
+	}
+	
+	/**
+	 * @since 2.2
+	 */
+	public void setFullSynchronization(boolean fullSynchronization) {
+		this.fullSynchronization = fullSynchronization;
 	}
 
 	/**
@@ -96,19 +112,21 @@ class SynchronizeQueryJob extends Job {
 				task.setStale(false);
 			}
 
-			// check if the repository has changed at all and have the connector mark tasks that need synchronization 
-			try {
-				monitor.subTask("Checking for changed tasks");
-				boolean hasChangedOrNew = connector.markStaleTasks(repository, allTasks, new SubProgressMonitor(
-						monitor, 20));
-				if (!hasChangedOrNew && !forced) {
-					updateQueryStatus(null);
+			// check if the repository has changed at all and have the connector mark tasks that need synchronization
+			if (isFullSynchronization()) {
+				try {
+					monitor.subTask("Checking for changed tasks");
+					boolean hasChangedOrNew = connector.markStaleTasks(repository, allTasks, new SubProgressMonitor(
+							monitor, 20));
+					if (!hasChangedOrNew && !forced) {
+						updateQueryStatus(null);
+						return Status.OK_STATUS;
+					}
+				} catch (CoreException e) {
+					// synchronization is unlikely to succeed, inform user and exit
+					updateQueryStatus(e.getStatus());
 					return Status.OK_STATUS;
 				}
-			} catch (CoreException e) {
-				// synchronization is unlikely to succeed, inform user and exit
-				updateQueryStatus(e.getStatus());
-				return Status.OK_STATUS;
 			}
 
 			// synchronize queries, tasks changed within query are added to set of tasks to be synchronized

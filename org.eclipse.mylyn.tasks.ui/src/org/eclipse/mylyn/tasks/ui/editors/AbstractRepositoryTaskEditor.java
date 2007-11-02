@@ -3258,7 +3258,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 										}
 									}
 								});
-						TasksUiPlugin.getSynchronizationScheduler().synchNow(0, Collections.singletonList(repository));
+						TasksUiPlugin.getSynchronizationScheduler().synchNow(0, Collections.singletonList(repository), false);
 					} else {
 						close();
 						// For some reason the task wasn't retrieved.

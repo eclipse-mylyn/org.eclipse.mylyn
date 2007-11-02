@@ -26,6 +26,9 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Rob Elves
  * @author Mik Kersten
+ * 
+ * API-3.0 rename synch* methods to synchronize*
+ * API-3.0 this class is exported TasksUiPlugin as public API, move to non-internal package  
  */
 public class TaskListSynchronizationScheduler implements IPropertyChangeListener {
 
@@ -102,10 +105,11 @@ public class TaskListSynchronizationScheduler implements IPropertyChangeListener
 	 * @param repositories
 	 *            used to scope sync to queries associated with given repositories, can be null (sync all repositories)
 	 */
-	public void synchNow(long delay, List<TaskRepository> repositories) {
+	public void synchNow(long delay, List<TaskRepository> repositories, boolean fullSynchronization) {
 		cancelAll();
 		ScheduledTaskListSynchJob job = new ScheduledTaskListSynchJob(delay, TasksUiPlugin.getTaskListManager());
 		job.setRepositories(repositories);
+		job.setFullSynchronization(fullSynchronization);
 		addJobToQueue(job);
 		startSynchJob();
 	}

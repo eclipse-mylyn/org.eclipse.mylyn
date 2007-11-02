@@ -107,6 +107,16 @@ public final class RepositorySynchronizationManager {
 	public final Job synchronize(AbstractRepositoryConnector connector, TaskRepository repository,
 			final Set<AbstractRepositoryQuery> repositoryQueries, final IJobChangeListener listener, int priority,
 			long delay, boolean userForcedSync) {
+		return synchronize(connector, repository, repositoryQueries, listener, priority, delay, userForcedSync, true);
+	}
+	
+	/**
+	 * @param fullSynchronization synchronize all changed tasks for <code>repository</code>
+	 * @since 2.2
+	 */
+	public final Job synchronize(AbstractRepositoryConnector connector, TaskRepository repository,
+			final Set<AbstractRepositoryQuery> repositoryQueries, final IJobChangeListener listener, int priority,
+			long delay, boolean userForcedSync, boolean fullSynchronization) {
 		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 		for (AbstractRepositoryQuery repositoryQuery : repositoryQueries) {
 			repositoryQuery.setSynchronizing(true);
@@ -116,6 +126,7 @@ public final class RepositorySynchronizationManager {
 
 		final SynchronizeQueryJob job = new SynchronizeQueryJob(connector, repository, repositoryQueries, taskList);
 		job.setSynchronizeChangedTasks(true);
+		job.setFullSynchronization(fullSynchronization);
 		job.setForced(userForcedSync);
 		if (listener != null) {
 			job.addJobChangeListener(listener);
@@ -140,6 +151,8 @@ public final class RepositorySynchronizationManager {
 	/**
 	 * Synchronizes only those tasks that have changed since the last time the given repository was synchronized. Calls
 	 * to this method update TaskRepository.syncTime.
+	 * 
+	 * API-3.0 remove since this method is not used
 	 */
 	public final void synchronizeChanged(final AbstractRepositoryConnector connector, final TaskRepository repository) {
 		// Method left here for completeness. Currently unused since ScheduledTaskListSynchJob calls SynchronizeQueriesJob

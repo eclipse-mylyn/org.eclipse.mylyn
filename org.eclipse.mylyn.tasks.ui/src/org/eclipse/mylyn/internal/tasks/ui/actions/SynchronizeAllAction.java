@@ -25,7 +25,7 @@ public class SynchronizeAllAction implements IViewActionDelegate {
 	}
 
 	public void run(IAction action) {
-		TasksUiPlugin.getSynchronizationScheduler().synchNow(0, null);
+		TasksUiPlugin.getSynchronizationScheduler().synchNow(0, null, true);
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
