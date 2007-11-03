@@ -59,6 +59,7 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 		taskHistory = TasksUiPlugin.getTaskListManager().getTaskActivationHistory();
 	}
 
+	@SuppressWarnings("deprecation")
 	protected IContributionItem[] getContributionItems() {
 		List<AbstractTask> tasks = new ArrayList<AbstractTask>(taskHistory.getPreviousTasks());
 		Set<IWorkingSet> sets = TaskListView.getActiveWorkingSets();
