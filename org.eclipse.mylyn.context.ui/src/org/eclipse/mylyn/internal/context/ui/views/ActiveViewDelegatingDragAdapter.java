@@ -39,7 +39,6 @@ public class ActiveViewDelegatingDragAdapter implements DragSourceListener {
 		fPossibleListeners = listeners;
 	}
 
-	@SuppressWarnings("unchecked")
 	public void dragStart(DragSourceEvent event) {
 		fFinishListener = null;
 		boolean saveDoit = event.doit;

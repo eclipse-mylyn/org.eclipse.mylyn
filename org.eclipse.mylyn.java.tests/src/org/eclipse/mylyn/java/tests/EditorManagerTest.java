@@ -47,7 +47,6 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 
 	private IViewPart view;
 
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -197,7 +196,6 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 		assertEquals(0, tracker.getEditorListenerMap().size());
 	}
 
-	@SuppressWarnings("deprecation")
 	public void testActivationPreservesActiveTaskEditor() throws JavaModelException, InvocationTargetException,
 			InterruptedException {
 		assertEquals(0, page.getEditorReferences().length);

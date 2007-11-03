@@ -107,7 +107,6 @@ public class JavaActiveSearchResultUpdater implements IElementChangedListener, I
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
 	private void collectRemoved(Set potentiallyRemovedSet, Set removedElements, IJavaElementDelta delta) {
 		if (delta.getKind() == IJavaElementDelta.REMOVED)
 			removedElements.add(delta.getElement());
@@ -141,7 +140,6 @@ public class JavaActiveSearchResultUpdater implements IElementChangedListener, I
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	private void collectRemovals(Set removals, IResourceDelta delta) {
 		if (delta.getKind() == IResourceDelta.REMOVED)
 			removals.add(delta.getResource());

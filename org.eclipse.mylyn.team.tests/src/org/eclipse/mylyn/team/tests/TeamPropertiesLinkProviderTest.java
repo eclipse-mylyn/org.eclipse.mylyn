@@ -30,7 +30,6 @@ import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
 /**
  * @author Steffen Pingel
  */
-@SuppressWarnings("restriction")
 public class TeamPropertiesLinkProviderTest extends TestCase {
 
 	private IProject project1;
@@ -128,7 +127,6 @@ public class TeamPropertiesLinkProviderTest extends TestCase {
 		assertEquals("project template: 1", changeSet.getComment());
 	}
 
-	@SuppressWarnings("restriction")
 	public class StubChangeSetManager extends ActiveChangeSetManager {
 
 		@Override
