@@ -126,7 +126,6 @@ public class TaskActivityEditorPart extends EditorPart {
 	public void doSaveAs() {
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		setSite(site);

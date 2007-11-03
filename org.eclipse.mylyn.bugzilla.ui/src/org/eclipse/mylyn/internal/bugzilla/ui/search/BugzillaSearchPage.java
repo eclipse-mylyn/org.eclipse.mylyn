@@ -1191,7 +1191,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		getDialogSettings();
 	}
 
-	@SuppressWarnings("restriction")
 	private void updateAttributesFromRepository(final String repositoryUrl, String[] selectedProducts,
 			boolean updateAttributes, final boolean userFoced) {
 
