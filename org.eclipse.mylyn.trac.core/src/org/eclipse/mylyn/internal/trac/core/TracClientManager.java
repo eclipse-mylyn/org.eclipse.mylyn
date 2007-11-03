@@ -84,7 +84,6 @@ public class TracClientManager implements ITaskRepositoryListener {
 		// clientDataByUrl, bug #149939
 	}
 
-	@SuppressWarnings("unchecked")
 	public void readCache() {
 		if (cacheFile == null || !cacheFile.exists()) {
 			return;

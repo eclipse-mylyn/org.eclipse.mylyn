@@ -96,7 +96,6 @@ public class XmlRpcServer {
 			return result;
 		}
 
-		@SuppressWarnings("unchecked")
 		public String[] getAll() throws Exception {
 			return Arrays.asList((Object[]) call(module + ".getAll")).toArray(new String[0]);
 		}
@@ -185,7 +184,6 @@ public class XmlRpcServer {
 			return (Map<?, ?>) ((Object[]) call("ticket.get", id))[3];
 		}
 
-		@SuppressWarnings("unchecked")
 		public Integer[] getAll() throws Exception {
 			return Arrays.asList((Object[]) call("ticket.query", "order=id")).toArray(new Integer[0]);
 		}
@@ -260,7 +258,6 @@ public class XmlRpcServer {
 			return (String) call(module + ".get", id);
 		}
 
-		@SuppressWarnings("unchecked")
 		public String[] getAll() throws Exception {
 			return Arrays.asList((Object[]) call(module + ".getAll")).toArray(new String[0]);
 		}
