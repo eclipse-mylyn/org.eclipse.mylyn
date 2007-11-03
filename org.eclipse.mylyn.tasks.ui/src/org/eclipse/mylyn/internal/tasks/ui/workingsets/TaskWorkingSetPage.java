@@ -166,7 +166,6 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		setImageDescriptor(TasksUiImages.BANNER_WORKING_SET);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void finish() {
 		Object[] elements = tree.getCheckedElements();
 		Set<IAdaptable> validElements = new HashSet<IAdaptable>();
@@ -267,7 +266,6 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 				}
 			}
 
-			@SuppressWarnings("unchecked")
 			public boolean hasChildren(Object element) {
 				return getChildren(element).length > 0;
 			}
