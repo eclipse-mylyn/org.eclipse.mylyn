@@ -5,10 +5,10 @@
 MAJOR_VERSION=2.2.0
 
 # Qualifier format: IYYYYMMDD-HHMM
-QUALIFIER=I20071101-1830
+QUALIFIER=I20071102-1800
 
 # root of build tree
-BUILD_HOME=/home/build/mylyn/org.eclipse.mylyn/org.eclipse.mylyn.releng/3.3
+BUILD_HOME=/home/releng/org.eclipse.mylyn/org.eclipse.mylyn.releng/3.3
 
 #------ END USER SETTINGS
 export JAVA_HOME=/home/build/mylyn/jdk/jdk1.6.0_03
