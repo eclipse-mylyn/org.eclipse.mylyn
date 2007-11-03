@@ -155,7 +155,6 @@ public class ProjectTeamPage extends PropertyPage {
 				new TemplateHandlerContentProposalProvider());
 	}
 
-	@SuppressWarnings("deprecation")
 	private Text addTemplateField(final Composite parent, final String text, IContentProposalProvider provider) {
 		IControlContentAdapter adapter = new TextContentAdapter();
 		IControlCreator controlCreator = new IControlCreator() {

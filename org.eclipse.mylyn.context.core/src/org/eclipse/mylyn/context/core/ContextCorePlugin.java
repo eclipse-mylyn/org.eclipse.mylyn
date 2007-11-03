@@ -330,7 +330,6 @@ public class ContextCorePlugin extends Plugin {
 			}
 		}
 
-		@SuppressWarnings("deprecation")
 		private static void readBridge(IConfigurationElement element) {
 			try {
 				Object object = element.createExecutableExtension(BridgesExtensionPointReader.ATTR_CLASS);
@@ -353,7 +352,6 @@ public class ContextCorePlugin extends Plugin {
 			}
 		}
 
-		@SuppressWarnings("deprecation")
 		private static void readRelationProvider(IConfigurationElement element) {
 			try {
 				String contentType = element.getAttribute(BridgesExtensionPointReader.ATTR_CONTENT_TYPE);
@@ -394,7 +392,6 @@ public class ContextCorePlugin extends Plugin {
 			}
 		}
 
-		@SuppressWarnings("deprecation")
 		private static void readHandler(IConfigurationElement element) {
 			try {
 				Object object = element.createExecutableExtension(ELEMENT_CLASS);
