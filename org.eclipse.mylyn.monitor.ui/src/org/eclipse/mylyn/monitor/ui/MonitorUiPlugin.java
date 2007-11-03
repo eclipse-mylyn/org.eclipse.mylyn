@@ -287,7 +287,6 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 		private boolean extensionsRead = false;
 
-		@SuppressWarnings("deprecation")
 		public void initExtensions() {
 			try {
 				if (!extensionsRead) {
