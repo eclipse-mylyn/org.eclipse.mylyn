@@ -10,8 +10,9 @@ QUALIFIER=I20071102-1800
 # root of build tree
 BUILD_HOME=/home/releng/org.eclipse.mylyn/org.eclipse.mylyn.releng/3.4
 
+export JAVA_HOME=/home/releng/jdk1.6.0_03
 #------ END USER SETTINGS
-export JAVA_HOME=/home/build/mylyn/jdk/jdk1.6.0_03
+
 rm -R ../build
 mkdir ../build
 cp -R ../../maps ../build/
