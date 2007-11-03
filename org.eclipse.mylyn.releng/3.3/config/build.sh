@@ -11,7 +11,7 @@ QUALIFIER=I20071102-1800
 BUILD_HOME=/home/releng/org.eclipse.mylyn/org.eclipse.mylyn.releng/3.3
 
 #------ END USER SETTINGS
-export JAVA_HOME=/home/build/mylyn/jdk/jdk1.6.0_03
+export JAVA_HOME=/home/releng/jdk1.6.0_03
 rm -R ../build
 mkdir ../build
 mkdir ../build/maps
