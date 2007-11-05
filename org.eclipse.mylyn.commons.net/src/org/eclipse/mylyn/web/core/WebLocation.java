@@ -9,8 +9,8 @@
 package org.eclipse.mylyn.web.core;
 
 import java.net.Proxy;
-
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @since 2.2
@@ -18,18 +18,19 @@ import org.apache.commons.httpclient.UsernamePasswordCredentials;
  */
 public class WebLocation extends AbstractWebLocation {
 
-	private final String username;
-
-	private final String password;
+	private final Map<WebCredentials.Type, WebCredentials> credentialsByType;
 
 	private final IProxyProvider proxyProvider;
 
 	public WebLocation(String url, String username, String password, IProxyProvider proxyProvider) {
 		super(url);
 
-		this.username = username;
-		this.password = password;
+		this.credentialsByType = new HashMap<WebCredentials.Type, WebCredentials>();
 		this.proxyProvider = proxyProvider;
+		
+		if (username != null && password != null) {
+			setCredentials(WebCredentials.Type.REPOSITORY, username, password);
+		}
 	}
 
 	public WebLocation(String url, String username, String password) {
@@ -40,11 +41,8 @@ public class WebLocation extends AbstractWebLocation {
 		this(url, null, null, null);
 	}
 
-	public UsernamePasswordCredentials getCredentials(String authType) {
-		if (username != null) {
-			return new UsernamePasswordCredentials(username, password);
-		}
-		return null;
+	public WebCredentials getCredentials(WebCredentials.Type authType) {
+		return credentialsByType.get(authType);
 	}
 
 	public Proxy getProxyForHost(String host, String proxyType) {
@@ -54,8 +52,12 @@ public class WebLocation extends AbstractWebLocation {
 		return null;
 	}
 
-	public ResultType requestCredentials(String authType, String url) {
+	public ResultType requestCredentials(WebCredentials.Type authType, String url) {
 		return ResultType.NOT_SUPPORTED;
 	}
 
+	public void setCredentials(WebCredentials.Type authType, String username, String password) {
+		credentialsByType.put(authType, new WebCredentials(username, password));
+	}
+	
 }

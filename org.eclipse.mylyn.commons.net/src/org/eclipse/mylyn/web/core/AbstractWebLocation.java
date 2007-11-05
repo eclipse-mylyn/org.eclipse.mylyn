@@ -12,8 +12,6 @@ import java.net.Proxy;
 
 import javax.net.ssl.X509TrustManager;
 
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
-
 /**
  * @since 2.2
  * @author Steffen Pingel
@@ -30,7 +28,7 @@ public abstract class AbstractWebLocation {
 		this.url = url;
 	}
 	
-	public abstract UsernamePasswordCredentials getCredentials(String authType);
+	public abstract WebCredentials getCredentials(WebCredentials.Type type);
 	
 	public abstract Proxy getProxyForHost(String host, String proxyType);
 
@@ -42,6 +40,6 @@ public abstract class AbstractWebLocation {
 		return url;
 	}
 
-	public abstract ResultType requestCredentials(String authType, String message);
+	public abstract ResultType requestCredentials(WebCredentials.Type type, String message);
 	
 }

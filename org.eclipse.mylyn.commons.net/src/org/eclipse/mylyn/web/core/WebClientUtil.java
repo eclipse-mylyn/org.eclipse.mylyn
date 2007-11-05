@@ -33,6 +33,8 @@ import org.eclipse.core.runtime.Plugin;
  * @author Steffen Pingel
  * @author Leo Dos Santos - getFaviconForUrl
  * @author Rob Elves
+ * 
+ * API-3.0 rename to WebUtil  
  */
 public class WebClientUtil {
 
@@ -61,9 +63,6 @@ public class WebClientUtil {
 	private static final String USER_AGENT_PREFIX;
 
 	private static final String USER_AGENT_POSTFIX;
-
-	// XXX this was copied from TaskRepository
-	public static final String AUTH_HTTP = "org.eclipse.mylyn.tasklist.repositories.httpauth";
 
 	private static String stripQualifier(String longVersion) {
 		String parts[] = longVersion.split("\\.");
@@ -188,6 +187,7 @@ public class WebClientUtil {
 		return Integer.parseInt(port);
 	}
 
+	// API-3.0 rename to getHost
 	public static String getDomain(String repositoryUrl) {
 		String result = repositoryUrl;
 		int colonSlashSlash = repositoryUrl.indexOf("://");
@@ -278,6 +278,20 @@ public class WebClientUtil {
 		if (i > 0 && i < username.length() - 1 && address != null) {
 			return new NTCredentials(username.substring(i + 1), password, address.getHostName(), username.substring(0,
 					i));
+		} else {
+			return new UsernamePasswordCredentials(username, password);
+		}
+	}
+
+	/**
+	 * @since 2.2
+	 */
+	public static Credentials getHttpClientCredentials(WebCredentials credentials, String host) {
+		String username = credentials.getUserName();
+		String password = credentials.getPassword();
+		int i = username.indexOf("\\");
+		if (i > 0 && i < username.length() - 1 && host != null) {
+			return new NTCredentials(username.substring(i + 1), password, host, username.substring(0, i));
 		} else {
 			return new UsernamePasswordCredentials(username, password);
 		}
@@ -428,11 +442,11 @@ public class WebClientUtil {
 		setupHttpClientParams(client, userAgent);
 		setupHttpClientProxy(client, location);
 
-		Credentials credentials = location.getCredentials(AUTH_HTTP);
+		WebCredentials credentials = location.getCredentials(WebCredentials.Type.HTTP);
 		if (credentials != null) {
 			client.getParams().setAuthenticationPreemptive(true);
 			AuthScope authScope = new AuthScope(host, port, AuthScope.ANY_REALM);
-			client.getState().setCredentials(authScope, credentials);
+			client.getState().setCredentials(authScope, getHttpClientCredentials(credentials, host));
 		}
 
 		if (WebClientUtil.isRepositoryHttps(url)) {
