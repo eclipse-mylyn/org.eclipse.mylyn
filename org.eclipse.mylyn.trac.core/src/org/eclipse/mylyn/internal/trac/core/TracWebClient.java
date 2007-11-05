@@ -29,7 +29,6 @@ import javax.security.auth.login.LoginException;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -51,13 +50,14 @@ import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylyn.internal.trac.core.util.TracUtils;
 import org.eclipse.mylyn.internal.trac.core.util.TracHttpClientTransportFactory.TracHttpException;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.web.core.AbstractWebLocation;
 import org.eclipse.mylyn.web.core.HtmlStreamTokenizer;
 import org.eclipse.mylyn.web.core.HtmlTag;
 import org.eclipse.mylyn.web.core.WebClientUtil;
+import org.eclipse.mylyn.web.core.WebCredentials;
 import org.eclipse.mylyn.web.core.AbstractWebLocation.ResultType;
 import org.eclipse.mylyn.web.core.HtmlStreamTokenizer.Token;
+import org.eclipse.mylyn.web.core.WebCredentials.Type;
 
 /**
  * Represents a Trac repository that is accessed through the Trac's query script and web interface.
@@ -99,7 +99,7 @@ public class TracWebClient extends AbstractTracClient {
 		for (int attempt = 0; attempt < 2; attempt++) {
 			// force authentication
 			if (!authenticated) {
-				UsernamePasswordCredentials credentials = location.getCredentials(TaskRepository.AUTH_DEFAULT);
+				WebCredentials credentials = location.getCredentials(WebCredentials.Type.REPOSITORY);
 				if (credentialsValid(credentials)) {
 					authenticate(monitor);
 				}
@@ -131,14 +131,14 @@ public class TracWebClient extends AbstractTracClient {
 
 	private void authenticate(IProgressMonitor monitor) throws TracLoginException, IOException {
 		while (true) {
-			UsernamePasswordCredentials credentials = location.getCredentials(TaskRepository.AUTH_DEFAULT);
+			WebCredentials credentials = location.getCredentials(WebCredentials.Type.REPOSITORY);
 			if (!credentialsValid(credentials)) {
 				throw new TracLoginException();
 			}
 
 			// try standard basic/digest authentication first
 			AuthScope authScope = new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT, AuthScope.ANY_REALM);
-			httpClient.getState().setCredentials(authScope, credentials);
+			httpClient.getState().setCredentials(authScope, WebClientUtil.getHttpClientCredentials(credentials, WebClientUtil.getDomain(repositoryUrl)));
 
 			GetMethod method = new GetMethod(WebClientUtil.getRequestPath(repositoryUrl + LOGIN_URL));
 			method.setFollowRedirects(false);
@@ -170,11 +170,11 @@ public class TracWebClient extends AbstractTracClient {
 	}
 
 	private boolean needsReauthentication(int code) throws IOException, TracLoginException {
-		final String authenticationType;
+		final Type authenticationType;
 		if (code == HttpStatus.SC_UNAUTHORIZED || code == HttpStatus.SC_FORBIDDEN) {
-			authenticationType = TaskRepository.AUTH_DEFAULT;
+			authenticationType = Type.REPOSITORY;
 		} else if (code == HttpStatus.SC_PROXY_AUTHENTICATION_REQUIRED) {
-			authenticationType = TaskRepository.AUTH_PROXY;
+			authenticationType = Type.PROXY;
 		} else {
 			return false;
 		}

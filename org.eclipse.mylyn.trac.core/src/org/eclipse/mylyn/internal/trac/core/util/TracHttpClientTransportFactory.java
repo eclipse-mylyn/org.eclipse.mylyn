@@ -34,7 +34,7 @@ import org.eclipse.mylyn.web.core.WebClientUtil;
  */
 public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 
-	protected static final String USER_AGENT = "TracConnector, XmlRpcClient/3.0";
+	protected static final String USER_AGENT = "TracConnector Apache XML-RPC/3.0";
 	
 	public static class TracHttpException extends XmlRpcException {
 

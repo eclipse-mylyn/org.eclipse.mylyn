@@ -16,7 +16,6 @@ import java.net.URL;
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.NameValuePair;
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -31,6 +30,7 @@ import org.eclipse.mylyn.internal.trac.core.model.TracTicketType;
 import org.eclipse.mylyn.internal.trac.core.model.TracVersion;
 import org.eclipse.mylyn.web.core.AbstractWebLocation;
 import org.eclipse.mylyn.web.core.WebClientUtil;
+import org.eclipse.mylyn.web.core.WebCredentials;
 
 /**
  * @author Steffen Pingel
@@ -72,11 +72,11 @@ public abstract class AbstractTracClient implements ITracClient {
 		return version;
 	}
 
-	protected boolean credentialsValid(UsernamePasswordCredentials credentials) {
+	protected boolean credentialsValid(WebCredentials credentials) {
 		return credentials != null && credentials.getUserName().length() > 0;
 	}
 
-	protected void authenticateAccountManager(HttpClient httpClient, UsernamePasswordCredentials credentials) throws IOException, TracLoginException {
+	protected void authenticateAccountManager(HttpClient httpClient, WebCredentials credentials) throws IOException, TracLoginException {
 		PostMethod post = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl + LOGIN_URL));
 		post.setFollowRedirects(false);
 		NameValuePair[] data = { new NameValuePair("referer", ""), new NameValuePair("user", credentials.getUserName()),

@@ -14,6 +14,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryLocation;
 import org.eclipse.mylyn.internal.tasks.ui.dialogs.EditCredentialsDialog;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.web.core.WebCredentials;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
@@ -22,36 +23,56 @@ import org.eclipse.ui.PlatformUI;
  */
 public class TaskRepositoryLocationUi extends TaskRepositoryLocation {
 
+	private static Object lock = new Object();
+
 	public TaskRepositoryLocationUi(TaskRepository taskRepository) {
 		super(taskRepository);
 	}
 
-	public ResultType requestCredentials(final String authType, String message) {
-		PasswordRunner runner = new PasswordRunner(authType, message);
-		PlatformUI.getWorkbench().getDisplay().syncExec(runner);
-		if (runner.isCancelled()) {
-			throw new OperationCanceledException();
+	@Override
+	public ResultType requestCredentials(WebCredentials.Type authType, String message) {
+		WebCredentials oldCredentials = taskRepository.getCredentials(authType);
+		// synchronize on a static lock to ensure that only one password dialog is displayed at a time
+		synchronized (lock) {
+			// check if the credentials changed while the thread was waiting for the lock
+			if (!areEqual(oldCredentials, taskRepository.getCredentials(authType))) {
+				return ResultType.CREDENTIALS_CHANGED;
+			}
+
+			PasswordRunner runner = new PasswordRunner(authType, message);
+			PlatformUI.getWorkbench().getDisplay().syncExec(runner);
+			if (runner.isCancelled()) {
+				throw new OperationCanceledException();
+			}
+			return runner.getResult();
 		}
-		return runner.getResult();
+	}
+
+	private boolean areEqual(WebCredentials oldCredentials, WebCredentials credentials) {
+		if (oldCredentials == null) {
+			return (credentials == null);
+		} else {
+			return oldCredentials.equals(credentials);
+		}
 	}
 
 	private class PasswordRunner implements Runnable {
 
-		private final String authType;
+		private final WebCredentials.Type authType;
 
-		private boolean cancelled;
+		private boolean canceled;
 
 		private ResultType result;
 
 		private final String message;
 
-		public PasswordRunner(String credentialType, String message) {
+		public PasswordRunner(WebCredentials.Type credentialType, String message) {
 			this.authType = credentialType;
 			this.message = message;
 		}
 
 		public boolean isCancelled() {
-			return cancelled;
+			return canceled;
 		}
 
 		public ResultType getResult() {
@@ -66,9 +87,9 @@ public class TaskRepositoryLocationUi extends TaskRepositoryLocation {
 				if (dialog.open() == Dialog.OK) {
 					saveDialog(dialog);
 					result = ResultType.CREDENTIALS_CHANGED;
-					cancelled = false;
+					canceled = false;
 				} else {
-					cancelled = true;
+					canceled = true;
 				}
 			}
 		}
@@ -76,14 +97,10 @@ public class TaskRepositoryLocationUi extends TaskRepositoryLocation {
 		private void initializeDialog(EditCredentialsDialog dialog) {
 			dialog.setUrl(taskRepository.getRepositoryLabel());
 
-			String username = taskRepository.getUserName(authType);
-			if (username != null) {
-				dialog.setUsername(taskRepository.getUserName());
-			}
-
-			String password = taskRepository.getPassword(authType);
-			if (password != null) {
-				dialog.setPassword(password);
+			WebCredentials credentials = taskRepository.getCredentials(authType);
+			if (credentials != null) {
+				dialog.setUsername(credentials.getUserName());
+				dialog.setPassword(credentials.getPassword());
 			}
 
 			// caller provided message takes precedence
@@ -95,23 +112,23 @@ public class TaskRepositoryLocationUi extends TaskRepositoryLocation {
 		}
 
 		private String getDefaultMessage() {
-			if (TaskRepository.AUTH_DEFAULT.equals(authType)) {
+			if (WebCredentials.Type.REPOSITORY.equals(authType)) {
 				return "Please enter repository password";
-			} else if (TaskRepository.AUTH_HTTP.equals(authType)) {
+			} else if (WebCredentials.Type.HTTP.equals(authType)) {
 				return "Please enter HTTP password";
-			} else if (TaskRepository.AUTH_PROXY.equals(authType)) {
+			} else if (WebCredentials.Type.PROXY.equals(authType)) {
 				return "Please enter proxy password";
 			}
 			return null;
 		}
 
 		private void saveDialog(EditCredentialsDialog dialog) {
-			if (TaskRepository.AUTH_DEFAULT.equals(authType)) {
+			if (WebCredentials.Type.REPOSITORY.equals(authType)) {
 				taskRepository.setAnonymous(false);
 			}
 
-			taskRepository.setSavePassword(authType, dialog.getSavePassword());
-			taskRepository.setCredentials(authType, dialog.getUserName(), dialog.getPassword());
+			WebCredentials credentials = new WebCredentials(dialog.getUserName(), dialog.getPassword());
+			taskRepository.setCredentials(authType, credentials, dialog.getSavePassword());
 
 			TasksUiPlugin.getRepositoryManager().notifyRepositorySettingsChanged(taskRepository);
 			TasksUiPlugin.getRepositoryManager().saveRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());

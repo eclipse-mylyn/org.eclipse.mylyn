@@ -22,6 +22,8 @@ import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.web.core.WebClientUtil;
+import org.eclipse.mylyn.web.core.WebCredentials;
+import org.eclipse.mylyn.web.core.WebCredentials.Type;
 
 /**
  * Note that task repositories use Strings for storing time stamps because using Date objects led to the following
@@ -51,35 +53,31 @@ public class TaskRepository extends PlatformObject {
 
 	private static final String SAVE_PASSWORD = ".savePassword";
 
-	/**
-	 * @since 2.2
-	 */
-	public static final String AUTH_DEFAULT = "org.eclipse.mylyn.tasklist.repositories";
+	private static final String ENABLED = ".enabled";
+
+	private static final String AUTH_REPOSITORY = "org.eclipse.mylyn.tasklist.repositories";
 
 	/**
-	 * @deprecated
+	 * @deprecated use {@link #setCredentials(Type, WebCredentials, boolean)} to access credentials
 	 */
-	public static final String AUTH_PASSWORD = AUTH_DEFAULT + PASSWORD;
+	public static final String AUTH_PASSWORD = AUTH_REPOSITORY + PASSWORD;
 
 	/**
-	 * @deprecated
+	 * @deprecated use {@link #setCredentials(Type, WebCredentials, boolean)} to access credentials
 	 */
-	public static final String AUTH_USERNAME = AUTH_DEFAULT + USERNAME;
+	public static final String AUTH_USERNAME = AUTH_REPOSITORY + USERNAME;
 
 	public static final String ANONYMOUS_LOGIN = "org.eclipse.mylyn.tasklist.repositories.anonymous";
 
-	/**
-	 * @since 2.2
-	 */
-	public static final String AUTH_HTTP = "org.eclipse.mylyn.tasklist.repositories.httpauth";
+	private static final String AUTH_HTTP = "org.eclipse.mylyn.tasklist.repositories.httpauth";
 
 	/**
-	 * @deprecated
+	 * @deprecated use {@link #setCredentials(Type, WebCredentials, boolean)} to access credentials
 	 */
 	public static final String AUTH_HTTP_PASSWORD = AUTH_HTTP + PASSWORD;
 
 	/**
-	 * @deprecated
+	 * @deprecated use {@link #setCredentials(Type, WebCredentials, boolean)} to access credentials
 	 */
 	public static final String AUTH_HTTP_USERNAME = AUTH_HTTP + USERNAME;
 
@@ -97,18 +95,15 @@ public class TaskRepository extends PlatformObject {
 
 	public static final String PROXY_PORT = "org.eclipse.mylyn.tasklist.repositories.proxy.port";
 
-	/**
-	 * @since 2.2
-	 */
-	public static final String AUTH_PROXY = "org.eclipse.mylyn.tasklist.repositories.proxy";
+	private static final String AUTH_PROXY = "org.eclipse.mylyn.tasklist.repositories.proxy";
 
 	/**
-	 * @deprecated
+	 * @deprecated use {@link #setCredentials(Type, WebCredentials, boolean)} to access credentials
 	 */
 	public static final String PROXY_USERNAME = AUTH_PROXY + USERNAME;
 
 	/**
-	 * @deprecated
+	 * @deprecated use {@link #setCredentials(Type, WebCredentials, boolean)} to access credentials
 	 */
 	public static final String PROXY_PASSWORD = AUTH_PROXY + PASSWORD;
 
@@ -173,13 +168,13 @@ public class TaskRepository extends PlatformObject {
 		this.setProperty(TaskRepository.PROXY_USEDEFAULT, new Boolean(true).toString());
 
 		// for backwards compatibility to versions prior to 2.2
-		setSavePassword(AUTH_DEFAULT, true);
-		setSavePassword(AUTH_HTTP, true);
-		setSavePassword(AUTH_PROXY, true);
+		this.setProperty(AUTH_REPOSITORY + SAVE_PASSWORD, String.valueOf(true));
+		this.setProperty(AUTH_HTTP + SAVE_PASSWORD, String.valueOf(true));
+		this.setProperty(AUTH_PROXY + SAVE_PASSWORD, String.valueOf(true));
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated use {@link #setProperty(String, String)} instead of passing a map
 	 */
 	public TaskRepository(String kind, String serverUrl, Map<String, String> properties) {
 		this.properties.put(IRepositoryConstants.PROPERTY_CONNECTOR_KIND, kind);
@@ -193,14 +188,15 @@ public class TaskRepository extends PlatformObject {
 		return properties.get(IRepositoryConstants.PROPERTY_URL);
 	}
 
-	// private String getProxyHostname() {
-	// return properties.get(PROXY_HOSTNAME);
-	// }
-
 	public void setUrl(String newUrl) {
 		properties.put(IRepositoryConstants.PROPERTY_URL, newUrl);
 	}
 
+	/**
+	 * <b>Note: </b> This method will be deprecated in 2.3.
+	 * 
+	 * @see #getCredentials(Type)
+	 */
 	public boolean hasCredentials() {
 		String username = getUserName();
 		String password = getPassword();
@@ -213,42 +209,77 @@ public class TaskRepository extends PlatformObject {
 	public String getUserName() {
 		// NOTE: if anonymous, user name is "" string so we won't go to keyring
 		if (!isCachedUserName) {
-			cachedUserName = getUserName(AUTH_DEFAULT);
+			cachedUserName = getUserName(WebCredentials.Type.REPOSITORY);
 			isCachedUserName = true;
 		}
 		return cachedUserName;
 	}
 
 	public String getPassword() {
-		return getPassword(AUTH_DEFAULT);
+		return getPassword(WebCredentials.Type.REPOSITORY);
 	}
 
+	/**
+	 * <b>Note: </b> This method will be deprecated in 2.3.
+	 * 
+	 * @see #getCredentials(Type)
+	 */
 	public String getProxyUsername() {
-		return getUserName(AUTH_PROXY);
+		return getUserName(WebCredentials.Type.PROXY);
 	}
 
+	/**
+	 * <b>Note: </b> This method will be deprecated in 2.3.
+	 * 
+	 * @see #getCredentials(Type)
+	 */
 	public String getProxyPassword() {
-		return getPassword(AUTH_PROXY);
+		return getPassword(WebCredentials.Type.PROXY);
 	}
 
+	/**
+	 * <b>Note: </b> This method will be deprecated in 2.3.
+	 * 
+	 * @see #getCredentials(Type)
+	 */
 	public String getHttpUser() {
-		return getUserName(AUTH_HTTP);
+		return getUserName(WebCredentials.Type.HTTP);
 	}
 
+	/**
+	 * <b>Note: </b> This method will be deprecated in 2.3.
+	 * 
+	 * @see #getCredentials(Type)
+	 */
 	public String getHttpPassword() {
-		return getPassword(AUTH_HTTP);
+		return getPassword(WebCredentials.Type.HTTP);
 	}
 
+	/**
+	 * <b>Note: </b> This method will be deprecated in 2.3.
+	 * 
+	 * @see #setCredentials(Type, WebCredentials, boolean)
+	 */
 	public void setAuthenticationCredentials(String username, String password) {
-		setCredentials(AUTH_DEFAULT, username, password);
+		setCredentials(WebCredentials.Type.REPOSITORY, username, password);
 	}
 
+	/**
+	 * <b>Note: </b> This method will be deprecated in 2.3.
+	 * 
+	 * @see #setCredentials(Type, WebCredentials, boolean)
+	 */
 	public void setProxyAuthenticationCredentials(String username, String password) {
-		setCredentials(AUTH_PROXY, username, password);
+		setCredentials(WebCredentials.Type.PROXY, username, password);
 	}
 
+	/**
+	 * <b>Note: </b> This method will be deprecated in 2.3.
+	 * 
+	 * @see #setCredentials(Type, WebCredentials, boolean)
+	 */
 	public void setHttpAuthenticationCredentials(String username, String password) {
-		setCredentials(AUTH_HTTP, username, password);
+		setCredentials(WebCredentials.Type.HTTP, username, password);
 	}
 
 	private void setCredentialsInternal(String username, String password, String userProperty, String passwordProperty) {
@@ -269,8 +300,13 @@ public class TaskRepository extends PlatformObject {
 	public void flushAuthenticationCredentials() {
 		synchronized (LOCK) {
 			isCachedUserName = false;
-
+		
 			transientProperties.clear();
+
+			// API30: legacy support for versions prior to 2.2 that did not set the enable flag, remove for 3.0
+			setProperty(getKeyPrefix(WebCredentials.Type.HTTP) + ENABLED, null);
+			setProperty(getKeyPrefix(WebCredentials.Type.PROXY) + ENABLED, null);
+			setProperty(getKeyPrefix(WebCredentials.Type.REPOSITORY) + ENABLED, null);
 
 			try {
 				if (Platform.isRunning()) {
@@ -495,10 +531,20 @@ public class TaskRepository extends PlatformObject {
 		return "true".equals(getProperty(PROXY_USEDEFAULT));
 	}
 
+	/**
+	 * <b>Note: </b> This method will be deprecated in 2.3.
+	 * 
+	 * @see #setCredentials(Type, WebCredentials, boolean)
+	 */
 	public void setAnonymous(boolean b) {
 		properties.put(ANONYMOUS_LOGIN, String.valueOf(b));
 	}
 
+	/**
+	 * <b>Note: </b> This method will be deprecated in 2.3.
+	 * 
+	 * @see #getCredentials(Type)
+	 */
 	public boolean isAnonymous() {
 		return getProperty(ANONYMOUS_LOGIN) == null || "true".equals(getProperty(ANONYMOUS_LOGIN));
 	}
@@ -522,51 +568,134 @@ public class TaskRepository extends PlatformObject {
 	/**
 	 * @since 2.2
 	 */
-	public void setCredentials(String authType, String username, String password) {
-		if (getSavePassword(authType)) {
-			setCredentialsInternal(username, password, authType + USERNAME, authType + PASSWORD);
-			transientProperties.remove(authType + PASSWORD);
-		} else {
-			setCredentialsInternal(username, "", authType + USERNAME, authType + PASSWORD);
-			transientProperties.put(authType + PASSWORD, password);
-		}
-
-		if (AUTH_DEFAULT.equals(authType)) {
-			this.cachedUserName = username;
-			this.isCachedUserName = true;
-		}
-	}
-
-	/**
-	 * @since 2.2
-	 */
-	public boolean getSavePassword(String authType) {
-		String value = getProperty(authType + SAVE_PASSWORD);
+	public boolean getSavePassword(Type authType) {
+		String value = getProperty(getKeyPrefix(authType) + SAVE_PASSWORD);
 		return value != null && "true".equals(value);
 	}
 
-	/**
-	 * @since 2.2
-	 */
-	public void setSavePassword(String authType, boolean savePassword) {
-		setProperty(authType + SAVE_PASSWORD, String.valueOf(savePassword));
-	}
-
-	/**
-	 * @since 2.2
-	 */
-	public String getUserName(String authType) {
-		return getAuthInfo(authType + USERNAME);
-	}
-
-	/**
-	 * @since 2.2
-	 */
-	public String getPassword(String authType) {
-		if (getSavePassword(authType)) {
-			return getAuthInfo(authType + PASSWORD);
+	private static String getKeyPrefix(Type type) {
+		switch (type) {
+		case HTTP:
+			return AUTH_HTTP;
+		case PROXY:
+			return AUTH_PROXY;
+		case REPOSITORY:
+			return AUTH_REPOSITORY;
 		}
-		return transientProperties.get(authType + PASSWORD);
+		throw new IllegalArgumentException("Unknown authentication type: " + type);
+	}
+
+	/**
+	 * Returns the credentials for an authentication type.
+	 * 
+	 * @param authType
+	 *            the type of authentication
+	 * @return null, if no credentials are set for <code>authType</code>
+	 * @since 2.2
+	 */
+	public synchronized WebCredentials getCredentials(Type authType) {
+		String key = getKeyPrefix(authType);
+
+		String enabled = getProperty(key + ENABLED);
+		if (enabled == null || "true".equals(enabled)) {
+			String userName = getAuthInfo(key + USERNAME);
+			String password;
+
+			String savePassword = getProperty(key + SAVE_PASSWORD);
+			if (savePassword != null && "true".equals(savePassword)) {
+				password = getAuthInfo(key + PASSWORD);
+			} else {
+				password = transientProperties.get(key + PASSWORD);
+			}
+
+			if (userName == null) {
+				userName = "";
+			}
+			if (password == null) {
+				password = "";
+			}
+
+			if (enabled == null && userName.length() == 0) {
+				// API30: legacy support for versions prior to 2.2 that did not set the enable flag, remove for 3.0
+				return null;
+			}
+
+			return new WebCredentials(userName, password);
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Sets the credentials for <code>authType</code>.
+	 * 
+	 * @param authType
+	 *            the type of authentication
+	 * @param credentials
+	 *            the credentials, if null, the credentials for <code>authType</code> will be flushed
+	 * @param savePassword
+	 *            if true, the password will be persisted in the platform key ring; otherwise it will be stored in
+	 *            memory only
+	 * @since 2.2
+	 */
+	public synchronized void setCredentials(Type authType, WebCredentials credentials, boolean savePassword) {
+		String key = getKeyPrefix(authType);
+
+		setProperty(key + SAVE_PASSWORD, String.valueOf(savePassword));
+
+		if (credentials == null) {
+			setProperty(key + ENABLED, String.valueOf(false));
+			transientProperties.remove(key + PASSWORD);
+			setCredentialsInternal("", "", key + USERNAME, key + PASSWORD);
+		} else {
+			setProperty(key + ENABLED, String.valueOf(true));
+			if (savePassword) {
+				setCredentialsInternal(credentials.getUserName(), credentials.getPassword(), key + USERNAME, key
+						+ PASSWORD);
+				transientProperties.remove(key + PASSWORD);
+			} else {
+				setCredentialsInternal(credentials.getUserName(), "", key + USERNAME, key + PASSWORD);
+				transientProperties.put(key + PASSWORD, credentials.getPassword());
+			}
+		}
+
+		if (authType == Type.REPOSITORY) {
+			if (credentials == null) {
+				this.cachedUserName = null;
+				this.isCachedUserName = false;
+			} else {
+				this.cachedUserName = credentials.getUserName();
+				this.isCachedUserName = true;
+			}
+		}
+	}
+
+	/**
+	 * Legacy support for < 2.2. Remove in 2.3.
+	 */
+	private void setCredentials(Type type, String username, String password) {
+		if (username == null) {
+			setCredentials(type, null, true);
+		} else {
+			setCredentials(type, new WebCredentials(username, password), true);
+		}
+
+	}
+
+	/**
+	 * Legacy support for < 2.2. Remove in 2.3.
+	 */
+	private String getUserName(WebCredentials.Type authType) {
+		WebCredentials credentials = getCredentials(authType);
+		return (credentials != null) ? credentials.getUserName() : null;
+	}
+
+	/**
+	 * Legacy support for < 2.2. Remove in 2.3.
+	 */
+	private String getPassword(WebCredentials.Type authType) {
+		WebCredentials credentials = getCredentials(authType);
+		return (credentials != null) ? credentials.getPassword() : null;
 	}
 
 }

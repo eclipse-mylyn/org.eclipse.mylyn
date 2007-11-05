@@ -31,6 +31,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.web.core.WebCredentials;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -390,7 +391,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		}
 
 		if (repository != null) {
-			savePasswordButton.setSelection(repository.getSavePassword(TaskRepository.AUTH_DEFAULT));
+			savePasswordButton.setSelection(repository.getSavePassword(WebCredentials.Type.REPOSITORY));
 		} else {
 			savePasswordButton.setSelection(false);
 		}
@@ -581,7 +582,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			saveHttpPasswordButton.setEnabled(httpAuthButton.getSelection());
 
 			if (repository != null) {
-				saveHttpPasswordButton.setSelection(repository.getSavePassword(TaskRepository.AUTH_HTTP));
+				saveHttpPasswordButton.setSelection(repository.getSavePassword(WebCredentials.Type.HTTP));
 			} else {
 				saveHttpPasswordButton.setSelection(false);
 			}
@@ -809,7 +810,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		saveProxyPasswordButton.setEnabled(proxyAuthButton.getSelection());
 
 		if (repository != null) {
-			saveProxyPasswordButton.setSelection(repository.getSavePassword(TaskRepository.AUTH_PROXY));
+			saveProxyPasswordButton.setSelection(repository.getSavePassword(WebCredentials.Type.PROXY));
 		} else {
 			saveProxyPasswordButton.setSelection(false);
 		}
@@ -888,6 +889,13 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		saveHttpPasswordButton.setEnabled(selected);
 	}
 
+	/**
+	 * @since 2.2
+	 */
+	public boolean getHttpAuth() {
+		return httpAuthButton.getSelection();
+	}
+	
 	public void setUseDefaultProxy(boolean selected) {
 		if (!needsProxy) {
 			return;
@@ -927,6 +935,13 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		proxyUserNameEditor.setEnabled(selected && !systemProxyButton.getSelection(), proxyAuthComp);
 		proxyPasswordEditor.setEnabled(selected && !systemProxyButton.getSelection(), proxyAuthComp);
 		saveProxyPasswordButton.setEnabled(selected && !systemProxyButton.getSelection());
+	}
+
+	/**
+	 * @since 2.2
+	 */
+	public boolean getProxyAuth() {
+		return proxyAuthButton.getSelection();
 	}
 
 	protected abstract void createAdditionalControls(Composite parent);
@@ -1142,34 +1157,36 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		}
 	}
 
-	// public String getTimeZoneId() {
-	// return (timeZonesCombo != null) ?
-	// timeZonesCombo.getItem(timeZonesCombo.getSelectionIndex()) : null;
-	// }
-
 	public TaskRepository createTaskRepository() {
-		// TaskRepository repository = new
-		// TaskRepository(connector.getRepositoryType(), getServerUrl(),
-		// getVersion(),
-		// getCharacterEncoding(), getTimeZoneId());
-
-		TaskRepository repository = new TaskRepository(connector.getConnectorKind(), getServerUrl(), getVersion(),
-				getCharacterEncoding(), "");
-		repository.setRepositoryLabel(getRepositoryLabel());
-		repository.setSavePassword(TaskRepository.AUTH_DEFAULT, savePasswordButton.getSelection());
-		repository.setAuthenticationCredentials(getUserName(), getPassword());
-		if (needsAnonymousLogin()) {
-			repository.setAnonymous(anonymousButton.getSelection());
+		TaskRepository repository = new TaskRepository(connector.getConnectorKind(), getServerUrl());
+		applyTo(repository);
+		return repository;
+	}
+	
+	/**
+	 * @since 2.2
+	 */
+	public void applyTo(TaskRepository repository) {
+		repository.setVersion(getVersion());
+		if (needsEncoding()) {
+			repository.setCharacterEncoding(getCharacterEncoding());
 		}
+		
+		if (isAnonymousAccess()) {
+			repository.setCredentials(WebCredentials.Type.REPOSITORY, null, getSavePassword());
+		} else {
+			WebCredentials credentials = new WebCredentials(getUserName(), getPassword());
+			repository.setCredentials(WebCredentials.Type.REPOSITORY, credentials, getSavePassword());
+		}
+		repository.setRepositoryLabel(getRepositoryLabel());
+		repository.setAnonymous(isAnonymousAccess());
 
-		// repository.setProperty(TaskRepository.AUTH_HTTP_USERNAME,
-		// getHttpAuthUserId());
-		// repository.setProperty(TaskRepository.AUTH_HTTP_PASSWORD,
-		// getHttpAuthPassword());
 		if (needsHttpAuth()) {
-			repository.setSavePassword(TaskRepository.AUTH_HTTP, saveHttpPasswordButton.getSelection());
-			if (getHttpAuthUserId().length() > 0) {
-				repository.setHttpAuthenticationCredentials(getHttpAuthUserId(), getHttpAuthPassword());
+			if (getHttpAuth()) {
+				WebCredentials webCredentials = new WebCredentials(getHttpAuthUserId(), getHttpAuthPassword());
+				repository.setCredentials(WebCredentials.Type.HTTP, webCredentials, getSaveHttpPassword());
+			} else {
+				repository.setCredentials(WebCredentials.Type.HTTP, null, getSaveHttpPassword());
 			}
 		}
 
@@ -1177,23 +1194,13 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			repository.setProperty(TaskRepository.PROXY_USEDEFAULT, String.valueOf(getUseDefaultProxy()));
 			repository.setProperty(TaskRepository.PROXY_HOSTNAME, getProxyHostname());
 			repository.setProperty(TaskRepository.PROXY_PORT, getProxyPort());
-
-			repository.setSavePassword(TaskRepository.AUTH_PROXY, saveProxyPasswordButton.getSelection());
-			if (getProxyUserName().length() > 0) {
-				repository.setProxyAuthenticationCredentials(getProxyUserName(), getProxyPassword());
+			if (getProxyAuth()) {
+				WebCredentials webCredentials = new WebCredentials(getProxyUserName(), getProxyPassword());
+				repository.setCredentials(WebCredentials.Type.PROXY, webCredentials, getSaveProxyPassword());					
+			} else {
+				repository.setCredentials(WebCredentials.Type.PROXY, null, getSaveProxyPassword());
 			}
 		}
-		// repository.setProperty(TaskRepository.PROXY_USERNAME,
-		// getProxyUsername());
-
-		// repository.setProperty(TaskRepository.PROXY_PASSWORD,
-		// getProxyPassword());
-
-		// repository.setProperty(TaskRepository.PROXY_USERNAME,
-		// getHttpAuthUserId());
-		// repository.setProperty(TaskRepository.PROXY_PASSWORD,
-		// getHttpAuthPassword());
-		return repository;
 	}
 
 	public AbstractRepositoryConnector getConnector() {

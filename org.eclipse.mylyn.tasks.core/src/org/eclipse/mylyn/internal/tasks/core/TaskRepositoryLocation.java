@@ -12,13 +12,13 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Proxy.Type;
 
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.eclipse.core.net.proxy.IProxyData;
 import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.web.core.AbstractWebLocation;
 import org.eclipse.mylyn.web.core.AuthenticatedProxy;
 import org.eclipse.mylyn.web.core.WebCorePlugin;
+import org.eclipse.mylyn.web.core.WebCredentials;
 
 /**
  * @author Steffen Pingel
@@ -41,7 +41,7 @@ public class TaskRepositoryLocation extends AbstractWebLocation {
 		IProxyService service = WebCorePlugin.getProxyService();
 		if (service != null && service.isProxiesEnabled()) {
 			IProxyData data = service.getProxyDataForHost(host, proxyType);
-			if (data.getHost() != null) {
+			if (data != null && data.getHost() != null) {
 				String proxyHost = data.getHost();
 				int proxyPort = data.getPort();
 				// change the IProxyData default port to the Java default port
@@ -65,22 +65,13 @@ public class TaskRepositoryLocation extends AbstractWebLocation {
 		return (IProxyData.SOCKS_PROXY_TYPE.equals(type)) ? Proxy.Type.SOCKS : Proxy.Type.HTTP;
 	}
 
-	public ResultType requestCredentials(final String authType, String message) {
+	public ResultType requestCredentials(WebCredentials.Type type, String message) {
 		return ResultType.NOT_SUPPORTED;
 	}
 
 	@Override
-	public UsernamePasswordCredentials getCredentials(String authType) {
-//		if (TaskRepository.AUTH_DEFAULT.equals(authType) && taskRepository.isAnonymous()) {
-//			return null;
-//		}
-
-		String userName = taskRepository.getUserName(authType);
-		if (userName == null || userName.length() == 0) {
-			return null;
-		}
-
-		return new UsernamePasswordCredentials(userName, taskRepository.getPassword(authType));
+	public WebCredentials getCredentials(WebCredentials.Type type) {
+		return taskRepository.getCredentials(type);
 	}
 
 }

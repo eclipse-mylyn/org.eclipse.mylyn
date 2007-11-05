@@ -24,7 +24,6 @@ import java.util.TimeZone;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
@@ -52,9 +51,9 @@ import org.eclipse.mylyn.internal.trac.core.util.TracHttpClientTransportFactory;
 import org.eclipse.mylyn.internal.trac.core.util.TracUtils;
 import org.eclipse.mylyn.internal.trac.core.util.TracHttpClientTransportFactory.TracHttpException;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.web.core.AbstractWebLocation;
 import org.eclipse.mylyn.web.core.WebClientUtil;
+import org.eclipse.mylyn.web.core.WebCredentials;
 import org.eclipse.mylyn.web.core.AbstractWebLocation.ResultType;
 
 /**
@@ -117,7 +116,7 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		}
 		
 		// update configuration with latest values
-		UsernamePasswordCredentials credentials = location.getCredentials(TaskRepository.AUTH_DEFAULT);
+		WebCredentials credentials = location.getCredentials(WebCredentials.Type.REPOSITORY);
 		if (credentialsValid(credentials)) {
 			config.setBasicUserName(credentials.getUserName());
 			config.setBasicPassword(credentials.getPassword());
@@ -130,7 +129,7 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		return xmlrpc;
 	}
 
-	private URL getXmlRpcUrl(UsernamePasswordCredentials credentials) throws TracException {
+	private URL getXmlRpcUrl(WebCredentials credentials) throws TracException {
 		try {
 			String location = repositoryUrl.toString();
 			if (credentialsValid(credentials)) {
@@ -151,15 +150,15 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 			try {
 				return executeCall(method, parameters);
 			} catch (TracLoginException e) {
-				if (location.requestCredentials(TaskRepository.AUTH_DEFAULT, null) == ResultType.NOT_SUPPORTED) {
+				if (location.requestCredentials(WebCredentials.Type.REPOSITORY, null) == ResultType.NOT_SUPPORTED) {
 					throw e;
 				}
 			} catch (TracPermissionDeniedException e) {
-				if (location.requestCredentials(TaskRepository.AUTH_DEFAULT, null) == ResultType.NOT_SUPPORTED) {
+				if (location.requestCredentials(WebCredentials.Type.REPOSITORY, null) == ResultType.NOT_SUPPORTED) {
 					throw e;
 				}
 			} catch (TracProxyAuthenticationException e) {
-				if (location.requestCredentials(TaskRepository.AUTH_PROXY, null) == ResultType.NOT_SUPPORTED) {
+				if (location.requestCredentials(WebCredentials.Type.PROXY, null) == ResultType.NOT_SUPPORTED) {
 					throw e;
 				}
 			}
@@ -177,7 +176,7 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 				throw e;
 			}
 
-			UsernamePasswordCredentials credentials = location.getCredentials(TaskRepository.AUTH_DEFAULT);
+			WebCredentials credentials = location.getCredentials(WebCredentials.Type.REPOSITORY);
 			if (!credentialsValid(credentials)) {
 				throw e;
 			}
@@ -190,7 +189,7 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 			try {
 				authenticateAccountManager(httpClient, credentials);
 			} catch (TracLoginException loginException) {
-				// caused by wrong username or password
+				// caused by wrong user name or password
 				throw loginException;
 			} catch (IOException ignore) {
 				accountMangerAuthenticationFailed = true;

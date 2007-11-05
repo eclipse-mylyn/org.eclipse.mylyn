@@ -58,6 +58,7 @@ public class TracRepositorySettingsPageTest extends AbstractTracClientTest {
 	@Override
 	public ITracClient connect(String url, String username, String password, Proxy proxy, Version version)
 			throws Exception {
+		page.setAnonymous(false);
 		page.setUrl(url);
 		page.setUserId(username);
 		page.setPassword(password);
