@@ -324,7 +324,7 @@ public class TaskListToolTip extends ToolTip {
 		return null;
 	}
 
-	private Widget getTipWidget(Event event) {
+	protected Widget getTipWidget(Event event) {
 		Point widgetPosition = new Point(event.x, event.y);
 		Widget widget = event.widget;
 		if (widget instanceof ToolBar) {
@@ -368,13 +368,7 @@ public class TaskListToolTip extends ToolTip {
 
 		TaskListView taskListView = TaskListView.getFromActivePerspective();
 
-		Composite composite = new Composite(parent, SWT.NONE);
-		GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 2;
-		gridLayout.marginWidth = 5;
-		gridLayout.marginHeight = 2;
-		composite.setLayout(gridLayout);
-		composite.setBackground(composite.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+		Composite composite = createToolTipContentAreaComposite(parent);
 
 		addIconAndLabel(composite, getImage(currentTipElement), getTitleText(currentTipElement));
 
@@ -442,6 +436,17 @@ public class TaskListToolTip extends ToolTip {
 		return composite;
 	}
 
+	protected Composite createToolTipContentAreaComposite(Composite parent) {
+		Composite composite = new Composite(parent, SWT.NONE);
+		GridLayout gridLayout = new GridLayout();
+		gridLayout.numColumns = 2;
+		gridLayout.marginWidth = 5;
+		gridLayout.marginHeight = 2;
+		composite.setLayout(gridLayout);
+		composite.setBackground(composite.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+		return composite;
+	}
+
 	private String getSynchText(AbstractTaskContainer element) {
 		if (element instanceof AbstractRepositoryQuery) {
 			String syncStamp = ((AbstractRepositoryQuery) element).getLastSynchronizedTimeStamp();
@@ -459,7 +464,7 @@ public class TaskListToolTip extends ToolTip {
 		return text;
 	}
 
-	private void addIconAndLabel(Composite parent, Image image, String text) {
+	protected void addIconAndLabel(Composite parent, Image image, String text) {
 		Label imageLabel = new Label(parent, SWT.NONE);
 		imageLabel.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
 		imageLabel.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
