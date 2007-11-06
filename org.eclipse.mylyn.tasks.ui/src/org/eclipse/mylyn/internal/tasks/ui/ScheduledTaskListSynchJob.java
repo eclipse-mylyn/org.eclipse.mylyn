@@ -51,7 +51,7 @@ public class ScheduledTaskListSynchJob extends Job {
 
 	private List<TaskRepository> repositories = null;
 
-	private boolean fullSynchronization;
+	private boolean fullSynchronization = true;
 
 	public ScheduledTaskListSynchJob(long schedule, TaskListManager taskListManager) {
 		super(JOB_NAME);
