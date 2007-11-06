@@ -64,15 +64,19 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 								//setNotified();
 								synchronized (TaskListNotificationManager.class) {
 									if (currentlyNotifying.size() > 0) {
-										popup = new TaskListNotificationPopup(new Shell(PlatformUI.getWorkbench()
-												.getDisplay()));
+										Shell shell = new Shell(PlatformUI.getWorkbench()
+												.getDisplay());
+										popup = new TaskListNotificationPopup(shell);
 										List<ITaskListNotification> toDisplay = new ArrayList<ITaskListNotification>(
 												currentlyNotifying);
 										Collections.sort(toDisplay);
 										popup.setContents(toDisplay);
 										cleanNotified();
 										popup.setBlockOnOpen(false);
+										shell.setAlpha(0);
 										popup.open();
+										
+										TaskListNotificationManager.this.fade(popup.getShell(), true);
 										
 //										for (int i = 2; i <= 6; i+= 2) {
 //											popup.getShell().setLocation(popup.getShell().getLocation().x, popup.getShell().getLocation().y - i);
@@ -104,6 +108,32 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 
 	};
 
+	private void fade(Shell shell, boolean in) {
+		int SLEEP = 80;
+		int SPEED = 15;
+		if (in) {
+			for (int i = 0; i <= 255; i += SPEED) {
+				shell.setAlpha(i);
+				try {
+					Thread.sleep(SLEEP);
+				} catch (InterruptedException e) {
+					// ignore
+				}
+			}
+			shell.setAlpha(255);
+		} else {
+			for (int i = 244; i >= 0; i-= SPEED) {
+				shell.setAlpha(i);
+				try {
+					Thread.sleep(SLEEP);
+				} catch (InterruptedException e) {
+					// ignore
+				}
+			}
+			shell.setAlpha(0);
+		}
+	}
+	
 	private Job closeJob = new Job(CLOSE_NOTIFICATION_JOB) {
 
 		@Override
@@ -113,6 +143,7 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 					public void run() {
 						if (popup != null) {
 							synchronized (popup) {
+								fade(popup.getShell(), false);
 								popup.close();
 							}
 						}
