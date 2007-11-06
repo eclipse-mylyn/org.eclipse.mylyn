@@ -193,6 +193,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private static final String ID_SEPARATOR_REPOSITORY = "repository";
 
+	private static final String ID_SEPARATOR_NAVIGATE = "navigate";
+
 	private static final String LABEL_NO_TASKS = "no task active";
 
 	private final static int SIZE_MAX_SELECTION_HISTORY = 10;
@@ -1132,6 +1134,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				}
 			}
 		}
+		manager.add(new Separator(ID_SEPARATOR_NAVIGATE));
 //		manager.add(new Separator(ID_SEPARATOR_OPERATIONS));
 		manager.add(new Separator());
 

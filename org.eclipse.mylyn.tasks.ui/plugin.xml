@@ -476,7 +476,7 @@
   </menu>
   <menu
         id="org.eclipse.mylyn.tasks.ui.menu.navigate"
-        label="Navigate"
+        label="Go To"
         path="navigate">
      <separator
            name="goTo">
@@ -506,6 +506,14 @@
         definitionId="org.eclipse.mylyn.tasks.ui.command.goToNextUnread"
         id="org.eclipse.mylyn.tasklist.actions.goToNextUnread"
         label="Next Unread Task"
+        menubarPath="org.eclipse.mylyn.tasks.ui.menu.navigate/goTo"
+        style="push">
+  </action>
+  <action
+        class="org.eclipse.mylyn.internal.tasks.ui.actions.GoToUnreadTaskAction"
+        definitionId="org.eclipse.mylyn.tasks.ui.command.goToPreviousUnread"
+        id="org.eclipse.mylyn.tasklist.actions.goToPreviousUnread"
+        label="Previous Unread Task"
         menubarPath="org.eclipse.mylyn.tasks.ui.menu.navigate/goTo"
         style="push">
   </action>
