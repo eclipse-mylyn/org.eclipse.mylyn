@@ -26,11 +26,15 @@ import org.eclipse.ui.PlatformUI;
  */
 public class RepositoryAwareStatusHandler implements IStatusHandler {
 
+	/**
+	 * Used to ensure that only one dialog is open.
+	 */
+	private static boolean errorDialogOpen = false;
+
 	protected static final String ERROR_MESSAGE = "Please report the following error at:\n"
 			+ "http://bugs.eclipse.org/bugs/enter_bug.cgi?product=Mylyn\n\n"
-			+ "Or select Report as Bug from popup menu on error in the Error Log (Window -> Show View -> Error Log)";
+			+ "Or via the popup menu in the Error Log view (see Window -> Show View)";
 
-	// TODO: implement option to report bug
 	public void fail(final IStatus status, boolean informUser) {
 		if (informUser && Platform.isRunning()) {
 			try {
@@ -41,7 +45,18 @@ public class RepositoryAwareStatusHandler implements IStatusHandler {
 								&& PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
 							shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 						}
-						ErrorDialog.openError(shell, "Mylyn Error", ERROR_MESSAGE, status);
+
+						// ensure that only one dialog can be open at a time
+						synchronized (shell) {
+							try {
+								if (!errorDialogOpen) {
+									errorDialogOpen = true;
+									ErrorDialog.openError(shell, "Mylyn Error", ERROR_MESSAGE, status);
+								}
+							} finally {
+								errorDialogOpen = false;
+							}
+						}
 					}
 				});
 			} catch (Throwable t) {
