@@ -56,7 +56,7 @@ class SynchronizeQueryJob extends Job {
 
 	private HashSet<AbstractTask> tasksToBeSynchronized = new HashSet<AbstractTask>();
 
-	private boolean fullSynchronization;
+	private boolean fullSynchronization = true;
 
 	public SynchronizeQueryJob(AbstractRepositoryConnector connector, TaskRepository repository,
 			Set<AbstractRepositoryQuery> queries, TaskList taskList) {
