@@ -123,13 +123,20 @@ class CustomTaskListDecorationDrawer implements Listener {
 			} else {
 				int imageOffset = 0;
 				if (!hideDecorationOnContainer(element) && hasIncoming(element)) {
-					image = TasksUiImages.getImage(TasksUiImages.OVERLAY_SYNCH_INCOMMING);
-					image = TasksUiImages.getImage(TasksUiImages.OVERLAY_INCOMMING);
+					if (taskListView.synchronizationOverlaid) {
+						image = TasksUiImages.getImage(TasksUiImages.OVERLAY_SYNCH_INCOMMING);
+					} else {
+						image = TasksUiImages.getImage(TasksUiImages.OVERLAY_INCOMMING);
+					}
 				} else if (element instanceof AbstractRepositoryQuery) {
 					AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
 					if (query.getSynchronizationStatus() != null) {
 						image = TasksUiImages.getImage(TasksUiImages.OVERLAY_WARNING);
-						imageOffset = 3;
+						if (taskListView.synchronizationOverlaid) {
+							imageOffset = 11;
+						} else {
+							imageOffset = 3;
+						}
 					}
 				}
 
