@@ -236,8 +236,8 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			public void run() {
 				if (PlatformUI.isWorkbenchRunning() && !taskProgressBar.isDisposed()) {
 					taskProgressBar.reset(completeTime, (completeTime + incompleteTime));
-					taskProgressBar.setToolTipText("Workweek Progress" + "\n     Hours: " + completeTime + " of "
-							+ (completeTime + incompleteTime) + " estimated" + "\n     Tasks: " + completeTasks
+					taskProgressBar.setToolTipText("Workweek Progress" + "\n     Estimated hours: " + completeTime + " of "
+							+ (completeTime + incompleteTime) + " estimated" + "\n     Scheduled tasks: " + completeTasks
 							+ " of " + totalTasks + " scheduled");
 				}
 			}
