@@ -8,6 +8,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -64,8 +65,7 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 								//setNotified();
 								synchronized (TaskListNotificationManager.class) {
 									if (currentlyNotifying.size() > 0) {
-										Shell shell = new Shell(PlatformUI.getWorkbench()
-												.getDisplay());
+										Shell shell = new Shell(PlatformUI.getWorkbench().getDisplay());
 										popup = new TaskListNotificationPopup(shell);
 										List<ITaskListNotification> toDisplay = new ArrayList<ITaskListNotification>(
 												currentlyNotifying);
@@ -73,11 +73,23 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 										popup.setContents(toDisplay);
 										cleanNotified();
 										popup.setBlockOnOpen(false);
-										shell.setAlpha(0);
+
+										Method method = null;
+										try {
+											method = shell.getClass().getMethod("setAlpha",
+													new Class[] { Integer.class });
+											method.setAccessible(true);
+
+											//shell.setAlpha(0);
+											method.invoke(shell, new Object[] { new Integer(0) });
+										} catch (Exception e) {
+											// ignore, not supported on Eclipse 3.3
+										}
+
 										popup.open();
-										
-										TaskListNotificationManager.this.fade(popup.getShell(), true);
-										
+										if (method != null) {
+											TaskListNotificationManager.this.fade(shell, method, true);
+										}
 //										for (int i = 2; i <= 6; i+= 2) {
 //											popup.getShell().setLocation(popup.getShell().getLocation().x, popup.getShell().getLocation().y - i);
 //											try {
@@ -108,32 +120,41 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 
 	};
 
-	private void fade(Shell shell, boolean in) {
+	// API-3.0: get rid of reflection on 3.4 branch
+	private void fade(Shell shell, Method method, boolean in) {
 		int SLEEP = 80;
 		int SPEED = 15;
-		if (in) {
-			for (int i = 0; i <= 255; i += SPEED) {
-				shell.setAlpha(i);
-				try {
-					Thread.sleep(SLEEP);
-				} catch (InterruptedException e) {
-					// ignore
+		try {
+			if (in) {
+				for (int i = 0; i <= 255; i += SPEED) {
+//				shell.setAlpha(i);
+					method.invoke(shell, new Object[] { new Integer(i) });
+					try {
+						Thread.sleep(SLEEP);
+					} catch (InterruptedException e) {
+						// ignore
+					}
 				}
-			}
-			shell.setAlpha(255);
-		} else {
-			for (int i = 244; i >= 0; i-= SPEED) {
-				shell.setAlpha(i);
-				try {
-					Thread.sleep(SLEEP);
-				} catch (InterruptedException e) {
-					// ignore
+//			shell.setAlpha(255);
+				method.invoke(shell, new Object[] { new Integer(255) });
+			} else {
+				for (int i = 244; i >= 0; i -= SPEED) {
+//				shell.setAlpha(i);
+					method.invoke(shell, new Object[] { new Integer(i) });
+					try {
+						Thread.sleep(SLEEP);
+					} catch (InterruptedException e) {
+						// ignore
+					}
 				}
+//			shell.setAlpha(0);
+				method.invoke(shell, new Object[] { new Integer(0) });
 			}
-			shell.setAlpha(0);
+		} catch (Exception e) {
+			// ignore
 		}
 	}
-	
+
 	private Job closeJob = new Job(CLOSE_NOTIFICATION_JOB) {
 
 		@Override
@@ -143,7 +164,20 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 					public void run() {
 						if (popup != null) {
 							synchronized (popup) {
-								fade(popup.getShell(), false);
+								Method method = null;
+								try {
+									method = popup.getShell().getClass().getMethod("setAlpha",
+											new Class[] { Integer.class });
+									method.setAccessible(true);
+
+									//shell.setAlpha(0);
+									method.invoke(popup.getShell(), new Object[] { new Integer(0) });
+								} catch (Exception e) {
+									// ignore, not supported on Eclipse 3.3
+								}
+								if (method != null) {
+									fade(popup.getShell(), method, false);
+								}
 								popup.close();
 							}
 						}
