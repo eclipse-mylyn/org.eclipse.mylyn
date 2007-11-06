@@ -36,9 +36,9 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 
 	private static final String OPEN_NOTIFICATION_JOB = "Open Notification Job";
 
-	private static final long CLOSE_POPUP_DELAY = 1000 * 12;
+	private static final long CLOSE_POPUP_DELAY = 1000 * 10;
 
-	private static final long OPEN_POPUP_DELAY = 1000 * 30;
+	private static final long OPEN_POPUP_DELAY = 1000 * 20;
 
 	private static final boolean runSystem = true;
 
@@ -76,19 +76,20 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 
 										Method method = null;
 										try {
-											method = shell.getClass().getMethod("setAlpha",
-													new Class[] { Integer.class });
+											method = shell.getClass().getDeclaredMethod("setAlpha",
+													new Class[] { int.class });
 											method.setAccessible(true);
 
 											//shell.setAlpha(0);
-											method.invoke(shell, new Object[] { new Integer(0) });
+											method.invoke(shell, new Object[] { 255 });
 										} catch (Exception e) {
+											e.printStackTrace();
 											// ignore, not supported on Eclipse 3.3
 										}
 
 										popup.open();
 										if (method != null) {
-											TaskListNotificationManager.this.fade(shell, method, true);
+											TaskListNotificationManager.this.fade(popup.getShell(), method, true);
 										}
 //										for (int i = 2; i <= 6; i+= 2) {
 //											popup.getShell().setLocation(popup.getShell().getLocation().x, popup.getShell().getLocation().y - i);
@@ -127,31 +128,31 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 		try {
 			if (in) {
 				for (int i = 0; i <= 255; i += SPEED) {
-//				shell.setAlpha(i);
-					method.invoke(shell, new Object[] { new Integer(i) });
+					// shell.setAlpha(i);
+					method.invoke(shell, new Object[] { i });
 					try {
 						Thread.sleep(SLEEP);
 					} catch (InterruptedException e) {
 						// ignore
 					}
 				}
-//			shell.setAlpha(255);
-				method.invoke(shell, new Object[] { new Integer(255) });
+				// shell.setAlpha(255);
+				method.invoke(shell, new Object[] { 255 });
 			} else {
 				for (int i = 244; i >= 0; i -= SPEED) {
-//				shell.setAlpha(i);
-					method.invoke(shell, new Object[] { new Integer(i) });
+					// shell.setAlpha(i);
+					method.invoke(shell, new Object[] { i });
 					try {
 						Thread.sleep(SLEEP);
 					} catch (InterruptedException e) {
 						// ignore
 					}
 				}
-//			shell.setAlpha(0);
-				method.invoke(shell, new Object[] { new Integer(0) });
+				// shell.setAlpha(0);
+				method.invoke(shell, new Object[] { 0 });
 			}
 		} catch (Exception e) {
-			// ignore
+			e.printStackTrace();
 		}
 	}
 
@@ -167,11 +168,11 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 								Method method = null;
 								try {
 									method = popup.getShell().getClass().getMethod("setAlpha",
-											new Class[] { Integer.class });
+											new Class[] { int.class });
 									method.setAccessible(true);
 
 									//shell.setAlpha(0);
-									method.invoke(popup.getShell(), new Object[] { new Integer(0) });
+									method.invoke(popup.getShell(), new Object[] { 0 });
 								} catch (Exception e) {
 									// ignore, not supported on Eclipse 3.3
 								}
