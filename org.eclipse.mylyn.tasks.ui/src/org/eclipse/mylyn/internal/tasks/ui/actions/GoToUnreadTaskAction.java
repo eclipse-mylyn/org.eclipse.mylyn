@@ -54,28 +54,29 @@ public class GoToUnreadTaskAction extends Action implements IViewActionDelegate 
 
 		Tree tree = treeViewer.getTree();
 
+		// need to expand nodes to traverse the tree, disable redraw to avoid flickering
+		TreePath treePath = null;
 		try {
 			tree.setRedraw(false);
-
-			TreePath treePath = getUnreadItem(treeViewer, tree);
-			if (treePath != null) {
-				treeViewer.expandToLevel(treePath, 0);
-				treeViewer.setSelection(new TreeSelection(treePath));
-				treeViewer.reveal(treePath);
-			}
+			treePath = getUnreadItem(treeViewer, tree);
 		} finally {
 			tree.setRedraw(true);
+		}
+
+		if (treePath != null) {
+			treeViewer.expandToLevel(treePath, 0);
+			treeViewer.setSelection(new TreeSelection(treePath), true);
 		}
 	}
 
 	public Direction getDirection() {
 		return direction;
 	}
-	
+
 	public void setDirection(Direction direction) {
 		this.direction = direction;
 	}
-	
+
 	private TreePath getTreePath(TreeItem item) {
 		List<Object> path = new ArrayList<Object>();
 		do {
@@ -136,7 +137,7 @@ public class GoToUnreadTaskAction extends Action implements IViewActionDelegate 
 		if (direction == Direction.UP) {
 			Collections.reverse(Arrays.asList(items));
 		}
-		
+
 		boolean found = (visitedItem == null);
 		for (TreeItem item : items) {
 			if (!found) {
@@ -151,12 +152,12 @@ public class GoToUnreadTaskAction extends Action implements IViewActionDelegate 
 						return itemPath;
 					}
 				}
-				
+
 				TreePath childPath = visitChildren(viewer, itemPath, item, visitor);
 				if (childPath != null) {
 					return childPath;
 				}
-				
+
 				if (direction == Direction.UP) {
 					if (visitor.visit(item.getData())) {
 						return itemPath;
@@ -221,5 +222,5 @@ public class GoToUnreadTaskAction extends Action implements IViewActionDelegate 
 		public abstract boolean visit(Object object);
 
 	}
-	
+
 }

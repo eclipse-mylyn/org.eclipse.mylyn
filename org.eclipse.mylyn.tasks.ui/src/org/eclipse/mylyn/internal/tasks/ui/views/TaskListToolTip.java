@@ -36,6 +36,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -43,8 +44,11 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.widgets.Widget;
 
 /**
@@ -55,19 +59,24 @@ import org.eclipse.swt.widgets.Widget;
  */
 public class TaskListToolTip extends ToolTip {
 
+	private static int X_SHIFT = -18;
+
+	private static int Y_SHIFT = 1;
+
 	private AbstractTaskContainer currentTipElement;
 
 	private List<TaskListToolTipListener> listeners = new ArrayList<TaskListToolTipListener>();
 
 	private boolean visible;
 
-	private Point lastLocation;
+	private Control control;
 
-	private boolean forced;
-	
 	public TaskListToolTip(Control control) {
 		super(control);
-		this.setShift(new Point(0, 1));
+
+		this.control = control;
+
+		setShift(new Point(1, 1));
 	}
 
 	@Override
@@ -77,7 +86,7 @@ public class TaskListToolTip extends ToolTip {
 			listener.toolTipHidden(event);
 		}
 	}
-	
+
 	public void addTaskListToolTipListener(TaskListToolTipListener listener) {
 		listeners.add(listener);
 	}
@@ -279,6 +288,18 @@ public class TaskListToolTip extends ToolTip {
 		return null;
 	}
 
+	@Override
+	public Point getLocation(Point tipSize, Event event) {
+		Widget widget = getTipWidget(event);
+		if (widget != null) {
+			Rectangle bounds = getBounds(widget);
+			if (bounds != null) {
+				return control.toDisplay(bounds.x + X_SHIFT, bounds.y + bounds.height + Y_SHIFT);
+			}
+		}
+		return super.getLocation(tipSize, event);//control.toDisplay(event.x + xShift, event.y + yShift);
+	}
+
 	private ProgressData getProgressData(AbstractTaskContainer element, TaskListView taskListView) {
 		if (element instanceof AbstractTask) {
 			return null;
@@ -343,23 +364,42 @@ public class TaskListToolTip extends ToolTip {
 		return null;
 	}
 
+	private Rectangle getBounds(Widget widget) {
+		if (widget instanceof ToolItem) {
+			ToolItem w = (ToolItem) widget;
+			return w.getBounds();
+		}
+		if (widget instanceof TableItem) {
+			TableItem w = (TableItem) widget;
+			return w.getBounds();
+		}
+		if (widget instanceof TreeItem) {
+			TreeItem w = (TreeItem) widget;
+			return w.getBounds();
+		}
+		return null;
+	}
+
 	@Override
 	protected boolean shouldCreateToolTip(Event event) {
-		if (forced) {
-			forced = false;
-			return true;
-		}
-		
 		currentTipElement = null;
 
 		if (super.shouldCreateToolTip(event)) {
 			Widget tipWidget = getTipWidget(event);
 			if (tipWidget != null) {
-				currentTipElement = getTaskListElement(tipWidget);
+				Rectangle bounds = getBounds(tipWidget);
+				if (bounds != null && control.getBounds().contains(bounds.x, bounds.y)) {
+					currentTipElement = getTaskListElement(tipWidget);
+				}
 			}
 		}
-		
-		return currentTipElement != null;
+
+		if (currentTipElement == null) {
+			hide();
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	@Override
@@ -431,7 +471,6 @@ public class TaskListToolTip extends ToolTip {
 		}
 
 		visible = true;
-		lastLocation = composite.getShell().getLocation();
 
 		return composite;
 	}
@@ -495,26 +534,13 @@ public class TaskListToolTip extends ToolTip {
 	}
 
 	public static interface TaskListToolTipListener {
-	
+
 		void toolTipHidden(Event event);
-		
+
 	}
 
 	public boolean isVisible() {
 		return visible;
 	}
 
-	public void update(AbstractTaskContainer item) {
-		if (!isVisible()) {
-			throw new IllegalStateException();
-		}
-
-		hide();
-
-		this.forced = true;
-		this.currentTipElement = item;
-		
-		show(lastLocation);
-	}
-	
 }

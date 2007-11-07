@@ -854,9 +854,18 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				Object selectedObject = ((IStructuredSelection) getViewer().getSelection()).getFirstElement();
 				if (selectedObject instanceof AbstractTaskContainer) {
 					updateActionEnablement(renameAction, (AbstractTaskContainer) selectedObject);
+				}
+			}
+		});
 
-					if (taskListToolTip.isVisible()) {
-						taskListToolTip.update((AbstractTaskContainer) selectedObject);
+		// update tooltip contents
+		getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				if (taskListToolTip.isVisible()) {
+					TreeItem[] selection = getViewer().getTree().getSelection();
+					if (selection != null && selection.length > 0) {
+						Rectangle bounds = selection[0].getBounds();
+						taskListToolTip.show(new Point(bounds.x, bounds.y));
 					}
 				}
 			}
