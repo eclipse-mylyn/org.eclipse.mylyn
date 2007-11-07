@@ -9,7 +9,6 @@
 package org.eclipse.mylyn.internal.trac.core;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,6 +17,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.TracAttributeFactory.Attribute;
@@ -71,12 +71,9 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	public boolean hasWiki(TaskRepository repository) {
 		// check the access mode to validate Wiki support
-		try {
-			ITracClient client = getClientManager().getRepository(repository);
-			if (client instanceof ITracWikiClient) {
-				return true;
-			}
-		} catch (MalformedURLException e) {
+		ITracClient client = getClientManager().getRepository(repository);
+		if (client instanceof ITracWikiClient) {
+			return true;
 		}
 		return false;
 	}
@@ -219,7 +216,10 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 				}
 
 				return true;
+			} catch (OperationCanceledException e) {
+				throw e;
 			} catch (Exception e) {
+				// TODO catch TracException
 				throw new CoreException(TracCorePlugin.toStatus(e, repository));
 			}
 		} finally {

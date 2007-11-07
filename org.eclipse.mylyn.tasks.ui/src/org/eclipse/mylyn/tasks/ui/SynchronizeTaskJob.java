@@ -83,6 +83,7 @@ class SynchronizeTaskJob extends Job {
 			monitor.beginTask(LABEL_SYNCHRONIZING, repositoryTasks.size());
 			setProperty(IProgressConstants.ICON_PROPERTY, TasksUiImages.REPOSITORY_SYNCHRONIZE);
 
+			// sort tasks by repository
 			for (final AbstractTask repositoryTask : repositoryTasks) {
 
 				if (monitor.isCanceled()) {
@@ -127,12 +128,11 @@ class SynchronizeTaskJob extends Job {
 				return Status.CANCEL_STATUS;
 			}
 
+			// synchronize tasks per repository if multi-sync is supported 
 			for (TaskRepository repository : repToTasks.keySet()) {
 				Set<AbstractTask> tasksToSynch = repToTasks.get(repository);
 				try {
 					synchronizeTasks(new SubProgressMonitor(monitor, tasksToSynch.size()), repository, tasksToSynch);
-				} catch (OperationCanceledException e) {
-					return Status.CANCEL_STATUS;
 				} catch (final CoreException e) {
 					for (AbstractTask task : tasksToSynch) {
 						updateStatus(repository, task, e.getStatus());
@@ -146,7 +146,8 @@ class SynchronizeTaskJob extends Job {
 					}
 				}
 			}
-
+		} catch (OperationCanceledException e) {
+			return Status.CANCEL_STATUS;
 		} catch (Exception e) {
 			StatusHandler.fail(e, "Synchronization failed", false);
 		} finally {

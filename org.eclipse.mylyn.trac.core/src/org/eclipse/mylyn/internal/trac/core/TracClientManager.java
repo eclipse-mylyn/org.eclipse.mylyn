@@ -14,7 +14,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,7 +45,7 @@ public class TracClientManager implements ITaskRepositoryListener {
 		readCache();
 	}
 
-	public synchronized ITracClient getRepository(TaskRepository taskRepository) throws MalformedURLException {
+	public synchronized ITracClient getRepository(TaskRepository taskRepository) {
 		ITracClient repository = clientByUrl.get(taskRepository.getUrl());
 		if (repository == null) {
 			AbstractWebLocation location = taskRepositoryLocationFactory.createWebLocation(taskRepository);

@@ -16,6 +16,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
@@ -166,6 +167,8 @@ class SynchronizeQueryJob extends Job {
 			}
 			taskList.notifyContainersUpdated(null);
 			return Status.OK_STATUS;
+		} catch (OperationCanceledException e) {
+			return Status.CANCEL_STATUS;
 		} finally {
 			monitor.done();
 		}

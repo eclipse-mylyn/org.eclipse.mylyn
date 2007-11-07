@@ -8,7 +8,6 @@
 package org.eclipse.mylyn.internal.trac.ui.wizard;
 
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -364,24 +363,14 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 	private boolean hasAttributes() {
 		TracRepositoryConnector connector = (TracRepositoryConnector) TasksUiPlugin.getRepositoryManager()
 				.getRepositoryConnector(TracCorePlugin.REPOSITORY_KIND);
-		try {
-			ITracClient client = connector.getClientManager().getRepository(repository);
-			return client.hasAttributes();
-		} catch (MalformedURLException e) {
-			return false;
-		}
+		ITracClient client = connector.getClientManager().getRepository(repository);
+		return client.hasAttributes();
 	}
 
 	private void updateAttributesFromRepository(final boolean force) {
 		TracRepositoryConnector connector = (TracRepositoryConnector) TasksUiPlugin.getRepositoryManager()
 				.getRepositoryConnector(TracCorePlugin.REPOSITORY_KIND);
-		final ITracClient client;
-		try {
-			client = connector.getClientManager().getRepository(repository);
-		} catch (MalformedURLException e) {
-			StatusHandler.displayStatus("Error updating attributes", TracCorePlugin.toStatus(e, repository));
-			return;
-		}
+		final ITracClient client = connector.getClientManager().getRepository(repository);
 
 		if (!client.hasAttributes() || force) {
 			try {
@@ -404,7 +393,8 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 					service.run(true, true, runnable);
 				}
 			} catch (InvocationTargetException e) {
-				StatusHandler.displayStatus("Error updating attributes", TracCorePlugin.toStatus(e.getCause(), repository));
+				StatusHandler.displayStatus("Error updating attributes", TracCorePlugin.toStatus(e.getCause(),
+						repository));
 				return;
 			} catch (InterruptedException e) {
 				return;

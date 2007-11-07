@@ -8,8 +8,6 @@
 
 package org.eclipse.mylyn.internal.trac.ui.editor;
 
-import java.net.MalformedURLException;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -63,8 +61,6 @@ public class TracRenderingEngine extends AbstractRenderingEngine {
 				throw new CoreException(TracCorePlugin.toStatus(new TracException(
 						"Preview is available only in XML-RPC access mode"), repository));
 			}
-		} catch (MalformedURLException e) {
-			throw new CoreException(TracCorePlugin.toStatus(e, repository));
 		} catch (TracException e) {
 			throw new CoreException(TracCorePlugin.toStatus(e, repository));
 		} finally {

@@ -20,6 +20,7 @@ import java.util.StringTokenizer;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.mylyn.internal.trac.core.TracAttributeFactory.Attribute;
 import org.eclipse.mylyn.internal.trac.core.model.TracAttachment;
 import org.eclipse.mylyn.internal.trac.core.model.TracComment;
@@ -72,7 +73,10 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 			createDefaultAttributes(attributeFactory, data, client, true);
 			updateTaskData(repository, attributeFactory, data, ticket);
 			return data;
+		} catch (OperationCanceledException e) {
+			throw e;
 		} catch (Exception e) {
+			// TODO catch TracException
 			throw new CoreException(TracCorePlugin.toStatus(e, repository));
 		}
 	}
@@ -327,7 +331,10 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 				server.updateTicket(ticket, taskData.getNewComment());
 				return null;
 			}
+		} catch (OperationCanceledException e) {
+			throw e;
 		} catch (Exception e) {
+			// TODO catch TracException
 			throw new CoreException(TracCorePlugin.toStatus(e, repository));
 		}
 	}
@@ -340,7 +347,10 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 			client.updateAttributes(new NullProgressMonitor(), false);
 			createDefaultAttributes(attributeFactory, data, client, false);
 			return true;
+		} catch (OperationCanceledException e) {
+			throw e;
 		} catch (Exception e) {
+			// TODO catch TracException
 			throw new CoreException(TracCorePlugin.toStatus(e, repository));
 		}
 	}

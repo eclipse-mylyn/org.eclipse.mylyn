@@ -9,7 +9,6 @@
 package org.eclipse.mylyn.internal.trac.ui.wizard;
 
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -99,13 +98,7 @@ public class NewTracTaskPage extends WizardPage {
 	private void updateAttributesFromRepository() {
 		TracRepositoryConnector connector = (TracRepositoryConnector) TasksUiPlugin.getRepositoryManager()
 				.getRepositoryConnector(TracCorePlugin.REPOSITORY_KIND);
-		final ITracClient client;
-		try {
-			client = connector.getClientManager().getRepository(taskRepository);
-		} catch (MalformedURLException e) {
-			StatusHandler.displayStatus("Error updating attributes", TracCorePlugin.toStatus(e, taskRepository));
-			return;
-		}
+		final ITracClient client = connector.getClientManager().getRepository(taskRepository);
 
 		if (!client.hasAttributes()) {
 			try {
@@ -121,7 +114,8 @@ public class NewTracTaskPage extends WizardPage {
 
 				getContainer().run(true, true, runnable);
 			} catch (InvocationTargetException e) {
-				StatusHandler.displayStatus("Error updating attributes", TracCorePlugin.toStatus(e.getCause(), taskRepository));
+				StatusHandler.displayStatus("Error updating attributes", TracCorePlugin.toStatus(e.getCause(),
+						taskRepository));
 				return;
 			} catch (InterruptedException e) {
 				return;

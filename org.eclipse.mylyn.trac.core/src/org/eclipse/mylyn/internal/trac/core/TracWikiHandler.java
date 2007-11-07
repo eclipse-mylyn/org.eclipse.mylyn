@@ -8,7 +8,6 @@
 
 package org.eclipse.mylyn.internal.trac.core;
 
-import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -93,16 +92,12 @@ public class TracWikiHandler extends AbstractWikiHandler {
 	}
 
 	private ITracWikiClient getTracWikiClient(TaskRepository repository) throws TracException {
-		try {
-			ITracClient client = connector.getClientManager().getRepository(repository);
-			if (client instanceof ITracWikiClient) {
-				return (ITracWikiClient) client;
-			} else {
-				throw new TracException("The access mode of " + repository.toString()
-						+ " does not support Wiki page editting.");
-			}
-		} catch (MalformedURLException e) {
-			throw new TracException(e);
+		ITracClient client = connector.getClientManager().getRepository(repository);
+		if (client instanceof ITracWikiClient) {
+			return (ITracWikiClient) client;
+		} else {
+			throw new TracException("The access mode of " + repository.toString()
+					+ " does not support Wiki page editting.");
 		}
 	}
 
