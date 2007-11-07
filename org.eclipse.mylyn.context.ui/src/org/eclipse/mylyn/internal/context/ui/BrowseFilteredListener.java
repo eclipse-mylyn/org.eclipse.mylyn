@@ -105,7 +105,7 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 		} else {
 			selectedObject = treeViewer.getTree();
 		}
-		
+
 		if (isUnfilterEvent(event)) {
 			if (treeViewer instanceof CommonViewer) {
 				CommonViewer commonViewer = (CommonViewer) treeViewer;
@@ -114,13 +114,14 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 
 			unfilter(filter, treeViewer, selectedObject);
 		} else {
-			Object unfiltered = filter.getTemporarilyUnfiltered();
-			if (unfiltered != null) {
-				filter.resetTemporarilyUnfiltered();
-
-				// NOTE: need to set selection otherwise it will be missed
-				viewer.setSelection(new StructuredSelection(selectedObject));
-				viewer.refresh(unfiltered);
+			if (event.button == 1) {
+				Object unfiltered = filter.getTemporarilyUnfiltered();
+				if (unfiltered != null) {
+					filter.resetTemporarilyUnfiltered();
+					// NOTE: need to set selection otherwise it will be missed
+					viewer.setSelection(new StructuredSelection(selectedObject));
+					viewer.refresh(unfiltered);
+				}
 			}
 		}
 	}
