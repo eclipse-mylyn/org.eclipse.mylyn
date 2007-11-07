@@ -8,7 +8,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -73,24 +72,10 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 										popup.setContents(toDisplay);
 										cleanNotified();
 										popup.setBlockOnOpen(false);
-
-										Method method = null;
-										try {
-											method = shell.getClass().getDeclaredMethod("setAlpha",
-													new Class[] { int.class });
-											method.setAccessible(true);
-
-											//shell.setAlpha(0);
-											method.invoke(shell, new Object[] { 255 });
-										} catch (Exception e) {
-											e.printStackTrace();
-											// ignore, not supported on Eclipse 3.3
-										}
-
+										SwtUtil.setAlpha(shell, 0);
 										popup.open();
-										if (method != null) {
-											TaskListNotificationManager.this.fade(popup.getShell(), method, true);
-										}
+										SwtUtil.fade(popup.getShell(), true, 15, 80);
+										
 //										for (int i = 2; i <= 6; i+= 2) {
 //											popup.getShell().setLocation(popup.getShell().getLocation().x, popup.getShell().getLocation().y - i);
 //											try {
@@ -121,41 +106,6 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 
 	};
 
-	// API-3.0: get rid of reflection on 3.4 branch
-	private void fade(Shell shell, Method method, boolean in) {
-		int SLEEP = 80;
-		int SPEED = 15;
-		try {
-			if (in) {
-				for (int i = 0; i <= 255; i += SPEED) {
-					// shell.setAlpha(i);
-					method.invoke(shell, new Object[] { i });
-					try {
-						Thread.sleep(SLEEP);
-					} catch (InterruptedException e) {
-						// ignore
-					}
-				}
-				// shell.setAlpha(255);
-				method.invoke(shell, new Object[] { 255 });
-			} else {
-				for (int i = 244; i >= 0; i -= SPEED) {
-					// shell.setAlpha(i);
-					method.invoke(shell, new Object[] { i });
-					try {
-						Thread.sleep(SLEEP);
-					} catch (InterruptedException e) {
-						// ignore
-					}
-				}
-				// shell.setAlpha(0);
-				method.invoke(shell, new Object[] { 0 });
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	private Job closeJob = new Job(CLOSE_NOTIFICATION_JOB) {
 
 		@Override
@@ -165,20 +115,7 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 					public void run() {
 						if (popup != null) {
 							synchronized (popup) {
-								Method method = null;
-								try {
-									method = popup.getShell().getClass().getMethod("setAlpha",
-											new Class[] { int.class });
-									method.setAccessible(true);
-
-									//shell.setAlpha(0);
-									method.invoke(popup.getShell(), new Object[] { 0 });
-								} catch (Exception e) {
-									// ignore, not supported on Eclipse 3.3
-								}
-								if (method != null) {
-									fade(popup.getShell(), method, false);
-								}
+								SwtUtil.fade(popup.getShell(), false, 20, 80);
 								popup.close();
 							}
 						}
