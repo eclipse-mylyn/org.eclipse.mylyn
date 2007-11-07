@@ -35,11 +35,15 @@ public class ShowTooltipAction extends Action implements IViewActionDelegate {
 	@Override
 	public void run() {
 		TaskListToolTip toolTip = taskListView.getToolTip();
-		taskListView.getViewer().getControl().getBounds();
-		Tree tree = taskListView.getViewer().getTree();
-		TreeItem[] selection = tree.getSelection();
-		if (selection.length > 0) {
-			toolTip.show(new Point(selection[0].getBounds().x, selection[0].getBounds().y));
+		if (toolTip.isVisible()) {
+			toolTip.hide();
+		} else {
+			taskListView.getViewer().getControl().getBounds();
+			Tree tree = taskListView.getViewer().getTree();
+			TreeItem[] selection = tree.getSelection();
+			if (selection.length > 0) {
+				toolTip.show(new Point(selection[0].getBounds().x, selection[0].getBounds().y));
+			}
 		}
 	}
 	

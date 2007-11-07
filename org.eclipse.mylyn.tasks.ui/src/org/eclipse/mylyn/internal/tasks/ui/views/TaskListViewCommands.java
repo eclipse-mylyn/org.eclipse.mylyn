@@ -93,7 +93,9 @@ public class TaskListViewCommands {
 			handler = new AbstractHandler() {
 				public Object execute(ExecutionEvent event) throws ExecutionException {
 					MarkTaskReadAction action = new MarkTaskReadAction(taskListView.getSelectedTaskContainers());
-					action.run();
+					if (action.isEnabled()) {
+						action.run();
+					}
 					return null;
 				}
 			};
@@ -103,11 +105,13 @@ public class TaskListViewCommands {
 			handler = new AbstractHandler() {
 				public Object execute(ExecutionEvent event) throws ExecutionException {
 					MarkTaskReadAction markReadAction = new MarkTaskReadAction(taskListView.getSelectedTaskContainers());
-					markReadAction.run();
+					if (markReadAction.isEnabled()) {
+						markReadAction.run();
 
-					GoToUnreadTaskAction goToAction = new GoToUnreadTaskAction();
-					goToAction.init(taskListView);
-					goToAction.run();
+						GoToUnreadTaskAction goToAction = new GoToUnreadTaskAction();
+						goToAction.init(taskListView);
+						goToAction.run();
+					}
 					return null;
 				}
 			};
@@ -117,7 +121,9 @@ public class TaskListViewCommands {
 			handler = new AbstractHandler() {
 				public Object execute(ExecutionEvent event) throws ExecutionException {
 					MarkTaskUnreadAction action = new MarkTaskUnreadAction(taskListView.getSelectedTaskContainers());
-					action.run();
+					if (action.isEnabled()) {
+						action.run();
+					}
 					return null;
 				}
 			};
