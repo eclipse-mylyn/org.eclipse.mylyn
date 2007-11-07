@@ -59,7 +59,7 @@ import org.eclipse.swt.widgets.Widget;
  */
 public class TaskListToolTip extends ToolTip {
 
-	private static int X_SHIFT = -18;
+	private static int X_SHIFT = -26;
 
 	private static int Y_SHIFT = 1;
 
