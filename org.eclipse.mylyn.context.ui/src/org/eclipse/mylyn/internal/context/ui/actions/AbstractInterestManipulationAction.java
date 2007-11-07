@@ -38,6 +38,8 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 
 	protected IWorkbenchWindow window;
 	
+	protected boolean preserveUninteresting = false;
+	
 	private ISelection selection;
 
 	public void init(IWorkbenchWindow window) {
@@ -92,7 +94,7 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 						}
 					}
 					boolean manipulated = ContextCorePlugin.getContextManager().manipulateInterestForElement(node,
-							increment, false, false, SOURCE_ID, getContext());
+							increment, false, preserveUninteresting, SOURCE_ID, getContext());
 					if (!manipulated) {
 						UiUtil.displayInterestManipulationFailure();
 					}

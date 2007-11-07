@@ -9,7 +9,7 @@
 package org.eclipse.mylyn.internal.context.ui.actions;
 
 /**
- * TODO: rename to RemoveFromContextAction?
+ * API-3.0: rename to RemoveFromContextAction?
  * 
  * @author Mik Kersten
  */

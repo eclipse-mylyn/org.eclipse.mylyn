@@ -415,6 +415,11 @@ public class InteractionContextManager {
 		}
 	}
 
+	/**
+	 * Policy is that a parent should not have an interest lower than that of one of its children. This meets our goal
+	 * of having them decay no faster than the children while having their interest be proportional to the interest of
+	 * their children.
+	 */
 	private void propegateInterestToParents(IInteractionContext interactionContext, InteractionEvent.Kind kind,
 			IInteractionElement node, float previousInterest, float decayOffset, int level,
 			List<IInteractionElement> interestDelta) {
@@ -425,9 +430,10 @@ public class InteractionContextManager {
 		}
 
 		checkForLandmarkDeltaAndNotify(previousInterest, node);
-
 		level++; // original is 1st level
-		float propagatedIncrement = node.getInterest().getValue() - previousInterest + decayOffset;
+
+		// NOTE: original code summed parent interest
+//		float propagatedIncrement = node.getInterest().getValue() - previousInterest + decayOffset;
 
 		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault()
 				.getStructureBridge(node.getContentType());
@@ -449,39 +455,40 @@ public class InteractionContextManager {
 		}
 
 		if (parentHandle != null) {
-			InteractionEvent propagationEvent = new InteractionEvent(InteractionEvent.Kind.PROPAGATION,
-					bridge.getContentType(node.getHandleIdentifier()), parentHandle, SOURCE_ID_MODEL_PROPAGATION,
-					CONTAINMENT_PROPAGATION_ID, propagatedIncrement);
-			IInteractionElement previous = interactionContext.get(propagationEvent.getStructureHandle());
-			if (previous != null && previous.getInterest() != null) {
-				previousInterest = previous.getInterest().getValue();
+			String parentContentType = bridge.getContentType(parentHandle);
+
+			IInteractionElement parentElement = interactionContext.get(parentHandle);
+			float parentPreviousInterest = 0;
+			if (parentElement != null && parentElement.getInterest() != null) {
+				parentPreviousInterest = parentElement.getInterest().getValue();
 			}
-			IInteractionElement parentNode = addInteractionEvent(interactionContext, propagationEvent);
-			if (kind.isUserEvent()
-					&& parentNode.getInterest().getEncodedValue() < commonContextScaling.getInteresting()) {
-				float parentOffset = ((-1) * parentNode.getInterest().getEncodedValue()) + 1;
+			
+			// NOTE: if element marked as landmark, this propagates the landmark value to all parents
+			float increment = interactionContext.getScaling().getInteresting();
+			if (parentPreviousInterest < node.getInterest().getValue()) {
+				increment = node.getInterest().getValue() - parentPreviousInterest;
+				InteractionEvent propagationEvent = new InteractionEvent(InteractionEvent.Kind.PROPAGATION,
+						parentContentType, parentHandle, SOURCE_ID_MODEL_PROPAGATION, CONTAINMENT_PROPAGATION_ID, increment);
+				parentElement = addInteractionEvent(interactionContext, propagationEvent);
+			}
+
+			// NOTE: this might be redundant
+			if (parentElement != null && kind.isUserEvent() && parentElement.getInterest().getValue() < commonContextScaling.getInteresting()) {
+				float parentOffset = commonContextScaling.getInteresting() - parentElement.getInterest().getValue() + increment;
 				addInteractionEvent(interactionContext, new InteractionEvent(InteractionEvent.Kind.MANIPULATION,
-						parentNode.getContentType(), parentNode.getHandleIdentifier(), SOURCE_ID_DECAY_CORRECTION,
-						parentOffset));
+						parentElement.getContentType(), parentElement.getHandleIdentifier(),
+						SOURCE_ID_DECAY_CORRECTION, parentOffset));
 			}
-			if (previous != null
-					&& isInterestDelta(previousInterest, previous.getInterest().isPredicted(), previous.getInterest()
-							.isPropagated(), parentNode)) {
-				interestDelta.add(0, parentNode);
+
+			if (parentElement != null
+					&& isInterestDelta(parentPreviousInterest, parentElement.getInterest().isPredicted(),
+							parentElement.getInterest().isPropagated(), parentElement)) {
+				interestDelta.add(0, parentElement);
 			}
-			propegateInterestToParents(interactionContext, kind, parentNode, previousInterest, decayOffset, level,
-					interestDelta);// adapter.getResourceExtension(),
+			propegateInterestToParents(interactionContext, kind, parentElement, parentPreviousInterest, decayOffset, level,
+					interestDelta);
 		}
 	}
-
-// public List<IInteractionElement>
-// findCompositesForNodes(List<InteractionContextElement> nodes) {
-// List<IInteractionElement> composites = new ArrayList<IInteractionElement>();
-// for (InteractionContextElement node : nodes) {
-// composites.add(aaactiveContext.get(node.getHandleIdentifier()));
-// }
-// return composites;
-// }
 
 	public void addListener(IInteractionContextListener listener) {
 		if (listener != null) {
@@ -527,7 +534,7 @@ public class InteractionContextManager {
 					ACTIVITY_STRUCTUREKIND_ACTIVATION, context.getHandleIdentifier(), ACTIVITY_ORIGINID_WORKBENCH,
 					null, ACTIVITY_DELTA_ACTIVATED, 1f));
 		}
-		
+
 		for (IInteractionContextListener listener : listeners) {
 			try {
 				listener.contextActivated(context);
@@ -1000,7 +1007,7 @@ public class InteractionContextManager {
 			} else {
 				// make uninteresting
 				if (originalValue >= 0) {
-					changeValue = (-1 * originalValue) - 1;
+					changeValue = ((-1) * originalValue) - 1;
 				}
 
 				// reduce interest of children

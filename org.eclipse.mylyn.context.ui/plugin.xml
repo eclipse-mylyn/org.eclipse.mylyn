@@ -25,6 +25,7 @@
      <objectContribution
         id="org.eclipse.mylyn.context.ui.actions.interest.contribution"
         objectClass="org.eclipse.mylyn.context.core.IInteractionElement">
+        <!-- API-3.0: remove? -->
      	<action  
   		  	label="Mark Less Interesting" 
 	  		tooltip="Mark selected element as uninteresting"

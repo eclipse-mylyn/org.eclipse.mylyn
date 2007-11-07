@@ -305,6 +305,8 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 				.getElement(m1.getHandleIdentifier())
 				.getInterest()
 				.isInteresting());
+		
+		fail();
 	}
 
 	public void testPropagation() throws JavaModelException, Exception {
