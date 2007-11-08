@@ -21,34 +21,34 @@
             urlRepository="https://bugs.eclipse.org/bugs"
             version="3.0"/>
    </extension>    
-  
+   
    <extension point="org.eclipse.ui.popupMenus">
         <viewerContribution
 		    id="org.eclipse.mylyn.bugzilla.ide.log.contribution"
             targetID="org.eclipse.pde.runtime.LogView">
       	<action
-	      	class="org.eclipse.mylyn.internal.bugzilla.ide.actions.NewTaskFromErrorAction"
-	        icon="icons/etool16/task-repository-new.gif"
-	        id="org.eclipse.mylyn.tasklist.actions.newTaskFromErrorLog"
-	        label="Report as Bug"
-	        menubarPath="org.eclipse.pde.runtime.LogView"/>
+      		class="org.eclipse.mylyn.internal.bugzilla.ide.actions.NewTaskFromErrorAction"
+         	icon="icons/etool16/task-repository-new.gif"
+         	menubarPath="org.eclipse.pde.runtime.LogView"
+         	id="org.eclipse.mylyn.tasklist.actions.newTaskFromErrorLog"
+         	label="%action.label.0"/>
       </viewerContribution>
    </extension>
   
     <!--
    <extension point="org.eclipse.ui.popupMenus">
         <objectContribution
-              adaptable="true"
-              id="org.eclipse.mylyn.bugzilla.ide.report.bug.fromError"
+              adaptable="false"
+              id="org.eclipse.mylyn.bugzilla.ide.objectContribution"
               objectClass="org.eclipse.ui.internal.views.log.LogEntry">
-           <action
-                 class="org.eclipse.mylyn.internal.bugzilla.ide.actions.NewTaskFromErrorAction"
-                 enablesFor="1"
-                 icon="icons/etool16/task-repository-new.gif"
-                 id="org.eclipse.mylyn.tasklist.actions.newTaskFromErrorLog"
-                 label="Report as Bug"
-                 menubarPath="org.eclipse.pde.runtime.LogView">
-           </action>
+			<action
+         class="org.eclipse.mylyn.internal.bugzilla.ide.actions.NewTaskFromErrorAction"
+         enablesFor="1"
+         icon="icons/etool16/task-repository-new.gif"
+         menubarPath="org.eclipse.pde.runtime.LogView"
+         id="org.eclipse.mylyn.tasklist.actions.newTaskFromErrorLog"
+         label="%action.label.0">
+             </action>
         </objectContribution>
    </extension>
    -->

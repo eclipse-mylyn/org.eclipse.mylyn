@@ -4,6 +4,9 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *    Chris Aniszczyk <zx@us.ibm.com> - bug 208819
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.ide.actions;
@@ -13,6 +16,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -25,9 +29,11 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.views.log.LogEntry;
 
@@ -36,20 +42,21 @@ import org.eclipse.ui.internal.views.log.LogEntry;
  * 
  * @author Jeff Pound
  */
-public class NewTaskFromErrorAction implements IViewActionDelegate, ISelectionChangedListener {
+public class NewTaskFromErrorAction implements IObjectActionDelegate, IViewActionDelegate, ISelectionChangedListener {
 
 	public static final String ID = "org.eclipse.mylyn.tasklist.ui.repositories.actions.create";
+
+	private LogEntry entry;
 
 	private TreeViewer treeViewer;
 
 	public void run() {
-		TreeItem[] items = treeViewer.getTree().getSelection();
-		LogEntry selection = null;
-		if (items.length > 0) {
-			selection = (LogEntry) items[0].getData();
-		}
-		if (selection == null) {
-			return;
+		if (entry == null) {
+			// TODO: remove if we can use an object contribution
+			TreeItem[] items = treeViewer.getTree().getSelection();
+			if (items.length > 0) {
+				entry = (LogEntry) items[0].getData();
+			}
 		}
 		NewTaskWizard wizard = new NewTaskWizard();
 
@@ -65,12 +72,9 @@ public class NewTaskFromErrorAction implements IViewActionDelegate, ISelectionCh
 			AbstractRepositoryTaskEditor editor = null;
 
 			String summary = "";
-//				selection.getSeverityText() + ": \"" + selection.getMessage() + "\" in "
-//					+ selection.getPluginId();
-			String description = "\n\n-- Error Log --\nDate: " + selection.getDate() + "\nMessage: "
-					+ selection.getMessage() + "\nSeverity: " + selection.getSeverityText() + "\nPlugin ID: "
-					+ selection.getPluginId() + "\nStack Trace:\n"
-					+ ((selection.getStack() == null) ? "no stack trace available" : selection.getStack());
+			String description = "\n\n-- Error Log --\nDate: " + entry.getDate() + "\nMessage: " + entry.getMessage()
+					+ "\nSeverity: " + entry.getSeverityText() + "\nPlugin ID: " + entry.getPluginId()
+					+ "\nStack Trace:\n" + ((entry.getStack() == null) ? "no stack trace available" : entry.getStack());
 
 			try {
 				TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
@@ -94,9 +98,18 @@ public class NewTaskFromErrorAction implements IViewActionDelegate, ISelectionCh
 		}
 	}
 
+	public void run(IAction action) {
+		run();
+	}
+
+	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+	}
+
 	public void selectionChanged(IAction action, ISelection selection) {
-		// this selection is always empty? explicitly register a listener in
-		// init() instead
+		Object object = ((IStructuredSelection)selection).getFirstElement();
+		if (object instanceof LogEntry) {
+			entry = (LogEntry) object;
+		}
 	}
 
 	public void init(IViewPart view) {
@@ -105,11 +118,8 @@ public class NewTaskFromErrorAction implements IViewActionDelegate, ISelectionCh
 		sp.setSelection(sp.getSelection());
 	}
 
-	public void run(IAction action) {
-		run();
-	}
-
 	public void selectionChanged(SelectionChangedEvent event) {
 		treeViewer = (TreeViewer) event.getSource();
 	}
+
 }
