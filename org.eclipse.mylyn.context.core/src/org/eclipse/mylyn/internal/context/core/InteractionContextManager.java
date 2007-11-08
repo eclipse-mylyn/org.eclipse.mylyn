@@ -1012,8 +1012,8 @@ public class InteractionContextManager {
 
 				// reduce interest of children
 				for (String childHandle : bridge.getChildHandles(element.getHandleIdentifier())) {
-					IInteractionElement childElement = getElement(childHandle);
-					if (childElement != null && childElement.getInterest().isInteresting()
+					IInteractionElement childElement = context.get(childHandle);
+					if (childElement != null /*&& childElement.getInterest().isInteresting()*/
 							&& !childElement.equals(element)) {
 						manipulateInterestForElement(childElement, increment, forceLandmark, preserveUninteresting,
 								sourceId, context);
@@ -1031,12 +1031,13 @@ public class InteractionContextManager {
 				}
 			}
 		}
-		if (changeValue > context.getScaling().getInteresting() || preserveUninteresting) {
+//		if (changeValue > context.getScaling().getInteresting() || preserveUninteresting) {
+		if (increment || preserveUninteresting) {
 			InteractionEvent interactionEvent = new InteractionEvent(InteractionEvent.Kind.MANIPULATION,
 					element.getContentType(), element.getHandleIdentifier(), sourceId, changeValue);
 			List<IInteractionElement> interestDelta = internalProcessInteractionEvent(interactionEvent, context, true);
 			notifyInterestDelta(interestDelta);
-		} else if (changeValue < context.getScaling().getInteresting()) {
+		} else { //if (changeValue < context.getScaling().getInteresting()) {
 			delete(element, context);
 			// TODO: batch this into a delta
 			for (IInteractionContextListener listener : listeners) {
