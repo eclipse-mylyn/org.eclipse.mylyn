@@ -37,9 +37,9 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 	protected IViewPart view;
 
 	protected IWorkbenchWindow window;
-	
+
 	protected boolean preserveUninteresting = false;
-	
+
 	private ISelection selection;
 
 	public void init(IWorkbenchWindow window) {
@@ -54,9 +54,9 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 	protected boolean isRemove() {
 		return !isIncrement();
 	}
-	
+
 	protected abstract boolean isIncrement();
-	
+
 	/**
 	 * Override to return a different context.
 	 */
@@ -72,7 +72,7 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 		}
 
 		boolean increment = !isRemove();
-		
+
 		if (selection instanceof StructuredSelection) {
 			StructuredSelection structuredSelection = (StructuredSelection) selection;
 			for (Object object : structuredSelection.toList()) {

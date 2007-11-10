@@ -13,6 +13,8 @@ import java.util.List;
 /**
  * Notified of changes to the context model activity.
  * 
+ * API-3.0: clean-up interface, e.g. make deletion take a list, consider removing relations stuff
+ * 
  * @author Mik Kersten
  * @since 2.0
  */

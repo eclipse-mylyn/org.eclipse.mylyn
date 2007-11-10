@@ -11,8 +11,11 @@ package org.eclipse.mylyn.internal.context.ui;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredViewer;
@@ -35,9 +38,9 @@ import org.eclipse.ui.PlatformUI;
  */
 public class FocusedViewerManager implements IInteractionContextListener, ISelectionListener {
 
-	private List<StructuredViewer> managedViewers = new ArrayList<StructuredViewer>();
+	private CopyOnWriteArrayList<StructuredViewer> managedViewers = new CopyOnWriteArrayList<StructuredViewer>();
 
-	private List<StructuredViewer> filteredViewers = new ArrayList<StructuredViewer>();
+	private CopyOnWriteArrayList<StructuredViewer> filteredViewers = new CopyOnWriteArrayList<StructuredViewer>();
 
 	private Map<StructuredViewer, BrowseFilteredListener> listenerMap = new HashMap<StructuredViewer, BrowseFilteredListener>();
 
@@ -62,7 +65,7 @@ public class FocusedViewerManager implements IInteractionContextListener, ISelec
 	}
 
 	public void addManagedViewer(StructuredViewer viewer, IWorkbenchPart viewPart) {
-		if (!managedViewers.contains(viewer)) {
+		if (viewer != null && !managedViewers.contains(viewer)) {
 			managedViewers.add(viewer);
 			partToViewerMap.put(viewPart, viewer);
 			BrowseFilteredListener listener = new BrowseFilteredListener(viewer);
@@ -83,7 +86,7 @@ public class FocusedViewerManager implements IInteractionContextListener, ISelec
 	}
 
 	public void addFilteredViewer(StructuredViewer viewer) {
-		if (!filteredViewers.contains(viewer)) {
+		if (viewer != null && !filteredViewers.contains(viewer)) {
 			filteredViewers.add(viewer);
 		}
 	}
@@ -125,20 +128,24 @@ public class FocusedViewerManager implements IInteractionContextListener, ISelec
 	}
 
 	protected void refreshViewers(final List<IInteractionElement> nodesToRefresh, final boolean updateLabels) {
-		if (syncRefreshMode) {
-			internalRefresh(nodesToRefresh, updateLabels);
+		if (nodesToRefresh == null) {
+			return;
 		} else {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					internalRefresh(nodesToRefresh, updateLabels);
-				}
-			});
+			if (syncRefreshMode) {
+				internalRefresh(new HashSet<IInteractionElement>(nodesToRefresh), updateLabels);
+			} else {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						internalRefresh(new HashSet<IInteractionElement>(nodesToRefresh), updateLabels);
+					}
+				});
+			}
 		}
 	}
 
-	private void internalRefresh(final List<IInteractionElement> nodesToRefresh, final boolean updateLabels) {
+	private void internalRefresh(final Set<IInteractionElement> nodesToRefresh, final boolean updateLabels) {
 		try {
-			for (StructuredViewer viewer : new ArrayList<StructuredViewer>(managedViewers)) {
+			for (StructuredViewer viewer : managedViewers) {
 				refreshViewer(nodesToRefresh, updateLabels, viewer);
 			}
 		} catch (Throwable t) {
@@ -146,41 +153,50 @@ public class FocusedViewerManager implements IInteractionContextListener, ISelec
 		}
 	}
 
-	private void refreshViewer(final List<IInteractionElement> nodesToRefresh, final boolean minor,
+	private void refreshViewer(final Set<IInteractionElement> nodesToRefresh, final boolean minor,
 			StructuredViewer viewer) {
 		if (viewer == null) {
 			return;
 		} else if (viewer.getControl().isDisposed()) {
 			managedViewers.remove(viewer);
-		} else { // if (viewer.getControl().isVisible()) {
+		} else { 
 			if (nodesToRefresh == null || nodesToRefresh.isEmpty()) {
 				if (!minor) {
 					viewer.refresh(false);
 					updateExpansionState(viewer, null);
 				} else {
-					viewer.getControl().setRedraw(false);
-					viewer.refresh(true);
-					updateExpansionState(viewer, null);
-					viewer.getControl().setRedraw(true);
+					try {
+						viewer.getControl().setRedraw(false);
+						viewer.refresh(true);
+						updateExpansionState(viewer, null);
+					} finally {
+						viewer.getControl().setRedraw(true);
+					}
 				}
 			} else {
 				if (filteredViewers.contains(viewer)) {
-					viewer.getControl().setRedraw(false);
-					viewer.refresh(minor);
-					updateExpansionState(viewer, null);
-					viewer.getControl().setRedraw(true);
-				} else { // don't need to worry about content changes
-					viewer.getControl().setRedraw(false);
-					for (IInteractionElement node : nodesToRefresh) {
-						AbstractContextStructureBridge structureBridge = ContextCorePlugin.getDefault()
-								.getStructureBridge(node.getContentType());
-						Object objectToRefresh = structureBridge.getObjectForHandle(node.getHandleIdentifier());
-						if (objectToRefresh != null) {
-							viewer.update(objectToRefresh, null);
-							updateExpansionState(viewer, objectToRefresh);
-						}
+					try {
+						viewer.getControl().setRedraw(false);
+						viewer.refresh(minor);
+						updateExpansionState(viewer, null);
+					} finally {
+						viewer.getControl().setRedraw(true);
 					}
-					viewer.getControl().setRedraw(true);
+				} else { // don't need to worry about content changes
+					try {
+						viewer.getControl().setRedraw(false);
+						for (IInteractionElement node : nodesToRefresh) {
+							AbstractContextStructureBridge structureBridge = ContextCorePlugin.getDefault()
+									.getStructureBridge(node.getContentType());
+							Object objectToRefresh = structureBridge.getObjectForHandle(node.getHandleIdentifier());
+							if (objectToRefresh != null) {
+								viewer.update(objectToRefresh, null);
+								updateExpansionState(viewer, objectToRefresh);
+							}
+						}
+					} finally {
+						viewer.getControl().setRedraw(true);
+					}
 				}
 			}
 		}
@@ -205,9 +221,9 @@ public class FocusedViewerManager implements IInteractionContextListener, ISelec
 				node.getContentType());
 		IInteractionElement parent = ContextCorePlugin.getContextManager().getElement(
 				structureBridge.getParentHandle(node.getHandleIdentifier()));
-		ArrayList<IInteractionElement> toRefresh = new ArrayList<IInteractionElement>();
 
 		if (parent != null) {
+			ArrayList<IInteractionElement> toRefresh = new ArrayList<IInteractionElement>();
 			toRefresh.add(parent);
 			refreshViewers(toRefresh, false);
 		}

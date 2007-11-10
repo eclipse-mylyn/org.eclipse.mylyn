@@ -1039,10 +1039,6 @@ public class InteractionContextManager {
 			notifyInterestDelta(interestDelta);
 		} else { //if (changeValue < context.getScaling().getInteresting()) {
 			delete(element, context);
-			// TODO: batch this into a delta
-			for (IInteractionContextListener listener : listeners) {
-				listener.elementDeleted(element);
-			}
 		}
 		return true;
 	}
