@@ -12,30 +12,31 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.tasks.core.LocalAttachment;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.Region;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * A wizard page to create a screenshot from the display.
@@ -59,21 +60,30 @@ public class ScreenshotAttachmentPage extends WizardPage {
 
 	private ScrolledComposite scrolledComposite;
 
-	private Rectangle cropRegionBounds;
+	/**
+	 * Stores the selection rectangle; this value is normalized to real image coordinates, no matter the zoom level (see
+	 * {@link #scaleFactor})
+	 */
+	private Rectangle currentSelection;
 
-	private boolean isCropFit;
+	/**
+	 * Temporary storage for selection start point; this value is normalized to real image coordinates, no matter the
+	 * zoom level (see {@link #scaleFactor})
+	 * <p>
+	 * This is also used to signal if a selection is in course if it is != null
+	 */
+	private Point selectionStartPoint;
 
-	private boolean isCropActive;
-
-	private Rectangle displayBounds;
-
-	private Rectangle scrolledBounds;
+	/**
+	 * Scale factor of displayed image compared to the original image
+	 */
+	private double scaleFactor = 1.0;
 
 	protected ScreenshotAttachmentPage(LocalAttachment attachment) {
 		super("ScreenShotAttachment");
 		setTitle("Capture Screenshot");
-		setDescription("After capturing, drag the mouse to crop. This window will not be captured. " +
-				"Note that you can continue to prepare the screenshot.");
+		setDescription("After capturing, drag the mouse to crop. This window will not be captured. "
+				+ "Note that you can continue to interact with the workbench as you the screenshot.");
 		this.attachment = attachment;
 		this.page = this;
 	}
@@ -89,7 +99,7 @@ public class ScreenshotAttachmentPage extends WizardPage {
 		captureButton = new Button(buttonsComposite, SWT.PUSH);
 		captureButton.setText("Capture Desktop");
 		captureButton.setImage(TasksUiImages.getImage(TasksUiImages.IMAGE_CAPTURE));
-		captureButton.addSelectionListener(new SelectionListener() {
+		captureButton.addSelectionListener(new SelectionAdapter() {
 
 			public void widgetSelected(SelectionEvent e) {
 				captureScreenshotContent();
@@ -97,12 +107,8 @@ public class ScreenshotAttachmentPage extends WizardPage {
 				fitButton.setEnabled(true);
 			}
 
-			public void widgetDefaultSelected(SelectionEvent e) {
-				//ignore
-			}
-
 		});
-		
+
 //		captureDelayedButton = new Button(buttonsComposite, SWT.PUSH);
 //		final String captureIn = "Capture in ";
 //		final int secondsDelay = 1;
@@ -135,26 +141,19 @@ public class ScreenshotAttachmentPage extends WizardPage {
 //				//ignore
 //			}
 //		});
-		
 
 		fitButton = new Button(buttonsComposite, SWT.TOGGLE);
 		fitButton.setText("Fit Image");
 		fitButton.setImage(TasksUiImages.getImage(TasksUiImages.IMAGE_FIT));
-		fitButton.addSelectionListener(new SelectionListener() {
+		fitButton.addSelectionListener(new SelectionAdapter() {
 
 			public void widgetSelected(SelectionEvent e) {
-				drawCanvas();
-			}
-
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// ignore
+				refreshCanvasSize();
 			}
 
 		});
 		fitButton.setSelection(true);
 		fitButton.setEnabled(false);
-		isCropFit = true;
-		isCropActive = false;
 
 		scrolledComposite = new ScrolledComposite(composite, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER);
 		scrolledComposite.setLayoutData(GridDataFactory.fillDefaults()
@@ -162,23 +161,34 @@ public class ScreenshotAttachmentPage extends WizardPage {
 				.grab(true, true)
 				.create());
 
-		canvas = new Canvas(scrolledComposite, SWT.DOUBLE_BUFFERED | SWT.NONE);
+		canvas = new Canvas(scrolledComposite, SWT.DOUBLE_BUFFERED);
 		scrolledComposite.setContent(canvas);
 		canvas.addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent e) {
 				if (screenshotImage != null) {
 					Rectangle imageBounds = screenshotImage.getBounds();
-					Rectangle canvasBounds = canvas.getBounds();
+					Rectangle canvasBounds = canvas.getClientArea();
 
-					if (fitButton.getSelection())
+					if (fitButton.getSelection()) {
 						e.gc.drawImage(screenshotImage, 0, 0, imageBounds.width, imageBounds.height, 0, 0,
 								canvasBounds.width, canvasBounds.height);
-					else
+					} else {
 						e.gc.drawImage(screenshotImage, 0, 0);
+					}
 
-					if (cropRegionBounds != null)
-						drawRegion(e.gc);
-
+					if (currentSelection != null) {
+						if (selectionStartPoint != null) {
+							// XOR may not work on Mac OS X, as said in javadoc
+//							e.gc.setXORMode(true);
+							e.gc.setLineStyle(SWT.LINE_DOT);
+							e.gc.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_BLACK));
+							e.gc.drawRectangle(getScaledSelection());
+//							e.gc.setXORMode(false);
+							e.gc.setLineStyle(SWT.LINE_SOLID);
+						} else {
+							drawRegion(e.gc);
+						}
+					}
 				} else {
 //					page.setErrorMessage("Screenshot required");
 					fitButton.setEnabled(false);
@@ -189,19 +199,24 @@ public class ScreenshotAttachmentPage extends WizardPage {
 		scrolledComposite.addControlListener(new ControlAdapter() {
 			@Override
 			public void controlResized(ControlEvent e) {
-				drawCanvas();
+				refreshCanvasSize();
 			}
 		});
 
-		canvas.addMouseMoveListener(new MouseMoveListener() {
-			public void mouseMove(MouseEvent e) {
-				if (!isCropActive && screenshotImage != null) {
-					drawCanvas();
-					cropScreenshotContent();
-				}
-			}
-		});
+		registerMouseListeners();
+	}
 
+	private Rectangle getScaledSelection() {
+		if (currentSelection == null) {
+			return null;
+		}
+		int x = (int) Math.round(currentSelection.x * scaleFactor);
+		int y = (int) Math.round(currentSelection.y * scaleFactor);
+		int right = (int) Math.round((currentSelection.x + currentSelection.width) * scaleFactor);
+		int bottom = (int) Math.round((currentSelection.y + currentSelection.height) * scaleFactor);
+		int width = Math.min(right, (int) Math.round((screenshotImage.getBounds().width - 1) * scaleFactor)) - x;
+		int height = Math.min(bottom, (int) Math.round((screenshotImage.getBounds().height - 1) * scaleFactor)) - y;
+		return new Rectangle(x, y, width, height);
 	}
 
 	@Override
@@ -231,8 +246,7 @@ public class ScreenshotAttachmentPage extends WizardPage {
 		final Display display = Display.getDefault();
 		final Shell wizardShell = getWizard().getContainer().getShell();
 		wizardShell.setVisible(false);
-		isCropFit = fitButton.getSelection();
-		
+
 		// NOTE: need a wait since the shell can take time to disappear (e.g. fade on Vista)
 		try {
 			Thread.sleep(400);
@@ -242,13 +256,16 @@ public class ScreenshotAttachmentPage extends WizardPage {
 
 		display.asyncExec(new Runnable() {
 			public void run() {
-				GC gc = new GC(display);
 				Rectangle displayBounds = display.getBounds();
 				screenshotImage = new Image(display, displayBounds);
+
+				GC gc = new GC(display);
 				gc.copyArea(screenshotImage, 0, 0);
-				gc.drawRectangle(0, 0, displayBounds.width - 1, displayBounds.height - 1);
 				gc.dispose();
-				drawCanvas();
+
+				clearSelection();
+				refreshCanvasSize();
+
 				wizardShell.setVisible(true);
 				if (screenshotImage != null) {
 					setPageComplete(true);
@@ -257,204 +274,150 @@ public class ScreenshotAttachmentPage extends WizardPage {
 		});
 	}
 
-	private void cropScreenshotContent() {
+	/**
+	 * Sets the selection rectangle based on the initial selection start point previously set in
+	 * {@link #selectionStartPoint} and the end point passed as parameters to this method
+	 * <p>
+	 * The coordinates are based on the real image coordinates
+	 */
+	private void refreshCurrentSelection(int x, int y) {
+		int startX = Math.min(selectionStartPoint.x, x);
+		int startY = Math.min(selectionStartPoint.y, y);
+		int width = Math.abs(selectionStartPoint.x - x);
+		int height = Math.abs(selectionStartPoint.y - y);
+		currentSelection = new Rectangle(startX, startY, width, height);
 
-		final Point downPoint = new Point(-1, -1);
+		// Decreases 1 pixel size from original image because Rectangle.intersect() consider them as right-bottom limit
+		Rectangle imageBounds = screenshotImage.getBounds();
+		imageBounds.width--;
+		imageBounds.height--;
+		currentSelection.intersect(imageBounds);
+	}
 
-		final Display display = Display.getDefault();
+	private void registerMouseListeners() {
+		canvas.addMouseMoveListener(new MouseMoveListener() {
 
-		final Rectangle originalBounds = screenshotImage.getBounds();
-
-		final GC cropRegionGC = new GC(canvas);
-
-		isCropActive = true;
-
-		final MouseMoveListener mouseMoveListener = new MouseMoveListener() {
+			/**
+			 * If a selection is in course, moving the mouse around refreshes the selection rectangle
+			 */
 			public void mouseMove(MouseEvent e) {
-				if (downPoint.x != -1 && downPoint.y != -1) {
-					int width = e.x - downPoint.x;
-					int height = e.y - downPoint.y;
+				if (selectionStartPoint != null) {
+					refreshCurrentSelection((int) Math.round(e.x / scaleFactor), (int) Math.round(e.y / scaleFactor));
 					canvas.redraw();
-					cropRegionGC.drawRectangle(downPoint.x, downPoint.y, width, height);
 				}
 			}
-		};
 
-		final MouseListener mouseListener = new MouseListener() {
+		});
+
+		canvas.addMouseListener(new MouseAdapter() {
+
+			/**
+			 * Releasing the mouse button ends the selection; compute the selection rectangle and redraw the cropped
+			 * image
+			 */
 			public void mouseUp(MouseEvent e) {
-				if (downPoint.x != -1 && downPoint.y != -1) {
+				if (selectionStartPoint != null) {
+					Display.getDefault().getActiveShell().setCursor(new Cursor(null, SWT.CURSOR_ARROW));
 
-					if (downPoint.x > e.x) {
-						int x = downPoint.x;
-						downPoint.x = e.x;
-						e.x = x;
+					refreshCurrentSelection((int) Math.round(e.x / scaleFactor), (int) Math.round(e.y / scaleFactor));
+					if (currentSelection.width == 0 && currentSelection.height == 0) {
+						currentSelection = null;
 					}
-					if (downPoint.y > e.y) {
-						int y = downPoint.y;
-						downPoint.y = e.y;
-						e.y = y;
-					}
+					selectionStartPoint = null;
 
-					isCropActive = false;
-
-					int width;
-					if (e.x > originalBounds.width) {
-						width = originalBounds.width - downPoint.x;
-					} else if (e.x < 0) {
-						width = downPoint.x;
-						downPoint.x = 0;
-					} else {
-						width = e.x - downPoint.x;
-					}
-
-					int height;
-					if (e.y > originalBounds.height) {
-						height = originalBounds.height - downPoint.y;
-					} else if (e.y < 0) {
-						height = downPoint.y;
-						downPoint.y = 0;
-					} else {
-						height = e.y - downPoint.y;
-					}
-
-					display.getActiveShell().setCursor(new Cursor(null, SWT.CURSOR_ARROW));
-
-					if (width == 0 || height == 0)
-						cropRegionBounds = null;
-					else
-						cropRegionBounds = new Rectangle(downPoint.x, downPoint.y, width, height);
-
-					canvas.removeMouseMoveListener(mouseMoveListener);
-					canvas.removeMouseListener(this);
-					downPoint.x = -1;
-					downPoint.y = -1;
-
-					cropRegionGC.dispose();
-
-					drawCanvas();
+					canvas.redraw();
 				}
 			}
 
+			/**
+			 * Pressing mouse button starts a selection; normalizes and marks the start point
+			 */
 			public void mouseDown(MouseEvent e) {
-				if (downPoint.x == -1 && downPoint.y == -1) {
-					cropRegionBounds = null;
-					isCropFit = fitButton.getSelection();
-					display.getActiveShell().setCursor(new Cursor(null, SWT.CURSOR_CROSS));
-					downPoint.x = e.x;
-					downPoint.y = e.y;
-					canvas.addMouseMoveListener(mouseMoveListener);
+				if (selectionStartPoint == null) {
+					currentSelection = null;
+					Display.getDefault().getActiveShell().setCursor(new Cursor(null, SWT.CURSOR_CROSS));
+					selectionStartPoint = new Point((int) (e.x / scaleFactor), (int) (e.y / scaleFactor));
 				}
 			}
 
-			public void mouseDoubleClick(MouseEvent e) {
-				// ignore
-			}
-		};
-
-		canvas.addMouseListener(mouseListener);
+		});
 
 	}
 
-	private void drawCanvas() {
+	private void clearSelection() {
+		currentSelection = null;
+		selectionStartPoint = null;
+	}
+
+	/**
+	 * Recalculates image canvas size based on "fit on canvas" setting and redraws
+	 * <p>
+	 * This method should be called whenever the {@link #screenshotImage image} or zoom level is changed
+	 */
+	private void refreshCanvasSize() {
 		if (fitButton.getSelection()) {
-			Rectangle bounds = scrolledComposite.getBounds();
-			bounds.x = 0;
-			bounds.y = 0;
-			bounds.width -= 5;
-			bounds.height -= 5;
+			// This little hack is necessary to get the client area without scrollbars; 
+			// they'll be automatically restored if necessary after Canvas.setBounds()
+			scrolledComposite.getHorizontalBar().setVisible(false);
+			scrolledComposite.getVerticalBar().setVisible(false);
+
+			Rectangle bounds = scrolledComposite.getClientArea();
+			if (screenshotImage != null) {
+				Rectangle imageBounds = screenshotImage.getBounds();
+				if (imageBounds.width > bounds.width || imageBounds.height > bounds.height) {
+					double xRatio = (double) bounds.width / imageBounds.width;
+					double yRatio = (double) bounds.height / imageBounds.height;
+					scaleFactor = Math.min(xRatio, yRatio);
+					bounds.width = (int) Math.round(imageBounds.width * scaleFactor);
+					bounds.height = (int) Math.round(imageBounds.height * scaleFactor);
+				}
+			}
 			canvas.setBounds(bounds);
 		} else {
-			canvas.setBounds(screenshotImage.getBounds());
+			scaleFactor = 1.0;
+			Rectangle bounds = scrolledComposite.getClientArea();
+			if (screenshotImage != null) {
+				Rectangle imageBounds = screenshotImage.getBounds();
+				bounds.width = imageBounds.width;
+				bounds.height = imageBounds.height;
+			}
+			canvas.setBounds(bounds);
 		}
-		scrolledComposite.redraw();
 		canvas.redraw();
 	}
 
 	private void drawRegion(GC gc) {
+		Rectangle scaledSelection = getScaledSelection();
 
-		Rectangle displayBounds = Display.getDefault().getBounds();
-		Rectangle bounds = scrolledComposite.getBounds();
-		bounds.width -= 5;
-		bounds.height -= 5;
-
-		double ratioX = (double) displayBounds.width / (double) bounds.width;
-		double ratioY = (double) displayBounds.height / (double) bounds.height;
-
-		Rectangle newCropRegion = new Rectangle(0, 0, 0, 0);
-
-		if (isCropFit && !fitButton.getSelection()) {
-			newCropRegion.x = (int) (cropRegionBounds.x * ratioX);
-			newCropRegion.width = (int) (cropRegionBounds.width * ratioX);
-			newCropRegion.y = (int) (cropRegionBounds.y * ratioY);
-			newCropRegion.height = (int) (cropRegionBounds.height * ratioY);
-		} else if (!isCropFit && fitButton.getSelection()) {
-			newCropRegion.x = (int) (cropRegionBounds.x / ratioX);
-			newCropRegion.width = (int) (cropRegionBounds.width / ratioX);
-			newCropRegion.y = (int) (cropRegionBounds.y / ratioY);
-			newCropRegion.height = (int) (cropRegionBounds.height / ratioY);
-		} else {
-			newCropRegion = cropRegionBounds;
-		}
-
-		Rectangle topRegionBounds = new Rectangle(0, 0, displayBounds.width, newCropRegion.y);
-		int bottomRegionY = newCropRegion.y + newCropRegion.height;
-		int bottomRegionHeight = displayBounds.height - bottomRegionY;
-		Rectangle bottomRegionBounds = new Rectangle(0, bottomRegionY, displayBounds.width, bottomRegionHeight);
-		Rectangle leftRegionBounds = new Rectangle(0, newCropRegion.y, newCropRegion.x, newCropRegion.height);
-		int rightRegionX = newCropRegion.x + newCropRegion.width;
-		int rightRegionWidth = displayBounds.width - rightRegionX;
-		Rectangle rightRegionBounds = new Rectangle(rightRegionX, newCropRegion.y, rightRegionWidth,
-				newCropRegion.height);
-
-		gc.setLineStyle(SWT.LINE_DASH);
+		gc.setBackground(TaskListColorsAndFonts.GRAY);
 		gc.setAdvanced(true);
-		gc.setAlpha(200);
+		gc.setAlpha(120);
 
-		gc.fillRectangle(topRegionBounds);
-		gc.fillRectangle(bottomRegionBounds);
-		gc.fillRectangle(leftRegionBounds);
-		gc.fillRectangle(rightRegionBounds);
+		Region invertedSelection = new Region();
+		invertedSelection.add(canvas.getClientArea());
+		invertedSelection.subtract(scaledSelection);
+		gc.setClipping(invertedSelection);
+		gc.fillRectangle(canvas.getClientArea());
+		gc.setClipping((Region) null);
 
-		gc.drawRectangle(newCropRegion);
+		gc.setAdvanced(false);
+
+		gc.setLineStyle(SWT.LINE_SOLID);
+//		gc.setXORMode(true);
+		gc.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GRAY));
+		gc.drawRectangle(scaledSelection);
+//		gc.setXORMode(false);
 	}
 
 	private Image getCropScreenshot() {
-		displayBounds = null;
-		scrolledBounds = null;
-		
-		if (cropRegionBounds == null)
+		if (currentSelection == null) {
 			return screenshotImage;
-
-		Rectangle bounds;
-		if (!isCropFit) {
-			bounds = cropRegionBounds;
-		} else {
-			bounds = new Rectangle(0, 0, 0, 0);
-			PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-
-				public void run() {
-					displayBounds = Display.getDefault().getBounds();
-					scrolledBounds = scrolledComposite.getBounds();
-				}
-			});
-
-			if (displayBounds == null) {
-				return null;
-			} else {
-				double ratioX = (double) displayBounds.width / (double) scrolledBounds.width; 
-				double ratioY = (double) displayBounds.height / (double) scrolledBounds.height;
-				bounds.x = (int) (cropRegionBounds.x * ratioX);
-				bounds.width = (int) (cropRegionBounds.width * ratioX);
-				bounds.y = (int) (cropRegionBounds.y * ratioY);
-				bounds.height = (int) (cropRegionBounds.height * ratioY);
-			}
 		}
 
-		Image image = new Image(Display.getDefault(), bounds);
+		Image image = new Image(Display.getDefault(), currentSelection);
 		GC gc = new GC(image);
-		gc.drawImage(screenshotImage, bounds.x, bounds.y, bounds.width, bounds.height, 0, 0, bounds.width,
-				bounds.height);
-		gc.drawRectangle(0, 0, bounds.width - 1, bounds.height - 1);
+		gc.drawImage(screenshotImage, currentSelection.x, currentSelection.y, currentSelection.width,
+				currentSelection.height, 0, 0, currentSelection.width, currentSelection.height);
 		gc.dispose();
 
 		return image;
