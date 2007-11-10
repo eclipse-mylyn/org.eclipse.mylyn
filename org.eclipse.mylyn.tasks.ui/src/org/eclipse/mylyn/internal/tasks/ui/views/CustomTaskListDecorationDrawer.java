@@ -40,7 +40,11 @@ class CustomTaskListDecorationDrawer implements Listener {
 	private Image taskInactiveContext = TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE_CONTEXT);
 
 	// see bug 185004
-	private int platformSpecificSquish = 0;
+	private final int platformSpecificSquish;
+
+	private final Rectangle lastClippingArea = new Rectangle(0, 0, 0, 0);
+
+	private final boolean tweakClipping;
 
 	CustomTaskListDecorationDrawer(TaskListView taskListView, int activationImageOffset) {
 		this.taskListView = taskListView;
@@ -49,9 +53,14 @@ class CustomTaskListDecorationDrawer implements Listener {
 				TasksUiPreferenceConstants.OVERLAYS_INCOMING_TIGHT);
 
 		if (SWT.getPlatform().equals("gtk")) {
-			platformSpecificSquish = 8;
+			this.platformSpecificSquish = 8;
+			this.tweakClipping = true;
 		} else if (SWT.getPlatform().equals("carbon")) {
-			platformSpecificSquish = 3;
+			this.platformSpecificSquish = 3;
+			this.tweakClipping = false;
+		} else {
+			this.platformSpecificSquish = 0;
+			this.tweakClipping = false;
 		}
 	}
 
@@ -91,17 +100,29 @@ class CustomTaskListDecorationDrawer implements Listener {
 //					int offsetY = tree.getViewer().getExpandedElements().length * tree.getViewer().getTree().getItemHeight();
 //					event.gc.drawText("Open search dialog...", 20, offsetY - 10);
 //				}
-
+				if (tweakClipping) {
+					lastClippingArea.x = event.x;
+					lastClippingArea.y = event.y;
+					lastClippingArea.width = event.width;
+					lastClippingArea.height = event.height;
+				}
 				break;
 			}
 			case SWT.PaintItem: {
+				Rectangle clipping = null;
+				if (tweakClipping) {
+					clipping = event.gc.getClipping();
+					event.gc.setClipping(lastClippingArea);
+				}
 				if (activationImage != null) {
 					drawActivationImage(activationImageOffset, event, activationImage);
 				}
 				if (data instanceof AbstractTaskContainer) {
 					drawSyncronizationImage((AbstractTaskContainer) data, event);
 				}
-
+				if (tweakClipping) {
+					event.gc.setClipping(clipping);
+				}
 				break;
 			}
 			}

@@ -760,7 +760,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 		final int activationImageOffset = 20;
 		CustomTaskListDecorationDrawer customDrawer = new CustomTaskListDecorationDrawer(this, activationImageOffset);
-		getViewer().getTree().addListener(SWT.MeasureItem, customDrawer);
 		getViewer().getTree().addListener(SWT.EraseItem, customDrawer);
 		getViewer().getTree().addListener(SWT.PaintItem, customDrawer);
 
