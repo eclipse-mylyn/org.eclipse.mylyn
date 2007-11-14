@@ -164,8 +164,6 @@ public interface IBugzillaConstants {
 
 	static final String ECLIPSE_BUGZILLA_URL = "https://bugs.eclipse.org/bugs";
 
-	static final String TEST_BUGZILLA_216_URL = "http://mylyn.eclipse.org/bugs216";
-
 	static final String TEST_BUGZILLA_218_URL = "http://mylyn.eclipse.org/bugs218";
 
 	static final String TEST_BUGZILLA_220_URL = "http://mylyn.eclipse.org/bugs220";
