@@ -94,7 +94,7 @@ public class RepositoryEditorWizardTest extends TestCase {
 		WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), wizard);
 		dialog.create();
 		BugzillaRepositorySettingsPage page = (BugzillaRepositorySettingsPage) wizard.getSettingsPage();
-		page.setUrl("http://invalid");
+		page.setUrl("http://mylar.eclipse.org");
 		try {
 			BugzillaClient client = BugzillaClientFactory.createClient(page.getServerUrl(), page.getUserName(),
 					page.getPassword(), page.getHttpAuthUserId(), page.getHttpAuthPassword(),
