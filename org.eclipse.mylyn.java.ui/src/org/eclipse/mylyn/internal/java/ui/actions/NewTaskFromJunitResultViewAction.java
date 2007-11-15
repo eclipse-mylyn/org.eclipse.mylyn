@@ -11,24 +11,14 @@ package org.eclipse.mylyn.internal.java.ui.actions;
 import org.eclipse.jdt.internal.junit.model.TestCaseElement;
 import org.eclipse.jdt.internal.junit.model.TestElement;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
-import org.eclipse.mylyn.internal.tasks.ui.wizards.NewTaskWizard;
-import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
-import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
-import org.eclipse.swt.dnd.Clipboard;
-import org.eclipse.swt.dnd.TextTransfer;
-import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.mylyn.internal.tasks.ui.actions.NewTaskAction;
+import org.eclipse.mylyn.tasks.core.TaskSelection;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * Creates a new task from the selected JUnit Test.
@@ -44,46 +34,29 @@ public class NewTaskFromJunitResultViewAction implements IViewActionDelegate, IS
 	private TestCaseElement testCaseElement;
 
 	public void run(IAction action) {
+		run();
+	}
+	
+	public void run() {
 		if (traceString == null || testCaseElement == null) {
 			return;
 		}
-		NewTaskWizard wizard = new NewTaskWizard();
 
-		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-		if (shell != null && !shell.isDisposed()) {
-			WizardDialog dialog = new WizardDialog(shell, wizard);
-			dialog.setBlockOnOpen(true);
-			if (dialog.open() == WizardDialog.CANCEL) {
-				return;
-			}
+		StringBuilder sb = new StringBuilder();
+		sb.append("\n-- Error Log from JUnit --\nClass: ");
+		sb.append(testCaseElement.getTestClassName());
+		sb.append("\nMethod: ");
+		sb.append(testCaseElement.getTestMethodName());
+		sb.append("\nActual: ");
+		sb.append(testCaseElement.getActual());
+		sb.append("\nExpected: ");
+		sb.append(testCaseElement.getExpected());
+		sb.append("\nStack Trace:\n");
+		sb.append(traceString);
 
-			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-			AbstractRepositoryTaskEditor editor = null;
-
-			String summary = "";
-			String description = "\n-- Failure Log from JUnit --\nClass: " + testCaseElement.getTestClassName()
-					+ "\nMethod: " + testCaseElement.getTestMethodName() + "\nActual: " + testCaseElement.getActual()
-					+ "\nExpected: " + testCaseElement.getExpected() + "\nStack Trace:\n" + traceString;
-
-			try {
-				TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
-				editor = (AbstractRepositoryTaskEditor) taskEditor.getActivePageInstance();
-			} catch (ClassCastException e) {
-				Clipboard clipboard = new Clipboard(page.getWorkbenchWindow().getShell().getDisplay());
-				clipboard.setContents(new Object[] { summary + "\n" + description },
-						new Transfer[] { TextTransfer.getInstance() });
-
-				MessageDialog.openInformation(
-						page.getWorkbenchWindow().getShell(),
-						ITasksUiConstants.TITLE_DIALOG,
-						"This connector does not provide a rich task editor for creating tasks.\n\n"
-								+ "The error contents have been placed in the clipboard so that you can paste them into the entry form.");
-				return;
-			}
-
-			editor.setSummaryText(summary);
-			editor.setDescriptionText(description);
-		}
+		TaskSelection taskSelection = new TaskSelection("", sb.toString());
+		NewTaskAction action = new NewTaskAction();
+		action.showWizard(taskSelection);
 	}
 
 	public void selectionChanged(SelectionChangedEvent event) {
