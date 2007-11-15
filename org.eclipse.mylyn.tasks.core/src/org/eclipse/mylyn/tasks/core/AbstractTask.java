@@ -182,6 +182,7 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 	 */
 	public abstract boolean isLocal();
 
+	// API-3.0 rename to getRepositoryKind()
 	public abstract String getConnectorKind();
 
 	public String getLastReadTimeStamp() {

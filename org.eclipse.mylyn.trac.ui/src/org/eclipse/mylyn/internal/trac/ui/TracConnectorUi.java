@@ -31,6 +31,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.TaskSelection;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylyn.tasks.ui.wizards.NewTaskWizard;
@@ -72,6 +73,7 @@ public class TracConnectorUi extends AbstractRepositoryConnectorUi {
 		return true;
 	}
 
+	// API-3.0 remove
 	@Override
 	public IWizard getNewTaskWizard(TaskRepository repository) {
 		if (TracRepositoryConnector.hasRichEditor(repository)) {
@@ -81,6 +83,16 @@ public class TracConnectorUi extends AbstractRepositoryConnectorUi {
 		}
 	}
 
+	@Override
+	public IWizard getNewTaskWizard(TaskRepository repository, TaskSelection selection) {
+		if (TracRepositoryConnector.hasRichEditor(repository)) {
+			return new NewTaskWizard(repository, selection);
+		} else {
+			// API-3.0 extend NewWebTaskWizard to support copying taskSelection to clipboard and return wizard here
+			return null;
+		}
+	}
+	
 	@Override
 	public IWizard getQueryWizard(TaskRepository repository, AbstractRepositoryQuery query) {
 		if (query instanceof TracRepositoryQuery) {

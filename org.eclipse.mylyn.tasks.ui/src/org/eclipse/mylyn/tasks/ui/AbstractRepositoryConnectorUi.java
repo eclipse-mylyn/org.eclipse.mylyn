@@ -29,6 +29,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylyn.tasks.core.TaskSelection;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
@@ -66,8 +67,20 @@ public abstract class AbstractRepositoryConnectorUi {
 	 */
 	public abstract IWizard getQueryWizard(TaskRepository repository, AbstractRepositoryQuery queryToEdit);
 
+	/**
+	 * @deprecated use {@link #getNewTaskWizard(TaskRepository, TaskSelection)} instead
+	 */
 	public abstract IWizard getNewTaskWizard(TaskRepository taskRepository);
 
+	/**
+	 * API-3.0 replace with default implementation that invokes NewTaskWizard
+	 * 
+	 * @since 2.2
+	 */
+	public IWizard getNewTaskWizard(TaskRepository taskRepository, TaskSelection selection) {
+		return null;
+	}
+	
 	/**
 	 * Override to return a custom task editor ID. If overriding this method the connector becomes responsible for
 	 * showing the additional pages handled by the default task editor. As of Mylyn 2.0M2 these are the Planning and

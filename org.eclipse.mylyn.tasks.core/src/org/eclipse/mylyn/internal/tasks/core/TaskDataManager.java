@@ -241,9 +241,10 @@ public class TaskDataManager {
 		}
 	}
 
+	// XXX: review if task data cloning can be done without using serialization
 	// Reference:
 	// http://www.javaworld.com/javaworld/javatips/jw-javatip76.html?page=2
-	static class ObjectCloner {
+	public static class ObjectCloner {
 
 		private ObjectCloner() {
 			// can not instantiate

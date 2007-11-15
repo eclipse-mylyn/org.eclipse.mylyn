@@ -24,6 +24,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.TaskSelection;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.NewTaskEditorInput;
@@ -42,6 +43,13 @@ import org.eclipse.ui.PlatformUI;
 public class NewTaskWizard extends Wizard implements INewWizard {
 
 	private TaskRepository taskRepository;
+
+	private TaskSelection taskSelection;
+
+	public NewTaskWizard(TaskRepository taskRepository, TaskSelection taskSelection) {
+		this.taskRepository = taskRepository;
+		this.taskSelection = taskSelection;
+	}
 
 	public NewTaskWizard(TaskRepository taskRepository) {
 		this.taskRepository = taskRepository;
@@ -104,6 +112,10 @@ public class NewTaskWizard extends Wizard implements INewWizard {
 			return false;
 		} catch (InterruptedException e) {
 			return false;
+		}
+
+		if (taskSelection != null) {
+			taskDataHandler.cloneTaskData(taskSelection.getTaskData(), taskData);
 		}
 
 		NewTaskEditorInput editorInput = new NewTaskEditorInput(taskRepository, taskData);

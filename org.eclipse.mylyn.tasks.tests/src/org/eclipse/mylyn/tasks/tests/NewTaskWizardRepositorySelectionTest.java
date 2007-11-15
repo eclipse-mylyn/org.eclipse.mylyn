@@ -48,7 +48,7 @@ public class NewTaskWizardRepositorySelectionTest extends TestCase {
 		view.getViewer().setSelection(new StructuredSelection(mockTask), true);
 		assertEquals(mockTask, ((StructuredSelection) view.getViewer().getSelection()).getFirstElement());
 
-		NewTaskWizard wizard = new NewTaskWizard();
+		NewTaskWizard wizard = new NewTaskWizard(null);
 		WizardDialog dialog = null;
 		dialog = new WizardDialog(shell, wizard);
 		dialog.setBlockOnOpen(false);
@@ -70,7 +70,7 @@ public class NewTaskWizardRepositorySelectionTest extends TestCase {
 		TaskListView view = TaskListView.openInActivePerspective();
 		view.getViewer().setSelection(new StructuredSelection());
 
-		NewTaskWizard wizard = new NewTaskWizard();
+		NewTaskWizard wizard = new NewTaskWizard(null);
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		WizardDialog dialog = null;
 		dialog = new WizardDialog(shell, wizard);
