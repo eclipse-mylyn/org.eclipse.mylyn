@@ -12,7 +12,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn.monitor.core,
  org.eclipse.ui,
  org.eclipse.ui.forms,
- org.eclipse.ui.views.log
+ org.eclipse.ui.views.log,
+ org.eclipse.jdt.junit
 Eclipse-AutoStart: true
 Bundle-Vendor: %Bundle-Vendor.0
 Bundle-ClassPath: .
