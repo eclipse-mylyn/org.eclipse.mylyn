@@ -730,7 +730,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				}
 			}
 		};
-		
+
 		configureColumns(columnNames, columnWidths);
 
 		final IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
@@ -773,7 +773,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 					Object selectedObject = ((TreeItem) selectedNode).getData();
 					if (selectedObject instanceof AbstractTask) {
 						if (e.x > activationImageOffset && e.x < activationImageOffset + 13) {
-							taskListCellModifier.toggleTaskActivation((AbstractTaskContainer) selectedObject);
+							taskListCellModifier.toggleTaskActivation((TreeItem) selectedNode);
 						}
 					}
 				}

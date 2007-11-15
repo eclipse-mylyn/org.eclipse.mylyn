@@ -19,6 +19,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.TreeItem;
 
 /**
@@ -28,8 +29,14 @@ class TaskListCellModifier implements ICellModifier {
 
 	private final TaskListView taskListView;
 
+	private boolean disableActivateForParentTasks = false;
+
 	TaskListCellModifier(TaskListView taskListView) {
 		this.taskListView = taskListView;
+
+		if (SWT.getPlatform().equals("gtk")) {
+			disableActivateForParentTasks = true;
+		}
 	}
 
 	public boolean canModify(Object element, String property) {
@@ -72,7 +79,7 @@ class TaskListCellModifier implements ICellModifier {
 				case 1:
 					break;
 				case 2:
-					toggleTaskActivation(taskListElement);
+					toggleTaskActivation((TreeItem) element);
 					break;
 				}
 			} else if (((TreeItem) element).getData() instanceof AbstractTaskCategory
@@ -95,13 +102,25 @@ class TaskListCellModifier implements ICellModifier {
 		this.taskListView.getViewer().refresh();
 	}
 
-	public void toggleTaskActivation(AbstractTaskContainer taskListElement) {
+	public void toggleTaskActivation(TreeItem element) {
+		AbstractTaskContainer taskListElement = (AbstractTaskContainer) element.getData();
+
 		AbstractTask task = null;
 		if (taskListElement instanceof AbstractTask) {
 			task = (AbstractTask) taskListElement;
 		}
 
 		if (task != null) {
+			if (disableActivateForParentTasks) {
+				// check if activation column overlaps with tree expander control: element is on second hierarchy level and has children  
+				TreeItem parent = element.getParentItem();
+				if (parent != null
+						&& (parent.getData() instanceof AbstractRepositoryQuery || parent.getData() instanceof AbstractTaskCategory)
+						&& element.getItemCount() > 0) {
+					return;
+				}
+			}
+
 			if (task.isActive()) {
 				new TaskDeactivateAction().run(task);
 //				this.taskListView.previousTaskAction.setButtonStatus();
