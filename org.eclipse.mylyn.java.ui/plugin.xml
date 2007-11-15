@@ -497,7 +497,7 @@
    <extension point="org.eclipse.ui.commands">
       <category
             name="Mylyn Java"
-            description="Mylyn Jav Commands"
+            description="Mylyn Java Commands"
             id="org.eclipse.mylyn.java.ui.commands">
       </category>
 	  <command
@@ -506,6 +506,19 @@
          id="org.eclipse.mylyn.java.ui.editor.folding.auto"
          name="Toggle Active Folding">
       </command>
+    </extension>
+   
+    <extension point="org.eclipse.ui.popupMenus">
+        <viewerContribution
+		    id="org.eclipse.mylyn.bugzilla.ui.contribution"
+            targetID="org.eclipse.jdt.junit.ResultView">
+      	<action
+	      	class="org.eclipse.mylyn.internal.java.ui.actions.NewTaskFromJunitResultViewAction"
+	        icon="icons/etool16/task-new.gif"
+	        id="org.eclipse.mylyn.bugzilla.actions.newTaskFromJunitResultView"
+	        label="New Task from Failure..."
+	        menubarPath="org.eclipse.jdt.junit.ResultView"/>
+      </viewerContribution>
    </extension>
    
 </plugin>

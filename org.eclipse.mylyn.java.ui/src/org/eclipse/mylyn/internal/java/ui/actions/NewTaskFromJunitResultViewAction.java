@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.bugzilla.ide.actions;
+package org.eclipse.mylyn.internal.java.ui.actions;
 
 import org.eclipse.jdt.internal.junit.model.TestCaseElement;
 import org.eclipse.jdt.internal.junit.model.TestElement;
@@ -61,7 +61,7 @@ public class NewTaskFromJunitResultViewAction implements IViewActionDelegate, IS
 			AbstractRepositoryTaskEditor editor = null;
 
 			String summary = "";
-			String description = "\n-- Error Log from JUnit --\nClass: " + testCaseElement.getTestClassName()
+			String description = "\n-- Failure Log from JUnit --\nClass: " + testCaseElement.getTestClassName()
 					+ "\nMethod: " + testCaseElement.getTestMethodName() + "\nActual: " + testCaseElement.getActual()
 					+ "\nExpected: " + testCaseElement.getExpected() + "\nStack Trace:\n" + traceString;
 
