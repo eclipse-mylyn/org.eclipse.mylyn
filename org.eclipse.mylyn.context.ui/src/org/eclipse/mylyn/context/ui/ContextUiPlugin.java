@@ -93,17 +93,6 @@ public class ContextUiPlugin extends AbstractContextUiPlugin {
 
 	private Map<String, Set<String>> preservedFilterIds = new HashMap<String, Set<String>>();
 
-	private final ITaskHighlighter DEFAULT_HIGHLIGHTER = new ITaskHighlighter() {
-		public Color getHighlightColor(AbstractTask task) {
-			Highlighter highlighter = getHighlighterForContextId("" + task.getHandleIdentifier());
-			if (highlighter != null) {
-				return highlighter.getHighlightColor();
-			} else {
-				return null;
-			}
-		}
-	};
-
 	private static final AbstractContextLabelProvider DEFAULT_LABEL_PROVIDER = new AbstractContextLabelProvider() {
 
 		@Override
@@ -218,13 +207,6 @@ public class ContextUiPlugin extends AbstractContextUiPlugin {
 	public ContextUiPlugin() {
 		super();
 		INSTANCE = this;
-//		try {
-//			resourceBundle = ResourceBundle.getBundle("org.eclipse.mylyn.UiPluginResources");
-//		} catch (MissingResourceException x) {
-//			resourceBundle = null;
-//		} catch (Throwable t) {
-//			StatusHandler.log(t, "plug-in intialization failed");
-//		}
 	}
 
 	@Override
@@ -242,8 +224,18 @@ public class ContextUiPlugin extends AbstractContextUiPlugin {
 			ContextCorePlugin.getContextManager().addListener(viewerManager);
 			MonitorUiPlugin.getDefault().addWindowPartListener(contentOutlineManager);
 
-			// NOTE: task list must have finished initializing
-			TasksUiPlugin.getDefault().setHighlighter(DEFAULT_HIGHLIGHTER);
+			// NOTE: task list must have finished initializing	
+			TasksUiPlugin.getDefault().setHighlighter(new ITaskHighlighter() {
+				public Color getHighlightColor(AbstractTask task) {
+					Highlighter highlighter = getHighlighterForContextId("" + task.getHandleIdentifier());
+					if (highlighter != null) {
+						return highlighter.getHighlightColor();
+					} else {
+						return null;
+					}
+				}
+			});
+
 			TasksUiPlugin.getTaskListManager().addActivityListener(perspectiveManager);
 			MonitorUiPlugin.getDefault().addWindowPerspectiveListener(perspectiveManager);
 			TasksUiPlugin.getTaskListManager().addActivityListener(TASK_ACTIVATION_LISTENER);
@@ -412,6 +404,10 @@ public class ContextUiPlugin extends AbstractContextUiPlugin {
 		return highlighters.getHighlighter(name);
 	}
 
+	/**
+	 * API-3.0: remove
+	 */
+	@Deprecated
 	public Highlighter getHighlighterForContextId(String id) {
 		String prefId = ContextUiPrefContstants.TASK_HIGHLIGHTER_PREFIX + id;
 		String highlighterName = getPreferenceStore().getString(prefId);

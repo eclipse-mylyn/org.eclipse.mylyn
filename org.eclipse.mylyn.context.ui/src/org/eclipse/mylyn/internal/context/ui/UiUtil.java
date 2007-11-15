@@ -29,6 +29,7 @@ public class UiUtil {
 		return getBackgroundForElement(node, false);
 	}
 
+	@SuppressWarnings("deprecation")
 	public static Color getBackgroundForElement(IInteractionElement node, boolean resolveContextColor) {
 		if (node == null) {
 			return null;
