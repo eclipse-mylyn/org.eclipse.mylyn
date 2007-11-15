@@ -27,7 +27,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	 * TODO: consider removing in 3.0 if handled by content provider
 	 */
 	private static final int MAX_SUBTASK_DEPTH = 10;
-	
+
 	private String handleIdentifier = "";
 
 	private Set<AbstractTask> children = new CopyOnWriteArraySet<AbstractTask>();
@@ -69,13 +69,28 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	 * TODO: review to make sure that this is too expensive, or move to creation.
 	 */
 	public Set<AbstractTask> getChildren() {
-		Set<AbstractTask> childrenWithoutCycles = new HashSet<AbstractTask>();
+		if (children.isEmpty()) {
+			return Collections.emptySet();
+		}
+
+		Set<AbstractTask> childrenWithoutCycles = new HashSet<AbstractTask>(children.size());
 		for (AbstractTask child : children) {
 			if (!child.contains(this.getHandleIdentifier())) {
 				childrenWithoutCycles.add(child);
 			}
 		}
-		return Collections.unmodifiableSet(childrenWithoutCycles); 
+		return childrenWithoutCycles;
+	}
+
+	/**
+	 * Internal method. Do not use.
+	 * 
+	 * API-3.0: remove this method (bug 207659)
+	 * 
+	 * @since 2.2
+	 */
+	public Set<AbstractTask> getChildrenInternal() {
+		return children;
 	}
 
 	/**
@@ -84,25 +99,19 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	 * TODO: review policy
 	 */
 	public boolean contains(String handle) {
-		return containsHelper(handle, 0);
+		return containsHelper(getChildrenInternal(), handle, 0);
 	}
 
-	private boolean containsHelper(String handle, int depth) {
-		if (depth >= MAX_SUBTASK_DEPTH) {
-			return false;
-		} else {
-			depth++;
+	private boolean containsHelper(Set<AbstractTask> children, String handle, int depth) {
+		if (depth < MAX_SUBTASK_DEPTH && children != null && !children.isEmpty()) {
 			for (AbstractTask child : children) {
-				if (handle.equals(child.getHandleIdentifier())) {
+				if (handle.equals(child.getHandleIdentifier())
+						|| containsHelper(child.getChildrenInternal(), handle, depth + 1)) {
 					return true;
-				} else if (child.getChildren() != null && child.getChildren().size() > 0) {
-					if (((AbstractTaskContainer)child).containsHelper(handle, depth)) {
-						return true;
-					}
 				}
 			}
-			return false;
 		}
+		return false;
 	}
 
 	public String getSummary() {

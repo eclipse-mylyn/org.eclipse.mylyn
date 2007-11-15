@@ -222,5 +222,10 @@ public class ScheduledTaskContainer extends AbstractTaskCategory {
 
 		}
 	}
+	
+	@Override
+	public Set<AbstractTask> getChildrenInternal() {
+		return getChildren();
+	}
 
 }

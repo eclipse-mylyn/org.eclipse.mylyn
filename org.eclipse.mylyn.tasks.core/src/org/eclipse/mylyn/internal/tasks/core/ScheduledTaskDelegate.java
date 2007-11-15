@@ -285,4 +285,9 @@ public class ScheduledTaskDelegate extends AbstractTask {
 		return true;
 	}
 
+	@Override
+	public Set<AbstractTask> getChildrenInternal() {
+		return task.getChildrenInternal();
+	}
+	
 }

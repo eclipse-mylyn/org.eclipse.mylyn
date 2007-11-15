@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import java.util.Arrays;
+import java.util.Set;
 
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
@@ -143,7 +144,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 						taskListView.synchronizationOverlaid));
 			} else {
 				int imageOffset = 0;
-				if (!hideDecorationOnContainer(element) && hasIncoming(element)) {
+				if (!hideDecorationOnContainer(element) && hasDescendantIncoming(element)) {
 					if (taskListView.synchronizationOverlaid) {
 						image = TasksUiImages.getImage(TasksUiImages.OVERLAY_SYNCH_INCOMMING);
 					} else {
@@ -185,13 +186,18 @@ class CustomTaskListDecorationDrawer implements Listener {
 				&& Arrays.asList(this.taskListView.getViewer().getExpandedElements()).contains(element);
 	}
 
-	private boolean hasIncoming(AbstractTaskContainer container) {
-		for (AbstractTask task : container.getChildren()) {
+	private boolean hasDescendantIncoming(AbstractTaskContainer container) {
+		Set<AbstractTask> children = container.getChildren();
+		if (children == null) {
+			return false;
+		}
+		
+		for (AbstractTask task : children) {
 			if (task != null) {
 				AbstractTask containedRepositoryTask = task;
 				if (containedRepositoryTask.getSynchronizationState() == RepositoryTaskSyncState.INCOMING) {
 					return true;
-				} else if (task.getChildren() != null && task.getChildren().size() > 0 && hasIncoming(task)) {
+				} else if (hasDescendantIncoming(task)) {
 					return true;
 				}
 			}
