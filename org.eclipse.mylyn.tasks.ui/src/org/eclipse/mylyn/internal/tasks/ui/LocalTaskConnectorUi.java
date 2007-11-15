@@ -15,6 +15,7 @@ import org.eclipse.mylyn.internal.tasks.ui.wizards.NewLocalTaskWizard;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.TaskSelection;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
 
@@ -34,6 +35,11 @@ public class LocalTaskConnectorUi extends AbstractRepositoryConnectorUi {
 		return new NewLocalTaskWizard();
 	}
 
+	@Override
+	public IWizard getNewTaskWizard(TaskRepository taskRepository, TaskSelection selection) {
+		return new NewLocalTaskWizard(selection);
+	}
+	
 	@Override
 	public IWizard getQueryWizard(TaskRepository repository, AbstractRepositoryQuery queryToEdit) {
 		return null;

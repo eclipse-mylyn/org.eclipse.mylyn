@@ -64,7 +64,7 @@ public class NewTaskAction extends Action implements IViewActionDelegate, IExecu
 		IWizard wizard;
 		List<TaskRepository> repositories = TasksUiPlugin.getRepositoryManager().getAllRepositories();
 		if (localTask) {
-			wizard = new NewLocalTaskWizard();
+			wizard = new NewLocalTaskWizard(taskSelection);
 		} else if (repositories.size() == 1) {
 			// NOTE: this click-saving should be generalized
 			TaskRepository taskRepository = repositories.get(0);

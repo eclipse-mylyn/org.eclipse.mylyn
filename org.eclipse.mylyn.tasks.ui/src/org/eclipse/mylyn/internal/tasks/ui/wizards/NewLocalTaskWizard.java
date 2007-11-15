@@ -10,8 +10,9 @@ package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.TaskSelection;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.ui.INewWizard;
@@ -19,14 +20,22 @@ import org.eclipse.ui.IWorkbench;
 
 /**
  * @author Rob Elves
+ * @author Steffen Pingel
  */
 public class NewLocalTaskWizard extends Wizard implements INewWizard {
 
-	public NewLocalTaskWizard() {
+	private final TaskSelection taskSelection;
+
+	public NewLocalTaskWizard(TaskSelection taskSelection) {
+		this.taskSelection = taskSelection;
 		setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
 		setNeedsProgressMonitor(true);
 	}
 
+	public NewLocalTaskWizard() {
+		this(null);
+	}
+	
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		setForcePreviousAndNextButtons(false);
 	}
@@ -43,7 +52,11 @@ public class NewLocalTaskWizard extends Wizard implements INewWizard {
 
 	@Override
 	public boolean performFinish() {
-		AbstractTask task = TasksUiPlugin.getTaskListManager().createNewLocalTask(null);
+		LocalTask task = TasksUiPlugin.getTaskListManager().createNewLocalTask(null);
+		if (taskSelection != null) {
+			task.setSummary(taskSelection.getTaskData().getSummary());
+			task.setNotes(taskSelection.getTaskData().getDescription());
+		}
 		if (task != null) {
 			TasksUiUtil.openEditor(task, true);
 			return true;
