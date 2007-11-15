@@ -57,6 +57,7 @@ public class AllTasksTests {
 		suite.addTestSuite(TaskExportImportTest.class);
 		suite.addTestSuite(PersonProposalProviderTest.class);
 		suite.addTestSuite(TaskRepositoryLocationTest.class);
+		suite.addTestSuite(AbstractTaskDataHandlerTest.class);
 		// $JUnit-END$
 
 		// suite.addTestSuite(BackgroundSaveTest.class);
