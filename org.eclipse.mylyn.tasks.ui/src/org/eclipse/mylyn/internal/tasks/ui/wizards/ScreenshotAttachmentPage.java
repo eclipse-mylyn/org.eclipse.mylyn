@@ -40,6 +40,13 @@ import org.eclipse.swt.widgets.Shell;
 
 /**
  * A wizard page to create a screenshot from the display.
+ * <p>
+ * Note: this class uses {@link GC#setXORMode(boolean)} which is deprecated because of lack of Mac implementation
+ * (bug#50228). The strategy to make it work on platforms XOR is implemented and still have a good looking in platforms
+ * where it is not implemented, is to draw each line 2 times: first using a WHITE foreground followed by the same draw
+ * using a BLACK foreground. On platforms where XOR is implemented, the second draw will have no effect, since anything
+ * XOR black results in noop. On platforms where XOR is NOT implemented, the {@link GC#setXORMode(boolean)} is a noop,
+ * so the end result will be a black line.
  * 
  * @author Balazs Brinkus (bug 160572)
  * @author Mik Kersten
@@ -83,7 +90,7 @@ public class ScreenshotAttachmentPage extends WizardPage {
 		super("ScreenShotAttachment");
 		setTitle("Capture Screenshot");
 		setDescription("After capturing, drag the mouse to crop. This window will not be captured. "
-				+ "Note that you can continue to interact with the workbench as you the screenshot.");
+				+ "Note that you can continue to interact with the workbench in order to set up the screenshot.");
 		this.attachment = attachment;
 		this.page = this;
 	}
@@ -164,6 +171,7 @@ public class ScreenshotAttachmentPage extends WizardPage {
 		canvas = new Canvas(scrolledComposite, SWT.DOUBLE_BUFFERED);
 		scrolledComposite.setContent(canvas);
 		canvas.addPaintListener(new PaintListener() {
+			@SuppressWarnings("deprecation")
 			public void paintControl(PaintEvent e) {
 				if (screenshotImage != null) {
 					Rectangle imageBounds = screenshotImage.getBounds();
@@ -178,12 +186,13 @@ public class ScreenshotAttachmentPage extends WizardPage {
 
 					if (currentSelection != null) {
 						if (selectionStartPoint != null) {
-							// XOR may not work on Mac OS X, as said in javadoc
-//							e.gc.setXORMode(true);
-							e.gc.setLineStyle(SWT.LINE_DOT);
+							e.gc.setLineDash(new int[] { 4 });
+							e.gc.setXORMode(true);
+							e.gc.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+							e.gc.drawRectangle(getScaledSelection());
 							e.gc.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_BLACK));
 							e.gc.drawRectangle(getScaledSelection());
-//							e.gc.setXORMode(false);
+							e.gc.setXORMode(false);
 							e.gc.setLineStyle(SWT.LINE_SOLID);
 						} else {
 							drawRegion(e.gc);
@@ -403,10 +412,8 @@ public class ScreenshotAttachmentPage extends WizardPage {
 		gc.setAdvanced(false);
 
 		gc.setLineStyle(SWT.LINE_SOLID);
-//		gc.setXORMode(true);
 		gc.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GRAY));
 		gc.drawRectangle(scaledSelection);
-//		gc.setXORMode(false);
 	}
 
 	private Image getCropScreenshot() {
