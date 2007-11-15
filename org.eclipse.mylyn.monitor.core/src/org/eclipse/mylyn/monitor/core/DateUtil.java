@@ -21,8 +21,6 @@ import java.util.TimeZone;
  */
 public class DateUtil {
 
-	private static final SimpleDateFormat formatter = new SimpleDateFormat();
-
 	public static String getFormattedDate() {
 		return getFormattedDate(Calendar.getInstance());
 	}
@@ -145,12 +143,16 @@ public class DateUtil {
 	}
 
 	public static String getZoneFormattedDate(TimeZone zone, Date date, String dateFormat) {
+		SimpleDateFormat formatter = new SimpleDateFormat();
+
 		formatter.setTimeZone(zone);
 		formatter.applyPattern(dateFormat);
 		return formatter.format(date);
 	}
 
 	public static String getFormattedDate(Date date, String format) {
+		SimpleDateFormat formatter = new SimpleDateFormat();
+
 		formatter.setTimeZone(TimeZone.getDefault());
 		formatter.applyPattern(format);
 		return formatter.format(date);
