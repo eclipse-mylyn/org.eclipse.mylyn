@@ -318,13 +318,14 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			super("Initializing Task List");
 			setSystem(true);
 		}
+
 //		public IStatus runInUIThread(IProgressMonitor monitor) {
 //			Job job = new RealJob(JavaUIMessages.JavaPlugin_initializing_ui);
 //			job.setPriority(Job.SHORT);
 //			job.schedule();
 //			return new Status(IStatus.OK, JavaPlugin.getPluginId(), IStatus.OK, "", null); //$NON-NLS-1$
 //		}
-		
+
 		@Override
 		public IStatus runInUIThread(IProgressMonitor monitor) {
 			// NOTE: failure in one part of the initialization should
@@ -344,7 +345,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				StatusHandler.fail(t, "Could not initialize task activity", false);
 			}
 			monitor.worked(1);
-			
+
 			try {
 				taskListNotificationManager = new TaskListNotificationManager();
 				taskListNotificationManager.addNotificationProvider(REMINDER_NOTIFICATION_PROVIDER);
@@ -355,7 +356,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				StatusHandler.fail(t, "Could not initialize notifications", false);
 			}
 			monitor.worked(1);
-			
+
 			try {
 				taskListBackupManager = new TaskListBackupManager();
 				getPreferenceStore().addPropertyChangeListener(taskListBackupManager);
@@ -371,8 +372,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				taskListSaveManager = new TaskListSaveManager();
 				taskListManager.setTaskListSaveManager(taskListSaveManager);
 
-				ContextCorePlugin.getDefault().getPluginPreferences().addPropertyChangeListener(
-						PREFERENCE_LISTENER);
+				ContextCorePlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
 
 				getPreferenceStore().addPropertyChangeListener(PROPERTY_LISTENER);
 				getPreferenceStore().addPropertyChangeListener(synchronizationScheduler);
@@ -391,9 +391,9 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				monitor.done();
 			}
 			return new Status(IStatus.OK, TasksUiPlugin.ID_PLUGIN, IStatus.OK, "", null);
-		} 
+		}
 	}
-	
+
 	public TasksUiPlugin() {
 		super();
 		INSTANCE = this;
@@ -467,7 +467,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				}
 			};
 			ResourcesPlugin.getWorkspace().addSaveParticipant(this, saveParticipant);
-			
+
 			new TasksUiInitializationJob().schedule();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1059,14 +1059,14 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	private static String cleanValues(List<String> values) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("[");
 		boolean first = true;
 		for (String value : values) {
-			if (!first)
+			if (!first) {
 				sb.append(", ");
+			}
 			sb.append(cleanValue(value));
+			first = false;
 		}
-		sb.append("]");
 		return sb.toString();
 	}
 
@@ -1102,7 +1102,11 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 		public Change(String field, List<String> newValues) {
 			this.field = field;
-			this.added = new ArrayList<String>(newValues);
+			if (newValues != null) {
+				this.added = new ArrayList<String>(newValues);
+			} else {
+				this.added = new ArrayList<String>();
+			}
 		}
 	}
 
