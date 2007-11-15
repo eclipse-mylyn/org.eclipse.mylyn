@@ -43,7 +43,7 @@ public class InterestFilter extends ViewerFilter {
 	@Override
 	public boolean select(Viewer viewer, Object parent, Object object) {
 		try {
-			if (!(viewer instanceof StructuredViewer) || !containsMylarInterestFilter((StructuredViewer) viewer)) {
+			if (!(viewer instanceof StructuredViewer)) {// || !containsMylarInterestFilter((StructuredViewer) viewer)) {
 				return true;
 			}
 			if (isTemporarilyUnfiltered(parent)) {
@@ -113,7 +113,7 @@ public class InterestFilter extends ViewerFilter {
 	}
 
 	/**
-	 * TODO: change name to containsInterestFilter(..)
+	 * API-3.0: change name to containsInterestFilter(..)
 	 */
 	@Deprecated
 	protected boolean containsMylarInterestFilter(StructuredViewer viewer) {
