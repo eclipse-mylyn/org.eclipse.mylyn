@@ -29,6 +29,11 @@ public class NewTaskWizard extends MultiRepositoryAwareWizard {
 		setNeedsProgressMonitor(true);
 	}
 
+	// API-3.0: consider removing this method
+	public NewTaskWizard() {
+		this(null);
+	}
+	
 	// API-3.0: remove legacy support
 	public boolean supportsTaskSelection() {
 		return page.supportsTaskSelection();
