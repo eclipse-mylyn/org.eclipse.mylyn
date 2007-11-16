@@ -127,7 +127,7 @@ public class TaskListToolTip extends ToolTip {
 			sb.append("]");
 			return sb.toString();
 		} else {
-			return element.getSummary();
+			return new TaskElementLabelProvider(false).getText(element);
 		}
 	}
 
