@@ -14,8 +14,11 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttributeFactory;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.TaskSelection;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.NewTaskEditorInput;
@@ -47,6 +50,8 @@ public class NewBugzillaTaskWizard extends Wizard implements INewWizard {
 	/** The taskData used to store all of the data for the wizard */
 	protected RepositoryTaskData taskData;
 
+	private TaskSelection taskSelection;
+
 	// TODO: Change taskData to a RepositoryTaskData
 	// protected RepositoryTaskData taskData;
 
@@ -67,6 +72,14 @@ public class NewBugzillaTaskWizard extends Wizard implements INewWizard {
 		this.productPage = new BugzillaProductPage(workbenchInstance, this, repository);
 	}
 
+	/**
+	 * @since 2.2
+	 */
+	public NewBugzillaTaskWizard(TaskRepository taskRepository, TaskSelection taskSelection) {
+		this(taskRepository);
+		this.taskSelection = taskSelection;
+	}
+
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		this.workbenchInstance = workbench;
 	}
@@ -84,9 +97,18 @@ public class NewBugzillaTaskWizard extends Wizard implements INewWizard {
 
 	@Override
 	public boolean performFinish() {
-
 		try {
 			productPage.saveDataToModel();
+
+			if (taskSelection != null) {
+				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+						repository.getConnectorKind());
+				AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+				if (taskDataHandler != null) {
+					taskDataHandler.cloneTaskData(taskSelection.getTaskData(), taskData);
+				}
+			}
+
 			NewTaskEditorInput editorInput = new NewTaskEditorInput(repository, taskData);
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			TasksUiUtil.openEditor(editorInput, TaskEditor.ID_EDITOR, page);

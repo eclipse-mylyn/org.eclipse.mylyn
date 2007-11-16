@@ -26,30 +26,32 @@ public class TaskSelection {
 		if (taskData == null) {
 			throw new IllegalArgumentException();
 		}
-		
+
 		try {
 			this.taskData = (RepositoryTaskData) TaskDataManager.ObjectCloner.deepCopy(taskData);
 			this.taskData.setAttributeFactory(taskData.getAttributeFactory());
 		} catch (Exception e) {
-			StatusHandler.fail(e, "Error creating a task dat copy", false);
+			StatusHandler.fail(e, "Error creating a task data copy", false);
 			throw new RuntimeException(e);
 		}
 	}
 
 	public TaskSelection(AbstractTask task) {
-		RepositoryTaskData taskData = new RepositoryTaskData(new IdentityAttributeFactory(), task.getConnectorKind(), task.getRepositoryUrl(), task.getTaskId(), task.getTaskKind());
+		RepositoryTaskData taskData = new RepositoryTaskData(new IdentityAttributeFactory(), task.getConnectorKind(),
+				task.getRepositoryUrl(), task.getTaskId(), task.getTaskKind());
 		taskData.setSummary(task.getSummary());
 		taskData.setAttributeValue(RepositoryTaskAttribute.PRIORITY, task.getPriority());
-		this.taskData = taskData; 
+		this.taskData = taskData;
 	}
-	
+
 	public TaskSelection(String summary, String description) {
-		RepositoryTaskData taskData = new RepositoryTaskData(new IdentityAttributeFactory(), LocalRepositoryConnector.REPOSITORY_KIND, LocalRepositoryConnector.REPOSITORY_URL, "");
+		RepositoryTaskData taskData = new RepositoryTaskData(new IdentityAttributeFactory(),
+				LocalRepositoryConnector.REPOSITORY_KIND, LocalRepositoryConnector.REPOSITORY_URL, "");
 		taskData.setSummary(summary);
 		taskData.setDescription(description);
-		this.taskData = taskData; 		
+		this.taskData = taskData;
 	}
-	
+
 	public RepositoryTaskData getTaskData() {
 		return taskData;
 	}
@@ -82,7 +84,7 @@ public class TaskSelection {
 		public String mapCommonAttributeKey(String key) {
 			return key;
 		}
-		
+
 	}
-	
+
 }

@@ -32,6 +32,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.TaskSelection;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -180,6 +181,11 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 		return new NewBugzillaTaskWizard(taskRepository);
 	}
 
+	@Override
+	public IWizard getNewTaskWizard(TaskRepository taskRepository, TaskSelection selection) {
+		return new NewBugzillaTaskWizard(taskRepository, selection);
+	}
+	
 	@Override
 	public IWizard getQueryWizard(TaskRepository repository, AbstractRepositoryQuery query) {
 		if (query instanceof BugzillaRepositoryQuery) {

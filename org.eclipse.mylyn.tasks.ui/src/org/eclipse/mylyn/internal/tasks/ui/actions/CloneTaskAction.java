@@ -60,14 +60,14 @@ public class CloneTaskAction extends BaseSelectionListenerAction implements IVie
 				if (selectedObject instanceof AbstractTask) {
 					AbstractTask task = (AbstractTask) selectedObject;
 
-					String description = task.getUrl() + "\n" + task.getSummary();
+					String description = "Clone of " + CopyTaskDetailsAction.getTextForTask(task);
 
 					final TaskSelection taskSelection;
 					RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(
 							task.getRepositoryUrl(), task.getTaskId());
 					if (taskData != null) {
 						taskSelection = new TaskSelection(taskData);
-						taskSelection.getTaskData().setDescription(description + "\n\n" + taskData.getDescription());
+						taskSelection.getTaskData().setDescription(description + "\n\n> " + taskData.getDescription());
 					} else {
 						taskSelection = new TaskSelection(task);
 						taskSelection.getTaskData().setDescription(description);
