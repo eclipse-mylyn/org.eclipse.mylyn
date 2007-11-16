@@ -120,7 +120,12 @@ public class NewTaskAction extends Action implements IViewActionDelegate, IExecu
 		return wizard;
 	}
 
+	// API-3.0: remove method when AbstractRepositoryConnector.getNewTaskWizard(TaskRepository) is removed
 	private void handleSelection(final TaskSelection taskSelection) {
+		if (taskSelection == null) {
+			return;
+		}
+		
 		// need to defer execution to make sure the task editor has been created by the wizard
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
