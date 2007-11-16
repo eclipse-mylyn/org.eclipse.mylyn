@@ -8,6 +8,13 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
@@ -50,6 +57,7 @@ import org.eclipse.swt.widgets.Shell;
  * 
  * @author Balazs Brinkus (bug 160572)
  * @author Mik Kersten
+ * @author Willian Mitsuda
  */
 public class ScreenshotAttachmentPage extends WizardPage {
 
@@ -74,17 +82,44 @@ public class ScreenshotAttachmentPage extends WizardPage {
 	private Rectangle currentSelection;
 
 	/**
-	 * Temporary storage for selection start point; this value is normalized to real image coordinates, no matter the
-	 * zoom level (see {@link #scaleFactor})
-	 * <p>
-	 * This is also used to signal if a selection is in course if it is != null
+	 * Stores the original selection rectangle, before a selection resize/move operation starts
 	 */
-	private Point selectionStartPoint;
+	private Rectangle originalSelection;
+
+	/**
+	 * Temporary storage for selection start point or selection resizing initial reference point; this value is
+	 * normalized to real image coordinates, no matter the zoom level (see {@link #scaleFactor})
+	 */
+	private Point startPoint;
+
+	/**
+	 * What sides I'm resizing when doing an selection {@link Action#RESIZING_SELECTION resize}
+	 */
+	private Set<SelectionSide> resizableSides = EnumSet.noneOf(SelectionSide.class);
 
 	/**
 	 * Scale factor of displayed image compared to the original image
 	 */
 	private double scaleFactor = 1.0;
+
+	/**
+	 * Manages allocated cursors
+	 */
+	private Map<Integer, Cursor> cursors = new HashMap<Integer, Cursor>();
+
+	/**
+	 * Available actions for the screenshot editor
+	 */
+	private static enum Action {
+
+		IDLE, SELECTING, RESIZING_SELECTION, MOVING_SELECTION;
+
+	};
+
+	/**
+	 * What am I doing now?
+	 */
+	private Action currentAction = Action.IDLE;
 
 	protected ScreenshotAttachmentPage(LocalAttachment attachment) {
 		super("ScreenShotAttachment");
@@ -100,6 +135,8 @@ public class ScreenshotAttachmentPage extends WizardPage {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout());
 		setControl(composite);
+
+		allocateCursors();
 
 		Composite buttonsComposite = new Composite(composite, SWT.NONE);
 		buttonsComposite.setLayout(new GridLayout(3, false));
@@ -171,7 +208,7 @@ public class ScreenshotAttachmentPage extends WizardPage {
 		canvas = new Canvas(scrolledComposite, SWT.DOUBLE_BUFFERED);
 		scrolledComposite.setContent(canvas);
 		canvas.addPaintListener(new PaintListener() {
-			@SuppressWarnings("deprecation")
+
 			public void paintControl(PaintEvent e) {
 				if (screenshotImage != null) {
 					Rectangle imageBounds = screenshotImage.getBounds();
@@ -184,18 +221,14 @@ public class ScreenshotAttachmentPage extends WizardPage {
 						e.gc.drawImage(screenshotImage, 0, 0);
 					}
 
-					if (currentSelection != null) {
-						if (selectionStartPoint != null) {
-							e.gc.setLineDash(new int[] { 4 });
-							e.gc.setXORMode(true);
-							e.gc.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-							e.gc.drawRectangle(getScaledSelection());
-							e.gc.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_BLACK));
-							e.gc.drawRectangle(getScaledSelection());
-							e.gc.setXORMode(false);
-							e.gc.setLineStyle(SWT.LINE_SOLID);
-						} else {
-							drawRegion(e.gc);
+					if (currentAction == Action.IDLE) {
+						if (currentSelection != null) {
+							drawSelection(e.gc);
+						}
+					} else if (currentAction == Action.SELECTING || currentAction == Action.RESIZING_SELECTION
+							|| currentAction == Action.MOVING_SELECTION) {
+						if (currentSelection != null) {
+							drawSelectionPreview(e.gc);
 						}
 					}
 				} else {
@@ -208,11 +241,33 @@ public class ScreenshotAttachmentPage extends WizardPage {
 		scrolledComposite.addControlListener(new ControlAdapter() {
 			@Override
 			public void controlResized(ControlEvent e) {
-				refreshCanvasSize();
+				if (fitButton.getSelection()) {
+					refreshCanvasSize();
+				}
 			}
 		});
 
 		registerMouseListeners();
+	}
+
+	@Override
+	public void dispose() {
+		canvas.setCursor(null);
+		for (Cursor cursor : cursors.values()) {
+			cursor.dispose();
+		}
+		super.dispose();
+	}
+
+	private void allocateCursors() {
+		Display display = Display.getCurrent();
+		cursors.put(SWT.CURSOR_ARROW, new Cursor(display, SWT.CURSOR_ARROW));
+		cursors.put(SWT.CURSOR_SIZEALL, new Cursor(display, SWT.CURSOR_SIZEALL));
+		cursors.put(SWT.CURSOR_SIZENWSE, new Cursor(display, SWT.CURSOR_SIZENWSE));
+		cursors.put(SWT.CURSOR_SIZENESW, new Cursor(display, SWT.CURSOR_SIZENESW));
+		cursors.put(SWT.CURSOR_SIZENS, new Cursor(display, SWT.CURSOR_SIZENS));
+		cursors.put(SWT.CURSOR_SIZEWE, new Cursor(display, SWT.CURSOR_SIZEWE));
+		cursors.put(SWT.CURSOR_CROSS, new Cursor(display, SWT.CURSOR_CROSS));
 	}
 
 	private Rectangle getScaledSelection() {
@@ -284,16 +339,16 @@ public class ScreenshotAttachmentPage extends WizardPage {
 	}
 
 	/**
-	 * Sets the selection rectangle based on the initial selection start point previously set in
-	 * {@link #selectionStartPoint} and the end point passed as parameters to this method
+	 * Sets the selection rectangle based on the initial selection start point previously set in {@link #startPoint} and
+	 * the end point passed as parameters to this method
 	 * <p>
 	 * The coordinates are based on the real image coordinates
 	 */
 	private void refreshCurrentSelection(int x, int y) {
-		int startX = Math.min(selectionStartPoint.x, x);
-		int startY = Math.min(selectionStartPoint.y, y);
-		int width = Math.abs(selectionStartPoint.x - x);
-		int height = Math.abs(selectionStartPoint.y - y);
+		int startX = Math.min(startPoint.x, x);
+		int startY = Math.min(startPoint.y, y);
+		int width = Math.abs(startPoint.x - x);
+		int height = Math.abs(startPoint.y - y);
 		currentSelection = new Rectangle(startX, startY, width, height);
 
 		// Decreases 1 pixel size from original image because Rectangle.intersect() consider them as right-bottom limit
@@ -303,6 +358,105 @@ public class ScreenshotAttachmentPage extends WizardPage {
 		currentSelection.intersect(imageBounds);
 	}
 
+	/**
+	 * Create the grab points to resize the selection; this method should be called every time the selection or zoom
+	 * level is changed
+	 */
+	private void setUpGrabPoints() {
+		if (currentSelection == null) {
+			return;
+		}
+
+		canvas.setCursor(null);
+		grabPoints.clear();
+		Rectangle scaledSelection = getScaledSelection();
+		grabPoints.add(GrabPoint.createGrabPoint(scaledSelection.x, scaledSelection.y, SWT.CURSOR_SIZENWSE, EnumSet.of(
+				SelectionSide.LEFT, SelectionSide.TOP)));
+		grabPoints.add(GrabPoint.createGrabPoint(scaledSelection.x + scaledSelection.width / 2, scaledSelection.y,
+				SWT.CURSOR_SIZENS, EnumSet.of(SelectionSide.TOP)));
+		grabPoints.add(GrabPoint.createGrabPoint(scaledSelection.x + scaledSelection.width, scaledSelection.y,
+				SWT.CURSOR_SIZENESW, EnumSet.of(SelectionSide.TOP, SelectionSide.RIGHT)));
+		grabPoints.add(GrabPoint.createGrabPoint(scaledSelection.x, scaledSelection.y + scaledSelection.height / 2,
+				SWT.CURSOR_SIZEWE, EnumSet.of(SelectionSide.LEFT)));
+		grabPoints.add(GrabPoint.createGrabPoint(scaledSelection.x + scaledSelection.width, scaledSelection.y
+				+ scaledSelection.height / 2, SWT.CURSOR_SIZEWE, EnumSet.of(SelectionSide.RIGHT)));
+		grabPoints.add(GrabPoint.createGrabPoint(scaledSelection.x, scaledSelection.y + scaledSelection.height,
+				SWT.CURSOR_SIZENESW, EnumSet.of(SelectionSide.LEFT, SelectionSide.BOTTOM)));
+		grabPoints.add(GrabPoint.createGrabPoint(scaledSelection.x + scaledSelection.width / 2, scaledSelection.y
+				+ scaledSelection.height, SWT.CURSOR_SIZENS, EnumSet.of(SelectionSide.BOTTOM)));
+		grabPoints.add(GrabPoint.createGrabPoint(scaledSelection.x + scaledSelection.width, scaledSelection.y
+				+ scaledSelection.height, SWT.CURSOR_SIZENWSE, EnumSet.of(SelectionSide.BOTTOM, SelectionSide.RIGHT)));
+	}
+
+	private void refreshSelectionResize(int x, int y) {
+		currentSelection = new Rectangle(originalSelection.x, originalSelection.y, originalSelection.width,
+				originalSelection.height);
+		int deltaX = x - startPoint.x;
+		int deltaY = y - startPoint.y;
+		Rectangle imageBounds = screenshotImage.getBounds();
+
+		// Check current selection limits
+		if (resizableSides.contains(SelectionSide.LEFT)) {
+			deltaX = Math.min(deltaX, originalSelection.width);
+			if (originalSelection.x + deltaX < 0) {
+				deltaX = -originalSelection.x;
+			}
+		}
+		if (resizableSides.contains(SelectionSide.RIGHT)) {
+			deltaX = Math.max(deltaX, -originalSelection.width);
+			if (originalSelection.x + originalSelection.width + deltaX - 1 > imageBounds.width) {
+				deltaX = imageBounds.width - (originalSelection.x + originalSelection.width);
+			}
+		}
+		if (resizableSides.contains(SelectionSide.TOP)) {
+			deltaY = Math.min(deltaY, originalSelection.height);
+			if (originalSelection.y + deltaY < 0) {
+				deltaY = -originalSelection.y;
+			}
+		}
+		if (resizableSides.contains(SelectionSide.BOTTOM)) {
+			deltaY = Math.max(deltaY, -originalSelection.height);
+			if (originalSelection.y + originalSelection.height + deltaY - 1 > imageBounds.height) {
+				deltaY = imageBounds.height - (originalSelection.y + originalSelection.height);
+			}
+		}
+
+		// Adjust corresponding sides
+		if (resizableSides.contains(SelectionSide.LEFT)) {
+			currentSelection.x += deltaX;
+			currentSelection.width -= deltaX;
+		}
+		if (resizableSides.contains(SelectionSide.RIGHT)) {
+			currentSelection.width += deltaX;
+		}
+		if (resizableSides.contains(SelectionSide.TOP)) {
+			currentSelection.y += deltaY;
+			currentSelection.height -= deltaY;
+		}
+		if (resizableSides.contains(SelectionSide.BOTTOM)) {
+			currentSelection.height += deltaY;
+		}
+	}
+
+	private void refreshSelectionPosition(int x, int y) {
+		int newX = originalSelection.x + (x - startPoint.x);
+		int newY = originalSelection.y + (y - startPoint.y);
+		if (newX < 0) {
+			newX = 0;
+		}
+		if (newY < 0) {
+			newY = 0;
+		}
+		Rectangle imageBounds = screenshotImage.getBounds();
+		if (newX + originalSelection.width - 1 > imageBounds.width) {
+			newX = imageBounds.width - originalSelection.width;
+		}
+		if (newY + originalSelection.height - 1 > imageBounds.height) {
+			newY = imageBounds.height - originalSelection.height;
+		}
+		currentSelection = new Rectangle(newX, newY, originalSelection.width, originalSelection.height);
+	}
+
 	private void registerMouseListeners() {
 		canvas.addMouseMoveListener(new MouseMoveListener() {
 
@@ -310,9 +464,36 @@ public class ScreenshotAttachmentPage extends WizardPage {
 			 * If a selection is in course, moving the mouse around refreshes the selection rectangle
 			 */
 			public void mouseMove(MouseEvent e) {
-				if (selectionStartPoint != null) {
+				if (currentAction == Action.SELECTING) {
+					// Selection in course
 					refreshCurrentSelection((int) Math.round(e.x / scaleFactor), (int) Math.round(e.y / scaleFactor));
 					canvas.redraw();
+				} else if (currentAction == Action.RESIZING_SELECTION) {
+					refreshSelectionResize((int) Math.round(e.x / scaleFactor), (int) Math.round(e.y / scaleFactor));
+					canvas.redraw();
+				} else if (currentAction == Action.MOVING_SELECTION) {
+					refreshSelectionPosition((int) Math.round(e.x / scaleFactor), (int) Math.round(e.y / scaleFactor));
+					canvas.redraw();
+				} else if (currentAction == Action.IDLE && currentSelection != null) {
+					boolean cursorSet = false;
+
+					// No selection in course, but have something selected; first test if I'm hovering some grab point
+					for (GrabPoint point : grabPoints) {
+						if (point.grabArea.contains(e.x, e.y)) {
+							canvas.setCursor(cursors.get(point.cursorType));
+							cursorSet = true;
+							break;
+						}
+					}
+
+					// Test if I'm inside selection, so I can move it
+					if (!cursorSet && getScaledSelection().contains(e.x, e.y)) {
+						canvas.setCursor(cursors.get(SWT.CURSOR_SIZEALL));
+						cursorSet = true;
+					}
+					if (!cursorSet && canvas.getCursor() != null) {
+						canvas.setCursor(null);
+					}
 				}
 			}
 
@@ -325,14 +506,25 @@ public class ScreenshotAttachmentPage extends WizardPage {
 			 * image
 			 */
 			public void mouseUp(MouseEvent e) {
-				if (selectionStartPoint != null) {
-					Display.getDefault().getActiveShell().setCursor(new Cursor(null, SWT.CURSOR_ARROW));
+				if (currentAction == Action.SELECTING || currentAction == Action.RESIZING_SELECTION
+						|| currentAction == Action.MOVING_SELECTION) {
+					canvas.setCursor(cursors.get(SWT.CURSOR_ARROW));
 
-					refreshCurrentSelection((int) Math.round(e.x / scaleFactor), (int) Math.round(e.y / scaleFactor));
+					int scaledX = (int) Math.round(e.x / scaleFactor);
+					int scaledY = (int) Math.round(e.y / scaleFactor);
+					if (currentAction == Action.SELECTING) {
+						refreshCurrentSelection(scaledX, scaledY);
+					} else if (currentAction == Action.RESIZING_SELECTION) {
+						refreshSelectionResize(scaledX, scaledY);
+					} else if (currentAction == Action.MOVING_SELECTION) {
+						refreshSelectionPosition(scaledX, scaledY);
+					}
 					if (currentSelection.width == 0 && currentSelection.height == 0) {
 						currentSelection = null;
 					}
-					selectionStartPoint = null;
+					setUpGrabPoints();
+					startPoint = null;
+					currentAction = Action.IDLE;
 
 					canvas.redraw();
 				}
@@ -342,11 +534,40 @@ public class ScreenshotAttachmentPage extends WizardPage {
 			 * Pressing mouse button starts a selection; normalizes and marks the start point
 			 */
 			public void mouseDown(MouseEvent e) {
-				if (selectionStartPoint == null) {
-					currentSelection = null;
-					Display.getDefault().getActiveShell().setCursor(new Cursor(null, SWT.CURSOR_CROSS));
-					selectionStartPoint = new Point((int) (e.x / scaleFactor), (int) (e.y / scaleFactor));
+				if (currentAction != Action.IDLE) {
+					return;
 				}
+
+				// Check the most appropriate action to follow; first check if I'm on some grab point
+				if (currentSelection != null) {
+					for (GrabPoint point : grabPoints) {
+						if (point.grabArea.contains(e.x, e.y)) {
+							originalSelection = currentSelection;
+							currentAction = Action.RESIZING_SELECTION;
+							resizableSides = point.resizableSides;
+							startPoint = new Point((int) (e.x / scaleFactor), (int) (e.y / scaleFactor));
+							canvas.redraw();
+							return;
+						}
+					}
+				}
+
+				// Check if I could move the selection
+				if (currentSelection != null
+						&& currentSelection.contains((int) (e.x / scaleFactor), (int) (e.y / scaleFactor))) {
+					originalSelection = currentSelection;
+					currentAction = Action.MOVING_SELECTION;
+					startPoint = new Point((int) (e.x / scaleFactor), (int) (e.y / scaleFactor));
+					canvas.redraw();
+					return;
+				}
+
+				// Do a simple selection
+				canvas.setCursor(cursors.get(SWT.CURSOR_CROSS));
+				currentAction = Action.SELECTING;
+				currentSelection = null;
+				startPoint = new Point((int) (e.x / scaleFactor), (int) (e.y / scaleFactor));
+				canvas.redraw();
 			}
 
 		});
@@ -355,13 +576,23 @@ public class ScreenshotAttachmentPage extends WizardPage {
 
 	private void clearSelection() {
 		currentSelection = null;
-		selectionStartPoint = null;
+		startPoint = null;
 	}
 
 	/**
-	 * Recalculates image canvas size based on "fit on canvas" setting and redraws
+	 * Recalculates image canvas size based on "fit on canvas" setting, set up the grab points, and redraws
 	 * <p>
-	 * This method should be called whenever the {@link #screenshotImage image} or zoom level is changed
+	 * This method should be called whenever the {@link #screenshotImage image} <strong>visible</strong> size is
+	 * changed, which can happen when:
+	 * <p>
+	 * <ul>
+	 * <li>The "Fit Image" setting is changed, so the image zoom level changes
+	 * <li>The image changes (by recapturing)
+	 * <li>The canvas is resized (indirectly happens by resizing the wizard page) <strong>AND</strong> "Fit Image"
+	 * setting is ON
+	 * </ul>
+	 * <p>
+	 * Calling this method under other circumstances may lead to strange behavior in the scrolled composite
 	 */
 	private void refreshCanvasSize() {
 		if (fitButton.getSelection()) {
@@ -392,12 +623,33 @@ public class ScreenshotAttachmentPage extends WizardPage {
 			}
 			canvas.setBounds(bounds);
 		}
+		setUpGrabPoints();
 		canvas.redraw();
 	}
 
-	private void drawRegion(GC gc) {
+	/**
+	 * Decorates the screenshot canvas with the selection rectangle; this is done while still selecting, so it does not
+	 * have all adornments of a {@link #drawSelection(GC) finished} selection
+	 */
+	@SuppressWarnings("deprecation")
+	private void drawSelectionPreview(GC gc) {
+		gc.setLineDash(new int[] { 4 });
+		gc.setXORMode(true);
+		gc.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+		gc.drawRectangle(getScaledSelection());
+		gc.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_BLACK));
+		gc.drawRectangle(getScaledSelection());
+		gc.setXORMode(false);
+		gc.setLineStyle(SWT.LINE_SOLID);
+	}
+
+	/**
+	 * Decorates the screenshot canvas with the selection rectangle, resize grab points and other adornments
+	 */
+	private void drawSelection(GC gc) {
 		Rectangle scaledSelection = getScaledSelection();
 
+		// Draw shadow
 		gc.setBackground(TaskListColorsAndFonts.GRAY);
 		gc.setAdvanced(true);
 		gc.setAlpha(120);
@@ -408,13 +660,51 @@ public class ScreenshotAttachmentPage extends WizardPage {
 		gc.setClipping(invertedSelection);
 		gc.fillRectangle(canvas.getClientArea());
 		gc.setClipping((Region) null);
+		invertedSelection.dispose();
 
 		gc.setAdvanced(false);
 
+		// Draw selection rectangle
 		gc.setLineStyle(SWT.LINE_SOLID);
 		gc.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GRAY));
 		gc.drawRectangle(scaledSelection);
+
+		// Draw grab points
+		gc.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+		gc.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
+		for (GrabPoint point : grabPoints) {
+			gc.fillRectangle(point.grabArea);
+			gc.drawRectangle(point.grabArea);
+		}
 	}
+
+	private static enum SelectionSide {
+
+		LEFT, RIGHT, TOP, BOTTOM;
+
+	};
+
+	private static final int SQUARE_SIZE = 3;
+
+	private static class GrabPoint {
+
+		public Rectangle grabArea;
+
+		public int cursorType;
+
+		public Set<SelectionSide> resizableSides;
+
+		public static GrabPoint createGrabPoint(int x, int y, int cursorType, Set<SelectionSide> resizableSides) {
+			GrabPoint point = new GrabPoint();
+			point.grabArea = new Rectangle(x - SQUARE_SIZE, y - SQUARE_SIZE, SQUARE_SIZE * 2 + 1, SQUARE_SIZE * 2 + 1);
+			point.cursorType = cursorType;
+			point.resizableSides = resizableSides;
+			return point;
+		}
+
+	}
+
+	private List<GrabPoint> grabPoints = new ArrayList<GrabPoint>(8);
 
 	private Image getCropScreenshot() {
 		if (currentSelection == null) {
