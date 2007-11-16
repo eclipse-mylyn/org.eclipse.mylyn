@@ -465,24 +465,26 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	public boolean isRepositoryConfigurationStale(TaskRepository repository) throws CoreException {
-
-		boolean result = true;
-		try {
-			BugzillaClient client = getClientManager().getClient(repository);
-			if (client != null) {
-				String timestamp = client.getConfigurationTimestamp();
-				if (timestamp != null) {
-					String oldTimestamp = repository.getProperty(IBugzillaConstants.PROPERTY_CONFIGTIMESTAMP);
-					if (oldTimestamp != null) {
-						result = !timestamp.equals(oldTimestamp);
+		if (super.isRepositoryConfigurationStale(repository)) {
+			boolean result = true;
+			try {
+				BugzillaClient client = getClientManager().getClient(repository);
+				if (client != null) {
+					String timestamp = client.getConfigurationTimestamp();
+					if (timestamp != null) {
+						String oldTimestamp = repository.getProperty(IBugzillaConstants.PROPERTY_CONFIGTIMESTAMP);
+						if (oldTimestamp != null) {
+							result = !timestamp.equals(oldTimestamp);
+						}
+						repository.setProperty(IBugzillaConstants.PROPERTY_CONFIGTIMESTAMP, timestamp);
 					}
-					repository.setProperty(IBugzillaConstants.PROPERTY_CONFIGTIMESTAMP, timestamp);
 				}
+			} catch (MalformedURLException e) {
+				StatusHandler.fail(e, "Error retrieving configuration timestamp for " + repository.getUrl(), false);
 			}
-		} catch (MalformedURLException e) {
-			StatusHandler.fail(e, "Error retrieving configuration timestamp for " + repository.getUrl(), false);
+			return result;
 		}
-		return result;
+		return false;
 	}
 
 	public void updateAttributeOptions(TaskRepository taskRepository, RepositoryTaskData existingReport)

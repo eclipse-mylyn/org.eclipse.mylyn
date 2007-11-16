@@ -33,6 +33,10 @@ public abstract class AbstractRepositoryConnector {
 
 	protected Set<RepositoryTemplate> templates = new LinkedHashSet<RepositoryTemplate>();
 
+	private static final long HOUR = 1000L * 3600L;
+
+	private static final long DAY = HOUR * 24L;
+
 	protected TaskList taskList;
 
 	private boolean userManaged = true;
@@ -313,11 +317,19 @@ public abstract class AbstractRepositoryConnector {
 	public abstract void updateAttributes(TaskRepository repository, IProgressMonitor monitor) throws CoreException;
 
 	/**
+	 * Default implementation returns true every 24hrs
+	 * 
 	 * @return true to indicate that the repository configuration is stale and requires update
 	 * @throws CoreException
 	 */
 	public boolean isRepositoryConfigurationStale(TaskRepository repository) throws CoreException {
-		return true;
+		boolean isStale = true;
+		Date configDate = repository.getConfigurationDate();
+		if (configDate != null) {
+			isStale = (new Date().getTime() - configDate.getTime()) > DAY;
+		}
+
+		return isStale;
 	}
 
 	public void setUserManaged(boolean userManaged) {

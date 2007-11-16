@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.tasks.tests;
 
 import java.net.URL;
+import java.util.Date;
 import java.util.Map;
 
 import junit.framework.TestCase;
@@ -115,6 +116,18 @@ public class TaskRepositoryTest extends TestCase {
 		assertNotNull(credentials);
 		assertEquals("user2", credentials.getUserName());
 		assertEquals("pwd2", credentials.getPassword());
+	}
+
+	public void testConfigUpdateStoring() throws Exception {
+		URL url = new URL("http://url");
+		TaskRepository taskRepository = new TaskRepository("kind", url.toString());
+		Date stamp = taskRepository.getConfigurationDate();
+		assertNull("unset configuration date returns null", stamp);
+		stamp = new Date();
+		stamp.setTime(stamp.getTime() - 35000L);
+
+		taskRepository.setConfigurationDate(stamp);
+		assertEquals("Time stamp set", stamp.getTime(), taskRepository.getConfigurationDate().getTime());
 	}
 
 }

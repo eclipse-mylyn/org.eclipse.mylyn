@@ -11,6 +11,7 @@ package org.eclipse.mylyn.tasks.core;
 import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -89,6 +90,8 @@ public class TaskRepository extends PlatformObject {
 
 	private static final URL DEFAULT_URL;
 
+	private static final String PROPERTY_CONFIG_TIMESTAMP = "org.eclipse.mylyn.tasklist.repositories.configuration.timestamp";
+
 	public static final String PROXY_USEDEFAULT = "org.eclipse.mylyn.tasklist.repositories.proxy.usedefault";
 
 	public static final String PROXY_HOSTNAME = "org.eclipse.mylyn.tasklist.repositories.proxy.hostname";
@@ -139,7 +142,7 @@ public class TaskRepository extends PlatformObject {
 	private Map<String, String> transientProperties = new HashMap<String, String>();
 
 	/*
-	 * TODO: should be externalized and added to extension point, see bug 183606 
+	 * TODO: should be externalized and added to extension point, see bug 183606
 	 */
 	private boolean isBugRepository = false;
 
@@ -300,7 +303,7 @@ public class TaskRepository extends PlatformObject {
 	public void flushAuthenticationCredentials() {
 		synchronized (LOCK) {
 			isCachedUserName = false;
-		
+
 			transientProperties.clear();
 
 			// API30: legacy support for versions prior to 2.2 that did not set the enable flag, remove for 3.0
@@ -696,6 +699,35 @@ public class TaskRepository extends PlatformObject {
 	private String getPassword(WebCredentials.Type authType) {
 		WebCredentials credentials = getCredentials(authType);
 		return (credentials != null) ? credentials.getPassword() : null;
+	}
+
+	/**
+	 * Get the last refresh date as initialized {@link Date} object, null if not set<br />
+	 * 
+	 * @return {@link Date} configuration date, null if not set
+	 */
+	final public Date getConfigurationDate() {
+		Date configDate = null;
+		String value = this.getProperty(PROPERTY_CONFIG_TIMESTAMP);
+		try {
+			configDate = new Date(Long.valueOf(value).longValue());
+
+		} catch (Exception e) {
+
+		}
+		return configDate;
+	}
+
+	/**
+	 * Set the Configuration date to the {@link Date} indicated.
+	 * 
+	 * @param configuration
+	 *            date {@link {@link Date}}
+	 */
+	final public void setConfigurationDate(final Date date) {
+		this.setProperty(PROPERTY_CONFIG_TIMESTAMP, String.valueOf(date.getTime()));
+		//  should persist here, but that can only be done by the TaskRepositoryManager
+		// However this is also included when persisting ordinary sync time
 	}
 
 }

@@ -8,7 +8,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -28,6 +28,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Rob Elves
+ * @author Maarten Meijer
  * 
  * API-3.0 rename to TaskRepositorySynchronizationJob (?)
  */
@@ -44,8 +45,6 @@ public class ScheduledTaskListSynchJob extends Job {
 	private TaskList taskList = null;
 
 	private static long count = 0;
-
-	private static Calendar lastRepositoryRefresh;
 
 	private TaskListManager taskListManager;
 
@@ -110,33 +109,35 @@ public class ScheduledTaskListSynchJob extends Job {
 
 				RepositorySynchronizationManager synchronizationManager = TasksUiPlugin.getSynchronizationManager();
 				Set<AbstractRepositoryQuery> queries = taskList.getRepositoryQueries(repository.getUrl());
+				try {
+					// Occasionally request update of repository configuration attributes
+					if (queries != null && queries.size() > 0 && connector.isRepositoryConfigurationStale(repository)) {
+						Job updateJob = new Job("Updating attributes for " + repository.getUrl()) {
 
-				// Occasionally request update of repository configuration attributes
-				if ((lastRepositoryRefresh == null || lastRepositoryRefresh.get(Calendar.DAY_OF_MONTH) != Calendar.getInstance()
-						.get(Calendar.DAY_OF_MONTH))
-						&& queries != null && queries.size() > 0) {
-					Job updateJob = new Job("Updating attributes for " + repository.getUrl()) {
-
-						@Override
-						protected IStatus run(IProgressMonitor monitor) {
-							try {
-								if (connector.isRepositoryConfigurationStale(repository)) {
+							@Override
+							protected IStatus run(IProgressMonitor monitor) {
+								try {
 									connector.updateAttributes(repository, new SubProgressMonitor(monitor, 1));
-									// HACK: A configuration update occurred. Save on behalf of connector which 
+									// HACK: A configuration update occurred. Save on behalf of connector which
 									// currently can't access the repository manager itself
 									TasksUiPlugin.getRepositoryManager().saveRepositories(
+									// ignore, since we might not be connected
 											TasksUiPlugin.getDefault().getRepositoriesFilePath());
+
+								} catch (Exception e) {
+									// ignore, since we might not be connected
 								}
-							} catch (Exception e) {
-								// ignore, since we might not be connected
+								return Status.OK_STATUS;
 							}
-							return Status.OK_STATUS;
-						}
-					};
-					//updateJob.setSystem(true);
-					updateJob.setPriority(Job.LONG);
-					updateJob.schedule();
-					lastRepositoryRefresh = null;
+						};
+						//updateJob.setSystem(true);
+						updateJob.setPriority(Job.LONG);
+						updateJob.schedule();
+						// In the event of updateJob failure, configuration will not be retrieved continuously
+						repository.setConfigurationDate(new Date());
+					}
+				} catch (Exception e) {
+					// ignore, since we might not be connected
 				}
 
 				synchronizationManager.synchronize(connector, repository, queries, null, Job.DECORATE, 0, false,
@@ -146,9 +147,6 @@ public class ScheduledTaskListSynchJob extends Job {
 			}
 		} finally {
 			count = count >= UPDATE_ATTRIBUTES_FREQUENCY ? 0 : count + 1;
-			if (lastRepositoryRefresh == null) {
-				lastRepositoryRefresh = Calendar.getInstance();
-			}
 			if (monitor != null) {
 				monitor.done();
 			}
@@ -165,13 +163,15 @@ public class ScheduledTaskListSynchJob extends Job {
 	}
 
 	/**
-	 * for testing purposes
+	 * for testing purposes ONLY!
 	 */
 	public static long getCount() {
 		return count;
 	}
 
-	/** for testing */
+	/**
+	 * for testing purposes ONLY!
+	 */
 	public static void resetCount() {
 		try {
 			if (TasksUiPlugin.getSynchronizationScheduler().getRefreshJob() != null) {

@@ -1259,8 +1259,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 						if (shell != null) {
 							shell.setEnabled(false);
 						}
-						WebBrowserDialog dialog = new WebBrowserDialog(shell, "Error updating search options",
-								null, cause.getStatus().getMessage(), NONE, new String[] { IDialogConstants.OK_LABEL }, 0,
+						WebBrowserDialog dialog = new WebBrowserDialog(shell, "Error updating search options", null,
+								cause.getStatus().getMessage(), NONE, new String[] { IDialogConstants.OK_LABEL }, 0,
 								((RepositoryStatus) cause.getStatus()).getHtmlMessage());
 						dialog.setBlockOnOpen(true);
 						dialog.open();
