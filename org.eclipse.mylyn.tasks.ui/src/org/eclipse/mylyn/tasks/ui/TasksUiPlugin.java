@@ -68,6 +68,7 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiExtensionReader;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.EditRepositoryWizard;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -988,33 +989,34 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	private static String getChangedAttributes(RepositoryTaskData newTaskData, RepositoryTaskData oldTaskData) {
 		List<Change> changes = new ArrayList<Change>();
 		for (RepositoryTaskAttribute newAttribute : newTaskData.getAttributes()) {
-			// HACK delta_ts is not a standard attribute
-			if ("delta_ts,longdesclength,".contains(newAttribute.getId())) {
+			if (ignoreAttribute(newTaskData, newAttribute)) {
 				continue;
 			}
+			
 			List<String> newValues = newAttribute.getValues();
 			if (newValues != null) {
 				RepositoryTaskAttribute oldAttribute = oldTaskData.getAttribute(newAttribute.getId());
 				if (oldAttribute == null) {
-					changes.add(getDiff(newAttribute.getName(), null, newValues));
+					changes.add(getDiff(newTaskData, newAttribute, null, newValues));
 				}
 				if (oldAttribute != null) {
 					List<String> oldValues = oldAttribute.getValues();
 					if (!oldValues.equals(newValues)) {
-						changes.add(getDiff(newAttribute.getName(), oldValues, newValues));
+						changes.add(getDiff(newTaskData, newAttribute, oldValues, newValues));
 					}
 				}
 			}
 		}
 
 		for (RepositoryTaskAttribute oldAttribute : oldTaskData.getAttributes()) {
-			if (oldAttribute.isHidden()) { // may not be a good idea
+			if (ignoreAttribute(oldTaskData, oldAttribute)) {
 				continue;
 			}
+			
 			RepositoryTaskAttribute attribute = newTaskData.getAttribute(oldAttribute.getId());
 			List<String> values = oldAttribute.getValues();
 			if (attribute == null && values != null && !values.isEmpty()) {
-				changes.add(getDiff(oldAttribute.getName(), values, null));
+				changes.add(getDiff(oldTaskData, oldAttribute, values, null));
 			}
 		}
 
@@ -1034,16 +1036,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			}
 			details += " -> " + added;
 			sep = "\n";
-
-//			if (!change.removed.isEmpty()) {
-//				details += "- " + change.field + " " + change.removed;
-//				sep = "\n";
-//			}
-//			if (!change.added.isEmpty()) {
-//				details += sep;
-//				details += "+ " + change.field + " " + change.added;
-//				sep = "\n";
-//			}
 
 			n++;
 			if (n > 5) {
@@ -1078,8 +1070,40 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		return commentText;
 	}
 
-	private static Change getDiff(String field, List<String> oldValues, List<String> newValues) {
-		Change change = new Change(field, newValues);
+	private static boolean ignoreAttribute(RepositoryTaskData taskData, RepositoryTaskAttribute attribute) {
+		AbstractAttributeFactory factory = taskData.getAttributeFactory();
+		return (attribute.isHidden()
+			|| attribute.getId().equals(factory.mapCommonAttributeKey(RepositoryTaskAttribute.DATE_MODIFIED)) 
+			|| attribute.getId().equals(factory.mapCommonAttributeKey(RepositoryTaskAttribute.DATE_CREATION))
+			|| "delta_ts".equals(attribute.getId())
+			|| "longdesclength".equals(attribute.getId()));
+	}
+	
+	private static Change getDiff(RepositoryTaskData taskData, RepositoryTaskAttribute attribute, List<String> oldValues, List<String> newValues) {
+//		AbstractAttributeFactory factory = taskData.getAttributeFactory();
+//		if (attribute.getId().equals(factory.mapCommonAttributeKey(RepositoryTaskAttribute.DATE_MODIFIED)) 
+//			|| attribute.getId().equals(factory.mapCommonAttributeKey(RepositoryTaskAttribute.DATE_CREATION))) {
+//			if (newValues != null && newValues.size() > 0) {
+//				for (int i = 0; i < newValues.size(); i++) {
+//					newValues.set(i, factory.getDateForAttributeType(attribute.getId(), newValues.get(i)).toString());
+//				}
+//			}
+//			
+//			Change change = new Change(attribute.getName(), newValues);
+//			if (oldValues != null) {
+//				for (String value : oldValues) {
+//					value = factory.getDateForAttributeType(attribute.getId(), value).toString();
+//					if (change.added.contains(value)) {
+//						change.added.remove(value);
+//					} else {
+//						change.removed.add(value);
+//					}
+//				}
+//			}
+//			return change;		
+//		}
+		
+		Change change = new Change(attribute.getName(), newValues);
 		if (oldValues != null) {
 			for (String value : oldValues) {
 				if (change.added.contains(value)) {
