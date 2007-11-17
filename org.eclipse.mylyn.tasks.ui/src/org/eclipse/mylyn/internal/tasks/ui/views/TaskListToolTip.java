@@ -59,9 +59,17 @@ import org.eclipse.swt.widgets.Widget;
  */
 public class TaskListToolTip extends ToolTip {
 
-	private static int X_SHIFT = -26;
+	private final static int X_SHIFT;
 
-	private static int Y_SHIFT = 1;
+	static {
+		if ("gtk".equals(SWT.getPlatform())) {
+			X_SHIFT = -26;
+		} else {
+			X_SHIFT = -23;
+		}
+	}
+
+	private final static int Y_SHIFT = 1;
 
 	private AbstractTaskContainer currentTipElement;
 
