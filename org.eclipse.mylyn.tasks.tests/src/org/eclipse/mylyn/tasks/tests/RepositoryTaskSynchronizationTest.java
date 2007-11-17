@@ -9,8 +9,10 @@
 package org.eclipse.mylyn.tasks.tests;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Stack;
 
 import junit.framework.TestCase;
 
@@ -74,6 +76,45 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 		task.setLastReadTimeStamp("2006-06-21 15:29:39");
 		assertTrue(TasksUiPlugin.getSynchronizationManager().checkHasIncoming(task, taskData));
 		task.setLastReadTimeStamp(DATE_STAMP_1);
+		assertFalse(TasksUiPlugin.getSynchronizationManager().checkHasIncoming(task, taskData));
+	}
+
+	public void testHasIncomingDateComparison() {
+		final Stack<Date> dates = new Stack<Date>();
+		AbstractTask task = new MockRepositoryTask(MOCCK_ID);
+		RepositoryTaskData taskData = new RepositoryTaskData(new MockAttributeFactory() {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Date getDateForAttributeType(String attributeKey, String dateString) {
+				return dates.pop();
+			}
+		}, connector.getConnectorKind(), MockRepositoryConnector.REPOSITORY_URL, MOCCK_ID);
+		task.setLastReadTimeStamp("never");
+
+		assertTrue(TasksUiPlugin.getSynchronizationManager().checkHasIncoming(task, taskData));
+		
+		// strings and dates mismatch
+		dates.push(new Date(1));
+		dates.push(new Date(2));
+		taskData.setAttributeValue(RepositoryTaskAttribute.DATE_MODIFIED, "2006-06-21 15:29:39");
+		assertTrue(TasksUiPlugin.getSynchronizationManager().checkHasIncoming(task, taskData));
+
+		dates.push(null);
+		dates.push(new Date(2));
+		assertTrue(TasksUiPlugin.getSynchronizationManager().checkHasIncoming(task, taskData));
+
+		dates.push(new Date());
+		dates.push(null);
+		assertTrue(TasksUiPlugin.getSynchronizationManager().checkHasIncoming(task, taskData));
+
+		// strings mismatch but dates match
+		dates.push(new Date(1));
+		dates.push(new Date(1));
+		assertFalse(TasksUiPlugin.getSynchronizationManager().checkHasIncoming(task, taskData));	
+		
+		// strings match, dates should not be checked
+		task.setLastReadTimeStamp("2006-06-21 15:29:39");
 		assertFalse(TasksUiPlugin.getSynchronizationManager().checkHasIncoming(task, taskData));
 	}
 

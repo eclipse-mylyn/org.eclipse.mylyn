@@ -109,9 +109,10 @@ public final class RepositorySynchronizationManager {
 			long delay, boolean userForcedSync) {
 		return synchronize(connector, repository, repositoryQueries, listener, priority, delay, userForcedSync, true);
 	}
-	
+
 	/**
-	 * @param fullSynchronization synchronize all changed tasks for <code>repository</code>
+	 * @param fullSynchronization
+	 *            synchronize all changed tasks for <code>repository</code>
 	 * @since 2.2
 	 */
 	public final Job synchronize(AbstractRepositoryConnector connector, TaskRepository repository,
@@ -247,21 +248,30 @@ public final class RepositorySynchronizationManager {
 
 	/** public for testing purposes */
 	public boolean checkHasIncoming(AbstractTask repositoryTask, RepositoryTaskData newData) {
-		String lastModified = repositoryTask.getLastReadTimeStamp();
+		if (repositoryTask.getSynchronizationState() == RepositoryTaskSyncState.INCOMING) {
+			return true;
+		}
 
+		String lastModified = repositoryTask.getLastReadTimeStamp();
 		RepositoryTaskAttribute modifiedDateAttribute = newData.getAttribute(RepositoryTaskAttribute.DATE_MODIFIED);
 		if (lastModified != null && modifiedDateAttribute != null && modifiedDateAttribute.getValue() != null) {
-			if (lastModified.trim().compareTo(modifiedDateAttribute.getValue().trim()) == 0
-					&& repositoryTask.getSynchronizationState() != RepositoryTaskSyncState.INCOMING) {
+			if (lastModified.trim().compareTo(modifiedDateAttribute.getValue().trim()) == 0) {
 				// Only set to synchronized state if not in incoming state.
 				// Case of incoming->sync handled by markRead upon opening
 				// or a forced synchronization on the task only.
 				return false;
 			}
+
+			Date modifiedDate = newData.getAttributeFactory().getDateForAttributeType(
+					RepositoryTaskAttribute.DATE_MODIFIED, modifiedDateAttribute.getValue());
+			Date lastModifiedDate = newData.getAttributeFactory().getDateForAttributeType(
+					RepositoryTaskAttribute.DATE_MODIFIED, lastModified);
+			if (modifiedDate != null && lastModifiedDate != null && modifiedDate.equals(lastModifiedDate)) {
+				return false;
+			}
 		}
 
 		return true;
-
 	}
 
 	/**
