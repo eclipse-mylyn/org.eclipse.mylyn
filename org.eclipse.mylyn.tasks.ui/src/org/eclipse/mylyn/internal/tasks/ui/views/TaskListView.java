@@ -724,6 +724,12 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		getViewer().getTree().setHeaderVisible(false);
 		getViewer().setUseHashlookup(true);
 		refreshJob = new DelayedRefreshJob(getViewer(), "Task List Refresh") {
+			@Override
+			protected void refresh(Object[] items) {
+				super.refresh(items);
+				updateToolTip();
+			}
+
 			protected void updateExpansionState(Object item) {
 				if (TaskListView.this.isFocusedMode()) {
 					TaskListView.this.getViewer().expandToLevel(item, 3);
@@ -854,16 +860,12 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			}
 		});
 
+		taskListToolTip = new TaskListToolTip(getViewer().getControl());
+
 		// update tooltip contents
 		getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
-				if (taskListToolTip.isVisible()) {
-					TreeItem[] selection = getViewer().getTree().getSelection();
-					if (selection != null && selection.length > 0) {
-						Rectangle bounds = selection[0].getBounds();
-						taskListToolTip.show(new Point(bounds.x, bounds.y));
-					}
-				}
+				updateToolTip();
 			}
 		});
 
@@ -871,8 +873,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		hookContextMenu();
 		hookOpenAction();
 		contributeToActionBars();
-
-		taskListToolTip = new TaskListToolTip(getViewer().getControl());
 
 		// Set to empty string to disable native tooltips (windows only?)
 		// bug#160897
@@ -1671,6 +1671,16 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				refresh(container);
 			}
 			break;
+		}
+	}
+
+	private void updateToolTip() {
+		if (taskListToolTip.isVisible()) {
+			TreeItem[] selection = getViewer().getTree().getSelection();
+			if (selection != null && selection.length > 0) {
+				Rectangle bounds = selection[0].getBounds();
+				taskListToolTip.show(new Point(bounds.x, bounds.y));
+			}
 		}
 	}
 
