@@ -77,6 +77,8 @@ public class TaskListToolTip extends ToolTip {
 
 	private boolean visible;
 
+	private boolean triggeredByMouse;
+	
 	private Control control;
 
 	public TaskListToolTip(Control control) {
@@ -89,6 +91,7 @@ public class TaskListToolTip extends ToolTip {
 
 	@Override
 	protected void afterHideToolTip(Event event) {
+		triggeredByMouse = true;
 		visible = false;
 		for (TaskListToolTipListener listener : listeners.toArray(new TaskListToolTipListener[0])) {
 			listener.toolTipHidden(event);
@@ -550,5 +553,15 @@ public class TaskListToolTip extends ToolTip {
 	public boolean isVisible() {
 		return visible;
 	}
+	
+	public boolean isTriggeredByMouse() {
+		return triggeredByMouse;
+	}
 
+	@Override
+	public void show(Point location) {
+		super.show(location);
+		triggeredByMouse = false;
+	}
+	
 }

@@ -729,7 +729,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			@Override
 			protected void refresh(Object[] items) {
 				super.refresh(items);
-				updateToolTip();
+				updateToolTip(false);
 			}
 
 			protected void updateExpansionState(Object item) {
@@ -867,7 +867,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		// update tooltip contents
 		getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
-				updateToolTip();
+				updateToolTip(true);
 			}
 		});
 
@@ -1683,8 +1683,12 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		}
 	}
 
-	private void updateToolTip() {
+	private void updateToolTip(boolean force) {
 		if (taskListToolTip.isVisible()) {
+			if (!force && taskListToolTip.isTriggeredByMouse()) {
+				return;
+			}
+			
 			TreeItem[] selection = getViewer().getTree().getSelection();
 			if (selection != null && selection.length > 0) {
 				Rectangle bounds = selection[0].getBounds();
