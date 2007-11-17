@@ -1004,6 +1004,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				if (reference != null && reference.isFastView()) {
 					updateDescription();
 				}
+				taskListToolTip.hide();
 			}
 		}
 
