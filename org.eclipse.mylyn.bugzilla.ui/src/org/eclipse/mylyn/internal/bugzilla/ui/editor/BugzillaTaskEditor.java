@@ -17,7 +17,9 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
@@ -48,6 +50,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.fieldassist.ContentAssistCommandAdapter;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
@@ -603,7 +606,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 	}
 
 	/**
-	 * @author Frank Becker (bug 198027)
+	 * @author Frank Becker (bug 198027) FIXME: A lot of duplicated code here between this and NewBugzillataskEditor
 	 */
 	@Override
 	protected void addAssignedTo(Composite peopleComposite) {
@@ -635,6 +638,14 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 					}
 				}
 			});
+			ContentAssistCommandAdapter adapter = applyContentAssist(assignedTo,
+					createContentProposalProvider(assignedAttribute));
+			ILabelProvider propsalLabelProvider = createProposalLabelProvider(assignedAttribute);
+			if (propsalLabelProvider != null) {
+				adapter.setLabelProvider(propsalLabelProvider);
+			}
+			adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
+
 			FormToolkit toolkit = getManagedForm().getToolkit();
 			Label dummylabel = toolkit.createLabel(peopleComposite, "");
 			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(dummylabel);
