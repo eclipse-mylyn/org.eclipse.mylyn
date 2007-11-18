@@ -1522,7 +1522,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		Button attachFileButton = toolkit.createButton(attachmentControlsComposite, AttachAction.LABEL, SWT.PUSH);
 		attachFileButton.setImage(WorkbenchImages.getImage(ISharedImages.IMG_OBJ_FILE));
 
-		Button attachScreenshotButton = toolkit.createButton(attachmentControlsComposite, AttachScreenshotAction.LABEL, SWT.PUSH);
+		Button attachScreenshotButton = toolkit.createButton(attachmentControlsComposite, AttachScreenshotAction.LABEL,
+				SWT.PUSH);
 		attachScreenshotButton.setImage(TasksUiImages.getImage(TasksUiImages.IMAGE_CAPTURE));
 
 		final AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(),
@@ -3086,6 +3087,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * valid username, the repository user is the assignee, reporter or already on the the cc list.
 	 */
 	protected void addSelfToCC(Composite composite) {
+
 		if (repository.getUserName() == null) {
 			return;
 		}
@@ -3259,7 +3261,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 										}
 									}
 								});
-						TasksUiPlugin.getSynchronizationScheduler().synchNow(0, Collections.singletonList(repository), false);
+						TasksUiPlugin.getSynchronizationScheduler().synchNow(0, Collections.singletonList(repository),
+								false);
 					} else {
 						close();
 						// For some reason the task wasn't retrieved.
@@ -3584,12 +3587,25 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		if (assignedAttribute != null) {
 			Label label = createLabel(peopleComposite, assignedAttribute);
 			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
-			Text textField = createTextField(peopleComposite, assignedAttribute, SWT.FLAT | SWT.READ_ONLY);
+			Text textField;
+			if (assignedAttribute.isReadOnly()) {
+				textField = createTextField(peopleComposite, assignedAttribute, SWT.FLAT | SWT.READ_ONLY);
+			} else {
+				textField = createTextField(peopleComposite, assignedAttribute, SWT.FLAT);
+				ContentAssistCommandAdapter adapter = applyContentAssist(textField,
+						createContentProposalProvider(assignedAttribute));
+				ILabelProvider propsalLabelProvider = createProposalLabelProvider(assignedAttribute);
+				if (propsalLabelProvider != null) {
+					adapter.setLabelProvider(propsalLabelProvider);
+				}
+				adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
+			}
 			GridDataFactory.fillDefaults().grab(true, false).applyTo(textField);
 			if (haveRealName) {
 				textField.setText(textField.getText() + " <"
 						+ taskData.getAttributeValue(RepositoryTaskAttribute.USER_ASSIGNED) + ">");
 			}
+
 		}
 	}
 

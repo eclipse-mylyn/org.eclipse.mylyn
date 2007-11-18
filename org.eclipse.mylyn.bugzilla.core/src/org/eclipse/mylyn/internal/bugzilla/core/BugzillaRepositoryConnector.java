@@ -667,9 +667,18 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		a.setHidden(false);
 
 		newTaskData.addAttribute(BugzillaReportElement.BUG_FILE_LOC.getKeyString(), a);
-		// attributes.put(a.getName(), a);
-
-		// newReport.attributes = attributes;
+		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.DEPENDSON);
+		a.setValue("");
+		a.setReadOnly(false);
+		newTaskData.addAttribute(BugzillaReportElement.DEPENDSON.getKeyString(), a);
+		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.BLOCKED);
+		a.setValue("");
+		a.setReadOnly(false);
+		newTaskData.addAttribute(BugzillaReportElement.BLOCKED.getKeyString(), a);
+		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.NEWCC);
+		a.setValue("");
+		a.setReadOnly(false);
+		newTaskData.addAttribute(BugzillaReportElement.NEWCC.getKeyString(), a);
 	}
 
 	public static int getBugId(String taskId) throws CoreException {

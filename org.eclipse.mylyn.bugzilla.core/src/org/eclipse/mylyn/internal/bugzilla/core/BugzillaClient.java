@@ -902,9 +902,18 @@ public class BugzillaClient {
 				value = a.getValue();
 				if (value == null)
 					continue;
-
-				cleanQAContact(a);
-
+				if (a.getId().equals(BugzillaReportElement.NEWCC.getKeyString())) {
+					RepositoryTaskAttribute b = new RepositoryTaskAttribute(BugzillaReportElement.CC.getKeyString(),
+							BugzillaReportElement.CC.toString(), false);
+					for (String val : a.getValues()) {
+						if (val != null) {
+							b.addValue(val);
+						}
+					}
+					a = b;
+				} else {
+					cleanQAContact(a);
+				}
 				fields.put(a.getId(), new NameValuePair(a.getId(), value));
 			}
 		}
