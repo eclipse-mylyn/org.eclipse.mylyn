@@ -155,6 +155,9 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 		return BugzillaReportElement.NEWCC.getKeyString().equals(attribute.getId());
 	}
 
+	/**
+	 * FIXME: A lot of duplicated code here between this and BugzillaTaskEditor
+	 */
 	@Override
 	protected void addAssignedTo(Composite peopleComposite) {
 		RepositoryTaskAttribute assignedAttribute = taskData.getAttribute(RepositoryTaskAttribute.USER_ASSIGNED);
