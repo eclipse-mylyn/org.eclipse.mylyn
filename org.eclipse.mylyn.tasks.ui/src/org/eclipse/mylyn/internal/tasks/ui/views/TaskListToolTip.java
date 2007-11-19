@@ -62,7 +62,7 @@ public class TaskListToolTip extends ToolTip {
 	private final static int X_SHIFT;
 
 	static {
-		if ("gtk".equals(SWT.getPlatform())) {
+		if ("gtk".equals(SWT.getPlatform()) || "carbon".equals(SWT.getPlatform())) {
 			X_SHIFT = -26;
 		} else {
 			X_SHIFT = -23;
@@ -78,7 +78,7 @@ public class TaskListToolTip extends ToolTip {
 	private boolean visible;
 
 	private boolean triggeredByMouse;
-	
+
 	private Control control;
 
 	public TaskListToolTip(Control control) {
@@ -553,7 +553,7 @@ public class TaskListToolTip extends ToolTip {
 	public boolean isVisible() {
 		return visible;
 	}
-	
+
 	public boolean isTriggeredByMouse() {
 		return triggeredByMouse;
 	}
@@ -563,5 +563,5 @@ public class TaskListToolTip extends ToolTip {
 		super.show(location);
 		triggeredByMouse = false;
 	}
-	
+
 }
