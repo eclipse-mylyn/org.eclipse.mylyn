@@ -217,7 +217,10 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 		createAttribute(factory, data, Attribute.SEVERITY, client.getSeverities());
 
 		createAttribute(factory, data, Attribute.TYPE, client.getTicketTypes());
-		createAttribute(factory, data, Attribute.OWNER);
+		RepositoryTaskAttribute attribute = createAttribute(factory, data, Attribute.OWNER);
+		if (!existingTask) {
+			attribute.setReadOnly(false);
+		}
 		createAttribute(factory, data, Attribute.MILESTONE, client.getMilestones(), true);
 		if (existingTask) {
 			createAttribute(factory, data, Attribute.REPORTER);
