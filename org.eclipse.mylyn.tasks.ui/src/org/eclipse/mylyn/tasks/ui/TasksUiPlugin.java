@@ -1072,6 +1072,9 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	private static boolean ignoreAttribute(RepositoryTaskData taskData, RepositoryTaskAttribute attribute) {
 		AbstractAttributeFactory factory = taskData.getAttributeFactory();
+		if (attribute.getId().equals(factory.mapCommonAttributeKey(RepositoryTaskAttribute.USER_CC))) {
+			return false;
+		}
 		return (attribute.isHidden()
 			|| attribute.getId().equals(factory.mapCommonAttributeKey(RepositoryTaskAttribute.DATE_MODIFIED)) 
 			|| attribute.getId().equals(factory.mapCommonAttributeKey(RepositoryTaskAttribute.DATE_CREATION))
