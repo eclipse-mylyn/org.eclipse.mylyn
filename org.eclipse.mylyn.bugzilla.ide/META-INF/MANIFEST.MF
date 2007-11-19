@@ -3,17 +3,13 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.mylyn.bugzilla.ide;singleton:=true
 Bundle-Version: 2.2.0.qualifier
-Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.jface,
- org.eclipse.mylyn.bugzilla.ui,
- org.eclipse.mylyn.tasks.core,
+Require-Bundle: org.eclipse.mylyn.tasks.core,
  org.eclipse.mylyn.bugzilla.core,
  org.eclipse.mylyn.tasks.ui,
  org.eclipse.mylyn.monitor.core,
  org.eclipse.ui,
- org.eclipse.ui.forms,
  org.eclipse.ui.views.log,
- org.eclipse.jdt.junit
+ org.eclipse.core.runtime
 Eclipse-AutoStart: true
 Bundle-Vendor: %Bundle-Vendor.0
 Bundle-ClassPath: .
