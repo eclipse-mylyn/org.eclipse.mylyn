@@ -34,7 +34,10 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoryLabelProvider;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
@@ -75,11 +78,75 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 
 	private Text text;
 
-	private CheckboxTreeViewer tree;
+	private CheckboxTreeViewer treeViewer;
 
 	private IWorkingSet workingSet;
+	
+	private WorkingSetPageContentProvider workingSetPageContentProvider = new WorkingSetPageContentProvider();
 
 	private boolean firstCheck = false;
+
+	private final class WorkingSetPageContentProvider implements ITreeContentProvider {
+		
+		public Object[] getChildren(Object parentElement) {
+			if (parentElement instanceof List) {
+				List<IAdaptable> taskContainers = new ArrayList<IAdaptable>();
+				for (AbstractTaskContainer category : TasksUiPlugin.getTaskListManager().getTaskList().getCategories()) {
+					if (!(category instanceof TaskArchive)) {
+						taskContainers.add(category);
+					}
+				}
+				
+				for (Object container : (List<?>) parentElement) {
+					if (container instanceof TaskRepository) {
+						// NOTE: looking down
+						if (hasChildren(container)) {
+							taskContainers.add((TaskRepository)container);
+						}
+					}
+				}
+				List<IAdaptable> projects = new ArrayList<IAdaptable>();
+				for (Object container : (List<?>) parentElement) {
+					if (container instanceof IProject) {
+						projects.add((IProject) container);
+					}
+				}
+
+				return new Object[] { new ElementCategory(LABEL_TASKS, taskContainers),
+						new ElementCategory("Resources", projects) };
+			} else if (parentElement instanceof TaskRepository) {
+				List<IAdaptable> taskContainers = new ArrayList<IAdaptable>();
+				for (AbstractTaskContainer element : TasksUiPlugin.getTaskListManager().getTaskList().getRepositoryQueries(((TaskRepository)parentElement).getUrl())) {
+					if (element instanceof AbstractRepositoryQuery) {
+						taskContainers.add(element);
+					}
+				} 
+				return taskContainers.toArray();
+			} else if (parentElement instanceof ElementCategory) {
+				return ((ElementCategory) parentElement).getChildren(parentElement);
+			} else {
+				return new Object[0];
+			}
+		}
+
+		public boolean hasChildren(Object element) {
+			return getChildren(element).length > 0;
+		}
+
+		public Object[] getElements(Object element) {
+			return getChildren(element);
+		}
+
+		public Object getParent(Object element) {
+			return null;
+		}
+
+		public void dispose() {
+		}
+
+		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		}
+	}
 
 	class ElementCategory extends PlatformObject implements IWorkbenchAdapter {
 
@@ -112,23 +179,29 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 
 	class AggregateLabelProvider implements ILabelProvider {
 
-		private TaskElementLabelProvider taskProvider = new TaskElementLabelProvider(false);
+		private TaskElementLabelProvider taskLabelProvider = new TaskElementLabelProvider(false);
 
-		private WorkbenchLabelProvider workbenchProvider = new WorkbenchLabelProvider();
+		private TaskRepositoryLabelProvider taskRepositoryLabelProvider = new TaskRepositoryLabelProvider();
+		
+		private WorkbenchLabelProvider workbenchLabelProvider = new WorkbenchLabelProvider();
 
 		public Image getImage(Object element) {
 			if (element instanceof AbstractTaskContainer) {
-				return taskProvider.getImage(element);
+				return taskLabelProvider.getImage(element);
+			} else if (element instanceof TaskRepository) {
+				return taskRepositoryLabelProvider.getImage(element);
 			} else {
-				return workbenchProvider.getImage(element);
+				return workbenchLabelProvider.getImage(element);
 			}
 		}
 
 		public String getText(Object element) {
 			if (element instanceof AbstractTaskContainer) {
-				return taskProvider.getText(element);
+				return taskLabelProvider.getText(element);
+			} else if (element instanceof TaskRepository) {
+				return taskRepositoryLabelProvider.getText(element);
 			} else {
-				return workbenchProvider.getText(element);
+				return workbenchLabelProvider.getText(element);
 			}
 		}
 
@@ -149,7 +222,11 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 	class CustomSorter extends ViewerSorter {
 		@Override
 		public int compare(Viewer viewer, Object e1, Object e2) {
-			if (e1 instanceof ElementCategory && ((ElementCategory) e1).getLabel(e1).equals(LABEL_TASKS)) {
+			if (e1 instanceof TaskRepository) {
+				return 1;
+			} else if (e2 instanceof TaskRepository) {
+				return -1;
+			} else if (e1 instanceof ElementCategory && ((ElementCategory) e1).getLabel(e1).equals(LABEL_TASKS)) {
 				return -1;
 			} else if (e2 instanceof ElementCategory && ((ElementCategory) e1).getLabel(e1).equals(LABEL_TASKS)) {
 				return 1;
@@ -167,7 +244,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 	}
 
 	public void finish() {
-		Object[] elements = tree.getCheckedElements();
+		Object[] elements = treeViewer.getCheckedElements();
 		Set<IAdaptable> validElements = new HashSet<IAdaptable>();
 		for (int i = 0; i < elements.length; i++) {
 			if (elements[i] instanceof AbstractTaskContainer || elements[i] instanceof IProject) {
@@ -236,83 +313,40 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		label.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL
 				| GridData.VERTICAL_ALIGN_CENTER));
 
-		tree = new CheckboxTreeViewer(composite);
-		tree.setUseHashlookup(true);
+		treeViewer = new CheckboxTreeViewer(composite);
+		treeViewer.setUseHashlookup(true);
+		treeViewer.setContentProvider(workingSetPageContentProvider);
 
-		final ITreeContentProvider treeContentProvider = new ITreeContentProvider() {
-
-			@SuppressWarnings("unchecked")
-			public Object[] getChildren(Object parentElement) {
-				if (parentElement instanceof List) {
-					List<IAdaptable> taskContainers = new ArrayList<IAdaptable>();
-					for (Object container : (List) parentElement) {
-						if (container instanceof AbstractTaskContainer) {
-							taskContainers.add((AbstractTaskContainer) container);
-						}
-					}
-					List<IAdaptable> projects = new ArrayList<IAdaptable>();
-					for (Object container : (List) parentElement) {
-						if (container instanceof IProject) {
-							projects.add((IProject) container);
-						}
-					}
-
-					return new Object[] { new ElementCategory(LABEL_TASKS, taskContainers),
-							new ElementCategory("Resources", projects) };
-				} else if (parentElement instanceof ElementCategory) {
-					return ((ElementCategory) parentElement).getChildren(parentElement);
-				} else {
-					return new Object[0];
-				}
-			}
-
-			public boolean hasChildren(Object element) {
-				return getChildren(element).length > 0;
-			}
-
-			public Object[] getElements(Object element) {
-				return getChildren(element);
-			}
-
-			public Object getParent(Object element) {
-				return null;
-			}
-
-			public void dispose() {
-			}
-
-			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-			}
-		};
-
-		tree.setContentProvider(treeContentProvider);
-
-		tree.setLabelProvider(new DecoratingLabelProvider(new AggregateLabelProvider(), PlatformUI.getWorkbench()
+		treeViewer.setLabelProvider(new DecoratingLabelProvider(new AggregateLabelProvider(), PlatformUI.getWorkbench()
 				.getDecoratorManager()
 				.getLabelDecorator()));
 
 //        tree.setLabelProvider(new TaskElementLabelProvider());
-		tree.setSorter(new CustomSorter());
+		treeViewer.setSorter(new CustomSorter());
 
 		ArrayList<Object> containers = new ArrayList<Object>();
-		for (AbstractTaskContainer element : TasksUiPlugin.getTaskListManager().getTaskList().getRootElements()) {
-			if (!(element instanceof TaskArchive)) {
-				containers.add(element);
-			}
+		for (TaskRepository repository : TasksUiPlugin.getRepositoryManager().getAllRepositories()) {
+			containers.add(repository);
 		}
+		
+//		for (AbstractTaskContainer element : TasksUiPlugin.getTaskListManager().getTaskList().getRootElements()) {
+//			if (!(element instanceof TaskArchive)) {
+//				containers.add(element);
+//			}
+//		}
 		containers.addAll(Arrays.asList(ResourcesPlugin.getWorkspace().getRoot().getProjects()));
 
-		tree.setInput(containers);
-		tree.expandAll();
+		treeViewer.setInput(containers);
+		treeViewer.expandAll();
 
 		// tree.setComparator(new ResourceComparator(ResourceComparator.NAME));
 
 		GridData data = new GridData(GridData.FILL_BOTH | GridData.GRAB_VERTICAL);
 		data.heightHint = SIZING_SELECTION_WIDGET_HEIGHT;
 		data.widthHint = SIZING_SELECTION_WIDGET_WIDTH;
-		tree.getControl().setLayoutData(data);
+		treeViewer.getControl().setLayoutData(data);
 
-		tree.addCheckStateListener(new ICheckStateListener() {
+		treeViewer.addCheckStateListener(new ICheckStateListener() {
 			public void checkStateChanged(CheckStateChangedEvent event) {
 				handleCheckStateChange(event);
 			}
@@ -351,7 +385,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		selectAllButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent selectionEvent) {
-				tree.setCheckedElements(treeContentProvider.getElements(tree.getInput()));
+				treeViewer.setCheckedElements(workingSetPageContentProvider.getElements(treeViewer.getInput()));
 				validateInput();
 			}
 		});
@@ -363,7 +397,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		deselectAllButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent selectionEvent) {
-				tree.setCheckedElements(new Object[0]);
+				treeViewer.setCheckedElements(new Object[0]);
 				validateInput();
 			}
 		});
@@ -386,10 +420,10 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 					items = workingSet.getElements();
 					if (items != null) {
 						// see bug 191342
-						tree.setCheckedElements(new Object[] {});
+						treeViewer.setCheckedElements(new Object[] {});
 						for (Object item : items) {
 							if (item != null) {
-								tree.setChecked(item, true);
+								treeViewer.setChecked(item, true);
 							}
 						}
 					}
@@ -403,7 +437,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 			public void run() {
 				IAdaptable element = (IAdaptable) event.getElement();
 				if (element instanceof AbstractTaskContainer || element instanceof IProject) {
-					tree.setGrayed(element, false);
+					treeViewer.setGrayed(element, false);
 					// boolean state = event.getChecked();
 					// if (element instanceof AbstractTaskContainer) {
 					//     setSubtreeChecked((AbstractTaskContainer) element, state, true);
@@ -411,9 +445,14 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 					// updateParentState(element);
 				} else if (element instanceof ElementCategory) {
 					for (Object child : ((ElementCategory) element).getChildren(null)) {
-						tree.setChecked(child, event.getChecked());
+						treeViewer.setChecked(child, event.getChecked());
+					}
+				} else if (element instanceof TaskRepository) {
+					for (Object child : workingSetPageContentProvider.getChildren(element)) {
+						treeViewer.setChecked(child, event.getChecked());
 					}
 				}
+				
 				validateInput();
 			}
 		});
@@ -441,7 +480,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 				}
 			}
 		}
-		if (tree.getCheckedElements().length == 0) {
+		if (treeViewer.getCheckedElements().length == 0) {
 			infoMessage = "No categories/queries selected.";
 		}
 		setMessage(infoMessage, INFORMATION);
