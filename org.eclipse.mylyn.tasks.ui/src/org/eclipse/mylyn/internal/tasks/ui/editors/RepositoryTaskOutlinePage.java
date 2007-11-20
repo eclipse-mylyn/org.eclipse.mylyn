@@ -18,7 +18,6 @@ import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.TaskComment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.ISelectionListener;
@@ -36,7 +35,7 @@ public class RepositoryTaskOutlinePage extends ContentOutlinePage {
 
 	protected final ISelectionListener selectionListener = new ISelectionListener() {
 		public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-			if ((part instanceof AbstractRepositoryTaskEditor) && (selection instanceof IStructuredSelection)) {
+			if (selection instanceof IStructuredSelection) {
 				if (((IStructuredSelection) selection).getFirstElement() instanceof IRepositoryTaskSelection) {
 					if (((IStructuredSelection) getSelection()).getFirstElement() instanceof IRepositoryTaskSelection) {
 						IRepositoryTaskSelection brs1 = (IRepositoryTaskSelection) ((IStructuredSelection) getSelection()).getFirstElement();
