@@ -81,47 +81,66 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 	private CheckboxTreeViewer treeViewer;
 
 	private IWorkingSet workingSet;
-	
+
 	private WorkingSetPageContentProvider workingSetPageContentProvider = new WorkingSetPageContentProvider();
 
 	private boolean firstCheck = false;
 
 	private final class WorkingSetPageContentProvider implements ITreeContentProvider {
-		
+
 		public Object[] getChildren(Object parentElement) {
 			if (parentElement instanceof List) {
-				List<IAdaptable> taskContainers = new ArrayList<IAdaptable>();
+				List<IAdaptable> taskRepositoriesContainers = new ArrayList<IAdaptable>();
+				List<IAdaptable> resourcesRepositoriesContainers = new ArrayList<IAdaptable>();
+
 				for (AbstractTaskContainer category : TasksUiPlugin.getTaskListManager().getTaskList().getCategories()) {
 					if (!(category instanceof TaskArchive)) {
-						taskContainers.add(category);
-					}
-				}
-				
-				for (Object container : (List<?>) parentElement) {
-					if (container instanceof TaskRepository) {
-						// NOTE: looking down
-						if (hasChildren(container)) {
-							taskContainers.add((TaskRepository)container);
-						}
-					}
-				}
-				List<IAdaptable> projects = new ArrayList<IAdaptable>();
-				for (Object container : (List<?>) parentElement) {
-					if (container instanceof IProject) {
-						projects.add((IProject) container);
+						taskRepositoriesContainers.add(category);
 					}
 				}
 
-				return new Object[] { new ElementCategory(LABEL_TASKS, taskContainers),
-						new ElementCategory("Resources", projects) };
+				IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+				Set<IProject> unmappedProjects = new HashSet<IProject>();
+				for (Object container : (List<?>) parentElement) {
+					if (container instanceof TaskRepository) {
+						// NOTE: looking down, high complexity
+						if (hasChildren(container)) {
+							taskRepositoriesContainers.add((TaskRepository) container);
+
+							// NOTE: O(n^2) complexity, could fix
+							Set<IProject> mappedProjects = new HashSet<IProject>();
+							
+							for (IProject project : projects) {
+								TaskRepository taskRepository = TasksUiPlugin.getDefault().getRepositoryForResource(
+										project, true);
+								if (container.equals(taskRepository)) {
+									mappedProjects.add(project);
+								} else if (taskRepository == null) {
+									unmappedProjects.add(project);
+								}
+							}
+							if (!mappedProjects.isEmpty()) {
+								resourcesRepositoriesContainers.add(new TaskRepositoryProjectMapping(
+										(TaskRepository) container, mappedProjects));
+							}
+						}
+					}
+				}
+				resourcesRepositoriesContainers.addAll(unmappedProjects);
+				return new Object[] { new ElementCategory(LABEL_TASKS, taskRepositoriesContainers),
+						new ElementCategory("Resources", resourcesRepositoriesContainers) };
 			} else if (parentElement instanceof TaskRepository) {
 				List<IAdaptable> taskContainers = new ArrayList<IAdaptable>();
-				for (AbstractTaskContainer element : TasksUiPlugin.getTaskListManager().getTaskList().getRepositoryQueries(((TaskRepository)parentElement).getUrl())) {
+				for (AbstractTaskContainer element : TasksUiPlugin.getTaskListManager()
+						.getTaskList()
+						.getRepositoryQueries(((TaskRepository) parentElement).getUrl())) {
 					if (element instanceof AbstractRepositoryQuery) {
 						taskContainers.add(element);
 					}
-				} 
+				}
 				return taskContainers.toArray();
+			} else if (parentElement instanceof TaskRepositoryProjectMapping) {
+				return ((TaskRepositoryProjectMapping) parentElement).getProjects().toArray();
 			} else if (parentElement instanceof ElementCategory) {
 				return ((ElementCategory) parentElement).getChildren(parentElement);
 			} else {
@@ -145,6 +164,26 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		}
 
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		}
+	}
+
+	private class TaskRepositoryProjectMapping extends PlatformObject {
+
+		private TaskRepository taskRepository;
+
+		private Set<IProject> projects;
+
+		public TaskRepositoryProjectMapping(TaskRepository taskRepository, Set<IProject> mappedProjects) {
+			this.taskRepository = taskRepository;
+			this.projects = mappedProjects;
+		}
+
+		public Set<IProject> getProjects() {
+			return projects;
+		}
+
+		public TaskRepository getTaskRepository() {
+			return taskRepository;
 		}
 	}
 
@@ -182,7 +221,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		private TaskElementLabelProvider taskLabelProvider = new TaskElementLabelProvider(false);
 
 		private TaskRepositoryLabelProvider taskRepositoryLabelProvider = new TaskRepositoryLabelProvider();
-		
+
 		private WorkbenchLabelProvider workbenchLabelProvider = new WorkbenchLabelProvider();
 
 		public Image getImage(Object element) {
@@ -190,6 +229,8 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 				return taskLabelProvider.getImage(element);
 			} else if (element instanceof TaskRepository) {
 				return taskRepositoryLabelProvider.getImage(element);
+			} else if (element instanceof TaskRepositoryProjectMapping) {
+				return getImage(((TaskRepositoryProjectMapping) element).getTaskRepository());
 			} else {
 				return workbenchLabelProvider.getImage(element);
 			}
@@ -200,6 +241,8 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 				return taskLabelProvider.getText(element);
 			} else if (element instanceof TaskRepository) {
 				return taskRepositoryLabelProvider.getText(element);
+			} else if (element instanceof TaskRepositoryProjectMapping) {
+				return getText(((TaskRepositoryProjectMapping) element).getTaskRepository());
 			} else {
 				return workbenchLabelProvider.getText(element);
 			}
@@ -223,9 +266,9 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		@Override
 		public int compare(Viewer viewer, Object e1, Object e2) {
 			if (e1 instanceof TaskRepository) {
-				return 1;
-			} else if (e2 instanceof TaskRepository) {
 				return -1;
+			} else if (e2 instanceof TaskRepository) {
+				return 1;
 			} else if (e1 instanceof ElementCategory && ((ElementCategory) e1).getLabel(e1).equals(LABEL_TASKS)) {
 				return -1;
 			} else if (e2 instanceof ElementCategory && ((ElementCategory) e1).getLabel(e1).equals(LABEL_TASKS)) {
@@ -328,7 +371,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		for (TaskRepository repository : TasksUiPlugin.getRepositoryManager().getAllRepositories()) {
 			containers.add(repository);
 		}
-		
+
 //		for (AbstractTaskContainer element : TasksUiPlugin.getTaskListManager().getTaskList().getRootElements()) {
 //			if (!(element instanceof TaskArchive)) {
 //				containers.add(element);
@@ -438,21 +481,16 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 				IAdaptable element = (IAdaptable) event.getElement();
 				if (element instanceof AbstractTaskContainer || element instanceof IProject) {
 					treeViewer.setGrayed(element, false);
-					// boolean state = event.getChecked();
-					// if (element instanceof AbstractTaskContainer) {
-					//     setSubtreeChecked((AbstractTaskContainer) element, state, true);
-					// }
-					// updateParentState(element);
 				} else if (element instanceof ElementCategory) {
 					for (Object child : ((ElementCategory) element).getChildren(null)) {
 						treeViewer.setChecked(child, event.getChecked());
 					}
-				} else if (element instanceof TaskRepository) {
+				} else if (element instanceof TaskRepository || element instanceof TaskRepositoryProjectMapping) {
 					for (Object child : workingSetPageContentProvider.getChildren(element)) {
 						treeViewer.setChecked(child, event.getChecked());
 					}
 				}
-				
+
 				validateInput();
 			}
 		});

@@ -902,6 +902,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	/**
 	 * Retrieve the task repository that has been associated with the given project (or resource belonging to a project)
+	 *
+	 * API-3.0: remove "silent" parameter
 	 */
 	public TaskRepository getRepositoryForResource(IResource resource, boolean silent) {
 		if (resource == null) {
