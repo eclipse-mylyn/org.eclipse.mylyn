@@ -127,6 +127,8 @@ import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -303,6 +305,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private boolean ignoreLocationEvents = false;
 
+	private TaskComment selectedComment = null;
+
 	/**
 	 * @author Raphael Ackermann (bug 195514)
 	 */
@@ -347,8 +351,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 
 		public ISelection getSelection() {
-			return new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(),
-					taskData.getRepositoryKind(), "", true, taskData.getSummary());
+			RepositoryTaskSelection selection = new RepositoryTaskSelection(taskData.getId(),
+					taskData.getRepositoryUrl(), taskData.getRepositoryKind(), "", selectedComment,
+					taskData.getSummary());
+			selection.setIsDescription(true);
+			return selection;
 		}
 
 		public void removeSelectionChangedListener(ISelectionChangedListener listener) {
@@ -2128,6 +2135,18 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 			TextViewer viewer = addTextViewer(repository, ecComposite, taskComment.getText().trim(), SWT.MULTI
 					| SWT.WRAP);
+			viewer.getTextWidget().addFocusListener(new FocusListener() {
+
+				public void focusGained(FocusEvent e) {
+					selectedComment = taskComment;
+
+				}
+
+				public void focusLost(FocusEvent e) {
+					selectedComment = null;
+				}
+			});
+
 			// viewer.getControl().setBackground(new
 			// Color(expandableComposite.getDisplay(), 123, 34, 155));
 			StyledText styledText = viewer.getTextWidget();

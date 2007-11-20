@@ -353,21 +353,21 @@ public class TaskFormPage extends FormPage {
 
 		commentViewer.getTextWidget().addFocusListener(new FocusListener() {
 			private IHandlerActivation handlerActivation;
-			
+
 			public void focusGained(FocusEvent e) {
 				actionContributor.updateSelectableActions(commentViewer.getSelection());
 
-				handlerActivation = handlerService.activateHandler(
-						ITextEditorActionDefinitionIds.QUICK_ASSIST, createQuickFixActionHandler(commentViewer),
-						new ActiveShellExpression(commentViewer.getTextWidget().getShell()));
+				handlerActivation = handlerService.activateHandler(ITextEditorActionDefinitionIds.QUICK_ASSIST,
+						createQuickFixActionHandler(commentViewer), new ActiveShellExpression(
+								commentViewer.getTextWidget().getShell()));
 			}
 
 			public void focusLost(FocusEvent e) {
 				StyledText st = (StyledText) e.widget;
 				st.setSelectionRange(st.getCaretOffset(), 0);
 				actionContributor.forceActionsEnabled();
-				
-				if(handlerActivation!=null) {
+
+				if (handlerActivation != null) {
 					handlerService.deactivateHandler(handlerActivation);
 				}
 			}
@@ -663,6 +663,25 @@ public class TaskFormPage extends FormPage {
 		public IInformationControl createInformationControl(Shell shell) {
 			return new DefaultInformationControl(shell);
 		}
+	}
+
+	/**
+	 * @since 2.2
+	 */
+	public String getSelectionText() {
+		Control focusControl = getFocusControl();
+		if (focusControl == null) {
+			return null;
+		}
+		if (focusControl instanceof StyledText) {
+			StyledText text = (StyledText) focusControl;
+			for (TextViewer viewer : textViewers) {
+				if (viewer.getTextWidget() == text) {
+					return text.getSelectionText();
+				}
+			}
+		}
+		return null;
 	}
 
 }

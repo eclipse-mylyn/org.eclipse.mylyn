@@ -33,6 +33,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.AbstractTaskEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AttachAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AttachScreenshotAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.NewTaskFromCommentAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenWithBrowserAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ShowInTaskListAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeEditorAction;
@@ -42,6 +43,7 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.TaskComment;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.NewTaskEditorInput;
@@ -82,10 +84,12 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 	private AbstractTaskEditorAction attachAction = new AttachAction();
 
 	private AbstractTaskEditorAction attachScreenshotAction = new AttachScreenshotAction();
-	
+
 	private SynchronizeEditorAction synchronizeEditorAction = new SynchronizeEditorAction();
 
 	private ShowInTaskListAction showInTaskListAction = new ShowInTaskListAction();
+
+	private NewTaskFromCommentAction newTaskFromCommentAction = new NewTaskFromCommentAction();
 
 	private GlobalAction cutAction;
 
@@ -212,15 +216,38 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 			attachAction.setEditor(editor);
 			attachScreenshotAction.selectionChanged(selection);
 			attachScreenshotAction.setEditor(editor);
-			
+
 			synchronizeEditorAction.selectionChanged(new StructuredSelection(this.getEditor()));
 			showInTaskListAction.selectionChanged(selection);
 
 			manager.add(new Separator());
 			manager.add(synchronizeEditorAction);
 			manager.add(openWithBrowserAction);
-			
-			
+
+			if (this.getEditor().getActivePageInstance() instanceof AbstractRepositoryTaskEditor) {
+				if (this.getEditor().getSelection() instanceof RepositoryTaskSelection) {
+					RepositoryTaskSelection repositoryTaskSelection = (RepositoryTaskSelection) this.getEditor()
+							.getSelection();
+					TaskComment comment = repositoryTaskSelection.getComment();
+					if (comment != null) {
+						newTaskFromCommentAction.setTaskComment(comment);
+						AbstractRepositoryTaskEditor editor = (AbstractRepositoryTaskEditor) this.getEditor()
+								.getActivePageInstance();
+						if (getEditor().getActivePageInstance() instanceof TaskFormPage) {
+							TaskFormPage formPage = (TaskFormPage) getEditor().getActivePageInstance();
+							String selectionText = formPage.getSelectionText();
+							newTaskFromCommentAction.setSelectedCommentText(selectionText);
+						}
+						IEditorInput input = editor.getEditorInput();
+						if (input instanceof RepositoryTaskEditorInput) {
+							RepositoryTaskEditorInput repositoryInput = (RepositoryTaskEditorInput) input;
+							newTaskFromCommentAction.setTaskData(repositoryInput.getTaskData());
+						}
+						manager.add(newTaskFromCommentAction);
+					}
+				}
+			}
+
 			if (task.isActive()) {
 				manager.add(new TaskDeactivateAction() {
 					@Override
@@ -258,7 +285,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 			manager.add(new Separator());
 			manager.add(attachAction);
 			manager.add(attachScreenshotAction);
-			
+
 			manager.add(new Separator());
 			// HACK: there should be a saner way of doing this
 			ObjectActionContributorManager.getManager().contributeObjectActions(editor, manager,
@@ -281,7 +308,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 						}
 					});
 		}
-		
+
 		manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 

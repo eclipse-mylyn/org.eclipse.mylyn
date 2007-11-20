@@ -12,6 +12,8 @@ import org.eclipse.mylyn.tasks.core.TaskComment;
 
 /**
  * A selection of an element in a view.
+ * 
+ * API-3.0: review overlap with TaskSelection
  */
 public class RepositoryTaskSelection implements IRepositoryTaskSelection {
 
