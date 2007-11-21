@@ -94,6 +94,7 @@ public class TasksUiUtil {
 						String repositoryUrl = connector.getRepositoryUrlFromTaskUrl(url);
 						String id = connector.getTaskIdFromTaskUrl(url);
 						TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryUrl);
+						
 						opened = openRepositoryTask(repository, id);
 					}
 					if (!opened) {
