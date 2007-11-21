@@ -51,7 +51,7 @@ public class TaskListFilterTest extends TestCase {
 		view = TaskListView.openInActivePerspective();
 		assertNotNull(view);
 		previousFilters = view.getFilters();
-		view.clearFilters(true);
+		view.clearFilters(false);
 
 		manager.getTaskList().reset();
 		assertEquals(0, manager.getTaskList().getAllTasks().size());
@@ -91,6 +91,7 @@ public class TaskListFilterTest extends TestCase {
 		TaskListInterestFilter interestFilter = new TaskListInterestFilter();
 		view.addFilter(interestFilter);
 		view.getViewer().refresh();
+		view.getViewer().expandAll();
 		List<Object> items = UiTestUtil.getAllData(view.getViewer().getTree());
 		assertFalse(items.contains(taskCompleted));
 		assertFalse(items.contains(taskIncomplete));
@@ -101,8 +102,8 @@ public class TaskListFilterTest extends TestCase {
 	}
 
 	public void testNoFilters() {
-		assertEquals("should have archive and working set filter: " + view.getFilters(), 2, view.getFilters().size());
+		assertEquals("should have working set filter: " + view.getFilters(), 1, view.getFilters().size());
 		view.getViewer().refresh();
-		assertEquals(5, view.getViewer().getTree().getItemCount());
+		assertEquals(2, view.getViewer().getTree().getItemCount());
 	}
 }
