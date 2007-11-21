@@ -48,8 +48,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 						return false;
 					} else if (isInteresting(parent, task)) {
 						if (parent instanceof TaskArchive) {
-							return (revealInArchive(task) && shouldAlwaysShow(child, task, TasksUiPlugin.getDefault()
-									.groupSubtasks(task)));
+							return (shouldAlwaysShow(child, task, TasksUiPlugin.getDefault().groupSubtasks(task)) && revealInArchive(task));
 						}
 						return true;
 					}
@@ -58,8 +57,8 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 				// Display Archive if contains otherwise non-visible tasks that should always show
 				boolean hasTasksToReveal = false;
 				for (AbstractTask task : ((TaskArchive) child).getChildren()) {
-					if (revealInArchive(task)
-							&& shouldAlwaysShow(child, task, TasksUiPlugin.getDefault().groupSubtasks(task))) {
+					if (shouldAlwaysShow(child, task, TasksUiPlugin.getDefault().groupSubtasks(task))
+							&& revealInArchive(task)) {
 						hasTasksToReveal = true;
 						break;
 					}
