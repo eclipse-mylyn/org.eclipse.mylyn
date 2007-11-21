@@ -33,7 +33,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.AbstractTaskEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AttachAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AttachScreenshotAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.NewTaskFromCommentAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.NewTaskFromSelectionAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenWithBrowserAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ShowInTaskListAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeEditorAction;
@@ -43,7 +43,6 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.TaskComment;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.NewTaskEditorInput;
@@ -89,7 +88,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 
 	private ShowInTaskListAction showInTaskListAction = new ShowInTaskListAction();
 
-	private NewTaskFromCommentAction newTaskFromCommentAction = new NewTaskFromCommentAction();
+	private NewTaskFromSelectionAction newTaskFromSelectionAction = new NewTaskFromSelectionAction();
 
 	private GlobalAction cutAction;
 
@@ -104,7 +103,6 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 	private GlobalAction selectAllAction;
 
 	public TaskEditorActionContributor() {
-
 		cutAction = new GlobalAction(ActionFactory.CUT.getId());
 		cutAction.setText(WorkbenchMessages.Workbench_cut);
 		cutAction.setToolTipText(WorkbenchMessages.Workbench_cutToolTip);
@@ -146,7 +144,6 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 		selectAllAction.setText(WorkbenchMessages.Workbench_selectAll);
 		selectAllAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.SELECT_ALL);
 		selectAllAction.setEnabled(true);
-
 	}
 
 	public void addClipboardActions(IMenuManager manager) {
@@ -158,6 +155,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 		manager.add(copyTaskDetailsAction);
 		manager.add(pasteAction);
 		manager.add(selectAllAction);
+		manager.add(newTaskFromSelectionAction);
 		manager.add(new Separator());
 	}
 
@@ -223,30 +221,6 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 			manager.add(new Separator());
 			manager.add(synchronizeEditorAction);
 			manager.add(openWithBrowserAction);
-
-			if (this.getEditor().getActivePageInstance() instanceof AbstractRepositoryTaskEditor) {
-				if (this.getEditor().getSelection() instanceof RepositoryTaskSelection) {
-					RepositoryTaskSelection repositoryTaskSelection = (RepositoryTaskSelection) this.getEditor()
-							.getSelection();
-					TaskComment comment = repositoryTaskSelection.getComment();
-					if (comment != null) {
-						newTaskFromCommentAction.setTaskComment(comment);
-						AbstractRepositoryTaskEditor editor = (AbstractRepositoryTaskEditor) this.getEditor()
-								.getActivePageInstance();
-						if (getEditor().getActivePageInstance() instanceof TaskFormPage) {
-							TaskFormPage formPage = (TaskFormPage) getEditor().getActivePageInstance();
-							String selectionText = formPage.getSelectionText();
-							newTaskFromCommentAction.setSelectedCommentText(selectionText);
-						}
-						IEditorInput input = editor.getEditorInput();
-						if (input instanceof RepositoryTaskEditorInput) {
-							RepositoryTaskEditorInput repositoryInput = (RepositoryTaskEditorInput) input;
-							newTaskFromCommentAction.setTaskData(repositoryInput.getTaskData());
-						}
-						manager.add(newTaskFromCommentAction);
-					}
-				}
-			}
 
 			if (task.isActive()) {
 				manager.add(new TaskDeactivateAction() {
@@ -336,6 +310,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 			undoAction.selectionChanged(selection);
 			redoAction.selectionChanged(selection);
 			selectAllAction.selectionChanged(selection);
+			newTaskFromSelectionAction.selectionChanged(selection);
 		}
 	}
 
