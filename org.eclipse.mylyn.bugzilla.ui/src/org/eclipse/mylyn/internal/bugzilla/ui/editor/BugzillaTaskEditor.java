@@ -671,4 +671,5 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		}
 		return super.attributeChanged(attribute);
 	}
+
 }

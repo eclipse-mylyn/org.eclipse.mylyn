@@ -67,6 +67,22 @@ public abstract class AbstractTaskDataHandler {
 	public abstract boolean initializeTaskData(TaskRepository repository, RepositoryTaskData data,
 			IProgressMonitor monitor) throws CoreException;
 
+	/**
+	 * @since 2.2
+	 * @return false if this operation is not supported by the connector, true if initialized
+	 */
+	public boolean initializeSubTaskData(TaskRepository repository, RepositoryTaskData taskData,
+			RepositoryTaskData parentTaskData, IProgressMonitor monitor) throws CoreException {
+		return false;
+	}
+
+	/**
+	 * @since 2.2
+	 */
+	public boolean canInitializeSubTaskData() {
+		return false;
+	}
+	
 	public abstract AbstractAttributeFactory getAttributeFactory(RepositoryTaskData taskData);
 
 	/**

@@ -52,8 +52,6 @@ public class BugzillaImages {
 
 	public static final ImageDescriptor OVERLAY_MINOR = create(T_VIEW, "overlay-minor.gif");
 	
-	public static final ImageDescriptor NEW_SUB_TASK = create(T_TOOL, "sub-task-new.gif");
-
 	private static ImageDescriptor create(String prefix, String name) {
 		try {
 			return ImageDescriptor.createFromURL(makeIconFileURL(prefix, name));

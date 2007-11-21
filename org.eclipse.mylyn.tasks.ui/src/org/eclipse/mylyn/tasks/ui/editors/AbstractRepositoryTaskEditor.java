@@ -78,6 +78,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.AttachAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AttachScreenshotAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyAttachmentToClipboardJob;
 import org.eclipse.mylyn.internal.tasks.ui.actions.DownloadAttachmentJob;
+import org.eclipse.mylyn.internal.tasks.ui.actions.NewSubTaskAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ToggleTaskActivationAction;
 import org.eclipse.mylyn.internal.tasks.ui.editors.AttachmentTableLabelProvider;
@@ -646,6 +647,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected void fillToolBar(IToolBarManager toolBarManager) {
 		if (taskData != null && !taskData.isNew()) {
 			if (repositoryTask != null) {
+				NewSubTaskAction newSubTaskAction = new NewSubTaskAction();
+				newSubTaskAction.selectionChanged(newSubTaskAction, new StructuredSelection(getRepositoryTask()));
+				if (newSubTaskAction.isEnabled()) {
+					toolBarManager.add(newSubTaskAction);
+				}
+
 				synchronizeEditorAction = new SynchronizeEditorAction();
 				synchronizeEditorAction.selectionChanged(new StructuredSelection(this));
 				toolBarManager.add(synchronizeEditorAction);

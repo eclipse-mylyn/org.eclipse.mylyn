@@ -338,7 +338,9 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 	public boolean canGetMultiTaskData() {
 		return true;
 	}
-	public void initializeSubTaskData(TaskRepository taskRepository, RepositoryTaskData taskData,
+
+	@Override
+	public boolean initializeSubTaskData(TaskRepository taskRepository, RepositoryTaskData taskData,
 			RepositoryTaskData parentTaskData, IProgressMonitor monitor) throws CoreException {
 		String project = parentTaskData.getProduct();
 		taskData.setAttributeValue(RepositoryTaskAttribute.PRODUCT, project);
@@ -347,6 +349,12 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		taskData.setAttributeValue(BugzillaReportElement.BLOCKED.getKeyString(), parentTaskData.getId());
 		taskData.setDescription("");
 		taskData.setSummary("");
+		return true;
+	}
+
+	@Override
+	public boolean canInitializeSubTaskData() {
+		return true;
 	}
 
 }

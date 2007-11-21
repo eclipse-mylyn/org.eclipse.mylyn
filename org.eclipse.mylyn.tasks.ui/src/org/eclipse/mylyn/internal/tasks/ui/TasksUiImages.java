@@ -266,7 +266,9 @@ public class TasksUiImages {
 	public static final ImageDescriptor IMAGE_FIT = create(T_TOOL, "capture-fit.png");
 	
 	public static final ImageDescriptor IMAGE_FILE = create(T_OBJ, "file-image.gif");
-	
+
+	public static final ImageDescriptor NEW_SUB_TASK = create(T_TOOL, "sub-task-new.gif");
+
 	private static ImageDescriptor create(String prefix, String name) {
 		try {
 			return ImageDescriptor.createFromURL(makeIconFileURL(prefix, name));
