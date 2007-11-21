@@ -707,6 +707,7 @@
          point="org.eclipse.ui.perspectives">
       <perspective
             class="org.eclipse.mylyn.internal.tasks.ui.PlanningPerspectiveFactory"
+            fixed="false"
             icon="icons/eview16/perspective-planning.png"
             id="org.eclipse.mylyn.tasks.ui.perspectives.planning"
             name="Planning"/>
