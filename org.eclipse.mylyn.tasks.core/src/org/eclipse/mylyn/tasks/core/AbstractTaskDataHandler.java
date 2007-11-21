@@ -77,9 +77,11 @@ public abstract class AbstractTaskDataHandler {
 	}
 
 	/**
+	 * @param task the parent task, may be null
+	 * @param task the parent task data, may be null
 	 * @since 2.2
 	 */
-	public boolean canInitializeSubTaskData() {
+	public boolean canInitializeSubTaskData(AbstractTask task, RepositoryTaskData parentTaskData) {
 		return false;
 	}
 	

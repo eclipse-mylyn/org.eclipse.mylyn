@@ -42,8 +42,6 @@ import org.eclipse.ui.progress.IProgressService;
 
 /**
  * @author Steffen Pingel
- * 
- * TODO support connectors that do not have a rich editor
  */
 public class NewSubTaskAction extends Action implements IViewActionDelegate, IExecutableExtension {
 
@@ -71,7 +69,7 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 				selectedTask.getConnectorKind());
 		final AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
-		if (taskDataHandler == null || !taskDataHandler.canInitializeSubTaskData()) {
+		if (taskDataHandler == null) {
 			return;
 		}
 
@@ -81,9 +79,14 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 		if (selectedTaskData == null) {
 			StatusHandler.displayStatus("Unable to create subtask", new Status(IStatus.WARNING,
 					TasksUiPlugin.ID_PLUGIN, "Could not retrieve task data for task: " + selectedTask.getUrl()));
+			 // TODO try to retrieve task data or fall back to invoking connector code
 			return;
 		}
 
+		if (!taskDataHandler.canInitializeSubTaskData(selectedTask, selectedTaskData)) {
+			return;
+		}
+		
 		final TaskRepository taskRepository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryUrl);
 		AbstractAttributeFactory attributeFactory = taskDataHandler.getAttributeFactory(taskRepository.getUrl(),
 				taskRepository.getConnectorKind(), AbstractTask.DEFAULT_TASK_KIND);
@@ -140,7 +143,7 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 						selectedTask.getConnectorKind());
 				final AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
-				if (taskDataHandler == null || !taskDataHandler.canInitializeSubTaskData()) {
+				if (taskDataHandler == null || !taskDataHandler.canInitializeSubTaskData(selectedTask, null)) {
 					selectedTask = null;
 				}
 			}
