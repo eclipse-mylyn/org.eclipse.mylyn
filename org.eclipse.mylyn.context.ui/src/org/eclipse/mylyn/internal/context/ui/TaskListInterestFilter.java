@@ -9,10 +9,12 @@
 package org.eclipse.mylyn.internal.context.ui;
 
 import java.util.Calendar;
+import java.util.Set;
 
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
+import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -24,31 +26,73 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
  * Goal is to have this reuse as much of the super as possible.
  * 
  * @author Mik Kersten
+ * @author Rob Elves
  */
 public class TaskListInterestFilter extends AbstractTaskListFilter {
 
 	@Override
-	public boolean select(Object parent, Object object) {
+	public boolean select(Object parent, Object child) {
+		System.err.println(">>>");
 		try {
-			if (object instanceof ScheduledTaskContainer) {
-				ScheduledTaskContainer dateRangeTaskContainer = (ScheduledTaskContainer) object;
+
+			if (child instanceof ScheduledTaskContainer) {
+				ScheduledTaskContainer dateRangeTaskContainer = (ScheduledTaskContainer) child;
 				return isDateRangeInteresting(dateRangeTaskContainer);
 			}
-			if (object instanceof AbstractTask) {
+			if (child instanceof AbstractTask) {
 				AbstractTask task = null;
-				if (object instanceof AbstractTask) {
-					task = (AbstractTask) object;
+				if (child instanceof AbstractTask) {
+					task = (AbstractTask) child;
 				}
 				if (task != null) {
 					if (isUninteresting(parent, task)) {
 						return false;
 					} else if (isInteresting(parent, task)) {
+						if (parent instanceof TaskArchive) {
+							return (revealInArchive(task) && shouldAlwaysShow(child, task, TasksUiPlugin.getDefault()
+									.groupSubtasks(task)));
+						}
 						return true;
 					}
 				}
+			} else if (child instanceof TaskArchive) {
+				// Display Archive if contains otherwise non-visible tasks that should always show
+				boolean hasTasksToReveal = false;
+				for (AbstractTask task : ((TaskArchive) child).getChildren()) {
+					if (revealInArchive(task)
+							&& shouldAlwaysShow(child, task, TasksUiPlugin.getDefault().groupSubtasks(task))) {
+						hasTasksToReveal = true;
+						break;
+					}
+				}
+				return hasTasksToReveal;
+			} else if (child instanceof AbstractTaskContainer) {
+				Set<AbstractTask> children = ((AbstractTaskContainer) child).getChildren();
+				// Always display empty containers
+				if (children.size() == 0) {
+					return false;
+				}
+
+				for (AbstractTask task : children) {
+					if (shouldAlwaysShow(child, task, TasksUiPlugin.getDefault().groupSubtasks(task))) {
+						return true;
+					}
+				}
+
 			}
 		} catch (Throwable t) {
 			StatusHandler.fail(t, "interest filter failed", false);
+		}
+		return false;
+	}
+
+	private boolean revealInArchive(AbstractTask task) {
+		if (TasksUiPlugin.getTaskListManager().getTaskList().getContainerForHandle(task.getHandleIdentifier()) == null
+				&& TasksUiPlugin.getTaskListManager()
+						.getTaskList()
+						.getQueriesForHandle(task.getHandleIdentifier())
+						.isEmpty()) {
+			return true;
 		}
 		return false;
 	}
@@ -71,9 +115,8 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		return shouldAlwaysShow(parent, task, TasksUiPlugin.getDefault().groupSubtasks(task));
 	}
 
-	@Override
 	public boolean shouldAlwaysShow(Object parent, AbstractTask task, boolean checkSubTasks) {
-		return super.shouldAlwaysShow(parent, task, checkSubTasks) || hasChanges(parent, task)
+		return task.isActive() || hasChanges(parent, task)
 				|| (TaskActivityManager.getInstance().isCompletedToday(task))
 				|| shouldShowInFocusedWorkweekDateContainer(parent, task)
 				|| (isInterestingForThisWeek(parent, task) && !task.isCompleted())
