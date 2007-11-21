@@ -425,8 +425,14 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		if (url == null) {
 			return null;
 		}
-		int index = url.indexOf(IBugzillaConstants.URL_GET_SHOW_BUG);
-		return index == -1 ? null : url.substring(index + IBugzillaConstants.URL_GET_SHOW_BUG.length());
+		int anchorIndex = url.lastIndexOf("#");
+		String bugUrl = url;
+		if (anchorIndex != -1) {
+			bugUrl = url.substring(0, anchorIndex);
+		}
+		
+		int index = bugUrl.indexOf(IBugzillaConstants.URL_GET_SHOW_BUG);
+		return index == -1 ? null : bugUrl.substring(index + IBugzillaConstants.URL_GET_SHOW_BUG.length());
 	}
 
 	@Override
