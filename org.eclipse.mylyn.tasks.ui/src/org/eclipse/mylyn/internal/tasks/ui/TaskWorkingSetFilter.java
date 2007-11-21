@@ -12,6 +12,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
@@ -22,6 +23,7 @@ import org.eclipse.ui.IWorkingSet;
  * AbstractTaskListFilter for task working sets
  * 
  * @author Eugene Kuleshov
+ * @author Rob Elves
  */
 public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 
@@ -35,8 +37,11 @@ public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 
 	@Override
 	public boolean select(Object parent, Object element) {
-		if (parent instanceof AbstractTaskContainer && !(parent instanceof AbstractTask)
-				&& !(parent instanceof ScheduledTaskContainer)) {
+		if (parent == null && element instanceof AbstractTaskContainer) {
+			return selectWorkingSet((AbstractTaskContainer) element);
+		}
+		if (!(parent instanceof TaskArchive) && parent instanceof AbstractTaskContainer
+				&& !(parent instanceof AbstractTask) && !(parent instanceof ScheduledTaskContainer)) {
 			return selectWorkingSet((AbstractTaskContainer) parent);
 		}
 		if (element instanceof LocalTask) {
@@ -59,9 +64,10 @@ public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 	}
 
 	private boolean selectWorkingSet(AbstractTaskContainer container) {
-		if (currentWorkingSet == null) {
+		if (currentWorkingSet == null || container instanceof TaskArchive) {
 			return true;
 		}
+
 		boolean seenTaskWorkingSets = false;
 		String handleIdentifier = container.getHandleIdentifier();
 		for (IAdaptable adaptable : currentWorkingSet.getElements()) {

@@ -7,8 +7,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.ui;
 
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-
 /**
  * Custom filters are used so that the "Find:" filter can 'see through' any filters that may have been applied.
  * 
@@ -18,7 +16,4 @@ public abstract class AbstractTaskListFilter {
 
 	public abstract boolean select(Object parent, Object element);
 
-	public boolean shouldAlwaysShow(Object parent, AbstractTask task, boolean exposeSubTasks) {
-		return task.isActive();
-	}
 }

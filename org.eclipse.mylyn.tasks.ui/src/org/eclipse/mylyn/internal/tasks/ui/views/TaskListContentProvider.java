@@ -17,7 +17,6 @@ import java.util.Set;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
-import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -33,6 +32,7 @@ import org.eclipse.ui.IWorkingSet;
  * TODO: move to viewer filter architecture?
  * 
  * @author Mik Kersten
+ * @author Rob Elves
  */
 public class TaskListContentProvider extends AbstractTaskListContentProvider {
 
@@ -55,7 +55,7 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	}
 
 	/**
-	 * @return	 first parent found
+	 * @return first parent found
 	 */
 	public Object getParent(Object child) {
 		// Return first parent found, first search within queries then categories.
@@ -120,14 +120,8 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 			List<AbstractTaskContainer> filteredRoots = new ArrayList<AbstractTaskContainer>();
 			for (AbstractTaskContainer element : roots) {
 				// NOTE: tasks can no longer appear as root elements
-				if (element instanceof AbstractRepositoryQuery) {
-					if (selectQuery((AbstractRepositoryQuery) element)) {
-						filteredRoots.add(element);
-					}
-				} else if (element instanceof AbstractTaskCategory) {
-					if (selectContainer(element)) {
-						filteredRoots.add(element);
-					}
+				if (selectContainer(element)) {
+					filteredRoots.add(element);
 				}
 			}
 			return filteredRoots;
@@ -158,23 +152,8 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 		return filterText == null || filterText.length() == 0;
 	}
 
-	// TODO: should only know about containers, not queries
-	private boolean selectQuery(AbstractRepositoryQuery query) {
-		Set<AbstractTask> hits = query.getChildren();
-		if (hits.size() == 0) {
-			return true;
-		}
-		for (AbstractTask element : hits) {
-			if (!filter(query, element)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	private boolean selectContainer(AbstractTaskContainer container) {
-		// TODO: move to interest filter
-		if (/*taskListView.isFocusedMode() && */container instanceof ScheduledTaskContainer) {
+		if (container instanceof ScheduledTaskContainer) {
 			ScheduledTaskContainer scheduleContainer = (ScheduledTaskContainer) container;
 			if (TasksUiPlugin.getTaskActivityManager().isWeekDay(scheduleContainer)
 					&& (scheduleContainer.isPresent() || scheduleContainer.isFuture())) {
@@ -184,84 +163,20 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 			}
 		}
 
-		if (filter(null, container) && !shouldAlwaysShow(container)) {
+		if (filter(null, container)) {
 			return false;
 		}
-
-		Set<AbstractTask> children = container.getChildren();
-		if (children.size() == 0) {
-			return true;
-		}
-		for (AbstractTaskContainer child : children) {
-			if (!filter(container, child)) {
-				return true;
-			}
-		}
-		return false;
+		return true;
 	}
 
-	private boolean shouldAlwaysShow(AbstractTaskContainer container) {
-		for (AbstractTask task : container.getChildren()) {
-			if (shouldAlwaysShow(container, task)) {
-				if (container instanceof TaskArchive) {
-					if (TasksUiPlugin.getTaskListManager().getTaskList().getContainerForHandle(
-							task.getHandleIdentifier()) == null
-							&& TasksUiPlugin.getTaskListManager().getTaskList().getQueriesForHandle(
-									task.getHandleIdentifier()).isEmpty()) {
-						return true;
-					}
-				} else {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	private boolean shouldAlwaysShow(Object parent, AbstractTask task) {
-		for (AbstractTaskListFilter filter : this.taskListView.getFilters()) {
-			if (filter.shouldAlwaysShow(parent, task, TasksUiPlugin.getDefault().groupSubtasks(task))) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	// TODO: This can be simplified post bug#124321
 	private List<AbstractTaskContainer> getFilteredChildrenFor(Object parent) {
 		if (containsNoFilterText((this.taskListView.getFilteredTree().getFilterControl()).getText())) {
 			List<AbstractTaskContainer> children = new ArrayList<AbstractTaskContainer>();
 			if (parent instanceof AbstractTaskCategory) {
-				if (filter(null, parent)) {
-					if (((AbstractTaskContainer) parent) instanceof TaskArchive) {
-						for (AbstractTask task : ((AbstractTaskContainer) parent).getChildren()) {
-							if (shouldAlwaysShow(parent, task)) {
-								// TODO: archive logic?
-								if (TasksUiPlugin.getTaskListManager().getTaskList().getQueriesForHandle(
-										task.getHandleIdentifier()).size() == 0) {
-									children.add(task);
-								}
-							}
-						}
-						return children;
-					}
-				}
 				children = getFilteredRootChildren((AbstractTaskContainer) parent);
-//				Set<AbstractTask> parentsTasks = ((AbstractTaskContainer) parent).getChildren();
-//				for (AbstractTaskContainer element : parentsTasks) {
-//					if (!filter(parent, element)) {
-//						children.add(element);
-//					}
-//				}
 				return children;
 			} else if (parent instanceof AbstractRepositoryQuery) {
 				return getFilteredRootChildren((AbstractTaskContainer) parent);
-//				for (AbstractTaskContainer element : ((AbstractRepositoryQuery) parent).getChildren()) {
-//					if (!filter(parent, element)) {
-//						children.add(element);
-//					}
-//				}
-//				return children;
 			} else if (parent instanceof AbstractTask) {
 				Set<AbstractTask> subTasks = ((AbstractTask) parent).getChildren();
 				for (AbstractTask t : subTasks) {

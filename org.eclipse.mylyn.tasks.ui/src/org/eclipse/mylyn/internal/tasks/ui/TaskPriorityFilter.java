@@ -8,10 +8,8 @@
 package org.eclipse.mylyn.internal.tasks.ui;
 
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
-import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Mik Kersten
@@ -34,13 +32,6 @@ public class TaskPriorityFilter extends AbstractTaskListFilter {
 	@Override
 	public boolean select(Object parent, Object element) {
 		if (element instanceof AbstractTaskContainer) {
-			boolean exposeSubTasks = TasksUiPlugin.getDefault().groupSubtasks((AbstractTaskContainer) element);
-			if (element instanceof AbstractTask) {
-				AbstractTask task = (AbstractTask) element;
-				if (shouldAlwaysShow(parent, task, exposeSubTasks)) {
-					return true;
-				}
-			}
 			String priority = ((AbstractTaskContainer) element).getPriority();
 			if (priority == null || !(priority.startsWith(PRIORITY_PREFIX))) {
 				return true;
