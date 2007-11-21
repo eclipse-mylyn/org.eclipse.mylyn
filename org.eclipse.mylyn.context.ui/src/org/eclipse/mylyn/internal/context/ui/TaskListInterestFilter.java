@@ -32,7 +32,6 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 
 	@Override
 	public boolean select(Object parent, Object child) {
-		System.err.println(">>>");
 		try {
 
 			if (child instanceof ScheduledTaskContainer) {
