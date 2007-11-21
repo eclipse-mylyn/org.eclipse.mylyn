@@ -29,10 +29,15 @@ public class InterestDecoratorLightweight implements ILightweightLabelDecorator 
 	}
 
 	public void decorate(Object element, IDecoration decoration) {
+		if (ContextCorePlugin.getContextManager() != null && !ContextCorePlugin.getContextManager().isContextActive()) {
+			return;
+		}
+		
 		AbstractContextStructureBridge bridge = null;
 		try {
-			if (ContextCorePlugin.getDefault() == null)
+			if (ContextCorePlugin.getDefault() == null) {
 				return;
+			}
 			bridge = ContextCorePlugin.getDefault().getStructureBridge(element);
 		} catch (ConcurrentModificationException cme) {
 			// ignored, because we can add structure bridges during decoration
