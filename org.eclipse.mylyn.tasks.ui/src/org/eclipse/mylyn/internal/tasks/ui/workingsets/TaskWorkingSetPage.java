@@ -263,11 +263,12 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 	}
 
 	class CustomSorter extends ViewerSorter {
+		
 		@Override
 		public int compare(Viewer viewer, Object e1, Object e2) {
-			if (e1 instanceof TaskRepository) {
+			if (e1 instanceof TaskRepository || e1 instanceof TaskRepositoryProjectMapping) {
 				return -1;
-			} else if (e2 instanceof TaskRepository) {
+			} else if (e2 instanceof TaskRepository || e2 instanceof TaskRepositoryProjectMapping) {
 				return 1;
 			} else if (e1 instanceof ElementCategory && ((ElementCategory) e1).getLabel(e1).equals(LABEL_TASKS)) {
 				return -1;
