@@ -8,10 +8,10 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
-import java.util.Arrays;
 import java.util.Set;
 
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
@@ -24,6 +24,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.TreeItem;
 
 /**
  * @author Mik Kersten
@@ -144,7 +145,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 						taskListView.synchronizationOverlaid));
 			} else {
 				int imageOffset = 0;
-				if (!hideDecorationOnContainer(element) && hasDescendantIncoming(element)) {
+				if (!hideDecorationOnContainer(element, (TreeItem)event.item) && hasDescendantIncoming(element)) {
 					if (taskListView.synchronizationOverlaid) {
 						image = TasksUiImages.getImage(TasksUiImages.OVERLAY_SYNCH_INCOMMING);
 					} else {
@@ -181,9 +182,14 @@ class CustomTaskListDecorationDrawer implements Listener {
 		}
 	}
 
-	private boolean hideDecorationOnContainer(AbstractTaskContainer element) {
-		return taskListView.isFocusedMode()
-				&& Arrays.asList(this.taskListView.getViewer().getExpandedElements()).contains(element);
+	private boolean hideDecorationOnContainer(AbstractTaskContainer element, TreeItem treeItem) {
+//		if (taskListView.isFocusedMode()) {
+		
+		if (element instanceof AbstractRepositoryQuery || element instanceof TaskCategory) {
+			return treeItem.getExpanded();
+		} else {
+			return false;
+		}
 	}
 
 	private boolean hasDescendantIncoming(AbstractTaskContainer container) {
