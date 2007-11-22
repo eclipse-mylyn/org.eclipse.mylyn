@@ -2868,7 +2868,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	public Object getAdapterDelgate(Class<?> adapter) {
 		if (IContentOutlinePage.class.equals(adapter)) {
-			if (outlinePage == null && editorInput != null) {
+			if (outlinePage == null && editorInput != null && taskOutlineModel != null) {
 				outlinePage = new RepositoryTaskOutlinePage(taskOutlineModel);
 			}
 			return outlinePage;
