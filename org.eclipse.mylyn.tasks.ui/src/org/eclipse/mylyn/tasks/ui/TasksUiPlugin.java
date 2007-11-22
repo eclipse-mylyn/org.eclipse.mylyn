@@ -902,20 +902,27 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	/**
 	 * Retrieve the task repository that has been associated with the given project (or resource belonging to a project)
-	 *
+	 * 
 	 * API-3.0: remove "silent" parameter
 	 */
 	public TaskRepository getRepositoryForResource(IResource resource, boolean silent) {
 		if (resource == null) {
 			return null;
 		}
-
+		Set<AbstractTaskRepositoryLinkProvider> defectiveLinkProviders = new HashSet<AbstractTaskRepositoryLinkProvider>();
 		for (AbstractTaskRepositoryLinkProvider linkProvider : repositoryLinkProviders) {
+			long startTime = System.nanoTime();
 			TaskRepository repository = linkProvider.getTaskRepository(resource, getRepositoryManager());
+			long elapsed = System.nanoTime() - startTime;
+			System.err.println(">>> " + elapsed);
+			if (elapsed > 5 * 1000 * 1000 * 1000) {
+				defectiveLinkProviders.add(linkProvider);
+			}
 			if (repository != null) {
 				return repository;
 			}
 		}
+		repositoryLinkProviders.removeAll(defectiveLinkProviders);
 
 		if (!silent) {
 			MessageDialog.openInformation(null, "No Repository Found",
@@ -994,7 +1001,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			if (ignoreAttribute(newTaskData, newAttribute)) {
 				continue;
 			}
-			
+
 			List<String> newValues = newAttribute.getValues();
 			if (newValues != null) {
 				RepositoryTaskAttribute oldAttribute = oldTaskData.getAttribute(newAttribute.getId());
@@ -1014,7 +1021,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			if (ignoreAttribute(oldTaskData, oldAttribute)) {
 				continue;
 			}
-			
+
 			RepositoryTaskAttribute attribute = newTaskData.getAttribute(oldAttribute.getId());
 			List<String> values = oldAttribute.getValues();
 			if (attribute == null && values != null && !values.isEmpty()) {
@@ -1078,13 +1085,13 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			return false;
 		}
 		return (attribute.isHidden()
-			|| attribute.getId().equals(factory.mapCommonAttributeKey(RepositoryTaskAttribute.DATE_MODIFIED)) 
-			|| attribute.getId().equals(factory.mapCommonAttributeKey(RepositoryTaskAttribute.DATE_CREATION))
-			|| "delta_ts".equals(attribute.getId())
-			|| "longdesclength".equals(attribute.getId()));
+				|| attribute.getId().equals(factory.mapCommonAttributeKey(RepositoryTaskAttribute.DATE_MODIFIED))
+				|| attribute.getId().equals(factory.mapCommonAttributeKey(RepositoryTaskAttribute.DATE_CREATION))
+				|| "delta_ts".equals(attribute.getId()) || "longdesclength".equals(attribute.getId()));
 	}
-	
-	private static Change getDiff(RepositoryTaskData taskData, RepositoryTaskAttribute attribute, List<String> oldValues, List<String> newValues) {
+
+	private static Change getDiff(RepositoryTaskData taskData, RepositoryTaskAttribute attribute,
+			List<String> oldValues, List<String> newValues) {
 //		AbstractAttributeFactory factory = taskData.getAttributeFactory();
 //		if (attribute.getId().equals(factory.mapCommonAttributeKey(RepositoryTaskAttribute.DATE_MODIFIED)) 
 //			|| attribute.getId().equals(factory.mapCommonAttributeKey(RepositoryTaskAttribute.DATE_CREATION))) {
@@ -1107,7 +1114,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 //			}
 //			return change;		
 //		}
-		
+
 		Change change = new Change(attribute.getName(), newValues);
 		if (oldValues != null) {
 			for (String value : oldValues) {
