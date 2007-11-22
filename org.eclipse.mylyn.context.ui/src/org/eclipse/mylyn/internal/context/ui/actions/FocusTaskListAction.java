@@ -103,13 +103,12 @@ public class FocusTaskListAction extends AbstractFocusViewAction implements IFil
 				if (!taskListView.getFilters().contains(taskListInterestFilter)) {
 					taskListView.addFilter(taskListInterestFilter);
 				}
-//				taskListView.getViewer().getTree().setHeaderVisible(false);
 				taskListView.getViewer().expandAll();
 				// Setting sorter causes root refresh
 				taskListView.getViewer().setSorter(taskListInterestSorter);
 				taskListView.setManualFiltersEnabled(false);
 				taskListView.selectedAndFocusTask(TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask());
-				//taskListView.refreshAndFocus(true);
+
 			} finally {
 				taskListView.getViewer().getControl().setRedraw(true);
 			}

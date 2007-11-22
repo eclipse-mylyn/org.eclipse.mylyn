@@ -103,7 +103,7 @@ public class ContextCopyAction extends TaskContextAction {
 				TasksUiPlugin.getTaskListManager().activateTask(targetTask);
 				TaskListView view = TaskListView.getFromActivePerspective();
 				if (view != null) {
-					view.refreshAndFocus(false);
+					view.refresh();
 				}
 			}
 		} else {
