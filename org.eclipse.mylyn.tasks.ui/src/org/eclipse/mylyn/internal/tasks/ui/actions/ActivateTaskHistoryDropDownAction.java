@@ -125,7 +125,7 @@ public class ActivateTaskHistoryDropDownAction extends TaskNavigateDropDownActio
 			if (previousTask != null && !previousTask.isActive()) {
 				TasksUiPlugin.getTaskListManager().activateTask(previousTask, false);
 				if (TaskListView.getFromActivePerspective() != null) {
-					TaskListView.getFromActivePerspective().refreshAndFocus(false);
+					TaskListView.getFromActivePerspective().refresh();
 				}
 			}
 			

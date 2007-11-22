@@ -92,7 +92,7 @@ public class TaskImportAction extends Action implements IViewActionDelegate {
 
 	public void refreshTaskListView() {
 		if (TaskListView.getFromActivePerspective() != null) {
-			TaskListView.getFromActivePerspective().refreshAndFocus(false);
+			TaskListView.getFromActivePerspective().refresh();
 		}
 	}
 

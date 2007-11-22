@@ -12,6 +12,7 @@ import java.util.LinkedHashSet;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
@@ -39,10 +40,18 @@ abstract class DelayedRefreshJob extends WorkbenchJob {
 	public DelayedRefreshJob(TreeViewer treeViewer, String name) {
 		super(name);
 		this.treeViewer = treeViewer;
-		
 		setSystem(true);
 	}
 
+	public void forceRefresh() {
+		queue.add(null);
+		runInUIThread(new NullProgressMonitor());
+	}
+
+	public synchronized void refresh() {
+		refreshTask(null);
+	}
+	
 	public synchronized void refreshTask(Object element) {
 		queue.add(element);
 
@@ -99,4 +108,5 @@ abstract class DelayedRefreshJob extends WorkbenchJob {
 	}
 
 	protected abstract void updateExpansionState(Object item);
+
 }

@@ -99,7 +99,7 @@ class TaskListCellModifier implements ICellModifier {
 		} catch (Exception e) {
 			StatusHandler.fail(e, e.getMessage(), true);
 		}
-		this.taskListView.getViewer().refresh();
+		this.taskListView.refresh();//.getViewer().refresh();
 	}
 
 	public void toggleTaskActivation(TreeItem element) {

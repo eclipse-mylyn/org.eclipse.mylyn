@@ -404,7 +404,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 						updateDescription(task);
 						selectedAndFocusTask(task);
 						filteredTree.indicateActiveTask(task);
-						refreshAndFocus(false);
+						refresh();
 					}
 				});
 			}
@@ -424,7 +424,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					if (ScheduledPresentation.ID.equals(getCurrentPresentation().getId())) {
-						refresh(week);
+						refreshJob.refreshTask(week);
 					}
 				}
 			});
@@ -433,7 +433,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		public void taskListRead() {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					refresh(null);
+					refreshJob.refresh();
 				}
 			});
 		}
@@ -447,27 +447,27 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 					for (TaskContainerDelta taskContainerDelta : deltas) {
 						if (ScheduledPresentation.ID.equals(getCurrentPresentation().getId())) {
 							// TODO: implement refresh policy for scheduled presentation
-							refresh(null);
+							refreshJob.refresh();
 						} else {
 							if (taskContainerDelta.getContainer() instanceof AbstractTask) {
 								refreshTask(taskContainerDelta);
 							} else { // category or query
 								switch (taskContainerDelta.getKind()) {
 								case ROOT:
-									refresh(null);
+									refreshJob.refresh();
 									break;
 								case ADDED:
-									refresh(null);
+									refreshJob.refresh();
 									break;
 								case REMOVED:
-									refresh(null);
+									refreshJob.refresh();
 									break;
 								default:
 									if (taskContainerDelta.getContainer().equals(
 											TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory())) {
-										refresh(null);
+										refreshJob.refresh();
 									} else {
-										refresh(taskContainerDelta.getContainer());
+										refreshJob.refreshTask(taskContainerDelta.getContainer());
 									}
 								}
 							}
@@ -938,7 +938,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			}
 			AbstractTaskListContentProvider contentProvider = presentation.getContentProvider(this);
 			getViewer().setContentProvider(contentProvider);
-			refreshAndFocus(isFocusedMode());
+			refresh(true);
 
 			currentPresentation = presentation;
 		} finally {
@@ -1388,12 +1388,28 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		}
 	}
 
-	public void refreshAndFocus(boolean expand) {
-		if (expand) {
-			getViewer().expandAll();
+	public void refresh(boolean expandIfFocused) {
+		if (expandIfFocused && isFocusedMode()) {
+			try {
+				getViewer().getControl().setRedraw(false);
+				refreshJob.forceRefresh();
+				getViewer().expandAll();
+			} finally {
+				getViewer().getControl().setRedraw(true);
+			}
+		} else {
+			refreshJob.forceRefresh();
 		}
-		refresh(null);
-		selectedAndFocusTask(TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask());
+	}
+	
+	public void refresh() {
+		refreshJob.forceRefresh();
+//		if (expand) {
+//			getViewer().expandAll();
+//		}
+//		getViewer().refresh();
+//		refresh(null);
+//		selectedAndFocusTask(TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask());
 	}
 
 	public TaskListToolTip getToolTip() {
@@ -1559,13 +1575,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		}
 	}
 
-	/**
-	 * Encapsulates refresh policy.
-	 */
-	private void refresh(final AbstractTaskContainer element) {
-		refreshJob.refreshTask(element);
-	}
-
 	public Image[] getPirorityImages() {
 		Image[] images = new Image[PriorityLevel.values().length];
 		for (int i = 0; i < PriorityLevel.values().length; i++) {
@@ -1685,31 +1694,31 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		AbstractTask task = (AbstractTask) taskContainerDelta.getContainer();
 		switch (taskContainerDelta.getKind()) {
 		case ROOT:
-			refresh(null);
+			refreshJob.refresh();
 			break;
 		case ADDED:
-			refresh(null);
+			refreshJob.refresh();
 			break;
 		case REMOVED:
-			refresh(null);
+			refreshJob.refresh();
 			break;
 		default:
 			// TODO: move logic into deltas
-			refresh(task);
+			refreshJob.refreshTask(task);
 			Set<AbstractTaskContainer> containers = new HashSet<AbstractTaskContainer>(
 					TasksUiPlugin.getTaskListManager().getTaskList().getQueriesForHandle(task.getHandleIdentifier()));
 			containers.addAll(task.getParentContainers());
 			containers.add(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer());
 			containers.add(TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 			for (AbstractTaskContainer container : containers) {
-				refresh(container);
+				refreshJob.refreshTask(container);
 			}
 			break;
 		}
 	}
 
 	private void updateToolTip(boolean force) {
-		if (taskListToolTip.isVisible()) {
+		if (taskListToolTip != null && taskListToolTip.isVisible()) {
 			if (!force && taskListToolTip.isTriggeredByMouse()) {
 				return;
 			}

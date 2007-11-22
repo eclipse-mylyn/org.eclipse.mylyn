@@ -44,7 +44,8 @@ public class NewTaskWizardRepositorySelectionTest extends TestCase {
 				TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 
 		view.setFocusedMode(true);
-		view.refreshAndFocus(true);
+		view.getViewer().refresh();
+		view.getViewer().expandAll();
 		view.getViewer().setSelection(new StructuredSelection(mockTask), true);
 		assertEquals(mockTask, ((StructuredSelection) view.getViewer().getSelection()).getFirstElement());
 

@@ -40,15 +40,17 @@ public class GroupSubTasksAction extends Action {
 		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TasksUiPreferenceConstants.GROUP_SUBTASKS,
 				isChecked());
 		// TODO: refresh not getting rid of subtasks
-		try {
-			view.getViewer().getControl().setRedraw(false);
-			view.getViewer().collapseAll();
-			if (view.isFocusedMode()) {
-				view.getViewer().expandAll();
-			}
-			view.getViewer().refresh();
-		} finally {
-			view.getViewer().getControl().setRedraw(true);
-		}
+		
+		view.refresh(true);
+//		try {
+//			view.getViewer().getControl().setRedraw(false);
+//			view.getViewer().collapseAll();
+//			if (view.isFocusedMode()) {
+//				view.getViewer().expandAll();
+//			}
+//			view.getViewer().refresh();
+//		} finally {
+//			view.getViewer().getControl().setRedraw(true);
+//		}
 	}
 }

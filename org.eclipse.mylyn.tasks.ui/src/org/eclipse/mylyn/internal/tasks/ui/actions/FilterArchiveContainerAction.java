@@ -44,6 +44,6 @@ public class FilterArchiveContainerAction extends Action {
 		} else {
 			view.removeFilter(view.getArchiveFilter());
 		}
-		this.view.getViewer().refresh();
+		this.view.refresh();
 	}
 }
