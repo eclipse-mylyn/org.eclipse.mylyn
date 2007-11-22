@@ -101,6 +101,8 @@ import org.osgi.framework.BundleContext;
  */
 public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
+	private static final int LINK_PROVIDER_TIMEOUT_SECONDS = 5;
+
 	public static final String LABEL_VIEW_REPOSITORIES = "Task Repositories";
 
 	public static final String ID_PLUGIN = "org.eclipse.mylyn.tasks.ui";
@@ -903,6 +905,9 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	/**
 	 * Retrieve the task repository that has been associated with the given project (or resource belonging to a project)
 	 * 
+	 * NOTE: if call does not return in LINK_PROVIDER_TIMEOUT_SECONDS, the provide will be disabled
+	 * until the next time that the Workbench starts.
+	 * 
 	 * API-3.0: remove "silent" parameter
 	 */
 	public TaskRepository getRepositoryForResource(IResource resource, boolean silent) {
@@ -914,16 +919,18 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			long startTime = System.nanoTime();
 			TaskRepository repository = linkProvider.getTaskRepository(resource, getRepositoryManager());
 			long elapsed = System.nanoTime() - startTime;
-			System.err.println(">>> " + elapsed);
-			if (elapsed > 5 * 1000 * 1000 * 1000) {
+			if (elapsed > LINK_PROVIDER_TIMEOUT_SECONDS * 1000 * 1000 * 1000) {
 				defectiveLinkProviders.add(linkProvider);
 			}
 			if (repository != null) {
 				return repository;
 			}
 		}
-		repositoryLinkProviders.removeAll(defectiveLinkProviders);
-
+		if (!defectiveLinkProviders.isEmpty()) {
+			repositoryLinkProviders.removeAll(defectiveLinkProviders);
+			StatusHandler.log(new Status(IStatus.WARNING, ID_PLUGIN, "Repository link provider took over 5s to execute and was timed out: " + defectiveLinkProviders));
+		}
+		
 		if (!silent) {
 			MessageDialog.openInformation(null, "No Repository Found",
 					"No repository was found. Associate a Task Repository with this project via the project's property page.");
