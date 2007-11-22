@@ -208,9 +208,9 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 			// get all children
 			for (AbstractTask element : parentTasks) {
 				for (AbstractTask abstractTask : element.getChildren()) {
-					if (!filter(element, abstractTask)) {
-						children.add(abstractTask);
-					}
+					//if (!filter(element, abstractTask)) {
+					children.add(abstractTask);
+					//}
 				}
 			}
 			for (AbstractTask task : parentTasks) {
