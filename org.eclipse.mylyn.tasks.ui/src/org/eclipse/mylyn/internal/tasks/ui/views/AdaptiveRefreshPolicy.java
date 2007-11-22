@@ -81,8 +81,9 @@ public class AdaptiveRefreshPolicy {
 	};
 
 	public void textChanged(String text) {
-		if (refreshJob == null)
-			return;
+		if (refreshJob == null) {
+			return; 
+		}
 		refreshJob.cancel();
 		int refreshDelay = 0;
 		int textLength = text.length();

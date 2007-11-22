@@ -1540,7 +1540,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		if (task == null || getViewer().getControl().isDisposed()) {
 			return;
 		}
-
 		saveSelection();
 
 		IStructuredSelection selection = restoreSelection(task);
