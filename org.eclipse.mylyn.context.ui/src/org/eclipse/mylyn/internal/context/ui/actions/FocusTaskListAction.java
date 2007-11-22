@@ -24,7 +24,6 @@ import org.eclipse.mylyn.internal.context.ui.TaskListInterestSorter;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.views.IFilteredTreeListener;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IViewPart;
 
 /**
@@ -103,12 +102,11 @@ public class FocusTaskListAction extends AbstractFocusViewAction implements IFil
 				if (!taskListView.getFilters().contains(taskListInterestFilter)) {
 					taskListView.addFilter(taskListInterestFilter);
 				}
-				taskListView.getViewer().expandAll();
 				// Setting sorter causes root refresh
 				taskListView.getViewer().setSorter(taskListInterestSorter);
+				taskListView.getViewer().expandAll();
 				taskListView.setManualFiltersEnabled(false);
-				taskListView.selectedAndFocusTask(TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask());
-
+//				taskListView.selectedAndFocusTask(TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask());
 			} finally {
 				taskListView.getViewer().getControl().setRedraw(true);
 			}
@@ -136,7 +134,7 @@ public class FocusTaskListAction extends AbstractFocusViewAction implements IFil
 
 				// Setting the sorter causes a root refresh
 				taskListView.getViewer().setSorter(previousSorter);
-				taskListView.selectedAndFocusTask(TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask());
+//				taskListView.selectedAndFocusTask(TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask());
 				//taskListView.refreshAndFocus(false);
 			} finally {
 				taskListView.getViewer().getControl().setRedraw(true);
