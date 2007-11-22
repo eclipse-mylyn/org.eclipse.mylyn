@@ -130,6 +130,8 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -268,8 +270,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private boolean expandedStateAttributes = false;
 
-	protected StyledText summaryText;
-
 	protected Button submitButton;
 
 	private Table attachmentsTable;
@@ -283,6 +283,13 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	private Composite editorComposite;
 
 	protected TextViewer summaryTextViewer;
+
+	/**
+	 * WARNING: This is present for backward compatibility only. You can get and set text on this widget but all ui
+	 * related changes to this widget will have no affect as ui is now being presented with a StyledText widget. This
+	 * simply proxies get/setText calls to the StyledText widget.
+	 */
+	protected Text summaryText;
 
 	private TextViewer newCommentTextViewer;
 
@@ -587,8 +594,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		// setFormHeaderLabel();
 		addHeaderControls();
 
-		if (summaryText != null) {
-			summaryText.setFocus();
+		if (summaryTextViewer != null) {
+			summaryTextViewer.getTextWidget().setFocus();
 		}
 	}
 
@@ -1270,11 +1277,51 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				attribute = taskData.getAttribute(RepositoryTaskAttribute.SUMMARY);
 			}
 
+			final RepositoryTaskAttribute summaryAttribute = attribute;
+
 			summaryTextViewer = addTextEditor(repository, summaryComposite, attribute.getValue(), true, SWT.FLAT
 					| SWT.SINGLE);
+			Composite hiddenComposite = new Composite(summaryComposite, SWT.NONE);
+			hiddenComposite.setLayout(new GridLayout());
+			GridData hiddenLayout = new GridData();
+			hiddenLayout.exclude = true;
+			hiddenComposite.setLayoutData(hiddenLayout);
+
+			// bugg#210695 - work around for 2.0 api breakage
+			summaryText = new Text(hiddenComposite, SWT.NONE);
+			summaryText.setText(attribute.getValue());
+			summaryText.addKeyListener(new KeyListener() {
+
+				public void keyPressed(KeyEvent e) {
+					if (summaryTextViewer != null && !summaryTextViewer.getTextWidget().isDisposed()) {
+						String newValue = summaryText.getText();
+						String oldValue = summaryTextViewer.getTextWidget().getText();
+						if (!newValue.equals(oldValue)) {
+							summaryTextViewer.getTextWidget().setText(newValue);
+							summaryAttribute.setValue(newValue);
+							attributeChanged(summaryAttribute);
+						}
+					}
+				}
+
+				public void keyReleased(KeyEvent e) {
+					// ignore
+				}
+			});
+
+			summaryText.addFocusListener(new FocusListener() {
+
+				public void focusGained(FocusEvent e) {
+					summaryTextViewer.getTextWidget().setFocus();
+				}
+
+				public void focusLost(FocusEvent e) {
+					// ignore
+				}
+			});
+
 			summaryTextViewer.setEditable(true);
-			summaryText = summaryTextViewer.getTextWidget();
-			summaryText.setIndent(2);
+			summaryTextViewer.getTextWidget().setIndent(2);
 			GridDataFactory.fillDefaults().grab(true, false).applyTo(summaryTextViewer.getControl());
 
 			if (hasChanged(attribute)) {
@@ -1282,14 +1329,15 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			}
 			summaryTextViewer.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 
-			final RepositoryTaskAttribute summaryAttribute = attribute;
-
 			summaryTextViewer.addTextListener(new ITextListener() {
 				public void textChanged(TextEvent event) {
 					String newValue = summaryTextViewer.getTextWidget().getText();
 					if (!newValue.equals(summaryAttribute.getValue())) {
 						summaryAttribute.setValue(newValue);
 						attributeChanged(summaryAttribute);
+					}
+					if (summaryText != null && !newValue.equals(summaryText.getText())) {
+						summaryText.setText(newValue);
 					}
 				}
 			});
@@ -2593,9 +2641,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	@Override
 	public void setFocus() {
-		if (summaryText != null && !summaryText.isDisposed()) {
+		if (summaryTextViewer != null && !summaryTextViewer.getTextWidget().isDisposed()) {
 			if (firstFocus) {
-				summaryText.setFocus();
+				summaryTextViewer.getTextWidget().setFocus();
 				firstFocus = false;
 			}
 		} else {
@@ -2954,8 +3002,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	public void setSummaryText(String text) {
-		if (summaryText != null) {
-			this.summaryText.setText(text);
+		if (summaryTextViewer != null && summaryTextViewer.getTextWidget() != null) {
+			summaryTextViewer.getTextWidget().setText(text);
 		}
 	}
 
