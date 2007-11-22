@@ -37,11 +37,14 @@ public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 
 	@Override
 	public boolean select(Object parent, Object element) {
+		if (parent instanceof AbstractTask || element instanceof TaskArchive) {
+			return true;
+		}
 		if (parent == null && element instanceof AbstractTaskContainer) {
 			return selectWorkingSet((AbstractTaskContainer) element);
 		}
 		if (!(parent instanceof TaskArchive) && parent instanceof AbstractTaskContainer
-				&& !(parent instanceof AbstractTask) && !(parent instanceof ScheduledTaskContainer)) {
+				&& !(parent instanceof ScheduledTaskContainer)) {
 			return selectWorkingSet((AbstractTaskContainer) parent);
 		}
 		if (element instanceof LocalTask) {
@@ -49,7 +52,7 @@ public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 				return selectWorkingSet(container);
 			}
 		}
-		if (element instanceof AbstractTask) {
+		if (parent instanceof TaskArchive && element instanceof AbstractTask) {
 			Set<AbstractRepositoryQuery> queries = taskList.getQueriesForHandle(((AbstractTask) element).getHandleIdentifier());
 			if (!queries.isEmpty()) {
 				for (AbstractRepositoryQuery query : queries) {
@@ -64,7 +67,7 @@ public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 	}
 
 	private boolean selectWorkingSet(AbstractTaskContainer container) {
-		if (currentWorkingSet == null || container instanceof TaskArchive) {
+		if (currentWorkingSet == null) {
 			return true;
 		}
 
