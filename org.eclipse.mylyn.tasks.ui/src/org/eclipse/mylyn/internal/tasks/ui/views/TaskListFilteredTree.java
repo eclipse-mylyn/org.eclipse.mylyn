@@ -412,8 +412,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			workingSetLink.setToolTipText(LABEL_SETS_EDIT);
 			currentWorkingSet = workingSet;
 		}
-		updateTaskProgressBar();
-		filterComposite.layout();
+		filterComposite.layout(); 
 	}
 
 	public void indicateActiveTask(AbstractTask task) {
