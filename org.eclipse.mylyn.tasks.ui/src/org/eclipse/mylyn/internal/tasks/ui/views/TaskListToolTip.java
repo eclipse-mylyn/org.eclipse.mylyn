@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskListNotification;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.monitor.core.DateUtil;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -85,10 +86,13 @@ public class TaskListToolTip extends ToolTip {
 		super(control);
 
 		this.control = control;
-
 		setShift(new Point(1, 1));
 	}
 
+	public void dispose() {
+		hide();
+	}
+	
 	@Override
 	protected void afterHideToolTip(Event event) {
 		triggeredByMouse = true;
@@ -107,7 +111,10 @@ public class TaskListToolTip extends ToolTip {
 	}
 
 	private AbstractTaskContainer getTaskListElement(Object hoverObject) {
-		if (hoverObject instanceof Widget) {
+		if (hoverObject instanceof TaskListHyperlink) {
+			TaskListHyperlink hyperlink = (TaskListHyperlink)hoverObject;
+			return hyperlink.getTask();
+		} else if (hoverObject instanceof Widget) {
 			Object data = ((Widget) hoverObject).getData();
 			if (data != null) {
 				if (data instanceof AbstractTaskContainer) {
@@ -372,7 +379,7 @@ public class TaskListToolTip extends ToolTip {
 			return w.getItem(widgetPosition);
 		}
 
-		return null;
+		return widget;
 	}
 
 	private Rectangle getBounds(Widget widget) {
@@ -399,7 +406,9 @@ public class TaskListToolTip extends ToolTip {
 			Widget tipWidget = getTipWidget(event);
 			if (tipWidget != null) {
 				Rectangle bounds = getBounds(tipWidget);
-				if (bounds != null && control.getBounds().contains(bounds.x, bounds.y)) {
+				if (tipWidget instanceof TaskListHyperlink) {
+					currentTipElement = getTaskListElement(tipWidget);
+				} else if (bounds != null && control.getBounds().contains(bounds.x, bounds.y)) {
 					currentTipElement = getTaskListElement(tipWidget);
 				}
 			}

@@ -96,11 +96,19 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 	private CopyTaskDetailsAction copyTaskDetailsAction = new CopyTaskDetailsAction(false);
 
+	private TaskListToolTip taskListToolTip;
+
 	public TaskListFilteredTree(Composite parent, int treeStyle, PatternFilter filter) {
 		super(parent, treeStyle, filter);
 		hookContextMenu();
 	}
 
+	@Override
+	public void dispose() {
+		super.dispose();
+		taskListToolTip.dispose();
+	}
+	
 	private void hookContextMenu() {
 		activeTaskMenuManager = new MenuManager("#PopupMenu");
 		activeTaskMenuManager.setRemoveAllWhenShown(true);
@@ -319,7 +327,9 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		activeTaskLink = new TaskListHyperlink(container, SWT.LEFT);
 		activeTaskLink.setText(LABEL_ACTIVE_NONE);
 		activeTaskLink.setForeground(TaskListColorsAndFonts.COLOR_HYPERLINK_WIDGET);
-
+		
+		taskListToolTip = new TaskListToolTip(activeTaskLink);	
+		
 		AbstractTask activeTask = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
 		if (activeTask != null) {
 			indicateActiveTask(activeTask);
@@ -423,7 +433,9 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		String text = task.getSummary();
 		activeTaskLink.setText(text);
 		activeTaskLink.setUnderlined(false);
-		activeTaskLink.setToolTipText("Open: " + task.getSummary());
+		activeTaskLink.setTask(task);
+		
+//		activeTaskLink.setToolTipText("Open: " + task.getSummary());
 		activeTaskLink.addMouseTrackListener(new MouseTrackListener() {
 
 			public void mouseEnter(MouseEvent e) {
@@ -436,11 +448,11 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 			public void mouseHover(MouseEvent e) {
 			}
-		});
-
+		});	
+		
 		filterComposite.layout();
 	}
-
+	
 	public String getActiveTaskLabelText() {
 		return activeTaskLink.getText();
 	}
@@ -452,6 +464,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 		activeTaskLink.setText(LABEL_ACTIVE_NONE);
 		activeTaskLink.setToolTipText("");
+		activeTaskLink.setTask(null);
 		filterComposite.layout();
 	}
 

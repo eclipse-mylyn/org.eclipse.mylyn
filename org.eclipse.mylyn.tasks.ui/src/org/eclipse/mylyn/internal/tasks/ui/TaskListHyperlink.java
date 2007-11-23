@@ -8,6 +8,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.Hyperlink;
@@ -18,6 +19,8 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
  * @author Leo Dos Santos
  */
 public class TaskListHyperlink extends Hyperlink {
+
+	private AbstractTask task;
 
 	public TaskListHyperlink(Composite parent, int style) {
 		super(parent, style);
@@ -42,6 +45,14 @@ public class TaskListHyperlink extends Hyperlink {
 			}
 		}
 		return returnText;
+	}
+
+	public AbstractTask getTask() {
+		return task;
+	}
+
+	public void setTask(AbstractTask task) {
+		this.task = task;
 	}
 
 }
