@@ -106,23 +106,23 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 						// NOTE: looking down, high complexity
 						if (hasChildren(container)) {
 							taskRepositoriesContainers.add((TaskRepository) container);
+						}
 
-							// NOTE: O(n^2) complexity, could fix
-							Set<IProject> mappedProjects = new HashSet<IProject>();
-							
-							for (IProject project : projects) {
-								TaskRepository taskRepository = TasksUiPlugin.getDefault().getRepositoryForResource(
-										project, true);
-								if (container.equals(taskRepository)) {
-									mappedProjects.add(project);
-								} else if (taskRepository == null) {
-									unmappedProjects.add(project);
-								}
+						// NOTE: O(n^2) complexity, could fix
+						Set<IProject> mappedProjects = new HashSet<IProject>();
+
+						for (IProject project : projects) {
+							TaskRepository taskRepository = TasksUiPlugin.getDefault().getRepositoryForResource(
+									project, true);
+							if (container.equals(taskRepository)) {
+								mappedProjects.add(project);
+							} else if (taskRepository == null) {
+								unmappedProjects.add(project);
 							}
-							if (!mappedProjects.isEmpty()) {
-								resourcesRepositoriesContainers.add(new TaskRepositoryProjectMapping(
-										(TaskRepository) container, mappedProjects));
-							}
+						}
+						if (!mappedProjects.isEmpty()) {
+							resourcesRepositoriesContainers.add(new TaskRepositoryProjectMapping(
+									(TaskRepository) container, mappedProjects));
 						}
 					}
 				}
@@ -263,7 +263,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 	}
 
 	class CustomSorter extends ViewerSorter {
-		
+
 		@Override
 		public int compare(Viewer viewer, Object e1, Object e2) {
 			if (e1 instanceof TaskRepository || e1 instanceof TaskRepositoryProjectMapping) {
