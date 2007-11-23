@@ -40,6 +40,7 @@ public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 		if (parent instanceof AbstractTask || element instanceof TaskArchive) {
 			return true;
 		}
+
 		if (parent == null && element instanceof AbstractTaskContainer) {
 			return selectWorkingSet((AbstractTaskContainer) element);
 		}
@@ -52,7 +53,8 @@ public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 				return selectWorkingSet(container);
 			}
 		}
-		if (parent instanceof TaskArchive && element instanceof AbstractTask) {
+		if ((parent instanceof ScheduledTaskContainer || parent instanceof TaskArchive)
+				&& element instanceof AbstractTask) {
 			Set<AbstractRepositoryQuery> queries = taskList.getQueriesForHandle(((AbstractTask) element).getHandleIdentifier());
 			if (!queries.isEmpty()) {
 				for (AbstractRepositoryQuery query : queries) {
