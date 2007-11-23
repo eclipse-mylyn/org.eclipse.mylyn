@@ -8,7 +8,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.search;
 
-import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.tasks.ui.search.RepositorySearchResult;
 
@@ -16,7 +16,7 @@ import org.eclipse.mylyn.tasks.ui.search.RepositorySearchResult;
  * @author Rob Elves (moved into task.ui)
  * @see org.eclipse.jface.viewers.IContentProvider
  */
-public abstract class SearchResultContentProvider implements IStructuredContentProvider {
+public abstract class SearchResultContentProvider implements ITreeContentProvider {
 
 	/** An empty array of objects */
 	protected final Object[] EMPTY_ARR = new Object[0];

@@ -37,11 +37,8 @@ import org.eclipse.search.internal.ui.SearchMessages;
 import org.eclipse.search.ui.IContextMenuConstants;
 import org.eclipse.search.ui.text.AbstractTextSearchViewPage;
 import org.eclipse.search.ui.text.Match;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -95,12 +92,9 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		}
 	};
 
-	/**
-	 * Constructor
-	 */
 	public RepositorySearchResultView() {
 		// Only use the table layout.
-		super(FLAG_LAYOUT_FLAT);
+		super(FLAG_LAYOUT_TREE);
 
 		sortByPriorityAction = new SearchResultSortAction("Task Priority", this, ORDER_PRIORITY);
 		sortByDescriptionAction = new SearchResultSortAction("Task Summary", this, ORDER_DESCRIPTION);
@@ -132,34 +126,6 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 
 	@Override
 	protected void configureTreeViewer(TreeViewer viewer) {
-		// The tree layout is not used
-	}
-
-	@Override
-	protected void configureTableViewer(TableViewer viewer) {
-		viewer.setUseHashlookup(true);
-		String[] columnNames = new String[] { "Summary" };
-		TableColumn[] columns = new TableColumn[columnNames.length];
-		int[] columnWidths = new int[] { 500 };
-		viewer.setColumnProperties(columnNames);
-
-		viewer.getTable().setHeaderVisible(false);
-		for (int i = 0; i < columnNames.length; i++) {
-			columns[i] = new TableColumn(viewer.getTable(), 0, i); // SWT.LEFT
-			columns[i].setText(columnNames[i]);
-			columns[i].setWidth(columnWidths[i]);
-			columns[i].setData(new Integer(i));
-			columns[i].addSelectionListener(new SelectionAdapter() {
-
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					TableColumn col = (TableColumn) e.getSource();
-					Integer integer = (Integer) col.getData();
-					setSortOrder(integer.intValue());
-				}
-			});
-		}
-
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		Color categoryBackground = themeManager.getCurrentTheme().getColorRegistry().get(
 				TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY);
@@ -169,13 +135,55 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator(), categoryBackground);
 
 		viewer.setLabelProvider(taskListTableLabelProvider);
-		viewer.setContentProvider(new SearchResultTableContentProvider(this));
+		viewer.setContentProvider(new SearchResultTreeContentProvider(this));
 
 		// Set the order when the search view is loading so that the items are
 		// sorted right away
 		setSortOrder(currentSortOrder);
-
 		taskContentProvider = (SearchResultContentProvider) viewer.getContentProvider();
+	}
+
+	@Override
+	protected void configureTableViewer(TableViewer viewer) {
+//		viewer.setUseHashlookup(true);
+//		String[] columnNames = new String[] { "Summary" };
+//		TableColumn[] columns = new TableColumn[columnNames.length];
+//		int[] columnWidths = new int[] { 500 };
+//		viewer.setColumnProperties(columnNames);
+//
+//		viewer.getTable().setHeaderVisible(false);
+//		for (int i = 0; i < columnNames.length; i++) {
+//			columns[i] = new TableColumn(viewer.getTable(), 0, i); // SWT.LEFT
+//			columns[i].setText(columnNames[i]);
+//			columns[i].setWidth(columnWidths[i]);
+//			columns[i].setData(new Integer(i));
+//			columns[i].addSelectionListener(new SelectionAdapter() {
+//
+//				@Override
+//				public void widgetSelected(SelectionEvent e) {
+//					TableColumn col = (TableColumn) e.getSource();
+//					Integer integer = (Integer) col.getData();
+//					setSortOrder(integer.intValue());
+//				}
+//			});
+//		}
+//
+//		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
+//		Color categoryBackground = themeManager.getCurrentTheme().getColorRegistry().get(
+//				TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY);
+//
+//		SearchViewTableLabelProvider taskListTableLabelProvider = new SearchViewTableLabelProvider(
+//				new TaskElementLabelProvider(true),
+//				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator(), categoryBackground);
+//
+//		viewer.setLabelProvider(taskListTableLabelProvider);
+//		viewer.setContentProvider(new SearchResultTableContentProvider(this));
+//
+//		// Set the order when the search view is loading so that the items are
+//		// sorted right away
+//		setSortOrder(currentSortOrder);
+//
+//		taskContentProvider = (SearchResultContentProvider) viewer.getContentProvider();
 	}
 
 	/**

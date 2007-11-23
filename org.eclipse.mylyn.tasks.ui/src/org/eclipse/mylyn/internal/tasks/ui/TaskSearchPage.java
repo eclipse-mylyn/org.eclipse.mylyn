@@ -120,9 +120,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		fParentComposite.setLayoutData(gd);
 
 		createRepositoryGroup(fParentComposite);
-
 		createSeparator(fParentComposite);
-
 		this.setControl(fParentComposite);
 	}
 
