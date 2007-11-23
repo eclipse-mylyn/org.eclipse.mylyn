@@ -76,10 +76,6 @@ public class WorkweekProgressBar extends Canvas {
 	}
 
 	public void reset(int ticksDone, int maximum) {
-//		boolean noChange = fError == hasErrors && fStopped == stopped && currentTickCount == ticksDone
-//				&& maxTickCount == maximum;
-//		fError = hasErrors;
-//		fStopped = stopped;
 		currentTickCount = ticksDone;
 		maxTickCount = maximum;
 		colorBarWidth = scale(ticksDone);
