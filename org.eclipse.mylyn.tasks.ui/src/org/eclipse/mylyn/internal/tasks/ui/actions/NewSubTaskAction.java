@@ -97,7 +97,7 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 		final boolean[] result = new boolean[1];
 		IProgressService service = PlatformUI.getWorkbench().getProgressService();
 		try {
-			service.run(false, true, new IRunnableWithProgress() {
+			service.busyCursorWhile(new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					try {
 						result[0] = taskDataHandler.initializeSubTaskData(taskRepository, taskData, selectedTaskData,
