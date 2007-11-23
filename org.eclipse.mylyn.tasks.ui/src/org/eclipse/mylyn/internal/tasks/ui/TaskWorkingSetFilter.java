@@ -37,7 +37,12 @@ public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 
 	@Override
 	public boolean select(Object parent, Object element) {
-		if (parent instanceof AbstractTask || element instanceof TaskArchive) {
+		// NOTE: to be removed if the archive will show through working sets
+		if (element instanceof TaskArchive) {
+			return false;
+		}
+		
+		if (parent instanceof AbstractTask /*|| element instanceof TaskArchive*/) {
 			return true;
 		}
 
