@@ -905,8 +905,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	/**
 	 * Retrieve the task repository that has been associated with the given project (or resource belonging to a project)
 	 * 
-	 * NOTE: if call does not return in LINK_PROVIDER_TIMEOUT_SECONDS, the provide will be disabled
-	 * until the next time that the Workbench starts.
+	 * NOTE: if call does not return in LINK_PROVIDER_TIMEOUT_SECONDS, the provide will be disabled until the next time
+	 * that the Workbench starts.
 	 * 
 	 * API-3.0: remove "silent" parameter
 	 */
@@ -928,9 +928,10 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		}
 		if (!defectiveLinkProviders.isEmpty()) {
 			repositoryLinkProviders.removeAll(defectiveLinkProviders);
-			StatusHandler.log(new Status(IStatus.WARNING, ID_PLUGIN, "Repository link provider took over 5s to execute and was timed out: " + defectiveLinkProviders));
+			StatusHandler.log(new Status(IStatus.WARNING, ID_PLUGIN,
+					"Repository link provider took over 5s to execute and was timed out: " + defectiveLinkProviders));
 		}
-		
+
 		if (!silent) {
 			MessageDialog.openInformation(null, "No Repository Found",
 					"No repository was found. Associate a Task Repository with this project via the project's property page.");
@@ -1088,11 +1089,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	private static boolean ignoreAttribute(RepositoryTaskData taskData, RepositoryTaskAttribute attribute) {
 		AbstractAttributeFactory factory = taskData.getAttributeFactory();
-		if (attribute.getId().equals(factory.mapCommonAttributeKey(RepositoryTaskAttribute.USER_CC))) {
-			return false;
-		}
-		return (attribute.isHidden()
-				|| attribute.getId().equals(factory.mapCommonAttributeKey(RepositoryTaskAttribute.DATE_MODIFIED))
+		return (attribute.getId().equals(factory.mapCommonAttributeKey(RepositoryTaskAttribute.DATE_MODIFIED))
 				|| attribute.getId().equals(factory.mapCommonAttributeKey(RepositoryTaskAttribute.DATE_CREATION))
 				|| "delta_ts".equals(attribute.getId()) || "longdesclength".equals(attribute.getId()));
 	}
