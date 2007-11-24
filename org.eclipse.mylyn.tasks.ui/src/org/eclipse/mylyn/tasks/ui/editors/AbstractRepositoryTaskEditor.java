@@ -654,15 +654,15 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected void fillToolBar(IToolBarManager toolBarManager) {
 		if (taskData != null && !taskData.isNew()) {
 			if (repositoryTask != null) {
+				synchronizeEditorAction = new SynchronizeEditorAction();
+				synchronizeEditorAction.selectionChanged(new StructuredSelection(this));
+				toolBarManager.add(synchronizeEditorAction);
+
 				NewSubTaskAction newSubTaskAction = new NewSubTaskAction();
 				newSubTaskAction.selectionChanged(newSubTaskAction, new StructuredSelection(getRepositoryTask()));
 				if (newSubTaskAction.isEnabled()) {
 					toolBarManager.add(newSubTaskAction);
 				}
-
-				synchronizeEditorAction = new SynchronizeEditorAction();
-				synchronizeEditorAction.selectionChanged(new StructuredSelection(this));
-				toolBarManager.add(synchronizeEditorAction);
 			}
 
 			if (getHistoryUrl() != null) {
