@@ -37,12 +37,7 @@ public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 
 	@Override
 	public boolean select(Object parent, Object element) {
-		// NOTE: to be removed if the archive will show through working sets
-		if (element instanceof TaskArchive) {
-			return false;
-		}
-		
-		if (parent instanceof AbstractTask /*|| element instanceof TaskArchive*/) {
+		if (parent instanceof AbstractTask || element instanceof TaskArchive) {
 			return true;
 		}
 
@@ -58,8 +53,7 @@ public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 				return selectWorkingSet(container);
 			}
 		}
-		if ((parent instanceof ScheduledTaskContainer || parent instanceof TaskArchive)
-				&& element instanceof AbstractTask) {
+		if (parent instanceof ScheduledTaskContainer && element instanceof AbstractTask) {
 			Set<AbstractRepositoryQuery> queries = taskList.getQueriesForHandle(((AbstractTask) element).getHandleIdentifier());
 			if (!queries.isEmpty()) {
 				for (AbstractRepositoryQuery query : queries) {
