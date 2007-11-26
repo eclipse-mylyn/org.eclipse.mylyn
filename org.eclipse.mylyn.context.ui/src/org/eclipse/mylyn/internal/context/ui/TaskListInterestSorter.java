@@ -186,9 +186,7 @@ public class TaskListInterestSorter extends ViewerSorter {
 	}
 
 	private int compareKeys(AbstractTaskContainer element1, AbstractTaskContainer element2) {
-		String summary1 = TaskListTableSorter.getSortableSummaryFromElement(element1);
-		String summary2 = TaskListTableSorter.getSortableSummaryFromElement(element2);
-		return taskKeyComparator.compare(summary1, summary2);
+		return taskKeyComparator.compare(TaskListTableSorter.getSortableFromElement(element1), TaskListTableSorter.getSortableFromElement(element2));
 	}
 
 	private int comparePriorities(AbstractTaskContainer element1, AbstractTaskContainer element2) {
