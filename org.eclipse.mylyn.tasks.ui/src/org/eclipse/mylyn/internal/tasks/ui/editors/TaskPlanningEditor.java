@@ -82,6 +82,8 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public class TaskPlanningEditor extends TaskFormPage {
 
+	private static final int NOTES_MINSIZE = 100;
+
 	public static final String ID = "org.eclipse.mylyn.tasks.ui.editors.planning";
 
 	private static final String CLEAR = "Clear";
@@ -288,7 +290,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		GridLayout editorLayout = new GridLayout();
 		editorLayout.verticalSpacing = 3;
 		editorComposite.setLayout(editorLayout);
-		editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
+		//editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 		if (task instanceof LocalTask) {
 			createSummarySection(editorComposite);
 		}
@@ -813,19 +815,21 @@ public class TaskPlanningEditor extends TaskFormPage {
 		section.setExpanded(true);
 		section.setLayout(new GridLayout());
 		section.setLayoutData(new GridData(GridData.FILL_BOTH));
-		section.addExpansionListener(new IExpansionListener() {
-			public void expansionStateChanging(ExpansionEvent e) {
-				form.reflow(true);
-			}
-
-			public void expansionStateChanged(ExpansionEvent e) {
-				form.reflow(true);
-			}
-		});
+//		section.addExpansionListener(new IExpansionListener() {
+//			public void expansionStateChanging(ExpansionEvent e) {
+//				form.reflow(true);
+//			}
+//
+//			public void expansionStateChanged(ExpansionEvent e) {
+//				form.reflow(true);
+//			}
+//		});
 		Composite container = toolkit.createComposite(section);
 		section.setClient(container);
 		container.setLayout(new GridLayout());
-		container.setLayoutData(new GridData(GridData.FILL_BOTH));
+		GridData notesData = new GridData(GridData.FILL_BOTH);
+		notesData.grabExcessVerticalSpace = true;
+		container.setLayoutData(notesData);
 
 		TaskRepository repository = null;
 		if (task != null && !(task instanceof LocalTask)) {
@@ -838,6 +842,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 				| SWT.V_SCROLL);
 
 		noteEditor.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
+		GridDataFactory.fillDefaults().minSize(SWT.DEFAULT, NOTES_MINSIZE).grab(true, true).applyTo(
+				noteEditor.getControl());
 		noteEditor.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		noteEditor.setEditable(true);
 

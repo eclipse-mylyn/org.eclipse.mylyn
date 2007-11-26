@@ -72,6 +72,8 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepositoryTaskEditor {
 
+	private static final int DESCRIPTION_MINSIZE = 100;
+
 	private static final int DEFAULT_FIELD_WIDTH = 150;
 
 	private static final int DEFAULT_ESTIMATED_TIME = 1;
@@ -143,8 +145,9 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 				SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 		descriptionTextViewer.setEditable(true);
 
-		GridData descriptionTextData = new GridData(GridData.FILL_BOTH);
-		descriptionTextViewer.getControl().setLayoutData(descriptionTextData);
+		GridDataFactory.fillDefaults().minSize(SWT.DEFAULT, DESCRIPTION_MINSIZE).grab(true, true).applyTo(
+				descriptionTextViewer.getControl());
+
 		descriptionTextViewer.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 
 		addDuplicateDetection(descriptionComposite);
