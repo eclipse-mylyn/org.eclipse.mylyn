@@ -29,16 +29,25 @@ public class TaskListTableSorter extends ViewerSorter {
 		PRIORITY, SUMMARY, DATE_CREATED;
 	}
 
+	private static final int DEFAULT_SORT_DIRECTION = 1;
+
+	private int sortDirection = DEFAULT_SORT_DIRECTION;
+
+	private SortByIndex sortByIndex = SortByIndex.PRIORITY;
+
 	private final TaskListView view;
 
 	private TaskKeyComparator taskKeyComparator = new TaskKeyComparator();
 
-	private SortByIndex sortByIndex;
-
-	public TaskListTableSorter(TaskListView view, SortByIndex sortByIndex) {
+	public TaskListTableSorter(TaskListView view) {
 		super();
 		this.view = view;
-		this.sortByIndex = sortByIndex;
+	}
+
+	public TaskListTableSorter(TaskListView view, SortByIndex index) {
+		super();
+		this.view = view;
+		this.sortByIndex = index;
 	}
 
 	public void setColumn(String column) {
@@ -90,7 +99,7 @@ public class TaskListTableSorter extends ViewerSorter {
 		if (!(o1 instanceof AbstractTask)) {
 			if (o2 instanceof AbstractTaskContainer || o2 instanceof AbstractRepositoryQuery) {
 
-				return this.view.sortDirection
+				return this.sortDirection
 						* ((AbstractTaskContainer) o1).getSummary().compareToIgnoreCase(
 								((AbstractTaskContainer) o2).getSummary());
 			} else {
@@ -113,10 +122,12 @@ public class TaskListTableSorter extends ViewerSorter {
 
 	private int compareElements(AbstractTaskContainer element1, AbstractTaskContainer element2) {
 		if (SortByIndex.PRIORITY.equals(sortByIndex)) {
-			int result = this.view.sortDirection * element1.getPriority().compareTo(element2.getPriority());
+			int result = this.sortDirection * element1.getPriority().compareTo(element2.getPriority());
 			if (result != 0) {
 				return result;
 			}
+			return sortBySummary(element1, element2);
+
 		} else if (SortByIndex.DATE_CREATED.equals(sortByIndex)) {
 			AbstractTask t1 = null;
 			AbstractTask t2 = null;
@@ -132,14 +143,30 @@ public class TaskListTableSorter extends ViewerSorter {
 				}
 			}
 		} else {
-			String summary1 = getSortableSummaryFromElement(element1);
-			String summary2 = getSortableSummaryFromElement(element2);
-			element2.getSummary();
-			return this.view.sortDirection * taskKeyComparator.compare(summary1, summary2);
+			return sortBySummary(element1, element2);
 		}
 		return 0;
 	}
 
+	/**
+	 * Determine the sort order of two tasks by id/summary
+	 *
+	 * @param element1
+	 * @param element2
+	 * @return sort order
+	 */
+	private int sortBySummary(AbstractTaskContainer element1, AbstractTaskContainer element2) {
+		return this.sortDirection
+				* taskKeyComparator.compare(getSortableFromElement(element1), getSortableFromElement(element2));
+	}
+
+	/**
+	 * Return a sortable string in the format "key: summary"
+	 *
+	 * @param element
+	 * @return sortable string
+	 * @deprecated Use getSortableFromElement()
+	 */
 	public static String getSortableSummaryFromElement(AbstractTaskContainer element) {
 		String summary = element.getSummary();
 
@@ -151,4 +178,48 @@ public class TaskListTableSorter extends ViewerSorter {
 		}
 		return summary;
 	}
+
+	/**
+	 * Return a array of values to pass to taskKeyComparator.compare() for sorting
+	 *
+	 * @param element
+	 * @return String array[component, taskId, summary]
+	 */
+	public static String[] getSortableFromElement(AbstractTaskContainer element) {
+		final String a[] = new String[] {"", null, element.getSummary()};
+
+		if (element instanceof AbstractTask) {
+			AbstractTask task1 = (AbstractTask) element;
+			if (task1.getTaskKey() != null) {
+				a[1] = task1.getTaskKey();
+			}
+		}
+		return a;
+	}
+
+	public SortByIndex getSortByIndex() {
+		return sortByIndex;
+	}
+
+	public void setSortByIndex(SortByIndex sortByIndex) {
+		SortByIndex oldValue = this.sortByIndex;
+		this.sortByIndex = sortByIndex;
+		if (!oldValue.equals(sortByIndex)) {
+			view.getViewer().refresh();
+		}
+
+	}
+
+	public int getSortDirection() {
+		return sortDirection;
+	}
+
+	public void setSortDirection(int sortDirection) {
+		int oldValue = this.sortDirection;
+		this.sortDirection = sortDirection;
+		if (oldValue != this.sortDirection) {
+			view.getViewer().refresh();
+		}
+	}
+
 }

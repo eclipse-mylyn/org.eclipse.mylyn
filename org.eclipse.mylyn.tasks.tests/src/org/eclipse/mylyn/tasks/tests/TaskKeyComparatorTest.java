@@ -54,8 +54,11 @@ public class TaskKeyComparatorTest extends TestCase {
 		assertTrue("Invalid " + Arrays.asList(res) + " " + Arrays.asList(exptecation), Arrays.equals(res, exptecation));
 	}
 
+	private static final TaskKeyComparator tkc = new TaskKeyComparator();
 	public void comparisonCheck(String s1, String s2, int n) {
-		assertEquals(n, new TaskKeyComparator().compare(s1, s2));
+		final String[] c1 = new String[] {null, null, s1};
+		final String[] c2 = new String[] {null, null, s2};
+		assertEquals(n, tkc.compare(c1, c2));
 	}
 
 }

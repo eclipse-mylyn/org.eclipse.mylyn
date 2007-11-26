@@ -11,11 +11,12 @@ package org.eclipse.mylyn.internal.tasks.ui.search;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskKeyComparator;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListTableSorter;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 
 /**
  * Sorts search results by summary.
- * 
+ *
  * @author Rob Elves
  */
 public class SearchResultSorterDescription extends ViewerSorter {
@@ -26,7 +27,7 @@ public class SearchResultSorterDescription extends ViewerSorter {
 	 * Returns a negative, zero, or positive number depending on whether the first bug's summary goes before, is the
 	 * same as, or goes after the second element's summary.
 	 * <p>
-	 * 
+	 *
 	 * @see org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object,
 	 *      java.lang.Object)
 	 */
@@ -38,7 +39,8 @@ public class SearchResultSorterDescription extends ViewerSorter {
 			AbstractTask entry2 = (AbstractTask) e2;
 			// NOTE we just comparing ids here, once summary and taskId separated
 			// they should have their own column/sorter.
-			return taskKeyComparator.compare(entry1.getTaskId(), entry2.getTaskId());
+			return taskKeyComparator.compare(TaskListTableSorter.getSortableFromElement(entry1),
+					TaskListTableSorter.getSortableFromElement(entry2));
 			// return taskKeyComparator.compare(entry1.getDescription(),
 			// entry2.getDescription());
 		} catch (Exception ignored) {
@@ -54,7 +56,7 @@ public class SearchResultSorterDescription extends ViewerSorter {
 	 * are arranged in ascending numeric order. The elements within a bin are arranged via a second level sort
 	 * criterion.
 	 * <p>
-	 * 
+	 *
 	 * @see org.eclipse.jface.viewers.ViewerSorter#category(Object)
 	 */
 	@Override

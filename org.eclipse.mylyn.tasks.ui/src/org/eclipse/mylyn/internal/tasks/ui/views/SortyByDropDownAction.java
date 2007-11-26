@@ -71,7 +71,7 @@ class SortyByDropDownAction extends Action implements IMenuCreator {
 		byPriority = new Action("", AS_CHECK_BOX) {
 			@Override
 			public void run() {
-				taskListView.setSortBy(SortByIndex.PRIORITY);
+				taskListView.getSorter().setSortByIndex(SortByIndex.PRIORITY);
 				byPriority.setChecked(true);
 				bySummary.setChecked(false);
 				byDateCreated.setChecked(false);
@@ -85,7 +85,7 @@ class SortyByDropDownAction extends Action implements IMenuCreator {
 		bySummary = new Action("", AS_CHECK_BOX) {
 			@Override
 			public void run() {
-				taskListView.setSortBy(SortByIndex.SUMMARY);
+				taskListView.getSorter().setSortByIndex(SortByIndex.SUMMARY);
 				byPriority.setChecked(false);
 				bySummary.setChecked(true);
 				byDateCreated.setChecked(false);
@@ -98,7 +98,7 @@ class SortyByDropDownAction extends Action implements IMenuCreator {
 		byDateCreated = new Action("", AS_CHECK_BOX) {
 			@Override
 			public void run() {
-				taskListView.setSortBy(SortByIndex.DATE_CREATED);
+				taskListView.getSorter().setSortByIndex(SortByIndex.DATE_CREATED);
 				byPriority.setChecked(false);
 				bySummary.setChecked(false);
 				byDateCreated.setChecked(true);
@@ -114,16 +114,16 @@ class SortyByDropDownAction extends Action implements IMenuCreator {
 		Action reverse = new Action("", AS_CHECK_BOX) {
 			@Override
 			public void run() {
-				taskListView.setSortDirection(taskListView.sortDirection * -1);
-				setChecked(taskListView.sortDirection < 0);
+				taskListView.getSorter().setSortDirection(taskListView.getSorter().getSortDirection() * -1);
+				setChecked(taskListView.getSorter().getSortDirection() < 0);
 			}
 		};
 		reverse.setEnabled(true);
 		reverse.setText("Descending");
-		reverse.setChecked(taskListView.sortDirection < 0);
+		reverse.setChecked(taskListView.getSorter().getSortDirection() < 0);
 		new ActionContributionItem(reverse).fill(dropDownMenu, -1);
-		
-		switch (taskListView.getSortByIndex()) {
+
+		switch (taskListView.getSorter().getSortByIndex()) {
 		case PRIORITY:
 			byPriority.setChecked(true);
 			break;
