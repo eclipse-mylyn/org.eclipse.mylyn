@@ -104,7 +104,7 @@ public class TaskTextViewerConfiguration extends TextSourceViewerConfiguration {
 	@Override
 	public IHyperlinkPresenter getHyperlinkPresenter(final ISourceViewer sourceViewer) {
 		return new TaskTextViewerHyperlinkPresenter(JFaceResources.getColorRegistry().get(
-                JFacePreferences.ACTIVE_HYPERLINK_COLOR), sourceViewer);
+				JFacePreferences.ACTIVE_HYPERLINK_COLOR), sourceViewer);
 	}
 
 	@Override
@@ -123,6 +123,12 @@ public class TaskTextViewerConfiguration extends TextSourceViewerConfiguration {
 
 	private final class TaskTextViewerHyperlinkPresenter extends DefaultHyperlinkPresenter {
 		private final ISourceViewer sourceViewer;
+
+		/**
+		 * Stores which task a tooltip is being displayed for. It is used to avoid having the same tooltip being set
+		 * multiple times while you move the mouse over a task hyperlink (bug#209409)
+		 */
+		private AbstractTask currentTaskHyperlink;
 
 		private TaskTextViewerHyperlinkPresenter(Color color, ISourceViewer sourceViewer) {
 			super(color);
@@ -144,7 +150,8 @@ public class TaskTextViewerConfiguration extends TextSourceViewerConfiguration {
 					task = taskList.getTaskByKey(repositoryUrl, hyperlink.getTaskId());
 				}
 
-				if (task != null) {
+				if (task != null && task != currentTaskHyperlink) {
+					currentTaskHyperlink = task;
 					Control cursorControl = sourceViewer.getTextWidget().getDisplay().getCursorControl();
 					if (task.getTaskKey() == null) {
 						cursorControl.setToolTipText(task.getSummary());
@@ -161,6 +168,7 @@ public class TaskTextViewerConfiguration extends TextSourceViewerConfiguration {
 			if (cursorControl != null) {
 				cursorControl.setToolTipText(null);
 			}
+			currentTaskHyperlink = null;
 
 			super.hideHyperlinks();
 		}
@@ -175,7 +183,7 @@ public class TaskTextViewerConfiguration extends TextSourceViewerConfiguration {
 
 		public RepositoryTextScanner() {
 			IToken bugToken = new Token(new TextAttribute(JFaceResources.getColorRegistry().get(
-	                JFacePreferences.ACTIVE_HYPERLINK_COLOR)));
+					JFacePreferences.ACTIVE_HYPERLINK_COLOR)));
 			IToken quoteToken = new Token(new TextAttribute(TaskListColorsAndFonts.COLOR_QUOTED_TEXT));
 			IRule[] rules = new IRule[16];
 			rules[0] = (new SingleLineRule("http://", " ", bugToken));
