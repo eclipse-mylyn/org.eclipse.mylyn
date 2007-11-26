@@ -204,7 +204,7 @@ public class NewAttachmentPage extends WizardPage {
 			}
 		});
 
-		filePath.setText(attachment.getFilePath());
+		filePath.setText(attachment.getFilePath() == null ? "" : attachment.getFilePath()); //$NON-NLS-1$
 
 		/* Listener for isPatch */
 		isPatchButton.addSelectionListener(new SelectionListener() {

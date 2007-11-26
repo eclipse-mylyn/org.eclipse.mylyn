@@ -1,14 +1,9 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 Mylyn project committers and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     IBM Corporation - initial API and implementation
- *     Sebastian Davids <sdavids@gmx.de> - layout tweaks
- *     Jeff Pound <jeff.bagu@gmail.com> - modified for attachment input
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
@@ -29,6 +24,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -39,6 +35,7 @@ import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
@@ -46,8 +43,6 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.ShellAdapter;
-import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -57,18 +52,22 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
-import org.eclipse.ui.views.navigator.*;
+import org.eclipse.ui.views.navigator.ResourceSorter;
 
 /**
- * A wizard to input the source of the attachment. This is a modified version of
- * org.eclipse.compare.internal.InputPatchPage.
+ * A wizard to input the source of the attachment.
+ * <p>
+ * Based on org.eclipse.compare.internal.InputPatchPage.
  * 
- * @author Jeff Pound
+ * @author IBM Corporation - initial API and implementation
+ * @author Sebastian Davids <sdavids@gmx.de> - layout tweaks
+ * @author Jeff Pound - modified for attachment input
+ * @author Chris Aniszczyk <caniszczyk@gmail.com> - bug 209572
  */
+@SuppressWarnings("deprecation")
 public class InputAttachmentSourcePage extends WizardPage {
 
 	// constants
@@ -93,8 +92,6 @@ public class InputAttachmentSourcePage extends WizardPage {
 
 	private boolean showError = false;
 
-	private ActivationListener activationListener = new ActivationListener();
-
 	// SWT widgets
 	private Button useClipboardButton;
 
@@ -118,24 +115,9 @@ public class InputAttachmentSourcePage extends WizardPage {
 
 	private boolean initUseClipboard = false;
 
-	class ActivationListener extends ShellAdapter {
-		@Override
-		public void shellActivated(ShellEvent e) {
-			// allow error messages if the selected input actually has something
-			// selected in it
-			showError = true;
-			switch (getInputMethod()) {
-			case FILE:
-				showError = (fileNameField.getText() != ""); //$NON-NLS-1$
-				break;
+	private String DIALOG_SETTINGS = "InputAttachmentSourcePage"; //$NON-NLS-1$
 
-			case WORKSPACE:
-				showError = (!treeViewer.getSelection().isEmpty());
-				break;
-			}
-			updateWidgetEnablements();
-		}
-	}
+	private String S_LAST_SELECTION = "lastSelection"; //$NON-NLS-1$
 
 	public InputAttachmentSourcePage(NewAttachmentWizard wizard) {
 		super("InputAttachmentPage");
@@ -143,6 +125,15 @@ public class InputAttachmentSourcePage extends WizardPage {
 		setTitle("Select attachment source");
 		setDescription("Clipboard contents are for text attachments only.");
 		// setMessage("Please select the source for the attachment");
+	}
+
+	private void initialize(IDialogSettings settings) {
+		String selection = settings.get(S_LAST_SELECTION);
+		if (selection != null) {
+			setInputMethod(Integer.valueOf(selection).intValue());
+		} else {
+			updateWidgetEnablements();
+		}
 	}
 
 	/*
@@ -178,10 +169,7 @@ public class InputAttachmentSourcePage extends WizardPage {
 		// No error for dialog opening
 		showError = false;
 		clearErrorMessage();
-		updateWidgetEnablements();
-
-		Shell shell = getShell();
-		shell.addShellListener(activationListener);
+		initialize(getDialogSettings());
 
 		Dialog.applyDialogFont(composite);
 
@@ -191,13 +179,17 @@ public class InputAttachmentSourcePage extends WizardPage {
 	public IWizardPage getNextPage() {
 		if (getInputMethod() == SCREENSHOT) {
 			return wizard.getPage("ScreenShotAttachment");
-		} else
+		} else {
+			saveDialogSettings();
 			return wizard.getNextPage(this);
+		}
 	}
 
-	/*
-	 * (non-JavaDoc) Method declared in IWizardPage.
-	 */
+	private void saveDialogSettings() {
+		IDialogSettings settings = getDialogSettings();
+		settings.put(S_LAST_SELECTION, getInputMethod());
+	}
+
 	@Override
 	public boolean canFlipToNextPage() {
 		return isPageComplete();
@@ -257,7 +249,7 @@ public class InputAttachmentSourcePage extends WizardPage {
 		useClipboardButton.setText("Clipboard");
 		useClipboardButton.setLayoutData(gd);
 		useClipboardButton.setSelection(initUseClipboard);
-		
+
 		// new row
 		useWorkspaceButton = new Button(composite, SWT.RADIO);
 		useWorkspaceButton.setText("Workspace");
@@ -275,9 +267,6 @@ public class InputAttachmentSourcePage extends WizardPage {
 
 				clearErrorMessage();
 				showError = true;
-				int state = getInputMethod();
-				setEnableAttachmentFile(state == FILE);
-				setEnableWorkspaceAttachment(state == WORKSPACE);
 				storeClipboardContents();
 				updateWidgetEnablements();
 			}
@@ -306,9 +295,6 @@ public class InputAttachmentSourcePage extends WizardPage {
 				// If there is anything typed in at all
 				clearErrorMessage();
 				showError = (fileNameField.getText() != ""); //$NON-NLS-1$
-				int state = getInputMethod();
-				setEnableAttachmentFile(state == FILE);
-				setEnableWorkspaceAttachment(state == WORKSPACE);
 				updateWidgetEnablements();
 			}
 		});
@@ -352,9 +338,6 @@ public class InputAttachmentSourcePage extends WizardPage {
 				clearErrorMessage();
 				// If there is anything typed in at all
 				showError = (!treeViewer.getSelection().isEmpty());
-				int state = getInputMethod();
-				setEnableAttachmentFile(state == FILE);
-				setEnableWorkspaceAttachment(state == WORKSPACE);
 				updateWidgetEnablements();
 			}
 		});
@@ -391,7 +374,6 @@ public class InputAttachmentSourcePage extends WizardPage {
 		setEnableWorkspaceAttachment(false);
 	}
 
-	@SuppressWarnings("deprecation")
 	private void addWorkspaceControls(Composite composite) {
 
 		Composite newComp = new Composite(composite, SWT.NONE);
@@ -473,6 +455,9 @@ public class InputAttachmentSourcePage extends WizardPage {
 		if (showError) {
 			setErrorMessage(error);
 		}
+
+		setEnableAttachmentFile(inputMethod == FILE);
+		setEnableWorkspaceAttachment(inputMethod == WORKSPACE);
 	}
 
 	/**
@@ -542,6 +527,27 @@ public class InputAttachmentSourcePage extends WizardPage {
 			return FILE;
 		}
 		return WORKSPACE;
+	}
+
+	protected void setInputMethod(int input) {
+		switch (input) {
+		case WORKSPACE:
+			useWorkspaceButton.setSelection(true);
+			useClipboardButton.setSelection(false);
+			useFileButton.setSelection(false);
+			break;
+		case CLIPBOARD:
+			useClipboardButton.setSelection(true);
+			useFileButton.setSelection(false);
+			useWorkspaceButton.setSelection(false);
+			break;
+		default:
+			useFileButton.setSelection(true);
+			useWorkspaceButton.setSelection(false);
+			useClipboardButton.setSelection(false);
+			break;
+		}
+		updateWidgetEnablements();
 	}
 
 	private String getAttachmentFilePath() {
@@ -644,6 +650,16 @@ public class InputAttachmentSourcePage extends WizardPage {
 			useClipboardButton.setSelection(b);
 		}
 		initUseClipboard = b;
+	}
+
+	protected IDialogSettings getDialogSettings() {
+		TasksUiPlugin plugin = TasksUiPlugin.getDefault();
+		IDialogSettings settings = plugin.getDialogSettings();
+		IDialogSettings section = settings.getSection(DIALOG_SETTINGS);
+		if (section == null) {
+			section = settings.addNewSection(DIALOG_SETTINGS);
+		}
+		return section;
 	}
 
 }
