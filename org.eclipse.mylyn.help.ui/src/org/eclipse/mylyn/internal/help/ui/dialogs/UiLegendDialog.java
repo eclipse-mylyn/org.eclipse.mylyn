@@ -11,6 +11,7 @@ package org.eclipse.mylyn.internal.help.ui.dialogs;
 import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.PopupDialog;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
@@ -24,30 +25,30 @@ import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
-import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IHyperlinkListener;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
-import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.forms.widgets.TableWrapData;
+import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.themes.IThemeManager;
 
 /**
  * @author Mik Kersten
+ * @author Leo Dos Santos
  */
 public class UiLegendDialog extends PopupDialog {
 
-	public static final String TITLE = "  Mylyn UI Overview";
+	public static final String TITLE = "Mylyn UI Overview";
 
 	private FormToolkit toolkit;
 
@@ -86,79 +87,82 @@ public class UiLegendDialog extends PopupDialog {
 	}
 
 	@Override
-	protected final Control createDialogArea(final Composite parent) {
-
-		getShell().setText(TITLE);
-
+	protected Control createDialogArea(Composite parent) {
 		toolkit = new FormToolkit(parent.getDisplay());
 		form = toolkit.createScrolledForm(parent);
-		GridLayout formLayout = new GridLayout();
-		formLayout.numColumns = 1;
-		form.getBody().setLayout(formLayout);
-		Label image = null;
+		form.setText(TITLE);
+		form.getToolBarManager().add(new CloseDialogAction());
+		form.getToolBarManager().update(true);
+		form.getBody().setLayout(new TableWrapLayout());
+		toolkit.decorateFormHeading(form.getForm());
 
-		Section section = toolkit.createSection(form.getBody(), Section.DESCRIPTION);
-		section.setText(TITLE + "                                                 ");
-		Composite sectionClient = toolkit.createComposite(section);
-		GridLayout layout = new GridLayout();
-		layout.verticalSpacing = 0;
-		layout.horizontalSpacing = 0;
-		layout.verticalSpacing = 0;
-		layout.marginHeight = 0;
-		layout.marginTop = 0;
-		sectionClient.setLayout(layout);
+		createTasksPrioritiesSection(form.getBody());
+		createActivitySection(form.getBody());
+		createContextSection(form.getBody());
+		createSynchronizationSection(form.getBody());
+		createConnectorsSection(form.getBody());
+		createGettingStartedSection(form.getBody());
 
-		Composite buttonsComposite = toolkit.createComposite(section);
-		GridLayout buttonsLayout = new GridLayout();
-		buttonsLayout.verticalSpacing = 0;
-		buttonsLayout.verticalSpacing = 0;
-		buttonsLayout.marginHeight = 0;
-		buttonsLayout.marginWidth = 0;
-		buttonsComposite.setLayout(buttonsLayout);
-		section.setTextClient(buttonsComposite);
-		final ImageHyperlink closeHyperlink = toolkit.createImageHyperlink(buttonsComposite, SWT.NONE);
-		closeHyperlink.setLayout(buttonsLayout);
-		closeHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.NOTIFICATION_CLOSE));
-		closeHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
-			@Override
-			public void linkActivated(HyperlinkEvent e) {
-				close();
-			}
-		});
-		
-		// TODO: get rid of ridiculous space-based padding
+		return parent;
+	}
 
-		Composite tasksComposite = toolkit.createComposite(form.getBody());
-		tasksComposite.setLayout(new GridLayout(2, false));
+	private void createTasksPrioritiesSection(Composite parent) {
+		TableWrapLayout layout = new TableWrapLayout();
+		layout.numColumns = 2;
+		layout.makeColumnsEqualWidth = true;
+		layout.leftMargin = 0;
+		layout.rightMargin = 0;
+		layout.topMargin = 0;
+		layout.bottomMargin = 0;
 
-		section = toolkit.createSection(tasksComposite, Section.TITLE_BAR);
-		section.setText("Tasks");
-		sectionClient = toolkit.createComposite(section);
-		setSectionLayout(sectionClient, section, false);
+		Composite composite = toolkit.createComposite(parent);
+		composite.setLayout(layout);
+		composite.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 
-		image = toolkit.createLabel(sectionClient, "");
-		image.setImage(TasksUiImages.getImage(TasksUiImages.TASK));
-		toolkit.createLabel(sectionClient, "Task                       ");
+		createTasksSection(composite);
+		createPrioritiesSection(composite);
+	}
 
-		image = toolkit.createLabel(sectionClient, "");
-		image.setImage(TasksUiImages.getImage(TasksUiImages.CATEGORY));
-		toolkit.createLabel(sectionClient, "Category");
+	private void createTasksSection(Composite parent) {
+		Section tasksSection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
+		tasksSection.setText("Tasks");
+		tasksSection.setLayout(new TableWrapLayout());
+		tasksSection.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 
-		image = toolkit.createLabel(sectionClient, "");
-		image.setImage(TasksUiImages.getImage(TasksUiImages.QUERY));
-		toolkit.createLabel(sectionClient, "Query");
+		TableWrapLayout layout = new TableWrapLayout();
+		layout.numColumns = 2;
+		layout.makeColumnsEqualWidth = false;
+		layout.verticalSpacing = 1;
+		layout.topMargin = 1;
+		layout.bottomMargin = 1;
 
-		image = toolkit.createLabel(sectionClient, "");
-		image.setImage(TasksUiImages.getImage(TasksUiImages.CALENDAR));
-		toolkit.createLabel(sectionClient, "Date range");
+		Composite tasksClient = toolkit.createComposite(tasksSection);
+		tasksClient.setLayout(layout);
+		tasksClient.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		tasksSection.setClient(tasksClient);
 
-		image = toolkit.createLabel(sectionClient, "");
-		image.setImage(TasksUiImages.getImage(TasksUiImages.BLANK));
+		Label imageLabel;
+		imageLabel = toolkit.createLabel(tasksClient, "");
+		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.TASK));
+		toolkit.createLabel(tasksClient, "Task");
 
-		
-		Hyperlink openView = toolkit.createHyperlink(sectionClient, "Open Task List...", SWT.NULL);
+		imageLabel = toolkit.createLabel(tasksClient, "");
+		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.CATEGORY));
+		toolkit.createLabel(tasksClient, "Category");
+
+		imageLabel = toolkit.createLabel(tasksClient, "");
+		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.QUERY));
+		toolkit.createLabel(tasksClient, "Query");
+
+		imageLabel = toolkit.createLabel(tasksClient, "");
+		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.CALENDAR));
+		toolkit.createLabel(tasksClient, "Date range");
+
+		imageLabel = toolkit.createLabel(tasksClient, "");
+		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.BLANK));
+
+		Hyperlink openView = toolkit.createHyperlink(tasksClient, "Open Task List...", SWT.WRAP);
 		openView.addHyperlinkListener(new IHyperlinkListener() {
-
 			public void linkActivated(HyperlinkEvent e) {
 				close();
 				TaskListView.openInActivePerspective();
@@ -172,88 +176,113 @@ public class UiLegendDialog extends PopupDialog {
 				// ignore
 			}
 		});
-		
-//		image = toolkit.createLabel(sectionClient, "");
-		
-		
-		
-		section = toolkit.createSection(tasksComposite, Section.TITLE_BAR);
-		section.setText("Priorities                       ");
-		sectionClient = toolkit.createComposite(section);
-		setSectionLayout(sectionClient, section, false);
+	}
 
-		image = toolkit.createLabel(sectionClient, "");
-		image.setImage(TasksUiImages.getImage(TasksUiImages.PRIORITY_1));
-		toolkit.createLabel(sectionClient, PriorityLevel.P1.getDescription());
+	private void createPrioritiesSection(Composite parent) {
+		Section prioritiesSection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
+		prioritiesSection.setText("Priorities");
+		prioritiesSection.setLayout(new TableWrapLayout());
+		prioritiesSection.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 
-		image = toolkit.createLabel(sectionClient, "");
-		image.setImage(TasksUiImages.getImage(TasksUiImages.PRIORITY_2));
-		toolkit.createLabel(sectionClient, PriorityLevel.P2.getDescription());
+		TableWrapLayout layout = new TableWrapLayout();
+		layout.numColumns = 2;
+		layout.makeColumnsEqualWidth = false;
+		layout.verticalSpacing = 1;
+		layout.topMargin = 1;
+		layout.bottomMargin = 1;
 
-		image = toolkit.createLabel(sectionClient, "");
-		image.setImage(TasksUiImages.getImage(TasksUiImages.PRIORITY_3));
-		toolkit.createLabel(sectionClient, PriorityLevel.P3.getDescription() + " (default)");
+		Composite prioritiesClient = toolkit.createComposite(prioritiesSection);
+		prioritiesClient.setLayout(layout);
+		prioritiesClient.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		prioritiesSection.setClient(prioritiesClient);
 
-		image = toolkit.createLabel(sectionClient, "");
-		image.setImage(TasksUiImages.getImage(TasksUiImages.PRIORITY_4));
-		toolkit.createLabel(sectionClient, PriorityLevel.P4.getDescription());
+		Label imageLabel;
+		imageLabel = toolkit.createLabel(prioritiesClient, "");
+		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.PRIORITY_1));
+		toolkit.createLabel(prioritiesClient, PriorityLevel.P1.getDescription());
 
-		image = toolkit.createLabel(sectionClient, "");
-		image.setImage(TasksUiImages.getImage(TasksUiImages.PRIORITY_5));
-		toolkit.createLabel(sectionClient, PriorityLevel.P5.getDescription());
+		imageLabel = toolkit.createLabel(prioritiesClient, "");
+		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.PRIORITY_2));
+		toolkit.createLabel(prioritiesClient, PriorityLevel.P2.getDescription());
 
-		section = toolkit.createSection(form.getBody(), Section.TITLE_BAR);
-		section.setText("Task Activity                                                                   ");
-		sectionClient = toolkit.createComposite(section);
-		setSectionLayout(sectionClient, section, false);
+		imageLabel = toolkit.createLabel(prioritiesClient, "");
+		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.PRIORITY_3));
+		toolkit.createLabel(prioritiesClient, PriorityLevel.P3.getDescription() + " (default)");
 
-		image = toolkit.createLabel(sectionClient, "");
-		image.setImage(TasksUiImages.getImage(TasksUiImages.TASK));
-		Label labelOverdue = toolkit.createLabel(sectionClient, "Past scheduled date");
+		imageLabel = toolkit.createLabel(prioritiesClient, "");
+		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.PRIORITY_4));
+		toolkit.createLabel(prioritiesClient, PriorityLevel.P4.getDescription());
+
+		imageLabel = toolkit.createLabel(prioritiesClient, "");
+		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.PRIORITY_5));
+		toolkit.createLabel(prioritiesClient, PriorityLevel.P5.getDescription());
+	}
+
+	private void createActivitySection(Composite parent) {
+		Section activitySection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
+		activitySection.setText("Task Activity");
+		activitySection.setLayout(new TableWrapLayout());
+		activitySection.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+
+		TableWrapLayout layout = new TableWrapLayout();
+		layout.numColumns = 2;
+		layout.makeColumnsEqualWidth = false;
+		layout.verticalSpacing = 1;
+		layout.topMargin = 1;
+		layout.bottomMargin = 1;
+
+		Composite activityClient = toolkit.createComposite(activitySection);
+		activityClient.setLayout(layout);
+		activityClient.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		activitySection.setClient(activityClient);
+
+		Label imageLabel;
+		imageLabel = toolkit.createLabel(activityClient, "");
+		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.TASK));
+		Label labelOverdue = toolkit.createLabel(activityClient, "Past scheduled date");
 		labelOverdue.setForeground(themeManager.getCurrentTheme().getColorRegistry().get(
 				TaskListColorsAndFonts.THEME_COLOR_TASK_OVERDUE));
 
-		image = toolkit.createLabel(sectionClient, "");
-		image.setImage(TasksUiImages.getImage(TasksUiImages.TASK));
-		Label labelToday = toolkit.createLabel(sectionClient, "Scheduled for today");
+		imageLabel = toolkit.createLabel(activityClient, "");
+		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.TASK));
+		Label labelToday = toolkit.createLabel(activityClient, "Scheduled for today");
 		labelToday.setForeground(themeManager.getCurrentTheme().getColorRegistry().get(
 				TaskListColorsAndFonts.THEME_COLOR_TASK_TODAY_SCHEDULED));
 
-// image = toolkit.createLabel(sectionClient, "");
-// image.setImage(TasksUiImages.getImage(TasksUiImages.TASK));
-// Label labelThisWeek = toolkit.createLabel(sectionClient, "Scheduled for this
+// imageLabel = toolkit.createLabel(activityClient, "");
+// imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.TASK));
+// Label labelThisWeek = toolkit.createLabel(activityClient, "Scheduled for this
 // week");
 // labelThisWeek.setForeground(themeManager.getCurrentTheme().getColorRegistry().get(
 // TaskListColorsAndFonts.THEME_COLOR_TASK_THISWEEK_SCHEDULED));
 
-		image = toolkit.createLabel(sectionClient, "");
-		image.setImage(TasksUiImages.getImage(TasksUiImages.TASK));
-		Label labelCompleted = toolkit.createLabel(sectionClient, "Completed");
+		imageLabel = toolkit.createLabel(activityClient, "");
+		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.TASK));
+		Label labelCompleted = toolkit.createLabel(activityClient, "Completed");
 		labelCompleted.setFont(TaskListColorsAndFonts.STRIKETHROUGH);
 // labelCompleted.setForeground(TaskListColorsAndFonts.COLOR_TASK_COMPLETED);
 		labelCompleted.setForeground(themeManager.getCurrentTheme().getColorRegistry().get(
 				TaskListColorsAndFonts.THEME_COLOR_COMPLETED));
 
-		image = toolkit.createLabel(sectionClient, "");
-		image.setImage(TasksUiImages.getImage(TasksUiImages.TASK));
-		Label labelCompletedToday = toolkit.createLabel(sectionClient, "Completed today");
+		imageLabel = toolkit.createLabel(activityClient, "");
+		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.TASK));
+		Label labelCompletedToday = toolkit.createLabel(activityClient, "Completed today");
 		labelCompletedToday.setFont(TaskListColorsAndFonts.STRIKETHROUGH);
 		labelCompletedToday.setForeground(themeManager.getCurrentTheme().getColorRegistry().get(
 				TaskListColorsAndFonts.THEME_COLOR_TASK_TODAY_COMPLETED));
 
-		image = toolkit.createLabel(sectionClient, "");
-		image.setImage(TasksUiImages.getImage(TasksUiImages.OVERLAY_HAS_DUE));
-		toolkit.createLabel(sectionClient, "Due date set");
+		imageLabel = toolkit.createLabel(activityClient, "");
+		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.OVERLAY_HAS_DUE));
+		toolkit.createLabel(activityClient, "Due date set");
 
-		image = toolkit.createLabel(sectionClient, "");
-		image.setImage(TasksUiImages.getImage(TasksUiImages.OVERLAY_OVER_DUE));
-		toolkit.createLabel(sectionClient, "Due date past");
+		imageLabel = toolkit.createLabel(activityClient, "");
+		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.OVERLAY_OVER_DUE));
+		toolkit.createLabel(activityClient, "Due date past");
 
-		image = toolkit.createLabel(sectionClient, "");
-		image.setImage(TasksUiImages.getImage(TasksUiImages.BLANK));
-		Hyperlink adjust = toolkit.createHyperlink(sectionClient, "Adjust Colors and Fonts...", SWT.NULL);
+		imageLabel = toolkit.createLabel(activityClient, "");
+		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.BLANK));
+		Hyperlink adjust = toolkit.createHyperlink(activityClient, "Adjust Colors and Fonts...", SWT.WRAP);
 		adjust.addHyperlinkListener(new IHyperlinkListener() {
-
 			public void linkActivated(HyperlinkEvent e) {
 				PreferenceDialog dlg = PreferencesUtil.createPreferenceDialogOn(PlatformUI.getWorkbench()
 						.getActiveWorkbenchWindow()
@@ -270,61 +299,97 @@ public class UiLegendDialog extends PopupDialog {
 				// ignore
 			}
 		});
+	}
 
-		section = toolkit.createSection(form.getBody(), Section.TITLE_BAR);
-		section.setText("Task Context                                                                  ");
-		sectionClient = toolkit.createComposite(section);
-		setSectionLayout(sectionClient, section, false);
+	private void createContextSection(Composite parent) {
+		Section contextSection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
+		contextSection.setText("Task Context");
+		contextSection.setLayout(new TableWrapLayout());
+		contextSection.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 
-		image = toolkit.createLabel(sectionClient, "");
-		image.setImage(TasksUiImages.getImage(TasksUiImages.CONTEXT_FOCUS));
-		toolkit.createLabel(sectionClient, "Focus view on active task");
-		
-		image = toolkit.createLabel(sectionClient, "");
-		image.setImage(TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE));
-		toolkit.createLabel(sectionClient, "Inactive task with no context");
+		TableWrapLayout layout = new TableWrapLayout();
+		layout.numColumns = 2;
+		layout.makeColumnsEqualWidth = false;
+		layout.verticalSpacing = 1;
+		layout.topMargin = 1;
+		layout.bottomMargin = 1;
 
-		image = toolkit.createLabel(sectionClient, "");
-		image.setImage(TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE_CONTEXT));
-		toolkit.createLabel(sectionClient, "Inactive task with context");
+		Composite contextClient = toolkit.createComposite(contextSection);
+		contextClient.setLayout(layout);
+		contextClient.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		contextSection.setClient(contextClient);
 
-		image = toolkit.createLabel(sectionClient, "");
-		image.setImage(TasksUiImages.getImage(TasksUiImages.TASK_ACTIVE));
-		toolkit.createLabel(sectionClient, "Active task");
-		
-		section = toolkit.createSection(form.getBody(), Section.TITLE_BAR);
-		section.setText("Synchronization                                                             ");
-		sectionClient = toolkit.createComposite(section);
-		setSectionLayout(sectionClient, section, true);
+		Label imageLabel;
+		imageLabel = toolkit.createLabel(contextClient, "");
+		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.CONTEXT_FOCUS));
+		toolkit.createLabel(contextClient, "Focus view on active task");
 
-		image = toolkit.createLabel(sectionClient, "");
-		image.setImage(TasksUiImages.getImage(TasksUiImages.OVERLAY_INCOMMING_NEW));
-		toolkit.createLabel(sectionClient, "New task, open to view");
+		imageLabel = toolkit.createLabel(contextClient, "");
+		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE));
+		toolkit.createLabel(contextClient, "Inactive task with no context");
 
-		image = toolkit.createLabel(sectionClient, "");
-		image.setImage(TasksUiImages.getImage(TasksUiImages.OVERLAY_INCOMMING));
-		toolkit.createLabel(sectionClient, "Incoming changes, open to view");
+		imageLabel = toolkit.createLabel(contextClient, "");
+		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE_CONTEXT));
+		toolkit.createLabel(contextClient, "Inactive task with context");
 
-		image = toolkit.createLabel(sectionClient, "");
-		image.setImage(TasksUiImages.getImage(TasksUiImages.OVERLAY_OUTGOING));
-		toolkit.createLabel(sectionClient, "Outgoing changes");
+		imageLabel = toolkit.createLabel(contextClient, "");
+		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.TASK_ACTIVE));
+		toolkit.createLabel(contextClient, "Active task");
+	}
 
-		image = toolkit.createLabel(sectionClient, "");
-		image.setImage(TasksUiImages.getImage(TasksUiImages.OVERLAY_WARNING));
-		toolkit.createLabel(sectionClient, "Synchronization failed, mouse over for details");
+	private void createSynchronizationSection(Composite parent) {
+		Section synchroSection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
+		synchroSection.setText("Synchronization");
+		synchroSection.setLayout(new TableWrapLayout());
+		synchroSection.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 
-		image = toolkit.createLabel(sectionClient, "");
-		image.setImage(TasksUiImages.getImage(TasksUiImages.OVERLAY_CONFLICT));
-		toolkit.createLabel(sectionClient, "Conflicting changes, need to synchronize");
+		TableWrapLayout layout = new TableWrapLayout();
+		layout.numColumns = 2;
+		layout.makeColumnsEqualWidth = false;
+		layout.verticalSpacing = 3;
+		layout.topMargin = 1;
+		layout.bottomMargin = 1;
 
-		// Connector specifics
-		Composite connectorComposite = toolkit.createComposite(form.getBody());
-		connectorComposite.setLayout(new GridLayout(3, false));
+		Composite synchroClient = toolkit.createComposite(synchroSection);
+		synchroClient.setLayout(layout);
+		synchroClient.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		synchroSection.setClient(synchroClient);
 
-		GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING, GridData.VERTICAL_ALIGN_BEGINNING, false, false);
-		gridData.verticalIndent = 0;
-		connectorComposite.setData(gridData);
-		
+		Label imageLabel;
+		imageLabel = toolkit.createLabel(synchroClient, "");
+		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.OVERLAY_INCOMMING_NEW));
+		toolkit.createLabel(synchroClient, "New task, open to view");
+
+		imageLabel = toolkit.createLabel(synchroClient, "");
+		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.OVERLAY_INCOMMING));
+		toolkit.createLabel(synchroClient, "Incoming changes, open to view");
+
+		imageLabel = toolkit.createLabel(synchroClient, "");
+		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.OVERLAY_OUTGOING));
+		toolkit.createLabel(synchroClient, "Outgoing changes");
+
+		imageLabel = toolkit.createLabel(synchroClient, "");
+		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.OVERLAY_WARNING));
+		toolkit.createLabel(synchroClient, "Synchronization failed, mouse over for details");
+
+		imageLabel = toolkit.createLabel(synchroClient, "");
+		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.OVERLAY_CONFLICT));
+		toolkit.createLabel(synchroClient, "Conflicting changes, need to synchronize");
+	}
+
+	private void createConnectorsSection(Composite parent) {
+		TableWrapLayout layout = new TableWrapLayout();
+		layout.numColumns = 3;
+		layout.makeColumnsEqualWidth = true;
+		layout.leftMargin = 0;
+		layout.rightMargin = 0;
+		layout.topMargin = 0;
+		layout.bottomMargin = 0;
+
+		Composite composite = toolkit.createComposite(parent);
+		composite.setLayout(layout);
+		composite.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+
 		Collection<AbstractRepositoryConnector> connectors = TasksUiPlugin.getRepositoryManager()
 				.getRepositoryConnectors();
 		for (AbstractRepositoryConnector connector : connectors) {
@@ -333,33 +398,60 @@ public class UiLegendDialog extends PopupDialog {
 				List<AbstractTaskContainer> elements = connectorUi.getLegendItems();
 
 				if (!elements.isEmpty()) {
-					section = toolkit.createSection(connectorComposite, Section.TITLE_BAR | SWT.TOP);
+					Section connectorSection = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR);
+					connectorSection.setLayout(new TableWrapLayout());
+					connectorSection.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+
 					String label = connector.getLabel();
 					int parenIndex = label.indexOf('(');
 					if (parenIndex != -1) {
 						label = label.substring(0, parenIndex);
 					}
+					connectorSection.setText(label);
 
-					section.setText(label);
-					sectionClient = toolkit.createComposite(section);
-					setSectionLayout(sectionClient, section, false);
+					TableWrapLayout clientLayout = new TableWrapLayout();
+					clientLayout.numColumns = 2;
+					clientLayout.makeColumnsEqualWidth = false;
+					clientLayout.verticalSpacing = 1;
+					clientLayout.topMargin = 1;
+					clientLayout.bottomMargin = 1;
 
+					Composite connectorClient = toolkit.createComposite(connectorSection);
+					connectorClient.setLayout(clientLayout);
+					connectorClient.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+					connectorSection.setClient(connectorClient);
+
+					Label imageLabel;
 					for (AbstractTaskContainer taskListElement : elements) {
-						image = toolkit.createLabel(sectionClient, "");
-						image.setImage(labelProvider.getImage(taskListElement));
-						toolkit.createLabel(sectionClient, taskListElement.getSummary());
+						imageLabel = toolkit.createLabel(connectorClient, "");
+						imageLabel.setImage(labelProvider.getImage(taskListElement));
+						toolkit.createLabel(connectorClient, taskListElement.getSummary());
 					}
-					if (elements.size() < 4)  {
-						image = toolkit.createLabel(sectionClient, "");
-						toolkit.createLabel(sectionClient, "");
+					
+					if (elements.size() < 4) {
+						imageLabel = toolkit.createLabel(connectorClient, "");
+						toolkit.createLabel(connectorClient, "");
 					}
 				}
 			}
 		}
+	}
 
-		Hyperlink gettingStartedLink = toolkit.createHyperlink(form.getBody(), "Also see the Getting Started documentation online", SWT.NULL);
-		gettingStartedLink.addHyperlinkListener(new IHyperlinkListener() { 
+	private void createGettingStartedSection(Composite parent) {
+		TableWrapLayout layout = new TableWrapLayout();
+		layout.verticalSpacing = 0;
+		layout.leftMargin = 0;
+		layout.rightMargin = 0;
+		layout.topMargin = 0;
+		layout.bottomMargin = 0;
 
+		Composite hyperlinkClient = toolkit.createComposite(parent);
+		hyperlinkClient.setLayout(layout);
+		hyperlinkClient.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+
+		Hyperlink gettingStartedLink = toolkit.createHyperlink(hyperlinkClient,
+				"Also see the Getting Started documentation online", SWT.WRAP);
+		gettingStartedLink.addHyperlinkListener(new IHyperlinkListener() {
 			public void linkActivated(HyperlinkEvent e) {
 				close();
 				TasksUiUtil.openUrl("http://www.eclipse.org/mylyn/start/", false);
@@ -373,33 +465,19 @@ public class UiLegendDialog extends PopupDialog {
 				// ignore
 			}
 		});
-		
-		form.pack();
-		return parent;
 	}
+	
+	private class CloseDialogAction extends Action {
 
-	private GridLayout setSectionLayout(Composite sectionClient, Section section, boolean extraPadding) {
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 2;
-		layout.makeColumnsEqualWidth = false;
-		layout.verticalSpacing = 0;
-		if (extraPadding) {
-			layout.verticalSpacing = 5;
-			layout.horizontalSpacing = 8;
-		} else {
-			layout.horizontalSpacing = 5;
-			layout.verticalSpacing = 1;
+		private CloseDialogAction() {
+			setImageDescriptor(TasksUiImages.NOTIFICATION_CLOSE);
+			setText("Close Dialog");
 		}
-		layout.marginHeight = 0;
-		layout.marginTop = 0;
-		sectionClient.setLayout(layout);
-		section.setClient(sectionClient);
-
-		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.verticalSpan = 2;
-		sectionClient.setLayoutData(gridData);
-
-		return layout;
+		
+		@Override
+		public void run() {
+			close();
+		}
+		
 	}
 }
