@@ -128,6 +128,8 @@ import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.KeyEvent;
@@ -141,6 +143,7 @@ import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
@@ -1683,8 +1686,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		GridLayout addCommentsLayout = new GridLayout();
 		addCommentsLayout.numColumns = 1;
 		sectionComposite.setLayout(addCommentsLayout);
-		GridData sectionCompositeData = new GridData(GridData.FILL_HORIZONTAL);
-		sectionComposite.setLayoutData(sectionCompositeData);
 
 		RepositoryTaskAttribute attribute = taskData.getDescriptionAttribute();
 		if (attribute != null && !attribute.isReadOnly()) {
@@ -1712,12 +1713,34 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			} else {
 				descriptionTextViewer = addTextEditor(repository, sectionComposite, taskData.getDescription(), true,
 						SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-				GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+				final GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+				// wrap text at this margin, see comment below
 				gd.widthHint = DESCRIPTION_WIDTH;
 				gd.minimumHeight = DESCRIPTION_HEIGHT;
 				gd.grabExcessHorizontalSpace = true;
 				descriptionTextViewer.getControl().setLayoutData(gd);
 				descriptionTextViewer.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+				// the goal is to make the text viewer as big as the text so it does not require scrolling when first drawn 
+				// on screen: when the descriptionTextViewer calculates its height it wraps the text according to the widthHint 
+				// which does not reflect the actual size of the widget causing the widget to be taller 
+				// (actual width > gd.widhtHint) or shorter (actual width < gd.widthHint) therefore the widthHint is tweaked 
+				// once in the listener  
+				sectionComposite.addControlListener(new ControlAdapter() {
+					private boolean first;
+
+					public void controlResized(ControlEvent e) {
+						if (!first) {
+							first = true;
+							int width = sectionComposite.getSize().x;
+							Point size = descriptionTextViewer.getTextWidget().computeSize(width, SWT.DEFAULT, true);
+							// limit width to parent widget
+							gd.widthHint = width;
+							// limit height to avoid dynamic resizing of the text widget
+							gd.heightHint = Math.min(Math.max(DESCRIPTION_HEIGHT, size.y), DESCRIPTION_HEIGHT * 4);
+							sectionComposite.layout();
+						}
+					}
+				});
 			}
 			descriptionTextViewer.setEditable(true);
 			descriptionTextViewer.addTextListener(new ITextListener() {
@@ -2571,7 +2594,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
 		section.setText(title);
 		section.setExpanded(true);
-		section.setLayout(new GridLayout());
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		return section;
 	}
