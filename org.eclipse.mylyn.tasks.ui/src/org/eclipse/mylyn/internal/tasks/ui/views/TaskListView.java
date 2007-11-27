@@ -1609,7 +1609,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	}
 
 	public void setFocusedMode(boolean focusedMode) {
-		this.linkWithEditor = focusedMode;
 		this.focusedMode = focusedMode;
 	}
 
