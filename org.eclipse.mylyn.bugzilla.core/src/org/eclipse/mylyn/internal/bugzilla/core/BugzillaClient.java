@@ -911,6 +911,7 @@ public class BugzillaClient {
 						}
 					}
 					a = b;
+					cleanIfShortLogin(a);
 				} else {
 					cleanQAContact(a);
 				}
@@ -928,13 +929,17 @@ public class BugzillaClient {
 
 	private void cleanQAContact(RepositoryTaskAttribute a) {
 		if (a.getId().equals(BugzillaReportElement.QA_CONTACT.getKeyString())) {
-			if ("true".equals(configParameters.get(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN))) {
-				if (a.getValue() != null && a.getValue().length() > 0) {
-					int atIndex = a.getValue().indexOf("@");
-					if (atIndex != -1) {
-						String newValue = a.getValue().substring(0, atIndex);
-						a.setValue(newValue);
-					}
+			cleanIfShortLogin(a);
+		}
+	}
+
+	private void cleanIfShortLogin(RepositoryTaskAttribute a) {
+		if ("true".equals(configParameters.get(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN))) {
+			if (a.getValue() != null && a.getValue().length() > 0) {
+				int atIndex = a.getValue().indexOf("@");
+				if (atIndex != -1) {
+					String newValue = a.getValue().substring(0, atIndex);
+					a.setValue(newValue);
 				}
 			}
 		}
@@ -950,14 +955,15 @@ public class BugzillaClient {
 			RepositoryTaskAttribute a = it.next();
 			if (a == null) {
 				continue;
-			} else if (a.getId().equals(BugzillaReportElement.CC.getKeyString())
+			} else if (a.getId().equals(BugzillaReportElement.QA_CONTACT.getKeyString())
+					|| a.getId().equals(BugzillaReportElement.ASSIGNED_TO.getKeyString())) {
+				cleanIfShortLogin(a);
+			} else if (a.getId().equals(BugzillaReportElement.REPORTER.getKeyString())
+					|| a.getId().equals(BugzillaReportElement.CC.getKeyString())
 					|| a.getId().equals(RepositoryTaskAttribute.REMOVE_CC)
-					|| a.getId().equals(BugzillaReportElement.REPORTER.getKeyString())
-//					|| a.getId().equals(BugzillaReportElement.ASSIGNED_TO.getKeyString())
 					|| a.getId().equals(BugzillaReportElement.CREATION_TS.getKeyString())) {
 				continue;
 			} else if (a.getId() != null && a.getId().compareTo("") != 0) {
-				cleanQAContact(a);
 				String value = a.getValue();
 				if (a.getId().equals(BugzillaReportElement.DELTA_TS.getKeyString())) {
 					value = stripTimeZone(value);
