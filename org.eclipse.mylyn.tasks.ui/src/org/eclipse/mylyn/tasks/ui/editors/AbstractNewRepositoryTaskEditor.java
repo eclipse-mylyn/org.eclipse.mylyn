@@ -411,10 +411,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	protected AbstractTaskCategory getCategory() {
 		int index = categoryChooser.getSelectionIndex();
 		if (addToCategory.getSelection() && index != -1) {
-			if (index == 0) {
-				return TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory();
-			}
-			return ((List<AbstractTaskCategory>) categoryChooser.getData()).get(index - 1);
+			return ((List<AbstractTaskCategory>) categoryChooser.getData()).get(index);
 		}
 		return null;
 	}
