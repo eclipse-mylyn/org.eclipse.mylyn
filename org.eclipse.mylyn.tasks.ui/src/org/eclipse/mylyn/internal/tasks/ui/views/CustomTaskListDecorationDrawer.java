@@ -11,6 +11,7 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 import java.util.Set;
 
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
@@ -183,7 +184,9 @@ class CustomTaskListDecorationDrawer implements Listener {
 	}
 
 	private boolean hideDecorationOnContainer(AbstractTaskContainer element, TreeItem treeItem) {
-		if (!taskListView.isFocusedMode()) {
+		if (element instanceof TaskArchive) {
+			return true;
+		} else if (!taskListView.isFocusedMode()) {
 			return false;
 		} else {
 			if (element instanceof AbstractRepositoryQuery || element instanceof TaskCategory) {
