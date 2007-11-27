@@ -145,7 +145,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 						taskListView.synchronizationOverlaid));
 			} else {
 				int imageOffset = 0;
-				if (!hideDecorationOnContainer(element, (TreeItem)event.item) && hasDescendantIncoming(element)) {
+				if (!hideDecorationOnContainer(element, (TreeItem) event.item) && hasDescendantIncoming(element)) {
 					if (taskListView.synchronizationOverlaid) {
 						image = TasksUiImages.getImage(TasksUiImages.OVERLAY_SYNCH_INCOMMING);
 					} else {
@@ -183,12 +183,14 @@ class CustomTaskListDecorationDrawer implements Listener {
 	}
 
 	private boolean hideDecorationOnContainer(AbstractTaskContainer element, TreeItem treeItem) {
-//		if (taskListView.isFocusedMode()) {
-		
-		if (element instanceof AbstractRepositoryQuery || element instanceof TaskCategory) {
-			return treeItem.getExpanded();
-		} else {
+		if (!taskListView.isFocusedMode()) {
 			return false;
+		} else {
+			if (element instanceof AbstractRepositoryQuery || element instanceof TaskCategory) {
+				return treeItem.getExpanded();
+			} else {
+				return false;
+			}
 		}
 	}
 
@@ -197,7 +199,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 		if (children == null) {
 			return false;
 		}
-		
+
 		for (AbstractTask task : children) {
 			if (task != null) {
 				AbstractTask containedRepositoryTask = task;
