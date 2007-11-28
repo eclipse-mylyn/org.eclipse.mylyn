@@ -115,7 +115,7 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 			unfilter(filter, treeViewer, selectedObject);
 		} else {
 			if (event.button == 1) {
-				if ((event.stateMask & SWT.CTRL) != 0) {
+				if ((event.stateMask & SWT.MOD1) != 0) {
 					viewer.setSelection(new StructuredSelection(selectedObject));
 				} else {
 					Object unfiltered = filter.getTemporarilyUnfiltered();

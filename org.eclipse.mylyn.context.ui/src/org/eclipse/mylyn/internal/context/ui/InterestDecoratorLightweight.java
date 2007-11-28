@@ -54,8 +54,8 @@ public class InterestDecoratorLightweight implements ILightweightLabelDecorator 
 				}
 			}
 			if (node != null) {
-				decoration.setBackgroundColor(UiUtil.getBackgroundForElement(node));
-				decoration.setForegroundColor(UiUtil.getForegroundForElement(node));
+//				decoration.setBackgroundColor(UiUtil.getBackgroundForElement(node));
+				decoration.setForegroundColor(InterestDecorator.getForegroundForElement(node));
 				if (bridge != null && bridge.canBeLandmark(node.getHandleIdentifier())
 						&& node.getInterest().isLandmark() && !node.getInterest().isPropagated()
 						&& !node.getInterest().isPredicted()) {

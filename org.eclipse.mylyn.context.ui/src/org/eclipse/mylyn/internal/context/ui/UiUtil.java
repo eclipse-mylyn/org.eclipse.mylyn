@@ -62,24 +62,5 @@ public class UiUtil {
 			return ColorMap.BACKGROUND_COLOR;
 		}
 	}
-
-	public static Color getForegroundForElement(IInteractionElement node) {
-		if (node == null)
-			return null;
-		if (node.getInterest().isPredicted() || node.getInterest().isPropagated()) {
-//			if (node.getInterest().getValue() >= InteractionContextManager.getScalingFactors().getLandmark() / 3) {
-//				return ColorMap.GRAY_DARK;
-//			} else if (node.getInterest().getValue() >= 10) {
-//				return ColorMap.GRAY_MEDIUM;
-//			} else {
-			return ColorMap.GRAY_MEDIUM;
-//			}
-		} else if (node.getInterest().isLandmark()) {
-			return ColorMap.LANDMARK;
-		} else if (node.getInterest().isInteresting()) {
-			return null;
-		}
-		return ColorMap.GRAY_MEDIUM;
-	}
 }
 
