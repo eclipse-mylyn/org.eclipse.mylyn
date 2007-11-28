@@ -65,31 +65,37 @@ public class NewTaskAction extends Action implements IViewActionDelegate, IExecu
 		List<TaskRepository> repositories = TasksUiPlugin.getRepositoryManager().getAllRepositories();
 		if (localTask) {
 			wizard = new NewLocalTaskWizard(taskSelection);
-		} else if (repositories.size() == 1) {
-			// NOTE: this click-saving should be generalized
-			TaskRepository taskRepository = repositories.get(0);
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskRepository.getConnectorKind());
-			wizard = createNewTaskWizard(connectorUi, taskRepository, taskSelection);
-		} else if (skipRepositoryPage) {
-			TaskRepository taskRepository = TasksUiUtil.getSelectedRepository();
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskRepository.getConnectorKind());
-			wizard = createNewTaskWizard(connectorUi, taskRepository, taskSelection);
 		} else {
-			wizard = new NewTaskWizard(taskSelection);
-		}
-
-		if (wizard.canFinish()) {
-			wizard.performFinish();
-			if (!supportsTaskSelection) {
-				handleSelection(taskSelection);
+			TaskRepository taskRepository = null;
+			if (repositories.size() == 1) {
+				taskRepository = repositories.get(0);
+			} else if (skipRepositoryPage) {
+				taskRepository = TasksUiUtil.getSelectedRepository();
 			}
-			return Dialog.OK;
+
+			if (taskRepository != null) {
+				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskRepository.getConnectorKind());
+				wizard = createNewTaskWizard(connectorUi, taskRepository, taskSelection);
+			} else {
+				wizard = new NewTaskWizard(taskSelection);
+			}
 		}
 
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		if (shell != null && !shell.isDisposed()) {
 			WizardDialog dialog = new WizardDialog(shell, wizard);
 			dialog.setBlockOnOpen(true);
+
+			// make sure the wizard has created its pages
+			dialog.create();
+			if (!(wizard instanceof NewTaskWizard) && wizard.canFinish()) {
+				wizard.performFinish();
+				if (!supportsTaskSelection) {
+					handleSelection(taskSelection);
+				}
+				return Dialog.OK;
+			}
+
 			int result = dialog.open();
 			if (result == Dialog.OK) {
 				if (wizard instanceof NewTaskWizard) {
@@ -125,7 +131,7 @@ public class NewTaskAction extends Action implements IViewActionDelegate, IExecu
 		if (taskSelection == null) {
 			return;
 		}
-		
+
 		// need to defer execution to make sure the task editor has been created by the wizard
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
