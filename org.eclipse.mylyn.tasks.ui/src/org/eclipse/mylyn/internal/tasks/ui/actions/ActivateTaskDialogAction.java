@@ -9,8 +9,6 @@
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -32,19 +30,12 @@ public class ActivateTaskDialogAction extends ActionDelegate implements IWorkben
 		this.window = window;
 	}
 
-	private static final String ACTIVATE_TASK_ACTION_DIALOG_SETTINGS = "activate.task.action.dialog.settings";
-
 	@Override
 	public void run(IAction action) {
 		TaskSelectionDialog dlg = new TaskSelectionDialog(window.getShell());
 		dlg.setTitle("Activate Task");
-
-		IDialogSettings settings = TasksUiPlugin.getDefault().getDialogSettings();
-		IDialogSettings dlgSettings = settings.getSection(ACTIVATE_TASK_ACTION_DIALOG_SETTINGS);
-		if (dlgSettings == null) {
-			dlgSettings = settings.addNewSection(ACTIVATE_TASK_ACTION_DIALOG_SETTINGS);
-		}
-		dlg.setDialogBoundsSettings(dlgSettings, Dialog.DIALOG_PERSISTLOCATION | Dialog.DIALOG_PERSISTSIZE);
+		dlg.setMessage("&Select a task to activate (? = any character, * = any String):");
+		dlg.setInsertInHistory(true);
 
 		if (dlg.open() != Window.OK) {
 			return;

@@ -8,6 +8,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
@@ -87,6 +88,14 @@ public class TaskActivationHistory {
 		}
 	}
 
+	public boolean containsTask(AbstractTask task) {
+		return history.contains(task);
+	}
+
+	public boolean removeTask(AbstractTask task) {
+		return history.remove(task);
+	}
+	
 	public AbstractTask getPreviousTask() {
 		try {
 			boolean active = false;
@@ -113,7 +122,7 @@ public class TaskActivationHistory {
 	}
 
 	public List<AbstractTask> getPreviousTasks() {
-		return history;
+		return Collections.unmodifiableList(history);
 	}
 
 	public boolean hasPrevious() {
