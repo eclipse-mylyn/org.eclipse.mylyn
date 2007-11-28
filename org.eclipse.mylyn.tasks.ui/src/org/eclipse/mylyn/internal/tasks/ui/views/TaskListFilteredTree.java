@@ -73,7 +73,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 	private static final String LABEL_SETS_MULTIPLE = "<multiple>";
 
 	public static final String LABEL_SEARCH = "Search repository for key or summary...";
-	
+
 	private TaskListHyperlink workingSetLink;
 
 	private TaskListHyperlink activeTaskLink;
@@ -108,7 +108,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		super.dispose();
 		taskListToolTip.dispose();
 	}
-	
+
 	private void hookContextMenu() {
 		activeTaskMenuManager = new MenuManager("#PopupMenu");
 		activeTaskMenuManager.setRemoveAllWhenShown(true);
@@ -193,7 +193,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		final TaskListHyperlink searchLink = new TaskListHyperlink(searchComposite, SWT.LEFT);
 		searchLink.setText(LABEL_SEARCH);
 		searchLink.setForeground(TaskListColorsAndFonts.COLOR_HYPERLINK_WIDGET);
-		
+
 		searchLink.addHyperlinkListener(new IHyperlinkListener() {
 
 			public void linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent e) {
@@ -208,10 +208,10 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 				searchLink.setUnderlined(false);
 			}
 		});
-		
+
 		return searchComposite;
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	private void updateTaskProgressBar() {
 		if (taskProgressBar.isDisposed()) {
@@ -219,7 +219,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		}
 
 		Set<AbstractTask> tasksThisWeek = TasksUiPlugin.getTaskListManager().getScheduledForThisWeek();
-		
+
 		totalTasks = tasksThisWeek.size();
 		completeTime = 0;
 		completeTasks = 0;
@@ -245,17 +245,15 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			public void run() {
 				if (PlatformUI.isWorkbenchRunning() && !taskProgressBar.isDisposed()) {
 					taskProgressBar.reset(completeTime, (completeTime + incompleteTime));
-					
+
 //					String workingSetName = "All";
 //					if (currentWorkingSet != null) {
 //						workingSetName = currentWorkingSet.getLabel();
 //					}
 
-					taskProgressBar.setToolTipText(
-							"Workweek Progress"
-							+ "\n     Estimated hours: " + completeTime + " of "
-							+ (completeTime + incompleteTime) + " estimated" + "\n     Scheduled tasks: " + completeTasks
-							+ " of " + totalTasks + " scheduled");
+					taskProgressBar.setToolTipText("Workweek Progress" + "\n     Estimated hours: " + completeTime
+							+ " of " + (completeTime + incompleteTime) + " estimated" + "\n     Scheduled tasks: "
+							+ completeTasks + " of " + totalTasks + " scheduled");
 				}
 			}
 		});
@@ -327,9 +325,11 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		activeTaskLink = new TaskListHyperlink(container, SWT.LEFT);
 		activeTaskLink.setText(LABEL_ACTIVE_NONE);
 		activeTaskLink.setForeground(TaskListColorsAndFonts.COLOR_HYPERLINK_WIDGET);
-		
-		taskListToolTip = new TaskListToolTip(activeTaskLink);	
-		
+		// avoid having the Hyperlink class show a native tooltip when it shortens the text which would overlap with the task list tooltip 
+		activeTaskLink.setToolTipText("");
+
+		taskListToolTip = new TaskListToolTip(activeTaskLink);
+
 		AbstractTask activeTask = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
 		if (activeTask != null) {
 			indicateActiveTask(activeTask);
@@ -398,11 +398,11 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		} else {
 			setShowSearch(false);
 		}
-	} 
-	
+	}
+
 	public void indicateActiveTaskWorkingSet() {
-		Set<IWorkingSet> activeSets = TaskListView.getActiveWorkingSets(); 
-		
+		Set<IWorkingSet> activeSets = TaskListView.getActiveWorkingSets();
+
 		if (filterComposite.isDisposed() || activeSets == null) {
 			return;
 		}
@@ -422,7 +422,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			workingSetLink.setToolTipText(LABEL_SETS_EDIT);
 			currentWorkingSet = workingSet;
 		}
-		filterComposite.layout(); 
+		filterComposite.layout();
 	}
 
 	public void indicateActiveTask(AbstractTask task) {
@@ -434,7 +434,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		activeTaskLink.setText(text);
 		activeTaskLink.setUnderlined(false);
 		activeTaskLink.setTask(task);
-		
+
 //		activeTaskLink.setToolTipText("Open: " + task.getSummary());
 		activeTaskLink.addMouseTrackListener(new MouseTrackListener() {
 
@@ -448,11 +448,11 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 			public void mouseHover(MouseEvent e) {
 			}
-		});	
-		
+		});
+
 		filterComposite.layout();
 	}
-	
+
 	public String getActiveTaskLabelText() {
 		return activeTaskLink.getText();
 	}
