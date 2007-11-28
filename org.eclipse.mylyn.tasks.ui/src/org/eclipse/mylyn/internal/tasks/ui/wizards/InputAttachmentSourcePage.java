@@ -537,6 +537,8 @@ public class InputAttachmentSourcePage extends WizardPage {
 			useFileButton.setSelection(false);
 			break;
 		case CLIPBOARD:
+			storeClipboardContents();
+			
 			useClipboardButton.setSelection(true);
 			useFileButton.setSelection(false);
 			useWorkspaceButton.setSelection(false);
