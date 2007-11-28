@@ -42,12 +42,17 @@ public class NewTaskFromErrorAction implements IObjectActionDelegate, IViewActio
 	private TreeViewer treeViewer;
 
 	public void run() {
-		if (entry == null) {
-			// TODO: remove if we can use an object contribution
-			TreeItem[] items = treeViewer.getTree().getSelection();
-			if (items.length > 0) {
+		// TODO: remove if we can use an object contribution
+		entry = null;
+		TreeItem[] items = treeViewer.getTree().getSelection();
+		if (items.length > 0) {
+			if (items[0].getData() instanceof LogEntry) {
 				entry = (LogEntry) items[0].getData();
 			}
+		}
+
+		if (entry == null) {
+			return;
 		}
 
 		StringBuilder sb = new StringBuilder();
