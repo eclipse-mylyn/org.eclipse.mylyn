@@ -102,7 +102,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 	private IPropertyChangeListener SHOW_TRIM_LISTENER = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
 			String property = event.getProperty();
-			if(property.equals(TasksUiPreferenceConstants.SHOW_TRIM)) {
+			if (property.equals(TasksUiPreferenceConstants.SHOW_TRIM)) {
 				setTrimVisible((Boolean) event.getNewValue());
 			}
 		}
@@ -122,7 +122,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 			((WorkbenchWindow) window).getTrimManager().setTrimVisible(trim, visible);
 		}
 	}
-	
+
 	@Override
 	public void dispose() {
 		if (composite != null && !composite.isDisposed()) {
@@ -207,16 +207,16 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		activeTaskLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
-				// if (TaskListFilteredTree.super.filterText.getText().length()
-				// > 0) {
-				// TaskListFilteredTree.super.filterText.setText("");
-				// TaskListFilteredTree.this.textChanged();
-				// }
-				if (TaskListView.getFromActivePerspective().getDrilledIntoCategory() != null) {
-					TaskListView.getFromActivePerspective().goUpToRoot();
+				if (activeTask == null) {
+					return;
 				}
-				TasksUiUtil.refreshAndOpenTaskListElement((TasksUiPlugin.getTaskListManager().getTaskList()
-						.getActiveTask()));
+
+				TaskListView taskListView = TaskListView.getFromActivePerspective();
+				if (taskListView != null && taskListView.getDrilledIntoCategory() != null) {
+					taskListView.goUpToRoot();
+				}
+
+				TasksUiUtil.refreshAndOpenTaskListElement(activeTask);
 			}
 		});
 
