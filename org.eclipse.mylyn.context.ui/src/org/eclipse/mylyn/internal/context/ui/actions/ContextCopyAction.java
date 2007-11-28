@@ -9,8 +9,6 @@
 package org.eclipse.mylyn.internal.context.ui.actions;
 
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
@@ -28,8 +26,6 @@ import org.eclipse.ui.PlatformUI;
  * @author Mik Kersten
  */
 public class ContextCopyAction extends TaskContextAction {
-
-	private static final String OPEN_TASK_ACTION_DIALOG_SETTINGS = "open.task.action.dialog.settings";
 
 	private static final String ID_ACTION = "org.eclipse.mylyn.context.ui.task.copy.context.to";
 
@@ -64,16 +60,9 @@ public class ContextCopyAction extends TaskContextAction {
 				.getActiveWorkbenchWindow()
 				.getShell());
 		dialog.setTitle("Select Target Task");
+		dialog.setMessage("&Select the target task (? = any character, * = any String):");
 
-		IDialogSettings settings = TasksUiPlugin.getDefault().getDialogSettings();
-		IDialogSettings dlgSettings = settings.getSection(OPEN_TASK_ACTION_DIALOG_SETTINGS);
-		if (dlgSettings == null) {
-			dlgSettings = settings.addNewSection(OPEN_TASK_ACTION_DIALOG_SETTINGS);
-		}
-		dialog.setDialogBoundsSettings(dlgSettings, Dialog.DIALOG_PERSISTLOCATION | Dialog.DIALOG_PERSISTSIZE);
-
-		int ret = dialog.open();
-		if (ret != Window.OK) {
+		if (dialog.open() != Window.OK) {
 			return;
 		}
 
