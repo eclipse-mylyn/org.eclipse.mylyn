@@ -348,6 +348,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		BugzillaRepositoryConnector.setupNewBugAttributes(taskRepository, taskData);
 		cloneTaskData(parentTaskData, taskData);
 		taskData.setAttributeValue(BugzillaReportElement.BLOCKED.getKeyString(), parentTaskData.getId());
+		taskData.setAttributeValue(RepositoryTaskAttribute.USER_ASSIGNED, parentTaskData.getAssignedTo());
 		taskData.setDescription("");
 		taskData.setSummary("");
 		return true;
