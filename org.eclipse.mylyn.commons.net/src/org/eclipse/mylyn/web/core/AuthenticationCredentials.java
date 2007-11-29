@@ -5,7 +5,6 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-
 package org.eclipse.mylyn.web.core;
 
 /**
@@ -14,21 +13,7 @@ package org.eclipse.mylyn.web.core;
  * @author Steffen Pingel
  * @since 2.2
  */
-public class WebCredentials {
-
-	/**
-	 * An enum of the supported authentication types.
-	 * 
-	 * @since 2.2
-	 */
-	public enum Type {
-		/** Basic HTTP authentication. */
-		HTTP,
-		/** Proxy authentication. */
-		PROXY,
-		/** Task repository authentication. */
-		REPOSITORY
-	};
+public class AuthenticationCredentials {
 
 	private String userName;
 
@@ -40,7 +25,7 @@ public class WebCredentials {
 	 * @param password
 	 *            the password, must not be null
 	 */
-	public WebCredentials(String userName, String password) {
+	public AuthenticationCredentials(String userName, String password) {
 		if (userName == null) {
 			throw new IllegalArgumentException();
 		}
@@ -60,7 +45,6 @@ public class WebCredentials {
 		return password;
 	}
 
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -78,7 +62,7 @@ public class WebCredentials {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		final WebCredentials other = (WebCredentials) obj;
+		final AuthenticationCredentials other = (AuthenticationCredentials) obj;
 		if (password == null) {
 			if (other.password != null)
 				return false;

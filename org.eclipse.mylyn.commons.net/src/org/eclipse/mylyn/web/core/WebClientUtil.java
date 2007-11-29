@@ -286,7 +286,7 @@ public class WebClientUtil {
 	/**
 	 * @since 2.2
 	 */
-	public static Credentials getHttpClientCredentials(WebCredentials credentials, String host) {
+	public static Credentials getHttpClientCredentials(AuthenticationCredentials credentials, String host) {
 		String username = credentials.getUserName();
 		String password = credentials.getPassword();
 		int i = username.indexOf("\\");
@@ -442,7 +442,7 @@ public class WebClientUtil {
 		setupHttpClientParams(client, userAgent);
 		setupHttpClientProxy(client, location);
 
-		WebCredentials credentials = location.getCredentials(WebCredentials.Type.HTTP);
+		AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.HTTP);
 		if (credentials != null) {
 			client.getParams().setAuthenticationPreemptive(true);
 			AuthScope authScope = new AuthScope(host, port, AuthScope.ANY_REALM);

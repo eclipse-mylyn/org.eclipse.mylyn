@@ -28,7 +28,7 @@ public abstract class AbstractWebLocation {
 		this.url = url;
 	}
 	
-	public abstract WebCredentials getCredentials(WebCredentials.Type type);
+	public abstract AuthenticationCredentials getCredentials(AuthenticationType type);
 	
 	public abstract Proxy getProxyForHost(String host, String proxyType);
 
@@ -40,6 +40,6 @@ public abstract class AbstractWebLocation {
 		return url;
 	}
 
-	public abstract ResultType requestCredentials(WebCredentials.Type type, String message);
+	public abstract ResultType requestCredentials(AuthenticationType type, String message);
 	
 }
