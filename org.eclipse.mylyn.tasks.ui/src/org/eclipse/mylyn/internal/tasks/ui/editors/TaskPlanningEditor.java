@@ -416,7 +416,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 		nameValueLayout.marginHeight = 3;
 		nameValueComp.setLayout(nameValueLayout);
 		toolkit.createLabel(nameValueComp, "Priority:").setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-		priorityCombo = new CCombo(nameValueComp, SWT.FLAT);
+		priorityCombo = new CCombo(nameValueComp, SWT.FLAT | SWT.READ_ONLY);
+		toolkit.adapt(priorityCombo, true, true);
 		priorityCombo.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		toolkit.paintBordersFor(nameValueComp);
 
@@ -447,7 +448,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 		nameValueComp = toolkit.createComposite(statusComposite);
 		nameValueComp.setLayout(new GridLayout(2, false));
 		toolkit.createLabel(nameValueComp, "Status:").setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-		statusCombo = new CCombo(nameValueComp, SWT.FLAT);
+		statusCombo = new CCombo(nameValueComp, SWT.FLAT | SWT.READ_ONLY);
+		toolkit.adapt(statusCombo, true, true);
 		statusCombo.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		toolkit.paintBordersFor(nameValueComp);
 		statusCombo.add(LABEL_COMPLETE);
