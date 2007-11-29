@@ -518,12 +518,12 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		for (TaskRepository repository : taskRepositoryManager.getAllRepositories()) {
 			AbstractRepositoryConnector connector = getRepositoryManager().getRepositoryConnector(
 					repository.getConnectorKind());
-			boolean userManaged = true;
+			boolean promptForCredentials = true;
 			if (connector != null) {
-				userManaged = connector.isUserManaged();
+				promptForCredentials = connector.isUserManaged() && !connector.hasCredentialsManagement();
 			}
 			if (!repository.isAnonymous()
-					&& !userManaged
+					&& promptForCredentials
 					&& (repository.getUserName() == null || repository.getPassword() == null
 							|| "".equals(repository.getUserName()) || "".equals(repository.getPassword()))) {
 				try {

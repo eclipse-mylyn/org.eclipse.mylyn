@@ -341,6 +341,13 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 	/**
+	 * @since 2.2
+	 */
+	public boolean hasCredentialsManagement() {
+		return false;
+	}
+
+	/**
 	 * Following synchronization, the timestamp needs to be recorded. This provides a default implementation for
 	 * determining the last synchronization timestamp. Override to return actual timestamp from repository.
 	 */

@@ -430,5 +430,10 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			clientManager.setTaskRepositoryLocationFactory(taskRepositoryLocationFactory);
 		}
 	}
-	
+
+	@Override
+	public boolean hasCredentialsManagement() {
+		return true;
+	}
+
 }
