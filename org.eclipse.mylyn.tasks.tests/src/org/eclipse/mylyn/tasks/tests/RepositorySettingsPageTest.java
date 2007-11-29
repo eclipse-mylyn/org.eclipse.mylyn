@@ -18,7 +18,7 @@ import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
-import org.eclipse.mylyn.web.core.WebCredentials;
+import org.eclipse.mylyn.web.core.AuthenticationType;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -143,7 +143,7 @@ public class RepositorySettingsPageTest extends TestCase {
 		TaskRepository repository = new TaskRepository("kind", "http://localhost/");
 		TasksUiPlugin.getDefault().addRepositoryConnectorUi(new MockRepositoryConnectorUi());
 		
-		assertTrue(repository.getSavePassword(WebCredentials.Type.REPOSITORY));
+		assertTrue(repository.getSavePassword(AuthenticationType.REPOSITORY));
 
 		MockRepositorySettingsPage page = new MockRepositorySettingsPage(new MockRepositoryConnectorUi());
 		page.setRepository(repository);
@@ -155,7 +155,7 @@ public class RepositorySettingsPageTest extends TestCase {
 			page.dispose();
 		}
 		
-		repository.setCredentials(WebCredentials.Type.REPOSITORY, null, false);
+		repository.setCredentials(AuthenticationType.REPOSITORY, null, false);
 		page = new MockRepositorySettingsPage(new MockRepositoryConnectorUi());
 		page.setRepository(repository);
 		try {
@@ -171,7 +171,7 @@ public class RepositorySettingsPageTest extends TestCase {
 		TaskRepository repository = new TaskRepository("kind", "http://localhost/");
 		TasksUiPlugin.getDefault().addRepositoryConnectorUi(new MockRepositoryConnectorUi());
 		
-		assertTrue(repository.getSavePassword(WebCredentials.Type.HTTP));
+		assertTrue(repository.getSavePassword(AuthenticationType.HTTP));
 
 		MockRepositorySettingsPage page = new MockRepositorySettingsPage(new MockRepositoryConnectorUi());
 		page.setNeedsHttpAuth(true);
@@ -184,7 +184,7 @@ public class RepositorySettingsPageTest extends TestCase {
 			page.dispose();
 		}
 		
-		repository.setCredentials(WebCredentials.Type.HTTP, null, false);
+		repository.setCredentials(AuthenticationType.HTTP, null, false);
 		page = new MockRepositorySettingsPage(new MockRepositoryConnectorUi());
 		page.setNeedsHttpAuth(true);
 		page.setRepository(repository);
@@ -201,7 +201,7 @@ public class RepositorySettingsPageTest extends TestCase {
 		TaskRepository repository = new TaskRepository("kind", "http://localhost/");
 		TasksUiPlugin.getDefault().addRepositoryConnectorUi(new MockRepositoryConnectorUi());
 		
-		assertTrue(repository.getSavePassword(WebCredentials.Type.PROXY));
+		assertTrue(repository.getSavePassword(AuthenticationType.PROXY));
 
 		MockRepositorySettingsPage page = new MockRepositorySettingsPage(new MockRepositoryConnectorUi());
 		page.setNeedsProxy(true);
@@ -214,7 +214,7 @@ public class RepositorySettingsPageTest extends TestCase {
 			page.dispose();
 		}
 		
-		repository.setCredentials(WebCredentials.Type.PROXY, null, false);
+		repository.setCredentials(AuthenticationType.PROXY, null, false);
 		page = new MockRepositorySettingsPage(new MockRepositoryConnectorUi());
 		page.setNeedsProxy(true);
 		page.setRepository(repository);

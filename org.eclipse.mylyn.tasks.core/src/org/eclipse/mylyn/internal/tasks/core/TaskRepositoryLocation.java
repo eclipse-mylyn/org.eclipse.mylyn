@@ -17,8 +17,9 @@ import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.web.core.AbstractWebLocation;
 import org.eclipse.mylyn.web.core.AuthenticatedProxy;
+import org.eclipse.mylyn.web.core.AuthenticationType;
 import org.eclipse.mylyn.web.core.WebCorePlugin;
-import org.eclipse.mylyn.web.core.WebCredentials;
+import org.eclipse.mylyn.web.core.AuthenticationCredentials;
 
 /**
  * @author Steffen Pingel
@@ -65,12 +66,12 @@ public class TaskRepositoryLocation extends AbstractWebLocation {
 		return (IProxyData.SOCKS_PROXY_TYPE.equals(type)) ? Proxy.Type.SOCKS : Proxy.Type.HTTP;
 	}
 
-	public ResultType requestCredentials(WebCredentials.Type type, String message) {
+	public ResultType requestCredentials(AuthenticationType type, String message) {
 		return ResultType.NOT_SUPPORTED;
 	}
 
 	@Override
-	public WebCredentials getCredentials(WebCredentials.Type type) {
+	public AuthenticationCredentials getCredentials(AuthenticationType type) {
 		return taskRepository.getCredentials(type);
 	}
 

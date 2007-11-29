@@ -30,7 +30,7 @@ import org.eclipse.mylyn.internal.trac.core.model.TracTicketType;
 import org.eclipse.mylyn.internal.trac.core.model.TracVersion;
 import org.eclipse.mylyn.web.core.AbstractWebLocation;
 import org.eclipse.mylyn.web.core.WebClientUtil;
-import org.eclipse.mylyn.web.core.WebCredentials;
+import org.eclipse.mylyn.web.core.AuthenticationCredentials;
 
 /**
  * @author Steffen Pingel
@@ -72,11 +72,11 @@ public abstract class AbstractTracClient implements ITracClient {
 		return version;
 	}
 
-	protected boolean credentialsValid(WebCredentials credentials) {
+	protected boolean credentialsValid(AuthenticationCredentials credentials) {
 		return credentials != null && credentials.getUserName().length() > 0;
 	}
 
-	protected void authenticateAccountManager(HttpClient httpClient, WebCredentials credentials) throws IOException, TracLoginException {
+	protected void authenticateAccountManager(HttpClient httpClient, AuthenticationCredentials credentials) throws IOException, TracLoginException {
 		PostMethod post = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl + LOGIN_URL));
 		post.setFollowRedirects(false);
 		NameValuePair[] data = { new NameValuePair("referer", ""), new NameValuePair("user", credentials.getUserName()),

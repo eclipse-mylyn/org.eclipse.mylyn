@@ -31,7 +31,8 @@ import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
-import org.eclipse.mylyn.web.core.WebCredentials;
+import org.eclipse.mylyn.web.core.AuthenticationType;
+import org.eclipse.mylyn.web.core.AuthenticationCredentials;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -391,7 +392,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		}
 
 		if (repository != null) {
-			savePasswordButton.setSelection(repository.getSavePassword(WebCredentials.Type.REPOSITORY));
+			savePasswordButton.setSelection(repository.getSavePassword(AuthenticationType.REPOSITORY));
 		} else {
 			savePasswordButton.setSelection(false);
 		}
@@ -582,7 +583,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			saveHttpPasswordButton.setEnabled(httpAuthButton.getSelection());
 
 			if (repository != null) {
-				saveHttpPasswordButton.setSelection(repository.getSavePassword(WebCredentials.Type.HTTP));
+				saveHttpPasswordButton.setSelection(repository.getSavePassword(AuthenticationType.HTTP));
 			} else {
 				saveHttpPasswordButton.setSelection(false);
 			}
@@ -810,7 +811,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		saveProxyPasswordButton.setEnabled(proxyAuthButton.getSelection());
 
 		if (repository != null) {
-			saveProxyPasswordButton.setSelection(repository.getSavePassword(WebCredentials.Type.PROXY));
+			saveProxyPasswordButton.setSelection(repository.getSavePassword(AuthenticationType.PROXY));
 		} else {
 			saveProxyPasswordButton.setSelection(false);
 		}
@@ -1173,20 +1174,20 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		}
 		
 		if (isAnonymousAccess()) {
-			repository.setCredentials(WebCredentials.Type.REPOSITORY, null, getSavePassword());
+			repository.setCredentials(AuthenticationType.REPOSITORY, null, getSavePassword());
 		} else {
-			WebCredentials credentials = new WebCredentials(getUserName(), getPassword());
-			repository.setCredentials(WebCredentials.Type.REPOSITORY, credentials, getSavePassword());
+			AuthenticationCredentials credentials = new AuthenticationCredentials(getUserName(), getPassword());
+			repository.setCredentials(AuthenticationType.REPOSITORY, credentials, getSavePassword());
 		}
 		repository.setRepositoryLabel(getRepositoryLabel());
 		repository.setAnonymous(isAnonymousAccess());
 
 		if (needsHttpAuth()) {
 			if (getHttpAuth()) {
-				WebCredentials webCredentials = new WebCredentials(getHttpAuthUserId(), getHttpAuthPassword());
-				repository.setCredentials(WebCredentials.Type.HTTP, webCredentials, getSaveHttpPassword());
+				AuthenticationCredentials webCredentials = new AuthenticationCredentials(getHttpAuthUserId(), getHttpAuthPassword());
+				repository.setCredentials(AuthenticationType.HTTP, webCredentials, getSaveHttpPassword());
 			} else {
-				repository.setCredentials(WebCredentials.Type.HTTP, null, getSaveHttpPassword());
+				repository.setCredentials(AuthenticationType.HTTP, null, getSaveHttpPassword());
 			}
 		}
 
@@ -1195,10 +1196,10 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			repository.setProperty(TaskRepository.PROXY_HOSTNAME, getProxyHostname());
 			repository.setProperty(TaskRepository.PROXY_PORT, getProxyPort());
 			if (getProxyAuth()) {
-				WebCredentials webCredentials = new WebCredentials(getProxyUserName(), getProxyPassword());
-				repository.setCredentials(WebCredentials.Type.PROXY, webCredentials, getSaveProxyPassword());					
+				AuthenticationCredentials webCredentials = new AuthenticationCredentials(getProxyUserName(), getProxyPassword());
+				repository.setCredentials(AuthenticationType.PROXY, webCredentials, getSaveProxyPassword());					
 			} else {
-				repository.setCredentials(WebCredentials.Type.PROXY, null, getSaveProxyPassword());
+				repository.setCredentials(AuthenticationType.PROXY, null, getSaveProxyPassword());
 			}
 		}
 	}

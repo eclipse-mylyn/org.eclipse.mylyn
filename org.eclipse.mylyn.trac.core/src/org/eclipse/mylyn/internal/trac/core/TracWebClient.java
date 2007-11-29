@@ -51,13 +51,13 @@ import org.eclipse.mylyn.internal.trac.core.util.TracUtils;
 import org.eclipse.mylyn.internal.trac.core.util.TracHttpClientTransportFactory.TracHttpException;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.web.core.AbstractWebLocation;
+import org.eclipse.mylyn.web.core.AuthenticationType;
 import org.eclipse.mylyn.web.core.HtmlStreamTokenizer;
 import org.eclipse.mylyn.web.core.HtmlTag;
 import org.eclipse.mylyn.web.core.WebClientUtil;
-import org.eclipse.mylyn.web.core.WebCredentials;
+import org.eclipse.mylyn.web.core.AuthenticationCredentials;
 import org.eclipse.mylyn.web.core.AbstractWebLocation.ResultType;
 import org.eclipse.mylyn.web.core.HtmlStreamTokenizer.Token;
-import org.eclipse.mylyn.web.core.WebCredentials.Type;
 
 /**
  * Represents a Trac repository that is accessed through the Trac's query script and web interface.
@@ -99,7 +99,7 @@ public class TracWebClient extends AbstractTracClient {
 		for (int attempt = 0; attempt < 2; attempt++) {
 			// force authentication
 			if (!authenticated) {
-				WebCredentials credentials = location.getCredentials(WebCredentials.Type.REPOSITORY);
+				AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
 				if (credentialsValid(credentials)) {
 					authenticate(monitor);
 				}
@@ -131,7 +131,7 @@ public class TracWebClient extends AbstractTracClient {
 
 	private void authenticate(IProgressMonitor monitor) throws TracLoginException, IOException {
 		while (true) {
-			WebCredentials credentials = location.getCredentials(WebCredentials.Type.REPOSITORY);
+			AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
 			if (!credentialsValid(credentials)) {
 				throw new TracLoginException();
 			}
@@ -170,11 +170,11 @@ public class TracWebClient extends AbstractTracClient {
 	}
 
 	private boolean needsReauthentication(int code) throws IOException, TracLoginException {
-		final Type authenticationType;
+		final AuthenticationType authenticationType;
 		if (code == HttpStatus.SC_UNAUTHORIZED || code == HttpStatus.SC_FORBIDDEN) {
-			authenticationType = Type.REPOSITORY;
+			authenticationType = AuthenticationType.REPOSITORY;
 		} else if (code == HttpStatus.SC_PROXY_AUTHENTICATION_REQUIRED) {
-			authenticationType = Type.PROXY;
+			authenticationType = AuthenticationType.PROXY;
 		} else {
 			return false;
 		}

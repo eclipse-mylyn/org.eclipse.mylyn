@@ -14,7 +14,8 @@ import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryLocation;
 import org.eclipse.mylyn.internal.tasks.ui.dialogs.EditCredentialsDialog;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.web.core.WebCredentials;
+import org.eclipse.mylyn.web.core.AuthenticationType;
+import org.eclipse.mylyn.web.core.AuthenticationCredentials;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
@@ -30,8 +31,8 @@ public class TaskRepositoryLocationUi extends TaskRepositoryLocation {
 	}
 
 	@Override
-	public ResultType requestCredentials(WebCredentials.Type authType, String message) {
-		WebCredentials oldCredentials = taskRepository.getCredentials(authType);
+	public ResultType requestCredentials(AuthenticationType authType, String message) {
+		AuthenticationCredentials oldCredentials = taskRepository.getCredentials(authType);
 		// synchronize on a static lock to ensure that only one password dialog is displayed at a time
 		synchronized (lock) {
 			// check if the credentials changed while the thread was waiting for the lock
@@ -48,7 +49,7 @@ public class TaskRepositoryLocationUi extends TaskRepositoryLocation {
 		}
 	}
 
-	private boolean areEqual(WebCredentials oldCredentials, WebCredentials credentials) {
+	private boolean areEqual(AuthenticationCredentials oldCredentials, AuthenticationCredentials credentials) {
 		if (oldCredentials == null) {
 			return (credentials == null);
 		} else {
@@ -58,7 +59,7 @@ public class TaskRepositoryLocationUi extends TaskRepositoryLocation {
 
 	private class PasswordRunner implements Runnable {
 
-		private final WebCredentials.Type authType;
+		private final AuthenticationType authType;
 
 		private boolean canceled;
 
@@ -66,7 +67,7 @@ public class TaskRepositoryLocationUi extends TaskRepositoryLocation {
 
 		private final String message;
 
-		public PasswordRunner(WebCredentials.Type credentialType, String message) {
+		public PasswordRunner(AuthenticationType credentialType, String message) {
 			this.authType = credentialType;
 			this.message = message;
 		}
@@ -97,7 +98,7 @@ public class TaskRepositoryLocationUi extends TaskRepositoryLocation {
 		private void initializeDialog(EditCredentialsDialog dialog) {
 			dialog.setUrl(taskRepository.getRepositoryLabel());
 
-			WebCredentials credentials = taskRepository.getCredentials(authType);
+			AuthenticationCredentials credentials = taskRepository.getCredentials(authType);
 			if (credentials != null) {
 				dialog.setUsername(credentials.getUserName());
 				dialog.setPassword(credentials.getPassword());
@@ -112,22 +113,22 @@ public class TaskRepositoryLocationUi extends TaskRepositoryLocation {
 		}
 
 		private String getDefaultMessage() {
-			if (WebCredentials.Type.REPOSITORY.equals(authType)) {
+			if (AuthenticationType.REPOSITORY.equals(authType)) {
 				return "Please enter repository password";
-			} else if (WebCredentials.Type.HTTP.equals(authType)) {
+			} else if (AuthenticationType.HTTP.equals(authType)) {
 				return "Please enter HTTP password";
-			} else if (WebCredentials.Type.PROXY.equals(authType)) {
+			} else if (AuthenticationType.PROXY.equals(authType)) {
 				return "Please enter proxy password";
 			}
 			return null;
 		}
 
 		private void saveDialog(EditCredentialsDialog dialog) {
-			if (WebCredentials.Type.REPOSITORY.equals(authType)) {
+			if (AuthenticationType.REPOSITORY.equals(authType)) {
 				taskRepository.setAnonymous(false);
 			}
 
-			WebCredentials credentials = new WebCredentials(dialog.getUserName(), dialog.getPassword());
+			AuthenticationCredentials credentials = new AuthenticationCredentials(dialog.getUserName(), dialog.getPassword());
 			taskRepository.setCredentials(authType, credentials, dialog.getSavePassword());
 
 			TasksUiPlugin.getRepositoryManager().notifyRepositorySettingsChanged(taskRepository);

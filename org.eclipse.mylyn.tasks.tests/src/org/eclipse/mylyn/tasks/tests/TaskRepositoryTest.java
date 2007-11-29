@@ -17,7 +17,8 @@ import junit.framework.TestCase;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.web.core.WebCredentials;
+import org.eclipse.mylyn.web.core.AuthenticationType;
+import org.eclipse.mylyn.web.core.AuthenticationCredentials;
 
 /**
  * @author Mik Kersten
@@ -33,11 +34,11 @@ public class TaskRepositoryTest extends TestCase {
 	}
 
 	public void testPassword() throws Exception {
-		password(WebCredentials.Type.REPOSITORY);
+		password(AuthenticationType.REPOSITORY);
 
 		// test old API
 		TaskRepository taskRepository = new TaskRepository("kind", "url");
-		taskRepository.setCredentials(WebCredentials.Type.REPOSITORY, new WebCredentials("user", "pwd"), true);
+		taskRepository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("user", "pwd"), true);
 		assertEquals("user", taskRepository.getUserName());
 		assertEquals("pwd", taskRepository.getPassword());
 
@@ -46,45 +47,45 @@ public class TaskRepositoryTest extends TestCase {
 	}
 
 	public void testHttpPassword() throws Exception {
-		password(WebCredentials.Type.HTTP);
+		password(AuthenticationType.HTTP);
 
 		TaskRepository taskRepository = new TaskRepository("kind", "url");
-		taskRepository.setCredentials(WebCredentials.Type.HTTP, new WebCredentials("user", "pwd"), true);
+		taskRepository.setCredentials(AuthenticationType.HTTP, new AuthenticationCredentials("user", "pwd"), true);
 		assertEquals("user", taskRepository.getHttpUser());
 		assertEquals("pwd", taskRepository.getHttpPassword());
 	}
 
 	public void testProxyPassword() throws Exception {
-		password(WebCredentials.Type.PROXY);
+		password(AuthenticationType.PROXY);
 
 		TaskRepository taskRepository = new TaskRepository("kind", "url");
-		taskRepository.setCredentials(WebCredentials.Type.PROXY, new WebCredentials("user", "pwd"), false);
+		taskRepository.setCredentials(AuthenticationType.PROXY, new AuthenticationCredentials("user", "pwd"), false);
 		assertEquals("user", taskRepository.getProxyUsername());
 		assertEquals("pwd", taskRepository.getProxyPassword());
 	}
 
 	public void testFlushCredentials() throws Exception {
 		TaskRepository taskRepository = new TaskRepository("kind", "url");
-		taskRepository.setCredentials(WebCredentials.Type.REPOSITORY, new WebCredentials("user", "pwd"), false);
-		taskRepository.setCredentials(WebCredentials.Type.HTTP, new WebCredentials("user", "pwd"), true);
+		taskRepository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("user", "pwd"), false);
+		taskRepository.setCredentials(AuthenticationType.HTTP, new AuthenticationCredentials("user", "pwd"), true);
 		taskRepository.flushAuthenticationCredentials();
 		assertEquals(null, taskRepository.getUserName());
 		assertEquals(null, taskRepository.getPassword());
 		assertEquals(null, taskRepository.getHttpUser());
 		assertEquals(null, taskRepository.getHttpPassword());
-		assertNull(taskRepository.getCredentials(WebCredentials.Type.REPOSITORY));
-		assertNull(taskRepository.getCredentials(WebCredentials.Type.HTTP));
-		assertNull(taskRepository.getCredentials(WebCredentials.Type.PROXY));
+		assertNull(taskRepository.getCredentials(AuthenticationType.REPOSITORY));
+		assertNull(taskRepository.getCredentials(AuthenticationType.HTTP));
+		assertNull(taskRepository.getCredentials(AuthenticationType.PROXY));
 	}
 
-	public void password(WebCredentials.Type authType) throws Exception {
+	public void password(AuthenticationType authType) throws Exception {
 		URL url = new URL("http://url");
 		TaskRepository taskRepository = new TaskRepository("kind", url.toString());
 		assertNull(taskRepository.getCredentials(authType));
 		assertTrue(taskRepository.getSavePassword(authType));
 
-		taskRepository.setCredentials(authType, new WebCredentials("user", "pwd"), true);
-		WebCredentials credentials = taskRepository.getCredentials(authType);
+		taskRepository.setCredentials(authType, new AuthenticationCredentials("user", "pwd"), true);
+		AuthenticationCredentials credentials = taskRepository.getCredentials(authType);
 		assertNotNull(credentials);
 		assertEquals("user", credentials.getUserName());
 		assertEquals("pwd", credentials.getPassword());
@@ -95,7 +96,7 @@ public class TaskRepositoryTest extends TestCase {
 		assertTrue(map.containsValue("pwd"));
 
 		// test not saving password
-		taskRepository.setCredentials(authType, new WebCredentials("user1", "pwd1"), false);
+		taskRepository.setCredentials(authType, new AuthenticationCredentials("user1", "pwd1"), false);
 		assertFalse(taskRepository.getSavePassword(authType));
 		credentials = taskRepository.getCredentials(authType);
 		assertNotNull(credentials);
@@ -110,7 +111,7 @@ public class TaskRepositoryTest extends TestCase {
 		assertFalse(map.containsValue("user"));
 		assertFalse(map.containsValue("pwd"));
 
-		taskRepository.setCredentials(authType, new WebCredentials("user2", "pwd2"), true);
+		taskRepository.setCredentials(authType, new AuthenticationCredentials("user2", "pwd2"), true);
 		assertTrue(taskRepository.getSavePassword(authType));
 		credentials = taskRepository.getCredentials(authType);
 		assertNotNull(credentials);

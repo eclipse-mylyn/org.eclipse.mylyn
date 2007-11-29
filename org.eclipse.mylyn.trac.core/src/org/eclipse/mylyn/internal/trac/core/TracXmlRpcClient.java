@@ -52,8 +52,9 @@ import org.eclipse.mylyn.internal.trac.core.util.TracUtils;
 import org.eclipse.mylyn.internal.trac.core.util.TracHttpClientTransportFactory.TracHttpException;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.web.core.AbstractWebLocation;
+import org.eclipse.mylyn.web.core.AuthenticationType;
 import org.eclipse.mylyn.web.core.WebClientUtil;
-import org.eclipse.mylyn.web.core.WebCredentials;
+import org.eclipse.mylyn.web.core.AuthenticationCredentials;
 import org.eclipse.mylyn.web.core.AbstractWebLocation.ResultType;
 
 /**
@@ -116,7 +117,7 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		}
 		
 		// update configuration with latest values
-		WebCredentials credentials = location.getCredentials(WebCredentials.Type.REPOSITORY);
+		AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
 		if (credentialsValid(credentials)) {
 			config.setBasicUserName(credentials.getUserName());
 			config.setBasicPassword(credentials.getPassword());
@@ -129,7 +130,7 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		return xmlrpc;
 	}
 
-	private URL getXmlRpcUrl(WebCredentials credentials) throws TracException {
+	private URL getXmlRpcUrl(AuthenticationCredentials credentials) throws TracException {
 		try {
 			String location = repositoryUrl.toString();
 			if (credentialsValid(credentials)) {
@@ -150,15 +151,15 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 			try {
 				return executeCall(method, parameters);
 			} catch (TracLoginException e) {
-				if (location.requestCredentials(WebCredentials.Type.REPOSITORY, null) == ResultType.NOT_SUPPORTED) {
+				if (location.requestCredentials(AuthenticationType.REPOSITORY, null) == ResultType.NOT_SUPPORTED) {
 					throw e;
 				}
 			} catch (TracPermissionDeniedException e) {
-				if (location.requestCredentials(WebCredentials.Type.REPOSITORY, null) == ResultType.NOT_SUPPORTED) {
+				if (location.requestCredentials(AuthenticationType.REPOSITORY, null) == ResultType.NOT_SUPPORTED) {
 					throw e;
 				}
 			} catch (TracProxyAuthenticationException e) {
-				if (location.requestCredentials(WebCredentials.Type.PROXY, null) == ResultType.NOT_SUPPORTED) {
+				if (location.requestCredentials(AuthenticationType.PROXY, null) == ResultType.NOT_SUPPORTED) {
 					throw e;
 				}
 			}
@@ -176,7 +177,7 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 				throw e;
 			}
 
-			WebCredentials credentials = location.getCredentials(WebCredentials.Type.REPOSITORY);
+			AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
 			if (!credentialsValid(credentials)) {
 				throw e;
 			}

@@ -18,7 +18,8 @@ import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryLocation;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.web.core.AbstractWebLocation;
 import org.eclipse.mylyn.web.core.AuthenticatedProxy;
-import org.eclipse.mylyn.web.core.WebCredentials;
+import org.eclipse.mylyn.web.core.AuthenticationType;
+import org.eclipse.mylyn.web.core.AuthenticationCredentials;
 
 public class TaskRepositoryLocationTest extends TestCase {
 
@@ -26,18 +27,18 @@ public class TaskRepositoryLocationTest extends TestCase {
 		TaskRepository taskRepository = new TaskRepository("kind", "http://url");
 		taskRepository.flushAuthenticationCredentials();
 		TaskRepositoryLocation location = new TaskRepositoryLocation(taskRepository);
-		assertNull(location.getCredentials(WebCredentials.Type.HTTP));
+		assertNull(location.getCredentials(AuthenticationType.HTTP));
 
-		taskRepository.setCredentials(WebCredentials.Type.HTTP, new WebCredentials("user", "pwd"), true);
-		WebCredentials credentials = location.getCredentials(WebCredentials.Type.HTTP);
+		taskRepository.setCredentials(AuthenticationType.HTTP, new AuthenticationCredentials("user", "pwd"), true);
+		AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.HTTP);
 		assertNotNull(credentials);
 		assertEquals("user", credentials.getUserName());
 		assertEquals("pwd", credentials.getPassword());
 
-		assertNull(location.getCredentials(WebCredentials.Type.PROXY));
+		assertNull(location.getCredentials(AuthenticationType.PROXY));
 
-		taskRepository.setCredentials(WebCredentials.Type.PROXY, new WebCredentials("user2", "pwd2"), true);
-		credentials = location.getCredentials(WebCredentials.Type.PROXY);
+		taskRepository.setCredentials(AuthenticationType.PROXY, new AuthenticationCredentials("user2", "pwd2"), true);
+		credentials = location.getCredentials(AuthenticationType.PROXY);
 		assertNotNull(credentials);
 		assertEquals("user2", credentials.getUserName());
 		assertEquals("pwd2", credentials.getPassword());
@@ -74,7 +75,7 @@ public class TaskRepositoryLocationTest extends TestCase {
 		TaskRepository taskRepository = new TaskRepository("kind", "http://url");
 		TaskRepositoryLocation location = new TaskRepositoryLocation(taskRepository);
 		assertEquals(AbstractWebLocation.ResultType.NOT_SUPPORTED, location.requestCredentials(
-				WebCredentials.Type.REPOSITORY, null));
+				AuthenticationType.REPOSITORY, null));
 	}
 
 }
