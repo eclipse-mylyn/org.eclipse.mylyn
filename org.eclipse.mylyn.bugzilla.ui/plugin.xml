@@ -47,13 +47,13 @@
             name="de"> 
             <languageAttribute command="error_login" 				response="Anmeldename erforderlich"/> 
             <languageAttribute command="error_login" 				response="check e-mail"/> 
-            <languageAttribute command="error_login" 				response="Ungâ€šÃ Ã¶Â¬Â¢âˆšÃ„âˆšÃºâ€šÃ¢Ã Â¬âˆžâ€šÃ Ã¶âˆšÃ¡Â¬Â¨â€šÃ Â´tiger Benutzername oder ungâ€šÃ Ã¶Â¬Â¢âˆšÃ„âˆšÃºâ€šÃ¢Ã Â¬âˆžâ€šÃ Ã¶âˆšÃ¡Â¬Â¨â€šÃ Â´ltiges Passwort"/> 
+            <languageAttribute command="error_login" 				response="Ungültiger Benutzername oder ungültiges Passwort"/> 
             <languageAttribute command="error_collision" 			response="Kollision!"/> 
             <languageAttribute command="error_comment_required" 	response="Kommentar erforderlich"/> 
             <languageAttribute command="error_logged_out" 			response="Abgemeldet"/> 
             <languageAttribute command="bad_login" 					response="Anmeldename erforderlich"/> 
             <languageAttribute command="bad_login" 					response="check e-mail"/> 
-            <languageAttribute command="bad_login" 					response="Ungâ€šÃ Ã¶Â¬Â¢âˆšÃ„âˆšÃºâ€šÃ¢Ã Â¬âˆžâ€šÃ Ã¶âˆšÃ¡Â¬Â¨â€šÃ Â´tiger Benutzername oder ungâ€šÃ Ã¶Â¬Â¢âˆšÃ„âˆšÃºâ€šÃ¢Ã Â¬âˆžâ€šÃ Ã¶âˆšÃ¡Â¬Â¨â€šÃ Â´ltiges Passwort"/> 
+            <languageAttribute command="bad_login" 					response="Ungültiger Benutzername oder ungültiges Passwort"/> 
             <languageAttribute command="bad_login" 					response="error"/> 
             <languageAttribute command="processed" 					response="processed"/> 
             <languageAttribute command="changes_submitted" 			response="Changes submitted"/> 
