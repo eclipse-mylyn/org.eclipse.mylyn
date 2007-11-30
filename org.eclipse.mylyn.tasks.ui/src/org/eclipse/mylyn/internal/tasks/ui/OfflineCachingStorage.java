@@ -29,6 +29,8 @@ import org.eclipse.mylyn.monitor.core.StatusHandler;
  * 
  * TODO: Use meta context to make cache more efficient
  * 
+ * API-3.0: review for race-conditions
+ * 
  * @author Rob Elves
  */
 public class OfflineCachingStorage implements ITaskDataStorage {
@@ -73,7 +75,10 @@ public class OfflineCachingStorage implements ITaskDataStorage {
 
 	public TaskDataState get(String repositoryUrl, String id) {
 		TaskDataState result = null;
-		result = retrieveFromCache(repositoryUrl, id);
+		result = retrieveFromCache(writeCache, repositoryUrl, id);
+		if (result == null) {
+			result = retrieveFromCache(readCache, repositoryUrl, id);
+		}
 		if (result == null) {
 			result = retrieveFromStorage(repositoryUrl, id);
 		}
@@ -83,8 +88,8 @@ public class OfflineCachingStorage implements ITaskDataStorage {
 		return result;
 	}
 
-	private TaskDataState retrieveFromCache(String repositoryUrl, String id) {
-		Map<String, TaskDataState> idMap = readCache.get(repositoryUrl);
+	private TaskDataState retrieveFromCache(Map<String, Map<String, TaskDataState>> cache, String repositoryUrl, String id) {
+		Map<String, TaskDataState> idMap = cache.get(repositoryUrl);
 		if (idMap != null) {
 			return idMap.get(id);
 		}

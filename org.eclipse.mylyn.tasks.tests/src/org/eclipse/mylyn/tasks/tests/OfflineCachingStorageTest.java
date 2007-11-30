@@ -148,4 +148,23 @@ public class OfflineCachingStorageTest extends TestCase {
 		assertEquals("2", storage.getReadQueue().iterator().next().getId());
 		assertEquals(3, storage.getReadQueue().size());
 	}
+	
+	public void testPendingWrites() {
+		assertEquals(0, storage.getReadCache().size());
+		assertEquals(0, storage.getWriteCache().size());
+		assertEquals(0, storage.getReadQueue().size());
+		
+		TaskDataState state1 = new TaskDataState(MockRepositoryConnector.REPOSITORY_URL, "1");
+		storage.put(state1);
+
+		storage.flushReadCache(true);
+		
+		assertEquals(0, storage.getReadCache().size());
+		assertEquals(1, storage.getWriteCache().size());
+		
+		TaskDataState data = storage.get(MockRepositoryConnector.REPOSITORY_URL, "1");
+		assertNotNull(data);
+		assertEquals(state1, data);
+	}
+
 }
