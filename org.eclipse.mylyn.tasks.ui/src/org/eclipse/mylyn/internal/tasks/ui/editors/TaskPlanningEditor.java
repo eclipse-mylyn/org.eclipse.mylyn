@@ -82,6 +82,8 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public class TaskPlanningEditor extends TaskFormPage {
 
+	private static final int WIDTH_SUMMARY = 500;
+
 	private static final int NOTES_MINSIZE = 100;
 
 	public static final String ID = "org.eclipse.mylyn.tasks.ui.editors.planning";
@@ -123,7 +125,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private ScrolledForm form;
 
-	private Text summary;
+	private TextViewer summaryEditor;
 
 	private Text issueReportURL;
 
@@ -184,12 +186,13 @@ public class TaskPlanningEditor extends TaskFormPage {
 			}
 		}
 
-		if (summary == null)
+		if (summaryEditor == null)
 			return;
-		if (!summary.isDisposed()) {
-			if (!summary.getText().equals(updateTask.getSummary())) {
+
+		if (!summaryEditor.getTextWidget().isDisposed()) {
+			if (!summaryEditor.getTextWidget().getText().equals(updateTask.getSummary())) {
 				boolean wasDirty = TaskPlanningEditor.this.isDirty;
-				summary.setText(updateTask.getSummary());
+				summaryEditor.getTextWidget().setText(updateTask.getSummary());
 				TaskPlanningEditor.this.markDirty(wasDirty);
 			}
 			if (parentEditor != null) {
@@ -220,7 +223,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		if (task instanceof LocalTask) {
-			String label = summary.getText();
+			String label = summaryEditor.getTextWidget().getText();
 			// task.setDescription(label);
 			TasksUiPlugin.getTaskListManager().getTaskList().renameTask(task, label);
 
@@ -297,11 +300,12 @@ public class TaskPlanningEditor extends TaskFormPage {
 		createPlanningSection(editorComposite);
 		createNotesSection(editorComposite);
 
-		if (summary != null && LocalRepositoryConnector.DEFAULT_SUMMARY.equals(summary.getText())) {
-			summary.setSelection(0, summary.getText().length());
-			summary.setFocus();
-		} else if (summary != null) {
-			summary.setFocus();
+		if (summaryEditor != null && summaryEditor.getTextWidget() != null
+				&& LocalRepositoryConnector.DEFAULT_SUMMARY.equals(summaryEditor.getTextWidget().getText())) {
+			summaryEditor.setSelectedRange(0, summaryEditor.getTextWidget().getText().length());
+			summaryEditor.getTextWidget().setFocus();
+		} else if (summaryEditor != null && summaryEditor.getTextWidget() != null) {
+			summaryEditor.getTextWidget().setFocus();
 		}
 	}
 
@@ -350,8 +354,9 @@ public class TaskPlanningEditor extends TaskFormPage {
 	@Override
 	public void setFocus() {
 		// form.setFocus();
-		if (summary != null && !summary.isDisposed()) {
-			summary.setFocus();
+		if (summaryEditor != null && summaryEditor.getTextWidget() != null
+				&& !summaryEditor.getTextWidget().isDisposed()) {
+			summaryEditor.getTextWidget().setFocus();
 		}
 	}
 
@@ -388,16 +393,27 @@ public class TaskPlanningEditor extends TaskFormPage {
 		summaryComposite.setLayout(summaryLayout);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(summaryComposite);
 
-		summary = toolkit.createText(summaryComposite, task.getSummary(), SWT.LEFT | SWT.FLAT);
-		summary.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-		GridDataFactory.fillDefaults().minSize(100, SWT.DEFAULT).grab(true, false).applyTo(summary);
+		TaskRepository repository = null;
+		if (task != null && !(task instanceof LocalTask)) {
+			AbstractTask repositoryTask = task;
+			repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryTask.getConnectorKind(),
+					repositoryTask.getRepositoryUrl());
+		}
+		summaryEditor = addTextEditor(repository, summaryComposite, task.getSummary(), true, SWT.FLAT | SWT.SINGLE);
+
+		GridDataFactory.fillDefaults().hint(WIDTH_SUMMARY, SWT.DEFAULT).minSize(NOTES_MINSIZE, SWT.DEFAULT).grab(true,
+				false).applyTo(summaryEditor.getTextWidget());
+		summaryEditor.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 
 		if (!(task instanceof LocalTask)) {
-			summary.setEnabled(false);
+			summaryEditor.setEditable(false);
 		} else {
-			summary.addModifyListener(new ModifyListener() {
-				public void modifyText(ModifyEvent e) {
-					markDirty(true);
+			summaryEditor.setEditable(true);
+			summaryEditor.addTextListener(new ITextListener() {
+				public void textChanged(TextEvent event) {
+					if (!task.getSummary().equals(summaryEditor.getTextWidget().getText())) {
+						markDirty(true);
+					}
 				}
 			});
 		}
@@ -573,7 +589,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 				@Override
 				protected void setTitle(final String pageTitle) {
-					summary.setText(pageTitle);
+					summaryEditor.getTextWidget().setText(pageTitle);
 					TaskPlanningEditor.this.markDirty(true);
 				}
 
@@ -941,12 +957,12 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	/** for testing - should cause dirty state */
 	public void setDescription(String desc) {
-		this.summary.setText(desc);
+		this.summaryEditor.getTextWidget().setText(desc);
 	}
 
 	/** for testing */
 	public String getDescription() {
-		return this.summary.getText();
+		return this.summaryEditor.getTextWidget().getText();
 	}
 
 	/** for testing */
