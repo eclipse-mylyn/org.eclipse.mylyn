@@ -14,10 +14,12 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.context.tests.support.TestUtil;
 import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaLanguageSettings;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.QueryHitCollector;
@@ -25,6 +27,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TaskFactory;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 // import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
@@ -38,6 +41,8 @@ public class BugzillaQueryTest extends TestCase {
 
 	private TaskRepository repository;
 
+	private AbstractRepositoryConnector connectorOriginal;
+
 	private BugzillaRepositoryConnector connector;
 
 	private AbstractTaskDataHandler handler;
@@ -45,17 +50,26 @@ public class BugzillaQueryTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		//		
-		// connector = (BugzillaRepositoryConnector)
-		// TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-		// BugzillaCorePlugin.REPOSITORY_KIND);
+
+		connectorOriginal = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+				BugzillaCorePlugin.REPOSITORY_KIND);
+
+		BugzillaLanguageSettings language = new BugzillaLanguageSettings("en");
 
 		connector = new BugzillaRepositoryConnector();
 		connector.init(new TaskList());
+		connector.addLanguageSetting(language);
 		handler = connector.getTaskDataHandler();
 		repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_222_URL);
 		Credentials credentials = TestUtil.readCredentials();
 		repository.setAuthenticationCredentials(credentials.username, credentials.password);
+	}
+
+	@Override
+	protected void tearDown() throws Exception {
+
+		connectorOriginal.init(TasksUiPlugin.getTaskListManager().getTaskList());
+
 	}
 
 	/**

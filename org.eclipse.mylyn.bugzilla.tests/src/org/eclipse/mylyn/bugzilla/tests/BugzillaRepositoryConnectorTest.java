@@ -41,8 +41,65 @@ import org.eclipse.mylyn.tasks.ui.search.SearchHitCollector;
  * @author Mik Kersten
  * @author Rob Elves
  * @author Nathan Hapke
+ * @author Frank Becker (bug 206510)
  */
 public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
+	public void testMidAirCollision() throws Exception {
+		init30();
+		String taskNumber = "5";
+
+		TasksUiPlugin.getTaskDataManager().clear();
+
+		// Get the task
+		BugzillaTask task = generateLocalTaskAndDownload(taskNumber);
+
+		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getEditableCopy(task.getRepositoryUrl(),
+				task.getTaskId());
+		assertNotNull(taskData);
+
+		TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task,
+				TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
+
+		String newCommentText = "BugzillaRepositoryClientTest.testMidAirCollision(): test " + (new Date()).toString();
+		taskData.setNewComment(newCommentText);
+		Set<RepositoryTaskAttribute> changed = new HashSet<RepositoryTaskAttribute>();
+		changed.add(taskData.getAttribute(RepositoryTaskAttribute.COMMENT_NEW));
+		taskData.setAttributeValue("delta_ts", "2007-01-01 00:00:00");
+		changed.add(taskData.getAttribute("delta_ts"));
+
+		TasksUiPlugin.getTaskDataManager().saveEdits(task.getRepositoryUrl(), task.getTaskId(), changed);
+
+		try {
+			// Submit changes
+			submit(task, taskData);
+			fail("Mid-air collision expected");
+		} catch (CoreException e) {
+			assertTrue(e.getStatus().getMessage().indexOf("Mid-air collision occurred while submitting") != -1);
+		}
+	}
+
+	public void testAuthenticationCredentials() throws Exception {
+		init218();
+		BugzillaTask task = this.generateLocalTaskAndDownload("3");
+		assertNotNull(task);
+		assertNotNull(TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId()));
+		TasksUiPlugin.getTaskListManager().activateTask(task);
+		File sourceContextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
+		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSynchronizationState());
+		sourceContextFile.createNewFile();
+		sourceContextFile.deleteOnExit();
+
+		repository.setAuthenticationCredentials("wrong", "wrong");
+		TasksUiPlugin.getRepositoryManager().notifyRepositorySettingsChanged(repository);
+		try {
+			connector.getAttachmentHandler().attachContext(repository, task, "", new NullProgressMonitor());
+		} catch (CoreException e) {
+			assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSynchronizationState());
+			assertTrue(e.getStatus().getMessage().indexOf("Invalid repository credentials.") != -1);
+			return;
+		}
+		fail("Should have failed due to invalid userid and password.");
+	}
 
 //  testReassign Bugs 
 //	Version	BugNr	assigned				reporter     

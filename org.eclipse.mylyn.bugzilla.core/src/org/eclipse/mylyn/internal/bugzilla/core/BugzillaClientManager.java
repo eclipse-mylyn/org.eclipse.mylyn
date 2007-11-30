@@ -37,7 +37,7 @@ public class BugzillaClientManager implements ITaskRepositoryListener {
 			if (language == null || language.equals("")) {
 				language = "en";
 			}
-			BugzillaLanguageSettings languageSettings = BugzillaCorePlugin.getLanguageSettings(language);
+			BugzillaLanguageSettings languageSettings = BugzillaCorePlugin.getDefault().getLanguageSetting(language);
 
 			
 			client = BugzillaClientFactory.createClient(taskRepository.getUrl(), taskRepository.getUserName(),

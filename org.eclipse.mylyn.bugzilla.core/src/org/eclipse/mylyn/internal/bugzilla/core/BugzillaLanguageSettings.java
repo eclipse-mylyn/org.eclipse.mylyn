@@ -8,7 +8,10 @@
 
 package org.eclipse.mylyn.internal.bugzilla.core;
 
-import java.io.Serializable;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Class describing the html response of Bugzilla requests which are used within Mylyn.
@@ -18,42 +21,21 @@ import java.io.Serializable;
  * @author Frank Becker
  */
 
-public class BugzillaLanguageSettings implements Serializable {
-
-	private static final long serialVersionUID = 5181964115189805498L;
-
+public class BugzillaLanguageSettings {
 	private String languageName = "<unknown>";
+	public static final String COMMAND_ERROR_LOGIN = "error_login";
+	public static final String COMMAND_ERROR_COLLISION = "error_collision";
+	public static final String COMMAND_ERROR_COMMENT_REQUIRED = "error_comment_required" ;
+	public static final String COMMAND_ERROR_LOGGED_OUT = "error_logged_out";
+	public static final String COMMAND_BAD_LOGIN = "bad_login";
+	public static final String COMMAND_PROCESSED = "processed";
+	public static final String COMMAND_CHANGES_SUBMITTED = "changes_submitted";
 
-	private String login;
-
-	private String login2;
-
-	private String invalid;
-
-	private String password;
-
-	private String checkEmail;
-
-	private String midairCollision;
-
-	private String commentRequired;
-
-	private String loggedOut;
-
-	private String processed;
-
-	public BugzillaLanguageSettings(String languageName, String checkEmail, String commentRequired, String invalid,
-			String loggedOut, String login, String midairCollision, String password, String processed) {
+	private Map<String , List<String>> languageAttributes = new LinkedHashMap<String, List<String>>();
+	
+	public BugzillaLanguageSettings(String languageName) {
 		super();
-		this.checkEmail = checkEmail;
-		this.commentRequired = commentRequired;
-		this.invalid = invalid;
-		this.languageName = languageName;
-		this.loggedOut = loggedOut;
-		this.login = login;
-		this.midairCollision = midairCollision;
-		this.password = password;
-		this.processed = processed;
+ 		this.languageName = languageName;
 	}
 
 	public String getLanguageName() {
@@ -64,75 +46,16 @@ public class BugzillaLanguageSettings implements Serializable {
 		this.languageName = languageName;
 	}
 
-	public String getLogin() {
-		return login;
+	public void addLanguageAttribute(String command, String response) {
+		List<String> commandList = languageAttributes.get(command);
+		if (commandList==null) {
+			commandList = new LinkedList<String>();
+			languageAttributes.put(command.toLowerCase(), commandList);
+		}
+		commandList.add(response);
 	}
-
-	public void setLogin(String login) {
-		this.login = login;
-	}
-
-	public String getInvalid() {
-		return invalid;
-	}
-
-	public void setInvalid(String invalid) {
-		this.invalid = invalid;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getCheckEmail() {
-		return checkEmail;
-	}
-
-	public void setCheckEmail(String checkEmail) {
-		this.checkEmail = checkEmail;
-	}
-
-	public String getMidairCollision() {
-		return midairCollision;
-	}
-
-	public void setMidairCollision(String midairCollision) {
-		this.midairCollision = midairCollision;
-	}
-
-	public String getCommentRequired() {
-		return commentRequired;
-	}
-
-	public void setCommentRequired(String commentRequired) {
-		this.commentRequired = commentRequired;
-	}
-
-	public String getLoggedOut() {
-		return loggedOut;
-	}
-
-	public void setLoggedOut(String loggedOut) {
-		this.loggedOut = loggedOut;
-	}
-
-	public String getProcessed() {
-		return processed;
-	}
-
-	public void setProcessed(String processed) {
-		this.processed = processed;
-	}
-
-	public String getLogin2() {
-		return login2;
-	}
-
-	public void setLogin2(String login2) {
-		this.login2 = login2;
-	}
+	
+	public List<String> getResponseForCommand(String command) {
+		return languageAttributes.get(command);
+		 	}
 }

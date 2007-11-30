@@ -160,7 +160,7 @@ public class BugzillaClient {
 
 	private boolean lastModifiedSupported = true;
 
-	private BugzillaLanguageSettings languageSettings;
+	private BugzillaLanguageSettings bugzillaLanguageSettings;
 
 	private class BugzillaRetryHandler extends DefaultHttpMethodRetryHandler {
 		public BugzillaRetryHandler() {
@@ -183,7 +183,7 @@ public class BugzillaClient {
 	public BugzillaClient(URL url, String username, String password, String htAuthUser, String htAuthPass,
 			String characterEncoding) {
 		this(url, username, password, htAuthUser, htAuthPass, characterEncoding, new HashMap<String, String>(),
-				BugzillaCorePlugin.getLanguageSettings("en"));
+				BugzillaCorePlugin.getDefault().getLanguageSetting("en"));
 	}
 
 	public BugzillaClient(URL url, String username, String password, String htAuthUser, String htAuthPass,
@@ -195,7 +195,7 @@ public class BugzillaClient {
 		this.htAuthPass = htAuthPass;
 		this.characterEncoding = characterEncoding;
 		this.configParameters = configParameters;
-		this.languageSettings = languageSettings;
+		this.bugzillaLanguageSettings = languageSettings;
 	}
 
 	public void validate() throws IOException, CoreException {
@@ -835,8 +835,13 @@ public class BugzillaClient {
 							&& ((HtmlTag) token.getValue()).getTagType() == HtmlTag.Type.TITLE
 							&& ((HtmlTag) token.getValue()).isEndTag()) {
 
-						if (!taskData.isNew()
-								&& (title.toLowerCase(Locale.ENGLISH).indexOf(languageSettings.getProcessed()) != -1)) {
+						boolean found = false;
+						for (Iterator<String> iterator = bugzillaLanguageSettings.getResponseForCommand(BugzillaLanguageSettings.COMMAND_PROCESSED).iterator(); iterator.hasNext()
+								&& !found;) {
+							String value = iterator.next().toLowerCase(Locale.ENGLISH);
+							found = found || title.indexOf(value) != -1;
+						}
+						if (!taskData.isNew() && found) {
 							existingBugPosted = true;
 						} else if (taskData.isNew() && prefix != null && prefix2 != null && postfix != null
 								&& postfix2 != null) {
@@ -1064,29 +1069,61 @@ public class BugzillaClient {
 							&& ((HtmlTag) token.getValue()).getTagType() == HtmlTag.Type.TITLE
 							&& ((HtmlTag) token.getValue()).isEndTag()) {
 
-						if (title.indexOf(languageSettings.getLogin()) != -1
-								|| (title.indexOf(languageSettings.getInvalid()) != -1 && title.indexOf(languageSettings.getPassword()) != -1)
-								|| title.indexOf(languageSettings.getCheckEmail()) != -1
-								|| (languageSettings.getLogin2() != null && title.indexOf(languageSettings.getLogin2()) != -1)) {
+						boolean found = false;
+						for (Iterator<String> iterator = bugzillaLanguageSettings.getResponseForCommand(BugzillaLanguageSettings.COMMAND_ERROR_LOGIN).iterator(); iterator.hasNext()
+								&& !found;) {
+							String value = iterator.next().toLowerCase(Locale.ENGLISH);
+							found = found || title.indexOf(value) != -1;
+						}
+						if (found) {
 							authenticated = false;
 							throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 									RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(), title));
-						} else if (title.indexOf(languageSettings.getMidairCollision()) != -1) {
+						}
+						found = false;
+						for (Iterator<String> iterator = bugzillaLanguageSettings.getResponseForCommand(BugzillaLanguageSettings.COMMAND_ERROR_COLLISION).iterator(); iterator.hasNext()
+								&& !found;) {
+							String value = iterator.next().toLowerCase(Locale.ENGLISH);
+							found = found || title.indexOf(value) != -1;
+						}
+						if (found) {
 							throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 									RepositoryStatus.REPOSITORY_COLLISION, repositoryUrl.toString()));
-						} else if (title.indexOf(languageSettings.getCommentRequired()) != -1) {
+						}
+						found = false;
+						for (Iterator<String> iterator = bugzillaLanguageSettings.getResponseForCommand(BugzillaLanguageSettings.COMMAND_ERROR_COMMENT_REQUIRED).iterator(); iterator.hasNext()
+								&& !found;) {
+							String value = iterator.next().toLowerCase(Locale.ENGLISH);
+							found = found || title.indexOf(value) != -1;
+						}
+						if (found) {
 							throw new CoreException(new BugzillaStatus(Status.INFO, BugzillaCorePlugin.PLUGIN_ID,
 									RepositoryStatus.REPOSITORY_COMMENT_REQUIRED));
-						} else if (title.indexOf(languageSettings.getLoggedOut()) != -1) {
+						}
+						found = false;
+						for (Iterator<String> iterator = bugzillaLanguageSettings.getResponseForCommand(BugzillaLanguageSettings.COMMAND_ERROR_LOGGED_OUT).iterator(); iterator.hasNext()
+								&& !found;) {
+							String value = iterator.next().toLowerCase(Locale.ENGLISH);
+							found = found || title.indexOf(value) != -1;
+						}
+						if (found) {
 							authenticated = false;
 							// throw new
 							// BugzillaException(IBugzillaConstants.LOGGED_OUT);
 							throw new CoreException(new BugzillaStatus(Status.INFO, BugzillaCorePlugin.PLUGIN_ID,
 									RepositoryStatus.REPOSITORY_LOGGED_OUT,
 									"You have been logged out. Please retry operation."));
-						} else if (title.indexOf(IBugzillaConstants.CHANGES_SUBMITTED) != -1) {
+						}
+						found = false;
+						for (Iterator<String> iterator = bugzillaLanguageSettings.getResponseForCommand(BugzillaLanguageSettings.COMMAND_CHANGES_SUBMITTED).iterator(); iterator.hasNext()
+								&& !found;) {
+							String value = iterator.next().toLowerCase(Locale.ENGLISH);
+							found = found || title.indexOf(value) != -1;
+						}
+						if (found) {
 							return;
 						}
+						isTitle = false;
 					}
 				}
 			}

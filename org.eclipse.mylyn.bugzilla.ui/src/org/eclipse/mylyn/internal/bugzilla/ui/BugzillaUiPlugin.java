@@ -90,15 +90,15 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 		if (repConfigCacheFile != null) {
 			BugzillaCorePlugin.setConfigurationCacheFile(repConfigCacheFile.toFile());
 		}
-		IPath languagesFile = getLanguagesPath();
-		if (languagesFile != null) {
-			BugzillaCorePlugin.setLanguagesFile(languagesFile.toFile());
-		}
 
 		BugzillaRepositoryConnector bugzillaConnector = (BugzillaRepositoryConnector) TasksUiPlugin.getRepositoryManager()
 				.getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
 
 		TasksUiPlugin.getRepositoryManager().addListener(bugzillaConnector.getClientManager());
+
+		// NOTE: initializing extensions in start(..) has caused race
+		// conditions previously
+		BugzillaUiExtensionReader.initStartupExtensions();
 	}
 
 	/**
@@ -107,15 +107,6 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	private static IPath getProductConfigurationCachePath() {
 		IPath stateLocation = Platform.getStateLocation(BugzillaCorePlugin.getDefault().getBundle());
 		IPath configFile = stateLocation.append("repositoryConfigurations");
-		return configFile;
-	}
-
-	/**
-	 * Returns the path to the file cacheing the product configuration.
-	 */
-	private static IPath getLanguagesPath() {
-		IPath stateLocation = Platform.getStateLocation(BugzillaCorePlugin.getDefault().getBundle());
-		IPath configFile = stateLocation.append("languageSettings");
 		return configFile;
 	}
 

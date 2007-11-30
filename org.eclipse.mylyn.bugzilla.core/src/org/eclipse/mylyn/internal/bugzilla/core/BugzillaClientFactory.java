@@ -21,7 +21,7 @@ public class BugzillaClientFactory {
 
 	public static BugzillaClient createClient(String hostUrl, String username, String password, String htAuthUser,
 			String htAuthPass, Proxy proxy, String encoding) throws MalformedURLException {
-		BugzillaLanguageSettings languageSettings = BugzillaCorePlugin.getLanguageSettings("en");
+		BugzillaLanguageSettings languageSettings = BugzillaCorePlugin.getDefault().getLanguageSetting("en");
 		return createClient(hostUrl, username, password, htAuthUser, htAuthPass, proxy, encoding,
 				new HashMap<String, String>(), languageSettings);
 	}

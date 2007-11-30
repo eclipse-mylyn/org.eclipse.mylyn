@@ -23,6 +23,42 @@
             class="org.eclipse.mylyn.internal.bugzilla.ui.tasklist.BugzillaTaskListFactory"
             id="org.eclipse.mylyn.bugzilla.tasklist.factory"/>
    </extension> 
+    <extension 
+         point="org.eclipse.mylyn.bugzilla.core.languages"> 
+      <language 
+            name="en"> 
+            <languageAttribute command="error_login" 				response="Login"/> 
+            <languageAttribute command="error_login" 				response="log in"/> 
+            <languageAttribute command="error_login" 				response="check e-mail"/> 
+            <languageAttribute command="error_login" 				response="Invalid Username Or Password"/> 
+            <languageAttribute command="error_collision" 			response="Mid-air collision!"/> 
+            <languageAttribute command="error_comment_required" 	response="Comment Required"/> 
+            <languageAttribute command="error_logged_out" 			response="logged out"/> 
+            <languageAttribute command="bad_login" 					response="Login"/> 
+            <languageAttribute command="bad_login" 					response="log in"/> 
+            <languageAttribute command="bad_login" 					response="check e-mail"/> 
+            <languageAttribute command="bad_login" 					response="Invalid Username Or Password"/> 
+            <languageAttribute command="bad_login" 					response="error"/> 
+            <languageAttribute command="processed" 					response="processed"/> 
+            <languageAttribute command="changes_submitted" 			response="Changes submitted"/> 
+      </language> 
+      
+      <language 
+            name="de"> 
+            <languageAttribute command="error_login" 				response="Anmeldename erforderlich"/> 
+            <languageAttribute command="error_login" 				response="check e-mail"/> 
+            <languageAttribute command="error_login" 				response="Ungâ€šÃ Ã¶Â¬Â¢âˆšÃ„âˆšÃºâ€šÃ¢Ã Â¬âˆžâ€šÃ Ã¶âˆšÃ¡Â¬Â¨â€šÃ Â´tiger Benutzername oder ungâ€šÃ Ã¶Â¬Â¢âˆšÃ„âˆšÃºâ€šÃ¢Ã Â¬âˆžâ€šÃ Ã¶âˆšÃ¡Â¬Â¨â€šÃ Â´ltiges Passwort"/> 
+            <languageAttribute command="error_collision" 			response="Kollision!"/> 
+            <languageAttribute command="error_comment_required" 	response="Kommentar erforderlich"/> 
+            <languageAttribute command="error_logged_out" 			response="Abgemeldet"/> 
+            <languageAttribute command="bad_login" 					response="Anmeldename erforderlich"/> 
+            <languageAttribute command="bad_login" 					response="check e-mail"/> 
+            <languageAttribute command="bad_login" 					response="Ungâ€šÃ Ã¶Â¬Â¢âˆšÃ„âˆšÃºâ€šÃ¢Ã Â¬âˆžâ€šÃ Ã¶âˆšÃ¡Â¬Â¨â€šÃ Â´tiger Benutzername oder ungâ€šÃ Ã¶Â¬Â¢âˆšÃ„âˆšÃºâ€šÃ¢Ã Â¬âˆžâ€šÃ Ã¶âˆšÃ¡Â¬Â¨â€šÃ Â´ltiges Passwort"/> 
+            <languageAttribute command="bad_login" 					response="error"/> 
+            <languageAttribute command="processed" 					response="processed"/> 
+            <languageAttribute command="changes_submitted" 			response="Changes submitted"/> 
+      </language> 
+   </extension>    
   
    <extension
          point="org.eclipse.mylyn.tasks.ui.editors">

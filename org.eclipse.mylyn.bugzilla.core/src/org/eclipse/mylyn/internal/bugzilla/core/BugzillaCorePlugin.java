@@ -15,6 +15,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -56,13 +57,6 @@ public class BugzillaCorePlugin extends Plugin {
 	/** Product configuration for the current server */
 	private static Map<String, RepositoryConfiguration> repositoryConfigurations = new HashMap<String, RepositoryConfiguration>();
 
-	private static boolean cacheLanguageSettingsFileRead = false;
-
-	@SuppressWarnings("unused")
-	private static File languageSettingsFile = null;
-
-	private static Map<String, BugzillaLanguageSettings> bugzillaLanguageSettings = new HashMap<String, BugzillaLanguageSettings>();
-
 	public BugzillaCorePlugin() {
 		super();
 		java2buzillaPlatformMap.put("x86", "PC"); // can be PC or Macintosh!
@@ -90,10 +84,6 @@ public class BugzillaCorePlugin extends Plugin {
 			writeRepositoryConfigFile();
 		}
 
-		if (!bugzillaLanguageSettings.isEmpty()) {
-			writeBugzillaLanguageSettingsFile();
-		}
-
 		INSTANCE = null;
 		super.stop(context);
 	}
@@ -112,10 +102,6 @@ public class BugzillaCorePlugin extends Plugin {
 
 	public static void setConfigurationCacheFile(File file) {
 		repositoryConfigurationFile = file;
-	}
-
-	public static void setLanguagesFile(File file) {
-		languageSettingsFile = file;
 	}
 
 	/**
@@ -379,103 +365,11 @@ public class BugzillaCorePlugin extends Plugin {
 		}
 	}
 
-	private static void setDefaultBugzillaLanguageSettings() {
-		bugzillaLanguageSettings.clear();
-		BugzillaLanguageSettings english = new BugzillaLanguageSettings("en", "check e-mail", "comment required",
-				"invalid", "logged out", "login", "collision", "password", "processed");
-		english.setLogin2("log in");
-
-		bugzillaLanguageSettings.put("en", english);
-
-		bugzillaLanguageSettings.put("de", new BugzillaLanguageSettings("de", "check e-mail", "Kommentar erforderlich",
-				"Ungültig", "logged out", "login", "Kollision", "password", "bearbeitet"));
-
+	public Set<BugzillaLanguageSettings> getLanguageSettings() {
+		return connector.getLanguageSettings();
 	}
 
-	private static void readBugzillaLanguageSettingsFile() {
-		setDefaultBugzillaLanguageSettings();
-//		
-//		if (!languageSettingsFile.exists()) {
-//			setDefaultBugzillaLanguageSettings();
-//			return;
-//		}
-//		ObjectInputStream in = null;
-//		try {
-//			in = new ObjectInputStream(new FileInputStream(languageSettingsFile));
-//			int size = in.readInt();
-//			for (int nX = 0; nX < size; nX++) {
-//				BugzillaLanguageSettings item = (BugzillaLanguageSettings) in.readObject();
-//				if (item != null) {
-//					bugzillaLanguageSettings.put(item.getLanguageName(), item);
-//				}
-//			}
-//		} catch (Exception e) {
-//			log(e);
-//			try {
-//				if (in != null) {
-//					in.close();
-//				}
-//				if (languageSettingsFile != null && languageSettingsFile.exists()) {
-//					if (languageSettingsFile.delete()) {
-//						// successfully deleted
-//					} else {
-//						log(new Status(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, ERROR_DELETING_CONFIGURATION, e));
-//					}
-//				}
-//
-//			} catch (Exception ex) {
-//				log(new Status(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, ERROR_DELETING_CONFIGURATION, e));
-//			}
-//		} finally {
-//			if (in != null) {
-//				try {
-//					in.close();
-//				} catch (IOException e) {
-//					// ignore
-//				}
-//			}
-//		}
-	}
-
-	private static void writeBugzillaLanguageSettingsFile() {
-//		if (languageSettingsFile != null) {
-//			ObjectOutputStream out = null;
-//			try {
-//				out = new ObjectOutputStream(new FileOutputStream(languageSettingsFile));
-//				out.writeInt(bugzillaLanguageSettings.size());
-//				for (String key : bugzillaLanguageSettings.keySet()) {
-//					BugzillaLanguageSettings item = bugzillaLanguageSettings.get(key);
-//					if (item != null) {
-//						out.writeObject(item);
-//					}
-//				}
-//			} catch (IOException e) {
-//				log(e);
-//			} finally {
-//				if (out != null) {
-//					try {
-//						out.close();
-//					} catch (IOException e) {
-//						// ignore
-//					}
-//				}
-//			}
-//		}
-	}
-
-	public static Map<String, BugzillaLanguageSettings> getLanguageSettings() {
-		if (!cacheLanguageSettingsFileRead) {
-			readBugzillaLanguageSettingsFile();
-			cacheLanguageSettingsFileRead = true;
-		}
-		return bugzillaLanguageSettings;
-	}
-
-	public static BugzillaLanguageSettings getLanguageSettings(String language) {
-		if (!cacheLanguageSettingsFileRead) {
-			readBugzillaLanguageSettingsFile();
-			cacheLanguageSettingsFileRead = true;
-		}
-		return bugzillaLanguageSettings.get(language);
+	public BugzillaLanguageSettings getLanguageSetting(String language) {
+		return connector.getLanguageSetting(language);
 	}
 }

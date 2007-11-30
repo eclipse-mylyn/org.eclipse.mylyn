@@ -24,6 +24,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClientFactory;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaLanguageSettings;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaStatus;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
@@ -270,8 +271,8 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		new Label(parent, SWT.NONE).setText("Language : ");
 		languageSettingCombo = new Combo(parent, SWT.DROP_DOWN);
 
-		for (String languageSettings : BugzillaCorePlugin.getLanguageSettings().keySet()) {
-			languageSettingCombo.add(languageSettings);
+		for (BugzillaLanguageSettings bugzillaLanguageSettings : BugzillaCorePlugin.getDefault().getLanguageSettings()) {
+			languageSettingCombo.add(bugzillaLanguageSettings.getLanguageName());
 		}
 		if (repository != null) {
 			String language = repository.getProperty(IBugzillaConstants.BUGZILLA_LANGUAGE_SETTING);

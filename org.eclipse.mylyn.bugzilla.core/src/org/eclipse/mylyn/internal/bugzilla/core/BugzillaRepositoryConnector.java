@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -65,6 +66,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	private BugzillaTaskDataHandler taskDataHandler;
 
 	private BugzillaClientManager clientManager;
+	
+	private Set<BugzillaLanguageSettings> languages = new LinkedHashSet<BugzillaLanguageSettings>();
 
 	@Override
 	public void init(TaskList taskList) {
@@ -273,8 +276,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				dateString = "";
 			}
 
-			String urlQueryBase = repository.getUrl() + CHANGED_BUGS_CGI_QUERY
-					+ URLEncoder.encode(dateString, repository.getCharacterEncoding()) + CHANGED_BUGS_CGI_ENDDATE;
+			String urlQueryBase = repository.getUrl() + CHANGED_BUGS_CGI_QUERY +
+			 URLEncoder.encode(dateString, repository.getCharacterEncoding()) + CHANGED_BUGS_CGI_ENDDATE;
 
 			String urlQueryString = urlQueryBase + BUG_ID;
 
@@ -315,8 +318,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			return true;
 		} catch (UnsupportedEncodingException e) {
 			// XXX throw CoreException instead?
-			StatusHandler.fail(e, "Repository configured with unsupported encoding: "
-					+ repository.getCharacterEncoding() + "\n\n Unable to determine changed tasks.", true);
+			StatusHandler.fail(e, "Repository configured with unsupported encoding: " +
+			 repository.getCharacterEncoding() + "\n\n Unable to determine changed tasks.", true);
 			return false;
 		} finally {
 			monitor.done();
@@ -691,9 +694,26 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		try {
 			return Integer.parseInt(taskId);
 		} catch (NumberFormatException e) {
-			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, "Invalid bug id: "
-					+ taskId, e));
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, "Invalid bug id: " +
+			 taskId, e));
 		}
+	}
+	public void addLanguageSetting(BugzillaLanguageSettings language) {
+		this.languages.add(language);
+	}
+
+	public Set<BugzillaLanguageSettings> getLanguageSettings() {
+		return languages;
+	}
+
+	/** returns null if language not found */
+	public BugzillaLanguageSettings getLanguageSetting(String label) {
+		for (BugzillaLanguageSettings language : getLanguageSettings()) {
+			if (language.getLanguageName().equals(label)) {
+				return language;
+			}
+		}
+		return null;
 	}
 
 }
