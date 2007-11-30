@@ -62,8 +62,6 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 
 	private static final String TITLE_QUERY_TITLE = "Query Title:";
 
-	private static final String[] DEFAULT_STATUS_SELECTION = new String[] { "new", "assigned", "reopened", };
-
 	private TracRepositoryQuery query;
 
 	private Text titleText;
@@ -354,9 +352,8 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 		if (inSearchContainer()) {
 			restored |= restoreWidgetValues();
 		}
-		// initialize with default values
 		if (!restored) {
-			statusField.selectItems(DEFAULT_STATUS_SELECTION);
+			// initialize with default values
 		}
 	}
 
