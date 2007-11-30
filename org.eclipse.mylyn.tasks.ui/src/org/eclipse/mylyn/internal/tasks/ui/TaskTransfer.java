@@ -21,6 +21,7 @@ import org.eclipse.swt.dnd.TransferData;
 
 /**
  * @author Mik Kersten
+ * @author Steffen Pingel
  */
 public class TaskTransfer extends ByteArrayTransfer {
 
@@ -50,11 +51,11 @@ public class TaskTransfer extends ByteArrayTransfer {
 
 	@Override
 	protected void javaToNative(Object data, TransferData transferData) {
-		if (!(data instanceof AbstractTask[])) {
+		if (!(data instanceof Object[])) {
 			return;
 		}
 
-		AbstractTask[] tasks = (AbstractTask[]) data;
+		Object[] tasks = (Object[]) data;
 		int resourceCount = tasks.length;
 
 		try {
@@ -66,7 +67,11 @@ public class TaskTransfer extends ByteArrayTransfer {
 
 			//write each resource
 			for (int i = 0; i < tasks.length; i++) {
-				writeResource(dataOut, tasks[i]);
+				if (tasks[i] instanceof AbstractTask) {
+					writeTask(dataOut, (AbstractTask) tasks[i]);
+				} else {
+					dataOut.writeUTF("");
+				}
 			}
 
 			//cleanup
@@ -103,7 +108,8 @@ public class TaskTransfer extends ByteArrayTransfer {
 		return TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle);
 	}
 
-	private void writeResource(DataOutputStream dataOut, AbstractTask task) throws IOException {
+	private void writeTask(DataOutputStream dataOut, AbstractTask task) throws IOException {
 		dataOut.writeUTF(task.getHandleIdentifier());
 	}
+	
 }

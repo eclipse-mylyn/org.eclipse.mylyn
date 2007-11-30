@@ -20,10 +20,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
@@ -82,17 +79,13 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 	public boolean performDrop(Object data) {
 		Object currentTarget = getCurrentTarget();
 		List<AbstractTask> tasksToMove = new ArrayList<AbstractTask>();
-		ISelection selection = ((TreeViewer) getViewer()).getSelection();
 		if (isUrl(data) && createTaskFromUrl(data)) {
 			tasksToMove.add(newTask);
-		} else if (TaskTransfer.getInstance().isSupportedType(currentTransfer)) {
-			for (Object selectedObject : ((IStructuredSelection) selection).toList()) {
-				AbstractTask toMove = null;
-				if (selectedObject instanceof AbstractTask) {
-					toMove = (AbstractTask) selectedObject;
-				}
-				if (toMove != null) {
-					tasksToMove.add(toMove);
+		} else if (TaskTransfer.getInstance().isSupportedType(currentTransfer) && data instanceof AbstractTask[]) {
+			AbstractTask[] tasks = (AbstractTask[]) data;
+			for (AbstractTask task : tasks) {
+				if (task != null) {
+					tasksToMove.add(task);
 				}
 			}
 		} else if (data instanceof String && createTaskFromString((String) data)) {
@@ -302,11 +295,10 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 	public boolean validateDrop(Object targetObject, int operation, TransferData transferType) {
 		currentTransfer = transferType;
 
-		Object selectedObject = ((IStructuredSelection) ((TreeViewer) getViewer()).getSelection()).getFirstElement();
 		if (FileTransfer.getInstance().isSupportedType(currentTransfer)) {
 			// handle all files
 			return true;
-		} else if (selectedObject != null && !(selectedObject instanceof AbstractRepositoryQuery)) {
+		} else if (TaskTransfer.getInstance().isSupportedType(currentTransfer)) {
 			if (getCurrentTarget() instanceof TaskCategory || getCurrentTarget() instanceof UnfiledCategory
 					|| getCurrentTarget() instanceof ScheduledTaskContainer) {
 				return true;
