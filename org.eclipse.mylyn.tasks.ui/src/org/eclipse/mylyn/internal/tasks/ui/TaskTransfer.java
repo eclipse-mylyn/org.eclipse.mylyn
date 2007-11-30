@@ -51,30 +51,26 @@ public class TaskTransfer extends ByteArrayTransfer {
 
 	@Override
 	protected void javaToNative(Object data, TransferData transferData) {
-		if (!(data instanceof Object[])) {
+		if (!(data instanceof AbstractTask[])) {
 			return;
 		}
 
-		Object[] tasks = (Object[]) data;
+		AbstractTask[] tasks = (AbstractTask[]) data;
 		int resourceCount = tasks.length;
 
 		try {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			DataOutputStream dataOut = new DataOutputStream(out);
 
-			//write the number of resources
+			// write the number of resources
 			dataOut.writeInt(resourceCount);
 
-			//write each resource
-			for (int i = 0; i < tasks.length; i++) {
-				if (tasks[i] instanceof AbstractTask) {
-					writeTask(dataOut, (AbstractTask) tasks[i]);
-				} else {
-					dataOut.writeUTF("");
-				}
+			// write each resource
+			for (AbstractTask task : tasks) {
+				writeTask(dataOut, task);
 			}
 
-			//cleanup
+			// cleanup
 			dataOut.close();
 			out.close();
 			byte[] bytes = out.toByteArray();
@@ -111,5 +107,5 @@ public class TaskTransfer extends ByteArrayTransfer {
 	private void writeTask(DataOutputStream dataOut, AbstractTask task) throws IOException {
 		dataOut.writeUTF(task.getHandleIdentifier());
 	}
-	
+
 }
