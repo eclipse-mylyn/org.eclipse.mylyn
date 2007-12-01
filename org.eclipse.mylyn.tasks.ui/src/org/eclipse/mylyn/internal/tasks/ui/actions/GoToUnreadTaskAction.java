@@ -26,11 +26,13 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 /**
  * @author Steffen Pingel
  */
-public class GoToUnreadTaskAction extends Action implements IViewActionDelegate {
+public class GoToUnreadTaskAction extends Action implements IViewActionDelegate, IWorkbenchWindowActionDelegate {
 
 	public enum Direction {
 		UP, DOWN
@@ -50,7 +52,16 @@ public class GoToUnreadTaskAction extends Action implements IViewActionDelegate 
 
 	@Override
 	public void run() {
-		TreeViewer treeViewer = taskListView.getViewer();
+		TreeViewer treeViewer;
+		if (taskListView == null) {
+			TaskListView activeTaskListView = TaskListView.getFromActivePerspective();
+			if (activeTaskListView == null) {
+				return;
+			}
+			treeViewer = activeTaskListView.getViewer();
+		} else {
+			treeViewer = taskListView.getViewer();
+		}
 
 		Tree tree = treeViewer.getTree();
 
@@ -221,6 +232,15 @@ public class GoToUnreadTaskAction extends Action implements IViewActionDelegate 
 
 		public abstract boolean visit(Object object);
 
+	}
+
+	
+	public void dispose() {
+		// ignore		
+	}
+	
+
+	public void init(IWorkbenchWindow window) {
 	}
 
 }

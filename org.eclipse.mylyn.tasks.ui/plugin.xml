@@ -474,14 +474,6 @@
            name="export">
     </separator>
   </menu>
-  <menu
-        id="org.eclipse.mylyn.tasks.ui.menu.navigate"
-        label="Go To"
-        path="navigate">
-     <separator
-           name="goTo">
-     </separator>
-  </menu>
  
   
   <!--<action
@@ -500,22 +492,6 @@
         label="Category"
         menubarPath="org.eclipse.mylyn.tasks.ui.menu.new/local"
         tooltip="New Category">
-  </action>
-  <action
-        class="org.eclipse.mylyn.internal.tasks.ui.actions.GoToUnreadTaskAction"
-        definitionId="org.eclipse.mylyn.tasks.ui.command.goToNextUnread"
-        id="org.eclipse.mylyn.tasklist.actions.goToNextUnread"
-        label="Next Unread Task"
-        menubarPath="org.eclipse.mylyn.tasks.ui.menu.navigate/goTo"
-        style="push">
-  </action>
-  <action
-        class="org.eclipse.mylyn.internal.tasks.ui.actions.GoToUnreadTaskAction"
-        definitionId="org.eclipse.mylyn.tasks.ui.command.goToPreviousUnread"
-        id="org.eclipse.mylyn.tasklist.actions.goToPreviousUnread"
-        label="Previous Unread Task"
-        menubarPath="org.eclipse.mylyn.tasks.ui.menu.navigate/goTo"
-        style="push">
   </action>
       </viewerContribution>
       <viewerContribution
@@ -780,6 +756,27 @@
                label="Search for Repository Task..."
                style="push"
                tooltip="Search for Repository Task"/>
+      </actionSet>
+      <actionSet
+            id="org.eclipse.mylyn.tasks.ui.tasklist.navigation"
+            label="Mylyn Task List Navigation"
+            visible="false">
+         <action
+               class="org.eclipse.mylyn.internal.tasks.ui.actions.GoToUnreadTaskAction"
+               definitionId="org.eclipse.mylyn.tasks.ui.command.goToNextUnread"
+               id="org.eclipse.mylyn.tasklist.actions.goToNextUnread"
+               label="Next Unread Task"
+               menubarPath="navigate/goTo/"
+               style="push">
+         </action>
+         <action
+               class="org.eclipse.mylyn.internal.tasks.ui.actions.GoToUnreadTaskAction"
+               definitionId="org.eclipse.mylyn.tasks.ui.command.goToPreviousUnread"
+               id="org.eclipse.mylyn.tasklist.actions.goToPreviousUnread"
+               label="Previous Unread Task"
+               menubarPath="navigate/goTo/"
+               style="push">
+         </action>
       </actionSet>
    </extension>
    
@@ -1143,6 +1140,15 @@
             name="In Task List View"
             parentId="org.eclipse.ui.contexts.window">
       </context>
+   </extension>
+   <extension
+         point="org.eclipse.ui.actionSetPartAssociations">
+      <actionSetPartAssociation
+            targetID="org.eclipse.mylyn.tasks.ui.tasklist.navigation">
+         <part
+               id="org.eclipse.mylyn.tasks.ui.views.tasks">
+         </part>
+      </actionSetPartAssociation>
    </extension>
    
 </plugin>
