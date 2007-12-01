@@ -1100,13 +1100,13 @@
             commandId="org.eclipse.mylyn.tasks.ui.command.goToPreviousUnread"
             contextId="org.eclipse.mylyn.tasks.ui.views.tasks"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="SHIFT+F6">
+            sequence="M3+ARROW_UP">
       </key>
       <key
             commandId="org.eclipse.mylyn.tasks.ui.command.goToNextUnread"
             contextId="org.eclipse.mylyn.tasks.ui.views.tasks"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="F6">
+            sequence="M3+ARROW_DOWN">
       </key>
       <key
             commandId="org.eclipse.mylyn.tasks.ui.command.showToolTip"
@@ -1118,19 +1118,19 @@
             commandId="org.eclipse.mylyn.tasks.ui.command.markTaskRead"
             contextId="org.eclipse.mylyn.tasks.ui.views.tasks"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="F7">
+            sequence=".">
       </key>
       <key
             commandId="org.eclipse.mylyn.tasks.ui.command.markTaskReadGoToNextUnread"
             contextId="org.eclipse.mylyn.tasks.ui.views.tasks"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="F8">
+            sequence="M2+M3+ARROW_DOWN">
       </key>
       <key
             commandId="org.eclipse.mylyn.tasks.ui.command.markTaskUnread"
             contextId="org.eclipse.mylyn.tasks.ui.views.tasks"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="SHIFT+F7">
+            sequence=",">
       </key>
    </extension>
    <extension
