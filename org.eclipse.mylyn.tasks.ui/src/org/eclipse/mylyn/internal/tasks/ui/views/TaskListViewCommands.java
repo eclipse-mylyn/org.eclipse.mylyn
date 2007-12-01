@@ -38,6 +38,8 @@ public class TaskListViewCommands {
 
 	private static final String MARK_TASK_READ_GOTO_NEXT_TASK_COMMAND_ID = "org.eclipse.mylyn.tasks.ui.command.markTaskReadGoToNextUnread";
 
+	private static final String MARK_TASK_READ_GOTO_PREVIOUS_TASK_COMMAND_ID = "org.eclipse.mylyn.tasks.ui.command.markTaskReadGoToPreviousUnread";
+
 	private static final String MARK_TASK_UNREAD_COMMAND_ID = "org.eclipse.mylyn.tasks.ui.command.markTaskUnread";
 
 	private final TaskListView taskListView;
@@ -104,19 +106,19 @@ public class TaskListViewCommands {
 
 			handler = new AbstractHandler() {
 				public Object execute(ExecutionEvent event) throws ExecutionException {
-					MarkTaskReadAction markReadAction = new MarkTaskReadAction(taskListView.getSelectedTaskContainers());
-					if (markReadAction.isEnabled()) {
-						markReadAction.run();
-
-						GoToUnreadTaskAction goToAction = new GoToUnreadTaskAction();
-						goToAction.init(taskListView);
-						goToAction.run();
-					}
-					return null;
+					return markReadGotoUnread(Direction.DOWN);
 				}
 			};
 			handlers.add(handler);
 			handlerService.activateHandler(MARK_TASK_READ_GOTO_NEXT_TASK_COMMAND_ID, handler);
+
+			handler = new AbstractHandler() {
+				public Object execute(ExecutionEvent event) throws ExecutionException {
+					return markReadGotoUnread(Direction.UP);
+				}
+			};
+			handlers.add(handler);
+			handlerService.activateHandler(MARK_TASK_READ_GOTO_PREVIOUS_TASK_COMMAND_ID, handler);
 
 			handler = new AbstractHandler() {
 				public Object execute(ExecutionEvent event) throws ExecutionException {
@@ -137,6 +139,19 @@ public class TaskListViewCommands {
 			handler.dispose();
 		}
 		handlers.clear();
+	}
+
+	private Object markReadGotoUnread(Direction direction) {
+		MarkTaskReadAction markReadAction = new MarkTaskReadAction(taskListView.getSelectedTaskContainers());
+		if (markReadAction.isEnabled()) {
+			markReadAction.run();
+
+			GoToUnreadTaskAction goToAction = new GoToUnreadTaskAction();
+			goToAction.setDirection(direction);
+			goToAction.init(taskListView);
+			goToAction.run();
+		}
+		return null;
 	}
 	
 }

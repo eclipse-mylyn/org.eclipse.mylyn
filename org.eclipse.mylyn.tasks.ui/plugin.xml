@@ -766,7 +766,7 @@
                definitionId="org.eclipse.mylyn.tasks.ui.command.goToNextUnread"
                id="org.eclipse.mylyn.tasklist.actions.goToNextUnread"
                label="Next Unread Task"
-               menubarPath="navigate/goTo/"
+               menubarPath="navigate/goTo/taskList"
                style="push">
          </action>
          <action
@@ -774,7 +774,7 @@
                definitionId="org.eclipse.mylyn.tasks.ui.command.goToPreviousUnread"
                id="org.eclipse.mylyn.tasklist.actions.goToPreviousUnread"
                label="Previous Unread Task"
-               menubarPath="navigate/goTo/"
+               menubarPath="navigate/goTo/taskList"
                style="push">
          </action>
       </actionSet>
@@ -1077,10 +1077,12 @@
             id="org.eclipse.mylyn.tasks.ui.command.markTaskRead"
             name="Mark Task Read">
       </command>
-      <category
-            id="org.eclipse.mylyn.tasks.ui.tasklist"
-            name="Task List">
-      </category>
+      <command
+            category="org.eclipse.mylyn.tasks.ui.commands"
+            categoryId="org.eclipse.mylyn.tasks.ui.tasklist"
+            id="org.eclipse.mylyn.tasks.ui.command.markTaskUnread"
+            name="Mark Task Unread">
+      </command>
       <command
             category="org.eclipse.mylyn.tasks.ui.commands"
             categoryId="org.eclipse.mylyn.tasks.ui.tasklist"
@@ -1090,9 +1092,13 @@
       <command
             category="org.eclipse.mylyn.tasks.ui.commands"
             categoryId="org.eclipse.mylyn.tasks.ui.tasklist"
-            id="org.eclipse.mylyn.tasks.ui.command.markTaskUnread"
-            name="Mark Task Unread">
+            id="org.eclipse.mylyn.tasks.ui.command.markTaskReadGoToPreviousUnread"
+            name="Mark Task Read and Go To Previous Unread Task">
       </command>
+      <category
+            id="org.eclipse.mylyn.tasks.ui.tasklist"
+            name="Task List">
+      </category>
    </extension>
    <extension
          point="org.eclipse.ui.bindings">
@@ -1121,16 +1127,22 @@
             sequence=".">
       </key>
       <key
+            commandId="org.eclipse.mylyn.tasks.ui.command.markTaskUnread"
+            contextId="org.eclipse.mylyn.tasks.ui.views.tasks"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence=",">
+      </key>
+      <key
             commandId="org.eclipse.mylyn.tasks.ui.command.markTaskReadGoToNextUnread"
             contextId="org.eclipse.mylyn.tasks.ui.views.tasks"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M2+M3+ARROW_DOWN">
       </key>
       <key
-            commandId="org.eclipse.mylyn.tasks.ui.command.markTaskUnread"
+            commandId="org.eclipse.mylyn.tasks.ui.command.markTaskReadGoToPreviousUnread"
             contextId="org.eclipse.mylyn.tasks.ui.views.tasks"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence=",">
+            sequence="M2+M3+ARROW_UP">
       </key>
    </extension>
    <extension
