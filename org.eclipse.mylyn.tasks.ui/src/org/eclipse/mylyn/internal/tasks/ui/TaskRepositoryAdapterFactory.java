@@ -37,7 +37,9 @@ public class TaskRepositoryAdapterFactory implements IAdapterFactory {
 			return new IActionFilter() {
 				public boolean testAttribute(Object target, String name, String value) {
 					TaskRepository repository = (TaskRepository) target;
-					if ("supportQuery".equals(name)) {
+					if ("offline".equals(name)) {
+						return Boolean.valueOf(value).booleanValue() == repository.isOffline();
+					} else if ("supportQuery".equals(name)) {
 						AbstractRepositoryConnectorUi connector = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
 						return null != connector.getQueryWizard(repository, null);
 					} else if ("supportNewTask".equals(name)) {

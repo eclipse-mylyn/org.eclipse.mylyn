@@ -507,7 +507,10 @@
                style="push"
                tooltip="Open Repository Task">
             <enablement>
-              <objectState name="hasRepository" value="true"/>
+              <and>
+                <objectState name="offline" value="false"/>
+                <objectState name="hasRepository" value="true"/>
+              </and>
             </enablement>   
          </action>
          <action
@@ -520,7 +523,10 @@
                style="push"
                tooltip="New Query">
             <enablement>
-              <objectState name="supportQuery" value="true"/>
+              <and>
+                <objectState name="offline" value="false"/>
+                <objectState name="supportQuery" value="true"/>
+              </and>
             </enablement>   
          </action>
          <action
@@ -532,7 +538,10 @@
                menubarPath="repository"
                tooltip="New Task">
             <enablement>
-              <objectState name="supportNewTask" value="true"/>
+              <and>
+                <objectState name="offline" value="false"/>
+                <objectState name="supportNewTask" value="true"/>
+              </and>
             </enablement>
          </action>      
       </viewerContribution>
