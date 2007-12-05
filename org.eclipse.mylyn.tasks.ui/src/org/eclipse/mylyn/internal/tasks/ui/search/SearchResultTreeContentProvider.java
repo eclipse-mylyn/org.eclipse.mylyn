@@ -11,7 +11,6 @@ package org.eclipse.mylyn.internal.tasks.ui.search;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.search.RepositorySearchResult;
@@ -71,13 +70,11 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 
 	@Override
 	public void elementsChanged(Object[] updatedElements) {
-		elements.clear();
 		for (Object object : updatedElements) {
 			elements.add(object);
 		}
 
-		TreeViewer viewer = (TreeViewer) searchResultsPage.getViewer();
-		viewer.refresh();
+		searchResultsPage.getViewer().refresh();
 ////		boolean tableLimited = SearchPreferencePage.isTableLimited();
 //		for (int i = 0; i < updatedElements.length; i++) {
 //			if (searchResult.getMatchCount(updatedElements[i]) > 0) {
@@ -94,6 +91,7 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 
 	@Override
 	public void clear() {
+		elements.clear();
 		searchResultsPage.getViewer().refresh();
 	}
 }

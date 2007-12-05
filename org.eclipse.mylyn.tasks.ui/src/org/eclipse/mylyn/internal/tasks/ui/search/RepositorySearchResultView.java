@@ -16,18 +16,15 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.viewers.ILabelDecorator;
-import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.internal.tasks.ui.AddExistingTaskJob;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskTableLabelProvider;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -37,14 +34,11 @@ import org.eclipse.search.internal.ui.SearchMessages;
 import org.eclipse.search.ui.IContextMenuConstants;
 import org.eclipse.search.ui.text.AbstractTextSearchViewPage;
 import org.eclipse.search.ui.text.Match;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.IShowInTargetList;
 import org.eclipse.ui.progress.IProgressService;
-import org.eclipse.ui.themes.IThemeManager;
 
 /**
  * Displays the results of a Repository search.
@@ -126,15 +120,18 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 
 	@Override
 	protected void configureTreeViewer(TreeViewer viewer) {
-		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
-		Color categoryBackground = themeManager.getCurrentTheme().getColorRegistry().get(
-				TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY);
+//		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
+//		Color categoryBackground = themeManager.getCurrentTheme().getColorRegistry().get(
+//				TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY);
+//
+//		SearchViewTableLabelProvider taskListTableLabelProvider = new SearchViewTableLabelProvider(
+//				new TaskElementLabelProvider(true),
+//				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator(), categoryBackground);
 
-		SearchViewTableLabelProvider taskListTableLabelProvider = new SearchViewTableLabelProvider(
-				new TaskElementLabelProvider(true),
-				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator(), categoryBackground);
+		DecoratingLabelProvider labelProvider = new DecoratingLabelProvider(new TaskElementLabelProvider(true),
+				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator());
 
-		viewer.setLabelProvider(taskListTableLabelProvider);
+		viewer.setLabelProvider(labelProvider);
 		viewer.setContentProvider(new SearchResultTreeContentProvider(this));
 
 		// Set the order when the search view is loading so that the items are
@@ -295,35 +292,35 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		}
 	}
 
-	class SearchViewTableLabelProvider extends TaskTableLabelProvider {
-
-		public SearchViewTableLabelProvider(ILabelProvider provider, ILabelDecorator decorator, Color parentBackground) {
-			super(provider, decorator, parentBackground);
-		}
-
-		@Override
-		public Image getColumnImage(Object element, int columnIndex) {
-			switch (columnIndex) {
-			case 0:
-				return super.getColumnImage(element, columnIndex);
-			}
-			return null;
-		}
-
-		@Override
-		public String getColumnText(Object element, int columnIndex) {
-			switch (columnIndex) {
-			case 0:
-				return super.getColumnText(element, columnIndex);
-			}
-			return null;
-		}
-
-		@Override
-		public Color getBackground(Object element, int columnIndex) {
-			// Note: see bug 142889
-			return null;
-		}
-	}
+//	class SearchViewTableLabelProvider extends TaskTableLabelProvider {
+//
+//		public SearchViewTableLabelProvider(ILabelProvider provider, ILabelDecorator decorator, Color parentBackground) {
+//			super(provider, decorator, parentBackground);
+//		}
+//
+//		@Override
+//		public Image getColumnImage(Object element, int columnIndex) {
+//			switch (columnIndex) {
+//			case 0:
+//				return super.getColumnImage(element, columnIndex);
+//			}
+//			return null;
+//		}
+//
+//		@Override
+//		public String getColumnText(Object element, int columnIndex) {
+//			switch (columnIndex) {
+//			case 0:
+//				return super.getColumnText(element, columnIndex);
+//			}
+//			return null;
+//		}
+//
+//		@Override
+//		public Color getBackground(Object element, int columnIndex) {
+//			// Note: see bug 142889
+//			return null;
+//		}
+//	}
 
 }
