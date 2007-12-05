@@ -55,6 +55,19 @@ public class TaskRepositoryManagerTest extends TestCase {
 		}
 	}
 
+	public void testRepositoryWithSlash() throws MalformedURLException {
+
+		TaskRepository repository1 = new TaskRepository("bugzilla", "http://repository1/");
+		manager.addRepository(repository1, TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		assertEquals(1, manager.getAllRepositories().size());
+		assertNotNull(manager.getRepository("http://repository1"));
+		assertNotNull(manager.getRepository("http://repository1/"));
+
+		assertNotNull(manager.getRepository("bugzilla", "http://repository1"));
+		assertNotNull(manager.getRepository("bugzilla", "http://repository1/"));
+
+	}
+
 	public void testQueryDeletion() {
 		MockRepositoryTask task = new MockRepositoryTask("1");
 		task.setLastReadTimeStamp("now");
@@ -67,9 +80,9 @@ public class TaskRepositoryManagerTest extends TestCase {
 		AbstractTask task2 = TasksUiPlugin.getTaskListManager().getTaskList().getTask(task.getHandleIdentifier());
 		assertNotNull(task2);
 		assertEquals(1, task2.getParentContainers().size());
-		
+
 	}
-	
+
 	public void testHandles() {
 		String url = "http://foo.bar";
 		String id = "123";
@@ -109,7 +122,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 		TaskRepository repository2 = new TaskRepository("jira", "http://jira");
 		manager.addRepository(repository1, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		manager.addRepository(repository2, TasksUiPlugin.getDefault().getRepositoriesFilePath());
-		
+
 		List<TaskRepository> repositoryList = new ArrayList<TaskRepository>();
 		repositoryList.add(repository2);
 		repositoryList.add(repository1);

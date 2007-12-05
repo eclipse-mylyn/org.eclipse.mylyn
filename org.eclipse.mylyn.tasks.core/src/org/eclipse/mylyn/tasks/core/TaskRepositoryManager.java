@@ -134,7 +134,7 @@ public class TaskRepositoryManager {
 		urlString = stripSlashes(urlString);
 		if (repositoryMap.containsKey(kind)) {
 			for (TaskRepository repository : repositoryMap.get(kind)) {
-				if (repository.getUrl().equals(urlString)) {
+				if (stripSlashes(repository.getUrl()).equals(urlString)) {
 					return repository;
 				}
 			}
@@ -149,7 +149,7 @@ public class TaskRepositoryManager {
 		urlString = stripSlashes(urlString);
 		for (String kind : repositoryMap.keySet()) {
 			for (TaskRepository repository : repositoryMap.get(kind)) {
-				if (repository.getUrl().equals(urlString)) {
+				if (stripSlashes(repository.getUrl()).equals(urlString)) {
 					return repository;
 				}
 			}
