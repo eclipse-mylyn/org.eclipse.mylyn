@@ -725,7 +725,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		return languages;
 	}
 
-	/** returns null if language not found */
+	/** returns default language if language not found */
 	public BugzillaLanguageSettings getLanguageSetting(String label) {
 		for (BugzillaLanguageSettings language : getLanguageSettings()) {
 			if (language.getLanguageName().equals(label)) {
