@@ -27,6 +27,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewPart;
@@ -58,19 +59,43 @@ public class TaskRepositoriesView extends ViewPart {
 	private final ITaskRepositoryListener REPOSITORY_LISTENER = new ITaskRepositoryListener() {
 
 		public void repositoriesRead() {
-			refresh();
+			asyncExec(new Runnable() {
+				public void run() {
+					refresh();
+				}
+			});
+		}
+
+		private void asyncExec(Runnable runnable) {
+			if (Display.getCurrent() != null) {
+				runnable.run();
+			} else {
+				Display.getDefault().asyncExec(runnable);
+			}
 		}
 
 		public void repositoryAdded(TaskRepository repository) {
-			refresh();
+			asyncExec(new Runnable() {
+				public void run() {
+					refresh();
+				}
+			});
 		}
 
 		public void repositoryRemoved(TaskRepository repository) {
-			refresh();
+			asyncExec(new Runnable() {
+				public void run() {
+					refresh();
+				}
+			});
 		}
 
 		public void repositorySettingsChanged(TaskRepository repository) {
-			refresh();
+			asyncExec(new Runnable() {
+				public void run() {
+					refresh();
+				}
+			});
 		}
 	};
 
