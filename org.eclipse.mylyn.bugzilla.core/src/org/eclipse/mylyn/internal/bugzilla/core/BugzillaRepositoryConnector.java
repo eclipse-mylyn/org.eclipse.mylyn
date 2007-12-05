@@ -66,7 +66,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	private BugzillaTaskDataHandler taskDataHandler;
 
 	private BugzillaClientManager clientManager;
-	
+
 	private Set<BugzillaLanguageSettings> languages = new LinkedHashSet<BugzillaLanguageSettings>();
 
 	@Override
@@ -75,6 +75,22 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		this.taskDataHandler = new BugzillaTaskDataHandler(this);
 		this.attachmentHandler = new BugzillaAttachmentHandler(this);
 		BugzillaCorePlugin.setConnector(this);
+		BugzillaLanguageSettings enSetting = new BugzillaLanguageSettings(IBugzillaConstants.DEFAULT_LANG);
+		enSetting.addLanguageAttribute("error_login", "Login");
+		enSetting.addLanguageAttribute("error_login", "log in");
+		enSetting.addLanguageAttribute("error_login", "check e-mail");
+		enSetting.addLanguageAttribute("error_login", "Invalid Username Or Password");
+		enSetting.addLanguageAttribute("error_collision", "Mid-air collision!");
+		enSetting.addLanguageAttribute("error_comment_required", "Comment Required");
+		enSetting.addLanguageAttribute("error_logged_out", "logged out");
+		enSetting.addLanguageAttribute("bad_login", "Login");
+		enSetting.addLanguageAttribute("bad_login", "log in");
+		enSetting.addLanguageAttribute("bad_login", "check e-mail");
+		enSetting.addLanguageAttribute("bad_login", "Invalid Username Or Password");
+		enSetting.addLanguageAttribute("bad_login", "error");
+		enSetting.addLanguageAttribute("processed", "processed");
+		enSetting.addLanguageAttribute("changes_submitted", "Changes submitted");
+		languages.add(enSetting);
 	}
 
 	@Override
@@ -276,8 +292,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				dateString = "";
 			}
 
-			String urlQueryBase = repository.getUrl() + CHANGED_BUGS_CGI_QUERY +
-			 URLEncoder.encode(dateString, repository.getCharacterEncoding()) + CHANGED_BUGS_CGI_ENDDATE;
+			String urlQueryBase = repository.getUrl() + CHANGED_BUGS_CGI_QUERY
+					+ URLEncoder.encode(dateString, repository.getCharacterEncoding()) + CHANGED_BUGS_CGI_ENDDATE;
 
 			String urlQueryString = urlQueryBase + BUG_ID;
 
@@ -318,8 +334,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			return true;
 		} catch (UnsupportedEncodingException e) {
 			// XXX throw CoreException instead?
-			StatusHandler.fail(e, "Repository configured with unsupported encoding: " +
-			 repository.getCharacterEncoding() + "\n\n Unable to determine changed tasks.", true);
+			StatusHandler.fail(e, "Repository configured with unsupported encoding: "
+					+ repository.getCharacterEncoding() + "\n\n Unable to determine changed tasks.", true);
 			return false;
 		} finally {
 			monitor.done();
@@ -433,7 +449,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		if (anchorIndex != -1) {
 			bugUrl = url.substring(0, anchorIndex);
 		}
-		
+
 		int index = bugUrl.indexOf(IBugzillaConstants.URL_GET_SHOW_BUG);
 		return index == -1 ? null : bugUrl.substring(index + IBugzillaConstants.URL_GET_SHOW_BUG.length());
 	}
@@ -694,12 +710,15 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		try {
 			return Integer.parseInt(taskId);
 		} catch (NumberFormatException e) {
-			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, "Invalid bug id: " +
-			 taskId, e));
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, "Invalid bug id: "
+					+ taskId, e));
 		}
 	}
+
 	public void addLanguageSetting(BugzillaLanguageSettings language) {
-		this.languages.add(language);
+		if (!languages.contains(language)) {
+			this.languages.add(language);
+		}
 	}
 
 	public Set<BugzillaLanguageSettings> getLanguageSettings() {
@@ -713,7 +732,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				return language;
 			}
 		}
-		return null;
+		return BugzillaCorePlugin.getDefault().getLanguageSetting(IBugzillaConstants.DEFAULT_LANG);
 	}
 
 }

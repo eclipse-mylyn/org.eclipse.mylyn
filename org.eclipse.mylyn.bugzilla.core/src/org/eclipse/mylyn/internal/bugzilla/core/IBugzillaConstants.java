@@ -272,5 +272,6 @@ public interface IBugzillaConstants {
 
 	public static final String BUGZILLA_LANGUAGE_SETTING = "bugzilla.languageSetting";
 
+	public static final String DEFAULT_LANG = "en (default)";
 
 }

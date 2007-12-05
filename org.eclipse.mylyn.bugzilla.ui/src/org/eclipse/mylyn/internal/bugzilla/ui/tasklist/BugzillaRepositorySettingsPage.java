@@ -85,7 +85,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 	private String platform = null;
 
 	private String os = null;
-	
+
 	private Combo languageSettingCombo;
 
 	public BugzillaRepositorySettingsPage(AbstractRepositoryConnectorUi repositoryUi) {
@@ -276,10 +276,14 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		}
 		if (repository != null) {
 			String language = repository.getProperty(IBugzillaConstants.BUGZILLA_LANGUAGE_SETTING);
-			if (language != null && !language.equals(""))
+			if (language != null && !language.equals("") && languageSettingCombo.indexOf(language) >= 0) {
 				languageSettingCombo.select(languageSettingCombo.indexOf(language));
+			} else {
+				if (languageSettingCombo.indexOf(IBugzillaConstants.DEFAULT_LANG) >= 0) {
+					languageSettingCombo.select(languageSettingCombo.indexOf(IBugzillaConstants.DEFAULT_LANG));
+				}
+			}
 		}
-
 	}
 
 	private void populateOsCombo() {
@@ -361,9 +365,8 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 	public void updateProperties(TaskRepository repository) {
 		repository.setProperty(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN,
 				String.valueOf(cleanQAContact.getSelection()));
-		repository.setProperty(IBugzillaConstants.BUGZILLA_LANGUAGE_SETTING,
-				languageSettingCombo.getText());
-		
+		repository.setProperty(IBugzillaConstants.BUGZILLA_LANGUAGE_SETTING, languageSettingCombo.getText());
+
 //		if (cachedConfigButton.getSelection()) {
 //			repository.setProperty(IBugzillaConstants.PROPERTY_CONFIGTIMESTAMP, "");
 //		} else {

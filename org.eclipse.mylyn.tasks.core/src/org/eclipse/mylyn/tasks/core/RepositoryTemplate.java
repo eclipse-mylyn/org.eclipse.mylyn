@@ -41,19 +41,10 @@ public final class RepositoryTemplate {
 	public final boolean addAutomatically;
 
 	public final String characterEncoding;
-	
-	public final String languageChoice;
 
 	public RepositoryTemplate(String label, String repositoryUrl, String characterEncoding, String version,
 			String newTaskUrl, String taskPrefix, String taskQuery, String newAccountUrl, boolean anonymous,
 			boolean addAutomatically) {
-		this(label, repositoryUrl, characterEncoding, version, newTaskUrl, taskPrefix, taskQuery, newAccountUrl,
-				anonymous, addAutomatically, "en");
-	}
-
-	public RepositoryTemplate(String label, String repositoryUrl, String characterEncoding, String version,
-			String newTaskUrl, String taskPrefix, String taskQuery, String newAccountUrl, boolean anonymous,
-			boolean addAutomatically, String languageChoice) {
 		this.label = label;
 		this.repositoryUrl = repositoryUrl;
 		this.newTaskUrl = newTaskUrl;
@@ -64,7 +55,6 @@ public final class RepositoryTemplate {
 		this.anonymous = anonymous;
 		this.characterEncoding = characterEncoding;
 		this.addAutomatically = addAutomatically;
-		this.languageChoice = languageChoice;
 	}
 
 	public void addAttribute(String name, String value) {

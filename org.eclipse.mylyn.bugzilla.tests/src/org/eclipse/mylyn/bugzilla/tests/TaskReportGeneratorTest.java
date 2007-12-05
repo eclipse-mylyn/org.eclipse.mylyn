@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.bugzilla.tests;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -167,8 +168,9 @@ public class TaskReportGeneratorTest extends TestCase {
 
 		Set<AbstractTaskContainer> catagories = new HashSet<AbstractTaskContainer>();
 		catagories.add(bugQuery);
-
-		CompletedTaskCollector collector = new CompletedTaskCollector(new Date(0), new Date());
+		Calendar future = Calendar.getInstance();
+		future.add(Calendar.MINUTE, 1);
+		CompletedTaskCollector collector = new CompletedTaskCollector(new Date(0), future.getTime());
 		TaskReportGenerator generator = new TaskReportGenerator(manager.getTaskList(), catagories);
 		generator.addCollector(collector);
 		generator.run(new NullProgressMonitor());

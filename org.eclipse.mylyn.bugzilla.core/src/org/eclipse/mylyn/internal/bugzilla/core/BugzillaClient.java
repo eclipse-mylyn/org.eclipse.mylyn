@@ -183,9 +183,12 @@ public class BugzillaClient {
 	public BugzillaClient(URL url, String username, String password, String htAuthUser, String htAuthPass,
 			String characterEncoding) {
 		this(url, username, password, htAuthUser, htAuthPass, characterEncoding, new HashMap<String, String>(),
-				BugzillaCorePlugin.getDefault().getLanguageSetting("en"));
+				BugzillaCorePlugin.getDefault().getLanguageSetting(IBugzillaConstants.DEFAULT_LANG));
 	}
 
+	/**
+	 * languageSettings must not be null
+	 */
 	public BugzillaClient(URL url, String username, String password, String htAuthUser, String htAuthPass,
 			String characterEncoding, Map<String, String> configParameters, BugzillaLanguageSettings languageSettings) {
 		this.username = username;
@@ -836,8 +839,8 @@ public class BugzillaClient {
 							&& ((HtmlTag) token.getValue()).isEndTag()) {
 
 						boolean found = false;
-						for (Iterator<String> iterator = bugzillaLanguageSettings.getResponseForCommand(BugzillaLanguageSettings.COMMAND_PROCESSED).iterator(); iterator.hasNext()
-								&& !found;) {
+						for (Iterator<String> iterator = bugzillaLanguageSettings.getResponseForCommand(
+								BugzillaLanguageSettings.COMMAND_PROCESSED).iterator(); iterator.hasNext() && !found;) {
 							String value = iterator.next().toLowerCase(Locale.ENGLISH);
 							found = found || title.indexOf(value) != -1;
 						}
@@ -1070,8 +1073,8 @@ public class BugzillaClient {
 							&& ((HtmlTag) token.getValue()).isEndTag()) {
 
 						boolean found = false;
-						for (Iterator<String> iterator = bugzillaLanguageSettings.getResponseForCommand(BugzillaLanguageSettings.COMMAND_ERROR_LOGIN).iterator(); iterator.hasNext()
-								&& !found;) {
+						for (Iterator<String> iterator = bugzillaLanguageSettings.getResponseForCommand(
+								BugzillaLanguageSettings.COMMAND_ERROR_LOGIN).iterator(); iterator.hasNext() && !found;) {
 							String value = iterator.next().toLowerCase(Locale.ENGLISH);
 							found = found || title.indexOf(value) != -1;
 						}
@@ -1081,7 +1084,8 @@ public class BugzillaClient {
 									RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(), title));
 						}
 						found = false;
-						for (Iterator<String> iterator = bugzillaLanguageSettings.getResponseForCommand(BugzillaLanguageSettings.COMMAND_ERROR_COLLISION).iterator(); iterator.hasNext()
+						for (Iterator<String> iterator = bugzillaLanguageSettings.getResponseForCommand(
+								BugzillaLanguageSettings.COMMAND_ERROR_COLLISION).iterator(); iterator.hasNext()
 								&& !found;) {
 							String value = iterator.next().toLowerCase(Locale.ENGLISH);
 							found = found || title.indexOf(value) != -1;
@@ -1091,7 +1095,8 @@ public class BugzillaClient {
 									RepositoryStatus.REPOSITORY_COLLISION, repositoryUrl.toString()));
 						}
 						found = false;
-						for (Iterator<String> iterator = bugzillaLanguageSettings.getResponseForCommand(BugzillaLanguageSettings.COMMAND_ERROR_COMMENT_REQUIRED).iterator(); iterator.hasNext()
+						for (Iterator<String> iterator = bugzillaLanguageSettings.getResponseForCommand(
+								BugzillaLanguageSettings.COMMAND_ERROR_COMMENT_REQUIRED).iterator(); iterator.hasNext()
 								&& !found;) {
 							String value = iterator.next().toLowerCase(Locale.ENGLISH);
 							found = found || title.indexOf(value) != -1;
@@ -1101,7 +1106,8 @@ public class BugzillaClient {
 									RepositoryStatus.REPOSITORY_COMMENT_REQUIRED));
 						}
 						found = false;
-						for (Iterator<String> iterator = bugzillaLanguageSettings.getResponseForCommand(BugzillaLanguageSettings.COMMAND_ERROR_LOGGED_OUT).iterator(); iterator.hasNext()
+						for (Iterator<String> iterator = bugzillaLanguageSettings.getResponseForCommand(
+								BugzillaLanguageSettings.COMMAND_ERROR_LOGGED_OUT).iterator(); iterator.hasNext()
 								&& !found;) {
 							String value = iterator.next().toLowerCase(Locale.ENGLISH);
 							found = found || title.indexOf(value) != -1;
@@ -1115,7 +1121,8 @@ public class BugzillaClient {
 									"You have been logged out. Please retry operation."));
 						}
 						found = false;
-						for (Iterator<String> iterator = bugzillaLanguageSettings.getResponseForCommand(BugzillaLanguageSettings.COMMAND_CHANGES_SUBMITTED).iterator(); iterator.hasNext()
+						for (Iterator<String> iterator = bugzillaLanguageSettings.getResponseForCommand(
+								BugzillaLanguageSettings.COMMAND_CHANGES_SUBMITTED).iterator(); iterator.hasNext()
 								&& !found;) {
 							String value = iterator.next().toLowerCase(Locale.ENGLISH);
 							found = found || title.indexOf(value) != -1;

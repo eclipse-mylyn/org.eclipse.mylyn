@@ -54,7 +54,8 @@ public class BugzillaQueryTest extends TestCase {
 		connectorOriginal = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 				BugzillaCorePlugin.REPOSITORY_KIND);
 
-		BugzillaLanguageSettings language = new BugzillaLanguageSettings("en");
+		BugzillaLanguageSettings language = BugzillaCorePlugin.getDefault().getLanguageSetting(
+				IBugzillaConstants.DEFAULT_LANG);
 
 		connector = new BugzillaRepositoryConnector();
 		connector.init(new TaskList());
