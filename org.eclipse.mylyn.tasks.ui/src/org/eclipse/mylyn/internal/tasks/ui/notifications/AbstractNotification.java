@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.tasks.ui;
+package org.eclipse.mylyn.internal.tasks.ui.notifications;
 
 import java.util.Date;
 
@@ -14,23 +14,24 @@ import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Rob Elves
+ * @author Mik Kersten
  */
-public interface ITaskListNotification extends Comparable<ITaskListNotification> {
+public abstract class AbstractNotification implements Comparable<AbstractNotification> {
 
-	public void openTask();
+	public abstract void open();
 
-	public String getDescription();
+	public abstract String getDescription();
 
-	public String getDetails();
+	public abstract String getDetails();
 	
-	public String getLabel();
+	public abstract String getLabel();
 
-	public Image getNotificationIcon();
+	public abstract Image getNotificationImage();
 
-	public Image getOverlayIcon();
+	public abstract Image getNotificationKindImage();
 
-	public Date getDate();
+	public abstract Date getDate();
 
-	public void setDate(Date date);
+	public abstract void setDate(Date date);
 
 }

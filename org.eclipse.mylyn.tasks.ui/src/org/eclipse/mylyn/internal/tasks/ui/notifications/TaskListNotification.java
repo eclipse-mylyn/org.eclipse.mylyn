@@ -6,11 +6,12 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.tasks.ui;
+package org.eclipse.mylyn.internal.tasks.ui.notifications;
 
 import java.util.Date;
 
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -19,11 +20,14 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Rob Elves
+ * @author Mik Kersten
  */
-public class TaskListNotificationIncoming implements ITaskListNotification {
+public class TaskListNotification extends AbstractNotification {
 
-	private final AbstractTask task;
+	protected final AbstractTask task;
 
+	protected Date date;
+	
 	private String description = null;
 
 	private String details = null;
@@ -31,10 +35,7 @@ public class TaskListNotificationIncoming implements ITaskListNotification {
 	private DecoratingLabelProvider labelProvider = new DecoratingLabelProvider(new TaskElementLabelProvider(true),
 			PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator());
 
-	private Date date;
-
-
-	public TaskListNotificationIncoming(AbstractTask task) {
+	public TaskListNotification(AbstractTask task) {
 		this.task = task;
 	}
 
@@ -58,17 +59,16 @@ public class TaskListNotificationIncoming implements ITaskListNotification {
 		this.details = details;
 	}
 
-	public void openTask() {
+	public void open() {
 
 		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 			public void run() {
 				TasksUiUtil.refreshAndOpenTaskListElement(task);
 			}
 		});
-
 	}
 
-	public Image getNotificationIcon() {
+	public Image getNotificationImage() {
 		return labelProvider.getImage(task);
 	}
 
@@ -83,14 +83,14 @@ public class TaskListNotificationIncoming implements ITaskListNotification {
 
 	@Override
 	public boolean equals(Object o) {
-		if (!(o instanceof TaskListNotificationIncoming)) {
+		if (!(o instanceof TaskListNotification)) {
 			return false;
 		}
-		TaskListNotificationIncoming notification = (TaskListNotificationIncoming) o;
+		TaskListNotification notification = (TaskListNotification) o;
 		return notification.getTask().equals(task);
 	}
 
-	private AbstractTask getTask() {
+	protected AbstractTask getTask() {
 		return task;
 	}
 
@@ -99,7 +99,7 @@ public class TaskListNotificationIncoming implements ITaskListNotification {
 		return task.hashCode();
 	}
 
-	public Image getOverlayIcon() {
+	public Image getNotificationKindImage() {
 		return TasksUiImages.getImage(TasksUiImages.OVERLAY_INCOMMING);
 	}
 
@@ -111,7 +111,7 @@ public class TaskListNotificationIncoming implements ITaskListNotification {
 		this.date = date;
 	}
 
-	public int compareTo(ITaskListNotification anotherNotification) throws ClassCastException {
+	public int compareTo(AbstractNotification anotherNotification) throws ClassCastException {
 		if (!(anotherNotification != null))
 			throw new ClassCastException("A ITaskListNotification object expected.");
 		Date anotherDate = (anotherNotification).getDate();

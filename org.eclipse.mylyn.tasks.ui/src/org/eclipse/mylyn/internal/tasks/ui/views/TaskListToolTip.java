@@ -22,9 +22,9 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
-import org.eclipse.mylyn.internal.tasks.ui.ITaskListNotification;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.internal.tasks.ui.notifications.AbstractNotification;
 import org.eclipse.mylyn.monitor.core.DateUtil;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
@@ -260,7 +260,7 @@ public class TaskListToolTip extends ToolTip {
 				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 						task);
 				if (connector != null) {
-					ITaskListNotification notification = TasksUiPlugin.getDefault().getIncommingNotification(connector,
+					AbstractNotification notification = TasksUiPlugin.getDefault().getIncommingNotification(connector,
 							task);
 					if (notification != null) {
 						String res = null;

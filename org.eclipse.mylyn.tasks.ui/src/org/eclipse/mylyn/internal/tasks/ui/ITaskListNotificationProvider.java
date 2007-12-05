@@ -10,11 +10,13 @@ package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.util.Set;
 
+import org.eclipse.mylyn.internal.tasks.ui.notifications.AbstractNotification;
+
 /**
  * @author Rob Elves
  */
 public interface ITaskListNotificationProvider {
 
-	public Set<ITaskListNotification> getNotifications();
+	public Set<AbstractNotification> getNotifications();
 
 }

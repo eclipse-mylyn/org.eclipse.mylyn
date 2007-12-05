@@ -47,7 +47,6 @@ import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskHighlighter;
-import org.eclipse.mylyn.internal.tasks.ui.ITaskListNotification;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskListNotificationProvider;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.OfflineCachingStorage;
@@ -55,13 +54,14 @@ import org.eclipse.mylyn.internal.tasks.ui.OfflineFileStorage;
 import org.eclipse.mylyn.internal.tasks.ui.RepositoryAwareStatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListBackupManager;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListNotificationIncoming;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListNotificationManager;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListNotificationQueryIncoming;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListNotificationReminder;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListSynchronizationScheduler;
 import org.eclipse.mylyn.internal.tasks.ui.TaskRepositoryUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.notifications.AbstractNotification;
+import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotification;
+import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationQueryIncoming;
+import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationReminder;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskListSaveManager;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskListWriter;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiExtensionReader;
@@ -236,10 +236,10 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	private static ITaskListNotificationProvider REMINDER_NOTIFICATION_PROVIDER = new ITaskListNotificationProvider() {
 
-		public Set<ITaskListNotification> getNotifications() {
+		public Set<AbstractNotification> getNotifications() {
 			Date currentDate = new Date();
 			Collection<AbstractTask> allTasks = TasksUiPlugin.getTaskListManager().getTaskList().getAllTasks();
-			Set<ITaskListNotification> reminders = new HashSet<ITaskListNotification>();
+			Set<AbstractNotification> reminders = new HashSet<AbstractNotification>();
 			for (AbstractTask task : allTasks) {
 				if (!task.isCompleted() && task.getScheduledForDate() != null && !task.isReminded()
 						&& task.getScheduledForDate().compareTo(currentDate) < 0) {
@@ -253,8 +253,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	private static ITaskListNotificationProvider INCOMING_NOTIFICATION_PROVIDER = new ITaskListNotificationProvider() {
 
-		public Set<ITaskListNotification> getNotifications() {
-			Set<ITaskListNotification> notifications = new HashSet<ITaskListNotification>();
+		public Set<AbstractNotification> getNotifications() {
+			Set<AbstractNotification> notifications = new HashSet<AbstractNotification>();
 			// Incoming Changes
 			for (TaskRepository repository : getRepositoryManager().getAllRepositories()) {
 				AbstractRepositoryConnector connector = getRepositoryManager().getRepositoryConnector(
@@ -266,7 +266,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 							.getRepositoryTasks(repository.getUrl())) {
 						if ((repositoryTask.getLastReadTimeStamp() == null || repositoryTask.getSynchronizationState() == RepositoryTaskSyncState.INCOMING)
 								&& repositoryTask.isNotified() == false) {
-							TaskListNotificationIncoming notification = INSTANCE.getIncommingNotification(connector,
+							TaskListNotification notification = INSTANCE.getIncommingNotification(connector,
 									repositoryTask);
 							notifications.add(notification);
 							repositoryTask.setNotified(true);
@@ -954,10 +954,10 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	/**
 	 * TODO: move, uses internal class.
 	 */
-	public TaskListNotificationIncoming getIncommingNotification(AbstractRepositoryConnector connector,
+	public TaskListNotification getIncommingNotification(AbstractRepositoryConnector connector,
 			AbstractTask task) {
 
-		TaskListNotificationIncoming notification = new TaskListNotificationIncoming(task);
+		TaskListNotification notification = new TaskListNotification(task);
 		RepositoryTaskData newTaskData = getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
 		RepositoryTaskData oldTaskData = getTaskDataManager().getOldTaskData(task.getRepositoryUrl(), task.getTaskId());
 

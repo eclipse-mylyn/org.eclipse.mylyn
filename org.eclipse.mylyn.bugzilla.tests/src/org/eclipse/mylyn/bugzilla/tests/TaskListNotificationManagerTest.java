@@ -15,9 +15,9 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
-import org.eclipse.mylyn.internal.tasks.ui.ITaskListNotification;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListNotificationIncoming;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListNotificationManager;
+import org.eclipse.mylyn.internal.tasks.ui.notifications.AbstractNotification;
+import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotification;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
@@ -80,7 +80,7 @@ public class TaskListNotificationManagerTest extends TestCase {
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
 		TaskListNotificationManager notificationManager = TasksUiPlugin.getTaskListNotificationManager();
 		notificationManager.collectNotifications();
-		assertTrue(notificationManager.getNotifications().contains(new TaskListNotificationIncoming(task)));
+		assertTrue(notificationManager.getNotifications().contains(new TaskListNotification(task)));
 		task = TasksUiPlugin.getTaskListManager().getTaskList().getTask("https://bugs.eclipse.org/bugs-142891");
 		assertNotNull(task);
 		assertTrue(task.isNotified());
@@ -97,7 +97,7 @@ public class TaskListNotificationManagerTest extends TestCase {
 		TaskListNotificationManager notificationManager = TasksUiPlugin.getTaskListNotificationManager();
 		assertFalse(hit.isNotified());
 		notificationManager.collectNotifications();
-		for (ITaskListNotification notification : notificationManager.getNotifications()) {
+		for (AbstractNotification notification : notificationManager.getNotifications()) {
 			notification.getLabel().equals(hit.getSummary());
 		}
 		//assertTrue(notificationManager.getNotifications().contains(new TaskListNotificationQueryIncoming(hit)));
@@ -115,7 +115,7 @@ public class TaskListNotificationManagerTest extends TestCase {
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(hit, query);
 		TaskListNotificationManager notificationManager = TasksUiPlugin.getTaskListNotificationManager();
 		notificationManager.collectNotifications();
-		for (ITaskListNotification notification : notificationManager.getNotifications()) {
+		for (AbstractNotification notification : notificationManager.getNotifications()) {
 			notification.getLabel().equals(hit.getSummary());
 		}
 		//assertTrue(notificationManager.getNotifications().iterator().next().equals(new TaskListNotificationQueryIncoming(hit)));

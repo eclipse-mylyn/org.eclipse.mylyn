@@ -20,6 +20,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.mylyn.internal.tasks.ui.notifications.AbstractNotification;
+import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationPopup;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
@@ -43,9 +45,9 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 
 	private TaskListNotificationPopup popup;
 
-	private Set<ITaskListNotification> notifications = new HashSet<ITaskListNotification>();
+	private Set<AbstractNotification> notifications = new HashSet<AbstractNotification>();
 
-	private Set<ITaskListNotification> currentlyNotifying = Collections.synchronizedSet(notifications);
+	private Set<AbstractNotification> currentlyNotifying = Collections.synchronizedSet(notifications);
 
 	private List<ITaskListNotificationProvider> notificationProviders = new ArrayList<ITaskListNotificationProvider>();
 
@@ -64,29 +66,7 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 								//setNotified();
 								synchronized (TaskListNotificationManager.class) {
 									if (currentlyNotifying.size() > 0) {
-										Shell shell = new Shell(PlatformUI.getWorkbench().getDisplay());
-										popup = new TaskListNotificationPopup(shell);
-										List<ITaskListNotification> toDisplay = new ArrayList<ITaskListNotification>(
-												currentlyNotifying);
-										Collections.sort(toDisplay);
-										popup.setContents(toDisplay);
-										cleanNotified();
-										popup.setBlockOnOpen(false);
-										SwtUtil.setAlpha(shell, 0);
-										popup.open();
-										SwtUtil.fade(popup.getShell(), true, 15, 80);
-										
-//										for (int i = 2; i <= 6; i+= 2) {
-//											popup.getShell().setLocation(popup.getShell().getLocation().x, popup.getShell().getLocation().y - i);
-//											try {
-//												Thread.sleep(70);
-//											} catch (InterruptedException e) {
-//												// ignore
-//											}
-//										}
-										closeJob.setSystem(runSystem);
-										closeJob.schedule(CLOSE_POPUP_DELAY);
-										popup.getShell().addShellListener(SHELL_LISTENER);
+										showPopup();
 									}
 								}
 							}
@@ -106,6 +86,24 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 
 	};
 
+	public void showPopup() {
+		Shell shell = new Shell(PlatformUI.getWorkbench().getDisplay());
+		popup = new TaskListNotificationPopup(shell);
+		List<AbstractNotification> toDisplay = new ArrayList<AbstractNotification>(
+				currentlyNotifying);
+		Collections.sort(toDisplay);
+		popup.setContents(toDisplay);
+		cleanNotified();
+		popup.setBlockOnOpen(false);
+		SwtUtil.setAlpha(shell, 0);
+		popup.open();
+		SwtUtil.fade(popup.getShell(), true, 15, 80);
+		
+		closeJob.setSystem(runSystem);
+		closeJob.schedule(CLOSE_POPUP_DELAY);
+		popup.getShell().addShellListener(SHELL_LISTENER);
+	}
+	
 	private Job closeJob = new Job(CLOSE_NOTIFICATION_JOB) {
 
 		@Override
@@ -202,7 +200,7 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 	/**
 	 * public for testing purposes
 	 */
-	public Set<ITaskListNotification> getNotifications() {
+	public Set<AbstractNotification> getNotifications() {
 		synchronized (TaskListNotificationManager.class) {
 			return currentlyNotifying;
 		}

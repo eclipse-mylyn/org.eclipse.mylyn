@@ -6,11 +6,12 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.tasks.ui;
+package org.eclipse.mylyn.internal.tasks.ui.notifications;
 
 import java.util.Date;
 
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -20,27 +21,23 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Rob Elves
  */
-public class TaskListNotificationReminder implements ITaskListNotification {
-
-	private final AbstractTask task;
+public class TaskListNotificationQueryIncoming extends TaskListNotification {
 
 	private DecoratingLabelProvider labelProvider = new DecoratingLabelProvider(new TaskElementLabelProvider(true),
 			PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator());
 
-	private Date date;
-
-	public TaskListNotificationReminder(AbstractTask task) {
-		this.task = task;
+	public TaskListNotificationQueryIncoming(AbstractTask task) {
+		super(task);
 	}
 
 	public String getDescription() {
-		return null;
+		return task.getSummary();
 	}
-	
+
 	public String getDetails() {
 		return null;
 	}
-
+	
 	public String getLabel() {
 		if (labelProvider.getText(task).length() > 40) {
 			String truncated = labelProvider.getText(task).substring(0, 35);
@@ -49,7 +46,7 @@ public class TaskListNotificationReminder implements ITaskListNotification {
 		return labelProvider.getText(task);
 	}
 
-	public void openTask() {
+	public void open() {
 
 		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 			public void run() {
@@ -59,30 +56,26 @@ public class TaskListNotificationReminder implements ITaskListNotification {
 
 	}
 
-	public Image getNotificationIcon() {
+	public Image getNotificationImage() {
 		return labelProvider.getImage(task);
-	}
-
-	public Image getOverlayIcon() {
-		return TasksUiImages.getImage(TasksUiImages.CALENDAR);
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		if (!(o instanceof TaskListNotificationReminder)) {
+		if (!(o instanceof TaskListNotificationQueryIncoming)) {
 			return false;
 		}
-		TaskListNotificationReminder notification = (TaskListNotificationReminder) o;
-		return notification.getTask().equals(task);
-	}
-
-	private AbstractTask getTask() {
-		return task;
+		TaskListNotificationQueryIncoming notification = (TaskListNotificationQueryIncoming) o;
+		return notification.getDescription().equals(task.getSummary());
 	}
 
 	@Override
 	public int hashCode() {
-		return task.hashCode();
+		return task.getSummary().hashCode();
+	}
+
+	public Image getNotificationKindImage() {
+		return TasksUiImages.getImage(TasksUiImages.OVERLAY_INCOMMING);
 	}
 
 	public Date getDate() {
@@ -93,7 +86,7 @@ public class TaskListNotificationReminder implements ITaskListNotification {
 		this.date = date;
 	}
 
-	public int compareTo(ITaskListNotification anotherNotification) throws ClassCastException {
+	public int compareTo(AbstractNotification anotherNotification) throws ClassCastException {
 		if (!(anotherNotification != null))
 			throw new ClassCastException("A ITaskListNotification object expected.");
 		Date anotherDate = (anotherNotification).getDate();
