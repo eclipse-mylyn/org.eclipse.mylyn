@@ -16,10 +16,9 @@ import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Rob Elves
+ * @author Mik Kersten
  */
 public class TaskListNotificationReminder extends TaskListNotification {
-
-	private Date date;
 
 	public TaskListNotificationReminder(AbstractTask task) {
 		super(task);
@@ -27,20 +26,6 @@ public class TaskListNotificationReminder extends TaskListNotification {
 
 	public Image getNotificationKindImage() {
 		return TasksUiImages.getImage(TasksUiImages.OVERLAY_HAS_DUE);
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (!(o instanceof TaskListNotificationReminder)) {
-			return false;
-		}
-		TaskListNotificationReminder notification = (TaskListNotificationReminder) o;
-		return notification.getTask().equals(task);
-	}
-
-	@Override
-	public int hashCode() {
-		return task.hashCode();
 	}
 
 	public int compareTo(AbstractNotification anotherNotification) throws ClassCastException {

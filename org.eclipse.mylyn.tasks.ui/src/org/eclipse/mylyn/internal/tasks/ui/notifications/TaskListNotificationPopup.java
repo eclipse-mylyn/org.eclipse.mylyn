@@ -81,7 +81,7 @@ public class TaskListNotificationPopup extends AbstractNotificationPopup {
 				if (notification.getDescription() != null) {
 					descriptionText = notification.getDescription();
 				}
-				if (descriptionText != null) {
+				if (descriptionText != null && !descriptionText.trim().equals("")) {
 					Label descriptionLabel = new Label(notificationComposite, SWT.NULL);
 					descriptionLabel.setText(descriptionText);
 					descriptionLabel.setBackground(parent.getBackground());

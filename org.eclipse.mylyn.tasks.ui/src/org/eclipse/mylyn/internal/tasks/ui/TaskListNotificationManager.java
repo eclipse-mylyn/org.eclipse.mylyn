@@ -34,7 +34,7 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 	private static final String OPEN_NOTIFICATION_JOB = "Open Notification Job";
 
 	private static final long DELAY_OPEN = 5 * 1000;
-	
+
 	private static final boolean runSystem = true;
 
 	private TaskListNotificationPopup popup;
@@ -54,17 +54,13 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 
 						public void run() {
-							if (popup != null || popup == null) {
-								collectNotifications();
-								//setNotified();
-								synchronized (TaskListNotificationManager.class) {
-									if (currentlyNotifying.size() > 0) {
+							collectNotifications();
+							synchronized (TaskListNotificationManager.class) {
+								if (currentlyNotifying.size() > 0) {
 //										popup.close();
-										showPopup();
-									}
+									showPopup();
 								}
 							}
-
 						}
 					});
 				}
@@ -88,7 +84,7 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 		if (popup != null) {
 			popup.close();
 		}
-		
+
 		Shell shell = new Shell(PlatformUI.getWorkbench().getDisplay());
 		popup = new TaskListNotificationPopup(shell);
 		List<AbstractNotification> toDisplay = new ArrayList<AbstractNotification>(currentlyNotifying);

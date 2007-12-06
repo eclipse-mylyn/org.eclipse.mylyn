@@ -30,7 +30,7 @@ public class TaskListNotification extends AbstractNotification {
 	
 	private String description = null;
 	
-	private DecoratingLabelProvider labelProvider = new DecoratingLabelProvider(new TaskElementLabelProvider(true),
+	private final DecoratingLabelProvider labelProvider = new DecoratingLabelProvider(new TaskElementLabelProvider(true),
 			PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator());
 
 	public TaskListNotification(AbstractTask task) {
@@ -62,22 +62,8 @@ public class TaskListNotification extends AbstractNotification {
 		return labelProvider.getImage(task);
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (!(o instanceof TaskListNotification)) {
-			return false;
-		}
-		TaskListNotification notification = (TaskListNotification) o;
-		return notification.getTask().equals(task);
-	}
-
 	protected AbstractTask getTask() {
 		return task;
-	}
-
-	@Override
-	public int hashCode() {
-		return task.hashCode();
 	}
 
 	public Image getNotificationKindImage() {
@@ -103,5 +89,42 @@ public class TaskListNotification extends AbstractNotification {
 		} else {
 			return 1;
 		}
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((date == null) ? 0 : date.hashCode());
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + ((task == null) ? 0 : task.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		TaskListNotification other = (TaskListNotification) obj;
+		if (date == null) {
+			if (other.date != null)
+				return false;
+		} else if (!date.equals(other.date))
+			return false;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
+			return false;
+		if (task == null) {
+			if (other.task != null)
+				return false;
+		} else if (!task.equals(other.task))
+			return false;
+		return true;
 	}
 }
