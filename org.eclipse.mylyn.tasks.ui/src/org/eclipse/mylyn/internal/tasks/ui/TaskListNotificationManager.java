@@ -59,7 +59,7 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 								//setNotified();
 								synchronized (TaskListNotificationManager.class) {
 									if (currentlyNotifying.size() > 0) {
-										popup.close();
+//										popup.close();
 										showPopup();
 									}
 								}
@@ -85,6 +85,10 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 	};
 
 	public void showPopup() {
+		if (popup != null) {
+			popup.close();
+		}
+		
 		Shell shell = new Shell(PlatformUI.getWorkbench().getDisplay());
 		popup = new TaskListNotificationPopup(shell);
 		List<AbstractNotification> toDisplay = new ArrayList<AbstractNotification>(currentlyNotifying);
