@@ -268,7 +268,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		defaultOSCombo = new Combo(platformOSContainer, SWT.READ_ONLY);
 		populateOsCombo();
 
-		new Label(parent, SWT.NONE).setText("Language : ");
+		new Label(parent, SWT.NONE).setText("Language: ");
 		languageSettingCombo = new Combo(parent, SWT.DROP_DOWN);
 
 		for (BugzillaLanguageSettings bugzillaLanguageSettings : BugzillaCorePlugin.getDefault().getLanguageSettings()) {
@@ -278,10 +278,11 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 			String language = repository.getProperty(IBugzillaConstants.BUGZILLA_LANGUAGE_SETTING);
 			if (language != null && !language.equals("") && languageSettingCombo.indexOf(language) >= 0) {
 				languageSettingCombo.select(languageSettingCombo.indexOf(language));
-			} else {
-				if (languageSettingCombo.indexOf(IBugzillaConstants.DEFAULT_LANG) >= 0) {
-					languageSettingCombo.select(languageSettingCombo.indexOf(IBugzillaConstants.DEFAULT_LANG));
-				}
+			}
+		}
+		if (languageSettingCombo.getSelectionIndex() == -1) {
+			if (languageSettingCombo.indexOf(IBugzillaConstants.DEFAULT_LANG) >= 0) {
+				languageSettingCombo.select(languageSettingCombo.indexOf(IBugzillaConstants.DEFAULT_LANG));
 			}
 		}
 	}
