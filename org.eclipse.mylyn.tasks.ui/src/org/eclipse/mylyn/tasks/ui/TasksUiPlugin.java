@@ -966,11 +966,22 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		try {
 			if (task.getSynchronizationState().equals(RepositoryTaskSyncState.INCOMING)
 					&& task.getLastReadTimeStamp() == null) {
-				notification.setDescription("New unread task");
+				notification.setDescription("New unread task ");
 			} else if (newTaskData != null && oldTaskData != null) {
-				notification.setDescription(
-						getChangedDescription(newTaskData, oldTaskData) 
-						+ "\n" + getChangedAttributes(newTaskData, oldTaskData));
+				StringBuilder description = new StringBuilder();
+				String changedDescription = getChangedDescription(newTaskData, oldTaskData);
+				String chnagedAttributes = getChangedAttributes(newTaskData, oldTaskData);
+				if (!"".equals(changedDescription.trim())) {
+					description.append(changedDescription);
+					if (!"".equals(chnagedAttributes)) {
+						description.append('\n');
+					}
+				}
+				if (!"".equals(chnagedAttributes)) {
+					description.append(chnagedAttributes);
+				}
+				
+				notification.setDescription(description.toString());
 
 				if (connector != null) {
 					AbstractTaskDataHandler offlineHandler = connector.getTaskDataHandler();
@@ -1053,6 +1064,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			String added = cleanValues(change.added);
 			details += sep + "  " + change.field + " " + removed;
 			if (removed.length() > 30) {
+//				details += "\n  ";
 				details += "\n  ";
 			}
 			details += " -> " + added;
@@ -1064,9 +1076,10 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				break;
 			}
 		}
-		if (!details.equals("")) {
-			return "Attributes Changed:\n" + details;
-		}
+//		if (!details.equals("")) {
+//			return details;
+//			return "Attributes Changed:\n" + details;
+//		}
 		return details;
 	}
 

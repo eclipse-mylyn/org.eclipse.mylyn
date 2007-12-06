@@ -56,6 +56,8 @@ public abstract class AbstractNotificationPopup extends Window {
 
 	private static final long DEFAULT_DELAY_CLOSE = 8 * 1000;
 	
+	private static final int PADDING_EDGE = 5;
+	
 	private long delayClose = DEFAULT_DELAY_CLOSE;
 	
 	protected LocalResourceManager resources;
@@ -96,11 +98,8 @@ public abstract class AbstractNotificationPopup extends Window {
 		}
 
 		public void shellDeactivated(ShellEvent arg0) {
-			AbstractNotificationPopup.this.close();
-			// don't want notifications right away
-//			openJob.cancel();
-//			openJob.setSystem(runSystem);
-//			openJob.schedule(OPEN_POPUP_DELAY);
+			// TODO: consider adding on mouse hover into popup
+//			AbstractNotificationPopup.this.close();
 		}
 
 		public void shellActivated(ShellEvent arg0) {
@@ -393,8 +392,6 @@ public abstract class AbstractNotificationPopup extends Window {
 		}
 		
 		Point size = new Point(DEFAULT_WIDTH, height);
-
-		int PADDING_EDGE = 10;
 		shell.setLocation(clArea.width + clArea.x - size.x - PADDING_EDGE, clArea.height + clArea.y - size.y - PADDING_EDGE);
 		shell.setSize(size);
 	}
