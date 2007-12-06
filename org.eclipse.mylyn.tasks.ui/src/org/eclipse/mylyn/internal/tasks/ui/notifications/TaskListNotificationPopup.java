@@ -11,6 +11,7 @@ package org.eclipse.mylyn.internal.tasks.ui.notifications;
 import java.util.List;
 
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
@@ -21,7 +22,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
-import org.eclipse.ui.forms.widgets.ImageHyperlink;
 
 /**
  * @author Rob Elves
@@ -29,29 +29,14 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
  */
 public class TaskListNotificationPopup extends AbstractNotificationPopup {
 
-	private static final String NOTIFICATIONS_HIDDEN = " more...";
+	private static final String NOTIFICATIONS_HIDDEN = "more, Open Task List to view";
 
-	private static final int NUM_NOTIFICATIONS_TO_DISPLAY = 3;
-
-//	private static final String LABEL_NOTIFICATION = "Mylyn Notification";
-
-//	private Rectangle bounds;
+	private static final int NUM_NOTIFICATIONS_TO_DISPLAY = 4;
 
 	private List<AbstractNotification> notifications;
 
-//	private Composite sectionClient;
-
-//	private Form form;
-	
-//	private FormToolkit toolkit;
-
 	public TaskListNotificationPopup(Shell parent) {
 		super(parent.getDisplay());
-	}
-	
-	@Override
-	protected String getPopupShellTitle() {
-		return "Eclipse Notification";
 	}
 
 	public void setContents(List<AbstractNotification> notifications) {
@@ -72,11 +57,12 @@ public class TaskListNotificationPopup extends AbstractNotificationPopup {
 			if (count < NUM_NOTIFICATIONS_TO_DISPLAY) {
 				Label notificationLabelIcon = new Label(notificationComposite, SWT.NONE);
 				notificationLabelIcon.setImage(notification.getNotificationKindImage());
-				ImageHyperlink link = new ImageHyperlink(notificationComposite, SWT.BEGINNING | SWT.WRAP);
-				link.setText(notification.getLabel());
-				link.setImage(notification.getNotificationImage());
-				link.setBackground(parent.getBackground());
-				link.addHyperlinkListener(new HyperlinkAdapter() {
+				final TaskListHyperlink itemLink = new TaskListHyperlink(notificationComposite, SWT.BEGINNING | SWT.WRAP);
+				
+				itemLink.setText(notification.getLabel());
+				itemLink.setImage(notification.getNotificationImage());
+				itemLink.setBackground(parent.getBackground());
+				itemLink.addHyperlinkListener(new HyperlinkAdapter() {
 					@Override
 					public void linkActivated(HyperlinkEvent e) {
 						notification.open();
@@ -98,14 +84,15 @@ public class TaskListNotificationPopup extends AbstractNotificationPopup {
 				if (descriptionText != null) {
 					Label descriptionLabel = new Label(notificationComposite, SWT.NULL);
 					descriptionLabel.setText(descriptionText);
+					descriptionLabel.setBackground(parent.getBackground());
 					GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(descriptionLabel);
 				}
 			} else {
 				int numNotificationsRemain = notifications.size() - count;
-				ImageHyperlink remainingHyperlink = new ImageHyperlink(notificationComposite, SWT.NONE);
+				TaskListHyperlink remainingHyperlink = new TaskListHyperlink(notificationComposite, SWT.NONE);
 				remainingHyperlink.setBackground(parent.getBackground());
 				
-				remainingHyperlink.setText(numNotificationsRemain + NOTIFICATIONS_HIDDEN);
+				remainingHyperlink.setText(numNotificationsRemain + " " + NOTIFICATIONS_HIDDEN);
 				GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(remainingHyperlink);
 				remainingHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 					@Override

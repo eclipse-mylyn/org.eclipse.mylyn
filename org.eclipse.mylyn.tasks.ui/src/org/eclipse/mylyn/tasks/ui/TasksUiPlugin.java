@@ -952,7 +952,9 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	}
 
 	/**
-	 * TODO: move, uses internal class.
+	 * TODO: move, uses and exposes internal class.
+	 * 
+	 * @Deprecated
 	 */
 	public TaskListNotification getIncommingNotification(AbstractRepositoryConnector connector,
 			AbstractTask task) {
@@ -966,8 +968,9 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 					&& task.getLastReadTimeStamp() == null) {
 				notification.setDescription("New unread task");
 			} else if (newTaskData != null && oldTaskData != null) {
-				notification.setDescription(getChangedDescription(newTaskData, oldTaskData));
-				notification.setDetails(getChangedAttributes(newTaskData, oldTaskData));
+				notification.setDescription(
+						getChangedDescription(newTaskData, oldTaskData) 
+						+ "\n" + getChangedAttributes(newTaskData, oldTaskData));
 
 				if (connector != null) {
 					AbstractTaskDataHandler offlineHandler = connector.getTaskDataHandler();
@@ -994,7 +997,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			if (taskComments != null && taskComments.size() > 0) {
 				TaskComment lastComment = taskComments.get(taskComments.size() - 1);
 				if (lastComment != null) {
-					descriptionText += "Comment by " + lastComment.getAuthor() + ":\n  ";
+//					descriptionText += "Comment by " + lastComment.getAuthor() + ":\n  ";
+					descriptionText += lastComment.getAuthor() + ":  ";
 					descriptionText += cleanValue(lastComment.getText());
 				}
 			}

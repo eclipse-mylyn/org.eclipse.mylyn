@@ -22,8 +22,6 @@ public abstract class AbstractNotification implements Comparable<AbstractNotific
 
 	public abstract String getDescription();
 
-	public abstract String getDetails();
-	
 	public abstract String getLabel();
 
 	public abstract Image getNotificationImage();

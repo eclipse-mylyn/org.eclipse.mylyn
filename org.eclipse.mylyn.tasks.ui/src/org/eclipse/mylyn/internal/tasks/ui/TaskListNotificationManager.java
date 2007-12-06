@@ -23,8 +23,6 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.AbstractNotification;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationPopup;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
-import org.eclipse.swt.events.ShellEvent;
-import org.eclipse.swt.events.ShellListener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
@@ -33,14 +31,10 @@ import org.eclipse.ui.PlatformUI;
  */
 public class TaskListNotificationManager implements IPropertyChangeListener {
 
-	private static final String CLOSE_NOTIFICATION_JOB = "Close Notification Job";
-
 	private static final String OPEN_NOTIFICATION_JOB = "Open Notification Job";
 
-	private static final long CLOSE_POPUP_DELAY = 1000 * 10;
-
-	private static final long OPEN_POPUP_DELAY = 1000 * 20;
-
+	private static final long DELAY_OPEN = 5 * 1000;
+	
 	private static final boolean runSystem = true;
 
 	private TaskListNotificationPopup popup;
@@ -60,12 +54,12 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 
 						public void run() {
-							if ((popup != null && popup.close()) || popup == null) {
-								closeJob.cancel();
+							if (popup != null || popup == null) {
 								collectNotifications();
 								//setNotified();
 								synchronized (TaskListNotificationManager.class) {
 									if (currentlyNotifying.size() > 0) {
+										popup.close();
 										showPopup();
 									}
 								}
@@ -75,7 +69,11 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 					});
 				}
 			} finally {
-				schedule(OPEN_POPUP_DELAY);
+				if (popup != null) {
+					schedule(popup.getDelayClose() / 2);
+				} else {
+					schedule(DELAY_OPEN);
+				}
 			}
 
 			if (monitor.isCanceled())
@@ -89,70 +87,13 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 	public void showPopup() {
 		Shell shell = new Shell(PlatformUI.getWorkbench().getDisplay());
 		popup = new TaskListNotificationPopup(shell);
-		List<AbstractNotification> toDisplay = new ArrayList<AbstractNotification>(
-				currentlyNotifying);
+		List<AbstractNotification> toDisplay = new ArrayList<AbstractNotification>(currentlyNotifying);
 		Collections.sort(toDisplay);
 		popup.setContents(toDisplay);
 		cleanNotified();
 		popup.setBlockOnOpen(false);
-		SwtUtil.setAlpha(shell, 0);
 		popup.open();
-		SwtUtil.fade(popup.getShell(), true, 15, 80);
-		
-		closeJob.setSystem(runSystem);
-		closeJob.schedule(CLOSE_POPUP_DELAY);
-		popup.getShell().addShellListener(SHELL_LISTENER);
 	}
-	
-	private Job closeJob = new Job(CLOSE_NOTIFICATION_JOB) {
-
-		@Override
-		protected IStatus run(IProgressMonitor monitor) {
-			if (!PlatformUI.getWorkbench().getDisplay().isDisposed()) {
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						if (popup != null) {
-							synchronized (popup) {
-								SwtUtil.fade(popup.getShell(), false, 20, 80);
-								popup.close();
-							}
-						}
-					}
-				});
-			}
-			if (monitor.isCanceled())
-				return Status.CANCEL_STATUS;
-
-			return Status.OK_STATUS;
-		}
-
-	};
-
-	private ShellListener SHELL_LISTENER = new ShellListener() {
-
-		public void shellClosed(ShellEvent arg0) {
-		}
-
-		public void shellDeactivated(ShellEvent arg0) {
-			popup.close();
-			// don't want notifications right away
-			openJob.cancel();
-			openJob.setSystem(runSystem);
-			openJob.schedule(OPEN_POPUP_DELAY);
-		}
-
-		public void shellActivated(ShellEvent arg0) {
-			closeJob.cancel();
-		}
-
-		public void shellDeiconified(ShellEvent arg0) {
-			// ingore
-		}
-
-		public void shellIconified(ShellEvent arg0) {
-			// ignore
-		}
-	};
 
 	private void cleanNotified() {
 		currentlyNotifying.clear();
@@ -183,10 +124,10 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 
 	public void stopNotification() {
 		openJob.cancel();
-		closeJob.cancel();
-		if (popup != null) {
-			popup.close();
-		}
+//		closeJob.cancel();
+//		if (popup != null) {
+//			popup.close();
+//		}
 	}
 
 	public void addNotificationProvider(ITaskListNotificationProvider notification_provider) {
@@ -211,9 +152,9 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 			Object newValue = event.getNewValue();
 			if (!(newValue instanceof Boolean)) {
 				// default if no preference value
-				startNotification(OPEN_POPUP_DELAY);
+				startNotification(0);
 			} else if ((Boolean) newValue == true) {
-				startNotification(OPEN_POPUP_DELAY);
+				startNotification(0);
 			} else {
 				stopNotification();
 			}

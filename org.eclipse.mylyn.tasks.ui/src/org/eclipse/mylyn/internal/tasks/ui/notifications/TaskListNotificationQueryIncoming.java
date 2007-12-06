@@ -34,18 +34,6 @@ public class TaskListNotificationQueryIncoming extends TaskListNotification {
 		return task.getSummary();
 	}
 
-	public String getDetails() {
-		return null;
-	}
-	
-	public String getLabel() {
-		if (labelProvider.getText(task).length() > 40) {
-			String truncated = labelProvider.getText(task).substring(0, 35);
-			return truncated + "...";
-		}
-		return labelProvider.getText(task);
-	}
-
 	public void open() {
 
 		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {

@@ -29,8 +29,6 @@ public class TaskListNotification extends AbstractNotification {
 	protected Date date;
 	
 	private String description = null;
-
-	private String details = null;
 	
 	private DecoratingLabelProvider labelProvider = new DecoratingLabelProvider(new TaskElementLabelProvider(true),
 			PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator());
@@ -50,14 +48,6 @@ public class TaskListNotification extends AbstractNotification {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-	public String getDetails() {
-		return details;
-	}
-	
-	public void setDetails(String details) {
-		this.details = details;
-	}
 
 	public void open() {
 
@@ -71,15 +61,6 @@ public class TaskListNotification extends AbstractNotification {
 	public Image getNotificationImage() {
 		return labelProvider.getImage(task);
 	}
-
-//
-//	public synchronized void setNotified(boolean notified) {
-//		task.setNotified(true);
-//	}
-//
-//	public synchronized boolean isNotified() {
-//		return task.isNotified();
-//	}
 
 	@Override
 	public boolean equals(Object o) {

@@ -7,9 +7,15 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.notifications;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.jface.window.Window;
+import org.eclipse.mylyn.internal.tasks.ui.SwtUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.swt.SWT;
@@ -17,6 +23,8 @@ import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.ShellEvent;
+import org.eclipse.swt.events.ShellListener;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -38,10 +46,18 @@ import org.eclipse.ui.PlatformUI;
  */
 public abstract class AbstractNotificationPopup extends Window {
 
+	private static final String LABEL_NOTIFICATION = "Notification";
+
+	private static final String LABEL_JOB_CLOSE = "Close Notification Job";
+
 	private static final int DEFAULT_WIDTH = 400;
 
 	private static final int DEFAULT_HEIGHT = 100;
 
+	private static final long DEFAULT_DELAY_CLOSE = 8 * 1000;
+	
+	private long delayClose = DEFAULT_DELAY_CLOSE;
+	
 	protected LocalResourceManager resources;
 
 	private NotificationPopupColors color;
@@ -51,6 +67,52 @@ public abstract class AbstractNotificationPopup extends Window {
 	private Shell shell;
 
 	private Region lastUsedRegion;
+
+	private Job closeJob = new Job(LABEL_JOB_CLOSE) {
+
+		@Override
+		protected IStatus run(IProgressMonitor monitor) {
+			if (!PlatformUI.getWorkbench().getDisplay().isDisposed()) {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						if (AbstractNotificationPopup.this.getShell() != null && !AbstractNotificationPopup.this.getShell().isDisposed()) {
+							AbstractNotificationPopup.this.close();
+						}
+					}
+				});
+			}
+			if (monitor.isCanceled())
+				return Status.CANCEL_STATUS;
+
+			return Status.OK_STATUS;
+		}
+	};
+	
+	private ShellListener SHELL_LISTENER = new ShellListener() {
+
+		public void shellClosed(ShellEvent arg0) {
+		}
+
+		public void shellDeactivated(ShellEvent arg0) {
+			AbstractNotificationPopup.this.close();
+			// don't want notifications right away
+//			openJob.cancel();
+//			openJob.setSystem(runSystem);
+//			openJob.schedule(OPEN_POPUP_DELAY);
+		}
+
+		public void shellActivated(ShellEvent arg0) {
+			closeJob.cancel();
+		}
+
+		public void shellDeiconified(ShellEvent arg0) {
+			// ingore
+		}
+
+		public void shellIconified(ShellEvent arg0) {
+			// ignore
+		}
+	};
 
 	public AbstractNotificationPopup(Display display) {
 		this(display, SWT.NO_TRIM | SWT.ON_TOP);
@@ -65,16 +127,37 @@ public abstract class AbstractNotificationPopup extends Window {
 		initResources();
 	}
 
-	protected abstract String getPopupShellTitle();
+	/**
+	 * Override to return a customized name. Default is to return the name of the product, specified by the -name (e.g.
+	 * "Eclipse SDK") command line parameter that's associated with the product ID (e.g. "org.eclipse.sdk.ide"). Strips
+	 * the trailing "SDK" for any name, since this part of the label is considered visual noise.
+	 * 
+	 * @return the name to be used in the title of the popup.
+	 */
+	protected String getPopupShellTitle() {
+		String productName = Platform.getProduct().getName();
+		String LABEL_SDK = "SDK";
+		if (productName.endsWith(LABEL_SDK)) {
+			productName = productName.substring(0, productName.length() - LABEL_SDK.length());
+		}
+		return productName + " " + LABEL_NOTIFICATION;
+	}
+
+	protected Image getPopupShellImage() {
+		Image[] images = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().getImages();
+		// TODO: fix hardcoded reference
+		return images[3];
+	}
 
 	/**
 	 * Override to populate with notifications.
+	 * 
 	 * @param parent
 	 */
 	protected void createContentArea(Composite parent) {
 		// empty by default
 	}
-	
+
 	/**
 	 * Override to customize the title bar
 	 */
@@ -82,9 +165,7 @@ public abstract class AbstractNotificationPopup extends Window {
 		((GridData) parent.getLayoutData()).heightHint = 24;
 
 		Label titleImageLabel = new Label(parent, SWT.NONE);
-		Image[] images = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().getImages();
-		// TODO: fix hardcoded reference
-		titleImageLabel.setImage(images[3]);
+		titleImageLabel.setImage(getPopupShellImage());
 
 		Label titleTextLabel = new Label(parent, SWT.NONE);
 		titleTextLabel.setText(getPopupShellTitle());
@@ -112,7 +193,7 @@ public abstract class AbstractNotificationPopup extends Window {
 
 		});
 	}
-	
+
 	private void initResources() {
 		color = new NotificationPopupColors(display, resources);
 	}
@@ -122,6 +203,7 @@ public abstract class AbstractNotificationPopup extends Window {
 
 		shell = newShell;
 		newShell.setBackground(color.getBorder());
+		shell.addShellListener(SHELL_LISTENER);
 	}
 
 	public void create() {
@@ -161,6 +243,24 @@ public abstract class AbstractNotificationPopup extends Window {
 		lastUsedRegion = region;
 	}
 
+	@Override
+	public int open() {		
+		if (shell == null || shell.isDisposed()) {
+            shell = null;
+			create();
+		}
+		constrainShellSize();
+
+		SwtUtil.setAlpha(shell, 0);
+		shell.open();
+		SwtUtil.fade(shell, true, 15, 80);
+
+		closeJob.setSystem(true);
+		closeJob.schedule(DEFAULT_DELAY_CLOSE);
+		
+		return Window.OK;
+	}
+	
 	protected Control createContents(Composite parent) {
 		((GridLayout) parent.getLayout()).marginWidth = 1;
 		((GridLayout) parent.getLayout()).marginHeight = 1;
@@ -188,7 +288,6 @@ public abstract class AbstractNotificationPopup extends Window {
 		layout.horizontalSpacing = 3;
 
 		titleCircle.setLayout(layout);
-
 		titleCircle.addControlListener(new ControlAdapter() {
 			public void controlResized(ControlEvent e) {
 				Rectangle clArea = titleCircle.getClientArea();
@@ -280,14 +379,19 @@ public abstract class AbstractNotificationPopup extends Window {
 
 		return outerCircle;
 	}
-	
+
 	protected void initializeBounds() {
 		Rectangle clArea = getPrimaryClientArea();
 		int initialHeight = shell.computeSize(DEFAULT_WIDTH, SWT.DEFAULT).y;
+		int height = DEFAULT_HEIGHT;
+		if (DEFAULT_HEIGHT < initialHeight) {
+			height = initialHeight;
+		}
+		
+		Point size = new Point(DEFAULT_WIDTH, height);
 
-		Point size = new Point(DEFAULT_WIDTH, initialHeight + DEFAULT_HEIGHT);
-
-		shell.setLocation(clArea.width + clArea.x - size.x, clArea.height + clArea.y - size.y);
+		int PADDING_EDGE = 10;
+		shell.setLocation(clArea.width + clArea.x - size.x - PADDING_EDGE, clArea.height + clArea.y - size.y - PADDING_EDGE);
 		shell.setSize(size);
 	}
 
@@ -297,10 +401,22 @@ public abstract class AbstractNotificationPopup extends Window {
 	}
 
 	public boolean close() {
+		if (!shell.isDisposed()) {
+			shell.removeShellListener(SHELL_LISTENER);
+		}
+		SwtUtil.fade(AbstractNotificationPopup.this.getShell(), false, 20, 80);
 		resources.dispose();
-		if (lastUsedRegion != null)
+		if (lastUsedRegion != null) {
 			lastUsedRegion.dispose();
-
+		}
 		return super.close();
+	}
+
+	public long getDelayClose() {
+		return delayClose;
+	}
+
+	public void setDelayClose(long delayClose) {
+		this.delayClose = delayClose;
 	}
 }

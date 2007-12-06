@@ -270,12 +270,12 @@ public class TaskListToolTip extends ToolTip {
 								res = descriptionText;
 							}
 						}
-						if (notification.getDetails() != null) {
-							String details = notification.getDetails();
-							if (details != null && details.length() > 0) {
-								res = res == null ? details : res + "\n" + details;
-							}
-						}
+//						if (notification.getDetails() != null) {
+//							String details = notification.getDetails();
+//							if (details != null && details.length() > 0) {
+//								res = res == null ? details : res + "\n" + details;
+//							}
+//						}
 						return res;
 					}
 				}
