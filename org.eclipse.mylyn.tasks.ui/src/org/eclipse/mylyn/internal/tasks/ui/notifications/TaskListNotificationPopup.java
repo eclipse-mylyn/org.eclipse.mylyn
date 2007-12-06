@@ -50,14 +50,14 @@ public class TaskListNotificationPopup extends AbstractNotificationPopup {
 	protected void createContentArea(Composite parent) {
 		int count = 0;
 		for (final AbstractNotification notification : notifications) {
-			Composite notificationComposite = new Composite(parent, SWT.NULL);
+			Composite notificationComposite = new Composite(parent, SWT.NO_FOCUS);
 			notificationComposite.setLayout(new GridLayout(2, false));
 			notificationComposite.setBackground(parent.getBackground());
 			
 			if (count < NUM_NOTIFICATIONS_TO_DISPLAY) {
-				Label notificationLabelIcon = new Label(notificationComposite, SWT.NONE);
+				Label notificationLabelIcon = new Label(notificationComposite, SWT.NO_FOCUS);
 				notificationLabelIcon.setImage(notification.getNotificationKindImage());
-				final TaskListHyperlink itemLink = new TaskListHyperlink(notificationComposite, SWT.BEGINNING | SWT.WRAP);
+				final TaskListHyperlink itemLink = new TaskListHyperlink(notificationComposite, SWT.BEGINNING | SWT.WRAP | SWT.NO_FOCUS);
 				
 				itemLink.setText(notification.getLabel());
 				itemLink.setImage(notification.getNotificationImage());
@@ -82,14 +82,14 @@ public class TaskListNotificationPopup extends AbstractNotificationPopup {
 					descriptionText = notification.getDescription();
 				}
 				if (descriptionText != null && !descriptionText.trim().equals("")) {
-					Label descriptionLabel = new Label(notificationComposite, SWT.NULL);
+					Label descriptionLabel = new Label(notificationComposite, SWT.NO_FOCUS);
 					descriptionLabel.setText(descriptionText);
 					descriptionLabel.setBackground(parent.getBackground());
 					GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(descriptionLabel);
 				}
 			} else {
 				int numNotificationsRemain = notifications.size() - count;
-				TaskListHyperlink remainingHyperlink = new TaskListHyperlink(notificationComposite, SWT.NONE);
+				TaskListHyperlink remainingHyperlink = new TaskListHyperlink(notificationComposite, SWT.NO_FOCUS);
 				remainingHyperlink.setBackground(parent.getBackground());
 				
 				remainingHyperlink.setText(numNotificationsRemain + " " + NOTIFICATIONS_HIDDEN);

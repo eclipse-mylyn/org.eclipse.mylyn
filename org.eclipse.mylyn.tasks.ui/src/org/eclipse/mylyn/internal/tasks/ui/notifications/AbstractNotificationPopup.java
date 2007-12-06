@@ -68,6 +68,8 @@ public abstract class AbstractNotificationPopup extends Window {
 
 	private Region lastUsedRegion;
 
+	private Image lastUsedBgImage;
+	
 	private Job closeJob = new Job(LABEL_JOB_CLOSE) {
 
 		@Override
@@ -115,7 +117,7 @@ public abstract class AbstractNotificationPopup extends Window {
 	};
 
 	public AbstractNotificationPopup(Display display) {
-		this(display, SWT.NO_TRIM | SWT.ON_TOP);
+		this(display, SWT.NO_TRIM | SWT.ON_TOP | SWT.NO_FOCUS);
 	}
 
 	public AbstractNotificationPopup(Display display, int style) {
@@ -252,7 +254,7 @@ public abstract class AbstractNotificationPopup extends Window {
 		constrainShellSize();
 
 		SwtUtil.setAlpha(shell, 0);
-		shell.open();
+		shell.setVisible(true);
 		SwtUtil.fade(shell, true, 15, 80);
 
 		closeJob.setSystem(true);
@@ -289,10 +291,11 @@ public abstract class AbstractNotificationPopup extends Window {
 
 		titleCircle.setLayout(layout);
 		titleCircle.addControlListener(new ControlAdapter() {
+
 			public void controlResized(ControlEvent e) {
 				Rectangle clArea = titleCircle.getClientArea();
-				Image newBGImage = new Image(titleCircle.getDisplay(), clArea.width, clArea.height);
-				GC gc = new GC(newBGImage);
+				lastUsedBgImage = new Image(titleCircle.getDisplay(), clArea.width, clArea.height);
+				GC gc = new GC(lastUsedBgImage);
 
 				/* Gradient */
 				drawGradient(gc, clArea);
@@ -303,10 +306,11 @@ public abstract class AbstractNotificationPopup extends Window {
 				gc.dispose();
 
 				Image oldBGImage = titleCircle.getBackgroundImage();
-				titleCircle.setBackgroundImage(newBGImage);
+				titleCircle.setBackgroundImage(lastUsedBgImage);
 
-				if (oldBGImage != null)
+				if (oldBGImage != null) {
 					oldBGImage.dispose();
+				}
 			}
 
 			private void drawGradient(GC gc, Rectangle clArea) {
@@ -408,6 +412,9 @@ public abstract class AbstractNotificationPopup extends Window {
 		resources.dispose();
 		if (lastUsedRegion != null) {
 			lastUsedRegion.dispose();
+		}
+		if (lastUsedBgImage != null && !lastUsedBgImage.isDisposed()) {
+			lastUsedBgImage.dispose();
 		}
 		return super.close();
 	}
