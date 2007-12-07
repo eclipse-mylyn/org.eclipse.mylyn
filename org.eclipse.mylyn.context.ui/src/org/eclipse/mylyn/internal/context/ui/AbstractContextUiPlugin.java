@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.internal.context.ui;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -33,18 +34,22 @@ import org.osgi.framework.BundleContext;
  */
 public abstract class AbstractContextUiPlugin extends AbstractUIPlugin implements IInteractionContextListener {
 
-	private boolean lazyStartComplete = false;
+	private AtomicBoolean lazyStarted = new AtomicBoolean(false);
 
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		ContextCorePlugin.getContextManager().addListener(this);
+		
+		if (ContextCorePlugin.getContextManager().isContextActive()) {
+			initLazyStart();
+		}
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
-		if (lazyStartComplete) {
+		if (lazyStarted.get()) {
 			lazyStop();
 		}
 		if (TasksUiPlugin.getTaskListManager() != null) {
@@ -63,7 +68,11 @@ public abstract class AbstractContextUiPlugin extends AbstractUIPlugin implement
 	protected abstract void lazyStop();
 
 	public void contextActivated(IInteractionContext context) {
-		if (!lazyStartComplete) {
+		initLazyStart();
+	}
+
+	private void initLazyStart() {
+		if (!lazyStarted.getAndSet(true)) {
 			IWorkbench workbench = PlatformUI.getWorkbench();
 			try {
 				lazyStart(workbench);
@@ -74,7 +83,6 @@ public abstract class AbstractContextUiPlugin extends AbstractUIPlugin implement
 			if (TasksUiPlugin.getTaskListManager() != null) {
 				ContextCorePlugin.getContextManager().removeListener(this);
 			}
-			lazyStartComplete = true;
 		}
 	}
 
