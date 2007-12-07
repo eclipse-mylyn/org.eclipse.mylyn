@@ -21,6 +21,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextListener;
+import org.eclipse.mylyn.context.core.IInteractionContextListener2;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
 import org.eclipse.mylyn.internal.context.ui.actions.ContextAttachAction;
@@ -81,7 +82,7 @@ public class ContextEditorFormPage extends FormPage {
 
 	private AbstractTask task;
 
-	private IInteractionContextListener CONTEXT_LISTENER = new IInteractionContextListener() {
+	private IInteractionContextListener CONTEXT_LISTENER = new IInteractionContextListener2() {
 
 		private void refresh() {
 			if (commonViewer != null && !commonViewer.getTree().isDisposed()) {
@@ -106,6 +107,10 @@ public class ContextEditorFormPage extends FormPage {
 			refresh();
 		}
 
+		public void elementsDeleted(List<IInteractionElement> element) {
+			refresh();
+		}
+		
 		public void interestChanged(List<IInteractionElement> elements) {
 			refresh();
 		}

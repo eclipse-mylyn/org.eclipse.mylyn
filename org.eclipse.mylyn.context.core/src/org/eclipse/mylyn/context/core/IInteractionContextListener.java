@@ -16,6 +16,7 @@ import java.util.List;
  * API-3.0: clean-up interface, e.g. make deletion take a list, consider removing relations stuff
  * 
  * @author Mik Kersten
+ * @author Shawn Minto
  * @since 2.0
  */
 public interface IInteractionContextListener {
@@ -53,6 +54,11 @@ public interface IInteractionContextListener {
 	 */
 	public void landmarkRemoved(IInteractionElement element);
 
+	/**
+	 * 
+	 * @see IInteractionContextListener2.elementsDeleted(List<IInteractionElement> elements)
+	 */
+	@Deprecated
 	public void elementDeleted(IInteractionElement element);
 
 	public void relationsChanged(IInteractionElement element);

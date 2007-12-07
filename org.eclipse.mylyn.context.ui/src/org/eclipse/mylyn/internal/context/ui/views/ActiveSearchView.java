@@ -30,6 +30,7 @@ import org.eclipse.mylyn.context.core.AbstractRelationProvider;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextListener;
+import org.eclipse.mylyn.context.core.IInteractionContextListener2;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
@@ -86,7 +87,7 @@ public class ActiveSearchView extends ViewPart {
 	 */
 	private boolean syncExecForTesting = true;
 
-	private final IInteractionContextListener REFRESH_UPDATE_LISTENER = new IInteractionContextListener() {
+	private final IInteractionContextListener REFRESH_UPDATE_LISTENER = new IInteractionContextListener2() {
 
 		public void interestChanged(List<IInteractionElement> nodes) {
 			refresh(nodes.get(nodes.size() - 1), false);
@@ -118,6 +119,10 @@ public class ActiveSearchView extends ViewPart {
 		}
 
 		public void elementDeleted(IInteractionElement node) {
+			refresh(null, true);
+		}
+
+		public void elementsDeleted(List<IInteractionElement> elements) {
 			refresh(null, true);
 		}
 

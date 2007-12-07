@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionContext;
-import org.eclipse.mylyn.context.core.IInteractionContextListener;
+import org.eclipse.mylyn.context.core.IInteractionContextListener2;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
@@ -56,7 +56,7 @@ import org.eclipse.ui.internal.WorkbenchPage;
  * @author Mik Kersten
  * @author Shawn Minto
  */
-public class ContextEditorManager implements IInteractionContextListener {
+public class ContextEditorManager implements IInteractionContextListener2 {
 
 	private static final String PREFS_PREFIX = "editors.task.";
 
@@ -309,6 +309,12 @@ public class ContextEditorManager implements IInteractionContextListener {
 
 	public void elementDeleted(IInteractionElement element) {
 		closeEditor(element, true);
+	}
+	
+	public void elementsDeleted(List<IInteractionElement> elements) {
+		for(IInteractionElement element: elements){
+			closeEditor(element, true);
+		}
 	}
 
 	private void closeEditor(IInteractionElement element, boolean force) {

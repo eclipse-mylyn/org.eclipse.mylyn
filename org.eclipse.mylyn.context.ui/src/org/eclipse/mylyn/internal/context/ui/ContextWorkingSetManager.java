@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionContext;
-import org.eclipse.mylyn.context.core.IInteractionContextListener;
+import org.eclipse.mylyn.context.core.IInteractionContextListener2;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkingSet;
@@ -27,7 +27,7 @@ import org.eclipse.ui.IWorkingSetUpdater;
  * @author Shawn Minto
  * @author Mik Kersten
  */
-public class ContextWorkingSetManager implements IWorkingSetUpdater, IInteractionContextListener {
+public class ContextWorkingSetManager implements IWorkingSetUpdater, IInteractionContextListener2 {
 
 	private static ContextWorkingSetManager INSTANCE = new ContextWorkingSetManager();
 
@@ -89,6 +89,10 @@ public class ContextWorkingSetManager implements IWorkingSetUpdater, IInteractio
 		updateWorkingSet();
 	}
 
+	public void elementsDeleted(List<IInteractionElement> elements) {
+		updateWorkingSet();
+	}
+	
 	public void landmarkAdded(IInteractionElement node) {
 		updateWorkingSet();
 
@@ -144,4 +148,6 @@ public class ContextWorkingSetManager implements IWorkingSetUpdater, IInteractio
 	public static ContextWorkingSetManager getDefault() {
 		return INSTANCE;
 	}
+
+
 }

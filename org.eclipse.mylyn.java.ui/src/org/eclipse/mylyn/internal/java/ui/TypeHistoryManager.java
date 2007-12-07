@@ -18,14 +18,15 @@ import org.eclipse.jdt.core.search.TypeNameMatch;
 import org.eclipse.jdt.internal.core.search.JavaSearchTypeNameMatch;
 import org.eclipse.jdt.internal.corext.util.OpenTypeHistory;
 import org.eclipse.mylyn.context.core.IInteractionContext;
-import org.eclipse.mylyn.context.core.IInteractionContextListener;
+import org.eclipse.mylyn.context.core.IInteractionContextListener2;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 
 /**
  * @author Mik Kersten
+ * @author Shawn Minto
  */
-public class TypeHistoryManager implements IInteractionContextListener {
+public class TypeHistoryManager implements IInteractionContextListener2 {
 
 //	private TypeInfoFactory factory = new TypeInfoFactory();
 
@@ -100,6 +101,12 @@ public class TypeHistoryManager implements IInteractionContextListener {
 
 	public void elementDeleted(IInteractionElement node) {
 		updateTypeHistory(node, false);
+	}
+	
+	public void elementsDeleted(List<IInteractionElement> elements) {
+		for(IInteractionElement element: elements){
+			updateTypeHistory(element, false);
+		}
 	}
 
 	public void landmarkAdded(IInteractionElement node) {

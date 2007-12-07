@@ -23,7 +23,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionContext;
-import org.eclipse.mylyn.context.core.IInteractionContextListener;
+import org.eclipse.mylyn.context.core.IInteractionContextListener2;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
@@ -35,8 +35,9 @@ import org.eclipse.ui.PlatformUI;
  * Encapsulates the element refresh and expansion state policy for all viewers focused on context.
  * 
  * @author Mik Kersten
+ * @author Shawn Minto
  */
-public class FocusedViewerManager implements IInteractionContextListener, ISelectionListener {
+public class FocusedViewerManager implements IInteractionContextListener2, ISelectionListener {
 
 	private CopyOnWriteArrayList<StructuredViewer> managedViewers = new CopyOnWriteArrayList<StructuredViewer>();
 
@@ -227,6 +228,13 @@ public class FocusedViewerManager implements IInteractionContextListener, ISelec
 			toRefresh.add(parent);
 			refreshViewers(toRefresh, false);
 		}
+	}
+	
+	/**
+      * TODO: consider making this work per-element and parent
+      */ 
+	public void elementsDeleted(List<IInteractionElement> elements) {
+		refreshViewers();
 	}
 
 	public void landmarkAdded(IInteractionElement node) {

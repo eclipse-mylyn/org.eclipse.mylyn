@@ -17,6 +17,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
@@ -34,6 +35,7 @@ import org.eclipse.mylyn.context.core.AbstractRelationProvider;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextListener;
+import org.eclipse.mylyn.context.core.IInteractionContextListener2;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
@@ -384,6 +386,22 @@ public class InteractionContextManager {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
+	private void notifyElementsDeleted(List<IInteractionElement> interestDelta) {
+		if (!interestDelta.isEmpty()) {
+			for (IInteractionContextListener listener : listeners) {
+				if (listener instanceof IInteractionContextListener2) {
+					((IInteractionContextListener2) listener).elementsDeleted(interestDelta);
+				} else {
+					// need this for legacy support
+					for (IInteractionElement element : interestDelta) {
+						listener.elementDeleted(element);
+					}
+				}
+			}
+		}
+	}
+
 	protected boolean isInterestDelta(float previousInterest, boolean previouslyPredicted,
 			boolean previouslyPropagated, IInteractionElement node) {
 		float currentInterest = node.getInterest().getValue();
@@ -462,19 +480,22 @@ public class InteractionContextManager {
 			if (parentElement != null && parentElement.getInterest() != null) {
 				parentPreviousInterest = parentElement.getInterest().getValue();
 			}
-			
+
 			// NOTE: if element marked as landmark, this propagates the landmark value to all parents
 			float increment = interactionContext.getScaling().getInteresting();
 			if (parentPreviousInterest < node.getInterest().getValue()) {
 				increment = node.getInterest().getValue() - parentPreviousInterest;
 				InteractionEvent propagationEvent = new InteractionEvent(InteractionEvent.Kind.PROPAGATION,
-						parentContentType, parentHandle, SOURCE_ID_MODEL_PROPAGATION, CONTAINMENT_PROPAGATION_ID, increment);
+						parentContentType, parentHandle, SOURCE_ID_MODEL_PROPAGATION, CONTAINMENT_PROPAGATION_ID,
+						increment);
 				parentElement = addInteractionEvent(interactionContext, propagationEvent);
 			}
 
 			// NOTE: this might be redundant
-			if (parentElement != null && kind.isUserEvent() && parentElement.getInterest().getValue() < commonContextScaling.getInteresting()) {
-				float parentOffset = commonContextScaling.getInteresting() - parentElement.getInterest().getValue() + increment;
+			if (parentElement != null && kind.isUserEvent()
+					&& parentElement.getInterest().getValue() < commonContextScaling.getInteresting()) {
+				float parentOffset = commonContextScaling.getInteresting() - parentElement.getInterest().getValue()
+						+ increment;
 				addInteractionEvent(interactionContext, new InteractionEvent(InteractionEvent.Kind.MANIPULATION,
 						parentElement.getContentType(), parentElement.getHandleIdentifier(),
 						SOURCE_ID_DECAY_CORRECTION, parentOffset));
@@ -485,8 +506,8 @@ public class InteractionContextManager {
 							parentElement.getInterest().isPropagated(), parentElement)) {
 				interestDelta.add(0, parentElement);
 			}
-			propegateInterestToParents(interactionContext, kind, parentElement, parentPreviousInterest, decayOffset, level,
-					interestDelta);
+			propegateInterestToParents(interactionContext, kind, parentElement, parentPreviousInterest, decayOffset,
+					level, interestDelta);
 		}
 	}
 
@@ -977,6 +998,8 @@ public class InteractionContextManager {
 
 	/**
 	 * Manipulates interest for the active context.
+	 * 
+	 * API-3.0: revise or remove this and it's helper
 	 */
 	public boolean manipulateInterestForElement(IInteractionElement element, boolean increment, boolean forceLandmark,
 			boolean preserveUninteresting, String sourceId) {
@@ -993,6 +1016,22 @@ public class InteractionContextManager {
 	 */
 	public boolean manipulateInterestForElement(IInteractionElement element, boolean increment, boolean forceLandmark,
 			boolean preserveUninteresting, String sourceId, IInteractionContext context) {
+		Set<IInteractionElement> changedElements = new HashSet<IInteractionElement>();
+		boolean manipulated = manipulateInterestForElementHelper(element, increment, forceLandmark,
+				preserveUninteresting, sourceId, context, changedElements);
+		if (manipulated) {
+			if (preserveUninteresting || increment) {
+				notifyInterestDelta(new ArrayList<IInteractionElement>(changedElements));
+			} else {
+				notifyElementsDeleted(new ArrayList<IInteractionElement>(changedElements));
+			}
+		}
+		return manipulated;
+	}
+
+	private boolean manipulateInterestForElementHelper(IInteractionElement element, boolean increment,
+			boolean forceLandmark, boolean preserveUninteresting, String sourceId, IInteractionContext context,
+			Set<IInteractionElement> changedElements) {
 		if (element == null || context == null) {
 			return false;
 		}
@@ -1015,8 +1054,8 @@ public class InteractionContextManager {
 					IInteractionElement childElement = context.get(childHandle);
 					if (childElement != null /*&& childElement.getInterest().isInteresting()*/
 							&& !childElement.equals(element)) {
-						manipulateInterestForElement(childElement, increment, forceLandmark, preserveUninteresting,
-								sourceId, context);
+						manipulateInterestForElementHelper(childElement, increment, forceLandmark,
+								preserveUninteresting, sourceId, context, changedElements);
 					}
 				}
 			}
@@ -1036,8 +1075,10 @@ public class InteractionContextManager {
 			InteractionEvent interactionEvent = new InteractionEvent(InteractionEvent.Kind.MANIPULATION,
 					element.getContentType(), element.getHandleIdentifier(), sourceId, changeValue);
 			List<IInteractionElement> interestDelta = internalProcessInteractionEvent(interactionEvent, context, true);
-			notifyInterestDelta(interestDelta);
+			changedElements.addAll(interestDelta);
+//			notifyInterestDelta(interestDelta);
 		} else { //if (changeValue < context.getScaling().getInteresting()) {
+			changedElements.add(element);
 			delete(element, context);
 		}
 		return true;
@@ -1096,6 +1137,7 @@ public class InteractionContextManager {
 
 	public void delete(IInteractionElement element) {
 		delete(element, getActiveContext());
+		notifyElementsDeleted(Arrays.asList(new IInteractionElement[] { element }));
 	}
 
 	private void delete(IInteractionElement element, IInteractionContext context) {
@@ -1103,9 +1145,6 @@ public class InteractionContextManager {
 			return;
 		}
 		context.delete(element);
-		for (IInteractionContextListener listener : listeners) {
-			listener.elementDeleted(element);
-		}
 	}
 
 	/**
