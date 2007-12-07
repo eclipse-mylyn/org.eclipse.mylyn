@@ -15,9 +15,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.ParseException;
+import java.util.Iterator;
+import java.util.Locale;
 
 import javax.security.auth.login.LoginException;
 
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaLanguageSettings;
 import org.eclipse.mylyn.web.core.HtmlStreamTokenizer;
 import org.eclipse.mylyn.web.core.HtmlTag;
 import org.eclipse.mylyn.web.core.HtmlStreamTokenizer.Token;
@@ -44,7 +47,8 @@ public class BugzillaTaskHistoryParser {
 	 * 
 	 * @return A BugActivity object containing the activity history
 	 */
-	public TaskHistory retrieveHistory() throws IOException, ParseException, LoginException {
+	public TaskHistory retrieveHistory(BugzillaLanguageSettings bugzillaLanguageSettings) throws IOException,
+			ParseException, LoginException {
 		TaskHistory activity = new TaskHistory();
 		HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(new BufferedReader(new InputStreamReader(inStream,
 				characterEncoding)), null);
@@ -72,10 +76,15 @@ public class BugzillaTaskHistoryParser {
 					// check if we may have a problem with login by looking
 					// at
 					// the title of the page
-					if ((title.indexOf("login") != -1
-							|| (title.indexOf("invalid") != -1 && title.indexOf("password") != -1)
-							|| title.indexOf("check e-mail") != -1 || title.indexOf("error") != -1))
+					boolean found = false;
+					for (Iterator<String> iterator = bugzillaLanguageSettings.getResponseForCommand(
+							BugzillaLanguageSettings.COMMAND_BAD_LOGIN).iterator(); iterator.hasNext() && !found;) {
+						String value = iterator.next().toLowerCase(Locale.ENGLISH);
+						found = found || title.indexOf(value) != -1;
+					}
+					if (found) {
 						possibleBadLogin = true;
+					}
 					isTitle = false;
 					title = "";
 				}

@@ -1161,7 +1161,7 @@ public class BugzillaClient {
 				BugzillaTaskHistoryParser parser = new BugzillaTaskHistoryParser(
 						method.getResponseBodyAsUnzippedStream(), characterEncoding);
 				try {
-					return parser.retrieveHistory();
+					return parser.retrieveHistory(bugzillaLanguageSettings);
 				} catch (LoginException e) {
 					authenticated = false;
 					throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
