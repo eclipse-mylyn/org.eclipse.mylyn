@@ -80,6 +80,8 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 
 	private static final String[] SHOW_IN_TARGETS = new String[] { IPageLayout.ID_RES_NAV };
 
+	private Action groupByAction;
+	
 	private static final IShowInTargetList SHOW_IN_TARGET_LIST = new IShowInTargetList() {
 		public String[] getShowInTargetIds() {
 			return SHOW_IN_TARGETS;
@@ -96,6 +98,26 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 
 		openInEditorAction = new OpenSearchResultAction("Open in Editor", this);
 		addTaskListAction = new CreateQueryFromSearchAction("Create Query from Search...", this);
+		
+		groupByAction = new Action(){
+			
+			@Override
+			public String getText() {
+				return "Group By Owner";	
+			}
+						
+			@Override
+			public void run() {
+				if(((SearchResultTreeContentProvider)getViewer().getContentProvider()).getGroupByOwner()){
+					((SearchResultTreeContentProvider)getViewer().getContentProvider()).setGroupByOwner(false);
+					setChecked(false);
+				} else {
+					((SearchResultTreeContentProvider)getViewer().getContentProvider()).setGroupByOwner(true);
+					setChecked(true);
+				}
+				
+			}
+		};
 	}
 
 	@Override
@@ -246,6 +268,8 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 
 		// Add the new context menu items
 		menuManager.appendToGroup(IContextMenuConstants.GROUP_VIEWER_SETUP, sortMenuManager);
+		menuManager.appendToGroup(IContextMenuConstants.GROUP_VIEWER_SETUP, groupByAction);
+		
 		menuManager.appendToGroup(IContextMenuConstants.GROUP_OPEN, openInEditorAction);
 		menuManager.appendToGroup(IContextMenuConstants.GROUP_OPEN, addTaskListAction);
 
