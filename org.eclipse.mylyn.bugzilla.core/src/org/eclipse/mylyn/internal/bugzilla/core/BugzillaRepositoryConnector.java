@@ -253,7 +253,14 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	public boolean updateTaskFromQueryHit(TaskRepository repository, AbstractTask existingTask, AbstractTask newTask) {
 		// these properties are not provided by Bugzilla queries
 		newTask.setCompleted(existingTask.isCompleted());
-//		newTask.setCompletionDate(existingTask.getCompletionDate());
+		//	newTask.setCompletionDate(existingTask.getCompletionDate());
+
+		// Owner attribute not previously
+		if (existingTask.getOwner() == null || existingTask.getOwner().equals("")) {
+			if (hasTaskPropertyChanged(existingTask.getOwner(), newTask.getOwner())) {
+				existingTask.setOwner(newTask.getOwner());
+			}
+		}
 
 		boolean changed = super.updateTaskFromQueryHit(repository, existingTask, newTask);
 
