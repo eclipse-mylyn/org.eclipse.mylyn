@@ -82,7 +82,7 @@ public class TaskListNotificationManagerTest extends TestCase {
 		notificationManager.collectNotifications();
 		TaskListNotification notification = new TaskListNotification(task);
 		notification.setDescription("Unread task");
-		assertTrue(notificationManager.getNotifications().contains(new TaskListNotification(task)));
+		assertTrue(notificationManager.getNotifications().contains(notification));
 		task = TasksUiPlugin.getTaskListManager().getTaskList().getTask("https://bugs.eclipse.org/bugs-142891");
 		assertNotNull(task);
 		assertTrue(task.isNotified());
