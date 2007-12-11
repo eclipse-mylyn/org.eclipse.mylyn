@@ -407,7 +407,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		super.start(context);
 		// NOTE: startup order is very sensitive
 		try {
-			StatusHandler.addStatusHandler(new RepositoryAwareStatusHandler());
+			StatusHandler.setDefaultStatusHandler(new RepositoryAwareStatusHandler());
 			WebClientUtil.setLoggingEnabled(DEBUG_HTTPCLIENT);
 			initializeDefaultPreferences(getPreferenceStore());
 			taskListWriter = new TaskListWriter();
