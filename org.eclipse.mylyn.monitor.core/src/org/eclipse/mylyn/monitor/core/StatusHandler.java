@@ -22,6 +22,7 @@ import org.eclipse.mylyn.internal.monitor.core.util.IStatusHandler;
  * NOTE: very likely to be removed for 3.0 due to the new workbench StatusManager API
  * 
  * @author Mik Kersten
+ * @author Shawn Minto
  */
 public class StatusHandler {
 
@@ -29,12 +30,52 @@ public class StatusHandler {
 
 	private static Set<IStatusHandler> handlers = new HashSet<IStatusHandler>();
 
+	private static IStatusHandler defaultHandler;
+
+	/**
+	 * @since 2.2
+	 */
+	public static IStatusHandler getDefaultStatusHandler() {
+		return defaultHandler;
+	}
+
+	/**
+	 * @since 2.2
+	 */
+	public static Set<IStatusHandler> getStatusHandlers() {
+		return handlers;
+	}
+
+	/**
+	 * @since 2.2
+	 */
+	public static void setDefaultStatusHandler(IStatusHandler handler) {
+		defaultHandler = handler;
+		handlers.add(handler);
+	}
+
 	public static void addStatusHandler(IStatusHandler handler) {
+		if (handler == null) {
+			return;
+		}
+		if (handler != defaultHandler) {
+			internalRemoveStatusHandler(defaultHandler, false);
+		}
 		handlers.add(handler);
 	}
 
 	public static void removeStatusHandler(IStatusHandler handler) {
+		internalRemoveStatusHandler(handler, true);
+	}
+
+	private static void internalRemoveStatusHandler(IStatusHandler handler, boolean restoreDefault) {
+		if (handler == null) {
+			return;
+		}
 		handlers.remove(handler);
+		if (restoreDefault && handlers.size() == 0) {
+			addStatusHandler(defaultHandler);
+		}
 	}
 
 	/**
@@ -55,8 +96,9 @@ public class StatusHandler {
 
 	public static void log(String message, Object source) {
 		message = "Mylyn: " + message;
-		if (source != null)
+		if (source != null) {
 			message += ", source: " + source.getClass().getName();
+		}
 
 		log(new Status(IStatus.INFO, ID_PLUGIN, IStatus.OK, message, null));
 	}
@@ -78,8 +120,9 @@ public class StatusHandler {
 	 *            if true dialog box will be popped up
 	 */
 	public static void fail(Throwable throwable, String message, boolean informUser, int severity) {
-		if (message == null)
+		if (message == null) {
 			message = "no message";
+		}
 		message += "\n";
 
 		final Status status = new Status(severity, ID_PLUGIN, IStatus.OK, message, throwable);
