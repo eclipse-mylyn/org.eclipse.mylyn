@@ -87,13 +87,13 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 	private IDialogSettings fDialogSettings;
 
-	private static final String[] patternOperationText = { "all words", "any word", "regexp" };
+	private static final String[] patternOperationText = { "all words", "any word", "regexp", "notregexp" };
 
-	private static final String[] patternOperationValues = { "allwordssubstr", "anywordssubstr", "regexp" };
+	private static final String[] patternOperationValues = { "allwordssubstr", "anywordssubstr", "regexp", "notregexp" };
 
-	private static final String[] emailOperationText = { "substring", "exact", "regexp" };
+	private static final String[] emailOperationText = { "substring", "exact", "regexp", "notregexp" };
 
-	private static final String[] emailOperationValues = { "substring", "exact", "regexp" };
+	private static final String[] emailOperationValues = { "substring", "exact", "regexp", "notregexp" };
 
 	private static final String[] keywordOperationText = { "all", "any", "none" };
 
