@@ -440,13 +440,18 @@ public class TaskActivityManager {
 	}
 
 	public void setScheduledFor(AbstractTask task, Date reminderDate) {
+		// API-3.0: remove check
 		if (task == null)
 			return;
+		
+		if (reminderDate != null && !reminderDate.equals(task.getScheduledForDate())) {
+			task.setReminded(false);
+		}
+
 		task.setScheduledForDate(reminderDate);
-		task.setReminded(false);
 		if (reminderDate == null) {
 			removeScheduledTask(task);
-		} else {
+		} else {		
 			removeScheduledTask(task);
 			addScheduledTask(task);
 		}

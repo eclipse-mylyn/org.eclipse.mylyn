@@ -663,7 +663,6 @@ public class TaskPlanningEditor extends TaskFormPage {
 		datePicker.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		datePicker.addPickerSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent arg0) {
-				task.setReminded(false);
 				TaskPlanningEditor.this.markDirty(true);
 			}
 
