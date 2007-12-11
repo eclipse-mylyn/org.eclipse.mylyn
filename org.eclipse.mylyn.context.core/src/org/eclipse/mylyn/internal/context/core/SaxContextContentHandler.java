@@ -9,7 +9,9 @@
 package org.eclipse.mylyn.internal.context.core;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import org.eclipse.mylyn.internal.monitor.core.util.XmlStringConverter;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
@@ -33,14 +35,14 @@ public class SaxContextContentHandler extends DefaultHandler {
 
 	private InteractionContext context;
 
-	private InteractionContextScaling contextScaling;
+	private final InteractionContextScaling contextScaling;
 	
-	private String contextHandleIdentifier;
+	private final String contextHandleIdentifier;
 
 	static final String ATTRIBUTE_INTERACTION_EVENT = "InteractionEvent";
 
 	static final String ATTRIBUTE_CONTENT = "Content";
-	
+
 	public SaxContextContentHandler(String contextHandleIdentifier, InteractionContextScaling contextScaling) {
 		this.contextHandleIdentifier = contextHandleIdentifier;
 		this.contextScaling = contextScaling;
@@ -72,6 +74,7 @@ public class SaxContextContentHandler extends DefaultHandler {
 		}
 	}
 
+	// API-3.0: make this method non-static and private?
 	public static InteractionEvent createEventFromAttributes(Attributes attributes) throws ParseException {
 		String delta = XmlStringConverter.convertXmlToString(attributes.getValue(InteractionContextExternalizer.ATR_DELTA));
 		String endDate = attributes.getValue(InteractionContextExternalizer.ATR_END_DATE);
@@ -83,8 +86,9 @@ public class SaxContextContentHandler extends DefaultHandler {
 		String structureHandle = XmlStringConverter.convertXmlToString(attributes.getValue(InteractionContextExternalizer.ATR_STRUCTURE_HANDLE));
 		String structureKind = XmlStringConverter.convertXmlToString(attributes.getValue(InteractionContextExternalizer.ATR_STRUCTURE_KIND));
 
-		Date dStartDate = InteractionContextExternalizer.DATE_FORMAT.parse(startDate);
-		Date dEndDate = InteractionContextExternalizer.DATE_FORMAT.parse(endDate);
+		SimpleDateFormat dateFormat = new SimpleDateFormat(InteractionContextExternalizer.DATE_FORMAT_STRING, Locale.ENGLISH);
+		Date dStartDate = dateFormat.parse(startDate);
+		Date dEndDate = dateFormat.parse(endDate);
 		float iInterest = Float.parseFloat(interest);
 
 		InteractionEvent ie = new InteractionEvent(Kind.fromString(kind), structureKind, structureHandle, originId,

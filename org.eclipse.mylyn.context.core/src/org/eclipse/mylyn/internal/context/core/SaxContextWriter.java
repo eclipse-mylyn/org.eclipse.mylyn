@@ -10,6 +10,8 @@ package org.eclipse.mylyn.internal.context.core;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -169,14 +171,17 @@ public class SaxContextWriter implements IInteractionContextWriter {
 		}
 	}
 
+	// API-3.0: make this method non-static and private?
 	public static Attributes createEventAttributes(InteractionEvent ie) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat(InteractionContextExternalizer.DATE_FORMAT_STRING, Locale.ENGLISH);
+		
 		AttributesImpl ieAttributes = new AttributesImpl();
 
 		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_DELTA,
 				InteractionContextExternalizer.ATR_DELTA, "", XmlStringConverter.convertToXmlString(ie.getDelta()));
 		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_END_DATE,
 				InteractionContextExternalizer.ATR_END_DATE, "",
-				InteractionContextExternalizer.DATE_FORMAT.format(ie.getEndDate()));
+				dateFormat.format(ie.getEndDate()));
 		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_INTEREST,
 				InteractionContextExternalizer.ATR_INTEREST, "", Float.toString(ie.getInterestContribution()));
 		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_KIND, InteractionContextExternalizer.ATR_KIND,
@@ -189,7 +194,7 @@ public class SaxContextWriter implements IInteractionContextWriter {
 				XmlStringConverter.convertToXmlString(ie.getOriginId()));
 		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_START_DATE,
 				InteractionContextExternalizer.ATR_START_DATE, "",
-				InteractionContextExternalizer.DATE_FORMAT.format(ie.getDate()));
+				dateFormat.format(ie.getDate()));
 		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_STRUCTURE_HANDLE,
 				InteractionContextExternalizer.ATR_STRUCTURE_HANDLE, "",
 				XmlStringConverter.convertToXmlString(ie.getStructureHandle()));

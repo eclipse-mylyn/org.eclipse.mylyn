@@ -14,8 +14,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -55,9 +53,7 @@ public class InteractionContextExternalizer {
 
 	public static final String ATR_VERSION = "Version";
 
-	private static final String DATE_FORMAT_STRING = "yyyy-MM-dd HH:mm:ss.S z";
-
-	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DATE_FORMAT_STRING, Locale.ENGLISH);
+	static final String DATE_FORMAT_STRING = "yyyy-MM-dd HH:mm:ss.S z";
 
 	public void writeContextToXml(InteractionContext context, File file) {
 		writeContextToXml(context, file, new SaxContextWriter());
@@ -67,8 +63,9 @@ public class InteractionContextExternalizer {
 	 * For testing
 	 */
 	public void writeContextToXml(InteractionContext context, File file, IInteractionContextWriter writer) {
-		if (context.getInteractionHistory().isEmpty())
+		if (context.getInteractionHistory().isEmpty()) {
 			return;
+		}
 
 		FileOutputStream fileOutputStream = null;
 		ZipOutputStream outputStream = null;
