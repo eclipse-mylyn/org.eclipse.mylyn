@@ -251,32 +251,31 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public boolean updateTaskFromQueryHit(TaskRepository repository, AbstractTask existingTask, AbstractTask newTask) {
-		// these properties are not provided by Bugzilla queries
-		newTask.setCompleted(existingTask.isCompleted());
-		//	newTask.setCompletionDate(existingTask.getCompletionDate());
-
-		// Owner attribute not previously
-		if (hasTaskPropertyChanged(existingTask.getOwner(), newTask.getOwner())) {
-			existingTask.setOwner(newTask.getOwner());
-		}
-
-		boolean changed = super.updateTaskFromQueryHit(repository, existingTask, newTask);
-
-		if (existingTask instanceof BugzillaTask && newTask instanceof BugzillaTask) {
-			BugzillaTask existingBugzillaTask = (BugzillaTask) existingTask;
-			BugzillaTask newBugzillaTask = (BugzillaTask) newTask;
-
-			if (hasTaskPropertyChanged(existingBugzillaTask.getSeverity(), newBugzillaTask.getSeverity())) {
-				existingBugzillaTask.setSeverity(newBugzillaTask.getSeverity());
-				changed = true;
-			}
-			if (hasTaskPropertyChanged(existingBugzillaTask.getProduct(), newBugzillaTask.getProduct())) {
-				existingBugzillaTask.setProduct(newBugzillaTask.getProduct());
-				changed = true;
-			}
-		}
-
-		return changed;
+//		// these properties are not provided by Bugzilla queries
+//		newTask.setCompleted(existingTask.isCompleted());
+//		//	newTask.setCompletionDate(existingTask.getCompletionDate());
+//
+//		// Owner attribute not previously 
+//		if (hasTaskPropertyChanged(existingTask.getOwner(), newTask.getOwner())) {
+//			existingTask.setOwner(newTask.getOwner());
+//		}
+//
+//		boolean changed = super.updateTaskFromQueryHit(repository, existingTask, newTask);
+//
+//		if (existingTask instanceof BugzillaTask && newTask instanceof BugzillaTask) {
+//			BugzillaTask existingBugzillaTask = (BugzillaTask) existingTask;
+//			BugzillaTask newBugzillaTask = (BugzillaTask) newTask;
+//
+//			if (hasTaskPropertyChanged(existingBugzillaTask.getSeverity(), newBugzillaTask.getSeverity())) {
+//				existingBugzillaTask.setSeverity(newBugzillaTask.getSeverity());
+//				changed = true;
+//			}
+//			if (hasTaskPropertyChanged(existingBugzillaTask.getProduct(), newBugzillaTask.getProduct())) {
+//				existingBugzillaTask.setProduct(newBugzillaTask.getProduct());
+//				changed = true;
+//			}
+//		}
+		return false;
 	}
 
 	@Override
