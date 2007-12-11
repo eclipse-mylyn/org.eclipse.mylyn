@@ -197,6 +197,9 @@ class CustomTaskListDecorationDrawer implements Listener {
 		}
 	}
 
+	/**
+	 * NOTE: performance implication of looking down children
+	 */
 	private boolean hasDescendantIncoming(AbstractTaskContainer container) {
 		Set<AbstractTask> children = container.getChildren();
 		if (children == null) {
