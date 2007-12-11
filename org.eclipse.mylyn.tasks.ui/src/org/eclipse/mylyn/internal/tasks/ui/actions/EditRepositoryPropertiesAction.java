@@ -8,16 +8,22 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.ui.IViewActionDelegate;
+import org.eclipse.ui.IViewPart;
 
 /**
  * @author Mik Kersten
+ * @author Steffen Pingel
  */
-public class EditRepositoryPropertiesAction extends AbstractTaskRepositoryAction {
+public class EditRepositoryPropertiesAction extends AbstractTaskRepositoryAction implements IViewActionDelegate {
 
 	private static final String ID = "org.eclipse.mylyn.tasklist.repositories.properties";
 
@@ -29,26 +35,56 @@ public class EditRepositoryPropertiesAction extends AbstractTaskRepositoryAction
 
 	@Override
 	protected boolean updateSelection(IStructuredSelection selection) {
-		if (selection != null && !selection.isEmpty()) {
-			Object selectedObject = selection.getFirstElement();
-			if (selectedObject instanceof TaskRepository) {
-				TaskRepository taskRepository = (TaskRepository) selectedObject;
-				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-						taskRepository.getConnectorKind());
-				if (connector.isUserManaged()) {
-					return true;
-				}
-				return false;
-			}
-		}
-		return false;
+		return getTaskRepository(selection) != null;
 	}
 
 	@Override
 	public void run() {
-		IStructuredSelection selection = getStructuredSelection();
-		if (selection.getFirstElement() instanceof TaskRepository) {
-			TasksUiUtil.openEditRepositoryWizard((TaskRepository) selection.getFirstElement());
+		TaskRepository taskRepository = getTaskRepository(getStructuredSelection());
+		if (taskRepository != null) {
+			TasksUiUtil.openEditRepositoryWizard(taskRepository);
 		}
 	}
+	
+	private TaskRepository getTaskRepository(IStructuredSelection selection) {
+		if (selection != null && !selection.isEmpty()) {
+			Object selectedObject = selection.getFirstElement();
+			TaskRepository taskRepository = null;
+			if (selectedObject instanceof TaskRepository) {
+				taskRepository  = (TaskRepository) selectedObject;
+			} else if (selectedObject instanceof AbstractRepositoryQuery) {
+				AbstractRepositoryQuery query = (AbstractRepositoryQuery) selectedObject;
+				taskRepository = TasksUiPlugin.getRepositoryManager().getRepository(query.getRepositoryKind(), query.getRepositoryUrl());
+			}
+			
+			if (taskRepository != null && isUserManaged(taskRepository)) {
+				return taskRepository;
+			}
+		}
+		return null;
+	}
+
+	private boolean isUserManaged(TaskRepository taskRepository) {
+		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+				taskRepository.getConnectorKind());
+		return connector.isUserManaged();
+	}
+
+	public void init(IViewPart view) {
+	}
+
+	public void run(IAction action) {
+		run();
+	}
+
+	public void selectionChanged(IAction action, ISelection selection) {
+		if (selection instanceof IStructuredSelection) {
+			selectionChanged((IStructuredSelection) selection);
+			action.setEnabled(this.isEnabled());
+		} else {
+			clearCache();
+			action.setEnabled(false);
+		}
+	}
+	
 }

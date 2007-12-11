@@ -66,6 +66,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CollapseAllAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.DeleteAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.EditRepositoryPropertiesAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ExpandAllAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.FilterArchiveContainerAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.FilterCompletedTasksAction;
@@ -1211,6 +1212,14 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 		if (element instanceof AbstractRepositoryQuery || element instanceof TaskCategory) {
 			manager.add(new Separator());
+			if (element instanceof AbstractRepositoryQuery) {
+				EditRepositoryPropertiesAction repositoryPropertiesAction = new EditRepositoryPropertiesAction();
+				repositoryPropertiesAction.selectionChanged(new StructuredSelection(element));
+				if (repositoryPropertiesAction.isEnabled()) {
+					repositoryPropertiesAction.setText("Repository Properties");
+					manager.add(repositoryPropertiesAction);
+				}
+			}
 			addAction(propertiesAction, manager, element);
 		}
 
