@@ -43,6 +43,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Benjamin Pasero
  * @author Mik Kersten
+ * @author Steffen Pingel
  */
 public abstract class AbstractNotificationPopup extends Window {
 
@@ -114,6 +115,10 @@ public abstract class AbstractNotificationPopup extends Window {
 			// ignore
 		}
 	};
+
+	private boolean respectDisplayBounds = true;
+
+	private boolean respectMonitorBounds = true;
 
 	public AbstractNotificationPopup(Display display) {
 		this(display, SWT.NO_TRIM | SWT.ON_TOP | SWT.NO_FOCUS);
@@ -250,8 +255,10 @@ public abstract class AbstractNotificationPopup extends Window {
             shell = null;
 			create();
 		}
-		constrainShellSize();
 
+		constrainShellSize();
+		shell.setLocation(fixupDisplayBounds(shell.getSize(), shell.getLocation()));
+		
 		SwtUtil.setAlpha(shell, 0);
 		shell.setVisible(true);
 		SwtUtil.fade(shell, true, 15, 80);
@@ -423,4 +430,39 @@ public abstract class AbstractNotificationPopup extends Window {
 	public void setDelayClose(long delayClose) {
 		this.delayClose = delayClose;
 	}
+	
+	private Point fixupDisplayBounds(Point tipSize, Point location) {
+		if (respectDisplayBounds || respectMonitorBounds) {
+			Rectangle bounds;
+			Point rightBounds = new Point(tipSize.x + location.x, tipSize.y
+					+ location.y);
+
+			if (respectMonitorBounds) {
+				bounds = shell.getDisplay().getPrimaryMonitor().getBounds();
+			} else {
+				bounds = getPrimaryClientArea();
+			}
+
+			if (!(bounds.contains(location) && bounds.contains(rightBounds))) {
+				if (rightBounds.x > bounds.x + bounds.width) {
+					location.x -= rightBounds.x - (bounds.x + bounds.width);
+				}
+
+				if (rightBounds.y > bounds.y + bounds.height) {
+					location.y -= rightBounds.y - (bounds.y + bounds.height);
+				}
+
+				if (location.x < bounds.x) {
+					location.x = bounds.x;
+				}
+
+				if (location.y < bounds.y) {
+					location.y = bounds.y;
+				}
+			}
+		}
+
+		return location;
+	}
+
 }
