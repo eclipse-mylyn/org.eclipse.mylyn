@@ -38,6 +38,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -150,9 +151,15 @@ public abstract class AbstractNotificationPopup extends Window {
 	}
 
 	protected Image getPopupShellImage() {
-		Image[] images = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().getImages();
-		// TODO: fix hardcoded reference
-		return images[3];
+		IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		if (activeWorkbenchWindow != null && !activeWorkbenchWindow.getShell().isDisposed()) {
+			Image[] images = getShell().getImages();
+			if (images.length >= 4) {
+				// TODO: fix hardcoded reference
+				return images[3];
+			}
+		}
+		return null;
 	}
 
 	/**
