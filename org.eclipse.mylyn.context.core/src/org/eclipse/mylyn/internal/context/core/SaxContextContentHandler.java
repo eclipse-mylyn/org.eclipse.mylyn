@@ -68,7 +68,7 @@ public class SaxContextContentHandler extends DefaultHandler {
 				InteractionEvent ie = createEventFromAttributes(attributes);
 				context.parseEvent(ie);
 			} catch (Exception e) {
-				StatusHandler.fail(e, "Could not process activity event", false);
+				StatusHandler.fail(e, "Could not process activity event, ignoring.", false);
 			}
 			break;
 		}
