@@ -89,7 +89,9 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	public boolean hasChildren(Object parent) {
 		if (parent instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) parent;
-			return !query.isEmpty();
+			// TODO: Performance implications?
+			return !getFilteredChildrenFor(query).isEmpty();
+			//return !query.isEmpty();
 		} else if (parent instanceof AbstractTask) {
 			return taskHasUnfilteredChildren((AbstractTask) parent);
 		} else if (parent instanceof AbstractTaskContainer) {
