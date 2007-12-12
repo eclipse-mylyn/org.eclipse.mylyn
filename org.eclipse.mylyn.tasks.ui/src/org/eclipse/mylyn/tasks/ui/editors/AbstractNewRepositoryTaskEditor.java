@@ -563,4 +563,11 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		this.saveTaskOffline(new NullProgressMonitor());
 		return super.searchForDuplicates();
 	}
+
+	@Override
+	protected boolean supportsRefreshAttributes() {
+		// see bug 212475
+		return false;
+	}
+
 }

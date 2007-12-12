@@ -939,6 +939,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		ToolBarManager barManager = new ToolBarManager(SWT.FLAT);
 		barManager.add(repositoryConfigRefresh);
+		repositoryConfigRefresh.setEnabled(supportsRefreshAttributes());
 		barManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 		barManager.createControl(toolbarComposite);
 		attributesSection.setTextClient(toolbarComposite);
@@ -967,6 +968,13 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		attribComp.setLayoutData(attributesData);
 
 		return attribComp;
+	}
+
+	/**
+	 * @since 2.2
+	 */
+	protected boolean supportsRefreshAttributes() {
+		return true;
 	}
 
 	/**
