@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.mylyn.test_feature"
+      label="Mylyn Test Feature"
+      version="2.2.0.qualifier"
+      plugin="org.eclipse.mylyn">
+
+   <description url="http://eclipse.org/mylyn">
+      Provides the Task List for task and time management.
+   </description>
+
+   <copyright>
+      Copyright (c) 2004 - 2007 Mylyn project committers and others.
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.junit"/>
+      <import plugin="org.eclipse.jface.text"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.ui.views"/>
+      <import plugin="org.eclipse.ui.editors"/>
+      <import plugin="org.eclipse.ui.workbench.texteditor"/>
+      <import plugin="org.eclipse.mylyn.bugzilla.core"/>
+      <import plugin="org.eclipse.mylyn.bugzilla.ui"/>
+      <import plugin="org.eclipse.mylyn.tasks.ui"/>
+      <import plugin="org.eclipse.mylyn.context.core"/>
+      <import plugin="org.eclipse.mylyn.tasks.core"/>
+      <import plugin="org.eclipse.ui.forms"/>
+      <import plugin="org.eclipse.mylyn"/>
+      <import plugin="org.eclipse.search"/>
+      <import plugin="org.eclipse.mylyn.web.core"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="org.eclipse.pde"/>
+      <import plugin="org.eclipse.pde.core"/>
+      <import plugin="org.eclipse.mylyn.monitor.ui"/>
+      <import plugin="org.eclipse.mylyn.monitor.core"/>
+      <import plugin="org.eclipse.mylyn.ide.ui"/>
+      <import plugin="org.eclipse.mylyn.context.ui"/>
+      <import plugin="org.eclipse.ui.workbench"/>
+      <import plugin="org.eclipse.jface"/>
+      <import plugin="org.eclipse.team.core"/>
+      <import plugin="org.eclipse.jdt"/>
+      <import plugin="org.eclipse.team.cvs.ui"/>
+      <import plugin="org.eclipse.mylyn.team.ui"/>
+      <import plugin="org.eclipse.mylyn.resources.ui"/>
+      <import plugin="org.eclipse.team.cvs.core"/>
+      <import plugin="org.eclipse.jdt.ui"/>
+      <import plugin="org.eclipse.mylyn.java.ui"/>
+      <import plugin="org.eclipse.jdt.launching"/>
+      <import plugin="org.eclipse.mylyn.pde.ui"/>
+      <import plugin="org.eclipse.mylyn.jira.core"/>
+      <import plugin="org.eclipse.mylyn.jira.ui"/>
+      <import plugin="org.eclipse.mylyn.monitor.usage"/>
+      <import plugin="org.eclipse.ui.browser"/>
+      <import plugin="org.eclipse.mylyn.sandbox.ui"/>
+      <import plugin="org.eclipse.mylyn.monitor.reports"/>
+      <import plugin="org.eclipse.core.net"/>
+      <import plugin="org.eclipse.mylyn.web.tasks"/>
+      <import plugin="org.eclipse.test.performance"/>
+      <import plugin="org.eclipse.mylyn.team.cvs"/>
+      <import plugin="org.eclipse.mylyn.web.ui"/>
+      <import plugin="org.eclipse.mylyn.trac.ui"/>
+      <import plugin="org.eclipse.mylyn.trac.core"/>
+      <import plugin="org.eclipse.mylyn.xplanner.core"/>
+      <import plugin="org.eclipse.mylyn.xplanner.ui"/>
+   </requires>
+
+   <plugin
+         id="org.eclipse.mylyn.bugzilla.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.mylyn.context.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.mylyn.ide.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.java.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.mylyn.jira.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.monitor.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.mylyn.resources.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.mylyn.sandbox.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.tasks.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.mylyn.team.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.mylyn.trac.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.xplanner.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
