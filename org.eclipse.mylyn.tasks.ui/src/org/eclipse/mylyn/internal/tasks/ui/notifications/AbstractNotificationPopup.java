@@ -87,12 +87,12 @@ public abstract class AbstractNotificationPopup extends Window {
 						if (shell == null || shell.isDisposed()) {
 							return;
 						}
-							
+
 						if (shell.getBounds().contains(display.getCursorLocation())) {
 							scheduleAutoClose();
 							return;
 						}
-						
+
 						AbstractNotificationPopup.this.close();
 					}
 				});
@@ -142,7 +142,7 @@ public abstract class AbstractNotificationPopup extends Window {
 		this.display = display;
 		resources = new LocalResourceManager(JFaceResources.getResources());
 		initResources();
-		
+
 		closeJob.setSystem(true);
 	}
 
@@ -164,28 +164,31 @@ public abstract class AbstractNotificationPopup extends Window {
 
 	protected Image getPopupShellImage(int maximumHeight) {
 		// always use the launching workbench window
-		IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getWorkbenchWindows()[0];
-		if (workbenchWindow != null && !workbenchWindow.getShell().isDisposed()) {
-			Image[] images = getShell().getImages();
-			if (images != null && images.length > 0) {
-				// find the icon that is closest in size, prefer icons that are smaller than maximumHeight 
-				int preferredIndex = 0;
-				int diff = maximumHeight - images[0].getBounds().height;
-				for (int i = 1; i < images.length; i++) {
-					int newDiff = maximumHeight - images[0].getBounds().height;
-					if (newDiff < diff) {
-						if (diff >= 0) {
-							if (newDiff >= 0) {
+		IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
+		if (windows != null && windows.length > 0) {
+			IWorkbenchWindow workbenchWindow = windows[0];
+			if (workbenchWindow != null && !workbenchWindow.getShell().isDisposed()) {
+				Image[] images = getShell().getImages();
+				if (images != null && images.length > 0) {
+					// find the icon that is closest in size, prefer icons that are smaller than maximumHeight 
+					int preferredIndex = 0;
+					int diff = maximumHeight - images[0].getBounds().height;
+					for (int i = 1; i < images.length; i++) {
+						int newDiff = maximumHeight - images[0].getBounds().height;
+						if (newDiff < diff) {
+							if (diff >= 0) {
+								if (newDiff >= 0) {
+									diff = newDiff;
+									preferredIndex = i;
+								}
+							} else {
 								diff = newDiff;
 								preferredIndex = i;
 							}
-						} else {
-							diff = newDiff;
-							preferredIndex = i;
 						}
 					}
+					return images[preferredIndex];
 				}
-				return images[preferredIndex];
 			}
 		}
 		return null;
@@ -302,7 +305,7 @@ public abstract class AbstractNotificationPopup extends Window {
 		SwtUtil.fade(shell, true, 15, 80);
 
 		scheduleAutoClose();
-		
+
 		return Window.OK;
 	}
 
@@ -455,12 +458,12 @@ public abstract class AbstractNotificationPopup extends Window {
 	public boolean closeNow() {
 		return closeInternal(false);
 	}
-	
+
 	public boolean close() {
 		return closeInternal(true);
 	}
-	
-	private boolean closeInternal(boolean fade) {		
+
+	private boolean closeInternal(boolean fade) {
 		if (!shell.isDisposed()) {
 			shell.removeShellListener(shellListener);
 		}
