@@ -48,6 +48,8 @@ import org.eclipse.ui.PlatformUI;
  */
 public abstract class AbstractNotificationPopup extends Window {
 
+	private static final int TITLE_HEIGHT = 24;
+
 	private static final String LABEL_NOTIFICATION = "Notification";
 
 	private static final String LABEL_JOB_CLOSE = "Close Notification Job";
@@ -57,11 +59,11 @@ public abstract class AbstractNotificationPopup extends Window {
 	private static final int DEFAULT_HEIGHT = 100;
 
 	private static final long DEFAULT_DELAY_CLOSE = 8 * 1000;
-	
+
 	private static final int PADDING_EDGE = 5;
-	
+
 	private long delayClose = DEFAULT_DELAY_CLOSE;
-	
+
 	protected LocalResourceManager resources;
 
 	private NotificationPopupColors color;
@@ -73,17 +75,25 @@ public abstract class AbstractNotificationPopup extends Window {
 	private Region lastUsedRegion;
 
 	private Image lastUsedBgImage;
-	
-	private Job closeJob = new Job(LABEL_JOB_CLOSE) {
+
+	private final Job closeJob = new Job(LABEL_JOB_CLOSE) {
 
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
-			if (!PlatformUI.getWorkbench().getDisplay().isDisposed()) {
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+			if (!display.isDisposed()) {
+				display.asyncExec(new Runnable() {
 					public void run() {
-						if (AbstractNotificationPopup.this.getShell() != null && !AbstractNotificationPopup.this.getShell().isDisposed()) {
-							AbstractNotificationPopup.this.close();
+						Shell shell = AbstractNotificationPopup.this.getShell();
+						if (shell == null || shell.isDisposed()) {
+							return;
 						}
+							
+						if (shell.getBounds().contains(display.getCursorLocation())) {
+							scheduleAutoClose();
+							return;
+						}
+						
+						AbstractNotificationPopup.this.close();
 					}
 				});
 			}
@@ -93,8 +103,8 @@ public abstract class AbstractNotificationPopup extends Window {
 			return Status.OK_STATUS;
 		}
 	};
-	
-	private ShellListener SHELL_LISTENER = new ShellListener() {
+
+	private final ShellListener shellListener = new ShellListener() {
 
 		public void shellClosed(ShellEvent arg0) {
 		}
@@ -132,6 +142,8 @@ public abstract class AbstractNotificationPopup extends Window {
 		this.display = display;
 		resources = new LocalResourceManager(JFaceResources.getResources());
 		initResources();
+		
+		closeJob.setSystem(true);
 	}
 
 	/**
@@ -150,13 +162,30 @@ public abstract class AbstractNotificationPopup extends Window {
 		return productName + " " + LABEL_NOTIFICATION;
 	}
 
-	protected Image getPopupShellImage() {
-		IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		if (activeWorkbenchWindow != null && !activeWorkbenchWindow.getShell().isDisposed()) {
+	protected Image getPopupShellImage(int maximumHeight) {
+		// always use the launching workbench window
+		IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getWorkbenchWindows()[0];
+		if (workbenchWindow != null && !workbenchWindow.getShell().isDisposed()) {
 			Image[] images = getShell().getImages();
-			if (images.length >= 4) {
-				// TODO: fix hardcoded reference
-				return images[3];
+			if (images != null && images.length > 0) {
+				// find the icon that is closest in size, prefer icons that are smaller than maximumHeight 
+				int preferredIndex = 0;
+				int diff = maximumHeight - images[0].getBounds().height;
+				for (int i = 1; i < images.length; i++) {
+					int newDiff = maximumHeight - images[0].getBounds().height;
+					if (newDiff < diff) {
+						if (diff >= 0) {
+							if (newDiff >= 0) {
+								diff = newDiff;
+								preferredIndex = i;
+							}
+						} else {
+							diff = newDiff;
+							preferredIndex = i;
+						}
+					}
+				}
+				return images[preferredIndex];
 			}
 		}
 		return null;
@@ -175,10 +204,10 @@ public abstract class AbstractNotificationPopup extends Window {
 	 * Override to customize the title bar
 	 */
 	protected void createTitleArea(Composite parent) {
-		((GridData) parent.getLayoutData()).heightHint = 24;
+		((GridData) parent.getLayoutData()).heightHint = TITLE_HEIGHT;
 
 		Label titleImageLabel = new Label(parent, SWT.NONE);
-		titleImageLabel.setImage(getPopupShellImage());
+		titleImageLabel.setImage(getPopupShellImage(TITLE_HEIGHT));
 
 		Label titleTextLabel = new Label(parent, SWT.NONE);
 		titleTextLabel.setText(getPopupShellTitle());
@@ -201,7 +230,7 @@ public abstract class AbstractNotificationPopup extends Window {
 			}
 
 			public void mouseUp(MouseEvent e) {
-				close();
+				closeNow();
 			}
 
 		});
@@ -216,7 +245,7 @@ public abstract class AbstractNotificationPopup extends Window {
 
 		shell = newShell;
 		newShell.setBackground(color.getBorder());
-		shell.addShellListener(SHELL_LISTENER);
+		shell.addShellListener(shellListener);
 	}
 
 	public void create() {
@@ -257,25 +286,32 @@ public abstract class AbstractNotificationPopup extends Window {
 	}
 
 	@Override
-	public int open() {		
+	public int open() {
 		if (shell == null || shell.isDisposed()) {
-            shell = null;
+			shell = null;
 			create();
 		}
 
 		constrainShellSize();
 		shell.setLocation(fixupDisplayBounds(shell.getSize(), shell.getLocation()));
-		
-		SwtUtil.setAlpha(shell, 0);
+
+		// FIXME fading should not block the UI thread: bug 212692
+		//SwtUtil.setAlpha(shell, 0);
 		shell.setVisible(true);
+		// FIXME fading should not block the UI thread: bug 212692
 		SwtUtil.fade(shell, true, 15, 80);
 
-		closeJob.setSystem(true);
-		closeJob.schedule(DEFAULT_DELAY_CLOSE);
+		scheduleAutoClose();
 		
 		return Window.OK;
 	}
-	
+
+	protected void scheduleAutoClose() {
+		if (delayClose > 0) {
+			closeJob.schedule(delayClose);
+		}
+	}
+
 	protected Control createContents(Composite parent) {
 		((GridLayout) parent.getLayout()).marginWidth = 1;
 		((GridLayout) parent.getLayout()).marginHeight = 1;
@@ -404,9 +440,10 @@ public abstract class AbstractNotificationPopup extends Window {
 		if (DEFAULT_HEIGHT < initialHeight) {
 			height = initialHeight;
 		}
-		
+
 		Point size = new Point(DEFAULT_WIDTH, height);
-		shell.setLocation(clArea.width + clArea.x - size.x - PADDING_EDGE, clArea.height + clArea.y - size.y - PADDING_EDGE);
+		shell.setLocation(clArea.width + clArea.x - size.x - PADDING_EDGE, clArea.height + clArea.y - size.y
+				- PADDING_EDGE);
 		shell.setSize(size);
 	}
 
@@ -415,11 +452,22 @@ public abstract class AbstractNotificationPopup extends Window {
 		return (primaryMonitor != null) ? primaryMonitor.getClientArea() : shell.getDisplay().getClientArea();
 	}
 
+	public boolean closeNow() {
+		return closeInternal(false);
+	}
+	
 	public boolean close() {
+		return closeInternal(true);
+	}
+	
+	private boolean closeInternal(boolean fade) {		
 		if (!shell.isDisposed()) {
-			shell.removeShellListener(SHELL_LISTENER);
+			shell.removeShellListener(shellListener);
 		}
-		SwtUtil.fade(AbstractNotificationPopup.this.getShell(), false, 20, 80);
+		if (fade) {
+			// FIXME fading should not block the UI thread: bug 212692
+			//SwtUtil.fade(AbstractNotificationPopup.this.getShell(), false, 20, 80);
+		}
 		resources.dispose();
 		if (lastUsedRegion != null) {
 			lastUsedRegion.dispose();
@@ -437,12 +485,11 @@ public abstract class AbstractNotificationPopup extends Window {
 	public void setDelayClose(long delayClose) {
 		this.delayClose = delayClose;
 	}
-	
+
 	private Point fixupDisplayBounds(Point tipSize, Point location) {
 		if (respectDisplayBounds || respectMonitorBounds) {
 			Rectangle bounds;
-			Point rightBounds = new Point(tipSize.x + location.x, tipSize.y
-					+ location.y);
+			Point rightBounds = new Point(tipSize.x + location.x, tipSize.y + location.y);
 
 			if (respectMonitorBounds) {
 				bounds = shell.getDisplay().getPrimaryMonitor().getBounds();
