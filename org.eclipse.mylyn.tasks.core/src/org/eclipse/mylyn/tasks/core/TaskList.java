@@ -608,6 +608,8 @@ public class TaskList {
 
 	/**
 	 * return all tasks for the given repository url
+	 * 
+	 * API-3.0: add a parameter for the kind
 	 */
 	public Set<AbstractTask> getRepositoryTasks(String repositoryUrl) {
 		Set<AbstractTask> repositoryTasks = new HashSet<AbstractTask>();
