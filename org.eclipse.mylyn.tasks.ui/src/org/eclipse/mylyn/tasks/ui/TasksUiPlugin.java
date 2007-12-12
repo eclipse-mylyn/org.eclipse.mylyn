@@ -523,6 +523,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				promptForCredentials = connector.isUserManaged() && !connector.hasCredentialsManagement();
 			}
 			if (!repository.isAnonymous()
+					&& !repository.isOffline()
 					&& promptForCredentials
 					&& (repository.getUserName() == null || repository.getPassword() == null
 							|| "".equals(repository.getUserName()) || "".equals(repository.getPassword()))) {
