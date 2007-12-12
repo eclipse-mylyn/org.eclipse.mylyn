@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -56,24 +57,25 @@ public class QueryImportAction extends Action implements IViewActionDelegate {
 		if (path != null) {
 			File file = new File(path);
 			if (file.isFile()) {
-				List<AbstractRepositoryQuery> queries = TasksUiPlugin.getTaskListManager()
-						.getTaskListWriter()
-						.readQueries(file);
-
-				Set<TaskRepository> repositories = TasksUiPlugin.getTaskListManager()
-						.getTaskListWriter()
-						.readRepositories(file);
-
-				if (queries.size() > 0) {
-					importQueries(queries, repositories, shell);
-				} else {
+				try {
+					List<AbstractRepositoryQuery> queries = TasksUiPlugin.getTaskListManager()
+							.getTaskListWriter()
+							.readQueries(file);
+					Set<TaskRepository> repositories = TasksUiPlugin.getTaskListManager()
+							.getTaskListWriter()
+							.readRepositories(file);
+					if (queries.size() > 0) {
+						importQueries(queries, repositories, shell);
+					} else {
+						MessageDialog.openError(shell, "Query Import Error",
+								"The specified file is not an exported query. Please, check that you have provided the correct file.");
+					}
+				} catch (IOException e) {
 					MessageDialog.openError(shell, "Query Import Error",
 							"The specified file is not an exported query. Please, check that you have provided the correct file.");
-					return;
 				}
 			}
 		}
-		return;
 	}
 
 	/**

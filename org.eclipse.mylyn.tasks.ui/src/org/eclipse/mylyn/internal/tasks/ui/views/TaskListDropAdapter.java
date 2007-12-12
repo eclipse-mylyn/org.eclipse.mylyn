@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -49,6 +50,7 @@ import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.TransferData;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
@@ -116,26 +118,33 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 					String path = names[i];
 					File file = new File(path);
 					if (file.isFile()) {
-						List<AbstractRepositoryQuery> readQueries = TasksUiPlugin.getTaskListManager()
-								.getTaskListWriter()
-								.readQueries(file);
-
-						if (readQueries.size() > 0) {
-							queries.addAll(readQueries);
-							repositories.addAll(TasksUiPlugin.getTaskListManager()
-									.getTaskListWriter()
-									.readRepositories(file));
-						} else {
-							List<AbstractTask> readTasks = TasksUiPlugin.getTaskListManager()
-									.getTaskListWriter()
-									.readTasks(file);
-							for (AbstractTask task : readTasks) {
-								taskContexts.put(task, ContextCorePlugin.getContextManager().loadContext(
-										task.getHandleIdentifier(), file));
+						List<AbstractRepositoryQuery> readQueries;
+						try {
+							readQueries = TasksUiPlugin.getTaskListManager().getTaskListWriter().readQueries(file);
+							if (readQueries.size() > 0) {
+								queries.addAll(readQueries);
+								repositories.addAll(TasksUiPlugin.getTaskListManager()
+										.getTaskListWriter()
+										.readRepositories(file));
+							} else {
+								List<AbstractTask> readTasks = TasksUiPlugin.getTaskListManager()
+										.getTaskListWriter()
+										.readTasks(file);
+								for (AbstractTask task : readTasks) {
+									taskContexts.put(task, ContextCorePlugin.getContextManager().loadContext(
+											task.getHandleIdentifier(), file));
+								}
+								repositories.addAll(TasksUiPlugin.getTaskListManager()
+										.getTaskListWriter()
+										.readRepositories(file));
 							}
-							repositories.addAll(TasksUiPlugin.getTaskListManager()
-									.getTaskListWriter()
-									.readRepositories(file));
+						} catch (IOException e) {
+							PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+								public void run() {
+									MessageDialog.openError(null, "Query Import Error",
+											"The specified file is not an exported query. Please, check that you have provided the correct file.");
+								}
+							});
 						}
 					}
 

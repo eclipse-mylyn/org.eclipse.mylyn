@@ -9,6 +9,7 @@ package org.eclipse.mylyn.internal.tasks.ui.util;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -66,6 +67,7 @@ import org.xml.sax.SAXException;
  * @author Rob Elves
  * @author Jevgeni Holodkov
  * 
+ * API-3.0: rewrite this class
  * TODO: move to core?
  */
 public class TaskListWriter {
@@ -268,7 +270,7 @@ public class TaskListWriter {
 		try {
 			if (!inFile.exists())
 				return;
-			Document doc = openAsDOM(inFile);
+			Document doc = openAsDOM(inFile, false);
 			if (doc == null) {
 				handleException(inFile, null, new TaskExternalizationException("TaskList was not well formed XML"));
 				return;
@@ -438,7 +440,7 @@ public class TaskListWriter {
 	 * Filename - the name of the file to open Return - the Document built from the XML file Throws - XMLException if
 	 * the file cannot be parsed as XML - IOException if the file cannot be opened
 	 */
-	private Document openAsDOM(File inputFile) throws IOException {
+	private Document openAsDOM(File inputFile, boolean propagateException) throws IOException {
 
 		// A factory API that enables applications to obtain a parser
 		// that produces DOM object trees from XML documents
@@ -481,8 +483,12 @@ public class TaskListWriter {
 			// document = builder.parse(inputFile);
 		} catch (SAXException se) {
 			// TODO: Use TaskListBackupManager to attempt restore from backup
-			MessageDialog.openWarning(null, "Mylyn task list corrupt",
-					"Unable to read the Mylyn task list. Please restore from previous backup via File > Import > Mylyn Task Data");
+			if (propagateException) {
+				throw new IOException("The task list format is invalid");
+			} else {
+				MessageDialog.openWarning(null, "Mylyn task list corrupt",
+						"Unable to read the Mylyn task list. Please restore from previous backup via File > Import > Mylyn Task Data");
+			}
 		}
 		return document;
 	}
@@ -586,22 +592,16 @@ public class TaskListWriter {
 		return doc;
 	}
 
-	public List<AbstractRepositoryQuery> readQueries(File inFile) {
-		List<AbstractRepositoryQuery> queries = new ArrayList<AbstractRepositoryQuery>();
-		try {
-			if (!inFile.exists())
-				return queries;
-			Document doc = openAsDOM(inFile);
-			if (doc == null) {
-				handleException(inFile, null, new TaskExternalizationException("TaskList was not well formed XML"));
-				return queries;
-			}
-			queries = readQueryDocument(doc);
-		} catch (Exception e) {
-			handleException(inFile, null, e);
+	public List<AbstractRepositoryQuery> readQueries(File inFile) throws IOException {
+		if (!inFile.exists()) {
+			throw new FileNotFoundException("File does not exist: " + inFile);
 		}
 
-		return queries;
+		Document doc = openAsDOM(inFile, true);
+		if (doc == null) {
+			throw new IOException("TaskList was not well formed XML");
+		}
+		return readQueryDocument(doc);
 	}
 
 	/**
@@ -650,7 +650,7 @@ public class TaskListWriter {
 		if (!task.isLocal()) {
 			repositories.add(TasksUiPlugin.getRepositoryManager().getRepository(task.getRepositoryUrl()));
 		}
-		
+
 		Document doc = createTaskListDocument();
 		if (doc == null) {
 			return;
@@ -670,7 +670,7 @@ public class TaskListWriter {
 			if (repositories.size() > 0) {
 				repositoriesExternalizer.writeRepositories(repositories, outputStream);
 			}
-			
+
 			outputStream.close();
 		} catch (Exception e) {
 			StatusHandler.log(e, "Task data was not written");
@@ -682,7 +682,7 @@ public class TaskListWriter {
 		try {
 			if (!inFile.exists())
 				return tasks;
-			Document doc = openAsDOM(inFile);
+			Document doc = openAsDOM(inFile, false);
 			if (doc == null) {
 				handleException(inFile, null, new TaskExternalizationException("TaskList was not well formed XML"));
 				return tasks;

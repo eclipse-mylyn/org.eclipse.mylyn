@@ -68,7 +68,7 @@ public class QueryExportImportTest extends TestCase {
 		//TasksUiPlugin.getSynchronizationManager().setForceSyncExec(false);
 	}
 
-	public void testExportImportQuery() {
+	public void testExportImportQuery() throws Exception {
 		List<AbstractTaskListFactory> oldExternalizers = TasksUiPlugin.getTaskListManager()
 				.getTaskListWriter()
 				.getExternalizers();
