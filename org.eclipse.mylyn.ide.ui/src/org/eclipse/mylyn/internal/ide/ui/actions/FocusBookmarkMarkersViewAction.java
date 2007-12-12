@@ -8,37 +8,36 @@
 
 package org.eclipse.mylyn.internal.ide.ui.actions;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
 
-import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.mylyn.monitor.core.StatusHandler;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.views.markers.internal.BookmarkView;
-import org.eclipse.ui.views.markers.internal.TableView;
-
+/**
+ * @author Mik Kersten
+ */
 public class FocusBookmarkMarkersViewAction extends AbstractFocusMarkerViewAction {
 
-	@Override
-	public List<StructuredViewer> getViewers() {
-		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
-		if (cachedViewer == null) {
-			try {
-				IViewPart viewPart = super.getPartForAction();
-				if (viewPart instanceof BookmarkView) {
-					Class<?> infoClass = TableView.class;
-					Method method = infoClass.getDeclaredMethod("getViewer", new Class[] {});
-					method.setAccessible(true);
-					cachedViewer = (StructuredViewer) method.invoke(viewPart, new Object[] {});
-					updateMarkerViewLabelProvider(cachedViewer);
-				}
-			} catch (Exception e) {
-				StatusHandler.log(e, "couldn't get bookmarks view viewer");
-			}
-		}
-		if (cachedViewer != null)
-			viewers.add(cachedViewer);
-		return viewers;
+	public FocusBookmarkMarkersViewAction() {
+		super();
 	}
+	
+//	@Override
+//	public List<StructuredViewer> getViewers() {
+//		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
+//		if (cachedViewer == null) {
+//			try {
+//				IViewPart viewPart = super.getPartForAction();
+//				System.err.println(">>> " + viewPart.getClass());
+//				if (viewPart instanceof  BookmarkView) {
+//					Class<?> infoClass = TableView.class;
+//					Method method = infoClass.getDeclaredMethod("getViewer", new Class[] {});
+//					method.setAccessible(true);
+//					cachedViewer = (StructuredViewer) method.invoke(viewPart, new Object[] {});
+//					updateMarkerViewLabelProvider(cachedViewer);
+//				}
+//			} catch (Exception e) {
+//				StatusHandler.log(e, "couldn't get bookmarks view viewer");
+//			}
+//		}
+//		if (cachedViewer != null)
+//			viewers.add(cachedViewer);
+//		return viewers;
+//	}
 }

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.internal.resources.Marker;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -272,15 +273,28 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 	}
 
 	@Override
-	public String getHandleForOffsetInObject(Object resource, int offset) {
-		if (resource == null || !(resource instanceof ConcreteMarker))
+	public String getHandleForOffsetInObject(Object object, int offset) {
+		IMarker marker;
+		int charStart = 0;
+		if (object instanceof ConcreteMarker) {
+			marker = ((ConcreteMarker)object).getMarker();
+		} else if (object instanceof Marker) {
+			marker = (Marker)object;
+		} else {
 			return null;
-		ConcreteMarker marker = (ConcreteMarker) resource;
+		}
+		
+		Object attribute = marker.getAttribute(IMarker.CHAR_START, 0);
+		if (attribute instanceof Integer) {
+			charStart = ((Integer)attribute).intValue();
+		}
+		
 		try {
-			IResource res = marker.getResource();
 			ICompilationUnit compilationUnit = null;
-			if (res instanceof IFile) {
-				IFile file = (IFile) res;
+			IResource resource = marker.getResource();
+			if (resource instanceof IFile) {
+				IFile file = (IFile)resource;
+				// TODO: get rid of file extension check
 				if (file.getFileExtension().equals("java")) {
 					compilationUnit = JavaCore.createCompilationUnitFrom(file);
 				} else {
@@ -288,8 +302,7 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 				}
 			}
 			if (compilationUnit != null) {
-				IJavaElement javaElement = compilationUnit.getElementAt(marker.getMarker().getAttribute(
-						IMarker.CHAR_START, 0));
+				IJavaElement javaElement = compilationUnit.getElementAt(charStart);
 				if (javaElement != null) {
 					if (javaElement instanceof IImportDeclaration)
 						javaElement = javaElement.getParent().getParent();

@@ -21,6 +21,7 @@ import org.eclipse.ant.internal.ui.model.AntModel;
 import org.eclipse.ant.internal.ui.model.IProblemRequestor;
 import org.eclipse.ant.internal.ui.model.LocationProvider;
 import org.eclipse.core.internal.resources.File;
+import org.eclipse.core.internal.resources.Marker;
 import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -36,7 +37,7 @@ import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
-import org.eclipse.ui.views.markers.internal.ProblemMarker;
+import org.eclipse.ui.views.markers.internal.ConcreteMarker;
 
 /**
  * @author Mik Kersten
@@ -263,18 +264,29 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 	 * @see org.eclipse.mylyn.context.core.AbstractContextStructureBridge#getHandleForOffsetInObject(Object, int)
 	 */
 	@Override
-	public String getHandleForOffsetInObject(Object resource, int offset) {
-		if (resource == null)
+	public String getHandleForOffsetInObject(Object object, int offset) {
+		if (object == null) {
 			return null;
-		if (resource instanceof ProblemMarker) {
-			ProblemMarker marker = (ProblemMarker) resource;
+		}
 
+		IResource markerResource = null;
+		try {
+			if (object instanceof ConcreteMarker) {
+				markerResource = ((ConcreteMarker) object).getMarker().getResource();
+			} else if (object instanceof Marker) {
+				markerResource = ((Marker) object).getResource();
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
+			return null;
+		}
+
+		if (markerResource != null) {
 			// we can only return a handle if the resource is build.xml
 			try {
-				IResource res = marker.getResource();
-
-				if (res instanceof IFile) {
-					IFile file = (IFile) res;
+				if (markerResource instanceof IFile) {
+					IFile file = (IFile) markerResource;
 					if (file.getFullPath().toString().endsWith("build.xml")) {
 						return file.getFullPath().toString();
 					} else {
@@ -283,12 +295,12 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 				}
 				return null;
 			} catch (Throwable t) {
-				StatusHandler.fail(t, "Could not find element for: " + marker, false);
+				StatusHandler.fail(t, "Could not find element for: " + object, false);
 				return null;
 			}
-		} else if (resource instanceof IFile) {
+		} else if (object instanceof IFile) {
 			try {
-				IFile file = (IFile) resource;
+				IFile file = (IFile) object;
 				if (file.getFullPath().toString().endsWith("build.xml")) {
 					FileEditorInput fei = new FileEditorInput(file);
 					String content = XmlNodeHelper.getContents(file.getContents());

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.internal.resources.Marker;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -177,21 +178,29 @@ public class ResourceStructureBridge extends AbstractContextStructureBridge {
 	}
 
 	@Override
-	public String getHandleForOffsetInObject(Object resource, int offset) {
-		if (resource == null || !(resource instanceof ConcreteMarker))
+	public String getHandleForOffsetInObject(Object object, int offset) {
+		IResource markerResource = null;
+		try {
+			if (object instanceof ConcreteMarker) {
+				markerResource = ((ConcreteMarker) object).getMarker().getResource();
+			} else if (object instanceof Marker) {
+				markerResource = ((Marker) object).getResource();
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
 			return null;
-		ConcreteMarker marker = (ConcreteMarker) resource;
+		}
+		
 		// we can only get a handle for a marker with the resource plugin.xml
 		try {
-			IResource res = marker.getResource();
-
-			if (res instanceof IFile) {
-				IFile file = (IFile) res;
+			if (markerResource instanceof IFile) {
+				IFile file = (IFile)markerResource;
 				return getHandleIdentifier(file);
 			}
 			return null;
 		} catch (Throwable t) {
-			StatusHandler.log(t, "Could not find element for: " + marker);
+			StatusHandler.log(t, "Could not find element for: " + object);
 			return null;
 		}
 	}

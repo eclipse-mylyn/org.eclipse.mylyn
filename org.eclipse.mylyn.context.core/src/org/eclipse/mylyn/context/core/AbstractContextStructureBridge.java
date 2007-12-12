@@ -69,6 +69,8 @@ public abstract class AbstractContextStructureBridge {
 	public abstract boolean isDocument(String handle);
 
 	/**
+	 * API-3.0: either remove of make marker coupling explicit
+	 * 
 	 * @param resource
 	 *            can be anything that has an element accessible via an offset, e.g. a file with a character offset
 	 */

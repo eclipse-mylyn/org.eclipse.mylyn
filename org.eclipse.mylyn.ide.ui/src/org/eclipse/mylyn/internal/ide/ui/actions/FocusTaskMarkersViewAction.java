@@ -8,45 +8,40 @@
 
 package org.eclipse.mylyn.internal.ide.ui.actions;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.mylyn.monitor.core.StatusHandler;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.views.markers.internal.TableView;
-import org.eclipse.ui.views.markers.internal.TaskView;
 
 /**
  * @author Mik Kersten
  */
 public class FocusTaskMarkersViewAction extends AbstractFocusMarkerViewAction {
 
-	/**
-	 * HACK: changing accessibility
-	 */
-	@Override
-	public List<StructuredViewer> getViewers() {
-		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
-		if (cachedViewer == null) {
-			try {
-				IViewPart viewPart = super.getPartForAction();
-				if (viewPart instanceof TaskView) {
-					Class<?> infoClass = TableView.class;
-					Method method = infoClass.getDeclaredMethod("getViewer", new Class[] {});
-					method.setAccessible(true);
-					cachedViewer = (StructuredViewer) method.invoke(viewPart, new Object[] {});
-					updateMarkerViewLabelProvider(cachedViewer);
-				}
-			} catch (Exception e) {
-				StatusHandler.log(e, "couldn't get task view list viewer");
-			}
-		}
-		if (cachedViewer != null)
-			viewers.add(cachedViewer);
-		return viewers;
+	public FocusTaskMarkersViewAction() {
+		super();
 	}
+	
+//	/**
+//	 * HACK: changing accessibility
+//	 */
+//	@Override
+//	public List<StructuredViewer> getViewers() {
+//		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
+//		if (cachedViewer == null) {
+//			try {
+//				IViewPart viewPart = super.getPartForAction();
+//				if (viewPart instanceof TaskView) {
+//					Class<?> infoClass = TableView.class;
+//					Method method = infoClass.getDeclaredMethod("getViewer", new Class[] {});
+//					method.setAccessible(true);
+//					cachedViewer = (StructuredViewer) method.invoke(viewPart, new Object[] {});
+//					updateMarkerViewLabelProvider(cachedViewer);
+//				}
+//			} catch (Exception e) {
+//				StatusHandler.log(e, "couldn't get task view list viewer");
+//			}
+//		}
+//		if (cachedViewer != null)
+//			viewers.add(cachedViewer);
+//		return viewers;
+//	}
 
 //	protected void updateMarkerViewLabelProvider(StructuredViewer viewer) {
 //		IBaseLabelProvider currentProvider = viewer.getLabelProvider();
