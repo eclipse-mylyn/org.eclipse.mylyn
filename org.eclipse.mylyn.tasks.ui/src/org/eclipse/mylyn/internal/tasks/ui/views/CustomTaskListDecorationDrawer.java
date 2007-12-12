@@ -211,7 +211,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 				AbstractTask containedRepositoryTask = task;
 				if (containedRepositoryTask.getSynchronizationState() == RepositoryTaskSyncState.INCOMING) {
 					return true;
-				} else if (hasDescendantIncoming(task)) {
+				} else if (TasksUiPlugin.getDefault().groupSubtasks(container) && hasDescendantIncoming(task)) {
 					return true;
 				}
 			}
