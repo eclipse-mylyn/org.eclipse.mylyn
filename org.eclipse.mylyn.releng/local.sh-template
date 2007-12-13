@@ -8,7 +8,7 @@ QUALIFIER=I20071207-1700
 HOST=releng
 
 # name of the jdk for performance tests
-JDK=java-6-sun-1.6.0.03
+JVM=java-6-sun-1.6.0.03
 
 # root of the JDK (Java 5.0 or higher)
 JAVA_HOME=$BUILD_ROOT/jdk
