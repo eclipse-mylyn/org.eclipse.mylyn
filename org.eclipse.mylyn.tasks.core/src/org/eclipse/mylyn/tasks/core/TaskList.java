@@ -409,11 +409,11 @@ public class TaskList {
 		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
 		delta.add(new TaskContainerDelta(category, TaskContainerDelta.Kind.CHANGED));
 		category.internalRemoveChild(task);
+		task.removeParentContainer(category);
 		addOrphan(task, delta);
-//		for (ITaskListChangeListener listener : changeListeners) {
-//			listener.containersChanged(delta);
-//		}
-		//moveToContainer(task, null);
+		for (ITaskListChangeListener listener : changeListeners) {
+			listener.containersChanged(delta);
+		}
 	}
 
 	/**

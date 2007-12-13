@@ -70,6 +70,8 @@ public class RemoveFromCategoryAction extends Action {
 						TasksUiPlugin.getTaskListManager().getTaskList().removeFromCategory(
 								(TaskCategory) parentContainers.iterator().next(), task);
 						//TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task, null);
+					} else if (!task.isLocal()) {
+						TasksUiPlugin.getTaskListManager().getTaskList().moveTask(task, null);
 					} else {
 						TasksUiPlugin.getTaskListManager().getTaskList().moveTask(task,
 								TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
