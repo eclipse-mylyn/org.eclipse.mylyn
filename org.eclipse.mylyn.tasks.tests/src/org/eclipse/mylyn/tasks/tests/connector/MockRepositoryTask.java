@@ -12,6 +12,8 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 
 /**
  * @author Mik Kersten
+ * 
+ * API-3.0: rename to MockTask
  */
 public class MockRepositoryTask extends AbstractTask {
 
