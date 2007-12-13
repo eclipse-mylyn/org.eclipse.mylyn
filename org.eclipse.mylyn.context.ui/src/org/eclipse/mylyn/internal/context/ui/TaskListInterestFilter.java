@@ -47,24 +47,10 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 					if (isUninteresting(parent, task)) {
 						return false;
 					} else if (isInteresting(parent, task)) {
-//						if (parent instanceof TaskArchive) {
-//							return (shouldAlwaysShow(child, task, TasksUiPlugin.getDefault().groupSubtasks(task)) && revealInArchive(task));
-//						}
 						return true;
 					}
 				}
-			} /*else if (child instanceof TaskArchive) {
-																				// Display Archive if contains otherwise non-visible tasks that should always show
-																				boolean hasTasksToReveal = false;
-																				for (AbstractTask task : ((TaskArchive) child).getChildren()) {
-																					if (shouldAlwaysShow(child, task, TasksUiPlugin.getDefault().groupSubtasks(task))
-																							&& revealInArchive(task)) {
-																						hasTasksToReveal = true;
-																						break;
-																					}
-																				}
-																				return hasTasksToReveal;
-																			}*/else if (child instanceof AbstractTaskContainer) {
+			} else if (child instanceof AbstractTaskContainer) {
 				Set<AbstractTask> children = ((AbstractTaskContainer) child).getChildren();
 				// Always display empty containers
 				if (children.size() == 0) {
@@ -84,20 +70,8 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		return false;
 	}
 
-//	private boolean revealInArchive(AbstractTask task) {
-//		if (TasksUiPlugin.getTaskListManager().getTaskList().getContainerForHandle(task.getHandleIdentifier()) == null
-//				&& TasksUiPlugin.getTaskListManager()
-//						.getTaskList()
-//						.getQueriesForHandle(task.getHandleIdentifier())
-//						.isEmpty()) {
-//			return true;
-//		}
-//		return false;
-//	}
-
 	private boolean isDateRangeInteresting(ScheduledTaskContainer container) {
 		return TasksUiPlugin.getTaskActivityManager().isWeekDay(container);
-//		return (TasksUiPlugin.getTaskListManager().isWeekDay(container) && (container.isPresent() || container.isFuture()));
 	}
 
 	protected boolean isUninteresting(Object parent, AbstractTask task) {
