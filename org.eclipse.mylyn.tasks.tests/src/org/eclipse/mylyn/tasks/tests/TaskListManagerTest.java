@@ -89,6 +89,24 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(0, manager.getTaskList().getAllTasks().size());
 	}
 
+	public void testUncategorizedTasksNotLost() {
+		MockRepositoryQuery query = new MockRepositoryQuery("Test");
+		manager.getTaskList().addQuery(query);
+		MockRepositoryTask task = new MockRepositoryTask("1");
+		manager.getTaskList().addTask(task, query);
+		manager.getTaskList().moveTask(task, manager.getTaskList().getDefaultCategory());
+		assertTrue(manager.getTaskList().getDefaultCategory().contains(task.getHandleIdentifier()));
+
+		manager.saveTaskList();
+		manager.resetTaskList();
+		assertEquals(0, manager.getTaskList().getAllTasks().size());
+		assertFalse(manager.getTaskList().getDefaultCategory().contains(task.getHandleIdentifier()));
+		manager.readExistingOrCreateNewList();
+
+		assertTrue(manager.getTaskList().getDefaultCategory().contains(task.getHandleIdentifier()));
+
+	}
+
 	public void testQueryAndCategoryNameClash() {
 		TaskCategory category = new TaskCategory("TestClash");
 		manager.getTaskList().addCategory(category);

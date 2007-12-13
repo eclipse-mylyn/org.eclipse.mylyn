@@ -407,7 +407,11 @@ final class DelegatingTaskExternalizer {
 //		} else {
 //			taskList.internalAddTask(task, taskList.getArchiveContainer());
 //		}
-		task.setCategoryHandle(element.getAttribute(KEY_CATEGORY));
+		String categoryHandle = element.getAttribute(KEY_CATEGORY);
+		if (categoryHandle.equals(VAL_ROOT)) {
+			categoryHandle = UnfiledCategory.HANDLE;
+		}
+		task.setCategoryHandle(categoryHandle);
 
 		if (element.hasAttribute(KEY_PRIORITY)) {
 			task.setPriority(element.getAttribute(KEY_PRIORITY));
