@@ -312,7 +312,7 @@ public abstract class AbstractNotificationPopup extends Window {
 		constrainShellSize();
 		shell.setLocation(fixupDisplayBounds(shell.getSize(), shell.getLocation()));
 
-		supportsFading = SwtUtil.setAlpha(shell, 0);
+		//supportsFading = SwtUtil.setAlpha(shell, 0);
 		shell.setVisible(true);
 		if (supportsFading) {
 			fadeJob = SwtUtil.fadeIn(shell, new IFadeListener() {
@@ -491,6 +491,8 @@ public abstract class AbstractNotificationPopup extends Window {
 					}					
 				}
 			});
+		} else {
+			shell.close();
 		}
 	}
 
