@@ -14,7 +14,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
@@ -71,12 +70,7 @@ public class RemoveFromCategoryAction extends Action {
 						TasksUiPlugin.getTaskListManager().getTaskList().removeFromCategory(
 								(TaskCategory) parentContainers.iterator().next(), task);
 						//TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task, null);
-					}/* else if (parentContainers.contains(TasksUiPlugin.getTaskListManager()
-																																.getTaskList()
-																																.getDefaultCategory())) {
-																															MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-																																	LABEL, "Can not remove from the default category, move to another category instead.");
-																														}*/else {
+					} else {
 						TasksUiPlugin.getTaskListManager().getTaskList().moveTask(task,
 								TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 					}

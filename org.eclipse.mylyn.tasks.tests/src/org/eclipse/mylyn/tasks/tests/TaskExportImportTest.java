@@ -35,13 +35,13 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 public class TaskExportImportTest extends AbstractContextTest {
 
 	private File dest;
-	
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		removeFiles(new File(TasksUiPlugin.getDefault().getDataDirectory()));
 		ContextCorePlugin.getDefault().getContextStore().init();
-		
+
 		// Create test export destination directory
 		dest = new File(TasksUiPlugin.getDefault().getDataDirectory() + File.separator + "TestDir");
 		if (dest.exists()) {
@@ -58,7 +58,7 @@ public class TaskExportImportTest extends AbstractContextTest {
 		removeFiles(dest);
 		dest.delete();
 		assertFalse(dest.exists());
-		
+
 		super.tearDown();
 	}
 
@@ -66,20 +66,20 @@ public class TaskExportImportTest extends AbstractContextTest {
 
 		LocalTask task = TasksUiPlugin.getTaskListManager().createNewLocalTask("Test local task");
 		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
-		taskList.moveToContainer(task, taskList.getDefaultCategory());
+		taskList.moveTask(task, taskList.getDefaultCategory());
 		assertTrue(taskList.getAllTasks().size() > 0);
-		
+
 		InteractionContext mockContext = ContextCorePlugin.getContextManager().loadContext(task.getHandleIdentifier());
-		
+
 		ContextCorePlugin.getContextManager().internalActivateContext(mockContext);
 		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.EDIT, "structureKind", "handle", "originId");
 		mockContext.parseEvent(event);
 		ContextCorePlugin.getContextManager().deactivateContext(mockContext.getHandleIdentifier());
-		
+
 		assertTrue(ContextCorePlugin.getDefault().getContextStore().getContextDirectory().exists());
 		ContextCorePlugin.getContextManager().saveContext(mockContext.getHandleIdentifier());
 		assertTrue(ContextCorePlugin.getContextManager().hasContext(task.getHandleIdentifier()));
-		
+
 		File outFile = new File(dest + File.separator + "local-task.xml.zip");
 		TasksUiPlugin.getTaskListManager().getTaskListWriter().writeTask(task, outFile);
 		assertTrue(outFile.exists());
@@ -92,18 +92,18 @@ public class TaskExportImportTest extends AbstractContextTest {
 			files.add(entry.getName());
 		}
 		inputStream.close();
-		
+
 		assertTrue("exported file contains a file with queries", files.contains(ITasksUiConstants.OLD_TASK_LIST_FILE));
-		
+
 		String handleIdentifier = mockContext.getHandleIdentifier();
 		String encoded = URLEncoder.encode(handleIdentifier, InteractionContextManager.CONTEXT_FILENAME_ENCODING);
 		String contextName = encoded + InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD;
 		assertTrue("exported file contains a file with context", files.contains(contextName));
-		
+
 		// reset all data
 		TasksUiPlugin.getTaskListManager().resetTaskList();
 		assertTrue(taskList.getAllTasks().size() == 0);
-		
+
 		ContextCorePlugin.getContextManager().deleteContext(handleIdentifier);
 		assertFalse(ContextCorePlugin.getContextManager().hasContext(task.getHandleIdentifier()));
 
@@ -111,26 +111,25 @@ public class TaskExportImportTest extends AbstractContextTest {
 		List<AbstractTask> tasks = TasksUiPlugin.getTaskListManager().getTaskListWriter().readTasks(outFile);
 		InteractionContext loadedContext = ContextCorePlugin.getContextManager().loadContext(
 				task.getHandleIdentifier(), outFile);
-		
+
 		// check with original one
 		assertEquals("There is 1 task loaded", 1, tasks.size());
 		assertEquals("Loaded task is correct", task, tasks.get(0));
 		assertEquals("Loaded context is correct", mockContext, loadedContext);
-		
+
 		// import data
 		for (AbstractTask loadedTask : tasks) {
 			taskList.insertTask(loadedTask, null, null);
 		}
 		ContextCorePlugin.getContextManager().importContext(loadedContext);
-		
+
 		// check that context was imported and is the same as original one
 		InteractionContext savedContext = ContextCorePlugin.getContextManager().loadContext(task.getHandleIdentifier());
 		assertEquals("Saved context is the same as original one", mockContext, savedContext);
 		assertEquals("Saved task is the same as original one", task, taskList.getTask(task.getHandleIdentifier()));
-		
+
 		ContextCorePlugin.getContextManager().deactivateAllContexts();
 	}
-	
 
 	private void removeFiles(File root) {
 		if (root.isDirectory()) {

@@ -7,7 +7,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.ui;
 
-import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.OrphanedTasksContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 

@@ -305,7 +305,8 @@ public class TaskList {
 				removeOrphan(task, delta);
 			}
 		} else {
-			internalAddTask(task, null);
+			addTask(task, null);
+			//internalAddTask(task, null);
 		}
 		for (ITaskListChangeListener listener : changeListeners) {
 			listener.containersChanged(delta);
@@ -949,6 +950,9 @@ public class TaskList {
 	}
 
 	/**
+	 * 
+	 * @API-3.0 review/deprecate, use addTask directly?
+	 * 
 	 * @since 2.1
 	 */
 	public final void insertTask(AbstractTask task, AbstractTaskCategory legacyCategory, AbstractTask parent) {
