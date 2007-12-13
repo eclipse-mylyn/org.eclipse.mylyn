@@ -18,6 +18,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.tasks.ui.SwtUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.internal.tasks.ui.SwtUtil.FadeJob;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -130,6 +131,8 @@ public abstract class AbstractNotificationPopup extends Window {
 	private boolean respectDisplayBounds = true;
 
 	private boolean respectMonitorBounds = true;
+
+	private FadeJob fadeJob;
 
 	public AbstractNotificationPopup(Display display) {
 		this(display, SWT.NO_TRIM | SWT.ON_TOP | SWT.NO_FOCUS);
@@ -298,11 +301,9 @@ public abstract class AbstractNotificationPopup extends Window {
 		constrainShellSize();
 		shell.setLocation(fixupDisplayBounds(shell.getSize(), shell.getLocation()));
 
-		// FIXME fading should not block the UI thread: bug 212692
-		//SwtUtil.setAlpha(shell, 0);
+		SwtUtil.setAlpha(shell, 0);
 		shell.setVisible(true);
-		// FIXME fading should not block the UI thread: bug 212692
-		SwtUtil.fade(shell, true, 15, 80);
+		fadeJob = SwtUtil.fadeIn(shell);
 
 		scheduleAutoClose();
 
@@ -468,8 +469,10 @@ public abstract class AbstractNotificationPopup extends Window {
 			shell.removeShellListener(shellListener);
 		}
 		if (fade) {
-			// FIXME fading should not block the UI thread: bug 212692
-			//SwtUtil.fade(AbstractNotificationPopup.this.getShell(), false, 20, 80);
+			if (fadeJob != null) {
+				fadeJob.cancelAndWait();
+			}
+			fadeJob = SwtUtil.fadeOut(getShell());
 		}
 		resources.dispose();
 		if (lastUsedRegion != null) {
