@@ -18,6 +18,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.monitor.usage.UiUsageMonitorPlugin;
+import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TaskListManager;
@@ -95,7 +96,8 @@ public class ChangeDataDirTest extends TestCase {
 	public void testTaskMove() {
 		AbstractTask task = manager.createNewLocalTask("label");
 		String handle = task.getHandleIdentifier();
-		manager.getTaskList().moveToContainer(task, manager.getTaskList().getDefaultCategory());
+		manager.getTaskList().moveTask(task,
+				manager.getTaskList().getOrphanContainer(LocalRepositoryConnector.REPOSITORY_URL));
 
 		AbstractTask readTaskBeforeMove = manager.getTaskList().getTask(handle);
 		TasksUiPlugin.getTaskListManager().copyDataDirContentsTo(newDataDir);
@@ -127,7 +129,6 @@ public class ChangeDataDirTest extends TestCase {
 	}
 
 	private void addBugzillaTask(BugzillaTask newTask) {
-		TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(newTask,
-				TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
+		TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask);
 	}
 }
