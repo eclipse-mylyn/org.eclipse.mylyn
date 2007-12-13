@@ -11,10 +11,10 @@ package org.eclipse.mylyn.internal.context.ui;
 import java.util.Calendar;
 import java.util.Set;
 
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
-import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -47,24 +47,24 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 					if (isUninteresting(parent, task)) {
 						return false;
 					} else if (isInteresting(parent, task)) {
-						if (parent instanceof TaskArchive) {
-							return (shouldAlwaysShow(child, task, TasksUiPlugin.getDefault().groupSubtasks(task)) && revealInArchive(task));
-						}
+//						if (parent instanceof TaskArchive) {
+//							return (shouldAlwaysShow(child, task, TasksUiPlugin.getDefault().groupSubtasks(task)) && revealInArchive(task));
+//						}
 						return true;
 					}
 				}
-			} else if (child instanceof TaskArchive) {
-				// Display Archive if contains otherwise non-visible tasks that should always show
-				boolean hasTasksToReveal = false;
-				for (AbstractTask task : ((TaskArchive) child).getChildren()) {
-					if (shouldAlwaysShow(child, task, TasksUiPlugin.getDefault().groupSubtasks(task))
-							&& revealInArchive(task)) {
-						hasTasksToReveal = true;
-						break;
-					}
-				}
-				return hasTasksToReveal;
-			} else if (child instanceof AbstractTaskContainer) {
+			} /*else if (child instanceof TaskArchive) {
+																				// Display Archive if contains otherwise non-visible tasks that should always show
+																				boolean hasTasksToReveal = false;
+																				for (AbstractTask task : ((TaskArchive) child).getChildren()) {
+																					if (shouldAlwaysShow(child, task, TasksUiPlugin.getDefault().groupSubtasks(task))
+																							&& revealInArchive(task)) {
+																						hasTasksToReveal = true;
+																						break;
+																					}
+																				}
+																				return hasTasksToReveal;
+																			}*/else if (child instanceof AbstractTaskContainer) {
 				Set<AbstractTask> children = ((AbstractTaskContainer) child).getChildren();
 				// Always display empty containers
 				if (children.size() == 0) {
@@ -72,7 +72,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 				}
 
 				for (AbstractTask task : children) {
-					if (shouldAlwaysShow(child, task, TasksUiPlugin.getDefault().groupSubtasks(task))) {
+					if (shouldAlwaysShow(child, task, ITasksCoreConstants.MAX_SUBTASK_DEPTH)) {
 						return true;
 					}
 				}
@@ -84,16 +84,16 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		return false;
 	}
 
-	private boolean revealInArchive(AbstractTask task) {
-		if (TasksUiPlugin.getTaskListManager().getTaskList().getContainerForHandle(task.getHandleIdentifier()) == null
-				&& TasksUiPlugin.getTaskListManager()
-						.getTaskList()
-						.getQueriesForHandle(task.getHandleIdentifier())
-						.isEmpty()) {
-			return true;
-		}
-		return false;
-	}
+//	private boolean revealInArchive(AbstractTask task) {
+//		if (TasksUiPlugin.getTaskListManager().getTaskList().getContainerForHandle(task.getHandleIdentifier()) == null
+//				&& TasksUiPlugin.getTaskListManager()
+//						.getTaskList()
+//						.getQueriesForHandle(task.getHandleIdentifier())
+//						.isEmpty()) {
+//			return true;
+//		}
+//		return false;
+//	}
 
 	private boolean isDateRangeInteresting(ScheduledTaskContainer container) {
 		return TasksUiPlugin.getTaskActivityManager().isWeekDay(container);
@@ -102,7 +102,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 
 	protected boolean isUninteresting(Object parent, AbstractTask task) {
 		return !task.isActive()
-				&& !hasInterestingSubTasks(parent, task, true)
+				&& !hasInterestingSubTasks(parent, task, ITasksCoreConstants.MAX_SUBTASK_DEPTH)
 				&& ((task.isCompleted() && !TaskActivityManager.getInstance().isCompletedToday(task) && !hasChanges(
 						parent, task)) || (TaskActivityManager.getInstance().isScheduledAfterThisWeek(task))
 						&& !hasChanges(parent, task));
@@ -110,31 +110,29 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 
 	// TODO: make meta-context more explicit
 	protected boolean isInteresting(Object parent, AbstractTask task) {
-		return shouldAlwaysShow(parent, task, TasksUiPlugin.getDefault().groupSubtasks(task));
+		return shouldAlwaysShow(parent, task, ITasksCoreConstants.MAX_SUBTASK_DEPTH);
 	}
 
-	public boolean shouldAlwaysShow(Object parent, AbstractTask task, boolean checkSubTasks) {
+	public boolean shouldAlwaysShow(Object parent, AbstractTask task, int depth) {
 		return task.isActive() || hasChanges(parent, task)
 				|| (TaskActivityManager.getInstance().isCompletedToday(task))
 				|| shouldShowInFocusedWorkweekDateContainer(parent, task)
 				|| (isInterestingForThisWeek(parent, task) && !task.isCompleted())
-				|| (TaskActivityManager.getInstance().isOverdue(task))
-				|| hasInterestingSubTasks(parent, task, checkSubTasks)
+				|| (TaskActivityManager.getInstance().isOverdue(task)) || hasInterestingSubTasks(parent, task, depth)
 				|| LocalRepositoryConnector.DEFAULT_SUMMARY.equals(task.getSummary());
 		// || isCurrentlySelectedInEditor(task);
 	}
 
-	private boolean hasInterestingSubTasks(Object parent, AbstractTask task, boolean checkSubTasks) {
-		if (!checkSubTasks) {
-			return false;
-		}
-		if (!TasksUiPlugin.getDefault().groupSubtasks(task)) {
-			return false;
-		}
-		if (task.getChildren() != null && task.getChildren().size() > 0) {
-			for (AbstractTask subTask : task.getChildren()) {
-				if (shouldAlwaysShow(parent, subTask, false)) {
-					return true;
+	private boolean hasInterestingSubTasks(Object parent, AbstractTask task, int depth) {
+		if (depth > 0) {
+			if (!TasksUiPlugin.getDefault().groupSubtasks(task)) {
+				return false;
+			}
+			if (task.getChildren() != null && task.getChildren().size() > 0) {
+				for (AbstractTask subTask : task.getChildren()) {
+					if (shouldAlwaysShow(parent, subTask, depth - 1)) {
+						return true;
+					}
 				}
 			}
 		}

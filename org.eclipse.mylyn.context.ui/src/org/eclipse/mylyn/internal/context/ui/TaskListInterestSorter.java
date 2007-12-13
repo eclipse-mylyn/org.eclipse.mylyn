@@ -10,8 +10,8 @@ package org.eclipse.mylyn.internal.context.ui;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.mylyn.internal.tasks.core.OrphanedTasksContainer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
-import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.internal.tasks.core.UnfiledCategory;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskKeyComparator;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListTableSorter;
@@ -28,9 +28,18 @@ public class TaskListInterestSorter extends ViewerSorter {
 
 	@Override
 	public int compare(Viewer compareViewer, Object o1, Object o2) {
-		if (o1 instanceof AbstractTaskContainer && o2 instanceof TaskArchive) {
+
+//		OrphanedTasksContainer localArchive = TasksUiPlugin.getTaskListManager().getTaskList().getOrphanContainer(
+//				LocalRepositoryConnector.REPOSITORY_URL);
+//		if (o1 == localArchive && o2 instanceof AbstractTaskContainer) {
+//			return -1;
+//		} else if (o1 instanceof AbstractTaskContainer && o2 == localArchive) {
+//			return 1;
+//		}
+
+		if (o1 instanceof AbstractTaskContainer && o2 instanceof OrphanedTasksContainer) {
 			return -1;
-		} else if (o2 instanceof AbstractTaskContainer && o1 instanceof TaskArchive) {
+		} else if (o2 instanceof AbstractTaskContainer && o1 instanceof OrphanedTasksContainer) {
 			return 1;
 		}
 
@@ -186,7 +195,8 @@ public class TaskListInterestSorter extends ViewerSorter {
 	}
 
 	private int compareKeys(AbstractTaskContainer element1, AbstractTaskContainer element2) {
-		return taskKeyComparator.compare(TaskListTableSorter.getSortableFromElement(element1), TaskListTableSorter.getSortableFromElement(element2));
+		return taskKeyComparator.compare(TaskListTableSorter.getSortableFromElement(element1),
+				TaskListTableSorter.getSortableFromElement(element2));
 	}
 
 	private int comparePriorities(AbstractTaskContainer element1, AbstractTaskContainer element2) {

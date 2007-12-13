@@ -83,7 +83,6 @@ public class RefactoringTest extends AbstractJavaContextTest {
 		IInteractionElement oldParentNode = ContextCorePlugin.getContextManager().getElement(
 				parentNode.getHandleIdentifier());
 		assertFalse(oldParentNode.getInterest().isInteresting());
-		// XXX: put back?
 		IInteractionElement newParentNode = ContextCorePlugin.getContextManager().getElement(
 				newType.getParent().getHandleIdentifier());
 		assertTrue(newParentNode.getInterest().isInteresting());
