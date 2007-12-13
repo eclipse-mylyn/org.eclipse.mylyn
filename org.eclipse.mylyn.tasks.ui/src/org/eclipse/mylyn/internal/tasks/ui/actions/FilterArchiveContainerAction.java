@@ -21,7 +21,7 @@ public class FilterArchiveContainerAction extends Action {
 
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.filter.archive";
 
-	private static final String LABEL = "Filter Archive Category";
+	private static final String LABEL = "Filter Archives";
 
 	private final TaskListView view;
 

@@ -14,6 +14,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.mylyn.internal.tasks.core.OrphanedTasksContainer;
 import org.eclipse.mylyn.internal.tasks.core.Person;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
@@ -87,7 +88,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 
 	private CompositeImageDescriptor getImageDescriptor(Object object) {
 		CompositeImageDescriptor compositeDescriptor = new CompositeImageDescriptor();
-		if (object instanceof TaskArchive || object instanceof UnfiledCategory) {
+		if (object instanceof TaskArchive || object instanceof OrphanedTasksContainer) {
 			compositeDescriptor.icon = TasksUiImages.CATEGORY_ARCHIVE;
 			return compositeDescriptor;
 		} else if (object instanceof TaskCategory || object instanceof UnfiledCategory) {
@@ -223,6 +224,25 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		} else if (object instanceof TaskGroup) {
 			TaskGroup element = (TaskGroup) object;
 			return element.getSummary();// + " / " + element.getChildren().size();
+		} else if (object instanceof OrphanedTasksContainer) {
+
+			OrphanedTasksContainer container = (OrphanedTasksContainer) object;
+
+//			OrphanedTasksContainer localArchive = TasksUiPlugin.getTaskListManager().getTaskList().getOrphanContainer(
+//					LocalRepositoryConnector.REPOSITORY_URL);
+//			if (container == localArchive) {
+//				return "Local Tasks";
+//			}
+
+			String result = container.getSummary();
+			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+					container.getConnectorKind(), container.getRepositoryUrl());
+			if (repository != null) {
+				result = "Archive: " + repository.getRepositoryLabel();
+			}
+
+			return result;
+
 		} else if (object instanceof AbstractTaskContainer) {
 			AbstractTaskContainer element = (AbstractTaskContainer) object;
 			return element.getSummary();

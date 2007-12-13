@@ -59,7 +59,7 @@ public abstract class AbstractBugzillaTest extends TestCase {
 		super.setUp();
 		TasksUiPlugin.getTaskDataManager().clear();
 		manager = TasksUiPlugin.getRepositoryManager();
-		TasksUiPlugin.getTaskListManager().getTaskList().reset();
+		TasksUiPlugin.getTaskListManager().resetTaskList();//getTaskList().reset();
 		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 	}
 
@@ -122,7 +122,7 @@ public abstract class AbstractBugzillaTest extends TestCase {
 				new NullProgressMonitor());
 		TasksUiPlugin.getSynchronizationManager().setTaskRead(task, true);
 		assertNotNull(task);
-		TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task,
+		TasksUiPlugin.getTaskListManager().getTaskList().moveTask(task,
 				TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 
 		return task;

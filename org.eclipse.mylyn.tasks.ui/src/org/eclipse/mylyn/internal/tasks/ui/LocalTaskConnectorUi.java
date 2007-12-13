@@ -47,7 +47,7 @@ public class LocalTaskConnectorUi extends AbstractRepositoryConnectorUi {
 
 	@Override
 	public String getConnectorKind() {
-		return LocalRepositoryConnector.REPOSITORY_KIND;
+		return LocalRepositoryConnector.CONNECTOR_KIND;
 	}
 
 	@Override

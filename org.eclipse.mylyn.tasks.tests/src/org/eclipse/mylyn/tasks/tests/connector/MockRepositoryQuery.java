@@ -15,11 +15,12 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
  */
 public class MockRepositoryQuery extends AbstractRepositoryQuery {
 
-	public String MOCK_URL = "http://mock.repository";
+	public String MOCK_QUERY_URL = MockRepositoryConnector.REPOSITORY_URL + ".query";
 
 	public MockRepositoryQuery(String description) {
 		super(description);
-		super.setUrl(MOCK_URL);
+		super.setUrl(MOCK_QUERY_URL);
+		super.setRepositoryUrl(MockRepositoryConnector.REPOSITORY_URL);
 	}
 
 	public MockRepositoryQuery(String description, String url) {

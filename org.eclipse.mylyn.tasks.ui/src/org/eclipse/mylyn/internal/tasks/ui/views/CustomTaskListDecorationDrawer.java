@@ -8,17 +8,15 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
-import java.util.Set;
-
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
+import org.eclipse.mylyn.internal.tasks.core.OrphanedTasksContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
+import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -146,7 +144,8 @@ class CustomTaskListDecorationDrawer implements Listener {
 						taskListView.synchronizationOverlaid));
 			} else {
 				int imageOffset = 0;
-				if (!hideDecorationOnContainer(element, (TreeItem) event.item) && hasDescendantIncoming(element)) {
+				if (!hideDecorationOnContainer(element, (TreeItem) event.item)
+						&& AbstractTaskListFilter.hasDescendantIncoming(element)) {
 					if (taskListView.synchronizationOverlaid) {
 						image = TasksUiImages.getImage(TasksUiImages.OVERLAY_SYNCH_INCOMMING);
 					} else {
@@ -184,7 +183,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 	}
 
 	private boolean hideDecorationOnContainer(AbstractTaskContainer element, TreeItem treeItem) {
-		if (element instanceof TaskArchive) {
+		if (element instanceof OrphanedTasksContainer) {
 			return true;
 		} else if (!taskListView.isFocusedMode()) {
 			return false;
@@ -195,28 +194,6 @@ class CustomTaskListDecorationDrawer implements Listener {
 				return false;
 			}
 		}
-	}
-
-	/**
-	 * NOTE: performance implication of looking down children
-	 */
-	private boolean hasDescendantIncoming(AbstractTaskContainer container) {
-		Set<AbstractTask> children = container.getChildren();
-		if (children == null) {
-			return false;
-		}
-
-		for (AbstractTask task : children) {
-			if (task != null) {
-				AbstractTask containedRepositoryTask = task;
-				if (containedRepositoryTask.getSynchronizationState() == RepositoryTaskSyncState.INCOMING) {
-					return true;
-				} else if (TasksUiPlugin.getDefault().groupSubtasks(container) && hasDescendantIncoming(task)) {
-					return true;
-				}
-			}
-		}
-		return false;
 	}
 
 	private void drawActivationImage(final int activationImageOffset, Event event, Image image) {

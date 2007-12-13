@@ -23,6 +23,8 @@ public abstract class AbstractTaskCategory extends AbstractTaskContainer {
 	/**
 	 * Override to return true for categories that the user creates, deletes, and renames. Return false for categories
 	 * that are managed
+	 * 
+	 * @API-3.0: Move up into AbstractTaskContainer
 	 */
 	public abstract boolean isUserDefined();
 

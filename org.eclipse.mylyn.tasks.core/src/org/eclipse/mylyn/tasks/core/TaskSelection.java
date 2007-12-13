@@ -46,7 +46,7 @@ public class TaskSelection {
 
 	public TaskSelection(String summary, String description) {
 		RepositoryTaskData taskData = new RepositoryTaskData(new IdentityAttributeFactory(),
-				LocalRepositoryConnector.REPOSITORY_KIND, LocalRepositoryConnector.REPOSITORY_URL, "");
+				LocalRepositoryConnector.CONNECTOR_KIND, LocalRepositoryConnector.REPOSITORY_URL, "");
 		taskData.setSummary(summary);
 		taskData.setDescription(description);
 		this.taskData = taskData;

@@ -8,7 +8,12 @@
 
 package org.eclipse.mylyn.internal.tasks.core;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
+import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 
 /**
@@ -20,8 +25,11 @@ public class TaskArchive extends AbstractTaskCategory {
 
 	public static final String LABEL_ARCHIVE = "Archive (all tasks)";
 
-	public TaskArchive() {
+	public TaskList taskList;
+
+	public TaskArchive(TaskList taskList) {
 		super(HANDLE);
+		this.taskList = taskList;
 	}
 
 	@Override
@@ -42,5 +50,29 @@ public class TaskArchive extends AbstractTaskCategory {
 	@Override
 	public boolean isUserDefined() {
 		return false;
+	}
+
+	@Override
+	public Set<AbstractTask> getChildren() {
+		Set<AbstractTask> children = new HashSet<AbstractTask>();
+		for (OrphanedTasksContainer container : taskList.getOrphanContainers()) {
+			children.addAll(container.getChildren());
+		}
+		return children;
+	}
+
+	@Override
+	public Set<AbstractTask> getChildrenInternal() {
+		return getChildren();
+	}
+
+	@Override
+	public void internalAddChild(AbstractTask task) {
+		// ignore
+	}
+
+	@Override
+	public void internalRemoveChild(AbstractTask task) {
+		// ignore
 	}
 }

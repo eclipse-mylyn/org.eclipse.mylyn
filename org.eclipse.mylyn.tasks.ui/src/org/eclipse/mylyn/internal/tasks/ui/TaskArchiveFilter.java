@@ -7,6 +7,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.ui;
 
+import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.OrphanedTasksContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 
 /**
@@ -16,6 +18,12 @@ public class TaskArchiveFilter extends AbstractTaskListFilter {
 
 	@Override
 	public boolean select(Object parent, Object element) {
+		if (element instanceof OrphanedTasksContainer) {
+//			if (((OrphanedTasksContainer) element).getRepositoryUrl().equals(LocalRepositoryConnector.REPOSITORY_URL)) {
+//				return true;
+//			}
+			return false;
+		}
 		if (element instanceof TaskArchive) {
 			return false;
 		}

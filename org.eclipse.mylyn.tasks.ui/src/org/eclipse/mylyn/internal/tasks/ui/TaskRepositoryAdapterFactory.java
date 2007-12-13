@@ -47,7 +47,7 @@ public class TaskRepositoryAdapterFactory implements IAdapterFactory {
 								.getRepositoryConnector(repository.getConnectorKind());
 						return connector.canCreateNewTask(repository);
 					} else if ("hasRepository".equals(name)) {
-						return !repository.getConnectorKind().equals(LocalRepositoryConnector.REPOSITORY_KIND);
+						return !repository.getConnectorKind().equals(LocalRepositoryConnector.CONNECTOR_KIND);
 					}
 					return false;
 				}

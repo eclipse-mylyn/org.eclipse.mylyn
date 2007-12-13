@@ -21,6 +21,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.mylyn.internal.tasks.core.OrphanedTasksContainer;
 import org.eclipse.mylyn.internal.tasks.ui.AddExistingTaskJob;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
@@ -281,7 +282,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 
 		Collections.sort(categories);
 		for (final AbstractTaskCategory category : categories) {
-			if (!category.equals(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer())) {
+			if (!(category instanceof OrphanedTasksContainer)) {//.equals(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer())) {
 				Action action = new Action() {
 					@Override
 					public void run() {

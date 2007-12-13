@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.eclipse.core.runtime.PlatformObject;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 
 /**
@@ -22,11 +23,6 @@ import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
  * @since 2.0
  */
 public abstract class AbstractTaskContainer extends PlatformObject implements Comparable<AbstractTaskContainer> {
-
-	/**
-	 * TODO: consider removing in 3.0 if handled by content provider
-	 */
-	private static final int MAX_SUBTASK_DEPTH = 10;
 
 	private String handleIdentifier = "";
 
@@ -103,7 +99,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	}
 
 	private boolean containsHelper(Set<AbstractTask> children, String handle, int depth) {
-		if (depth < MAX_SUBTASK_DEPTH && children != null && !children.isEmpty()) {
+		if (depth < ITasksCoreConstants.MAX_SUBTASK_DEPTH && children != null && !children.isEmpty()) {
 			for (AbstractTask child : children) {
 				if (handle.equals(child.getHandleIdentifier())
 						|| containsHelper(child.getChildrenInternal(), handle, depth + 1)) {

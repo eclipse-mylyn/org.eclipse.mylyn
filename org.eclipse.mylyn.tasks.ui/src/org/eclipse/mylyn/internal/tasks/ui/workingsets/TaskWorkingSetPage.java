@@ -31,6 +31,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.mylyn.internal.tasks.core.OrphanedTasksContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
@@ -138,6 +139,14 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 						taskContainers.add(element);
 					}
 				}
+
+				OrphanedTasksContainer orphansContainer = TasksUiPlugin.getTaskListManager()
+						.getTaskList()
+						.getOrphanContainer(((TaskRepository) parentElement).getUrl());
+				if (orphansContainer != null) {
+					taskContainers.add(orphansContainer);
+				}
+
 				return taskContainers.toArray();
 			} else if (parentElement instanceof TaskRepositoryProjectMapping) {
 				return ((TaskRepositoryProjectMapping) parentElement).getProjects().toArray();

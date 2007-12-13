@@ -159,7 +159,7 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 			viewer.setSelection(new StructuredSelection(selectedRepository));
 		} else {
 			TaskRepository localRepository = TasksUiPlugin.getRepositoryManager().getRepository(
-					LocalRepositoryConnector.REPOSITORY_KIND, LocalRepositoryConnector.REPOSITORY_URL);
+					LocalRepositoryConnector.CONNECTOR_KIND, LocalRepositoryConnector.REPOSITORY_URL);
 			viewer.setSelection(new StructuredSelection(localRepository));
 		}
 		

@@ -102,9 +102,6 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	}
 
 	private boolean taskHasUnfilteredChildren(AbstractTask parent) {
-		boolean groupSubtasks = !TasksUiPlugin.getDefault().groupSubtasks(parent);
-		if (groupSubtasks)
-			return false;
 		Set<AbstractTask> children = parent.getChildren();
 		if (children != null) {
 			for (AbstractTask task : children) {
@@ -210,9 +207,7 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 			// get all children
 			for (AbstractTask element : parentTasks) {
 				for (AbstractTask abstractTask : element.getChildren()) {
-					//if (!filter(element, abstractTask)) {
 					children.add(abstractTask);
-					//}
 				}
 			}
 			for (AbstractTask task : parentTasks) {

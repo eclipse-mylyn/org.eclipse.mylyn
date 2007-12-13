@@ -3553,7 +3553,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					if (getCategory() != null) {
-						TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(newTask, getCategory());
+						TasksUiPlugin.getTaskListManager().getTaskList().moveTask(newTask, getCategory());
 					}
 				}
 			});

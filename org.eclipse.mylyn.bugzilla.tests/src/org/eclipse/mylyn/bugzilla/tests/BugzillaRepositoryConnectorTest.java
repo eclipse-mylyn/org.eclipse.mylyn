@@ -57,8 +57,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 				task.getTaskId());
 		assertNotNull(taskData);
 
-		TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task,
-				TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
+		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
 
 		String newCommentText = "BugzillaRepositoryClientTest.testMidAirCollision(): test " + (new Date()).toString();
 		taskData.setNewComment(newCommentText);
@@ -132,8 +131,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 				task.getTaskId());
 		assertNotNull(taskData);
 
-		TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task,
-				TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
+		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
 
 		assertEquals("rob.elves@eclipse.org", taskData.getAssignedTo());
 		// Modify it (reassign to tests2@mylyn.eclipse.org)
@@ -182,7 +180,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 				task.getTaskId());
 		assertNotNull(taskData);
 
-		TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task,
+		TasksUiPlugin.getTaskListManager().getTaskList().moveTask(task,
 				TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 
 		assertEquals(defaultAssignee, taskData.getAssignedTo());
@@ -386,8 +384,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 				task.getTaskId());
 		assertNotNull(taskData);
 
-		TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task,
-				TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
+		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
 		int numComments = taskData.getComments().size();
 
 		// Modify it

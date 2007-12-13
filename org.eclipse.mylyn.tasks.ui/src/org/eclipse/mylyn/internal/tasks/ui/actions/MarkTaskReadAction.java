@@ -25,24 +25,24 @@ public class MarkTaskReadAction extends AbstractTaskAction {
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.mark.read";
 
 	public static final String DEFINITION_ID = "org.eclipse.mylyn.tasks.ui.command.markTaskRead";
-	
+
 	public MarkTaskReadAction(List<AbstractTaskContainer> selectedElements) {
 		super.selectedElements = selectedElements;
 		setText(ACTION_NAME);
 		setToolTipText("Mark " + ACTION_NAME);
 		setId(ID);
 		setActionDefinitionId(DEFINITION_ID);
-		if (containsArchiveContainer(selectedElements)) {
-			setEnabled(false);
+//		if (containsArchiveContainer(selectedElements)) {
+//			setEnabled(false);
+//		} else {
+		setEnabled(selectedElements.size() > 0);
+		if (selectedElements.size() == 1 && (selectedElements.get(0) instanceof AbstractTask)) {
+			AbstractTask task = (AbstractTask) selectedElements.get(0);
+			setEnabled(!(task instanceof LocalTask));
 		} else {
-			setEnabled(selectedElements.size() > 0);
-			if (selectedElements.size() == 1 && (selectedElements.get(0) instanceof AbstractTask)) {
-				AbstractTask task = (AbstractTask) selectedElements.get(0);
-				setEnabled(!(task instanceof LocalTask));
-			} else {
-				setEnabled(true);
-			}
+			setEnabled(true);
 		}
+//		}
 	}
 
 	@Override

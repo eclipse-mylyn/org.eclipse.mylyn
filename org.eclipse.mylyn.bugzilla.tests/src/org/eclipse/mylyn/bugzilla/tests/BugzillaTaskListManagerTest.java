@@ -23,8 +23,8 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
@@ -87,10 +87,9 @@ public class BugzillaTaskListManagerTest extends TestCase {
 	}
 
 	public void testRepositoryTaskExternalization() {
-		BugzillaTask repositoryTask = new BugzillaTask("repo", "1", "label");
+		BugzillaTask repositoryTask = new BugzillaTask(IBugzillaConstants.ECLIPSE_BUGZILLA_URL, "1", "label");
 		repositoryTask.setTaskKind("kind");
-		manager.getTaskList().moveToContainer(repositoryTask,
-				TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
+		manager.getTaskList().addTask(repositoryTask);
 		manager.saveTaskList();
 
 		manager.resetTaskList();
@@ -98,8 +97,15 @@ public class BugzillaTaskListManagerTest extends TestCase {
 		// TaskList list = new TaskList();
 		// manager.setTaskList(list);
 		manager.readExistingOrCreateNewList();
-		assertEquals(1, manager.getTaskList().getDefaultCategory().getChildren().size());
-		AbstractTask readTask = manager.getTaskList().getDefaultCategory().getChildren().iterator().next();
+		assertEquals(1, manager.getTaskList()
+				.getOrphanContainer(IBugzillaConstants.ECLIPSE_BUGZILLA_URL)
+				.getChildren()
+				.size());
+		AbstractTask readTask = manager.getTaskList()
+				.getOrphanContainer(IBugzillaConstants.ECLIPSE_BUGZILLA_URL)
+				.getChildren()
+				.iterator()
+				.next();
 
 		assertEquals(repositoryTask.getHandleIdentifier(), readTask.getHandleIdentifier());
 		assertEquals(repositoryTask.getSummary(), readTask.getSummary());

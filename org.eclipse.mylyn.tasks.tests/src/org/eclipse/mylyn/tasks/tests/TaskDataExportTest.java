@@ -69,7 +69,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 
 		// Create a task and context with an interaction event to be saved
 		task1 = manager.createNewLocalTask("Export Test Task");
-		manager.getTaskList().moveToContainer(task1, manager.getTaskList().getDefaultCategory());
+		manager.getTaskList().addTask(task1);
 		mockContext = ContextCorePlugin.getContextManager().loadContext(task1.getHandleIdentifier());
 		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.EDIT, "structureKind", "handle", "originId");
 		mockContext.parseEvent(event);

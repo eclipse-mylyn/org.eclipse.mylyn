@@ -29,7 +29,7 @@ public class LocalRepositoryConnector extends AbstractRepositoryConnector {
 
 	public static final String REPOSITORY_LABEL = "Local Tasks";
 
-	public static final String REPOSITORY_KIND = "local";
+	public static final String CONNECTOR_KIND = "local";
 
 	public static final String REPOSITORY_URL = "local";
 
@@ -70,7 +70,7 @@ public class LocalRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public String getConnectorKind() {
-		return REPOSITORY_KIND;
+		return CONNECTOR_KIND;
 	}
 
 	@Override

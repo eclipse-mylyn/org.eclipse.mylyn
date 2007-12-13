@@ -40,8 +40,7 @@ public class NewTaskWizardRepositorySelectionTest extends TestCase {
 		TaskListView view = TaskListView.openInActivePerspective();
 		MockRepositoryTask mockTask = new MockRepositoryTask("mock.task");
 		TasksUiPlugin.getTaskActivityManager().scheduleNewTask(mockTask);
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(mockTask,
-				TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
+		TasksUiPlugin.getTaskListManager().getTaskList().addTask(mockTask);
 
 		view.setFocusedMode(true);
 		view.getViewer().refresh();
@@ -80,7 +79,7 @@ public class NewTaskWizardRepositorySelectionTest extends TestCase {
 
 		SelectRepositoryPage page = (SelectRepositoryPage) wizard.getPages()[0];
 		TaskRepository localRepository = TasksUiPlugin.getRepositoryManager().getRepositories(
-				LocalRepositoryConnector.REPOSITORY_KIND).iterator().next();
+				LocalRepositoryConnector.CONNECTOR_KIND).iterator().next();
 		assertEquals(localRepository, ((IStructuredSelection) page.getViewer().getSelection()).getFirstElement());
 
 		wizard.dispose();

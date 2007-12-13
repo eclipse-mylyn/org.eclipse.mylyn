@@ -33,6 +33,7 @@ import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
+import org.eclipse.mylyn.internal.tasks.core.OrphanedTasksContainer;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
@@ -109,8 +110,7 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	private TaskListSaveManager taskListSaveManager;
 
-	// TODO: guard against overwriting the single instance?
-	private TaskList taskList = new TaskList();
+	private final TaskList taskList = new TaskList();
 
 	private TaskActivationHistory taskActivityHistory = new TaskActivationHistory();
 
@@ -157,8 +157,22 @@ public class TaskListManager implements IPropertyChangeListener {
 	public TaskList resetTaskList() {
 		resetAndRollOver();
 		taskList.reset();
+		prepareOrphanContainers();
+
 		taskListInitialized = true;
 		return taskList;
+	}
+
+	private void prepareOrphanContainers() {
+		for (TaskRepository repository : TasksUiPlugin.getRepositoryManager().getAllRepositories()) {
+			if (!repository.getConnectorKind().equals(LocalRepositoryConnector.CONNECTOR_KIND)) {
+				taskList.addOrphanContainer(new OrphanedTasksContainer(repository.getConnectorKind(),
+						repository.getUrl()));
+			}
+		}
+
+//		taskList.addOrphanContainer(new OrphanedTasksContainer(LocalRepositoryConnector.CONNECTOR_KIND,
+//				LocalRepositoryConnector.REPOSITORY_URL));
 	}
 
 	public void refactorRepositoryUrl(String oldUrl, String newUrl) {
@@ -262,6 +276,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	public boolean readExistingOrCreateNewList() {
 		try {
 			if (taskListFile.exists()) {
+				prepareOrphanContainers();
 				taskListWriter.readTaskList(taskList, taskListFile, TasksUiPlugin.getTaskDataManager());
 			} else {
 				resetTaskList();
@@ -506,7 +521,7 @@ public class TaskListManager implements IPropertyChangeListener {
 				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), ITasksUiConstants.TITLE_DIALOG,
 						"The new task has been added to the root of the list, since tasks can not be added to a query.");
 			}
-			taskList.addTask(newTask, taskList.getDefaultCategory());
+			taskList.addTask(newTask, TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 		}
 		return newTask;
 	}

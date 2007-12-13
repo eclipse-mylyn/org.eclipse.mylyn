@@ -15,6 +15,7 @@ import java.util.List;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.mylyn.internal.tasks.core.OrphanedTasksContainer;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewCategoryAction;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
@@ -41,7 +42,7 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 				.getCategories());
 		Collections.sort(categories);
 		for (final AbstractTaskCategory category : categories) {
-			if (!category.equals(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer())) {
+			if (!(category instanceof OrphanedTasksContainer)) {
 				Action action = new Action() {
 					@Override
 					public void run() {
@@ -99,7 +100,7 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 	private void moveToCategory(final List<AbstractTaskContainer> selectedElements, AbstractTaskCategory category) {
 		for (AbstractTaskContainer element : selectedElements) {
 			if (element instanceof AbstractTask) {
-				TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer((AbstractTask) element, category);
+				TasksUiPlugin.getTaskListManager().getTaskList().moveTask((AbstractTask) element, category);
 			}
 		}
 	}

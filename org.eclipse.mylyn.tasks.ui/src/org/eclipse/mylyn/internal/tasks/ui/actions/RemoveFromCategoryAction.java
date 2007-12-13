@@ -14,6 +14,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
@@ -59,25 +60,27 @@ public class RemoveFromCategoryAction extends Action {
 
 					TreeItem item = this.view.getViewer().getTree().getSelection()[0];
 					Set<AbstractTaskContainer> parentContainers = task.getParentContainers();
-					
+
 					if (item.getParentItem() != null && item.getParent().getData() instanceof TaskCategory) {
 						TaskCategory category = (TaskCategory) item.getParentItem().getData();
 						TasksUiPlugin.getTaskListManager().getTaskList().removeFromCategory(category, task);
-						TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task,
-								TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
-					} else if (!task.isLocal() && parentContainers.contains(TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory())) {
-						TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task, TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer());
-					} else if (parentContainers.contains(TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory())) {
-						MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
-								LABEL, "Can not remove from the default category, move to another category instead.");
-					} else {
-						TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task,
+					}
+//						TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task,
+//								TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
+					else if (!parentContainers.isEmpty() && parentContainers.iterator().next() instanceof TaskCategory) {
+						TasksUiPlugin.getTaskListManager().getTaskList().removeFromCategory(
+								(TaskCategory) parentContainers.iterator().next(), task);
+						//TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task, null);
+					}/* else if (parentContainers.contains(TasksUiPlugin.getTaskListManager()
+																																.getTaskList()
+																																.getDefaultCategory())) {
+																															MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+																																	LABEL, "Can not remove from the default category, move to another category instead.");
+																														}*/else {
+						TasksUiPlugin.getTaskListManager().getTaskList().moveTask(task,
 								TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 					}
-					
-					if (item.getParentItem() != null && item.getParentItem().getData() instanceof TaskCategory) {
 
-					}
 				}
 			}
 		} catch (NullPointerException npe) {

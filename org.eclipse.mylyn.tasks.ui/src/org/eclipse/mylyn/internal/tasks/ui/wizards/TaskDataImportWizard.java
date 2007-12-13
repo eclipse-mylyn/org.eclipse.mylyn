@@ -27,9 +27,6 @@ import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.monitor.core.util.ZipFileUtil;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
@@ -215,19 +212,19 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 		}
 	}
 
-	/** Returns all tasks in the task list root or a category in the task list */
-	protected List<AbstractTask> getAllTasks() {
-		List<AbstractTask> allTasks = new ArrayList<AbstractTask>();
-		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
-
-		allTasks.addAll(taskList.getDefaultCategory().getChildren());
-
-		for (AbstractTaskContainer category : taskList.getCategories()) {
-			allTasks.addAll(category.getChildren());
-		}
-
-		return allTasks;
-	}
+//	/** Returns all tasks in the task list root or a category in the task list */
+//	protected List<AbstractTask> getAllTasks() {
+//		List<AbstractTask> allTasks = new ArrayList<AbstractTask>();
+//		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+//
+//		allTasks.addAll(taskList.getOrphanContainer(LocalRepositoryConnector.REPOSITORY_URL).getChildren());
+//
+//		for (AbstractTaskContainer category : taskList.getCategories()) {
+//			allTasks.addAll(category.getChildren());
+//		}
+//
+//		return allTasks;
+//	}
 
 	private void readTaskListData() {
 		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {

@@ -14,7 +14,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Rob Elves
@@ -49,7 +48,7 @@ public abstract class AbstractTaskAction extends Action {
 	protected abstract void performActionOnTask(AbstractTask repositoryTask);
 
 	protected boolean containsArchiveContainer(List<AbstractTaskContainer> selectedElements) {
-		return selectedElements.contains(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer());
+		return false;//selectedElements.contains(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer());
 	}
 
 }

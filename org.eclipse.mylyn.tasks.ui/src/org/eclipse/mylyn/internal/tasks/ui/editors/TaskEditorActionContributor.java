@@ -26,6 +26,7 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylyn.internal.tasks.core.OrphanedTasksContainer;
 import org.eclipse.mylyn.internal.tasks.ui.AddExistingTaskJob;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
@@ -180,7 +181,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 
 			Collections.sort(categories);
 			for (final AbstractTaskCategory category : categories) {
-				if (!category.equals(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer())) {
+				if (!(category instanceof OrphanedTasksContainer)) {//.equals(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer())) {
 					Action action = new Action() {
 						@Override
 						public void run() {

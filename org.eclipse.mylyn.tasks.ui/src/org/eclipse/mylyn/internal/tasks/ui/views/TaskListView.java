@@ -46,6 +46,7 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
+import org.eclipse.mylyn.internal.tasks.core.OrphanedTasksContainer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
@@ -276,7 +277,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private TaskPriorityFilter filterPriority = new TaskPriorityFilter();
 
-	private TaskCompletionFilter filterComplete = new TaskCompletionFilter();
+	private TaskCompletionFilter filterComplete = new TaskCompletionFilter(this);
 
 	private TaskArchiveFilter filterArchive = new TaskArchiveFilter();
 
@@ -458,8 +459,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 									refreshJob.refresh();
 									break;
 								default:
-									if (taskContainerDelta.getContainer().equals(
-											TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory())) {
+									if (taskContainerDelta.getContainer() == null) {
 										refreshJob.refresh();
 									} else {
 										refreshJob.refreshTask(taskContainerDelta.getContainer());
@@ -1135,7 +1135,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 					subMenu = new MenuManager("New", ID_MENU_NEW);
 					manager.add(subMenu);
 				}
-				
+
 				subMenu.add(new Separator(ID_SEPARATOR_NEW_REPOSITORY));
 				subMenu.add(action);
 				subMenu.add(new Separator(ID_SEPARATOR_NEW_LOCAL));
@@ -1178,6 +1178,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 		addAction(copyDetailsAction, manager, element);
 		if (task != null && !task.isLocal()) {
+			// TODO: if selection parent is an Orphan container don't add this action
 //			addAction(cloneThisBugAction, manager, element);
 			addAction(removeFromCategoryAction, manager, element);
 		}
@@ -1276,7 +1277,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			} else if (action instanceof MarkTaskIncompleteAction) {
 				action.setEnabled(false);
 			} else if (action instanceof DeleteAction) {
-				if (element instanceof TaskArchive || element instanceof UnfiledCategory)
+				if (element instanceof TaskArchive || element instanceof UnfiledCategory
+						|| element instanceof OrphanedTasksContainer)
 					action.setEnabled(false);
 				else
 					action.setEnabled(true);
@@ -1407,7 +1409,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			refreshJob.forceRefresh();
 		}
 	}
-	
+
 	public void refresh() {
 		refreshJob.forceRefresh();
 //		if (expand) {
@@ -1698,8 +1700,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			Set<AbstractTaskContainer> containers = new HashSet<AbstractTaskContainer>(
 					TasksUiPlugin.getTaskListManager().getTaskList().getQueriesForHandle(task.getHandleIdentifier()));
 			containers.addAll(task.getParentContainers());
-			containers.add(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer());
-			containers.add(TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
+			containers.add(TasksUiPlugin.getTaskListManager().getTaskList().getOrphanContainer(task.getRepositoryUrl()));
+//			containers.add(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer());
+//			containers.add(TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 			for (AbstractTaskContainer container : containers) {
 				refreshJob.refreshTask(container);
 			}

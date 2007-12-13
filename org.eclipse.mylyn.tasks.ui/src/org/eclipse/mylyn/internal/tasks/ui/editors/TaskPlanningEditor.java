@@ -154,7 +154,9 @@ public class TaskPlanningEditor extends TaskFormPage {
 						if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
 							PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 								public void run() {
-									updateTaskData(updateTask);
+									if (summaryEditor != null && summaryEditor.getTextWidget() != null) {
+										updateTaskData(updateTask);
+									}
 								}
 							});
 						}

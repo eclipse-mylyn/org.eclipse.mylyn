@@ -11,13 +11,15 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.OrphanedTasksContainer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
-import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.internal.tasks.core.UnfiledCategory;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -74,15 +76,23 @@ public class TaskListTableSorter extends ViewerSorter {
 			return 1;
 		}
 
-		if (o1 instanceof UnfiledCategory && o2 instanceof AbstractTaskContainer) {
-			return -1;
-		} else if (o1 instanceof AbstractTaskContainer && o2 instanceof UnfiledCategory) {
+//		OrphanedTasksContainer localArchive = TasksUiPlugin.getTaskListManager().getTaskList().getOrphanContainer(
+//				LocalRepositoryConnector.REPOSITORY_URL);
+//		if (o1 == localArchive && o2 instanceof AbstractTaskContainer) {
+//			return -1;
+//		} else if (o1 instanceof AbstractTaskContainer && o2 == localArchive) {
+//			return 1;
+//		}
+
+		if (o1 instanceof AbstractTaskContainer && o2 instanceof UnfiledCategory) {
 			return 1;
+		} else if (o2 instanceof AbstractTaskContainer && o1 instanceof UnfiledCategory) {
+			return -1;
 		}
 
-		if (o1 instanceof AbstractTaskContainer && o2 instanceof TaskArchive) {
+		if (o1 instanceof AbstractTaskContainer && o2 instanceof OrphanedTasksContainer) {
 			return -1;
-		} else if (o2 instanceof AbstractTaskContainer && o1 instanceof TaskArchive) {
+		} else if (o2 instanceof AbstractTaskContainer && o1 instanceof OrphanedTasksContainer) {
 			return 1;
 		}
 
@@ -150,7 +160,7 @@ public class TaskListTableSorter extends ViewerSorter {
 
 	/**
 	 * Determine the sort order of two tasks by id/summary
-	 *
+	 * 
 	 * @param element1
 	 * @param element2
 	 * @return sort order
@@ -162,7 +172,7 @@ public class TaskListTableSorter extends ViewerSorter {
 
 	/**
 	 * Return a sortable string in the format "key: summary"
-	 *
+	 * 
 	 * @param element
 	 * @return sortable string
 	 * @deprecated Use getSortableFromElement()
@@ -181,12 +191,12 @@ public class TaskListTableSorter extends ViewerSorter {
 
 	/**
 	 * Return a array of values to pass to taskKeyComparator.compare() for sorting
-	 *
+	 * 
 	 * @param element
 	 * @return String array[component, taskId, summary]
 	 */
 	public static String[] getSortableFromElement(AbstractTaskContainer element) {
-		final String a[] = new String[] {"", null, element.getSummary()};
+		final String a[] = new String[] { "", null, element.getSummary() };
 
 		if (element instanceof AbstractTask) {
 			AbstractTask task1 = (AbstractTask) element;

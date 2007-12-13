@@ -28,7 +28,7 @@ public class LocalTask extends AbstractTask {
 
 	@Override
 	public String getConnectorKind() {
-		return LocalRepositoryConnector.REPOSITORY_KIND;
+		return LocalRepositoryConnector.CONNECTOR_KIND;
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public class LocalTask extends AbstractTask {
 
 	@Override
 	public String getOwner() {
-		return LocalRepositoryConnector.REPOSITORY_KIND;
+		return LocalRepositoryConnector.CONNECTOR_KIND;
 	}
 
 	@Override

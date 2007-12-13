@@ -6,23 +6,13 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.tests;
-
-import junit.framework.TestCase;
-
-import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
-import org.eclipse.mylyn.tasks.core.TaskList;
+package org.eclipse.mylyn.internal.tasks.core;
 
 /**
- * @author Mik Kersten
  * @author Rob Elves
  */
-public class TaskListTest extends TestCase {
+public interface ITasksCoreConstants {
 
-	public void testGetUserCategories() {
-		TaskList taskList = new TaskList();
-		taskList.addCategory(new TaskCategory("a"));
-		assertEquals(2, taskList.getUserCategories().size());
-	}
+	public static final int MAX_SUBTASK_DEPTH = 10;
 
 }

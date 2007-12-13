@@ -26,6 +26,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
+import org.eclipse.mylyn.internal.tasks.core.OrphanedTasksContainer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
@@ -162,9 +163,14 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 
 		for (AbstractTask task : tasksToMove) {
 			if (currentTarget instanceof UnfiledCategory) {
-				TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task, (UnfiledCategory) currentTarget);
+				TasksUiPlugin.getTaskListManager().getTaskList().moveTask(task, (UnfiledCategory) currentTarget);
 			} else if (currentTarget instanceof TaskCategory) {
-				TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task, (TaskCategory) currentTarget);
+				TasksUiPlugin.getTaskListManager().getTaskList().moveTask(task, (TaskCategory) currentTarget);
+			} else if (currentTarget instanceof OrphanedTasksContainer) {
+				if (((OrphanedTasksContainer) currentTarget).getRepositoryUrl().equals(task.getRepositoryUrl())) {
+					TasksUiPlugin.getTaskListManager().getTaskList().moveTask(task,
+							(AbstractTaskCategory) currentTarget);
+				}
 			} else if (currentTarget instanceof AbstractTask) {
 				AbstractTask targetTask = (AbstractTask) currentTarget;
 				AbstractTaskCategory targetCategory = null;
@@ -173,10 +179,14 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 					AbstractTaskContainer container = targetTask.getParentContainers().iterator().next();
 					if (container instanceof TaskCategory || container instanceof UnfiledCategory) {
 						targetCategory = (AbstractTaskCategory) container;
+					} else if (container instanceof OrphanedTasksContainer) {
+						if (((OrphanedTasksContainer) container).getRepositoryUrl().equals(task.getRepositoryUrl())) {
+							targetCategory = (AbstractTaskCategory) container;
+						}
 					}
 				}
 				if (targetCategory != null) {
-					TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task, targetCategory);
+					TasksUiPlugin.getTaskListManager().getTaskList().moveTask(task, targetCategory);
 				}
 			} else if (currentTarget instanceof ScheduledTaskContainer) {
 				ScheduledTaskContainer container = (ScheduledTaskContainer) currentTarget;
@@ -185,8 +195,10 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 				TaskActivityUtil.snapEndOfWorkDay(newSchedule);
 				TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, newSchedule.getTime());
 			} else if (currentTarget == null) {
-				TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(newTask,
-						TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
+//				TasksUiPlugin.getTaskListManager().getTaskList().moveTask(
+//						newTask,
+//						TasksUiPlugin.getTaskListManager().getTaskList().getOrphanContainer(
+//								LocalRepositoryConnector.REPOSITORY_URL));
 			}
 		}
 
@@ -307,7 +319,8 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			// handle all files
 			return true;
 		} else if (TaskTransfer.getInstance().isSupportedType(currentTransfer)) {
-			if (getCurrentTarget() instanceof TaskCategory || getCurrentTarget() instanceof UnfiledCategory
+			if (getCurrentTarget() instanceof UnfiledCategory || getCurrentTarget() instanceof TaskCategory
+					|| getCurrentTarget() instanceof OrphanedTasksContainer
 					|| getCurrentTarget() instanceof ScheduledTaskContainer) {
 				return true;
 			} else if (getCurrentTarget() instanceof AbstractTaskContainer

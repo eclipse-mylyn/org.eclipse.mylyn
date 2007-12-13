@@ -19,6 +19,7 @@ import java.util.Set;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
@@ -217,7 +218,7 @@ public class TaskActivityWizardPage extends WizardPage {
 		List<AbstractTaskContainer> containers = new ArrayList<AbstractTaskContainer>();
 		containers.addAll(manager.getTaskList().getUserCategories());
 		containers.addAll(manager.getTaskList().getQueries());
-		containers.add(manager.getTaskList().getArchiveContainer());
+		//containers.add(manager.getTaskList().getArchiveContainer());
 		Collections.sort(containers, new Comparator<AbstractTaskContainer>() {
 
 			public int compare(AbstractTaskContainer c1, AbstractTaskContainer c2) {

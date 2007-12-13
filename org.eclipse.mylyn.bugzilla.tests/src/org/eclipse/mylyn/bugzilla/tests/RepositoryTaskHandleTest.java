@@ -12,6 +12,8 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
@@ -51,24 +53,28 @@ public class RepositoryTaskHandleTest extends TestCase {
 	// }
 
 	public void testRepositoryUrlHandles() {
+		String repositoryUrl = IBugzillaConstants.ECLIPSE_BUGZILLA_URL;
+		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, repositoryUrl);
+		TasksUiPlugin.getRepositoryManager().addRepository(repository,
+				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
-		String repository = IBugzillaConstants.ECLIPSE_BUGZILLA_URL;
 		String id = "123";
-		BugzillaTask bugTask = new BugzillaTask(repository, id, "label 124");
-		assertEquals(repository, bugTask.getRepositoryUrl());
+		BugzillaTask bugTask = new BugzillaTask(repositoryUrl, id, "label 124");
+		assertEquals(repositoryUrl, bugTask.getRepositoryUrl());
 
-		manager.getTaskList().moveToContainer(bugTask,
-				TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
+		manager.getTaskList().addTask(bugTask);
 		manager.saveTaskList();
 		manager.resetTaskList();
 		manager.readExistingOrCreateNewList();
 
 		BugzillaTask readReport = (BugzillaTask) manager.getTaskList()
-				.getDefaultCategory()
+				.getOrphanContainer(repositoryUrl)
 				.getChildren()
 				.iterator()
 				.next();
 		assertEquals(readReport.getSummary(), readReport.getSummary());
 		assertEquals(readReport.getRepositoryUrl(), readReport.getRepositoryUrl());
+		TasksUiPlugin.getRepositoryManager().removeRepository(repository,
+				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 	}
 }

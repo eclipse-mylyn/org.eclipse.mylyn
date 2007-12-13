@@ -442,6 +442,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			// initialized
 			taskListManager.init();
 			taskListManager.addActivityListener(CONTEXT_TASK_ACTIVITY_LISTENER);
+			// readExistingOrCreateNewList() must be called after repositories have been read in
 			taskListManager.readExistingOrCreateNewList();
 			initialized = true;
 
@@ -482,7 +483,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 		// Add standard local task repository
 		if (taskRepositoryManager.getRepository(LocalRepositoryConnector.REPOSITORY_URL) == null) {
-			TaskRepository localRepository = new TaskRepository(LocalRepositoryConnector.REPOSITORY_KIND,
+			TaskRepository localRepository = new TaskRepository(LocalRepositoryConnector.CONNECTOR_KIND,
 					LocalRepositoryConnector.REPOSITORY_URL, LocalRepositoryConnector.REPOSITORY_VERSION);
 			localRepository.setRepositoryLabel(LocalRepositoryConnector.REPOSITORY_LABEL);
 			localRepository.setAnonymous(true);
@@ -640,13 +641,13 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	 * @param withProgress
 	 */
 	public void reloadDataDirectory(boolean withProgress) {
-		getTaskListManager().resetTaskList();
 		getTaskListManager().getTaskActivationHistory().clear();
 		getRepositoryManager().readRepositories(getRepositoriesFilePath());
 		loadTemplateRepositories();
-		ContextCorePlugin.getContextManager().loadActivityMetaContext();
+		getTaskListManager().resetTaskList();
 		getTaskListManager().setTaskListFile(
 				new File(getDataDirectory() + File.separator + ITasksUiConstants.DEFAULT_TASK_LIST_FILE));
+		ContextCorePlugin.getContextManager().loadActivityMetaContext();
 		getTaskListManager().readExistingOrCreateNewList();
 		getTaskListManager().initActivityHistory();
 		checkForCredentials();
@@ -957,8 +958,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	 * 
 	 * @Deprecated
 	 */
-	public TaskListNotification getIncommingNotification(AbstractRepositoryConnector connector,
-			AbstractTask task) {
+	public TaskListNotification getIncommingNotification(AbstractRepositoryConnector connector, AbstractTask task) {
 
 		TaskListNotification notification = new TaskListNotification(task);
 		RepositoryTaskData newTaskData = getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
@@ -981,7 +981,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				if (!"".equals(chnagedAttributes)) {
 					description.append(chnagedAttributes);
 				}
-				
+
 				notification.setDescription(description.toString());
 
 				if (connector != null) {

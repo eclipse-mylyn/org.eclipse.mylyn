@@ -59,7 +59,6 @@ public class TaskRepositoryManagerTest extends TestCase {
 
 		TaskRepository repository1 = new TaskRepository("bugzilla", "http://repository1/");
 		manager.addRepository(repository1, TasksUiPlugin.getDefault().getRepositoriesFilePath());
-		assertEquals(1, manager.getAllRepositories().size());
 		assertNotNull(manager.getRepository("http://repository1"));
 		assertNotNull(manager.getRepository("http://repository1/"));
 
@@ -69,6 +68,11 @@ public class TaskRepositoryManagerTest extends TestCase {
 	}
 
 	public void testQueryDeletion() {
+		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND,
+				MockRepositoryConnector.REPOSITORY_URL);
+		TasksUiPlugin.getRepositoryManager().addRepository(repository,
+				TasksUiPlugin.getDefault().getRepositoriesFilePath());
+
 		MockRepositoryTask task = new MockRepositoryTask("1");
 		task.setLastReadTimeStamp("now");
 		MockRepositoryQuery query = new MockRepositoryQuery("Test");

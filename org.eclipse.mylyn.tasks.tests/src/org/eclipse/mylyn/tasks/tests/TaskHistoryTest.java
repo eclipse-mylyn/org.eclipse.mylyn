@@ -45,9 +45,9 @@ public class TaskHistoryTest extends TestCase {
 
 	protected AbstractTask task5 = null;
 
-	private ActivateTaskHistoryDropDownAction previousTaskAction = new ActivateTaskHistoryDropDownAction(TasksUiPlugin.getTaskListManager()
-			.getTaskActivationHistory(), false);
-	
+	private ActivateTaskHistoryDropDownAction previousTaskAction = new ActivateTaskHistoryDropDownAction(
+			TasksUiPlugin.getTaskListManager().getTaskActivationHistory(), false);
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -57,19 +57,19 @@ public class TaskHistoryTest extends TestCase {
 		resetHistory();
 
 		task1 = manager.createNewLocalTask("task 1");
-		manager.getTaskList().moveToContainer(task1, manager.getTaskList().getDefaultCategory());
+		manager.getTaskList().addTask(task1);
 
 		task2 = manager.createNewLocalTask("task 2");
-		manager.getTaskList().moveToContainer(task2, manager.getTaskList().getDefaultCategory());
+		manager.getTaskList().addTask(task2);
 
 		task3 = manager.createNewLocalTask("task 3");
-		manager.getTaskList().moveToContainer(task3, manager.getTaskList().getDefaultCategory());
+		manager.getTaskList().addTask(task3);
 
 		task4 = manager.createNewLocalTask("task 4");
-		manager.getTaskList().moveToContainer(task4, manager.getTaskList().getDefaultCategory());
+		manager.getTaskList().addTask(task4);
 
 		task5 = manager.createNewLocalTask("task 5");
-		manager.getTaskList().moveToContainer(task5, manager.getTaskList().getDefaultCategory());
+		manager.getTaskList().addTask(task5);
 
 		history = manager.getTaskActivationHistory();
 	}
@@ -95,7 +95,7 @@ public class TaskHistoryTest extends TestCase {
 		assertTrue(task3.isActive());
 		assertFalse(task2.isActive());
 		assertFalse(task1.isActive());
-		
+
 		previousTaskAction.run();
 		assertTrue(task2.isActive());
 

@@ -34,16 +34,16 @@ public class MarkTaskUnreadAction extends AbstractTaskAction {
 		setId(ID);
 		setActionDefinitionId(DEFINITION_ID);
 		setImageDescriptor(TasksUiImages.OVERLAY_INCOMMING);
-		if (containsArchiveContainer(selectedElements)) {
-			setEnabled(false);
+//		if (containsArchiveContainer(selectedElements)) {
+//			setEnabled(false);
+//		} else {
+		if (selectedElements.size() == 1 && (selectedElements.get(0) instanceof AbstractTask)) {
+			AbstractTask task = (AbstractTask) selectedElements.get(0);
+			setEnabled(!task.isLocal());
 		} else {
-			if (selectedElements.size() == 1 && (selectedElements.get(0) instanceof AbstractTask)) {
-				AbstractTask task = (AbstractTask) selectedElements.get(0);
-				setEnabled(!task.isLocal());
-			} else {
-				setEnabled(true);
-			}
+			setEnabled(true);
 		}
+//		}
 	}
 
 	@Override
