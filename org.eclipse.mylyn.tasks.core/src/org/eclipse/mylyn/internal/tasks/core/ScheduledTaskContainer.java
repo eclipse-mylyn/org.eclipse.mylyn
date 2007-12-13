@@ -186,7 +186,8 @@ public class ScheduledTaskContainer extends AbstractTaskCategory {
 					children.add(task);
 				}
 			}
-			children.addAll(activityManager.getActiveTasks(getStart(), getEnd()));
+			/*bug#212489 */
+			//children.addAll(activityManager.getActiveTasks(getStart(), getEnd()));
 			children.addAll(activityManager.getScheduledTasks(getStart(), getEnd()));
 			for (AbstractTask task : activityManager.getDueTasks(getStart(), getEnd())) {
 				if (activityManager.isOwnedByUser(task)) {
@@ -222,7 +223,7 @@ public class ScheduledTaskContainer extends AbstractTaskCategory {
 
 		}
 	}
-	
+
 	@Override
 	public Set<AbstractTask> getChildrenInternal() {
 		return getChildren();
