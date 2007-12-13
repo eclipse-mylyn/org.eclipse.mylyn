@@ -23,6 +23,6 @@ $JAVA_HOME/bin/java \
  -Declipse-home=$ECLIPSE_TEST_HOME_3_3 \
  "-Dvmargs=-Xms256M -Xmx256M" \
  "-DextraVMargs=-Declipse.perf.dbloc=$BUILD_ROOT/derby \
-                -Declipse.perf.config=build=$QUALIFIER;host=$HOST;jvm=$JVM" \
+                -Declipse.perf.config=build=$QUALIFIER;config=$HOST-3.3;jvm=$JVM" \
  -logger org.apache.tools.ant.DefaultLogger \
  $@

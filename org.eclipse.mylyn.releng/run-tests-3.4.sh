@@ -20,7 +20,7 @@ $JAVA_HOME/bin/java \
  -file $ECLIPSE_TEST_HOME_3_4/plugins/org.eclipse.mylyn.tests/test.xml \
  -Declipse-home=$ECLIPSE_TEST_HOME_3_4 \
  "-DextraVMargs=-Declipse.perf.dbloc=$BUILD_ROOT/derby \
-                -Declipse.perf.config=build=$QUALIFIER;host=$HOST;jvm=$JVM" \
+                -Declipse.perf.config=build=$QUALIFIER;config=$HOST-3.4;jvm=$JVM" \
  -Dos=linux -Dws=gtk -Darch=x86 \
  "-Dvmargs=-Xms256M -Xmx256M" \
  -logger org.apache.tools.ant.DefaultLogger \
