@@ -13,17 +13,10 @@ package org.eclipse.mylyn.internal.bugzilla.ide.actions;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewTaskAction;
 import org.eclipse.mylyn.tasks.core.TaskSelection;
-import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IObjectActionDelegate;
-import org.eclipse.ui.IViewActionDelegate;
-import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.internal.views.log.LogEntry;
 
@@ -33,28 +26,13 @@ import org.eclipse.ui.internal.views.log.LogEntry;
  * @author Jeff Pound
  * @author Steffen Pingel
  */
-public class NewTaskFromErrorAction implements IObjectActionDelegate, IViewActionDelegate, ISelectionChangedListener {
+public class NewTaskFromErrorAction implements IObjectActionDelegate {
 
 	public static final String ID = "org.eclipse.mylyn.tasklist.ui.repositories.actions.create";
 
 	private LogEntry entry;
 
-	private TreeViewer treeViewer;
-
 	public void run() {
-		// TODO: remove if we can use an object contribution
-		entry = null;
-		TreeItem[] items = treeViewer.getTree().getSelection();
-		if (items.length > 0) {
-			if (items[0].getData() instanceof LogEntry) {
-				entry = (LogEntry) items[0].getData();
-			}
-		}
-
-		if (entry == null) {
-			return;
-		}
-
 		StringBuilder sb = new StringBuilder();
 		sb.append("\n\n-- Error Log --\nDate: ");
 		sb.append(entry.getDate());
@@ -87,16 +65,6 @@ public class NewTaskFromErrorAction implements IObjectActionDelegate, IViewActio
 		if (object instanceof LogEntry) {
 			entry = (LogEntry) object;
 		}
-	}
-
-	public void init(IViewPart view) {
-		ISelectionProvider sp = view.getViewSite().getSelectionProvider();
-		sp.addSelectionChangedListener(this);
-		sp.setSelection(sp.getSelection());
-	}
-
-	public void selectionChanged(SelectionChangedEvent event) {
-		treeViewer = (TreeViewer) event.getSource();
 	}
 
 }

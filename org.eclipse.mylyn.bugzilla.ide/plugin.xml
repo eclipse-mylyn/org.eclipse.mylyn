@@ -22,6 +22,7 @@
             version="3.0"/>
    </extension>    
    
+   <!--
    <extension point="org.eclipse.ui.popupMenus">
         <viewerContribution
 		    id="org.eclipse.mylyn.bugzilla.ide.log.contribution"
@@ -34,24 +35,22 @@
          	label="Report as Bug"/>
       </viewerContribution>
    </extension>
+   -->
   
-  
-    <!--
    <extension point="org.eclipse.ui.popupMenus">
         <objectContribution
               adaptable="false"
               id="org.eclipse.mylyn.bugzilla.ide.objectContribution"
               objectClass="org.eclipse.ui.internal.views.log.LogEntry">
 			<action
-         class="org.eclipse.mylyn.internal.bugzilla.ide.actions.NewTaskFromErrorAction"
-         enablesFor="1"
-         icon="icons/etool16/task-repository-new.gif"
-         menubarPath="org.eclipse.pde.runtime.LogView"
-         id="org.eclipse.mylyn.tasklist.actions.newTaskFromErrorLog"
-         label="%action.label.0">
+		         class="org.eclipse.mylyn.internal.bugzilla.ide.actions.NewTaskFromErrorAction"
+		         enablesFor="1"
+		         icon="icons/etool16/task-repository-new.gif"
+		         menubarPath="org.eclipse.pde.runtime.LogView"
+		         id="org.eclipse.mylyn.tasklist.actions.newTaskFromErrorLog"
+		         label="Report as Bug">
              </action>
         </objectContribution>
    </extension>
-   -->
   
 </plugin>
