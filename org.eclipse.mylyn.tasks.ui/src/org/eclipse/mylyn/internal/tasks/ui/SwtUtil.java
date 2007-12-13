@@ -27,12 +27,10 @@ public class SwtUtil {
 
 	public static final int FADE_IN_INCREMENT = 15;
 
-	public static final int FADE_OUT_INCREMENT = 20;
+	public static final int FADE_OUT_INCREMENT = -20;
 
 	/**
 	 * API-3.0: get rid of reflection on 3.4 branch
-	 * 
-	 * @return
 	 */
 	public static boolean setAlpha(Shell shell, int value) {
 		Method method = null;
@@ -48,12 +46,26 @@ public class SwtUtil {
 		}
 	}
 
-	public static FadeJob fadeIn(Shell shell) {
-		return new FadeJob(shell, 0, FADE_IN_INCREMENT, FADE_RESCHEDULE_DELAY);		
+	/**
+	 * API-3.0: get rid of reflection on 3.4 branch
+	 */
+	public static int getAlpha(Shell shell) {
+		Method method = null;
+		try {
+			method = shell.getClass().getMethod("getAlpha");
+			method.setAccessible(true);
+			return (Integer) method.invoke(shell);
+		} catch (Exception e) {
+			return 0xFF;
+		}
 	}
 
-	public static FadeJob fadeOut(Shell shell) {
-		return new FadeJob(shell, 0, FADE_OUT_INCREMENT, FADE_RESCHEDULE_DELAY);		
+	public static FadeJob fadeIn(Shell shell, IFadeListener listener) {
+		return new FadeJob(shell, FADE_IN_INCREMENT, FADE_RESCHEDULE_DELAY, listener);		
+	}
+
+	public static FadeJob fadeOut(Shell shell, IFadeListener listener) {
+		return new FadeJob(shell, FADE_OUT_INCREMENT, FADE_RESCHEDULE_DELAY, listener);		
 	}
 
 	/**
@@ -106,21 +118,21 @@ public class SwtUtil {
 
 		private final long delay;
 
-		public FadeJob(Shell shell, int initialAlpha, int increment, long delay) {
+		private final IFadeListener fadeListener;
+
+		public FadeJob(Shell shell, int increment, long delay, IFadeListener fadeListener) {
 			super("Fading");
 			if (increment < -255 || increment == 0 || increment > 255) {
 				throw new IllegalArgumentException("-255 <= increment <= 255 && increment != 0");
 			}
-			if (initialAlpha < 0 || initialAlpha > 255) {
-				throw new IllegalArgumentException("0 <= initialAlpha <= 255");
-			}
 			if (delay < 1) {
 				throw new IllegalArgumentException("delay must be > 0");
 			}
-			this.currentAlpha = initialAlpha;
+			this.currentAlpha = getAlpha(shell);
 			this.shell = shell;
 			this.increment = increment;
 			this.delay = delay;
+			this.fadeListener = fadeListener;
 
 			setSystem(true);
 			schedule(delay);
@@ -138,14 +150,16 @@ public class SwtUtil {
 			schedule(delay);
 		}
 
-		public void cancelAndWait() {
+		public void cancelAndWait(final boolean setAlpha) {
 			if (stopped) {
 				return;
 			}
 			cancel();
 			Display.getDefault().syncExec(new Runnable() {
 				public void run() {
-					SwtUtil.setAlpha(shell, getLastAlpha());
+					if (setAlpha) {
+						SwtUtil.setAlpha(shell, getLastAlpha());
+					}
 				}				
 			});				
 		}
@@ -159,10 +173,8 @@ public class SwtUtil {
 			currentAlpha += increment;
 			if (currentAlpha <= 0) {
 				currentAlpha = 0;
-				stopped = true;
 			} else if (currentAlpha >= 255) {
 				currentAlpha = 255;
-				stopped = true;
 			}
 
 			Display.getDefault().syncExec(new Runnable() {
@@ -171,13 +183,27 @@ public class SwtUtil {
 						return;
 					}
 					
+					if (shell.isDisposed()) {
+						stopped = true;
+						return;
+					}
+					
 					if (!SwtUtil.setAlpha(shell, currentAlpha)) {
 						// just in case it failed for some other reason than lack of support on the platform
-						SwtUtil.setAlpha(shell, getLastAlpha());
+						currentAlpha = getLastAlpha();
+						SwtUtil.setAlpha(shell, currentAlpha);
 						stopped = true;
+					}
+					
+					if (fadeListener != null) {
+						fadeListener.faded(shell, currentAlpha);
 					}
 				}				
 			});
+
+			if (currentAlpha == 0 || currentAlpha == 255) {
+				stopped = true;
+			}
 
 			reschedule();
 			return Status.OK_STATUS;
@@ -189,4 +215,10 @@ public class SwtUtil {
 
 	}
 
+	public static interface IFadeListener {
+		
+		public void faded(Shell shell, int alpha);
+		
+	}
+	
 }

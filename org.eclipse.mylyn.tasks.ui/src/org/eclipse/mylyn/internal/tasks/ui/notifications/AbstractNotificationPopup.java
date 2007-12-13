@@ -19,6 +19,7 @@ import org.eclipse.mylyn.internal.tasks.ui.SwtUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.SwtUtil.FadeJob;
+import org.eclipse.mylyn.internal.tasks.ui.SwtUtil.IFadeListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -89,13 +90,14 @@ public abstract class AbstractNotificationPopup extends Window {
 							return;
 						}
 
-						if (shell.getBounds().contains(display.getCursorLocation())) {
+						if (isMouseOver(shell)) {
 							scheduleAutoClose();
 							return;
 						}
 
-						AbstractNotificationPopup.this.close();
+						AbstractNotificationPopup.this.closeFade();
 					}
+
 				});
 			}
 			if (monitor.isCanceled())
@@ -133,6 +135,8 @@ public abstract class AbstractNotificationPopup extends Window {
 	private boolean respectMonitorBounds = true;
 
 	private FadeJob fadeJob;
+
+	private boolean supportsFading;
 
 	public AbstractNotificationPopup(Display display) {
 		this(display, SWT.NO_TRIM | SWT.ON_TOP | SWT.NO_FOCUS);
@@ -236,7 +240,7 @@ public abstract class AbstractNotificationPopup extends Window {
 			}
 
 			public void mouseUp(MouseEvent e) {
-				closeNow();
+				close();
 			}
 
 		});
@@ -291,6 +295,13 @@ public abstract class AbstractNotificationPopup extends Window {
 		lastUsedRegion = region;
 	}
 
+	private boolean isMouseOver(Shell shell) {
+		if (display.isDisposed()) {
+			return false;
+		}
+		return shell.getBounds().contains(display.getCursorLocation());
+	}
+
 	@Override
 	public int open() {
 		if (shell == null || shell.isDisposed()) {
@@ -301,11 +312,23 @@ public abstract class AbstractNotificationPopup extends Window {
 		constrainShellSize();
 		shell.setLocation(fixupDisplayBounds(shell.getSize(), shell.getLocation()));
 
-		SwtUtil.setAlpha(shell, 0);
+		supportsFading = SwtUtil.setAlpha(shell, 0);
 		shell.setVisible(true);
-		fadeJob = SwtUtil.fadeIn(shell);
-
-		scheduleAutoClose();
+		if (supportsFading) {
+			fadeJob = SwtUtil.fadeIn(shell, new IFadeListener() {
+				public void faded(Shell shell, int alpha) {
+					if (shell.isDisposed()) {
+						return;
+					}
+										
+					if (alpha == 255) {
+						scheduleAutoClose();					
+					}
+				}
+			});
+		} else {
+			scheduleAutoClose();
+		}
 
 		return Window.OK;
 	}
@@ -456,23 +479,24 @@ public abstract class AbstractNotificationPopup extends Window {
 		return (primaryMonitor != null) ? primaryMonitor.getClientArea() : shell.getDisplay().getClientArea();
 	}
 
-	public boolean closeNow() {
-		return closeInternal(false);
+	public void closeFade() {
+		if (fadeJob != null) {
+			fadeJob.cancelAndWait(false);
+		}
+		if (supportsFading) {
+			fadeJob = SwtUtil.fadeOut(getShell(), new IFadeListener() {
+				public void faded(Shell shell, int alpha) {
+					if (!shell.isDisposed() && alpha == 0) {
+						shell.close();
+					}					
+				}
+			});
+		}
 	}
 
 	public boolean close() {
-		return closeInternal(true);
-	}
-
-	private boolean closeInternal(boolean fade) {
 		if (!shell.isDisposed()) {
 			shell.removeShellListener(shellListener);
-		}
-		if (fade) {
-			if (fadeJob != null) {
-				fadeJob.cancelAndWait();
-			}
-			fadeJob = SwtUtil.fadeOut(getShell());
 		}
 		resources.dispose();
 		if (lastUsedRegion != null) {
