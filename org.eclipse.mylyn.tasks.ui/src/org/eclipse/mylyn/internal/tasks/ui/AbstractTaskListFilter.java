@@ -33,6 +33,10 @@ public abstract class AbstractTaskListFilter {
 		return hasDescendantIncoming(container, ITasksCoreConstants.MAX_SUBTASK_DEPTH);
 	}
 
+	public static boolean hasIncompleteDescendant(AbstractTaskContainer container) {
+		return hasIncompleteDescendant(container, ITasksCoreConstants.MAX_SUBTASK_DEPTH);
+	}
+
 	private static boolean hasDescendantIncoming(AbstractTaskContainer container, int depth) {
 		Set<AbstractTask> children = container.getChildren();
 		if (children == null || depth <= 0) {
@@ -46,6 +50,25 @@ public abstract class AbstractTaskListFilter {
 					return true;
 				} else if (TasksUiPlugin.getDefault().groupSubtasks(container)
 						&& hasDescendantIncoming(task, depth - 1)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	private static boolean hasIncompleteDescendant(AbstractTaskContainer container, int depth) {
+		Set<AbstractTask> children = container.getChildren();
+		if (children == null || depth <= 0) {
+			return false;
+		}
+
+		for (AbstractTask task : children) {
+			if (task != null) {
+				AbstractTask containedRepositoryTask = task;
+				if (!containedRepositoryTask.isCompleted()) {
+					return true;
+				} else if (hasIncompleteDescendant(task, depth - 1)) {
 					return true;
 				}
 			}

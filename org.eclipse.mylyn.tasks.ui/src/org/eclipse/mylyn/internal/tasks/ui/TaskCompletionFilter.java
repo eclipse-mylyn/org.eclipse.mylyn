@@ -32,9 +32,10 @@ public class TaskCompletionFilter extends AbstractTaskListFilter {
 					&& TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
 							TasksUiPreferenceConstants.FILTER_COMPLETE_MODE)) {
 				// but has child with incoming don't filter
-				return (hasDescendantIncoming(task));
+				return hasDescendantIncoming(task);
+			} else if (!taskListView.isFocusedMode() && task.isCompleted()) {
+				return hasIncompleteDescendant(task);
 			}
-
 			return !task.isCompleted();
 		}
 		return true;
