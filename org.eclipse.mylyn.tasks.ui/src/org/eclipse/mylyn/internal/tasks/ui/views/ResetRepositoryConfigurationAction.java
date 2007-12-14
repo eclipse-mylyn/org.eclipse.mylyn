@@ -15,8 +15,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AbstractTaskRepositoryAction;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
@@ -26,6 +24,8 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Mik Kersten
+ * 
+ * API-3.0: rename to Refresh...
  */
 public class ResetRepositoryConfigurationAction extends AbstractTaskRepositoryAction {
 
@@ -42,9 +42,8 @@ public class ResetRepositoryConfigurationAction extends AbstractTaskRepositoryAc
 		try {
 			IStructuredSelection selection = getStructuredSelection();
 			for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
-				Object selectedObject = iter.next();
-				if (selectedObject instanceof TaskRepository) {
-					final TaskRepository repository = (TaskRepository) selectedObject;
+				final TaskRepository repository = getTaskRepository(iter.next());
+				if (repository != null) {
 					final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
 							.getRepositoryConnector(repository.getConnectorKind());
 					if (connector != null) {
@@ -78,6 +77,4 @@ public class ResetRepositoryConfigurationAction extends AbstractTaskRepositoryAc
 		}
 	}
 
-	public void selectionChanged(IAction action, ISelection selection) {
-	}
 }

@@ -10,12 +10,14 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
 /**
  * @author Shawn Minto
+ * @author Steffen Pingel
  */
 public abstract class AbstractTaskRepositoryAction extends BaseSelectionListenerAction {
 
@@ -26,18 +28,38 @@ public abstract class AbstractTaskRepositoryAction extends BaseSelectionListener
 	@Override
 	protected boolean updateSelection(IStructuredSelection selection) {
 		if (selection != null && !selection.isEmpty()) {
-			Object selectedObject = selection.getFirstElement();
-			if (selectedObject instanceof TaskRepository) {
-				TaskRepository taskRepository = (TaskRepository) selectedObject;
-				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-						taskRepository.getConnectorKind());
-				if (connector.isUserManaged()) {
-					return true;
-				}
-				return false;
-			}
+			return getTaskRepository(selection.getFirstElement()) != null;
 		}
 		return false;
+	}
+
+	protected TaskRepository getTaskRepository(IStructuredSelection selection) {
+		if (selection != null && !selection.isEmpty()) {
+			return getTaskRepository(selection.getFirstElement());
+		}
+		return null;
+	}
+	
+	protected TaskRepository getTaskRepository(Object selectedObject) {		
+		TaskRepository taskRepository = null;
+		if (selectedObject instanceof TaskRepository) {
+			taskRepository = (TaskRepository) selectedObject;
+		} else if (selectedObject instanceof AbstractRepositoryQuery) {
+			AbstractRepositoryQuery query = (AbstractRepositoryQuery) selectedObject;
+			taskRepository = TasksUiPlugin.getRepositoryManager().getRepository(query.getRepositoryKind(),
+					query.getRepositoryUrl());
+		}
+
+		if (taskRepository != null && isUserManaged(taskRepository)) {
+			return taskRepository;
+		}
+		return null;
+	}
+
+	protected boolean isUserManaged(TaskRepository taskRepository) {
+		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+				taskRepository.getConnectorKind());
+		return connector != null && connector.isUserManaged();
 	}
 
 }
