@@ -7,9 +7,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.graphics.Image;
@@ -18,16 +15,51 @@ import org.eclipse.ui.internal.WorkbenchPlugin;
 
 /**
  * @author Shawn Minto
+ * @author Steffen Pingel
  */
 public class EditorBusyIndicator {
 
-	private boolean showingBusy = false;
+	private class Animator implements Runnable {
+
+		int imageDataIndex = 0;
+
+		private final Image[] images;
+
+		private boolean stopped;
+
+		public Animator(Image[] images) {
+			this.images = images;
+		}
+
+		public void run() {
+			if (stopped) {
+				return;
+			}
+
+			try {
+				Image image = images[imageDataIndex];
+				imageDataIndex = (imageDataIndex + 1) % images.length;
+
+				if (updateTitleImage(image)) {
+					PlatformUI.getWorkbench().getDisplay().timerExec(DELAY, this);
+				}
+			} catch (Exception e) {
+				WorkbenchPlugin.log(e);
+			}
+		}
+
+		public void stop() {
+			stopped = true;
+		}
+	}
+
+	public static final int DELAY = 90;
+
+	private Animator animator;
+
+	private final IBusyEditor editor;
 
 	private Image[] images;
-
-	private TimerTask animateTask;
-
-	private IBusyEditor editor;
 
 	private Image oldImage;
 
@@ -36,142 +68,58 @@ public class EditorBusyIndicator {
 	}
 
 	/**
-	 * Stop showing the busy cursor.
-	 */
-	public void stopBusy() {
-
-		if (!showingBusy || isDisposed())
-			return;
-
-		showingBusy = false;
-		if (animateTask != null) {
-			animateTask.cancel();
-			animateTask = null;
-		}
-
-		updateTitleImage(oldImage);
-	}
-
-	/**
 	 * Start the busy indication.
 	 */
-	public void startBusy() {
-
-		if (showingBusy || isDisposed())
-			return;
-
-		showingBusy = true;
-
-		oldImage = editor.getTitleImage();
+	public void start() {
+		if (animator != null) {
+			stop();
+		}
 
 		try {
 			if (images == null) {
-				images = TasksUiImages.getProgressImages();// If we fail to
-				// load do not
-				// continue
+				images = TasksUiImages.getProgressImages();
+				// if image fails to load do not continue
 				if (images == null) {
-					showingBusy = false;
 					return;
 				}
 			}
 
-			if (images.length > 1) {
+			oldImage = editor.getTitleImage();
 
-				Timer animateTimer = new Timer();
-				if (animateTask == null)
-					animateTimer.schedule(getTimerTask(), 0);
+			if (images.length > 1) {
+				animator = new Animator(images);
+				animator.run();
 			}
-		} catch (SWTException ex) {
-			WorkbenchPlugin.log(ex);
+		} catch (SWTException e) {
+			WorkbenchPlugin.log(e);
 		}
 	}
 
 	/**
-	 * Get the timer task for the receiver.
-	 * 
-	 * @param background
-	 * @param display
-	 * @return TimerTask
+	 * Stop showing the busy cursor.
 	 */
-	private TimerTask getTimerTask() {
+	public void stop() {
+		if (animator != null) {
+			animator.stop();
+			animator = null;
 
-		animateTask = new TimerTask() {
+			updateTitleImage(oldImage);
+			oldImage = null;
+		}
+	}
 
-			@Override
-			public void run() {
-
-				try {
-					int imageDataIndex = 0;
-
-					Image image = images[imageDataIndex];
-
-					while (showingBusy) {
-
-						updateTitleImage(image);
-
-						imageDataIndex = (imageDataIndex + 1) % images.length;
-						image = images[imageDataIndex];
-
-						try {
-							Thread.sleep(90);
-						} catch (InterruptedException e) {
-						}
-
-						if (images == null)
-							return;
-					}
-				} catch (SWTException ex) {
-					WorkbenchPlugin.log(ex);
-				} catch (NullPointerException e) {
-					// we will get this if the timer continues to run after the
-					// images have been disposed
-				} finally {
-
+	private boolean updateTitleImage(final Image image) {
+		if (!PlatformUI.getWorkbench().isClosing()) {
+			if (image != null && !image.isDisposed()) {
+				editor.setTitleImage(image);
+				return true;
+			} else {
+				if (oldImage != null && !oldImage.isDisposed()) {
+					editor.setTitleImage(oldImage);
 				}
 			}
-
-		};
-
-		return animateTask;
-	}
-
-	private void updateTitleImage(final Image image) {
-		if (PlatformUI.getWorkbench().isClosing()) {
-			return;
-		} else {
-			PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-				public void run() {
-					if ((image == null || !image.isDisposed()) && !isDisposed() && showingBusy) {
-						editor.setTitleImage(image);
-					} else {
-						if (oldImage != null && !oldImage.isDisposed()) {
-							editor.setTitleImage(oldImage);
-						}
-					}
-
-				}
-			});
 		}
-	}
-
-	private boolean isDisposed = false;
-
-	public void dispose() {
-		if (!isDisposed) {
-			if (animateTask != null)
-				animateTask.cancel();
-			// if (images != null) {
-			// for (int i = 0; i < images.length; i++) {
-			// images[i].dispose();
-			// }
-			// }
-			// images = null;
-			isDisposed = true;
-		}
-	}
-
-	public boolean isDisposed() {
-		return isDisposed;
+		return false;
 	}
 
 }

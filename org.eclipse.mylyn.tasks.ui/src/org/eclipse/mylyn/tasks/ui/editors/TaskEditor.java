@@ -31,6 +31,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IEditorInput;
@@ -218,7 +219,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 	@Override
 	public void dispose() {
 		if (editorBusyIndicator != null) {
-			editorBusyIndicator.dispose();
+			editorBusyIndicator.stop();
 		}
 
 		for (IEditorPart part : editors) {
@@ -365,9 +366,11 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 		// }
 
 		if (busy) {
-			editorBusyIndicator.startBusy();
+			if (TasksUiUtil.isAnimationsEnabled()) {
+				editorBusyIndicator.start();
+			}
 		} else {
-			editorBusyIndicator.stopBusy();
+			editorBusyIndicator.stop();
 		}
 
 		for (IFormPage page : getPages()) {

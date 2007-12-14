@@ -26,6 +26,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceNode;
 import org.eclipse.jface.preference.IPreferencePage;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.preference.PreferenceNode;
@@ -60,6 +61,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -94,7 +96,7 @@ public class TasksUiUtil {
 						String repositoryUrl = connector.getRepositoryUrlFromTaskUrl(url);
 						String id = connector.getTaskIdFromTaskUrl(url);
 						TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryUrl);
-						
+
 						opened = openRepositoryTask(repository, id);
 					}
 					if (!opened) {
@@ -562,5 +564,10 @@ public class TasksUiUtil {
 		if (editor != null) {
 			page.closeEditor(editor, save);
 		}
+	}
+
+	public static boolean isAnimationsEnabled() {
+		IPreferenceStore store = PlatformUI.getPreferenceStore();
+		return store.getBoolean(IWorkbenchPreferenceConstants.ENABLE_ANIMATIONS);
 	}
 }

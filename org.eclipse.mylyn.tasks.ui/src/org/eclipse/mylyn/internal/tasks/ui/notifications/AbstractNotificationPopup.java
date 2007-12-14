@@ -137,6 +137,8 @@ public abstract class AbstractNotificationPopup extends Window {
 	private FadeJob fadeJob;
 
 	private boolean supportsFading;
+	
+	private boolean fadingEnabled;
 
 	public AbstractNotificationPopup(Display display) {
 		this(display, SWT.NO_TRIM | SWT.ON_TOP | SWT.NO_FOCUS);
@@ -153,6 +155,14 @@ public abstract class AbstractNotificationPopup extends Window {
 		closeJob.setSystem(true);
 	}
 
+	public boolean isFadingEnabled() {
+		return fadingEnabled;
+	}
+	
+	public void setFadingEnabled(boolean fadingEnabled) {
+		this.fadingEnabled = fadingEnabled;
+	}
+	
 	/**
 	 * Override to return a customized name. Default is to return the name of the product, specified by the -name (e.g.
 	 * "Eclipse SDK") command line parameter that's associated with the product ID (e.g. "org.eclipse.sdk.ide"). Strips
@@ -312,7 +322,11 @@ public abstract class AbstractNotificationPopup extends Window {
 		constrainShellSize();
 		shell.setLocation(fixupDisplayBounds(shell.getSize(), shell.getLocation()));
 
-		supportsFading = SwtUtil.setAlpha(shell, 0);
+		if (isFadingEnabled()) {
+			supportsFading = SwtUtil.setAlpha(shell, 0);
+		} else {
+			supportsFading = false;
+		}
 		shell.setVisible(true);
 		if (supportsFading) {
 			fadeJob = SwtUtil.fadeIn(shell, new IFadeListener() {
