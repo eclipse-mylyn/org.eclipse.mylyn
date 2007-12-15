@@ -22,6 +22,8 @@ import org.eclipse.mylyn.context.tests.ContextTestsPlugin;
  */
 public class TestUtil {
 
+	public static final String KEY_CREDENTIALS_FILE = "mylyn.credentials";
+
 	public enum PrivilegeLevel {
 		ANONYMOUS, GUEST, USER, ADMIN
 	};
@@ -54,9 +56,13 @@ public class TestUtil {
 	public static Credentials readCredentials(PrivilegeLevel level, String realm) {
 		Properties properties = new Properties();
 		try {
-			URL localURL = FileLocator.toFileURL(ContextTestsPlugin.getDefault().getBundle().getEntry(
-					"credentials.properties"));
-			properties.load(new FileInputStream(new File(localURL.getFile())));
+			String filename = System.getProperty(KEY_CREDENTIALS_FILE);
+			if (filename == null) {
+				URL localURL = FileLocator.toFileURL(ContextTestsPlugin.getDefault().getBundle().getEntry(
+						"credentials.properties"));
+				filename = localURL.getFile();
+			}
+			properties.load(new FileInputStream(new File(filename)));
 		} catch (Exception e) {
 			throw new AssertionFailedError("must define credentials in <plug-in dir>/credentials.properties");
 		}
