@@ -22,7 +22,9 @@ $JAVA_HOME/bin/java \
  -Dos=linux -Dws=gtk -Darch=x86 \
  -Declipse-home=$ECLIPSE_TEST_HOME_3_3 \
  "-Dvmargs=-Xms256M -Xmx256M" \
- "-DextraVMargs=-Declipse.perf.dbloc=$BUILD_ROOT/derby \
-                -Declipse.perf.config=build=$QUALIFIER;config=$HOST-3.3;jvm=$JVM" \
+ "-DextraVMargs= \
+    -Declipse.perf.dbloc=$BUILD_ROOT/derby \
+    -Declipse.perf.config=build=$QUALIFIER;config=$HOST-3.4;jvm=$JVM \
+    -Dmylyn.credentials=$BUILD_ROOT/credentials.properties" \
  -logger org.apache.tools.ant.DefaultLogger \
  $@

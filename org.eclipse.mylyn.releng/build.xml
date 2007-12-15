@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="testsuite" default="report" basedir=".">
+  
+  <property name="junit-report-output" value="./report" />
+  <property name="eclipse-test-home-3.4" value="eclipse-test-3.4" />
+  <property name="eclipse-test-home-3.3" value="eclipse-test-3.3" />
+  
+  <target name="report">
+    <mkdir dir="${junit-report-output}/e3.3"/>
+    <mkdir dir="${junit-report-output}/e3.4"/>
+    <xslt style="${eclipse-test-home-3.3}/plugins/org.eclipse.test/JUNIT.XSL"
+	   basedir="${eclipse-test-home-3.3}/results"
+	   includes="*.xml"
+	   destdir="${junit-report-output}/e3.3" />
+    <xslt style="${eclipse-test-home-3.4}/plugins/org.eclipse.test/JUNIT.XSL"
+	   basedir="${eclipse-test-home-3.4}/results"
+	   includes="*.xml"
+	   destdir="${junit-report-output}/e3.4" />
+  </target>
+  
+</project>
