@@ -3437,42 +3437,43 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				this.init(this.getEditorSite(), this.getEditorInput());
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
+						if (editorComposite != null && !editorComposite.isDisposed()) {
+							if (taskData == null) {
+								parentEditor.setMessage(
+										"Task data not available. Press synchronize button (right) to retrieve latest data.",
+										IMessageProvider.WARNING);
+							} else {
 
-						if (taskData == null) {
-							parentEditor.setMessage(
-									"Task data not available. Press synchronize button (right) to retrieve latest data.",
-									IMessageProvider.WARNING);
-						} else {
+								updateEditorTitle();
+								menu = editorComposite.getMenu();
+								removeSections();
+								editorComposite.setMenu(menu);
+								createSections();
+								// setFormHeaderLabel();
+								markDirty(false);
+								parentEditor.setMessage(null, 0);
+								AbstractRepositoryTaskEditor.this.getEditor().setActivePage(
+										AbstractRepositoryTaskEditor.this.getId());
 
-							updateEditorTitle();
-							menu = editorComposite.getMenu();
-							removeSections();
-							editorComposite.setMenu(menu);
-							createSections();
-							// setFormHeaderLabel();
-							markDirty(false);
-							parentEditor.setMessage(null, 0);
-							AbstractRepositoryTaskEditor.this.getEditor().setActivePage(
-									AbstractRepositoryTaskEditor.this.getId());
+								// Activate editor disabled: bug#179078
+								// AbstractTaskEditor.this.getEditor().getEditorSite().getPage().activate(
+								// AbstractTaskEditor.this);
 
-							// Activate editor disabled: bug#179078
-							// AbstractTaskEditor.this.getEditor().getEditorSite().getPage().activate(
-							// AbstractTaskEditor.this);
+								// TODO: expand sections that were previously
+								// expanded
 
-							// TODO: expand sections that were previously
-							// expanded
+								if (taskOutlineModel != null && outlinePage != null
+										&& !outlinePage.getControl().isDisposed()) {
+									outlinePage.getOutlineTreeViewer().setInput(taskOutlineModel);
+									outlinePage.getOutlineTreeViewer().refresh(true);
+								}
 
-							if (taskOutlineModel != null && outlinePage != null
-									&& !outlinePage.getControl().isDisposed()) {
-								outlinePage.getOutlineTreeViewer().setInput(taskOutlineModel);
-								outlinePage.getOutlineTreeViewer().refresh(true);
+								if (repositoryTask != null) {
+									TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
+								}
+
+								setSubmitEnabled(true);
 							}
-
-							if (repositoryTask != null) {
-								TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
-							}
-
-							setSubmitEnabled(true);
 						}
 					}
 				});
