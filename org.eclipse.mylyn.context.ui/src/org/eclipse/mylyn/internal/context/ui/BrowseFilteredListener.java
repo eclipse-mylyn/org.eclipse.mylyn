@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonViewer;
 
 /**
@@ -92,6 +93,14 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 	}
 
 	public void mouseDown(MouseEvent event) {
+		// ignore
+	}
+
+	public void mouseDoubleClick(MouseEvent e) {
+		// ignore
+	}
+	
+	public void mouseUp(MouseEvent event) {
 		final InterestFilter filter = getInterestFilter(viewer);
 		if (filter == null || !(viewer instanceof TreeViewer)) {
 			return;
@@ -117,19 +126,27 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 			if (event.button == 1) {
 				if ((event.stateMask & SWT.MOD1) != 0) {
 					viewer.setSelection(new StructuredSelection(selectedObject));
+					viewer.refresh(selectedObject);
 				} else {
-					Object unfiltered = filter.getTemporarilyUnfiltered();
+					final Object unfiltered = filter.getTemporarilyUnfiltered();
 					if (unfiltered != null) {
 						filter.resetTemporarilyUnfiltered();
 						// NOTE: need to set selection otherwise it will be missed
 						viewer.setSelection(new StructuredSelection(selectedObject));
-						viewer.refresh(unfiltered);
+						
+						// TODO: using asyncExec so that viewer has chance to open
+						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+
+							public void run() {
+								viewer.refresh(unfiltered);	
+							}
+						});
 					}
 				}
 			}
 		}
 	}
-
+	
 	private Object getClickedItem(MouseEvent event) {
 		if (event.getSource() instanceof Table) {
 			TableItem item = ((Table) event.getSource()).getItem(new Point(event.x, event.y));
@@ -161,12 +178,4 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 		}
 		return null;
 	}
-
-	public void mouseUp(MouseEvent e) {
-		// ignore
-	}
-
-	public void mouseDoubleClick(MouseEvent e) {
-	}
-
 }
