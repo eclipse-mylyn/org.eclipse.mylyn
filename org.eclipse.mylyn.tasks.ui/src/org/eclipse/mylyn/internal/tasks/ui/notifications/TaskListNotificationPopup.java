@@ -13,7 +13,11 @@ import java.util.List;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -55,10 +59,23 @@ public class TaskListNotificationPopup extends AbstractNotificationPopup {
 			notificationComposite.setBackground(parent.getBackground());
 			
 			if (count < NUM_NOTIFICATIONS_TO_DISPLAY) {
-				Label notificationLabelIcon = new Label(notificationComposite, SWT.NO_FOCUS);
+				final Label notificationLabelIcon = new Label(notificationComposite, SWT.NO_FOCUS);
+				notificationLabelIcon.setBackground(parent.getBackground());
 				notificationLabelIcon.setImage(notification.getNotificationKindImage());
-				final TaskListHyperlink itemLink = new TaskListHyperlink(notificationComposite, SWT.BEGINNING | SWT.WRAP | SWT.NO_FOCUS);
+				notificationLabelIcon.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseUp(MouseEvent e) {
+						if (!(notification instanceof TaskListNotificationReminder)) {
+							AbstractTask task = (AbstractTask) notification.getAdapter(AbstractTask.class);
+							if (task != null) {
+								TasksUiPlugin.getSynchronizationManager().setTaskRead(task, true);
+								notificationLabelIcon.setImage(null);
+							}
+						}
+					}
+				});
 				
+				final TaskListHyperlink itemLink = new TaskListHyperlink(notificationComposite, SWT.BEGINNING | SWT.WRAP | SWT.NO_FOCUS);
 				itemLink.setText(notification.getLabel());
 				itemLink.setImage(notification.getNotificationImage());
 				itemLink.setBackground(parent.getBackground());

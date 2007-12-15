@@ -10,13 +10,14 @@ package org.eclipse.mylyn.internal.tasks.ui.notifications;
 
 import java.util.Date;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Rob Elves
  * @author Mik Kersten
  */
-public abstract class AbstractNotification implements Comparable<AbstractNotification> {
+public abstract class AbstractNotification implements Comparable<AbstractNotification>, IAdaptable {
 
 	public abstract void open();
 
