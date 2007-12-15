@@ -57,25 +57,28 @@ public class TaskListNotificationPopup extends AbstractNotificationPopup {
 			Composite notificationComposite = new Composite(parent, SWT.NO_FOCUS);
 			notificationComposite.setLayout(new GridLayout(2, false));
 			notificationComposite.setBackground(parent.getBackground());
-			
+
 			if (count < NUM_NOTIFICATIONS_TO_DISPLAY) {
 				final Label notificationLabelIcon = new Label(notificationComposite, SWT.NO_FOCUS);
 				notificationLabelIcon.setBackground(parent.getBackground());
 				notificationLabelIcon.setImage(notification.getNotificationKindImage());
-				notificationLabelIcon.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseUp(MouseEvent e) {
-						if (!(notification instanceof TaskListNotificationReminder)) {
-							AbstractTask task = (AbstractTask) notification.getAdapter(AbstractTask.class);
-							if (task != null) {
+				if (!(notification instanceof TaskListNotificationReminder)) {
+					final AbstractTask task = (AbstractTask) notification.getAdapter(AbstractTask.class);
+					if (task != null) {
+						notificationLabelIcon.addMouseListener(new MouseAdapter() {
+							@Override
+							public void mouseUp(MouseEvent e) {
 								TasksUiPlugin.getSynchronizationManager().setTaskRead(task, true);
 								notificationLabelIcon.setImage(null);
+								notificationLabelIcon.setToolTipText(null);
 							}
-						}
+						});
+						notificationLabelIcon.setToolTipText("Mark Task Read");
 					}
-				});
-				
-				final TaskListHyperlink itemLink = new TaskListHyperlink(notificationComposite, SWT.BEGINNING | SWT.WRAP | SWT.NO_FOCUS);
+				}
+
+				final TaskListHyperlink itemLink = new TaskListHyperlink(notificationComposite, SWT.BEGINNING
+						| SWT.WRAP | SWT.NO_FOCUS);
 				itemLink.setText(notification.getLabel());
 				itemLink.setImage(notification.getNotificationImage());
 				itemLink.setBackground(parent.getBackground());
@@ -108,7 +111,7 @@ public class TaskListNotificationPopup extends AbstractNotificationPopup {
 				int numNotificationsRemain = notifications.size() - count;
 				TaskListHyperlink remainingHyperlink = new TaskListHyperlink(notificationComposite, SWT.NO_FOCUS);
 				remainingHyperlink.setBackground(parent.getBackground());
-				
+
 				remainingHyperlink.setText(numNotificationsRemain + " " + NOTIFICATIONS_HIDDEN);
 				GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(remainingHyperlink);
 				remainingHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
@@ -130,5 +133,5 @@ public class TaskListNotificationPopup extends AbstractNotificationPopup {
 			count++;
 		}
 	}
-	
+
 }
