@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -52,9 +53,20 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	private TracAttachmentHandler attachmentHandler = new TracAttachmentHandler(this);
 
 	private TaskRepositoryLocationFactory taskRepositoryLocationFactory = new TaskRepositoryLocationFactory();
-	
+
+	private File repositoryConfigurationCacheFile;
+
+	public TracRepositoryConnector(File repositoryConfigurationCacheFile) {
+		this.repositoryConfigurationCacheFile = repositoryConfigurationCacheFile;
+
+	}
+
 	public TracRepositoryConnector() {
-		TracCorePlugin.getDefault().setConnector(this);
+		if (TracCorePlugin.getDefault() != null) {
+			TracCorePlugin.getDefault().setConnector(this);
+			IPath path = TracCorePlugin.getDefault().getRepostioryAttributeCachePath();
+			repositoryConfigurationCacheFile = path.toFile();
+		}
 	}
 
 	@Override
@@ -198,8 +210,10 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 				}
 
 				if (ids.size() == 1) {
-					// getChangedTickets() is expected to always return at least one ticket because
-					// the repository synchronization timestamp is set to the most recent modification date
+					// getChangedTickets() is expected to always return at least
+					// one ticket because
+					// the repository synchronization timestamp is set to the
+					// most recent modification date
 					Integer id = ids.iterator().next();
 					Date lastChanged = client.getTicketLastChanged(id);
 					if (since.equals(lastChanged)) {
@@ -264,7 +278,8 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			repositoryTask.setOwner(taskData.getAttributeValue(RepositoryTaskAttribute.USER_ASSIGNED));
 			repositoryTask.setCompleted(TracTask.isCompleted(taskData.getStatus()));
 			repositoryTask.setUrl(repository.getUrl() + ITracClient.TICKET_URL + taskData.getId());
-			repositoryTask.setPriority(TracTask.getMylynPriority(taskData.getAttributeValue(Attribute.PRIORITY.getTracKey())));
+			repositoryTask.setPriority(TracTask.getMylynPriority(taskData.getAttributeValue(Attribute.PRIORITY
+					.getTracKey())));
 			Kind kind = TracTask.Kind.fromType(taskData.getAttributeValue(Attribute.TYPE.getTracKey()));
 			repositoryTask.setTaskKind((kind != null) ? kind.toString() : null);
 			// TODO: Completion Date
@@ -282,11 +297,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	public synchronized TracClientManager getClientManager() {
 		if (clientManager == null) {
-			File cacheFile = null;
-			if (TracCorePlugin.getDefault().getRepostioryAttributeCachePath() != null) {
-				cacheFile = TracCorePlugin.getDefault().getRepostioryAttributeCachePath().toFile();
-			}
-			clientManager = new TracClientManager(cacheFile, taskRepositoryLocationFactory);
+			clientManager = new TracClientManager(repositoryConfigurationCacheFile, taskRepositoryLocationFactory);
 		}
 		return clientManager;
 	}
@@ -402,16 +413,16 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			String action = operation.getKnobName();
 			if (!"leave".equals(action)) {
 				if ("accept".equals(action)) {
-					ticket.putValue("status", "assigned");
+					ticket.putValue("status", TracTask.Status.ASSIGNED.toStatusString());
 					ticket.putValue("owner", getDisplayUsername(repository));
 				} else if ("resolve".equals(action)) {
-					ticket.putValue("status", "closed");
+					ticket.putValue("status", TracTask.Status.CLOSED.toStatusString());
 					ticket.putValue("resolution", operation.getOptionSelection());
 				} else if ("reopen".equals(action)) {
-					ticket.putValue("status", "reopened");
+					ticket.putValue("status", TracTask.Status.REOPENED.toStatusString());
 					ticket.putValue("resolution", "");
 				} else if ("reassign".equals(operation.getKnobName())) {
-					ticket.putValue("status", "new");
+					ticket.putValue("status", TracTask.Status.NEW.toStatusString());
 					ticket.putValue("owner", operation.getInputValue());
 				}
 			}
@@ -423,8 +434,9 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	public TaskRepositoryLocationFactory getTaskRepositoryLocationFactory() {
 		return taskRepositoryLocationFactory;
 	}
-	
-	public synchronized void setTaskRepositoryLocationFactory(TaskRepositoryLocationFactory taskRepositoryLocationFactory) {
+
+	public synchronized void setTaskRepositoryLocationFactory(
+			TaskRepositoryLocationFactory taskRepositoryLocationFactory) {
 		this.taskRepositoryLocationFactory = taskRepositoryLocationFactory;
 		if (this.clientManager != null) {
 			clientManager.setTaskRepositoryLocationFactory(taskRepositoryLocationFactory);

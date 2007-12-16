@@ -17,7 +17,10 @@ import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryListener;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
@@ -100,7 +103,7 @@ public class TracClientManager implements ITaskRepositoryListener {
 				}
 			}
 		} catch (Throwable e) {
-			TracCorePlugin.log(e);
+			StatusHandler.log(new Status(IStatus.WARNING, TracCorePlugin.PLUGIN_ID, "The Trac respository configuration cache could not be read", e));
 		} finally {
 			if (in != null) {
 				try {
@@ -127,7 +130,7 @@ public class TracClientManager implements ITaskRepositoryListener {
 				out.writeObject(clientDataByUrl.get(url));
 			}
 		} catch (IOException e) {
-			TracCorePlugin.log(e);
+			StatusHandler.log(new Status(IStatus.WARNING, TracCorePlugin.PLUGIN_ID, "The Trac respository configuration cache could not be written", e));
 		} finally {
 			if (out != null) {
 				try {

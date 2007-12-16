@@ -92,7 +92,7 @@ public class TracTicket {
 	 * Constructs a Trac ticket.
 	 * 
 	 * @param id
-	 *            the nummeric Trac ticket id
+	 *            the numeric Trac ticket id
 	 */
 	public TracTicket(int id) {
 		this.id = id;

@@ -129,6 +129,21 @@ public class TracTask extends AbstractTask {
 			return null;
 		}
 
+		public String toStatusString() {
+			switch (this) {
+			case NEW:
+				return "new";
+			case ASSIGNED:
+				return "assigned";
+			case REOPENED:
+				return "reopened";
+			case CLOSED:
+				return "closed";
+			default:
+				return "";
+			}
+		}
+
 	}
 
 	public TracTask(String repositoryUrl, String id, String label) {

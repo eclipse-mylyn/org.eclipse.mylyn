@@ -71,7 +71,7 @@ public class TracCorePlugin extends Plugin {
 	 * Returns the path to the file caching repository attributes.
 	 */
 	protected IPath getRepostioryAttributeCachePath() {
-		IPath stateLocation = Platform.getStateLocation(TracCorePlugin.getDefault().getBundle());
+		IPath stateLocation = Platform.getStateLocation(getBundle());
 		IPath cacheFile = stateLocation.append("repositoryConfigurations");
 		return cacheFile;
 	}
@@ -97,30 +97,6 @@ public class TracCorePlugin extends Plugin {
 		} else {
 			return new RepositoryStatus(Status.ERROR, PLUGIN_ID, RepositoryStatus.ERROR_INTERNAL, "Unexpected error", e);
 		}
-	}
-
-	/**
-	 * Convenience method for logging statuses to the plug-in log
-	 * 
-	 * @param status
-	 *            the status to log
-	 */
-	public static void log(IStatus status) {
-		getDefault().getLog().log(status);
-	}
-
-	/**
-	 * Convenience method for logging exceptions to the plug-in log
-	 * 
-	 * @param e
-	 *            the exception to log
-	 */
-	public static void log(Throwable e) {
-		String message = e.getMessage();
-		if (e.getMessage() == null) {
-			message = e.getClass().toString();
-		}
-		log(new Status(Status.ERROR, TracCorePlugin.PLUGIN_ID, 0, message, e));
 	}
 
 }
