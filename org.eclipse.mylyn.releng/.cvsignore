@@ -5,3 +5,7 @@ eclipse-test-3.3
 eclipse-test-3.4
 jdk
 derby
+report
+credentials.properties
+repository.properties
+test-report.jar

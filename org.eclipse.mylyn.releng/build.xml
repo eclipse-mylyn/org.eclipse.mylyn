@@ -1,22 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project name="testsuite" default="report" basedir=".">
-  
-  <property name="junit-report-output" value="./report" />
-  <property name="eclipse-test-home-3.4" value="eclipse-test-3.4" />
-  <property name="eclipse-test-home-3.3" value="eclipse-test-3.3" />
-  
-  <target name="report">
-    <mkdir dir="${junit-report-output}/e3.3"/>
-    <mkdir dir="${junit-report-output}/e3.4"/>
-    <xslt style="${eclipse-test-home-3.3}/plugins/org.eclipse.test/JUNIT.XSL"
-	   basedir="${eclipse-test-home-3.3}/results"
-	   includes="*.xml"
-	   destdir="${junit-report-output}/e3.3" />
-    <xslt style="${eclipse-test-home-3.4}/plugins/org.eclipse.test/JUNIT.XSL"
-	   basedir="${eclipse-test-home-3.4}/results"
-	   includes="*.xml"
-	   destdir="${junit-report-output}/e3.4" />
-  </target>
-  
+
+	<property name="build" value="I20071214-2200" />
+
+	<property name="junit-report-output" value="./report/${build}" />
+	<property name="eclipse-test-home-3.4" value="eclipse-test-3.4" />
+	<property name="eclipse-test-home-3.3" value="eclipse-test-3.3" />
+
+	<target name="report">
+		<mkdir dir="${junit-report-output}/e3.3" />
+		<mkdir dir="${junit-report-output}/e3.4" />
+		<xslt style="${eclipse-test-home-3.3}/plugins/org.eclipse.test/JUNIT.XSL" basedir="${eclipse-test-home-3.3}/results" includes="*.xml" destdir="${junit-report-output}/e3.3" />
+		<xslt style="${eclipse-test-home-3.4}/plugins/org.eclipse.test/JUNIT.XSL" basedir="${eclipse-test-home-3.4}/results" includes="*.xml" destdir="${junit-report-output}/e3.4" />
+		<copy todir="${junit-report-output}/e3.3">
+			<fileset dir="${eclipse-test-home-3.3}/results" />
+		</copy>
+		<copy todir="${junit-report-output}/e3.4">
+			<fileset dir="${eclipse-test-home-3.4}/results" />
+		</copy>
+	</target>
+
+	<target name="publish">
+		<java jar="test-report.jar" failonerror="true" fork="true">
+			<classpath>
+				<pathelement location="test-report.jar" />
+				<pathelement path="${java.class.path}" />
+			</classpath>
+			<arg value="-in" />
+			<arg value="${eclipse-test-home-3.4}/results/org.eclipse.mylyn.tests.AllTests.xml" />
+			<arg value="-config" />
+			<arg value="repository.properties" />
+			<arg value="-build" />
+			<arg value="${build}" />
+		</java>
+	</target>
+
 </project>
