@@ -34,13 +34,14 @@ import org.eclipse.core.runtime.Plugin;
  * @author Leo Dos Santos - getFaviconForUrl
  * @author Rob Elves
  * 
- * API-3.0 rename to WebUtil  
+ * API-3.0 rename to WebUtil
  */
 public class WebClientUtil {
 
 	/**
-	 * like Mylyn/2.1.0 (Rally Connector 1.0) Eclipse/3.3.0 (JBuilder 2007) HttpClient/3.0.1 Java/1.5.0_11 (Sun)
-	 * Linux/2.6.20-16-lowlatency (i386; en)
+	 * like Mylyn/2.1.0 (Rally Connector 1.0) Eclipse/3.3.0 (JBuilder 2007)
+	 * HttpClient/3.0.1 Java/1.5.0_11 (Sun) Linux/2.6.20-16-lowlatency (i386;
+	 * en)
 	 */
 	public static final String USER_AGENT;
 
@@ -65,19 +66,23 @@ public class WebClientUtil {
 	private static final String USER_AGENT_POSTFIX;
 
 	private static String stripQualifier(String longVersion) {
+		if (longVersion == null) {
+			return "";
+		}
+		
 		String parts[] = longVersion.split("\\.");
 		StringBuilder version = new StringBuilder();
 		if (parts.length > 0) {
 			version.append("/");
 			version.append(parts[0]);
-		}
-		if (parts.length > 1) {
-			version.append(".");
-			version.append(parts[1]);
-		}
-		if (parts.length > 2) {
-			version.append(".");
-			version.append(parts[2]);
+			if (parts.length > 1) {
+				version.append(".");
+				version.append(parts[1]);
+				if (parts.length > 2) {
+					version.append(".");
+					version.append(parts[2]);
+				}
+			}
 		}
 		return version.toString();
 
@@ -108,7 +113,9 @@ public class WebClientUtil {
 		// TODO insert (redistribution)
 
 		sb.append(" ");
-		sb.append(HttpClientParams.getDefaultParams().getParameter(HttpClientParams.USER_AGENT).toString().split("-")[1]);
+		sb
+				.append(HttpClientParams.getDefaultParams().getParameter(HttpClientParams.USER_AGENT).toString().split(
+						"-")[1]);
 
 		sb.append(" Java/");
 		sb.append(System.getProperty("java.version"));
@@ -141,12 +148,17 @@ public class WebClientUtil {
 		LogFactory logFactory = LogFactory.getFactory();
 		logFactory.setAttribute("org.apache.commons.logging.Log", "org.eclipse.mylyn.web.core.WebClientLog");
 		// Note: level being set by Web
-//		logFactory.setAttribute("org.apache.commons.logging.simplelog.showdatetime", "true");
-//		logFactory.setAttribute("org.apache.commons.logging.simplelog.log.httpclient.wire", "debug");
-//		logFactory.setAttribute("org.apache.commons.logging.simplelog.log.httpclient.wire.header", "debug");
-//		logFactory.setAttribute("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "debug");
-//		logFactory.setAttribute(
-//				"org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient.HttpConnection", "trace");
+		// logFactory.setAttribute("org.apache.commons.logging.simplelog.showdatetime",
+		// "true");
+		// logFactory.setAttribute("org.apache.commons.logging.simplelog.log.httpclient.wire",
+		// "debug");
+		// logFactory.setAttribute("org.apache.commons.logging.simplelog.log.httpclient.wire.header",
+		// "debug");
+		// logFactory.setAttribute("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient",
+		// "debug");
+		// logFactory.setAttribute(
+		// "org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient.HttpConnection",
+		// "trace");
 		logFactory.release();
 	}
 
@@ -237,8 +249,8 @@ public class WebClientUtil {
 			client.getHostConfiguration().setProxy(WebClientUtil.getDomain(address.getHostName()), address.getPort());
 			if (proxySettings instanceof AuthenticatedProxy) {
 				AuthenticatedProxy authProxy = (AuthenticatedProxy) proxySettings;
-				Credentials credentials = getCredentials(authProxy.getUserName(), authProxy.getPassword(),
-						address.getAddress());
+				Credentials credentials = getCredentials(authProxy.getUserName(), authProxy.getPassword(), address
+						.getAddress());
 				AuthScope proxyAuthScope = new AuthScope(address.getHostName(), address.getPort(), AuthScope.ANY_REALM);
 				client.getState().setProxyCredentials(proxyAuthScope, credentials);
 				client.getParams().setAuthenticationPreemptive(true);
@@ -246,8 +258,8 @@ public class WebClientUtil {
 		}
 
 		if (user != null && password != null) {
-			AuthScope authScope = new AuthScope(WebClientUtil.getDomain(repositoryUrl),
-					WebClientUtil.getPort(repositoryUrl), AuthScope.ANY_REALM);
+			AuthScope authScope = new AuthScope(WebClientUtil.getDomain(repositoryUrl), WebClientUtil
+					.getPort(repositoryUrl), AuthScope.ANY_REALM);
 			try {
 				client.getState().setCredentials(authScope, getCredentials(user, password, InetAddress.getLocalHost()));
 				client.getParams().setAuthenticationPreemptive(true);
@@ -257,9 +269,8 @@ public class WebClientUtil {
 		}
 
 		if (WebClientUtil.isRepositoryHttps(repositoryUrl)) {
-			Protocol acceptAllSsl = new Protocol("https",
-					(ProtocolSocketFactory) SslProtocolSocketFactory.getInstance(),
-					WebClientUtil.getPort(repositoryUrl));
+			Protocol acceptAllSsl = new Protocol("https", (ProtocolSocketFactory) SslProtocolSocketFactory
+					.getInstance(), WebClientUtil.getPort(repositoryUrl));
 			client.getHostConfiguration().setHost(WebClientUtil.getDomain(repositoryUrl),
 					WebClientUtil.getPort(repositoryUrl), acceptAllSsl);
 			Protocol.registerProtocol("https", acceptAllSsl);
@@ -299,7 +310,8 @@ public class WebClientUtil {
 
 	/** utility method, should use TaskRepository.getProxy() */
 	public static Proxy getProxy(String proxyHost, String proxyPort, String proxyUsername, String proxyPassword) {
-		boolean authenticated = (proxyUsername != null && proxyPassword != null && proxyUsername.length() > 0 && proxyPassword.length() > 0);
+		boolean authenticated = (proxyUsername != null && proxyPassword != null && proxyUsername.length() > 0 && proxyPassword
+				.length() > 0);
 		if (proxyHost != null && proxyHost.length() > 0 && proxyPort != null && proxyPort.length() > 0) {
 			int proxyPortNum = Integer.parseInt(proxyPort);
 			InetSocketAddress sockAddr = new InetSocketAddress(proxyHost, proxyPortNum);
@@ -317,7 +329,8 @@ public class WebClientUtil {
 	 * 
 	 * TODO: deprecate
 	 * 
-	 * @return proxy as defined in platform proxy settings property page, Proxy.NO_PROXY otherwise
+	 * @return proxy as defined in platform proxy settings property page,
+	 *         Proxy.NO_PROXY otherwise
 	 */
 	public static Proxy getPlatformProxy() {
 		Proxy proxy = Proxy.NO_PROXY;
@@ -341,7 +354,8 @@ public class WebClientUtil {
 	/**
 	 * utility method, proxy should be obtained via TaskRepository.getProxy()
 	 * 
-	 * @return proxy as defined in platform proxy settings property page, Proxy.NO_PROXY otherwise
+	 * @return proxy as defined in platform proxy settings property page,
+	 *         Proxy.NO_PROXY otherwise
 	 * @since 2.1
 	 */
 	public static Proxy getPlatformProxy(String url) {
@@ -354,7 +368,9 @@ public class WebClientUtil {
 			IProxyData httpProxy = service.getProxyDataForHost(getDomain(url), IProxyData.HTTP_PROXY_TYPE);
 			IProxyData httpsProxy = service.getProxyDataForHost(getDomain(url), IProxyData.HTTPS_PROXY_TYPE);
 			// See TODO below regarding socks
-			//IProxyData socksProxy = service.getProxyDataForHost(getDomain(url), IProxyData.SOCKS_PROXY_TYPE);
+			// IProxyData socksProxy =
+			// service.getProxyDataForHost(getDomain(url),
+			// IProxyData.SOCKS_PROXY_TYPE);
 
 			if (url.startsWith("https")) {
 				if (httpsProxy != null) {
@@ -368,17 +384,18 @@ public class WebClientUtil {
 				}
 			}
 			// TODO: Support for SOCKS handled by Eclipse platform
-			// currently hosts in exception list may not be excluded so will require custom socket construction in httpclient.
-//			else {
-//				if (socksProxy != null) {
-//					proxyDataInUse = socksProxy;
-//				}
-//				if (httpsProxy != null) {
-//					proxyDataInUse = httpsProxy;
-//				} else if (httpProxy != null) {
-//					proxyDataInUse = httpProxy;
-//				}
-//			}
+			// currently hosts in exception list may not be excluded so will
+			// require custom socket construction in httpclient.
+			// else {
+			// if (socksProxy != null) {
+			// proxyDataInUse = socksProxy;
+			// }
+			// if (httpsProxy != null) {
+			// proxyDataInUse = httpsProxy;
+			// } else if (httpProxy != null) {
+			// proxyDataInUse = httpProxy;
+			// }
+			// }
 
 			if (proxyDataInUse != null) {
 				int proxyPort = proxyDataInUse.getPort();
@@ -404,8 +421,8 @@ public class WebClientUtil {
 				String proxyPassword = proxyDataInUse.getPassword();
 
 				// Change the IProxyData default port to the Java default port
-				//if (proxyPort == -1)
-				//	proxyPort = 0;
+				// if (proxyPort == -1)
+				// proxyPort = 0;
 
 				InetSocketAddress sockAddr = new InetSocketAddress(proxyHost, proxyPort);
 				if (proxyUserName != null && proxyUserName.length() > 0 && proxyPassword != null
@@ -450,11 +467,11 @@ public class WebClientUtil {
 		}
 
 		if (WebClientUtil.isRepositoryHttps(url)) {
-			Protocol acceptAllSsl = new Protocol("https",
-					(ProtocolSocketFactory) SslProtocolSocketFactory.getInstance(), port);
+			Protocol acceptAllSsl = new Protocol("https", (ProtocolSocketFactory) SslProtocolSocketFactory
+					.getInstance(), port);
 			client.getHostConfiguration().setHost(host, port, acceptAllSsl);
 
-			// globally register handler, unfortunately Axis requires this 
+			// globally register handler, unfortunately Axis requires this
 			Protocol.registerProtocol("https", acceptAllSsl);
 		} else {
 			client.getHostConfiguration().setHost(host, port);
@@ -476,8 +493,8 @@ public class WebClientUtil {
 			client.getHostConfiguration().setProxy(address.getHostName(), address.getPort());
 			if (proxy instanceof AuthenticatedProxy) {
 				AuthenticatedProxy authProxy = (AuthenticatedProxy) proxy;
-				Credentials credentials = getCredentials(authProxy.getUserName(), authProxy.getPassword(),
-						address.getAddress());
+				Credentials credentials = getCredentials(authProxy.getUserName(), authProxy.getPassword(), address
+						.getAddress());
 				AuthScope proxyAuthScope = new AuthScope(address.getHostName(), address.getPort(), AuthScope.ANY_REALM);
 				client.getState().setProxyCredentials(proxyAuthScope, credentials);
 				client.getParams().setAuthenticationPreemptive(true);
