@@ -164,6 +164,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 		IProgressService service = PlatformUI.getWorkbench().getProgressService();
 
 		try {
+			// TODO use the wizard's progress service or IProgressService.busyCursorWhile(): bug 210710
 			service.run(true, false, job);
 		} catch (InvocationTargetException e) {
 			StatusHandler.fail(e, "Could not import files", true);

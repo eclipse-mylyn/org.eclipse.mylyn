@@ -1237,7 +1237,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 					getContainer().run(true, false, updateRunnable);
 				} else {
 					IProgressService service = PlatformUI.getWorkbench().getProgressService();
-					service.run(true, false, updateRunnable);
+					service.busyCursorWhile(updateRunnable);
 				}
 
 			} catch (InvocationTargetException e) {

@@ -60,6 +60,7 @@ public class TaskActivityEditorInput implements IEditorInput {
 		taskReportGenerator.addCollector(inProgressTaskCollector);
 
 		try {
+			// TODO consider using IProgressService.busyCursorWhile(): bug 210710
 			IProgressService service = PlatformUI.getWorkbench().getProgressService();
 			service.run(false, true, taskReportGenerator);
 			while (!taskReportGenerator.isFinished())
