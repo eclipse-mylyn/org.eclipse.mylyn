@@ -8,6 +8,7 @@
 
 package org.eclipse.mylyn.internal.monitor.ui;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -53,8 +54,10 @@ public class ActivityContextManager {
 
 	private CheckActivityJob checkJob;
 
-	public ActivityContextManager(int timeout, AbstractUserActivityMonitor userActivityMonitor) {
-		this.userActivityMonitor = userActivityMonitor;
+	private ArrayList<AbstractUserActivityMonitor> activityMonitors;
+
+	public ActivityContextManager(int timeout, ArrayList<AbstractUserActivityMonitor> monitors) {
+		this.activityMonitors = monitors;
 		this.timeout = timeout;
 	}
 
@@ -63,8 +66,7 @@ public class ActivityContextManager {
 			ContextCorePlugin.getContextManager().processActivityMetaContextEvent(
 					new InteractionEvent(InteractionEvent.Kind.ATTENTION, userActivityMonitor.getStructureKind(),
 							userActivityMonitor.getStructureHandle(), userActivityMonitor.getOriginId(), null,
-							InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, new Date(start),
-							new Date(end)));
+							InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, new Date(start), new Date(end)));
 			for (IUserAttentionListener attentionListener : attentionListeners) {
 				attentionListener.userAttentionGained();
 			}
@@ -78,7 +80,9 @@ public class ActivityContextManager {
 	}
 
 	public void start() {
-		userActivityMonitor.start();
+		for (AbstractUserActivityMonitor monitor : activityMonitors) {
+			monitor.start();
+		}
 		checkJob = new CheckActivityJob();
 		checkJob.setSystem(true);
 		checkJob.setPriority(Job.DECORATE);
@@ -86,7 +90,9 @@ public class ActivityContextManager {
 	}
 
 	public void stop() {
-		userActivityMonitor.stop();
+		for (AbstractUserActivityMonitor monitor : activityMonitors) {
+			monitor.stop();
+		}
 		if (checkJob != null) {
 			checkJob.cancel();
 		}
@@ -101,7 +107,14 @@ public class ActivityContextManager {
 	}
 
 	public long getLastEventTime() {
-		return userActivityMonitor.getLastInteractionTime();
+		for (AbstractUserActivityMonitor monitor : activityMonitors) {
+			if (monitor.isEnabled()) {
+				userActivityMonitor = monitor;
+				return userActivityMonitor.getLastInteractionTime();
+			}
+		}
+
+		return -1;
 	}
 
 	public long getStartTime() {

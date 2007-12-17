@@ -62,7 +62,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 	private ActivityContextManager activityContextManager;
 
-	private AbstractUserActivityMonitor osActivityTimer = null;
+	private ArrayList<AbstractUserActivityMonitor> monitors = new ArrayList<AbstractUserActivityMonitor>();
 
 	protected Set<IPartListener> partListeners = new HashSet<IPartListener>();
 
@@ -116,7 +116,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 	@Override
 	public void start(BundleContext context) throws Exception {
-		super.start(context); 
+		super.start(context);
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				try {
@@ -130,16 +130,10 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 					shellLifecycleListener = new ShellLifecycleListener(ContextCorePlugin.getContextManager());
 					getWorkbench().getActiveWorkbenchWindow().getShell().addShellListener(shellLifecycleListener);
 
+					monitors.add(new WorkbenchUserActivityMonitor());
 					new MonitorUiExtensionPointReader().initExtensions();
 
-					AbstractUserActivityMonitor activityMonitor = null;
-					if (osActivityTimer != null) {
-						activityMonitor = osActivityTimer;
-					} else {
-						activityMonitor = new WorkbenchUserActivityMonitor();
-					}
-
-					activityContextManager = new ActivityContextManager(TIMEOUT_INACTIVITY_MILLIS, activityMonitor);
+					activityContextManager = new ActivityContextManager(TIMEOUT_INACTIVITY_MILLIS, monitors);
 					activityContextManager.start();
 				} catch (Exception e) {
 					StatusHandler.fail(e, "Mylyn Monitor start failed", false);
@@ -315,13 +309,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 				if (element.getAttribute(ELEMENT_CLASS) != null) {
 					Object activityTimer = element.createExecutableExtension(ELEMENT_CLASS);
 					if (activityTimer instanceof AbstractUserActivityMonitor) {
-						if (((AbstractUserActivityMonitor) activityTimer).isEnabled()) {
-							if (osActivityTimer != null) {
-								StatusHandler.log("Monitor discarded: " + osActivityTimer.getClass().getSimpleName(),
-										this);
-							}
-							osActivityTimer = (AbstractUserActivityMonitor) activityTimer;
-						}
+						monitors.add(0, (AbstractUserActivityMonitor) activityTimer);
 					}
 				}
 			} catch (CoreException throwable) {
