@@ -1209,28 +1209,27 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				}
 			}
 		}
-		manager.add(new Separator(ID_SEPARATOR_REPOSITORY));
+		if (element instanceof AbstractRepositoryQuery) {
+			EditRepositoryPropertiesAction repositoryPropertiesAction = new EditRepositoryPropertiesAction();
+			repositoryPropertiesAction.selectionChanged(new StructuredSelection(element));
+			if (repositoryPropertiesAction.isEnabled()) {
+				MenuManager subMenu = new MenuManager("Repository");
+				manager.add(subMenu);
 
+				ResetRepositoryConfigurationAction resetRepositoryConfigurationAction = new ResetRepositoryConfigurationAction();
+				resetRepositoryConfigurationAction.selectionChanged(new StructuredSelection(element));
+				subMenu.add(resetRepositoryConfigurationAction);
+				subMenu.add(new Separator());
+				subMenu.add(repositoryPropertiesAction);
+			}
+		}
+		manager.add(new Separator(ID_SEPARATOR_REPOSITORY));
+		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+		
 		if (element instanceof AbstractRepositoryQuery || element instanceof TaskCategory) {
 			manager.add(new Separator());
-			if (element instanceof AbstractRepositoryQuery) {
-				EditRepositoryPropertiesAction repositoryPropertiesAction = new EditRepositoryPropertiesAction();
-				repositoryPropertiesAction.selectionChanged(new StructuredSelection(element));
-				if (repositoryPropertiesAction.isEnabled()) {
-					MenuManager subMenu = new MenuManager("Repository");
-					manager.add(subMenu);
-
-					ResetRepositoryConfigurationAction resetRepositoryConfigurationAction = new ResetRepositoryConfigurationAction();
-					resetRepositoryConfigurationAction.selectionChanged(new StructuredSelection(element));
-					subMenu.add(resetRepositoryConfigurationAction);
-					subMenu.add(new Separator());
-					subMenu.add(repositoryPropertiesAction);
-				}
-			}
 			addAction(propertiesAction, manager, element);
 		}
-
-		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
 	public List<AbstractTaskContainer> getSelectedTaskContainers() {
