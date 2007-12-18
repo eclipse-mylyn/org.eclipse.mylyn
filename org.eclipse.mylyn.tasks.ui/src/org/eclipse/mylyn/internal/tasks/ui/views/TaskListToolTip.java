@@ -23,9 +23,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.mylyn.internal.tasks.core.OrphanedTasksContainer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UnfiledCategory;
+import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.AbstractNotification;
 import org.eclipse.mylyn.monitor.core.DateUtil;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -94,7 +97,7 @@ public class TaskListToolTip extends ToolTip {
 	public void dispose() {
 		hide();
 	}
-	
+
 	@Override
 	protected void afterHideToolTip(Event event) {
 		triggeredByMouse = true;
@@ -114,7 +117,7 @@ public class TaskListToolTip extends ToolTip {
 
 	private AbstractTaskContainer getTaskListElement(Object hoverObject) {
 		if (hoverObject instanceof TaskListHyperlink) {
-			TaskListHyperlink hyperlink = (TaskListHyperlink)hoverObject;
+			TaskListHyperlink hyperlink = (TaskListHyperlink) hoverObject;
 			return hyperlink.getTask();
 		} else if (hoverObject instanceof Widget) {
 			Object data = ((Widget) hoverObject).getData();
@@ -503,8 +506,35 @@ public class TaskListToolTip extends ToolTip {
 	}
 
 	private String getHelpText(AbstractTaskContainer element) {
+		if (element instanceof TaskCategory || element instanceof AbstractRepositoryQuery) {
+			if (AbstractTaskListFilter.hasDescendantIncoming(element)) {
+				TaskListView taskListView = TaskListView.getFromActivePerspective();
+				if (taskListView != null) {
+
+					if (!taskListView.isFocusedMode()
+							&& TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
+									TasksUiPreferenceConstants.FILTER_COMPLETE_MODE)) {
+						Object[] children = ((TaskListContentProvider) taskListView.getViewer().getContentProvider()).getChildren(element);
+						boolean hasIncoming = false;
+						for (Object object : children) {
+							if (object instanceof AbstractTask) {
+								if (((AbstractTask) object).getSynchronizationState().equals(
+										RepositoryTaskSyncState.INCOMING)) {
+									hasIncoming = true;
+									break;
+								}
+							}
+						}
+						if (!hasIncoming) {
+							return "Some incoming elements may be filtered,\nfocus the view to see all incomings";
+						}
+					}
+				}
+			}
+			// if has incoming but no top level children have incoming, suggest incoming tasks may be filtered
+		}
 		if (element instanceof UnfiledCategory) {
-			 return "Automatic container for all local tasks\nwith no category set";
+			return "Automatic container for all local tasks\nwith no category set";
 		} else if (element instanceof OrphanedTasksContainer) {
 			return "Automatic container for repository tasks\nnot matched by any query";
 		}
