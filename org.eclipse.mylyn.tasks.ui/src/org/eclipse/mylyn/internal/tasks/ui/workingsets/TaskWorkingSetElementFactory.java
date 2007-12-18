@@ -28,6 +28,7 @@ public class TaskWorkingSetElementFactory implements IElementFactory {
 
 	static final String HANDLE_TASK = "handle.task";
 
+	// XXX this looks like a c&p error but changing it would break restoring of working sets
 	static final String HANDLE_PROJECT = "handle.task";
 
 	public IAdaptable createElement(IMemento memento) {
