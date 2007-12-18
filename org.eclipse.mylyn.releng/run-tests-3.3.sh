@@ -23,6 +23,7 @@ $JAVA_HOME/bin/java \
  -Declipse-home=$ECLIPSE_TEST_HOME_3_3 \
  "-Dvmargs=-Xms256M -Xmx256M" \
  "-DextraVMargs= \
+    -ea \
     -Declipse.perf.dbloc=$BUILD_ROOT/derby \
     -Declipse.perf.config=build=$QUALIFIER;config=$HOST-3.4;jvm=$JVM \
     -Dmylyn.credentials=$BUILD_ROOT/credentials.properties" \
