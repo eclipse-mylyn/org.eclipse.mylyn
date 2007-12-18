@@ -145,13 +145,6 @@ final class DelegatingTaskExternalizer {
 		}
 	}
 
-//	/**
-//	 * Override to create specific elements
-//	 */
-//	public boolean canCreateElementFor(AbstractTask task) {
-//		return false;
-//	}
-
 	public Element createTaskElement(AbstractTask task, Document doc, Element parent) {
 		AbstractTaskListFactory factory = null;
 		for (AbstractTaskListFactory currentFactory : factories) {
@@ -167,7 +160,6 @@ final class DelegatingTaskExternalizer {
 		} else {
 			StatusHandler.log("No externalizer for task: " + task, this);
 			return null;
-//			taskTagName = getTaskTagName();
 		}
 		Element node = doc.createElement(taskTagName);
 		factory.setAdditionalAttributes(task, node);
@@ -288,10 +280,6 @@ final class DelegatingTaskExternalizer {
 		return format.format(date);
 	}
 
-//	public boolean canReadCategory(Node node) {
-//		return node.getNodeName().equals(getCategoryTagName());
-//	}
-
 	public void readCategory(Node node, TaskList taskList) throws TaskExternalizationException {
 		boolean hasCaughtException = false;
 		Element element = (Element) node;
@@ -363,50 +351,12 @@ final class DelegatingTaskExternalizer {
 		return task;
 	}
 
-//	public boolean canReadTask(Node node) {
-//		return node.getNodeName().equals(getTaskTagName());
-//	}
-
-//	/**
-//	 * Override for connector-specific implementation
-//	 */
-//	public AbstractTask createTask(String repositoryUrl, String taskId, String summary, Element element,
-//			TaskList taskList, AbstractTaskContainer category, AbstractTask parent) throws TaskExternalizationException {
-//		String handle;
-//		if (element.hasAttribute(KEY_HANDLE)) {
-//			handle = element.getAttribute(KEY_HANDLE);
-//		} else {
-//			throw new TaskExternalizationException("Handle not stored for task");
-//		}
-//		AbstractTask task = new LocalTask(handle, summary);
-//		return task;
-//	}
-
 	private void readTaskInfo(AbstractTask task, Element element, AbstractTask parent,
 			AbstractTaskCategory legacyCategory) throws TaskExternalizationException {
 		if (task == null) {
 			return;
 		}
 
-//		String categoryHandle = null;
-//		if (element.hasAttribute(KEY_CATEGORY)) {
-//			categoryHandle = element.getAttribute(KEY_CATEGORY);
-//			AbstractTaskCategory category = null;
-//			if (categoryHandle != null) {
-//				category = taskList.getContainerForHandle(categoryHandle);
-//			}
-//
-//			if (category != null) {
-//				taskList.internalAddTask(task, category);
-//			} else if (parent == null) {
-//				taskList.internalAddRootTask(task);
-//			}
-//		} else if (legacyCategory != null && !(legacyCategory instanceof TaskArchive)) {
-//			task.addParentContainer(legacyCategory);
-//			legacyCategory.internalAddChild(task);
-//		} else {
-//			taskList.internalAddTask(task, taskList.getArchiveContainer());
-//		}
 		String categoryHandle = element.getAttribute(KEY_CATEGORY);
 		if (categoryHandle.equals(VAL_ROOT)) {
 			categoryHandle = UnfiledCategory.HANDLE;
@@ -528,40 +478,6 @@ final class DelegatingTaskExternalizer {
 // }
 	}
 
-	// /**
-	// * @return task ID, or null if not found
-	// */
-	// protected void readLegacyHandleFormat(ITask task, Element element) throws
-	// TaskExternalizationException {
-	// if (task instanceof AbstractTask) {
-	// AbstractTask abstractTask = (AbstractTask) task;
-	//			
-	// if (element.hasAttribute(KEY_HANDLE)) {
-	// String handle = element.getAttribute(KEY_HANDLE);
-	// String repositoryUrl = RepositoryTaskHandleUtil.getRepositoryUrl(handle);
-	// String taskId = RepositoryTaskHandleUtil.getTaskId(handle);
-	// abstractTask.setRepositoryUrl(repositoryUrl);
-	// abstractTask.setTaskId(taskId);
-	// } else {
-	// throw new TaskExternalizationException("Handle not stored for repository
-	// task");
-	// }
-	// }
-	// }
-
-	// protected void readTaskData(AbstractTask task) {
-	// RepositoryTaskData data =
-	// taskDataManager.getRepositoryTaskData(task.getHandleIdentifier());
-	// // RepositoryTaskData data =
-	// //
-	// TasksUiPlugin.getTaskDataManager().getTaskData(task.getHandleIdentifier());
-	// task.setTaskData(data);
-	//		
-	// if (data != null && data.hasLocalChanges()) {
-	// task.setSyncState(RepositoryTaskSyncState.OUTGOING);
-	// }
-	// }
-
 	private Date getDateFromString(String dateString) {
 		Date date = null;
 		if ("".equals(dateString))
@@ -580,14 +496,6 @@ final class DelegatingTaskExternalizer {
 		return KEY_TASK_CATEGORY;
 	}
 
-//	public String getTaskTagName() {
-//		return AbstractTaskListElementFactory.KEY_TASK;
-//	}
-
-//	public boolean canCreateElementFor(AbstractRepositoryQuery query) {
-//		return false;
-//	}
-
 	public Element createQueryElement(AbstractRepositoryQuery query, Document doc, Element parent) {
 		AbstractTaskListFactory factory = null;
 		String queryTagName = null;
@@ -599,12 +507,9 @@ final class DelegatingTaskExternalizer {
 			}
 		}
 		if (factory == null || queryTagName == null) {
-			StatusHandler.log("No externalizer for query: " + query, this);
+			StatusHandler.log("Could not externalize query: " + query, this);
 			return null;
-//			queryTagName = getQueryTagNameForElement(query);
 		}
-
-//		String queryTagName = getQueryTagNameForElement(query);
 
 		Element node = doc.createElement(queryTagName);
 		factory.setAdditionalAttributes(query, node);
