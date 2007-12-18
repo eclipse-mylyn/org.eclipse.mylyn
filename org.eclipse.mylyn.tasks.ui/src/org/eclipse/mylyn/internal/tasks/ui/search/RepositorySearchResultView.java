@@ -154,6 +154,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		DecoratingLabelProvider labelProvider = new DecoratingLabelProvider(new TaskElementLabelProvider(true),
 				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator());
 
+		viewer.setUseHashlookup(true);
 		viewer.setLabelProvider(labelProvider);
 		viewer.setContentProvider(new SearchResultTreeContentProvider(this));
 
