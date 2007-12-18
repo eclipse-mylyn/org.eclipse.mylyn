@@ -8,6 +8,7 @@
 
 package org.eclipse.mylyn.internal.resources.ui;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -78,18 +79,19 @@ public class ResourceUiBridge extends AbstractContextUiBridge {
 		if (object instanceof IFile) {
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			if (page != null) {
-				IEditorReference[] references = page.getEditorReferences();
-				for (int i = 0; i < references.length; i++) {
-					IEditorPart editorPart = references[i].getEditor(false);
-					if (editorPart != null) {
-						IEditorInput input = editorPart.getEditorInput();
-						if (input != null) {
-							Object adapter = input.getAdapter(IResource.class);
-							if (adapter instanceof IFile && ((IFile) adapter).equals(object)) {
-								page.closeEditor(references[i].getEditor(false), true);
-							}
+				List<IEditorReference> toClose = new ArrayList<IEditorReference>(0);
+				for (IEditorReference reference : page.getEditorReferences()) {
+					try {
+						IResource input = (IResource) reference.getEditorInput().getAdapter(IResource.class);
+						if (input instanceof IFile && ((IFile) input).equals(object))  {
+							toClose.add(reference);
 						}
+					} catch (PartInitException e) {
+						// ignore
 					}
+				}
+				if (toClose.size() > 0) {
+					page.closeEditors(toClose.toArray(new IEditorReference[toClose.size()]), true);
 				}
 			}
 		}

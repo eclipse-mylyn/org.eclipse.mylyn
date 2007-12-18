@@ -33,7 +33,6 @@ import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.editors.NewTaskEditorInput;
-import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -228,22 +227,18 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 					List<IEditorReference> toClose = new ArrayList<IEditorReference>();
 					for (int i = 0; i < references.length; i++) {
 						if (canClose(references[i])) {
-
-							IEditorPart part = references[i].getEditor(false);
-							if (part instanceof TaskEditor) {
-								try {
-									IEditorInput input = references[i].getEditorInput();
-									if (input instanceof TaskEditorInput) {
-										AbstractTask task = ((TaskEditorInput) input).getTask();
-										if (task != null && task.getHandleIdentifier().equals(taskHandle)) {
-											// do not close
-										} else {
-											toClose.add(references[i]);
-										}
+							try {
+								IEditorInput input = references[i].getEditorInput();
+								if (input instanceof TaskEditorInput) {
+									AbstractTask task = ((TaskEditorInput) input).getTask();
+									if (task != null && task.getHandleIdentifier().equals(taskHandle)) {
+										// do not close
+									} else {
+										toClose.add(references[i]);
 									}
-								} catch (PartInitException e) {
-									// ignore
 								}
+							} catch (PartInitException e) {
+								// ignore
 							}
 						}
 					}
@@ -287,16 +282,13 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 	}
 
 	private boolean isUnsubmittedTaskEditor(IEditorReference editorReference) {
-		IEditorPart part = editorReference.getEditor(false);
-		if (part instanceof TaskEditor) {
-			try {
-				IEditorInput input = editorReference.getEditorInput();
-				if (input instanceof NewTaskEditorInput) {
-					return true;
-				}
-			} catch (PartInitException e) {
-				// ignore
+		try {
+			IEditorInput input = editorReference.getEditorInput();
+			if (input instanceof NewTaskEditorInput) {
+				return true;
 			}
+		} catch (PartInitException e) {
+			// ignore
 		}
 		return false;
 	}
@@ -310,9 +302,9 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 	public void elementDeleted(IInteractionElement element) {
 		closeEditor(element, true);
 	}
-	
+
 	public void elementsDeleted(List<IInteractionElement> elements) {
-		for(IInteractionElement element: elements){
+		for (IInteractionElement element : elements) {
 			closeEditor(element, true);
 		}
 	}

@@ -8,6 +8,9 @@
 
 package org.eclipse.mylyn.internal.resources.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.compare.internal.CompareEditor;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -23,6 +26,7 @@ import org.eclipse.mylyn.monitor.ui.AbstractEditorTracker;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -47,31 +51,35 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 	@Override
 	public void editorOpened(IEditorPart editorPartOpened) {
 		IWorkbenchPage page = editorPartOpened.getSite().getPage();
-		IEditorReference[] editorReferences = page.getEditorReferences();
-		for (int i = 0; i < editorReferences.length; i++) {
-			IInteractionElement element = null;
-			Object adapter;
-			IEditorPart editorToClose = editorReferences[i].getEditor(false);
-			if (editorToClose != null) {
-				adapter = editorToClose.getEditorInput().getAdapter(IResource.class);
+		List<IEditorReference> toClose = new ArrayList<IEditorReference>();
+		for (IEditorReference editorReference : page.getEditorReferences()) {
+			try {
+				IInteractionElement element = null;
+				Object adapter;
+				adapter = editorReference.getEditorInput().getAdapter(IResource.class);
 				if (adapter instanceof IFile) {
 					String handle = ContextCorePlugin.getDefault().getStructureBridge(adapter).getHandleIdentifier(
 							adapter);
 					element = ContextCorePlugin.getContextManager().getElement(handle);
 				}
 				if (!ContextCorePlugin.getContextManager().isContextCapturePaused() && element != null
-						&& !element.getInterest().isInteresting() && !isSameEditor(editorPartOpened, editorToClose)) {
-					page.closeEditor(editorToClose, true);
+						&& !element.getInterest().isInteresting() && !isSameEditor(editorPartOpened, editorReference)) {
+					toClose.add(editorReference);
 				}
+			} catch (PartInitException e) {
+				// ignore
 			}
+		}
+		if (toClose.size() > 0) {
+			page.closeEditors(toClose.toArray(new IEditorReference[toClose.size()]), true);
 		}
 	}
 
-	private boolean isSameEditor(IEditorPart editorPart1, IEditorPart editorPart2) {
-		if (editorPart1 == null || editorPart2 == null) {
+	private boolean isSameEditor(IEditorPart editorPart1, IEditorReference editorReference2) throws PartInitException {
+		if (editorPart1 == null || editorReference2 == null) {
 			return false;
 		} else {
-			return editorPart1.equals(editorPart2) && editorPart1.getEditorInput().equals(editorPart2.getEditorInput());
+			return editorPart1.getEditorInput().equals(editorReference2.getEditorInput());
 		}
 	}
 
@@ -131,15 +139,15 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 		if (adapter instanceof IResource) {
 			IResource resource = (IResource) adapter;
 			IWorkbenchPage page = editorPart.getSite().getPage();
-			IEditorReference[] editorReferences = page.getEditorReferences();
-			for (int i = 0; i < editorReferences.length; i++) {
-				Object otherAdapter;
-				IEditorPart otherEditor = editorReferences[i].getEditor(false);
-				if (otherEditor != null) {
-					otherAdapter = otherEditor.getEditorInput().getAdapter(IResource.class);
+			for (IEditorReference editorReference : page.getEditorReferences()) {
+				try {
+					Object otherAdapter;
+					otherAdapter = editorReference.getEditorInput().getAdapter(IResource.class);
 					if (otherAdapter instanceof IResource && otherAdapter.equals(resource)) {
 						return true;
 					}
+				} catch (PartInitException e) {
+					// ignore
 				}
 			}
 		}

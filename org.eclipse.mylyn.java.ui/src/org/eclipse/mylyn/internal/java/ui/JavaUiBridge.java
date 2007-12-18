@@ -29,6 +29,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
@@ -66,17 +67,20 @@ public class JavaUiBridge extends AbstractContextUiBridge {
 		try {
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			if (page != null) {
-				IEditorReference[] references = page.getEditorReferences();
-				for (int i = 0; i < references.length; i++) {
-					IEditorPart part = references[i].getEditor(false);
-					if (part != null && part instanceof JavaEditor) {
-						JavaEditor editor = (JavaEditor) part;
-						Object adapter = editor.getEditorInput().getAdapter(IJavaElement.class);
-						if (adapter instanceof IJavaElement
-								&& node.getHandleIdentifier().equals(((IJavaElement) adapter).getHandleIdentifier())) {
-							editor.close(true);
+				List<IEditorReference> toClose = new ArrayList<IEditorReference>(4);
+				for (IEditorReference reference : page.getEditorReferences()) {
+					try {
+						IJavaElement input = (IJavaElement) reference.getEditorInput().getAdapter(IJavaElement.class);
+						if (input != null
+								&& node.getHandleIdentifier().equals(input.getHandleIdentifier())) {
+							toClose.add(reference);
 						}
+					} catch (PartInitException e) {
+						// ignore
 					}
+				}
+				if (toClose.size() > 0) {
+					page.closeEditors(toClose.toArray(new IEditorReference[toClose.size()]), true);
 				}
 			}
 		} catch (Throwable t) {

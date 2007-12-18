@@ -35,9 +35,7 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.ide.IDE;
-import org.eclipse.ui.texteditor.AbstractTextEditor;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
@@ -131,21 +129,21 @@ public class AntUiBridge extends AbstractContextUiBridge {
 	public void close(IInteractionElement node) {
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		if (page != null) {
-			IEditorReference[] references = page.getEditorReferences();
-			for (int i = 0; i < references.length; i++) {
-				IEditorPart part = references[i].getEditor(false);
-				if (part != null) {
-					if (part.getEditorInput() instanceof IFileEditorInput) {
-						IFileEditorInput input = (IFileEditorInput) part.getEditorInput();
-						if ((input.getFile().getFullPath().toString()).equals(node.getHandleIdentifier())) {
-							if (part instanceof FormEditor) {
-								((FormEditor) part).close(true);
-							} else if (part instanceof AbstractTextEditor) {
-								((AbstractTextEditor) part).close(true);
-							}
+			List<IEditorReference> toClose = new ArrayList<IEditorReference>();
+			for (IEditorReference reference : page.getEditorReferences()) {
+				try {
+					if (reference.getEditorInput() instanceof IFileEditorInput) {
+						IFileEditorInput input = (IFileEditorInput) reference.getEditorInput();
+						if (input.getFile().getFullPath().toString().equals(node.getHandleIdentifier())) {
+							toClose.add(reference);
 						}
 					}
+				} catch (PartInitException e) {
+					// ignore
 				}
+			}
+			if (toClose.size() > 0) {
+				page.closeEditors(toClose.toArray(new IEditorReference[toClose.size()]), true);
 			}
 		}
 	}

@@ -32,13 +32,7 @@ public class InteractionContextScaling {
 	
 	private static final float DEFAULT_FORCED_LANDMARK = 7 * DEFAULT_LANDMARK;
 	
-//	private static final InteractionEventScalingFactor DEFAULT_SCALING_FACTOR = new InteractionEventScalingFactor("<default>", DEFAULT_EVENT);
-	
 	private Map<InteractionEvent.Kind, Float> interactionScalingFactors = new HashMap<InteractionEvent.Kind, Float>();
-	
-//	private InteractionEventScalingFactor defaultDecay = new InteractionEventScalingFactor("decay", DEFAULT_EVENT_DECAY);
-
-//	private InteractionEventScalingFactor defaultEdit = new InteractionEventScalingFactor("edit", DEFAULT_EVENT_EDIT);
 	
 	private float interesting = DEFAULT_INTERESTING;
 	

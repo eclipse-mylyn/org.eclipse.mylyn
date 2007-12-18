@@ -150,8 +150,7 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 			for (int i = 0; i < references.length; i++) {
 				IEditorPart part = references[i].getEditor(false);
 				if (part != null) {
-					// HACK find better way to get the filename other than the
-					// tooltip
+					// HACK: find better way to get the filename other than the tooltip
 					if (("/" + part.getTitleToolTip()).equals(node.getHandleIdentifier())) {
 						if (part instanceof FormEditor) {
 							((FormEditor) part).close(true);
@@ -159,17 +158,6 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 							((AbstractTextEditor) part).close(true);
 						}
 					}
-					// if (part.getEditorInput() instanceof IFileEditorInput) {
-					// IFileEditorInput input =
-					// (IFileEditorInput)part.getEditorInput();
-					// if (input.getFile().getName().endsWith(".xml")) {
-					// if (part instanceof FormEditor) {
-					// ((FormEditor)part).close(true);
-					// } else if (part instanceof AbstractTextEditor) {
-					// ((AbstractTextEditor)part).close(true);
-					// }
-					// }
-					// }
 				}
 			}
 		}

@@ -143,6 +143,7 @@ public class JavaUiUtil {
 			return m.getDeclaringType().getFullyQualifiedName() + "." + m.getElementName();
 	}
 
+	@Deprecated
 	public static void closeActiveEditors(boolean javaOnly) {
 		for (IWorkbenchWindow workbenchWindow : PlatformUI.getWorkbench().getWorkbenchWindows()) {
 			IWorkbenchPage page = workbenchWindow.getActivePage();
