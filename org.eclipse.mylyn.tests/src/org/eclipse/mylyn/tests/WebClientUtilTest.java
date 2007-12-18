@@ -22,6 +22,7 @@ import org.apache.commons.httpclient.params.HttpClientParams;
 import org.eclipse.mylyn.tests.TestProxy.Message;
 import org.eclipse.mylyn.web.core.AbstractWebLocation;
 import org.eclipse.mylyn.web.core.AuthenticatedProxy;
+import org.eclipse.mylyn.web.core.AuthenticationType;
 import org.eclipse.mylyn.web.core.IProxyProvider;
 import org.eclipse.mylyn.web.core.SslProtocolSocketFactory;
 import org.eclipse.mylyn.web.core.WebClientUtil;
@@ -327,11 +328,12 @@ public class WebClientUtilTest extends TestCase {
 	public void testLocationConnectProxyHttpAuth() throws Exception {
 		String url = "http://foo/bar";
 		final Proxy proxy = new Proxy(Type.HTTP, proxyAddress);
-		AbstractWebLocation location = new WebLocation(url, "user", "pass", new IProxyProvider() {
+		WebLocation location = new WebLocation(url, "", "", new IProxyProvider() {
 			public Proxy getProxyForHost(String host, String proxyType) {
 				return proxy;
 			}
 		});
+		location.setCredentials(AuthenticationType.HTTP, "user", "pass");
 		WebClientUtil.setupHttpClient(client, null, location);
 
 		Message response = new Message("HTTP/1.1 401 Authentication required");
@@ -400,11 +402,13 @@ public class WebClientUtilTest extends TestCase {
 	public void testLocationConnectProxyProxyCredentialsHttpAuth() throws Exception {
 		String url = "http://foo/bar";
 		final Proxy proxy = new AuthenticatedProxy(Type.HTTP, proxyAddress, "proxyUser", "proxyPass");
-		AbstractWebLocation location = new WebLocation(url, "user", "pass", new IProxyProvider() {
+		WebLocation location = new WebLocation(url, "", "", new IProxyProvider() {
 			public Proxy getProxyForHost(String host, String proxyType) {
 				return proxy;
 			}
 		});
+		location.setCredentials(AuthenticationType.HTTP, "user", "pass");
+
 		WebClientUtil.setupHttpClient(client, null, location);
 
 		testProxy.addResponse(TestProxy.OK);
