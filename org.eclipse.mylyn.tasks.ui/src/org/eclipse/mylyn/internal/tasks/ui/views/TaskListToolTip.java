@@ -21,7 +21,9 @@ import java.util.List;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.window.ToolTip;
+import org.eclipse.mylyn.internal.tasks.core.OrphanedTasksContainer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.UnfiledCategory;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.AbstractNotification;
@@ -490,9 +492,23 @@ public class TaskListToolTip extends ToolTip {
 			addIconAndLabel(composite, TasksUiImages.getImage(TasksUiImages.WARNING), statusText);
 		}
 
+		String helpText = getHelpText(currentTipElement);
+		if (helpText != null) {
+			addIconAndLabel(composite, TasksUiImages.getImage(TasksUiImages.QUESTION), helpText);
+		}
+
 		visible = true;
 
 		return composite;
+	}
+
+	private String getHelpText(AbstractTaskContainer element) {
+		if (element instanceof UnfiledCategory) {
+			 return "Automatic container for all local tasks\nwith no category set";
+		} else if (element instanceof OrphanedTasksContainer) {
+			return "Automatic container for repository tasks\nnot matched by any query";
+		}
+		return null;
 	}
 
 	protected Composite createToolTipContentAreaComposite(Composite parent) {

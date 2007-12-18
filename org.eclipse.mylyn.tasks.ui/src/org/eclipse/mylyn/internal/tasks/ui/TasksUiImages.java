@@ -269,6 +269,8 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor NEW_SUB_TASK = create(T_TOOL, "sub-task-new.gif");
 
+	public static final ImageDescriptor QUESTION = create(T_OBJ, "question.gif");
+
 	private static ImageDescriptor create(String prefix, String name) {
 		try {
 			return ImageDescriptor.createFromURL(makeIconFileURL(prefix, name));
