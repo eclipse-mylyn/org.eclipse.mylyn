@@ -1,21 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="testsuite" default="report" basedir=".">
+<project name="testsuite" default="" basedir=".">
 
-	<property name="build" value="I20071214-2200" />
+	<property name="build" value="I20071217-1800" />
 
 	<property name="junit-report-output" value="./report/${build}" />
 	<property name="eclipse-test-home-3.4" value="eclipse-test-3.4" />
 	<property name="eclipse-test-home-3.3" value="eclipse-test-3.3" />
 
+	<target name="all" depends="clean">
+		<exec executable="./build-3.3.sh" />
+		<exec executable="./build-3.4.sh" />
+
+		<exec executable="./run-tests-3.3.sh">
+			<arg value="run" />
+		</exec>
+		<antcall target="report" />
+		<exec executable="./run-tests-3.3.sh">
+			<arg value="performance" />
+		</exec>
+		<antcall target="report" />
+
+		<exec executable="./run-tests-3.4.sh">
+			<arg value="run" />
+		</exec>
+		<antcall target="report" />
+		<exec executable="./run-tests-3.4.sh">
+			<arg value="performance" />
+		</exec>
+		<antcall target="report" />
+
+		<antcall target="publish" />
+	</target>
+
+	<target name="clean">
+		<delete dir="${eclipse-test-home-3.3}/results" />
+		<delete>
+			<fileset dir="${eclipse-test-home-3.3}" includes="org*.xml" />
+		</delete>
+		<delete dir="${eclipse-test-home-3.3}/plugins/org.eclipse.mylyn.tests"/>
+		<mkdir dir="${eclipse-test-home-3.3}/results" />
+
+		<delete dir="${eclipse-test-home-3.4}/results" />
+		<delete>
+			<fileset dir="${eclipse-test-home-3.4}" includes="org*.xml" />
+		</delete>
+		<delete dir="${eclipse-test-home-3.4}/plugins/org.eclipse.mylyn.tests"/>
+		<mkdir dir="${eclipse-test-home-3.4}/results" />
+	</target>
+
 	<target name="report">
 		<mkdir dir="${junit-report-output}/e3.3" />
-		<mkdir dir="${junit-report-output}/e3.4" />
 		<xslt style="${eclipse-test-home-3.3}/plugins/org.eclipse.test/JUNIT.XSL" basedir="${eclipse-test-home-3.3}/results" includes="*.xml" destdir="${junit-report-output}/e3.3" />
-		<xslt style="${eclipse-test-home-3.4}/plugins/org.eclipse.test/JUNIT.XSL" basedir="${eclipse-test-home-3.4}/results" includes="*.xml" destdir="${junit-report-output}/e3.4" />
 		<copy todir="${junit-report-output}/e3.3">
 			<fileset dir="${eclipse-test-home-3.3}/results" />
 		</copy>
+
+		<mkdir dir="${junit-report-output}/e3.4" />
+		<xslt style="${eclipse-test-home-3.4}/plugins/org.eclipse.test/JUNIT.XSL" basedir="${eclipse-test-home-3.4}/results" includes="*.xml" destdir="${junit-report-output}/e3.4" />
 		<copy todir="${junit-report-output}/e3.4">
 			<fileset dir="${eclipse-test-home-3.4}/results" />
 		</copy>
