@@ -88,10 +88,10 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 
 	private CompositeImageDescriptor getImageDescriptor(Object object) {
 		CompositeImageDescriptor compositeDescriptor = new CompositeImageDescriptor();
-		if (object instanceof TaskArchive || object instanceof OrphanedTasksContainer) {
+		if (object instanceof TaskArchive || object instanceof UnfiledCategory) {
 			compositeDescriptor.icon = TasksUiImages.CATEGORY_ARCHIVE;
 			return compositeDescriptor;
-		} else if (object instanceof TaskCategory || object instanceof UnfiledCategory) {
+		} else if (object instanceof TaskCategory) {
 			compositeDescriptor.icon = TasksUiImages.CATEGORY;
 		} else if (object instanceof TaskGroup) {
 			compositeDescriptor.icon = TasksUiImages.TASK_GROUPING;
@@ -115,7 +115,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				compositeDescriptor.icon = connectorUi.getTaskListElementIcon(element);
 				return compositeDescriptor;
 			} else {
-				if (element instanceof AbstractRepositoryQuery) {
+				if (element instanceof AbstractRepositoryQuery || object instanceof OrphanedTasksContainer) {
 					compositeDescriptor.icon = TasksUiImages.QUERY;
 				} else if (element instanceof AbstractTask) {
 					compositeDescriptor.icon = TasksUiImages.TASK;
@@ -228,17 +228,11 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 
 			OrphanedTasksContainer container = (OrphanedTasksContainer) object;
 
-//			OrphanedTasksContainer localArchive = TasksUiPlugin.getTaskListManager().getTaskList().getOrphanContainer(
-//					LocalRepositoryConnector.REPOSITORY_URL);
-//			if (container == localArchive) {
-//				return "Local Tasks";
-//			}
-
 			String result = container.getSummary();
 			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 					container.getConnectorKind(), container.getRepositoryUrl());
 			if (repository != null) {
-				result = "Archive: " + repository.getRepositoryLabel();
+				result = "Unmatched [" + repository.getRepositoryLabel() + "]";
 			}
 
 			return result;

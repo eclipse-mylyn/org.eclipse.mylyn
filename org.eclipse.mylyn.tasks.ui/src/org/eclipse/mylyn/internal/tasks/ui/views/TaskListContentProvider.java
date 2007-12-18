@@ -87,31 +87,34 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	 * NOTE: If parent is an ITask, this method checks if parent has unfiltered children (see bug 145194).
 	 */
 	public boolean hasChildren(Object parent) {
-		if (parent instanceof AbstractRepositoryQuery) {
-			AbstractRepositoryQuery query = (AbstractRepositoryQuery) parent;
-			// TODO: Performance implications?
-			return !getFilteredChildrenFor(query).isEmpty();
-			//return !query.isEmpty();
-		} else if (parent instanceof AbstractTask) {
-			return taskHasUnfilteredChildren((AbstractTask) parent);
-		} else if (parent instanceof AbstractTaskContainer) {
-			AbstractTaskContainer container = (AbstractTaskContainer) parent;
-			return !container.getChildren().isEmpty();
-		}
-		return false;
+
+		return !getFilteredChildrenFor(parent).isEmpty();
+
+//		if (parent instanceof AbstractRepositoryQuery) {
+//			AbstractRepositoryQuery query = (AbstractRepositoryQuery) parent;
+//			return !getFilteredChildrenFor(query).isEmpty();
+//			//return !query.isEmpty();
+//		} else if (parent instanceof AbstractTask) {
+//			return taskHasUnfilteredChildren((AbstractTask) parent);
+//		} else if (parent instanceof AbstractTaskContainer) {
+//			AbstractTaskContainer container = (AbstractTaskContainer) parent;
+//			return !getFilteredChildrenFor(container).isEmpty();
+//			//return !container.getChildren().isEmpty();
+//		}
+//		return false;
 	}
 
-	private boolean taskHasUnfilteredChildren(AbstractTask parent) {
-		Set<AbstractTask> children = parent.getChildren();
-		if (children != null) {
-			for (AbstractTask task : children) {
-				if (!filter(parent, task)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+//	private boolean taskHasUnfilteredChildren(AbstractTask parent) {
+//		Set<AbstractTask> children = parent.getChildren();
+//		if (children != null) {
+//			for (AbstractTask task : children) {
+//				if (!filter(parent, task)) {
+//					return true;
+//				}
+//			}
+//		}
+//		return false;
+//	}
 
 	protected List<AbstractTaskContainer> applyFilter(Set<AbstractTaskContainer> roots) {
 		String filterText = (taskListView.getFilteredTree().getFilterControl()).getText();

@@ -40,7 +40,7 @@ public class OrphanedTasksContainer extends AbstractTaskCategory {
 
 	@Override
 	public String getSummary() {
-		return "Archive: " + getRepositoryUrl();
+		return "Unmatched [" + getRepositoryUrl() + "]";
 	}
 
 	@Override

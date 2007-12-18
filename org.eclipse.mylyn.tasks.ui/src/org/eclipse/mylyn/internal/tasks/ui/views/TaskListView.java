@@ -277,7 +277,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private TaskPriorityFilter filterPriority = new TaskPriorityFilter();
 
-	private TaskCompletionFilter filterComplete = new TaskCompletionFilter(this);
+	private TaskCompletionFilter filterComplete = new TaskCompletionFilter();
 
 	private TaskArchiveFilter filterArchive = new TaskArchiveFilter();
 
@@ -1225,7 +1225,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		}
 		manager.add(new Separator(ID_SEPARATOR_REPOSITORY));
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-		
+
 		if (element instanceof AbstractRepositoryQuery || element instanceof TaskCategory) {
 			manager.add(new Separator());
 			addAction(propertiesAction, manager, element);

@@ -37,7 +37,7 @@ public class AllTasksTests {
 		suite.addTestSuite(TaskRepositoryManagerTest.class);
 		suite.addTestSuite(TaskRepositoriesExternalizerTest.class);
 		suite.addTestSuite(TaskListContentProviderTest.class);
-		//suite.addTestSuite(TaskListBackupManagerTest.class);
+		suite.addTestSuite(TaskListBackupManagerTest.class);
 		suite.addTestSuite(TableSorterTest.class);
 		suite.addTestSuite(TaskKeyComparatorTest.class);
 		suite.addTestSuite(TaskTest.class);

@@ -140,13 +140,6 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 					}
 				}
 
-				OrphanedTasksContainer orphansContainer = TasksUiPlugin.getTaskListManager()
-						.getTaskList()
-						.getOrphanContainer(((TaskRepository) parentElement).getUrl());
-				if (orphansContainer != null) {
-					taskContainers.add(orphansContainer);
-				}
-
 				return taskContainers.toArray();
 			} else if (parentElement instanceof TaskRepositoryProjectMapping) {
 				return ((TaskRepositoryProjectMapping) parentElement).getProjects().toArray();
@@ -305,6 +298,8 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 			}
 		}
 
+		addUnmatchedCategories(validElements);
+
 		if (workingSet == null) {
 			IWorkingSetManager workingSetManager = PlatformUI.getWorkbench().getWorkingSetManager();
 			workingSet = workingSetManager.createWorkingSet(getWorkingSetName(),
@@ -313,6 +308,24 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 			workingSet.setName(getWorkingSetName());
 			workingSet.setElements(validElements.toArray(new IAdaptable[validElements.size()]));
 		}
+	}
+
+	private void addUnmatchedCategories(Set<IAdaptable> validElements) {
+		HashSet<OrphanedTasksContainer> orphanContainers = new HashSet<OrphanedTasksContainer>();
+		for (IAdaptable element : validElements) {
+			if (element instanceof AbstractRepositoryQuery) {
+				AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
+				if (query.getRepositoryUrl() != null) {
+					OrphanedTasksContainer orphansContainer = TasksUiPlugin.getTaskListManager()
+							.getTaskList()
+							.getOrphanContainer(query.getRepositoryUrl());
+					if (orphansContainer != null) {
+						orphanContainers.add(orphansContainer);
+					}
+				}
+			}
+		}
+		validElements.addAll(orphanContainers);
 	}
 
 	public IWorkingSet getSelection() {
