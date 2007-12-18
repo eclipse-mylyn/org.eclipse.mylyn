@@ -456,15 +456,18 @@ public class TasksUiUtil {
 		for (IWorkbenchWindow window : windows) {
 			IEditorReference[] editorReferences = window.getActivePage().getEditorReferences();
 			for (int i = 0; i < editorReferences.length; i++) {
-				IEditorPart editor = editorReferences[i].getEditor(false);
-				if (editor instanceof TaskEditor) {
-					TaskEditor taskEditor = (TaskEditor) editor;
-					if (taskEditor.getEditorInput() instanceof TaskEditorInput) {
-						TaskEditorInput input = (TaskEditorInput) taskEditor.getEditorInput();
+				try {
+					if (editorReferences[i].getEditorInput() instanceof TaskEditorInput) {
+						TaskEditorInput input = (TaskEditorInput) editorReferences[i].getEditorInput();
 						if (input.getTask() != null) {
-							repositoryTaskEditors.add((TaskEditor) editor);
+							IEditorPart editorPart = editorReferences[i].getEditor(false);
+							if (editorPart instanceof TaskEditor) {
+								repositoryTaskEditors.add((TaskEditor) editorPart);
+							}
 						}
-					}
+					} 
+				} catch (PartInitException e) {
+					// ignore
 				}
 			}
 		}
