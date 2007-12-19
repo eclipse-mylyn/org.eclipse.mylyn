@@ -37,6 +37,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.trac.tests.support.TestFixture;
+import org.eclipse.mylyn.trac.tests.support.TracTestUtil;
 import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
 
 /**
@@ -54,6 +55,8 @@ public class TracTaskDataHandlerTest extends TestCase {
 
 	private AbstractTaskDataHandler taskDataHandler;
 
+	private ITracClient client;
+
 	public TracTaskDataHandlerTest() {
 	}
 
@@ -68,7 +71,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 
 		connector = (TracRepositoryConnector) manager.getRepositoryConnector(TracCorePlugin.REPOSITORY_KIND);
 		TasksUiPlugin.getSynchronizationManager().setForceSyncExec(true);
-				
+
 		taskDataHandler = connector.getTaskDataHandler();
 	}
 
@@ -82,6 +85,8 @@ public class TracTaskDataHandlerTest extends TestCase {
 		repository.setVersion(version.name());
 
 		manager.addRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
+
+		client = connector.getClientManager().getRepository(repository);
 	}
 
 	public void testGetChangedSinceLastSyncWeb096() throws Exception {
@@ -116,7 +121,8 @@ public class TracTaskDataHandlerTest extends TestCase {
 	}
 
 	private void markStaleTasks() throws Exception {
-		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.offlineHandlerTicketId + "",
+		TracTicket ticket = TracTestUtil.createTicket(client, "markStaleTasks");
+		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, ticket.getId() + "",
 				new NullProgressMonitor());
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(),
@@ -149,13 +155,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 
 		// change ticket making sure it gets a new change time
 		Thread.sleep(1000);
-		ITracClient client = connector.getClientManager().getRepository(repository);
-		TracTicket ticket = client.getTicket(data.offlineHandlerTicketId);
-		if (ticket.getValue(Key.DESCRIPTION).equals(lastModified + "")) {
-			ticket.putBuiltinValue(Key.DESCRIPTION, lastModified + "x");
-		} else {
-			ticket.putBuiltinValue(Key.DESCRIPTION, lastModified + "");
-		}
+		ticket.putBuiltinValue(Key.DESCRIPTION, lastModified + "");
 		client.updateTicket(ticket, "comment");
 
 		task.setStale(false);
@@ -218,36 +218,40 @@ public class TracTaskDataHandlerTest extends TestCase {
 		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
 		attachmentChangesLastModifiedDate();
 	}
-	
+
 	public void testAttachmentChangesLastModifiedDate011() throws Exception {
 		init(TracTestConstants.TEST_TRAC_011_URL, Version.XML_RPC);
 		attachmentChangesLastModifiedDate();
 	}
 
 	private void attachmentChangesLastModifiedDate() throws Exception {
-		RepositoryTaskData taskData = taskDataHandler.getTaskData(repository, data.attachmentTicketId + "", new NullProgressMonitor());
+		RepositoryTaskData taskData = taskDataHandler.getTaskData(repository, data.attachmentTicketId + "",
+				new NullProgressMonitor());
 		TracTask task = new TracTask(repository.getUrl(), data.attachmentTicketId + "", "");
 		connector.updateTaskFromTaskData(repository, task, taskData);
-		Date lastModified = taskDataHandler.getAttributeFactory(taskData).getDateForAttributeType(RepositoryTaskAttribute.DATE_MODIFIED, taskData.getLastModified());
-		
+		Date lastModified = taskDataHandler.getAttributeFactory(taskData).getDateForAttributeType(
+				RepositoryTaskAttribute.DATE_MODIFIED, taskData.getLastModified());
+
 		AbstractAttachmentHandler attachmentHandler = connector.getAttachmentHandler();
 		ITaskAttachment attachment = new MockAttachment("abc".getBytes());
 		attachmentHandler.uploadAttachment(repository, task, attachment, null, new NullProgressMonitor());
-		
+
 		taskData = taskDataHandler.getTaskData(repository, data.attachmentTicketId + "", new NullProgressMonitor());
-		Date newLastModified = taskDataHandler.getAttributeFactory(taskData).getDateForAttributeType(RepositoryTaskAttribute.DATE_MODIFIED, taskData.getLastModified());
-		assertTrue("Expected " + newLastModified + " to be more recent than " + lastModified, newLastModified.after(lastModified));
+		Date newLastModified = taskDataHandler.getAttributeFactory(taskData).getDateForAttributeType(
+				RepositoryTaskAttribute.DATE_MODIFIED, taskData.getLastModified());
+		assertTrue("Expected " + newLastModified + " to be more recent than " + lastModified,
+				newLastModified.after(lastModified));
 	}
 
 	public void testPostTaskDataInvalidCredentials010() throws Exception {
 		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
 		postTaskDataInvalidCredentials();
-	}		
+	}
 
 	public void testPostTaskDataInvalidCredentials011() throws Exception {
 		init(TracTestConstants.TEST_TRAC_011_URL, Version.XML_RPC);
 		postTaskDataInvalidCredentials();
-	}		
+	}
 
 	private void postTaskDataInvalidCredentials() throws Exception {
 		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.offlineHandlerTicketId + "",
@@ -255,7 +259,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(),
 				task.getTaskId());
-		
+
 		taskData.setNewComment("new comment");
 		repository.setAuthenticationCredentials("foo", "bar");
 		try {
@@ -265,5 +269,5 @@ public class TracTaskDataHandlerTest extends TestCase {
 		}
 		assertEquals("new comment", taskData.getNewComment());
 	}
-	
+
 }

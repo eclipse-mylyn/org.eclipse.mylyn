@@ -21,11 +21,11 @@ import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
  * 
  * @author Steffen Pingel
  */
-public class TestCleanupUtil extends AbstractTracClientTest {
+public class TracTestCleanupUtil extends AbstractTracClientTest {
 
 	private TestData data;
 
-	public TestCleanupUtil() {
+	public TracTestCleanupUtil() {
 		super(Version.XML_RPC, PrivilegeLevel.ADMIN);
 	}
 
