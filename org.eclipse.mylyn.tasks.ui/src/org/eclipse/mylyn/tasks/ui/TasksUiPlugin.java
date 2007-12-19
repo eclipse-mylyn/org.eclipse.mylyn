@@ -102,6 +102,8 @@ import org.osgi.framework.BundleContext;
  */
 public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
+	private static final int MAX_CHANGED_ATTRIBUTES = 2;
+
 	private static final int LINK_PROVIDER_TIMEOUT_SECONDS = 5;
 
 	public static final String LABEL_VIEW_REPOSITORIES = "Task Repositories";
@@ -1071,9 +1073,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			details += " -> " + added;
 			sep = "\n";
 
-			n++;
-			if (n > 5) {
-				details += "\nOpen to view more changes";
+			if (++n == MAX_CHANGED_ATTRIBUTES) {
 				break;
 			}
 		}
