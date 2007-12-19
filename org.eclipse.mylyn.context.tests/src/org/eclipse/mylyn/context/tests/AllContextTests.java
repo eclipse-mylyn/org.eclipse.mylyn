@@ -19,7 +19,7 @@ public class AllContextTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.core.tests");
 		// $JUnit-BEGIN$
-		suite.addTestSuite(InteractionContextManagerTest.class);
+		suite.addTestSuite(InteractionContextListeningTest.class);
 		suite.addTestSuite(ScalingFactorsTest.class);
 		suite.addTestSuite(InteractionContextTest.class);
 		suite.addTestSuite(ContextExternalizerTest.class);

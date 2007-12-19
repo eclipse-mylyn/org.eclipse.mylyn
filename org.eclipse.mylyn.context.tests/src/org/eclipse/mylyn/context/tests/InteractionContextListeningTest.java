@@ -24,12 +24,18 @@ import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
 /**
  * @author Steffen Pingel
  */
-public class InteractionContextManagerTest extends TestCase {
+public class InteractionContextListeningTest extends TestCase {
 
 	private InteractionContext mockContext = new InteractionContext("doitest", new InteractionContextScaling());
 
 	private InteractionContextManager contextManager;
 
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		contextManager.deactivateAllContexts();
+	}
+	
 	public void testAddRemoveListenerInContextActivated() {
 		contextManager = ContextCorePlugin.getContextManager();
 		((CompositeInteractionContext) contextManager.getActiveContext()).getContextMap().put("handle", mockContext);
