@@ -20,7 +20,6 @@ import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IWorkingSet;
@@ -87,8 +86,8 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	 * NOTE: If parent is an ITask, this method checks if parent has unfiltered children (see bug 145194).
 	 */
 	public boolean hasChildren(Object parent) {
-
-		return !getFilteredChildrenFor(parent).isEmpty();
+		Object[] children = getChildren(parent);
+		return children != null && children.length > 0;
 
 //		if (parent instanceof AbstractRepositoryQuery) {
 //			AbstractRepositoryQuery query = (AbstractRepositoryQuery) parent;
@@ -103,18 +102,6 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 //		}
 //		return false;
 	}
-
-//	private boolean taskHasUnfilteredChildren(AbstractTask parent) {
-//		Set<AbstractTask> children = parent.getChildren();
-//		if (children != null) {
-//			for (AbstractTask task : children) {
-//				if (!filter(parent, task)) {
-//					return true;
-//				}
-//			}
-//		}
-//		return false;
-//	}
 
 	protected List<AbstractTaskContainer> applyFilter(Set<AbstractTaskContainer> roots) {
 		String filterText = (taskListView.getFilteredTree().getFilterControl()).getText();
@@ -174,12 +161,7 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	private List<AbstractTaskContainer> getFilteredChildrenFor(Object parent) {
 		if (containsNoFilterText((this.taskListView.getFilteredTree().getFilterControl()).getText())) {
 			List<AbstractTaskContainer> children = new ArrayList<AbstractTaskContainer>();
-			if (parent instanceof AbstractTaskCategory) {
-				children = getFilteredRootChildren((AbstractTaskContainer) parent);
-				return children;
-			} else if (parent instanceof AbstractRepositoryQuery) {
-				return getFilteredRootChildren((AbstractTaskContainer) parent);
-			} else if (parent instanceof AbstractTask) {
+			if (parent instanceof AbstractTask) {
 				Set<AbstractTask> subTasks = ((AbstractTask) parent).getChildren();
 				for (AbstractTask t : subTasks) {
 					if (!filter(parent, t)) {
@@ -187,6 +169,8 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 					}
 				}
 				return children;
+			} else if (parent instanceof AbstractTaskContainer) {
+				return getFilteredRootChildren((AbstractTaskContainer) parent);
 			}
 		} else {
 			List<AbstractTaskContainer> children = new ArrayList<AbstractTaskContainer>();
