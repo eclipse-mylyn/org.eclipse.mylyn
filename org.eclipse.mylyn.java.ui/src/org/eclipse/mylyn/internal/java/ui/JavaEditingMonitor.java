@@ -8,6 +8,8 @@
 
 package org.eclipse.mylyn.internal.java.ui;
 
+import java.util.Iterator;
+
 import org.eclipse.jdt.core.IImportContainer;
 import org.eclipse.jdt.core.IImportDeclaration;
 import org.eclipse.jdt.core.IJavaElement;
@@ -53,21 +55,26 @@ public class JavaEditingMonitor extends AbstractUserInteractionMonitor {
 			if (selection instanceof StructuredSelection) {
 				StructuredSelection structuredSelection = (StructuredSelection) selection;
 
-				if (structuredSelection.equals(currentSelection))
+				if (structuredSelection.equals(currentSelection)) {
 					return;
+				}
 				currentSelection = structuredSelection;
 
-				Object selectedObject = structuredSelection.getFirstElement();
-				if (selectedObject instanceof IJavaElement) {
-					IJavaElement checkedElement = checkIfAcceptedAndPromoteIfNecessary((IJavaElement) selectedObject);
-					if (checkedElement == null) {
-						return;
-					} else {
-						selectedElement = checkedElement;
+//				Object selectedObject = structuredSelection.getFirstElement();
+				for (Iterator<?> iterator = structuredSelection.iterator(); iterator.hasNext();) {
+					Object selectedObject = iterator.next();					
+					if (selectedObject instanceof IJavaElement) {
+						IJavaElement checkedElement = checkIfAcceptedAndPromoteIfNecessary((IJavaElement) selectedObject);
+						if (checkedElement == null) {
+							return;
+						} else {
+							selectedElement = checkedElement;
+						}
+					}
+					if (selectedElement != null) {
+						super.handleElementSelection(part, selectedElement, contributeToContext);
 					}
 				}
-				if (selectedElement != null)
-					super.handleElementSelection(part, selectedElement, contributeToContext);
 			} else {
 				if (selection instanceof TextSelection && part instanceof JavaEditor) {
 					currentEditor = (JavaEditor) part;
@@ -124,8 +131,9 @@ public class JavaEditingMonitor extends AbstractUserInteractionMonitor {
 					}
 				}
 			}
-			if (selectedElement != null)
+			if (selectedElement != null) {
 				lastSelectedElement = selectedElement;
+			}
 		} catch (JavaModelException e) {
 			// ignore, fine to fail to resolve an element if the model is not up-to-date
 		} catch (Throwable t) {

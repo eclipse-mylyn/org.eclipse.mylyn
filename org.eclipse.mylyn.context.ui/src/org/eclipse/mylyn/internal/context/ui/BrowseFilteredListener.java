@@ -8,6 +8,9 @@
 
 package org.eclipse.mylyn.internal.context.ui;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -21,12 +24,13 @@ import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.internal.win32.OS;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonViewer;
+import org.eclipse.ui.progress.UIJob;
 
 /**
  * @author Mik Kersten
@@ -99,7 +103,7 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 	public void mouseDoubleClick(MouseEvent e) {
 		// ignore
 	}
-	
+
 	public void mouseUp(MouseEvent event) {
 		final InterestFilter filter = getInterestFilter(viewer);
 		if (filter == null || !(viewer instanceof TreeViewer)) {
@@ -120,33 +124,29 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 				CommonViewer commonViewer = (CommonViewer) treeViewer;
 				commonViewer.setSelection(new StructuredSelection(selectedObject), true);
 			}
-
 			unfilter(filter, treeViewer, selectedObject);
 		} else {
 			if (event.button == 1) {
 				if ((event.stateMask & SWT.MOD1) != 0) {
-					viewer.setSelection(new StructuredSelection(selectedObject));
 					viewer.refresh(selectedObject);
 				} else {
 					final Object unfiltered = filter.getTemporarilyUnfiltered();
 					if (unfiltered != null) {
-						filter.resetTemporarilyUnfiltered();
-						// NOTE: need to set selection otherwise it will be missed
-						viewer.setSelection(new StructuredSelection(selectedObject));
-						
-						// TODO: using asyncExec so that viewer has chance to open
-						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-
-							public void run() {
-								viewer.refresh(unfiltered);	
+						// NOTE: delaying refresh to ensure double click is handled, see bug 208702
+						new UIJob("") {
+							@Override
+							public IStatus runInUIThread(IProgressMonitor monitor) {
+								filter.resetTemporarilyUnfiltered();
+								viewer.refresh(unfiltered);
+								return Status.OK_STATUS;
 							}
-						});
+						}.schedule(OS.GetDoubleClickTime() + 50);	
 					}
 				}
 			}
 		}
 	}
-	
+
 	private Object getClickedItem(MouseEvent event) {
 		if (event.getSource() instanceof Table) {
 			TableItem item = ((Table) event.getSource()).getItem(new Point(event.x, event.y));

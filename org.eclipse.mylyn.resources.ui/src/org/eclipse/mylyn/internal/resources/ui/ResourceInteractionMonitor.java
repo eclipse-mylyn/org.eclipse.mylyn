@@ -10,6 +10,8 @@
  */
 package org.eclipse.mylyn.internal.resources.ui;
 
+import java.util.Iterator;
+
 import org.eclipse.core.internal.resources.File;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -32,10 +34,13 @@ public class ResourceInteractionMonitor extends AbstractUserInteractionMonitor {
 		if (selection instanceof StructuredSelection) {
 			StructuredSelection structuredSelection = (StructuredSelection) selection;
 
-			Object selectedObject = structuredSelection.getFirstElement();
-			if (selectedObject instanceof File) {
-				File file = (File) selectedObject;
-				super.handleElementSelection(part, file, contributeToContext);
+//			Object selectedObject = structuredSelection.getFirstElement();
+			for (Iterator<?> iterator = structuredSelection.iterator(); iterator.hasNext();) {
+				Object selectedObject = iterator.next();
+				if (selectedObject instanceof File) {
+					File file = (File) selectedObject;
+					super.handleElementSelection(part, file, contributeToContext);
+				}
 			}
 		} else if (selection instanceof TextSelection) {
 			if (part instanceof EditorPart) {
@@ -43,7 +48,9 @@ public class ResourceInteractionMonitor extends AbstractUserInteractionMonitor {
 					Object object = ((EditorPart) part).getEditorInput().getAdapter(IResource.class);
 					if (object instanceof IFile) {
 						IFile file = (IFile) object;
-						if (file.getFileExtension() != null && !ContextCorePlugin.getDefault().getKnownContentTypes().contains(file.getFileExtension())) {
+						if (file.getFileExtension() != null
+								&& !ContextCorePlugin.getDefault().getKnownContentTypes().contains(
+										file.getFileExtension())) {
 							super.handleElementEdit(part, object, contributeToContext);
 						}
 					}

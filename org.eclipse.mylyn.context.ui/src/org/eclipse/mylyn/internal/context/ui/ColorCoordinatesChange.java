@@ -8,7 +8,7 @@
 
 package org.eclipse.mylyn.internal.context.ui;
 
-public class ColorCoordinatesChange {
+class ColorCoordinatesChange {
 	/**
 	 * Change RGB colors to HSV colors
 	 * 
