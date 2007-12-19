@@ -79,6 +79,10 @@ public class TaskRepositoryTest extends TestCase {
 		assertNull(taskRepository.getCredentials(AuthenticationType.PROXY));
 	}
 
+	public void testPlatformIsRunning() {
+		assertTrue(Platform.isRunning());
+	}
+	
 	public void password(AuthenticationType authType) throws Exception {
 		URL url = new URL("http://url");
 		TaskRepository taskRepository = new TaskRepository("kind", url.toString());
@@ -105,16 +109,13 @@ public class TaskRepositoryTest extends TestCase {
 			assertEquals("user1", credentials.getUserName());
 			assertEquals("pwd1", credentials.getPassword());
 
-			// make sure not old passwords are in the key ring
-			// XXX this check is for running continuous tests, Platform.isRunning() might not be the appropriate method to check if the key ring is available
-			if (Platform.isRunning()) {
-				map = Platform.getAuthorizationInfo(url, "", "Basic");
-				assertNotNull(map);
-				assertTrue(map.containsValue("user1"));
-				assertFalse(map.containsValue("pwd1"));
-				assertFalse(map.containsValue("user"));
-				assertFalse(map.containsValue("pwd"));
-			}
+			// make sure old passwords are not in the key ring
+			map = Platform.getAuthorizationInfo(url, "", "Basic");
+			assertNotNull(map);
+			assertTrue(map.containsValue("user1"));
+			assertFalse(map.containsValue("pwd1"));
+			assertFalse(map.containsValue("user"));
+			assertFalse(map.containsValue("pwd"));
 
 			taskRepository.setCredentials(authType, new AuthenticationCredentials("user2", "pwd2"), true);
 			assertTrue(taskRepository.getSavePassword(authType));
