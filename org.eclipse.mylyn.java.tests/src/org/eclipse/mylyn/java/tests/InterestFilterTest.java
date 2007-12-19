@@ -64,9 +64,14 @@ public class InterestFilterTest extends AbstractJavaContextTest {
 	}
 
 	public void testFilterRemovalAndRestore() throws JavaModelException {
-
+		applyAction.update(false);
 		ViewerFilter[] previousFilters = explorer.getTreeViewer().getFilters();
 		assertTrue(previousFilters.length > 1);
+		for (ViewerFilter viewerFilter : previousFilters) {
+			if (viewerFilter instanceof InterestFilter) {
+				fail();
+			}
+		} 
 		applyAction.update(true);
 		ViewerFilter[] afterInstall = explorer.getTreeViewer().getFilters();
 		// more than 1 since we preserve some filters

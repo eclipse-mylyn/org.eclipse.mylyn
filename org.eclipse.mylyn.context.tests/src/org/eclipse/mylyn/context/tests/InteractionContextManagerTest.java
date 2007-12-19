@@ -1,0 +1,100 @@
+/*******************************************************************************
+ * Copyright (c) 2004, 2007 Mylyn project committers and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *******************************************************************************/
+
+package org.eclipse.mylyn.context.tests;
+
+import java.util.List;
+
+import junit.framework.TestCase;
+
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.IInteractionContext;
+import org.eclipse.mylyn.context.core.IInteractionContextListener;
+import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.internal.context.core.CompositeInteractionContext;
+import org.eclipse.mylyn.internal.context.core.InteractionContext;
+import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
+import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
+
+/**
+ * @author Steffen Pingel
+ */
+public class InteractionContextManagerTest extends TestCase {
+
+	private InteractionContext mockContext = new InteractionContext("doitest", new InteractionContextScaling());
+
+	private InteractionContextManager contextManager;
+
+	public void testAddRemoveListenerInContextActivated() {
+		contextManager = ContextCorePlugin.getContextManager();
+		((CompositeInteractionContext) contextManager.getActiveContext()).getContextMap().put("handle", mockContext);
+
+		final StubContextListener listener = new StubContextListener();
+		contextManager.addListener(new ContextListenerAdapter() {
+			@Override
+			public void contextActivated(IInteractionContext arg0) {
+				contextManager.addListener(listener);
+				contextManager.removeListener(listener);
+			}
+		});
+		contextManager.activateContext("handle");
+
+		contextManager.deactivateContext("handle");
+		contextManager.activateContext("handle");
+		
+		assertEquals(0, listener.activationEventCount);
+	}
+
+	private class StubContextListener extends ContextListenerAdapter {
+
+		private int activationEventCount;
+
+		public void contextActivated(IInteractionContext context) {
+			contextManager.removeListener(this);
+			activationEventCount++;
+		}
+
+	}
+
+	private class ContextListenerAdapter implements IInteractionContextListener {
+
+		public void contextActivated(IInteractionContext context) {
+			// ignore
+		}
+
+		public void contextCleared(IInteractionContext context) {
+			// ignore
+		}
+
+		public void contextDeactivated(IInteractionContext context) {
+			// ignore
+		}
+
+		public void elementDeleted(IInteractionElement element) {
+			// ignore
+		}
+
+		public void interestChanged(List<IInteractionElement> elements) {
+			// ignore
+		}
+
+		public void landmarkAdded(IInteractionElement element) {
+			// ignore
+		}
+
+		public void landmarkRemoved(IInteractionElement element) {
+			// ignore
+		}
+
+		public void relationsChanged(IInteractionElement element) {
+			// ignore
+		}
+
+	}
+
+}

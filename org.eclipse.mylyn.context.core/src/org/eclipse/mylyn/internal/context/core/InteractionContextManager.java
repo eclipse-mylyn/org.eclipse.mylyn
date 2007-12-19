@@ -117,11 +117,11 @@ public class InteractionContextManager {
 
 	private InteractionContext activityMetaContext = null;
 
-	private List<IInteractionContextListener> activityMetaContextListeners = new ArrayList<IInteractionContextListener>();
+	private List<IInteractionContextListener> activityMetaContextListeners = new CopyOnWriteArrayList<IInteractionContextListener>();
 
 	private List<IInteractionContextListener> listeners = new CopyOnWriteArrayList<IInteractionContextListener>();
 
-	private List<IInteractionContextListener> waitingListeners = new ArrayList<IInteractionContextListener>();
+//	private List<IInteractionContextListener> waitingListeners = new ArrayList<IInteractionContextListener>();
 
 	private boolean suppressListenerNotification = false;
 
@@ -513,14 +513,15 @@ public class InteractionContextManager {
 
 	public void addListener(IInteractionContextListener listener) {
 		if (listener != null) {
-			if (suppressListenerNotification && !waitingListeners.contains(listener)) {
-				waitingListeners.add(listener);
-			} else {
-				if (!listeners.contains(listener))
+//			if (suppressListenerNotification && !waitingListeners.contains(listener)) {
+//				waitingListeners.add(listener);
+//			} else {
+				if (!listeners.contains(listener)) {
 					listeners.add(listener);
-			}
+				}
+//			}
 		} else {
-			StatusHandler.log("attempted to add null lisetener", this);
+			StatusHandler.log("Attempted to add null lisetener", this);
 		}
 	}
 
@@ -580,10 +581,10 @@ public class InteractionContextManager {
 				internalActivateContext(context);
 			} else {
 				StatusHandler.log("Could not load context", this);
-			}
+			} 
 			suppressListenerNotification = false;
-			listeners.addAll(waitingListeners);
-			waitingListeners.clear();
+//			listeners.addAll(waitingListeners);
+//			waitingListeners.clear();
 		} catch (Throwable t) {
 			StatusHandler.log(t, "Could not activate context");
 		}
