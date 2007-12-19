@@ -971,15 +971,15 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			} else if (newTaskData != null && oldTaskData != null) {
 				StringBuilder description = new StringBuilder();
 				String changedDescription = getChangedDescription(newTaskData, oldTaskData);
-				String chnagedAttributes = getChangedAttributes(newTaskData, oldTaskData);
+				String changedAttributes = getChangedAttributes(newTaskData, oldTaskData);
 				if (!"".equals(changedDescription.trim())) {
 					description.append(changedDescription);
-					if (!"".equals(chnagedAttributes)) {
+					if (!"".equals(changedAttributes)) {
 						description.append('\n');
 					}
 				}
-				if (!"".equals(chnagedAttributes)) {
-					description.append(chnagedAttributes);
+				if (!"".equals(changedAttributes)) {
+					description.append(changedAttributes);
 				}
 
 				notification.setDescription(description.toString());
