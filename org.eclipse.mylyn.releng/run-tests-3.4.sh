@@ -7,11 +7,13 @@ source $BUILD_ROOT/local.sh
 
 cp 3.4/build/allUpdateSite/plugins/*jar $ECLIPSE_TEST_HOME_3_4/plugins/
 
-rm -R $ECLIPSE_TEST_HOME_3_4/plugins/org.eclipse.mylyn.tests
-mkdir $ECLIPSE_TEST_HOME_3_4/plugins/org.eclipse.mylyn.tests
-unzip -o $ECLIPSE_TEST_HOME_3_4/plugins/org.eclipse.mylyn.tests_0.0.0.jar \
- -d $ECLIPSE_TEST_HOME_3_4/plugins/org.eclipse.mylyn.tests
-rm $ECLIPSE_TEST_HOME_3_4/plugins/org.eclipse.mylyn.tests_0.0.0.jar
+rm -R $ECLIPSE_TEST_HOME_3_4/plugins/org.eclipse.mylyn.*tests
+for i in $ECLIPSE_TEST_HOME_3_4/plugins/org.eclipse.mylyn.*tests_0.0.0.jar; do
+	DIR=`echo $i | sed -e 's/_0.0.0.jar//'`
+	mkdir $DIR
+	unzip -o $i -d $DIR
+	rm $i
+done
 
 $JAVA_HOME/bin/java \
  -jar $ECLIPSE_TEST_HOME_3_4/plugins/org.eclipse.equinox.launcher_*.jar \
