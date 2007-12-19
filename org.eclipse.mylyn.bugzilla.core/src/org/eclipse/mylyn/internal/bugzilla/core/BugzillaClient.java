@@ -971,7 +971,9 @@ public class BugzillaClient {
 					|| a.getId().equals(RepositoryTaskAttribute.REMOVE_CC)
 					|| a.getId().equals(BugzillaReportElement.CREATION_TS.getKeyString())) {
 				continue;
-			} else if (a.getId() != null && a.getId().compareTo("") != 0) {
+			}
+
+			if (a.getId() != null && a.getId().compareTo("") != 0) {
 				String value = a.getValue();
 				if (a.getId().equals(BugzillaReportElement.DELTA_TS.getKeyString())) {
 					value = stripTimeZone(value);
