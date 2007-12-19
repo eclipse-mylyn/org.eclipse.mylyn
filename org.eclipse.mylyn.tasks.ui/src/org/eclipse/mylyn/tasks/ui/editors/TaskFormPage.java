@@ -357,9 +357,11 @@ public class TaskFormPage extends FormPage {
 			public void focusGained(FocusEvent e) {
 				actionContributor.updateSelectableActions(commentViewer.getSelection());
 
-				handlerActivation = handlerService.activateHandler(ITextEditorActionDefinitionIds.QUICK_ASSIST,
-						createQuickFixActionHandler(commentViewer), new ActiveShellExpression(
-								commentViewer.getTextWidget().getShell()));
+				if (handlerActivation == null) {
+					handlerActivation = handlerService.activateHandler(ITextEditorActionDefinitionIds.QUICK_ASSIST,
+							createQuickFixActionHandler(commentViewer), new ActiveShellExpression(
+									commentViewer.getTextWidget().getShell()));
+				}
 			}
 
 			public void focusLost(FocusEvent e) {
@@ -369,10 +371,11 @@ public class TaskFormPage extends FormPage {
 
 				if (handlerActivation != null) {
 					handlerService.deactivateHandler(handlerActivation);
+					handlerActivation = null;
 				}
 			}
 		});
-
+ 
 		commentViewer.addTextListener(new ITextListener() {
 			public void textChanged(TextEvent event) {
 				actionContributor.updateSelectableActions(commentViewer.getSelection());
