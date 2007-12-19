@@ -61,6 +61,7 @@ public class AllTasksTests {
 		suite.addTestSuite(TaskRepositoryLocationTest.class);
 		suite.addTestSuite(AbstractTaskDataHandlerTest.class);
 		suite.addTestSuite(OrphanedTasksTest.class);
+		suite.addTestSuite(TaskWorkingSetTest.class);
 		// $JUnit-END$
 
 		// suite.addTestSuite(BackgroundSaveTest.class);
