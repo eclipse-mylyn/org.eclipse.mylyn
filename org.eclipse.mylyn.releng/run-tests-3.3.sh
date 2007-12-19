@@ -12,7 +12,7 @@ cp 3.3/build/standardUpdateSite/plugins/*jar $ECLIPSE_TEST_HOME_3_3/plugins/
 
 rm -R $ECLIPSE_TEST_HOME_3_3/plugins/org.eclipse.mylyn.*tests
 for i in $ECLIPSE_TEST_HOME_3_3/plugins/org.eclipse.mylyn.*tests_0.0.0.jar; do
-	DIR=`echo $i | sed -e 's/_0.0.0.jar//`
+	DIR=`echo $i | sed -e 's/_0.0.0.jar//'`
 	mkdir $DIR
 	unzip -o $i -d $DIR
 	rm $i
