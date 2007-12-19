@@ -727,6 +727,10 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 		filteredTree = new TaskListFilteredTree(parent, SWT.MULTI | SWT.VERTICAL | /* SWT.H_SCROLL | */SWT.V_SCROLL
 				| SWT.FULL_SELECTION | SWT.HIDE_SELECTION, new TaskListPatternFilter());
+		// Set to empty string to disable native tooltips (windows only?)
+		// bug#160897
+		// http://dev.eclipse.org/newslists/news.eclipse.platform.swt/msg29614.html
+		getViewer().getTree().setToolTipText("");
 
 		getViewer().getTree().setHeaderVisible(false);
 		getViewer().setUseHashlookup(true);
@@ -887,11 +891,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		hookContextMenu();
 		hookOpenAction();
 		contributeToActionBars();
-
-		// Set to empty string to disable native tooltips (windows only?)
-		// bug#160897
-		// http://dev.eclipse.org/newslists/news.eclipse.platform.swt/msg29614.html
-		getViewer().getTree().setToolTipText("");
 
 		configureGradientColors();
 
