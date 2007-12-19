@@ -267,10 +267,7 @@ public abstract class AbstractRepositoryConnector {
 	 * All errors should be thrown as <code>CoreException</code> for the framework to handle, since background
 	 * synchronizations fail silently when disconnected.
 	 * 
-	 * @param tasks
-	 *            TODO
-	 * 
-	 * @return null if there was no tasks changed in the repository, otherwise collection of updated tasks (within
+	 * @return false if there was no tasks changed in the repository, otherwise collection of updated tasks (within
 	 *         <code>tasks</code> collection), so empty collection means that there are some other tasks changed
 	 * 
 	 * @throws CoreException
