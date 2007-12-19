@@ -132,11 +132,6 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 					final Object unfiltered = filter.getTemporarilyUnfiltered();
 					if (unfiltered != null) {
 						// NOTE: delaying refresh to ensure double click is handled, see bug 208702
-						
-						// FIXME this API is windows specific
-						//OS.GetDoubleClickTime()
-						int doubleClickDelay = 400;
-						
 						new UIJob("") {
 							@Override
 							public IStatus runInUIThread(IProgressMonitor monitor) {
@@ -144,7 +139,7 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 								viewer.refresh(unfiltered);
 								return Status.OK_STATUS;
 							}
-						}.schedule(doubleClickDelay + 50);	
+						}.schedule(event.display.getDoubleClickTime() + 50);	
 					}
 				}
 			}
