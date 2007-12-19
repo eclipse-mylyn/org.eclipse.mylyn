@@ -66,7 +66,8 @@ public class TaskRepositoryTest extends TestCase {
 
 	public void testFlushCredentials() throws Exception {
 		TaskRepository taskRepository = new TaskRepository("kind", "url");
-		taskRepository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("user", "pwd"), false);
+		taskRepository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("user", "pwd"),
+				false);
 		taskRepository.setCredentials(AuthenticationType.HTTP, new AuthenticationCredentials("user", "pwd"), true);
 		taskRepository.flushAuthenticationCredentials();
 		assertEquals(null, taskRepository.getUserName());
@@ -81,42 +82,49 @@ public class TaskRepositoryTest extends TestCase {
 	public void password(AuthenticationType authType) throws Exception {
 		URL url = new URL("http://url");
 		TaskRepository taskRepository = new TaskRepository("kind", url.toString());
-		assertNull(taskRepository.getCredentials(authType));
-		assertTrue(taskRepository.getSavePassword(authType));
+		try {
+			assertNull(taskRepository.getCredentials(authType));
+			assertTrue(taskRepository.getSavePassword(authType));
 
-		taskRepository.setCredentials(authType, new AuthenticationCredentials("user", "pwd"), true);
-		AuthenticationCredentials credentials = taskRepository.getCredentials(authType);
-		assertNotNull(credentials);
-		assertEquals("user", credentials.getUserName());
-		assertEquals("pwd", credentials.getPassword());
+			taskRepository.setCredentials(authType, new AuthenticationCredentials("user", "pwd"), true);
+			AuthenticationCredentials credentials = taskRepository.getCredentials(authType);
+			assertNotNull(credentials);
+			assertEquals("user", credentials.getUserName());
+			assertEquals("pwd", credentials.getPassword());
 
-		Map<?, ?> map = Platform.getAuthorizationInfo(url, "", "Basic");
-		assertNotNull(map);
-		assertTrue(map.containsValue("user"));
-		assertTrue(map.containsValue("pwd"));
+			Map<?, ?> map = Platform.getAuthorizationInfo(url, "", "Basic");
+			assertNotNull(map);
+			assertTrue(map.containsValue("user"));
+			assertTrue(map.containsValue("pwd"));
 
-		// test not saving password
-		taskRepository.setCredentials(authType, new AuthenticationCredentials("user1", "pwd1"), false);
-		assertFalse(taskRepository.getSavePassword(authType));
-		credentials = taskRepository.getCredentials(authType);
-		assertNotNull(credentials);
-		assertEquals("user1", credentials.getUserName());
-		assertEquals("pwd1", credentials.getPassword());
+			// test not saving password
+			taskRepository.setCredentials(authType, new AuthenticationCredentials("user1", "pwd1"), false);
+			assertFalse(taskRepository.getSavePassword(authType));
+			credentials = taskRepository.getCredentials(authType);
+			assertNotNull(credentials);
+			assertEquals("user1", credentials.getUserName());
+			assertEquals("pwd1", credentials.getPassword());
 
-		// make sure not old passwords are in the key ring
-		map = Platform.getAuthorizationInfo(url, "", "Basic");
-		assertNotNull(map);
-		assertTrue(map.containsValue("user1"));
-		assertFalse(map.containsValue("pwd1"));
-		assertFalse(map.containsValue("user"));
-		assertFalse(map.containsValue("pwd"));
+			// make sure not old passwords are in the key ring
+			// XXX this check is for running continuous tests, Platform.isRunning() might not be the appropriate method to check if the key ring is available
+			if (Platform.isRunning()) {
+				map = Platform.getAuthorizationInfo(url, "", "Basic");
+				assertNotNull(map);
+				assertTrue(map.containsValue("user1"));
+				assertFalse(map.containsValue("pwd1"));
+				assertFalse(map.containsValue("user"));
+				assertFalse(map.containsValue("pwd"));
+			}
 
-		taskRepository.setCredentials(authType, new AuthenticationCredentials("user2", "pwd2"), true);
-		assertTrue(taskRepository.getSavePassword(authType));
-		credentials = taskRepository.getCredentials(authType);
-		assertNotNull(credentials);
-		assertEquals("user2", credentials.getUserName());
-		assertEquals("pwd2", credentials.getPassword());
+			taskRepository.setCredentials(authType, new AuthenticationCredentials("user2", "pwd2"), true);
+			assertTrue(taskRepository.getSavePassword(authType));
+			credentials = taskRepository.getCredentials(authType);
+			assertNotNull(credentials);
+			assertEquals("user2", credentials.getUserName());
+			assertEquals("pwd2", credentials.getPassword());
+		} finally {
+			taskRepository.flushAuthenticationCredentials();
+		}
 	}
 
 	public void testConfigUpdateStoring() throws Exception {
