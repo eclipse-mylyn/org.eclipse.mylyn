@@ -44,6 +44,7 @@ import org.eclipse.mylyn.tasks.ui.search.SearchHitCollector;
  * @author Frank Becker (bug 206510)
  */
 public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
+	
 	public void testMidAirCollision() throws Exception {
 		init30();
 		String taskNumber = "5";
@@ -132,8 +133,52 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		assertNotNull(taskData);
 
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
+		if (taskData.getAssignedTo().equals("rob.elves@eclipse.org")) {
+			assertEquals("rob.elves@eclipse.org", taskData.getAssignedTo());
+			reassingToUser31(task, taskData);
+			TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+			taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
+			assertEquals("tests2@mylyn.eclipse.org", taskData.getAssignedTo());
 
-		assertEquals("rob.elves@eclipse.org", taskData.getAssignedTo());
+			reassignToDefault31(task, taskData);
+			TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+			taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
+			assertEquals("rob.elves@eclipse.org", taskData.getAssignedTo());
+		} else if (taskData.getAssignedTo().equals("tests2@mylyn.eclipse.org")) {
+			assertEquals("tests2@mylyn.eclipse.org", taskData.getAssignedTo());
+			reassignToDefault31(task, taskData);
+			TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+			taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
+			assertEquals("rob.elves@eclipse.org", taskData.getAssignedTo());
+
+			reassingToUser31(task, taskData);
+			TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+			taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
+			assertEquals("tests2@mylyn.eclipse.org", taskData.getAssignedTo());
+		} else {
+			fail("Bug with unexpected user assigned");
+		}
+
+	}
+
+	private void reassignToDefault31(BugzillaTask task, RepositoryTaskData taskData) throws CoreException {
+		// Modify it (reassignbycomponent)
+		String newCommentText = "BugzillaRepositoryClientTest.testReassign31(): reassignbycomponent "
+				+ (new Date()).toString();
+		taskData.setNewComment(newCommentText);
+		Set<RepositoryTaskAttribute> changed = new HashSet<RepositoryTaskAttribute>();
+		changed.add(taskData.getAttribute(RepositoryTaskAttribute.COMMENT_NEW));
+
+		taskData.setAttributeValue(BugzillaReportElement.SET_DEFAULT_ASSIGNEE.getKeyString(), "1");
+		changed.add(taskData.getAttribute(BugzillaReportElement.SET_DEFAULT_ASSIGNEE.getKeyString()));
+
+		TasksUiPlugin.getTaskDataManager().saveEdits(task.getRepositoryUrl(), task.getTaskId(), changed);
+
+		// Submit changes
+		submit(task, taskData);
+	}
+
+	private void reassingToUser31(BugzillaTask task, RepositoryTaskData taskData) throws CoreException {
 		// Modify it (reassign to tests2@mylyn.eclipse.org)
 		String newCommentText = "BugzillaRepositoryClientTest.testReassign31(): reassign " + (new Date()).toString();
 		taskData.setNewComment(newCommentText);
@@ -146,28 +191,6 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 		// Submit changes
 		submit(task, taskData);
-
-		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
-		taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
-		assertEquals("tests2@mylyn.eclipse.org", taskData.getAssignedTo());
-
-		// Modify it (reassignbycomponent)
-		newCommentText = "BugzillaRepositoryClientTest.testReassign31(): reassignbycomponent "
-				+ (new Date()).toString();
-		taskData.setNewComment(newCommentText);
-		changed = new HashSet<RepositoryTaskAttribute>();
-		changed.add(taskData.getAttribute(RepositoryTaskAttribute.COMMENT_NEW));
-
-		taskData.setAttributeValue(BugzillaReportElement.SET_DEFAULT_ASSIGNEE.getKeyString(), "1");
-		changed.add(taskData.getAttribute(BugzillaReportElement.SET_DEFAULT_ASSIGNEE.getKeyString()));
-
-		TasksUiPlugin.getTaskDataManager().saveEdits(task.getRepositoryUrl(), task.getTaskId(), changed);
-
-		// Submit changes
-		submit(task, taskData);
-		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
-		taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
-		assertEquals("rob.elves@eclipse.org", taskData.getAssignedTo());
 	}
 
 	private void doReassignOld(String taskNumber, String defaultAssignee) throws CoreException {
