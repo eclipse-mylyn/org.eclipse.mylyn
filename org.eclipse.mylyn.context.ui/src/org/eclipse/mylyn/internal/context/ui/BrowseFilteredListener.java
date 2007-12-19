@@ -24,7 +24,6 @@ import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.internal.win32.OS;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Tree;
@@ -133,6 +132,11 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 					final Object unfiltered = filter.getTemporarilyUnfiltered();
 					if (unfiltered != null) {
 						// NOTE: delaying refresh to ensure double click is handled, see bug 208702
+						
+						// FIXME this API is windows specific
+						//OS.GetDoubleClickTime()
+						int doubleClickDelay = 400;
+						
 						new UIJob("") {
 							@Override
 							public IStatus runInUIThread(IProgressMonitor monitor) {
@@ -140,7 +144,7 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 								viewer.refresh(unfiltered);
 								return Status.OK_STATUS;
 							}
-						}.schedule(OS.GetDoubleClickTime() + 50);	
+						}.schedule(doubleClickDelay + 50);	
 					}
 				}
 			}
