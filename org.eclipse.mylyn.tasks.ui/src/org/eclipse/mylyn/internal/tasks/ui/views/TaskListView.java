@@ -698,7 +698,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		}
 
 		filterWorkingSet = new TaskWorkingSetFilter(TasksUiPlugin.getTaskListManager().getTaskList());
-		filterWorkingSet.setCurrentWorkingSet(getSite().getPage().getAggregateWorkingSet());
+		filterWorkingSet.updateWorkingSet(getSite().getPage().getAggregateWorkingSet());
 		addFilter(filterWorkingSet);
 		addFilter(filterPriority);
 		if (TasksUiPlugin.getDefault().getPreferenceStore().contains(TasksUiPreferenceConstants.FILTER_COMPLETE_MODE)) {
@@ -1643,7 +1643,19 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		if (IWorkingSetManager.CHANGE_WORKING_SET_CONTENT_CHANGE.equals(property)
 				|| IWorkingSetManager.CHANGE_WORKING_SET_REMOVE.equals(property)) {
 			if (getSite() != null && getSite().getPage() != null) {
-				filterWorkingSet.setCurrentWorkingSet(getSite().getPage().getAggregateWorkingSet());
+				if (filterWorkingSet.updateWorkingSet(getSite().getPage().getAggregateWorkingSet())) {
+					try {
+						getViewer().getControl().setRedraw(false);
+						// XXX why is this needed?
+						//getViewer().collapseAll();
+						getViewer().refresh();
+						if (isFocusedMode()) {
+							getViewer().expandAll();
+						}
+					} finally {
+						getViewer().getControl().setRedraw(true);
+					}
+				}
 			}
 
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -1651,17 +1663,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 					filteredTree.indicateActiveTaskWorkingSet();
 				}
 			});
-		}
-
-		try {
-			getViewer().getControl().setRedraw(false);
-			getViewer().collapseAll();
-			getViewer().refresh();
-			if (isFocusedMode()) {
-				getViewer().expandAll();
-			}
-		} finally {
-			getViewer().getControl().setRedraw(true);
 		}
 	}
 
