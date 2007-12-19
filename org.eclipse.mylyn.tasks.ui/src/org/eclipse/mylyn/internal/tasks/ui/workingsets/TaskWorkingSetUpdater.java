@@ -12,8 +12,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
@@ -32,16 +37,53 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Eugene Kuleshov
  * @author Mik Kersten
+ * @author Steffen Pingel
  */
-public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChangeListener, ITaskActivityListener {
+public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChangeListener, ITaskActivityListener,
+		IResourceChangeListener {
 
 	public static String ID_TASK_WORKING_SET = "org.eclipse.mylyn.tasks.ui.workingSet";
 
-	private List<IWorkingSet> workingSets = new ArrayList<IWorkingSet>();
+	private List<IWorkingSet> workingSets = new CopyOnWriteArrayList<IWorkingSet>();
+
+	private static class TaskWorkingSetDelta {
+		private IWorkingSet workingSet;
+
+		private List<Object> elements;
+
+		private boolean changed;
+
+		public TaskWorkingSetDelta(IWorkingSet workingSet) {
+			this.workingSet = workingSet;
+			this.elements = new ArrayList<Object>(Arrays.asList(workingSet.getElements()));
+		}
+
+		public int indexOf(Object element) {
+			return elements.indexOf(element);
+		}
+
+		public void set(int index, Object element) {
+			elements.set(index, element);
+			changed = true;
+		}
+
+		public void remove(int index) {
+			if (elements.remove(index) != null) {
+				changed = true;
+			}
+		}
+
+		public void process() {
+			if (changed) {
+				workingSet.setElements(elements.toArray(new IAdaptable[elements.size()]));
+			}
+		}
+	}
 
 	public TaskWorkingSetUpdater() {
 		TasksUiPlugin.getTaskListManager().getTaskList().addChangeListener(this);
 		TasksUiPlugin.getTaskListManager().addActivityListener(this);
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
 	}
 
 	public void dispose() {
@@ -211,7 +253,7 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 		}
 		return false;
 	}
-	
+
 	public static boolean isOnlyTaskWorkingSetEnabled(IWorkingSet set) {
 		if (!TaskWorkingSetUpdater.isWorkingSetEnabled(set)) {
 			return false;
@@ -219,10 +261,56 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 
 		IWorkingSet[] enabledSets = TaskWorkingSetUpdater.getEnabledSets();
 		for (int i = 0; i < enabledSets.length; i++) {
-			if (!enabledSets[i].equals(set) && enabledSets[i].getId().equalsIgnoreCase(TaskWorkingSetUpdater.ID_TASK_WORKING_SET)) {
+			if (!enabledSets[i].equals(set)
+					&& enabledSets[i].getId().equalsIgnoreCase(TaskWorkingSetUpdater.ID_TASK_WORKING_SET)) {
 				return false;
 			}
 		}
 		return true;
 	}
+
+	private void processResourceDelta(TaskWorkingSetDelta result, IResourceDelta delta) {
+		IResource resource = delta.getResource();
+		int type = resource.getType();
+		int index = result.indexOf(resource);
+		int kind = delta.getKind();
+		int flags = delta.getFlags();
+		if (kind == IResourceDelta.CHANGED && type == IResource.PROJECT && index != -1) {
+			if ((flags & IResourceDelta.OPEN) != 0) {
+				result.set(index, resource);
+			}
+		}
+		if (index != -1 && kind == IResourceDelta.REMOVED) {
+			if ((flags & IResourceDelta.MOVED_TO) != 0) {
+				result.set(index, ResourcesPlugin.getWorkspace().getRoot().findMember(delta.getMovedToPath()));
+			} else {
+				result.remove(index);
+			}
+		}
+
+		// Don't dive into closed or opened projects
+		if (projectGotClosedOrOpened(resource, kind, flags))
+			return;
+
+		IResourceDelta[] children = delta.getAffectedChildren();
+		for (int i = 0; i < children.length; i++) {
+			processResourceDelta(result, children[i]);
+		}
+	}
+
+	private boolean projectGotClosedOrOpened(IResource resource, int kind, int flags) {
+		return resource.getType() == IResource.PROJECT && kind == IResourceDelta.CHANGED
+				&& (flags & IResourceDelta.OPEN) != 0;
+	}
+
+	public void resourceChanged(IResourceChangeEvent event) {
+		for (IWorkingSet workingSet : workingSets) {
+			TaskWorkingSetDelta workingSetDelta = new TaskWorkingSetDelta(workingSet);
+			if (event.getDelta() != null) {
+				processResourceDelta(workingSetDelta, event.getDelta());
+			}
+			workingSetDelta.process();
+		}
+	}
+
 }

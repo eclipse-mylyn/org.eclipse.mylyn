@@ -24,7 +24,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn,
  org.eclipse.mylyn.web.core,
  org.eclipse.jface.text,
- org.eclipse.test.performance
+ org.eclipse.test.performance,
+ org.eclipse.ui.ide
 Eclipse-AutoStart: true
 Bundle-ClassPath: mylyn-tasklist-tests.jar
 Export-Package: org.eclipse.mylyn.tasks.tests,
