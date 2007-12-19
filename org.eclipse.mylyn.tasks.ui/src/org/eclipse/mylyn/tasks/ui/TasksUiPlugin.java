@@ -52,6 +52,7 @@ import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.OfflineCachingStorage;
 import org.eclipse.mylyn.internal.tasks.ui.OfflineFileStorage;
 import org.eclipse.mylyn.internal.tasks.ui.RepositoryAwareStatusHandler;
+import org.eclipse.mylyn.internal.tasks.ui.TaskEditorBloatMonitor;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListBackupManager;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListNotificationManager;
@@ -160,6 +161,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	private ISaveParticipant saveParticipant;
 
+	private TaskEditorBloatMonitor taskEditorBloatManager;
+	
 	private static final boolean DEBUG_HTTPCLIENT = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.mylyn.tasks.ui/debug/httpclient"));
 
 	private static final class OrderComparator implements Comparator<AbstractTaskRepositoryLinkProvider> {
@@ -321,14 +324,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			super("Initializing Task List");
 			setSystem(true);
 		}
-
-//		public IStatus runInUIThread(IProgressMonitor monitor) {
-//			Job job = new RealJob(JavaUIMessages.JavaPlugin_initializing_ui);
-//			job.setPriority(Job.SHORT);
-//			job.schedule();
-//			return new Status(IStatus.OK, JavaPlugin.getPluginId(), IStatus.OK, "", null); //$NON-NLS-1$
-//		}
-
+		
 		@Override
 		public IStatus runInUIThread(IProgressMonitor monitor) {
 			// NOTE: failure in one part of the initialization should
@@ -388,6 +384,9 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 					repositoriesView.getViewer().refresh();
 				}
 				checkForCredentials();
+				
+				taskEditorBloatManager = new TaskEditorBloatMonitor();
+				taskEditorBloatManager.install(PlatformUI.getWorkbench());
 			} catch (Throwable t) {
 				StatusHandler.fail(t, "Could not finish Tasks UI initialization", false);
 			} finally {
@@ -574,6 +573,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 					ContextCorePlugin.getDefault().getPluginPreferences().removePropertyChangeListener(
 							PREFERENCE_LISTENER);
 				}
+				taskEditorBloatManager.dispose(PlatformUI.getWorkbench());
 				INSTANCE = null;
 			}
 		} catch (Exception e) {
