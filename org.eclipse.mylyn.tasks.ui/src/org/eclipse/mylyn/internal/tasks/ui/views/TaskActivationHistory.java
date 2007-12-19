@@ -109,12 +109,11 @@ public class TaskActivationHistory {
 			if (hasPrevious()) {
 				if (currentIndex < history.size()-1 && ((currentIndex == 0 && !history.get(currentIndex).isActive()) || !active)) {
 					return history.get(currentIndex);
-				} else {
+				} else if (currentIndex > 0 && currentIndex < history.size()){
 					return history.get(--currentIndex);
 				}
-			} else {
-				return null;
-			}
+			} 
+			return null;
 		} catch (RuntimeException e) {
 			StatusHandler.fail(e, "could not get previous task from history", false);
 			return null;
