@@ -98,6 +98,7 @@ public class ResourcesUiBridgePlugin extends AbstractContextUiPlugin {
 		ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceChangeMonitor);
 		ContextCorePlugin.getContextManager().removeListener(editorManager);
 		MonitorUiPlugin.getDefault().getSelectionMonitors().remove(resourceInteractionMonitor);
+		interestEditorTracker.dispose(PlatformUI.getWorkbench());
 	}
 
 	/**
