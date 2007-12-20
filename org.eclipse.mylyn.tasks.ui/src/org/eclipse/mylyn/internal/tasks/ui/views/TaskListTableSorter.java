@@ -74,14 +74,6 @@ public class TaskListTableSorter extends ViewerSorter {
 			return 1;
 		}
 
-//		OrphanedTasksContainer localArchive = TasksUiPlugin.getTaskListManager().getTaskList().getOrphanContainer(
-//				LocalRepositoryConnector.REPOSITORY_URL);
-//		if (o1 == localArchive && o2 instanceof AbstractTaskContainer) {
-//			return -1;
-//		} else if (o1 instanceof AbstractTaskContainer && o2 == localArchive) {
-//			return 1;
-//		}
-
 		if (o1 instanceof AbstractTaskContainer && o2 instanceof UnfiledCategory) {
 			return 1;
 		} else if (o2 instanceof AbstractTaskContainer && o1 instanceof UnfiledCategory) {
