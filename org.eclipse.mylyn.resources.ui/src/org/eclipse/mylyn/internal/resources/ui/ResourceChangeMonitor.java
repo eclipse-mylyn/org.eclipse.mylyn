@@ -85,14 +85,15 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 		// NOTE: n^2 time complexity, but should not be a bottleneck
 		for (String pattern : excludedPatterns) {
 			if (resource != null && pattern.startsWith("file:/")) {
-				return isUriExcluded(resource.getLocationURI().toString(), pattern);
+				excluded |= isUriExcluded(resource.getLocationURI().toString(), pattern);
 			} else {
 				for (String segment : path.segments()) {
-					boolean matches = segment.matches(pattern.replaceAll("\\.", "\\\\.").replaceAll("\\*", ".*"));
-					if (matches) {
-						excluded = true;
-					}
+					excluded |= segment.matches(pattern.replaceAll("\\.", "\\\\.").replaceAll("\\*", ".*"));
 				}
+			}
+			
+			if (excluded) {
+				break;
 			}
 		}
 		return excluded;
