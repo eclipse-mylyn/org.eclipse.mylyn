@@ -81,7 +81,9 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 	private final IInteractionContextListener CONTEXT_LISTENER = new IInteractionContextListener() {
 
 		public void contextActivated(IInteractionContext context) {
-			updateEnablement(initAction);
+			if (updateEnablementWithContextActivation()) {
+				updateEnablement(initAction);
+			}
 		}
 
 		public void contextCleared(IInteractionContext context) {
@@ -89,8 +91,10 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 		}
 
 		public void contextDeactivated(IInteractionContext context) {
-			updateEnablement(initAction);
-			update(false);
+			if (updateEnablementWithContextActivation()) {
+				updateEnablement(initAction);
+				update(false);
+			}
 		}
 
 		public void elementDeleted(IInteractionElement element) {
@@ -113,7 +117,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 			// ignore
 		}
 	};
-	
+
 	private final IWorkbenchListener WORKBENCH_LISTENER = new IWorkbenchListener() {
 
 		public boolean preShutdown(IWorkbench workbench, boolean forced) {
@@ -240,7 +244,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 		if (PlatformUI.getWorkbench().isClosing()) {
 			return;
 		}
-		
+
 		boolean wasPaused = ContextCorePlugin.getContextManager().isContextCapturePaused();
 		try {
 			if (!wasPaused) {

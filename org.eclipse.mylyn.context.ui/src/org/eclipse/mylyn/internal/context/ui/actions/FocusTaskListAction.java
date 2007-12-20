@@ -52,6 +52,7 @@ public class FocusTaskListAction extends AbstractFocusViewAction implements IFil
 		if (part instanceof TaskListView) {
 			((TaskListView) part).getFilteredTree().getRefreshPolicy().addListener(this);
 		}
+		update();
 	}
 
 	@Override
