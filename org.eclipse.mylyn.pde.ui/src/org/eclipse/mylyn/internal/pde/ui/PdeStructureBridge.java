@@ -289,13 +289,11 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 				markerResource = ((ConcreteMarker) object).getMarker().getResource();
 			} else if (object instanceof Marker) {
 				markerResource = ((Marker) object).getResource();
-			} else {
-				return null;
 			}
 		} catch (Exception e) {
 			return null;
 		}
-		
+
 		if (markerResource != null) {
 			// we can only get a handle for a marker with the resource
 			// plugin.xml
