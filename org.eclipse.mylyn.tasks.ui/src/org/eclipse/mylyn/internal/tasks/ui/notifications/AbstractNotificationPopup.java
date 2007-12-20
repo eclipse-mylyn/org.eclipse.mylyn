@@ -25,8 +25,6 @@ import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
-import org.eclipse.swt.events.ShellEvent;
-import org.eclipse.swt.events.ShellListener;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -104,29 +102,6 @@ public abstract class AbstractNotificationPopup extends Window {
 				return Status.CANCEL_STATUS;
 
 			return Status.OK_STATUS;
-		}
-	};
-
-	private final ShellListener shellListener = new ShellListener() {
-
-		public void shellClosed(ShellEvent arg0) {
-		}
-
-		public void shellDeactivated(ShellEvent arg0) {
-			// TODO: consider adding on mouse hover into popup
-//			AbstractNotificationPopup.this.close();
-		}
-
-		public void shellActivated(ShellEvent arg0) {
-			closeJob.cancel();
-		}
-
-		public void shellDeiconified(ShellEvent arg0) {
-			// ingore
-		}
-
-		public void shellIconified(ShellEvent arg0) {
-			// ignore
 		}
 	};
 
@@ -265,7 +240,6 @@ public abstract class AbstractNotificationPopup extends Window {
 
 		shell = newShell;
 		newShell.setBackground(color.getBorder());
-		shell.addShellListener(shellListener);
 	}
 
 	public void create() {
@@ -511,9 +485,6 @@ public abstract class AbstractNotificationPopup extends Window {
 	}
 
 	public boolean close() {
-		if (!shell.isDisposed()) {
-			shell.removeShellListener(shellListener);
-		}
 		resources.dispose();
 		if (lastUsedRegion != null) {
 			lastUsedRegion.dispose();
