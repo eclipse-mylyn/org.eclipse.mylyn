@@ -69,7 +69,6 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.DeleteAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.EditRepositoryPropertiesAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ExpandAllAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.FilterArchiveContainerAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.FilterCompletedTasksAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.GoIntoAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.GoUpAction;
@@ -265,7 +264,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private OpenTasksUiPreferencesAction openPreferencesAction;
 
-	private FilterArchiveContainerAction filterArchiveCategory;
+	//private FilterArchiveContainerAction filterArchiveCategory;
 
 	private PriorityDropDownAction filterOnPriorityAction;
 
@@ -705,9 +704,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			addFilter(filterComplete);
 		}
 
-		if (TasksUiPlugin.getDefault().getPreferenceStore().contains(TasksUiPreferenceConstants.FILTER_ARCHIVE_MODE)) {
-			addFilter(filterArchive);
-		}
+		//if (TasksUiPlugin.getDefault().getPreferenceStore().contains(TasksUiPreferenceConstants.FILTER_ARCHIVE_MODE)) {
+		addFilter(filterArchive);
+		//}
 
 		// Restore "link with editor" value; by default true
 		boolean linkValue = true;
@@ -1079,7 +1078,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		manager.add(sortByAction);
 		manager.add(filterOnPriorityAction);
 		manager.add(filterCompleteTask);
-		manager.add(filterArchiveCategory);
+		//manager.add(filterArchiveCategory);
 		manager.add(filterSubTasksAction);
 
 		manager.add(new Separator(ID_SEPARATOR_TASKS));
@@ -1176,7 +1175,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		manager.add(new Separator());
 
 		addAction(copyDetailsAction, manager, element);
-		if (task != null && !task.isLocal()) {
+		if (task != null && task.isLocal()) {
 			// TODO: if selection parent is an Orphan container don't add this action
 //			addAction(cloneThisBugAction, manager, element);
 			addAction(removeFromCategoryAction, manager, element);
@@ -1331,7 +1330,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		filterSubTasksAction = new GroupSubTasksAction(this);
 		synchronizeAutomatically = new SynchronizeAutomaticallyAction();
 		openPreferencesAction = new OpenTasksUiPreferencesAction();
-		filterArchiveCategory = new FilterArchiveContainerAction(this);
+		//filterArchiveCategory = new FilterArchiveContainerAction(this);
 		sortByAction = new SortyByDropDownAction(this);
 		filterOnPriorityAction = new PriorityDropDownAction(this);
 		linkWithEditorAction = new LinkWithEditorAction(this);
@@ -1448,9 +1447,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	public void clearFilters(boolean preserveArchiveFilter) {
 		filters.clear();
-		if (preserveArchiveFilter) {
-			filters.add(filterArchive);
-		}
+//		if (preserveArchiveFilter) {
+//			filters.add(filterArchive);
+//		}
 		filters.add(filterWorkingSet);
 	}
 
@@ -1616,7 +1615,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		sortByAction.setEnabled(enabled);
 		filterOnPriorityAction.setEnabled(enabled);
 		filterCompleteTask.setEnabled(enabled);
-		filterArchiveCategory.setEnabled(enabled);
+		//filterArchiveCategory.setEnabled(enabled);
 	}
 
 	public boolean isFocusedMode() {

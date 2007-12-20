@@ -18,6 +18,8 @@ import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 
 /**
  * @author Mik Kersten
+ * 
+ * deprecated
  */
 public class TaskArchive extends AbstractTaskCategory {
 

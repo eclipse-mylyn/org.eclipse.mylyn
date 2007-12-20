@@ -16,6 +16,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Mik Kersten
+ * @deprecated
  */
 public class FilterArchiveContainerAction extends Action {
 

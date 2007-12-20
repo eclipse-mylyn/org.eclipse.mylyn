@@ -407,7 +407,6 @@ public class TaskList {
 
 	public void removeFromCategory(TaskCategory category, AbstractTask task) {
 		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
-		delta.add(new TaskContainerDelta(category, TaskContainerDelta.Kind.CHANGED));
 		category.internalRemoveChild(task);
 		task.removeParentContainer(category);
 		addOrphan(task, delta);
