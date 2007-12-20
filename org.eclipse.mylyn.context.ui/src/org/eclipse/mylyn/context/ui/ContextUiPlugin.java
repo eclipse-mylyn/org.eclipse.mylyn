@@ -29,7 +29,9 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
@@ -260,7 +262,12 @@ public class ContextUiPlugin extends AbstractContextUiPlugin {
 						if (viewPart != null) {
 							ISelectionProvider selectionProvider = viewPart.getSite().getSelectionProvider();
 							if (selectionProvider != null) {
-								selectionProvider.setSelection(selectionProvider.getSelection());
+								ISelection selection = selectionProvider.getSelection();
+								if (selection != null) {
+									selectionProvider.setSelection(selectionProvider.getSelection());
+								} else {
+									selectionProvider.setSelection(StructuredSelection.EMPTY);
+								}
 							}
 						}
 					}
