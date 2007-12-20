@@ -102,8 +102,11 @@ public class TaskListFilterTest extends TestCase {
 	}
 
 	public void testNoFilters() {
-		assertEquals("should have working set filter: " + view.getFilters(), 1, view.getFilters().size());
+		assertEquals("should have working set filter and orphan/archive filter: " + view.getFilters(), 2,
+				view.getFilters().size());
 		view.getViewer().refresh();
-		assertEquals(2, view.getViewer().getTree().getItemCount());
+
+		assertEquals("should only have Uncategorized folder present in stock task list: "
+				+ view.getViewer().getTree().getItems(), 1, view.getViewer().getTree().getItemCount());
 	}
 }
