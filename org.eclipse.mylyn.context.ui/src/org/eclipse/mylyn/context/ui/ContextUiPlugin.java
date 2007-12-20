@@ -273,6 +273,8 @@ public class ContextUiPlugin extends AbstractContextUiPlugin {
 					}
 				}
 			}
+			// NOTE: 
+			viewerManager.forceReferesh();
 		} catch (Exception e) {
 			StatusHandler.fail(e, "Could not initialize focused viewers", true);
 		}

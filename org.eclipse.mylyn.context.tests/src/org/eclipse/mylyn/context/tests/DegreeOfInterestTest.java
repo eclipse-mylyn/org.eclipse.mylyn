@@ -45,6 +45,30 @@ public class DegreeOfInterestTest extends TestCase {
 		assertTrue(doi.isPredicted());
 	}
 
+	public void testPredictedInterestWithPropagated() {
+		DegreeOfInterest doi = new DegreeOfInterest(mockContext, InteractionContextManager.getCommonContextScaling());
+		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.SELECTION, "kind", "handle", "source-id",
+				"id", null, 20);
+		doi.addEvent(event);
+
+		InteractionEvent event2 = new InteractionEvent(InteractionEvent.Kind.PREDICTION, "kind", "handle", "source-id",
+				"id", null, 2);
+		doi.addEvent(event2);
+
+		InteractionEvent event3 = new InteractionEvent(InteractionEvent.Kind.PROPAGATION, "kind", "handle", "source-id",
+				"id", null, 750);
+		doi.addEvent(event3);
+
+		InteractionEvent event4 = new InteractionEvent(InteractionEvent.Kind.MANIPULATION, "kind", "handle", "source-id",
+				"id", null, -684);
+		doi.addEvent(event4);
+		
+		assertTrue(doi.isInteresting());
+		assertTrue(doi.isLandmark());
+		assertFalse(doi.isPropagated());
+		assertFalse(doi.isPredicted());
+	}
+	
 	public void testPropagatedInterest() {
 		DegreeOfInterest doi = new DegreeOfInterest(mockContext, InteractionContextManager.getCommonContextScaling());
 		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.PROPAGATION, "kind", "handle", "source-id",

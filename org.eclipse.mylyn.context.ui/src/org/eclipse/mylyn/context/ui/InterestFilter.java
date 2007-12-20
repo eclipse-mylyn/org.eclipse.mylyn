@@ -100,7 +100,6 @@ public class InterestFilter extends ViewerFilter {
 			return false;
 		} else {
 			return element.getInterest().isInteresting();
-//			return element.getInterest().getValue() > InteractionContextManager.getScalingFactors().getInteresting();
 		}
 	}
 

@@ -261,4 +261,8 @@ public class FocusedViewerManager implements IInteractionContextListener2, ISele
 		
 	}
 
+	public void forceReferesh() {
+		refreshViewers();
+	}
+
 }

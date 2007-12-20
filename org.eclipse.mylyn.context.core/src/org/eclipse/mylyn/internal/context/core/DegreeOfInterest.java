@@ -122,15 +122,17 @@ public class DegreeOfInterest implements IDegreeOfInterest {
 
 	/**
 	 * Sums predicted and propagated values
+	 * 
+	 * API-3.0: improve method name
 	 */
 	public boolean isPropagated() {
-		float value = selections * contextScaling.get(InteractionEvent.Kind.SELECTION) + edits
-				* contextScaling.get(InteractionEvent.Kind.EDIT);
+		float value = selections * contextScaling.get(InteractionEvent.Kind.SELECTION) 
+			+ edits * contextScaling.get(InteractionEvent.Kind.EDIT);
 		return value <= 0 && propagatedBias > 0;
 	}
 
 	public boolean isPredicted() {
-		return getEncodedValue() <= 0 && predictedBias > 0;
+		return (getValue()-predictedBias) <= 0 && predictedBias > 0;
 	}
 
 	public boolean isLandmark() {
