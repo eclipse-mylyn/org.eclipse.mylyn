@@ -1445,11 +1445,12 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		}
 	}
 
+	/**
+	 * @API-3.0 eliminate parameter from this method
+	 */
 	public void clearFilters(boolean preserveArchiveFilter) {
 		filters.clear();
-//		if (preserveArchiveFilter) {
-//			filters.add(filterArchive);
-//		}
+		filters.add(filterArchive);
 		filters.add(filterWorkingSet);
 	}
 
