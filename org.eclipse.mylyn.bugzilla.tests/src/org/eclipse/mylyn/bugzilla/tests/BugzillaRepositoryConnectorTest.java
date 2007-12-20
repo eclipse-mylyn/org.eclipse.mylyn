@@ -44,7 +44,7 @@ import org.eclipse.mylyn.tasks.ui.search.SearchHitCollector;
  * @author Frank Becker (bug 206510)
  */
 public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
-	
+
 	public void testMidAirCollision() throws Exception {
 		init30();
 		String taskNumber = "5";
@@ -206,7 +206,56 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		TasksUiPlugin.getTaskListManager().getTaskList().moveTask(task,
 				TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 
-		assertEquals(defaultAssignee, taskData.getAssignedTo());
+		if (taskData.getAssignedTo().equals(defaultAssignee)) {
+			assertEquals(defaultAssignee, taskData.getAssignedTo());
+			reassingToUserOld(task, taskData);
+			TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+			taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
+			assertEquals("tests2@mylyn.eclipse.org", taskData.getAssignedTo());
+
+			reassignToDefaultOld(task, taskData);
+			TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+			taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
+			assertEquals(defaultAssignee, taskData.getAssignedTo());
+		} else if (taskData.getAssignedTo().equals("tests2@mylyn.eclipse.org")) {
+			assertEquals("tests2@mylyn.eclipse.org", taskData.getAssignedTo());
+			reassignToDefaultOld(task, taskData);
+			TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+			taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
+			assertEquals(defaultAssignee, taskData.getAssignedTo());
+
+			reassingToUserOld(task, taskData);
+			TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+			taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
+			assertEquals("tests2@mylyn.eclipse.org", taskData.getAssignedTo());
+		} else {
+			fail("Bug with unexpected user assigned");
+		}
+	}
+
+	private void reassignToDefaultOld(BugzillaTask task, RepositoryTaskData taskData) throws CoreException {
+		// Modify it (reassignbycomponent)
+		String newCommentText = "BugzillaRepositoryClientTest.testReassignOld(): reassignbycomponent "
+				+ (new Date()).toString();
+		taskData.setNewComment(newCommentText);
+		Set<RepositoryTaskAttribute> changed = new HashSet<RepositoryTaskAttribute>();
+		changed.add(taskData.getAttribute(RepositoryTaskAttribute.COMMENT_NEW));
+		for (Iterator<RepositoryOperation> it = taskData.getOperations().iterator(); it.hasNext();) {
+			RepositoryOperation o = it.next();
+			if (o.isChecked())
+				o.setChecked(false);
+			if (o.getKnobName().compareTo("reassignbycomponent") == 0) {
+				o.setChecked(true);
+				taskData.setSelectedOperation(o);
+			}
+		}
+		TasksUiPlugin.getTaskDataManager().saveEdits(task.getRepositoryUrl(), task.getTaskId(), changed);
+
+		// Submit changes
+		submit(task, taskData);
+	}
+
+	private void reassingToUserOld(BugzillaTask task, RepositoryTaskData taskData) throws CoreException {
 		// Modify it (reassign to tests2@mylyn.eclipse.org)
 		String newCommentText = "BugzillaRepositoryClientTest.testReassignOld(): reassign " + (new Date()).toString();
 		taskData.setNewComment(newCommentText);
@@ -227,32 +276,6 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		// Submit changes
 		submit(task, taskData);
 
-		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
-		taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
-		assertEquals("tests2@mylyn.eclipse.org", taskData.getAssignedTo());
-
-		// Modify it (reassignbycomponent)
-		newCommentText = "BugzillaRepositoryClientTest.testReassignOld(): reassignbycomponent "
-				+ (new Date()).toString();
-		taskData.setNewComment(newCommentText);
-		changed = new HashSet<RepositoryTaskAttribute>();
-		changed.add(taskData.getAttribute(RepositoryTaskAttribute.COMMENT_NEW));
-		for (Iterator<RepositoryOperation> it = taskData.getOperations().iterator(); it.hasNext();) {
-			RepositoryOperation o = it.next();
-			if (o.isChecked())
-				o.setChecked(false);
-			if (o.getKnobName().compareTo("reassignbycomponent") == 0) {
-				o.setChecked(true);
-				taskData.setSelectedOperation(o);
-			}
-		}
-		TasksUiPlugin.getTaskDataManager().saveEdits(task.getRepositoryUrl(), task.getTaskId(), changed);
-
-		// Submit changes
-		submit(task, taskData);
-		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
-		taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
-		assertEquals(defaultAssignee, taskData.getAssignedTo());
 	}
 
 	public void testSubTaskHasIncoming() throws CoreException {
