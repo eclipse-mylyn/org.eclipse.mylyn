@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project name="testsuite" default="" basedir=".">
+	
+	<property name="BUILD_ROOT" value="./" />
+	<property file="local.sh"/>
 
-	<property name="build" value="I20071217-1800" />
+	<property name="build" value="${BUILD}" />
 
 	<property name="junit-report-output" value="./report/${build}" />
-	<property name="eclipse-test-home-3.4" value="eclipse-test-3.4" />
-	<property name="eclipse-test-home-3.3" value="eclipse-test-3.3" />
-	<property name="jvm" value="./jdk/bin/java" />
+	<property name="eclipse-test-home-3.4" value="${ECLIPSE_TEST_HOME_3_4}" />
+	<property name="eclipse-test-home-3.3" value="${ECLIPSE_TEST_HOME_3_3}" />
+	<property name="jvm" value="${JVM}" />
 
+	
 	<target name="all" depends="clean">
 		<exec executable="./build-3.3.sh" />
 		<exec executable="./build-3.4.sh" />
