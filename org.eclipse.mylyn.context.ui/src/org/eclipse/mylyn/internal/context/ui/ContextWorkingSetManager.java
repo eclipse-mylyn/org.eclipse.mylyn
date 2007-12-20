@@ -149,5 +149,10 @@ public class ContextWorkingSetManager implements IWorkingSetUpdater, IInteractio
 		return INSTANCE;
 	}
 
+	public void contextPreActivated(IInteractionContext context) {
+		// ignore
+		
+	}
+
 
 }

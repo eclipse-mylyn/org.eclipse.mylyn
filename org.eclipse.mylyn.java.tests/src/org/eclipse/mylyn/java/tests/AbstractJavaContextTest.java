@@ -80,8 +80,6 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
 		for (InteractionContext context : manager.getActiveContexts()) {
 			manager.deactivateContext(context.getHandleIdentifier());
 		}
-		if (manager.isContextActive())
-			System.err.println("> still active: " + manager.getActiveContext().getInteresting());
 		assertFalse(manager.isContextActive());
 		waitForAutoBuild();
 		ResourcesUiBridgePlugin.getDefault().setResourceMonitoringEnabled(false);

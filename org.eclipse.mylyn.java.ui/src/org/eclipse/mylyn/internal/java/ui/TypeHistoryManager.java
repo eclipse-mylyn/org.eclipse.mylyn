@@ -120,4 +120,9 @@ public class TypeHistoryManager implements IInteractionContextListener2 {
 	public void relationsChanged(IInteractionElement node) {
 		// ignore
 	}
+
+	public void contextPreActivated(IInteractionContext context) {
+		// ignore
+		
+	}
 }

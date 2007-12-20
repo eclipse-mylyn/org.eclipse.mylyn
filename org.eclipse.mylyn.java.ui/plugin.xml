@@ -262,7 +262,7 @@
            disabledIcon="icons/elcl16/focus-disabled.gif"
            enablesFor="*"
            icon="icons/elcl16/focus.gif"
-           id="org.eclipse.mylyn.actions.filter.packageExplorer"
+           id="org.eclipse.mylyn.java.actions.focus.packageExplorer"
            label="Focus on Active Task"
            menubarPath="mylyn"
            style="toggle"

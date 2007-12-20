@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionContext;
-import org.eclipse.mylyn.context.core.IInteractionContextListener;
+import org.eclipse.mylyn.context.core.IInteractionContextListener2;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -32,7 +32,7 @@ import org.osgi.framework.BundleContext;
  * @author Mik Kersten
  * @since 2.2
  */
-public abstract class AbstractContextUiPlugin extends AbstractUIPlugin implements IInteractionContextListener {
+public abstract class AbstractContextUiPlugin extends AbstractUIPlugin implements IInteractionContextListener2 {
 
 	private AtomicBoolean lazyStarted = new AtomicBoolean(false);
 
@@ -44,7 +44,7 @@ public abstract class AbstractContextUiPlugin extends AbstractUIPlugin implement
 		if (ContextCorePlugin.getContextManager().isContextActive()) {
 			initLazyStart();
 		}
-	}
+	} 
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
@@ -58,7 +58,10 @@ public abstract class AbstractContextUiPlugin extends AbstractUIPlugin implement
 	}
 
 	/**
-	 * Override with startup code.
+	 * Override with startup code.  
+	 * 
+	 * API-3.0: IInteractionContextListener's cannot be added during this method
+	 * since notifications will be lost.
 	 */
 	protected abstract void lazyStart(IWorkbench workbench);
 
@@ -67,8 +70,12 @@ public abstract class AbstractContextUiPlugin extends AbstractUIPlugin implement
 	 */
 	protected abstract void lazyStop();
 
-	public void contextActivated(IInteractionContext context) {
+	public void contextPreActivated(IInteractionContext context) {
 		initLazyStart();
+	}
+	
+	public void contextActivated(IInteractionContext context) {
+		// ignore
 	}
 
 	private void initLazyStart() {
@@ -114,4 +121,7 @@ public abstract class AbstractContextUiPlugin extends AbstractUIPlugin implement
 		// ignore	
 	}
 
+	public void elementsDeleted(List<IInteractionElement> elements) {
+		// ignore	
+	}
 }

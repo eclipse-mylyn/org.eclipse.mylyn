@@ -256,4 +256,9 @@ public class FocusedViewerManager implements IInteractionContextListener2, ISele
 		this.syncRefreshMode = syncRefreshMode;
 	}
 
+	public void contextPreActivated(IInteractionContext context) {
+		// ignore
+		
+	}
+
 }

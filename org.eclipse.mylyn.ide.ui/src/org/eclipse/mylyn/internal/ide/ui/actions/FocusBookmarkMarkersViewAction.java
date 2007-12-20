@@ -17,27 +17,4 @@ public class FocusBookmarkMarkersViewAction extends AbstractFocusMarkerViewActio
 	public FocusBookmarkMarkersViewAction() {
 		super();
 	}
-	
-//	@Override
-//	public List<StructuredViewer> getViewers() {
-//		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
-//		if (cachedViewer == null) {
-//			try {
-//				IViewPart viewPart = super.getPartForAction();
-//				System.err.println(">>> " + viewPart.getClass());
-//				if (viewPart instanceof  BookmarkView) {
-//					Class<?> infoClass = TableView.class;
-//					Method method = infoClass.getDeclaredMethod("getViewer", new Class[] {});
-//					method.setAccessible(true);
-//					cachedViewer = (StructuredViewer) method.invoke(viewPart, new Object[] {});
-//					updateMarkerViewLabelProvider(cachedViewer);
-//				}
-//			} catch (Exception e) {
-//				StatusHandler.log(e, "couldn't get bookmarks view viewer");
-//			}
-//		}
-//		if (cachedViewer != null)
-//			viewers.add(cachedViewer);
-//		return viewers;
-//	}
 }

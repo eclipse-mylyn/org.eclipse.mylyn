@@ -334,4 +334,9 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 	public void relationsChanged(IInteractionElement element) {
 		// ignore
 	}
+
+	public void contextPreActivated(IInteractionContext context) {
+		// ignore
+		
+	}
 }

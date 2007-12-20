@@ -126,6 +126,11 @@ public class ActiveSearchView extends ViewPart {
 			refresh(null, true);
 		}
 
+		public void contextPreActivated(IInteractionContext context) {
+			// ignore
+			
+		}
+
 	};
 
 	public static ActiveSearchView getFromActivePerspective() {

@@ -17,6 +17,7 @@ import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -28,7 +29,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewAction implements
 		IInteractionContextListener {
- 
+
 	public AbstractAutoFocusViewAction(InterestFilter interestFilter, boolean manageViewer, boolean manageFilters,
 			boolean manageLinking) {
 		super(interestFilter, manageViewer, manageFilters, manageLinking);
@@ -39,6 +40,12 @@ public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewActio
 	public void dispose() {
 		super.dispose();
 		ContextCorePlugin.getContextManager().removeListener(this);
+	}
+
+	@Override
+	public void init(IViewPart view) {
+		super.init(view);
+		configureAction();
 	}
 
 	@Override
@@ -68,14 +75,13 @@ public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewActio
 		if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
 				ContextUiPrefContstants.NAVIGATORS_AUTO_FILTER_ENABLE)) {
 			update(true);
+		} else {
+			update(false);
 		}
 	}
 
 	public void contextDeactivated(IInteractionContext context) {
-		if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				ContextUiPrefContstants.NAVIGATORS_AUTO_FILTER_ENABLE)) {
-			update(false);
-		}
+		// now happens in super
 	}
 
 	public void contextCleared(IInteractionContext context) {

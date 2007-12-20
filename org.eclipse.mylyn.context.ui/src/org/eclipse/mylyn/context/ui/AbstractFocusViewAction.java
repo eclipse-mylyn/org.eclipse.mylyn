@@ -24,6 +24,9 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.IInteractionContext;
+import org.eclipse.mylyn.context.core.IInteractionContextListener;
+import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
@@ -75,6 +78,42 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 
 	private boolean wasRun = false;
 
+	private final IInteractionContextListener CONTEXT_LISTENER = new IInteractionContextListener() {
+
+		public void contextActivated(IInteractionContext context) {
+			updateEnablement(initAction);
+		}
+
+		public void contextCleared(IInteractionContext context) {
+			// ignore	
+		}
+
+		public void contextDeactivated(IInteractionContext context) {
+			updateEnablement(initAction);
+			update(false);
+		}
+
+		public void elementDeleted(IInteractionElement element) {
+			// ignore			
+		}
+
+		public void interestChanged(List<IInteractionElement> elements) {
+			// ignore
+		}
+
+		public void landmarkAdded(IInteractionElement element) {
+			// ignore	
+		}
+
+		public void landmarkRemoved(IInteractionElement element) {
+			// ignore			
+		}
+
+		public void relationsChanged(IInteractionElement element) {
+			// ignore
+		}
+	};
+	
 	private final IWorkbenchListener WORKBENCH_LISTENER = new IWorkbenchListener() {
 
 		public boolean preShutdown(IWorkbench workbench, boolean forced) {
@@ -139,6 +178,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 		setToolTipText(ACTION_LABEL);
 		setImageDescriptor(ContextUiImages.INTEREST_FILTERING);
 		PlatformUI.getWorkbench().addWorkbenchListener(WORKBENCH_LISTENER);
+		ContextCorePlugin.getContextManager().addListener(CONTEXT_LISTENER);
 	}
 
 	public void dispose() {
@@ -149,6 +189,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 			}
 		}
 		MonitorUiPlugin.getDefault().removeWindowPostSelectionListener(this);
+		ContextCorePlugin.getContextManager().removeListener(CONTEXT_LISTENER);
 		PlatformUI.getWorkbench().removeWorkbenchListener(WORKBENCH_LISTENER);
 	}
 
@@ -199,8 +240,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 		if (PlatformUI.getWorkbench().isClosing()) {
 			return;
 		}
-		updateEnablement(action);
-
+		
 		boolean wasPaused = ContextCorePlugin.getContextManager().isContextCapturePaused();
 		try {
 			if (!wasPaused) {
@@ -246,7 +286,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 	private void updateLinking(boolean on) {
 		if (on) {
 			wasLinkingEnabled = isDefaultLinkingEnabled();
-			setDefaultLinkingEnabled(false);
+//			setDefaultLinkingEnabled(false);
 			MonitorUiPlugin.getDefault().addWindowPostSelectionListener(this);
 		} else {
 			MonitorUiPlugin.getDefault().removeWindowPostSelectionListener(this);

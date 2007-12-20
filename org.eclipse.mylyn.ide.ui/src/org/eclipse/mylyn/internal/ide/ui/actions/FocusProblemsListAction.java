@@ -8,28 +8,13 @@
 
 package org.eclipse.mylyn.internal.ide.ui.actions;
 
-import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.mylyn.internal.ide.ui.MarkerViewLabelProvider;
-import org.eclipse.ui.views.markers.internal.TableViewLabelProvider;
 
 /**
  * @author Mik Kersten
  */
 public class FocusProblemsListAction extends AbstractFocusMarkerViewAction {
 
-	@Override
-	public void update() {
-		super.update();
-		cachedViewer = null;
-		for (StructuredViewer viewer : getViewers()) {
-			if (viewer instanceof TableViewer) {
-				TableViewer tableViewer = (TableViewer) viewer;
-				if (!(tableViewer.getLabelProvider() instanceof MarkerViewLabelProvider)) {
-					tableViewer.setLabelProvider(new MarkerViewLabelProvider(
-							(TableViewLabelProvider) tableViewer.getLabelProvider()));
-				}
-			}
-		}
+	public FocusProblemsListAction() {
+		super();
 	}
 }

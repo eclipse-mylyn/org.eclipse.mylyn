@@ -126,6 +126,11 @@ public class ContextEditorFormPage extends FormPage {
 		public void relationsChanged(IInteractionElement element) {
 			refresh();
 		}
+
+		public void contextPreActivated(IInteractionContext context) {
+			// ignore
+			
+		}
 	};
 
 	public ContextEditorFormPage(FormEditor editor, String id, String title) {

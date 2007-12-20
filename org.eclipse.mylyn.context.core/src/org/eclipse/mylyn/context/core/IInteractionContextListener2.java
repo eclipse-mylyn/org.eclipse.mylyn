@@ -13,10 +13,15 @@ import java.util.List;
 /**
  * Notified of changes to the context model activity.
  * 
+ * API-3.0: fold into super interface
+ * 
  * @author Shawn Minto
+ * @author Mik Kersten
  * @since 2.2
  */
 public interface IInteractionContextListener2 extends IInteractionContextListener {
 
+	public void contextPreActivated(IInteractionContext context);
+	
 	public void elementsDeleted(List<IInteractionElement> elements);
 }

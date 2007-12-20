@@ -29,6 +29,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
@@ -58,7 +59,10 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -241,6 +245,29 @@ public class ContextUiPlugin extends AbstractContextUiPlugin {
 			TasksUiPlugin.getTaskListManager().addActivityListener(TASK_ACTIVATION_LISTENER);
 		} catch (Exception e) {
 			StatusHandler.fail(e, "Context UI initialization failed", true);
+		}
+
+		try {
+			// NOTE: this needs to be done because some views (e.g. Project Explorer) are not
+			// correctly initialized on startup and do not have the dummy selection event
+			// sent to them.  See PartPluginAction and bug 213545.
+			// API-3.0: consider a mechanism to identify only views that provide focus
+			for (IWorkbenchWindow window : PlatformUI.getWorkbench().getWorkbenchWindows()) {
+				if (window.getActivePage() != null) {
+					IViewReference[] views = window.getActivePage().getViewReferences();
+					for (IViewReference viewReference : views) {
+						IViewPart viewPart = viewReference.getView(false);
+						if (viewPart != null) {
+							ISelectionProvider selectionProvider = viewPart.getSite().getSelectionProvider();
+							if (selectionProvider != null) {
+								selectionProvider.setSelection(selectionProvider.getSelection());
+							}
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			StatusHandler.fail(e, "Could not initialize focused viewers", true);
 		}
 	}
 
