@@ -16,6 +16,7 @@ import org.eclipse.mylyn.java.tests.search.JavaImplementorsSearchPluginTest;
 import org.eclipse.mylyn.java.tests.search.JavaReadAccessSearchPluginTest;
 import org.eclipse.mylyn.java.tests.search.JavaReferencesSearchTest;
 import org.eclipse.mylyn.java.tests.search.JavaWriteAccessSearchPluginTest;
+import org.eclipse.mylyn.java.tests.xml.ResultUpdaterTest;
 import org.eclipse.mylyn.java.tests.xml.XmlSearchPluginTest;
 
 /**
@@ -23,7 +24,7 @@ import org.eclipse.mylyn.java.tests.xml.XmlSearchPluginTest;
  */
 public class AllJavaTests {
 
-	public static Test suite() {		
+	public static Test suite() {
 		TestSuite suite = new TestSuite("Tests for org.eclipse.mylyn.java.tests");
 
 		// $JUnit-BEGIN$
@@ -38,6 +39,7 @@ public class AllJavaTests {
 		suite.addTestSuite(PackageExplorerRefreshTest.class);
 		suite.addTestSuite(ActiveHierarchyTest.class);
 		suite.addTestSuite(ActiveSearchTest.class);
+		suite.addTestSuite(ResultUpdaterTest.class);
 		suite.addTestSuite(ProblemsListTest.class);
 		suite.addTestSuite(InterestFilterTest.class);
 		suite.addTestSuite(ContextManagerTest.class);
