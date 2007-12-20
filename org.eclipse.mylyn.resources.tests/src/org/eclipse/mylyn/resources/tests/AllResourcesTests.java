@@ -17,8 +17,8 @@ import junit.framework.TestSuite;
 public class AllResourcesTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.tests.xml");
-		// $JUnit-BEGIN$
+		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.resources.tests");
+		// $JUnit-BEGIN$ 
 		suite.addTestSuite(ResourceChangeMonitorTest.class);
 		suite.addTestSuite(ResourceContextTest.class);
 		// suite.addTestSuite(ResultUpdaterTest.class);
