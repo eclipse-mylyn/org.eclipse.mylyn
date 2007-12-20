@@ -238,6 +238,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 	 */
 	public void update(boolean on) {
 		valueChanged(initAction, on, false);
+		updateEnablement(initAction);
 	}
 
 	protected void valueChanged(IAction action, final boolean on, boolean store) {
