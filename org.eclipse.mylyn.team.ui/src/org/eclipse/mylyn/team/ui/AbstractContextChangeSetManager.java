@@ -60,8 +60,6 @@ public abstract class AbstractContextChangeSetManager implements IInteractionCon
 	private ITaskActivityListener TASK_ACTIVITY_LISTENER = new ITaskActivityListener() {
 
 		public void taskListRead() {
-			System.err.println("1111111");
-			
 			initContextChangeSets();
 		}
 
