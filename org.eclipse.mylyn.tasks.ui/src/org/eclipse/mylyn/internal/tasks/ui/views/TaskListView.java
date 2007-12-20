@@ -1175,9 +1175,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		manager.add(new Separator());
 
 		addAction(copyDetailsAction, manager, element);
-		if (task != null && task.isLocal()) {
+		if (task != null) {
 			// TODO: if selection parent is an Orphan container don't add this action
-//			addAction(cloneThisBugAction, manager, element);
 			addAction(removeFromCategoryAction, manager, element);
 		}
 		// This should also test for null, or else nothing to delete!

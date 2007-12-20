@@ -410,6 +410,7 @@ public class TaskList {
 		category.internalRemoveChild(task);
 		task.removeParentContainer(category);
 		addOrphan(task, delta);
+		delta.add(new TaskContainerDelta(category, TaskContainerDelta.Kind.ADDED));
 		for (ITaskListChangeListener listener : changeListeners) {
 			listener.containersChanged(delta);
 		}
