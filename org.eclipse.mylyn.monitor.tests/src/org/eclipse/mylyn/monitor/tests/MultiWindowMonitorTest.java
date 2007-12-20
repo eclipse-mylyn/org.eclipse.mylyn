@@ -141,6 +141,11 @@ public class MultiWindowMonitorTest extends TestCase {
 		super.setUp();
 		monitoringWasEnabled = UiUsageMonitorPlugin.getDefault().isMonitoringEnabled();
 		UiUsageMonitorPlugin.getDefault().stopMonitoring();
+		
+		// make sure the MonitorUiPlugin is fully initialized
+		while (PlatformUI.getWorkbench().getDisplay().readAndDispatch()) {
+		}
+
 		window1 = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		assertTrue(MonitorUiPlugin.getDefault().getMonitoredWindows().contains(window1));
 		window2 = duplicateWindow(window1);
