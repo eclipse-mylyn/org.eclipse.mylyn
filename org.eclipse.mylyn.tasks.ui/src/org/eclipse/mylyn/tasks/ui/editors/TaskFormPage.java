@@ -94,6 +94,8 @@ public class TaskFormPage extends FormPage {
 
 	protected List<TextViewer> textViewers = new ArrayList<TextViewer>();
 
+	private IHandlerActivation handlerActivation;
+
 	private void addTextViewer(TextViewer viewer) {
 		textViewers.add(viewer);
 	}
@@ -352,16 +354,10 @@ public class TaskFormPage extends FormPage {
 		commentViewer.addSelectionChangedListener(actionContributor);
 
 		commentViewer.getTextWidget().addFocusListener(new FocusListener() {
-			private IHandlerActivation handlerActivation;
 
 			public void focusGained(FocusEvent e) {
 				actionContributor.updateSelectableActions(commentViewer.getSelection());
-
-				if (handlerActivation == null) {
-					handlerActivation = handlerService.activateHandler(ITextEditorActionDefinitionIds.QUICK_ASSIST,
-							createQuickFixActionHandler(commentViewer), new ActiveShellExpression(
-									commentViewer.getTextWidget().getShell()));
-				}
+				activate();
 			}
 
 			public void focusLost(FocusEvent e) {
@@ -369,6 +365,19 @@ public class TaskFormPage extends FormPage {
 				st.setSelectionRange(st.getCaretOffset(), 0);
 				actionContributor.forceActionsEnabled();
 
+				deactivate();
+			}
+			
+			private void activate() {
+				deactivate();
+				if (handlerActivation == null) {
+					handlerActivation = handlerService.activateHandler(ITextEditorActionDefinitionIds.QUICK_ASSIST,
+							createQuickFixActionHandler(commentViewer), new ActiveShellExpression(
+									commentViewer.getTextWidget().getShell()));
+				}
+			}
+
+			private void deactivate() {
 				if (handlerActivation != null) {
 					handlerService.deactivateHandler(handlerActivation);
 					handlerActivation = null;
