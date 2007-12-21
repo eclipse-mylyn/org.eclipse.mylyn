@@ -10,22 +10,11 @@
 	<property name="junit-report-output" value="./report/${build}" />
 	<property name="eclipse-test-home-3.4" value="${ECLIPSE_TEST_HOME_3_4}" />
 	<property name="eclipse-test-home-3.3" value="${ECLIPSE_TEST_HOME_3_3}" />
-	<property name="jvm" value="${JVM}" />
+	<property name="jvm" value="${JAVA_HOME}/bin/java" />
 
 	
 	<target name="all" depends="clean">
-		<exec executable="./build-3.3.sh" />
 		<exec executable="./build-3.4.sh" />
-
-		<exec executable="./run-tests-3.3.sh">
-			<arg value="run" />
-		</exec>
-		<antcall target="report" />
-		<exec executable="./run-tests-3.3.sh">
-			<arg value="performance" />
-		</exec>
-		<antcall target="report" />
-
 		<exec executable="./run-tests-3.4.sh">
 			<arg value="run" />
 		</exec>
@@ -36,6 +25,16 @@
 		<antcall target="report" />
 
 		<antcall target="publish" />
+
+		<exec executable="./build-3.3.sh" />
+		<exec executable="./run-tests-3.3.sh">
+			<arg value="run" />
+		</exec>
+		<antcall target="report" />
+		<exec executable="./run-tests-3.3.sh">
+			<arg value="performance" />
+		</exec>
+		<antcall target="report" />
 	</target>
 
 	<target name="clean">
