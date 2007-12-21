@@ -25,6 +25,7 @@ $JAVA_HOME/bin/java \
     -ea \
     -Declipse.perf.dbloc=$BUILD_ROOT/derby \
     -Declipse.perf.config=build=$QUALIFIER;config=$HOST-3.4;jvm=$JVM \
+    -Declipse.perf.assertAgainst=build=$ASSERT_QUALIFIER \
     -Dmylyn.credentials=$BUILD_ROOT/credentials.properties" \
  -Dos=linux -Dws=gtk -Darch=x86 \
  "-Dvmargs=-Xms256M -Xmx256M" \

@@ -5,7 +5,7 @@
 	<property name="BUILD_ROOT" value="./" />
 	<property file="local.sh"/>
 
-	<property name="build" value="${BUILD}" />
+	<property name="build" value="${QUALIFIER}" />
 
 	<property name="junit-report-output" value="./report/${build}" />
 	<property name="eclipse-test-home-3.4" value="${ECLIPSE_TEST_HOME_3_4}" />

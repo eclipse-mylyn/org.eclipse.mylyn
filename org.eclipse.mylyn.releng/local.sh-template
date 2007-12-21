@@ -8,7 +8,12 @@ QUALIFIER=I20071207-1700
 CONFIG=releng
 
 # name of the jdk for performance tests
-JVM=java-6-sun-1.6.0.03
+JVM=sun
+
+# location of the performance result db
+DBLOC=${HOME}/derby
+
+ASSERT_QUALIFIER=2.1_20070927-0900_20070927-0900
 
 # root of the JDK (Java 5.0 or higher)
 JAVA_HOME=${BUILD_ROOT}/jdk
