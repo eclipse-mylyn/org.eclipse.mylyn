@@ -554,12 +554,6 @@ public class InteractionContextManager {
 	 * Public for testing, activate via handle
 	 */
 	public void internalActivateContext(InteractionContext context) {
-		for (IInteractionContextListener listener : contextListeners) {
-			if (listener instanceof IInteractionContextListener2) {
-				((IInteractionContextListener2)listener).contextPreActivated(context);
-			}
-		}
-		
 		System.setProperty(PROPERTY_CONTEXT_ACTIVE, Boolean.TRUE.toString());
 
 		activeContext.getContextMap().put(context.getHandleIdentifier(), context);
@@ -586,13 +580,18 @@ public class InteractionContextManager {
 	}
 
 	public void activateContext(String handleIdentifier) {
-		try {
-			suppressListenerNotification = true;
+		try {			
 			InteractionContext context = activeContext.getContextMap().get(handleIdentifier);
 			if (context == null) {
 				context = loadContext(handleIdentifier);
 			}
 			if (context != null) {
+				for (IInteractionContextListener listener : contextListeners) {
+					if (listener instanceof IInteractionContextListener2) {
+						((IInteractionContextListener2)listener).contextPreActivated(context);
+					}
+				}
+				suppressListenerNotification = true;
 				internalActivateContext(context);
 			} else {
 				StatusHandler.log("Could not load context", this);
