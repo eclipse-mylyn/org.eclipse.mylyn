@@ -26,6 +26,7 @@ public class AllIntegrationTests {
 		suite.addTestSuite(ExtensionPointInitializationTest.class);
 		suite.addTestSuite(ChangeDataDirTest.class);
 		suite.addTest(RepositoryConnectorsTest.suite());
+		suite.addTestSuite(WebRepositoryConnectorTest.class);
 		// $JUnit-END$
 		return suite;
 	}
