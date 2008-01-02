@@ -20,7 +20,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Mik Kersten
  */
-public class AttachScreenshotAction extends AbstractTaskEditorAction {
+public class AttachScreenshotAction extends AttachAction {
 
 	public static final String LABEL = "Attach Screenshot...";
 
