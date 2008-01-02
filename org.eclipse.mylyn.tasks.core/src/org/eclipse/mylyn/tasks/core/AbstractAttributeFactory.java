@@ -11,6 +11,8 @@ package org.eclipse.mylyn.tasks.core;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.eclipse.mylyn.internal.tasks.core.AbstractAttributeMapper;
+
 /**
  * Extend to provide mapping between repository task attribute IDs and native repository IDs.
  * 
@@ -39,4 +41,12 @@ public abstract class AbstractAttributeFactory implements Serializable {
 	 * @return null if date cannot be parsed
 	 */
 	public abstract Date getDateForAttributeType(String attributeKey, String dateString);
+
+	/**
+	 * @since 2.3
+	 */
+	public AbstractAttributeMapper getAttributeMapper() {
+		return null;
+	}
+
 }

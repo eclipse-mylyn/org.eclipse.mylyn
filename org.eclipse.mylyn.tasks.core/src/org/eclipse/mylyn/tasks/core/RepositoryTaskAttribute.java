@@ -104,6 +104,46 @@ public class RepositoryTaskAttribute implements Serializable {
 	 */
 	public static final String FALSE = "0";
 
+	/**
+	 * @since 2.3
+	 */
+	public static final String TYPE_SHORT_TEXT = "shortText";
+
+	/**
+	 * @since 2.3
+	 */
+	public static final String TYPE_LONG_TEXT = "longText";
+
+	/**
+	 * @since 2.3
+	 */
+	public static final String TYPE_DATE = "date";
+
+	/**
+	 * @since 2.3
+	 */
+	public static final String TYPE_BOOLEAN = "boolean";
+
+	/**
+	 * @since 2.3
+	 */
+	public static final String TYPE_NUMBER = "number";
+
+	/**
+	 * @since 2.3
+	 */
+	public static final String TYPE_SINGLE_SELECT = "singleSelect";
+
+	/**
+	 * @since 2.3
+	 */
+	public static final String TYPE_MULTI_SELECT = "multiSelect";
+
+	/**
+	 * @since 2.3
+	 */
+	public static final String TYPE_PERSON = "person";
+
 	private boolean hidden = false;
 
 	private boolean isReadOnly = false;
