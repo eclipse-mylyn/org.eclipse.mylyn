@@ -8,17 +8,20 @@
 
 package org.eclipse.mylyn.web.core;
 
+import java.io.IOException;
+
 import org.eclipse.core.net.proxy.IProxyChangeListener;
 import org.eclipse.core.net.proxy.IProxyData;
 import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.core.runtime.Status;
 import org.osgi.framework.BundleContext;
 import org.osgi.util.tracker.ServiceTracker;
 
 /**
- * Provides an entry point for the proxy service and potentially other web
- * facilities
+ * Provides an entry point for the proxy service and potentially other web facilities
  * 
  * @author Mik Kersten
  * @author Michael Valenta
@@ -55,11 +58,9 @@ public class WebCorePlugin extends Plugin {
 		super.stop(context);
 		tracker.close();
 	}
-	
 
 	/**
-	 * Return the {@link IProxyService} or <code>null</code> if the service is
-	 * not available.
+	 * Return the {@link IProxyService} or <code>null</code> if the service is not available.
 	 * 
 	 * @return the {@link IProxyService} or <code>null</code>
 	 */
@@ -139,6 +140,15 @@ public class WebCorePlugin extends Plugin {
 
 		}
 
+	}
+
+	/**
+	 * @since 2.3
+	 */
+	public static void log(int error, String message, IOException e) {
+		if (getDefault() != null) {
+			getDefault().getLog().log(new Status(IStatus.ERROR, ID_PLUGIN, error, message, e));
+		}
 	}
 
 }

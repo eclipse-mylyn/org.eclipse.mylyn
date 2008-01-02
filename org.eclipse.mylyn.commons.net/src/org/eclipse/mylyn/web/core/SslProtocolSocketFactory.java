@@ -34,6 +34,7 @@ import org.apache.commons.httpclient.protocol.SecureProtocolSocketFactory;
  * @author Steffen Pingel
  * @since 2.0
  */
+// API-3.0 move to internal package and merge with PollingSslProtocolSocketFactory
 public class SslProtocolSocketFactory implements SecureProtocolSocketFactory {
 
 	private static final String KEY_STORE = "javax.net.ssl.keyStore";
@@ -50,7 +51,7 @@ public class SslProtocolSocketFactory implements SecureProtocolSocketFactory {
 
 	private SSLSocketFactory socketFactory;
 
-	private boolean hasKeyManager;
+	private final boolean hasKeyManager;
 
 	private SslProtocolSocketFactory() {
 		KeyManager[] keymanagers = null;
@@ -81,7 +82,10 @@ public class SslProtocolSocketFactory implements SecureProtocolSocketFactory {
 		}
 	}
 
-	private SSLSocketFactory getSocketFactory() throws IOException {
+	/**
+	 * @since 2.3
+	 */
+	public SSLSocketFactory getSocketFactory() throws IOException {
 		if (socketFactory == null) {
 			throw new IOException("Could not initialize SSL context");
 		}

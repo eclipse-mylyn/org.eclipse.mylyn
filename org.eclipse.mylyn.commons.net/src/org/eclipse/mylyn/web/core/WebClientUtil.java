@@ -8,15 +8,28 @@
 
 package org.eclipse.mylyn.web.core;
 
+import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
+import java.net.Socket;
 import java.net.UnknownHostException;
 import java.net.Proxy.Type;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.httpclient.Credentials;
+import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.NTCredentials;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
@@ -26,7 +39,11 @@ import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.core.net.proxy.IProxyData;
 import org.eclipse.core.net.proxy.IProxyService;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.mylyn.internal.web.core.CloneableHostConfiguration;
+import org.eclipse.mylyn.internal.web.core.PollingProtocolSocketFactory;
+import org.eclipse.mylyn.internal.web.core.PollingSslProtocolSocketFactory;
 
 /**
  * @author Mik Kersten
@@ -38,10 +55,11 @@ import org.eclipse.core.runtime.Plugin;
  */
 public class WebClientUtil {
 
+	private static final int MAX_THREADS = 10;
+
 	/**
-	 * like Mylyn/2.1.0 (Rally Connector 1.0) Eclipse/3.3.0 (JBuilder 2007)
-	 * HttpClient/3.0.1 Java/1.5.0_11 (Sun) Linux/2.6.20-16-lowlatency (i386;
-	 * en)
+	 * like Mylyn/2.1.0 (Rally Connector 1.0) Eclipse/3.3.0 (JBuilder 2007) HttpClient/3.0.1 Java/1.5.0_11 (Sun)
+	 * Linux/2.6.20-16-lowlatency (i386; en)
 	 */
 	public static final String USER_AGENT;
 
@@ -57,6 +75,8 @@ public class WebClientUtil {
 
 	private static final int SOCKS_PORT = 1080;
 
+	private static final long POLL_INTERVAL = 1000;
+
 	private static OutputStream logOutputStream = System.err;
 
 	private static boolean loggingEnabled = false;
@@ -65,11 +85,14 @@ public class WebClientUtil {
 
 	private static final String USER_AGENT_POSTFIX;
 
+	private static final ExecutorService service = new ThreadPoolExecutor(1, MAX_THREADS, 60L, TimeUnit.SECONDS,
+			new SynchronousQueue<Runnable>());
+
 	private static String stripQualifier(String longVersion) {
 		if (longVersion == null) {
 			return "";
 		}
-		
+
 		String parts[] = longVersion.split("\\.");
 		StringBuilder version = new StringBuilder();
 		if (parts.length > 0) {
@@ -89,11 +112,13 @@ public class WebClientUtil {
 	}
 
 	private static String getBundleVersion(Plugin plugin) {
-		if (null == plugin)
+		if (null == plugin) {
 			return "";
+		}
 		Object bundleVersion = plugin.getBundle().getHeaders().get("Bundle-Version");
-		if (null == bundleVersion)
+		if (null == bundleVersion) {
 			return "";
+		}
 		return stripQualifier((String) bundleVersion);
 	}
 
@@ -113,9 +138,7 @@ public class WebClientUtil {
 		// TODO insert (redistribution)
 
 		sb.append(" ");
-		sb
-				.append(HttpClientParams.getDefaultParams().getParameter(HttpClientParams.USER_AGENT).toString().split(
-						"-")[1]);
+		sb.append(HttpClientParams.getDefaultParams().getParameter(HttpClientParams.USER_AGENT).toString().split("-")[1]);
 
 		sb.append(" Java/");
 		sb.append(System.getProperty("java.version"));
@@ -214,14 +237,15 @@ public class WebClientUtil {
 		int substringEnd;
 
 		// minimum positive, or string length
-		if (colonPort > 0 && requestPath > 0)
+		if (colonPort > 0 && requestPath > 0) {
 			substringEnd = Math.min(colonPort, requestPath);
-		else if (colonPort > 0)
+		} else if (colonPort > 0) {
 			substringEnd = colonPort;
-		else if (requestPath > 0)
+		} else if (requestPath > 0) {
 			substringEnd = requestPath;
-		else
+		} else {
 			substringEnd = result.length();
+		}
 
 		return result.substring(0, substringEnd);
 	}
@@ -249,8 +273,8 @@ public class WebClientUtil {
 			client.getHostConfiguration().setProxy(WebClientUtil.getDomain(address.getHostName()), address.getPort());
 			if (proxySettings instanceof AuthenticatedProxy) {
 				AuthenticatedProxy authProxy = (AuthenticatedProxy) proxySettings;
-				Credentials credentials = getCredentials(authProxy.getUserName(), authProxy.getPassword(), address
-						.getAddress());
+				Credentials credentials = getCredentials(authProxy.getUserName(), authProxy.getPassword(),
+						address.getAddress());
 				AuthScope proxyAuthScope = new AuthScope(address.getHostName(), address.getPort(), AuthScope.ANY_REALM);
 				client.getState().setProxyCredentials(proxyAuthScope, credentials);
 				client.getParams().setAuthenticationPreemptive(true);
@@ -258,8 +282,8 @@ public class WebClientUtil {
 		}
 
 		if (user != null && password != null) {
-			AuthScope authScope = new AuthScope(WebClientUtil.getDomain(repositoryUrl), WebClientUtil
-					.getPort(repositoryUrl), AuthScope.ANY_REALM);
+			AuthScope authScope = new AuthScope(WebClientUtil.getDomain(repositoryUrl),
+					WebClientUtil.getPort(repositoryUrl), AuthScope.ANY_REALM);
 			try {
 				client.getState().setCredentials(authScope, getCredentials(user, password, InetAddress.getLocalHost()));
 				client.getParams().setAuthenticationPreemptive(true);
@@ -269,8 +293,9 @@ public class WebClientUtil {
 		}
 
 		if (WebClientUtil.isRepositoryHttps(repositoryUrl)) {
-			Protocol acceptAllSsl = new Protocol("https", (ProtocolSocketFactory) SslProtocolSocketFactory
-					.getInstance(), WebClientUtil.getPort(repositoryUrl));
+			Protocol acceptAllSsl = new Protocol("https",
+					(ProtocolSocketFactory) SslProtocolSocketFactory.getInstance(),
+					WebClientUtil.getPort(repositoryUrl));
 			client.getHostConfiguration().setHost(WebClientUtil.getDomain(repositoryUrl),
 					WebClientUtil.getPort(repositoryUrl), acceptAllSsl);
 			Protocol.registerProtocol("https", acceptAllSsl);
@@ -310,8 +335,7 @@ public class WebClientUtil {
 
 	/** utility method, should use TaskRepository.getProxy() */
 	public static Proxy getProxy(String proxyHost, String proxyPort, String proxyUsername, String proxyPassword) {
-		boolean authenticated = (proxyUsername != null && proxyPassword != null && proxyUsername.length() > 0 && proxyPassword
-				.length() > 0);
+		boolean authenticated = (proxyUsername != null && proxyPassword != null && proxyUsername.length() > 0 && proxyPassword.length() > 0);
 		if (proxyHost != null && proxyHost.length() > 0 && proxyPort != null && proxyPort.length() > 0) {
 			int proxyPortNum = Integer.parseInt(proxyPort);
 			InetSocketAddress sockAddr = new InetSocketAddress(proxyHost, proxyPortNum);
@@ -329,8 +353,7 @@ public class WebClientUtil {
 	 * 
 	 * TODO: deprecate
 	 * 
-	 * @return proxy as defined in platform proxy settings property page,
-	 *         Proxy.NO_PROXY otherwise
+	 * @return proxy as defined in platform proxy settings property page, Proxy.NO_PROXY otherwise
 	 */
 	public static Proxy getPlatformProxy() {
 		Proxy proxy = Proxy.NO_PROXY;
@@ -341,8 +364,9 @@ public class WebClientUtil {
 				String proxyHost = data.getHost();
 				int proxyPort = data.getPort();
 				// Change the IProxyData default port to the Java default port
-				if (proxyPort == -1)
+				if (proxyPort == -1) {
 					proxyPort = 0;
+				}
 
 				InetSocketAddress sockAddr = new InetSocketAddress(proxyHost, proxyPort);
 				proxy = new Proxy(Type.HTTP, sockAddr);
@@ -354,8 +378,7 @@ public class WebClientUtil {
 	/**
 	 * utility method, proxy should be obtained via TaskRepository.getProxy()
 	 * 
-	 * @return proxy as defined in platform proxy settings property page,
-	 *         Proxy.NO_PROXY otherwise
+	 * @return proxy as defined in platform proxy settings property page, Proxy.NO_PROXY otherwise
 	 * @since 2.1
 	 */
 	public static Proxy getPlatformProxy(String url) {
@@ -445,8 +468,11 @@ public class WebClientUtil {
 	}
 
 	/**
+	 * It is recommended to use {@link #createHostConfiguration(HttpClient, String, AbstractWebLocation)} instead.
+	 * 
 	 * @since 2.2
 	 */
+	// API-3.0 remove
 	public static void setupHttpClient(HttpClient client, String userAgent, AbstractWebLocation location) {
 		if (client == null || location == null) {
 			throw new IllegalArgumentException();
@@ -457,7 +483,7 @@ public class WebClientUtil {
 		int port = WebClientUtil.getPort(url);
 
 		setupHttpClientParams(client, userAgent);
-		setupHttpClientProxy(client, location);
+		setupHttpClientProxy(client, client.getHostConfiguration(), location);
 
 		AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.HTTP);
 		if (credentials != null) {
@@ -467,8 +493,8 @@ public class WebClientUtil {
 		}
 
 		if (WebClientUtil.isRepositoryHttps(url)) {
-			Protocol acceptAllSsl = new Protocol("https", (ProtocolSocketFactory) SslProtocolSocketFactory
-					.getInstance(), port);
+			Protocol acceptAllSsl = new Protocol("https",
+					(ProtocolSocketFactory) SslProtocolSocketFactory.getInstance(), port);
 			client.getHostConfiguration().setHost(host, port, acceptAllSsl);
 
 			// globally register handler, unfortunately Axis requires this
@@ -478,7 +504,46 @@ public class WebClientUtil {
 		}
 	}
 
-	private static void setupHttpClientProxy(HttpClient client, AbstractWebLocation location) {
+	/**
+	 * @since 2.3
+	 */
+	public static HostConfiguration createHostConfiguration(HttpClient client, String userAgent,
+			AbstractWebLocation location, IProgressMonitor monitor) {
+		if (client == null || location == null) {
+			throw new IllegalArgumentException();
+		}
+
+		String url = location.getUrl();
+		String host = WebClientUtil.getDomain(url);
+		int port = WebClientUtil.getPort(url);
+
+		HostConfiguration hostConfiguration = new CloneableHostConfiguration();
+
+		setupHttpClientParams(client, userAgent);
+		setupHttpClientProxy(client, hostConfiguration, location);
+
+		AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.HTTP);
+		if (credentials != null) {
+			client.getParams().setAuthenticationPreemptive(true);
+			AuthScope authScope = new AuthScope(host, port, AuthScope.ANY_REALM);
+			client.getState().setCredentials(authScope, getHttpClientCredentials(credentials, host));
+		}
+
+		if (WebClientUtil.isRepositoryHttps(url)) {
+			ProtocolSocketFactory socketFactory = new PollingSslProtocolSocketFactory(monitor);
+			Protocol protocol = new Protocol("https", socketFactory, port);
+			hostConfiguration.setHost(host, port, protocol);
+		} else {
+			ProtocolSocketFactory socketFactory = new PollingProtocolSocketFactory(monitor);
+			Protocol protocol = new Protocol("http", socketFactory, port);
+			hostConfiguration.setHost(host, port, protocol);
+		}
+
+		return hostConfiguration;
+	}
+
+	private static void setupHttpClientProxy(HttpClient client, HostConfiguration hostConfiguration,
+			AbstractWebLocation location) {
 		String host = WebClientUtil.getDomain(location.getUrl());
 
 		Proxy proxy;
@@ -490,17 +555,17 @@ public class WebClientUtil {
 
 		if (proxy != null && !Proxy.NO_PROXY.equals(proxy)) {
 			InetSocketAddress address = (InetSocketAddress) proxy.address();
-			client.getHostConfiguration().setProxy(address.getHostName(), address.getPort());
+			hostConfiguration.setProxy(address.getHostName(), address.getPort());
 			if (proxy instanceof AuthenticatedProxy) {
 				AuthenticatedProxy authProxy = (AuthenticatedProxy) proxy;
-				Credentials credentials = getCredentials(authProxy.getUserName(), authProxy.getPassword(), address
-						.getAddress());
+				Credentials credentials = getCredentials(authProxy.getUserName(), authProxy.getPassword(),
+						address.getAddress());
 				AuthScope proxyAuthScope = new AuthScope(address.getHostName(), address.getPort(), AuthScope.ANY_REALM);
 				client.getState().setProxyCredentials(proxyAuthScope, credentials);
 				client.getParams().setAuthenticationPreemptive(true);
 			}
 		} else {
-			client.getHostConfiguration().setProxyHost(null);
+			hostConfiguration.setProxyHost(null);
 		}
 	}
 
@@ -517,6 +582,81 @@ public class WebClientUtil {
 		}
 		client.getHttpConnectionManager().getParams().setSoTimeout(WebClientUtil.SOCKET_TIMEOUT);
 		client.getHttpConnectionManager().getParams().setConnectionTimeout(WebClientUtil.CONNNECT_TIMEOUT);
+	}
+
+	/**
+	 * @since 2.3
+	 */
+	public static int execute(final HttpClient client, final HostConfiguration hostConfiguration,
+			final HttpMethod method, IProgressMonitor monitor) throws IOException {
+		if (client == null || method == null) {
+			throw new IllegalArgumentException();
+		}
+
+		monitor = Policy.monitorFor(monitor);
+
+		Callable<Integer> executor = new Callable<Integer>() {
+			public Integer call() throws Exception {
+				return client.executeMethod(hostConfiguration, method);
+			}
+		};
+
+		try {
+			return poll(monitor, executor);
+		} catch (IOException e) {
+			method.abort();
+			throw e;
+		}
+	}
+
+	/**
+	 * @since 2.3
+	 */
+	public static void connect(final Socket socket, final InetSocketAddress address, final int timeout,
+			IProgressMonitor monitor) throws IOException {
+		if (socket == null) {
+			throw new IllegalArgumentException();
+		}
+
+		Callable<?> executor = new Callable<Object>() {
+			public Object call() throws Exception {
+				socket.connect(address, timeout);
+				return null;
+			}
+		};
+
+		try {
+			poll(monitor, executor);
+		} catch (IOException e) {
+			socket.close();
+			throw e;
+		}
+	}
+
+	private static <T> T poll(IProgressMonitor monitor, Callable<T> executor) throws IOException {
+		monitor = Policy.monitorFor(monitor);
+
+		Future<T> future = service.submit(executor);
+		while (true) {
+			if (monitor.isCanceled()) {
+				future.cancel(true);
+				throw new InterruptedIOException();
+			}
+
+			try {
+				return future.get(POLL_INTERVAL, TimeUnit.MILLISECONDS);
+			} catch (InterruptedException e) {
+				throw new InterruptedIOException();
+			} catch (ExecutionException e) {
+				if (e.getCause() instanceof Error) {
+					throw (Error) e.getCause();
+				} else if (e.getCause() instanceof RuntimeException) {
+					throw (RuntimeException) e.getCause();
+				}
+				throw (IOException) e.getCause();
+			} catch (TimeoutException ignored) {
+			}
+		}
 	}
 
 }
