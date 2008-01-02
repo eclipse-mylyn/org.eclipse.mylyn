@@ -132,11 +132,15 @@ public class WebClientUtil {
 		USER_AGENT_PREFIX = sb.toString();
 		sb.setLength(0);
 
-		sb.append(" ");
-		sb.append("Eclipse");
-		sb.append(stripQualifier(System.getProperty("osgi.framework.version")));
-		// TODO insert (redistribution)
-
+		if (System.getProperty("org.osgi.framework.vendor") != null) {
+			sb.append(" ");
+			sb.append(System.getProperty("org.osgi.framework.vendor"));
+			sb.append(stripQualifier(System.getProperty("osgi.framework.version")));
+			sb.append(" (");
+			sb.append(System.getProperty("eclipse.product"));
+			sb.append(")");
+		}
+		
 		sb.append(" ");
 		sb.append(HttpClientParams.getDefaultParams().getParameter(HttpClientParams.USER_AGENT).toString().split("-")[1]);
 
@@ -151,8 +155,10 @@ public class WebClientUtil {
 		sb.append(System.getProperty("os.version"));
 		sb.append(" (");
 		sb.append(System.getProperty("os.arch"));
-		sb.append("; ");
-		sb.append(System.getProperty("osgi.nl"));
+		if (System.getProperty("osgi.nl") != null) {
+			sb.append("; ");
+			sb.append(System.getProperty("osgi.nl"));
+		}
 		sb.append(")");
 
 		USER_AGENT_POSTFIX = sb.toString();
