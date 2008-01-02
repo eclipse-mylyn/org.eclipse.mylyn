@@ -52,6 +52,7 @@ import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.PlatformUI;
@@ -98,6 +99,8 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 	private TaskListToolTip taskListToolTip;
 
+	private ITaskListChangeListener changeListener;
+
 	public TaskListFilteredTree(Composite parent, int treeStyle, PatternFilter filter) {
 		super(parent, treeStyle, filter);
 		hookContextMenu();
@@ -105,6 +108,9 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 	@Override
 	public void dispose() {
+		if (changeListener != null) {
+			TasksUiPlugin.getTaskListManager().getTaskList().removeChangeListener(changeListener);
+		}
 		super.dispose();
 		taskListToolTip.dispose();
 	}
@@ -323,6 +329,32 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		activeTaskButton.setToolTipText("Select Active Task");
 
 		activeTaskLink = new TaskListHyperlink(container, SWT.LEFT);
+
+		changeListener = new ITaskListChangeListener() {
+			public void containersChanged(Set<TaskContainerDelta> containers) {
+				for (TaskContainerDelta taskContainerDelta : containers) {
+					if (taskContainerDelta.getContainer() instanceof AbstractTask) {
+						final AbstractTask changedTask = (AbstractTask) (taskContainerDelta.getContainer());
+						if (Display.getCurrent() == null) {
+							PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+
+								public void run() {
+									if (changedTask.isActive()) {
+										indicateActiveTask(changedTask);
+									}
+								}
+							});
+						} else {
+							if (changedTask.isActive()) {
+								indicateActiveTask(changedTask);
+							}
+						}
+					}
+				}
+			}
+		};
+		TasksUiPlugin.getTaskListManager().getTaskList().addChangeListener(changeListener);
+
 		activeTaskLink.setText(LABEL_ACTIVE_NONE);
 		activeTaskLink.setForeground(TaskListColorsAndFonts.COLOR_HYPERLINK_WIDGET);
 		// avoid having the Hyperlink class show a native tooltip when it shortens the text which would overlap with the task list tooltip 
