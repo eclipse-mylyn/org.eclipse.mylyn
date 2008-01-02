@@ -577,9 +577,10 @@ public class WebClientUtil {
 
 	private static void setupHttpClientParams(HttpClient client, String userAgent) {
 		client.getParams().setBooleanParameter(HttpClientParams.ALLOW_CIRCULAR_REDIRECTS, true);
-		if (userAgent != null) {
+		if (userAgent != null && userAgent.length() > 0) {
 			StringBuilder sb = new StringBuilder();
 			sb.append(USER_AGENT_PREFIX);
+			sb.append(" ");
 			sb.append(userAgent);
 			sb.append(USER_AGENT_POSTFIX);
 			client.getParams().setParameter(HttpClientParams.USER_AGENT, sb.toString());
