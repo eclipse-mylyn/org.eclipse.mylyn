@@ -31,8 +31,8 @@ import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
-import org.eclipse.mylyn.web.core.AuthenticationType;
 import org.eclipse.mylyn.web.core.AuthenticationCredentials;
+import org.eclipse.mylyn.web.core.AuthenticationType;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -185,7 +185,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	private Button proxyAuthButton;
 
-	private FormToolkit toolkit = new FormToolkit(Display.getCurrent());
+	private final FormToolkit toolkit = new FormToolkit(Display.getCurrent());
 
 	private Hyperlink createAccountHyperlink;
 
@@ -240,17 +240,21 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 			oldProxyHostname = repository.getProperty(TaskRepository.PROXY_HOSTNAME);
 			oldProxyPort = repository.getProperty(TaskRepository.PROXY_PORT);
-			if (oldProxyHostname == null)
+			if (oldProxyHostname == null) {
 				oldProxyHostname = "";
-			if (oldProxyPort == null)
+			}
+			if (oldProxyPort == null) {
 				oldProxyPort = "";
+			}
 
 			oldProxyUsername = repository.getProxyUsername();
 			oldProxyPassword = repository.getProxyPassword();
-			if (oldProxyUsername == null)
+			if (oldProxyUsername == null) {
 				oldProxyUsername = "";
-			if (oldProxyPassword == null)
+			}
+			if (oldProxyPassword == null) {
 				oldProxyPassword = "";
+			}
 
 		} else {
 			oldUsername = "";
@@ -896,7 +900,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	public boolean getHttpAuth() {
 		return httpAuthButton.getSelection();
 	}
-	
+
 	public void setUseDefaultProxy(boolean selected) {
 		if (!needsProxy) {
 			return;
@@ -1163,7 +1167,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		applyTo(repository);
 		return repository;
 	}
-	
+
 	/**
 	 * @since 2.2
 	 */
@@ -1172,7 +1176,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		if (needsEncoding()) {
 			repository.setCharacterEncoding(getCharacterEncoding());
 		}
-		
+
 		if (isAnonymousAccess()) {
 			repository.setCredentials(AuthenticationType.REPOSITORY, null, getSavePassword());
 		} else {
@@ -1184,7 +1188,8 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 		if (needsHttpAuth()) {
 			if (getHttpAuth()) {
-				AuthenticationCredentials webCredentials = new AuthenticationCredentials(getHttpAuthUserId(), getHttpAuthPassword());
+				AuthenticationCredentials webCredentials = new AuthenticationCredentials(getHttpAuthUserId(),
+						getHttpAuthPassword());
 				repository.setCredentials(AuthenticationType.HTTP, webCredentials, getSaveHttpPassword());
 			} else {
 				repository.setCredentials(AuthenticationType.HTTP, null, getSaveHttpPassword());
@@ -1196,8 +1201,9 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			repository.setProperty(TaskRepository.PROXY_HOSTNAME, getProxyHostname());
 			repository.setProperty(TaskRepository.PROXY_PORT, getProxyPort());
 			if (getProxyAuth()) {
-				AuthenticationCredentials webCredentials = new AuthenticationCredentials(getProxyUserName(), getProxyPassword());
-				repository.setCredentials(AuthenticationType.PROXY, webCredentials, getSaveProxyPassword());					
+				AuthenticationCredentials webCredentials = new AuthenticationCredentials(getProxyUserName(),
+						getProxyPassword());
+				repository.setCredentials(AuthenticationType.PROXY, webCredentials, getSaveProxyPassword());
 			} else {
 				repository.setCredentials(AuthenticationType.PROXY, null, getSaveProxyPassword());
 			}
@@ -1319,7 +1325,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		}
 
 		try {
-			getWizard().getContainer().run(true, false, new IRunnableWithProgress() {
+			getWizard().getContainer().run(true, true, new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					monitor.beginTask("Validating server settings", IProgressMonitor.UNKNOWN);
 					try {
@@ -1351,8 +1357,9 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	protected void applyValidatorResult(Validator validator) {
 		IStatus status = validator.getStatus();
 		String message = status.getMessage();
-		if (message == null || message.length() == 0)
+		if (message == null || message.length() == 0) {
 			message = null;
+		}
 		switch (status.getSeverity()) {
 		case IStatus.OK:
 			if (status == Status.OK_STATUS) {

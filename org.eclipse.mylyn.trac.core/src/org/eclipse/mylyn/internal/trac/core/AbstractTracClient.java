@@ -14,6 +14,7 @@ import java.net.Proxy;
 import java.net.URL;
 
 import org.apache.commons.httpclient.Cookie;
+import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -29,8 +30,8 @@ import org.eclipse.mylyn.internal.trac.core.model.TracTicketStatus;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicketType;
 import org.eclipse.mylyn.internal.trac.core.model.TracVersion;
 import org.eclipse.mylyn.web.core.AbstractWebLocation;
-import org.eclipse.mylyn.web.core.WebClientUtil;
 import org.eclipse.mylyn.web.core.AuthenticationCredentials;
+import org.eclipse.mylyn.web.core.WebClientUtil;
 
 /**
  * @author Steffen Pingel
@@ -42,7 +43,7 @@ public abstract class AbstractTracClient implements ITracClient {
 	private static final String LOGIN_COOKIE_NAME = "trac_auth";
 
 	protected static final IProgressMonitor DEFAULT_MONITOR = new NullProgressMonitor();
-	
+
 	protected final String repositoryUrl;
 
 	protected final Version version;
@@ -56,7 +57,7 @@ public abstract class AbstractTracClient implements ITracClient {
 		this.version = version;
 
 		this.location = null;
-		
+
 		this.data = new TracClientData();
 	}
 
@@ -64,7 +65,7 @@ public abstract class AbstractTracClient implements ITracClient {
 		this.location = location;
 		this.version = version;
 		this.repositoryUrl = location.getUrl();
-		
+
 		this.data = new TracClientData();
 	}
 
@@ -76,14 +77,16 @@ public abstract class AbstractTracClient implements ITracClient {
 		return credentials != null && credentials.getUserName().length() > 0;
 	}
 
-	protected void authenticateAccountManager(HttpClient httpClient, AuthenticationCredentials credentials) throws IOException, TracLoginException {
+	protected void authenticateAccountManager(HttpClient httpClient, HostConfiguration hostConfiguration,
+			AuthenticationCredentials credentials, IProgressMonitor monitor) throws IOException, TracLoginException {
 		PostMethod post = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl + LOGIN_URL));
 		post.setFollowRedirects(false);
-		NameValuePair[] data = { new NameValuePair("referer", ""), new NameValuePair("user", credentials.getUserName()),
+		NameValuePair[] data = { new NameValuePair("referer", ""),
+				new NameValuePair("user", credentials.getUserName()),
 				new NameValuePair("password", credentials.getPassword()) };
 		post.setRequestBody(data);
 		try {
-			int code = httpClient.executeMethod(post);
+			int code = WebClientUtil.execute(httpClient, hostConfiguration, post, monitor);
 			// code should be a redirect in case of success  
 			if (code == HttpURLConnection.HTTP_OK) {
 				throw new TracLoginException();

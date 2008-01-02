@@ -22,8 +22,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
 
+import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
@@ -49,12 +51,13 @@ import org.eclipse.mylyn.internal.trac.core.model.TracWikiPageInfo;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylyn.internal.trac.core.util.TracHttpClientTransportFactory;
 import org.eclipse.mylyn.internal.trac.core.util.TracUtils;
+import org.eclipse.mylyn.internal.trac.core.util.TracXmlRpcClientRequest;
 import org.eclipse.mylyn.internal.trac.core.util.TracHttpClientTransportFactory.TracHttpException;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.web.core.AbstractWebLocation;
+import org.eclipse.mylyn.web.core.AuthenticationCredentials;
 import org.eclipse.mylyn.web.core.AuthenticationType;
 import org.eclipse.mylyn.web.core.WebClientUtil;
-import org.eclipse.mylyn.web.core.AuthenticationCredentials;
 import org.eclipse.mylyn.web.core.AbstractWebLocation.ResultType;
 
 /**
@@ -64,6 +67,91 @@ import org.eclipse.mylyn.web.core.AbstractWebLocation.ResultType;
  * @author Xiaoyang Guan
  */
 public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiClient {
+
+	private class XmlRpcRequest {
+
+		private final String method;
+
+		private final Object[] parameters;
+
+		public XmlRpcRequest(String method, Object[] parameters) {
+			this.method = method;
+			this.parameters = parameters;
+		}
+
+		public Object execute(IProgressMonitor monitor) throws TracException {
+			try {
+				// first attempt
+				return executeCallInternal(monitor);
+			} catch (TracPermissionDeniedException e) {
+				if (accountMangerAuthenticationFailed) {
+					// do not try again if this has failed in the past since it
+					// is more likely that XML_RPC permissions have not been set
+					throw e;
+				}
+
+				AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
+				if (!credentialsValid(credentials)) {
+					throw e;
+				}
+
+				// try form-based authentication via AccountManagerPlugin as a
+				// fall-back
+				HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(httpClient, USER_AGENT,
+						location, monitor);
+				try {
+					authenticateAccountManager(httpClient, hostConfiguration, credentials, monitor);
+				} catch (TracLoginException loginException) {
+					// caused by wrong user name or password
+					throw loginException;
+				} catch (IOException ignore) {
+					accountMangerAuthenticationFailed = true;
+					throw e;
+				}
+
+				try {
+					validateAuthenticationState(httpClient);
+				} catch (TracLoginException ignore) {
+					// most likely form based authentication is not supported by
+					// repository
+					accountMangerAuthenticationFailed = true;
+					throw e;
+				}
+
+				factory.setCookies(httpClient.getState().getCookies());
+			}
+
+			// second attempt
+			return executeCallInternal(monitor);
+		}
+
+		private Object executeCallInternal(IProgressMonitor monitor) throws TracException {
+			try {
+				TracXmlRpcClientRequest request = new TracXmlRpcClientRequest(xmlrpc.getClientConfig(), method,
+						parameters, monitor);
+				return xmlrpc.execute(request);
+			} catch (TracHttpException e) {
+				if (e.code == HttpStatus.SC_UNAUTHORIZED) {
+					throw new TracLoginException();
+				} else if (e.code == HttpStatus.SC_FORBIDDEN) {
+					throw new TracPermissionDeniedException();
+				} else if (e.code == HttpStatus.SC_PROXY_AUTHENTICATION_REQUIRED) {
+					throw new TracProxyAuthenticationException();
+				} else {
+					throw new TracException(e);
+				}
+			} catch (XmlRpcException e) {
+				if (e.code == NO_SUCH_METHOD_ERROR) {
+					throw new TracNoSuchMethodException(e);
+				} else {
+					throw new TracRemoteException(e);
+				}
+			} catch (Exception e) {
+				throw new TracException(e);
+			}
+		}
+
+	}
 
 	public static final String XMLRPC_URL = "/xmlrpc";
 
@@ -95,8 +183,14 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 
 	private XmlRpcClientConfigImpl config;
 
+	private final HttpClient httpClient;
+
 	public TracXmlRpcClient(AbstractWebLocation location, Version version) {
 		super(location, version);
+
+		httpClient = new HttpClient();
+		httpClient.setHttpConnectionManager(new MultiThreadedHttpConnectionManager());
+		httpClient.getParams().setCookiePolicy(CookiePolicy.RFC_2109);
 	}
 
 	public synchronized XmlRpcClient getClient() throws TracException {
@@ -111,11 +205,11 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 			xmlrpc = new XmlRpcClient();
 			xmlrpc.setConfig(config);
 
-			factory = new TracHttpClientTransportFactory(xmlrpc);
+			factory = new TracHttpClientTransportFactory(xmlrpc, httpClient);
 			factory.setLocation(location);
-			xmlrpc.setTransportFactory(factory);			
+			xmlrpc.setTransportFactory(factory);
 		}
-		
+
 		// update configuration with latest values
 		AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
 		if (credentialsValid(credentials)) {
@@ -145,11 +239,16 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 	}
 
 	private Object call(String method, Object... parameters) throws TracException {
+		return call(null, method, parameters);
+	}
+
+	private Object call(IProgressMonitor monitor, String method, Object... parameters) throws TracException {
 		while (true) {
 			getClient();
-						
+
 			try {
-				return executeCall(method, parameters);
+				XmlRpcRequest request = new XmlRpcRequest(method, parameters);
+				return request.execute(monitor);
 			} catch (TracLoginException e) {
 				if (location.requestCredentials(AuthenticationType.REPOSITORY, null) == ResultType.NOT_SUPPORTED) {
 					throw e;
@@ -165,80 +264,13 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 			}
 		}
 	}
-		
-	private Object executeCall(String method, Object... parameters) throws TracException {
-		try {
-			// first attempt
-			return executeCallInternal(method, parameters);
-		} catch (TracPermissionDeniedException e) {
-			if (accountMangerAuthenticationFailed) {
-				// do not try again if this has failed in the past since it
-				// is more likely that XML_RPC permissions have not been set
-				throw e;
-			}
-
-			AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
-			if (!credentialsValid(credentials)) {
-				throw e;
-			}
-			
-			// try form-based authentication via AccountManagerPlugin as a
-			// fall-back
-			HttpClient httpClient = new HttpClient();
-			httpClient.getParams().setCookiePolicy(CookiePolicy.RFC_2109);
-			WebClientUtil.setupHttpClient(httpClient, USER_AGENT, location);
-			try {
-				authenticateAccountManager(httpClient, credentials);
-			} catch (TracLoginException loginException) {
-				// caused by wrong user name or password
-				throw loginException;
-			} catch (IOException ignore) {
-				accountMangerAuthenticationFailed = true;
-				throw e;
-			}
-
-			try {
-				validateAuthenticationState(httpClient);
-			} catch (TracLoginException ignore) {
-				// most likely form based authentication is not supported by
-				// repository
-				accountMangerAuthenticationFailed = true;
-				throw e;
-			}
-
-			factory.setCookies(httpClient.getState().getCookies());
-		}
-
-		// second attempt
-		return executeCallInternal(method, parameters);
-	}
-
-	private Object executeCallInternal(String method, Object... parameters) throws TracException {
-		try {
-			return xmlrpc.execute(method, parameters);
-		} catch (TracHttpException e) {
-			if (e.code == HttpStatus.SC_UNAUTHORIZED) {
-				throw new TracLoginException();
-			} else if (e.code == HttpStatus.SC_FORBIDDEN) {
-				throw new TracPermissionDeniedException();
-			} else if (e.code == HttpStatus.SC_PROXY_AUTHENTICATION_REQUIRED) {
-				throw new TracProxyAuthenticationException();
-			} else {
-				throw new TracException(e);
-			}
-		} catch (XmlRpcException e) {
-			if (e.code == NO_SUCH_METHOD_ERROR) {
-				throw new TracNoSuchMethodException(e);
-			} else {
-				throw new TracRemoteException(e);
-			}
-		} catch (Exception e) {
-			throw new TracException(e);
-		}
-	}
 
 	private Object[] multicall(Map<String, Object>... calls) throws TracException {
-		Object[] result = (Object[]) call("system.multicall", new Object[] { calls });
+		return multicall(null, calls);
+	}
+
+	private Object[] multicall(IProgressMonitor monitor, Map<String, Object>... calls) throws TracException {
+		Object[] result = (Object[]) call(monitor, "system.multicall", new Object[] { calls });
 		for (Object item : result) {
 			try {
 				checkForException(item);
@@ -274,7 +306,7 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 
 	public void validate(IProgressMonitor monitor) throws TracException {
 		try {
-			Object[] result = (Object[]) call("system.getAPIVersion");
+			Object[] result = (Object[]) call(monitor, "system.getAPIVersion");
 			if (result.length >= 3) {
 				epochAPIVersion = (Integer) result[0];
 				majorAPIVersion = (Integer) result[1];
@@ -282,10 +314,11 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 			} else if (result.length >= 2) {
 				epochAPIVersion = 0;
 				majorAPIVersion = (Integer) result[0];
-				minorAPIVersion = (Integer) result[1];				
+				minorAPIVersion = (Integer) result[1];
 			} else {
-				throw new TracException("The API version is unsupported, please update your Trac XML-RPC Plugin to revision " + REQUIRED_REVISION
-						+ " or later");
+				throw new TracException(
+						"The API version is unsupported, please update your Trac XML-RPC Plugin to revision "
+								+ REQUIRED_REVISION + " or later");
 			}
 		} catch (TracNoSuchMethodException e) {
 			throw new TracException(
@@ -424,21 +457,21 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 	public synchronized void updateAttributes(IProgressMonitor monitor) throws TracException {
 		monitor.beginTask("Updating attributes", 9);
 
-		Object[] result = getAttributes("ticket.component");
+		Object[] result = getAttributes("ticket.component", monitor);
 		data.components = new ArrayList<TracComponent>(result.length);
 		for (Object item : result) {
 			data.components.add(parseComponent((Map<?, ?>) getMultiCallResult(item)));
 		}
 		advance(monitor, 1);
 
-		result = getAttributes("ticket.milestone");
+		result = getAttributes("ticket.milestone", monitor);
 		data.milestones = new ArrayList<TracMilestone>(result.length);
 		for (Object item : result) {
 			data.milestones.add(parseMilestone((Map<?, ?>) getMultiCallResult(item)));
 		}
 		advance(monitor, 1);
 
-		List<TicketAttributeResult> attributes = getTicketAttributes("ticket.priority");
+		List<TicketAttributeResult> attributes = getTicketAttributes("ticket.priority", monitor);
 		data.priorities = new ArrayList<TracPriority>(result.length);
 		for (TicketAttributeResult attribute : attributes) {
 			data.priorities.add(new TracPriority(attribute.name, attribute.value));
@@ -446,7 +479,7 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		Collections.sort(data.priorities);
 		advance(monitor, 1);
 
-		attributes = getTicketAttributes("ticket.resolution");
+		attributes = getTicketAttributes("ticket.resolution", monitor);
 		data.ticketResolutions = new ArrayList<TracTicketResolution>(result.length);
 		for (TicketAttributeResult attribute : attributes) {
 			data.ticketResolutions.add(new TracTicketResolution(attribute.name, attribute.value));
@@ -454,7 +487,7 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		Collections.sort(data.ticketResolutions);
 		advance(monitor, 1);
 
-		attributes = getTicketAttributes("ticket.severity");
+		attributes = getTicketAttributes("ticket.severity", monitor);
 		data.severities = new ArrayList<TracSeverity>(result.length);
 		for (TicketAttributeResult attribute : attributes) {
 			data.severities.add(new TracSeverity(attribute.name, attribute.value));
@@ -463,7 +496,7 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		advance(monitor, 1);
 
 		boolean trac011 = isAPIVersionOrHigher(1, 0, 0);
-		attributes = getTicketAttributes("ticket.status", trac011);
+		attributes = getTicketAttributes("ticket.status", trac011, monitor);
 		data.ticketStatus = new ArrayList<TracTicketStatus>(result.length);
 		for (TicketAttributeResult attribute : attributes) {
 			data.ticketStatus.add(new TracTicketStatus(attribute.name, attribute.value));
@@ -471,7 +504,7 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		Collections.sort(data.ticketStatus);
 		advance(monitor, 1);
 
-		attributes = getTicketAttributes("ticket.type");
+		attributes = getTicketAttributes("ticket.type", monitor);
 		data.ticketTypes = new ArrayList<TracTicketType>(result.length);
 		for (TicketAttributeResult attribute : attributes) {
 			data.ticketTypes.add(new TracTicketType(attribute.name, attribute.value));
@@ -479,14 +512,14 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		Collections.sort(data.ticketTypes);
 		advance(monitor, 1);
 
-		result = getAttributes("ticket.version");
+		result = getAttributes("ticket.version", monitor);
 		data.versions = new ArrayList<TracVersion>(result.length);
 		for (Object item : result) {
 			data.versions.add(parseVersion((Map<?, ?>) getMultiCallResult(item)));
 		}
 		advance(monitor, 1);
 
-		result = (Object[]) call("ticket.getTicketFields");
+		result = (Object[]) call(monitor, "ticket.getTicketFields");
 		data.ticketFields = new ArrayList<TracTicketField>(result.length);
 		for (Object item : result) {
 			data.ticketFields.add(parseTicketField((Map<?, ?>) item));
@@ -496,8 +529,9 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 
 	private void advance(IProgressMonitor monitor, int worked) {
 		monitor.worked(worked);
-		if (monitor.isCanceled())
+		if (monitor.isCanceled()) {
 			throw new OperationCanceledException();
+		}
 
 	}
 
@@ -555,8 +589,8 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 	}
 
 	@SuppressWarnings("unchecked")
-	private Object[] getAttributes(String attributeType) throws TracException {
-		Object[] ids = (Object[]) call(attributeType + ".getAll");
+	private Object[] getAttributes(String attributeType, IProgressMonitor monitor) throws TracException {
+		Object[] ids = (Object[]) call(monitor, attributeType + ".getAll");
 		Map<String, Object>[] calls = new Map[ids.length];
 		for (int i = 0; i < calls.length; i++) {
 			calls[i] = createMultiCall(attributeType + ".get", ids[i]);
@@ -568,22 +602,23 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		return result;
 	}
 
-	private List<TicketAttributeResult> getTicketAttributes(String attributeType) throws TracException {
-		return getTicketAttributes(attributeType, false);
+	private List<TicketAttributeResult> getTicketAttributes(String attributeType, IProgressMonitor monitor)
+			throws TracException {
+		return getTicketAttributes(attributeType, false, monitor);
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<TicketAttributeResult> getTicketAttributes(String attributeType, boolean assignValues)
-			throws TracException {
+	private List<TicketAttributeResult> getTicketAttributes(String attributeType, boolean assignValues,
+			IProgressMonitor monitor) throws TracException {
 		// get list of attribute ids first
-		Object[] ids = (Object[]) call(attributeType + ".getAll");
+		Object[] ids = (Object[]) call(monitor, attributeType + ".getAll");
 		// fetch all attributes in a single call
 		Map<String, Object>[] calls = new Map[ids.length];
 		for (int i = 0; i < calls.length; i++) {
 			calls[i] = createMultiCall(attributeType + ".get", ids[i]);
 		}
 
-		Object[] result = multicall(calls);
+		Object[] result = multicall(monitor, calls);
 		assert result.length == ids.length;
 
 		List<TicketAttributeResult> attributes = new ArrayList<TicketAttributeResult>(result.length);
@@ -739,8 +774,9 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 	public TracWikiPageInfo getWikiPageInfo(String pageName, int version) throws TracException {
 		// Note: if an unexpected null value is passed to XmlRpcPlugin, XmlRpcClient will throw a TracRemoteException. 
 		//       So, this null-parameter checking may be omitted if resorting to XmlRpcClient is more appropriate.
-		if (pageName == null)
+		if (pageName == null) {
 			throw new IllegalArgumentException("Wiki page name cannot be null");
+		}
 
 		Object result = (version == LATEST_VERSION) ? call("wiki.getPageInfo", pageName) //
 				: call("wiki.getPageInfoVersion", pageName, version);
@@ -790,8 +826,9 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 	public String getWikiPageContent(String pageName, int version) throws TracException {
 		// Note: if an unexpected null value is passed to XmlRpcPlugin, XmlRpcClient will throw a TracRemoteException. 
 		//       So, this null-parameter checking may be omitted if resorting to XmlRpcClient is more appropriate.
-		if (pageName == null)
+		if (pageName == null) {
 			throw new IllegalArgumentException("Wiki page name cannot be null");
+		}
 		if (version == LATEST_VERSION) {
 			// XmlRpcClient throws a TracRemoteException if pageName or version doesn't exist
 			return (String) call("wiki.getPage", pageName);

@@ -19,6 +19,7 @@ import java.util.Random;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.httpclient.HttpClient;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
@@ -83,7 +84,7 @@ public class TracXmlRpcTest extends TestCase {
 		xmlrpc = new XmlRpcClient();
 		xmlrpc.setConfig(config);
 
-		TracHttpClientTransportFactory factory = new TracHttpClientTransportFactory(xmlrpc);
+		TracHttpClientTransportFactory factory = new TracHttpClientTransportFactory(xmlrpc, new HttpClient());
 		xmlrpc.setTransportFactory(factory);
 
 		this.username = username;

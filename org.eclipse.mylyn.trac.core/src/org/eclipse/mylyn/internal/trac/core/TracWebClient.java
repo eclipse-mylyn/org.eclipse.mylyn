@@ -26,6 +26,7 @@ import java.util.StringTokenizer;
 
 import javax.security.auth.login.LoginException;
 
+import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
@@ -51,11 +52,11 @@ import org.eclipse.mylyn.internal.trac.core.util.TracUtils;
 import org.eclipse.mylyn.internal.trac.core.util.TracHttpClientTransportFactory.TracHttpException;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.web.core.AbstractWebLocation;
+import org.eclipse.mylyn.web.core.AuthenticationCredentials;
 import org.eclipse.mylyn.web.core.AuthenticationType;
 import org.eclipse.mylyn.web.core.HtmlStreamTokenizer;
 import org.eclipse.mylyn.web.core.HtmlTag;
 import org.eclipse.mylyn.web.core.WebClientUtil;
-import org.eclipse.mylyn.web.core.AuthenticationCredentials;
 import org.eclipse.mylyn.web.core.AbstractWebLocation.ResultType;
 import org.eclipse.mylyn.web.core.HtmlStreamTokenizer.Token;
 
@@ -65,6 +66,117 @@ import org.eclipse.mylyn.web.core.HtmlStreamTokenizer.Token;
  * @author Steffen Pingel
  */
 public class TracWebClient extends AbstractTracClient {
+
+	private class WebRequest {
+
+		private final String url;
+
+		private final IProgressMonitor monitor;
+
+		private HostConfiguration hostConfiguration;
+
+		public WebRequest(String url, IProgressMonitor monitor) {
+			this.url = url;
+			this.monitor = monitor;
+		}
+
+		public GetMethod execute() throws TracLoginException, IOException, TracHttpException {
+			hostConfiguration = WebClientUtil.createHostConfiguration(httpClient, USER_AGENT, location, monitor);
+
+			for (int attempt = 0; attempt < 2; attempt++) {
+				// force authentication
+				if (!authenticated) {
+					AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
+					if (credentialsValid(credentials)) {
+						authenticate(monitor);
+					}
+				}
+
+				GetMethod method = new GetMethod(WebClientUtil.getRequestPath(url));
+				int code;
+				try {
+					code = WebClientUtil.execute(httpClient, hostConfiguration, method, monitor);
+				} catch (IOException e) {
+					method.releaseConnection();
+					throw e;
+				}
+
+				if (code == HttpURLConnection.HTTP_OK) {
+					return method;
+				} else if (code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN) {
+					// login or re-authenticate due to an expired session
+					method.releaseConnection();
+					authenticated = false;
+					authenticate(monitor);
+				} else {
+					throw new TracHttpException(code);
+				}
+			}
+
+			throw new TracLoginException();
+		}
+
+		private void authenticate(IProgressMonitor monitor) throws TracLoginException, IOException {
+			while (true) {
+				AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
+				if (!credentialsValid(credentials)) {
+					throw new TracLoginException();
+				}
+
+				// try standard basic/digest authentication first
+				AuthScope authScope = new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT, AuthScope.ANY_REALM);
+				httpClient.getState().setCredentials(authScope,
+						WebClientUtil.getHttpClientCredentials(credentials, WebClientUtil.getDomain(repositoryUrl)));
+
+				GetMethod method = new GetMethod(WebClientUtil.getRequestPath(repositoryUrl + LOGIN_URL));
+				method.setFollowRedirects(false);
+				int code;
+				try {
+					httpClient.getParams().setAuthenticationPreemptive(true);
+					code = WebClientUtil.execute(httpClient, hostConfiguration, method, monitor);
+					if (needsReauthentication(code)) {
+						continue;
+					}
+				} finally {
+					method.releaseConnection();
+					httpClient.getParams().setAuthenticationPreemptive(false);
+				}
+
+				// the expected return code is a redirect, anything else is suspicious
+				if (code == HttpURLConnection.HTTP_OK) {
+					// try form-based authentication via AccountManagerPlugin as a
+					// fall-back
+					authenticateAccountManager(httpClient, hostConfiguration, credentials, monitor);
+				}
+
+				validateAuthenticationState(httpClient);
+
+				// success since no exception was thrown
+				authenticated = true;
+				break;
+			}
+		}
+
+		private boolean needsReauthentication(int code) throws IOException, TracLoginException {
+			final AuthenticationType authenticationType;
+			if (code == HttpStatus.SC_UNAUTHORIZED || code == HttpStatus.SC_FORBIDDEN) {
+				authenticationType = AuthenticationType.REPOSITORY;
+			} else if (code == HttpStatus.SC_PROXY_AUTHENTICATION_REQUIRED) {
+				authenticationType = AuthenticationType.PROXY;
+			} else {
+				return false;
+			}
+
+			if (location.requestCredentials(authenticationType, null) == ResultType.NOT_SUPPORTED) {
+				throw new TracLoginException();
+			}
+
+			hostConfiguration = WebClientUtil.createHostConfiguration(httpClient, USER_AGENT, location, monitor);
+
+			return true;
+		}
+
+	}
 
 	private final HttpClient httpClient;
 
@@ -78,114 +190,19 @@ public class TracWebClient extends AbstractTracClient {
 		httpClient.getParams().setCookiePolicy(CookiePolicy.RFC_2109);
 	}
 
-	private synchronized GetMethod connect(String serverURL) throws TracException {
-		return connect(serverURL, DEFAULT_MONITOR);
+	private synchronized GetMethod connect(String requestUrl) throws TracException {
+		return connect(requestUrl, DEFAULT_MONITOR);
 	}
 
-	private synchronized GetMethod connect(String serverURL, IProgressMonitor monitor) throws TracException {
+	private synchronized GetMethod connect(String requestUrl, IProgressMonitor monitor) throws TracException {
 		try {
-			return connectInternal(serverURL, monitor);
+			WebRequest request = new WebRequest(requestUrl, monitor);
+			return request.execute();
 		} catch (TracException e) {
 			throw e;
 		} catch (Exception e) {
 			throw new TracException(e);
 		}
-	}
-
-	private GetMethod connectInternal(String serverURL, IProgressMonitor monitor) throws TracLoginException,
-			IOException, TracHttpException {
-		WebClientUtil.setupHttpClient(httpClient, USER_AGENT, location);
-
-		for (int attempt = 0; attempt < 2; attempt++) {
-			// force authentication
-			if (!authenticated) {
-				AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
-				if (credentialsValid(credentials)) {
-					authenticate(monitor);
-				}
-			}
-
-			GetMethod method = new GetMethod(WebClientUtil.getRequestPath(serverURL));
-			int code;
-			try {
-				code = httpClient.executeMethod(method);
-			} catch (IOException e) {
-				method.releaseConnection();
-				throw e;
-			}
-
-			if (code == HttpURLConnection.HTTP_OK) {
-				return method;
-			} else if (code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN) {
-				// login or re-authenticate due to an expired session
-				method.releaseConnection();
-				authenticated = false;
-				authenticate(monitor);
-			} else {
-				throw new TracHttpException(code);
-			}
-		}
-
-		throw new TracLoginException();
-	}
-
-	private void authenticate(IProgressMonitor monitor) throws TracLoginException, IOException {
-		while (true) {
-			AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
-			if (!credentialsValid(credentials)) {
-				throw new TracLoginException();
-			}
-
-			// try standard basic/digest authentication first
-			AuthScope authScope = new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT, AuthScope.ANY_REALM);
-			httpClient.getState().setCredentials(authScope, WebClientUtil.getHttpClientCredentials(credentials, WebClientUtil.getDomain(repositoryUrl)));
-
-			GetMethod method = new GetMethod(WebClientUtil.getRequestPath(repositoryUrl + LOGIN_URL));
-			method.setFollowRedirects(false);
-			int code;
-			try {
-				httpClient.getParams().setAuthenticationPreemptive(true);
-				code = httpClient.executeMethod(method);
-				if (needsReauthentication(code)) {
-					continue;
-				}
-			} finally {
-				method.releaseConnection();
-				httpClient.getParams().setAuthenticationPreemptive(false);
-			}
-
-			// the expected return code is a redirect, anything else is suspicious
-			if (code == HttpURLConnection.HTTP_OK) {
-				// try form-based authentication via AccountManagerPlugin as a
-				// fall-back
-				authenticateAccountManager(httpClient, credentials);
-			}
-
-			validateAuthenticationState(httpClient);
-
-			// success since no exception was thrown
-			authenticated = true;
-			break;
-		}
-	}
-
-	private boolean needsReauthentication(int code) throws IOException, TracLoginException {
-		final AuthenticationType authenticationType;
-		if (code == HttpStatus.SC_UNAUTHORIZED || code == HttpStatus.SC_FORBIDDEN) {
-			authenticationType = AuthenticationType.REPOSITORY;
-		} else if (code == HttpStatus.SC_PROXY_AUTHENTICATION_REQUIRED) {
-			authenticationType = AuthenticationType.PROXY;
-		} else {
-			return false;
-		}
-
-		if (location.requestCredentials(authenticationType, null) == ResultType.NOT_SUPPORTED) {
-			throw new TracLoginException();
-		}
-
-		WebClientUtil.setupHttpClient(httpClient, USER_AGENT, location);
-
-		return true;
 	}
 
 	/**
