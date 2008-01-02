@@ -109,23 +109,25 @@ public class RepositoryTaskAttribute implements Serializable {
 	private boolean isReadOnly = false;
 
 	/** Attribute pretty printing name */
-	private String name;
+	private final String name;
 
 	/** ID of the option used when updating the attribute on the server */
-	private String id;
+	private final String id;
 
 	/** Option parameters */
-	private Map<String, String> optionParameters;
+	private final Map<String, String> optionParameters;
 
 	/** Ordered list of legal attribute values */
-	private List<String> options;
+	private final List<String> options;
 
 	/**
 	 * Attribute's values (selected or added)
 	 */
-	private List<String> values = new ArrayList<String>();
+	private final List<String> values = new ArrayList<String>();
 
-	private Map<String, String> metaData = new HashMap<String, String>();
+	private final Map<String, String> metaData = new HashMap<String, String>();
+
+	private transient RepositoryTaskData taskData;
 
 	public RepositoryTaskAttribute(String id, String name, boolean hidden) {
 		this.id = id;
@@ -254,18 +256,23 @@ public class RepositoryTaskAttribute implements Serializable {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		final RepositoryTaskAttribute other = (RepositoryTaskAttribute) obj;
 		if (id == null) {
-			if (other.id != null)
+			if (other.id != null) {
 				return false;
-		} else if (!id.equals(other.id))
+			}
+		} else if (!id.equals(other.id)) {
 			return false;
+		}
 		return true;
 	}
 
@@ -288,4 +295,19 @@ public class RepositoryTaskAttribute implements Serializable {
 	public Map<String, String> getMetaData() {
 		return Collections.unmodifiableMap(metaData);
 	}
+
+	/**
+	 * @since 2.3
+	 */
+	void setTaskData(RepositoryTaskData taskData) {
+		this.taskData = taskData;
+	}
+
+	/**
+	 * @since 2.3
+	 */
+	public RepositoryTaskData getTaskData() {
+		return taskData;
+	}
+
 }

@@ -29,9 +29,9 @@ import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
  */
 public class TaskDataManager {
 
-	private TaskRepositoryManager taskRepositoryManager;
+	private final TaskRepositoryManager taskRepositoryManager;
 
-	private ITaskDataStorage storage;
+	private final ITaskDataStorage storage;
 
 	private int nextNewId = 1;
 
@@ -125,7 +125,7 @@ public class TaskDataManager {
 		TaskDataState state = retrieveState(repositoryUrl, id);
 		RepositoryTaskData clone = null;
 		if (state != null) {
-			if (state.getNewTaskData() != null)
+			if (state.getNewTaskData() != null) {
 				try {
 					clone = (RepositoryTaskData) ObjectCloner.deepCopy(state.getNewTaskData());
 					updateAttributeFactory(clone);
@@ -133,10 +133,12 @@ public class TaskDataManager {
 					StatusHandler.fail(e, "Error constructing modifiable task", false);
 					return null;
 				}
+			}
 			if (clone != null) {
 				for (RepositoryTaskAttribute attribute : state.getEdits()) {
-					if (attribute == null)
+					if (attribute == null) {
 						continue;
+					}
 					RepositoryTaskAttribute existing = clone.getAttribute(attribute.getId());
 					if (existing != null) {
 						existing.clearValues();
@@ -230,8 +232,10 @@ public class TaskDataManager {
 	 * After deserialization process the attributeFactory needs to be reset on each RepositoryTaskData.
 	 */
 	private void updateAttributeFactory(RepositoryTaskData taskData) {
-		if (taskData == null)
+		if (taskData == null) {
 			return;
+		}
+		taskData.refresh();
 		AbstractRepositoryConnector connector = taskRepositoryManager.getRepositoryConnector(taskData.getRepositoryKind());
 		if (connector != null && connector.getTaskDataHandler() != null) {
 			AbstractAttributeFactory factory = connector.getTaskDataHandler().getAttributeFactory(taskData);

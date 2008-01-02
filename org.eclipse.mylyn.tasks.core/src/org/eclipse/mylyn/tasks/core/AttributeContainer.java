@@ -11,7 +11,6 @@ package org.eclipse.mylyn.tasks.core;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.mylyn.monitor.core.StatusHandler;
@@ -29,12 +28,14 @@ public class AttributeContainer implements Serializable {
 	private static final long serialVersionUID = 3538078709450471836L;
 
 	/** The keys for the report attributes */
-	private ArrayList<String> attributeKeys;
+	private final ArrayList<String> attributeKeys;
 
 	/** report attributes (status, resolution, etc.) */
-	private HashMap<String, RepositoryTaskAttribute> attributes;
+	private final HashMap<String, RepositoryTaskAttribute> attributes;
 
 	private transient AbstractAttributeFactory attributeFactory;
+
+	private transient RepositoryTaskData taskData;
 
 	public AttributeContainer(AbstractAttributeFactory attributeFactory) {
 		this.attributeFactory = attributeFactory;
@@ -79,8 +80,7 @@ public class AttributeContainer implements Serializable {
 	public List<RepositoryTaskAttribute> getAttributes() {
 		ArrayList<RepositoryTaskAttribute> attributeEntries = new ArrayList<RepositoryTaskAttribute>(
 				attributeKeys.size());
-		for (Iterator<String> it = attributeKeys.iterator(); it.hasNext();) {
-			String key = it.next();
+		for (String key : attributeKeys) {
 			RepositoryTaskAttribute attribute = attributes.get(key);
 			attributeEntries.add(attribute);
 		}
@@ -151,6 +151,23 @@ public class AttributeContainer implements Serializable {
 
 	public AbstractAttributeFactory getAttributeFactory() {
 		return attributeFactory;
+	}
+
+	/**
+	 * @since 2.3
+	 */
+	void setTaskData(RepositoryTaskData taskData) {
+		this.taskData = taskData;
+		for (RepositoryTaskAttribute attribute : attributes.values()) {
+			attribute.setTaskData(taskData);
+		}
+	}
+
+	/**
+	 * @since 2.3
+	 */
+	public RepositoryTaskData getTaskData() {
+		return taskData;
 	}
 
 }

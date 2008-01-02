@@ -30,23 +30,23 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 
 	private boolean isNew = false;
 
-	private String reportID;
+	private final String reportID;
 
 	private String repositoryURL;
 
-	private String repositoryKind;
+	private final String repositoryKind;
 
-	private String taskKind;
+	private final String taskKind;
 
-	private List<TaskComment> taskComments = new ArrayList<TaskComment>();
+	private final List<TaskComment> taskComments = new ArrayList<TaskComment>();
 
-	private List<RepositoryAttachment> attachments = new ArrayList<RepositoryAttachment>();
+	private final List<RepositoryAttachment> attachments = new ArrayList<RepositoryAttachment>();
 
 	/** The operation that was selected to do to the bug */
 	private RepositoryOperation selectedOperation = null;
 
 	/** The repositoryOperations that can be done on the report */
-	private List<RepositoryOperation> repositoryOperations = new ArrayList<RepositoryOperation>();
+	private final List<RepositoryOperation> repositoryOperations = new ArrayList<RepositoryOperation>();
 
 	public RepositoryTaskData(AbstractAttributeFactory factory, String repositoryKind, String repositoryURL, String id) {
 		this(factory, repositoryKind, repositoryURL, id, AbstractTask.DEFAULT_TASK_KIND);
@@ -131,8 +131,9 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 			String opName = o.getOperationName();
 			opName = opName.replaceAll("</.*>", "");
 			opName = opName.replaceAll("<.*>", "");
-			if (opName.equals(displayText))
+			if (opName.equals(displayText)) {
 				return o;
+			}
 		}
 		return null;
 	}
@@ -261,6 +262,7 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 
 	public void addAttachment(RepositoryAttachment attachment) {
 		attachments.add(attachment);
+		attachment.setTaskData(this);
 	}
 
 	public List<RepositoryAttachment> getAttachments() {
@@ -335,4 +337,21 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 	public final String getHandleIdentifier() {
 		return RepositoryTaskHandleUtil.getHandle(getRepositoryUrl(), getId());
 	}
+
+	@Override
+	public void addAttribute(String key, RepositoryTaskAttribute attribute) {
+		super.addAttribute(key, attribute);
+		attribute.setTaskData(this);
+	}
+
+	public void refresh() {
+		setTaskData(this);
+		for (AttributeContainer container : taskComments) {
+			container.setTaskData(this);
+		}
+		for (AttributeContainer container : attachments) {
+			container.setTaskData(this);
+		}
+	}
+
 }

@@ -30,6 +30,7 @@ public class TaskSelection {
 		try {
 			this.taskData = (RepositoryTaskData) TaskDataManager.ObjectCloner.deepCopy(taskData);
 			this.taskData.setAttributeFactory(taskData.getAttributeFactory());
+			this.taskData.refresh();
 		} catch (Exception e) {
 			StatusHandler.fail(e, "Error creating a task data copy", false);
 			throw new RuntimeException(e);

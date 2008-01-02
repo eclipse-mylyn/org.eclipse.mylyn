@@ -183,6 +183,7 @@ public class TaskDataManagerTest extends TestCase {
 				"1");
 		assertNotNull(editData);
 		editData.setAttributeFactory(new MockAttributeFactory());
+		editData.refresh();
 		editData.setAttributeValue(RepositoryTaskAttribute.COMMENT_NEW, "new comment");
 		// for (RepositoryTaskAttribute attribute: editData.getAttributes()) {
 		// assertTrue(taskData.getAttribute(attribute.getID()).equals(attribute));
