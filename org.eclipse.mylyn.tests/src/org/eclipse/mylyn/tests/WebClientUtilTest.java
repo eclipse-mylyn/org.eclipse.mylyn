@@ -8,17 +8,23 @@
 
 package org.eclipse.mylyn.tests;
 
+import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
+import java.net.Socket;
 import java.net.Proxy.Type;
 
 import javax.net.ssl.SSLHandshakeException;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.HttpClientParams;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.tests.TestProxy.Message;
 import org.eclipse.mylyn.web.core.AbstractWebLocation;
 import org.eclipse.mylyn.web.core.AuthenticatedProxy;
@@ -58,6 +64,92 @@ public class WebClientUtilTest extends TestCase {
 		super.tearDown();
 
 		testProxy.stop();
+	}
+
+	public void testConnectCancelStalledConnect() throws Exception {
+		final StubProgressMonitor monitor = new StubProgressMonitor();
+		String host = "google.com";
+		int port = 9999;
+
+		try {
+			Runnable runner = new Runnable() {
+				public void run() {
+					try {
+						Thread.sleep(500);
+					} catch (InterruptedException e) {
+					}
+					monitor.canceled = true;
+				}
+			};
+			new Thread(runner).start();
+			WebClientUtil.connect(new Socket(), new InetSocketAddress(host, port), 5000, monitor);
+			fail("Expected InterruptedIOException");
+		} catch (InterruptedIOException e) {
+			assertTrue(monitor.isCanceled());
+		}
+	}
+
+	public void testExecute() throws Exception {
+		StubProgressMonitor monitor = new StubProgressMonitor();
+		HttpClient client = new HttpClient();
+		String url = "http://eclipse.org/";
+		WebLocation location = new WebLocation(url);
+		HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(client, null, location, monitor);
+
+		GetMethod method = new GetMethod(url);
+		try {
+			int result = WebClientUtil.execute(client, hostConfiguration, method, monitor);
+			assertEquals(HttpStatus.SC_OK, result);
+		} finally {
+			method.releaseConnection();
+		}
+	}
+
+	public void testExecuteCancelStalledConnect() throws Exception {
+		final StubProgressMonitor monitor = new StubProgressMonitor();
+		HttpClient client = new HttpClient();
+		String url = "http://google.com:9999/";
+		WebLocation location = new WebLocation(url);
+		HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(client, null, location, monitor);
+
+		GetMethod method = new GetMethod(url);
+		try {
+			Runnable runner = new Runnable() {
+				public void run() {
+					try {
+						Thread.sleep(500);
+					} catch (InterruptedException e) {
+					}
+					monitor.canceled = true;
+				}
+			};
+			new Thread(runner).start();
+			WebClientUtil.execute(client, hostConfiguration, method, monitor);
+			client.executeMethod(method);
+			fail("Expected exception");
+		} catch (IOException e) {
+			assertTrue(monitor.isCanceled());
+		} finally {
+			method.releaseConnection();
+		}
+	}
+
+	public void testExecuteAlreadyCancelled() throws Exception {
+		StubProgressMonitor monitor = new StubProgressMonitor();
+		HttpClient client = new HttpClient();
+		String url = "http://eclipse.org/";
+		WebLocation location = new WebLocation(url);
+		HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(client, null, location, monitor);
+
+		GetMethod method = new GetMethod(url);
+		try {
+			monitor.canceled = true;
+			WebClientUtil.execute(client, hostConfiguration, method, monitor);
+			fail("Expected InterruptedIOException");
+		} catch (InterruptedIOException expected) {
+		} finally {
+			method.releaseConnection();
+		}
 	}
 
 	public void testConnect() throws Exception {
@@ -525,6 +617,38 @@ public class WebClientUtilTest extends TestCase {
 		GetMethod method = new GetMethod(WebClientUtil.getRequestPath(url));
 		int statusCode = client.executeMethod(method);
 		assertEquals(200, statusCode);
+	}
+
+	private class StubProgressMonitor implements IProgressMonitor {
+
+		private volatile boolean canceled;
+
+		public void beginTask(String name, int totalWork) {
+		}
+
+		public void done() {
+		}
+
+		public void internalWorked(double work) {
+		}
+
+		public boolean isCanceled() {
+			return canceled;
+		}
+
+		public void setCanceled(boolean value) {
+			this.canceled = value;
+		}
+
+		public void setTaskName(String name) {
+		}
+
+		public void subTask(String name) {
+		}
+
+		public void worked(int work) {
+		}
+
 	}
 
 }
