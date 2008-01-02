@@ -860,8 +860,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		noteEditor = addTextEditor(repository, container, task.getNotes(), true, SWT.FLAT | SWT.MULTI | SWT.WRAP
 				| SWT.V_SCROLL);
 
-		noteEditor.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
-		GridDataFactory.fillDefaults().minSize(SWT.DEFAULT, NOTES_MINSIZE).grab(true, true).applyTo(
+		GridDataFactory.fillDefaults().minSize(NOTES_MINSIZE, NOTES_MINSIZE).grab(true, true).applyTo(
 				noteEditor.getControl());
 		noteEditor.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		noteEditor.setEditable(true);
