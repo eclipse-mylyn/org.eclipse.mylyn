@@ -213,8 +213,10 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 			copyTaskDetailsAction.selectionChanged(selection);
 			attachAction.selectionChanged(selection);
 			attachAction.setEditor(editor);
+			attachAction.setEnabled(!task.isLocal());
 			attachScreenshotAction.selectionChanged(selection);
 			attachScreenshotAction.setEditor(editor);
+			attachScreenshotAction.setEnabled(!task.isLocal());
 
 			synchronizeEditorAction.selectionChanged(new StructuredSelection(this.getEditor()));
 			showInTaskListAction.selectionChanged(selection);
