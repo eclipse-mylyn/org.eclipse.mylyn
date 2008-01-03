@@ -48,9 +48,9 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	private TracClientManager clientManager;
 
-	private TracTaskDataHandler taskDataHandler = new TracTaskDataHandler(this);
+	private final TracTaskDataHandler taskDataHandler = new TracTaskDataHandler(this);
 
-	private TracAttachmentHandler attachmentHandler = new TracAttachmentHandler(this);
+	private final TracAttachmentHandler attachmentHandler = new TracAttachmentHandler(this);
 
 	private TaskRepositoryLocationFactory taskRepositoryLocationFactory = new TaskRepositoryLocationFactory();
 
@@ -79,7 +79,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		return true;
 	}
 
-	private TracWikiHandler wikiHandler = new TracWikiHandler(this);
+	private final TracWikiHandler wikiHandler = new TracWikiHandler(this);
 
 	public boolean hasWiki(TaskRepository repository) {
 		// check the access mode to validate Wiki support
@@ -182,6 +182,11 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		try {
 			monitor.beginTask("Getting changed tasks", IProgressMonitor.UNKNOWN);
 
+			// there are no Trac tasks in the task list, skip contacting the repository
+			if (tasks.isEmpty()) {
+				return true;
+			}
+
 			if (!TracRepositoryConnector.hasChangedSince(repository)) {
 				// always run the queries for web mode
 				return true;
@@ -278,8 +283,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			repositoryTask.setOwner(taskData.getAttributeValue(RepositoryTaskAttribute.USER_ASSIGNED));
 			repositoryTask.setCompleted(TracTask.isCompleted(taskData.getStatus()));
 			repositoryTask.setUrl(repository.getUrl() + ITracClient.TICKET_URL + taskData.getId());
-			repositoryTask.setPriority(TracTask.getMylynPriority(taskData.getAttributeValue(Attribute.PRIORITY
-					.getTracKey())));
+			repositoryTask.setPriority(TracTask.getMylynPriority(taskData.getAttributeValue(Attribute.PRIORITY.getTracKey())));
 			Kind kind = TracTask.Kind.fromType(taskData.getAttributeValue(Attribute.TYPE.getTracKey()));
 			repositoryTask.setTaskKind((kind != null) ? kind.toString() : null);
 			// TODO: Completion Date

@@ -133,8 +133,14 @@ public class TracTaskDataHandlerTest extends TestCase {
 		Set<AbstractTask> tasks = new HashSet<AbstractTask>();
 		tasks.add(task);
 
+		// an empty set should not cause contact to the repository
 		repository.setSynchronizationTimeStamp(null);
-		boolean changed = connector.markStaleTasks(repository, tasks, new NullProgressMonitor());
+		boolean changed = connector.markStaleTasks(repository, new HashSet<AbstractTask>(), new NullProgressMonitor());
+		assertTrue(changed);
+		assertNull(repository.getSynchronizationTimeStamp());
+
+		repository.setSynchronizationTimeStamp(null);
+		changed = connector.markStaleTasks(repository, tasks, new NullProgressMonitor());
 		assertTrue(changed);
 		assertTrue(task.isStale());
 
