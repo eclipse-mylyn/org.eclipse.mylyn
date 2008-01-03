@@ -66,6 +66,9 @@ class TaskListCellModifier implements ICellModifier {
 	public void modify(Object element, String property, Object value) {
 		int columnIndex = -1;
 		try {
+			if(element instanceof TreeItem && ((TreeItem)element).isDisposed()) {
+				return;
+			}
 			columnIndex = Arrays.asList(this.taskListView.columnNames).indexOf(property);
 			if (((TreeItem) element).getData() instanceof AbstractTask) {
 				final AbstractTaskContainer taskListElement = (AbstractTaskContainer) ((TreeItem) element).getData();
