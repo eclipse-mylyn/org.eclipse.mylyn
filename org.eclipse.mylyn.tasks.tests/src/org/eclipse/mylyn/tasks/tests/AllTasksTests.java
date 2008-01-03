@@ -68,6 +68,7 @@ public class AllTasksTests {
 		// suite.addTestSuite(RetrieveTitleFromUrlTest.class);
 
 		suite.addTestSuite(org.eclipse.mylyn.tasks.tests.web.NamedPatternTest.class);
+		suite.addTestSuite(org.eclipse.mylyn.tasks.tests.web.HtmlDecodeEntityTest.class);
 
 		return suite;
 	}
