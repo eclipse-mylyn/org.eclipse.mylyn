@@ -57,6 +57,12 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.1</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>org.eclipse</groupId>
             <artifactId>osgi</artifactId>
             <version>3.3.0-v20070530</version>
@@ -86,6 +92,7 @@
                     <include>lib-httpclient/*.jar</include>
                     <include>lib-rome/*.jar</include>
                     <include>lib-xmlrpc/*.jar</include>
+                    <include>lib-lang/*.jar</include>
                 </includes>
             </resource>
         </resources>
