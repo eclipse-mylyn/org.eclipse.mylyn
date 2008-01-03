@@ -8,8 +8,6 @@
 
 package org.eclipse.mylyn.web.core;
 
-import java.io.IOException;
-
 import org.eclipse.core.net.proxy.IProxyChangeListener;
 import org.eclipse.core.net.proxy.IProxyData;
 import org.eclipse.core.net.proxy.IProxyService;
@@ -145,7 +143,7 @@ public class WebCorePlugin extends Plugin {
 	/**
 	 * @since 2.3
 	 */
-	public static void log(int error, String message, IOException e) {
+	public static void log(int error, String message, Throwable e) {
 		if (getDefault() != null) {
 			getDefault().getLog().log(new Status(IStatus.ERROR, ID_PLUGIN, error, message, e));
 		}

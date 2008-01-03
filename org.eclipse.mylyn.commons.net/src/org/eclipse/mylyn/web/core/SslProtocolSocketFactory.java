@@ -65,8 +65,7 @@ public class SslProtocolSocketFactory implements SecureProtocolSocketFactory {
 				keyManagerFactory.init(keyStore, password);
 				keymanagers = keyManagerFactory.getKeyManagers();
 			} catch (Exception e) {
-				throw new RuntimeException("Could not initialize keystore", e);
-//				throw new CoreException(new Status(Status.ERROR, WebCorePlugin.ID_PLUGIN, , e));
+				WebCorePlugin.log(0, "Could not initialize keystore", e);
 			}
 		}
 
@@ -77,8 +76,7 @@ public class SslProtocolSocketFactory implements SecureProtocolSocketFactory {
 			sslContext.init(keymanagers, new TrustManager[] { new TrustAllTrustManager() }, null);
 			this.socketFactory = sslContext.getSocketFactory();
 		} catch (Exception e) {
-			throw new RuntimeException("Could not initialize SSL context", e);
-//			throw new CoreException(new Status(Status.ERROR, WebCorePlugin.ID_PLUGIN, "Could not initialize SSL context", e));
+			WebCorePlugin.log(0, "Could not initialize SSL context", e);
 		}
 	}
 
