@@ -142,6 +142,8 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 		if (taskId == null && connector != null) {
 			taskId = connector.getTaskIdFromTaskUrl(taskFullUrl);
 		}
+		
+		// XXX: clean up and remove break to label
 		if (taskId == null && comment != null) {
 			Collection<AbstractRepositoryConnector> connectors = connector != null ? Collections.singletonList(connector)
 					: TasksUiPlugin.getRepositoryManager().getRepositoryConnectors();

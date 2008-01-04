@@ -21,12 +21,15 @@ import org.eclipse.core.resources.mapping.ResourceMapping;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.team.ui.properties.TeamPropertiesLinkProvider;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ILinkedTaskInfo;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.team.core.TeamException;
 import org.eclipse.team.core.diff.IDiff;
 import org.eclipse.team.core.diff.provider.ThreeWayDiff;
@@ -34,6 +37,7 @@ import org.eclipse.team.core.mapping.provider.ResourceDiff;
 import org.eclipse.team.internal.ccvs.core.mapping.CVSActiveChangeSet;
 import org.eclipse.team.internal.ccvs.core.mapping.ChangeSetResourceMapping;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
+import org.eclipse.ui.PlatformUI;
 import org.osgi.service.prefs.Preferences;
 
 /**
@@ -106,12 +110,33 @@ public class ContextChangeSet extends CVSActiveChangeSet/*ActiveChangeSet*/imple
 				projects.add(project);
 			}			
 		}
-
-		if (template == null) {
-			template = FocusedTeamUiPlugin.getDefault().getPreferenceStore().getString(
-					FocusedTeamUiPlugin.COMMIT_TEMPLATE);
+		
+		boolean unmatchedRepositoryFound = false;
+		for (IProject project : projects) {
+			TaskRepository repository = TasksUiPlugin.getDefault().getRepositoryForResource(project, true);
+			if (repository != null) {
+				if (!repository.getUrl().equals(task.getRepositoryUrl())) {
+					unmatchedRepositoryFound = true;
+				}
+			}
 		}
-		return FocusedTeamUiPlugin.getDefault().getCommitTemplateManager().generateComment(task, template);
+		
+		boolean proceed = true;
+		if (unmatchedRepositoryFound) {
+			proceed = MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
+					"Mylyn Change Set Management", 
+					"You are attempting to commit a resource which is not associated with the selected task repository.  Proceed with creating the commit message?");
+		}
+		
+		if (proceed) {
+			if (template == null) {
+				template = FocusedTeamUiPlugin.getDefault().getPreferenceStore().getString(
+						FocusedTeamUiPlugin.COMMIT_TEMPLATE);
+			}
+			return FocusedTeamUiPlugin.getDefault().getCommitTemplateManager().generateComment(task, template);	
+		} else {
+			return "";
+		}
 	}
 
 	@Override
