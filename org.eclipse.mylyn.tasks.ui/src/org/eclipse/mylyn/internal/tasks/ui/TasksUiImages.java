@@ -131,7 +131,7 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor CATEGORY_ARCHIVE = create(T_TOOL, "category-archive.gif");
 
-	public static final ImageDescriptor QUERY_UNMATCHED = create(T_TOOL, "query-unmatched.gif");
+	public static final ImageDescriptor QUERY_UNMATCHED = create(T_TOOL, "query-unmatched.png");
 	
 	public static final ImageDescriptor TASK_REPOSITORY = create(T_TOOL, "task-repository.gif");
 
