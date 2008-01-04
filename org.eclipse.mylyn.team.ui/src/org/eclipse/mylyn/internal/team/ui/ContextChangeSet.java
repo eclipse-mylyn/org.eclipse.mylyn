@@ -96,8 +96,12 @@ public class ContextChangeSet extends CVSActiveChangeSet/*ActiveChangeSet*/imple
 
 	@Override
 	public String getComment() {
+		return internalGetComment(true);
+	}
+
+	private String internalGetComment(boolean checkTaskRepository) {
 		String template = null;
-		Set<IProject> projects = new HashSet<IProject>(); 
+		Set<IProject> projects = new HashSet<IProject>();
 		IResource[] resources = getResources();
 		for (IResource resource : resources) {
 			IProject project = resource.getProject();
@@ -108,32 +112,36 @@ public class ContextChangeSet extends CVSActiveChangeSet/*ActiveChangeSet*/imple
 					break;
 				}
 				projects.add(project);
-			}			
-		}
-		
-		boolean unmatchedRepositoryFound = false;
-		for (IProject project : projects) {
-			TaskRepository repository = TasksUiPlugin.getDefault().getRepositoryForResource(project, true);
-			if (repository != null) {
-				if (!repository.getUrl().equals(task.getRepositoryUrl())) {
-					unmatchedRepositoryFound = true;
-				}
 			}
 		}
-		
+
 		boolean proceed = true;
-		if (unmatchedRepositoryFound) {
-			proceed = MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
-					"Mylyn Change Set Management", 
-					"You are attempting to commit a resource which is not associated with the selected task repository.  Proceed with creating the commit message?");
+
+		if (checkTaskRepository) {
+			boolean unmatchedRepositoryFound = false;
+			for (IProject project : projects) {
+				TaskRepository repository = TasksUiPlugin.getDefault().getRepositoryForResource(project, true);
+				if (repository != null) {
+					if (!repository.getUrl().equals(task.getRepositoryUrl())) {
+						unmatchedRepositoryFound = true;
+					}
+				}
+			}
+
+			if (unmatchedRepositoryFound) {
+				proceed = MessageDialog.openQuestion(
+						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+						"Mylyn Change Set Management",
+						"You are attempting to commit a resource which is not associated with the selected task repository.  Proceed with creating the commit message?");
+			}
 		}
-		
+
 		if (proceed) {
 			if (template == null) {
 				template = FocusedTeamUiPlugin.getDefault().getPreferenceStore().getString(
 						FocusedTeamUiPlugin.COMMIT_TEMPLATE);
 			}
-			return FocusedTeamUiPlugin.getDefault().getCommitTemplateManager().generateComment(task, template);	
+			return FocusedTeamUiPlugin.getDefault().getCommitTemplateManager().generateComment(task, template);
 		} else {
 			return "";
 		}
@@ -188,7 +196,7 @@ public class ContextChangeSet extends CVSActiveChangeSet/*ActiveChangeSet*/imple
 		suppressInterestContribution = true;
 		try {
 			super.add(newResources);
-			setComment(getComment());
+			setComment(internalGetComment(false));
 		} catch (TeamException e) {
 			throw e;
 		} finally {
