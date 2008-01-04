@@ -235,7 +235,7 @@ litigation.
       <import plugin="org.eclipse.update.ui"/>
       <import plugin="org.eclipse.mylyn.bugzilla.core"/>
       <import plugin="org.eclipse.mylyn.tasks.ui"/>
-      <import feature="org.eclipse.mylyn_feature" version="2.3.0.qualifier" match="greaterOrEqual"/>
+      <import feature="org.eclipse.mylyn_feature" version="2.1.0.v20070926-1230" match="greaterOrEqual"/>
    </requires>
 
    <plugin
