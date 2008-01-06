@@ -136,11 +136,14 @@ public class WebClientUtil {
 			sb.append(" ");
 			sb.append(System.getProperty("org.osgi.framework.vendor"));
 			sb.append(stripQualifier(System.getProperty("osgi.framework.version")));
-			sb.append(" (");
-			sb.append(System.getProperty("eclipse.product"));
-			sb.append(")");
+
+			if (System.getProperty("eclipse.product") != null) {
+				sb.append(" (");
+				sb.append(System.getProperty("eclipse.product"));
+				sb.append(")");
+			}
 		}
-		
+
 		sb.append(" ");
 		sb.append(HttpClientParams.getDefaultParams().getParameter(HttpClientParams.USER_AGENT).toString().split("-")[1]);
 
@@ -577,18 +580,39 @@ public class WebClientUtil {
 
 	private static void setupHttpClientParams(HttpClient client, String userAgent) {
 		client.getParams().setBooleanParameter(HttpClientParams.ALLOW_CIRCULAR_REDIRECTS, true);
-		if (userAgent != null && userAgent.length() > 0) {
+		client.getParams().setParameter(HttpClientParams.USER_AGENT, getUserAgent(userAgent));
+		client.getHttpConnectionManager().getParams().setSoTimeout(WebClientUtil.SOCKET_TIMEOUT);
+		client.getHttpConnectionManager().getParams().setConnectionTimeout(WebClientUtil.CONNNECT_TIMEOUT);
+	}
+
+	/**
+	 * Returns a user agent string that contains information about the platform and operating system. The
+	 * <code>product</code> parameter allows to additional specify custom text that is inserted into the returned
+	 * string. The exact return value depends on the environment.
+	 * 
+	 * <p>
+	 * Examples:
+	 * <ul>
+	 * <li>Headless: <code>Mylyn MyProduct HttpClient/3.1 Java/1.5.0_13 (Sun) Linux/2.6.22-14-generic (i386)</code>
+	 * <li>Eclipse:
+	 * <code>Mylyn/2.2.0 Eclipse/3.4.0 (org.eclipse.sdk.ide) HttpClient/3.1 Java/1.5.0_13 (Sun) Linux/2.6.22-14-generic (i386; en_CA)</code>
+	 * 
+	 * @param product
+	 *            an identifier that is inserted into the returned user agent string
+	 * @return a user agent string
+	 * @since 2.3
+	 */
+	public static String getUserAgent(String product) {
+		if (product != null && product.length() > 0) {
 			StringBuilder sb = new StringBuilder();
 			sb.append(USER_AGENT_PREFIX);
 			sb.append(" ");
-			sb.append(userAgent);
+			sb.append(product);
 			sb.append(USER_AGENT_POSTFIX);
-			client.getParams().setParameter(HttpClientParams.USER_AGENT, sb.toString());
+			return sb.toString();
 		} else {
-			client.getParams().setParameter(HttpClientParams.USER_AGENT, USER_AGENT);
+			return USER_AGENT;
 		}
-		client.getHttpConnectionManager().getParams().setSoTimeout(WebClientUtil.SOCKET_TIMEOUT);
-		client.getHttpConnectionManager().getParams().setConnectionTimeout(WebClientUtil.CONNNECT_TIMEOUT);
 	}
 
 	/**
