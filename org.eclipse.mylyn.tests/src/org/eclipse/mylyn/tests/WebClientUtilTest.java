@@ -619,6 +619,20 @@ public class WebClientUtilTest extends TestCase {
 		assertEquals(200, statusCode);
 	}
 
+	public void testGetUserAgent() {
+		String userAgent = WebClientUtil.getUserAgent(null);
+		assertEquals(userAgent, WebClientUtil.getUserAgent(""));
+		assertEquals(-1, userAgent.indexOf("null"));
+		assertEquals(-1, userAgent.indexOf("  "));
+		assertEquals(0, userAgent.indexOf("Mylyn"));
+
+		userAgent = WebClientUtil.getUserAgent("abc");
+		assertEquals(-1, userAgent.indexOf("null"));
+		assertEquals(-1, userAgent.indexOf("  "));
+		assertEquals(0, userAgent.indexOf("Mylyn"));		
+		assertTrue(userAgent.contains(" abc "));
+	}
+
 	private class StubProgressMonitor implements IProgressMonitor {
 
 		private volatile boolean canceled;
