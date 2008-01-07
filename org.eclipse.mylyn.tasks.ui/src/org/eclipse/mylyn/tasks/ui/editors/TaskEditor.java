@@ -33,7 +33,6 @@ import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
@@ -62,11 +61,11 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 
 	private List<IEditorPart> editors = new ArrayList<IEditorPart>();
 
-	private Menu contextMenu;
-
 	private IEditorPart contentOutlineProvider = null;
 
 	public final Object FAMILY_SUBMIT = new Object();
+	
+	private MenuManager menuManager = new MenuManager();
 
 	private EditorBusyIndicator editorBusyIndicator;
 
@@ -85,6 +84,22 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 
 	public TaskEditorActionContributor getContributor() {
 		return (TaskEditorActionContributor) getEditorSite().getActionBarContributor();
+	}
+	
+	/**
+	 * @param Configurs standard task editor context menu
+	 * @Since 2.3
+	 */
+	protected void configureContextMenuManager(MenuManager manager) {
+		if (manager == null)
+			return;
+		IMenuListener listener = new IMenuListener() {
+			public void menuAboutToShow(IMenuManager manager) {
+				contextMenuAboutToShow(manager);
+			}
+		};
+		manager.setRemoveAllWhenShown(true);
+		manager.addMenuListener(listener);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -142,15 +157,6 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 				editor.refreshEditor();
 			}
 		}
-		// if (webBrowser != null) {
-		// PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-		//
-		// public void run() {
-		// refresh to original url?
-		// webBrowser.refresh();
-		// }
-		// });
-		// }
 	}
 
 	/**
@@ -218,6 +224,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 
 	@Override
 	public void dispose() {
+		
 		if (editorBusyIndicator != null) {
 			editorBusyIndicator.stop();
 		}
@@ -238,20 +245,12 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 
 	@Override
 	protected void addPages() {
-
 		editorBusyIndicator = new EditorBusyIndicator(this);
 
 		try {
-			MenuManager manager = new MenuManager();
-			IMenuListener listener = new IMenuListener() {
-				public void menuAboutToShow(IMenuManager manager) {
-					contextMenuAboutToShow(manager);
-				}
-			};
-			manager.setRemoveAllWhenShown(true);
-			manager.addMenuListener(listener);
-			contextMenu = manager.createContextMenu(getContainer());
-			getContainer().setMenu(contextMenu);
+			menuManager = new MenuManager();
+			configureContextMenuManager(menuManager);
+			getContainer().setMenu(menuManager.createContextMenu(getContainer()));
 			int index = -1;
 			if (getEditorInput() instanceof TaskEditorInput) {
 				addPage(taskPlanningEditor);

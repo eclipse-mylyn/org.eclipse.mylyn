@@ -15,6 +15,7 @@ import java.util.List;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.text.DefaultInformationControl;
 import org.eclipse.jface.text.Document;
@@ -90,6 +91,8 @@ public class TaskFormPage extends FormPage {
 
 	protected boolean isDirty;
 
+	private TaskEditor taskEditor = null;
+	
 	protected TaskEditorActionContributor actionContributor;
 
 	protected List<TextViewer> textViewers = new ArrayList<TextViewer>();
@@ -102,6 +105,7 @@ public class TaskFormPage extends FormPage {
 
 	public TaskFormPage(FormEditor editor, String id, String title) {
 		super(editor, id, title);
+		taskEditor = (TaskEditor)editor;
 	}
 
 	public boolean canPerformAction(String actionId) {
@@ -258,7 +262,7 @@ public class TaskFormPage extends FormPage {
 	protected TextViewer addTextViewer(TaskRepository repository, Composite composite, String text, int style) {
 
 		if (actionContributor == null) {
-			actionContributor = ((TaskEditor) getEditor()).getContributor();
+			actionContributor = taskEditor.getContributor();
 		}
 
 		final RepositoryTextViewer commentViewer = new RepositoryTextViewer(repository, composite, style);
@@ -299,7 +303,9 @@ public class TaskFormPage extends FormPage {
 		});
 
 		commentViewer.setEditable(false);
-		commentViewer.getTextWidget().setMenu(getManagedForm().getForm().getMenu());
+		MenuManager manager = commentViewer.getMenuManager();
+		taskEditor.configureContextMenuManager(manager);
+		commentViewer.setMenu(manager.createContextMenu(commentViewer.getTextWidget()));
 		Document document = new Document(text);
 		commentViewer.setDocument(document);
 
@@ -315,7 +321,7 @@ public class TaskFormPage extends FormPage {
 			int style) {
 
 		if (actionContributor == null) {
-			actionContributor = ((TaskEditor) getEditor()).getContributor();
+			actionContributor = taskEditor.getContributor();
 		}
 
 		AnnotationModel annotationModel = new AnnotationModel();
@@ -392,7 +398,9 @@ public class TaskFormPage extends FormPage {
 		});
 
 		commentViewer.setEditable(false);
-		commentViewer.getTextWidget().setMenu(getManagedForm().getForm().getMenu());
+		MenuManager manager = commentViewer.getMenuManager();
+		taskEditor.configureContextMenuManager(manager);
+		commentViewer.setMenu(manager.createContextMenu(commentViewer.getTextWidget()));
 		Document document = new Document(text);
 
 		// NOTE: Configuration must be applied before the document is set in order for
@@ -402,12 +410,12 @@ public class TaskFormPage extends FormPage {
 
 		commentViewer.setDocument(document, annotationModel);
 
-		// !DND! hover manager that shows text when we hover
+		// !Do Not Delete! hover manager that shows text when we hover
 		// AnnotationBarHoverManager fAnnotationHoverManager = new AnnotationBarHoverManager(fCompositeRuler,
 		//     commentViewer, new AnnotationHover(fAnnotationModel), new AnnotationConfiguration());
 		// fAnnotationHoverManager.install(annotationRuler.getControl());
 
-		// !DND! Sample debugging code
+		// !Do Not Delete! Sample debugging code
 		// document.set("Here's some texst so that we have somewhere to show an error");
 		//
 		// // // add an annotation
@@ -695,5 +703,6 @@ public class TaskFormPage extends FormPage {
 		}
 		return null;
 	}
+
 
 }

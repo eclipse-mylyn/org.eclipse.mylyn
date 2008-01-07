@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.tasks.ui.editors;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -276,6 +277,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected Button submitButton;
 
 	private Table attachmentsTable;
+
+	private boolean refreshEnabled = true;
 
 	private TableViewer attachmentsTableViewer;
 
@@ -596,7 +599,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		// setFormHeaderLabel();
 		addHeaderControls();
-
 		if (summaryTextViewer != null) {
 			summaryTextViewer.getTextWidget().setFocus();
 		}
@@ -2070,7 +2072,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 
 		// Additional (read-only) Comments Area
-		Composite addCommentsComposite = toolkit.createComposite(commentsSection);
+		final Composite addCommentsComposite = toolkit.createComposite(commentsSection);
 		commentsSection.setClient(addCommentsComposite);
 		GridLayout addCommentsLayout = new GridLayout();
 		addCommentsLayout.numColumns = 1;
@@ -2097,15 +2099,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			}
 
 			expandableComposite.setTitleBarForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-
-//			expandableComposite.setText(taskComment.getNumber() + ": " + taskComment.getAuthorName() + ", "
-//					+ formatDate(taskComment.getCreated()));
-
-			expandableComposite.addExpansionListener(new ExpansionAdapter() {
-				public void expansionStateChanged(ExpansionEvent e) {
-					resetLayout();
-				}
-			});
 
 			final Composite toolbarComp = toolkit.createComposite(expandableComposite);
 			RowLayout rowLayout = new RowLayout();
@@ -2167,23 +2160,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			final ImageHyperlink replyLink = createReplyHyperlink(taskComment.getNumber(), toolbarButtonComp,
 					taskComment.getText());
 
-			expandableComposite.addExpansionListener(new ExpansionAdapter() {
-
-				@Override
-				public void expansionStateChanged(ExpansionEvent e) {
-					toolbarButtonComp.setVisible(expandableComposite.isExpanded());
-				}
-			});
-
-			toolbarButtonComp.setVisible(expandableComposite.isExpanded());
-
 			formHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 
 				@Override
 				public void linkActivated(HyperlinkEvent e) {
-					expandableComposite.setExpanded(!expandableComposite.isExpanded());
-					toolbarButtonComp.setVisible(expandableComposite.isExpanded());
-					resetLayout();
+					toggleExpandableComposite(!expandableComposite.isExpanded(), expandableComposite);
 				}
 
 				@Override
@@ -2201,6 +2182,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 			expandableComposite.setTextClient(toolbarComp);
 
+
+			toolbarButtonComp.setVisible(expandableComposite.isExpanded());
+
 			// HACK: This is necessary
 			// due to a bug in SWT's ExpandableComposite.
 			// 165803: Expandable bars should expand when clicking anywhere
@@ -2210,7 +2194,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			expandableComposite.setLayout(new GridLayout());
 			expandableComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-			Composite ecComposite = toolkit.createComposite(expandableComposite);
+			final Composite ecComposite = toolkit.createComposite(expandableComposite);
 			GridLayout ecLayout = new GridLayout();
 			ecLayout.marginHeight = 0;
 			ecLayout.marginBottom = 3;
@@ -2218,46 +2202,43 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			ecComposite.setLayout(ecLayout);
 			ecComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			expandableComposite.setClient(ecComposite);
+			// code for outline
+			commentComposites.add(expandableComposite);
+			controlBySelectableObject.put(taskComment, expandableComposite);
+			expandableComposite.addExpansionListener(new ExpansionAdapter() {
+				public void expansionStateChanged(ExpansionEvent e) {
+					toolbarButtonComp.setVisible(expandableComposite.isExpanded());
+					TextViewer viewer = null;
+					if (e.getState() && expandableComposite.getData("viewer") == null) {
+						viewer = addTextViewer(repository, ecComposite, taskComment.getText().trim(), SWT.MULTI
+								| SWT.WRAP);
+						expandableComposite.setData("viewer", viewer.getTextWidget());
+						viewer.getTextWidget().addFocusListener(new FocusListener() {
 
-			TextViewer viewer = addTextViewer(repository, ecComposite, taskComment.getText().trim(), SWT.MULTI
-					| SWT.WRAP);
-			viewer.getTextWidget().addFocusListener(new FocusListener() {
+							public void focusGained(FocusEvent e) {
+								selectedComment = taskComment;
 
-				public void focusGained(FocusEvent e) {
-					selectedComment = taskComment;
+							}
 
-				}
+							public void focusLost(FocusEvent e) {
+								selectedComment = null;
+							}
+						});
 
-				public void focusLost(FocusEvent e) {
-					selectedComment = null;
+						StyledText styledText = viewer.getTextWidget();
+						GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(styledText);
+						resetLayout();
+					} else {
+						// dispose viewer
+						if (expandableComposite.getData("viewer") instanceof StyledText) {
+							((StyledText) expandableComposite.getData("viewer")).dispose();
+							expandableComposite.setData("viewer", null);
+						}
+						resetLayout();
+					}
 				}
 			});
 
-			// viewer.getControl().setBackground(new
-			// Color(expandableComposite.getDisplay(), 123, 34, 155));
-			StyledText styledText = viewer.getTextWidget();
-			GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(styledText);
-			// GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH,
-			// SWT.DEFAULT).applyTo(viewer.getControl());
-
-			// code for outline
-			commentStyleText.add(styledText);
-			controlBySelectableObject.put(taskComment, styledText);
-
-			// if (supportsCommentDelete()) {
-			// Button deleteButton = toolkit.createButton(ecComposite, null,
-			// SWT.PUSH);
-			// deleteButton.setImage(TasksUiImages.getImage(TasksUiImages.COMMENT_DELETE));
-			// deleteButton.setToolTipText("Remove comment above.");
-			// deleteButton.addListener(SWT.Selection, new Listener() {
-			// public void handleEvent(Event e) {
-			// if (taskComment != null) {
-			// deleteComment(taskComment);
-			// submitToRepository();
-			// }
-			// }
-			// });
-			// }
 		}
 		if (foundNew) {
 			commentsSection.setExpanded(true);
@@ -2768,70 +2749,89 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private HashMap<Object, Control> controlBySelectableObject = new HashMap<Object, Control>();
 
-	private List<StyledText> commentStyleText = new ArrayList<StyledText>();
+	private List<ExpandableComposite> commentComposites = new ArrayList<ExpandableComposite>();
 
 	private StyledText addCommentsTextBox = null;
 
 	protected TextViewer descriptionTextViewer = null;
 
 	private void revealAllComments() {
-		if (commentsSection != null) {
-			commentsSection.setExpanded(true);
-		}
-		for (StyledText text : commentStyleText) {
-			if (text.isDisposed())
-				continue;
-			Composite comp = text.getParent();
-			while (comp != null && !comp.isDisposed()) {
-				if (comp instanceof ExpandableComposite && !comp.isDisposed()) {
-					ExpandableComposite ex = (ExpandableComposite) comp;
-					ex.setExpanded(true);
-
-					// HACK: This is necessary
-					// due to a bug in SWT's ExpandableComposite.
-					// 165803: Expandable bars should expand when clicking
-					// anywhere
-					// https://bugs.eclipse.org/bugs/show_bug.cgi?taskId=165803
-					if (ex.getData() != null && ex.getData() instanceof Composite) {
-						((Composite) ex.getData()).setVisible(true);
-					}
-
-					break;
-				}
-				comp = comp.getParent();
+		try {
+			refreshEnabled = false;
+			if (commentsSection != null) {
+				commentsSection.setExpanded(true);
 			}
+			for (ExpandableComposite composite : commentComposites) {
+				if (composite.isDisposed())
+					continue;
+				if (!composite.isExpanded()) {
+					toggleExpandableComposite(true, composite);
+				}
+//			Composite comp = composite.getParent();
+//			while (comp != null && !comp.isDisposed()) {
+//				if (comp instanceof ExpandableComposite && !comp.isDisposed()) {
+//					ExpandableComposite ex = (ExpandableComposite) comp;
+//					setExpandableCompositeState(true, ex);
+//
+//					// HACK: This is necessary
+//					// due to a bug in SWT's ExpandableComposite.
+//					// 165803: Expandable bars should expand when clicking
+//					// anywhere
+//					// https://bugs.eclipse.org/bugs/show_bug.cgi?taskId=165803
+//					if (ex.getData() != null && ex.getData() instanceof Composite) {
+//						((Composite) ex.getData()).setVisible(true);
+//					}
+//
+//					break;
+//				}
+//				comp = comp.getParent();
+//			}
+			}
+		} finally {
+			refreshEnabled = true;
 		}
 		resetLayout();
 	}
 
 	private void hideAllComments() {
-		for (StyledText text : commentStyleText) {
-			if (text.isDisposed())
-				continue;
-			Composite comp = text.getParent();
-			while (comp != null && !comp.isDisposed()) {
-				if (comp instanceof ExpandableComposite && !comp.isDisposed()) {
-					ExpandableComposite ex = (ExpandableComposite) comp;
-					ex.setExpanded(false);
+		try {
+			refreshEnabled = false;
 
-					// HACK: This is necessary
-					// due to a bug in SWT's ExpandableComposite.
-					// 165803: Expandable bars should expand when clicking anywhere
-					// https://bugs.eclipse.org/bugs/show_bug.cgi?taskId=165803
-					if (ex.getData() != null && ex.getData() instanceof Composite) {
-						((Composite) ex.getData()).setVisible(false);
-					}
+			for (ExpandableComposite composite : commentComposites) {
+				if (composite.isDisposed())
+					continue;
 
-					break;
+				if (composite.isExpanded()) {
+					toggleExpandableComposite(false, composite);
 				}
-				comp = comp.getParent();
+
+//			Composite comp = composite.getParent();
+//			while (comp != null && !comp.isDisposed()) {
+//				if (comp instanceof ExpandableComposite && !comp.isDisposed()) {
+//					ExpandableComposite ex = (ExpandableComposite) comp;
+//					setExpandableCompositeState(false, ex);
+//
+//					// HACK: This is necessary
+//					// due to a bug in SWT's ExpandableComposite.
+//					// 165803: Expandable bars should expand when clicking anywhere
+//					// https://bugs.eclipse.org/bugs/show_bug.cgi?taskId=165803
+//					if (ex.getData() != null && ex.getData() instanceof Composite) {
+//						((Composite) ex.getData()).setVisible(false);
+//					}
+//
+//					break;
+//				}
+//				comp = comp.getParent();
+//			}
 			}
-		}
 
 //		if (commentsSection != null) {
 //			commentsSection.setExpanded(false);
 //		}
 
+		} finally {
+			refreshEnabled = true;
+		}
 		resetLayout();
 	}
 
@@ -2845,13 +2845,26 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 */
 	public boolean select(Object o, boolean highlight) {
 		Control control = controlBySelectableObject.get(o);
-		if (control != null) {
+		if (control != null && !control.isDisposed()) {
+
+			// expand all children
+			if (control instanceof ExpandableComposite) {
+				ExpandableComposite ex = (ExpandableComposite) control;
+				if (!ex.isExpanded()) {
+					toggleExpandableComposite(true, ex);
+				}
+			}
+
 			// expand all parents of control
 			Composite comp = control.getParent();
 			while (comp != null) {
-				if (comp instanceof ExpandableComposite) {
+				if(comp instanceof Section) {
+					((Section)comp).setExpanded(true);
+				} else if (comp instanceof ExpandableComposite) {
 					ExpandableComposite ex = (ExpandableComposite) comp;
-					ex.setExpanded(true);
+					if (!ex.isExpanded()) {
+						toggleExpandableComposite(true, ex);
+					}
 
 					// HACK: This is necessary
 					// due to a bug in SWT's ExpandableComposite.
@@ -2871,6 +2884,26 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 		return true;
 	}
+
+	/**
+	 * Programmatically expand the provided ExpandableComposite, using reflection to fire the expansion listeners (see
+	 * bug#70358)
+	 * 
+	 * @param comp
+	 */
+	private void toggleExpandableComposite(boolean expanded, ExpandableComposite comp) {
+		if (comp.isExpanded() != expanded) {
+			Method method = null;
+			try {
+				method = comp.getClass().getDeclaredMethod("programmaticToggleState");
+				method.setAccessible(true);
+				method.invoke(comp);
+			} catch (Exception e) {
+				// ignore
+			}
+		}
+	}
+
 
 	private void selectNewComment() {
 		focusOn(addCommentsTextBox, false);
@@ -3422,7 +3455,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				}
 				setGlobalBusy(true);
 				changedAttributes.clear();
-				commentStyleText.clear();
+				commentComposites.clear();
 				controlBySelectableObject.clear();
 				editorInput.refreshInput();
 
@@ -3718,7 +3751,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * force a re-layout of entire form
 	 */
 	protected void resetLayout() {
-		form.layout(true, true);
-		form.reflow(true);
+		if (refreshEnabled) {
+			form.layout(true, true);
+			form.reflow(true);
+		}
 	}
 }

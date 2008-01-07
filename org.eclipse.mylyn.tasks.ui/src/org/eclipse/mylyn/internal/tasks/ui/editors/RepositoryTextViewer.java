@@ -8,30 +8,35 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.source.IOverviewRuler;
 import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
 
 /**
  * @author Rob Elves
  */
 public class RepositoryTextViewer extends SourceViewer {
 
+	private MenuManager menuManager;
+	
 	private TaskRepository repository;
 
 	public RepositoryTextViewer(IVerticalRuler vertRuler, IOverviewRuler overRuler, TaskRepository repository,
 			Composite composite, int style) {
 		super(composite, vertRuler, overRuler, true, style);
-
+		this.menuManager = new MenuManager();
 		this.repository = repository;
 
 	}
 
 	public RepositoryTextViewer(TaskRepository repository, Composite composite, int style) {// FormEditor
 		super(composite, null, style);
+		this.menuManager = new MenuManager();
 		this.repository = repository;
 	}
 
@@ -53,4 +58,19 @@ public class RepositoryTextViewer extends SourceViewer {
 		this.repository = repository;
 	}
 
+	@Override
+	protected void handleDispose() {
+		menuManager.dispose();
+		super.handleDispose();
+	}
+
+	public MenuManager getMenuManager() {
+		return menuManager;
+	}
+	
+	public void setMenu(Menu menu) {
+		if(getTextWidget() != null && !getTextWidget().isDisposed()) {
+			getTextWidget().setMenu(menu);
+		}
+	}
 }
