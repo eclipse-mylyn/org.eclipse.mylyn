@@ -2087,17 +2087,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			final ExpandableComposite expandableComposite = toolkit.createExpandableComposite(addCommentsComposite,
 					ExpandableComposite.TREE_NODE | ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT);
 
-			if ((repositoryTask != null && repositoryTask.getLastReadTimeStamp() == null)
-					|| editorInput.getOldTaskData() == null) {
-				// hit or lost task data, expose all comments
-				expandableComposite.setExpanded(true);
-				foundNew = true;
-			} else if (isNewComment(taskComment)) {
-				expandableComposite.setBackground(colorIncoming);
-				expandableComposite.setExpanded(true);
-				foundNew = true;
-			}
-
 			expandableComposite.setTitleBarForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 
 			final Composite toolbarComp = toolkit.createComposite(expandableComposite);
@@ -2239,6 +2228,17 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				}
 			});
 
+			if ((repositoryTask != null && repositoryTask.getLastReadTimeStamp() == null)
+					|| editorInput.getOldTaskData() == null) {
+				// hit or lost task data, expose all comments
+				toggleExpandableComposite(true, expandableComposite);
+				foundNew = true;
+			} else if (isNewComment(taskComment)) {
+				expandableComposite.setBackground(colorIncoming);
+				toggleExpandableComposite(true, expandableComposite);
+				foundNew = true;
+			}
+			
 		}
 		if (foundNew) {
 			commentsSection.setExpanded(true);
