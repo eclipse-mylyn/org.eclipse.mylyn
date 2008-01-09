@@ -242,24 +242,10 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		if (values != null && values.length() > 0) {
 			for (String bugNumber : values.split(",")) {
 				final String bugId = bugNumber.trim();
-				Hyperlink hyperlink = getManagedForm().getToolkit().createHyperlink(hyperlinksComposite, bugId,
-						SWT.NONE);
+				final String bugUrl = repository.getUrl() + IBugzillaConstants.URL_GET_SHOW_BUG + bugId;
 				final AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(),
 						bugId);
-				if (task != null) {
-					hyperlink.setToolTipText(task.getSummary());
-				}
-				hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
-					@Override
-					public void linkActivated(HyperlinkEvent e) {
-						if (task != null) {
-							TasksUiUtil.refreshAndOpenTaskListElement(task);
-						} else {
-							TasksUiUtil.openRepositoryTask(repository.getUrl(), bugId, repository.getUrl()
-									+ IBugzillaConstants.URL_GET_SHOW_BUG + bugId);
-						}
-					}
-				});
+				createTaskListHyperlink(hyperlinksComposite, bugId, bugUrl, task);
 			}
 		}
 	}

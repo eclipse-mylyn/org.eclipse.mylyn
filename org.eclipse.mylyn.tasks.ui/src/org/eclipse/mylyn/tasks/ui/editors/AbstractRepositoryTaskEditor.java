@@ -73,6 +73,7 @@ import org.eclipse.mylyn.internal.tasks.core.CommentQuoter;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalProvider;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AbstractTaskEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AttachAction;
@@ -3756,4 +3757,31 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			form.reflow(true);
 		}
 	}
+
+	/**
+	 * @since 2.3
+	 */
+	protected Hyperlink createTaskListHyperlink(Composite parent, final String taskId, final String taskUrl,
+			final AbstractTask task) {
+		TaskListHyperlink hyperlink = new TaskListHyperlink(parent, SWT.SHORT
+				| getManagedForm().getToolkit().getOrientation());
+		getManagedForm().getToolkit().adapt(hyperlink, true, true);
+		getManagedForm().getToolkit().getHyperlinkGroup().add(hyperlink);
+		hyperlink.setTask(task);
+		if (task == null) {
+			hyperlink.setText(taskId);
+		}
+		hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
+			public void linkActivated(HyperlinkEvent e) {
+				if (task != null) {
+					TasksUiUtil.refreshAndOpenTaskListElement(task);
+				} else {
+					TasksUiUtil.openRepositoryTask(repository.getUrl(), taskId, taskUrl);
+				}
+			}
+		});
+		return hyperlink;
+	}
+
 }
