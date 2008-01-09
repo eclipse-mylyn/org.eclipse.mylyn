@@ -129,12 +129,12 @@ public class CompositeContextElement implements IInteractionElement {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (obj == null)
+	public boolean equals(Object object) {
+		if (object == null)
 			return false;
-		if (obj instanceof CompositeContextElement) {
-			CompositeContextElement node = (CompositeContextElement) obj;
-			return this.getHandleIdentifier().equals(node.getHandleIdentifier());
+		if (object instanceof CompositeContextElement) {
+			CompositeContextElement element = (CompositeContextElement)object;
+			return this.getHandleIdentifier().equals(element.getHandleIdentifier());
 		}
 		return false;
 	}
