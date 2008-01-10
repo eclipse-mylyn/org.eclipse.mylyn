@@ -33,6 +33,10 @@ public class NewTaskFromErrorAction implements IObjectActionDelegate {
 	private LogEntry entry;
 
 	public void run() {
+		createTask(entry);
+	}
+
+	protected void createTask(LogEntry entry) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("\n\n-- Error Log --\nDate: ");
 		sb.append(entry.getDate());
