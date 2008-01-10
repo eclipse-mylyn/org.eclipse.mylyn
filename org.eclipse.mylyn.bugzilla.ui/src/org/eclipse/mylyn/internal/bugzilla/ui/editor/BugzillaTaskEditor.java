@@ -373,11 +373,14 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 
 		Label label = toolkit.createLabel(timeComposite, "Current Estimate:");
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+		float total = 0;
+		try {
+			total = (Float.parseFloat(taskData.getAttributeValue(BugzillaReportElement.ACTUAL_TIME.getKeyString())) + Float.parseFloat(taskData.getAttributeValue(BugzillaReportElement.REMAINING_TIME.getKeyString())));
+		} catch (Exception e) {
+			// ignore likely NumberFormatException
+		}
 
-		Text currentEstimate = toolkit.createText(
-				timeComposite,
-				""
-						+ (Float.parseFloat(taskData.getAttributeValue(BugzillaReportElement.ACTUAL_TIME.getKeyString())) + Float.parseFloat(taskData.getAttributeValue(BugzillaReportElement.REMAINING_TIME.getKeyString()))));
+		Text currentEstimate = toolkit.createText(timeComposite, "" + total);
 		currentEstimate.setFont(TEXT_FONT);
 		currentEstimate.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 		currentEstimate.setEditable(false);
