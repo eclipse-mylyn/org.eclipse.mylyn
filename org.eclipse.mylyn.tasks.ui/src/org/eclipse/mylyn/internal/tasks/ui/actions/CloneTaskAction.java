@@ -18,6 +18,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskSelection;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -73,8 +74,8 @@ public class CloneTaskAction extends BaseSelectionListenerAction implements IVie
 						taskSelection.getTaskData().setDescription(description);
 					}
 
-					NewTaskAction action = new NewTaskAction();
-					if (action.showWizard(taskSelection) != Dialog.OK) {
+					if (TasksUiUtil.openNewTaskWizard(taskSelection, false) != Dialog.OK) {
+						// do not process other tasks if canceled
 						return;
 					}
 				}

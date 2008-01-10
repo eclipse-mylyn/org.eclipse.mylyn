@@ -34,16 +34,20 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskDelegate;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiMessages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.editors.CategoryEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.CategoryEditorInput;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.EditRepositoryWizard;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.NewLocalTaskWizard;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.NewTaskWizard;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
@@ -51,10 +55,15 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.TaskSelection;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.custom.BusyIndicator;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
@@ -72,6 +81,7 @@ import org.eclipse.ui.internal.browser.WorkbenchBrowserSupport;
 
 /**
  * @author Mik Kersten
+ * @author Steffen Pingel
  */
 public class TasksUiUtil {
 
@@ -465,7 +475,7 @@ public class TasksUiUtil {
 								repositoryTaskEditors.add((TaskEditor) editorPart);
 							}
 						}
-					} 
+					}
 				} catch (PartInitException e) {
 					// ignore
 				}
@@ -569,8 +579,126 @@ public class TasksUiUtil {
 		}
 	}
 
+	/**
+	 * @since 2.2 
+	 */
+	// API-3.0 consider moving to internal class
 	public static boolean isAnimationsEnabled() {
 		IPreferenceStore store = PlatformUI.getPreferenceStore();
 		return store.getBoolean(IWorkbenchPreferenceConstants.ENABLE_ANIMATIONS);
 	}
+
+	/**
+	 * @since 2.3
+	 */
+	// API-3.0 review bloat
+	public static int openNewLocalTaskWizard(TaskSelection taskSelection) {
+		return openNewTaskWizard(new NewLocalTaskWizard(taskSelection), taskSelection, true);
+	}
+
+	/**
+	 * @since 2.3
+	 */
+	// API-3.0 review bloat
+	@SuppressWarnings("deprecation")
+	public static int openNewTaskWizard(TaskSelection taskSelection, boolean skipRepositoryPage) {
+		final IWizard wizard;
+		List<TaskRepository> repositories = TasksUiPlugin.getRepositoryManager().getAllRepositories();
+		TaskRepository taskRepository = null;
+		if (repositories.size() == 1) {
+			taskRepository = repositories.get(0);
+		} else if (skipRepositoryPage) {
+			taskRepository = TasksUiUtil.getSelectedRepository();
+		}
+
+		boolean supportsTaskSelection = true;
+		if (taskRepository != null) {
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskRepository.getConnectorKind());
+			IWizard newWizard = connectorUi.getNewTaskWizard(taskRepository, taskSelection);
+			if (newWizard == null) {
+				// API-3.0: remove legacy support
+				wizard = connectorUi.getNewTaskWizard(taskRepository);
+				supportsTaskSelection = false;
+			} else {
+				wizard = newWizard;
+			}
+		} else {
+			wizard = new NewTaskWizard(taskSelection);
+		}
+		
+		return openNewTaskWizard(wizard, taskSelection, supportsTaskSelection);
+	}
+
+	private static int openNewTaskWizard(IWizard wizard, TaskSelection taskSelection, boolean supportsTaskSelection) {
+		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+		if (shell != null && !shell.isDisposed()) {
+			WizardDialog dialog = new WizardDialog(shell, wizard);
+			dialog.setBlockOnOpen(true);
+
+			// make sure the wizard has created its pages
+			dialog.create();
+			if (!(wizard instanceof NewTaskWizard) && wizard.canFinish()) {
+				wizard.performFinish();
+				if (!supportsTaskSelection) {
+					handleSelection(taskSelection);
+				}
+				return Dialog.OK;
+			}
+
+			int result = dialog.open();
+			if (result == Dialog.OK) {
+				if (wizard instanceof NewTaskWizard) {
+					supportsTaskSelection = ((NewTaskWizard) wizard).supportsTaskSelection();
+				}
+				if (!supportsTaskSelection) {
+					handleSelection(taskSelection);
+				}
+			}
+			return result;
+		} else {
+			return Dialog.CANCEL;
+		}
+	}
+
+	// API-3.0: remove method when AbstractRepositoryConnector.getNewTaskWizard(TaskRepository) is removed
+	private static void handleSelection(final TaskSelection taskSelection) {
+		if (taskSelection == null) {
+			return;
+		}
+
+		// need to defer execution to make sure the task editor has been created by the wizard
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+				if (page == null) {
+					return;
+				}
+
+				RepositoryTaskData taskData = taskSelection.getTaskData();
+				String summary = taskData.getSummary();
+				String description = taskData.getDescription();
+
+				if (page.getActiveEditor() instanceof TaskEditor) {
+					TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
+					if (taskEditor.getActivePageInstance() instanceof AbstractRepositoryTaskEditor) {
+						AbstractRepositoryTaskEditor repositoryTaskEditor = (AbstractRepositoryTaskEditor) taskEditor.getActivePageInstance();
+						repositoryTaskEditor.setSummaryText(summary);
+						repositoryTaskEditor.setDescriptionText(description);
+						return;
+					}
+				}
+
+				Clipboard clipboard = new Clipboard(page.getWorkbenchWindow().getShell().getDisplay());
+				clipboard.setContents(new Object[] { summary + "\n" + description },
+						new Transfer[] { TextTransfer.getInstance() });
+
+				MessageDialog.openInformation(
+						page.getWorkbenchWindow().getShell(),
+						ITasksUiConstants.TITLE_DIALOG,
+						"This connector does not provide a rich task editor for creating tasks.\n\n"
+								+ "The error contents have been placed in the clipboard so that you can paste them into the entry form.");
+			}
+		});
+	}
+
 }

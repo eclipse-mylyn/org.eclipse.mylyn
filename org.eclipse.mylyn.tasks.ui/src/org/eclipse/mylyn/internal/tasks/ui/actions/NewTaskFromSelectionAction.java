@@ -10,6 +10,7 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
@@ -19,6 +20,7 @@ import org.eclipse.mylyn.tasks.core.TaskComment;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskSelection;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 
 /**
  * @author Frank Becker
@@ -49,11 +51,11 @@ public class NewTaskFromSelectionAction extends Action {
 	@Override
 	public void run() {
 		if (taskSelection == null) {
+			MessageDialog.openError(null, LABEL, "Nothing selected to create task from.");
 			return;
 		}
 
-		NewTaskAction action = new NewTaskAction();
-		action.showWizard(taskSelection);
+		TasksUiUtil.openNewTaskWizard(taskSelection, false);
 	}
 
 	public void selectionChanged(ISelection selection) {
