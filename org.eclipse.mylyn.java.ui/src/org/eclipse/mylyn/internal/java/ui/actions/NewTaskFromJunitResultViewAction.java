@@ -15,8 +15,8 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.eclipse.mylyn.internal.tasks.ui.actions.NewTaskAction;
 import org.eclipse.mylyn.tasks.core.TaskSelection;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 
@@ -55,8 +55,7 @@ public class NewTaskFromJunitResultViewAction implements IViewActionDelegate, IS
 		sb.append(traceString);
 
 		TaskSelection taskSelection = new TaskSelection("", sb.toString());
-		NewTaskAction action = new NewTaskAction();
-		action.showWizard(taskSelection);
+		TasksUiUtil.openNewTaskWizard(taskSelection, false);
 	}
 
 	public void selectionChanged(SelectionChangedEvent event) {

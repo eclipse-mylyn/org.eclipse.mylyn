@@ -14,8 +14,8 @@ package org.eclipse.mylyn.internal.bugzilla.ide.actions;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylyn.internal.tasks.ui.actions.NewTaskAction;
 import org.eclipse.mylyn.tasks.core.TaskSelection;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.internal.views.log.LogEntry;
@@ -49,8 +49,7 @@ public class NewTaskFromErrorAction implements IObjectActionDelegate {
 		}
 
 		TaskSelection taskSelection = new TaskSelection("", sb.toString());
-		NewTaskAction action = new NewTaskAction();
-		action.showWizard(taskSelection);
+		TasksUiUtil.openNewTaskWizard(taskSelection, false);
 	}
 
 	public void run(IAction action) {
