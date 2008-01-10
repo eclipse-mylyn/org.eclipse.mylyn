@@ -462,25 +462,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			return;
 		}
 
-		String text = task.getSummary();
-		activeTaskLink.setText(text);
-		activeTaskLink.setUnderlined(false);
 		activeTaskLink.setTask(task);
-
-//		activeTaskLink.setToolTipText("Open: " + task.getSummary());
-		activeTaskLink.addMouseTrackListener(new MouseTrackListener() {
-
-			public void mouseEnter(MouseEvent e) {
-				activeTaskLink.setUnderlined(true);
-			}
-
-			public void mouseExit(MouseEvent e) {
-				activeTaskLink.setUnderlined(false);
-			}
-
-			public void mouseHover(MouseEvent e) {
-			}
-		});
 
 		filterComposite.layout();
 	}
@@ -494,9 +476,10 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			return;
 		}
 
+		activeTaskLink.setTask(null);
 		activeTaskLink.setText(LABEL_ACTIVE_NONE);
 		activeTaskLink.setToolTipText("");
-		activeTaskLink.setTask(null);
+		
 		filterComposite.layout();
 	}
 

@@ -94,14 +94,15 @@ public class TaskListHyperlink extends ImageHyperlink {
 				setStrikeThrough(task.isCompleted());
 			} else {
 				setText(task.getSummary());
-				setToolTipText(null);
+				setToolTipText("");
 				setStrikeThrough(false);
 			}
 		} else {
 			setText("");
-			setToolTipText(null);
+			setToolTipText("");
 			setStrikeThrough(false);
 		}
+		setUnderlined(false);
 	}
 
 	@Override
