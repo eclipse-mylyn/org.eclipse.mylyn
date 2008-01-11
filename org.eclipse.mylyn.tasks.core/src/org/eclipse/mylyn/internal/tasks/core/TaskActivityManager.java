@@ -30,6 +30,7 @@ import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITaskTimingListener;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 
@@ -74,7 +75,9 @@ public class TaskActivityManager {
 	private List<ScheduledTaskContainer> scheduleWeekDays = new ArrayList<ScheduledTaskContainer>();
 
 	private ArrayList<ScheduledTaskContainer> scheduleContainers = new ArrayList<ScheduledTaskContainer>();
-
+	
+	private List<ITaskTimingListener> timingListeners = new ArrayList<ITaskTimingListener>();
+	
 	private ScheduledTaskContainer scheduledThisWeek;
 
 	private ScheduledTaskContainer scheduledNextWeek;
@@ -197,7 +200,7 @@ public class TaskActivityManager {
 
 					timeTicks++;
 					if (taskActivityHistoryInitialized && timeTicks > 3) {
-						// Save incase of system failure.
+						// Save in case of system failure.
 						// TODO: request asynchronous save
 						ContextCorePlugin.getContextManager().saveActivityContext();
 						timeTicks = 0;
@@ -242,6 +245,16 @@ public class TaskActivityManager {
 			activeTasks.put(hourOfDay, active);
 		}
 		active.add(activatedTask);
+		
+		long totalElapsed = getElapsedTime(activityMap);
+		
+		for (ITaskTimingListener listener : new ArrayList<ITaskTimingListener>(timingListeners)) {
+			try {
+				listener.elapsedTimeUpdated(activatedTask, totalElapsed);
+			} catch (Throwable t) {
+				StatusHandler.fail(t, "task activity listener failed: " + listener, false);
+			}
+		}
 	}
 
 	private void addScheduledTask(AbstractTask task) {
@@ -320,8 +333,13 @@ public class TaskActivityManager {
 
 	/** total elapsed time based on activation history */
 	public long getElapsedTime(AbstractTask task) {
-		long result = 0;
 		SortedMap<Calendar, Long> activityMap = taskElapsedTimeMap.get(task);
+		return getElapsedTime(activityMap);
+	}
+
+	private long getElapsedTime(SortedMap<Calendar, Long> activityMap) {
+		// TODO: Keep a running total instead of recalculating all the time
+		long result = 0;
 		if (activityMap != null) {
 			synchronized (activityMap) {
 				for (Long time : activityMap.values()) {
@@ -759,4 +777,13 @@ public class TaskActivityManager {
 		}
 		return false;
 	}
+	
+	public void addTimingListener(ITaskTimingListener listener) {
+		timingListeners.add(listener);
+	}
+	
+	public void removeTimingListener(ITaskTimingListener listener) {
+		timingListeners.remove(listener);
+	}
+	
 }

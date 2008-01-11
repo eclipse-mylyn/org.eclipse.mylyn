@@ -32,6 +32,7 @@ import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
+import org.eclipse.mylyn.tasks.core.ITaskTimingListener;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
@@ -53,7 +54,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -170,6 +170,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 	private FormToolkit toolkit;
 
 	private Action activateAction;
+
+	private ITaskTimingListener timingListener;
 
 	public TaskPlanningEditor(FormEditor editor) {
 		super(editor, ID, "Planning");
@@ -794,18 +796,14 @@ public class TaskPlanningEditor extends TaskFormPage {
 		td.widthHint = 120;
 		elapsedTimeText.setLayoutData(td);
 		elapsedTimeText.setEditable(false);
+		
+		
+		timingListener = new ITaskTimingListener() {
 
-		// Refresh Button
-		Button timeRefresh = toolkit.createButton(nameValueComp, "Refresh", SWT.PUSH | SWT.CENTER);
-		// timeRefresh.setImage(TaskListImages.getImage(TaskListImages.REFRESH));
-
-		timeRefresh.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void elapsedTimeUpdated(AbstractTask task, long newElapsedTime) {
 				String elapsedTimeString = NO_TIME_ELAPSED;
 				try {
-					elapsedTimeString = DateUtil.getFormattedDuration(TasksUiPlugin.getTaskActivityManager()
-							.getElapsedTime(task), true);
+					elapsedTimeString = DateUtil.getFormattedDuration(newElapsedTime, false);
 					if (elapsedTimeString.equals("")) {
 						elapsedTimeString = NO_TIME_ELAPSED;
 					}
@@ -813,10 +811,18 @@ public class TaskPlanningEditor extends TaskFormPage {
 				} catch (RuntimeException e1) {
 					StatusHandler.fail(e1, "Could not format elapsed time", true);
 				}
-				elapsedTimeText.setText(elapsedTimeString);
-			}
-		});
+				final String elapsedString = elapsedTimeString;
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable(){
 
+					public void run() {
+						elapsedTimeText.setText(elapsedString);
+					}});
+
+			}};
+		
+		
+		TasksUiPlugin.getTaskListManager().addTimingListener(timingListener);
+		
 		toolkit.paintBordersFor(sectionClient);
 	}
 
@@ -942,6 +948,9 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	@Override
 	public void dispose() {
+		if(timingListener != null) {
+			TasksUiPlugin.getTaskListManager().removeTimingListener(timingListener);
+		}
 		TasksUiPlugin.getTaskListManager().getTaskList().removeChangeListener(TASK_LIST_LISTENER);
 	}
 
@@ -969,5 +978,5 @@ public class TaskPlanningEditor extends TaskFormPage {
 	public String getFormTitle() {
 		return form.getText();
 	}
-
+	
 }

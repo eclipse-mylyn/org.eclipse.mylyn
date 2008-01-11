@@ -56,6 +56,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener2;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
+import org.eclipse.mylyn.tasks.core.ITaskTimingListener;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
@@ -329,6 +330,20 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	public void removeActivityListener(ITaskActivityListener listener) {
 		activityListeners.remove(listener);
+	}
+	
+	/**
+	 * @API-3.0 this should be moved to TaskActivityManager
+	 */
+	public void addTimingListener(ITaskTimingListener listener) {
+		TasksUiPlugin.getTaskActivityManager().addTimingListener(listener);
+	}
+	
+	/**
+	 * @API-3.0 this should be moved to TaskActivityManager
+	 */
+	public void removeTimingListener(ITaskTimingListener listener) {
+		TasksUiPlugin.getTaskActivityManager().removeTimingListener(listener);
 	}
 
 	public void activateTask(AbstractTask task) {
