@@ -21,6 +21,9 @@ import java.util.List;
  */
 public interface IInteractionContextListener2 extends IInteractionContextListener {
 
+	/**
+	 * @param context	can be null
+	 */
 	public void contextPreActivated(IInteractionContext context);
 	
 	public void elementsDeleted(List<IInteractionElement> elements);

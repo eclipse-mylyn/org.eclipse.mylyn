@@ -12,8 +12,8 @@ package org.eclipse.mylyn.context.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PartInitException;

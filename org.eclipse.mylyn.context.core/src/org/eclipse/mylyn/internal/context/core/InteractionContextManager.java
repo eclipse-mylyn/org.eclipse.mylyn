@@ -585,12 +585,12 @@ public class InteractionContextManager {
 			if (context == null) {
 				context = loadContext(handleIdentifier);
 			}
-			if (context != null) {
-				for (IInteractionContextListener listener : contextListeners) {
-					if (listener instanceof IInteractionContextListener2) {
-						((IInteractionContextListener2)listener).contextPreActivated(context);
-					}
+			for (IInteractionContextListener listener : contextListeners) {
+				if (listener instanceof IInteractionContextListener2) {
+					((IInteractionContextListener2)listener).contextPreActivated(context);
 				}
+			}
+			if (context != null) {
 				suppressListenerNotification = true;
 				internalActivateContext(context);
 			} else {

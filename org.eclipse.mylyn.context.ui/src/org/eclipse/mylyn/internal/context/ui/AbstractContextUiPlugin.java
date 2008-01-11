@@ -40,7 +40,7 @@ public abstract class AbstractContextUiPlugin extends AbstractUIPlugin implement
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		ContextCorePlugin.getContextManager().addListener(this);
-		
+
 		if (ContextCorePlugin.getContextManager().isContextActive()) {
 			initLazyStart();
 		}

@@ -10,6 +10,7 @@ package org.eclipse.mylyn.context.ui;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -403,26 +404,27 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 			previousFilters.put(viewer, Arrays.asList(viewer.getFilters()));
 
 			if (viewPart != null && manageFilters) {
+				Set<ViewerFilter> toAdd = new HashSet<ViewerFilter>();
 				Set<Class<?>> excludedFilters = getPreservedFilterClasses();
 				for (ViewerFilter filter : previousFilters.get(viewer)) {
-					if (!excludedFilters.contains(filter.getClass())) {
-						try {
-							viewer.removeFilter(filter);
-						} catch (Throwable t) {
-							StatusHandler.fail(t, "Failed to remove filter: " + filter, false);
-						}
+					if (excludedFilters.contains(filter.getClass())) {
+						toAdd.add(filter);
 					}
 				}
+				toAdd.add(interestFilter);
+				viewer.setFilters(toAdd.toArray(new ViewerFilter[toAdd.size()]));
+			} else {
+				viewer.addFilter(interestFilter);
 			}
-			viewer.addFilter(interestFilter);
+
 			if (viewer instanceof TreeViewer) {
 				((TreeViewer) viewer).expandAll();
 			}
-			viewer.getControl().setRedraw(true);
 			return true;
 		} catch (Throwable t) {
-			t.printStackTrace();
 			StatusHandler.fail(t, "Could not install viewer filter on: " + globalPrefId, false);
+		} finally {
+			viewer.getControl().setRedraw(true);
 		}
 		return false;
 	}
@@ -437,28 +439,23 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 			return;
 		}
 
-		viewer.getControl().setRedraw(false);
-		if (viewPart != null && manageFilters) {
-			Set<Class<?>> excludedFilters = getPreservedFilterClasses();
-			if (previousFilters.containsKey(viewer)) {
-				for (ViewerFilter filter : previousFilters.get(viewer)) {
-					if (!excludedFilters.contains(filter.getClass())) {
-						try {
-							viewer.addFilter(filter);
-						} catch (Throwable t) {
-							StatusHandler.fail(t, "Failed to remove filter: " + filter, false);
-						}
-					}
+		try {
+			viewer.getControl().setRedraw(false);
+			if (viewPart != null && manageFilters) {
+				if (previousFilters.containsKey(viewer)) {
+					List<ViewerFilter> filters = previousFilters.get(viewer);
+					previousFilters.remove(viewer);
+					viewer.setFilters(filters.toArray(new ViewerFilter[filters.size()]));
 				}
-				previousFilters.remove(viewer);
 			}
-		}
-		for (ViewerFilter filter : Arrays.asList(viewer.getFilters())) {
-			if (filter instanceof InterestFilter) {
+			if (Arrays.asList(viewer.getFilters()).contains(interestFilter)) {
 				viewer.removeFilter(interestFilter);
 			}
+		} catch (Throwable t) {
+			StatusHandler.fail(t, "Could not uninstall interest viewer filter on: " + globalPrefId, false);
+		} finally {
+			viewer.getControl().setRedraw(true);
 		}
-		viewer.getControl().setRedraw(true);
 	}
 
 	public String getGlobalPrefId() {
