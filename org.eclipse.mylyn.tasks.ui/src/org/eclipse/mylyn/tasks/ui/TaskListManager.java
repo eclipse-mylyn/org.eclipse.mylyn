@@ -54,6 +54,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
+import org.eclipse.mylyn.tasks.core.ITaskActivityListener2;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
@@ -336,6 +337,18 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	public void activateTask(AbstractTask task, boolean addToHistory) {
 		deactivateAllTasks();
+		
+		// notify that a task is about to be activated
+		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
+			try {
+				if(listener instanceof ITaskActivityListener2){
+					((ITaskActivityListener2)listener).preTaskActivated(task);
+				}
+			} catch (Throwable t) {
+				StatusHandler.fail(t, "task activity listener failed: " + listener, false);
+			}
+		}
+		
 		try {
 			taskList.setActive(task, true);
 			if (addToHistory) {
@@ -364,8 +377,18 @@ public class TaskListManager implements IPropertyChangeListener {
 		if (task == null) {
 			return;
 		}
-
 		if (task.isActive()) {
+			// notify that a task is about to be deactivated
+			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
+				try {
+					if (listener instanceof ITaskActivityListener2) {
+						((ITaskActivityListener2) listener).preTaskDeactivated(task);
+					}
+				} catch (Throwable t) {
+					StatusHandler.fail(t, "notification failed for: " + listener, false);
+				}
+			}
+
 			taskList.setActive(task, false);
 			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
 				try {
