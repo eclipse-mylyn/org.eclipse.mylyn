@@ -120,6 +120,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.LocationAdapter;
 import org.eclipse.swt.browser.LocationEvent;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.custom.StyledText;
@@ -561,13 +562,15 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		super(editor, "id", "label"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
-	protected void createFormContent(final IManagedForm managedForm) {
+	protected void createFormContent(final IManagedForm managedForm) {	
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		colorIncoming = themeManager.getCurrentTheme().getColorRegistry().get(
 				TaskListColorsAndFonts.THEME_COLOR_TASKS_INCOMING_BACKGROUND);
 
 		super.createFormContent(managedForm);
 		form = managedForm.getForm();
+		form.setRedraw(false);
+
 		toolkit = managedForm.getToolkit();
 		registerDropListener(form);
 
@@ -603,6 +606,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		if (summaryTextViewer != null) {
 			summaryTextViewer.getTextWidget().setFocus();
 		}
+		
+		form.setRedraw(true);
 	}
 
 	private void addHeaderControls() {
@@ -2064,7 +2069,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			expandAllHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.EXPAND_ALL));
 			expandAllHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 				public void linkActivated(HyperlinkEvent e) {
-					revealAllComments();
+					BusyIndicator.showWhile(getControl().getDisplay(), new Runnable() {
+						public void run() {
+							revealAllComments();
+						}
+					});
 				}
 			});
 			commentsSection.setTextClient(commentsSectionClient);
@@ -2758,7 +2767,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private void revealAllComments() {
 		try {
+			form.setRedraw(false);
 			refreshEnabled = false;
+
 			if (commentsSection != null) {
 				commentsSection.setExpanded(true);
 			}
@@ -2790,6 +2801,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			}
 		} finally {
 			refreshEnabled = true;
+			form.setRedraw(true);
 		}
 		resetLayout();
 	}
