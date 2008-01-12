@@ -783,7 +783,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		String elapsedTimeString = NO_TIME_ELAPSED;
 		try {
 			elapsedTimeString = DateUtil.getFormattedDuration(TasksUiPlugin.getTaskActivityManager().getElapsedTime(
-					task), true);
+					task), false);
 			if (elapsedTimeString.equals(""))
 				elapsedTimeString = NO_TIME_ELAPSED;
 		} catch (RuntimeException e) {
