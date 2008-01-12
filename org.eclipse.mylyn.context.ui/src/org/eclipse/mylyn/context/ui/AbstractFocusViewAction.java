@@ -79,6 +79,13 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 
 	private boolean wasRun = false;
 
+	/**
+	 * API-3.0: Work-around for suppressing expansion without breaking API.
+	 * 
+	 * Will be remove for 3.0
+	 */
+	boolean tempSuppressExpandAll = false;
+	
 	private final IInteractionContextListener CONTEXT_LISTENER = new IInteractionContextListener() {
 
 		public void contextActivated(IInteractionContext context) {
@@ -369,7 +376,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 			}
 		}
 	}
-
+	
 	/**
 	 * Public for testing
 	 */
@@ -417,7 +424,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 				viewer.addFilter(interestFilter);
 			}
 
-			if (viewer instanceof TreeViewer) {
+			if (viewer instanceof TreeViewer && !tempSuppressExpandAll) {
 				((TreeViewer) viewer).expandAll();
 			}
 			return true;
@@ -425,6 +432,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 			StatusHandler.fail(t, "Could not install viewer filter on: " + globalPrefId, false);
 		} finally {
 			viewer.getControl().setRedraw(true);
+			tempSuppressExpandAll = false;
 		}
 		return false;
 	}
@@ -443,8 +451,13 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 			viewer.getControl().setRedraw(false);
 			if (viewPart != null && manageFilters) {
 				if (previousFilters.containsKey(viewer)) {
-					List<ViewerFilter> filters = previousFilters.get(viewer);
+					Set<ViewerFilter> filters = new HashSet<ViewerFilter>(previousFilters.get(viewer));
 					previousFilters.remove(viewer);
+					for(ViewerFilter filter: viewer.getFilters()){
+						if(!(filter instanceof InterestFilter)){
+							filters.add(filter);
+					}
+					}
 					viewer.setFilters(filters.toArray(new ViewerFilter[filters.size()]));
 				}
 			}
