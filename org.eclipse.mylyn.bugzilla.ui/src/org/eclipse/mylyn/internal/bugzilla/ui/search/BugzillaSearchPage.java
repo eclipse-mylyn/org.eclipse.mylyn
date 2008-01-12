@@ -67,6 +67,8 @@ import org.eclipse.ui.progress.IProgressService;
 @SuppressWarnings("restriction")
 public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements Listener {
 
+	private static final int LABEL_WIDTH = 58;
+
 	private static final String NUM_DAYS_POSITIVE = "Number of days must be a positive integer. ";
 
 	private static final String TITLE_BUGZILLA_QUERY = "Bugzilla Query";
@@ -79,6 +81,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 	private static ArrayList<BugzillaSearchData> previousEmailPatterns = new ArrayList<BugzillaSearchData>(20);
 
+	private static ArrayList<BugzillaSearchData> previousEmailPatterns2 = new ArrayList<BugzillaSearchData>(20);
+	
 	private static ArrayList<BugzillaSearchData> previousCommentPatterns = new ArrayList<BugzillaSearchData>(20);
 
 	private static ArrayList<BugzillaSearchData> previousKeywords = new ArrayList<BugzillaSearchData>(20);
@@ -101,13 +105,128 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 	private static final String[] emailRoleValues = { "emailassigned_to1", "emailreporter1", "emailcc1",
 			"emaillongdesc1" };
+	
+	private static final String[] emailRoleValues2 = { "emailassigned_to2", "emailreporter2", "emailcc2",
+	"emaillongdesc2" };
 
 	private BugzillaRepositoryQuery originalQuery = null;
 
 	protected boolean restoring = false;
 
 	private boolean restoreQueryOptions = true;
+	
+	protected Combo summaryPattern;
 
+	protected Combo summaryOperation;
+
+	protected List product;
+
+	protected List os;
+
+	protected List hardware;
+
+	protected List priority;
+
+	protected List severity;
+
+	protected List resolution;
+
+	protected List status;
+
+	protected Combo commentOperation;
+
+	protected Combo commentPattern;
+
+	protected List component;
+
+	protected List version;
+
+	protected List target;
+
+	protected Combo emailOperation;
+
+	protected Combo emailOperation2;
+
+	protected Combo emailPattern;
+	
+	protected Combo emailPattern2;
+	
+	protected Button[] emailButtons;
+
+	protected Button[] emailButtons2;
+	
+	private Combo keywords;
+
+	private Combo keywordsOperation;
+
+	protected Text daysText;
+
+	// /** File containing saved queries */
+	// protected static SavedQueryFile input;
+
+	// /** "Remember query" button */
+	// protected Button saveButton;
+
+	// /** "Saved queries..." button */
+	// protected Button loadButton;
+
+	// /** Run a remembered query */
+	// protected boolean rememberedQuery = false;
+
+	/** Index of the saved query to run */
+	protected int selIndex;
+
+	// --------------- Configuration handling --------------
+
+	// Dialog store taskId constants
+	protected final static String PAGE_NAME = "BugzillaSearchPage"; //$NON-NLS-1$
+
+	private static final String STORE_PRODUCT_ID = PAGE_NAME + ".PRODUCT";
+
+	private static final String STORE_COMPONENT_ID = PAGE_NAME + ".COMPONENT";
+
+	private static final String STORE_VERSION_ID = PAGE_NAME + ".VERSION";
+
+	private static final String STORE_MSTONE_ID = PAGE_NAME + ".MILESTONE";
+
+	private static final String STORE_STATUS_ID = PAGE_NAME + ".STATUS";
+
+	private static final String STORE_RESOLUTION_ID = PAGE_NAME + ".RESOLUTION";
+
+	private static final String STORE_SEVERITY_ID = PAGE_NAME + ".SEVERITY";
+
+	private static final String STORE_PRIORITY_ID = PAGE_NAME + ".PRIORITY";
+
+	private static final String STORE_HARDWARE_ID = PAGE_NAME + ".HARDWARE";
+
+	private static final String STORE_OS_ID = PAGE_NAME + ".OS";
+
+	private static final String STORE_SUMMARYMATCH_ID = PAGE_NAME + ".SUMMARYMATCH";
+
+	private static final String STORE_COMMENTMATCH_ID = PAGE_NAME + ".COMMENTMATCH";
+
+	private static final String STORE_EMAILMATCH_ID = PAGE_NAME + ".EMAILMATCH";
+	
+	private static final String STORE_EMAIL2MATCH_ID = PAGE_NAME + ".EMAIL2MATCH";
+
+	private static final String STORE_EMAILBUTTON_ID = PAGE_NAME + ".EMAILATTR";
+	
+	private static final String STORE_EMAIL2BUTTON_ID = PAGE_NAME + ".EMAIL2ATTR";
+
+	private static final String STORE_SUMMARYTEXT_ID = PAGE_NAME + ".SUMMARYTEXT";
+
+	private static final String STORE_COMMENTTEXT_ID = PAGE_NAME + ".COMMENTTEXT";
+
+	private static final String STORE_EMAILADDRESS_ID = PAGE_NAME + ".EMAILADDRESS";
+	
+	private static final String STORE_EMAIL2ADDRESS_ID = PAGE_NAME + ".EMAIL2ADDRESS";
+
+	private static final String STORE_KEYWORDS_ID = PAGE_NAME + ".KEYWORDS";
+
+	private static final String STORE_KEYWORDSMATCH_ID = PAGE_NAME + ".KEYWORDSMATCH";
+
+	// private static final String STORE_REPO_ID = PAGE_NAME + ".REPO";
+	
 	private SelectionAdapter updateActionSelectionAdapter = new SelectionAdapter() {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
@@ -116,6 +235,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			}
 		}
 	};
+
 
 	private final class ModifyListenerImplementation implements ModifyListener {
 		public void modifyText(ModifyEvent e) {
@@ -235,7 +355,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		gridLayout.marginBottom = 8;
 		gridLayout.marginHeight = 0;
 		gridLayout.marginWidth = 0;
-		gridLayout.numColumns = 3;
+		gridLayout.numColumns = 4;
 		composite.setLayout(gridLayout);
 
 		if (!inSearchContainer()) {
@@ -243,7 +363,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			queryTitleLabel.setText("&Query Title:");
 
 			Text queryTitle = new Text(composite, SWT.BORDER);
-			queryTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+			queryTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 			if (originalQuery != null) {
 				queryTitle.setText(originalQuery.getSummary());
 			}
@@ -252,19 +372,16 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			title.setFocus();
 		}
 
-		final Label label = new Label(composite, SWT.NONE);
-		final GridData gd_label = new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1);
-		gd_label.heightHint = 3;
-		label.setLayoutData(gd_label);
 
 		// Info text
 		Label labelSummary = new Label(composite, SWT.LEFT);
 		labelSummary.setText("&Summary:");
+		labelSummary.setLayoutData(new GridData(LABEL_WIDTH, SWT.DEFAULT));
 		//labelSummary.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 
 		// Pattern combo
 		summaryPattern = new Combo(composite, SWT.SINGLE | SWT.BORDER);
-		summaryPattern.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		summaryPattern.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		summaryPattern.addModifyListener(new ModifyListenerImplementation());
 		summaryPattern.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -285,7 +402,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 		// Comment pattern combo
 		commentPattern = new Combo(composite, SWT.SINGLE | SWT.BORDER);
-		commentPattern.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
+		commentPattern.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
 		commentPattern.addModifyListener(new ModifyListenerImplementation());
 		commentPattern.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -305,7 +422,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 		// pattern combo
 		emailPattern = new Combo(composite, SWT.SINGLE | SWT.BORDER);
-		emailPattern.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
+		emailPattern.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		emailPattern.addModifyListener(new ModifyListenerImplementation());
 		emailPattern.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -314,28 +431,14 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			}
 		});
 
-		// operation combo
-		emailOperation = new Combo(composite, SWT.SINGLE | SWT.READ_ONLY | SWT.BORDER);
-		emailOperation.setItems(emailOperationText);
-		emailOperation.setText(emailOperationText[0]);
-		emailOperation.select(0);
-		new Label(composite, SWT.NONE);
-
 		Composite emailComposite = new Composite(composite, SWT.NONE);
-		emailComposite.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
+		emailComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		GridLayout emailLayout = new GridLayout();
 		emailLayout.marginWidth = 0;
 		emailLayout.marginHeight = 0;
+		emailLayout.horizontalSpacing = 2;
 		emailLayout.numColumns = 4;
 		emailComposite.setLayout(emailLayout);
-
-		// Composite buttons = new Composite(group, SWT.NONE);
-		// layout = new GridLayout(4, false);
-		// buttons.setLayout(layout);
-		// buttons.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		// gd = new GridData(GridData.BEGINNING);
-		// gd.horizontalSpan = 3;
-		// buttons.setLayoutData(gd);
 
 		Button button0 = new Button(emailComposite, SWT.CHECK);
 		button0.setText("owner");
@@ -350,13 +453,72 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		button3.setText("commenter");
 
 		emailButtons = new Button[] { button0, button1, button2, button3 };
+		
+		
+		// operation combo
+		emailOperation = new Combo(composite, SWT.SINGLE | SWT.READ_ONLY | SWT.BORDER);
+		emailOperation.setItems(emailOperationText);
+		emailOperation.setText(emailOperationText[0]);
+		emailOperation.select(0);
+
+		
+		// Email2
+
+		Label labelEmail2 = new Label(composite, SWT.LEFT);
+		labelEmail2.setText("&Email:");
+		//labelEmail.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+
+		// pattern combo
+		emailPattern2 = new Combo(composite, SWT.SINGLE | SWT.BORDER);
+		emailPattern2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		emailPattern2.addModifyListener(new ModifyListenerImplementation());
+		emailPattern2.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				handleWidgetSelected(emailPattern2, emailOperation2, previousEmailPatterns2);
+			}
+		});
+
+		Composite emailComposite2 = new Composite(composite, SWT.NONE);
+		emailComposite2.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		GridLayout emailLayout2 = new GridLayout();
+		emailLayout2.marginWidth = 0;
+		emailLayout2.marginHeight = 0;
+		emailLayout2.horizontalSpacing = 2;
+		emailLayout2.numColumns = 4;
+		emailComposite2.setLayout(emailLayout2);
+
+		Button e2button0 = new Button(emailComposite2, SWT.CHECK);
+		e2button0.setText("owner");
+
+		Button e2button1 = new Button(emailComposite2, SWT.CHECK);
+		e2button1.setText("reporter");
+
+		Button e2button2 = new Button(emailComposite2, SWT.CHECK);
+		e2button2.setText("cc");
+
+		Button e2button3 = new Button(emailComposite2, SWT.CHECK);
+		e2button3.setText("commenter");
+
+		emailButtons2 = new Button[] { e2button0, e2button1, e2button2, e2button3 };
+		
+		
+		// operation combo
+		emailOperation2 = new Combo(composite, SWT.SINGLE | SWT.READ_ONLY | SWT.BORDER);
+		emailOperation2.setItems(emailOperationText);
+		emailOperation2.setText(emailOperationText[0]);
+		emailOperation2.select(0);
+		
+		/////
+		
 
 		Label labelKeywords = new Label(composite, SWT.NONE);
 		labelKeywords.setText("&Keywords:");
+		labelKeywords.setLayoutData(new GridData(LABEL_WIDTH, SWT.DEFAULT));
 		//labelKeywords.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 
 		Composite keywordsComposite = new Composite(composite, SWT.NONE);
-		keywordsComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
+		keywordsComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
 		GridLayout keywordsLayout = new GridLayout();
 		keywordsLayout.marginWidth = 0;
 		keywordsLayout.marginHeight = 0;
@@ -734,6 +896,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		getPatternData(summaryPattern, summaryOperation, previousSummaryPatterns);
 		getPatternData(commentPattern, commentOperation, previousCommentPatterns);
 		getPatternData(emailPattern, emailOperation, previousEmailPatterns);
+		getPatternData(emailPattern2, emailOperation2, previousEmailPatterns2);
 		getPatternData(keywords, keywordsOperation, previousKeywords);
 
 		String summaryText = summaryPattern.getText();
@@ -802,6 +965,11 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				for (String email : getPreviousPatterns(previousEmailPatterns)) {
 					emailPattern.add(email);
 				}
+				
+				for (String email : getPreviousPatterns(previousEmailPatterns2)) {
+					emailPattern2.add(email);
+				}
+				
 				// emailPattern.setItems(getPreviousPatterns(previousEmailPatterns));
 				for (String keyword : getPreviousPatterns(previousKeywords)) {
 					keywords.add(keyword);
@@ -860,7 +1028,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 					|| severity.getSelectionCount() > 0 || priority.getSelectionCount() > 0
 					|| hardware.getSelectionCount() > 0 || os.getSelectionCount() > 0
 					|| summaryPattern.getText().length() > 0 || commentPattern.getText().length() > 0
-					|| emailPattern.getText().length() > 0 || keywords.getText().length() > 0;
+					|| emailPattern.getText().length() > 0 || emailPattern2.getText().length() > 0 || keywords.getText().length() > 0;
 		} else {
 			return false;
 		}
@@ -1033,6 +1201,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			sb.append(URLEncoder.encode(os.getItem(selected[i]), repository.getCharacterEncoding()));
 		}
 
+		
 		if (emailPattern.getText() != null && !emailPattern.getText().trim().equals("")) {
 			boolean selectionMade = false;
 			for (Button button : emailButtons) {
@@ -1055,6 +1224,30 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				sb.append(URLEncoder.encode(emailPattern.getText(), repository.getCharacterEncoding()));
 			}
 		}
+		
+		if (emailPattern2.getText() != null && !emailPattern2.getText().trim().equals("")) {
+			boolean selectionMade = false;
+			for (Button button : emailButtons2) {
+				if (button.getSelection()) {
+					selectionMade = true;
+					break;
+				}
+			}
+			if (selectionMade) {
+				for (int i = 0; i < emailButtons2.length; i++) {
+					if (emailButtons2[i].getSelection()) {
+						sb.append("&");
+						sb.append(emailRoleValues2[i]);
+						sb.append("=1");
+					}
+				}
+				sb.append("&emailtype2=");
+				sb.append(emailOperationValues[emailOperation2.getSelectionIndex()]);
+				sb.append("&email2=");
+				sb.append(URLEncoder.encode(emailPattern2.getText(), repository.getCharacterEncoding()));
+			}
+		}
+		
 
 		if (daysText.getText() != null && !daysText.getText().equals("")) {
 			try {
@@ -1076,105 +1269,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		return sb;
 	}
 
-	// --------------- Configuration handling --------------
-
-	// Dialog store taskId constants
-	protected final static String PAGE_NAME = "BugzillaSearchPage"; //$NON-NLS-1$
-
-	private static final String STORE_PRODUCT_ID = PAGE_NAME + ".PRODUCT";
-
-	private static final String STORE_COMPONENT_ID = PAGE_NAME + ".COMPONENT";
-
-	private static final String STORE_VERSION_ID = PAGE_NAME + ".VERSION";
-
-	private static final String STORE_MSTONE_ID = PAGE_NAME + ".MILESTONE";
-
-	private static final String STORE_STATUS_ID = PAGE_NAME + ".STATUS";
-
-	private static final String STORE_RESOLUTION_ID = PAGE_NAME + ".RESOLUTION";
-
-	private static final String STORE_SEVERITY_ID = PAGE_NAME + ".SEVERITY";
-
-	private static final String STORE_PRIORITY_ID = PAGE_NAME + ".PRIORITY";
-
-	private static final String STORE_HARDWARE_ID = PAGE_NAME + ".HARDWARE";
-
-	private static final String STORE_OS_ID = PAGE_NAME + ".OS";
-
-	private static final String STORE_SUMMARYMATCH_ID = PAGE_NAME + ".SUMMARYMATCH";
-
-	private static final String STORE_COMMENTMATCH_ID = PAGE_NAME + ".COMMENTMATCH";
-
-	private static final String STORE_EMAILMATCH_ID = PAGE_NAME + ".EMAILMATCH";
-
-	private static final String STORE_EMAILBUTTON_ID = PAGE_NAME + ".EMAILATTR";
-
-	private static final String STORE_SUMMARYTEXT_ID = PAGE_NAME + ".SUMMARYTEXT";
-
-	private static final String STORE_COMMENTTEXT_ID = PAGE_NAME + ".COMMENTTEXT";
-
-	private static final String STORE_EMAILADDRESS_ID = PAGE_NAME + ".EMAILADDRESS";
-
-	private static final String STORE_KEYWORDS_ID = PAGE_NAME + ".KEYWORDS";
-
-	private static final String STORE_KEYWORDSMATCH_ID = PAGE_NAME + ".KEYWORDSMATCH";
-
-	// private static final String STORE_REPO_ID = PAGE_NAME + ".REPO";
-
-	protected Combo summaryPattern;
-
-	protected Combo summaryOperation;
-
-	protected List product;
-
-	protected List os;
-
-	protected List hardware;
-
-	protected List priority;
-
-	protected List severity;
-
-	protected List resolution;
-
-	protected List status;
-
-	protected Combo commentOperation;
-
-	protected Combo commentPattern;
-
-	protected List component;
-
-	protected List version;
-
-	protected List target;
-
-	protected Combo emailOperation;
-
-	protected Combo emailPattern;
-
-	protected Button[] emailButtons;
-
-	private Combo keywords;
-
-	private Combo keywordsOperation;
-
-	protected Text daysText;
-
-	// /** File containing saved queries */
-	// protected static SavedQueryFile input;
-
-	// /** "Remember query" button */
-	// protected Button saveButton;
-
-	// /** "Saved queries..." button */
-	// protected Button loadButton;
-
-	// /** Run a remembered query */
-	// protected boolean rememberedQuery = false;
-
-	/** Index of the saved query to run */
-	protected int selIndex;
 
 	public IDialogSettings getDialogSettings() {
 		IDialogSettings settings = BugzillaUiPlugin.getDefault().getDialogSettings();
@@ -1533,6 +1627,50 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				}
 			} else if (key.equals("email1")) {
 				emailPattern.setText(value);
+			} else if (key.equals("emailassigned_to2")) { // HACK: email
+				// buttons
+				// assumed to be
+				// in same
+				// position
+				if (value.equals("1"))
+					emailButtons2[0].setSelection(true);
+				else
+					emailButtons2[0].setSelection(false);
+			} else if (key.equals("emailreporter2")) { // HACK: email
+				// buttons assumed
+				// to be in same
+				// position
+				if (value.equals("1"))
+					emailButtons2[1].setSelection(true);
+				else
+					emailButtons2[1].setSelection(false);
+			} else if (key.equals("emailcc2")) { // HACK: email buttons
+				// assumed to be in same
+				// position
+				if (value.equals("1"))
+					emailButtons2[2].setSelection(true);
+				else
+					emailButtons2[2].setSelection(false);
+			} else if (key.equals("emaillongdesc2")) { // HACK: email
+				// buttons assumed
+				// to be in same
+				// position
+				if (value.equals("1"))
+					emailButtons2[3].setSelection(true);
+				else
+					emailButtons2[3].setSelection(false);
+			} else if (key.equals("emailtype2")) {
+				int index = 0;
+				for (String item : emailOperation2.getItems()) {
+					if (item.compareTo(value) == 0)
+						break;
+					index++;
+				}
+				if (index < emailOperation2.getItemCount()) {
+					emailOperation2.select(index);
+				}
+			} else if (key.equals("email2")) {
+					emailPattern2.setText(value);
 			} else if (key.equals("changedin")) {
 				daysText.setText(value);
 			} else if (key.equals("keywords")) {
@@ -1607,6 +1745,15 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		summaryPattern.setText(settings.get(STORE_SUMMARYTEXT_ID + repoId));
 		commentPattern.setText(settings.get(STORE_COMMENTTEXT_ID + repoId));
 		emailPattern.setText(settings.get(STORE_EMAILADDRESS_ID + repoId));
+		try {
+		emailOperation2.select(settings.getInt(STORE_EMAIL2MATCH_ID + repoId));
+		} catch (Exception e) {
+			//ignore
+		}
+		for (int i = 0; i < emailButtons2.length; i++) {
+			emailButtons2[i].setSelection(settings.getBoolean(STORE_EMAIL2BUTTON_ID + i + repoId));
+		}
+		emailPattern2.setText(settings.get(STORE_EMAIL2ADDRESS_ID + repoId));
 		if (settings.get(STORE_KEYWORDS_ID + repoId) != null) {
 			keywords.setText(settings.get(STORE_KEYWORDS_ID + repoId));
 			keywordsOperation.select(settings.getInt(STORE_KEYWORDSMATCH_ID + repoId));
@@ -1635,6 +1782,12 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		settings.put(STORE_SUMMARYTEXT_ID + repoId, summaryPattern.getText());
 		settings.put(STORE_COMMENTTEXT_ID + repoId, commentPattern.getText());
 		settings.put(STORE_EMAILADDRESS_ID + repoId, emailPattern.getText());
+		settings.put(STORE_EMAIL2ADDRESS_ID + repoId, emailPattern2.getText());
+		settings.put(STORE_EMAIL2MATCH_ID + repoId, emailOperation2.getSelectionIndex());
+		for (int i = 0; i < emailButtons2.length; i++) {
+			settings.put(STORE_EMAIL2BUTTON_ID + i + repoId, emailButtons2[i].getSelection());
+		}
+		
 		settings.put(STORE_KEYWORDS_ID + repoId, keywords.getText());
 		settings.put(STORE_KEYWORDSMATCH_ID + repoId, keywordsOperation.getSelectionIndex());
 		// settings.put(STORE_REPO_ID, repositoryCombo.getText());
