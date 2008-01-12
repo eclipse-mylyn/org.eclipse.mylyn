@@ -16,6 +16,8 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Locale;
 
+import org.apache.commons.lang.StringEscapeUtils;
+
 /**
  * Parses HTML into tokens.
  * 
@@ -293,7 +295,10 @@ public class HtmlStreamTokenizer {
 
 	/**
 	 * Returns a string with HTML escapes changed into their corresponding characters.
+	 *
+	 * @deprecated use {@link StringEscapeUtils#unescapeHtml(String)} instead
 	 */
+	@Deprecated
 	public static String unescape(String s) {
 		if (s.indexOf('&') == -1) {
 			return s;
@@ -306,7 +311,10 @@ public class HtmlStreamTokenizer {
 
 	/**
 	 * Replaces (in-place) HTML escapes in a StringBuffer with their corresponding characters.
+	 *
+	 * @deprecated use {@link StringEscapeUtils#unescapeHtml(String)} instead
 	 */
+	@Deprecated
 	public static StringBuffer unescape(StringBuffer sb) {
 		int i = 0; // index into the unprocessed section of the buffer
 		int j = 0; // index into the processed section of the buffer
