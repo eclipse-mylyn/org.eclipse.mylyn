@@ -21,6 +21,8 @@ import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskSelection;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Frank Becker
@@ -55,7 +57,8 @@ public class NewTaskFromSelectionAction extends Action {
 			return;
 		}
 
-		TasksUiUtil.openNewTaskWizard(taskSelection, false);
+		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+		TasksUiUtil.openNewTaskEditor(shell, taskSelection, null);
 	}
 
 	public void selectionChanged(ISelection selection) {

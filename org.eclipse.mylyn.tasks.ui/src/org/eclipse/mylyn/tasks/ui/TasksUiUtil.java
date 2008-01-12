@@ -580,7 +580,7 @@ public class TasksUiUtil {
 	}
 
 	/**
-	 * @since 2.2 
+	 * @since 2.2
 	 */
 	// API-3.0 consider moving to internal class
 	public static boolean isAnimationsEnabled() {
@@ -592,8 +592,8 @@ public class TasksUiUtil {
 	 * @since 2.3
 	 */
 	// API-3.0 review bloat
-	public static int openNewLocalTaskWizard(TaskSelection taskSelection) {
-		return openNewTaskWizard(new NewLocalTaskWizard(taskSelection), taskSelection, true);
+	public static boolean openNewLocalTaskEditor(Shell shell, TaskSelection taskSelection) {
+		return openNewTaskEditor(shell, new NewLocalTaskWizard(taskSelection), taskSelection, true);
 	}
 
 	/**
@@ -601,14 +601,12 @@ public class TasksUiUtil {
 	 */
 	// API-3.0 review bloat
 	@SuppressWarnings("deprecation")
-	public static int openNewTaskWizard(TaskSelection taskSelection, boolean skipRepositoryPage) {
+	public static boolean openNewTaskEditor(Shell shell, TaskSelection taskSelection, TaskRepository taskRepository) {
 		final IWizard wizard;
 		List<TaskRepository> repositories = TasksUiPlugin.getRepositoryManager().getAllRepositories();
-		TaskRepository taskRepository = null;
-		if (repositories.size() == 1) {
+		if (taskRepository == null && repositories.size() == 1) {
+			// only the Local Tasks connector is available
 			taskRepository = repositories.get(0);
-		} else if (skipRepositoryPage) {
-			taskRepository = TasksUiUtil.getSelectedRepository();
 		}
 
 		boolean supportsTaskSelection = true;
@@ -625,39 +623,36 @@ public class TasksUiUtil {
 		} else {
 			wizard = new NewTaskWizard(taskSelection);
 		}
-		
-		return openNewTaskWizard(wizard, taskSelection, supportsTaskSelection);
+
+		return openNewTaskEditor(shell, wizard, taskSelection, supportsTaskSelection);
 	}
 
-	private static int openNewTaskWizard(IWizard wizard, TaskSelection taskSelection, boolean supportsTaskSelection) {
-		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-		if (shell != null && !shell.isDisposed()) {
-			WizardDialog dialog = new WizardDialog(shell, wizard);
-			dialog.setBlockOnOpen(true);
+	private static boolean openNewTaskEditor(Shell shell, IWizard wizard, TaskSelection taskSelection,
+			boolean supportsTaskSelection) {
+		WizardDialog dialog = new WizardDialog(shell, wizard);
+		dialog.setBlockOnOpen(true);
 
-			// make sure the wizard has created its pages
-			dialog.create();
-			if (!(wizard instanceof NewTaskWizard) && wizard.canFinish()) {
-				wizard.performFinish();
-				if (!supportsTaskSelection) {
-					handleSelection(taskSelection);
-				}
-				return Dialog.OK;
+		// make sure the wizard has created its pages
+		dialog.create();
+		if (!(wizard instanceof NewTaskWizard) && wizard.canFinish()) {
+			wizard.performFinish();
+			if (!supportsTaskSelection) {
+				handleSelection(taskSelection);
 			}
-
-			int result = dialog.open();
-			if (result == Dialog.OK) {
-				if (wizard instanceof NewTaskWizard) {
-					supportsTaskSelection = ((NewTaskWizard) wizard).supportsTaskSelection();
-				}
-				if (!supportsTaskSelection) {
-					handleSelection(taskSelection);
-				}
-			}
-			return result;
-		} else {
-			return Dialog.CANCEL;
+			return true;
 		}
+
+		int result = dialog.open();
+		if (result == Dialog.OK) {
+			if (wizard instanceof NewTaskWizard) {
+				supportsTaskSelection = ((NewTaskWizard) wizard).supportsTaskSelection();
+			}
+			if (!supportsTaskSelection) {
+				handleSelection(taskSelection);
+			}
+			return true;
+		}
+		return false;
 	}
 
 	// API-3.0: remove method when AbstractRepositoryConnector.getNewTaskWizard(TaskRepository) is removed

@@ -15,12 +15,15 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
  * @author Eugene Kuleshov
+ * @author Steffen Pingel
  */
 public class NewTaskAction extends Action implements IViewActionDelegate, IExecutableExtension {
 
@@ -32,10 +35,17 @@ public class NewTaskAction extends Action implements IViewActionDelegate, IExecu
 
 	@Override
 	public void run() {
-		if (localTask) {
-			TasksUiUtil.openNewLocalTaskWizard(null);
-		} else {
-			TasksUiUtil.openNewTaskWizard(null, skipRepositoryPage);
+		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+		if (shell != null && !shell.isDisposed()) {
+			if (localTask) {
+				TasksUiUtil.openNewLocalTaskEditor(shell, null);
+			} else {
+				if (skipRepositoryPage) {
+					TasksUiUtil.openNewTaskEditor(shell, null, TasksUiUtil.getSelectedRepository());
+				} else {
+					TasksUiUtil.openNewTaskEditor(shell, null, null);
+				}
+			}
 		}
 	}
 

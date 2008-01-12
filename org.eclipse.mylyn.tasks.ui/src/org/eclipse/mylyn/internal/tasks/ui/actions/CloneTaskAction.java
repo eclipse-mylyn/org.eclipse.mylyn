@@ -9,7 +9,6 @@
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
@@ -20,8 +19,10 @@ import org.eclipse.mylyn.tasks.core.TaskSelection;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
 /**
@@ -74,7 +75,8 @@ public class CloneTaskAction extends BaseSelectionListenerAction implements IVie
 						taskSelection.getTaskData().setDescription(description);
 					}
 
-					if (TasksUiUtil.openNewTaskWizard(taskSelection, false) != Dialog.OK) {
+					Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+					if (!TasksUiUtil.openNewTaskEditor(shell, taskSelection, null)) {
 						// do not process other tasks if canceled
 						return;
 					}
