@@ -185,14 +185,19 @@ class CustomTaskListDecorationDrawer implements Listener {
 	private boolean hideDecorationOnContainer(AbstractTaskContainer element, TreeItem treeItem) {
 		if (element instanceof OrphanedTasksContainer) {
 			return true;
-		} else if (!taskListView.isFocusedMode()) {
-			return false;
-		} else {
-			if (element instanceof AbstractRepositoryQuery || element instanceof TaskCategory) {
-				return treeItem.getExpanded();
-			} else {
-				return false;
+		} else if (element instanceof AbstractRepositoryQuery) {
+			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
+			if (query.getSynchronizationStatus() != null) {
+				return true;
 			}
+		}
+
+		if (!taskListView.isFocusedMode()) {
+			return false;
+		} else if (element instanceof AbstractRepositoryQuery || element instanceof TaskCategory) {
+			return treeItem.getExpanded();
+		} else {
+			return false;
 		}
 	}
 

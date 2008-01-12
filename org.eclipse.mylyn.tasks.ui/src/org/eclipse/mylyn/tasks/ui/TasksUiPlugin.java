@@ -33,12 +33,10 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.ContextPreferenceContstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
@@ -67,7 +65,6 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TaskListSaveManager;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskListWriter;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiExtensionReader;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesView;
-import org.eclipse.mylyn.internal.tasks.ui.wizards.EditRepositoryWizard;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -87,7 +84,6 @@ import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorFactory;
 import org.eclipse.mylyn.web.core.WebClientUtil;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -385,7 +381,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				if (repositoriesView != null) {
 					repositoriesView.getViewer().refresh();
 				}
-				checkForCredentials();
 				
 				taskEditorBloatManager = new TaskEditorBloatMonitor();
 				taskEditorBloatManager.install(PlatformUI.getWorkbench());
@@ -516,39 +511,39 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		}
 	}
 
-	private void checkForCredentials() {
-		for (TaskRepository repository : taskRepositoryManager.getAllRepositories()) {
-			AbstractRepositoryConnector connector = getRepositoryManager().getRepositoryConnector(
-					repository.getConnectorKind());
-			boolean promptForCredentials = true;
-			if (connector != null) {
-				promptForCredentials = connector.isUserManaged() && !connector.hasCredentialsManagement();
-			}
-			if (!repository.isAnonymous()
-					&& !repository.isOffline()
-					&& promptForCredentials
-					&& (repository.getUserName() == null || repository.getPassword() == null
-							|| "".equals(repository.getUserName()) || "".equals(repository.getPassword()))) {
-				try {
-					EditRepositoryWizard wizard = new EditRepositoryWizard(repository);
-					Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-					if (shell != null && !shell.isDisposed()) {
-						WizardDialog dialog = new WizardDialog(shell, wizard);
-						dialog.create();
-						// dialog.setTitle("Repository Credentials Missing");
-						dialog.setErrorMessage("Authentication credentials missing.");
-						dialog.setBlockOnOpen(true);
-						if (dialog.open() == Dialog.CANCEL) {
-							dialog.close();
-							return;
-						}
-					}
-				} catch (Exception e) {
-					StatusHandler.fail(e, e.getMessage(), true);
-				}
-			}
-		}
-	}
+//	private void checkForCredentials() {
+//		for (TaskRepository repository : taskRepositoryManager.getAllRepositories()) {
+//			AbstractRepositoryConnector connector = getRepositoryManager().getRepositoryConnector(
+//					repository.getConnectorKind());
+//			boolean promptForCredentials = true;
+//			if (connector != null) {
+//				promptForCredentials = connector.isUserManaged() && !connector.hasCredentialsManagement();
+//			}
+//			if (!repository.isAnonymous()
+//					&& !repository.isOffline()
+//					&& promptForCredentials
+//					&& (repository.getUserName() == null || repository.getPassword() == null
+//							|| "".equals(repository.getUserName()) || "".equals(repository.getPassword()))) {
+//				try {
+//					EditRepositoryWizard wizard = new EditRepositoryWizard(repository);
+//					Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+//					if (shell != null && !shell.isDisposed()) {
+//						WizardDialog dialog = new WizardDialog(shell, wizard);
+//						dialog.create();
+//						// dialog.setTitle("Repository Credentials Missing");
+//						dialog.setErrorMessage("Authentication credentials missing.");
+//						dialog.setBlockOnOpen(true);
+//						if (dialog.open() == Dialog.CANCEL) {
+//							dialog.close();
+//							return;
+//						}
+//					}
+//				} catch (Exception e) {
+//					StatusHandler.fail(e, e.getMessage(), true);
+//				}
+//			}
+//		}
+//	}
 
 	public void earlyStartup() {
 		// ignore
@@ -652,7 +647,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		ContextCorePlugin.getContextManager().loadActivityMetaContext();
 		getTaskListManager().readExistingOrCreateNewList();
 		getTaskListManager().initActivityHistory();
-		checkForCredentials();
 	}
 
 	@Override

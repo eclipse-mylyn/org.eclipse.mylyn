@@ -27,11 +27,9 @@ import java.util.Set;
 
 import javax.security.auth.login.LoginException;
 
-import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.NameValuePair;
@@ -103,10 +101,6 @@ public class BugzillaClient {
 	// Pages with this string in the html occur when login is required
 	private static final String LOGIN_REQUIRED = "goaheadandlogin=1";
 
-	private static final int MAX_RETRY = 3;
-
-	// private static final int CONNECT_TIMEOUT = 60000;
-
 	private static final String VALUE_CONTENTTYPEMETHOD_MANUAL = "manual";
 
 	private static final String VALUE_ISPATCH = "1";
@@ -156,29 +150,9 @@ public class BugzillaClient {
 
 	private HttpClient httpClient = new HttpClient(new MultiThreadedHttpConnectionManager());
 
-	private boolean isValidation = false;
-
 	private boolean lastModifiedSupported = true;
 
 	private BugzillaLanguageSettings bugzillaLanguageSettings;
-
-	private class BugzillaRetryHandler extends DefaultHttpMethodRetryHandler {
-		public BugzillaRetryHandler() {
-			super(MAX_RETRY, false);
-		}
-
-		@Override
-		public boolean retryMethod(HttpMethod method, IOException exception, int executionCount) {
-			if (super.retryMethod(method, exception, executionCount)) {
-				int soTimeout = httpClient.getHttpConnectionManager().getParams().getSoTimeout();
-				httpClient.getHttpConnectionManager().getParams().setSoTimeout(soTimeout * 2);
-				int connectTimeout = httpClient.getHttpConnectionManager().getParams().getConnectionTimeout();
-				httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(connectTimeout * 2);
-				return true;
-			}
-			return false;
-		}
-	}
 
 	public BugzillaClient(URL url, String username, String password, String htAuthUser, String htAuthPass,
 			String characterEncoding) {
@@ -204,11 +178,9 @@ public class BugzillaClient {
 	public void validate() throws IOException, CoreException {
 		GzipGetMethod method = null;
 		try {
-			isValidation = true;
 			logout();
 			method = getConnect(repositoryUrl + "/");
 		} finally {
-			isValidation = false;
 			if (method != null) {
 				method.releaseConnection();
 			}
@@ -271,9 +243,9 @@ public class BugzillaClient {
 			// getMethod.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
 			// getMethod.getParams().setCookiePolicy(CookiePolicy.RFC_2109);
 
-			if (!isValidation) {
-				getMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new BugzillaRetryHandler());
-			}
+//			if (!isValidation) {
+//				getMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new BugzillaRetryHandler());
+//			}
 			getMethod.setDoAuthentication(true);
 
 			int code;
@@ -382,9 +354,9 @@ public class BugzillaClient {
 					+ characterEncoding);
 			postMethod.setRequestBody(formData);
 			postMethod.setDoAuthentication(true);
-			if (!isValidation) {
-				postMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new BugzillaRetryHandler());
-			}
+//			if (!isValidation) {
+//				postMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new BugzillaRetryHandler());
+//			}
 			// httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(WebClientUtil.CONNNECT_TIMEOUT);
 			postMethod.setFollowRedirects(false);
 
@@ -762,7 +734,7 @@ public class BugzillaClient {
 		// Bug#175054
 		httpClient.getHttpConnectionManager().getParams().setSoTimeout(WebClientUtil.CONNNECT_TIMEOUT);
 
-		postMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new BugzillaRetryHandler());
+//		postMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new BugzillaRetryHandler());
 		postMethod.setRequestBody(formData);
 		postMethod.setDoAuthentication(true);
 		// httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(CONNECT_TIMEOUT);
@@ -1221,7 +1193,8 @@ public class BugzillaClient {
 				if (method == null) {
 					throw new IOException("Could not post form, client returned null method.");
 				}
-
+				
+				boolean parseable = false;
 				if (method.getResponseHeader("Content-Type") != null) {
 					Header responseTypeHeader = method.getResponseHeader("Content-Type");
 					for (String type : VALID_CONFIG_CONTENT_TYPES) {
@@ -1230,13 +1203,18 @@ public class BugzillaClient {
 									method.getResponseBodyAsUnzippedStream(), characterEncoding);
 							factory.populateReport(taskDataMap);
 							taskIds.removeAll(idsToRetrieve);
+							parseable = true;
+							break;
 						}
 					}
-				} else {
+				}
 
+				if (!parseable) {
 					parseHtmlError(new BufferedReader(new InputStreamReader(method.getResponseBodyAsUnzippedStream(),
 							characterEncoding)));
+					break;
 				}
+				
 			} finally {
 				if (method != null) {
 					method.releaseConnection();
@@ -1298,7 +1276,7 @@ public class BugzillaClient {
 			// authentication
 			// getMethod.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
 
-			headMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new BugzillaRetryHandler());
+//			headMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new BugzillaRetryHandler());
 			headMethod.setDoAuthentication(true);
 
 			int code;
