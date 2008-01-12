@@ -33,6 +33,7 @@ import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.mylyn.internal.trac.core.model.TracComponent;
@@ -703,7 +704,7 @@ public class TracWebClient extends AbstractTracClient {
 				break;
 			}
 		}
-		return HtmlStreamTokenizer.unescape(sb).toString();
+		return StringEscapeUtils.unescapeHtml(sb.toString());
 	}
 
 	/**
