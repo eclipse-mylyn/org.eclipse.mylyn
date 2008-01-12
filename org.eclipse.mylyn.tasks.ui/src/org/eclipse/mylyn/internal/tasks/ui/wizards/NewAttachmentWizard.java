@@ -312,6 +312,8 @@ public class NewAttachmentWizard extends Wizard {
 			addPage((attachPage = new NewAttachmentPage(attachment)));
 //			addPage((shotPage = new ScreenshotAttachmentPage(attachment)));
 		}
+		// XXX wizard needs refactoring: bug 193156 
+		attachPage.setSupportsDescription(!"jira".equals(task.getConnectorKind()));
 	}
 
 	public LocalAttachment getAttachment() {

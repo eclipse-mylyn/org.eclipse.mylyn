@@ -54,6 +54,8 @@ public class NewAttachmentPage extends WizardPage {
 
 	private Combo contentTypeList;
 
+	private boolean supportsDescription = true;
+
 	private static List<String> contentTypes;
 
 	private static Map<String, String> extensions2Types;
@@ -108,23 +110,25 @@ public class NewAttachmentPage extends WizardPage {
 		filePath.setEditable(false);
 		filePath.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 2, 1));
 
-		new Label(composite, SWT.NONE).setText("Description");
-		attachmentDesc = new Text(composite, SWT.BORDER);
-		attachmentDesc.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 2, 1));
+		if (supportsDescription) {
+			new Label(composite, SWT.NONE).setText("Description");
+			attachmentDesc = new Text(composite, SWT.BORDER);
+			attachmentDesc.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 2, 1));
 
-		attachmentDesc.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				if ("".equals(attachmentDesc.getText().trim())) {
-					thisPage.setErrorMessage("Description required");
-				} else {
-					if (!"".equals(filePath.getText())) {
-						thisPage.setPageComplete(true);
-						thisPage.setErrorMessage(null);
+			attachmentDesc.addModifyListener(new ModifyListener() {
+				public void modifyText(ModifyEvent e) {
+					if ("".equals(attachmentDesc.getText().trim())) {
+						thisPage.setErrorMessage("Description required");
+					} else {
+						if (!"".equals(filePath.getText())) {
+							thisPage.setPageComplete(true);
+							thisPage.setErrorMessage(null);
+						}
 					}
 				}
-			}
 
-		});
+			});
+		}
 
 		Label label = new Label(composite, SWT.NONE);
 		label.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false));
@@ -193,7 +197,7 @@ public class NewAttachmentPage extends WizardPage {
 				}
 
 				// check page completenes
-				if ("".equals(attachmentDesc.getText())) {
+				if (attachmentDesc != null && "".equals(attachmentDesc.getText())) {
 					thisPage.setErrorMessage("Description required");
 				} else {
 					if (!"".equals(filePath.getText())) {
@@ -233,11 +237,13 @@ public class NewAttachmentPage extends WizardPage {
 
 	@Override
 	public boolean isPageComplete() {
-		return !"".equals(filePath.getText().trim()) && !"".equals(attachmentDesc.getText().trim());
+		return !"".equals(filePath.getText().trim()) && (attachmentDesc == null || !"".equals(attachmentDesc.getText().trim()));
 	}
 
 	public void populateAttachment() {
-		attachment.setDescription(attachmentDesc.getText());
+		if (attachmentDesc != null) {
+			attachment.setDescription(attachmentDesc.getText());
+		}
 		attachment.setComment(attachmentComment.getText());
 	}
 
@@ -287,4 +293,12 @@ public class NewAttachmentPage extends WizardPage {
 		}
 	}
 
+	public boolean supportsDescription() {
+		return supportsDescription;
+	}
+	
+	public void setSupportsDescription(boolean supportsDescription) {
+		this.supportsDescription = supportsDescription;
+	}
+	
 }
