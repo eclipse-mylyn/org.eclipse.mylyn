@@ -63,8 +63,10 @@ public class FocusPackageExplorerAction extends AbstractAutoFocusViewAction {
 					}
 				}
 			}
+			return new StructuredSelection(elementToSelect);
+		} else {
+			return null;
 		}
-		return new StructuredSelection(elementToSelect);
 	}
 
 	// TODO: should have better way of doing this
