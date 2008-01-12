@@ -1719,44 +1719,48 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	}
 
 	private void restoreWidgetValues() {
-		IDialogSettings settings = getDialogSettings();
-		String repoId = "." + repository.getUrl();
-		if (!restoreQueryOptions || settings.getArray(STORE_PRODUCT_ID + repoId) == null || product == null) {
-			return;
-		}
-
-		// set widgets to stored values
-		product.setSelection(nonNullArray(settings, STORE_PRODUCT_ID + repoId));
-		component.setSelection(nonNullArray(settings, STORE_COMPONENT_ID + repoId));
-		version.setSelection(nonNullArray(settings, STORE_VERSION_ID + repoId));
-		target.setSelection(nonNullArray(settings, STORE_MSTONE_ID + repoId));
-		status.setSelection(nonNullArray(settings, STORE_STATUS_ID + repoId));
-		resolution.setSelection(nonNullArray(settings, STORE_RESOLUTION_ID + repoId));
-		severity.setSelection(nonNullArray(settings, STORE_SEVERITY_ID + repoId));
-		priority.setSelection(nonNullArray(settings, STORE_PRIORITY_ID + repoId));
-		hardware.setSelection(nonNullArray(settings, STORE_HARDWARE_ID + repoId));
-		os.setSelection(nonNullArray(settings, STORE_OS_ID + repoId));
-		summaryOperation.select(settings.getInt(STORE_SUMMARYMATCH_ID + repoId));
-		commentOperation.select(settings.getInt(STORE_COMMENTMATCH_ID + repoId));
-		emailOperation.select(settings.getInt(STORE_EMAILMATCH_ID + repoId));
-		for (int i = 0; i < emailButtons.length; i++) {
-			emailButtons[i].setSelection(settings.getBoolean(STORE_EMAILBUTTON_ID + i + repoId));
-		}
-		summaryPattern.setText(settings.get(STORE_SUMMARYTEXT_ID + repoId));
-		commentPattern.setText(settings.get(STORE_COMMENTTEXT_ID + repoId));
-		emailPattern.setText(settings.get(STORE_EMAILADDRESS_ID + repoId));
 		try {
-		emailOperation2.select(settings.getInt(STORE_EMAIL2MATCH_ID + repoId));
-		} catch (Exception e) {
+			IDialogSettings settings = getDialogSettings();
+			String repoId = "." + repository.getUrl();
+			if (!restoreQueryOptions || settings.getArray(STORE_PRODUCT_ID + repoId) == null || product == null) {
+				return;
+			}
+
+			// set widgets to stored values
+			product.setSelection(nonNullArray(settings, STORE_PRODUCT_ID + repoId));
+			component.setSelection(nonNullArray(settings, STORE_COMPONENT_ID + repoId));
+			version.setSelection(nonNullArray(settings, STORE_VERSION_ID + repoId));
+			target.setSelection(nonNullArray(settings, STORE_MSTONE_ID + repoId));
+			status.setSelection(nonNullArray(settings, STORE_STATUS_ID + repoId));
+			resolution.setSelection(nonNullArray(settings, STORE_RESOLUTION_ID + repoId));
+			severity.setSelection(nonNullArray(settings, STORE_SEVERITY_ID + repoId));
+			priority.setSelection(nonNullArray(settings, STORE_PRIORITY_ID + repoId));
+			hardware.setSelection(nonNullArray(settings, STORE_HARDWARE_ID + repoId));
+			os.setSelection(nonNullArray(settings, STORE_OS_ID + repoId));
+			summaryOperation.select(settings.getInt(STORE_SUMMARYMATCH_ID + repoId));
+			commentOperation.select(settings.getInt(STORE_COMMENTMATCH_ID + repoId));
+			emailOperation.select(settings.getInt(STORE_EMAILMATCH_ID + repoId));
+			for (int i = 0; i < emailButtons.length; i++) {
+				emailButtons[i].setSelection(settings.getBoolean(STORE_EMAILBUTTON_ID + i + repoId));
+			}
+			summaryPattern.setText(settings.get(STORE_SUMMARYTEXT_ID + repoId));
+			commentPattern.setText(settings.get(STORE_COMMENTTEXT_ID + repoId));
+			emailPattern.setText(settings.get(STORE_EMAILADDRESS_ID + repoId));
+			try {
+				emailOperation2.select(settings.getInt(STORE_EMAIL2MATCH_ID + repoId));
+			} catch (Exception e) {
+				//ignore
+			}
+			for (int i = 0; i < emailButtons2.length; i++) {
+				emailButtons2[i].setSelection(settings.getBoolean(STORE_EMAIL2BUTTON_ID + i + repoId));
+			}
+			emailPattern2.setText(settings.get(STORE_EMAIL2ADDRESS_ID + repoId));
+			if (settings.get(STORE_KEYWORDS_ID + repoId) != null) {
+				keywords.setText(settings.get(STORE_KEYWORDS_ID + repoId));
+				keywordsOperation.select(settings.getInt(STORE_KEYWORDSMATCH_ID + repoId));
+			}
+		} catch (IllegalArgumentException e) {
 			//ignore
-		}
-		for (int i = 0; i < emailButtons2.length; i++) {
-			emailButtons2[i].setSelection(settings.getBoolean(STORE_EMAIL2BUTTON_ID + i + repoId));
-		}
-		emailPattern2.setText(settings.get(STORE_EMAIL2ADDRESS_ID + repoId));
-		if (settings.get(STORE_KEYWORDS_ID + repoId) != null) {
-			keywords.setText(settings.get(STORE_KEYWORDS_ID + repoId));
-			keywordsOperation.select(settings.getInt(STORE_KEYWORDSMATCH_ID + repoId));
 		}
 	}
 
