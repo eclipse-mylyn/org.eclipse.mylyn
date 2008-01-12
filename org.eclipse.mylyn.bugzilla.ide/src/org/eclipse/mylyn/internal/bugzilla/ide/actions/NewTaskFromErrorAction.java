@@ -16,8 +16,10 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.tasks.core.TaskSelection;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.views.log.LogEntry;
 
 /**
@@ -52,8 +54,9 @@ public class NewTaskFromErrorAction implements IObjectActionDelegate {
 			sb.append(entry.getStack());
 		}
 
+		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		TaskSelection taskSelection = new TaskSelection("", sb.toString());
-		TasksUiUtil.openNewTaskWizard(taskSelection, false);
+		TasksUiUtil.openNewTaskEditor(shell, taskSelection, null);
 	}
 
 	public void run(IAction action) {

@@ -17,8 +17,10 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.mylyn.tasks.core.TaskSelection;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Creates a new task from the selected JUnit Test.
@@ -54,8 +56,9 @@ public class NewTaskFromJunitResultViewAction implements IViewActionDelegate, IS
 		sb.append("\nStack Trace:\n");
 		sb.append(traceString);
 
+		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		TaskSelection taskSelection = new TaskSelection("", sb.toString());
-		TasksUiUtil.openNewTaskWizard(taskSelection, false);
+		TasksUiUtil.openNewTaskEditor(shell, taskSelection, null);
 	}
 
 	public void selectionChanged(SelectionChangedEvent event) {
