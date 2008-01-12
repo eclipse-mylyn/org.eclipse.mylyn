@@ -62,7 +62,7 @@ public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewActio
 					if (ContextCorePlugin.getContextManager().isContextActive()
 							&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
 									ContextUiPrefContstants.NAVIGATORS_AUTO_FILTER_ENABLE)) {
-						tempSuppressExpandAll = true;
+						internalSuppressExpandAll = true;
 						update(true);
 					}
 				} catch (Exception e) {
@@ -75,10 +75,10 @@ public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewActio
 	public void contextActivated(IInteractionContext context) {
 		if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
 				ContextUiPrefContstants.NAVIGATORS_AUTO_FILTER_ENABLE)) {
-			tempSuppressExpandAll = true;
+			internalSuppressExpandAll = true;
 			update(true);
 		} else {
-			tempSuppressExpandAll = true;
+			internalSuppressExpandAll = true;
 			update(false);
 		}
 	}

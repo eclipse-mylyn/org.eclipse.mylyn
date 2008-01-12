@@ -84,7 +84,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 	 * 
 	 * Will be remove for 3.0
 	 */
-	boolean tempSuppressExpandAll = false;
+	protected boolean internalSuppressExpandAll = false;
 	
 	private final IInteractionContextListener CONTEXT_LISTENER = new IInteractionContextListener() {
 
@@ -424,7 +424,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 				viewer.addFilter(interestFilter);
 			}
 
-			if (viewer instanceof TreeViewer && !tempSuppressExpandAll) {
+			if (viewer instanceof TreeViewer && !internalSuppressExpandAll) {
 				((TreeViewer) viewer).expandAll();
 			}
 			return true;
@@ -432,7 +432,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 			StatusHandler.fail(t, "Could not install viewer filter on: " + globalPrefId, false);
 		} finally {
 			viewer.getControl().setRedraw(true);
-			tempSuppressExpandAll = false;
+			internalSuppressExpandAll = false;
 		}
 		return false;
 	}
