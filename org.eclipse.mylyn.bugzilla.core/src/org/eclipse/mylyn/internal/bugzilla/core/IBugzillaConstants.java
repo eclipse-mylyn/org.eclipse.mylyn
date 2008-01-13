@@ -54,6 +54,8 @@ public interface IBugzillaConstants {
 	public static final String URL_POST_LOGIN = "/index.cgi";
 
 	public static final String URL_POST_ATTACHMENT_UPLOAD = "/attachment.cgi";
+	
+	public static final String URL_BUGLIST = "/buglist.cgi";
 
 	public static final String URL_GET_ATTACHMENT_DOWNLOAD = "/attachment.cgi?id=";
 

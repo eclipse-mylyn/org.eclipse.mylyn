@@ -282,6 +282,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	public boolean markStaleTasks(TaskRepository repository, Set<AbstractTask> tasks, IProgressMonitor monitor)
 			throws CoreException {
 		try {
+			
 			monitor.beginTask("Checking for changed tasks", IProgressMonitor.UNKNOWN);
 
 			if (repository.getSynchronizationTimeStamp() == null) {
@@ -306,32 +307,21 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			// so, we can't say that no tasks has changed in repository
 
 			Set<AbstractTask> changedTasks = new HashSet<AbstractTask>();
-			int queryCounter = -1;
 			Iterator<AbstractTask> itr = tasks.iterator();
 			while (itr.hasNext()) {
-				queryCounter++;
 				AbstractTask task = itr.next();
 				String newurlQueryString = URLEncoder.encode(task.getTaskId() + ",", repository.getCharacterEncoding());
-				if ((urlQueryString.length() + newurlQueryString.length() + IBugzillaConstants.CONTENT_TYPE_RDF.length()) > IBugzillaConstants.MAX_URL_LENGTH) {
-					queryForChanged(repository, changedTasks, urlQueryString);
-					queryCounter = 0;
-					urlQueryString = urlQueryBase + BUG_ID;
-				}
 				urlQueryString += newurlQueryString;
-				if (!itr.hasNext()) {
-					queryForChanged(repository, changedTasks, urlQueryString);
-				}
 			}
-
+			
+			queryForChanged(repository, changedTasks, urlQueryString);
+			
 			for (AbstractTask task : tasks) {
 				if (changedTasks.contains(task)) {
 					task.setStale(true);
 				}
 			}
 
-//			for (AbstractTask task : changedTasks) {
-//				task.setStale(true);
-//			}
 
 			// FIXME check if new tasks were added
 			//return changedTasks.isEmpty();
@@ -345,7 +335,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			monitor.done();
 		}
 	}
-
+	
 	private void queryForChanged(final TaskRepository repository, Set<AbstractTask> changedTasks, String urlQueryString)
 			throws UnsupportedEncodingException, CoreException {
 		QueryHitCollector collector = new QueryHitCollector(new ITaskFactory() {
@@ -360,40 +350,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 		performQuery(query, repository, new NullProgressMonitor(), collector);
 		changedTasks.addAll(collector.getTasks());
-
-//		for (AbstractTask taskHit : collector.getTaskHits()) {
-//			// String handle =
-//			// AbstractTask.getHandle(repository.getUrl(),
-//			// hit.getId());
-//			if (taskHit != null && taskHit instanceof AbstractTask) {
-//				AbstractTask repositoryTask = (AbstractTask) taskHit;
-//				// Hack to avoid re-syncing last task from previous
-//				// synchronization
-//				// This can be removed once we are getting a query timestamp
-//				// from the repository rather than
-//				// using the last modified stamp of the last task modified in
-//				// the return hits.
-//				// (or the changeddate field in the hit rdf becomes consistent,
-//				// currently it doesn't return a proper modified date string)
-//				// if (repositoryTask.getTaskData() != null
-//				// &&
-//				// repositoryTask.getTaskData().getLastModified().equals(repository.getSyncTimeStamp()))
-//				// {
-//				// // String taskId =
-//				// //
-//				// RepositoryTaskHandleUtil.getTaskId(repositoryTask.getHandleIdentifier());
-//				// RepositoryTaskData taskData =
-//				// getTaskDataHandler().getTaskData(repository,
-//				// repositoryTask.getTaskId());
-//				// if (taskData != null &&
-//				// taskData.getLastModified().equals(repository.getSyncTimeStamp()))
-//				// {
-//				// continue;
-//				// }
-//				// }
-//				changedTasks.add(repositoryTask);
-//			}
-//		}
 	}
 
 	@Override

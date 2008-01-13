@@ -14,6 +14,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -470,32 +471,54 @@ public class BugzillaClient {
 
 	public boolean getSearchHits(AbstractRepositoryQuery query, ITaskCollector collector) throws IOException,
 			CoreException {
-		GzipGetMethod method = null;
-		try {
-			String queryUrl = query.getUrl();
-			// Test that we don't specify content type twice.
-			// Should only be specified here (not in passed in url if possible)
-			if (!queryUrl.contains("ctype=rdf")) {
-				queryUrl = queryUrl.concat(IBugzillaConstants.CONTENT_TYPE_RDF);
-			}
+		GzipPostMethod postMethod = null;
 
-			method = getConnectGzip(queryUrl);
-			if (method.getResponseHeader("Content-Type") != null) {
-				Header responseTypeHeader = method.getResponseHeader("Content-Type");
+		try {
+			
+			String queryUrl = query.getUrl();
+			int start = queryUrl.indexOf('?');
+			
+			List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+			if(start != -1) {
+				queryUrl = queryUrl.substring(start + 1);
+				String[] result = queryUrl.split("&");
+				if(result.length > 0) {
+					for (String string : result) {
+						String[] nameValue = string.split("=");
+						if(nameValue.length == 1) {
+							pairs.add(new NameValuePair(nameValue[0].trim(), ""));
+						} else if(nameValue.length == 2 && nameValue[0] != null && nameValue[1] != null) {
+							pairs.add(new NameValuePair(nameValue[0].trim(), URLDecoder.decode(nameValue[1].trim(), characterEncoding)));
+						}
+					}
+				}
+			}
+			
+			NameValuePair ctypePair = new NameValuePair("ctype", "rdf");
+			// Test that we don't specify content type twice.
+			if(!pairs.contains(ctypePair)) {
+				pairs.add(ctypePair);
+			}
+			
+			postMethod = postFormData(IBugzillaConstants.URL_BUGLIST, pairs.toArray(new NameValuePair[pairs.size()]));
+			//System.err.println(postMethod.getResponseBodyAsString());
+			if (postMethod.getResponseHeader("Content-Type") != null) {
+				Header responseTypeHeader = postMethod.getResponseHeader("Content-Type");
 				for (String type : VALID_CONFIG_CONTENT_TYPES) {
 					if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
 						RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory(
-								method.getResponseBodyAsUnzippedStream(), characterEncoding);
+								postMethod.getResponseBodyAsUnzippedStream(), characterEncoding);
 						queryFactory.performQuery(repositoryUrl.toString(), collector, QueryHitCollector.MAX_HITS);
 						return !collector.getTasks().isEmpty();
 					}
 				}
 			}
-			parseHtmlError(new BufferedReader(new InputStreamReader(method.getResponseBodyAsUnzippedStream(),
+			
+			parseHtmlError(new BufferedReader(new InputStreamReader(postMethod.getResponseBodyAsUnzippedStream(),
 					characterEncoding)));
 		} finally {
-			if (method != null) {
-				method.releaseConnection();
+			if (postMethod != null) {
+				postMethod.releaseConnection();
 			}
 		}
 		return false;
@@ -714,7 +737,7 @@ public class BugzillaClient {
 	}
 
 	/**
-	 * calling method must release the connection on the returned PostMethod once finished. TODO: refactor
+	 * calling method must release the connection on the returned PostMethod once finished.
 	 * 
 	 * @throws CoreException
 	 */
