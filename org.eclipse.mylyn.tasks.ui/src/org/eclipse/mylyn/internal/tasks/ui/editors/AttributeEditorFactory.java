@@ -8,6 +8,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 
 /**
@@ -16,11 +17,30 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
  */
 public class AttributeEditorFactory {
 
-	public AttributeEditorFactory() {
+	private final AbstractAttributeEditorManager manager;
+
+	public AttributeEditorFactory(AbstractAttributeEditorManager manager) {
+		this.manager = manager;
 	}
 
-	public AbstractAttributeEditor getEditor(RepositoryTaskAttribute taskAttribute) {
-		return null;
+	public AbstractAttributeEditor createEditor(String type, RepositoryTaskAttribute taskAttribute) {
+		Assert.isNotNull(type);
+
+		if (RepositoryTaskAttribute.TYPE_DATE.equals(type)) {
+			return new DateAttributeEditor(manager, taskAttribute);
+		} else if (RepositoryTaskAttribute.TYPE_LONG_TEXT.equals(type)) {
+			return new LongTextAttributeEditor(manager, taskAttribute);
+		} else if (RepositoryTaskAttribute.TYPE_MULTI_SELECT.equals(type)) {
+			return new MultiSelectionAttributeEditor(manager, taskAttribute);	
+		} else if (RepositoryTaskAttribute.TYPE_SHORT_TEXT.equals(type)) {
+			return new TextAttributeEditor(manager, taskAttribute);	
+		} else if (RepositoryTaskAttribute.TYPE_SINGLE_SELECT.equals(type)) {
+			return new SingleSelectionAttributeEditor(manager, taskAttribute);	
+		} else if (RepositoryTaskAttribute.TYPE_TASK_DEPENDENCY.equals(type)) {
+			return new TaskDependendyAttributeEditor(manager, taskAttribute);	
+		} 
+		
+		throw new IllegalArgumentException("Unsupported editor type: \"" + type + "\"");
 	}
 
 }

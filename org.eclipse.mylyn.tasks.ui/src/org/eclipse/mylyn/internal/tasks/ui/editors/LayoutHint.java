@@ -8,10 +8,42 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
+
 public class LayoutHint {
 
-	public int preferredWith;
+	public final static int DEFAULT_PRIORITY = 10;
+	
+	public enum ColumnSpan {
+		MULTIPLE, SINGLE
+	};
 
-	public int preferredHeight;
+	public enum RowSpan {
+		MULTIPLE, SINGLE
+	};
 
+	public RowSpan rowSpan;
+
+	public ColumnSpan columnSpan;
+
+	public LayoutHint(RowSpan rowHint, ColumnSpan columnHint) {	
+		this.rowSpan = rowHint;
+		this.columnSpan = columnHint;
+	}
+
+	public int getPriority() {
+		if (columnSpan == null || columnSpan == ColumnSpan.SINGLE) {
+			if (rowSpan == null || rowSpan == RowSpan.SINGLE) {
+				return DEFAULT_PRIORITY;
+			} else {
+				return DEFAULT_PRIORITY * 2;
+			}
+		} else {
+			if (rowSpan == null || rowSpan == RowSpan.SINGLE) {
+				return DEFAULT_PRIORITY * 3;
+			} else {
+				return DEFAULT_PRIORITY * 4;
+			}			
+		}
+	}
+	
 }

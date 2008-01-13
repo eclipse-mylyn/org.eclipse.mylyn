@@ -144,6 +144,11 @@ public class RepositoryTaskAttribute implements Serializable {
 	 */
 	public static final String TYPE_PERSON = "person";
 
+	/**
+	 * @since 2.3
+	 */
+	public static final String TYPE_TASK_DEPENDENCY = "taskDepenedency";
+
 	private boolean hidden = false;
 
 	private boolean isReadOnly = false;

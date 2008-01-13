@@ -5,11 +5,12 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-
 package org.eclipse.mylyn.internal.tasks.core;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
@@ -18,6 +19,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 /**
  * @author Steffen Pingel
  */
+// TODO EDITOR return null if attribute value invalid for primitive types? 
 public abstract class AbstractAttributeMapper {
 
 	private final AbstractAttributeFactory attributeFactory;
@@ -28,6 +30,18 @@ public abstract class AbstractAttributeMapper {
 
 	public String mapToRepositoryKey(String key) {
 		return attributeFactory.mapCommonAttributeKey(key);
+	}
+
+	public boolean getBooleanValue(RepositoryTaskAttribute attribute) {
+		String booleanString = attribute.getValue();
+		if (booleanString != null && booleanString.length() > 0) {
+			return Boolean.parseBoolean(booleanString);
+		}
+		return false;
+	}
+
+	public void setBooleanValue(RepositoryTaskAttribute attribute, Boolean value) {
+		attribute.setValue(Boolean.toString(value));
 	}
 
 	public Date getDateValue(RepositoryTaskAttribute attribute) {
@@ -46,7 +60,17 @@ public abstract class AbstractAttributeMapper {
 		attribute.setValue(Long.toString(date.getTime()));
 	}
 
-	public abstract Map<String, String> getOptions(RepositoryTaskAttribute attribute);
+	/**
+	 * Returns labelByValue.
+	 */
+	public Map<String, String> getOptions(RepositoryTaskAttribute attribute) {
+		List<String> options = attribute.getOptions();
+		Map<String, String> map = new LinkedHashMap<String, String>();
+		for (String option : options) {
+			map.put(option, option);
+		}
+		return map;
+	}
 
 	public void setValue(RepositoryTaskAttribute attribute, String value) {
 		attribute.setValue(value);
@@ -58,6 +82,28 @@ public abstract class AbstractAttributeMapper {
 
 	public String[] getValues(RepositoryTaskAttribute attribute) {
 		return attribute.getValues().toArray(new String[0]);
+	}
+
+	public String getValue(RepositoryTaskAttribute taskAttribute) {
+		return taskAttribute.getValue();
+	}
+
+	public String getLabel(RepositoryTaskAttribute taskAttribute) {
+		return taskAttribute.getName();
+	}
+
+	public String getValueLabel(RepositoryTaskAttribute taskAttribute) {
+		StringBuilder sb = new StringBuilder();
+		String sep = "";
+		for (String key : taskAttribute.getValues()) {
+			sb.append(sep).append(key);
+			sep = ", ";
+		}
+		return sb.toString();
+	}
+
+	public String[] getValueLabels(RepositoryTaskAttribute taskAttribute) {
+		return taskAttribute.getValues().toArray(new String[0]);
 	}
 
 }

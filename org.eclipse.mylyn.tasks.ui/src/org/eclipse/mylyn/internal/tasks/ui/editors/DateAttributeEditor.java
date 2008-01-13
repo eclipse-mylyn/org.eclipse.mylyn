@@ -15,7 +15,6 @@ import java.util.Date;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.ui.DatePicker;
-import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -32,8 +31,8 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
  */
 public class DateAttributeEditor extends AbstractAttributeEditor {
 
-	public DateAttributeEditor(AbstractRepositoryTaskEditor editor, RepositoryTaskAttribute taskAttribute) {
-		super(editor, taskAttribute);
+	public DateAttributeEditor(AbstractAttributeEditorManager manager, RepositoryTaskAttribute taskAttribute) {
+		super(manager, taskAttribute);
 	}
 
 	@Override
