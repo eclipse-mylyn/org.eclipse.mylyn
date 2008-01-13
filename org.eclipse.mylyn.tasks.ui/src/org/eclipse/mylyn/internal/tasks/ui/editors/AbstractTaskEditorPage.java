@@ -61,6 +61,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.tasks.ui.editors.NewTaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.RepositoryTaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskFormPage;
@@ -401,7 +402,8 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 	 * @param attribute
 	 *            changed attribute
 	 */
-	boolean attributeChanged(RepositoryTaskAttribute attribute) {
+	// TODO EDITOR make private?
+	public boolean attributeChanged(RepositoryTaskAttribute attribute) {
 		if (attribute == null) {
 			return false;
 		}
@@ -498,8 +500,10 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 				TaskListColorsAndFonts.THEME_COLOR_TASKS_INCOMING_BACKGROUND);
 
 		super.createFormContent(managedForm);
-		form = managedForm.getForm();
 
+		this.parentEditor = (TaskEditor) getEditor();
+
+		form = managedForm.getForm();
 		toolkit = managedForm.getToolkit();
 		registerDropListener(form);
 
@@ -548,10 +552,10 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, true).applyTo(peopleSection);
 
 		TaskEditorPeoplePart peoplePart = new TaskEditorPeoplePart(this);
-		peoplePart.setInput(connector, repository, taskData);
-		peoplePart.createControl(composite, toolkit);
-
 		getManagedForm().addPart(peoplePart);
+		peoplePart.setInput(connector, repository, taskData);
+		peoplePart.createControl(peopleSection, toolkit);		
+		peopleSection.setClient(peoplePart.getControl());
 	}
 
 	ImageHyperlink createReplyHyperlink(final int commentNum, Composite composite, final String commentBody) {
@@ -795,8 +799,13 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 		return null;
 	}
 
-	Color getColorIncoming() {
+	// TODO EDITOR make private?
+	public Color getColorIncoming() {
 		return colorIncoming;
+	}
+
+	public AbstractRepositoryConnector getConnector() {
+		return connector;
 	}
 
 	/**
@@ -835,6 +844,14 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 		return null;
 	}
 
+	public RepositoryTaskData getTaskData() {
+		return taskData;
+	}
+
+	public TaskRepository getTaskRepository() {
+		return repository;
+	}
+	
 	private IStatus handleSubmitError(final CoreException exception) {
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
@@ -865,6 +882,14 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input) {
+		if (getEditorInput() instanceof RepositoryTaskEditorInput) {
+			RepositoryTaskEditorInput existingInput = (RepositoryTaskEditorInput) getEditorInput();
+			setPartName(existingInput.getName());
+		} else if (getEditorInput() instanceof NewTaskEditorInput) {
+			String label = ((NewTaskEditorInput) getEditorInput()).getName();
+			setPartName(label);
+		}
+
 		if (!(input instanceof RepositoryTaskEditorInput)) {
 			return;
 		}

@@ -432,6 +432,8 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 //		if (supportsAttachmentDelete()) {
 //			registerDropListener(deleteAttachmentButton);
 //		}
+		
+		setControl(attachmentsComposite);
 	}
 
 	public void setSupportsDelete(boolean supportsDelete) {

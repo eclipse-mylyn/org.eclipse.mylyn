@@ -41,7 +41,7 @@ import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 /**
  * @author Steffen Pingel
  */
-// TODO EDITOR use this class
+// TODO EDITOR rename to AttributeUiToolkit?
 public class AttributeEditorToolkit {
 
 	private class StyledTextFocusListener implements org.eclipse.swt.events.FocusListener {

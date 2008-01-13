@@ -175,8 +175,9 @@ public class TaskEditorPeoplePart extends AbstractTaskEditorPart {
 	/**
 	 * Creates a check box for adding the repository user to the cc list. Does nothing if the repository does not have a
 	 * valid username, the repository user is the assignee, reporter or already on the the cc list.
+	 * @param toolkit 
 	 */
-	protected void addSelfToCC(Composite composite) {
+	protected void addSelfToCC(Composite composite, FormToolkit toolkit) {
 
 		if (getTaskRepository().getUserName() == null) {
 			return;
@@ -197,7 +198,6 @@ public class TaskEditorPeoplePart extends AbstractTaskEditorPart {
 			return;
 		}
 
-		FormToolkit toolkit = getManagedForm().getToolkit();
 		toolkit.createLabel(composite, "");
 		final Button addSelfButton = toolkit.createButton(composite, "Add me to CC", SWT.CHECK);
 		addSelfButton.setSelection(RepositoryTaskAttribute.TRUE.equals(getTaskData().getAttributeValue(
@@ -243,9 +243,11 @@ public class TaskEditorPeoplePart extends AbstractTaskEditorPart {
 						+ getTaskData().getAttributeValue(RepositoryTaskAttribute.USER_REPORTER) + ">");
 			}
 		}
-		addSelfToCC(peopleComposite);
+		
+		addSelfToCC(peopleComposite, toolkit);
 		addCCList(peopleComposite, toolkit);
-		getManagedForm().getToolkit().paintBordersFor(peopleComposite);
+
+		toolkit.paintBordersFor(peopleComposite);
 
 		setControl(peopleComposite);
 	}
