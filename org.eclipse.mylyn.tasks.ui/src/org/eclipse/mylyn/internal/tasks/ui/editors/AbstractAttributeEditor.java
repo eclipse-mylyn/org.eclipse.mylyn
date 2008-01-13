@@ -64,9 +64,7 @@ public abstract class AbstractAttributeEditor {
 	}
 
 	protected void decorate(Control control) {
-		if (manager.hasIncomingChanges(getTaskAttribute())) {
-			control.setBackground(manager.getColorIncoming());
-		}
+		manager.decorate(getTaskAttribute(), control);
 	}
 
 	public void dispose() {

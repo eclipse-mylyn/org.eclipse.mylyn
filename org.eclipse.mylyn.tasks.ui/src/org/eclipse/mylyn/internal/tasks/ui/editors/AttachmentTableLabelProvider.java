@@ -40,6 +40,7 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 	
 	public AttachmentTableLabelProvider(AbstractRepositoryTaskEditor AbstractTaskEditor, ILabelProvider provider,
 			ILabelDecorator decorator) {
+		// FIXME this class must not depend on AbstractTaskEditor
 		this.AbstractTaskEditor = AbstractTaskEditor;
 	}
 
@@ -98,7 +99,11 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 			return attachment.getCreator();
 		case 4:
 			// TODO should retrieve Date object from IOfflineTaskHandler
-			return this.AbstractTaskEditor.formatDate(attachment.getDateCreated());
+			if (AbstractTaskEditor != null) {
+				return this.AbstractTaskEditor.formatDate(attachment.getDateCreated());
+			} else {
+				return attachment.getDateCreated();
+			}
 		}
 		return "unrecognized column";
 	}

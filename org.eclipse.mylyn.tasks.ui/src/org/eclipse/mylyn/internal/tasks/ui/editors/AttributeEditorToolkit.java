@@ -149,7 +149,8 @@ public class AttributeEditorToolkit {
 	 *            instance providing content proposals
 	 * @return the ContentAssistCommandAdapter for the field.
 	 */
-	private ContentAssistCommandAdapter applyContentAssist(Text text, IContentProposalProvider proposalProvider) {
+	// TODO EDITOR make private
+	protected ContentAssistCommandAdapter applyContentAssist(Text text, IContentProposalProvider proposalProvider) {
 		ControlDecoration controlDecoration = new ControlDecoration(text, (SWT.TOP | SWT.LEFT));
 		controlDecoration.setMarginWidth(0);
 		controlDecoration.setShowHover(true);
@@ -193,8 +194,9 @@ public class AttributeEditorToolkit {
 	 *            the attribute
 	 * @return true if content assist is available for the specified attribute.
 	 */
-	private boolean hasContentAssist(RepositoryTaskAttribute taskAttribute) {
-		// TODO EDITOR
+	// TODO EDITOR make private
+	boolean hasContentAssist(RepositoryTaskAttribute taskAttribute) {
+		// TODO EDITOR implement
 		return false;
 	}
 
