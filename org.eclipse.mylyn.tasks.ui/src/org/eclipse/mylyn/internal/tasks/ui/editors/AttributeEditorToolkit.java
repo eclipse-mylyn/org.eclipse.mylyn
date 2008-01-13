@@ -24,6 +24,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalProvider;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractRenderingEngine;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -188,6 +189,17 @@ public class AttributeEditorToolkit {
 	}
 
 	/**
+	 * Subclasses that support HTML preview of ticket description and comments override this method to return an
+	 * instance of AbstractRenderingEngine
+	 * 
+	 * @return <code>null</code> if HTML preview is not supported for the repository (default)
+	 * @since 2.1
+	 */
+	public AbstractRenderingEngine getRenderingEngine(RepositoryTaskAttribute attribute) {
+		return null;
+	}
+
+	/**
 	 * Called to check if there's content assist available for the given attribute.
 	 * 
 	 * @param attribute
@@ -204,5 +216,34 @@ public class AttributeEditorToolkit {
 		// TODO EDITOR
 		return false;
 	};
+
+//	/**
+//	 * Creates an IContentProposalProvider to provide content assist proposals for the given operation.
+//	 * 
+//	 * @param operation
+//	 *            operation for which to provide content assist.
+//	 * @return the IContentProposalProvider.
+//	 */
+//	protected IContentProposalProvider createContentProposalProvider(RepositoryOperation operation) {
+//
+//		return new PersonProposalProvider(repositoryTask, taskData);
+//	}
+
+//	protected ILabelProvider createProposalLabelProvider(RepositoryOperation operation) {
+//
+//		return new PersonProposalLabelProvider();
+//	}
+
+//	/**
+//	 * Called to check if there's content assist available for the given operation.
+//	 * 
+//	 * @param operation
+//	 *            the operation
+//	 * @return true if content assist is available for the specified operation.
+//	 */
+//	protected boolean hasContentAssist(RepositoryOperation operation) {
+//		return false;
+//	}
+//
 
 }

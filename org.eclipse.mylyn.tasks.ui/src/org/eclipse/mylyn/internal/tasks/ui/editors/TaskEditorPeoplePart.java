@@ -72,9 +72,9 @@ public class TaskEditorPeoplePart extends AbstractTaskEditorPart {
 				textField = createTextField(peopleComposite, assignedAttribute, SWT.FLAT | SWT.READ_ONLY, toolkit);
 			} else {
 				textField = createTextField(peopleComposite, assignedAttribute, SWT.FLAT, toolkit);
-				ContentAssistCommandAdapter adapter = getTaskEditorPage().applyContentAssist(textField,
-						getTaskEditorPage().createContentProposalProvider(assignedAttribute));
-				ILabelProvider propsalLabelProvider = getTaskEditorPage().createProposalLabelProvider(assignedAttribute);
+				ContentAssistCommandAdapter adapter = getTaskEditorPage().getAttributeEditorToolkit().applyContentAssist(textField,
+						getTaskEditorPage().getAttributeEditorToolkit().createContentProposalProvider(assignedAttribute));
+				ILabelProvider propsalLabelProvider = getTaskEditorPage().getAttributeEditorToolkit().createLabelProposalProvider(assignedAttribute);
 				if (propsalLabelProvider != null) {
 					adapter.setLabelProvider(propsalLabelProvider);
 				}
@@ -105,7 +105,7 @@ public class TaskEditorPeoplePart extends AbstractTaskEditorPart {
 
 			if (getTaskEditorPage().getAttributeEditorToolkit().hasContentAssist(addCCattribute)) {
 				ContentAssistCommandAdapter adapter = getTaskEditorPage().getAttributeEditorToolkit().applyContentAssist(text,
-						getTaskEditorPage().createContentProposalProvider(addCCattribute));
+						getTaskEditorPage().getAttributeEditorToolkit().createContentProposalProvider(addCCattribute));
 				ILabelProvider propsalLabelProvider = getTaskEditorPage().getAttributeEditorToolkit().createLabelProposalProvider(addCCattribute);
 				if (propsalLabelProvider != null) {
 					adapter.setLabelProvider(propsalLabelProvider);

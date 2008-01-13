@@ -8,7 +8,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -156,7 +155,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			}
 
 			formHyperlink.setText(taskComment.getNumber() + ": " + authorName + ", "
-					+ getTaskEditorPage().formatDate(taskComment.getCreated()));
+					+ formatDate(taskComment.getCreated()));
 
 			formHyperlink.setToolTipText(tooltipText);
 			formHyperlink.setEnabled(true);
@@ -193,7 +192,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 				@Override
 				public void linkActivated(HyperlinkEvent e) {
-					toggleExpandableComposite(!expandableComposite.isExpanded(), expandableComposite);
+					EditorUtil.toggleExpandableComposite(!expandableComposite.isExpanded(), expandableComposite);
 				}
 
 				@Override
@@ -272,12 +271,12 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			if ((repositoryTask != null && repositoryTask.getLastReadTimeStamp() == null)
 					|| editorInput.getOldTaskData() == null) {
 				// hit or lost task data, expose all comments
-				toggleExpandableComposite(true, expandableComposite);
+				EditorUtil.toggleExpandableComposite(true, expandableComposite);
 				foundNew = true;
 			} else if (getTaskEditorPage().getAttributeEditorManager().isNewComment(taskComment)) {
 				// TODO EDITOR getTaskEditorPage().getAttributeEditorManager().decorate(taskAttribute, control)
 				expandableComposite.setBackground(getTaskEditorPage().getAttributeEditorManager().getColorIncoming());
-				toggleExpandableComposite(true, expandableComposite);
+				EditorUtil.toggleExpandableComposite(true, expandableComposite);
 				foundNew = true;
 			}
 
@@ -309,7 +308,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 				}
 
 				if (composite.isExpanded()) {
-					toggleExpandableComposite(false, composite);
+					EditorUtil.toggleExpandableComposite(false, composite);
 				}
 
 //			Composite comp = composite.getParent();
@@ -353,7 +352,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 					continue;
 				}
 				if (!composite.isExpanded()) {
-					toggleExpandableComposite(true, composite);
+					EditorUtil.toggleExpandableComposite(true, composite);
 				}
 //			Composite comp = composite.getParent();
 //			while (comp != null && !comp.isDisposed()) {
@@ -388,28 +387,14 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		return supportsDelete;
 	}
 
-	/**
-	 * Programmatically expand the provided ExpandableComposite, using reflection to fire the expansion listeners (see
-	 * bug#70358)
-	 * 
-	 * @param comp
-	 */
-	// TODO EDITOR move to utility class?
-	private void toggleExpandableComposite(boolean expanded, ExpandableComposite comp) {
-		if (comp.isExpanded() != expanded) {
-			Method method = null;
-			try {
-				method = comp.getClass().getDeclaredMethod("programmaticToggleState");
-				method.setAccessible(true);
-				method.invoke(comp);
-			} catch (Exception e) {
-				// ignore
-			}
-		}
-	}
-
 	public TaskComment getSelectedComment() {
 		return selectedComment;
 	}
+
+	// TODO EDITOR where should this go?
+	public String formatDate(String dateString) {
+		return dateString;
+	}
+
 
 }

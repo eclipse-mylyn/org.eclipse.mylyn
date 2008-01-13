@@ -65,6 +65,27 @@ public abstract class AbstractAttributeEditorManager {
 		return input.getOldEdits().contains(taskAttribute);
 	}
 
+	/**
+	 * If implementing custom attributes you may need to override this method
+	 * 
+	 * @return true if one or more attributes exposed in the editor have
+	 */
+	// TODO EDITOR this should be moved somewhere else to iterate over the form parts instead of attributes
+	boolean hasVisibleOutgoingChanges(RepositoryTaskData taskData) {
+		if (taskData == null) {
+			return false;
+		}
+		for (RepositoryTaskAttribute attribute : taskData.getAttributes()) {
+			if (!attribute.isHidden()) {
+				if (hasOutgoingChanges(attribute)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+
 	public boolean isNewComment(TaskComment comment) {
 		// Simple test (will not reveal new comments if offline data was lost
 		if (input.getOldTaskData() != null) {

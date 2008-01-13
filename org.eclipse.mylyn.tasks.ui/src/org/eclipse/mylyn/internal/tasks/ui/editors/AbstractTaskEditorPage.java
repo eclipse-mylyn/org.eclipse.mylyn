@@ -8,11 +8,8 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -33,21 +30,10 @@ import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.jface.fieldassist.ContentProposalAdapter;
-import org.eclipse.jface.fieldassist.ControlDecoration;
-import org.eclipse.jface.fieldassist.FieldDecoration;
-import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
-import org.eclipse.jface.fieldassist.IContentProposalProvider;
-import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.text.ITextListener;
-import org.eclipse.jface.text.Region;
-import org.eclipse.jface.text.TextEvent;
 import org.eclipse.jface.text.TextViewer;
-import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.util.SafeRunnable;
-import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -55,8 +41,6 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.tasks.core.CommentQuoter;
-import org.eclipse.mylyn.internal.tasks.ui.PersonProposalLabelProvider;
-import org.eclipse.mylyn.internal.tasks.ui.PersonProposalProvider;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewSubTaskAction;
@@ -68,7 +52,6 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
-import org.eclipse.mylyn.tasks.core.RepositoryOperation;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
@@ -76,56 +59,32 @@ import org.eclipse.mylyn.tasks.core.TaskComment;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
-import org.eclipse.mylyn.tasks.ui.AbstractDuplicateDetector;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
-import org.eclipse.mylyn.tasks.ui.editors.AbstractRenderingEngine;
 import org.eclipse.mylyn.tasks.ui.editors.RepositoryTaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskFormPage;
-import org.eclipse.mylyn.tasks.ui.search.SearchHitCollector;
-import org.eclipse.osgi.util.NLS;
-import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.browser.Browser;
-import org.eclipse.swt.browser.LocationAdapter;
-import org.eclipse.swt.browser.LocationEvent;
-import org.eclipse.swt.custom.CCombo;
-import org.eclipse.swt.custom.StackLayout;
-import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.events.ControlAdapter;
-import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.fieldassist.ContentAssistCommandAdapter;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -137,7 +96,6 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.keys.IBindingService;
 import org.eclipse.ui.themes.IThemeManager;
 import org.eclipse.ui.views.contentoutline.ContentOutline;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
@@ -155,124 +113,11 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  */
 public abstract class AbstractTaskEditorPage extends TaskFormPage {
 
-	/**
-	 * A listener for selection of the summary field.
-	 * 
-	 * @since 2.1
-	 */
-	protected class DescriptionListener implements Listener {
-		public DescriptionListener() {
-		}
-
-		public void handleEvent(Event event) {
-			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
-					new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(),
-							taskData.getRepositoryKind(), getSectionLabel(SECTION_NAME.DESCRIPTION_SECTION), true,
-							taskData.getSummary()))));
-		}
-	}
-
-	/**
-	 * A listener for selection of the textbox where a new comment is entered in.
-	 */
-	private class NewCommentListener implements Listener {
-		public void handleEvent(Event event) {
-			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
-					new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(),
-							taskData.getRepositoryKind(), getSectionLabel(SECTION_NAME.NEWCOMMENT_SECTION), false,
-							taskData.getSummary()))));
-		}
-	}
-
-	/**
-	 * Class to handle the selection change of the radio buttons.
-	 */
-	private class RadioButtonListener implements SelectionListener, ModifyListener {
-
-		public void modifyText(ModifyEvent e) {
-			Button selected = null;
-			for (Button element : radios) {
-				if (element.getSelection()) {
-					selected = element;
-				}
-			}
-			// determine the operation to do to the bug
-			for (int i = 0; i < radios.length; i++) {
-				if (radios[i] != e.widget && radios[i] != selected) {
-					radios[i].setSelection(false);
-				}
-
-				if (e.widget == radios[i]) {
-					RepositoryOperation o = taskData.getOperation(radios[i].getText());
-					taskData.setSelectedOperation(o);
-					markDirty(true);
-				} else if (e.widget == radioOptions[i]) {
-					RepositoryOperation o = taskData.getOperation(radios[i].getText());
-					o.setInputValue(((Text) radioOptions[i]).getText());
-
-					if (taskData.getSelectedOperation() != null) {
-						taskData.getSelectedOperation().setChecked(false);
-					}
-					o.setChecked(true);
-
-					taskData.setSelectedOperation(o);
-					radios[i].setSelection(true);
-					if (selected != null && selected != radios[i]) {
-						selected.setSelection(false);
-					}
-					markDirty(true);
-				}
-			}
-			validateInput();
-		}
-
-		public void widgetDefaultSelected(SelectionEvent e) {
-			widgetSelected(e);
-		}
-
-		public void widgetSelected(SelectionEvent e) {
-			Button selected = null;
-			for (Button element : radios) {
-				if (element.getSelection()) {
-					selected = element;
-				}
-			}
-			// determine the operation to do to the bug
-			for (int i = 0; i < radios.length; i++) {
-				if (radios[i] != e.widget && radios[i] != selected) {
-					radios[i].setSelection(false);
-				}
-
-				if (e.widget == radios[i]) {
-					RepositoryOperation o = taskData.getOperation(radios[i].getText());
-					taskData.setSelectedOperation(o);
-					markDirty(true);
-				} else if (e.widget == radioOptions[i]) {
-					RepositoryOperation o = taskData.getOperation(radios[i].getText());
-					o.setOptionSelection(((CCombo) radioOptions[i]).getItem(((CCombo) radioOptions[i]).getSelectionIndex()));
-
-					if (taskData.getSelectedOperation() != null) {
-						taskData.getSelectedOperation().setChecked(false);
-					}
-					o.setChecked(true);
-
-					taskData.setSelectedOperation(o);
-					radios[i].setSelection(true);
-					if (selected != null && selected != radios[i]) {
-						selected.setSelection(false);
-					}
-					markDirty(true);
-				}
-			}
-			validateInput();
-		}
-	}
-
 	// API-3.0 rename ATTRIBTUES_SECTION to ATTRIBUTES_SECTION (bug 208629)
 	protected enum SECTION_NAME {
 		ACTIONS_SECTION("Actions"), ATTACHMENTS_SECTION("Attachments"), ATTRIBTUES_SECTION("Attributes"), COMMENTS_SECTION(
-				"Comments"), DESCRIPTION_SECTION("Description"), NEWCOMMENT_SECTION("New Comment"), PEOPLE_SECTION("People"), RELATEDBUGS_SECTION(
-				"Related Tasks");
+				"Comments"), DESCRIPTION_SECTION("Description"), NEWCOMMENT_SECTION("New Comment"), PEOPLE_SECTION(
+				"People"), RELATEDBUGS_SECTION("Related Tasks");
 
 		private String prettyName;
 
@@ -285,17 +130,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 		}
 	}
 
-	protected static final String CONTEXT_MENU_ID = "#MylynRepositoryEditor";
-
-	private static final int DESCRIPTION_HEIGHT = 10 * 14;
-
-	private static final int DESCRIPTION_WIDTH = 79 * 7; // 500;
-
 	private static final String ERROR_NOCONNECTIVITY = "Unable to submit at this time. Check connectivity and retry.";
-
-//	private static final String LABEL_NO_DETECTOR = "No duplicate detector available.";
-
-	private static final String LABEL_BUTTON_SUBMIT = "Submit";
 
 	private static final String LABEL_HISTORY = "History";
 
@@ -303,25 +138,9 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 
 	private static final String LABEL_REPLY = "Reply";
 
-	private static final String LABEL_SEARCH_DUPS = "Search";
-
-	private static final String LABEL_SELECT_DETECTOR = "Duplicate Detection";
-
-	private static final int RADIO_OPTION_WIDTH = 120;
-
-	protected static final int SUMMARY_HEIGHT = 20;
-
-	protected static final Font TEXT_FONT = JFaceResources.getDefaultFont();
-
 	private static final Font TITLE_FONT = JFaceResources.getBannerFont();
 
 	private ToggleTaskActivationAction activateAction;
-
-	private StyledText addCommentsTextBox = null;
-
-	private Button attachContextButton;
-
-	private boolean attachContextEnabled = true;
 
 	private final List<IRepositoryTaskAttributeListener> attributesListeners = new ArrayList<IRepositoryTaskAttributeListener>();
 
@@ -333,17 +152,9 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 
 	private TaskEditorCommentPart commentPart;
 
-	private Section commentsSection;
-
 	private AbstractRepositoryConnector connector;
 
 	private final HashMap<Object, Control> controlBySelectableObject = new HashMap<Object, Control>();
-
-	protected TextViewer descriptionTextViewer = null;
-
-	protected CCombo duplicateDetectorChooser;
-
-	protected Label duplicateDetectorLabel;
 
 	private Composite editorComposite;
 
@@ -359,17 +170,11 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 
 	private boolean formBusy = false;
 
-	private boolean hasAttributeChanges = false;
-
 	private Action historyAction;
-
-	private boolean ignoreLocationEvents = false;
 
 	private IRepositoryTaskSelection lastSelected = null;
 
 	private Menu menu;
-
-	private TextViewer newCommentTextViewer;
 
 	private Action openBrowserAction;
 
@@ -377,17 +182,11 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 
 	private TaskEditor parentEditor = null;
 
-	private Control[] radioOptions;
-
-	private Button[] radios;
-
 	private boolean reflow = true;
 
-	protected TaskRepository repository;
+	private TaskRepository repository;
 
 	private AbstractTask repositoryTask;
-
-	protected Button searchForDuplicates;
 
 	private final List<ISelectionChangedListener> selectionChangedListeners = new ArrayList<ISelectionChangedListener>();
 
@@ -416,10 +215,13 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 
 					Object data = n.getData();
 					if (n.getKey().equals(RepositoryTaskOutlineNode.LABEL_NEW_COMMENT)) {
-						selectNewComment();
-					} else if (n.getKey().equals(RepositoryTaskOutlineNode.LABEL_DESCRIPTION)
-							&& descriptionTextViewer.isEditable()) {
-						focusDescription();
+						if (commentPart != null) {
+							commentPart.setFocus();
+						}
+					} else if (n.getKey().equals(RepositoryTaskOutlineNode.LABEL_DESCRIPTION)) {
+						if (descriptionPart != null) {
+							descriptionPart.setFocus();
+						}
 					} else if (data != null) {
 						select(data, highlight);
 					}
@@ -429,7 +231,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 		}
 	};
 
-	protected final ISelectionProvider selectionProvider = new ISelectionProvider() {
+	private final ISelectionProvider selectionProvider = new ISelectionProvider() {
 		public void addSelectionChangedListener(ISelectionChangedListener listener) {
 			selectionChangedListeners.add(listener);
 		}
@@ -456,8 +258,6 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 	};
 
 	private boolean showAttachments = true;
-
-	protected Button submitButton;
 
 	private SynchronizeEditorAction synchronizeEditorAction;
 
@@ -487,7 +287,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 							parentEditor.setMessage("Task has incoming changes, synchronize to view",
 									IMessageProvider.WARNING);
 
-							setSubmitEnabled(false);
+							actionPart.setSubmitEnabled(false);
 							// updateContents();
 							// TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask,
 							// true);
@@ -510,6 +310,12 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 
 	private TaskEditorSummaryPart summaryPart;
 
+	private TaskEditorActionPart actionPart;
+
+	private TaskEditorDescriptionPart descriptionPart;
+
+	private TaskEditorNewCommentPart newCommentPart;
+
 	/**
 	 * Creates a new <code>AbstractTaskEditor</code>.
 	 */
@@ -519,127 +325,8 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 		super(editor, "id", "label"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
-	/**
-	 * Adds buttons to this composite. Subclasses can override this method to provide different/additional buttons.
-	 * 
-	 * @param buttonComposite
-	 *            Composite to add the buttons to.
-	 */
-	protected void addActionButtons(Composite buttonComposite) {
-		submitButton = toolkit.createButton(buttonComposite, LABEL_BUTTON_SUBMIT, SWT.NONE);
-		GridData submitButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-		submitButtonData.widthHint = 100;
-		submitButton.setImage(TasksUiImages.getImage(TasksUiImages.REPOSITORY_SUBMIT));
-		submitButton.setLayoutData(submitButtonData);
-		submitButton.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event e) {
-				submitToRepository();
-			}
-		});
-
-		setSubmitEnabled(true);
-
-		toolkit.createLabel(buttonComposite, "    ");
-
-		AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(),
-				taskData.getId());
-		if (attachContextEnabled && task != null) {
-			addAttachContextButton(buttonComposite, task);
-		}
-	}
-
-	protected void addAttachContextButton(Composite buttonComposite, AbstractTask task) {
-		attachContextButton = toolkit.createButton(buttonComposite, "Attach Context", SWT.CHECK);
-		attachContextButton.setImage(TasksUiImages.getImage(TasksUiImages.CONTEXT_ATTACH));
-	}
-
 	public void addAttributeListener(IRepositoryTaskAttributeListener listener) {
 		attributesListeners.add(listener);
-	}
-
-	private Browser addBrowser(Composite parent, int style) {
-		Browser browser = new Browser(parent, style);
-		// intercept links to open tasks in rich editor and urls in separate browser
-		browser.addLocationListener(new LocationAdapter() {
-			@Override
-			public void changing(LocationEvent event) {
-				// ignore events that are caused by manually setting the contents of the browser
-				if (ignoreLocationEvents) {
-					return;
-				}
-
-				if (event.location != null && !event.location.startsWith("about")) {
-					event.doit = false;
-					IHyperlink link = new TaskUrlHyperlink(
-							new Region(0, 0)/* a fake region just to make constructor happy */, event.location);
-					link.open();
-				}
-			}
-
-		});
-
-		return browser;
-	}
-
-	protected void addDuplicateDetection(Composite composite) {
-		List<AbstractDuplicateDetector> allCollectors = new ArrayList<AbstractDuplicateDetector>();
-		if (getDuplicateSearchCollectorsList() != null) {
-			allCollectors.addAll(getDuplicateSearchCollectorsList());
-		}
-		if (!allCollectors.isEmpty()) {
-			Section duplicatesSection = toolkit.createSection(composite, ExpandableComposite.TWISTIE
-					| ExpandableComposite.SHORT_TITLE_BAR);
-			duplicatesSection.setText(LABEL_SELECT_DETECTOR);
-			duplicatesSection.setLayout(new GridLayout());
-			GridDataFactory.fillDefaults().indent(SWT.DEFAULT, 15).applyTo(duplicatesSection);
-			Composite relatedBugsComposite = toolkit.createComposite(duplicatesSection);
-			relatedBugsComposite.setLayout(new GridLayout(4, false));
-			relatedBugsComposite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
-			duplicatesSection.setClient(relatedBugsComposite);
-			duplicateDetectorLabel = new Label(relatedBugsComposite, SWT.LEFT);
-			duplicateDetectorLabel.setText("Detector:");
-
-			duplicateDetectorChooser = new CCombo(relatedBugsComposite, SWT.FLAT | SWT.READ_ONLY);
-			toolkit.adapt(duplicateDetectorChooser, true, true);
-			duplicateDetectorChooser.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-			duplicateDetectorChooser.setFont(TEXT_FONT);
-			duplicateDetectorChooser.setLayoutData(GridDataFactory.swtDefaults().hint(150, SWT.DEFAULT).create());
-
-			Collections.sort(allCollectors, new Comparator<AbstractDuplicateDetector>() {
-
-				public int compare(AbstractDuplicateDetector c1, AbstractDuplicateDetector c2) {
-					return c1.getName().compareToIgnoreCase(c2.getName());
-				}
-
-			});
-
-			for (AbstractDuplicateDetector detector : allCollectors) {
-				duplicateDetectorChooser.add(detector.getName());
-			}
-
-			duplicateDetectorChooser.select(0);
-			duplicateDetectorChooser.setEnabled(true);
-			duplicateDetectorChooser.setData(allCollectors);
-
-			if (allCollectors.size() > 0) {
-
-				searchForDuplicates = toolkit.createButton(relatedBugsComposite, LABEL_SEARCH_DUPS, SWT.NONE);
-				GridData searchDuplicatesButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-				searchForDuplicates.setLayoutData(searchDuplicatesButtonData);
-				searchForDuplicates.addListener(SWT.Selection, new Listener() {
-					public void handleEvent(Event e) {
-						searchForDuplicates();
-					}
-				});
-			}
-//		} else {
-//			Label label = new Label(composite, SWT.LEFT);
-//			label.setText(LABEL_NO_DETECTOR);
-
-			toolkit.paintBordersFor(relatedBugsComposite);
-
-		}
-
 	}
 
 	private void addHeaderControls() {
@@ -690,103 +377,6 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 		}
 	}
 
-	protected void addRadioButtons(Composite buttonComposite) {
-		int i = 0;
-		Button selected = null;
-		radios = new Button[taskData.getOperations().size()];
-		radioOptions = new Control[taskData.getOperations().size()];
-		for (RepositoryOperation o : taskData.getOperations()) {
-			radios[i] = toolkit.createButton(buttonComposite, "", SWT.RADIO);
-			radios[i].setFont(TEXT_FONT);
-			GridData radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-			if (!o.hasOptions() && !o.isInput()) {
-				radioData.horizontalSpan = 4;
-			} else {
-				radioData.horizontalSpan = 1;
-			}
-			radioData.heightHint = 20;
-			String opName = o.getOperationName();
-			opName = opName.replaceAll("</.*>", "");
-			opName = opName.replaceAll("<.*>", "");
-			radios[i].setText(opName);
-			radios[i].setLayoutData(radioData);
-			// radios[i].setBackground(background);
-			radios[i].addSelectionListener(new RadioButtonListener());
-
-			if (o.hasOptions()) {
-				radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-				radioData.horizontalSpan = 3;
-				radioData.heightHint = 20;
-				radioData.widthHint = RADIO_OPTION_WIDTH;
-				radioOptions[i] = new CCombo(buttonComposite, SWT.FLAT | SWT.READ_ONLY);
-				radioOptions[i].setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-				toolkit.adapt(radioOptions[i], true, true);
-				radioOptions[i].setFont(TEXT_FONT);
-				radioOptions[i].setLayoutData(radioData);
-
-				Object[] a = o.getOptionNames().toArray();
-				Arrays.sort(a);
-				for (int j = 0; j < a.length; j++) {
-					if (a[j] != null) {
-						((CCombo) radioOptions[i]).add((String) a[j]);
-						if (((String) a[j]).equals(o.getOptionSelection())) {
-							((CCombo) radioOptions[i]).select(j);
-						}
-					}
-				}
-				((CCombo) radioOptions[i]).addSelectionListener(new RadioButtonListener());
-			} else if (o.isInput()) {
-				radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-				radioData.horizontalSpan = 3;
-				radioData.widthHint = RADIO_OPTION_WIDTH - 10;
-
-				String assignmentValue = "";
-				// NOTE: removed this because we now have content assit
-// if (opName.equals(REASSIGN_BUG_TO)) {
-// assignmentValue = repository.getUserName();
-// }
-				radioOptions[i] = toolkit.createText(buttonComposite, assignmentValue);
-				radioOptions[i].setFont(TEXT_FONT);
-				radioOptions[i].setLayoutData(radioData);
-				// radioOptions[i].setBackground(background);
-				((Text) radioOptions[i]).setText(o.getInputValue());
-				((Text) radioOptions[i]).addModifyListener(new RadioButtonListener());
-
-				if (hasContentAssist(o)) {
-					ContentAssistCommandAdapter adapter = applyContentAssist((Text) radioOptions[i],
-							createContentProposalProvider(o));
-					ILabelProvider propsalLabelProvider = createProposalLabelProvider(o);
-					if (propsalLabelProvider != null) {
-						adapter.setLabelProvider(propsalLabelProvider);
-					}
-					adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
-				}
-			}
-
-			if (i == 0 || o.isChecked()) {
-				if (selected != null) {
-					selected.setSelection(false);
-				}
-				selected = radios[i];
-				radios[i].setSelection(true);
-				if (o.hasOptions() && o.getOptionSelection() != null) {
-					int j = 0;
-					for (String s : ((CCombo) radioOptions[i]).getItems()) {
-						if (s.compareTo(o.getOptionSelection()) == 0) {
-							((CCombo) radioOptions[i]).select(j);
-						}
-						j++;
-					}
-				}
-				taskData.setSelectedOperation(o);
-			}
-
-			i++;
-		}
-
-		toolkit.paintBordersFor(buttonComposite);
-	}
-
 	/**
 	 * @see #select(Object, boolean)
 	 */
@@ -801,39 +391,8 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 	}
 
 	@Override
-	public TextViewer addTextViewer(TaskRepository repository, Composite composite, String text, int style) {
+	protected TextViewer addTextViewer(TaskRepository repository, Composite composite, String text, int style) {
 		return super.addTextViewer(repository, composite, text, style);
-	}
-
-	/**
-	 * Adds content assist to the given text field.
-	 * 
-	 * @param text
-	 *            text field to decorate.
-	 * @param proposalProvider
-	 *            instance providing content proposals
-	 * @return the ContentAssistCommandAdapter for the field.
-	 */
-	protected ContentAssistCommandAdapter applyContentAssist(Text text, IContentProposalProvider proposalProvider) {
-		ControlDecoration controlDecoration = new ControlDecoration(text, (SWT.TOP | SWT.LEFT));
-		controlDecoration.setMarginWidth(0);
-		controlDecoration.setShowHover(true);
-		controlDecoration.setShowOnlyOnFocus(true);
-
-		FieldDecoration contentProposalImage = FieldDecorationRegistry.getDefault().getFieldDecoration(
-				FieldDecorationRegistry.DEC_CONTENT_PROPOSAL);
-		controlDecoration.setImage(contentProposalImage.getImage());
-
-		TextContentAdapter textContentAdapter = new TextContentAdapter();
-
-		ContentAssistCommandAdapter adapter = new ContentAssistCommandAdapter(text, textContentAdapter,
-				proposalProvider, "org.eclipse.ui.edit.text.contentAssist.proposals", new char[0]);
-
-		IBindingService bindingService = (IBindingService) PlatformUI.getWorkbench().getService(IBindingService.class);
-		controlDecoration.setDescriptionText(NLS.bind("Content Assist Available ({0})",
-				bindingService.getBestActiveBindingFormattedFor(adapter.getCommandId())));
-
-		return adapter;
 	}
 
 	/**
@@ -842,7 +401,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 	 * @param attribute
 	 *            changed attribute
 	 */
-	protected boolean attributeChanged(RepositoryTaskAttribute attribute) {
+	boolean attributeChanged(RepositoryTaskAttribute attribute) {
 		if (attribute == null) {
 			return false;
 		}
@@ -871,17 +430,16 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 	 * Creates the button layout. This displays options and buttons at the bottom of the editor to allow actions to be
 	 * performed on the bug.
 	 */
-	protected void createActionsLayout(Composite composite) {
+	private void createActionsSection(Composite composite) {
 		Section section = createSection(composite, getSectionLabel(SECTION_NAME.ACTIONS_SECTION));
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, true).applyTo(section);
-		Composite buttonComposite = toolkit.createComposite(section);
-		GridLayout buttonLayout = new GridLayout();
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(buttonComposite);
-		buttonLayout.numColumns = 4;
-		buttonComposite.setLayout(buttonLayout);
-		addRadioButtons(buttonComposite);
-		addActionButtons(buttonComposite);
-		section.setClient(buttonComposite);
+
+		actionPart = new TaskEditorActionPart(this);
+		actionPart.setInput(connector, repository, taskData);
+		actionPart.createControl(section, toolkit);
+		section.setClient(actionPart.getControl());
+
+		getManagedForm().addPart(actionPart);
 	}
 
 	private void createAttachmentSection(Composite composite) {
@@ -901,17 +459,18 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 
 	private void createAttributeSection() {
 		attributesSection = createSection(editorComposite, getSectionLabel(SECTION_NAME.ATTRIBTUES_SECTION));
-		attributesSection.setExpanded(expandedStateAttributes || hasAttributeChanges);
+		attributesSection.setExpanded(expandedStateAttributes
+				|| getAttributeEditorManager().hasVisibleOutgoingChanges(taskData));
 
 		TaskEditorAttributePart attributePart = new TaskEditorAttributePart(this, attributesSection);
 		attributePart.setInput(connector, repository, taskData);
-		attributePart.createControl(commentsSection, toolkit);
+		attributePart.createControl(attributesSection, toolkit);
 
 		getManagedForm().addPart(attributePart);
 	}
 
 	private void createCommentSection(Composite composite) {
-		commentsSection = createSection(composite, getSectionLabel(SECTION_NAME.COMMENTS_SECTION));
+		Section commentsSection = createSection(composite, getSectionLabel(SECTION_NAME.COMMENTS_SECTION));
 
 		commentPart = new TaskEditorCommentPart(this, commentsSection, editorInput, repositoryTask);
 		commentPart.setSupportsDelete(supportsCommentDelete());
@@ -921,130 +480,15 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 		getManagedForm().addPart(commentPart);
 	}
 
-	/**
-	 * Creates an IContentProposalProvider to provide content assist proposals for the given operation.
-	 * 
-	 * @param operation
-	 *            operation for which to provide content assist.
-	 * @return the IContentProposalProvider.
-	 */
-	protected IContentProposalProvider createContentProposalProvider(RepositoryOperation operation) {
-
-		return new PersonProposalProvider(repositoryTask, taskData);
-	}
-
-	/**
-	 * Creates an IContentProposalProvider to provide content assist proposals for the given attribute.
-	 * 
-	 * @param attribute
-	 *            attribute for which to provide content assist.
-	 * @return the IContentProposalProvider.
-	 */
-	protected IContentProposalProvider createContentProposalProvider(RepositoryTaskAttribute attribute) {
-		return new PersonProposalProvider(repositoryTask, taskData);
-	}
-
-	protected void createDescriptionLayout(Composite composite) {
+	private void createDescriptionSection(Composite composite) {
 		Section descriptionSection = createSection(composite, getSectionLabel(SECTION_NAME.DESCRIPTION_SECTION));
-		final Composite sectionComposite = toolkit.createComposite(descriptionSection);
-		descriptionSection.setClient(sectionComposite);
-		GridLayout addCommentsLayout = new GridLayout();
-		addCommentsLayout.numColumns = 1;
-		sectionComposite.setLayout(addCommentsLayout);
 
-		RepositoryTaskAttribute attribute = taskData.getDescriptionAttribute();
-		if (attribute != null && !attribute.isReadOnly()) {
-			if (getRenderingEngine() != null) {
-				// composite with StackLayout to hold text editor and preview widget
-				Composite descriptionComposite = toolkit.createComposite(sectionComposite);
-				descriptionComposite.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-				GridData descriptionGridData = new GridData(GridData.FILL_BOTH);
-				descriptionGridData.widthHint = DESCRIPTION_WIDTH;
-				descriptionGridData.minimumHeight = DESCRIPTION_HEIGHT;
-				descriptionGridData.grabExcessHorizontalSpace = true;
-				descriptionComposite.setLayoutData(descriptionGridData);
-				final StackLayout descriptionLayout = new StackLayout();
-				descriptionComposite.setLayout(descriptionLayout);
+		descriptionPart = new TaskEditorDescriptionPart(this, descriptionSection);
+		descriptionPart.setInput(connector, repository, taskData);
+		descriptionPart.createControl(descriptionSection, toolkit);
+		descriptionSection.setClient(descriptionPart.getControl());
 
-				descriptionTextViewer = addTextEditor(repository, descriptionComposite, taskData.getDescription(),
-						true, SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-				descriptionLayout.topControl = descriptionTextViewer.getControl();
-				descriptionComposite.layout();
-
-				// composite for edit/preview button
-				Composite buttonComposite = toolkit.createComposite(sectionComposite);
-				buttonComposite.setLayout(new GridLayout());
-				createPreviewButton(buttonComposite, descriptionTextViewer, descriptionComposite, descriptionLayout);
-			} else {
-				descriptionTextViewer = addTextEditor(repository, sectionComposite, taskData.getDescription(), true,
-						SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-				final GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-				// wrap text at this margin, see comment below
-				gd.widthHint = DESCRIPTION_WIDTH;
-				gd.minimumHeight = DESCRIPTION_HEIGHT;
-				gd.grabExcessHorizontalSpace = true;
-				descriptionTextViewer.getControl().setLayoutData(gd);
-				descriptionTextViewer.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-				// the goal is to make the text viewer as big as the text so it does not require scrolling when first drawn 
-				// on screen: when the descriptionTextViewer calculates its height it wraps the text according to the widthHint 
-				// which does not reflect the actual size of the widget causing the widget to be taller 
-				// (actual width > gd.widhtHint) or shorter (actual width < gd.widthHint) therefore the widthHint is tweaked 
-				// once in the listener  
-				sectionComposite.addControlListener(new ControlAdapter() {
-					private boolean first;
-
-					@Override
-					public void controlResized(ControlEvent e) {
-						if (!first) {
-							first = true;
-							int width = sectionComposite.getSize().x;
-							Point size = descriptionTextViewer.getTextWidget().computeSize(width, SWT.DEFAULT, true);
-							// limit width to parent widget
-							gd.widthHint = width;
-							// limit height to avoid dynamic resizing of the text widget
-							gd.heightHint = Math.min(Math.max(DESCRIPTION_HEIGHT, size.y), DESCRIPTION_HEIGHT * 4);
-							sectionComposite.layout();
-						}
-					}
-				});
-			}
-			descriptionTextViewer.setEditable(true);
-			descriptionTextViewer.addTextListener(new ITextListener() {
-				public void textChanged(TextEvent event) {
-					String newValue = descriptionTextViewer.getTextWidget().getText();
-					RepositoryTaskAttribute attribute = taskData.getAttribute(RepositoryTaskAttribute.DESCRIPTION);
-					if (attribute != null && !newValue.equals(attribute.getValue())) {
-						attribute.setValue(newValue);
-						attributeChanged(attribute);
-						taskData.setDescription(newValue);
-					}
-				}
-			});
-			StyledText styledText = descriptionTextViewer.getTextWidget();
-			controlBySelectableObject.put(taskData.getDescription(), styledText);
-		} else {
-			String text = taskData.getDescription();
-			descriptionTextViewer = addTextViewer(repository, sectionComposite, text, SWT.MULTI | SWT.WRAP);
-			StyledText styledText = descriptionTextViewer.getTextWidget();
-			GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(
-					descriptionTextViewer.getControl());
-
-			controlBySelectableObject.put(text, styledText);
-		}
-
-		if (hasChanged(taskData.getAttribute(RepositoryTaskAttribute.DESCRIPTION))) {
-			descriptionTextViewer.getTextWidget().setBackground(colorIncoming);
-		}
-		descriptionTextViewer.getTextWidget().addListener(SWT.FocusIn, new DescriptionListener());
-
-		Composite replyComp = toolkit.createComposite(descriptionSection);
-		replyComp.setLayout(new RowLayout());
-		replyComp.setBackground(null);
-
-		createReplyHyperlink(0, replyComp, taskData.getDescription());
-		descriptionSection.setTextClient(replyComp);
-		addDuplicateDetection(sectionComposite);
-		toolkit.paintBordersFor(sectionComposite);
+		getManagedForm().addPart(descriptionPart);
 	}
 
 	@Override
@@ -1086,88 +530,23 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 		addHeaderControls();
 	}
 
-	private void createSummarySection(Composite composite) {
-		summaryPart = new TaskEditorSummaryPart(this);
-		summaryPart.setInput(connector, repository, taskData);
-		summaryPart.createControl(composite, toolkit);
-
-		getManagedForm().addPart(summaryPart);
-	}
-
-	protected void createNewCommentLayout(Composite composite) {
-		// Section newCommentSection = createSection(composite,
-		// getSectionLabel(SECTION_NAME.NEWCOMMENT_SECTION));
-
+	private void createNewCommentSection(Composite composite) {
 		Section newCommentSection = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR);
 		newCommentSection.setText(getSectionLabel(SECTION_NAME.NEWCOMMENT_SECTION));
 		newCommentSection.setLayout(new GridLayout());
 		newCommentSection.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		Composite newCommentsComposite = toolkit.createComposite(newCommentSection);
-		newCommentsComposite.setLayout(new GridLayout());
+		newCommentPart = new TaskEditorNewCommentPart(this);
+		newCommentPart.setInput(connector, repository, taskData);
+		newCommentPart.createControl(composite, toolkit);
 
-		// HACK: new new comment attribute not created by connector, create one.
-		if (taskData.getAttribute(RepositoryTaskAttribute.COMMENT_NEW) == null) {
-			taskData.setAttributeValue(RepositoryTaskAttribute.COMMENT_NEW, "");
-		}
-		final RepositoryTaskAttribute attribute = taskData.getAttribute(RepositoryTaskAttribute.COMMENT_NEW);
-
-		if (getRenderingEngine() != null) {
-			// composite with StackLayout to hold text editor and preview widget
-			Composite editPreviewComposite = toolkit.createComposite(newCommentsComposite);
-			GridData editPreviewData = new GridData(GridData.FILL_BOTH);
-			editPreviewData.widthHint = DESCRIPTION_WIDTH;
-			editPreviewData.minimumHeight = DESCRIPTION_HEIGHT;
-			editPreviewData.grabExcessHorizontalSpace = true;
-			editPreviewComposite.setLayoutData(editPreviewData);
-			editPreviewComposite.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-
-			final StackLayout editPreviewLayout = new StackLayout();
-			editPreviewComposite.setLayout(editPreviewLayout);
-
-			newCommentTextViewer = addTextEditor(repository, editPreviewComposite, attribute.getValue(), true, SWT.FLAT
-					| SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-
-			editPreviewLayout.topControl = newCommentTextViewer.getControl();
-			editPreviewComposite.layout();
-
-			// composite for edit/preview button
-			Composite buttonComposite = toolkit.createComposite(newCommentsComposite);
-			buttonComposite.setLayout(new GridLayout());
-			createPreviewButton(buttonComposite, newCommentTextViewer, editPreviewComposite, editPreviewLayout);
-		} else {
-			newCommentTextViewer = addTextEditor(repository, newCommentsComposite, attribute.getValue(), true, SWT.FLAT
-					| SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-			GridData addCommentsTextData = new GridData(GridData.FILL_BOTH);
-			addCommentsTextData.widthHint = DESCRIPTION_WIDTH;
-			addCommentsTextData.minimumHeight = DESCRIPTION_HEIGHT;
-			addCommentsTextData.grabExcessHorizontalSpace = true;
-			newCommentTextViewer.getControl().setLayoutData(addCommentsTextData);
-			newCommentTextViewer.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-		}
-		newCommentTextViewer.setEditable(true);
-		newCommentTextViewer.addTextListener(new ITextListener() {
-			public void textChanged(TextEvent event) {
-				String newValue = addCommentsTextBox.getText();
-				if (!newValue.equals(attribute.getValue())) {
-					attribute.setValue(newValue);
-					attributeChanged(attribute);
-				}
-			}
-		});
-
-		newCommentTextViewer.getTextWidget().addListener(SWT.FocusIn, new NewCommentListener());
-		addCommentsTextBox = newCommentTextViewer.getTextWidget();
-
-		newCommentSection.setClient(newCommentsComposite);
-
-		toolkit.paintBordersFor(newCommentsComposite);
+		getManagedForm().addPart(newCommentPart);
 	}
 
-	protected void createPeopleSection(Composite composite) {
+	private void createPeopleSection(Composite composite) {
 		Section peopleSection = createSection(composite, getSectionLabel(SECTION_NAME.PEOPLE_SECTION));
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, true).applyTo(peopleSection);
-		
+
 		TaskEditorPeoplePart peoplePart = new TaskEditorPeoplePart(this);
 		peoplePart.setInput(connector, repository, taskData);
 		peoplePart.createControl(composite, toolkit);
@@ -1175,134 +554,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 		getManagedForm().addPart(peoplePart);
 	}
 
-	/**
-	 * Creates and sets up the button for switching between text editor and HTML preview. Subclasses that support HTML
-	 * preview of new comments must override this method.
-	 * 
-	 * @param buttonComposite
-	 *            the composite that holds the button
-	 * @param editor
-	 *            the TextViewer for editing text
-	 * @param previewBrowser
-	 *            the Browser for displaying the preview
-	 * @param editorLayout
-	 *            the StackLayout of the <code>editorComposite</code>
-	 * @param editorComposite
-	 *            the composite that holds <code>editor</code> and <code>previewBrowser</code>
-	 * @since 2.1
-	 */
-	private void createPreviewButton(final Composite buttonComposite, final TextViewer editor,
-			final Composite editorComposite, final StackLayout editorLayout) {
-		// create an anonymous object that encapsulates the edit/preview button together with
-		// its state and String constants for button text;
-		// this implementation keeps all information needed to set up the button 
-		// in this object and the method parameters, and this method is reused by both the
-		// description section and new comments section.
-		new Object() {
-			private static final String LABEL_BUTTON_EDIT = "Edit";
-
-			private static final String LABEL_BUTTON_PREVIEW = "Preview";
-
-			private int buttonState = 0;
-
-			private Browser previewBrowser;
-
-			private Button previewButton;
-
-			{
-				previewButton = toolkit.createButton(buttonComposite, LABEL_BUTTON_PREVIEW, SWT.PUSH);
-				GridData previewButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-				previewButtonData.widthHint = 100;
-				//previewButton.setImage(TasksUiImages.getImage(TasksUiImages.PREVIEW));
-				previewButton.setLayoutData(previewButtonData);
-				previewButton.addListener(SWT.Selection, new Listener() {
-					public void handleEvent(Event e) {
-						if (previewBrowser == null) {
-							previewBrowser = addBrowser(editorComposite, SWT.NONE);
-						}
-
-						buttonState = ++buttonState % 2;
-						if (buttonState == 1) {
-							setText(previewBrowser, "Loading preview...");
-							previewWiki(previewBrowser, editor.getTextWidget().getText());
-						}
-						previewButton.setText(buttonState == 0 ? LABEL_BUTTON_PREVIEW : LABEL_BUTTON_EDIT);
-						editorLayout.topControl = (buttonState == 0 ? editor.getControl() : previewBrowser);
-						editorComposite.layout();
-					}
-				});
-			}
-
-		};
-	}
-
-	protected ILabelProvider createProposalLabelProvider(RepositoryOperation operation) {
-
-		return new PersonProposalLabelProvider();
-	}
-
-	protected ILabelProvider createProposalLabelProvider(RepositoryTaskAttribute attribute) {
-		return new PersonProposalLabelProvider();
-	}
-
-	/**
-	 * Adds a related bugs section to the bug editor
-	 */
-	protected void createRelatedBugsSection(Composite composite) {
-//		Section relatedBugsSection = createSection(editorComposite, getSectionLabel(SECTION_NAME.RELATEDBUGS_SECTION));
-//		Composite relatedBugsComposite = toolkit.createComposite(relatedBugsSection);
-//		relatedBugsComposite.setLayout(new GridLayout(4, false));
-//		relatedBugsComposite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
-//		relatedBugsSection.setClient(relatedBugsComposite);
-//		relatedBugsSection.setExpanded(repositoryTask == null);
-//
-//		List<AbstractDuplicateDetector> allCollectors = new ArrayList<AbstractDuplicateDetector>();
-//		if (getDuplicateSearchCollectorsList() != null) {
-//			allCollectors.addAll(getDuplicateSearchCollectorsList());
-//		}
-//		if (!allCollectors.isEmpty()) {
-//			duplicateDetectorLabel = new Label(relatedBugsComposite, SWT.LEFT);
-//			duplicateDetectorLabel.setText(LABEL_SELECT_DETECTOR);
-//
-//			duplicateDetectorChooser = new CCombo(relatedBugsComposite, SWT.FLAT | SWT.READ_ONLY | SWT.BORDER);
-//
-//			duplicateDetectorChooser.setLayoutData(GridDataFactory.swtDefaults().hint(150, SWT.DEFAULT).create());
-//			duplicateDetectorChooser.setFont(TEXT_FONT);
-//
-//			Collections.sort(allCollectors, new Comparator<AbstractDuplicateDetector>() {
-//
-//				public int compare(AbstractDuplicateDetector c1, AbstractDuplicateDetector c2) {
-//					return c1.getName().compareToIgnoreCase(c2.getName());
-//				}
-//
-//			});
-//
-//			for (AbstractDuplicateDetector detector : allCollectors) {
-//				duplicateDetectorChooser.add(detector.getName());
-//			}
-//
-//			duplicateDetectorChooser.select(0);
-//			duplicateDetectorChooser.setEnabled(true);
-//			duplicateDetectorChooser.setData(allCollectors);
-//
-//			if (allCollectors.size() > 0) {
-//
-//				searchForDuplicates = toolkit.createButton(relatedBugsComposite, LABEL_SEARCH_DUPS, SWT.NONE);
-//				GridData searchDuplicatesButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-//				searchForDuplicates.setLayoutData(searchDuplicatesButtonData);
-//				searchForDuplicates.addListener(SWT.Selection, new Listener() {
-//					public void handleEvent(Event e) {
-//						searchForDuplicates();
-//					}
-//				});
-//			}
-//		} else {
-//			Label label = new Label(relatedBugsComposite, SWT.LEFT);
-//			label.setText(LABEL_NO_DETECTOR);
-//		}
-	}
-
-	protected ImageHyperlink createReplyHyperlink(final int commentNum, Composite composite, final String commentBody) {
+	ImageHyperlink createReplyHyperlink(final int commentNum, Composite composite, final String commentBody) {
 		final ImageHyperlink replyLink = new ImageHyperlink(composite, SWT.NULL);
 		toolkit.adapt(replyLink, true, true);
 		replyLink.setImage(TasksUiImages.getImage(TasksUiImages.REPLY));
@@ -1313,30 +565,19 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 		replyLink.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
-				String oldText = newCommentTextViewer.getDocument().get();
 				StringBuilder strBuilder = new StringBuilder();
-				strBuilder.append(oldText);
-				if (strBuilder.length() != 0) {
-					strBuilder.append("\n");
-				}
 				strBuilder.append(" (In reply to comment #" + commentNum + ")\n");
 				CommentQuoter quoter = new CommentQuoter();
 				strBuilder.append(quoter.quote(commentBody));
-				newCommentTextViewer.getDocument().set(strBuilder.toString());
-				RepositoryTaskAttribute attribute = taskData.getAttribute(RepositoryTaskAttribute.COMMENT_NEW);
-				if (attribute != null) {
-					attribute.setValue(strBuilder.toString());
-					attributeChanged(attribute);
-				}
-				selectNewComment();
-				newCommentTextViewer.getTextWidget().setCaretOffset(strBuilder.length());
+				newCommentPart.appendText(strBuilder.toString());
+				newCommentPart.setFocus();
 			}
 		});
 
 		return replyLink;
 	}
 
-	protected Section createSection(Composite composite, String title) {
+	private Section createSection(Composite composite, String title) {
 		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE);
 		section.setText(title);
 		section.setExpanded(true);
@@ -1349,32 +590,42 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 
 		createAttributeSection();
 
-		createRelatedBugsSection(editorComposite);
-
 		if (showAttachments) {
 			createAttachmentSection(editorComposite);
 		}
-		createDescriptionLayout(editorComposite);
+
+		createDescriptionSection(editorComposite);
 		createCommentSection(editorComposite);
-		createNewCommentLayout(editorComposite);
+		createNewCommentSection(editorComposite);
+
 		Composite bottomComposite = toolkit.createComposite(editorComposite);
 		bottomComposite.setLayout(new GridLayout(2, false));
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(bottomComposite);
 
-		createActionsLayout(bottomComposite);
+		createActionsSection(bottomComposite);
 		createPeopleSection(bottomComposite);
+
 		bottomComposite.pack(true);
 		form.reflow(true);
+
 		getSite().getPage().addSelectionListener(selectionListener);
 		getSite().setSelectionProvider(selectionProvider);
 	}
 
-	protected void deleteAttachment(RepositoryAttachment attachment) {
+	private void createSummarySection(Composite composite) {
+		summaryPart = new TaskEditorSummaryPart(this);
+		summaryPart.setInput(connector, repository, taskData);
+		summaryPart.createControl(composite, toolkit);
 
+		getManagedForm().addPart(summaryPart);
 	}
 
-	protected void deleteComment(TaskComment comment) {
+	// TODO EDITOR move
+	protected void deleteAttachment(RepositoryAttachment attachment) {
+	}
 
+	// TODO EDITOR move
+	protected void deleteComment(TaskComment comment) {
 	}
 
 	@Override
@@ -1392,7 +643,6 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		//updateTask();
 		saveTaskOffline(monitor);
 		updateEditorTitle();
 	}
@@ -1415,7 +665,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 				toolBarManager.add(synchronizeEditorAction);
 
 				NewSubTaskAction newSubTaskAction = new NewSubTaskAction();
-				newSubTaskAction.selectionChanged(newSubTaskAction, new StructuredSelection(getRepositoryTask()));
+				newSubTaskAction.selectionChanged(newSubTaskAction, new StructuredSelection(repositoryTask));
 				if (newSubTaskAction.isEnabled()) {
 					toolBarManager.add(newSubTaskAction);
 				}
@@ -1478,38 +728,6 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 	}
 
 	/**
-	 * @author Raphael Ackermann (bug 195514)
-	 * @since 2.1
-	 */
-	protected void focusAttributes() {
-		if (attributesSection != null) {
-			focusOn(attributesSection, false);
-		}
-	}
-
-	// // TODO: Remove once offline persistence is improved
-	// private void runSaveJob() {
-	// Job saveJob = new Job("Save") {
-	//
-	// @Override
-	// protected IStatus run(IProgressMonitor monitor) {
-	// saveTaskOffline(monitor);
-	// return Status.OK_STATUS;
-	// }
-	//
-	// };
-	// saveJob.setSystem(true);
-	// saveJob.schedule();
-	// markDirty(false);
-	// }
-
-	private void focusDescription() {
-		if (descriptionTextViewer != null) {
-			focusOn(descriptionTextViewer.getTextWidget(), false);
-		}
-	}
-
-	/**
 	 * Scroll to a specified piece of text
 	 * 
 	 * @param selectionComposite
@@ -1555,21 +773,9 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 		}
 	}
 
-	public String formatDate(String dateString) {
-		return dateString;
-	}
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public Object getAdapter(Class adapter) {
-		return getAdapterDelgate(adapter);
-	}
-
-	/*----------------------------------------------------------*
-	 * CODE TO SCROLL TO A COMMENT OR OTHER PIECE OF TEXT
-	 *----------------------------------------------------------*/
-
-	public Object getAdapterDelgate(Class<?> adapter) {
 		if (IContentOutlinePage.class.equals(adapter)) {
 			if (outlinePage == null && editorInput != null && taskOutlineModel != null) {
 				outlinePage = new RepositoryTaskOutlinePage(taskOutlineModel);
@@ -1579,57 +785,18 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 		return super.getAdapter(adapter);
 	}
 
-	public boolean getAttachContext() {
-		if (attachContextButton == null || attachContextButton.isDisposed()) {
-			return false;
-		} else {
-			return attachContextButton.getSelection();
-		}
-	}
-
 	protected abstract AttributeEditorFactory getAttributeEditorFactory();
 
 	protected abstract AbstractAttributeEditorManager getAttributeEditorManager();
+
+	public abstract AttributeEditorToolkit getAttributeEditorToolkit();
 
 	protected AbstractTaskCategory getCategory() {
 		return null;
 	}
 
-	public Color getColorIncoming() {
+	Color getColorIncoming() {
 		return colorIncoming;
-	}
-
-	public AbstractRepositoryConnector getConnector() {
-		return connector;
-	}
-
-	public Control getControl() {
-		return form;
-	}
-
-	protected SearchHitCollector getDuplicateSearchCollector(String name) {
-		String duplicateDetectorName = name.equals("default") ? "Stack Trace" : name;
-		Set<AbstractDuplicateDetector> allDetectors = getDuplicateSearchCollectorsList();
-
-		for (AbstractDuplicateDetector detector : allDetectors) {
-			if (detector.getName().equals(duplicateDetectorName)) {
-				return detector.getSearchHitCollector(repository, taskData);
-			}
-		}
-		// didn't find it
-		return null;
-	}
-
-	protected Set<AbstractDuplicateDetector> getDuplicateSearchCollectorsList() {
-		Set<AbstractDuplicateDetector> duplicateDetectors = new HashSet<AbstractDuplicateDetector>();
-		for (AbstractDuplicateDetector abstractDuplicateDetector : TasksUiPlugin.getDefault()
-				.getDuplicateSearchCollectorsList()) {
-			if (abstractDuplicateDetector.getKind() == null
-					|| abstractDuplicateDetector.getKind().equals(getConnector().getConnectorKind())) {
-				duplicateDetectors.add(abstractDuplicateDetector);
-			}
-		}
-		return duplicateDetectors;
 	}
 
 	/**
@@ -1644,6 +811,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 	 * 
 	 * @return url String form of url that points to task's past activity
 	 */
+	// TODO EDITOR move to tasks core
 	protected String getHistoryUrl() {
 		return null;
 	}
@@ -1659,22 +827,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 		return parentEditor;
 	}
 
-	/**
-	 * Subclasses that support HTML preview of ticket description and comments override this method to return an
-	 * instance of AbstractRenderingEngine
-	 * 
-	 * @return <code>null</code> if HTML preview is not supported for the repository (default)
-	 * @since 2.1
-	 */
-	protected AbstractRenderingEngine getRenderingEngine() {
-		return null;
-	}
-
-	public AbstractTask getRepositoryTask() {
-		return repositoryTask;
-	}
-
-	public String getSectionLabel(SECTION_NAME labelName) {
+	private String getSectionLabel(SECTION_NAME labelName) {
 		return labelName.getPrettyName();
 	}
 
@@ -1682,11 +835,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 		return null;
 	}
 
-	public RepositoryTaskOutlineNode getTaskOutlineModel() {
-		return taskOutlineModel;
-	}
-
-	protected IStatus handleSubmitError(final CoreException exception) {
+	private IStatus handleSubmitError(final CoreException exception) {
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				if (form != null && !form.isDisposed()) {
@@ -1695,9 +844,8 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 						StatusHandler.log(exception.getStatus());
 					} else if (exception.getStatus().getCode() == RepositoryStatus.REPOSITORY_COMMENT_REQUIRED) {
 						StatusHandler.displayStatus("Comment required", exception.getStatus());
-						if (!getManagedForm().getForm().isDisposed() && newCommentTextViewer != null
-								&& !newCommentTextViewer.getControl().isDisposed()) {
-							newCommentTextViewer.getControl().setFocus();
+						if (!getManagedForm().getForm().isDisposed() && newCommentPart != null) {
+							newCommentPart.setFocus();
 						}
 					} else if (exception.getStatus().getCode() == RepositoryStatus.ERROR_REPOSITORY_LOGIN) {
 						if (TasksUiUtil.openEditRepositoryWizard(repository) == Window.OK) {
@@ -1715,76 +863,6 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 		return Status.OK_STATUS;
 	}
 
-	protected boolean hasChanged(RepositoryTaskAttribute newAttribute) {
-		if (newAttribute == null) {
-			return false;
-		}
-		RepositoryTaskData oldTaskData = editorInput.getOldTaskData();
-		if (oldTaskData == null) {
-			return false;
-		}
-
-		if (hasOutgoingChange(newAttribute)) {
-			return false;
-		}
-
-		RepositoryTaskAttribute oldAttribute = oldTaskData.getAttribute(newAttribute.getId());
-		if (oldAttribute == null) {
-			return true;
-		}
-		if (oldAttribute.getValue() != null && !oldAttribute.getValue().equals(newAttribute.getValue())) {
-			return true;
-		} else if (oldAttribute.getValues() != null && !oldAttribute.getValues().equals(newAttribute.getValues())) {
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Called to check if there's content assist available for the given operation.
-	 * 
-	 * @param operation
-	 *            the operation
-	 * @return true if content assist is available for the specified operation.
-	 */
-	protected boolean hasContentAssist(RepositoryOperation operation) {
-		return false;
-	}
-
-	/**
-	 * Called to check if there's content assist available for the given attribute.
-	 * 
-	 * @param attribute
-	 *            the attribute
-	 * @return true if content assist is available for the specified attribute.
-	 */
-	protected boolean hasContentAssist(RepositoryTaskAttribute attribute) {
-		return false;
-	}
-
-	protected boolean hasOutgoingChange(RepositoryTaskAttribute newAttribute) {
-		return editorInput.getOldEdits().contains(newAttribute);
-	}
-
-	/**
-	 * If implementing custom attributes you may need to override this method
-	 * 
-	 * @return true if one or more attributes exposed in the editor have
-	 */
-	protected boolean hasVisibleAttributeChanges() {
-		if (taskData == null) {
-			return false;
-		}
-		for (RepositoryTaskAttribute attribute : taskData.getAttributes()) {
-			if (!attribute.isHidden()) {
-				if (hasChanged(attribute)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
 	@Override
 	public void init(IEditorSite site, IEditorInput input) {
 		if (!(input instanceof RepositoryTaskEditorInput)) {
@@ -1795,9 +873,9 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 
 		if (taskData != null) {
 			// TODO EDITOR editorInput.setToolTipText(taskData.getLabel());
-			taskOutlineModel = RepositoryTaskOutlineNode.parseBugReport(taskData);
+			this.taskOutlineModel = RepositoryTaskOutlineNode.parseBugReport(taskData);
 		}
-		hasAttributeChanges = hasVisibleAttributeChanges();
+
 		TasksUiPlugin.getTaskListManager().getTaskList().addChangeListener(TASKLIST_CHANGE_LISTENER);
 	}
 
@@ -1815,89 +893,9 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 		isDirty = false;
 	}
 
-	public boolean isReflow() {
-		return reflow;
-	}
-
 	@Override
 	public boolean isSaveAsAllowed() {
 		return false;
-	}
-
-	private void previewWiki(final Browser browser, String sourceText) {
-		final class PreviewWikiJob extends Job {
-			private String htmlText;
-
-			private IStatus jobStatus;
-
-			private final String sourceText;
-
-			public PreviewWikiJob(String sourceText) {
-				super("Formatting Wiki Text");
-
-				if (sourceText == null) {
-					throw new IllegalArgumentException("source text must not be null");
-				}
-
-				this.sourceText = sourceText;
-			}
-
-			public String getHtmlText() {
-				return htmlText;
-			}
-
-			public IStatus getStatus() {
-				return jobStatus;
-			}
-
-			@Override
-			protected IStatus run(IProgressMonitor monitor) {
-				AbstractRenderingEngine htmlRenderingEngine = getRenderingEngine();
-				if (htmlRenderingEngine == null) {
-					jobStatus = new RepositoryStatus(repository, IStatus.INFO, TasksUiPlugin.ID_PLUGIN,
-							RepositoryStatus.ERROR_INTERNAL, "The repository does not support HTML preview.");
-					return Status.OK_STATUS;
-				}
-
-				jobStatus = Status.OK_STATUS;
-				try {
-					htmlText = htmlRenderingEngine.renderAsHtml(repository, sourceText, monitor);
-				} catch (CoreException e) {
-					jobStatus = e.getStatus();
-				}
-				return Status.OK_STATUS;
-			}
-
-		}
-
-		final PreviewWikiJob job = new PreviewWikiJob(sourceText);
-
-		job.addJobChangeListener(new JobChangeAdapter() {
-
-			@Override
-			public void done(final IJobChangeEvent event) {
-				if (!form.isDisposed()) {
-					if (job.getStatus().isOK()) {
-						getPartControl().getDisplay().asyncExec(new Runnable() {
-							public void run() {
-								AbstractTaskEditorPage.this.setText(browser, job.getHtmlText());
-								parentEditor.setMessage(null, IMessageProvider.NONE);
-							}
-						});
-					} else {
-						getPartControl().getDisplay().asyncExec(new Runnable() {
-							public void run() {
-								parentEditor.setMessage(job.getStatus().getMessage(), IMessageProvider.ERROR);
-							}
-						});
-					}
-				}
-				super.done(event);
-			}
-		});
-
-		job.setUser(true);
-		job.schedule();
 	}
 
 	/**
@@ -1961,7 +959,9 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 									TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
 								}
 
-								setSubmitEnabled(true);
+								if (actionPart != null) {
+									actionPart.setSubmitEnabled(true);
+								}
 							}
 						}
 					}
@@ -2039,18 +1039,6 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 		markDirty(false);
 	}
 
-	public boolean searchForDuplicates() {
-		String duplicateDetectorName = duplicateDetectorChooser.getItem(duplicateDetectorChooser.getSelectionIndex());
-
-		SearchHitCollector collector = getDuplicateSearchCollector(duplicateDetectorName);
-		if (collector != null) {
-			NewSearchUI.runQueryInBackground(collector);
-			return true;
-		}
-
-		return false;
-	}
-
 	/**
 	 * Selects the given object in the editor.
 	 * 
@@ -2067,7 +1055,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 			if (control instanceof ExpandableComposite) {
 				ExpandableComposite ex = (ExpandableComposite) control;
 				if (!ex.isExpanded()) {
-					toggleExpandableComposite(true, ex);
+					EditorUtil.toggleExpandableComposite(true, ex);
 				}
 			}
 
@@ -2079,7 +1067,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 				} else if (comp instanceof ExpandableComposite) {
 					ExpandableComposite ex = (ExpandableComposite) comp;
 					if (!ex.isExpanded()) {
-						toggleExpandableComposite(true, ex);
+						EditorUtil.toggleExpandableComposite(true, ex);
 					}
 
 					// HACK: This is necessary
@@ -2099,33 +1087,6 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 			return false;
 		}
 		return true;
-	}
-
-	private void selectNewComment() {
-		focusOn(addCommentsTextBox, false);
-	}
-
-	public void setAttachContextEnabled(boolean attachContextEnabled) {
-		this.attachContextEnabled = attachContextEnabled;
-//		if (attachContextButton != null && attachContextButton.isEnabled()) {
-//			attachContextButton.setSelection(attachContext);
-//		}
-	}
-
-	public void setDescriptionText(String text) {
-		this.descriptionTextViewer.getDocument().set(text);
-	}
-
-	private void setEnabledState(Composite composite, boolean enabled) {
-		if (!composite.isDisposed()) {
-			composite.setEnabled(enabled);
-			for (Control control : composite.getChildren()) {
-				control.setEnabled(enabled);
-				if (control instanceof Composite) {
-					setEnabledState(((Composite) control), enabled);
-				}
-			}
-		}
 	}
 
 	public void setExpandAttributeSection(boolean expandAttributeSection) {
@@ -2180,29 +1141,6 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 		this.showAttachments = showAttachments;
 	}
 
-	private void setSubmitEnabled(boolean enabled) {
-		if (submitButton != null && !submitButton.isDisposed()) {
-			submitButton.setEnabled(enabled);
-			if (enabled) {
-				submitButton.setToolTipText("Submit to " + this.repository.getUrl());
-			}
-		}
-	}
-
-	public void setTaskOutlineModel(RepositoryTaskOutlineNode taskOutlineModel) {
-		this.taskOutlineModel = taskOutlineModel;
-	}
-
-	private void setText(Browser browser, String html) {
-		try {
-			ignoreLocationEvents = true;
-			browser.setText((html != null) ? html : "");
-		} finally {
-			ignoreLocationEvents = false;
-		}
-
-	}
-
 	@Override
 	public void showBusy(boolean busy) {
 		if (!getManagedForm().getForm().isDisposed() && busy != formBusy) {
@@ -2223,11 +1161,11 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 				historyAction.setEnabled(!busy);
 			}
 
-			if (submitButton != null && !submitButton.isDisposed()) {
-				submitButton.setEnabled(!busy);
+			if (actionPart != null) {
+				actionPart.setSubmitEnabled(!busy);
 			}
 
-			setEnabledState(editorComposite, !busy);
+			EditorUtil.setEnabledState(editorComposite, !busy);
 
 			formBusy = busy;
 		}
@@ -2241,7 +1179,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 			markDirty(false);
 		}
 
-		final boolean attachContext = getAttachContext();
+		final boolean attachContext = actionPart.getAttachContext();
 
 		Job submitJob = new Job(LABEL_JOB_SUBMIT) {
 
@@ -2360,28 +1298,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 	}
 
 	/**
-	 * Programmatically expand the provided ExpandableComposite, using reflection to fire the expansion listeners (see
-	 * bug#70358)
-	 * 
-	 * @param comp
-	 */
-	// TODO EDITOR move to utility class?
-	private void toggleExpandableComposite(boolean expanded, ExpandableComposite comp) {
-		if (comp.isExpanded() != expanded) {
-			Method method = null;
-			try {
-				method = comp.getClass().getDeclaredMethod("programmaticToggleState");
-				method.setAccessible(true);
-				method.invoke(comp);
-			} catch (Exception e) {
-				// ignore
-			}
-		}
-	}
-
-	/**
 	 * Updates the title of the editor
-	 * 
 	 */
 	protected void updateEditorTitle() {
 		setPartName(editorInput.getName());
@@ -2405,7 +1322,5 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 	}
 
 	protected abstract void validateInput();
-
-	public abstract AttributeEditorToolkit getAttributeEditorToolkit();
 
 }

@@ -8,10 +8,12 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.AbstractFormPart;
@@ -21,6 +23,9 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  * @author Steffen Pingel
  */
 public abstract class AbstractTaskEditorPart extends AbstractFormPart {
+
+	// XXX why is this required?
+	protected static final Font TEXT_FONT = JFaceResources.getDefaultFont();
 
 	private RepositoryTaskData taskData;
 
