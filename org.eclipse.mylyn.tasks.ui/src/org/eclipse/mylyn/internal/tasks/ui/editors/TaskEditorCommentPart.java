@@ -11,14 +11,16 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.text.TextViewer;
+import org.eclipse.mylyn.internal.tasks.core.CommentQuoter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskComment;
 import org.eclipse.mylyn.tasks.ui.editors.RepositoryTaskEditorInput;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
@@ -42,6 +44,8 @@ import org.eclipse.ui.forms.widgets.Section;
 public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 	private static final int DESCRIPTION_WIDTH = 79 * 7; // 500;
+
+	private static final String LABEL_REPLY = "Reply";
 
 	private TaskComment selectedComment;
 
@@ -67,47 +71,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 	@Override
 	public void createControl(Composite composite, FormToolkit toolkit) {
 		commentsSection.setText(commentsSection.getText() + " (" + getTaskData().getComments().size() + ")");
-		if (getTaskData().getComments().size() > 0) {
-			commentsSection.setEnabled(true);
-
-			final Composite commentsSectionClient = toolkit.createComposite(commentsSection);
-			RowLayout rowLayout = new RowLayout();
-			rowLayout.pack = true;
-			rowLayout.marginLeft = 0;
-			rowLayout.marginBottom = 0;
-			rowLayout.marginTop = 0;
-			commentsSectionClient.setLayout(rowLayout);
-			commentsSectionClient.setBackground(null);
-
-			ImageHyperlink collapseAllHyperlink = new ImageHyperlink(commentsSectionClient, SWT.NONE);
-			collapseAllHyperlink.setToolTipText("Collapse All Comments");
-			toolkit.adapt(collapseAllHyperlink, true, true);
-			collapseAllHyperlink.setBackground(null);
-			collapseAllHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.COLLAPSE_ALL));
-			collapseAllHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
-				@Override
-				public void linkActivated(HyperlinkEvent e) {
-					hideAllComments();
-				}
-			});
-
-			ImageHyperlink expandAllHyperlink = new ImageHyperlink(commentsSectionClient, SWT.NONE);
-			expandAllHyperlink.setToolTipText("Expand All Comments");
-			toolkit.adapt(expandAllHyperlink, true, true);
-			expandAllHyperlink.setBackground(null);
-			expandAllHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.EXPAND_ALL));
-			expandAllHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
-				@Override
-				public void linkActivated(HyperlinkEvent e) {
-					BusyIndicator.showWhile(getControl().getDisplay(), new Runnable() {
-						public void run() {
-							revealAllComments();
-						}
-					});
-				}
-			});
-			commentsSection.setTextClient(commentsSectionClient);
-		} else {
+		if (getTaskData().getComments().size() == 0) {
 			commentsSection.setEnabled(false);
 		}
 
@@ -185,9 +149,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 			}
 
-			final ImageHyperlink replyLink = getTaskEditorPage().createReplyHyperlink(taskComment.getNumber(), toolbarButtonComp,
-					taskComment.getText());
-
+			final ImageHyperlink replyLink = createReplyHyperlink(toolbarButtonComp, toolkit, taskComment);
 			formHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 
 				@Override
@@ -294,8 +256,86 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 				commentsSection.setExpanded(newTaskComments.size() != oldTaskComments.size());
 			}
 		}
-		
+
 		setControl(addCommentsComposite);
+	}
+
+	// TODO EDITOR merge with AbstractReplyToAction
+	private ImageHyperlink createReplyHyperlink(Composite composite, FormToolkit toolkit, final TaskComment taskComment) {
+		final ImageHyperlink replyLink = new ImageHyperlink(composite, SWT.NULL);
+		toolkit.adapt(replyLink, true, true);
+		replyLink.setImage(TasksUiImages.getImage(TasksUiImages.REPLY));
+		replyLink.setToolTipText(LABEL_REPLY);
+		// no need for the background - transparency will take care of it
+		replyLink.setBackground(null);
+		// replyLink.setBackground(section.getTitleBarGradientBackground());
+		replyLink.addHyperlinkListener(new HyperlinkAdapter() {
+			public void linkActivated(HyperlinkEvent e) {
+				StringBuilder strBuilder = new StringBuilder();
+				strBuilder.append(" (In reply to comment #" + taskComment.getNumber() + ")\n");
+				CommentQuoter quoter = new CommentQuoter();
+				strBuilder.append(quoter.quote(taskComment.getText()));
+				getTaskEditorPage().appendTextToNewComment(strBuilder.toString());
+			}
+		});
+
+		return replyLink;
+	}
+
+	@Override
+	protected void fillToolBar(ToolBarManager barManager) {
+		if (getTaskData().getComments().isEmpty()) {
+			return;
+		}
+
+		Action collapseAllAction = new Action("") {
+			@Override
+			public void run() {
+				hideAllComments();
+			}
+		};
+		collapseAllAction.setImageDescriptor(TasksUiImages.COLLAPSE_ALL);
+		collapseAllAction.setToolTipText("Collapse All Comments");
+		barManager.add(collapseAllAction);
+
+		Action expandAllAction = new Action("") {
+			@Override
+			public void run() {
+				expandAllComments();
+			}
+		};
+		expandAllAction.setImageDescriptor(TasksUiImages.EXPAND_ALL);
+		expandAllAction.setToolTipText("Expand All Comments");
+		barManager.add(expandAllAction);
+
+//		ImageHyperlink collapseAllHyperlink = new ImageHyperlink(commentsSectionClient, SWT.NONE);
+//		collapseAllHyperlink.setToolTipText("Collapse All Comments");
+//		getManagedForm().getToolkit().adapt(collapseAllHyperlink, true, true);
+//		collapseAllHyperlink.setBackground(null);
+//		collapseAllHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.COLLAPSE_ALL));
+//		collapseAllHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+//			@Override
+//			public void linkActivated(HyperlinkEvent e) {
+//				hideAllComments();
+//			}
+//		});
+
+//		ImageHyperlink expandAllHyperlink = new ImageHyperlink(commentsSectionClient, SWT.NONE);
+//		expandAllHyperlink.setToolTipText("Expand All Comments");
+//		getManagedForm().getToolkit().adapt(expandAllHyperlink, true, true);
+//		expandAllHyperlink.setBackground(null);
+//		expandAllHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.EXPAND_ALL));
+//		expandAllHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+//			@Override
+//			public void linkActivated(HyperlinkEvent e) {
+//				BusyIndicator.showWhile(getControl().getDisplay(), new Runnable() {
+//					public void run() {
+//						revealAllComments();
+//					}
+//				});
+//			}
+//		});
+//		commentsSection.setTextClient(commentsSectionClient);
 	}
 
 	private void hideAllComments() {
@@ -340,7 +380,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		}
 	}
 
-	private void revealAllComments() {
+	private void expandAllComments() {
 		try {
 			getTaskEditorPage().setReflow(false);
 
@@ -395,6 +435,5 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 	public String formatDate(String dateString) {
 		return dateString;
 	}
-
 
 }

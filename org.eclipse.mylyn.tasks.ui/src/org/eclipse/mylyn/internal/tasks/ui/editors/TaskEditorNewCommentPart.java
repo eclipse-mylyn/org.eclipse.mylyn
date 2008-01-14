@@ -318,6 +318,7 @@ public class TaskEditorNewCommentPart extends AbstractTaskEditorPart {
 			strBuilder.append("\n");
 		}
 		strBuilder.append(oldText);
+		strBuilder.append(text);
 		newCommentTextViewer.getDocument().set(strBuilder.toString());
 		RepositoryTaskAttribute attribute = getTaskData().getAttribute(RepositoryTaskAttribute.COMMENT_NEW);
 		if (attribute != null) {

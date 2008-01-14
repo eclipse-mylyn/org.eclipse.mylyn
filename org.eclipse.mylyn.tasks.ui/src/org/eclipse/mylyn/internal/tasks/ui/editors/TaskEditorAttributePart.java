@@ -8,164 +8,172 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylyn.internal.tasks.core.AbstractAttributeMapper;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.internal.tasks.ui.editors.LayoutHint.ColumnSpan;
+import org.eclipse.mylyn.internal.tasks.ui.editors.LayoutHint.RowSpan;
 import org.eclipse.mylyn.internal.tasks.ui.views.ResetRepositoryConfigurationAction;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * @author Steffen Pingel
  */
 public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 
-	private boolean supportsRefresh;
+	private static final int MULTI_ROW_HEIGHT = 55;
 
-	private final Section attributesSection;
+	private static final int COLUMN_WIDTH = 140;
 
-	public TaskEditorAttributePart(AbstractTaskEditorPage taskEditorPage, Section attributesSection) {
+	private static final int MULTI_COLUMN_WIDTH = 380;
+
+	public TaskEditorAttributePart(AbstractTaskEditorPage taskEditorPage) {
 		super(taskEditorPage);
-		this.attributesSection = attributesSection;
 	}
 
-//	/**
-//	 * Creates the attribute section, which contains most of the basic attributes of the task (some of which are
-//	 * editable).
-//	 */
-//	protected void createAttributeLayout(Composite attributesComposite) {
-//		int numColumns = ((GridLayout) attributesComposite.getLayout()).numColumns;
-//		int currentCol = 1;
-//
-//		for (final RepositoryTaskAttribute attribute : taskData.getAttributes()) {
-//			if (attribute.isHidden()) {
-//				continue;
-//			}
-//
-//			GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-//			data.horizontalSpan = 1;
-//
-//			if (attribute.hasOptions() && !attribute.isReadOnly()) {
-//				Label label = createLabel(attributesComposite, attribute);
-//				GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
-//				final CCombo attributeCombo = new CCombo(attributesComposite, SWT.FLAT | SWT.READ_ONLY);
-//				toolkit.adapt(attributeCombo, true, true);
-//				attributeCombo.setFont(TEXT_FONT);
-//				attributeCombo.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-//				if (hasChanged(attribute)) {
-//					attributeCombo.setBackground(colorIncoming);
-//				}
-//				attributeCombo.setLayoutData(data);
-//
-//				List<String> values = attribute.getOptions();
-//				if (values != null) {
-//					for (String val : values) {
-//						if (val != null) {
-//							attributeCombo.add(val);
-//						}
-//					}
-//				}
-//
-//				String value = attribute.getValue();
-//				if (value == null) {
-//					value = "";
-//				}
-//				if (attributeCombo.indexOf(value) != -1) {
-//					attributeCombo.select(attributeCombo.indexOf(value));
-//				}
-//				attributeCombo.clearSelection();
-//				attributeCombo.addSelectionListener(new SelectionAdapter() {
-//					@Override
-//					public void widgetSelected(SelectionEvent event) {
-//						if (attributeCombo.getSelectionIndex() > -1) {
-//							String sel = attributeCombo.getItem(attributeCombo.getSelectionIndex());
-//							attribute.setValue(sel);
-//							attributeChanged(attribute);
-//							attributeCombo.clearSelection();
-//						}
-//					}
-//				});
-//				currentCol += 2;
-//			} else {
-//				Label label = createLabel(attributesComposite, attribute);
-//				GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
-//				Composite textFieldComposite = toolkit.createComposite(attributesComposite);
-//				GridLayout textLayout = new GridLayout();
-//				textLayout.marginWidth = 1;
-//				textLayout.marginHeight = 2;
-//				textFieldComposite.setLayout(textLayout);
-//				GridData textData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-//				textData.horizontalSpan = 1;
-//				textData.widthHint = 135;
-//
-//				if (attribute.isReadOnly()) {
-//					final Text text = createTextField(textFieldComposite, attribute, SWT.FLAT | SWT.READ_ONLY);
-//					text.setLayoutData(textData);
-//				} else {
-//					final Text text = createTextField(textFieldComposite, attribute, SWT.FLAT);
-//					// text.setFont(COMMENT_FONT);
-//					text.setLayoutData(textData);
-//					toolkit.paintBordersFor(textFieldComposite);
-//					text.setData(attribute);
-//
-//					if (hasContentAssist(attribute)) {
-//						ContentAssistCommandAdapter adapter = applyContentAssist(text,
-//								createContentProposalProvider(attribute));
-//
-//						ILabelProvider propsalLabelProvider = createProposalLabelProvider(attribute);
-//						if (propsalLabelProvider != null) {
-//							adapter.setLabelProvider(propsalLabelProvider);
-//						}
-//						adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
-//					}
-//				}
-//
-//				currentCol += 2;
-//			}
-//
-//			if (currentCol > numColumns) {
-//				currentCol -= numColumns;
-//			}
-//		}
-//
-//		// make sure that we are in the first column
-//		if (currentCol > 1) {
-//			while (currentCol <= numColumns) {
-//				toolkit.createLabel(attributesComposite, "");
-//				currentCol++;
-//			}
-//		}
-//
-//		toolkit.paintBordersFor(attributesComposite);
-//	}
+	private void createAttributeControls(Composite attributesComposite, FormToolkit toolkit) {
+		List<AbstractAttributeEditor> attributeEditors = createAttributeEditors();
+
+		int columnCount = ((GridLayout) attributesComposite.getLayout()).numColumns;
+		((GridLayout) attributesComposite.getLayout()).verticalSpacing = 6;
+
+		int currentColumn = 1;
+		int currentPriority = 0;
+		for (AbstractAttributeEditor attributeEditor : attributeEditors) {
+			int priority = (attributeEditor.getLayoutHint() != null) ? attributeEditor.getLayoutHint().getPriority()
+					: LayoutHint.DEFAULT_PRIORITY;
+			if (priority != currentPriority) {
+				currentPriority = priority;
+				if (currentColumn > 1) {
+					while (currentColumn <= columnCount) {
+						getManagedForm().getToolkit().createLabel(attributesComposite, "");
+						currentColumn++;
+					}
+					currentColumn = 1;
+				}
+			}
+
+			if (attributeEditor.hasLabel()) {
+				attributeEditor.createLabelControl(attributesComposite, toolkit);
+				Label label = attributeEditor.getLabelControl();
+				GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
+				currentColumn++;
+			}
+
+			attributeEditor.createControl(attributesComposite, toolkit);
+			LayoutHint layoutHint = attributeEditor.getLayoutHint();
+			GridData gd = new GridData(SWT.FILL, SWT.CENTER, false, false);
+			if (layoutHint != null
+					&& !(layoutHint.rowSpan == RowSpan.SINGLE && layoutHint.columnSpan == ColumnSpan.SINGLE)) {
+				if (layoutHint.rowSpan == RowSpan.MULTIPLE) {
+					gd.heightHint = MULTI_ROW_HEIGHT;
+				}
+				if (layoutHint.columnSpan == ColumnSpan.SINGLE) {
+					gd.widthHint = COLUMN_WIDTH;
+					gd.horizontalSpan = 1;
+				} else {
+					gd.widthHint = MULTI_COLUMN_WIDTH;
+					gd.horizontalSpan = columnCount - currentColumn + 1;
+				}
+			} else {
+				gd.widthHint = COLUMN_WIDTH;
+				gd.horizontalSpan = 1;
+			}
+			attributeEditor.getControl().setLayoutData(gd);
+			currentColumn += gd.horizontalSpan;
+
+			currentColumn %= columnCount;
+		}
+	}
+
+	private List<AbstractAttributeEditor> createAttributeEditors() {
+		List<AbstractAttributeEditor> attributeEditors = new ArrayList<AbstractAttributeEditor>();
+
+		AttributeEditorFactory attributeEditorFactory = getTaskEditorPage().getAttributeEditorFactory();
+		AbstractAttributeMapper attributeMapper = getTaskData().getAttributeFactory().getAttributeMapper();
+		for (final RepositoryTaskAttribute attribute : getTaskData().getAttributes()) {
+			if (attribute.isHidden()
+					|| (attribute.isReadOnly() && (attribute.getValue() == null || attribute.getValue().length() == 0))) {
+				continue;
+			}
+
+			String type = attributeMapper.getType(attribute);
+			if (type != null) {
+				attributeEditorFactory.createEditor(type, attribute);
+				AbstractAttributeEditor attributeEditor = attributeEditorFactory.createEditor(type, attribute);
+				if (attributeEditor != null) {
+					attributeEditors.add(attributeEditor);
+				}
+			}
+		}
+
+		Collections.sort(attributeEditors, new Comparator<AbstractAttributeEditor>() {
+			public int compare(AbstractAttributeEditor o1, AbstractAttributeEditor o2) {
+				int p1 = (o1.getLayoutHint() != null) ? o1.getLayoutHint().getPriority() : LayoutHint.DEFAULT_PRIORITY;
+				int p2 = (o2.getLayoutHint() != null) ? o2.getLayoutHint().getPriority() : LayoutHint.DEFAULT_PRIORITY;
+				return p1 - p2;
+			}
+		});
+
+		return attributeEditors;
+	}
 
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
-		Composite toolbarComposite = toolkit.createComposite(parent);
-		toolbarComposite.setBackground(null);
-		RowLayout rowLayout = new RowLayout();
-		rowLayout.marginTop = 0;
-		rowLayout.marginBottom = 0;
-		toolbarComposite.setLayout(rowLayout);
+		// Attributes Composite- this holds all the combo fields and text fields
+		Composite attributesComposite = toolkit.createComposite(parent);
+		attributesComposite.addListener(SWT.MouseDown, new Listener() {
+			public void handleEvent(Event event) {
+				Control focus = event.display.getFocusControl();
+				if (focus instanceof Text && ((Text) focus).getEditable() == false) {
+					getManagedForm().getForm().setFocus();
+				}
+			}
+		});
+
+		GridLayout attributesLayout = new GridLayout();
+		attributesLayout.numColumns = 4;
+		attributesLayout.horizontalSpacing = 5;
+		attributesLayout.verticalSpacing = 6;
+		attributesComposite.setLayout(attributesLayout);
+
+		GridData attributesData = new GridData(GridData.FILL_BOTH);
+		attributesData.horizontalSpan = 1;
+		attributesData.grabExcessVerticalSpace = false;
+		attributesComposite.setLayoutData(attributesData);
+
+		createAttributeControls(attributesComposite, toolkit);
+		toolkit.paintBordersFor(attributesComposite);
+
+		setControl(attributesComposite);
+	}
+
+	protected void fillToolBar(ToolBarManager toolBar) {
 		ResetRepositoryConfigurationAction repositoryConfigRefresh = new ResetRepositoryConfigurationAction() {
 			@Override
 			public void performUpdate(TaskRepository repository, AbstractRepositoryConnector connector,
@@ -212,45 +220,7 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 		repositoryConfigRefresh.setImageDescriptor(TasksUiImages.REPOSITORY_SYNCHRONIZE);
 		repositoryConfigRefresh.selectionChanged(new StructuredSelection(getTaskRepository()));
 		repositoryConfigRefresh.setToolTipText("Refresh attributes");
-
-		ToolBarManager barManager = new ToolBarManager(SWT.FLAT);
-		barManager.add(repositoryConfigRefresh);
-		repositoryConfigRefresh.setEnabled(supportsRefresh());
-		barManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-		barManager.createControl(toolbarComposite);
-		attributesSection.setTextClient(toolbarComposite);
-
-		// Attributes Composite- this holds all the combo fields and text fields
-		final Composite attribComp = toolkit.createComposite(parent);
-		attribComp.addListener(SWT.MouseDown, new Listener() {
-			public void handleEvent(Event event) {
-				Control focus = event.display.getFocusControl();
-				if (focus instanceof Text && ((Text) focus).getEditable() == false) {
-					getManagedForm().getForm().setFocus();
-				}
-			}
-		});
-
-		GridLayout attributesLayout = new GridLayout();
-		attributesLayout.numColumns = 4;
-		attributesLayout.horizontalSpacing = 5;
-		attributesLayout.verticalSpacing = 4;
-		attribComp.setLayout(attributesLayout);
-
-		GridData attributesData = new GridData(GridData.FILL_BOTH);
-		attributesData.horizontalSpan = 1;
-		attributesData.grabExcessVerticalSpace = false;
-		attribComp.setLayoutData(attributesData);
-
-		setControl(attribComp);
-	}
-
-	public void setSupportsRefresh(boolean supportsRefresh) {
-		this.supportsRefresh = supportsRefresh;
-	}
-
-	private boolean supportsRefresh() {
-		return supportsRefresh;
+		toolBar.add(repositoryConfigRefresh);
 	}
 
 }

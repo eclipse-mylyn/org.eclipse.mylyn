@@ -29,6 +29,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.JFaceResources;
@@ -40,7 +41,6 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylyn.internal.tasks.core.CommentQuoter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewSubTaskAction;
@@ -94,7 +94,6 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
-import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.themes.IThemeManager;
@@ -136,8 +135,6 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 	private static final String LABEL_HISTORY = "History";
 
 	private static final String LABEL_JOB_SUBMIT = "Submitting to repository";
-
-	private static final String LABEL_REPLY = "Reply";
 
 	private static final Font TITLE_FONT = JFaceResources.getBannerFont();
 
@@ -396,6 +393,11 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 		return super.addTextViewer(repository, composite, text, style);
 	}
 
+	public void appendTextToNewComment(String text) {
+		newCommentPart.appendText(text);
+		newCommentPart.setFocus();
+	}
+
 	/**
 	 * Call upon change to attribute value
 	 * 
@@ -437,11 +439,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, true).applyTo(section);
 
 		actionPart = new TaskEditorActionPart(this);
-		actionPart.setInput(connector, repository, taskData);
-		actionPart.createControl(section, toolkit);
-		section.setClient(actionPart.getControl());
-
-		getManagedForm().addPart(actionPart);
+		initializePart(section, actionPart);
 	}
 
 	private void createAttachmentSection(Composite composite) {
@@ -452,11 +450,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 
 		TaskEditorAttachmentPart attachmentPart = new TaskEditorAttachmentPart(this);
 		attachmentPart.setSupportsDelete(supportsAttachmentDelete());
-		attachmentPart.setInput(connector, repository, taskData);
-		attachmentPart.createControl(section, toolkit);
-		section.setClient(attachmentPart.getControl());
-
-		getManagedForm().addPart(attachmentPart);
+		initializePart(section, attachmentPart);
 	}
 
 	private void createAttributeSection() {
@@ -464,11 +458,8 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 		attributesSection.setExpanded(expandedStateAttributes
 				|| getAttributeEditorManager().hasVisibleOutgoingChanges(taskData));
 
-		TaskEditorAttributePart attributePart = new TaskEditorAttributePart(this, attributesSection);
-		attributePart.setInput(connector, repository, taskData);
-		attributePart.createControl(attributesSection, toolkit);
-
-		getManagedForm().addPart(attributePart);
+		TaskEditorAttributePart attributePart = new TaskEditorAttributePart(this);
+		initializePart(attributesSection, attributePart);
 	}
 
 	private void createCommentSection(Composite composite) {
@@ -476,21 +467,14 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 
 		commentPart = new TaskEditorCommentPart(this, commentsSection, editorInput, repositoryTask);
 		commentPart.setSupportsDelete(supportsCommentDelete());
-		commentPart.setInput(connector, repository, taskData);
-		commentPart.createControl(commentsSection, toolkit);
-
-		getManagedForm().addPart(commentPart);
+		initializePart(commentsSection, commentPart);
 	}
 
 	private void createDescriptionSection(Composite composite) {
 		Section descriptionSection = createSection(composite, getSectionLabel(SECTION_NAME.DESCRIPTION_SECTION));
 
-		descriptionPart = new TaskEditorDescriptionPart(this, descriptionSection);
-		descriptionPart.setInput(connector, repository, taskData);
-		descriptionPart.createControl(descriptionSection, toolkit);
-		descriptionSection.setClient(descriptionPart.getControl());
-
-		getManagedForm().addPart(descriptionPart);
+		descriptionPart = new TaskEditorDescriptionPart(this);
+		initializePart(descriptionSection, descriptionPart);
 	}
 
 	@Override
@@ -541,10 +525,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 		newCommentSection.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		newCommentPart = new TaskEditorNewCommentPart(this);
-		newCommentPart.setInput(connector, repository, taskData);
-		newCommentPart.createControl(composite, toolkit);
-
-		getManagedForm().addPart(newCommentPart);
+		initializePart(newCommentSection, newCommentPart);
 	}
 
 	private void createPeopleSection(Composite composite) {
@@ -552,33 +533,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, true).applyTo(peopleSection);
 
 		TaskEditorPeoplePart peoplePart = new TaskEditorPeoplePart(this);
-		getManagedForm().addPart(peoplePart);
-		peoplePart.setInput(connector, repository, taskData);
-		peoplePart.createControl(peopleSection, toolkit);		
-		peopleSection.setClient(peoplePart.getControl());
-	}
-
-	ImageHyperlink createReplyHyperlink(final int commentNum, Composite composite, final String commentBody) {
-		final ImageHyperlink replyLink = new ImageHyperlink(composite, SWT.NULL);
-		toolkit.adapt(replyLink, true, true);
-		replyLink.setImage(TasksUiImages.getImage(TasksUiImages.REPLY));
-		replyLink.setToolTipText(LABEL_REPLY);
-		// no need for the background - transparency will take care of it
-		replyLink.setBackground(null);
-		// replyLink.setBackground(section.getTitleBarGradientBackground());
-		replyLink.addHyperlinkListener(new HyperlinkAdapter() {
-			@Override
-			public void linkActivated(HyperlinkEvent e) {
-				StringBuilder strBuilder = new StringBuilder();
-				strBuilder.append(" (In reply to comment #" + commentNum + ")\n");
-				CommentQuoter quoter = new CommentQuoter();
-				strBuilder.append(quoter.quote(commentBody));
-				newCommentPart.appendText(strBuilder.toString());
-				newCommentPart.setFocus();
-			}
-		});
-
-		return replyLink;
+		initializePart(peopleSection, peoplePart);
 	}
 
 	private Section createSection(Composite composite, String title) {
@@ -851,7 +806,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 	public TaskRepository getTaskRepository() {
 		return repository;
 	}
-	
+
 	private IStatus handleSubmitError(final CoreException exception) {
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
@@ -902,6 +857,31 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 		}
 
 		TasksUiPlugin.getTaskListManager().getTaskList().addChangeListener(TASKLIST_CHANGE_LISTENER);
+	}
+
+	private void initializePart(Section section, AbstractTaskEditorPart part) {
+		getManagedForm().addPart(part);
+		part.setInput(connector, repository, taskData);
+		part.createControl(section, toolkit);
+		section.setClient(part.getControl());
+
+		if (section.getTextClient() == null) {
+			ToolBarManager toolBarManager = new ToolBarManager(SWT.FLAT);
+			part.fillToolBar(toolBarManager);
+			// TODO EDITOR toolBarManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+
+			if (toolBarManager.getSize() > 0) {
+				Composite toolbarComposite = toolkit.createComposite(section);
+				toolbarComposite.setBackground(null);
+				RowLayout rowLayout = new RowLayout();
+				rowLayout.marginTop = 0;
+				rowLayout.marginBottom = 0;
+				toolbarComposite.setLayout(rowLayout);
+
+				toolBarManager.createControl(toolbarComposite);
+				section.setTextClient(toolbarComposite);
+			}
+		}
 	}
 
 	protected void initTaskEditor(IEditorSite site, RepositoryTaskEditorInput input) {
@@ -1346,6 +1326,9 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 		return newTask;
 	}
 
-	protected abstract void validateInput();
+	// TODO EDITOR review if required
+	protected void validateInput() {
+
+	}
 
 }

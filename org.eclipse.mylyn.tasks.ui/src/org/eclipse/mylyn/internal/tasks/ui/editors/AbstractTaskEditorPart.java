@@ -8,6 +8,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
@@ -22,6 +23,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 /**
  * @author Steffen Pingel
  */
+// TODO EDITOR add API for section toolbars
 public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 
 	// XXX why is this required?
@@ -76,6 +78,9 @@ public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 		this.connector = connector;
 		this.taskRepository = taskRepository;
 		this.taskData = taskData;
+	}
+
+	protected void fillToolBar(ToolBarManager toolBarManager) {
 	}
 
 }

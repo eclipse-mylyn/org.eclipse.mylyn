@@ -93,30 +93,27 @@ public class TaskEditorPeoplePart extends AbstractTaskEditorPart {
 
 		RepositoryTaskAttribute addCCattribute = getTaskData().getAttribute(RepositoryTaskAttribute.NEW_CC);
 		if (addCCattribute == null) {
-			// TODO: remove once TRAC is priming taskData with NEW_CC attribute
-			getTaskData().setAttributeValue(RepositoryTaskAttribute.NEW_CC, "");
-			addCCattribute = getTaskData().getAttribute(RepositoryTaskAttribute.NEW_CC);
+			return;
 		}
-		if (addCCattribute != null) {
-			Label label = createLabel(attributesComposite, addCCattribute, toolkit);
-			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
-			Text text = createTextField(attributesComposite, addCCattribute, SWT.FLAT, toolkit);
-			GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).applyTo(text);
 
-			if (getTaskEditorPage().getAttributeEditorToolkit().hasContentAssist(addCCattribute)) {
-				ContentAssistCommandAdapter adapter = getTaskEditorPage().getAttributeEditorToolkit().applyContentAssist(text,
-						getTaskEditorPage().getAttributeEditorToolkit().createContentProposalProvider(addCCattribute));
-				ILabelProvider propsalLabelProvider = getTaskEditorPage().getAttributeEditorToolkit().createLabelProposalProvider(addCCattribute);
-				if (propsalLabelProvider != null) {
-					adapter.setLabelProvider(propsalLabelProvider);
-				}
-				adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
+		Label label = createLabel(attributesComposite, addCCattribute, toolkit);
+		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
+		Text text = createTextField(attributesComposite, addCCattribute, SWT.FLAT, toolkit);
+		GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).applyTo(text);
+
+		if (getTaskEditorPage().getAttributeEditorToolkit().hasContentAssist(addCCattribute)) {
+			ContentAssistCommandAdapter adapter = getTaskEditorPage().getAttributeEditorToolkit().applyContentAssist(text,
+					getTaskEditorPage().getAttributeEditorToolkit().createContentProposalProvider(addCCattribute));
+			ILabelProvider propsalLabelProvider = getTaskEditorPage().getAttributeEditorToolkit().createLabelProposalProvider(addCCattribute);
+			if (propsalLabelProvider != null) {
+				adapter.setLabelProvider(propsalLabelProvider);
 			}
+			adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 		}
 
 		RepositoryTaskAttribute CCattribute = getTaskData().getAttribute(RepositoryTaskAttribute.USER_CC);
 		if (CCattribute != null) {
-			Label label = createLabel(attributesComposite, CCattribute, toolkit);
+			label = createLabel(attributesComposite, CCattribute, toolkit);
 			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.TOP).applyTo(label);
 			ccList = new org.eclipse.swt.widgets.List(attributesComposite, SWT.MULTI | SWT.V_SCROLL);// SWT.BORDER
 			ccList.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);

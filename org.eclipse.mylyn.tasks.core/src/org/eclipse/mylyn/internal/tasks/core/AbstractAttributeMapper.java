@@ -106,4 +106,6 @@ public abstract class AbstractAttributeMapper {
 		return taskAttribute.getValues().toArray(new String[0]);
 	}
 
+	public abstract String getType(RepositoryTaskAttribute taskAttribute); 
+	
 }

@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.text.ITextListener;
@@ -48,7 +49,6 @@ import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
@@ -84,8 +84,6 @@ public class TaskEditorDescriptionPart extends AbstractTaskEditorPart {
 
 	private static final String LABEL_SELECT_DETECTOR = "Duplicate Detection";
 
-	private final Section descriptionSection;
-
 	protected TextViewer descriptionTextViewer = null;
 
 	protected CCombo duplicateDetectorChooser;
@@ -98,9 +96,8 @@ public class TaskEditorDescriptionPart extends AbstractTaskEditorPart {
 
 	private Button searchForDuplicates;
 
-	public TaskEditorDescriptionPart(AbstractTaskEditorPage taskEditorPage, Section descriptionSection) {
+	public TaskEditorDescriptionPart(AbstractTaskEditorPage taskEditorPage) {
 		super(taskEditorPage);
-		this.descriptionSection = descriptionSection;
 	}
 
 	private Browser addBrowser(Composite parent, int style) {
@@ -281,15 +278,9 @@ public class TaskEditorDescriptionPart extends AbstractTaskEditorPart {
 		// FIXME EDITOR
 		//		descriptionTextViewer.getTextWidget().addListener(SWT.FocusIn, new DescriptionListener());
 
-		Composite replyComp = toolkit.createComposite(parent);
-		replyComp.setLayout(new RowLayout());
-		replyComp.setBackground(null);
-
-		getTaskEditorPage().createReplyHyperlink(0, replyComp, getTaskData().getDescription());
-		descriptionSection.setTextClient(replyComp);
 		addDuplicateDetection(sectionComposite, toolkit);
-		toolkit.paintBordersFor(sectionComposite);
 
+		toolkit.paintBordersFor(sectionComposite);
 		setControl(sectionComposite);
 	}
 
@@ -353,6 +344,42 @@ public class TaskEditorDescriptionPart extends AbstractTaskEditorPart {
 			}
 
 		};
+	}
+
+	@Override
+	protected void fillToolBar(ToolBarManager toolBar) {
+		AbstractReplyToCommenAction replyAction = new AbstractReplyToCommenAction(getTaskEditorPage(), 0) {
+			@Override
+			protected String getReplyText() {
+				return getTaskData().getDescription();
+			}
+		};
+		toolBar.add(replyAction);
+	}
+
+	protected SearchHitCollector getDuplicateSearchCollector(String name) {
+		String duplicateDetectorName = name.equals("default") ? "Stack Trace" : name;
+		Set<AbstractDuplicateDetector> allDetectors = getDuplicateSearchCollectorsList();
+
+		for (AbstractDuplicateDetector detector : allDetectors) {
+			if (detector.getName().equals(duplicateDetectorName)) {
+				return detector.getSearchHitCollector(getTaskRepository(), getTaskData());
+			}
+		}
+		// didn't find it
+		return null;
+	}
+
+	protected Set<AbstractDuplicateDetector> getDuplicateSearchCollectorsList() {
+		Set<AbstractDuplicateDetector> duplicateDetectors = new HashSet<AbstractDuplicateDetector>();
+		for (AbstractDuplicateDetector abstractDuplicateDetector : TasksUiPlugin.getDefault()
+				.getDuplicateSearchCollectorsList()) {
+			if (abstractDuplicateDetector.getKind() == null
+					|| abstractDuplicateDetector.getKind().equals(getConnector().getConnectorKind())) {
+				duplicateDetectors.add(abstractDuplicateDetector);
+			}
+		}
+		return duplicateDetectors;
 	}
 
 	private void previewWiki(final Browser browser, String sourceText) {
@@ -430,41 +457,6 @@ public class TaskEditorDescriptionPart extends AbstractTaskEditorPart {
 		job.schedule();
 	}
 
-	private void setText(Browser browser, String html) {
-		try {
-			ignoreLocationEvents = true;
-			browser.setText((html != null) ? html : "");
-		} finally {
-			ignoreLocationEvents = false;
-		}
-
-	}
-
-	protected SearchHitCollector getDuplicateSearchCollector(String name) {
-		String duplicateDetectorName = name.equals("default") ? "Stack Trace" : name;
-		Set<AbstractDuplicateDetector> allDetectors = getDuplicateSearchCollectorsList();
-
-		for (AbstractDuplicateDetector detector : allDetectors) {
-			if (detector.getName().equals(duplicateDetectorName)) {
-				return detector.getSearchHitCollector(getTaskRepository(), getTaskData());
-			}
-		}
-		// didn't find it
-		return null;
-	}
-
-	protected Set<AbstractDuplicateDetector> getDuplicateSearchCollectorsList() {
-		Set<AbstractDuplicateDetector> duplicateDetectors = new HashSet<AbstractDuplicateDetector>();
-		for (AbstractDuplicateDetector abstractDuplicateDetector : TasksUiPlugin.getDefault()
-				.getDuplicateSearchCollectorsList()) {
-			if (abstractDuplicateDetector.getKind() == null
-					|| abstractDuplicateDetector.getKind().equals(getConnector().getConnectorKind())) {
-				duplicateDetectors.add(abstractDuplicateDetector);
-			}
-		}
-		return duplicateDetectors;
-	}
-
 	public boolean searchForDuplicates() {
 		String duplicateDetectorName = duplicateDetectorChooser.getItem(duplicateDetectorChooser.getSelectionIndex());
 
@@ -475,6 +467,16 @@ public class TaskEditorDescriptionPart extends AbstractTaskEditorPart {
 		}
 
 		return false;
+	}
+
+	private void setText(Browser browser, String html) {
+		try {
+			ignoreLocationEvents = true;
+			browser.setText((html != null) ? html : "");
+		} finally {
+			ignoreLocationEvents = false;
+		}
+
 	}
 
 }
