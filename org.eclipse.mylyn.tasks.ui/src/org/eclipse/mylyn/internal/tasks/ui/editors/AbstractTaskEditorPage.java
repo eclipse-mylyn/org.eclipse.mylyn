@@ -255,8 +255,6 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 		}
 	};
 
-	private boolean showAttachments = true;
-
 	private SynchronizeEditorAction synchronizeEditorAction;
 
 	protected RepositoryTaskData taskData;
@@ -313,6 +311,12 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 	private TaskEditorDescriptionPart descriptionPart;
 
 	private TaskEditorNewCommentPart newCommentPart;
+
+	private boolean needsAttachments;
+
+	private boolean needsComments;
+
+	private boolean needsHeader;
 
 	/**
 	 * Creates a new <code>AbstractTaskEditor</code>.
@@ -549,13 +553,16 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 
 		createAttributeSection();
 
-		if (showAttachments) {
+		if (needsAttachments()) {
 			createAttachmentSection(editorComposite);
 		}
 
 		createDescriptionSection(editorComposite);
-		createCommentSection(editorComposite);
-		createNewCommentSection(editorComposite);
+		
+		if (needsComments) {
+			createCommentSection(editorComposite);
+			createNewCommentSection(editorComposite);
+		}
 
 		Composite bottomComposite = toolkit.createComposite(editorComposite);
 		bottomComposite.setLayout(new GridLayout(2, false));
@@ -573,17 +580,18 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 
 	private void createSummarySection(Composite composite) {
 		summaryPart = new TaskEditorSummaryPart(this);
-		summaryPart.setInput(connector, repository, taskData);
-		summaryPart.createControl(composite, toolkit);
-
 		getManagedForm().addPart(summaryPart);
+		summaryPart.setInput(connector, repository, taskData);
+		summaryPart.setNeedsHeader(needsHeader());
+		summaryPart.createControl(composite, toolkit);
+		summaryPart.getControl().setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
 	}
 
-	// TODO EDITOR move
+// TODO EDITOR move
 	protected void deleteAttachment(RepositoryAttachment attachment) {
 	}
 
-	// TODO EDITOR move
+// TODO EDITOR move
 	protected void deleteComment(TaskComment comment) {
 	}
 
@@ -892,6 +900,10 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 		taskData = editorInput.getTaskData();
 		connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getConnectorKind());
 
+		needsComments = !taskData.isNew();
+		needsAttachments = !taskData.isNew();
+		needsHeader = !taskData.isNew();
+		
 		setSite(site);
 		setInput(input);
 
@@ -901,6 +913,18 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 	@Override
 	public boolean isSaveAsAllowed() {
 		return false;
+	}
+
+	public boolean needsAttachments() {
+		return needsAttachments;
+	}
+
+	public boolean needsComments() {
+		return needsComments;
+	}
+
+	public boolean needsHeader() {
+		return needsHeader;
 	}
 
 	/**
@@ -1140,10 +1164,6 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 	public void setReflow(boolean refreshEnabled) {
 		this.reflow = refreshEnabled;
 		form.setRedraw(reflow);
-	}
-
-	public void setShowAttachments(boolean showAttachments) {
-		this.showAttachments = showAttachments;
 	}
 
 	@Override

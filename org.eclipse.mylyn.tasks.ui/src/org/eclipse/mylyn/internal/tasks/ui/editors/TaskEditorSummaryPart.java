@@ -19,14 +19,9 @@ import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.VerifyKeyListener;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.VerifyEvent;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -38,6 +33,23 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  * @author Steffen Pingel
  */
 public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
+
+	/**
+	 * @author Raphael Ackermann (bug 195514)
+	 */
+	private class TabVerifyKeyListener implements VerifyKeyListener {
+
+		public void verifyKey(VerifyEvent event) {
+			// if there is a tab key, do not "execute" it and instead select the Status control
+			if (event.keyCode == SWT.TAB) {
+				event.doit = false;
+				if (headerInfoComposite != null) {
+					headerInfoComposite.setFocus();
+				}
+			}
+		}
+
+	}
 
 	private static final String HEADER_DATE_FORMAT = "yyyy-MM-dd HH:mm";
 
@@ -51,6 +63,10 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 	protected Text summaryText;
 
 	private FormToolkit toolkit;
+
+	private Composite headerInfoComposite;
+
+	private boolean needsHeader;
 
 	public TaskEditorSummaryPart(AbstractTaskEditorPage taskEditorPage) {
 		super(taskEditorPage);
@@ -69,118 +85,58 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 	 * Adds a text editor with spell checking enabled to display and edit the task's summary.
 	 * 
 	 * @author Raphael Ackermann (modifications) (bug 195514)
-	 * @param attributesComposite
+	 * @param composite
 	 *            The composite to add the text editor to.
 	 */
-	protected void addSummaryText(Composite attributesComposite) {
-		Composite summaryComposite = toolkit.createComposite(attributesComposite);
-		GridLayout summaryLayout = new GridLayout(2, false);
-		summaryLayout.verticalSpacing = 0;
-		summaryLayout.marginHeight = 2;
-		summaryComposite.setLayout(summaryLayout);
-		GridDataFactory.fillDefaults().grab(true, false).applyTo(summaryComposite);
+	protected void addSummaryText(Composite composite) {
+		final RepositoryTaskAttribute attribute = getTaskData().getAttribute(RepositoryTaskAttribute.SUMMARY);
 
-		if (getTaskData() != null) {
-			RepositoryTaskAttribute attribute = getTaskData().getAttribute(RepositoryTaskAttribute.SUMMARY);
-			if (attribute == null) {
-				getTaskData().setAttributeValue(RepositoryTaskAttribute.SUMMARY, "");
-				attribute = getTaskData().getAttribute(RepositoryTaskAttribute.SUMMARY);
+		summaryTextViewer = getTaskEditorPage().addTextEditor(getTaskRepository(), composite,
+				attribute.getValue(), true, SWT.FLAT | SWT.SINGLE);
+		summaryTextViewer.setEditable(true);
+		summaryTextViewer.getTextWidget().setIndent(2);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(summaryTextViewer.getControl());
+
+		getTaskEditorPage().getAttributeEditorManager().decorate(attribute, summaryTextViewer.getTextWidget());
+		summaryTextViewer.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+
+		summaryTextViewer.addTextListener(new ITextListener() {
+			public void textChanged(TextEvent event) {
+				String newValue = summaryTextViewer.getTextWidget().getText();
+				if (!newValue.equals(attribute.getValue())) {
+					attribute.setValue(newValue);
+					getTaskEditorPage().getAttributeEditorManager().attributeChanged(attribute);
+				}
+				if (summaryText != null && !newValue.equals(summaryText.getText())) {
+					summaryText.setText(newValue);
+				}
 			}
-
-			final RepositoryTaskAttribute summaryAttribute = attribute;
-
-			summaryTextViewer = getTaskEditorPage().addTextEditor(getTaskRepository(), summaryComposite, attribute.getValue(), true, SWT.FLAT
-					| SWT.SINGLE);
-			Composite hiddenComposite = new Composite(summaryComposite, SWT.NONE);
-			hiddenComposite.setLayout(new GridLayout());
-			GridData hiddenLayout = new GridData();
-			hiddenLayout.exclude = true;
-			hiddenComposite.setLayoutData(hiddenLayout);
-
-			// bugg#210695 - work around for 2.0 api breakage
-			summaryText = new Text(hiddenComposite, SWT.NONE);
-			summaryText.setText(attribute.getValue());
-			summaryText.addKeyListener(new KeyListener() {
-
-				public void keyPressed(KeyEvent e) {
-					if (summaryTextViewer != null && !summaryTextViewer.getTextWidget().isDisposed()) {
-						String newValue = summaryText.getText();
-						String oldValue = summaryTextViewer.getTextWidget().getText();
-						if (!newValue.equals(oldValue)) {
-							summaryTextViewer.getTextWidget().setText(newValue);
-							summaryAttribute.setValue(newValue);
-							getTaskEditorPage().getAttributeEditorManager().attributeChanged(summaryAttribute);
-						}
-					}
-				}
-
-				public void keyReleased(KeyEvent e) {
-					// ignore
-				}
-			});
-
-			summaryText.addFocusListener(new FocusListener() {
-
-				public void focusGained(FocusEvent e) {
-					summaryTextViewer.getTextWidget().setFocus();
-				}
-
-				public void focusLost(FocusEvent e) {
-					// ignore
-				}
-			});
-
-			summaryTextViewer.setEditable(true);
-			summaryTextViewer.getTextWidget().setIndent(2);
-			GridDataFactory.fillDefaults().grab(true, false).applyTo(summaryTextViewer.getControl());
-
-			getTaskEditorPage().getAttributeEditorManager().decorate(attribute, summaryTextViewer.getTextWidget());
-			summaryTextViewer.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-
-			summaryTextViewer.addTextListener(new ITextListener() {
-				public void textChanged(TextEvent event) {
-					String newValue = summaryTextViewer.getTextWidget().getText();
-					if (!newValue.equals(summaryAttribute.getValue())) {
-						summaryAttribute.setValue(newValue);
-						getTaskEditorPage().getAttributeEditorManager().attributeChanged(summaryAttribute);
-					}
-					if (summaryText != null && !newValue.equals(summaryText.getText())) {
-						summaryText.setText(newValue);
-					}
-				}
-			});
-
-		}
-		toolkit.paintBordersFor(summaryComposite);
+		});
 	}
 
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
 		this.toolkit = toolkit;
-		createSummaryLayout(parent);
-	}
 
-	protected Label createLabel(Composite composite, RepositoryTaskAttribute attribute) {
-		Label label;
-		if (getTaskEditorPage().getAttributeEditorManager().hasOutgoingChanges(attribute)) {
-			label = toolkit.createLabel(composite, "*" + attribute.getName());
-		} else {
-			label = toolkit.createLabel(composite, attribute.getName());
+		Composite composite = toolkit.createComposite(parent);
+		composite.setLayout(new GridLayout());
+		
+		addSummaryText(composite);
+		summaryTextViewer.prependVerifyKeyListener(new TabVerifyKeyListener());
+
+		if (needsHeader()) {
+			createHeaderLayout(composite);
 		}
-		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
-		return label;
+
+		toolkit.paintBordersFor(composite);
+
+		setControl(composite);
 	}
 
 	/**
 	 * @author Raphael Ackermann (modifications) (bug 195514)
 	 */
-	protected void createSummaryLayout(Composite composite) {
-		addSummaryText(composite);
-		if (summaryTextViewer != null) {
-			summaryTextViewer.prependVerifyKeyListener(new TabVerifyKeyListener());
-		}
-
+	protected void createHeaderLayout(Composite composite) {
 		headerInfoComposite = toolkit.createComposite(composite);
 		GridLayout headerLayout = new GridLayout(11, false);
 		headerLayout.verticalSpacing = 1;
@@ -247,6 +203,18 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 		}
 	}
 
+	protected Label createLabel(Composite composite, RepositoryTaskAttribute attribute) {
+		Label label;
+		if (getTaskEditorPage().getAttributeEditorManager().hasOutgoingChanges(attribute)) {
+			label = toolkit.createLabel(composite, "*" + attribute.getName());
+		} else {
+			label = toolkit.createLabel(composite, attribute.getName());
+		}
+		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
+		return label;
+	}
+
 	/**
 	 * Utility method to create text field sets background to TaskListColorsAndFonts.COLOR_ATTRIBUTE_CHANGED if
 	 * attribute has changed.
@@ -288,26 +256,16 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 		return text;
 	}
 
-	/**
-	 * @author Raphael Ackermann (bug 195514)
-	 */
-	private class TabVerifyKeyListener implements VerifyKeyListener {
-
-		public void verifyKey(VerifyEvent event) {
-			// if there is a tab key, do not "execute" it and instead select the Status control
-			if (event.keyCode == SWT.TAB) {
-				event.doit = false;
-				if (headerInfoComposite != null) {
-					headerInfoComposite.setFocus();
-				}
-			}
-		}
-
+	public boolean needsHeader() {
+		return needsHeader;
 	}
-	private Composite headerInfoComposite;
 
 	@Override
 	public void setFocus() {
 		summaryTextViewer.getTextWidget().setFocus();
+	}
+
+	public void setNeedsHeader(boolean needsHeader) {
+		this.needsHeader = needsHeader;
 	}
 }
