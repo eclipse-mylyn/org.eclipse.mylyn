@@ -9,16 +9,23 @@
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.RepositoryOperation;
+import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -117,6 +124,8 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		}
 	}
 
+	private static final int DEFAULT_FIELD_WIDTH = 150;
+
 	private static final String LABEL_BUTTON_SUBMIT = "Submit";
 
 	private static final int RADIO_OPTION_WIDTH = 120;
@@ -129,10 +138,21 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 
 	private Button attachContextButton;
 
-	private boolean attachContextEnabled = true;
+	private boolean needsAttachContext = true;
+
+	private boolean needsAddToCategory;
+
+	private Button addToCategory;
+
+	private CCombo categoryChooser;
 
 	public TaskEditorActionPart(AbstractTaskEditorPage taskEditorPage) {
 		super(taskEditorPage);
+	}
+
+	protected void addAttachContextButton(Composite buttonComposite, AbstractTask task, FormToolkit toolkit) {
+		attachContextButton = toolkit.createButton(buttonComposite, "Attach Context", SWT.CHECK);
+		attachContextButton.setImage(TasksUiImages.getImage(TasksUiImages.CONTEXT_ATTACH));
 	}
 
 	/**
@@ -142,7 +162,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 	 *            Composite to add the buttons to.
 	 * @param toolkit
 	 */
-	private void addActionButtons(Composite buttonComposite, FormToolkit toolkit) {
+	private void createActionButtons(Composite buttonComposite, FormToolkit toolkit) {
 		submitButton = toolkit.createButton(buttonComposite, LABEL_BUTTON_SUBMIT, SWT.NONE);
 		GridData submitButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		submitButtonData.widthHint = 100;
@@ -160,17 +180,79 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 
 		AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(getTaskRepository().getUrl(),
 				getTaskData().getId());
-		if (attachContextEnabled && task != null) {
+		if (needsAttachContext && task != null) {
 			addAttachContextButton(buttonComposite, task, toolkit);
 		}
 	}
 
-	protected void addAttachContextButton(Composite buttonComposite, AbstractTask task, FormToolkit toolkit) {
-		attachContextButton = toolkit.createButton(buttonComposite, "Attach Context", SWT.CHECK);
-		attachContextButton.setImage(TasksUiImages.getImage(TasksUiImages.CONTEXT_ATTACH));
+	/**
+	 * Creates the button layout. This displays options and buttons at the bottom of the editor to allow actions to be
+	 * performed on the bug.
+	 * 
+	 * @param toolkit
+	 */
+	private void createCategoryChooser(Composite buttonComposite, FormToolkit toolkit) {
+		addToCategory = getManagedForm().getToolkit().createButton(buttonComposite, "Add to Category", SWT.CHECK);
+		categoryChooser = new CCombo(buttonComposite, SWT.FLAT | SWT.READ_ONLY);
+		categoryChooser.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+		categoryChooser.setLayoutData(GridDataFactory.swtDefaults().hint(150, SWT.DEFAULT).create());
+		toolkit.adapt(categoryChooser, true, true);
+		categoryChooser.setFont(TEXT_FONT);
+		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+		List<AbstractTaskCategory> categories = taskList.getUserCategories();
+		Collections.sort(categories, new Comparator<AbstractTaskContainer>() {
+
+			public int compare(AbstractTaskContainer c1, AbstractTaskContainer c2) {
+				if (c1.equals(TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory())) {
+					return -1;
+				} else if (c2.equals(TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory())) {
+					return 1;
+				} else {
+					return c1.getSummary().compareToIgnoreCase(c2.getSummary());
+				}
+			}
+
+		});
+
+		for (AbstractTaskContainer category : categories) {
+			categoryChooser.add(category.getSummary());
+		}
+
+		categoryChooser.select(0);
+		categoryChooser.setEnabled(false);
+		categoryChooser.setData(categories);
+		addToCategory.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				categoryChooser.setEnabled(addToCategory.getSelection());
+			}
+
+		});
+
+		GridDataFactory.fillDefaults().hint(DEFAULT_FIELD_WIDTH, SWT.DEFAULT).span(3, SWT.DEFAULT).applyTo(
+				categoryChooser);
 	}
 
-	private void addRadioButtons(Composite buttonComposite, FormToolkit toolkit) {
+	@Override
+	public void createControl(Composite parent, FormToolkit toolkit) {
+		Composite buttonComposite = toolkit.createComposite(parent);
+		GridLayout buttonLayout = new GridLayout();
+		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(buttonComposite);
+		buttonLayout.numColumns = 4;
+		buttonComposite.setLayout(buttonLayout);
+
+		if (needsAddToCategory) {
+			createCategoryChooser(buttonComposite, toolkit);
+		}
+
+		createRadioButtons(buttonComposite, toolkit);
+		createActionButtons(buttonComposite, toolkit);
+
+		setControl(buttonComposite);
+	}
+
+	private void createRadioButtons(Composite buttonComposite, FormToolkit toolkit) {
 		int i = 0;
 		Button selected = null;
 		radios = new Button[getTaskData().getOperations().size()];
@@ -269,26 +351,43 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		toolkit.paintBordersFor(buttonComposite);
 	}
 
-	@Override
-	public void createControl(Composite parent, FormToolkit toolkit) {
-		Composite buttonComposite = toolkit.createComposite(parent);
-		GridLayout buttonLayout = new GridLayout();
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(buttonComposite);
-		buttonLayout.numColumns = 4;
-		buttonComposite.setLayout(buttonLayout);
-
-		addRadioButtons(buttonComposite, toolkit);
-		addActionButtons(buttonComposite, toolkit);
-		
-		setControl(buttonComposite);
+	boolean getAttachContext() {
+		if (attachContextButton == null || attachContextButton.isDisposed()) {
+			return false;
+		} else {
+			return attachContextButton.getSelection();
+		}
 	}
 
-	boolean isAttachContextEnabled() {
-		return attachContextEnabled;
+	/**
+	 * Returns the {@link AbstractTaskContainer category} the new task belongs to
+	 * 
+	 * @return {@link AbstractTaskContainer category} where the new task must be added to, or null if it must not be
+	 *         added to the task list
+	 */
+	@SuppressWarnings("unchecked")
+	protected AbstractTaskCategory getCategory() {
+		int index = categoryChooser.getSelectionIndex();
+		if (addToCategory.getSelection() && index != -1) {
+			return ((List<AbstractTaskCategory>) categoryChooser.getData()).get(index);
+		}
+		return null;
 	}
 
-	void setAttachContextEnabled(boolean attachContextEnabled) {
-		this.attachContextEnabled = attachContextEnabled;
+	boolean needsAddToCategory() {
+		return needsAddToCategory;
+	}
+
+	boolean needsAttachContext() {
+		return needsAttachContext;
+	}
+
+	public void setNeedsAddToCategory(boolean needsAddToCategory) {
+		this.needsAddToCategory = needsAddToCategory;
+	}
+
+	void setNeedsAttachContext(boolean attachContextEnabled) {
+		this.needsAttachContext = attachContextEnabled;
 	}
 
 	void setSubmitEnabled(boolean enabled) {
@@ -297,14 +396,6 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 			if (enabled) {
 				submitButton.setToolTipText("Submit to " + getTaskRepository().getUrl());
 			}
-		}
-	}
-
-	boolean getAttachContext() {
-		if (attachContextButton == null || attachContextButton.isDisposed()) {
-			return false;
-		} else {
-			return attachContextButton.getSelection();
 		}
 	}
 

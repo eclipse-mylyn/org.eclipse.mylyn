@@ -117,7 +117,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 	protected enum SECTION_NAME {
 		ACTIONS_SECTION("Actions"), ATTACHMENTS_SECTION("Attachments"), ATTRIBTUES_SECTION("Attributes"), COMMENTS_SECTION(
 				"Comments"), DESCRIPTION_SECTION("Description"), NEWCOMMENT_SECTION("New Comment"), PEOPLE_SECTION(
-				"People"), RELATEDBUGS_SECTION("Related Tasks");
+				"People"), RELATEDBUGS_SECTION("Related Tasks"), PLANNING_SECTION("Personal Planning");
 
 		private String prettyName;
 
@@ -317,6 +317,8 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 	private boolean needsComments;
 
 	private boolean needsHeader;
+
+	private boolean needsPlanning;
 
 	/**
 	 * Creates a new <code>AbstractTaskEditor</code>.
@@ -532,6 +534,14 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 		initializePart(newCommentSection, newCommentPart);
 	}
 
+	private void createPlanningSection(Composite composite) {
+		Section planningSection = createSection(composite, getSectionLabel(SECTION_NAME.PLANNING_SECTION));
+		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, true).applyTo(planningSection);
+
+		TaskEditorPlanningPart planningPart = new TaskEditorPlanningPart(this);
+		initializePart(planningSection, planningPart);
+	}
+
 	private void createPeopleSection(Composite composite) {
 		Section peopleSection = createSection(composite, getSectionLabel(SECTION_NAME.PEOPLE_SECTION));
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, true).applyTo(peopleSection);
@@ -559,9 +569,13 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 
 		createDescriptionSection(editorComposite);
 		
-		if (needsComments) {
+		if (needsComments()) {
 			createCommentSection(editorComposite);
 			createNewCommentSection(editorComposite);
+		}
+
+		if (needsPlanning()) {
+			createPlanningSection(editorComposite);
 		}
 
 		Composite bottomComposite = toolkit.createComposite(editorComposite);
@@ -903,6 +917,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 		needsComments = !taskData.isNew();
 		needsAttachments = !taskData.isNew();
 		needsHeader = !taskData.isNew();
+		needsPlanning = taskData.isNew();
 		
 		setSite(site);
 		setInput(input);
@@ -921,6 +936,10 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 
 	public boolean needsComments() {
 		return needsComments;
+	}
+
+	public boolean needsPlanning() {
+		return needsPlanning;
 	}
 
 	public boolean needsHeader() {
