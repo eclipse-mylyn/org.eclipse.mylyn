@@ -664,6 +664,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 	@Override
 	protected void addSelfToCC(Composite composite) {
 
+		// XXX: Work around for adding QAContact to People section. Update once bug#179254 is complete
 		boolean haveRealName = false;
 		RepositoryTaskAttribute qaContact = taskData.getAttribute(BugzillaReportElement.QA_CONTACT_NAME.getKeyString());
 		if (qaContact == null) {
