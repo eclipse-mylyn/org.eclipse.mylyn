@@ -321,6 +321,16 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 							select(viewer, toSelect);
 						}
 					}
+					// NOTE: if we could make the code below work we could set the selection the first time the elment is shown
+//					boolean canSelectElement = true;
+//					if (viewer instanceof TreeViewer) {
+//						TreeViewer treeViewer = (TreeViewer) viewer;
+//						Object[] expanded = treeViewer.getExpandedElements();
+//						canSelectElement = false;
+//						if (Arrays.asList(expanded).contains(((StructuredSelection) toSelect).getFirstElement())) {
+//							canSelectElement = true;
+//						}
+//					}
 				}
 			} catch (Throwable t) {
 				// ignore, linking failure is not fatal
