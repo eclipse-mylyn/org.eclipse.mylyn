@@ -225,7 +225,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 				}
 				DateSelectionDialog reminderDialog = new DateSelectionDialog(PlatformUI.getWorkbench()
 						.getActiveWorkbenchWindow()
-						.getShell(), theCalendar, DatePicker.TITLE_DIALOG);
+						.getShell(), theCalendar, DatePicker.TITLE_DIALOG, true);
 				int result = reminderDialog.open();
 				if (result == Window.OK) {
 					for (AbstractTaskContainer element : taskListElementsToSchedule) {

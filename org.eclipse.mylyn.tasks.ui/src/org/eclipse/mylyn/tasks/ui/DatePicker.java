@@ -67,9 +67,19 @@ public class DatePicker extends Composite {
 
 	private String initialText = "Select Date";
 
+	private boolean includeTime = true;;
+
 	public DatePicker(Composite parent, int style, String initialText) {
+		this(parent, style, initialText, true);
+	}
+	
+	/**
+	 * @Since 2.3
+	 */
+	public DatePicker(Composite parent, int style, String initialText, boolean includeTime) {
 		super(parent, style);
 		this.initialText = initialText;
+		this.includeTime  = includeTime;
 		initialize((style & SWT.FLAT) > 0 ? SWT.FLAT : 0);
 	}
 
@@ -143,7 +153,7 @@ public class DatePicker extends Composite {
 				} else {
 					shell = new Shell(PlatformUI.getWorkbench().getDisplay());
 				}
-				DateSelectionDialog dialog = new DateSelectionDialog(shell, newCalendar, DatePicker.TITLE_DIALOG);
+				DateSelectionDialog dialog = new DateSelectionDialog(shell, newCalendar, DatePicker.TITLE_DIALOG, includeTime);
 				pickButton.setEnabled(false);
 				dateText.setEnabled(false);
 

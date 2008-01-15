@@ -60,7 +60,7 @@ public class ReminderCellEditor extends DialogCellEditor {
 			newCalendar.setTime(initialCalendar.getTime());
 		}
 
-		dialog = new DateSelectionDialog(cellEditorWindow.getShell(), newCalendar, DatePicker.TITLE_DIALOG);
+		dialog = new DateSelectionDialog(cellEditorWindow.getShell(), newCalendar, DatePicker.TITLE_DIALOG, true);
 		int dialogResponse = dialog.open();
 
 		if (dialogResponse == DateSelectionDialog.CANCEL) {

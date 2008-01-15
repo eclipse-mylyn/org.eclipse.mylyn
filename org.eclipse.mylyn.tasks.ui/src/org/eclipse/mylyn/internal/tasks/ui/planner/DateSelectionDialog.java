@@ -19,6 +19,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.mylyn.internal.tasks.ui.views.DatePickerPanel;
 import org.eclipse.mylyn.internal.tasks.ui.views.DatePickerPanel.DateSelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -38,16 +39,17 @@ public class DateSelectionDialog extends Dialog {
 	private Calendar initialCalendar = GregorianCalendar.getInstance();
 
 	private FormToolkit toolkit;
+	
+	private boolean includeTime = true;
 
 	public DateSelectionDialog(Shell parentShell, String title) {
-		this(parentShell, GregorianCalendar.getInstance(), title);
+		this(parentShell, GregorianCalendar.getInstance(), title, true);
 	}
 
-	public DateSelectionDialog(Shell parentShell, Calendar initialDate, String title) {
+	public DateSelectionDialog(Shell parentShell, Calendar initialDate, String title, boolean includeTime) {
 		super(parentShell);
-
+		this.includeTime = includeTime; 
 		toolkit = new FormToolkit(parentShell.getDisplay());
-		;
 		if (title != null) {
 			this.title = title;
 		}
@@ -59,8 +61,9 @@ public class DateSelectionDialog extends Dialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
+		parent.setBackground(toolkit.getColors().getBackground());
 		getShell().setText(title);
-		DatePickerPanel datePanel = new DatePickerPanel(parent, SWT.NULL, initialCalendar);
+		DatePickerPanel datePanel = new DatePickerPanel(parent, SWT.NULL, initialCalendar, includeTime);
 		datePanel.addSelectionChangedListener(new ISelectionChangedListener() {
 
 			public void selectionChanged(SelectionChangedEvent event) {
@@ -71,6 +74,8 @@ public class DateSelectionDialog extends Dialog {
 			}
 		});
 		datePanel.setBackground(toolkit.getColors().getBackground());
+		datePanel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
+		
 		return datePanel;
 	}
 
