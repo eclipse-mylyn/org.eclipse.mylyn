@@ -42,7 +42,7 @@ public enum BugzillaReportElement {
 			"type"), UNKNOWN("UNKNOWN", "UNKNOWN"), VERSION("Version:", "version", false), INSTALL_VERSION(
 			"version of bugzilla installed", "install_version", true), VOTES("Votes:", "votes", true, true), WORK_TIME(
 			"Add Time:", "work_time", true, false), WHO("who", "who"), WHO_NAME("who_name", "who_name", true, true), QA_CONTACT(
-			"QA Contact", "qa_contact", false, false), ADDSELFCC("Add self to CC", "addselfcc", true, false),
+			"QA Contact", "qa_contact", true, false),QA_CONTACT_NAME("QA Contact", "qa_contact_name", true, true), ADDSELFCC("Add self to CC", "addselfcc", true, false),
 	// Used by search engine
 	LI("used by search engine", "li", true), ID("used by search engine", "id", true), SHORT_SHORT_DESC(
 			"used by search engine", "short_short_desc", false), SEQ("used by search engine", "seq", false), RESULT(

@@ -427,7 +427,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			dateWithClear.setLayout(layout);
 
 			deadlinePicker = new DatePicker(dateWithClear, /* SWT.NONE */SWT.BORDER,
-					taskData.getAttributeValue(BugzillaReportElement.DEADLINE.getKeyString()));
+					taskData.getAttributeValue(BugzillaReportElement.DEADLINE.getKeyString()), false);
 			deadlinePicker.setFont(TEXT_FONT);
 			deadlinePicker.setDatePattern("yyyy-MM-dd");
 			if (hasChanged(attribute)) {
@@ -659,6 +659,43 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			}
 		}
 		return super.attributeChanged(attribute);
+	}
+
+	@Override
+	protected void addSelfToCC(Composite composite) {
+
+		boolean haveRealName = false;
+		RepositoryTaskAttribute qaContact = taskData.getAttribute(BugzillaReportElement.QA_CONTACT_NAME.getKeyString());
+		if (qaContact == null) {
+			qaContact = taskData.getAttribute(BugzillaReportElement.QA_CONTACT.getKeyString());
+		} else {
+			haveRealName = true;
+		}
+		if (qaContact != null) {
+			Label label = createLabel(composite, qaContact);
+			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
+			Text textField;
+			if (qaContact.isReadOnly()) {
+				textField = createTextField(composite, qaContact, SWT.FLAT | SWT.READ_ONLY);
+			} else {
+				textField = createTextField(composite, qaContact, SWT.FLAT);
+				ContentAssistCommandAdapter adapter = applyContentAssist(textField,
+						createContentProposalProvider(qaContact));
+				ILabelProvider propsalLabelProvider = createProposalLabelProvider(qaContact);
+				if (propsalLabelProvider != null) {
+					adapter.setLabelProvider(propsalLabelProvider);
+				}
+				adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
+			}
+			GridDataFactory.fillDefaults().grab(true, false).applyTo(textField);
+			if (haveRealName) {
+				textField.setText(textField.getText() + " <"
+						+ taskData.getAttributeValue(BugzillaReportElement.QA_CONTACT.getKeyString()) + ">");
+			}			
+		}
+		
+		super.addSelfToCC(composite);
+
 	}
 
 }
