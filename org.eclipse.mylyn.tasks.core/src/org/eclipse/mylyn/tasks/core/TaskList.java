@@ -595,7 +595,7 @@ public class TaskList {
 		tasks.put(task.getHandleIdentifier(), task);
 		if (container != null) {
 			container.internalAddChild(task);
-			if (container instanceof TaskCategory || container instanceof OrphanedTasksContainer) {
+			if (container instanceof TaskCategory || container instanceof OrphanedTasksContainer || container instanceof UnfiledCategory) {
 				task.addParentContainer(container);
 			}
 		} else {

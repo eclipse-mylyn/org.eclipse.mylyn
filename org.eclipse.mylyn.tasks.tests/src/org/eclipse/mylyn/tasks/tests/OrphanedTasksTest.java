@@ -152,6 +152,37 @@ public class OrphanedTasksTest extends TestCase {
 		assertEquals(1, taskList.getCategories().size());
 	}
 
+	
+	/**
+	 * If a task exists in a category and is a query hit
+	 * it should not be removed from the category
+	 */
+	public void testQueryRemovedTaskInCategory() {
+		MockRepositoryTask mockTask = new MockRepositoryTask("1");
+		MockRepositoryQuery mockQuery = new MockRepositoryQuery("mock query");
+		taskList.addQuery(mockQuery);
+		taskList.addTask(mockTask, mockQuery);
+		assertTrue(taskList.getDefaultCategory().isEmpty());
+		taskList.moveTask(mockTask, taskList.getDefaultCategory());
+		assertEquals(1, taskList.getCategories().size());
+		assertFalse(taskList.getDefaultCategory().isEmpty());
+		// save tasklist, restore tasklist
+		TasksUiPlugin.getTaskListManager().saveTaskList();
+		TasksUiPlugin.getTaskListManager().resetTaskList();
+		TasksUiPlugin.getTaskListManager().readExistingOrCreateNewList();
+		assertEquals(1, taskList.getCategories().size());
+		assertEquals(1, taskList.getQueries().size());
+		assertFalse(taskList.getDefaultCategory().isEmpty());
+		taskList.deleteQuery(mockQuery);
+		TasksUiPlugin.getTaskListManager().saveTaskList();
+		TasksUiPlugin.getTaskListManager().resetTaskList();
+		TasksUiPlugin.getTaskListManager().readExistingOrCreateNewList();
+		assertEquals(1, taskList.getCategories().size());
+		assertEquals(0, taskList.getQueries().size());
+		assertFalse(taskList.getDefaultCategory().isEmpty());
+	}
+	
+	
 	/**
 	 * Repository tasks that exist in another query are not orphaned
 	 */
