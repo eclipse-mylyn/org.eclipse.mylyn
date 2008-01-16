@@ -25,10 +25,41 @@
       <labelProvider
             class="org.eclipse.mylyn.internal.resources.ui.ResourceContextLabelProvider"
             contentType="resource"/>
-   </extension>  
+      <preservedFilters
+			viewId="org.eclipse.ui.navigator.ProjectExplorer">
+			<filter
+				id="org.eclipse.mylyn.resources.ui.navigator.filters.tasks">
+			</filter>
+	  </preservedFilters>
+   </extension>
+
+   	<extension point="org.eclipse.ui.navigator.viewer">
+		<viewerContentBinding
+			viewerId="org.eclipse.ui.navigator.ProjectExplorer">
+			<includes>
+				<contentExtension
+					pattern="org.eclipse.mylyn.resources.ui.navigator.filters.*" />
+			</includes>
+		</viewerContentBinding>
+	</extension>
+   
+   	<extension point="org.eclipse.ui.navigator.navigatorContent">
+		<commonFilter
+			id="org.eclipse.mylyn.resources.ui.navigator.filters.tasks"
+			name="Task List Elements (Recommended)"
+			description="Hides Task List Elements from Common Navigators" 
+			activeByDefault="true">
+			<filterExpression>
+				<instanceof
+					value="org.eclipse.mylyn.tasks.core.AbstractTaskContainer" />
+			</filterExpression>
+		</commonFilter>
+	</extension>
+
    <extension point="org.eclipse.core.runtime.preferences">
       <initializer class="org.eclipse.mylyn.internal.resources.ui.ResourcesUiPreferenceInitializer"/>
    </extension>
+   
    
    <!--
    <extension

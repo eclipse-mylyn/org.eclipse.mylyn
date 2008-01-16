@@ -254,12 +254,14 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 				IAdaptable[] elements = workingSet.getElements();
 				for (int i = 0; i < elements.length; i++) {
 					IAdaptable adaptable = elements[i];
-					IInteractionElement element = ContextCorePlugin.getContextManager().getElement(
+					IInteractionElement interactionElement = ContextCorePlugin.getContextManager().getElement(
 							getHandleIdentifier(adaptable));
-					if (element.getInterest().isInteresting())
+					if (interactionElement != null && interactionElement.getInterest().isInteresting()) {
 						return false;
+					}
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 				return false;
 			}
 		}

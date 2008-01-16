@@ -250,6 +250,9 @@ public class InteractionContextManager {
 		}
 	}
 
+	/**
+	 * @return	null if the element handle is null or if the element is not found in the active task context.
+	 */
 	public IInteractionElement getElement(String elementHandle) {
 		if (activeContext != null && elementHandle != null) {
 			return activeContext.get(elementHandle);
