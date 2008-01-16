@@ -24,7 +24,6 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.internal.tasks.core.OrphanedTasksContainer;
 import org.eclipse.mylyn.internal.tasks.ui.AddExistingTaskJob;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
@@ -67,7 +66,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 
 	private static final String KEY_SORTING = TasksUiPlugin.ID_PLUGIN + ".search.resultpage.sorting"; //$NON-NLS-1$
 
-	private SearchResultContentProvider taskContentProvider;
+	private SearchResultContentProvider searchResultProvider;
 
 	private int currentSortOrder;
 
@@ -123,15 +122,15 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 
 	@Override
 	protected void elementsChanged(Object[] objects) {
-		if (taskContentProvider != null) {
-			taskContentProvider.elementsChanged(objects);
+		if (searchResultProvider != null) {
+			searchResultProvider.elementsChanged(objects);
 		}
 	}
 
 	@Override
 	protected void clear() {
-		if (taskContentProvider != null) {
-			taskContentProvider.clear();
+		if (searchResultProvider != null) {
+			searchResultProvider.clear();
 		}
 	}
 
@@ -143,25 +142,17 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 
 	@Override
 	protected void configureTreeViewer(TreeViewer viewer) {
-//		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
-//		Color categoryBackground = themeManager.getCurrentTheme().getColorRegistry().get(
-//				TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY);
-//
-//		SearchViewTableLabelProvider taskListTableLabelProvider = new SearchViewTableLabelProvider(
-//				new TaskElementLabelProvider(true),
-//				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator(), categoryBackground);
-
-		DecoratingLabelProvider labelProvider = new DecoratingLabelProvider(new TaskElementLabelProvider(true),
-				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator());
-
 		viewer.setUseHashlookup(true);
-		viewer.setLabelProvider(labelProvider);
 		viewer.setContentProvider(new SearchResultTreeContentProvider(this));
+		searchResultProvider = (SearchResultContentProvider) viewer.getContentProvider();
+		
+		DecoratingLabelProvider labelProvider = new DecoratingLabelProvider(new SearchResultsLabelProvider(searchResultProvider),
+				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator());
+		viewer.setLabelProvider(labelProvider);
 
 		// Set the order when the search view is loading so that the items are
 		// sorted right away
 		setSortOrder(currentSortOrder);
-		taskContentProvider = (SearchResultContentProvider) viewer.getContentProvider();
 	}
 
 	@Override
@@ -317,36 +308,5 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 			}
 		}
 	}
-
-//	class SearchViewTableLabelProvider extends TaskTableLabelProvider {
-//
-//		public SearchViewTableLabelProvider(ILabelProvider provider, ILabelDecorator decorator, Color parentBackground) {
-//			super(provider, decorator, parentBackground);
-//		}
-//
-//		@Override
-//		public Image getColumnImage(Object element, int columnIndex) {
-//			switch (columnIndex) {
-//			case 0:
-//				return super.getColumnImage(element, columnIndex);
-//			}
-//			return null;
-//		}
-//
-//		@Override
-//		public String getColumnText(Object element, int columnIndex) {
-//			switch (columnIndex) {
-//			case 0:
-//				return super.getColumnText(element, columnIndex);
-//			}
-//			return null;
-//		}
-//
-//		@Override
-//		public Color getBackground(Object element, int columnIndex) {
-//			// Note: see bug 142889
-//			return null;
-//		}
-//	}
 
 }

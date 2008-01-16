@@ -97,7 +97,6 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			if (!openSuccessful) {
 				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 						ITasksUiConstants.TITLE_DIALOG, "No task found matching key: " + key);
-//				new SearchDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), TaskSearchPage.ID).open();
 			}
 			return openSuccessful;
 		} else {
@@ -426,7 +425,6 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 					keyText.setSelection(0, keyText.getText().length());
 				}
 			}
-//			repositoryCombo.setFocus();
 		}
 		updatePageEnablement();
 	}

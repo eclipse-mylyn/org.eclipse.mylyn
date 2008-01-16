@@ -24,6 +24,7 @@ import org.eclipse.mylyn.tasks.ui.search.RepositorySearchResult;
  * result.
  * 
  * @author Rob Elves (moved into task.ui)
+ * @author Mik Kersten
  */
 public class SearchResultTreeContentProvider extends SearchResultContentProvider {
 
@@ -33,16 +34,9 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 	private List<Object> elements = new ArrayList<Object>();
 
 	private Map<String, Person> owners = new HashMap<String, Person>();
-	
+
 	private boolean groupByOwner = false;
-	
-	
-	/**
-	 * Constructor
-	 * 
-	 * @param page
-	 *            The page the Bugzilla search results are displayed in
-	 */
+
 	public SearchResultTreeContentProvider(RepositorySearchResultView page) {
 		searchResultsPage = page;
 	}
@@ -59,7 +53,7 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 	 */
 	public Object[] getElements(Object inputElement) {
 		if (inputElement instanceof RepositorySearchResult) {
-			if(groupByOwner){
+			if (groupByOwner) {
 				return owners.values().toArray();
 			} else {
 				return elements.toArray();
@@ -70,12 +64,12 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 	}
 
 	public Object[] getChildren(Object parentElement) {
-		if(groupByOwner && parentElement instanceof Person){
-			Set<AbstractTask> children = ((Person)parentElement).getChildren();
-			if(children != null){
+		if (groupByOwner && parentElement instanceof Person) {
+			Set<AbstractTask> children = ((Person) parentElement).getChildren();
+			if (children != null) {
 				return children.toArray();
 			} else {
-				return EMPTY_ARR;	
+				return EMPTY_ARR;
 			}
 		} else {
 			return EMPTY_ARR;
@@ -87,12 +81,12 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 	}
 
 	public boolean hasChildren(Object element) {
-		if(groupByOwner && element instanceof String){
-			Set<AbstractTask> children = ((Person)element).getChildren();
-			if(children != null){
+		if (groupByOwner && element instanceof String) {
+			Set<AbstractTask> children = ((Person) element).getChildren();
+			if (children != null) {
 				return !children.isEmpty();
 			} else {
-				return false;	
+				return false;
 			}
 		} else {
 			return !(element instanceof AbstractTask);
@@ -103,20 +97,20 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 	public void elementsChanged(Object[] updatedElements) {
 		for (Object object : updatedElements) {
 			elements.add(object);
-			
-			if(object instanceof AbstractTask){
-				AbstractTask task = ((AbstractTask)object);
+
+			if (object instanceof AbstractTask) {
+				AbstractTask task = ((AbstractTask) object);
 				String owner = task.getOwner();
-				if(owner == null){
+				if (owner == null) {
 					owner = "UNKNOWN";
 				}
 				Person person = owners.get(owner);
-				if(person == null){
+				if (person == null) {
 					person = new Person(owner, task.getConnectorKind(), task.getRepositoryUrl());
 					owners.put(owner, person);
 				}
 				person.internalAddChild(task);
-				
+
 			}
 		}
 
@@ -145,7 +139,7 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 	public boolean getGroupByOwner() {
 		return groupByOwner;
 	}
-	
+
 	public void setGroupByOwner(boolean grouping) {
 		this.groupByOwner = grouping;
 		searchResultsPage.getViewer().setInput(searchResultsPage.getViewer().getInput());
