@@ -1373,11 +1373,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	protected void createAttachmentLayout(Composite composite) {
-
 		// TODO: expand to show new attachments
-		Section section = createSection(composite, getSectionLabel(SECTION_NAME.ATTACHMENTS_SECTION));
+		Section section = createSection(composite, getSectionLabel(SECTION_NAME.ATTACHMENTS_SECTION), false);
 		section.setText(section.getText() + " (" + taskData.getAttachments().size() + ")");
-		section.setExpanded(false);
 		final Composite attachmentsComposite = toolkit.createComposite(section);
 		attachmentsComposite.setLayout(new GridLayout(1, false));
 		attachmentsComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -2599,7 +2597,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	private Section createSection(Composite composite, String title, boolean expandedState) {
 		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
 		section.setText(title);
-		section.setExpanded(expandedState);
+		if (section.isExpanded() != expandedState) {
+			section.setExpanded(expandedState);
+		}
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		return section;
 	}
@@ -2777,7 +2777,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			form.setRedraw(false);
 			refreshEnabled = false;
 
-			if (commentsSection != null) {
+			if (commentsSection != null && !commentsSection.isExpanded()) {
 				commentsSection.setExpanded(true);
 			}
 			for (ExpandableComposite composite : commentComposites) {
@@ -2879,7 +2879,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			Composite comp = control.getParent();
 			while (comp != null) {
 				if(comp instanceof Section) {
-					((Section)comp).setExpanded(true);
+					if (!((Section)comp).isExpanded()) {
+						((Section)comp).setExpanded(true);
+					}
 				} else if (comp instanceof ExpandableComposite) {
 					ExpandableComposite ex = (ExpandableComposite) comp;
 					if (!ex.isExpanded()) {
