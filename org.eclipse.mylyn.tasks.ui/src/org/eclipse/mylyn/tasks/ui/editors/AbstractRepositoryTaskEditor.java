@@ -893,8 +893,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	protected Composite createAttributeSection() {
-		attributesSection = createSection(editorComposite, getSectionLabel(SECTION_NAME.ATTRIBTUES_SECTION));
-		attributesSection.setExpanded(expandedStateAttributes || hasAttributeChanges);
+		attributesSection = createSection(editorComposite, getSectionLabel(SECTION_NAME.ATTRIBTUES_SECTION), expandedStateAttributes || hasAttributeChanges);
 
 		Composite toolbarComposite = toolkit.createComposite(attributesSection);
 		toolbarComposite.setBackground(null);
@@ -2037,7 +2036,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	protected void createCommentLayout(Composite composite) {
-		commentsSection = createSection(composite, getSectionLabel(SECTION_NAME.COMMENTS_SECTION));
+		commentsSection = createSection(composite, getSectionLabel(SECTION_NAME.COMMENTS_SECTION), false);
 		commentsSection.setText(commentsSection.getText() + " (" + taskData.getComments().size() + ")");
 		if (taskData.getComments().size() > 0) {
 			commentsSection.setEnabled(true);
@@ -2253,14 +2252,14 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		if (foundNew) {
 			commentsSection.setExpanded(true);
 		} else if (taskData.getComments() == null || taskData.getComments().size() == 0) {
-			commentsSection.setExpanded(false);
+			//commentsSection.setExpanded(false);
 		} else if (editorInput.getTaskData() != null && editorInput.getOldTaskData() != null) {
 			List<TaskComment> newTaskComments = editorInput.getTaskData().getComments();
 			List<TaskComment> oldTaskComments = editorInput.getOldTaskData().getComments();
 			if (newTaskComments == null || oldTaskComments == null) {
 				commentsSection.setExpanded(true);
-			} else {
-				commentsSection.setExpanded(newTaskComments.size() != oldTaskComments.size());
+			} else if (newTaskComments.size() != oldTaskComments.size()) {
+				commentsSection.setExpanded(true);
 			}
 		}
 	}
@@ -2589,10 +2588,18 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		section.setClient(buttonComposite);
 	}
 
+
 	protected Section createSection(Composite composite, String title) {
+		return createSection(composite, title, true);
+	}
+	
+	/**
+	 * @Since 2.3
+	 */
+	private Section createSection(Composite composite, String title, boolean expandedState) {
 		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
 		section.setText(title);
-		section.setExpanded(true);
+		section.setExpanded(expandedState);
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		return section;
 	}
