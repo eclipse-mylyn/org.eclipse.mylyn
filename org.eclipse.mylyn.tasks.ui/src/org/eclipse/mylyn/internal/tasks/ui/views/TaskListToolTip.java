@@ -247,11 +247,11 @@ public class TaskListToolTip extends ToolTip {
 				sb.append(DateFormat.getDateInstance(DateFormat.LONG).format(dueDate));
 				sb.append(" (").append(DateFormat.getTimeInstance(DateFormat.SHORT).format(dueDate)).append(')');
 				sb.append('\n');
-			}
+			} 
 			
 			Date scheduledDate = task.getScheduledForDate();
 			if (scheduledDate != null) {
-				sb.append("Scheduled for: ");
+				sb.append("Scheduled: ");
 				sb.append(new SimpleDateFormat("E").format(scheduledDate)).append(", ");
 				sb.append(DateFormat.getDateInstance(DateFormat.LONG).format(scheduledDate));
 //				sb.append(" (").append(DateFormat.getTimeInstance(DateFormat.SHORT).format(date)).append(")\n");
