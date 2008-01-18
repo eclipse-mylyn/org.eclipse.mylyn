@@ -98,54 +98,53 @@ public class TaskListInterestSorter extends ViewerSorter {
 				if (complete != 0) {
 					return complete;
 				} else {
-					int overdue = compareOverdue(task1, task2);
-					if (overdue != 0) {
-						return overdue;
+					int today = compareScheduledDate(task1, task2);
+					if (today == 0) {
+						return comparePrioritiesAndKeys(element1, element2);
 					} else {
-						int thisWeek = compareThisWeek(task1, task2);
-						if (thisWeek != 0) {
-							return thisWeek;
-						} else {
-							int today = compareToday(task1, task2);
-							if (today != 0) {
-								return today;
-							} else {
-								// int hasChanges = compareChanges(task1,
-								// task2);
-								// if (hasChanges != 0) {
-								// return hasChanges;
-								// }
-							}
-						}
+						return today;
 					}
 				}
-				return comparePrioritiesAndKeys(element1, element2);
 			}
 		}
 		return 0;
 	}
 
-	private int compareOverdue(AbstractTask task1, AbstractTask task2) {
-		if (task1.isPastReminder() && !task2.isPastReminder()) {
+	private int compareScheduledDate(AbstractTask task1, AbstractTask task2) {
+		if (isToday(task1) && !isToday(task2)) {
 			return -1;
-		} else if (!task1.isPastReminder() && task2.isPastReminder()) {
+		} else if (!isToday(task1) && isToday(task2)) {
 			return 1;
 		} else {
 			return 0;
 		}
 	}
 
-	private int compareToday(AbstractTask task1, AbstractTask task2) {
-		if (TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task1)
-				&& !TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task2)) {
-			return -1;
-		} else if (!TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task1)
-				&& TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task2)) {
-			return 1;
-		} else {
-			return 0;
-		}
+	private boolean isToday(AbstractTask task) {
+		return task.isPastReminder() || TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task);
 	}
+
+//	private int compareOverScheduled(AbstractTask task1, AbstractTask task2) {
+//		if (task1.isPastReminder() && !task2.isPastReminder()) {
+//			return -1;
+//		} else if (!task1.isPastReminder() && task2.isPastReminder()) {
+//			return 1;
+//		} else {
+//			return 0;
+//		}
+//	}
+//
+//	private int compareScheduledToday(AbstractTask task1, AbstractTask task2) {
+//		if (TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task1)
+//				&& !TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task2)) {
+//			return -1;
+//		} else if (!TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task1)
+//				&& TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task2)) {
+//			return 1;
+//		} else {
+//			return 0;
+//		}
+//	}
 
 	// private int compareChanges(ITask task1, ITask task2) {
 	// if (TaskListInterestFilter.hasChanges(task1) &&
