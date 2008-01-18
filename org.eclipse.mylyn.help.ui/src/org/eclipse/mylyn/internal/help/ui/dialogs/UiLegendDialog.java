@@ -236,19 +236,18 @@ public class UiLegendDialog extends PopupDialog {
 		activityClient.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 		activitySection.setClient(activityClient);
 
-		Label imageLabel;
-		imageLabel = toolkit.createLabel(activityClient, "");
-		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.TASK));
-		Label labelOverdue = toolkit.createLabel(activityClient, "Past scheduled date");
-		labelOverdue.setForeground(themeManager.getCurrentTheme().getColorRegistry().get(
-				TaskListColorsAndFonts.THEME_COLOR_TASK_OVERDUE));
-
-		imageLabel = toolkit.createLabel(activityClient, "");
+		Label imageLabel = toolkit.createLabel(activityClient, "");
 		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.TASK));
 		Label labelToday = toolkit.createLabel(activityClient, "Scheduled for today");
 		labelToday.setForeground(themeManager.getCurrentTheme().getColorRegistry().get(
 				TaskListColorsAndFonts.THEME_COLOR_TASK_TODAY_SCHEDULED));
 
+		imageLabel = toolkit.createLabel(activityClient, "");
+		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.TASK));
+		Label labelOverdue = toolkit.createLabel(activityClient, "Past scheduled date");
+		labelOverdue.setForeground(themeManager.getCurrentTheme().getColorRegistry().get(
+				TaskListColorsAndFonts.THEME_COLOR_TASK_PAST_SCHEDULED));
+		
 // imageLabel = toolkit.createLabel(activityClient, "");
 // imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.TASK));
 // Label labelThisWeek = toolkit.createLabel(activityClient, "Scheduled for this
@@ -273,12 +272,14 @@ public class UiLegendDialog extends PopupDialog {
 
 		imageLabel = toolkit.createLabel(activityClient, "");
 		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.OVERLAY_HAS_DUE));
-		toolkit.createLabel(activityClient, "Due date set");
+		toolkit.createLabel(activityClient, "Has due date");
 
 		imageLabel = toolkit.createLabel(activityClient, "");
 		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.OVERLAY_OVER_DUE));
-		toolkit.createLabel(activityClient, "Due date past");
-
+		Label textLabel = toolkit.createLabel(activityClient, "Past Due date");
+		textLabel.setForeground(themeManager.getCurrentTheme().getColorRegistry().get(
+				TaskListColorsAndFonts.THEME_COLOR_TASK_PAST_DUE));		
+		
 		imageLabel = toolkit.createLabel(activityClient, "");
 		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.BLANK));
 		Hyperlink adjust = toolkit.createHyperlink(activityClient, "Adjust Colors and Fonts...", SWT.WRAP);

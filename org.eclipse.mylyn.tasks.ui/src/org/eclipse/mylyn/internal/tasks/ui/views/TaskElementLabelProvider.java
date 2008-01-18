@@ -259,9 +259,12 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 							TaskListColorsAndFonts.THEME_COLOR_COMPLETED);
 				} else if (task.isActive()) {
 					return TaskListColorsAndFonts.COLOR_TASK_ACTIVE;
+				} else if (TaskActivityManager.getInstance().isOverdue(task)) {
+					return themeManager.getCurrentTheme().getColorRegistry().get(
+							TaskListColorsAndFonts.THEME_COLOR_TASK_PAST_DUE);
 				} else if (task.isPastReminder()) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(
-							TaskListColorsAndFonts.THEME_COLOR_TASK_OVERDUE);
+							TaskListColorsAndFonts.THEME_COLOR_TASK_PAST_SCHEDULED);
 				} else if (TaskActivityManager.getInstance().isScheduledForToday(task)) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(
 							TaskListColorsAndFonts.THEME_COLOR_TASK_TODAY_SCHEDULED);
@@ -276,7 +279,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 					return TaskListColorsAndFonts.COLOR_TASK_ACTIVE;
 				} else if ((child.isPastReminder() && !child.isCompleted()) || showHasChildrenPastDue(child)) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(
-							TaskListColorsAndFonts.THEME_COLOR_TASK_OVERDUE);
+							TaskListColorsAndFonts.THEME_COLOR_TASK_PAST_SCHEDULED);
 				}
 			}
 		}

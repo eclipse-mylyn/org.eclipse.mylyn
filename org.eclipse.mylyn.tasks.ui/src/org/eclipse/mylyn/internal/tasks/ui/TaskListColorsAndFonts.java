@@ -24,8 +24,10 @@ public class TaskListColorsAndFonts {
 
 	public static final String THEME_COLOR_TASKS_INCOMING_BACKGROUND = "org.eclipse.mylyn.tasks.ui.colors.incoming.background";
 
-	public static final String THEME_COLOR_TASK_OVERDUE = "org.eclipse.mylyn.tasks.ui.colors.foreground.overdue";
+	public static final String THEME_COLOR_TASK_PAST_SCHEDULED = "org.eclipse.mylyn.tasks.ui.colors.foreground.past.scheduled";
 
+	public static final String THEME_COLOR_TASK_PAST_DUE = "org.eclipse.mylyn.tasks.ui.colors.foreground.past.due";
+	
 	public static final String THEME_COLOR_TASK_THISWEEK_SCHEDULED = "org.eclipse.mylyn.tasks.ui.colors.foreground.thisweek.scheduled";
 
 	public static final String THEME_COLOR_COMPLETED = "org.eclipse.mylyn.tasks.ui.colors.foreground.completed";
@@ -109,7 +111,8 @@ public class TaskListColorsAndFonts {
 			return false;
 		} else {
 			return property.equals(TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY)
-					|| property.equals(TaskListColorsAndFonts.THEME_COLOR_TASK_OVERDUE)
+					|| property.equals(TaskListColorsAndFonts.THEME_COLOR_TASK_PAST_DUE)
+					|| property.equals(TaskListColorsAndFonts.THEME_COLOR_TASK_PAST_SCHEDULED)
 					|| property.equals(TaskListColorsAndFonts.THEME_COLOR_TASK_TODAY_COMPLETED)
 					|| property.equals(TaskListColorsAndFonts.THEME_COLOR_TASK_TODAY_SCHEDULED)
 					|| property.equals(TaskListColorsAndFonts.THEME_COLOR_TASK_TODAY_SCHEDULED)

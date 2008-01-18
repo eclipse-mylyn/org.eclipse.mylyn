@@ -603,17 +603,8 @@
       <themeElementCategory
            id="org.eclipse.mylyn.tasks.ui.presentation"
            label="Tasks"/>         
-     <colorDefinition
-           categoryId="org.eclipse.mylyn.tasks.ui.presentation"
-           id="org.eclipse.mylyn.tasks.ui.colors.foreground.overdue"
-           isEditable="true"
-           label="Tasks - Overdue"
-           value="198,4,38"> 
-         <description>
-            Text color for overdue tasks.
-         </description>
-     </colorDefinition>
-     <colorDefinition
+
+	 <colorDefinition
            categoryId="org.eclipse.mylyn.tasks.ui.presentation"
            id="org.eclipse.mylyn.tasks.ui.colors.foreground.today.scheduled"
            isEditable="true"
@@ -623,6 +614,29 @@
             Text color for tasks scheduled for today.
          </description>
      </colorDefinition>
+
+     <colorDefinition
+           categoryId="org.eclipse.mylyn.tasks.ui.presentation"
+           id="org.eclipse.mylyn.tasks.ui.colors.foreground.past.scheduled"
+           isEditable="true"
+           label="Tasks - Past Scheduled Date"
+           value="32,21,223"> 
+         <description>
+            Text color for tasks past their scheduled date.
+         </description>
+     </colorDefinition>
+
+	 <colorDefinition
+           categoryId="org.eclipse.mylyn.tasks.ui.presentation"
+           id="org.eclipse.mylyn.tasks.ui.colors.foreground.past.due"
+           isEditable="true"
+           label="Tasks - Past Due Date"
+           value="198,4,38"> 
+         <description>
+            Text color tasks past their due date.
+         </description>
+     </colorDefinition>
+
      <colorDefinition
            categoryId="org.eclipse.mylyn.tasks.ui.presentation"
            id="org.eclipse.mylyn.tasks.ui.colors.foreground.thisweek.scheduled"
