@@ -124,6 +124,28 @@ public class TaskListInterestSorter extends ViewerSorter {
 		return task.isPastReminder() || TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task);
 	}
 
+//	private int compareThisWeek(AbstractTask task1, AbstractTask task2) {
+//		if (TasksUiPlugin.getTaskActivityManager().isScheduledForThisWeek(task1)
+//				&& !TasksUiPlugin.getTaskActivityManager().isScheduledForThisWeek(task2)) {
+//			return 1;
+//		} else if (!TasksUiPlugin.getTaskActivityManager().isScheduledForThisWeek(task1)
+//				&& TasksUiPlugin.getTaskActivityManager().isScheduledForThisWeek(task2)) {
+//			return -1;
+//		} else {
+//			return 0;
+//		}
+//	}
+
+	private int compareCompleted(AbstractTask task1, AbstractTask task2) {
+		if (task1.isCompleted() && !task2.isCompleted()) {
+			return 1;
+		} else if (!task1.isCompleted() && task2.isCompleted()) {
+			return -1;
+		} else {
+			return 0;
+		}
+	}
+	
 //	private int compareOverScheduled(AbstractTask task1, AbstractTask task2) {
 //		if (task1.isPastReminder() && !task2.isPastReminder()) {
 //			return -1;
@@ -157,28 +179,6 @@ public class TaskListInterestSorter extends ViewerSorter {
 	// return 0;
 	// }
 	// }
-
-	private int compareThisWeek(AbstractTask task1, AbstractTask task2) {
-		if (TasksUiPlugin.getTaskActivityManager().isScheduledForThisWeek(task1)
-				&& !TasksUiPlugin.getTaskActivityManager().isScheduledForThisWeek(task2)) {
-			return 1;
-		} else if (!TasksUiPlugin.getTaskActivityManager().isScheduledForThisWeek(task1)
-				&& TasksUiPlugin.getTaskActivityManager().isScheduledForThisWeek(task2)) {
-			return -1;
-		} else {
-			return 0;
-		}
-	}
-
-	private int compareCompleted(AbstractTask task1, AbstractTask task2) {
-		if (task1.isCompleted() && !task2.isCompleted()) {
-			return 1;
-		} else if (!task1.isCompleted() && task2.isCompleted()) {
-			return -1;
-		} else {
-			return 0;
-		}
-	}
 
 	private int comparePrioritiesAndKeys(AbstractTaskContainer element1, AbstractTaskContainer element2) {
 		int priority = comparePriorities(element1, element2);
