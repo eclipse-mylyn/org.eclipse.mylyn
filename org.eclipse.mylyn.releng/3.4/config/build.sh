@@ -5,7 +5,7 @@
 MAJOR_VERSION=2.3.0
 
 # Qualifier format: IYYYYMMDD-HHMM
-QUALIFIER=I20080116-2030
+QUALIFIER=I20080118-1330
 
 # root of build tree
 BUILD_HOME=/home/releng/org.eclipse.mylyn/org.eclipse.mylyn.releng/3.4
