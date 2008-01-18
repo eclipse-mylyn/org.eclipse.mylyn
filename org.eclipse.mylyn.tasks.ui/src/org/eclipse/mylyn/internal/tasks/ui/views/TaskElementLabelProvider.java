@@ -287,6 +287,28 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		return null;
 	}
 
+//	private boolean showHasChildrenPastDueHelper(AbstractTaskContainer container) {
+//		for (AbstractTaskContainer child : container.getChildren()) {
+//			if (child instanceof AbstractTask && ((AbstractTask) child).isPastReminder()
+//					&& !((AbstractTask) child).isCompleted()) {
+//				return true;
+//			} else {
+//				if (showHasChildrenPastDueHelper(child)) {
+//					return true;
+//				}
+//			}
+//		}
+//		return false;
+//	}
+	
+//	private boolean showHasChildrenPastDue(AbstractTaskContainer container) {
+//		if (!TasksUiPlugin.getDefault().groupSubtasks(container)) {
+//			return false;
+//		}
+//
+//		return showHasChildrenPastDueHelper(container);
+//	}
+	
 	/**
 	 * TODO: move
 	 */
@@ -362,28 +384,6 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				return true;
 			} else {
 				if (showHasActiveChildHelper(child)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	private boolean showHasChildrenPastDue(AbstractTaskContainer container) {
-		if (!TasksUiPlugin.getDefault().groupSubtasks(container)) {
-			return false;
-		}
-
-		return showHasChildrenPastDueHelper(container);
-	}
-
-	private boolean showHasChildrenPastDueHelper(AbstractTaskContainer container) {
-		for (AbstractTaskContainer child : container.getChildren()) {
-			if (child instanceof AbstractTask && ((AbstractTask) child).isPastReminder()
-					&& !((AbstractTask) child).isCompleted()) {
-				return true;
-			} else {
-				if (showHasChildrenPastDueHelper(child)) {
 					return true;
 				}
 			}
