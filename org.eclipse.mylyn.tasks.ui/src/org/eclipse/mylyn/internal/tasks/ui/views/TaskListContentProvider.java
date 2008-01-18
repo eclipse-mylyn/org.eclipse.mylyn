@@ -16,11 +16,9 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IWorkingSet;
@@ -60,12 +58,9 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	public Object getParent(Object child) {
 		// Return first parent found, first search within queries then categories.
 		if (child instanceof AbstractTask) {
-			AbstractTaskCategory category = TaskCategory.getParentTaskCategory((AbstractTask)child);
-			if(category != null) return category;
-			
 			Set<AbstractRepositoryQuery> queries = TasksUiPlugin.getTaskListManager()
 					.getTaskList()
-					.getParentQueries(((AbstractTask) child));
+					.getQueriesForHandle(((AbstractTask) child).getHandleIdentifier());
 			if (queries.size() > 0) {
 				return queries.toArray()[0];
 			}
@@ -81,6 +76,7 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 		// no parent found
 		return null;
 	}
+
 
 	public Object[] getChildren(Object parent) {
 		return getFilteredChildrenFor(parent).toArray();
