@@ -70,8 +70,13 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		return false;
 	}
 
-	private boolean isDateRangeInteresting(ScheduledTaskContainer container) {
-		return TasksUiPlugin.getTaskActivityManager().isWeekDay(container);
+	private boolean isDateRangeInteresting(ScheduledTaskContainer scheduleContainer) {
+		if (TasksUiPlugin.getTaskActivityManager().isWeekDay(scheduleContainer)
+				&& (scheduleContainer.isPresent() || scheduleContainer.isFuture())) {
+			return true;
+		}
+		return false;
+		//return TasksUiPlugin.getTaskActivityManager().isWeekDay(container);
 	}
 
 	protected boolean isUninteresting(Object parent, AbstractTask task) {
