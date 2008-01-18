@@ -234,8 +234,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private static final String LABEL_TEXT_EDITOR = "Text Editor";
 
-//	private static final String LABEL_NO_DETECTOR = "No duplicate detector available.";
-
 	protected static final String CONTEXT_MENU_ID = "#MylynRepositoryEditor";
 
 	private FormToolkit toolkit;
@@ -404,6 +402,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 							// "Changed - " + repositoryTask.getSummary(),
 							// "Editor will Test with new incoming
 							// changes.");
+							parentEditor.getTopForm().addMessageHyperlinkListener(new HyperlinkAdapter() {
+								public void linkActivated(HyperlinkEvent e) {
+									refreshEditor();
+								}
+							});
 							parentEditor.setMessage("Task has incoming changes, synchronize to view",
 									IMessageProvider.WARNING);
 
