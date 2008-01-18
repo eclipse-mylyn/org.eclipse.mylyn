@@ -239,12 +239,23 @@ public class TaskListToolTip extends ToolTip {
 			AbstractTask task = (AbstractTask) element;
 
 			StringBuilder sb = new StringBuilder();
-			Date date = task.getScheduledForDate();
-			if (date != null) {
+			
+			Date dueDate = task.getDueDate();
+			if (dueDate != null) {
+				sb.append("Due: ");
+				sb.append(new SimpleDateFormat("E").format(dueDate)).append(", ");
+				sb.append(DateFormat.getDateInstance(DateFormat.LONG).format(dueDate));
+				sb.append(" (").append(DateFormat.getTimeInstance(DateFormat.SHORT).format(dueDate)).append(')');
+				sb.append('\n');
+			}
+			
+			Date scheduledDate = task.getScheduledForDate();
+			if (scheduledDate != null) {
 				sb.append("Scheduled for: ");
-				sb.append(new SimpleDateFormat("E").format(date)).append(", ");
-				sb.append(DateFormat.getDateInstance(DateFormat.LONG).format(date));
-				sb.append(" (").append(DateFormat.getTimeInstance(DateFormat.SHORT).format(date)).append(")\n");
+				sb.append(new SimpleDateFormat("E").format(scheduledDate)).append(", ");
+				sb.append(DateFormat.getDateInstance(DateFormat.LONG).format(scheduledDate));
+//				sb.append(" (").append(DateFormat.getTimeInstance(DateFormat.SHORT).format(date)).append(")\n");
+				sb.append('\n');
 			}
 
 			long elapsed = TasksUiPlugin.getTaskActivityManager().getElapsedTime(task);
