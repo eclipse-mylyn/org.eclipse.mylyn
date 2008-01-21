@@ -377,7 +377,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(repository.getUrl(), urlQueryString, "");
 		performQuery(query, repository, new NullProgressMonitor(), collector);
-		System.err.println(">>> -- queryforchanged: "+collector.getTasks().size());
 		
 		changedTasks.addAll(collector.getTasks());
 	}
