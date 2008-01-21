@@ -111,7 +111,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private DatePicker dueDatePicker;
 
-	private DatePicker datePicker;
+	private DatePicker scheduledDatePicker;
 
 	private AbstractTask task;
 
@@ -180,13 +180,13 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	/** public for testing */
 	public void updateTaskData(final AbstractTask updateTask) {
-		if (datePicker != null && !datePicker.isDisposed()) {
+		if (scheduledDatePicker != null && !scheduledDatePicker.isDisposed()) {
 			if (updateTask.getScheduledForDate() != null) {
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(updateTask.getScheduledForDate());
-				datePicker.setDate(cal);
+				scheduledDatePicker.setDate(cal);
 			} else {
-				datePicker.setDate(null);
+				scheduledDatePicker.setDate(null);
 			}
 		}
 
@@ -248,8 +248,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 		String note = noteEditor.getTextWidget().getText();// notes.getText();
 		task.setNotes(note);
 		task.setEstimatedTimeHours(estimated.getSelection());
-		if (datePicker != null && datePicker.getDate() != null) {
-			TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, datePicker.getDate().getTime());
+		if (scheduledDatePicker != null && scheduledDatePicker.getDate() != null) {
+			TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, scheduledDatePicker.getDate().getTime());
 		} else {
 			TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, null);
 		}
@@ -656,16 +656,16 @@ public class TaskPlanningEditor extends TaskFormPage {
 		Label label = toolkit.createLabel(nameValueComp, LABEL_SCHEDULE);
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 
-		datePicker = new DatePicker(nameValueComp, SWT.FLAT, DatePicker.LABEL_CHOOSE);
-
+		scheduledDatePicker = new DatePicker(nameValueComp, SWT.FLAT, DatePicker.LABEL_CHOOSE, false);
+		scheduledDatePicker.setDatePattern("yyyy-MM-dd");
 		Calendar calendar = Calendar.getInstance();
 		if (task.getScheduledForDate() != null) {
 			calendar.setTime(task.getScheduledForDate());
-			datePicker.setDate(calendar);
+			scheduledDatePicker.setDate(calendar);
 		}
 
-		datePicker.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-		datePicker.addPickerSelectionListener(new SelectionListener() {
+		scheduledDatePicker.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+		scheduledDatePicker.addPickerSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent arg0) {
 				TaskPlanningEditor.this.markDirty(true);
 			}
@@ -675,8 +675,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 			}
 		});
 
-		datePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-		toolkit.adapt(datePicker, true, true);
+		scheduledDatePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+		toolkit.adapt(scheduledDatePicker, true, true);
 		toolkit.paintBordersFor(nameValueComp);
 
 		ImageHyperlink clearScheduledDate = toolkit.createImageHyperlink(nameValueComp, SWT.NONE);
@@ -686,7 +686,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
-				datePicker.setDate(null);
+				scheduledDatePicker.setDate(null);
 				task.setReminded(false);
 				TaskPlanningEditor.this.markDirty(true);
 			}
