@@ -18,6 +18,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
  * @author Rob Elves
  * @since 2.0
  */
+// API 3.0 merge with AbstractRepositoryTaskEditorInput
 public class RepositoryTaskEditorInput extends AbstractRepositoryTaskEditorInput {
 
 	protected String taskId;

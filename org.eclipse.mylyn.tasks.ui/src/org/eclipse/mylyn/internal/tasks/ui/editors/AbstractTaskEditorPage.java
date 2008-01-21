@@ -61,7 +61,6 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
-import org.eclipse.mylyn.tasks.ui.editors.NewTaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.RepositoryTaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskFormPage;
@@ -111,6 +110,8 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  * @author Steffen Pingel
  * @author Xiaoyang Guan (Wiki HTML preview)
  */
+// TODO EDITOR add label of task form page to extension point
+// TODO EDITOR rename/merge with TaskFormPage
 public abstract class AbstractTaskEditorPage extends TaskFormPage {
 
 	// API-3.0 rename ATTRIBTUES_SECTION to ATTRIBUTES_SECTION (bug 208629)
@@ -859,24 +860,29 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input) {
-		if (getEditorInput() instanceof RepositoryTaskEditorInput) {
-			RepositoryTaskEditorInput existingInput = (RepositoryTaskEditorInput) getEditorInput();
-			setPartName(existingInput.getName());
-		} else if (getEditorInput() instanceof NewTaskEditorInput) {
-			String label = ((NewTaskEditorInput) getEditorInput()).getName();
-			setPartName(label);
-		}
-
 		if (!(input instanceof RepositoryTaskEditorInput)) {
-			return;
+			throw new IllegalArgumentException("Invalid input for task editor: " + input);
 		}
 
-		initTaskEditor(site, (RepositoryTaskEditorInput) input);
+		changedAttributes = new HashSet<RepositoryTaskAttribute>();
+		editorInput = (RepositoryTaskEditorInput) input;
+		repositoryTask = editorInput.getRepositoryTask();
+		repository = editorInput.getRepository();
+		taskData = editorInput.getTaskData();
+		connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getConnectorKind());
 
-		if (taskData != null) {
-			// TODO EDITOR editorInput.setToolTipText(taskData.getLabel());
-			this.taskOutlineModel = RepositoryTaskOutlineNode.parseBugReport(taskData);
-		}
+		// TODO add assertions
+		
+		needsComments = !taskData.isNew();
+		needsAttachments = !taskData.isNew();
+		needsHeader = !taskData.isNew();
+		needsPlanning = taskData.isNew();
+		
+		setSite(site);
+		setInput(input);
+
+		isDirty = false;
+		taskOutlineModel = RepositoryTaskOutlineNode.parseBugReport(taskData);
 
 		TasksUiPlugin.getTaskListManager().getTaskList().addChangeListener(TASKLIST_CHANGE_LISTENER);
 	}
@@ -904,25 +910,6 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 				section.setTextClient(toolbarComposite);
 			}
 		}
-	}
-
-	protected void initTaskEditor(IEditorSite site, RepositoryTaskEditorInput input) {
-		changedAttributes = new HashSet<RepositoryTaskAttribute>();
-		editorInput = input;
-		repositoryTask = editorInput.getRepositoryTask();
-		repository = editorInput.getRepository();
-		taskData = editorInput.getTaskData();
-		connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getConnectorKind());
-
-		needsComments = !taskData.isNew();
-		needsAttachments = !taskData.isNew();
-		needsHeader = !taskData.isNew();
-		needsPlanning = taskData.isNew();
-		
-		setSite(site);
-		setInput(input);
-
-		isDirty = false;
 	}
 
 	@Override

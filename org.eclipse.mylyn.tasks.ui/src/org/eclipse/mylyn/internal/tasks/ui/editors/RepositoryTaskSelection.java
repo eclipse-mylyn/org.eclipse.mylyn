@@ -15,6 +15,7 @@ import org.eclipse.mylyn.tasks.core.TaskComment;
  * 
  * API-3.0: review overlap with TaskSelection
  */
+// API 3.0 rename to TaskEditorSelection?
 public class RepositoryTaskSelection implements IRepositoryTaskSelection {
 
 	protected String id;

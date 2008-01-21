@@ -164,6 +164,7 @@ public class TaskDataManager {
 
 	}
 
+	// API 3.0 review: the state of the elements of changedAttribues could change between this call and the time state is written to disk, might need to make a full copy  
 	public void saveEdits(String repositoryUrl, String id, Set<RepositoryTaskAttribute> changedAttributes) {
 		TaskDataState state = retrieveState(repositoryUrl, id);
 		if (state != null) {
