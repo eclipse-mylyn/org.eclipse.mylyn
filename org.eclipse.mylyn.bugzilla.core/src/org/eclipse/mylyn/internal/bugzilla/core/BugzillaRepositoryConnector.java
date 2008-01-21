@@ -283,6 +283,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			throws CoreException {
 		try {
 			
+			if(tasks.isEmpty()) return false;
+			
 			monitor.beginTask("Checking for changed tasks", IProgressMonitor.UNKNOWN);
 
 			if (repository.getSynchronizationTimeStamp() == null) {
@@ -306,22 +308,49 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			// the trouble is that bugzilla only have 1 hour granularity for "changed since" query
 			// so, we can't say that no tasks has changed in repository
 
+			
+			// Retrieve all in one query
+//			Set<AbstractTask> changedTasks = new HashSet<AbstractTask>();
+//			Iterator<AbstractTask> itr = tasks.iterator();
+//			while (itr.hasNext()) {
+//				AbstractTask task = itr.next();
+//				String newurlQueryString = URLEncoder.encode(task.getTaskId() + ",", repository.getCharacterEncoding());
+//				urlQueryString += newurlQueryString;
+//			}
+//			System.err.println(">>>> markStale "+tasks.size());
+//			queryForChanged(repository, changedTasks, urlQueryString);
+			
+			
+			
+			
 			Set<AbstractTask> changedTasks = new HashSet<AbstractTask>();
 			Iterator<AbstractTask> itr = tasks.iterator();
+			int queryCounter = 0;
+			Set<AbstractTask> checking = new HashSet<AbstractTask>();
 			while (itr.hasNext()) {
 				AbstractTask task = itr.next();
+				checking.add(task);
+				queryCounter++;
 				String newurlQueryString = URLEncoder.encode(task.getTaskId() + ",", repository.getCharacterEncoding());
 				urlQueryString += newurlQueryString;
+				if (queryCounter >= 1000) {
+					queryForChanged(repository, changedTasks, urlQueryString);
+					
+					queryCounter = 0;
+					urlQueryString = urlQueryBase + BUG_ID;
+					newurlQueryString = "";
+				}
+				
+				if (!itr.hasNext() && queryCounter != 0) {
+					queryForChanged(repository, changedTasks, urlQueryString);
+				}
 			}
-			
-			queryForChanged(repository, changedTasks, urlQueryString);
 			
 			for (AbstractTask task : tasks) {
 				if (changedTasks.contains(task)) {
 					task.setStale(true);
 				}
 			}
-
 
 			// FIXME check if new tasks were added
 			//return changedTasks.isEmpty();
@@ -347,8 +376,9 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		});
 
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(repository.getUrl(), urlQueryString, "");
-
 		performQuery(query, repository, new NullProgressMonitor(), collector);
+		System.err.println(">>> -- queryforchanged: "+collector.getTasks().size());
+		
 		changedTasks.addAll(collector.getTasks());
 	}
 

@@ -37,6 +37,9 @@ public class BugzillaCorePlugin extends Plugin {
 
 	private static final String ERROR_DELETING_CONFIGURATION = "Error removing corrupt repository configuration file.";
 
+	/**
+	 * API 3.0: Rename to CONNECTOR_KIND
+	 */
 	public static final String REPOSITORY_KIND = "bugzilla";
 
 	public static final String PLUGIN_ID = "org.eclipse.mylyn.bugzilla";
