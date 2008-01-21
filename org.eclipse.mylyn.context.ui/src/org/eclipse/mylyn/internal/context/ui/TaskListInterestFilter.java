@@ -79,12 +79,15 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		//return TasksUiPlugin.getTaskActivityManager().isWeekDay(container);
 	}
 
+	/**
+	 * TODO: Consider merging with isInteresting
+	 */
 	protected boolean isUninteresting(Object parent, AbstractTask task) {
 		return !task.isActive()
 				&& !hasInterestingSubTasks(parent, task, ITasksCoreConstants.MAX_SUBTASK_DEPTH)
 				&& ((task.isCompleted() && !TaskActivityManager.getInstance().isCompletedToday(task) && !hasChanges(
 						parent, task)) || (TaskActivityManager.getInstance().isScheduledAfterThisWeek(task))
-						&& !hasChanges(parent, task));
+						&& !hasChanges(parent, task) && !TasksUiPlugin.getTaskActivityManager().isOverdue(task));
 	}
 
 	// TODO: make meta-context more explicit
