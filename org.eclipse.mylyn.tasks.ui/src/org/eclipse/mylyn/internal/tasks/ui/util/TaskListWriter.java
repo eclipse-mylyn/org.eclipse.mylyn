@@ -66,10 +66,13 @@ import org.xml.sax.SAXException;
  * @author Ken Sueda
  * @author Rob Elves
  * @author Jevgeni Holodkov
- * 
- * API-3.0: rewrite this class
- * TODO: move to core?
  */
+// API-3.0: rewrite this class
+// - move to core
+// - separate error handling and backup mechanism from externalization
+// - make the externalization stream based instead of file base
+// - separate repository externalization and task list externalization
+// - provide roll-back when import fails
 public class TaskListWriter {
 
 	private static final String TRANSFORM_PROPERTY_VERSION = "version";
