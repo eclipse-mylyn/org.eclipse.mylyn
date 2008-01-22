@@ -7,7 +7,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.core;
 
-import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 
 /**
  * NOTE: this class is likely to change or become API for 3.0
@@ -15,7 +15,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
  * @author Eugene Kuleshov
  * @since 2.1
  */
-public class TaskGroup extends AbstractTaskCategory {
+public class TaskGroup extends AbstractTaskContainer {
 
 	private final String summary;
 
@@ -31,8 +31,9 @@ public class TaskGroup extends AbstractTaskCategory {
 	public String getSummary() {
 		return summary; 
 	} 
-
-	public boolean isUserDefined() {
+	
+	@Override
+	public boolean isUserManaged() {
 		return false;
 	}
 

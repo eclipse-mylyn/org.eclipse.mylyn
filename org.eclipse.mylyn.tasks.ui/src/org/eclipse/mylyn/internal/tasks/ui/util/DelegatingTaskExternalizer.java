@@ -168,11 +168,8 @@ final class DelegatingTaskExternalizer {
 		node.setAttribute(KEY_HANDLE, task.getHandleIdentifier());
 		node.setAttribute(KEY_REPOSITORY_URL, task.getRepositoryUrl());
 
-		AbstractTaskContainer container = null;
+		AbstractTaskContainer container = TaskCategory.getParentTaskCategory(task);
 
-		if (task.getParentContainers().size() > 0) {
-			container = task.getParentContainers().iterator().next();
-		}
 		if (container != null) {
 			if (container.getHandleIdentifier().equals(UnfiledCategory.HANDLE)) {
 				node.setAttribute(KEY_CATEGORY, VAL_ROOT);

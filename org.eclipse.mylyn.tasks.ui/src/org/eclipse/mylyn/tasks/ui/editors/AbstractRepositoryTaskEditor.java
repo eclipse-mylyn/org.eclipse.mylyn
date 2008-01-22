@@ -294,6 +294,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * WARNING: This is present for backward compatibility only. You can get and set text on this widget but all ui
 	 * related changes to this widget will have no affect as ui is now being presented with a StyledText widget. This
 	 * simply proxies get/setText calls to the StyledText widget.
+	 * 
+	 * API 3.0: Eliminate this field
 	 */
 	protected Text summaryText;
 

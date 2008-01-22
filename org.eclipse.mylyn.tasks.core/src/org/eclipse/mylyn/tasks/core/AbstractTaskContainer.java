@@ -53,6 +53,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	}
 
 	/**
+	 * Remove all children held by this container
 	 * Does not delete tasks from TaskList
 	 */
 	public void clear() {
@@ -179,4 +180,13 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	public int compareTo(AbstractTaskContainer taskListElement) {
 		return getHandleIdentifier().compareTo(taskListElement.getHandleIdentifier());
 	}
+	
+	/**
+	 * If false, user is unable to manipulate (i.e. rename/delete), no preferences are available.
+	 * @since 2.3
+	 */
+	public boolean isUserManaged() {
+		return true;
+	}
+		
 }

@@ -7,6 +7,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.tasks.ui.editors;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -361,7 +362,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		getManagedForm().getToolkit().adapt(categoryChooser, true, true);
 		categoryChooser.setFont(TEXT_FONT);
 		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
-		List<AbstractTaskCategory> categories = taskList.getUserCategories();
+		List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(taskList.getCategories());
 		Collections.sort(categories, new Comparator<AbstractTaskContainer>() {
 
 			public int compare(AbstractTaskContainer c1, AbstractTaskContainer c2) {

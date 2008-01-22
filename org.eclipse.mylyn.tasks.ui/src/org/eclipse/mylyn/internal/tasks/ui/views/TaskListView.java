@@ -1298,7 +1298,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			} else if (action instanceof RenameAction) {
 				if (element instanceof AbstractTaskCategory) {
 					AbstractTaskCategory container = (AbstractTaskCategory) element;
-					action.setEnabled(container.isUserDefined());
+					action.setEnabled(container.isUserManaged());
 				} else if (element instanceof AbstractRepositoryQuery) {
 					action.setEnabled(true);
 				}
@@ -1702,7 +1702,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			// TODO: move logic into deltas
 			refreshJob.refreshTask(task);
 			Set<AbstractTaskContainer> containers = new HashSet<AbstractTaskContainer>(
-					TasksUiPlugin.getTaskListManager().getTaskList().getQueriesForHandle(task.getHandleIdentifier()));
+					TasksUiPlugin.getTaskListManager().getTaskList().getParentQueries(task));
 			containers.addAll(task.getParentContainers());
 			containers.add(TasksUiPlugin.getTaskListManager().getTaskList().getOrphanContainer(task.getRepositoryUrl()));
 //			containers.add(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer());

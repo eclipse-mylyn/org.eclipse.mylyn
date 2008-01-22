@@ -50,7 +50,7 @@ public class RenameAction extends BaseSelectionListenerAction {
 		Object selectedObject = selection.getFirstElement();
 		if (selectedObject instanceof AbstractTaskCategory) {
 			AbstractTaskCategory container = (AbstractTaskCategory) selectedObject;
-			return container.isUserDefined();
+			return container.isUserManaged();
 		} else if (selectedObject instanceof AbstractRepositoryQuery) {
 			return true;
 		}

@@ -174,15 +174,13 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			} else if (currentTarget instanceof AbstractTask) {
 				AbstractTask targetTask = (AbstractTask) currentTarget;
 				AbstractTaskCategory targetCategory = null;
-				// TODO: just look for categories?
-				if (targetTask.getParentContainers().size() > 0) {
-					AbstractTaskContainer container = targetTask.getParentContainers().iterator().next();
-					if (container instanceof TaskCategory || container instanceof UnfiledCategory) {
+				// TODO: TaskCategory only used what about AbstractTaskCategory descendants?
+				AbstractTaskContainer container = TaskCategory.getParentTaskCategory(targetTask);
+				if (container instanceof TaskCategory || container instanceof UnfiledCategory) {
+					targetCategory = (AbstractTaskCategory) container;
+				} else if (container instanceof OrphanedTasksContainer) {
+					if (((OrphanedTasksContainer) container).getRepositoryUrl().equals(task.getRepositoryUrl())) {
 						targetCategory = (AbstractTaskCategory) container;
-					} else if (container instanceof OrphanedTasksContainer) {
-						if (((OrphanedTasksContainer) container).getRepositoryUrl().equals(task.getRepositoryUrl())) {
-							targetCategory = (AbstractTaskCategory) container;
-						}
 					}
 				}
 				if (targetCategory != null) {

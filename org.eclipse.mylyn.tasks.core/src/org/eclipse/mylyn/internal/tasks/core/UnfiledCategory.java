@@ -42,8 +42,13 @@ public class UnfiledCategory extends AbstractTaskCategory {
 	}
 
 	@Override
-	public boolean isUserDefined() {
-		// ignore
+	public boolean isUserManaged() {
 		return false;
+	}
+	
+	@Override
+	@Deprecated
+	public boolean isUserDefined() {
+		return isUserManaged();
 	}
 }

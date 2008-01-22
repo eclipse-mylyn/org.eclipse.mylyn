@@ -340,19 +340,21 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 	}
 
 	/**
-	 * Limitation: can currently only add one container.
+	 * @API 3.0: Rename to internalAddParentContainer
 	 */
 	public void addParentContainer(AbstractTaskContainer container) {
-		containers.clear();
 		containers.add(container);
 	}
 
+	/**
+	 * @API 3.0: Rename to internalremoveParentContainer
+	 */
 	public void removeParentContainer(AbstractTaskContainer container) {
 		containers.remove(container);
 	}
 
 	public Set<AbstractTaskContainer> getParentContainers() {
-		return containers;
+		return new HashSet<AbstractTaskContainer>(containers);
 	}
 
 	@Override
@@ -454,14 +456,14 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 	}
 
 	/**
-	 * deprecated
+	 * @API 3.0: deprecate?
 	 */
 	public String getCategoryHandle() {
 		return categoryHandle;
 	}
 
 	/**
-	 * deprecated
+	 * @API 3.0: deprecate?
 	 */
 	public void setCategoryHandle(String categoryHandle) {
 		this.categoryHandle = categoryHandle;

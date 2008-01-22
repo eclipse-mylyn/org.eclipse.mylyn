@@ -15,14 +15,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 
 /**
  * @author Rob Elves
  * @author Mik Kersten
  */
-public class ScheduledTaskContainer extends AbstractTaskCategory {
+public class ScheduledTaskContainer extends AbstractTaskContainer {
 
 	private Set<ScheduledTaskDelegate> dateRangeDelegates = new HashSet<ScheduledTaskDelegate>();
 
@@ -161,7 +160,7 @@ public class ScheduledTaskContainer extends AbstractTaskCategory {
 	}
 
 	@Override
-	public boolean isUserDefined() {
+	public boolean isUserManaged() {
 		return false;
 	}
 

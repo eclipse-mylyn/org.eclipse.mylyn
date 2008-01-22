@@ -334,6 +334,9 @@ public abstract class AbstractRepositoryConnector {
 		this.userManaged = userManaged;
 	}
 
+	/**
+	 * If false, user is unable to manipulate (i.e. rename/delete), no preferences are available.
+	 */
 	public boolean isUserManaged() {
 		return userManaged;
 	}

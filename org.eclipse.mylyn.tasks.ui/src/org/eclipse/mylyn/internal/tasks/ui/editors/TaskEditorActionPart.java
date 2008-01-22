@@ -8,6 +8,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -199,7 +200,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		toolkit.adapt(categoryChooser, true, true);
 		categoryChooser.setFont(TEXT_FONT);
 		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
-		List<AbstractTaskCategory> categories = taskList.getUserCategories();
+		List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(taskList.getCategories());
 		Collections.sort(categories, new Comparator<AbstractTaskContainer>() {
 
 			public int compare(AbstractTaskContainer c1, AbstractTaskContainer c2) {

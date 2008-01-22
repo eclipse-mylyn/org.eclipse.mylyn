@@ -215,7 +215,7 @@ public class TaskActivityWizardPage extends WizardPage {
 		}
 
 		List<AbstractTaskContainer> containers = new ArrayList<AbstractTaskContainer>();
-		containers.addAll(manager.getTaskList().getUserCategories());
+		containers.addAll(manager.getTaskList().getCategories());
 		containers.addAll(manager.getTaskList().getQueries());
 		//containers.add(manager.getTaskList().getArchiveContainer());
 		Collections.sort(containers, new Comparator<AbstractTaskContainer>() {

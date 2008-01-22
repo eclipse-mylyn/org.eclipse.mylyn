@@ -9,7 +9,8 @@
 package org.eclipse.mylyn.tasks.core;
 
 /**
- * A container that stores tasks from any repository.
+ * A container that stores tasks from any repository. A task can only have a single
+ * AbstractTaskCategory parent (only be in one category at a time).
  * 
  * @author Mik Kersten
  * @since 2.0
@@ -23,18 +24,9 @@ public abstract class AbstractTaskCategory extends AbstractTaskContainer {
 	/**
 	 * Override to return true for categories that the user creates, deletes, and renames. Return false for categories
 	 * that are managed
-	 * 
-	 * @API-3.0: Move up into AbstractTaskContainer
+	 * @deprecated
+	 * @API-3.0: Use AbstractTaskContainer.isUserManaged
 	 */
 	public abstract boolean isUserDefined();
 
-	@Override
-	public boolean equals(Object object) {
-		return super.equals(object);
-	}
-
-	@Override
-	public int hashCode() {
-		return super.hashCode();
-	}
 }

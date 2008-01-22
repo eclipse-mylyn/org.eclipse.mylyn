@@ -10,7 +10,9 @@
  */
 package org.eclipse.mylyn.internal.tasks.core;
 
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 
 /**
  * NOTE: this class is likely to change or become API for 3.0
@@ -26,5 +28,20 @@ public final class TaskCategory extends AbstractTaskCategory {
 	@Override
 	public boolean isUserDefined() {
 		return true;
+	}
+	
+	/**
+	 * null if no parent category
+	 */
+	public static AbstractTaskCategory getParentTaskCategory(AbstractTask task) {
+		AbstractTaskCategory category = null;
+		if(task != null) {
+			for (AbstractTaskContainer container: task.getParentContainers()) {
+				if(container instanceof AbstractTaskCategory) {
+					category = (AbstractTaskCategory)container;
+				}
+			}
+		}
+		return category;
 	}
 }
