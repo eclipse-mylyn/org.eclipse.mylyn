@@ -8,16 +8,13 @@
 package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.util.Arrays;
-import java.util.Set;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.ui.IWorkingSet;
 
 /**
@@ -29,13 +26,7 @@ import org.eclipse.ui.IWorkingSet;
  */
 public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 
-	private final TaskList taskList;
-
 	private IAdaptable[] elements;
-
-	public TaskWorkingSetFilter(TaskList taskList) {
-		this.taskList = taskList;
-	}
 
 	@Override
 	public boolean select(Object parent, Object element) {
@@ -60,15 +51,12 @@ public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 			}
 		}
 		if (parent instanceof ScheduledTaskContainer && element instanceof AbstractTask) {
-			Set<AbstractRepositoryQuery> queries = taskList.getQueriesForHandle(((AbstractTask) element).getHandleIdentifier());
-			if (!queries.isEmpty()) {
-				for (AbstractRepositoryQuery query : queries) {
-					if (isContainedInWorkingSet(query)) {
-						return true;
-					}
+			for (AbstractTaskContainer query : ((AbstractTask) element).getParentContainers()) {
+				if (isContainedInWorkingSet(query)) {
+					return true;
 				}
-				return false;
 			}
+			return false;
 		}
 		return true;
 	}

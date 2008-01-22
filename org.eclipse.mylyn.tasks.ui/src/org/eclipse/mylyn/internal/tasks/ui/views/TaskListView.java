@@ -696,7 +696,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			tableSorter = new TaskListTableSorter(this);
 		}
 
-		filterWorkingSet = new TaskWorkingSetFilter(TasksUiPlugin.getTaskListManager().getTaskList());
+		filterWorkingSet = new TaskWorkingSetFilter();
 		filterWorkingSet.updateWorkingSet(getSite().getPage().getAggregateWorkingSet());
 		addFilter(filterWorkingSet);
 		addFilter(filterPriority);
