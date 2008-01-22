@@ -10,9 +10,9 @@ package org.eclipse.mylyn.internal.context.ui;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.mylyn.internal.tasks.core.UnmatchedContainer;
+import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
-import org.eclipse.mylyn.internal.tasks.core.UncategorizedContainer;
+import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskKeyComparator;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListTableSorter;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -37,9 +37,9 @@ public class TaskListInterestSorter extends ViewerSorter {
 //			return 1;
 //		}
 
-		if (o1 instanceof AbstractTaskContainer && o2 instanceof UnmatchedContainer) {
+		if (o1 instanceof AbstractTaskContainer && o2 instanceof UnmatchedTaskContainer) {
 			return -1;
-		} else if (o2 instanceof AbstractTaskContainer && o1 instanceof UnmatchedContainer) {
+		} else if (o2 instanceof AbstractTaskContainer && o1 instanceof UnmatchedTaskContainer) {
 			return 1;
 		}
 
@@ -53,9 +53,9 @@ public class TaskListInterestSorter extends ViewerSorter {
 			return 1;
 		}
 
-		if (o1 instanceof UncategorizedContainer && o2 instanceof AbstractTaskContainer) {
+		if (o1 instanceof UncategorizedTaskContainer && o2 instanceof AbstractTaskContainer) {
 			return -1;
-		} else if (o1 instanceof AbstractTaskContainer && o2 instanceof UncategorizedContainer) {
+		} else if (o1 instanceof AbstractTaskContainer && o2 instanceof UncategorizedTaskContainer) {
 			return 1;
 		}
 
