@@ -68,10 +68,7 @@ public class OrphanedTasksTest extends TestCase {
 		assertFalse(category.contains(newTask.getHandleIdentifier()));
 		assertTrue(taskList.getDefaultCategory().contains(newTask.getHandleIdentifier()));
 		assertEquals(1, newTask.getParentContainers().size());
-		assertEquals(taskList.getDefaultCategory().getHandleIdentifier(), newTask.getParentContainers()
-				.iterator()
-				.next()
-				.getHandleIdentifier());
+		assertEquals(taskList.getDefaultCategory(), TaskCategory.getParentTaskCategory(newTask));
 	}
 
 	/**
@@ -222,8 +219,7 @@ public class OrphanedTasksTest extends TestCase {
 		Set<AbstractTask> tasks = TasksUiPlugin.getTaskListManager().getTaskList().getRepositoryTasks(
 				MockRepositoryConnector.REPOSITORY_URL);
 		assertFalse(tasks.isEmpty());
-		AbstractRepositoryQuery query = TasksUiPlugin.getTaskListManager().getTaskList().getQueryForHandle(
-				mockTask.getHandleIdentifier());
+		AbstractRepositoryQuery query = TasksUiPlugin.getTaskListManager().getTaskList().getParentQueries(mockTask).iterator().next();
 		assertEquals(mockQuery, query);
 		assertFalse(query.isEmpty());
 		assertTrue(TasksUiPlugin.getTaskListManager().getTaskList().getOrphanContainer(
@@ -287,8 +283,7 @@ public class OrphanedTasksTest extends TestCase {
 		taskList.removeFromQuery(mockQuery, mockTask);
 		assertTrue(taskList.getOrphanContainer(MockRepositoryConnector.REPOSITORY_URL).contains(
 				mockTask.getHandleIdentifier()));
-		assertTrue(taskList.getOrphanContainer(MockRepositoryConnector.REPOSITORY_URL).contains(
-				mockTask2.getHandleIdentifier()));
+		assertTrue(mockTask.contains(mockTask2.getHandleIdentifier()));
 		taskList.deleteTask(mockTask);
 		assertFalse(taskList.getOrphanContainer(MockRepositoryConnector.REPOSITORY_URL).contains(
 				mockTask.getHandleIdentifier()));
@@ -321,13 +316,15 @@ public class OrphanedTasksTest extends TestCase {
 		taskList.removeFromQuery(mockQuery, mockTask);
 		assertTrue(taskList.getOrphanContainer(MockRepositoryConnector.REPOSITORY_URL).contains(
 				mockTask.getHandleIdentifier()));
+		assertTrue(mockTask.contains(mockTask2.getHandleIdentifier()));
 		assertFalse(taskList.getOrphanContainer(MockRepositoryConnector.REPOSITORY_URL).contains(
 				mockTask2.getHandleIdentifier()));
 
 		taskList.removeFromQuery(mockQuery, mockTask3);
 		assertTrue(taskList.getOrphanContainer(MockRepositoryConnector.REPOSITORY_URL).contains(
 				mockTask3.getHandleIdentifier()));
-		assertTrue(taskList.getOrphanContainer(MockRepositoryConnector.REPOSITORY_URL).contains(
+		assertTrue(mockTask3.contains(mockTask2.getHandleIdentifier()));
+		assertFalse(taskList.getOrphanContainer(MockRepositoryConnector.REPOSITORY_URL).contains(
 				mockTask2.getHandleIdentifier()));
 
 	}

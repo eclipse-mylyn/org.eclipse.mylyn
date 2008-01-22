@@ -19,10 +19,10 @@ import org.eclipse.mylyn.tasks.core.TaskList;
  */
 public class TaskListTest extends TestCase {
 
-	public void testGetUserCategories() {
+	public void testGetCategories() {
 		TaskList taskList = new TaskList();
 		taskList.addCategory(new TaskCategory("a"));
-		assertEquals(2, taskList.getUserCategories().size());
+		assertEquals(2, taskList.getCategories().size());
 	}
 
 }

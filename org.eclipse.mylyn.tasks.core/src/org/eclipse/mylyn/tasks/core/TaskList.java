@@ -70,8 +70,7 @@ public class TaskList {
 	 * @since 2.2
 	 */
 	private void addOrphan(AbstractTask task, Set<TaskContainerDelta> delta, int depth) {
-		if (/*task.getLastReadTimeStamp() == null ||*/!getQueriesForHandle(task.getHandleIdentifier()).isEmpty()
-				|| getCategoryForHandle(task.getHandleIdentifier()) != null) {
+		if (!task.getParentContainers().isEmpty()) {
 			// Current policy is not to archive/orphan if the task exists in some other container
 			return;
 		}
@@ -260,16 +259,18 @@ public class TaskList {
 				// Ensure the parent task exists in the task list
 				tasks.put(parentContainer.getHandleIdentifier(), (AbstractTask) parentContainer);
 				addOrphan((AbstractTask) parentContainer, null);
-				// TODO: will need to update map of children to parents here
 			}
 
+			if(parentContainer instanceof AbstractTaskCategory) {
+			  removeFromCategory(TaskCategory.getParentTaskCategory(newTask), newTask);
+			}
 			removeOrphan(newTask, null);
-
+			newTask.addParentContainer(parentContainer);
 			parentContainer.internalAddChild(newTask);
 
-			if (!(parentContainer instanceof AbstractTask) && !(parentContainer instanceof AbstractRepositoryQuery)) {
-				newTask.addParentContainer(parentContainer);
-			}
+//			if (!(parentContainer instanceof AbstractTask) && !(parentContainer instanceof AbstractRepositoryQuery)) {
+//				newTask.addParentContainer(parentContainer);
+//			}
 		} else {
 			// TODO: if the task has a parent task which isn't orphaned than the current task isn't orphaned
 			// check map of children to parents first
@@ -287,15 +288,11 @@ public class TaskList {
 		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
 		delta.add(new TaskContainerDelta(container, TaskContainerDelta.Kind.CHANGED));
 
-		Set<AbstractTaskContainer> currentContainers = task.getParentContainers();
-		for (AbstractTaskContainer taskContainer : currentContainers) {
-			if (taskContainer instanceof AbstractTaskCategory) {
-				if (!(taskContainer instanceof OrphanedTasksContainer)) {
-					taskContainer.internalRemoveChild(task);
-				}
-				task.removeParentContainer(taskContainer);
-				delta.add(new TaskContainerDelta(taskContainer, TaskContainerDelta.Kind.CHANGED));
-			}
+		AbstractTaskCategory category = TaskCategory.getParentTaskCategory(task);
+		if(category != null) {
+			task.removeParentContainer(category);
+			category.internalRemoveChild(task);
+			delta.add(new TaskContainerDelta(category, TaskContainerDelta.Kind.CHANGED));
 		}
 		if (container != null) {
 			addTask(task, container);
@@ -314,7 +311,7 @@ public class TaskList {
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated use moveTask
 	 */
 	public void moveToContainer(AbstractTask task, AbstractTaskCategory container) {
 		if (!tasks.containsKey(task.getHandleIdentifier())) {
@@ -360,7 +357,6 @@ public class TaskList {
 				tasks.remove(task.getHandleIdentifier());
 				task.setRepositoryUrl(newRepositoryUrl);
 				tasks.put(task.getHandleIdentifier(), task);
-
 				String taskUrl = task.getUrl();
 				if (taskUrl != null && taskUrl.startsWith(oldRepositoryUrl)) {
 					task.setUrl(newRepositoryUrl + taskUrl.substring(oldRepositoryUrl.length()));
@@ -406,11 +402,27 @@ public class TaskList {
 	}
 
 	public void removeFromCategory(TaskCategory category, AbstractTask task) {
+		removeFromCategory((AbstractTaskCategory)category, task);
+//		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
+//		category.internalRemoveChild(task);
+//		task.removeParentContainer(category);
+//		addOrphan(task, delta);
+//		delta.add(new TaskContainerDelta(category, TaskContainerDelta.Kind.ADDED));
+//		for (ITaskListChangeListener listener : changeListeners) {
+//			listener.containersChanged(delta);
+//		}
+	}
+	
+	/**
+	 * @Since 2.3
+	 */
+	public void removeFromCategory(AbstractTaskCategory category, AbstractTask task) {
+		if(category == null || task == null) return;
 		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
 		category.internalRemoveChild(task);
 		task.removeParentContainer(category);
 		addOrphan(task, delta);
-		delta.add(new TaskContainerDelta(category, TaskContainerDelta.Kind.ADDED));
+		delta.add(new TaskContainerDelta(category, TaskContainerDelta.Kind.CHANGED));
 		for (ITaskListChangeListener listener : changeListeners) {
 			listener.containersChanged(delta);
 		}
@@ -427,6 +439,7 @@ public class TaskList {
 		delta.add(new TaskContainerDelta(task, TaskContainerDelta.Kind.CHANGED));
 
 		query.internalRemoveChild(task);
+		task.removeParentContainer(query);
 		addOrphan(task, delta);
 
 //		for (ITaskListChangeListener listener : changeListeners) {
@@ -494,20 +507,30 @@ public class TaskList {
 	/**
 	 * TODO: refactor around querying containers for their tasks
 	 * 
-	 * Task is removed from all containers: root, archive, category, and tasks catchall (Currently no support for
-	 * deletion of subtasks)
+	 * Task is removed from all containers: root, archive, category, and orphan bin
+	 * 
+	 * Currently subtasks are not deleted but rather are rather potentially orphaned
 	 */
 	public void deleteTask(AbstractTask task) {
-		defaultCategory.internalRemoveChild(task);
-
+		//defaultCategory.internalRemoveChild(task);
+		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
+		// Remove task from all parent containers
 		for (AbstractTaskContainer container : task.getParentContainers()) {
 			container.internalRemoveChild(task);
 			task.removeParentContainer(container);
 		}
-		tasks.remove(task.getHandleIdentifier());
-
-		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
+		
+		// Remove this task as a parent for all subtasks
+		// moving to orphanage as necessary
+		for (AbstractTask child : task.getChildren()) {
+			child.removeParentContainer(task);
+			if(child.getParentContainers().isEmpty()) {
+				addOrphan(child, delta);
+			}
+		}
+		task.clear();		
 		removeOrphan(task, delta);
+		tasks.remove(task.getHandleIdentifier());
 		delta.add(new TaskContainerDelta(task, TaskContainerDelta.Kind.REMOVED));
 		for (ITaskListChangeListener listener : changeListeners) {
 			listener.containersChanged(delta);
@@ -519,6 +542,7 @@ public class TaskList {
 
 		categories.remove(category.getHandleIdentifier());
 		for (AbstractTask task : category.getChildren()) {
+			task.removeParentContainer(category);
 			addOrphan(task, delta);
 		}
 
@@ -651,6 +675,10 @@ public class TaskList {
 		return Collections.unmodifiableSet(new HashSet<AbstractTaskCategory>(categories.values()));
 	}
 
+	/**
+	 * @deprecated
+	 * @API 3.0: remove
+	 */
 	public List<AbstractTaskCategory> getUserCategories() {
 		List<AbstractTaskCategory> included = new ArrayList<AbstractTaskCategory>();
 		for (AbstractTaskCategory category : categories.values()) {
@@ -690,6 +718,9 @@ public class TaskList {
 		return containers;
 	}
 
+	/**
+	 * API 3.0: remove
+	 */
 	public AbstractRepositoryQuery getQueryForHandle(String handle) {
 		if (handle == null) {
 			return null;
@@ -697,18 +728,6 @@ public class TaskList {
 		for (AbstractRepositoryQuery query : queries.values()) {
 			if (query.contains(handle)) {
 				return query;
-			}
-		}
-		return null;
-	}
-
-	private AbstractTaskCategory getCategoryForHandle(String handle) {
-		if (handle == null) {
-			return null;
-		}
-		for (AbstractTaskCategory category : categories.values()) {
-			if (!(category instanceof OrphanedTasksContainer) && category.contains(handle)) {
-				return category;
 			}
 		}
 		return null;
@@ -794,23 +813,40 @@ public class TaskList {
 	}
 
 	/**
+	 * @API 3.0: remove
 	 * @deprecated
 	 */
 	public TaskArchive getArchiveContainer() {
 		return archiveContainer;
 	}
 
-	/** if handle == null or no queries found an empty set is returned * */
+	/**
+	 * @
+	 */
+	public Set<AbstractRepositoryQuery> getParentQueries(AbstractTask task) {
+		Set<AbstractRepositoryQuery> parentQueries = new HashSet<AbstractRepositoryQuery>();
+		for (AbstractTaskContainer container : task.getParentContainers()) {
+			if(container instanceof AbstractRepositoryQuery) {
+				parentQueries.add((AbstractRepositoryQuery)container);
+			}
+		}
+		return parentQueries;
+	}
+	
+	/**
+	 *  if handle == null or no queries found an empty set is returned
+	 * @API 3.0: remove 
+	 */
 	public Set<AbstractRepositoryQuery> getQueriesForHandle(String handle) {
 		if (handle == null) {
 			return Collections.emptySet();
 		}
 		Set<AbstractRepositoryQuery> queriesForHandle = new HashSet<AbstractRepositoryQuery>();
-		for (AbstractRepositoryQuery query : queries.values()) {
-			if (query.contains(handle)) {
-				queriesForHandle.add(query);
-			}
+		AbstractTask tempTask = tasks.get(handle);
+		if(tempTask != null) {
+			queriesForHandle = getParentQueries(tempTask);
 		}
+		
 		return queriesForHandle;
 	}
 

@@ -44,7 +44,7 @@ public class OrphanedTasksContainer extends AbstractTaskCategory {
 	}
 
 	@Override
-	public boolean isUserDefined() {
+	public boolean isUserManaged() {
 		return false;
 	}
 
@@ -72,5 +72,11 @@ public class OrphanedTasksContainer extends AbstractTaskCategory {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	@Deprecated
+	public boolean isUserDefined() {
+		return isUserManaged();
 	}
 }
