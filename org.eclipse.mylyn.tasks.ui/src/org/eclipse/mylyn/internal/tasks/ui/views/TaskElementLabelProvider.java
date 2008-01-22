@@ -14,14 +14,14 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.mylyn.internal.tasks.core.OrphanedTasksContainer;
+import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.Person;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskGroup;
-import org.eclipse.mylyn.internal.tasks.core.UnfiledCategory;
+import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskHighlighter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
@@ -88,7 +88,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 
 	private CompositeImageDescriptor getImageDescriptor(Object object) {
 		CompositeImageDescriptor compositeDescriptor = new CompositeImageDescriptor();
-		if (object instanceof TaskArchive || object instanceof UnfiledCategory) {
+		if (object instanceof TaskArchive || object instanceof UncategorizedTaskContainer) {
 			compositeDescriptor.icon = TasksUiImages.CATEGORY_ARCHIVE;
 			return compositeDescriptor;
 		} else if (object instanceof TaskCategory) {
@@ -115,9 +115,9 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				compositeDescriptor.icon = connectorUi.getTaskListElementIcon(element);
 				return compositeDescriptor;
 			} else {
-				if (element instanceof OrphanedTasksContainer) {
+				if (element instanceof UnmatchedTaskContainer) {
 					compositeDescriptor.icon = TasksUiImages.QUERY_UNMATCHED;
-				} else if (element instanceof AbstractRepositoryQuery || object instanceof OrphanedTasksContainer) {
+				} else if (element instanceof AbstractRepositoryQuery || object instanceof UnmatchedTaskContainer) {
 					compositeDescriptor.icon = TasksUiImages.QUERY;
 				} else if (element instanceof AbstractTask) {
 					compositeDescriptor.icon = TasksUiImages.TASK;
@@ -226,9 +226,9 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		} else if (object instanceof TaskGroup) {
 			TaskGroup element = (TaskGroup) object;
 			return element.getSummary();// + " / " + element.getChildren().size();
-		} else if (object instanceof OrphanedTasksContainer) {
+		} else if (object instanceof UnmatchedTaskContainer) {
 
-			OrphanedTasksContainer container = (OrphanedTasksContainer) object;
+			UnmatchedTaskContainer container = (UnmatchedTaskContainer) object;
 
 			String result = container.getSummary();
 			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(

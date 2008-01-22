@@ -9,7 +9,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.tasks.core.OrphanedTasksContainer;
+import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
@@ -183,7 +183,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 	}
 
 	private boolean hideDecorationOnContainer(AbstractTaskContainer element, TreeItem treeItem) {
-		if (element instanceof OrphanedTasksContainer) {
+		if (element instanceof UnmatchedTaskContainer) {
 			return true;
 		} else if (element instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;

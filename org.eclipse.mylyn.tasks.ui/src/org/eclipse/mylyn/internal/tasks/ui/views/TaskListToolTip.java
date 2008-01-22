@@ -21,10 +21,10 @@ import java.util.List;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.window.ToolTip;
-import org.eclipse.mylyn.internal.tasks.core.OrphanedTasksContainer;
+import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
-import org.eclipse.mylyn.internal.tasks.core.UnfiledCategory;
+import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
@@ -544,9 +544,9 @@ public class TaskListToolTip extends ToolTip {
 			}
 			// if has incoming but no top level children have incoming, suggest incoming tasks may be filtered
 		}
-		if (element instanceof UnfiledCategory) {
+		if (element instanceof UncategorizedTaskContainer) {
 			return "Automatic container for all local tasks\nwith no category set";
-		} else if (element instanceof OrphanedTasksContainer) {
+		} else if (element instanceof UnmatchedTaskContainer) {
 			return "Automatic container for repository tasks\nnot matched by any query";
 		}
 		return null;

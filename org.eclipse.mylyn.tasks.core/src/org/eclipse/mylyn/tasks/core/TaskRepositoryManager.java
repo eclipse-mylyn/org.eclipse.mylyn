@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylyn.internal.tasks.core.OrphanedTasksContainer;
+import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoriesExternalizer;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 
@@ -98,7 +98,7 @@ public class TaskRepositoryManager {
 		repositories.add(repository);
 		saveRepositories(repositoryFilePath);
 
-		taskList.addOrphanContainer(new OrphanedTasksContainer(repository.getConnectorKind(), repository.getUrl()));
+		taskList.addOrphanContainer(new UnmatchedTaskContainer(repository.getConnectorKind(), repository.getUrl()));
 
 		for (ITaskRepositoryListener listener : listeners) {
 			listener.repositoryAdded(repository);

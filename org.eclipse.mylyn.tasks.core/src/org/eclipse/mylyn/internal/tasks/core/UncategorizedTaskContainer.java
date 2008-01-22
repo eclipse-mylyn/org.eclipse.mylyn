@@ -16,13 +16,13 @@ import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
  * 
  * @author Rob Elves
  */
-public class UnfiledCategory extends AbstractTaskCategory {
+public class UncategorizedTaskContainer extends AbstractTaskCategory {
 
 	public static final String LABEL = "Uncategorized";
 
 	public static final String HANDLE = "uncategorized";
 
-	public UnfiledCategory() {
+	public UncategorizedTaskContainer() {
 		super(HANDLE);
 	}
 

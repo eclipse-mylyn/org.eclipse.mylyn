@@ -46,11 +46,11 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylyn.internal.tasks.core.OrphanedTasksContainer;
+import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
-import org.eclipse.mylyn.internal.tasks.core.UnfiledCategory;
+import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.CategorizedPresentation;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
@@ -1279,8 +1279,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			} else if (action instanceof MarkTaskIncompleteAction) {
 				action.setEnabled(false);
 			} else if (action instanceof DeleteAction) {
-				if (element instanceof TaskArchive || element instanceof UnfiledCategory
-						|| element instanceof OrphanedTasksContainer)
+				if (element instanceof TaskArchive || element instanceof UncategorizedTaskContainer
+						|| element instanceof UnmatchedTaskContainer)
 					action.setEnabled(false);
 				else
 					action.setEnabled(true);

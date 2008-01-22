@@ -33,7 +33,7 @@ import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
-import org.eclipse.mylyn.internal.tasks.core.OrphanedTasksContainer;
+import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
@@ -168,7 +168,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	private void prepareOrphanContainers() {
 		for (TaskRepository repository : TasksUiPlugin.getRepositoryManager().getAllRepositories()) {
 			if (!repository.getConnectorKind().equals(LocalRepositoryConnector.CONNECTOR_KIND)) {
-				taskList.addOrphanContainer(new OrphanedTasksContainer(repository.getConnectorKind(),
+				taskList.addOrphanContainer(new UnmatchedTaskContainer(repository.getConnectorKind(),
 						repository.getUrl()));
 			}
 		}

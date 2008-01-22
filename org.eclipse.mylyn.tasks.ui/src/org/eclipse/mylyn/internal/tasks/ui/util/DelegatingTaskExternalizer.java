@@ -20,7 +20,7 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskExternalizationException;
-import org.eclipse.mylyn.internal.tasks.core.UnfiledCategory;
+import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -135,7 +135,7 @@ final class DelegatingTaskExternalizer {
 	public Element createCategoryElement(AbstractTaskContainer category, Document doc, Element parent) {
 		if (category instanceof TaskArchive) {
 			return parent;
-		} else if (category instanceof UnfiledCategory) {
+		} else if (category instanceof UncategorizedTaskContainer) {
 			return parent;
 		} else {
 			Element node = doc.createElement(getCategoryTagName());
@@ -171,7 +171,7 @@ final class DelegatingTaskExternalizer {
 		AbstractTaskContainer container = TaskCategory.getParentTaskCategory(task);
 
 		if (container != null) {
-			if (container.getHandleIdentifier().equals(UnfiledCategory.HANDLE)) {
+			if (container.getHandleIdentifier().equals(UncategorizedTaskContainer.HANDLE)) {
 				node.setAttribute(KEY_CATEGORY, VAL_ROOT);
 			} else {
 				node.setAttribute(KEY_CATEGORY, container.getHandleIdentifier());
@@ -356,7 +356,7 @@ final class DelegatingTaskExternalizer {
 
 		String categoryHandle = element.getAttribute(KEY_CATEGORY);
 		if (categoryHandle.equals(VAL_ROOT)) {
-			categoryHandle = UnfiledCategory.HANDLE;
+			categoryHandle = UncategorizedTaskContainer.HANDLE;
 		}
 		task.setCategoryHandle(categoryHandle);
 

@@ -17,7 +17,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
  * 
  * @author Rob Elves
  */
-public class OrphanedTasksContainer extends AbstractTaskCategory {
+public class UnmatchedTaskContainer extends AbstractTaskCategory {
 
 	public static final String LABEL = "Uncategorized";
 
@@ -27,7 +27,7 @@ public class OrphanedTasksContainer extends AbstractTaskCategory {
 
 	private String connectorKind;
 
-	public OrphanedTasksContainer(String connectorKind, String repositoryUrl) {
+	public UnmatchedTaskContainer(String connectorKind, String repositoryUrl) {
 		super(repositoryUrl + "-" + HANDLE);
 		this.repositoryUrl = repositoryUrl;
 		this.connectorKind = connectorKind;

@@ -15,7 +15,7 @@ import java.util.List;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.mylyn.internal.tasks.core.OrphanedTasksContainer;
+import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewCategoryAction;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
@@ -42,7 +42,7 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 				.getCategories());
 		Collections.sort(categories);
 		for (final AbstractTaskCategory category : categories) {
-			if (!(category instanceof OrphanedTasksContainer)) {
+			if (!(category instanceof UnmatchedTaskContainer)) {
 				Action action = new Action() {
 					@Override
 					public void run() {

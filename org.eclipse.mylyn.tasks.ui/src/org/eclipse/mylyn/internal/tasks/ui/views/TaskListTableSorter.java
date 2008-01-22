@@ -11,9 +11,9 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.mylyn.internal.tasks.core.OrphanedTasksContainer;
+import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
-import org.eclipse.mylyn.internal.tasks.core.UnfiledCategory;
+import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -74,15 +74,15 @@ public class TaskListTableSorter extends ViewerSorter {
 			return 1;
 		}
 
-		if (o1 instanceof AbstractTaskContainer && o2 instanceof UnfiledCategory) {
+		if (o1 instanceof AbstractTaskContainer && o2 instanceof UncategorizedTaskContainer) {
 			return 1;
-		} else if (o2 instanceof AbstractTaskContainer && o1 instanceof UnfiledCategory) {
+		} else if (o2 instanceof AbstractTaskContainer && o1 instanceof UncategorizedTaskContainer) {
 			return -1;
 		}
 
-		if (o1 instanceof AbstractTaskContainer && o2 instanceof OrphanedTasksContainer) {
+		if (o1 instanceof AbstractTaskContainer && o2 instanceof UnmatchedTaskContainer) {
 			return -1;
-		} else if (o2 instanceof AbstractTaskContainer && o1 instanceof OrphanedTasksContainer) {
+		} else if (o2 instanceof AbstractTaskContainer && o1 instanceof UnmatchedTaskContainer) {
 			return 1;
 		}
 

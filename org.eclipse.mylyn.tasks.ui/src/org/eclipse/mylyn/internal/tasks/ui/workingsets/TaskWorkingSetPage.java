@@ -31,7 +31,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylyn.internal.tasks.core.OrphanedTasksContainer;
+import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
@@ -311,12 +311,12 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 	}
 
 	private void addUnmatchedCategories(Set<IAdaptable> validElements) {
-		HashSet<OrphanedTasksContainer> orphanContainers = new HashSet<OrphanedTasksContainer>();
+		HashSet<UnmatchedTaskContainer> orphanContainers = new HashSet<UnmatchedTaskContainer>();
 		for (IAdaptable element : validElements) {
 			if (element instanceof AbstractRepositoryQuery) {
 				AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
 				if (query.getRepositoryUrl() != null) {
-					OrphanedTasksContainer orphansContainer = TasksUiPlugin.getTaskListManager()
+					UnmatchedTaskContainer orphansContainer = TasksUiPlugin.getTaskListManager()
 							.getTaskList()
 							.getOrphanContainer(query.getRepositoryUrl());
 					if (orphansContainer != null) {

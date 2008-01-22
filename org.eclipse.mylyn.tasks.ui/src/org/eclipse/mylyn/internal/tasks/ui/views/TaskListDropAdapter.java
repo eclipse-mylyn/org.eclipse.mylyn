@@ -26,11 +26,11 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
-import org.eclipse.mylyn.internal.tasks.core.OrphanedTasksContainer;
+import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
-import org.eclipse.mylyn.internal.tasks.core.UnfiledCategory;
+import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.RetrieveTitleFromUrlJob;
 import org.eclipse.mylyn.internal.tasks.ui.TaskTransfer;
@@ -162,12 +162,12 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 		}
 
 		for (AbstractTask task : tasksToMove) {
-			if (currentTarget instanceof UnfiledCategory) {
-				TasksUiPlugin.getTaskListManager().getTaskList().moveTask(task, (UnfiledCategory) currentTarget);
+			if (currentTarget instanceof UncategorizedTaskContainer) {
+				TasksUiPlugin.getTaskListManager().getTaskList().moveTask(task, (UncategorizedTaskContainer) currentTarget);
 			} else if (currentTarget instanceof TaskCategory) {
 				TasksUiPlugin.getTaskListManager().getTaskList().moveTask(task, (TaskCategory) currentTarget);
-			} else if (currentTarget instanceof OrphanedTasksContainer) {
-				if (((OrphanedTasksContainer) currentTarget).getRepositoryUrl().equals(task.getRepositoryUrl())) {
+			} else if (currentTarget instanceof UnmatchedTaskContainer) {
+				if (((UnmatchedTaskContainer) currentTarget).getRepositoryUrl().equals(task.getRepositoryUrl())) {
 					TasksUiPlugin.getTaskListManager().getTaskList().moveTask(task,
 							(AbstractTaskCategory) currentTarget);
 				}
@@ -176,10 +176,10 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 				AbstractTaskCategory targetCategory = null;
 				// TODO: TaskCategory only used what about AbstractTaskCategory descendants?
 				AbstractTaskContainer container = TaskCategory.getParentTaskCategory(targetTask);
-				if (container instanceof TaskCategory || container instanceof UnfiledCategory) {
+				if (container instanceof TaskCategory || container instanceof UncategorizedTaskContainer) {
 					targetCategory = (AbstractTaskCategory) container;
-				} else if (container instanceof OrphanedTasksContainer) {
-					if (((OrphanedTasksContainer) container).getRepositoryUrl().equals(task.getRepositoryUrl())) {
+				} else if (container instanceof UnmatchedTaskContainer) {
+					if (((UnmatchedTaskContainer) container).getRepositoryUrl().equals(task.getRepositoryUrl())) {
 						targetCategory = (AbstractTaskCategory) container;
 					}
 				}
@@ -317,8 +317,8 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			// handle all files
 			return true;
 		} else if (TaskTransfer.getInstance().isSupportedType(currentTransfer)) {
-			if (getCurrentTarget() instanceof UnfiledCategory || getCurrentTarget() instanceof TaskCategory
-					|| getCurrentTarget() instanceof OrphanedTasksContainer
+			if (getCurrentTarget() instanceof UncategorizedTaskContainer || getCurrentTarget() instanceof TaskCategory
+					|| getCurrentTarget() instanceof UnmatchedTaskContainer
 					|| getCurrentTarget() instanceof ScheduledTaskContainer) {
 				return true;
 			} else if (getCurrentTarget() instanceof AbstractTaskContainer
