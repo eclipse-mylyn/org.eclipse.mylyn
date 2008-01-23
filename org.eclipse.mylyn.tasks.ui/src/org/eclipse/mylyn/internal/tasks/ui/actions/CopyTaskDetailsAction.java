@@ -69,8 +69,10 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 				task = (AbstractTask) object;
 			}
 			if (task != null) {
-				text += task.getTaskKey() + ": ";
-
+				if (task.getTaskKey() != null) {
+					text += task.getTaskKey() + ": ";
+				}
+				
 				text += task.getSummary();
 				if (task.hasValidUrl()) {
 					text += "\n" + task.getUrl();
@@ -84,7 +86,6 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 			AbstractTaskContainer element = (AbstractTaskContainer) object;
 			text = element.getSummary();
 		} else if (object instanceof RepositoryTaskSelection) {
-
 			RepositoryTaskSelection selection = (RepositoryTaskSelection) object;
 			text += selection.getId() + ": " + selection.getBugSummary();
 			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(

@@ -362,16 +362,18 @@
         menubarPath="org.eclipse.mylyn.tasks.ui.menu.operations/clone"
         tooltip="Clone Task">
      <enablement>
-        <and>
+<!--        <and> -->
            <objectClass
                  name="org.eclipse.mylyn.tasks.core.AbstractTask">
            </objectClass>
+<!--
            <not>
               <objectClass
                     name="org.eclipse.mylyn.internal.tasks.core.LocalTask">
               </objectClass>
            </not>
         </and>
+-->
      </enablement>
   </action>
          

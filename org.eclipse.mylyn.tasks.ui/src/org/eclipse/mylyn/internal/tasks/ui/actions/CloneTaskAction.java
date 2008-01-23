@@ -11,6 +11,7 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -61,8 +62,8 @@ public class CloneTaskAction extends BaseSelectionListenerAction implements IVie
 			for (Object selectedObject : getStructuredSelection().toList()) {
 				if (selectedObject instanceof AbstractTask) {
 					AbstractTask task = (AbstractTask) selectedObject;
-
-					String description = "Clone of " + CopyTaskDetailsAction.getTextForTask(task);
+					
+					String description = "Cloned from: " + CopyTaskDetailsAction.getTextForTask(task);
 
 					final TaskSelection taskSelection;
 					RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(
@@ -72,7 +73,16 @@ public class CloneTaskAction extends BaseSelectionListenerAction implements IVie
 						taskSelection.getTaskData().setDescription(description + "\n\n> " + taskData.getDescription());
 					} else {
 						taskSelection = new TaskSelection(task);
-						taskSelection.getTaskData().setDescription(description);
+						if (task instanceof LocalTask) {
+							String notes = task.getNotes();
+							if (!"".equals(notes)) {
+								taskSelection.getTaskData().setDescription(description + "\n\n" + notes);
+							} else {
+								taskSelection.getTaskData().setDescription(description);
+							}
+						} else {
+							taskSelection.getTaskData().setDescription(description);
+						}
 					}
 
 					Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
