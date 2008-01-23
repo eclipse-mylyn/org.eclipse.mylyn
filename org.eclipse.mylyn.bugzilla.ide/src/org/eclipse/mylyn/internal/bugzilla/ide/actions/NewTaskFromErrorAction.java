@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.bugzilla.ide.actions;
 
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.tasks.core.TaskSelection;
@@ -35,11 +36,31 @@ public class NewTaskFromErrorAction implements IObjectActionDelegate {
 	private LogEntry entry;
 
 	public void run() {
-		createTask(entry);
+		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+		boolean includeChildren = false;
+
+		if (entry.hasChildren() && MessageDialog.openQuestion(shell, "Report Bug", "Include children of this entry in the report?")) {
+			includeChildren = true;
+		}
+
+		StringBuilder sb = new StringBuilder();
+		buildDescriptionFromLogEntry(entry, sb, includeChildren);
+
+		TaskSelection taskSelection = new TaskSelection("", sb.toString());
+		TasksUiUtil.openNewTaskEditor(shell, taskSelection, null);
 	}
 
-	protected void createTask(LogEntry entry) {
-		StringBuilder sb = new StringBuilder();
+	/**
+	 * Fills a {@link StringBuilder} with {@link LogEntry} information, optionally including subentries too
+	 * 
+	 * @param entry
+	 *            The {@link LogEntry} who provides the information
+	 * @param sb
+	 *            An {@link StringBuilder} to be filled with
+	 * @param includeChildren
+	 *            Indicates if it should include subentries, if the {@link LogEntry} have any
+	 */
+	private void buildDescriptionFromLogEntry(LogEntry entry, StringBuilder sb, boolean includeChildren) {
 		sb.append("\n\n-- Error Log --\nDate: ");
 		sb.append(entry.getDate());
 		sb.append("\nMessage: ");
@@ -54,9 +75,14 @@ public class NewTaskFromErrorAction implements IObjectActionDelegate {
 			sb.append(entry.getStack());
 		}
 
-		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-		TaskSelection taskSelection = new TaskSelection("", sb.toString());
-		TasksUiUtil.openNewTaskEditor(shell, taskSelection, null);
+		if (includeChildren && entry.hasChildren()) {
+			Object[] children = entry.getChildren(null);
+			for (Object child : children) {
+				if (child instanceof LogEntry) {
+					buildDescriptionFromLogEntry((LogEntry) child, sb, includeChildren);
+				}
+			}
+		}
 	}
 
 	public void run(IAction action) {
