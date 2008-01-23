@@ -25,6 +25,7 @@ import org.eclipse.mylyn.context.core.IInteractionContextListener2;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
 import org.eclipse.mylyn.internal.context.ui.actions.ContextAttachAction;
+import org.eclipse.mylyn.internal.context.ui.actions.ContextClearAction;
 import org.eclipse.mylyn.internal.context.ui.actions.ContextCopyAction;
 import org.eclipse.mylyn.internal.context.ui.actions.ContextRetrieveAction;
 import org.eclipse.mylyn.internal.context.ui.views.ContextNodeOpenListener;
@@ -266,6 +267,24 @@ public class ContextEditorFormPage extends FormPage {
 
 			public void mouseUp(MouseEvent e) {
 				new ContextCopyAction().run(task);
+			}
+
+			public void mouseDoubleClick(MouseEvent e) {
+				// ignore
+			}
+
+			public void mouseDown(MouseEvent e) {
+				// ignore
+			}
+		});
+
+		Label clearImage = toolkit.createLabel(sectionClient, "");
+		clearImage.setImage(TasksUiImages.getImage(TasksUiImages.CONTEXT_CLEAR));
+		Hyperlink clearHyperlink = toolkit.createHyperlink(sectionClient, "Clear Context", SWT.NONE);
+		clearHyperlink.addMouseListener(new MouseListener() {
+
+			public void mouseUp(MouseEvent e) {
+				new ContextClearAction().run();
 			}
 
 			public void mouseDoubleClick(MouseEvent e) {
