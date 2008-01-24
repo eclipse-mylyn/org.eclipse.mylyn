@@ -23,6 +23,7 @@ Export-Package: org.eclipse.mylyn.context.ui,
  org.eclipse.mylyn.internal.context.ui,
  org.eclipse.mylyn.internal.context.ui.actions,
  org.eclipse.mylyn.internal.context.ui.commands,
+ org.eclipse.mylyn.internal.context.ui.editors,
  org.eclipse.mylyn.internal.context.ui.preferences,
  org.eclipse.mylyn.internal.context.ui.views
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
