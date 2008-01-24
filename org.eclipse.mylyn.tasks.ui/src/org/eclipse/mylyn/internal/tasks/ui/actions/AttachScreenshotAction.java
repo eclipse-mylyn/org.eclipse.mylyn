@@ -8,7 +8,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
@@ -48,13 +47,19 @@ public class AttachScreenshotAction extends AttachAction {
 			NewAttachmentWizard attachmentWizard = new NewAttachmentWizard(repository, repositoryTask, true);
 			NewAttachmentWizardDialog dialog = new NewAttachmentWizardDialog(PlatformUI.getWorkbench()
 					.getActiveWorkbenchWindow()
-					.getShell(), attachmentWizard, false);
+					.getShell(), attachmentWizard, false) {
+				@Override
+				public boolean close() {
+					boolean closed = super.close();
+					if (closed && editor != null) {
+						editor.showBusy(false);
+					}
+					return closed;
+				}
+			};
 			attachmentWizard.setDialog(dialog);
 			dialog.create();
-			int result = dialog.open();
-			if (result != MessageDialog.OK && editor != null) {
-				editor.showBusy(false);
-			}
+			dialog.open();
 		}
 	}
 
