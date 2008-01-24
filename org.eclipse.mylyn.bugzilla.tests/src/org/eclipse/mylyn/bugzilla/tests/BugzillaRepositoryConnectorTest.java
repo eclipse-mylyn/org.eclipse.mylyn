@@ -27,7 +27,6 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.tasks.core.LocalAttachment;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryOperation;
@@ -48,46 +47,46 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 	int counter = 0;
 	
-	public void testMissingHits() throws Exception {
-		// query for all mylyn bugzilla tasks.
-		// reset sync date
-		// mark stale tasks should equal number of tasks
-		TasksUiPlugin.getSynchronizationManager().setForceSyncExec(true);
-		init(IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
-		repository.setAuthenticationCredentials("username", "password");
-		String queryString = "https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=&classification=Tools&product=Mylyn&component=Bugzilla&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&status_whiteboard_type=allwordssubstr&status_whiteboard=&keywords_type=allwords&keywords=&bug_status=NEW&priority=P1&priority=P2&emailtype1=substring&email1=&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
-		//String queryString = "https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=&classification=Tools&product=Mylyn&component=Bugzilla&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&status_whiteboard_type=allwordssubstr&status_whiteboard=&keywords_type=allwords&keywords=&priority=P1&emailtype1=substring&email1=&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
-		//String queryString = "https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=&classification=Tools&product=Mylyn&component=Bugzilla&component=Tasks&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&status_whiteboard_type=allwordssubstr&status_whiteboard=&keywords_type=allwords&keywords=&emailtype1=substring&email1=&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
-		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(IBugzillaConstants.ECLIPSE_BUGZILLA_URL, queryString, "test" );
-		//TasksUiPlugin.getTaskListManager().getTaskList().addQuery(query);
-		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
-//		QueryHitCollector collector = new QueryHitCollector(new TaskFactory(repository, false, false));
-//		connector.performQuery(query, repository, new NullProgressMonitor(), collector);
-//		System.err.println(">>> Collector: "+collector.getTasks().size());
-//		for (AbstractTask task : collector.getTasks()) {
-//			TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);	
+//	public void testMissingHits() throws Exception {
+//		// query for all mylyn bugzilla tasks.
+//		// reset sync date
+//		// mark stale tasks should equal number of tasks
+//		TasksUiPlugin.getSynchronizationManager().setForceSyncExec(true);
+//		init(IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
+//		repository.setAuthenticationCredentials("username", "password");
+//		String queryString = "https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=&classification=Tools&product=Mylyn&component=Bugzilla&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&status_whiteboard_type=allwordssubstr&status_whiteboard=&keywords_type=allwords&keywords=&bug_status=NEW&priority=P1&priority=P2&emailtype1=substring&email1=&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
+//		//String queryString = "https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=&classification=Tools&product=Mylyn&component=Bugzilla&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&status_whiteboard_type=allwordssubstr&status_whiteboard=&keywords_type=allwords&keywords=&priority=P1&emailtype1=substring&email1=&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
+//		//String queryString = "https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=&classification=Tools&product=Mylyn&component=Bugzilla&component=Tasks&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&status_whiteboard_type=allwordssubstr&status_whiteboard=&keywords_type=allwords&keywords=&emailtype1=substring&email1=&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
+//		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(IBugzillaConstants.ECLIPSE_BUGZILLA_URL, queryString, "test" );
+//		//TasksUiPlugin.getTaskListManager().getTaskList().addQuery(query);
+//		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
+////		QueryHitCollector collector = new QueryHitCollector(new TaskFactory(repository, false, false));
+////		connector.performQuery(query, repository, new NullProgressMonitor(), collector);
+////		System.err.println(">>> Collector: "+collector.getTasks().size());
+////		for (AbstractTask task : collector.getTasks()) {
+////			TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);	
+////		}
+//		
+//		TasksUiPlugin.getSynchronizationManager().synchronize(connector, query, null, true);
+//		//System.err.println(">>> initial size: "+query.getChildren().size());
+//		for (AbstractTask task : query.getChildren()) {
+//			assertTrue(task.getSynchronizationState() == RepositoryTaskSyncState.INCOMING);
+//			TasksUiPlugin.getSynchronizationManager().setTaskRead(task, true);
+//			task.setLastReadTimeStamp("1970-01-01");
+//			assertTrue(task.getSynchronizationState() == RepositoryTaskSyncState.SYNCHRONIZED);
 //		}
-		
-		TasksUiPlugin.getSynchronizationManager().synchronize(connector, query, null, true);
-		System.err.println(">>> initial size: "+query.getChildren().size());
-		for (AbstractTask task : query.getChildren()) {
-			assertTrue(task.getSynchronizationState() == RepositoryTaskSyncState.INCOMING);
-			TasksUiPlugin.getSynchronizationManager().setTaskRead(task, true);
-			task.setLastReadTimeStamp("1970-01-01");
-			assertTrue(task.getSynchronizationState() == RepositoryTaskSyncState.SYNCHRONIZED);
-		}
-		
-		for (AbstractTask task : query.getChildren()) {
-			assertTrue(task.getSynchronizationState() == RepositoryTaskSyncState.SYNCHRONIZED);
-		}
-		
-		repository.setSynchronizationTimeStamp("1970-01-01");//getSynchronizationTimeStamp();
-		//connector.markStaleTasks(repository, query.getChildren(), new NullProgressMonitor());
-		TasksUiPlugin.getSynchronizationManager().synchronize(connector, query, null, true);
-		for (AbstractTask task : query.getChildren()) {
-			assertTrue(task.getSynchronizationState() == RepositoryTaskSyncState.INCOMING);
-		}
-	}
+//		
+//		for (AbstractTask task : query.getChildren()) {
+//			assertTrue(task.getSynchronizationState() == RepositoryTaskSyncState.SYNCHRONIZED);
+//		}
+//		
+//		repository.setSynchronizationTimeStamp("1970-01-01");//getSynchronizationTimeStamp();
+//		//connector.markStaleTasks(repository, query.getChildren(), new NullProgressMonitor());
+//		TasksUiPlugin.getSynchronizationManager().synchronize(connector, query, null, true);
+//		for (AbstractTask task : query.getChildren()) {
+//			assertTrue(task.getSynchronizationState() == RepositoryTaskSyncState.INCOMING);
+//		}
+//	}
 	
 	
 	public void testMidAirCollision() throws Exception {

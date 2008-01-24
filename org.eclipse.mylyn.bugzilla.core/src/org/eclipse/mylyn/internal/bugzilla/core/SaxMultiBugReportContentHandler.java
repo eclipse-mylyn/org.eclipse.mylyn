@@ -17,7 +17,6 @@ import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskComment;
-import org.eclipse.mylyn.web.core.HtmlStreamTokenizer;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -157,7 +156,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 
-		String parsedText = HtmlStreamTokenizer.unescape(characters.toString());
+		String parsedText = characters.toString();
 
 		BugzillaReportElement tag = BugzillaReportElement.UNKNOWN;
 		try {

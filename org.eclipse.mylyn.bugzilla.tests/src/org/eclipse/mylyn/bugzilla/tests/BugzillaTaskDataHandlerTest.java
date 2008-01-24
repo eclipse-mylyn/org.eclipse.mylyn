@@ -49,7 +49,7 @@ public class BugzillaTaskDataHandlerTest extends TestCase {
 		repository.setAuthenticationCredentials(credentials.username, credentials.password);
 		return repository;
 	}
-
+	
 	private void testAttributesFromCloneBug(RepositoryTaskData repositoryTaskData, boolean valueFromBug9) {
 		assertEquals("Clone Bug 1", repositoryTaskData.getAttribute(BugzillaReportElement.SHORT_DESC.getKeyString())
 				.getValue());
@@ -153,6 +153,13 @@ public class BugzillaTaskDataHandlerTest extends TestCase {
 		handler.cloneTaskData(report1, report2);
 		testAttributesFromCloneBug(report2, false);
 
+	}
+	
+	public void testCharacterEscaping() throws CoreException {
+		String bugid = "17";
+		setRepository(BugzillaCorePlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_30_URL);
+		RepositoryTaskData report1 = init(bugid);
+		assertEquals("Testing! \"&@ $\" &amp;", report1.getSummary());
 	}
 
 }

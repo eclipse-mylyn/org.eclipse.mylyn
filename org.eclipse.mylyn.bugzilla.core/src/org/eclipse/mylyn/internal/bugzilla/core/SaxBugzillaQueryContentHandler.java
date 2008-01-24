@@ -12,7 +12,6 @@ import java.util.Locale;
 
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskCollector;
-import org.eclipse.mylyn.web.core.HtmlStreamTokenizer;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -76,8 +75,7 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 
-		String parsedText = HtmlStreamTokenizer.unescape(characters.toString());
-
+		String parsedText = characters.toString();
 		BugzillaReportElement tag = BugzillaReportElement.UNKNOWN;
 		try {
 			tag = BugzillaReportElement.valueOf(localName.trim().toUpperCase(Locale.ENGLISH));
