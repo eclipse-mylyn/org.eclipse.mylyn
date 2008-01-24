@@ -9,13 +9,16 @@
 package org.eclipse.mylyn.tasks.ui.editors;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.TextAttribute;
+import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.jface.text.hyperlink.DefaultHyperlinkPresenter;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkPresenter;
@@ -38,6 +41,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.editors.text.EditorsUI;
@@ -124,6 +128,8 @@ public class TaskTextViewerConfiguration extends TextSourceViewerConfiguration {
 	private final class TaskTextViewerHyperlinkPresenter extends DefaultHyperlinkPresenter {
 		private final ISourceViewer sourceViewer;
 
+		private IRegion activeRegion;
+
 		/**
 		 * Stores which task a tooltip is being displayed for. It is used to avoid having the same tooltip being set
 		 * multiple times while you move the mouse over a task hyperlink (bug#209409)
@@ -135,10 +141,25 @@ public class TaskTextViewerConfiguration extends TextSourceViewerConfiguration {
 			this.sourceViewer = sourceViewer;
 		}
 
+		@SuppressWarnings("unchecked")
+		@Override
+		public void applyTextPresentation(TextPresentation textPresentation) {
+			super.applyTextPresentation(textPresentation);
+			if (activeRegion != null && currentTaskHyperlink != null && currentTaskHyperlink.isCompleted()) {
+				Iterator<StyleRange> styleRangeIterator = textPresentation.getAllStyleRangeIterator();
+				while (styleRangeIterator.hasNext()) {
+					StyleRange styleRange = styleRangeIterator.next();
+					if (activeRegion.getOffset() == styleRange.start && activeRegion.getLength() == styleRange.length) {
+						styleRange.strikeout = true;
+						break;
+					}
+				}
+			}
+		}
+
 		@Override
 		public void showHyperlinks(IHyperlink[] hyperlinks) {
-			super.showHyperlinks(hyperlinks);
-
+			activeRegion = null;
 			if (hyperlinks != null && hyperlinks.length > 0 && hyperlinks[0] instanceof TaskHyperlink) {
 				TaskHyperlink hyperlink = (TaskHyperlink) hyperlinks[0];
 
@@ -152,6 +173,7 @@ public class TaskTextViewerConfiguration extends TextSourceViewerConfiguration {
 
 				if (task != null && task != currentTaskHyperlink) {
 					currentTaskHyperlink = task;
+					activeRegion = hyperlink.getHyperlinkRegion();
 					Control cursorControl = sourceViewer.getTextWidget().getDisplay().getCursorControl();
 					if (task.getTaskKey() == null) {
 						cursorControl.setToolTipText(task.getSummary());
@@ -160,6 +182,7 @@ public class TaskTextViewerConfiguration extends TextSourceViewerConfiguration {
 					}
 				}
 			}
+			super.showHyperlinks(hyperlinks);
 		}
 
 		@Override
