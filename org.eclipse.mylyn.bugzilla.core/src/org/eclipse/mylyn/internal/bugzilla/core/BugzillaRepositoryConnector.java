@@ -283,7 +283,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			throws CoreException {
 		try {
 			
-			if(tasks.isEmpty()) return false;
+			if(tasks.isEmpty()) return true;
 			
 			monitor.beginTask("Checking for changed tasks", IProgressMonitor.UNKNOWN);
 
