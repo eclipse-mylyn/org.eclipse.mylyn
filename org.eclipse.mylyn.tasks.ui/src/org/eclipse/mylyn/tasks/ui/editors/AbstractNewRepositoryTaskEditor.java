@@ -478,13 +478,18 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		if (newTask != null) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					Calendar selectedDate = scheduledForDate.getDate();
+					Calendar selectedDate = null;
+					if (scheduledForDate != null) {
+						selectedDate = scheduledForDate.getDate();
+					}
 					if (selectedDate != null) {
 						// NewLocalTaskAction.scheduleNewTask(newTask);
 						TasksUiPlugin.getTaskActivityManager().setScheduledFor(newTask, selectedDate.getTime());
 					}
-
-					newTask.setEstimatedTimeHours(estimatedTime.getSelection());
+					
+					if (estimatedTime != null) {
+						newTask.setEstimatedTimeHours(estimatedTime.getSelection());
+					}
 
 					Object selectedObject = null;
 					if (TaskListView.getFromActivePerspective() != null)
