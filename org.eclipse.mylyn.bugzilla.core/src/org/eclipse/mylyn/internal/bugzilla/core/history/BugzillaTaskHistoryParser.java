@@ -20,6 +20,7 @@ import java.util.Locale;
 
 import javax.security.auth.login.LoginException;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaLanguageSettings;
 import org.eclipse.mylyn.web.core.HtmlStreamTokenizer;
 import org.eclipse.mylyn.web.core.HtmlTag;
@@ -205,7 +206,7 @@ public class BugzillaTaskHistoryParser {
 				if (token.getType() == Token.TAG) {
 					tag = (HtmlTag) token.getValue();
 					if (tag.getTagType() == HtmlTag.Type.TD && tag.isEndTag()) {
-						String data = HtmlStreamTokenizer.unescape(sb.toString());
+						String data = StringEscapeUtils.unescapeHtml(sb.toString());
 						if (data.startsWith("\n") && (data.contains("Attachment") == false)) {
 							data = ""; // empty field
 						}
