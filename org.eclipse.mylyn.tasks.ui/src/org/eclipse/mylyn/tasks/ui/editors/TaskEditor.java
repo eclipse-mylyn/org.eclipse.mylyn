@@ -41,6 +41,7 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.forms.editor.SharedHeaderFormEditor;
+import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 
@@ -68,6 +69,8 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 	private MenuManager menuManager = new MenuManager();
 
 	private EditorBusyIndicator editorBusyIndicator;
+
+	private IHyperlinkListener messageHyperLinkListener;
 
 	public TaskEditor() {
 		super();
@@ -434,14 +437,29 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 		return this.getHeaderForm().getForm().getForm();
 	}
 
-	public void setMessage(String message, int type) {
+	/**
+	 * @since 2.3 
+	 */
+	public void setMessage(String message, int type, IHyperlinkListener listener) {
 		if (this.getHeaderForm() != null && this.getHeaderForm().getForm() != null) {
 			if (!this.getHeaderForm().getForm().isDisposed()) {
-				this.getHeaderForm().getForm().setMessage(message, type);
+				getTopForm().setMessage(message, type);
+				
+				if (messageHyperLinkListener != null) {
+					getTopForm().removeMessageHyperlinkListener(messageHyperLinkListener);
+				}
+				if (listener != null) {
+					getTopForm().addMessageHyperlinkListener(listener);
+				}
+				messageHyperLinkListener = listener;
 			}
 		}
 	}
 
+	public void setMessage(String message, int type) {
+		setMessage(message, type, null);
+	}
+	
 	protected IWorkbenchSiteProgressService getProgressService() {
 		Object siteService = getEditorSite().getAdapter(IWorkbenchSiteProgressService.class);
 		if (siteService != null)

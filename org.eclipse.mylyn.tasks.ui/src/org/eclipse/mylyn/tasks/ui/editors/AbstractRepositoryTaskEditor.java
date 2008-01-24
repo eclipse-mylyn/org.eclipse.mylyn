@@ -404,13 +404,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 							// "Changed - " + repositoryTask.getSummary(),
 							// "Editor will Test with new incoming
 							// changes.");
-							parentEditor.getTopForm().addMessageHyperlinkListener(new HyperlinkAdapter() {
-								public void linkActivated(HyperlinkEvent e) {
-									refreshEditor();
-								}
-							});
 							parentEditor.setMessage("Task has incoming changes, synchronize to view",
-									IMessageProvider.WARNING);
+									IMessageProvider.WARNING, new HyperlinkAdapter() {
+										public void linkActivated(HyperlinkEvent e) {
+											refreshEditor();
+										}
+									});
 
 							setSubmitEnabled(false);
 							// updateContents();
