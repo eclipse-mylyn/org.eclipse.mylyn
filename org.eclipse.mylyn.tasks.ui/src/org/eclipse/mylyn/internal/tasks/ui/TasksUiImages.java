@@ -105,6 +105,10 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor FIND_CLEAR_DISABLED = create(T_TOOL, "find-clear-disabled.gif");
 
+	public static final ImageDescriptor SCHEDULE_DAY = create(T_TOOL, "schedule-day.png");
+
+	public static final ImageDescriptor SCHEDULE_WEEK = create(T_TOOL, "schedule-week.png");
+	
 	public static final ImageDescriptor WARNING = create(T_ELCL, "warning.gif");
 
 	public static final ImageDescriptor OVERLAY_WEB = create(T_TOOL, "overlay-web.gif");

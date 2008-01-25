@@ -93,14 +93,16 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 			}
 		};
 		action.setText(LABEL_TODAY);
+		action.setImageDescriptor(TasksUiImages.SCHEDULE_DAY);
 		action.setEnabled(canSchedule(singleSelection, taskListElementsToSchedule));
 		subMenuManager.add(action);
 
-		if (singleTaskSelection != null && TasksUiPlugin.getTaskListManager().isScheduledForToday(singleTaskSelection)) {
+		if (singleTaskSelection != null && (TasksUiPlugin.getTaskListManager().isScheduledForToday(singleTaskSelection)
+				|| singleTaskSelection.isPastReminder())) {
 			action.setChecked(true);
 		}
 
-		subMenuManager.add(new Separator());
+//		subMenuManager.add(new Separator());
 
 		final int today = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
 //		boolean reachedEndOfWeek = false;
@@ -148,6 +150,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 			}
 		};
 		action.setText(LABEL_NEXT_WEEK);
+		action.setImageDescriptor(TasksUiImages.SCHEDULE_WEEK);
 		action.setEnabled(canSchedule(singleSelection, taskListElementsToSchedule));
 
 		if (singleTaskSelection != null
@@ -239,7 +242,8 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 			}
 		};
 		action.setText(LABEL_CALENDAR);
-		action.setImageDescriptor(TasksUiImages.CALENDAR);
+//		action.setImageDescriptor(TasksUiImages.CALENDAR);
+		action.setImageDescriptor(TasksUiImages.SCHEDULE_DAY);
 		action.setEnabled(canSchedule(singleSelection, taskListElementsToSchedule));
 		subMenuManager.add(action);
 
@@ -253,7 +257,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 			}
 		};
 		action.setText(LABEL_NOT_SCHEDULED);
-		action.setImageDescriptor(TasksUiImages.REMOVE);
+//		action.setImageDescriptor(TasksUiImages.REMOVE);
 		if (singleTaskSelection != null) {
 			if (singleTaskSelection.getScheduledForDate() == null) {
 				action.setChecked(true);
