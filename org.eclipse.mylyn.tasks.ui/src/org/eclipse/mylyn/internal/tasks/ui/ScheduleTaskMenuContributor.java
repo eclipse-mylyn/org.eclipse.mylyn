@@ -264,10 +264,9 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 	}
 
 	private void getDayLabel(int i, Action action) {
-//		System.err.print(">>>> " + i);
 		if (i > 8) {
+			// rotates up to 7 days ahead
 			i = i - 7;
-			System.err.println(">>>>> " + i);
 		}
 		switch (i) {
 		case Calendar.MONDAY:
@@ -292,8 +291,6 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 			action.setText("Sunday");
 			break;
 		default:
-			System.err.println(">>>>>>>>>>>>>> " + i);
-			action.setText("<unknown>");
 			break;
 		}
 	}
