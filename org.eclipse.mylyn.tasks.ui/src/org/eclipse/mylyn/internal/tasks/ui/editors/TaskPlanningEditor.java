@@ -815,7 +815,9 @@ public class TaskPlanningEditor extends TaskFormPage {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable(){
 
 					public void run() {
-						elapsedTimeText.setText(elapsedString);
+						if (!elapsedTimeText.isDisposed()) {
+							elapsedTimeText.setText(elapsedString);
+						}
 					}});
 
 			}};

@@ -73,7 +73,7 @@ public class AddExistingTaskJob extends Job {
 		try {
 			final AbstractTask newTask = connector.createTaskFromExistingId(repository, taskId, monitor);
 			if (newTask != null) {
-				Calendar newSchedule = Calendar.getInstance();
+				Calendar newSchedule = TaskActivityUtil.getCalendar();
 				TaskActivityUtil.snapEndOfWorkDay(newSchedule);
 				TasksUiPlugin.getTaskActivityManager().setScheduledFor(newTask, newSchedule.getTime());
 
