@@ -34,7 +34,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 
-	private static final String LABEL_REMINDER = "Schedule";
+	private static final String LABEL_REMINDER = "Schedule for";
 
 	private static final String LABEL_TODAY = "Today";
 
@@ -103,8 +103,8 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 		subMenuManager.add(new Separator());
 
 		final int today = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-		boolean reachedEndOfWeek = false;
-		for (int i = today + 1; i <= 8 && !reachedEndOfWeek; i++) {
+//		boolean reachedEndOfWeek = false;
+		for (int i = today + 1; i <= today + 7/* && !reachedEndOfWeek*/; i++) {
 			final int day = i;
 			action = new Action() {
 				@Override
@@ -239,6 +239,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 			}
 		};
 		action.setText(LABEL_CALENDAR);
+		action.setImageDescriptor(TasksUiImages.CALENDAR);
 		action.setEnabled(canSchedule(singleSelection, taskListElementsToSchedule));
 		subMenuManager.add(action);
 
@@ -252,6 +253,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 			}
 		};
 		action.setText(LABEL_NOT_SCHEDULED);
+		action.setImageDescriptor(TasksUiImages.REMOVE);
 		if (singleTaskSelection != null) {
 			if (singleTaskSelection.getScheduledForDate() == null) {
 				action.setChecked(true);
@@ -262,6 +264,11 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 	}
 
 	private void getDayLabel(int i, Action action) {
+//		System.err.print(">>>> " + i);
+		if (i > 8) {
+			i = i - 7;
+			System.err.println(">>>>> " + i);
+		}
 		switch (i) {
 		case Calendar.MONDAY:
 			action.setText("Monday");
@@ -285,6 +292,8 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 			action.setText("Sunday");
 			break;
 		default:
+			System.err.println(">>>>>>>>>>>>>> " + i);
+			action.setText("<unknown>");
 			break;
 		}
 	}

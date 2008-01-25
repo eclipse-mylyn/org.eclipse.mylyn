@@ -735,7 +735,7 @@
             class="org.eclipse.mylyn.internal.tasks.ui.ScheduleTaskMenuContributor"
             menuPath="tasks"/>
       <dynamicPopupMenu
-            class="org.eclipse.mylyn.internal.tasks.ui.TaskStatusMenuContributor"
+            class="org.eclipse.mylyn.internal.tasks.ui.MarkTaskMenuContributor"
             menuPath="tasks"/>
       <dynamicPopupMenu
             class="org.eclipse.mylyn.internal.tasks.ui.MoveToCategoryMenuContributor"
