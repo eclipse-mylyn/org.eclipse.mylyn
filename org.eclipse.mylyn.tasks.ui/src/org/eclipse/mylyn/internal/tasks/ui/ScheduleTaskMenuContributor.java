@@ -270,7 +270,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 			public void run() {
 				for (AbstractTaskContainer element : taskListElementsToSchedule) {
 					AbstractTask task = tasklistManager.getTaskForElement(element, true);
-					TasksUiPlugin.getTaskListManager().setScheduledFor(task, null);
+					TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, null, false);
 				}
 			}
 		};

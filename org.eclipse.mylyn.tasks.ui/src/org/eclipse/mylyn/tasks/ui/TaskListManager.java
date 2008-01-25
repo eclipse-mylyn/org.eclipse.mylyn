@@ -895,6 +895,6 @@ public class TaskListManager implements IPropertyChangeListener {
 		} else {
 			TasksUiPlugin.getTaskListManager().setScheduledEndOfDay(newTaskSchedule);
 		}
-		TasksUiPlugin.getTaskListManager().setScheduledFor(newTask, newTaskSchedule.getTime());
+		TasksUiPlugin.getTaskActivityManager().setScheduledFor(newTask, newTaskSchedule.getTime());
 	}
 }
