@@ -261,7 +261,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 		};
 		action.setText(LABEL_CALENDAR);
 //		action.setImageDescriptor(TasksUiImages.CALENDAR);
-		action.setImageDescriptor(TasksUiImages.SCHEDULE_DAY);
+//		action.setImageDescriptor(TasksUiImages.SCHEDULE_DAY);
 		action.setEnabled(canSchedule(singleSelection, taskListElementsToSchedule));
 		subMenuManager.add(action);
 
