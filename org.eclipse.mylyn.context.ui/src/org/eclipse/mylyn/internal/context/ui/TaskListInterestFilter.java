@@ -75,6 +75,9 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 				&& (scheduleContainer.isPresent() || scheduleContainer.isFuture())) {
 			return true;
 		}
+		if(scheduleContainer.isPresent() && scheduleContainer.isCaptureFloating()) {
+			return true;
+		}
 		return false;
 		//return TasksUiPlugin.getTaskActivityManager().isWeekDay(container);
 	}
@@ -123,6 +126,9 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 
 	private static boolean shouldShowInFocusedWorkweekDateContainer(Object parent, AbstractTask task) {
 		if (parent instanceof ScheduledTaskContainer) {
+			if(((ScheduledTaskContainer)parent).isCaptureFloating()) {
+				return true;
+			}
 			if (!TasksUiPlugin.getTaskActivityManager().isWeekDay((ScheduledTaskContainer) parent)) {
 				return false;
 			}
