@@ -144,6 +144,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 			}
 		};
 		action.setText(LABEL_THIS_WEEK);
+		action.setImageDescriptor(TasksUiImages.SCHEDULE_WEEK);
 		action.setEnabled(canSchedule(singleSelection, taskListElementsToSchedule));
 		subMenuManager.add(action);
 		
@@ -164,7 +165,6 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 			}
 		};
 		action.setText(LABEL_NEXT_WEEK);
-		action.setImageDescriptor(TasksUiImages.SCHEDULE_WEEK);
 		action.setEnabled(canSchedule(singleSelection, taskListElementsToSchedule));
 
 		if (singleTaskSelection != null && singleTaskSelection.internalIsFloatingScheduledDate()
