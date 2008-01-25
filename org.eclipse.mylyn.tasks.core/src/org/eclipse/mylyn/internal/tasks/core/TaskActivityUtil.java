@@ -70,6 +70,17 @@ public class TaskActivityUtil {
 		snapEndOfDay(cal);
 		return cal;
 	}
+	
+	public static Calendar snapEndOfNextWeek(Calendar cal) {
+		if (cal.getFirstDayOfWeek() == Calendar.MONDAY) {
+			cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+		} else {
+			cal.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+		}
+		snapEndOfWeek(cal);
+		cal.add(Calendar.WEEK_OF_MONTH, 1);
+		return cal;
+	}
 
 	public static Calendar snapForwardNumDays(Calendar calendar, int days) {
 		calendar.add(Calendar.DAY_OF_MONTH, days);
@@ -121,6 +132,18 @@ public class TaskActivityUtil {
 			Calendar weekStart = getCalendar();
 			snapStartOfWorkWeek(weekStart);
 			Calendar weekEnd = getCalendar();
+			snapEndOfWeek(weekEnd);
+			return (time.compareTo(weekStart) >= 0 && time.compareTo(weekEnd) <= 0);
+		}
+		return false;
+	}
+	
+	public static boolean isNextWeek(Calendar time) {
+		if (time != null) {
+			Calendar weekStart = getCalendar();
+			snapNextWorkWeek(weekStart);
+			Calendar weekEnd = getCalendar();
+			snapNextWorkWeek(weekEnd);
 			snapEndOfWeek(weekEnd);
 			return (time.compareTo(weekStart) >= 0 && time.compareTo(weekEnd) <= 0);
 		}

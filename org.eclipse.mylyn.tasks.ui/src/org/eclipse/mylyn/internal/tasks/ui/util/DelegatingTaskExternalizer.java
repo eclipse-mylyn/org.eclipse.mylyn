@@ -110,6 +110,8 @@ final class DelegatingTaskExternalizer {
 	static final String KEY_DATE_DUE = "DueDate";
 
 	static final String KEY_REMINDED = "Reminded";
+	
+	static final String KEY_FLOATING = "Floating";
 
 	/**
 	 * This element holds the date stamp recorded upon last transition to a synchronized state.
@@ -207,6 +209,11 @@ final class DelegatingTaskExternalizer {
 			node.setAttribute(KEY_REMINDED, VAL_TRUE);
 		} else {
 			node.setAttribute(KEY_REMINDED, VAL_FALSE);
+		}
+		if (task.internalIsFloatingScheduledDate()) {
+			node.setAttribute(KEY_FLOATING, VAL_TRUE);
+		} else {
+			node.setAttribute(KEY_FLOATING, VAL_FALSE);
 		}
 		if (task.isStale()) {
 			node.setAttribute(KEY_STALE, VAL_TRUE);
@@ -427,6 +434,11 @@ final class DelegatingTaskExternalizer {
 			task.setReminded(true);
 		} else {
 			task.setReminded(false);
+		}
+		if (element.hasAttribute(KEY_FLOATING) && element.getAttribute(KEY_FLOATING).compareTo(VAL_TRUE) == 0) {
+			task.internalSetFloatingScheduledDate(true);
+		} else {
+			task.internalSetFloatingScheduledDate(false);
 		}
 		if (element.hasAttribute(KEY_STALE) && element.getAttribute(KEY_STALE).compareTo(VAL_TRUE) == 0) {
 			task.setStale(true);

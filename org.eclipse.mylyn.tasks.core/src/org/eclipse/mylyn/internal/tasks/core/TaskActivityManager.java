@@ -457,7 +457,13 @@ public class TaskActivityManager {
 		}
 	}
 
+	
 	public void setScheduledFor(AbstractTask task, Date reminderDate) {
+		setScheduledFor(task, reminderDate, false);
+	}
+
+	
+	public void setScheduledFor(AbstractTask task, Date reminderDate, boolean floating) {
 		// API-3.0: remove check
 		if (task == null)
 			return;
@@ -467,6 +473,7 @@ public class TaskActivityManager {
 		}
 
 		task.setScheduledForDate(reminderDate);
+		task.internalSetFloatingScheduledDate(floating);
 		if (reminderDate == null) {
 			removeScheduledTask(task);
 		} else {		
@@ -574,6 +581,18 @@ public class TaskActivityManager {
 		}
 		return false;
 	}
+	
+	public boolean isScheduledForNextWeek(AbstractTask task) {
+		if (task != null) {
+			Date reminder = task.getScheduledForDate();
+			if (reminder != null) {
+				Calendar time = TaskActivityUtil.getCalendar();
+				time.setTime(reminder);
+				return TaskActivityUtil.isNextWeek(time);
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * TODO: move to activity manager
@@ -592,19 +611,19 @@ public class TaskActivityManager {
 //		scheduledEndHour = TasksUiPlugin.getDefault().getPreferenceStore().getInt(
 //				TasksUiPreferenceConstants.PLANNING_ENDHOUR);
 
-		Calendar pastStart = GregorianCalendar.getInstance();
+		Calendar pastStart = TaskActivityUtil.getCalendar();
 		pastStart.setTimeInMillis(0);
 //		pastStart.setFirstDayOfWeek(startDay);
 //		pastStart.setTime(startTime);
 //		pastStart.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_PAST_START);
-//		snapToStartOfWeek(pastStart);
+//		TaskActivityUtil.snapToStartOfWeek(pastStart);
 		GregorianCalendar pastEnd = new GregorianCalendar();
 		pastEnd.setFirstDayOfWeek(startDay);
 		pastEnd.setTime(startTime);
 		pastEnd.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_PAST_END);
 		TaskActivityUtil.snapEndOfWeek(pastEnd);
 		scheduledPast = new ScheduledTaskContainer(this, pastStart.getTime(), pastEnd.getTime(), DESCRIPTION_PAST);
-		scheduleContainers.add(scheduledPast);
+		//scheduleContainers.add(scheduledPast);
 
 		scheduleWeekDays.clear();
 		for (int x = startDay; x < (startDay + 7); x++) {
@@ -661,16 +680,28 @@ public class TaskActivityManager {
 			scheduleContainers.add(day);
 		}
 
-		GregorianCalendar currentBegin = new GregorianCalendar();
-		currentBegin.setFirstDayOfWeek(startDay);
+		
+		Calendar currentBegin = TaskActivityUtil.getCalendar();
 		currentBegin.setTime(startTime);
 		TaskActivityUtil.snapStartOfWorkWeek(currentBegin);
-		GregorianCalendar currentEnd = new GregorianCalendar();
-		currentEnd.setFirstDayOfWeek(startDay);
+		Calendar currentEnd = TaskActivityUtil.getCalendar();
 		currentEnd.setTime(startTime);
 		TaskActivityUtil.snapEndOfWeek(currentEnd);
 		scheduledThisWeek = new ScheduledTaskContainer(this, currentBegin, currentEnd, DESCRIPTION_THIS_WEEK);
-		// dateRangeContainers.add(activityThisWeek);
+		scheduledThisWeek.setCaptureFloating(true);
+		//scheduleContainers.add(scheduledThisWeek);
+		
+//		GregorianCalendar currentBegin = new GregorianCalendar();
+//		currentBegin.setFirstDayOfWeek(startDay);
+//		currentBegin.setTime(startTime);
+//		TaskActivityUtil.snapStartOfWorkWeek(currentBegin);
+//		GregorianCalendar currentEnd = new GregorianCalendar();
+//		currentEnd.setFirstDayOfWeek(startDay);
+//		currentEnd.setTime(startTime);
+//		TaskActivityUtil.snapEndOfWeek(currentEnd);
+//		scheduledThisWeek = new ScheduledTaskContainer(this, currentBegin, currentEnd, DESCRIPTION_THIS_WEEK);
+//		scheduledThisWeek.setCaptureFloating(true);
+//		//scheduleContainers.add(scheduledThisWeek);
 
 		GregorianCalendar nextStart = new GregorianCalendar();
 		nextStart.setFirstDayOfWeek(startDay);
@@ -684,7 +715,9 @@ public class TaskActivityManager {
 		TaskActivityUtil.snapEndOfWeek(nextEnd);
 		scheduledNextWeek = new ScheduledTaskContainer(this, nextStart.getTime(), nextEnd.getTime(),
 				DESCRIPTION_NEXT_WEEK);
+		scheduledNextWeek.setCaptureFloating(true);
 		scheduleContainers.add(scheduledNextWeek);
+		
 
 		GregorianCalendar futureStart = new GregorianCalendar();
 		futureStart.setFirstDayOfWeek(startDay);
@@ -698,6 +731,7 @@ public class TaskActivityManager {
 		TaskActivityUtil.snapEndOfWeek(futureEnd);
 		scheduledFuture = new ScheduledTaskContainer(this, futureStart.getTime(), futureEnd.getTime(),
 				DESCRIPTION_FUTURE);
+		scheduledFuture.setCaptureFloating(true);
 		scheduleContainers.add(scheduledFuture);
 
 		GregorianCalendar previousStart = new GregorianCalendar();
@@ -712,7 +746,7 @@ public class TaskActivityManager {
 		TaskActivityUtil.snapEndOfWeek(previousEnd);
 		scheduledPrevious = new ScheduledTaskContainer(this, previousStart.getTime(), previousEnd.getTime(),
 				DESCRIPTION_PREVIOUS_WEEK);
-		scheduleContainers.add(scheduledPrevious);
+		//scheduleContainers.add(scheduledPrevious);
 	}
 
 	public List<ScheduledTaskContainer> getDateRanges() {

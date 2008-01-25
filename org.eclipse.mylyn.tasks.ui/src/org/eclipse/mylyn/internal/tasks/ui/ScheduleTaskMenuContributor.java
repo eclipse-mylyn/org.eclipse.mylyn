@@ -34,6 +34,8 @@ import org.eclipse.ui.PlatformUI;
  */
 public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 
+	private static final String LABEL_THIS_WEEK = "This week";
+
 	private static final String LABEL_REMINDER = "Schedule for";
 
 	private static final String LABEL_TODAY = "Today";
@@ -70,15 +72,6 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 			if (selectedElement instanceof AbstractTask) {
 				taskListElementsToSchedule.add(selectedElement);
 			}
-			// if (selectedElement instanceof ITask) {
-			// taskListElementsToSchedule.add((ITask) selectedElement);
-			// } else if (selectedElement instanceof AbstractQueryHit) {
-			// if (((AbstractQueryHit) selectedElement).getCorrespondingTask()
-			// != null) {
-			// taskListElementsToSchedule.add(((AbstractQueryHit)
-			// selectedElement).getCorrespondingTask());
-			// }
-			// }
 		}
 
 		Action action = new Action() {
@@ -105,13 +98,12 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 //		subMenuManager.add(new Separator());
 
 		final int today = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-//		boolean reachedEndOfWeek = false;
-		for (int i = today + 1; i <= today + 7/* && !reachedEndOfWeek*/; i++) {
+		for (int i = today + 1; i <= today + 7; i++) {
 			final int day = i;
 			action = new Action() {
 				@Override
 				public void run() {
-					Calendar reminderCalendar = GregorianCalendar.getInstance();
+					Calendar reminderCalendar = TaskActivityUtil.getCalendar();
 					int dueIn = day - today;
 					TasksUiPlugin.getTaskListManager().setSecheduledIn(reminderCalendar, dueIn);
 					for (AbstractTaskContainer element : taskListElementsToSchedule) {
@@ -121,17 +113,17 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 				}
 			};
 			getDayLabel(i, action);
-			if (singleTaskSelection != null && singleTaskSelection.getScheduledForDate() != null) {
-				int tasksCheduledOn = singleTaskSelection.getScheduledForDate().getDay();
-				if (TasksUiPlugin.getTaskListManager().isScheduledForThisWeek(singleTaskSelection)) {
-					if (tasksCheduledOn + 1 == day) {
-						action.setChecked(true);
-					} else if (tasksCheduledOn == 0 && day == 8) {
-						action.setChecked(true);
-					}
+			if (singleTaskSelection != null && singleTaskSelection.getScheduledForDate() != null
+					&& !singleTaskSelection.internalIsFloatingScheduledDate()) {
+				Calendar now = Calendar.getInstance();
+				now.add(Calendar.DAY_OF_MONTH, i - today);
+				now.getTime();
+				Calendar then = Calendar.getInstance();
+				then.setTime(singleTaskSelection.getScheduledForDate());
+				if(now.get(Calendar.DAY_OF_MONTH) == then.get(Calendar.DAY_OF_MONTH)) {
+					action.setChecked(true);
 				}
 			}
-
 			action.setEnabled(canSchedule(singleSelection, taskListElementsToSchedule));
 			subMenuManager.add(action);
 		}
@@ -141,11 +133,33 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 		action = new Action() {
 			@Override
 			public void run() {
+				Calendar reminderCalendar = TaskActivityUtil.getCalendar();
+				TaskActivityUtil.snapStartOfWorkWeek(reminderCalendar);
+				for (AbstractTaskContainer element : taskListElementsToSchedule) {
+					AbstractTask task = tasklistManager.getTaskForElement(element, true);
+					if(task != null) {
+						TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, reminderCalendar.getTime(), true);
+					}
+				}
+			}
+		};
+		action.setText(LABEL_THIS_WEEK);
+		action.setEnabled(canSchedule(singleSelection, taskListElementsToSchedule));
+		subMenuManager.add(action);
+		
+		if (singleTaskSelection != null && singleTaskSelection.internalIsFloatingScheduledDate() && TasksUiPlugin.getTaskListManager().isScheduledForThisWeek(singleTaskSelection)) {
+			action.setChecked(true);
+		}
+		
+		
+		action = new Action() {
+			@Override
+			public void run() {
 				for (AbstractTaskContainer element : taskListElementsToSchedule) {
 					AbstractTask task = tasklistManager.getTaskForElement(element, true);
 					Calendar startNextWeek = Calendar.getInstance();
 					TasksUiPlugin.getTaskListManager().setScheduledNextWeek(startNextWeek);
-					TasksUiPlugin.getTaskListManager().setScheduledFor(task, startNextWeek.getTime());
+					TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, startNextWeek.getTime(), true);
 				}
 			}
 		};
@@ -153,7 +167,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 		action.setImageDescriptor(TasksUiImages.SCHEDULE_WEEK);
 		action.setEnabled(canSchedule(singleSelection, taskListElementsToSchedule));
 
-		if (singleTaskSelection != null
+		if (singleTaskSelection != null && singleTaskSelection.internalIsFloatingScheduledDate()
 				&& TasksUiPlugin.getTaskListManager().isScheduledAfterThisWeek(singleTaskSelection)
 				&& !TasksUiPlugin.getTaskListManager().isScheduledForLater(singleTaskSelection)) {
 			action.setChecked(true);
@@ -167,15 +181,19 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 			public void run() {
 				for (AbstractTaskContainer element : taskListElementsToSchedule) {
 					AbstractTask task = tasklistManager.getTaskForElement(element, true);
-					TasksUiPlugin.getTaskListManager().setScheduledFor(task,
-							TasksUiPlugin.getTaskActivityManager().getActivityFuture().getStart().getTime());
+					if(task != null) {
+						Calendar twoWeeks = TaskActivityUtil.getCalendar();
+						TasksUiPlugin.getTaskListManager().setScheduledNextWeek(twoWeeks);
+						twoWeeks.add(Calendar.DAY_OF_MONTH, 7);
+						TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, twoWeeks.getTime(), true);
+					}
 				}
 			}
 		};
 		action.setText(LABEL_TWO_WEEKS);
 		action.setEnabled(canSchedule(singleSelection, taskListElementsToSchedule));
 
-		if (singleTaskSelection != null && singleTaskSelection.getScheduledForDate() != null) {
+		if (singleTaskSelection != null && singleTaskSelection.getScheduledForDate() != null && singleTaskSelection.internalIsFloatingScheduledDate()) {
 
 			Calendar time = TaskActivityUtil.getCalendar();
 			time.setTime(singleTaskSelection.getScheduledForDate());

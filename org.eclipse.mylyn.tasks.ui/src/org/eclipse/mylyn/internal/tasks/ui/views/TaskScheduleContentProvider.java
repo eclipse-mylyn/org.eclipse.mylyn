@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
@@ -35,27 +36,15 @@ public class TaskScheduleContentProvider extends TaskListContentProvider {
 	@Override
 	public Object[] getElements(Object parent) {
 		if (parent.equals(this.taskListView.getViewSite())) {
-			//unscheduledCategory.activeTask = null;
+			List<ScheduledTaskContainer> temp = taskActivityManager.getDateRanges();
 			Set<AbstractTaskContainer> ranges = new HashSet<AbstractTaskContainer>();
-
-			ranges.addAll(taskActivityManager.getDateRanges());
-//			ranges.add(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer());
-
-			//			AbstractTask activeTask = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
-//			boolean containsActiveTask = false;
-//			if (activeTask != null) {
-//				for (AbstractTaskContainer taskListElement : ranges) {
-//					if (taskListElement != null) {
-//						if (taskListElement.getChildren().contains(activeTask)) {
-//							containsActiveTask = true;
-//						}
-//					}
-//				}
-//				if (!containsActiveTask) {
-//					unscheduledCategory.activeTask = activeTask;
-//					ranges.add(unscheduledCategory);
-//				}
-//			}
+			for (ScheduledTaskContainer scheduledTaskContainer : temp) {
+				if(scheduledTaskContainer.isPresent() || scheduledTaskContainer.isFuture()) {
+					ranges.add(scheduledTaskContainer);
+				}
+			}
+			//ranges.addAll(taskActivityManager.getDateRanges());
+			ranges.add(taskActivityManager.getActivityThisWeek());
 			return applyFilter(ranges).toArray();
 		} else {
 			return super.getElements(parent);

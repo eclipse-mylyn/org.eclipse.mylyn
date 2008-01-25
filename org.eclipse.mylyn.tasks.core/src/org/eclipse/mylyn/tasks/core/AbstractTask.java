@@ -48,6 +48,8 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 	private boolean isNotifiedIncoming = false;
 
 	private boolean reminded = false;
+	
+	private boolean floatingScheduledDate = false;
 
 	private String categoryHandle = "";
 
@@ -467,6 +469,22 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 	 */
 	public void setCategoryHandle(String categoryHandle) {
 		this.categoryHandle = categoryHandle;
+	}
+
+	/**
+	 * @since 2.3
+	 * @API 3.0: rename/move
+	 */
+	public boolean internalIsFloatingScheduledDate() {
+		return floatingScheduledDate;
+	}
+
+	/**
+	 * @since 2.3
+	 * @API 3.0: rename/move
+	 */
+	public void internalSetFloatingScheduledDate(boolean floatingScheduledDate) {
+		this.floatingScheduledDate = floatingScheduledDate;
 	}
 
 }

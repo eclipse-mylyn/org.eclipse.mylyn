@@ -29,6 +29,8 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 
 	private Calendar endDate;
 
+	private boolean captureFloating = false;
+
 	private TaskActivityManager activityManager;
 
 	public ScheduledTaskContainer(TaskActivityManager activityManager, GregorianCalendar startDate,
@@ -108,16 +110,16 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 		// ignore
 	}
 
-	public Set<ScheduledTaskDelegate> getDateRangeDelegates() {
-		return dateRangeDelegates;
-	}
-
 	public boolean isFuture() {
 		return !isPresent() && getStart().after(Calendar.getInstance());
 	}
 
 	public boolean isPresent() {
 		return getStart().before(Calendar.getInstance()) && getEnd().after(Calendar.getInstance());
+	}
+
+	public boolean isToday() {
+		return TaskActivityUtil.getCalendar().get(Calendar.DAY_OF_MONTH) == getStart().get(Calendar.DAY_OF_MONTH);
 	}
 
 	@Override
@@ -167,29 +169,27 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 	@Override
 	public Set<AbstractTask> getChildren() {
 		Set<AbstractTask> children = new HashSet<AbstractTask>();
-		if (isPresent()) {
-			// add all overdue
-			Calendar beginning = Calendar.getInstance();
-			beginning.setTimeInMillis(0);
+		Calendar beginning = Calendar.getInstance();
+		beginning.setTimeInMillis(0);
+		if (isCaptureFloating() && !isFuture()) {
+			for (AbstractTask task : activityManager.getScheduledTasks(beginning, getEnd())) {
+				if (task.internalIsFloatingScheduledDate()) {
+					children.add(task);
+				}
+			}
+		} else if (isPresent()) {
+			// add all due/overdue
 			Calendar end = Calendar.getInstance();
 			end.set(5000, 12, 1);
-			for (AbstractTask task : activityManager.getDueTasks(beginning, getStart())) {
-				if (activityManager.isOverdue(task)) {
+			for (AbstractTask task : activityManager.getDueTasks(beginning, getEnd())) {
+				if (activityManager.isOwnedByUser(task)) {
 					children.add(task);
 				}
 			}
 
-			// add all over scheduled
-			for (AbstractTask task : activityManager.getScheduledTasks(beginning, getStart())) {
-				if (task.isPastReminder() && !task.isCompleted()) {
-					children.add(task);
-				}
-			}
-			/*bug#212489 */
-			//children.addAll(activityManager.getActiveTasks(getStart(), getEnd()));
-			children.addAll(activityManager.getScheduledTasks(getStart(), getEnd()));
-			for (AbstractTask task : activityManager.getDueTasks(getStart(), getEnd())) {
-				if (activityManager.isOwnedByUser(task)) {
+			// add all scheduled/overscheduled
+			for (AbstractTask task : activityManager.getScheduledTasks(beginning, getEnd())) {
+				if (!task.internalIsFloatingScheduledDate() && !task.isCompleted()) {
 					children.add(task);
 				}
 			}
@@ -207,7 +207,6 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 					children.add(activeTask);
 				}
 			}
-			return children;
 		} else if (isFuture()) {
 			children.addAll(activityManager.getScheduledTasks(getStart(), getEnd()));
 			for (AbstractTask task : activityManager.getDueTasks(getStart(), getEnd())) {
@@ -215,17 +214,23 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 					children.add(task);
 				}
 			}
-			return children;
 		} else {
 			children.addAll(activityManager.getActiveTasks(getStart(), getEnd()));
-			return children;
-
 		}
+		return children;
 	}
 
 	@Override
 	public Set<AbstractTask> getChildrenInternal() {
 		return getChildren();
+	}
+
+	public boolean isCaptureFloating() {
+		return captureFloating;
+	}
+
+	public void setCaptureFloating(boolean captureFloating) {
+		this.captureFloating = captureFloating;
 	}
 
 }

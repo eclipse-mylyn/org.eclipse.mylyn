@@ -48,7 +48,7 @@ public class TaskTableLabelProvider extends DecoratingLabelProvider implements I
 			switch (columnIndex) {
 			case 0:
 				if (obj instanceof ScheduledTaskContainer) {
-					if (((ScheduledTaskContainer) obj).isPresent()) {
+					if (((ScheduledTaskContainer) obj).isToday()) {
 						return super.getText(obj) + " - Today";
 					}
 				}

@@ -188,10 +188,10 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 				}
 			} else if (currentTarget instanceof ScheduledTaskContainer) {
 				ScheduledTaskContainer container = (ScheduledTaskContainer) currentTarget;
-				Calendar newSchedule = Calendar.getInstance();
+				Calendar newSchedule = TaskActivityUtil.getCalendar();
 				newSchedule.setTimeInMillis(container.getStart().getTimeInMillis());
 				TaskActivityUtil.snapEndOfWorkDay(newSchedule);
-				TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, newSchedule.getTime());
+				TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, newSchedule.getTime(), container.isCaptureFloating());
 			} else if (currentTarget == null) {
 //				TasksUiPlugin.getTaskListManager().getTaskList().moveTask(
 //						newTask,
