@@ -21,7 +21,7 @@ public class TaskComment extends AttributeContainer implements Serializable {
 	private static final long serialVersionUID = 1076016406335550318L;
 
 	/** Comment's number */
-	private final int number;
+	private int number;
 
 	private boolean hasAttachment;
 
@@ -39,6 +39,15 @@ public class TaskComment extends AttributeContainer implements Serializable {
 	 */
 	public int getNumber() {
 		return number;
+	}
+
+	/**
+	 * Set the comment number
+	 * 
+	 * @param number the number of the comment
+	 */
+	public void setNumber(int number) {
+		this.number = number;
 	}
 
 	/**

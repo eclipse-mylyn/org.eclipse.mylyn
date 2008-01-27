@@ -8,7 +8,9 @@
 
 package org.eclipse.mylyn.internal.bugzilla.core;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -45,6 +47,8 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 	private Map<String, RepositoryTaskData> taskDataMap;
 
 	private RepositoryTaskData repositoryTaskData;
+
+	private List<TaskComment> longDescs;
 
 	private String errorMessage = null;
 
@@ -102,6 +106,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			attachIdToComment = new HashMap<String, TaskComment>();
 			commentNum = 0;
 			taskComment = null;
+			longDescs = new ArrayList<TaskComment>();
 			break;
 		case LONG_DESC:
 			taskComment = new TaskComment(attributeFactory, commentNum++);
@@ -215,11 +220,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			break;
 		case LONG_DESC:
 			if (taskComment != null) {
-				if (taskComment.getNumber() == 0) {
-					repositoryTaskData.setAttributeValue(RepositoryTaskAttribute.DESCRIPTION, taskComment.getText());
-					break;
-				}
-				repositoryTaskData.addComment(taskComment);
+				longDescs.add(taskComment);
 			}
 			break;
 
@@ -264,6 +265,57 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		case BUG:
 			// Reached end of bug. Need to set LONGDESCLENGTH to number of
 			// comments
+			int longDescsSize = longDescs.size() - 1;
+			if (longDescsSize == 0) {
+				repositoryTaskData.setAttributeValue(RepositoryTaskAttribute.DESCRIPTION, longDescs.get(0).getText());
+			} else if (longDescsSize == 1) {
+				if (longDescs.get(0).getCreated().compareTo(longDescs.get(1).getCreated()) < 0) {
+					repositoryTaskData.setAttributeValue(RepositoryTaskAttribute.DESCRIPTION, longDescs.get(0)
+							.getText());
+					repositoryTaskData.addComment(longDescs.get(1));
+				} else {
+					repositoryTaskData.setAttributeValue(RepositoryTaskAttribute.DESCRIPTION, longDescs.get(1)
+							.getText());
+					commentNum = 1;
+					longDescs.get(0).setNumber(commentNum);
+					repositoryTaskData.addComment(longDescs.get(0));
+				}
+			} else if (longDescsSize > 1) {
+				String created_0 = longDescs.get(0).getCreated();
+				String created_1 = longDescs.get(1).getCreated();
+				String created_n = longDescs.get(longDescsSize).getCreated();
+				commentNum = 1;
+				if (created_0.compareTo(created_1) < 0 && created_0.compareTo(created_n) < 0) {
+					repositoryTaskData.setAttributeValue(RepositoryTaskAttribute.DESCRIPTION, longDescs.get(0)
+							.getText());
+					if (created_1.compareTo(created_n) < 0) {
+						for (int i = 1; i <= longDescsSize; i++) {
+							longDescs.get(i).setNumber(commentNum++);
+							repositoryTaskData.addComment(longDescs.get(i));
+						}
+					} else {
+						for (int i = longDescsSize; i > 0; i--) {
+							longDescs.get(i).setNumber(commentNum++);
+							repositoryTaskData.addComment(longDescs.get(i));
+						}
+					}
+				} else {
+					repositoryTaskData.setAttributeValue(RepositoryTaskAttribute.DESCRIPTION, longDescs.get(
+							longDescsSize).getText());
+					if (created_0.compareTo(created_1) < 0) {
+						for (int i = 0; i < longDescsSize; i++) {
+							longDescs.get(i).setNumber(commentNum++);
+							repositoryTaskData.addComment(longDescs.get(i));
+						}
+					} else {
+						for (int i = longDescsSize - 1; i >= 0; i--) {
+							longDescs.get(i).setNumber(commentNum++);
+							repositoryTaskData.addComment(longDescs.get(i));
+						}
+					}
+				}
+			}
+
 			RepositoryTaskAttribute numCommentsAttribute = repositoryTaskData.getAttribute(BugzillaReportElement.LONGDESCLENGTH.getKeyString());
 			if (numCommentsAttribute == null) {
 				numCommentsAttribute = attributeFactory.createAttribute(BugzillaReportElement.LONGDESCLENGTH.getKeyString());

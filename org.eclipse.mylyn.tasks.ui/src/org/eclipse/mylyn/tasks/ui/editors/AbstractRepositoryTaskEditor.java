@@ -208,6 +208,8 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  */
 public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
+	private static final String PREF_SORT_ORDER_PREFIX = "org.eclipse.mylyn.editor.comments.sortDirectionDown.";
+
 	private static final String ERROR_NOCONNECTIVITY = "Unable to submit at this time. Check connectivity and retry.";
 
 	private static final String LABEL_HISTORY = "History";
@@ -290,6 +292,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	protected TextViewer summaryTextViewer;
 
+	private ImageHyperlink sortHyperlink;
+
+	private boolean commentSortIsDown = true;
+
+	private Composite addCommentsComposite;
+
 	/**
 	 * WARNING: This is present for backward compatibility only. You can get and set text on this widget but all ui
 	 * related changes to this widget will have no affect as ui is now being presented with a StyledText widget. This
@@ -343,8 +351,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	// API-3.0 rename ATTRIBTUES_SECTION to ATTRIBUTES_SECTION (bug 208629)
 	protected enum SECTION_NAME {
 		ATTRIBTUES_SECTION("Attributes"), ATTACHMENTS_SECTION("Attachments"), DESCRIPTION_SECTION("Description"), COMMENTS_SECTION(
-				"Comments"), NEWCOMMENT_SECTION("New Comment"), ACTIONS_SECTION("Actions"), PEOPLE_SECTION("People"), RELATEDBUGS_SECTION(
-				"Related Tasks");
+		"Comments"), NEWCOMMENT_SECTION("New Comment"), ACTIONS_SECTION("Actions"), PEOPLE_SECTION("People"), RELATEDBUGS_SECTION(
+		"Related Tasks");
 
 		private String prettyName;
 
@@ -406,10 +414,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 							// changes.");
 							parentEditor.setMessage("Task has incoming changes, synchronize to view",
 									IMessageProvider.WARNING, new HyperlinkAdapter() {
-										public void linkActivated(HyperlinkEvent e) {
-											refreshEditor();
-										}
-									});
+								public void linkActivated(HyperlinkEvent e) {
+									refreshEditor();
+								}
+							});
 
 							setSubmitEnabled(false);
 							// updateContents();
@@ -521,7 +529,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		repository = editorInput.getRepository();
 		taskData = editorInput.getTaskData();
 		connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getConnectorKind());
-
+		commentSortIsDown = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(PREF_SORT_ORDER_PREFIX+repository.getConnectorKind());	
 		setSite(site);
 		setInput(input);
 
@@ -565,6 +573,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		// scroll wheel
 		super(editor, "id", "label"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
+
+	protected boolean supportsCommentSort() {
+		return true;
+	}
+	
 
 	protected void createFormContent(final IManagedForm managedForm) {	
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
@@ -610,7 +623,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		if (summaryTextViewer != null) {
 			summaryTextViewer.getTextWidget().setFocus();
 		}
-		
+
 		form.setRedraw(true);
 	}
 
@@ -922,17 +935,17 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						TasksUiPlugin.getSynchronizationManager().synchronize(connector, repositoryTask, true,
 								new JobChangeAdapter() {
 
-									@Override
-									public void done(IJobChangeEvent event) {
-										PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+							@Override
+							public void done(IJobChangeEvent event) {
+								PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 
-											public void run() {
-												refreshEditor();
-											}
-										});
-
+									public void run() {
+										refreshEditor();
 									}
 								});
+
+							}
+						});
 					}
 				} catch (Exception e) {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -1661,7 +1674,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 							|| task.getSynchronizationState().equals(RepositoryTaskSyncState.OUTGOING)) {
 						MessageDialog.openInformation(attachmentsComposite.getShell(),
 								"Task not synchronized or dirty editor",
-								"Commit edits or synchronize task before deleting attachments.");
+						"Commit edits or synchronize task before deleting attachments.");
 						return;
 					} else {
 						if (attachmentsTableViewer != null
@@ -2042,6 +2055,19 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		commentsSection.setText(commentsSection.getText() + " (" + taskData.getComments().size() + ")");
 		if (taskData.getComments().size() > 0) {
 			commentsSection.setEnabled(true);
+			commentsSection.addExpansionListener(new ExpansionAdapter() {
+				public void expansionStateChanged(ExpansionEvent e) {
+					if (commentsSection.isExpanded()) {
+						if (supportsCommentSort()) {
+							sortHyperlink.setEnabled(true);
+						}					
+					} else {
+						if (supportsCommentSort()) {
+							sortHyperlink.setEnabled(false);
+						}					
+					}					
+				}
+			});
 
 			final Composite commentsSectionClient = toolkit.createComposite(commentsSection);
 			RowLayout rowLayout = new RowLayout();
@@ -2051,6 +2077,20 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			rowLayout.marginTop = 0;
 			commentsSectionClient.setLayout(rowLayout);
 			commentsSectionClient.setBackground(null);
+
+			if (supportsCommentSort()) {
+				sortHyperlink = new ImageHyperlink(commentsSectionClient, SWT.NONE);
+				sortHyperlink.setToolTipText("Change order of comments");
+				toolkit.adapt(sortHyperlink, true, true);
+				sortHyperlink.setBackground(null);
+
+				sortHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+					public void linkActivated(HyperlinkEvent e) {
+						sortComments();
+					}
+				});
+				sortHyperlink.setEnabled(false);
+			}
 
 			ImageHyperlink collapseAllHyperlink = new ImageHyperlink(commentsSectionClient, SWT.NONE);
 			collapseAllHyperlink.setToolTipText("Collapse All Comments");
@@ -2073,6 +2113,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					BusyIndicator.showWhile(getControl().getDisplay(), new Runnable() {
 						public void run() {
 							revealAllComments();
+							if (supportsCommentSort()) {
+								sortHyperlink.setEnabled(true);
+							}
 						}
 					});
 				}
@@ -2083,7 +2126,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 
 		// Additional (read-only) Comments Area
-		final Composite addCommentsComposite = toolkit.createComposite(commentsSection);
+		addCommentsComposite = toolkit.createComposite(commentsSection);
 		commentsSection.setClient(addCommentsComposite);
 		GridLayout addCommentsLayout = new GridLayout();
 		addCommentsLayout.numColumns = 1;
@@ -2249,19 +2292,38 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				toggleExpandableComposite(true, expandableComposite);
 				foundNew = true;
 			}
-			
+
+		}
+		if (supportsCommentSort()) {
+			if (commentSortIsDown) {
+				sortHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.SORT_COMMENT_DOWN));
+			} else {
+				commentSortIsDown = !commentSortIsDown;
+				sortComments();
+			}
 		}
 		if (foundNew) {
 			commentsSection.setExpanded(true);
+			if (supportsCommentSort()) {
+				sortHyperlink.setEnabled(true);
+			}
 		} else if (taskData.getComments() == null || taskData.getComments().size() == 0) {
-			//commentsSection.setExpanded(false);
+			if (supportsCommentSort()) {
+				sortHyperlink.setEnabled(false);
+			}
 		} else if (editorInput.getTaskData() != null && editorInput.getOldTaskData() != null) {
 			List<TaskComment> newTaskComments = editorInput.getTaskData().getComments();
 			List<TaskComment> oldTaskComments = editorInput.getOldTaskData().getComments();
 			if (newTaskComments == null || oldTaskComments == null) {
 				commentsSection.setExpanded(true);
+				if (supportsCommentSort()) {
+					sortHyperlink.setEnabled(true);
+				}
 			} else if (newTaskComments.size() != oldTaskComments.size()) {
 				commentsSection.setExpanded(true);
+				if (supportsCommentSort()) {
+					sortHyperlink.setEnabled(true);
+				}
 			}
 		}
 	}
@@ -2594,7 +2656,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected Section createSection(Composite composite, String title) {
 		return createSection(composite, title, true);
 	}
-	
+
 	/**
 	 * @Since 2.3
 	 */
@@ -2734,6 +2796,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	@Override
 	public void dispose() {
+		TasksUiPlugin.getDefault().getPreferenceStore().setValue(PREF_SORT_ORDER_PREFIX+repository.getConnectorKind(), commentSortIsDown);	
 		TasksUiPlugin.getTaskListManager().getTaskList().removeChangeListener(TASKLIST_CHANGE_LISTENER);
 		getSite().getPage().removeSelectionListener(selectionListener);
 		if (waitCursor != null) {
@@ -2780,9 +2843,15 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		try {
 			form.setRedraw(false);
 			refreshEnabled = false;
+			if (supportsCommentSort()) {
+				sortHyperlink.setEnabled(false);
+			}
 
 			if (commentsSection != null && !commentsSection.isExpanded()) {
 				commentsSection.setExpanded(true);
+				if (supportsCommentSort()) {
+					sortHyperlink.setEnabled(true);
+				}
 			}
 			for (ExpandableComposite composite : commentComposites) {
 				if (composite.isDisposed())
@@ -2856,6 +2925,24 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		} finally {
 			refreshEnabled = true;
 		}
+		resetLayout();
+	}
+
+	private void sortComments() {
+		if (addCommentsComposite != null) {
+			Control[] commentControlList = addCommentsComposite.getChildren();
+			int commentControlListLength = commentControlList.length;
+			for (int i = 1; i < commentControlListLength; i++)
+				commentControlList[commentControlListLength-i].moveAbove(commentControlList[0]);
+		}
+		if (sortHyperlink != null) {
+			if (commentSortIsDown) {
+				sortHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.SORT_COMMENT_UP));
+			} else {
+				sortHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.SORT_COMMENT_DOWN));
+			}
+		}
+		commentSortIsDown = !commentSortIsDown;
 		resetLayout();
 	}
 
@@ -3387,7 +3474,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 							throw new CoreException(
 									new RepositoryStatus(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 											RepositoryStatus.ERROR_INTERNAL,
-											"Task could not be created. No additional information was provided by the connector."));
+									"Task could not be created. No additional information was provided by the connector."));
 						}
 					} else {
 						modifiedTask = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(),
@@ -3407,23 +3494,23 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						TasksUiPlugin.getSynchronizationManager().synchronize(connector, modifiedTask, true,
 								new JobChangeAdapter() {
 
-									@Override
-									public void done(IJobChangeEvent event) {
+							@Override
+							public void done(IJobChangeEvent event) {
 
-										if (isNew) {
-											close();
-											TasksUiPlugin.getSynchronizationManager().setTaskRead(finalModifiedTask,
-													true);
-											TasksUiUtil.openEditor(finalModifiedTask, false);
-										} else {
-											PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-												public void run() {
-													refreshEditor();
-												}
-											});
+								if (isNew) {
+									close();
+									TasksUiPlugin.getSynchronizationManager().setTaskRead(finalModifiedTask,
+											true);
+									TasksUiUtil.openEditor(finalModifiedTask, false);
+								} else {
+									PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+										public void run() {
+											refreshEditor();
 										}
-									}
-								});
+									});
+								}
+							}
+						});
 						TasksUiPlugin.getSynchronizationScheduler().synchNow(0, Collections.singletonList(repository),
 								false);
 					} else {
