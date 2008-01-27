@@ -106,6 +106,11 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		// config.setRightImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT));
 		// compareInput = new BugzillaCompareInput(config);
 	}
+	
+	@Override
+	protected boolean supportsCommentSort() {
+		return true;
+	}
 
 	@Override
 	protected void createCustomAttributeLayout(Composite composite) {

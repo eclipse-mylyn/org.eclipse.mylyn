@@ -575,7 +575,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	protected boolean supportsCommentSort() {
-		return true;
+		return false;
 	}
 	
 
