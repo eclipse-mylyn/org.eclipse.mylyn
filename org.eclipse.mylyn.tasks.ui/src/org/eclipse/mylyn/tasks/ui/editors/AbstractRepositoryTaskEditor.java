@@ -2053,6 +2053,30 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected void createCommentLayout(Composite composite) {
 		commentsSection = createSection(composite, getSectionLabel(SECTION_NAME.COMMENTS_SECTION), false);
 		commentsSection.setText(commentsSection.getText() + " (" + taskData.getComments().size() + ")");
+		
+		final Composite commentsSectionClient = toolkit.createComposite(commentsSection);
+		RowLayout rowLayout = new RowLayout();
+		rowLayout.pack = true;
+		rowLayout.marginLeft = 0;
+		rowLayout.marginBottom = 0;
+		rowLayout.marginTop = 0;
+		commentsSectionClient.setLayout(rowLayout);
+		commentsSectionClient.setBackground(null);
+		
+		if (supportsCommentSort()) {
+			sortHyperlink = new ImageHyperlink(commentsSectionClient, SWT.NONE);
+			sortHyperlink.setToolTipText("Change order of comments");
+			toolkit.adapt(sortHyperlink, true, true);
+			sortHyperlink.setBackground(null);
+
+			sortHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+				public void linkActivated(HyperlinkEvent e) {
+					sortComments();
+				}
+			});
+			sortHyperlink.setEnabled(false);
+		}
+		
 		if (taskData.getComments().size() > 0) {
 			commentsSection.setEnabled(true);
 			commentsSection.addExpansionListener(new ExpansionAdapter() {
@@ -2069,28 +2093,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				}
 			});
 
-			final Composite commentsSectionClient = toolkit.createComposite(commentsSection);
-			RowLayout rowLayout = new RowLayout();
-			rowLayout.pack = true;
-			rowLayout.marginLeft = 0;
-			rowLayout.marginBottom = 0;
-			rowLayout.marginTop = 0;
-			commentsSectionClient.setLayout(rowLayout);
-			commentsSectionClient.setBackground(null);
 
-			if (supportsCommentSort()) {
-				sortHyperlink = new ImageHyperlink(commentsSectionClient, SWT.NONE);
-				sortHyperlink.setToolTipText("Change order of comments");
-				toolkit.adapt(sortHyperlink, true, true);
-				sortHyperlink.setBackground(null);
-
-				sortHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
-					public void linkActivated(HyperlinkEvent e) {
-						sortComments();
-					}
-				});
-				sortHyperlink.setEnabled(false);
-			}
 
 			ImageHyperlink collapseAllHyperlink = new ImageHyperlink(commentsSectionClient, SWT.NONE);
 			collapseAllHyperlink.setToolTipText("Collapse All Comments");
@@ -2144,7 +2147,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			expandableComposite.setTitleBarForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 
 			final Composite toolbarComp = toolkit.createComposite(expandableComposite);
-			RowLayout rowLayout = new RowLayout();
+			rowLayout = new RowLayout();
 			rowLayout.pack = true;
 			rowLayout.marginLeft = 0;
 			rowLayout.marginBottom = 0;
