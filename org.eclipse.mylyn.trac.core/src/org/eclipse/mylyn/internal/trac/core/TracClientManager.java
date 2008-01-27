@@ -48,6 +48,7 @@ public class TracClientManager implements ITaskRepositoryListener {
 		readCache();
 	}
 
+	// API 3.0 rename to getTracClient
 	public synchronized ITracClient getRepository(TaskRepository taskRepository) {
 		ITracClient repository = clientByUrl.get(taskRepository.getUrl());
 		if (repository == null) {

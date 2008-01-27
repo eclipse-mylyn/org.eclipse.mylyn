@@ -127,6 +127,23 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 			}
 		}
 
+		/** 
+		 * @since 2.3
+		 */
+		public static PriorityLevel fromLevel(int level) {
+			if (level <= 1)
+				return P1;
+			if (level == 2)
+				return P2;
+			if (level == 3)
+				return P3;
+			if (level == 4)
+				return P4;
+			if (level >= 5)
+				return P5;
+			return getDefault();
+		}
+		
 		public static PriorityLevel fromString(String string) {
 			if (string.equals("P1"))
 				return P1;
@@ -141,6 +158,7 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 			return getDefault();
 		}
 
+		
 		public static PriorityLevel fromDescription(String string) {
 			if (string == null)
 				return null;

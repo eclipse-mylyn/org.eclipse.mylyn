@@ -22,9 +22,9 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.web.core.AuthenticationCredentials;
 import org.eclipse.mylyn.web.core.AuthenticationType;
 import org.eclipse.mylyn.web.core.WebClientUtil;
-import org.eclipse.mylyn.web.core.AuthenticationCredentials;
 
 /**
  * Note that task repositories use Strings for storing time stamps because using Date objects led to the following
@@ -44,6 +44,7 @@ import org.eclipse.mylyn.web.core.AuthenticationCredentials;
  * @author Steffen Pingel
  * @since 2.0
  */
+// API-3.0 make this class final
 public class TaskRepository extends PlatformObject {
 
 	public static final String DEFAULT_CHARACTER_ENCODING = "UTF-8";

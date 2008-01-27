@@ -16,6 +16,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 
 /**
  * @author Mik Kersten
+ * @author Steffen Pingel
  */
 public class TaskTest extends TestCase {
 
@@ -55,5 +56,18 @@ public class TaskTest extends TestCase {
 		assertNotNull(def);
 		assertEquals(def, AbstractTask.PriorityLevel.fromDescription("garbage"));
 		assertEquals(def, AbstractTask.PriorityLevel.fromString("garbage"));
+	}
+
+	public void testPriorityLevelFromLevel() {
+		assertEquals(PriorityLevel.P1, PriorityLevel.fromLevel(Integer.MIN_VALUE));
+		assertEquals(PriorityLevel.P1, PriorityLevel.fromLevel(-1));
+		assertEquals(PriorityLevel.P1, PriorityLevel.fromLevel(0));
+		assertEquals(PriorityLevel.P1, PriorityLevel.fromLevel(1));
+		assertEquals(PriorityLevel.P2, PriorityLevel.fromLevel(2));
+		assertEquals(PriorityLevel.P3, PriorityLevel.fromLevel(3));
+		assertEquals(PriorityLevel.P4, PriorityLevel.fromLevel(4));
+		assertEquals(PriorityLevel.P5, PriorityLevel.fromLevel(5));
+		assertEquals(PriorityLevel.P5, PriorityLevel.fromLevel(6));
+		assertEquals(PriorityLevel.P5, PriorityLevel.fromLevel(Integer.MAX_VALUE));
 	}
 }
