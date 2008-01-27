@@ -20,26 +20,34 @@ public class TracTask extends AbstractTask {
 		DEFECT, ENHANCEMENT, TASK;
 
 		public static Kind fromString(String type) {
-			if (type == null)
+			if (type == null) {
 				return null;
-			if (type.equals("Defect"))
+			}
+			if (type.equals("Defect")) {
 				return DEFECT;
-			if (type.equals("Enhancement"))
+			}
+			if (type.equals("Enhancement")) {
 				return ENHANCEMENT;
-			if (type.equals("Task"))
+			}
+			if (type.equals("Task")) {
 				return TASK;
+			}
 			return null;
 		}
 
 		public static Kind fromType(String type) {
-			if (type == null)
+			if (type == null) {
 				return null;
-			if (type.equals("defect"))
+			}
+			if (type.equals("defect")) {
 				return DEFECT;
-			if (type.equals("enhancement"))
+			}
+			if (type.equals("enhancement")) {
 				return ENHANCEMENT;
-			if (type.equals("task"))
+			}
+			if (type.equals("task")) {
 				return TASK;
+			}
 			return null;
 		}
 
@@ -58,21 +66,26 @@ public class TracTask extends AbstractTask {
 		}
 
 	}
-	
+
 	public enum Status {
 		ASSIGNED, CLOSED, NEW, REOPENED;
 
 		public static Status fromStatus(String status) {
-			if (status == null)
+			if (status == null) {
 				return null;
-			if (status.equals("new"))
+			}
+			if (status.equals("new")) {
 				return NEW;
-			if (status.equals("assigned"))
+			}
+			if (status.equals("assigned")) {
 				return ASSIGNED;
-			if (status.equals("reopened"))
+			}
+			if (status.equals("reopened")) {
 				return REOPENED;
-			if (status.equals("closed"))
+			}
+			if (status.equals("closed")) {
 				return CLOSED;
+			}
 			return null;
 		}
 
@@ -113,21 +126,27 @@ public class TracTask extends AbstractTask {
 		BLOCKER, CRITICAL, MAJOR, MINOR, TRIVIAL;
 
 		public static TracPriorityLevel fromPriority(String priority) {
-			if (priority == null)
+			if (priority == null) {
 				return null;
-			if (priority.equals("blocker"))
+			}
+			if (priority.equals("blocker")) {
 				return BLOCKER;
-			if (priority.equals("critical"))
+			}
+			if (priority.equals("critical")) {
 				return CRITICAL;
-			if (priority.equals("major"))
+			}
+			if (priority.equals("major")) {
 				return MAJOR;
-			if (priority.equals("minor"))
+			}
+			if (priority.equals("minor")) {
 				return MINOR;
-			if (priority.equals("trivial"))
+			}
+			if (priority.equals("trivial")) {
 				return TRIVIAL;
+			}
 			return null;
 		}
-		
+
 		public PriorityLevel toPriorityLevel() {
 			switch (this) {
 			case BLOCKER:
@@ -142,7 +161,7 @@ public class TracTask extends AbstractTask {
 				return PriorityLevel.P5;
 			default:
 				return null;
-			}			
+			}
 		}
 
 		@Override
@@ -162,7 +181,7 @@ public class TracTask extends AbstractTask {
 				return null;
 			}
 		}
-	
+
 	}
 
 	private static int TASK_PRIORITY_LEVELS = 5;
@@ -183,13 +202,13 @@ public class TracTask extends AbstractTask {
 			int range = tracPriorities[tracPriorities.length - 1].getValue() - minValue;
 			for (TracPriority tracPriority : tracPriorities) {
 				if (priority.equals(tracPriority.getName())) {
-					float relativeValue = (float)(tracPriority.getValue() - minValue) / range;
-					int value = (int)(relativeValue * TASK_PRIORITY_LEVELS) + 1;
+					float relativeValue = (float) (tracPriority.getValue() - minValue) / range;
+					int value = (int) (relativeValue * TASK_PRIORITY_LEVELS) + 1;
 					return AbstractTask.PriorityLevel.fromLevel(value).toString();
 				}
 			}
 		}
-		
+
 		return getTaskPriority(priority);
 	}
 
@@ -198,6 +217,8 @@ public class TracTask extends AbstractTask {
 		return status == TracTask.Status.CLOSED;
 	}
 
+	private boolean supportsSubtasks = false;
+	
 	public TracTask(String repositoryUrl, String id, String label) {
 		super(repositoryUrl, id, label);
 		setUrl(repositoryUrl + ITracClient.TICKET_URL + id);
@@ -207,11 +228,18 @@ public class TracTask extends AbstractTask {
 	public String getConnectorKind() {
 		return TracCorePlugin.REPOSITORY_KIND;
 	}
-	
 
 	@Override
 	public boolean isLocal() {
 		return false;
 	}
 
+	public boolean getSupportsSubtasks() {
+		return supportsSubtasks;
+	}
+	
+	public void setSupportsSubtasks(boolean supportsSubtasks) {
+		this.supportsSubtasks = supportsSubtasks;
+	}
+	
 }

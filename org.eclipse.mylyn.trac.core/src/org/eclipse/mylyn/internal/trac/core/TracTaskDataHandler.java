@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,6 +20,7 @@ import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.mylyn.internal.trac.core.TracAttributeFactory.Attribute;
@@ -29,9 +31,11 @@ import org.eclipse.mylyn.internal.trac.core.model.TracTicketField;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylyn.internal.trac.core.util.TracUtils;
 import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryOperation;
+import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskComment;
@@ -41,6 +45,10 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  * @author Steffen Pingel
  */
 public class TracTaskDataHandler extends AbstractTaskDataHandler {
+
+	public static final String ATTRIBUTE_BLOCKED_BY = "blockedby";
+
+	public static final String ATTRIBUTE_BLOCKING = "blocking";
 
 	private static final String CC_DELIMETER = ", ";
 
@@ -359,9 +367,37 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 	}
 
 	@Override
+	public boolean initializeSubTaskData(TaskRepository repository, RepositoryTaskData taskData,
+			RepositoryTaskData parentTaskData, IProgressMonitor monitor) throws CoreException {
+		initializeTaskData(repository, taskData, monitor);
+		RepositoryTaskAttribute attribute = taskData.getAttribute(ATTRIBUTE_BLOCKING);
+		if (attribute == null) {
+			throw new CoreException(new RepositoryStatus(repository, IStatus.ERROR, TracCorePlugin.PLUGIN_ID, RepositoryStatus.ERROR_REPOSITORY, "The repository does not support subtasks"));			
+		}		
+		cloneTaskData(parentTaskData, taskData);
+		taskData.setDescription("");
+		taskData.setSummary("");
+		attribute.setValue(parentTaskData.getId());
+		return true;
+	}
+	
+	@Override
 	public Set<String> getSubTaskIds(RepositoryTaskData taskData) {
-		// TODO Auto-generated method stub
+		RepositoryTaskAttribute attribute = taskData.getAttribute(ATTRIBUTE_BLOCKED_BY);
+		if (attribute != null) {
+			return new HashSet<String>(Arrays.asList(attribute.getValue().split("\\s")));
+		}
 		return Collections.emptySet();
 	}
 
+	@Override
+	public boolean canInitializeSubTaskData(AbstractTask task, RepositoryTaskData parentTaskData) {
+		if (parentTaskData != null) {
+			return parentTaskData.getAttribute(ATTRIBUTE_BLOCKED_BY) != null;
+		} else if (task instanceof TracTask) {
+			return ((TracTask)task).getSupportsSubtasks();
+		}
+		return false;
+	}
+	
 }

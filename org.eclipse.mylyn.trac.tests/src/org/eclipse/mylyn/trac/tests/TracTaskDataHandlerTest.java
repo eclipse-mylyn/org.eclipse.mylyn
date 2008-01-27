@@ -20,9 +20,11 @@ import org.eclipse.mylyn.context.tests.support.TestUtil;
 import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
 import org.eclipse.mylyn.context.tests.support.TestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
+import org.eclipse.mylyn.internal.trac.core.TracAttributeFactory;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
 import org.eclipse.mylyn.internal.trac.core.TracTask;
+import org.eclipse.mylyn.internal.trac.core.TracTaskDataHandler;
 import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
@@ -274,6 +276,48 @@ public class TracTaskDataHandlerTest extends TestCase {
 			assertEquals(RepositoryStatus.ERROR_REPOSITORY_LOGIN, expected.getStatus().getCode());
 		}
 		assertEquals("new comment", taskData.getNewComment());
+	}
+
+	public void testCanInitializeTaskData() throws Exception {
+		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
+
+		TracTask task = new TracTask("", "", "");
+		assertFalse(taskDataHandler.canInitializeSubTaskData(task, null));
+		task.setSupportsSubtasks(true);
+		assertTrue(taskDataHandler.canInitializeSubTaskData(task, null));
+		
+		RepositoryTaskData taskData = taskDataHandler.getTaskData(repository, data.offlineHandlerTicketId + "", new NullProgressMonitor());
+		assertFalse(taskDataHandler.canInitializeSubTaskData(null, taskData));
+		taskData.setAttributeValue(TracTaskDataHandler.ATTRIBUTE_BLOCKED_BY, "");
+		assertTrue(taskDataHandler.canInitializeSubTaskData(null, taskData));
+		
+		task.setSupportsSubtasks(false);
+		connector.updateTaskFromTaskData(repository, task, taskData);
+		assertTrue(taskDataHandler.canInitializeSubTaskData(task, null));	
+	}
+
+	public void testInitializeSubTaskData() throws Exception {
+		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
+
+		RepositoryTaskData parentTaskData = taskDataHandler.getTaskData(repository, data.offlineHandlerTicketId + "", new NullProgressMonitor());
+		try {
+			taskDataHandler.initializeSubTaskData(repository, parentTaskData, parentTaskData, new NullProgressMonitor());
+			fail("expected CoreException");
+		} catch (CoreException expected) {
+		}
+		
+		parentTaskData.setSummary("abc");
+		parentTaskData.setDescription("def");
+		parentTaskData.setAttributeValue(TracAttributeFactory.Attribute.COMPONENT.getTracKey(), "ghi");
+		parentTaskData.setAttributeValue(TracTaskDataHandler.ATTRIBUTE_BLOCKED_BY, "");
+		RepositoryTaskData subTaskData = new RepositoryTaskData(parentTaskData.getAttributeFactory(), "", "", "");
+		subTaskData.setAttributeValue(TracTaskDataHandler.ATTRIBUTE_BLOCKING, "");
+		taskDataHandler.initializeSubTaskData(repository, subTaskData , parentTaskData, new NullProgressMonitor());
+		assertEquals("", subTaskData.getSummary());
+		assertEquals("", subTaskData.getDescription());
+		assertEquals("ghi", subTaskData.getAttributeValue(TracAttributeFactory.Attribute.COMPONENT.getTracKey()));
+		assertEquals(parentTaskData.getId(), subTaskData.getAttributeValue(TracTaskDataHandler.ATTRIBUTE_BLOCKING));
+		assertEquals("", parentTaskData.getAttributeValue(TracTaskDataHandler.ATTRIBUTE_BLOCKED_BY));
 	}
 
 }

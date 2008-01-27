@@ -30,6 +30,8 @@ public class TracTaskListFactory extends AbstractTaskListFactory {
 
 	private static final String KEY_TRAC_QUERY = KEY_TRAC + AbstractTaskListFactory.KEY_QUERY;
 
+	private static final String KEY_SUPPORTS_SUBTASKS = "SupportsSubtasks";
+
 	@Override
 	public String getTaskElementName() {
 		return KEY_TRAC_TASK;
@@ -59,7 +61,14 @@ public class TracTaskListFactory extends AbstractTaskListFactory {
 
 	@Override
 	public AbstractTask createTask(String repositoryUrl, String taskId, String summary, Element element) {
-		return new TracTask(repositoryUrl, taskId, summary);
+		boolean supportsSubtasks = false;
+		if (element.hasAttribute(KEY_SUPPORTS_SUBTASKS)) {
+			supportsSubtasks = Boolean.valueOf(element.getAttribute(KEY_SUPPORTS_SUBTASKS));
+		}
+
+		TracTask task = new TracTask(repositoryUrl, taskId, summary);
+		task.setSupportsSubtasks(supportsSubtasks);
+		return task;
 	}
 
 	@Override

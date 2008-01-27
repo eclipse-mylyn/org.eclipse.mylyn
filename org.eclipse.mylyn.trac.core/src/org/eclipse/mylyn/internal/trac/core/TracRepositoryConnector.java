@@ -153,6 +153,20 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
+	public boolean updateTaskFromQueryHit(TaskRepository repository, AbstractTask existingTask, AbstractTask queryHit) {
+		if (hasRichEditor(repository)) {
+			// handled by updateTaskFromTaskData
+			return false;
+		}
+		
+		boolean changed = super.updateTaskFromQueryHit(repository, existingTask, queryHit);
+		if (existingTask instanceof TracTask) {
+			((TracTask)existingTask).setSupportsSubtasks(false);
+		}
+		return changed;
+	}
+	
+	@Override
 	public IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository, IProgressMonitor monitor,
 			ITaskCollector resultCollector) {
 
@@ -277,23 +291,25 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public void updateTaskFromTaskData(TaskRepository taskRepository, AbstractTask repositoryTask,
+	public void updateTaskFromTaskData(TaskRepository taskRepository, AbstractTask task,
 			RepositoryTaskData taskData) {
 		// API 3.0 taskData should never be null
-		if (taskData != null) {
+		if (taskData != null && task instanceof TracTask) {
 			ITracClient client = getClientManager().getRepository(taskRepository);
 			
-			repositoryTask.setSummary(taskData.getSummary());
-			repositoryTask.setOwner(taskData.getAttributeValue(RepositoryTaskAttribute.USER_ASSIGNED));
-			repositoryTask.setCompleted(TracTask.isCompleted(taskData.getStatus()));
-			repositoryTask.setUrl(taskRepository.getUrl() + ITracClient.TICKET_URL + taskData.getId());
+			task.setSummary(taskData.getSummary());
+			task.setOwner(taskData.getAttributeValue(RepositoryTaskAttribute.USER_ASSIGNED));
+			task.setCompleted(TracTask.isCompleted(taskData.getStatus()));
+			task.setUrl(taskRepository.getUrl() + ITracClient.TICKET_URL + taskData.getId());
 			
 			String priority = taskData.getAttributeValue(Attribute.PRIORITY.getTracKey());
 			TracPriority[] tracPriorities = client.getPriorities();
-			repositoryTask.setPriority(TracTask.getTaskPriority(priority, tracPriorities));
+			task.setPriority(TracTask.getTaskPriority(priority, tracPriorities));
 
 			Kind kind = TracTask.Kind.fromType(taskData.getAttributeValue(Attribute.TYPE.getTracKey()));
-			repositoryTask.setTaskKind((kind != null) ? kind.toString() : null);
+			task.setTaskKind((kind != null) ? kind.toString() : null);
+			
+			((TracTask)task).setSupportsSubtasks(taskDataHandler.canInitializeSubTaskData(null, taskData));
 			// TODO: Completion Date
 		}
 	}
@@ -338,6 +354,8 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			task.setCreationDate(ticket.getCreated());
 		}
 
+		task.setSupportsSubtasks(ticket.getCustomValue(TracTaskDataHandler.ATTRIBUTE_BLOCKING) != null);
+		
 		if (notify) {
 			taskList.notifyTaskChanged(task, false);
 		}
