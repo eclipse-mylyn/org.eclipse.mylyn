@@ -245,7 +245,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			Collection<AbstractTask> allTasks = TasksUiPlugin.getTaskListManager().getTaskList().getAllTasks();
 			Set<AbstractNotification> reminders = new HashSet<AbstractNotification>();
 			for (AbstractTask task : allTasks) {
-				if (task.isPastReminder()) {
+				if (task.isPastReminder() && !task.isReminded()) {
 					reminders.add(new TaskListNotificationReminder(task));
 					task.setReminded(true);
 				}
