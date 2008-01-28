@@ -438,7 +438,7 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 	}
 
 	public boolean isPastReminder() {
-		if (isCompleted() || isReminded() || scheduledForDate == null) {
+		if (isCompleted() || scheduledForDate == null) {
 			return false;
 		} else {
 			Date now = new Date();
