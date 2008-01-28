@@ -2820,7 +2820,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	@Override
 	public void dispose() {
-		TasksUiPlugin.getDefault().getPreferenceStore().setValue(PREF_SORT_ORDER_PREFIX+repository.getConnectorKind(), commentSortIsUp);	
 		TasksUiPlugin.getTaskListManager().getTaskList().removeChangeListener(TASKLIST_CHANGE_LISTENER);
 		getSite().getPage().removeSelectionListener(selectionListener);
 		if (waitCursor != null) {
@@ -2986,6 +2985,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			}
 		}
 		commentSortIsUp = !commentSortIsUp;
+		TasksUiPlugin.getDefault().getPreferenceStore().setValue(PREF_SORT_ORDER_PREFIX+repository.getConnectorKind(), commentSortIsUp);
 		sortHyperlinkState(commentSortEnable);
 		resetLayout();
 	}
