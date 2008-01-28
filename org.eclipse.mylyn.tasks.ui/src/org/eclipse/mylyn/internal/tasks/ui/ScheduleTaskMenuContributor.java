@@ -91,7 +91,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 		subMenuManager.add(action);
 
 		if (singleTaskSelection != null && (TasksUiPlugin.getTaskListManager().isScheduledForToday(singleTaskSelection)
-				|| (singleTaskSelection.isPastReminder() && !singleTaskSelection.internalIsFloatingScheduledDate()))) {
+				|| (singleTaskSelection.isPastReminder()))) {
 			action.setChecked(true);
 		}
 

@@ -539,7 +539,7 @@ public class TaskActivityManager {
 	public boolean isScheduledForToday(AbstractTask task) {
 		if (task != null) {
 			Date reminder = task.getScheduledForDate();
-			if (reminder != null) {
+			if (reminder != null && !task.internalIsFloatingScheduledDate()) {
 				Calendar time = TaskActivityUtil.getCalendar();
 				time.setTime(reminder);
 				return TaskActivityUtil.isToday(time);

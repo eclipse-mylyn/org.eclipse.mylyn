@@ -425,7 +425,7 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 			return false;
 		} else {
 			Date now = new Date();
-			if (scheduledForDate.compareTo(now) < 0) {
+			if (!internalIsFloatingScheduledDate() && scheduledForDate.compareTo(now) < 0) {
 				return true;
 			} else {
 				return false;
