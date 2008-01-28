@@ -186,14 +186,18 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		}
 
 		public static TaskListSaveMode fromString(String string) {
-			if (string == null)
+			if (string == null) {
 				return null;
-			if (string.equals("1 hour"))
+			}
+			if (string.equals("1 hour")) {
 				return ONE_HOUR;
-			if (string.equals("3 hours"))
+			}
+			if (string.equals("3 hours")) {
 				return THREE_HOURS;
-			if (string.equals("1 day"))
+			}
+			if (string.equals("1 day")) {
 				return DAY;
+			}
 			return null;
 		}
 
@@ -238,12 +242,10 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	private static ITaskListNotificationProvider REMINDER_NOTIFICATION_PROVIDER = new ITaskListNotificationProvider() {
 
 		public Set<AbstractNotification> getNotifications() {
-			Date currentDate = new Date();
 			Collection<AbstractTask> allTasks = TasksUiPlugin.getTaskListManager().getTaskList().getAllTasks();
 			Set<AbstractNotification> reminders = new HashSet<AbstractNotification>();
 			for (AbstractTask task : allTasks) {
-				if (!task.isCompleted() && task.getScheduledForDate() != null && !task.isReminded()
-						&& task.getScheduledForDate().compareTo(currentDate) < 0) {
+				if (task.isPastReminder()) {
 					reminders.add(new TaskListNotificationReminder(task));
 					task.setReminded(true);
 				}
@@ -756,8 +758,9 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	}
 
 	public void addContextEditor(AbstractTaskEditorFactory contextEditor) {
-		if (contextEditor != null)
+		if (contextEditor != null) {
 			this.taskEditorFactories.add(contextEditor);
+		}
 	}
 
 	public static TaskRepositoryManager getRepositoryManager() {
@@ -789,13 +792,15 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	}
 
 	public void addTaskHyperlinkDetector(IHyperlinkDetector listener) {
-		if (listener != null)
+		if (listener != null) {
 			this.hyperlinkDetectors.add(listener);
+		}
 	}
 
 	public void addRepositoryLinkProvider(AbstractTaskRepositoryLinkProvider repositoryLinkProvider) {
-		if (repositoryLinkProvider != null)
+		if (repositoryLinkProvider != null) {
 			this.repositoryLinkProviders.add(repositoryLinkProvider);
+		}
 	}
 
 	public TaskListBackupManager getBackupManager() {

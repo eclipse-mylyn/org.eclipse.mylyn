@@ -223,8 +223,9 @@ public class TaskActivityManager {
 		long attentionSpan = event.getEndDate().getTime() - event.getDate().getTime();
 
 		// Ignore any potential negative or zero times
-		if (attentionSpan <= 0)
+		if (attentionSpan <= 0) {
 			return;
+		}
 
 		// granularity to the hour
 		Calendar hourOfDay = Calendar.getInstance();
@@ -465,8 +466,9 @@ public class TaskActivityManager {
 	
 	public void setScheduledFor(AbstractTask task, Date reminderDate, boolean floating) {
 		// API-3.0: remove check
-		if (task == null)
+		if (task == null) {
 			return;
+		}
 		
 		if (reminderDate != null && !reminderDate.equals(task.getScheduledForDate())) {
 			task.setReminded(false);

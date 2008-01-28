@@ -131,47 +131,63 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 		 * @since 2.3
 		 */
 		public static PriorityLevel fromLevel(int level) {
-			if (level <= 1)
+			if (level <= 1) {
 				return P1;
-			if (level == 2)
+			}
+			if (level == 2) {
 				return P2;
-			if (level == 3)
+			}
+			if (level == 3) {
 				return P3;
-			if (level == 4)
+			}
+			if (level == 4) {
 				return P4;
-			if (level >= 5)
+			}
+			if (level >= 5) {
 				return P5;
+			}
 			return getDefault();
 		}
 		
 		public static PriorityLevel fromString(String string) {
-			if (string.equals("P1"))
+			if (string.equals("P1")) {
 				return P1;
-			if (string.equals("P2"))
+			}
+			if (string.equals("P2")) {
 				return P2;
-			if (string.equals("P3"))
+			}
+			if (string.equals("P3")) {
 				return P3;
-			if (string.equals("P4"))
+			}
+			if (string.equals("P4")) {
 				return P4;
-			if (string.equals("P5"))
+			}
+			if (string.equals("P5")) {
 				return P5;
+			}
 			return getDefault();
 		}
 
 		
 		public static PriorityLevel fromDescription(String string) {
-			if (string == null)
+			if (string == null) {
 				return null;
-			if (string.equals("Very High"))
+			}
+			if (string.equals("Very High")) {
 				return P1;
-			if (string.equals("High"))
+			}
+			if (string.equals("High")) {
 				return P2;
-			if (string.equals("Normal"))
+			}
+			if (string.equals("Normal")) {
 				return P3;
-			if (string.equals("Low"))
+			}
+			if (string.equals("Low")) {
 				return P4;
-			if (string.equals("Very Low"))
+			}
+			if (string.equals("Very Low")) {
 				return P5;
+			}
 			return getDefault();
 		}
 
@@ -403,8 +419,9 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 	}
 
 	public Date getCreationDate() {
-		if (creationDate == null)
+		if (creationDate == null) {
 			creationDate = new Date();
+		}
 		return creationDate;
 	}
 
@@ -421,7 +438,7 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 	}
 
 	public boolean isPastReminder() {
-		if (scheduledForDate == null) {
+		if (isCompleted() || isReminded() || scheduledForDate == null) {
 			return false;
 		} else {
 			Date now = new Date();
