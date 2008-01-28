@@ -76,6 +76,10 @@ public class TasksUiImages {
 	public static final ImageDescriptor SORT_COMMENT_DOWN = create(T_TOOL, "sort-down.gif");
 
 	public static final ImageDescriptor SORT_COMMENT_UP = create(T_TOOL, "sort-up.gif");
+
+	public static final ImageDescriptor SORT_COMMENT_DOWN_GRAY = create(T_TOOL, "sort-down-gray.gif");
+
+	public static final ImageDescriptor SORT_COMMENT_UP_GRAY = create(T_TOOL, "sort-up-gray.gif");
 	
 	public static final ImageDescriptor TASKLIST = create("eview16", "task-list.gif");
 

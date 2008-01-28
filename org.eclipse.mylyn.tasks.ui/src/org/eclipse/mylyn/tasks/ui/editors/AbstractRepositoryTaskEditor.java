@@ -296,6 +296,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private boolean commentSortIsUp = true;
 
+	private boolean commentSortEnable = false;
+
 	private Composite addCommentsComposite;
 
 	/**
@@ -2088,7 +2090,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					sortComments();
 				}
 			});
-			sortHyperlink.setEnabled(false);
+			sortHyperlinkState(false);
 		}
 		
 		if (taskData.getComments().size() > 0) {
@@ -2098,11 +2100,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				public void expansionStateChanged(ExpansionEvent e) {
 					if (commentsSection.isExpanded()) {
 						if (supportsCommentSort()) {
-							sortHyperlink.setEnabled(true);
+							sortHyperlinkState(true);
 						}					
 					} else {
 						if (supportsCommentSort()) {
-							sortHyperlink.setEnabled(false);
+							sortHyperlinkState(false);
 						}					
 					}					
 				}
@@ -2134,7 +2136,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						public void run() {
 							revealAllComments();
 							if (supportsCommentSort()) {
-								sortHyperlink.setEnabled(true);
+								sortHyperlinkState(true);
 							}
 						}
 					});
@@ -2320,17 +2322,17 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				commentSortIsUp = !commentSortIsUp;
 				sortComments();				
 			} else {
-				sortHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.SORT_COMMENT_DOWN));
+				sortHyperlinkState(commentSortEnable);
 			}
 		}
 		if (foundNew) {
 			commentsSection.setExpanded(true);
 			if (supportsCommentSort()) {
-				sortHyperlink.setEnabled(true);
+				sortHyperlinkState(true);
 			}
 		} else if (taskData.getComments() == null || taskData.getComments().size() == 0) {
 			if (supportsCommentSort()) {
-				sortHyperlink.setEnabled(false);
+				sortHyperlinkState(false);
 			}
 		} else if (editorInput.getTaskData() != null && editorInput.getOldTaskData() != null) {
 			List<TaskComment> newTaskComments = editorInput.getTaskData().getComments();
@@ -2338,12 +2340,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			if (newTaskComments == null || oldTaskComments == null) {
 				commentsSection.setExpanded(true);
 				if (supportsCommentSort()) {
-					sortHyperlink.setEnabled(true);
+					sortHyperlinkState(true);
 				}
 			} else if (newTaskComments.size() != oldTaskComments.size()) {
 				commentsSection.setExpanded(true);
 				if (supportsCommentSort()) {
-					sortHyperlink.setEnabled(true);
+					sortHyperlinkState(true);
 				}
 			}
 		}
@@ -2866,13 +2868,13 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			form.setRedraw(false);
 			refreshEnabled = false;
 			if (supportsCommentSort()) {
-				sortHyperlink.setEnabled(false);
+				sortHyperlinkState(false);
 			}
 
 			if (commentsSection != null && !commentsSection.isExpanded()) {
 				commentsSection.setExpanded(true);
 				if (supportsCommentSort()) {
-					sortHyperlink.setEnabled(true);
+					sortHyperlinkState(true);
 				}
 			}
 			for (ExpandableComposite composite : commentComposites) {
@@ -2952,6 +2954,29 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		resetLayout();
 	}
 
+	private void sortHyperlinkState(boolean enabled) {
+		commentSortEnable = enabled;
+
+		if (sortHyperlink == null) {
+			return;
+		}
+
+		sortHyperlink.setEnabled(enabled);
+		if (enabled) {
+			if (commentSortIsUp) {
+				sortHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.SORT_COMMENT_UP));
+			} else {
+				sortHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.SORT_COMMENT_DOWN));
+			}
+		} else {
+			if (commentSortIsUp) {
+				sortHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.SORT_COMMENT_UP_GRAY));				
+			} else {
+				sortHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.SORT_COMMENT_DOWN_GRAY));
+			}
+		}
+	}
+	
 	private void sortComments() {
 		if (addCommentsComposite != null) {
 			Control[] commentControlList = addCommentsComposite.getChildren();
@@ -2960,14 +2985,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				commentControlList[commentControlListLength-i].moveAbove(commentControlList[0]);
 			}
 		}
-		if (sortHyperlink != null) {
-			if (commentSortIsUp) {
-				sortHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.SORT_COMMENT_DOWN));				
-			} else {
-				sortHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.SORT_COMMENT_UP));
-			}
-		}
 		commentSortIsUp = !commentSortIsUp;
+		sortHyperlinkState(commentSortEnable);
 		resetLayout();
 	}
 
