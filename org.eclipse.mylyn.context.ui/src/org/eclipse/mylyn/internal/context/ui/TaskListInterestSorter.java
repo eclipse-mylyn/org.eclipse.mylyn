@@ -10,9 +10,9 @@ package org.eclipse.mylyn.internal.context.ui;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskKeyComparator;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListTableSorter;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -46,6 +46,11 @@ public class TaskListInterestSorter extends ViewerSorter {
 		if (o1 instanceof ScheduledTaskContainer && o2 instanceof ScheduledTaskContainer) {
 			ScheduledTaskContainer dateRangeTaskContainer1 = (ScheduledTaskContainer) o1;
 			ScheduledTaskContainer dateRangeTaskContainer2 = (ScheduledTaskContainer) o2;
+			if (dateRangeTaskContainer1.isCaptureFloating() && !dateRangeTaskContainer2.isCaptureFloating()) {
+				return 1;
+			} else if (!dateRangeTaskContainer1.isCaptureFloating() && dateRangeTaskContainer2.isCaptureFloating()) {
+				return -1;
+			}
 			return -1 * dateRangeTaskContainer2.getStart().compareTo(dateRangeTaskContainer1.getStart());
 		} else if (o1 instanceof AbstractTaskContainer && o2 instanceof ScheduledTaskContainer) {
 			return -1;
