@@ -427,7 +427,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		toolkit.paintBordersFor(summaryComposite);
 
 		Composite statusComposite = toolkit.createComposite(parent);
-		GridLayout compLayout = new GridLayout(7, false);
+		GridLayout compLayout = new GridLayout(8, false);
 		compLayout.verticalSpacing = 0;
 		compLayout.horizontalSpacing = 5;
 		compLayout.marginHeight = 3;
