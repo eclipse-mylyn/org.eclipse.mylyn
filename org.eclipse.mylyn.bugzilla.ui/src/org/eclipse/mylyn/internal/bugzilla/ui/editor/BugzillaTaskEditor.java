@@ -109,7 +109,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 	
 	@Override
 	protected boolean supportsCommentSort() {
-		return false;
+		return true;
 	}
 
 	@Override
