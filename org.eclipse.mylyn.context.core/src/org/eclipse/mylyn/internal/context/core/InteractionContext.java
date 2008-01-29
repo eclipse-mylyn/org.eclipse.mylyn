@@ -51,8 +51,9 @@ public class InteractionContext implements IInteractionContext {
 	void parseInteractionHistory() {
 		elementMap = new ConcurrentHashMap<String, InteractionContextElement>();
 		landmarkMap = new HashMap<String, IInteractionElement>();
-		for (InteractionEvent event : interactionHistory)
+		for (InteractionEvent event : interactionHistory) {
 			parseInteractionEvent(event);
+		}
 		updateLandmarks();
 		activeNode = lastEdgeNode;
 	}
@@ -72,7 +73,7 @@ public class InteractionContext implements IInteractionContext {
 	 * Propagations and predictions are not added as edges
 	 */
 	private IInteractionElement parseInteractionEvent(InteractionEvent event) {
-		if (event.getStructureHandle() == null) {
+		if (event.getStructureHandle() == null || event.getKind() == null) {
 			return null;
 		}
 
@@ -121,8 +122,9 @@ public class InteractionContext implements IInteractionContext {
 	private void updateLandmarks() {
 		// landmarks = new HashMap<String, ITaskscapeNode>();
 		for (InteractionContextElement node : elementMap.values()) {
-			if (node.getInterest().isLandmark())
+			if (node.getInterest().isLandmark()) {
 				landmarkMap.put(node.getHandleIdentifier(), node);
+			}
 		}
 	}
 
@@ -228,23 +230,30 @@ public class InteractionContext implements IInteractionContext {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		InteractionContext other = (InteractionContext) obj;
 		if (contentLimitedTo == null) {
-			if (other.contentLimitedTo != null)
+			if (other.contentLimitedTo != null) {
 				return false;
-		} else if (!contentLimitedTo.equals(other.contentLimitedTo))
+			}
+		} else if (!contentLimitedTo.equals(other.contentLimitedTo)) {
 			return false;
+		}
 		if (handleIdentifier == null) {
-			if (other.handleIdentifier != null)
+			if (other.handleIdentifier != null) {
 				return false;
-		} else if (!handleIdentifier.equals(other.handleIdentifier))
+			}
+		} else if (!handleIdentifier.equals(other.handleIdentifier)) {
 			return false;
+		}
 		return true;
 	}
 
