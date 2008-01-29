@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -52,6 +53,7 @@ import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.PlatformUI;
@@ -334,7 +336,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 				for (TaskContainerDelta taskContainerDelta : containers) {
 					if (taskContainerDelta.getContainer() instanceof AbstractTask) {
 						final AbstractTask changedTask = (AbstractTask) (taskContainerDelta.getContainer());
-						if (PlatformUI.getWorkbench().getDisplay() == null) {
+						if (Platform.isRunning() && PlatformUI.getWorkbench() != null && Display.getCurrent() == null) {
 							PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 
 								public void run() {
@@ -343,7 +345,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 									}
 								}
 							});
-						} else {
+						} else if(Display.getCurrent() != null){
 							if (changedTask.isActive()) {
 								indicateActiveTask(changedTask);
 							}
@@ -457,13 +459,16 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 	}
 
 	public void indicateActiveTask(AbstractTask task) {
-		if (filterComposite.isDisposed()) {
-			return;
+		if (Display.getCurrent() != null) {
+
+			if (filterComposite.isDisposed()) {
+				return;
+			}
+
+			activeTaskLink.setTask(task);
+
+			filterComposite.layout();
 		}
-
-		activeTaskLink.setTask(task);
-
-		filterComposite.layout();
 	}
 
 	public String getActiveTaskLabelText() {
