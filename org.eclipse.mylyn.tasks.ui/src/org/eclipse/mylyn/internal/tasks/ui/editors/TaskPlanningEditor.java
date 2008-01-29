@@ -22,7 +22,9 @@ import org.eclipse.jface.text.TextViewer;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
+import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.ui.RetrieveTitleFromUrlJob;
+import org.eclipse.mylyn.internal.tasks.ui.ScheduleDatePicker;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
@@ -111,7 +113,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private DatePicker dueDatePicker;
 
-	private DatePicker scheduledDatePicker;
+	private ScheduleDatePicker scheduleDatePicker;
 
 	private AbstractTask task;
 
@@ -180,18 +182,17 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	/** public for testing */
 	public void updateTaskData(final AbstractTask updateTask) {
-		if (scheduledDatePicker != null && !scheduledDatePicker.isDisposed()) {
+		if (scheduleDatePicker != null && !scheduleDatePicker.isDisposed()) {
 			if (updateTask.getScheduledForDate() != null) {
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(updateTask.getScheduledForDate());
-				scheduledDatePicker.setDate(cal);
+				scheduleDatePicker.setScheduledDate(updateTask.getScheduledForDate());
 			} else {
-				scheduledDatePicker.setDate(null);
+				scheduleDatePicker.setScheduledDate(null);
 			}
 		}
 
-		if (summaryEditor == null)
+		if (summaryEditor == null) {
 			return;
+		}
 
 		if (!summaryEditor.getTextWidget().isDisposed()) {
 			if (!summaryEditor.getTextWidget().getText().equals(updateTask.getSummary())) {
@@ -248,8 +249,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 		String note = noteEditor.getTextWidget().getText();// notes.getText();
 		task.setNotes(note);
 		task.setEstimatedTimeHours(estimated.getSelection());
-		if (scheduledDatePicker != null && scheduledDatePicker.getDate() != null) {
-			TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, scheduledDatePicker.getDate().getTime());
+		if (scheduleDatePicker != null && scheduleDatePicker.getScheduledDate() != null) {
+			TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, scheduleDatePicker.getScheduledDate(), scheduleDatePicker.isFloatingDate());				
 		} else {
 			TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, null);
 		}
@@ -656,16 +657,14 @@ public class TaskPlanningEditor extends TaskFormPage {
 		Label label = toolkit.createLabel(nameValueComp, LABEL_SCHEDULE);
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 
-		scheduledDatePicker = new DatePicker(nameValueComp, SWT.FLAT, DatePicker.LABEL_CHOOSE, false);
-		scheduledDatePicker.setDatePattern("yyyy-MM-dd");
-		Calendar calendar = Calendar.getInstance();
-		if (task.getScheduledForDate() != null) {
-			calendar.setTime(task.getScheduledForDate());
-			scheduledDatePicker.setDate(calendar);
-		}
+		scheduleDatePicker = new ScheduleDatePicker(nameValueComp, task, SWT.FLAT);
+		scheduleDatePicker.setDatePattern("yyyy-MM-dd");
+		scheduleDatePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+		toolkit.adapt(scheduleDatePicker, true, true);
+		toolkit.paintBordersFor(nameValueComp);
 
-		scheduledDatePicker.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-		scheduledDatePicker.addPickerSelectionListener(new SelectionListener() {
+		scheduleDatePicker.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+		scheduleDatePicker.addPickerSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent arg0) {
 				TaskPlanningEditor.this.markDirty(true);
 			}
@@ -675,30 +674,13 @@ public class TaskPlanningEditor extends TaskFormPage {
 			}
 		});
 
-		scheduledDatePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-		toolkit.adapt(scheduledDatePicker, true, true);
-		toolkit.paintBordersFor(nameValueComp);
-
-		ImageHyperlink clearScheduledDate = toolkit.createImageHyperlink(nameValueComp, SWT.NONE);
-		clearScheduledDate.setImage(TasksUiImages.getImage(TasksUiImages.REMOVE));
-		clearScheduledDate.setToolTipText(CLEAR);
-		clearScheduledDate.addHyperlinkListener(new HyperlinkAdapter() {
-
-			@Override
-			public void linkActivated(HyperlinkEvent e) {
-				scheduledDatePicker.setDate(null);
-				task.setReminded(false);
-				TaskPlanningEditor.this.markDirty(true);
-			}
-		});
-
 		nameValueComp = makeComposite(sectionClient, 3);
 		label = toolkit.createLabel(nameValueComp, LABEL_DUE);
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 
 		dueDatePicker = new DatePicker(nameValueComp, SWT.FLAT, DatePicker.LABEL_CHOOSE);
-
-		calendar = Calendar.getInstance();
+		
+		Calendar calendar = TaskActivityUtil.getCalendar();
 
 		if (task.getDueDate() != null) {
 			calendar.setTime(task.getDueDate());
@@ -784,8 +766,9 @@ public class TaskPlanningEditor extends TaskFormPage {
 		try {
 			elapsedTimeString = DateUtil.getFormattedDuration(TasksUiPlugin.getTaskActivityManager().getElapsedTime(
 					task), false);
-			if (elapsedTimeString.equals(""))
+			if (elapsedTimeString.equals("")) {
 				elapsedTimeString = NO_TIME_ELAPSED;
+			}
 		} catch (RuntimeException e) {
 			StatusHandler.fail(e, "Could not format elapsed time", true);
 		}
@@ -894,10 +877,12 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private String getTaskDateString(AbstractTask task) {
 
-		if (task == null)
+		if (task == null) {
 			return "";
-		if (task.getCompletionDate() == null)
+		}
+		if (task.getCompletionDate() == null) {
 			return "";
+		}
 
 		String completionDateString = "";
 		try {

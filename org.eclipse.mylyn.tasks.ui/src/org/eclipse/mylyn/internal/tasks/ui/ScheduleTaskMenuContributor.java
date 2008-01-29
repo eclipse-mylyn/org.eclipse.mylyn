@@ -78,10 +78,10 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 			@Override
 			public void run() {
 				Calendar reminderCalendar = GregorianCalendar.getInstance();
-				TasksUiPlugin.getTaskListManager().setScheduledEndOfDay(reminderCalendar);
+				TaskActivityUtil.snapEndOfWorkDay(reminderCalendar);
 				for (AbstractTaskContainer element : taskListElementsToSchedule) {
 					AbstractTask task = tasklistManager.getTaskForElement(element, true);
-					TasksUiPlugin.getTaskListManager().setScheduledFor(task, reminderCalendar.getTime());
+					setScheduledDate(task, reminderCalendar, false);
 				}
 			}
 		};
@@ -90,7 +90,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 		action.setEnabled(canSchedule(singleSelection, taskListElementsToSchedule));
 		subMenuManager.add(action);
 
-		if (singleTaskSelection != null && (TasksUiPlugin.getTaskListManager().isScheduledForToday(singleTaskSelection)
+		if (singleTaskSelection != null && (TasksUiPlugin.getTaskActivityManager().isScheduledForToday(singleTaskSelection)
 				|| (singleTaskSelection.isPastReminder()))) {
 			action.setChecked(true);
 		}
@@ -108,7 +108,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 					TasksUiPlugin.getTaskListManager().setSecheduledIn(reminderCalendar, dueIn);
 					for (AbstractTaskContainer element : taskListElementsToSchedule) {
 						AbstractTask task = tasklistManager.getTaskForElement(element, true);
-						TasksUiPlugin.getTaskListManager().setScheduledFor(task, reminderCalendar.getTime());
+						setScheduledDate(task, reminderCalendar, false);
 					}
 				}
 			};
@@ -138,7 +138,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 				for (AbstractTaskContainer element : taskListElementsToSchedule) {
 					AbstractTask task = tasklistManager.getTaskForElement(element, true);
 					if(task != null) {
-						TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, reminderCalendar.getTime(), true);
+						setScheduledDate(task, reminderCalendar, true);
 					}
 				}
 			}
@@ -159,8 +159,8 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 				for (AbstractTaskContainer element : taskListElementsToSchedule) {
 					AbstractTask task = tasklistManager.getTaskForElement(element, true);
 					Calendar startNextWeek = Calendar.getInstance();
-					TasksUiPlugin.getTaskListManager().setScheduledNextWeek(startNextWeek);
-					TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, startNextWeek.getTime(), true);
+					TaskActivityUtil.snapNextWorkWeek(startNextWeek);
+					setScheduledDate(task, startNextWeek, true);
 				}
 			}
 		};
@@ -185,7 +185,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 						Calendar twoWeeks = TaskActivityUtil.getCalendar();
 						TasksUiPlugin.getTaskListManager().setScheduledNextWeek(twoWeeks);
 						twoWeeks.add(Calendar.DAY_OF_MONTH, 7);
-						TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, twoWeeks.getTime(), true);
+						setScheduledDate(task, twoWeeks, true);
 					}
 				}
 			}
@@ -253,8 +253,14 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 						AbstractTask task = null;
 						if (element instanceof AbstractTask) {
 							task = (AbstractTask) element;
+							if (reminderDialog.getDate() != null) {
+								Calendar cal = TaskActivityUtil.getCalendar();
+								cal.setTime(reminderDialog.getDate());
+								setScheduledDate(task, cal, false);
+							} else {
+								setScheduledDate(task, null, false);
+							}
 						}
-						TasksUiPlugin.getTaskListManager().setScheduledFor(task, reminderDialog.getDate());
 					}
 				}
 			}
@@ -270,7 +276,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 			public void run() {
 				for (AbstractTaskContainer element : taskListElementsToSchedule) {
 					AbstractTask task = tasklistManager.getTaskForElement(element, true);
-					TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, null, false);
+					setScheduledDate(task, null, false);
 				}
 			}
 		};
@@ -325,5 +331,19 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 		}
 		// return (singleSelection != null && !singleSelection.isCompleted())
 		// || elements.size() > 0;
+	}
+	
+	protected void setScheduledDate(AbstractTask task, Calendar scheduledDate, boolean floating) {
+		TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, scheduledDate.getTime(), floating);
+	}
+	
+	public static boolean isTodayChecked(AbstractTask task) {
+		if(task == null) {
+			return false;
+		}
+		if (TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task) || task.isPastReminder()) {
+			return true;
+		}
+		return false;
 	}
 }
