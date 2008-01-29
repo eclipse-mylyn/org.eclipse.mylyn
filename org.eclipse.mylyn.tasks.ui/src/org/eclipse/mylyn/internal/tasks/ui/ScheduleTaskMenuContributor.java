@@ -92,7 +92,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 		subMenuManager.add(action);
 
 		if (singleTaskSelection != null
-				&& (TasksUiPlugin.getTaskActivityManager().isScheduledForToday(getScheduledForDate(singleTaskSelection), isFloating(singleTaskSelection)) || (singleTaskSelection.isPastReminder()))) {
+				&& (TasksUiPlugin.getTaskActivityManager().isScheduledForToday(getScheduledForDate(singleTaskSelection), isFloating(singleTaskSelection)) || (TasksUiPlugin.getTaskActivityManager().isOverScheduled(getScheduledForDate(singleTaskSelection), isFloating(singleTaskSelection))))) {
 			action.setChecked(true);
 		}
 
@@ -116,12 +116,17 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 			getDayLabel(i, action);
 			if (singleTaskSelection != null && getScheduledForDate(singleTaskSelection) != null
 					&& !isFloating(singleTaskSelection)) {
-				Calendar now = Calendar.getInstance();
-				now.add(Calendar.DAY_OF_MONTH, i - today);
-				now.getTime();
-				Calendar then = Calendar.getInstance();
-				then.setTime(getScheduledForDate(singleTaskSelection));
-				if (now.get(Calendar.DAY_OF_MONTH) == then.get(Calendar.DAY_OF_MONTH)) {
+				Calendar dayStart = Calendar.getInstance();
+				dayStart.add(Calendar.DAY_OF_MONTH, i - today);
+				TaskActivityUtil.snapStartOfDay(dayStart);
+				dayStart.getTime();
+				Calendar dayEnd = Calendar.getInstance();
+				dayEnd.add(Calendar.DAY_OF_MONTH, i - today);
+				TaskActivityUtil.snapEndOfDay(dayEnd);
+				dayEnd.getTime();
+				Calendar time = TaskActivityUtil.getCalendar();
+				time.setTime(getScheduledForDate(singleTaskSelection));
+				if (TaskActivityUtil.isBetween(time, dayStart, dayEnd)) {
 					action.setChecked(true);
 				}
 			}

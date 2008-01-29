@@ -521,6 +521,20 @@ public class TaskActivityManager {
 		return false;
 	}
 
+	
+	public boolean isOverScheduled(Date scheduledDate, boolean floating) {
+		if (scheduledDate == null) {
+			return false;
+		} else {
+			Date now = new Date();
+			if (!floating && scheduledDate.compareTo(now) < 0) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}
+	
 	public boolean isOverdue(AbstractTask task) {
 		return (!task.isCompleted() && task.getDueDate() != null && new Date().after(task.getDueDate()))
 				&& repositoryManager.isOwnedByUser(task);
