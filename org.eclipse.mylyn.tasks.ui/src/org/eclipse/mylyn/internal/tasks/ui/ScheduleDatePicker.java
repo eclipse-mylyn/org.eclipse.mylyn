@@ -59,6 +59,7 @@ public class ScheduleDatePicker extends Composite {
 		super(parent, style);
 		this.scheduledDate = task.getScheduledForDate();
 		this.floatingDate = task.internalIsFloatingScheduledDate();
+		this.setDatePattern("yyyy-MM-dd");
 		initialize((style & SWT.FLAT) > 0 ? SWT.FLAT : 0);
 		contributor = new ScheduleTaskMenuContributor() {
 
