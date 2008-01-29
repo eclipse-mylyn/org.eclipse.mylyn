@@ -250,9 +250,11 @@ public class TaskPlanningEditor extends TaskFormPage {
 		task.setNotes(note);
 		task.setEstimatedTimeHours(estimated.getSelection());
 		if (scheduleDatePicker != null && scheduleDatePicker.getScheduledDate() != null) {
-			TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, scheduleDatePicker.getScheduledDate(), scheduleDatePicker.isFloatingDate());				
+			TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, scheduleDatePicker.getScheduledDate(), scheduleDatePicker.isFloatingDate());
+			task.setReminded(false);
 		} else {
 			TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, null);
+			task.setReminded(false);
 		}
 		if (dueDatePicker != null && dueDatePicker.getDate() != null) {
 			TasksUiPlugin.getTaskActivityManager().setDueDate(task, dueDatePicker.getDate().getTime());
@@ -671,6 +673,19 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 			public void widgetDefaultSelected(SelectionEvent arg0) {
 				// ignore
+			}
+		});
+		
+		ImageHyperlink clearScheduledDate = toolkit.createImageHyperlink(nameValueComp, SWT.NONE);
+		clearScheduledDate.setImage(TasksUiImages.getImage(TasksUiImages.REMOVE));
+		clearScheduledDate.setToolTipText(CLEAR);
+		clearScheduledDate.addHyperlinkListener(new HyperlinkAdapter() {
+
+			@Override
+			public void linkActivated(HyperlinkEvent e) {
+				scheduleDatePicker.setScheduledDate(null);
+				task.setReminded(false);
+				TaskPlanningEditor.this.markDirty(true);
 			}
 		});
 
