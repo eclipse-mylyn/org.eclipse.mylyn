@@ -47,10 +47,12 @@ public class TaskListNotificationPopup extends AbstractNotificationPopup {
 		this.notifications = notifications;
 	}
 
+	@Override
 	protected void createTitleArea(Composite parent) {
 		super.createTitleArea(parent);
 	}
 
+	@Override
 	protected void createContentArea(Composite parent) {
 		int count = 0;
 		for (final AbstractNotification notification : notifications) {
@@ -90,8 +92,8 @@ public class TaskListNotificationPopup extends AbstractNotificationPopup {
 						if (window != null) {
 							Shell windowShell = window.getShell();
 							if (windowShell != null) {
-								windowShell.setMaximized(true);
 								windowShell.open();
+								windowShell.forceActive();
 							}
 						}
 					}
