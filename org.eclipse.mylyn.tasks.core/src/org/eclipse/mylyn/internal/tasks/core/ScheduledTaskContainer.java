@@ -119,7 +119,7 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 	}
 
 	public boolean isToday() {
-		return TaskActivityUtil.getCalendar().get(Calendar.DAY_OF_MONTH) == getStart().get(Calendar.DAY_OF_MONTH);
+		return !isCaptureFloating() && (TaskActivityUtil.getCalendar().get(Calendar.DAY_OF_MONTH) == getStart().get(Calendar.DAY_OF_MONTH));
 	}
 
 	@Override
@@ -133,23 +133,30 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (!super.equals(obj))
+		}
+		if (!super.equals(obj)) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		ScheduledTaskContainer other = (ScheduledTaskContainer) obj;
 		if (endDate == null) {
-			if (other.endDate != null)
+			if (other.endDate != null) {
 				return false;
-		} else if (!endDate.equals(other.endDate))
+			}
+		} else if (!endDate.equals(other.endDate)) {
 			return false;
+		}
 		if (startDate == null) {
-			if (other.startDate != null)
+			if (other.startDate != null) {
 				return false;
-		} else if (!startDate.equals(other.startDate))
+			}
+		} else if (!startDate.equals(other.startDate)) {
 			return false;
+		}
 		return true;
 	}
 

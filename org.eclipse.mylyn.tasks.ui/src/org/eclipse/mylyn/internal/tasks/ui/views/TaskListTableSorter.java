@@ -11,9 +11,9 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -67,6 +67,11 @@ public class TaskListTableSorter extends ViewerSorter {
 		if (o1 instanceof ScheduledTaskContainer && o2 instanceof ScheduledTaskContainer) {
 			ScheduledTaskContainer dateRangeTaskContainer1 = (ScheduledTaskContainer) o1;
 			ScheduledTaskContainer dateRangeTaskContainer2 = (ScheduledTaskContainer) o2;
+			if (dateRangeTaskContainer1.isCaptureFloating() && !dateRangeTaskContainer2.isCaptureFloating()) {
+				return 1;
+			} else if (!dateRangeTaskContainer1.isCaptureFloating() && dateRangeTaskContainer2.isCaptureFloating()) {
+				return -1;
+			}
 			return -1 * dateRangeTaskContainer2.getStart().compareTo(dateRangeTaskContainer1.getStart());
 		} else if (o1 instanceof AbstractTaskContainer && o2 instanceof ScheduledTaskContainer) {
 			return -1;
@@ -167,6 +172,7 @@ public class TaskListTableSorter extends ViewerSorter {
 	 * @return sortable string
 	 * @deprecated Use getSortableFromElement()
 	 */
+	@Deprecated
 	public static String getSortableSummaryFromElement(AbstractTaskContainer element) {
 		String summary = element.getSummary();
 
