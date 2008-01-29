@@ -53,16 +53,25 @@ public class ScheduleDatePicker extends Composite {
 	
 	private Date scheduledDate;
 
-	private boolean floatingDate;
+	private boolean isFloating;
 	
 	public ScheduleDatePicker(Composite parent, AbstractTask task, int style) {
 		super(parent, style);
 		this.scheduledDate = task.getScheduledForDate();
-		this.floatingDate = task.internalIsFloatingScheduledDate();
+		this.isFloating = task.internalIsFloatingScheduledDate();
 		this.setDatePattern("yyyy-MM-dd");
 		initialize((style & SWT.FLAT) > 0 ? SWT.FLAT : 0);
 		contributor = new ScheduleTaskMenuContributor() {
 
+			@Override
+			protected Date getScheduledForDate(AbstractTask singleTaskSelection) {
+				return ScheduleDatePicker.this.scheduledDate;
+			}
+			
+			protected boolean isFloating(AbstractTask task) {
+				return ScheduleDatePicker.this.isFloating;
+			}
+			
 			@Override
 			protected void setScheduledDate(AbstractTask task, Calendar scheduledDate, boolean floating) {
 				if(scheduledDate != null) {
@@ -70,7 +79,7 @@ public class ScheduleDatePicker extends Composite {
 				} else {
 					ScheduleDatePicker.this.scheduledDate = null;
 				}
-				ScheduleDatePicker.this.floatingDate = floating;
+				ScheduleDatePicker.this.isFloating = floating;
 				updateDateText();
 				notifyPickerListeners();
 			}};
@@ -164,7 +173,7 @@ public class ScheduleDatePicker extends Composite {
 	}
 
 	public boolean isFloatingDate() {
-		return floatingDate;
+		return isFloating;
 	}
 
 }
