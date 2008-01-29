@@ -577,7 +577,7 @@ public class TaskActivityManager {
 
 	public boolean isScheduledAfterThisWeek(AbstractTask task) {
 		if (task.getScheduledForDate() != null) {
-			return isScheduledForThisWeek(task.getScheduledForDate());
+			return isScheduledAfterThisWeek(task.getScheduledForDate());
 		}
 
 		return false;
