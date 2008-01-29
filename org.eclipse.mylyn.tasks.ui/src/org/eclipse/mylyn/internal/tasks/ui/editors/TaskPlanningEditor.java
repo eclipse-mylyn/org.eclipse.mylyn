@@ -660,7 +660,6 @@ public class TaskPlanningEditor extends TaskFormPage {
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 
 		scheduleDatePicker = new ScheduleDatePicker(nameValueComp, task, SWT.FLAT);
-		scheduleDatePicker.setDatePattern("yyyy-MM-dd");
 		scheduleDatePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		toolkit.adapt(scheduleDatePicker, true, true);
 		toolkit.paintBordersFor(nameValueComp);
@@ -799,26 +798,30 @@ public class TaskPlanningEditor extends TaskFormPage {
 		timingListener = new ITaskTimingListener() {
 
 			public void elapsedTimeUpdated(AbstractTask task, long newElapsedTime) {
-				String elapsedTimeString = NO_TIME_ELAPSED;
-				try {
-					elapsedTimeString = DateUtil.getFormattedDuration(newElapsedTime, false);
-					if (elapsedTimeString.equals("")) {
-						elapsedTimeString = NO_TIME_ELAPSED;
-					}
-
-				} catch (RuntimeException e1) {
-					StatusHandler.fail(e1, "Could not format elapsed time", true);
-				}
-				final String elapsedString = elapsedTimeString;
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable(){
-
-					public void run() {
-						if (!elapsedTimeText.isDisposed()) {
-							elapsedTimeText.setText(elapsedString);
+				if (task.equals(TaskPlanningEditor.this.task)) {
+					String elapsedTimeString = NO_TIME_ELAPSED;
+					try {
+						elapsedTimeString = DateUtil.getFormattedDuration(newElapsedTime, false);
+						if (elapsedTimeString.equals("")) {
+							elapsedTimeString = NO_TIME_ELAPSED;
 						}
-					}});
 
-			}};
+					} catch (RuntimeException e1) {
+						StatusHandler.fail(e1, "Could not format elapsed time", true);
+					}
+					final String elapsedString = elapsedTimeString;
+					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+
+						public void run() {
+							if (!elapsedTimeText.isDisposed()) {
+								elapsedTimeText.setText(elapsedString);
+							}
+						}
+					});
+
+				}
+			}
+		};
 		
 		
 		TasksUiPlugin.getTaskListManager().addTimingListener(timingListener);
