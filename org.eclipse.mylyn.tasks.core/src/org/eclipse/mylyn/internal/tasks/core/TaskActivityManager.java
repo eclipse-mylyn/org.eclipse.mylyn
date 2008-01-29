@@ -549,37 +549,66 @@ public class TaskActivityManager {
 		}
 		return false;
 	}
+	
+	public boolean isScheduledForToday(Date date, boolean floating) {
+		if (date != null) {
+			if (!floating) {
+				Calendar time = TaskActivityUtil.getCalendar();
+				time.setTime(date);
+				return TaskActivityUtil.isToday(time);
+			}
+		}
+		return false;
+	}
 
 	public boolean isScheduledAfterThisWeek(AbstractTask task) {
-		Calendar cal = TaskActivityUtil.getCalendar();
 		if (task.getScheduledForDate() != null) {
-			cal.setTime(task.getScheduledForDate());
-			return TaskActivityUtil.isAfterCurrentWeek(cal);
+			return isScheduledForThisWeek(task.getScheduledForDate());
 		}
 
+		return false;
+	}
+	
+	public boolean isScheduledAfterThisWeek(Date date) {
+		Calendar cal = TaskActivityUtil.getCalendar();
+		if (date != null) {
+			cal.setTime(date);
+			return TaskActivityUtil.isAfterCurrentWeek(cal);
+		}
 		return false;
 	}
 
 	public boolean isScheduledForFuture(AbstractTask task) {
 		if (task != null) {
 			Date reminder = task.getScheduledForDate();
-			if (reminder != null) {
-				Calendar cal = TaskActivityUtil.getCalendar();
-				cal.setTime(reminder);
-				return TaskActivityUtil.isFuture(cal);
-			}
+			return isScheduledForFuture(reminder);
+		}
+		return false;
+	}
+
+	public boolean isScheduledForFuture(Date reminder) {
+		if (reminder != null) {
+			Calendar cal = TaskActivityUtil.getCalendar();
+			cal.setTime(reminder);
+			return TaskActivityUtil.isFuture(cal);
 		}
 		return false;
 	}
 
 	public boolean isScheduledForThisWeek(AbstractTask task) {
+		boolean result = false;
 		if (task != null) {
 			Date reminder = task.getScheduledForDate();
-			if (reminder != null) {
-				Calendar time = TaskActivityUtil.getCalendar();
-				time.setTime(reminder);
-				return TaskActivityUtil.isThisWeek(time);
-			}
+			result = isScheduledForThisWeek(reminder);
+		}
+		return result;
+	}
+
+	public boolean isScheduledForThisWeek(Date reminder) {
+		if (reminder != null) {
+			Calendar time = TaskActivityUtil.getCalendar();
+			time.setTime(reminder);
+			return TaskActivityUtil.isThisWeek(time);
 		}
 		return false;
 	}

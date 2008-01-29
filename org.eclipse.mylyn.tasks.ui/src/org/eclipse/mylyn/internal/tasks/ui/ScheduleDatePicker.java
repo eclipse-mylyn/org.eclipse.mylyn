@@ -19,6 +19,7 @@ import java.util.List;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.ui.DatePicker;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -35,7 +36,7 @@ import org.eclipse.swt.widgets.Text;
  * @author Rob Elves
  */
 public class ScheduleDatePicker extends Composite {
-
+	
 	private Text scheduledDateText = null;
 
 	private Button pickButton = null;
@@ -45,7 +46,7 @@ public class ScheduleDatePicker extends Composite {
 	private SimpleDateFormat simpleDateFormat = (SimpleDateFormat) DateFormat.getDateTimeInstance(DateFormat.MEDIUM,
 			DateFormat.SHORT);
 
-	private String initialText = "Select Date";
+	private String initialText = DatePicker.LABEL_CHOOSE;
 
 	private List<AbstractTaskContainer> tasks;
 
@@ -151,7 +152,7 @@ public class ScheduleDatePicker extends Composite {
 			scheduledDateText.setText(simpleDateFormat.format(scheduledDate));
 		} else {
 			scheduledDateText.setEnabled(false);
-			scheduledDateText.setText("Choose Date");
+			scheduledDateText.setText(DatePicker.LABEL_CHOOSE);
 			scheduledDateText.setEnabled(true);
 		}
 	}

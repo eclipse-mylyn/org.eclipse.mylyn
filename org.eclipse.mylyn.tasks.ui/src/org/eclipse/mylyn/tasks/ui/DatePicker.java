@@ -52,7 +52,7 @@ public class DatePicker extends Composite {
 
 	public final static String TITLE_DIALOG = "Choose Date";
 
-	public static final String LABEL_CHOOSE = "<choose date>";
+	public static final String LABEL_CHOOSE = "Choose Date";
 
 	private Text dateText = null;
 
@@ -65,7 +65,7 @@ public class DatePicker extends Composite {
 	private SimpleDateFormat simpleDateFormat = (SimpleDateFormat) DateFormat.getDateTimeInstance(DateFormat.MEDIUM,
 			DateFormat.SHORT);
 
-	private String initialText = "Select Date";
+	private String initialText = LABEL_CHOOSE;
 
 	private boolean includeTime = true;;
 
