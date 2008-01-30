@@ -15,4 +15,6 @@ public interface ITasksCoreConstants {
 
 	public static final int MAX_SUBTASK_DEPTH = 10;
 
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.tasks.core";
+	
 }

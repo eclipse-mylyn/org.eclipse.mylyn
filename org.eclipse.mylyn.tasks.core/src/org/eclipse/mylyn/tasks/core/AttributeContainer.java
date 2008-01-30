@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 
 /**
@@ -21,6 +24,7 @@ import org.eclipse.mylyn.monitor.core.StatusHandler;
  * @author Rob Elves
  * @since 2.0
  */
+// API 3.0 convert all error logging to assertions
 public class AttributeContainer implements Serializable {
 
 	public static final String ERROR_NO_ATTRIBUTE_FACTORY = "Attribute factory not available.";
@@ -49,12 +53,12 @@ public class AttributeContainer implements Serializable {
 
 	public void addAttribute(String key, RepositoryTaskAttribute attribute) {
 		if (attributeFactory == null) {
-			StatusHandler.log(ERROR_NO_ATTRIBUTE_FACTORY, this);
+			StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, ERROR_NO_ATTRIBUTE_FACTORY));
 			return;
 		}
 		String mapped = attributeFactory.mapCommonAttributeKey(key);
 		if (mapped == null) {
-			StatusHandler.log("Mapped value for " + key + " returned null.", this);
+			StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "Mapped value for " + key + " returned null."));
 			return;
 		}
 		if (!attributes.containsKey(mapped)) {
@@ -65,7 +69,7 @@ public class AttributeContainer implements Serializable {
 
 	public RepositoryTaskAttribute getAttribute(String key) {
 		if (attributeFactory == null) {
-			StatusHandler.log(ERROR_NO_ATTRIBUTE_FACTORY, this);
+			StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, ERROR_NO_ATTRIBUTE_FACTORY));
 			return null;
 		}
 		String mapped = attributeFactory.mapCommonAttributeKey(key);
@@ -94,7 +98,7 @@ public class AttributeContainer implements Serializable {
 
 	public void addAttributeValue(String key, String value) {
 		if (attributeFactory == null) {
-			StatusHandler.log(ERROR_NO_ATTRIBUTE_FACTORY, this);
+			StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, ERROR_NO_ATTRIBUTE_FACTORY));
 			return;
 		}
 		RepositoryTaskAttribute attrib = getAttribute(key);
@@ -112,7 +116,7 @@ public class AttributeContainer implements Serializable {
 	 */
 	public void setAttributeValue(String key, String value) {
 		if (attributeFactory == null) {
-			StatusHandler.log(ERROR_NO_ATTRIBUTE_FACTORY, this);
+			StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, ERROR_NO_ATTRIBUTE_FACTORY));
 			return;
 		}
 		RepositoryTaskAttribute attrib = getAttribute(key);
@@ -125,7 +129,7 @@ public class AttributeContainer implements Serializable {
 
 	public String getAttributeValue(String key) {
 		if (attributeFactory == null) {
-			StatusHandler.log(ERROR_NO_ATTRIBUTE_FACTORY, this);
+			StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, ERROR_NO_ATTRIBUTE_FACTORY));
 			return "";
 		}
 		String returnValue = "";
@@ -139,7 +143,7 @@ public class AttributeContainer implements Serializable {
 	public List<String> getAttributeValues(String key) {
 		List<String> returnValue = new ArrayList<String>();
 		if (attributeFactory == null) {
-			StatusHandler.log(ERROR_NO_ATTRIBUTE_FACTORY, this);
+			StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, ERROR_NO_ATTRIBUTE_FACTORY));
 			return returnValue;
 		}
 		RepositoryTaskAttribute attrib = getAttribute(key);

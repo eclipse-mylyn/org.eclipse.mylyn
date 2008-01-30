@@ -344,7 +344,8 @@ public class TaskRepository extends PlatformObject {
 					headlessCreds.putAll(map);
 				}
 			} catch (CoreException e) {
-				StatusHandler.fail(e, "Could not set authorization credentials", true);
+				// API 3.0 propagate exception
+				StatusHandler.fail(e, "Could not set authorization credentials", false);
 			}
 		}
 	}

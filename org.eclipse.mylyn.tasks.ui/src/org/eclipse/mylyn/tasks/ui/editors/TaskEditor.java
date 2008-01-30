@@ -14,6 +14,8 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -306,7 +308,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 							contentOutlineProvider = editor;
 						}
 					} catch (Exception e) {
-						StatusHandler.fail(e, "Could not create editor via factory: " + factory, true);
+						StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not create editor via factory: " + factory, e));
 					}
 				}
 			}

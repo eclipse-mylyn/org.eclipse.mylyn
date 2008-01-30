@@ -16,6 +16,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
@@ -30,6 +32,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTaskListFactory;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.web.core.XmlUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -160,7 +163,7 @@ final class DelegatingTaskExternalizer {
 		if (factory != null) {
 			taskTagName = factory.getTaskElementName();
 		} else {
-			StatusHandler.log("No externalizer for task: " + task, this);
+			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "No externalizer for task: " + task));
 			return null;
 		}
 		Element node = doc.createElement(taskTagName);
@@ -516,7 +519,7 @@ final class DelegatingTaskExternalizer {
 			}
 		}
 		if (factory == null || queryTagName == null) {
-			StatusHandler.log("Could not externalize query: " + query, this);
+			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Could not externalize query: " + query));
 			return null;
 		}
 
