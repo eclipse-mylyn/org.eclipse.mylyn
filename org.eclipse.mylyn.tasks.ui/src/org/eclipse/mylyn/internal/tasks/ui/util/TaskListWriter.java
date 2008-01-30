@@ -39,6 +39,8 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
@@ -506,7 +508,7 @@ public class TaskListWriter {
 		File save = new File(name);
 		if (save.exists()) {
 			if (!save.delete()) {
-				StatusHandler.log("Unable to delete old backup tasklist file", this);
+				StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Unable to delete old backup tasklist file"));
 				return;
 			}
 		}
