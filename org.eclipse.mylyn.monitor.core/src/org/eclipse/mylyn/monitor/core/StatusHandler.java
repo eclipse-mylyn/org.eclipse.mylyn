@@ -19,15 +19,17 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.monitor.core.util.IStatusHandler;
 
 /**
- * NOTE: very likely to be removed for 3.0 due to the new workbench StatusManager API
- * 
  * @author Mik Kersten
  * @author Shawn Minto
+ * @author Steffen Pingel
  */
+// API 3.0 review for concurrency bugs
 public class StatusHandler {
 
+	// API 3.0 remove
 	private static final String ID_PLUGIN = "org.eclipse.mylyn";
 
+	// API 3.0 remove
 	private static Set<IStatusHandler> handlers = new HashSet<IStatusHandler>();
 
 	private static IStatusHandler defaultHandler;
@@ -35,6 +37,7 @@ public class StatusHandler {
 	/**
 	 * @since 2.2
 	 */
+	// API 3.0 remove
 	public static IStatusHandler getDefaultStatusHandler() {
 		return defaultHandler;
 	}
@@ -42,6 +45,7 @@ public class StatusHandler {
 	/**
 	 * @since 2.2
 	 */
+	// API 3.0 remove
 	public static Set<IStatusHandler> getStatusHandlers() {
 		return handlers;
 	}
@@ -49,11 +53,13 @@ public class StatusHandler {
 	/**
 	 * @since 2.2
 	 */
+	// API 3.0 remove
 	public static void setDefaultStatusHandler(IStatusHandler handler) {
 		defaultHandler = handler;
 		handlers.add(handler);
 	}
 
+	// API 3.0 remove
 	public static void addStatusHandler(IStatusHandler handler) {
 		if (handler == null) {
 			return;
@@ -64,10 +70,12 @@ public class StatusHandler {
 		handlers.add(handler);
 	}
 
+	// API 3.0 remove
 	public static void removeStatusHandler(IStatusHandler handler) {
 		internalRemoveStatusHandler(handler, true);
 	}
 
+	// API 3.0 remove
 	private static void internalRemoveStatusHandler(IStatusHandler handler, boolean restoreDefault) {
 		if (handler == null) {
 			return;
@@ -79,7 +87,8 @@ public class StatusHandler {
 	}
 
 	/**
-	 * Logs the specified status with this plug-in's log.
+	 * Logs <code>status</code> to this bundle's log if a platform is running. Does nothing if no platform is running.
+	 * Plug-ins that require running in Eclipse are encouraged to use their plug-in log.
 	 * 
 	 * @param status
 	 *            status to log
@@ -94,6 +103,9 @@ public class StatusHandler {
 		}
 	}
 
+	/**
+	 * @deprecated use {@link #log(IStatus)} instead
+	 */
 	public static void log(String message, Object source) {
 		message = "Mylyn: " + message;
 		if (source != null) {
@@ -103,10 +115,16 @@ public class StatusHandler {
 		log(new Status(IStatus.INFO, ID_PLUGIN, IStatus.OK, message, null));
 	}
 
+	/**
+	 * @deprecated use {@link #log(IStatus)} instead
+	 */
 	public static void log(Throwable throwable, String message) {
 		fail(throwable, message, false, Status.INFO);
 	}
 
+	/**
+	 * @deprecated use {@link #fail(IStatus)} or {{@link #log(IStatus)} instead
+	 */
 	public static void fail(Throwable throwable, String message, boolean informUser) {
 		fail(throwable, message, informUser, Status.ERROR);
 	}
@@ -118,6 +136,7 @@ public class StatusHandler {
 	 *            The message to include
 	 * @param informUser
 	 *            if true dialog box will be popped up
+	 * @deprecated use {@link #fail(IStatus)} or {{@link #log(IStatus)} instead
 	 */
 	public static void fail(Throwable throwable, String message, boolean informUser, int severity) {
 		if (message == null) {
@@ -134,12 +153,29 @@ public class StatusHandler {
 	}
 
 	/**
+	 * Logs <code>status</code> to this bundle's log if a platform is running. Forwards <code>status</code> to
+	 * registered status handlers. 
+	 * 
+	 * API 3.0 add comment that method does not block
+	 * 
+	 * @see #log(IStatus)
+	 * @since 2.3
+	 */
+	public static void fail(IStatus status) {
+		log(status);
+		for (IStatusHandler handler : handlers) {
+			handler.fail(status, true);
+		}
+	}
+
+	/**
 	 * Display error to user
 	 * 
 	 * @param title
 	 *            dialog title
 	 * @param status
 	 *            IStatus to reveal in dialog
+	 * @deprecated use <code>org.eclipse.ui.statushandlers.StatusMananger#getManager().handle()</code> instead.
 	 */
 	public static void displayStatus(String title, IStatus status) {
 		for (IStatusHandler handler : handlers) {
