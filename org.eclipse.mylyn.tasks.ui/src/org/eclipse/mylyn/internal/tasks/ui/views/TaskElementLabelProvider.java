@@ -14,7 +14,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.Person;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
@@ -22,6 +21,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskGroup;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskHighlighter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
@@ -42,6 +42,7 @@ import org.eclipse.ui.themes.IThemeManager;
 /**
  * @author Mik Kersten
  */
+// API 3.0 rename to TaskContainerLabelProvider?
 public class TaskElementLabelProvider extends LabelProvider implements IColorProvider, IFontProvider {
 
 	private static final String NO_SUMMARY_AVAILABLE = ": <no summary available>";

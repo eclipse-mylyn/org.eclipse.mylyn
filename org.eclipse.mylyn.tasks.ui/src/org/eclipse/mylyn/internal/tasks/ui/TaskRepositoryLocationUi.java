@@ -14,8 +14,8 @@ import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryLocation;
 import org.eclipse.mylyn.internal.tasks.ui.dialogs.EditCredentialsDialog;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.web.core.AuthenticationType;
 import org.eclipse.mylyn.web.core.AuthenticationCredentials;
+import org.eclipse.mylyn.web.core.AuthenticationType;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
@@ -83,7 +83,7 @@ public class TaskRepositoryLocationUi extends TaskRepositoryLocation {
 		public void run() {
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			if (shell != null && !shell.isDisposed()) {
-				EditCredentialsDialog dialog = new EditCredentialsDialog(shell);
+				EditCredentialsDialog dialog = EditCredentialsDialog.createDialog(shell);
 				initializeDialog(dialog);
 				if (dialog.open() == Dialog.OK) {
 					saveDialog(dialog);
@@ -96,7 +96,7 @@ public class TaskRepositoryLocationUi extends TaskRepositoryLocation {
 		}
 
 		private void initializeDialog(EditCredentialsDialog dialog) {
-			dialog.setUrl(taskRepository.getRepositoryLabel());
+			dialog.setTaskRepository(taskRepository);
 
 			AuthenticationCredentials credentials = taskRepository.getCredentials(authType);
 			if (credentials != null) {
