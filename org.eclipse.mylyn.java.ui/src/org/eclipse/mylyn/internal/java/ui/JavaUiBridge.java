@@ -38,6 +38,8 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  */
 public class JavaUiBridge extends AbstractContextUiBridge {
 
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.java.ui";
+	
 	private Field javaOutlineField = null;
 
 	public JavaUiBridge() {

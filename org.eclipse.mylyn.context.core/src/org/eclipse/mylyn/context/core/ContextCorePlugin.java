@@ -21,8 +21,10 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.monitor.core.util.IStatusHandler;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
@@ -244,7 +246,7 @@ public class ContextCorePlugin extends Plugin {
 			if (contextStore != null) {
 				contextStore.init();
 			} else {
-				StatusHandler.log("No context store specified", this);
+				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID, "No context store specified"));
 			}
 		}
 		return contextStore;
