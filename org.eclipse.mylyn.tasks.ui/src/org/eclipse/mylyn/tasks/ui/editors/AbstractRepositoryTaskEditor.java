@@ -493,6 +493,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private Action openBrowserAction;
 
+	private NewSubTaskAction newSubTaskAction;
+
 	/**
 	 * Call upon change to attribute value
 	 * 
@@ -691,7 +693,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				synchronizeEditorAction.selectionChanged(new StructuredSelection(this));
 				toolBarManager.add(synchronizeEditorAction);
 
-				NewSubTaskAction newSubTaskAction = new NewSubTaskAction();
+				newSubTaskAction = new NewSubTaskAction();
 				newSubTaskAction.selectionChanged(newSubTaskAction, new StructuredSelection(getRepositoryTask()));
 				if (newSubTaskAction.isEnabled()) {
 					toolBarManager.add(newSubTaskAction);
@@ -3469,6 +3471,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				historyAction.setEnabled(!busy);
 			}
 
+			if (newSubTaskAction != null) {
+				newSubTaskAction.setEnabled(!busy);
+			}
+			
 			if (submitButton != null && !submitButton.isDisposed()) {
 				submitButton.setEnabled(!busy);
 			}
