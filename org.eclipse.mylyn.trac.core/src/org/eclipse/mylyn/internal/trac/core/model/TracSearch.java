@@ -18,7 +18,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
+import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter.CompareOperator;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 
@@ -139,7 +142,7 @@ public class TracSearch {
 					sb.append(URLEncoder.encode(filter.getOperator().getQueryValue(), ITracClient.CHARSET));
 					sb.append(URLEncoder.encode(value, ITracClient.CHARSET));
 				} catch (UnsupportedEncodingException e) {
-					StatusHandler.log(e, "Unexpected exception while decoding URL");
+					StatusHandler.log(new Status(IStatus.WARNING, TracCorePlugin.PLUGIN_ID, "Unexpected exception while decoding URL", e));
 				}
 			}
 		}
@@ -166,7 +169,7 @@ public class TracSearch {
 						addFilter(key, value);
 					}
 				} catch (UnsupportedEncodingException e) {
-					StatusHandler.log(e, "Unexpected exception while decoding URL");
+					StatusHandler.log(new Status(IStatus.WARNING, TracCorePlugin.PLUGIN_ID, "Unexpected exception while decoding URL", e));
 				}
 			}
 		}

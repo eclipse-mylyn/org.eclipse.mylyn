@@ -35,7 +35,9 @@ import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.trac.core.model.TracComponent;
 import org.eclipse.mylyn.internal.trac.core.model.TracMilestone;
 import org.eclipse.mylyn.internal.trac.core.model.TracPriority;
@@ -334,7 +336,8 @@ public class TracWebClient extends AbstractTracClient {
 								ticket.putBuiltinValue(fields[i], parseTicketValue(t.nextToken()));
 							}
 						} catch (NumberFormatException e) {
-							StatusHandler.log(e, "Error parsing response: " + line);
+							StatusHandler.log(new Status(IStatus.WARNING, TracCorePlugin.PLUGIN_ID,
+									"Error parsing response: '" + line + "'", e));
 						}
 					}
 				}

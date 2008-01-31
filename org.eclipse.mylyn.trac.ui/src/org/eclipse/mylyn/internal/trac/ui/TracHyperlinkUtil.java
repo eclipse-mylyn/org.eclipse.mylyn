@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
@@ -201,7 +203,7 @@ public class TracHyperlinkUtil {
 					url += "?new_path=" + URLEncoder.encode(new_path, "UTF-8");
 					url += "&old_path=" + URLEncoder.encode(old_path, "UTF-8");
 				} catch (UnsupportedEncodingException e) {
-					StatusHandler.fail(e, "Unexpected exception", false);
+					StatusHandler.log(new Status(IStatus.WARNING, TracUiPlugin.PLUGIN_ID, "Unexcpected exception", e));
 					continue;
 				}
 				if (new_rev != null) {

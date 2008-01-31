@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -171,7 +173,8 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 			if (field != null) {
 				field.setFilter(filter);
 			} else {
-				StatusHandler.log("Ignoring invalid search filter: " + filter, this);
+				StatusHandler.log(new Status(IStatus.WARNING, TracUiPlugin.PLUGIN_ID,
+						"Ignoring invalid search filter: " + filter));
 			}
 		}
 	}

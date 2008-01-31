@@ -8,6 +8,9 @@
 
 package org.eclipse.mylyn.internal.trac.ui.editor;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.internal.trac.ui.TracUiPlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
@@ -45,9 +48,11 @@ public class BrowserFormPage extends FormPage {
 			managedForm.getForm().setContent(browser);
 			browser.setUrl(task.getUrl());
 		} catch (SWTError e) {
-			StatusHandler.fail(e, "Could not create Browser page: " + e.getMessage(), true);
+			StatusHandler.fail(new Status(IStatus.ERROR, TracUiPlugin.PLUGIN_ID, "Could not create Browser page: "
+					+ e.getMessage()));
 		} catch (RuntimeException e) {
-			StatusHandler.fail(e, "could not create issue report page", false);
+			StatusHandler.fail(new Status(IStatus.ERROR, TracUiPlugin.PLUGIN_ID,
+					"Could not create issue report page: ", e));
 		}
 	}
 

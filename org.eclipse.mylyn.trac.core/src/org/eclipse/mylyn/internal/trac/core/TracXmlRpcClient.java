@@ -31,8 +31,10 @@ import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.trac.core.model.TracAttachment;
 import org.eclipse.mylyn.internal.trac.core.model.TracComment;
 import org.eclipse.mylyn.internal.trac.core.model.TracComponent;
@@ -634,11 +636,11 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 				}
 				attributes.add(attribute);
 			} catch (ClassCastException e) {
-				StatusHandler.log(e, "Invalid response from Trac repository for attribute type: '" + attributeType
-						+ "'");
+				StatusHandler.log(new Status(IStatus.WARNING, TracCorePlugin.PLUGIN_ID,
+						"Invalid response from Trac repository for attribute type: '" + attributeType + "'", e));
 			} catch (NumberFormatException e) {
-				StatusHandler.log(e, "Invalid response from Trac repository for attribute type: '" + attributeType
-						+ "'");
+				StatusHandler.log(new Status(IStatus.WARNING, TracCorePlugin.PLUGIN_ID,
+						"Invalid response from Trac repository for attribute type: '" + attributeType + "'", e));
 			}
 		}
 
@@ -682,7 +684,8 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 			try {
 				in.close();
 			} catch (IOException e) {
-				StatusHandler.fail(e, "Error closing attachment stream", false);
+				StatusHandler.log(new Status(IStatus.ERROR, TracCorePlugin.PLUGIN_ID,
+						"Error closing attachment stream", e));
 			}
 		}
 	}
