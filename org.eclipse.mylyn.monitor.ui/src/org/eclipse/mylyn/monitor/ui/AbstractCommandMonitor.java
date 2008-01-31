@@ -12,6 +12,8 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IExecutionListener;
 import org.eclipse.core.commands.NotHandledException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
@@ -32,8 +34,8 @@ public abstract class AbstractCommandMonitor implements IExecutionListener {
 			ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getAdapter(
 					ICommandService.class);
 			commandService.addExecutionListener(this);
-		} catch (NullPointerException npe) {
-			StatusHandler.log("Monitors can not be instantiated until the workbench is active: ", this);
+		} catch (NullPointerException e) {
+			StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN, "Monitors can not be instantiated until the workbench is active.", e));
 		}
 	}
 
@@ -42,8 +44,8 @@ public abstract class AbstractCommandMonitor implements IExecutionListener {
 			ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getAdapter(
 					ICommandService.class);
 			commandService.removeExecutionListener(this);
-		} catch (NullPointerException npe) {
-			StatusHandler.log(npe, "Could not dispose monitor.");
+		} catch (NullPointerException e) {
+			StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN, "Could not dispose monitor.", e));
 		}
 	}
 

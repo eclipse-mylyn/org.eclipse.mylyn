@@ -167,7 +167,7 @@ public class StatusHandler {
 			handler.fail(status, true);
 		}
 	}
-
+	
 	/**
 	 * Display error to user
 	 * 

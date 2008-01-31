@@ -45,6 +45,8 @@ import org.osgi.framework.BundleContext;
  */
 public class MonitorUiPlugin extends AbstractUIPlugin {
 
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.monitor.ui";
+	
 	public static final int TIMEOUT_INACTIVITY_MILLIS = 60 * 1000;
 
 	private int inactivityTimeout = TIMEOUT_INACTIVITY_MILLIS;
