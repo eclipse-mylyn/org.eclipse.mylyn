@@ -17,6 +17,9 @@ import java.net.URLEncoder;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionContextReader;
 import org.eclipse.mylyn.context.core.IInteractionContextWriter;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
@@ -78,7 +81,8 @@ public class InteractionContextExternalizer {
 			writeContext(context, outputStream, writer);
 
 		} catch (IOException e) {
-			StatusHandler.fail(e, "Could not write: " + file.getAbsolutePath(), true);
+			// TODO: propagate exception?
+			StatusHandler.fail(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID, "Could not write: " + file.getAbsolutePath(), e));
 		} finally {
 			try {
 				if (outputStream != null) {
@@ -88,7 +92,7 @@ public class InteractionContextExternalizer {
 					fileOutputStream.close();
 				}
 			} catch (IOException e) {
-				StatusHandler.fail(e, "Unable to write context " + context.getHandleIdentifier(), false);
+				StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Unable to write context " + context.getHandleIdentifier(), e));
 			}
 		}
 	}
@@ -132,7 +136,8 @@ public class InteractionContextExternalizer {
 				return reader.readContext(handleIdentifier, file);
 			}
 		} catch (Exception e) {
-			StatusHandler.fail(e, "Could not read: " + file.getAbsolutePath(), true);
+			// TODO: propagate exception instead?
+			StatusHandler.fail(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Could not read: " + file.getAbsolutePath(), e));
 		}
 		return null;
 	}

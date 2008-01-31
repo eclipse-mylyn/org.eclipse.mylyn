@@ -141,7 +141,7 @@ public class ContextCorePlugin extends Plugin {
 				provider.stopAllRunningJobs();
 			}
 		} catch (Exception e) {
-			StatusHandler.fail(e, "Mylyn Core stop failed", false);
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Mylyn Core stop failed", e));
 		}
 	}
 
@@ -284,14 +284,14 @@ public class ContextCorePlugin extends Plugin {
 			try {
 				Object object = element.createExecutableExtension(BridgesExtensionPointReader.ATTR_CLASS);
 				if (!(object instanceof AbstractContextStore)) {
-					StatusHandler.log("Could not load bridge: " + object.getClass().getCanonicalName()
-							+ " must implement " + AbstractContextStructureBridge.class.getCanonicalName(), null);
+					StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID, "Could not load bridge: " + object.getClass().getCanonicalName()
+							+ " must implement " + AbstractContextStructureBridge.class.getCanonicalName()));					
 					return;
 				} else {
 					INSTANCE.contextStore = (AbstractContextStore) object;
 				}
 			} catch (CoreException e) {
-				StatusHandler.log(e, "Could not load bridge extension");
+				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID, "Could not load bridge extension", e));
 			}
 		}
 	}
@@ -336,8 +336,8 @@ public class ContextCorePlugin extends Plugin {
 			try {
 				Object object = element.createExecutableExtension(BridgesExtensionPointReader.ATTR_CLASS);
 				if (!(object instanceof AbstractContextStructureBridge)) {
-					StatusHandler.log("Could not load bridge: " + object.getClass().getCanonicalName()
-							+ " must implement " + AbstractContextStructureBridge.class.getCanonicalName(), null);
+					StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID, "Could not load bridge: " + object.getClass().getCanonicalName()
+							+ " must implement " + AbstractContextStructureBridge.class.getCanonicalName()));
 					return;
 				}
 
@@ -350,7 +350,7 @@ public class ContextCorePlugin extends Plugin {
 				}
 				ContextCorePlugin.getDefault().addStructureBridge(bridge);
 			} catch (CoreException e) {
-				StatusHandler.log(e, "Could not load bridge extension");
+				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID, "Could not load bridge extension", e));
 			}
 		}
 
@@ -362,7 +362,7 @@ public class ContextCorePlugin extends Plugin {
 					ContextCorePlugin.getDefault().addRelationProvider(contentType, relationProvider);
 				}
 			} catch (Exception e) {
-				StatusHandler.log(e, "Could not load relation provider");
+				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID, "Could not load relation provider", e));
 			}
 		}
 	}
@@ -398,8 +398,8 @@ public class ContextCorePlugin extends Plugin {
 			try {
 				Object object = element.createExecutableExtension(ELEMENT_CLASS);
 				if (!(object instanceof IStatusHandler)) {
-					StatusHandler.log("Could not load handler: " + object.getClass().getCanonicalName()
-							+ " must implement " + AbstractContextStructureBridge.class.getCanonicalName(), null);
+					StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID, "Could not load handler: " + object.getClass().getCanonicalName()
+							+ " must implement " + AbstractContextStructureBridge.class.getCanonicalName()));
 					return;
 				}
 

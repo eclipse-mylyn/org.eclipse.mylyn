@@ -30,6 +30,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.AbstractRelationProvider;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
@@ -163,7 +165,7 @@ public class InteractionContextManager {
 			}
 		} else {
 			resetActivityHistory();
-			StatusHandler.log("No context store installed, not restoring activity context.", this);
+			StatusHandler.log(new Status(IStatus.INFO, ContextCorePlugin.PLUGIN_ID, "No context store installed, not restoring activity context."));
 		}
 	}
 
@@ -193,7 +195,7 @@ public class InteractionContextManager {
 				changed.add(element);
 				listener.interestChanged(changed);
 			} catch (Throwable t) {
-				StatusHandler.fail(t, "context listener failed", false);
+				StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Context listener failed: " + listener.getClass().getCanonicalName(), t));
 			}
 		}
 	}
@@ -573,7 +575,7 @@ public class InteractionContextManager {
 			try {
 				listener.contextActivated(context);
 			} catch (Exception e) {
-				StatusHandler.fail(e, "context listener failed", false);
+				StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Context listener failed: " + listener.getClass().getCanonicalName(), e));
 			}
 		}
 	}
@@ -597,13 +599,13 @@ public class InteractionContextManager {
 				suppressListenerNotification = true;
 				internalActivateContext(context);
 			} else {
-				StatusHandler.log("Could not load context", this);
+				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID, "Could not load context"));
 			} 
 			suppressListenerNotification = false;
 			contextListeners.addAll(waitingContextListeners);
 			waitingContextListeners.clear();
 		} catch (Throwable t) {
-			StatusHandler.log(t, "Could not activate context");
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Could not activate context", t));
 		}
 	}
 
@@ -653,7 +655,7 @@ public class InteractionContextManager {
 					try {
 						listener.contextDeactivated(context);
 					} catch (Exception e) {
-						StatusHandler.fail(e, "context listener failed", false);
+						StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Context listener failed: " + listener.getClass().getCanonicalName(), e));
 					}
 				}
 				if (context.getAllElements().size() == 0) {
@@ -668,7 +670,7 @@ public class InteractionContextManager {
 			}
 			saveActivityContext();
 		} catch (Throwable t) {
-			StatusHandler.log(t, "Could not deactivate context");
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Could not deactivate context", t));
 		}
 	}
 
@@ -689,7 +691,7 @@ public class InteractionContextManager {
 				contextFiles.remove(getFileForContext(handleIdentifier));
 			}
 		} catch (SecurityException e) {
-			StatusHandler.fail(e, "Could not delete context file", false);
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Could not delete context file", e));
 		}
 	}
 
@@ -751,7 +753,7 @@ public class InteractionContextManager {
 			}
 			contextFiles.add(getFileForContext(context.getHandleIdentifier()));
 		} catch (Throwable t) {
-			StatusHandler.fail(t, "could not save context", false);
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "could not save context", t));
 		} finally {
 			if (!wasPaused) {
 				setContextCapturePaused(false);
@@ -1198,7 +1200,7 @@ public class InteractionContextManager {
 			copy(sourceContextFile, targetContextFile);
 			contextFiles.add(targetContextFile);
 		} catch (IOException e) {
-			StatusHandler.fail(e, "Cold not transfer context: " + targetcontextHandle, false);
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Cold not transfer context: " + targetcontextHandle, e));
 		}
 	}
 

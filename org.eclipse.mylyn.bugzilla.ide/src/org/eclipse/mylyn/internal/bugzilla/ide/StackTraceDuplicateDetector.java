@@ -10,6 +10,8 @@ package org.eclipse.mylyn.internal.bugzilla.ide;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
@@ -47,7 +49,7 @@ public class StackTraceDuplicateDetector extends AbstractDuplicateDetector {
 			queryUrl = repository.getUrl() + "/buglist.cgi?long_desc_type=allwordssubstr&long_desc="
 					+ URLEncoder.encode(searchString, repository.getCharacterEncoding());
 		} catch (UnsupportedEncodingException e) {
-			StatusHandler.log(e, "Error during duplicate detection");
+			StatusHandler.log(new Status(IStatus.INFO, IBugzillaIdeConstants.ID_PLUGIN, "Error during duplicate detection", e));
 			return null;
 		}
 

@@ -15,6 +15,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IDegreeOfInterest;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
@@ -110,7 +113,7 @@ public class CompositeContextElement implements IInteractionElement {
 		if (edges.size() == 0) {
 			return null;
 		} else if (edges.size() > 1) {
-			StatusHandler.log("Multiple edges found in composite, not supported", this);
+			StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID, "Multiple edges found in composite, not supported"));
 		}
 		return edges.iterator().next();
 	}
