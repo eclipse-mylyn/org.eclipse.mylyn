@@ -175,7 +175,7 @@ public class StatusHandler {
 	 *            dialog title
 	 * @param status
 	 *            IStatus to reveal in dialog
-	 * @deprecated use <code>org.eclipse.ui.statushandlers.StatusMananger#getManager().handle()</code> instead.
+	 * FIXME deprecated use <code>org.eclipse.ui.statushandlers.StatusMananger#getManager().handle()</code> instead.
 	 */
 	public static void displayStatus(String title, IStatus status) {
 		for (IStatusHandler handler : handlers) {
