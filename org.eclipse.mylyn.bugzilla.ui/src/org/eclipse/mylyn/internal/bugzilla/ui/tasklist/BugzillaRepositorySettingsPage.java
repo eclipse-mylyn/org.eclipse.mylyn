@@ -29,6 +29,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaStatus;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BugzillaServerVersion;
+import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
@@ -351,7 +352,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 					}
 				}
 				if (i == -1) {
-					StatusHandler.log("Could not resolve repository version: " + version, this);
+					StatusHandler.log(new Status(IStatus.INFO, BugzillaUiPlugin.PLUGIN_ID, "Could not resolve repository version: " + version));
 					i = repositoryVersionCombo.indexOf(IBugzillaConstants.SERVER_VERSION_DEFAULT.toString());
 					if (i != -1) {
 						repositoryVersionCombo.select(i);

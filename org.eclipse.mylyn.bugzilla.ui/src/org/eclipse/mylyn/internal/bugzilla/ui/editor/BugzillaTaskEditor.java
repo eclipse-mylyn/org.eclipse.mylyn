@@ -15,6 +15,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
@@ -310,7 +312,8 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		try {
 			operation = BUGZILLA_OPERATION.valueOf(repositoryOperation.getKnobName());
 		} catch (RuntimeException e) {
-			StatusHandler.log(e, "Unrecognized operation: " + repositoryOperation.getKnobName());
+			// FIXME: ?
+			StatusHandler.log(new Status(IStatus.INFO, BugzillaUiPlugin.PLUGIN_ID, "Unrecognized operation: " + repositoryOperation.getKnobName(), e));
 			operation = null;
 		}
 

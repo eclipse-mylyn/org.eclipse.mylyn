@@ -10,9 +10,12 @@ package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
+import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -77,7 +80,7 @@ public class NewBugzillaQueryWizard extends Wizard {
 		try {
 			getContainer().run(true, false, op);
 		} catch (Exception e) {
-			StatusHandler.log(e, "There was a problem executing the query refresh");
+			StatusHandler.log(new Status(IStatus.INFO, BugzillaUiPlugin.PLUGIN_ID, "There was a problem executing the query refresh", e));
 		}
 
 		return true;

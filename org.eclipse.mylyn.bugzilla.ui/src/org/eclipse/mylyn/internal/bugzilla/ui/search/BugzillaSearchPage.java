@@ -16,7 +16,9 @@ import java.util.Arrays;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -1365,7 +1367,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 //						this.setPageComplete(this.isPageComplete());
 //						this.setControlsEnabled(true);
 					} else {
-						StatusHandler.fail(cause, cause.getMessage(), false);
+						StatusHandler.log(new Status(IStatus.ERROR, BugzillaUiPlugin.PLUGIN_ID, cause.getMessage(), cause));
 					}
 				}
 

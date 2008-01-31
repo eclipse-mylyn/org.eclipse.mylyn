@@ -12,8 +12,10 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
@@ -221,7 +223,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 		try {
 			config = BugzillaCorePlugin.getRepositoryConfiguration(repository, false);
 		} catch (Exception e) {
-			StatusHandler.fail(e, "Could not retrieve repository configuration for: " + repository, true);
+			StatusHandler.fail(new Status(IStatus.ERROR, BugzillaUiPlugin.PLUGIN_ID, "Could not retrieve repository configuration for: " + repository, e));
 			return;
 		}
 

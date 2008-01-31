@@ -364,7 +364,7 @@ public class BugzillaCorePlugin extends Plugin {
 			}
 
 		} catch (Exception e) {
-			StatusHandler.fail(e, "could not set platform options", false);
+			StatusHandler.log(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, "could not set platform options", e));
 		}
 	}
 

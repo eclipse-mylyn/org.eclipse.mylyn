@@ -234,18 +234,18 @@ public class BugzillaProductPage extends WizardPage {
 							monitor.beginTask("Updating repository report options...", IProgressMonitor.UNKNOWN);
 							try {
 								connector.updateAttributes(repository, monitor);
-							} catch (CoreException ce) {
-								if (ce.getStatus().getException() instanceof GeneralSecurityException) {
-									StatusHandler.fail(ce,
-											"Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\n"
-													+ "Please ensure proper configuration in "
-													+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ". ", true);
-								} else if (ce.getStatus().getException() instanceof IOException) {
-									StatusHandler.fail(ce, "Connection Error, please ensure proper configuration in "
-											+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".", true);
+							} catch (CoreException e) {
+								// TODO: remove exceptions from communication of connectivity errors to the user
+								if (e.getStatus().getException() instanceof GeneralSecurityException) {
+									StatusHandler.fail(new Status(IStatus.WARNING, BugzillaUiPlugin.PLUGIN_ID, "Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\n"
+											+ "Please ensure proper configuration in "
+											+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ". ", e));
+								} else if (e.getStatus().getException() instanceof IOException) {
+									StatusHandler.fail(new Status(IStatus.WARNING, BugzillaUiPlugin.PLUGIN_ID, "Connection Error, please ensure proper configuration in "
+											+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".", e));
 								} else {
-									StatusHandler.fail(ce, "Error updating repository attributes for "
-											+ repository.getUrl(), true);
+									StatusHandler.fail(new Status(IStatus.WARNING, BugzillaUiPlugin.PLUGIN_ID, "Error updating repository attributes for "
+											+ repository.getUrl(), e));
 								}
 								return;
 							}

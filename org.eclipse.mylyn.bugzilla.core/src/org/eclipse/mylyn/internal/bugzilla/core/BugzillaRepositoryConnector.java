@@ -307,8 +307,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			// Need to replace this with query that would return list of tasks since last sync
 			// the trouble is that bugzilla only have 1 hour granularity for "changed since" query
 			// so, we can't say that no tasks has changed in repository
-
-			
 			// Retrieve all in one query
 //			Set<AbstractTask> changedTasks = new HashSet<AbstractTask>();
 //			Iterator<AbstractTask> itr = tasks.iterator();
@@ -319,9 +317,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 //			}
 //			System.err.println(">>>> markStale "+tasks.size());
 //			queryForChanged(repository, changedTasks, urlQueryString);
-			
-			
-			
 			
 			Set<AbstractTask> changedTasks = new HashSet<AbstractTask>();
 			Iterator<AbstractTask> itr = tasks.iterator();
@@ -357,8 +352,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			return true;
 		} catch (UnsupportedEncodingException e) {
 			// XXX throw CoreException instead?
-			StatusHandler.fail(e, "Repository configured with unsupported encoding: "
-					+ repository.getCharacterEncoding() + "\n\n Unable to determine changed tasks.", true);
+			StatusHandler.fail(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, "Repository configured with unsupported encoding: "
+					+ repository.getCharacterEncoding() + "\n\n Unable to determine changed tasks.", e));
 			return false;
 		} finally {
 			monitor.done();
@@ -447,8 +442,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	public String getTaskUrl(String repositoryUrl, String taskId) {
 		try {
 			return BugzillaClient.getBugUrlWithoutLogin(repositoryUrl, taskId);
-		} catch (Exception ex) {
-			StatusHandler.fail(ex, "Error constructing task url for " + repositoryUrl + "  id:" + taskId, false);
+		} catch (Exception e) {
+			StatusHandler.log(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, "Error constructing task url for " + repositoryUrl + "  id:" + taskId, e));
 		}
 		return null;
 	}
@@ -494,7 +489,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 					}
 				}
 			} catch (MalformedURLException e) {
-				StatusHandler.fail(e, "Error retrieving configuration timestamp for " + repository.getUrl(), false);
+				StatusHandler.log(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, "Error retrieving configuration timestamp for " + repository.getUrl(), e));
 			}
 			return result;
 		}

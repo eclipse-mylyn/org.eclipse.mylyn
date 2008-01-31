@@ -12,7 +12,9 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaLanguageSettings;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
@@ -87,8 +89,7 @@ public class BugzillaUiExtensionReader {
 			}
 			connector.addLanguageSetting(bugzillaLanguageSettings);
 		} else {
-			StatusHandler.log("Could not load language template extension " + element.getName(),
-					BugzillaUiExtensionReader.class);
+			StatusHandler.log(new Status(IStatus.WARNING, BugzillaUiPlugin.PLUGIN_ID, "Could not load language template extension " + element.getName()));
 		}
 	}
 }
