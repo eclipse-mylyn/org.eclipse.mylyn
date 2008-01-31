@@ -35,21 +35,6 @@ public class NewTaskFromErrorAction implements IObjectActionDelegate {
 
 	private LogEntry entry;
 
-	public void run() {
-		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-		boolean includeChildren = false;
-
-		if (entry.hasChildren() && MessageDialog.openQuestion(shell, "Report Bug", "Include children of this entry in the report?")) {
-			includeChildren = true;
-		}
-
-		StringBuilder sb = new StringBuilder();
-		buildDescriptionFromLogEntry(entry, sb, includeChildren);
-
-		TaskSelection taskSelection = new TaskSelection("", sb.toString());
-		TasksUiUtil.openNewTaskEditor(shell, taskSelection, null);
-	}
-
 	/**
 	 * Fills a {@link StringBuilder} with {@link LogEntry} information, optionally including subentries too
 	 * 
@@ -85,11 +70,30 @@ public class NewTaskFromErrorAction implements IObjectActionDelegate {
 		}
 	}
 
-	public void run(IAction action) {
-		run();
+	/* Please do not change the structure of this class. It is forked in the 3.3 branch. 
+	 * This method is intentionally protected. */
+	protected void createTask(LogEntry entry) {
+		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+		boolean includeChildren = false;
+
+		if (entry.hasChildren()
+				&& MessageDialog.openQuestion(shell, "Report Bug", "Include children of this entry in the report?")) {
+			includeChildren = true;
+		}
+
+		StringBuilder sb = new StringBuilder();
+		buildDescriptionFromLogEntry(entry, sb, includeChildren);
+
+		TaskSelection taskSelection = new TaskSelection("", sb.toString());
+		TasksUiUtil.openNewTaskEditor(shell, taskSelection, null);
 	}
 
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+	public void run() {
+		createTask(entry);
+	}
+
+	public void run(IAction action) {
+		run();
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
@@ -97,6 +101,9 @@ public class NewTaskFromErrorAction implements IObjectActionDelegate {
 		if (object instanceof LogEntry) {
 			entry = (LogEntry) object;
 		}
+	}
+
+	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 	}
 
 }
