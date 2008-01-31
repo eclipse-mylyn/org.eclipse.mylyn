@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
+   <extension-point id="pluginRepositoryMappings" name="Plug-in to Repository Mappings" schema="schema/pluginRepositoryMappings.exsd"/>
       
    <extension
    		point="org.eclipse.mylyn.tasks.ui.duplicateDetectors">
@@ -51,6 +52,25 @@
 		         label="Report as Bug">
              </action>
         </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.monitor.core.errorReporters">
+      <errorReporter
+            class="org.eclipse.mylyn.internal.bugzilla.ide.TaskErrorReporter"
+            id="org.eclipse.mylyn.bugzilla.ide.errorReporter"
+            label="Report Error as Bug">
+      </errorReporter>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.bugzilla.ide.pluginRepositoryMappings">
+      <mapping
+            pluginIdPrefix="org.eclipse"
+            repositoryAttributes="repository=https://bugs.eclipse.org/bugs;repositoryKind=bugzilla">
+      </mapping>
+      <mapping
+            pluginIdPrefix="org.eclipse.mylyn"
+            repositoryAttributes="product=Mylyn">
+      </mapping>
    </extension>
   
 </plugin>
