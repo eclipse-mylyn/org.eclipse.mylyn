@@ -41,6 +41,8 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  */
 public class EditCredentialsDialog extends TitleAreaDialog {
 
+	private static final String IMAGE_FILE_KEYLOCK = "icons/wizban/secur_role_wiz.gif";
+
 	private static final String MESSAGE = "Please enter the repository credentials";
 
 	private static final String TITLE = "Authentication Failed";
@@ -178,7 +180,7 @@ public class EditCredentialsDialog extends TitleAreaDialog {
 
 		Control control = super.createContents(parent);
 		setTitle(TITLE);
-		keyLockImage = AbstractUIPlugin.imageDescriptorFromPlugin(TasksUiPlugin.ID_PLUGIN, "icons/wizban/keylock.gif")
+		keyLockImage = AbstractUIPlugin.imageDescriptorFromPlugin(TasksUiPlugin.ID_PLUGIN, IMAGE_FILE_KEYLOCK)
 				.createImage();
 		setTitleImage(keyLockImage);
 		if (message != null) {
