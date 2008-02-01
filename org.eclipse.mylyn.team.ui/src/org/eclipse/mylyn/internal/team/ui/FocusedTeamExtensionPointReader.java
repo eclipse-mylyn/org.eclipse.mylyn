@@ -13,7 +13,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.team.ui.AbstractActiveChangeSetProvider;
 import org.eclipse.mylyn.team.ui.AbstractContextChangeSetManager;
@@ -49,9 +51,9 @@ public class FocusedTeamExtensionPointReader {
 						AbstractActiveChangeSetProvider provider = (AbstractActiveChangeSetProvider) element.createExecutableExtension(ATTR_CLASS);
 						FocusedTeamUiPlugin.getDefault().addActiveChangeSetProvider(provider);
 					} catch (CoreException e) {
-						StatusHandler.log(e, MessageFormat.format(
+						StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.PLUGIN_ID, MessageFormat.format(
 								"Error while initializing repository contribution {0} from plugin {1}.",
-								element.getAttribute(ATTR_CLASS), element.getContributor().getName()));
+								element.getAttribute(ATTR_CLASS), element.getContributor().getName()), e));
 					}
 				}
 			}
@@ -67,10 +69,9 @@ public class FocusedTeamExtensionPointReader {
 						AbstractContextChangeSetManager manager = (AbstractContextChangeSetManager) element.createExecutableExtension(ATTR_CLASS);
 						FocusedTeamUiPlugin.getDefault().addContextChangeSetManager(manager);
 					} catch (CoreException e) {
-						// ignore, we
-						StatusHandler.log(e, MessageFormat.format(
+						StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.PLUGIN_ID, MessageFormat.format(
 								"Error while initializing repository contribution {0} from plugin {1}.",
-								element.getAttribute(ATTR_CLASS), element.getContributor().getName()));
+								element.getAttribute(ATTR_CLASS), element.getContributor().getName()), e));
 					}
 				}
 			}

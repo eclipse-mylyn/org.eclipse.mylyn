@@ -10,6 +10,8 @@
  */
 package org.eclipse.mylyn.context.tests;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 
 /**
@@ -22,9 +24,10 @@ public class ManualUiTest extends AbstractManualTest {
 			int i = 10 / 0;
 			System.out.println(i);
 		} catch (Throwable t) {
-			StatusHandler.fail(t, "whoops", true);
+			StatusHandler.fail(new Status(IStatus.ERROR, "org.eclipse.mylyn", "whoops", t));
 		}
-		StatusHandler.fail(null, "whoops", true);
+		StatusHandler.fail(new Status(IStatus.ERROR, "org.eclipse.mylyn", "whoops"));
+		
 		assertTrue(confirmWithUser("Did an error dialog show up correctly?"));
 	}
 

@@ -11,6 +11,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateManager;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.team.ui.AbstractActiveChangeSetProvider;
@@ -67,7 +69,7 @@ public class FocusedTeamUiPlugin extends AbstractUIPlugin implements IStartup {
 						}
 					}
 				} catch (Exception e) {
-					StatusHandler.fail(e, "Mylyn Team start failed", false);
+					StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.PLUGIN_ID, "Mylyn Team start failed", e));
 				}
 			}
 		});

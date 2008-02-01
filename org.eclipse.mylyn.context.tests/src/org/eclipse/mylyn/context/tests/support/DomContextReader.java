@@ -19,20 +19,17 @@ import java.util.zip.ZipInputStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.mylyn.context.core.IInteractionContextReader;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.monitor.core.util.XmlStringConverter;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
-import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.monitor.core.InteractionEvent.Kind;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 /**
  * @author Mik Kersten
@@ -60,9 +57,7 @@ public class DomContextReader implements IInteractionContextReader {
 			}
 			return t;
 		} catch (Exception e) {
-			StatusHandler.fail(e, "could not read context, recreating", false);
-			file.renameTo(new File(file.getAbsolutePath() + "-save"));
-			return null;
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -79,10 +74,8 @@ public class DomContextReader implements IInteractionContextReader {
 			zipInputStream.getNextEntry();
 			builder = factory.newDocumentBuilder();
 			document = builder.parse(zipInputStream);
-		} catch (SAXException se) {
-			StatusHandler.log(se, "could not build");
-		} catch (ParserConfigurationException e) {
-			StatusHandler.log(e, "could not parse");
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		} finally {
 			closeStream(zipInputStream);
 			closeStream(fileInputStream);
@@ -109,9 +102,8 @@ public class DomContextReader implements IInteractionContextReader {
 					navigation, delta, Float.parseFloat(interest), format.parse(startDate), format.parse(endDate));
 			return ie;
 		} catch (ParseException e) {
-			StatusHandler.log(e, "could not read interaction event");
+			throw new RuntimeException(e);
 		}
-		return null;
 	}
 
 	private static final void closeStream(Closeable closeable) {
@@ -119,7 +111,7 @@ public class DomContextReader implements IInteractionContextReader {
 			try {
 				closeable.close();
 			} catch (IOException e) {
-				StatusHandler.fail(e, "Failed to close context input stream.", false);
+				throw new RuntimeException(e);
 			}
 		}
 	}

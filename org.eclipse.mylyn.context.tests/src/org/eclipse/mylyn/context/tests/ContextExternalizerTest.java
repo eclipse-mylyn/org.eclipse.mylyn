@@ -20,8 +20,8 @@ import org.eclipse.mylyn.context.tests.support.FileTool;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextExternalizer;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
-import org.eclipse.mylyn.internal.context.core.SaxContextReader;
 import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
+import org.eclipse.mylyn.internal.context.core.SaxContextReader;
 
 /**
  * @author Mik Kersten
@@ -68,7 +68,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		assertEquals("foobar", loaded.getContentLimitedTo());
 	}
 
-	public void testSaxExternalizationAgainstDom() {
+	public void testSaxExternalizationAgainstDom() throws Exception {
 		File file = FileTool.getFileInPlugin(ContextTestsPlugin.getDefault(), new Path(
 				"testdata/externalizer/testcontext.xml.zip"));
 		assertTrue(file.getAbsolutePath(), file.exists());

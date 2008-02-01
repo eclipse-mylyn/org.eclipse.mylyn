@@ -19,7 +19,9 @@ import java.util.regex.Pattern;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -74,8 +76,8 @@ public class CommitTemplateManager {
 			if (matcher.find()) {
 				return matcher.group(1);
 			}
-		} catch (Exception ex) {
-			StatusHandler.log(ex, "Problem while parsing task id from comment");
+		} catch (Exception e) {
+			StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.PLUGIN_ID, "Problem while parsing task id from comment", e));
 		}
 
 		return null;
@@ -204,8 +206,8 @@ public class CommitTemplateManager {
 			if (handler != null) {
 				return handler.getValue(task);
 			}
-		} catch (Exception ex) {
-			StatusHandler.log(ex, "Problem while dispatching to template handler for: " + keyword);
+		} catch (Exception e) {
+			StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.PLUGIN_ID, "Problem while dispatching to template handler for: " + keyword, e));
 		}
 
 		return null;
@@ -229,11 +231,11 @@ public class CommitTemplateManager {
 							Object result = processContribution(element);
 							if (result != null)
 								return result;
-						} catch (Exception ex) {
-							final String msg = MessageFormat.format(
+						} catch (Exception e) {
+							String msg = MessageFormat.format(
 									"Error while processing template handler contribution {0} from plugin {1}.",
 									element.getAttribute(ATTR_CLASS), element.getContributor().getName());
-							StatusHandler.log(ex, msg);
+							StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.PLUGIN_ID, msg, e));
 						}
 					}
 				}

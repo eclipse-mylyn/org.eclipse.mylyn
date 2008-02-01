@@ -16,6 +16,8 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionContext;
@@ -138,7 +140,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 							collector.remove(restoredSet);
 							collector.add(contextChangeSet);
 						} catch (Exception e) {
-							StatusHandler.fail(e, "could not restore change set", false);
+							StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.PLUGIN_ID, "Could not restore change set", e));
 						}
 					}
 				}
@@ -187,7 +189,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 				}
 			}
 		} catch (Exception e) {
-			StatusHandler.fail(e, "could not update change set", false);
+			StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.PLUGIN_ID, "Could not update change set", e));
 		}
 	}
 
@@ -239,7 +241,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 					}
 				}
 			} catch (Exception e) {
-				StatusHandler.fail(e, "could not manipulate change set resources", false);
+				StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.PLUGIN_ID, "Could not manipulate change set resources", e));
 			}
 		}
 	}

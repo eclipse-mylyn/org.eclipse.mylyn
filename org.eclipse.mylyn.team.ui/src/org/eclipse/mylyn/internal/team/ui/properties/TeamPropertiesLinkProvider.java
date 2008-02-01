@@ -11,6 +11,8 @@ package org.eclipse.mylyn.internal.team.ui.properties;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ProjectScope;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin;
@@ -65,7 +67,7 @@ public class TeamPropertiesLinkProvider {
 				projectNode.flush();
 				return true;
 			} catch (BackingStoreException e) {
-				StatusHandler.fail(e, "Failed to save commit comment template for project", false);
+				StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.PLUGIN_ID, "Failed to save commit comment template for project", e));
 			}
 		}
 		return false;
