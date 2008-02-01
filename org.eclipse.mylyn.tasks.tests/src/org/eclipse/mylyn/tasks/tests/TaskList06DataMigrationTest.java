@@ -23,7 +23,6 @@ import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.monitor.core.util.ZipFileUtil;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.WorkspaceAwareContextStore;
-import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
@@ -139,12 +138,14 @@ class TaskListDataMigration implements IRunnableWithProgress {
 		try {
 			monitor.beginTask("Task Data Migration", IProgressMonitor.UNKNOWN);
 			doMigration(monitor);
+		} catch (Exception e) {
+			throw new InvocationTargetException(e);
 		} finally {
 
 		}
 	}
 
-	public void doMigration(IProgressMonitor monitor) {
+	public void doMigration(IProgressMonitor monitor) throws Exception {
 		try {
 			if (dataDirectory == null || !dataDirectory.exists())
 				return;
@@ -162,15 +163,14 @@ class TaskListDataMigration implements IRunnableWithProgress {
 		}
 	}
 
-	public boolean migrateTaskList(IProgressMonitor monitor) {
+	public boolean migrateTaskList(IProgressMonitor monitor) throws Exception {
 		File oldTasklistFile = new File(dataDirectory, ITasksUiConstants.OLD_TASK_LIST_FILE);
 		File newTasklistFile = new File(dataDirectory, ITasksUiConstants.DEFAULT_TASK_LIST_FILE);
 		if (!oldTasklistFile.exists())
 			return false;
 		if (newTasklistFile.exists()) {
 			if (!newTasklistFile.delete()) {
-				StatusHandler.fail(null, "Could not overwrite tasklist", false);
-				return false;
+				throw new Exception("Could not overwrite tasklist");
 			}
 		}
 		ArrayList<File> filesToZip = new ArrayList<File>();
@@ -179,29 +179,23 @@ class TaskListDataMigration implements IRunnableWithProgress {
 			monitor.beginTask("Migrate Tasklist Data", 1);
 			ZipFileUtil.createZipFile(newTasklistFile, filesToZip, new SubProgressMonitor(monitor, 1));
 			if (!oldTasklistFile.delete()) {
-				StatusHandler.fail(null, "Could not remove old tasklist.", false);
-				return false;
+				throw new Exception("Could not remove old tasklist.");
 			}
 			monitor.worked(1);
-		} catch (Exception e) {
-			StatusHandler.fail(e, "Error occurred while migrating old tasklist: " + e.getMessage(), true);
-			return false;
 		} finally {
 			monitor.done();
 		}
 		return true;
 	}
 
-	public boolean migrateRepositoriesData(IProgressMonitor monitor) {
+	public boolean migrateRepositoriesData(IProgressMonitor monitor) throws Exception {
 		File oldRepositoriesFile = new File(dataDirectory, TaskRepositoryManager.OLD_REPOSITORIES_FILE);
 		File newRepositoriesFile = new File(dataDirectory, TaskRepositoryManager.DEFAULT_REPOSITORIES_FILE);
 		if (!oldRepositoriesFile.exists())
 			return false;
 		if (newRepositoriesFile.exists()) {
 			if (!newRepositoriesFile.delete()) {
-				StatusHandler.fail(null,
-						"Could not overwrite repositories file. Check read/write permission on data directory.", false);
-				return false;
+				throw new Exception("Could not overwrite repositories file. Check read/write permission on data directory.");
 			}
 		}
 		ArrayList<File> filesToZip = new ArrayList<File>();
@@ -210,21 +204,18 @@ class TaskListDataMigration implements IRunnableWithProgress {
 			monitor.beginTask("Migrate Repository Data", 1);
 			ZipFileUtil.createZipFile(newRepositoriesFile, filesToZip, new SubProgressMonitor(monitor, 1));
 			if (!oldRepositoriesFile.delete()) {
-				StatusHandler.fail(null,
-						"Could not remove old repositories file. Check read/write permission on data directory.", false);
-				return false;
+				throw new Exception("Could not remove old repositories file. Check read/write permission on data directory.");
 			}
 			monitor.worked(1);
 		} catch (Exception e) {
-			StatusHandler.fail(e, "Error occurred while migrating old repositories data: " + e.getMessage(), true);
-			return false;
+			throw new Exception("Error occurred while migrating old repositories data: " + e.getMessage());
 		} finally {
 			monitor.done();
 		}
 		return true;
 	}
 
-	public boolean migrateTaskContextData(IProgressMonitor monitor) {
+	public boolean migrateTaskContextData(IProgressMonitor monitor) throws Exception {
 		ArrayList<File> contextFiles = new ArrayList<File>();
 		for (File file : dataDirectory.listFiles()) {
 			if (file.getName().startsWith("http") || file.getName().startsWith("local")
@@ -241,9 +232,7 @@ class TaskListDataMigration implements IRunnableWithProgress {
 			File contextsFolder = new File(dataDirectory, WorkspaceAwareContextStore.CONTEXTS_DIRECTORY);
 			if (!contextsFolder.exists()) {
 				if (!contextsFolder.mkdir()) {
-					StatusHandler.fail(null,
-							"Could not create contexts folder. Check read/write permission on data directory.", false);
-					return false;
+					throw new Exception("Could not create contexts folder. Check read/write permission on data directory.");
 				}
 			}
 			for (File file : contextFiles) {
@@ -252,30 +241,22 @@ class TaskListDataMigration implements IRunnableWithProgress {
 				File newContextFile = new File(contextsFolder, file.getName() + ".zip");
 				if (newContextFile.exists()) {
 					if (!newContextFile.delete()) {
-						StatusHandler.fail(null,
-								"Could not overwrite context file. Check read/write permission on data directory.",
-								false);
-						return false;
+						throw new Exception("Could not overwrite context file. Check read/write permission on data directory.");
 					}
 				}
 				ZipFileUtil.createZipFile(newContextFile, filesToZip, new SubProgressMonitor(monitor, 1));
 				if (!file.delete()) {
-					StatusHandler.fail(null,
-							"Could not remove old context file. Check read/write permission on data directory.", false);
-					return false;
+					throw new Exception("Could not remove old context file. Check read/write permission on data directory.");
 				}
 				monitor.worked(1);
 			}
-		} catch (Exception e) {
-			StatusHandler.fail(e, "Error occurred while migrating old repositories data: " + e.getMessage(), true);
-			return false;
 		} finally {
 			monitor.done();
 		}
 		return true;
 	}
 
-	public boolean migrateActivityData(IProgressMonitor monitor) {
+	public boolean migrateActivityData(IProgressMonitor monitor) throws Exception {
 		File oldActivityFile = new File(dataDirectory, InteractionContextManager.OLD_CONTEXT_HISTORY_FILE_NAME
 				+ InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD);
 		if (!oldActivityFile.exists())
@@ -284,9 +265,7 @@ class TaskListDataMigration implements IRunnableWithProgress {
 		File contextsFolder = new File(dataDirectory, WorkspaceAwareContextStore.CONTEXTS_DIRECTORY);
 		if (!contextsFolder.exists()) {
 			if (!contextsFolder.mkdir()) {
-				StatusHandler.fail(null,
-						"Could not create contexts folder. Check read/write permission on data directory.", false);
-				return false;
+				throw new Exception("Could not create contexts folder. Check read/write permission on data directory.");
 			}
 		}
 
@@ -295,9 +274,7 @@ class TaskListDataMigration implements IRunnableWithProgress {
 
 		if (newActivityFile.exists()) {
 			if (!newActivityFile.delete()) {
-				StatusHandler.fail(null,
-						"Could not overwrite activity file. Check read/write permission on data directory.", false);
-				return false;
+				throw new Exception("Could not overwrite activity file. Check read/write permission on data directory.");
 			}
 		}
 		ArrayList<File> filesToZip = new ArrayList<File>();
@@ -306,14 +283,9 @@ class TaskListDataMigration implements IRunnableWithProgress {
 			monitor.beginTask("Migrate Activity Data", 1);
 			ZipFileUtil.createZipFile(newActivityFile, filesToZip, new SubProgressMonitor(monitor, 1));
 			if (!oldActivityFile.delete()) {
-				StatusHandler.fail(null,
-						"Could not remove old activity file. Check read/write permission on data directory.", false);
-				return false;
+				throw new Exception("Could not remove old activity file. Check read/write permission on data directory.");
 			}
 			monitor.worked(1);
-		} catch (Exception e) {
-			StatusHandler.fail(e, "Error occurred while migrating old activity data: " + e.getMessage(), true);
-			return false;
 		} finally {
 			monitor.done();
 		}
