@@ -43,6 +43,8 @@ public class EditCredentialsDialog extends TitleAreaDialog {
 
 	private static final String IMAGE_FILE_KEYLOCK = "icons/wizban/secur_role_wiz.gif";
 
+	public static final int TASK_REPOSITORY_CHANGED = 1000;
+	
 	private static final String MESSAGE = "Please enter the repository credentials";
 
 	private static final String TITLE = "Authentication Failed";
@@ -94,6 +96,9 @@ public class EditCredentialsDialog extends TitleAreaDialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				taskRepository.setOffline(true);
+				TasksUiPlugin.getRepositoryManager().notifyRepositorySettingsChanged(taskRepository);
+				TasksUiPlugin.getRepositoryManager().saveRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
+
 				setReturnCode(Window.CANCEL);
 				close();
 			}
@@ -119,7 +124,11 @@ public class EditCredentialsDialog extends TitleAreaDialog {
 				public void linkActivated(HyperlinkEvent e) {
 					close();
 					int returnCode = TasksUiUtil.openEditRepositoryWizard(taskRepository);
-					setReturnCode(returnCode);
+					if (returnCode == Dialog.OK) {
+						setReturnCode(TASK_REPOSITORY_CHANGED);
+					} else {
+						setReturnCode(returnCode);						
+					}
 				}
 			});
 		}
@@ -201,7 +210,7 @@ public class EditCredentialsDialog extends TitleAreaDialog {
 
 		createCenterArea(composite);
 
-		if (taskRepository != null) {
+		if (taskRepository != null && !taskRepository.isOffline()) {
 			createButtonArea(composite);
 		}
 

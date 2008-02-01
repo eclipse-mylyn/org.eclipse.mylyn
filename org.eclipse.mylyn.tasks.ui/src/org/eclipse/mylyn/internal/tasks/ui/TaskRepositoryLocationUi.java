@@ -85,9 +85,13 @@ public class TaskRepositoryLocationUi extends TaskRepositoryLocation {
 			if (shell != null && !shell.isDisposed()) {
 				EditCredentialsDialog dialog = EditCredentialsDialog.createDialog(shell);
 				initializeDialog(dialog);
-				if (dialog.open() == Dialog.OK) {
+				int resultCode = dialog.open();
+				if (resultCode == Dialog.OK) {
 					saveDialog(dialog);
 					result = ResultType.CREDENTIALS_CHANGED;
+					canceled = false;
+				} else if (resultCode == EditCredentialsDialog.TASK_REPOSITORY_CHANGED) {
+					result = ResultType.PROPERTIES_CHANGED;
 					canceled = false;
 				} else {
 					canceled = true;
