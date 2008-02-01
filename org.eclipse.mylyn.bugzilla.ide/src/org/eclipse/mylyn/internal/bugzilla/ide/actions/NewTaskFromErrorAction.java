@@ -70,9 +70,7 @@ public class NewTaskFromErrorAction implements IObjectActionDelegate {
 		}
 	}
 
-	/* Please do not change the structure of this class. It is forked in the 3.3 branch. 
-	 * This method is intentionally protected. */
-	protected void createTask(LogEntry entry) {
+	private void createTask(LogEntry entry) {
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		boolean includeChildren = false;
 
@@ -83,8 +81,13 @@ public class NewTaskFromErrorAction implements IObjectActionDelegate {
 
 		StringBuilder sb = new StringBuilder();
 		buildDescriptionFromLogEntry(entry, sb, includeChildren);
+		openNewTaskEditor(shell, sb.toString());
+	}
 
-		TaskSelection taskSelection = new TaskSelection("", sb.toString());
+	/* Please do not change the structure of this class. It is forked in the 3.3 branch. 
+	 * This method is intentionally protected. */
+	protected void openNewTaskEditor(Shell shell, String text) {
+		TaskSelection taskSelection = new TaskSelection("", text);
 		TasksUiUtil.openNewTaskEditor(shell, taskSelection, null);
 	}
 
