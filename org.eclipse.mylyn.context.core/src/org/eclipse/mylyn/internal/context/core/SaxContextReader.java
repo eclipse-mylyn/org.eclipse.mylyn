@@ -16,6 +16,9 @@ import java.net.URLEncoder;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionContextReader;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.xml.sax.InputSource;
@@ -80,7 +83,7 @@ public class SaxContextReader implements IInteractionContextReader {
 			try {
 				closeable.close();
 			} catch (IOException e) {
-				StatusHandler.fail(e, "Failed to close context input stream.", false);
+				StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Failed to close context input", e));
 			}
 		}
 	}

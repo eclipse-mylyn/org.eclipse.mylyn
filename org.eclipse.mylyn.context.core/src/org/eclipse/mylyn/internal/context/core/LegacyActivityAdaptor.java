@@ -8,6 +8,9 @@
 
 package org.eclipse.mylyn.internal.context.core;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 
@@ -55,7 +58,7 @@ public class LegacyActivityAdaptor {
 				}
 			}
 		} catch (Throwable t) {
-			StatusHandler.fail(t, "Error parsing interaction event", false);
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Error parsing interaction event", t));
 		}
 		return event;
 	}

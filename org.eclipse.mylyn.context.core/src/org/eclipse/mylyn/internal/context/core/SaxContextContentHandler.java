@@ -13,6 +13,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.monitor.core.util.XmlStringConverter;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
@@ -68,7 +71,7 @@ public class SaxContextContentHandler extends DefaultHandler {
 				InteractionEvent ie = createEventFromAttributes(attributes);
 				context.parseEvent(ie);
 			} catch (Exception e) {
-				StatusHandler.fail(e, "Could not process activity event, ignoring.", false);
+				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID, "Ignored unexpected activity event", e));
 			}
 			break;
 		}

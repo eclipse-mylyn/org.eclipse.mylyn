@@ -533,7 +533,8 @@ public class InteractionContextManager {
 				}
 			}
 		} else {
-			StatusHandler.log("Attempted to add null lisetener", this);
+			// FIXME replace by Assert.isNotNull(listener)
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Attempted to add null lisetener", new Exception()));
 		}
 	}
 
@@ -793,7 +794,7 @@ public class InteractionContextManager {
 			externalizer.writeContextToXml(collapseActivityMetaContext(context),
 					getFileForContext(CONTEXT_HISTORY_FILE_NAME));
 		} catch (Throwable t) {
-			StatusHandler.fail(t, "could not save activity history", false);
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Could not save activity history", t));
 		} finally {
 			if (!wasPaused) {
 				setContextCapturePaused(false);
@@ -857,7 +858,7 @@ public class InteractionContextManager {
 				activityEvents.clear();
 			}
 		} catch (Exception e) {
-			StatusHandler.fail(e, "Error during meta activity collapse", false);
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Error during meta activity collapse", e));
 		}
 	}
 
@@ -932,7 +933,7 @@ public class InteractionContextManager {
 			File contextFile = new File(contextDirectory, encoded + CONTEXT_FILE_EXTENSION);
 			return contextFile;
 		} catch (UnsupportedEncodingException e) {
-			StatusHandler.fail(e, "Could not determine path for context", false);
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Could not determine path for context", e));
 		}
 		return null;
 	}
