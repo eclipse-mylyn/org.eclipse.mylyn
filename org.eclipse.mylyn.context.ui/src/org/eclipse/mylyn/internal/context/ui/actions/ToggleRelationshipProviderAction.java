@@ -12,6 +12,8 @@ package org.eclipse.mylyn.internal.context.ui.actions;
 
 import java.util.Set;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IMenuCreator;
@@ -116,8 +118,7 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 						ActiveSearchView.getFromActivePerspective().updateDegreesOfSeparation(providers,
 								degreeOfSeparation);
 					} catch (NumberFormatException e) {
-						// ignore this for now
-						StatusHandler.fail(e, "invalid degree of separation", false);
+						StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Invalid degree of separation", e));
 					}
 				}
 			};

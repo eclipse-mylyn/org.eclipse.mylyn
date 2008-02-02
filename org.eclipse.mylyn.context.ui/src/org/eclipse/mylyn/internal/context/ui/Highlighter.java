@@ -12,7 +12,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
@@ -116,7 +119,7 @@ public class Highlighter {
 
 			highlightColor = new Color(Display.getDefault(), redStep, greenStep, blueStep);
 		} catch (Throwable t) {
-			StatusHandler.log(t, "highlighter init failed");
+			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Highlighter initialization failed", t));
 		}
 	}
 
@@ -149,7 +152,7 @@ public class Highlighter {
 				green += greenStep;
 			}
 		} catch (Throwable t) {
-			StatusHandler.log(t, "gradients failed");
+			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Gradients initialization failed", t));
 		}
 	}
 

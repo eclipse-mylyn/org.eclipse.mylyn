@@ -11,6 +11,9 @@ package org.eclipse.mylyn.internal.context.ui;
 import java.util.Calendar;
 import java.util.Set;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
@@ -33,7 +36,6 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 	@Override
 	public boolean select(Object parent, Object child) {
 		try {
-
 			if (child instanceof ScheduledTaskContainer) {
 				ScheduledTaskContainer dateRangeTaskContainer = (ScheduledTaskContainer) child;
 				return isDateRangeInteresting(dateRangeTaskContainer);
@@ -65,7 +67,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 
 			}
 		} catch (Throwable t) {
-			StatusHandler.fail(t, "interest filter failed", false);
+			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Interest filter failed", t));
 		}
 		return false;
 	}

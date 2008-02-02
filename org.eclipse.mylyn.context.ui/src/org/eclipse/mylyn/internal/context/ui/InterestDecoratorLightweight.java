@@ -10,12 +10,15 @@ package org.eclipse.mylyn.internal.context.ui;
 
 import java.util.ConcurrentModificationException;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContextRelation;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 
@@ -62,7 +65,7 @@ public class InterestDecoratorLightweight implements ILightweightLabelDecorator 
 				}
 			}
 		} catch (Exception e) {
-			StatusHandler.log(e, "decoration failed");
+			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Decoration failed", e));
 		}
 	}
 

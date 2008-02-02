@@ -17,6 +17,8 @@ import java.util.Set;
 import java.util.WeakHashMap;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.ITextSelection;
@@ -143,7 +145,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 							try {
 								viewer.addFilter(filter);
 							} catch (Throwable t) {
-								StatusHandler.fail(t, "Failed to restore filter: " + filter, false);
+								StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Failed to restore filter: " + filter, t));
 							}
 						}
 					}
@@ -278,7 +280,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 				updateLinking(on);
 			}
 		} catch (Throwable t) {
-			StatusHandler.fail(t, "Could not install viewer manager on: " + globalPrefId, false);
+			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not install viewer manager on: " + globalPrefId, t));
 		} finally {
 			if (!wasPaused) {
 				ContextCorePlugin.getContextManager().setContextCapturePaused(false);
@@ -402,14 +404,15 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 		try {
 			return ContextUiPlugin.getDefault().getPreservedFilterClasses(viewPart.getSite().getId());
 		} catch (Exception e) {
-			StatusHandler.log(e, "Could not determine preserved filters");
+			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not determine preserved filters", e));
 			return Collections.emptySet();
 		}
 	}
 
 	protected boolean installInterestFilter(StructuredViewer viewer) {
 		if (viewer == null) {
-			StatusHandler.log("The viewer to install InterestFilter is null", this);
+			// FIXME Assert.isNotNull(viewer)
+			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "The viewer to install interest filter is null", new Exception()));
 			return false;
 		} else if (viewer.getControl().isDisposed() && manageViewer) {
 			// TODO: do this with part listener, not lazily?
@@ -439,7 +442,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 			}
 			return true;
 		} catch (Throwable t) {
-			StatusHandler.fail(t, "Could not install viewer filter on: " + globalPrefId, false);
+			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not install viewer filter on: " + globalPrefId, t));
 		} finally {
 			viewer.getControl().setRedraw(true);
 			internalSuppressExpandAll = false;
@@ -449,7 +452,8 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 
 	protected void uninstallInterestFilter(StructuredViewer viewer) {
 		if (viewer == null) {
-			StatusHandler.log("Could not uninstall interest filter", this);
+			// FIXME Assert.isNotNull(viewer)
+			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "The viewer to uninstall interest filter is null", new Exception()));
 			return;
 		} else if (viewer.getControl().isDisposed()) {
 			// TODO: do this with part listener, not lazily?
@@ -475,7 +479,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 				viewer.removeFilter(interestFilter);
 			}
 		} catch (Throwable t) {
-			StatusHandler.fail(t, "Could not uninstall interest viewer filter on: " + globalPrefId, false);
+			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not uninstall interest viewer filter on: " + globalPrefId, t));
 		} finally {
 			viewer.getControl().setRedraw(true);
 		}

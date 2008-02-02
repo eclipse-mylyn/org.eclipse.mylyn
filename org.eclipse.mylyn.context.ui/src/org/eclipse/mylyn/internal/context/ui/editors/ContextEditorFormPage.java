@@ -11,6 +11,8 @@ package org.eclipse.mylyn.internal.context.ui.editors;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -23,6 +25,7 @@ import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionContextListener2;
 import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
 import org.eclipse.mylyn.internal.context.ui.actions.ContextAttachAction;
 import org.eclipse.mylyn.internal.context.ui.actions.ContextClearAction;
@@ -395,7 +398,7 @@ public class ContextEditorFormPage extends FormPage {
 				Method method = clazz.getDeclaredMethod("setIsFlatLayout", new Class[] { boolean.class });
 				method.invoke(treeContentProvider, new Object[] { true });
 			} catch (Exception e) {
-				StatusHandler.log(e, "couldn't set flat layout on Java content provider");
+				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not set flat layout on Java content provider", e));
 			}
 		}
 	}

@@ -17,6 +17,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -150,7 +152,7 @@ public class FocusedViewerManager implements IInteractionContextListener2, ISele
 				refreshViewer(nodesToRefresh, updateLabels, viewer);
 			}
 		} catch (Throwable t) {
-			StatusHandler.fail(t, "could not refresh viewer", false);
+			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not refresh viewer", t));
 		}
 	}
 

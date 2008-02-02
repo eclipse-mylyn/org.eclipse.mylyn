@@ -13,6 +13,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionManager;
@@ -78,7 +80,7 @@ public class ActiveSearchView extends ViewPart {
 				updateDegreesOfSeparation(providerList, provider.getCurrentDegreeOfSeparation());
 			}
 		} catch (Throwable t) {
-			StatusHandler.fail(t, "Could not refresn related elements", false);
+			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not refresh related elements", t));
 		}
 	}
 
@@ -192,7 +194,7 @@ public class ActiveSearchView extends ViewPart {
 					try {
 						internalRefresh(node, updateLabels);
 					} catch (Throwable t) {
-						StatusHandler.log(t, "active searchrefresh failed");
+						StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Refresh of active search failed", t));
 					}
 				}
 			});
@@ -202,7 +204,7 @@ public class ActiveSearchView extends ViewPart {
 					try {
 						internalRefresh(node, updateLabels);
 					} catch (Throwable t) {
-						StatusHandler.log(t, "active searchrefresh failed");
+						StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Refresh of active search failed", t));
 					}
 				}
 			});

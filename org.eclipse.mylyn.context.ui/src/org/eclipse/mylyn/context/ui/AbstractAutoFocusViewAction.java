@@ -10,6 +10,8 @@ package org.eclipse.mylyn.context.ui;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionContext;
@@ -66,7 +68,7 @@ public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewActio
 						update(true);
 					}
 				} catch (Exception e) {
-					StatusHandler.fail(e, "could not toggle Mylyn on view: " + getPartForAction(), true);
+					StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not toggle focus action on view: " + getPartForAction(), e));
 				}
 			}
 		});

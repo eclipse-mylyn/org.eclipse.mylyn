@@ -14,6 +14,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.Viewer;
@@ -86,7 +88,7 @@ public class InterestFilter extends ViewerFilter {
 				return isInteresting(element);
 			}
 		} catch (Throwable t) {
-			StatusHandler.fail(t, "interest filter failed on viewer: " + viewer.getClass(), false);
+			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Interest filter failed on viewer: " + viewer.getClass(), t));
 		}
 		return false;
 	}

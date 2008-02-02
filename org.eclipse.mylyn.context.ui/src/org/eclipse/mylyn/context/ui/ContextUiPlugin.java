@@ -23,7 +23,9 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -77,6 +79,8 @@ import org.osgi.framework.BundleContext;
  */
 public class ContextUiPlugin extends AbstractContextUiPlugin {
 
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.context.ui";
+	
 	private Map<String, AbstractContextUiBridge> bridges = new HashMap<String, AbstractContextUiBridge>();
 
 	private Map<String, ILabelProvider> contextLabelProviders = new HashMap<String, ILabelProvider>();
@@ -246,7 +250,7 @@ public class ContextUiPlugin extends AbstractContextUiPlugin {
 			MonitorUiPlugin.getDefault().addWindowPerspectiveListener(perspectiveManager);
 			TasksUiPlugin.getTaskListManager().addActivityListener(TASK_ACTIVATION_LISTENER);
 		} catch (Exception e) {
-			StatusHandler.fail(e, "Context UI initialization failed", true);
+			StatusHandler.fail(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Context UI initialization failed", e));
 		}
 
 		try {
@@ -276,7 +280,7 @@ public class ContextUiPlugin extends AbstractContextUiPlugin {
 			// NOTE: 
 			viewerManager.forceReferesh();
 		} catch (Exception e) {
-			StatusHandler.fail(e, "Could not initialize focused viewers", true);
+			StatusHandler.fail(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not initialize focused viewers", e));
 		}
 	}
 
@@ -526,11 +530,11 @@ public class ContextUiPlugin extends AbstractContextUiPlugin {
 					ContextUiPlugin.getDefault().internalAddContextLabelProvider((String) contentType,
 							(ILabelProvider) provider);
 				} else {
-					StatusHandler.log("Could not load label provider: " + provider.getClass().getCanonicalName()
-							+ " must implement " + ILabelProvider.class.getCanonicalName(), thisReader);
+					StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not load label provider: " + provider.getClass().getCanonicalName()
+							+ " must implement " + ILabelProvider.class.getCanonicalName()));
 				}
 			} catch (CoreException e) {
-				StatusHandler.log(e, "Could not load label provider extension");
+				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not load label provider extension", e));
 			}
 		}
 

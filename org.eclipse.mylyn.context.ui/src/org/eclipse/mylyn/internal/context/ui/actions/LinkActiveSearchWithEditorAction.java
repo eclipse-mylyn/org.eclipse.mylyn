@@ -8,6 +8,8 @@
 
 package org.eclipse.mylyn.internal.context.ui.actions;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -81,7 +83,7 @@ public class LinkActiveSearchWithEditorAction extends Action {
 					}
 				}
 			} catch (Throwable t) {
-				StatusHandler.log(t, "Could not update package explorer");
+				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not update package explorer", t));
 			}
 		}
 	}
