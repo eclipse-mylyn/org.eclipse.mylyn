@@ -369,7 +369,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
-		// ignore
+		updateEnablement(action);
 	}
 
 	/**
