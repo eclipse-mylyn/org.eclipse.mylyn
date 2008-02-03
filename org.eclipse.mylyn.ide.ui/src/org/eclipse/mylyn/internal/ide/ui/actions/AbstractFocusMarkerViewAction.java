@@ -12,16 +12,19 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.mylyn.context.ui.AbstractFocusViewAction;
+import org.eclipse.mylyn.internal.ide.ui.IdeUiBridgePlugin;
 import org.eclipse.mylyn.internal.ide.ui.MarkerInterestFilter;
 import org.eclipse.mylyn.internal.ide.ui.MarkerViewLabelProvider;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.internal.provisional.views.markers.ExtendedMarkersView;
-import org.eclipse.ui.internal.provisional.views.markers.MarkersTreeViewer;
+import org.eclipse.ui.internal.views.markers.ExtendedMarkersView;
+import org.eclipse.ui.internal.views.markers.MarkersTreeViewer;
 import org.eclipse.ui.views.markers.internal.TableViewLabelProvider;
 
 /**
@@ -67,7 +70,7 @@ public abstract class AbstractFocusMarkerViewAction extends AbstractFocusViewAct
 					}
 				}
 			} catch (Exception e) {
-				StatusHandler.log(e, "couldn't get problems view viewer");
+				StatusHandler.log(new Status(IStatus.ERROR, IdeUiBridgePlugin.PLUGIN_ID, "Could not get problems view viewer", e));
 			}
 		}
 		if (cachedViewer != null) {

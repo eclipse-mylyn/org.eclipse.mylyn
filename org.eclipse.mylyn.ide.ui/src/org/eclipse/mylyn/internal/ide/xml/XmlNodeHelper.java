@@ -15,6 +15,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.internal.ide.ui.IdeUiBridgePlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 
 /**
@@ -148,7 +151,7 @@ public class XmlNodeHelper {
 				contents += s;
 			}
 		} catch (IOException e) {
-			StatusHandler.log(e, "couldn't get contents");
+			StatusHandler.log(new Status(IStatus.ERROR, IdeUiBridgePlugin.PLUGIN_ID, "Could not get contents", e));
 		}
 		return contents;
 	}
