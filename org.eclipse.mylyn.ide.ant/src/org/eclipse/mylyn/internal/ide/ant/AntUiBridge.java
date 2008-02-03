@@ -21,7 +21,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.context.core.IInteractionElement;
@@ -69,7 +71,7 @@ public class AntUiBridge extends AbstractContextUiBridge {
 
 			// if the editor is null, we had a problem and should return
 			if (editor == null) {
-				StatusHandler.log("Unable to open editor for file: " + filename, this);
+				StatusHandler.log(new Status(IStatus.ERROR, AntUiBridgePlugin.ID_PLUGIN, "Unable to open editor for file: " + filename));
 				return;
 			}
 
@@ -95,7 +97,7 @@ public class AntUiBridge extends AbstractContextUiBridge {
 			// }
 
 		} catch (Exception e) {
-			StatusHandler.fail(e, "ERROR OPENING XML EDITOR\n" + e.getMessage(), false);
+			StatusHandler.log(new Status(IStatus.ERROR, AntUiBridgePlugin.ID_PLUGIN, "Could not open XML editor", e));
 		}
 	}
 
@@ -168,7 +170,7 @@ public class AntUiBridge extends AbstractContextUiBridge {
 				method.setAccessible(true);
 				viewers.add((TreeViewer) method.invoke(outline, new Object[] {}));
 			} catch (Exception e) {
-				StatusHandler.log(e, "couldn't get outline");
+				StatusHandler.log(new Status(IStatus.WARNING, AntUiBridgePlugin.ID_PLUGIN, "Unable to get outline", e));
 			}
 		}
 		return viewers;

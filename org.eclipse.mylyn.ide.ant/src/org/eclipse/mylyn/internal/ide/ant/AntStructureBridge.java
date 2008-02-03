@@ -27,7 +27,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
@@ -295,7 +297,7 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 				}
 				return null;
 			} catch (Throwable t) {
-				StatusHandler.fail(t, "Could not find element for: " + object, false);
+				StatusHandler.log(new Status(IStatus.ERROR, AntUiBridgePlugin.ID_PLUGIN, "Could not find element for: " + object, t));
 				return null;
 			}
 		} else if (object instanceof IFile) {
@@ -322,7 +324,7 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 					return handle;
 				}
 			} catch (Exception e) {
-				StatusHandler.log(e, "Unable to get handle for offset in object");
+				StatusHandler.log(new Status(IStatus.WARNING, AntUiBridgePlugin.ID_PLUGIN, "Unable to get handle for offset in object", e));
 			}
 		}
 		return null;

@@ -17,6 +17,8 @@ import org.eclipse.ant.internal.ui.editor.AntEditor;
 import org.eclipse.ant.internal.ui.model.AntElementNode;
 import org.eclipse.ant.internal.ui.model.AntModel;
 import org.eclipse.ant.internal.ui.model.AntProjectNode;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylyn.internal.ide.xml.XmlNodeHelper;
@@ -71,7 +73,7 @@ public class AntEditingMonitor extends AbstractUserInteractionMonitor {
 					XmlNodeHelper xnode = new XmlNodeHelper(fei.getFile().getFullPath().toString(), path);
 					super.handleElementSelection(part, xnode, contributeToContext);
 				} catch (Exception e) {
-					StatusHandler.log(e, "selection resolve failed");
+					StatusHandler.log(new Status(IStatus.ERROR, AntUiBridgePlugin.ID_PLUGIN, "Resolving selection failed", e));
 				}
 			}
 		}

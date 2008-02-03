@@ -18,6 +18,8 @@ import org.osgi.framework.BundleContext;
  */
 public class AntUiBridgePlugin extends AbstractContextUiPlugin {
 
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.ide.ant";
+	
 	private AntEditingMonitor antEditingMonitor;
 
 	public AntUiBridgePlugin() {
