@@ -8,6 +8,8 @@
 
 package org.eclipse.mylyn.internal.monitor.ui;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
@@ -93,7 +95,7 @@ public class MenuCommandMonitor implements Listener {
 			MonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 
 		} catch (Throwable t) {
-			StatusHandler.fail(t, "Could not log selection", false);
+			StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN, "Could not log selection", t));
 		}
 	}
 }

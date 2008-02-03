@@ -19,7 +19,9 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.monitor.ui.ActivityContextManager;
 import org.eclipse.mylyn.internal.monitor.ui.IMonitoredWindow;
@@ -138,7 +140,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 					activityContextManager = new ActivityContextManager(TIMEOUT_INACTIVITY_MILLIS, monitors);
 					activityContextManager.start();
 				} catch (Exception e) {
-					StatusHandler.fail(e, "Mylyn Monitor start failed", false);
+					StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN, "Monitor UI start failed", e));
 				}
 			}
 		});
@@ -170,7 +172,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 			}
 		} catch (Exception e) {
-			StatusHandler.fail(e, "Mylyn Monitor stop failed", false);
+			StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN, "Monitor UI stop failed", e));
 		}
 		INSTANCE = null;
 	}
@@ -302,7 +304,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 					}
 				}
 			} catch (Throwable t) {
-				StatusHandler.fail(t, "could not read monitor extension", false);
+				StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN, "Could not read monitor extension", t));
 			}
 		}
 
@@ -314,8 +316,8 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 						monitors.add(0, (AbstractUserActivityMonitor) activityTimer);
 					}
 				}
-			} catch (CoreException throwable) {
-				StatusHandler.log(throwable, "could not load activity timer");
+			} catch (CoreException e) {
+				StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN, "Could not load activity timer", e));
 			}
 		}
 	}

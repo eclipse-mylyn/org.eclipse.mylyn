@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
@@ -107,7 +109,7 @@ public class BrowserMonitor extends AbstractUserInteractionMonitor implements IP
 				return ((BrowserViewer) browserObject).getBrowser();
 			}
 		} catch (Exception e) {
-			StatusHandler.log(e, "could not add browser listener");
+			StatusHandler.log(new Status(IStatus.WARNING, MonitorUiPlugin.ID_PLUGIN, "Could not add browser listener", e));
 		}
 		return null;
 	}

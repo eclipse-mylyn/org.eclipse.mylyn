@@ -8,6 +8,8 @@
 
 package org.eclipse.mylyn.monitor.ui;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
@@ -36,16 +38,16 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 	public AbstractUserInteractionMonitor() {
 		try {
 			MonitorUiPlugin.getDefault().addWindowPostSelectionListener(this);
-		} catch (NullPointerException npe) {
-			StatusHandler.log("Monitors can not be instantiated until the workbench is active", this);
+		} catch (NullPointerException e) {
+			StatusHandler.log(new Status(IStatus.WARNING, MonitorUiPlugin.ID_PLUGIN, "Monitors can not be instantiated until the workbench is active", e));
 		}
 	}
 
 	public void dispose() {
 		try {
 			MonitorUiPlugin.getDefault().removeWindowPostSelectionListener(this);
-		} catch (NullPointerException npe) {
-			StatusHandler.log(npe, "Could not dispose monitor.");
+		} catch (NullPointerException e) {
+			StatusHandler.log(new Status(IStatus.WARNING, MonitorUiPlugin.ID_PLUGIN, "Could not dispose monitor", e));
 		}
 	}
 
