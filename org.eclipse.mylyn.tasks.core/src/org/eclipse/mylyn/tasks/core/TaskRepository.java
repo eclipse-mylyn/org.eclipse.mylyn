@@ -18,9 +18,12 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.PlatformObject;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.web.core.AuthenticationCredentials;
 import org.eclipse.mylyn.web.core.AuthenticationType;
@@ -324,7 +327,8 @@ public class TaskRepository extends PlatformObject {
 					headlessCreds.clear();
 				}
 			} catch (CoreException e) {
-				StatusHandler.fail(e, "could not flush authorization credentials", true);
+				// FIXME propagate exception?
+				StatusHandler.fail(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Could not flush authorization credentials", e));
 			}
 		}
 	}
@@ -345,7 +349,7 @@ public class TaskRepository extends PlatformObject {
 				}
 			} catch (CoreException e) {
 				// API 3.0 propagate exception
-				StatusHandler.fail(e, "Could not set authorization credentials", false);
+				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Could not set authorization credentials", e));
 			}
 		}
 	}
@@ -359,7 +363,7 @@ public class TaskRepository extends PlatformObject {
 				} catch (MalformedURLException ex) {
 					return Platform.getAuthorizationInfo(DEFAULT_URL, getUrl(), AUTH_SCHEME);
 				} catch (Exception e) {
-					StatusHandler.fail(e, "Could not retrieve authentication credentials", false);
+					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Could not retrieve authorization credentials", e));
 				}
 			} else {
 				Map<String, String> headlessCreds = credentials.get(getUrl());

@@ -18,9 +18,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoriesExternalizer;
+import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 
 /**
@@ -239,7 +242,7 @@ public class TaskRepositoryManager {
 			try {
 				listener.repositoriesRead();
 			} catch (Throwable t) {
-				StatusHandler.fail(t, "repository listener failed", false);
+				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Repository listener failed", t));
 			}
 		}
 		return repositoryMap;
@@ -281,7 +284,7 @@ public class TaskRepositoryManager {
 				}
 			}
 		} catch (Throwable t) {
-			StatusHandler.fail(t, "could not load repositories", false);
+			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Could not load repositories", t));
 		}
 	}
 
@@ -361,7 +364,7 @@ public class TaskRepositoryManager {
 			File repositoriesFile = new File(destinationPath);
 			externalizer.writeRepositoriesToXML(repositoriesToWrite, repositoriesFile);
 		} catch (Throwable t) {
-			StatusHandler.fail(t, "could not save repositories", false);
+			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Could not save repositories", t));
 			return false;
 		}
 		return true;

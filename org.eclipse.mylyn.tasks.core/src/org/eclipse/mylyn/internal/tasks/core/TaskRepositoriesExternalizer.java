@@ -19,6 +19,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
@@ -51,13 +53,13 @@ public class TaskRepositoriesExternalizer {
 			outputStream.close();
 
 		} catch (IOException e) {
-			StatusHandler.fail(e, "Could not write: " + file.getAbsolutePath(), false);
+			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Could not write: " + file.getAbsolutePath(), e));
 		} finally {
 			if (outputStream != null) {
 				try {
 					outputStream.close();
 				} catch (IOException e) {
-					StatusHandler.fail(e, "Unable to terminate output stream to repositories file.", false);
+					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Could not close: " + file.getAbsolutePath(), e));
 				}
 			}
 		}
@@ -109,14 +111,14 @@ public class TaskRepositoriesExternalizer {
 			return contentHandler.getRepositories();
 		} catch (Throwable e) {
 			file.renameTo(new File(file.getAbsolutePath() + "-save"));
-			StatusHandler.log(e, "Error while reading context file");
+			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Error reading context file", e));
 			return null;
 		} finally {
 			if (inputStream != null) {
 				try {
 					inputStream.close();
 				} catch (IOException e) {
-					StatusHandler.fail(e, "Failed to close repositories input stream.", false);
+					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Error closing context file", e));
 				}
 			}
 		}

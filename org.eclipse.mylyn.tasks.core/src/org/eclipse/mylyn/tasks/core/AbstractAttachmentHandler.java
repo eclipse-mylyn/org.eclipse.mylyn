@@ -22,8 +22,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
@@ -95,7 +97,7 @@ public abstract class AbstractAttachmentHandler {
 				try {
 					in.close();
 				} catch (IOException e) {
-					StatusHandler.fail(e, "Error closing attachment stream", false);
+					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Error closing attachment stream", e));
 				}
 			}
 		} finally {
@@ -196,7 +198,7 @@ public abstract class AbstractAttachmentHandler {
 				try {
 					out.close();
 				} catch (IOException e) {
-					StatusHandler.fail(e, "Could not close context file", false);
+					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Error closing context file", e));
 				}
 			}
 		} catch (FileNotFoundException e) {

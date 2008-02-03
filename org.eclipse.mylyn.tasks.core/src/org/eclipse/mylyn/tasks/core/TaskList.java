@@ -19,14 +19,16 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
-import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 
 /**
@@ -910,7 +912,7 @@ public class TaskList {
 				delta.add(new TaskContainerDelta(task, kind));
 				listener.containersChanged(delta);
 			} catch (Throwable t) {
-				StatusHandler.fail(t, "Notification failed for: " + listener, false);
+				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Notification failed for: " + listener, t));
 			}
 		}
 	}
@@ -930,7 +932,7 @@ public class TaskList {
 			try {
 				listener.containersChanged(delta);
 			} catch (Throwable t) {
-				StatusHandler.fail(t, "notification failed for: " + listener, false);
+				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Notification failed for: " + listener, t));
 			}
 		}
 	}

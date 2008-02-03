@@ -10,6 +10,9 @@ package org.eclipse.mylyn.tasks.core;
 
 import java.util.Date;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
@@ -32,7 +35,7 @@ public class TaskSelection {
 			this.taskData.setAttributeFactory(taskData.getAttributeFactory());
 			this.taskData.refresh();
 		} catch (Exception e) {
-			StatusHandler.fail(e, "Error creating a task data copy", false);
+			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Error creating a task data copy", e));
 			throw new RuntimeException(e);
 		}
 	}

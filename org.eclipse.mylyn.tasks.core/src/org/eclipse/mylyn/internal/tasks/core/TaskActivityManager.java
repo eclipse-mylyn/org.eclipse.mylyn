@@ -22,6 +22,8 @@ import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextListener;
@@ -209,7 +211,7 @@ public class TaskActivityManager {
 				return;
 			}
 		} catch (Throwable t) {
-			StatusHandler.fail(t, "Error parsing interaction event", false);
+			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Error parsing interaction event", t));
 		}
 	}
 
@@ -253,7 +255,7 @@ public class TaskActivityManager {
 			try {
 				listener.elapsedTimeUpdated(activatedTask, totalElapsed);
 			} catch (Throwable t) {
-				StatusHandler.fail(t, "task activity listener failed: " + listener, false);
+				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Task activity listener failed: \"" + listener + "\"", t));
 			}
 		}
 	}

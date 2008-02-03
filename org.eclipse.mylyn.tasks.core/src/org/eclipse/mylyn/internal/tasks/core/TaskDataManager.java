@@ -15,6 +15,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -66,7 +68,7 @@ public class TaskDataManager {
 		if (state != null) {
 			state.setOldTaskData(data);
 		} else {
-			StatusHandler.log("Attempt to save old data when no new data exists.", this);
+			StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "Attempt to save old data when no new data exists", new Exception()));
 		}
 		saveState(state);
 	}
@@ -130,7 +132,7 @@ public class TaskDataManager {
 					clone = (RepositoryTaskData) ObjectCloner.deepCopy(state.getNewTaskData());
 					updateAttributeFactory(clone);
 				} catch (Exception e) {
-					StatusHandler.fail(e, "Error constructing modifiable task", false);
+					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Error constructing modifiable task", e));
 					return null;
 				}
 			}
@@ -179,7 +181,8 @@ public class TaskDataManager {
 			try {
 				storage.put(state);
 			} catch (Exception e) {
-				StatusHandler.fail(e, "Error saving edits", false);
+				// FIXME what exception is caught here?
+				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Error saving edits", e));
 			}
 		}
 
@@ -208,7 +211,8 @@ public class TaskDataManager {
 			try {
 				storage.put(state);
 			} catch (Exception e) {
-				StatusHandler.fail(e, "Discard edits failed.", false);
+				// FIXME what exception is caught here?
+				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Error discarding edits", e));
 			}
 		}
 	}
@@ -286,7 +290,7 @@ public class TaskDataManager {
 		try {
 			storage.start();
 		} catch (Exception e) {
-			StatusHandler.fail(e, "Offline storage start failed", false);
+			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Offline storage start failed", e));
 		}
 	}
 
@@ -294,7 +298,7 @@ public class TaskDataManager {
 		try {
 			storage.stop();
 		} catch (Exception e) {
-			StatusHandler.fail(e, "Offline storage stop failed", false);
+			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Offline storage stop failed", e));
 		}
 	}
 
@@ -320,8 +324,8 @@ public class TaskDataManager {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			StatusHandler.fail(e, "Error saving offline data", false);
+			// FIXME what Exception is caught here?
+			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Error saving offline data", e));
 		}
 		return state;
 	}
