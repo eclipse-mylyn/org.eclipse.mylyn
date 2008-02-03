@@ -24,6 +24,9 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.internal.monitor.core.IMonitorCoreConstants;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 
 /**
@@ -155,7 +158,7 @@ public class ZipFileUtil {
 					monitor.worked(1);
 				}
 			} catch (Exception e) {
-				StatusHandler.log(e, "Could not add " + file.getName() + " to zip");
+				StatusHandler.log(new Status(IStatus.ERROR, IMonitorCoreConstants.ID_PLUGIN, "Could not add " + file.getName() + " to zip", e));
 			}
 		}
 
