@@ -18,7 +18,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
@@ -192,7 +194,7 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 						PdeEditingMonitor.getStringOfNode(node).hashCode()).getHandle();
 				return handle;
 			} catch (Exception e) {
-				StatusHandler.log(e, "pde handle failed");
+				StatusHandler.log(new Status(IStatus.ERROR, PdeUiBridgePlugin.ID_PLUGIN, "Could not get handle", e));
 			}
 		} else if (object instanceof PluginNode) {
 			PluginNode node = (PluginNode) object;
@@ -209,7 +211,7 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 						PdeEditingMonitor.getStringOfNode(node).hashCode()).getHandle();
 				return handle;
 			} catch (Exception e) {
-				StatusHandler.log(e, "pde handle failed");
+				StatusHandler.log(new Status(IStatus.ERROR, PdeUiBridgePlugin.ID_PLUGIN, "Could not get handle", e));
 			}
 
 		} else if (object instanceof File) {
@@ -308,7 +310,7 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 				}
 				return null;
 			} catch (Throwable t) {
-				StatusHandler.log(t, "Could not find element for: " + object);
+				StatusHandler.log(new Status(IStatus.WARNING, PdeUiBridgePlugin.ID_PLUGIN, "Could not find element for: " + object));
 				return null;
 			}
 		} else if (object instanceof IFile) {
@@ -323,7 +325,7 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 					return handle;
 				}
 			} catch (Exception e) {
-				StatusHandler.log(e, "Unable to get handle for offset in object");
+				StatusHandler.log(new Status(IStatus.ERROR, PdeUiBridgePlugin.ID_PLUGIN, "Unable to get handle for offset in object", e));
 			}
 		}
 		return null;

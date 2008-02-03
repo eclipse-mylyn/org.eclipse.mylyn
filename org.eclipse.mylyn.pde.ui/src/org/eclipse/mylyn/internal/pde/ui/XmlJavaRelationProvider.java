@@ -125,7 +125,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 						IPath path = new Path(filename);
 						element = ((Workspace) ResourcesPlugin.getWorkspace()).newResource(path, IResource.FILE);
 					} catch (Exception e) {
-						StatusHandler.log(e, "scope creation failed");
+						StatusHandler.log(new Status(IStatus.WARNING, PdeUiBridgePlugin.ID_PLUGIN, "Scope creation failed", e));
 					}
 					l.add(element);
 				}
@@ -236,7 +236,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 											}
 										}
 									} catch (Exception e) {
-										StatusHandler.log(e, "search failed - unable to create match");
+										StatusHandler.log(new Status(IStatus.ERROR, PdeUiBridgePlugin.ID_PLUGIN, "Unable to create match", e));
 									}
 								}
 							}
@@ -322,7 +322,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 				}
 				return fResult;
 			} catch (Exception e) {
-				StatusHandler.log(e.getMessage(), this);
+				StatusHandler.log(new Status(IStatus.WARNING, PdeUiBridgePlugin.ID_PLUGIN, "Failed to get search result: " + e.getMessage()));
 			}
 			return super.getSearchResult();
 		}
@@ -341,7 +341,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 				}
 				return Status.OK_STATUS;
 			} catch (Throwable t) {
-				return new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID, 0, "skipped xml search", null);
+				return new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID, 0, "Skipped XML search", null);
 			}
 		}
 

@@ -14,6 +14,8 @@ import java.util.Locale;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
@@ -117,7 +119,7 @@ public class PdeEditingMonitor extends AbstractUserInteractionMonitor {
 						super.handleElementSelection(part, xnode, contributeToContext);
 					}
 				} catch (Exception e) {
-					StatusHandler.log(e, "couldn't resolve selection");
+					StatusHandler.log(new Status(IStatus.ERROR, PdeUiBridgePlugin.ID_PLUGIN, "Could not resolve selection", e));
 				}
 			}
 		}

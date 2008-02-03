@@ -18,6 +18,8 @@ import org.osgi.framework.BundleContext;
  */
 public class PdeUiBridgePlugin extends AbstractContextUiPlugin {
 
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.pde.ui";
+	
 	private PdeEditingMonitor pdeEditingMonitor;
 
 	public PdeUiBridgePlugin() {

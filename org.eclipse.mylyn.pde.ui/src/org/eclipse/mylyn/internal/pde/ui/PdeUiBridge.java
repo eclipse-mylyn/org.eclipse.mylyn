@@ -20,7 +20,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITreeViewerListener;
@@ -86,7 +88,7 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 
 			// if the editor is null, we had a problem and should return
 			if (editor == null) {
-				StatusHandler.log("Unable to open editor for file: " + filename, this);
+				StatusHandler.log(new Status(IStatus.WARNING, PdeUiBridgePlugin.ID_PLUGIN, "Unable to open editor for file: " + filename));
 				return;
 			}
 
@@ -191,7 +193,7 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 							}
 						}
 					} catch (Exception e) {
-						StatusHandler.log(e, "failed to get tree viewers");
+						StatusHandler.log(new Status(IStatus.ERROR, PdeUiBridgePlugin.ID_PLUGIN, "Failed to get tree viewers", e));
 						return null;
 					}
 				}
@@ -225,7 +227,7 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 					}
 				}
 			} catch (Exception e) {
-				StatusHandler.fail(e, "could not get PDE outline", false);
+				StatusHandler.log(new Status(IStatus.ERROR, PdeUiBridgePlugin.ID_PLUGIN, "Could not get PDE outline", e));
 				return Collections.emptyList();
 			}
 
