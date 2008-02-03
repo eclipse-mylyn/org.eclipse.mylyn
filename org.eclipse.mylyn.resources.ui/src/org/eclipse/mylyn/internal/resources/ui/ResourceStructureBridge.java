@@ -23,10 +23,13 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 import org.eclipse.ui.views.markers.internal.ConcreteMarker;
 
 /**
@@ -83,7 +86,8 @@ public class ResourceStructureBridge extends AbstractContextStructureBridge {
 					}
 					return childHandles;
 				} catch (Exception e) {
-					StatusHandler.fail(e, "could not get child", false);
+					StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.PLUGIN_ID, ""
+							+ "Could not get child", e));
 				}
 			} else if (resource instanceof IFile) {
 				// delegate to child bridges
@@ -191,16 +195,17 @@ public class ResourceStructureBridge extends AbstractContextStructureBridge {
 		} catch (Exception e) {
 			return null;
 		}
-		
+
 		// we can only get a handle for a marker with the resource plugin.xml
 		try {
 			if (markerResource instanceof IFile) {
-				IFile file = (IFile)markerResource;
+				IFile file = (IFile) markerResource;
 				return getHandleIdentifier(file);
 			}
 			return null;
 		} catch (Throwable t) {
-			StatusHandler.log(t, "Could not find element for: " + object);
+			StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.PLUGIN_ID,
+					"Could not find element for: \"" + object + "\"", t));
 			return null;
 		}
 	}

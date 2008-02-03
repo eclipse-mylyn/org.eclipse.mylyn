@@ -13,11 +13,14 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 
@@ -47,7 +50,8 @@ public class ResourceInterestUpdater {
 				}
 			}
 		} catch (Throwable t) {
-			StatusHandler.fail(t, "could not add resource to context: " + resources, false);
+			StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.PLUGIN_ID, ""
+					+ "Could not add resource to context: \"" + resources + "\"", t));
 		}
 	}
 

@@ -15,12 +15,15 @@ import java.util.Iterator;
 import org.eclipse.core.internal.resources.File;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.monitor.ui.AbstractUserInteractionMonitor;
+import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.EditorPart;
 
@@ -55,7 +58,8 @@ public class ResourceInteractionMonitor extends AbstractUserInteractionMonitor {
 						}
 					}
 				} catch (Throwable t) {
-					StatusHandler.log(t, "failed to resolve resource edit");
+					StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.PLUGIN_ID,
+							"Failed to resolve resource edit", t));
 				}
 			}
 		}

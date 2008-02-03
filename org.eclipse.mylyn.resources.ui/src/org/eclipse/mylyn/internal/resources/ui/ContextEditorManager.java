@@ -19,6 +19,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionContext;
@@ -93,7 +94,7 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 							}
 						}
 					} catch (Exception e) {
-						StatusHandler.log(e, "Could not restore all editors, memento: " + mementoString + ".");
+						StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.PLUGIN_ID, "Could not restore all editors, memento: \"" + mementoString + "\"", e));
 					}
 				}
 				IInteractionElement activeNode = context.getActiveNode();
@@ -101,7 +102,7 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 					ContextUiPlugin.getDefault().getUiBridge(activeNode.getContentType()).open(activeNode);
 				}
 			} catch (Exception e) {
-				StatusHandler.fail(e, "failed to open editors on activation", false);
+				StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.PLUGIN_ID, "Failed to open editors on activation", e));
 			} finally {
 				ContextCorePlugin.getContextManager().setContextCapturePaused(false);
 			}
@@ -127,7 +128,7 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 					ResourcesUiBridgePlugin.getDefault().getPreferenceStore().setValue(
 							PREFS_PREFIX + task.getHandleIdentifier(), writer.getBuffer().toString());
 				} catch (IOException e) {
-					StatusHandler.fail(e, "Could not store editor state", false);
+					StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.PLUGIN_ID, "Could not store editor state", e));
 				}
 
 				Workbench.getInstance().getPreferenceStore().setValue(IPreferenceConstants.REUSE_EDITORS_BOOLEAN,
@@ -153,7 +154,7 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 				ResourcesUiBridgePlugin.getDefault().getPreferenceStore().setValue(
 						PREFS_PREFIX + task.getHandleIdentifier(), writer.getBuffer().toString());
 			} catch (IOException e) {
-				StatusHandler.fail(e, "Could not store editor state", false);
+				StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.PLUGIN_ID, "Could not store editor state", e));
 			}
 
 			Workbench.getInstance().getPreferenceStore().setValue(IPreferenceConstants.REUSE_EDITORS_BOOLEAN,
@@ -211,7 +212,7 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 				}
 			}
 		} catch (Exception e) {
-			StatusHandler.fail(e, "Could not restore editors", false);
+			StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.PLUGIN_ID, "Could not restore editors", e));
 		}
 	}
 
@@ -246,7 +247,7 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 				}
 			}
 		} catch (Throwable t) {
-			StatusHandler.fail(t, "Could not auto close editor.", false);
+			StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.PLUGIN_ID, "Could not auto close editor", t));
 		}
 	}
 
@@ -269,7 +270,7 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 				}
 			}
 		} catch (Throwable t) {
-			StatusHandler.fail(t, "Could not auto close editor.", false);
+			StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.PLUGIN_ID, "Could not auto close editor", t));
 		}
 	}
 

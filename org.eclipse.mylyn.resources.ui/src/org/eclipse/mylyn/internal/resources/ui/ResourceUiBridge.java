@@ -14,6 +14,8 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
@@ -21,6 +23,7 @@ import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -58,7 +61,8 @@ public class ResourceUiBridge extends AbstractContextUiBridge {
 				IDE.openEditor(activePage, file, activate);
 			}
 		} catch (PartInitException e) {
-			StatusHandler.fail(e, "failed to open editor for: " + file, false);
+			StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.PLUGIN_ID,
+					"Failed to open editor for: \"" + file + "\"", e));
 		}
 	}
 
@@ -83,7 +87,7 @@ public class ResourceUiBridge extends AbstractContextUiBridge {
 				for (IEditorReference reference : page.getEditorReferences()) {
 					try {
 						IResource input = (IResource) reference.getEditorInput().getAdapter(IResource.class);
-						if (input instanceof IFile && ((IFile) input).equals(object))  {
+						if (input instanceof IFile && ((IFile) input).equals(object)) {
 							toClose.add(reference);
 						}
 					} catch (PartInitException e) {
