@@ -11,6 +11,8 @@ package org.eclipse.mylyn.internal.java.ui.editor;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.internal.ui.text.java.AbstractJavaCompletionProposal;
 import org.eclipse.jdt.internal.ui.text.java.JavaCompletionProposal;
@@ -19,6 +21,7 @@ import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
+import org.eclipse.mylyn.internal.java.ui.JavaUiBridgePlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 
 /**
@@ -102,7 +105,7 @@ public class FocusedJavaProposalProcessor {
 				return proposals;
 			}
 		} catch (Throwable t) {
-			StatusHandler.fail(t, "Failed to project interest onto propsals", false);
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Failed to project interest onto propsals", t));
 			return proposals;
 		}
 	}

@@ -12,6 +12,8 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
@@ -47,7 +49,7 @@ public class JavaUiBridge extends AbstractContextUiBridge {
 			javaOutlineField = JavaOutlinePage.class.getDeclaredField("fOutlineViewer");
 			javaOutlineField.setAccessible(true);
 		} catch (Exception e) {
-			StatusHandler.fail(e, "could not get install Mylyn on Outline viewer", true);
+			StatusHandler.fail(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not get outline viewer", e));
 		}
 	}
 
@@ -60,7 +62,7 @@ public class JavaUiBridge extends AbstractContextUiBridge {
 			IEditorPart part = JavaUI.openInEditor(javaElement);
 			JavaUI.revealInEditor(part, javaElement);
 		} catch (Throwable t) {
-			StatusHandler.fail(t, "Could not open editor for: " + node, true);
+			StatusHandler.fail(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not open editor for: " + node, t));
 		}
 	}
 
@@ -86,7 +88,7 @@ public class JavaUiBridge extends AbstractContextUiBridge {
 				}
 			}
 		} catch (Throwable t) {
-			StatusHandler.fail(t, "Could not auto close editor.", false);
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not auto close editor", t));
 		}
 	}
 
@@ -120,7 +122,7 @@ public class JavaUiBridge extends AbstractContextUiBridge {
 				try {
 					viewers.add((TreeViewer) javaOutlineField.get(page));
 				} catch (Exception e) {
-					StatusHandler.log(e, "could not get outline viewer");
+					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not get outline viewer", e));
 				}
 			}
 		}

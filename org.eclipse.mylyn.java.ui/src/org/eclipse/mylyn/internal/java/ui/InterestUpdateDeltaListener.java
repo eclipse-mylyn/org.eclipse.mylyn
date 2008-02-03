@@ -8,6 +8,8 @@
 
 package org.eclipse.mylyn.internal.java.ui;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.ElementChangedEvent;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IElementChangedListener;
@@ -74,7 +76,7 @@ public class InterestUpdateDeltaListener implements IElementChangedListener {
 				}
 			}
 		} catch (Throwable t) {
-			StatusHandler.fail(t, "delta update failed", false);
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Delta update failed", t));
 		}
 	}
 

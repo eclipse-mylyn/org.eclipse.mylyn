@@ -10,6 +10,8 @@ package org.eclipse.mylyn.internal.java.ui;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
@@ -91,7 +93,8 @@ public class JavaUiBridgePlugin extends AbstractContextUiPlugin {
 			typeHistoryManager = new TypeHistoryManager();
 			ContextCorePlugin.getContextManager().addListener(typeHistoryManager);
 		} catch (Throwable t) {
-			StatusHandler.log(t, "Could not install type history manager, incompatible Eclipse version.");
+			// FIXME review error message
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not install type history manager: incompatible Eclipse version", t));
 		}
 	}
 

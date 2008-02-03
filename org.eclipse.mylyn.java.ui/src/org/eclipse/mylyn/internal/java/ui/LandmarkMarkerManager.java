@@ -20,6 +20,8 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.ISourceRange;
@@ -67,7 +69,7 @@ public class LandmarkMarkerManager implements IInteractionContextListener {
 				landmarkAdded(node);
 			}
 		} catch (Throwable t) {
-			StatusHandler.fail(t, "Could not update landmark markers", false);
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not update landmark markers", t));
 		}
 	}
 
@@ -102,9 +104,9 @@ public class LandmarkMarkerManager implements IInteractionContextListener {
 						resource.getWorkspace().run(runnable, null);
 					}
 				} catch (JavaModelException e) {
-					StatusHandler.fail(e, "couldn't update marker", false);
+					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not update marker", e));
 				} catch (CoreException e) {
-					StatusHandler.fail(e, "couldn't update marker", false);
+					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not update marker", e));
 				}
 			}
 		}
@@ -135,7 +137,8 @@ public class LandmarkMarkerManager implements IInteractionContextListener {
 											marker.delete();
 									}
 								} catch (NullPointerException e) {
-									StatusHandler.log(e, "could not update markers");
+									// FIXME avoid NPE
+									StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not update marker", e));
 								}
 							}
 						}
@@ -144,7 +147,7 @@ public class LandmarkMarkerManager implements IInteractionContextListener {
 				} catch (JavaModelException e) {
 					// ignore the Java Model errors
 				} catch (CoreException e) {
-					StatusHandler.fail(e, "couldn't update landmark marker", false);
+					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not update landmark marker", e));
 				}
 			}
 		}

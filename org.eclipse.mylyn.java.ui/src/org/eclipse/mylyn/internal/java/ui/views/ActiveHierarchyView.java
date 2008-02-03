@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.ITypeHierarchy;
@@ -45,6 +47,7 @@ import org.eclipse.mylyn.internal.context.ui.views.ActiveViewDelegatingDragAdapt
 import org.eclipse.mylyn.internal.context.ui.views.ActiveViewDropAdapter;
 import org.eclipse.mylyn.internal.java.ui.JavaContextLabelProvider;
 import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
+import org.eclipse.mylyn.internal.java.ui.JavaUiBridgePlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
@@ -199,7 +202,7 @@ public class ActiveHierarchyView extends ViewPart {
 				});
 			}
 		} catch (Throwable t) {
-			StatusHandler.fail(t, "Could not update viewer", false);
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not update viewer", t));
 		}
 	}
 
@@ -227,7 +230,7 @@ public class ActiveHierarchyView extends ViewPart {
 				viewer.getControl().setRedraw(true);
 			}
 		} catch (Throwable t) {
-			StatusHandler.fail(t, "Could not update viewer", false);
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not update viewer", t));
 		}
 	}
 
@@ -252,7 +255,7 @@ public class ActiveHierarchyView extends ViewPart {
 							IEditorPart part = JavaUI.openInEditor(element);
 							JavaUI.revealInEditor(part, element);
 						} catch (Throwable t) {
-							StatusHandler.log(t, "Could not open type");
+							StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not open type", t));
 						}
 					}
 				}
@@ -264,7 +267,7 @@ public class ActiveHierarchyView extends ViewPart {
 			initDrag();
 			getSite().setSelectionProvider(getViewer());
 		} catch (Throwable t) {
-			StatusHandler.log(t, "create failed");
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Create failed", t));
 		}
 	}
 

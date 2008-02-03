@@ -21,6 +21,8 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IClassFile;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IImportDeclaration;
@@ -125,7 +127,7 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 				} catch (JavaModelException e) {
 					// ignore these, usually indicate no-existent element
 				} catch (Exception e) {
-					StatusHandler.fail(e, "could not get child", false);
+					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not get children", e));
 				}
 			}
 		}
@@ -137,7 +139,7 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 		try {
 			return JavaCore.create(handle);
 		} catch (Throwable t) {
-			StatusHandler.log("Could not create java element for handle: " + handle, this);
+			StatusHandler.log(new Status(IStatus.WARNING, JavaUiBridgePlugin.PLUGIN_ID, "Could not create java element for handle: " + handle, t));
 			return null;
 		}
 	}
@@ -320,7 +322,7 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 				ExceptionHandler.handle(ex, "error", "could not find java element"); //$NON-NLS-2$ //$NON-NLS-1$
 			return null;
 		} catch (Throwable t) {
-			StatusHandler.fail(t, "Could not find element for: " + marker, false);
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not find element for: " + marker, t));
 			return null;
 		}
 	}

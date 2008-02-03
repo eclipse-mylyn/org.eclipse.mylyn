@@ -13,6 +13,8 @@ package org.eclipse.mylyn.internal.java.ui.editor;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -31,6 +33,7 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
+import org.eclipse.mylyn.internal.java.ui.JavaUiBridgePlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 
 /**
@@ -62,7 +65,7 @@ public class ActiveFoldingListener implements IInteractionContextListener {
 	public ActiveFoldingListener(JavaEditor editor) {
 		this.editor = editor;
 		if (ContextUiPlugin.getDefault() == null) {
-			StatusHandler.fail(null, "Could not update folding, Mylyn is not correctly installed", false);
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not update folding", new Exception()));
 		} else { 
 			ContextCorePlugin.getContextManager().addListener(this);
 			ContextUiPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
@@ -74,11 +77,11 @@ public class ActiveFoldingListener implements IInteractionContextListener {
 				if (adapter instanceof IJavaFoldingStructureProviderExtension) {
 					updater = (IJavaFoldingStructureProviderExtension) adapter;
 				} else {
-					StatusHandler.log("Could not install active folding on provider: " + adapter + ", must extend "
-							+ IJavaFoldingStructureProviderExtension.class.getName(), this);
+					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not install active folding on provider: " + adapter + ", must extend "
+							+ IJavaFoldingStructureProviderExtension.class.getName()));
 				}
 			} catch (Exception e) {
-				StatusHandler.fail(e, "could not install auto folding, reflection denied", false);
+				StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not install auto folding, reflection denied", e));
 			}
 			updateFolding();
 		}
@@ -122,7 +125,7 @@ public class ActiveFoldingListener implements IInteractionContextListener {
 					updater.expandElements(toExpand.toArray(new IJavaElement[toExpand.size()]));
 				}
 			} catch (Exception e) {
-				StatusHandler.fail(e, "couldn't update folding", false);
+				StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not update folding", e));
 			}
 		}
 	}

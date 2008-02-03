@@ -15,6 +15,8 @@ import java.util.Set;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.jdt.core.Flags;
@@ -31,6 +33,7 @@ import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
 import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
+import org.eclipse.mylyn.internal.java.ui.JavaUiBridgePlugin;
 import org.eclipse.mylyn.internal.java.ui.search.JUnitReferencesProvider;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 
@@ -98,7 +101,7 @@ public class InteractionContextTestUtil {
 				}
 			}
 		} catch (Exception e) {
-			StatusHandler.fail(e, "could not add all test types", false);
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not add all test types", e));
 		}
 		return testTypes;
 	}

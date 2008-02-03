@@ -10,6 +10,8 @@ package org.eclipse.mylyn.internal.java.ui;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
@@ -57,7 +59,7 @@ public class TypeHistoryManager implements IInteractionContextListener2 {
 					}
 				}
 			} catch (JavaModelException e) {
-				StatusHandler.log(e, "failed to update history for a type");
+				StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Failed to update history for a type", e));
 			}
 		}
 	}

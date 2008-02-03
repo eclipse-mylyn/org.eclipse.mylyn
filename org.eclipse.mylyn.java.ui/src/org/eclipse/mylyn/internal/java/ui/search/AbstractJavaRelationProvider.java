@@ -11,7 +11,6 @@
 package org.eclipse.mylyn.internal.java.ui.search;
 
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -47,6 +46,7 @@ import org.eclipse.mylyn.internal.context.core.DegreeOfSeparation;
 import org.eclipse.mylyn.internal.context.core.IActiveSearchListener;
 import org.eclipse.mylyn.internal.context.core.IActiveSearchOperation;
 import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
+import org.eclipse.mylyn.internal.java.ui.JavaUiBridgePlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 import org.eclipse.search.ui.ISearchResult;
@@ -91,7 +91,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 		if (node == null)
 			return;
 		if (node.getContentType() == null) {
-			StatusHandler.log("null content type for: " + node, this);
+			StatusHandler.log(new Status(IStatus.WARNING, JavaUiBridgePlugin.PLUGIN_ID, "Null content type for: " + node));
 			return;
 		}
 		if (!node.getContentType().equals(JavaStructureBridge.CONTENT_TYPE))
@@ -199,7 +199,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 		} else {
 			if (interesting.getContentType() == null) {
 				// TODO: remove
-				StatusHandler.log("null content type for: " + interesting.getHandleIdentifier(), this);
+				StatusHandler.log(new Status(IStatus.WARNING, JavaUiBridgePlugin.PLUGIN_ID, "Null content type for: " + interesting.getHandleIdentifier()));
 				return false;
 			} else {
 				return interesting.getContentType().equals(JavaStructureBridge.CONTENT_TYPE)
@@ -339,10 +339,8 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 					}
 				}
 				return runStatus;
-			} catch (ConcurrentModificationException cme) {
-				StatusHandler.log(cme, "java search failed");
 			} catch (Throwable t) {
-				StatusHandler.log(t, "java search failed");
+				StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Java search failed", t));
 			}
 
 			IStatus status = new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID, IStatus.OK,

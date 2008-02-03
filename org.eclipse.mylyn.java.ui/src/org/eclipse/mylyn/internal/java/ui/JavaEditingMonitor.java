@@ -10,6 +10,8 @@ package org.eclipse.mylyn.internal.java.ui;
 
 import java.util.Iterator;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IImportContainer;
 import org.eclipse.jdt.core.IImportDeclaration;
 import org.eclipse.jdt.core.IJavaElement;
@@ -137,7 +139,7 @@ public class JavaEditingMonitor extends AbstractUserInteractionMonitor {
 		} catch (JavaModelException e) {
 			// ignore, fine to fail to resolve an element if the model is not up-to-date
 		} catch (Throwable t) {
-			StatusHandler.log(t, "Failed to update model based on selection.");
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Failed to update model based on selection", t));
 		}
 	}
 

@@ -10,6 +10,8 @@ package org.eclipse.mylyn.internal.java.ui;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.viewsupport.IProblemChangedListener;
@@ -53,7 +55,7 @@ public class InterestInducingProblemListener implements IProblemChangedListener,
 				}
 			}
 		} catch (Exception e) {
-			StatusHandler.log(e, "could not update on marker change");
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not update marker change", e));
 		}
 	}
 
