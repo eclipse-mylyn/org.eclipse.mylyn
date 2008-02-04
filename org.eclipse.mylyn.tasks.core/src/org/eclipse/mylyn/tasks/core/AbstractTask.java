@@ -437,6 +437,9 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 		this.completionDate = completionDate;
 	}
 
+	/**
+	 * @API-3.0: Deprecate. Use TaskActivityManager.isPastReminder(Abstract task)
+	 */
 	public boolean isPastReminder() {
 		if (isCompleted() || scheduledForDate == null) {
 			return false;

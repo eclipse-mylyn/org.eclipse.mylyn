@@ -523,6 +523,30 @@ public class TaskActivityManager {
 		return false;
 	}
 
+	
+	public boolean isPastReminder(AbstractTask task) {
+		if (task == null || task.isCompleted() || task.getScheduledForDate() == null) {
+			return false;
+		} else {
+			return isPastReminder(task.getScheduledForDate(), task.isCompleted());
+		}
+	}
+	
+	public boolean isPastReminder(Date date, boolean isComplete) {
+		if (date == null || isComplete) {
+			return false;
+		} else {
+			Date now = new Date();
+			if (/*!internalIsFloatingScheduledDate() && */date.compareTo(now) < 0) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}
+
+	
+	
 	public boolean isOverdue(AbstractTask task) {
 		return (!task.isCompleted() && task.getDueDate() != null && new Date().after(task.getDueDate()))
 				&& repositoryManager.isOwnedByUser(task);
