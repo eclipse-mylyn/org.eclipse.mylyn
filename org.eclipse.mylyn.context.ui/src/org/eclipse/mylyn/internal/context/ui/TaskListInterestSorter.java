@@ -90,7 +90,7 @@ public class TaskListInterestSorter extends ViewerSorter {
 				if (element2 instanceof AbstractTask) {
 					task2 = (AbstractTask) element2;
 				}
-
+				
 				if (task1 == null && task2 == null) {
 					return comparePrioritiesAndKeys(element1, element2);
 				} else if (task1 == null) {
@@ -116,6 +116,12 @@ public class TaskListInterestSorter extends ViewerSorter {
 	}
 
 	private int compareScheduledDate(AbstractTask task1, AbstractTask task2) {
+		if(task1.internalIsFloatingScheduledDate() && !task2.internalIsFloatingScheduledDate()) {
+			return 1;
+		} else if (!task1.internalIsFloatingScheduledDate() && task2.internalIsFloatingScheduledDate()) {
+			return -1;
+		} 
+		
 		if (isToday(task1) && !isToday(task2)) {
 			return -1;
 		} else if (!isToday(task1) && isToday(task2)) {
