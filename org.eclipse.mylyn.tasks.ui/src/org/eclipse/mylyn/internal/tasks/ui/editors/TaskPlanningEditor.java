@@ -250,8 +250,12 @@ public class TaskPlanningEditor extends TaskFormPage {
 		task.setNotes(note);
 		task.setEstimatedTimeHours(estimated.getSelection());
 		if (scheduleDatePicker != null && scheduleDatePicker.getScheduledDate() != null) {
-			TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, scheduleDatePicker.getScheduledDate(), scheduleDatePicker.isFloatingDate());
-			task.setReminded(false);
+			if (task.getScheduledForDate() != null
+					&& (!scheduleDatePicker.getScheduledDate().equals(task.getScheduledForDate()) || task.internalIsFloatingScheduledDate() != scheduleDatePicker.isFloatingDate())) {
+				TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, scheduleDatePicker.getScheduledDate(),
+						scheduleDatePicker.isFloatingDate());
+				task.setReminded(false);
+			}
 		} else {
 			TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, null);
 			task.setReminded(false);
