@@ -92,9 +92,10 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 		subMenuManager.add(action);
 
 		if (singleTaskSelection != null
-				&& (TasksUiPlugin.getTaskActivityManager().isScheduledForToday(getScheduledForDate(singleTaskSelection), isFloating(singleTaskSelection)) || (singleTaskSelection.isPastReminder() && !singleTaskSelection.internalIsFloatingScheduledDate()))) {
+				&& (TasksUiPlugin.getTaskActivityManager().isScheduledForToday(getScheduledForDate(singleTaskSelection), isFloating(singleTaskSelection)) || (isPast(getScheduledForDate(singleTaskSelection)) && !isFloating(singleTaskSelection)))) {
 			action.setChecked(true);
 		}
+		
 
 //		subMenuManager.add(new Separator());
 
@@ -357,5 +358,14 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 	
 	protected boolean isFloating(AbstractTask task) {
 		return task.internalIsFloatingScheduledDate();
+	}
+	
+	private boolean isPast(Date date) {
+		Date now = new Date();
+		if (date != null && date.compareTo(now) < 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
