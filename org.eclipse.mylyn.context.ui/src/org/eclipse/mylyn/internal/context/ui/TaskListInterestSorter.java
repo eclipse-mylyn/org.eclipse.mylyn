@@ -103,14 +103,28 @@ public class TaskListInterestSorter extends ViewerSorter {
 				if (complete != 0) {
 					return complete;
 				} else {
-					int today = compareScheduledDate(task1, task2);
-					if (today == 0) {
-						return comparePrioritiesAndKeys(element1, element2);
+					int due = compareDueDates(task1, task2);
+					if (due != 0) {
+						return due;
 					} else {
-						return today;
+						int today = compareScheduledDate(task1, task2);
+						if (today == 0) {
+							return comparePrioritiesAndKeys(element1, element2);
+						} else {
+							return today;
+						}
 					}
 				}
 			}
+		}
+		return 0;
+	}
+		
+	private int compareDueDates(AbstractTask task1, AbstractTask task2) {
+		if(TasksUiPlugin.getTaskActivityManager().isOverdue(task1) && !TasksUiPlugin.getTaskActivityManager().isOverdue(task2)) {
+			return -1;
+		} else if(!TasksUiPlugin.getTaskActivityManager().isOverdue(task1) && TasksUiPlugin.getTaskActivityManager().isOverdue(task2)) {
+			return 1;
 		}
 		return 0;
 	}
