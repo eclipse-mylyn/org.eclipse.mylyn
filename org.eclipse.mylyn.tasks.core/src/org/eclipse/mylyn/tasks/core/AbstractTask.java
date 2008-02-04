@@ -437,15 +437,12 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 		this.completionDate = completionDate;
 	}
 
-	/**
-	 * @API 3.0: deprecated use TaskActivityManager.isOverScheduled()
-	 */
 	public boolean isPastReminder() {
 		if (isCompleted() || scheduledForDate == null) {
 			return false;
 		} else {
 			Date now = new Date();
-			if (!internalIsFloatingScheduledDate() && scheduledForDate.compareTo(now) < 0) {
+			if (/*!internalIsFloatingScheduledDate() && */scheduledForDate.compareTo(now) < 0) {
 				return true;
 			} else {
 				return false;
