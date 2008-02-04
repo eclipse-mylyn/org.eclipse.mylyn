@@ -7,6 +7,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.notifications;
 
+import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -146,12 +147,17 @@ public abstract class AbstractNotificationPopup extends Window {
 	 * @return the name to be used in the title of the popup.
 	 */
 	protected String getPopupShellTitle() {
-		String productName = Platform.getProduct().getName();
-		String LABEL_SDK = "SDK";
-		if (productName.endsWith(LABEL_SDK)) {
-			productName = productName.substring(0, productName.length() - LABEL_SDK.length());
+		IProduct product = Platform.getProduct();
+		if (product != null) {
+			String productName = product.getName();
+			String LABEL_SDK = "SDK";
+			if (productName.endsWith(LABEL_SDK)) {
+				productName = productName.substring(0, productName.length() - LABEL_SDK.length());
+			}
+			return productName + " " + LABEL_NOTIFICATION;
+		} else {
+			return LABEL_NOTIFICATION;
 		}
-		return productName + " " + LABEL_NOTIFICATION;
 	}
 
 	protected Image getPopupShellImage(int maximumHeight) {
