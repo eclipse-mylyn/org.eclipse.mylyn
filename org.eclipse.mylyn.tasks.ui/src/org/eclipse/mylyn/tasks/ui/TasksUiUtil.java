@@ -137,7 +137,7 @@ public class TasksUiUtil {
 				IWorkbenchBrowserSupport support = PlatformUI.getWorkbench().getBrowserSupport();
 				support.getExternalBrowser().openURL(url);
 			} catch (Exception e) {
-				StatusHandler.fail(e, "could not open task url", true);
+				StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not open task url", e));
 			}
 		} else {
 			IWebBrowser browser = null;
@@ -174,7 +174,8 @@ public class TasksUiUtil {
 				try {
 					opened = connectorUi.openRepositoryTask(repository.getUrl(), taskId);
 				} catch (Exception e) {
-					StatusHandler.log(e, "Internal error while opening repository task");
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+							"Internal error while opening repository task", e));
 				}
 			}
 		}
@@ -246,8 +247,9 @@ public class TasksUiUtil {
 						repositoryTask.getRepositoryUrl());
 
 				if (repository == null) {
-					StatusHandler.fail(null, "No repository found for task. Please create repository in "
-							+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".", true);
+					StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+							"No repository found for task. Please create repository in "
+									+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + "."));
 					return;
 				}
 
@@ -390,7 +392,8 @@ public class TasksUiUtil {
 					TasksUiPlugin.getSynchronizationManager().setTaskRead(task, true);
 				}
 			} else {
-				StatusHandler.log("Unable to open editor for " + task.getSummary(), TasksUiUtil.class);
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						"Unable to open editor for " + task.getSummary()));
 			}
 		}
 	}
@@ -418,7 +421,8 @@ public class TasksUiUtil {
 		try {
 			return page.openEditor(input, editorId);
 		} catch (PartInitException e) {
-			StatusHandler.fail(e, "Open for editor failed: " + input + ", taskId: " + editorId, true);
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					"Open for editor failed: " + input + ", taskId: " + editorId, e));
 		}
 		return null;
 	}
@@ -455,7 +459,7 @@ public class TasksUiUtil {
 				TaskRepositoriesView.getFromActivePerspective().getViewer().refresh();
 			}
 		} catch (Exception e) {
-			StatusHandler.fail(e, e.getMessage(), true);
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, e.getMessage(), e));
 		}
 		return Dialog.OK;
 	}

@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.wizard.WizardPage;
@@ -116,7 +118,8 @@ public class TaskDataImportWizardPage extends WizardPage {
 			setControl(container);
 			setPageComplete(validate());
 		} catch (RuntimeException e) {
-			StatusHandler.fail(e, "Could not create import wizard page", true);
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					"Could not create import wizard page", e));
 		}
 	}
 

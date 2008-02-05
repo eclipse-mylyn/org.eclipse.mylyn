@@ -7,6 +7,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
@@ -105,7 +107,8 @@ public class TaskDataExportWizardPage extends WizardPage {
 
 			setPageComplete(validate());
 		} catch (RuntimeException e) {
-			StatusHandler.fail(e, "Could not create export wizard page", true);
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					"Could not create export wizard page", e));
 		}
 	}
 

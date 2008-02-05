@@ -79,7 +79,7 @@ class SynchronizeQueryJob extends Job {
 	public boolean isFullSynchronization() {
 		return fullSynchronization;
 	}
-	
+
 	/**
 	 * @since 2.2
 	 */
@@ -200,7 +200,8 @@ class SynchronizeQueryJob extends Job {
 			// do nothing
 		} else if (resultingStatus.isOK()) {
 			if (collector.getTasks().size() >= QueryHitCollector.MAX_HITS) {
-				StatusHandler.log(QueryHitCollector.MAX_HITS_REACHED + "\n" + repositoryQuery.getSummary(), this);
+				StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
+						QueryHitCollector.MAX_HITS_REACHED + "\n" + repositoryQuery.getSummary()));
 			}
 
 			// bug#195485 - tasks dissappear form tasklist

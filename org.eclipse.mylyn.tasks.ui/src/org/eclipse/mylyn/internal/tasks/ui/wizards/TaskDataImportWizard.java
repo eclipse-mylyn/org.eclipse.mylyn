@@ -18,6 +18,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -155,7 +157,8 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 			}
 
 		} catch (IOException e) {
-			StatusHandler.fail(e, "Could not import files", true);
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					"Could not import files", e));
 		}
 
 		FileCopyJob job = new FileCopyJob(sourceDirFile, sourceZipFile, sourceTaskListFile, sourceRepositoriesFile,
@@ -167,9 +170,11 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 			// TODO use the wizard's progress service or IProgressService.busyCursorWhile(): bug 210710
 			service.run(true, false, job);
 		} catch (InvocationTargetException e) {
-			StatusHandler.fail(e, "Could not import files", true);
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					"Could not import files", e));
 		} catch (InterruptedException e) {
-			StatusHandler.fail(e, "Could not import files", true);
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					"Could not import files", e));
 		}
 
 		importPage.saveSettings();
@@ -202,8 +207,9 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 						.getDataDirectory());
 				//ZipFileUtil.unzipFiles(sourceZipFile, TasksUiPlugin.getDefault().getDataDirectory());
 
-			} catch (IOException ioe) {
-				StatusHandler.fail(new Exception("Import Exception"), "Problem occured extracting from zip file.", true);
+			} catch (IOException e) {
+				StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						"Problem occured extracting from zip file.", e));
 				return;
 			}
 			readTaskListData();

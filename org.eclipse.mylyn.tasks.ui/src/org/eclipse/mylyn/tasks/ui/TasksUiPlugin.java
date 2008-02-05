@@ -341,7 +341,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				}
 				taskListManager.initActivityHistory();
 			} catch (Throwable t) {
-				StatusHandler.fail(t, "Could not initialize task activity", false);
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						"Could not initialize task activity", t));
 			}
 			monitor.worked(1);
 
@@ -352,7 +353,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				taskListNotificationManager.startNotification(NOTIFICATION_DELAY);
 				getPreferenceStore().addPropertyChangeListener(taskListNotificationManager);
 			} catch (Throwable t) {
-				StatusHandler.fail(t, "Could not initialize notifications", false);
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						"Could not initialize notifications", t));
 			}
 			monitor.worked(1);
 
@@ -363,7 +365,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				synchronizationScheduler = new TaskListSynchronizationScheduler(true);
 				synchronizationScheduler.startSynchJob();
 			} catch (Throwable t) {
-				StatusHandler.fail(t, "Could not initialize task list backup and synchronization", false);
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						"Could not initialize task list backup and synchronization", t));
 			}
 			monitor.worked(1);
 
@@ -387,7 +390,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				taskEditorBloatManager = new TaskEditorBloatMonitor();
 				taskEditorBloatManager.install(PlatformUI.getWorkbench());
 			} catch (Throwable t) {
-				StatusHandler.fail(t, "Could not finish Tasks UI initialization", false);
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						"Could not finish Tasks UI initialization", t));
 			} finally {
 				monitor.done();
 			}
@@ -472,8 +476,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 			new TasksUiInitializationJob().schedule();
 		} catch (Exception e) {
-			e.printStackTrace();
-			StatusHandler.fail(e, "Mylyn Task List initialization failed", false);
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					"Task list initialization failed", e));
 		}
 	}
 
@@ -506,7 +510,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 							taskRepositoryManager.addRepository(taskRepository, getRepositoriesFilePath());
 						}
 					} catch (Throwable t) {
-						StatusHandler.fail(t, "Could not load repository template", false);
+						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+								"Could not load repository template", t));
 					}
 				}
 			}
@@ -576,7 +581,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				INSTANCE = null;
 			}
 		} catch (Exception e) {
-			StatusHandler.log(e, "Mylyn Task List stop terminated abnormally");
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					"Task list stop terminated abnormally", e));
 		} finally {
 			super.stop(context);
 		}
@@ -818,7 +824,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	public static TaskDataManager getTaskDataManager() {
 		if (INSTANCE == null || INSTANCE.taskDataManager == null) {
-			StatusHandler.fail(null, "Offline reports file not created, try restarting.", true);
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					"Offline reports file not created, try restarting."));
 			return null;
 		} else {
 			return INSTANCE.taskDataManager;
@@ -997,7 +1004,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				notification.setDescription("Unread task");
 			}
 		} catch (Throwable t) {
-			StatusHandler.fail(t, "Could not format notification for: " + task, false);
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					"Could not format notification for: " + task, t));
 		}
 		return notification;
 	}

@@ -13,7 +13,9 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
@@ -186,8 +188,9 @@ public final class RepositorySynchronizationManager {
 		RepositoryTaskSyncState status = repositoryTask.getSynchronizationState();
 
 		if (newTaskData == null) {
-			StatusHandler.log("Download of " + repositoryTask.getSummary() + " from "
-					+ repositoryTask.getRepositoryUrl() + " failed.", this);
+			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, 
+					"Download of " + repositoryTask.getSummary() + " from "
+					+ repositoryTask.getRepositoryUrl() + " failed."));
 			return false;
 		}
 

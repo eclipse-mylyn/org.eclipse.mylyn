@@ -14,6 +14,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Locale;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -109,8 +111,9 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 		final File destDirFile = new File(destDir);
 		if (!destDirFile.exists() || !destDirFile.isDirectory()) {
 			// This should never happen
-			StatusHandler.fail(new Exception("File Export Exception"),
-					"Could not export data because specified location does not exist or is not a folder", true);
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					"Could not export data because specified location does not exist or is not a folder",
+					new Exception()));
 			return false;
 		}
 
@@ -177,9 +180,11 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 			// TODO use the wizard's progress service or IProgressService.busyCursorWhile(): bug 210710 
 			service.run(true, false, job);
 		} catch (InvocationTargetException e) {
-			StatusHandler.fail(e, "Could not export files", true);
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					"Could not export files", e));
 		} catch (InterruptedException e) {
-			StatusHandler.fail(e, "Could not export files", true);
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					"Could not export files", e));
 		}
 
 		exportPage.saveSettings();

@@ -23,7 +23,9 @@ import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -33,13 +35,13 @@ import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
-import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
+import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.WorkspaceAwareContextStore;
@@ -210,7 +212,8 @@ public class TaskListManager implements IPropertyChangeListener {
 							}
 						}
 					} catch (Exception e) {
-						StatusHandler.fail(e, "Could not move context file: " + file.getName(), false);
+						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+								"Could not move context file: " + file.getName(), e));
 					}
 				}
 			}
@@ -289,7 +292,8 @@ public class TaskListManager implements IPropertyChangeListener {
 				listener.taskListRead();
 			}
 		} catch (Throwable t) {
-			StatusHandler.fail(t, "Could not read task list, consider restoring via view menu", true);
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					"Could not read task list, consider restoring via view menu", t));
 			return false;
 		}
 		return true;
@@ -313,10 +317,12 @@ public class TaskListManager implements IPropertyChangeListener {
 			if (taskListInitialized && taskListSaveManager != null) {
 				taskListSaveManager.saveTaskList(true, false);
 			} else {
-				StatusHandler.log("task list save attempted before initialization", this);
+				StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
+						"Task list save attempted before initialization"));
 			}
 		} catch (Exception e) {
-			StatusHandler.fail(e, "Could not save task list", true);
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					"Could not save task list", e));
 		}
 	}
 
@@ -360,7 +366,8 @@ public class TaskListManager implements IPropertyChangeListener {
 					((ITaskActivityListener2)listener).preTaskActivated(task);
 				}
 			} catch (Throwable t) {
-				StatusHandler.fail(t, "task activity listener failed: " + listener, false);
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						"Task activity listener failed: " + listener, t));
 			}
 		}
 		
@@ -373,11 +380,13 @@ public class TaskListManager implements IPropertyChangeListener {
 				try {
 					listener.taskActivated(task);
 				} catch (Throwable t) {
-					StatusHandler.fail(t, "task activity listener failed: " + listener, false);
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+							"Task activity listener failed: " + listener, t));
 				}
 			}
 		} catch (Throwable t) {
-			StatusHandler.fail(t, "could not activate task", false);
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					"Could not activate task", t));
 		}
 	}
 
@@ -400,7 +409,8 @@ public class TaskListManager implements IPropertyChangeListener {
 						((ITaskActivityListener2) listener).preTaskDeactivated(task);
 					}
 				} catch (Throwable t) {
-					StatusHandler.fail(t, "notification failed for: " + listener, false);
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+							"Notification failed for: " + listener, t));
 				}
 			}
 
@@ -409,7 +419,8 @@ public class TaskListManager implements IPropertyChangeListener {
 				try {
 					listener.taskDeactivated(task);
 				} catch (Throwable t) {
-					StatusHandler.fail(t, "notification failed for: " + listener, false);
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+							"Notification failed for: " + listener, t));
 				}
 			}
 		}
