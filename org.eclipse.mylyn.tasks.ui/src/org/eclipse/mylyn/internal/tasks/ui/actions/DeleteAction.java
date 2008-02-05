@@ -73,7 +73,7 @@ public class DeleteAction extends Action {
 			} else if (object instanceof TaskCategory) {
 				message = "Permanently delete the category?  Local tasks will be moved to the Uncategorized folder. Repository tasks will be moved to the Unmatched folder.";
 			} else if (object instanceof AbstractRepositoryQuery) {
-				message = "Permanently delete the query?  Contained tasks will moved to the Unmatched folder.";
+				message = "Permanently delete the query?  Contained tasks will be moved to the Unmatched folder.";
 			} else {
 				message = "Permanently delete the element listed below?";
 			}
