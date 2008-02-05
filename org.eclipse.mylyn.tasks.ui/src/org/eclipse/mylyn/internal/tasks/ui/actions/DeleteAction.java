@@ -71,9 +71,9 @@ public class DeleteAction extends Action {
 							" copy will not be deleted and the task will remain in queries that match it.";
 				}
 			} else if (object instanceof TaskCategory) {
-				message = "Permanently delete the category?  Contained tasks will still be available in the Archive";
+				message = "Permanently delete the category?  Local tasks will be moved to the Uncategorized folder. Repository tasks will be moved to the Unmatched folder.";
 			} else if (object instanceof AbstractRepositoryQuery) {
-				message = "Permanently delete the query?  Matching tasks will still be available in the Archive";
+				message = "Permanently delete the query?  Contained tasks will moved to the Unmatched folder.";
 			} else {
 				message = "Permanently delete the element listed below?";
 			}
