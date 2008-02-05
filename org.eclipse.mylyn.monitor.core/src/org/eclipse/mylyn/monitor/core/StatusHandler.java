@@ -101,6 +101,7 @@ public class StatusHandler {
 				log.log(status);
 			}
 		}
+		// FIXME log to console if no log available?
 	}
 
 	/**
