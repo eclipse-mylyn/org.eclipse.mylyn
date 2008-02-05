@@ -16,6 +16,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -51,7 +52,7 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 		protected IStatus run(IProgressMonitor monitor) {
 			try {
 
-				if (!PlatformUI.getWorkbench().getDisplay().isDisposed()) {
+				if (Platform.isRunning() && PlatformUI.getWorkbench() != null && PlatformUI.getWorkbench().getDisplay() != null && !PlatformUI.getWorkbench().getDisplay().isDisposed()) {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 
 						public void run() {
