@@ -10,7 +10,6 @@ package org.eclipse.mylyn.internal.tasks.ui.planner;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -20,6 +19,8 @@ import java.util.List;
 import java.util.Locale;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -534,10 +535,8 @@ public class TaskActivityEditorPart extends EditorPart {
 
 			writer.write("</body></html>");
 			writer.close();
-		} catch (FileNotFoundException e) {
-			StatusHandler.log(e, "could not resolve file");
 		} catch (IOException e) {
-			StatusHandler.log(e, "could not write to file");
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not write to file", e));
 		}
 	}
 

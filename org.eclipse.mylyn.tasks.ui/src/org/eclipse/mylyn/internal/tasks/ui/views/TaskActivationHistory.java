@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
@@ -84,7 +86,8 @@ public class TaskActivationHistory {
 			history.add(task);
 			currentIndex = history.size() - 1;
 		} catch (RuntimeException e) {
-			StatusHandler.fail(e, "could not add task to history", false);
+			// FIXME what exception is caught here?
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not add task to history", e));
 		}
 	}
 
@@ -115,7 +118,8 @@ public class TaskActivationHistory {
 			} 
 			return null;
 		} catch (RuntimeException e) {
-			StatusHandler.fail(e, "could not get previous task from history", false);
+			// FIXME what exception is caught here?
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not get previous task from history", e));
 			return null;
 		}
 	}
@@ -133,7 +137,8 @@ public class TaskActivationHistory {
 
 			return (currentIndex == 0 && !history.get(currentIndex).isActive()) || currentIndex > 0;
 		} catch (RuntimeException e) {
-			StatusHandler.fail(e, "could determine previous task", false);
+			// FIXME what exception is caught here?
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not get previous task from history", e));
 			return false;
 		}
 	}
@@ -143,7 +148,8 @@ public class TaskActivationHistory {
 			history.clear();
 			currentIndex = -1;
 		} catch (RuntimeException e) {
-			StatusHandler.fail(e, "could not clear history", false);
+			// FIXME what exception is caught here?
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not get clear history", e));
 		}
 	}
 

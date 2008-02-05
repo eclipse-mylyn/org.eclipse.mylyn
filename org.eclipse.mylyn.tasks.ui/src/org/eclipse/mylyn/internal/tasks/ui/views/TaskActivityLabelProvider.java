@@ -10,6 +10,8 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import java.text.DateFormat;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.ILabelDecorator;
@@ -128,7 +130,7 @@ public class TaskActivityLabelProvider extends TaskElementLabelProvider implemen
 					if (elapsedTimeString.equals(""))
 						elapsedTimeString = NO_MINUTES;
 				} catch (RuntimeException e) {
-					StatusHandler.fail(e, "Could not format elapsed time", true);
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not format elapsed time", e));
 				}
 				return elapsedTimeString;
 			case 4:

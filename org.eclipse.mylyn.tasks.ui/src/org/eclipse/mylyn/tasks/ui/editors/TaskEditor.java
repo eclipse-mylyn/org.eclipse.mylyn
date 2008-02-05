@@ -340,7 +340,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 			}
 
 		} catch (PartInitException e) {
-			StatusHandler.fail(e, "failed to create task editor pages", false);
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to create task editor pages", e));
 		}
 	}
 

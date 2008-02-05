@@ -75,8 +75,8 @@ public class DownloadAttachmentJob extends Job {
 				try {
 					out.close();
 				} catch (IOException e) {
-					StatusHandler.fail(e, "Could not close attachment file: " + this.targetFile.getAbsolutePath(),
-							false);
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+							"Could not close attachment file: " + this.targetFile.getAbsolutePath(), e));
 				}
 			}
 		}

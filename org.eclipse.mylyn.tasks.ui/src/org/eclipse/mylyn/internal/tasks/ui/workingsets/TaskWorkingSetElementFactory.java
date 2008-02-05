@@ -11,6 +11,8 @@ package org.eclipse.mylyn.internal.tasks.ui.workingsets;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.TaskList;
@@ -50,7 +52,7 @@ public class TaskWorkingSetElementFactory implements IElementFactory {
 					return project;
 				}
 			} catch (Throwable t) {
-				StatusHandler.log("Could not not determine project for handle: " + projectHandle, t);
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not not determine project for handle: " + projectHandle, t));
 			}
 		}
 		return null;

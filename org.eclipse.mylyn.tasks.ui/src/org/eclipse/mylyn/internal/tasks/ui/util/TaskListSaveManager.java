@@ -23,6 +23,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
@@ -69,7 +70,7 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 			try {
 				taskListSaverJob.runRequested();
 			} catch (Exception e) {
-				StatusHandler.fail(e, "Could not auto save task list", false);
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not auto save task list", e));
 			}
 		}
 	}
@@ -101,7 +102,7 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 				internalSaveTaskList();
 			}
 		} else if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
-			StatusHandler.log("Possible task list initialization failure, not saving list.", this);
+			StatusHandler.fail(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Possible task list initialization failure, not saving list"));
 			if (!initializationWarningDialogShow) {
 				initializationWarningDialogShow = true;
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -143,8 +144,7 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 				File destDir = new File(targetFolderPath + File.separator + currFile.getName());
 				if (!destDir.exists()) {
 					if (!destDir.mkdir()) {
-						StatusHandler.log("Unable to create destination context folder: " + destDir.getAbsolutePath(),
-								this);
+						StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Unable to create destination context folder: " + destDir.getAbsolutePath()));
 						continue;
 					}
 				}

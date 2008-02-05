@@ -11,6 +11,8 @@ package org.eclipse.mylyn.tasks.ui;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
@@ -167,7 +169,7 @@ public abstract class AbstractRepositoryConnectorUi {
 				}
 			}
 		} catch (Exception e) {
-			StatusHandler.fail(e, e.getMessage(), true);
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to open query dialog", e));
 		}
 	}
 

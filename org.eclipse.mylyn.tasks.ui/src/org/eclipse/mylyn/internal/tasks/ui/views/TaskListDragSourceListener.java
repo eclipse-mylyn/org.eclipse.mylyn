@@ -16,6 +16,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TaskTransfer;
@@ -100,7 +102,7 @@ class TaskListDragSourceListener implements DragSourceListener {
 
 			return taskFiles;
 		} catch (IOException e) {
-			StatusHandler.fail(e, "Cannot create a temp query file for Drag&Drop", true);
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Cannot create a temp query file for Drag&Drop", e));
 			return null;
 		}
 	}

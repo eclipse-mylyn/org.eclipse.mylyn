@@ -12,6 +12,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.TitleEvent;
@@ -72,7 +73,7 @@ public abstract class RetrieveTitleFromUrlJob extends Job implements TitleListen
 			try {
 				Thread.sleep(SLEEP_INTERVAL_MILLIS);
 			} catch (InterruptedException e) {
-				StatusHandler.fail(e, "Thread interrupted during sleep", false);
+				StatusHandler.fail(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Unexpected thread interruption", e));
 			}
 			timeWaitedMillis += SLEEP_INTERVAL_MILLIS;
 		}

@@ -10,12 +10,15 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import java.lang.reflect.Field;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -48,7 +51,7 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 	private boolean showProgress = false;
 	
 	/**
-	 * HACK: using reflection to gain access
+	 * XXX: using reflection to gain access
 	 */
 	public AbstractFilteredTree(Composite parent, int treeStyle, PatternFilter filter) {
 		super(parent, treeStyle, filter);
@@ -59,7 +62,7 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 			refreshJob = (Job) refreshField.get(this);
 			refreshPolicy = new AdaptiveRefreshPolicy(refreshJob, super.getFilterControl());
 		} catch (Exception e) {
-			StatusHandler.fail(e, "Could not get refresh job", false);
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not get refresh job", e));
 		}
 		setInitialText("");
 	}

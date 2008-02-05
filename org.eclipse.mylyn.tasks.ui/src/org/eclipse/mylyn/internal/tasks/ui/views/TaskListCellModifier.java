@@ -10,6 +10,8 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import java.util.Arrays;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
@@ -58,7 +60,7 @@ class TaskListCellModifier implements ICellModifier {
 				}
 			}
 		} catch (Exception e) {
-			StatusHandler.log(e, e.getMessage());
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, e.getMessage(), e));
 		}
 		return "";
 	}
@@ -100,7 +102,7 @@ class TaskListCellModifier implements ICellModifier {
 				}
 			}
 		} catch (Exception e) {
-			StatusHandler.fail(e, e.getMessage(), true);
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, e.getMessage(), e));
 		}
 		this.taskListView.refresh();//.getViewer().refresh();
 	}

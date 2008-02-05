@@ -11,6 +11,8 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -91,8 +93,7 @@ public class QueryCloneAction extends Action implements IViewActionDelegate {
 			}
 		} else {
 			// cannot happen
-			StatusHandler.fail(new IllegalStateException(selectedQuery.toString()), "Query cloning did not succeeded.", true);
-			return;
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Query cloning did not succeeded.", new IllegalStateException(selectedQuery.toString()))); 
 		}
 	}
 

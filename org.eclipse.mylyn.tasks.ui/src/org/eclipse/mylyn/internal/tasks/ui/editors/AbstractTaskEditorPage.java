@@ -1292,7 +1292,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 					if (modifiedTask != null) {
 						modifiedTask.setSubmitting(false);
 					}
-					StatusHandler.fail(e, e.getMessage(), true);
+					StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, e.getMessage(), e));
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 						public void run() {
 							setGlobalBusy(false);// enableButtons();

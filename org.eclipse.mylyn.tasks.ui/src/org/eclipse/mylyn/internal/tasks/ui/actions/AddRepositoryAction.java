@@ -8,6 +8,8 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskCommandIds;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
@@ -38,7 +40,7 @@ public class AddRepositoryAction extends Action {
 		try {
 			handlerSvc.executeCommand(ITaskCommandIds.ADD_TASK_REPOSITORY, null);
 		} catch (Exception e) {
-			StatusHandler.fail(e, e.getMessage(), true);
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, e.getMessage(), e));
 		}
 	}
 

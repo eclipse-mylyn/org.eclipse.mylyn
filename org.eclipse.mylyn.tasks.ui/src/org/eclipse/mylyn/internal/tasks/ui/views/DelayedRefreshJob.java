@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWTException;
 import org.eclipse.ui.progress.WorkbenchJob;
 
@@ -102,7 +103,7 @@ abstract class DelayedRefreshJob extends WorkbenchJob {
 					updateExpansionState(item);
 				}
 			} catch (SWTException e) {
-				StatusHandler.log(e, "Failed to refresh viewer: " + treeViewer);
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to refresh viewer: " + treeViewer, e));
 			}
 		}
 	}

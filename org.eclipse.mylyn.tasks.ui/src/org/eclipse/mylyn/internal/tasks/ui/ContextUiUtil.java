@@ -12,6 +12,8 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableContext;
@@ -75,7 +77,7 @@ public class ContextUiUtil {
 			if (e.getCause() instanceof CoreException) {
 				StatusHandler.displayStatus(ITasksUiConstants.TITLE_DIALOG, ((CoreException) e.getCause()).getStatus());
 			} else {
-				StatusHandler.fail(e, "Unexpected error while attaching context", true);
+				StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unexpected error while attaching context", e));
 			}
 			return false;
 		} catch (InterruptedException ignored) {
@@ -129,7 +131,7 @@ public class ContextUiUtil {
 			if (e.getCause() instanceof CoreException) {
 				StatusHandler.displayStatus(ITasksUiConstants.TITLE_DIALOG, ((CoreException) e.getCause()).getStatus());
 			} else {
-				StatusHandler.fail(e, "Unexpected error while attaching context", true);
+				StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unexpected error while attaching context", e));
 			}
 			return false;
 		} catch (InterruptedException ignored) {

@@ -383,7 +383,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 				repositoryUserNameEditor.setStringValue(repository.getUserName());
 				repositoryPasswordEditor.setStringValue(repository.getPassword());
 			} catch (Throwable t) {
-				StatusHandler.fail(t, "could not set field value for: " + repository, false);
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not set field value", t));
 			}
 		}
 
@@ -511,7 +511,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 							}
 						}
 					} catch (Throwable t) {
-						StatusHandler.fail(t, "could not set field value for: " + repository, false);
+						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not set field value", t));
 					}
 				}
 			}
@@ -1072,7 +1072,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			try {
 				super.refreshValidState();
 			} catch (Exception e) {
-				StatusHandler.log(e, "problem refreshing password field");
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Problem refreshing password field", e));
 			}
 		}
 
@@ -1343,7 +1343,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 				}
 			});
 		} catch (InvocationTargetException e) {
-			StatusHandler.fail(e.getCause(), "Internal error validating repository", true);
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Internal error validating repository", e.getCause()));
 			return;
 		} catch (InterruptedException e) {
 			// canceled

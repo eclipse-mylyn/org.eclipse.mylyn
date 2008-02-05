@@ -64,7 +64,7 @@ public class ResetRepositoryConfigurationAction extends AbstractTaskRepositoryAc
 				}
 			}
 		} catch (Exception e) {
-			StatusHandler.fail(e, e.getMessage(), true);
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, e.getMessage(), e));
 		}
 	}
 

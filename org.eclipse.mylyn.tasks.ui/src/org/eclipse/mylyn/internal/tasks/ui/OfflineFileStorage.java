@@ -27,6 +27,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.tasks.core.ITaskDataStorage;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataState;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
@@ -36,6 +38,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryOperation;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskComment;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.web.core.XmlUtil;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.XMLMemento;
@@ -214,7 +217,7 @@ public class OfflineFileStorage implements ITaskDataStorage {
 				}
 			}
 		} catch (Exception e) {
-			StatusHandler.fail(e, "Error retrieving offline data", false);
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error retrieving offline data", e));
 		} finally {
 			try {
 				if (lock != null && lock.isValid()) {
@@ -224,7 +227,7 @@ public class OfflineFileStorage implements ITaskDataStorage {
 					fileInputStream.close();
 				}
 			} catch (IOException e) {
-				StatusHandler.fail(e, "Error closing offline data input stream", false);
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error closing offline data input stream", e));
 			}
 		}
 
@@ -273,7 +276,7 @@ public class OfflineFileStorage implements ITaskDataStorage {
 				}
 			}
 		} catch (Exception e) {
-			StatusHandler.fail(e, "Error saving offline data", false);
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error saving offline data"));
 		} finally {
 			try {
 				if (lock != null && lock.isValid()) {
@@ -284,7 +287,7 @@ public class OfflineFileStorage implements ITaskDataStorage {
 					fileOutputStream.close();
 				}
 			} catch (IOException e) {
-				StatusHandler.fail(e, "Error closing offline data output stream", false);
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error closing offline data output stream"));
 			}
 		}
 
@@ -677,9 +680,8 @@ public class OfflineFileStorage implements ITaskDataStorage {
 			// TODO: Remove folder if last file removed
 
 		} catch (Exception e) {
-			StatusHandler.fail(e, "Error removing offline data: " + repositoryUrl + "-" + id, false);
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error removing offline data: " + repositoryUrl + "-" + id, e));
 		}
-
 	}
 
 	private File getDataFile(String folder, String id) throws IOException {

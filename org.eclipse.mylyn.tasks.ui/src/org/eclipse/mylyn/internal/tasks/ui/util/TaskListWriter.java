@@ -146,7 +146,9 @@ public class TaskListWriter {
 				delagatingExternalizer.createQueryElement(query, doc, root);
 //				}
 			} catch (Throwable t) {
-				StatusHandler.fail(t, "Did not externalize: " + query.getSummary(), true);
+				// FIXME use log?
+				StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Did not externalize: "
+						+ query.getSummary(), t));
 			}
 //			if (element == null) {
 //				StatusManager.log("Did not externalize: " + query, this);
@@ -210,8 +212,8 @@ public class TaskListWriter {
 			ZipOutputStream outputStream = new ZipOutputStream(new FileOutputStream(file));
 			writeTaskList(doc, outputStream);
 			outputStream.close();
-		} catch (Exception fnfe) {
-			StatusHandler.log(fnfe, "TaskList could not be found");
+		} catch (Exception e) {
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Task list could not be found", e));
 		}
 	}
 
@@ -284,7 +286,9 @@ public class TaskListWriter {
 			readVersion = root.getAttribute(ATTRIBUTE_VERSION);
 
 			if (readVersion.equals(VALUE_VERSION_1_0_0)) {
-				StatusHandler.log("version: " + readVersion + " not supported", this);
+				// make an error? propagate exception?
+				StatusHandler.log(new Status(IStatus.INFO, TasksUiPlugin.ID_PLUGIN, "Task list version \""
+						+ readVersion + "\" not supported"));
 			} else {
 				NodeList list = root.getChildNodes();
 
@@ -370,7 +374,8 @@ public class TaskListWriter {
 			db = dbf.newDocumentBuilder();
 			doc = db.newDocument();
 		} catch (ParserConfigurationException e) {
-			StatusHandler.log(e, "could not create document");
+			// FIXME propagate exception?
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not create document", e));
 			return doc;
 		}
 
@@ -508,7 +513,8 @@ public class TaskListWriter {
 		File save = new File(name);
 		if (save.exists()) {
 			if (!save.delete()) {
-				StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Unable to delete old backup tasklist file"));
+				StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
+						"Unable to delete old backup tasklist file"));
 				return;
 			}
 		}
@@ -516,10 +522,10 @@ public class TaskListWriter {
 			inFile.renameTo(new File(name));
 		}
 		if (child == null) {
-			StatusHandler.log(e, ITasksUiConstants.MESSAGE_RESTORE);
+			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, ITasksUiConstants.MESSAGE_RESTORE, e));
 		} else {
-			e.printStackTrace(); // in case logging plug-in has not yet started
-			StatusHandler.log(e, "Tasks may have been lost from " + child.getNodeName());
+			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Tasks may have been lost from "
+					+ child.getNodeName(), e));
 		}
 	}
 
@@ -566,8 +572,8 @@ public class TaskListWriter {
 				writeTaskList(doc, outputStream);
 				repositoriesExternalizer.writeRepositories(repositories, outputStream);
 				outputStream.close();
-			} catch (Exception fnfe) {
-				StatusHandler.log(fnfe, "TaskList could not be found");
+			} catch (Exception e) {
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Task list could not be found", e));
 			}
 		}
 		return;
@@ -588,7 +594,8 @@ public class TaskListWriter {
 			try {
 				delagatingExternalizer.createQueryElement(query, doc, root);
 			} catch (Throwable t) {
-				StatusHandler.fail(t, "Did not externalize: " + query.getSummary(), true);
+				StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Did not externalize: "
+						+ query.getSummary(), t));
 				return null;
 			}
 		}
@@ -632,11 +639,14 @@ public class TaskListWriter {
 						}
 					}
 				} catch (Exception e) {
-					StatusHandler.log(e, "Tasks may have been lost from " + child.getNodeName());
+					StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
+							"Tasks may have been lost from " + child.getNodeName(), e));
 				}
 			}
 		} else {
-			StatusHandler.log("version: " + readVersion + " not supported", this);
+			// FIXME propagate error?
+			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Version \"" + readVersion
+					+ "\" not supported"));
 		}
 
 		return queries;
@@ -678,7 +688,7 @@ public class TaskListWriter {
 
 			outputStream.close();
 		} catch (Exception e) {
-			StatusHandler.log(e, "Task data was not written");
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Task data was not written", e));
 		}
 	}
 
@@ -712,11 +722,14 @@ public class TaskListWriter {
 							}
 						}
 					} catch (Exception e) {
-						StatusHandler.log(e, "Tasks may have been lost from " + child.getNodeName());
+						StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
+								"Tasks may have been lost from " + child.getNodeName(), e));
 					}
 				}
 			} else {
-				StatusHandler.log("version: " + readVersion + " not supported", this);
+				// FIXME propagate error?
+				StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Version \"" + readVersion
+						+ "\" not supported"));
 			}
 		} catch (Exception e) {
 			handleException(inFile, null, e);

@@ -11,6 +11,8 @@ package org.eclipse.mylyn.internal.tasks.ui.properties;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
@@ -178,7 +180,7 @@ public class ProjectTaskRepositoryPage extends PropertyPage {
 					plugin.setRepositoryForResource(project, selectedRepository);
 				}
 			} catch (CoreException e) {
-				StatusHandler.fail(e, "Unable to associate project with task repository", true);
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unable to associate project with task repository", e));
 			}
 		}
 		return true;

@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
@@ -78,7 +79,7 @@ public class NewAttachmentWizard extends Wizard {
 	private AbstractTask task;
 
 	private boolean screenshotMode;
-	
+
 	public NewAttachmentWizard(TaskRepository repository, AbstractTask task, boolean screenshotMode) {
 		super();
 		this.task = task;
@@ -92,7 +93,7 @@ public class NewAttachmentWizard extends Wizard {
 			setWindowTitle("Add Attachment");
 			setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
 		}
-		
+
 		inputPage = new InputAttachmentSourcePage(this);
 		attachment = new LocalAttachment();
 		attachment.setFilePath("");
@@ -110,7 +111,7 @@ public class NewAttachmentWizard extends Wizard {
 	public NewAttachmentWizard(TaskRepository repository, AbstractTask task) {
 		this(repository, task, false);
 	}
-	
+
 	public NewAttachmentWizard(TaskRepository repository, AbstractTask task, File attachFile) {
 		this(repository, task, false);
 		attachment.setFilePath(attachFile.getAbsolutePath());
@@ -232,9 +233,8 @@ public class NewAttachmentWizard extends Wizard {
 			task.setSynchronizationState(RepositoryTaskSyncState.SYNCHRONIZED);
 			if (e1.getCause() != null && e1.getCause() instanceof CoreException) {
 				handleSubmitError((CoreException) e1.getCause());
-
 			} else {
-				StatusHandler.fail(e1, "Attachment failure", true);
+				StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Attachment failure", e1));
 			}
 			return false;
 		} catch (InterruptedException e1) {

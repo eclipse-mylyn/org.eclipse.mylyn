@@ -7,6 +7,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -133,7 +135,7 @@ public class RepositoryTaskOutlinePage extends ContentOutlinePage {
 			viewer.setComparer(new RepositoryTaskOutlineComparer());
 			viewer.expandAll();
 		} catch (Exception e) {
-			StatusHandler.fail(e, "could not create bugzilla outline", true);
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not create bugzilla outline", e));
 		}
 		getSite().getPage().addSelectionListener(selectionListener);
 	}

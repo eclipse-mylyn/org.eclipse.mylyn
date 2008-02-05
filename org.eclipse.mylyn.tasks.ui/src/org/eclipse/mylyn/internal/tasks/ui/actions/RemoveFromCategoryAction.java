@@ -10,6 +10,8 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import java.util.Set;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -79,8 +81,8 @@ public class RemoveFromCategoryAction extends Action {
 
 				}
 			}
-		} catch (NullPointerException npe) {
-			StatusHandler.fail(npe, "Could not remove task from category, it may still be refreshing.", true);
+		} catch (NullPointerException e) {
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not remove task from category, it may still be refreshing.", e));
 		}
 	}
 }

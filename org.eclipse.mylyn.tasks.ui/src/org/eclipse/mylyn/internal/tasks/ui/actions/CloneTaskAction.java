@@ -8,6 +8,8 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -92,8 +94,9 @@ public class CloneTaskAction extends BaseSelectionListenerAction implements IVie
 					}
 				}
 			}
-		} catch (NullPointerException npe) {
-			StatusHandler.fail(npe, "Could not remove task from category, it may still be refreshing.", true);
+		} catch (NullPointerException e) {
+			// FIXME check for null instead?
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not remove task from category, it may still be refreshing.", e));
 		}
 	}
 

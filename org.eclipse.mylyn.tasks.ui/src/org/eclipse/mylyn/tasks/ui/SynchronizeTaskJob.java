@@ -149,7 +149,7 @@ class SynchronizeTaskJob extends Job {
 		} catch (OperationCanceledException e) {
 			return Status.CANCEL_STATUS;
 		} catch (Exception e) {
-			StatusHandler.fail(e, "Synchronization failed", false);
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Synchronization failed", e));
 		} finally {
 			monitor.done();
 		}

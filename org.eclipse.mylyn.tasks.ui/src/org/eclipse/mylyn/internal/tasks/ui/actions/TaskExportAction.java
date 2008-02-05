@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -130,9 +132,9 @@ public class TaskExportAction extends Action implements IViewActionDelegate {
 		try {
 			encodedName = URLEncoder.encode(task.getHandleIdentifier(), ITasksUiConstants.FILENAME_ENCODING);
 		} catch (UnsupportedEncodingException e) {
-			StatusHandler.fail(e, "Could not determine name for the selected task", false);
-		}
-		
+			// FIXME propagate RuntimeException? a null return value is not handled properly
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not determine name for the selected task", e));
+		}		
 		return encodedName;
 	}
 

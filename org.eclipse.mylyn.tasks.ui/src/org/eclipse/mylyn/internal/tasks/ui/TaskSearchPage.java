@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -230,8 +232,8 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			searchPage = new DeadSearchPage(repository);
 			searchPage.setContainer(pageContainer);
 			searchPage.createControl(fParentComposite);
-			StatusHandler.log(e, "Error occurred while constructing search page for " + repository.getUrl() + " ["
-					+ repository.getConnectorKind() + "]");
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error occurred while constructing search page for " + repository.getUrl() + " ["
+					+ repository.getConnectorKind() + "]", e));
 			searchPage.getControl().setData(PAGE_KEY, searchPage);
 			return searchPage.getControl();
 		}

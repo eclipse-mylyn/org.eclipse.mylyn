@@ -8,6 +8,8 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
@@ -34,7 +36,7 @@ public class TaskDeactivateAction extends Action {
 				TasksUiPlugin.getTaskListManager().deactivateTask(task);
 			}
 		} catch (Exception e) {
-			StatusHandler.log(e, " Closing task editor on task deactivation failed");
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Closing task editor on task deactivation failed", e));
 		}
 	}
 

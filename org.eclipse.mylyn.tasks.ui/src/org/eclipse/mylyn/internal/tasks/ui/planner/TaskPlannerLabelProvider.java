@@ -12,6 +12,8 @@ import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -74,7 +76,7 @@ public class TaskPlannerLabelProvider extends TaskElementLabelProvider implement
 					if (task.getCreationDate() != null) {
 						return DateFormat.getDateInstance(DateFormat.MEDIUM).format(task.getCreationDate());
 					} else {
-						StatusHandler.log("Task has no creation date: " + task.getSummary(), this);
+						StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Task has no creation date: " + task.getSummary()));
 						return "[unknown]";
 					}
 				case 6:
@@ -119,7 +121,7 @@ public class TaskPlannerLabelProvider extends TaskElementLabelProvider implement
 				}
 			}
 		} catch (RuntimeException e) {
-			StatusHandler.fail(e, "Could not produce completed task label", false);
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not produce completed task label", e));
 			return "";
 		}
 		return null;

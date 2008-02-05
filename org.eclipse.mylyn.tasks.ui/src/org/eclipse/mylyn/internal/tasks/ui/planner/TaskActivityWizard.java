@@ -8,6 +8,8 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.planner;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskPlanningEditor;
@@ -45,8 +47,8 @@ public class TaskActivityWizard extends Wizard implements INewWizard {
 					planningGamePage.getReportEndDate(), planningGamePage.getSelectedContainers(),
 					TasksUiPlugin.getTaskListManager().getTaskList());
 			page.openEditor(input, TaskPlanningEditor.ID);
-		} catch (PartInitException ex) {
-			StatusHandler.log(ex, "couldn't open summary editor");
+		} catch (PartInitException e) {
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not open summary editor", e));
 		}
 		return true;
 	}

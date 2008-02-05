@@ -19,18 +19,20 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
-import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.RetrieveTitleFromUrlJob;
 import org.eclipse.mylyn.internal.tasks.ui.TaskTransfer;
@@ -261,7 +263,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 						TasksUiUtil.refreshAndOpenTaskListElement(newTask);
 						return true;
 					} catch (CoreException e) {
-						StatusHandler.fail(e, "could not create task", false);
+						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not create task", e));
 						return false;
 					}
 				}
@@ -336,7 +338,6 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 	 * Attempts to set the task pageTitle to the title from the specified url
 	 */
 	protected void retrieveTaskDescription(final String url) {
-
 		try {
 			RetrieveTitleFromUrlJob job = new RetrieveTitleFromUrlJob(url) {
 				@Override
@@ -347,7 +348,8 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			};
 			job.schedule();
 		} catch (RuntimeException e) {
-			StatusHandler.fail(e, "could not open task web page", false);
+			// FIXME what exception is caught here?
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not open task web page", e));
 		}
 	}
 }

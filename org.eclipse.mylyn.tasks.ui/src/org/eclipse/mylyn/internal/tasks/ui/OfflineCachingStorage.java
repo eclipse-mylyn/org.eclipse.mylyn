@@ -19,10 +19,12 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.internal.tasks.core.ITaskDataStorage;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataState;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * Least Recently Used (LRU) cache
@@ -231,7 +233,7 @@ public class OfflineCachingStorage implements ITaskDataStorage {
 					try {
 						persistToStorage();
 					} catch (Throwable t) {
-						StatusHandler.fail(t, "Error saving offline cache", false);
+						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error saving offline cache", t));
 					}
 				}
 

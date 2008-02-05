@@ -13,6 +13,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -107,7 +108,8 @@ public class NewTaskWizard extends Wizard implements INewWizard {
 			if (e.getCause() instanceof CoreException) {
 				StatusHandler.displayStatus("Error creating new task", ((CoreException) e.getCause()).getStatus());
 			} else {
-				StatusHandler.fail(e.getCause(), "Error creating new task", true);
+				StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error creating new task",
+						e.getCause()));
 			}
 			return false;
 		} catch (InterruptedException e) {

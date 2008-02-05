@@ -1500,7 +1500,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					try {
 						page.openEditor(input, desc.getId());
 					} catch (PartInitException e) {
-						StatusHandler.fail(e, "Unable to open editor for: " + attachment.getDescription(), false);
+						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unable to open editor for: " + attachment.getDescription(), e));
 					}
 				}
 			};
@@ -1518,7 +1518,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					try {
 						page.openEditor(input, "org.eclipse.ui.DefaultTextEditor");
 					} catch (PartInitException e) {
-						StatusHandler.fail(e, "Unable to open editor for: " + attachment.getDescription(), false);
+						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unable to open editor for: " + attachment.getDescription(), e));
 					}
 				}
 			};
@@ -3595,7 +3595,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					if (modifiedTask != null) {
 						modifiedTask.setSubmitting(false);
 					}
-					StatusHandler.fail(e, e.getMessage(), true);
+					StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, e.getMessage(), e));
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 						public void run() {
 							setGlobalBusy(false);// enableButtons();

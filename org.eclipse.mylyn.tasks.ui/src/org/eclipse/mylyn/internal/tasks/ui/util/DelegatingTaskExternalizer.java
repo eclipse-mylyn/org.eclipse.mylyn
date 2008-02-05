@@ -499,7 +499,7 @@ final class DelegatingTaskExternalizer {
 		try {
 			date = format.parse(dateString);
 		} catch (ParseException e) {
-			StatusHandler.fail(e, "Could not parse end date", false);
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not parse end date", e));
 		}
 		return date;
 	}
@@ -536,7 +536,7 @@ final class DelegatingTaskExternalizer {
 			try {
 				createQueryHitElement(hit, doc, node);
 			} catch (Exception e) {
-				StatusHandler.log(e, e.getMessage());
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, e.getMessage(), e));
 			}
 		}
 		parent.appendChild(node);

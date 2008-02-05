@@ -10,11 +10,14 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import java.util.Date;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.mylyn.internal.tasks.ui.RetrieveTitleFromUrlJob;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.ui.DatePicker;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
@@ -222,20 +225,17 @@ public class TaskInputDialog extends Dialog {
 	 * Attempts to set the task pageTitle to the title from the specified url
 	 */
 	protected void retrieveTaskDescription(final String url) {
-
 		try {
 			RetrieveTitleFromUrlJob job = new RetrieveTitleFromUrlJob(issueURLTextWidget.getText()) {
-
 				@Override
 				protected void setTitle(final String pageTitle) {
 					taskNameTextWidget.setText(pageTitle);
 				}
-
 			};
 			job.schedule();
-
 		} catch (RuntimeException e) {
-			StatusHandler.fail(e, "could not open task web page", false);
+			// FIXME which exception is caught here?
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not open task web page", e));
 		}
 	}
 

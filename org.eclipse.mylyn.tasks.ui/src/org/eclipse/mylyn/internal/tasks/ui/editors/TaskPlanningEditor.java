@@ -14,6 +14,8 @@ import java.util.Calendar;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.text.ITextListener;
@@ -507,7 +509,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 		try {
 			creationDateString = DateFormat.getDateInstance(DateFormat.LONG).format(task.getCreationDate());
 		} catch (RuntimeException e) {
-			StatusHandler.fail(e, "Could not format creation date", true);
+			// FIXME what exception is caught here?
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not format creation date", e));
 		}
 		addNameValueComp(statusComposite, "Created:", creationDateString, SWT.FLAT | SWT.READ_ONLY);
 
@@ -594,7 +597,6 @@ public class TaskPlanningEditor extends TaskFormPage {
 	 * Attempts to set the task pageTitle to the title from the specified url
 	 */
 	protected void retrieveTaskDescription(final String url) {
-
 		try {
 			RetrieveTitleFromUrlJob job = new RetrieveTitleFromUrlJob(issueReportURL.getText()) {
 
@@ -608,7 +610,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 			job.schedule();
 
 		} catch (RuntimeException e) {
-			StatusHandler.fail(e, "could not open task web page", false);
+			// FIXME what exception is caught here?
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not open task web page", e));
 		}
 	}
 
@@ -788,7 +791,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 				elapsedTimeString = NO_TIME_ELAPSED;
 			}
 		} catch (RuntimeException e) {
-			StatusHandler.fail(e, "Could not format elapsed time", true);
+			// FIXME what exception is caught here?
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not format elapsed time", e));
 		}
 
 		final Text elapsedTimeText = new Text(nameValueComp, SWT.READ_ONLY | SWT.FLAT);
@@ -810,8 +814,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 							elapsedTimeString = NO_TIME_ELAPSED;
 						}
 
-					} catch (RuntimeException e1) {
-						StatusHandler.fail(e1, "Could not format elapsed time", true);
+					} catch (RuntimeException e) {
+						StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not format elapsed time", e));
 					}
 					final String elapsedString = elapsedTimeString;
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -910,7 +914,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 		try {
 			completionDateString = DateFormat.getDateInstance(DateFormat.LONG).format(task.getCompletionDate());
 		} catch (RuntimeException e) {
-			StatusHandler.fail(e, "Could not format date", true);
+			// FIXME what exception is caught here?
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not format date", e));
 			return completionDateString;
 		}
 		return completionDateString;

@@ -11,6 +11,8 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 import java.io.File;
 import java.util.Date;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -206,7 +208,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 				try {
 					page.openEditor(input, desc.getId());
 				} catch (PartInitException e) {
-					StatusHandler.fail(e, "Unable to open editor for: " + attachment.getDescription(), false);
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unable to open editor for: " + attachment.getDescription(), e));
 				}
 			}
 		};
@@ -224,7 +226,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 				try {
 					page.openEditor(input, "org.eclipse.ui.DefaultTextEditor");
 				} catch (PartInitException e) {
-					StatusHandler.fail(e, "Unable to open editor for: " + attachment.getDescription(), false);
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unable to open editor for: " + attachment.getDescription(), e));
 				}
 			}
 		};

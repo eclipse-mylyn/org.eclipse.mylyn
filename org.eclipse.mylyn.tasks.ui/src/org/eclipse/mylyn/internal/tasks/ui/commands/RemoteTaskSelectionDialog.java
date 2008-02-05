@@ -199,13 +199,13 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 		addRepositoryButton.setEnabled(TasksUiPlugin.getRepositoryManager().hasUserManagedRepositoryConnectors());
 		addRepositoryButton.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(SelectionEvent event) {
 				IHandlerService hndSvc = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
 				try {
 					hndSvc.executeCommand(ITaskCommandIds.ADD_TASK_REPOSITORY, null);
 					repositoriesViewer.setInput(getTaskRepositories());
-				} catch (CommandException ex) {
-					StatusHandler.fail(ex, ex.getMessage(), true);
+				} catch (CommandException e) {
+					StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, e.getMessage(), e));
 				}
 			}
 		});
