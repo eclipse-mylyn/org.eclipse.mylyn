@@ -134,8 +134,9 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 			if (!TasksUiPlugin.getTaskActivityManager().isWeekDay((ScheduledTaskContainer) parent)) {
 				return false;
 			}
-			if (TaskActivityManager.getInstance().isOverdue(task) || task.isPastReminder())
+			if (TaskActivityManager.getInstance().isOverdue(task) || task.isPastReminder()) {
 				return true;
+			}
 
 			ScheduledTaskContainer container = (ScheduledTaskContainer) parent;
 			Calendar previousCal = TasksUiPlugin.getTaskActivityManager().getActivityPrevious().getEnd();
@@ -168,9 +169,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 
 		boolean result = false;
 		if (task != null) {
-			if (task.getLastReadTimeStamp() == null) {
-				return true;
-			} else if (task.getSynchronizationState() == RepositoryTaskSyncState.OUTGOING) {
+			if (task.getSynchronizationState() == RepositoryTaskSyncState.OUTGOING) {
 				return true;
 			} else if (task.getSynchronizationState() == RepositoryTaskSyncState.INCOMING
 					&& !(parent instanceof ScheduledTaskContainer)) {
@@ -187,9 +186,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		boolean result = false;
 		for (AbstractTask task : container.getChildren()) {
 			if (task != null) {
-				if (task.getLastReadTimeStamp() == null) {
-					result = true;
-				} else if (task.getSynchronizationState() == RepositoryTaskSyncState.OUTGOING) {
+				if (task.getSynchronizationState() == RepositoryTaskSyncState.OUTGOING) {
 					result = true;
 				} else if (task.getSynchronizationState() == RepositoryTaskSyncState.INCOMING
 						&& !(parent instanceof ScheduledTaskContainer)) {
