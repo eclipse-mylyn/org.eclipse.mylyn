@@ -67,7 +67,11 @@ public class TaskListNotification extends AbstractNotification {
 	}
 
 	public Image getNotificationKindImage() {
-		return TasksUiImages.getImage(TasksUiImages.OVERLAY_INCOMMING);
+		if (task != null && task.getLastReadTimeStamp() == null) {
+			return TasksUiImages.getImage(TasksUiImages.OVERLAY_INCOMMING_NEW);
+		} else {
+			return TasksUiImages.getImage(TasksUiImages.OVERLAY_INCOMMING);
+		}
 	}
 
 	public Date getDate() {

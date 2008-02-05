@@ -21,10 +21,10 @@ import java.util.List;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.window.ToolTip;
-import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
@@ -465,7 +465,14 @@ public class TaskListToolTip extends ToolTip {
 
 		String incommingText = getIncommingText(currentTipElement);
 		if (incommingText != null) {
-			addIconAndLabel(composite, TasksUiImages.getImage(TasksUiImages.OVERLAY_INCOMMING), incommingText);
+			Image image = TasksUiImages.getImage(TasksUiImages.OVERLAY_INCOMMING);
+			if (currentTipElement instanceof AbstractTask) {
+				AbstractTask task = (AbstractTask)currentTipElement;
+				if (task.getLastReadTimeStamp() == null) {
+					image = TasksUiImages.getImage(TasksUiImages.OVERLAY_INCOMMING_NEW);
+				}
+			}
+			addIconAndLabel(composite, image, incommingText);
 		}
 
 		ProgressData progress = getProgressData(currentTipElement, taskListView);
