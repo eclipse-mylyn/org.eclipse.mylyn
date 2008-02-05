@@ -526,9 +526,7 @@ public class TaskList {
 		// moving to orphanage as necessary
 		for (AbstractTask child : task.getChildren()) {
 			child.removeParentContainer(task);
-			if(child.getParentContainers().isEmpty()) {
-				addOrphan(child, delta);
-			}
+			addOrphan(child, delta);
 		}
 		task.clear();		
 		removeOrphan(task, delta);
@@ -560,6 +558,7 @@ public class TaskList {
 
 		queries.remove(query.getHandleIdentifier());
 		for (AbstractTask task : query.getChildren()) {
+			task.removeParentContainer(query);
 			addOrphan(task, delta);
 		}
 

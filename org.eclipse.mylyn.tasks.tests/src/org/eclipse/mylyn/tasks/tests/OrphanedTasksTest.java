@@ -145,8 +145,24 @@ public class OrphanedTasksTest extends TestCase {
 		assertEquals(2, taskList.getCategories().size());
 		assertTrue(taskList.getDefaultCategory().isEmpty());
 		taskList.deleteCategory(category);
-		assert (taskList.getOrphanContainer(MockRepositoryConnector.REPOSITORY_URL).isEmpty());
+		assertTrue(taskList.getOrphanContainer(MockRepositoryConnector.REPOSITORY_URL).isEmpty());
 		assertEquals(1, taskList.getCategories().size());
+	}
+	
+	/**
+	 * Repository tasks in deleted queries are orphaned.
+	 */
+	public void testRepositoryTaskInDeletedQuery() {
+		MockRepositoryTask mockTask = new MockRepositoryTask("1");
+		MockRepositoryQuery mockQuery = new MockRepositoryQuery("mock query");
+		taskList.addQuery(mockQuery);
+		assertTrue(taskList.getQueries().size() > 0);
+		taskList.addTask(mockTask, mockQuery);
+		assertTrue(mockQuery.contains(mockTask.getHandleIdentifier()));
+		assertTrue(taskList.getOrphanContainer(MockRepositoryConnector.REPOSITORY_URL).isEmpty());
+		taskList.deleteQuery(mockQuery);
+		assertTrue(taskList.getQueries().size() == 0);
+		assertFalse(taskList.getOrphanContainer(MockRepositoryConnector.REPOSITORY_URL).isEmpty());
 	}
 
 	
