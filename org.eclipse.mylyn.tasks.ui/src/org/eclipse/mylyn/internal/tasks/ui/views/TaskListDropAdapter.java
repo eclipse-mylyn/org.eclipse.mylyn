@@ -60,6 +60,7 @@ import org.eclipse.ui.PlatformUI;
  * @author Rob Elves (added URL based task creation support)
  * @author Jevgeni Holodkov
  */
+// API 3.0 rename to TaskListDropTargetListener
 public class TaskListDropAdapter extends ViewerDropAdapter {
 
 	private AbstractTask newTask = null;

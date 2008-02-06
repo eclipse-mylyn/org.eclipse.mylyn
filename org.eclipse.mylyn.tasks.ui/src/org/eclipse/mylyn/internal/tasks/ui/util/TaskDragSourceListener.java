@@ -5,8 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-
-package org.eclipse.mylyn.internal.tasks.ui.views;
+package org.eclipse.mylyn.internal.tasks.ui.util;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,17 +17,21 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TaskTransfer;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.swt.dnd.DragSourceAdapter;
 import org.eclipse.swt.dnd.DragSourceEvent;
-import org.eclipse.swt.dnd.DragSourceListener;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 
@@ -38,29 +41,29 @@ import org.eclipse.swt.dnd.TextTransfer;
  * @author Leo Dos Santos
  * @author Steffen Pingel
  */
-class TaskListDragSourceListener implements DragSourceListener {
+public class TaskDragSourceListener extends DragSourceAdapter {
 
 	static final String DELIM = ", ";
 
-	private final TaskListView view;
+	private IStructuredSelection selection;
 
-	private StructuredSelection selection;
+	private final ISelectionProvider selectionProvider;
 
-	public TaskListDragSourceListener(TaskListView view) {
-		this.view = view;
+	public TaskDragSourceListener(ISelectionProvider selectionProvider) {
+		this.selectionProvider = selectionProvider;
 	}
 
 	public void dragStart(DragSourceEvent event) {
-		StructuredSelection selection = (StructuredSelection) this.view.getViewer().getSelection();
-		if (selection.isEmpty()) {
+		ISelection selection = selectionProvider.getSelection();
+		if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
+			this.selection = (IStructuredSelection) selection;
+		} else {
 			this.selection = null;
 			event.doit = false;
-		} else {
-			this.selection = selection;
 		}
 	}
 
-	private List<File> createTaskFiles(StructuredSelection selection) {
+	private List<File> createTaskFiles(IStructuredSelection selection) {
 		// prepare temporary directory 
 		File tempDir = new File(TasksUiPlugin.getDefault().getDataDirectory() + File.separator + "temp");
 		if (!tempDir.exists()) {
@@ -132,11 +135,19 @@ class TaskListDragSourceListener implements DragSourceListener {
 				event.data = paths;
 			}
 		} else if (TextTransfer.getInstance().isSupportedType(event.dataType)) {
-			event.data = CopyTaskDetailsAction.getTextForTask(selection.getFirstElement());
+			if (selection.getFirstElement() instanceof RepositoryTaskData) {
+				RepositoryTaskData taskData = (RepositoryTaskData) selection.getFirstElement();
+				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+						taskData.getRepositoryKind());
+				if (connector != null) {
+					event.data = connector.getTaskUrl(taskData.getRepositoryUrl(), taskData.getId());
+				} else {
+					event.data = taskData.getSummary();
+				}
+			} else {
+				event.data = CopyTaskDetailsAction.getTextForTask(selection.getFirstElement());
+			}
 		}
 	}
 
-	public void dragFinished(DragSourceEvent event) {
-		// don't care if the drag is done
-	}
 }

@@ -15,6 +15,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
@@ -55,7 +56,7 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 		String text = getTextForTask(object);
 
 		TextTransfer textTransfer = TextTransfer.getInstance();
-		if (text != null &&  !text.equals("")) {
+		if (text != null && !text.equals("")) {
 			clipboard.setContents(new Object[] { text }, new Transfer[] { textTransfer });
 		}
 	}
@@ -64,19 +65,26 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 	public static String getTextForTask(Object object) {
 		String text = "";
 		if (object instanceof AbstractTask) {
-			AbstractTask task = null;
-			if (object instanceof AbstractTask) {
-				task = (AbstractTask) object;
+			AbstractTask task = (AbstractTask) object;
+			if (task.getTaskKey() != null) {
+				text += task.getTaskKey() + ": ";
 			}
-			if (task != null) {
-				if (task.getTaskKey() != null) {
-					text += task.getTaskKey() + ": ";
-				}
-				
-				text += task.getSummary();
-				if (task.hasValidUrl()) {
-					text += "\n" + task.getUrl();
-				}
+
+			text += task.getSummary();
+			if (task.hasValidUrl()) {
+				text += "\n" + task.getUrl();
+			}
+		} else if (object instanceof RepositoryTaskData) {
+			RepositoryTaskData taskData = (RepositoryTaskData) object;
+			if (taskData.getTaskKey() != null) {
+				text += taskData.getTaskKey() + ": ";
+			}
+
+			text += taskData.getSummary();
+			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+					taskData.getRepositoryKind());
+			if (connector != null) {
+				text += "\n" + connector.getTaskUrl(taskData.getRepositoryUrl(), taskData.getId());
 			}
 		} else if (object instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) object;

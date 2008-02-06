@@ -23,17 +23,24 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
+import org.eclipse.mylyn.internal.tasks.ui.TaskTransfer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorBusyIndicator;
 import org.eclipse.mylyn.internal.tasks.ui.editors.IBusyEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionContributor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskPlanningEditor;
+import org.eclipse.mylyn.internal.tasks.ui.util.SelectionProviderAdapter;
+import org.eclipse.mylyn.internal.tasks.ui.util.TaskDragSourceListener;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.FileTransfer;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -67,12 +74,14 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 	private IEditorPart contentOutlineProvider = null;
 
 	public final Object FAMILY_SUBMIT = new Object();
-	
+
 	private MenuManager menuManager = new MenuManager();
 
 	private EditorBusyIndicator editorBusyIndicator;
 
 	private IHyperlinkListener messageHyperLinkListener;
+
+	private TaskDragSourceListener titleDragSourceListener;
 
 	public TaskEditor() {
 		super();
@@ -90,9 +99,9 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 	public TaskEditorActionContributor getContributor() {
 		return (TaskEditorActionContributor) getEditorSite().getActionBarContributor();
 	}
-	
+
 	/**
-	 * @param Configurs standard task editor context menu
+	 * Configures the standard task editor context menu
 	 * @Since 2.3
 	 */
 	protected void configureContextMenuManager(MenuManager manager) {
@@ -229,7 +238,6 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 
 	@Override
 	public void dispose() {
-		
 		if (editorBusyIndicator != null) {
 			editorBusyIndicator.stop();
 		}
@@ -335,7 +343,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 				}
 			} else if (getEditorInput() instanceof AbstractRepositoryTaskEditorInput) {
 				this.setTitleImage(TasksUiImages.getImage(TasksUiImages.TASK_REMOTE));
-			} else { 
+			} else {
 				setTitleImage(TasksUiImages.getImage(TasksUiImages.TASK));
 			}
 
@@ -365,10 +373,6 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 
 	@Override
 	public void showBusy(boolean busy) {
-		// if (!this.getHeaderForm().getForm().isDisposed()) {
-		// this.getHeaderForm().getForm().setBusy(busy);
-		// }
-
 		if (busy) {
 			if (TasksUiUtil.isAnimationsEnabled()) {
 				editorBusyIndicator.start();
@@ -400,31 +404,56 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 		updateFormTitle();
 	}
 
+	private void installTitleDrag(Form form, final AbstractTask task, final RepositoryTaskData taskData) {
+		if (titleDragSourceListener == null) {
+			Transfer[] transferTypes;
+			if (null == task) {
+				transferTypes = new Transfer[] { TextTransfer.getInstance() };
+			} else {
+				transferTypes = new Transfer[] { TaskTransfer.getInstance(), TextTransfer.getInstance(),
+						FileTransfer.getInstance() };
+			}
+			titleDragSourceListener = new TaskDragSourceListener(new SelectionProviderAdapter() {
+				@Override
+				public ISelection getSelection() {
+					if (task != null) {
+						return new StructuredSelection(task);
+					} else if (taskData != null && !taskData.isNew()){
+						return new StructuredSelection(taskData);
+					}
+					return null;
+				}
+			});
+			form.addTitleDragSupport(DND.DROP_MOVE | DND.DROP_LINK, transferTypes, titleDragSourceListener);
+		}
+	}
+
 	protected void updateFormTitle() {
+		AbstractTask task = null;
+		RepositoryTaskData taskData = null;
 		IEditorInput input = getEditorInput();
 		if (input instanceof TaskEditorInput) {
-			AbstractTask task = ((TaskEditorInput) input).getTask();
+			task = ((TaskEditorInput) input).getTask();
 			if (task instanceof LocalTask) {
 				getHeaderForm().getForm().setText("Task: " + task.getSummary());
 			} else {
 				setFormHeaderImage(task.getConnectorKind());
 				setFormHeaderLabel(task);
-				return;
 			}
 		} else if (input instanceof RepositoryTaskEditorInput) {
-			AbstractTask task = ((RepositoryTaskEditorInput) input).getRepositoryTask();
-			RepositoryTaskData data = ((RepositoryTaskEditorInput) input).getTaskData();
-			if (task != null && data != null && !data.isNew()) {
+			task = ((RepositoryTaskEditorInput) input).getRepositoryTask();
+			taskData = ((RepositoryTaskEditorInput) input).getTaskData();
+			if (task != null && taskData != null && !taskData.isNew()) {
 				setFormHeaderImage(task.getConnectorKind());
 				setFormHeaderLabel(task);
-				return;
 			} else {
-				if (data != null) {
-					setFormHeaderImage(data.getRepositoryKind());
-					setFormHeaderLabel(data);
+				if (taskData != null) {
+					setFormHeaderImage(taskData.getRepositoryKind());
+					setFormHeaderLabel(taskData);
 				}
 			}
 		}
+		installTitleDrag(getHeaderForm().getForm().getForm(), task, taskData);
 	}
 
 	private void setFormHeaderImage(String repositoryKind) {
@@ -440,13 +469,13 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 	}
 
 	/**
-	 * @since 2.3 
+	 * @since 2.3
 	 */
 	public void setMessage(String message, int type, IHyperlinkListener listener) {
 		if (this.getHeaderForm() != null && this.getHeaderForm().getForm() != null) {
 			if (!this.getHeaderForm().getForm().isDisposed()) {
 				getTopForm().setMessage(message, type);
-				
+
 				if (messageHyperLinkListener != null) {
 					getTopForm().removeMessageHyperlinkListener(messageHyperLinkListener);
 				}
@@ -461,7 +490,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 	public void setMessage(String message, int type) {
 		setMessage(message, type, null);
 	}
-	
+
 	protected IWorkbenchSiteProgressService getProgressService() {
 		Object siteService = getEditorSite().getAdapter(IWorkbenchSiteProgressService.class);
 		if (siteService != null)
@@ -470,7 +499,6 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 	}
 
 	private void setFormHeaderLabel(RepositoryTaskData taskData) {
-
 		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskData.getRepositoryKind());
 
 		String kindLabel = taskData.getTaskKind();
@@ -500,7 +528,6 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 	}
 
 	private void setFormHeaderLabel(AbstractTask repositoryTask) {
-
 		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repositoryTask.getConnectorKind());
 		String kindLabel = "";
 		if (connectorUi != null) {
