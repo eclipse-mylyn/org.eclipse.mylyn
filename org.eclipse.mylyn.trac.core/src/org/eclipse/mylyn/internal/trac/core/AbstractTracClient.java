@@ -81,9 +81,12 @@ public abstract class AbstractTracClient implements ITracClient {
 			AuthenticationCredentials credentials, IProgressMonitor monitor) throws IOException, TracLoginException {
 		PostMethod post = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl + LOGIN_URL));
 		post.setFollowRedirects(false);
+		String formToken = getFormToken(httpClient);
 		NameValuePair[] data = { new NameValuePair("referer", ""),
 				new NameValuePair("user", credentials.getUserName()),
-				new NameValuePair("password", credentials.getPassword()) };
+				new NameValuePair("password", credentials.getPassword()), 
+				new NameValuePair("__FORM_TOKEN", formToken)};
+		
 		post.setRequestBody(data);
 		try {
 			int code = WebClientUtil.execute(httpClient, hostConfiguration, post, monitor);
@@ -94,6 +97,16 @@ public abstract class AbstractTracClient implements ITracClient {
 		} finally {
 			post.releaseConnection();
 		}
+	}
+
+	private String getFormToken(HttpClient httpClient) {
+		Cookie[] cookies = httpClient.getState().getCookies();
+		for (Cookie cookie : cookies) {
+			if ("trac_form_token".equals(cookie.getName())) {
+				return cookie.getValue();
+			}
+		}
+		return "";
 	}
 
 	/**
