@@ -5,7 +5,6 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-
 package org.eclipse.mylyn.internal.tasks.ui.dialogs;
 
 import org.eclipse.jface.dialogs.Dialog;
@@ -13,6 +12,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.window.Window;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -28,29 +28,29 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.forms.events.HyperlinkAdapter;
-import org.eclipse.ui.forms.events.HyperlinkEvent;
-import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
  * @author Frank Becker
  * @author Steffen Pingel
  */
-public class EditCredentialsDialog extends TitleAreaDialog {
+public class TaskRepositoryCredentialsDialog extends TitleAreaDialog {
+
+	private static final String DIALOG_TITLE = "Enter Credentials";
 
 	private static final String IMAGE_FILE_KEYLOCK = "icons/wizban/secur_role_wiz.gif";
 
 	public static final int TASK_REPOSITORY_CHANGED = 1000;
-	
-	private static final String MESSAGE = "Please enter the repository credentials";
 
-	private static final String TITLE = "Authentication Failed";
+	private static final String MESSAGE = "Enter repository credentials";
 
-	public static EditCredentialsDialog createDialog(Shell shell) {
-		return new EditCredentialsDialog(shell);
+	private static final String TITLE = "Repository Authentication";
+
+	public static TaskRepositoryCredentialsDialog createDialog(Shell shell) {
+		return new TaskRepositoryCredentialsDialog(shell);
 	}
 
 	private Image keyLockImage;
@@ -65,7 +65,7 @@ public class EditCredentialsDialog extends TitleAreaDialog {
 
 	private String username = "";
 
-	private EditCredentialsDialog(Shell parentShell) {
+	private TaskRepositoryCredentialsDialog(Shell parentShell) {
 		super(parentShell);
 	}
 
@@ -77,7 +77,7 @@ public class EditCredentialsDialog extends TitleAreaDialog {
 		return super.close();
 	}
 
-	private void createButtonArea(Composite parent) {
+	private void createLinkArea(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
 		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -85,24 +85,23 @@ public class EditCredentialsDialog extends TitleAreaDialog {
 		// spacer
 		new Label(composite, SWT.NONE);
 
-		Label label = new Label(composite, SWT.WRAP);
-		label.setText("To disable background synchronization put the repository in disconnected mode.");
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).grab(true, false).applyTo(label);
-
-		Button disconnectButton = new Button(composite, SWT.PUSH);
-		disconnectButton.setText("Disconnect Repository");
-		disconnectButton.addSelectionListener(new SelectionAdapter() {
-
+		Link link = new Link(parent, SWT.WRAP);
+		link.setText("<a href=\"properties\">Open Repository Properties</a> to change settings or to disable background synchronization put the repository in disconnected mode.");
+		link.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				taskRepository.setOffline(true);
-				TasksUiPlugin.getRepositoryManager().notifyRepositorySettingsChanged(taskRepository);
-				TasksUiPlugin.getRepositoryManager().saveRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
-
-				setReturnCode(Window.CANCEL);
 				close();
+				int returnCode = TasksUiUtil.openEditRepositoryWizard(taskRepository);
+				if (returnCode == Window.OK) {
+					setReturnCode(TASK_REPOSITORY_CHANGED);
+				} else {
+					setReturnCode(returnCode);
+				}
 			}
 		});
+		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).hint(
+				convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH), SWT.DEFAULT).grab(true,
+				false).applyTo(link);
 	}
 
 	private void createCenterArea(Composite parent) {
@@ -111,29 +110,22 @@ public class EditCredentialsDialog extends TitleAreaDialog {
 		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		if (taskRepository != null) {
-			Label label = new Label(composite, SWT.NONE);
+			Composite labelComposite = new Composite(composite, SWT.NONE);
+			labelComposite.setLayout(new GridLayout(3, false));
+			GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).span(2, 1).applyTo(
+					labelComposite);
+
+			Label label = new Label(labelComposite, SWT.NONE);
+			label.setImage(TasksUiPlugin.getDefault().getBrandingIcon(taskRepository.getConnectorKind()));
+
+			label = new Label(labelComposite, SWT.NONE);
 			label.setText("Task Repository:");
 
-			ImageHyperlink repositoryHyperlink = new ImageHyperlink(composite, SWT.NONE);
-			repositoryHyperlink.setText(taskRepository.getRepositoryLabel());
-			repositoryHyperlink.setToolTipText("Open Repository Properties");
-			repositoryHyperlink.setImage(TasksUiPlugin.getDefault().getBrandingIcon(taskRepository.getConnectorKind()));
-			repositoryHyperlink.setBackground(composite.getBackground());
-			repositoryHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
-				@Override
-				public void linkActivated(HyperlinkEvent e) {
-					close();
-					int returnCode = TasksUiUtil.openEditRepositoryWizard(taskRepository);
-					if (returnCode == Dialog.OK) {
-						setReturnCode(TASK_REPOSITORY_CHANGED);
-					} else {
-						setReturnCode(returnCode);						
-					}
-				}
-			});
+			label = new Label(labelComposite, SWT.NONE);
+			label.setText(taskRepository.getRepositoryLabel());
 		}
 
-		new Label(composite, SWT.NONE).setText("&User name:");
+		new Label(composite, SWT.NONE).setText("&User ID:");
 
 		final Text usernameField = new Text(composite, SWT.BORDER);
 		usernameField.addModifyListener(new ModifyListener() {
@@ -170,7 +162,7 @@ public class EditCredentialsDialog extends TitleAreaDialog {
 				.applyTo(passwordField);
 
 		final Button savePasswordButton = new Button(composite, SWT.CHECK);
-		savePasswordButton.setText("&Save password");
+		savePasswordButton.setText("&Save Password");
 		savePasswordButton.setSelection(savePassword);
 		savePasswordButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -185,10 +177,18 @@ public class EditCredentialsDialog extends TitleAreaDialog {
 
 	@Override
 	protected Control createContents(Composite parent) {
-		getShell().setText("Enter Credentials");
+		getShell().setText(DIALOG_TITLE);
 
-		Control control = super.createContents(parent);
 		setTitle(TITLE);
+		Control control = super.createContents(parent);
+		if (taskRepository != null) {
+			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+					taskRepository.getConnectorKind());
+			if (connector != null) {
+				setTitle(connector.getShortLabel() + " " + TITLE);
+			}
+		}
+
 		keyLockImage = AbstractUIPlugin.imageDescriptorFromPlugin(TasksUiPlugin.ID_PLUGIN, IMAGE_FILE_KEYLOCK)
 				.createImage();
 		setTitleImage(keyLockImage);
@@ -209,14 +209,12 @@ public class EditCredentialsDialog extends TitleAreaDialog {
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).applyTo(composite);
 
 		createCenterArea(composite);
-
-		if (taskRepository != null && !taskRepository.isOffline()) {
-			createButtonArea(composite);
+		if (taskRepository != null) {
+			createLinkArea(composite);
 		}
 
 		composite.pack();
 		return parent;
-
 	}
 
 	private void createWarningMessage(Composite parent) {

@@ -177,6 +177,29 @@ public abstract class AbstractRepositoryConnector {
 	public abstract String getLabel();
 
 	/**
+	 * Returns a short label for the connector, e.g. Bugzilla.
+	 * @since 2.3
+	 */
+	public String getShortLabel() {
+		String label = getLabel();
+		if (label == null) {
+			return null;
+		}
+		
+		int i = label.indexOf("(");
+		if (i != -1) {
+			return label.substring(0, i).trim();
+		}
+		
+		i = label.indexOf(" ");
+		if (i != -1) {
+			return label.substring(0, i).trim();
+		}		
+		
+		return label;
+	}
+	
+	/**
 	 * @return the unique kind of the repository, e.g. "bugzilla"
 	 */
 	public abstract String getConnectorKind();

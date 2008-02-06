@@ -197,6 +197,8 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	private Button saveProxyPasswordButton;
 
+	private Button disconnectedButton;
+
 	public AbstractRepositorySettingsPage(String title, String description, AbstractRepositoryConnectorUi repositoryUi) {
 		super(title);
 		super.setTitle(title);
@@ -600,6 +602,8 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			addProxySection();
 		}
 
+		addStatusSection();
+		
 		Composite managementComposite = new Composite(compositeContainer, SWT.NULL);
 		GridLayout managementLayout = new GridLayout(4, false);
 		managementLayout.marginHeight = 0;
@@ -824,6 +828,39 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 		setUseDefaultProxy(repository != null ? repository.isDefaultProxyEnabled() : true);
 		proxyExpComposite.setExpanded(!systemProxyButton.getSelection());
+	}
+
+	private void addStatusSection() {
+		ExpandableComposite statusComposite = toolkit.createExpandableComposite(compositeContainer, Section.COMPACT | Section.TWISTIE
+				| Section.TITLE_BAR);
+		statusComposite.clientVerticalSpacing = 0;
+		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false);
+		gd.horizontalIndent = -5;
+		statusComposite.setLayoutData(gd);
+		statusComposite.setFont(compositeContainer.getFont());
+		statusComposite.setBackground(compositeContainer.getBackground());
+		statusComposite.setText("Status");
+		statusComposite.addExpansionListener(new ExpansionAdapter() {
+			@Override
+			public void expansionStateChanged(ExpansionEvent e) {
+				getControl().getShell().pack();
+			}
+		});
+		GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(statusComposite);
+
+		Composite composite = toolkit.createComposite(statusComposite, SWT.NONE);
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 2;
+		layout.verticalSpacing = 0;
+		composite.setLayout(layout);
+		composite.setBackground(compositeContainer.getBackground());
+		statusComposite.setClient(composite);
+
+		disconnectedButton = new Button(composite, SWT.CHECK);
+		disconnectedButton.setText("Disconnected");
+		GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).span(2, SWT.DEFAULT).applyTo(disconnectedButton);
+		disconnectedButton.setSelection(repository != null ? repository.isOffline() : false);
+		statusComposite.setExpanded(disconnectedButton.getSelection());
 	}
 
 	protected void setEncoding(String encoding) {
@@ -1208,6 +1245,8 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 				repository.setCredentials(AuthenticationType.PROXY, null, getSaveProxyPassword());
 			}
 		}
+		
+		repository.setOffline(disconnectedButton.getSelection());
 	}
 
 	public AbstractRepositoryConnector getConnector() {

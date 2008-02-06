@@ -5,13 +5,12 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-
 package org.eclipse.mylyn.internal.tasks.ui;
 
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryLocation;
-import org.eclipse.mylyn.internal.tasks.ui.dialogs.EditCredentialsDialog;
+import org.eclipse.mylyn.internal.tasks.ui.dialogs.TaskRepositoryCredentialsDialog;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.web.core.AuthenticationCredentials;
@@ -44,6 +43,9 @@ public class TaskRepositoryLocationUi extends TaskRepositoryLocation {
 			PlatformUI.getWorkbench().getDisplay().syncExec(runner);
 			if (runner.isCancelled()) {
 				throw new OperationCanceledException();
+			}
+			if (runner.getResult() == null) {
+				throw new RuntimeException("Password dialog failed");
 			}
 			return runner.getResult();
 		}
@@ -83,14 +85,14 @@ public class TaskRepositoryLocationUi extends TaskRepositoryLocation {
 		public void run() {
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			if (shell != null && !shell.isDisposed()) {
-				EditCredentialsDialog dialog = EditCredentialsDialog.createDialog(shell);
+				TaskRepositoryCredentialsDialog dialog = TaskRepositoryCredentialsDialog.createDialog(shell);
 				initializeDialog(dialog);
 				int resultCode = dialog.open();
-				if (resultCode == Dialog.OK) {
+				if (resultCode == Window.OK) {
 					saveDialog(dialog);
 					result = ResultType.CREDENTIALS_CHANGED;
 					canceled = false;
-				} else if (resultCode == EditCredentialsDialog.TASK_REPOSITORY_CHANGED) {
+				} else if (resultCode == TaskRepositoryCredentialsDialog.TASK_REPOSITORY_CHANGED) {
 					result = ResultType.PROPERTIES_CHANGED;
 					canceled = false;
 				} else {
@@ -99,7 +101,7 @@ public class TaskRepositoryLocationUi extends TaskRepositoryLocation {
 			}
 		}
 
-		private void initializeDialog(EditCredentialsDialog dialog) {
+		private void initializeDialog(TaskRepositoryCredentialsDialog dialog) {
 			dialog.setTaskRepository(taskRepository);
 
 			AuthenticationCredentials credentials = taskRepository.getCredentials(authType);
@@ -118,21 +120,22 @@ public class TaskRepositoryLocationUi extends TaskRepositoryLocation {
 
 		private String getDefaultMessage() {
 			if (AuthenticationType.REPOSITORY.equals(authType)) {
-				return "Please enter repository password";
+				return "Enter repository password";
 			} else if (AuthenticationType.HTTP.equals(authType)) {
-				return "Please enter HTTP password";
+				return "Enter HTTP password";
 			} else if (AuthenticationType.PROXY.equals(authType)) {
-				return "Please enter proxy password";
+				return "Enter proxy password";
 			}
 			return null;
 		}
 
-		private void saveDialog(EditCredentialsDialog dialog) {
+		private void saveDialog(TaskRepositoryCredentialsDialog dialog) {
 			if (AuthenticationType.REPOSITORY.equals(authType)) {
 				taskRepository.setAnonymous(false);
 			}
 
-			AuthenticationCredentials credentials = new AuthenticationCredentials(dialog.getUserName(), dialog.getPassword());
+			AuthenticationCredentials credentials = new AuthenticationCredentials(dialog.getUserName(),
+					dialog.getPassword());
 			taskRepository.setCredentials(authType, credentials, dialog.getSavePassword());
 
 			TasksUiPlugin.getRepositoryManager().notifyRepositorySettingsChanged(taskRepository);
