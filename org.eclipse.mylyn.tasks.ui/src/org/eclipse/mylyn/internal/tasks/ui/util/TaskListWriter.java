@@ -121,6 +121,19 @@ public class TaskListWriter {
 	}
 
 	public void writeTaskList(TaskList taskList, File outFile) {
+		try {
+			FileOutputStream outStream = new FileOutputStream(outFile);
+			try {
+				writeTaskList(taskList, outStream);
+			} finally {
+				outStream.close();
+			}
+		} catch (Exception e) {
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Task data was not written", e));
+		}
+	}
+	
+	public void writeTaskList(TaskList taskList, OutputStream outputStream) throws IOException {
 		Document doc = createTaskListDocument();
 		if (doc == null) {
 			return;
@@ -176,45 +189,9 @@ public class TaskListWriter {
 			}
 		}
 
-//		doc.appendChild(root);
-		writeDOMtoFile(doc, outFile);
-		return;
-	}
-
-//	private void createTaskElement(Document doc, Element root, AbstractTask task) {
-//		try {
-//			Element element = null;
-//			for (ITaskListElementFactory externalizer : externalizers) {
-//				if (externalizer.canCreateElementFor(task)) {
-//					element = externalizer.createTaskElement(task, doc, root);
-//					break;
-//				}
-//			}
-//			if (element == null) {// &&
-	// delagatingExternalizer.canCreateElementFor(task))
-	// {
-//				delagatingExternalizer.createTaskElement(task, doc, root);
-//			} else if (element == null) {
-//				StatusManager.log("Did not externalize: " + task, this);
-//			}
-//		} catch (Exception e) {
-//			StatusManager.log(e, e.getMessage());
-//		}
-//	}
-
-	/**
-	 * Writes an XML file from a DOM.
-	 * 
-	 * doc - the document to write file - the file to be written to
-	 */
-	private void writeDOMtoFile(Document doc, File file) {
-		try {
-			ZipOutputStream outputStream = new ZipOutputStream(new FileOutputStream(file));
-			writeTaskList(doc, outputStream);
-			outputStream.close();
-		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Task list could not be found", e));
-		}
+		ZipOutputStream zipOutStream = new ZipOutputStream(outputStream);
+		writeTaskList(doc, zipOutStream);
+		zipOutStream.finish();
 	}
 
 	/**
@@ -661,6 +638,14 @@ public class TaskListWriter {
 	}
 
 	public void writeTask(AbstractTask task, File outFile) {
+		try {
+			writeTask(task, new FileOutputStream(outFile));
+		} catch (Exception e) {
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Task data was not written", e));
+		}
+	}
+	
+	public void writeTask(AbstractTask  task, OutputStream stream) {
 		Set<TaskRepository> repositories = new HashSet<TaskRepository>();
 		if (!task.isLocal()) {
 			repositories.add(TasksUiPlugin.getRepositoryManager().getRepository(task.getRepositoryUrl()));
@@ -675,7 +660,7 @@ public class TaskListWriter {
 
 		delagatingExternalizer.createTaskElement(task, doc, root);
 		try {
-			ZipOutputStream outputStream = new ZipOutputStream(new FileOutputStream(outFile));
+			ZipOutputStream outputStream = new ZipOutputStream(stream);
 			// write task data 
 			writeTaskList(doc, outputStream);
 
