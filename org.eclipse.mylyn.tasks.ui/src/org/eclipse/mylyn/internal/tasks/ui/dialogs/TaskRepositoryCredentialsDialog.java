@@ -82,10 +82,7 @@ public class TaskRepositoryCredentialsDialog extends TitleAreaDialog {
 		composite.setLayout(new GridLayout(1, false));
 		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		// spacer
-		new Label(composite, SWT.NONE);
-
-		Link link = new Link(parent, SWT.WRAP);
+		Link link = new Link(composite, SWT.WRAP);
 		link.setText("<a href=\"properties\">Open Repository Properties</a> to change settings or to disable background synchronization put the repository in disconnected mode.");
 		link.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -111,7 +108,10 @@ public class TaskRepositoryCredentialsDialog extends TitleAreaDialog {
 
 		if (taskRepository != null) {
 			Composite labelComposite = new Composite(composite, SWT.NONE);
-			labelComposite.setLayout(new GridLayout(3, false));
+			GridLayout layout = new GridLayout(3, false);
+			layout.marginHeight = 0;
+			layout.marginWidth = 0;
+			labelComposite.setLayout(layout);
 			GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).span(2, 1).applyTo(
 					labelComposite);
 
@@ -222,7 +222,7 @@ public class TaskRepositoryCredentialsDialog extends TitleAreaDialog {
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 2;
 		layout.marginHeight = 0;
-		layout.marginHeight = 0;
+		layout.marginWidth = 0;
 		composite.setLayout(layout);
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).span(2, 1).applyTo(composite);
 

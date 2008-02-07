@@ -23,7 +23,7 @@ import org.eclipse.ui.IWorkbench;
  */
 public class EditRepositoryWizard extends Wizard implements INewWizard {
 
-	private static final String TITLE = "Task Repository Settings";
+	private static final String TITLE = "Properties for Task Repository";
 
 	private AbstractRepositorySettingsPage abstractRepositorySettingsPage;
 
