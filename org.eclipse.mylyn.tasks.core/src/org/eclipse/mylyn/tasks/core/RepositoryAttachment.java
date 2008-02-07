@@ -63,13 +63,13 @@ public class RepositoryAttachment extends AttributeContainer implements Serializ
 	}
 
 	/**
-	 * @since 	2.2
-	 * @return	The name of the file, e.g. screenshot.jpg.
+	 * @since 2.2
+	 * @return The name of the file, e.g. screenshot.jpg.
 	 */
 	public String getFilename() {
 		return getAttributeValue(RepositoryTaskAttribute.ATTACHMENT_FILENAME);
 	}
-	
+
 	public String getDescription() {
 		return getAttributeValue(RepositoryTaskAttribute.DESCRIPTION);
 	}
@@ -89,6 +89,13 @@ public class RepositoryAttachment extends AttributeContainer implements Serializ
 		} else {
 			return getAttributeValue(RepositoryTaskAttribute.ATTACHMENT_CTYPE);
 		}
+	}
+
+	/**
+	 * @since 2.3
+	 */
+	public String getSize() {
+		return getAttributeValue(RepositoryTaskAttribute.ATTACHMENT_SIZE);
 	}
 
 	public boolean isPatch() {
@@ -122,4 +129,5 @@ public class RepositoryAttachment extends AttributeContainer implements Serializ
 	public void setTaskId(String taskId) {
 		this.taskId = taskId;
 	}
+
 }

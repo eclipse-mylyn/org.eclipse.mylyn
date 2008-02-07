@@ -62,6 +62,11 @@ public class RepositoryTaskAttribute implements Serializable {
 	public static final String ATTACHMENT_URL = "task.common.attachment.url";
 
 	public static final String ATTACHMENT_FILENAME = "filename";
+	
+	/**
+	 * @since 2.3
+	 */
+	public static final String ATTACHMENT_SIZE = "task.common.attachment.size";
 
 	public static final String USER_ASSIGNED = "task.common.user.assigned";
 

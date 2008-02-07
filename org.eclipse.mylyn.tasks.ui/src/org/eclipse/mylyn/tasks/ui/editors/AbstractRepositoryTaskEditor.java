@@ -284,9 +284,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private TableViewer attachmentsTableViewer;
 
-	private String[] attachmentsColumns = { "Name", "Description", "Type", "Creator", "Created" };
+	private String[] attachmentsColumns = { "Name", "Description", "Type", "Size", "Creator", "Created" };
 
-	private int[] attachmentsColumnWidths = { 140, 160, 100, 100, 100 };
+	private int[] attachmentsColumnWidths = { 140, 160, 100, 70, 100, 100 };
 
 	private Composite editorComposite;
 
@@ -1419,6 +1419,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				column.setText(attachmentsColumns[i]);
 				column.setWidth(attachmentsColumnWidths[i]);
 			}
+			attachmentsTable.getColumn(3).setAlignment(SWT.RIGHT);
 
 			attachmentsTableViewer = new TableViewer(attachmentsTable);
 			attachmentsTableViewer.setUseHashlookup(true);

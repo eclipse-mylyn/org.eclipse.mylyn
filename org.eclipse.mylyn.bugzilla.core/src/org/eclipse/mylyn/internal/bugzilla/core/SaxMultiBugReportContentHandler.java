@@ -231,6 +231,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		case FILENAME:
 		case CTYPE:
 		case TYPE:
+		case SIZE:
 			if (attachment != null) {
 				RepositoryTaskAttribute attr = attributeFactory.createAttribute(tag.getKeyString());
 				attr.setValue(parsedText);

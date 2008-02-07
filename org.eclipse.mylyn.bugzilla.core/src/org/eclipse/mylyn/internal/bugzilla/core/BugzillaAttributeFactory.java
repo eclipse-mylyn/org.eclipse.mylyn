@@ -85,6 +85,8 @@ public class BugzillaAttributeFactory extends AbstractAttributeFactory {
 			return BugzillaReportElement.KEYWORDS.getKeyString();
 		} else if (key.equals(RepositoryTaskAttribute.ATTACHMENT_DATE)) {
 			return BugzillaReportElement.DATE.getKeyString();
+		} else if (key.equals(RepositoryTaskAttribute.ATTACHMENT_SIZE)) {
+			return BugzillaReportElement.SIZE.getKeyString();
 		} else if (key.equals(RepositoryTaskAttribute.ADD_SELF_CC)) {
 			return BugzillaReportElement.ADDSELFCC.getKeyString();
 		} else if (key.equals(RepositoryTaskAttribute.PRIORITY)) {

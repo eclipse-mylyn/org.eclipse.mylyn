@@ -37,7 +37,7 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 	private IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
 
 	private static final String[] IMAGE_EXTENSIONS = { "jpg", "gif", "png", "tiff", "tif", "bmp" };
-	
+
 	public AttachmentTableLabelProvider(AbstractRepositoryTaskEditor AbstractTaskEditor, ILabelProvider provider,
 			ILabelDecorator decorator) {
 		// FIXME this class must not depend on AbstractTaskEditor
@@ -56,7 +56,7 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 				if (filename != null) {
 					int dotIndex = filename.lastIndexOf('.');
 					if (dotIndex != -1) {
-						String fileType = filename.substring(dotIndex+1);
+						String fileType = filename.substring(dotIndex + 1);
 						for (int i = 0; i < IMAGE_EXTENSIONS.length; i++) {
 							if (IMAGE_EXTENSIONS[i].equalsIgnoreCase(fileType)) {
 								return TasksUiImages.getImage(TasksUiImages.IMAGE_FILE);
@@ -93,11 +93,13 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 //			if (attachment.isPatch()) {
 //				return "patch";
 //			} else {
-				return attachment.getContentType();
+			return attachment.getContentType();
 //			}
 		case 3:
-			return attachment.getCreator();
+			return AttachmentSizeFormatter.format(attachment.getSize());
 		case 4:
+			return attachment.getCreator();
+		case 5:
 			// TODO should retrieve Date object from IOfflineTaskHandler
 			if (AbstractTaskEditor != null) {
 				return this.AbstractTaskEditor.formatDate(attachment.getDateCreated());
