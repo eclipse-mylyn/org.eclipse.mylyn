@@ -21,6 +21,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaReportElement;
@@ -121,13 +122,12 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		if (attribute != null && !attribute.isReadOnly()) {
 			Label label = createLabel(composite, attribute);
 			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
+			
 			Composite textFieldComposite = getManagedForm().getToolkit().createComposite(composite);
-			GridLayout textLayout = new GridLayout();
-			textLayout.marginWidth = 1;
-			textLayout.marginHeight = 3;
-			textLayout.verticalSpacing = 3;
-			textFieldComposite.setLayout(textLayout);
-			GridData textData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+			GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).applyTo(textFieldComposite);
+			GridLayoutFactory.swtDefaults().margins(1, 3).spacing(0, 3).applyTo(textFieldComposite);
+			
+			GridData textData = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL);
 			textData.horizontalSpan = 1;
 			textData.widthHint = 135;
 
