@@ -146,6 +146,8 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 				taskAttachment.setAttributeValue(Attribute.DESCRIPTION.getTracKey(), attachments[i].getDescription());
 				taskAttachment.setAttributeValue(RepositoryTaskAttribute.ATTACHMENT_FILENAME,
 						attachments[i].getFilename());
+				taskAttachment.setAttributeValue(RepositoryTaskAttribute.ATTACHMENT_SIZE,
+						attachments[i].getSize() + "");
 				taskAttachment.setAttributeValue(RepositoryTaskAttribute.USER_OWNER, attachments[i].getAuthor());
 				if (attachments[i].getCreated() != null) {
 					if (lastChanged == null || attachments[i].getCreated().after(lastChanged)) {
