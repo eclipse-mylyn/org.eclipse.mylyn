@@ -450,8 +450,9 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public void updateTaskFromRepository(TaskRepository repository, AbstractTask repositoryTask,
-			IProgressMonitor monitor) {
-		// ignore
+			IProgressMonitor monitor) throws CoreException {
+		StatusHandler.log(new Status(IStatus.WARNING, BugzillaCorePlugin.PLUGIN_ID, "updateTaskFromRepository called!" + repositoryTask.getTaskKey() + " [" + repositoryTask.getRepositoryUrl() + "]"));
+		throw new CoreException(new Status(Status.WARNING, BugzillaCorePlugin.PLUGIN_ID, "Unable to retrieve data for task"));
 	}
 
 	@Override

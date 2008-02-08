@@ -110,16 +110,28 @@ class SynchronizeQueryJob extends Job {
 			Set<AbstractTask> allTasks = Collections.unmodifiableSet(taskList.getRepositoryTasks(repository.getUrl()));
 
 			for (AbstractTask task : allTasks) {
-//				if (task.isStale()) {
-//					StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Reseting flag on stale task: " + task.getTaskKey() + " [" + task.getRepositoryUrl() + "]"));
-//				}
-				task.setStale(false);
+				if (task.isStale()) {
+					StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Reseting flag on stale task: " + task.getTaskKey() + " [" + task.getRepositoryUrl() + "]"));
+				}
+				//task.setStale(false);
 			}
 
 			// check if the repository has changed at all and have the connector mark tasks that need synchronization
 			if (isFullSynchronization()) {
 				try {
 					monitor.subTask("Checking for changed tasks");
+					
+					// if repository doesn't have a last sync timestamp, try to recover one if task data exists
+					if (repository.getSynchronizationTimeStamp() == null) {
+						if (Platform.isRunning() && !(TasksUiPlugin.getRepositoryManager() == null)) {
+							String syncTimeStamp = connector.getSynchronizationTimestamp(repository, allTasks);
+							if (syncTimeStamp != null) {
+								TasksUiPlugin.getRepositoryManager().setSynchronizationTime(repository, syncTimeStamp,
+										TasksUiPlugin.getDefault().getRepositoriesFilePath());
+							}
+						}
+					}
+					
 					boolean hasChangedOrNew = connector.markStaleTasks(repository, allTasks, new SubProgressMonitor(
 							monitor, 20));
 					if (!hasChangedOrNew && !forced) {

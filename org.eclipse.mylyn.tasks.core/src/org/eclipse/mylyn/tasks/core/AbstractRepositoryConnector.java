@@ -380,18 +380,18 @@ public abstract class AbstractRepositoryConnector {
 		String mostRecentTimeStamp = repository.getSynchronizationTimeStamp();
 		for (AbstractTask task : changedTasks) {
 			Date taskModifiedDate;
-
-			if (getTaskData(task) != null && getTaskDataHandler() != null
-					&& getTaskData(task).getLastModified() != null) {
-				taskModifiedDate = getTaskData(task).getAttributeFactory().getDateForAttributeType(
-						RepositoryTaskAttribute.DATE_MODIFIED, getTaskData(task).getLastModified());
+			RepositoryTaskData taskData = getTaskData(task);
+			if (taskData != null && getTaskDataHandler() != null
+					&& taskData.getLastModified() != null) {
+				taskModifiedDate = taskData.getAttributeFactory().getDateForAttributeType(
+						RepositoryTaskAttribute.DATE_MODIFIED, taskData.getLastModified());
 			} else {
 				continue;
 			}
 
 			if (taskModifiedDate != null && taskModifiedDate.after(mostRecent)) {
 				mostRecent = taskModifiedDate;
-				mostRecentTimeStamp = getTaskData(task).getLastModified();
+				mostRecentTimeStamp = taskData.getLastModified();
 			}
 		}
 		return mostRecentTimeStamp;
