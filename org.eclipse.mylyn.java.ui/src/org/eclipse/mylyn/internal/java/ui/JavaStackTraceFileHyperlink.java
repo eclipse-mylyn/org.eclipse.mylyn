@@ -9,6 +9,10 @@
 package org.eclipse.mylyn.internal.java.ui;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.ui.IDebugModelPresentation;
 import org.eclipse.jdt.internal.debug.ui.JDIDebugUIPlugin;
 import org.eclipse.jdt.internal.debug.ui.actions.OpenTypeAction;
@@ -20,6 +24,7 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 
@@ -53,46 +58,18 @@ public class JavaStackTraceFileHyperlink implements IHyperlink {
 
 	public void open() {
 
-		int lineNumber;
 		try {
 
 			String typeName = getTypeName();
-			lineNumber = getLineNumber();
+			int lineNumber = getLineNumber();
 
 			// documents start at 0
 			if (lineNumber > 0) {
 				lineNumber--;
 			}
-			Object sourceElement = getSourceElement(typeName);
-			if (sourceElement != null) {
-				IDebugModelPresentation presentation = JDIDebugUIPlugin.getDefault().getModelPresentation();
-				IEditorInput editorInput = presentation.getEditorInput(sourceElement);
-				if (editorInput != null) {
-					String editorId = presentation.getEditorId(editorInput, sourceElement);
-					if (editorId != null) {
-						IEditorPart editorPart = JDIDebugUIPlugin.getActivePage().openEditor(editorInput, editorId);
-						if (editorPart instanceof ITextEditor && lineNumber >= 0) {
-							ITextEditor textEditor = (ITextEditor) editorPart;
-							IDocumentProvider provider = textEditor.getDocumentProvider();
-							provider.connect(editorInput);
-							IDocument document = provider.getDocument(editorInput);
-							try {
-								IRegion line = document.getLineInformation(lineNumber);
-								textEditor.selectAndReveal(line.getOffset(), line.getLength());
-							} catch (BadLocationException e1) {
-								MessageDialog.openInformation(PlatformUI.getWorkbench()
-										.getActiveWorkbenchWindow()
-										.getShell(), "Open Type", "Line not found in type.");
-							}
-							provider.disconnect(editorInput);
-						}
-						return;
-					}
-				}
-			}
-			// did not find source
-			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Open Type",
-					"Type could not be located.");
+			
+			startSourceSearch(typeName, lineNumber);
+			
 		} catch (CoreException e1) {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Open Type",
 					"Failed to open type.");
@@ -100,13 +77,82 @@ public class JavaStackTraceFileHyperlink implements IHyperlink {
 		}
 
 	}
+	
+	/**
+	 * Starts a search for the type with the given name. Reports back to 'searchCompleted(...)'.
+	 * 
+	 * @param typeName the type to search for
+	 */
+	protected void startSourceSearch(final String typeName, final int lineNumber) {
+		Job search = new Job("Searching...") {
+			protected IStatus run(IProgressMonitor monitor) {
+				try {
+					// search for the type in the workspace
+					Object result = OpenTypeAction.findTypeInWorkspace(typeName);
+					searchCompleted(result, typeName, lineNumber, null);
+				} catch (CoreException e) {
+					searchCompleted(null, typeName, lineNumber, e.getStatus());
+				}
+				return Status.OK_STATUS;
+			}
 
-	// adapted from JavaStackTraceHyperlink
-	private Object getSourceElement(String typeName) throws CoreException {
-		Object result = null;
-		result = OpenTypeAction.findTypeInWorkspace(typeName);
-		// }
-		return result;
+		};
+		search.schedule();
+	}
+
+	protected void searchCompleted(final Object source, final String typeName, final int lineNumber, final IStatus status) {
+		UIJob job = new UIJob("link search complete") { //$NON-NLS-1$
+			public IStatus runInUIThread(IProgressMonitor monitor) {
+				if (source == null) {
+					// did not find source
+					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Open Type",
+							"Type could not be located.");
+				} else {
+					processSearchResult(source, typeName, lineNumber);
+				}
+				return Status.OK_STATUS;
+			}
+		};
+		job.setSystem(true);
+		job.schedule();
+	}
+
+	/**
+	 * The search succeeded with the given result
+	 * 
+	 * @param source resolved source object for the search
+	 * @param typeName type name searched for
+	 * @param lineNumber line number on link
+	 */
+	protected void processSearchResult(Object source, String typeName, int lineNumber) {
+		IDebugModelPresentation presentation = JDIDebugUIPlugin.getDefault().getModelPresentation();
+		IEditorInput editorInput = presentation.getEditorInput(source);
+		if (editorInput != null) {
+			String editorId = presentation.getEditorId(editorInput, source);
+			if (editorId != null) {
+				try {
+					IEditorPart editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(editorInput, editorId);
+					if (editorPart instanceof ITextEditor && lineNumber >= 0) {
+						ITextEditor textEditor = (ITextEditor) editorPart;
+						IDocumentProvider provider = textEditor.getDocumentProvider();
+						provider.connect(editorInput);
+						IDocument document = provider.getDocument(editorInput);
+						try {
+							IRegion line = document.getLineInformation(lineNumber);
+							textEditor.selectAndReveal(line.getOffset(), line.getLength());
+						} catch (BadLocationException e) {
+							MessageDialog.openInformation(PlatformUI.getWorkbench()
+									.getActiveWorkbenchWindow()
+									.getShell(), "Open Type", "Line not found in type.");
+						}
+						provider.disconnect(editorInput);
+					}
+				} catch (CoreException e) {
+					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Open Type",
+					"Failed to open type.");
+				}
+			}
+		}
 	}
 
 	// adapted from JavaStackTraceHyperlink

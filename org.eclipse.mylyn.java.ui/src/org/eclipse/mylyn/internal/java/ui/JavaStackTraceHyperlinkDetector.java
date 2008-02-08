@@ -24,7 +24,7 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
  */
 public class JavaStackTraceHyperlinkDetector extends AbstractHyperlinkDetector {
 
-	private static final Pattern stackTracePattern = Pattern.compile("\\S*.{1}java:\\d*\\){1}",
+	private static final Pattern stackTracePattern = Pattern.compile("\\S*\\.java:\\d*\\)",
 			Pattern.CASE_INSENSITIVE);
 
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
