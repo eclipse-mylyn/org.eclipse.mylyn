@@ -110,9 +110,9 @@ class SynchronizeQueryJob extends Job {
 			Set<AbstractTask> allTasks = Collections.unmodifiableSet(taskList.getRepositoryTasks(repository.getUrl()));
 
 			for (AbstractTask task : allTasks) {
-				if (task.isStale()) {
-					StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Reseting flag on stale task: " + task.getTaskKey() + " [" + task.getRepositoryUrl() + "]"));
-				}
+//				if (task.isStale()) {
+//					StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Reseting flag on stale task: " + task.getTaskKey() + " [" + task.getRepositoryUrl() + "]"));
+//				}
 				task.setStale(false);
 			}
 
