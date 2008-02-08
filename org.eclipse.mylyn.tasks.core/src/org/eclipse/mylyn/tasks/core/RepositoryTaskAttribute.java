@@ -112,6 +112,11 @@ public class RepositoryTaskAttribute implements Serializable {
 	/**
 	 * @since 2.3
 	 */
+	public static final String COMPONENT = "task.common.component";
+
+	/**
+	 * @since 2.3
+	 */
 	public static final String TYPE_SHORT_TEXT = "shortText";
 
 	/**
