@@ -36,6 +36,7 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
@@ -68,6 +69,7 @@ import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -253,6 +255,9 @@ public class ContextUiPlugin extends AbstractContextUiPlugin {
 			StatusHandler.fail(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Context UI initialization failed", e));
 		}
 
+		// activate all UI bridges and load all focused view actions before setting the selections (see below)
+		UiStartupExtensionPointReader.runStartupExtensions();
+		
 		try {
 			// NOTE: this needs to be done because some views (e.g. Project Explorer) are not
 			// correctly initialized on startup and do not have the dummy selection event
@@ -268,7 +273,7 @@ public class ContextUiPlugin extends AbstractContextUiPlugin {
 							if (selectionProvider != null) {
 								ISelection selection = selectionProvider.getSelection();
 								if (selection != null) {
-									selectionProvider.setSelection(selectionProvider.getSelection());
+									selectionProvider.setSelection(selection);
 								} else {
 									selectionProvider.setSelection(StructuredSelection.EMPTY);
 								}
@@ -277,7 +282,6 @@ public class ContextUiPlugin extends AbstractContextUiPlugin {
 					}
 				}
 			}
-			// NOTE: 
 			viewerManager.forceReferesh();
 		} catch (Exception e) {
 			StatusHandler.fail(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not initialize focused viewers", e));
@@ -587,6 +591,47 @@ public class ContextUiPlugin extends AbstractContextUiPlugin {
 		}
 	}
 
+	static class UiStartupExtensionPointReader {
+		
+		private static final String EXTENSION_ID_STARTUP = "org.eclipse.mylyn.context.ui.startup";
+
+		private static final String ELEMENT_STARTUP = "startup";
+		
+		private static final String ELEMENT_CLASS = "class";
+
+		public static void runStartupExtensions() {
+			IExtensionRegistry registry = Platform.getExtensionRegistry();
+			IExtensionPoint extensionPoint = registry.getExtensionPoint(EXTENSION_ID_STARTUP);
+			IExtension[] extensions = extensionPoint.getExtensions();
+			for (int i = 0; i < extensions.length; i++) {
+				IConfigurationElement[] elements = extensions[i].getConfigurationElements();
+				for (int j = 0; j < elements.length; j++) {
+					if (elements[j].getName().compareTo(ELEMENT_STARTUP) == 0) {
+						runStartupExtension(elements[j]);
+					}
+				}
+			}
+		}
+
+		private static void runStartupExtension(IConfigurationElement configurationElement) {
+			try {
+				Object object = WorkbenchPlugin.createExtension(configurationElement,
+		                ELEMENT_CLASS);
+				if (!(object instanceof IContextUiStartup)) {
+					StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not : " + object.getClass().getCanonicalName()
+							+ " must implement " + AbstractContextStructureBridge.class.getCanonicalName()));
+					return;
+				}
+
+				IContextUiStartup startup = (IContextUiStartup) object;
+				startup.lazyStartup();
+			} catch (CoreException e) {
+				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not load startup extension", e));
+			}
+		}
+
+	}
+	
 	/**
 	 * @param task
 	 *            can be null to indicate no task

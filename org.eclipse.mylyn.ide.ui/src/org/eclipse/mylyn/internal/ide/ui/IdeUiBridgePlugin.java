@@ -8,15 +8,14 @@
 package org.eclipse.mylyn.internal.ide.ui;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylyn.internal.context.ui.AbstractContextUiPlugin;
-import org.eclipse.ui.IWorkbench;
+import org.eclipse.mylyn.context.ui.IContextUiStartup;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
  * @author Mik Kersten
  */
-public class IdeUiBridgePlugin extends AbstractContextUiPlugin {
+public class IdeUiBridgePlugin extends AbstractUIPlugin {
 
 	public static final String PLUGIN_ID = "org.eclipse.mylyn.ide";
 
@@ -24,6 +23,14 @@ public class IdeUiBridgePlugin extends AbstractContextUiPlugin {
 
 	public static final ImageDescriptor EDGE_REF_XML = getImageDescriptor("icons/elcl16/edge-ref-xml.gif");
 
+	public static class IdeUiBridgeStartup implements IContextUiStartup {
+
+		public void lazyStartup() {
+			// ignore, it is sufficient that the bundle is activated on context ui startup
+		}
+		
+	}
+	
 	public IdeUiBridgePlugin() {
 		INSTANCE = this;
 	}
@@ -33,16 +40,6 @@ public class IdeUiBridgePlugin extends AbstractContextUiPlugin {
 		super.start(context);
 	}
 	
-	@Override
-	protected void lazyStart(IWorkbench workbench) {
-		// ignore		
-	}
-	
-	@Override
-	protected void lazyStop() {
-		// ignore	
-	}
-
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
@@ -62,4 +59,5 @@ public class IdeUiBridgePlugin extends AbstractContextUiPlugin {
 	public static ImageDescriptor getImageDescriptor(String path) {
 		return AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.mylyn.ide", path);
 	}
+
 }

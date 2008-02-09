@@ -3,6 +3,7 @@
 <?eclipse version="3.0"?>
 <plugin>
     <extension-point id="bridges" name="bridges" schema="schema/bridges.exsd"/>
+    <extension-point id="startup" name="Context UI Startup" schema="schema/startup.exsd"/>
 
     <extension 
          point="org.eclipse.mylyn.context.core.bridges">
