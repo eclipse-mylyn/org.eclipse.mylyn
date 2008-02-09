@@ -8,6 +8,9 @@
     <extension
          name="Mylyn Change Set Management"
          point="org.eclipse.ui.startup">
+       <startup
+             class="org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin$FocusedTeamUiStartup">
+       </startup>
     </extension>
 
   <extension

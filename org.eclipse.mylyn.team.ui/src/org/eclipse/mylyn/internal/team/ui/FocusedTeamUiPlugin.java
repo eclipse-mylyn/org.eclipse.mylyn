@@ -24,8 +24,10 @@ import org.osgi.framework.BundleContext;
 
 /**
  * The activator class controls the plug-in life cycle
+ * 
+ * API-3.0: change the name of this class to avoid the word "focused"
  */
-public class FocusedTeamUiPlugin extends AbstractUIPlugin implements IStartup {
+public class FocusedTeamUiPlugin extends AbstractUIPlugin {
 
 	public static final String PLUGIN_ID = "org.eclipse.mylyn.team.ui";
 
@@ -47,6 +49,13 @@ public class FocusedTeamUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	private static final String OLD_DEFAULT_COMMIT_TEMPLATE2 = "${task.status} - ${connector.task.prefix} ${task.id}: ${task.description} \r\n${task.url}";
 
+	public static class FocusedTeamUiStartup implements IStartup {
+
+		public void earlyStartup() {
+			// ignore
+		}
+	}
+	
 	public FocusedTeamUiPlugin() {
 		INSTANCE = this;
 	}
@@ -73,10 +82,6 @@ public class FocusedTeamUiPlugin extends AbstractUIPlugin implements IStartup {
 				}
 			}
 		});
-	}
-
-	public void earlyStartup() {
-		// all done in start
 	}
 
 	@Override
