@@ -320,4 +320,38 @@ public class TracTaskDataHandlerTest extends TestCase {
 		assertEquals("", parentTaskData.getAttributeValue(TracTaskDataHandler.ATTRIBUTE_BLOCKED_BY));
 	}
 
+	public void testGetSubTaskIds() throws Exception {
+		RepositoryTaskData taskData = new RepositoryTaskData(new TracAttributeFactory(), TracCorePlugin.REPOSITORY_KIND, "", "");
+		taskData.setAttributeValue(TracTaskDataHandler.ATTRIBUTE_BLOCKED_BY, "123 456");
+		Set<String> subTaskIds = taskDataHandler.getSubTaskIds(taskData);
+		assertEquals(2, subTaskIds.size());
+		assertTrue(subTaskIds.contains("123"));
+		assertTrue(subTaskIds.contains("456"));
+
+		taskData.setAttributeValue(TracTaskDataHandler.ATTRIBUTE_BLOCKED_BY, "7,8");
+		subTaskIds = taskDataHandler.getSubTaskIds(taskData);
+		assertEquals(2, subTaskIds.size());
+		assertTrue(subTaskIds.contains("7"));
+		assertTrue(subTaskIds.contains("8"));
+
+		taskData.setAttributeValue(TracTaskDataHandler.ATTRIBUTE_BLOCKED_BY, "  7 ,   8,  ");
+		subTaskIds = taskDataHandler.getSubTaskIds(taskData);
+		assertEquals(2, subTaskIds.size());
+		assertTrue(subTaskIds.contains("7"));
+		assertTrue(subTaskIds.contains("8"));
+
+		taskData.setAttributeValue(TracTaskDataHandler.ATTRIBUTE_BLOCKED_BY, "7");
+		subTaskIds = taskDataHandler.getSubTaskIds(taskData);
+		assertEquals(1, subTaskIds.size());
+		assertTrue(subTaskIds.contains("7"));
+
+		taskData.setAttributeValue(TracTaskDataHandler.ATTRIBUTE_BLOCKED_BY, "");
+		subTaskIds = taskDataHandler.getSubTaskIds(taskData);
+		assertEquals(0, subTaskIds.size());
+
+		taskData.setAttributeValue(TracTaskDataHandler.ATTRIBUTE_BLOCKED_BY, "  ");
+		subTaskIds = taskDataHandler.getSubTaskIds(taskData);
+		assertEquals(0, subTaskIds.size());
+	}
+
 }

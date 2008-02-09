@@ -387,7 +387,12 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 	public Set<String> getSubTaskIds(RepositoryTaskData taskData) {
 		RepositoryTaskAttribute attribute = taskData.getAttribute(ATTRIBUTE_BLOCKED_BY);
 		if (attribute != null) {
-			return new HashSet<String>(Arrays.asList(attribute.getValue().split("\\s")));
+			Set<String> result = new HashSet<String>();
+			StringTokenizer t = new StringTokenizer(attribute.getValue(), ", ");
+			while (t.hasMoreTokens()) {
+				result.add(t.nextToken());
+			}
+			return result;
 		}
 		return Collections.emptySet();
 	}
