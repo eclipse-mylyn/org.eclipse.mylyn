@@ -97,9 +97,9 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 
 	private static final String LABEL_DEFAULT_EDITOR = "Default Editor";
 
-	private final String[] attachmentsColumns = { "Name", "Description", "Type", "Creator", "Created" };
+	private final String[] attachmentsColumns = { "Name", "Description", "Type", "Size", "Creator", "Created" };
 
-	private final int[] attachmentsColumnWidths = { 140, 160, 100, 100, 100 };
+	private final int[] attachmentsColumnWidths = { 140, 160, 100, 70, 100, 100 };
 
 	private Table attachmentsTable;
 
@@ -124,6 +124,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 			column.setText(attachmentsColumns[i]);
 			column.setWidth(attachmentsColumnWidths[i]);
 		}
+		attachmentsTable.getColumn(3).setAlignment(SWT.RIGHT);
 
 		attachmentsTableViewer = new TableViewer(attachmentsTable);
 		attachmentsTableViewer.setUseHashlookup(true);

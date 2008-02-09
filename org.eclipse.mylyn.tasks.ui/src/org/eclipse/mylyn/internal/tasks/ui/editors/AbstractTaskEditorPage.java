@@ -282,7 +282,12 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 							// "Editor will Test with new incoming
 							// changes.");
 							parentEditor.setMessage("Task has incoming changes, synchronize to view",
-									IMessageProvider.WARNING);
+									IMessageProvider.WARNING, new HyperlinkAdapter() {
+								@Override
+								public void linkActivated(HyperlinkEvent e) {
+									refreshEditor();
+								}
+							});
 
 							actionPart.setSubmitEnabled(false);
 							// updateContents();
@@ -320,6 +325,8 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 	private boolean needsHeader;
 
 	private boolean needsPlanning;
+
+	private NewSubTaskAction newSubTaskAction;
 
 	/**
 	 * Creates a new <code>AbstractTaskEditor</code>.
@@ -646,7 +653,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 				synchronizeEditorAction.selectionChanged(new StructuredSelection(this));
 				toolBarManager.add(synchronizeEditorAction);
 
-				NewSubTaskAction newSubTaskAction = new NewSubTaskAction();
+				newSubTaskAction = new NewSubTaskAction();
 				newSubTaskAction.selectionChanged(newSubTaskAction, new StructuredSelection(repositoryTask));
 				if (newSubTaskAction.isEnabled()) {
 					toolBarManager.add(newSubTaskAction);
@@ -1194,6 +1201,10 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage {
 
 			if (actionPart != null) {
 				actionPart.setSubmitEnabled(!busy);
+			}
+
+			if (newSubTaskAction != null) {
+				newSubTaskAction.setEnabled(!busy);
 			}
 
 			EditorUtil.setEnabledState(editorComposite, !busy);
