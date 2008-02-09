@@ -96,7 +96,7 @@ import org.osgi.framework.BundleContext;
  * @author Mik Kersten
  * @since 2.0
  */
-public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
+public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private static final int MAX_CHANGED_ATTRIBUTES = 2;
 
@@ -163,6 +163,13 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	
 	private static final boolean DEBUG_HTTPCLIENT = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.mylyn.tasks.ui/debug/httpclient"));
 
+	public static class TasksUiStartup implements IStartup {
+
+		public void earlyStartup() {
+			// ignore
+		}
+	}
+	
 	private static final class OrderComparator implements Comparator<AbstractTaskRepositoryLinkProvider> {
 		public int compare(AbstractTaskRepositoryLinkProvider p1, AbstractTaskRepositoryLinkProvider p2) {
 			return p1.getOrder() - p2.getOrder();
@@ -518,44 +525,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		}
 	}
 
-//	private void checkForCredentials() {
-//		for (TaskRepository repository : taskRepositoryManager.getAllRepositories()) {
-//			AbstractRepositoryConnector connector = getRepositoryManager().getRepositoryConnector(
-//					repository.getConnectorKind());
-//			boolean promptForCredentials = true;
-//			if (connector != null) {
-//				promptForCredentials = connector.isUserManaged() && !connector.hasCredentialsManagement();
-//			}
-//			if (!repository.isAnonymous()
-//					&& !repository.isOffline()
-//					&& promptForCredentials
-//					&& (repository.getUserName() == null || repository.getPassword() == null
-//							|| "".equals(repository.getUserName()) || "".equals(repository.getPassword()))) {
-//				try {
-//					EditRepositoryWizard wizard = new EditRepositoryWizard(repository);
-//					Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-//					if (shell != null && !shell.isDisposed()) {
-//						WizardDialog dialog = new WizardDialog(shell, wizard);
-//						dialog.create();
-//						// dialog.setTitle("Repository Credentials Missing");
-//						dialog.setErrorMessage("Authentication credentials missing.");
-//						dialog.setBlockOnOpen(true);
-//						if (dialog.open() == Dialog.CANCEL) {
-//							dialog.close();
-//							return;
-//						}
-//					}
-//				} catch (Exception e) {
-//					StatusHandler.fail(e, e.getMessage(), true);
-//				}
-//			}
-//		}
-//	}
-
-	public void earlyStartup() {
-		// ignore
-	}
-
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		try {
@@ -603,10 +572,12 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			migrateFromLegacyDirectory();
 			attemptMigration = false;
 		}
-//		return ContextCorePlugin.getDefault().getContextStore().getRootDirectory().getAbsolutePath();
 		return getPreferenceStore().getString(ContextPreferenceContstants.PREF_DATA_DIR);
 	}
 
+	/**
+	 * API-3.0: remove
+	 */
 	@Deprecated
 	private void migrateFromLegacyDirectory() {
 		// Migrate .mylar data folder to .metadata/.mylyn
