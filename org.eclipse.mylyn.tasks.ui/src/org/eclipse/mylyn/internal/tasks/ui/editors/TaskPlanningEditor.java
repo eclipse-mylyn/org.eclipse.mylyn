@@ -16,7 +16,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.text.ITextListener;
 import org.eclipse.jface.text.TextEvent;
@@ -28,8 +28,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.ui.RetrieveTitleFromUrlJob;
 import org.eclipse.mylyn.internal.tasks.ui.ScheduleDatePicker;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.ToggleTaskActivationAction;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.monitor.core.DateUtil;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
@@ -173,7 +172,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private FormToolkit toolkit;
 
-	private Action activateAction;
+	private ToggleTaskActivationAction activateAction;
 
 	private ITaskTimingListener timingListener;
 
@@ -324,26 +323,11 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private void addHeaderControls() {
 
-		if (parentEditor.getTopForm() != null && parentEditor.getTopForm().getToolBarManager().isEmpty()) {
-			activateAction = new Action() {
-				@Override
-				public void run() {
-					if (!task.isActive()) {
-						setChecked(true);
-						new TaskActivateAction().run(task);
-					} else {
-						setChecked(false);
-						new TaskDeactivateAction().run(task);
-					}
-				}
-			};
-
-			activateAction.setImageDescriptor(TasksUiImages.TASK_ACTIVE_CENTERED);
-			activateAction.setToolTipText("Toggle Activation");
-			activateAction.setChecked(task.isActive());
+		if (task.isLocal() && parentEditor.getTopForm() != null && parentEditor.getTopForm().getToolBarManager() != null) {
+			activateAction = new ToggleTaskActivationAction(task, parentEditor.getTopForm().getToolBarManager());
+			parentEditor.getTopForm().getToolBarManager().add(new Separator("activation"));
 			parentEditor.getTopForm().getToolBarManager().add(activateAction);
-
-			parentEditor.getTopForm().getToolBarManager().update(true);
+			parentEditor.getTopForm().getToolBarManager().update(true);			
 		}
 
 		// if (form.getToolBarManager() != null) {
