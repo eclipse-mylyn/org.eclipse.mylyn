@@ -25,7 +25,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  */
 public class LongTextAttributeEditor extends AbstractAttributeEditor {
 
-	public LongTextAttributeEditor(AbstractAttributeEditorManager manager, RepositoryTaskAttribute taskAttribute) {
+	public LongTextAttributeEditor(AttributeManager manager, RepositoryTaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
 		setLayoutHint(new LayoutHint(RowSpan.MULTIPLE, ColumnSpan.MULTIPLE));
 	}
@@ -50,7 +50,6 @@ public class LongTextAttributeEditor extends AbstractAttributeEditor {
 			});
 		}
 
-		decorate(text);
 		setControl(text);
 	}
 

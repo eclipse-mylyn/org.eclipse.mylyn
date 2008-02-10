@@ -17,9 +17,9 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
  */
 public class AttributeEditorFactory {
 
-	private final AbstractAttributeEditorManager manager;
+	private final AttributeManager manager;
 
-	public AttributeEditorFactory(AbstractAttributeEditorManager manager) {
+	public AttributeEditorFactory(AttributeManager manager) {
 		this.manager = manager;
 	}
 
@@ -27,7 +27,13 @@ public class AttributeEditorFactory {
 		Assert.isNotNull(type);
 
 		if (RepositoryTaskAttribute.TYPE_DATE.equals(type)) {
-			return new DateAttributeEditor(manager, taskAttribute);
+			// FIXME map attribute ids
+			if (RepositoryTaskAttribute.DATE_CREATION.equals(taskAttribute.getId())
+				|| RepositoryTaskAttribute.DATE_MODIFIED.equals(taskAttribute.getId())) {
+				return new SimpleDateAttributeEditor(manager, taskAttribute);
+			} else {
+				return new DateAttributeEditor(manager, taskAttribute);
+			}
 		} else if (RepositoryTaskAttribute.TYPE_LONG_TEXT.equals(type)) {
 			return new LongTextAttributeEditor(manager, taskAttribute);
 		} else if (RepositoryTaskAttribute.TYPE_MULTI_SELECT.equals(type)) {

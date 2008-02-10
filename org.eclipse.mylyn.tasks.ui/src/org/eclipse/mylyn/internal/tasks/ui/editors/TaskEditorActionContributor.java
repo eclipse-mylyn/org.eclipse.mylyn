@@ -20,6 +20,8 @@ import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.text.ITextOperationTarget;
+import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -50,6 +52,10 @@ import org.eclipse.mylyn.tasks.ui.editors.NewTaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.RepositoryTaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskFormPage;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -59,6 +65,8 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.SubActionBars;
 import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.forms.IManagedForm;
+import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.internal.ObjectActionContributorManager;
 import org.eclipse.ui.internal.WorkbenchImages;
 import org.eclipse.ui.internal.WorkbenchMessages;
@@ -102,6 +110,8 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 	private GlobalAction pasteAction;
 
 	private GlobalAction selectAllAction;
+
+	protected List<TextViewer> textViewers = new ArrayList<TextViewer>();
 
 	public TaskEditorActionContributor() {
 		cutAction = new GlobalAction(ActionFactory.CUT.getId());
@@ -161,9 +171,9 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 	}
 
 	public void contextMenuAboutToShow(IMenuManager mng) {
-		boolean addClipboard = this.getEditor().getActivePageInstance() != null
-				&& (this.getEditor().getActivePageInstance() instanceof TaskPlanningEditor || this.getEditor()
-						.getActivePageInstance() instanceof AbstractRepositoryTaskEditor);
+		IFormPage page = this.getEditor().getActivePageInstance();
+		// API 3.0 pass addClipboard as a parameter
+		boolean addClipboard = (page instanceof TaskPlanningEditor || page instanceof AbstractRepositoryTaskEditor || page instanceof AbstractTaskEditorPage);
 		contextMenuAboutToShow(mng, addClipboard);
 	}
 
@@ -387,17 +397,24 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 
 		@Override
 		public void run() {
+			// remove check for TaskFormPage
 			if (getEditor().getActivePageInstance() instanceof TaskFormPage) {
 				TaskFormPage editor = (TaskFormPage) getEditor().getActivePageInstance();
 				editor.doAction(actionId);
+				updateSelectableActions(getEditor().getSelection());
+			} else {
+				doAction(actionId);
 				updateSelectableActions(getEditor().getSelection());
 			}
 		}
 
 		public void selectionChanged(ISelection selection) {
+			// remove check for TaskFormPage
 			if (getEditor().getActivePageInstance() instanceof TaskFormPage) {
 				TaskFormPage editor = (TaskFormPage) getEditor().getActivePageInstance();
 				setEnabled(editor.canPerformAction(actionId));
+			} else {
+				setEnabled(canPerformAction(actionId));
 			}
 		}
 	}
@@ -429,6 +446,142 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 		selectAllAction.setEnabled(true);
 		undoAction.setEnabled(false);
 		redoAction.setEnabled(false);
+	}
+
+	private boolean canPerformAction(String actionId) {
+		Control focusControl = getFocusControl();
+		if (focusControl instanceof StyledText) {
+			for (TextViewer viewer : textViewers) {
+				if (viewer.getTextWidget() == focusControl) {
+					return canDoGlobalAction(actionId, viewer);
+				}
+			}
+		} else {
+			if (actionId.equals(ActionFactory.UNDO.getId()) || actionId.equals(ActionFactory.REDO.getId())) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private Control getFocusControl() {
+		IFormPage activePage = getEditor().getActivePageInstance();
+		if (activePage == null) {
+			return null;
+		}
+
+		IManagedForm form = activePage.getManagedForm();
+		if (form == null)
+			return null;
+		Control control = form.getForm();
+		if (control == null || control.isDisposed())
+			return null;
+		Display display = control.getDisplay();
+		Control focusControl = display.getFocusControl();
+		if (focusControl == null || focusControl.isDisposed())
+			return null;
+		return focusControl;
+	}
+
+	private void doAction(String actionId) {
+		Control focusControl = getFocusControl();
+		if (focusControl == null)
+			return;
+		if (canPerformDirectly(actionId, focusControl)) {
+			return;
+		}
+		if (focusControl instanceof StyledText) {
+			for (TextViewer viewer : textViewers) {
+				if (viewer.getTextWidget() == focusControl) {
+					doGlobalAction(actionId, viewer);
+					return;
+				}
+			}
+		}
+	}
+
+	private boolean doGlobalAction(String actionId, TextViewer textViewer) {
+		if (actionId.equals(ActionFactory.CUT.getId())) {
+			textViewer.doOperation(ITextOperationTarget.CUT);
+			return true;
+		} else if (actionId.equals(ActionFactory.COPY.getId())) {
+			textViewer.doOperation(ITextOperationTarget.COPY);
+			return true;
+		} else if (actionId.equals(ActionFactory.PASTE.getId())) {
+			textViewer.doOperation(ITextOperationTarget.PASTE);
+			return true;
+		} else if (actionId.equals(ActionFactory.DELETE.getId())) {
+			textViewer.doOperation(ITextOperationTarget.DELETE);
+			return true;
+		} else if (actionId.equals(ActionFactory.UNDO.getId())) {
+			textViewer.doOperation(ITextOperationTarget.UNDO);
+			return true;
+		} else if (actionId.equals(ActionFactory.REDO.getId())) {
+			textViewer.doOperation(ITextOperationTarget.REDO);
+			return true;
+		} else if (actionId.equals(ActionFactory.SELECT_ALL.getId())) {
+			textViewer.doOperation(ITextOperationTarget.SELECT_ALL);
+			return true;
+		}
+		return false;
+	}
+
+	private boolean canPerformDirectly(String id, Control control) {
+		if (control instanceof Text) {
+			Text text = (Text) control;
+			if (id.equals(ActionFactory.CUT.getId())) {
+				text.cut();
+				return true;
+			}
+			if (id.equals(ActionFactory.COPY.getId())) {
+				text.copy();
+				return true;
+			}
+			if (id.equals(ActionFactory.PASTE.getId())) {
+				text.paste();
+				return true;
+			}
+			if (id.equals(ActionFactory.SELECT_ALL.getId())) {
+				text.selectAll();
+				return true;
+			}
+			if (id.equals(ActionFactory.DELETE.getId())) {
+				int count = text.getSelectionCount();
+				if (count == 0) {
+					int caretPos = text.getCaretPosition();
+					text.setSelection(caretPos, caretPos + 1);
+				}
+				text.insert(""); //$NON-NLS-1$
+				return true;
+			}
+		}
+		return false;
+	}
+
+	// FIXME these are never removed: this is a problem when the editor is refreshed 
+	public void addTextViewer(TextViewer textViewer) {
+		textViewers.add(textViewer);
+	}
+
+	private boolean canDoGlobalAction(String actionId, TextViewer textViewer) {
+		if (actionId.equals(ActionFactory.CUT.getId())) {
+			return textViewer.canDoOperation(ITextOperationTarget.CUT);
+		} else if (actionId.equals(ActionFactory.COPY.getId())) {
+			return textViewer.canDoOperation(ITextOperationTarget.COPY);
+		} else if (actionId.equals(ActionFactory.PASTE.getId())) {
+			return textViewer.canDoOperation(ITextOperationTarget.PASTE);
+		} else if (actionId.equals(ActionFactory.DELETE.getId())) {
+			return textViewer.canDoOperation(ITextOperationTarget.DELETE);
+		} else if (actionId.equals(ActionFactory.UNDO.getId())) {
+			return textViewer.canDoOperation(ITextOperationTarget.UNDO);
+		} else if (actionId.equals(ActionFactory.REDO.getId())) {
+			return textViewer.canDoOperation(ITextOperationTarget.REDO);
+		} else if (actionId.equals(ActionFactory.SELECT_ALL.getId())) {
+			return textViewer.canDoOperation(ITextOperationTarget.SELECT_ALL);
+		}
+		return false;
 	}
 
 }

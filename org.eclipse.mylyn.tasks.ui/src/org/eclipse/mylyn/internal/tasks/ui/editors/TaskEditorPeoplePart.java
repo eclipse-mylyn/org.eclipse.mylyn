@@ -125,7 +125,9 @@ public class TaskEditorPeoplePart extends AbstractTaskEditorPart {
 			ccList.setLayoutData(ccListData);
 
 			RepositoryTaskAttribute taskAttribute = getTaskData().getAttribute(RepositoryTaskAttribute.USER_CC);
-			getTaskEditorPage().getAttributeEditorManager().decorate(taskAttribute, ccList);
+			if (getTaskEditorPage().getAttributeManager().hasIncomingChanges(taskAttribute)) {
+				ccList.setBackground(getTaskEditorPage().getColorIncoming());
+			}
 
 			java.util.List<String> ccs = getTaskData().getCc();
 			if (ccs != null) {
@@ -159,7 +161,7 @@ public class TaskEditorPeoplePart extends AbstractTaskEditorPart {
 							getTaskData().removeAttributeValue(RepositoryTaskAttribute.REMOVE_CC, cc);
 						}
 					}
-					getTaskEditorPage().attributeChanged(getTaskData().getAttribute(RepositoryTaskAttribute.REMOVE_CC));
+					getTaskEditorPage().getAttributeManager().attributeChanged(getTaskData().getAttribute(RepositoryTaskAttribute.REMOVE_CC));
 				}
 			});
 			toolkit.createLabel(attributesComposite, "");
@@ -209,7 +211,7 @@ public class TaskEditorPeoplePart extends AbstractTaskEditorPart {
 					getTaskData().setAttributeValue(RepositoryTaskAttribute.ADD_SELF_CC, RepositoryTaskAttribute.FALSE);
 				}
 				RepositoryTaskAttribute attribute = getTaskData().getAttribute(RepositoryTaskAttribute.ADD_SELF_CC);
-				getTaskEditorPage().attributeChanged(attribute);
+				getTaskEditorPage().getAttributeManager().attributeChanged(attribute);
 			}
 		});
 	}
@@ -251,7 +253,7 @@ public class TaskEditorPeoplePart extends AbstractTaskEditorPart {
 
 	protected Label createLabel(Composite composite, RepositoryTaskAttribute attribute, FormToolkit toolkit) {
 		Label label;
-		if (getTaskEditorPage().getAttributeEditorManager().hasOutgoingChanges(attribute)) {
+		if (getTaskEditorPage().getAttributeManager().hasOutgoingChanges(attribute)) {
 			label = toolkit.createLabel(composite, "*" + attribute.getName());
 		} else {
 			label = toolkit.createLabel(composite, attribute.getName());
@@ -295,11 +297,13 @@ public class TaskEditorPeoplePart extends AbstractTaskEditorPart {
 					String newValue = text.getText();
 					RepositoryTaskAttribute attribute = (RepositoryTaskAttribute) text.getData();
 					attribute.setValue(newValue);
-					getTaskEditorPage().getAttributeEditorManager().attributeChanged(attribute);
+					getTaskEditorPage().getAttributeManager().attributeChanged(attribute);
 				}
 			});
 		}
-		getTaskEditorPage().getAttributeEditorManager().decorate(attribute, text);
+		if (getTaskEditorPage().getAttributeManager().hasIncomingChanges(attribute)) {
+			text.setBackground(getTaskEditorPage().getColorIncoming());
+		}
 
 		return text;
 	}

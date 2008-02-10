@@ -8,9 +8,11 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.mylyn.internal.tasks.core.AbstractAttributeMapper;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -23,26 +25,28 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  */
 public abstract class AbstractAttributeEditor {
 
+	protected static final int MAXIMUM_HEIGHT = 140;
+
+	protected static final int MAXIMUM_WIDTH = 500;
+
 	// XXX why is this required?
 	protected static final Font TEXT_FONT = JFaceResources.getDefaultFont();
 
-	private final RepositoryTaskAttribute taskAttribute;
-
-	private LayoutHint layoutHint;
-
-	private final AbstractAttributeEditorManager manager;
-
 	private Control control;
+	
+	private boolean decorationEnabled;
 
 	private Label labelControl;
 
-	public AbstractAttributeEditor(AbstractAttributeEditorManager manager, RepositoryTaskAttribute taskAttribute) {
-		if (manager == null) {
-			throw new IllegalArgumentException();
-		}
-		if (taskAttribute == null) {
-			throw new IllegalArgumentException();
-		}
+	private LayoutHint layoutHint;
+
+	private final AttributeManager manager;
+
+	private final RepositoryTaskAttribute taskAttribute;
+
+	public AbstractAttributeEditor(AttributeManager manager, RepositoryTaskAttribute taskAttribute) {
+		Assert.isNotNull(manager);
+		Assert.isNotNull(taskAttribute);
 
 		this.manager = manager;
 		this.taskAttribute = taskAttribute;
@@ -63,14 +67,10 @@ public abstract class AbstractAttributeEditor {
 		labelControl.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 	}
 
-	protected void decorate(Control control) {
-		manager.decorate(getTaskAttribute(), control);
-	}
-
 	public void dispose() {
 	}
 
-	public AbstractAttributeEditorManager getAttributeEditorManager() {
+	public AttributeManager getAttributeEditorManager() {
 		return manager;
 	}
 
@@ -103,12 +103,26 @@ public abstract class AbstractAttributeEditor {
 		return true;
 	}
 
+	public boolean isDecorationEnabled() {
+		return decorationEnabled;
+	}
+
 	protected void setControl(Control control) {
 		this.control = control;
 	}
 
+	public void setDecorationEnabled(boolean decorationEnabled) {
+		this.decorationEnabled = decorationEnabled;
+	}
+	
 	protected void setLayoutHint(LayoutHint layoutHint) {
 		this.layoutHint = layoutHint;
 	}
 
+	public void decorate(Color color) {
+		if (isDecorationEnabled()) {
+			getControl().setBackground(color);
+		}
+	}
+	
 }

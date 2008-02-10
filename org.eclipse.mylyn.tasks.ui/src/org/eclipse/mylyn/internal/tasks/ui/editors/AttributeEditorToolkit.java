@@ -9,6 +9,7 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.ControlDecoration;
@@ -18,6 +19,7 @@ import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.text.ITextListener;
 import org.eclipse.jface.text.TextEvent;
+import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -138,6 +140,13 @@ public class AttributeEditorToolkit {
 					actionContributor.updateSelectableActions(viewer.getSelection());
 				}
 			});
+		
+			if (viewer instanceof RepositoryTextViewer) {
+				RepositoryTextViewer textViewer = (RepositoryTextViewer) viewer;
+				MenuManager menuManager = textViewer.getMenuManager();
+				configureContextMenuManager(menuManager, textViewer);
+				textViewer.setMenu(menuManager.createContextMenu(viewer.getTextWidget()));
+			}
 		}
 	}
 
@@ -215,7 +224,11 @@ public class AttributeEditorToolkit {
 	private boolean hasSpellChecking(RepositoryTaskAttribute taskAttribute) {
 		// TODO EDITOR
 		return false;
-	};
+	}
+
+	
+	protected void configureContextMenuManager(MenuManager menuManager, TextViewer textViewer) {
+	}
 
 //	/**
 //	 * Creates an IContentProposalProvider to provide content assist proposals for the given operation.
@@ -245,5 +258,7 @@ public class AttributeEditorToolkit {
 //		return false;
 //	}
 //
+	
+	
 
 }

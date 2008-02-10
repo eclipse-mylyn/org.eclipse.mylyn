@@ -10,8 +10,9 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import java.util.Iterator;
 
-import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.text.Document;
+import org.eclipse.jface.text.ITextListener;
+import org.eclipse.jface.text.TextEvent;
 import org.eclipse.jface.text.source.AnnotationModel;
 import org.eclipse.jface.text.source.IAnnotationAccess;
 import org.eclipse.jface.text.source.SourceViewer;
@@ -37,15 +38,17 @@ import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 import org.eclipse.ui.themes.IThemeManager;
 
 /**
+ * FIXME comment is out dated
+ * 
  * Text viewer generally used for displaying non-editable text. No annotation model or spell checking support. Supports
  * cut/copy/paste/etc..
  * 
  * For viewing and editing text. Spell checking w/ annotations supported One or two max per editor, any more and the
  * spell checker will bring the editor to a grinding halt.
  * 
+ * @author Raphael Ackermann (bug 195514)
  * @author Steffen Pingel
  */
-// TODO EDITOR support setting values
 public class RichTextAttributeEditor extends AbstractAttributeEditor {
 
 	private RepositoryTextViewer viewer;
@@ -55,11 +58,15 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 
 	private final int style;
 
-	public RichTextAttributeEditor(AbstractAttributeEditorManager manager, RepositoryTaskAttribute taskAttribute) {
-		this(manager, taskAttribute, SWT.V_SCROLL);
+	public RichTextAttributeEditor(AttributeManager manager, RepositoryTaskAttribute taskAttribute) {
+		this(manager, taskAttribute, getDefaultStyle(taskAttribute));
 	}
 
-	public RichTextAttributeEditor(AbstractAttributeEditorManager manager, RepositoryTaskAttribute taskAttribute,
+	private static int getDefaultStyle(RepositoryTaskAttribute taskAttribute) {
+		return (taskAttribute.isReadOnly()) ? SWT.MULTI : SWT.V_SCROLL | SWT.MULTI;
+	}
+
+	public RichTextAttributeEditor(AttributeManager manager, RepositoryTaskAttribute taskAttribute,
 			int style) {
 		super(manager, taskAttribute);
 		this.style = style;
@@ -116,11 +123,7 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
 		TaskRepository taskRepository = getAttributeEditorManager().getTaskRepository();
-		viewer = new RepositoryTextViewer(taskRepository, parent, SWT.FLAT | SWT.MULTI | SWT.WRAP | style);
-
-		MenuManager menuManager = viewer.getMenuManager();
-		getAttributeEditorManager().configureContextMenuManager(menuManager);
-		viewer.setMenu(menuManager.createContextMenu(viewer.getTextWidget()));
+		viewer = new RepositoryTextViewer(taskRepository, parent, SWT.FLAT | SWT.WRAP | style);
 
 		// NOTE: configuration must be applied before the document is set in order for
 		// hyper link coloring to work, the Presenter requires the document object up front
@@ -134,6 +137,12 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 		} else {
 			viewer.setEditable(true);
 			configureAsTextEditor(document);
+			viewer.addTextListener(new ITextListener() {
+				public void textChanged(TextEvent event) {
+					setValue(viewer.getTextWidget().getText());
+				}
+			});
+			viewer.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		}
 
 		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
@@ -141,8 +150,6 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 		viewer.getTextWidget().setFont(font);
 		toolkit.adapt(viewer.getTextWidget(), true, true);
 
-		getAttributeEditorManager().addTextViewer(viewer);
-		decorate(viewer.getTextWidget());
 		setControl(viewer.getTextWidget());
 	}
 
@@ -164,6 +171,7 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 
 	public void setValue(String value) {
 		getAttributeMapper().setValue(getTaskAttribute(), value);
+		attributeChanged();
 	}
 
 }

@@ -20,6 +20,7 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
@@ -104,7 +105,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 	 * Configures the standard task editor context menu
 	 * @Since 2.3
 	 */
-	protected void configureContextMenuManager(MenuManager manager) {
+	public void configureContextMenuManager(MenuManager manager, TextViewer textViewer) {
 		if (manager == null)
 			return;
 		IMenuListener listener = new IMenuListener() {
@@ -114,6 +115,17 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 		};
 		manager.setRemoveAllWhenShown(true);
 		manager.addMenuListener(listener);
+		
+		if (textViewer != null){
+			TaskEditorActionContributor contributor = getContributor();
+			if (contributor != null) {
+				contributor.addTextViewer(textViewer);
+			}
+		}
+	}
+
+	protected void configureContextMenuManager(MenuManager manager) {
+		configureContextMenuManager(manager, null);
 	}
 
 	@SuppressWarnings("unchecked")

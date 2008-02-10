@@ -28,7 +28,7 @@ public class SingleSelectionAttributeEditor extends AbstractAttributeEditor {
 
 	private CCombo combo;
 
-	public SingleSelectionAttributeEditor(AbstractAttributeEditorManager manager, RepositoryTaskAttribute taskAttribute) {
+	public SingleSelectionAttributeEditor(AttributeManager manager, RepositoryTaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
 	}
 
@@ -63,7 +63,6 @@ public class SingleSelectionAttributeEditor extends AbstractAttributeEditor {
 			});
 		}
 
-		decorate(combo);
 		setControl(combo);
 	}
 

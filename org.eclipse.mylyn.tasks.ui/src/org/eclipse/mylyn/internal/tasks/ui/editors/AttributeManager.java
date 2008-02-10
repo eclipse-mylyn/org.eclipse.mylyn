@@ -8,39 +8,97 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.text.source.SourceViewer;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.RepositoryOperation;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskComment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.editors.RepositoryTaskEditorInput;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.widgets.Control;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Steffen Pingel
  */
-public abstract class AbstractAttributeEditorManager {
+// API 3.0 move to core?
+public class AttributeManager {
+	
+	private Set<RepositoryTaskAttribute> changedAttributes = new HashSet<RepositoryTaskAttribute>();
 
-	private final RepositoryTaskEditorInput input;
+	private List<IAttributeManagerListener> listeners;
 
-	public AbstractAttributeEditorManager(RepositoryTaskEditorInput input) {
-		this.input = input;
+	private Set<RepositoryTaskAttribute> oldEdits;
+
+	private RepositoryTaskData oldTaskData;
+
+	private AbstractTask task;
+
+	private RepositoryTaskData taskData;
+
+	private TaskDataManager taskDataManager;
+
+	private final String taskId;
+
+	private final TaskRepository taskRepository;
+
+	public AttributeManager(TaskRepository taskRepository, String taskId) {
+		this.taskRepository = taskRepository;
+		this.taskId = taskId;
+		this.taskDataManager = TasksUiPlugin.getTaskDataManager();		
+		this.task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(taskRepository.getUrl(), taskId);
 	}
 
-	public abstract void addTextViewer(SourceViewer viewer);
+	public void addAttributeEditorManagerListener(IAttributeManagerListener listener) {
+		listeners.add(listener);
+	}
 
-	public abstract boolean attributeChanged(RepositoryTaskAttribute attribute);
+	/**
+	 * Invoke upon change to attribute value.
+	 * 
+	 * @param attribute
+	 *            changed attribute
+	 */
+	public void attributeChanged(RepositoryTaskAttribute attribute) {
+		changedAttributes.add(attribute);
+		for (IAttributeManagerListener listener : listeners) {
+			listener.attributeChanged(attribute);
+		}
+	}
 
-	public abstract void configureContextMenuManager(MenuManager menuManager);
+	private Set<RepositoryTaskAttribute> getOldEdits() {
+		return oldEdits;
+	}
 
-	public abstract Color getColorIncoming();
+	/**
+	 * Returns the old task data.
+	 */
+	private RepositoryTaskData getOldTaskData() {
+		return oldTaskData;
+	}
 
-	public abstract TaskRepository getTaskRepository();
+	public AbstractTask getTask() {
+		return task;
+	}
+
+	/**
+	 * Returns the new editable task data.
+	 */
+	public RepositoryTaskData getTaskData() {
+		return taskData;
+	}
+
+	public TaskRepository getTaskRepository() {
+		return taskRepository;
+	}
+
 
 	public boolean hasIncomingChanges(RepositoryTaskAttribute taskAttribute) {
-		RepositoryTaskData oldTaskData = input.getOldTaskData();
+		RepositoryTaskData oldTaskData = getOldTaskData();
 		if (oldTaskData == null) {
 			return false;
 		}
@@ -62,7 +120,7 @@ public abstract class AbstractAttributeEditorManager {
 	}
 
 	public boolean hasOutgoingChanges(RepositoryTaskAttribute taskAttribute) {
-		return input.getOldEdits().contains(taskAttribute);
+		return getOldEdits().contains(taskAttribute);
 	}
 
 	/**
@@ -85,11 +143,14 @@ public abstract class AbstractAttributeEditorManager {
 		return false;
 	}
 
+	public boolean isDirty() {
+		return !changedAttributes.isEmpty();
+	}
 
 	public boolean isNewComment(TaskComment comment) {
 		// Simple test (will not reveal new comments if offline data was lost
-		if (input.getOldTaskData() != null) {
-			return (comment.getNumber() > input.getOldTaskData().getComments().size());
+		if (getOldTaskData() != null) {
+			return (comment.getNumber() > getOldTaskData().getComments().size());
 		}
 		return false;
 
@@ -136,10 +197,38 @@ public abstract class AbstractAttributeEditorManager {
 
 	}
 
-	public void decorate(RepositoryTaskAttribute taskAttribute, Control control) {
-		if (hasIncomingChanges(taskAttribute)) {
-			control.setBackground(getColorIncoming());
+	public void operationChanged(RepositoryOperation operation) {
+		// TODO EDITOR implement
+	}
+
+	public void refreshInput() {
+		setTaskData(taskDataManager.getEditableCopy(taskRepository.getUrl(), taskId));
+		setOldTaskData(taskDataManager.getOldTaskData(taskRepository.getUrl(), taskId));
+		setOldEdits(taskDataManager.getEdits(taskRepository.getUrl(), taskId));
+	}
+
+	public void removeAttributeEditorManagerListener(IAttributeManagerListener listener) {
+		listeners.remove(listener);
+	}
+
+	public void save(IProgressMonitor progressMonitor) {
+		// FIXME this should always save - whether a task is available or not
+		if (task != null) {
+			TasksUiPlugin.getSynchronizationManager().saveOutgoing(task, changedAttributes);
 		}
+		changedAttributes.clear();
+	}
+
+	private void setOldEdits(Set<RepositoryTaskAttribute> oldEdits) {
+		this.oldEdits = oldEdits;
+	}
+
+	private void setOldTaskData(RepositoryTaskData oldTaskData) {
+		this.oldTaskData = oldTaskData;
+	}
+
+	private void setTaskData(RepositoryTaskData taskData) {
+		this.taskData = taskData;
 	}
 
 }

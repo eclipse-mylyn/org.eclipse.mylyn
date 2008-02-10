@@ -18,6 +18,7 @@ import org.eclipse.mylyn.tasks.ui.DatePicker;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
@@ -31,7 +32,9 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
  */
 public class DateAttributeEditor extends AbstractAttributeEditor {
 
-	public DateAttributeEditor(AbstractAttributeEditorManager manager, RepositoryTaskAttribute taskAttribute) {
+	private DatePicker deadlinePicker;
+
+	public DateAttributeEditor(AttributeManager manager, RepositoryTaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
 	}
 
@@ -49,11 +52,10 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 			value = f.format(date);
 		}
 
-		final DatePicker deadlinePicker = new DatePicker(dateWithClear, /* SWT.NONE */SWT.BORDER, value);
+		deadlinePicker = new DatePicker(dateWithClear, /* SWT.NONE */SWT.BORDER, value);
 		deadlinePicker.setEnabled(!getTaskAttribute().isReadOnly());
 		deadlinePicker.setFont(TEXT_FONT);
 		deadlinePicker.setDatePattern("yyyy-MM-dd");
-		decorate(deadlinePicker);
 		deadlinePicker.addPickerSelectionListener(new SelectionListener() {
 
 			public void widgetDefaultSelected(SelectionEvent e) {
@@ -97,4 +99,10 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 		getAttributeMapper().setDateValue(getTaskAttribute(), date);
 		attributeChanged();
 	}
+
+	@Override
+	public void decorate(Color color) {
+		deadlinePicker.setBackground(color);
+	}
+	
 }

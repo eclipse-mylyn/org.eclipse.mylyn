@@ -87,6 +87,7 @@ import org.eclipse.ui.themes.IThemeManager;
  * @ref: PDEFormPage.class ref:
  * @ref: http://dev.eclipse.org/newslists/news.eclipse.platform.swt/msg19676.html
  */
+// API 3.0 deprecate class
 public class TaskFormPage extends FormPage {
 
 	protected boolean isDirty;
@@ -688,6 +689,7 @@ public class TaskFormPage extends FormPage {
 	/**
 	 * @since 2.2
 	 */
+	// API 3.0 remove method
 	public String getSelectionText() {
 		Control focusControl = getFocusControl();
 		if (focusControl == null) {

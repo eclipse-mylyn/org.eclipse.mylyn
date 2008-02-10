@@ -33,7 +33,7 @@ public class MultiSelectionAttributeEditor extends AbstractAttributeEditor {
 
 	private List list;
 
-	public MultiSelectionAttributeEditor(AbstractAttributeEditorManager manager, RepositoryTaskAttribute taskAttribute) {
+	public MultiSelectionAttributeEditor(AttributeManager manager, RepositoryTaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
 		setLayoutHint(new LayoutHint(RowSpan.MULTIPLE, ColumnSpan.SINGLE));
 	}
@@ -73,7 +73,6 @@ public class MultiSelectionAttributeEditor extends AbstractAttributeEditor {
 			list.showSelection();
 		}
 
-		decorate(list);
 		setControl(list);
 	}
 

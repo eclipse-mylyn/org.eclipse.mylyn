@@ -18,6 +18,7 @@ import org.eclipse.jface.text.TextViewer;
 import org.eclipse.mylyn.internal.tasks.core.CommentQuoter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.TaskComment;
 import org.eclipse.mylyn.tasks.ui.editors.RepositoryTaskEditorInput;
 import org.eclipse.swt.SWT;
@@ -69,7 +70,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 	}
 
 	@Override
-	public void createControl(Composite composite, FormToolkit toolkit) {
+	public void createControl(Composite composite, final FormToolkit toolkit) {
 		commentsSection.setText(commentsSection.getText() + " (" + getTaskData().getComments().size() + ")");
 		if (getTaskData().getComments().size() == 0) {
 			commentsSection.setEnabled(false);
@@ -200,9 +201,12 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 					toolbarButtonComp.setVisible(expandableComposite.isExpanded());
 					TextViewer viewer = null;
 					if (e.getState() && expandableComposite.getData("viewer") == null) {
-						// FIXME EDITOR
-						viewer = getTaskEditorPage().addTextViewer(getTaskRepository(), ecComposite,
-								taskComment.getText().trim(), SWT.MULTI | SWT.WRAP);
+						RichTextAttributeEditor editor = new RichTextAttributeEditor(
+								getTaskEditorPage().getAttributeManager(), taskComment.getAttribute(
+										RepositoryTaskAttribute.COMMENT_TEXT));
+						editor.setDecorationEnabled(false);
+						editor.createControl(ecComposite, toolkit);
+						viewer = editor.getViewer();
 						expandableComposite.setData("viewer", viewer.getTextWidget());
 						viewer.getTextWidget().addFocusListener(new FocusListener() {
 
@@ -235,9 +239,9 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 				// hit or lost task data, expose all comments
 				EditorUtil.toggleExpandableComposite(true, expandableComposite);
 				foundNew = true;
-			} else if (getTaskEditorPage().getAttributeEditorManager().isNewComment(taskComment)) {
+			} else if (getTaskEditorPage().getAttributeManager().isNewComment(taskComment)) {
 				// TODO EDITOR getTaskEditorPage().getAttributeEditorManager().decorate(taskAttribute, control)
-				expandableComposite.setBackground(getTaskEditorPage().getAttributeEditorManager().getColorIncoming());
+				expandableComposite.setBackground(getTaskEditorPage().getColorIncoming());
 				EditorUtil.toggleExpandableComposite(true, expandableComposite);
 				foundNew = true;
 			}

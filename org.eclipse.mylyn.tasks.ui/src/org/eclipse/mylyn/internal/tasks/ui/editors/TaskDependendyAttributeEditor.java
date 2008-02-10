@@ -18,8 +18,8 @@ import org.eclipse.swt.SWT;
  */
 public class TaskDependendyAttributeEditor extends RichTextAttributeEditor {
 
-	public TaskDependendyAttributeEditor(AbstractAttributeEditorManager manager, RepositoryTaskAttribute taskAttribute) {
-		super(manager, taskAttribute, SWT.NONE);
+	public TaskDependendyAttributeEditor(AttributeManager manager, RepositoryTaskAttribute taskAttribute) {
+		super(manager, taskAttribute, SWT.MULTI);
 		setLayoutHint(new LayoutHint(RowSpan.SINGLE, ColumnSpan.MULTIPLE));
 		setSpellCheckingEnabled(false);
 	}

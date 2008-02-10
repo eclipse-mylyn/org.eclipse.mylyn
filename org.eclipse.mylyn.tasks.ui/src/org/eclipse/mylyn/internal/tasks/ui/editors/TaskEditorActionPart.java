@@ -62,7 +62,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 				if (e.widget == radios[i]) {
 					RepositoryOperation o = getTaskData().getOperation(radios[i].getText());
 					getTaskData().setSelectedOperation(o);
-					getTaskEditorPage().markDirty(true);
+					getTaskEditorPage().getAttributeManager().operationChanged(o);
 				} else if (e.widget == radioOptions[i]) {
 					RepositoryOperation o = getTaskData().getOperation(radios[i].getText());
 					o.setInputValue(((Text) radioOptions[i]).getText());
@@ -77,10 +77,9 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 					if (selected != null && selected != radios[i]) {
 						selected.setSelection(false);
 					}
-					getTaskEditorPage().markDirty(true);
+					getTaskEditorPage().getAttributeManager().operationChanged(o);
 				}
 			}
-			getTaskEditorPage().validateInput();
 		}
 
 		public void widgetDefaultSelected(SelectionEvent e) {
@@ -103,7 +102,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 				if (e.widget == radios[i]) {
 					RepositoryOperation o = getTaskData().getOperation(radios[i].getText());
 					getTaskData().setSelectedOperation(o);
-					getTaskEditorPage().markDirty(true);
+					getTaskEditorPage().getAttributeManager().operationChanged(o);
 				} else if (e.widget == radioOptions[i]) {
 					RepositoryOperation o = getTaskData().getOperation(radios[i].getText());
 					o.setOptionSelection(((CCombo) radioOptions[i]).getItem(((CCombo) radioOptions[i]).getSelectionIndex()));
@@ -118,10 +117,9 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 					if (selected != null && selected != radios[i]) {
 						selected.setSelection(false);
 					}
-					getTaskEditorPage().markDirty(true);
+					getTaskEditorPage().getAttributeManager().operationChanged(o);
 				}
 			}
-			getTaskEditorPage().validateInput();
 		}
 	}
 
@@ -400,4 +398,6 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		}
 	}
 
+	
+	
 }

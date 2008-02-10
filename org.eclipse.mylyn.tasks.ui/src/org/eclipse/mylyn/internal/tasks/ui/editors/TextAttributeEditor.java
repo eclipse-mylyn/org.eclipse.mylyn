@@ -20,21 +20,20 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  */
 public class TextAttributeEditor extends AbstractAttributeEditor {
 
-	public TextAttributeEditor(AbstractAttributeEditorManager manager, RepositoryTaskAttribute taskAttribute) {
+	public TextAttributeEditor(AttributeManager manager, RepositoryTaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
 	}
 
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
 		final Text text;
-		if (getTaskAttribute().isReadOnly()) {
+		if (isReadOnly()) {
 			text = new Text(parent, SWT.FLAT | SWT.READ_ONLY);
 			toolkit.adapt(text, true, true);
 			text.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
 			text.setText(getValue());
 		} else {
 			text = toolkit.createText(parent, getValue(), SWT.FLAT);
-
 			text.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
 					setValue(text.getText());
@@ -42,8 +41,11 @@ public class TextAttributeEditor extends AbstractAttributeEditor {
 			});
 		}
 
-		decorate(text);
 		setControl(text);
+	}
+
+	protected boolean isReadOnly() {
+		return getTaskAttribute().isReadOnly();
 	}
 
 	public String getValue() {
@@ -53,7 +55,6 @@ public class TextAttributeEditor extends AbstractAttributeEditor {
 	public void setValue(String text) {
 		getAttributeMapper().setValue(getTaskAttribute(), text);
 		attributeChanged();
-
 	}
 
 }

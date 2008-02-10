@@ -8,6 +8,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -15,12 +16,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.jface.text.ITextListener;
 import org.eclipse.jface.text.Region;
-import org.eclipse.jface.text.TextEvent;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -30,7 +29,6 @@ import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.LocationAdapter;
 import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.custom.StackLayout;
-import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -39,35 +37,23 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
-public class TaskEditorNewCommentPart extends AbstractTaskEditorPart {
+public class PreviewAttributeEditor extends AbstractAttributeEditor {
 
-	private static final int DESCRIPTION_HEIGHT = 10 * 14;
+	private final RichTextAttributeEditor editor;
 
-	private static final int DESCRIPTION_WIDTH = 79 * 7; // 500;
+	private boolean ignoreLocationEvents;
 
-//	/**
-//	 * A listener for selection of the textbox where a new comment is entered in.
-//	 */
-//	private class NewCommentListener implements Listener {
-//		public void handleEvent(Event event) {
-//			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
-//					new RepositoryTaskSelection(getTaskData().getId(), getTaskData().getRepositoryUrl(),
-//							getTaskData().getRepositoryKind(), getSectionLabel(SECTION_NAME.NEWCOMMENT_SECTION), false,
-//							getTaskData().getSummary()))));
-//		}
-//	}
+	private final AbstractRenderingEngine renderingEngine;
 
-	private StyledText addCommentsTextBox = null;
+	public PreviewAttributeEditor(AttributeManager manager, RepositoryTaskAttribute taskAttribute,
+			AbstractRenderingEngine renderingEngine, RichTextAttributeEditor editor) {
+		super(manager, taskAttribute);
 
-	private boolean ignoreLocationEvents = false;
+		Assert.isNotNull(editor);
+		Assert.isNotNull(renderingEngine);
 
-	private TextViewer newCommentTextViewer;
-
-	private AbstractRenderingEngine renderingEngine;
-
-	public TaskEditorNewCommentPart(AbstractTaskEditorPage taskEditorPage) {
-		super(taskEditorPage);
-		// ignore
+		this.editor = editor;
+		this.renderingEngine = renderingEngine;
 	}
 
 	private Browser addBrowser(Composite parent, int style) {
@@ -96,67 +82,26 @@ public class TaskEditorNewCommentPart extends AbstractTaskEditorPart {
 
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
-		// ignore
-		Composite newCommentsComposite = toolkit.createComposite(parent);
-		newCommentsComposite.setLayout(new GridLayout());
+		final Composite sectionComposite = toolkit.createComposite(parent);
+		sectionComposite.setLayout(new GridLayout(1, false));
 
-		// HACK: new new comment attribute not created by connector, create one.
-		if (getTaskData().getAttribute(RepositoryTaskAttribute.COMMENT_NEW) == null) {
-			getTaskData().setAttributeValue(RepositoryTaskAttribute.COMMENT_NEW, "");
-		}
-		final RepositoryTaskAttribute attribute = getTaskData().getAttribute(RepositoryTaskAttribute.COMMENT_NEW);
+		// composite with StackLayout to hold text editor and preview widget
+		Composite editorComposite = toolkit.createComposite(sectionComposite);
+		editorComposite.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+		GridData gd = new GridData(GridData.FILL_BOTH);
+		gd.widthHint = MAXIMUM_WIDTH;
+		gd.minimumHeight = MAXIMUM_HEIGHT;
+		gd.grabExcessHorizontalSpace = true;
+		editorComposite.setLayoutData(gd);
+		final StackLayout descriptionLayout = new StackLayout();
+		editorComposite.setLayout(descriptionLayout);
 
-		renderingEngine = getTaskEditorPage().getAttributeEditorToolkit().getRenderingEngine(attribute);
-		if (renderingEngine != null) {
-			// composite with StackLayout to hold text editor and preview widget
-			Composite editPreviewComposite = toolkit.createComposite(newCommentsComposite);
-			GridData editPreviewData = new GridData(GridData.FILL_BOTH);
-			editPreviewData.widthHint = DESCRIPTION_WIDTH;
-			editPreviewData.minimumHeight = DESCRIPTION_HEIGHT;
-			editPreviewData.grabExcessHorizontalSpace = true;
-			editPreviewComposite.setLayoutData(editPreviewData);
-			editPreviewComposite.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+		editor.createControl(editorComposite, toolkit);
 
-			final StackLayout editPreviewLayout = new StackLayout();
-			editPreviewComposite.setLayout(editPreviewLayout);
-
-			newCommentTextViewer = getTaskEditorPage().addTextEditor(getTaskRepository(), editPreviewComposite,
-					attribute.getValue(), true, SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-
-			editPreviewLayout.topControl = newCommentTextViewer.getControl();
-			editPreviewComposite.layout();
-
-			// composite for edit/preview button
-			Composite buttonComposite = toolkit.createComposite(newCommentsComposite);
-			buttonComposite.setLayout(new GridLayout());
-			createPreviewButton(buttonComposite, newCommentTextViewer, editPreviewComposite, editPreviewLayout, toolkit);
-		} else {
-			newCommentTextViewer = getTaskEditorPage().addTextEditor(getTaskRepository(), newCommentsComposite,
-					attribute.getValue(), true, SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-			GridData addCommentsTextData = new GridData(GridData.FILL_BOTH);
-			addCommentsTextData.widthHint = DESCRIPTION_WIDTH;
-			addCommentsTextData.minimumHeight = DESCRIPTION_HEIGHT;
-			addCommentsTextData.grabExcessHorizontalSpace = true;
-			newCommentTextViewer.getControl().setLayoutData(addCommentsTextData);
-			newCommentTextViewer.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-		}
-		newCommentTextViewer.setEditable(true);
-		newCommentTextViewer.addTextListener(new ITextListener() {
-			public void textChanged(TextEvent event) {
-				String newValue = addCommentsTextBox.getText();
-				if (!newValue.equals(attribute.getValue())) {
-					attribute.setValue(newValue);
-					getTaskEditorPage().getAttributeEditorManager().attributeChanged(attribute);
-				}
-			}
-		});
-// FIXME EDITOR implement
-//		newCommentTextViewer.getTextWidget().addListener(SWT.FocusIn, new NewCommentListener());
-		addCommentsTextBox = newCommentTextViewer.getTextWidget();
-
-		toolkit.paintBordersFor(newCommentsComposite);
-
-		setControl(newCommentsComposite);
+		// composite for edit/preview button
+		Composite buttonComposite = toolkit.createComposite(sectionComposite);
+		buttonComposite.setLayout(new GridLayout());
+		createPreviewButton(buttonComposite, editor.getViewer(), editorComposite, descriptionLayout, toolkit);
 	}
 
 	/**
@@ -250,14 +195,16 @@ public class TaskEditorNewCommentPart extends AbstractTaskEditorPart {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				if (renderingEngine == null) {
-					jobStatus = new RepositoryStatus(getTaskRepository(), IStatus.INFO, TasksUiPlugin.ID_PLUGIN,
-							RepositoryStatus.ERROR_INTERNAL, "The repository does not support HTML preview.");
+					jobStatus = new RepositoryStatus(getAttributeEditorManager().getTaskRepository(), IStatus.INFO,
+							TasksUiPlugin.ID_PLUGIN, RepositoryStatus.ERROR_INTERNAL,
+							"The repository does not support HTML preview.");
 					return Status.OK_STATUS;
 				}
 
 				jobStatus = Status.OK_STATUS;
 				try {
-					htmlText = renderingEngine.renderAsHtml(getTaskRepository(), sourceText, monitor);
+					htmlText = renderingEngine.renderAsHtml(getAttributeEditorManager().getTaskRepository(),
+							sourceText, monitor);
 				} catch (CoreException e) {
 					jobStatus = e.getStatus();
 				}
@@ -277,13 +224,16 @@ public class TaskEditorNewCommentPart extends AbstractTaskEditorPart {
 						getControl().getDisplay().asyncExec(new Runnable() {
 							public void run() {
 								setText(browser, job.getHtmlText());
-								getTaskEditor().setMessage(null, IMessageProvider.NONE);
+								// TODO EDITOR error handling
+								//getAttributeEditorManager().setMessage(null, IMessageProvider.NONE);
 							}
 						});
 					} else {
 						getControl().getDisplay().asyncExec(new Runnable() {
 							public void run() {
-								getTaskEditor().setMessage(job.getStatus().getMessage(), IMessageProvider.ERROR);
+								StatusHandler.displayStatus("Error", job.getStatus());
+								// TODO EDITOR error handling
+								//getAttributeEditorManager().setMessage(job.getStatus().getMessage(), IMessageProvider.ERROR);
 							}
 						});
 					}
@@ -306,26 +256,4 @@ public class TaskEditorNewCommentPart extends AbstractTaskEditorPart {
 
 	}
 
-	@Override
-	public void setFocus() {
-		newCommentTextViewer.getControl().setFocus();
-	}
-
-	public void appendText(String text) {
-		StringBuilder strBuilder = new StringBuilder();
-		String oldText = newCommentTextViewer.getDocument().get();
-		if (strBuilder.length() != 0) {
-			strBuilder.append("\n");
-		}
-		strBuilder.append(oldText);
-		strBuilder.append(text);
-		newCommentTextViewer.getDocument().set(strBuilder.toString());
-		RepositoryTaskAttribute attribute = getTaskData().getAttribute(RepositoryTaskAttribute.COMMENT_NEW);
-		if (attribute != null) {
-			attribute.setValue(strBuilder.toString());
-			getTaskEditorPage().getAttributeEditorManager().attributeChanged(attribute);
-		}
-		newCommentTextViewer.getTextWidget().setCaretOffset(strBuilder.length());
-	}
-	
 }
