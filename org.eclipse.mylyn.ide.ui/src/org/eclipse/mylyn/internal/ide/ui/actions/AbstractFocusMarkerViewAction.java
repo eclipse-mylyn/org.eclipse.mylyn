@@ -23,8 +23,8 @@ import org.eclipse.mylyn.internal.ide.ui.MarkerInterestFilter;
 import org.eclipse.mylyn.internal.ide.ui.MarkerViewLabelProvider;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.internal.provisional.views.markers.ExtendedMarkersView;
-import org.eclipse.ui.internal.provisional.views.markers.MarkersTreeViewer;
+import org.eclipse.ui.internal.views.markers.ExtendedMarkersView;
+import org.eclipse.ui.internal.views.markers.MarkersTreeViewer;
 import org.eclipse.ui.views.markers.internal.TableViewLabelProvider;
 
 /**

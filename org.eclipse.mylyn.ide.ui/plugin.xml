@@ -82,6 +82,24 @@
            tooltip="Focus on Active Task">
   		</action>  
       </viewContribution> 
+
+      <viewContribution 
+		id="org.eclipse.mylyn.markers.all.contribution" 
+   		targetID="org.eclipse.ui.views.AllMarkersView">
+    	<action
+           class="org.eclipse.mylyn.internal.ide.ui.actions.FocusAllMarkersViewAction"
+           disabledIcon="icons/elcl16/focus-disabled.gif"
+           enablesFor="*"
+           icon="icons/elcl16/focus.gif"
+           id="org.eclipse.mylyn.ide.ui.actions.focus.markers.all"
+           label="Focus on Active Task"
+           menubarPath="mylyn"
+           style="toggle"
+           toolbarPath="mylyn"
+           tooltip="Focus on Active Task">
+  		</action>  
+      </viewContribution>
+      
 	  <viewContribution 
 		id="org.eclipse.mylyn.markers.tasks.contribution" 
    		targetID="org.eclipse.ui.views.TaskList">

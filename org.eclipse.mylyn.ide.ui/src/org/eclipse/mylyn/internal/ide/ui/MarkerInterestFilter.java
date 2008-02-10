@@ -15,8 +15,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.ui.InterestFilter;
-import org.eclipse.ui.internal.provisional.views.markers.MarkerEntry;
-import org.eclipse.ui.internal.provisional.views.markers.api.MarkerItem;
+import org.eclipse.ui.internal.views.markers.MarkerEntry;
+import org.eclipse.ui.views.markers.MarkerItem;
 
 /**
  * @author Mik Kersten
