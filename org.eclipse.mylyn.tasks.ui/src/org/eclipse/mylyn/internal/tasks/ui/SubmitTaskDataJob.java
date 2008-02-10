@@ -25,7 +25,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 /**
  * @author Steffen Pingel
  */
-public class SubmitTaskJob extends Job {
+public class SubmitTaskDataJob extends Job {
 
 	private static final String LABEL_JOB_SUBMIT = "Submitting to repository";
 
@@ -41,7 +41,7 @@ public class SubmitTaskJob extends Job {
 
 	private AbstractTask task;
 
-	public SubmitTaskJob(AbstractRepositoryConnector connector, TaskRepository taskRepository,
+	public SubmitTaskDataJob(AbstractRepositoryConnector connector, TaskRepository taskRepository,
 			RepositoryTaskData taskData) {
 		super(LABEL_JOB_SUBMIT);
 		this.connector = connector;
@@ -64,9 +64,18 @@ public class SubmitTaskJob extends Job {
 			String taskId = connector.getTaskDataHandler().postTaskData(taskRepository, taskData,
 					new SubProgressMonitor(monitor, 1));
 			if (taskData.isNew()) {
-				if (taskId != null) {
-					task = connector.createTaskFromExistingId(taskRepository, taskId,
-							new SubProgressMonitor(monitor, 1));
+				if (taskId == null) {
+					throw new CoreException(new RepositoryStatus(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+							RepositoryStatus.ERROR_INTERNAL,
+							"Task could not be created. No additional information was provided by the connector."));
+				}
+				
+				task = connector.createTaskFromExistingId(taskRepository, taskId,
+						new SubProgressMonitor(monitor, 1));
+				if (task == null) {
+					throw new CoreException(new RepositoryStatus(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+							RepositoryStatus.ERROR_INTERNAL,
+							"Task could not be created. No additional information was provided by the connector."));
 				}
 			} else {
 				task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(taskRepository.getUrl(),
@@ -74,9 +83,8 @@ public class SubmitTaskJob extends Job {
 			}
 
 			if (task == null) {
-				throw new CoreException(new RepositoryStatus(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						RepositoryStatus.ERROR_INTERNAL,
-						"Task could not be created. No additional information was provided by the connector."));
+				// repository task only
+				return Status.OK_STATUS;
 			}
 
 			// attach context if required

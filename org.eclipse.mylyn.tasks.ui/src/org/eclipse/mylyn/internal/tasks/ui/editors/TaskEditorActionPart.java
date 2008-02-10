@@ -145,10 +145,12 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 
 	private CCombo categoryChooser;
 
+	private AbstractTaskCategory category;
+
 	public TaskEditorActionPart(AbstractTaskEditorPage taskEditorPage) {
 		super(taskEditorPage);
 	}
-
+	
 	protected void addAttachContextButton(Composite buttonComposite, AbstractTask task, FormToolkit toolkit) {
 		attachContextButton = toolkit.createButton(buttonComposite, "Attach Context", SWT.CHECK);
 		attachContextButton.setImage(TasksUiImages.getImage(TasksUiImages.CONTEXT_ATTACH));
@@ -233,6 +235,19 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 				categoryChooser);
 	}
 
+	@Override
+	public void commit(boolean onSave) {
+		if (needsAddToCategory()) {
+			category = getCategoryInternal();
+		}
+
+		super.commit(onSave);
+	}
+	
+	public AbstractTaskCategory getCategory() {
+		return category;
+	}
+	
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
 		Composite buttonComposite = toolkit.createComposite(parent);
@@ -365,7 +380,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 	 *         added to the task list
 	 */
 	@SuppressWarnings("unchecked")
-	protected AbstractTaskCategory getCategory() {
+	private AbstractTaskCategory getCategoryInternal() {
 		int index = categoryChooser.getSelectionIndex();
 		if (addToCategory.getSelection() && index != -1) {
 			return ((List<AbstractTaskCategory>) categoryChooser.getData()).get(index);

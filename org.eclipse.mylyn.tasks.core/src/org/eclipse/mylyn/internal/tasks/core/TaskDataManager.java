@@ -60,6 +60,20 @@ public class TaskDataManager {
 		saveState(state);
 	}
 
+	/**
+	 * @since 2.3
+	 */
+	public void setNewTaskData(String repositoryUrl, String taskId, RepositoryTaskData data) {
+		TaskDataState state = retrieveState(repositoryUrl, taskId);
+		if (state != null) {
+			state.setNewTaskData(data);
+		} else {
+			state = new TaskDataState(repositoryUrl, taskId);
+			state.setNewTaskData(data);
+		}
+		saveState(state);
+	}
+	
 	public void setOldTaskData(RepositoryTaskData data) {
 		if (data == null || data.getRepositoryUrl() == null || data.getId() == null) {
 			return;

@@ -20,7 +20,6 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.TaskComment;
-import org.eclipse.mylyn.tasks.ui.editors.RepositoryTaskEditorInput;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.FocusEvent;
@@ -56,17 +55,9 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 	private final List<ExpandableComposite> commentComposites = new ArrayList<ExpandableComposite>();
 
-	private final RepositoryTaskEditorInput editorInput;
-
-	private final AbstractTask repositoryTask;
-
-	// TODO EDITOR remove editorInput and repositoryTask
-	public TaskEditorCommentPart(AbstractTaskEditorPage taskEditorPage, Section commentsSection,
-			RepositoryTaskEditorInput editorInput, AbstractTask repositoryTask) {
+	public TaskEditorCommentPart(AbstractTaskEditorPage taskEditorPage, Section commentsSection) {
 		super(taskEditorPage);
 		this.commentsSection = commentsSection;
-		this.editorInput = editorInput;
-		this.repositoryTask = repositoryTask;
 	}
 
 	@Override
@@ -202,8 +193,8 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 					TextViewer viewer = null;
 					if (e.getState() && expandableComposite.getData("viewer") == null) {
 						RichTextAttributeEditor editor = new RichTextAttributeEditor(
-								getTaskEditorPage().getAttributeManager(), taskComment.getAttribute(
-										RepositoryTaskAttribute.COMMENT_TEXT));
+								getTaskEditorPage().getAttributeManager(),
+								taskComment.getAttribute(RepositoryTaskAttribute.COMMENT_TEXT));
 						editor.setDecorationEnabled(false);
 						editor.createControl(ecComposite, toolkit);
 						viewer = editor.getViewer();
@@ -234,8 +225,9 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 				}
 			});
 
+			AbstractTask repositoryTask = getTaskEditorPage().getTask(); 
 			if ((repositoryTask != null && repositoryTask.getLastReadTimeStamp() == null)
-					|| editorInput.getOldTaskData() == null) {
+					|| getTaskEditorPage().getAttributeManager().getOldTaskData() == null) {
 				// hit or lost task data, expose all comments
 				EditorUtil.toggleExpandableComposite(true, expandableComposite);
 				foundNew = true;
@@ -251,9 +243,12 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			commentsSection.setExpanded(true);
 		} else if (getTaskData().getComments() == null || getTaskData().getComments().size() == 0) {
 			commentsSection.setExpanded(false);
-		} else if (editorInput.getTaskData() != null && editorInput.getOldTaskData() != null) {
-			List<TaskComment> newTaskComments = editorInput.getTaskData().getComments();
-			List<TaskComment> oldTaskComments = editorInput.getOldTaskData().getComments();
+		} else if (getTaskEditorPage().getAttributeManager().getTaskData() != null
+				&& getTaskEditorPage().getAttributeManager().getOldTaskData() != null) {
+			List<TaskComment> newTaskComments = getTaskEditorPage().getAttributeManager().getTaskData().getComments();
+			List<TaskComment> oldTaskComments = getTaskEditorPage().getAttributeManager()
+					.getOldTaskData()
+					.getComments();
 			if (newTaskComments == null || oldTaskComments == null) {
 				commentsSection.setExpanded(true);
 			} else {

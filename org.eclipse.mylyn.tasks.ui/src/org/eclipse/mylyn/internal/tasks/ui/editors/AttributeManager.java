@@ -8,13 +8,13 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryOperation;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
@@ -27,7 +27,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
  */
 // API 3.0 move to core?
 public class AttributeManager {
-	
+
 	private Set<RepositoryTaskAttribute> changedAttributes = new HashSet<RepositoryTaskAttribute>();
 
 	private List<IAttributeManagerListener> listeners;
@@ -36,24 +36,27 @@ public class AttributeManager {
 
 	private RepositoryTaskData oldTaskData;
 
-	private AbstractTask task;
+	private String storageId;
+
+	private String storageUrl;
 
 	private RepositoryTaskData taskData;
 
 	private TaskDataManager taskDataManager;
 
-	private final String taskId;
-
 	private final TaskRepository taskRepository;
 
-	public AttributeManager(TaskRepository taskRepository, String taskId) {
+	public AttributeManager(TaskRepository taskRepository, String storageUrl, String storageId) {
 		this.taskRepository = taskRepository;
-		this.taskId = taskId;
-		this.taskDataManager = TasksUiPlugin.getTaskDataManager();		
-		this.task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(taskRepository.getUrl(), taskId);
+		this.storageUrl = storageUrl;
+		this.storageId = storageId;
+		this.taskDataManager = TasksUiPlugin.getTaskDataManager();
 	}
 
-	public void addAttributeEditorManagerListener(IAttributeManagerListener listener) {
+	public void addAttributeManagerListener(IAttributeManagerListener listener) {
+		if (listeners == null) {
+			listeners = new ArrayList<IAttributeManagerListener>();
+		}
 		listeners.add(listener);
 	}
 
@@ -65,8 +68,11 @@ public class AttributeManager {
 	 */
 	public void attributeChanged(RepositoryTaskAttribute attribute) {
 		changedAttributes.add(attribute);
-		for (IAttributeManagerListener listener : listeners) {
-			listener.attributeChanged(attribute);
+
+		if (listeners != null) {
+			for (IAttributeManagerListener listener : listeners.toArray(new IAttributeManagerListener[0])) {
+				listener.attributeChanged(attribute);
+			}
 		}
 	}
 
@@ -77,12 +83,17 @@ public class AttributeManager {
 	/**
 	 * Returns the old task data.
 	 */
-	private RepositoryTaskData getOldTaskData() {
+	// TODO make private?
+	public RepositoryTaskData getOldTaskData() {
 		return oldTaskData;
 	}
 
-	public AbstractTask getTask() {
-		return task;
+	public String getStorageId() {
+		return storageId;
+	}
+
+	public String getStorageUrl() {
+		return storageUrl;
 	}
 
 	/**
@@ -95,7 +106,6 @@ public class AttributeManager {
 	public TaskRepository getTaskRepository() {
 		return taskRepository;
 	}
-
 
 	public boolean hasIncomingChanges(RepositoryTaskAttribute taskAttribute) {
 		RepositoryTaskData oldTaskData = getOldTaskData();
@@ -196,26 +206,21 @@ public class AttributeManager {
 		// return false;
 
 	}
-
 	public void operationChanged(RepositoryOperation operation) {
 		// TODO EDITOR implement
 	}
-
 	public void refreshInput() {
-		setTaskData(taskDataManager.getEditableCopy(taskRepository.getUrl(), taskId));
-		setOldTaskData(taskDataManager.getOldTaskData(taskRepository.getUrl(), taskId));
-		setOldEdits(taskDataManager.getEdits(taskRepository.getUrl(), taskId));
+		setTaskData(taskDataManager.getEditableCopy(storageUrl, storageId));
+		setOldTaskData(taskDataManager.getOldTaskData(storageUrl, storageId));
+		setOldEdits(taskDataManager.getEdits(storageUrl, storageId));
 	}
-
-	public void removeAttributeEditorManagerListener(IAttributeManagerListener listener) {
+	public void removeAttributeManagerListener(IAttributeManagerListener listener) {
 		listeners.remove(listener);
 	}
-
-	public void save(IProgressMonitor progressMonitor) {
-		// FIXME this should always save - whether a task is available or not
-		if (task != null) {
-			TasksUiPlugin.getSynchronizationManager().saveOutgoing(task, changedAttributes);
-		}
+	
+	public void save() {
+		TasksUiPlugin.getTaskDataManager().saveEdits(storageUrl, storageId,
+				Collections.unmodifiableSet(changedAttributes));
 		changedAttributes.clear();
 	}
 
@@ -225,6 +230,14 @@ public class AttributeManager {
 
 	private void setOldTaskData(RepositoryTaskData oldTaskData) {
 		this.oldTaskData = oldTaskData;
+	}
+
+	public void setStorageId(String storageId) {
+		this.storageId = storageId;
+	}
+
+	public void setStorageUrl(String storageUrl) {
+		this.storageUrl = storageUrl;
 	}
 
 	private void setTaskData(RepositoryTaskData taskData) {

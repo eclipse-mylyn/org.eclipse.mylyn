@@ -10,9 +10,11 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import java.util.Calendar;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.DatePicker;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
@@ -43,6 +45,26 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 		// ignore
 	}
 
+	@Override
+	public void commit(boolean onSave) {
+		AbstractTask task = getTaskEditorPage().getTask();
+		Assert.isNotNull(task);
+		
+		Calendar selectedDate = null;
+		if (scheduledForDate != null) {
+			selectedDate = scheduledForDate.getDate();
+		}
+		if (selectedDate != null) {
+			TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, selectedDate.getTime());
+		}
+
+		if (estimatedTime != null) {
+			task.setEstimatedTimeHours(estimatedTime.getSelection());
+		}
+		
+		super.commit(onSave);
+	}
+	
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
 		Composite sectionClient = getManagedForm().getToolkit().createComposite(parent);
