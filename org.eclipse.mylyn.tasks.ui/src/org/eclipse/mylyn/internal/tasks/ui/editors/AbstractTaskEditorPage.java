@@ -59,6 +59,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.NewTaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.RepositoryTaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTarget;
@@ -365,6 +366,8 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 	private FormToolkit toolkit;
 
+	private boolean initialized;
+
 	/**
 	 * Creates a new <code>AbstractTaskEditor</code>.
 	 */
@@ -476,23 +479,35 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		initializePart(section, attachmentPart);
 	}
 
-	private void createAttributeManager(RepositoryTaskEditorInput editorInput) {
+	private void createAttributeManager(IEditorInput input) {
 		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
-		if (editorInput instanceof NewTaskEditorInput) {
+		if (input instanceof NewTaskEditorInput) {
+			NewTaskEditorInput editorInput = (NewTaskEditorInput) input;
+			
 			task = new LocalTask("" + taskList.getNextLocalTaskId(), "*");
+			task.setUrl(editorInput.getRepository().getUrl());
 			taskList.addTask(task, taskList.getDefaultCategory());
 
 			TasksUiPlugin.getTaskDataManager().setNewTaskData(task.getRepositoryUrl(), task.getTaskId(),
 					editorInput.getTaskData());
 
-			TaskRepository taskRepository = TasksUiPlugin.getRepositoryManager().getRepository(
-					LocalRepositoryConnector.CONNECTOR_KIND, LocalRepositoryConnector.REPOSITORY_URL);
-			attributeManager = createAttributeManager(taskRepository, task.getRepositoryUrl(), task.getTaskId());
-		} else {
+			attributeManager = createAttributeManager(editorInput.getRepository(), LocalRepositoryConnector.REPOSITORY_URL, task.getTaskId());
+		} else if (input instanceof RepositoryTaskEditorInput) {
+			RepositoryTaskEditorInput editorInput = (RepositoryTaskEditorInput) input;
+
 			task = editorInput.getRepositoryTask();
 			attributeManager = createAttributeManager(editorInput.getRepository(),
 					editorInput.getRepository().getUrl(), editorInput.getId());
+		} else if (input instanceof TaskEditorInput) {
+			TaskEditorInput editorInput = (TaskEditorInput) input;
+
+			task = editorInput.getTask();
+			TaskRepository taskRepository = TasksUiPlugin.getRepositoryManager().getRepository(task.getUrl());
+			attributeManager = createAttributeManager(taskRepository, 
+					LocalRepositoryConnector.REPOSITORY_URL, task.getTaskId());
+			
 		}
+
 	}
 
 	protected abstract AttributeManager createAttributeManager(TaskRepository taskRepository, String storageUrl,
@@ -877,18 +892,17 @@ private void createSections() {
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input) {
-		if (!(input instanceof RepositoryTaskEditorInput)) {
-			// FIXME this method is invoked with the wrong input and should throw an exception
-			// throw new IllegalArgumentException("Invalid input for task editor: " + input);
+		if (initialized) {
+			// FIXME should only be called once
 			return;
 		}
+		initialized = true;
 
-		RepositoryTaskEditorInput editorInput = (RepositoryTaskEditorInput) input;
+		createAttributeManager(input);
 
-		repository = editorInput.getRepository();
+		repository = attributeManager.getTaskRepository();
 		connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getConnectorKind());
 
-		createAttributeManager(editorInput);
 		attributeManager.addAttributeManagerListener(new IAttributeManagerListener() {
 			public void attributeChanged(RepositoryTaskAttribute attribute) {
 				getManagedForm().dirtyStateChanged();
