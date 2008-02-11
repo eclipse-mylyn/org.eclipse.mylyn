@@ -93,6 +93,8 @@ public class BugzillaAttributeFactory extends AbstractAttributeFactory {
 			return BugzillaReportElement.PRIORITY.getKeyString();
 		} else if (key.equals(RepositoryTaskAttribute.COMMENT_NEW)) {
 			return BugzillaReportElement.NEW_COMMENT.getKeyString();
+		} else if (key.equals(RepositoryTaskAttribute.COMPONENT)) {
+			return BugzillaReportElement.COMPONENT.getKeyString();
 		} else {
 			return key;
 		}
