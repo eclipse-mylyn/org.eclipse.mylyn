@@ -62,6 +62,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -414,6 +415,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 							// "Changed - " + repositoryTask.getSummary(),
 							// "Editor will Test with new incoming
 							// changes.");
+							parentEditor.getTopForm().addMessageHyperlinkListener(new HyperlinkAdapter() {
+								public void linkActivated(HyperlinkEvent e) {
+									refreshEditor();
+								}
+							});
 							parentEditor.setMessage("Task has incoming changes, synchronize to view",
 									IMessageProvider.WARNING, new HyperlinkAdapter() {
 								@Override
@@ -1407,7 +1413,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		if (taskData.getAttachments().size() > 0) {
 
-			attachmentsTable = toolkit.createTable(attachmentsComposite, SWT.SINGLE | SWT.BORDER | SWT.FULL_SELECTION);
+			attachmentsTable = toolkit.createTable(attachmentsComposite, SWT.MULTI | SWT.BORDER | SWT.FULL_SELECTION);
 			attachmentsTable.setLinesVisible(true);
 			attachmentsTable.setHeaderVisible(true);
 			attachmentsTable.setLayout(new GridLayout());
@@ -1588,31 +1594,34 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				public void menuAboutToShow(IMenuManager manager) {
 					popupMenu.removeAll();
 
-					ISelection selection = attachmentsTableViewer.getSelection();
+					IStructuredSelection selection = (IStructuredSelection) attachmentsTableViewer.getSelection();
 					if (selection.isEmpty()) {
 						return;
 					}
 
-					RepositoryAttachment att = (RepositoryAttachment) ((StructuredSelection) selection).getFirstElement();
+					if (selection.size() == 1) {
+						RepositoryAttachment att = (RepositoryAttachment) ((StructuredSelection) selection).getFirstElement();
 
-					// reinitialize menu
-					popupMenu.add(openMenu);
-					openMenu.removeAll();
-					IStorageEditorInput input = new RepositoryAttachmentEditorInput(repository, att);
-					IEditorDescriptor desc = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(
-							input.getName());
-					if (desc != null) {
-						openMenu.add(openWithDefaultAction);
-					}
-					openMenu.add(openWithBrowserAction);
-					openMenu.add(openWithTextEditorAction);
+						// reinitialize open menu
+						popupMenu.add(openMenu);
+						openMenu.removeAll();
 
-					popupMenu.add(new Separator());
-					popupMenu.add(saveAction);
+						IStorageEditorInput input = new RepositoryAttachmentEditorInput(repository, att);
+						IEditorDescriptor desc = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(
+								input.getName());
+						if (desc != null) {
+							openMenu.add(openWithDefaultAction);
+						}
+						openMenu.add(openWithBrowserAction);
+						openMenu.add(openWithTextEditorAction);
 
-					popupMenu.add(copyURLToClipAction);
-					if (att.getContentType().startsWith(CTYPE_TEXT) || att.getContentType().endsWith("xml")) {
-						popupMenu.add(copyToClipAction);
+						popupMenu.add(new Separator());
+						popupMenu.add(saveAction);
+
+						popupMenu.add(copyURLToClipAction);
+						if (att.getContentType().startsWith(CTYPE_TEXT) || att.getContentType().endsWith("xml")) {
+							popupMenu.add(copyToClipAction);
+						}
 					}
 					popupMenu.add(new Separator("actions"));
 

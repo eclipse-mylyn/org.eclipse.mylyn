@@ -24,7 +24,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.mylyn,
  org.eclipse.ui.net,
  org.eclipse.mylyn.web.core,
- org.eclipse.core.net
+ org.eclipse.core.net,
+ org.eclipse.compare
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
 Export-Package: org.eclipse.mylyn.internal.tasks.ui,

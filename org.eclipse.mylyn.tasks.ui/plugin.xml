@@ -566,6 +566,20 @@
          </action>      
       </viewerContribution>
       
+      <objectContribution
+            adaptable="false"
+            id="org.eclipse.mylyn.tasks.ui.contribution.attachment.compare"
+            objectClass="org.eclipse.mylyn.tasks.core.RepositoryAttachment">
+         <action
+               class="org.eclipse.mylyn.internal.tasks.ui.actions.CompareAttachmentsAction"
+               enablesFor="2"
+               icon="icons/etool16/compare.png"
+               id="org.eclipse.mylyn.tasks.ui.action.attachment.compare"
+               label="Compare"
+               menubarPath="actions"
+               tooltip="Compare attachments"/>
+      </objectContribution>
+
    </extension>
 
   <extension point="org.eclipse.ui.preferencePages">
