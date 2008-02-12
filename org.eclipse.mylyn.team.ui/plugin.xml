@@ -107,12 +107,8 @@
                id="org.eclipse.mylyn.team.ui.ui.patch.apply"
                label="Apply Patch..."
                menubarPath="actions"
-               tooltip="Apply from Repository Task Attachment">
-            <enablement>
-               <objectClass
-                     name="org.eclipse.mylyn.tasks.core.RepositoryAttachment">
-               </objectClass>
-            </enablement>
+               tooltip="Apply from Repository Task Attachment"
+               enablesFor="1">
          </action>
       </objectContribution>
    </extension>
