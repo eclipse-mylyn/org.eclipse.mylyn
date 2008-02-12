@@ -51,6 +51,7 @@ import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
  * @author Rob Elves
  * @since 2.1
  */
+//API 3.0 rename back to RepositoryTextViewerConfiguration?
 public class TaskTextViewerConfiguration extends TextSourceViewerConfiguration {
 
 	private static final String ID_CONTEXT_EDITOR_TASK = "org.eclipse.mylyn.tasks.ui.TaskEditor";
