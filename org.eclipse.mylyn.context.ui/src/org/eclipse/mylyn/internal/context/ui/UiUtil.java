@@ -17,19 +17,22 @@ import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Mik Kersten
+ * 
+ * API-3.0: remove 
  */
 public class UiUtil {
-
+	
 	public static void displayInterestManipulationFailure() {
 		MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Mylyn Interest Manipulation",
 				"Not a valid landmark, select an element within this resource instead.");
 	}
 
+	@Deprecated
 	public static Color getBackgroundForElement(IInteractionElement node) {
 		return getBackgroundForElement(node, false);
 	}
 
-	@SuppressWarnings("deprecation")
+	@Deprecated
 	public static Color getBackgroundForElement(IInteractionElement node, boolean resolveContextColor) {
 		if (node == null) {
 			return null;

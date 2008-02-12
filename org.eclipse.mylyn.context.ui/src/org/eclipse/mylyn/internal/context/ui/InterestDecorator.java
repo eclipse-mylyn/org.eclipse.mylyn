@@ -12,9 +12,9 @@ import org.eclipse.jface.viewers.IColorDecorator;
 import org.eclipse.jface.viewers.IFontDecorator;
 import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.internal.context.core.InteractionContextRelation;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -87,12 +87,13 @@ public class InterestDecorator implements ILabelDecorator, IFontDecorator, IColo
 	}
 
 	public Color decorateBackground(Object element) {
-		IInteractionElement node = getNode(element);
-		if (node != null) {
-			return UiUtil.getBackgroundForElement(node);
-		} else {
-			return null;
-		}
+		return null;
+//		IInteractionElement node = getNode(element);
+//		if (node != null) {
+//			return UiUtil.getBackgroundForElement(node);
+//		} else {
+//			return null;
+//		}
 	}
 	
 	public static Color getForegroundForElement(IInteractionElement node) {

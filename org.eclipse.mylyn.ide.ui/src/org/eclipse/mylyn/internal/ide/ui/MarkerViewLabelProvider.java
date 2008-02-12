@@ -16,7 +16,6 @@ import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylyn.internal.context.ui.InterestDecorator;
-import org.eclipse.mylyn.internal.context.ui.UiUtil;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -69,14 +68,15 @@ public class MarkerViewLabelProvider implements ITableLabelProvider, IColorProvi
 	}
 
 	public Color getBackground(Object element) {
-		if (element instanceof ConcreteMarker) {
-			String handle = ContextCorePlugin.getDefault().getStructureBridge(
-					((ConcreteMarker) element).getResource().getFileExtension()).getHandleForOffsetInObject((element),
-					0);
-			return UiUtil.getBackgroundForElement(ContextCorePlugin.getContextManager().getElement(handle));
-		} else {
-			return null;
-		}
+		return null;
+//		if (element instanceof ConcreteMarker) {
+//			String handle = ContextCorePlugin.getDefault().getStructureBridge(
+//					((ConcreteMarker) element).getResource().getFileExtension()).getHandleForOffsetInObject((element),
+//					0);
+//			return UiUtil.getBackgroundForElement(ContextCorePlugin.getContextManager().getElement(handle));
+//		} else {
+//			return null;
+//		}
 	}
 
 	/**
