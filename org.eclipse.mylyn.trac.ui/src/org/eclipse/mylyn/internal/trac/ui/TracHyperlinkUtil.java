@@ -5,7 +5,6 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-
 package org.eclipse.mylyn.internal.trac.ui;
 
 import java.io.UnsupportedEncodingException;
@@ -26,6 +25,11 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
 import org.eclipse.mylyn.tasks.ui.WebHyperlink;
 
+/**
+ * Utility class for detecting Trac hyperlinks.
+ * 
+ * @author Steffen Pingel
+ */
 public class TracHyperlinkUtil {
 
 	static Pattern ticketPattern = Pattern.compile("(ticket:|#)(\\d+)");
@@ -61,8 +65,28 @@ public class TracHyperlinkUtil {
 	static Pattern filesPattern = Pattern.compile("source:/*([\\w\\./\\-_]+)(@(\\d+)(#L(\\d+))?)?");
 
 	/**
+	 * Detects hyperlinks to Trac tickets.
+	 */
+	public static IHyperlink[] findTicketHyperlinks(TaskRepository repository, String text, int lineOffset,
+			int regionOffset) {
+		List<IHyperlink> links = null;
+		Matcher m = ticketPattern.matcher(text);
+		while (m.find()) {
+			if (isInRegion(lineOffset, m)) {
+				String id = m.group(2);
+				if (links == null) {
+					 links = new ArrayList<IHyperlink>();					
+				}
+				links.add(new TaskHyperlink(determineRegion(regionOffset, m), repository, id));
+			}
+		}
+		return links == null ? null : links.toArray(new IHyperlink[0]);
+	}
+
+	/**
+	 * Detects Trac hyperlinks.
+	 *  
 	 * <ul>
-	 * <li>Tickets: #1 or ticket:1
 	 * <li>Ticket comments: comment:ticket:1:2
 	 * <li>Reports: {1} or report:1
 	 * <li>Changesets: r1, [1], changeset:1 or (restricted) [1/trunk], changeset:1/trunk
@@ -79,22 +103,23 @@ public class TracHyperlinkUtil {
 	 * 
 	 * @see http://trac.edgewall.org/wiki/TracLinks
 	 */
-	public static IHyperlink[] findHyperlinks(TaskRepository repository, String text, int lineOffset, int regionOffset) {
+	public static IHyperlink[] findTracHyperlinks(TaskRepository repository, String text, int lineOffset,
+			int regionOffset) {
 		List<IHyperlink> links = new ArrayList<IHyperlink>();
 
-		Matcher m = commentPattern.matcher(text);
+		Matcher m = ticketPattern.matcher(text);
 		while (m.find()) {
 			if (isInRegion(lineOffset, m)) {
-				String id = m.group(1);
-				// String comment = m.group(2);
+				String id = m.group(2);
 				links.add(new TaskHyperlink(determineRegion(regionOffset, m), repository, id));
 			}
 		}
 
-		m = ticketPattern.matcher(text);
+		m = commentPattern.matcher(text);
 		while (m.find()) {
 			if (isInRegion(lineOffset, m)) {
-				String id = m.group(2);
+				String id = m.group(1);
+				// String comment = m.group(2);
 				links.add(new TaskHyperlink(determineRegion(regionOffset, m), repository, id));
 			}
 		}

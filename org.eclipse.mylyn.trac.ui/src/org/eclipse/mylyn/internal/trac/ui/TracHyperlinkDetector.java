@@ -14,6 +14,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
@@ -26,7 +27,7 @@ public class TracHyperlinkDetector extends AbstractHyperlinkDetector {
 
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
 		TaskRepository taskRepository = (TaskRepository) getAdapter(TaskRepository.class);
-		if (taskRepository != null) {
+		if (taskRepository != null && TracCorePlugin.REPOSITORY_KIND.equals(taskRepository.getConnectorKind())) {
 			IDocument document = textViewer.getDocument();
 			if (document == null) {
 				return null;
