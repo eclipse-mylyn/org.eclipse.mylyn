@@ -176,10 +176,12 @@ public class TaskTextViewerConfiguration extends TextSourceViewerConfiguration {
 					currentTaskHyperlink = task;
 					activeRegion = hyperlink.getHyperlinkRegion();
 					Control cursorControl = sourceViewer.getTextWidget().getDisplay().getCursorControl();
-					if (task.getTaskKey() == null) {
-						cursorControl.setToolTipText(task.getSummary());
-					} else {
-						cursorControl.setToolTipText(task.getTaskKey() + ": " + task.getSummary());
+					if (cursorControl != null) {
+						if (task.getTaskKey() == null) {
+							cursorControl.setToolTipText(task.getSummary());
+						} else {
+							cursorControl.setToolTipText(task.getTaskKey() + ": " + task.getSummary());
+						}
 					}
 				}
 			}
