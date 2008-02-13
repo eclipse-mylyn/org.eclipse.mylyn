@@ -934,6 +934,17 @@
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M1+F12"/>
       <key
+            commandId="org.eclipse.mylyn.tasks.ui.command.openTask"
+            platform="carbon"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M3+F12">
+      </key>
+      <key
+            platform="carbon"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+F12">
+      </key>
+      <key
             commandId="org.eclipse.mylyn.tasks.ui.command.searchForTask"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M1+M2+F12"/>
