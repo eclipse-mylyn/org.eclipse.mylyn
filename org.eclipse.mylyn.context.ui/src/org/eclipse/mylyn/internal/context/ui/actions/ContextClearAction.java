@@ -46,21 +46,21 @@ public class ContextClearAction extends TaskContextAction {
 	public void run(IAction action) {
 		AbstractTask task = TaskListView.getFromActivePerspective().getSelectedTask();
 		if (task != null) {
-			boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench()
-					.getActiveWorkbenchWindow()
-					.getShell(), "Confirm clear context", "Clear the context for the selected task?  This cannot be undone.");
-			if (!deleteConfirmed)
-				return;
-
-			if (task.isActive()) {
-//				TasksUiPlugin.getTaskListManager().deactivateTask(task);
-				ContextCorePlugin.getContextManager().deleteContext((task).getHandleIdentifier());
-//				TasksUiPlugin.getTaskListManager().activateTask(task);
-			} else {
-				ContextCorePlugin.getContextManager().deleteContext((task).getHandleIdentifier());
-			}
-			TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(task, false);
+			run(task);
 		}
+	}
+
+	public boolean run(AbstractTask task) {
+		boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow()
+				.getShell(), "Confirm clear context",
+				"Clear the context for the selected task?  This cannot be undone.");
+		if (!deleteConfirmed)
+			return false;
+
+		ContextCorePlugin.getContextManager().deleteContext(task.getHandleIdentifier());
+		TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(task, false);
+		return true;
 	}
 
 }

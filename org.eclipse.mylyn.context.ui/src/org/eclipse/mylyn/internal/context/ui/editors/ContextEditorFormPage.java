@@ -287,7 +287,7 @@ public class ContextEditorFormPage extends FormPage {
 		clearHyperlink.addMouseListener(new MouseListener() {
 
 			public void mouseUp(MouseEvent e) {
-				new ContextClearAction().run();
+				new ContextClearAction().run(task);
 			}
 
 			public void mouseDoubleClick(MouseEvent e) {
