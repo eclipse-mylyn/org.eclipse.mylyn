@@ -417,6 +417,10 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 	}
 
 	private void installTitleDrag(Form form, final AbstractTask task, final RepositoryTaskData taskData) {
+		if (taskData != null && taskData.isNew()) {
+			return;
+		}
+		
 		if (titleDragSourceListener == null) {
 			Transfer[] transferTypes;
 			if (null == task) {
