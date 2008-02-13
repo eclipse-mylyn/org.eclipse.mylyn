@@ -56,6 +56,8 @@ import org.eclipse.ui.progress.WorkbenchJob;
 /**
  * Based on
  * 
+ * API-3.0: remove?  Not used.
+ * 
  * @see{FilteredTree}
  * 
  * @author Mik Kersten
