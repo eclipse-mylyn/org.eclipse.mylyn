@@ -655,7 +655,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		if (parentEditor.getTopForm() != null) {
 			IToolBarManager toolBarManager = parentEditor.getTopForm().getToolBarManager();
 
+			// NOTE: the update call should not be needed, but toolbar can fail to show last item?
 			toolBarManager.removeAll();
+			toolBarManager.update(true);
+			
 			toolBarManager.add(repositoryLabelControl);
 			fillToolBar(toolBarManager);
 
