@@ -44,17 +44,15 @@ public class JavaUiBridgePlugin extends AbstractContextUiPlugin {
 
 	private ActiveFoldingEditorTracker editorTracker;
 
-//	private PackageExplorerManager packageExplorerManager = new PackageExplorerManager();
+	private TypeHistoryManager typeHistoryManager;
 
-	private TypeHistoryManager typeHistoryManager = null;
+	private LandmarkMarkerManager landmarkMarkerManager;
 
-	private LandmarkMarkerManager landmarkMarkerManager = new LandmarkMarkerManager();
-
-	private InterestInducingProblemListener problemListener = new InterestInducingProblemListener();
+	private InterestInducingProblemListener problemListener;
 
 	private JavaEditingMonitor javaEditingMonitor;
 
-	private InterestUpdateDeltaListener javaElementChangeListener = new InterestUpdateDeltaListener();
+	private InterestUpdateDeltaListener javaElementChangeListener;
 
 	public JavaUiBridgePlugin() {
 		super();
@@ -78,12 +76,17 @@ public class JavaUiBridgePlugin extends AbstractContextUiPlugin {
 
 	@Override
 	protected void lazyStart(IWorkbench workbench) {
+		landmarkMarkerManager = new LandmarkMarkerManager();
 		ContextCorePlugin.getContextManager().addListener(landmarkMarkerManager);
+		
 		javaEditingMonitor = new JavaEditingMonitor();
 		MonitorUiPlugin.getDefault().getSelectionMonitors().add(javaEditingMonitor);
 		installEditorTracker(workbench);
+		
+		javaElementChangeListener = new InterestUpdateDeltaListener();
 		JavaCore.addElementChangedListener(javaElementChangeListener);
 
+		problemListener = new InterestInducingProblemListener();
 		getPreferenceStore().addPropertyChangeListener(problemListener);
 		if (getPreferenceStore().getBoolean(InterestInducingProblemListener.PREDICTED_INTEREST_ERRORS)) {
 			problemListener.enable();
@@ -108,6 +111,7 @@ public class JavaUiBridgePlugin extends AbstractContextUiPlugin {
 		ContextCorePlugin.getContextManager().removeListener(typeHistoryManager);
 		ContextCorePlugin.getContextManager().removeListener(landmarkMarkerManager);
 		MonitorUiPlugin.getDefault().getSelectionMonitors().remove(javaEditingMonitor);
+		getPreferenceStore().removePropertyChangeListener(problemListener);
 		JavaCore.removeElementChangedListener(javaElementChangeListener);
 		// TODO: uninstall editor tracker
 	}

@@ -224,6 +224,7 @@ public class ContextUiPlugin extends AbstractContextUiPlugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+
 		initializeDefaultPreferences(getPreferenceStore());
 		initializeHighlighters();
 

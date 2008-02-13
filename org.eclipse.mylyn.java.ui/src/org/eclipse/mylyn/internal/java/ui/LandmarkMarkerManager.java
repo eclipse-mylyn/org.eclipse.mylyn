@@ -120,9 +120,7 @@ public class LandmarkMarkerManager implements IInteractionContextListener {
 			if (!element.exists())
 				return;
 			if (element.getAncestor(IJavaElement.COMPILATION_UNIT) != null // stuff
-					// from
-					// .class
-					// files
+					// from .class files
 					&& element instanceof ISourceReference) {
 				try {
 					final IResource resource = element.getUnderlyingResource();

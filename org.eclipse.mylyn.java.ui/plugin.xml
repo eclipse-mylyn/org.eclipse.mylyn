@@ -112,7 +112,6 @@
             id="org.eclipse.mylyn.java.hyperlink.detector.stack"
             name="Mylyn Stack Trace"
             targetId="org.eclipse.ui.DefaultTextEditor"/>
-            <!-- targetId="org.eclipse.mylyn.tasks.ui.TaskEditor"/> -->
    </extension>
 	
   	<!-- ==================== Content Assist ==================== -->
