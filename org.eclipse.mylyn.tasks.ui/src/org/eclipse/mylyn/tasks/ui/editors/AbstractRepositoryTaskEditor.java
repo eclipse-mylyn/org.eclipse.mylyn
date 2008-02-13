@@ -413,15 +413,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					public void run() {
 						if (repositoryTask.getSynchronizationState() == RepositoryTaskSyncState.INCOMING
 								|| repositoryTask.getSynchronizationState() == RepositoryTaskSyncState.CONFLICT) {
-							// MessageDialog.openInformation(AbstractTaskEditor.this.getSite().getShell(),
-							// "Changed - " + repositoryTask.getSummary(),
-							// "Editor will Test with new incoming
-							// changes.");
-							parentEditor.getTopForm().addMessageHyperlinkListener(new HyperlinkAdapter() {
-								public void linkActivated(HyperlinkEvent e) {
-									refreshEditor();
-								}
-							});
 							parentEditor.setMessage("Task has incoming changes, synchronize to view",
 									IMessageProvider.WARNING, new HyperlinkAdapter() {
 								@Override
@@ -429,13 +420,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 									refreshEditor();
 								}
 							});
-
 							setSubmitEnabled(false);
-							// updateContents();
-							// TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask,
-							// true);
-							// TasksUiPlugin.getTaskDataManager().clearIncoming(
-							// repositoryTask.getHandleIdentifier());
 						} else {
 							refreshEditor();
 						}
@@ -607,34 +592,16 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		toolkit = managedForm.getToolkit();
 		registerDropListener(form);
 
-		// ImageDescriptor overlay =
-		// TasksUiPlugin.getDefault().getOverlayIcon(repository.getKind());
-		// ImageDescriptor imageDescriptor =
-		// TaskListImages.createWithOverlay(TaskListImages.REPOSITORY, overlay,
-		// false,
-		// false);
-		// form.setImage(TaskListImages.getImage(imageDescriptor));
-
-		// toolkit.decorateFormHeading(form.getForm());
-
 		editorComposite = form.getBody();
 		GridLayout editorLayout = new GridLayout();
 		editorComposite.setLayout(editorLayout);
 		editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		if (taskData == null) {
 
-			parentEditor.setMessage(
-					"Task data not available. Press synchronize button (right) to retrieve latest data.",
-					IMessageProvider.WARNING);
-
-		} else {
-
+		if (taskData != null) {
 			createSections();
-
 		}
 
-		// setFormHeaderLabel();
 		updateHeaderControls();
 		if (summaryTextViewer != null) {
 			summaryTextViewer.getTextWidget().setFocus();
@@ -644,6 +611,20 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	private void updateHeaderControls() {
+		
+		if (taskData == null) {
+			parentEditor.setMessage(
+					"Task data not available. Press synchronize button (right) to retrieve latest data.",
+					IMessageProvider.WARNING, new HyperlinkAdapter() {
+						@Override
+						public void linkActivated(HyperlinkEvent e) {
+							if (synchronizeEditorAction != null) {
+								synchronizeEditorAction.run();
+							}
+						}
+					});
+		}
+		
 		ControlContribution repositoryLabelControl = new ControlContribution("Title") { //$NON-NLS-1$
 			@Override
 			protected Control createControl(Composite parent) {
@@ -694,6 +675,13 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * @since 2.1 (NOTE: likely to change for 3.0)
 	 */
 	protected void fillToolBar(IToolBarManager toolBarManager) {
+		
+		if((taskData != null && !taskData.isNew()) || repositoryTask != null) {
+			synchronizeEditorAction = new SynchronizeEditorAction();
+			synchronizeEditorAction.selectionChanged(new StructuredSelection(this));
+			toolBarManager.add(synchronizeEditorAction);			
+		}
+		
 		if (taskData != null && !taskData.isNew()) {
 			if (repositoryTask != null) {
 				clearOutgoingAction = new ClearOutgoingAction(Collections.singletonList((AbstractTaskContainer)repositoryTask));
@@ -702,10 +690,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					toolBarManager.add(clearOutgoingAction);
 				}
 				
-				synchronizeEditorAction = new SynchronizeEditorAction();
-				synchronizeEditorAction.selectionChanged(new StructuredSelection(this));
-				toolBarManager.add(synchronizeEditorAction);
-
 				newSubTaskAction = new NewSubTaskAction();
 				newSubTaskAction.selectionChanged(newSubTaskAction, new StructuredSelection(getRepositoryTask()));
 				if (newSubTaskAction.isEnabled()) {
@@ -3624,7 +3608,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	public void refreshEditor() {
 		try {
 			if (!getManagedForm().getForm().isDisposed()) {
-				if (this.isDirty && !taskData.isNew()) {
+				if (this.isDirty && taskData !=null && !taskData.isNew()) {
 					this.doSave(new NullProgressMonitor());
 				}
 				setGlobalBusy(true);
@@ -3639,20 +3623,17 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				if (repositoryTask != null) {
 					TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
 				}
-
-				updateHeaderControls();
 				
 				this.setInputWithNotify(this.getEditorInput());
 				this.init(this.getEditorSite(), this.getEditorInput());
+				
+				// Header must be updated after init is called to task data is available
+				updateHeaderControls();
+				
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						if (editorComposite != null && !editorComposite.isDisposed()) {
-							if (taskData == null) {
-								parentEditor.setMessage(
-										"Task data not available. Press synchronize button (right) to retrieve latest data.",
-										IMessageProvider.WARNING);
-							} else {
-
+							if (taskData != null) {
 								updateEditorTitle();
 								menu = editorComposite.getMenu();
 								removeSections();
