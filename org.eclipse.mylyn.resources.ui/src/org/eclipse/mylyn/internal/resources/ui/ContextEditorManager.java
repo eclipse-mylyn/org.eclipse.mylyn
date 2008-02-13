@@ -164,7 +164,7 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 	}
 
 	/**
-	 * HACK: uses reflection for 3.2 compatibility. HACK: will fail to restore different parts with same name
+	 * HACK: will fail to restore different parts with same name
 	 */
 	@SuppressWarnings("unchecked")
 	private void restoreEditors(WorkbenchPage page, IMemento memento) {
@@ -174,13 +174,7 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 		final MultiStatus result = new MultiStatus(PlatformUI.PLUGIN_ID, IStatus.OK,
 				WorkbenchMessages.EditorManager_problemsRestoringEditors, null);
 
-		// HACK: using reflection to gain accessibility
-//		Class<?> clazz = editorManager.getClass();
 		try {
-//			Method method = clazz.getDeclaredMethod("restoreEditorState", IMemento.class, ArrayList.class,
-//					IEditorReference[].class, MultiStatus.class);
-//			method.setAccessible(true);
-
 			IMemento[] editorMementos = memento.getChildren(IWorkbenchConstants.TAG_EDITOR);
 			Set<IMemento> editorMementoSet = new HashSet<IMemento>();
 			editorMementoSet.addAll(Arrays.asList(editorMementos));
@@ -194,8 +188,6 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 				String partName = editorMemento.getString(IWorkbenchConstants.TAG_PART_NAME);
 				if (!restoredPartNames.contains(partName)) {
 					editorManager.restoreEditorState(editorMemento, visibleEditors, activeEditor, result);
-					// method.invoke(editorManager, new Object[] { editorMemento, visibleEditors,
-					// activeEditor, result });
 				} else {
 					restoredPartNames.add(partName);
 				}
