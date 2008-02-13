@@ -175,6 +175,8 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor CONTEXT_CLEAR = create(T_TOOL, "context-clear.gif");
 
+	public static final ImageDescriptor CLEAR = create(T_TOOL, "clear.gif");
+	
 	public static final ImageDescriptor ATTACHMENT_PATCH = create(T_OBJ, "attachment-patch.gif");
 
 	public static final ImageDescriptor TASK_RETRIEVE = create(T_TOOL, "task-retrieve.gif");
@@ -292,10 +294,6 @@ public class TasksUiImages {
 			return ImageDescriptor.getMissingImageDescriptor();
 		}
 	}
-
-//	private static ImageDescriptor createSize(ImageDescriptor base, Point size) {
-//		return new TaskListImageDescriptor(base, size);
-//	}
 
 	/**
 	 * Lazily initializes image map.

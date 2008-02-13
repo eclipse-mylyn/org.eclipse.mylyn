@@ -79,6 +79,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AbstractTaskEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AttachAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AttachScreenshotAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.ClearOutgoingAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyAttachmentToClipboardJob;
 import org.eclipse.mylyn.internal.tasks.ui.actions.DownloadAttachmentJob;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewSubTaskAction;
@@ -100,6 +101,7 @@ import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
@@ -497,6 +499,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private Action historyAction;
 
+	private Action clearOutgoingAction;
+	
 	private Action openBrowserAction;
 
 	private NewSubTaskAction newSubTaskAction;
@@ -631,7 +635,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 
 		// setFormHeaderLabel();
-		addHeaderControls();
+		updateHeaderControls();
 		if (summaryTextViewer != null) {
 			summaryTextViewer.getTextWidget().setFocus();
 		}
@@ -639,7 +643,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		form.setRedraw(true);
 	}
 
-	private void addHeaderControls() {
+	private void updateHeaderControls() {
 		ControlContribution repositoryLabelControl = new ControlContribution("Title") { //$NON-NLS-1$
 			@Override
 			protected Control createControl(Composite parent) {
@@ -670,12 +674,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		if (parentEditor.getTopForm() != null) {
 			IToolBarManager toolBarManager = parentEditor.getTopForm().getToolBarManager();
 
-			// TODO: Remove? Added to debug bug#197355
 			toolBarManager.removeAll();
-			toolBarManager.update(true);
-
 			toolBarManager.add(repositoryLabelControl);
-			fillToolBar(parentEditor.getTopForm().getToolBarManager());
+			fillToolBar(toolBarManager);
 
 			if (repositoryTask != null && taskData != null && !taskData.isNew()) {
 				activateAction = new ToggleTaskActivationAction(repositoryTask, toolBarManager);
@@ -686,7 +687,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			toolBarManager.update(true);
 		}
 	}
-
+	
 	/**
 	 * Override for customizing the toolbar.
 	 * 
@@ -695,6 +696,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected void fillToolBar(IToolBarManager toolBarManager) {
 		if (taskData != null && !taskData.isNew()) {
 			if (repositoryTask != null) {
+				clearOutgoingAction = new ClearOutgoingAction(Collections.singletonList((AbstractTaskContainer)repositoryTask));
+
+				if (clearOutgoingAction.isEnabled()) {
+					toolBarManager.add(clearOutgoingAction);
+				}
+				
 				synchronizeEditorAction = new SynchronizeEditorAction();
 				synchronizeEditorAction.selectionChanged(new StructuredSelection(this));
 				toolBarManager.add(synchronizeEditorAction);
@@ -2797,26 +2804,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		//updateTask();
 		saveTaskOffline(monitor);
 		updateEditorTitle();
+		updateHeaderControls();
+//		fillToolBar(getParentEditor().getTopForm().getToolBarManager());
 	}
-
-	// // TODO: Remove once offline persistence is improved
-	// private void runSaveJob() {
-	// Job saveJob = new Job("Save") {
-	//
-	// @Override
-	// protected IStatus run(IProgressMonitor monitor) {
-	// saveTaskOffline(monitor);
-	// return Status.OK_STATUS;
-	// }
-	//
-	// };
-	// saveJob.setSystem(true);
-	// saveJob.schedule();
-	// markDirty(false);
-	// }
 
 	@Override
 	public void doSaveAs() {
@@ -3640,7 +3632,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				commentComposites.clear();
 				controlBySelectableObject.clear();
 				editorInput.refreshInput();
-
+				
 				// Note: Marking read must run synchronously
 				// If not, incomings resulting from subsequent synchronization
 				// can get marked as read (without having been viewed by user
@@ -3648,6 +3640,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
 				}
 
+				updateHeaderControls();
+				
 				this.setInputWithNotify(this.getEditorInput());
 				this.init(this.getEditorSite(), this.getEditorInput());
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
