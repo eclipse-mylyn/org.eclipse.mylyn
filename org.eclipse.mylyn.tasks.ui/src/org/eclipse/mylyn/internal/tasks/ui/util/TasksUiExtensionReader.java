@@ -172,7 +172,7 @@ public class TasksUiExtensionReader {
 				}
 			}
 
-			// NOTE: causes ..mylyn.java.ui to load
+			// NOTE: causes ..mylyn.context.ui to load
 			IExtensionPoint editorsExtensionPoint = registry.getExtensionPoint(EXTENSION_EDITORS);
 			IExtension[] editors = editorsExtensionPoint.getExtensions();
 			for (int i = 0; i < editors.length; i++) {
@@ -180,12 +180,20 @@ public class TasksUiExtensionReader {
 				for (int j = 0; j < elements.length; j++) {
 					if (elements[j].getName().equals(ELMNT_EDITOR_FACTORY)) {
 						readEditorFactory(elements[j]);
-					} else if (elements[j].getName().equals(ELMNT_HYPERLINK_DETECTOR)) {
+					} 
+				}
+			}
+
+			// NOTE: causes ..mylyn.java.ui to load
+			for (int i = 0; i < editors.length; i++) {
+				IConfigurationElement[] elements = editors[i].getConfigurationElements();
+				for (int j = 0; j < elements.length; j++) {
+					if (elements[j].getName().equals(ELMNT_HYPERLINK_DETECTOR)) {
 						readHyperlinkDetector(elements[j]);
 					}
 				}
 			}
-
+			
 			coreExtensionsRead = true;
 		}
 	}
