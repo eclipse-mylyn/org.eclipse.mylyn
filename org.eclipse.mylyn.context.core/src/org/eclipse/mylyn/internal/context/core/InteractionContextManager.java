@@ -971,10 +971,17 @@ public class InteractionContextManager {
 		return commonContextScaling;
 	}
 
+	// API-3.0: consider removing check for pause and making clients explicitly determine this, 
+	// or provide a separate method
 	public boolean isContextActive() {
 		return !contextCapturePaused && activeContext.getContextMap().values().size() > 0;
 	}
 
+	@Deprecated
+	public boolean isContextActivePropertySet() {
+		return Boolean.parseBoolean(System.getProperty(PROPERTY_CONTEXT_ACTIVE));
+	}
+	
 	public List<IInteractionElement> getActiveLandmarks() {
 		List<IInteractionElement> allLandmarks = activeContext.getLandmarks();
 		List<IInteractionElement> acceptedLandmarks = new ArrayList<IInteractionElement>();
