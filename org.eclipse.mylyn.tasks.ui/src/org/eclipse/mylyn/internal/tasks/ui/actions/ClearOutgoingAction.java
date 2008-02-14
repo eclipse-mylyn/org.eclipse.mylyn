@@ -40,19 +40,21 @@ public class ClearOutgoingAction extends Action {
 		setId(ID);
 		if (selectedElements.size() == 1 && (selectedElements.get(0) instanceof AbstractTask)) {
 			AbstractTask task = (AbstractTask) selectedElements.get(0);
-			setEnabled(task.getSynchronizationState().equals(RepositoryTaskSyncState.OUTGOING));
+			setEnabled(hasOutgoingChanges(task));
 		} else {
 			setEnabled(false);
 		}
+	}
+
+	private boolean hasOutgoingChanges(AbstractTask task) {
+		return task.getSynchronizationState().equals(RepositoryTaskSyncState.OUTGOING) || task.getSynchronizationState().equals(RepositoryTaskSyncState.CONFLICT);
 	}
 
 	@Override
 	public void run() {
 		ArrayList<AbstractTask> toClear = new ArrayList<AbstractTask>();
 		for (Object selectedObject : selectedElements) {
-			if (selectedObject instanceof AbstractTask
-					&& ((AbstractTask) selectedObject).getSynchronizationState().equals(
-							RepositoryTaskSyncState.OUTGOING)) {
+			if (selectedObject instanceof AbstractTask && hasOutgoingChanges((AbstractTask)selectedObject)) {
 				toClear.add(((AbstractTask) selectedObject));
 			}
 		}
