@@ -43,6 +43,7 @@ import org.eclipse.mylyn.context.core.IInteractionRelation;
 import org.eclipse.mylyn.internal.context.ui.AbstractContextLabelProvider;
 import org.eclipse.mylyn.internal.context.ui.AbstractContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.ContentOutlineManager;
+import org.eclipse.mylyn.internal.context.ui.ContextHighlighterInitializer;
 import org.eclipse.mylyn.internal.context.ui.ContextPerspectiveManager;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylyn.internal.context.ui.FocusedViewerManager;
@@ -50,7 +51,6 @@ import org.eclipse.mylyn.internal.context.ui.Highlighter;
 import org.eclipse.mylyn.internal.context.ui.HighlighterList;
 import org.eclipse.mylyn.internal.context.ui.actions.ContextRetrieveAction;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
-import org.eclipse.mylyn.internal.tasks.ui.ITaskHighlighter;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.PlanningPerspectiveFactory;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
@@ -60,7 +60,6 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -237,18 +236,9 @@ public class ContextUiPlugin extends AbstractContextUiPlugin {
 			ContextCorePlugin.getContextManager().addListener(viewerManager);
 			MonitorUiPlugin.getDefault().addWindowPartListener(contentOutlineManager);
 
-			// NOTE: task list must have finished initializing	
-			TasksUiPlugin.getDefault().setHighlighter(new ITaskHighlighter() {
-				public Color getHighlightColor(AbstractTask task) {
-					Highlighter highlighter = getHighlighterForContextId("" + task.getHandleIdentifier());
-					if (highlighter != null) {
-						return highlighter.getHighlightColor();
-					} else {
-						return null;
-					}
-				}
-			});
-
+			// NOTE: can't init within this class because ..mylyn.tasks.ui activation will be triggered on activation
+			ContextHighlighterInitializer.init();
+			
 			TasksUiPlugin.getTaskListManager().addActivityListener(perspectiveManager);
 			MonitorUiPlugin.getDefault().addWindowPerspectiveListener(perspectiveManager);
 			TasksUiPlugin.getTaskListManager().addActivityListener(TASK_ACTIVATION_LISTENER);
