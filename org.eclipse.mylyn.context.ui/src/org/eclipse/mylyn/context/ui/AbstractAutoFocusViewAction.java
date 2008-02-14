@@ -32,6 +32,8 @@ import org.eclipse.ui.PlatformUI;
 public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewAction implements
 		IInteractionContextListener {
 
+	private boolean initialized = false;
+	
 	public AbstractAutoFocusViewAction(InterestFilter interestFilter, boolean manageViewer, boolean manageFilters,
 			boolean manageLinking) {
 		super(interestFilter, manageViewer, manageFilters, manageLinking);
@@ -57,6 +59,11 @@ public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewActio
 	}
 
 	private void configureAction() {
+		if (initialized) {
+			return;
+		}
+		initialized = true;
+
 		// can not run this until the view has been initialized
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {

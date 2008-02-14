@@ -431,12 +431,13 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 						toAdd.add(filter);
 					}
 				}
+				
 				toAdd.add(interestFilter);
 				viewer.setFilters(toAdd.toArray(new ViewerFilter[toAdd.size()]));
 			} else {
 				viewer.addFilter(interestFilter);
 			}
-
+			
 			if (viewer instanceof TreeViewer && !internalSuppressExpandAll) {
 				((TreeViewer) viewer).expandAll();
 			}
