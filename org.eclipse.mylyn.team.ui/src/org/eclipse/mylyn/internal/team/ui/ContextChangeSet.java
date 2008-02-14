@@ -102,7 +102,7 @@ public class ContextChangeSet extends CVSActiveChangeSet/*ActiveChangeSet*/imple
 	private String internalGetComment(boolean checkTaskRepository) {
 		String template = null;
 		Set<IProject> projects = new HashSet<IProject>();
-		IResource[] resources = getResources();
+		IResource[] resources = super.getResources();
 		for (IResource resource : resources) {
 			IProject project = resource.getProject();
 			if (project != null && project.isAccessible() && !projects.contains(project)) {
@@ -116,9 +116,9 @@ public class ContextChangeSet extends CVSActiveChangeSet/*ActiveChangeSet*/imple
 		}
 
 		boolean proceed = true;
-
+		
 		if (checkTaskRepository) {
-			boolean unmatchedRepositoryFound = false;
+			boolean unmatchedRepositoryFound = false; 
 			for (IProject project : projects) {
 				TaskRepository repository = TasksUiPlugin.getDefault().getRepositoryForResource(project, true);
 				if (repository != null) {
