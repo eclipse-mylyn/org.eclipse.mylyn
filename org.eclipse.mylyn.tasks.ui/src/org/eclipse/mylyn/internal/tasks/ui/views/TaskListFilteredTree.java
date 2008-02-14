@@ -182,6 +182,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			public void taskListRead() {
 			}
 		});
+		
 		return progressComposite;
 	}
 
@@ -252,11 +253,6 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			public void run() {
 				if (PlatformUI.isWorkbenchRunning() && !taskProgressBar.isDisposed()) {
 					taskProgressBar.reset(completeTime, (completeTime + incompleteTime));
-
-//					String workingSetName = "All";
-//					if (currentWorkingSet != null) {
-//						workingSetName = currentWorkingSet.getLabel();
-//					}
 
 					taskProgressBar.setToolTipText("Workweek Progress" + "\n     Estimated hours: " + completeTime
 							+ " of " + (completeTime + incompleteTime) + " estimated" + "\n     Scheduled tasks: "

@@ -27,6 +27,8 @@ public class AdaptiveRefreshPolicy {
 	private Set<IFilteredTreeListener> listeners = new HashSet<IFilteredTreeListener>();
 
 	private Text filterText = null;
+	
+	private String oldText = "";
 
 	protected Job refreshJob;
 
@@ -81,9 +83,10 @@ public class AdaptiveRefreshPolicy {
 	};
 
 	public void textChanged(String text) {
-		if (refreshJob == null) {
-			return; 
+		if (refreshJob == null || (oldText != null && oldText.equals(filterText.getText()))) {
+			return;
 		}
+		
 		refreshJob.cancel();
 		int refreshDelay = 0;
 		int textLength = text.length();
@@ -92,6 +95,8 @@ public class AdaptiveRefreshPolicy {
 		}
 		refreshJob.addJobChangeListener(REFRESH_JOB_LISTENER);
 		refreshJob.schedule(refreshDelay);
+		
+		oldText = filterText.getText();
 	}
 
 	public void addListener(IFilteredTreeListener listener) {

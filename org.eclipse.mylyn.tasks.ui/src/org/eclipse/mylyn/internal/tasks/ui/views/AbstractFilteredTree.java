@@ -80,15 +80,16 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 	@Override
 	protected Control createTreeControl(Composite parent, int style) {
 		progressComposite = createProgressComposite(parent);
-		progressComposite.setVisible(false);
-		((GridData) progressComposite.getLayoutData()).exclude = true;
-
+//		progressComposite.setVisible(false);
+//		((GridData) progressComposite.getLayoutData()).exclude = true;
+		
 		searchComposite = createSearchComposite(parent);
 		if (searchComposite != null) {
 			searchComposite.setVisible(false);
 			((GridData) searchComposite.getLayoutData()).exclude = true;
 		}
 
+		
 		return super.createTreeControl(parent, style);
 	}
 
@@ -185,6 +186,7 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 		updateToolbar(true);
 	}
 
+	@Deprecated
 	protected Job getRefreshJob() {
 		return refreshJob;
 	}
