@@ -26,3 +26,4 @@ Require-Bundle: org.junit,
  org.eclipse.mylyn.context.ui,
  org.eclipse.team.cvs.core
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Export-Package: org.eclipse.mylyn.team.tests
