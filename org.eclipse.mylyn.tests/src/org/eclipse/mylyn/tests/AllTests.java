@@ -20,6 +20,7 @@ import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.monitor.tests.AllMonitorTests;
 import org.eclipse.mylyn.resources.tests.AllResourcesTests;
 import org.eclipse.mylyn.tasks.tests.AllTasksTests;
+import org.eclipse.mylyn.team.tests.AllTeamTests;
 import org.eclipse.mylyn.tests.integration.AllIntegrationTests;
 import org.eclipse.mylyn.tests.integration.TestingStatusNotifier;
 import org.eclipse.mylyn.tests.misc.AllMiscTests;
@@ -46,6 +47,7 @@ public class AllTests {
 		suite.addTest(AllIdeTests.suite());
 		suite.addTest(AllTasksTests.suite());
 		suite.addTest(AllResourcesTests.suite());
+		suite.addTest(AllTeamTests.suite());
 		suite.addTest(AllBugzillaTests.suite());
 		suite.addTest(AllMiscTests.suite());
 		suite.addTest(AllJiraTests.suite());
