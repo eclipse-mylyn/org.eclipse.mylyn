@@ -1027,11 +1027,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	};
 
 	private void initDragAndDrop(Composite parent) {
-		Transfer[] dragTypes = new Transfer[] { TaskTransfer.getInstance(), TextTransfer.getInstance(),
-				FileTransfer.getInstance() };
+		Transfer[] dragTypes = new Transfer[] { TaskTransfer.getInstance(), FileTransfer.getInstance() };
 
-		Transfer[] dropTypes = new Transfer[] { TaskTransfer.getInstance(), TextTransfer.getInstance(),
-				FileTransfer.getInstance(), // PluginTransfer.getInstance(),
+		Transfer[] dropTypes = new Transfer[] { TaskTransfer.getInstance(), FileTransfer.getInstance(), TextTransfer.getInstance(),
 				RTFTransfer.getInstance() };
 
 		getViewer().addDragSupport(DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK, dragTypes,
