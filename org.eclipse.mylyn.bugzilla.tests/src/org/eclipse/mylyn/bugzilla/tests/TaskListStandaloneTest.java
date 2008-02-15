@@ -80,7 +80,7 @@ public class TaskListStandaloneTest extends TestCase {
 
 		task.setScheduledForDate(new Date(now - 1000));
 		task.setCompleted(true);
-		assertTrue(task.isPastReminder());
+		assertFalse(task.isPastReminder());
 	}
 
 	public void testDates() {

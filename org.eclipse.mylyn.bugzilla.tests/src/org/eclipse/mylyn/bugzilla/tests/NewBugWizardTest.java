@@ -14,10 +14,12 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttributeFactory;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaReportElement;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Mik Kersten
@@ -32,7 +34,12 @@ public class NewBugWizardTest extends TestCase {
 
 		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_220_URL);
-		BugzillaRepositoryConnector.setupNewBugAttributes(repository, newReport);
+		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+				repository.getConnectorKind());
+		assertNotNull(connector);
+		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+		assertNotNull(taskDataHandler);
+		taskDataHandler.initializeTaskData(repository, newReport, null);
 		BugzillaCorePlugin.getDefault().setPlatformOptions(newReport);
 
 		String os = Platform.getOS();

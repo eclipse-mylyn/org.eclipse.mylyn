@@ -40,7 +40,6 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaReportElement;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
@@ -48,6 +47,7 @@ import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -394,7 +394,19 @@ public class BugzillaProductPage extends WizardPage {
 		RepositoryTaskData model = bugWizard.taskData;
 		model.setAttributeValue(BugzillaReportElement.PRODUCT.getKeyString(),
 				(String) ((IStructuredSelection) productList.getViewer().getSelection()).getFirstElement());
-		BugzillaRepositoryConnector.setupNewBugAttributes(repository, model);
+		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+				repository.getConnectorKind());
+		if (connector == null) {
+			throw new CoreException(new Status(Status.ERROR, BugzillaUiPlugin.PLUGIN_ID,
+					"Error AbstractRepositoryConnector could not been retrieved.\n\n"));
+		}
+		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+		if (taskDataHandler == null) {
+			throw new CoreException(new Status(Status.ERROR, BugzillaUiPlugin.PLUGIN_ID,
+					"Error AbstractTaskDataHandler could not been retrieved.\n\n"));
+		}
+		taskDataHandler.initializeTaskData(repository, model, null);
+
 		// platform/os are now set to All/All
 		BugzillaCorePlugin.getDefault().setPlatformDefaultsOrGuess(repository, model);
 	}

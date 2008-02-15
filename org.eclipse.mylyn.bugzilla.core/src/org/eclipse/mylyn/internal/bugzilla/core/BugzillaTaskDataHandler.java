@@ -9,7 +9,10 @@
 package org.eclipse.mylyn.internal.bugzilla.core;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -181,7 +184,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 	}
 
 	public void configureTaskData(TaskRepository repository, RepositoryTaskData taskData) throws CoreException {
-		connector.updateAttributeOptions(repository, taskData);
+		updateAttributeOptions(repository, taskData);
 		addValidOperations(taskData, repository.getUserName(), repository);
 	}
 
@@ -313,9 +316,136 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 	@Override
 	public boolean initializeTaskData(TaskRepository repository, RepositoryTaskData data, IProgressMonitor monitor)
-			throws CoreException {
-		// Bugzilla needs a product to create task data
-		return false;
+	throws CoreException {
+
+		if (data == null)
+			return false;
+		String product = data.getProduct();
+		if (product.equals("")) {
+			// Bugzilla needs a product to create task data
+			// If I see it right the product is never an empty String.
+			// but to be save I return false as before bug# 213077
+			return false;
+		}
+		data.removeAllAttributes();
+
+		RepositoryConfiguration repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository,
+				false);
+
+		RepositoryTaskAttribute a = BugzillaClient.makeNewAttribute(BugzillaReportElement.PRODUCT);
+		List<String> optionValues = repositoryConfiguration.getProducts();
+		Collections.sort(optionValues);
+		a.setValue(product);
+		a.setReadOnly(true);
+
+		data.addAttribute(BugzillaReportElement.PRODUCT.getKeyString(), a);
+
+		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.BUG_STATUS);
+		optionValues = repositoryConfiguration.getStatusValues();
+		for (String option : optionValues) {
+			a.addOption(option, option);
+		}
+		a.setValue(IBugzillaConstants.VALUE_STATUS_NEW);
+
+		data.addAttribute(BugzillaReportElement.BUG_STATUS.getKeyString(), a);
+
+		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.SHORT_DESC);
+		data.addAttribute(BugzillaReportElement.SHORT_DESC.getKeyString(), a);
+
+		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.VERSION);
+		optionValues = repositoryConfiguration.getVersions(data.getProduct());
+		Collections.sort(optionValues);
+		for (String option : optionValues) {
+			a.addOption(option, option);
+		}
+		if (optionValues.size() > 0) {
+			a.setValue(optionValues.get(optionValues.size() - 1));
+		}
+
+		data.addAttribute(BugzillaReportElement.VERSION.getKeyString(), a);
+
+		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.COMPONENT);
+		optionValues = repositoryConfiguration.getComponents(data.getProduct());
+		Collections.sort(optionValues);
+		for (String option : optionValues) {
+			a.addOption(option, option);
+		}
+		if (optionValues.size() == 1) {
+			a.setValue(optionValues.get(0));
+		}
+
+		data.addAttribute(BugzillaReportElement.COMPONENT.getKeyString(), a);
+
+		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.REP_PLATFORM);
+		optionValues = repositoryConfiguration.getPlatforms();
+		for (String option : optionValues) {
+			a.addOption(option, option);
+		}
+		if (optionValues.size() > 0) {
+			// bug 159397 choose first platform: All
+			a.setValue(optionValues.get(0));
+		}
+
+		data.addAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString(), a);
+
+		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.OP_SYS);
+		optionValues = repositoryConfiguration.getOSs();
+		for (String option : optionValues) {
+			a.addOption(option, option);
+		}
+		if (optionValues.size() > 0) {
+			// bug 159397 change to choose first op_sys All
+			a.setValue(optionValues.get(0));
+		}
+
+		data.addAttribute(BugzillaReportElement.OP_SYS.getKeyString(), a);
+
+		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.PRIORITY);
+		optionValues = repositoryConfiguration.getPriorities();
+		for (String option : optionValues) {
+			a.addOption(option, option);
+		}
+		if (optionValues.size() > 0) {
+			a.setValue(optionValues.get((optionValues.size() / 2))); // choose middle priority
+		}
+
+		data.addAttribute(BugzillaReportElement.PRIORITY.getKeyString(), a);
+
+		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.BUG_SEVERITY);
+		optionValues = repositoryConfiguration.getSeverities();
+		for (String option : optionValues) {
+			a.addOption(option, option);
+		}
+		if (optionValues.size() > 0) {
+			a.setValue(optionValues.get((optionValues.size() / 2))); // choose middle severity
+		}
+
+		data.addAttribute(BugzillaReportElement.BUG_SEVERITY.getKeyString(), a);
+
+		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.ASSIGNED_TO);
+		a.setValue("");
+		a.setReadOnly(false);
+
+		data.addAttribute(BugzillaReportElement.ASSIGNED_TO.getKeyString(), a);
+
+		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.BUG_FILE_LOC);
+		a.setValue("http://");
+		a.setHidden(false);
+
+		data.addAttribute(BugzillaReportElement.BUG_FILE_LOC.getKeyString(), a);
+		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.DEPENDSON);
+		a.setValue("");
+		a.setReadOnly(false);
+		data.addAttribute(BugzillaReportElement.DEPENDSON.getKeyString(), a);
+		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.BLOCKED);
+		a.setValue("");
+		a.setReadOnly(false);
+		data.addAttribute(BugzillaReportElement.BLOCKED.getKeyString(), a);
+		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.NEWCC);
+		a.setValue("");
+		a.setReadOnly(false);
+		data.addAttribute(BugzillaReportElement.NEWCC.getKeyString(), a);
+		return true;
 	}
 
 	// TODO: Move to AbstractTaskDataHandler
@@ -346,7 +476,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			RepositoryTaskData parentTaskData, IProgressMonitor monitor) throws CoreException {
 		String project = parentTaskData.getProduct();
 		taskData.setAttributeValue(RepositoryTaskAttribute.PRODUCT, project);
-		BugzillaRepositoryConnector.setupNewBugAttributes(taskRepository, taskData);
+		initializeTaskData(taskRepository, taskData, monitor);
 		cloneTaskData(parentTaskData, taskData);
 		taskData.setAttributeValue(BugzillaReportElement.BLOCKED.getKeyString(), parentTaskData.getId());
 		taskData.setAttributeValue(RepositoryTaskAttribute.USER_ASSIGNED, parentTaskData.getAssignedTo());
@@ -358,6 +488,41 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 	@Override
 	public boolean canInitializeSubTaskData(AbstractTask task, RepositoryTaskData parentTaskData) {
 		return true;
+	}
+
+	public void updateAttributeOptions(TaskRepository taskRepository, RepositoryTaskData existingReport)
+			throws CoreException {
+		String product = existingReport.getAttributeValue(BugzillaReportElement.PRODUCT.getKeyString());
+		for (RepositoryTaskAttribute attribute : existingReport.getAttributes()) {
+			BugzillaReportElement element = BugzillaReportElement.valueOf(attribute.getId().trim().toUpperCase(
+					Locale.ENGLISH));
+			attribute.clearOptions();
+			List<String> optionValues = BugzillaCorePlugin.getRepositoryConfiguration(taskRepository, false)
+					.getOptionValues(element, product);
+			if (element != BugzillaReportElement.OP_SYS && element != BugzillaReportElement.BUG_SEVERITY
+					&& element != BugzillaReportElement.PRIORITY && element != BugzillaReportElement.BUG_STATUS) {
+				Collections.sort(optionValues);
+			}
+			if (element == BugzillaReportElement.TARGET_MILESTONE && optionValues.isEmpty()) {
+	
+				existingReport.removeAttribute(BugzillaReportElement.TARGET_MILESTONE);
+				continue;
+			}
+			attribute.clearOptions();
+			for (String option : optionValues) {
+				attribute.addOption(option, option);
+			}
+	
+			// TODO: bug#162428, bug#150680 - something along the lines of...
+			// but must think about the case of multiple values selected etc.
+			// if(attribute.hasOptions()) {
+			// if(!attribute.getOptionValues().containsKey(attribute.getValue()))
+			// {
+			// // updateAttributes()
+			// }
+			// }
+		}
+	
 	}
 
 }

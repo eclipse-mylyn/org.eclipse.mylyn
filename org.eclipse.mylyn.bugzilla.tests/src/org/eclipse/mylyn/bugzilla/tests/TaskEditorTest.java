@@ -12,8 +12,10 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttributeFactory;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -59,7 +61,12 @@ public class TaskEditorTest extends TestCase {
 				BugzillaCorePlugin.REPOSITORY_KIND, repository.getUrl(), TasksUiPlugin.getTaskDataManager()
 						.getNewRepositoryTaskId());
 		model.setNew(true);
-		BugzillaRepositoryConnector.setupNewBugAttributes(repository, model);
+		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+				repository.getConnectorKind());
+		assertNotNull(connector);
+		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+		assertNotNull(taskDataHandler);
+		taskDataHandler.initializeTaskData(repository, model, null);
 		NewTaskEditorInput editorInput = new NewTaskEditorInput(repository, model);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		TasksUiUtil.openEditor(editorInput, TaskEditor.ID_EDITOR, page);
@@ -76,4 +83,25 @@ public class TaskEditorTest extends TestCase {
 		// editor.doSave(new NullProgressMonitor());
 	}
 
+ public void testinitializeTaskData() throws Exception {
+		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND,
+				IBugzillaConstants.TEST_BUGZILLA_222_URL);
+
+
+		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(),
+				BugzillaCorePlugin.REPOSITORY_KIND, repository.getUrl(), TasksUiPlugin.getTaskDataManager()
+						.getNewRepositoryTaskId());
+		model.setNew(true);
+		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+				repository.getConnectorKind());
+		assertNotNull(connector);
+		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+		assertNotNull(taskDataHandler);
+		assertFalse(taskDataHandler.initializeTaskData(repository, null, null));
+		assertFalse(taskDataHandler.initializeTaskData(repository, model, null));
+		model.setAttributeValue(RepositoryTaskAttribute.PRODUCT, "TestProduct");
+		assertEquals("TestProduct", model.getProduct());
+		assertTrue(taskDataHandler.initializeTaskData(repository, model, null));
+	
+	}
 }
