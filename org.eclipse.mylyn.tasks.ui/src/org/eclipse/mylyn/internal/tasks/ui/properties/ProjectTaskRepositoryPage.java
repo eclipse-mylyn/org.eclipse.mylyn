@@ -19,6 +19,7 @@ import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AddRepositoryAction;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesSorter;
@@ -117,8 +118,10 @@ public class ProjectTaskRepositoryPage extends PropertyPage {
 		});
 		updateLinkedRepository();
 
+		// TODO this code was copied from SelectRepositoryPage
 		final AddRepositoryAction action = new AddRepositoryAction();
-
+		action.setPromptToAddQuery(false);
+		
 		Button button = new Button(composite, SWT.NONE);
 		button.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING));
 		button.setText(AddRepositoryAction.TITLE);
@@ -126,10 +129,13 @@ public class ProjectTaskRepositoryPage extends PropertyPage {
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				action.run();
-				listViewer.setInput(project.getWorkspace());
-				updateLinkedRepository();
-			}
+				TaskRepository taskRepository = action.showWizard();
+				if (taskRepository != null) {
+					listViewer.setInput(project.getWorkspace());
+					listViewer.setSelection(new StructuredSelection(taskRepository));
+					updateLinkedRepository();
+				}
+			}	
 		});
 
 		return composite;

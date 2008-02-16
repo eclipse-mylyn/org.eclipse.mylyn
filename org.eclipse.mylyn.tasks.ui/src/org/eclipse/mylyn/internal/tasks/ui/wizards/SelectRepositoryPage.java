@@ -117,6 +117,7 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 		table.setLayoutData(gridData);
 
 		final AddRepositoryAction action = new AddRepositoryAction();
+		action.setPromptToAddQuery(false);
 
 		Button button = new Button(container, SWT.NONE);
 		button.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING));
@@ -125,9 +126,12 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				action.run();
-				SelectRepositoryPage.this.repositories = getTaskRepositories();
-				viewer.setInput(TasksUiPlugin.getRepositoryManager().getRepositoryConnectors());
+				TaskRepository taskRepository = action.showWizard();
+				if (taskRepository != null) {
+					SelectRepositoryPage.this.repositories = getTaskRepositories();
+					viewer.setInput(TasksUiPlugin.getRepositoryManager().getRepositoryConnectors());
+					viewer.setSelection(new StructuredSelection(taskRepository));
+				}
 			}
 		});
 		
