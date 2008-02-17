@@ -83,7 +83,7 @@ public class AdaptiveRefreshPolicy {
 	};
 
 	public void textChanged(String text) {
-		if (refreshJob == null || (oldText != null && oldText.equals(filterText.getText()))) {
+		if (refreshJob == null || (oldText != null && oldText.equals(text))) {
 			return;
 		}
 		
@@ -96,7 +96,7 @@ public class AdaptiveRefreshPolicy {
 		refreshJob.addJobChangeListener(REFRESH_JOB_LISTENER);
 		refreshJob.schedule(refreshDelay);
 		
-		oldText = filterText.getText();
+		oldText = text;
 	}
 
 	public void addListener(IFilteredTreeListener listener) {

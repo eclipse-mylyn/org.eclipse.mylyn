@@ -49,7 +49,7 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 	private Composite searchComposite;
 
 	private boolean showProgress = false;
-	
+
 	/**
 	 * XXX: using reflection to gain access
 	 */
@@ -82,14 +82,13 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 		progressComposite = createProgressComposite(parent);
 //		progressComposite.setVisible(false);
 //		((GridData) progressComposite.getLayoutData()).exclude = true;
-		
+
 		searchComposite = createSearchComposite(parent);
 		if (searchComposite != null) {
 			searchComposite.setVisible(false);
 			((GridData) searchComposite.getLayoutData()).exclude = true;
 		}
 
-		
 		return super.createTreeControl(parent, style);
 	}
 
@@ -179,6 +178,12 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 
 	@Override
 	protected void textChanged() {
+		// this call allows the filtered tree to preserve the selection when the clear button is used.
+		// It is necessary to correctly set the private narrowingDown flag in the super class. 
+		// Note that the scheduling of the refresh job that is done in the super class will be overridden 
+		// by the call to refreshPolicy.textChanged().
+		super.textChanged();
+
 		if (refreshPolicy != null) {
 			refreshPolicy.textChanged(filterText.getText());
 		}
