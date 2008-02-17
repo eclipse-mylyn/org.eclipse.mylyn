@@ -22,14 +22,19 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.NewTaskEditorInput;
@@ -66,6 +71,17 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 			return;
 		}
 
+		if (selectedTask instanceof LocalTask) {
+			// XXX code copied from NewLocalTaskWizard.performFinish() and TaskListManager.createNewLocalTask()
+			TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+			LocalTask newTask = new LocalTask("" + taskList.getNextLocalTaskId(), LocalRepositoryConnector.DEFAULT_SUMMARY);
+			newTask.setPriority(PriorityLevel.P3.toString());
+			TasksUiPlugin.getTaskActivityManager().scheduleNewTask(newTask);
+			taskList.addTask(newTask, selectedTask);
+			TasksUiUtil.openEditor(newTask, true);
+			return;
+		}
+		
 		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 				selectedTask.getConnectorKind());
 		final AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
@@ -137,7 +153,11 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 		selectedTask = null;
 		if (selection instanceof StructuredSelection) {
 			Object selectedObject = ((StructuredSelection) selection).getFirstElement();
-			if (selectedObject instanceof AbstractTask) {
+			if (selectedObject instanceof LocalTask) {
+				if (TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(TasksUiPreferenceConstants.LOCAL_SUB_TASKS_ENABLED)) {			
+					selectedTask = (AbstractTask) selectedObject;
+				}
+			} else if (selectedObject instanceof AbstractTask) {
 				selectedTask = (AbstractTask) selectedObject;
 
 				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(

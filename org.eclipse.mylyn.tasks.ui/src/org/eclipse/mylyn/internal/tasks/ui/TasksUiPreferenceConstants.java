@@ -63,4 +63,6 @@ public final class TasksUiPreferenceConstants {
 
 	public static final String TEMPLATES_DELETED_DELIM = "|";
 
+	public static final String LOCAL_SUB_TASKS_ENABLED = "org.eclipse.mylyn.tasks.ui.subtasks.local";
+
 }
