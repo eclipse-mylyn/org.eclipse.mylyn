@@ -18,7 +18,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.GoToUnreadTaskAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskReadAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskUnreadAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ShowTooltipAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.GoToUnreadTaskAction.Direction;
+import org.eclipse.mylyn.internal.tasks.ui.util.TreeWalker.Direction;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.handlers.IHandlerService;

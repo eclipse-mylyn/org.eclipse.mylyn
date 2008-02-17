@@ -14,11 +14,17 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.TreePath;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.mylyn.internal.tasks.ui.util.TreeWalker;
+import org.eclipse.mylyn.internal.tasks.ui.util.TreeWalker.TreeVisitor;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWTException;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.progress.WorkbenchJob;
 
 /**
@@ -83,7 +89,28 @@ abstract class DelayedRefreshJob extends WorkbenchJob {
 			scheduleTime = NOT_SCHEDULED;
 		}
 
+		// in case the refresh removes the currently selected item, 
+		// remember the next item in the tree to restore the selection
+		TreeItem[] selection = treeViewer.getTree().getSelection();
+		TreePath treePath = null;
+		if (selection.length > 0) {
+			TreeWalker treeWalker = new TreeWalker(treeViewer);
+			treePath  = treeWalker.walk(new TreeVisitor() {
+				@Override
+				public boolean visit(Object object) {
+					return true;
+				}				
+			}, selection[selection.length - 1]);
+		}
+				
 		refresh(items);
+
+		if (treePath != null) {
+			ISelection newSelection = treeViewer.getSelection();
+			if (newSelection == null || newSelection.isEmpty()) {
+				treeViewer.setSelection(new TreeSelection(treePath), true);
+			}
+		}
 
 		return Status.OK_STATUS;
 	}
