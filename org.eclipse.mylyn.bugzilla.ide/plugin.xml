@@ -85,7 +85,7 @@
             pluginIdPrefix="org.eclipse"
             >
          <attributes>
-            repository=https://bugs.eclipse.org/bugs;repositoryKind=bugzilla
+            repository=https://bugs.eclipse.org/bugs;repositoryKind=bugzilla;branding=Eclipse
          </attributes>
       </mapping>
       <mapping
@@ -93,18 +93,6 @@
             >
          <attributes>
             product=Mylyn;branding=Eclipse Mylyn
-         </attributes>
-      </mapping>
-      <mapping
-            pluginIdPrefix="org.eclipse.pde">
-         <attributes>
-            product=PDE
-         </attributes>
-      </mapping>
-      <mapping
-            pluginIdPrefix="org.eclipse.help">
-         <attributes>
-            product=Platform;component=User Assistance
          </attributes>
       </mapping>
    </extension>

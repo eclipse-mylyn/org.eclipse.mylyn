@@ -18,6 +18,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.IBundleGroup;
 import org.eclipse.core.runtime.IBundleGroupProvider;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
@@ -48,6 +49,8 @@ import org.eclipse.ui.branding.IBundleGroupConstants;
  * @author Steffen Pingel
  */
 public class SelectProductPage extends WizardPage {
+
+	private static final int TABLE_HEIGHT = IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH;
 
 	/**
 	 * A container for bundles that map to the same name.
@@ -88,6 +91,10 @@ public class SelectProductPage extends WizardPage {
 			return name;
 		}
 
+		public boolean requiresSelection() {
+			return groups.size() > 1;
+		}
+		
 	}
 
 	private ImageRegistry imageRegistry;
@@ -104,11 +111,11 @@ public class SelectProductPage extends WizardPage {
 
 	@Override
 	public boolean canFlipToNextPage() {
-		return selectedBundleGroupContainer != null && selectedBundleGroupContainer.getGroups().size() > 1;
+		return selectedBundleGroupContainer != null && selectedBundleGroupContainer.requiresSelection();
 	}
 
 	public void createControl(Composite parent) {
-		Composite composite = new Composite(parent, SWT.NULL);
+		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout(1, true);
 		composite.setLayout(layout);
 
@@ -117,7 +124,7 @@ public class SelectProductPage extends WizardPage {
 		final Map<String, BundleGroupContainer> containerByName = getProducts();
 
 		TableViewer viewer = new TableViewer(composite, SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(viewer.getControl());
+		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).hint(SWT.DEFAULT, TABLE_HEIGHT).applyTo(viewer.getControl());
 		viewer.setContentProvider(new IStructuredContentProvider() {
 
 			public void dispose() {
@@ -159,8 +166,14 @@ public class SelectProductPage extends WizardPage {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 				if (selection.getFirstElement() instanceof BundleGroupContainer) {
 					selectedBundleGroupContainer = (BundleGroupContainer) selection.getFirstElement();
+					if (selectedBundleGroupContainer.requiresSelection()) {
+						setMessage(null);
+					} else {
+						setMessage(selectedBundleGroupContainer.getDisplayGroup().getDescription());
+					}
 					setPageComplete(true);
 				} else {
+					setMessage(null);
 					setPageComplete(false);
 				}
 			}

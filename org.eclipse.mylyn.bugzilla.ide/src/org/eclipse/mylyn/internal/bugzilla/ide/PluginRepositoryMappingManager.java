@@ -53,7 +53,7 @@ public class PluginRepositoryMappingManager {
 				KeyValueParser parser = new KeyValueParser(repositoryAttributes);
 				attributes = parser.parse();
 			} catch (ParseException e) {
-				StatusHandler.log(new Status(IStatus.WARNING, IBugzillaIdeConstants.ID_PLUGIN,
+				StatusHandler.log(new Status(IStatus.WARNING, BugzillaIdePlugin.ID_PLUGIN,
 						"Invalid attributes in extension.", e));
 				return;
 			}
@@ -65,7 +65,7 @@ public class PluginRepositoryMappingManager {
 			pluginRepositoryMapping.addPrefix(pluginIdPrefix);
 			addPluginRepositoryMapping(pluginRepositoryMapping);
 		} else {
-			StatusHandler.log(new Status(IStatus.ERROR, IBugzillaIdeConstants.ID_PLUGIN,
+			StatusHandler.log(new Status(IStatus.ERROR, BugzillaIdePlugin.ID_PLUGIN,
 					"Missing attributes in extension."));			
 		}
 	}

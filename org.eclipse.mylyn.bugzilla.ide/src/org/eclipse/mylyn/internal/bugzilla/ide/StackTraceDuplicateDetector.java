@@ -49,7 +49,7 @@ public class StackTraceDuplicateDetector extends AbstractDuplicateDetector {
 			queryUrl = repository.getUrl() + "/buglist.cgi?long_desc_type=allwordssubstr&long_desc="
 					+ URLEncoder.encode(searchString, repository.getCharacterEncoding());
 		} catch (UnsupportedEncodingException e) {
-			StatusHandler.log(new Status(IStatus.WARNING, IBugzillaIdeConstants.ID_PLUGIN, "Error during duplicate detection", e));
+			StatusHandler.log(new Status(IStatus.WARNING, BugzillaIdePlugin.ID_PLUGIN, "Error during duplicate detection", e));
 			return null;
 		}
 

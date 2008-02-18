@@ -19,3 +19,5 @@ Export-Package: org.eclipse.mylyn.bugzilla.ide,
  org.eclipse.mylyn.internal.bugzilla.ide.actions,
  org.eclipse.mylyn.internal.bugzilla.ide.wizards
 Bundle-Localization: plugin
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: org.eclipse.mylyn.internal.bugzilla.ide.BugzillaIdePlugin

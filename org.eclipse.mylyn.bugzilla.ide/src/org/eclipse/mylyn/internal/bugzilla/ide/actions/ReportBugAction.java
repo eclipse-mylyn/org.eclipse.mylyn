@@ -11,7 +11,10 @@ package org.eclipse.mylyn.internal.bugzilla.ide.actions;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.mylyn.internal.bugzilla.ide.BugzillaIdePlugin;
+import org.eclipse.mylyn.internal.bugzilla.ide.IBugzillaIdeConstants;
 import org.eclipse.mylyn.internal.bugzilla.ide.wizards.ReportBugWizard;
+import org.eclipse.mylyn.internal.tasks.ui.actions.NewTaskAction;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
@@ -30,11 +33,15 @@ public class ReportBugAction implements IWorkbenchWindowActionDelegate {
 	}
 
 	public void run(IAction action) {
-		WizardDialog dialog = new WizardDialog(window.getShell(), new ReportBugWizard());
-		dialog.open();
+		if (BugzillaIdePlugin.getDefault().getPluginPreferences().getBoolean(IBugzillaIdeConstants.ENHANCED_BUG_REPORTING)) {
+			WizardDialog dialog = new WizardDialog(window.getShell(), new ReportBugWizard());
+			dialog.open();
+		} else {
+			new NewTaskAction().run(action);
+		}
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
-		// ignore		
+		// ignore
 	}
 }

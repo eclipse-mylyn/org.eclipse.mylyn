@@ -12,6 +12,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.core.runtime.IBundleGroup;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
@@ -38,6 +39,8 @@ import org.eclipse.ui.branding.IBundleGroupConstants;
  * @author Steffen Pingel
  */
 public class SelectFeaturePage extends WizardPage {
+
+	private static final int TABLE_HEIGHT = IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH;
 
 	private IBundleGroup selectedBundleGroup;
 
@@ -71,7 +74,7 @@ public class SelectFeaturePage extends WizardPage {
 		}
 
 		TableViewer viewer = new TableViewer(container, SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(viewer.getControl());
+		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).hint(SWT.DEFAULT, TABLE_HEIGHT).applyTo(viewer.getControl());
 		viewer.setContentProvider(new IStructuredContentProvider() {
 
 			public Object[] getElements(Object inputElement) {
@@ -113,8 +116,10 @@ public class SelectFeaturePage extends WizardPage {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 				if (selection.getFirstElement() instanceof IBundleGroup) {
 					selectedBundleGroup = (IBundleGroup) selection.getFirstElement();
+					setMessage(selectedBundleGroup.getDescription());
 					setPageComplete(true);
 				} else {
+					setMessage(null);
 					setPageComplete(false);
 				}
 			}

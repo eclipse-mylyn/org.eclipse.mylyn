@@ -14,6 +14,6 @@ package org.eclipse.mylyn.internal.bugzilla.ide;
  */
 public interface IBugzillaIdeConstants {
 
-	public static final String ID_PLUGIN = "org.eclipse.mylyn.bugzilla.ide";
+	public static final String ENHANCED_BUG_REPORTING = "org.eclipse.mylyn.bugzilla.ide.reportbug.enhanced";
 	
 }
