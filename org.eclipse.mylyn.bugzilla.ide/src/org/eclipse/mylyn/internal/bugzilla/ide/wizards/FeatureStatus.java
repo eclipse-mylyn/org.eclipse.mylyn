@@ -6,21 +6,26 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.bugzilla.ide;
+package org.eclipse.mylyn.internal.bugzilla.ide.wizards;
+
+import org.eclipse.core.runtime.IBundleGroup;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 
 /**
  * @author Steffen Pingel
  */
-public class IRepositoryConstants {
+public class FeatureStatus extends Status {
 
-	public static final String REPOSITORY = "repository"; 
+	private final IBundleGroup bundleGroup;
 
-	public static final String REPOSITORY_KIND = "repositoryKind"; 
+	public FeatureStatus(IBundleGroup bundleGroup) {
+		super(IStatus.INFO, bundleGroup.getIdentifier(), "");
+		this.bundleGroup = bundleGroup;
+	}
 
-	public static final String COMPONENT = "component";
-	
-	public static final String PRODUCT = "product";
-	
-	public static final String BRANDING = "branding";
+	public IBundleGroup getBundleGroup() {
+		return bundleGroup;
+	}
 	
 }

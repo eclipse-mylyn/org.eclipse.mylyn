@@ -3,7 +3,7 @@
 <schema targetNamespace="org.eclipse.mylyn.bugzilla.ide" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appinfo>
-         <meta.schema plugin="org.eclipse.mylyn.bugzilla.ide" id="pluginRepositoryMappings" name="Plug-in to Repository Mappings"/>
+         <meta.schema plugin="org.eclipse.mylyn.bugzilla.ide" id="taskContributors" name="Task Contributors"/>
       </appinfo>
       <documentation>
          [Enter description of this extension point.]
@@ -12,9 +12,6 @@
 
    <element name="extension">
       <complexType>
-         <sequence>
-            <element ref="mapping" minOccurs="1" maxOccurs="unbounded"/>
-         </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
                <documentation>
@@ -42,22 +39,26 @@
       </complexType>
    </element>
 
-   <element name="mapping">
+   <element name="contributor">
       <complexType>
-         <sequence>
-            <element ref="attributes"/>
-         </sequence>
-         <attribute name="pluginIdPrefix" type="string" use="required">
+         <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
                   
                </documentation>
             </annotation>
          </attribute>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java"/>
+               </appinfo>
+            </annotation>
+         </attribute>
       </complexType>
-   </element>
-
-   <element name="attributes" type="string">
    </element>
 
    <annotation>
@@ -80,13 +81,12 @@
 
    <annotation>
       <appinfo>
-         <meta.section type="apiInfo"/>
+         <meta.section type="apiinfo"/>
       </appinfo>
       <documentation>
          [Enter API information here.]
       </documentation>
    </annotation>
-
 
    <annotation>
       <appinfo>

@@ -6,21 +6,22 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.bugzilla.ide;
+package org.eclipse.mylyn.bugzilla.ide;
+
+import java.util.Map;
+
+import org.eclipse.core.runtime.IStatus;
 
 /**
+ * Note: This API is likely to change for 3.0.
+ * 
  * @author Steffen Pingel
+ * @since 2.3
  */
-public class IRepositoryConstants {
+public abstract class AbstractTaskContributor {
 
-	public static final String REPOSITORY = "repository"; 
-
-	public static final String REPOSITORY_KIND = "repositoryKind"; 
-
-	public static final String COMPONENT = "component";
-	
-	public static final String PRODUCT = "product";
-	
-	public static final String BRANDING = "branding";
+	public abstract Map<String, String> getAttributes(IStatus status);
+		
+	public abstract String getDescription(IStatus status);
 	
 }

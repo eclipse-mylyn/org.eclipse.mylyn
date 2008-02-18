@@ -11,10 +11,11 @@ Require-Bundle: org.eclipse.mylyn.tasks.core,
  org.eclipse.ui.views.log,
  org.eclipse.core.runtime,
  org.eclipse.ui.ide
-Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
 Bundle-ClassPath: .
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: org.eclipse.mylyn.internal.bugzilla.ide,
- org.eclipse.mylyn.internal.bugzilla.ide.actions
+Export-Package: org.eclipse.mylyn.bugzilla.ide,
+ org.eclipse.mylyn.internal.bugzilla.ide,
+ org.eclipse.mylyn.internal.bugzilla.ide.actions,
+ org.eclipse.mylyn.internal.bugzilla.ide.wizards
 Bundle-Localization: plugin
