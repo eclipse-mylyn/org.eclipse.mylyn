@@ -92,6 +92,10 @@ public class TaskListNotificationPopup extends AbstractNotificationPopup {
 						if (window != null) {
 							Shell windowShell = window.getShell();
 							if (windowShell != null) {
+								if (windowShell.getMinimized()) {
+									windowShell.setMinimized(false);
+								}
+
 								windowShell.open();
 								windowShell.forceActive();
 							}
