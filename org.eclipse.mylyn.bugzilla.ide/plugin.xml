@@ -3,24 +3,7 @@
 <plugin>
    <extension-point id="pluginRepositoryMappings" name="Plug-in to Repository Mappings" schema="schema/pluginRepositoryMappings.exsd"/>
    <extension-point id="taskContributors" name="Task Contributors" schema="schema/taskContributors.exsd"/>
-
    
-    <extension point="org.eclipse.ui.actionSets">
-	<actionSet
-            id="org.eclipse.mylyn.doc.actionSet"
-            label="Mylyn Help"
-            visible="true"> 
-        <action
-              class="org.eclipse.mylyn.internal.bugzilla.ide.actions.ReportBugAction"
-              icon="icons/etool16/report-bug.gif"
-              id="org.eclipse.mylyn.tasks.ui.bug.report"
-              label="Report Bug or Enhancement..."
-              menubarPath="help/helpStart"
-              style="push"
-              tooltip="Report Bug or Enhancement"/> 
-    </actionSet>
-    </extension>
-  
    <extension point="org.eclipse.ui.popupMenus">
         <objectContribution
               adaptable="false"
@@ -56,6 +39,7 @@
                   name="Stack Trace">
             </detector>       
    </extension>
+   
    <extension
          point="org.eclipse.mylyn.monitor.core.errorReporters">
       <errorReporter
@@ -65,20 +49,6 @@
       </errorReporter>
    </extension>    
    
-   <!--
-   <extension point="org.eclipse.ui.popupMenus">
-        <viewerContribution
-		    id="org.eclipse.mylyn.bugzilla.ide.log.contribution"
-            targetID="org.eclipse.pde.runtime.LogView">
-      	<action
-      		class="org.eclipse.mylyn.internal.bugzilla.ide.actions.NewTaskFromErrorAction"
-         	icon="icons/etool16/task-repository-new.gif"
-         	menubarPath="org.eclipse.pde.runtime.LogView"
-         	id="org.eclipse.mylyn.tasklist.actions.newTaskFromErrorLog"
-         	label="Report as Bug"/>
-      </viewerContribution>
-   </extension>
-   -->
    <extension
          point="org.eclipse.mylyn.bugzilla.ide.pluginRepositoryMappings">
       <mapping
@@ -95,6 +65,22 @@
             product=Mylyn;branding=Eclipse Mylyn
          </attributes>
       </mapping>
+   </extension>
+
+   <extension point="org.eclipse.ui.actionSets">
+		<actionSet
+            id="org.eclipse.mylyn.doc.actionSet"
+            label="Mylyn Help"
+            visible="true"> 
+        <action
+              class="org.eclipse.mylyn.internal.bugzilla.ide.actions.ReportBugAction"
+              icon="icons/etool16/report-bug.gif"
+              id="org.eclipse.mylyn.tasks.ui.bug.report"
+              label="Report Bug or Enhancement..."
+              menubarPath="help/helpStart"
+              style="push"
+              tooltip="Report Bug or Enhancement"/> 
+    	</actionSet>
    </extension>
   
 </plugin>
