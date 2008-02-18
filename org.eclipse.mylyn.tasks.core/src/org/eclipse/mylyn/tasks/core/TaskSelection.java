@@ -12,6 +12,7 @@ import java.util.Date;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.internal.tasks.core.AbstractAttributeMapper;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
@@ -64,6 +65,18 @@ public class TaskSelection {
 
 		private static final long serialVersionUID = 1L;
 
+		private final AbstractAttributeMapper attributeMapper = new AbstractAttributeMapper(this) {
+			@Override
+			public String getType(RepositoryTaskAttribute taskAttribute) {
+				return RepositoryTaskAttribute.TYPE_SHORT_TEXT;
+			}				
+		};
+		
+		@Override
+		public AbstractAttributeMapper getAttributeMapper() {
+			return attributeMapper;
+		}
+		
 		@Override
 		public Date getDateForAttributeType(String attributeKey, String dateString) {
 			return null;

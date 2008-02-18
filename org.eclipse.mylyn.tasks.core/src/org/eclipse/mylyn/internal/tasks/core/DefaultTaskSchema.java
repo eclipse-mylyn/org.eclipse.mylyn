@@ -10,6 +10,7 @@ package org.eclipse.mylyn.internal.tasks.core;
 
 import java.util.Date;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
@@ -20,10 +21,12 @@ import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
  * TODO url, due date, completed
  */
 public class DefaultTaskSchema {
-	
+
 	private final RepositoryTaskData taskData;
 
 	public DefaultTaskSchema(RepositoryTaskData taskData) {
+		Assert.isNotNull(taskData);
+			
 		this.taskData = taskData;
 	}
 
@@ -55,10 +58,18 @@ public class DefaultTaskSchema {
 		return getValue(RepositoryTaskAttribute.USER_OWNER);
 	}
 
+	public PriorityLevel getPriority() {
+		return PriorityLevel.fromString(getValue(RepositoryTaskAttribute.PRIORITY));
+	}
+
+	public String getProduct() {
+		return getValue(RepositoryTaskAttribute.PRODUCT);
+	}
+
 	public String getSummary() {
 		return getValue(RepositoryTaskAttribute.SUMMARY);
 	}
-	
+
 	private String getValue(String attributeKey) {
 		RepositoryTaskAttribute attribute = taskData.getAttribute(attributeKey);
 		if (attribute != null) {
@@ -94,6 +105,14 @@ public class DefaultTaskSchema {
 		setValue(RepositoryTaskAttribute.USER_OWNER, owner);
 	}
 
+	public void setPriority(PriorityLevel priority) {
+		setValue(RepositoryTaskAttribute.PRIORITY, priority.toString());
+	}
+
+	public void setProduct(String product) {
+		setValue(RepositoryTaskAttribute.PRODUCT, product);
+	}
+
 	// TODO use Person class?
 	public void setReporter(String reporter) {
 		setValue(RepositoryTaskAttribute.USER_REPORTER, reporter);
@@ -103,21 +122,19 @@ public class DefaultTaskSchema {
 		setValue(RepositoryTaskAttribute.SUMMARY, summary);
 	}
 
-	public void setPriority(PriorityLevel priority) {
-		setValue(RepositoryTaskAttribute.PRIORITY, priority.toString());
-	}
-
-	public PriorityLevel getPriority() {
-		return PriorityLevel.fromString(getValue(RepositoryTaskAttribute.PRIORITY));
-	}
-
 	private RepositoryTaskAttribute setValue(String attributeKey, String value) {
 		RepositoryTaskAttribute attribute = taskData.getAttribute(attributeKey);
 		if (attribute == null) {
 			attribute = new RepositoryTaskAttribute(attributeKey, null, false);
 			taskData.addAttribute(attributeKey, attribute);
 		}
-		taskData.getAttributeFactory().getAttributeMapper().setValue(attribute, value);
+		
+		AbstractAttributeMapper attributeMapper = taskData.getAttributeFactory().getAttributeMapper();
+		if (attributeMapper != null) {
+			attributeMapper.setValue(attribute, value);
+		} else {
+			attribute.setValue(value);
+		}
 		return attribute;
 	}
 

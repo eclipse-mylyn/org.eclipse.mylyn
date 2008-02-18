@@ -11,30 +11,6 @@
             primary="true">
       </toc>
    </extension>
-   
-    <extension point="org.eclipse.ui.actionSets">
-	<actionSet
-            id="org.eclipse.mylyn.doc.actionSet"
-            label="Mylyn Help"
-            visible="true"> 
-        <action
-              class="org.eclipse.mylyn.internal.tasks.ui.actions.ReportBugAction"
-              icon="icons/etool16/report-bug.gif"
-              id="org.eclipse.mylyn.tasks.ui.bug.report"
-              label="Report Bug or Enhancement"
-              menubarPath="help/helpStart"
-              style="push"
-              tooltip="Report Bug or Enhancement"/> 
-		<action
-               class="org.eclipse.mylyn.internal.help.ui.actions.ShowMylynLegendAction"
-               definitionId="org.eclipse.mylyn.doc.legend.show"
-               icon="icons/etool16/icons-legend.gif"
-               id="org.eclipse.mylyn.doc.legend.show.action"
-               label="Mylyn UI Legend"
-               style="push"
-               tooltip="Mylyn UI Legend"/>
-    </actionSet>
-    </extension>
   
    <extension point="org.eclipse.ui.commands">
    <category
