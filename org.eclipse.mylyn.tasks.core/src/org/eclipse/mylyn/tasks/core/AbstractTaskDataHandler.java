@@ -77,14 +77,16 @@ public abstract class AbstractTaskDataHandler {
 	}
 
 	/**
-	 * @param task the parent task, may be null
-	 * @param task the parent task data, may be null
+	 * @param task
+	 *            the parent task, may be null
+	 * @param task
+	 *            the parent task data, may be null
 	 * @since 2.2
 	 */
 	public boolean canInitializeSubTaskData(AbstractTask task, RepositoryTaskData parentTaskData) {
 		return false;
 	}
-	
+
 	public abstract AbstractAttributeFactory getAttributeFactory(RepositoryTaskData taskData);
 
 	/**
@@ -133,8 +135,8 @@ public abstract class AbstractTaskDataHandler {
 			// map attributes from common schema
 			String[] commonAttributeKeys = new String[] { RepositoryTaskAttribute.KEYWORDS,
 					RepositoryTaskAttribute.PRIORITY, RepositoryTaskAttribute.PRODUCT,
-					RepositoryTaskAttribute.RESOLUTION, RepositoryTaskAttribute.USER_ASSIGNED,
-					RepositoryTaskAttribute.USER_CC, };
+					RepositoryTaskAttribute.COMPONENT, RepositoryTaskAttribute.RESOLUTION,
+					RepositoryTaskAttribute.USER_ASSIGNED, RepositoryTaskAttribute.USER_CC, };
 			for (String key : commonAttributeKeys) {
 				RepositoryTaskAttribute sourceAttribute = sourceTaskData.getAttribute(key);
 				if (sourceAttribute != null) {
