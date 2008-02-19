@@ -308,14 +308,15 @@ public class TracTaskDataHandlerTest extends TestCase {
 		
 		parentTaskData.setSummary("abc");
 		parentTaskData.setDescription("def");
-		parentTaskData.setAttributeValue(TracAttributeFactory.Attribute.COMPONENT.getTracKey(), "ghi");
+		String component = parentTaskData.getAttribute(TracAttributeFactory.Attribute.COMPONENT.getTracKey()).getOptions().get(0);
+		parentTaskData.setAttributeValue(TracAttributeFactory.Attribute.COMPONENT.getTracKey(), component);
 		parentTaskData.setAttributeValue(TracTaskDataHandler.ATTRIBUTE_BLOCKED_BY, "");
-		RepositoryTaskData subTaskData = new RepositoryTaskData(parentTaskData.getAttributeFactory(), "", "", "");
+		RepositoryTaskData subTaskData = new RepositoryTaskData(parentTaskData.getAttributeFactory(), TracCorePlugin.REPOSITORY_KIND, "", "");
 		subTaskData.setAttributeValue(TracTaskDataHandler.ATTRIBUTE_BLOCKING, "");
 		taskDataHandler.initializeSubTaskData(repository, subTaskData , parentTaskData, new NullProgressMonitor());
 		assertEquals("", subTaskData.getSummary());
 		assertEquals("", subTaskData.getDescription());
-		assertEquals("ghi", subTaskData.getAttributeValue(TracAttributeFactory.Attribute.COMPONENT.getTracKey()));
+		assertEquals(component, subTaskData.getAttributeValue(TracAttributeFactory.Attribute.COMPONENT.getTracKey()));
 		assertEquals(parentTaskData.getId(), subTaskData.getAttributeValue(TracTaskDataHandler.ATTRIBUTE_BLOCKING));
 		assertEquals("", parentTaskData.getAttributeValue(TracTaskDataHandler.ATTRIBUTE_BLOCKED_BY));
 	}
