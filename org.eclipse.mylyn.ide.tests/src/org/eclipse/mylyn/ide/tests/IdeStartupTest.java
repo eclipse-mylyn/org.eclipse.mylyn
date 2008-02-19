@@ -14,6 +14,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionContextListener;
+import org.eclipse.mylyn.context.tests.support.TestUtil;
 import org.eclipse.mylyn.internal.team.ui.ContextActiveChangeSetManager;
 
 /**
@@ -21,6 +22,11 @@ import org.eclipse.mylyn.internal.team.ui.ContextActiveChangeSetManager;
  */
 public class IdeStartupTest extends TestCase {
 
+	@Override
+	protected void setUp() throws Exception {
+		TestUtil.triggerContextUiLazyStart();
+	}
+	
 	public void testChangeSetsStartup() {
 		List<IInteractionContextListener> listeners = ContextCorePlugin.getContextManager().getListeners();
 		boolean containsManager = false;
