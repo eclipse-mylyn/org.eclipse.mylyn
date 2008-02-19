@@ -10,6 +10,7 @@ package org.eclipse.mylyn.internal.tasks.core;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
@@ -23,7 +24,7 @@ public class TaskDataState {
 
 	private RepositoryTaskData oldTaskData;
 
-	private Set<RepositoryTaskAttribute> edits = new HashSet<RepositoryTaskAttribute>();
+	private Set<RepositoryTaskAttribute> edits = new CopyOnWriteArraySet<RepositoryTaskAttribute>();
 
 	private String url;
 
