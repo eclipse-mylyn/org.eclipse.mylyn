@@ -102,7 +102,7 @@ public class ContextChangeSet extends CVSActiveChangeSet/*ActiveChangeSet*/imple
 	private String internalGetComment(boolean checkTaskRepository) {
 		String template = null;
 		Set<IProject> projects = new HashSet<IProject>();
-		IResource[] resources = super.getResources();
+		IResource[] resources = getChangedResources();
 		for (IResource resource : resources) {
 			IProject project = resource.getProject();
 			if (project != null && project.isAccessible() && !projects.contains(project)) {
@@ -208,6 +208,10 @@ public class ContextChangeSet extends CVSActiveChangeSet/*ActiveChangeSet*/imple
 	public IResource[] getResources() {
 		List<IResource> allResources = getAllResourcesInChangeContext();
 		return allResources.toArray(new IResource[allResources.size()]);
+	}
+
+	public IResource[] getChangedResources() {
+		return super.getResources();
 	}
 
 	public List<IResource> getAllResourcesInChangeContext() {

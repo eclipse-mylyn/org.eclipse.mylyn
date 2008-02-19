@@ -65,7 +65,7 @@ public class TeamPropertiesLinkProviderTest extends TestCase {
 
 		ContextChangeSet changeSet = new ContextChangeSet(task, new StubChangeSetManager()) {
 			@Override
-			public IResource[] getResources() {
+			public IResource[] getChangedResources() {
 				return resources.toArray(new IResource[0]);
 			}
 		};
@@ -108,10 +108,12 @@ public class TeamPropertiesLinkProviderTest extends TestCase {
 
 		ContextChangeSet changeSet = new ContextChangeSet(task, new StubChangeSetManager()) {
 			@Override
-			public IResource[] getResources() {
+			public IResource[] getChangedResources() {
 				return resources.toArray(new IResource[0]);
 			}
 		};
+		
+		resources.add(project1);
 
 		FocusedTeamUiPlugin.getDefault().getPreferenceStore().setValue(FocusedTeamUiPlugin.COMMIT_TEMPLATE,
 				"global template: ${task.key}");
@@ -125,6 +127,36 @@ public class TeamPropertiesLinkProviderTest extends TestCase {
 
 		resources.add(project2);
 		assertEquals("project template: 1", changeSet.getComment());
+	}
+
+	public void testChangeSetCommitCommentChangedResources() throws Exception {
+		MockRepositoryTask task = new MockRepositoryTask("1");
+		task.setSummary("summary");
+		task.setUrl("http://url");
+
+		ContextChangeSet changeSet = new ContextChangeSet(task, new StubChangeSetManager()) {
+			@Override
+			public IResource[] getResources() {
+				return new IResource[] { project1, project2 };
+			}
+			
+			@Override
+			public IResource[] getChangedResources() {
+				return new IResource[] { project2 };
+			}
+
+		};
+
+		FocusedTeamUiPlugin.getDefault().getPreferenceStore().setValue(FocusedTeamUiPlugin.COMMIT_TEMPLATE,
+				"global");
+
+		// only the template project 2 should matter
+		TeamPropertiesLinkProvider linkProvider = new TeamPropertiesLinkProvider();
+		assertTrue(linkProvider.setCommitCommentTemplate(project1, "project1"));
+		assertEquals("global", changeSet.getComment());
+		
+		assertTrue(linkProvider.setCommitCommentTemplate(project2, "project2"));
+		assertEquals("project2", changeSet.getComment());
 	}
 
 	public class StubChangeSetManager extends ActiveChangeSetManager {
