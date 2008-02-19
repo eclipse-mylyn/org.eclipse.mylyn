@@ -11,7 +11,7 @@ package org.eclipse.mylyn.java.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.tests.support.TestUtil;
 import org.eclipse.mylyn.java.tests.search.JUnitReferencesSearchPluginTest;
 import org.eclipse.mylyn.java.tests.search.JavaImplementorsSearchPluginTest;
 import org.eclipse.mylyn.java.tests.search.JavaReadAccessSearchPluginTest;
@@ -28,12 +28,11 @@ public class AllJavaTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Tests for org.eclipse.mylyn.java.tests");
 
+		// API-3.0 replace with context UI lazy start extension 
 		// NOTE: used to trigger activation on start
 		ResourcesUiBridgePlugin.getDefault();
 		
-		// NOTE: needed to trigger lazy startup of Context UI and bridges
-		ContextCorePlugin.getContextManager().activateContext("startup");
-		ContextCorePlugin.getContextManager().deactivateContext("startup");
+		TestUtil.triggerContextUiLazyStart();
 		
 		// $JUnit-BEGIN$
 		suite.addTestSuite(ContentSpecificContextTest.class);

@@ -15,12 +15,15 @@ import java.util.Properties;
 import junit.framework.AssertionFailedError;
 
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.tests.ContextTestsPlugin;
 
 /**
  * @author Steffen Pingel
  */
 public class TestUtil {
+
+	private static boolean contextUiLazyStarted;
 
 	public static final String KEY_CREDENTIALS_FILE = "mylyn.credentials";
 
@@ -103,6 +106,21 @@ public class TestUtil {
 		}
 
 		return new Credentials(username, password);
+	}
+
+	/**
+	 * Test cases that rely on lazy startup of Context Ui (e.g. context bridges) need to invoke this method prior to
+	 * running the test.
+	 */
+	public static void triggerContextUiLazyStart() {
+		if (contextUiLazyStarted) {
+			return;
+		}
+		
+		contextUiLazyStarted = true;
+		
+		ContextCorePlugin.getContextManager().activateContext("startup");
+		ContextCorePlugin.getContextManager().deactivateContext("startup");
 	}
 
 }

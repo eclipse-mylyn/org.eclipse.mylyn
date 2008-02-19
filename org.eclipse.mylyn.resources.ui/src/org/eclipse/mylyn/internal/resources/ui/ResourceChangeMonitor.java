@@ -33,6 +33,9 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 
 	private boolean enabled = true;
 
+	public ResourceChangeMonitor() {	
+	}	
+
 	public void resourceChanged(IResourceChangeEvent event) {
 		if (!enabled || !ContextCorePlugin.getContextManager().isContextActive()) {
 			return;
