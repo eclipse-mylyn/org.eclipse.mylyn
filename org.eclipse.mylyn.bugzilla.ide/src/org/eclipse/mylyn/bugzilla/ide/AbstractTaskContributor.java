@@ -24,4 +24,6 @@ public abstract class AbstractTaskContributor {
 		
 	public abstract String getDescription(IStatus status);
 	
+	public abstract String getEditorId(IStatus status);
+	
 }

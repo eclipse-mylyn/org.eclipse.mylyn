@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.IBundleGroup;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.bugzilla.ide.AbstractTaskContributor;
 import org.eclipse.mylyn.internal.bugzilla.ide.wizards.FeatureStatus;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.osgi.framework.Bundle;
 
 /**
@@ -59,6 +60,11 @@ public class DefaultTaskContributor extends AbstractTaskContributor {
 			}
 			return sb.toString();
 		}
+	}
+
+	@Override
+	public String getEditorId(IStatus status) {
+		return TaskEditor.ID_EDITOR;
 	}
 
 }

@@ -29,44 +29,39 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
  */
 public class TaskContributorManager {
 
+	private static final String ELEMENT_CLASS = "class";
+
+	private static final String ELEMENT_TASK_CONTRIBUTOR = "contributor";
+
 	private static final String EXTENSION_ID_TASK_CONTRIBUTORS = "org.eclipse.mylyn.bugzilla.ide.taskContributors";
 
-	private static final String ELEMENT_TASK_CONTRIBUTOR = "taskContributor";
-
-	private final List<AbstractTaskContributor> taskContributors = new CopyOnWriteArrayList<AbstractTaskContributor>();
+	private final DefaultTaskContributor defaultTaskContributor = new DefaultTaskContributor();
 
 	private boolean readExtensions;
 
-	private static final String ELEMENT_CLASS = "class";
+	private final List<AbstractTaskContributor> taskContributors = new CopyOnWriteArrayList<AbstractTaskContributor>();
 
 	public void addErrorReporter(AbstractTaskContributor taskContributor) {
 		taskContributors.add(taskContributor);
 	}
 
-	public void removeErrorReporter(AbstractTaskContributor taskContributor) {
-		taskContributors.remove(taskContributor);
-	}
-
-	public void updateAttributes(RepositoryTaskData taskData, IStatus status) {
+	public String getEditorId(IStatus status) {
 		readExtensions();
 
 		for (AbstractTaskContributor contributor : taskContributors) {
-			String description = contributor.getDescription(status);
-			if (description != null) {
-				taskData.setDescription(description);
-				return;
+			String editorId = contributor.getEditorId(status);
+			if (editorId != null) {
+				return editorId;
 			}
 		}
-		
-		DefaultTaskContributor contributor = new DefaultTaskContributor();
-		taskData.setDescription(contributor.getDescription(status));
+
+		return defaultTaskContributor.getEditorId(status);
 	}
 
 	private synchronized void readExtensions() {
 		if (readExtensions) {
 			return;
 		}
-
 		readExtensions = true;
 
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
@@ -90,12 +85,30 @@ public class TaskContributorManager {
 			} else {
 				StatusHandler.log(new Status(IStatus.WARNING, IMonitorCoreConstants.ID_PLUGIN,
 						"Could not load task contributor extenstion: \"" + object.getClass().getCanonicalName() + "\""
-						+ " does not implement \"" + AbstractTaskContributor.class.getCanonicalName() + "\""));
+								+ " does not implement \"" + AbstractTaskContributor.class.getCanonicalName() + "\""));
 			}
 		} catch (CoreException e) {
 			StatusHandler.log(new Status(IStatus.WARNING, IMonitorCoreConstants.ID_PLUGIN,
 					"Could not load task contributor extension", e));
 		}
+	}
+
+	public void removeErrorReporter(AbstractTaskContributor taskContributor) {
+		taskContributors.remove(taskContributor);
+	}
+
+	public void updateAttributes(RepositoryTaskData taskData, IStatus status) {
+		readExtensions();
+
+		for (AbstractTaskContributor contributor : taskContributors) {
+			String description = contributor.getDescription(status);
+			if (description != null) {
+				taskData.setDescription(description);
+				return;
+			}
+		}
+
+		taskData.setDescription(defaultTaskContributor.getDescription(status));
 	}
 
 }

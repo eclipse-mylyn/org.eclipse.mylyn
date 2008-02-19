@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.bugzilla.ide;
  */
 public class IRepositoryConstants {
 
-	public static final String REPOSITORY = "repository"; 
+	public static final String REPOSITORY_URL = "repositoryUrl"; 
 
 	public static final String REPOSITORY_KIND = "repositoryKind"; 
 

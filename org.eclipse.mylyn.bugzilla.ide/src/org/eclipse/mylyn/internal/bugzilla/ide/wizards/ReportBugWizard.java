@@ -12,8 +12,8 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IBundleGroup;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.mylyn.internal.bugzilla.ide.BugzillaIdePlugin;
 import org.eclipse.mylyn.internal.bugzilla.ide.PluginRepositoryMappingManager;
-import org.eclipse.mylyn.internal.bugzilla.ide.TaskErrorReporter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 
 /**
@@ -66,7 +66,7 @@ public class ReportBugWizard extends Wizard {
 		// delay run this until after the dialog has been closed
 		getShell().getDisplay().asyncExec(new Runnable() {
 			public void run() {
-				new TaskErrorReporter().handle(new FeatureStatus(bundle));
+				BugzillaIdePlugin.getTaskErrorReporter().handle(new FeatureStatus(bundle));
 			}			
 		});
 		

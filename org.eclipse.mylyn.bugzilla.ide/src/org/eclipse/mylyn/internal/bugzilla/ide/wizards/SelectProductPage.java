@@ -235,7 +235,7 @@ public class SelectProductPage extends WizardPage {
 		Map<String, String> attributes = manager.getAllAttributes(bundleGroup.getIdentifier());
 
 		AttributeTaskMapper mapper = new AttributeTaskMapper(attributes);
-		if (mapper.getTaskRepository() == null) {
+		if (!mapper.isMappingComplete()) {
 			return;
 		}
 

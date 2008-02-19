@@ -48,24 +48,6 @@
             label="Report Error as Bug">
       </errorReporter>
    </extension>    
-   
-   <extension
-         point="org.eclipse.mylyn.bugzilla.ide.pluginRepositoryMappings">
-      <mapping
-            pluginIdPrefix="org.eclipse"
-            >
-         <attributes>
-            repository=https://bugs.eclipse.org/bugs;repositoryKind=bugzilla;branding=Eclipse
-         </attributes>
-      </mapping>
-      <mapping
-            pluginIdPrefix="org.eclipse.mylyn"
-            >
-         <attributes>
-            product=Mylyn;branding=Eclipse Mylyn
-         </attributes>
-      </mapping>
-   </extension>
 
    <extension point="org.eclipse.ui.actionSets">
 		<actionSet

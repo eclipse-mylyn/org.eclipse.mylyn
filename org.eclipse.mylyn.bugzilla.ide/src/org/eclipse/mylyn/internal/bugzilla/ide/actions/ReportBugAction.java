@@ -12,7 +12,6 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.bugzilla.ide.BugzillaIdePlugin;
-import org.eclipse.mylyn.internal.bugzilla.ide.IBugzillaIdeConstants;
 import org.eclipse.mylyn.internal.bugzilla.ide.wizards.ReportBugWizard;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewTaskAction;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -33,7 +32,7 @@ public class ReportBugAction implements IWorkbenchWindowActionDelegate {
 	}
 
 	public void run(IAction action) {
-		if (BugzillaIdePlugin.getDefault().getPluginPreferences().getBoolean(IBugzillaIdeConstants.ENHANCED_BUG_REPORTING)) {
+		if (BugzillaIdePlugin.getTaskErrorReporter().isEnabled()) {
 			WizardDialog dialog = new WizardDialog(window.getShell(), new ReportBugWizard());
 			dialog.open();
 		} else {

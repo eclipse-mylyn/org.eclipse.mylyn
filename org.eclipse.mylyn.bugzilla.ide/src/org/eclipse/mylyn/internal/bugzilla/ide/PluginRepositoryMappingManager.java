@@ -121,4 +121,8 @@ public class PluginRepositoryMappingManager {
 		return attributes;
 	}
 
+	public boolean hasMappings() {
+		return !mappingByPrefix.isEmpty();
+	}
+	
 }

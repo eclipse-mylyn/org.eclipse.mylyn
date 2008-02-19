@@ -11,10 +11,12 @@
 
 package org.eclipse.mylyn.internal.bugzilla.ide.actions;
 
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.mylyn.internal.bugzilla.ide.BugzillaIdePlugin;
 import org.eclipse.mylyn.tasks.core.TaskSelection;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.widgets.Shell;
@@ -81,14 +83,14 @@ public class NewTaskFromErrorAction implements IObjectActionDelegate {
 
 		StringBuilder sb = new StringBuilder();
 		buildDescriptionFromLogEntry(entry, sb, includeChildren);
-		openNewTaskEditor(shell, sb.toString());
-	}
 
-	/* Please do not change the structure of this class. It is forked in the 3.3 branch. 
-	 * This method is intentionally protected. */
-	protected void openNewTaskEditor(Shell shell, String text) {
-		TaskSelection taskSelection = new TaskSelection("", text);
-		TasksUiUtil.openNewTaskEditor(shell, taskSelection, null);
+		if (BugzillaIdePlugin.getTaskErrorReporter().isEnabled()) {
+			Status status = new Status(entry.getSeverity(), entry.getPluginId(), entry.getMessage());
+			BugzillaIdePlugin.getTaskErrorReporter().handle(status);
+		} else {
+			TaskSelection taskSelection = new TaskSelection("", sb.toString());
+			TasksUiUtil.openNewTaskEditor(shell, taskSelection, null);			
+		}
 	}
 
 	public void run() {

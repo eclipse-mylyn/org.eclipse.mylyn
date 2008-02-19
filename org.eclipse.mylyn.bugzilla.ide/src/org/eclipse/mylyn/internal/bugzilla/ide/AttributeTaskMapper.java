@@ -29,10 +29,14 @@ public class AttributeTaskMapper {
 		Assert.isNotNull(attributes);
 		this.attributes = attributes;		
 	}
+
+	public boolean isMappingComplete() {
+		return getTaskRepository() != null && attributes.get(IRepositoryConstants.PRODUCT) != null;
+	}
 	
 	public TaskRepository getTaskRepository() {
 		TaskRepository taskRepository = null;
-		String repositoryUrl = attributes.get(IRepositoryConstants.REPOSITORY);
+		String repositoryUrl = attributes.get(IRepositoryConstants.REPOSITORY_URL);
 		if (repositoryUrl != null) {
 			String repositoryKind = attributes.get(IRepositoryConstants.REPOSITORY_KIND);
 			if (repositoryKind != null) {

@@ -28,7 +28,6 @@ import org.eclipse.mylyn.tasks.core.TaskSelection;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.NewTaskEditorInput;
-import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 
@@ -39,10 +38,14 @@ public class TaskErrorReporter extends AbstractErrorReporter {
 
 	private PluginRepositoryMappingManager manager;
 
-	public TaskErrorReporter() {
+	TaskErrorReporter() {
 		manager = new PluginRepositoryMappingManager();
 	}
 
+	public boolean isEnabled() {
+		return manager.hasMappings();
+	}
+	
 	@Override
 	public int getPriority(IStatus status) {
 		Assert.isNotNull(status);
@@ -75,11 +78,16 @@ public class TaskErrorReporter extends AbstractErrorReporter {
 			if (taskRepository != null) {
 				RepositoryTaskData taskData = createTaskData(taskRepository, mapper);
 				if (taskData != null) {
-					updateAttributes(taskData, status);
+					taskData.setSummary(status.getMessage());
+
+					TaskContributorManager manager = new TaskContributorManager();
+					manager.updateAttributes(taskData, status);
+
+					String editorId = manager.getEditorId(status);
 
 					NewTaskEditorInput editorInput = new NewTaskEditorInput(taskRepository, taskData);
 					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-					TasksUiUtil.openEditor(editorInput, TaskEditor.ID_EDITOR, page);
+					TasksUiUtil.openEditor(editorInput, editorId, page);
 					return;
 				}
 			}
@@ -139,10 +147,7 @@ public class TaskErrorReporter extends AbstractErrorReporter {
 	}
 
 	private void updateAttributes(RepositoryTaskData taskData, IStatus status) {
-		taskData.setSummary(status.getMessage());
 
-		TaskContributorManager manager = new TaskContributorManager();
-		manager.updateAttributes(taskData, status);
 	}
 
 }

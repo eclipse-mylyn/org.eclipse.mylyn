@@ -16,17 +16,26 @@ import org.osgi.framework.BundleContext;
  */
 public class BugzillaIdePlugin extends AbstractUIPlugin {
 
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.bugzilla.ide";
+	
 	private static BugzillaIdePlugin INSTANCE;
+
+	private static TaskErrorReporter taskErrorReporter;
 
 	public static BugzillaIdePlugin getDefault() {
 		return INSTANCE;
 	}
 
-	public static final String ID_PLUGIN = "org.eclipse.mylyn.bugzilla.ide";
-
-	public BugzillaIdePlugin() {
+	public static synchronized TaskErrorReporter getTaskErrorReporter() {
+		if (taskErrorReporter == null) {
+			taskErrorReporter = new TaskErrorReporter();
+		}
+		return taskErrorReporter;
 	}
 	
+	public BugzillaIdePlugin() {
+	}
+
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
