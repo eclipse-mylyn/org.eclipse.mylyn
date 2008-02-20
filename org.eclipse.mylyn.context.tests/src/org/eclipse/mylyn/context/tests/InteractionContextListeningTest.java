@@ -35,25 +35,30 @@ public class InteractionContextListeningTest extends TestCase {
 		super.tearDown();
 		contextManager.deactivateAllContexts();
 	}
-	
+
 	public void testAddRemoveListenerInContextActivated() {
 		contextManager = ContextCorePlugin.getContextManager();
 		((CompositeInteractionContext) contextManager.getActiveContext()).getContextMap().put("handle", mockContext);
 
 		final StubContextListener listener = new StubContextListener();
-		contextManager.addListener(new ContextListenerAdapter() {
-			@Override
-			public void contextActivated(IInteractionContext arg0) {
-				contextManager.addListener(listener);
-				contextManager.removeListener(listener);
-			}
-		});
-		contextManager.activateContext("handle");
+		try {
+			contextManager.addListener(new ContextListenerAdapter() {
+				@Override
+				public void contextActivated(IInteractionContext arg0) {
+					contextManager.addListener(listener);
+					contextManager.removeListener(listener);
+				}
+			});
+			contextManager.activateContext("handle");
 
-		contextManager.deactivateContext("handle");
-		contextManager.activateContext("handle");
-		
-		assertEquals(0, listener.activationEventCount);
+			contextManager.deactivateContext("handle");
+			contextManager.activateContext("handle");
+
+			assertEquals(0, listener.activationEventCount);
+		} finally {
+			// clean up just in case
+			contextManager.removeListener(listener);
+		}
 	}
 
 	private class StubContextListener extends ContextListenerAdapter {

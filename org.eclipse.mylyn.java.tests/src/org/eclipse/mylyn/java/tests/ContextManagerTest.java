@@ -413,35 +413,39 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 
 	public void testLandmarks() throws CoreException, IOException {
 		LandmarksModelListener listener = new LandmarksModelListener();
-		manager.addListener(listener);
+		try {
+			manager.addListener(listener);
 
-		IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
-		IMethod m1 = type1.createMethod("void m1() { }", null, true, null);
+			IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
+			IMethod m1 = type1.createMethod("void m1() { }", null, true, null);
 
-		StructuredSelection sm1 = new StructuredSelection(m1);
-		monitor.selectionChanged(part, sm1);
-		manager.processInteractionEvent(mockInterestContribution(m1.getHandleIdentifier(), scaling.getLandmark()));
-		// packages can't be landmarks
-		manager.processInteractionEvent(mockInterestContribution(m1.getCompilationUnit()
-				.getParent()
-				.getHandleIdentifier(), scaling.getLandmark()));
-		// source folders can't be landmarks
-		manager.processInteractionEvent(mockInterestContribution(m1.getCompilationUnit()
-				.getParent()
-				.getParent()
-				.getHandleIdentifier(), scaling.getLandmark()));
-		// projects can't be landmarks
-		manager.processInteractionEvent(mockInterestContribution(m1.getCompilationUnit()
-				.getParent()
-				.getParent()
-				.getParent()
-				.getHandleIdentifier(), scaling.getLandmark()));
+			StructuredSelection sm1 = new StructuredSelection(m1);
+			monitor.selectionChanged(part, sm1);
+			manager.processInteractionEvent(mockInterestContribution(m1.getHandleIdentifier(), scaling.getLandmark()));
+			// packages can't be landmarks
+			manager.processInteractionEvent(mockInterestContribution(m1.getCompilationUnit()
+					.getParent()
+					.getHandleIdentifier(), scaling.getLandmark()));
+			// source folders can't be landmarks
+			manager.processInteractionEvent(mockInterestContribution(m1.getCompilationUnit()
+					.getParent()
+					.getParent()
+					.getHandleIdentifier(), scaling.getLandmark()));
+			// projects can't be landmarks
+			manager.processInteractionEvent(mockInterestContribution(m1.getCompilationUnit()
+					.getParent()
+					.getParent()
+					.getParent()
+					.getHandleIdentifier(), scaling.getLandmark()));
 
-		assertEquals(1, ContextCorePlugin.getContextManager().getActiveLandmarks().size());
-		assertEquals(1, listener.numAdditions);
+			assertEquals(1, ContextCorePlugin.getContextManager().getActiveLandmarks().size());
+			assertEquals(1, listener.numAdditions);
 
-		manager.processInteractionEvent(mockInterestContribution(m1.getHandleIdentifier(), -scaling.getLandmark()));
-		assertEquals(1, listener.numDeletions);
+			manager.processInteractionEvent(mockInterestContribution(m1.getHandleIdentifier(), -scaling.getLandmark()));
+			assertEquals(1, listener.numDeletions);
+		} finally {
+			manager.removeListener(listener);
+		}
 	}
 
 	public void testEventProcessWithObject() throws JavaModelException {

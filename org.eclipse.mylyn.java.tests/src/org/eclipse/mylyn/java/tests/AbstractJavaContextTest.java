@@ -69,6 +69,7 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
 
 	@Override
 	protected void tearDown() throws Exception {
+		ResourcesUiBridgePlugin.getDefault().setResourceMonitoringEnabled(true);
 		context.reset();
 		assertTrue(context.getInteresting().isEmpty());
 		manager.deactivateContext(contextId);
@@ -82,7 +83,6 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
 		}
 		assertFalse(manager.isContextActive());
 		waitForAutoBuild();
-		ResourcesUiBridgePlugin.getDefault().setResourceMonitoringEnabled(false);
 		super.tearDown();
 	}
 

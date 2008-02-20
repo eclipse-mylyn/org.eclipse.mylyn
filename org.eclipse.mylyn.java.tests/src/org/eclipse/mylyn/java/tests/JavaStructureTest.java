@@ -67,7 +67,6 @@ public class JavaStructureTest extends AbstractJavaContextTest {
 
 	@Override
 	protected void tearDown() throws Exception {
-		manager.removeAllListeners();
 		manager.deactivateContext("12312");
 		ResourceTestUtil.deleteProject(project.getProject());
 	}

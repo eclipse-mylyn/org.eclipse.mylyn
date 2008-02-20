@@ -533,7 +533,7 @@ public class InteractionContextManager {
 				}
 			}
 		} else {
-			// FIXME replace by Assert.isNotNull(listener)
+			// API 3.0 FIXME replace by Assert.isNotNull(listener)
 			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Attempted to add null lisetener", new Exception()));
 		}
 	}
