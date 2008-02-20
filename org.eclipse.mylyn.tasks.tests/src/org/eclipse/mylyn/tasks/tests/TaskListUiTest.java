@@ -181,30 +181,25 @@ public class TaskListUiTest extends TestCase {
 	}
 
 	public void testUiFilter() {
-		try {
-			assertNotNull(TaskListView.getFromActivePerspective());
-			TreeViewer viewer = TaskListView.getFromActivePerspective().getViewer();
-			TaskListView.getFromActivePerspective().addFilter(
-					TaskListView.getFromActivePerspective().getCompleteFilter());
-			viewer.refresh();
-			viewer.expandAll();
-			TreeItem[] items = viewer.getTree().getItems();
-			assertTrue(checkFilter(CHECK_COMPLETE_FILTER, items));
-			TaskListView.getFromActivePerspective().removeFilter(
-					TaskListView.getFromActivePerspective().getCompleteFilter());
+		assertNotNull(TaskListView.getFromActivePerspective());
+		TreeViewer viewer = TaskListView.getFromActivePerspective().getViewer();
+		TaskListView.getFromActivePerspective().addFilter(TaskListView.getFromActivePerspective().getCompleteFilter());
+		viewer.refresh();
+		viewer.expandAll();
+		TreeItem[] items = viewer.getTree().getItems();
+		assertTrue(checkFilter(CHECK_COMPLETE_FILTER, items));
+		TaskListView.getFromActivePerspective().removeFilter(
+				TaskListView.getFromActivePerspective().getCompleteFilter());
 
-			TaskPriorityFilter filter = TaskListView.getFromActivePerspective().getPriorityFilter();
-			filter.displayPrioritiesAbove("P2");
-			TaskListView.getFromActivePerspective().addFilter(filter);
-			viewer.refresh();
-			viewer.expandAll();
-			items = viewer.getTree().getItems();
+		TaskPriorityFilter filter = TaskListView.getFromActivePerspective().getPriorityFilter();
+		filter.displayPrioritiesAbove("P2");
+		TaskListView.getFromActivePerspective().addFilter(filter);
+		viewer.refresh();
+		viewer.expandAll();
+		items = viewer.getTree().getItems();
 
-			// check priority tasks
-			assertTrue(checkFilter(CHECK_PRIORITY_FILTER, items));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		// check priority tasks
+		assertTrue(checkFilter(CHECK_PRIORITY_FILTER, items));
 	}
 
 	/**
