@@ -52,6 +52,9 @@ public class ProjectRepositoryAssociationTest extends TestCase {
 		assertNotNull(returnedRepository);
 		assertEquals(REPOSITORY_KIND, returnedRepository.getConnectorKind());
 		assertEquals(REPOSITORY_URL, returnedRepository.getUrl());
+		
+		TasksUiPlugin.getRepositoryManager().removeRepository(repository,
+				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 	}
 
 	public void testRepositoryForFolder() throws CoreException {
@@ -66,5 +69,8 @@ public class ProjectRepositoryAssociationTest extends TestCase {
 		assertNotNull(returnedRepository);
 		assertEquals(REPOSITORY_KIND, returnedRepository.getConnectorKind());
 		assertEquals(REPOSITORY_URL, returnedRepository.getUrl());
+
+		TasksUiPlugin.getRepositoryManager().removeRepository(repository,
+				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 	}
 }
