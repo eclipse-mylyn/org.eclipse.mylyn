@@ -44,7 +44,7 @@ public class ActivityContextManager {
 
 	private long startTime = -1;
 
-	private final int timeout;
+	private int timeout;
 
 	private Object startTimeLock = new Object();
 
@@ -144,7 +144,7 @@ public class ActivityContextManager {
 						long localLastEventTime = getLastEventTime();
 						long localStartTime = getStartTime();
 						long currentTime = System.currentTimeMillis();
-						if ((currentTime - localLastEventTime) >= timeout) {
+						if ((currentTime - localLastEventTime) >= timeout && timeout != 0) {
 							if (wasTimedOut == false) {
 								fireInactive();
 								// timed out
@@ -172,5 +172,9 @@ public class ActivityContextManager {
 				}
 			}
 		}
+	}
+
+	public void setInactivityTimeout(int inactivityTimeout) {
+		timeout = inactivityTimeout;
 	}
 }
