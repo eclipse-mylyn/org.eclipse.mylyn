@@ -38,6 +38,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -182,7 +183,8 @@ public class TaskListToolTip extends ToolTip {
 		} else if (element instanceof AbstractTask) {
 			AbstractTask task = (AbstractTask) element;
 			StringBuilder sb = new StringBuilder();
-			sb.append(TasksUiPlugin.getConnectorUi(task.getConnectorKind()).getTaskKindLabel(task));
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(task.getConnectorKind());
+			sb.append(connectorUi.getTaskKindLabel(task));
 			String key = task.getTaskKey();
 			if (key != null) {
 				sb.append(" ");
