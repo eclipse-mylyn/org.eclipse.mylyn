@@ -106,15 +106,22 @@ class SynchronizeQueryJob extends Job {
 	protected IStatus run(IProgressMonitor monitor) {
 		try {
 			monitor.beginTask("Synchronizing " + queries.size() + " queries", 20 + queries.size() * 10 + 40);
-
-			Set<AbstractTask> allTasks = Collections.unmodifiableSet(taskList.getRepositoryTasks(repository.getUrl()));
-
-			for (AbstractTask task : allTasks) {
-				if (task.isStale()) {
-					StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Reseting flag on stale task: " + task.getTaskKey() + " [" + task.getRepositoryUrl() + "]"));
+			Set<AbstractTask> allTasks;
+			
+			if(forced && !isFullSynchronization()) {
+				allTasks = new HashSet<AbstractTask>();
+				for (AbstractRepositoryQuery query : queries) {
+					allTasks.addAll(query.getChildren());
 				}
-				//task.setStale(false);
+			} else {
+				allTasks = Collections.unmodifiableSet(taskList.getRepositoryTasks(repository.getUrl()));
 			}
+			
+			//for (AbstractTask task : allTasks) {
+			//	if (task.isStale()) {
+			//		StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Reseting flag on stale task: " + task.getTaskKey() + " [" + task.getRepositoryUrl() + "]"));
+			//	}
+			//}
 
 			// check if the repository has changed at all and have the connector mark tasks that need synchronization
 			if (isFullSynchronization()) {
