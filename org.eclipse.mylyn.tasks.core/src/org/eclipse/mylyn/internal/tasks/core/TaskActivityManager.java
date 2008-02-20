@@ -326,7 +326,7 @@ public class TaskActivityManager {
 	public Set<AbstractTask> getDueTasks(Calendar start, Calendar end) {
 		Set<AbstractTask> resultingTasks = new HashSet<AbstractTask>();
 		SortedMap<Calendar, Set<AbstractTask>> result = dueTasks.subMap(start, end);
-		synchronized (activeTasks) {
+		synchronized (dueTasks) {
 			for (Set<AbstractTask> set : result.values()) {
 				resultingTasks.addAll(set);
 			}
