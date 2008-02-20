@@ -286,7 +286,6 @@ public class WebClientUtil {
 						address.getAddress());
 				AuthScope proxyAuthScope = new AuthScope(address.getHostName(), address.getPort(), AuthScope.ANY_REALM);
 				client.getState().setProxyCredentials(proxyAuthScope, credentials);
-				client.getParams().setAuthenticationPreemptive(true);
 			}
 		}
 
@@ -295,7 +294,6 @@ public class WebClientUtil {
 					WebClientUtil.getPort(repositoryUrl), AuthScope.ANY_REALM);
 			try {
 				client.getState().setCredentials(authScope, getCredentials(user, password, InetAddress.getLocalHost()));
-				client.getParams().setAuthenticationPreemptive(true);
 			} catch (UnknownHostException e) {
 				client.getState().setCredentials(authScope, getCredentials(user, password, null));
 			}
@@ -496,7 +494,6 @@ public class WebClientUtil {
 
 		AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.HTTP);
 		if (credentials != null) {
-			client.getParams().setAuthenticationPreemptive(true);
 			AuthScope authScope = new AuthScope(host, port, AuthScope.ANY_REALM);
 			client.getState().setCredentials(authScope, getHttpClientCredentials(credentials, host));
 		}
@@ -533,7 +530,6 @@ public class WebClientUtil {
 
 		AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.HTTP);
 		if (credentials != null) {
-			client.getParams().setAuthenticationPreemptive(true);
 			AuthScope authScope = new AuthScope(host, port, AuthScope.ANY_REALM);
 			client.getState().setCredentials(authScope, getHttpClientCredentials(credentials, host));
 		}
@@ -571,7 +567,6 @@ public class WebClientUtil {
 						address.getAddress());
 				AuthScope proxyAuthScope = new AuthScope(address.getHostName(), address.getPort(), AuthScope.ANY_REALM);
 				client.getState().setProxyCredentials(proxyAuthScope, credentials);
-				client.getParams().setAuthenticationPreemptive(true);
 			}
 		} else {
 			hostConfiguration.setProxyHost(null);
