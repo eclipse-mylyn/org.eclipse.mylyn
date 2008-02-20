@@ -61,11 +61,11 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 	private static final String LABEL_ACTIVITY_TIMEOUT = "Stop time accumulation after";
 	private static final String LABEL_ACTIVITY_TIMEOUT2 = "minutes of inactivity.";
 	
-//	private static final String END_HOUR_LABEL = "Work day end (24hr): ";
-//
-//	private static final String START_HOUR_LABEL = "Work day start (24hr): ";
-//	private static final String GROUP_WORK_WEEK_LABEL = "Scheduling";
-//	
+	private static final String END_HOUR_LABEL = "Work day end (24hr): ";
+
+	private static final String START_HOUR_LABEL = "Work day start (24hr): ";
+	private static final String GROUP_WORK_WEEK_LABEL = "Scheduling";
+	
 	private static final String GROUP_TASK_TIMING = "Task Timing";
 
 	private static final String FORWARDSLASH = "/";
@@ -94,9 +94,9 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 	private Text backupFolderText;
 
-//	private Spinner hourDayStart;
-//
-//	private Spinner hourDayEnd;
+	private Spinner hourDayStart;
+
+	private Spinner hourDayEnd;
 
 	private int taskDataDirectoryAction = -1;
 
@@ -128,7 +128,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		}
 
 		createTaskRefreshScheduleGroup(container);
-		//createSchedulingGroup(container);
+		createSchedulingGroup(container);
 		createOpenWith(container);
 		Composite advanced = createAdvancedSection(container);
 		createTaskActivityGroup(advanced);
@@ -421,6 +421,79 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 				TasksUiPlugin.getDefault().getBackupManager().backupNow(true);
 			}
 		});
+	}
+	
+	private void createSchedulingGroup(Composite container) {
+		Group group = new Group(container, SWT.SHADOW_ETCHED_IN);
+		group.setText(GROUP_WORK_WEEK_LABEL);
+		group.setLayout(new GridLayout(5, false));
+		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+		// Label workWeekBeginLabel = new Label(group, SWT.NONE);
+		// workWeekBeginLabel.setText(START_DAY_LABEL);
+		// workWeekBegin = new Combo(group, SWT.READ_ONLY);
+		// // Calendar.SUNDAY = 1
+		// workWeekBegin.add("SUNDAY");
+		// workWeekBegin.add("MONDAY");
+		// workWeekBegin.add("TUESDAY");
+		// workWeekBegin.add("WEDNESDAY");
+		// workWeekBegin.add("THURSDAY");
+		// workWeekBegin.add("FRIDAY");
+		// workWeekBegin.add("SATURDAY");
+		// workWeekBegin.select(getPreferenceStore().getInt(TaskListPreferenceConstants.PLANNING_STARTDAY)
+		// - 1);
+		//		
+		// Label workWeekEndLabel = new Label(group, SWT.NONE);
+		// workWeekEndLabel.setText(END_DAY_LABEL);
+		// workWeekEnd = new Combo(group, SWT.READ_ONLY);
+		// workWeekEnd.add("SUNDAY");
+		// workWeekEnd.add("MONDAY");
+		// workWeekEnd.add("TUESDAY");
+		// workWeekEnd.add("WEDNESDAY");
+		// workWeekEnd.add("THURSDAY");
+		// workWeekEnd.add("FRIDAY");
+		// workWeekEnd.add("SATURDAY");
+		// workWeekEnd.select(getPreferenceStore().getInt(TaskListPreferenceConstants.PLANNING_ENDDAY)
+		// - 1);
+
+		Label hourDayStartLabel = new Label(group, SWT.NONE);
+		hourDayStartLabel.setText(START_HOUR_LABEL);
+		hourDayStart = new Spinner(group, SWT.BORDER);
+		hourDayStart.setDigits(0);
+		hourDayStart.setIncrement(1);
+		hourDayStart.setMaximum(23);
+		hourDayStart.setMinimum(0);
+		hourDayStart.setSelection(getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_STARTHOUR));
+		hourDayStart.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				updateRefreshGroupEnablements();
+			}
+
+		});
+
+		Label spacer = new Label(group, SWT.NONE);
+		GridDataFactory.fillDefaults().hint(40, SWT.DEFAULT).applyTo(spacer);
+
+		Label hourDayEndLabel = new Label(group, SWT.NONE);
+		hourDayEndLabel.setText(END_HOUR_LABEL);
+
+		hourDayEnd = new Spinner(group, SWT.BORDER);
+		hourDayEnd.setDigits(0);
+		hourDayEnd.setIncrement(1);
+		hourDayEnd.setMaximum(23);
+		hourDayEnd.setMinimum(0);
+		hourDayEnd.setSelection(getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
+		hourDayEnd.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				updateRefreshGroupEnablements();
+			}
+
+		});
+
 	}
 	
 	
