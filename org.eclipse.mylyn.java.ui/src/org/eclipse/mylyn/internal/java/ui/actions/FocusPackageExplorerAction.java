@@ -19,6 +19,7 @@ import org.eclipse.jdt.internal.ui.actions.SelectionConverter;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jdt.internal.ui.packageview.ToggleLinkingAction;
+import org.eclipse.jdt.ui.StandardJavaElementContentProvider;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.text.ITextSelection;
@@ -57,9 +58,20 @@ public class FocusPackageExplorerAction extends AbstractAutoFocusViewAction {
 		if (elementToSelect != null) {
 			StructuredSelection currentSelection = (StructuredSelection) viewer.getSelection();
 			if (currentSelection.size() <= 1) {
-				for (ViewerFilter filter : Arrays.asList(viewer.getFilters())) {
-					if (filter instanceof JavaDeclarationsFilter && elementToSelect instanceof IMember) {
-						elementToSelect = ((IMember) elementToSelect).getCompilationUnit();
+				if (elementToSelect instanceof IMember) {
+					// API 3.0 remove JavaDeclarationsFilter
+					if (viewer.getContentProvider() instanceof StandardJavaElementContentProvider) {  			
+						if (!((StandardJavaElementContentProvider)viewer.getContentProvider()).getProvideMembers()) {
+							elementToSelect = ((IMember) elementToSelect).getCompilationUnit();
+							return new StructuredSelection(elementToSelect);
+						}
+					} 
+				
+					for (ViewerFilter filter : Arrays.asList(viewer.getFilters())) {						
+						if (filter instanceof JavaDeclarationsFilter) {
+							elementToSelect = ((IMember) elementToSelect).getCompilationUnit();
+							return new StructuredSelection(elementToSelect);
+						}
 					}
 				}
 			}
