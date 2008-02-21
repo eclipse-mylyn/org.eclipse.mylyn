@@ -34,8 +34,10 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 
 /**
  * @author Mik Kersten
@@ -175,18 +177,27 @@ public class TaskRepositoriesView extends ViewPart {
 
 		makeActions();
 		hookContextMenu();
+		hookGlobalActions();
 		contributeToActionBars();
 		getSite().setSelectionProvider(getViewer());
 	}
 
+	private void hookGlobalActions() {
+		IActionBars bars = getViewSite().getActionBars();
+		bars.setGlobalActionHandler(ActionFactory.DELETE.getId(), deleteRepositoryAction);
+		bars.setGlobalActionHandler(ActionFactory.REFRESH.getId(), resetConfigurationAction);
+	}
+
 	private void makeActions() {
 		deleteRepositoryAction = new DeleteTaskRepositoryAction();
+		deleteRepositoryAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.DELETE);
 		viewer.addSelectionChangedListener(deleteRepositoryAction);
 
 		repositoryPropertiesAction = new EditRepositoryPropertiesAction();
 		viewer.addSelectionChangedListener(repositoryPropertiesAction);
 
 		resetConfigurationAction = new ResetRepositoryConfigurationAction();
+		resetConfigurationAction.setActionDefinitionId("org.eclipse.ui.file.refresh");
 		viewer.addSelectionChangedListener(resetConfigurationAction);
 
 		offlineAction = new DisconnectRepositoryAction();
