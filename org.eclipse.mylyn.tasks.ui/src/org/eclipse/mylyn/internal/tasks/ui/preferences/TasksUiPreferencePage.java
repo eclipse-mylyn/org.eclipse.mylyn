@@ -13,8 +13,10 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.mylyn.internal.monitor.ui.ActivityContextManager;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
+import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
@@ -196,8 +198,8 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 		///getPreferenceStore().setValue(TasksUiPreferenceConstants.PLANNING_STARTHOUR, hourDayStart.getSelection());
 		///getPreferenceStore().setValue(TasksUiPreferenceConstants.PLANNING_ENDHOUR, hourDayEnd.getSelection());
-		getPreferenceStore().setValue(TasksUiPreferenceConstants.ACTIVITY_TIMEOUT_ENABLED, timeoutEnabledButton.getSelection());
-		getPreferenceStore().setValue(TasksUiPreferenceConstants.ACTIVITY_TIMEOUT, timeoutMinutes.getSelection() * (60*1000));
+		MonitorUiPlugin.getDefault().getPreferenceStore().setValue(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED, timeoutEnabledButton.getSelection());
+		MonitorUiPlugin.getDefault().getPreferenceStore().setValue(ActivityContextManager.ACTIVITY_TIMEOUT, timeoutMinutes.getSelection() * (60*1000));
 		backupNow.setEnabled(true);
 		return true;
 	}
@@ -220,9 +222,9 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		///hourDayStart.setSelection(getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_STARTHOUR));
 		///hourDayEnd.setSelection(getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
 		backupNow.setEnabled(true);
-		int minutes = getPreferenceStore().getInt(TasksUiPreferenceConstants.ACTIVITY_TIMEOUT)/MS_MINUTES;
+		int minutes = MonitorUiPlugin.getDefault().getPreferenceStore().getInt(ActivityContextManager.ACTIVITY_TIMEOUT)/MS_MINUTES;
 		timeoutMinutes.setSelection(minutes);
-		timeoutEnabledButton.setSelection(getPreferenceStore().getBoolean(TasksUiPreferenceConstants.ACTIVITY_TIMEOUT_ENABLED));
+		timeoutEnabledButton.setSelection(MonitorUiPlugin.getDefault().getPreferenceStore().getBoolean(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED));
 		return true;
 	}
 
@@ -261,9 +263,9 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 		///hourDayStart.setSelection(getPreferenceStore().getDefaultInt(TasksUiPreferenceConstants.PLANNING_STARTHOUR));
 		///hourDayEnd.setSelection(getPreferenceStore().getDefaultInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
-		int activityTimeoutMinutes = getPreferenceStore().getDefaultInt(TasksUiPreferenceConstants.ACTIVITY_TIMEOUT)/MS_MINUTES;
+		int activityTimeoutMinutes = MonitorUiPlugin.getDefault().getPreferenceStore().getDefaultInt(ActivityContextManager.ACTIVITY_TIMEOUT)/MS_MINUTES;
 		timeoutMinutes.setSelection(activityTimeoutMinutes);
-		timeoutEnabledButton.setSelection(getPreferenceStore().getDefaultBoolean(TasksUiPreferenceConstants.ACTIVITY_TIMEOUT_ENABLED));
+		timeoutEnabledButton.setSelection(MonitorUiPlugin.getDefault().getPreferenceStore().getDefaultBoolean(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED));
 		updateRefreshGroupEnablements();
 	}
 
@@ -503,7 +505,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		group.setLayout(new GridLayout(3, false));
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
-		boolean timeoutEnabled = getPreferenceStore().getBoolean(TasksUiPreferenceConstants.ACTIVITY_TIMEOUT_ENABLED);
+		boolean timeoutEnabled = MonitorUiPlugin.getDefault().getPreferenceStore().getBoolean(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED);
 		
 		timeoutEnabledButton = new Button(group, SWT.CHECK);
 		timeoutEnabledButton.setText("Enable inactivity timeouts");
@@ -524,7 +526,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		timeoutMinutes.setIncrement(5);
 		timeoutMinutes.setMaximum(60);
 		timeoutMinutes.setMinimum(1);
-		long minutes = getPreferenceStore().getLong(TasksUiPreferenceConstants.ACTIVITY_TIMEOUT)/MS_MINUTES;
+		long minutes = MonitorUiPlugin.getDefault().getPreferenceStore().getLong(ActivityContextManager.ACTIVITY_TIMEOUT)/MS_MINUTES;
 		timeoutMinutes.setSelection((int)minutes);
 		timeoutMinutes.addSelectionListener(new SelectionAdapter() {
 

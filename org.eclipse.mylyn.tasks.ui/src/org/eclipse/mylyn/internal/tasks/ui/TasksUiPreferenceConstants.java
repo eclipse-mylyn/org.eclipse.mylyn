@@ -65,8 +65,4 @@ public final class TasksUiPreferenceConstants {
 
 	public static final String LOCAL_SUB_TASKS_ENABLED = "org.eclipse.mylyn.tasks.ui.subtasks.local";
 
-	public static final String ACTIVITY_TIMEOUT = "org.eclipse.mylyn.tasks.ui.activity.timeout";
-
-	public static final String ACTIVITY_TIMEOUT_ENABLED = "org.eclipse.mylyn.tasks.ui.activity.timeout.enabled";
-
 }
