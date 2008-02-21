@@ -7,9 +7,8 @@ Bundle-Activator: org.eclipse.mylyn.monitor.ui.MonitorUiPlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.browser,
- org.eclipse.mylyn.context.core,
- org.eclipse.mylyn.monitor.core,
- org.eclipse.mylyn
+ org.eclipse.mylyn.context.core;bundle-version="[2.3.0,3.0.0)",
+ org.eclipse.mylyn.monitor.core;bundle-version="[2.3.0,3.0.0)"
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
 Export-Package: org.eclipse.mylyn.internal.monitor.ui,
