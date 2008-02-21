@@ -177,6 +177,10 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor CLEAR = create(T_TOOL, "clear.gif");
 	
+	public static final ImageDescriptor EDIT = create(T_TOOL, "edit.gif");
+	
+	public static final ImageDescriptor CUT = create(T_TOOL, "cut.gif");
+	
 	public static final ImageDescriptor ATTACHMENT_PATCH = create(T_OBJ, "attachment-patch.gif");
 
 	public static final ImageDescriptor TASK_RETRIEVE = create(T_TOOL, "task-retrieve.gif");

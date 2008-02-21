@@ -238,7 +238,7 @@ public class ScreenshotAttachmentPage extends WizardPage implements IImageCreato
 			}
 		};
 		cropAction.setToolTipText("Crop");
-		cropAction.setImageDescriptor(ImageDescriptor.createFromFile(getClass(), "crop.png"));
+		cropAction.setImageDescriptor(TasksUiImages.CUT);
 		cropAction.setEnabled(false);
 
 		markAction = new Action("&Annotate", IAction.AS_RADIO_BUTTON) {
@@ -252,8 +252,8 @@ public class ScreenshotAttachmentPage extends WizardPage implements IImageCreato
 			}
 		};
 		markAction.setToolTipText("Draw annotations on screenshot image");
-		markAction.setImageDescriptor(ImageDescriptor.createFromFile(getClass(), "mark.gif"));
-		markAction.setDisabledImageDescriptor(ImageDescriptor.createFromFile(getClass(), "mark_disabled.gif"));
+		markAction.setImageDescriptor(TasksUiImages.EDIT);
+//		markAction.setDisabledImageDescriptor(ImageDescriptor.createFromFile(getClass(), "mark_disabled.gif"));
 		markAction.setEnabled(false);
 
 		colorAction = new Action("", IAction.AS_DROP_DOWN_MENU) {
@@ -295,7 +295,7 @@ public class ScreenshotAttachmentPage extends WizardPage implements IImageCreato
 			}
 		};
 		clearAction.setToolTipText("Clear all annotations made on screenshot image");
-		clearAction.setImageDescriptor(ImageDescriptor.createFromFile(getClass(), "erase.png"));
+		clearAction.setImageDescriptor(TasksUiImages.CLEAR);
 		clearAction.setEnabled(false);
 
 		tbm.add(createAndConfigureCI(captureAction));
