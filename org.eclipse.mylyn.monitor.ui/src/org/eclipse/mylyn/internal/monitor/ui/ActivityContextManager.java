@@ -56,6 +56,10 @@ public class ActivityContextManager {
 
 	private ArrayList<AbstractUserActivityMonitor> activityMonitors;
 
+	public static final String ACTIVITY_TIMEOUT = "org.eclipse.mylyn.monitor.ui.activity.timeout";
+
+	public static final String ACTIVITY_TIMEOUT_ENABLED = "org.eclipse.mylyn.monitor.ui.activity.timeout.enabled";
+
 	public ActivityContextManager(int timeout, ArrayList<AbstractUserActivityMonitor> monitors) {
 		this.activityMonitors = monitors;
 		this.timeout = timeout;

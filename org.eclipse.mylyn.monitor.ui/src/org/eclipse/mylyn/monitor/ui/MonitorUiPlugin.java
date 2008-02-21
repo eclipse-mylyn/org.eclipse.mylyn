@@ -47,6 +47,8 @@ import org.osgi.framework.BundleContext;
  */
 public class MonitorUiPlugin extends AbstractUIPlugin {
 
+	private static final int DEFAULT_ACTIVITY_TIMEOUT = 180000;
+
 	public static final String ID_PLUGIN = "org.eclipse.mylyn.monitor.ui";
 	
 	/**
@@ -84,6 +86,25 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 	public static final String OBFUSCATED_LABEL = "[obfuscated]";
 
 	private IWorkbenchWindow launchingWorkbenchWindow = null;
+	
+	private final org.eclipse.jface.util.IPropertyChangeListener PROPERTY_LISTENER = new org.eclipse.jface.util.IPropertyChangeListener() {
+
+		public void propertyChange(org.eclipse.jface.util.PropertyChangeEvent event) {
+			if (event.getProperty().equals(ActivityContextManager.ACTIVITY_TIMEOUT)) {
+				MonitorUiPlugin.getDefault().setInactivityTimeout(
+						getPreferenceStore().getInt(ActivityContextManager.ACTIVITY_TIMEOUT));
+			} else if (event.getProperty().equals(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED)) {
+				if (getPreferenceStore().getBoolean(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED)) {
+					MonitorUiPlugin.getDefault().setInactivityTimeout(
+							getPreferenceStore().getInt(ActivityContextManager.ACTIVITY_TIMEOUT));
+				} else {
+					MonitorUiPlugin.getDefault().setInactivityTimeout(0);
+				}
+
+			}
+		}
+
+	};
 
 	protected IWindowListener WINDOW_LISTENER = new IWindowListener() {
 		public void windowActivated(IWorkbenchWindow window) {
@@ -117,6 +138,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 		}
 	};
 
+
 	public MonitorUiPlugin() {
 		INSTANCE = this;
 	}
@@ -124,6 +146,11 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		
+		getPreferenceStore().setDefault(ActivityContextManager.ACTIVITY_TIMEOUT, DEFAULT_ACTIVITY_TIMEOUT);
+		getPreferenceStore().setDefault(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED, true);
+		getPreferenceStore().addPropertyChangeListener(PROPERTY_LISTENER);
+		
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				try {
@@ -141,6 +168,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 					new MonitorUiExtensionPointReader().initExtensions();
 
 					activityContextManager = new ActivityContextManager(TIMEOUT_INACTIVITY_MILLIS, monitors);
+					setInactivityTimeout(getPreferenceStore().getInt(ActivityContextManager.ACTIVITY_TIMEOUT));
 					activityContextManager.start();
 				} catch (Exception e) {
 					StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN, "Monitor UI start failed", e));
@@ -157,6 +185,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 				if (activityContextManager != null) {
 					activityContextManager.stop();
 				}
+				getPreferenceStore().removePropertyChangeListener(PROPERTY_LISTENER);
 				if (getWorkbench() != null && !getWorkbench().isClosing()) {
 					getWorkbench().removeWindowListener(WINDOW_LISTENER);
 
