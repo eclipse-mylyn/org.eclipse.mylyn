@@ -66,7 +66,6 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TaskListWriter;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiExtensionReader;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
-import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
@@ -321,20 +320,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				if (event.getOldValue() instanceof String) {
 					reloadDataDirectory(true);
 				}
-			} else if (event.getProperty().equals(TasksUiPreferenceConstants.ACTIVITY_TIMEOUT)) {
-				MonitorUiPlugin.getDefault().setInactivityTimeout(
-						getPreferenceStore().getInt(TasksUiPreferenceConstants.ACTIVITY_TIMEOUT));
-			} else if (event.getProperty().equals(TasksUiPreferenceConstants.ACTIVITY_TIMEOUT_ENABLED)) {
-				if (getPreferenceStore().getBoolean(TasksUiPreferenceConstants.ACTIVITY_TIMEOUT_ENABLED)) {
-					MonitorUiPlugin.getDefault().setInactivityTimeout(
-							getPreferenceStore().getInt(TasksUiPreferenceConstants.ACTIVITY_TIMEOUT));
-				} else {
-					MonitorUiPlugin.getDefault().setInactivityTimeout(0);
-				}
-
 			}
 		}
-
 	};
 
 	private class TasksUiInitializationJob extends UIJob {
@@ -392,8 +379,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			try {
 				taskListSaveManager = new TaskListSaveManager();
 				taskListManager.setTaskListSaveManager(taskListSaveManager);
-				
-//				MonitorUiPlugin.getDefault().setInactivityTimeout(getPreferenceStore().getInt(TasksUiPreferenceConstants.ACTIVITY_TIMEOUT));
 
 				ContextCorePlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
 
@@ -666,8 +651,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 		store.setDefault(TasksUiPreferenceConstants.PLANNING_STARTHOUR, 9);
 		store.setDefault(TasksUiPreferenceConstants.PLANNING_ENDHOUR, 18);
-		store.setDefault(TasksUiPreferenceConstants.ACTIVITY_TIMEOUT, 180000);
-		store.setDefault(TasksUiPreferenceConstants.ACTIVITY_TIMEOUT_ENABLED, true);
 	}
 
 	public static TaskListManager getTaskListManager() {
