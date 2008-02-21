@@ -11,6 +11,7 @@ package org.eclipse.mylyn.internal.context.ui.views;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.PopupDialog;
 import org.eclipse.jface.text.IInformationControl;
 import org.eclipse.jface.text.IInformationControlExtension;
@@ -18,6 +19,7 @@ import org.eclipse.jface.text.IInformationControlExtension2;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.context.ui.InterestFilter;
 import org.eclipse.mylyn.internal.context.ui.editors.ContextEditorFormPage;
 import org.eclipse.swt.SWT;
@@ -69,8 +71,8 @@ public class QuickContextPopupDialog extends PopupDialog implements IInformation
 
 	private ContextNodeOpenListener openListener;
 
-	public QuickContextPopupDialog(Shell parent, int shellStyle) {
-		super(parent, shellStyle, true, true, true, true, null, "Task Context");
+	public QuickContextPopupDialog(Shell parent) {
+		super(parent, SWT.RESIZE, true, true, true, true, null, "Task Context");
 		create();
 	}
 
@@ -90,7 +92,8 @@ public class QuickContextPopupDialog extends PopupDialog implements IInformation
 	}
 
 	private void createViewer(Composite parent) {
-		commonViewer = createCommonViewer(parent);
+		Control composite = super.createDialogArea(parent);
+		commonViewer = createCommonViewer((Composite) composite);
 
 		openListener = new ContextNodeOpenListener(commonViewer);
 
@@ -116,12 +119,8 @@ public class QuickContextPopupDialog extends PopupDialog implements IInformation
 
 	protected CommonViewer createCommonViewer(Composite parent) {
 		CommonViewer viewer = new CommonViewer(ID_VIEWER, parent, SWT.H_SCROLL | SWT.V_SCROLL);
+		viewer.getControl().setLayoutData(new GridData(500, 400));
 		return viewer;
-	}
-
-	@Override
-	protected Point getInitialSize() {
-		return new Point(400, 500);
 	}
 
 	@Override
@@ -298,6 +297,16 @@ public class QuickContextPopupDialog extends PopupDialog implements IInformation
 		return fFilterText;
 	}
 
+	@Override
+	protected IDialogSettings getDialogSettings() {
+		IDialogSettings dialogSettings = ContextUiPlugin.getDefault().getDialogSettings();
+		IDialogSettings result = dialogSettings.getSection(ID_VIEWER);
+		if (result == null) {
+			result = dialogSettings.addNewSection(ID_VIEWER);
+		}
+		return result;
+	}
+	
 	private void createUIWidgetFilterText(Composite parent) {
 		// Create the widget
 		fFilterText = new Text(parent, SWT.NONE);

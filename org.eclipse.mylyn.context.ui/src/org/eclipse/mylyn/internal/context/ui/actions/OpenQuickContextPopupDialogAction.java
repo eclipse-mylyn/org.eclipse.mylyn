@@ -11,7 +11,6 @@ package org.eclipse.mylyn.internal.context.ui.actions;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylyn.internal.context.ui.views.QuickContextPopupDialog;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
@@ -36,9 +35,7 @@ public class OpenQuickContextPopupDialogAction implements IWorkbenchWindowAction
 
 	public void run(IAction action) {
 		Shell parent = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-		inplaceDialog = new QuickContextPopupDialog(parent, SWT.NULL);
-		// TODO: remember size settings
-//		inplaceDialog.setSize(400, 500);
+		inplaceDialog = new QuickContextPopupDialog(parent);
 		inplaceDialog.open();
 		inplaceDialog.setFocus();
 		// inplaceDialog.setLastSelection(XRefUIUtils.getCurrentSelection());
