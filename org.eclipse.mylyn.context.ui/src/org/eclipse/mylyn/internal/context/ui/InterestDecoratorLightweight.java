@@ -21,6 +21,7 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContextRelation;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 
 /**
  * @author Mik Kersten
@@ -35,7 +36,7 @@ public class InterestDecoratorLightweight implements ILightweightLabelDecorator 
 		if (ContextCorePlugin.getContextManager() != null && !ContextCorePlugin.getContextManager().isContextActive()) {
 			return;
 		}
-		
+
 		AbstractContextStructureBridge bridge = null;
 		try {
 			if (ContextCorePlugin.getDefault() == null) {
@@ -46,22 +47,25 @@ public class InterestDecoratorLightweight implements ILightweightLabelDecorator 
 			// ignored, because we can add structure bridges during decoration
 		}
 		try {
-			IInteractionElement node = null;
-			if (element instanceof InteractionContextRelation) {
-				decoration.setForegroundColor(ColorMap.RELATIONSHIP);
-			} else if (element instanceof IInteractionElement) {
-				node = (IInteractionElement) element;
-			} else {
-				if (bridge != null && bridge.getContentType() != null) {
-					node = ContextCorePlugin.getContextManager().getElement(bridge.getHandleIdentifier(element));
+			// NOTE: awkward coupling and special rule to deal with tasks, see bug 212639
+			if (!(element instanceof AbstractTask)) {
+				IInteractionElement node = null;
+				if (element instanceof InteractionContextRelation) {
+					decoration.setForegroundColor(ColorMap.RELATIONSHIP);
+				} else if (element instanceof IInteractionElement) {
+					node = (IInteractionElement) element;
+				} else {
+					if (bridge != null && bridge.getContentType() != null) {
+						node = ContextCorePlugin.getContextManager().getElement(bridge.getHandleIdentifier(element));
+					}
 				}
-			}
-			if (node != null) {
-				decoration.setForegroundColor(InterestDecorator.getForegroundForElement(node));
-				if (bridge != null && bridge.canBeLandmark(node.getHandleIdentifier())
-						&& node.getInterest().isLandmark() && !node.getInterest().isPropagated()
-						&& !node.getInterest().isPredicted()) {
-					decoration.setFont(ContextUiPrefContstants.BOLD);
+				if (node != null) {
+					decoration.setForegroundColor(InterestDecorator.getForegroundForElement(node));
+					if (bridge != null && bridge.canBeLandmark(node.getHandleIdentifier())
+							&& node.getInterest().isLandmark() && !node.getInterest().isPropagated()
+							&& !node.getInterest().isPredicted()) {
+						decoration.setFont(ContextUiPrefContstants.BOLD);
+					}
 				}
 			}
 		} catch (Exception e) {

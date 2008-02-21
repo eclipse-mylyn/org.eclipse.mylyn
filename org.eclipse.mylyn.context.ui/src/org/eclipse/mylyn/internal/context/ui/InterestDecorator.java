@@ -81,7 +81,7 @@ public class InterestDecorator implements ILabelDecorator, IFontDecorator, IColo
 		if (element instanceof InteractionContextRelation) {
 			return ColorMap.RELATIONSHIP;
 		} else if (node != null) {
-			getForegroundForElement(node);
+			return getForegroundForElement(node);
 		}
 		return null;
 	}
