@@ -21,15 +21,15 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.mylyn.java.ui,
  org.eclipse.jdt.launching,
  org.eclipse.jdt.junit,
- org.eclipse.mylyn.tasks.core,
- org.eclipse.mylyn.context.ui,
- org.eclipse.mylyn.ide.ui,
- org.eclipse.mylyn.java.ui,
- org.eclipse.mylyn.monitor.ui,
- org.eclipse.mylyn.monitor.core,
- org.eclipse.mylyn.resources.ui,
- org.eclipse.mylyn.context.core,
- org.eclipse.jdt.debug.ui
+ org.eclipse.jdt.debug.ui,
+ org.eclipse.mylyn.tasks.core;bundle-version="[2.3.0,3.0.0)",
+ org.eclipse.mylyn.context.ui;bundle-version="[2.3.0,3.0.0)",
+ org.eclipse.mylyn.ide.ui;bundle-version="[2.3.0,3.0.0)",
+ org.eclipse.mylyn.java.ui;bundle-version="[2.3.0,3.0.0)",
+ org.eclipse.mylyn.monitor.ui;bundle-version="[2.3.0,3.0.0)",
+ org.eclipse.mylyn.monitor.core;bundle-version="[2.3.0,3.0.0)",
+ org.eclipse.mylyn.resources.ui;bundle-version="[2.3.0,3.0.0)",
+ org.eclipse.mylyn.context.core;bundle-version="[2.3.0,3.0.0)"
 Bundle-Activator: org.eclipse.mylyn.internal.pde.ui.PdeUiBridgePlugin
 Eclipse-LazyStart: true
 Bundle-ClassPath: .

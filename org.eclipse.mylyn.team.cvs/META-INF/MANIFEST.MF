@@ -13,16 +13,15 @@ Require-Bundle: org.eclipse.team.core,
  org.eclipse.core.runtime,
  org.eclipse.ui.navigator,
  org.eclipse.ui.workbench,
- org.eclipse.mylyn.context.core,
- org.eclipse.mylyn.context.ui,
- org.eclipse.mylyn.tasks.core,
- org.eclipse.mylyn.tasks.ui,
- org.eclipse.mylyn.resources.ui,
+ org.eclipse.mylyn.context.core;bundle-version="[2.3.0,3.0.0)",
+ org.eclipse.mylyn.context.ui;bundle-version="[2.3.0,3.0.0)",
+ org.eclipse.mylyn.tasks.core;bundle-version="[2.3.0,3.0.0)",
+ org.eclipse.mylyn.tasks.ui;bundle-version="[2.3.0,3.0.0)",
+ org.eclipse.mylyn.resources.ui;bundle-version="[2.3.0,3.0.0)",
  org.eclipse.compare,
  org.eclipse.ui.navigator.resources,
- org.eclipse.mylyn.monitor.core,
- org.eclipse.mylyn,
- org.eclipse.mylyn.team.ui
+ org.eclipse.mylyn.monitor.core;bundle-version="[2.3.0,3.0.0)",
+ org.eclipse.mylyn.team.ui;bundle-version="[2.3.0,3.0.0)"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ClassPath: .
 Export-Package: org.eclipse.mylyn.internal.team.ccvs

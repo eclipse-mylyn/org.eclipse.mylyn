@@ -3,10 +3,10 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Bugzilla Connector IDE
 Bundle-SymbolicName: org.eclipse.mylyn.bugzilla.ide;singleton:=true
 Bundle-Version: 2.3.0.qualifier
-Require-Bundle: org.eclipse.mylyn.tasks.core,
- org.eclipse.mylyn.bugzilla.core,
- org.eclipse.mylyn.tasks.ui,
- org.eclipse.mylyn.monitor.core,
+Require-Bundle: org.eclipse.mylyn.tasks.core;bundle-version="[2.3.0,3.0.0)",
+ org.eclipse.mylyn.bugzilla.core;bundle-version="[2.3.0,3.0.0)",
+ org.eclipse.mylyn.tasks.ui;bundle-version="[2.3.0,3.0.0)",
+ org.eclipse.mylyn.monitor.core;bundle-version="[2.3.0,3.0.0)",
  org.eclipse.ui,
  org.eclipse.ui.views.log,
  org.eclipse.core.runtime,
