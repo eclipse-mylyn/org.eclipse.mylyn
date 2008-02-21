@@ -5,9 +5,9 @@ Bundle-SymbolicName: org.eclipse.mylyn.bugzilla.core;singleton:=true
 Bundle-Version: 2.3.0.qualifier
 Bundle-Activator: org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin
 Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.mylyn.tasks.core,
- org.eclipse.mylyn.web.core,
- org.eclipse.mylyn.monitor.core
+ org.eclipse.mylyn.tasks.core;bundle-version="[2.3.0,3.0.0)",
+ org.eclipse.mylyn.web.core;bundle-version="[2.3.0,3.0.0)",
+ org.eclipse.mylyn.monitor.core;bundle-version="[2.3.0,3.0.0)"
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
 Bundle-ClassPath: .
