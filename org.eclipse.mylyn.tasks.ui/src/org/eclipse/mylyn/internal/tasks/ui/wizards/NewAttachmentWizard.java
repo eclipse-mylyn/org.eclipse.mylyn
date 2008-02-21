@@ -42,10 +42,6 @@ import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
@@ -81,7 +77,6 @@ public class NewAttachmentWizard extends Wizard {
 	private boolean screenshotMode;
 
 	public NewAttachmentWizard(TaskRepository repository, AbstractTask task, boolean screenshotMode) {
-		super();
 		this.task = task;
 		this.repository = repository;
 		this.screenshotMode = screenshotMode;
@@ -95,7 +90,12 @@ public class NewAttachmentWizard extends Wizard {
 		}
 
 		inputPage = new InputAttachmentSourcePage(this);
-		attachment = new LocalAttachment();
+		if (screenshotMode) {
+			shotPage = new ScreenshotAttachmentPage();
+			attachment = new ImageAttachment(shotPage);
+		} else {
+			attachment = new LocalAttachment();
+		}
 		attachment.setFilePath("");
 		setNeedsProgressMonitor(true);
 		IDialogSettings workbenchSettings = TasksUiPlugin.getDefault().getDialogSettings();
@@ -122,6 +122,15 @@ public class NewAttachmentWizard extends Wizard {
 		inputPage.setUseClipboard(true);
 		inputPage.setClipboardContents(attachContents);
 		attachment.setFilePath(InputAttachmentSourcePage.CLIPBOARD_LABEL);
+	}
+
+	@Override
+	public void dispose() {
+		// Ensures the temporary screenshot image is deleted
+		if (attachment != null && attachment instanceof ImageAttachment) {
+			((ImageAttachment) attachment).clearImageFile();
+		}
+		super.dispose();
 	}
 
 	@Override
@@ -159,19 +168,7 @@ public class NewAttachmentWizard extends Wizard {
 					task.setSynchronizationState(RepositoryTaskSyncState.OUTGOING);
 
 					if (screenshotMode || InputAttachmentSourcePage.SCREENSHOT_LABEL.equals(path)) {
-						Image image = shotPage.getScreenshotImage();
-						if (image == null) {
-							throw new InvocationTargetException(new CoreException(new RepositoryStatus(IStatus.ERROR,
-									TasksUiPlugin.ID_PLUGIN, RepositoryStatus.ERROR_INTERNAL, "Screenshot is empty",
-									null)));
-						}
-						String path = TasksUiPlugin.getDefault().getDefaultDataDirectory();
-						ImageLoader loader = new ImageLoader();
-						loader.data = new ImageData[] { image.getImageData() };
-						String fileName = path + "/" + SCREENSHOT_FILENAME;
-						loader.save(fileName, SWT.IMAGE_JPEG);
-						attachment.setFile(new File(fileName));
-						attachment.setFilename(SCREENSHOT_FILENAME);
+						((ImageAttachment) attachment).ensureImageFileWasCreated();
 					} else if (InputAttachmentSourcePage.CLIPBOARD_LABEL.equals(path)) {
 						String contents = inputPage.getClipboardContents();
 						if (contents == null) {
@@ -293,7 +290,7 @@ public class NewAttachmentWizard extends Wizard {
 	@Override
 	public boolean canFinish() {
 		if (screenshotMode) {
-			return shotPage.isPageComplete();
+			return shotPage.isPageComplete() && attachPage.isPageComplete();
 		} else {
 			return attachPage.isPageComplete();
 		}
@@ -303,7 +300,7 @@ public class NewAttachmentWizard extends Wizard {
 	public void addPages() {
 		super.addPages();
 		if (screenshotMode) {
-			addPage((shotPage = new ScreenshotAttachmentPage(attachment)));
+			addPage(shotPage);
 			addPage((attachPage = new NewAttachmentPage(attachment)));
 		} else {
 			if ("".equals(attachment.getFilePath())) {

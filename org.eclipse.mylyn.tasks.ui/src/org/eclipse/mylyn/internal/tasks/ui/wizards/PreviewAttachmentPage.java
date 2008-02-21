@@ -13,10 +13,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.tasks.core.LocalAttachment;
 import org.eclipse.swt.SWT;
@@ -50,7 +53,7 @@ public class PreviewAttachmentPage extends WizardPage {
 	private static final String TITLE = "Attachment Preview";
 
 	private static final String DESCRIPTION = "Review the attachment before submitting";
-	
+
 	private LocalAttachment attachment;
 
 	private static HashMap<String, String> textTypes;
@@ -92,6 +95,25 @@ public class PreviewAttachmentPage extends WizardPage {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout());
 		setControl(composite);
+
+		if (attachment instanceof ImageAttachment) {
+			try {
+				getContainer().run(true, false, new IRunnableWithProgress() {
+					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+						monitor.beginTask("Preparing image for preview...", 1);
+						((ImageAttachment) attachment).ensureImageFileWasCreated();
+						monitor.worked(1);
+						monitor.done();
+					}
+				});
+			} catch (InvocationTargetException e) {
+				createErrorPreview(composite, "Could not create image for preview");
+				return;
+			} catch (InterruptedException e) {
+				createErrorPreview(composite, "Could not create image for preview");
+				return;
+			}
+		}
 
 		if (InputAttachmentSourcePage.CLIPBOARD_LABEL.equals(attachment.getFilePath())) {
 			createTextPreview(composite, ((NewAttachmentWizard) getWizard()).getClipboardContents());

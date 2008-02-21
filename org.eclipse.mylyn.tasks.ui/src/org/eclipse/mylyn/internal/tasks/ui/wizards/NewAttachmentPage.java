@@ -239,7 +239,8 @@ public class NewAttachmentPage extends WizardPage {
 
 	@Override
 	public boolean isPageComplete() {
-		return !"".equals(filePath.getText().trim()) && (attachmentDesc == null || !"".equals(attachmentDesc.getText().trim()));
+		return !"".equals(filePath.getText().trim())
+				&& (attachmentDesc == null || !"".equals(attachmentDesc.getText().trim()));
 	}
 
 	public void populateAttachment() {
@@ -251,13 +252,6 @@ public class NewAttachmentPage extends WizardPage {
 
 	public LocalAttachment getAttachment() {
 		return attachment;
-	}
-
-	@Override
-	public boolean canFlipToNextPage() {
-		if (filePath.getText().equals(InputAttachmentSourcePage.SCREENSHOT_LABEL))
-			return false;
-		return isPageComplete();
 	}
 
 	public void setFilePath(String path) {
@@ -298,9 +292,9 @@ public class NewAttachmentPage extends WizardPage {
 	public boolean supportsDescription() {
 		return supportsDescription;
 	}
-	
+
 	public void setSupportsDescription(boolean supportsDescription) {
 		this.supportsDescription = supportsDescription;
 	}
-	
+
 }

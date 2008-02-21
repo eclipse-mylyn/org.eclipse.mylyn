@@ -15,14 +15,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.ActionContributionItem;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylyn.internal.tasks.core.LocalAttachment;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.MouseAdapter;
@@ -30,46 +36,60 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Region;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.ToolItem;
 
 /**
  * A wizard page to create a screenshot from the display.
- * <p>
- * Note: this class uses {@link GC#setXORMode(boolean)} which is deprecated because of lack of Mac implementation
- * (bug#50228). The strategy to make it work on platforms XOR is implemented and still have a good looking in platforms
- * where it is not implemented, is to draw each line 2 times: first using a WHITE foreground followed by the same draw
- * using a BLACK foreground. On platforms where XOR is implemented, the second draw will have no effect, since anything
- * XOR black results in noop. On platforms where XOR is NOT implemented, the {@link GC#setXORMode(boolean)} is a noop,
- * so the end result will be a black line.
  * 
  * @author Balazs Brinkus (bug 160572)
  * @author Mik Kersten
  * @author Willian Mitsuda
  */
-public class ScreenshotAttachmentPage extends WizardPage {
+public class ScreenshotAttachmentPage extends WizardPage implements IImageCreator {
 
-	private ScreenshotAttachmentPage page;
+	private IAction captureAction;
 
-	private LocalAttachment attachment;
+	private IAction fitAction;
 
-	private Button captureButton;
+	private IAction cropAction;
 
-	private Button fitButton;
+	private IAction markAction;
 
-	private Image screenshotImage;
+	private IAction colorAction;
+
+	private Image colorIcon;
+
+	private Color markColor;
+
+	private IAction clearAction;
+
+	/**
+	 * Original screenshot image; used for backup purposes
+	 */
+	private Image originalImage;
+
+	/**
+	 * Copy of {@link #originalImage original} image; all drawing operations are done here; base for the result image
+	 */
+	private Image workImage;
+
+	/**
+	 * Used to draw into {@link #workImage}
+	 */
+	private GC workImageGC;
 
 	private Canvas canvas;
 
@@ -87,13 +107,14 @@ public class ScreenshotAttachmentPage extends WizardPage {
 	private Rectangle originalSelection;
 
 	/**
-	 * Temporary storage for selection start point or selection resizing initial reference point; this value is
-	 * normalized to real image coordinates, no matter the zoom level (see {@link #scaleFactor})
+	 * Temporary storage for selection start point, selection resizing initial reference point or previous mark point
+	 * (it depends on current tool); this value is normalized to real image coordinates, no matter the zoom level (see
+	 * {@link #scaleFactor})
 	 */
 	private Point startPoint;
 
 	/**
-	 * What sides I'm resizing when doing an selection {@link Action#RESIZING_SELECTION resize}
+	 * What sides I'm resizing when doing an selection {@link EditorAction#RESIZING_SELECTION resize}
 	 */
 	private Set<SelectionSide> resizableSides = EnumSet.noneOf(SelectionSide.class);
 
@@ -110,48 +131,56 @@ public class ScreenshotAttachmentPage extends WizardPage {
 	/**
 	 * Available actions for the screenshot editor
 	 */
-	private static enum Action {
+	private static enum EditorAction {
 
-		IDLE, SELECTING, RESIZING_SELECTION, MOVING_SELECTION;
+		CROPPING, SELECTING, RESIZING_SELECTION, MOVING_SELECTION, MARKING;
 
 	};
 
 	/**
 	 * What am I doing now?
 	 */
-	private Action currentAction = Action.IDLE;
+	private EditorAction currentAction = EditorAction.CROPPING;
 
-	protected ScreenshotAttachmentPage(LocalAttachment attachment) {
+	protected ScreenshotAttachmentPage() {
 		super("ScreenShotAttachment");
 		setTitle("Capture Screenshot");
-		setDescription("After capturing, drag the mouse to crop. This window will not be captured. "
+		setDescription("After capturing, you can crop the image and make drawings on it. This window will not be captured. "
 				+ "Note that you can continue to interact with the workbench in order to set up the screenshot.");
-		this.attachment = attachment;
-		this.page = this;
 	}
 
 	public void createControl(Composite parent) {
-
-		Composite composite = new Composite(parent, SWT.NONE);
-		composite.setLayout(new GridLayout());
-		setControl(composite);
+		ViewForm vf = new ViewForm(parent, SWT.BORDER | SWT.FLAT);
+		vf.horizontalSpacing = 0;
+		vf.verticalSpacing = 0;
+		setControl(vf);
+		vf.setLayoutData(GridDataFactory.fillDefaults().create());
 
 		allocateCursors();
 
-		Composite buttonsComposite = new Composite(composite, SWT.NONE);
-		buttonsComposite.setLayout(new GridLayout(3, false));
-		captureButton = new Button(buttonsComposite, SWT.PUSH);
-		captureButton.setText("Capture Desktop");
-		captureButton.setImage(TasksUiImages.getImage(TasksUiImages.IMAGE_CAPTURE));
-		captureButton.addSelectionListener(new SelectionAdapter() {
+		// TODO: need disabled versions of all toolbar icons
+		ToolBarManager tbm = new ToolBarManager(SWT.FLAT | SWT.HORIZONTAL | SWT.RIGHT);
+		captureAction = new Action("&Capture Desktop", IAction.AS_PUSH_BUTTON) {
 
-			public void widgetSelected(SelectionEvent e) {
+			private boolean isFirstCapture = true;
+
+			@Override
+			public void run() {
 				captureScreenshotContent();
-				page.setErrorMessage(null);
-				fitButton.setEnabled(true);
+				setErrorMessage(null);
+				if (isFirstCapture) {
+					isFirstCapture = false;
+					fitAction.setEnabled(true);
+					cropAction.setEnabled(true);
+					cropAction.setChecked(true);
+					markAction.setEnabled(true);
+					clearAction.setEnabled(false);
+				}
 			}
 
-		});
+		};
+		captureAction.setToolTipText("Capture Desktop");
+		captureAction.setImageDescriptor(ImageDescriptor.createFromImage(TasksUiImages.getImage(TasksUiImages.IMAGE_CAPTURE)));
 
 //		captureDelayedButton = new Button(buttonsComposite, SWT.PUSH);
 //		final String captureIn = "Capture in ";
@@ -186,54 +215,118 @@ public class ScreenshotAttachmentPage extends WizardPage {
 //			}
 //		});
 
-		fitButton = new Button(buttonsComposite, SWT.TOGGLE);
-		fitButton.setText("Fit Image");
-		fitButton.setImage(TasksUiImages.getImage(TasksUiImages.IMAGE_FIT));
-		fitButton.addSelectionListener(new SelectionAdapter() {
-
-			public void widgetSelected(SelectionEvent e) {
+		fitAction = new Action("", IAction.AS_CHECK_BOX) {
+			@Override
+			public void run() {
 				refreshCanvasSize();
 			}
+		};
+		fitAction.setToolTipText("Fit Image");
+		fitAction.setText("&Fit Image");
+		fitAction.setImageDescriptor(ImageDescriptor.createFromImage(TasksUiImages.getImage(TasksUiImages.IMAGE_FIT)));
+		fitAction.setChecked(true);
+		fitAction.setEnabled(false);
 
-		});
-		fitButton.setSelection(true);
-		fitButton.setEnabled(false);
+		cropAction = new Action("C&rop", IAction.AS_RADIO_BUTTON) {
+			@Override
+			public void run() {
+				currentAction = EditorAction.CROPPING;
+				cropAction.setChecked(true);
+				markAction.setChecked(false);
+				colorAction.setEnabled(false);
+				canvas.redraw();
+			}
+		};
+		cropAction.setToolTipText("Crop");
+		cropAction.setImageDescriptor(ImageDescriptor.createFromFile(getClass(), "crop.png"));
+		cropAction.setEnabled(false);
 
-		scrolledComposite = new ScrolledComposite(composite, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER);
-		scrolledComposite.setLayoutData(GridDataFactory.fillDefaults()
-				.align(SWT.FILL, SWT.FILL)
-				.grab(true, true)
-				.create());
+		markAction = new Action("&Annotate", IAction.AS_RADIO_BUTTON) {
+			@Override
+			public void run() {
+				currentAction = EditorAction.MARKING;
+				cropAction.setChecked(false);
+				markAction.setChecked(true);
+				colorAction.setEnabled(true);
+				canvas.redraw();
+			}
+		};
+		markAction.setToolTipText("Draw annotations on screenshot image");
+		markAction.setImageDescriptor(ImageDescriptor.createFromFile(getClass(), "mark.gif"));
+		markAction.setDisabledImageDescriptor(ImageDescriptor.createFromFile(getClass(), "mark_disabled.gif"));
+		markAction.setEnabled(false);
 
+		colorAction = new Action("", IAction.AS_DROP_DOWN_MENU) {
+			@Override
+			public void runWithEvent(final Event e) {
+				final ColorSelectionWindow colorWindow = new ColorSelectionWindow(getControl().getShell()) {
+
+					@Override
+					protected Point getInitialLocation(Point initialSize) {
+						ToolItem toolItem = (ToolItem) e.widget;
+						Rectangle itemBounds = toolItem.getBounds();
+						Point location = toolItem.getParent().toDisplay(itemBounds.x + itemBounds.width,
+								itemBounds.y + itemBounds.height);
+						location.x -= initialSize.x;
+						return location;
+					}
+
+				};
+				colorWindow.setBlockOnOpen(true);
+				colorWindow.open();
+				RGB color = colorWindow.getSelectedRGB();
+				if (color != null) {
+					setMarkColor(color);
+				}
+			}
+		};
+		colorAction.setToolTipText("Change pen color");
+		colorIcon = new Image(getShell().getDisplay(), 16, 16);
+		setMarkColor(new RGB(255, 85, 85));
+		colorAction.setEnabled(false);
+
+		clearAction = new Action("C&lear Annotations", IAction.AS_PUSH_BUTTON) {
+			@Override
+			public void run() {
+				clearAction.setEnabled(false);
+				workImageGC.drawImage(originalImage, 0, 0);
+				canvas.redraw();
+				markAttachmentDirty();
+			}
+		};
+		clearAction.setToolTipText("Clear all annotations made on screenshot image");
+		clearAction.setImageDescriptor(ImageDescriptor.createFromFile(getClass(), "erase.png"));
+		clearAction.setEnabled(false);
+
+		tbm.add(createAndConfigureCI(captureAction));
+		tbm.add(createAndConfigureCI(fitAction));
+		tbm.add(new Separator());
+		tbm.add(createAndConfigureCI(cropAction));
+		tbm.add(createAndConfigureCI(markAction));
+		tbm.add(createAndConfigureCI(colorAction));
+		tbm.add(new Separator());
+		tbm.add(createAndConfigureCI(clearAction));
+
+		scrolledComposite = new ScrolledComposite(vf, SWT.V_SCROLL | SWT.H_SCROLL);
 		canvas = new Canvas(scrolledComposite, SWT.DOUBLE_BUFFERED);
 		scrolledComposite.setContent(canvas);
 		canvas.addPaintListener(new PaintListener() {
 
 			public void paintControl(PaintEvent e) {
-				if (screenshotImage != null) {
-					Rectangle imageBounds = screenshotImage.getBounds();
+				if (workImage != null) {
+					Rectangle imageBounds = workImage.getBounds();
 					Rectangle canvasBounds = canvas.getClientArea();
 
-					if (fitButton.getSelection()) {
-						e.gc.drawImage(screenshotImage, 0, 0, imageBounds.width, imageBounds.height, 0, 0,
+					if (fitAction.isChecked()) {
+						e.gc.drawImage(workImage, 0, 0, imageBounds.width, imageBounds.height, 0, 0,
 								canvasBounds.width, canvasBounds.height);
 					} else {
-						e.gc.drawImage(screenshotImage, 0, 0);
+						e.gc.drawImage(workImage, 0, 0);
 					}
-
-					if (currentAction == Action.IDLE) {
-						if (currentSelection != null) {
-							drawSelection(e.gc);
-						}
-					} else if (currentAction == Action.SELECTING || currentAction == Action.RESIZING_SELECTION
-							|| currentAction == Action.MOVING_SELECTION) {
-						if (currentSelection != null) {
-							drawSelectionPreview(e.gc);
-						}
-					}
+					drawSelection(e.gc);
 				} else {
 //					page.setErrorMessage("Screenshot required");
-					fitButton.setEnabled(false);
+					fitAction.setEnabled(false);
 				}
 			}
 		});
@@ -241,17 +334,51 @@ public class ScreenshotAttachmentPage extends WizardPage {
 		scrolledComposite.addControlListener(new ControlAdapter() {
 			@Override
 			public void controlResized(ControlEvent e) {
-				if (fitButton.getSelection()) {
+				if (fitAction.isChecked()) {
 					refreshCanvasSize();
 				}
 			}
 		});
 
+		vf.setTopLeft(tbm.createControl(vf));
+		vf.setContent(scrolledComposite);
 		registerMouseListeners();
+	}
+
+	private ActionContributionItem createAndConfigureCI(IAction action) {
+		ActionContributionItem ci = new ActionContributionItem(action);
+		ci.setMode(ActionContributionItem.MODE_FORCE_TEXT);
+		return ci;
+	}
+
+	private void setMarkColor(RGB color) {
+		if (markColor != null) {
+			markColor.dispose();
+		}
+		markColor = new Color(getShell().getDisplay(), color);
+		if (workImageGC != null) {
+			workImageGC.setForeground(markColor);
+		}
+
+		GC colorGC = new GC(colorIcon);
+		colorGC.setBackground(markColor);
+		colorGC.fillRectangle(0, 0, 16, 16);
+		colorGC.drawRectangle(0, 0, 15, 15);
+		colorGC.dispose();
+
+		colorAction.setImageDescriptor(ImageDescriptor.createFromImage(colorIcon));
 	}
 
 	@Override
 	public void dispose() {
+		disposeImageResources();
+		if (markColor != null) {
+			markColor.dispose();
+		}
+		if (colorIcon != null) {
+			colorIcon.dispose();
+		}
+
 		canvas.setCursor(null);
 		for (Cursor cursor : cursors.values()) {
 			cursor.dispose();
@@ -259,8 +386,22 @@ public class ScreenshotAttachmentPage extends WizardPage {
 		super.dispose();
 	}
 
+	private void disposeImageResources() {
+		if (originalImage != null) {
+			originalImage.dispose();
+		}
+		if (workImageGC != null) {
+			workImageGC.dispose();
+		}
+		if (workImage != null) {
+			workImage.dispose();
+		}
+	}
+
+	private static final int CURSOR_MARK_TOOL = -1;
+
 	private void allocateCursors() {
-		Display display = Display.getCurrent();
+		Display display = getShell().getDisplay();
 		cursors.put(SWT.CURSOR_ARROW, new Cursor(display, SWT.CURSOR_ARROW));
 		cursors.put(SWT.CURSOR_SIZEALL, new Cursor(display, SWT.CURSOR_SIZEALL));
 		cursors.put(SWT.CURSOR_SIZENWSE, new Cursor(display, SWT.CURSOR_SIZENWSE));
@@ -268,6 +409,9 @@ public class ScreenshotAttachmentPage extends WizardPage {
 		cursors.put(SWT.CURSOR_SIZENS, new Cursor(display, SWT.CURSOR_SIZENS));
 		cursors.put(SWT.CURSOR_SIZEWE, new Cursor(display, SWT.CURSOR_SIZEWE));
 		cursors.put(SWT.CURSOR_CROSS, new Cursor(display, SWT.CURSOR_CROSS));
+
+		// TODO: allocate custom cursor for "mark" tool
+		cursors.put(CURSOR_MARK_TOOL, new Cursor(display, SWT.CURSOR_HAND));
 	}
 
 	private Rectangle getScaledSelection() {
@@ -278,25 +422,21 @@ public class ScreenshotAttachmentPage extends WizardPage {
 		int y = (int) Math.round(currentSelection.y * scaleFactor);
 		int right = (int) Math.round((currentSelection.x + currentSelection.width) * scaleFactor);
 		int bottom = (int) Math.round((currentSelection.y + currentSelection.height) * scaleFactor);
-		int width = Math.min(right, (int) Math.round((screenshotImage.getBounds().width - 1) * scaleFactor)) - x;
-		int height = Math.min(bottom, (int) Math.round((screenshotImage.getBounds().height - 1) * scaleFactor)) - y;
+		int width = Math.min(right, (int) Math.round((workImage.getBounds().width - 1) * scaleFactor)) - x;
+		int height = Math.min(bottom, (int) Math.round((workImage.getBounds().height - 1) * scaleFactor)) - y;
 		return new Rectangle(x, y, width, height);
 	}
 
 	@Override
 	public boolean isPageComplete() {
-		if (screenshotImage == null)
-			return false;
-		return true;
+		return workImage != null;
 	}
 
 	@Override
 	public IWizardPage getNextPage() {
 		NewAttachmentPage page = (NewAttachmentPage) getWizard().getPage("AttachmentDetails");
-		attachment.setContentType("image/jpeg");
 		page.setFilePath(InputAttachmentSourcePage.SCREENSHOT_LABEL);
 		page.setContentType();
-		getCropScreenshot();
 		return page;
 	}
 
@@ -306,9 +446,8 @@ public class ScreenshotAttachmentPage extends WizardPage {
 	}
 
 	private void captureScreenshotContent() {
-
-		final Display display = Display.getDefault();
-		final Shell wizardShell = getWizard().getContainer().getShell();
+		Display display = getShell().getDisplay();
+		Shell wizardShell = getWizard().getContainer().getShell();
 		wizardShell.setVisible(false);
 
 		// NOTE: need a wait since the shell can take time to disappear (e.g. fade on Vista)
@@ -318,24 +457,26 @@ public class ScreenshotAttachmentPage extends WizardPage {
 			// ignore
 		}
 
-		display.asyncExec(new Runnable() {
-			public void run() {
-				Rectangle displayBounds = display.getBounds();
-				screenshotImage = new Image(display, displayBounds);
+		disposeImageResources();
+		Rectangle displayBounds = display.getBounds();
+		originalImage = new Image(display, displayBounds);
+		workImage = new Image(display, displayBounds);
 
-				GC gc = new GC(display);
-				gc.copyArea(screenshotImage, 0, 0);
-				gc.dispose();
+		GC gc = new GC(display);
+		gc.copyArea(originalImage, 0, 0);
+		gc.copyArea(workImage, 0, 0);
+		gc.dispose();
 
-				clearSelection();
-				refreshCanvasSize();
+		workImageGC = new GC(workImage);
+		workImageGC.setForeground(markColor);
+		workImageGC.setLineWidth(4);
+		workImageGC.setLineCap(SWT.CAP_ROUND);
 
-				wizardShell.setVisible(true);
-				if (screenshotImage != null) {
-					setPageComplete(true);
-				}
-			}
-		});
+		clearSelection();
+		refreshCanvasSize();
+
+		wizardShell.setVisible(true);
+		setPageComplete(true);
 	}
 
 	/**
@@ -352,7 +493,7 @@ public class ScreenshotAttachmentPage extends WizardPage {
 		currentSelection = new Rectangle(startX, startY, width, height);
 
 		// Decreases 1 pixel size from original image because Rectangle.intersect() consider them as right-bottom limit
-		Rectangle imageBounds = screenshotImage.getBounds();
+		Rectangle imageBounds = workImage.getBounds();
 		imageBounds.width--;
 		imageBounds.height--;
 		currentSelection.intersect(imageBounds);
@@ -363,12 +504,11 @@ public class ScreenshotAttachmentPage extends WizardPage {
 	 * level is changed
 	 */
 	private void setUpGrabPoints() {
+		grabPoints.clear();
 		if (currentSelection == null) {
 			return;
 		}
 
-		canvas.setCursor(null);
-		grabPoints.clear();
 		Rectangle scaledSelection = getScaledSelection();
 		grabPoints.add(GrabPoint.createGrabPoint(scaledSelection.x, scaledSelection.y, SWT.CURSOR_SIZENWSE, EnumSet.of(
 				SelectionSide.LEFT, SelectionSide.TOP)));
@@ -393,7 +533,7 @@ public class ScreenshotAttachmentPage extends WizardPage {
 				originalSelection.height);
 		int deltaX = x - startPoint.x;
 		int deltaY = y - startPoint.y;
-		Rectangle imageBounds = screenshotImage.getBounds();
+		Rectangle imageBounds = workImage.getBounds();
 
 		// Check current selection limits
 		if (resizableSides.contains(SelectionSide.LEFT)) {
@@ -436,6 +576,8 @@ public class ScreenshotAttachmentPage extends WizardPage {
 		if (resizableSides.contains(SelectionSide.BOTTOM)) {
 			currentSelection.height += deltaY;
 		}
+
+		setUpGrabPoints();
 	}
 
 	private void refreshSelectionPosition(int x, int y) {
@@ -447,7 +589,7 @@ public class ScreenshotAttachmentPage extends WizardPage {
 		if (newY < 0) {
 			newY = 0;
 		}
-		Rectangle imageBounds = screenshotImage.getBounds();
+		Rectangle imageBounds = workImage.getBounds();
 		if (newX + originalSelection.width - 1 > imageBounds.width) {
 			newX = imageBounds.width - originalSelection.width;
 		}
@@ -455,6 +597,8 @@ public class ScreenshotAttachmentPage extends WizardPage {
 			newY = imageBounds.height - originalSelection.height;
 		}
 		currentSelection = new Rectangle(newX, newY, originalSelection.width, originalSelection.height);
+
+		setUpGrabPoints();
 	}
 
 	private void registerMouseListeners() {
@@ -464,17 +608,19 @@ public class ScreenshotAttachmentPage extends WizardPage {
 			 * If a selection is in course, moving the mouse around refreshes the selection rectangle
 			 */
 			public void mouseMove(MouseEvent e) {
-				if (currentAction == Action.SELECTING) {
-					// Selection in course
-					refreshCurrentSelection((int) Math.round(e.x / scaleFactor), (int) Math.round(e.y / scaleFactor));
+				int scaledX = (int) Math.round(e.x / scaleFactor);
+				int scaledY = (int) Math.round(e.y / scaleFactor);
+
+				if (currentAction == EditorAction.SELECTING) {
+					refreshCurrentSelection(scaledX, scaledY);
 					canvas.redraw();
-				} else if (currentAction == Action.RESIZING_SELECTION) {
-					refreshSelectionResize((int) Math.round(e.x / scaleFactor), (int) Math.round(e.y / scaleFactor));
+				} else if (currentAction == EditorAction.RESIZING_SELECTION) {
+					refreshSelectionResize(scaledX, scaledY);
 					canvas.redraw();
-				} else if (currentAction == Action.MOVING_SELECTION) {
-					refreshSelectionPosition((int) Math.round(e.x / scaleFactor), (int) Math.round(e.y / scaleFactor));
+				} else if (currentAction == EditorAction.MOVING_SELECTION) {
+					refreshSelectionPosition(scaledX, scaledY);
 					canvas.redraw();
-				} else if (currentAction == Action.IDLE && currentSelection != null) {
+				} else if (currentAction == EditorAction.CROPPING && currentSelection != null) {
 					boolean cursorSet = false;
 
 					// No selection in course, but have something selected; first test if I'm hovering some grab point
@@ -491,8 +637,18 @@ public class ScreenshotAttachmentPage extends WizardPage {
 						canvas.setCursor(cursors.get(SWT.CURSOR_SIZEALL));
 						cursorSet = true;
 					}
-					if (!cursorSet && canvas.getCursor() != null) {
-						canvas.setCursor(null);
+
+					// If I'm out, the default cursor for cropping mode is cross
+					Cursor crossCursor = cursors.get(SWT.CURSOR_CROSS);
+					if (!cursorSet && canvas.getCursor() != crossCursor) {
+						canvas.setCursor(crossCursor);
+					}
+				} else if (currentAction == EditorAction.MARKING) {
+					drawMarkLine(scaledX, scaledY);
+
+					Cursor markCursor = cursors.get(CURSOR_MARK_TOOL);
+					if (canvas.getCursor() != markCursor) {
+						canvas.setCursor(markCursor);
 					}
 				}
 			}
@@ -502,21 +658,19 @@ public class ScreenshotAttachmentPage extends WizardPage {
 		canvas.addMouseListener(new MouseAdapter() {
 
 			/**
-			 * Releasing the mouse button ends the selection; compute the selection rectangle and redraw the cropped
-			 * image
+			 * Releasing the mouse button ends the selection or a drawing; compute the selection rectangle and redraw
+			 * the cropped image
 			 */
 			public void mouseUp(MouseEvent e) {
-				if (currentAction == Action.SELECTING || currentAction == Action.RESIZING_SELECTION
-						|| currentAction == Action.MOVING_SELECTION) {
-					canvas.setCursor(cursors.get(SWT.CURSOR_ARROW));
-
+				if (currentAction == EditorAction.SELECTING || currentAction == EditorAction.RESIZING_SELECTION
+						|| currentAction == EditorAction.MOVING_SELECTION) {
 					int scaledX = (int) Math.round(e.x / scaleFactor);
 					int scaledY = (int) Math.round(e.y / scaleFactor);
-					if (currentAction == Action.SELECTING) {
+					if (currentAction == EditorAction.SELECTING) {
 						refreshCurrentSelection(scaledX, scaledY);
-					} else if (currentAction == Action.RESIZING_SELECTION) {
+					} else if (currentAction == EditorAction.RESIZING_SELECTION) {
 						refreshSelectionResize(scaledX, scaledY);
-					} else if (currentAction == Action.MOVING_SELECTION) {
+					} else if (currentAction == EditorAction.MOVING_SELECTION) {
 						refreshSelectionPosition(scaledX, scaledY);
 					}
 					if (currentSelection.width == 0 && currentSelection.height == 0) {
@@ -524,17 +678,29 @@ public class ScreenshotAttachmentPage extends WizardPage {
 					}
 					setUpGrabPoints();
 					startPoint = null;
-					currentAction = Action.IDLE;
+					currentAction = EditorAction.CROPPING;
 
 					canvas.redraw();
+					markAttachmentDirty();
+				} else if (currentAction == EditorAction.MARKING) {
+					startPoint = null;
+					markAttachmentDirty();
 				}
 			}
 
 			/**
-			 * Pressing mouse button starts a selection; normalizes and marks the start point
+			 * Pressing mouse button starts a selection or a drawing; normalizes and marks the start point
 			 */
 			public void mouseDown(MouseEvent e) {
-				if (currentAction != Action.IDLE) {
+				int scaledX = (int) (e.x / scaleFactor);
+				int scaledY = (int) (e.y / scaleFactor);
+
+				if (currentAction == EditorAction.MARKING) {
+					startPoint = new Point(scaledX, scaledY);
+					drawMarkLine(scaledX, scaledY);
+					canvas.setCursor(cursors.get(CURSOR_MARK_TOOL));
+					return;
+				} else if (currentAction != EditorAction.CROPPING) {
 					return;
 				}
 
@@ -543,9 +709,9 @@ public class ScreenshotAttachmentPage extends WizardPage {
 					for (GrabPoint point : grabPoints) {
 						if (point.grabArea.contains(e.x, e.y)) {
 							originalSelection = currentSelection;
-							currentAction = Action.RESIZING_SELECTION;
+							currentAction = EditorAction.RESIZING_SELECTION;
 							resizableSides = point.resizableSides;
-							startPoint = new Point((int) (e.x / scaleFactor), (int) (e.y / scaleFactor));
+							startPoint = new Point(scaledX, scaledY);
 							canvas.redraw();
 							return;
 						}
@@ -553,20 +719,20 @@ public class ScreenshotAttachmentPage extends WizardPage {
 				}
 
 				// Check if I could move the selection
-				if (currentSelection != null
-						&& currentSelection.contains((int) (e.x / scaleFactor), (int) (e.y / scaleFactor))) {
+				if (currentSelection != null && currentSelection.contains(scaledX, scaledY)) {
 					originalSelection = currentSelection;
-					currentAction = Action.MOVING_SELECTION;
-					startPoint = new Point((int) (e.x / scaleFactor), (int) (e.y / scaleFactor));
+					currentAction = EditorAction.MOVING_SELECTION;
+					startPoint = new Point(scaledX, scaledY);
 					canvas.redraw();
 					return;
 				}
 
 				// Do a simple selection
 				canvas.setCursor(cursors.get(SWT.CURSOR_CROSS));
-				currentAction = Action.SELECTING;
+				currentAction = EditorAction.SELECTING;
 				currentSelection = null;
-				startPoint = new Point((int) (e.x / scaleFactor), (int) (e.y / scaleFactor));
+				startPoint = new Point(scaledX, scaledY);
+				setUpGrabPoints();
 				canvas.redraw();
 			}
 
@@ -577,13 +743,14 @@ public class ScreenshotAttachmentPage extends WizardPage {
 	private void clearSelection() {
 		currentSelection = null;
 		startPoint = null;
+		markAttachmentDirty();
 	}
 
 	/**
 	 * Recalculates image canvas size based on "fit on canvas" setting, set up the grab points, and redraws
 	 * <p>
-	 * This method should be called whenever the {@link #screenshotImage image} <strong>visible</strong> size is
-	 * changed, which can happen when:
+	 * This method should be called whenever the {@link #workImage image} <strong>visible</strong> size is changed,
+	 * which can happen when:
 	 * <p>
 	 * <ul>
 	 * <li>The "Fit Image" setting is changed, so the image zoom level changes
@@ -595,15 +762,15 @@ public class ScreenshotAttachmentPage extends WizardPage {
 	 * Calling this method under other circumstances may lead to strange behavior in the scrolled composite
 	 */
 	private void refreshCanvasSize() {
-		if (fitButton.getSelection()) {
+		if (fitAction.isChecked()) {
 			// This little hack is necessary to get the client area without scrollbars; 
 			// they'll be automatically restored if necessary after Canvas.setBounds()
 			scrolledComposite.getHorizontalBar().setVisible(false);
 			scrolledComposite.getVerticalBar().setVisible(false);
 
 			Rectangle bounds = scrolledComposite.getClientArea();
-			if (screenshotImage != null) {
-				Rectangle imageBounds = screenshotImage.getBounds();
+			if (workImage != null) {
+				Rectangle imageBounds = workImage.getBounds();
 				if (imageBounds.width > bounds.width || imageBounds.height > bounds.height) {
 					double xRatio = (double) bounds.width / imageBounds.width;
 					double yRatio = (double) bounds.height / imageBounds.height;
@@ -616,8 +783,8 @@ public class ScreenshotAttachmentPage extends WizardPage {
 		} else {
 			scaleFactor = 1.0;
 			Rectangle bounds = scrolledComposite.getClientArea();
-			if (screenshotImage != null) {
-				Rectangle imageBounds = screenshotImage.getBounds();
+			if (workImage != null) {
+				Rectangle imageBounds = workImage.getBounds();
 				bounds.width = imageBounds.width;
 				bounds.height = imageBounds.height;
 			}
@@ -628,25 +795,12 @@ public class ScreenshotAttachmentPage extends WizardPage {
 	}
 
 	/**
-	 * Decorates the screenshot canvas with the selection rectangle; this is done while still selecting, so it does not
-	 * have all adornments of a {@link #drawSelection(GC) finished} selection
-	 */
-	@SuppressWarnings("deprecation")
-	private void drawSelectionPreview(GC gc) {
-		gc.setLineDash(new int[] { 4 });
-		gc.setXORMode(true);
-		gc.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-		gc.drawRectangle(getScaledSelection());
-		gc.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_BLACK));
-		gc.drawRectangle(getScaledSelection());
-		gc.setXORMode(false);
-		gc.setLineStyle(SWT.LINE_SOLID);
-	}
-
-	/**
 	 * Decorates the screenshot canvas with the selection rectangle, resize grab points and other adornments
 	 */
 	private void drawSelection(GC gc) {
+		if (currentSelection == null) {
+			return;
+		}
 		Rectangle scaledSelection = getScaledSelection();
 
 		// Draw shadow
@@ -666,15 +820,28 @@ public class ScreenshotAttachmentPage extends WizardPage {
 
 		// Draw selection rectangle
 		gc.setLineStyle(SWT.LINE_SOLID);
-		gc.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GRAY));
+		gc.setForeground(getShell().getDisplay().getSystemColor(SWT.COLOR_DARK_GRAY));
 		gc.drawRectangle(scaledSelection);
 
 		// Draw grab points
-		gc.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
-		gc.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
+		gc.setBackground(getShell().getDisplay().getSystemColor(SWT.COLOR_WHITE));
+		gc.setForeground(getShell().getDisplay().getSystemColor(SWT.COLOR_BLACK));
 		for (GrabPoint point : grabPoints) {
 			gc.fillRectangle(point.grabArea);
 			gc.drawRectangle(point.grabArea);
+		}
+	}
+
+	/**
+	 * Connects the previous mark point to the new reference point, by drawing a new line
+	 */
+	private void drawMarkLine(int x, int y) {
+		if (startPoint != null) {
+			clearAction.setEnabled(true);
+			workImageGC.drawLine(startPoint.x, startPoint.y, x, y);
+			startPoint.x = x;
+			startPoint.y = y;
+			canvas.redraw();
 		}
 	}
 
@@ -706,22 +873,31 @@ public class ScreenshotAttachmentPage extends WizardPage {
 
 	private List<GrabPoint> grabPoints = new ArrayList<GrabPoint>(8);
 
-	private Image getCropScreenshot() {
-		if (currentSelection == null) {
-			return screenshotImage;
-		}
+	/**
+	 * Creates the final screenshot
+	 * 
+	 * @return The final screenshot, with all markings, and cropped according to user settings; <strong>The caller is
+	 *         responsible for disposing the returned image</strong>
+	 */
+	public Image createImage() {
+		Image screenshot = new Image(getShell().getDisplay(), currentSelection != null ? currentSelection
+				: workImage.getBounds());
 
-		Image image = new Image(Display.getDefault(), currentSelection);
-		GC gc = new GC(image);
-		gc.drawImage(screenshotImage, currentSelection.x, currentSelection.y, currentSelection.width,
-				currentSelection.height, 0, 0, currentSelection.width, currentSelection.height);
+		GC gc = new GC(screenshot);
+		if (currentSelection != null) {
+			gc.drawImage(workImage, currentSelection.x, currentSelection.y, currentSelection.width,
+					currentSelection.height, 0, 0, currentSelection.width, currentSelection.height);
+		} else {
+			gc.drawImage(workImage, 0, 0);
+		}
 		gc.dispose();
 
-		return image;
+		return screenshot;
 	}
 
-	public Image getScreenshotImage() {
-		return getCropScreenshot();
+	private void markAttachmentDirty() {
+		NewAttachmentWizard wizard = (NewAttachmentWizard) getWizard();
+		((ImageAttachment) wizard.getAttachment()).markDirty();
 	}
 
 }
