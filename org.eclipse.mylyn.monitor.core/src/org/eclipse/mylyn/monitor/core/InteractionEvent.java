@@ -207,6 +207,8 @@ public class InteractionEvent {
 
 	/**
 	 * For parameter description see this class's getters.
+	 * 
+	 * API-3.0: assert that parameter values are not null, e.g. bug 216059
 	 */
 	public InteractionEvent(Kind kind, String structureKind, String handle, String originId, String navigatedRelation,
 			String delta, float interestContribution) {
