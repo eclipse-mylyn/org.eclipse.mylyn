@@ -387,7 +387,7 @@ public class ContextEditorFormPage extends FormPage {
 				"org.eclipse.jdt.java.ui.javaContent");
 		if (javaContent != null) {
 			ITreeContentProvider treeContentProvider = javaContent.getContentProvider();
-			// TODO: find a sane way of doing this, should be:
+			// TODO: find a sane way of doing this, perhaps via AbstractContextUiBridge, should be:
 			// if (javaContent.getContentProvider() != null) {
 			// JavaNavigatorContentProvider java =
 			// (JavaNavigatorContentProvider)javaContent.getContentProvider();
