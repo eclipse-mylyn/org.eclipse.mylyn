@@ -393,7 +393,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				taskListSaveManager = new TaskListSaveManager();
 				taskListManager.setTaskListSaveManager(taskListSaveManager);
 				
-				MonitorUiPlugin.getDefault().setInactivityTimeout(getPreferenceStore().getInt(TasksUiPreferenceConstants.ACTIVITY_TIMEOUT));
+//				MonitorUiPlugin.getDefault().setInactivityTimeout(getPreferenceStore().getInt(TasksUiPreferenceConstants.ACTIVITY_TIMEOUT));
 
 				ContextCorePlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
 
