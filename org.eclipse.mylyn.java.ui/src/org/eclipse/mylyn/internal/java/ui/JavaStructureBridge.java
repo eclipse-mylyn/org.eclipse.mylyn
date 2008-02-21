@@ -125,7 +125,10 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 
 					return childHandles;
 				} catch (JavaModelException e) {
-					// ignore these, usually indicate no-existent element
+					// NOTE: it would be better if this was not hard-wired but used the parent/child bridge mapping
+					AbstractContextStructureBridge parentBridge = ContextCorePlugin.getDefault().getStructureBridge(
+							ContextCorePlugin.CONTENT_TYPE_RESOURCE);
+					return parentBridge.getChildHandles(handle);
 				} catch (Exception e) {
 					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not get children", e));
 				}
