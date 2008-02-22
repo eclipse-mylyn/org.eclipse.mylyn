@@ -114,6 +114,7 @@ import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.AbstractDuplicateDetector;
+import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.search.SearchHitCollector;
@@ -600,6 +601,17 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		if (taskData != null) {
 			createSections();
+		}
+
+		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
+		if (connectorUi == null) {
+			parentEditor.setMessage("The editor may not be fully loaded. Click to refresh.",
+					IMessageProvider.WARNING, new HyperlinkAdapter() {
+						@Override
+						public void linkActivated(HyperlinkEvent e) {
+							refreshEditor();
+						}
+					});
 		}
 
 		updateHeaderControls();
