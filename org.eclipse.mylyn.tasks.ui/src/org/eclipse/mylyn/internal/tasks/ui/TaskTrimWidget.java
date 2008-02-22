@@ -15,6 +15,7 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
@@ -161,6 +162,13 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 
 		createStatusComposite(composite);
 
+		parent.getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				IPreferenceStore uiPreferenceStore = TasksUiPlugin.getDefault().getPreferenceStore();
+				setTrimVisible(uiPreferenceStore.getBoolean(TasksUiPreferenceConstants.SHOW_TRIM));
+			}			
+		});
+		
 		return composite;
 	}
 
