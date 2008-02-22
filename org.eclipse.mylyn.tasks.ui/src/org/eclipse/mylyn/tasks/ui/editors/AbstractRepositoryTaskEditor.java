@@ -414,7 +414,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					public void run() {
 						if (repositoryTask.getSynchronizationState() == RepositoryTaskSyncState.INCOMING
 								|| repositoryTask.getSynchronizationState() == RepositoryTaskSyncState.CONFLICT) {
-							parentEditor.setMessage("Task has incoming changes, synchronize to view",
+							parentEditor.setMessage("Task has incoming changes",
 									IMessageProvider.WARNING, new HyperlinkAdapter() {
 								@Override
 								public void linkActivated(HyperlinkEvent e) {
@@ -605,8 +605,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
 		if (connectorUi == null) {
-			parentEditor.setMessage("The editor may not be fully loaded. Click to refresh.",
-					IMessageProvider.WARNING, new HyperlinkAdapter() {
+			parentEditor.setMessage("The editor may not be fully loaded",
+					IMessageProvider.INFORMATION, new HyperlinkAdapter() {
 						@Override
 						public void linkActivated(HyperlinkEvent e) {
 							refreshEditor();
