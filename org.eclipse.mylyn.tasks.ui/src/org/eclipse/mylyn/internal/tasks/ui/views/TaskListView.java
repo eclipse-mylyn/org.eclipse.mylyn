@@ -808,6 +808,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 		});
 
+		// TODO make these proper commands and move code into TaskListViewCommands
 		getViewer().getTree().addKeyListener(new KeyListener() {
 
 			public void keyPressed(KeyEvent e) {
@@ -819,8 +820,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 					}
 				} else if ((e.keyCode & SWT.KEYCODE_BIT) != 0) {
 					// Do nothing here since it is key code
-				} else if (e.keyCode == SWT.DEL) {
-					deleteAction.run();
 				} else if (e.keyCode == SWT.ESC) {
 					taskListToolTip.hide();
 				} else if (e.keyCode == 'f' && e.stateMask == SWT.MOD1) {
@@ -865,6 +864,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				Object selectedObject = ((IStructuredSelection) getViewer().getSelection()).getFirstElement();
 				if (selectedObject instanceof AbstractTaskContainer) {
 					updateActionEnablement(renameAction, (AbstractTaskContainer) selectedObject);
+					updateActionEnablement(deleteAction, (AbstractTaskContainer) selectedObject);
 				}
 			}
 		});
@@ -1257,9 +1257,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		}
 	}
 
-	/**
-	 * Refactor out element
-	 */
+	// FIXME move the enablement to the action classes
 	private void updateActionEnablement(Action action, AbstractTaskContainer element) {
 		if (element instanceof AbstractTask) {
 			if (action instanceof OpenWithBrowserAction) {

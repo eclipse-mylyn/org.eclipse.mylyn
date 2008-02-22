@@ -16,6 +16,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
+import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -50,8 +51,13 @@ public class DeleteAction extends Action {
 		String elements = "";
 		int i = 0;
 		for (Object object : toDelete) {
+			if (object instanceof UnmatchedTaskContainer) {
+				continue;
+			}
+			
 			i++;
 			if (i < 20) {
+				// TODO this action should be based on the action enablement and check if the container is user managed or not
 				if (object instanceof AbstractTaskContainer) {
 					elements += "    " + ((AbstractTaskContainer) object).getSummary() + "\n";
 				}
@@ -123,6 +129,8 @@ public class DeleteAction extends Action {
 					TasksUiUtil.closeEditorInActivePage(task, false);
 				}
 				TasksUiPlugin.getTaskListManager().getTaskList().deleteCategory(cat);
+			} else if (selectedObject instanceof UnmatchedTaskContainer) {
+				// ignore
 			} else {
 				MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 						"Delete failed", "Nothing selected.");
