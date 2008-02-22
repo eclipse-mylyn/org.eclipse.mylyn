@@ -91,9 +91,6 @@ public class RepositoryAttachment extends AttributeContainer implements Serializ
 		}
 	}
 
-	/**
-	 * @since 2.3
-	 */
 	public String getSize() {
 		return getAttributeValue(RepositoryTaskAttribute.ATTACHMENT_SIZE);
 	}
