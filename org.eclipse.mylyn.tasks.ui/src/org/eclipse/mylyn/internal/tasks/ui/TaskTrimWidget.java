@@ -76,7 +76,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 
 	private OpenWithBrowserAction openWithBrowserAction = new OpenWithBrowserAction();
 
-	private CopyTaskDetailsAction copyTaskDetailsAction = new CopyTaskDetailsAction(false);
+	private CopyTaskDetailsAction copyTaskDetailsAction = new CopyTaskDetailsAction();
 
 	private Point p;
 

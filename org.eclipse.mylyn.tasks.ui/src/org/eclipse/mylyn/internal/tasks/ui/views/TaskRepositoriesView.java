@@ -37,7 +37,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 import org.eclipse.ui.part.ViewPart;
-import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 
 /**
  * @author Mik Kersten
@@ -190,7 +189,6 @@ public class TaskRepositoriesView extends ViewPart {
 
 	private void makeActions() {
 		deleteRepositoryAction = new DeleteTaskRepositoryAction();
-		deleteRepositoryAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.DELETE);
 		viewer.addSelectionChangedListener(deleteRepositoryAction);
 
 		repositoryPropertiesAction = new EditRepositoryPropertiesAction();

@@ -155,6 +155,7 @@ import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.themes.IThemeManager;
@@ -818,10 +819,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 					}
 				} else if ((e.keyCode & SWT.KEYCODE_BIT) != 0) {
 					// Do nothing here since it is key code
-				} else if (e.keyCode == 'c' && e.stateMask == SWT.MOD1) {
-					copyDetailsAction.run();
-//				} else if (e.keyCode == 'd' && e.stateMask == SWT.MOD1) {
-//					cloneThisBugAction.run();
 				} else if (e.keyCode == SWT.DEL) {
 					deleteAction.run();
 				} else if (e.keyCode == SWT.ESC) {
@@ -889,6 +886,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		});
 
 		makeActions();
+		hookGlobalActions();
 		hookContextMenu();
 		hookOpenAction();
 		contributeToActionBars();
@@ -909,6 +907,12 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 		// Need to do this because the page, which holds the active working set is not around on creation, see bug 203179
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().addPageListener(PAGE_LISTENER);
+	}
+
+	private void hookGlobalActions() {
+		IActionBars bars = getViewSite().getActionBars();
+		bars.setGlobalActionHandler(ActionFactory.DELETE.getId(), deleteAction);
+		bars.setGlobalActionHandler(ActionFactory.COPY.getId(), copyDetailsAction);
 	}
 
 	private void applyPresentation(String id) {
@@ -1309,7 +1313,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	}
 
 	private void makeActions() {
-		copyDetailsAction = new CopyTaskDetailsAction(true);
+		copyDetailsAction = new CopyTaskDetailsAction();
 
 		goIntoAction = new GoIntoAction();
 		goUpAction = new GoUpAction(drillDownAdapter);

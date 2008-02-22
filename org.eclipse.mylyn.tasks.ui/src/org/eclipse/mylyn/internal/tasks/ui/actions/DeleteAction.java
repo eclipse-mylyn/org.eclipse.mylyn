@@ -25,6 +25,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.WorkbenchImages;
+import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 
 /**
  * @author Mik Kersten
@@ -37,6 +38,7 @@ public class DeleteAction extends Action {
 		setText("Delete");
 		setId(ID);
 		setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
+		setActionDefinitionId(IWorkbenchActionDefinitionIds.DELETE);
 	}
 
 	@Override

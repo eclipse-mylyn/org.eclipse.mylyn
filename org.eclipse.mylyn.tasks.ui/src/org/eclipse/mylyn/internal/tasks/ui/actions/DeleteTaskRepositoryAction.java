@@ -25,6 +25,7 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.WorkbenchImages;
+import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 
 /**
  * @author Mik Kersten
@@ -38,6 +39,7 @@ public class DeleteTaskRepositoryAction extends AbstractTaskRepositoryAction {
 		setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
 		setId(ID);
 		setEnabled(false);
+		setActionDefinitionId(IWorkbenchActionDefinitionIds.DELETE);
 	}
 
 	public void init(IViewPart view) {

@@ -17,13 +17,13 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
+import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 
 /**
  * @author Mik Kersten
@@ -36,15 +36,13 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 
 	private Clipboard clipboard;
 
-	public CopyTaskDetailsAction(boolean setAccelerator) {
+	public CopyTaskDetailsAction() {
 		super(LABEL);
 		setToolTipText(LABEL);
 		setId(ID);
 		setImageDescriptor(TasksUiImages.COPY);
-		if (setAccelerator) {
-			setAccelerator(SWT.MOD1 + 'c');
-		}
-
+		setActionDefinitionId(IWorkbenchActionDefinitionIds.COPY);
+		
 		Display display = PlatformUI.getWorkbench().getDisplay();
 		clipboard = new Clipboard(display);
 	}

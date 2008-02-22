@@ -87,7 +87,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 
 	private OpenWithBrowserAction openWithBrowserAction = new OpenWithBrowserAction();
 
-	private CopyTaskDetailsAction copyTaskDetailsAction = new CopyTaskDetailsAction(false);
+	private CopyTaskDetailsAction copyTaskDetailsAction = new CopyTaskDetailsAction();
 
 	private AbstractTaskEditorAction attachAction = new AttachAction();
 

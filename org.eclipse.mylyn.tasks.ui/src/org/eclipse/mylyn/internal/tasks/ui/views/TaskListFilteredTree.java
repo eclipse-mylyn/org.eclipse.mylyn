@@ -96,7 +96,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 	private Menu activeTaskMenu = null;
 
-	private CopyTaskDetailsAction copyTaskDetailsAction = new CopyTaskDetailsAction(false);
+	private CopyTaskDetailsAction copyTaskDetailsAction = new CopyTaskDetailsAction();
 
 	private TaskListToolTip taskListToolTip;
 
