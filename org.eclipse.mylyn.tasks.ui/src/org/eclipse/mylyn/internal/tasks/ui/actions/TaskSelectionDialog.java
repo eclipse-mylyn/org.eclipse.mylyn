@@ -8,23 +8,34 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.text.ITextSelection;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TaskSearchPage;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskActivationHistory;
@@ -32,7 +43,10 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskDetailLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListFilteredTree;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
+import org.eclipse.mylyn.internal.tasks.ui.workingsets.WorkingSetLabelComparator;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.search.internal.ui.SearchDialog;
@@ -43,8 +57,12 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.IWorkingSet;
+import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.FilteredItemsSelectionDialog;
+import org.eclipse.ui.dialogs.IWorkingSetEditWizard;
+import org.eclipse.ui.dialogs.IWorkingSetSelectionDialog;
 import org.eclipse.ui.dialogs.SearchPattern;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
@@ -64,6 +82,10 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 	private static final String OPEN_IN_BROWSER_SETTING = "OpenInBrowser";
 
 	private static final String SHOW_COMPLETED_TASKS_SETTING = "ShowCompletedTasks";
+
+	private static final String IS_USING_WINDOW_WORKING_SET_SETTING = "IsUsingWindowWorkingSet";
+
+	private static final String WORKING_SET_NAME_SETTING = "WorkingSetName";
 
 	private boolean openInBrowser;
 
@@ -146,6 +168,31 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 		}
 	}
 
+	/**
+	 * Caches the window working set
+	 */
+	private final IWorkingSet windowWorkingSet;
+
+	/**
+	 * Set of filtered working sets
+	 */
+	private IWorkingSet selectedWorkingSet;
+
+	/**
+	 * Refilters if the current working set content has changed
+	 */
+	private IPropertyChangeListener workingSetListener = new IPropertyChangeListener() {
+
+		public void propertyChange(PropertyChangeEvent event) {
+			if (event.getProperty().equals(IWorkingSetManager.CHANGE_WORKING_SET_CONTENT_CHANGE)) {
+				if (event.getNewValue().equals(selectedWorkingSet)) {
+					applyFilter();
+				}
+			}
+		}
+
+	};
+
 	private TaskElementLabelProvider labelProvider;
 
 	public TaskSelectionDialog(Shell parent) {
@@ -153,9 +200,9 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 		setSelectionHistory(new TaskSelectionHistory());
 
 		labelProvider = new TaskElementLabelProvider(false);
-		
+
 		setListLabelProvider(labelProvider);
-		
+
 //		setListLabelProvider(new DecoratingLabelProvider(labelProvider, PlatformUI.getWorkbench()
 //				.getDecoratorManager()
 //				.getLabelDecorator()));
@@ -174,6 +221,11 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 			}
 			setInitialPattern(text);
 		}
+
+		windowWorkingSet = window.getActivePage().getAggregateWorkingSet();
+		selectedWorkingSet = windowWorkingSet;
+
+		PlatformUI.getWorkbench().getWorkingSetManager().addPropertyChangeListener(workingSetListener);
 	}
 
 	private boolean showExtendedOpeningOptions;
@@ -192,6 +244,63 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 	protected void fillViewMenu(IMenuManager menuManager) {
 		super.fillViewMenu(menuManager);
 		menuManager.add(showCompletedTasksAction);
+		menuManager.add(new Separator());
+
+		// Fill existing tasks working sets
+		menuManager.add(new SelectWorkingSetAction());
+		final DeselectWorkingSetAction deselectAction = new DeselectWorkingSetAction();
+		menuManager.add(deselectAction);
+		final EditWorkingSetAction editAction = new EditWorkingSetAction();
+		menuManager.add(editAction);
+		menuManager.add(new Separator("lruActions"));
+		final FilterWorkingSetAction windowWorkingSetAction = new FilterWorkingSetAction(windowWorkingSet, 1);
+		menuManager.add(windowWorkingSetAction);
+
+		menuManager.addMenuListener(new IMenuListener() {
+
+			private List<ActionContributionItem> lruActions = new ArrayList<ActionContributionItem>();
+
+			public void menuAboutToShow(IMenuManager manager) {
+				deselectAction.setEnabled(selectedWorkingSet != null);
+				editAction.setEnabled(selectedWorkingSet != null && selectedWorkingSet.isEditable());
+
+				// Remove previous LRU actions
+				for (ActionContributionItem action : lruActions) {
+					manager.remove(action);
+				}
+				lruActions.clear();
+
+				// Adds actual LRU actions
+				IWorkingSet[] workingSets = PlatformUI.getWorkbench().getWorkingSetManager().getRecentWorkingSets();
+				Arrays.sort(workingSets, new WorkingSetLabelComparator());
+				int count = 2;
+				for (IWorkingSet workingSet : workingSets) {
+					if (workingSet.getId().equalsIgnoreCase(TaskWorkingSetUpdater.ID_TASK_WORKING_SET)) {
+						IAction action = new FilterWorkingSetAction(workingSet, count++);
+						if (workingSet.equals(selectedWorkingSet)) {
+							action.setChecked(true);
+						}
+						ActionContributionItem ci = new ActionContributionItem(action);
+						lruActions.add(ci);
+						manager.appendToGroup("lruActions", ci);
+					}
+				}
+				windowWorkingSetAction.setChecked(windowWorkingSet.equals(selectedWorkingSet));
+			}
+
+		});
+	}
+
+	/**
+	 * All working set filter changes should be made through this method; ensures proper history handling and triggers
+	 * refiltering
+	 */
+	private void setSelectedWorkingSet(IWorkingSet workingSet) {
+		selectedWorkingSet = workingSet;
+		if (workingSet != null) {
+			PlatformUI.getWorkbench().getWorkingSetManager().addRecentWorkingSet(workingSet);
+		}
+		applyFilter();
 	}
 
 	private boolean showCompletedTasks;
@@ -208,6 +317,82 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 			applyFilter();
 		}
 
+	}
+
+	private class SelectWorkingSetAction extends Action {
+
+		public SelectWorkingSetAction() {
+			super("Select &Working Set...", IAction.AS_PUSH_BUTTON);
+		}
+
+		@Override
+		public void run() {
+			IWorkingSetSelectionDialog dlg = PlatformUI.getWorkbench()
+					.getWorkingSetManager()
+					.createWorkingSetSelectionDialog(getShell(), false,
+							new String[] { TaskWorkingSetUpdater.ID_TASK_WORKING_SET });
+			if (selectedWorkingSet != null) {
+				dlg.setSelection(new IWorkingSet[] { selectedWorkingSet });
+			}
+			if (dlg.open() == Window.OK) {
+				IWorkingSet[] selection = dlg.getSelection();
+				if (selection.length == 0) {
+					setSelectedWorkingSet(null);
+				} else {
+					setSelectedWorkingSet(selection[0]);
+				}
+			}
+		}
+	}
+
+	private class DeselectWorkingSetAction extends Action {
+
+		public DeselectWorkingSetAction() {
+			super("&Deselect Working Set", IAction.AS_PUSH_BUTTON);
+		}
+
+		@Override
+		public void run() {
+			setSelectedWorkingSet(null);
+		}
+	}
+
+	private class EditWorkingSetAction extends Action {
+
+		public EditWorkingSetAction() {
+			super("&Edit Active Working Set...", IAction.AS_PUSH_BUTTON);
+		}
+
+		@Override
+		public void run() {
+			IWorkingSetEditWizard wizard = PlatformUI.getWorkbench().getWorkingSetManager().createWorkingSetEditWizard(
+					selectedWorkingSet);
+			if (wizard != null) {
+				WizardDialog dlg = new WizardDialog(getShell(), wizard);
+				dlg.open();
+			}
+		}
+	}
+
+	private class FilterWorkingSetAction extends Action {
+
+		private IWorkingSet workingSet;
+
+		public FilterWorkingSetAction(IWorkingSet workingSet, int shortcutKeyNumber) {
+			super("", IAction.AS_RADIO_BUTTON);
+			this.workingSet = workingSet;
+			if (shortcutKeyNumber >= 1 && shortcutKeyNumber <= 9) {
+				setText("&" + String.valueOf(shortcutKeyNumber) + " " + workingSet.getLabel());
+			} else {
+				setText(workingSet.getLabel());
+			}
+			setImageDescriptor(workingSet.getImageDescriptor());
+		}
+
+		@Override
+		public void run() {
+			setSelectedWorkingSet(workingSet);
+		}
 	}
 
 	@Override
@@ -242,6 +427,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 
 	@Override
 	public boolean close() {
+		PlatformUI.getWorkbench().getWorkingSetManager().removePropertyChangeListener(workingSetListener);
 		if (openInBrowserCheck != null) {
 			openInBrowser = openInBrowserCheck.getSelection();
 		}
@@ -250,13 +436,31 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 
 	private class TasksFilter extends ItemsFilter {
 
-		private boolean showCompletedTasks;
+		private final boolean showCompletedTasks;
 
-		public TasksFilter(boolean showCompletedTasks) {
+		/**
+		 * Stores the task containers from selected working set; empty, which can come from no working set selection or
+		 * working set with no task containers selected, means no filtering
+		 */
+		private final Set<AbstractTaskContainer> elements;
+
+		private Set<AbstractTask> allTasksFromWorkingSets;
+
+		public TasksFilter(boolean showCompletedTasks, IWorkingSet selectedWorkingSet) {
 			super(new SearchPattern());
 			// Little hack to force always a match inside any part of task text
 			patternMatcher.setPattern("*" + patternMatcher.getPattern());
 			this.showCompletedTasks = showCompletedTasks;
+
+			elements = new HashSet<AbstractTaskContainer>();
+			if (selectedWorkingSet != null) {
+				for (IAdaptable adaptable : selectedWorkingSet.getElements()) {
+					AbstractTaskContainer container = (AbstractTaskContainer) adaptable.getAdapter(AbstractTaskContainer.class);
+					if (container != null) {
+						elements.add(container);
+					}
+				}
+			}
 		}
 
 		@Override
@@ -265,7 +469,17 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 				return false;
 			}
 			if (filter instanceof TasksFilter) {
-				return showCompletedTasks == ((TasksFilter) filter).showCompletedTasks;
+				TasksFilter tasksFilter = (TasksFilter) filter;
+				if (!showCompletedTasks && tasksFilter.showCompletedTasks) {
+					return false;
+				}
+				if (elements.isEmpty()) {
+					return true;
+				}
+				if (tasksFilter.elements.isEmpty()) {
+					return false;
+				}
+				return elements.containsAll(tasksFilter.elements);
 			}
 			return true;
 		}
@@ -276,7 +490,11 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 				return false;
 			}
 			if (filter instanceof TasksFilter) {
-				return showCompletedTasks == ((TasksFilter) filter).showCompletedTasks;
+				TasksFilter tasksFilter = (TasksFilter) filter;
+				if (showCompletedTasks != tasksFilter.showCompletedTasks) {
+					return false;
+				}
+				return elements.equals(tasksFilter.elements);
 			}
 			return true;
 		}
@@ -294,13 +512,28 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 			if (!showCompletedTasks && ((AbstractTask) item).isCompleted()) {
 				return false;
 			}
+			if (!elements.isEmpty()) {
+				if (allTasksFromWorkingSets == null) {
+					populateTasksFromWorkingSets();
+				}
+				if (!allTasksFromWorkingSets.contains(item)) {
+					return false;
+				}
+			}
 			return matches(labelProvider.getText(item));
+		}
+
+		private void populateTasksFromWorkingSets() {
+			allTasksFromWorkingSets = new HashSet<AbstractTask>(1000);
+			for (AbstractTaskContainer container : elements) {
+				allTasksFromWorkingSets.addAll(container.getChildren());
+			}
 		}
 	}
 
 	@Override
 	protected ItemsFilter createFilter() {
-		return new TasksFilter(showCompletedTasks);
+		return new TasksFilter(showCompletedTasks, selectedWorkingSet);
 	}
 
 	/**
@@ -339,6 +572,8 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 			section = settings.addNewSection(TASK_SELECTION_DIALOG_SECTION);
 			section.put(OPEN_IN_BROWSER_SETTING, false);
 			section.put(SHOW_COMPLETED_TASKS_SETTING, true);
+			section.put(IS_USING_WINDOW_WORKING_SET_SETTING, true);
+			section.put(WORKING_SET_NAME_SETTING, "");
 		}
 		return section;
 	}
@@ -348,6 +583,15 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 		openInBrowser = settings.getBoolean(OPEN_IN_BROWSER_SETTING);
 		showCompletedTasks = settings.getBoolean(SHOW_COMPLETED_TASKS_SETTING);
 		showCompletedTasksAction.setChecked(showCompletedTasks);
+		boolean isUsingWindowWorkingSet = settings.getBoolean(IS_USING_WINDOW_WORKING_SET_SETTING);
+		if (isUsingWindowWorkingSet) {
+			selectedWorkingSet = windowWorkingSet;
+		} else {
+			String workingSetName = settings.get(WORKING_SET_NAME_SETTING);
+			if (workingSetName != null) {
+				selectedWorkingSet = PlatformUI.getWorkbench().getWorkingSetManager().getWorkingSet(workingSetName);
+			}
+		}
 		super.restoreDialog(settings);
 	}
 
@@ -355,6 +599,12 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 	protected void storeDialog(IDialogSettings settings) {
 		settings.put(OPEN_IN_BROWSER_SETTING, openInBrowser);
 		settings.put(SHOW_COMPLETED_TASKS_SETTING, showCompletedTasks);
+		settings.put(IS_USING_WINDOW_WORKING_SET_SETTING, selectedWorkingSet == windowWorkingSet);
+		if (selectedWorkingSet == null) {
+			settings.put(WORKING_SET_NAME_SETTING, "");
+		} else {
+			settings.put(WORKING_SET_NAME_SETTING, selectedWorkingSet.getName());
+		}
 		super.storeDialog(settings);
 	}
 
