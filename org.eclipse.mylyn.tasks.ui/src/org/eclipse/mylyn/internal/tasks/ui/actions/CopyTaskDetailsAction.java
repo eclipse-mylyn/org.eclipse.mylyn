@@ -23,7 +23,6 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
-import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 
 /**
  * @author Mik Kersten
@@ -41,7 +40,6 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 		setToolTipText(LABEL);
 		setId(ID);
 		setImageDescriptor(TasksUiImages.COPY);
-		setActionDefinitionId(IWorkbenchActionDefinitionIds.COPY);
 		
 		Display display = PlatformUI.getWorkbench().getDisplay();
 		clipboard = new Clipboard(display);

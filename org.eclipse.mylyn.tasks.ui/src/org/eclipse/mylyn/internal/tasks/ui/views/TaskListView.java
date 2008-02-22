@@ -158,6 +158,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 import org.eclipse.ui.themes.IThemeManager;
 
 /**
@@ -1312,6 +1313,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private void makeActions() {
 		copyDetailsAction = new CopyTaskDetailsAction();
+		copyDetailsAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.COPY);
 
 		goIntoAction = new GoIntoAction();
 		goUpAction = new GoUpAction(drillDownAdapter);
