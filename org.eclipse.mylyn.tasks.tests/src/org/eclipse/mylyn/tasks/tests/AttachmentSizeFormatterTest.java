@@ -35,22 +35,21 @@ public class AttachmentSizeFormatterTest extends TestCase {
 	public void testByteFormatter() {
 		assertEquals("1 byte", AttachmentSizeFormatter.format("1"));
 		assertEquals("2 bytes", AttachmentSizeFormatter.format("2"));
-		assertEquals("999 bytes", AttachmentSizeFormatter.format("999"));
+		assertEquals("1023 bytes", AttachmentSizeFormatter.format("1023"));
 	}
 
 	public void testKBFormatter() {
-		assertEquals("1.00 kB", AttachmentSizeFormatter.format("1000"));
-		assertEquals("999.99 kB", AttachmentSizeFormatter.format("999994"));
+		assertEquals("1.00 KB", AttachmentSizeFormatter.format("1024"));
+		assertEquals("1024.00 KB", AttachmentSizeFormatter.format("1048575"));
 	}
 
 	public void testMBFormatter() {
-		assertEquals("1.00 MB", AttachmentSizeFormatter.format("999995"));
-		assertEquals("1.50 MB", AttachmentSizeFormatter.format("1500000"));
-		assertEquals("999.99 MB", AttachmentSizeFormatter.format("999994444"));
+		assertEquals("1.00 MB", AttachmentSizeFormatter.format("1048576"));
+		assertEquals("1024.00 MB", AttachmentSizeFormatter.format("1073741823"));
 	}
 
 	public void testGBFormatter() {
-		assertEquals("1.00 GB", AttachmentSizeFormatter.format("999994445"));
+		assertEquals("1.00 GB", AttachmentSizeFormatter.format("1073741824"));
 	}
 
 }

@@ -17,12 +17,12 @@ import java.text.DecimalFormat;
  * <p>
  * <ul>
  * <li>< 1 KB - byte based: 1 byte, 100 bytes, etc.
- * <li>Between 1 and 999 KB - KB based: 0.50 KB, 2.00 KB, 100.76 KB
- * <li>Between 1 MB and 999 MB - MB based: 1.00 MB, 33.33 MB
+ * <li>>= 1 KB and < 1 MB - KB based: 2.00 KB, 100.76 KB
+ * <li>>= 1 MB and < 1 GB - MB based: 1.00 MB, 33.33 MB
  * <li>>= 1 GB - GB based: 2.00 GB
  * </ul>
  * <p>
- * This formatter assumes 1 KB == 1000 bytes, <strong>NOT</strong> 1024 bytes.
+ * This formatter assumes 1 KB == 1024 bytes, <strong>NOT</strong> 1000 bytes.
  * <p>
  * This formatter always uses 2 decimal places.
  * <p>
@@ -54,27 +54,27 @@ public class AttachmentSizeFormatter {
 		if (size < 0) {
 			return UNKNOWN_SIZE;
 		}
-		if (size < 1000) {
+		if (size < 1024) {
 			// Format as byte
 			if (size == 1) {
 				return "1 byte";
 			}
 			DecimalFormat fmt = new DecimalFormat("0 bytes");
 			return fmt.format(size);
-		} else if (size >= 1000 && size <= 999994) {
+		} else if (size >= 1024 && size <= 1048575) {
 			// Format as KB
-			double formattedValue = size / 1000.0;
-			DecimalFormat fmt = new DecimalFormat("0.00 kB");
+			double formattedValue = size / 1024.0;
+			DecimalFormat fmt = new DecimalFormat("0.00 KB");
 			return fmt.format(formattedValue);
-		} else if (size >= 999995 && size <= 999994444) {
+		} else if (size >= 1048576 && size <= 1073741823) {
 			// Format as MB
-			double formattedValue = size / 1000000.0;
+			double formattedValue = size / 1048576.0;
 			DecimalFormat fmt = new DecimalFormat("0.00 MB");
 			return fmt.format(formattedValue);
 		}
 
 		// Format as GB
-		double formattedValue = size / 1000000000.0;
+		double formattedValue = size / 1073741824.0;
 		DecimalFormat fmt = new DecimalFormat("0.00 GB");
 		return fmt.format(formattedValue);
 	}
