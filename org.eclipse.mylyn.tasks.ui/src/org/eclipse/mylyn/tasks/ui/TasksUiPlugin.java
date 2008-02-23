@@ -513,6 +513,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 									template.version);
 							taskRepository.setRepositoryLabel(template.label);
 							taskRepository.setAnonymous(true);
+							taskRepository.setCharacterEncoding(template.characterEncoding);
+							taskRepository.setAnonymous(template.anonymous);
 							taskRepositoryManager.addRepository(taskRepository, getRepositoriesFilePath());
 						}
 					} catch (Throwable t) {
