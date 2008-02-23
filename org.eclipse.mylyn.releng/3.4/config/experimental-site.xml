@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<site>
+<site pack200="true">
    <description url="http://download.eclipse.org/tools/mylyn/update/weekly/experimental">
       Mylyn Experimental Features
    </description>
