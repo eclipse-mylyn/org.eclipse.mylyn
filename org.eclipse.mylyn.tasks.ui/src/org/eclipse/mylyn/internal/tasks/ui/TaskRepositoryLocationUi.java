@@ -15,6 +15,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.web.core.AuthenticationCredentials;
 import org.eclipse.mylyn.web.core.AuthenticationType;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
@@ -45,7 +46,7 @@ public class TaskRepositoryLocationUi extends TaskRepositoryLocation {
 				throw new OperationCanceledException();
 			}
 			if (runner.getResult() == null) {
-				throw new RuntimeException("Password dialog failed");
+				return ResultType.NOT_SUPPORTED;
 			}
 			return runner.getResult();
 		}
@@ -83,8 +84,9 @@ public class TaskRepositoryLocationUi extends TaskRepositoryLocation {
 		}
 
 		public void run() {
+			Shell activeShell = Display.getCurrent().getActiveShell();
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-			if (shell != null && !shell.isDisposed()) {
+			if (activeShell != null && activeShell == shell && !shell.isDisposed()) {
 				TaskRepositoryCredentialsDialog dialog = TaskRepositoryCredentialsDialog.createDialog(shell);
 				initializeDialog(dialog);
 				int resultCode = dialog.open();
