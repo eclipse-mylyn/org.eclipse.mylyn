@@ -37,6 +37,8 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
 	protected JavaEditingMonitor monitor = new JavaEditingMonitor();
 
 	protected TestJavaProject project;
+	
+	protected TestProject nonJavaProject;
 
 	protected IPackageFragment p1;
 
@@ -54,6 +56,7 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
 		assertNotNull(JavaPlugin.getDefault());
 		assertNotNull(JavaUiBridgePlugin.getDefault());
 		project = new TestJavaProject(this.getClass().getSimpleName());
+		nonJavaProject = new TestProject(this.getClass().getSimpleName() + "nonJava");
 		p1 = project.createPackage("p1");
 		type1 = project.createType(p1, "Type1.java", "public class Type1 { }");
 		context = new InteractionContext(contextId, scaling);
@@ -77,6 +80,7 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
 		manager.getFileForContext(contextId).delete();
 
 		ResourceTestUtil.deleteProject(project.getProject());
+		ResourceTestUtil.deleteProject(nonJavaProject.getProject());
 
 		for (InteractionContext context : manager.getActiveContexts()) {
 			manager.deactivateContext(context.getHandleIdentifier());

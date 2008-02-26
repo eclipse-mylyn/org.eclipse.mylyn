@@ -38,7 +38,7 @@ public class AllJavaTests {
 		suite.addTestSuite(ContentSpecificContextTest.class);
 		suite.addTestSuite(ResourceStructureMappingTest.class);
 		// XXX: Put back
-		//suite.addTestSuite(InterestManipulationTest.class);
+		suite.addTestSuite(InterestManipulationTest.class);
 		suite.addTestSuite(EditorManagerTest.class);
 		suite.addTestSuite(RefactoringTest.class);
 		suite.addTestSuite(ContentOutlineRefreshTest.class);
