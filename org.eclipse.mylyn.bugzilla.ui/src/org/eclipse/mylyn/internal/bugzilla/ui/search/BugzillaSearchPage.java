@@ -467,7 +467,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		// Email2
 
 		Label labelEmail2 = new Label(composite, SWT.LEFT);
-		labelEmail2.setText("&Email:");
+		labelEmail2.setText("Email &2:");
 		//labelEmail.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 
 		// pattern combo
