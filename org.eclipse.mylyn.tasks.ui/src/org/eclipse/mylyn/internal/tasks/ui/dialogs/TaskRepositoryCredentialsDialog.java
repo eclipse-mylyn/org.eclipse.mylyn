@@ -83,7 +83,7 @@ public class TaskRepositoryCredentialsDialog extends TitleAreaDialog {
 		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		Link link = new Link(composite, SWT.WRAP);
-		link.setText("<a href=\"properties\">Open Repository Properties</a> to change settings or to disable background synchronization put the repository in disconnected mode.");
+		link.setText("<a href=\"properties\">Open Repository Properties</a> to disable background synchronization by disconnecting the repository.");
 		link.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
