@@ -39,6 +39,10 @@ public class TaskContextJUnitMainTab extends JUnitLaunchConfigurationTab {
 		image = JavaUiBridgePlugin.getImageDescriptor("icons/etool16/junit-tab.gif").createImage();
 	}
 
+	public boolean isValid(ILaunchConfiguration config) {
+		return true;
+	}
+	
 	@Override
 	public void createControl(Composite parent) {
 		Composite comp = new Composite(parent, SWT.NONE);

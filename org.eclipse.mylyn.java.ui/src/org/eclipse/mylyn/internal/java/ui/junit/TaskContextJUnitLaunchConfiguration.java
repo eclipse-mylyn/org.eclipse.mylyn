@@ -17,6 +17,7 @@ import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.junit.launcher.JUnitLaunchConfigurationDelegate;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -31,8 +32,12 @@ public class TaskContextJUnitLaunchConfiguration extends JUnitLaunchConfiguratio
 		InteractionContextTestUtil.setupTestConfiguration(contextTestCases, configuration, monitor);
 
 		if (contextTestCases.isEmpty()) {
-			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					"Context Test Suite", "No test types found in the active task context.");
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
+							"Context Test Suite", "No test types found in the active task context.");	
+				}
+			});
 		}
 		return contextTestCases.toArray(new IMember[contextTestCases.size()]);
 	}
