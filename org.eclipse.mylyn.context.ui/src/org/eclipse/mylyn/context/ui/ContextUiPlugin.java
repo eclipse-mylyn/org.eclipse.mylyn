@@ -31,9 +31,6 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
@@ -49,6 +46,7 @@ import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylyn.internal.context.ui.FocusedViewerManager;
 import org.eclipse.mylyn.internal.context.ui.Highlighter;
 import org.eclipse.mylyn.internal.context.ui.HighlighterList;
+import org.eclipse.mylyn.internal.context.ui.UiUtil;
 import org.eclipse.mylyn.internal.context.ui.actions.ContextRetrieveAction;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
@@ -238,7 +236,7 @@ public class ContextUiPlugin extends AbstractContextUiPlugin {
 
 			// NOTE: can't init within this class because ..mylyn.tasks.ui activation will be triggered on activation
 			ContextHighlighterInitializer.init();
-			
+
 			TasksUiPlugin.getTaskListManager().addActivityListener(perspectiveManager);
 			MonitorUiPlugin.getDefault().addWindowPerspectiveListener(perspectiveManager);
 			TasksUiPlugin.getTaskListManager().addActivityListener(TASK_ACTIVATION_LISTENER);
@@ -261,19 +259,7 @@ public class ContextUiPlugin extends AbstractContextUiPlugin {
 					for (IViewReference viewReference : views) {
 						IViewPart viewPart = viewReference.getView(false);
 						if (viewPart != null) {
-							ISelectionProvider selectionProvider = viewPart.getSite().getSelectionProvider();
-							if (selectionProvider != null) {
-								ISelection selection = selectionProvider.getSelection();
-								try {
-									if (selection != null) {
-										selectionProvider.setSelection(selection);
-									} else {
-										selectionProvider.setSelection(StructuredSelection.EMPTY);
-									}
-								} catch (UnsupportedOperationException e) {
-									// ignore if the selection does not support setting a selection, see bug 217634
-								}
-							}
+							UiUtil.initializeViewerSelection(viewPart);
 						}
 					}
 				}
