@@ -51,6 +51,12 @@ public class ContextContentProvider implements IStructuredContentProvider, ITree
 		this.landmarkOnlyMode = landmarkOnlyMode;
 	}
 
+	public ContextContentProvider(Tree tree, Shell shell, boolean landmarkOnlyMode) {
+		this.shell = shell;
+		this.tree = tree;
+		this.landmarkOnlyMode = landmarkOnlyMode;
+	}
+
 	public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 		// don't care when the input changes
 	}
