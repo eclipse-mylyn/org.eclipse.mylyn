@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
@@ -3591,6 +3592,16 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					}
 
 					return Status.OK_STATUS;
+				} catch (OperationCanceledException e) {
+					if (modifiedTask != null) {
+						modifiedTask.setSubmitting(false);
+					}
+					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+						public void run() {
+							setGlobalBusy(false);// enableButtons();
+						}
+					});
+					return Status.CANCEL_STATUS;
 				} catch (CoreException e) {
 					if (modifiedTask != null) {
 						modifiedTask.setSubmitting(false);
