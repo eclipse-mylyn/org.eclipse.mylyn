@@ -84,9 +84,8 @@ public class TaskRepositoryLocationUi extends TaskRepositoryLocation {
 		}
 
 		public void run() {
-			Shell activeShell = Display.getCurrent().getActiveShell();
-			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-			if (activeShell != null && activeShell == shell && !shell.isDisposed()) {
+			Shell shell = Display.getCurrent().getActiveShell();
+			if (shell != null && !shell.isDisposed()) {
 				TaskRepositoryCredentialsDialog dialog = TaskRepositoryCredentialsDialog.createDialog(shell);
 				initializeDialog(dialog);
 				int resultCode = dialog.open();
