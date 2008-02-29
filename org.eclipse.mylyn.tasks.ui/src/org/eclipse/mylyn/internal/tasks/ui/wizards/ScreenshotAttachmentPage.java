@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
@@ -50,6 +53,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.ui.progress.UIJob;
 
 /**
  * A wizard page to create a screenshot from the display.
@@ -400,6 +404,8 @@ public class ScreenshotAttachmentPage extends WizardPage implements IImageCreato
 
 	private static final int CURSOR_MARK_TOOL = -1;
 
+	private static final long CAPTURE_DELAY = 400;
+
 	private void allocateCursors() {
 		Display display = getShell().getDisplay();
 		cursors.put(SWT.CURSOR_ARROW, new Cursor(display, SWT.CURSOR_ARROW));
@@ -446,37 +452,41 @@ public class ScreenshotAttachmentPage extends WizardPage implements IImageCreato
 	}
 
 	private void captureScreenshotContent() {
-		Display display = getShell().getDisplay();
-		Shell wizardShell = getWizard().getContainer().getShell();
+		final Display display = getShell().getDisplay();
+		final Shell wizardShell = getWizard().getContainer().getShell();
 		wizardShell.setVisible(false);
 
+		// this code needs to run asynchronously to allow the workbench to refresh before the screen is captured  
+		UIJob job = new UIJob("Capturing Screenshot") {
+		
+			@Override
+			public IStatus runInUIThread(IProgressMonitor monitor) {
+				disposeImageResources();
+				Rectangle displayBounds = display.getBounds();
+				originalImage = new Image(display, displayBounds);
+				workImage = new Image(display, displayBounds);
+
+				GC gc = new GC(display);
+				gc.copyArea(originalImage, 0, 0);
+				gc.copyArea(workImage, 0, 0);
+				gc.dispose();
+
+				workImageGC = new GC(workImage);
+				workImageGC.setForeground(markColor);
+				workImageGC.setLineWidth(4);
+				workImageGC.setLineCap(SWT.CAP_ROUND);
+
+				clearSelection();
+				refreshCanvasSize();
+
+				wizardShell.setVisible(true);
+				setPageComplete(true);
+
+				return Status.OK_STATUS;
+			}
+		};
 		// NOTE: need a wait since the shell can take time to disappear (e.g. fade on Vista)
-		try {
-			Thread.sleep(400);
-		} catch (InterruptedException e) {
-			// ignore
-		}
-
-		disposeImageResources();
-		Rectangle displayBounds = display.getBounds();
-		originalImage = new Image(display, displayBounds);
-		workImage = new Image(display, displayBounds);
-
-		GC gc = new GC(display);
-		gc.copyArea(originalImage, 0, 0);
-		gc.copyArea(workImage, 0, 0);
-		gc.dispose();
-
-		workImageGC = new GC(workImage);
-		workImageGC.setForeground(markColor);
-		workImageGC.setLineWidth(4);
-		workImageGC.setLineCap(SWT.CAP_ROUND);
-
-		clearSelection();
-		refreshCanvasSize();
-
-		wizardShell.setVisible(true);
-		setPageComplete(true);
+		job.schedule(CAPTURE_DELAY);
 	}
 
 	/**
