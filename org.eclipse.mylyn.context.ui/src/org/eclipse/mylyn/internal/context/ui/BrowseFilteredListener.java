@@ -51,7 +51,7 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 	public void unfilterSelection(TreeViewer treeViewer, IStructuredSelection targetSelection) {
 		InterestFilter filter = getInterestFilter(treeViewer);
 		Object targetObject = targetSelection.getFirstElement();
-		if (targetObject != null) {
+		if (filter != null && targetObject != null) {
 			filter.setTemporarilyUnfiltered(targetObject);
 			if (targetObject instanceof Tree) {
 				treeViewer.refresh();
