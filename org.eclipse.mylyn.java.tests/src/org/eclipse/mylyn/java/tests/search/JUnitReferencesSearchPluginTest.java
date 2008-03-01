@@ -46,8 +46,9 @@ public class JUnitReferencesSearchPluginTest extends TestCase implements ISearch
 
 	public List<?> search(int dos, IInteractionElement node) {
 
-		if (node == null)
+		if (node == null) {
 			return null;
+		}
 
 		// test with each of the sepatations
 		JUnitReferencesProvider prov = new JUnitReferencesProvider();

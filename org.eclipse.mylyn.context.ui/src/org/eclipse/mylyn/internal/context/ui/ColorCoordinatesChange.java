@@ -30,29 +30,32 @@ class ColorCoordinatesChange {
 		double H = 0;
 
 		// Calculate saturation: saturation is 0 if r, g and b are all 0
-		if (V == 0)
+		if (V == 0) {
 			S = 0.0;
-		else
+		} else {
 			S = Delta / V;
+		}
 
-		if (S == 0)
+		if (S == 0) {
 			H = 0; // Achromatic: When s = 0, h is undefined but who cares
-		else // Chromatic
+		} else // Chromatic
 		{
-			if (R == V) // between yellow and magenta [degrees]
+			if (R == V) {
 				H = 60.0 * (G - B) / Delta;
-			else {
-				if (G == V) // between cyan and yellow
+			} else {
+				if (G == V) {
 					H = 120.0 + 60.0 * (B - R) / Delta;
-				else
+				} else {
 					// between magenta and cyan
 					H = 240.0 + 60.0 * (R - G) / Delta;
+				}
 
 			}
 		}
 
-		if (H < 0)
+		if (H < 0) {
 			H = H + 360.0;
+		}
 		// return a list of values as an rgb object would not be sensible
 		return new double[] { H, S, V / 255.0 };
 	}
@@ -79,10 +82,11 @@ class ColorCoordinatesChange {
 			B = V;
 		} else // chromatic color
 		{
-			if (H == 360.0) // 360 degrees same as 0 degrees
+			if (H == 360.0) {
 				hTemp = 0.0;
-			else
+			} else {
 				hTemp = H;
+			}
 
 			hTemp = hTemp / 60.0; // h is now in [0,6)
 			i = new Double(hTemp).intValue(); // largest integer <= h

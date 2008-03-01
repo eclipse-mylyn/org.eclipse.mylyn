@@ -56,10 +56,11 @@ public class AntUiBridge extends AbstractContextUiBridge {
 
 		int first = handle.indexOf(";");
 		String filename = "";
-		if (first == -1)
+		if (first == -1) {
 			filename = handle;
-		else
+		} else {
 			filename = handle.substring(0, first);
+		}
 
 		try {
 			// get the file
@@ -71,7 +72,8 @@ public class AntUiBridge extends AbstractContextUiBridge {
 
 			// if the editor is null, we had a problem and should return
 			if (editor == null) {
-				StatusHandler.log(new Status(IStatus.ERROR, AntUiBridgePlugin.ID_PLUGIN, "Unable to open editor for file: " + filename));
+				StatusHandler.log(new Status(IStatus.ERROR, AntUiBridgePlugin.ID_PLUGIN,
+						"Unable to open editor for file: " + filename));
 				return;
 			}
 

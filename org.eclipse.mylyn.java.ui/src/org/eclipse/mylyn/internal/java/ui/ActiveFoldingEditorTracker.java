@@ -24,14 +24,16 @@ public class ActiveFoldingEditorTracker extends AbstractEditorTracker {
 
 	@Override
 	public void editorOpened(IEditorPart part) {
-		if (part instanceof JavaEditor)
+		if (part instanceof JavaEditor) {
 			registerEditor((JavaEditor) part);
+		}
 	}
 
 	@Override
 	public void editorClosed(IEditorPart part) {
-		if (part instanceof JavaEditor)
+		if (part instanceof JavaEditor) {
 			unregisterEditor((JavaEditor) part);
+		}
 	}
 
 	public void registerEditor(final JavaEditor editor) {

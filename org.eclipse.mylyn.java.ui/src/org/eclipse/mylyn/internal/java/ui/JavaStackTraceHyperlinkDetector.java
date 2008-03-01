@@ -24,20 +24,21 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
  */
 public class JavaStackTraceHyperlinkDetector extends AbstractHyperlinkDetector {
 
-	private static final Pattern stackTracePattern = Pattern.compile("\\S*\\.java:\\d*\\)",
-			Pattern.CASE_INSENSITIVE);
+	private static final Pattern stackTracePattern = Pattern.compile("\\S*\\.java:\\d*\\)", Pattern.CASE_INSENSITIVE);
 
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
 
-		if (region == null || textViewer == null)
+		if (region == null || textViewer == null) {
 			return null;
+		}
 
 		IDocument document = textViewer.getDocument();
 
 		int offset = region.getOffset();
 
-		if (document == null)
+		if (document == null) {
 			return null;
+		}
 
 		IRegion lineInfo;
 		String line;

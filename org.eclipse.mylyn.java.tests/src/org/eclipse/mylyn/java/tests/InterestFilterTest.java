@@ -71,7 +71,7 @@ public class InterestFilterTest extends AbstractJavaContextTest {
 			if (viewerFilter instanceof InterestFilter) {
 				fail();
 			}
-		} 
+		}
 		applyAction.update(true);
 		ViewerFilter[] afterInstall = explorer.getTreeViewer().getFilters();
 		// more than 1 since we preserve some filters

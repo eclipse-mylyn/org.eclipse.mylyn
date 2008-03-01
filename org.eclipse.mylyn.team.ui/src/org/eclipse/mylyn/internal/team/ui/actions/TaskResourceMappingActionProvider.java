@@ -18,9 +18,9 @@ import org.eclipse.ui.navigator.ICommonMenuConstants;
  */
 public class TaskResourceMappingActionProvider extends CommonActionProvider {
 
-	private OpenCorrespondingTaskAction openCorrespondingAction = new OpenCorrespondingTaskAction();
+	private final OpenCorrespondingTaskAction openCorrespondingAction = new OpenCorrespondingTaskAction();
 
-	private AddToTaskContextAction addToTaskContextAction = new AddToTaskContextAction();
+	private final AddToTaskContextAction addToTaskContextAction = new AddToTaskContextAction();
 
 	@Override
 	public void fillContextMenu(IMenuManager menuManager) {

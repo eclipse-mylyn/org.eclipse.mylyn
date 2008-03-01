@@ -33,8 +33,9 @@ public class JUnitReferencesProvider extends AbstractJavaRelationProvider {
 			IMethod method = (IMethod) element;
 			boolean isTestMethod = false;
 			boolean isTestCase = false;
-			if (method.getElementName().startsWith("test"))
+			if (method.getElementName().startsWith("test")) {
 				isTestMethod = true;
+			}
 
 			IJavaElement parent = method.getParent();
 			if (parent instanceof IType) {

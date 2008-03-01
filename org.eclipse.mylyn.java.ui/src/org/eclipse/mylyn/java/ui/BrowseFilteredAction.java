@@ -39,15 +39,15 @@ public class BrowseFilteredAction extends Action implements IObjectActionDelegat
 	@Deprecated
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 		if (targetPart instanceof PackageExplorerPart) {
-			treeViewer = ((PackageExplorerPart)targetPart).getTreeViewer();
+			treeViewer = ((PackageExplorerPart) targetPart).getTreeViewer();
 			browseFilteredListener = new BrowseFilteredListener(treeViewer);
 		}
-	} 
-	
+	}
+
 	@Deprecated
 	public void init(IViewPart targetPart) {
 		if (targetPart instanceof PackageExplorerPart) {
-			treeViewer = ((PackageExplorerPart)targetPart).getTreeViewer();
+			treeViewer = ((PackageExplorerPart) targetPart).getTreeViewer();
 			browseFilteredListener = new BrowseFilteredListener(treeViewer);
 		}
 	}

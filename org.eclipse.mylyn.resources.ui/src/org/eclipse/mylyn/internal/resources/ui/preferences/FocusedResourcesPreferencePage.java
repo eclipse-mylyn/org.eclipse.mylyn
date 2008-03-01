@@ -164,10 +164,13 @@ public class FocusedResourcesPreferencePage extends PreferencePage implements IW
 		InputDialog dialog = new InputDialog(getShell(), "Add Ignored Resource", "Enter pattern (* = any string)",
 				null, null); // 
 		dialog.open();
-		if (dialog.getReturnCode() != Window.OK)
+		if (dialog.getReturnCode() != Window.OK) {
 			return;
+		}
 		String pattern = dialog.getValue();
-		if (pattern.equals(""))return; //$NON-NLS-1$
+		if (pattern.equals("")) {
+			return; //$NON-NLS-1$
+		}
 		TableItem item = new TableItem(ignoreTable, SWT.NONE);
 		item.setText(pattern);
 		item.setChecked(true);

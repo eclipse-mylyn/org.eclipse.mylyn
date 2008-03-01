@@ -115,8 +115,9 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 	@Override
 	public Object getObjectForHandle(String handle) {
 		try {
-			if (handle == null)
+			if (handle == null) {
 				return null;
+			}
 			int first = handle.indexOf(HANDLE_PATH_SEPARATOR);
 			String filename = "";
 			if (first == -1) {
@@ -151,8 +152,9 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 						.getActiveEditor();
 				if (editorPart instanceof AntEditor) {
 					AntModel antModel = ((AntEditor) editorPart).getAntModel();
-					if (antModel != null)
+					if (antModel != null) {
 						return AntEditingMonitor.getNode(antModel, elementPath);
+					}
 				} else {
 					String content = XmlNodeHelper.getContents(file.getContents());
 					IDocument d = new Document(content);
@@ -190,8 +192,9 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 		} else if (object instanceof File) {
 			File file = (File) object;
 			// get the handle for the build.xml file
-			if (file.getFullPath().toString().endsWith("build.xml"))
+			if (file.getFullPath().toString().endsWith("build.xml")) {
 				return file.getFullPath().toString();
+			}
 		}
 		return null;
 	}
@@ -207,8 +210,9 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 			return name;
 		} else if (object instanceof File) {
 			File file = (File) object;
-			if (file.getFullPath().toString().endsWith("build.xml"))
+			if (file.getFullPath().toString().endsWith("build.xml")) {
 				return "build.xml";
+			}
 		}
 		return "";
 	}
@@ -236,12 +240,14 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 		if (object instanceof AntElementNode) {
 			return true;
 		} else if (object instanceof XmlNodeHelper) {
-			if (((XmlNodeHelper) object).getFilename().endsWith("build.xml"))
+			if (((XmlNodeHelper) object).getFilename().endsWith("build.xml")) {
 				return true;
+			}
 		} else if (object instanceof File) {
 			File file = (File) object;
-			if (file.getFullPath().toString().endsWith("build.xml"))
+			if (file.getFullPath().toString().endsWith("build.xml")) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -297,7 +303,8 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 				}
 				return null;
 			} catch (Throwable t) {
-				StatusHandler.log(new Status(IStatus.ERROR, AntUiBridgePlugin.ID_PLUGIN, "Could not find element for: " + object, t));
+				StatusHandler.log(new Status(IStatus.ERROR, AntUiBridgePlugin.ID_PLUGIN, "Could not find element for: "
+						+ object, t));
 				return null;
 			}
 		} else if (object instanceof IFile) {
@@ -324,7 +331,8 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 					return handle;
 				}
 			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.WARNING, AntUiBridgePlugin.ID_PLUGIN, "Unable to get handle for offset in object", e));
+				StatusHandler.log(new Status(IStatus.WARNING, AntUiBridgePlugin.ID_PLUGIN,
+						"Unable to get handle for offset in object", e));
 			}
 		}
 		return null;

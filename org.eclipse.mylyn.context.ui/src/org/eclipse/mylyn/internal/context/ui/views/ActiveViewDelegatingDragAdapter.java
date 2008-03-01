@@ -47,8 +47,7 @@ public class ActiveViewDelegatingDragAdapter implements DragSourceListener {
 		List transfers = new ArrayList(fPossibleListeners.length);
 		fActiveListeners = new ArrayList(fPossibleListeners.length);
 
-		for (int i = 0; i < fPossibleListeners.length; i++) {
-			TransferDragSourceListener listener = fPossibleListeners[i];
+		for (TransferDragSourceListener listener : fPossibleListeners) {
 			event.doit = saveDoit;
 			listener.dragStart(event);
 			if (event.doit) {
@@ -66,8 +65,9 @@ public class ActiveViewDelegatingDragAdapter implements DragSourceListener {
 
 	public void dragSetData(DragSourceEvent event) {
 		fFinishListener = getListener(event.dataType);
-		if (fFinishListener != null)
+		if (fFinishListener != null) {
 			fFinishListener.dragSetData(event);
+		}
 	}
 
 	public void dragFinished(DragSourceEvent event) {
@@ -78,8 +78,9 @@ public class ActiveViewDelegatingDragAdapter implements DragSourceListener {
 				// If the user presses Escape then we get a dragFinished without
 				// getting a dragSetData before.
 				fFinishListener = getListener(event.dataType);
-				if (fFinishListener != null)
+				if (fFinishListener != null) {
 					fFinishListener.dragFinished(event);
+				}
 			}
 		} finally {
 			fFinishListener = null;
@@ -88,8 +89,9 @@ public class ActiveViewDelegatingDragAdapter implements DragSourceListener {
 	}
 
 	private TransferDragSourceListener getListener(TransferData type) {
-		if (type == null)
+		if (type == null) {
 			return null;
+		}
 
 		for (Iterator iter = fActiveListeners.iterator(); iter.hasNext();) {
 			TransferDragSourceListener listener = (TransferDragSourceListener) iter.next();

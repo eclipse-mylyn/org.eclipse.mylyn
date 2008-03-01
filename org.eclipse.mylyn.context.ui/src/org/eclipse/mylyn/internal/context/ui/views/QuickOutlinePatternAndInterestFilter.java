@@ -23,7 +23,7 @@ import org.eclipse.ui.internal.misc.StringMatcher;
  */
 public class QuickOutlinePatternAndInterestFilter extends ViewerFilter {
 
-	private InterestFilter interestFilter = new InterestFilter();
+	private final InterestFilter interestFilter = new InterestFilter();
 
 	private StringMatcher stringMatcher;
 
@@ -66,8 +66,8 @@ public class QuickOutlinePatternAndInterestFilter extends ViewerFilter {
 		// If the element has a child that passes the filter, then we want to
 		// keep the parent around - even if it does not pass the filter itself
 		Object[] children = ((ITreeContentProvider) viewer.getContentProvider()).getChildren(element);
-		for (int i = 0; i < children.length; i++) {
-			if (select(viewer, element, children[i])) {
+		for (Object element2 : children) {
+			if (select(viewer, element, element2)) {
 				return true;
 			}
 		}

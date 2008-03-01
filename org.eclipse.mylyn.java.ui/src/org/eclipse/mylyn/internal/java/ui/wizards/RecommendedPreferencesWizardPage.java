@@ -45,7 +45,7 @@ public class RecommendedPreferencesWizardPage extends WizardPage {
 
 	private boolean autoFolding = true;
 
-	private boolean openTaskList = true;
+	private final boolean openTaskList = true;
 
 	protected RecommendedPreferencesWizardPage(String pageName) {
 		super(pageName);

@@ -33,14 +33,15 @@ import org.xml.sax.helpers.XMLReaderFactory;
 public class SaxContextReader implements IInteractionContextReader {
 
 	private InteractionContextScaling contextScaling;
-	
+
 	public void setContextScaling(InteractionContextScaling contextScaling) {
 		this.contextScaling = contextScaling;
 	}
-	
+
 	public InteractionContext readContext(String handleIdentifier, File file) {
-		if (!file.exists())
+		if (!file.exists()) {
 			return null;
+		}
 		FileInputStream fileInputStream = null;
 		ZipInputStream zipInputStream = null;
 		try {
@@ -83,7 +84,8 @@ public class SaxContextReader implements IInteractionContextReader {
 			try {
 				closeable.close();
 			} catch (IOException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Failed to close context input", e));
+				StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID,
+						"Failed to close context input", e));
 			}
 		}
 	}

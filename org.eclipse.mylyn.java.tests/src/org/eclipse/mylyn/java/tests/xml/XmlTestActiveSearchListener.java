@@ -11,9 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.internal.resources.File;
+import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.AbstractRelationProvider;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.tests.support.search.TestActiveSearchListener;
 import org.eclipse.mylyn.internal.ide.xml.XmlNodeHelper;
 import org.eclipse.search.internal.ui.text.FileSearchResult;
@@ -44,14 +44,13 @@ public class XmlTestActiveSearchListener extends TestActiveSearchListener {
 			FileSearchResult fsr = (FileSearchResult) l.get(0);
 			List<Object> nodes = new ArrayList<Object>();
 			Object[] far = fsr.getElements();
-			for (int i = 0; i < far.length; i++) {
-				Match[] mar = fsr.getMatches(far[i]);
+			for (Object element : far) {
+				Match[] mar = fsr.getMatches(element);
 
-				if (far[i] instanceof File) {
-					File f = (File) far[i];
+				if (element instanceof File) {
+					File f = (File) element;
 
-					for (int j = 0; j < mar.length; j++) {
-						Match m = mar[j];
+					for (Match m : mar) {
 						try {
 
 							AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(

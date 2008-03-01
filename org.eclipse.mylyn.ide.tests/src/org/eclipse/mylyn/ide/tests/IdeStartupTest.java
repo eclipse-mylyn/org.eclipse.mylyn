@@ -26,7 +26,7 @@ public class IdeStartupTest extends TestCase {
 	protected void setUp() throws Exception {
 		TestUtil.triggerContextUiLazyStart();
 	}
-	
+
 	public void testChangeSetsStartup() {
 		List<IInteractionContextListener> listeners = ContextCorePlugin.getContextManager().getListeners();
 		boolean containsManager = false;

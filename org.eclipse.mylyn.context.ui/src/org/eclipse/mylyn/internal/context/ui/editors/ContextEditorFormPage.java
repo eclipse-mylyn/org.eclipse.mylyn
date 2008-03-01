@@ -80,13 +80,13 @@ public class ContextEditorFormPage extends FormPage {
 
 	private CommonViewer commonViewer;
 
-	private ScalableInterestFilter interestFilter = new ScalableInterestFilter();
+	private final ScalableInterestFilter interestFilter = new ScalableInterestFilter();
 
 	private Scale doiScale;
 
 	private AbstractTask task;
 
-	private IInteractionContextListener CONTEXT_LISTENER = new IInteractionContextListener2() {
+	private final IInteractionContextListener CONTEXT_LISTENER = new IInteractionContextListener2() {
 
 		private void refresh() {
 			if (commonViewer != null && !commonViewer.getTree().isDisposed()) {
@@ -114,7 +114,7 @@ public class ContextEditorFormPage extends FormPage {
 		public void elementsDeleted(List<IInteractionElement> element) {
 			refresh();
 		}
-		
+
 		public void interestChanged(List<IInteractionElement> elements) {
 			refresh();
 		}
@@ -133,7 +133,7 @@ public class ContextEditorFormPage extends FormPage {
 
 		public void contextPreActivated(IInteractionContext context) {
 			// ignore
-			
+
 		}
 	};
 
@@ -171,7 +171,7 @@ public class ContextEditorFormPage extends FormPage {
 	}
 
 	private void createActionsSection(Composite composite) {
-		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
+		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE);
 		section.setText("Actions");
 
 		section.setLayout(new GridLayout());
@@ -315,7 +315,7 @@ public class ContextEditorFormPage extends FormPage {
 	}
 
 	private void createDisplaySection(Composite composite) {
-		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
+		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE);
 		section.setText("Elements");
 		section.setLayoutData(new GridData(GridData.FILL_BOTH));
 
@@ -398,7 +398,8 @@ public class ContextEditorFormPage extends FormPage {
 				Method method = clazz.getDeclaredMethod("setIsFlatLayout", new Class[] { boolean.class });
 				method.invoke(treeContentProvider, new Object[] { true });
 			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not set flat layout on Java content provider", e));
+				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
+						"Could not set flat layout on Java content provider", e));
 			}
 		}
 	}

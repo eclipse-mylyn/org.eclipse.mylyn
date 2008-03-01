@@ -47,7 +47,7 @@ public class JavaUiUtil {
 
 	private static final Point SMALL_SIZE = new Point(16, 16);
 
-	private static final String SEPARATOR_CODEASSIST = "\0"; 
+	private static final String SEPARATOR_CODEASSIST = "\0";
 
 	public static final String ASSIST_MYLYN_TYPE = "org.eclipse.mylyn.java.javaTypeProposalCategory";
 
@@ -96,8 +96,9 @@ public class JavaUiUtil {
 	}
 
 	public static IJavaElement getJavaElement(ConcreteMarker marker) {
-		if (marker == null)
+		if (marker == null) {
 			return null;
+		}
 		try {
 			IResource res = marker.getResource();
 			ICompilationUnit cu = null;
@@ -118,11 +119,13 @@ public class JavaUiUtil {
 				return null;
 			}
 		} catch (JavaModelException ex) {
-			if (!ex.isDoesNotExist())
+			if (!ex.isDoesNotExist()) {
 				ExceptionHandler.handle(ex, "error", "could not find java element"); //$NON-NLS-2$ //$NON-NLS-1$
+			}
 			return null;
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not find element for: " + marker, t));
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not find element for: "
+					+ marker, t));
 			return null;
 		}
 	}
@@ -135,14 +138,16 @@ public class JavaUiUtil {
 	 * @return String representing the fully qualified name
 	 */
 	public static String getFullyQualifiedName(IJavaElement je) {
-		if (!(je instanceof IMember))
+		if (!(je instanceof IMember)) {
 			return null;
+		}
 
 		IMember m = (IMember) je;
-		if (m.getDeclaringType() == null)
+		if (m.getDeclaringType() == null) {
 			return ((IType) m).getFullyQualifiedName();
-		else
+		} else {
 			return m.getDeclaringType().getFullyQualifiedName() + "." + m.getElementName();
+		}
 	}
 
 	@Deprecated
@@ -151,8 +156,8 @@ public class JavaUiUtil {
 			IWorkbenchPage page = workbenchWindow.getActivePage();
 			if (page != null) {
 				IEditorReference[] references = page.getEditorReferences();
-				for (int i = 0; i < references.length; i++) {
-					IEditorPart part = references[i].getEditor(false);
+				for (IEditorReference reference : references) {
+					IEditorPart part = reference.getEditor(false);
 					if (part != null) {
 						if (javaOnly && part.getEditorInput() instanceof IFileEditorInput && part instanceof JavaEditor) {
 							JavaEditor editor = (JavaEditor) part;

@@ -55,8 +55,9 @@ public class ContextClearAction extends TaskContextAction {
 				.getActiveWorkbenchWindow()
 				.getShell(), "Confirm clear context",
 				"Clear the context for the selected task?  This cannot be undone.");
-		if (!deleteConfirmed)
+		if (!deleteConfirmed) {
 			return false;
+		}
 
 		ContextCorePlugin.getContextManager().deleteContext(task.getHandleIdentifier());
 		TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(task, false);

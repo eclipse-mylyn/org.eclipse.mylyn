@@ -10,10 +10,10 @@ package org.eclipse.mylyn.internal.context.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.tasks.ui.ContextUiUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
@@ -102,7 +102,7 @@ public class ContextRetrieveAction extends Action implements IViewActionDelegate
 			dialog.create();
 			dialog.setTitle(ContextRetrieveWizard.WIZARD_TITLE);
 			dialog.setBlockOnOpen(true);
-			if (dialog.open() == Dialog.CANCEL) {
+			if (dialog.open() == Window.CANCEL) {
 				dialog.close();
 				return;
 			}

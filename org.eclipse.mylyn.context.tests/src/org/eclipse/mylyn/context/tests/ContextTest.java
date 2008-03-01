@@ -84,8 +84,9 @@ public class ContextTest extends AbstractContextTest {
 		IInteractionElement node1 = context.parseEvent(mockSelection("1"));
 
 		context.parseEvent(mockSelection("2"));
-		for (int i = 0; i < 98; i++)
+		for (int i = 0; i < 98; i++) {
 			context.parseEvent(mockSelection("1"));
+		}
 		assertEquals(99 - (decay * 99), node1.getInterest().getValue());
 	}
 

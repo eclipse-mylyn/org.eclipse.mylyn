@@ -108,18 +108,20 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 				try {
 					children = parent.getChildren();
 					List<String> childHandles = new ArrayList<String>();
-					for (int i = 0; i < children.length; i++) {
-						String childHandle = getHandleIdentifier(children[i]);
-						if (childHandle != null)
+					for (IJavaElement element2 : children) {
+						String childHandle = getHandleIdentifier(element2);
+						if (childHandle != null) {
 							childHandles.add(childHandle);
+						}
 					}
 					AbstractContextStructureBridge parentBridge = ContextCorePlugin.getDefault().getStructureBridge(
 							parentContentType);
 					if (parentBridge != null && parentBridge instanceof ResourceStructureBridge) {
 						if (element.getElementType() < IJavaElement.TYPE) {
 							List<String> resourceChildren = parentBridge.getChildHandles(handle);
-							if (!resourceChildren.isEmpty())
+							if (!resourceChildren.isEmpty()) {
 								childHandles.addAll(resourceChildren);
+							}
 						}
 					}
 
@@ -130,7 +132,8 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 							ContextCorePlugin.CONTENT_TYPE_RESOURCE);
 					return parentBridge.getChildHandles(handle);
 				} catch (Exception e) {
-					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not get children", e));
+					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not get children",
+							e));
 				}
 			}
 		}
@@ -142,7 +145,8 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 		try {
 			return JavaCore.create(handle);
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.WARNING, JavaUiBridgePlugin.PLUGIN_ID, "Could not create java element for handle: " + handle, t));
+			StatusHandler.log(new Status(IStatus.WARNING, JavaUiBridgePlugin.PLUGIN_ID,
+					"Could not create java element for handle: " + handle, t));
 			return null;
 		}
 	}
@@ -188,7 +192,7 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 	private boolean isWtpClass(Object object) {
 		try {
 			return object != null && object.getClass().getSimpleName().equals("CompressedJavaProject");
-		} catch (Throwable t) { 
+		} catch (Throwable t) {
 			// could have malformed name, see bug 165065
 			return false;
 		}
@@ -243,9 +247,9 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 			PackageFragmentRootContainer container = (PackageFragmentRootContainer) object;
 
 			Object[] children = container.getChildren();
-			for (int i = 0; i < children.length; i++) {
-				if (children[i] instanceof JarPackageFragmentRoot) {
-					JarPackageFragmentRoot element = (JarPackageFragmentRoot) children[i];
+			for (Object element2 : children) {
+				if (element2 instanceof JarPackageFragmentRoot) {
+					JarPackageFragmentRoot element = (JarPackageFragmentRoot) element2;
 					IInteractionElement node = ContextCorePlugin.getContextManager().getElement(
 							element.getHandleIdentifier());
 					if (node != null && node.getInterest().isInteresting()) {
@@ -257,8 +261,7 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 			try {
 				WorkingSet workingSet = (WorkingSet) object;
 				IAdaptable[] elements = workingSet.getElements();
-				for (int i = 0; i < elements.length; i++) {
-					IAdaptable adaptable = elements[i];
+				for (IAdaptable adaptable : elements) {
 					IInteractionElement interactionElement = ContextCorePlugin.getContextManager().getElement(
 							getHandleIdentifier(adaptable));
 					if (interactionElement != null && interactionElement.getInterest().isInteresting()) {
@@ -284,23 +287,23 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 		IMarker marker;
 		int charStart = 0;
 		if (object instanceof ConcreteMarker) {
-			marker = ((ConcreteMarker)object).getMarker();
+			marker = ((ConcreteMarker) object).getMarker();
 		} else if (object instanceof Marker) {
-			marker = (Marker)object;
+			marker = (Marker) object;
 		} else {
 			return null;
 		}
-		
+
 		Object attribute = marker.getAttribute(IMarker.CHAR_START, 0);
 		if (attribute instanceof Integer) {
-			charStart = ((Integer)attribute).intValue();
+			charStart = ((Integer) attribute).intValue();
 		}
-		
+
 		try {
 			ICompilationUnit compilationUnit = null;
 			IResource resource = marker.getResource();
 			if (resource instanceof IFile) {
-				IFile file = (IFile)resource;
+				IFile file = (IFile) resource;
 				// TODO: get rid of file extension check
 				if (file.getFileExtension().equals("java")) {
 					compilationUnit = JavaCore.createCompilationUnitFrom(file);
@@ -311,8 +314,9 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 			if (compilationUnit != null) {
 				IJavaElement javaElement = compilationUnit.getElementAt(charStart);
 				if (javaElement != null) {
-					if (javaElement instanceof IImportDeclaration)
+					if (javaElement instanceof IImportDeclaration) {
 						javaElement = javaElement.getParent().getParent();
+					}
 					return javaElement.getHandleIdentifier();
 				} else {
 					return null;
@@ -321,11 +325,13 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 				return null;
 			}
 		} catch (JavaModelException ex) {
-			if (!ex.isDoesNotExist())
+			if (!ex.isDoesNotExist()) {
 				ExceptionHandler.handle(ex, "error", "could not find java element"); //$NON-NLS-2$ //$NON-NLS-1$
+			}
 			return null;
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not find element for: " + marker, t));
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not find element for: "
+					+ marker, t));
 			return null;
 		}
 	}
@@ -360,8 +366,9 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 			case IJavaElement.FIELD:
 			case IJavaElement.LOCAL_VARIABLE:
 				ICompilationUnit cu = (ICompilationUnit) element.getAncestor(IJavaElement.COMPILATION_UNIT);
-				if (cu != null)
+				if (cu != null) {
 					return getErrorTicksFromMarkers(element.getResource(), IResource.DEPTH_ONE, null);
+				}
 			}
 		} catch (CoreException e) {
 			// ignore
@@ -371,12 +378,12 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 
 	private boolean getErrorTicksFromMarkers(IResource res, int depth, ISourceReference sourceElement)
 			throws CoreException {
-		if (res == null || !res.isAccessible())
+		if (res == null || !res.isAccessible()) {
 			return false;
+		}
 		IMarker[] markers = res.findMarkers(IMarker.PROBLEM, true, depth);
 		if (markers != null) {
-			for (int i = 0; i < markers.length; i++) {
-				IMarker curr = markers[i];
+			for (IMarker curr : markers) {
 				if (sourceElement == null) {
 					int priority = curr.getAttribute(IMarker.SEVERITY, -1);
 					if (priority == IMarker.SEVERITY_ERROR) {

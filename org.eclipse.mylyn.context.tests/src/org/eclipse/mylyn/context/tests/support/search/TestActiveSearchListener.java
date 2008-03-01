@@ -29,12 +29,14 @@ public class TestActiveSearchListener implements IActiveSearchListener {
 		List<Object> accepted = new ArrayList<Object>(l.size());
 		if (prov != null) {
 			for (Object o : l) {
-				if (prov.acceptResultElement(o))
+				if (prov.acceptResultElement(o)) {
 					accepted.add(o);
+				}
 			}
 			results = accepted;
-		} else
+		} else {
 			results = l;
+		}
 		gathered = true;
 	}
 

@@ -24,10 +24,12 @@ public class InterestComparator<T> implements Comparator<T> {
 			IInteractionElement info2 = (IInteractionElement) e2;
 			float v1 = info1.getInterest().getValue();
 			float v2 = info2.getInterest().getValue();
-			if (v1 >= v2)
+			if (v1 >= v2) {
 				return -1;
-			if (v1 < v2)
+			}
+			if (v1 < v2) {
 				return 1;
+			}
 		}
 		return 0;
 	}

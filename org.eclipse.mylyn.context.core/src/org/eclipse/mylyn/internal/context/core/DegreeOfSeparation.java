@@ -15,9 +15,9 @@ import org.eclipse.mylyn.context.core.IDegreeOfSeparation;
  */
 public class DegreeOfSeparation implements IDegreeOfSeparation {
 
-	private String label;
+	private final String label;
 
-	private int degree;
+	private final int degree;
 
 	public DegreeOfSeparation(String label, int degree) {
 		this.label = label;

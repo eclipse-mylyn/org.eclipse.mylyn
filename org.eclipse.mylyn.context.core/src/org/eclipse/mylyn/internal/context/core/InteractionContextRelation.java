@@ -19,15 +19,15 @@ import org.eclipse.mylyn.context.core.IInteractionRelation;
  */
 public class InteractionContextRelation implements IInteractionRelation {
 
-	private DegreeOfInterest interest;
+	private final DegreeOfInterest interest;
 
-	private String structureKind;
+	private final String structureKind;
 
-	private String relationshipHandle;
+	private final String relationshipHandle;
 
-	private IInteractionElement source;
+	private final IInteractionElement source;
 
-	private IInteractionElement target;
+	private final IInteractionElement target;
 
 	public InteractionContextRelation(String kind, String edgeKind, IInteractionElement source,
 			IInteractionElement target, InteractionContext context) {

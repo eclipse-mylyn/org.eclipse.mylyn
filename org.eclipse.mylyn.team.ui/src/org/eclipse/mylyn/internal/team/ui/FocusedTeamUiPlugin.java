@@ -33,9 +33,9 @@ public class FocusedTeamUiPlugin extends AbstractUIPlugin {
 
 	private static FocusedTeamUiPlugin INSTANCE;
 
-	private Set<AbstractContextChangeSetManager> changeSetManagers = new HashSet<AbstractContextChangeSetManager>();
+	private final Set<AbstractContextChangeSetManager> changeSetManagers = new HashSet<AbstractContextChangeSetManager>();
 
-	private Set<AbstractActiveChangeSetProvider> activeChangeSetProviders = new HashSet<AbstractActiveChangeSetProvider>();
+	private final Set<AbstractActiveChangeSetProvider> activeChangeSetProviders = new HashSet<AbstractActiveChangeSetProvider>();
 
 	private CommitTemplateManager commitTemplateManager;
 
@@ -55,7 +55,7 @@ public class FocusedTeamUiPlugin extends AbstractUIPlugin {
 			// ignore
 		}
 	}
-	
+
 	public FocusedTeamUiPlugin() {
 		INSTANCE = this;
 	}
@@ -78,7 +78,8 @@ public class FocusedTeamUiPlugin extends AbstractUIPlugin {
 						}
 					}
 				} catch (Exception e) {
-					StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.PLUGIN_ID, "Mylyn Team start failed", e));
+					StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.PLUGIN_ID,
+							"Mylyn Team start failed", e));
 				}
 			}
 		});

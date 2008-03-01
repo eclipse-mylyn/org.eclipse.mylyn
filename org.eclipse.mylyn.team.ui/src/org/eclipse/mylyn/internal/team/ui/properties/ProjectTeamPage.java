@@ -110,6 +110,7 @@ public class ProjectTeamPage extends PropertyPage {
 		configurationHyperlink.setText("Configure workspace");
 		configurationHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 
+			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				PreferenceDialog dlg = PreferencesUtil.createPreferenceDialogOn(getShell(),
 						FocusedTeamPreferencePage.PAGE_ID, new String[] { FocusedTeamPreferencePage.PAGE_ID }, null);
@@ -128,12 +129,13 @@ public class ProjectTeamPage extends PropertyPage {
 			child.setEnabled(enabled);
 		}
 		commitTemplateText.setEnabled(enabled);
-		
+
 		configurationHyperlink.setEnabled(!enabled);
 		if (!enabled) {
 			configurationHyperlink.setForeground(JFaceColors.getHyperlinkText(getShell().getDisplay()));
 		} else {
-			configurationHyperlink.setForeground(getShell().getDisplay().getSystemColor(SWT.COLOR_TITLE_INACTIVE_FOREGROUND));
+			configurationHyperlink.setForeground(getShell().getDisplay().getSystemColor(
+					SWT.COLOR_TITLE_INACTIVE_FOREGROUND));
 		}
 	}
 

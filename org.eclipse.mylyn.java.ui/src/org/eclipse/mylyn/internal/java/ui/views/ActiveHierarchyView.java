@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -69,11 +68,11 @@ public class ActiveHierarchyView extends ViewPart {
 
 	public static final String ID = "org.eclipse.mylyn.ui.views.active.hierarchy";
 
-	private TreeParent root = new TreeParent("<no hierarchy>");
+	private final TreeParent root = new TreeParent("<no hierarchy>");
 
 	private TreeViewer viewer;
 
-	private Map<String, TreeParent> nodeMap = new HashMap<String, TreeParent>();
+	private final Map<String, TreeParent> nodeMap = new HashMap<String, TreeParent>();
 
 	final IInteractionContextListener MODEL_LISTENER = new IInteractionContextListener() {
 
@@ -169,12 +168,12 @@ public class ActiveHierarchyView extends ViewPart {
 	 */
 	public void refreshHierarchy(boolean asyncRefreshMode) {
 		try {
-			if (root != null && root.getChildren().length > 0)
+			if (root != null && root.getChildren().length > 0) {
 				root.removeAllChildren();
+			}
 			nodeMap.clear();
 			List<IInteractionElement> landmarks = ContextCorePlugin.getContextManager().getActiveLandmarks();
-			for (Iterator<IInteractionElement> it = landmarks.iterator(); it.hasNext();) {
-				IInteractionElement node = it.next();
+			for (IInteractionElement node : landmarks) {
 				IJavaElement element = null;
 				if (node.getContentType().equals(JavaStructureBridge.CONTENT_TYPE)) {
 					element = JavaCore.create(node.getHandleIdentifier());
@@ -207,8 +206,9 @@ public class ActiveHierarchyView extends ViewPart {
 	}
 
 	private void addHierarchy(TreeParent node, List<IType> hierarchyTypes) {
-		if (hierarchyTypes.isEmpty())
+		if (hierarchyTypes.isEmpty()) {
 			return;
+		}
 		IType type = hierarchyTypes.get(0);
 		if (!type.equals(node.getElement())) {
 			TreeParent newNode = nodeMap.get(type.getHandleIdentifier());
@@ -255,7 +255,8 @@ public class ActiveHierarchyView extends ViewPart {
 							IEditorPart part = JavaUI.openInEditor(element);
 							JavaUI.revealInEditor(part, element);
 						} catch (Throwable t) {
-							StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not open type", t));
+							StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID,
+									"Could not open type", t));
 						}
 					}
 				}
@@ -333,7 +334,7 @@ class TreeParent implements IAdaptable {
 
 	protected TreeParent parent;
 
-	private List<TreeParent> children;
+	private final List<TreeParent> children;
 
 	private String relationshipName;
 
@@ -370,10 +371,11 @@ class TreeParent implements IAdaptable {
 
 	@Override
 	public String toString() {
-		if (getElement() == null)
+		if (getElement() == null) {
 			return relationshipName;
-		else
+		} else {
 			return getName();
+		}
 	}
 
 	public void addChild(TreeParent child) {
@@ -383,8 +385,9 @@ class TreeParent implements IAdaptable {
 
 	public void removeAllChildren() {
 		for (TreeParent node : children) {
-			if (node != null)
+			if (node != null) {
 				node.setParent(null);
+			}
 		}
 		children.clear();
 	}

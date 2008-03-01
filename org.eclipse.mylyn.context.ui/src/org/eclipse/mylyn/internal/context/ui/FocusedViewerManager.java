@@ -19,6 +19,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -41,13 +42,13 @@ import org.eclipse.ui.PlatformUI;
  */
 public class FocusedViewerManager implements IInteractionContextListener2, ISelectionListener {
 
-	private CopyOnWriteArrayList<StructuredViewer> managedViewers = new CopyOnWriteArrayList<StructuredViewer>();
+	private final CopyOnWriteArrayList<StructuredViewer> managedViewers = new CopyOnWriteArrayList<StructuredViewer>();
 
-	private CopyOnWriteArrayList<StructuredViewer> filteredViewers = new CopyOnWriteArrayList<StructuredViewer>();
+	private final CopyOnWriteArrayList<StructuredViewer> filteredViewers = new CopyOnWriteArrayList<StructuredViewer>();
 
-	private Map<StructuredViewer, BrowseFilteredListener> listenerMap = new HashMap<StructuredViewer, BrowseFilteredListener>();
+	private final Map<StructuredViewer, BrowseFilteredListener> listenerMap = new HashMap<StructuredViewer, BrowseFilteredListener>();
 
-	private Map<IWorkbenchPart, StructuredViewer> partToViewerMap = new HashMap<IWorkbenchPart, StructuredViewer>();
+	private final Map<IWorkbenchPart, StructuredViewer> partToViewerMap = new HashMap<IWorkbenchPart, StructuredViewer>();
 
 	/**
 	 * For testing.
@@ -162,7 +163,7 @@ public class FocusedViewerManager implements IInteractionContextListener2, ISele
 			return;
 		} else if (viewer.getControl().isDisposed()) {
 			managedViewers.remove(viewer);
-		} else { 
+		} else {
 			if (nodesToRefresh == null || nodesToRefresh.isEmpty()) {
 				if (!minor) {
 					viewer.refresh(false);
@@ -214,7 +215,7 @@ public class FocusedViewerManager implements IInteractionContextListener2, ISele
 			if (objectToRefresh == null) {
 				treeViewer.expandAll();
 			} else {
-				treeViewer.expandToLevel(objectToRefresh, TreeViewer.ALL_LEVELS);
+				treeViewer.expandToLevel(objectToRefresh, AbstractTreeViewer.ALL_LEVELS);
 			}
 		}
 	}
@@ -231,10 +232,10 @@ public class FocusedViewerManager implements IInteractionContextListener2, ISele
 			refreshViewers(toRefresh, false);
 		}
 	}
-	
+
 	/**
-      * TODO: consider making this work per-element and parent
-      */ 
+	 * TODO: consider making this work per-element and parent
+	 */
 	public void elementsDeleted(List<IInteractionElement> elements) {
 		refreshViewers();
 	}
@@ -260,7 +261,7 @@ public class FocusedViewerManager implements IInteractionContextListener2, ISele
 
 	public void contextPreActivated(IInteractionContext context) {
 		// ignore
-		
+
 	}
 
 	public void forceReferesh() {

@@ -41,7 +41,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 public class JavaUiBridge extends AbstractContextUiBridge {
 
 	public static final String ID_PLUGIN = "org.eclipse.mylyn.java.ui";
-	
+
 	private Field javaOutlineField = null;
 
 	public JavaUiBridge() {
@@ -49,20 +49,23 @@ public class JavaUiBridge extends AbstractContextUiBridge {
 			javaOutlineField = JavaOutlinePage.class.getDeclaredField("fOutlineViewer");
 			javaOutlineField.setAccessible(true);
 		} catch (Exception e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not get outline viewer", e));
+			StatusHandler.fail(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not get outline viewer",
+					e));
 		}
 	}
 
 	@Override
 	public void open(IInteractionElement node) {
 		IJavaElement javaElement = JavaCore.create(node.getHandleIdentifier());
-		if (javaElement == null || !javaElement.exists())
+		if (javaElement == null || !javaElement.exists()) {
 			return;
+		}
 		try {
 			IEditorPart part = JavaUI.openInEditor(javaElement);
 			JavaUI.revealInEditor(part, javaElement);
 		} catch (Throwable t) {
-			StatusHandler.fail(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not open editor for: " + node, t));
+			StatusHandler.fail(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not open editor for: "
+					+ node, t));
 		}
 	}
 
@@ -75,8 +78,7 @@ public class JavaUiBridge extends AbstractContextUiBridge {
 				for (IEditorReference reference : page.getEditorReferences()) {
 					try {
 						IJavaElement input = (IJavaElement) reference.getEditorInput().getAdapter(IJavaElement.class);
-						if (input != null
-								&& node.getHandleIdentifier().equals(input.getHandleIdentifier())) {
+						if (input != null && node.getHandleIdentifier().equals(input.getHandleIdentifier())) {
 							toClose.add(reference);
 						}
 					} catch (PartInitException e) {
@@ -112,8 +114,9 @@ public class JavaUiBridge extends AbstractContextUiBridge {
 
 	@Override
 	public List<TreeViewer> getContentOutlineViewers(IEditorPart editorPart) {
-		if (editorPart == null || javaOutlineField == null)
+		if (editorPart == null || javaOutlineField == null) {
 			return null;
+		}
 		List<TreeViewer> viewers = new ArrayList<TreeViewer>();
 		Object out = editorPart.getAdapter(IContentOutlinePage.class);
 		if (out instanceof JavaOutlinePage) {
@@ -122,7 +125,8 @@ public class JavaUiBridge extends AbstractContextUiBridge {
 				try {
 					viewers.add((TreeViewer) javaOutlineField.get(page));
 				} catch (Exception e) {
-					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not get outline viewer", e));
+					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID,
+							"Could not get outline viewer", e));
 				}
 			}
 		}
@@ -138,8 +142,9 @@ public class JavaUiBridge extends AbstractContextUiBridge {
 					return SelectionConverter.resolveEnclosingElement((JavaEditor) editor, textSelection);
 				} else {
 					Object element = ((JavaEditor) editor).getEditorInput().getAdapter(IJavaElement.class);
-					if (element instanceof IJavaElement)
+					if (element instanceof IJavaElement) {
 						return element;
+					}
 				}
 			} catch (JavaModelException e) {
 				// ignore

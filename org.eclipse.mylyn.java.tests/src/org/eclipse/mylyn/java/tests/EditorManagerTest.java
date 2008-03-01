@@ -56,7 +56,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 		assertNotNull(view);
 		assertTrue(ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
 				ContextUiPrefContstants.AUTO_MANAGE_EDITORS));
-		
+
 		ContextUiPlugin.getDefault().getPreferenceStore().setValue(
 				ContextUiPrefContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING, false);
 	}
@@ -65,9 +65,11 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		ResourcesUiBridgePlugin.getEditorManager().closeAllEditors();
-		
+
 		ContextUiPlugin.getDefault().getPreferenceStore().setValue(
-				ContextUiPrefContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING, ContextUiPlugin.getDefault().getPreferenceStore().getDefaultBoolean(ContextUiPrefContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING));
+				ContextUiPrefContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING,
+				ContextUiPlugin.getDefault().getPreferenceStore().getDefaultBoolean(
+						ContextUiPrefContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING));
 	}
 
 	// XXX: Put back

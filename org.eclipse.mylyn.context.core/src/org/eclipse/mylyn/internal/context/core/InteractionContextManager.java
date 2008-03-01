@@ -103,31 +103,31 @@ public class InteractionContextManager {
 
 	private int numInterestingErrors = 0;
 
-	private List<String> errorElementHandles = new ArrayList<String>();
+	private final List<String> errorElementHandles = new ArrayList<String>();
 
 	private Set<File> contextFiles = null;
 
 	private boolean contextCapturePaused = false;
 
-	private CompositeInteractionContext activeContext = new CompositeInteractionContext(getCommonContextScaling());
+	private final CompositeInteractionContext activeContext = new CompositeInteractionContext(getCommonContextScaling());
 
 	/**
 	 * Global contexts do not participate in the regular activation lifecycle but are instead activated and deactivated
 	 * by clients.
 	 */
-	private Collection<IInteractionContext> globalContexts = new HashSet<IInteractionContext>();
+	private final Collection<IInteractionContext> globalContexts = new HashSet<IInteractionContext>();
 
 	private InteractionContext activityMetaContext = null;
 
-	private List<IInteractionContextListener> activityMetaContextListeners = new CopyOnWriteArrayList<IInteractionContextListener>();
+	private final List<IInteractionContextListener> activityMetaContextListeners = new CopyOnWriteArrayList<IInteractionContextListener>();
 
-	private List<IInteractionContextListener> contextListeners = new CopyOnWriteArrayList<IInteractionContextListener>();
+	private final List<IInteractionContextListener> contextListeners = new CopyOnWriteArrayList<IInteractionContextListener>();
 
-	private List<IInteractionContextListener> waitingContextListeners = new ArrayList<IInteractionContextListener>();
+	private final List<IInteractionContextListener> waitingContextListeners = new ArrayList<IInteractionContextListener>();
 
 	private boolean suppressListenerNotification = false;
 
-	private InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
+	private final InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
 
 	private boolean activationHistorySuppressed = false;
 
@@ -144,10 +144,10 @@ public class InteractionContextManager {
 		if (ContextCorePlugin.getDefault().getContextStore() != null) {
 			for (IInteractionContextListener listener : activityMetaContextListeners) {
 				if (listener instanceof IInteractionContextListener2) {
-					((IInteractionContextListener2)listener).contextPreActivated(activityMetaContext);
+					((IInteractionContextListener2) listener).contextPreActivated(activityMetaContext);
 				}
 			}
-			
+
 			File contextActivityFile = getFileForContext(CONTEXT_HISTORY_FILE_NAME);
 			activityMetaContext = externalizer.readContextFromXML(CONTEXT_HISTORY_FILE_NAME, contextActivityFile,
 					commonContextScaling);
@@ -159,13 +159,14 @@ public class InteractionContextManager {
 				ContextCorePlugin.getDefault().getPluginPreferences().setValue(PREFERENCE_ATTENTION_MIGRATED, true);
 				ContextCorePlugin.getDefault().savePluginPreferences();
 			}
-			
+
 			for (IInteractionContextListener listener : activityMetaContextListeners) {
 				listener.contextActivated(activityMetaContext);
 			}
 		} else {
 			resetActivityHistory();
-			StatusHandler.log(new Status(IStatus.INFO, ContextCorePlugin.PLUGIN_ID, "No context store installed, not restoring activity context."));
+			StatusHandler.log(new Status(IStatus.INFO, ContextCorePlugin.PLUGIN_ID,
+					"No context store installed, not restoring activity context."));
 		}
 	}
 
@@ -195,7 +196,8 @@ public class InteractionContextManager {
 				changed.add(element);
 				listener.interestChanged(changed);
 			} catch (Throwable t) {
-				StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Context listener failed: " + listener.getClass().getCanonicalName(), t));
+				StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Context listener failed: "
+						+ listener.getClass().getCanonicalName(), t));
 			}
 		}
 	}
@@ -217,8 +219,9 @@ public class InteractionContextManager {
 	@SuppressWarnings("deprecation")
 	public void addErrorPredictedInterest(String handle, String kind, boolean notify) {
 		if (numInterestingErrors > commonContextScaling.getMaxNumInterestingErrors()
-				|| activeContext.getContextMap().isEmpty())
+				|| activeContext.getContextMap().isEmpty()) {
 			return;
+		}
 		InteractionEvent errorEvent = new InteractionEvent(InteractionEvent.Kind.PROPAGATION, kind, handle,
 				SOURCE_ID_MODEL_ERROR, commonContextScaling.getErrorInterest());
 		processInteractionEvent(errorEvent, true);
@@ -231,10 +234,12 @@ public class InteractionContextManager {
 	 */
 	@SuppressWarnings("deprecation")
 	public void removeErrorPredictedInterest(String handle, String kind, boolean notify) {
-		if (activeContext.getContextMap().isEmpty())
+		if (activeContext.getContextMap().isEmpty()) {
 			return;
-		if (handle == null)
+		}
+		if (handle == null) {
 			return;
+		}
 		IInteractionElement element = activeContext.get(handle);
 		if (element != null && element.getInterest().isInteresting() && errorElementHandles.contains(handle)) {
 			InteractionEvent errorEvent = new InteractionEvent(InteractionEvent.Kind.MANIPULATION, kind, handle,
@@ -243,17 +248,18 @@ public class InteractionContextManager {
 			numInterestingErrors--;
 			errorElementHandles.remove(handle);
 			// TODO: this results in double-notification
-			if (notify)
+			if (notify) {
 				for (IInteractionContextListener listener : contextListeners) {
 					List<IInteractionElement> changed = new ArrayList<IInteractionElement>();
 					changed.add(element);
 					listener.interestChanged(changed);
 				}
+			}
 		}
 	}
 
 	/**
-	 * @return	null if the element handle is null or if the element is not found in the active task context.
+	 * @return null if the element handle is null or if the element is not found in the active task context.
 	 */
 	public IInteractionElement getElement(String elementHandle) {
 		if (activeContext != null && elementHandle != null) {
@@ -436,11 +442,13 @@ public class InteractionContextManager {
 				.getStructureBridge(node.getContentType());
 		if (bridge.canBeLandmark(node.getHandleIdentifier())) {
 			if (previousInterest >= commonContextScaling.getLandmark() && !node.getInterest().isLandmark()) {
-				for (IInteractionContextListener listener : contextListeners)
+				for (IInteractionContextListener listener : contextListeners) {
 					listener.landmarkRemoved(node);
+				}
 			} else if (previousInterest < commonContextScaling.getLandmark() && node.getInterest().isLandmark()) {
-				for (IInteractionContextListener listener : contextListeners)
+				for (IInteractionContextListener listener : contextListeners) {
 					listener.landmarkAdded(node);
+				}
 			}
 		}
 	}
@@ -534,7 +542,8 @@ public class InteractionContextManager {
 			}
 		} else {
 			// API 3.0 FIXME replace by Assert.isNotNull(listener)
-			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Attempted to add null lisetener", new Exception()));
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Attempted to add null lisetener",
+					new Exception()));
 		}
 	}
 
@@ -576,7 +585,8 @@ public class InteractionContextManager {
 			try {
 				listener.contextActivated(context);
 			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Context listener failed: " + listener.getClass().getCanonicalName(), e));
+				StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Context listener failed: "
+						+ listener.getClass().getCanonicalName(), e));
 			}
 		}
 	}
@@ -586,14 +596,14 @@ public class InteractionContextManager {
 	}
 
 	public void activateContext(String handleIdentifier) {
-		try {			
+		try {
 			InteractionContext context = activeContext.getContextMap().get(handleIdentifier);
 			if (context == null) {
 				context = loadContext(handleIdentifier);
 			}
 			for (IInteractionContextListener listener : contextListeners) {
 				if (listener instanceof IInteractionContextListener2) {
-					((IInteractionContextListener2)listener).contextPreActivated(context);
+					((IInteractionContextListener2) listener).contextPreActivated(context);
 				}
 			}
 			if (context != null) {
@@ -601,7 +611,7 @@ public class InteractionContextManager {
 				internalActivateContext(context);
 			} else {
 				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID, "Could not load context"));
-			} 
+			}
 			suppressListenerNotification = false;
 			contextListeners.addAll(waitingContextListeners);
 			waitingContextListeners.clear();
@@ -656,7 +666,8 @@ public class InteractionContextManager {
 					try {
 						listener.contextDeactivated(context);
 					} catch (Exception e) {
-						StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Context listener failed: " + listener.getClass().getCanonicalName(), e));
+						StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID,
+								"Context listener failed: " + listener.getClass().getCanonicalName(), e));
 					}
 				}
 				if (context.getAllElements().size() == 0) {
@@ -701,8 +712,9 @@ public class InteractionContextManager {
 			contextFiles.remove(getFileForContext(handleIdentifier));
 		}
 		InteractionContext context = activeContext.getContextMap().get(handleIdentifier);
-		if (context == null)
+		if (context == null) {
 			return;
+		}
 		activeContext.getContextMap().remove(context);
 		context.reset();
 	}
@@ -794,7 +806,8 @@ public class InteractionContextManager {
 			externalizer.writeContextToXml(collapseActivityMetaContext(context),
 					getFileForContext(CONTEXT_HISTORY_FILE_NAME));
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Could not save activity history", t));
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Could not save activity history",
+					t));
 		} finally {
 			if (!wasPaused) {
 				setContextCapturePaused(false);
@@ -858,7 +871,8 @@ public class InteractionContextManager {
 				activityEvents.clear();
 			}
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Error during meta activity collapse", e));
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID,
+					"Error during meta activity collapse", e));
 		}
 	}
 
@@ -933,7 +947,8 @@ public class InteractionContextManager {
 			File contextFile = new File(contextDirectory, encoded + CONTEXT_FILE_EXTENSION);
 			return contextFile;
 		} catch (UnsupportedEncodingException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Could not determine path for context", e));
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID,
+					"Could not determine path for context", e));
 		}
 		return null;
 	}
@@ -950,8 +965,9 @@ public class InteractionContextManager {
 				}
 			}
 		}
-		for (IInteractionContextListener listener : contextListeners)
+		for (IInteractionContextListener listener : contextListeners) {
 			listener.relationsChanged(null);
+		}
 	}
 
 	/**
@@ -960,8 +976,9 @@ public class InteractionContextManager {
 	 * @param node
 	 */
 	public void notifyRelationshipsChanged(IInteractionElement node) {
-		if (suppressListenerNotification)
+		if (suppressListenerNotification) {
 			return;
+		}
 		for (IInteractionContextListener listener : contextListeners) {
 			listener.relationsChanged(node);
 		}
@@ -981,7 +998,7 @@ public class InteractionContextManager {
 	public boolean isContextActivePropertySet() {
 		return Boolean.parseBoolean(System.getProperty(PROPERTY_CONTEXT_ACTIVE));
 	}
-	
+
 	public List<IInteractionElement> getActiveLandmarks() {
 		List<IInteractionElement> allLandmarks = activeContext.getLandmarks();
 		List<IInteractionElement> acceptedLandmarks = new ArrayList<IInteractionElement>();
@@ -1127,8 +1144,9 @@ public class InteractionContextManager {
 		IInteractionElement dominantNode = null;
 		if (node instanceof CompositeContextElement) {
 			CompositeContextElement compositeNode = (CompositeContextElement) node;
-			if (compositeNode.getNodes().isEmpty())
+			if (compositeNode.getNodes().isEmpty()) {
 				return null;
+			}
 			dominantNode = (IInteractionElement) compositeNode.getNodes().toArray()[0];
 
 			for (IInteractionElement concreteNode : compositeNode.getNodes()) {
@@ -1148,8 +1166,9 @@ public class InteractionContextManager {
 	}
 
 	public void updateHandle(IInteractionElement element, String newHandle) {
-		if (element == null)
+		if (element == null) {
 			return;
+		}
 		getActiveContext().updateElementHandle(element, newHandle);
 		for (IInteractionContextListener listener : contextListeners) {
 			List<IInteractionElement> changed = new ArrayList<IInteractionElement>();
@@ -1208,7 +1227,8 @@ public class InteractionContextManager {
 			copy(sourceContextFile, targetContextFile);
 			contextFiles.add(targetContextFile);
 		} catch (IOException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Cold not transfer context: " + targetcontextHandle, e));
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Cold not transfer context: "
+					+ targetcontextHandle, e));
 		}
 	}
 

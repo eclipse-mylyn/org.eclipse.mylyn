@@ -11,9 +11,9 @@ package org.eclipse.mylyn.internal.ide.ui;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.InterestComparator;
 import org.eclipse.ui.views.markers.internal.ProblemMarker;
 

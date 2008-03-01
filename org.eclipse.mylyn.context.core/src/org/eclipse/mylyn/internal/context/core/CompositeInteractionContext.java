@@ -33,27 +33,29 @@ public class CompositeInteractionContext implements IInteractionContext {
 
 	protected IInteractionElement activeNode = null;
 
-	private InteractionContextScaling contextScaling;
+	private final InteractionContextScaling contextScaling;
 
 	public String contentLimitedTo = null;
-	
+
 	public CompositeInteractionContext(InteractionContextScaling contextScaling) {
 		this.contextScaling = contextScaling;
 	}
-	
+
 	public IInteractionElement addEvent(InteractionEvent event) {
 		List<InteractionContextElement> nodes = new ArrayList<InteractionContextElement>();
 		for (InteractionContext context : contexts.values()) {
 			InteractionContextElement info = (InteractionContextElement) context.parseEvent(event);
 			nodes.add(info);
 		}
-		CompositeContextElement compositeNode = new CompositeContextElement(event.getStructureHandle(), nodes, contextScaling);
+		CompositeContextElement compositeNode = new CompositeContextElement(event.getStructureHandle(), nodes,
+				contextScaling);
 		return compositeNode;
 	}
 
 	public IInteractionElement get(String handle) {
-		if (contexts.values().size() == 0)
+		if (contexts.values().size() == 0) {
 			return null;
+		}
 		List<InteractionContextElement> nodes = new ArrayList<InteractionContextElement>();
 		for (InteractionContext taskscape : contexts.values()) {
 			InteractionContextElement node = (InteractionContextElement) taskscape.get(handle);
@@ -69,8 +71,9 @@ public class CompositeInteractionContext implements IInteractionContext {
 		Set<IInteractionElement> landmarks = new HashSet<IInteractionElement>();
 		for (InteractionContext taskscape : contexts.values()) {
 			for (IInteractionElement concreteNode : taskscape.getLandmarks()) {
-				if (concreteNode != null)
+				if (concreteNode != null) {
 					landmarks.add(get(concreteNode.getHandleIdentifier()));
+				}
 			}
 		}
 		return new ArrayList<IInteractionElement>(landmarks);
@@ -80,8 +83,9 @@ public class CompositeInteractionContext implements IInteractionContext {
 		Set<IInteractionElement> landmarks = new HashSet<IInteractionElement>();
 		for (InteractionContext context : contexts.values()) {
 			for (IInteractionElement concreteNode : context.getInteresting()) {
-				if (concreteNode != null)
+				if (concreteNode != null) {
 					landmarks.add(get(concreteNode.getHandleIdentifier()));
+				}
 			}
 		}
 		return new ArrayList<IInteractionElement>(landmarks);
@@ -126,8 +130,9 @@ public class CompositeInteractionContext implements IInteractionContext {
 	 */
 	public List<InteractionEvent> getInteractionHistory() {
 		Set<InteractionEvent> events = new HashSet<InteractionEvent>();
-		for (InteractionContext taskscape : contexts.values())
+		for (InteractionContext taskscape : contexts.values()) {
 			events.addAll(taskscape.getInteractionHistory());
+		}
 		return new ArrayList<InteractionEvent>(events);
 	}
 
@@ -150,11 +155,11 @@ public class CompositeInteractionContext implements IInteractionContext {
 			return null;
 		}
 	}
-	
+
 	public InteractionContextScaling getScaling() {
 		return contextScaling;
 	}
-	
+
 	public String getContentLimitedTo() {
 		return contentLimitedTo;
 	}

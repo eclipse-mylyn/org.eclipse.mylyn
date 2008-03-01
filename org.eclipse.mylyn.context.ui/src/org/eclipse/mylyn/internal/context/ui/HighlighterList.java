@@ -8,7 +8,6 @@
 package org.eclipse.mylyn.internal.context.ui;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.swt.graphics.Color;
@@ -22,7 +21,7 @@ public class HighlighterList {
 
 	public static final Highlighter DEFAULT_HIGHLIGHTER = new Highlighter("<none>", ColorMap.DEFAULT, false);
 
-	private List<Highlighter> highlighters;
+	private final List<Highlighter> highlighters;
 
 	public HighlighterList() {
 		highlighters = new ArrayList<Highlighter>();
@@ -30,8 +29,7 @@ public class HighlighterList {
 
 	public HighlighterList(List<Highlighter> hlist) {
 		highlighters = new ArrayList<Highlighter>();
-		for (Iterator<Highlighter> it = hlist.iterator(); it.hasNext();) {
-			final Highlighter highlighter = it.next();
+		for (Highlighter highlighter : hlist) {
 			highlighters.add(highlighter);
 		}
 	}
@@ -83,10 +81,10 @@ public class HighlighterList {
 	}
 
 	public Highlighter getHighlighter(String name) {
-		for (Iterator<Highlighter> it = highlighters.iterator(); it.hasNext();) {
-			Highlighter highlighter = it.next();
-			if (highlighter.getName().equals(name))
+		for (Highlighter highlighter : highlighters) {
+			if (highlighter.getName().equals(name)) {
 				return highlighter;
+			}
 		}
 		return null;
 	}
@@ -105,8 +103,7 @@ public class HighlighterList {
 		// but if this flag is in place, we will know if highlighterlist has
 		// ever been saved
 		String result = "flag:";
-		for (Iterator<Highlighter> it = highlighters.iterator(); it.hasNext();) {
-			Highlighter highlighter = it.next();
+		for (Highlighter highlighter : highlighters) {
 			result += highlighter.externalizeToString() + ":";
 		}
 		return result;
@@ -144,8 +141,9 @@ public class HighlighterList {
 			} else {
 				HSV[1] *= 3;
 			}
-			if (HSV[1] > 1)
+			if (HSV[1] > 1) {
 				HSV[1] = 1;
+			}
 
 			int[] newRGB = ColorCoordinatesChange.HSVtoRGB(HSV[0], HSV[1], HSV[2]);
 			Color rgb = new Color(Display.getDefault(), newRGB[0], newRGB[1], newRGB[2]);

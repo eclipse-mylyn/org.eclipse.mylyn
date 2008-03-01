@@ -29,7 +29,7 @@ import org.eclipse.search.ui.text.Match;
  * 
  */
 public class XmlActiveSearchUpdater implements IResourceChangeListener, IQueryListener {
-	private FileSearchResult fResult;
+	private final FileSearchResult fResult;
 
 	public XmlActiveSearchUpdater(FileSearchResult result) {
 		fResult = result;
@@ -39,8 +39,9 @@ public class XmlActiveSearchUpdater implements IResourceChangeListener, IQueryLi
 
 	public void resourceChanged(IResourceChangeEvent event) {
 		IResourceDelta delta = event.getDelta();
-		if (delta != null)
+		if (delta != null) {
 			handleDelta(delta);
+		}
 	}
 
 	private void handleDelta(IResourceDelta d) {
@@ -56,7 +57,7 @@ public class XmlActiveSearchUpdater implements IResourceChangeListener, IQueryLi
 							Match[] matches = fResult.getMatches(res);
 							fResult.removeMatches(matches);
 
-							for (int j = 0; j < matches.length; j++) {
+							for (Match matche : matches) {
 								// Match m = matches[j];
 								// XmlNodeHelper xnode =
 								// XmlJavaReferencesProvider.nodeMap.remove(m);

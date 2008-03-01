@@ -18,9 +18,9 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylyn.context.tests.UiTestUtil;
+import org.eclipse.mylyn.context.ui.AbstractFocusViewAction;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.context.ui.InterestFilter;
-import org.eclipse.mylyn.internal.java.ui.actions.FocusPackageExplorerAction;
 
 /**
  * @author Mik Kersten
@@ -37,7 +37,7 @@ public class PackageExplorerRefreshTest extends AbstractJavaContextTest {
 		view = PackageExplorerPart.openInActivePerspective();
 		viewer = view.getTreeViewer();
 		ContextUiPlugin.getViewerManager().setSyncRefreshMode(true);
-		FocusPackageExplorerAction.getActionForPart(view).update(true);
+		AbstractFocusViewAction.getActionForPart(view).update(true);
 	}
 
 	@Override
@@ -56,25 +56,25 @@ public class PackageExplorerRefreshTest extends AbstractJavaContextTest {
 		assertNotNull(viewer.testFindItem(m1.getParent()));
 
 		manager.deactivateContext(contextId);
-		FocusPackageExplorerAction.getActionForPart(view).update(true);
+		AbstractFocusViewAction.getActionForPart(view).update(true);
 		assertTrue("num items: " + UiTestUtil.countItemsInTree(viewer.getTree()),
 				UiTestUtil.countItemsInTree(viewer.getTree()) == 0);
-		FocusPackageExplorerAction.getActionForPart(view).update();
+		AbstractFocusViewAction.getActionForPart(view).update();
 	}
 
 	public void testFocusPackageExplorerFilterAddition() {
-		FocusPackageExplorerAction.getActionForPart(view).update(false);
+		AbstractFocusViewAction.getActionForPart(view).update(false);
 		List<ViewerFilter> filters = Arrays.asList(viewer.getFilters());
-		
+
 		for (ViewerFilter viewerFilter : filters) {
 			if (viewerFilter instanceof InterestFilter) {
 				fail();
 			}
 		}
-	
-		FocusPackageExplorerAction.getActionForPart(view).update(true);
-		FocusPackageExplorerAction.getActionForPart(view).update(true);
-	
+
+		AbstractFocusViewAction.getActionForPart(view).update(true);
+		AbstractFocusViewAction.getActionForPart(view).update(true);
+
 		filters = Arrays.asList(viewer.getFilters());
 		int filterCount = 0;
 		for (ViewerFilter viewerFilter : filters) {
@@ -84,7 +84,7 @@ public class PackageExplorerRefreshTest extends AbstractJavaContextTest {
 		}
 		assertEquals(1, filterCount);
 	}
-	
+
 	public void testPropagation() throws JavaModelException {
 		IMethod m1 = type1.createMethod("void m111() { }", null, true, null);
 		StructuredSelection sm1 = new StructuredSelection(m1);

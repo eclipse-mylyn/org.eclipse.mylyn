@@ -27,15 +27,16 @@ public class InteractionContextElement implements IInteractionElement {
 
 	private String kind;
 
-	private DegreeOfInterest interest;
+	private final DegreeOfInterest interest;
 
-	private InteractionContext context;
+	private final InteractionContext context;
 
-	private Map<String/* target handle */, InteractionContextRelation> edges = new HashMap<String, InteractionContextRelation>();
+	private final Map<String/* target handle */, InteractionContextRelation> edges = new HashMap<String, InteractionContextRelation>();
 
 	public InteractionContextElement(String kind, String elementHandle, InteractionContext context) {
-		if (elementHandle == null)
+		if (elementHandle == null) {
 			throw new RuntimeException("malformed context: null handle");
+		}
 		interest = new DegreeOfInterest(context, context.getScaling());
 		this.handle = elementHandle;
 		this.kind = kind;
@@ -83,10 +84,12 @@ public class InteractionContextElement implements IInteractionElement {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null)
+		if (obj == null) {
 			return false;
-		if (this.getHandleIdentifier() == null)
+		}
+		if (this.getHandleIdentifier() == null) {
 			return false;
+		}
 		if (obj instanceof InteractionContextElement) {
 			InteractionContextElement node = (InteractionContextElement) obj;
 			return this.getHandleIdentifier().equals(node.getHandleIdentifier());

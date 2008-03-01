@@ -34,8 +34,9 @@ public class TypeHistoryManager implements IInteractionContextListener2 {
 
 	public void contextActivated(IInteractionContext context) {
 		clearTypeHistory();
-		for (IInteractionElement node : context.getInteresting())
+		for (IInteractionElement node : context.getInteresting()) {
 			updateTypeHistory(node, true);
+		}
 	}
 
 	/**
@@ -59,7 +60,8 @@ public class TypeHistoryManager implements IInteractionContextListener2 {
 					}
 				}
 			} catch (JavaModelException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Failed to update history for a type", e));
+				StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID,
+						"Failed to update history for a type", e));
 			}
 		}
 	}
@@ -90,8 +92,8 @@ public class TypeHistoryManager implements IInteractionContextListener2 {
 	 */
 	public void clearTypeHistory() {
 		TypeNameMatch[] typeInfos = OpenTypeHistory.getInstance().getTypeInfos();
-		for (int i = 0; i < typeInfos.length; i++) {
-			OpenTypeHistory.getInstance().remove(typeInfos[i]);
+		for (TypeNameMatch typeInfo : typeInfos) {
+			OpenTypeHistory.getInstance().remove(typeInfo);
 		}
 	}
 
@@ -104,9 +106,9 @@ public class TypeHistoryManager implements IInteractionContextListener2 {
 	public void elementDeleted(IInteractionElement node) {
 		updateTypeHistory(node, false);
 	}
-	
+
 	public void elementsDeleted(List<IInteractionElement> elements) {
-		for(IInteractionElement element: elements){
+		for (IInteractionElement element : elements) {
 			updateTypeHistory(element, false);
 		}
 	}
@@ -125,6 +127,6 @@ public class TypeHistoryManager implements IInteractionContextListener2 {
 
 	public void contextPreActivated(IInteractionContext context) {
 		// ignore
-		
+
 	}
 }

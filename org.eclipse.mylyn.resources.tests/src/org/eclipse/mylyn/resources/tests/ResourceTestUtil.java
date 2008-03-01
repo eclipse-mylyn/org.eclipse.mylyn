@@ -57,8 +57,9 @@ public class ResourceTestUtil {
 				System.out.println("(IllegalArgumentException) Retry " + retryCount + ": " + iae.getMessage() + ", resource " + resource.getFullPath()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 		}
-		if (!resource.isAccessible())
+		if (!resource.isAccessible()) {
 			return;
+		}
 		System.err.println("Failed to delete " + resource.getFullPath()); //$NON-NLS-1$
 		if (lastException != null) {
 			throw lastException;

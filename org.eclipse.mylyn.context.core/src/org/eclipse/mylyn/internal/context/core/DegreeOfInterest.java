@@ -23,9 +23,9 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
  */
 public class DegreeOfInterest implements IDegreeOfInterest {
 
-	private List<InteractionEvent> events = new ArrayList<InteractionEvent>();
+	private final List<InteractionEvent> events = new ArrayList<InteractionEvent>();
 
-	private Map<InteractionEvent.Kind, InteractionEvent> collapsedEvents = new HashMap<InteractionEvent.Kind, InteractionEvent>();
+	private final Map<InteractionEvent.Kind, InteractionEvent> collapsedEvents = new HashMap<InteractionEvent.Kind, InteractionEvent>();
 
 	protected InteractionContextScaling contextScaling;
 
@@ -41,9 +41,9 @@ public class DegreeOfInterest implements IDegreeOfInterest {
 
 	private float manipulationBias = 0;
 
-	private InteractionContext context;
+	private final InteractionContext context;
 
-	private int eventCountOnCreation;
+	private final int eventCountOnCreation;
 
 	public DegreeOfInterest(InteractionContext context, InteractionContextScaling scaling) {
 		this.context = context;
@@ -126,13 +126,13 @@ public class DegreeOfInterest implements IDegreeOfInterest {
 	 * API-3.0: improve method name
 	 */
 	public boolean isPropagated() {
-		float value = selections * contextScaling.get(InteractionEvent.Kind.SELECTION) 
-			+ edits * contextScaling.get(InteractionEvent.Kind.EDIT);
+		float value = selections * contextScaling.get(InteractionEvent.Kind.SELECTION) + edits
+				* contextScaling.get(InteractionEvent.Kind.EDIT);
 		return value <= 0 && propagatedBias > 0;
 	}
 
 	public boolean isPredicted() {
-		return (getValue()-predictedBias) <= 0 && predictedBias > 0;
+		return (getValue() - predictedBias) <= 0 && predictedBias > 0;
 	}
 
 	public boolean isLandmark() {

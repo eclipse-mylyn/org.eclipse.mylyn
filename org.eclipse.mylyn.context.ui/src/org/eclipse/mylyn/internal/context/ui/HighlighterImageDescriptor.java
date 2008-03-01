@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Display;
 
 public class HighlighterImageDescriptor extends ImageDescriptor {
 
-	private Image image;
+	private final Image image;
 
 	public HighlighterImageDescriptor(Color fromColor, Color toColor) {
 		super();
@@ -182,10 +182,11 @@ public class HighlighterImageDescriptor extends ImageDescriptor {
 				for (int dx = 0, dptr = dp; dx < bandWidth; ++dx, dptr += 4) {
 					final int thresh = DITHER_MATRIX[dy & 7][dx] >>> bits;
 					int temp = val + thresh;
-					if (temp > 0xffffff)
+					if (temp > 0xffffff) {
 						bitmapData[dptr] = -1;
-					else
+					} else {
 						bitmapData[dptr] = (byte) ((temp >>> 16) & mask);
+					}
 				}
 				val += inc;
 			}
@@ -194,10 +195,11 @@ public class HighlighterImageDescriptor extends ImageDescriptor {
 				for (int dy = 0, dptr = dp; dy < bandHeight; ++dy, dptr += bytesPerLine) {
 					final int thresh = DITHER_MATRIX[dy][dx & 7] >>> bits;
 					int temp = val + thresh;
-					if (temp > 0xffffff)
+					if (temp > 0xffffff) {
 						bitmapData[dptr] = -1;
-					else
+					} else {
 						bitmapData[dptr] = (byte) ((temp >>> 16) & mask);
+					}
 				}
 				val += inc;
 			}

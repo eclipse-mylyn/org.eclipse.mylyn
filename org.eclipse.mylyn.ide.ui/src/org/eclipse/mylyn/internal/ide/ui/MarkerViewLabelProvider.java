@@ -27,7 +27,7 @@ import org.eclipse.ui.views.markers.internal.TableViewLabelProvider;
  */
 public class MarkerViewLabelProvider implements ITableLabelProvider, IColorProvider, IFontProvider {
 
-	private TableViewLabelProvider provider;
+	private final TableViewLabelProvider provider;
 
 	public MarkerViewLabelProvider(TableViewLabelProvider provider) {
 		this.provider = provider;

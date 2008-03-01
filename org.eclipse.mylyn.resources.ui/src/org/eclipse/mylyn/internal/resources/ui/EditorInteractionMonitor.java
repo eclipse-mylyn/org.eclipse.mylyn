@@ -93,23 +93,22 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 				&& !otherEditorsOpenForResource(editorPart)
 				&& !(editorPart instanceof CompareEditor)
 				&& !(editorPart instanceof IContextAwareEditor)) {
-			
-			if (ContextCorePlugin.getContextManager().isContextActive() 
+
+			if (ContextCorePlugin.getContextManager().isContextActive()
 					&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
-					ContextUiPrefContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING)) {
+							ContextUiPrefContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING)) {
 				try {
-					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
-							"Mylyn", 
-							"Closing a file automatically removes it from the Task Context. " +
-							"This is recommended in order to make the open editors match " +
-							"the focused views. It can be disabled via Preferences -> Mylyn -> Context.\n\n" +
-							"This dialog will not show again.");
+					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+							"Mylyn", "Closing a file automatically removes it from the Task Context. "
+									+ "This is recommended in order to make the open editors match "
+									+ "the focused views. It can be disabled via Preferences -> Mylyn -> Context.\n\n"
+									+ "This dialog will not show again.");
 				} finally {
 					ContextUiPlugin.getDefault().getPreferenceStore().setValue(
 							ContextUiPrefContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING, false);
 				}
 			}
-			
+
 			IInteractionElement element = null;
 			AbstractContextUiBridge uiBridge = ContextUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
 			Object object = uiBridge.getObjectForTextSelection(null, editorPart);
@@ -129,7 +128,8 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 				}
 			}
 			if (element != null) {
-				ContextCorePlugin.getContextManager().manipulateInterestForElement(element, false, false, false, SOURCE_ID);
+				ContextCorePlugin.getContextManager().manipulateInterestForElement(element, false, false, false,
+						SOURCE_ID);
 			}
 		}
 	}

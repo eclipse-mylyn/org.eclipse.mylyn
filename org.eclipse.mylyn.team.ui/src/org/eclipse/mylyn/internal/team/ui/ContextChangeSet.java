@@ -53,7 +53,7 @@ public class ContextChangeSet extends CVSActiveChangeSet/*ActiveChangeSet*/imple
 
 	private boolean suppressInterestContribution = false;
 
-	private AbstractTask task;
+	private final AbstractTask task;
 
 	public ContextChangeSet(AbstractTask task, ActiveChangeSetManager manager) {
 		super(manager, task.getSummary());
@@ -116,9 +116,9 @@ public class ContextChangeSet extends CVSActiveChangeSet/*ActiveChangeSet*/imple
 		}
 
 		boolean proceed = true;
-		
+
 		if (checkTaskRepository) {
-			boolean unmatchedRepositoryFound = false; 
+			boolean unmatchedRepositoryFound = false;
 			for (IProject project : projects) {
 				TaskRepository repository = TasksUiPlugin.getDefault().getRepositoryForResource(project, true);
 				if (repository != null) {

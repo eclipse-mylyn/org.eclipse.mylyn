@@ -33,9 +33,9 @@ import org.eclipse.ui.internal.registry.IActionSetDescriptor;
  */
 public class ContextPerspectiveManager implements ITaskActivityListener, IPerspectiveListener4 {
 
-	private Set<String> managedPerspectiveIds = new HashSet<String>();
+	private final Set<String> managedPerspectiveIds = new HashSet<String>();
 
-	private Set<String> actionSetsToSuppress = new HashSet<String>();
+	private final Set<String> actionSetsToSuppress = new HashSet<String>();
 
 	public ContextPerspectiveManager() {
 		actionSetsToSuppress.add("org.eclipse.ui.edit.text.actionSet.annotationNavigation");

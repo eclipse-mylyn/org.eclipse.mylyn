@@ -64,13 +64,14 @@ public abstract class AbstractFocusMarkerViewAction extends AbstractFocusViewAct
 					Class<?> clazz = ExtendedMarkersView.class;
 					Field field = clazz.getDeclaredField("viewer");
 					field.setAccessible(true);
-					cachedViewer = (MarkersTreeViewer)field.get(viewPart);
+					cachedViewer = (MarkersTreeViewer) field.get(viewPart);
 					if (!cachedViewer.getControl().isDisposed()) {
 						updateMarkerViewLabelProvider(cachedViewer);
 					}
 				}
 			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.ERROR, IdeUiBridgePlugin.PLUGIN_ID, "Could not get problems view viewer", e));
+				StatusHandler.log(new Status(IStatus.ERROR, IdeUiBridgePlugin.PLUGIN_ID,
+						"Could not get problems view viewer", e));
 			}
 		}
 		if (cachedViewer != null) {
@@ -78,7 +79,7 @@ public abstract class AbstractFocusMarkerViewAction extends AbstractFocusViewAct
 		}
 		return viewers;
 	}
-	
+
 	@Override
 	public void update() {
 		super.update();

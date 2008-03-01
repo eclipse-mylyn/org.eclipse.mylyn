@@ -40,18 +40,17 @@ public class InterestUpdateDeltaListener implements IElementChangedListener {
 		try {
 			IJavaElement added = null;
 			IJavaElement removed = null;
-			for (int i = 0; i < delta.length; i++) {
-				IJavaElementDelta child = delta[i];
+			for (IJavaElementDelta child : delta) {
 				if (child.getElement() instanceof ICompilationUnit) {
-					if (((ICompilationUnit)child.getElement()).getOwner() != null) {
+					if (((ICompilationUnit) child.getElement()).getOwner() != null) {
 						// see bug 195361, do not reduce interest of temporary working copy
 						return;
-					} 
+					}
 				}
-				
+
 				if (child.getKind() == IJavaElementDelta.ADDED) {
 					if (added == null) {
-						added = child.getElement();	
+						added = child.getElement();
 					}
 				} else if (child.getKind() == IJavaElementDelta.REMOVED) {
 					if (removed == null) {
@@ -68,7 +67,7 @@ public class InterestUpdateDeltaListener implements IElementChangedListener {
 					resetHandle(element, added.getHandleIdentifier());
 				}
 			} else if (removed != null) {
-				
+
 				IInteractionElement element = ContextCorePlugin.getContextManager().getElement(
 						removed.getHandleIdentifier());
 				if (element != null) {

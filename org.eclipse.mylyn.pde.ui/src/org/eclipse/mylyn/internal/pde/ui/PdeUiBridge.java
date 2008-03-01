@@ -57,7 +57,7 @@ import org.eclipse.ui.texteditor.AbstractTextEditor;
  */
 public class PdeUiBridge extends AbstractContextUiBridge {
 
-	private TreeViewerListener treeSelectionChangedListener;
+	private final TreeViewerListener treeSelectionChangedListener;
 
 	public PdeUiBridge() {
 		treeSelectionChangedListener = new TreeViewerListener();
@@ -73,10 +73,11 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 
 		int first = handle.indexOf(";");
 		String filename = "";
-		if (first == -1)
+		if (first == -1) {
 			filename = handle;
-		else
+		} else {
 			filename = handle.substring(0, first);
+		}
 
 		try {
 			// get the file
@@ -88,7 +89,8 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 
 			// if the editor is null, we had a problem and should return
 			if (editor == null) {
-				StatusHandler.log(new Status(IStatus.WARNING, PdeUiBridgePlugin.ID_PLUGIN, "Unable to open editor for file: " + filename));
+				StatusHandler.log(new Status(IStatus.WARNING, PdeUiBridgePlugin.ID_PLUGIN,
+						"Unable to open editor for file: " + filename));
 				return;
 			}
 
@@ -149,8 +151,8 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		if (page != null) {
 			IEditorReference[] references = page.getEditorReferences();
-			for (int i = 0; i < references.length; i++) {
-				IEditorPart part = references[i].getEditor(false);
+			for (IEditorReference reference : references) {
+				IEditorPart part = reference.getEditor(false);
 				if (part != null) {
 					// HACK: find better way to get the filename other than the tooltip
 					if (("/" + part.getTitleToolTip()).equals(node.getHandleIdentifier())) {
@@ -193,7 +195,8 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 							}
 						}
 					} catch (Exception e) {
-						StatusHandler.log(new Status(IStatus.ERROR, PdeUiBridgePlugin.ID_PLUGIN, "Failed to get tree viewers", e));
+						StatusHandler.log(new Status(IStatus.ERROR, PdeUiBridgePlugin.ID_PLUGIN,
+								"Failed to get tree viewers", e));
 						return null;
 					}
 				}

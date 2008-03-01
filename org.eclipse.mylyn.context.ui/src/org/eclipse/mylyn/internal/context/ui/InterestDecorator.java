@@ -95,10 +95,11 @@ public class InterestDecorator implements ILabelDecorator, IFontDecorator, IColo
 //			return null;
 //		}
 	}
-	
+
 	public static Color getForegroundForElement(IInteractionElement node) {
-		if (node == null)
+		if (node == null) {
 			return null;
+		}
 		if (node.getInterest().isPredicted() || node.getInterest().isPropagated()) {
 //			if (node.getInterest().getValue() >= InteractionContextManager.getScalingFactors().getLandmark() / 3) {
 //				return ColorMap.GRAY_DARK;

@@ -19,7 +19,7 @@ import org.osgi.framework.BundleContext;
 public class PdeUiBridgePlugin extends AbstractContextUiPlugin {
 
 	public static final String ID_PLUGIN = "org.eclipse.mylyn.pde.ui";
-	
+
 	private PdeEditingMonitor pdeEditingMonitor;
 
 	public PdeUiBridgePlugin() {
@@ -41,7 +41,7 @@ public class PdeUiBridgePlugin extends AbstractContextUiPlugin {
 	protected void lazyStop() {
 		MonitorUiPlugin.getDefault().getSelectionMonitors().remove(pdeEditingMonitor);
 	}
-	
+
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);

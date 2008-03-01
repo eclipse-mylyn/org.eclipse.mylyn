@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.internal.context.ui.actions;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
 import org.eclipse.mylyn.internal.context.ui.views.ActiveSearchView;
@@ -22,10 +23,10 @@ public class ShowQualifiedNamesAction extends Action {
 
 	public static final String ID = "org.eclipse.mylyn.ui.views.elements.qualify";
 
-	private ActiveSearchView view;
+	private final ActiveSearchView view;
 
 	public ShowQualifiedNamesAction(ActiveSearchView view) {
-		super(LABEL, Action.AS_CHECK_BOX);
+		super(LABEL, IAction.AS_CHECK_BOX);
 		this.view = view;
 		setId(ID);
 		setText(LABEL);

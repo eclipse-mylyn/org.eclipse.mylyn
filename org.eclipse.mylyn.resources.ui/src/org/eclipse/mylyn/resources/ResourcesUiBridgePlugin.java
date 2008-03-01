@@ -153,8 +153,9 @@ public class ResourcesUiBridgePlugin extends AbstractContextUiPlugin {
 	}
 
 	public IResource getResourceForElement(IInteractionElement element, boolean findContainingResource) {
-		if (element == null)
+		if (element == null) {
 			return null;
+		}
 		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
 				element.getContentType());
 		Object object = bridge.getObjectForHandle(element.getHandleIdentifier());

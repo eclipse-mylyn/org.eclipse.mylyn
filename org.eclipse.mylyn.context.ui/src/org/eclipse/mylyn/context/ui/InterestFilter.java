@@ -44,7 +44,7 @@ public class InterestFilter extends ViewerFilter {
 
 	@Override
 	public boolean select(Viewer viewer, Object parent, Object object) {
-		try {			
+		try {
 			if (!(viewer instanceof StructuredViewer)) {// || !containsMylarInterestFilter((StructuredViewer) viewer)) {
 				return true;
 			}
@@ -88,7 +88,8 @@ public class InterestFilter extends ViewerFilter {
 				return isInteresting(element);
 			}
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Interest filter failed on viewer: " + viewer.getClass(), t));
+			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Interest filter failed on viewer: "
+					+ viewer.getClass(), t));
 		}
 		return false;
 	}

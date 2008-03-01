@@ -77,7 +77,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 				&& (scheduleContainer.isPresent() || scheduleContainer.isFuture())) {
 			return true;
 		}
-		if(scheduleContainer.isPresent() && scheduleContainer.isCaptureFloating()) {
+		if (scheduleContainer.isPresent() && scheduleContainer.isCaptureFloating()) {
 			return true;
 		}
 		return false;
@@ -128,7 +128,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 
 	private static boolean shouldShowInFocusedWorkweekDateContainer(Object parent, AbstractTask task) {
 		if (parent instanceof ScheduledTaskContainer) {
-			if(((ScheduledTaskContainer)parent).isCaptureFloating()) {
+			if (((ScheduledTaskContainer) parent).isCaptureFloating()) {
 				return true;
 			}
 			if (!TasksUiPlugin.getTaskActivityManager().isWeekDay((ScheduledTaskContainer) parent)) {
@@ -154,9 +154,9 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		if (parent instanceof ScheduledTaskContainer) {
 			return shouldShowInFocusedWorkweekDateContainer(parent, task);
 		} else {
-			return task.isPastReminder() || TasksUiPlugin.getTaskActivityManager().isScheduledForThisWeek(task) 
-			|| TasksUiPlugin.getTaskActivityManager().isDueThisWeek(task)
-			|| TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task);
+			return task.isPastReminder() || TasksUiPlugin.getTaskActivityManager().isScheduledForThisWeek(task)
+					|| TasksUiPlugin.getTaskActivityManager().isDueThisWeek(task)
+					|| TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task);
 		}
 	}
 

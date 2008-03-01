@@ -64,7 +64,7 @@ public class JavaEditingMonitor extends AbstractUserInteractionMonitor {
 
 //				Object selectedObject = structuredSelection.getFirstElement();
 				for (Iterator<?> iterator = structuredSelection.iterator(); iterator.hasNext();) {
-					Object selectedObject = iterator.next();					
+					Object selectedObject = iterator.next();
 					if (selectedObject instanceof IJavaElement) {
 						IJavaElement checkedElement = checkIfAcceptedAndPromoteIfNecessary((IJavaElement) selectedObject);
 						if (checkedElement == null) {
@@ -82,8 +82,9 @@ public class JavaEditingMonitor extends AbstractUserInteractionMonitor {
 					currentEditor = (JavaEditor) part;
 					TextSelection textSelection = (TextSelection) selection;
 					selectedElement = SelectionConverter.resolveEnclosingElement(currentEditor, textSelection);
-					if (selectedElement instanceof IPackageDeclaration)
+					if (selectedElement instanceof IPackageDeclaration) {
 						return; // HACK: ignoring these selections
+					}
 					IJavaElement[] resolved = SelectionConverter.codeResolve(currentEditor);
 					if (resolved != null && resolved.length == 1 && !resolved[0].equals(selectedElement)) {
 						lastResolvedElement = resolved[0];
@@ -139,7 +140,8 @@ public class JavaEditingMonitor extends AbstractUserInteractionMonitor {
 		} catch (JavaModelException e) {
 			// ignore, fine to fail to resolve an element if the model is not up-to-date
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Failed to update model based on selection", t));
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID,
+					"Failed to update model based on selection", t));
 		}
 	}
 

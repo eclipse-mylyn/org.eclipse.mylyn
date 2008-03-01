@@ -38,7 +38,7 @@ public class NewTaskFromJunitResultViewAction implements IViewActionDelegate, IS
 	public void run(IAction action) {
 		run();
 	}
-	
+
 	public void run() {
 		if (traceString == null || testCaseElement == null) {
 			return;

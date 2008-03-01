@@ -29,15 +29,14 @@ public class InterestInducingProblemListener implements IProblemChangedListener,
 	public static final String PREDICTED_INTEREST_ERRORS = "org.eclipse.mylyn.java.ui.interest.prediction.errors";
 
 	// TODO: consider getting rid of this
-	private JavaStructureBridge javaStructureBridge = new JavaStructureBridge();
+	private final JavaStructureBridge javaStructureBridge = new JavaStructureBridge();
 
 	public void problemsChanged(IResource[] changedResources, boolean isMarkerChange) {
 		try {
 			if (!ContextCorePlugin.getContextManager().isContextActive()) {
 				return;
 			} else {
-				for (int i = 0; i < changedResources.length; i++) {
-					IResource resource = changedResources[i];
+				for (IResource resource : changedResources) {
 					if (resource instanceof IFile) {
 						IJavaElement javaElement = (IJavaElement) resource.getAdapter(IJavaElement.class);
 						if (javaElement != null) {
@@ -55,7 +54,8 @@ public class InterestInducingProblemListener implements IProblemChangedListener,
 				}
 			}
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not update marker change", e));
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not update marker change",
+					e));
 		}
 	}
 

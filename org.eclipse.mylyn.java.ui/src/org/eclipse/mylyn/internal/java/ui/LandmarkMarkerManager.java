@@ -41,7 +41,7 @@ public class LandmarkMarkerManager implements IInteractionContextListener {
 
 	private static final String ID_MARKER_LANDMARK = "org.eclipse.mylyn.context.ui.markers.landmark";
 
-	private Map<IInteractionElement, Long> markerMap = new HashMap<IInteractionElement, Long>();
+	private final Map<IInteractionElement, Long> markerMap = new HashMap<IInteractionElement, Long>();
 
 	public LandmarkMarkerManager() {
 		super();
@@ -69,7 +69,8 @@ public class LandmarkMarkerManager implements IInteractionContextListener {
 				landmarkAdded(node);
 			}
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not update landmark markers", t));
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID,
+					"Could not update landmark markers", t));
 		}
 	}
 
@@ -78,12 +79,14 @@ public class LandmarkMarkerManager implements IInteractionContextListener {
 	}
 
 	public void landmarkAdded(final IInteractionElement node) {
-		if (node == null || node.getContentType() == null)
+		if (node == null || node.getContentType() == null) {
 			return;
+		}
 		if (node.getContentType().equals(JavaStructureBridge.CONTENT_TYPE)) {
 			final IJavaElement element = JavaCore.create(node.getHandleIdentifier());
-			if (!element.exists())
+			if (!element.exists()) {
 				return;
+			}
 			if (element instanceof IMember) {
 				try {
 					final ISourceRange range = ((IMember) element).getNameRange();
@@ -104,21 +107,25 @@ public class LandmarkMarkerManager implements IInteractionContextListener {
 						resource.getWorkspace().run(runnable, null);
 					}
 				} catch (JavaModelException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not update marker", e));
+					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID,
+							"Could not update marker", e));
 				} catch (CoreException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not update marker", e));
+					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID,
+							"Could not update marker", e));
 				}
 			}
 		}
 	}
 
 	public void landmarkRemoved(final IInteractionElement node) {
-		if (node == null)
+		if (node == null) {
 			return;
+		}
 		if (node.getContentType().equals(JavaStructureBridge.CONTENT_TYPE)) {
 			IJavaElement element = JavaCore.create(node.getHandleIdentifier());
-			if (!element.exists())
+			if (!element.exists()) {
 				return;
+			}
 			if (element.getAncestor(IJavaElement.COMPILATION_UNIT) != null // stuff
 					// from .class files
 					&& element instanceof ISourceReference) {
@@ -131,12 +138,14 @@ public class LandmarkMarkerManager implements IInteractionContextListener {
 									if (markerMap.containsKey(node)) {
 										long id = markerMap.get(node);
 										IMarker marker = resource.getMarker(id);
-										if (marker != null)
+										if (marker != null) {
 											marker.delete();
+										}
 									}
 								} catch (NullPointerException e) {
 									// FIXME avoid NPE
-									StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not update marker", e));
+									StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID,
+											"Could not update marker", e));
 								}
 							}
 						}
@@ -145,7 +154,8 @@ public class LandmarkMarkerManager implements IInteractionContextListener {
 				} catch (JavaModelException e) {
 					// ignore the Java Model errors
 				} catch (CoreException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not update landmark marker", e));
+					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID,
+							"Could not update landmark marker", e));
 				}
 			}
 		}

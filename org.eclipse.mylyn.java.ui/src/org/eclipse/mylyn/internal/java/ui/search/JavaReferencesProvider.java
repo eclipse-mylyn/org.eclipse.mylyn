@@ -28,8 +28,9 @@ public class JavaReferencesProvider extends AbstractJavaRelationProvider {
 
 	@Override
 	protected boolean acceptResultElement(IJavaElement element) {
-		if (element instanceof IImportDeclaration)
+		if (element instanceof IImportDeclaration) {
 			return false;
+		}
 		if (element instanceof IMethod) {
 			IMethod method = (IMethod) element;
 			if (method.getElementName().startsWith("test")) {

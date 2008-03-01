@@ -176,15 +176,15 @@ public class SaxContextWriter implements IInteractionContextWriter {
 
 	// API-3.0: make this method non-static and private?
 	public static Attributes createEventAttributes(InteractionEvent ie) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat(InteractionContextExternalizer.DATE_FORMAT_STRING, Locale.ENGLISH);
-		
+		SimpleDateFormat dateFormat = new SimpleDateFormat(InteractionContextExternalizer.DATE_FORMAT_STRING,
+				Locale.ENGLISH);
+
 		AttributesImpl ieAttributes = new AttributesImpl();
 
 		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_DELTA,
 				InteractionContextExternalizer.ATR_DELTA, "", XmlStringConverter.convertToXmlString(ie.getDelta()));
 		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_END_DATE,
-				InteractionContextExternalizer.ATR_END_DATE, "",
-				dateFormat.format(ie.getEndDate()));
+				InteractionContextExternalizer.ATR_END_DATE, "", dateFormat.format(ie.getEndDate()));
 		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_INTEREST,
 				InteractionContextExternalizer.ATR_INTEREST, "", Float.toString(ie.getInterestContribution()));
 		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_KIND, InteractionContextExternalizer.ATR_KIND,
@@ -196,8 +196,7 @@ public class SaxContextWriter implements IInteractionContextWriter {
 				InteractionContextExternalizer.ATR_ORIGIN_ID, "",
 				XmlStringConverter.convertToXmlString(ie.getOriginId()));
 		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_START_DATE,
-				InteractionContextExternalizer.ATR_START_DATE, "",
-				dateFormat.format(ie.getDate()));
+				InteractionContextExternalizer.ATR_START_DATE, "", dateFormat.format(ie.getDate()));
 		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_STRUCTURE_HANDLE,
 				InteractionContextExternalizer.ATR_STRUCTURE_HANDLE, "",
 				XmlStringConverter.convertToXmlString(ie.getStructureHandle()));

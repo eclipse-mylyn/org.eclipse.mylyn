@@ -33,7 +33,7 @@ public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewActio
 		IInteractionContextListener {
 
 	private boolean initialized = false;
-	
+
 	public AbstractAutoFocusViewAction(InterestFilter interestFilter, boolean manageViewer, boolean manageFilters,
 			boolean manageLinking) {
 		super(interestFilter, manageViewer, manageFilters, manageLinking);
@@ -75,7 +75,8 @@ public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewActio
 						update(true);
 					}
 				} catch (Exception e) {
-					StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not toggle focus action on view: " + getPartForAction(), e));
+					StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
+							"Could not toggle focus action on view: " + getPartForAction(), e));
 				}
 			}
 		});

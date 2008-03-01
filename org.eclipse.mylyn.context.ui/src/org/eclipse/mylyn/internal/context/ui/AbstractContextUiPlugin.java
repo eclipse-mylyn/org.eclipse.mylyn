@@ -34,7 +34,7 @@ import org.osgi.framework.BundleContext;
  */
 public abstract class AbstractContextUiPlugin extends AbstractUIPlugin implements IInteractionContextListener2 {
 
-	private AtomicBoolean lazyStarted = new AtomicBoolean(false);
+	private final AtomicBoolean lazyStarted = new AtomicBoolean(false);
 
 	@Override
 	public void start(BundleContext context) throws Exception {
@@ -44,7 +44,7 @@ public abstract class AbstractContextUiPlugin extends AbstractUIPlugin implement
 		if (ContextCorePlugin.getContextManager().isContextActive()) {
 			initLazyStart();
 		}
-	} 
+	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
@@ -58,10 +58,9 @@ public abstract class AbstractContextUiPlugin extends AbstractUIPlugin implement
 	}
 
 	/**
-	 * Override with startup code.  
+	 * Override with startup code.
 	 * 
-	 * API-3.0: IInteractionContextListener's cannot be added during this method
-	 * since notifications will be lost.
+	 * API-3.0: IInteractionContextListener's cannot be added during this method since notifications will be lost.
 	 */
 	protected abstract void lazyStart(IWorkbench workbench);
 
@@ -73,7 +72,7 @@ public abstract class AbstractContextUiPlugin extends AbstractUIPlugin implement
 	public void contextPreActivated(IInteractionContext context) {
 		initLazyStart();
 	}
-	
+
 	public void contextActivated(IInteractionContext context) {
 		// ignore
 	}
@@ -84,7 +83,7 @@ public abstract class AbstractContextUiPlugin extends AbstractUIPlugin implement
 			try {
 				lazyStart(workbench);
 			} catch (Throwable t) {
-				StatusHandler.log(new Status(IStatus.ERROR, super.getBundle().getSymbolicName(), IStatus.ERROR, 
+				StatusHandler.log(new Status(IStatus.ERROR, super.getBundle().getSymbolicName(), IStatus.ERROR,
 						"Could not lazy start context plug-in", t));
 			}
 			if (TasksUiPlugin.getTaskListManager() != null) {

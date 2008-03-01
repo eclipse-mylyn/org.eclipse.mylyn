@@ -78,11 +78,11 @@ public class JavaUiBridgePlugin extends AbstractContextUiPlugin {
 	protected void lazyStart(IWorkbench workbench) {
 		landmarkMarkerManager = new LandmarkMarkerManager();
 		ContextCorePlugin.getContextManager().addListener(landmarkMarkerManager);
-		
+
 		javaEditingMonitor = new JavaEditingMonitor();
 		MonitorUiPlugin.getDefault().getSelectionMonitors().add(javaEditingMonitor);
 		installEditorTracker(workbench);
-		
+
 		javaElementChangeListener = new InterestUpdateDeltaListener();
 		JavaCore.addElementChangedListener(javaElementChangeListener);
 
@@ -97,7 +97,8 @@ public class JavaUiBridgePlugin extends AbstractContextUiPlugin {
 			ContextCorePlugin.getContextManager().addListener(typeHistoryManager);
 		} catch (Throwable t) {
 			// FIXME review error message
-			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not install type history manager: incompatible Eclipse version", t));
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID,
+					"Could not install type history manager: incompatible Eclipse version", t));
 		}
 	}
 
@@ -141,8 +142,8 @@ public class JavaUiBridgePlugin extends AbstractContextUiPlugin {
 			IWorkbenchPage page = w.getActivePage();
 			if (page != null) {
 				IEditorReference[] references = page.getEditorReferences();
-				for (int i = 0; i < references.length; i++) {
-					IEditorPart part = references[i].getEditor(false);
+				for (IEditorReference reference : references) {
+					IEditorPart part = reference.getEditor(false);
 					if (part != null && part instanceof JavaEditor) {
 						JavaEditor editor = (JavaEditor) part;
 						editorTracker.registerEditor(editor);
@@ -179,8 +180,9 @@ public class JavaUiBridgePlugin extends AbstractContextUiPlugin {
 	@Deprecated
 	public ResourceBundle getResourceBundle() {
 		try {
-			if (resourceBundle == null)
+			if (resourceBundle == null) {
 				resourceBundle = ResourceBundle.getBundle("org.eclipse.mylyn.java.JavaPluginResources");
+			}
 		} catch (MissingResourceException x) {
 			resourceBundle = null;
 		}

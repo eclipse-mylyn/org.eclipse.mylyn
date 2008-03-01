@@ -142,7 +142,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 		if (taskId == null && connector != null) {
 			taskId = connector.getTaskIdFromTaskUrl(taskFullUrl);
 		}
-		
+
 		// XXX: clean up and remove break to label
 		if (taskId == null && comment != null) {
 			Collection<AbstractRepositoryConnector> connectors = connector != null ? Collections.singletonList(connector)
@@ -289,10 +289,10 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 				if (taskFullUrl != null) {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 						public void run() {
-							TasksUiUtil.openUrl(taskFullUrl, false);		
-						}	
+							TasksUiUtil.openUrl(taskFullUrl, false);
+						}
 					});
-					
+
 					return Status.OK_STATUS;
 				}
 			}

@@ -60,8 +60,9 @@ public class JavaImplementorsSearchPluginTest extends TestCase implements ISearc
 	// }
 
 	public List<?> search(int dos, IInteractionElement node) {
-		if (node == null)
+		if (node == null) {
 			return null;
+		}
 
 		// test with each of the sepatations
 		JavaImplementorsProvider prov = new JavaImplementorsProvider();

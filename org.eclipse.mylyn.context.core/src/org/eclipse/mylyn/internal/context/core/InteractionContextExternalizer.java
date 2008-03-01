@@ -82,7 +82,8 @@ public class InteractionContextExternalizer {
 
 		} catch (IOException e) {
 			// TODO: propagate exception?
-			StatusHandler.fail(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID, "Could not write: " + file.getAbsolutePath(), e));
+			StatusHandler.fail(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID, "Could not write: "
+					+ file.getAbsolutePath(), e));
 		} finally {
 			try {
 				if (outputStream != null) {
@@ -92,7 +93,8 @@ public class InteractionContextExternalizer {
 					fileOutputStream.close();
 				}
 			} catch (IOException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Unable to write context " + context.getHandleIdentifier(), e));
+				StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Unable to write context "
+						+ context.getHandleIdentifier(), e));
 			}
 		}
 	}
@@ -121,23 +123,25 @@ public class InteractionContextExternalizer {
 	public InteractionContext readContextFromXML(String handleIdentifier, File file, InteractionContextScaling scaling) {
 		return readContextFromXML(handleIdentifier, file, new SaxContextReader(), scaling);
 	}
-	
+
 	/**
 	 * Public for testing
 	 */
-	public InteractionContext readContextFromXML(String handleIdentifier, File file, IInteractionContextReader reader, InteractionContextScaling scaling) {
+	public InteractionContext readContextFromXML(String handleIdentifier, File file, IInteractionContextReader reader,
+			InteractionContextScaling scaling) {
 		try {
 			if (!file.exists()) {
 				return null;
 			} else {
 				if (reader instanceof SaxContextReader) {
-					((SaxContextReader)reader).setContextScaling(scaling);
+					((SaxContextReader) reader).setContextScaling(scaling);
 				}
 				return reader.readContext(handleIdentifier, file);
 			}
 		} catch (Exception e) {
 			// TODO: propagate exception instead?
-			StatusHandler.fail(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Could not read: " + file.getAbsolutePath(), e));
+			StatusHandler.fail(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Could not read: "
+					+ file.getAbsolutePath(), e));
 		}
 		return null;
 	}

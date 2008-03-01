@@ -29,7 +29,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 public abstract class AbstractContextChangeSetManager implements IInteractionContextListener {
 
 	protected boolean isEnabled = false;
-	
+
 	public void enable() {
 		if (!isEnabled) {
 			isEnabled = true;
@@ -38,7 +38,7 @@ public abstract class AbstractContextChangeSetManager implements IInteractionCon
 			if (TasksUiPlugin.getTaskListManager().isTaskListInitialized()) {
 				initContextChangeSets(); // otherwise listener will do it
 			}
-			
+
 			if (ContextCorePlugin.getContextManager().isContextActive()) {
 				contextActivated(ContextCorePlugin.getContextManager().getActiveContext());
 			}
@@ -57,7 +57,7 @@ public abstract class AbstractContextChangeSetManager implements IInteractionCon
 
 	protected abstract void updateChangeSetLabel(AbstractTask task);
 
-	private ITaskActivityListener TASK_ACTIVITY_LISTENER = new ITaskActivityListener() {
+	private final ITaskActivityListener TASK_ACTIVITY_LISTENER = new ITaskActivityListener() {
 
 		public void taskListRead() {
 			initContextChangeSets();
@@ -76,7 +76,7 @@ public abstract class AbstractContextChangeSetManager implements IInteractionCon
 		}
 	};
 
-	private ITaskListChangeListener TASK_CHANGE_LISTENER = new ITaskListChangeListener() {
+	private final ITaskListChangeListener TASK_CHANGE_LISTENER = new ITaskListChangeListener() {
 
 		public void containersChanged(Set<TaskContainerDelta> containers) {
 			for (TaskContainerDelta taskContainerDelta : containers) {

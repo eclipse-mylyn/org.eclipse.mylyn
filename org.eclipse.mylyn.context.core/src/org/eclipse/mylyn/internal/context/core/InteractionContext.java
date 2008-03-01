@@ -30,7 +30,7 @@ public class InteractionContext implements IInteractionContext {
 
 	private String handleIdentifier;
 
-	private List<InteractionEvent> interactionHistory = new CopyOnWriteArrayList<InteractionEvent>();
+	private final List<InteractionEvent> interactionHistory = new CopyOnWriteArrayList<InteractionEvent>();
 
 	protected ConcurrentHashMap<String, InteractionContextElement> elementMap;
 

@@ -30,13 +30,15 @@ public class FocusViewHandler extends AbstractHandler {
 		Object returnValue = Boolean.FALSE;
 		String viewId = event.getParameter(PARAMETER_VIEW_ID);
 
-		if (viewId == null)
+		if (viewId == null) {
 			return returnValue;
+		}
 
 		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		IViewPart viewPart = activePage.findView(viewId);
-		if (viewPart == null)
+		if (viewPart == null) {
 			return returnValue;
+		}
 
 		applyAction = AbstractFocusViewAction.getActionForPart(viewPart);
 

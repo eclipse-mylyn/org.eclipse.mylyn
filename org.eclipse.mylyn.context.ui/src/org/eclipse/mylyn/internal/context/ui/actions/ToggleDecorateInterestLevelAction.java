@@ -36,8 +36,9 @@ public class ToggleDecorateInterestLevelAction extends Action {
 
 	private void valueChanged(final boolean on, boolean store) {
 		setChecked(on);
-		if (store)
+		if (store) {
 			ContextUiPlugin.getDefault().getPreferenceStore().setValue(PREF_ID, on);
+		}
 		ContextUiPlugin.getDefault().getPreferenceStore().setValue(ContextUiPrefContstants.INTERSECTION_MODE, true);
 	}
 }

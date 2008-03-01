@@ -43,13 +43,13 @@ public class FocusedJavaProposalProcessor {
 
 	public static final FocusedProposalSeparator PROPOSAL_SEPARATOR = new FocusedProposalSeparator();
 
-	private List<IJavaCompletionProposalComputer> monitoredProposalComputers = new ArrayList<IJavaCompletionProposalComputer>();
+	private final List<IJavaCompletionProposalComputer> monitoredProposalComputers = new ArrayList<IJavaCompletionProposalComputer>();
 
-	private List<IJavaCompletionProposalComputer> alreadyComputedProposals = new ArrayList<IJavaCompletionProposalComputer>();
+	private final List<IJavaCompletionProposalComputer> alreadyComputedProposals = new ArrayList<IJavaCompletionProposalComputer>();
 
-	private List<IJavaCompletionProposalComputer> alreadyContainSeparator = new ArrayList<IJavaCompletionProposalComputer>();
+	private final List<IJavaCompletionProposalComputer> alreadyContainSeparator = new ArrayList<IJavaCompletionProposalComputer>();
 
-	private List<IJavaCompletionProposalComputer> containsSingleInterestingProposal = new ArrayList<IJavaCompletionProposalComputer>();
+	private final List<IJavaCompletionProposalComputer> containsSingleInterestingProposal = new ArrayList<IJavaCompletionProposalComputer>();
 
 	private static FocusedJavaProposalProcessor INSTANCE = new FocusedJavaProposalProcessor();
 
@@ -105,7 +105,8 @@ public class FocusedJavaProposalProcessor {
 				return proposals;
 			}
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Failed to project interest onto propsals", t));
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID,
+					"Failed to project interest onto propsals", t));
 			return proposals;
 		}
 	}

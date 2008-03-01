@@ -30,11 +30,11 @@ public class TemplateHandlerContentProposalProvider implements IContentProposalP
 	 * @author Eike Stepper
 	 */
 	protected static class ProposalComputer {
-		private String contents;
+		private final String contents;
 
-		private int position;
+		private final int position;
 
-		private List<IContentProposal> result = new ArrayList<IContentProposal>();
+		private final List<IContentProposal> result = new ArrayList<IContentProposal>();
 
 		private String[] keywords;
 

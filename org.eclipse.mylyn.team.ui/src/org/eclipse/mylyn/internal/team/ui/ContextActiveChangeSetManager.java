@@ -40,9 +40,9 @@ import org.eclipse.team.internal.core.subscribers.IChangeSetChangeListener;
  */
 public class ContextActiveChangeSetManager extends AbstractContextChangeSetManager {
 
-	private List<ActiveChangeSetManager> changeSetManagers = new ArrayList<ActiveChangeSetManager>();
+	private final List<ActiveChangeSetManager> changeSetManagers = new ArrayList<ActiveChangeSetManager>();
 
-	private Map<String, ContextChangeSet> activeChangeSets = new HashMap<String, ContextChangeSet>();
+	private final Map<String, ContextChangeSet> activeChangeSets = new HashMap<String, ContextChangeSet>();
 
 	/**
 	 * Used to restore change sets managed with task context when platform deletes them, bug 168129
@@ -93,8 +93,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 	protected void updateChangeSetLabel(AbstractTask task) {
 		for (ActiveChangeSetManager collector : changeSetManagers) {
 			ChangeSet[] sets = collector.getSets();
-			for (int i = 0; i < sets.length; i++) {
-				ChangeSet set = sets[i];
+			for (ChangeSet set : sets) {
 				if (set instanceof ContextChangeSet) {
 					ContextChangeSet contextChangeSet = (ContextChangeSet) set;
 					if (contextChangeSet.getTask().equals(task)) {
@@ -127,8 +126,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 	protected void initContextChangeSets() {
 		for (ActiveChangeSetManager collector : changeSetManagers) {
 			ChangeSet[] sets = collector.getSets();
-			for (int i = 0; i < sets.length; i++) {
-				ChangeSet restoredSet = sets[i];
+			for (ChangeSet restoredSet : sets) {
 				if (!(restoredSet instanceof ContextChangeSet)) {
 					String encodedTitle = restoredSet.getName();
 					String taskHandle = ContextChangeSet.getHandleFromPersistedTitle(encodedTitle);
@@ -140,7 +138,8 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 							collector.remove(restoredSet);
 							collector.add(contextChangeSet);
 						} catch (Exception e) {
-							StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.PLUGIN_ID, "Could not restore change set", e));
+							StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.PLUGIN_ID,
+									"Could not restore change set", e));
 						}
 					}
 				}
@@ -158,8 +157,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 	public IResource[] getResources(AbstractTask task) {
 		for (ActiveChangeSetManager collector : changeSetManagers) {
 			ChangeSet[] sets = collector.getSets();
-			for (int i = 0; i < sets.length; i++) {
-				ChangeSet set = sets[i];
+			for (ChangeSet set : sets) {
 				if (set instanceof ContextChangeSet) {
 					ContextChangeSet contextChangeSet = (ContextChangeSet) set;
 					if (contextChangeSet.getTask().equals(task)) {
@@ -196,8 +194,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 	public void contextDeactivated(IInteractionContext context) {
 		for (ActiveChangeSetManager collector : changeSetManagers) {
 			ChangeSet[] sets = collector.getSets();
-			for (int i = 0; i < sets.length; i++) {
-				ChangeSet set = sets[i];
+			for (ChangeSet set : sets) {
 				if (set instanceof ContextChangeSet) {
 					IResource[] resources = set.getResources();
 					if (resources == null || resources.length == 0) {
@@ -231,9 +228,9 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 						if (shouldRemove(element)) {
 							for (ActiveChangeSetManager collector : changeSetManagers) {
 								ChangeSet[] sets = collector.getSets();
-								for (int i = 0; i < sets.length; i++) {
-									if (sets[i] instanceof ContextChangeSet) {
-										sets[i].remove(resource);
+								for (ChangeSet set : sets) {
+									if (set instanceof ContextChangeSet) {
+										set.remove(resource);
 									}
 								}
 							}
@@ -241,7 +238,8 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 					}
 				}
 			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.PLUGIN_ID, "Could not manipulate change set resources", e));
+				StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.PLUGIN_ID,
+						"Could not manipulate change set resources", e));
 			}
 		}
 	}

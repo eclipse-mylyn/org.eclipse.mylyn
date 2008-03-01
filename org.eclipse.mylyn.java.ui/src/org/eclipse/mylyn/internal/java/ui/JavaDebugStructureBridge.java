@@ -32,7 +32,7 @@ public class JavaDebugStructureBridge extends AbstractContextStructureBridge {
 
 	public final static String CONTENT_TYPE = "java/debug";
 
-	private JavaStructureBridge javaStructureBridge = new JavaStructureBridge();
+	private final JavaStructureBridge javaStructureBridge = new JavaStructureBridge();
 
 	/**
 	 * Needed due to slowness in resolving type names. We expect the stack frame elements to disappear, they are never
@@ -40,7 +40,7 @@ public class JavaDebugStructureBridge extends AbstractContextStructureBridge {
 	 * 
 	 * TODO: consider clearing on each re-launch
 	 */
-	private Map<JDIStackFrame, IType> stackFrameMap = new WeakHashMap<JDIStackFrame, IType>();
+	private final Map<JDIStackFrame, IType> stackFrameMap = new WeakHashMap<JDIStackFrame, IType>();
 
 	@Override
 	public boolean acceptsObject(Object object) {

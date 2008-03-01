@@ -77,7 +77,8 @@ public class CommitTemplateManager {
 				return matcher.group(1);
 			}
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.PLUGIN_ID, "Problem while parsing task id from comment", e));
+			StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.PLUGIN_ID,
+					"Problem while parsing task id from comment", e));
 		}
 
 		return null;
@@ -207,7 +208,8 @@ public class CommitTemplateManager {
 				return handler.getValue(task);
 			}
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.PLUGIN_ID, "Problem while dispatching to template handler for: " + keyword, e));
+			StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.PLUGIN_ID,
+					"Problem while dispatching to template handler for: " + keyword, e));
 		}
 
 		return null;
@@ -221,16 +223,15 @@ public class CommitTemplateManager {
 			IExtensionPoint extPoint = Platform.getExtensionRegistry().getExtensionPoint(FocusedTeamUiPlugin.PLUGIN_ID,
 					EXT_POINT_TEMPLATE_HANDLERS);
 			IExtension[] extensions = extPoint.getExtensions();
-			for (int i = 0; i < extensions.length; i++) {
-				IExtension extension = extensions[i];
+			for (IExtension extension : extensions) {
 				IConfigurationElement[] elements = extension.getConfigurationElements();
-				for (int j = 0; j < elements.length; j++) {
-					IConfigurationElement element = elements[j];
+				for (IConfigurationElement element : elements) {
 					if (ELEM_TEMPLATE_HANDLER.equals(element.getName())) {
 						try {
 							Object result = processContribution(element);
-							if (result != null)
+							if (result != null) {
 								return result;
+							}
 						} catch (Exception e) {
 							String msg = MessageFormat.format(
 									"Error while processing template handler contribution {0} from plugin {1}.",

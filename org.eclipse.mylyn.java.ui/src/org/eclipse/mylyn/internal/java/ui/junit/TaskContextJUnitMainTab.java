@@ -32,17 +32,18 @@ public class TaskContextJUnitMainTab extends JUnitLaunchConfigurationTab {
 
 	private boolean isPdeMode = false;
 
-	private Image image;
+	private final Image image;
 
 	public TaskContextJUnitMainTab(boolean isPdeMode) {
 		this.isPdeMode = isPdeMode;
 		image = JavaUiBridgePlugin.getImageDescriptor("icons/etool16/junit-tab.gif").createImage();
 	}
 
+	@Override
 	public boolean isValid(ILaunchConfiguration config) {
 		return true;
 	}
-	
+
 	@Override
 	public void createControl(Composite parent) {
 		Composite comp = new Composite(parent, SWT.NONE);

@@ -37,7 +37,7 @@ public class LinkActiveSearchWithEditorAction extends Action {
 
 	private static final String LABEL = "Link with Editor";
 
-	private SelectionTracker selectionTracker = new SelectionTracker();
+	private final SelectionTracker selectionTracker = new SelectionTracker();
 
 	private static LinkActiveSearchWithEditorAction INSTANCE;
 
@@ -73,8 +73,9 @@ public class LinkActiveSearchWithEditorAction extends Action {
 			try {
 				if (selection instanceof TextSelection && part instanceof IEditorPart) {
 					ActiveSearchView view = ActiveSearchView.getFromActivePerspective();
-					if (view == null || !view.getViewer().getControl().isVisible())
+					if (view == null || !view.getViewer().getControl().isVisible()) {
 						return;
+					}
 					AbstractContextUiBridge bridge = ContextUiPlugin.getDefault().getUiBridgeForEditor(
 							(IEditorPart) part);
 					Object toSelect = bridge.getObjectForTextSelection((TextSelection) selection, (IEditorPart) part);
@@ -83,7 +84,8 @@ public class LinkActiveSearchWithEditorAction extends Action {
 					}
 				}
 			} catch (Throwable t) {
-				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not update package explorer", t));
+				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
+						"Could not update package explorer", t));
 			}
 		}
 	}

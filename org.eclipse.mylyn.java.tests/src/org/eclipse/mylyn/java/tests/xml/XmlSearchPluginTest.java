@@ -312,15 +312,17 @@ public class XmlSearchPluginTest extends TestCase implements ISearchPluginTest {
 	}
 
 	public List<?> search(int dos, IInteractionElement node) throws IOException, CoreException {
-		if (node == null)
+		if (node == null) {
 			return null;
+		}
 
 		// test with each of the sepatations
 		XmlJavaRelationProvider prov = new XmlJavaRelationProvider();
 
 		IActiveSearchOperation o = prov.getSearchOperation(node, 0, dos);
-		if (o == null)
+		if (o == null) {
 			return null;
+		}
 
 		XmlTestActiveSearchListener l = new XmlTestActiveSearchListener(prov);
 		SearchPluginTestHelper.search(o, l);

@@ -95,17 +95,20 @@ public class Highlighter {
 	}
 
 	public Color mapDoiToElevation(IInteractionElement element) {
-		if (element == null)
+		if (element == null) {
 			return ColorMap.COLOR_WHITE;
-		if (element.getInterest().getValue() < 0)
+		}
+		if (element.getInterest().getValue() < 0) {
 			return highlightColor;
+		}
 
 		int step = 2;
 		Color color = ColorMap.COLOR_WHITE;
 		for (Iterator<Color> it = gradients.iterator(); it.hasNext();) {
 			color = it.next();
-			if (element.getInterest().getValue() < step)
+			if (element.getInterest().getValue() < step) {
 				return color;
+			}
 			step += 2;
 		}
 		return color;
@@ -119,7 +122,8 @@ public class Highlighter {
 
 			highlightColor = new Color(Display.getDefault(), redStep, greenStep, blueStep);
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Highlighter initialization failed", t));
+			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Highlighter initialization failed",
+					t));
 		}
 	}
 
@@ -134,18 +138,24 @@ public class Highlighter {
 			int green = ColorMap.COLOR_WHITE.getGreen() + greenStep * OFFSET;
 			int blue = ColorMap.COLOR_WHITE.getBlue() + blueStep * OFFSET;
 			for (int i = 0; i < NUM_LEVELS - OFFSET; i++) {
-				if (red > 255)
+				if (red > 255) {
 					red = 255; // TODO: fix this mess
-				if (green > 255)
+				}
+				if (green > 255) {
 					green = 255;
-				if (blue > 255)
+				}
+				if (blue > 255) {
 					blue = 255;
-				if (red < 0)
+				}
+				if (red < 0) {
 					red = 0;
-				if (green < 0)
+				}
+				if (green < 0) {
 					green = 0;
-				if (blue < 0)
+				}
+				if (blue < 0) {
 					blue = 0;
+				}
 				gradients.add(new Color(Display.getDefault(), red, green, blue));
 				red += redStep;
 				blue += blueStep;
@@ -182,8 +192,7 @@ public class Highlighter {
 		int green = 0;
 		int blue = 0;
 		int num = highlighters.size();
-		for (Iterator<Highlighter> it = highlighters.iterator(); it.hasNext();) {
-			Highlighter highlighter = it.next();
+		for (Highlighter highlighter : highlighters) {
 			Color color = highlighter.getHighlight(info, isLandmark);
 			red += color.getRed();
 			green += color.getGreen();

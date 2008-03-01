@@ -40,38 +40,36 @@ public class FocusedTeamExtensionPointReader {
 		IExtensionPoint teamProvider = Platform.getExtensionRegistry().getExtensionPoint(FocusedTeamUiPlugin.PLUGIN_ID,
 				EXT_POINT_TEAM_REPOSITORY_PROVIDER);
 		IExtension[] extensions = teamProvider.getExtensions();
-		for (int i = 0; i < extensions.length; i++) {
-			IExtension extension = extensions[i];
+		for (IExtension extension : extensions) {
 			IConfigurationElement[] elements = extension.getConfigurationElements();
 
-			for (int j = 0; j < elements.length; j++) {
-				IConfigurationElement element = elements[j];
+			for (IConfigurationElement element : elements) {
 				if (ELEM_ACTIVE_CHANGE_SET_PROVIDER.equals(element.getName())) {
 					try {
 						AbstractActiveChangeSetProvider provider = (AbstractActiveChangeSetProvider) element.createExecutableExtension(ATTR_CLASS);
 						FocusedTeamUiPlugin.getDefault().addActiveChangeSetProvider(provider);
 					} catch (CoreException e) {
-						StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.PLUGIN_ID, MessageFormat.format(
-								"Error while initializing repository contribution {0} from plugin {1}.",
-								element.getAttribute(ATTR_CLASS), element.getContributor().getName()), e));
+						StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.PLUGIN_ID,
+								MessageFormat.format(
+										"Error while initializing repository contribution {0} from plugin {1}.",
+										element.getAttribute(ATTR_CLASS), element.getContributor().getName()), e));
 					}
 				}
 			}
 		}
 		// NOTE: must first have read providers to properly instantiate manager
-		for (int i = 0; i < extensions.length; i++) {
-			IExtension extension = extensions[i];
+		for (IExtension extension : extensions) {
 			IConfigurationElement[] elements = extension.getConfigurationElements();
-			for (int j = 0; j < elements.length; j++) {
-				IConfigurationElement element = elements[j];
+			for (IConfigurationElement element : elements) {
 				if (ELEM_CHANGE_SET_MANAGER.equals(element.getName())) {
 					try {
 						AbstractContextChangeSetManager manager = (AbstractContextChangeSetManager) element.createExecutableExtension(ATTR_CLASS);
 						FocusedTeamUiPlugin.getDefault().addContextChangeSetManager(manager);
 					} catch (CoreException e) {
-						StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.PLUGIN_ID, MessageFormat.format(
-								"Error while initializing repository contribution {0} from plugin {1}.",
-								element.getAttribute(ATTR_CLASS), element.getContributor().getName()), e));
+						StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.PLUGIN_ID,
+								MessageFormat.format(
+										"Error while initializing repository contribution {0} from plugin {1}.",
+										element.getAttribute(ATTR_CLASS), element.getContributor().getName()), e));
 					}
 				}
 			}

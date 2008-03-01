@@ -24,7 +24,8 @@ public class ContextHighlighterInitializer {
 		TasksUiPlugin.getDefault().setHighlighter(new ITaskHighlighter() {
 			@SuppressWarnings("deprecation")
 			public Color getHighlightColor(AbstractTask task) {
-				Highlighter highlighter = ContextUiPlugin.getDefault().getHighlighterForContextId("" + task.getHandleIdentifier());
+				Highlighter highlighter = ContextUiPlugin.getDefault().getHighlighterForContextId(
+						"" + task.getHandleIdentifier());
 				if (highlighter != null) {
 					return highlighter.getHighlightColor();
 				} else {

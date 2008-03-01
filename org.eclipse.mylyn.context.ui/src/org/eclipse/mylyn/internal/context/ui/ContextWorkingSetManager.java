@@ -42,14 +42,15 @@ public class ContextWorkingSetManager implements IWorkingSetUpdater, IInteractio
 	}
 
 	public ContextWorkingSetManager getWorkingSetUpdater() {
-		if (workingSetUpdaters == null)
+		if (workingSetUpdaters == null) {
 			return null;
-		else
+		} else {
 			return workingSetUpdaters.get(0);
+		}
 	}
 
 	/** Should only ever have 1 working set */
-	private List<IWorkingSet> workingSets = new ArrayList<IWorkingSet>();
+	private final List<IWorkingSet> workingSets = new ArrayList<IWorkingSet>();
 
 	public void add(IWorkingSet workingSet) {
 		workingSets.add(workingSet);
@@ -92,7 +93,7 @@ public class ContextWorkingSetManager implements IWorkingSetUpdater, IInteractio
 	public void elementsDeleted(List<IInteractionElement> elements) {
 		updateWorkingSet();
 	}
-	
+
 	public void landmarkAdded(IInteractionElement node) {
 		updateWorkingSet();
 
@@ -111,8 +112,9 @@ public class ContextWorkingSetManager implements IWorkingSetUpdater, IInteractio
 	private void updateWorkingSet() {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				if (workingSets.size() <= 0)
+				if (workingSets.size() <= 0) {
 					return;
+				}
 				IWorkingSet set = workingSets.get(0);
 				set.setElements(new IAdaptable[] {});
 				List<IAdaptable> elements = new ArrayList<IAdaptable>();
@@ -130,8 +132,9 @@ public class ContextWorkingSetManager implements IWorkingSetUpdater, IInteractio
 			// HACK comparing extension to string
 			// No need to add bugzilla resources to the taskscape
 			// search...really slow and eclipese doesn't know about them
-			if (bridge.getContentType().equals("bugzilla"))
+			if (bridge.getContentType().equals("bugzilla")) {
 				continue;
+			}
 
 			Object o = bridge.getObjectForHandle(node.getHandleIdentifier());
 			if (o instanceof IAdaptable) {
@@ -151,8 +154,7 @@ public class ContextWorkingSetManager implements IWorkingSetUpdater, IInteractio
 
 	public void contextPreActivated(IInteractionContext context) {
 		// ignore
-		
-	}
 
+	}
 
 }

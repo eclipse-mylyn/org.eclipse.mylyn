@@ -43,8 +43,9 @@ public class JavaReadAccessSearchPluginTest extends TestCase implements ISearchP
 
 	public List<?> search(int dos, IInteractionElement node) {
 
-		if (node == null)
+		if (node == null) {
 			return null;
+		}
 
 		// test with each of the sepatations
 		JavaReadAccessProvider prov = new JavaReadAccessProvider();

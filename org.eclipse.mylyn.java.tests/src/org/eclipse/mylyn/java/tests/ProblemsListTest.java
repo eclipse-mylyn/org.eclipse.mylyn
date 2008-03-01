@@ -50,8 +50,8 @@ public class ProblemsListTest extends AbstractJavaContextTest {
 		IMarker[] markers = type1.getResource().findMarkers(IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER, false,
 				IResource.DEPTH_INFINITE);
 		List<ProblemMarker> problemMarkers = new ArrayList<ProblemMarker>();
-		for (int i = 0; i < markers.length; i++) {
-			ProblemMarker marker = new ProblemMarker(markers[i]);
+		for (IMarker marker2 : markers) {
+			ProblemMarker marker = new ProblemMarker(marker2);
 			problemMarkers.add(marker);
 			viewer.add(marker);
 		}

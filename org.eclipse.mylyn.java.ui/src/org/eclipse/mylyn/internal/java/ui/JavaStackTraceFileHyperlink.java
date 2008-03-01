@@ -33,9 +33,9 @@ import org.eclipse.ui.texteditor.ITextEditor;
  */
 public class JavaStackTraceFileHyperlink implements IHyperlink {
 
-	private IRegion region;
+	private final IRegion region;
 
-	private String traceLine;
+	private final String traceLine;
 
 	public JavaStackTraceFileHyperlink(IRegion region, String traceLine) {
 		this.region = region;
@@ -67,9 +67,9 @@ public class JavaStackTraceFileHyperlink implements IHyperlink {
 			if (lineNumber > 0) {
 				lineNumber--;
 			}
-			
+
 			startSourceSearch(typeName, lineNumber);
-			
+
 		} catch (CoreException e1) {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Open Type",
 					"Failed to open type.");
@@ -77,14 +77,16 @@ public class JavaStackTraceFileHyperlink implements IHyperlink {
 		}
 
 	}
-	
+
 	/**
 	 * Starts a search for the type with the given name. Reports back to 'searchCompleted(...)'.
 	 * 
-	 * @param typeName the type to search for
+	 * @param typeName
+	 *            the type to search for
 	 */
 	protected void startSourceSearch(final String typeName, final int lineNumber) {
 		Job search = new Job("Searching...") {
+			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
 					// search for the type in the workspace
@@ -100,13 +102,15 @@ public class JavaStackTraceFileHyperlink implements IHyperlink {
 		search.schedule();
 	}
 
-	protected void searchCompleted(final Object source, final String typeName, final int lineNumber, final IStatus status) {
+	protected void searchCompleted(final Object source, final String typeName, final int lineNumber,
+			final IStatus status) {
 		UIJob job = new UIJob("link search complete") { //$NON-NLS-1$
+			@Override
 			public IStatus runInUIThread(IProgressMonitor monitor) {
 				if (source == null) {
 					// did not find source
-					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Open Type",
-							"Type could not be located.");
+					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+							"Open Type", "Type could not be located.");
 				} else {
 					processSearchResult(source, typeName, lineNumber);
 				}
@@ -120,9 +124,12 @@ public class JavaStackTraceFileHyperlink implements IHyperlink {
 	/**
 	 * The search succeeded with the given result
 	 * 
-	 * @param source resolved source object for the search
-	 * @param typeName type name searched for
-	 * @param lineNumber line number on link
+	 * @param source
+	 *            resolved source object for the search
+	 * @param typeName
+	 *            type name searched for
+	 * @param lineNumber
+	 *            line number on link
 	 */
 	protected void processSearchResult(Object source, String typeName, int lineNumber) {
 		IDebugModelPresentation presentation = JDIDebugUIPlugin.getDefault().getModelPresentation();
@@ -131,7 +138,10 @@ public class JavaStackTraceFileHyperlink implements IHyperlink {
 			String editorId = presentation.getEditorId(editorInput, source);
 			if (editorId != null) {
 				try {
-					IEditorPart editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(editorInput, editorId);
+					IEditorPart editorPart = PlatformUI.getWorkbench()
+							.getActiveWorkbenchWindow()
+							.getActivePage()
+							.openEditor(editorInput, editorId);
 					if (editorPart instanceof ITextEditor && lineNumber >= 0) {
 						ITextEditor textEditor = (ITextEditor) editorPart;
 						IDocumentProvider provider = textEditor.getDocumentProvider();
@@ -148,8 +158,8 @@ public class JavaStackTraceFileHyperlink implements IHyperlink {
 						provider.disconnect(editorInput);
 					}
 				} catch (CoreException e) {
-					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Open Type",
-					"Failed to open type.");
+					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+							"Open Type", "Failed to open type.");
 				}
 			}
 		}

@@ -26,7 +26,7 @@ import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
  */
 public class InteractionContextListeningTest extends TestCase {
 
-	private InteractionContext mockContext = new InteractionContext("doitest", new InteractionContextScaling());
+	private final InteractionContext mockContext = new InteractionContext("doitest", new InteractionContextScaling());
 
 	private InteractionContextManager contextManager;
 
@@ -65,6 +65,7 @@ public class InteractionContextListeningTest extends TestCase {
 
 		private int activationEventCount;
 
+		@Override
 		public void contextActivated(IInteractionContext context) {
 			contextManager.removeListener(this);
 			activationEventCount++;

@@ -37,7 +37,7 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
 	protected JavaEditingMonitor monitor = new JavaEditingMonitor();
 
 	protected TestJavaProject project;
-	
+
 	protected TestProject nonJavaProject;
 
 	protected IPackageFragment p1;

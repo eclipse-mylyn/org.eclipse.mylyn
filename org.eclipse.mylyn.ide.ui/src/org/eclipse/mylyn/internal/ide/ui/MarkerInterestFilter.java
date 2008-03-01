@@ -28,14 +28,14 @@ public class MarkerInterestFilter extends InterestFilter {
 		if (element instanceof MarkerItem) {
 			if (element.getClass().getSimpleName().equals("MarkerCategory")) {
 				return true;
-			} else if (element instanceof MarkerEntry){
-				MarkerEntry entry = (MarkerEntry)element;
+			} else if (element instanceof MarkerEntry) {
+				MarkerEntry entry = (MarkerEntry) element;
 				return isInteresting(entry.getMarker(), viewer, parent);
 			}
-		} 
+		}
 		return false;
 //			return true;
-			// NOTE: code commented out below did a look-down the children, which may be too expensive
+		// NOTE: code commented out below did a look-down the children, which may be too expensive
 //			if (element instanceof MarkerNode) {
 //				MarkerNode markerNode = (MarkerNode) element;
 //				MarkerNode[] children = markerNode.getChildren();

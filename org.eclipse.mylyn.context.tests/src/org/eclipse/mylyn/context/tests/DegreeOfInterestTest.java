@@ -21,7 +21,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
  */
 public class DegreeOfInterestTest extends TestCase {
 
-	private InteractionContext mockContext = new InteractionContext("doitest", new InteractionContextScaling());
+	private final InteractionContext mockContext = new InteractionContext("doitest", new InteractionContextScaling());
 
 	@Override
 	protected void setUp() throws Exception {
@@ -55,20 +55,20 @@ public class DegreeOfInterestTest extends TestCase {
 				"id", null, 2);
 		doi.addEvent(event2);
 
-		InteractionEvent event3 = new InteractionEvent(InteractionEvent.Kind.PROPAGATION, "kind", "handle", "source-id",
-				"id", null, 750);
+		InteractionEvent event3 = new InteractionEvent(InteractionEvent.Kind.PROPAGATION, "kind", "handle",
+				"source-id", "id", null, 750);
 		doi.addEvent(event3);
 
-		InteractionEvent event4 = new InteractionEvent(InteractionEvent.Kind.MANIPULATION, "kind", "handle", "source-id",
-				"id", null, -684);
+		InteractionEvent event4 = new InteractionEvent(InteractionEvent.Kind.MANIPULATION, "kind", "handle",
+				"source-id", "id", null, -684);
 		doi.addEvent(event4);
-		
+
 		assertTrue(doi.isInteresting());
 		assertTrue(doi.isLandmark());
 		assertFalse(doi.isPropagated());
 		assertFalse(doi.isPredicted());
 	}
-	
+
 	public void testPropagatedInterest() {
 		DegreeOfInterest doi = new DegreeOfInterest(mockContext, InteractionContextManager.getCommonContextScaling());
 		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.PROPAGATION, "kind", "handle", "source-id",

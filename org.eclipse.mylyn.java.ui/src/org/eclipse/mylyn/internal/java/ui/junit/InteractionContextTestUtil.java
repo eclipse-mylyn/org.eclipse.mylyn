@@ -109,16 +109,17 @@ public class InteractionContextTestUtil {
 	public static boolean isTestType(IType type) {
 		ITypeHierarchy hierarchy;
 		try {
-			if (Flags.isAbstract(type.getFlags()))
+			if (Flags.isAbstract(type.getFlags())) {
 				return false;
+			}
 		} catch (JavaModelException e) {
 			return false;
 		}
 		try {
 			hierarchy = type.newSupertypeHierarchy(null);
 			IType[] supertypes = hierarchy.getAllSuperclasses(type);
-			for (int i = 0; i < supertypes.length; i++) {
-				if (supertypes[i].getFullyQualifiedName().equals("junit.framework.TestCase")) {
+			for (IType supertype : supertypes) {
+				if (supertype.getFullyQualifiedName().equals("junit.framework.TestCase")) {
 					return true;
 				}
 			}

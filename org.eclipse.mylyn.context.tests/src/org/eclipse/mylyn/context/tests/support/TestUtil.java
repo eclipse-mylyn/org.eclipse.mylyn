@@ -117,12 +117,12 @@ public class TestUtil {
 		if (contextUiLazyStarted) {
 			return;
 		}
-		
+
 		contextUiLazyStarted = true;
-		
+
 		// make sure monitor UI is started and logs the start interaction event 
 		MonitorUiPlugin.getDefault();
-		
+
 		ContextCorePlugin.getContextManager().activateContext("startup");
 		ContextCorePlugin.getContextManager().deactivateContext("startup");
 	}

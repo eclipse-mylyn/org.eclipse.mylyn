@@ -48,8 +48,9 @@ public class AntEditingMonitor extends AbstractUserInteractionMonitor {
 			// this is the build.xml and other ant file editor
 			AntEditor editor = (AntEditor) part;
 
-			if (!(editor.getSelectionProvider().getSelection() instanceof TextSelection))
+			if (!(editor.getSelectionProvider().getSelection() instanceof TextSelection)) {
 				return;
+			}
 
 			textSelection = (TextSelection) editor.getSelectionProvider().getSelection();
 			in = editor.getEditorInput();
@@ -73,7 +74,8 @@ public class AntEditingMonitor extends AbstractUserInteractionMonitor {
 					XmlNodeHelper xnode = new XmlNodeHelper(fei.getFile().getFullPath().toString(), path);
 					super.handleElementSelection(part, xnode, contributeToContext);
 				} catch (Exception e) {
-					StatusHandler.log(new Status(IStatus.ERROR, AntUiBridgePlugin.ID_PLUGIN, "Resolving selection failed", e));
+					StatusHandler.log(new Status(IStatus.ERROR, AntUiBridgePlugin.ID_PLUGIN,
+							"Resolving selection failed", e));
 				}
 			}
 		}
@@ -96,8 +98,9 @@ public class AntEditingMonitor extends AbstractUserInteractionMonitor {
 	 */
 	private static AntElementNode getNode(AntElementNode topNode, String elementPath) throws NoSuchMethodException,
 			IllegalAccessException {
-		if (topNode == null)
+		if (topNode == null) {
 			return null;
+		}
 
 //		Method method = AntElementNode.class.getDeclaredMethod("getElementPath", new Class[] {});
 //		method.setAccessible(true);
@@ -107,8 +110,9 @@ public class AntEditingMonitor extends AbstractUserInteractionMonitor {
 			return topNode;
 		}
 
-		if (topNode.getChildNodes() == null)
+		if (topNode.getChildNodes() == null) {
 			return null;
+		}
 
 		for (Object obj : topNode.getChildNodes()) {
 			if (obj instanceof AntElementNode) {
@@ -119,8 +123,9 @@ public class AntEditingMonitor extends AbstractUserInteractionMonitor {
 					return node;
 				} else {
 					AntElementNode node2 = getNode(node, elementPath);
-					if (node2 != null)
+					if (node2 != null) {
 						return node2;
+					}
 				}
 			}
 		}

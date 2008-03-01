@@ -21,7 +21,7 @@ import java.util.List;
  */
 public abstract class AbstractContextStore {
 
-	private List<IContextStoreListener> listeners = new ArrayList<IContextStoreListener>();
+	private final List<IContextStoreListener> listeners = new ArrayList<IContextStoreListener>();
 
 	public abstract void init();
 

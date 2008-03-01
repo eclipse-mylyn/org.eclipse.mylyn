@@ -28,9 +28,9 @@ public class IdeUiBridgePlugin extends AbstractUIPlugin {
 		public void lazyStartup() {
 			// ignore, it is sufficient that the bundle is activated on context ui startup
 		}
-		
+
 	}
-	
+
 	public IdeUiBridgePlugin() {
 		INSTANCE = this;
 	}
@@ -39,12 +39,12 @@ public class IdeUiBridgePlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 	}
-	
+
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
 	}
-	
+
 	public static IdeUiBridgePlugin getDefault() {
 		return INSTANCE;
 	}

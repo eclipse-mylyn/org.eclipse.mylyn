@@ -58,8 +58,9 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 
 	public void testDisabledMode() {
 		ChangeSet[] sets = collector.getSets();
-		for (int i = 0; i < sets.length; i++)
-			collector.remove(sets[i]);
+		for (ChangeSet set : sets) {
+			collector.remove(set);
+		}
 
 		assertEquals(0, collector.getSets().length);
 		manager.deactivateContext(taskId);
@@ -79,8 +80,9 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 
 	public void testSingleContextActivation() {
 		ChangeSet[] sets = collector.getSets();
-		for (int i = 0; i < sets.length; i++)
-			collector.remove(sets[i]);
+		for (ChangeSet set : sets) {
+			collector.remove(set);
+		}
 
 		assertEquals(0, collector.getSets().length);
 		manager.deactivateContext(taskId);

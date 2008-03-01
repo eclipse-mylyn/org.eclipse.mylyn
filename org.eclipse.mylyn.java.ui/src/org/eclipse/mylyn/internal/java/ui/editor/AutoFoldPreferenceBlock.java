@@ -70,7 +70,8 @@ public class AutoFoldPreferenceBlock implements IJavaFoldingPreferenceBlock {
 
 			return inner;
 		} catch (Throwable t) {
-			StatusHandler.fail(new Status(IStatus.ERROR, JavaUiBridge.ID_PLUGIN, "Could not create folding preferences page", t));
+			StatusHandler.fail(new Status(IStatus.ERROR, JavaUiBridge.ID_PLUGIN,
+					"Could not create folding preferences page", t));
 		}
 		return null;
 	}

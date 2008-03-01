@@ -43,8 +43,9 @@ public class JavaWriteAccessSearchPluginTest extends TestCase implements ISearch
 
 	public List<?> search(int dos, IInteractionElement node) {
 
-		if (node == null)
+		if (node == null) {
 			return null;
+		}
 
 		// test with each of the sepatations
 		JavaWriteAccessProvider prov = new JavaWriteAccessProvider();

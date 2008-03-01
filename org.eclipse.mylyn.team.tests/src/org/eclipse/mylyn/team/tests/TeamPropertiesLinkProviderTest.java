@@ -112,7 +112,7 @@ public class TeamPropertiesLinkProviderTest extends TestCase {
 				return resources.toArray(new IResource[0]);
 			}
 		};
-		
+
 		resources.add(project1);
 
 		FocusedTeamUiPlugin.getDefault().getPreferenceStore().setValue(FocusedTeamUiPlugin.COMMIT_TEMPLATE,
@@ -139,7 +139,7 @@ public class TeamPropertiesLinkProviderTest extends TestCase {
 			public IResource[] getResources() {
 				return new IResource[] { project1, project2 };
 			}
-			
+
 			@Override
 			public IResource[] getChangedResources() {
 				return new IResource[] { project2 };
@@ -147,14 +147,13 @@ public class TeamPropertiesLinkProviderTest extends TestCase {
 
 		};
 
-		FocusedTeamUiPlugin.getDefault().getPreferenceStore().setValue(FocusedTeamUiPlugin.COMMIT_TEMPLATE,
-				"global");
+		FocusedTeamUiPlugin.getDefault().getPreferenceStore().setValue(FocusedTeamUiPlugin.COMMIT_TEMPLATE, "global");
 
 		// only the template project 2 should matter
 		TeamPropertiesLinkProvider linkProvider = new TeamPropertiesLinkProvider();
 		assertTrue(linkProvider.setCommitCommentTemplate(project1, "project1"));
 		assertEquals("global", changeSet.getComment());
-		
+
 		assertTrue(linkProvider.setCommitCommentTemplate(project2, "project2"));
 		assertEquals("project2", changeSet.getComment());
 	}

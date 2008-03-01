@@ -32,7 +32,7 @@ public class ResourcesUiPreferenceInitializer extends AbstractPreferenceInitiali
 	public static final String PREF_RESOURCES_IGNORED = PREF_DEFAULT_SCOPE + ".ignored.pattern";
 
 	public static Set<String> forcedExclusionPatterns = new HashSet<String>();
-	
+
 	@Override
 	public void initializeDefaultPreferences() {
 		// ignore, default comes from extension point
@@ -65,19 +65,19 @@ public class ResourcesUiPreferenceInitializer extends AbstractPreferenceInitiali
 		}
 		return exclusions;
 	}
-	
+
 	public static Set<String> getForcedExcludedResourcePatterns() {
 		return forcedExclusionPatterns;
 	}
-	
+
 	/**
 	 * TODO: move and consider for API
 	 */
 	public static void addForcedExclusionPattern(String pattern) {
 		forcedExclusionPatterns.add(pattern);
 	}
-	
+
 	public static void removeForcedExclusionPattern(String pattern) {
 		forcedExclusionPatterns.remove(pattern);
-	}	
+	}
 }

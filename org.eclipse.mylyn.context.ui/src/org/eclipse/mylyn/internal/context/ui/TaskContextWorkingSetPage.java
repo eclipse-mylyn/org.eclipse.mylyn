@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.dialogs.IWorkingSetPage;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
  * @author Shawn Minto
@@ -37,7 +38,7 @@ public class TaskContextWorkingSetPage extends WizardPage implements IWorkingSet
 
 	public TaskContextWorkingSetPage() {
 		super("org.eclipse.mylyn.monitor.ui.workingSetPage", "Mylyn Task Context Working Set",
-				ContextUiPlugin.imageDescriptorFromPlugin("org.eclipse.mylyn.context.ui",
+				AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.mylyn.context.ui",
 						"icons/wizban/banner-prefs.gif"));
 		setDescription("Create the Mylyn Task Context working set.  It will be updated automatically to contain\n"
 				+ "all of the resources related to the active task.");

@@ -25,7 +25,7 @@ import org.eclipse.mylyn.internal.context.core.IActiveSearchOperation;
  */
 public class SearchPluginTestHelper extends TestCase {
 
-	private ISearchPluginTest test;
+	private final ISearchPluginTest test;
 
 	/**
 	 * maximum time to wait for search results * 2. so 60 = 30sec - only sleeping 500ms at a time instead of 1 sec
@@ -84,8 +84,9 @@ public class SearchPluginTestHelper extends TestCase {
 	 * @return -1 if there was a prob, else the search time in seconds
 	 */
 	public static long search(IActiveSearchOperation op, IActiveSearchListener listener) {
-		if (op == null)
+		if (op == null) {
 			return -1;
+		}
 
 		op.addListener(listener);
 

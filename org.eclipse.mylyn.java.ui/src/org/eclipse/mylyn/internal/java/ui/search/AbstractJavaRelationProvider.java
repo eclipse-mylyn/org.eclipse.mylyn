@@ -88,22 +88,26 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 
 	@Override
 	protected void findRelated(final IInteractionElement node, int degreeOfSeparation) {
-		if (node == null)
-			return;
-		if (node.getContentType() == null) {
-			StatusHandler.log(new Status(IStatus.WARNING, JavaUiBridgePlugin.PLUGIN_ID, "Null content type for: " + node));
+		if (node == null) {
 			return;
 		}
-		if (!node.getContentType().equals(JavaStructureBridge.CONTENT_TYPE))
+		if (node.getContentType() == null) {
+			StatusHandler.log(new Status(IStatus.WARNING, JavaUiBridgePlugin.PLUGIN_ID, "Null content type for: "
+					+ node));
 			return;
+		}
+		if (!node.getContentType().equals(JavaStructureBridge.CONTENT_TYPE)) {
+			return;
+		}
 		IJavaElement javaElement = JavaCore.create(node.getHandleIdentifier());
 		if (!acceptElement(javaElement) || !javaElement.exists() || javaElement instanceof IInitializer) {
 			return;
 		}
 
 		IJavaSearchScope scope = createJavaSearchScope(javaElement, degreeOfSeparation);
-		if (scope != null)
+		if (scope != null) {
 			runJob(node, degreeOfSeparation, getId());
+		}
 	}
 
 	private IJavaSearchScope createJavaSearchScope(IJavaElement element, int degreeOfSeparation) {
@@ -162,8 +166,9 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 						IProject project = resource.getProject();
 						if (project != null && JavaProject.hasJavaNature(project) && project.exists()) {
 							IJavaProject javaProject = JavaCore.create(project);// ((IJavaElement)o).getJavaProject();
-							if (javaProject != null && javaProject.exists())
+							if (javaProject != null && javaProject.exists()) {
 								searchElements.add(javaProject);
+							}
 						}
 					}
 				}
@@ -199,7 +204,8 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 		} else {
 			if (interesting.getContentType() == null) {
 				// TODO: remove
-				StatusHandler.log(new Status(IStatus.WARNING, JavaUiBridgePlugin.PLUGIN_ID, "Null content type for: " + interesting.getHandleIdentifier()));
+				StatusHandler.log(new Status(IStatus.WARNING, JavaUiBridgePlugin.PLUGIN_ID, "Null content type for: "
+						+ interesting.getHandleIdentifier()));
 				return false;
 			} else {
 				return interesting.getContentType().equals(JavaStructureBridge.CONTENT_TYPE)
@@ -232,8 +238,9 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 		}
 
 		final JavaSearchOperation query = (JavaSearchOperation) getSearchOperation(node, limitTo, degreeOfSeparation);
-		if (query == null)
+		if (query == null) {
 			return;
+		}
 
 		JavaSearchJob job = new JavaSearchJob(query.getLabel(), query);
 		query.addListener(new IActiveSearchListener() {
@@ -246,18 +253,21 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 
 			@SuppressWarnings("unchecked")
 			public void searchCompleted(List l) {
-				if (l == null)
+				if (l == null) {
 					return;
+				}
 				List<IJavaElement> relatedHandles = new ArrayList<IJavaElement>();
 				Object[] elements = l.toArray();
-				for (int i = 0; i < elements.length; i++) {
-					if (elements[i] instanceof IJavaElement)
-						relatedHandles.add((IJavaElement) elements[i]);
+				for (Object element : elements) {
+					if (element instanceof IJavaElement) {
+						relatedHandles.add((IJavaElement) element);
+					}
 				}
 
 				for (IJavaElement element : relatedHandles) {
-					if (!acceptResultElement(element))
+					if (!acceptResultElement(element)) {
 						continue;
+					}
 					incrementInterest(node, JavaStructureBridge.CONTENT_TYPE, element.getHandleIdentifier(),
 							degreeOfSeparation);
 				}
@@ -276,13 +286,15 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 	@Override
 	public IActiveSearchOperation getSearchOperation(IInteractionElement node, int limitTo, int degreeOfSeparation) {
 		IJavaElement javaElement = JavaCore.create(node.getHandleIdentifier());
-		if (javaElement == null || !javaElement.exists())
+		if (javaElement == null || !javaElement.exists()) {
 			return null;
+		}
 
 		IJavaSearchScope scope = createJavaSearchScope(javaElement, degreeOfSeparation);
 
-		if (scope == null)
+		if (scope == null) {
 			return null;
+		}
 
 		QuerySpecification specs = new ElementQuerySpecification(javaElement, limitTo, scope,
 				"Mylyn degree of separation: " + degreeOfSeparation);
@@ -292,7 +304,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 
 	protected static class JavaSearchJob extends Job {
 
-		private JavaSearchOperation op;
+		private final JavaSearchOperation op;
 
 		public JavaSearchJob(String name, JavaSearchOperation op) {
 			super(name);
@@ -314,8 +326,9 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 
 		@Override
 		public ISearchResult getSearchResult() {
-			if (result == null)
+			if (result == null) {
 				result = new JavaSearchResult(this);
+			}
 			new JavaActiveSearchResultUpdater((JavaSearchResult) result);
 			return result;
 		}
@@ -332,8 +345,8 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 						notifySearchCompleted(null);
 					} else {
 						List<Object> l = new ArrayList<Object>();
-						for (int i = 0; i < objs.length; i++) {
-							l.add(objs[i]);
+						for (Object obj : objs) {
+							l.add(obj);
 						}
 						notifySearchCompleted(l);
 					}
@@ -360,7 +373,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 		}
 
 		/** List of listeners wanting to know about the searches */
-		private List<IActiveSearchListener> listeners = new ArrayList<IActiveSearchListener>();
+		private final List<IActiveSearchListener> listeners = new ArrayList<IActiveSearchListener>();
 
 		/**
 		 * Add a listener for when the bugzilla search is completed

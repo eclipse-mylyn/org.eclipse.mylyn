@@ -45,12 +45,10 @@ public class ResourcesUiExtensionPointReader {
 		IExtensionPoint teamProvider = Platform.getExtensionRegistry().getExtensionPoint(
 				ResourcesUiBridgePlugin.PLUGIN_ID + '.' + EXTENSION_CHANGE_MONITORING);
 		IExtension[] extensions = teamProvider.getExtensions();
-		for (int i = 0; i < extensions.length; i++) {
-			IExtension extension = extensions[i];
+		for (IExtension extension : extensions) {
 			IConfigurationElement[] elements = extension.getConfigurationElements();
 
-			for (int j = 0; j < elements.length; j++) {
-				IConfigurationElement element = elements[j];
+			for (IConfigurationElement element : elements) {
 				if (ELEMENT_EXCLUDE.equals(element.getName())) {
 					readLinkProvider(element);
 				}

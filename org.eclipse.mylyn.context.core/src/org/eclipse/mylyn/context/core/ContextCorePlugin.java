@@ -42,9 +42,9 @@ public class ContextCorePlugin extends Plugin {
 
 	public static final String CONTENT_TYPE_RESOURCE = "resource";
 
-	private Map<String, AbstractContextStructureBridge> bridges = new ConcurrentHashMap<String, AbstractContextStructureBridge>();
+	private final Map<String, AbstractContextStructureBridge> bridges = new ConcurrentHashMap<String, AbstractContextStructureBridge>();
 
-	private Map<String, List<String>> childContentTypeMap = new ConcurrentHashMap<String, List<String>>();
+	private final Map<String, List<String>> childContentTypeMap = new ConcurrentHashMap<String, List<String>>();
 
 	private AbstractContextStructureBridge defaultBridge = null;
 
@@ -54,7 +54,7 @@ public class ContextCorePlugin extends Plugin {
 
 	private AbstractContextStore contextStore;
 
-	private Map<String, Set<AbstractRelationProvider>> relationProviders = new HashMap<String, Set<AbstractRelationProvider>>();
+	private final Map<String, Set<AbstractRelationProvider>> relationProviders = new HashMap<String, Set<AbstractRelationProvider>>();
 
 	private boolean contextStoreRead = false;
 
@@ -127,7 +127,7 @@ public class ContextCorePlugin extends Plugin {
 
 	@Override
 	public void start(BundleContext context) throws Exception {
-		super.start(context);  
+		super.start(context);
 
 		contextManager = new InteractionContextManager();
 	}
@@ -267,11 +267,11 @@ public class ContextCorePlugin extends Plugin {
 				IExtensionRegistry registry = Platform.getExtensionRegistry();
 				IExtensionPoint extensionPoint = registry.getExtensionPoint(BridgesExtensionPointReader.EXTENSION_ID_CONTEXT);
 				IExtension[] extensions = extensionPoint.getExtensions();
-				for (int i = 0; i < extensions.length; i++) {
-					IConfigurationElement[] elements = extensions[i].getConfigurationElements();
-					for (int j = 0; j < elements.length; j++) {
-						if (elements[j].getName().compareTo(ELEMENT_CONTEXT_STORE) == 0) {
-							readStore(elements[j]);
+				for (IExtension extension : extensions) {
+					IConfigurationElement[] elements = extension.getConfigurationElements();
+					for (IConfigurationElement element : elements) {
+						if (element.getName().compareTo(ELEMENT_CONTEXT_STORE) == 0) {
+							readStore(element);
 						}
 					}
 				}
@@ -284,14 +284,16 @@ public class ContextCorePlugin extends Plugin {
 			try {
 				Object object = element.createExecutableExtension(BridgesExtensionPointReader.ATTR_CLASS);
 				if (!(object instanceof AbstractContextStore)) {
-					StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID, "Could not load bridge: " + object.getClass().getCanonicalName()
-							+ " must implement " + AbstractContextStructureBridge.class.getCanonicalName()));					
+					StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID,
+							"Could not load bridge: " + object.getClass().getCanonicalName() + " must implement "
+									+ AbstractContextStructureBridge.class.getCanonicalName()));
 					return;
 				} else {
 					INSTANCE.contextStore = (AbstractContextStore) object;
 				}
 			} catch (CoreException e) {
-				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID, "Could not load bridge extension", e));
+				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID,
+						"Could not load bridge extension", e));
 			}
 		}
 	}
@@ -317,14 +319,13 @@ public class ContextCorePlugin extends Plugin {
 				IExtensionRegistry registry = Platform.getExtensionRegistry();
 				IExtensionPoint extensionPoint = registry.getExtensionPoint(BridgesExtensionPointReader.EXTENSION_ID_CONTEXT);
 				IExtension[] extensions = extensionPoint.getExtensions();
-				for (int i = 0; i < extensions.length; i++) {
-					IConfigurationElement[] elements = extensions[i].getConfigurationElements();
-					for (int j = 0; j < elements.length; j++) {
-						if (elements[j].getName().compareTo(BridgesExtensionPointReader.ELEMENT_STRUCTURE_BRIDGE) == 0) {
-							readBridge(elements[j]);
-						} else if (elements[j].getName().compareTo(
-								BridgesExtensionPointReader.ELEMENT_RELATION_PROVIDER) == 0) {
-							readRelationProvider(elements[j]);
+				for (IExtension extension : extensions) {
+					IConfigurationElement[] elements = extension.getConfigurationElements();
+					for (IConfigurationElement element : elements) {
+						if (element.getName().compareTo(BridgesExtensionPointReader.ELEMENT_STRUCTURE_BRIDGE) == 0) {
+							readBridge(element);
+						} else if (element.getName().compareTo(BridgesExtensionPointReader.ELEMENT_RELATION_PROVIDER) == 0) {
+							readRelationProvider(element);
 						}
 					}
 				}
@@ -336,8 +337,9 @@ public class ContextCorePlugin extends Plugin {
 			try {
 				Object object = element.createExecutableExtension(BridgesExtensionPointReader.ATTR_CLASS);
 				if (!(object instanceof AbstractContextStructureBridge)) {
-					StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID, "Could not load bridge: " + object.getClass().getCanonicalName()
-							+ " must implement " + AbstractContextStructureBridge.class.getCanonicalName()));
+					StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID,
+							"Could not load bridge: " + object.getClass().getCanonicalName() + " must implement "
+									+ AbstractContextStructureBridge.class.getCanonicalName()));
 					return;
 				}
 
@@ -350,7 +352,8 @@ public class ContextCorePlugin extends Plugin {
 				}
 				ContextCorePlugin.getDefault().addStructureBridge(bridge);
 			} catch (CoreException e) {
-				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID, "Could not load bridge extension", e));
+				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID,
+						"Could not load bridge extension", e));
 			}
 		}
 
@@ -362,7 +365,8 @@ public class ContextCorePlugin extends Plugin {
 					ContextCorePlugin.getDefault().addRelationProvider(contentType, relationProvider);
 				}
 			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID, "Could not load relation provider", e));
+				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID,
+						"Could not load relation provider", e));
 			}
 		}
 	}
@@ -382,11 +386,11 @@ public class ContextCorePlugin extends Plugin {
 				IExtensionRegistry registry = Platform.getExtensionRegistry();
 				IExtensionPoint extensionPoint = registry.getExtensionPoint(EXTENSION_ID_HANDLERS);
 				IExtension[] extensions = extensionPoint.getExtensions();
-				for (int i = 0; i < extensions.length; i++) {
-					IConfigurationElement[] elements = extensions[i].getConfigurationElements();
-					for (int j = 0; j < elements.length; j++) {
-						if (elements[j].getName().compareTo(ELEMENT_STATUS) == 0) {
-							readHandler(elements[j]);
+				for (IExtension extension : extensions) {
+					IConfigurationElement[] elements = extension.getConfigurationElements();
+					for (IConfigurationElement element : elements) {
+						if (element.getName().compareTo(ELEMENT_STATUS) == 0) {
+							readHandler(element);
 						}
 					}
 				}
@@ -398,8 +402,9 @@ public class ContextCorePlugin extends Plugin {
 			try {
 				Object object = element.createExecutableExtension(ELEMENT_CLASS);
 				if (!(object instanceof IStatusHandler)) {
-					StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID, "Could not load handler: " + object.getClass().getCanonicalName()
-							+ " must implement " + AbstractContextStructureBridge.class.getCanonicalName()));
+					StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID,
+							"Could not load handler: " + object.getClass().getCanonicalName() + " must implement "
+									+ AbstractContextStructureBridge.class.getCanonicalName()));
 					return;
 				}
 

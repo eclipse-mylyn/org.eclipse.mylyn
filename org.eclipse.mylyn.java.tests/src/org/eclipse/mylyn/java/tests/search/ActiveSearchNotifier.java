@@ -25,7 +25,7 @@ public class ActiveSearchNotifier extends AbstractContextTest {
 
 	private CompositeInteractionContext context;
 
-	private String source;
+	private final String source;
 
 	public ActiveSearchNotifier(CompositeInteractionContext context, String source) {
 		this.context = context;
@@ -56,7 +56,8 @@ public class ActiveSearchNotifier extends AbstractContextTest {
 	public IInteractionElement getElement(String handle, String kind) {
 		IInteractionElement node = context.addEvent(mockSelection(handle, kind, source));
 		ContextCorePlugin.getContextManager().processInteractionEvent(
-				mockUserEvent(handle, kind, source, (1 / InteractionContextManager.getCommonContextScaling().getLandmark())
+				mockUserEvent(handle, kind, source, (1 / InteractionContextManager.getCommonContextScaling()
+						.getLandmark())
 						* -2), true);
 		return node;
 	}

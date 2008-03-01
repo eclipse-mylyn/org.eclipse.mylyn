@@ -60,14 +60,14 @@ public class FocusPackageExplorerAction extends AbstractAutoFocusViewAction {
 			if (currentSelection.size() <= 1) {
 				if (elementToSelect instanceof IMember) {
 					// API 3.0 remove JavaDeclarationsFilter
-					if (viewer.getContentProvider() instanceof StandardJavaElementContentProvider) {  			
-						if (!((StandardJavaElementContentProvider)viewer.getContentProvider()).getProvideMembers()) {
+					if (viewer.getContentProvider() instanceof StandardJavaElementContentProvider) {
+						if (!((StandardJavaElementContentProvider) viewer.getContentProvider()).getProvideMembers()) {
 							elementToSelect = ((IMember) elementToSelect).getCompilationUnit();
 							return new StructuredSelection(elementToSelect);
 						}
-					} 
-				
-					for (ViewerFilter filter : Arrays.asList(viewer.getFilters())) {						
+					}
+
+					for (ViewerFilter filter : Arrays.asList(viewer.getFilters())) {
 						if (filter instanceof JavaDeclarationsFilter) {
 							elementToSelect = ((IMember) elementToSelect).getCompilationUnit();
 							return new StructuredSelection(elementToSelect);
@@ -82,6 +82,7 @@ public class FocusPackageExplorerAction extends AbstractAutoFocusViewAction {
 	}
 
 	// TODO: should have better way of doing this
+	@Override
 	protected void setManualFilteringAndLinkingEnabled(boolean enabled) {
 		IViewPart part = super.getPartForAction();
 		if (part instanceof PackageExplorerPart) {

@@ -28,9 +28,9 @@ import org.eclipse.ui.PartInitException;
  */
 public class ActiveHierarchyTest extends AbstractJavaContextTest {
 
-	private ActiveHierarchyView view;
+	private final ActiveHierarchyView view;
 
-	private Tree tree;
+	private final Tree tree;
 
 	public ActiveHierarchyTest() throws PartInitException {
 		view = (ActiveHierarchyView) JavaPlugin.getActivePage().showView(ActiveHierarchyView.ID);

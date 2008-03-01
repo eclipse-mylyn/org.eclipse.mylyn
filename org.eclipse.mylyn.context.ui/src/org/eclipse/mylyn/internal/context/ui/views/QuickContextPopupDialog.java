@@ -61,7 +61,7 @@ public class QuickContextPopupDialog extends PopupDialog implements IInformation
 
 	private CommonViewer commonViewer;
 
-	private InterestFilter interestFilter = new InterestFilter();
+	private final InterestFilter interestFilter = new InterestFilter();
 
 	private Text fFilterText;
 
@@ -306,7 +306,7 @@ public class QuickContextPopupDialog extends PopupDialog implements IInformation
 		}
 		return result;
 	}
-	
+
 	private void createUIWidgetFilterText(Composite parent) {
 		// Create the widget
 		fFilterText = new Text(parent, SWT.NONE);
@@ -438,8 +438,8 @@ public class QuickContextPopupDialog extends PopupDialog implements IInformation
 		// Match the string pattern against labels
 		ILabelProvider labelProvider = (ILabelProvider) commonViewer.getLabelProvider();
 		// Process each item in the tree
-		for (int i = 0; i < items.length; i++) {
-			Object element = items[i].getData();
+		for (TreeItem item : items) {
+			Object element = item.getData();
 			// Return the first element if no pattern is set
 			if (fStringMatcher == null) {
 				return element;
@@ -452,7 +452,7 @@ public class QuickContextPopupDialog extends PopupDialog implements IInformation
 				}
 			}
 			// Recursively check the elements children for a match
-			element = findFirstMatchToPattern(items[i].getItems());
+			element = findFirstMatchToPattern(item.getItems());
 			// Return the child element match if found
 			if (element != null) {
 				return element;

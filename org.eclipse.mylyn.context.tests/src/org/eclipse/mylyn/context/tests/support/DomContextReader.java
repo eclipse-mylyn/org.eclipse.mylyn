@@ -39,8 +39,9 @@ import org.w3c.dom.NodeList;
 public class DomContextReader implements IInteractionContextReader {
 
 	public InteractionContext readContext(String handle, File file) {
-		if (!file.exists())
+		if (!file.exists()) {
 			return null;
+		}
 		try {
 			Document doc = openAsDOM(file);
 			Element root = doc.getDocumentElement();

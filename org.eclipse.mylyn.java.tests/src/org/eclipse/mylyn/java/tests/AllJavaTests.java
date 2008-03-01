@@ -31,9 +31,9 @@ public class AllJavaTests {
 		// API-3.0 replace with context UI lazy start extension 
 		// NOTE: used to trigger activation on start
 		ResourcesUiBridgePlugin.getDefault();
-		
+
 		TestUtil.triggerContextUiLazyStart();
-		
+
 		// $JUnit-BEGIN$
 		suite.addTestSuite(ContentSpecificContextTest.class);
 		suite.addTestSuite(ResourceStructureMappingTest.class);

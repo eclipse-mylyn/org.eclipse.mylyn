@@ -31,7 +31,7 @@ public class TeamPropertiesLinkProvider {
 
 	public TeamPropertiesLinkProvider() {
 	}
-	
+
 	public boolean canAccessProperties(IResource resource) {
 		IProject project = resource.getProject();
 		return project != null && project.isAccessible();
@@ -67,7 +67,8 @@ public class TeamPropertiesLinkProvider {
 				projectNode.flush();
 				return true;
 			} catch (BackingStoreException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.PLUGIN_ID, "Failed to save commit comment template for project", e));
+				StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.PLUGIN_ID,
+						"Failed to save commit comment template for project", e));
 			}
 		}
 		return false;

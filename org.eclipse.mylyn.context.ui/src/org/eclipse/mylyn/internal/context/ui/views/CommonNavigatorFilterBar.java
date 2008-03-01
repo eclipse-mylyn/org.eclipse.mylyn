@@ -56,7 +56,7 @@ import org.eclipse.ui.progress.WorkbenchJob;
 /**
  * Based on
  * 
- * API-3.0: remove?  Not used.
+ * API-3.0: remove? Not used.
  * 
  * @see{FilteredTree}
  * 
@@ -66,7 +66,7 @@ public class CommonNavigatorFilterBar extends Composite {
 
 	private InterestFilter suppressedFilter = null;
 
-	private AdaptiveRefreshPolicy refreshPolicy;
+	private final AdaptiveRefreshPolicy refreshPolicy;
 
 	public CommonNavigatorFilterBar(TreeViewer treeViewer, Composite parent, CommonNavigatorPatternFilter filter) {
 		super(parent, SWT.NONE);
@@ -127,8 +127,7 @@ public class CommonNavigatorFilterBar extends Composite {
 			return null;
 		}
 		ViewerFilter[] filters = getViewer().getFilters();
-		for (int i = 0; i < filters.length; i++) {
-			ViewerFilter filter = filters[i];
+		for (ViewerFilter filter : filters) {
 			if (filter instanceof InterestFilter) {
 				return (InterestFilter) filter;
 			}
@@ -373,12 +372,12 @@ public class CommonNavigatorFilterBar extends Composite {
 	 * @return the first matching TreeItem
 	 */
 	private TreeItem getFirstMatchingItem(TreeItem[] items) {
-		for (int i = 0; i < items.length; i++) {
-			if (patternFilter.isLeafMatch(treeViewer, items[i].getData())
-					&& patternFilter.isElementSelectable(items[i].getData())) {
-				return items[i];
+		for (TreeItem item : items) {
+			if (patternFilter.isLeafMatch(treeViewer, item.getData())
+					&& patternFilter.isElementSelectable(item.getData())) {
+				return item;
 			}
-			return getFirstMatchingItem(items[i].getItems());
+			return getFirstMatchingItem(item.getItems());
 		}
 		return null;
 	}
@@ -422,8 +421,7 @@ public class CommonNavigatorFilterBar extends Composite {
 					if (!narrowingDown) {
 						// collapse all
 						TreeItem[] is = treeViewer.getTree().getItems();
-						for (int i = 0; i < is.length; i++) {
-							TreeItem item = is[i];
+						for (TreeItem item : is) {
 							if (item.getExpanded()) {
 								treeViewer.setExpandedState(item.getData(), false);
 							}
@@ -624,8 +622,9 @@ public class CommonNavigatorFilterBar extends Composite {
 		GridData gridData = new GridData(SWT.FILL, SWT.BEGINNING, true, false);
 		// if the text widget supported cancel then it will have it's own
 		// integrated button. We can take all of the space.
-		if ((filterText.getStyle() & SWT.CANCEL) != 0)
+		if ((filterText.getStyle() & SWT.CANCEL) != 0) {
 			gridData.horizontalSpan = 2;
+		}
 		filterText.setLayoutData(gridData);
 	}
 

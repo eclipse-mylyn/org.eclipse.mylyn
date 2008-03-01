@@ -133,7 +133,7 @@ public class ActiveSearchQuickView {
 
 	private Composite composite, viewMenuButtonComposite;
 
-	private int shellStyle;
+	private final int shellStyle;
 
 	private Listener deactivateListener;
 
@@ -280,8 +280,9 @@ public class ActiveSearchQuickView {
 		final Tree tree = treeViewer.getTree();
 		tree.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
-				if (e.character == 0x1B) // ESC
+				if (e.character == 0x1B) {
 					dispose();
+				}
 			}
 
 			public void keyReleased(KeyEvent e) {
@@ -336,17 +337,20 @@ public class ActiveSearchQuickView {
 			@Override
 			public void mouseUp(MouseEvent e) {
 
-				if (tree.getSelectionCount() < 1)
+				if (tree.getSelectionCount() < 1) {
 					return;
+				}
 
-				if (e.button != 1)
+				if (e.button != 1) {
 					return;
+				}
 
 				if (tree.equals(e.getSource())) {
 					Object o = tree.getItem(new Point(e.x, e.y));
 					TreeItem selection = tree.getSelection()[0];
-					if (selection.equals(o))
+					if (selection.equals(o)) {
 						gotoSelectedElement();
+					}
 				}
 			}
 		});
@@ -358,8 +362,9 @@ public class ActiveSearchQuickView {
 
 			public void widgetDisposed(DisposeEvent e) {
 				close();
-				if (statusTextFont != null && !statusTextFont.isDisposed())
+				if (statusTextFont != null && !statusTextFont.isDisposed()) {
 					statusTextFont.dispose();
+				}
 
 				dialogShell = null;
 				viewer = null;
@@ -375,8 +380,9 @@ public class ActiveSearchQuickView {
 			 * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
 			 */
 			public void handleEvent(Event event) {
-				if (isDeactivateListenerActive)
+				if (isDeactivateListenerActive) {
 					dispose();
+				}
 			}
 		};
 
@@ -386,8 +392,9 @@ public class ActiveSearchQuickView {
 
 			@Override
 			public void shellActivated(ShellEvent e) {
-				if (e.widget == dialogShell && dialogShell.getShells().length == 0)
+				if (e.widget == dialogShell && dialogShell.getShells().length == 0) {
 					isDeactivateListenerActive = true;
+				}
 			}
 		});
 
@@ -513,8 +520,9 @@ public class ActiveSearchQuickView {
 
 	private IDialogSettings getDialogSettings() {
 		IDialogSettings settings = ContextUiPlugin.getDefault().getDialogSettings().getSection(sectionName);
-		if (settings == null)
+		if (settings == null) {
 			settings = ContextUiPlugin.getDefault().getDialogSettings().addNewSection(sectionName);
+		}
 
 		return settings;
 	}
@@ -525,8 +533,9 @@ public class ActiveSearchQuickView {
 		boolean controlRestoresSize = !dialogSettings.getBoolean(STORE_DISABLE_RESTORE_SIZE);
 		boolean controlRestoresLocation = !dialogSettings.getBoolean(STORE_DISABLE_RESTORE_LOCATION);
 
-		if (bounds == null)
+		if (bounds == null) {
 			return;
+		}
 
 		if (controlRestoresSize) {
 			dialogSettings.put(STORE_SIZE_WIDTH, bounds.width);
@@ -566,19 +575,22 @@ public class ActiveSearchQuickView {
 		}
 
 		// sanity check
-		if (bounds.x == -1 && bounds.y == -1 && bounds.width == -1 && bounds.height == -1)
+		if (bounds.x == -1 && bounds.y == -1 && bounds.width == -1 && bounds.height == -1) {
 			return null;
+		}
 
 		Rectangle maxBounds = null;
-		if (dialogShell != null && !dialogShell.isDisposed())
+		if (dialogShell != null && !dialogShell.isDisposed()) {
 			maxBounds = dialogShell.getDisplay().getBounds();
-		else {
+		} else {
 			// fallback
 			Display display = Display.getCurrent();
-			if (display == null)
+			if (display == null) {
 				display = Display.getDefault();
-			if (display != null && !display.isDisposed())
+			}
+			if (display != null && !display.isDisposed()) {
 				maxBounds = display.getBounds();
+			}
 		}
 
 		if (bounds.width > -1 && bounds.height > -1) {
@@ -621,14 +633,18 @@ public class ActiveSearchQuickView {
 
 		filterText.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
-				if (e.keyCode == 0x0D) // return
+				if (e.keyCode == 0x0D) {
 					gotoSelectedElement();
-				if (e.keyCode == SWT.ARROW_DOWN)
+				}
+				if (e.keyCode == SWT.ARROW_DOWN) {
 					viewer.getTree().setFocus();
-				if (e.keyCode == SWT.ARROW_UP)
+				}
+				if (e.keyCode == SWT.ARROW_UP) {
 					viewer.getTree().setFocus();
-				if (e.character == 0x1B) // ESC
+				}
+				if (e.character == 0x1B) {
 					dispose();
+				}
 			}
 
 			public void keyReleased(KeyEvent e) {
@@ -656,8 +672,9 @@ public class ActiveSearchQuickView {
 	}
 
 	private Object getSelectedElement() {
-		if (viewer == null)
+		if (viewer == null) {
 			return null;
+		}
 		return ((IStructuredSelection) viewer.getSelection()).getFirstElement();
 	}
 
@@ -729,8 +746,9 @@ public class ActiveSearchQuickView {
 		 * Creates a fill layout with a border.
 		 */
 		public BorderFillLayout(int borderSize) {
-			if (borderSize < 0)
+			if (borderSize < 0) {
 				throw new IllegalArgumentException();
+			}
 			fBorderSize = borderSize;
 		}
 
@@ -748,8 +766,8 @@ public class ActiveSearchQuickView {
 			Point minSize = new Point(0, 0);
 
 			if (children != null) {
-				for (int i = 0; i < children.length; i++) {
-					Point size = children[i].computeSize(wHint, hHint, flushCache);
+				for (Control element : children) {
+					Point size = element.computeSize(wHint, hHint, flushCache);
 					minSize.x = Math.max(minSize.x, size.x);
 					minSize.y = Math.max(minSize.y, size.y);
 				}
@@ -768,8 +786,7 @@ public class ActiveSearchQuickView {
 			Point minSize = new Point(composite.getClientArea().width, composite.getClientArea().height);
 
 			if (children != null) {
-				for (int i = 0; i < children.length; i++) {
-					Control child = children[i];
+				for (Control child : children) {
 					child.setSize(minSize.x - fBorderSize * 2, minSize.y - fBorderSize * 2);
 					child.setLocation(fBorderSize, fBorderSize);
 				}
@@ -791,8 +808,9 @@ public class ActiveSearchQuickView {
 	public void dispose() {
 		filterText = null;
 		if (dialogShell != null) {
-			if (!dialogShell.isDisposed())
+			if (!dialogShell.isDisposed()) {
 				dialogShell.dispose();
+			}
 			dialogShell = null;
 			parentShell = null;
 			viewer = null;

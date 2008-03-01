@@ -33,9 +33,9 @@ import org.eclipse.ui.IViewPart;
  */
 public class FocusTaskListAction extends AbstractFocusViewAction implements IFilteredTreeListener {
 
-	private TaskListInterestFilter taskListInterestFilter = new TaskListInterestFilter();
+	private final TaskListInterestFilter taskListInterestFilter = new TaskListInterestFilter();
 
-	private TaskListInterestSorter taskListInterestSorter = new TaskListInterestSorter();
+	private final TaskListInterestSorter taskListInterestSorter = new TaskListInterestSorter();
 
 	private Set<AbstractTaskListFilter> previousFilters = new HashSet<AbstractTaskListFilter>();
 
@@ -52,7 +52,7 @@ public class FocusTaskListAction extends AbstractFocusViewAction implements IFil
 		if (part instanceof TaskListView) {
 			((TaskListView) part).getFilteredTree().getRefreshPolicy().addListener(this);
 		}
-		
+
 		update();
 		((TaskListView) part).getFilteredTree().setShowProgress(super.isChecked());
 	}

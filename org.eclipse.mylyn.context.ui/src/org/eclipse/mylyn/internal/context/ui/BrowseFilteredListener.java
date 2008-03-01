@@ -36,7 +36,7 @@ import org.eclipse.ui.progress.UIJob;
  */
 public class BrowseFilteredListener implements MouseListener, KeyListener {
 
-	private StructuredViewer viewer;
+	private final StructuredViewer viewer;
 
 	public BrowseFilteredListener(StructuredViewer viewer) {
 		this.viewer = viewer;
@@ -139,7 +139,7 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 								viewer.refresh(unfiltered);
 								return Status.OK_STATUS;
 							}
-						}.schedule(event.display.getDoubleClickTime() + 50);	
+						}.schedule(event.display.getDoubleClickTime() + 50);
 					}
 				}
 			}
@@ -171,9 +171,10 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 
 	private InterestFilter getInterestFilter(StructuredViewer structuredViewer) {
 		ViewerFilter[] filters = structuredViewer.getFilters();
-		for (int i = 0; i < filters.length; i++) {
-			if (filters[i] instanceof InterestFilter)
-				return (InterestFilter) filters[i];
+		for (ViewerFilter filter : filters) {
+			if (filter instanceof InterestFilter) {
+				return (InterestFilter) filter;
+			}
 		}
 		return null;
 	}

@@ -25,7 +25,7 @@ import org.eclipse.mylyn.internal.resources.ui.ResourcesUiPreferenceInitializer;
  */
 public class ResourceChangeMonitorTest extends TestCase {
 
-	private ResourceChangeMonitor changeMonitor = new ResourceChangeMonitor();
+	private final ResourceChangeMonitor changeMonitor = new ResourceChangeMonitor();
 
 	public void testForcedExclusionPatterns() {
 		String pattern = "file:/foo";
@@ -33,20 +33,20 @@ public class ResourceChangeMonitorTest extends TestCase {
 		assertTrue(ResourcesUiPreferenceInitializer.getForcedExcludedResourcePatterns().contains(pattern));
 		assertFalse(ResourcesUiPreferenceInitializer.getExcludedResourcePatterns().contains(pattern));
 	}
-	
+
 	public void testFileUriExclusionPattern() throws URISyntaxException {
 		URI uri = new URI("file:/C:");
 		assertTrue(changeMonitor.isUriExcluded(uri.toString(), "file:/C:"));
-		
+
 		uri = new URI("file:/C:/foo/bar");
 		assertTrue(changeMonitor.isUriExcluded(uri.toString(), "file:/C:"));
 	}
-	
+
 	public void testExclusionPattern() {
 		Set<String> patterns = new HashSet<String>();
 		patterns.add(".*");
 		patterns.add("target");
-		
+
 		IPath path1 = new Path(".foo");
 		assertTrue(changeMonitor.isExcluded(path1, null, patterns));
 

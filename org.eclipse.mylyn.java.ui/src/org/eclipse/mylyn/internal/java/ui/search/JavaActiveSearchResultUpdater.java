@@ -33,7 +33,7 @@ import org.eclipse.search.ui.text.Match;
 @SuppressWarnings("unchecked")
 public class JavaActiveSearchResultUpdater implements IElementChangedListener, IQueryListener {
 
-	private JavaSearchResult fResult;
+	private final JavaSearchResult fResult;
 
 	private static final int REMOVED_FLAGS = IJavaElementDelta.F_MOVED_TO | IJavaElementDelta.F_REMOVED_FROM_CLASSPATH
 			| IJavaElementDelta.F_CLOSED | IJavaElementDelta.F_CONTENT;
@@ -51,31 +51,33 @@ public class JavaActiveSearchResultUpdater implements IElementChangedListener, I
 		Set removedElements = new HashSet();
 		Set potentiallyRemovedElements = new HashSet();
 		collectRemoved(potentiallyRemovedElements, removedElements, delta);
-		if (removedElements.size() > 0)
+		if (removedElements.size() > 0) {
 			handleRemoved(removedElements);
-		if (potentiallyRemovedElements.size() > 0)
+		}
+		if (potentiallyRemovedElements.size() > 0) {
 			handleRemoved(potentiallyRemovedElements);
+		}
 	}
 
 	private void handleRemoved(Set removedElements) {
 		Object[] elements = fResult.getElements();
-		for (int i = 0; i < elements.length; i++) {
-			if (isContainedInRemoved(removedElements, elements[i])) {
-				if (elements[i] instanceof IJavaElement) {
-					IJavaElement je = (IJavaElement) elements[i];
+		for (Object element : elements) {
+			if (isContainedInRemoved(removedElements, element)) {
+				if (element instanceof IJavaElement) {
+					IJavaElement je = (IJavaElement) element;
 					if (!je.exists()) {
-						Match[] matches = fResult.getMatches(elements[i]);
-						for (int j = 0; j < matches.length; j++) {
-							fResult.removeMatch(matches[j]);
+						Match[] matches = fResult.getMatches(element);
+						for (Match matche : matches) {
+							fResult.removeMatch(matche);
 						}
 						// XXX remove edge and element
 					}
-				} else if (elements[i] instanceof IResource) {
-					IResource resource = (IResource) elements[i];
+				} else if (element instanceof IResource) {
+					IResource resource = (IResource) element;
 					if (!resource.exists()) {
-						Match[] matches = fResult.getMatches(elements[i]);
-						for (int j = 0; j < matches.length; j++) {
-							fResult.removeMatch(matches[j]);
+						Match[] matches = fResult.getMatches(element);
+						for (Match matche : matches) {
+							fResult.removeMatch(matche);
 						}
 						// XXX remove edge and element
 					}
@@ -87,44 +89,47 @@ public class JavaActiveSearchResultUpdater implements IElementChangedListener, I
 
 	private boolean isContainedInRemoved(Set removedElements, Object object) {
 		for (Iterator elements = removedElements.iterator(); elements.hasNext();) {
-			if (isParentOf(elements.next(), object))
+			if (isParentOf(elements.next(), object)) {
 				return true;
+			}
 		}
 		return false;
 	}
 
 	private boolean isParentOf(Object ancestor, Object descendant) {
-		while (descendant != null && !ancestor.equals(descendant))
+		while (descendant != null && !ancestor.equals(descendant)) {
 			descendant = getParent(descendant);
+		}
 		return descendant != null;
 	}
 
 	private Object getParent(Object object) {
-		if (object instanceof IJavaElement)
+		if (object instanceof IJavaElement) {
 			return ((IJavaElement) object).getParent();
-		else if (object instanceof IResource)
+		} else if (object instanceof IResource) {
 			return ((IResource) object).getParent();
+		}
 		return null;
 	}
 
 	private void collectRemoved(Set potentiallyRemovedSet, Set removedElements, IJavaElementDelta delta) {
-		if (delta.getKind() == IJavaElementDelta.REMOVED)
+		if (delta.getKind() == IJavaElementDelta.REMOVED) {
 			removedElements.add(delta.getElement());
-		else if (delta.getKind() == IJavaElementDelta.CHANGED) {
+		} else if (delta.getKind() == IJavaElementDelta.CHANGED) {
 			int flags = delta.getFlags();
 			if ((flags & REMOVED_FLAGS) != 0) {
 				potentiallyRemovedSet.add(delta.getElement());
 			} else {
 				IJavaElementDelta[] childDeltas = delta.getAffectedChildren();
-				for (int i = 0; i < childDeltas.length; i++) {
-					collectRemoved(potentiallyRemovedSet, removedElements, childDeltas[i]);
+				for (IJavaElementDelta childDelta : childDeltas) {
+					collectRemoved(potentiallyRemovedSet, removedElements, childDelta);
 				}
 			}
 		}
 		IResourceDelta[] resourceDeltas = delta.getResourceDeltas();
 		if (resourceDeltas != null) {
-			for (int i = 0; i < resourceDeltas.length; i++) {
-				collectRemovals(removedElements, resourceDeltas[i]);
+			for (IResourceDelta resourceDelta : resourceDeltas) {
+				collectRemovals(removedElements, resourceDelta);
 			}
 		}
 	}
@@ -141,12 +146,12 @@ public class JavaActiveSearchResultUpdater implements IElementChangedListener, I
 	}
 
 	private void collectRemovals(Set removals, IResourceDelta delta) {
-		if (delta.getKind() == IResourceDelta.REMOVED)
+		if (delta.getKind() == IResourceDelta.REMOVED) {
 			removals.add(delta.getResource());
-		else {
+		} else {
 			IResourceDelta[] children = delta.getAffectedChildren();
-			for (int i = 0; i < children.length; i++) {
-				collectRemovals(removals, children[i]);
+			for (IResourceDelta element : children) {
+				collectRemovals(removals, element);
 			}
 		}
 	}

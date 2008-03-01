@@ -89,8 +89,9 @@ public class TestJavaProject {
 	}
 
 	public IPackageFragment createPackage(String name) throws CoreException {
-		if (sourceFolder == null)
+		if (sourceFolder == null) {
 			sourceFolder = createSourceFolder();
+		}
 		return sourceFolder.createPackageFragment(name, false, null);
 	}
 

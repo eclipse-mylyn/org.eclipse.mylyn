@@ -39,8 +39,8 @@ public abstract class AbstractContextStructureBridge {
 	public abstract String getHandleIdentifier(Object object);
 
 	/**
-	 * @return 	The handle identifier of the element that is the parent of this element in the containment
-	 * 			hierarchy, or null if no such parent exists.
+	 * @return The handle identifier of the element that is the parent of this element in the containment hierarchy, or
+	 *         null if no such parent exists.
 	 */
 	public abstract String getParentHandle(String handle);
 

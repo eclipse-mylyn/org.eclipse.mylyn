@@ -33,8 +33,8 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 
 	private boolean enabled = true;
 
-	public ResourceChangeMonitor() {	
-	}	
+	public ResourceChangeMonitor() {
+	}
 
 	public void resourceChanged(IResourceChangeEvent event) {
 		if (!enabled || !ContextCorePlugin.getContextManager().isContextActive()) {
@@ -51,8 +51,8 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 		IResourceDeltaVisitor visitor = new IResourceDeltaVisitor() {
 			public boolean visit(IResourceDelta delta) {
 				IResourceDelta[] added = delta.getAffectedChildren(IResourceDelta.ADDED);
-				for (int i = 0; i < added.length; i++) {
-					IResource resource = added[i].getResource();
+				for (IResourceDelta element : added) {
+					IResource resource = element.getResource();
 					if ((resource instanceof IFile || resource instanceof IFolder)
 							&& !isExcluded(resource.getProjectRelativePath(), resource, excludedPatterns)) {
 						addedResources.add(resource);
@@ -60,8 +60,8 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 				}
 //				int changeMask = IResourceDelta.CONTENT | IResourceDelta.REMOVED | IResourceDelta.MOVED_TO | IResourceDelta.MOVED_FROM;
 				IResourceDelta[] changed = delta.getAffectedChildren(IResourceDelta.CHANGED | IResourceDelta.REMOVED);
-				for (int i = 0; i < changed.length; i++) {
-					IResource resource = changed[i].getResource();
+				for (IResourceDelta element : changed) {
+					IResource resource = element.getResource();
 					if (resource instanceof IFile) {
 						changedResources.add(resource);
 					}
@@ -84,7 +84,8 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 	/**
 	 * Public for testing.
 	 * 
-	 * @param resource can be null
+	 * @param resource
+	 *            can be null
 	 */
 	public boolean isExcluded(IPath path, IResource resource, Set<String> excludedPatterns) {
 		boolean excluded = false;
@@ -97,7 +98,7 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 					excluded |= segment.matches(pattern.replaceAll("\\.", "\\\\.").replaceAll("\\*", ".*"));
 				}
 			}
-			
+
 			if (excluded) {
 				break;
 			}

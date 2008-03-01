@@ -106,8 +106,9 @@ public class XmlNodeHelper {
 	}
 
 	public String getFilename() {
-		if (filename != null)
+		if (filename != null) {
 			filename = filename.trim();
+		}
 		return filename;
 	}
 

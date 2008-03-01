@@ -19,7 +19,7 @@ import org.osgi.framework.BundleContext;
 public class AntUiBridgePlugin extends AbstractContextUiPlugin {
 
 	public static final String ID_PLUGIN = "org.eclipse.mylyn.ide.ant";
-	
+
 	private AntEditingMonitor antEditingMonitor;
 
 	public AntUiBridgePlugin() {
@@ -41,7 +41,7 @@ public class AntUiBridgePlugin extends AbstractContextUiPlugin {
 	protected void lazyStop() {
 		MonitorUiPlugin.getDefault().getSelectionMonitors().remove(antEditingMonitor);
 	}
-	
+
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);

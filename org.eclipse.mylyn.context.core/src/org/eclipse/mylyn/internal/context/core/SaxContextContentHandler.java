@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright (c) 2004, 2007 Mylyn project committers and others.
  * All rights reserved. This program and the accompanying materials
@@ -39,7 +38,7 @@ public class SaxContextContentHandler extends DefaultHandler {
 	private InteractionContext context;
 
 	private final InteractionContextScaling contextScaling;
-	
+
 	private final String contextHandleIdentifier;
 
 	static final String ATTRIBUTE_INTERACTION_EVENT = "InteractionEvent";
@@ -71,7 +70,8 @@ public class SaxContextContentHandler extends DefaultHandler {
 				InteractionEvent ie = createEventFromAttributes(attributes);
 				context.parseEvent(ie);
 			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID, "Ignored unexpected activity event", e));
+				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID,
+						"Ignored unexpected activity event", e));
 			}
 			break;
 		}
@@ -89,7 +89,8 @@ public class SaxContextContentHandler extends DefaultHandler {
 		String structureHandle = XmlStringConverter.convertXmlToString(attributes.getValue(InteractionContextExternalizer.ATR_STRUCTURE_HANDLE));
 		String structureKind = XmlStringConverter.convertXmlToString(attributes.getValue(InteractionContextExternalizer.ATR_STRUCTURE_KIND));
 
-		SimpleDateFormat dateFormat = new SimpleDateFormat(InteractionContextExternalizer.DATE_FORMAT_STRING, Locale.ENGLISH);
+		SimpleDateFormat dateFormat = new SimpleDateFormat(InteractionContextExternalizer.DATE_FORMAT_STRING,
+				Locale.ENGLISH);
 		Date dStartDate = dateFormat.parse(startDate);
 		Date dEndDate = dateFormat.parse(endDate);
 		float iInterest = Float.parseFloat(interest);

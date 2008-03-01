@@ -33,12 +33,12 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
  */
 public class FocusBrowsingPerspectiveAction extends AbstractFocusViewAction implements IWorkbenchWindowActionDelegate {
 
-	private String packageViewerWrapperClassName = "org.eclipse.jdt.internal.ui.browsing.PackageViewerWrapper";
+	private final String packageViewerWrapperClassName = "org.eclipse.jdt.internal.ui.browsing.PackageViewerWrapper";
 
-	private String[] viewNames = { "org.eclipse.jdt.ui.MembersView", "org.eclipse.jdt.ui.PackagesView",
+	private final String[] viewNames = { "org.eclipse.jdt.ui.MembersView", "org.eclipse.jdt.ui.PackagesView",
 			"org.eclipse.jdt.ui.TypesView" };
 
-	private String[] classNames = { "org.eclipse.jdt.internal.ui.browsing.MembersView",
+	private final String[] classNames = { "org.eclipse.jdt.internal.ui.browsing.MembersView",
 			"org.eclipse.jdt.internal.ui.browsing.PackagesView", "org.eclipse.jdt.internal.ui.browsing.TypesView" };
 
 	private IWorkbenchWindow initWindow;
@@ -59,8 +59,9 @@ public class FocusBrowsingPerspectiveAction extends AbstractFocusViewAction impl
 		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
 		for (int i = 0; i < viewNames.length; i++) {
 			StructuredViewer viewer = getBrowsingViewerFromActivePerspective(viewNames[i], classNames[i]);
-			if (viewer != null)
+			if (viewer != null) {
 				viewers.add(viewer);
+			}
 		}
 		return viewers;
 	}
@@ -70,8 +71,9 @@ public class FocusBrowsingPerspectiveAction extends AbstractFocusViewAction impl
 	 */
 	private StructuredViewer getBrowsingViewerFromActivePerspective(String id, String className) {
 		IWorkbenchPage activePage = initWindow.getActivePage();
-		if (activePage == null)
+		if (activePage == null) {
 			return null;
+		}
 		try {
 			IViewPart viewPart = activePage.findView(id);
 			Class<?> sub = Class.forName(className);
@@ -101,7 +103,8 @@ public class FocusBrowsingPerspectiveAction extends AbstractFocusViewAction impl
 							}
 						}
 					} catch (Exception e) {
-						StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not get \"" + id + "\" view tree viewer", e));
+						StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not get \""
+								+ id + "\" view tree viewer", e));
 						return null;
 					}
 				} else {
@@ -110,7 +113,8 @@ public class FocusBrowsingPerspectiveAction extends AbstractFocusViewAction impl
 
 			}
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not get \"" + id + "\" view tree viewer", e));
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not get \"" + id
+					+ "\" view tree viewer", e));
 		}
 		return null;
 	}

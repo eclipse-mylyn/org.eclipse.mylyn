@@ -20,6 +20,7 @@ import org.eclipse.mylyn.internal.java.ui.JavaUiUtil;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
  * @author Mik Kersten
@@ -32,12 +33,12 @@ public class RecommendedPreferencesWizard extends Wizard implements INewWizard {
 
 	private static final String DEFAULT_FOLDING_PROVIDER = "org.eclipse.jdt.ui.text.defaultFoldingProvider";
 
-	private IPreferenceStore javaPrefs = JavaPlugin.getDefault().getPreferenceStore();
+	private final IPreferenceStore javaPrefs = JavaPlugin.getDefault().getPreferenceStore();
 
 	public void init() {
 		setDefaultPageImageDescriptor(ContextUiImages.MYLYN);
 		setWindowTitle("Recommended Preferences");
-		super.setDefaultPageImageDescriptor(JavaUiBridgePlugin.imageDescriptorFromPlugin(JavaUiBridgePlugin.PLUGIN_ID,
+		super.setDefaultPageImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(JavaUiBridgePlugin.PLUGIN_ID,
 				"icons/wizban/banner-prefs.gif"));
 		preferencePage = new RecommendedPreferencesWizardPage("Mylyn Java Preference Settings");
 	}

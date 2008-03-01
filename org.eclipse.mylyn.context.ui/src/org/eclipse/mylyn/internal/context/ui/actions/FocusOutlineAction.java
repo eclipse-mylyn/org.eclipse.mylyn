@@ -16,9 +16,9 @@ import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.AbstractFocusViewAction;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
-import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.InterestFilter;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
@@ -82,12 +82,13 @@ public class FocusOutlineAction extends AbstractFocusViewAction {
 			IWorkbenchPage page = w.getActivePage();
 			if (page != null) {
 				IEditorPart[] parts = page.getEditors();
-				for (int i = 0; i < parts.length; i++) {
-					AbstractContextUiBridge bridge = ContextUiPlugin.getDefault().getUiBridgeForEditor(parts[i]);
-					List<TreeViewer> outlineViewers = bridge.getContentOutlineViewers(parts[i]);
+				for (IEditorPart part : parts) {
+					AbstractContextUiBridge bridge = ContextUiPlugin.getDefault().getUiBridgeForEditor(part);
+					List<TreeViewer> outlineViewers = bridge.getContentOutlineViewers(part);
 					for (TreeViewer viewer : outlineViewers) {
-						if (viewer != null && !viewers.contains(viewer))
+						if (viewer != null && !viewers.contains(viewer)) {
 							viewers.add(viewer);
+						}
 					}
 				}
 			}

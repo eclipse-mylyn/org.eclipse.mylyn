@@ -8,8 +8,8 @@
 
 package org.eclipse.mylyn.internal.team.ui;
 
-import org.eclipse.mylyn.tasks.core.ILinkedTaskInfo;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ILinkedTaskInfo;
 import org.eclipse.team.internal.core.subscribers.ChangeSet;
 
 /**

@@ -68,9 +68,9 @@ public class ActiveSearchView extends ViewPart {
 
 	private TreeViewer viewer;
 
-	private List<ToggleRelationshipProviderAction> relationshipProviderActions = new ArrayList<ToggleRelationshipProviderAction>();
+	private final List<ToggleRelationshipProviderAction> relationshipProviderActions = new ArrayList<ToggleRelationshipProviderAction>();
 
-	private DelegatingContextLabelProvider labelProvider = new DelegatingContextLabelProvider();
+	private final DelegatingContextLabelProvider labelProvider = new DelegatingContextLabelProvider();
 
 	public void refreshRelatedElements() {
 		try {
@@ -80,7 +80,8 @@ public class ActiveSearchView extends ViewPart {
 				updateDegreesOfSeparation(providerList, provider.getCurrentDegreeOfSeparation());
 			}
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not refresh related elements", t));
+			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
+					"Could not refresh related elements", t));
 		}
 	}
 
@@ -130,20 +131,23 @@ public class ActiveSearchView extends ViewPart {
 
 		public void contextPreActivated(IInteractionContext context) {
 			// ignore
-			
+
 		}
 
 	};
 
 	public static ActiveSearchView getFromActivePerspective() {
-		if (PlatformUI.getWorkbench() == null)
+		if (PlatformUI.getWorkbench() == null) {
 			return null;
+		}
 		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		if (activePage == null)
+		if (activePage == null) {
 			return null;
+		}
 		IViewPart view = activePage.findView(ID);
-		if (view instanceof ActiveSearchView)
+		if (view instanceof ActiveSearchView) {
 			return (ActiveSearchView) view;
+		}
 		return null;
 	}
 
@@ -194,7 +198,8 @@ public class ActiveSearchView extends ViewPart {
 					try {
 						internalRefresh(node, updateLabels);
 					} catch (Throwable t) {
-						StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Refresh of active search failed", t));
+						StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
+								"Refresh of active search failed", t));
 					}
 				}
 			});
@@ -204,7 +209,8 @@ public class ActiveSearchView extends ViewPart {
 					try {
 						internalRefresh(node, updateLabels);
 					} catch (Throwable t) {
-						StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Refresh of active search failed", t));
+						StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
+								"Refresh of active search failed", t));
 					}
 				}
 			});
@@ -234,8 +240,9 @@ public class ActiveSearchView extends ViewPart {
 		boolean contains = false;
 		for (int i = 0; i < tree.getItems().length; i++) {
 			TreeItem item = tree.getItems()[i];
-			if (object.equals(item.getData()))
+			if (object.equals(item.getData())) {
 				contains = true;
+			}
 		}
 		return contains;
 	}
@@ -335,7 +342,8 @@ public class ActiveSearchView extends ViewPart {
 			Set<AbstractRelationProvider> providers = ContextCorePlugin.getDefault().getRelationProviders(
 					uiBridge.getContentType());
 			if (providers != null && providers.size() > 0) {
-				ToggleRelationshipProviderAction action = new ToggleRelationshipProviderAction(this, providers, uiBridge);
+				ToggleRelationshipProviderAction action = new ToggleRelationshipProviderAction(this, providers,
+						uiBridge);
 				relationshipProviderActions.add(action);
 				manager.add(action);
 			}

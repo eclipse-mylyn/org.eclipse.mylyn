@@ -455,8 +455,8 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 
 		assertEquals(0, ContextCorePlugin.getContextManager().getActiveContext().getAllElements().size());
 		assertEquals(0, context.getAllElements().size());
-		ContextCorePlugin.getContextManager().processInteractionEvent(type1, InteractionEvent.Kind.SELECTION, MOCK_ORIGIN,
-				context);
+		ContextCorePlugin.getContextManager().processInteractionEvent(type1, InteractionEvent.Kind.SELECTION,
+				MOCK_ORIGIN, context);
 		assertEquals(6, context.getAllElements().size());
 		assertEquals(0, ContextCorePlugin.getContextManager().getActiveContext().getAllElements().size());
 		ContextCorePlugin.getContextManager().removeGlobalContext(context);
@@ -469,8 +469,8 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 
 		assertEquals(0, ContextCorePlugin.getContextManager().getActiveContext().getAllElements().size());
 		assertEquals(0, context.getAllElements().size());
-		ContextCorePlugin.getContextManager().processInteractionEvent(new String("non existent"), InteractionEvent.Kind.SELECTION, MOCK_ORIGIN,
-				context);
+		ContextCorePlugin.getContextManager().processInteractionEvent(new String("non existent"),
+				InteractionEvent.Kind.SELECTION, MOCK_ORIGIN, context);
 		assertEquals(0, context.getAllElements().size());
 		assertEquals(0, ContextCorePlugin.getContextManager().getActiveContext().getAllElements().size());
 		ContextCorePlugin.getContextManager().removeGlobalContext(context);

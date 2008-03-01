@@ -31,14 +31,14 @@ public interface IInteractionContext {
 	public abstract List<InteractionEvent> getInteractionHistory();
 
 	public List<IInteractionElement> getInteresting();
-	
+
 	/**
 	 * @since 2.2
 	 * 
 	 * API-3.0: this might get changed or removed
 	 */
 	public List<IInteractionElement> getLandmarks();
-	
+
 	public abstract IInteractionElement get(String element);
 
 	public abstract IInteractionElement getActiveNode();
@@ -48,9 +48,9 @@ public interface IInteractionContext {
 	public abstract void updateElementHandle(IInteractionElement element, String newHandle);
 
 	public abstract List<IInteractionElement> getAllElements();
-	
+
 	public InteractionContextScaling getScaling();
-	
+
 	/**
 	 * @since 2.2
 	 * 

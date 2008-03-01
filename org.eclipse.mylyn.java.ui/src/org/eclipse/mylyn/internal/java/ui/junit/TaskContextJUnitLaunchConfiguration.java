@@ -34,8 +34,8 @@ public class TaskContextJUnitLaunchConfiguration extends JUnitLaunchConfiguratio
 		if (contextTestCases.isEmpty()) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
-							"Context Test Suite", "No test types found in the active task context.");	
+					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Context Test Suite",
+							"No test types found in the active task context.");
 				}
 			});
 		}

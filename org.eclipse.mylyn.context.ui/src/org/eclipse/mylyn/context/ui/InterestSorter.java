@@ -10,10 +10,10 @@ package org.eclipse.mylyn.context.ui;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylyn.context.core.InterestComparator;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.context.core.InterestComparator;
 
 /**
  * Sorts view elements by degree-of-interest.

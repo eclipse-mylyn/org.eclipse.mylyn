@@ -288,16 +288,18 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 	}
 
 	public List<?> search(int dos, IInteractionElement node) {
-		if (node == null)
+		if (node == null) {
 			return null;
+		}
 
 		// test with each of the sepatations
 		JavaReferencesProvider prov = new JavaReferencesProvider();
 
 		TestActiveSearchListener l = new TestActiveSearchListener(prov);
 		IActiveSearchOperation o = prov.getSearchOperation(node, IJavaSearchConstants.REFERENCES, dos);
-		if (o == null)
+		if (o == null) {
 			return null;
+		}
 
 		SearchPluginTestHelper.search(o, l);
 		return l.getResults();

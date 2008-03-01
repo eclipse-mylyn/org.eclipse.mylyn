@@ -47,8 +47,9 @@ public class ContextNodeOpenListener implements IOpenListener, IDoubleClickListe
 			String handle = bridge.getHandleIdentifier(object);
 			node = ContextCorePlugin.getContextManager().getElement(handle);
 		}
-		if (node != null)
+		if (node != null) {
 			ContextUiPlugin.getDefault().getUiBridge(node.getContentType()).open(node);
+		}
 	}
 
 	public void doubleClick(DoubleClickEvent event) {

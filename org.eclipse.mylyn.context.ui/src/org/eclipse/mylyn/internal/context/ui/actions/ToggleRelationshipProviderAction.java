@@ -37,13 +37,14 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 
 	public static final String ID = "org.eclipse.mylyn.ui.actions.active.search.toggle";
 
-	private ActiveSearchView view;
-	
-	private Set<AbstractRelationProvider> providers;
+	private final ActiveSearchView view;
+
+	private final Set<AbstractRelationProvider> providers;
 
 	private Menu dropDownMenu = null;
 
-	public ToggleRelationshipProviderAction(ActiveSearchView view, Set<AbstractRelationProvider> providers, AbstractContextUiBridge uiBridge) {
+	public ToggleRelationshipProviderAction(ActiveSearchView view, Set<AbstractRelationProvider> providers,
+			AbstractContextUiBridge uiBridge) {
 		super();
 		this.providers = providers;
 		this.view = view;
@@ -118,7 +119,8 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 						ActiveSearchView.getFromActivePerspective().updateDegreesOfSeparation(providers,
 								degreeOfSeparation);
 					} catch (NumberFormatException e) {
-						StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Invalid degree of separation", e));
+						StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
+								"Invalid degree of separation", e));
 					}
 				}
 			};

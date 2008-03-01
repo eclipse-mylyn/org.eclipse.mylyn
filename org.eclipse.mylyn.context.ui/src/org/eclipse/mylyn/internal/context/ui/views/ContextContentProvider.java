@@ -17,10 +17,10 @@ import java.util.Map;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.context.core.IInteractionRelation;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.context.core.IInteractionRelation;
 import org.eclipse.mylyn.internal.context.core.InteractionContextRelation;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
@@ -38,7 +38,7 @@ public class ContextContentProvider implements IStructuredContentProvider, ITree
 
 	private Shell shell = null;
 
-	private boolean landmarkOnlyMode;
+	private final boolean landmarkOnlyMode;
 
 	public ContextContentProvider(Tree tree, IViewSite site, boolean landmarkOnlyMode) {
 		this.tree = tree;
@@ -86,8 +86,9 @@ public class ContextContentProvider implements IStructuredContentProvider, ITree
 				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
 						node.getContentType());
 				Object object = bridge.getObjectForHandle(node.getHandleIdentifier());
-				if (object != null)
+				if (object != null) {
 					resolvedNodes.add(object);
+				}
 			}
 			return resolvedNodes.toArray();
 		}
@@ -109,8 +110,9 @@ public class ContextContentProvider implements IStructuredContentProvider, ITree
 	}
 
 	public Object[] getChildren(Object parent) {
-		if (parent == null)
+		if (parent == null) {
 			return new Object[0];
+		}
 		if (parent instanceof InteractionContextRelation) {
 			IInteractionRelation edge = (IInteractionRelation) parent;
 			IInteractionElement source = ContextCorePlugin.getContextManager().getElement(
@@ -136,10 +138,10 @@ public class ContextContentProvider implements IStructuredContentProvider, ITree
 	private boolean isRootItem(Object object) {
 		boolean isRootItem = false;
 		TreeItem[] items = tree.getItems();
-		for (int i = 0; i < items.length; i++) {
-			TreeItem item = items[i];
-			if (object.equals(item.getData()))
+		for (TreeItem item : items) {
+			if (object.equals(item.getData())) {
 				isRootItem = true;
+			}
 		}
 		return isRootItem;
 	}
@@ -153,8 +155,9 @@ public class ContextContentProvider implements IStructuredContentProvider, ITree
 				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
 						target.getContentType());
 				Object object = bridge.getObjectForHandle(target.getHandleIdentifier());
-				if (object != null)
+				if (object != null) {
 					targets.add(object);
+				}
 			}
 		}
 

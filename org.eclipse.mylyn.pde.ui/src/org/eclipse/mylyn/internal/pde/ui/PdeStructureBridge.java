@@ -112,8 +112,9 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 	 */
 	@Override
 	public Object getObjectForHandle(String handle) {
-		if (handle == null)
+		if (handle == null) {
 			return null;
+		}
 		int first = handle.indexOf(";");
 		String filename = "";
 		if (first == -1) {
@@ -217,8 +218,9 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 		} else if (object instanceof File) {
 			// get the handle for the file if it is plugin.xml
 			File file = (File) object;
-			if (file.getFullPath().toString().endsWith("plugin.xml"))
+			if (file.getFullPath().toString().endsWith("plugin.xml")) {
 				return file.getFullPath().toString();
+			}
 		}
 		return null;
 	}
@@ -228,14 +230,16 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 		if (object instanceof PluginObjectNode) {
 			PluginObjectNode node = (PluginObjectNode) object;
 			String name = node.getXMLAttributeValue("name");
-			if (name == null)
+			if (name == null) {
 				name = node.getXMLTagName();
+			}
 			name = node.getModel().getUnderlyingResource().getName() + ": " + name;
 			return name;
 		} else if (object instanceof File) {
 			File file = (File) object;
-			if (file.getFullPath().toString().endsWith("plugin.xml"))
+			if (file.getFullPath().toString().endsWith("plugin.xml")) {
 				return "plugin.xml";
+			}
 		}
 		return "";
 	}
@@ -259,12 +263,14 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 				|| object instanceof PDEFormPage) {
 			return true;
 		} else if (object instanceof XmlNodeHelper) {
-			if (((XmlNodeHelper) object).getFilename().endsWith("plugin.xml"))
+			if (((XmlNodeHelper) object).getFilename().endsWith("plugin.xml")) {
 				return true;
+			}
 		} else if (object instanceof File) {
 			File file = (File) object;
-			if (file.getFullPath().toString().endsWith("plugin.xml"))
+			if (file.getFullPath().toString().endsWith("plugin.xml")) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -310,7 +316,8 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 				}
 				return null;
 			} catch (Throwable t) {
-				StatusHandler.log(new Status(IStatus.WARNING, PdeUiBridgePlugin.ID_PLUGIN, "Could not find element for: " + object));
+				StatusHandler.log(new Status(IStatus.WARNING, PdeUiBridgePlugin.ID_PLUGIN,
+						"Could not find element for: " + object));
 				return null;
 			}
 		} else if (object instanceof IFile) {
@@ -325,7 +332,8 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 					return handle;
 				}
 			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.ERROR, PdeUiBridgePlugin.ID_PLUGIN, "Unable to get handle for offset in object", e));
+				StatusHandler.log(new Status(IStatus.ERROR, PdeUiBridgePlugin.ID_PLUGIN,
+						"Unable to get handle for offset in object", e));
 			}
 		}
 		return null;

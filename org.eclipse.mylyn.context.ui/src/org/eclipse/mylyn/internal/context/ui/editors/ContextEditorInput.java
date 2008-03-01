@@ -21,7 +21,7 @@ public class ContextEditorInput implements IEditorInput {
 
 	private static final String LABEL = "Task Context Editor";
 
-	private AbstractTask task;
+	private final AbstractTask task;
 
 	public ContextEditorInput(AbstractTask task) {
 		this.task = task;

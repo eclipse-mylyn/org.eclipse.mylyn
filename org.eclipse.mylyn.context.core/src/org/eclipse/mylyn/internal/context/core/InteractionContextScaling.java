@@ -22,44 +22,44 @@ public class InteractionContextScaling {
 
 	private static final float DEFAULT_INTERESTING = 0f;
 
-	private static final float DEFAULT_EVENT = 1f;	
+	private static final float DEFAULT_EVENT = 1f;
 
 	private static final float DEFAULT_EVENT_EDIT = .7f;
-	
+
 	private static final float DEFAULT_DECAY = .017f;
 
 	private static final float DEFAULT_LANDMARK = 30f;
-	
+
 	private static final float DEFAULT_FORCED_LANDMARK = 7 * DEFAULT_LANDMARK;
-	
-	private Map<InteractionEvent.Kind, Float> interactionScalingFactors = new HashMap<InteractionEvent.Kind, Float>();
-	
+
+	private final Map<InteractionEvent.Kind, Float> interactionScalingFactors = new HashMap<InteractionEvent.Kind, Float>();
+
 	private float interesting = DEFAULT_INTERESTING;
-	
+
 	private float landmark = DEFAULT_LANDMARK;
 
 	private float forcedLandmark = DEFAULT_FORCED_LANDMARK;
-	
+
 	private float decay = DEFAULT_DECAY;
 
 	@Deprecated
-	private float errorInterest = .3f;
+	private final float errorInterest = .3f;
 
 	@Deprecated
-	private int maxNumInterestingErrors = 20;
+	private final int maxNumInterestingErrors = 20;
 
 	public InteractionContextScaling() {
-		interactionScalingFactors.put(InteractionEvent.Kind.EDIT, DEFAULT_EVENT_EDIT);		
+		interactionScalingFactors.put(InteractionEvent.Kind.EDIT, DEFAULT_EVENT_EDIT);
 	}
 
 	public float get(InteractionEvent.Kind kind) {
 		if (interactionScalingFactors.containsKey(kind)) {
-			return  interactionScalingFactors.get(kind);
+			return interactionScalingFactors.get(kind);
 		} else {
 			return DEFAULT_EVENT;
 		}
 	}
-	
+
 	public void set(InteractionEvent.Kind kind, float value) {
 		interactionScalingFactors.put(kind, value);
 	}

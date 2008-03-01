@@ -82,60 +82,69 @@ public class WorkspaceSetupHelper {
 
 	public static InteractionContext getContext() throws CoreException, IOException, InvocationTargetException,
 			InterruptedException {
-		if (!isSetup)
+		if (!isSetup) {
 			setupWorkspace();
+		}
 		return taskscape;
 	}
 
 	public static IJavaProject getJdtCoreDomProject() throws CoreException, IOException, InvocationTargetException,
 			InterruptedException {
-		if (!isSetup)
+		if (!isSetup) {
 			setupWorkspace();
+		}
 		return jdtCoreDomProject.getJavaProject();
 	}
 
 	public static IJavaProject getProject1() throws CoreException, IOException, InvocationTargetException,
 			InterruptedException {
-		if (!isSetup)
+		if (!isSetup) {
 			setupWorkspace();
+		}
 		return project1;
 	}
 
 	public static IJavaProject getProject2() throws CoreException, IOException, InvocationTargetException,
 			InterruptedException {
-		if (!isSetup)
+		if (!isSetup) {
 			setupWorkspace();
+		}
 		return project2;
 	}
 
 	public static IWorkspaceRoot getWorkspaceRoot() throws CoreException, IOException, InvocationTargetException,
 			InterruptedException {
-		if (!isSetup)
+		if (!isSetup) {
 			setupWorkspace();
+		}
 		return workspaceRoot;
 	}
 
 	public static IFile getFile(IJavaProject jp, String name) throws JavaModelException {
-		if (jp == null || name == null)
+		if (jp == null || name == null) {
 			return null;
+		}
 		Object[] files = jp.getNonJavaResources();
 		for (Object o : files) {
-			if (o instanceof IFile && ((IFile) o).getName().equals(name))
+			if (o instanceof IFile && ((IFile) o).getName().equals(name)) {
 				return (IFile) o;
+			}
 		}
 		return null;
 	}
 
 	public static IType getType(IJavaProject jp, String fullyQualifiedName) throws JavaModelException {
-		if (jp == null || fullyQualifiedName == null)
+		if (jp == null || fullyQualifiedName == null) {
 			return null;
+		}
 		IType t = jp.findType(fullyQualifiedName);
 		return t;
 	}
 
 	public static IMethod getMethod(IType t, String methodName, String[] params) {
-		if (t == null || methodName == null || params == null)
+		if (t == null || methodName == null || params == null) {
 			return null;
+		}
 		return t.getMethod(methodName, params);
 	}
 }

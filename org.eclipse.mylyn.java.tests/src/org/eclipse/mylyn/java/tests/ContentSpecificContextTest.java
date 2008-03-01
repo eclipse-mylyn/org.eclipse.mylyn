@@ -34,13 +34,13 @@ public class ContentSpecificContextTest extends AbstractContextTest {
 		assertEquals(1, context.getAllElements().size());
 		ContextCorePlugin.getContextManager().removeGlobalContext(context);
 	}
-	
+
 	public void testEventProcessingCompositeContext() {
 		InteractionContext context1 = new InteractionContext("global-id-1", new InteractionContextScaling());
 		InteractionContext context2 = new InteractionContext("global-id-2", new InteractionContextScaling());
 		context1.setContentLimitedTo(JavaStructureBridge.CONTENT_TYPE);
 		context2.setContentLimitedTo(JavaStructureBridge.CONTENT_TYPE);
-		
+
 		CompositeInteractionContext context = new CompositeInteractionContext(new InteractionContextScaling());
 		context.getContextMap().put(context1.getHandleIdentifier(), context1);
 		context.getContextMap().put(context2.getHandleIdentifier(), context2);
@@ -56,8 +56,7 @@ public class ContentSpecificContextTest extends AbstractContextTest {
 		assertEquals(1, context.getAllElements().size());
 		assertEquals(1, context1.getAllElements().size());
 		assertEquals(1, context2.getAllElements().size());
-		
-		
+
 		context.getContextMap().remove(context2.getHandleIdentifier());
 
 		ContextCorePlugin.getContextManager().processInteractionEvent(
@@ -69,7 +68,7 @@ public class ContentSpecificContextTest extends AbstractContextTest {
 		assertEquals(2, context.getAllElements().size());
 		assertEquals(2, context1.getAllElements().size());
 		assertEquals(1, context2.getAllElements().size());
-		
+
 		ContextCorePlugin.getContextManager().removeGlobalContext(context);
 	}
 

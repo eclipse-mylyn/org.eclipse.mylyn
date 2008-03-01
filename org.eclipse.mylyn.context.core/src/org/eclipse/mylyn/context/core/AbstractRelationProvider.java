@@ -40,9 +40,9 @@ public abstract class AbstractRelationProvider implements IInteractionContextLis
 
 	private boolean enabled = false;
 
-	private String id;
+	private final String id;
 
-	private String structureKind;
+	private final String structureKind;
 
 	private int degreeOfSeparation;
 
@@ -115,8 +115,9 @@ public abstract class AbstractRelationProvider implements IInteractionContextLis
 	public void createEdge(IInteractionElement toNode, String elementKind, String targetHandle) {
 		CompositeContextElement targetNode = (CompositeContextElement) ContextCorePlugin.getContextManager()
 				.getElement(targetHandle);
-		if (targetNode == null)
+		if (targetNode == null) {
 			return;
+		}
 		InteractionContextElement concreteTargetNode = null;
 		if (targetNode.getNodes().size() != 1) {
 			return;

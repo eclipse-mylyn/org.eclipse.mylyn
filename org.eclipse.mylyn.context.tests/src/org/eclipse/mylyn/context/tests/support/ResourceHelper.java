@@ -46,8 +46,9 @@ public class ResourceHelper {
 	public static void deleteProject(String projectName) throws CoreException {
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		IProject project = root.getProject(projectName);
-		if (project.exists())
+		if (project.exists()) {
 			delete(project);
+		}
 	}
 
 	public static void delete(final IResource resource) throws CoreException {
@@ -80,28 +81,32 @@ public class ResourceHelper {
 
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		IProject project = root.getProject(projectName);
-		if (!project.exists())
+		if (!project.exists()) {
 			project.create(NULL_MONITOR);
-		else
+		} else {
 			project.refreshLocal(IResource.DEPTH_INFINITE, null);
+		}
 
-		if (!project.isOpen())
+		if (!project.isOpen()) {
 			project.open(NULL_MONITOR);
+		}
 
 		return project;
 	}
 
 	private static IJavaProject createPluginProject(IProject project) throws CoreException, JavaModelException {
 
-		if (project == null)
+		if (project == null) {
 			return null;
+		}
 
 		IJavaProject javaProject = JavaCore.create(project);
 
 		// create bin folder
 		IFolder binFolder = project.getFolder("bin");
-		if (!binFolder.exists())
+		if (!binFolder.exists()) {
 			binFolder.create(false, true, null);
+		}
 
 		// set java nature
 		IProjectDescription description = project.getDescription();

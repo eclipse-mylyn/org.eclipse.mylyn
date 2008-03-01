@@ -33,23 +33,24 @@ public class CompositeContextElement implements IInteractionElement {
 
 	private String handle = "<no handle>";
 
-	private InteractionContextScaling contextScaling;
-	
-	public CompositeContextElement(String handle, List<InteractionContextElement> nodes, InteractionContextScaling contextScaling) {
+	private final InteractionContextScaling contextScaling;
+
+	public CompositeContextElement(String handle, List<InteractionContextElement> nodes,
+			InteractionContextScaling contextScaling) {
 		this.nodes = nodes;
 		this.handle = handle;
 		this.contextScaling = contextScaling;
 	}
 
 	/**
-	 * @return the context with the highest value 
-	 * TODO: is this always best?
+	 * @return the context with the highest value TODO: is this always best?
 	 */
 	public IInteractionContext getContext() {
 		IInteractionElement highestValueNode = null;
 		for (IInteractionElement node : nodes) {
-			if (highestValueNode == null || node.getInterest().getValue() < highestValueNode.getInterest().getValue())
+			if (highestValueNode == null || node.getInterest().getValue() < highestValueNode.getInterest().getValue()) {
 				highestValueNode = node;
+			}
 		}
 		if (highestValueNode != null) {
 			return highestValueNode.getContext();
@@ -108,12 +109,14 @@ public class CompositeContextElement implements IInteractionElement {
 	 */
 	public InteractionContextRelation getRelation(String targetHandle) {
 		Set<InteractionContextRelation> edges = new HashSet<InteractionContextRelation>();
-		for (IInteractionElement node : nodes)
+		for (IInteractionElement node : nodes) {
 			edges.add(node.getRelation(targetHandle));
+		}
 		if (edges.size() == 0) {
 			return null;
 		} else if (edges.size() > 1) {
-			StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID, "Multiple edges found in composite, not supported"));
+			StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID,
+					"Multiple edges found in composite, not supported"));
 		}
 		return edges.iterator().next();
 	}
@@ -121,22 +124,25 @@ public class CompositeContextElement implements IInteractionElement {
 	public Collection<InteractionContextRelation> getRelations() {
 		Set<InteractionContextRelation> edges = new HashSet<InteractionContextRelation>();
 
-		for (InteractionContextElement node : nodes)
+		for (InteractionContextElement node : nodes) {
 			edges.addAll(node.getRelations());
+		}
 		return edges;
 	}
 
 	public void clearRelations() {
-		for (InteractionContextElement node : nodes)
+		for (InteractionContextElement node : nodes) {
 			node.clearRelations();
+		}
 	}
 
 	@Override
 	public boolean equals(Object object) {
-		if (object == null)
+		if (object == null) {
 			return false;
+		}
 		if (object instanceof CompositeContextElement) {
-			CompositeContextElement element = (CompositeContextElement)object;
+			CompositeContextElement element = (CompositeContextElement) object;
 			return this.getHandleIdentifier().equals(element.getHandleIdentifier());
 		}
 		return false;

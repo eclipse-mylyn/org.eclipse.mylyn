@@ -80,9 +80,9 @@ public class ContextUiPlugin extends AbstractContextUiPlugin {
 
 	public static final String ID_PLUGIN = "org.eclipse.mylyn.context.ui";
 
-	private Map<String, AbstractContextUiBridge> bridges = new HashMap<String, AbstractContextUiBridge>();
+	private final Map<String, AbstractContextUiBridge> bridges = new HashMap<String, AbstractContextUiBridge>();
 
-	private Map<String, ILabelProvider> contextLabelProviders = new HashMap<String, ILabelProvider>();
+	private final Map<String, ILabelProvider> contextLabelProviders = new HashMap<String, ILabelProvider>();
 
 	private static ContextUiPlugin INSTANCE;
 
@@ -90,17 +90,17 @@ public class ContextUiPlugin extends AbstractContextUiPlugin {
 
 	private FocusedViewerManager viewerManager;
 
-	private ContextPerspectiveManager perspectiveManager = new ContextPerspectiveManager();
+	private final ContextPerspectiveManager perspectiveManager = new ContextPerspectiveManager();
 
-	private ContentOutlineManager contentOutlineManager = new ContentOutlineManager();
+	private final ContentOutlineManager contentOutlineManager = new ContentOutlineManager();
 
-	private Map<AbstractContextUiBridge, ImageDescriptor> activeSearchIcons = new HashMap<AbstractContextUiBridge, ImageDescriptor>();
+	private final Map<AbstractContextUiBridge, ImageDescriptor> activeSearchIcons = new HashMap<AbstractContextUiBridge, ImageDescriptor>();
 
-	private Map<AbstractContextUiBridge, String> activeSearchLabels = new HashMap<AbstractContextUiBridge, String>();
+	private final Map<AbstractContextUiBridge, String> activeSearchLabels = new HashMap<AbstractContextUiBridge, String>();
 
-	private Map<String, Set<Class<?>>> preservedFilterClasses = new HashMap<String, Set<Class<?>>>();
+	private final Map<String, Set<Class<?>>> preservedFilterClasses = new HashMap<String, Set<Class<?>>>();
 
-	private Map<String, Set<String>> preservedFilterIds = new HashMap<String, Set<String>>();
+	private final Map<String, Set<String>> preservedFilterIds = new HashMap<String, Set<String>>();
 
 	private static final AbstractContextLabelProvider DEFAULT_LABEL_PROVIDER = new AbstractContextLabelProvider() {
 
@@ -229,6 +229,7 @@ public class ContextUiPlugin extends AbstractContextUiPlugin {
 		perspectiveManager.addManagedPerspective(PlanningPerspectiveFactory.ID_PERSPECTIVE);
 	}
 
+	@Override
 	protected void lazyStart(IWorkbench workbench) {
 		try {
 			ContextCorePlugin.getContextManager().addListener(viewerManager);
@@ -492,16 +493,15 @@ public class ContextUiPlugin extends AbstractContextUiPlugin {
 				IExtensionRegistry registry = Platform.getExtensionRegistry();
 				IExtensionPoint extensionPoint = registry.getExtensionPoint(UiExtensionPointReader.EXTENSION_ID_CONTEXT);
 				IExtension[] extensions = extensionPoint.getExtensions();
-				for (int i = 0; i < extensions.length; i++) {
-					IConfigurationElement[] elements = extensions[i].getConfigurationElements();
-					for (int j = 0; j < elements.length; j++) {
-						if (elements[j].getName().equals(UiExtensionPointReader.ELEMENT_UI_BRIDGE)) {
-							readBridge(elements[j]);
-						} else if (elements[j].getName().equals(
-								UiExtensionPointReader.ELEMENT_UI_CONTEXT_LABEL_PROVIDER)) {
-							readLabelProvider(elements[j]);
-						} else if (elements[j].getName().equals(UiExtensionPointReader.ELEMENT_PRESERVED_FILTERS)) {
-							readPreservedFilters(elements[j]);
+				for (IExtension extension : extensions) {
+					IConfigurationElement[] elements = extension.getConfigurationElements();
+					for (IConfigurationElement element : elements) {
+						if (element.getName().equals(UiExtensionPointReader.ELEMENT_UI_BRIDGE)) {
+							readBridge(element);
+						} else if (element.getName().equals(UiExtensionPointReader.ELEMENT_UI_CONTEXT_LABEL_PROVIDER)) {
+							readLabelProvider(element);
+						} else if (element.getName().equals(UiExtensionPointReader.ELEMENT_PRESERVED_FILTERS)) {
+							readPreservedFilters(element);
 						}
 					}
 				}
@@ -588,11 +588,11 @@ public class ContextUiPlugin extends AbstractContextUiPlugin {
 			IExtensionRegistry registry = Platform.getExtensionRegistry();
 			IExtensionPoint extensionPoint = registry.getExtensionPoint(EXTENSION_ID_STARTUP);
 			IExtension[] extensions = extensionPoint.getExtensions();
-			for (int i = 0; i < extensions.length; i++) {
-				IConfigurationElement[] elements = extensions[i].getConfigurationElements();
-				for (int j = 0; j < elements.length; j++) {
-					if (elements[j].getName().compareTo(ELEMENT_STARTUP) == 0) {
-						runStartupExtension(elements[j]);
+			for (IExtension extension : extensions) {
+				IConfigurationElement[] elements = extension.getConfigurationElements();
+				for (IConfigurationElement element : elements) {
+					if (element.getName().compareTo(ELEMENT_STARTUP) == 0) {
+						runStartupExtension(element);
 					}
 				}
 			}

@@ -30,7 +30,7 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		super.setUp();
 //		ResourcesUiBridgePlugin.getDefault().setResourceMonitoringEnabled(true);
 		ResourcesUiBridgePlugin.getInterestUpdater().setSyncExec(true);
-		
+
 		TestUtil.triggerContextUiLazyStart();
 	}
 

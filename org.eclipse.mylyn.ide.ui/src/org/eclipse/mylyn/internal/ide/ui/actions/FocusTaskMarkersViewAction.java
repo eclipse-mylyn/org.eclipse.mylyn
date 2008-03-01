@@ -8,7 +8,6 @@
 
 package org.eclipse.mylyn.internal.ide.ui.actions;
 
-
 /**
  * @author Mik Kersten
  */

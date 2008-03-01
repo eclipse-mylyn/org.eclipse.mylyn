@@ -39,13 +39,13 @@ public final class RegExContentProposalProvider implements IContentProposalProvi
 
 		private static class Proposal implements IContentProposal {
 
-			private String fContent;
+			private final String fContent;
 
-			private String fLabel;
+			private final String fLabel;
 
-			private String fDescription;
+			private final String fDescription;
 
-			private int fCursorPosition;
+			private final int fCursorPosition;
 
 			Proposal(String content, String label, String description, int cursorPosition) {
 				fContent = content;
@@ -112,10 +112,11 @@ public final class RegExContentProposalProvider implements IContentProposalProvi
 
 			boolean isEscape = false;
 			esc: for (int i = position - 1; i >= 0; i--) {
-				if (fExpression.charAt(i) == '\\')
+				if (fExpression.charAt(i) == '\\') {
 					isEscape = !isEscape;
-				else
+				} else {
 					break esc;
+				}
 			}
 			fIsEscape = isEscape;
 		}
@@ -139,8 +140,9 @@ public final class RegExContentProposalProvider implements IContentProposalProvi
 			addBsProposal("\\e", RegExMessages.displayString_bs_e, RegExMessages.additionalInfo_bs_e); //$NON-NLS-1$
 			addBsProposal("\\c", RegExMessages.displayString_bs_c, RegExMessages.additionalInfo_bs_c); //$NON-NLS-1$
 
-			if (!fIsEscape)
+			if (!fIsEscape) {
 				addBracketProposal(".", 1, RegExMessages.displayString_dot, RegExMessages.additionalInfo_dot); //$NON-NLS-1$
+			}
 			addBsProposal("\\d", RegExMessages.displayString_bs_d, RegExMessages.additionalInfo_bs_d); //$NON-NLS-1$
 			addBsProposal("\\D", RegExMessages.displayString_bs_D, RegExMessages.additionalInfo_bs_D); //$NON-NLS-1$
 			addBsProposal("\\s", RegExMessages.displayString_bs_s, RegExMessages.additionalInfo_bs_s); //$NON-NLS-1$
@@ -450,8 +452,9 @@ public final class RegExContentProposalProvider implements IContentProposalProvi
 	 *      int)
 	 */
 	public IContentProposal[] getProposals(String contents, int position) {
-		if (fIsFind)
+		if (fIsFind) {
 			return new ProposalComputer(contents, position).computeFindProposals();
+		}
 		return new ProposalComputer(contents, position).computeReplaceProposals();
 	}
 }

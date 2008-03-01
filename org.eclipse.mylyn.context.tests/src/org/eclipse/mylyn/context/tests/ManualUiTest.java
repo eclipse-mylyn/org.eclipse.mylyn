@@ -27,7 +27,7 @@ public class ManualUiTest extends AbstractManualTest {
 			StatusHandler.fail(new Status(IStatus.ERROR, "org.eclipse.mylyn", "whoops", t));
 		}
 		StatusHandler.fail(new Status(IStatus.ERROR, "org.eclipse.mylyn", "whoops"));
-		
+
 		assertTrue(confirmWithUser("Did an error dialog show up correctly?"));
 	}
 

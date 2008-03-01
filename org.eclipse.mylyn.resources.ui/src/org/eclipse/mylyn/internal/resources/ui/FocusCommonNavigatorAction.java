@@ -62,8 +62,8 @@ public abstract class FocusCommonNavigatorAction extends AbstractAutoFocusViewAc
 		IStructuredSelection selection = StructuredSelection.EMPTY;
 		IStructuredSelection newSelection = StructuredSelection.EMPTY;
 
-		for (int i = 0; i < helpers.length; i++) {
-			selection = helpers[i].findSelection(input);
+		for (ILinkHelper helper : helpers) {
+			selection = helper.findSelection(input);
 			if (selection != null && !selection.isEmpty()) {
 				newSelection = mergeSelection(newSelection, selection);
 			}
@@ -85,20 +85,27 @@ public abstract class FocusCommonNavigatorAction extends AbstractAutoFocusViewAc
 	}
 
 	// TODO: should have better way of doing this
+	@Override
 	protected void setManualFilteringAndLinkingEnabled(boolean on) {
 		IViewPart part = super.getPartForAction();
 		if (part instanceof CommonNavigator) {
-			for (IContributionItem item : ((CommonNavigator) part).getViewSite().getActionBars().getToolBarManager().getItems()) {
+			for (IContributionItem item : ((CommonNavigator) part).getViewSite()
+					.getActionBars()
+					.getToolBarManager()
+					.getItems()) {
 				if (item instanceof ActionContributionItem) {
-					ActionContributionItem actionItem = (ActionContributionItem)item;
+					ActionContributionItem actionItem = (ActionContributionItem) item;
 					if (actionItem.getAction() instanceof LinkEditorAction) {
 						actionItem.getAction().setEnabled(on);
 					}
 				}
 			}
-			for (IContributionItem item : ((CommonNavigator) part).getViewSite().getActionBars().getMenuManager().getItems()) {
+			for (IContributionItem item : ((CommonNavigator) part).getViewSite()
+					.getActionBars()
+					.getMenuManager()
+					.getItems()) {
 				if (item instanceof ActionContributionItem) {
-					ActionContributionItem actionItem = (ActionContributionItem)item;
+					ActionContributionItem actionItem = (ActionContributionItem) item;
 					if (actionItem.getAction() instanceof SelectFiltersAction) {
 						actionItem.getAction().setEnabled(on);
 					}
@@ -106,7 +113,7 @@ public abstract class FocusCommonNavigatorAction extends AbstractAutoFocusViewAc
 			}
 		}
 	}
-	
+
 	@Override
 	protected void setDefaultLinkingEnabled(boolean on) {
 		IViewPart part = super.getPartForAction();

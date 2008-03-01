@@ -49,8 +49,9 @@ public class FilterMembersAction extends Action implements IViewActionDelegate {
 		ViewerFilter existingFilter = null;
 		for (int i = 0; i < packageExplorer.getTreeViewer().getFilters().length; i++) {
 			ViewerFilter filter = packageExplorer.getTreeViewer().getFilters()[i];
-			if (filter instanceof JavaDeclarationsFilter)
+			if (filter instanceof JavaDeclarationsFilter) {
 				existingFilter = filter;
+			}
 		}
 		if (existingFilter != null) {
 			packageExplorer.getTreeViewer().removeFilter(existingFilter);

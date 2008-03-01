@@ -42,8 +42,7 @@ public class FindReferencesInContextAction extends Action implements IWorkbenchW
 				if (resolved != null && resolved.length == 1 && resolved[0] != null) {
 					IJavaElement element = resolved[0];
 
-					ContextWorkingSetManager updater = ContextWorkingSetManager.getDefault()
-							.getWorkingSetUpdater();
+					ContextWorkingSetManager updater = ContextWorkingSetManager.getDefault().getWorkingSetUpdater();
 					if (updater != null && updater.getWorkingSet() != null) {
 						IJavaSearchScope scope = JavaSearchScopeFactory.getInstance().createJavaSearchScope(
 								updater.getWorkingSet(), false);

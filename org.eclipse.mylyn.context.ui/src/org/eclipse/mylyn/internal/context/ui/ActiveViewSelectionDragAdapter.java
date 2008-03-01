@@ -22,7 +22,7 @@ import org.eclipse.swt.dnd.Transfer;
  */
 public class ActiveViewSelectionDragAdapter extends DragSourceAdapter implements TransferDragSourceListener {
 
-	private ISelectionProvider fProvider;
+	private final ISelectionProvider fProvider;
 
 	public ActiveViewSelectionDragAdapter(ISelectionProvider provider) {
 		assert provider != null;

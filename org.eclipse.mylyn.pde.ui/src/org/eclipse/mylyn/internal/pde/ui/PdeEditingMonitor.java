@@ -60,8 +60,9 @@ public class PdeEditingMonitor extends AbstractUserInteractionMonitor {
 			// fix bug when user is looking in the cvs repository since the
 			// input
 			// is not a FileEditorInput
-			if (!(editor.getEditorInput() instanceof FileEditorInput))
+			if (!(editor.getEditorInput() instanceof FileEditorInput)) {
 				return;
+			}
 
 			// make sure that the selection is a text selection
 			if (!(editor.getSelection() instanceof TextSelection || editor.getSelection() instanceof StructuredSelection)) {
@@ -105,8 +106,9 @@ public class PdeEditingMonitor extends AbstractUserInteractionMonitor {
 						}
 
 						String nodeString = getStringOfNode(node);
-						if (nodeString == null)
+						if (nodeString == null) {
 							return;
+						}
 
 						// create the helper to get the handle for the node
 						XmlNodeHelper xnode = new XmlNodeHelper(fei.getFile().getFullPath().toString(),
@@ -119,15 +121,17 @@ public class PdeEditingMonitor extends AbstractUserInteractionMonitor {
 						super.handleElementSelection(part, xnode, contributeToContext);
 					}
 				} catch (Exception e) {
-					StatusHandler.log(new Status(IStatus.ERROR, PdeUiBridgePlugin.ID_PLUGIN, "Could not resolve selection", e));
+					StatusHandler.log(new Status(IStatus.ERROR, PdeUiBridgePlugin.ID_PLUGIN,
+							"Could not resolve selection", e));
 				}
 			}
 		}
 	}
 
 	public static String getStringOfNode(IDocumentElementNode node) {
-		if (node == null)
+		if (node == null) {
 			return null;
+		}
 		String s = node.getXMLTagName();
 		for (IDocumentAttributeNode a : node.getNodeAttributes()) {
 			s += a.getAttributeName() + "=" + a.getAttributeValue();
@@ -144,15 +148,18 @@ public class PdeEditingMonitor extends AbstractUserInteractionMonitor {
 			IPluginModelBase model = (IPluginModelBase) page.getInputContext().getModel();
 			PluginObjectNode node = (PluginObjectNode) PdeEditingMonitor.findNode(model.getPluginBase().getLibraries(),
 					offset, hashCode);
-			if (node == null)
+			if (node == null) {
 				node = (PluginObjectNode) PdeEditingMonitor.findNode(model.getPluginBase().getImports(), offset,
 						hashCode);
-			if (node == null)
+			}
+			if (node == null) {
 				node = (PluginObjectNode) PdeEditingMonitor.findNode(model.getPluginBase().getExtensionPoints(),
 						offset, hashCode);
-			if (node == null)
+			}
+			if (node == null) {
 				node = (PluginObjectNode) PdeEditingMonitor.findNode(model.getPluginBase().getExtensions(), offset,
 						hashCode);
+			}
 			if (node == null) {
 				node = (PluginObjectNode) PdeEditingMonitor.findNode(new IPluginObject[] { model.getPluginBase() },
 						offset, hashCode);
@@ -172,13 +179,16 @@ public class PdeEditingMonitor extends AbstractUserInteractionMonitor {
 
 		PluginObjectNode node = (PluginObjectNode) PdeEditingMonitor.findNode(model.getPluginBase().getLibraries(),
 				num, hashCode);
-		if (node == null)
+		if (node == null) {
 			node = (PluginObjectNode) PdeEditingMonitor.findNode(model.getPluginBase().getImports(), num, hashCode);
-		if (node == null)
+		}
+		if (node == null) {
 			node = (PluginObjectNode) PdeEditingMonitor.findNode(model.getPluginBase().getExtensionPoints(), num,
 					hashCode);
-		if (node == null)
+		}
+		if (node == null) {
 			node = (PluginObjectNode) PdeEditingMonitor.findNode(model.getPluginBase().getExtensions(), num, hashCode);
+		}
 		if (node == null) {
 			node = (PluginObjectNode) PdeEditingMonitor.findNode(new IPluginObject[] { model.getPluginBase() }, num,
 					hashCode);
@@ -190,27 +200,30 @@ public class PdeEditingMonitor extends AbstractUserInteractionMonitor {
 	 * COPIED FROM ManifestSourcePage
 	 */
 	private static IDocumentElementNode findNode(IPluginObject[] nodes, int offset, boolean hashCode) {
-		for (int i = 0; i < nodes.length; i++) {
-			IDocumentElementNode node = (IDocumentElementNode) nodes[i];
+		for (IPluginObject node3 : nodes) {
+			IDocumentElementNode node = (IDocumentElementNode) node3;
 			IDocumentElementNode[] children = node.getChildNodes();
 
 			// changed region - added to check the children to make it work
 			// properly
 			IDocumentElementNode node2 = null;
-			if (children.length > 0)
+			if (children.length > 0) {
 				node2 = PdeEditingMonitor.findNode(children, offset, hashCode);
-			// end changed region
+				// end changed region
+			}
 
-			if (node2 != null && node2 instanceof IPluginObject)
+			if (node2 != null && node2 instanceof IPluginObject) {
 				return node2;
+			}
 
 			if (!hashCode) {
 				if (offset >= node.getOffset() && offset < node.getOffset() + node.getLength()) {
 					return node;
 				}
 			} else {
-				if (getStringOfNode(node).hashCode() == offset)
+				if (getStringOfNode(node).hashCode() == offset) {
 					return node;
+				}
 			}
 		}
 		return null;
@@ -220,22 +233,24 @@ public class PdeEditingMonitor extends AbstractUserInteractionMonitor {
 	 * Copy of previous, taking different arguments
 	 */
 	private static IDocumentElementNode findNode(IDocumentElementNode[] nodes, int offset, boolean hashCode) {
-		for (int i = 0; i < nodes.length; i++) {
-			IDocumentElementNode node = nodes[i];
+		for (IDocumentElementNode node : nodes) {
 			IDocumentElementNode[] children = node.getChildNodes();
 			IDocumentElementNode node2 = null;
-			if (children.length > 0)
+			if (children.length > 0) {
 				node2 = PdeEditingMonitor.findNode(children, offset, hashCode);
-			if (node2 != null)
+			}
+			if (node2 != null) {
 				return node2;
+			}
 
 			if (!hashCode) {
 				if (offset >= node.getOffset() && offset < node.getOffset() + node.getLength()) {
 					return node;
 				}
 			} else {
-				if (getStringOfNode(node).hashCode() == offset)
+				if (getStringOfNode(node).hashCode() == offset) {
 					return node;
+				}
 			}
 		}
 		return null;

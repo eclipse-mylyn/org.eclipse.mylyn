@@ -43,8 +43,9 @@ public class DelegatingContextLabelProvider implements ILabelProvider {
 		} else {
 			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(element);
 			ILabelProvider provider = ContextUiPlugin.getDefault().getContextLabelProvider(bridge.getContentType());
-			if (provider != null)
+			if (provider != null) {
 				return provider.getImage(element);
+			}
 		}
 		return null;
 	}

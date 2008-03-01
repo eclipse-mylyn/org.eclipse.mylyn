@@ -49,7 +49,7 @@ public class ActiveFoldingListener implements IInteractionContextListener {
 
 	private boolean enabled = false;
 
-	private IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
+	private final IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
 			if (event.getProperty().equals(ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED)) {
 				if (event.getNewValue().equals(Boolean.TRUE.toString())) {
@@ -65,8 +65,9 @@ public class ActiveFoldingListener implements IInteractionContextListener {
 	public ActiveFoldingListener(JavaEditor editor) {
 		this.editor = editor;
 		if (ContextUiPlugin.getDefault() == null) {
-			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not update folding", new Exception()));
-		} else { 
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not update folding",
+					new Exception()));
+		} else {
 			ContextCorePlugin.getContextManager().addListener(this);
 			ContextUiPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
 
@@ -77,11 +78,13 @@ public class ActiveFoldingListener implements IInteractionContextListener {
 				if (adapter instanceof IJavaFoldingStructureProviderExtension) {
 					updater = (IJavaFoldingStructureProviderExtension) adapter;
 				} else {
-					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not install active folding on provider: " + adapter + ", must extend "
-							+ IJavaFoldingStructureProviderExtension.class.getName()));
+					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID,
+							"Could not install active folding on provider: " + adapter + ", must extend "
+									+ IJavaFoldingStructureProviderExtension.class.getName()));
 				}
 			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not install auto folding, reflection denied", e));
+				StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID,
+						"Could not install auto folding, reflection denied", e));
 			}
 			updateFolding();
 		}

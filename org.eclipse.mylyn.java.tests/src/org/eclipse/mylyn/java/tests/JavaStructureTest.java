@@ -33,11 +33,14 @@ import org.eclipse.ui.PlatformUI;
  */
 public class JavaStructureTest extends AbstractJavaContextTest {
 
-	private InteractionContextManager manager = ContextCorePlugin.getContextManager();
+	private final InteractionContextManager manager = ContextCorePlugin.getContextManager();
 
-	private JavaEditingMonitor monitor = new JavaEditingMonitor();
+	private final JavaEditingMonitor monitor = new JavaEditingMonitor();
 
-	private IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
+	private final IWorkbenchPart part = PlatformUI.getWorkbench()
+			.getActiveWorkbenchWindow()
+			.getActivePage()
+			.getActivePart();
 
 	private TestJavaProject project;
 
@@ -51,7 +54,7 @@ public class JavaStructureTest extends AbstractJavaContextTest {
 
 	private InteractionContext taskscape;
 
-	private InteractionContextScaling scaling = new InteractionContextScaling();
+	private final InteractionContextScaling scaling = new InteractionContextScaling();
 
 	@Override
 	protected void setUp() throws Exception {

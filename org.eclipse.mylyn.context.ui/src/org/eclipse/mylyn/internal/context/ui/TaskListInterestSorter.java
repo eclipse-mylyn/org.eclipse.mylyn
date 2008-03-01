@@ -24,7 +24,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
  */
 public class TaskListInterestSorter extends ViewerSorter {
 
-	private TaskKeyComparator taskKeyComparator = new TaskKeyComparator();
+	private final TaskKeyComparator taskKeyComparator = new TaskKeyComparator();
 
 	@Override
 	public int compare(Viewer compareViewer, Object o1, Object o2) {
@@ -90,7 +90,7 @@ public class TaskListInterestSorter extends ViewerSorter {
 				if (element2 instanceof AbstractTask) {
 					task2 = (AbstractTask) element2;
 				}
-				
+
 				if (task1 == null && task2 == null) {
 					return comparePrioritiesAndKeys(element1, element2);
 				} else if (task1 == null) {
@@ -119,23 +119,25 @@ public class TaskListInterestSorter extends ViewerSorter {
 		}
 		return 0;
 	}
-		
+
 	private int compareDueDates(AbstractTask task1, AbstractTask task2) {
-		if(TasksUiPlugin.getTaskActivityManager().isOverdue(task1) && !TasksUiPlugin.getTaskActivityManager().isOverdue(task2)) {
+		if (TasksUiPlugin.getTaskActivityManager().isOverdue(task1)
+				&& !TasksUiPlugin.getTaskActivityManager().isOverdue(task2)) {
 			return -1;
-		} else if(!TasksUiPlugin.getTaskActivityManager().isOverdue(task1) && TasksUiPlugin.getTaskActivityManager().isOverdue(task2)) {
+		} else if (!TasksUiPlugin.getTaskActivityManager().isOverdue(task1)
+				&& TasksUiPlugin.getTaskActivityManager().isOverdue(task2)) {
 			return 1;
 		}
 		return 0;
 	}
 
 	private int compareScheduledDate(AbstractTask task1, AbstractTask task2) {
-		if(task1.internalIsFloatingScheduledDate() && !task2.internalIsFloatingScheduledDate()) {
+		if (task1.internalIsFloatingScheduledDate() && !task2.internalIsFloatingScheduledDate()) {
 			return 1;
 		} else if (!task1.internalIsFloatingScheduledDate() && task2.internalIsFloatingScheduledDate()) {
 			return -1;
-		} 
-		
+		}
+
 		if (isToday(task1) && !isToday(task2)) {
 			return -1;
 		} else if (!isToday(task1) && isToday(task2)) {
@@ -170,7 +172,7 @@ public class TaskListInterestSorter extends ViewerSorter {
 			return 0;
 		}
 	}
-	
+
 //	private int compareOverScheduled(AbstractTask task1, AbstractTask task2) {
 //		if (task1.isPastReminder() && !task2.isPastReminder()) {
 //			return -1;

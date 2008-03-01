@@ -50,8 +50,9 @@ public class RefactoringTest extends AbstractJavaContextTest {
 		project.build();
 		TestProgressMonitor monitor = new TestProgressMonitor();
 		method.delete(true, monitor);
-		if (!monitor.isDone())
+		if (!monitor.isDone()) {
 			Thread.sleep(100);
+		}
 		IInteractionElement deletedNode = ContextCorePlugin.getContextManager()
 				.getElement(method.getHandleIdentifier());
 		assertFalse(deletedNode.getInterest().isInteresting());
@@ -74,8 +75,9 @@ public class RefactoringTest extends AbstractJavaContextTest {
 
 		TestProgressMonitor monitor = new TestProgressMonitor();
 		type.rename("NewName", true, monitor);
-		if (!monitor.isDone())
+		if (!monitor.isDone()) {
 			Thread.sleep(200);
+		}
 		project.build();
 		ICompilationUnit unit = (ICompilationUnit) p1.getChildren()[0];
 
@@ -102,8 +104,9 @@ public class RefactoringTest extends AbstractJavaContextTest {
 		project.build();
 		TestProgressMonitor monitor = new TestProgressMonitor();
 		method.rename("refactored", true, monitor);
-		if (!monitor.isDone())
+		if (!monitor.isDone()) {
 			Thread.sleep(200);
+		}
 		IMethod newMethod = type.getMethods()[0];
 		assertTrue(newMethod.getElementName().equals("refactored"));
 		IInteractionElement newNode = ContextCorePlugin.getContextManager().getElement(newMethod.getHandleIdentifier());

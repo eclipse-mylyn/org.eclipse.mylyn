@@ -79,10 +79,11 @@ public class ResourceStructureBridge extends AbstractContextStructureBridge {
 				try {
 					children = container.members();
 					List<String> childHandles = new ArrayList<String>();
-					for (int i = 0; i < children.length; i++) {
-						String childHandle = getHandleIdentifier(children[i]);
-						if (childHandle != null)
+					for (IResource element : children) {
+						String childHandle = getHandleIdentifier(element);
+						if (childHandle != null) {
 							childHandles.add(childHandle);
+						}
 					}
 					return childHandles;
 				} catch (Exception e) {
@@ -122,8 +123,9 @@ public class ResourceStructureBridge extends AbstractContextStructureBridge {
 
 	@Override
 	public Object getObjectForHandle(String handle) {
-		if (handle == null)
+		if (handle == null) {
 			return null;
+		}
 		IPath path = new Path(handle);
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		if (path.segmentCount() == 1) {
