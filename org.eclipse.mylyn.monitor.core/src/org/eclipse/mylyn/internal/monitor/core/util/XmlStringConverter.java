@@ -14,11 +14,13 @@ package org.eclipse.mylyn.internal.monitor.core.util;
 public class XmlStringConverter {
 
 	public static String convertToXmlString(String s) {
-		if (s == null)
+		if (s == null) {
 			return "";
+		}
 		StringBuffer res = new StringBuffer(s.length() + 20);
-		for (int i = 0; i < s.length(); ++i)
+		for (int i = 0; i < s.length(); ++i) {
 			appendEscapedChar(res, s.charAt(i));
+		}
 		return res.toString();
 	}
 

@@ -32,7 +32,7 @@ public class ActivityTimerThread extends Thread implements Runnable {
 
 	private int elapsed = 0;
 
-	private List<IActivityTimerListener> listeners = new ArrayList<IActivityTimerListener>();
+	private final List<IActivityTimerListener> listeners = new ArrayList<IActivityTimerListener>();
 
 	private boolean suspended = false;
 
@@ -74,8 +74,9 @@ public class ActivityTimerThread extends Thread implements Runnable {
 
 				if (elapsed >= timeout && !killed) {
 					if (!suspended) {
-						for (IActivityTimerListener listener : listeners)
+						for (IActivityTimerListener listener : listeners) {
 							listener.fireInactive();
+						}
 					}
 					elapsed = 0;
 				}

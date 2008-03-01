@@ -34,10 +34,12 @@ public class SummaryCollector implements IUsageCollector {
 	protected int numPreference = 0;
 
 	public void consumeEvent(InteractionEvent event, int userId) {
-		if (mostRecentDate.compareTo(event.getDate()) == -1)
+		if (mostRecentDate.compareTo(event.getDate()) == -1) {
 			mostRecentDate = event.getDate();
-		if (leastRecentDate.compareTo(event.getDate()) == 1)
+		}
+		if (leastRecentDate.compareTo(event.getDate()) == 1) {
 			leastRecentDate = event.getDate();
+		}
 
 		if (event.getKind().equals(InteractionEvent.Kind.SELECTION)) {
 			numSelections++;

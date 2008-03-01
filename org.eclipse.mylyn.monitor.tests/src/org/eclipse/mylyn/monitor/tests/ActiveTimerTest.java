@@ -8,10 +8,10 @@
 
 package org.eclipse.mylyn.monitor.tests;
 
-import org.eclipse.mylyn.monitor.core.IActivityTimerListener;
-import org.eclipse.mylyn.monitor.core.ActivityTimerThread;
-
 import junit.framework.TestCase;
+
+import org.eclipse.mylyn.monitor.core.ActivityTimerThread;
+import org.eclipse.mylyn.monitor.core.IActivityTimerListener;
 
 /**
  * @author Shawn Minto
@@ -23,7 +23,7 @@ public class ActiveTimerTest extends TestCase {
 
 	private ActivityTimerThread thread;
 
-	private IActivityTimerListener listener = new IActivityTimerListener() {
+	private final IActivityTimerListener listener = new IActivityTimerListener() {
 
 		public void fireInactive() {
 			gotTimeOut = true;
@@ -42,7 +42,7 @@ public class ActiveTimerTest extends TestCase {
 
 	};
 
-	private IActivityTimerListener listener2 = new IActivityTimerListener() {
+	private final IActivityTimerListener listener2 = new IActivityTimerListener() {
 
 		public void fireInactive() {
 			gotTimeOut = true;

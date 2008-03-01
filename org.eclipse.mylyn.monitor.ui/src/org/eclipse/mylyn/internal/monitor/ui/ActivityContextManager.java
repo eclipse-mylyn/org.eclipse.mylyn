@@ -34,19 +34,19 @@ import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
  */
 public class ActivityContextManager {
 
-	private int TICK = 30 * 1000;
+	private final int TICK = 30 * 1000;
 
-	private int SHORT_TICK = 5 * 1000;
+	private final int SHORT_TICK = 5 * 1000;
 
 	private AbstractUserActivityMonitor userActivityMonitor;
 
-	private Set<IUserAttentionListener> attentionListeners = new CopyOnWriteArraySet<IUserAttentionListener>();
+	private final Set<IUserAttentionListener> attentionListeners = new CopyOnWriteArraySet<IUserAttentionListener>();
 
 	private long startTime = -1;
 
 	private int timeout;
 
-	private Object startTimeLock = new Object();
+	private final Object startTimeLock = new Object();
 
 	private boolean wasTimedOut = true;
 
@@ -54,7 +54,7 @@ public class ActivityContextManager {
 
 	private CheckActivityJob checkJob;
 
-	private ArrayList<AbstractUserActivityMonitor> activityMonitors;
+	private final ArrayList<AbstractUserActivityMonitor> activityMonitors;
 
 	public static final String ACTIVITY_TIMEOUT = "org.eclipse.mylyn.monitor.ui.activity.timeout";
 

@@ -83,12 +83,14 @@ public class PerspectiveChangeMonitor extends PerspectiveAdapter {
 
 		if (perspective instanceof PerspectiveDescriptor) {
 			String originalId = ((PerspectiveDescriptor) perspective).getOriginalId();
-			if (!originalId.equals(perspective.getId()))
+			if (!originalId.equals(perspective.getId())) {
 				id = originalId + "[customized]";
-			else
+			} else {
 				id = perspective.getId();
-		} else
+			}
+		} else {
 			id = perspective.getId();
+		}
 		return id;
 	}
 

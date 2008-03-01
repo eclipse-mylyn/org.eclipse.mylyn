@@ -14,5 +14,5 @@ package org.eclipse.mylyn.internal.monitor.core;
 public interface IMonitorCoreConstants {
 
 	public static String ID_PLUGIN = "org.eclipse.mylyn.monitor.core";
-	
+
 }

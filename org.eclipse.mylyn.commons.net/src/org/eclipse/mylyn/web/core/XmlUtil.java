@@ -22,8 +22,9 @@ public class XmlUtil {
 	 * @return string with all non valid characters removed, if text is null return null
 	 */
 	public static String cleanXmlString(String text) {
-		if (text == null)
+		if (text == null) {
 			return null;
+		}
 		StringBuilder builder = new StringBuilder(text.length());
 		for (int x = 0; x < text.length(); x++) {
 			char ch = text.charAt(x);

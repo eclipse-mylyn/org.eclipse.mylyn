@@ -30,16 +30,16 @@ public class HtmlStreamTokenizer {
 	private State state;
 
 	/** reader from which to parse the text */
-	private BufferedReader in;
+	private final BufferedReader in;
 
 	/** base URL for resolving relative URLs */
-	private URL base;
+	private final URL base;
 
 	/** buffer holding the text of the current token */
-	private StringBuffer textBuffer;
+	private final StringBuffer textBuffer;
 
 	/** buffer holding whitespace preceding the current token */
-	private StringBuffer whitespaceBuffer;
+	private final StringBuffer whitespaceBuffer;
 
 	/**
 	 * holds a token that was read and then put back in the queue to be returned again on <code>nextToken</code> call
@@ -113,13 +113,15 @@ public class HtmlStreamTokenizer {
 			if (state == State.TEXT) {
 				if (ch == '<') {
 					state = State.TAG;
-					if (textBuffer.length() > 0)
+					if (textBuffer.length() > 0) {
 						return new Token(textBuffer, whitespaceBuffer, false);
+					}
 				} else if (Character.isWhitespace((char) ch)) {
 					pushbackChar = ch;
 					state = State.WS;
-					if (textBuffer.length() > 0)
+					if (textBuffer.length() > 0) {
 						return new Token(textBuffer, whitespaceBuffer, false);
+					}
 				} else {
 					textBuffer.append((char) ch);
 				}
@@ -157,8 +159,9 @@ public class HtmlStreamTokenizer {
 					state = State.TAG;
 				} else {
 					textBuffer.append((char) ch);
-					if (ch == quoteChar)
+					if (ch == quoteChar) {
 						state = State.TAG;
+					}
 				}
 			} else if (state == State.COMMENT) {
 				if (ch == '>' && closingComment >= 2) {
@@ -193,8 +196,9 @@ public class HtmlStreamTokenizer {
 		for (; i < s.length() && Character.isWhitespace(s.charAt(i)); i++) {
 			// just move forward
 		}
-		if (i == s.length())
+		if (i == s.length()) {
 			throw new ParseException("parse empty tag", 0);
+		}
 
 		int start = i;
 		for (; i < s.length() && !Character.isWhitespace(s.charAt(i)); i++) {
@@ -219,11 +223,13 @@ public class HtmlStreamTokenizer {
 	private static void parseAttributes(HtmlTag tag, String s, int i, boolean escapeValues) throws ParseException {
 		while (i < s.length()) {
 			// skip whitespace
-			while (i < s.length() && Character.isWhitespace(s.charAt(i)))
+			while (i < s.length() && Character.isWhitespace(s.charAt(i))) {
 				i++;
+			}
 
-			if (i == s.length())
+			if (i == s.length()) {
 				return;
+			}
 
 			// read the attribute name -- the rule might be looser than the RFC
 			// specifies:
@@ -252,8 +258,9 @@ public class HtmlStreamTokenizer {
 			for (i = i + 1; i < s.length() && Character.isWhitespace(s.charAt(i)); i++) {
 				// just move forward
 			}
-			if (i == s.length())
+			if (i == s.length()) {
 				return;
+			}
 
 			// read the attribute value -- the rule for unquoted attribute value
 			// is
@@ -266,20 +273,23 @@ public class HtmlStreamTokenizer {
 				for (; i < s.length() && s.charAt(i) != '"'; i++) {
 					// just move forward
 				}
-				if (i == s.length())
+				if (i == s.length()) {
 					return; // shouldn't happen if input returned by nextToken
-				if (escapeValues)
+				}
+				if (escapeValues) {
 					attributeValue = unescape(s.substring(start, i));
-				else
+				} else {
 					attributeValue = s.substring(start, i);
+				}
 				i++;
 			} else if (s.charAt(i) == '\'') {
 				start = ++i;
 				for (; i < s.length() && s.charAt(i) != '\''; i++) {
 					// just move forward
 				}
-				if (i == s.length())
+				if (i == s.length()) {
 					return; // shouldn't happen if input returned by nextToken
+				}
 				attributeValue = unescape(s.substring(start, i));
 				i++;
 			} else {
@@ -295,7 +305,7 @@ public class HtmlStreamTokenizer {
 
 	/**
 	 * Returns a string with HTML escapes changed into their corresponding characters.
-	 *
+	 * 
 	 * @deprecated use {@link StringEscapeUtils#unescapeHtml(String)} instead
 	 */
 	@Deprecated
@@ -311,7 +321,7 @@ public class HtmlStreamTokenizer {
 
 	/**
 	 * Replaces (in-place) HTML escapes in a StringBuffer with their corresponding characters.
-	 *
+	 * 
 	 * @deprecated use {@link StringEscapeUtils#unescapeHtml(String)} instead
 	 */
 	@Deprecated
@@ -366,13 +376,15 @@ public class HtmlStreamTokenizer {
 	 * Parses HTML character and entity references and returns the corresponding character.
 	 */
 	private static Character parseReference(String s) {
-		if (s.length() == 0)
+		if (s.length() == 0) {
 			return null;
+		}
 
 		if (s.charAt(0) == '#') {
 			// character reference
-			if (s.length() == 1)
+			if (s.length() == 1) {
 				return null;
+			}
 
 			try {
 				int value;
@@ -408,10 +420,10 @@ public class HtmlStreamTokenizer {
 		private Type type;
 
 		/** token's value */
-		private Object value;
+		private final Object value;
 
 		/** whitespace preceding the token */
-		private StringBuffer whitespace;
+		private final StringBuffer whitespace;
 
 		/**
 		 * Constructor for the EOF token.

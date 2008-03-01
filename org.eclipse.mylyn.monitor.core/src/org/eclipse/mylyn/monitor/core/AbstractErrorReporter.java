@@ -17,15 +17,15 @@ import org.eclipse.core.runtime.IStatus;
 public abstract class AbstractErrorReporter {
 
 	public static int PRIORITY_NONE = -1;
-	
+
 	public static int PRIORITY_LOW = 10;
-	
+
 	public static int PRIORITY_DEFAULT = 100;
-	
+
 	public static int PRIORITY_HIGH = 1000;
-	
-	public abstract int getPriority(IStatus status); 
-	
+
+	public abstract int getPriority(IStatus status);
+
 	public abstract void handle(IStatus status);
-	
+
 }

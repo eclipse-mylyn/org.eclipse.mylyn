@@ -17,5 +17,5 @@ import java.net.Proxy;
 public interface IProxyProvider {
 
 	public Proxy getProxyForHost(String host, String proxyType);
-	
+
 }

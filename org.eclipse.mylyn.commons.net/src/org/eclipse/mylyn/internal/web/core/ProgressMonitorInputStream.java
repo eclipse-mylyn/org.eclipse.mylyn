@@ -18,27 +18,36 @@ import java.io.InterruptedIOException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
- * Updates a progress monitor as bytes are read from the input stream.
- * Also starts a background thread to provide responsive cancellation on read().
+ * Updates a progress monitor as bytes are read from the input stream. Also starts a background thread to provide
+ * responsive cancellation on read().
  * 
- * Supports resuming partially completed operations after an InterruptedIOException
- * if the underlying stream does.  Check the bytesTransferred field to determine how
- * much of the operation completed; conversely, at what point to resume.
+ * Supports resuming partially completed operations after an InterruptedIOException if the underlying stream does. Check
+ * the bytesTransferred field to determine how much of the operation completed; conversely, at what point to resume.
  */
 public abstract class ProgressMonitorInputStream extends FilterInputStream {
-	private IProgressMonitor monitor;
-	private int updateIncrement;
-	private long bytesTotal;
+	private final IProgressMonitor monitor;
+
+	private final int updateIncrement;
+
+	private final long bytesTotal;
+
 	private long bytesRead = 0;
+
 	private long lastUpdate = -1;
+
 	private long nextUpdate = 0;
-	
+
 	/**
 	 * Creates a progress monitoring input stream.
-	 * @param in the underlying input stream
-	 * @param bytesTotal the number of bytes to read in total (passed to updateMonitor())
-	 * @param updateIncrement the number of bytes read between updates
-	 * @param monitor the progress monitor
+	 * 
+	 * @param in
+	 *            the underlying input stream
+	 * @param bytesTotal
+	 *            the number of bytes to read in total (passed to updateMonitor())
+	 * @param updateIncrement
+	 *            the number of bytes read between updates
+	 * @param monitor
+	 *            the progress monitor
 	 */
 	public ProgressMonitorInputStream(InputStream in, long bytesTotal, int updateIncrement, IProgressMonitor monitor) {
 		super(in);
@@ -51,10 +60,12 @@ public abstract class ProgressMonitorInputStream extends FilterInputStream {
 	protected abstract void updateMonitor(long bytesRead, long size, IProgressMonitor monitor);
 
 	/**
-	 * Wraps the underlying stream's method.
-	 * Updates the progress monitor to the final number of bytes read.
-	 * @throws IOException if an i/o error occurs
+	 * Wraps the underlying stream's method. Updates the progress monitor to the final number of bytes read.
+	 * 
+	 * @throws IOException
+	 *             if an i/o error occurs
 	 */
+	@Override
 	public void close() throws IOException {
 		try {
 			in.close();
@@ -64,12 +75,15 @@ public abstract class ProgressMonitorInputStream extends FilterInputStream {
 	}
 
 	/**
-	 * Wraps the underlying stream's method.
-	 * Updates the progress monitor if the next update increment has been reached.
-	 * @throws InterruptedIOException if the operation was interrupted before all of the
-	 *         bytes specified have been skipped, bytesTransferred will be zero
-	 * @throws IOException if an i/o error occurs
+	 * Wraps the underlying stream's method. Updates the progress monitor if the next update increment has been reached.
+	 * 
+	 * @throws InterruptedIOException
+	 *             if the operation was interrupted before all of the bytes specified have been skipped,
+	 *             bytesTransferred will be zero
+	 * @throws IOException
+	 *             if an i/o error occurs
 	 */
+	@Override
 	public int read() throws IOException {
 		int b = in.read();
 		if (b != -1) {
@@ -78,14 +92,17 @@ public abstract class ProgressMonitorInputStream extends FilterInputStream {
 		}
 		return b;
 	}
-	
+
 	/**
-	 * Wraps the underlying stream's method.
-	 * Updates the progress monitor if the next update increment has been reached.
-	 * @throws InterruptedIOException if the operation was interrupted before all of the
-	 *         bytes specified have been skipped, bytesTransferred may be non-zero
-	 * @throws IOException if an i/o error occurs
+	 * Wraps the underlying stream's method. Updates the progress monitor if the next update increment has been reached.
+	 * 
+	 * @throws InterruptedIOException
+	 *             if the operation was interrupted before all of the bytes specified have been skipped,
+	 *             bytesTransferred may be non-zero
+	 * @throws IOException
+	 *             if an i/o error occurs
 	 */
+	@Override
 	public int read(byte[] buffer, int offset, int length) throws IOException {
 		try {
 			int count = in.read(buffer, offset, length);
@@ -100,14 +117,17 @@ public abstract class ProgressMonitorInputStream extends FilterInputStream {
 			throw e;
 		}
 	}
-	
+
 	/**
-	 * Wraps the underlying stream's method.
-	 * Updates the progress monitor if the next update increment has been reached.
-	 * @throws InterruptedIOException if the operation was interrupted before all of the
-	 *         bytes specified have been skipped, bytesTransferred may be non-zero
-	 * @throws IOException if an i/o error occurs
+	 * Wraps the underlying stream's method. Updates the progress monitor if the next update increment has been reached.
+	 * 
+	 * @throws InterruptedIOException
+	 *             if the operation was interrupted before all of the bytes specified have been skipped,
+	 *             bytesTransferred may be non-zero
+	 * @throws IOException
+	 *             if an i/o error occurs
 	 */
+	@Override
 	public long skip(long amount) throws IOException {
 		try {
 			long count = in.skip(amount);
@@ -120,18 +140,21 @@ public abstract class ProgressMonitorInputStream extends FilterInputStream {
 			throw e;
 		}
 	}
-	
+
 	/**
 	 * Mark is not supported by the wrapper even if the underlying stream does, returns false.
 	 */
+	@Override
 	public boolean markSupported() {
 		return false;
 	}
-	
+
 	private void update(boolean now) {
 		if (bytesRead >= nextUpdate || now) {
 			nextUpdate = bytesRead - (bytesRead % updateIncrement);
-			if (nextUpdate != lastUpdate) updateMonitor(nextUpdate, bytesTotal, monitor);
+			if (nextUpdate != lastUpdate) {
+				updateMonitor(nextUpdate, bytesTotal, monitor);
+			}
 			lastUpdate = nextUpdate;
 			nextUpdate += updateIncrement;
 		}

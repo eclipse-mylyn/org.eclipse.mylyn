@@ -33,12 +33,14 @@ public class DateUtil {
 		try {
 			int monthInt = (calendar.get(Calendar.MONTH) + 1);
 			String month = "" + monthInt;
-			if (monthInt < 10)
+			if (monthInt < 10) {
 				month = "0" + month;
+			}
 			int dateInt = (calendar.get(Calendar.DATE));
 			String date = "" + dateInt;
-			if (dateInt < 10)
+			if (dateInt < 10) {
 				date = "0" + date;
+			}
 			return calendar.get(Calendar.YEAR) + "-" + month + "-" + date;
 		} catch (Exception e) {
 			return "<unresolved date>";
@@ -116,8 +118,9 @@ public class DateUtil {
 				sec = seconds + " seconds";
 			}
 			formatted += hour + min;
-			if (includeSeconds)
+			if (includeSeconds) {
 				formatted += sec;
+			}
 		} else if (seconds >= MIN) {
 			minutes = seconds / MIN;
 			if (minutes == 1) {
@@ -132,16 +135,18 @@ public class DateUtil {
 				sec = seconds + " seconds";
 			}
 			formatted += min;
-			if (includeSeconds)
+			if (includeSeconds) {
 				formatted += sec;
+			}
 		} else {
 			if (seconds == 1) {
 				sec = seconds + " second";
 			} else if (seconds > 1) {
 				sec = seconds + " seconds";
 			}
-			if (includeSeconds)
+			if (includeSeconds) {
 				formatted += sec;
+			}
 		}
 		return formatted;
 	}
@@ -165,8 +170,9 @@ public class DateUtil {
 	public static TimeZone getTimeZone(String zoneId) {
 		TimeZone timeZone = TimeZone.getTimeZone(zoneId);
 		if (!timeZone.getID().equals(zoneId)) {
-			StatusHandler.log(new Status(IStatus.INFO, IMonitorCoreConstants.ID_PLUGIN, "Specified time zone not available, using " + timeZone.getDisplayName()
-					+ ". Check repository settings."));
+			StatusHandler.log(new Status(IStatus.INFO, IMonitorCoreConstants.ID_PLUGIN,
+					"Specified time zone not available, using " + timeZone.getDisplayName()
+							+ ". Check repository settings."));
 		}
 		return timeZone;
 	}

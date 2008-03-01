@@ -27,7 +27,7 @@ public class WebLocation extends AbstractWebLocation {
 
 		this.credentialsByType = new HashMap<AuthenticationType, AuthenticationCredentials>();
 		this.proxyProvider = proxyProvider;
-		
+
 		if (username != null && password != null) {
 			setCredentials(AuthenticationType.REPOSITORY, username, password);
 		}
@@ -41,10 +41,12 @@ public class WebLocation extends AbstractWebLocation {
 		this(url, null, null, null);
 	}
 
+	@Override
 	public AuthenticationCredentials getCredentials(AuthenticationType authType) {
 		return credentialsByType.get(authType);
 	}
 
+	@Override
 	public Proxy getProxyForHost(String host, String proxyType) {
 		if (proxyProvider != null) {
 			return proxyProvider.getProxyForHost(host, proxyType);
@@ -52,6 +54,7 @@ public class WebLocation extends AbstractWebLocation {
 		return null;
 	}
 
+	@Override
 	public ResultType requestCredentials(AuthenticationType authType, String url) {
 		return ResultType.NOT_SUPPORTED;
 	}
@@ -59,5 +62,5 @@ public class WebLocation extends AbstractWebLocation {
 	public void setCredentials(AuthenticationType authType, String username, String password) {
 		credentialsByType.put(authType, new AuthenticationCredentials(username, password));
 	}
-	
+
 }

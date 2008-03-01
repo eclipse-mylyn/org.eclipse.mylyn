@@ -33,7 +33,9 @@ import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.NTCredentials;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
+import org.apache.commons.httpclient.params.DefaultHttpParams;
 import org.apache.commons.httpclient.params.HttpClientParams;
+import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 import org.apache.commons.logging.LogFactory;
@@ -145,7 +147,7 @@ public class WebClientUtil {
 		}
 
 		sb.append(" ");
-		sb.append(HttpClientParams.getDefaultParams().getParameter(HttpClientParams.USER_AGENT).toString().split("-")[1]);
+		sb.append(DefaultHttpParams.getDefaultParams().getParameter(HttpMethodParams.USER_AGENT).toString().split("-")[1]);
 
 		sb.append(" Java/");
 		sb.append(System.getProperty("java.version"));
@@ -575,7 +577,7 @@ public class WebClientUtil {
 
 	private static void setupHttpClientParams(HttpClient client, String userAgent) {
 		client.getParams().setBooleanParameter(HttpClientParams.ALLOW_CIRCULAR_REDIRECTS, true);
-		client.getParams().setParameter(HttpClientParams.USER_AGENT, getUserAgent(userAgent));
+		client.getParams().setParameter(HttpMethodParams.USER_AGENT, getUserAgent(userAgent));
 		client.getHttpConnectionManager().getParams().setSoTimeout(WebClientUtil.SOCKET_TIMEOUT);
 		client.getHttpConnectionManager().getParams().setConnectionTimeout(WebClientUtil.CONNNECT_TIMEOUT);
 	}

@@ -22,7 +22,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
  */
 public class InteractionLoggerTest extends TestCase {
 
-	private InteractionEventLogger logger = UiUsageMonitorPlugin.getDefault().getInteractionLogger();
+	private final InteractionEventLogger logger = UiUsageMonitorPlugin.getDefault().getInteractionLogger();
 
 	@Override
 	protected void setUp() throws Exception {

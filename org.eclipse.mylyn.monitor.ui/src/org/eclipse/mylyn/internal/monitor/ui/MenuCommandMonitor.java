@@ -38,11 +38,13 @@ public class MenuCommandMonitor implements Listener {
 
 	public void handleEvent(Event event) {
 		try {
-			if (!(event.widget instanceof Item))
+			if (!(event.widget instanceof Item)) {
 				return;
+			}
 			Item item = (Item) event.widget;
-			if (item.getData() == null)
+			if (item.getData() == null) {
 				return;
+			}
 			Object target = event.widget.getData();
 			String id = null;
 			String delta = null;

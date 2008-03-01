@@ -12,12 +12,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Calendar;
 
+import junit.framework.TestCase;
+
 import org.eclipse.core.runtime.Path;
 import org.eclipse.mylyn.context.tests.support.FileTool;
 import org.eclipse.mylyn.internal.monitor.usage.FileDisplayDialog;
 import org.eclipse.mylyn.monitor.tests.MonitorTestsPlugin;
-
-import junit.framework.TestCase;
 
 /**
  * @author Meghan Allen

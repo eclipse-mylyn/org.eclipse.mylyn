@@ -39,7 +39,8 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 		try {
 			MonitorUiPlugin.getDefault().addWindowPostSelectionListener(this);
 		} catch (NullPointerException e) {
-			StatusHandler.log(new Status(IStatus.WARNING, MonitorUiPlugin.ID_PLUGIN, "Monitors can not be instantiated until the workbench is active", e));
+			StatusHandler.log(new Status(IStatus.WARNING, MonitorUiPlugin.ID_PLUGIN,
+					"Monitors can not be instantiated until the workbench is active", e));
 		}
 	}
 
@@ -58,8 +59,9 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 				return;
 			}
 		}
-		if (selection == null || selection.isEmpty())
+		if (selection == null || selection.isEmpty()) {
 			return;
+		}
 		if (!ContextCorePlugin.getContextManager().isContextActive()) {
 			handleWorkbenchPartSelection(part, selection, false);
 		} else {
@@ -75,8 +77,9 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 	 */
 	protected InteractionEvent handleElementSelection(IWorkbenchPart part, Object selectedElement,
 			boolean contributeToContext) {
-		if (selectedElement == null || selectedElement.equals(lastSelectedElement))
+		if (selectedElement == null || selectedElement.equals(lastSelectedElement)) {
 			return null;
+		}
 		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(selectedElement);
 		String handleIdentifier = bridge.getHandleIdentifier(selectedElement);
 		InteractionEvent selectionEvent;
@@ -97,8 +100,9 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 	 * Intended to be called back by subclasses.
 	 */
 	protected void handleElementEdit(IWorkbenchPart part, Object selectedElement, boolean contributeToContext) {
-		if (selectedElement == null)
+		if (selectedElement == null) {
 			return;
+		}
 		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(selectedElement);
 		String handleIdentifier = bridge.getHandleIdentifier(selectedElement);
 		InteractionEvent editEvent = new InteractionEvent(InteractionEvent.Kind.EDIT, bridge.getContentType(),

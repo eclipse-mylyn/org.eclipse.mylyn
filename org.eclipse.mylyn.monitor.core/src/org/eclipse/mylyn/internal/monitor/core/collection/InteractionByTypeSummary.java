@@ -23,16 +23,18 @@ public class InteractionByTypeSummary {
 	}
 
 	public void setUserCount(int userId, String originId, int count) {
-		if (!usageMap.containsKey(originId))
+		if (!usageMap.containsKey(originId)) {
 			usageMap.put(originId, new HashMap<Integer, Integer>());
+		}
 		usageMap.get(originId).put(userId, count);
 	}
 
 	public int getUserCount(int userId, String originId) {
-		if (usageMap.containsKey(originId) && usageMap.get(originId).containsKey(userId))
+		if (usageMap.containsKey(originId) && usageMap.get(originId).containsKey(userId)) {
 			return usageMap.get(originId).get(userId);
-		else
+		} else {
 			return 0;
+		}
 	}
 
 	public int getTotalCount(String originId) {
@@ -56,10 +58,11 @@ public class InteractionByTypeSummary {
 			System.out.print(originId);
 			Set<Integer> userIdSet = usageMap.get(originId).keySet();
 			for (int userId : allUserIdsList) {
-				if (userIdSet.contains(userId))
+				if (userIdSet.contains(userId)) {
 					System.out.print("\t1");
-				else
+				} else {
 					System.out.print("\t0");
+				}
 			}
 			System.out.println();
 

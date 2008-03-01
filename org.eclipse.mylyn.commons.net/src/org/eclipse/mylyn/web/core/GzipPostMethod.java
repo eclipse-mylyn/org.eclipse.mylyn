@@ -31,7 +31,7 @@ import org.apache.commons.httpclient.methods.PostMethod;
  * @author Maarten Meijer
  */
 public class GzipPostMethod extends PostMethod {
-	private boolean gzipWanted;
+	private final boolean gzipWanted;
 
 	private boolean gzipReceived;
 

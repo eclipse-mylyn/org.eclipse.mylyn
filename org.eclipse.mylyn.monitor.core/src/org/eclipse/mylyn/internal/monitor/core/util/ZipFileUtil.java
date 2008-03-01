@@ -158,7 +158,8 @@ public class ZipFileUtil {
 					monitor.worked(1);
 				}
 			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.ERROR, IMonitorCoreConstants.ID_PLUGIN, "Could not add " + file.getName() + " to zip", e));
+				StatusHandler.log(new Status(IStatus.ERROR, IMonitorCoreConstants.ID_PLUGIN, "Could not add "
+						+ file.getName() + " to zip", e));
 			}
 		}
 

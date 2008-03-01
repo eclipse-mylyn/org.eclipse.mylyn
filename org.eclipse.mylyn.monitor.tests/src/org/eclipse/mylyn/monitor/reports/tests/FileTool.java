@@ -191,8 +191,9 @@ public class FileTool {
 				File dstChild = new File(dst, srcChildren[i]);
 				copy(srcChild, dstChild);
 			}
-		} else
+		} else {
 			transferData(src, dst);
+		}
 	}
 
 	@SuppressWarnings("deprecation")
@@ -251,9 +252,9 @@ public class FileTool {
 	public static void delete(File file) {
 		if (file.exists()) {
 			for (int i = 0; i < MAX_RETRY; i++) {
-				if (file.delete())
+				if (file.delete()) {
 					i = MAX_RETRY;
-				else {
+				} else {
 					try {
 						Thread.sleep(1000); // sleep a second
 					} catch (InterruptedException e) {

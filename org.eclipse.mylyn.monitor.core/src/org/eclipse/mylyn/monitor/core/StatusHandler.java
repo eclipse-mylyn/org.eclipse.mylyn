@@ -107,6 +107,7 @@ public class StatusHandler {
 	/**
 	 * @deprecated use {@link #log(IStatus)} instead
 	 */
+	@Deprecated
 	public static void log(String message, Object source) {
 		message = "Mylyn: " + message;
 		if (source != null) {
@@ -119,15 +120,17 @@ public class StatusHandler {
 	/**
 	 * @deprecated use {@link #log(IStatus)} instead
 	 */
+	@Deprecated
 	public static void log(Throwable throwable, String message) {
-		fail(throwable, message, false, Status.INFO);
+		fail(throwable, message, false, IStatus.INFO);
 	}
 
 	/**
 	 * @deprecated use {@link #fail(IStatus)} or {{@link #log(IStatus)} instead
 	 */
+	@Deprecated
 	public static void fail(Throwable throwable, String message, boolean informUser) {
-		fail(throwable, message, informUser, Status.ERROR);
+		fail(throwable, message, informUser, IStatus.ERROR);
 	}
 
 	/**
@@ -139,6 +142,7 @@ public class StatusHandler {
 	 *            if true dialog box will be popped up
 	 * @deprecated use {@link #fail(IStatus)} or {{@link #log(IStatus)} instead
 	 */
+	@Deprecated
 	public static void fail(Throwable throwable, String message, boolean informUser, int severity) {
 		if (message == null) {
 			message = "no message";
@@ -155,7 +159,7 @@ public class StatusHandler {
 
 	/**
 	 * Logs <code>status</code> to this bundle's log if a platform is running. Forwards <code>status</code> to
-	 * registered status handlers. 
+	 * registered status handlers.
 	 * 
 	 * API 3.0 add comment that method does not block
 	 * 
@@ -168,15 +172,15 @@ public class StatusHandler {
 			handler.fail(status, true);
 		}
 	}
-	
+
 	/**
 	 * Display error to user
 	 * 
 	 * @param title
 	 *            dialog title
 	 * @param status
-	 *            IStatus to reveal in dialog
-	 * FIXME deprecated use <code>org.eclipse.ui.statushandlers.StatusMananger#getManager().handle()</code> instead.
+	 *            IStatus to reveal in dialog FIXME deprecated use
+	 *            <code>org.eclipse.ui.statushandlers.StatusMananger#getManager().handle()</code> instead.
 	 */
 	public static void displayStatus(String title, IStatus status) {
 		for (IStatusHandler handler : handlers) {

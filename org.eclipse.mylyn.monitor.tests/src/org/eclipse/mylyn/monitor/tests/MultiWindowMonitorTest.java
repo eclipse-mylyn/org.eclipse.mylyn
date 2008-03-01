@@ -44,7 +44,7 @@ public class MultiWindowMonitorTest extends TestCase {
 
 		public ContextAwareWorkbenchWindow(int number, boolean monitored) {
 			super(number);
-			this.monitored  = monitored;
+			this.monitored = monitored;
 		}
 
 		public boolean isMonitored() {
@@ -53,13 +53,14 @@ public class MultiWindowMonitorTest extends TestCase {
 
 		public boolean isPerspectiveManaged() {
 			return false;
-		}	
+		}
 	}
-	
+
 	private class MockWorkbench {
-		private Workbench wBench;
+		private final Workbench wBench;
+
 		private WindowManager parentManager = null;
-		
+
 		private MockWorkbench() {
 			wBench = Workbench.getInstance();
 
@@ -79,7 +80,7 @@ public class MultiWindowMonitorTest extends TestCase {
 
 			boolean checkArray[] = new boolean[count];
 			for (int nX = 0; nX < count; nX++) {
-				if(windows[nX] instanceof WorkbenchWindow) {
+				if (windows[nX] instanceof WorkbenchWindow) {
 					WorkbenchWindow ww = (WorkbenchWindow) windows[nX];
 					int index = ww.getNumber() - 1;
 					if (index >= 0 && index < count) {
@@ -99,7 +100,6 @@ public class MultiWindowMonitorTest extends TestCase {
 		private ContextAwareWorkbenchWindow newWorkbenchWindow(boolean isMonitored) {
 			return new ContextAwareWorkbenchWindow(getNewWindowNumber(), isMonitored);
 		}
-
 
 		public ContextAwareWorkbenchWindow restoreState(IMemento memento, boolean isMonitored) {
 
@@ -123,15 +123,17 @@ public class MultiWindowMonitorTest extends TestCase {
 			return newWindow;
 		}
 	}
-	
-	private InteractionEventLogger logger = UiUsageMonitorPlugin.getDefault().getInteractionLogger();
 
-	private MockSelectionMonitor selectionMonitor = new MockSelectionMonitor();
+	private final InteractionEventLogger logger = UiUsageMonitorPlugin.getDefault().getInteractionLogger();
+
+	private final MockSelectionMonitor selectionMonitor = new MockSelectionMonitor();
 
 	private IWorkbenchWindow window1;
 
 	private IWorkbenchWindow window2;
+
 	private IWorkbenchWindow window3;
+
 	private IWorkbenchWindow window4;
 
 	private boolean monitoringWasEnabled;
@@ -141,7 +143,7 @@ public class MultiWindowMonitorTest extends TestCase {
 		super.setUp();
 		monitoringWasEnabled = UiUsageMonitorPlugin.getDefault().isMonitoringEnabled();
 		UiUsageMonitorPlugin.getDefault().stopMonitoring();
-		
+
 		// make sure the MonitorUiPlugin is fully initialized
 		while (PlatformUI.getWorkbench().getDisplay().readAndDispatch()) {
 		}
@@ -199,7 +201,7 @@ public class MultiWindowMonitorTest extends TestCase {
 		}
 		return restoreWorkbenchWindow((Workbench) w.getWorkbench(), memento);
 	}
-	
+
 	private IWorkbenchWindow createContextAwareWindow(boolean monitored, IWorkbenchWindow window) {
 		WorkbenchWindow w = (WorkbenchWindow) window;
 		XMLMemento memento = XMLMemento.createWriteRoot(IWorkbenchConstants.TAG_WINDOW);
@@ -210,7 +212,6 @@ public class MultiWindowMonitorTest extends TestCase {
 		return new MockWorkbench().restoreState(memento, monitored);
 	}
 
-	
 	protected IWorkbenchWindow restoreWorkbenchWindow(Workbench workbench, IMemento memento) {
 		return (IWorkbenchWindow) invokeMethod(workbench, "restoreWorkbenchWindow", new Class[] { IMemento.class },
 				new Object[] { memento });

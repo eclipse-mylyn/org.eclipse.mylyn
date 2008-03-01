@@ -40,7 +40,7 @@ public class BrowserMonitor extends AbstractUserInteractionMonitor implements IP
 
 	public static final String URL_LIST_DELIM = ",";
 
-	private UrlTrackingListener urlTrackingListener = new UrlTrackingListener();
+	private final UrlTrackingListener urlTrackingListener = new UrlTrackingListener();
 
 	private List<String> acceptedUrls = new ArrayList<String>();
 
@@ -54,8 +54,9 @@ public class BrowserMonitor extends AbstractUserInteractionMonitor implements IP
 			String url = locationEvent.location;
 			boolean accept = false;
 			for (String urlMatch : acceptedUrls) {
-				if (url.indexOf(urlMatch) != -1)
+				if (url.indexOf(urlMatch) != -1) {
 					accept = true;
+				}
 			}
 			if (accept) {
 				InteractionEvent interactionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION, "url", url,
@@ -76,8 +77,9 @@ public class BrowserMonitor extends AbstractUserInteractionMonitor implements IP
 	public void partOpened(IWorkbenchPart part) {
 		if (part instanceof WebBrowserEditor) {
 			Browser browser = getBrowser((WebBrowserEditor) part);
-			if (browser != null)
+			if (browser != null) {
 				browser.addLocationListener(urlTrackingListener);
+			}
 		}
 	}
 
@@ -109,7 +111,8 @@ public class BrowserMonitor extends AbstractUserInteractionMonitor implements IP
 				return ((BrowserViewer) browserObject).getBrowser();
 			}
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.WARNING, MonitorUiPlugin.ID_PLUGIN, "Could not add browser listener", e));
+			StatusHandler.log(new Status(IStatus.WARNING, MonitorUiPlugin.ID_PLUGIN, "Could not add browser listener",
+					e));
 		}
 		return null;
 	}

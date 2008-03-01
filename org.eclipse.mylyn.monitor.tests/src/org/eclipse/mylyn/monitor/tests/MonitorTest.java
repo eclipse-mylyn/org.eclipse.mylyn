@@ -33,15 +33,15 @@ import org.eclipse.ui.PlatformUI;
  */
 public class MonitorTest extends TestCase implements IMylarMonitorLifecycleListener {
 
-	private InteractionEventLogger logger = UiUsageMonitorPlugin.getDefault().getInteractionLogger();
+	private final InteractionEventLogger logger = UiUsageMonitorPlugin.getDefault().getInteractionLogger();
 
-	private MockSelectionMonitor selectionMonitor = new MockSelectionMonitor();
+	private final MockSelectionMonitor selectionMonitor = new MockSelectionMonitor();
 
-	private KeybindingCommandMonitor commandMonitor = new KeybindingCommandMonitor();
+	private final KeybindingCommandMonitor commandMonitor = new KeybindingCommandMonitor();
 
-	private BrowserMonitor browserMonitor = new BrowserMonitor();
+	private final BrowserMonitor browserMonitor = new BrowserMonitor();
 
-	private PerspectiveChangeMonitor perspectiveMonitor = new PerspectiveChangeMonitor();
+	private final PerspectiveChangeMonitor perspectiveMonitor = new PerspectiveChangeMonitor();
 
 	@Override
 	protected void setUp() throws Exception {

@@ -12,7 +12,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Immutable.  Encapsulates interaction made by the user or on behalf of the user.
+ * Immutable. Encapsulates interaction made by the user or on behalf of the user.
  * 
  * Also see: http://wiki.eclipse.org/index.php/Mylyn_Integrator_Reference#Monitor_API
  * 
@@ -22,49 +22,47 @@ import java.util.Date;
 public class InteractionEvent {
 
 	/**
-	 * Determines the type of interaction that took place, either initiated by the user
-	 * or done on behalf of the user.
+	 * Determines the type of interaction that took place, either initiated by the user or done on behalf of the user.
 	 */
 	public enum Kind {
 		/**
 		 * User selection of elements, issued by the Eclipse post-selection mechanism.
 		 */
-		SELECTION, 
-		
+		SELECTION,
+
 		/**
 		 * Edit events that are created by text selections in an editor.
 		 */
-		EDIT, 
-		
+		EDIT,
+
 		/**
 		 * Commands and actions invoked via buttons, menus, and keyboard shortcuts.
 		 */
-		COMMAND, 
-		
+		COMMAND,
+
 		/**
-		 * Workbench preference changes, sometimes made by the user, sometimes automatically
-		 * on behalf of the user.
+		 * Workbench preference changes, sometimes made by the user, sometimes automatically on behalf of the user.
 		 */
-		PREFERENCE, 
-		
+		PREFERENCE,
+
 		/**
 		 * Candidates for future interaction.
 		 */
-		PREDICTION, 
-		
+		PREDICTION,
+
 		/**
 		 * Indirect user interaction with elements (e.g. parent gets implicitly selected when element is selected).
 		 */
-		PROPAGATION, 
-		
+		PROPAGATION,
+
 		/**
-		 * Direct manipulation of interest via actions such as "Mark as Landmark" and "Mark Less Interesting". 
+		 * Direct manipulation of interest via actions such as "Mark as Landmark" and "Mark Less Interesting".
 		 */
-		MANIPULATION, 
-		
+		MANIPULATION,
+
 		/**
-		 * Capture interaction with tasks, the workbench, and lifecycle events that define where the user's
-		 * attention is directed.
+		 * Capture interaction with tasks, the workbench, and lifecycle events that define where the user's attention is
+		 * directed.
 		 */
 		ATTENTION;
 
@@ -76,7 +74,7 @@ public class InteractionEvent {
 		}
 
 		/**
-		 * @return	Simple string representation of the event kind or "null" if no such kind. 
+		 * @return Simple string representation of the event kind or "null" if no such kind.
 		 */
 		@Override
 		public String toString() {
@@ -103,27 +101,36 @@ public class InteractionEvent {
 		}
 
 		/**
-		 * @return	The corresponding event based on the string provided, or null if no such STring.
+		 * @return The corresponding event based on the string provided, or null if no such STring.
 		 */
 		public static Kind fromString(String string) {
-			if (string == null)
+			if (string == null) {
 				return null;
-			if (string.equals("selection"))
+			}
+			if (string.equals("selection")) {
 				return SELECTION;
-			if (string.equals("edit"))
+			}
+			if (string.equals("edit")) {
 				return EDIT;
-			if (string.equals("command"))
+			}
+			if (string.equals("command")) {
 				return COMMAND;
-			if (string.equals("preference"))
+			}
+			if (string.equals("preference")) {
 				return PREFERENCE;
-			if (string.equals("prediction"))
+			}
+			if (string.equals("prediction")) {
 				return PREDICTION;
-			if (string.equals("propagation"))
+			}
+			if (string.equals("propagation")) {
 				return PROPAGATION;
-			if (string.equals("manipulation"))
+			}
+			if (string.equals("manipulation")) {
 				return MANIPULATION;
-			if (string.equals("attention"))
+			}
+			if (string.equals("attention")) {
 				return ATTENTION;
+			}
 			return null;
 		}
 	}
@@ -144,7 +151,7 @@ public class InteractionEvent {
 
 	private final String delta;
 
-	private float interestContribution;
+	private final float interestContribution;
 
 	/**
 	 * Use to specify an uknown identifier, e.g. for an originId.
@@ -155,14 +162,14 @@ public class InteractionEvent {
 	 * For parameter description see this class's getters.
 	 */
 	public InteractionEvent(Kind kind, String structureKind, String handle, String originId) {
-		this(kind, structureKind, handle, originId, 1f); 
+		this(kind, structureKind, handle, originId, 1f);
 	}
 
 	/**
 	 * For parameter description see this class's getters.
 	 */
 	public InteractionEvent(Kind kind, String structureKind, String handle, String originId, String navigatedRelation) {
-		this(kind, structureKind, handle, originId, navigatedRelation, "null", 1f); 
+		this(kind, structureKind, handle, originId, navigatedRelation, "null", 1f);
 	}
 
 	/**
@@ -170,7 +177,7 @@ public class InteractionEvent {
 	 */
 	public InteractionEvent(Kind kind, String structureKind, String handle, String originId, String navigatedRelation,
 			float interestContribution) {
-		this(kind, structureKind, handle, originId, navigatedRelation, "null", interestContribution); 
+		this(kind, structureKind, handle, originId, navigatedRelation, "null", interestContribution);
 	}
 
 	/**
@@ -180,7 +187,7 @@ public class InteractionEvent {
 		return new InteractionEvent(InteractionEvent.Kind.COMMAND, "null", "null", originId, "null", delta, 1);
 	}
 
-	/** 
+	/**
 	 * For parameter description see this class's getters.
 	 */
 	public static InteractionEvent makeCopy(InteractionEvent originalEvent, float newInterestContribution) {
@@ -241,8 +248,9 @@ public class InteractionEvent {
 
 	@Override
 	public boolean equals(Object object) {
-		if (object == null || !(object instanceof InteractionEvent))
+		if (object == null || !(object instanceof InteractionEvent)) {
 			return false;
+		}
 		InteractionEvent event = (InteractionEvent) object;
 		return (date == null ? event.date == null : date.equals(event.date))
 				&& (endDate == null ? event.endDate == null : endDate.equals(event.endDate))
@@ -259,22 +267,30 @@ public class InteractionEvent {
 	@Override
 	public int hashCode() {
 		int hashCode = 0;
-		if (date != null)
+		if (date != null) {
 			hashCode += date.hashCode();
-		if (endDate != null)
+		}
+		if (endDate != null) {
 			hashCode += endDate.hashCode();
-		if (kind != null)
+		}
+		if (kind != null) {
 			hashCode += kind.hashCode();
-		if (structureKind != null)
+		}
+		if (structureKind != null) {
 			hashCode += structureKind.hashCode();
-		if (structureHandle != null)
+		}
+		if (structureHandle != null) {
 			hashCode += structureHandle.hashCode();
-		if (originId != null)
+		}
+		if (originId != null) {
 			hashCode += originId.hashCode();
-		if (navigation != null)
+		}
+		if (navigation != null) {
 			hashCode += navigation.hashCode();
-		if (delta != null)
+		}
+		if (delta != null) {
 			hashCode += delta.hashCode();
+		}
 		// TODO: could this lose precision?
 		hashCode += new Float(interestContribution).hashCode();
 		return hashCode;
@@ -295,14 +311,14 @@ public class InteractionEvent {
 	}
 
 	/**
-	 * @return	The content type of the element being interacted with.
+	 * @return The content type of the element being interacted with.
 	 */
 	public String getStructureKind() {
 		return structureKind;
 	}
 
 	/**
-	 * @return	Time stamp for the occurrence of the event.
+	 * @return Time stamp for the occurrence of the event.
 	 */
 	public Date getDate() {
 		return date;
@@ -311,21 +327,21 @@ public class InteractionEvent {
 	/**
 	 * Can be used for extensibility, e.g. by adding an XML-encoded String.
 	 * 
-	 * @return	Additional information relevant to interaction monitoring.
+	 * @return Additional information relevant to interaction monitoring.
 	 */
 	public String getDelta() {
 		return delta;
 	}
 
 	/**
-	 * @return	Defines the kind of interaction that took place.
+	 * @return Defines the kind of interaction that took place.
 	 */
 	public Kind getKind() {
 		return kind;
 	}
 
 	/**
-	 * @return	The UI affordance that the event was issued from.
+	 * @return The UI affordance that the event was issued from.
 	 */
 	public String getOriginId() {
 		return originId;
@@ -334,21 +350,21 @@ public class InteractionEvent {
 	/**
 	 * API-3.0: consider refactoring in order to de-couple events from interest.
 	 * 
-	 * @return	If an aggregate event, amount of interest of all contained events.
+	 * @return If an aggregate event, amount of interest of all contained events.
 	 */
 	public float getInterestContribution() {
 		return interestContribution;
 	}
 
 	/**
-	 * @return	 If an aggregate event, time stamp of the last occurrence.
+	 * @return If an aggregate event, time stamp of the last occurrence.
 	 */
 	public Date getEndDate() {
 		return endDate;
 	}
 
 	/**
-	 * @return	An identifier for the kind of relation that corresponds to the navigation to this element. 
+	 * @return An identifier for the kind of relation that corresponds to the navigation to this element.
 	 */
 	public String getNavigation() {
 		return navigation;

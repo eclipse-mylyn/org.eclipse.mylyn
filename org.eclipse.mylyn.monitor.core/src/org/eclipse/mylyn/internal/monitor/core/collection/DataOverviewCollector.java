@@ -23,11 +23,11 @@ public class DataOverviewCollector implements IUsageCollector {
 
 	private static long FIVEMININMS = 5 * 60 * 1000;
 
-	private Map<Integer, Integer> interactionHistorySizes = new HashMap<Integer, Integer>();
+	private final Map<Integer, Integer> interactionHistorySizes = new HashMap<Integer, Integer>();
 
-	private Map<Integer, List<Date>> interactionHistoryRanges = new HashMap<Integer, List<Date>>();
+	private final Map<Integer, List<Date>> interactionHistoryRanges = new HashMap<Integer, List<Date>>();
 
-	private Map<Integer, Long> interactionHistoryActiveDuration = new HashMap<Integer, Long>();
+	private final Map<Integer, Long> interactionHistoryActiveDuration = new HashMap<Integer, Long>();
 
 	// For calculating active milliseconds
 	private int currentUser = -1;

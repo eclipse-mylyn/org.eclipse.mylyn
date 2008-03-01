@@ -104,7 +104,7 @@ public class ErrorReporterManager {
 			} else {
 				StatusHandler.log(new Status(IStatus.WARNING, IMonitorCoreConstants.ID_PLUGIN,
 						"Could not load error reporter extenstion: \"" + object.getClass().getCanonicalName() + "\""
-						+ " does not implement \"" + AbstractErrorReporter.class.getCanonicalName() + "\""));
+								+ " does not implement \"" + AbstractErrorReporter.class.getCanonicalName() + "\""));
 			}
 		} catch (CoreException e) {
 			StatusHandler.log(new Status(IStatus.WARNING, IMonitorCoreConstants.ID_PLUGIN,

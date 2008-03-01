@@ -40,14 +40,16 @@ public class ViewUsageCollector implements IUsageCollector {
 		}
 
 		if (event.getKind().equals(InteractionEvent.Kind.SELECTION)) {
-			if (!usersNumSelections.containsKey(userId))
+			if (!usersNumSelections.containsKey(userId)) {
 				usersNumSelections.put(userId, 0);
+			}
 			int numEvents = usersNumSelections.get(userId) + 1;
 			usersNumSelections.put(userId, numEvents);
 
 			String viewId = event.getOriginId();
-			if (!normalViewSelections.containsKey(viewId))
+			if (!normalViewSelections.containsKey(viewId)) {
 				normalViewSelections.put(viewId, 0);
+			}
 			int normal = normalViewSelections.get(viewId) + 1;
 			normalViewSelections.put(viewId, normal);
 		}

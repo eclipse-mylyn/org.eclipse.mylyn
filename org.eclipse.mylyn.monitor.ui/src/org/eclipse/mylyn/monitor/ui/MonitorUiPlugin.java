@@ -50,10 +50,11 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 	private static final int DEFAULT_ACTIVITY_TIMEOUT = 180000;
 
 	public static final String ID_PLUGIN = "org.eclipse.mylyn.monitor.ui";
-	
+
 	/**
 	 * @deprecated
 	 */
+	@Deprecated
 	public static final int TIMEOUT_INACTIVITY_MILLIS = 60 * 1000;
 
 	private int inactivityTimeout = TIMEOUT_INACTIVITY_MILLIS;
@@ -62,16 +63,16 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 	private ShellLifecycleListener shellLifecycleListener;
 
-	private List<AbstractUserInteractionMonitor> selectionMonitors = new ArrayList<AbstractUserInteractionMonitor>();
+	private final List<AbstractUserInteractionMonitor> selectionMonitors = new ArrayList<AbstractUserInteractionMonitor>();
 
 	/**
 	 * TODO: this could be merged with context interaction events rather than requiring update from the monitor.
 	 */
-	private List<IInteractionEventListener> interactionListeners = new ArrayList<IInteractionEventListener>();
+	private final List<IInteractionEventListener> interactionListeners = new ArrayList<IInteractionEventListener>();
 
 	private ActivityContextManager activityContextManager;
 
-	private ArrayList<AbstractUserActivityMonitor> monitors = new ArrayList<AbstractUserActivityMonitor>();
+	private final ArrayList<AbstractUserActivityMonitor> monitors = new ArrayList<AbstractUserActivityMonitor>();
 
 	protected Set<IPartListener> partListeners = new HashSet<IPartListener>();
 
@@ -81,12 +82,12 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 	protected Set<ISelectionListener> postSelectionListeners = new HashSet<ISelectionListener>();
 
-	private Set<IWorkbenchWindow> monitoredWindows = new HashSet<IWorkbenchWindow>();
+	private final Set<IWorkbenchWindow> monitoredWindows = new HashSet<IWorkbenchWindow>();
 
 	public static final String OBFUSCATED_LABEL = "[obfuscated]";
 
 	private IWorkbenchWindow launchingWorkbenchWindow = null;
-	
+
 	private final org.eclipse.jface.util.IPropertyChangeListener PROPERTY_LISTENER = new org.eclipse.jface.util.IPropertyChangeListener() {
 
 		public void propertyChange(org.eclipse.jface.util.PropertyChangeEvent event) {
@@ -138,7 +139,6 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 		}
 	};
 
-
 	public MonitorUiPlugin() {
 		INSTANCE = this;
 	}
@@ -146,11 +146,11 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		
+
 		getPreferenceStore().setDefault(ActivityContextManager.ACTIVITY_TIMEOUT, DEFAULT_ACTIVITY_TIMEOUT);
 		getPreferenceStore().setDefault(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED, true);
 		getPreferenceStore().addPropertyChangeListener(PROPERTY_LISTENER);
-		
+
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				try {
@@ -219,7 +219,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 	public int getInactivityTimeout() {
 		return inactivityTimeout;
 	}
-	
+
 	public void setInactivityTimeout(int timeout) {
 		inactivityTimeout = timeout;
 		activityContextManager.setInactivityTimeout(inactivityTimeout);
@@ -329,11 +329,11 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 					IExtensionPoint extensionPoint = registry.getExtensionPoint(EXTENSION_ID_USER);
 					if (extensionPoint != null) {
 						IExtension[] extensions = extensionPoint.getExtensions();
-						for (int i = 0; i < extensions.length; i++) {
-							IConfigurationElement[] elements = extensions[i].getConfigurationElements();
-							for (int j = 0; j < elements.length; j++) {
-								if (elements[j].getName().compareTo(ELEMENT_ACTIVITY_TIMER) == 0) {
-									readActivityMonitor(elements[j]);
+						for (IExtension extension : extensions) {
+							IConfigurationElement[] elements = extension.getConfigurationElements();
+							for (IConfigurationElement element : elements) {
+								if (element.getName().compareTo(ELEMENT_ACTIVITY_TIMER) == 0) {
+									readActivityMonitor(element);
 								}
 							}
 						}
@@ -341,7 +341,8 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 					}
 				}
 			} catch (Throwable t) {
-				StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN, "Could not read monitor extension", t));
+				StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN,
+						"Could not read monitor extension", t));
 			}
 		}
 
@@ -354,7 +355,8 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 					}
 				}
 			} catch (CoreException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN, "Could not load activity timer", e));
+				StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN, "Could not load activity timer",
+						e));
 			}
 		}
 	}

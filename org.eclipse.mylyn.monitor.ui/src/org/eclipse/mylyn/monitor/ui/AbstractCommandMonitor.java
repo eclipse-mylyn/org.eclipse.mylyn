@@ -35,7 +35,8 @@ public abstract class AbstractCommandMonitor implements IExecutionListener {
 					ICommandService.class);
 			commandService.addExecutionListener(this);
 		} catch (NullPointerException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN, "Monitors can not be instantiated until the workbench is active.", e));
+			StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN,
+					"Monitors can not be instantiated until the workbench is active.", e));
 		}
 	}
 
@@ -62,8 +63,9 @@ public abstract class AbstractCommandMonitor implements IExecutionListener {
 	}
 
 	public void preExecute(String commandId, ExecutionEvent event) {
-		if (commandId != null)
+		if (commandId != null) {
 			handleCommandExecution(commandId, event);
+		}
 	}
 
 	protected abstract void handleCommandExecution(String commandId, ExecutionEvent event);

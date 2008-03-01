@@ -20,9 +20,9 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
  */
 public class CommandUsageCollector implements IUsageCollector {
 
-	private InteractionByTypeSummary commands = new InteractionByTypeSummary();
+	private final InteractionByTypeSummary commands = new InteractionByTypeSummary();
 
-	private Set<Integer> userIdSet = new HashSet<Integer>();
+	private final Set<Integer> userIdSet = new HashSet<Integer>();
 
 	public void consumeEvent(InteractionEvent event, int userId) {
 		userIdSet.add(userId);

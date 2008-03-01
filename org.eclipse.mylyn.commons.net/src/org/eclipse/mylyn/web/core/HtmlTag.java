@@ -35,7 +35,7 @@ public class HtmlTag {
 	private HashMap<String, String> attributes;
 
 	/** tag's base url */
-	private URL baseUrl;
+	private final URL baseUrl;
 
 	/** tag is self terminated */
 	private boolean selfTerminating;
@@ -108,14 +108,16 @@ public class HtmlTag {
 	 *             if the argument is <code>null</code> or empty string
 	 */
 	public void setTagName(String s) throws IllegalArgumentException {
-		if (s == null || s.length() == 0)
+		if (s == null || s.length() == 0) {
 			throw new IllegalArgumentException("Empty tag name");
+		}
 		if (s.charAt(0) == '/') {
 			isEndTag = true;
 			s = s.substring(1);
 		}
-		if (s.length() == 0)
+		if (s.length() == 0) {
 			throw new IllegalArgumentException("Empty tag name");
+		}
 		tagName = s;
 		tagType = tags.get(s.toUpperCase(Locale.ENGLISH));
 		if (tagType == null) {
@@ -174,8 +176,9 @@ public class HtmlTag {
 					for (int i = 0; i < target.length(); i++) {
 						char ch = target.charAt(i);
 						if (!Character.isWhitespace(ch)) {
-							if (i > 0)
+							if (i > 0) {
 								target = target.substring(i + 1);
+							}
 							break;
 						}
 					}
@@ -183,8 +186,9 @@ public class HtmlTag {
 
 					if (target.startsWith("news:") || (target.indexOf("://") != -1 && target.length() >= 7)) {
 						// Absolute URL
-						if (target.substring(0, 7).compareToIgnoreCase("http://") == 0)
+						if (target.substring(0, 7).compareToIgnoreCase("http://") == 0) {
 							sb.append(target);
+						}
 					} else {
 						// Relative URL
 
@@ -192,13 +196,15 @@ public class HtmlTag {
 						int lastSep = -1;
 						for (int i = 0; i < baseDir.length(); i++) {
 							char ch = baseDir.charAt(i);
-							if (ch == '/')
+							if (ch == '/') {
 								lastSep = i;
-							else if (ch == '?')
+							} else if (ch == '?') {
 								break;
+							}
 						}
-						if (lastSep >= 0)
+						if (lastSep >= 0) {
 							baseDir = baseDir.substring(0, lastSep);
+						}
 						while (baseDir.length() > 1 && baseDir.endsWith("/.")) {
 							baseDir = baseDir.substring(0, baseDir.length() - 2);
 						}
@@ -231,8 +237,9 @@ public class HtmlTag {
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		sb.append('<');
-		if (isEndTag)
+		if (isEndTag) {
 			sb.append('/');
+		}
 		sb.append(tagName);
 		Iterator<String> keys = attributes.keySet().iterator();
 		Iterator<String> values = attributes.values().iterator();
