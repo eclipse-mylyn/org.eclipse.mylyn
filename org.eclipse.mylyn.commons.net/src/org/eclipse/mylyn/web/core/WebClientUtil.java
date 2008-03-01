@@ -38,7 +38,6 @@ import org.apache.commons.httpclient.params.HttpClientParams;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
-import org.apache.commons.logging.LogFactory;
 import org.eclipse.core.net.proxy.IProxyData;
 import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -178,9 +177,10 @@ public class WebClientUtil {
 		System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header", "off");
 		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "off");
 
+		// FIXME this does not work with the commons logging Orbit bundle which does not see the WebClientLog class
 		// Update our assigned logger to use custom WebClientLog
-		LogFactory logFactory = LogFactory.getFactory();
-		logFactory.setAttribute("org.apache.commons.logging.Log", "org.eclipse.mylyn.web.core.WebClientLog");
+//		LogFactory logFactory = LogFactory.getFactory();
+//		logFactory.setAttribute("org.apache.commons.logging.Log", "org.eclipse.mylyn.web.core.WebClientLog");
 		// Note: level being set by Web
 		// logFactory.setAttribute("org.apache.commons.logging.simplelog.showdatetime",
 		// "true");
@@ -193,7 +193,7 @@ public class WebClientUtil {
 		// logFactory.setAttribute(
 		// "org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient.HttpConnection",
 		// "trace");
-		logFactory.release();
+//		logFactory.release();
 	}
 
 	public static OutputStream getLogStream() {
