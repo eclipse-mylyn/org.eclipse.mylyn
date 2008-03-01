@@ -38,7 +38,7 @@ public class TaskActivityEditorInput implements IEditorInput {
 
 	private Set<AbstractTask> inProgressTasks = new HashSet<AbstractTask>();
 
-	private Set<AbstractTask> plannedTasks = new HashSet<AbstractTask>();
+	private final Set<AbstractTask> plannedTasks = new HashSet<AbstractTask>();
 
 	private TaskReportGenerator taskReportGenerator = null;
 
@@ -46,7 +46,7 @@ public class TaskActivityEditorInput implements IEditorInput {
 
 	private Date reportEndDate = null;
 
-	private Set<AbstractTaskContainer> categories;
+	private final Set<AbstractTaskContainer> categories;
 
 	public TaskActivityEditorInput(Date reportStartDate, Date reportEndDate,
 			Set<AbstractTaskContainer> chosenCategories, TaskList tlist) {
@@ -65,8 +65,9 @@ public class TaskActivityEditorInput implements IEditorInput {
 			// TODO consider using IProgressService.busyCursorWhile(): bug 210710
 			IProgressService service = PlatformUI.getWorkbench().getProgressService();
 			service.run(false, true, taskReportGenerator);
-			while (!taskReportGenerator.isFinished())
+			while (!taskReportGenerator.isFinished()) {
 				Thread.sleep(500);
+			}
 		} catch (InvocationTargetException e) {
 			// operation was canceled
 		} catch (InterruptedException e) {

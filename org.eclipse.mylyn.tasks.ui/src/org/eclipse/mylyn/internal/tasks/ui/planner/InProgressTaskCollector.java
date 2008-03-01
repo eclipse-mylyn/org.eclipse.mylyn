@@ -25,11 +25,11 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
  */
 public class InProgressTaskCollector implements ITaskCollector {
 
-	private Map<String, AbstractTask> inProgressTasks = new HashMap<String, AbstractTask>();
+	private final Map<String, AbstractTask> inProgressTasks = new HashMap<String, AbstractTask>();
 
-	private Date periodStartDate;
+	private final Date periodStartDate;
 
-	private Date periodEndDate;
+	private final Date periodEndDate;
 
 	protected static boolean hasActivity(AbstractTask task, Date startDate, Date endDate) {
 		Calendar startCal = Calendar.getInstance();

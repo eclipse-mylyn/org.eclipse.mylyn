@@ -48,6 +48,7 @@ public class QueryImportAction extends Action implements IViewActionDelegate {
 		// ignore
 	}
 
+	@Override
 	public void run() {
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		FileDialog dialog = new FileDialog(shell);

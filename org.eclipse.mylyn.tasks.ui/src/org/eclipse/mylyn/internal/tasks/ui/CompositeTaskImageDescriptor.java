@@ -18,7 +18,7 @@ import org.eclipse.swt.graphics.Point;
  */
 public class CompositeTaskImageDescriptor extends CompositeImageDescriptor {
 
-	private ImageData base;
+	private final ImageData base;
 
 	private ImageData kind;
 

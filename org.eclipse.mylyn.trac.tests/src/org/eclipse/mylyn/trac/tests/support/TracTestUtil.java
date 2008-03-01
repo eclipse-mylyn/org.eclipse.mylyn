@@ -24,5 +24,5 @@ public class TracTestUtil {
 		int id = client.createTicket(ticket);
 		return client.getTicket(id);
 	}
-	
+
 }

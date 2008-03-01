@@ -13,10 +13,10 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
@@ -72,6 +72,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	/**
 	 * @deprecated use {@link #getNewTaskWizard(TaskRepository, TaskSelection)} instead
 	 */
+	@Deprecated
 	public abstract IWizard getNewTaskWizard(TaskRepository taskRepository);
 
 	/**
@@ -82,7 +83,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	public IWizard getNewTaskWizard(TaskRepository taskRepository, TaskSelection selection) {
 		return null;
 	}
-	
+
 	/**
 	 * Override to return a custom task editor ID. If overriding this method the connector becomes responsible for
 	 * showing the additional pages handled by the default task editor. As of Mylyn 2.0M2 these are the Planning and
@@ -152,8 +153,9 @@ public abstract class AbstractRepositoryConnectorUi {
 		try {
 			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(query.getRepositoryKind(),
 					query.getRepositoryUrl());
-			if (repository == null)
+			if (repository == null) {
 				return;
+			}
 
 			IWizard wizard = this.getQueryWizard(repository, query);
 
@@ -163,7 +165,7 @@ public abstract class AbstractRepositoryConnectorUi {
 				dialog.create();
 				dialog.setTitle("Edit Repository Query");
 				dialog.setBlockOnOpen(true);
-				if (dialog.open() == Dialog.CANCEL) {
+				if (dialog.open() == Window.CANCEL) {
 					dialog.close();
 					return;
 				}

@@ -42,21 +42,21 @@ public class TaskRepositoryManager {
 
 	public static final String PREF_REPOSITORIES = "org.eclipse.mylyn.tasklist.repositories.";
 
-	private Map<String, AbstractRepositoryConnector> repositoryConnectors = new HashMap<String, AbstractRepositoryConnector>();
+	private final Map<String, AbstractRepositoryConnector> repositoryConnectors = new HashMap<String, AbstractRepositoryConnector>();
 
-	private Map<String, Set<TaskRepository>> repositoryMap = new HashMap<String, Set<TaskRepository>>();
+	private final Map<String, Set<TaskRepository>> repositoryMap = new HashMap<String, Set<TaskRepository>>();
 
-	private Set<ITaskRepositoryListener> listeners = new HashSet<ITaskRepositoryListener>();
+	private final Set<ITaskRepositoryListener> listeners = new HashSet<ITaskRepositoryListener>();
 
-	private Set<TaskRepository> orphanedRepositories = new HashSet<TaskRepository>();
+	private final Set<TaskRepository> orphanedRepositories = new HashSet<TaskRepository>();
 
 	public static final String MESSAGE_NO_REPOSITORY = "No repository available, please add one using the Task Repositories view.";
 
 	public static final String PREFIX_LOCAL = "local-";
 
-	private TaskRepositoriesExternalizer externalizer = new TaskRepositoriesExternalizer();
+	private final TaskRepositoriesExternalizer externalizer = new TaskRepositoriesExternalizer();
 
-	private TaskList taskList;
+	private final TaskList taskList;
 
 	public TaskRepositoryManager(TaskList taskList) {
 		this.taskList = taskList;
@@ -242,7 +242,8 @@ public class TaskRepositoryManager {
 			try {
 				listener.repositoriesRead();
 			} catch (Throwable t) {
-				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Repository listener failed", t));
+				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+						"Repository listener failed", t));
 			}
 		}
 		return repositoryMap;

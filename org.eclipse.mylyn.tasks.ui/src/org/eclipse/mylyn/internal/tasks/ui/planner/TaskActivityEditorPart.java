@@ -79,12 +79,12 @@ public class TaskActivityEditorPart extends EditorPart {
 
 	private TaskActivityEditorInput editorInput = null;
 
-	private String[] activityColumnNames = new String[] { " ", " !", "Description", "Elapsed", "Estimated", "Created",
-			"Completed" };
+	private final String[] activityColumnNames = new String[] { " ", " !", "Description", "Elapsed", "Estimated",
+			"Created", "Completed" };
 
-	private int[] activityColumnWidths = new int[] { 100, 30, 200, 70, 70, 90, 90 };
+	private final int[] activityColumnWidths = new int[] { 100, 30, 200, 70, 70, 90, 90 };
 
-	private int[] activitySortConstants = new int[] { TaskActivitySorter.ICON, TaskActivitySorter.PRIORITY,
+	private final int[] activitySortConstants = new int[] { TaskActivitySorter.ICON, TaskActivitySorter.PRIORITY,
 			TaskActivitySorter.DESCRIPTION, TaskActivitySorter.DURATION, TaskActivitySorter.ESTIMATED,
 			TaskActivitySorter.CREATION_DATE, TaskActivitySorter.COMPLETED_DATE };
 
@@ -517,11 +517,13 @@ public class TaskActivityEditorPart extends EditorPart {
 			dialog.setFilterExtensions(new String[] { "*.html", "*.*" });
 			String filename = dialog.open();
 
-			if (filename == null || filename.equals(""))
+			if (filename == null || filename.equals("")) {
 				return;
+			}
 
-			if (!filename.endsWith(".html"))
+			if (!filename.endsWith(".html")) {
 				filename += ".html";
+			}
 			outputFile = new File(filename);
 			// outputStream = new FileOutputStream(outputFile, true);
 			BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
@@ -560,8 +562,9 @@ public class TaskActivityEditorPart extends EditorPart {
 				String elapsedTimeString = DateUtil.getFormattedDuration(TasksUiPlugin.getTaskActivityManager()
 						.getElapsedTime(currentTask), false);
 				String estimatedTimeString = currentTask.getEstimateTimeHours() + " hours";
-				if (elapsedTimeString.equals(""))
+				if (elapsedTimeString.equals("")) {
 					elapsedTimeString = BLANK_CELL;
+				}
 
 				Date reminderDate = currentTask.getScheduledForDate();
 				String reminderDateString = BLANK_CELL;
@@ -609,8 +612,9 @@ public class TaskActivityEditorPart extends EditorPart {
 				String elapsedTimeString = DateUtil.getFormattedDuration(TasksUiPlugin.getTaskActivityManager()
 						.getElapsedTime(currentTask), false);
 				String estimatedTimeString = currentTask.getEstimateTimeHours() + " hours";
-				if (elapsedTimeString.equals(""))
+				if (elapsedTimeString.equals("")) {
 					elapsedTimeString = NO_TIME_ELAPSED;
+				}
 
 				Date creationDate = currentTask.getCreationDate();
 				String creationDateString = BLANK_CELL;

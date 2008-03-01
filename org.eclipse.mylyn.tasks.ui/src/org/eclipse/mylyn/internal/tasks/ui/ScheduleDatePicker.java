@@ -36,26 +36,26 @@ import org.eclipse.swt.widgets.Text;
  * @author Rob Elves
  */
 public class ScheduleDatePicker extends Composite {
-	
+
 	private Text scheduledDateText = null;
 
 	private Button pickButton = null;
 
-	private List<SelectionListener> pickerListeners = new LinkedList<SelectionListener>();
+	private final List<SelectionListener> pickerListeners = new LinkedList<SelectionListener>();
 
-	private SimpleDateFormat simpleDateFormat = (SimpleDateFormat) DateFormat.getDateTimeInstance(DateFormat.MEDIUM,
-			DateFormat.SHORT);
+	private final SimpleDateFormat simpleDateFormat = (SimpleDateFormat) DateFormat.getDateTimeInstance(
+			DateFormat.MEDIUM, DateFormat.SHORT);
 
-	private String initialText = DatePicker.LABEL_CHOOSE;
+	private final String initialText = DatePicker.LABEL_CHOOSE;
 
-	private List<AbstractTaskContainer> tasks;
+	private final List<AbstractTaskContainer> tasks;
 
-	private ScheduleTaskMenuContributor contributor;
-	
+	private final ScheduleTaskMenuContributor contributor;
+
 	private Date scheduledDate;
 
 	private boolean isFloating;
-	
+
 	public ScheduleDatePicker(Composite parent, AbstractTask task, int style) {
 		super(parent, style);
 		this.scheduledDate = task.getScheduledForDate();
@@ -68,14 +68,15 @@ public class ScheduleDatePicker extends Composite {
 			protected Date getScheduledForDate(AbstractTask singleTaskSelection) {
 				return ScheduleDatePicker.this.scheduledDate;
 			}
-			
+
+			@Override
 			protected boolean isFloating(AbstractTask task) {
 				return ScheduleDatePicker.this.isFloating;
 			}
-			
+
 			@Override
 			protected void setScheduledDate(AbstractTask task, Calendar scheduledDate, boolean floating) {
-				if(scheduledDate != null) {
+				if (scheduledDate != null) {
 					ScheduleDatePicker.this.scheduledDate = scheduledDate.getTime();
 				} else {
 					ScheduleDatePicker.this.scheduledDate = null;
@@ -83,7 +84,8 @@ public class ScheduleDatePicker extends Composite {
 				ScheduleDatePicker.this.isFloating = floating;
 				updateDateText();
 				notifyPickerListeners();
-			}};
+			}
+		};
 		tasks = new ArrayList<AbstractTaskContainer>();
 		tasks.add(task);
 	}
@@ -117,7 +119,7 @@ public class ScheduleDatePicker extends Composite {
 		pickButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				
+
 				MenuManager menuManager = contributor.getSubMenuManager(tasks);
 				Menu menu = menuManager.createContextMenu(pickButton);
 				pickButton.setMenu(menu);
@@ -133,7 +135,6 @@ public class ScheduleDatePicker extends Composite {
 	public void addPickerSelectionListener(SelectionListener listener) {
 		pickerListeners.add(listener);
 	}
-
 
 	@Override
 	public void setBackground(Color backgroundColor) {
@@ -167,7 +168,7 @@ public class ScheduleDatePicker extends Composite {
 	public Date getScheduledDate() {
 		return scheduledDate;
 	}
-	
+
 	public void setScheduledDate(Date date) {
 		scheduledDate = date;
 		updateDateText();

@@ -26,6 +26,7 @@ import org.eclipse.ui.menus.UIElement;
  */
 public class TaskHistoryHandler extends AbstractHandler implements IElementUpdater {
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		TaskActivationHistory taskHistory = TasksUiPlugin.getTaskListManager().getTaskActivationHistory();
 		if (taskHistory.hasPrevious()) {

@@ -45,7 +45,7 @@ public class TaskHistoryTest extends TestCase {
 
 	protected AbstractTask task5 = null;
 
-	private ActivateTaskHistoryDropDownAction previousTaskAction = new ActivateTaskHistoryDropDownAction(
+	private final ActivateTaskHistoryDropDownAction previousTaskAction = new ActivateTaskHistoryDropDownAction(
 			TasksUiPlugin.getTaskListManager().getTaskActivationHistory(), false);
 
 	@Override

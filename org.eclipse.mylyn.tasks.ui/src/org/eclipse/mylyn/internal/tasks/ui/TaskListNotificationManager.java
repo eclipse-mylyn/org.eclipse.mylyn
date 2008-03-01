@@ -41,18 +41,20 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 
 	private TaskListNotificationPopup popup;
 
-	private Set<AbstractNotification> notifications = new HashSet<AbstractNotification>();
+	private final Set<AbstractNotification> notifications = new HashSet<AbstractNotification>();
 
-	private Set<AbstractNotification> currentlyNotifying = Collections.synchronizedSet(notifications);
+	private final Set<AbstractNotification> currentlyNotifying = Collections.synchronizedSet(notifications);
 
-	private List<ITaskListNotificationProvider> notificationProviders = new ArrayList<ITaskListNotificationProvider>();
+	private final List<ITaskListNotificationProvider> notificationProviders = new ArrayList<ITaskListNotificationProvider>();
 
-	private Job openJob = new Job(OPEN_NOTIFICATION_JOB) {
+	private final Job openJob = new Job(OPEN_NOTIFICATION_JOB) {
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
 			try {
 
-				if (Platform.isRunning() && PlatformUI.getWorkbench() != null && PlatformUI.getWorkbench().getDisplay() != null && !PlatformUI.getWorkbench().getDisplay().isDisposed()) {
+				if (Platform.isRunning() && PlatformUI.getWorkbench() != null
+						&& PlatformUI.getWorkbench().getDisplay() != null
+						&& !PlatformUI.getWorkbench().getDisplay().isDisposed()) {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 
 						public void run() {
@@ -74,8 +76,9 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 				}
 			}
 
-			if (monitor.isCanceled())
+			if (monitor.isCanceled()) {
 				return Status.CANCEL_STATUS;
+			}
 
 			return Status.OK_STATUS;
 		}

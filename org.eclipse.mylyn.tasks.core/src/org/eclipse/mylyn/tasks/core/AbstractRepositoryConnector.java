@@ -178,6 +178,7 @@ public abstract class AbstractRepositoryConnector {
 
 	/**
 	 * Returns a short label for the connector, e.g. Bugzilla.
+	 * 
 	 * @since 2.3
 	 */
 	public String getShortLabel() {
@@ -185,20 +186,20 @@ public abstract class AbstractRepositoryConnector {
 		if (label == null) {
 			return null;
 		}
-		
+
 		int i = label.indexOf("(");
 		if (i != -1) {
 			return label.substring(0, i).trim();
 		}
-		
+
 		i = label.indexOf(" ");
 		if (i != -1) {
 			return label.substring(0, i).trim();
-		}		
-		
+		}
+
 		return label;
 	}
-	
+
 	/**
 	 * @return the unique kind of the repository, e.g. "bugzilla"
 	 */
@@ -381,8 +382,7 @@ public abstract class AbstractRepositoryConnector {
 		for (AbstractTask task : changedTasks) {
 			Date taskModifiedDate;
 			RepositoryTaskData taskData = getTaskData(task);
-			if (taskData != null && getTaskDataHandler() != null
-					&& taskData.getLastModified() != null) {
+			if (taskData != null && getTaskDataHandler() != null && taskData.getLastModified() != null) {
 				taskModifiedDate = taskData.getAttributeFactory().getDateForAttributeType(
 						RepositoryTaskAttribute.DATE_MODIFIED, taskData.getLastModified());
 			} else {

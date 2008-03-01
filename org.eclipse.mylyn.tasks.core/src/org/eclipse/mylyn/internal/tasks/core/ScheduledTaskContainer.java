@@ -23,15 +23,15 @@ import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
  */
 public class ScheduledTaskContainer extends AbstractTaskContainer {
 
-	private Set<ScheduledTaskDelegate> dateRangeDelegates = new HashSet<ScheduledTaskDelegate>();
+	private final Set<ScheduledTaskDelegate> dateRangeDelegates = new HashSet<ScheduledTaskDelegate>();
 
-	private Calendar startDate;
+	private final Calendar startDate;
 
-	private Calendar endDate;
+	private final Calendar endDate;
 
 	private boolean captureFloating = false;
 
-	private TaskActivityManager activityManager;
+	private final TaskActivityManager activityManager;
 
 	public ScheduledTaskContainer(TaskActivityManager activityManager, GregorianCalendar startDate,
 			GregorianCalendar endDate, String description) {
@@ -119,7 +119,8 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 	}
 
 	public boolean isToday() {
-		return !isCaptureFloating() && (TaskActivityUtil.getCalendar().get(Calendar.DAY_OF_MONTH) == getStart().get(Calendar.DAY_OF_MONTH));
+		return !isCaptureFloating()
+				&& (TaskActivityUtil.getCalendar().get(Calendar.DAY_OF_MONTH) == getStart().get(Calendar.DAY_OF_MONTH));
 	}
 
 	@Override

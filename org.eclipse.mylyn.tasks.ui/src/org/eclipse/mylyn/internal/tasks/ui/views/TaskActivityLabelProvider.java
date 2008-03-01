@@ -43,11 +43,11 @@ public class TaskActivityLabelProvider extends TaskElementLabelProvider implemen
 
 	private static final String NO_MINUTES = "0 minutes";
 
-	private TaskActivityManager activityManager;
+	private final TaskActivityManager activityManager;
 
 	private Color categoryBackgroundColor;
 
-	private ITreeContentProvider contentProvider;
+	private final ITreeContentProvider contentProvider;
 
 	public TaskActivityLabelProvider(ILabelProvider provider, ILabelDecorator decorator, Color parentBacground,
 			ITreeContentProvider contentProvider) {
@@ -127,10 +127,12 @@ public class TaskActivityLabelProvider extends TaskElementLabelProvider implemen
 					}
 
 					elapsedTimeString = DateUtil.getFormattedDurationShort(elapsed);
-					if (elapsedTimeString.equals(""))
+					if (elapsedTimeString.equals("")) {
 						elapsedTimeString = NO_MINUTES;
+					}
 				} catch (RuntimeException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not format elapsed time", e));
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+							"Could not format elapsed time", e));
 				}
 				return elapsedTimeString;
 			case 4:

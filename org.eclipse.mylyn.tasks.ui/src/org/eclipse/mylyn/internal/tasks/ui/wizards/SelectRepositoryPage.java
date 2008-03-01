@@ -134,7 +134,7 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 				}
 			}
 		});
-		
+
 		setControl(container);
 	}
 
@@ -166,20 +166,20 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 					LocalRepositoryConnector.CONNECTOR_KIND, LocalRepositoryConnector.REPOSITORY_URL);
 			viewer.setSelection(new StructuredSelection(localRepository));
 		}
-		
+
 		viewer.addOpenListener(new IOpenListener() {
 
 			public void open(OpenEvent event) {
-				if(canFlipToNextPage()) {
+				if (canFlipToNextPage()) {
 					getContainer().showPage(getNextPage());
-				} else if(canFinish()) {
+				} else if (canFinish()) {
 					if (getWizard().performFinish()) {
-						((WizardDialog)getContainer()).close();
+						((WizardDialog) getContainer()).close();
 					}
 				}
 			}
 		});
-		
+
 		viewer.getTable().showSelection();
 		viewer.getTable().setFocus();
 		return viewer.getTable();

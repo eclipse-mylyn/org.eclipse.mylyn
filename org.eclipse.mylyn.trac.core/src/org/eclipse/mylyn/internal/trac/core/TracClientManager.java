@@ -33,11 +33,11 @@ import org.eclipse.mylyn.web.core.AbstractWebLocation;
  */
 public class TracClientManager implements ITaskRepositoryListener {
 
-	private Map<String, ITracClient> clientByUrl = new HashMap<String, ITracClient>();
+	private final Map<String, ITracClient> clientByUrl = new HashMap<String, ITracClient>();
 
-	private Map<String, TracClientData> clientDataByUrl = new HashMap<String, TracClientData>();
+	private final Map<String, TracClientData> clientDataByUrl = new HashMap<String, TracClientData>();
 
-	private File cacheFile;
+	private final File cacheFile;
 
 	private TaskRepositoryLocationFactory taskRepositoryLocationFactory;
 
@@ -104,7 +104,8 @@ public class TracClientManager implements ITaskRepositoryListener {
 				}
 			}
 		} catch (Throwable e) {
-			StatusHandler.log(new Status(IStatus.WARNING, TracCorePlugin.PLUGIN_ID, "The Trac respository configuration cache could not be read", e));
+			StatusHandler.log(new Status(IStatus.WARNING, TracCorePlugin.PLUGIN_ID,
+					"The Trac respository configuration cache could not be read", e));
 		} finally {
 			if (in != null) {
 				try {
@@ -131,7 +132,8 @@ public class TracClientManager implements ITaskRepositoryListener {
 				out.writeObject(clientDataByUrl.get(url));
 			}
 		} catch (IOException e) {
-			StatusHandler.log(new Status(IStatus.WARNING, TracCorePlugin.PLUGIN_ID, "The Trac respository configuration cache could not be written", e));
+			StatusHandler.log(new Status(IStatus.WARNING, TracCorePlugin.PLUGIN_ID,
+					"The Trac respository configuration cache could not be written", e));
 		} finally {
 			if (out != null) {
 				try {
@@ -146,9 +148,9 @@ public class TracClientManager implements ITaskRepositoryListener {
 	public TaskRepositoryLocationFactory getTaskRepositoryLocationFactory() {
 		return taskRepositoryLocationFactory;
 	}
-	
+
 	public void setTaskRepositoryLocationFactory(TaskRepositoryLocationFactory taskRepositoryLocationFactory) {
 		this.taskRepositoryLocationFactory = taskRepositoryLocationFactory;
 	}
-	
+
 }

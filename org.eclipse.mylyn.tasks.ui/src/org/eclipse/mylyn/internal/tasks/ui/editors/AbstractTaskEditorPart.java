@@ -38,7 +38,7 @@ public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 	private AbstractRepositoryConnector connector;
 
 	private final AbstractTaskEditorPage taskEditorPage;
-	
+
 	public AbstractTaskEditorPart(AbstractTaskEditorPage taskEditorPage) {
 		this.taskEditorPage = taskEditorPage;
 	}
@@ -52,7 +52,7 @@ public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 	public AbstractRepositoryConnector getConnector() {
 		return connector;
 	}
-	
+
 	public RepositoryTaskData getTaskData() {
 		return taskData;
 	}
@@ -60,21 +60,22 @@ public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 	public TaskRepository getTaskRepository() {
 		return taskRepository;
 	}
-	
+
 	// TODO EDITOR review if this is required
 	public TaskEditor getTaskEditor() {
 		return getTaskEditorPage().getParentEditor();
 	}
-	
+
 	public AbstractTaskEditorPage getTaskEditorPage() {
 		return taskEditorPage;
 	}
-	
+
 	public void setControl(Control control) {
 		this.control = control;
 	}
 
-	public void setInput(AbstractRepositoryConnector connector, TaskRepository taskRepository, RepositoryTaskData taskData) {
+	public void setInput(AbstractRepositoryConnector connector, TaskRepository taskRepository,
+			RepositoryTaskData taskData) {
 		this.connector = connector;
 		this.taskRepository = taskRepository;
 		this.taskData = taskData;

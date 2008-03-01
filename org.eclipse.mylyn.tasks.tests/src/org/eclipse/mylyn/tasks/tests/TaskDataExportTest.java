@@ -40,7 +40,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 
 	private AbstractTask task1 = null;
 
-	private TaskListManager manager = TasksUiPlugin.getTaskListManager();
+	private final TaskListManager manager = TasksUiPlugin.getTaskListManager();
 
 	private InteractionContext mockContext;
 

@@ -140,13 +140,13 @@ public class TasksUiExtensionReader {
 			// NOTE: has to be read first, consider improving
 			IExtensionPoint repositoriesExtensionPoint = registry.getExtensionPoint(EXTENSION_REPOSITORIES);
 			IExtension[] repositoryExtensions = repositoriesExtensionPoint.getExtensions();
-			for (int i = 0; i < repositoryExtensions.length; i++) {
-				IConfigurationElement[] elements = repositoryExtensions[i].getConfigurationElements();
-				for (int j = 0; j < elements.length; j++) {
-					if (elements[j].getName().equals(ELMNT_REPOSITORY_CONNECTOR)) {
-						readRepositoryConnectorCore(elements[j]);
-					} else if (elements[j].getName().equals(ELMNT_EXTERNALIZER)) {
-						readExternalizer(elements[j], externalizers);
+			for (IExtension repositoryExtension : repositoryExtensions) {
+				IConfigurationElement[] elements = repositoryExtension.getConfigurationElements();
+				for (IConfigurationElement element : elements) {
+					if (element.getName().equals(ELMNT_REPOSITORY_CONNECTOR)) {
+						readRepositoryConnectorCore(element);
+					} else if (element.getName().equals(ELMNT_EXTERNALIZER)) {
+						readExternalizer(element, externalizers);
 					}
 				}
 			}
@@ -154,46 +154,46 @@ public class TasksUiExtensionReader {
 
 			IExtensionPoint templatesExtensionPoint = registry.getExtensionPoint(EXTENSION_TEMPLATES);
 			IExtension[] templateExtensions = templatesExtensionPoint.getExtensions();
-			for (int i = 0; i < templateExtensions.length; i++) {
-				IConfigurationElement[] elements = templateExtensions[i].getConfigurationElements();
-				for (int j = 0; j < elements.length; j++) {
-					if (elements[j].getName().equals(EXTENSION_TMPL_REPOSITORY)) {
-						readRepositoryTemplate(elements[j]);
+			for (IExtension templateExtension : templateExtensions) {
+				IConfigurationElement[] elements = templateExtension.getConfigurationElements();
+				for (IConfigurationElement element : elements) {
+					if (element.getName().equals(EXTENSION_TMPL_REPOSITORY)) {
+						readRepositoryTemplate(element);
 					}
 				}
 			}
 
 			IExtensionPoint presentationsExtensionPoint = registry.getExtensionPoint(EXTENSION_PRESENTATIONS);
 			IExtension[] presentations = presentationsExtensionPoint.getExtensions();
-			for (int i = 0; i < presentations.length; i++) {
-				IConfigurationElement[] elements = presentations[i].getConfigurationElements();
-				for (int j = 0; j < elements.length; j++) {
-					readPresentation(elements[j]);
+			for (IExtension presentation : presentations) {
+				IConfigurationElement[] elements = presentation.getConfigurationElements();
+				for (IConfigurationElement element : elements) {
+					readPresentation(element);
 				}
 			}
 
 			// NOTE: causes ..mylyn.context.ui to load
 			IExtensionPoint editorsExtensionPoint = registry.getExtensionPoint(EXTENSION_EDITORS);
 			IExtension[] editors = editorsExtensionPoint.getExtensions();
-			for (int i = 0; i < editors.length; i++) {
-				IConfigurationElement[] elements = editors[i].getConfigurationElements();
-				for (int j = 0; j < elements.length; j++) {
-					if (elements[j].getName().equals(ELMNT_EDITOR_FACTORY)) {
-						readEditorFactory(elements[j]);
-					} 
+			for (IExtension editor : editors) {
+				IConfigurationElement[] elements = editor.getConfigurationElements();
+				for (IConfigurationElement element : elements) {
+					if (element.getName().equals(ELMNT_EDITOR_FACTORY)) {
+						readEditorFactory(element);
+					}
 				}
 			}
 
 			// NOTE: causes ..mylyn.java.ui to load
-			for (int i = 0; i < editors.length; i++) {
-				IConfigurationElement[] elements = editors[i].getConfigurationElements();
-				for (int j = 0; j < elements.length; j++) {
-					if (elements[j].getName().equals(ELMNT_HYPERLINK_DETECTOR)) {
-						readHyperlinkDetector(elements[j]);
+			for (IExtension editor : editors) {
+				IConfigurationElement[] elements = editor.getConfigurationElements();
+				for (IConfigurationElement element : elements) {
+					if (element.getName().equals(ELMNT_HYPERLINK_DETECTOR)) {
+						readHyperlinkDetector(element);
 					}
 				}
 			}
-			
+
 			coreExtensionsRead = true;
 		}
 	}
@@ -203,44 +203,44 @@ public class TasksUiExtensionReader {
 
 		IExtensionPoint repositoriesExtensionPoint = registry.getExtensionPoint(EXTENSION_REPOSITORIES);
 		IExtension[] repositoryExtensions = repositoriesExtensionPoint.getExtensions();
-		for (int i = 0; i < repositoryExtensions.length; i++) {
-			IConfigurationElement[] elements = repositoryExtensions[i].getConfigurationElements();
-			for (int j = 0; j < elements.length; j++) {
-				if (elements[j].getName().equals(ELMNT_REPOSITORY_UI)) {
-					readRepositoryConnectorUi(elements[j]);
+		for (IExtension repositoryExtension : repositoryExtensions) {
+			IConfigurationElement[] elements = repositoryExtension.getConfigurationElements();
+			for (IConfigurationElement element : elements) {
+				if (element.getName().equals(ELMNT_REPOSITORY_UI)) {
+					readRepositoryConnectorUi(element);
 				}
 			}
 		}
 
 		IExtensionPoint linkProvidersExtensionPoint = registry.getExtensionPoint(EXTENSION_REPOSITORY_LINKS_PROVIDERS);
 		IExtension[] linkProvidersExtensions = linkProvidersExtensionPoint.getExtensions();
-		for (int i = 0; i < linkProvidersExtensions.length; i++) {
-			IConfigurationElement[] elements = linkProvidersExtensions[i].getConfigurationElements();
-			for (int j = 0; j < elements.length; j++) {
-				if (elements[j].getName().equals(ELMNT_REPOSITORY_LINK_PROVIDER)) {
-					readLinkProvider(elements[j]);
+		for (IExtension linkProvidersExtension : linkProvidersExtensions) {
+			IConfigurationElement[] elements = linkProvidersExtension.getConfigurationElements();
+			for (IConfigurationElement element : elements) {
+				if (element.getName().equals(ELMNT_REPOSITORY_LINK_PROVIDER)) {
+					readLinkProvider(element);
 				}
 			}
 		}
 
 		IExtensionPoint duplicateDetectorsExtensionPoint = registry.getExtensionPoint(EXTENSION_DUPLICATE_DETECTORS);
 		IExtension[] dulicateDetectorsExtensions = duplicateDetectorsExtensionPoint.getExtensions();
-		for (int i = 0; i < dulicateDetectorsExtensions.length; i++) {
-			IConfigurationElement[] elements = dulicateDetectorsExtensions[i].getConfigurationElements();
-			for (int j = 0; j < elements.length; j++) {
-				if (elements[j].getName().equals(ELMNT_DUPLICATE_DETECTOR)) {
-					readDuplicateDetector(elements[j]);
+		for (IExtension dulicateDetectorsExtension : dulicateDetectorsExtensions) {
+			IConfigurationElement[] elements = dulicateDetectorsExtension.getConfigurationElements();
+			for (IConfigurationElement element : elements) {
+				if (element.getName().equals(ELMNT_DUPLICATE_DETECTOR)) {
+					readDuplicateDetector(element);
 				}
 			}
 		}
 
 		IExtensionPoint extensionPoint = registry.getExtensionPoint(EXTENSION_TASK_CONTRIBUTOR);
 		IExtension[] extensions = extensionPoint.getExtensions();
-		for (int i = 0; i < extensions.length; i++) {
-			IConfigurationElement[] elements = extensions[i].getConfigurationElements();
-			for (int j = 0; j < elements.length; j++) {
-				if (elements[j].getName().equals(DYNAMIC_POPUP_ELEMENT)) {
-					readDynamicPopupContributor(elements[j]);
+		for (IExtension extension : extensions) {
+			IConfigurationElement[] elements = extension.getConfigurationElements();
+			for (IConfigurationElement element : elements) {
+				if (element.getName().equals(DYNAMIC_POPUP_ELEMENT)) {
+					readDynamicPopupContributor(element);
 				}
 			}
 		}

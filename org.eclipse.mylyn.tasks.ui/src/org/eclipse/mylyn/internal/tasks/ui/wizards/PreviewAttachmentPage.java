@@ -54,7 +54,7 @@ public class PreviewAttachmentPage extends WizardPage {
 
 	private static final String DESCRIPTION = "Review the attachment before submitting";
 
-	private LocalAttachment attachment;
+	private final LocalAttachment attachment;
 
 	private static HashMap<String, String> textTypes;
 

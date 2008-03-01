@@ -29,11 +29,11 @@ import org.eclipse.mylyn.tasks.ui.search.RepositorySearchResult;
 public class SearchResultTreeContentProvider extends SearchResultContentProvider {
 
 	/** The page the Bugzilla search results are displayed in */
-	private RepositorySearchResultView searchResultsPage;
+	private final RepositorySearchResultView searchResultsPage;
 
-	private List<Object> elements = new ArrayList<Object>();
+	private final List<Object> elements = new ArrayList<Object>();
 
-	private Map<String, Person> owners = new HashMap<String, Person>();
+	private final Map<String, Person> owners = new HashMap<String, Person>();
 
 	private boolean groupByOwner = false;
 

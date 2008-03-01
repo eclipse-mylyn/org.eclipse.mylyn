@@ -285,35 +285,40 @@ public class TracTaskDataHandlerTest extends TestCase {
 		assertFalse(taskDataHandler.canInitializeSubTaskData(task, null));
 		task.setSupportsSubtasks(true);
 		assertTrue(taskDataHandler.canInitializeSubTaskData(task, null));
-		
-		RepositoryTaskData taskData = taskDataHandler.getTaskData(repository, data.offlineHandlerTicketId + "", new NullProgressMonitor());
+
+		RepositoryTaskData taskData = taskDataHandler.getTaskData(repository, data.offlineHandlerTicketId + "",
+				new NullProgressMonitor());
 		assertFalse(taskDataHandler.canInitializeSubTaskData(null, taskData));
 		taskData.setAttributeValue(TracTaskDataHandler.ATTRIBUTE_BLOCKED_BY, "");
 		assertTrue(taskDataHandler.canInitializeSubTaskData(null, taskData));
-		
+
 		task.setSupportsSubtasks(false);
 		connector.updateTaskFromTaskData(repository, task, taskData);
-		assertTrue(taskDataHandler.canInitializeSubTaskData(task, null));	
+		assertTrue(taskDataHandler.canInitializeSubTaskData(task, null));
 	}
 
 	public void testInitializeSubTaskData() throws Exception {
 		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
 
-		RepositoryTaskData parentTaskData = taskDataHandler.getTaskData(repository, data.offlineHandlerTicketId + "", new NullProgressMonitor());
+		RepositoryTaskData parentTaskData = taskDataHandler.getTaskData(repository, data.offlineHandlerTicketId + "",
+				new NullProgressMonitor());
 		try {
 			taskDataHandler.initializeSubTaskData(repository, parentTaskData, parentTaskData, new NullProgressMonitor());
 			fail("expected CoreException");
 		} catch (CoreException expected) {
 		}
-		
+
 		parentTaskData.setSummary("abc");
 		parentTaskData.setDescription("def");
-		String component = parentTaskData.getAttribute(TracAttributeFactory.Attribute.COMPONENT.getTracKey()).getOptions().get(0);
+		String component = parentTaskData.getAttribute(TracAttributeFactory.Attribute.COMPONENT.getTracKey())
+				.getOptions()
+				.get(0);
 		parentTaskData.setAttributeValue(TracAttributeFactory.Attribute.COMPONENT.getTracKey(), component);
 		parentTaskData.setAttributeValue(TracTaskDataHandler.ATTRIBUTE_BLOCKED_BY, "");
-		RepositoryTaskData subTaskData = new RepositoryTaskData(parentTaskData.getAttributeFactory(), TracCorePlugin.REPOSITORY_KIND, "", "");
+		RepositoryTaskData subTaskData = new RepositoryTaskData(parentTaskData.getAttributeFactory(),
+				TracCorePlugin.REPOSITORY_KIND, "", "");
 		subTaskData.setAttributeValue(TracTaskDataHandler.ATTRIBUTE_BLOCKING, "");
-		taskDataHandler.initializeSubTaskData(repository, subTaskData , parentTaskData, new NullProgressMonitor());
+		taskDataHandler.initializeSubTaskData(repository, subTaskData, parentTaskData, new NullProgressMonitor());
 		assertEquals("", subTaskData.getSummary());
 		assertEquals("", subTaskData.getDescription());
 		assertEquals(component, subTaskData.getAttributeValue(TracAttributeFactory.Attribute.COMPONENT.getTracKey()));
@@ -322,7 +327,8 @@ public class TracTaskDataHandlerTest extends TestCase {
 	}
 
 	public void testGetSubTaskIds() throws Exception {
-		RepositoryTaskData taskData = new RepositoryTaskData(new TracAttributeFactory(), TracCorePlugin.REPOSITORY_KIND, "", "");
+		RepositoryTaskData taskData = new RepositoryTaskData(new TracAttributeFactory(),
+				TracCorePlugin.REPOSITORY_KIND, "", "");
 		taskData.setAttributeValue(TracTaskDataHandler.ATTRIBUTE_BLOCKED_BY, "123 456");
 		Set<String> subTaskIds = taskDataHandler.getSubTaskIds(taskData);
 		assertEquals(2, subTaskIds.size());

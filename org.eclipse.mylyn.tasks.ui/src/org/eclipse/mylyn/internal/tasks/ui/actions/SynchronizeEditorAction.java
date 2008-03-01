@@ -29,7 +29,7 @@ public class SynchronizeEditorAction extends BaseSelectionListenerAction {
 	private static final String LABEL = "Synchronize";
 
 	private static final String TOOLTIP = "Synchronize Incoming Changes";
-	
+
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.synchronize.editor";
 
 	public SynchronizeEditorAction() {

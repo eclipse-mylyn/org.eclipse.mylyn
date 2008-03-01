@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Text;
  */
 public class NewAttachmentPage extends WizardPage {
 
-	private LocalAttachment attachment;
+	private final LocalAttachment attachment;
 
 	private Text filePath;
 
@@ -233,7 +233,7 @@ public class NewAttachmentPage extends WizardPage {
 				}
 			}
 		});
-		
+
 		thisPage.setErrorMessage(null);
 	}
 

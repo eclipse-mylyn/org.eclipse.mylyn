@@ -10,7 +10,6 @@ package org.eclipse.mylyn.internal.tasks.ui.planner;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -36,19 +35,19 @@ public class DateSelectionDialog extends Dialog {
 
 	private String title = "Date Selection";
 
-	private Calendar initialCalendar = GregorianCalendar.getInstance();
+	private final Calendar initialCalendar = Calendar.getInstance();
 
-	private FormToolkit toolkit;
-	
+	private final FormToolkit toolkit;
+
 	private boolean includeTime = true;
 
 	public DateSelectionDialog(Shell parentShell, String title) {
-		this(parentShell, GregorianCalendar.getInstance(), title, true);
+		this(parentShell, Calendar.getInstance(), title, true);
 	}
 
 	public DateSelectionDialog(Shell parentShell, Calendar initialDate, String title, boolean includeTime) {
 		super(parentShell);
-		this.includeTime = includeTime; 
+		this.includeTime = includeTime;
 		toolkit = new FormToolkit(parentShell.getDisplay());
 		if (title != null) {
 			this.title = title;
@@ -75,7 +74,7 @@ public class DateSelectionDialog extends Dialog {
 		});
 		datePanel.setBackground(toolkit.getColors().getBackground());
 		datePanel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
-		
+
 		return datePanel;
 	}
 

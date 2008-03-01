@@ -44,7 +44,6 @@ import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 /**
@@ -59,22 +58,23 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 	private static final String TITLE_FOLDER_SELECTION = "Folder Selection";
 
-
 	private static final String LABEL_ACTIVITY_TIMEOUT = "Stop time accumulation after";
+
 	private static final String LABEL_ACTIVITY_TIMEOUT2 = "minutes of inactivity.";
-	
+
 	private static final String END_HOUR_LABEL = "Work day end (24hr): ";
 
 	private static final String START_HOUR_LABEL = "Work day start (24hr): ";
+
 	private static final String GROUP_WORK_WEEK_LABEL = "Scheduling";
-	
+
 	private static final String GROUP_TASK_TIMING = "Task Timing";
 
 	private static final String FORWARDSLASH = "/";
 
 	private static final String BACKSLASH_MULTI = "\\\\";
 
-	private static final int MS_MINUTES = 60*1000;
+	private static final int MS_MINUTES = 60 * 1000;
 
 	private Button useRichEditor;
 
@@ -102,7 +102,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 	private int taskDataDirectoryAction = -1;
 
-	private FormToolkit toolkit;
+	private final FormToolkit toolkit;
 
 	private Spinner timeoutMinutes;
 
@@ -141,8 +141,8 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 	}
 
 	private Composite createAdvancedSection(Composite container) {
-		advancedComposite = toolkit.createExpandableComposite(container, Section.COMPACT | Section.TWISTIE
-				| Section.TITLE_BAR);
+		advancedComposite = toolkit.createExpandableComposite(container, ExpandableComposite.COMPACT
+				| ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR);
 		advancedComposite.setFont(container.getFont());
 		advancedComposite.setBackground(container.getBackground());
 		advancedComposite.setText("Advanced");
@@ -154,7 +154,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 				getControl().getShell().pack();
 			}
 		});
-		
+
 		Composite advanced = new Composite(advancedComposite, SWT.NONE);
 		advanced.setLayout(new GridLayout(1, false));
 		advancedComposite.setClient(advanced);
@@ -198,8 +198,10 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 		///getPreferenceStore().setValue(TasksUiPreferenceConstants.PLANNING_STARTHOUR, hourDayStart.getSelection());
 		///getPreferenceStore().setValue(TasksUiPreferenceConstants.PLANNING_ENDHOUR, hourDayEnd.getSelection());
-		MonitorUiPlugin.getDefault().getPreferenceStore().setValue(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED, timeoutEnabledButton.getSelection());
-		MonitorUiPlugin.getDefault().getPreferenceStore().setValue(ActivityContextManager.ACTIVITY_TIMEOUT, timeoutMinutes.getSelection() * (60*1000));
+		MonitorUiPlugin.getDefault().getPreferenceStore().setValue(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED,
+				timeoutEnabledButton.getSelection());
+		MonitorUiPlugin.getDefault().getPreferenceStore().setValue(ActivityContextManager.ACTIVITY_TIMEOUT,
+				timeoutMinutes.getSelection() * (60 * 1000));
 		backupNow.setEnabled(true);
 		return true;
 	}
@@ -222,9 +224,11 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		///hourDayStart.setSelection(getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_STARTHOUR));
 		///hourDayEnd.setSelection(getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
 		backupNow.setEnabled(true);
-		int minutes = MonitorUiPlugin.getDefault().getPreferenceStore().getInt(ActivityContextManager.ACTIVITY_TIMEOUT)/MS_MINUTES;
+		int minutes = MonitorUiPlugin.getDefault().getPreferenceStore().getInt(ActivityContextManager.ACTIVITY_TIMEOUT)
+				/ MS_MINUTES;
 		timeoutMinutes.setSelection(minutes);
-		timeoutEnabledButton.setSelection(MonitorUiPlugin.getDefault().getPreferenceStore().getBoolean(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED));
+		timeoutEnabledButton.setSelection(MonitorUiPlugin.getDefault().getPreferenceStore().getBoolean(
+				ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED));
 		return true;
 	}
 
@@ -263,9 +267,12 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 		///hourDayStart.setSelection(getPreferenceStore().getDefaultInt(TasksUiPreferenceConstants.PLANNING_STARTHOUR));
 		///hourDayEnd.setSelection(getPreferenceStore().getDefaultInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
-		int activityTimeoutMinutes = MonitorUiPlugin.getDefault().getPreferenceStore().getDefaultInt(ActivityContextManager.ACTIVITY_TIMEOUT)/MS_MINUTES;
+		int activityTimeoutMinutes = MonitorUiPlugin.getDefault().getPreferenceStore().getDefaultInt(
+				ActivityContextManager.ACTIVITY_TIMEOUT)
+				/ MS_MINUTES;
 		timeoutMinutes.setSelection(activityTimeoutMinutes);
-		timeoutEnabledButton.setSelection(MonitorUiPlugin.getDefault().getPreferenceStore().getDefaultBoolean(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED));
+		timeoutEnabledButton.setSelection(MonitorUiPlugin.getDefault().getPreferenceStore().getDefaultBoolean(
+				ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED));
 		updateRefreshGroupEnablements();
 	}
 
@@ -368,8 +375,9 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 				dialog.setFilterPath(dir);
 
 				dir = dialog.open();
-				if (dir == null || dir.equals(""))
+				if (dir == null || dir.equals("")) {
 					return;
+				}
 				dir = dir.replaceAll(BACKSLASH_MULTI, FORWARDSLASH);
 				checkForExistingTasklist(dir);
 
@@ -424,7 +432,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 			}
 		});
 	}
-	
+
 	private void createSchedulingGroup(Composite container) {
 		Group group = new Group(container, SWT.SHADOW_ETCHED_IN);
 		group.setText(GROUP_WORK_WEEK_LABEL);
@@ -497,16 +505,16 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		});
 
 	}
-	
-	
+
 	private void createTaskActivityGroup(Composite container) {
 		Group group = new Group(container, SWT.SHADOW_ETCHED_IN);
 		group.setText(GROUP_TASK_TIMING);
 		group.setLayout(new GridLayout(3, false));
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		
-		boolean timeoutEnabled = MonitorUiPlugin.getDefault().getPreferenceStore().getBoolean(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED);
-		
+
+		boolean timeoutEnabled = MonitorUiPlugin.getDefault().getPreferenceStore().getBoolean(
+				ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED);
+
 		timeoutEnabledButton = new Button(group, SWT.CHECK);
 		timeoutEnabledButton.setText("Enable inactivity timeouts");
 		timeoutEnabledButton.setSelection(timeoutEnabled);
@@ -526,8 +534,10 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		timeoutMinutes.setIncrement(5);
 		timeoutMinutes.setMaximum(60);
 		timeoutMinutes.setMinimum(1);
-		long minutes = MonitorUiPlugin.getDefault().getPreferenceStore().getLong(ActivityContextManager.ACTIVITY_TIMEOUT)/MS_MINUTES;
-		timeoutMinutes.setSelection((int)minutes);
+		long minutes = MonitorUiPlugin.getDefault().getPreferenceStore().getLong(
+				ActivityContextManager.ACTIVITY_TIMEOUT)
+				/ MS_MINUTES;
+		timeoutMinutes.setSelection((int) minutes);
 		timeoutMinutes.addSelectionListener(new SelectionAdapter() {
 
 			@Override
@@ -536,11 +546,10 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 			}
 
 		});
-		
+
 		timeoutLabel = new Label(group, SWT.NONE);
 		timeoutLabel.setText(LABEL_ACTIVITY_TIMEOUT2);
-		
-		
+
 //		Label spacer = new Label(group, SWT.NONE);
 //		GridDataFactory.fillDefaults().hint(40, SWT.DEFAULT).applyTo(spacer);
 //
@@ -670,7 +679,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		setValid(errorMessage == null);
 
 		synchScheduleTime.setEnabled(enableBackgroundSynch.getSelection());
-		
+
 		timeoutMinutes.setEnabled(timeoutEnabledButton.getSelection());
 
 	}

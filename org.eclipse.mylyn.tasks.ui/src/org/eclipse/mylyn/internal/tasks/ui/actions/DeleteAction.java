@@ -54,7 +54,7 @@ public class DeleteAction extends Action {
 			if (object instanceof UnmatchedTaskContainer) {
 				continue;
 			}
-			
+
 			i++;
 			if (i < 20) {
 				// TODO this action should be based on the action enablement and check if the container is user managed or not
@@ -66,17 +66,17 @@ public class DeleteAction extends Action {
 				break;
 			}
 		}
-	
+
 		String message;
-		
+
 		if (toDelete.size() == 1) {
 			Object object = toDelete.get(0);
 			if (object instanceof AbstractTask) {
-				if (((AbstractTask)object).isLocal()) {
+				if (((AbstractTask) object).isLocal()) {
 					message = "Permanently delete the task listed below?";
 				} else {
-					message = "Delete the planning information and context for the repository task?  The server" +
-							" copy will not be deleted and the task will remain in queries that match it.";
+					message = "Delete the planning information and context for the repository task?  The server"
+							+ " copy will not be deleted and the task will remain in queries that match it.";
 				}
 			} else if (object instanceof TaskCategory) {
 				message = "Permanently delete the category?  Local tasks will be moved to the Uncategorized folder. Repository tasks will be moved to the Unmatched folder.";
@@ -87,11 +87,11 @@ public class DeleteAction extends Action {
 			}
 		} else {
 			message = "Delete the elements listed below?  If categories or queries are selected contained tasks"
-			+ " will not be deleted.  Contexts will be deleted for selected tasks.";
+					+ " will not be deleted.  Contexts will be deleted for selected tasks.";
 		}
-		
+
 		message += "\n\n" + elements;
-		
+
 		boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench()
 				.getActiveWorkbenchWindow()
 				.getShell(), "Confirm Delete", message);

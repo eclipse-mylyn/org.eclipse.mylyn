@@ -24,20 +24,22 @@ public class TaskActivityListenerTest extends TestCase {
 	private class MockTaskActivityListener implements ITaskActivityListener2 {
 
 		private boolean hasActivated = false;
+
 		private boolean hasPreActivated = false;
-		
+
 		private boolean hasDeactivated = false;
+
 		private boolean hasPreDeactivated = false;
-		
+
 		public void reset() {
 			hasActivated = false;
 			hasPreActivated = false;
-			
+
 			hasDeactivated = false;
 			hasPreDeactivated = false;
 
 		}
-		
+
 		public void preTaskActivated(AbstractTask task) {
 			assertFalse(hasActivated);
 			hasPreActivated = true;
@@ -50,7 +52,7 @@ public class TaskActivityListenerTest extends TestCase {
 
 		public void activityChanged(ScheduledTaskContainer week) {
 			// ignore
-			
+
 		}
 
 		public void taskActivated(AbstractTask task) {
@@ -65,33 +67,33 @@ public class TaskActivityListenerTest extends TestCase {
 
 		public void taskListRead() {
 			// ignore
-			
-		}	
+
+		}
 	}
-	
+
 	public void testTaskActivation() {
 		MockRepositoryTask task = new MockRepositoryTask("test:activation");
-		
+
 		MockTaskActivityListener listener = new MockTaskActivityListener();
-		
+
 		TasksUiPlugin.getTaskListManager().addActivityListener(listener);
-		
+
 		TasksUiPlugin.getTaskListManager().activateTask(task);
 		assertTrue(listener.hasPreActivated);
 		assertTrue(listener.hasActivated);
 		assertFalse(listener.hasPreDeactivated);
 		assertFalse(listener.hasDeactivated);
-		
+
 		listener.reset();
-		
+
 		TasksUiPlugin.getTaskListManager().deactivateTask(task);
 		assertFalse(listener.hasPreActivated);
 		assertFalse(listener.hasActivated);
 		assertTrue(listener.hasPreDeactivated);
 		assertTrue(listener.hasDeactivated);
-		
+
 		TasksUiPlugin.getTaskListManager().removeActivityListener(listener);
-		
+
 	}
-	
+
 }

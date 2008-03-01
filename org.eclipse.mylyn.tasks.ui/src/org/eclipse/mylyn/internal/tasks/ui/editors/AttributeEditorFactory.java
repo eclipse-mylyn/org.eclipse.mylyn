@@ -29,7 +29,7 @@ public class AttributeEditorFactory {
 		if (RepositoryTaskAttribute.TYPE_DATE.equals(type)) {
 			// FIXME map attribute ids
 			if (RepositoryTaskAttribute.DATE_CREATION.equals(taskAttribute.getId())
-				|| RepositoryTaskAttribute.DATE_MODIFIED.equals(taskAttribute.getId())) {
+					|| RepositoryTaskAttribute.DATE_MODIFIED.equals(taskAttribute.getId())) {
 				return new SimpleDateAttributeEditor(manager, taskAttribute);
 			} else {
 				return new DateAttributeEditor(manager, taskAttribute);
@@ -37,15 +37,15 @@ public class AttributeEditorFactory {
 		} else if (RepositoryTaskAttribute.TYPE_LONG_TEXT.equals(type)) {
 			return new LongTextAttributeEditor(manager, taskAttribute);
 		} else if (RepositoryTaskAttribute.TYPE_MULTI_SELECT.equals(type)) {
-			return new MultiSelectionAttributeEditor(manager, taskAttribute);	
+			return new MultiSelectionAttributeEditor(manager, taskAttribute);
 		} else if (RepositoryTaskAttribute.TYPE_SHORT_TEXT.equals(type)) {
-			return new TextAttributeEditor(manager, taskAttribute);	
+			return new TextAttributeEditor(manager, taskAttribute);
 		} else if (RepositoryTaskAttribute.TYPE_SINGLE_SELECT.equals(type)) {
-			return new SingleSelectionAttributeEditor(manager, taskAttribute);	
+			return new SingleSelectionAttributeEditor(manager, taskAttribute);
 		} else if (RepositoryTaskAttribute.TYPE_TASK_DEPENDENCY.equals(type)) {
-			return new TaskDependendyAttributeEditor(manager, taskAttribute);	
-		} 
-		
+			return new TaskDependendyAttributeEditor(manager, taskAttribute);
+		}
+
 		throw new IllegalArgumentException("Unsupported editor type: \"" + type + "\"");
 	}
 

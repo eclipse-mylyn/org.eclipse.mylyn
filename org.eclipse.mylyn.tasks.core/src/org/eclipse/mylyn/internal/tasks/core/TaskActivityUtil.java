@@ -70,7 +70,7 @@ public class TaskActivityUtil {
 		snapEndOfDay(cal);
 		return cal;
 	}
-	
+
 	public static Calendar snapEndOfNextWeek(Calendar cal) {
 		if (cal.getFirstDayOfWeek() == Calendar.MONDAY) {
 			cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
@@ -137,7 +137,7 @@ public class TaskActivityUtil {
 		}
 		return false;
 	}
-	
+
 	public static boolean isNextWeek(Calendar time) {
 		if (time != null) {
 			Calendar weekStart = getCalendar();

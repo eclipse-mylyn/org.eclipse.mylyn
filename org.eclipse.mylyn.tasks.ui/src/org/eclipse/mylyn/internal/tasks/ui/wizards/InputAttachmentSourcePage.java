@@ -109,15 +109,15 @@ public class InputAttachmentSourcePage extends WizardPage {
 
 	private TreeViewer treeViewer;
 
-	private NewAttachmentWizard wizard;
+	private final NewAttachmentWizard wizard;
 
 	private String clipboardContents;
 
 	private boolean initUseClipboard = false;
 
-	private String DIALOG_SETTINGS = "InputAttachmentSourcePage"; //$NON-NLS-1$
+	private final String DIALOG_SETTINGS = "InputAttachmentSourcePage"; //$NON-NLS-1$
 
-	private String S_LAST_SELECTION = "lastSelection"; //$NON-NLS-1$
+	private final String S_LAST_SELECTION = "lastSelection"; //$NON-NLS-1$
 
 	public InputAttachmentSourcePage(NewAttachmentWizard wizard) {
 		super("InputAttachmentPage");
@@ -262,8 +262,9 @@ public class InputAttachmentSourcePage extends WizardPage {
 		useClipboardButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (!useClipboardButton.getSelection())
+				if (!useClipboardButton.getSelection()) {
 					return;
+				}
 
 				clearErrorMessage();
 				showError = true;
@@ -290,8 +291,9 @@ public class InputAttachmentSourcePage extends WizardPage {
 		useFileButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (!useFileButton.getSelection())
+				if (!useFileButton.getSelection()) {
 					return;
+				}
 				// If there is anything typed in at all
 				clearErrorMessage();
 				showError = (fileNameField.getText() != ""); //$NON-NLS-1$
@@ -333,8 +335,9 @@ public class InputAttachmentSourcePage extends WizardPage {
 		useWorkspaceButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (!useWorkspaceButton.getSelection())
+				if (!useWorkspaceButton.getSelection()) {
 					return;
+				}
 				clearErrorMessage();
 				// If there is anything typed in at all
 				showError = (!treeViewer.getSelection().isEmpty());
@@ -411,14 +414,17 @@ public class InputAttachmentSourcePage extends WizardPage {
 				clipboard.dispose();
 				if (o instanceof String) {
 					String s = ((String) o).trim();
-					if (s.length() > 0)
+					if (s.length() > 0) {
 						attachmentFound = true;
-					else
+					} else {
 						error = "Clipboard is empty";
-				} else
+					}
+				} else {
 					error = "Clipboard does not contain text";
-			} else
+				}
+			} else {
 				error = "Cannot retrieve clipboard contents";
+			}
 		} else if (inputMethod == SCREENSHOT) {
 			attachmentFound = true;
 		} else if (inputMethod == FILE) {
@@ -426,8 +432,9 @@ public class InputAttachmentSourcePage extends WizardPage {
 			if (path != null && path.length() > 0) {
 				File file = new File(path);
 				attachmentFound = file.exists() && file.isFile() && file.length() > 0;
-				if (!attachmentFound)
+				if (!attachmentFound) {
 					error = "Cannot locate attachment file";
+				}
 			} else {
 				error = "No file name";
 			}
@@ -473,9 +480,11 @@ public class InputAttachmentSourcePage extends WizardPage {
 
 			String[] currentItems = fileNameField.getItems();
 			int selectionIndex = -1;
-			for (int i = 0; i < currentItems.length; i++)
-				if (currentItems[i].equals(path))
+			for (int i = 0; i < currentItems.length; i++) {
+				if (currentItems[i].equals(path)) {
 					selectionIndex = i;
+				}
+			}
 
 			if (selectionIndex < 0) { // not found in history
 				int oldLength = currentItems.length;
@@ -538,7 +547,7 @@ public class InputAttachmentSourcePage extends WizardPage {
 			break;
 		case CLIPBOARD:
 			storeClipboardContents();
-			
+
 			useClipboardButton.setSelection(true);
 			useFileButton.setSelection(false);
 			useWorkspaceButton.setSelection(false);
@@ -590,9 +599,8 @@ public class InputAttachmentSourcePage extends WizardPage {
 		if (selection instanceof IStructuredSelection) {
 			Object[] s = ((IStructuredSelection) selection).toArray();
 
-			for (int i = 0; i < s.length; i++) {
+			for (Object o : s) {
 				IResource resource = null;
-				Object o = s[i];
 				if (type.isInstance(o)) {
 					resource = (IResource) o;
 
@@ -601,11 +609,12 @@ public class InputAttachmentSourcePage extends WizardPage {
 						ResourceTraversal[] travs = ((ResourceMapping) o).getTraversals(
 								ResourceMappingContext.LOCAL_CONTEXT, null);
 						if (travs != null) {
-							for (int k = 0; k < travs.length; k++) {
-								IResource[] resources = travs[k].getResources();
-								for (int j = 0; j < resources.length; j++) {
-									if (type.isInstance(resources[j]) && resources[j].isAccessible())
-										tmp.add(resources[j]);
+							for (ResourceTraversal trav : travs) {
+								IResource[] resources = trav.getResources();
+								for (IResource resource2 : resources) {
+									if (type.isInstance(resource2) && resource2.isAccessible()) {
+										tmp.add(resource2);
+									}
 								}
 							}
 						}
@@ -615,12 +624,14 @@ public class InputAttachmentSourcePage extends WizardPage {
 				} else if (o instanceof IAdaptable) {
 					IAdaptable a = (IAdaptable) o;
 					Object adapter = a.getAdapter(IResource.class);
-					if (type.isInstance(adapter))
+					if (type.isInstance(adapter)) {
 						resource = (IResource) adapter;
+					}
 				}
 
-				if (resource != null && resource.isAccessible())
+				if (resource != null && resource.isAccessible()) {
 					tmp.add(resource);
+				}
 			}
 		}
 
@@ -654,6 +665,7 @@ public class InputAttachmentSourcePage extends WizardPage {
 		initUseClipboard = b;
 	}
 
+	@Override
 	protected IDialogSettings getDialogSettings() {
 		TasksUiPlugin plugin = TasksUiPlugin.getDefault();
 		IDialogSettings settings = plugin.getDialogSettings();

@@ -86,7 +86,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 		if (data == null) {
 			return false;
 		}
-		
+
 		Object currentTarget = getCurrentTarget();
 		List<AbstractTask> tasksToMove = new ArrayList<AbstractTask>();
 		if (isUrl(data) && createTaskFromUrl(data)) {
@@ -122,8 +122,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 				Map<AbstractTask, InteractionContext> taskContexts = new HashMap<AbstractTask, InteractionContext>();
 				Set<TaskRepository> repositories = new HashSet<TaskRepository>();
 
-				for (int i = 0; i < names.length; i++) {
-					String path = names[i];
+				for (String path : names) {
 					File file = new File(path);
 					if (file.isFile()) {
 						List<AbstractRepositoryQuery> readQueries;
@@ -170,7 +169,8 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 
 		for (AbstractTask task : tasksToMove) {
 			if (currentTarget instanceof UncategorizedTaskContainer) {
-				TasksUiPlugin.getTaskListManager().getTaskList().moveTask(task, (UncategorizedTaskContainer) currentTarget);
+				TasksUiPlugin.getTaskListManager().getTaskList().moveTask(task,
+						(UncategorizedTaskContainer) currentTarget);
 			} else if (currentTarget instanceof TaskCategory) {
 				TasksUiPlugin.getTaskListManager().getTaskList().moveTask(task, (TaskCategory) currentTarget);
 			} else if (currentTarget instanceof UnmatchedTaskContainer) {
@@ -198,10 +198,10 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 				Calendar newSchedule = TaskActivityUtil.getCalendar();
 				newSchedule.setTimeInMillis(container.getStart().getTimeInMillis());
 				TaskActivityUtil.snapEndOfWorkDay(newSchedule);
-				TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, newSchedule.getTime(), container.isCaptureFloating());
+				TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, newSchedule.getTime(),
+						container.isCaptureFloating());
 			} else if (currentTarget == null) {
-				TasksUiPlugin.getTaskListManager().getTaskList().moveTask(
-						newTask,
+				TasksUiPlugin.getTaskListManager().getTaskList().moveTask(newTask,
 						TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 			}
 		}
@@ -237,8 +237,9 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 	 * @return true if task succesfully created, false otherwise
 	 */
 	public boolean createTaskFromUrl(Object data) {
-		if (!(data instanceof String))
+		if (!(data instanceof String)) {
 			return false;
+		}
 
 		String[] urlTransfer = ((String) data).split("\n");
 

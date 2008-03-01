@@ -17,9 +17,9 @@ import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.web.core.AbstractWebLocation;
 import org.eclipse.mylyn.web.core.AuthenticatedProxy;
+import org.eclipse.mylyn.web.core.AuthenticationCredentials;
 import org.eclipse.mylyn.web.core.AuthenticationType;
 import org.eclipse.mylyn.web.core.WebCorePlugin;
-import org.eclipse.mylyn.web.core.AuthenticationCredentials;
 
 /**
  * @author Steffen Pingel
@@ -34,6 +34,7 @@ public class TaskRepositoryLocation extends AbstractWebLocation {
 		this.taskRepository = taskRepository;
 	}
 
+	@Override
 	public Proxy getProxyForHost(String host, String proxyType) {
 		if (!taskRepository.isDefaultProxyEnabled()) {
 			return taskRepository.getProxy();
@@ -66,6 +67,7 @@ public class TaskRepositoryLocation extends AbstractWebLocation {
 		return (IProxyData.SOCKS_PROXY_TYPE.equals(type)) ? Proxy.Type.SOCKS : Proxy.Type.HTTP;
 	}
 
+	@Override
 	public ResultType requestCredentials(AuthenticationType type, String message) {
 		return ResultType.NOT_SUPPORTED;
 	}

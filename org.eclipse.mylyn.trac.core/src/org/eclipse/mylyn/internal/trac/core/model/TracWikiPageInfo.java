@@ -29,7 +29,7 @@ public class TracWikiPageInfo {
 
 	public TracWikiPageInfo() {
 	}
-	
+
 	public String getPageName() {
 		return pageName;
 	}
@@ -70,8 +70,9 @@ public class TracWikiPageInfo {
 		this.comment = comment;
 	}
 
+	@Override
 	public String toString() {
 		return pageName + ": version " + version + " by " + author + " last modified at " + lastModified;
 	}
-	
+
 }

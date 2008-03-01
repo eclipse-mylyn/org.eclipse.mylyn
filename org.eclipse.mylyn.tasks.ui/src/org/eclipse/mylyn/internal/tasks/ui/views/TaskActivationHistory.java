@@ -27,7 +27,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
  */
 public class TaskActivationHistory {
 
-	private List<AbstractTask> history = new ArrayList<AbstractTask>();
+	private final List<AbstractTask> history = new ArrayList<AbstractTask>();
 
 	private int currentIndex = -1;
 
@@ -98,7 +98,7 @@ public class TaskActivationHistory {
 	public boolean removeTask(AbstractTask task) {
 		return history.remove(task);
 	}
-	
+
 	public AbstractTask getPreviousTask() {
 		try {
 			boolean active = false;
@@ -110,16 +110,18 @@ public class TaskActivationHistory {
 			}
 
 			if (hasPrevious()) {
-				if (currentIndex < history.size()-1 && ((currentIndex == 0 && !history.get(currentIndex).isActive()) || !active)) {
+				if (currentIndex < history.size() - 1
+						&& ((currentIndex == 0 && !history.get(currentIndex).isActive()) || !active)) {
 					return history.get(currentIndex);
-				} else if (currentIndex > 0 && currentIndex < history.size()){
+				} else if (currentIndex > 0 && currentIndex < history.size()) {
 					return history.get(--currentIndex);
 				}
-			} 
+			}
 			return null;
 		} catch (RuntimeException e) {
 			// FIXME what exception is caught here?
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not get previous task from history", e));
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					"Could not get previous task from history", e));
 			return null;
 		}
 	}
@@ -138,7 +140,8 @@ public class TaskActivationHistory {
 			return (currentIndex == 0 && !history.get(currentIndex).isActive()) || currentIndex > 0;
 		} catch (RuntimeException e) {
 			// FIXME what exception is caught here?
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not get previous task from history", e));
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					"Could not get previous task from history", e));
 			return false;
 		}
 	}

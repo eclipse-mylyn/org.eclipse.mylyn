@@ -36,6 +36,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
  * Wizard Page for the Task Data Import Wizard
@@ -92,7 +93,7 @@ public class TaskDataImportWizardPage extends WizardPage {
 	private final static String IMPORT_BACKUPMETHOD_SETTING = "Import method backup";
 
 	public TaskDataImportWizardPage() {
-		super("org.eclipse.mylyn.tasklist.importPage", PAGE_TITLE, TasksUiPlugin.imageDescriptorFromPlugin(
+		super("org.eclipse.mylyn.tasklist.importPage", PAGE_TITLE, AbstractUIPlugin.imageDescriptorFromPlugin(
 				TasksUiPlugin.ID_PLUGIN, "icons/wizban/banner-import.gif"));
 		setPageComplete(false);
 		setDescription(DESCRIPTION);
@@ -188,8 +189,9 @@ public class TaskDataImportWizardPage extends WizardPage {
 				String dir = sourceZipText.getText();
 				dialog.setFilterPath(dir);
 				dir = dialog.open();
-				if (dir == null || dir.equals(""))
+				if (dir == null || dir.equals("")) {
 					return;
+				}
 				sourceZipText.setText(dir);
 			}
 		});

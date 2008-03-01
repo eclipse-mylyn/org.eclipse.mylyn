@@ -36,7 +36,8 @@ public class TaskSelection {
 			this.taskData.setAttributeFactory(taskData.getAttributeFactory());
 			this.taskData.refresh();
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Error creating a task data copy", e));
+			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+					"Error creating a task data copy", e));
 			throw new RuntimeException(e);
 		}
 	}
@@ -69,14 +70,14 @@ public class TaskSelection {
 			@Override
 			public String getType(RepositoryTaskAttribute taskAttribute) {
 				return RepositoryTaskAttribute.TYPE_SHORT_TEXT;
-			}				
+			}
 		};
-		
+
 		@Override
 		public AbstractAttributeMapper getAttributeMapper() {
 			return attributeMapper;
 		}
-		
+
 		@Override
 		public Date getDateForAttributeType(String attributeKey, String dateString) {
 			return null;

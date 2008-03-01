@@ -33,7 +33,7 @@ public abstract class AbstractAttributeEditor {
 	protected static final Font TEXT_FONT = JFaceResources.getDefaultFont();
 
 	private Control control;
-	
+
 	private boolean decorationEnabled;
 
 	private Label labelControl;
@@ -114,7 +114,7 @@ public abstract class AbstractAttributeEditor {
 	public void setDecorationEnabled(boolean decorationEnabled) {
 		this.decorationEnabled = decorationEnabled;
 	}
-	
+
 	protected void setLayoutHint(LayoutHint layoutHint) {
 		this.layoutHint = layoutHint;
 	}
@@ -124,5 +124,5 @@ public abstract class AbstractAttributeEditor {
 			getControl().setBackground(color);
 		}
 	}
-	
+
 }

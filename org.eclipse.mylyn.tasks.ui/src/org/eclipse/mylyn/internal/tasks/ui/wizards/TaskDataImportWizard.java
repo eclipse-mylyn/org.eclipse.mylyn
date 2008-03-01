@@ -157,8 +157,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 			}
 
 		} catch (IOException e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Could not import files", e));
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not import files", e));
 		}
 
 		FileCopyJob job = new FileCopyJob(sourceDirFile, sourceZipFile, sourceTaskListFile, sourceRepositoriesFile,
@@ -170,11 +169,9 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 			// TODO use the wizard's progress service or IProgressService.busyCursorWhile(): bug 210710
 			service.run(true, false, job);
 		} catch (InvocationTargetException e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Could not import files", e));
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not import files", e));
 		} catch (InterruptedException e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Could not import files", e));
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not import files", e));
 		}
 
 		importPage.saveSettings();
@@ -188,7 +185,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 
 		private File sourceZipFile = null;
 
-		private List<ZipEntry> zipEntriesToExtract;
+		private final List<ZipEntry> zipEntriesToExtract;
 
 		public FileCopyJob(File sourceFolder, File sourceZipFile, File sourceTaskListFile, File sourceRepositoriesFile,
 				File sourceActivationHistoryFile, List<File> contextFiles, List<ZipEntry> zipEntries) {

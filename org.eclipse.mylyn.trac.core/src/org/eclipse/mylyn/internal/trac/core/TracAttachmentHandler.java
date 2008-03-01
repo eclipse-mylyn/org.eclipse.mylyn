@@ -27,7 +27,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  */
 public class TracAttachmentHandler extends AbstractAttachmentHandler {
 
-	private TracRepositoryConnector connector;
+	private final TracRepositoryConnector connector;
 
 	public TracAttachmentHandler(TracRepositoryConnector connector) {
 		this.connector = connector;

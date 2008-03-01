@@ -87,7 +87,7 @@ public class TaskFactory implements ITaskFactory {
 				if (dataHandler != null) {
 					repositoryTask.clear();
 					Set<String> subTaskIds = dataHandler.getSubTaskIds(taskData);
-					if (subTaskIds != null){
+					if (subTaskIds != null) {
 						for (String subId : subTaskIds) {
 							if (subId == null || subId.trim().equals("")) {
 								continue;

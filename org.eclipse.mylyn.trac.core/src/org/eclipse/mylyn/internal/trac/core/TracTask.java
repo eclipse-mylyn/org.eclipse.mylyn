@@ -218,7 +218,7 @@ public class TracTask extends AbstractTask {
 	}
 
 	private boolean supportsSubtasks = false;
-	
+
 	public TracTask(String repositoryUrl, String id, String label) {
 		super(repositoryUrl, id, label);
 		setUrl(repositoryUrl + ITracClient.TICKET_URL + id);
@@ -237,9 +237,9 @@ public class TracTask extends AbstractTask {
 	public boolean getSupportsSubtasks() {
 		return supportsSubtasks;
 	}
-	
+
 	public void setSupportsSubtasks(boolean supportsSubtasks) {
 		this.supportsSubtasks = supportsSubtasks;
 	}
-	
+
 }

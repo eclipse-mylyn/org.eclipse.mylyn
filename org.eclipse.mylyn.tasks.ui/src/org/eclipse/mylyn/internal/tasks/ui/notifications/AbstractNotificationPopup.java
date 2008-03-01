@@ -99,21 +99,22 @@ public abstract class AbstractNotificationPopup extends Window {
 
 				});
 			}
-			if (monitor.isCanceled())
+			if (monitor.isCanceled()) {
 				return Status.CANCEL_STATUS;
+			}
 
 			return Status.OK_STATUS;
 		}
 	};
 
-	private boolean respectDisplayBounds = true;
+	private final boolean respectDisplayBounds = true;
 
-	private boolean respectMonitorBounds = true;
+	private final boolean respectMonitorBounds = true;
 
 	private FadeJob fadeJob;
 
 	private boolean supportsFading;
-	
+
 	private boolean fadingEnabled;
 
 	public AbstractNotificationPopup(Display display) {
@@ -134,11 +135,11 @@ public abstract class AbstractNotificationPopup extends Window {
 	public boolean isFadingEnabled() {
 		return fadingEnabled;
 	}
-	
+
 	public void setFadingEnabled(boolean fadingEnabled) {
 		this.fadingEnabled = fadingEnabled;
 	}
-	
+
 	/**
 	 * Override to return a customized name. Default is to return the name of the product, specified by the -name (e.g.
 	 * "Eclipse SDK") command line parameter that's associated with the product ID (e.g. "org.eclipse.sdk.ide"). Strips
@@ -173,19 +174,19 @@ public abstract class AbstractNotificationPopup extends Window {
 				} else {
 					image = null;
 				}
-				
+
 				Image[] images = getShell().getImages();
 				if (images != null && images.length > 0) {
 					// find the icon that is closest in size, but not larger than maximumHeight 
-					for (int i = 0; i < images.length; i++) {
-						int newDiff = maximumHeight - images[i].getBounds().height;
+					for (Image image2 : images) {
+						int newDiff = maximumHeight - image2.getBounds().height;
 						if (newDiff >= 0 && newDiff <= diff) {
 							diff = newDiff;
-							image = images[i];
+							image = image2;
 						}
 					}
 				}
-				
+
 				return image;
 			}
 		}
@@ -241,6 +242,7 @@ public abstract class AbstractNotificationPopup extends Window {
 		color = new NotificationPopupColors(display, resources);
 	}
 
+	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 
@@ -248,6 +250,7 @@ public abstract class AbstractNotificationPopup extends Window {
 		newShell.setBackground(color.getBorder());
 	}
 
+	@Override
 	public void create() {
 		super.create();
 		addRegion(shell);
@@ -275,8 +278,9 @@ public abstract class AbstractNotificationPopup extends Window {
 		region.subtract(s.x - 1, 4, 1, 1);
 
 		/* Dispose old first */
-		if (shell.getRegion() != null)
+		if (shell.getRegion() != null) {
 			shell.getRegion().dispose();
+		}
 
 		/* Apply Region */
 		shell.setRegion(region);
@@ -314,9 +318,9 @@ public abstract class AbstractNotificationPopup extends Window {
 					if (shell.isDisposed()) {
 						return;
 					}
-										
+
 					if (alpha == 255) {
-						scheduleAutoClose();					
+						scheduleAutoClose();
 					}
 				}
 			});
@@ -333,6 +337,7 @@ public abstract class AbstractNotificationPopup extends Window {
 		}
 	}
 
+	@Override
 	protected Control createContents(Composite parent) {
 		((GridLayout) parent.getLayout()).marginWidth = 1;
 		((GridLayout) parent.getLayout()).marginHeight = 1;
@@ -362,6 +367,7 @@ public abstract class AbstractNotificationPopup extends Window {
 		titleCircle.setLayout(layout);
 		titleCircle.addControlListener(new ControlAdapter() {
 
+			@Override
 			public void controlResized(ControlEvent e) {
 				Rectangle clArea = titleCircle.getClientArea();
 				lastUsedBgImage = new Image(titleCircle.getDisplay(), clArea.width, clArea.height);
@@ -454,6 +460,7 @@ public abstract class AbstractNotificationPopup extends Window {
 		return outerCircle;
 	}
 
+	@Override
 	protected void initializeBounds() {
 		Rectangle clArea = getPrimaryClientArea();
 		int initialHeight = shell.computeSize(DEFAULT_WIDTH, SWT.DEFAULT).y;
@@ -482,7 +489,7 @@ public abstract class AbstractNotificationPopup extends Window {
 				public void faded(Shell shell, int alpha) {
 					if (!shell.isDisposed() && alpha == 0) {
 						shell.close();
-					}					
+					}
 				}
 			});
 		} else {
@@ -490,6 +497,7 @@ public abstract class AbstractNotificationPopup extends Window {
 		}
 	}
 
+	@Override
 	public boolean close() {
 		resources.dispose();
 		if (lastUsedRegion != null) {

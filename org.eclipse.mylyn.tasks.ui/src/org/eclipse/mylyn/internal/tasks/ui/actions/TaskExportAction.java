@@ -38,12 +38,13 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * Action to export a task to an external file.
+ * 
  * @author Jevgeni Holodkov
  */
 public class TaskExportAction extends Action implements IViewActionDelegate {
 
 	protected ISelection selection;
-	
+
 	public void init(IViewPart view) {
 		// ignore
 	}
@@ -62,7 +63,7 @@ public class TaskExportAction extends Action implements IViewActionDelegate {
 			action.setEnabled(false);
 		}
 	}
-	
+
 	protected List<AbstractTask> getSelectedTasks(ISelection newSelection) {
 		List<AbstractTask> selectedQueries = new ArrayList<AbstractTask>();
 		if (selection instanceof StructuredSelection) {
@@ -75,13 +76,13 @@ public class TaskExportAction extends Action implements IViewActionDelegate {
 		}
 		return selectedQueries;
 	}
-	
+
 	public void run(List<AbstractTask> tasks) {
 		Map<AbstractTask, File> taskFiles = new HashMap<AbstractTask, File>();
 
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-		
-		if(tasks.size() == 1) {
+
+		if (tasks.size() == 1) {
 			// open FileDialog
 			FileDialog dialog = new FileDialog(shell, SWT.PRIMARY_MODAL | SWT.SAVE);
 			dialog.setFilterExtensions(new String[] { "*" + ITasksUiConstants.FILE_EXTENSION });
@@ -109,11 +110,11 @@ public class TaskExportAction extends Action implements IViewActionDelegate {
 				taskFiles.put(task, file);
 			}
 		}
-		
-		for(Entry<AbstractTask, File> entry : taskFiles.entrySet()) {
+
+		for (Entry<AbstractTask, File> entry : taskFiles.entrySet()) {
 			AbstractTask task = entry.getKey();
 			File file = entry.getValue();
-			
+
 			// Prompt the user to confirm if save operation will cause an overwrite
 			if (file.exists()) {
 				if (!MessageDialog.openQuestion(shell, "Confirm File Replace", "The file " + file.getPath()
@@ -121,10 +122,10 @@ public class TaskExportAction extends Action implements IViewActionDelegate {
 					continue;
 				}
 			}
-			
+
 			TasksUiPlugin.getTaskListManager().getTaskListWriter().writeTask(task, file);
 		}
-		 return;
+		return;
 	}
 
 	private String encodeName(AbstractTask task) {
@@ -133,8 +134,9 @@ public class TaskExportAction extends Action implements IViewActionDelegate {
 			encodedName = URLEncoder.encode(task.getHandleIdentifier(), ITasksUiConstants.FILENAME_ENCODING);
 		} catch (UnsupportedEncodingException e) {
 			// FIXME propagate RuntimeException? a null return value is not handled properly
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not determine name for the selected task", e));
-		}		
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					"Could not determine name for the selected task", e));
+		}
 		return encodedName;
 	}
 

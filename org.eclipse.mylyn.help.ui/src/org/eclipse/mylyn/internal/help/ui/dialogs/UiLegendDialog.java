@@ -54,9 +54,9 @@ public class UiLegendDialog extends PopupDialog {
 
 	private ScrolledForm form;
 
-	private TaskElementLabelProvider labelProvider = new TaskElementLabelProvider(false);
+	private final TaskElementLabelProvider labelProvider = new TaskElementLabelProvider(false);
 
-	private IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
+	private final IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
 
 	public UiLegendDialog(Shell parent) {
 		super(parent, PopupDialog.INFOPOPUP_SHELLSTYLE | SWT.ON_TOP, false, false, false, false, null, null);
@@ -247,7 +247,7 @@ public class UiLegendDialog extends PopupDialog {
 		Label labelOverdue = toolkit.createLabel(activityClient, "Past scheduled date");
 		labelOverdue.setForeground(themeManager.getCurrentTheme().getColorRegistry().get(
 				TaskListColorsAndFonts.THEME_COLOR_TASK_PAST_SCHEDULED));
-		
+
 // imageLabel = toolkit.createLabel(activityClient, "");
 // imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.TASK));
 // Label labelThisWeek = toolkit.createLabel(activityClient, "Scheduled for this
@@ -278,8 +278,8 @@ public class UiLegendDialog extends PopupDialog {
 		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.OVERLAY_OVER_DUE));
 		Label textLabel = toolkit.createLabel(activityClient, "Past Due date");
 		textLabel.setForeground(themeManager.getCurrentTheme().getColorRegistry().get(
-				TaskListColorsAndFonts.THEME_COLOR_TASK_PAST_DUE));		
-		
+				TaskListColorsAndFonts.THEME_COLOR_TASK_PAST_DUE));
+
 		imageLabel = toolkit.createLabel(activityClient, "");
 		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.BLANK));
 		Hyperlink adjust = toolkit.createHyperlink(activityClient, "Adjust Colors and Fonts...", SWT.WRAP);
@@ -428,7 +428,7 @@ public class UiLegendDialog extends PopupDialog {
 						imageLabel.setImage(labelProvider.getImage(taskListElement));
 						toolkit.createLabel(connectorClient, taskListElement.getSummary());
 					}
-					
+
 					if (elements.size() < 4) {
 						imageLabel = toolkit.createLabel(connectorClient, "");
 						toolkit.createLabel(connectorClient, "");
@@ -467,18 +467,18 @@ public class UiLegendDialog extends PopupDialog {
 			}
 		});
 	}
-	
+
 	private class CloseDialogAction extends Action {
 
 		private CloseDialogAction() {
 			setImageDescriptor(TasksUiImages.NOTIFICATION_CLOSE);
 			setText("Close Dialog");
 		}
-		
+
 		@Override
 		public void run() {
 			close();
 		}
-		
+
 	}
 }

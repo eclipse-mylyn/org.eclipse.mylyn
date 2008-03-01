@@ -29,16 +29,16 @@ public final class TaskCategory extends AbstractTaskCategory {
 	public boolean isUserDefined() {
 		return true;
 	}
-	
+
 	/**
 	 * null if no parent category
 	 */
 	public static AbstractTaskCategory getParentTaskCategory(AbstractTask task) {
 		AbstractTaskCategory category = null;
-		if(task != null) {
-			for (AbstractTaskContainer container: task.getParentContainers()) {
-				if(container instanceof AbstractTaskCategory) {
-					category = (AbstractTaskCategory)container;
+		if (task != null) {
+			for (AbstractTaskContainer container : task.getParentContainers()) {
+				if (container instanceof AbstractTaskCategory) {
+					category = (AbstractTaskCategory) container;
 				}
 			}
 		}

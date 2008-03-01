@@ -47,7 +47,7 @@ public class SearchHitCollector implements ISearchQuery, ITaskCollector {
 
 	private static final String QUERYING_REPOSITORY = "Querying Repository...";
 
-	private Set<AbstractTask> taskResults = new HashSet<AbstractTask>();
+	private final Set<AbstractTask> taskResults = new HashSet<AbstractTask>();
 
 //	/** The string to display to the user when we have 1 match */
 //	private static final String MATCH = "1 match";
@@ -59,11 +59,11 @@ public class SearchHitCollector implements ISearchQuery, ITaskCollector {
 
 	private final ITaskFactory taskFactory;
 
-	private TaskRepository repository;
+	private final TaskRepository repository;
 
-	private AbstractRepositoryQuery repositoryQuery;
+	private final AbstractRepositoryQuery repositoryQuery;
 
-	private RepositorySearchResult searchResult;
+	private final RepositorySearchResult searchResult;
 
 	public SearchHitCollector(TaskList tasklist, TaskRepository repository, AbstractRepositoryQuery repositoryQuery,
 			ITaskFactory taskFactory) {

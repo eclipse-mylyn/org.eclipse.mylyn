@@ -24,8 +24,7 @@ import org.eclipse.ui.IWorkingSetElementAdapter;
 public class TaskWorkingSetElementAdapter implements IWorkingSetElementAdapter {
 
 	public IAdaptable[] adaptElements(IWorkingSet workingSet, IAdaptable[] elements) {
-		for (int i = 0; i < elements.length; i++) {
-			IAdaptable adaptable = elements[i];
+		for (IAdaptable adaptable : elements) {
 			if (!(adaptable instanceof AbstractTaskContainer)) {
 				return selectContainers(elements);
 			}

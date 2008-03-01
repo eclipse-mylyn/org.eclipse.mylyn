@@ -14,7 +14,7 @@ package org.eclipse.mylyn.trac.tests;
 public class TracTestConstants {
 
 	public static final String SERVER = System.getProperty("mylyn.trac.server", "mylyn.eclipse.org");
-	
+
 	public static final String TEST_TRAC_096_URL = "http://" + SERVER + "/trac096";
 
 	public static final String TEST_TRAC_010_URL = "http://" + SERVER + "/trac010";

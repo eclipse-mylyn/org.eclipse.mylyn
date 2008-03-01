@@ -41,8 +41,9 @@ public class TaskActivityWizard extends Wizard implements INewWizard {
 	public boolean performFinish() {
 		try {
 			IWorkbenchPage page = TasksUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
-			if (page == null)
+			if (page == null) {
 				return false;
+			}
 			IEditorInput input = new TaskActivityEditorInput(planningGamePage.getReportStartDate(),
 					planningGamePage.getReportEndDate(), planningGamePage.getSelectedContainers(),
 					TasksUiPlugin.getTaskListManager().getTaskList());

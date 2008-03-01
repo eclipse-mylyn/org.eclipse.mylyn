@@ -10,10 +10,10 @@ package org.eclipse.mylyn.tasks.tests;
 
 import java.util.List;
 
+import junit.framework.TestCase;
+
 import org.eclipse.mylyn.internal.tasks.ui.views.AbstractTaskListPresentation;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-
-import junit.framework.TestCase;
 
 /**
  * @author Mik Kersten
@@ -21,10 +21,10 @@ import junit.framework.TestCase;
 public class TaskListPresentationTest extends TestCase {
 
 	public void testDefaultPresentations() {
-		
+
 		List<AbstractTaskListPresentation> presentations = TaskListView.getPresentations();
 		// depends on whether Sandbox is running
 		assertTrue(presentations.size() == 2 || presentations.size() == 7);
 	}
-	
+
 }

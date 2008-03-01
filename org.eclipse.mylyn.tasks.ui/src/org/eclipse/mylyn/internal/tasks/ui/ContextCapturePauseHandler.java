@@ -34,11 +34,13 @@ public class ContextCapturePauseHandler extends AbstractHandler //
 		ContextCorePlugin.getContextManager().addListener(this);
 	}
 
+	@Override
 	public void dispose() {
 		ContextCorePlugin.getContextManager().removeListener(this);
 		super.dispose();
 	}
 
+	@Override
 	public Object execute(ExecutionEvent e) throws ExecutionException {
 		if (ContextCorePlugin.getContextManager().isContextCapturePaused()) {
 			resume();

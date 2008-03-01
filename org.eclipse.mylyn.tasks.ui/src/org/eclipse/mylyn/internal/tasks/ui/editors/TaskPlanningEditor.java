@@ -146,7 +146,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private TaskEditor parentEditor = null;
 
-	private ITaskListChangeListener TASK_LIST_LISTENER = new ITaskListChangeListener() {
+	private final ITaskListChangeListener TASK_LIST_LISTENER = new ITaskListChangeListener() {
 
 		public void containersChanged(Set<TaskContainerDelta> containers) {
 			for (TaskContainerDelta taskContainerDelta : containers) {
@@ -325,11 +325,12 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private void addHeaderControls() {
 
-		if (task.isLocal() && parentEditor.getTopForm() != null && parentEditor.getTopForm().getToolBarManager() != null) {
+		if (task.isLocal() && parentEditor.getTopForm() != null
+				&& parentEditor.getTopForm().getToolBarManager() != null) {
 			activateAction = new ToggleTaskActivationAction(task, parentEditor.getTopForm().getToolBarManager());
 			parentEditor.getTopForm().getToolBarManager().add(new Separator("activation"));
 			parentEditor.getTopForm().getToolBarManager().add(activateAction);
-			parentEditor.getTopForm().getToolBarManager().update(true);			
+			parentEditor.getTopForm().getToolBarManager().update(true);
 		}
 
 		// if (form.getToolBarManager() != null) {
@@ -623,7 +624,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private void createPlanningSection(Composite parent) {
 
-		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
+		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE);
 		section.setText(LABEL_PLAN);
 		section.setLayout(new GridLayout());
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -667,7 +668,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 				// ignore
 			}
 		});
-		
+
 		ImageHyperlink clearScheduledDate = toolkit.createImageHyperlink(nameValueComp, SWT.NONE);
 		clearScheduledDate.setImage(TasksUiImages.getImage(TasksUiImages.REMOVE));
 		clearScheduledDate.setToolTipText(CLEAR);
@@ -686,7 +687,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 
 		dueDatePicker = new DatePicker(nameValueComp, SWT.FLAT, DatePicker.LABEL_CHOOSE);
-		
+
 		Calendar calendar = TaskActivityUtil.getCalendar();
 
 		if (task.getDueDate() != null) {
@@ -787,8 +788,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		td.widthHint = 120;
 		elapsedTimeText.setLayoutData(td);
 		elapsedTimeText.setEditable(false);
-		
-		
+
 		timingListener = new ITaskTimingListener() {
 
 			public void elapsedTimeUpdated(AbstractTask task, long newElapsedTime) {
@@ -801,7 +801,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 						}
 
 					} catch (RuntimeException e) {
-						StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not format elapsed time", e));
+						StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+								"Could not format elapsed time", e));
 					}
 					final String elapsedString = elapsedTimeString;
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -816,10 +817,9 @@ public class TaskPlanningEditor extends TaskFormPage {
 				}
 			}
 		};
-		
-		
+
 		TasksUiPlugin.getTaskListManager().addTimingListener(timingListener);
-		
+
 		toolkit.paintBordersFor(sectionClient);
 	}
 
@@ -909,7 +909,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	// TODO: unused, delete?
 	void createResourcesSection(Composite parent) {
-		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
+		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE);
 		section.setText("Resources");
 		section.setLayout(new GridLayout());
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -948,7 +948,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	@Override
 	public void dispose() {
-		if(timingListener != null) {
+		if (timingListener != null) {
 			TasksUiPlugin.getTaskListManager().removeTimingListener(timingListener);
 		}
 		TasksUiPlugin.getTaskListManager().getTaskList().removeChangeListener(TASK_LIST_LISTENER);
@@ -978,5 +978,5 @@ public class TaskPlanningEditor extends TaskFormPage {
 	public String getFormTitle() {
 		return form.getText();
 	}
-	
+
 }

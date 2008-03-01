@@ -35,7 +35,8 @@ public class TracUiPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 
-		TracCorePlugin.getDefault().getConnector().setTaskRepositoryLocationFactory(new TaskRepositoryLocationUiFactory());
+		TracCorePlugin.getDefault().getConnector().setTaskRepositoryLocationFactory(
+				new TaskRepositoryLocationUiFactory());
 		TasksUiPlugin.getRepositoryManager().addListener(TracCorePlugin.getDefault().getConnector().getClientManager());
 	}
 

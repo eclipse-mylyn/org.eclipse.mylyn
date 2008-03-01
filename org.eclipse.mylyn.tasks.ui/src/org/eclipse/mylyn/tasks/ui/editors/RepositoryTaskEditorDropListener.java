@@ -11,7 +11,7 @@ package org.eclipse.mylyn.tasks.ui.editors;
 import java.io.File;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -21,6 +21,7 @@ import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.DropTargetListener;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.widgets.Control;
 
 /**
@@ -56,9 +57,9 @@ class RepositoryTaskEditorDropListener implements DropTargetListener {
 			}
 		}
 		// will accept text but prefer to have files dropped
-		for (int i = 0; i < event.dataTypes.length; i++) {
-			if (fileTransfer.isSupportedType(event.dataTypes[i])) {
-				event.currentDataType = event.dataTypes[i];
+		for (TransferData dataType : event.dataTypes) {
+			if (fileTransfer.isSupportedType(dataType)) {
+				event.currentDataType = dataType;
 				// files should only be copied
 				if (event.detail != DND.DROP_COPY) {
 					event.detail = DND.DROP_NONE;
@@ -150,7 +151,7 @@ class RepositoryTaskEditorDropListener implements DropTargetListener {
 			dialog.setMessage(message, IMessageProvider.WARNING);
 		}
 		int result = dialog.open();
-		if (result != MessageDialog.OK) {
+		if (result != Window.OK) {
 			AbstractTaskEditor.setGlobalBusy(false);
 		}
 	}

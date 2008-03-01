@@ -27,7 +27,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class ToggleWorkingSetAction extends Action {
 
-	private IWorkingSet workingSet;
+	private final IWorkingSet workingSet;
 
 	public ToggleWorkingSetAction(IWorkingSet set) {
 		super(set.getLabel(), IAction.AS_CHECK_BOX);
@@ -40,7 +40,7 @@ public class ToggleWorkingSetAction extends Action {
 	public void run() {
 		runWithEvent(null);
 	}
-	
+
 	@Override
 	public void runWithEvent(Event event) {
 		Set<IWorkingSet> newList = new HashSet<IWorkingSet>(Arrays.asList(TaskWorkingSetUpdater.getEnabledSets()));
@@ -56,8 +56,7 @@ public class ToggleWorkingSetAction extends Action {
 			Iterator<IWorkingSet> iter = newList.iterator();
 			while (iter.hasNext()) {
 				IWorkingSet workingSet = iter.next();
-				if (workingSet != null
-						&& workingSet.getId() != null
+				if (workingSet != null && workingSet.getId() != null
 						&& workingSet.getId().equalsIgnoreCase(TaskWorkingSetUpdater.ID_TASK_WORKING_SET)) {
 					tempList.add(workingSet);
 				}

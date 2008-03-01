@@ -27,11 +27,11 @@ public abstract class AbstractRepositoryClientWizard extends Wizard implements I
 	/**
 	 * If not null, indicates that the wizard will initially jump to a specific connector page
 	 */
-	private String repositoryType;
+	private final String repositoryType;
 
 	protected TaskRepository repository;
 
-	private SelectRepositoryClientPage selectRepositoryClientPage = new SelectRepositoryClientPage(this);
+	private final SelectRepositoryClientPage selectRepositoryClientPage = new SelectRepositoryClientPage(this);
 
 	protected AbstractRepositorySettingsPage abstractRepositorySettingsPage;
 

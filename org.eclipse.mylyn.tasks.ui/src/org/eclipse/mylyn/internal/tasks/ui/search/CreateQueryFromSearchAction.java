@@ -33,7 +33,7 @@ import org.eclipse.ui.PlatformUI;
 public class CreateQueryFromSearchAction extends Action {
 
 	/** The view this action works on */
-	private RepositorySearchResultView resultView;
+	private final RepositorySearchResultView resultView;
 
 	/**
 	 * Constructor

@@ -58,7 +58,8 @@ public class AttributeContainer implements Serializable {
 		}
 		String mapped = attributeFactory.mapCommonAttributeKey(key);
 		if (mapped == null) {
-			StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "Mapped value for " + key + " returned null."));
+			StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "Mapped value for " + key
+					+ " returned null."));
 			return;
 		}
 		if (!attributes.containsKey(mapped)) {

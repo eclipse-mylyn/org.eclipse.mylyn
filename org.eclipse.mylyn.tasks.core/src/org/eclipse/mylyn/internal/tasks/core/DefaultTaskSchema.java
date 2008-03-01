@@ -26,7 +26,7 @@ public class DefaultTaskSchema {
 
 	public DefaultTaskSchema(RepositoryTaskData taskData) {
 		Assert.isNotNull(taskData);
-			
+
 		this.taskData = taskData;
 	}
 
@@ -128,7 +128,7 @@ public class DefaultTaskSchema {
 			attribute = new RepositoryTaskAttribute(attributeKey, null, false);
 			taskData.addAttribute(attributeKey, attribute);
 		}
-		
+
 		AbstractAttributeMapper attributeMapper = taskData.getAttributeFactory().getAttributeMapper();
 		if (attributeMapper != null) {
 			attributeMapper.setValue(attribute, value);

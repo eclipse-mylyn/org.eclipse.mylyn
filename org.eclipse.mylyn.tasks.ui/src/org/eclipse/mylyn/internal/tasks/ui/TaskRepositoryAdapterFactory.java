@@ -31,8 +31,7 @@ public class TaskRepositoryAdapterFactory implements IAdapterFactory {
 		return ADAPTER_TYPES;
 	}
 
-	public Object getAdapter(final Object adaptable, @SuppressWarnings("unchecked")
-	Class adapterType) {
+	public Object getAdapter(final Object adaptable, @SuppressWarnings("unchecked") Class adapterType) {
 		if (adaptable instanceof TaskRepository) {
 			return new IActionFilter() {
 				public boolean testAttribute(Object target, String name, String value) {

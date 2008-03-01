@@ -30,6 +30,7 @@ public class OrphanedTasksTest extends TestCase {
 
 	private TaskList taskList;
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		TasksUiPlugin.getTaskListManager().resetTaskList();
@@ -37,6 +38,7 @@ public class OrphanedTasksTest extends TestCase {
 		assertTrue(taskList.getDefaultCategory().isEmpty());
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
 	}
@@ -148,7 +150,7 @@ public class OrphanedTasksTest extends TestCase {
 		assertTrue(taskList.getOrphanContainer(MockRepositoryConnector.REPOSITORY_URL).isEmpty());
 		assertEquals(1, taskList.getCategories().size());
 	}
-	
+
 	/**
 	 * Repository tasks in deleted queries are orphaned.
 	 */
@@ -165,10 +167,8 @@ public class OrphanedTasksTest extends TestCase {
 		assertFalse(taskList.getOrphanContainer(MockRepositoryConnector.REPOSITORY_URL).isEmpty());
 	}
 
-	
 	/**
-	 * If a task exists in a category and is a query hit
-	 * it should not be removed from the category
+	 * If a task exists in a category and is a query hit it should not be removed from the category
 	 */
 	public void testQueryRemovedTaskInCategory() {
 		MockRepositoryTask mockTask = new MockRepositoryTask("1");
@@ -194,8 +194,7 @@ public class OrphanedTasksTest extends TestCase {
 		assertEquals(0, taskList.getQueries().size());
 		assertFalse(taskList.getDefaultCategory().isEmpty());
 	}
-	
-	
+
 	/**
 	 * Repository tasks that exist in another query are not orphaned
 	 */
@@ -235,7 +234,11 @@ public class OrphanedTasksTest extends TestCase {
 		Set<AbstractTask> tasks = TasksUiPlugin.getTaskListManager().getTaskList().getRepositoryTasks(
 				MockRepositoryConnector.REPOSITORY_URL);
 		assertFalse(tasks.isEmpty());
-		AbstractRepositoryQuery query = TasksUiPlugin.getTaskListManager().getTaskList().getParentQueries(mockTask).iterator().next();
+		AbstractRepositoryQuery query = TasksUiPlugin.getTaskListManager()
+				.getTaskList()
+				.getParentQueries(mockTask)
+				.iterator()
+				.next();
 		assertEquals(mockQuery, query);
 		assertFalse(query.isEmpty());
 		assertTrue(TasksUiPlugin.getTaskListManager().getTaskList().getOrphanContainer(

@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.PreferenceDialog;
@@ -60,7 +61,6 @@ import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
-import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * Extend to provide custom repository settings. This page is typically invoked by the user requesting properties via
@@ -427,8 +427,8 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 		if (needsAdvanced() || needsEncoding()) {
 
-			advancedExpComposite = toolkit.createExpandableComposite(compositeContainer, Section.COMPACT
-					| Section.TWISTIE | Section.TITLE_BAR);
+			advancedExpComposite = toolkit.createExpandableComposite(compositeContainer, ExpandableComposite.COMPACT
+					| ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR);
 			advancedExpComposite.clientVerticalSpacing = 0;
 			GridData gridData_2 = new GridData(SWT.FILL, SWT.FILL, true, false);
 			gridData_2.horizontalIndent = -5;
@@ -513,15 +513,16 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 							}
 						}
 					} catch (Throwable t) {
-						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not set field value", t));
+						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+								"Could not set field value", t));
 					}
 				}
 			}
 		}
 
 		if (needsHttpAuth()) {
-			httpAuthExpComposite = toolkit.createExpandableComposite(compositeContainer, Section.COMPACT
-					| Section.TWISTIE | Section.TITLE_BAR);
+			httpAuthExpComposite = toolkit.createExpandableComposite(compositeContainer, ExpandableComposite.COMPACT
+					| ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR);
 			httpAuthExpComposite.clientVerticalSpacing = 0;
 			GridData gridData_2 = new GridData(SWT.FILL, SWT.FILL, true, false);
 			gridData_2.horizontalIndent = -5;
@@ -603,7 +604,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		}
 
 		addStatusSection();
-		
+
 		Composite managementComposite = new Composite(compositeContainer, SWT.NULL);
 		GridLayout managementLayout = new GridLayout(4, false);
 		managementLayout.marginHeight = 0;
@@ -681,8 +682,8 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	private void addProxySection() {
 
-		proxyExpComposite = toolkit.createExpandableComposite(compositeContainer, Section.COMPACT | Section.TWISTIE
-				| Section.TITLE_BAR);
+		proxyExpComposite = toolkit.createExpandableComposite(compositeContainer, ExpandableComposite.COMPACT
+				| ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR);
 		proxyExpComposite.clientVerticalSpacing = 0;
 		GridData gridData_2 = new GridData(SWT.FILL, SWT.FILL, true, false);
 		gridData_2.horizontalIndent = -5;
@@ -831,8 +832,8 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	}
 
 	private void addStatusSection() {
-		ExpandableComposite statusComposite = toolkit.createExpandableComposite(compositeContainer, Section.COMPACT | Section.TWISTIE
-				| Section.TITLE_BAR);
+		ExpandableComposite statusComposite = toolkit.createExpandableComposite(compositeContainer,
+				ExpandableComposite.COMPACT | ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR);
 		statusComposite.clientVerticalSpacing = 0;
 		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false);
 		gd.horizontalIndent = -5;
@@ -1109,7 +1110,8 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			try {
 				super.refreshValidState();
 			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Problem refreshing password field", e));
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						"Problem refreshing password field", e));
 			}
 		}
 
@@ -1245,7 +1247,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 				repository.setCredentials(AuthenticationType.PROXY, null, getSaveProxyPassword());
 			}
 		}
-		
+
 		repository.setOffline(disconnectedButton.getSelection());
 	}
 
@@ -1382,7 +1384,8 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 				}
 			});
 		} catch (InvocationTargetException e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Internal error validating repository", e.getCause()));
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					"Internal error validating repository", e.getCause()));
 			return;
 		} catch (InterruptedException e) {
 			// canceled
@@ -1408,16 +1411,16 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 					message = "Repository is valid.";
 				}
 			}
-			setMessage(message, WizardPage.INFORMATION);
+			setMessage(message, IMessageProvider.INFORMATION);
 			break;
 		case IStatus.INFO:
-			setMessage(message, WizardPage.INFORMATION);
+			setMessage(message, IMessageProvider.INFORMATION);
 			break;
 		case IStatus.WARNING:
-			setMessage(message, WizardPage.WARNING);
+			setMessage(message, IMessageProvider.WARNING);
 			break;
 		default:
-			setMessage(message, WizardPage.ERROR);
+			setMessage(message, IMessageProvider.ERROR);
 			break;
 		}
 		setErrorMessage(null);

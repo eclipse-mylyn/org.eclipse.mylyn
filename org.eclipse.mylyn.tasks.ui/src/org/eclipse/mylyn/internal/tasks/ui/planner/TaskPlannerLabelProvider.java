@@ -33,11 +33,11 @@ import org.eclipse.swt.graphics.Image;
  */
 public class TaskPlannerLabelProvider extends TaskElementLabelProvider implements ITableLabelProvider, IColorProvider {
 
-	private Calendar startDate;
+	private final Calendar startDate;
 
-	private Calendar endDate;
+	private final Calendar endDate;
 
-	private TreeViewer viewer;
+	private final TreeViewer viewer;
 
 	public TaskPlannerLabelProvider(TreeViewer viewer, Date startDate, Date endDate) {
 		super(true);
@@ -48,7 +48,7 @@ public class TaskPlannerLabelProvider extends TaskElementLabelProvider implement
 		this.endDate.setTime(endDate);
 	}
 
-	private TaskElementLabelProvider taskListLabelProvider = new TaskElementLabelProvider(true);
+	private final TaskElementLabelProvider taskListLabelProvider = new TaskElementLabelProvider(true);
 
 	public Image getColumnImage(Object element, int columnIndex) {
 		if (columnIndex == 0) {
@@ -76,7 +76,8 @@ public class TaskPlannerLabelProvider extends TaskElementLabelProvider implement
 					if (task.getCreationDate() != null) {
 						return DateFormat.getDateInstance(DateFormat.MEDIUM).format(task.getCreationDate());
 					} else {
-						StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Task has no creation date: " + task.getSummary()));
+						StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
+								"Task has no creation date: " + task.getSummary()));
 						return "[unknown]";
 					}
 				case 6:
@@ -121,7 +122,8 @@ public class TaskPlannerLabelProvider extends TaskElementLabelProvider implement
 				}
 			}
 		} catch (RuntimeException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not produce completed task label", e));
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					"Could not produce completed task label", e));
 			return "";
 		}
 		return null;

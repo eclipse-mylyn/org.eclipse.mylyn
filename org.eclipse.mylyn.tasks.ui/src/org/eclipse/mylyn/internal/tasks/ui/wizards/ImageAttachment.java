@@ -30,7 +30,7 @@ public class ImageAttachment extends LocalAttachment {
 	/**
 	 * Provides the {@link Image} object that will be converted to desired file format, and then attached
 	 */
-	private IImageCreator imageCreator;
+	private final IImageCreator imageCreator;
 
 	public ImageAttachment(IImageCreator imageCreator) {
 		this.imageCreator = imageCreator;

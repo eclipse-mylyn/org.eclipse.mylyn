@@ -56,7 +56,7 @@ public class TaskActivityWizardPage extends WizardPage {
 
 	private static final String DESCRIPTION = "Summarizes task activity and assists planning future tasks.";
 
-	private long DAY = 24 * 3600 * 1000;
+	private final long DAY = 24 * 3600 * 1000;
 
 	protected String[] columnNames = new String[] { "", "Description" };
 
@@ -74,7 +74,7 @@ public class TaskActivityWizardPage extends WizardPage {
 
 	private Table filtersTable;
 
-	private TaskElementLabelProvider labelProvider = new TaskElementLabelProvider(false);
+	private final TaskElementLabelProvider labelProvider = new TaskElementLabelProvider(false);
 
 	public TaskActivityWizardPage() {
 		super(TITLE);
@@ -164,6 +164,7 @@ public class TaskActivityWizardPage extends WizardPage {
 		reportEndDate = endCal.getTime();
 		endDatePicker.setDate(endCal);
 		endDatePicker.addPickerSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				if (datePicker.getDate() != null) {
 					reportEndDate = endDatePicker.getDate().getTime();
@@ -178,10 +179,12 @@ public class TaskActivityWizardPage extends WizardPage {
 				numDays.setEnabled(daysRadioButton.getSelection());
 				datePicker.setEnabled(dateRadioButton.getSelection());
 				endDatePicker.setEnabled(dateRadioButton.getSelection());
-				if (daysRadioButton.getSelection())
+				if (daysRadioButton.getSelection()) {
 					numDays.setFocus();
-				if (dateRadioButton.getSelection())
+				}
+				if (dateRadioButton.getSelection()) {
 					datePicker.setFocus();
+				}
 			}
 
 		};
@@ -322,9 +325,9 @@ public class TaskActivityWizardPage extends WizardPage {
 		this.filtersTable.setLayoutData(data);
 		this.filtersTable.setFont(font);
 
-		for (int i = 0; i < columnNames.length; i++) {
+		for (String columnName : columnNames) {
 			TableColumn column = new TableColumn(filtersTable, SWT.NONE);
-			column.setText(columnNames[i]);
+			column.setText(columnName);
 		}
 
 	}

@@ -25,7 +25,7 @@ import org.eclipse.ui.IWorkingSet;
  */
 public class ToggleAllWorkingSetsAction extends Action {
 
-	private IWorkbenchWindow window;
+	private final IWorkbenchWindow window;
 
 	public ToggleAllWorkingSetsAction(IWorkbenchWindow window) {
 		super("Show All", IAction.AS_CHECK_BOX);
@@ -41,7 +41,8 @@ public class ToggleAllWorkingSetsAction extends Action {
 		Iterator<IWorkingSet> iter = newList.iterator();
 		while (iter.hasNext()) {
 			IWorkingSet workingSet = iter.next();
-			if (workingSet != null && workingSet.getId() != null && workingSet.getId().equalsIgnoreCase(TaskWorkingSetUpdater.ID_TASK_WORKING_SET)) {
+			if (workingSet != null && workingSet.getId() != null
+					&& workingSet.getId().equalsIgnoreCase(TaskWorkingSetUpdater.ID_TASK_WORKING_SET)) {
 				tempList.add(workingSet);
 			}
 		}

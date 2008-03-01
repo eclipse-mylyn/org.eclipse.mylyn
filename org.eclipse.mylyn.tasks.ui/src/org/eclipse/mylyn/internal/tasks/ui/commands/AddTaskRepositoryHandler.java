@@ -36,13 +36,13 @@ public class AddTaskRepositoryHandler extends AbstractHandler {
 			repositoryDialog.create();
 			repositoryDialog.getShell().setText("Add Task Repository");
 			repositoryDialog.setBlockOnOpen(true);
-			repositoryDialog.open();			
+			repositoryDialog.open();
 			if (repositoryDialog.getReturnCode() == Window.OK) {
 				return repositoryWizard.getRepository();
 			}
 		}
-		
+
 		return null;
 	}
-		
+
 }

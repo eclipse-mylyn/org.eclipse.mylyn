@@ -45,7 +45,7 @@ public class UncategorizedTaskContainer extends AbstractTaskCategory {
 	public boolean isUserManaged() {
 		return false;
 	}
-	
+
 	@Override
 	@Deprecated
 	public boolean isUserDefined() {

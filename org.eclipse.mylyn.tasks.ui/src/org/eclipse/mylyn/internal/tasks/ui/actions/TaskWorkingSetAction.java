@@ -104,7 +104,8 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 		IWorkingSet[] workingSets = PlatformUI.getWorkbench().getWorkingSetManager().getWorkingSets();
 
 		if (doTaskWorkingSetsExist()) {
-			ActionContributionItem itemAll = new ActionContributionItem(new ToggleAllWorkingSetsAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow()));
+			ActionContributionItem itemAll = new ActionContributionItem(new ToggleAllWorkingSetsAction(
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow()));
 //			ActionContributionItem itemNone = new ActionContributionItem(new ToggleNoWorkingSetsAction());
 
 			List<IWorkingSet> sortedWorkingSets = Arrays.asList(workingSets);
@@ -113,7 +114,8 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 			Iterator<IWorkingSet> iter = sortedWorkingSets.iterator();
 			while (iter.hasNext()) {
 				IWorkingSet workingSet = iter.next();
-				if (workingSet != null && workingSet.getId().equalsIgnoreCase(TaskWorkingSetUpdater.ID_TASK_WORKING_SET)) {
+				if (workingSet != null
+						&& workingSet.getId().equalsIgnoreCase(TaskWorkingSetUpdater.ID_TASK_WORKING_SET)) {
 					ActionContributionItem itemSet = new ActionContributionItem(new ToggleWorkingSetAction(workingSet));
 					itemSet.fill(dropDownMenu, -1);
 				}
@@ -142,7 +144,8 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 	public void run() {
 		String[] ids = new String[1];
 		ids[0] = TaskWorkingSetUpdater.ID_TASK_WORKING_SET;
-		ConfigureWindowWorkingSetsDialog dialog = new ConfigureWindowWorkingSetsDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), ids);
+		ConfigureWindowWorkingSetsDialog dialog = new ConfigureWindowWorkingSetsDialog(PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow(), ids);
 		dialog.open();
 	}
 
@@ -197,7 +200,8 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 			Iterator<IWorkingSet> iter = newList.iterator();
 			while (iter.hasNext()) {
 				IWorkingSet workingSet = iter.next();
-				if (workingSet != null && workingSet.getId().equalsIgnoreCase(TaskWorkingSetUpdater.ID_TASK_WORKING_SET)) {
+				if (workingSet != null
+						&& workingSet.getId().equalsIgnoreCase(TaskWorkingSetUpdater.ID_TASK_WORKING_SET)) {
 					tempList.add(workingSet);
 				}
 			}
@@ -206,13 +210,15 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 			if (isChecked()) {
 				IWorkingSet[] allWorkingSets = PlatformUI.getWorkbench().getWorkingSetManager().getWorkingSets();
 				for (IWorkingSet workingSet : allWorkingSets) {
-					if (workingSet != null && workingSet.getId().equalsIgnoreCase(TaskWorkingSetUpdater.ID_TASK_WORKING_SET)) {
+					if (workingSet != null
+							&& workingSet.getId().equalsIgnoreCase(TaskWorkingSetUpdater.ID_TASK_WORKING_SET)) {
 						newList.add(workingSet);
 					}
 				}
 			}
 
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().setWorkingSets(newList.toArray(new IWorkingSet[newList.size()]));
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().setWorkingSets(
+					newList.toArray(new IWorkingSet[newList.size()]));
 		}
 
 	}
@@ -223,7 +229,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 
 		private final static int SIZING_SELECTION_WIDGET_WIDTH = 50;
 
-		private IWorkbenchWindow window;
+		private final IWorkbenchWindow window;
 
 		private CheckboxTableViewer viewer;
 

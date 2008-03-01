@@ -17,8 +17,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -79,7 +79,7 @@ public class NewQueryAction extends Action implements IViewActionDelegate, IExec
 				dialog.create();
 				dialog.setTitle(WIZARD_LABEL);
 				dialog.setBlockOnOpen(true);
-				if (dialog.open() == Dialog.CANCEL) {
+				if (dialog.open() == Window.CANCEL) {
 					dialog.close();
 					return;
 				}

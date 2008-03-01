@@ -51,7 +51,7 @@ public class TaskRepositoryLabelProvider implements ILabelProvider {
 	}
 
 	public String getText(Object object) {
-		
+
 		if (object instanceof TaskRepository) {
 			TaskRepository repository = (TaskRepository) object;
 			StringBuilder label = new StringBuilder();

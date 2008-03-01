@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class NewAttachmentWizardDialog extends WizardDialog {
 
-	private static final String ATTACHMENT_WIZARD_SETTINGS_SECTION = "PatchWizard"; 
+	private static final String ATTACHMENT_WIZARD_SETTINGS_SECTION = "PatchWizard";
 
 	public NewAttachmentWizardDialog(Shell parent, IWizard wizard, boolean modal) {
 		super(parent, wizard);
@@ -28,7 +28,7 @@ public class NewAttachmentWizardDialog extends WizardDialog {
 		if (modal) {
 			setShellStyle(getShellStyle() | SWT.RESIZE);
 		} else {
-			setShellStyle(SWT.MODELESS | SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.RESIZE);			
+			setShellStyle(SWT.MODELESS | SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.RESIZE);
 		}
 		setMinimumPageSize(600, 300);
 		setPageSize(600, 300);

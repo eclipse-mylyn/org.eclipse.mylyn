@@ -18,10 +18,10 @@ import org.eclipse.jface.action.Action;
 public class SearchResultSortAction extends Action {
 
 	/** The category that this class sorts Bugzilla search results by. */
-	private int bugSortOrder;
+	private final int bugSortOrder;
 
 	/** The view where the Bugzilla search results are displayed. */
-	private RepositorySearchResultView bugPage;
+	private final RepositorySearchResultView bugPage;
 
 	/**
 	 * Constructor

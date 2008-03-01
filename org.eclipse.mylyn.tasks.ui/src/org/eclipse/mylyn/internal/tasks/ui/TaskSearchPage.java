@@ -8,7 +8,6 @@
 package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
@@ -232,8 +231,9 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			searchPage = new DeadSearchPage(repository);
 			searchPage.setContainer(pageContainer);
 			searchPage.createControl(fParentComposite);
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error occurred while constructing search page for " + repository.getUrl() + " ["
-					+ repository.getConnectorKind() + "]", e));
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					"Error occurred while constructing search page for " + repository.getUrl() + " ["
+							+ repository.getConnectorKind() + "]", e));
 			searchPage.getControl().setData(PAGE_KEY, searchPage);
 			return searchPage.getControl();
 		}
@@ -249,8 +249,9 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 	}
 
 	private void displayQueryPage(int pageIndex) {
-		if (currentPageIndex == pageIndex || pageIndex < 0)
+		if (currentPageIndex == pageIndex || pageIndex < 0) {
 			return;
+		}
 
 		// TODO: if repository == null display invalid page?
 		if (currentPageIndex != -1 && queryPages[currentPageIndex] != null) {
@@ -334,8 +335,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			String[] repositoryUrls = new String[searchableRepositories.size()];
 			int i = 0;
 			int indexToSelect = 0;
-			for (Iterator<TaskRepository> iter = searchableRepositories.iterator(); iter.hasNext();) {
-				TaskRepository currRepsitory = iter.next();
+			for (TaskRepository currRepsitory : searchableRepositories) {
 				if (repository != null && repository.equals(currRepsitory)) {
 					indexToSelect = i;
 				}
@@ -451,8 +451,9 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 	public IDialogSettings getDialogSettings() {
 		IDialogSettings settings = TasksUiPlugin.getDefault().getDialogSettings();
 		fDialogSettings = settings.getSection(PAGE_NAME);
-		if (fDialogSettings == null)
+		if (fDialogSettings == null) {
 			fDialogSettings = settings.addNewSection(PAGE_NAME);
+		}
 		return fDialogSettings;
 	}
 
@@ -476,7 +477,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 
 	private class DeadSearchPage extends AbstractRepositoryQueryPage {
 
-		private TaskRepository taskRepository;
+		private final TaskRepository taskRepository;
 
 		public DeadSearchPage(TaskRepository rep) {
 			super("Search page error");
@@ -530,7 +531,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 
 	private class NoSearchPage extends AbstractRepositoryQueryPage {
 
-		private TaskRepository taskRepository;
+		private final TaskRepository taskRepository;
 
 		public NoSearchPage(TaskRepository rep) {
 			super("No search page");

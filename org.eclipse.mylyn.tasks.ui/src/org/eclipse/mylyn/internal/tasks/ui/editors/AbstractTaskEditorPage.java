@@ -129,6 +129,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 	private class SubmitTaskJobListener extends JobChangeAdapter {
 
+		@Override
 		public void done(IJobChangeEvent event) {
 			final SubmitTaskDataJob job = (SubmitTaskDataJob) event.getJob();
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -138,7 +139,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 						if (task != null) {
 							updateTask(task);
 						}
-						
+
 						refreshEditor();
 					} else {
 						handleSubmitError(job.getError());
@@ -172,9 +173,9 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 		private void updateTask(AbstractTask task) {
 			TasksUiPlugin.getTaskListManager().getTaskList().moveTask(task, actionPart.getCategory());
-			
-			AbstractTaskEditorPage.this.task = task; 
-			
+
+			AbstractTaskEditorPage.this.task = task;
+
 			getAttributeManager().setStorageUrl(task.getRepositoryUrl());
 			getAttributeManager().setStorageId(task.getTaskId());
 		}
@@ -483,7 +484,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 		if (input instanceof NewTaskEditorInput) {
 			NewTaskEditorInput editorInput = (NewTaskEditorInput) input;
-			
+
 			task = new LocalTask("" + taskList.getNextLocalTaskId(), "*");
 			task.setUrl(editorInput.getRepository().getUrl());
 			taskList.addTask(task, taskList.getDefaultCategory());
@@ -491,7 +492,8 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 			TasksUiPlugin.getTaskDataManager().setNewTaskData(task.getRepositoryUrl(), task.getTaskId(),
 					editorInput.getTaskData());
 
-			attributeManager = createAttributeManager(editorInput.getRepository(), LocalRepositoryConnector.REPOSITORY_URL, task.getTaskId());
+			attributeManager = createAttributeManager(editorInput.getRepository(),
+					LocalRepositoryConnector.REPOSITORY_URL, task.getTaskId());
 		} else if (input instanceof RepositoryTaskEditorInput) {
 			RepositoryTaskEditorInput editorInput = (RepositoryTaskEditorInput) input;
 
@@ -503,9 +505,9 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 			task = editorInput.getTask();
 			TaskRepository taskRepository = TasksUiPlugin.getRepositoryManager().getRepository(task.getUrl());
-			attributeManager = createAttributeManager(taskRepository, 
-					LocalRepositoryConnector.REPOSITORY_URL, task.getTaskId());
-			
+			attributeManager = createAttributeManager(taskRepository, LocalRepositoryConnector.REPOSITORY_URL,
+					task.getTaskId());
+
 		}
 
 	}
@@ -609,7 +611,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		initializePart(planningSection, planningPart);
 	}
 
-private Section createSection(Composite composite, String title) {
+	private Section createSection(Composite composite, String title) {
 		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE);
 		section.setText(title);
 		section.setExpanded(true);
@@ -617,7 +619,7 @@ private Section createSection(Composite composite, String title) {
 		return section;
 	}
 
-private void createSections() {
+	private void createSections() {
 		createSummarySection(editorComposite);
 
 		createAttributeSection();
@@ -683,7 +685,7 @@ private void createSections() {
 		if (!isDirty()) {
 			return;
 		}
-		
+
 		getManagedForm().commit(true);
 
 		attributeManager.save();
@@ -692,7 +694,7 @@ private void createSections() {
 			task.setSynchronizationState(RepositoryTaskSyncState.OUTGOING);
 			TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(task, false);
 		}
-		
+
 		getManagedForm().dirtyStateChanged();
 	}
 
@@ -986,7 +988,7 @@ private void createSections() {
 
 		try {
 			setGlobalBusy(true);
-			
+
 			doSave(new NullProgressMonitor());
 
 			// TODO EDITOR commentComposites.clear();
@@ -1008,7 +1010,7 @@ private void createSections() {
 				menu = editorComposite.getMenu();
 				removeSections();
 				editorComposite.setMenu(menu);
-				
+
 				createSections();
 				getParentEditor().setMessage(null, 0);
 				getParentEditor().setActivePage(AbstractTaskEditorPage.this.getId());
@@ -1022,7 +1024,7 @@ private void createSections() {
 					actionPart.setSubmitEnabled(true);
 				}
 			}
-			
+
 			getManagedForm().dirtyStateChanged();
 		} finally {
 			setGlobalBusy(false);
@@ -1031,7 +1033,7 @@ private void createSections() {
 
 	private void refreshInput() {
 		attributeManager.refreshInput();
-		
+
 		taskData = attributeManager.getTaskData();
 
 		needsComments = !taskData.isNew();

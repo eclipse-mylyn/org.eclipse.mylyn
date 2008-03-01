@@ -31,9 +31,9 @@ import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
  */
 public class RepositoryTaskOutlinePage extends ContentOutlinePage {
 
-	private RepositoryTaskOutlineNode topTreeNode;
+	private final RepositoryTaskOutlineNode topTreeNode;
 
-	private TaskRepository repository;
+	private final TaskRepository repository;
 
 	protected final ISelectionListener selectionListener = new ISelectionListener() {
 		public void selectionChanged(IWorkbenchPart part, ISelection selection) {
@@ -135,7 +135,8 @@ public class RepositoryTaskOutlinePage extends ContentOutlinePage {
 			viewer.setComparer(new RepositoryTaskOutlineComparer());
 			viewer.expandAll();
 		} catch (Exception e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not create bugzilla outline", e));
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not create bugzilla outline",
+					e));
 		}
 		getSite().getPage().addSelectionListener(selectionListener);
 	}

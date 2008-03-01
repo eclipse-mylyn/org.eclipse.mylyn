@@ -92,7 +92,7 @@ public class TracConnectorUi extends AbstractRepositoryConnectorUi {
 			return null;
 		}
 	}
-	
+
 	@Override
 	public IWizard getQueryWizard(TaskRepository repository, AbstractRepositoryQuery query) {
 		if (query instanceof TracRepositoryQuery) {
@@ -135,7 +135,7 @@ public class TracConnectorUi extends AbstractRepositoryConnectorUi {
 		TracTask task = new TracTask("", Kind.TASK.name(), Kind.TASK.toString());
 		task.setTaskKind(Kind.TASK.toString());
 		legendItems.add(task);
-		
+
 		return legendItems;
 	}
 

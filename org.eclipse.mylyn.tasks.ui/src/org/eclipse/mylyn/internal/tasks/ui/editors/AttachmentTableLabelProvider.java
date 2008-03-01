@@ -34,7 +34,7 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 
 	private final AbstractRepositoryTaskEditor AbstractTaskEditor;
 
-	private IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
+	private final IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
 
 	private static final String[] IMAGE_EXTENSIONS = { "jpg", "gif", "png", "tiff", "tif", "bmp" };
 
@@ -57,8 +57,8 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 					int dotIndex = filename.lastIndexOf('.');
 					if (dotIndex != -1) {
 						String fileType = filename.substring(dotIndex + 1);
-						for (int i = 0; i < IMAGE_EXTENSIONS.length; i++) {
-							if (IMAGE_EXTENSIONS[i].equalsIgnoreCase(fileType)) {
+						for (String element2 : IMAGE_EXTENSIONS) {
+							if (element2.equalsIgnoreCase(fileType)) {
 								return TasksUiImages.getImage(TasksUiImages.IMAGE_FILE);
 							}
 						}
@@ -147,6 +147,7 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 		return super.getFont(element);
 	}
 
+	@Override
 	public String getToolTipText(Object element) {
 		RepositoryAttachment attachment = (RepositoryAttachment) element;
 		return "File: " + attachment.getAttributeValue("filename");
@@ -159,18 +160,22 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 		      + "\nURL\t\t\t"     + attachment.getAttributeValue("task.common.attachment.url");*/
 	}
 
+	@Override
 	public Point getToolTipShift(Object object) {
 		return new Point(5, 5);
 	}
 
+	@Override
 	public int getToolTipDisplayDelayTime(Object object) {
 		return 200;
 	}
 
+	@Override
 	public int getToolTipTimeDisplayed(Object object) {
 		return 5000;
 	}
 
+	@Override
 	public void update(ViewerCell cell) {
 		Object element = cell.getElement();
 		cell.setText(getColumnText(element, cell.getColumnIndex()));

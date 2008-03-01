@@ -31,8 +31,8 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
+import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoryLabelProvider;
@@ -83,7 +83,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 
 	private IWorkingSet workingSet;
 
-	private WorkingSetPageContentProvider workingSetPageContentProvider = new WorkingSetPageContentProvider();
+	private final WorkingSetPageContentProvider workingSetPageContentProvider = new WorkingSetPageContentProvider();
 
 	private boolean firstCheck = false;
 
@@ -171,9 +171,9 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 
 	private class TaskRepositoryProjectMapping extends PlatformObject {
 
-		private TaskRepository taskRepository;
+		private final TaskRepository taskRepository;
 
-		private Set<IProject> projects;
+		private final Set<IProject> projects;
 
 		public TaskRepositoryProjectMapping(TaskRepository taskRepository, Set<IProject> mappedProjects) {
 			this.taskRepository = taskRepository;
@@ -191,9 +191,9 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 
 	class ElementCategory extends PlatformObject implements IWorkbenchAdapter {
 
-		private String label;
+		private final String label;
 
-		private List<IAdaptable> children;
+		private final List<IAdaptable> children;
 
 		public ElementCategory(String label, List<IAdaptable> children) {
 			this.label = label;
@@ -220,11 +220,11 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 
 	class AggregateLabelProvider implements ILabelProvider {
 
-		private TaskElementLabelProvider taskLabelProvider = new TaskElementLabelProvider(false);
+		private final TaskElementLabelProvider taskLabelProvider = new TaskElementLabelProvider(false);
 
-		private TaskRepositoryLabelProvider taskRepositoryLabelProvider = new TaskRepositoryLabelProvider();
+		private final TaskRepositoryLabelProvider taskRepositoryLabelProvider = new TaskRepositoryLabelProvider();
 
-		private WorkbenchLabelProvider workbenchLabelProvider = new WorkbenchLabelProvider();
+		private final WorkbenchLabelProvider workbenchLabelProvider = new WorkbenchLabelProvider();
 
 		public Image getImage(Object element) {
 			if (element instanceof AbstractTaskContainer) {
@@ -292,9 +292,9 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 	public void finish() {
 		Object[] elements = treeViewer.getCheckedElements();
 		Set<IAdaptable> validElements = new HashSet<IAdaptable>();
-		for (int i = 0; i < elements.length; i++) {
-			if (elements[i] instanceof AbstractTaskContainer || elements[i] instanceof IProject) {
-				validElements.add((IAdaptable) elements[i]);
+		for (Object element : elements) {
+			if (element instanceof AbstractTaskContainer || element instanceof IProject) {
+				validElements.add((IAdaptable) element);
 			}
 		}
 
@@ -535,8 +535,8 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		}
 		if (errorMessage == null && (workingSet == null || !newText.equals(workingSet.getName()))) {
 			IWorkingSet[] workingSets = PlatformUI.getWorkbench().getWorkingSetManager().getWorkingSets();
-			for (int i = 0; i < workingSets.length; i++) {
-				if (newText.equals(workingSets[i].getName())) {
+			for (IWorkingSet workingSet2 : workingSets) {
+				if (newText.equals(workingSet2.getName())) {
 					errorMessage = "A working set with the same name already exists.";
 				}
 			}

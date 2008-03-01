@@ -28,9 +28,9 @@ public class ContextAttachWizardPage extends WizardPage {
 
 	private static final String DESCRIPTION = "Attaches local context to repository task";
 
-	private TaskRepository repository;
+	private final TaskRepository repository;
 
-	private AbstractTask task;
+	private final AbstractTask task;
 
 	private Text commentText;
 

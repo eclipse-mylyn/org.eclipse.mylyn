@@ -26,7 +26,7 @@ import org.eclipse.ui.intro.IIntroPart;
  * @author Leo Dos Santos
  */
 public class ShowMylynLegendAction implements IWorkbenchWindowActionDelegate, IViewActionDelegate {
-	
+
 	private IWorkbenchWindow wbWindow;
 
 	public void dispose() {
@@ -43,7 +43,7 @@ public class ShowMylynLegendAction implements IWorkbenchWindowActionDelegate, IV
 		if (intro != null) {
 			introMgr.setIntroStandby(intro, true);
 		}
-		
+
 		TaskListView.openInActivePerspective();
 		Shell parentShell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		UiLegendDialog uiLegendDialog = new UiLegendDialog(parentShell);

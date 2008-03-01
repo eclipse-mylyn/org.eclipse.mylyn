@@ -8,7 +8,7 @@
 
 package org.eclipse.mylyn.tasks.tests.connector;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.internal.monitor.core.util.IStatusHandler;
@@ -26,7 +26,7 @@ public class MockStatusHandler implements IStatusHandler {
 	}
 
 	public void assertNoStatus() {
-		TestCase.assertNull("Unexpected error reported through StatusHandler", status);
+		Assert.assertNull("Unexpected error reported through StatusHandler", status);
 	}
 
 }

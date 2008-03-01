@@ -35,7 +35,7 @@ public class NewLocalTaskWizard extends Wizard implements INewWizard {
 	public NewLocalTaskWizard() {
 		this(null);
 	}
-	
+
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		setForcePreviousAndNextButtons(false);
 	}

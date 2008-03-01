@@ -153,20 +153,21 @@ public class RepositoryStatus extends Status {
 	}
 
 	public static RepositoryStatus createLoginError(String repositoryUrl, String pluginId) {
-		return new RepositoryStatus(repositoryUrl, Status.ERROR, pluginId, RepositoryStatus.ERROR_REPOSITORY_LOGIN,
+		return new RepositoryStatus(repositoryUrl, IStatus.ERROR, pluginId, RepositoryStatus.ERROR_REPOSITORY_LOGIN,
 				NLS.bind("Unable to login to {0}. Please validate credentials via Task Repositories view.",
 						repositoryUrl));
 	}
 
 	public static RepositoryStatus createNotFoundError(String repositoryUrl, String pluginId) {
-		return new RepositoryStatus(repositoryUrl, Status.ERROR, pluginId, RepositoryStatus.ERROR_REPOSITORY_NOT_FOUND,
-				NLS.bind("Repository {0} could not be found.", repositoryUrl));
+		return new RepositoryStatus(repositoryUrl, IStatus.ERROR, pluginId,
+				RepositoryStatus.ERROR_REPOSITORY_NOT_FOUND, NLS.bind("Repository {0} could not be found.",
+						repositoryUrl));
 	}
 
 	public static RepositoryStatus createCollisionError(String repositoryUrl, String pluginId) {
 		return new RepositoryStatus(
 				repositoryUrl,
-				Status.ERROR,
+				IStatus.ERROR,
 				pluginId,
 				RepositoryStatus.REPOSITORY_COLLISION,
 				NLS.bind(
@@ -175,7 +176,7 @@ public class RepositoryStatus extends Status {
 	}
 
 	public static RepositoryStatus createCommentRequiredError(String repositoryUrl, String pluginId) {
-		return new RepositoryStatus(repositoryUrl, Status.ERROR, pluginId,
+		return new RepositoryStatus(repositoryUrl, IStatus.ERROR, pluginId,
 				RepositoryStatus.REPOSITORY_COMMENT_REQUIRED,
 				"You have to specify a new comment when making this change. Please comment on the reason for this change.");
 	}

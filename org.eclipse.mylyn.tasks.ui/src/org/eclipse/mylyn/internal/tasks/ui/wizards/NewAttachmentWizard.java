@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
@@ -60,7 +61,7 @@ public class NewAttachmentWizard extends Wizard {
 
 	private LocalAttachment attachment;
 
-	private InputAttachmentSourcePage inputPage;
+	private final InputAttachmentSourcePage inputPage;
 
 	private NewAttachmentPage attachPage;
 
@@ -70,11 +71,11 @@ public class NewAttachmentWizard extends Wizard {
 
 	private boolean hasNewDialogSettings;
 
-	private TaskRepository repository;
+	private final TaskRepository repository;
 
-	private AbstractTask task;
+	private final AbstractTask task;
 
-	private boolean screenshotMode;
+	private final boolean screenshotMode;
 
 	public NewAttachmentWizard(TaskRepository repository, AbstractTask task, boolean screenshotMode) {
 		this.task = task;
@@ -275,7 +276,7 @@ public class NewAttachmentWizard extends Wizard {
 
 	private void handleSubmitError(final CoreException exception) {
 		if (exception.getStatus().getCode() == RepositoryStatus.ERROR_REPOSITORY_LOGIN) {
-			if (TasksUiUtil.openEditRepositoryWizard(repository) == MessageDialog.OK) {
+			if (TasksUiUtil.openEditRepositoryWizard(repository) == Window.OK) {
 				// performFinish();
 			}
 		} else {

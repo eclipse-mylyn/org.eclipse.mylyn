@@ -32,7 +32,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class CopyAttachmentToClipboardJob extends Job {
 
-	private RepositoryAttachment attachment;
+	private final RepositoryAttachment attachment;
 
 	public CopyAttachmentToClipboardJob(RepositoryAttachment attachment) {
 		super("Copying Attachment to Clipboard");

@@ -29,11 +29,11 @@ import org.eclipse.ui.IStorageEditorInput;
  */
 public class RepositoryAttachmentEditorInput extends PlatformObject implements IStorageEditorInput {
 
-	private RepositoryAttachment attachment;
+	private final RepositoryAttachment attachment;
 
-	private RepositoryAttachmentStorage storage;
+	private final RepositoryAttachmentStorage storage;
 
-	private TaskRepository repository;
+	private final TaskRepository repository;
 
 	public RepositoryAttachmentEditorInput(TaskRepository repository, RepositoryAttachment att) {
 		this.attachment = att;

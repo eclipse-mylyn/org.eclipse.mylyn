@@ -39,8 +39,8 @@ public abstract class AbstractTaskRepositoryAction extends BaseSelectionListener
 		}
 		return null;
 	}
-	
-	protected TaskRepository getTaskRepository(Object selectedObject) {		
+
+	protected TaskRepository getTaskRepository(Object selectedObject) {
 		TaskRepository taskRepository = null;
 		if (selectedObject instanceof TaskRepository) {
 			taskRepository = (TaskRepository) selectedObject;

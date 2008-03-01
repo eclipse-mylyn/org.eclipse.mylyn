@@ -37,5 +37,5 @@ public class TaskListTest extends TestCase {
 		assertEquals(1, task.getChildren().size());
 		assertEquals(subTask, task.getChildren().iterator().next());
 	}
-	
+
 }

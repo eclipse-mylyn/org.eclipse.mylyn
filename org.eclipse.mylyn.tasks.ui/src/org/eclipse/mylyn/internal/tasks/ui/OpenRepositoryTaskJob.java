@@ -33,15 +33,15 @@ import org.eclipse.ui.PlatformUI;
  */
 public class OpenRepositoryTaskJob extends Job {
 
-	private String serverUrl;
+	private final String serverUrl;
 
-	private IWorkbenchPage page;
+	private final IWorkbenchPage page;
 
-	private String repositoryKind;
+	private final String repositoryKind;
 
-	private String taskId;
+	private final String taskId;
 
-	private String taskUrl;
+	private final String taskUrl;
 
 	public OpenRepositoryTaskJob(String repositoryKind, String serverUrl, String taskId, String taskUrl,
 			IWorkbenchPage page) {

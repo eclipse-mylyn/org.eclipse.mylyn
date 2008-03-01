@@ -17,8 +17,8 @@ import junit.framework.TestCase;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.web.core.AuthenticationType;
 import org.eclipse.mylyn.web.core.AuthenticationCredentials;
+import org.eclipse.mylyn.web.core.AuthenticationType;
 
 /**
  * @author Mik Kersten
@@ -82,7 +82,7 @@ public class TaskRepositoryTest extends TestCase {
 	public void testPlatformIsRunning() {
 		assertTrue(Platform.isRunning());
 	}
-	
+
 	public void password(AuthenticationType authType) throws Exception {
 		URL url = new URL("http://url");
 		TaskRepository taskRepository = new TaskRepository("kind", url.toString());

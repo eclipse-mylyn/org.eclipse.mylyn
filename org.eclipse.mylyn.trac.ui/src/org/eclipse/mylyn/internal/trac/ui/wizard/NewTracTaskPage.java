@@ -37,7 +37,7 @@ public class NewTracTaskPage extends WizardPage {
 
 	// private boolean firstTime;
 
-	private TaskRepository taskRepository;
+	private final TaskRepository taskRepository;
 
 	private RepositoryTaskData taskData;
 

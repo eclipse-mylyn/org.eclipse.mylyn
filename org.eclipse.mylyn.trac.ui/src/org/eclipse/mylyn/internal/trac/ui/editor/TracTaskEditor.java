@@ -22,7 +22,7 @@ import org.eclipse.ui.forms.editor.FormEditor;
  */
 public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 
-	private TracRenderingEngine renderingEngine = new TracRenderingEngine();
+	private final TracRenderingEngine renderingEngine = new TracRenderingEngine();
 
 	public TracTaskEditor(FormEditor editor) {
 		super(editor);

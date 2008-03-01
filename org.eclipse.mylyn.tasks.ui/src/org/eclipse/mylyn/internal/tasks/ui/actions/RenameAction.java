@@ -25,7 +25,7 @@ public class RenameAction extends BaseSelectionListenerAction {
 
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.rename";
 
-	private TaskListView view;
+	private final TaskListView view;
 
 	public RenameAction(TaskListView view) {
 		super(LABEL_NAME);

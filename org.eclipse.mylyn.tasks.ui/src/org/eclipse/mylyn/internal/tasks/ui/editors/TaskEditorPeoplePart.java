@@ -53,7 +53,7 @@ public class TaskEditorPeoplePart extends AbstractTaskEditorPart {
 	 * 
 	 * @since 2.1
 	 * @author Frank Becker (bug 198027)
-	 * @param toolkit 
+	 * @param toolkit
 	 */
 	protected void addAssignedTo(Composite peopleComposite, FormToolkit toolkit) {
 		boolean haveRealName = false;
@@ -72,9 +72,13 @@ public class TaskEditorPeoplePart extends AbstractTaskEditorPart {
 				textField = createTextField(peopleComposite, assignedAttribute, SWT.FLAT | SWT.READ_ONLY, toolkit);
 			} else {
 				textField = createTextField(peopleComposite, assignedAttribute, SWT.FLAT, toolkit);
-				ContentAssistCommandAdapter adapter = getTaskEditorPage().getAttributeEditorToolkit().applyContentAssist(textField,
-						getTaskEditorPage().getAttributeEditorToolkit().createContentProposalProvider(assignedAttribute));
-				ILabelProvider propsalLabelProvider = getTaskEditorPage().getAttributeEditorToolkit().createLabelProposalProvider(assignedAttribute);
+				ContentAssistCommandAdapter adapter = getTaskEditorPage().getAttributeEditorToolkit()
+						.applyContentAssist(
+								textField,
+								getTaskEditorPage().getAttributeEditorToolkit().createContentProposalProvider(
+										assignedAttribute));
+				ILabelProvider propsalLabelProvider = getTaskEditorPage().getAttributeEditorToolkit()
+						.createLabelProposalProvider(assignedAttribute);
 				if (propsalLabelProvider != null) {
 					adapter.setLabelProvider(propsalLabelProvider);
 				}
@@ -102,9 +106,13 @@ public class TaskEditorPeoplePart extends AbstractTaskEditorPart {
 		GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).applyTo(text);
 
 		if (getTaskEditorPage().getAttributeEditorToolkit().hasContentAssist(addCCattribute)) {
-			ContentAssistCommandAdapter adapter = getTaskEditorPage().getAttributeEditorToolkit().applyContentAssist(text,
-					getTaskEditorPage().getAttributeEditorToolkit().createContentProposalProvider(addCCattribute));
-			ILabelProvider propsalLabelProvider = getTaskEditorPage().getAttributeEditorToolkit().createLabelProposalProvider(addCCattribute);
+			ContentAssistCommandAdapter adapter = getTaskEditorPage().getAttributeEditorToolkit()
+					.applyContentAssist(
+							text,
+							getTaskEditorPage().getAttributeEditorToolkit().createContentProposalProvider(
+									addCCattribute));
+			ILabelProvider propsalLabelProvider = getTaskEditorPage().getAttributeEditorToolkit()
+					.createLabelProposalProvider(addCCattribute);
 			if (propsalLabelProvider != null) {
 				adapter.setLabelProvider(propsalLabelProvider);
 			}
@@ -161,7 +169,8 @@ public class TaskEditorPeoplePart extends AbstractTaskEditorPart {
 							getTaskData().removeAttributeValue(RepositoryTaskAttribute.REMOVE_CC, cc);
 						}
 					}
-					getTaskEditorPage().getAttributeManager().attributeChanged(getTaskData().getAttribute(RepositoryTaskAttribute.REMOVE_CC));
+					getTaskEditorPage().getAttributeManager().attributeChanged(
+							getTaskData().getAttribute(RepositoryTaskAttribute.REMOVE_CC));
 				}
 			});
 			toolkit.createLabel(attributesComposite, "");
@@ -174,7 +183,8 @@ public class TaskEditorPeoplePart extends AbstractTaskEditorPart {
 	/**
 	 * Creates a check box for adding the repository user to the cc list. Does nothing if the repository does not have a
 	 * valid username, the repository user is the assignee, reporter or already on the the cc list.
-	 * @param toolkit 
+	 * 
+	 * @param toolkit
 	 */
 	protected void addSelfToCC(Composite composite, FormToolkit toolkit) {
 
@@ -242,7 +252,7 @@ public class TaskEditorPeoplePart extends AbstractTaskEditorPart {
 						+ getTaskData().getAttributeValue(RepositoryTaskAttribute.USER_REPORTER) + ">");
 			}
 		}
-		
+
 		addSelfToCC(peopleComposite, toolkit);
 		addCCList(peopleComposite, toolkit);
 
@@ -270,9 +280,10 @@ public class TaskEditorPeoplePart extends AbstractTaskEditorPart {
 	 * @param composite
 	 * @param attribute
 	 * @param style
-	 * @param toolkit 
+	 * @param toolkit
 	 */
-	protected Text createTextField(Composite composite, RepositoryTaskAttribute attribute, int style, FormToolkit toolkit) {
+	protected Text createTextField(Composite composite, RepositoryTaskAttribute attribute, int style,
+			FormToolkit toolkit) {
 		String value;
 		if (attribute == null || attribute.getValue() == null) {
 			value = "";

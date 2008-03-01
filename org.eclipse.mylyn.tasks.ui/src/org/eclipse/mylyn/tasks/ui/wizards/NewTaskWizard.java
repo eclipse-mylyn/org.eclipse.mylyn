@@ -43,7 +43,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class NewTaskWizard extends Wizard implements INewWizard {
 
-	private TaskRepository taskRepository;
+	private final TaskRepository taskRepository;
 
 	private TaskSelection taskSelection;
 

@@ -188,9 +188,8 @@ public final class RepositorySynchronizationManager {
 		RepositoryTaskSyncState status = repositoryTask.getSynchronizationState();
 
 		if (newTaskData == null) {
-			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, 
-					"Download of " + repositoryTask.getSummary() + " from "
-					+ repositoryTask.getRepositoryUrl() + " failed."));
+			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Download of "
+					+ repositoryTask.getSummary() + " from " + repositoryTask.getRepositoryUrl() + " failed."));
 			return false;
 		}
 

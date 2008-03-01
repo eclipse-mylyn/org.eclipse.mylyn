@@ -25,7 +25,7 @@ public class SaxRepositoriesContentHandler extends DefaultHandler {
 
 	static final String ATTRIBUTE_INTERACTION_EVENT = "InteractionEvent";
 
-	private Set<TaskRepository> taskRepositories = new HashSet<TaskRepository>();
+	private final Set<TaskRepository> taskRepositories = new HashSet<TaskRepository>();
 
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {

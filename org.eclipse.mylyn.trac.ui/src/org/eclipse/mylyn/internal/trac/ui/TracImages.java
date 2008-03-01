@@ -36,12 +36,14 @@ public class TracImages {
 	}
 
 	private static URL makeIconFileURL(String prefix, String name) throws MalformedURLException {
-		if (baseURL == null)
+		if (baseURL == null) {
 			throw new MalformedURLException();
+		}
 
 		StringBuffer buffer = new StringBuffer(prefix);
-		if (prefix != "")
+		if (prefix != "") {
 			buffer.append('/');
+		}
 		buffer.append(name);
 		return new URL(baseURL, buffer.toString());
 	}

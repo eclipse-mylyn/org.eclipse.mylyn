@@ -29,7 +29,7 @@ public class TaskPlanSorter extends TaskActivitySorter {
 
 	public static final int ICON = 0;
 
-	private int criteria;
+	private final int criteria;
 
 	public TaskPlanSorter(int criteria) {
 		super(criteria);
@@ -58,12 +58,15 @@ public class TaskPlanSorter extends TaskActivitySorter {
 	}
 
 	private int compareReminder(AbstractTask task1, AbstractTask task2) {
-		if (task2.getScheduledForDate() == null)
+		if (task2.getScheduledForDate() == null) {
 			return -1;
-		if (task1.getScheduledForDate() == null)
+		}
+		if (task1.getScheduledForDate() == null) {
 			return 1;
-		if (task1.getScheduledForDate() == null && task2.getScheduledForDate() == null)
+		}
+		if (task1.getScheduledForDate() == null && task2.getScheduledForDate() == null) {
 			return 0;
+		}
 		return task2.getScheduledForDate().compareTo(task1.getScheduledForDate());
 	}
 

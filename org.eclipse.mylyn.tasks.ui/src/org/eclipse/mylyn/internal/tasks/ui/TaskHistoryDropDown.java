@@ -43,11 +43,11 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 
 	private final static int MAX_ITEMS_TO_DISPLAY = 12;
 
-	private boolean scopeToWorkingSet;
+	private final boolean scopeToWorkingSet;
 
-	private TaskActivationHistory taskHistory;
+	private final TaskActivationHistory taskHistory;
 
-	private TaskElementLabelProvider labelProvider = new TaskElementLabelProvider(false);
+	private final TaskElementLabelProvider labelProvider = new TaskElementLabelProvider(false);
 
 	public TaskHistoryDropDown() {
 		this(null);
@@ -59,6 +59,7 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 		taskHistory = TasksUiPlugin.getTaskListManager().getTaskActivationHistory();
 	}
 
+	@Override
 	@SuppressWarnings("deprecation")
 	protected IContributionItem[] getContributionItems() {
 		List<AbstractTask> tasks = new ArrayList<AbstractTask>(taskHistory.getPreviousTasks());
@@ -102,20 +103,17 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 
 		AbstractTask active = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
 		if (active != null) {
-			IContributionItem pauseContributionItem = new CommandContributionItem(
-					PlatformUI.getWorkbench(), 
-					"org.eclipse.mylyn.ui.context.capture.pause",  // id 
-					"org.eclipse.mylyn.ui.context.capture.pause.command",  // commandId 
-					Collections.EMPTY_MAP,  // params 
-					TasksUiImages.CAPTURE_PAUSE,  // icon 
-					null,
-					null, 
-					"Pause Capturing Context",  // label 
+			IContributionItem pauseContributionItem = new CommandContributionItem(PlatformUI.getWorkbench(),
+					"org.eclipse.mylyn.ui.context.capture.pause", // id 
+					"org.eclipse.mylyn.ui.context.capture.pause.command", // commandId 
+					Collections.EMPTY_MAP, // params 
+					TasksUiImages.CAPTURE_PAUSE, // icon 
+					null, null, "Pause Capturing Context", // label 
 					null, // mnemonic 
 					"Pause Capturing Context", // tooltip
-					CommandContributionItem.STYLE_CHECK); 
+					CommandContributionItem.STYLE_CHECK);
 			items.add(pauseContributionItem);
-			
+
 			Action deactivateAction = new DeactivateTaskAction();
 			ActionContributionItem item = new ActionContributionItem(deactivateAction);
 			items.add(item);
@@ -136,7 +134,7 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 
 		private static final int MAX_LABEL_LENGTH = 40;
 
-		private AbstractTask targetTask;
+		private final AbstractTask targetTask;
 
 		public TaskNavigateAction(AbstractTask task) {
 			targetTask = task;
@@ -163,7 +161,7 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 
 	public class ActivateDialogAction extends Action {
 
-		private ActivateTaskDialogAction dialogAction;
+		private final ActivateTaskDialogAction dialogAction;
 
 		public ActivateDialogAction(ActivateTaskDialogAction action) {
 			dialogAction = action;
@@ -203,5 +201,5 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 		}
 
 	}
-	
+
 }

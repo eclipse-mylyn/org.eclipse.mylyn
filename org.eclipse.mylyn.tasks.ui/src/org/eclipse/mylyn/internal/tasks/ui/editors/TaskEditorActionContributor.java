@@ -85,31 +85,31 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 
 	private TaskEditor editor;
 
-	private OpenWithBrowserAction openWithBrowserAction = new OpenWithBrowserAction();
+	private final OpenWithBrowserAction openWithBrowserAction = new OpenWithBrowserAction();
 
-	private CopyTaskDetailsAction copyTaskDetailsAction = new CopyTaskDetailsAction();
+	private final CopyTaskDetailsAction copyTaskDetailsAction = new CopyTaskDetailsAction();
 
-	private AbstractTaskEditorAction attachAction = new AttachAction();
+	private final AbstractTaskEditorAction attachAction = new AttachAction();
 
-	private AbstractTaskEditorAction attachScreenshotAction = new AttachScreenshotAction();
+	private final AbstractTaskEditorAction attachScreenshotAction = new AttachScreenshotAction();
 
-	private SynchronizeEditorAction synchronizeEditorAction = new SynchronizeEditorAction();
+	private final SynchronizeEditorAction synchronizeEditorAction = new SynchronizeEditorAction();
 
-	private ShowInTaskListAction showInTaskListAction = new ShowInTaskListAction();
+	private final ShowInTaskListAction showInTaskListAction = new ShowInTaskListAction();
 
-	private NewTaskFromSelectionAction newTaskFromSelectionAction = new NewTaskFromSelectionAction();
+	private final NewTaskFromSelectionAction newTaskFromSelectionAction = new NewTaskFromSelectionAction();
 
-	private GlobalAction cutAction;
+	private final GlobalAction cutAction;
 
-	private GlobalAction undoAction;
+	private final GlobalAction undoAction;
 
-	private GlobalAction redoAction;
+	private final GlobalAction redoAction;
 
-	private GlobalAction copyAction;
+	private final GlobalAction copyAction;
 
-	private GlobalAction pasteAction;
+	private final GlobalAction pasteAction;
 
-	private GlobalAction selectAllAction;
+	private final GlobalAction selectAllAction;
 
 	protected List<TextViewer> textViewers = new ArrayList<TextViewer>();
 
@@ -178,8 +178,9 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 	}
 
 	public void contextMenuAboutToShow(IMenuManager manager, boolean addClipboard) {
-		if (editor != null)
+		if (editor != null) {
 			updateSelectableActions(editor.getSelection());
+		}
 		if (addClipboard) {
 			addClipboardActions(manager);
 		}
@@ -389,7 +390,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 
 	private class GlobalAction extends Action {
 
-		private String actionId;
+		private final String actionId;
 
 		public GlobalAction(String actionId) {
 			this.actionId = actionId;
@@ -473,22 +474,26 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 		}
 
 		IManagedForm form = activePage.getManagedForm();
-		if (form == null)
+		if (form == null) {
 			return null;
+		}
 		Control control = form.getForm();
-		if (control == null || control.isDisposed())
+		if (control == null || control.isDisposed()) {
 			return null;
+		}
 		Display display = control.getDisplay();
 		Control focusControl = display.getFocusControl();
-		if (focusControl == null || focusControl.isDisposed())
+		if (focusControl == null || focusControl.isDisposed()) {
 			return null;
+		}
 		return focusControl;
 	}
 
 	private void doAction(String actionId) {
 		Control focusControl = getFocusControl();
-		if (focusControl == null)
+		if (focusControl == null) {
 			return;
+		}
 		if (canPerformDirectly(actionId, focusControl)) {
 			return;
 		}

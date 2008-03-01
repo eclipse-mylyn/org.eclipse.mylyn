@@ -18,6 +18,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
  * @author Mik Kersten
  * @deprecated
  */
+@Deprecated
 public class FilterArchiveContainerAction extends Action {
 
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.filter.archive";

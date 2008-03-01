@@ -21,7 +21,7 @@ public class WorkspaceAwareContextStore extends AbstractContextStore {
 	public static final String CONTEXTS_DIRECTORY = "contexts";
 
 	private File rootDirectory;
- 
+
 	private File contextDirectory;
 
 	@Override

@@ -8,11 +8,11 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import junit.framework.TestCase;
+
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesSorter;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-
-import junit.framework.TestCase;
 
 /**
  * @author Mik Kersten

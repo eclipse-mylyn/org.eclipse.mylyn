@@ -31,7 +31,7 @@ public class FileAttachment implements ITaskAttachment {
 
 	private boolean patch;
 
-	private File file;
+	private final File file;
 
 	public FileAttachment(File file) {
 		if (file == null) {

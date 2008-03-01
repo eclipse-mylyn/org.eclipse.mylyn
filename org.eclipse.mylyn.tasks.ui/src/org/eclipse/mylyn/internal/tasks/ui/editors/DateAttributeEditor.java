@@ -104,5 +104,5 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 	public void decorate(Color color) {
 		deadlinePicker.setBackground(color);
 	}
-	
+
 }

@@ -29,7 +29,7 @@ public class RepositoryOperation implements Serializable {
 	private static final long serialVersionUID = 3256442508174045236L;
 
 	/** The name of the value for the knob attribute */
-	private String knob_name;
+	private final String knob_name;
 
 	/** The name of the option that can be chosen */
 	private String optionName;
@@ -44,7 +44,7 @@ public class RepositoryOperation implements Serializable {
 	private boolean hasOptions = false;
 
 	/** The name of the operation (text that we display) */
-	private String operation_name;
+	private final String operation_name;
 
 	/** The option that is selected */
 	private String op_sel;
@@ -121,8 +121,9 @@ public class RepositoryOperation implements Serializable {
 	 */
 	public void addOption(String name, String value) {
 		options.put(name, value);
-		if (options.size() == 1)
+		if (options.size() == 1) {
 			op_sel = name;
+		}
 		optionNames.add(name);
 	}
 

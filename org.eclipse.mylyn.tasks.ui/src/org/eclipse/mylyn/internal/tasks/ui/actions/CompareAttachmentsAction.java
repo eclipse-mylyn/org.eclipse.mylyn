@@ -65,7 +65,7 @@ public class CompareAttachmentsAction extends BaseSelectionListenerAction implem
 			final RepositoryAttachment attachment2 = (RepositoryAttachment) elements[1];
 
 			CompareConfiguration cc = new CompareConfiguration();
-			
+
 			cc.setLeftEditable(false);
 			cc.setLeftLabel(attachment1.getFilename());
 			cc.setLeftImage(getImage(attachment1));
@@ -73,13 +73,15 @@ public class CompareAttachmentsAction extends BaseSelectionListenerAction implem
 			cc.setRightEditable(false);
 			cc.setRightLabel(attachment2.getFilename());
 			cc.setRightImage(getImage(attachment2));
-			
+
 			CompareEditorInput editorInput = new CompareEditorInput(cc) {
-				
+
+				@Override
 				public String getTitle() {
 					return "Compare (" + attachment1.getFilename() + " - " + attachment2.getFilename() + ")";
 				}
-				
+
+				@Override
 				protected Object prepareInput(IProgressMonitor pm) throws InvocationTargetException {
 					byte[] data1 = downloadAttachment(attachment1, pm);
 					byte[] data2 = downloadAttachment(attachment2, pm);
@@ -111,7 +113,7 @@ public class CompareAttachmentsAction extends BaseSelectionListenerAction implem
 	}
 
 	private static final String[] IMAGE_EXTENSIONS = { ".jpg", ".gif", ".png", ".tiff", ".tif", ".bmp" };
-	
+
 	private Image getImage(RepositoryAttachment attachment) {
 		if (isContext(attachment)) {
 			return TasksUiImages.getImage(TasksUiImages.CONTEXT_TRANSFER);
@@ -135,7 +137,7 @@ public class CompareAttachmentsAction extends BaseSelectionListenerAction implem
 		return AbstractAttachmentHandler.MYLAR_CONTEXT_DESCRIPTION.equals(attachment.getDescription())
 				|| AbstractAttachmentHandler.MYLAR_CONTEXT_DESCRIPTION_LEGACY.equals(attachment.getDescription());
 	}
-	
+
 	public void selectionChanged(IAction action, ISelection selection) {
 		this.currentSelection = selection;
 	}
@@ -143,6 +145,7 @@ public class CompareAttachmentsAction extends BaseSelectionListenerAction implem
 	class CompareItem implements IStreamContentAccessor, ITypedElement {
 
 		private final String filename;
+
 		private final byte[] data;
 
 		public CompareItem(String filename, byte[] data) {
@@ -170,11 +173,11 @@ public class CompareAttachmentsAction extends BaseSelectionListenerAction implem
 			// JavaContentViewerCreator - java,java2"
 			// RefactoringDescriptorCompareViewerCreator - refactoring_descriptor
 			// 
-			int n = filename.lastIndexOf('.'); 
-			if(n>-1) {
-				return filename.substring(n+1);
+			int n = filename.lastIndexOf('.');
+			if (n > -1) {
+				return filename.substring(n + 1);
 			}
-			
+
 			return ITypedElement.TEXT_TYPE;
 		}
 	}

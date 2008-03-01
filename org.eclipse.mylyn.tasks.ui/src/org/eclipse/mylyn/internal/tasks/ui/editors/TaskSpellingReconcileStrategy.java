@@ -48,7 +48,7 @@ public class TaskSpellingReconcileStrategy implements IReconcilerExtension, IRec
 	private class SpellingProblemCollector implements ISpellingProblemCollector {
 
 		/** Annotation model */
-		private IAnnotationModel fAnnotationModel;
+		private final IAnnotationModel fAnnotationModel;
 
 		/** Annotations to add */
 		private Map<ErrorAnnotation, Position> fAddAnnotations;
@@ -94,14 +94,16 @@ public class TaskSpellingReconcileStrategy implements IReconcilerExtension, IRec
 			List<Annotation> removeAnnotations = new ArrayList<Annotation>();
 			for (Iterator iter = fAnnotationModel.getAnnotationIterator(); iter.hasNext();) {
 				Annotation annotation = (Annotation) iter.next();
-				if (ErrorAnnotation.ERROR_TYPE.equals(annotation.getType()))
+				if (ErrorAnnotation.ERROR_TYPE.equals(annotation.getType())) {
 					removeAnnotations.add(annotation);
+				}
 			}
 
-			for (Iterator iter = removeAnnotations.iterator(); iter.hasNext();)
-				fAnnotationModel.removeAnnotation((Annotation) iter.next());
-			for (Iterator iter = fAddAnnotations.keySet().iterator(); iter.hasNext();) {
-				Annotation annotation = (Annotation) iter.next();
+			for (Object element : removeAnnotations) {
+				fAnnotationModel.removeAnnotation((Annotation) element);
+			}
+			for (Object element : fAddAnnotations.keySet()) {
+				Annotation annotation = (Annotation) element;
 				fAnnotationModel.addAnnotation(annotation, fAddAnnotations.get(annotation));
 			}
 
@@ -127,7 +129,7 @@ public class TaskSpellingReconcileStrategy implements IReconcilerExtension, IRec
 	 * 
 	 * @since 3.2
 	 */
-	private SpellingContext fSpellingContext;
+	private final SpellingContext fSpellingContext;
 
 	private IAnnotationModel annotationModel;
 

@@ -46,9 +46,9 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 
 	private final static int DEFAULT_SAVE_INTERVAL = 1 * 60 * 1000;
 
-	private BackgroundSaveTimer saveTimer;
+	private final BackgroundSaveTimer saveTimer;
 
-	private TaskListSaverJob taskListSaverJob;
+	private final TaskListSaverJob taskListSaverJob;
 
 	private boolean initializationWarningDialogShow = false;
 
@@ -102,7 +102,8 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 				internalSaveTaskList();
 			}
 		} else if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
-			StatusHandler.fail(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Possible task list initialization failure, not saving list"));
+			StatusHandler.fail(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
+					"Possible task list initialization failure, not saving list"));
 			if (!initializationWarningDialogShow) {
 				initializationWarningDialogShow = true;
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -144,7 +145,8 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 				File destDir = new File(targetFolderPath + File.separator + currFile.getName());
 				if (!destDir.exists()) {
 					if (!destDir.mkdir()) {
-						StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Unable to create destination context folder: " + destDir.getAbsolutePath()));
+						StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
+								"Unable to create destination context folder: " + destDir.getAbsolutePath()));
 						continue;
 					}
 				}

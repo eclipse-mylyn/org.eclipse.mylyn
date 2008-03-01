@@ -101,6 +101,7 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 		}
 	}
 
+	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
 		super.createControl(parent, toolkit);
 

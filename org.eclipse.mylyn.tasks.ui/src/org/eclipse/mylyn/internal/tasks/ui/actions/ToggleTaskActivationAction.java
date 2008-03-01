@@ -27,13 +27,15 @@ public class ToggleTaskActivationAction extends Action implements ITaskActivityL
 
 	private static final String LABEL_DEACTIVATE = "Deactivate Task";
 
-	private AbstractTask task;
-	
-	private IToolBarManager toolBarManager;
+	private final AbstractTask task;
+
+	private final IToolBarManager toolBarManager;
 
 	/**
-	 * @param task	cannot be null
-	 * @param toolBarManager	cannot be null
+	 * @param task
+	 *            cannot be null
+	 * @param toolBarManager
+	 *            cannot be null
 	 */
 	public ToggleTaskActivationAction(AbstractTask task, IToolBarManager toolBarManager) {
 		this.task = task;
@@ -43,7 +45,7 @@ public class ToggleTaskActivationAction extends Action implements ITaskActivityL
 		update();
 		TasksUiPlugin.getTaskListManager().addActivityListener(this);
 	}
-	
+
 	public void dispose() {
 		TasksUiPlugin.getTaskListManager().removeActivityListener(this);
 	}
@@ -58,7 +60,7 @@ public class ToggleTaskActivationAction extends Action implements ITaskActivityL
 			setToolTipText(LABEL_ACTIVATE);
 		}
 	}
-	
+
 	@Override
 	public void run() {
 		if (!task.isActive()) {
@@ -86,6 +88,6 @@ public class ToggleTaskActivationAction extends Action implements ITaskActivityL
 
 	public void taskListRead() {
 		// ignore
-		
+
 	}
 }

@@ -22,7 +22,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  */
 public class TracWikiHandler extends AbstractWikiHandler {
 
-	private TracRepositoryConnector connector;
+	private final TracRepositoryConnector connector;
 
 	public TracWikiHandler(TracRepositoryConnector connector) {
 		this.connector = connector;
@@ -55,6 +55,7 @@ public class TracWikiHandler extends AbstractWikiHandler {
 		}
 	}
 
+	@Override
 	public void postWikiPage(TaskRepository repository, TracWikiPage newPage, IProgressMonitor monitor)
 			throws CoreException {
 		monitor.beginTask("Upload Wiki Page", IProgressMonitor.UNKNOWN);
@@ -78,6 +79,7 @@ public class TracWikiHandler extends AbstractWikiHandler {
 		}
 	}
 
+	@Override
 	public TracWikiPageInfo[] getPageHistory(TaskRepository repository, String pageName, IProgressMonitor monitor)
 			throws CoreException {
 		monitor.beginTask("Retrieve Wiki Page History", IProgressMonitor.UNKNOWN);

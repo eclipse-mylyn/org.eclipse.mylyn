@@ -23,7 +23,7 @@ public class ScheduledTaskDelegate extends AbstractTask {
 
 	private AbstractTask task = null;
 
-	private ScheduledTaskContainer parent;
+	private final ScheduledTaskContainer parent;
 
 	private long startMili = 0;
 
@@ -261,27 +261,36 @@ public class ScheduledTaskDelegate extends AbstractTask {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (!super.equals(obj))
+		}
+		if (!super.equals(obj)) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		ScheduledTaskDelegate other = (ScheduledTaskDelegate) obj;
-		if (endMili != other.endMili)
+		if (endMili != other.endMili) {
 			return false;
+		}
 		if (parent == null) {
-			if (other.parent != null)
+			if (other.parent != null) {
 				return false;
-		} else if (!parent.equals(other.parent))
+			}
+		} else if (!parent.equals(other.parent)) {
 			return false;
-		if (startMili != other.startMili)
+		}
+		if (startMili != other.startMili) {
 			return false;
+		}
 		if (task == null) {
-			if (other.task != null)
+			if (other.task != null) {
 				return false;
-		} else if (!task.equals(other.task))
+			}
+		} else if (!task.equals(other.task)) {
 			return false;
+		}
 		return true;
 	}
 
@@ -289,5 +298,5 @@ public class ScheduledTaskDelegate extends AbstractTask {
 	public Set<AbstractTask> getChildrenInternal() {
 		return task.getChildrenInternal();
 	}
-	
+
 }

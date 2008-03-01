@@ -36,7 +36,8 @@ public class TaskDeactivateAction extends Action {
 				TasksUiPlugin.getTaskListManager().deactivateTask(task);
 			}
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Closing task editor on task deactivation failed", e));
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					"Closing task editor on task deactivation failed", e));
 		}
 	}
 

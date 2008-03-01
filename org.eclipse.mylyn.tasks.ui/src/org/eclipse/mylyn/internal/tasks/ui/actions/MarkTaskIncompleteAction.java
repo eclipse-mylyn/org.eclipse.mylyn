@@ -30,7 +30,7 @@ public class MarkTaskIncompleteAction extends AbstractChangeCompletionAction {
 
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.mark.incomplete";
 
-	private List<AbstractTaskContainer> selectedElements;
+	private final List<AbstractTaskContainer> selectedElements;
 
 	public MarkTaskIncompleteAction(List<AbstractTaskContainer> selectedElements) {
 		this.selectedElements = selectedElements;

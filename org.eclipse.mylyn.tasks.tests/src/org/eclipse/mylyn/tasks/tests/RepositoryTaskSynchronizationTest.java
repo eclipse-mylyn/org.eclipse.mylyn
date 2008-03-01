@@ -45,9 +45,9 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 
 	//private static final String URL1 = "http://www.eclipse.org/mylar";
 
-	private TestRepositoryConnector connector = new TestRepositoryConnector();
+	private final TestRepositoryConnector connector = new TestRepositoryConnector();
 
-	private TestOfflineTaskHandler handler = new TestOfflineTaskHandler();
+	private final TestOfflineTaskHandler handler = new TestOfflineTaskHandler();
 
 	private RepositoryTaskData newData;
 
@@ -93,7 +93,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 		task.setLastReadTimeStamp("never");
 
 		assertTrue(TasksUiPlugin.getSynchronizationManager().checkHasIncoming(task, taskData));
-		
+
 		// strings and dates mismatch
 		dates.push(new Date(1));
 		dates.push(new Date(2));
@@ -111,8 +111,8 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 		// strings mismatch but dates match
 		dates.push(new Date(1));
 		dates.push(new Date(1));
-		assertFalse(TasksUiPlugin.getSynchronizationManager().checkHasIncoming(task, taskData));	
-		
+		assertFalse(TasksUiPlugin.getSynchronizationManager().checkHasIncoming(task, taskData));
+
 		// strings match, dates should not be checked
 		task.setLastReadTimeStamp("2006-06-21 15:29:39");
 		assertFalse(TasksUiPlugin.getSynchronizationManager().checkHasIncoming(task, taskData));

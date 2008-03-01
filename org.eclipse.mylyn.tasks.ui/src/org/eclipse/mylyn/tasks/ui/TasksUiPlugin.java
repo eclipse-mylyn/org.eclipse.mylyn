@@ -138,11 +138,11 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private TaskDataManager taskDataManager;
 
-	private Set<AbstractTaskEditorFactory> taskEditorFactories = new HashSet<AbstractTaskEditorFactory>();
+	private final Set<AbstractTaskEditorFactory> taskEditorFactories = new HashSet<AbstractTaskEditorFactory>();
 
-	private Set<IHyperlinkDetector> hyperlinkDetectors = new HashSet<IHyperlinkDetector>();
+	private final Set<IHyperlinkDetector> hyperlinkDetectors = new HashSet<IHyperlinkDetector>();
 
-	private TreeSet<AbstractTaskRepositoryLinkProvider> repositoryLinkProviders = new TreeSet<AbstractTaskRepositoryLinkProvider>(
+	private final TreeSet<AbstractTaskRepositoryLinkProvider> repositoryLinkProviders = new TreeSet<AbstractTaskRepositoryLinkProvider>(
 			new OrderComparator());
 
 	private TaskListWriter taskListWriter;
@@ -151,16 +151,16 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private boolean initialized = false;
 
-	private Map<String, Image> brandingIcons = new HashMap<String, Image>();
+	private final Map<String, Image> brandingIcons = new HashMap<String, Image>();
 
-	private Map<String, ImageDescriptor> overlayIcons = new HashMap<String, ImageDescriptor>();
+	private final Map<String, ImageDescriptor> overlayIcons = new HashMap<String, ImageDescriptor>();
 
-	private Set<AbstractDuplicateDetector> duplicateDetectors = new HashSet<AbstractDuplicateDetector>();
+	private final Set<AbstractDuplicateDetector> duplicateDetectors = new HashSet<AbstractDuplicateDetector>();
 
 	private ISaveParticipant saveParticipant;
 
 	private TaskEditorBloatMonitor taskEditorBloatManager;
-	
+
 	private static final boolean DEBUG_HTTPCLIENT = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.mylyn.tasks.ui/debug/httpclient"));
 
 	// API 3.0 reconsider if this is necessary
@@ -170,7 +170,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			// ignore
 		}
 	}
-	
+
 	private static final class OrderComparator implements Comparator<AbstractTaskRepositoryLinkProvider> {
 		public int compare(AbstractTaskRepositoryLinkProvider p1, AbstractTaskRepositoryLinkProvider p2) {
 			return p1.getOrder() - p2.getOrder();
@@ -309,7 +309,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				if (event.getOldValue() instanceof String) {
 					reloadDataDirectory(true);
 				}
-			} 
+			}
 		}
 	};
 
@@ -330,7 +330,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			super("Initializing Task List");
 			setSystem(true);
 		}
-		
+
 		@Override
 		public IStatus runInUIThread(IProgressMonitor monitor) {
 			// NOTE: failure in one part of the initialization should
@@ -392,7 +392,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				if (repositoriesView != null) {
 					repositoriesView.getViewer().refresh();
 				}
-				
+
 				taskEditorBloatManager = new TaskEditorBloatMonitor();
 				taskEditorBloatManager.install(PlatformUI.getWorkbench());
 			} catch (Throwable t) {
@@ -482,8 +482,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			new TasksUiInitializationJob().schedule();
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Task list initialization failed", e));
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Task list initialization failed", e));
 		}
 	}
 
@@ -699,7 +698,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		return groupSubtasks;
 	}
 
-	private Map<String, List<IDynamicSubMenuContributor>> menuContributors = new HashMap<String, List<IDynamicSubMenuContributor>>();
+	private final Map<String, List<IDynamicSubMenuContributor>> menuContributors = new HashMap<String, List<IDynamicSubMenuContributor>>();
 
 	public Map<String, List<IDynamicSubMenuContributor>> getDynamicMenuMap() {
 		return menuContributors;
@@ -977,8 +976,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				notification.setDescription("Unread task");
 			}
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Could not format notification for: " + task, t));
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not format notification for: "
+					+ task, t));
 		}
 		return notification;
 	}

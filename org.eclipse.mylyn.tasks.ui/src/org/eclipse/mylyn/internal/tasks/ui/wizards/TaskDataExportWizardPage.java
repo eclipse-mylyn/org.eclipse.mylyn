@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
  * Wizard Page for the Task Data Export Wizard
@@ -76,7 +77,7 @@ public class TaskDataExportWizardPage extends WizardPage {
 	// private final static String ZIP_SETTING = "Zip Setting";
 
 	public TaskDataExportWizardPage() {
-		super("org.eclipse.mylyn.tasklist.exportPage", PAGE_TITLE, TasksUiPlugin.imageDescriptorFromPlugin(
+		super("org.eclipse.mylyn.tasklist.exportPage", PAGE_TITLE, AbstractUIPlugin.imageDescriptorFromPlugin(
 				TasksUiPlugin.ID_PLUGIN, "icons/wizban/banner-export.gif"));
 		setPageComplete(false);
 	}
@@ -159,8 +160,9 @@ public class TaskDataExportWizardPage extends WizardPage {
 				String dir = destDirText.getText();
 				dialog.setFilterPath(dir);
 				dir = dialog.open();
-				if (dir == null || dir.equals(""))
+				if (dir == null || dir.equals("")) {
 					return;
+				}
 				destDirText.setText(dir);
 			}
 		});

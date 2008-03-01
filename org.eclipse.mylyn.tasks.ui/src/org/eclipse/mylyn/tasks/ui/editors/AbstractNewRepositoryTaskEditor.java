@@ -486,16 +486,17 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 						// NewLocalTaskAction.scheduleNewTask(newTask);
 						TasksUiPlugin.getTaskActivityManager().setScheduledFor(newTask, selectedDate.getTime());
 					}
-					
+
 					if (estimatedTime != null) {
 						newTask.setEstimatedTimeHours(estimatedTime.getSelection());
 					}
 
 					Object selectedObject = null;
-					if (TaskListView.getFromActivePerspective() != null)
+					if (TaskListView.getFromActivePerspective() != null) {
 						selectedObject = ((IStructuredSelection) TaskListView.getFromActivePerspective()
 								.getViewer()
 								.getSelection()).getFirstElement();
+					}
 
 					if (selectedObject instanceof TaskCategory) {
 						TasksUiPlugin.getTaskListManager().getTaskList().moveTask(newTask,

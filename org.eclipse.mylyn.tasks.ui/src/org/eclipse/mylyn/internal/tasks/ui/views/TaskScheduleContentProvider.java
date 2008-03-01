@@ -26,7 +26,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
  */
 public class TaskScheduleContentProvider extends TaskListContentProvider {
 
-	private TaskActivityManager taskActivityManager;
+	private final TaskActivityManager taskActivityManager;
 
 	public TaskScheduleContentProvider(TaskListView taskListView) {
 		super(taskListView);
@@ -39,7 +39,7 @@ public class TaskScheduleContentProvider extends TaskListContentProvider {
 			List<ScheduledTaskContainer> temp = taskActivityManager.getDateRanges();
 			Set<AbstractTaskContainer> ranges = new HashSet<AbstractTaskContainer>();
 			for (ScheduledTaskContainer scheduledTaskContainer : temp) {
-				if(scheduledTaskContainer.isPresent() || scheduledTaskContainer.isFuture()) {
+				if (scheduledTaskContainer.isPresent() || scheduledTaskContainer.isFuture()) {
 					ranges.add(scheduledTaskContainer);
 				}
 			}

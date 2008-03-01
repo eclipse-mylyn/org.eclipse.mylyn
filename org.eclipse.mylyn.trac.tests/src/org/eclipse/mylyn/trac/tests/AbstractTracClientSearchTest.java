@@ -94,7 +94,6 @@ public abstract class AbstractTracClientSearchTest extends AbstractTracClientTes
 		assertTicketEquals(tickets.get(1), ticket);
 	}
 
-	
 	public void testGetTicketInvalidId096() throws Exception {
 		if (version == Version.XML_RPC) {
 			return;

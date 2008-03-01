@@ -11,6 +11,7 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -27,13 +28,13 @@ import org.eclipse.swt.widgets.Text;
  */
 public class SpellingDialog extends Dialog {
 
-	private String title;
+	private final String title;
 
 	private Text wordToFix;
 
 	private List suggestions;
 
-	private IDocument document;
+	private final IDocument document;
 
 	private ICompletionProposal[] proposals;
 
@@ -90,10 +91,11 @@ public class SpellingDialog extends Dialog {
 
 	@Override
 	protected void handleShellCloseEvent() {
-		if (getReturnCode() == Dialog.OK) {
+		if (getReturnCode() == Window.OK) {
 			int i = suggestions.getSelectionIndex();
-			if (i > 0 && i < proposals.length)
+			if (i > 0 && i < proposals.length) {
 				proposals[i].apply(document);
+			}
 		}
 		super.handleShellCloseEvent();
 	}

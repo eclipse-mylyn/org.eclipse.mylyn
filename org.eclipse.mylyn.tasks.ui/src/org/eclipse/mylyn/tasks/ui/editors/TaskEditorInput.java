@@ -31,7 +31,7 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 
 	private static final int MAX_LABEL_LENGTH = 60;
 
-	private AbstractTask task;
+	private final AbstractTask task;
 
 	private String summary;
 
@@ -141,20 +141,25 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		final TaskEditorInput other = (TaskEditorInput) obj;
 		//if (newTask != other.newTask)
 		//	return false;
 		if (task == null) {
-			if (other.task != null)
+			if (other.task != null) {
 				return false;
-		} else if (!task.equals(other.task))
+			}
+		} else if (!task.equals(other.task)) {
 			return false;
+		}
 		return true;
 	}
 

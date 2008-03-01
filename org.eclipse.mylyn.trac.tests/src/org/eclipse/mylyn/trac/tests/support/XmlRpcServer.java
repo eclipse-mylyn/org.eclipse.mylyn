@@ -47,11 +47,11 @@ public class XmlRpcServer {
 	 */
 	public class ModelEnum extends AbstractTracItem {
 
-		private String[] attributes;
+		private final String[] attributes;
 
-		private String id;
+		private final String id;
 
-		private String module;
+		private final String module;
 
 		public ModelEnum(String module, String id, String... attributes) {
 			this.module = module;
@@ -218,9 +218,9 @@ public class XmlRpcServer {
 	 */
 	public class TicketEnum extends AbstractTracItem {
 
-		private String id;
+		private final String id;
 
-		private String module;
+		private final String module;
 
 		public TicketEnum(String module, String id) {
 			this.module = module;
@@ -269,17 +269,17 @@ public class XmlRpcServer {
 
 	}
 
-	private XmlRpcClient client;
+	private final XmlRpcClient client;
 
-	private TestData data;
+	private final TestData data;
 
-	private String password;
+	private final String password;
 
-	private TracXmlRpcClient repository;
+	private final TracXmlRpcClient repository;
 
-	private String url;
+	private final String url;
 
-	private String username;
+	private final String username;
 
 	public XmlRpcServer(String url, String username, String password) throws Exception {
 		this.url = url;

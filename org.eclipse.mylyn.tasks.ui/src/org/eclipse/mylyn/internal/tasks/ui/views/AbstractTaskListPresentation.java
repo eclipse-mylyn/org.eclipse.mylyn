@@ -20,19 +20,19 @@ import org.eclipse.jface.resource.ImageDescriptor;
 public abstract class AbstractTaskListPresentation {
 
 	private final String id;
-	
+
 	private String name;
 
 	private ImageDescriptor imageDescriptor;
-	
+
 	private boolean primary = false;
-	
-	private Map<TaskListView, AbstractTaskListContentProvider> contentProviders = new HashMap<TaskListView, AbstractTaskListContentProvider>();
-	
+
+	private final Map<TaskListView, AbstractTaskListContentProvider> contentProviders = new HashMap<TaskListView, AbstractTaskListContentProvider>();
+
 	public AbstractTaskListPresentation(String id) {
 		this.id = id;
 	}
-	
+
 	public AbstractTaskListContentProvider getContentProvider(TaskListView taskListView) {
 		AbstractTaskListContentProvider contentProvider = contentProviders.get(taskListView);
 		if (contentProvider == null) {
@@ -41,14 +41,14 @@ public abstract class AbstractTaskListPresentation {
 		}
 		return contentProvider;
 	}
-	
+
 	/**
 	 * Creates a new instance of a content provider for a particular instance of the Task List
 	 * 
 	 * TODO: change view parameter to be the viewer
 	 */
 	protected abstract AbstractTaskListContentProvider createContentProvider(TaskListView taskListView);
-	
+
 	public ImageDescriptor getImageDescriptor() {
 		return imageDescriptor;
 	}
@@ -64,7 +64,7 @@ public abstract class AbstractTaskListPresentation {
 	public void setImageDescriptor(ImageDescriptor imageDescriptor) {
 		this.imageDescriptor = imageDescriptor;
 	}
-	
+
 	public boolean isPrimary() {
 		return primary;
 	}

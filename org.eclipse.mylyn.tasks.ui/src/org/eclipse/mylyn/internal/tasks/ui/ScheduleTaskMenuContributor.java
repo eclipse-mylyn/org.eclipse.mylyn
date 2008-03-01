@@ -11,7 +11,6 @@ package org.eclipse.mylyn.internal.tasks.ui;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
@@ -78,7 +77,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 		Action action = new Action() {
 			@Override
 			public void run() {
-				Calendar reminderCalendar = GregorianCalendar.getInstance();
+				Calendar reminderCalendar = Calendar.getInstance();
 				TaskActivityUtil.snapEndOfWorkDay(reminderCalendar);
 				for (AbstractTaskContainer element : taskListElementsToSchedule) {
 					AbstractTask task = tasklistManager.getTaskForElement(element, true);
@@ -92,10 +91,10 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 		subMenuManager.add(action);
 
 		if (singleTaskSelection != null
-				&& (TasksUiPlugin.getTaskActivityManager().isScheduledForToday(getScheduledForDate(singleTaskSelection), isFloating(singleTaskSelection)) || (isPastReminder(singleTaskSelection) && !isFloating(singleTaskSelection)))) {
+				&& (TasksUiPlugin.getTaskActivityManager().isScheduledForToday(
+						getScheduledForDate(singleTaskSelection), isFloating(singleTaskSelection)) || (isPastReminder(singleTaskSelection) && !isFloating(singleTaskSelection)))) {
 			action.setChecked(true);
 		}
-		
 
 //		subMenuManager.add(new Separator());
 
@@ -155,8 +154,10 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 		action.setEnabled(canSchedule(singleSelection, taskListElementsToSchedule));
 		subMenuManager.add(action);
 
-		if (singleTaskSelection != null && isFloating(singleTaskSelection)
-				&& (TasksUiPlugin.getTaskActivityManager().isScheduledForThisWeek(getScheduledForDate(singleTaskSelection)) || isPastReminder(singleTaskSelection))) {
+		if (singleTaskSelection != null
+				&& isFloating(singleTaskSelection)
+				&& (TasksUiPlugin.getTaskActivityManager().isScheduledForThisWeek(
+						getScheduledForDate(singleTaskSelection)) || isPastReminder(singleTaskSelection))) {
 			action.setChecked(true);
 		}
 
@@ -174,9 +175,12 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 		action.setText(LABEL_NEXT_WEEK);
 		action.setEnabled(canSchedule(singleSelection, taskListElementsToSchedule));
 
-		if (singleTaskSelection != null && isFloating(singleTaskSelection)
-				&& TasksUiPlugin.getTaskActivityManager().isScheduledAfterThisWeek(getScheduledForDate(singleTaskSelection))
-				&& !TasksUiPlugin.getTaskActivityManager().isScheduledForFuture(getScheduledForDate(singleTaskSelection))) {
+		if (singleTaskSelection != null
+				&& isFloating(singleTaskSelection)
+				&& TasksUiPlugin.getTaskActivityManager().isScheduledAfterThisWeek(
+						getScheduledForDate(singleTaskSelection))
+				&& !TasksUiPlugin.getTaskActivityManager().isScheduledForFuture(
+						getScheduledForDate(singleTaskSelection))) {
 			action.setChecked(true);
 		}
 
@@ -248,7 +252,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 		action = new Action() {
 			@Override
 			public void run() {
-				Calendar theCalendar = GregorianCalendar.getInstance();
+				Calendar theCalendar = Calendar.getInstance();
 				if (singleTaskSelection != null && getScheduledForDate(singleTaskSelection) != null) {
 					theCalendar.setTime(getScheduledForDate(singleTaskSelection));
 				}
@@ -298,7 +302,6 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 		subMenuManager.add(action);
 		return subMenuManager;
 	}
-
 
 	private void getDayLabel(int i, Action action) {
 		if (i > 8) {
@@ -351,16 +354,15 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 			}
 		}
 	}
-	
+
 	protected Date getScheduledForDate(final AbstractTask singleTaskSelection) {
 		return singleTaskSelection.getScheduledForDate();
 	}
-	
+
 	protected boolean isFloating(AbstractTask task) {
 		return task.internalIsFloatingScheduledDate();
 	}
-	
-	
+
 	private boolean isPastReminder(AbstractTask task) {
 		Date date = getScheduledForDate(task);
 		return TasksUiPlugin.getTaskActivityManager().isPastReminder(date, task.isCompleted());

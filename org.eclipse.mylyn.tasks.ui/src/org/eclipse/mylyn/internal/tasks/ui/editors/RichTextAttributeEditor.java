@@ -66,8 +66,7 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 		return (taskAttribute.isReadOnly()) ? SWT.MULTI : SWT.V_SCROLL | SWT.MULTI;
 	}
 
-	public RichTextAttributeEditor(AttributeManager manager, RepositoryTaskAttribute taskAttribute,
-			int style) {
+	public RichTextAttributeEditor(AttributeManager manager, RepositoryTaskAttribute taskAttribute, int style) {
 		super(manager, taskAttribute);
 		this.style = style;
 		setLayoutHint(new LayoutHint(RowSpan.MULTIPLE, ColumnSpan.MULTIPLE));

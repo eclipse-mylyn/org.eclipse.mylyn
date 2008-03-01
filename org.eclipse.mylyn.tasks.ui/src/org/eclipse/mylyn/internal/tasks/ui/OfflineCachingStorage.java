@@ -8,7 +8,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Timer;
@@ -41,13 +40,13 @@ public class OfflineCachingStorage implements ITaskDataStorage {
 
 	private static final int MAX_READ_QUEUE_SIZE = 80;
 
-	private Map<String, Map<String, TaskDataState>> readCache = new ConcurrentHashMap<String, Map<String, TaskDataState>>();
+	private final Map<String, Map<String, TaskDataState>> readCache = new ConcurrentHashMap<String, Map<String, TaskDataState>>();
 
-	private Map<String, Map<String, TaskDataState>> writeCache = new ConcurrentHashMap<String, Map<String, TaskDataState>>();
+	private final Map<String, Map<String, TaskDataState>> writeCache = new ConcurrentHashMap<String, Map<String, TaskDataState>>();
 
-	private Queue<TaskDataState> lruQueue = new ConcurrentLinkedQueue<TaskDataState>();
+	private final Queue<TaskDataState> lruQueue = new ConcurrentLinkedQueue<TaskDataState>();
 
-	private ITaskDataStorage storage;
+	private final ITaskDataStorage storage;
 
 	private CacheFlushJob cacheFlushJob;
 
@@ -90,7 +89,8 @@ public class OfflineCachingStorage implements ITaskDataStorage {
 		return result;
 	}
 
-	private TaskDataState retrieveFromCache(Map<String, Map<String, TaskDataState>> cache, String repositoryUrl, String id) {
+	private TaskDataState retrieveFromCache(Map<String, Map<String, TaskDataState>> cache, String repositoryUrl,
+			String id) {
 		Map<String, TaskDataState> idMap = cache.get(repositoryUrl);
 		if (idMap != null) {
 			return idMap.get(id);
@@ -203,8 +203,7 @@ public class OfflineCachingStorage implements ITaskDataStorage {
 	private void persistToStorage() {
 		synchronized (writeCache) {
 			for (Map<String, TaskDataState> idMap : writeCache.values()) {
-				for (Iterator<TaskDataState> it = idMap.values().iterator(); it.hasNext();) {
-					TaskDataState state = it.next();
+				for (TaskDataState state : idMap.values()) {
 					storage.put(state);
 				}
 				idMap.clear();
@@ -233,7 +232,8 @@ public class OfflineCachingStorage implements ITaskDataStorage {
 					try {
 						persistToStorage();
 					} catch (Throwable t) {
-						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error saving offline cache", t));
+						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+								"Error saving offline cache", t));
 					}
 				}
 

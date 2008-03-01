@@ -74,14 +74,15 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 		if (selectedTask instanceof LocalTask) {
 			// XXX code copied from NewLocalTaskWizard.performFinish() and TaskListManager.createNewLocalTask()
 			TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
-			LocalTask newTask = new LocalTask("" + taskList.getNextLocalTaskId(), LocalRepositoryConnector.DEFAULT_SUMMARY);
+			LocalTask newTask = new LocalTask("" + taskList.getNextLocalTaskId(),
+					LocalRepositoryConnector.DEFAULT_SUMMARY);
 			newTask.setPriority(PriorityLevel.P3.toString());
 			TasksUiPlugin.getTaskActivityManager().scheduleNewTask(newTask);
 			taskList.addTask(newTask, selectedTask);
 			TasksUiUtil.openEditor(newTask, true);
 			return;
 		}
-		
+
 		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 				selectedTask.getConnectorKind());
 		final AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
@@ -95,14 +96,14 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 		if (selectedTaskData == null) {
 			StatusHandler.displayStatus("Unable to create subtask", new Status(IStatus.WARNING,
 					TasksUiPlugin.ID_PLUGIN, "Could not retrieve task data for task: " + selectedTask.getUrl()));
-			 // TODO try to retrieve task data or fall back to invoking connector code
+			// TODO try to retrieve task data or fall back to invoking connector code
 			return;
 		}
 
 		if (!taskDataHandler.canInitializeSubTaskData(selectedTask, selectedTaskData)) {
 			return;
 		}
-		
+
 		final TaskRepository taskRepository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryUrl);
 		AbstractAttributeFactory attributeFactory = taskDataHandler.getAttributeFactory(taskRepository.getUrl(),
 				taskRepository.getConnectorKind(), AbstractTask.DEFAULT_TASK_KIND);
@@ -154,7 +155,8 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 		if (selection instanceof StructuredSelection) {
 			Object selectedObject = ((StructuredSelection) selection).getFirstElement();
 			if (selectedObject instanceof LocalTask) {
-				if (TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(TasksUiPreferenceConstants.LOCAL_SUB_TASKS_ENABLED)) {			
+				if (TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
+						TasksUiPreferenceConstants.LOCAL_SUB_TASKS_ENABLED)) {
 					selectedTask = (AbstractTask) selectedObject;
 				}
 			} else if (selectedObject instanceof AbstractTask) {

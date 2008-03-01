@@ -13,7 +13,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -60,10 +59,10 @@ public class DatePicker extends Composite {
 
 	private Calendar date = null;
 
-	private List<SelectionListener> pickerListeners = new LinkedList<SelectionListener>();
+	private final List<SelectionListener> pickerListeners = new LinkedList<SelectionListener>();
 
-	private SimpleDateFormat simpleDateFormat = (SimpleDateFormat) DateFormat.getDateTimeInstance(DateFormat.MEDIUM,
-			DateFormat.SHORT);
+	private final SimpleDateFormat simpleDateFormat = (SimpleDateFormat) DateFormat.getDateTimeInstance(
+			DateFormat.MEDIUM, DateFormat.SHORT);
 
 	private String initialText = LABEL_CHOOSE;
 
@@ -72,14 +71,14 @@ public class DatePicker extends Composite {
 	public DatePicker(Composite parent, int style, String initialText) {
 		this(parent, style, initialText, true);
 	}
-	
+
 	/**
 	 * @Since 2.3
 	 */
 	public DatePicker(Composite parent, int style, String initialText, boolean includeTime) {
 		super(parent, style);
 		this.initialText = initialText;
-		this.includeTime  = includeTime;
+		this.includeTime = includeTime;
 		initialize((style & SWT.FLAT) > 0 ? SWT.FLAT : 0);
 	}
 
@@ -138,8 +137,9 @@ public class DatePicker extends Composite {
 		pickButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				Calendar newCalendar = GregorianCalendar.getInstance();
-				newCalendar.set(Calendar.HOUR_OF_DAY, TasksUiPlugin.getDefault().getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
+				Calendar newCalendar = Calendar.getInstance();
+				newCalendar.set(Calendar.HOUR_OF_DAY, TasksUiPlugin.getDefault().getPreferenceStore().getInt(
+						TasksUiPreferenceConstants.PLANNING_ENDHOUR));
 				newCalendar.set(Calendar.MINUTE, 0);
 				newCalendar.set(Calendar.SECOND, 0);
 				newCalendar.set(Calendar.MILLISECOND, 0);
@@ -153,7 +153,8 @@ public class DatePicker extends Composite {
 				} else {
 					shell = new Shell(PlatformUI.getWorkbench().getDisplay());
 				}
-				DateSelectionDialog dialog = new DateSelectionDialog(shell, newCalendar, DatePicker.TITLE_DIALOG, includeTime);
+				DateSelectionDialog dialog = new DateSelectionDialog(shell, newCalendar, DatePicker.TITLE_DIALOG,
+						includeTime);
 				pickButton.setEnabled(false);
 				dateText.setEnabled(false);
 

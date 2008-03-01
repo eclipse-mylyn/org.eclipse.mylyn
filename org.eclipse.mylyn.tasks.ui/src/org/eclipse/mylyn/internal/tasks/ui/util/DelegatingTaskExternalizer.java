@@ -113,7 +113,7 @@ final class DelegatingTaskExternalizer {
 	static final String KEY_DATE_DUE = "DueDate";
 
 	static final String KEY_REMINDED = "Reminded";
-	
+
 	static final String KEY_FLOATING = "Floating";
 
 	/**
@@ -274,14 +274,16 @@ final class DelegatingTaskExternalizer {
 	}
 
 	private String stripControlCharacters(String text) {
-		if (text == null)
+		if (text == null) {
 			return "";
+		}
 		return XmlUtil.cleanXmlString(text);
 	}
 
 	private String formatExternDate(Date date) {
-		if (date == null)
+		if (date == null) {
 			return "";
+		}
 		String f = DATE_FORMAT;
 		SimpleDateFormat format = new SimpleDateFormat(f, Locale.ENGLISH);
 		return format.format(date);
@@ -492,8 +494,9 @@ final class DelegatingTaskExternalizer {
 
 	private Date getDateFromString(String dateString) {
 		Date date = null;
-		if ("".equals(dateString))
+		if ("".equals(dateString)) {
 			return null;
+		}
 		String formatString = DATE_FORMAT;
 		SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.ENGLISH);
 		try {
@@ -519,7 +522,8 @@ final class DelegatingTaskExternalizer {
 			}
 		}
 		if (factory == null || queryTagName == null) {
-			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Could not externalize query: " + query));
+			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Could not externalize query: "
+					+ query));
 			return null;
 		}
 

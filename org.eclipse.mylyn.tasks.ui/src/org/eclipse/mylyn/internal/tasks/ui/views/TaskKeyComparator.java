@@ -17,7 +17,9 @@ import java.util.regex.Pattern;
 public class TaskKeyComparator implements Comparator<String[]> {
 
 	private static final String MODULE_TASK_PATTERN = "(?:([A-Za-z]*[:_\\-]?)(\\d+))?";
+
 	private static final Pattern ID_PATTERN = Pattern.compile(MODULE_TASK_PATTERN);
+
 	public static final Pattern PATTERN = Pattern.compile(MODULE_TASK_PATTERN + "(.*)");
 
 	public int compare2(String o1, String o2) {
@@ -97,11 +99,12 @@ public class TaskKeyComparator implements Comparator<String[]> {
 		}
 		return res;
 	}
+
 	private static String[] splitTask(final String s) {
 		Matcher matcher = ID_PATTERN.matcher(s);
 
 		if (!matcher.find()) {
-			return new String[] {null, s};
+			return new String[] { null, s };
 		}
 
 		int n = matcher.groupCount();

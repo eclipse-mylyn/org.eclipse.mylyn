@@ -10,7 +10,6 @@ package org.eclipse.mylyn.tasks.tests;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -29,6 +28,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
  */
 public class ScheduledPresentationTest extends TestCase {
 
+	@Override
 	protected void setUp() throws Exception {
 		ContextCorePlugin.getContextManager().getActivityMetaContext().reset();
 		ContextCorePlugin.getContextManager().saveActivityContext();
@@ -36,6 +36,7 @@ public class ScheduledPresentationTest extends TestCase {
 		TasksUiPlugin.getTaskListManager().saveTaskList();
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		TasksUiPlugin.getTaskListManager().resetTaskList();
 		TasksUiPlugin.getTaskListManager().saveTaskList();
@@ -135,9 +136,9 @@ public class ScheduledPresentationTest extends TestCase {
 
 	public void testScheduledTaskContainer() {
 
-		Calendar startDate = GregorianCalendar.getInstance();
+		Calendar startDate = Calendar.getInstance();
 		startDate.setTimeInMillis(1000);
-		Calendar endDate = GregorianCalendar.getInstance();
+		Calendar endDate = Calendar.getInstance();
 		endDate.setTimeInMillis(2000);
 
 		AbstractTask task1 = new LocalTask("task 1", "Task 1");

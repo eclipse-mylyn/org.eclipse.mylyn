@@ -54,5 +54,5 @@ public class EditRepositoryPropertiesAction extends AbstractTaskRepositoryAction
 			action.setEnabled(false);
 		}
 	}
-	
+
 }

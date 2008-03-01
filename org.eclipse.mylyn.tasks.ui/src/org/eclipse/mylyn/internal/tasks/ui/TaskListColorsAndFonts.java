@@ -27,7 +27,7 @@ public class TaskListColorsAndFonts {
 	public static final String THEME_COLOR_TASK_PAST_SCHEDULED = "org.eclipse.mylyn.tasks.ui.colors.foreground.past.scheduled";
 
 	public static final String THEME_COLOR_TASK_PAST_DUE = "org.eclipse.mylyn.tasks.ui.colors.foreground.past.due";
-	
+
 	public static final String THEME_COLOR_TASK_THISWEEK_SCHEDULED = "org.eclipse.mylyn.tasks.ui.colors.foreground.thisweek.scheduled";
 
 	public static final String THEME_COLOR_COMPLETED = "org.eclipse.mylyn.tasks.ui.colors.foreground.completed";
@@ -84,8 +84,8 @@ public class TaskListColorsAndFonts {
 				} catch (Throwable t) {
 					// ignore
 				}
-			} 
-		} 
+			}
+		}
 		if (STRIKETHROUGH == null) {
 			STRIKETHROUGH = defaultFont;
 		}

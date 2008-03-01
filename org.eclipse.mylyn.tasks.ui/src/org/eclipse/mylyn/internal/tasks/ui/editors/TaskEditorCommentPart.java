@@ -225,7 +225,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 				}
 			});
 
-			AbstractTask repositoryTask = getTaskEditorPage().getTask(); 
+			AbstractTask repositoryTask = getTaskEditorPage().getTask();
 			if ((repositoryTask != null && repositoryTask.getLastReadTimeStamp() == null)
 					|| getTaskEditorPage().getAttributeManager().getOldTaskData() == null) {
 				// hit or lost task data, expose all comments
@@ -269,6 +269,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		replyLink.setBackground(null);
 		// replyLink.setBackground(section.getTitleBarGradientBackground());
 		replyLink.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				StringBuilder strBuilder = new StringBuilder();
 				strBuilder.append(" (In reply to comment #" + taskComment.getNumber() + ")\n");

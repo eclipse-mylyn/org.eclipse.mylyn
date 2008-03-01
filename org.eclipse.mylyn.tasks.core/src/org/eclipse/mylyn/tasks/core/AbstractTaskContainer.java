@@ -26,7 +26,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 
 	private String handleIdentifier = "";
 
-	private Set<AbstractTask> children = new CopyOnWriteArraySet<AbstractTask>();
+	private final Set<AbstractTask> children = new CopyOnWriteArraySet<AbstractTask>();
 
 	/**
 	 * Optional URL corresponding to the web resource associated with this container.
@@ -53,8 +53,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	}
 
 	/**
-	 * Remove all children held by this container
-	 * Does not delete tasks from TaskList
+	 * Remove all children held by this container Does not delete tasks from TaskList
 	 */
 	public void clear() {
 		children.clear();
@@ -145,8 +144,9 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 
 	@Override
 	public boolean equals(Object object) {
-		if (object == null)
+		if (object == null) {
 			return false;
+		}
 		if (object instanceof AbstractTaskContainer) {
 			AbstractTaskContainer compare = (AbstractTaskContainer) object;
 			return this.getHandleIdentifier().equals(compare.getHandleIdentifier());
@@ -180,13 +180,14 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	public int compareTo(AbstractTaskContainer taskListElement) {
 		return getHandleIdentifier().compareTo(taskListElement.getHandleIdentifier());
 	}
-	
+
 	/**
 	 * If false, user is unable to manipulate (i.e. rename/delete), no preferences are available.
+	 * 
 	 * @since 2.3
 	 */
 	public boolean isUserManaged() {
 		return true;
 	}
-		
+
 }

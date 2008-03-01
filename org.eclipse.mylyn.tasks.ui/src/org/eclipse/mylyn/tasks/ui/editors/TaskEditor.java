@@ -66,11 +66,11 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 
 	protected AbstractTask task;
 
-	private TaskPlanningEditor taskPlanningEditor;
+	private final TaskPlanningEditor taskPlanningEditor;
 
 	private TaskEditorInput taskEditorInput;
 
-	private List<IEditorPart> editors = new ArrayList<IEditorPart>();
+	private final List<IEditorPart> editors = new ArrayList<IEditorPart>();
 
 	private IEditorPart contentOutlineProvider = null;
 
@@ -93,8 +93,9 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 	protected void contextMenuAboutToShow(IMenuManager manager) {
 		TaskEditorActionContributor contributor = getContributor();
 		// IFormPage page = getActivePageInstance();
-		if (contributor != null)
+		if (contributor != null) {
 			contributor.contextMenuAboutToShow(manager);
+		}
 	}
 
 	public TaskEditorActionContributor getContributor() {
@@ -103,11 +104,13 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 
 	/**
 	 * Configures the standard task editor context menu
+	 * 
 	 * @Since 2.3
 	 */
 	public void configureContextMenuManager(MenuManager manager, TextViewer textViewer) {
-		if (manager == null)
+		if (manager == null) {
 			return;
+		}
 		IMenuListener listener = new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
 				contextMenuAboutToShow(manager);
@@ -115,8 +118,8 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 		};
 		manager.setRemoveAllWhenShown(true);
 		manager.addMenuListener(listener);
-		
-		if (textViewer != null){
+
+		if (textViewer != null) {
 			TaskEditorActionContributor contributor = getContributor();
 			if (contributor != null) {
 				contributor.addTextViewer(textViewer);
@@ -166,8 +169,9 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 		if (pages != null) {
 			for (int i = 0; i < pages.size(); i++) {
 				Object page = pages.get(i);
-				if (page instanceof IFormPage)
+				if (page instanceof IFormPage) {
 					formPages.add(page);
+				}
 			}
 		}
 		return (IFormPage[]) formPages.toArray(new IFormPage[formPages.size()]);
@@ -328,7 +332,8 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 							contentOutlineProvider = editor;
 						}
 					} catch (Exception e) {
-						StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not create editor via factory: " + factory, e));
+						StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+								"Could not create editor via factory: " + factory, e));
 					}
 				}
 			}
@@ -360,7 +365,8 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 			}
 
 		} catch (PartInitException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to create task editor pages", e));
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to create task editor pages",
+					e));
 		}
 	}
 
@@ -420,7 +426,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 		if (taskData != null && taskData.isNew()) {
 			return;
 		}
-		
+
 		if (titleDragSourceListener == null) {
 			Transfer[] transferTypes;
 			if (null == task) {
@@ -434,7 +440,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 				public ISelection getSelection() {
 					if (task != null) {
 						return new StructuredSelection(task);
-					} else if (taskData != null && !taskData.isNew()){
+					} else if (taskData != null && !taskData.isNew()) {
 						return new StructuredSelection(taskData);
 					}
 					return null;
@@ -509,8 +515,9 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 
 	protected IWorkbenchSiteProgressService getProgressService() {
 		Object siteService = getEditorSite().getAdapter(IWorkbenchSiteProgressService.class);
-		if (siteService != null)
+		if (siteService != null) {
 			return (IWorkbenchSiteProgressService) siteService;
+		}
 		return null;
 	}
 

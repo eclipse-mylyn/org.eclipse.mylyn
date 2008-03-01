@@ -64,7 +64,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 
 	private static final String TITLE_QUERY_TITLE = "Query Title:";
 
-	private TracRepositoryQuery query;
+	private final TracRepositoryQuery query;
 
 	private Text titleText;
 
@@ -102,7 +102,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 
 	private TextSearchField keywordsField;
 
-	private Map<String, SearchField> searchFieldByName = new HashMap<String, SearchField>();
+	private final Map<String, SearchField> searchFieldByName = new HashMap<String, SearchField>();
 
 	private boolean firstTime = true;
 
@@ -538,7 +538,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 
 		private Label label;
 
-		private CompareOperator[] compareOperators = { CompareOperator.CONTAINS, CompareOperator.CONTAINS_NOT,
+		private final CompareOperator[] compareOperators = { CompareOperator.CONTAINS, CompareOperator.CONTAINS_NOT,
 				CompareOperator.BEGINS_WITH, CompareOperator.ENDS_WITH, CompareOperator.IS, CompareOperator.IS_NOT, };
 
 		public TextSearchField(String fieldName) {
@@ -694,7 +694,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 
 	private class UserSearchField extends SearchField {
 
-		private TextSearchField textField;
+		private final TextSearchField textField;
 
 		private Combo userCombo;
 
@@ -739,7 +739,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 
 		class UserSelectionSearchField extends SearchField {
 
-			private int index;
+			private final int index;
 
 			public UserSelectionSearchField(String fieldName, int index) {
 				super(fieldName);

@@ -121,7 +121,7 @@ public class ProjectTaskRepositoryPage extends PropertyPage {
 		// TODO this code was copied from SelectRepositoryPage
 		final AddRepositoryAction action = new AddRepositoryAction();
 		action.setPromptToAddQuery(false);
-		
+
 		Button button = new Button(composite, SWT.NONE);
 		button.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING));
 		button.setText(AddRepositoryAction.TITLE);
@@ -135,7 +135,7 @@ public class ProjectTaskRepositoryPage extends PropertyPage {
 					listViewer.setSelection(new StructuredSelection(taskRepository));
 					updateLinkedRepository();
 				}
-			}	
+			}
 		});
 
 		return composite;
@@ -186,7 +186,8 @@ public class ProjectTaskRepositoryPage extends PropertyPage {
 					plugin.setRepositoryForResource(project, selectedRepository);
 				}
 			} catch (CoreException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unable to associate project with task repository", e));
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						"Unable to associate project with task repository", e));
 			}
 		}
 		return true;

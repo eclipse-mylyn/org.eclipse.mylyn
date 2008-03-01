@@ -35,12 +35,12 @@ abstract class DelayedRefreshJob extends WorkbenchJob {
 	static final long REFRESH_DELAY_DEFAULT = 200;
 
 	static final long REFRESH_DELAY_MAX = 500;
-	
+
 	private final TreeViewer treeViewer;
 
 	private static final int NOT_SCHEDULED = -1;
 
-	private LinkedHashSet<Object> queue = new LinkedHashSet<Object>();
+	private final LinkedHashSet<Object> queue = new LinkedHashSet<Object>();
 
 	private long scheduleTime = NOT_SCHEDULED;
 
@@ -58,7 +58,7 @@ abstract class DelayedRefreshJob extends WorkbenchJob {
 	public synchronized void refresh() {
 		refreshTask(null);
 	}
-	
+
 	public synchronized void refreshTask(Object element) {
 		queue.add(element);
 
@@ -72,6 +72,7 @@ abstract class DelayedRefreshJob extends WorkbenchJob {
 		}
 	}
 
+	@Override
 	public IStatus runInUIThread(IProgressMonitor monitor) {
 		if (treeViewer.getControl() == null || treeViewer.getControl().isDisposed()) {
 			return Status.CANCEL_STATUS;
@@ -95,14 +96,14 @@ abstract class DelayedRefreshJob extends WorkbenchJob {
 		TreePath treePath = null;
 		if (selection.length > 0) {
 			TreeWalker treeWalker = new TreeWalker(treeViewer);
-			treePath  = treeWalker.walk(new TreeVisitor() {
+			treePath = treeWalker.walk(new TreeVisitor() {
 				@Override
 				public boolean visit(Object object) {
 					return true;
-				}				
+				}
 			}, selection[selection.length - 1]);
 		}
-				
+
 		refresh(items);
 
 		if (treePath != null) {
@@ -130,7 +131,8 @@ abstract class DelayedRefreshJob extends WorkbenchJob {
 					updateExpansionState(item);
 				}
 			} catch (SWTException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to refresh viewer: " + treeViewer, e));
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to refresh viewer: "
+						+ treeViewer, e));
 			}
 		}
 	}

@@ -69,8 +69,10 @@ public class TracRepositoryConnectorTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		TracCorePlugin.getDefault().getConnector().setTaskRepositoryLocationFactory(new TaskRepositoryLocationFactory());
-		
+		TracCorePlugin.getDefault()
+				.getConnector()
+				.setTaskRepositoryLocationFactory(new TaskRepositoryLocationFactory());
+
 		manager = TasksUiPlugin.getRepositoryManager();
 		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 

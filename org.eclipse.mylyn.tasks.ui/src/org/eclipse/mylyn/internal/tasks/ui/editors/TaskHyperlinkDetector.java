@@ -55,7 +55,7 @@ public class TaskHyperlinkDetector extends AbstractHyperlinkDetector {
 		if (line.length() == 0) {
 			return null;
 		}
-		
+
 		TaskRepository repository = getRepository(textViewer);
 		if (repository == null) {
 			repository = guessRepository(line);

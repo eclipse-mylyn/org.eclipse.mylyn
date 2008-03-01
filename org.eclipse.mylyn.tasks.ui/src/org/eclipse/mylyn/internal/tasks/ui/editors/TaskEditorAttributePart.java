@@ -173,6 +173,7 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 		setControl(attributesComposite);
 	}
 
+	@Override
 	protected void fillToolBar(ToolBarManager toolBar) {
 		ResetRepositoryConfigurationAction repositoryConfigRefresh = new ResetRepositoryConfigurationAction() {
 			@Override

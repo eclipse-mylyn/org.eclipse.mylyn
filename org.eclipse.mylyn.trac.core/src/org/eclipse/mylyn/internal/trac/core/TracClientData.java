@@ -12,10 +12,10 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.eclipse.mylyn.internal.trac.core.model.TracComponent;
-import org.eclipse.mylyn.internal.trac.core.model.TracTicketField;
 import org.eclipse.mylyn.internal.trac.core.model.TracMilestone;
 import org.eclipse.mylyn.internal.trac.core.model.TracPriority;
 import org.eclipse.mylyn.internal.trac.core.model.TracSeverity;
+import org.eclipse.mylyn.internal.trac.core.model.TracTicketField;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicketResolution;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicketStatus;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicketType;

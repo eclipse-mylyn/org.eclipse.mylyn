@@ -64,7 +64,7 @@ public class CloneTaskAction extends BaseSelectionListenerAction implements IVie
 			for (Object selectedObject : getStructuredSelection().toList()) {
 				if (selectedObject instanceof AbstractTask) {
 					AbstractTask task = (AbstractTask) selectedObject;
-					
+
 					String description = "Cloned from: " + CopyTaskDetailsAction.getTextForTask(task);
 
 					final TaskSelection taskSelection;
@@ -96,7 +96,8 @@ public class CloneTaskAction extends BaseSelectionListenerAction implements IVie
 			}
 		} catch (NullPointerException e) {
 			// FIXME check for null instead?
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not remove task from category, it may still be refreshing.", e));
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					"Could not remove task from category, it may still be refreshing.", e));
 		}
 	}
 

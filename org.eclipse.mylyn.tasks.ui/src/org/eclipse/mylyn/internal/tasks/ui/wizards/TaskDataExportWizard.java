@@ -180,11 +180,9 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 			// TODO use the wizard's progress service or IProgressService.busyCursorWhile(): bug 210710 
 			service.run(true, false, job);
 		} catch (InvocationTargetException e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Could not export files", e));
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not export files", e));
 		} catch (InterruptedException e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Could not export files", e));
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not export files", e));
 		}
 
 		exportPage.saveSettings();

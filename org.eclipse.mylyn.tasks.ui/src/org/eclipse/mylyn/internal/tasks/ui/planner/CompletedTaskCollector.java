@@ -21,11 +21,11 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
  */
 public class CompletedTaskCollector implements ITaskCollector {
 
-	private Map<String, AbstractTask> completedTasks = new HashMap<String, AbstractTask>();
+	private final Map<String, AbstractTask> completedTasks = new HashMap<String, AbstractTask>();
 
-	private Date periodStartDate;
+	private final Date periodStartDate;
 
-	private Date periodEndDate;
+	private final Date periodEndDate;
 
 	public CompletedTaskCollector(Date periodStartDate, Date periodEndDate) {
 		this.periodStartDate = periodStartDate;

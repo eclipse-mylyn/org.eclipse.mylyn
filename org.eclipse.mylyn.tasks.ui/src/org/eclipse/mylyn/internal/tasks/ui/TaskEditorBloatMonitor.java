@@ -17,7 +17,7 @@ import org.eclipse.ui.PartInitException;
  */
 public class TaskEditorBloatMonitor extends AbstractEditorTracker {
 
-	private int MAX_EDITORS = 12; 
+	private final int MAX_EDITORS = 12;
 
 	@Override
 	protected void editorBroughtToTop(IEditorPart part) {

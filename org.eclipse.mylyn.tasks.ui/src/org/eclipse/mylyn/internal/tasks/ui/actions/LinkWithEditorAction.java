@@ -18,7 +18,7 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
  */
 public class LinkWithEditorAction extends Action {
 
-	private TaskListView taskListView;
+	private final TaskListView taskListView;
 
 	public LinkWithEditorAction(TaskListView taskListView) {
 		super("&Link with Editor", IAction.AS_CHECK_BOX);

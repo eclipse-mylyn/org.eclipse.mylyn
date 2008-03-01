@@ -18,7 +18,7 @@ import org.eclipse.swt.graphics.Point;
  */
 public class TaskListImageDescriptor extends CompositeImageDescriptor {
 
-	private ImageData base;
+	private final ImageData base;
 
 	private ImageData overlay;
 
@@ -49,10 +49,12 @@ public class TaskListImageDescriptor extends CompositeImageDescriptor {
 		drawImage(base, 0, 0);
 		int x = 0;
 		int y = 0;
-		if (!left)
+		if (!left) {
 			x = 8;// base.width - overlay.width;
-		if (!top)
+		}
+		if (!top) {
 			y = 8;// base.height - overlay.height;
+		}
 		if (overlay != null) {
 			drawImage(overlay, x, y);
 		}

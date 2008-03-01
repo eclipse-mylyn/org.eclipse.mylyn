@@ -88,7 +88,7 @@ public class TaskListUiTest extends TestCase {
 		// make sure no unfiled folders exist
 		TasksUiPlugin.getRepositoryManager().clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		manager.resetTaskList();
-		
+
 		cat1 = new TaskCategory("First Category");
 		manager.getTaskList().addCategory(cat1);
 		cat1task1 = manager.createNewLocalTask("task 1");
@@ -341,12 +341,12 @@ public class TaskListUiTest extends TestCase {
 	public boolean checkCompleteIncompleteFilter(TreeItem[] items, boolean checkComplete) {
 		assertEquals(3, items.length);
 		int count = 0;
-		for (int i = 0; i < items.length; i++) {
-			if (items[i].getData() instanceof TaskCategory) {
-				TreeItem[] sub = items[i].getItems();
-				for (int j = 0; j < sub.length; j++) {
-					assertTrue(sub[j].getData() instanceof AbstractTask);
-					AbstractTask task = (AbstractTask) sub[j].getData();
+		for (TreeItem item : items) {
+			if (item.getData() instanceof TaskCategory) {
+				TreeItem[] sub = item.getItems();
+				for (TreeItem element : sub) {
+					assertTrue(element.getData() instanceof AbstractTask);
+					AbstractTask task = (AbstractTask) element.getData();
 					if (checkComplete) {
 						assertTrue(task.isCompleted());
 					} else {
@@ -364,12 +364,12 @@ public class TaskListUiTest extends TestCase {
 		assertTrue(items.length == 3);
 		int p2Count = 0;
 		int p1Count = 0;
-		for (int i = 0; i < items.length; i++) {
-			if (items[i].getData() instanceof TaskCategory) {
-				TreeItem[] sub = items[i].getItems();
-				for (int j = 0; j < sub.length; j++) {
-					assertTrue(sub[j].getData() instanceof AbstractTask);
-					AbstractTask task = (AbstractTask) sub[j].getData();
+		for (TreeItem item : items) {
+			if (item.getData() instanceof TaskCategory) {
+				TreeItem[] sub = item.getItems();
+				for (TreeItem element : sub) {
+					assertTrue(element.getData() instanceof AbstractTask);
+					AbstractTask task = (AbstractTask) element.getData();
 					assertTrue(task.getPriority().equals("P2") || task.getPriority().equals("P1"));
 					if (task.getPriority().equals("P2")) {
 						p2Count++;

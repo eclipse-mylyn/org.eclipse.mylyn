@@ -21,7 +21,7 @@ public class PersonProposalProviderTest extends TestCase {
 		IContentProposal[] result = provider.getProposals("", 0);
 		assertNotNull(result);
 		assertEquals(0, result.length);
-		
+
 		result = provider.getProposals(" ", 1);
 		assertNotNull(result);
 		assertEquals(0, result.length);
@@ -35,7 +35,7 @@ public class PersonProposalProviderTest extends TestCase {
 		assertNotNull(result);
 		assertEquals(1, result.length);
 		assertEquals("foo", result[0].getContent());
-		
+
 		result = provider.getProposals("a", 1);
 		assertNotNull(result);
 		assertEquals(0, result.length);
@@ -44,7 +44,7 @@ public class PersonProposalProviderTest extends TestCase {
 		assertNotNull(result);
 		assertEquals(1, result.length);
 		assertEquals("foo", result[0].getContent());
-		
+
 		result = provider.getProposals("", 0);
 		assertNotNull(result);
 		assertEquals(1, result.length);

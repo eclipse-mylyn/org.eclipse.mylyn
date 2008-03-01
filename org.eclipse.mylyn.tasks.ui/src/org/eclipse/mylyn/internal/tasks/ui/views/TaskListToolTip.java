@@ -80,13 +80,13 @@ public class TaskListToolTip extends ToolTip {
 
 	private AbstractTaskContainer currentTipElement;
 
-	private List<TaskListToolTipListener> listeners = new ArrayList<TaskListToolTipListener>();
+	private final List<TaskListToolTipListener> listeners = new ArrayList<TaskListToolTipListener>();
 
 	private boolean visible;
 
 	private boolean triggeredByMouse;
 
-	private Control control;
+	private final Control control;
 
 	public TaskListToolTip(Control control) {
 		super(control);
@@ -241,7 +241,7 @@ public class TaskListToolTip extends ToolTip {
 			AbstractTask task = (AbstractTask) element;
 
 			StringBuilder sb = new StringBuilder();
-			
+
 			Date dueDate = task.getDueDate();
 			if (dueDate != null) {
 				sb.append("Due: ");
@@ -249,8 +249,8 @@ public class TaskListToolTip extends ToolTip {
 				sb.append(DateFormat.getDateInstance(DateFormat.LONG).format(dueDate));
 				sb.append(" (").append(DateFormat.getTimeInstance(DateFormat.SHORT).format(dueDate)).append(')');
 				sb.append('\n');
-			} 
-			
+			}
+
 			Date scheduledDate = task.getScheduledForDate();
 			if (scheduledDate != null) {
 				sb.append("Scheduled: ");
@@ -469,7 +469,7 @@ public class TaskListToolTip extends ToolTip {
 		if (incommingText != null) {
 			Image image = TasksUiImages.getImage(TasksUiImages.OVERLAY_INCOMMING);
 			if (currentTipElement instanceof AbstractTask) {
-				AbstractTask task = (AbstractTask)currentTipElement;
+				AbstractTask task = (AbstractTask) currentTipElement;
 				if (task.getLastReadTimeStamp() == null) {
 					image = TasksUiImages.getImage(TasksUiImages.OVERLAY_INCOMMING_NEW);
 				}

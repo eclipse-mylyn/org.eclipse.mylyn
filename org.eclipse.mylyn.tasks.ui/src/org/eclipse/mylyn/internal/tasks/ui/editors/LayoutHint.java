@@ -8,11 +8,10 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
-
 public class LayoutHint {
 
 	public final static int DEFAULT_PRIORITY = 10;
-	
+
 	public enum ColumnSpan {
 		MULTIPLE, SINGLE
 	};
@@ -25,7 +24,7 @@ public class LayoutHint {
 
 	public ColumnSpan columnSpan;
 
-	public LayoutHint(RowSpan rowHint, ColumnSpan columnHint) {	
+	public LayoutHint(RowSpan rowHint, ColumnSpan columnHint) {
 		this.rowSpan = rowHint;
 		this.columnSpan = columnHint;
 	}
@@ -42,8 +41,8 @@ public class LayoutHint {
 				return DEFAULT_PRIORITY * 3;
 			} else {
 				return DEFAULT_PRIORITY * 4;
-			}			
+			}
 		}
 	}
-	
+
 }

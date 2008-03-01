@@ -11,10 +11,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import org.eclipse.jface.viewers.DialogCellEditor;
+import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.tasks.ui.DatePicker;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -31,9 +31,9 @@ public class ReminderCellEditor extends DialogCellEditor {
 
 	private DateSelectionDialog dialog;
 
-	private String formatString = "dd-MMM-yyyy";
+	private final String formatString = "dd-MMM-yyyy";
 
-	private SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.ENGLISH);
+	private final SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.ENGLISH);
 
 	public ReminderCellEditor(Composite parent) {
 		super(parent, SWT.NONE);
@@ -48,14 +48,14 @@ public class ReminderCellEditor extends DialogCellEditor {
 			try {
 				Date tempDate = format.parse(value);
 				if (tempDate != null) {
-					initialCalendar = GregorianCalendar.getInstance();
+					initialCalendar = Calendar.getInstance();
 					initialCalendar.setTime(tempDate);
 				}
 			} catch (ParseException e) {
 				// ignore
 			}
 		}
-		Calendar newCalendar = GregorianCalendar.getInstance();
+		Calendar newCalendar = Calendar.getInstance();
 		if (initialCalendar != null) {
 			newCalendar.setTime(initialCalendar.getTime());
 		}
@@ -63,7 +63,7 @@ public class ReminderCellEditor extends DialogCellEditor {
 		dialog = new DateSelectionDialog(cellEditorWindow.getShell(), newCalendar, DatePicker.TITLE_DIALOG, true);
 		int dialogResponse = dialog.open();
 
-		if (dialogResponse == DateSelectionDialog.CANCEL) {
+		if (dialogResponse == Window.CANCEL) {
 			if (initialCalendar != null) {
 				reminderDate = initialCalendar.getTime();
 			} else {

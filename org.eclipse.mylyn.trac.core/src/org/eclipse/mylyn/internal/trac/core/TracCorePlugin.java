@@ -13,7 +13,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.osgi.framework.BundleContext;
@@ -86,16 +85,17 @@ public class TracCorePlugin extends Plugin {
 			if (message == null) {
 				message = "I/O error has occured";
 			}
-			return new RepositoryStatus(repository.getUrl(), Status.ERROR, PLUGIN_ID, RepositoryStatus.ERROR_IO,
+			return new RepositoryStatus(repository.getUrl(), IStatus.ERROR, PLUGIN_ID, RepositoryStatus.ERROR_IO,
 					message, e);
 		} else if (e instanceof ClassCastException) {
-			return new RepositoryStatus(Status.ERROR, PLUGIN_ID, RepositoryStatus.ERROR_IO,
+			return new RepositoryStatus(IStatus.ERROR, PLUGIN_ID, RepositoryStatus.ERROR_IO,
 					"Unexpected server response: " + e.getMessage(), e);
 		} else if (e instanceof MalformedURLException) {
-			return new RepositoryStatus(Status.ERROR, PLUGIN_ID, RepositoryStatus.ERROR_IO,
+			return new RepositoryStatus(IStatus.ERROR, PLUGIN_ID, RepositoryStatus.ERROR_IO,
 					"Repository URL is invalid", e);
 		} else {
-			return new RepositoryStatus(Status.ERROR, PLUGIN_ID, RepositoryStatus.ERROR_INTERNAL, "Unexpected error", e);
+			return new RepositoryStatus(IStatus.ERROR, PLUGIN_ID, RepositoryStatus.ERROR_INTERNAL, "Unexpected error",
+					e);
 		}
 	}
 

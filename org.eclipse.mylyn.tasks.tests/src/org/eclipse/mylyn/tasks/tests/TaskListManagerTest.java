@@ -638,8 +638,9 @@ public class TaskListManagerTest extends TestCase {
 				assertEquals(1, readCat1.getChildren().size());
 			}
 		}
-		if (!found)
+		if (!found) {
 			fail(" Category not found afer tasklist read");
+		}
 
 		manager.saveTaskList();
 		assertNotNull(manager.getTaskList());
@@ -659,8 +660,9 @@ public class TaskListManagerTest extends TestCase {
 				assertEquals(1, readCat1.getChildren().size());
 			}
 		}
-		if (!found)
+		if (!found) {
 			fail(" Category not found afer tasklist read");
+		}
 	}
 
 	public void testSubTaskExternalization() {
@@ -772,8 +774,9 @@ public class TaskListManagerTest extends TestCase {
 				assertEquals(cat1Contents, readCat1.getChildren());
 			}
 		}
-		if (!found)
+		if (!found) {
 			fail(" Category not found afer tasklist read");
+		}
 	}
 
 	public void testExternalizationOfHandlesWithDash() {

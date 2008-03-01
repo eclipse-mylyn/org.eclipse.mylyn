@@ -97,13 +97,13 @@ public class TaskListWriter {
 
 	private DelegatingTaskExternalizer delagatingExternalizer;
 
-	private TaskRepositoriesExternalizer repositoriesExternalizer;
+	private final TaskRepositoriesExternalizer repositoriesExternalizer;
 
-	private InteractionContextExternalizer contextExternalizer;
+	private final InteractionContextExternalizer contextExternalizer;
 
-	private List<Node> orphanedTaskNodes = new ArrayList<Node>();
+	private final List<Node> orphanedTaskNodes = new ArrayList<Node>();
 
-	private List<Node> orphanedQueryNodes = new ArrayList<Node>();
+	private final List<Node> orphanedQueryNodes = new ArrayList<Node>();
 
 	private String readVersion = "";
 
@@ -132,7 +132,7 @@ public class TaskListWriter {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Task data was not written", e));
 		}
 	}
-	
+
 	public void writeTaskList(TaskList taskList, OutputStream outputStream) throws IOException {
 		Document doc = createTaskListDocument();
 		if (doc == null) {
@@ -252,8 +252,9 @@ public class TaskListWriter {
 		orphanedTaskNodes.clear();
 		orphanedQueryNodes.clear();
 		try {
-			if (!inFile.exists())
+			if (!inFile.exists()) {
 				return;
+			}
 			Document doc = openAsDOM(inFile, false);
 			if (doc == null) {
 				handleException(inFile, null, new TaskExternalizationException("TaskList was not well formed XML"));
@@ -644,8 +645,8 @@ public class TaskListWriter {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Task data was not written", e));
 		}
 	}
-	
-	public void writeTask(AbstractTask  task, OutputStream stream) {
+
+	public void writeTask(AbstractTask task, OutputStream stream) {
 		Set<TaskRepository> repositories = new HashSet<TaskRepository>();
 		if (!task.isLocal()) {
 			repositories.add(TasksUiPlugin.getRepositoryManager().getRepository(task.getRepositoryUrl()));
@@ -680,8 +681,9 @@ public class TaskListWriter {
 	public List<AbstractTask> readTasks(File inFile) {
 		List<AbstractTask> tasks = new ArrayList<AbstractTask>();
 		try {
-			if (!inFile.exists())
+			if (!inFile.exists()) {
 				return tasks;
+			}
 			Document doc = openAsDOM(inFile, false);
 			if (doc == null) {
 				handleException(inFile, null, new TaskExternalizationException("TaskList was not well formed XML"));

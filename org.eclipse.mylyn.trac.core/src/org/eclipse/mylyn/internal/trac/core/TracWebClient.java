@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import javax.security.auth.login.LoginException;
+import javax.swing.text.html.HTML.Tag;
 
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
@@ -226,7 +227,7 @@ public class TracWebClient extends AbstractTracClient {
 			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
 				if (token.getType() == Token.TAG) {
 					HtmlTag tag = (HtmlTag) token.getValue();
-					if (tag.getTagType() == HtmlTag.Type.TD) {
+					if (tag.getTagType() == Tag.TD) {
 						String headers = tag.getAttribute("headers");
 						if ("h_component".equals(headers)) {
 							ticket.putBuiltinValue(Key.COMPONENT, getText(tokenizer));
@@ -248,9 +249,9 @@ public class TracWebClient extends AbstractTracClient {
 							ticket.putBuiltinValue(Key.REPORTER, getText(tokenizer));
 						}
 						// TODO handle custom fields
-					} else if (tag.getTagType() == HtmlTag.Type.H2 && "summary".equals(tag.getAttribute("class"))) {
+					} else if (tag.getTagType() == Tag.H2 && "summary".equals(tag.getAttribute("class"))) {
 						ticket.putBuiltinValue(Key.SUMMARY, getText(tokenizer));
-					} else if (tag.getTagType() == HtmlTag.Type.H3 && "status".equals(tag.getAttribute("class"))) {
+					} else if (tag.getTagType() == Tag.H3 && "status".equals(tag.getAttribute("class"))) {
 						String text = getStrongText(tokenizer);
 						if (text.length() > 0) {
 							// Trac 0.9 format: status / status (resolution)
@@ -262,7 +263,7 @@ public class TracWebClient extends AbstractTracClient {
 								ticket.putBuiltinValue(Key.STATUS, text);
 							}
 						}
-					} else if (tag.getTagType() == HtmlTag.Type.SPAN) {
+					} else if (tag.getTagType() == Tag.SPAN) {
 						String clazz = tag.getAttribute("class");
 						if ("status".equals(clazz)) {
 							// Trac 0.10 format: (status type) / (status type: resolution)
@@ -396,12 +397,12 @@ public class TracWebClient extends AbstractTracClient {
 			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
 				if (token.getType() == Token.TAG) {
 					HtmlTag tag = (HtmlTag) token.getValue();
-					if (tag.getTagType() == HtmlTag.Type.DIV) {
+					if (tag.getTagType() == Tag.DIV) {
 						String id = tag.getAttribute("id");
 						inFooter = !tag.isEndTag() && "footer".equals(id);
-					} else if (tag.getTagType() == HtmlTag.Type.STRONG && inFooter) {
+					} else if (tag.getTagType() == Tag.STRONG && inFooter) {
 						version = getText(tokenizer);
-					} else if (tag.getTagType() == HtmlTag.Type.A) {
+					} else if (tag.getTagType() == Tag.A) {
 						String id = tag.getAttribute("id");
 						if ("tracpowered".equals(id)) {
 							valid = true;
@@ -443,7 +444,7 @@ public class TracWebClient extends AbstractTracClient {
 
 				if (token.getType() == Token.TAG) {
 					HtmlTag tag = (HtmlTag) token.getValue();
-					if (tag.getTagType() == HtmlTag.Type.SCRIPT) {
+					if (tag.getTagType() == Tag.SCRIPT) {
 						String text = getText(tokenizer).trim();
 						if (text.startsWith("var properties=")) {
 							parseAttributes(text);
@@ -610,7 +611,7 @@ public class TracWebClient extends AbstractTracClient {
 
 				if (token.getType() == Token.TAG) {
 					HtmlTag tag = (HtmlTag) token.getValue();
-					if (tag.getTagType() == HtmlTag.Type.SELECT) {
+					if (tag.getTagType() == Tag.SELECT) {
 						String name = tag.getAttribute("id");
 						if ("component".equals(name)) {
 							List<String> values = getOptionValues(tokenizer);
@@ -683,7 +684,7 @@ public class TracWebClient extends AbstractTracClient {
 		for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
 			if (token.getType() == Token.TAG) {
 				HtmlTag tag = (HtmlTag) token.getValue();
-				if (tag.getTagType() == HtmlTag.Type.OPTION && !tag.isEndTag()) {
+				if (tag.getTagType() == Tag.OPTION && !tag.isEndTag()) {
 					String value = getText(tokenizer).trim();
 					if (value.length() > 0) {
 						values.add(value);
@@ -715,7 +716,7 @@ public class TracWebClient extends AbstractTracClient {
 	 */
 	private String getStrongText(HtmlStreamTokenizer tokenizer) throws IOException, ParseException {
 		for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
-			if (token.getType() == Token.TAG && ((HtmlTag) token.getValue()).getTagType() == HtmlTag.Type.STRONG) {
+			if (token.getType() == Token.TAG && ((HtmlTag) token.getValue()).getTagType() == Tag.STRONG) {
 				return getText(tokenizer);
 			} else if (token.getType() == Token.COMMENT) {
 				// ignore

@@ -49,7 +49,7 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 	public void commit(boolean onSave) {
 		AbstractTask task = getTaskEditorPage().getTask();
 		Assert.isNotNull(task);
-		
+
 		Calendar selectedDate = null;
 		if (scheduledForDate != null) {
 			selectedDate = scheduledForDate.getDate();
@@ -61,10 +61,10 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 		if (estimatedTime != null) {
 			task.setEstimatedTimeHours(estimatedTime.getSelection());
 		}
-		
+
 		super.commit(onSave);
 	}
-	
+
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
 		Composite sectionClient = getManagedForm().getToolkit().createComposite(parent);
@@ -148,6 +148,4 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 		setControl(sectionClient);
 	}
 
-	
-	
 }

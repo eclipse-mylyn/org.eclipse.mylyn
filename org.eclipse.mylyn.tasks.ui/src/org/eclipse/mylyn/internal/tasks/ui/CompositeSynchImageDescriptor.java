@@ -18,11 +18,11 @@ import org.eclipse.swt.graphics.Point;
  */
 public class CompositeSynchImageDescriptor extends CompositeImageDescriptor {
 
-	private ImageData base;
+	private final ImageData base;
 
-	private ImageData background;
+	private final ImageData background;
 
-	private boolean fillBackground;
+	private final boolean fillBackground;
 
 	protected Point size;
 

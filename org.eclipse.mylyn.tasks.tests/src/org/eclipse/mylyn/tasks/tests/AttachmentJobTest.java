@@ -73,7 +73,7 @@ public class AttachmentJobTest extends TestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		manager.removeRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
-		
+
 		if (statusHandler != null) {
 			StatusHandler.removeStatusHandler(statusHandler);
 		}

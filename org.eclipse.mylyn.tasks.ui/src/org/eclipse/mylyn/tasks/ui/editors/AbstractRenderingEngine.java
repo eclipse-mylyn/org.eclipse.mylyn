@@ -23,5 +23,6 @@ public abstract class AbstractRenderingEngine {
 	/**
 	 * generate HTML preview page for <code>text</code>
 	 */
-	public abstract String renderAsHtml(TaskRepository repository, String text, IProgressMonitor monitor) throws CoreException;
+	public abstract String renderAsHtml(TaskRepository repository, String text, IProgressMonitor monitor)
+			throws CoreException;
 }

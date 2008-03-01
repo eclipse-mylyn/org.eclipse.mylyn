@@ -75,10 +75,10 @@ public class QueryCloneAction extends Action implements IViewActionDelegate {
 					ITasksUiConstants.TITLE_DIALOG, "No query selected.");
 			return;
 		}
-		
+
 		List<AbstractRepositoryQuery> queries = new ArrayList<AbstractRepositoryQuery>();
 		queries.add(selectedQuery);
-		
+
 		Document queryDoc = TasksUiPlugin.getTaskListManager().getTaskListWriter().createQueryDocument(queries);
 		List<AbstractRepositoryQuery> clonedQueries = TasksUiPlugin.getTaskListManager()
 				.getTaskListWriter()
@@ -93,7 +93,8 @@ public class QueryCloneAction extends Action implements IViewActionDelegate {
 			}
 		} else {
 			// cannot happen
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Query cloning did not succeeded.", new IllegalStateException(selectedQuery.toString()))); 
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Query cloning did not succeeded.",
+					new IllegalStateException(selectedQuery.toString())));
 		}
 	}
 

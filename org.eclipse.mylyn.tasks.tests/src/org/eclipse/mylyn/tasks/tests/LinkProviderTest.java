@@ -26,7 +26,7 @@ public class LinkProviderTest extends TestCase {
 	class LinkProviderStub extends AbstractTaskRepositoryLinkProvider {
 
 		int executions = 0;
-		
+
 		@Override
 		public TaskRepository getTaskRepository(IResource resource, TaskRepositoryManager repositoryManager) {
 			executions++;
@@ -38,15 +38,15 @@ public class LinkProviderTest extends TestCase {
 			return null;
 		}
 	}
-	
+
 	public void testTimeout() {
 		LinkProviderStub provider = new LinkProviderStub();
 		TasksUiPlugin.getDefault().addRepositoryLinkProvider(provider);
 		TasksUiPlugin.getDefault().getRepositoryForResource(ResourcesPlugin.getWorkspace().getRoot(), true);
 		assertEquals(1, provider.executions);
-		
+
 		TasksUiPlugin.getDefault().getRepositoryForResource(ResourcesPlugin.getWorkspace().getRoot(), true);
 		assertEquals(1, provider.executions);
 	}
-	
+
 }

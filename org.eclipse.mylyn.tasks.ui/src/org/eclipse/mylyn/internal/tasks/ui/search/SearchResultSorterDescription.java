@@ -16,18 +16,18 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 
 /**
  * Sorts search results by summary.
- *
+ * 
  * @author Rob Elves
  */
 public class SearchResultSorterDescription extends ViewerSorter {
 
-	private TaskKeyComparator taskKeyComparator = new TaskKeyComparator();
+	private final TaskKeyComparator taskKeyComparator = new TaskKeyComparator();
 
 	/**
 	 * Returns a negative, zero, or positive number depending on whether the first bug's summary goes before, is the
 	 * same as, or goes after the second element's summary.
 	 * <p>
-	 *
+	 * 
 	 * @see org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object,
 	 *      java.lang.Object)
 	 */
@@ -56,7 +56,7 @@ public class SearchResultSorterDescription extends ViewerSorter {
 	 * are arranged in ascending numeric order. The elements within a bin are arranged via a second level sort
 	 * criterion.
 	 * <p>
-	 *
+	 * 
 	 * @see org.eclipse.jface.viewers.ViewerSorter#category(Object)
 	 */
 	@Override

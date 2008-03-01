@@ -29,16 +29,16 @@ class OfflineDataStore implements Serializable {
 	private int lastNewRepositoryTaskId = 0;
 
 	// Local changes to existing reports
-	private Map<String, Set<RepositoryTaskAttribute>> localEdits = new ConcurrentHashMap<String, Set<RepositoryTaskAttribute>>();
+	private final Map<String, Set<RepositoryTaskAttribute>> localEdits = new ConcurrentHashMap<String, Set<RepositoryTaskAttribute>>();
 
 	/** Older version of Task Data */
-	private Map<String, RepositoryTaskData> oldTaskDataMap = new ConcurrentHashMap<String, RepositoryTaskData>();
+	private final Map<String, RepositoryTaskData> oldTaskDataMap = new ConcurrentHashMap<String, RepositoryTaskData>();
 
 	/** Newest version of the task data */
-	private Map<String, RepositoryTaskData> newTaskDataMap = new ConcurrentHashMap<String, RepositoryTaskData>();
+	private final Map<String, RepositoryTaskData> newTaskDataMap = new ConcurrentHashMap<String, RepositoryTaskData>();
 
 	/** New unsubmitted repository task data */
-	private Map<String, RepositoryTaskData> unsubmittedTaskData = new ConcurrentHashMap<String, RepositoryTaskData>();
+	private final Map<String, RepositoryTaskData> unsubmittedTaskData = new ConcurrentHashMap<String, RepositoryTaskData>();
 
 	public void setLastNewTaskId(int lastNumber) {
 		lastNewRepositoryTaskId = new Integer(lastNumber);

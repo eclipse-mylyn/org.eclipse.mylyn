@@ -16,12 +16,12 @@ import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 
 public class MockAttachment implements ITaskAttachment {
 
-	private byte[] data;
+	private final byte[] data;
 
 	public MockAttachment(byte[] data) {
 		this.data = data;
 	}
-	
+
 	public InputStream createInputStream() throws IOException {
 		return new ByteArrayInputStream(data);
 	}

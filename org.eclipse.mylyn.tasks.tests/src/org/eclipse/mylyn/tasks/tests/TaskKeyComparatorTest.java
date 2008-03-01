@@ -55,9 +55,10 @@ public class TaskKeyComparatorTest extends TestCase {
 	}
 
 	private static final TaskKeyComparator tkc = new TaskKeyComparator();
+
 	public void comparisonCheck(String s1, String s2, int n) {
-		final String[] c1 = new String[] {null, null, s1};
-		final String[] c2 = new String[] {null, null, s2};
+		final String[] c1 = new String[] { null, null, s1 };
+		final String[] c2 = new String[] { null, null, s2 };
 		assertEquals(n, tkc.compare(c1, c2));
 	}
 

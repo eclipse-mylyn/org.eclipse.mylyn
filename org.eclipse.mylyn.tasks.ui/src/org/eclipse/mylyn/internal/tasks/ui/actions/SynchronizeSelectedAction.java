@@ -40,9 +40,9 @@ import org.eclipse.ui.actions.ActionFactory;
  */
 public class SynchronizeSelectedAction extends ActionDelegate implements IViewActionDelegate {
 
-	private Map<AbstractRepositoryConnector, List<AbstractRepositoryQuery>> queriesToSyncMap = new LinkedHashMap<AbstractRepositoryConnector, List<AbstractRepositoryQuery>>();
+	private final Map<AbstractRepositoryConnector, List<AbstractRepositoryQuery>> queriesToSyncMap = new LinkedHashMap<AbstractRepositoryConnector, List<AbstractRepositoryQuery>>();
 
-	private Map<AbstractRepositoryConnector, List<AbstractTask>> tasksToSyncMap = new LinkedHashMap<AbstractRepositoryConnector, List<AbstractTask>>();
+	private final Map<AbstractRepositoryConnector, List<AbstractTask>> tasksToSyncMap = new LinkedHashMap<AbstractRepositoryConnector, List<AbstractTask>>();
 
 	@Override
 	public void run(IAction action) {

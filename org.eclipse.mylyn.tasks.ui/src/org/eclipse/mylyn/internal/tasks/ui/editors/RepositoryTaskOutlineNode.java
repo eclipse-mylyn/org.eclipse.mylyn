@@ -8,11 +8,10 @@
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Locale;
 
-import org.eclipse.mylyn.tasks.core.TaskComment;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.core.TaskComment;
 
 /**
  * A node for the tree in the <code>RepositoryTaskOutlinePage</code>.
@@ -34,7 +33,7 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 	protected String server;
 
 	/** connector kind */
-	private String kind;
+	private final String kind;
 
 	/** The label for this piece of data. */
 	private String key;
@@ -47,9 +46,9 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 
 	private Object data = null;
 
-	private String bugSummary;
+	private final String bugSummary;
 
-	private boolean fromEditor = false;
+	private final boolean fromEditor = false;
 
 	private boolean isCommentHeader = false;
 
@@ -231,11 +230,11 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 		topNode.addChild(desc);
 
 		RepositoryTaskOutlineNode comments = null;
-		for (Iterator<TaskComment> iter = bug.getComments().iterator(); iter.hasNext();) {
-			TaskComment taskComment = iter.next();
+		for (TaskComment taskComment : bug.getComments()) {
 			// first comment is the bug summary
-			if (taskComment.getNumber() == 0)
+			if (taskComment.getNumber() == 0) {
 				continue;
+			}
 			if (comments == null) {
 				comments = new RepositoryTaskOutlineNode(bugId, bugServer, bug.getRepositoryKind(), LABEL_COMMENTS,
 						taskComment, bug.getSummary());

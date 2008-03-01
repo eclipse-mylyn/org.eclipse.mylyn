@@ -42,18 +42,18 @@ public class AddExistingTaskJob extends Job {
 	/**
 	 * Task repository whose task will be added
 	 */
-	private TaskRepository repository;
+	private final TaskRepository repository;
 
 	/**
 	 * Identifies a existing task on the repository
 	 */
-	private String taskId;
+	private final String taskId;
 
 	/**
 	 * Optional; informs the task container the task initialy belongs to; if null, it will be added to the current
 	 * selected task's category in task list
 	 */
-	private AbstractTaskCategory taskContainer;
+	private final AbstractTaskCategory taskContainer;
 
 	public AddExistingTaskJob(TaskRepository repository, String taskId) {
 		this(repository, taskId, null);

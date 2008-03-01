@@ -32,12 +32,13 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * Makes able to export selected query to the file system.
+ * 
  * @author Jevgeni Holodkov
  */
 public class QueryExportAction extends Action implements IViewActionDelegate {
 
 	protected ISelection selection;
-	
+
 	public void init(IViewPart view) {
 		// ignore
 	}
@@ -56,7 +57,7 @@ public class QueryExportAction extends Action implements IViewActionDelegate {
 			action.setEnabled(false);
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	protected List<AbstractRepositoryQuery> getSelectedQueries(ISelection newSelection) {
 		List<AbstractRepositoryQuery> selectedQueries = new ArrayList<AbstractRepositoryQuery>();
@@ -64,15 +65,13 @@ public class QueryExportAction extends Action implements IViewActionDelegate {
 			List selectedObjects = ((StructuredSelection) selection).toList();
 			for (Object selectedObject : selectedObjects) {
 				if (selectedObject instanceof AbstractRepositoryQuery) {
-					selectedQueries.add((AbstractRepositoryQuery)selectedObject);
+					selectedQueries.add((AbstractRepositoryQuery) selectedObject);
 				}
 			}
 		}
 		return selectedQueries;
 	}
-	
 
-	
 	public void run(List<AbstractRepositoryQuery> queries) {
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		FileDialog dialog = new FileDialog(shell, SWT.PRIMARY_MODAL | SWT.SAVE);
@@ -85,12 +84,13 @@ public class QueryExportAction extends Action implements IViewActionDelegate {
 			String date = format.format(new Date());
 			dialog.setFileName(date + "-exported-queries" + ITasksUiConstants.FILE_EXTENSION);
 		}
-		
+
 		String path = dialog.open();
 		if (path != null) {
 			File file = new File(path);
 			if (file.isDirectory()) {
-				MessageDialog.openError(shell, "Query Export Error", "Could not export query because specified location is a folder");
+				MessageDialog.openError(shell, "Query Export Error",
+						"Could not export query because specified location is a folder");
 				return;
 			}
 
@@ -101,9 +101,9 @@ public class QueryExportAction extends Action implements IViewActionDelegate {
 					return;
 				}
 			}
-			
+
 			TasksUiPlugin.getTaskListManager().getTaskListWriter().writeQueries(queries, file);
 		}
-		 return;
+		return;
 	}
 }

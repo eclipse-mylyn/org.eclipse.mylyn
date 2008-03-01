@@ -22,7 +22,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceNode;
 import org.eclipse.jface.preference.IPreferencePage;
@@ -143,11 +142,11 @@ public class TasksUiUtil {
 			IWebBrowser browser = null;
 			int flags = 0;
 			if (WorkbenchBrowserSupport.getInstance().isInternalWebBrowserAvailable()) {
-				flags = WorkbenchBrowserSupport.AS_EDITOR | WorkbenchBrowserSupport.LOCATION_BAR
-						| WorkbenchBrowserSupport.NAVIGATION_BAR | customFlags;
+				flags = IWorkbenchBrowserSupport.AS_EDITOR | IWorkbenchBrowserSupport.LOCATION_BAR
+						| IWorkbenchBrowserSupport.NAVIGATION_BAR | customFlags;
 			} else {
-				flags = WorkbenchBrowserSupport.AS_EXTERNAL | WorkbenchBrowserSupport.LOCATION_BAR
-						| WorkbenchBrowserSupport.NAVIGATION_BAR | customFlags;
+				flags = IWorkbenchBrowserSupport.AS_EXTERNAL | IWorkbenchBrowserSupport.LOCATION_BAR
+						| IWorkbenchBrowserSupport.NAVIGATION_BAR | customFlags;
 			}
 
 			String generatedId = "org.eclipse.mylyn.web.browser-" + Calendar.getInstance().getTimeInMillis();
@@ -392,8 +391,8 @@ public class TasksUiUtil {
 					TasksUiPlugin.getSynchronizationManager().setTaskRead(task, true);
 				}
 			} else {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Unable to open editor for " + task.getSummary()));
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unable to open editor for "
+						+ task.getSummary()));
 			}
 		}
 	}
@@ -421,8 +420,8 @@ public class TasksUiUtil {
 		try {
 			return page.openEditor(input, editorId);
 		} catch (PartInitException e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Open for editor failed: " + input + ", taskId: " + editorId, e));
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Open for editor failed: " + input
+					+ ", taskId: " + editorId, e));
 		}
 		return null;
 	}
@@ -448,9 +447,9 @@ public class TasksUiUtil {
 				WizardDialog dialog = new WizardDialog(shell, wizard);
 				dialog.create();
 				dialog.setBlockOnOpen(true);
-				if (dialog.open() == Dialog.CANCEL) {
+				if (dialog.open() == Window.CANCEL) {
 					dialog.close();
-					return Dialog.CANCEL;
+					return Window.CANCEL;
 				}
 
 			}
@@ -461,7 +460,7 @@ public class TasksUiUtil {
 		} catch (Exception e) {
 			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, e.getMessage(), e));
 		}
-		return Dialog.OK;
+		return Window.OK;
 	}
 
 	public static List<TaskEditor> getActiveRepositoryTaskEditors() {
@@ -469,12 +468,12 @@ public class TasksUiUtil {
 		IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
 		for (IWorkbenchWindow window : windows) {
 			IEditorReference[] editorReferences = window.getActivePage().getEditorReferences();
-			for (int i = 0; i < editorReferences.length; i++) {
+			for (IEditorReference editorReference : editorReferences) {
 				try {
-					if (editorReferences[i].getEditorInput() instanceof TaskEditorInput) {
-						TaskEditorInput input = (TaskEditorInput) editorReferences[i].getEditorInput();
+					if (editorReference.getEditorInput() instanceof TaskEditorInput) {
+						TaskEditorInput input = (TaskEditorInput) editorReference.getEditorInput();
 						if (input.getTask() != null) {
-							IEditorPart editorPart = editorReferences[i].getEditor(false);
+							IEditorPart editorPart = editorReference.getEditor(false);
 							if (editorPart instanceof TaskEditor) {
 								repositoryTaskEditors.add((TaskEditor) editorPart);
 							}
@@ -647,7 +646,7 @@ public class TasksUiUtil {
 		}
 
 		int result = dialog.open();
-		if (result == Dialog.OK) {
+		if (result == Window.OK) {
 			if (wizard instanceof NewTaskWizard) {
 				supportsTaskSelection = ((NewTaskWizard) wizard).supportsTaskSelection();
 			}

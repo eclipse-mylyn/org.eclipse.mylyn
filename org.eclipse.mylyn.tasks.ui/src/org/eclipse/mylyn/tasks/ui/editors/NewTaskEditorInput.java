@@ -49,5 +49,5 @@ public class NewTaskEditorInput extends RepositoryTaskEditorInput {
 	public void refreshInput() {
 		// does nothing
 	}
-	
+
 }

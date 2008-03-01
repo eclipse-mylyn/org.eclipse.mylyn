@@ -63,13 +63,17 @@ public class TaskRepository extends PlatformObject {
 	private static final String AUTH_REPOSITORY = "org.eclipse.mylyn.tasklist.repositories";
 
 	/**
-	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access credentials
+	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access
+	 *             credentials
 	 */
+	@Deprecated
 	public static final String AUTH_PASSWORD = AUTH_REPOSITORY + PASSWORD;
 
 	/**
-	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access credentials
+	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access
+	 *             credentials
 	 */
+	@Deprecated
 	public static final String AUTH_USERNAME = AUTH_REPOSITORY + USERNAME;
 
 	public static final String ANONYMOUS_LOGIN = "org.eclipse.mylyn.tasklist.repositories.anonymous";
@@ -77,13 +81,17 @@ public class TaskRepository extends PlatformObject {
 	private static final String AUTH_HTTP = "org.eclipse.mylyn.tasklist.repositories.httpauth";
 
 	/**
-	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access credentials
+	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access
+	 *             credentials
 	 */
+	@Deprecated
 	public static final String AUTH_HTTP_PASSWORD = AUTH_HTTP + PASSWORD;
 
 	/**
-	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access credentials
+	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access
+	 *             credentials
 	 */
+	@Deprecated
 	public static final String AUTH_HTTP_USERNAME = AUTH_HTTP + USERNAME;
 
 	public static final String NO_VERSION_SPECIFIED = "unknown";
@@ -105,13 +113,17 @@ public class TaskRepository extends PlatformObject {
 	private static final String AUTH_PROXY = "org.eclipse.mylyn.tasklist.repositories.proxy";
 
 	/**
-	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access credentials
+	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access
+	 *             credentials
 	 */
+	@Deprecated
 	public static final String PROXY_USERNAME = AUTH_PROXY + USERNAME;
 
 	/**
-	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access credentials
+	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access
+	 *             credentials
 	 */
+	@Deprecated
 	public static final String PROXY_PASSWORD = AUTH_PROXY + PASSWORD;
 
 	public static final String OFFLINE = "org.eclipse.mylyn.tasklist.repositories.offline";
@@ -137,13 +149,13 @@ public class TaskRepository extends PlatformObject {
 		DEFAULT_URL = url;
 	}
 
-	private Map<String, String> properties = new LinkedHashMap<String, String>();
+	private final Map<String, String> properties = new LinkedHashMap<String, String>();
 
 	/**
 	 * Stores properties that are not persisted. Note that this map is currently cleared when flushCredentials() is
 	 * invoked.
 	 */
-	private Map<String, String> transientProperties = new HashMap<String, String>();
+	private final Map<String, String> transientProperties = new HashMap<String, String>();
 
 	/*
 	 * TODO: should be externalized and added to extension point, see bug 183606
@@ -183,6 +195,7 @@ public class TaskRepository extends PlatformObject {
 	/**
 	 * @deprecated use {@link #setProperty(String, String)} instead of passing a map
 	 */
+	@Deprecated
 	public TaskRepository(String kind, String serverUrl, Map<String, String> properties) {
 		this.properties.put(IRepositoryConstants.PROPERTY_CONNECTOR_KIND, kind);
 		this.properties.put(IRepositoryConstants.PROPERTY_URL, serverUrl);
@@ -328,7 +341,8 @@ public class TaskRepository extends PlatformObject {
 				}
 			} catch (CoreException e) {
 				// FIXME propagate exception?
-				StatusHandler.fail(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Could not flush authorization credentials", e));
+				StatusHandler.fail(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+						"Could not flush authorization credentials", e));
 			}
 		}
 	}
@@ -349,7 +363,8 @@ public class TaskRepository extends PlatformObject {
 				}
 			} catch (CoreException e) {
 				// API 3.0 propagate exception
-				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Could not set authorization credentials", e));
+				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+						"Could not set authorization credentials", e));
 			}
 		}
 	}
@@ -363,7 +378,8 @@ public class TaskRepository extends PlatformObject {
 				} catch (MalformedURLException ex) {
 					return Platform.getAuthorizationInfo(DEFAULT_URL, getUrl(), AUTH_SCHEME);
 				} catch (Exception e) {
-					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Could not retrieve authorization credentials", e));
+					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+							"Could not retrieve authorization credentials", e));
 				}
 			} else {
 				Map<String, String> headlessCreds = credentials.get(getUrl());
@@ -647,7 +663,8 @@ public class TaskRepository extends PlatformObject {
 	 *            memory only
 	 * @since 2.2
 	 */
-	public synchronized void setCredentials(AuthenticationType authType, AuthenticationCredentials credentials, boolean savePassword) {
+	public synchronized void setCredentials(AuthenticationType authType, AuthenticationCredentials credentials,
+			boolean savePassword) {
 		String key = getKeyPrefix(authType);
 
 		setProperty(key + SAVE_PASSWORD, String.valueOf(savePassword));

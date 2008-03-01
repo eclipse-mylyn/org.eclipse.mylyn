@@ -15,8 +15,8 @@ public class TracProxyAuthenticationException extends TracException {
 	public TracProxyAuthenticationException(String message) {
 		super(message);
 	}
-	
+
 	public TracProxyAuthenticationException() {
 	}
-	
+
 }

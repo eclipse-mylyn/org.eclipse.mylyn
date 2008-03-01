@@ -20,7 +20,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
  */
 public class TaskPlanContentProvider implements IStructuredContentProvider {
 
-	private List<AbstractTask> tasks = new ArrayList<AbstractTask>();
+	private final List<AbstractTask> tasks = new ArrayList<AbstractTask>();
 
 	public Object[] getElements(Object inputElement) {
 		return tasks.toArray();

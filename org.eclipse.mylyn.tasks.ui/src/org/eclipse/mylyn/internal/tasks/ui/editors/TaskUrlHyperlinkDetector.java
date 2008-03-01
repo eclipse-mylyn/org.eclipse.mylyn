@@ -28,16 +28,18 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 public class TaskUrlHyperlinkDetector extends AbstractHyperlinkDetector {
 
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
-		if (region == null || textViewer == null)
+		if (region == null || textViewer == null) {
 			return null;
+		}
 
 		IDocument document = textViewer.getDocument();
 
 		int offset = region.getOffset();
 
 		String urlString = null;
-		if (document == null)
+		if (document == null) {
 			return null;
+		}
 
 		IRegion lineInfo;
 		String line;
@@ -63,8 +65,9 @@ public class TaskUrlHyperlinkDetector extends AbstractHyperlinkDetector {
 			do {
 				urlOffsetInLine--;
 				ch = ' ';
-				if (urlOffsetInLine > -1)
+				if (urlOffsetInLine > -1) {
 					ch = line.charAt(urlOffsetInLine);
+				}
 				startDoubleQuote = ch == '"';
 			} while (Character.isUnicodeIdentifierStart(ch));
 			urlOffsetInLine++;
@@ -72,31 +75,36 @@ public class TaskUrlHyperlinkDetector extends AbstractHyperlinkDetector {
 			// Right to "://"
 			StringTokenizer tokenizer = new StringTokenizer(line.substring(urlSeparatorOffset + 3),
 					" \t\n\r\f<>", false); //$NON-NLS-1$
-			if (!tokenizer.hasMoreTokens())
+			if (!tokenizer.hasMoreTokens()) {
 				return null;
+			}
 
 			urlLength = tokenizer.nextToken().length() + 3 + urlSeparatorOffset - urlOffsetInLine;
-			if (offsetInLine >= urlOffsetInLine && offsetInLine <= urlOffsetInLine + urlLength)
+			if (offsetInLine >= urlOffsetInLine && offsetInLine <= urlOffsetInLine + urlLength) {
 				break;
+			}
 
 			urlSeparatorOffset = line.indexOf("://", urlSeparatorOffset + 1); //$NON-NLS-1$
 		}
 
-		if (urlSeparatorOffset < 0)
+		if (urlSeparatorOffset < 0) {
 			return null;
+		}
 
 		if (startDoubleQuote) {
 			int endOffset = -1;
 			int nextDoubleQuote = line.indexOf('"', urlOffsetInLine);
 			int nextWhitespace = line.indexOf(' ', urlOffsetInLine);
-			if (nextDoubleQuote != -1 && nextWhitespace != -1)
+			if (nextDoubleQuote != -1 && nextWhitespace != -1) {
 				endOffset = Math.min(nextDoubleQuote, nextWhitespace);
-			else if (nextDoubleQuote != -1)
+			} else if (nextDoubleQuote != -1) {
 				endOffset = nextDoubleQuote;
-			else if (nextWhitespace != -1)
+			} else if (nextWhitespace != -1) {
 				endOffset = nextWhitespace;
-			if (endOffset != -1)
+			}
+			if (endOffset != -1) {
 				urlLength = endOffset - urlOffsetInLine;
+			}
 		}
 
 		// Set and validate URL string

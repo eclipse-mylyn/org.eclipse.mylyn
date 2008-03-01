@@ -23,7 +23,7 @@ import org.eclipse.ui.IPersistableElement;
  */
 public class CategoryEditorInput implements IEditorInput {
 
-	private TaskCategory category;
+	private final TaskCategory category;
 
 	public CategoryEditorInput(TaskCategory cat) {
 		this.category = cat;

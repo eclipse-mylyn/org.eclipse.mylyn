@@ -52,7 +52,7 @@ public class PersonContentProposal implements IContentProposal, Comparable<Perso
 	public int compareTo(PersonContentProposal otherContentProposal) {
 		if (isCurrentUser) {
 			return -1;
-		} else if(otherContentProposal.isCurrentUser){
+		} else if (otherContentProposal.isCurrentUser) {
 			return 1;
 		}
 		return address.compareToIgnoreCase(otherContentProposal.address);

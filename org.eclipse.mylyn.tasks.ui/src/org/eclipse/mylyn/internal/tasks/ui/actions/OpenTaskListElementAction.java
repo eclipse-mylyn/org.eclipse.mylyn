@@ -8,7 +8,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
@@ -39,9 +38,8 @@ public class OpenTaskListElementAction extends Action {
 	public void run() {
 		ISelection selection = viewer.getSelection();
 		List<?> list = ((IStructuredSelection) selection).toList();
-		for (Iterator<?> iterator = list.iterator(); iterator.hasNext();) {
-			Object element = iterator.next();
-//			if (element instanceof ITaskListElement && !(element instanceof AbstractTaskContainer)) {
+		for (Object element : list) {
+			//			if (element instanceof ITaskListElement && !(element instanceof AbstractTaskContainer)) {
 			if (element instanceof AbstractTask) {
 				TasksUiUtil.refreshAndOpenTaskListElement((AbstractTaskContainer) element);
 			}

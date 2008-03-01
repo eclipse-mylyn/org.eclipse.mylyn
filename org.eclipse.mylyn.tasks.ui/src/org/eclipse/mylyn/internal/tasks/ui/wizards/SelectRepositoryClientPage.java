@@ -42,7 +42,7 @@ public class SelectRepositoryClientPage extends WizardPage {
 
 	private TableViewer viewer;
 
-	private AbstractRepositoryClientWizard wizard;
+	private final AbstractRepositoryClientWizard wizard;
 
 	static class RepositoryContentProvider implements IStructuredContentProvider {
 

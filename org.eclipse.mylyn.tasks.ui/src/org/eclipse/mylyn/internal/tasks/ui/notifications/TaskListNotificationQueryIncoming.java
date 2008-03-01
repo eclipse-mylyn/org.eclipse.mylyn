@@ -21,13 +21,16 @@ public class TaskListNotificationQueryIncoming extends TaskListNotification {
 		super(task);
 	}
 
+	@Override
 	public String getDescription() {
 		return task.getSummary();
 	}
 
+	@Override
 	public int compareTo(AbstractNotification anotherNotification) throws ClassCastException {
-		if (!(anotherNotification != null))
+		if (!(anotherNotification != null)) {
 			throw new ClassCastException("A ITaskListNotification object expected.");
+		}
 		Date anotherDate = (anotherNotification).getDate();
 		if (date != null && anotherDate != null) {
 			return date.compareTo(anotherDate);

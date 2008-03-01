@@ -42,7 +42,7 @@ public class TasksReminderDialog extends Dialog {
 
 	private TableViewer tableViewer = null;
 
-	private String[] columnNames = new String[] { "Description", "Priority", "Reminder Day" };
+	private final String[] columnNames = new String[] { "Description", "Priority", "Reminder Day" };
 
 	private static final int DISMISS_ALL_ID = 200;
 
@@ -226,7 +226,7 @@ public class TasksReminderDialog extends Dialog {
 
 		public final static int DATE = 3;
 
-		private int criteria;
+		private final int criteria;
 
 		public ReminderTaskSorter(int criteria) {
 			super();

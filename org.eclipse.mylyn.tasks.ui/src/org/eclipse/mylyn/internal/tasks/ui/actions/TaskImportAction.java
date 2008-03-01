@@ -32,9 +32,9 @@ import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 
-
 /**
  * Action to import a task from an external file. Imports also task's related repository and context information.
+ * 
  * @author Jevgeni Holodkov
  */
 public class TaskImportAction extends Action implements IViewActionDelegate {
@@ -53,6 +53,7 @@ public class TaskImportAction extends Action implements IViewActionDelegate {
 		// ignore
 	}
 
+	@Override
 	public void run() {
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		FileDialog dialog = new FileDialog(shell);
@@ -62,9 +63,9 @@ public class TaskImportAction extends Action implements IViewActionDelegate {
 		if (path != null) {
 			File file = new File(path);
 			if (file.isFile()) {
-				
+
 				Map<AbstractTask, InteractionContext> taskContexts = new HashMap<AbstractTask, InteractionContext>();
-				
+
 				List<AbstractTask> readTasks = TasksUiPlugin.getTaskListManager().getTaskListWriter().readTasks(file);
 				for (AbstractTask task : readTasks) {
 					// deactivate all tasks
@@ -75,8 +76,7 @@ public class TaskImportAction extends Action implements IViewActionDelegate {
 				Set<TaskRepository> repositories = TasksUiPlugin.getTaskListManager()
 						.getTaskListWriter()
 						.readRepositories(file);
-				
-			
+
 				if (taskContexts.size() > 0) {
 					importTasks(taskContexts, repositories, shell);
 					refreshTaskListView();
@@ -106,7 +106,7 @@ public class TaskImportAction extends Action implements IViewActionDelegate {
 			Shell shell) {
 		TasksUiPlugin.getRepositoryManager().insertRepositories(repositories,
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
-		
+
 		for (AbstractTask loadedTask : taskContexts.keySet()) {
 			TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 			if (taskList.getTask(loadedTask.getHandleIdentifier()) != null) {

@@ -21,7 +21,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
  */
 public class TaskActivityContentProvider implements ITreeContentProvider, ITaskPlannerContentProvider {
 
-	private TaskActivityEditorInput editorInput;
+	private final TaskActivityEditorInput editorInput;
 
 	public TaskActivityContentProvider(TaskActivityEditorInput editorInput) {
 		this.editorInput = editorInput;

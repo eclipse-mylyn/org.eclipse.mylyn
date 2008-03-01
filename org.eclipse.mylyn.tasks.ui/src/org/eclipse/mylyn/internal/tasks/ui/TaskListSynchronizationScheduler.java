@@ -27,8 +27,8 @@ import org.eclipse.ui.PlatformUI;
  * @author Rob Elves
  * @author Mik Kersten
  * 
- * API-3.0 rename synch* methods to synchronize*
- * API-3.0 this class is exported TasksUiPlugin as public API, move to non-internal package  
+ * API-3.0 rename synch* methods to synchronize* API-3.0 this class is exported TasksUiPlugin as public API, move to
+ * non-internal package
  */
 public class TaskListSynchronizationScheduler implements IPropertyChangeListener {
 
@@ -36,9 +36,9 @@ public class TaskListSynchronizationScheduler implements IPropertyChangeListener
 
 	private ScheduledTaskListSynchJob refreshJob;
 
-	private List<ScheduledTaskListSynchJob> jobs = new ArrayList<ScheduledTaskListSynchJob>();
+	private final List<ScheduledTaskListSynchJob> jobs = new ArrayList<ScheduledTaskListSynchJob>();
 
-	private List<ScheduledTaskListSynchJob> jobsQueue = Collections.synchronizedList(jobs);
+	private final List<ScheduledTaskListSynchJob> jobsQueue = Collections.synchronizedList(jobs);
 
 	private final MutexRule rule = new MutexRule();
 

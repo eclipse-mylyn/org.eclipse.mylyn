@@ -158,14 +158,14 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			// handled by updateTaskFromTaskData
 			return false;
 		}
-		
+
 		boolean changed = super.updateTaskFromQueryHit(repository, existingTask, queryHit);
 		if (existingTask instanceof TracTask) {
-			((TracTask)existingTask).setSupportsSubtasks(false);
+			((TracTask) existingTask).setSupportsSubtasks(false);
 		}
 		return changed;
 	}
-	
+
 	@Override
 	public IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository, IProgressMonitor monitor,
 			ITaskCollector resultCollector) {
@@ -291,25 +291,24 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public void updateTaskFromTaskData(TaskRepository taskRepository, AbstractTask task,
-			RepositoryTaskData taskData) {
+	public void updateTaskFromTaskData(TaskRepository taskRepository, AbstractTask task, RepositoryTaskData taskData) {
 		// API 3.0 taskData should never be null
 		if (taskData != null && task instanceof TracTask) {
 			ITracClient client = getClientManager().getRepository(taskRepository);
-			
+
 			task.setSummary(taskData.getSummary());
 			task.setOwner(taskData.getAttributeValue(RepositoryTaskAttribute.USER_ASSIGNED));
 			task.setCompleted(TracTask.isCompleted(taskData.getStatus()));
 			task.setUrl(taskRepository.getUrl() + ITracClient.TICKET_URL + taskData.getId());
-			
+
 			String priority = taskData.getAttributeValue(Attribute.PRIORITY.getTracKey());
 			TracPriority[] tracPriorities = client.getPriorities();
 			task.setPriority(TracTask.getTaskPriority(priority, tracPriorities));
 
 			Kind kind = TracTask.Kind.fromType(taskData.getAttributeValue(Attribute.TYPE.getTracKey()));
 			task.setTaskKind((kind != null) ? kind.toString() : null);
-			
-			((TracTask)task).setSupportsSubtasks(taskDataHandler.canInitializeSubTaskData(null, taskData));
+
+			((TracTask) task).setSupportsSubtasks(taskDataHandler.canInitializeSubTaskData(null, taskData));
 			// TODO: Completion Date
 		}
 	}
@@ -332,30 +331,31 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	/**
 	 * Updates fields of <code>task</code> from <code>ticket</code>.
-	 * @param client 
+	 * 
+	 * @param client
 	 */
 	public void updateTaskFromTicket(TracTask task, TracTicket ticket, boolean notify, ITracClient client) {
 		if (ticket.getValue(Key.SUMMARY) != null) {
 			task.setSummary(ticket.getValue(Key.SUMMARY));
 		}
-		
+
 		task.setCompleted(TracTask.isCompleted(ticket.getValue(Key.STATUS)));
-		
+
 		String priority = ticket.getValue(Key.PRIORITY);
 		TracPriority[] tracPriorities = client.getPriorities();
 		task.setPriority(TracTask.getTaskPriority(priority, tracPriorities));
-		
+
 		if (ticket.getValue(Key.TYPE) != null) {
 			Kind kind = TracTask.Kind.fromType(ticket.getValue(Key.TYPE));
 			task.setTaskKind((kind != null) ? kind.toString() : ticket.getValue(Key.TYPE));
 		}
-		
+
 		if (ticket.getCreated() != null) {
 			task.setCreationDate(ticket.getCreated());
 		}
 
 		task.setSupportsSubtasks(ticket.getCustomValue(TracTaskDataHandler.ATTRIBUTE_BLOCKING) != null);
-		
+
 		if (notify) {
 			taskList.notifyTaskChanged(task, false);
 		}

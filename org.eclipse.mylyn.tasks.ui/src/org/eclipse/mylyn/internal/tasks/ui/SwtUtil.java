@@ -61,11 +61,11 @@ public class SwtUtil {
 	}
 
 	public static FadeJob fadeIn(Shell shell, IFadeListener listener) {
-		return new FadeJob(shell, FADE_IN_INCREMENT, FADE_RESCHEDULE_DELAY, listener);		
+		return new FadeJob(shell, FADE_IN_INCREMENT, FADE_RESCHEDULE_DELAY, listener);
 	}
 
 	public static FadeJob fadeOut(Shell shell, IFadeListener listener) {
-		return new FadeJob(shell, FADE_OUT_INCREMENT, FADE_RESCHEDULE_DELAY, listener);		
+		return new FadeJob(shell, FADE_OUT_INCREMENT, FADE_RESCHEDULE_DELAY, listener);
 	}
 
 	/**
@@ -160,16 +160,16 @@ public class SwtUtil {
 					if (setAlpha) {
 						SwtUtil.setAlpha(shell, getLastAlpha());
 					}
-				}				
-			});				
+				}
+			});
 		}
-		
+
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
-			if (stopped) { 
+			if (stopped) {
 				return Status.OK_STATUS;
 			}
-			
+
 			currentAlpha += increment;
 			if (currentAlpha <= 0) {
 				currentAlpha = 0;
@@ -179,26 +179,26 @@ public class SwtUtil {
 
 			Display.getDefault().syncExec(new Runnable() {
 				public void run() {
-					if (stopped) { 
+					if (stopped) {
 						return;
 					}
-					
+
 					if (shell.isDisposed()) {
 						stopped = true;
 						return;
 					}
-					
+
 					if (!SwtUtil.setAlpha(shell, currentAlpha)) {
 						// just in case it failed for some other reason than lack of support on the platform
 						currentAlpha = getLastAlpha();
 						SwtUtil.setAlpha(shell, currentAlpha);
 						stopped = true;
 					}
-					
+
 					if (fadeListener != null) {
 						fadeListener.faded(shell, currentAlpha);
 					}
-				}				
+				}
 			});
 
 			if (currentAlpha == 0 || currentAlpha == 255) {
@@ -216,9 +216,9 @@ public class SwtUtil {
 	}
 
 	public static interface IFadeListener {
-		
+
 		public void faded(Shell shell, int alpha);
-		
+
 	}
-	
+
 }

@@ -82,7 +82,8 @@ public class RemoveFromCategoryAction extends Action {
 				}
 			}
 		} catch (NullPointerException e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not remove task from category, it may still be refreshing.", e));
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					"Could not remove task from category, it may still be refreshing.", e));
 		}
 	}
 }

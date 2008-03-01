@@ -44,12 +44,12 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 
 	public static String ID_TASK_WORKING_SET = "org.eclipse.mylyn.tasks.ui.workingSet";
 
-	private List<IWorkingSet> workingSets = new CopyOnWriteArrayList<IWorkingSet>();
+	private final List<IWorkingSet> workingSets = new CopyOnWriteArrayList<IWorkingSet>();
 
 	private static class TaskWorkingSetDelta {
-		private IWorkingSet workingSet;
+		private final IWorkingSet workingSet;
 
-		private List<Object> elements;
+		private final List<Object> elements;
 
 		private boolean changed;
 
@@ -246,8 +246,8 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 
 	public static boolean isWorkingSetEnabled(IWorkingSet set) {
 		IWorkingSet[] enabledSets = TaskWorkingSetUpdater.getEnabledSets();
-		for (int i = 0; i < enabledSets.length; i++) {
-			if (enabledSets[i].equals(set)) {
+		for (IWorkingSet enabledSet : enabledSets) {
+			if (enabledSet.equals(set)) {
 				return true;
 			}
 		}
@@ -289,12 +289,13 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 		}
 
 		// Don't dive into closed or opened projects
-		if (projectGotClosedOrOpened(resource, kind, flags))
+		if (projectGotClosedOrOpened(resource, kind, flags)) {
 			return;
+		}
 
 		IResourceDelta[] children = delta.getAffectedChildren();
-		for (int i = 0; i < children.length; i++) {
-			processResourceDelta(result, children[i]);
+		for (IResourceDelta element : children) {
+			processResourceDelta(result, element);
 		}
 	}
 

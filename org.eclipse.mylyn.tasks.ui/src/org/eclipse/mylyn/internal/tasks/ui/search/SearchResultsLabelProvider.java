@@ -16,8 +16,8 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
  */
 public class SearchResultsLabelProvider extends TaskElementLabelProvider {
 
-	private SearchResultContentProvider contentProvider;
-	
+	private final SearchResultContentProvider contentProvider;
+
 	public SearchResultsLabelProvider(SearchResultContentProvider contentProvider) {
 		super(true);
 		this.contentProvider = contentProvider;

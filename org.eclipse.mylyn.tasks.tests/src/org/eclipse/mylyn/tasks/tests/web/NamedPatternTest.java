@@ -10,9 +10,9 @@ package org.eclipse.mylyn.tasks.tests.web;
 
 import java.util.regex.Matcher;
 
-import org.eclipse.mylyn.internal.web.tasks.NamedPattern;
-
 import junit.framework.TestCase;
+
+import org.eclipse.mylyn.internal.web.tasks.NamedPattern;
 
 /**
  * @author Eugene Kuleshov
@@ -26,7 +26,7 @@ public class NamedPatternTest extends TestCase {
 		assertEquals("Hour", p.groupName(0));
 		assertEquals("Minute", p.groupName(1));
 		assertEquals("Second", p.groupName(2));
-		
+
 		Matcher m = p.matcher("01:02:03");
 		assertTrue(m.find());
 		assertEquals("01", p.group("Hour", m));
@@ -38,24 +38,24 @@ public class NamedPatternTest extends TestCase {
 		NamedPattern p = new NamedPattern("(\\d\\d):(\\d\\d):(\\d\\d)", 0);
 		assertEquals("(\\d\\d):(\\d\\d):(\\d\\d)", p.getPattern().pattern());
 		assertEquals(0, p.getGroups().size());
-		
+
 		Matcher m = p.matcher("01:02:03");
 		assertTrue(m.find());
 		assertEquals("01", m.group(1));
 		assertEquals("02", m.group(2));
 		assertEquals("03", m.group(3));
 	}
-	
+
 	public void testNestedGroups() {
 		NamedPattern p = new NamedPattern(":({a}:({b}:({c}foo)boo)doo)", 0);
 		assertEquals(":(:(:(foo)boo)doo)", p.getPattern().pattern());
 		assertEquals(3, p.getGroups().size());
-		
+
 		Matcher m = p.matcher(":::fooboodoo");
 		assertTrue(m.find());
 		assertEquals("::fooboodoo", p.group("a", m));
 		assertEquals(":fooboo", p.group("b", m));
 		assertEquals("foo", p.group("c", m));
 	}
-	
+
 }

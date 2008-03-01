@@ -19,7 +19,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
  * @author Nathan Hapke
  */
 public class TasksUiProxyChangeListener implements IProxyChangeListener {
-	private TaskRepositoryManager taskRepositoryManager;
+	private final TaskRepositoryManager taskRepositoryManager;
 
 	public TasksUiProxyChangeListener(TaskRepositoryManager taskRepositoryManager) {
 		this.taskRepositoryManager = taskRepositoryManager;

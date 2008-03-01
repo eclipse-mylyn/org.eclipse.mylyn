@@ -138,11 +138,11 @@ public class RepositorySettingsPageTest extends TestCase {
 		TaskRepositoryUtil.disableAddAutomatically(MockRepositoryConnector.REPOSITORY_URL);
 		assertTrue(TaskRepositoryUtil.isAddAutomaticallyDisabled(MockRepositoryConnector.REPOSITORY_URL));
 	}
-	
+
 	public void testSavePassword() {
 		TaskRepository repository = new TaskRepository("kind", "http://localhost/");
 		TasksUiPlugin.getDefault().addRepositoryConnectorUi(new MockRepositoryConnectorUi());
-		
+
 		assertTrue(repository.getSavePassword(AuthenticationType.REPOSITORY));
 
 		MockRepositorySettingsPage page = new MockRepositorySettingsPage(new MockRepositoryConnectorUi());
@@ -151,10 +151,10 @@ public class RepositorySettingsPageTest extends TestCase {
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			page.createControl(shell);
 			assertTrue(page.getSavePassword());
-		} finally {		
+		} finally {
 			page.dispose();
 		}
-		
+
 		repository.setCredentials(AuthenticationType.REPOSITORY, null, false);
 		page = new MockRepositorySettingsPage(new MockRepositoryConnectorUi());
 		page.setRepository(repository);
@@ -162,7 +162,7 @@ public class RepositorySettingsPageTest extends TestCase {
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			page.createControl(shell);
 			assertFalse(page.getSavePassword());
-		} finally {		
+		} finally {
 			page.dispose();
 		}
 	}
@@ -170,7 +170,7 @@ public class RepositorySettingsPageTest extends TestCase {
 	public void testSaveHttpPassword() {
 		TaskRepository repository = new TaskRepository("kind", "http://localhost/");
 		TasksUiPlugin.getDefault().addRepositoryConnectorUi(new MockRepositoryConnectorUi());
-		
+
 		assertTrue(repository.getSavePassword(AuthenticationType.HTTP));
 
 		MockRepositorySettingsPage page = new MockRepositorySettingsPage(new MockRepositoryConnectorUi());
@@ -180,10 +180,10 @@ public class RepositorySettingsPageTest extends TestCase {
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			page.createControl(shell);
 			assertTrue(page.getSaveHttpPassword());
-		} finally {		
+		} finally {
 			page.dispose();
 		}
-		
+
 		repository.setCredentials(AuthenticationType.HTTP, null, false);
 		page = new MockRepositorySettingsPage(new MockRepositoryConnectorUi());
 		page.setNeedsHttpAuth(true);
@@ -192,7 +192,7 @@ public class RepositorySettingsPageTest extends TestCase {
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			page.createControl(shell);
 			assertFalse(page.getSaveHttpPassword());
-		} finally {		
+		} finally {
 			page.dispose();
 		}
 	}
@@ -200,7 +200,7 @@ public class RepositorySettingsPageTest extends TestCase {
 	public void testSaveProxyPassword() {
 		TaskRepository repository = new TaskRepository("kind", "http://localhost/");
 		TasksUiPlugin.getDefault().addRepositoryConnectorUi(new MockRepositoryConnectorUi());
-		
+
 		assertTrue(repository.getSavePassword(AuthenticationType.PROXY));
 
 		MockRepositorySettingsPage page = new MockRepositorySettingsPage(new MockRepositoryConnectorUi());
@@ -210,10 +210,10 @@ public class RepositorySettingsPageTest extends TestCase {
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			page.createControl(shell);
 			assertTrue(page.getSaveProxyPassword());
-		} finally {		
+		} finally {
 			page.dispose();
 		}
-		
+
 		repository.setCredentials(AuthenticationType.PROXY, null, false);
 		page = new MockRepositorySettingsPage(new MockRepositoryConnectorUi());
 		page.setNeedsProxy(true);
@@ -222,7 +222,7 @@ public class RepositorySettingsPageTest extends TestCase {
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			page.createControl(shell);
 			assertFalse(page.getSaveProxyPassword());
-		} finally {		
+		} finally {
 			page.dispose();
 		}
 	}

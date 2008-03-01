@@ -60,14 +60,15 @@ public class SaxRepositoriesWriter {
 					new SAXSource(new RepositoriesWriter(), new TaskRepositoriesInputSource(repositories)),
 					new StreamResult(outputStream));
 		} catch (TransformerException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Could not write repositories", e));
+			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Could not write repositories",
+					e));
 			throw new IOException(e.getMessage());
 		}
 
 	}
 
 	private static class TaskRepositoriesInputSource extends InputSource {
-		private Collection<TaskRepository> repositories;
+		private final Collection<TaskRepository> repositories;
 
 		public TaskRepositoriesInputSource(Collection<TaskRepository> repositories) {
 			this.repositories = repositories;

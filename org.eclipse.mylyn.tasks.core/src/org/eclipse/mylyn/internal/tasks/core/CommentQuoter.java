@@ -30,7 +30,7 @@ public class CommentQuoter {
 
 	public static final int DEFAULT_WRAP_SIZE = 80;
 
-	private int lineSize;
+	private final int lineSize;
 
 	public CommentQuoter() {
 		this(DEFAULT_WRAP_SIZE);

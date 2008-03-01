@@ -74,7 +74,7 @@ public class NewTaskFromSelectionAction extends Action {
 			RepositoryTaskSelection repositoryTaskSelection = (RepositoryTaskSelection) selection;
 			TaskRepositoryManager repositoryManager = TasksUiPlugin.getRepositoryManager();
 			AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(repositoryTaskSelection.getRepositoryKind());
-			
+
 			TaskComment comment = repositoryTaskSelection.getComment();
 			if (comment != null) {
 				StringBuilder sb = new StringBuilder();
@@ -94,7 +94,7 @@ public class NewTaskFromSelectionAction extends Action {
 				} else {
 					sb.append(comment.getText());
 				}
-				
+
 				taskSelection = new TaskSelection("", sb.toString());
 			} else if (taskSelection != null) {
 				StringBuilder sb = new StringBuilder();
@@ -104,12 +104,12 @@ public class NewTaskFromSelectionAction extends Action {
 					sb.append(connector.getTaskUrl(repositoryTaskSelection.getRepositoryUrl(),
 							repositoryTaskSelection.getId()));
 				}
-				
+
 				sb.append("\n\n");
 				sb.append(taskSelection.getTaskData().getDescription());
-				
+
 				taskSelection = new TaskSelection("", sb.toString());
-			}		
+			}
 		}
 
 		setEnabled(taskSelection != null);

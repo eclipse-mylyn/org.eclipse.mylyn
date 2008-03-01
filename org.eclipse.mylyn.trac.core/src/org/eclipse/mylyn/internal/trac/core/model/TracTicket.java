@@ -75,7 +75,7 @@ public class TracTicket {
 	private Date lastChanged;
 
 	/** Trac's built-in ticket properties. */
-	private Map<Key, String> valueByKey = new HashMap<Key, String>();
+	private final Map<Key, String> valueByKey = new HashMap<Key, String>();
 
 	private List<TracComment> comments;
 

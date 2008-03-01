@@ -77,7 +77,6 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 		return null;
 	}
 
-
 	public Object[] getChildren(Object parent) {
 		return getFilteredChildrenFor(parent).toArray();
 	}

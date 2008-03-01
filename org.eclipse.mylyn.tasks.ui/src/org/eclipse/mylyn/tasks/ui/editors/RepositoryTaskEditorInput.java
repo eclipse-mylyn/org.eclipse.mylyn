@@ -77,12 +77,15 @@ public class RepositoryTaskEditorInput extends AbstractRepositoryTaskEditorInput
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		final RepositoryTaskEditorInput other = (RepositoryTaskEditorInput) obj;
 		if (repositoryTask == null) {
 			if (other.repositoryTask != null) {
@@ -90,8 +93,9 @@ public class RepositoryTaskEditorInput extends AbstractRepositoryTaskEditorInput
 			} else if (!other.getId().equals(this.getId())) {
 				return false;
 			}
-		} else if (!repositoryTask.equals(other.repositoryTask))
+		} else if (!repositoryTask.equals(other.repositoryTask)) {
 			return false;
+		}
 		return true;
 	}
 

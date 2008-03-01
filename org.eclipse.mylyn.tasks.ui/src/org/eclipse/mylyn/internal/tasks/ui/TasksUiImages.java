@@ -80,13 +80,14 @@ public class TasksUiImages {
 	public static final ImageDescriptor SORT_COMMENT_DOWN_GRAY = create(T_TOOL, "sort-down-gray.gif");
 
 	public static final ImageDescriptor SORT_COMMENT_UP_GRAY = create(T_TOOL, "sort-up-gray.gif");
-	
+
 	public static final ImageDescriptor TASKLIST = create("eview16", "task-list.gif");
 
 	public static final ImageDescriptor REPOSITORY = create("eview16", "repository.gif");
 
-	public static final ImageDescriptor REPOSITORY_OFFLINE = ImageDescriptor.createWithFlags(TasksUiImages.REPOSITORY, SWT.IMAGE_GRAY);
-	
+	public static final ImageDescriptor REPOSITORY_OFFLINE = ImageDescriptor.createWithFlags(TasksUiImages.REPOSITORY,
+			SWT.IMAGE_GRAY);
+
 	public static final ImageDescriptor REPOSITORY_SUBMIT = create(T_TOOL, "repository-submit.gif");
 
 	public static final ImageDescriptor REPOSITORY_SMALL = create(T_OBJ, "repository-small.gif");
@@ -116,7 +117,7 @@ public class TasksUiImages {
 	public static final ImageDescriptor SCHEDULE_DAY = create(T_TOOL, "schedule-day.png");
 
 	public static final ImageDescriptor SCHEDULE_WEEK = create(T_TOOL, "schedule-week.png");
-	
+
 	public static final ImageDescriptor WARNING = create(T_ELCL, "warning.gif");
 
 	public static final ImageDescriptor OVERLAY_WEB = create(T_TOOL, "overlay-web.gif");
@@ -144,7 +145,7 @@ public class TasksUiImages {
 	public static final ImageDescriptor CATEGORY_ARCHIVE = create(T_TOOL, "category-archive.gif");
 
 	public static final ImageDescriptor QUERY_UNMATCHED = create(T_TOOL, "query-unmatched.png");
-	
+
 	public static final ImageDescriptor TASK_REPOSITORY = create(T_TOOL, "task-repository.gif");
 
 	public static final ImageDescriptor TASK_REPOSITORY_NEW = create(T_TOOL, "task-repository-new.gif");
@@ -166,7 +167,7 @@ public class TasksUiImages {
 	public static final ImageDescriptor PERSON_ME_NARROW = create(T_TOOL, "person-me-narrow.gif");
 
 	public static final ImageDescriptor CONTEXT_FOCUS = create(T_EVIEW, "focus-view.gif");
-	
+
 	public static final ImageDescriptor CONTEXT_ATTACH = create(T_TOOL, "context-attach.gif");
 
 	public static final ImageDescriptor CONTEXT_RETRIEVE = create(T_TOOL, "context-retrieve.gif");
@@ -176,17 +177,17 @@ public class TasksUiImages {
 	public static final ImageDescriptor CONTEXT_CLEAR = create(T_TOOL, "context-clear.gif");
 
 	public static final ImageDescriptor CLEAR = create(T_TOOL, "clear.gif");
-	
+
 	public static final ImageDescriptor EDIT = create(T_TOOL, "edit.gif");
-	
+
 	public static final ImageDescriptor CUT = create(T_TOOL, "cut.gif");
-	
+
 	public static final ImageDescriptor ATTACHMENT_PATCH = create(T_OBJ, "attachment-patch.gif");
 
 	public static final ImageDescriptor TASK_RETRIEVE = create(T_TOOL, "task-retrieve.gif");
 
 	public static final ImageDescriptor OVERLAY_LOCAL_TASK = create(T_OVR, "overlay-local-task.gif");
-	
+
 	public static final ImageDescriptor OVERLAY_INCOMMING = create(T_EVIEW, "overlay-incoming.gif");
 
 	public static final ImageDescriptor OVERLAY_INCOMMING_NEW = create(T_EVIEW, "overlay-incoming-new.gif");
@@ -220,7 +221,7 @@ public class TasksUiImages {
 	public static final ImageDescriptor REPOSITORY_SYNCHRONIZE = create(T_TOOL, "repository-synchronize.gif");
 
 	public static final ImageDescriptor NAVIGATE_PREVIOUS = create(T_TOOL, "navigate-previous.gif");
-	
+
 	public static final ImageDescriptor NAVIGATE_PREVIOUS_PAUSE = create(T_TOOL, "navigate-previous-pause.gif");
 
 	public static final ImageDescriptor NAVIGATE_PREVIOUS_ACTIVE = create(T_TOOL, "navigate-previous-active.gif");
@@ -232,7 +233,7 @@ public class TasksUiImages {
 	public static final ImageDescriptor TASKLIST_MODE = create(T_TOOL, "presentation.gif");
 
 	public static final ImageDescriptor TASK_GROUPING = create(T_TOOL, "grouping.gif");
-	
+
 	public static final ImageDescriptor COPY = create(T_TOOL, "copy.png");
 
 	public static final ImageDescriptor GO_UP = create(T_TOOL, "go-up.gif");
@@ -284,7 +285,7 @@ public class TasksUiImages {
 	public static final ImageDescriptor IMAGE_CAPTURE = create(T_TOOL, "capture-screen.png");
 
 	public static final ImageDescriptor IMAGE_FIT = create(T_TOOL, "capture-fit.png");
-	
+
 	public static final ImageDescriptor IMAGE_FILE = create(T_OBJ, "file-image.gif");
 
 	public static final ImageDescriptor NEW_SUB_TASK = create(T_TOOL, "sub-task-new.gif");
@@ -402,8 +403,9 @@ public class TasksUiImages {
 	}
 
 	private static URL makeIconFileURL(String prefix, String name) throws MalformedURLException {
-		if (baseURL == null)
+		if (baseURL == null) {
 			throw new MalformedURLException();
+		}
 
 		StringBuffer buffer = new StringBuffer(prefix);
 		buffer.append('/');
@@ -415,8 +417,9 @@ public class TasksUiImages {
 
 	public static Image[] getProgressImages() {
 
-		if (progressImages != null)
+		if (progressImages != null) {
 			return progressImages;
+		}
 
 		progressImages = new Image[8];
 

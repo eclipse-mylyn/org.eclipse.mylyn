@@ -39,7 +39,7 @@ public class TracTaskTest extends TestCase {
 		assertEquals("P4", TracTask.getTaskPriority("minor"));
 		assertEquals("P5", TracTask.getTaskPriority("trivial"));
 	}
-	
+
 	public void testGetTaskPriorityFromTracPriorities() {
 		TracPriority p1 = new TracPriority("a", 1);
 		TracPriority p2 = new TracPriority("b", 2);
@@ -69,7 +69,7 @@ public class TracTaskTest extends TestCase {
 		assertEquals("P2", TracTask.getTaskPriority("3", priorities));
 		assertEquals("P2", TracTask.getTaskPriority("4", priorities));
 		assertEquals("P4", TracTask.getTaskPriority("5", priorities));
-		assertEquals("P5", TracTask.getTaskPriority("6", priorities));		
+		assertEquals("P5", TracTask.getTaskPriority("6", priorities));
 	}
 
 }

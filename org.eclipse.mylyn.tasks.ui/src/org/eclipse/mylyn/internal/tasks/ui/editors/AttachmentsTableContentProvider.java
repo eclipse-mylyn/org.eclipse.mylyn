@@ -19,7 +19,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
  */
 public class AttachmentsTableContentProvider implements IStructuredContentProvider {
 
-	private List<RepositoryAttachment> attachments;
+	private final List<RepositoryAttachment> attachments;
 
 	public AttachmentsTableContentProvider(List<RepositoryAttachment> attachments) {
 		this.attachments = attachments;

@@ -124,7 +124,7 @@ public abstract class AbstractRepositoryTaskEditorInput implements IEditorInput 
 	protected void setOldEdits(Set<RepositoryTaskAttribute> oldEdits) {
 		this.oldEdits = oldEdits;
 	}
-	
+
 	public void refreshInput() {
 		setEditableTaskData(TasksUiPlugin.getTaskDataManager().getEditableCopy(repository.getUrl(), taskId));
 		setOldTaskData(TasksUiPlugin.getTaskDataManager().getOldTaskData(repository.getUrl(), taskId));

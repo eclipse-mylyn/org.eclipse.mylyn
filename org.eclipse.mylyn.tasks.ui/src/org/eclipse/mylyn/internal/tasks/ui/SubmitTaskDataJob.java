@@ -69,9 +69,8 @@ public class SubmitTaskDataJob extends Job {
 							RepositoryStatus.ERROR_INTERNAL,
 							"Task could not be created. No additional information was provided by the connector."));
 				}
-				
-				task = connector.createTaskFromExistingId(taskRepository, taskId,
-						new SubProgressMonitor(monitor, 1));
+
+				task = connector.createTaskFromExistingId(taskRepository, taskId, new SubProgressMonitor(monitor, 1));
 				if (task == null) {
 					throw new CoreException(new RepositoryStatus(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 							RepositoryStatus.ERROR_INTERNAL,
@@ -104,7 +103,7 @@ public class SubmitTaskDataJob extends Job {
 			} finally {
 				task.setSubmitting(false);
 			}
-			
+
 			TasksUiPlugin.getSynchronizationManager().setTaskRead(task, true);
 		} catch (CoreException e) {
 			errorStatus = e.getStatus();

@@ -209,7 +209,8 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 				try {
 					page.openEditor(input, desc.getId());
 				} catch (PartInitException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unable to open editor for: " + attachment.getDescription(), e));
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unable to open editor for: "
+							+ attachment.getDescription(), e));
 				}
 			}
 		};
@@ -227,7 +228,8 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 				try {
 					page.openEditor(input, "org.eclipse.ui.DefaultTextEditor");
 				} catch (PartInitException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unable to open editor for: " + attachment.getDescription(), e));
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unable to open editor for: "
+							+ attachment.getDescription(), e));
 				}
 			}
 		};
@@ -435,7 +437,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 //		if (supportsAttachmentDelete()) {
 //			registerDropListener(deleteAttachmentButton);
 //		}
-		
+
 		setControl(attachmentsComposite);
 	}
 

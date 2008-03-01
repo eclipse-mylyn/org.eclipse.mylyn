@@ -75,9 +75,9 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 
 	private TaskListHyperlink activeTaskLabel;
 
-	private OpenWithBrowserAction openWithBrowserAction = new OpenWithBrowserAction();
+	private final OpenWithBrowserAction openWithBrowserAction = new OpenWithBrowserAction();
 
-	private CopyTaskDetailsAction copyTaskDetailsAction = new CopyTaskDetailsAction();
+	private final CopyTaskDetailsAction copyTaskDetailsAction = new CopyTaskDetailsAction();
 
 	private Point p;
 
@@ -100,7 +100,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		}
 	};
 
-	private IPropertyChangeListener SHOW_TRIM_LISTENER = new IPropertyChangeListener() {
+	private final IPropertyChangeListener SHOW_TRIM_LISTENER = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
 			String property = event.getProperty();
 			if (property.equals(TasksUiPreferenceConstants.SHOW_TRIM)) {
@@ -166,9 +166,9 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 			public void run() {
 				IPreferenceStore uiPreferenceStore = TasksUiPlugin.getDefault().getPreferenceStore();
 				setTrimVisible(uiPreferenceStore.getBoolean(TasksUiPreferenceConstants.SHOW_TRIM));
-			}			
+			}
 		});
-		
+
 		return composite;
 	}
 

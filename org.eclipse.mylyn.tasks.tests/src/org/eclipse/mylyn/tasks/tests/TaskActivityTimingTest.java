@@ -11,7 +11,6 @@ package org.eclipse.mylyn.tasks.tests;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -39,12 +38,14 @@ public class TaskActivityTimingTest extends TestCase {
 
 	TaskActivityManager activityManager = null;
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		manager = TasksUiPlugin.getTaskListManager();
 		activityManager = TasksUiPlugin.getTaskActivityManager();
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		ContextCorePlugin.getContextManager().getActivityMetaContext().reset();
 		TasksUiPlugin.getTaskListManager().resetTaskList();
@@ -557,8 +558,8 @@ public class TaskActivityTimingTest extends TestCase {
 				InteractionContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f, activityThisWeek.getEnd().getTime(),
 				activityThisWeek.getEnd().getTime());
 
-		Calendar activityStart = GregorianCalendar.getInstance();
-		Calendar activityEnd = GregorianCalendar.getInstance();
+		Calendar activityStart = Calendar.getInstance();
+		Calendar activityEnd = Calendar.getInstance();
 		activityEnd.add(Calendar.HOUR_OF_DAY, 1);
 
 		InteractionEvent activityEvent = new InteractionEvent(InteractionEvent.Kind.ATTENTION,

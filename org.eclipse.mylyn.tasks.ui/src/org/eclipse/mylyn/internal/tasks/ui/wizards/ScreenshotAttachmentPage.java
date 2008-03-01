@@ -130,7 +130,7 @@ public class ScreenshotAttachmentPage extends WizardPage implements IImageCreato
 	/**
 	 * Manages allocated cursors
 	 */
-	private Map<Integer, Cursor> cursors = new HashMap<Integer, Cursor>();
+	private final Map<Integer, Cursor> cursors = new HashMap<Integer, Cursor>();
 
 	/**
 	 * Available actions for the screenshot editor
@@ -458,7 +458,7 @@ public class ScreenshotAttachmentPage extends WizardPage implements IImageCreato
 
 		// this code needs to run asynchronously to allow the workbench to refresh before the screen is captured  
 		UIJob job = new UIJob("Capturing Screenshot") {
-		
+
 			@Override
 			public IStatus runInUIThread(IProgressMonitor monitor) {
 				disposeImageResources();
@@ -671,6 +671,7 @@ public class ScreenshotAttachmentPage extends WizardPage implements IImageCreato
 			 * Releasing the mouse button ends the selection or a drawing; compute the selection rectangle and redraw
 			 * the cropped image
 			 */
+			@Override
 			public void mouseUp(MouseEvent e) {
 				if (currentAction == EditorAction.SELECTING || currentAction == EditorAction.RESIZING_SELECTION
 						|| currentAction == EditorAction.MOVING_SELECTION) {
@@ -701,6 +702,7 @@ public class ScreenshotAttachmentPage extends WizardPage implements IImageCreato
 			/**
 			 * Pressing mouse button starts a selection or a drawing; normalizes and marks the start point
 			 */
+			@Override
 			public void mouseDown(MouseEvent e) {
 				int scaledX = (int) (e.x / scaleFactor);
 				int scaledY = (int) (e.y / scaleFactor);
@@ -881,7 +883,7 @@ public class ScreenshotAttachmentPage extends WizardPage implements IImageCreato
 
 	}
 
-	private List<GrabPoint> grabPoints = new ArrayList<GrabPoint>(8);
+	private final List<GrabPoint> grabPoints = new ArrayList<GrabPoint>(8);
 
 	/**
 	 * Creates the final screenshot

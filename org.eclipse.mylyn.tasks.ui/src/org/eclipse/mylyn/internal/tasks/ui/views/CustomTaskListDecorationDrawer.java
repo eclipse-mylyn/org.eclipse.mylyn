@@ -32,13 +32,13 @@ class CustomTaskListDecorationDrawer implements Listener {
 
 	private final TaskListView taskListView;
 
-	private int activationImageOffset;
+	private final int activationImageOffset;
 
-	private Image taskActive = TasksUiImages.getImage(TasksUiImages.TASK_ACTIVE);
+	private final Image taskActive = TasksUiImages.getImage(TasksUiImages.TASK_ACTIVE);
 
-	private Image taskInactive = TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE);
+	private final Image taskInactive = TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE);
 
-	private Image taskInactiveContext = TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE_CONTEXT);
+	private final Image taskInactiveContext = TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE_CONTEXT);
 
 	// see bug 185004
 	private final int platformSpecificSquish;
@@ -184,9 +184,9 @@ class CustomTaskListDecorationDrawer implements Listener {
 
 	private boolean hideDecorationOnContainer(AbstractTaskContainer element, TreeItem treeItem) {
 		if (element instanceof UnmatchedTaskContainer) {
-			if(!taskListView.isFocusedMode()) {
+			if (!taskListView.isFocusedMode()) {
 				return false;
-			} else if(AbstractTaskListFilter.hasDescendantIncoming(element)) {
+			} else if (AbstractTaskListFilter.hasDescendantIncoming(element)) {
 				return true;
 			}
 		} else if (element instanceof AbstractRepositoryQuery) {

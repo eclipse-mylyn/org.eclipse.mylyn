@@ -74,7 +74,8 @@ public class ProjectPropertiesLinkProvider extends AbstractTaskRepositoryLinkPro
 				projectNode.flush();
 				return true;
 			} catch (BackingStoreException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to save task repository to project association preference", e));
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						"Failed to save task repository to project association preference", e));
 			}
 		}
 		return false;

@@ -28,9 +28,9 @@ public class DisconnectRepositoryAction extends Action implements ISelectionChan
 	private static final String ID = "org.eclipse.mylyn.tasklist.repositories.offline";
 
 	private TaskRepository repository;
-	
+
 	public DisconnectRepositoryAction() {
-		super(LABEL, Action.AS_CHECK_BOX);
+		super(LABEL, IAction.AS_CHECK_BOX);
 		setId(ID);
 		setEnabled(false);
 	}

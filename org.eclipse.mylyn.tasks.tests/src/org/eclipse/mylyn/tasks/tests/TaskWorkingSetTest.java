@@ -44,13 +44,13 @@ public class TaskWorkingSetTest extends TestCase {
 		workingSetManager = Workbench.getInstance().getWorkingSetManager();
 		root = ResourcesPlugin.getWorkspace().getRoot();
 	}
-	
+
 	@Override
 	protected void tearDown() throws Exception {
 		if (workingSet != null) {
 			workingSetManager.removeWorkingSet(workingSet);
 		}
-		
+
 		if (project != null) {
 			ResourceTestUtil.deleteProject(project);
 		}
@@ -83,7 +83,7 @@ public class TaskWorkingSetTest extends TestCase {
 	public void testRenameProject() throws Exception {
 		createProject("Test Rename");
 		workingSet = createWorkingSet(project);
-		
+
 		WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
 			@Override
 			protected void execute(IProgressMonitor monitor) throws CoreException, InvocationTargetException,
@@ -91,10 +91,10 @@ public class TaskWorkingSetTest extends TestCase {
 				IProjectDescription description = new ProjectDescription();
 				description.setName("New Name");
 				project.move(description, true, new NullProgressMonitor());
-			}			
+			}
 		};
 		op.run(new NullProgressMonitor());
-		
+
 		IProject oldProject = root.getProject("Test Rename");
 		IProject newProject = root.getProject("New Name");
 		assertFalse(Arrays.asList(workingSet.getElements()).contains(oldProject));
@@ -108,8 +108,7 @@ public class TaskWorkingSetTest extends TestCase {
 	}
 
 	private IWorkingSet createWorkingSet(IAdaptable element) {
-		IWorkingSet workingSet = workingSetManager.createWorkingSet("Task Working Set",
-				new IAdaptable[] { element });
+		IWorkingSet workingSet = workingSetManager.createWorkingSet("Task Working Set", new IAdaptable[] { element });
 		workingSet.setId(TaskWorkingSetUpdater.ID_TASK_WORKING_SET);
 		assertTrue(Arrays.asList(workingSet.getElements()).contains(element));
 		workingSetManager.addWorkingSet(workingSet);

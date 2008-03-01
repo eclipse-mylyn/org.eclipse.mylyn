@@ -33,11 +33,10 @@ public class NewTaskWizard extends MultiRepositoryAwareWizard {
 	public NewTaskWizard() {
 		this(null);
 	}
-	
+
 	// API-3.0: remove legacy support
 	public boolean supportsTaskSelection() {
 		return page.supportsTaskSelection();
 	}
 
-	
 }

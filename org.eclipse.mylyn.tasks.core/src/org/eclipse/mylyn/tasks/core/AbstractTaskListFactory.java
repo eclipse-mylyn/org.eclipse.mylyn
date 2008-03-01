@@ -34,8 +34,8 @@ public abstract class AbstractTaskListFactory {
 	/**
 	 * Returns true if factory can create an XML element to store given {@link AbstractTask}.
 	 * <p>
-	 * The name of the XML element is taken from the {@link #getTaskElementName()} method and
-	 * additional task attributes can be stored in {@link #setAdditionalAttributes(AbstractTask, Element)} method.
+	 * The name of the XML element is taken from the {@link #getTaskElementName()} method and additional task attributes
+	 * can be stored in {@link #setAdditionalAttributes(AbstractTask, Element)} method.
 	 * 
 	 * @param task
 	 *            a task instance to create XML element for

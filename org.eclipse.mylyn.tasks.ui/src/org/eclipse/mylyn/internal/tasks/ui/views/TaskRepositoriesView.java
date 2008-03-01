@@ -47,7 +47,7 @@ public class TaskRepositoriesView extends ViewPart {
 
 	private TableViewer viewer;
 
-	private Action addRepositoryAction = new AddRepositoryAction();
+	private final Action addRepositoryAction = new AddRepositoryAction();
 
 	private BaseSelectionListenerAction deleteRepositoryAction;
 
@@ -119,11 +119,13 @@ public class TaskRepositoriesView extends ViewPart {
 	public static TaskRepositoriesView getFromActivePerspective() {
 		if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
 			IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-			if (activePage == null)
+			if (activePage == null) {
 				return null;
+			}
 			IViewPart view = activePage.findView(ID);
-			if (view instanceof TaskRepositoriesView)
+			if (view instanceof TaskRepositoriesView) {
 				return (TaskRepositoriesView) view;
+			}
 		}
 		return null;
 	}

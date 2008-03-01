@@ -77,7 +77,8 @@ public class ContextUiUtil {
 			if (e.getCause() instanceof CoreException) {
 				StatusHandler.displayStatus(ITasksUiConstants.TITLE_DIALOG, ((CoreException) e.getCause()).getStatus());
 			} else {
-				StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unexpected error while attaching context", e));
+				StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						"Unexpected error while attaching context", e));
 			}
 			return false;
 		} catch (InterruptedException ignored) {
@@ -131,7 +132,8 @@ public class ContextUiUtil {
 			if (e.getCause() instanceof CoreException) {
 				StatusHandler.displayStatus(ITasksUiConstants.TITLE_DIALOG, ((CoreException) e.getCause()).getStatus());
 			} else {
-				StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unexpected error while attaching context", e));
+				StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						"Unexpected error while attaching context", e));
 			}
 			return false;
 		} catch (InterruptedException ignored) {

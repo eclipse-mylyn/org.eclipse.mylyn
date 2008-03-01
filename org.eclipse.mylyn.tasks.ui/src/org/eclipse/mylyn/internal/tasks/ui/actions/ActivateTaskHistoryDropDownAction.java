@@ -128,7 +128,7 @@ public class ActivateTaskHistoryDropDownAction extends TaskNavigateDropDownActio
 					TaskListView.getFromActivePerspective().refresh();
 				}
 			}
-			
+
 			setButtonStatus();
 			// view.refreshAndFocus(false);
 			// TasksUiUtil.refreshAndOpenTaskListElement(previousTask);
@@ -158,7 +158,7 @@ public class ActivateTaskHistoryDropDownAction extends TaskNavigateDropDownActio
 
 	public class ActivateDialogAction extends Action {
 
-		private ActivateTaskDialogAction dialogAction;
+		private final ActivateTaskDialogAction dialogAction;
 
 		public ActivateDialogAction(ActivateTaskDialogAction action) {
 			dialogAction = action;

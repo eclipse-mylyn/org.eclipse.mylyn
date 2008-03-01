@@ -97,7 +97,8 @@ public abstract class AbstractAttachmentHandler {
 				try {
 					in.close();
 				} catch (IOException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Error closing attachment stream", e));
+					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+							"Error closing attachment stream", e));
 				}
 			}
 		} finally {
@@ -198,7 +199,8 @@ public abstract class AbstractAttachmentHandler {
 				try {
 					out.close();
 				} catch (IOException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Error closing context file", e));
+					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+							"Error closing context file", e));
 				}
 			}
 		} catch (FileNotFoundException e) {

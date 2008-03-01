@@ -51,11 +51,11 @@ public class ContextRetrieveWizardPage extends WizardPage {
 
 	private static final String COLUMN_DATE = "Date";
 
-	private TaskRepository repository;
+	private final TaskRepository repository;
 
-	private AbstractTask task;
+	private final AbstractTask task;
 
-	private TaskElementLabelProvider labelProvider = new TaskElementLabelProvider(false);
+	private final TaskElementLabelProvider labelProvider = new TaskElementLabelProvider(false);
 
 	private RepositoryAttachment selectedContextAttachment = null;
 
@@ -168,8 +168,8 @@ public class ContextRetrieveWizardPage extends WizardPage {
 			item.setData(attachment);
 		}
 
-		for (int i = 0, n = columns.length; i < n; i++) {
-			columns[i].pack();
+		for (TableColumn column : columns) {
+			column.pack();
 		}
 
 		contextTable.setLayoutData(new GridData(GridData.FILL_BOTH));

@@ -29,9 +29,9 @@ public class TaskGroup extends AbstractTaskContainer {
 
 	@Override
 	public String getSummary() {
-		return summary; 
-	} 
-	
+		return summary;
+	}
+
 	@Override
 	public boolean isUserManaged() {
 		return false;

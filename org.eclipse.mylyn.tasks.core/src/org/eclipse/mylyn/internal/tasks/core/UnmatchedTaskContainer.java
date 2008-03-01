@@ -25,7 +25,7 @@ public class UnmatchedTaskContainer extends AbstractTaskCategory {
 
 	private String repositoryUrl;
 
-	private String connectorKind;
+	private final String connectorKind;
 
 	public UnmatchedTaskContainer(String connectorKind, String repositoryUrl) {
 		super(repositoryUrl + "-" + HANDLE);

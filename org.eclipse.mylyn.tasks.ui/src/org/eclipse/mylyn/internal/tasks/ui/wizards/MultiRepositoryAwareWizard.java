@@ -20,7 +20,7 @@ import org.eclipse.ui.IWorkbench;
  */
 public class MultiRepositoryAwareWizard extends Wizard implements INewWizard {
 
-	private SelectRepositoryPage selectRepositoryPage;
+	private final SelectRepositoryPage selectRepositoryPage;
 
 	public MultiRepositoryAwareWizard(SelectRepositoryPage page, String title) {
 		selectRepositoryPage = page;

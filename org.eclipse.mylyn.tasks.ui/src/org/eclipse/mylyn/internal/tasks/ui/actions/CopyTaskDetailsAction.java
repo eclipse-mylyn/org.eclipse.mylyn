@@ -33,14 +33,14 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.copy";
 
-	private Clipboard clipboard;
+	private final Clipboard clipboard;
 
 	public CopyTaskDetailsAction() {
 		super(LABEL);
 		setToolTipText(LABEL);
 		setId(ID);
 		setImageDescriptor(TasksUiImages.COPY);
-		
+
 		Display display = PlatformUI.getWorkbench().getDisplay();
 		clipboard = new Clipboard(display);
 	}

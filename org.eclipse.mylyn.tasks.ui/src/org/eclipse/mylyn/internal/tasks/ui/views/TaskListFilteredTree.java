@@ -96,7 +96,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 	private Menu activeTaskMenu = null;
 
-	private CopyTaskDetailsAction copyTaskDetailsAction = new CopyTaskDetailsAction();
+	private final CopyTaskDetailsAction copyTaskDetailsAction = new CopyTaskDetailsAction();
 
 	private TaskListToolTip taskListToolTip;
 
@@ -182,7 +182,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			public void taskListRead() {
 			}
 		});
-		
+
 		return progressComposite;
 	}
 
@@ -341,7 +341,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 									}
 								}
 							});
-						} else if(Display.getCurrent() != null){
+						} else if (Display.getCurrent() != null) {
 							if (changedTask.isActive()) {
 								indicateActiveTask(changedTask);
 							}
@@ -479,7 +479,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		activeTaskLink.setTask(null);
 		activeTaskLink.setText(LABEL_ACTIVE_NONE);
 		activeTaskLink.setToolTipText("");
-		
+
 		filterComposite.layout();
 	}
 

@@ -25,7 +25,7 @@ import org.eclipse.ui.PlatformUI;
 public class SearchForRepositoryTask extends Action implements IWorkbenchWindowActionDelegate, IViewActionDelegate {
 
 	public void run(IAction action) {
-		new SearchDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), TaskSearchPage.ID).open();	
+		new SearchDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), TaskSearchPage.ID).open();
 	}
 
 	public void dispose() {

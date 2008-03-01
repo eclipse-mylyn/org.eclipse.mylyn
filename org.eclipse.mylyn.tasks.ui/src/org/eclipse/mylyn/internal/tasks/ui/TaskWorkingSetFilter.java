@@ -33,11 +33,11 @@ public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 		if (parent instanceof AbstractTask || element instanceof TaskArchive) {
 			return true;
 		}
-		
+
 		if (parent == null && element instanceof ScheduledTaskContainer) {
 			return true;
 		}
-		
+
 		if (parent == null && element instanceof AbstractTaskContainer) {
 			return isContainedInWorkingSet((AbstractTaskContainer) element);
 		}
@@ -87,9 +87,9 @@ public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 		}
 		return false;
 	}
-	
+
 	public IAdaptable[] getElements() {
 		return elements;
 	}
-	
+
 }

@@ -21,7 +21,7 @@ public class ExpandAllAction extends Action {
 
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.expand.all";
 
-	private TaskListView taskListView;
+	private final TaskListView taskListView;
 
 	public ExpandAllAction(TaskListView taskListView) {
 		super(LABEL);
@@ -34,7 +34,8 @@ public class ExpandAllAction extends Action {
 
 	@Override
 	public void run() {
-		if (taskListView.getViewer() != null)
+		if (taskListView.getViewer() != null) {
 			taskListView.getViewer().expandAll();
+		}
 	}
 }

@@ -199,6 +199,7 @@ public class TaskTextViewerConfiguration extends TextSourceViewerConfiguration {
 			super.hideHyperlinks();
 		}
 
+		@Override
 		public void uninstall() {
 			// ignore
 			super.uninstall();

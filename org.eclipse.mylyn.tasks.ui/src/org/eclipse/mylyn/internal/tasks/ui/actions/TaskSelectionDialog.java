@@ -117,7 +117,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 		/**
 		 * Mylyn's task activation history
 		 */
-		private TaskActivationHistory history = TasksUiPlugin.getTaskListManager().getTaskActivationHistory();
+		private final TaskActivationHistory history = TasksUiPlugin.getTaskListManager().getTaskActivationHistory();
 
 		@Override
 		public synchronized void accessed(Object object) {
@@ -181,7 +181,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 	/**
 	 * Refilters if the current working set content has changed
 	 */
-	private IPropertyChangeListener workingSetListener = new IPropertyChangeListener() {
+	private final IPropertyChangeListener workingSetListener = new IPropertyChangeListener() {
 
 		public void propertyChange(PropertyChangeEvent event) {
 			if (event.getProperty().equals(IWorkingSetManager.CHANGE_WORKING_SET_CONTENT_CHANGE)) {
@@ -193,7 +193,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 
 	};
 
-	private TaskElementLabelProvider labelProvider;
+	private final TaskElementLabelProvider labelProvider;
 
 	public TaskSelectionDialog(Shell parent) {
 		super(parent);
@@ -238,7 +238,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 		return showExtendedOpeningOptions;
 	}
 
-	private ShowCompletedTasksAction showCompletedTasksAction = new ShowCompletedTasksAction();
+	private final ShowCompletedTasksAction showCompletedTasksAction = new ShowCompletedTasksAction();
 
 	@Override
 	protected void fillViewMenu(IMenuManager menuManager) {
@@ -258,7 +258,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 
 		menuManager.addMenuListener(new IMenuListener() {
 
-			private List<ActionContributionItem> lruActions = new ArrayList<ActionContributionItem>();
+			private final List<ActionContributionItem> lruActions = new ArrayList<ActionContributionItem>();
 
 			public void menuAboutToShow(IMenuManager manager) {
 				deselectAction.setEnabled(selectedWorkingSet != null);
@@ -376,7 +376,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 
 	private class FilterWorkingSetAction extends Action {
 
-		private IWorkingSet workingSet;
+		private final IWorkingSet workingSet;
 
 		public FilterWorkingSetAction(IWorkingSet workingSet, int shortcutKeyNumber) {
 			super("", IAction.AS_RADIO_BUTTON);
@@ -415,6 +415,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 		openHyperlink.setUnderlined(true);
 		openHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 
+			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				getShell().close();
 				new SearchDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), TaskSearchPage.ID).open();

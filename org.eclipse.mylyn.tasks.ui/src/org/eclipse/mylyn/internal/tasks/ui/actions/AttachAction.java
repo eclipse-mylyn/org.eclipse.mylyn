@@ -8,8 +8,8 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
 import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
@@ -31,7 +31,7 @@ public class AttachAction extends AbstractTaskEditorAction {
 	public AttachAction(String label) {
 		super(label);
 	}
-	
+
 	public AttachAction() {
 		super(LABEL);
 		setId("org.eclipse.mylyn.tasks.ui.actions.add.attachment");
@@ -61,12 +61,13 @@ public class AttachAction extends AbstractTaskEditorAction {
 			attachmentWizard.setDialog(dialog);
 			dialog.create();
 			int result = dialog.open();
-			if (result != MessageDialog.OK && editor != null) {
+			if (result != Window.OK && editor != null) {
 				editor.showBusy(false);
 			}
 		}
 	}
 
+	@Override
 	protected boolean updateSelection(IStructuredSelection selection) {
 		if (selection.getFirstElement() instanceof AbstractTask) {
 			AbstractTask task = (AbstractTask) selection.getFirstElement();
@@ -84,5 +85,5 @@ public class AttachAction extends AbstractTaskEditorAction {
 		}
 		return super.updateSelection(selection);
 	}
-	
+
 }

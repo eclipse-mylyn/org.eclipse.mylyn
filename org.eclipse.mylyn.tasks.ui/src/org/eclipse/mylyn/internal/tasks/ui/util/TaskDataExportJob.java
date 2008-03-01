@@ -47,21 +47,21 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 
 	private static final String JOB_LABEL = "Exporting Mylyn Task Data";
 
-	private boolean zip;
+	private final boolean zip;
 
-	private boolean exportTaskList;
+	private final boolean exportTaskList;
 
-	private boolean exportActivationHistory;
+	private final boolean exportActivationHistory;
 
-	private boolean exportTaskContexts;
+	private final boolean exportTaskContexts;
 
-	private String destinationDirectory;
+	private final String destinationDirectory;
 
-	private String zipFileName;
+	private final String zipFileName;
 
 	private File destZipFile = null;
 
-	private Collection<AbstractTask> tasks;
+	private final Collection<AbstractTask> tasks;
 
 	/** export all data */
 	public TaskDataExportJob(String destinationDirectory, boolean zipIt, String zipFileName) {
@@ -84,12 +84,15 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 
 	public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		int jobSize = 1; // 1 for repositories.xml
-		if (exportTaskList)
+		if (exportTaskList) {
 			jobSize++;
-		if (exportActivationHistory)
+		}
+		if (exportActivationHistory) {
 			jobSize++;
-		if (exportTaskContexts)
+		}
+		if (exportTaskContexts) {
 			jobSize += tasks.size();
+		}
 		monitor.beginTask(JOB_LABEL, jobSize);
 
 		// List of files to add to the zip archive
@@ -215,9 +218,10 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 						destTaskFile.delete();
 					}
 					if (!copy(sourceTaskContextFile, destTaskFile) && !errorDisplayed) {
-						Exception e = new Exception("Export Exception: " + sourceTaskContextFile.getPath()
-								+ " -> " + destTaskFile.getPath());
-						StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not export one or more task context files", e));
+						Exception e = new Exception("Export Exception: " + sourceTaskContextFile.getPath() + " -> "
+								+ destTaskFile.getPath());
+						StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+								"Could not export one or more task context files", e));
 						errorDisplayed = true;
 					}
 					monitor.worked(1);

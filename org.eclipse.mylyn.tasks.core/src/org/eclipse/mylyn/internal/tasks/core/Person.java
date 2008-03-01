@@ -15,9 +15,9 @@ import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
  */
 public class Person extends AbstractTaskContainer {
 
-	private String connectorKind;
+	private final String connectorKind;
 
-	private String repositoryUrl;
+	private final String repositoryUrl;
 
 	public Person(String email, String connectorKind, String repositoryUrl) {
 		super(email);

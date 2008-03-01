@@ -52,16 +52,16 @@ public class TracQueryWizardPage extends WizardPage {
 
 	private static final String TITLE_QUERY_TITLE = "Query Title";
 
-	private TaskRepository repository;
+	private final TaskRepository repository;
 
-	private TracRepositoryQuery query;
+	private final TracRepositoryQuery query;
 
 	private Text titleText;
 
 	private Composite scrollComposite;
 
 	/* Maintain order of criterions in order to be able to restore this later. */
-	private Set<SearchField> visibleSearchFields = new LinkedHashSet<SearchField>();
+	private final Set<SearchField> visibleSearchFields = new LinkedHashSet<SearchField>();
 
 	private List<SearchField> searchFields;
 
@@ -113,7 +113,8 @@ public class TracQueryWizardPage extends WizardPage {
 			if (field != null) {
 				showSearchField(field, filter);
 			} else {
-				StatusHandler.log(new Status(IStatus.WARNING, TracUiPlugin.PLUGIN_ID, "Ignoring invalid search filter: " + filter));
+				StatusHandler.log(new Status(IStatus.WARNING, TracUiPlugin.PLUGIN_ID,
+						"Ignoring invalid search filter: " + filter));
 			}
 		}
 	}
@@ -246,7 +247,7 @@ public class TracQueryWizardPage extends WizardPage {
 
 		protected String fieldName;
 
-		private String displayName;
+		private final String displayName;
 
 		public SearchField(String fieldName, String displayName) {
 			this.fieldName = fieldName;
@@ -271,7 +272,7 @@ public class TracQueryWizardPage extends WizardPage {
 
 	private class TextSearchField extends SearchField {
 
-		private CompareOperator[] compareOperators = { CompareOperator.CONTAINS, CompareOperator.CONTAINS_NOT,
+		private final CompareOperator[] compareOperators = { CompareOperator.CONTAINS, CompareOperator.CONTAINS_NOT,
 				CompareOperator.BEGINS_WITH, CompareOperator.ENDS_WITH, CompareOperator.IS, CompareOperator.IS_NOT, };
 
 		private List<TextCriterion> criterions;

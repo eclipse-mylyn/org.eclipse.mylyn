@@ -39,11 +39,11 @@ public class TaskReportGenerator implements IRunnableWithProgress {
 
 	private TaskList tasklist = null;
 
-	private List<ITaskCollector> collectors = new ArrayList<ITaskCollector>();
+	private final List<ITaskCollector> collectors = new ArrayList<ITaskCollector>();
 
-	private List<AbstractTask> tasks = new ArrayList<AbstractTask>();
+	private final List<AbstractTask> tasks = new ArrayList<AbstractTask>();
 
-	private Set<AbstractTaskContainer> filterCategories;
+	private final Set<AbstractTaskContainer> filterCategories;
 
 	public TaskReportGenerator(TaskList tlist) {
 		this(tlist, null);
@@ -97,10 +97,11 @@ public class TaskReportGenerator implements IRunnableWithProgress {
 				}
 			} else if (element instanceof AbstractTaskContainer) {
 				AbstractTaskContainer cat = (AbstractTaskContainer) element;
-				for (AbstractTask task : cat.getChildren())
+				for (AbstractTask task : cat.getChildren()) {
 					for (ITaskCollector collector : collectors) {
 						collector.consumeTask(task);
 					}
+				}
 
 			}
 		}

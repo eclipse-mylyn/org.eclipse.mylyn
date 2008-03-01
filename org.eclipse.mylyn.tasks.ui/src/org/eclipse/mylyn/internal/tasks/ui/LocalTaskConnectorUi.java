@@ -39,7 +39,7 @@ public class LocalTaskConnectorUi extends AbstractRepositoryConnectorUi {
 	public IWizard getNewTaskWizard(TaskRepository taskRepository, TaskSelection selection) {
 		return new NewLocalTaskWizard(selection);
 	}
-	
+
 	@Override
 	public IWizard getQueryWizard(TaskRepository repository, AbstractRepositoryQuery queryToEdit) {
 		return null;

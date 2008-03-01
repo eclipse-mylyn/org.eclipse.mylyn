@@ -22,8 +22,8 @@ import org.eclipse.swt.widgets.Menu;
  */
 public class RepositoryTextViewer extends SourceViewer {
 
-	private MenuManager menuManager;
-	
+	private final MenuManager menuManager;
+
 	private TaskRepository repository;
 
 	public RepositoryTextViewer(IVerticalRuler vertRuler, IOverviewRuler overRuler, TaskRepository repository,
@@ -67,9 +67,9 @@ public class RepositoryTextViewer extends SourceViewer {
 	public MenuManager getMenuManager() {
 		return menuManager;
 	}
-	
+
 	public void setMenu(Menu menu) {
-		if(getTextWidget() != null && !getTextWidget().isDisposed()) {
+		if (getTextWidget() != null && !getTextWidget().isDisposed()) {
 			getTextWidget().setMenu(menu);
 		}
 	}

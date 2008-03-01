@@ -33,7 +33,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
  */
 public class TaskList06DataMigrationTest extends TestCase {
 
-	private String sourceDir = "testdata/tasklistdatamigrationtest";
+	private final String sourceDir = "testdata/tasklistdatamigrationtest";
 
 	private File sourceDirFile;
 
@@ -147,8 +147,9 @@ class TaskListDataMigration implements IRunnableWithProgress {
 
 	public void doMigration(IProgressMonitor monitor) throws Exception {
 		try {
-			if (dataDirectory == null || !dataDirectory.exists())
+			if (dataDirectory == null || !dataDirectory.exists()) {
 				return;
+			}
 			monitor.beginTask("Mylar Data Migration", 4);
 			migrateTaskList(new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN));
 			monitor.worked(1);
@@ -166,8 +167,9 @@ class TaskListDataMigration implements IRunnableWithProgress {
 	public boolean migrateTaskList(IProgressMonitor monitor) throws Exception {
 		File oldTasklistFile = new File(dataDirectory, ITasksUiConstants.OLD_TASK_LIST_FILE);
 		File newTasklistFile = new File(dataDirectory, ITasksUiConstants.DEFAULT_TASK_LIST_FILE);
-		if (!oldTasklistFile.exists())
+		if (!oldTasklistFile.exists()) {
 			return false;
+		}
 		if (newTasklistFile.exists()) {
 			if (!newTasklistFile.delete()) {
 				throw new Exception("Could not overwrite tasklist");
@@ -191,11 +193,13 @@ class TaskListDataMigration implements IRunnableWithProgress {
 	public boolean migrateRepositoriesData(IProgressMonitor monitor) throws Exception {
 		File oldRepositoriesFile = new File(dataDirectory, TaskRepositoryManager.OLD_REPOSITORIES_FILE);
 		File newRepositoriesFile = new File(dataDirectory, TaskRepositoryManager.DEFAULT_REPOSITORIES_FILE);
-		if (!oldRepositoriesFile.exists())
+		if (!oldRepositoriesFile.exists()) {
 			return false;
+		}
 		if (newRepositoriesFile.exists()) {
 			if (!newRepositoriesFile.delete()) {
-				throw new Exception("Could not overwrite repositories file. Check read/write permission on data directory.");
+				throw new Exception(
+						"Could not overwrite repositories file. Check read/write permission on data directory.");
 			}
 		}
 		ArrayList<File> filesToZip = new ArrayList<File>();
@@ -204,7 +208,8 @@ class TaskListDataMigration implements IRunnableWithProgress {
 			monitor.beginTask("Migrate Repository Data", 1);
 			ZipFileUtil.createZipFile(newRepositoriesFile, filesToZip, new SubProgressMonitor(monitor, 1));
 			if (!oldRepositoriesFile.delete()) {
-				throw new Exception("Could not remove old repositories file. Check read/write permission on data directory.");
+				throw new Exception(
+						"Could not remove old repositories file. Check read/write permission on data directory.");
 			}
 			monitor.worked(1);
 		} catch (Exception e) {
@@ -232,7 +237,8 @@ class TaskListDataMigration implements IRunnableWithProgress {
 			File contextsFolder = new File(dataDirectory, WorkspaceAwareContextStore.CONTEXTS_DIRECTORY);
 			if (!contextsFolder.exists()) {
 				if (!contextsFolder.mkdir()) {
-					throw new Exception("Could not create contexts folder. Check read/write permission on data directory.");
+					throw new Exception(
+							"Could not create contexts folder. Check read/write permission on data directory.");
 				}
 			}
 			for (File file : contextFiles) {
@@ -241,12 +247,14 @@ class TaskListDataMigration implements IRunnableWithProgress {
 				File newContextFile = new File(contextsFolder, file.getName() + ".zip");
 				if (newContextFile.exists()) {
 					if (!newContextFile.delete()) {
-						throw new Exception("Could not overwrite context file. Check read/write permission on data directory.");
+						throw new Exception(
+								"Could not overwrite context file. Check read/write permission on data directory.");
 					}
 				}
 				ZipFileUtil.createZipFile(newContextFile, filesToZip, new SubProgressMonitor(monitor, 1));
 				if (!file.delete()) {
-					throw new Exception("Could not remove old context file. Check read/write permission on data directory.");
+					throw new Exception(
+							"Could not remove old context file. Check read/write permission on data directory.");
 				}
 				monitor.worked(1);
 			}
@@ -259,8 +267,9 @@ class TaskListDataMigration implements IRunnableWithProgress {
 	public boolean migrateActivityData(IProgressMonitor monitor) throws Exception {
 		File oldActivityFile = new File(dataDirectory, InteractionContextManager.OLD_CONTEXT_HISTORY_FILE_NAME
 				+ InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD);
-		if (!oldActivityFile.exists())
+		if (!oldActivityFile.exists()) {
 			return false;
+		}
 
 		File contextsFolder = new File(dataDirectory, WorkspaceAwareContextStore.CONTEXTS_DIRECTORY);
 		if (!contextsFolder.exists()) {
@@ -283,7 +292,8 @@ class TaskListDataMigration implements IRunnableWithProgress {
 			monitor.beginTask("Migrate Activity Data", 1);
 			ZipFileUtil.createZipFile(newActivityFile, filesToZip, new SubProgressMonitor(monitor, 1));
 			if (!oldActivityFile.delete()) {
-				throw new Exception("Could not remove old activity file. Check read/write permission on data directory.");
+				throw new Exception(
+						"Could not remove old activity file. Check read/write permission on data directory.");
 			}
 			monitor.worked(1);
 		} finally {

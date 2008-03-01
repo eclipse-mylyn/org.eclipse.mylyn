@@ -53,6 +53,7 @@ public class TaskDragSourceListener extends DragSourceAdapter {
 		this.selectionProvider = selectionProvider;
 	}
 
+	@Override
 	public void dragStart(DragSourceEvent event) {
 		ISelection selection = selectionProvider.getSelection();
 		if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
@@ -105,11 +106,13 @@ public class TaskDragSourceListener extends DragSourceAdapter {
 
 			return taskFiles;
 		} catch (IOException e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Cannot create a temp query file for Drag&Drop", e));
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					"Cannot create a temp query file for Drag&Drop", e));
 			return null;
 		}
 	}
 
+	@Override
 	public void dragSetData(DragSourceEvent event) {
 		if (selection == null || selection.isEmpty()) {
 			return;

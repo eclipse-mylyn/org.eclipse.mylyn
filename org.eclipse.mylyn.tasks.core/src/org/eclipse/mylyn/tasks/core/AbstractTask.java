@@ -33,7 +33,7 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 
 	private String taskKind = DEFAULT_TASK_KIND;
 
-	private String taskId;
+	private final String taskId;
 
 	private String owner;
 
@@ -48,12 +48,12 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 	private boolean isNotifiedIncoming = false;
 
 	private boolean reminded = false;
-	
+
 	private boolean floatingScheduledDate = false;
 
 	private String categoryHandle = "";
 
-	private Set<AbstractTaskContainer> containers = new HashSet<AbstractTaskContainer>();
+	private final Set<AbstractTaskContainer> containers = new HashSet<AbstractTaskContainer>();
 
 	// ************ Synch ****************
 
@@ -127,7 +127,7 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 			}
 		}
 
-		/** 
+		/**
 		 * @since 2.3
 		 */
 		public static PriorityLevel fromLevel(int level) {
@@ -148,7 +148,7 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 			}
 			return getDefault();
 		}
-		
+
 		public static PriorityLevel fromString(String string) {
 			if (string.equals("P1")) {
 				return P1;
@@ -168,7 +168,6 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 			return getDefault();
 		}
 
-		
 		public static PriorityLevel fromDescription(String string) {
 			if (string == null) {
 				return null;

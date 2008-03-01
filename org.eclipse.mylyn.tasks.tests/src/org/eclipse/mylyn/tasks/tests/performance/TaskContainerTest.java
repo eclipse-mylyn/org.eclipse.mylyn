@@ -38,7 +38,7 @@ public class TaskContainerTest extends PerformanceTestCase {
 			task.contains("handle");
 			stopMeasuring();
 		}
-		
+
 		commitMeasurements();
 		assertPerformance();
 	}

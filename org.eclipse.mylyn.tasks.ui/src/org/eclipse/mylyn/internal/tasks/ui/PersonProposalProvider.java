@@ -31,9 +31,9 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
  */
 public class PersonProposalProvider implements IContentProposalProvider {
 
-	private AbstractTask currentTask;
+	private final AbstractTask currentTask;
 
-	private RepositoryTaskData currentTaskData;
+	private final RepositoryTaskData currentTaskData;
 
 	private String currentUser;
 
@@ -48,7 +48,7 @@ public class PersonProposalProvider implements IContentProposalProvider {
 		if (contents == null) {
 			throw new IllegalArgumentException();
 		}
-		
+
 		SortedSet<String> addressSet = getAddressSet();
 		if (position > 0) {
 			// retrieve subset of the tree set using key range
@@ -110,8 +110,9 @@ public class PersonProposalProvider implements IContentProposalProvider {
 
 			if (repository != null) {
 				currentUser = repository.getUserName();
-				if (currentUser != null && !repository.isAnonymous())
+				if (currentUser != null && !repository.isAnonymous()) {
 					addressSet.add(currentUser);
+				}
 			}
 
 			Collection<AbstractTask> allTasks = TasksUiPlugin.getTaskListManager().getTaskList().getAllTasks();

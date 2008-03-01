@@ -140,7 +140,7 @@ public class AttributeEditorToolkit {
 					actionContributor.updateSelectableActions(viewer.getSelection());
 				}
 			});
-		
+
 			if (viewer instanceof RepositoryTextViewer) {
 				RepositoryTextViewer textViewer = (RepositoryTextViewer) viewer;
 				MenuManager menuManager = textViewer.getMenuManager();
@@ -226,7 +226,6 @@ public class AttributeEditorToolkit {
 		return false;
 	}
 
-	
 	protected void configureContextMenuManager(MenuManager menuManager, TextViewer textViewer) {
 	}
 
@@ -258,7 +257,5 @@ public class AttributeEditorToolkit {
 //		return false;
 //	}
 //
-	
-	
 
 }

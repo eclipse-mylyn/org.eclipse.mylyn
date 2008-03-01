@@ -12,8 +12,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.AddExistingTaskWizard;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
@@ -40,7 +40,7 @@ public class AddRepositoryTaskAction extends Action implements IViewActionDelega
 				dialog.create();
 				dialog.setTitle(WIZARD_LABEL);
 				dialog.setBlockOnOpen(true);
-				if (dialog.open() == Dialog.CANCEL) {
+				if (dialog.open() == Window.CANCEL) {
 					dialog.close();
 					return;
 				}

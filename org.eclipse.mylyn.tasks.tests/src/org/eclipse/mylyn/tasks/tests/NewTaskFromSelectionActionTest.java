@@ -62,7 +62,7 @@ public class NewTaskFromSelectionActionTest extends TestCase {
 
 		private static final long serialVersionUID = 1L;
 
-		private Map<String, String> attributeMap = new HashMap<String, String>();
+		private final Map<String, String> attributeMap = new HashMap<String, String>();
 
 		@Override
 		public Date getDateForAttributeType(String attributeKey, String dateString) {

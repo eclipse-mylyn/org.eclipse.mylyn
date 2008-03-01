@@ -66,20 +66,20 @@ public class TaskActivityManager {
 
 	private static final String DESCRIPTION_PAST = "Past";
 
-	private SortedMap<Calendar, Set<AbstractTask>> scheduledTasks = Collections.synchronizedSortedMap(new TreeMap<Calendar, Set<AbstractTask>>());
+	private final SortedMap<Calendar, Set<AbstractTask>> scheduledTasks = Collections.synchronizedSortedMap(new TreeMap<Calendar, Set<AbstractTask>>());
 
-	private SortedMap<Calendar, Set<AbstractTask>> dueTasks = Collections.synchronizedSortedMap(new TreeMap<Calendar, Set<AbstractTask>>());
+	private final SortedMap<Calendar, Set<AbstractTask>> dueTasks = Collections.synchronizedSortedMap(new TreeMap<Calendar, Set<AbstractTask>>());
 
-	private SortedMap<Calendar, Set<AbstractTask>> activeTasks = Collections.synchronizedSortedMap(new TreeMap<Calendar, Set<AbstractTask>>());
+	private final SortedMap<Calendar, Set<AbstractTask>> activeTasks = Collections.synchronizedSortedMap(new TreeMap<Calendar, Set<AbstractTask>>());
 
-	private Map<AbstractTask, SortedMap<Calendar, Long>> taskElapsedTimeMap = new ConcurrentHashMap<AbstractTask, SortedMap<Calendar, Long>>();
+	private final Map<AbstractTask, SortedMap<Calendar, Long>> taskElapsedTimeMap = new ConcurrentHashMap<AbstractTask, SortedMap<Calendar, Long>>();
 
-	private List<ScheduledTaskContainer> scheduleWeekDays = new ArrayList<ScheduledTaskContainer>();
+	private final List<ScheduledTaskContainer> scheduleWeekDays = new ArrayList<ScheduledTaskContainer>();
 
-	private ArrayList<ScheduledTaskContainer> scheduleContainers = new ArrayList<ScheduledTaskContainer>();
-	
-	private List<ITaskTimingListener> timingListeners = new ArrayList<ITaskTimingListener>();
-	
+	private final ArrayList<ScheduledTaskContainer> scheduleContainers = new ArrayList<ScheduledTaskContainer>();
+
+	private final List<ITaskTimingListener> timingListeners = new ArrayList<ITaskTimingListener>();
+
 	private ScheduledTaskContainer scheduledThisWeek;
 
 	private ScheduledTaskContainer scheduledNextWeek;
@@ -211,7 +211,8 @@ public class TaskActivityManager {
 				return;
 			}
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Error parsing interaction event", t));
+			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+					"Error parsing interaction event", t));
 		}
 	}
 
@@ -248,14 +249,15 @@ public class TaskActivityManager {
 			activeTasks.put(hourOfDay, active);
 		}
 		active.add(activatedTask);
-		
+
 		long totalElapsed = getElapsedTime(activityMap);
-		
+
 		for (ITaskTimingListener listener : new ArrayList<ITaskTimingListener>(timingListeners)) {
 			try {
 				listener.elapsedTimeUpdated(activatedTask, totalElapsed);
 			} catch (Throwable t) {
-				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Task activity listener failed: \"" + listener + "\"", t));
+				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+						"Task activity listener failed: \"" + listener + "\"", t));
 			}
 		}
 	}
@@ -460,18 +462,16 @@ public class TaskActivityManager {
 		}
 	}
 
-	
 	public void setScheduledFor(AbstractTask task, Date reminderDate) {
 		setScheduledFor(task, reminderDate, false);
 	}
 
-	
 	public void setScheduledFor(AbstractTask task, Date reminderDate, boolean floating) {
 		// API-3.0: remove check
 		if (task == null) {
 			return;
 		}
-		
+
 		if (reminderDate != null && !reminderDate.equals(task.getScheduledForDate())) {
 			task.setReminded(false);
 		}
@@ -480,7 +480,7 @@ public class TaskActivityManager {
 		task.internalSetFloatingScheduledDate(floating);
 		if (reminderDate == null) {
 			removeScheduledTask(task);
-		} else {		
+		} else {
 			removeScheduledTask(task);
 			addScheduledTask(task);
 		}
@@ -523,7 +523,6 @@ public class TaskActivityManager {
 		return false;
 	}
 
-	
 	public boolean isPastReminder(AbstractTask task) {
 		if (task == null || task.isCompleted() || task.getScheduledForDate() == null) {
 			return false;
@@ -531,7 +530,7 @@ public class TaskActivityManager {
 			return isPastReminder(task.getScheduledForDate(), task.isCompleted());
 		}
 	}
-	
+
 	public boolean isPastReminder(Date date, boolean isComplete) {
 		if (date == null || isComplete) {
 			return false;
@@ -545,8 +544,6 @@ public class TaskActivityManager {
 		}
 	}
 
-	
-	
 	public boolean isOverdue(AbstractTask task) {
 		return (!task.isCompleted() && task.getDueDate() != null && new Date().after(task.getDueDate()))
 				&& repositoryManager.isOwnedByUser(task);
@@ -575,7 +572,7 @@ public class TaskActivityManager {
 		}
 		return false;
 	}
-	
+
 	public boolean isScheduledForToday(Date date, boolean floating) {
 		if (date != null) {
 			if (!floating) {
@@ -594,7 +591,7 @@ public class TaskActivityManager {
 
 		return false;
 	}
-	
+
 	public boolean isScheduledAfterThisWeek(Date date) {
 		Calendar cal = TaskActivityUtil.getCalendar();
 		if (date != null) {
@@ -638,7 +635,7 @@ public class TaskActivityManager {
 		}
 		return false;
 	}
-	
+
 	public boolean isScheduledForNextWeek(AbstractTask task) {
 		if (task != null) {
 			Date reminder = task.getScheduledForDate();
@@ -737,7 +734,6 @@ public class TaskActivityManager {
 			scheduleContainers.add(day);
 		}
 
-		
 		Calendar currentBegin = TaskActivityUtil.getCalendar();
 		currentBegin.setTime(startTime);
 		TaskActivityUtil.snapStartOfWorkWeek(currentBegin);
@@ -747,7 +743,7 @@ public class TaskActivityManager {
 		scheduledThisWeek = new ScheduledTaskContainer(this, currentBegin, currentEnd, DESCRIPTION_THIS_WEEK);
 		scheduledThisWeek.setCaptureFloating(true);
 		//scheduleContainers.add(scheduledThisWeek);
-		
+
 //		GregorianCalendar currentBegin = new GregorianCalendar();
 //		currentBegin.setFirstDayOfWeek(startDay);
 //		currentBegin.setTime(startTime);
@@ -774,7 +770,6 @@ public class TaskActivityManager {
 				DESCRIPTION_NEXT_WEEK);
 		scheduledNextWeek.setCaptureFloating(true);
 		scheduleContainers.add(scheduledNextWeek);
-		
 
 		GregorianCalendar futureStart = new GregorianCalendar();
 		futureStart.setFirstDayOfWeek(startDay);
@@ -868,22 +863,23 @@ public class TaskActivityManager {
 		}
 		return false;
 	}
-	
+
 	public void addTimingListener(ITaskTimingListener listener) {
 		timingListeners.add(listener);
 	}
-	
+
 	public void removeTimingListener(ITaskTimingListener listener) {
 		timingListeners.remove(listener);
 	}
 
 	public boolean isFloatingThisWeek(AbstractTask singleTaskSelection) {
-		if(singleTaskSelection != null && singleTaskSelection.getScheduledForDate() != null) {
-			if(singleTaskSelection.internalIsFloatingScheduledDate() && isScheduledForThisWeek(singleTaskSelection.getScheduledForDate())) {
+		if (singleTaskSelection != null && singleTaskSelection.getScheduledForDate() != null) {
+			if (singleTaskSelection.internalIsFloatingScheduledDate()
+					&& isScheduledForThisWeek(singleTaskSelection.getScheduledForDate())) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 }

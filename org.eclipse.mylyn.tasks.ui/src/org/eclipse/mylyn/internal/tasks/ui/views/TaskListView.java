@@ -225,7 +225,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private boolean linkWithEditor;
 
-	private TaskListCellModifier taskListCellModifier = new TaskListCellModifier(this);
+	private final TaskListCellModifier taskListCellModifier = new TaskListCellModifier(this);
 
 	private IThemeManager themeManager;
 
@@ -257,9 +257,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private RemoveFromCategoryAction removeFromCategoryAction;
 
-	private TaskActivateAction activateAction = new TaskActivateAction();
+	private final TaskActivateAction activateAction = new TaskActivateAction();
 
-	private TaskDeactivateAction deactivateAction = new TaskDeactivateAction();
+	private final TaskDeactivateAction deactivateAction = new TaskDeactivateAction();
 
 	private FilterCompletedTasksAction filterCompleteTask;
 
@@ -279,15 +279,15 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private LinkWithEditorAction linkWithEditorAction;
 
-	private TaskPriorityFilter filterPriority = new TaskPriorityFilter();
+	private final TaskPriorityFilter filterPriority = new TaskPriorityFilter();
 
-	private TaskCompletionFilter filterComplete = new TaskCompletionFilter();
+	private final TaskCompletionFilter filterComplete = new TaskCompletionFilter();
 
-	private TaskArchiveFilter filterArchive = new TaskArchiveFilter();
+	private final TaskArchiveFilter filterArchive = new TaskArchiveFilter();
 
 	private TaskWorkingSetFilter filterWorkingSet;
 
-	private Set<AbstractTaskListFilter> filters = new HashSet<AbstractTaskListFilter>();
+	private final Set<AbstractTaskListFilter> filters = new HashSet<AbstractTaskListFilter>();
 
 	protected String[] columnNames = new String[] { "Summary" };
 
@@ -322,7 +322,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		}
 	};
 
-	private LinkedHashMap<String, IStructuredSelection> lastSelectionByTaskHandle = new LinkedHashMap<String, IStructuredSelection>(
+	private final LinkedHashMap<String, IStructuredSelection> lastSelectionByTaskHandle = new LinkedHashMap<String, IStructuredSelection>(
 			SIZE_MAX_SELECTION_HISTORY);
 
 	/**
@@ -375,10 +375,11 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 		private void expandRegion(Event event, Scrollable scrollable, GC gc, Rectangle area) {
 			int columnCount;
-			if (scrollable instanceof Table)
+			if (scrollable instanceof Table) {
 				columnCount = ((Table) scrollable).getColumnCount();
-			else
+			} else {
 				columnCount = ((Tree) scrollable).getColumnCount();
+			}
 
 			if (event.index == columnCount - 1 || columnCount == 0) {
 				int width = area.x + area.width - event.x;
@@ -526,7 +527,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 					categoryGradientStart = new Color(Display.getDefault(), red, green, blue);
 				} catch (Exception e) {
 					categoryGradientStart = getViewer().getTree().getParent().getBackground();
-					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not set color: " + red + ", " + green + ", " + blue, e));
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not set color: " + red
+							+ ", " + green + ", " + blue, e));
 				}
 				red = Math.max(0, (int) (parentBackground.getRed() / GRADIENT_BOTTOM));
 				green = Math.max(0, (int) (parentBackground.getGreen() / GRADIENT_BOTTOM));
@@ -538,7 +540,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 					categoryGradientEnd = new Color(Display.getDefault(), red, green, blue);
 				} catch (Exception e) {
 					categoryGradientStart = getViewer().getTree().getParent().getBackground();
-					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not set color: " + red + ", " + green + ", " + blue, e));
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not set color: " + red
+							+ ", " + green + ", " + blue, e));
 				}
 			}
 		} else if (categoryGradientStart != null && categoryGradientStart.equals(categoryGradientEnd)) {
@@ -610,8 +613,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	}
 
 	private void updateDescription(AbstractTask task) {
-		if (getSite() == null || getSite().getPage() == null)
+		if (getSite() == null || getSite().getPage() == null) {
 			return;
+		}
 
 		IViewReference reference = getSite().getPage().findViewReference(ID);
 		boolean shouldSetDescription = false;
@@ -744,6 +748,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				updateToolTip(false);
 			}
 
+			@Override
 			protected void updateExpansionState(Object item) {
 				if (TaskListView.this.isFocusedMode()) {
 					TaskListView.this.getViewer().expandToLevel(item, 3);
@@ -994,7 +999,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	/**
 	 * Tracks editor activation and jump to corresponding task, if applicable
 	 */
-	private IPartListener editorListener = new IPartListener() {
+	private final IPartListener editorListener = new IPartListener() {
 
 		private void jumpToEditor(IWorkbenchPart part) {
 			if (!linkWithEditor || !(part instanceof IEditorPart)) {
@@ -1034,8 +1039,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	private void initDragAndDrop(Composite parent) {
 		Transfer[] dragTypes = new Transfer[] { TaskTransfer.getInstance(), FileTransfer.getInstance() };
 
-		Transfer[] dropTypes = new Transfer[] { TaskTransfer.getInstance(), FileTransfer.getInstance(), TextTransfer.getInstance(),
-				RTFTransfer.getInstance() };
+		Transfer[] dropTypes = new Transfer[] { TaskTransfer.getInstance(), FileTransfer.getInstance(),
+				TextTransfer.getInstance(), RTFTransfer.getInstance() };
 
 		getViewer().addDragSupport(DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK, dragTypes,
 				new TaskDragSourceListener(getViewer()));
@@ -1283,10 +1288,11 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				action.setEnabled(false);
 			} else if (action instanceof DeleteAction) {
 				if (element instanceof TaskArchive || element instanceof UncategorizedTaskContainer
-						|| element instanceof UnmatchedTaskContainer)
+						|| element instanceof UnmatchedTaskContainer) {
 					action.setEnabled(false);
-				else
+				} else {
 					action.setEnabled(true);
+				}
 			} else if (action instanceof GoIntoAction) {
 				TaskCategory cat = (TaskCategory) element;
 				if (cat.getChildren().size() > 0) {
@@ -1505,8 +1511,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	public AbstractTask getSelectedTask() {
 		ISelection selection = getViewer().getSelection();
-		if (selection.isEmpty())
+		if (selection.isEmpty()) {
 			return null;
+		}
 		if (selection instanceof StructuredSelection) {
 			StructuredSelection structuredSelection = (StructuredSelection) selection;
 			Object element = structuredSelection.getFirstElement();

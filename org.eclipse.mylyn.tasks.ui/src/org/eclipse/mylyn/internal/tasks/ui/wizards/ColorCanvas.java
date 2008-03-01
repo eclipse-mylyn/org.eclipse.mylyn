@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class ColorCanvas extends Canvas {
 
-	private Color color;
+	private final Color color;
 
 	public ColorCanvas(Composite parent, int style, RGB rgb) {
 		super(parent, style);

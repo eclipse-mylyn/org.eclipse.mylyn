@@ -52,7 +52,8 @@ public class TaskWorkingSetElementFactory implements IElementFactory {
 					return project;
 				}
 			} catch (Throwable t) {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not not determine project for handle: " + projectHandle, t));
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						"Could not not determine project for handle: " + projectHandle, t));
 			}
 		}
 		return null;

@@ -13,14 +13,13 @@ import org.eclipse.mylyn.internal.tasks.ui.views.AbstractTaskListPresentation;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskScheduleContentProvider;
 
-
 /**
  * @author Mik Kersten
  */
 public class ScheduledPresentation extends AbstractTaskListPresentation {
 
 	public static final String ID = "org.eclipse.mylyn.tasks.ui.scheduled";
-	
+
 	public ScheduledPresentation() {
 		super(ID);
 	}

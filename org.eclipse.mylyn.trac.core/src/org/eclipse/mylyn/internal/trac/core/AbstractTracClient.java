@@ -84,9 +84,8 @@ public abstract class AbstractTracClient implements ITracClient {
 		String formToken = getFormToken(httpClient);
 		NameValuePair[] data = { new NameValuePair("referer", ""),
 				new NameValuePair("user", credentials.getUserName()),
-				new NameValuePair("password", credentials.getPassword()), 
-				new NameValuePair("__FORM_TOKEN", formToken)};
-		
+				new NameValuePair("password", credentials.getPassword()), new NameValuePair("__FORM_TOKEN", formToken) };
+
 		post.setRequestBody(data);
 		try {
 			int code = WebClientUtil.execute(httpClient, hostConfiguration, post, monitor);

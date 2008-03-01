@@ -37,21 +37,21 @@ import org.eclipse.swt.widgets.Display;
  * Note: Copied from FormColors of UI Forms.
  * </p>
  * 
- * @author	Benjamin Pasero
+ * @author Benjamin Pasero
  */
 class NotificationPopupColors {
-	
-	private Display display;
+
+	private final Display display;
 
 	private Color titleText;
-	
+
 	private Color gradientBegin;
 
 	private Color gradientEnd;
 
 	private Color border;
-	
-	private ResourceManager resourceManager;
+
+	private final ResourceManager resourceManager;
 
 	NotificationPopupColors(Display display, ResourceManager resourceManager) {
 		this.display = display;
@@ -63,7 +63,7 @@ class NotificationPopupColors {
 	private void createColors() {
 		createBorderColor();
 		createGradientColors();
-		
+
 		titleText = getColor(resourceManager, getSystemColor(SWT.COLOR_TITLE_INACTIVE_FOREGROUND));
 	}
 
@@ -82,7 +82,7 @@ class NotificationPopupColors {
 	Color getTitleText() {
 		return titleText;
 	}
-	
+
 	private void createBorderColor() {
 		RGB tbBorder = getSystemColor(SWT.COLOR_TITLE_BACKGROUND);
 		RGB bg = getImpliedBackground().getRGB();
@@ -92,23 +92,11 @@ class NotificationPopupColors {
 		// 255, then apply specified opacity for Group 1
 		// Examples: Vista, XP Silver, Wn High Con #2
 		// Keyline = TITLE_BACKGROUND @ 70% Opacity over LIST_BACKGROUND
-		if (testTwoPrimaryColors(tbBorder, 179, 256))
+		if (testTwoPrimaryColors(tbBorder, 179, 256)) {
 			tbBorder = blend(tbBorder, bg, 70);
-
-		// Group 2
-		// Rule: If at least 2 of the RGB values are equal to or between 121 and
-		// 179, then apply specified opacity for Group 2
-		// Examples: XP Olive, OSX Graphite, Linux GTK, Wn High Con Black
-		// Keyline = TITLE_BACKGROUND @ 50% Opacity over LIST_BACKGROUND
-		else if (testTwoPrimaryColors(tbBorder, 120, 180))
+		} else if (testTwoPrimaryColors(tbBorder, 120, 180)) {
 			tbBorder = blend(tbBorder, bg, 50);
-
-		// Group 3
-		// Rule: Everything else
-		// Examples: XP Default, Wn Classic Standard, Wn Marine, Wn Plum, OSX
-		// Aqua, Wn High Con White, Wn High Con #1
-		// Keyline = TITLE_BACKGROUND @ 30% Opacity over LIST_BACKGROUND
-		else {
+		} else {
 			tbBorder = blend(tbBorder, bg, 30);
 		}
 
@@ -173,12 +161,15 @@ class NotificationPopupColors {
 
 	private boolean testTwoPrimaryColors(RGB rgb, int from, int to) {
 		int total = 0;
-		if (testPrimaryColor(rgb.red, from, to))
+		if (testPrimaryColor(rgb.red, from, to)) {
 			total++;
-		if (testPrimaryColor(rgb.green, from, to))
+		}
+		if (testPrimaryColor(rgb.green, from, to)) {
 			total++;
-		if (testPrimaryColor(rgb.blue, from, to))
+		}
+		if (testPrimaryColor(rgb.blue, from, to)) {
 			total++;
+		}
 		return total >= 2;
 	}
 

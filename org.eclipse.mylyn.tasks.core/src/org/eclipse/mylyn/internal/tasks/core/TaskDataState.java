@@ -26,9 +26,9 @@ public class TaskDataState {
 
 	private Set<RepositoryTaskAttribute> edits = new CopyOnWriteArraySet<RepositoryTaskAttribute>();
 
-	private String url;
+	private final String url;
 
-	private String id;
+	private final String id;
 
 	public TaskDataState(String repositoryUrl, String id) {
 		this.url = repositoryUrl;
@@ -82,23 +82,30 @@ public class TaskDataState {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		final TaskDataState other = (TaskDataState) obj;
 		if (id == null) {
-			if (other.id != null)
+			if (other.id != null) {
 				return false;
-		} else if (!id.equals(other.id))
+			}
+		} else if (!id.equals(other.id)) {
 			return false;
+		}
 		if (url == null) {
-			if (other.url != null)
+			if (other.url != null) {
 				return false;
-		} else if (!url.equals(other.url))
+			}
+		} else if (!url.equals(other.url)) {
 			return false;
+		}
 		return true;
 	}
 

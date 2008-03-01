@@ -31,16 +31,18 @@ public class GroupSubTasksAction extends Action {
 		setToolTipText(LABEL);
 		setId(ID);
 		// setImageDescriptor(TasksUiImages.FILTER_COMPLETE);
-		setChecked(TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				TasksUiPreferenceConstants.GROUP_SUBTASKS));
+		setChecked(TasksUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getBoolean(TasksUiPreferenceConstants.GROUP_SUBTASKS));
 	}
 
 	@Override
 	public void run() {
-		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TasksUiPreferenceConstants.GROUP_SUBTASKS,
-				isChecked());
+		TasksUiPlugin.getDefault()
+				.getPreferenceStore()
+				.setValue(TasksUiPreferenceConstants.GROUP_SUBTASKS, isChecked());
 		// TODO: refresh not getting rid of subtasks
-		
+
 		view.refresh(true);
 //		try {
 //			view.getViewer().getControl().setRedraw(false);

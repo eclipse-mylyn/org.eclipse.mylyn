@@ -44,7 +44,8 @@ public class TaskComment extends AttributeContainer implements Serializable {
 	/**
 	 * Set the comment number
 	 * 
-	 * @param number the number of the comment
+	 * @param number
+	 *            the number of the comment
 	 */
 	public void setNumber(int number) {
 		this.number = number;

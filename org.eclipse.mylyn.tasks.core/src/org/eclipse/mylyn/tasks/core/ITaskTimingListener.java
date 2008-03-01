@@ -8,15 +8,14 @@
 
 package org.eclipse.mylyn.tasks.core;
 
-/** 
+/**
  * @Since 2.3
  * @author Rob Elves
  */
 public interface ITaskTimingListener {
-	
+
 	/**
-	 * Warning: This is called frequently (i.e. every 15s)
-	 * Implementers are responsible for launching jobs for long
+	 * Warning: This is called frequently (i.e. every 15s) Implementers are responsible for launching jobs for long
 	 * running activity.
 	 */
 	public abstract void elapsedTimeUpdated(AbstractTask task, long newElapsedTime);

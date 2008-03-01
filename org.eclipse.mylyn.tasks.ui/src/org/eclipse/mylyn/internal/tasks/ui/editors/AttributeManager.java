@@ -28,7 +28,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 // API 3.0 move to core?
 public class AttributeManager {
 
-	private Set<RepositoryTaskAttribute> changedAttributes = new HashSet<RepositoryTaskAttribute>();
+	private final Set<RepositoryTaskAttribute> changedAttributes = new HashSet<RepositoryTaskAttribute>();
 
 	private List<IAttributeManagerListener> listeners;
 
@@ -42,7 +42,7 @@ public class AttributeManager {
 
 	private RepositoryTaskData taskData;
 
-	private TaskDataManager taskDataManager;
+	private final TaskDataManager taskDataManager;
 
 	private final TaskRepository taskRepository;
 
@@ -206,18 +206,21 @@ public class AttributeManager {
 		// return false;
 
 	}
+
 	public void operationChanged(RepositoryOperation operation) {
 		// TODO EDITOR implement
 	}
+
 	public void refreshInput() {
 		setTaskData(taskDataManager.getEditableCopy(storageUrl, storageId));
 		setOldTaskData(taskDataManager.getOldTaskData(storageUrl, storageId));
 		setOldEdits(taskDataManager.getEdits(storageUrl, storageId));
 	}
+
 	public void removeAttributeManagerListener(IAttributeManagerListener listener) {
 		listeners.remove(listener);
 	}
-	
+
 	public void save() {
 		TasksUiPlugin.getTaskDataManager().saveEdits(storageUrl, storageId,
 				Collections.unmodifiableSet(changedAttributes));

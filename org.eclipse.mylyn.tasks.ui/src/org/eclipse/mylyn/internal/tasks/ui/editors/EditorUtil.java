@@ -27,7 +27,6 @@ public class EditorUtil {
 			}
 		}
 	}
-	
 
 	/**
 	 * Programmatically expand the provided ExpandableComposite, using reflection to fire the expansion listeners (see

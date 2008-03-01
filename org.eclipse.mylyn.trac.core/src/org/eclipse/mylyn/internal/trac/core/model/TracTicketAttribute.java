@@ -17,9 +17,9 @@ public class TracTicketAttribute implements Comparable<TracTicketAttribute>, Ser
 
 	private static final long serialVersionUID = -8611030780681519787L;
 
-	private String name;
+	private final String name;
 
-	private int value;
+	private final int value;
 
 	public TracTicketAttribute(String name, int value) {
 		this.name = name;

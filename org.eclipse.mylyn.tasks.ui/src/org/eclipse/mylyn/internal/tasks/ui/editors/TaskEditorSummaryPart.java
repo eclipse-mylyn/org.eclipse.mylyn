@@ -8,7 +8,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
-
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractAttributeMapper;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;

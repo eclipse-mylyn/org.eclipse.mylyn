@@ -21,14 +21,14 @@ import org.w3c.dom.Element;
  * @author Jevgeni Holodkov
  */
 public class MockTaskListFactory extends AbstractTaskListFactory {
-	
+
 	private static final String QUERY_ELEMENT_NAME = "MockQuery";
 
 	@Override
 	public boolean canCreate(AbstractTask task) {
 		return task instanceof MockRepositoryTask;
 	}
-	
+
 	@Override
 	public boolean canCreate(AbstractRepositoryQuery query) {
 		return query instanceof MockRepositoryQuery;
@@ -49,14 +49,14 @@ public class MockTaskListFactory extends AbstractTaskListFactory {
 	public String getQueryElementName(AbstractRepositoryQuery query) {
 		return QUERY_ELEMENT_NAME;
 	}
-	
+
 	@Override
 	public AbstractRepositoryQuery createQuery(String repositoryUrl, String queryString, String label, Element element) {
 		MockRepositoryQuery query = new MockRepositoryQuery(label, queryString);
 		query.setRepositoryUrl(repositoryUrl);
 		return query;
 	}
-	
+
 	@Override
 	public Set<String> getQueryElementNames() {
 		Set<String> names = new HashSet<String>();

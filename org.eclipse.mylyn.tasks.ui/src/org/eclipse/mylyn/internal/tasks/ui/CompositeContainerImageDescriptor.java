@@ -18,7 +18,7 @@ import org.eclipse.swt.graphics.Point;
  */
 public class CompositeContainerImageDescriptor extends CompositeImageDescriptor {
 
-	private ImageData base;
+	private final ImageData base;
 
 	private ImageData overlay;
 

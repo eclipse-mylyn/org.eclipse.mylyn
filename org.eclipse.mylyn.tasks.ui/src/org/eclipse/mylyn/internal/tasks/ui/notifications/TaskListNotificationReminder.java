@@ -24,13 +24,16 @@ public class TaskListNotificationReminder extends TaskListNotification {
 		super(task);
 	}
 
+	@Override
 	public Image getNotificationKindImage() {
 		return TasksUiImages.getImage(TasksUiImages.OVERLAY_HAS_DUE);
 	}
 
+	@Override
 	public int compareTo(AbstractNotification anotherNotification) throws ClassCastException {
-		if (!(anotherNotification != null))
+		if (!(anotherNotification != null)) {
 			throw new ClassCastException("A ITaskListNotification object expected.");
+		}
 		Date anotherDate = (anotherNotification).getDate();
 		if (date != null && anotherDate != null) {
 			return date.compareTo(anotherDate);

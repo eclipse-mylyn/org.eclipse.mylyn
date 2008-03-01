@@ -13,7 +13,6 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -106,9 +105,9 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	//private ArrayList<ScheduledTaskContainer> scheduleContainers = new ArrayList<ScheduledTaskContainer>();
 
-	private List<ITaskActivityListener> activityListeners = new ArrayList<ITaskActivityListener>();
+	private final List<ITaskActivityListener> activityListeners = new ArrayList<ITaskActivityListener>();
 
-	private TaskListWriter taskListWriter;
+	private final TaskListWriter taskListWriter;
 
 	private File taskListFile;
 
@@ -116,17 +115,18 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	private final TaskList taskList = new TaskList();
 
-	private TaskActivationHistory taskActivityHistory = new TaskActivationHistory();
+	private final TaskActivationHistory taskActivityHistory = new TaskActivationHistory();
 
 	private boolean taskListInitialized = false;
 
-	private Timer timer;
+	private final Timer timer;
 
 	/**
 	 * public for testing
 	 * 
 	 * @deprecated use TaskActivityManager.getStartTime()
 	 */
+	@Deprecated
 	public Date startTime = new Date();
 
 	private final ITaskListChangeListener CHANGE_LISTENER = new ITaskListChangeListener() {
@@ -321,8 +321,7 @@ public class TaskListManager implements IPropertyChangeListener {
 						"Task list save attempted before initialization"));
 			}
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Could not save task list", e));
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not save task list", e));
 		}
 	}
 
@@ -337,14 +336,14 @@ public class TaskListManager implements IPropertyChangeListener {
 	public void removeActivityListener(ITaskActivityListener listener) {
 		activityListeners.remove(listener);
 	}
-	
+
 	/**
 	 * @API-3.0 this should be moved to TaskActivityManager
 	 */
 	public void addTimingListener(ITaskTimingListener listener) {
 		TasksUiPlugin.getTaskActivityManager().addTimingListener(listener);
 	}
-	
+
 	/**
 	 * @API-3.0 this should be moved to TaskActivityManager
 	 */
@@ -358,19 +357,19 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	public void activateTask(AbstractTask task, boolean addToHistory) {
 		deactivateAllTasks();
-		
+
 		// notify that a task is about to be activated
 		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
 			try {
-				if(listener instanceof ITaskActivityListener2){
-					((ITaskActivityListener2)listener).preTaskActivated(task);
+				if (listener instanceof ITaskActivityListener2) {
+					((ITaskActivityListener2) listener).preTaskActivated(task);
 				}
 			} catch (Throwable t) {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Task activity listener failed: " + listener, t));
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Task activity listener failed: "
+						+ listener, t));
 			}
 		}
-		
+
 		try {
 			taskList.setActive(task, true);
 			if (addToHistory) {
@@ -385,8 +384,7 @@ public class TaskListManager implements IPropertyChangeListener {
 				}
 			}
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Could not activate task", t));
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not activate task", t));
 		}
 	}
 
@@ -409,8 +407,8 @@ public class TaskListManager implements IPropertyChangeListener {
 						((ITaskActivityListener2) listener).preTaskDeactivated(task);
 					}
 				} catch (Throwable t) {
-					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-							"Notification failed for: " + listener, t));
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Notification failed for: "
+							+ listener, t));
 				}
 			}
 
@@ -419,8 +417,8 @@ public class TaskListManager implements IPropertyChangeListener {
 				try {
 					listener.taskDeactivated(task);
 				} catch (Throwable t) {
-					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-							"Notification failed for: " + listener, t));
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Notification failed for: "
+							+ listener, t));
 				}
 			}
 		}
@@ -494,7 +492,7 @@ public class TaskListManager implements IPropertyChangeListener {
 			if (!Platform.isRunning() || ContextCorePlugin.getDefault() == null) {
 				return;
 			} else {
-				Calendar now = GregorianCalendar.getInstance();
+				Calendar now = Calendar.getInstance();
 				ScheduledTaskContainer thisWeek = TasksUiPlugin.getTaskActivityManager().getActivityThisWeek();
 				if (!thisWeek.includes(now)) {
 					resetAndRollOver();
@@ -553,7 +551,7 @@ public class TaskListManager implements IPropertyChangeListener {
 			AbstractTask task = (AbstractTask) selectedObject;
 
 			AbstractTaskContainer container = TaskCategory.getParentTaskCategory(task);
-			
+
 			if (container instanceof TaskCategory) {
 				taskList.addTask(newTask, container);
 			} else if (view != null && view.getDrilledIntoCategory() instanceof TaskCategory) {
@@ -654,6 +652,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	/**
 	 * @deprecated use TaskActivityManager.getScheduledTasks
 	 */
+	@Deprecated
 	public Set<AbstractTask> getScheduledForThisWeek() {
 		Calendar startWeek = TaskActivityUtil.getStartOfCurrentWeek();
 		Calendar endWeek = TaskActivityUtil.getEndOfCurrentWeek();
@@ -663,6 +662,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	/**
 	 * @deprecated use TaskActivityUtil.isScheduledAfterThisWeek
 	 */
+	@Deprecated
 	public boolean isScheduledAfterThisWeek(AbstractTask task) {
 		return TaskActivityManager.getInstance().isScheduledAfterThisWeek(task);
 	}
@@ -670,6 +670,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	/**
 	 * @deprecated use TaskActivityUtil.isScheduledForFuture
 	 */
+	@Deprecated
 	public boolean isScheduledForLater(AbstractTask task) {
 		return TaskActivityManager.getInstance().isScheduledForFuture(task);
 	}
@@ -677,6 +678,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	/**
 	 * @deprecated use TaskActivityUtil.isScheduledForThisWeek
 	 */
+	@Deprecated
 	public boolean isScheduledForThisWeek(AbstractTask task) {
 		return TaskActivityManager.getInstance().isScheduledForThisWeek(task);
 	}
@@ -684,6 +686,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	/**
 	 * @deprecated use TaskActivityManager.isScheduledForToday
 	 */
+	@Deprecated
 	public boolean isScheduledForToday(AbstractTask task) {
 		return TaskActivityManager.getInstance().isScheduledForToday(task);
 	}
@@ -691,6 +694,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	/**
 	 * @deprecated use TaskRepositoryManager.isOwnedBuyUser
 	 */
+	@Deprecated
 	public boolean isOwnedByUser(AbstractTask task) {
 		return TasksUiPlugin.getRepositoryManager().isOwnedByUser(task);
 	}
@@ -698,6 +702,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	/**
 	 * @deprecated use ActivityManager
 	 */
+	@Deprecated
 	public void setScheduledFor(AbstractTask task, Date reminderDate) {
 		TaskActivityManager.getInstance().setScheduledFor(task, reminderDate);
 	}
@@ -705,6 +710,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	/**
 	 * @deprecated use TaskActivityManager.setDueDate
 	 */
+	@Deprecated
 	public void setDueDate(AbstractTask task, Date dueDate) {
 		TaskActivityManager.getInstance().setDueDate(task, dueDate);
 	}
@@ -713,6 +719,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	 * @deprecated use TaskActivityManager
 	 * @return true if task due date != null and has past
 	 */
+	@Deprecated
 	public boolean isOverdue(AbstractTask task) {
 		return TaskActivityManager.getInstance().isOverdue(task);
 	}
@@ -720,6 +727,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	/**
 	 * @deprecated use TaskActivityManager.isActiveThisWeek
 	 */
+	@Deprecated
 	public boolean isActiveThisWeek(AbstractTask task) {
 		return TaskActivityManager.getInstance().isActiveThisWeek(task);
 	}
@@ -728,6 +736,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	 * @deprecated use TaskActivityManager.isCompletedToday
 	 * @return if a repository task, will only return true if the user is a
 	 */
+	@Deprecated
 	public boolean isCompletedToday(AbstractTask task) {
 		return TaskActivityManager.getInstance().isCompletedToday(task);
 	}
@@ -740,6 +749,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	/**
 	 * @deprecated use same method on TaskActivityManager
 	 */
+	@Deprecated
 	public long getElapsedTime(AbstractTask task) {
 		return TasksUiPlugin.getTaskActivityManager().getElapsedTime(task);
 	}
@@ -747,6 +757,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	/**
 	 * @deprecated use TaskActivityUtil.snapStartOfDay
 	 */
+	@Deprecated
 	public void snapToStartOfDay(Calendar cal) {
 		TaskActivityUtil.snapStartOfDay(cal);
 	}
@@ -754,6 +765,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	/**
 	 * @deprecated use TaskActivityUtil.snapStartOfHour
 	 */
+	@Deprecated
 	public void snapToStartOfHour(Calendar cal) {
 		TaskActivityUtil.snapStartOfHour(cal);
 	}
@@ -761,6 +773,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	/**
 	 * @deprecated use TaskActivityUtil.snapEndOfHour
 	 */
+	@Deprecated
 	public void snapToEndOfHour(Calendar cal) {
 		TaskActivityUtil.snapEndOfHour(cal);
 	}
@@ -768,6 +781,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	/**
 	 * @deprecated use TaskActivityUtil.snapEndOfDay
 	 */
+	@Deprecated
 	public void snapToEndOfDay(Calendar cal) {
 		TaskActivityUtil.snapEndOfDay(cal);
 	}
@@ -775,6 +789,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	/**
 	 * @deprecated use TaskActivityUtil.snapNextDay
 	 */
+	@Deprecated
 	public void snapToNextDay(Calendar cal) {
 		TaskActivityUtil.snapNextDay(cal);
 	}
@@ -782,6 +797,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	/**
 	 * @deprecated use TaskActivityUtil.snapStartOfWorkWeek
 	 */
+	@Deprecated
 	public void snapToStartOfWeek(Calendar cal) {
 		TaskActivityUtil.snapStartOfWorkWeek(cal);
 	}
@@ -789,6 +805,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	/**
 	 * @deprecated use TaskActivityUtil.snapEndOfWeek
 	 */
+	@Deprecated
 	public void snapToEndOfWeek(Calendar cal) {
 		TaskActivityUtil.snapEndOfWeek(cal);
 	}
@@ -796,6 +813,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	/**
 	 * @deprecated use TaskActivityUtil.snapForwardNumDays
 	 */
+	@Deprecated
 	public Calendar setSecheduledIn(Calendar calendar, int days) {
 		return TaskActivityUtil.snapForwardNumDays(calendar, days);
 	}
@@ -803,6 +821,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	/**
 	 * @deprecated use TaskActivityUtil.snapEndOfWorkDay
 	 */
+	@Deprecated
 	public Calendar setScheduledEndOfDay(Calendar calendar) {
 		return TaskActivityUtil.snapEndOfWorkDay(calendar);
 	}
@@ -810,6 +829,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	/**
 	 * @deprecated use TaskActivityUtil.snapNextWorkWeek
 	 */
+	@Deprecated
 	public void setScheduledNextWeek(Calendar calendar) {
 		TaskActivityUtil.snapNextWorkWeek(calendar);
 	}
@@ -817,6 +837,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	/**
 	 * @deprecated use TaskActivityManager.getDateRanges()
 	 */
+	@Deprecated
 	public List<ScheduledTaskContainer> getDateRanges() {
 		return TasksUiPlugin.getTaskActivityManager().getDateRanges();
 	}
@@ -824,6 +845,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	/**
 	 * @deprecated use TaskActivityManager.getActivityWeekDays()
 	 */
+	@Deprecated
 	public List<ScheduledTaskContainer> getActivityWeekDays() {
 		return TasksUiPlugin.getTaskActivityManager().getActivityWeekDays();
 	}
@@ -831,6 +853,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	/**
 	 * @deprecated use TaskActivityManager.isWeekDay()
 	 */
+	@Deprecated
 	public boolean isWeekDay(ScheduledTaskContainer dateRangeTaskContainer) {
 		return TasksUiPlugin.getTaskActivityManager().isWeekDay(dateRangeTaskContainer);
 	}
@@ -840,6 +863,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	 * 
 	 * @deprecated
 	 */
+	@Deprecated
 	public ScheduledTaskContainer getActivityThisWeek() {
 		return TasksUiPlugin.getTaskActivityManager().getActivityThisWeek();
 	}
@@ -849,6 +873,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	 * 
 	 * @deprecated
 	 */
+	@Deprecated
 	public ScheduledTaskContainer getActivityPast() {
 		return TasksUiPlugin.getTaskActivityManager().getActivityPast();
 	}
@@ -858,6 +883,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	 * 
 	 * @deprecated
 	 */
+	@Deprecated
 	public ScheduledTaskContainer getActivityFuture() {
 		return TasksUiPlugin.getTaskActivityManager().getActivityFuture();
 	}
@@ -867,6 +893,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	 * 
 	 * @deprecated
 	 */
+	@Deprecated
 	public ScheduledTaskContainer getActivityNextWeek() {
 		return TasksUiPlugin.getTaskActivityManager().getActivityNextWeek();
 	}
@@ -876,6 +903,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	 * 
 	 * @deprecated
 	 */
+	@Deprecated
 	public ScheduledTaskContainer getActivityPrevious() {
 		return TasksUiPlugin.getTaskActivityManager().getActivityPrevious();
 	}
@@ -885,6 +913,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	 * 
 	 * @deprecated
 	 */
+	@Deprecated
 	public int getStartHour() {
 		return TasksUiPlugin.getDefault().getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR);
 	}
@@ -894,6 +923,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	 * 
 	 * @deprecated
 	 */
+	@Deprecated
 	public static void scheduleNewTask(AbstractTask newTask) {
 		newTask.setCreationDate(new Date());
 

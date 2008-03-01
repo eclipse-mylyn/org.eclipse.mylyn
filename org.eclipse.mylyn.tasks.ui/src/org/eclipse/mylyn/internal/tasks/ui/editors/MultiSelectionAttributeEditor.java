@@ -54,7 +54,7 @@ public class MultiSelectionAttributeEditor extends AbstractAttributeEditor {
 		}
 
 		select(getValues(), getValuesLabels());
-		
+
 		if (allValues != null) {
 			list.addSelectionListener(new SelectionAdapter() {
 				@Override

@@ -30,7 +30,7 @@ public class ClearOutgoingAction extends Action {
 
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.mark.discard";
 
-	private List<AbstractTaskContainer> selectedElements;
+	private final List<AbstractTaskContainer> selectedElements;
 
 	public ClearOutgoingAction(List<AbstractTaskContainer> selectedElements) {
 		this.selectedElements = selectedElements;
@@ -47,14 +47,15 @@ public class ClearOutgoingAction extends Action {
 	}
 
 	private boolean hasOutgoingChanges(AbstractTask task) {
-		return task.getSynchronizationState().equals(RepositoryTaskSyncState.OUTGOING) || task.getSynchronizationState().equals(RepositoryTaskSyncState.CONFLICT);
+		return task.getSynchronizationState().equals(RepositoryTaskSyncState.OUTGOING)
+				|| task.getSynchronizationState().equals(RepositoryTaskSyncState.CONFLICT);
 	}
 
 	@Override
 	public void run() {
 		ArrayList<AbstractTask> toClear = new ArrayList<AbstractTask>();
 		for (Object selectedObject : selectedElements) {
-			if (selectedObject instanceof AbstractTask && hasOutgoingChanges((AbstractTask)selectedObject)) {
+			if (selectedObject instanceof AbstractTask && hasOutgoingChanges((AbstractTask) selectedObject)) {
 				toClear.add(((AbstractTask) selectedObject));
 			}
 		}

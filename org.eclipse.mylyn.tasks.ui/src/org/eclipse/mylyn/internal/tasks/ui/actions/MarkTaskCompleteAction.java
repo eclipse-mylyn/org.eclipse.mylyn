@@ -29,7 +29,7 @@ public class MarkTaskCompleteAction extends AbstractChangeCompletionAction {
 
 	private static final String ACTION_NAME = "Complete";
 
-	private List<AbstractTaskContainer> selectedElements;
+	private final List<AbstractTaskContainer> selectedElements;
 
 	public MarkTaskCompleteAction(List<AbstractTaskContainer> selectedElements) {
 		this.selectedElements = selectedElements;

@@ -93,7 +93,7 @@ public class TaskFormPage extends FormPage {
 	protected boolean isDirty;
 
 	private TaskEditor taskEditor = null;
-	
+
 	protected TaskEditorActionContributor actionContributor;
 
 	protected List<TextViewer> textViewers = new ArrayList<TextViewer>();
@@ -106,7 +106,7 @@ public class TaskFormPage extends FormPage {
 
 	public TaskFormPage(FormEditor editor, String id, String title) {
 		super(editor, id, title);
-		taskEditor = (TaskEditor)editor;
+		taskEditor = (TaskEditor) editor;
 	}
 
 	public boolean canPerformAction(String actionId) {
@@ -149,8 +149,9 @@ public class TaskFormPage extends FormPage {
 
 	public void doAction(String actionId) {
 		Control focusControl = getFocusControl();
-		if (focusControl == null)
+		if (focusControl == null) {
 			return;
+		}
 		if (canPerformDirectly(actionId, focusControl)) {
 			return;
 		}
@@ -199,15 +200,18 @@ public class TaskFormPage extends FormPage {
 
 	protected Control getFocusControl() {
 		IManagedForm form = getManagedForm();
-		if (form == null)
+		if (form == null) {
 			return null;
+		}
 		Control control = form.getForm();
-		if (control == null || control.isDisposed())
+		if (control == null || control.isDisposed()) {
 			return null;
+		}
 		Display display = control.getDisplay();
 		Control focusControl = display.getFocusControl();
-		if (focusControl == null || focusControl.isDisposed())
+		if (focusControl == null || focusControl.isDisposed()) {
 			return null;
+		}
 		return focusControl;
 	}
 
@@ -374,7 +378,7 @@ public class TaskFormPage extends FormPage {
 
 				deactivate();
 			}
-			
+
 			private void activate() {
 				deactivate();
 				if (handlerActivation == null) {
@@ -391,7 +395,7 @@ public class TaskFormPage extends FormPage {
 				}
 			}
 		});
- 
+
 		commentViewer.addTextListener(new ITextListener() {
 			public void textChanged(TextEvent event) {
 				actionContributor.updateSelectableActions(commentViewer.getSelection());
@@ -436,6 +440,7 @@ public class TaskFormPage extends FormPage {
 
 	private IHandler createQuickFixActionHandler(final SourceViewer viewer) {
 		Action quickFixAction = new Action() {
+			@Override
 			public void run() {
 				if (viewer.canDoOperation(ISourceViewer.QUICK_ASSIST)) {
 					viewer.doOperation(ISourceViewer.QUICK_ASSIST);
@@ -471,15 +476,17 @@ public class TaskFormPage extends FormPage {
 		}
 
 		public String getTypeLabel(Annotation annotation) {
-			if (annotation instanceof ErrorAnnotation)
+			if (annotation instanceof ErrorAnnotation) {
 				return "Errors";
+			}
 
 			return null;
 		}
 
 		public int getLayer(Annotation annotation) {
-			if (annotation instanceof ErrorAnnotation)
+			if (annotation instanceof ErrorAnnotation) {
 				return ((ErrorAnnotation) annotation).getLayer();
+			}
 
 			return 0;
 		}
@@ -489,15 +496,17 @@ public class TaskFormPage extends FormPage {
 		}
 
 		public boolean isPaintable(Annotation annotation) {
-			if (annotation instanceof ErrorAnnotation)
+			if (annotation instanceof ErrorAnnotation) {
 				return ((ErrorAnnotation) annotation).getImage() != null;
+			}
 
 			return false;
 		}
 
 		public boolean isSubtype(Object annotationType, Object potentialSupertype) {
-			if (annotationType.equals(potentialSupertype))
+			if (annotationType.equals(potentialSupertype)) {
 				return true;
+			}
 
 			return false;
 
@@ -553,7 +562,7 @@ public class TaskFormPage extends FormPage {
 
 		// ProblemAnnotation.SPELLING_ANNOTATION_TYPE;
 
-		private IMarker marker;
+		private final IMarker marker;
 
 		private String text;
 
@@ -705,6 +714,5 @@ public class TaskFormPage extends FormPage {
 		}
 		return null;
 	}
-
 
 }

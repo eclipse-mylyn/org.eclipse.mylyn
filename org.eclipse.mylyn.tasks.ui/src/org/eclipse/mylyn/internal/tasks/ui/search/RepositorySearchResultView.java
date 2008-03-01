@@ -70,18 +70,18 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 
 	private int currentSortOrder;
 
-	private SearchResultSortAction sortByPriorityAction;
+	private final SearchResultSortAction sortByPriorityAction;
 
-	private SearchResultSortAction sortByDescriptionAction;
+	private final SearchResultSortAction sortByDescriptionAction;
 
-	private OpenSearchResultAction openInEditorAction;
+	private final OpenSearchResultAction openInEditorAction;
 
-	private CreateQueryFromSearchAction addTaskListAction;
+	private final CreateQueryFromSearchAction addTaskListAction;
 
 	private static final String[] SHOW_IN_TARGETS = new String[] { IPageLayout.ID_RES_NAV };
 
-	private Action groupByAction;
-	
+	private final Action groupByAction;
+
 	private static final IShowInTargetList SHOW_IN_TARGET_LIST = new IShowInTargetList() {
 		public String[] getShowInTargetIds() {
 			return SHOW_IN_TARGETS;
@@ -98,24 +98,24 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 
 		openInEditorAction = new OpenSearchResultAction("Open in Editor", this);
 		addTaskListAction = new CreateQueryFromSearchAction("Create Query from Search...", this);
-		
-		groupByAction = new Action(){
-			
+
+		groupByAction = new Action() {
+
 			@Override
 			public String getText() {
-				return "Group By Owner";	
+				return "Group By Owner";
 			}
-						
+
 			@Override
 			public void run() {
-				if(((SearchResultTreeContentProvider)getViewer().getContentProvider()).getGroupByOwner()){
-					((SearchResultTreeContentProvider)getViewer().getContentProvider()).setGroupByOwner(false);
+				if (((SearchResultTreeContentProvider) getViewer().getContentProvider()).getGroupByOwner()) {
+					((SearchResultTreeContentProvider) getViewer().getContentProvider()).setGroupByOwner(false);
 					setChecked(false);
 				} else {
-					((SearchResultTreeContentProvider)getViewer().getContentProvider()).setGroupByOwner(true);
+					((SearchResultTreeContentProvider) getViewer().getContentProvider()).setGroupByOwner(true);
 					setChecked(true);
 				}
-				
+
 			}
 		};
 	}
@@ -145,9 +145,9 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		viewer.setUseHashlookup(true);
 		viewer.setContentProvider(new SearchResultTreeContentProvider(this));
 		searchResultProvider = (SearchResultContentProvider) viewer.getContentProvider();
-		
-		DecoratingLabelProvider labelProvider = new DecoratingLabelProvider(new SearchResultsLabelProvider(searchResultProvider),
-				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator());
+
+		DecoratingLabelProvider labelProvider = new DecoratingLabelProvider(new SearchResultsLabelProvider(
+				searchResultProvider), PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator());
 		viewer.setLabelProvider(labelProvider);
 
 		// Set the order when the search view is loading so that the items are
@@ -262,7 +262,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		// Add the new context menu items
 		menuManager.appendToGroup(IContextMenuConstants.GROUP_VIEWER_SETUP, sortMenuManager);
 		menuManager.appendToGroup(IContextMenuConstants.GROUP_VIEWER_SETUP, groupByAction);
-		
+
 		menuManager.appendToGroup(IContextMenuConstants.GROUP_OPEN, openInEditorAction);
 		menuManager.appendToGroup(IContextMenuConstants.GROUP_OPEN, addTaskListAction);
 

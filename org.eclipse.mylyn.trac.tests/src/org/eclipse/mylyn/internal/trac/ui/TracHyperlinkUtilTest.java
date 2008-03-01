@@ -121,8 +121,8 @@ public class TracHyperlinkUtilTest extends TestCase {
 		assertEquals(1, links.length);
 		assertEquals("http://localhost/changeset/?new=456&old=123", ((WebHyperlink) links[0]).getURLString());
 
-		links = TracHyperlinkUtil.findTracHyperlinks(repository, "diff:trunk/trac@3538//sandbox/vc-refactoring/trac@3539",
-				0, 0);
+		links = TracHyperlinkUtil.findTracHyperlinks(repository,
+				"diff:trunk/trac@3538//sandbox/vc-refactoring/trac@3539", 0, 0);
 		assertNotNull(links);
 		assertEquals(1, links.length);
 		assertEquals(

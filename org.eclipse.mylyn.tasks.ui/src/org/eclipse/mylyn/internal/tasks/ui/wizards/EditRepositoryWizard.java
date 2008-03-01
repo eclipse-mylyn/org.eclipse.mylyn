@@ -25,9 +25,9 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 
 	private static final String TITLE = "Properties for Task Repository";
 
-	private AbstractRepositorySettingsPage abstractRepositorySettingsPage;
+	private final AbstractRepositorySettingsPage abstractRepositorySettingsPage;
 
-	private TaskRepository repository;
+	private final TaskRepository repository;
 
 	public EditRepositoryWizard(TaskRepository repository) {
 		super();
@@ -53,7 +53,7 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 			TasksUiPlugin.getTaskListManager().refactorRepositoryUrl(oldUrl, newUrl);
 
 			repository.flushAuthenticationCredentials();
-			
+
 			repository.setUrl(newUrl);
 			abstractRepositorySettingsPage.applyTo(repository);
 			abstractRepositorySettingsPage.updateProperties(repository);

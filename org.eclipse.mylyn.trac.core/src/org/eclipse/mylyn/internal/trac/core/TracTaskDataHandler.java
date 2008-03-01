@@ -52,9 +52,9 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 
 	private static final String CC_DELIMETER = ", ";
 
-	private AbstractAttributeFactory attributeFactory = new TracAttributeFactory();
+	private final AbstractAttributeFactory attributeFactory = new TracAttributeFactory();
 
-	private TracRepositoryConnector connector;
+	private final TracRepositoryConnector connector;
 
 	public TracTaskDataHandler(TracRepositoryConnector connector) {
 		this.connector = connector;
@@ -105,7 +105,7 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 		if (ticket.getCreated() != null) {
 			data.setAttributeValue(Attribute.TIME.getTracKey(), TracUtils.toTracTime(ticket.getCreated()) + "");
 		}
-		
+
 		Date lastChanged = ticket.getLastChanged();
 
 		Map<String, String> valueByKey = ticket.getValues();
@@ -146,16 +146,15 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 				taskAttachment.setAttributeValue(Attribute.DESCRIPTION.getTracKey(), attachments[i].getDescription());
 				taskAttachment.setAttributeValue(RepositoryTaskAttribute.ATTACHMENT_FILENAME,
 						attachments[i].getFilename());
-				taskAttachment.setAttributeValue(RepositoryTaskAttribute.ATTACHMENT_SIZE,
-						attachments[i].getSize() + "");
+				taskAttachment.setAttributeValue(RepositoryTaskAttribute.ATTACHMENT_SIZE, attachments[i].getSize() + "");
 				taskAttachment.setAttributeValue(RepositoryTaskAttribute.USER_OWNER, attachments[i].getAuthor());
 				if (attachments[i].getCreated() != null) {
 					if (lastChanged == null || attachments[i].getCreated().after(lastChanged)) {
-						lastChanged = attachments[i].getCreated(); 
+						lastChanged = attachments[i].getCreated();
 					}
-					
-					taskAttachment.setAttributeValue(RepositoryTaskAttribute.ATTACHMENT_DATE, attachments[i].getCreated()
-							.toString());
+
+					taskAttachment.setAttributeValue(RepositoryTaskAttribute.ATTACHMENT_DATE,
+							attachments[i].getCreated().toString());
 				}
 				taskAttachment.setAttributeValue(RepositoryTaskAttribute.ATTACHMENT_URL, repository.getUrl()
 						+ ITracClient.TICKET_ATTACHMENT_URL + ticket.getId() + "/" + attachments[i].getFilename());
@@ -273,8 +272,8 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 				if (field.isOptional()) {
 					attr.addOption("", "");
 				}
-				for (int i = 0; i < values.length; i++) {
-					attr.addOption(values[i], values[i]);
+				for (String value : values) {
+					attr.addOption(value, value);
 				}
 
 				if (field.getDefaultValue() != null) {
@@ -284,9 +283,9 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 							attr.setValue(values[index]);
 						}
 					} catch (NumberFormatException e) {
-						for (int i = 0; i < values.length; i++) {
-							if (field.getDefaultValue().equals(values[i].toString())) {
-								attr.setValue(values[i]);
+						for (String value : values) {
+							if (field.getDefaultValue().equals(value.toString())) {
+								attr.setValue(value);
 								break;
 							}
 						}
@@ -308,8 +307,8 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 			if (allowEmtpy) {
 				attr.addOption("", "");
 			}
-			for (int i = 0; i < values.length; i++) {
-				attr.addOption(values[i].toString(), values[i].toString());
+			for (Object value : values) {
+				attr.addOption(value.toString(), value.toString());
 			}
 		} else {
 			attr.setHidden(true);
@@ -374,15 +373,16 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 		initializeTaskData(repository, taskData, monitor);
 		RepositoryTaskAttribute attribute = taskData.getAttribute(ATTRIBUTE_BLOCKING);
 		if (attribute == null) {
-			throw new CoreException(new RepositoryStatus(repository, IStatus.ERROR, TracCorePlugin.PLUGIN_ID, RepositoryStatus.ERROR_REPOSITORY, "The repository does not support subtasks"));			
-		}		
+			throw new CoreException(new RepositoryStatus(repository, IStatus.ERROR, TracCorePlugin.PLUGIN_ID,
+					RepositoryStatus.ERROR_REPOSITORY, "The repository does not support subtasks"));
+		}
 		cloneTaskData(parentTaskData, taskData);
 		taskData.setDescription("");
 		taskData.setSummary("");
 		attribute.setValue(parentTaskData.getId());
 		return true;
 	}
-	
+
 	@Override
 	public Set<String> getSubTaskIds(RepositoryTaskData taskData) {
 		RepositoryTaskAttribute attribute = taskData.getAttribute(ATTRIBUTE_BLOCKED_BY);
@@ -402,9 +402,9 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 		if (parentTaskData != null) {
 			return parentTaskData.getAttribute(ATTRIBUTE_BLOCKED_BY) != null;
 		} else if (task instanceof TracTask) {
-			return ((TracTask)task).getSupportsSubtasks();
+			return ((TracTask) task).getSupportsSubtasks();
 		}
 		return false;
 	}
-	
+
 }

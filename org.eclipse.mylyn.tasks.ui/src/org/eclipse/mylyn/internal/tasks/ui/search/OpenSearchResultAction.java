@@ -21,7 +21,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 public class OpenSearchResultAction extends Action {
 
 	/** The view this action works on */
-	private RepositorySearchResultView resultView;
+	private final RepositorySearchResultView resultView;
 
 	/**
 	 * Constructor

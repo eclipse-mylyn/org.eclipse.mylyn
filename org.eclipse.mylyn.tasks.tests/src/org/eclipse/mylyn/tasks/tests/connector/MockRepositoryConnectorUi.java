@@ -29,7 +29,7 @@ public class MockRepositoryConnectorUi extends AbstractRepositoryConnectorUi {
 	public String getConnectorKind() {
 		return "mock";
 	}
-	
+
 	@Override
 	public AbstractRepositorySettingsPage getSettingsPage() {
 		// ignore

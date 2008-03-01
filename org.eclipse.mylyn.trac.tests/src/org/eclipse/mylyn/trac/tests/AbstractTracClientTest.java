@@ -40,10 +40,10 @@ public abstract class AbstractTracClientTest extends TestCase {
 
 	public Version version;
 
-	private PrivilegeLevel level;
+	private final PrivilegeLevel level;
 
 	final IProgressMonitor callback = new NullProgressMonitor();
-	
+
 	public AbstractTracClientTest(Version version, PrivilegeLevel level) {
 		this.version = version;
 		this.level = level;
@@ -95,11 +95,11 @@ public abstract class AbstractTracClientTest extends TestCase {
 		this.repositoryUrl = url;
 		this.username = username;
 		this.password = password;
-		
+
 		WebLocation location = new WebLocation(url, username, password, new IProxyProvider() {
 			public Proxy getProxyForHost(String host, String proxyType) {
 				return proxy;
-			}		
+			}
 		});
 		this.repository = TracClientFactory.createClient(location, version);
 

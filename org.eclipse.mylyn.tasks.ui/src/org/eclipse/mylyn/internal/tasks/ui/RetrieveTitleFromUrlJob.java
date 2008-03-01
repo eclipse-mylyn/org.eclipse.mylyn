@@ -47,8 +47,9 @@ public abstract class RetrieveTitleFromUrlJob extends Job implements TitleListen
 	private boolean titleRetrieved = false;
 
 	private Shell shell = null;
+
 	private Browser browser = null;
-	
+
 	public RetrieveTitleFromUrlJob(String url) {
 		super(LABEL_TITLE);
 		this.url = url;
@@ -73,7 +74,8 @@ public abstract class RetrieveTitleFromUrlJob extends Job implements TitleListen
 			try {
 				Thread.sleep(SLEEP_INTERVAL_MILLIS);
 			} catch (InterruptedException e) {
-				StatusHandler.fail(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Unexpected thread interruption", e));
+				StatusHandler.fail(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
+						"Unexpected thread interruption", e));
 			}
 			timeWaitedMillis += SLEEP_INTERVAL_MILLIS;
 		}
@@ -87,12 +89,12 @@ public abstract class RetrieveTitleFromUrlJob extends Job implements TitleListen
 					titleRetrieved = true;
 				}
 				setTitle(pageTitle);
-				
-				if(shell != null && !shell.isDisposed()){
+
+				if (shell != null && !shell.isDisposed()) {
 					shell.dispose();
 				}
-				
-				if(browser != null && !browser.isDisposed()){
+
+				if (browser != null && !browser.isDisposed()) {
 					browser.dispose();
 				}
 			}

@@ -46,7 +46,7 @@ public class ScheduledTaskListSynchJob extends Job {
 
 	private static long count = 0;
 
-	private TaskListManager taskListManager;
+	private final TaskListManager taskListManager;
 
 	private List<TaskRepository> repositories = null;
 

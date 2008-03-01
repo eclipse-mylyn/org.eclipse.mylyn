@@ -27,20 +27,22 @@ public class TaskListNotification extends AbstractNotification {
 	protected final AbstractTask task;
 
 	protected Date date;
-	
+
 	private String description = null;
-	
-	private final DecoratingLabelProvider labelProvider = new DecoratingLabelProvider(new TaskElementLabelProvider(true),
-			PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator());
+
+	private final DecoratingLabelProvider labelProvider = new DecoratingLabelProvider(
+			new TaskElementLabelProvider(true), PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator());
 
 	public TaskListNotification(AbstractTask task) {
 		this.task = task;
 	}
 
+	@Override
 	public String getDescription() {
 		return description;
 	}
 
+	@Override
 	public String getLabel() {
 		return labelProvider.getText(task);
 	}
@@ -49,6 +51,7 @@ public class TaskListNotification extends AbstractNotification {
 		this.description = description;
 	}
 
+	@Override
 	public void open() {
 
 		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
@@ -58,6 +61,7 @@ public class TaskListNotification extends AbstractNotification {
 		});
 	}
 
+	@Override
 	public Image getNotificationImage() {
 		return labelProvider.getImage(task);
 	}
@@ -66,6 +70,7 @@ public class TaskListNotification extends AbstractNotification {
 		return task;
 	}
 
+	@Override
 	public Image getNotificationKindImage() {
 		if (task != null && task.getLastReadTimeStamp() == null) {
 			return TasksUiImages.getImage(TasksUiImages.OVERLAY_INCOMMING_NEW);
@@ -74,17 +79,20 @@ public class TaskListNotification extends AbstractNotification {
 		}
 	}
 
+	@Override
 	public Date getDate() {
 		return date;
 	}
 
+	@Override
 	public void setDate(Date date) {
 		this.date = date;
 	}
 
 	public int compareTo(AbstractNotification anotherNotification) throws ClassCastException {
-		if (!(anotherNotification != null))
+		if (!(anotherNotification != null)) {
 			throw new ClassCastException("A ITaskListNotification object expected.");
+		}
 		Date anotherDate = (anotherNotification).getDate();
 		if (date != null && anotherDate != null) {
 			return date.compareTo(anotherDate);
@@ -94,7 +102,7 @@ public class TaskListNotification extends AbstractNotification {
 			return 1;
 		}
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -107,28 +115,37 @@ public class TaskListNotification extends AbstractNotification {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		TaskListNotification other = (TaskListNotification) obj;
 		if (date == null) {
-			if (other.date != null)
+			if (other.date != null) {
 				return false;
-		} else if (!date.equals(other.date))
+			}
+		} else if (!date.equals(other.date)) {
 			return false;
+		}
 		if (description == null) {
-			if (other.description != null)
+			if (other.description != null) {
 				return false;
-		} else if (!description.equals(other.description))
+			}
+		} else if (!description.equals(other.description)) {
 			return false;
+		}
 		if (task == null) {
-			if (other.task != null)
+			if (other.task != null) {
 				return false;
-		} else if (!task.equals(other.task))
+			}
+		} else if (!task.equals(other.task)) {
 			return false;
+		}
 		return true;
 	}
 

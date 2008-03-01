@@ -23,7 +23,7 @@ public class CategorizedPresentation extends AbstractTaskListPresentation {
 	public CategorizedPresentation() {
 		super(ID);
 	}
-	
+
 	@Override
 	protected AbstractTaskListContentProvider createContentProvider(TaskListView taskListView) {
 		return new TaskListContentProvider(taskListView);

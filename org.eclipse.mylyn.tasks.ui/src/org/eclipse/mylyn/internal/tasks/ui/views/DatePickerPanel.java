@@ -11,7 +11,6 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.eclipse.jface.layout.GridDataFactory;
@@ -48,7 +47,7 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 
 	private DateTime calendar = null;
 
-	private List<ISelectionChangedListener> selectionListeners = new ArrayList<ISelectionChangedListener>();
+	private final List<ISelectionChangedListener> selectionListeners = new ArrayList<ISelectionChangedListener>();
 
 	public DatePickerPanel(Composite parent, int style, Calendar initialDate) {
 		this(parent, style, initialDate, true);
@@ -61,24 +60,25 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 		setDate(date);
 		//this.setBackground()
 	}
-	
+
 	private void initialize(boolean includeTime) {
 		if (date == null) {
-			date = GregorianCalendar.getInstance();
-			date.set(Calendar.HOUR_OF_DAY, TasksUiPlugin.getDefault().getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
+			date = Calendar.getInstance();
+			date.set(Calendar.HOUR_OF_DAY, TasksUiPlugin.getDefault().getPreferenceStore().getInt(
+					TasksUiPreferenceConstants.PLANNING_ENDHOUR));
 			date.set(Calendar.MINUTE, 0);
 			date.set(Calendar.SECOND, 0);
 			date.set(Calendar.MILLISECOND, 0);
 		}
-		
+
 		GridLayout gridLayout = new GridLayout();
-		if(includeTime) {
+		if (includeTime) {
 			gridLayout.numColumns = 2;
 		} else {
 			gridLayout.numColumns = 2;
 		}
 		this.setLayout(gridLayout);
-				
+
 		calendar = new DateTime(this, SWT.CALENDAR);
 		calendar.addSelectionListener(new SelectionAdapter() {
 
@@ -184,7 +184,7 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 	}
 
 	public class DateSelection implements ISelection {
-		private Calendar date;
+		private final Calendar date;
 
 		public DateSelection(Calendar calendar) {
 			date = calendar;

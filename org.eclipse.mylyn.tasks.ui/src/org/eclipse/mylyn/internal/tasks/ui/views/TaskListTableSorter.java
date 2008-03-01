@@ -37,7 +37,7 @@ public class TaskListTableSorter extends ViewerSorter {
 
 	private final TaskListView view;
 
-	private TaskKeyComparator taskKeyComparator = new TaskKeyComparator();
+	private final TaskKeyComparator taskKeyComparator = new TaskKeyComparator();
 
 	public TaskListTableSorter(TaskListView view) {
 		super();

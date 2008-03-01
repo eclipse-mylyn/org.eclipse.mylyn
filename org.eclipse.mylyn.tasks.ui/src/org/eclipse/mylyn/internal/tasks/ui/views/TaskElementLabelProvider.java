@@ -47,7 +47,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 
 	private static final String NO_SUMMARY_AVAILABLE = ": <no summary available>";
 
-	private IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
+	private final IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
 
 	private static final Pattern pattern = Pattern.compile("\\d*: .*");
 
@@ -301,7 +301,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 //		}
 //		return false;
 //	}
-	
+
 //	private boolean showHasChildrenPastDue(AbstractTaskContainer container) {
 //		if (!TasksUiPlugin.getDefault().groupSubtasks(container)) {
 //			return false;
@@ -309,7 +309,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 //
 //		return showHasChildrenPastDueHelper(container);
 //	}
-	
+
 	/**
 	 * TODO: move
 	 */

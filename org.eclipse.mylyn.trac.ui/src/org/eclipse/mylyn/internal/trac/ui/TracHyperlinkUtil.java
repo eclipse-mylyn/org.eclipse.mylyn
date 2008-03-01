@@ -75,7 +75,7 @@ public class TracHyperlinkUtil {
 			if (isInRegion(lineOffset, m)) {
 				String id = m.group(2);
 				if (links == null) {
-					 links = new ArrayList<IHyperlink>();					
+					links = new ArrayList<IHyperlink>();
 				}
 				links.add(new TaskHyperlink(determineRegion(regionOffset, m), repository, id));
 			}
@@ -85,7 +85,7 @@ public class TracHyperlinkUtil {
 
 	/**
 	 * Detects Trac hyperlinks.
-	 *  
+	 * 
 	 * <ul>
 	 * <li>Ticket comments: comment:ticket:1:2
 	 * <li>Reports: {1} or report:1

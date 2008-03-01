@@ -47,11 +47,11 @@ class SynchronizeTaskJob extends Job {
 
 	private final AbstractRepositoryConnector connector;
 
-	private Set<AbstractTask> repositoryTasks;
+	private final Set<AbstractTask> repositoryTasks;
 
 	private boolean forced = false;
 
-	private AbstractTaskDataHandler taskDataHandler;
+	private final AbstractTaskDataHandler taskDataHandler;
 
 	private Map<TaskRepository, Set<AbstractTask>> repToTasks;
 
@@ -222,8 +222,9 @@ class SynchronizeTaskJob extends Job {
 				new SubProgressMonitor(monitor, tasks.size()));
 		if (newTaskData != null && newTaskData.size() > 0) {
 			for (RepositoryTaskData taskData : newTaskData) {
-				if (monitor.isCanceled())
+				if (monitor.isCanceled()) {
 					throw new OperationCanceledException("Synchronization cancelled by user");
+				}
 				if (taskData != null) {
 					AbstractTask task = idToTask.remove(taskData.getId());
 					if (task != null) {
@@ -266,8 +267,9 @@ class SynchronizeTaskJob extends Job {
 	private void updateTask(IProgressMonitor monitor, TaskRepository repository, AbstractTask repositoryTask,
 			RepositoryTaskData downloadedTaskData) throws CoreException {
 
-		if (downloadedTaskData == null)
+		if (downloadedTaskData == null) {
 			return;
+		}
 
 		// HACK: part of hack below
 		Date oldDueDate = repositoryTask.getDueDate();

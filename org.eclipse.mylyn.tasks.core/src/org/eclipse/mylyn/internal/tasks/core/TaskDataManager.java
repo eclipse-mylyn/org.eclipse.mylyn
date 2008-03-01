@@ -73,7 +73,7 @@ public class TaskDataManager {
 		}
 		saveState(state);
 	}
-	
+
 	public void setOldTaskData(RepositoryTaskData data) {
 		if (data == null || data.getRepositoryUrl() == null || data.getId() == null) {
 			return;
@@ -82,7 +82,8 @@ public class TaskDataManager {
 		if (state != null) {
 			state.setOldTaskData(data);
 		} else {
-			StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "Attempt to save old data when no new data exists", new Exception()));
+			StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
+					"Attempt to save old data when no new data exists", new Exception()));
 		}
 		saveState(state);
 	}
@@ -146,7 +147,8 @@ public class TaskDataManager {
 					clone = (RepositoryTaskData) ObjectCloner.deepCopy(state.getNewTaskData());
 					updateAttributeFactory(clone);
 				} catch (Exception e) {
-					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Error constructing modifiable task", e));
+					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+							"Error constructing modifiable task", e));
 					return null;
 				}
 			}
@@ -304,7 +306,8 @@ public class TaskDataManager {
 		try {
 			storage.start();
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Offline storage start failed", e));
+			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Offline storage start failed",
+					e));
 		}
 	}
 

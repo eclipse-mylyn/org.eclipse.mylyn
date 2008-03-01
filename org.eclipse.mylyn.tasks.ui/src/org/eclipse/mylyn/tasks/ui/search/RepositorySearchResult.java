@@ -27,7 +27,7 @@ public class RepositorySearchResult extends AbstractTextSearchResult {
 	/**
 	 * The query producing this result.
 	 */
-	private ISearchQuery repositoryQuery;
+	private final ISearchQuery repositoryQuery;
 
 	/**
 	 * Constructor for <code>RepositorySearchResult</code> class.

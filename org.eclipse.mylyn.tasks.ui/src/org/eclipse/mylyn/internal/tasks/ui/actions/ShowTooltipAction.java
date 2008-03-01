@@ -46,7 +46,7 @@ public class ShowTooltipAction extends Action implements IViewActionDelegate {
 			}
 		}
 	}
-	
+
 	public void run(IAction action) {
 		run();
 	}
@@ -54,5 +54,5 @@ public class ShowTooltipAction extends Action implements IViewActionDelegate {
 	public void selectionChanged(IAction action, ISelection selection) {
 		// ignore
 	}
-	
+
 }

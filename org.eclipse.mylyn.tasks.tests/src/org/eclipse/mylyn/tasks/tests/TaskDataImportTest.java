@@ -28,11 +28,11 @@ public class TaskDataImportTest extends AbstractContextTest {
 
 	private TaskDataImportWizardPage wizardPage = null;
 
-	private String sourceZipPath = "testdata/taskdataimporttest/mylardata-2007-01-19.zip";
+	private final String sourceZipPath = "testdata/taskdataimporttest/mylardata-2007-01-19.zip";
 
 	private File sourceZipFile = null;
 
-	private TaskListManager manager = TasksUiPlugin.getTaskListManager();
+	private final TaskListManager manager = TasksUiPlugin.getTaskListManager();
 
 	@Override
 	protected void setUp() throws Exception {
@@ -89,7 +89,6 @@ public class TaskDataImportTest extends AbstractContextTest {
 //		assertTrue(historyContext.getInteractionHistory().size() > 0);
 //		assertTrue(TasksUiPlugin.getRepositoryManager().getAllRepositories().size() >  2);
 //	}
-
 	// XXX: Put Back
 //	public void testImportOverwritesAllTasks() {
 //		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
@@ -119,5 +118,4 @@ public class TaskDataImportTest extends AbstractContextTest {
 //		assertTrue(historyContext.getInteractionHistory().size() > 0);
 //		assertTrue(TasksUiPlugin.getRepositoryManager().getAllRepositories().size() > 2);
 //	}
-
 }

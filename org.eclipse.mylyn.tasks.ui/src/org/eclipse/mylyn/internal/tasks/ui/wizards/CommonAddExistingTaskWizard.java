@@ -22,7 +22,7 @@ import org.eclipse.ui.progress.IProgressService;
  */
 public class CommonAddExistingTaskWizard extends Wizard {
 
-	private TaskRepository repository;
+	private final TaskRepository repository;
 
 	private ExistingTaskWizardPage page;
 

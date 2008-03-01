@@ -28,7 +28,7 @@ public class PresentationDropDownSelectionAction extends Action implements IMenu
 
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.presentationselection";
 
-	private TaskListView view;
+	private final TaskListView view;
 
 	protected Menu dropDownMenu = null;
 
@@ -55,14 +55,14 @@ public class PresentationDropDownSelectionAction extends Action implements IMenu
 			}
 		}
 		boolean separatorAdded = false;
-		
+
 		for (AbstractTaskListPresentation presentation : TaskListView.getPresentations()) {
 			if (!presentation.isPrimary()) {
 				if (!separatorAdded) {
 					new Separator().fill(dropDownMenu, -1);
 					separatorAdded = true;
 				}
-				
+
 				PresentationSelectionAction action = new PresentationSelectionAction(presentation);
 				ActionContributionItem item = new ActionContributionItem(action);
 				action.setText(presentation.getName());
@@ -74,10 +74,10 @@ public class PresentationDropDownSelectionAction extends Action implements IMenu
 	}
 
 	@Override
-	public void run() { 
+	public void run() {
 		AbstractTaskListPresentation current = view.getCurrentPresentation();
 		List<AbstractTaskListPresentation> all = TaskListView.getPresentations();
-		int index = all.indexOf(current)+1;
+		int index = all.indexOf(current) + 1;
 		if (index < all.size()) {
 			view.applyPresentation(all.get(index));
 		} else {
@@ -112,7 +112,7 @@ public class PresentationDropDownSelectionAction extends Action implements IMenu
 
 	private class PresentationSelectionAction extends Action {
 
-		private AbstractTaskListPresentation presentation;
+		private final AbstractTaskListPresentation presentation;
 
 		public PresentationSelectionAction(AbstractTaskListPresentation presentation) {
 			this.presentation = presentation;

@@ -34,7 +34,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
  */
 public class TaskRepositoriesExternalizer {
 
-	private SaxRepositoriesWriter writer = new SaxRepositoriesWriter();
+	private final SaxRepositoriesWriter writer = new SaxRepositoriesWriter();
 
 	public static final String ELEMENT_TASK_REPOSITORIES = "TaskRepositories";
 
@@ -45,21 +45,24 @@ public class TaskRepositoriesExternalizer {
 	public void writeRepositoriesToXML(Collection<TaskRepository> repositories, File file) {
 		ZipOutputStream outputStream = null;
 		try {
-			if (!file.exists())
+			if (!file.exists()) {
 				file.createNewFile();
+			}
 
 			outputStream = new ZipOutputStream(new FileOutputStream(file));
 			writeRepositories(repositories, outputStream);
 			outputStream.close();
 
 		} catch (IOException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Could not write: " + file.getAbsolutePath(), e));
+			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Could not write: "
+					+ file.getAbsolutePath(), e));
 		} finally {
 			if (outputStream != null) {
 				try {
 					outputStream.close();
 				} catch (IOException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Could not close: " + file.getAbsolutePath(), e));
+					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Could not close: "
+							+ file.getAbsolutePath(), e));
 				}
 			}
 		}
@@ -85,12 +88,13 @@ public class TaskRepositoriesExternalizer {
 
 	public Set<TaskRepository> readRepositoriesFromXML(File file) {
 
-		if (!file.exists())
+		if (!file.exists()) {
 			return null;
+		}
 		InputStream inputStream = null;
 		try {
 			inputStream = new ZipInputStream(new FileInputStream(file));
-			
+
 			// search for REPOSITORIES entry
 			ZipEntry entry = ((ZipInputStream) inputStream).getNextEntry();
 			while (entry != null) {
@@ -99,11 +103,11 @@ public class TaskRepositoriesExternalizer {
 				}
 				entry = ((ZipInputStream) inputStream).getNextEntry();
 			}
-			
+
 			if (entry == null) {
 				return null;
 			}
-			
+
 			SaxRepositoriesContentHandler contentHandler = new SaxRepositoriesContentHandler();
 			XMLReader reader = XMLReaderFactory.createXMLReader();
 			reader.setContentHandler(contentHandler);
@@ -118,7 +122,8 @@ public class TaskRepositoriesExternalizer {
 				try {
 					inputStream.close();
 				} catch (IOException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Error closing context file", e));
+					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+							"Error closing context file", e));
 				}
 			}
 		}

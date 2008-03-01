@@ -62,14 +62,14 @@ public class NewCategoryAction extends Action implements IViewActionDelegate {
 
 			for (AbstractTaskCategory category : categories) {
 				if (name != null && name.equals(category.getSummary())) {
-					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
+					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 							"New Category", "A category with this name already exists, please choose another name.");
 					return;
 				}
 			}
 			for (AbstractRepositoryQuery query : queries) {
 				if (name != null && name.equals(query.getSummary())) {
-					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
+					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 							"New Category", "A query with this name already exists, please choose another name.");
 					return;
 				}

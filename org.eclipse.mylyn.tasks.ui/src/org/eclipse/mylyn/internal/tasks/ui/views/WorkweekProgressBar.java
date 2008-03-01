@@ -39,9 +39,9 @@ public class WorkweekProgressBar extends Canvas {
 
 	private int colorBarWidth = 0;
 
-	private Color completedColor;
+	private final Color completedColor;
 
-	private Composite parent;
+	private final Composite parent;
 
 	public WorkweekProgressBar(Composite parent) {
 		super(parent, SWT.NONE);
@@ -100,8 +100,9 @@ public class WorkweekProgressBar extends Canvas {
 		if (maxTickCount > 0) {
 			// TODO: should probably get own client area, not parent's
 			Rectangle r = parent.getClientArea();
-			if (r.width != 0)
+			if (r.width != 0) {
 				return Math.max(0, value * (r.width - 2) / maxTickCount);
+			}
 		}
 		return value;
 	}
@@ -135,10 +136,12 @@ public class WorkweekProgressBar extends Canvas {
 	public Point computeSize(int wHint, int hHint, boolean changed) {
 		checkWidget();
 		Point size = new Point(parent.getSize().x, DEFAULT_HEIGHT);//parent.getSize().y);
-		if (wHint != SWT.DEFAULT)
+		if (wHint != SWT.DEFAULT) {
 			size.x = wHint;
-		if (hHint != SWT.DEFAULT)
+		}
+		if (hHint != SWT.DEFAULT) {
 			size.y = hHint;
+		}
 		return size;
 	}
 
@@ -148,8 +151,9 @@ public class WorkweekProgressBar extends Canvas {
 
 		colorBarWidth = scale(currentTickCount);
 
-		if (currentTickCount == maxTickCount)
+		if (currentTickCount == maxTickCount) {
 			colorBarWidth = getClientArea().width - 1;
+		}
 		paintStep(x, colorBarWidth);
 	}
 
@@ -158,8 +162,9 @@ public class WorkweekProgressBar extends Canvas {
 		int x = colorBarWidth;
 
 		colorBarWidth = scale(currentTickCount);
-		if (currentTickCount == maxTickCount)
+		if (currentTickCount == maxTickCount) {
 			colorBarWidth = getClientArea().width - 1;
+		}
 		paintStep(x, colorBarWidth);
 	}
 

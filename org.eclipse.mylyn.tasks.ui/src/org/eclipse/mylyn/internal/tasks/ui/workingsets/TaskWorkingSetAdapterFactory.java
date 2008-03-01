@@ -31,8 +31,7 @@ public class TaskWorkingSetAdapterFactory implements IAdapterFactory {
 		return ADAPTER_TYPES;
 	}
 
-	public Object getAdapter(final Object adaptableObject, @SuppressWarnings("unchecked")
-	Class adapterType) {
+	public Object getAdapter(final Object adaptableObject, @SuppressWarnings("unchecked") Class adapterType) {
 		if (adapterType == IPersistableElement.class && adaptableObject instanceof AbstractTaskContainer) {
 			return new IPersistableElement() {
 				public void saveState(IMemento memento) {

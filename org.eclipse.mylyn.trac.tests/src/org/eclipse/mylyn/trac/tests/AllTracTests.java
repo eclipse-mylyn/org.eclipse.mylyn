@@ -24,8 +24,10 @@ public class AllTracTests {
 	public static Test suite() {
 //		UrlConnectionUtil.initCommonsLoggingSettings();
 
-		TracCorePlugin.getDefault().getConnector().setTaskRepositoryLocationFactory(new TaskRepositoryLocationFactory());
-		
+		TracCorePlugin.getDefault()
+				.getConnector()
+				.setTaskRepositoryLocationFactory(new TaskRepositoryLocationFactory());
+
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.trac.tests");
 		// $JUnit-BEGIN$
 		// suite.addTestSuite(TracXmlRpcTest.class);

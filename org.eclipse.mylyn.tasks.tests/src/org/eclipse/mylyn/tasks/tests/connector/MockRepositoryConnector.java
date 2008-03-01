@@ -168,6 +168,7 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 		this.attachmentHandler = attachmentHandler;
 	}
 
+	@Override
 	public Set<RepositoryTemplate> getTemplates() {
 		Set<RepositoryTemplate> templates = new HashSet<RepositoryTemplate>();
 		RepositoryTemplate template = new RepositoryTemplate("Mock Template", REPOSITORY_URL, "utf-8", "1", "new",

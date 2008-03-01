@@ -150,7 +150,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 	public TaskEditorActionPart(AbstractTaskEditorPage taskEditorPage) {
 		super(taskEditorPage);
 	}
-	
+
 	protected void addAttachContextButton(Composite buttonComposite, AbstractTask task, FormToolkit toolkit) {
 		attachContextButton = toolkit.createButton(buttonComposite, "Attach Context", SWT.CHECK);
 		attachContextButton.setImage(TasksUiImages.getImage(TasksUiImages.CONTEXT_ATTACH));
@@ -243,11 +243,11 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 
 		super.commit(onSave);
 	}
-	
+
 	public AbstractTaskCategory getCategory() {
 		return category;
 	}
-	
+
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
 		Composite buttonComposite = toolkit.createComposite(parent);
@@ -413,6 +413,4 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		}
 	}
 
-	
-	
 }

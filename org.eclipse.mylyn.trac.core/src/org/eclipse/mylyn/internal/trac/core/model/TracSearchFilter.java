@@ -72,11 +72,11 @@ public class TracSearchFilter {
 
 	}
 
-	private String fieldName;
+	private final String fieldName;
 
 	private CompareOperator operator;
 
-	private List<String> values = new ArrayList<String>();
+	private final List<String> values = new ArrayList<String>();
 
 	public TracSearchFilter(String fieldName) {
 		this.fieldName = fieldName;

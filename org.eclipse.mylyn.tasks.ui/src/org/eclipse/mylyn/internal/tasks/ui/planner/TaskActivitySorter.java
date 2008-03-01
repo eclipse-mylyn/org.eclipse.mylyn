@@ -33,7 +33,7 @@ public class TaskActivitySorter extends ViewerSorter {
 
 	public static final int ICON = 0;
 
-	private int criteria;
+	private final int criteria;
 
 	public TaskActivitySorter(int criteria) {
 		super();
@@ -80,12 +80,13 @@ public class TaskActivitySorter extends ViewerSorter {
 	}
 
 	protected int compareCreationDate(AbstractTask task1, AbstractTask task2) {
-		if (task1.getCreationDate() == null)
+		if (task1.getCreationDate() == null) {
 			return 1;
-		else if (task2.getCreationDate() == null)
+		} else if (task2.getCreationDate() == null) {
 			return -1;
-		else
+		} else {
 			return task2.getCreationDate().compareTo(task1.getCreationDate());
+		}
 	}
 
 	protected int compareDuration(AbstractTask task1, AbstractTask task2) {

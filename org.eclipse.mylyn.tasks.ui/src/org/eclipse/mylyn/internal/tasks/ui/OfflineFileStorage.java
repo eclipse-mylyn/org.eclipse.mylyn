@@ -146,7 +146,7 @@ public class OfflineFileStorage implements ITaskDataStorage {
 
 	private static final String EXTENSION = ".zip";
 
-	private File dataDir;
+	private final File dataDir;
 
 	// HACK: Remove attribute factories all together!!!
 	private static final AbstractAttributeFactory temporaryFactory = new AbstractAttributeFactory() {
@@ -227,7 +227,8 @@ public class OfflineFileStorage implements ITaskDataStorage {
 					fileInputStream.close();
 				}
 			} catch (IOException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error closing offline data input stream", e));
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						"Error closing offline data input stream", e));
 			}
 		}
 
@@ -287,7 +288,8 @@ public class OfflineFileStorage implements ITaskDataStorage {
 					fileOutputStream.close();
 				}
 			} catch (IOException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error closing offline data output stream"));
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						"Error closing offline data output stream"));
 			}
 		}
 
@@ -538,8 +540,9 @@ public class OfflineFileStorage implements ITaskDataStorage {
 			String inputName = operationMemento.getString(ATTRIBUTE_INPUT_NAME);
 			String inputValue = operationMemento.getString(ATTRIBUTE_INPUT_VALUE);
 
-			if (knobName == null || operationName == null)
+			if (knobName == null || operationName == null) {
 				continue;
+			}
 
 			RepositoryOperation op = new RepositoryOperation(knobName, operationName);
 			if (optionName != null) {
@@ -611,8 +614,9 @@ public class OfflineFileStorage implements ITaskDataStorage {
 	}
 
 	private String getCleanText(String text) {
-		if (text == null)
+		if (text == null) {
 			return "";
+		}
 		String result = XmlUtil.cleanXmlString(text);
 		if (result == null) {
 			result = "";
@@ -663,8 +667,9 @@ public class OfflineFileStorage implements ITaskDataStorage {
 	}
 
 	public void remove(String repositoryUrl, String id) {
-		if (repositoryUrl == null || id == null)
+		if (repositoryUrl == null || id == null) {
 			return;
+		}
 		File file;
 		try {
 			file = getDataFile(URLEncoder.encode(repositoryUrl, ENCODING_UTF_8), id);
@@ -680,7 +685,8 @@ public class OfflineFileStorage implements ITaskDataStorage {
 			// TODO: Remove folder if last file removed
 
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error removing offline data: " + repositoryUrl + "-" + id, e));
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error removing offline data: "
+					+ repositoryUrl + "-" + id, e));
 		}
 	}
 

@@ -24,20 +24,20 @@ public class TaskActivationActionTest extends TestCase {
 		MockRepositoryTask task = new MockRepositoryTask("test:activation");
 		ToggleTaskActivationAction action = new ToggleTaskActivationAction(task, new ToolBarManager());
 		assertFalse(action.isChecked());
-		
+
 		TasksUiPlugin.getTaskListManager().activateTask(task);
 		assertTrue(action.isChecked());
-		
+
 		TasksUiPlugin.getTaskListManager().deactivateTask(task);
 		assertFalse(action.isChecked());
-		
+
 		action.dispose();
-		
+
 		TasksUiPlugin.getTaskListManager().activateTask(task);
 		assertFalse(action.isChecked());
-		
+
 		TasksUiPlugin.getTaskListManager().deactivateTask(task);
 		assertFalse(action.isChecked());
 	}
-	
+
 }
