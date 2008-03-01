@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Resources UI
 Bundle-SymbolicName: org.eclipse.mylyn.resources.ui;singleton:=true
-Bundle-Version: 2.3.0.qualifier
+Bundle-Version: 3.0.0.qualifier
 Bundle-Activator: org.eclipse.mylyn.resources.ResourcesUiBridgePlugin
 Require-Bundle: org.eclipse.ui.ide,
  org.eclipse.core.runtime,
@@ -12,12 +12,12 @@ Require-Bundle: org.eclipse.ui.ide,
  org.eclipse.ui.forms,
  org.eclipse.jface.text,
  org.eclipse.compare,
- org.eclipse.mylyn.context.core;bundle-version="[2.3.0,3.0.0)",
- org.eclipse.mylyn.context.ui;bundle-version="[2.3.0,3.0.0)",
- org.eclipse.mylyn.monitor.ui;bundle-version="[2.3.0,3.0.0)",
- org.eclipse.mylyn.tasks.core;bundle-version="[2.3.0,3.0.0)",
- org.eclipse.mylyn.tasks.ui;bundle-version="[2.3.0,3.0.0)",
- org.eclipse.mylyn.monitor.core;bundle-version="[2.3.0,3.0.0)"
+ org.eclipse.mylyn.context.core;bundle-version="[3.0.0,4.0.0)",
+ org.eclipse.mylyn.context.ui;bundle-version="[3.0.0,4.0.0)",
+ org.eclipse.mylyn.monitor.ui;bundle-version="[3.0.0,4.0.0)",
+ org.eclipse.mylyn.tasks.core;bundle-version="[3.0.0,4.0.0)",
+ org.eclipse.mylyn.tasks.ui;bundle-version="[3.0.0,4.0.0)",
+ org.eclipse.mylyn.monitor.core;bundle-version="[3.0.0,4.0.0)"
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
 Export-Package: org.eclipse.mylyn.internal.resources.ui,
