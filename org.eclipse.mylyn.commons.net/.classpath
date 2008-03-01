@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry exported="true" kind="lib" path="lib-lang/commons-lang-2.1.jar" sourcepath="lib-lang/commons-lang-2.1-src.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib-xmlrpc/xmlrpc-client-3.0.jar" sourcepath="lib-xmlrpc/xmlrpc-client-3.0-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib-xmlrpc/xmlrpc-common-3.0.jar" sourcepath="lib-xmlrpc/xmlrpc-common-3.0-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib-xmlrpc/ws-commons-util-1.0.1.jar" sourcepath="lib-xmlrpc/ws-commons-util-1.0.1-sources.jar"/>
