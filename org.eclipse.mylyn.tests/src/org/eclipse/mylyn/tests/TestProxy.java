@@ -49,9 +49,9 @@ public class TestProxy implements Runnable {
 
 	private int listenPort;
 
-	private List<Message> requests = new ArrayList<Message>();
+	private final List<Message> requests = new ArrayList<Message>();
 
-	private List<Message> responses = new ArrayList<Message>();
+	private final List<Message> responses = new ArrayList<Message>();
 
 	private Thread runner;
 

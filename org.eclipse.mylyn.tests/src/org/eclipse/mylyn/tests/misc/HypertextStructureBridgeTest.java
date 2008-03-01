@@ -17,7 +17,7 @@ import org.eclipse.mylyn.internal.web.ui.WebResourceStructureBridge;
  */
 public class HypertextStructureBridgeTest extends TestCase {
 
-	private WebResourceStructureBridge bridge = new WebResourceStructureBridge();
+	private final WebResourceStructureBridge bridge = new WebResourceStructureBridge();
 
 	public void testParentHandle() {
 		String site = "http://www.foo.bar";

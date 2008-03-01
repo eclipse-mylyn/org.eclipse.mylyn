@@ -30,6 +30,7 @@ public class NoticicationPopupMain {
 		final AbstractNotificationPopup popup = new SampleNotificationPopup(display);
 
 		shell.addShellListener(new ShellAdapter() {
+			@Override
 			public void shellClosed(ShellEvent e) {
 				popup.close();
 			}

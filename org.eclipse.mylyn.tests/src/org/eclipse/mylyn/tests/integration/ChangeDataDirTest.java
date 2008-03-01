@@ -36,7 +36,7 @@ public class ChangeDataDirTest extends TestCase {
 
 	private final String defaultDir = TasksUiPlugin.getDefault().getDefaultDataDirectory();
 
-	private TaskListManager manager = TasksUiPlugin.getTaskListManager();
+	private final TaskListManager manager = TasksUiPlugin.getTaskListManager();
 
 	@Override
 	protected void setUp() throws Exception {

@@ -8,10 +8,10 @@
 
 package org.eclipse.mylyn.tests.integration;
 
+import junit.framework.TestCase;
+
 import org.eclipse.mylyn.internal.monitor.usage.MonitorPreferenceConstants;
 import org.eclipse.mylyn.internal.monitor.usage.UiUsageMonitorPlugin;
-
-import junit.framework.TestCase;
 
 /**
  * @author Mik Kersten

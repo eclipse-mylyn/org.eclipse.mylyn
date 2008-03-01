@@ -22,10 +22,10 @@ public class AllPerformanceTests {
 
 	public static Test suite() {
 		StatusHandler.addStatusHandler(new TestingStatusNotifier());
-		
+
 		TestSuite suite = new TestSuite("Performance tests for org.eclipse.mylyn.tests");
 		suite.addTest(AllTasksPerformanceTests.suite());
 		return suite;
 	}
-	
+
 }

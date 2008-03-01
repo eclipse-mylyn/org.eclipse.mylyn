@@ -200,7 +200,7 @@ public class WebClientUtilTest extends TestCase {
 		Proxy proxy = new Proxy(Type.HTTP, proxyAddress);
 		WebClientUtil.setupHttpClient(client, proxy, url, "user", "pass");
 		client.getParams().setAuthenticationPreemptive(true);
-		
+
 		Message response = new Message("HTTP/1.1 401 Authentication required");
 		response.headers.add("WWW-Authenticate: Basic realm=\"Foo\"");
 		testProxy.addResponse(response);
@@ -240,7 +240,7 @@ public class WebClientUtilTest extends TestCase {
 		Proxy proxy = new AuthenticatedProxy(Type.HTTP, proxyAddress, "proxyUser", "proxyPass");
 		WebClientUtil.setupHttpClient(client, proxy, url, "user", "pass");
 		client.getParams().setAuthenticationPreemptive(true);
-		
+
 		Message response = new Message("HTTP/1.1 407 Proxy authentication required");
 		response.headers.add("Proxy-Authenticate: Basic realm=\"Foo\"");
 		testProxy.addResponse(response);
@@ -260,7 +260,7 @@ public class WebClientUtilTest extends TestCase {
 		Proxy proxy = new AuthenticatedProxy(Type.HTTP, proxyAddress, "proxyUser", "proxyPass");
 		WebClientUtil.setupHttpClient(client, proxy, url, "user", "pass");
 		client.getParams().setAuthenticationPreemptive(true);
-		
+
 		testProxy.addResponse(TestProxy.OK);
 
 		GetMethod method = new GetMethod(url);
@@ -293,7 +293,7 @@ public class WebClientUtilTest extends TestCase {
 		Proxy proxy = new AuthenticatedProxy(Type.HTTP, proxyAddress, "proxyUser", "proxyPass");
 		WebClientUtil.setupHttpClient(client, proxy, url, "", "");
 		client.getParams().setAuthenticationPreemptive(true);
-		
+
 		testProxy.addResponse(TestProxy.SERVICE_UNVAILABLE);
 
 		GetMethod method = new GetMethod("/");
@@ -330,7 +330,7 @@ public class WebClientUtilTest extends TestCase {
 		Proxy proxy = new Proxy(Type.HTTP, proxyAddress);
 		WebClientUtil.setupHttpClient(client, proxy, url, "", "");
 		client.getParams().setAuthenticationPreemptive(true);
-		
+
 		testProxy.addResponse(TestProxy.OK);
 
 		GetMethod method = new GetMethod("/");
@@ -433,7 +433,7 @@ public class WebClientUtilTest extends TestCase {
 		location.setCredentials(AuthenticationType.HTTP, "user", "pass");
 		WebClientUtil.setupHttpClient(client, null, location);
 		client.getParams().setAuthenticationPreemptive(true);
-		
+
 		Message response = new Message("HTTP/1.1 401 Authentication required");
 		response.headers.add("WWW-Authenticate: Basic realm=\"Foo\"");
 		testProxy.addResponse(response);
@@ -483,7 +483,7 @@ public class WebClientUtilTest extends TestCase {
 		});
 		WebClientUtil.setupHttpClient(client, null, location);
 		client.getParams().setAuthenticationPreemptive(true);
-		
+
 		Message response = new Message("HTTP/1.1 407 Proxy authentication required");
 		response.headers.add("Proxy-Authenticate: Basic realm=\"Foo\"");
 		testProxy.addResponse(response);
@@ -510,7 +510,7 @@ public class WebClientUtilTest extends TestCase {
 
 		WebClientUtil.setupHttpClient(client, null, location);
 		client.getParams().setAuthenticationPreemptive(true);
-		
+
 		testProxy.addResponse(TestProxy.OK);
 
 		GetMethod method = new GetMethod(url);
@@ -553,7 +553,7 @@ public class WebClientUtilTest extends TestCase {
 		});
 		WebClientUtil.setupHttpClient(client, null, location);
 		client.getParams().setAuthenticationPreemptive(true);
-		
+
 		testProxy.addResponse(TestProxy.SERVICE_UNVAILABLE);
 
 		GetMethod method = new GetMethod("/");
@@ -638,7 +638,7 @@ public class WebClientUtilTest extends TestCase {
 		userAgent = WebClientUtil.getUserAgent("abc");
 		assertEquals(-1, userAgent.indexOf("null"));
 		assertEquals(-1, userAgent.indexOf("  "));
-		assertEquals(0, userAgent.indexOf("Mylyn"));		
+		assertEquals(0, userAgent.indexOf("Mylyn"));
 		assertTrue(userAgent.contains(" abc "));
 	}
 

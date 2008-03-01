@@ -69,7 +69,7 @@ public class LiveWebConnectorTemplatesTest extends TestCase {
 		for (Map.Entry<String, String> e : template.getAttributes().entrySet()) {
 			repository.setProperty(e.getKey(), e.getValue());
 		}
-		
+
 		String url = repository.getUrl();
 		// HACK: repositories that require auth
 		if ("http://demo.otrs.org".equals(url)) {
@@ -85,13 +85,13 @@ public class LiveWebConnectorTemplatesTest extends TestCase {
 		String regexp = WebRepositoryConnector.evaluateParams(queryPattern, repository);
 
 		String taskPrefix = template.taskPrefixUrl;
-		
-		WebQuery query = new WebQuery(template.label, queryUrl, queryUrlTemplate, queryPattern,
-				taskPrefix, repositoryUrl, params);
-		
+
+		WebQuery query = new WebQuery(template.label, queryUrl, queryUrlTemplate, queryPattern, taskPrefix,
+				repositoryUrl, params);
+
 		WebRepositoryConnector connector = new WebRepositoryConnector();
 		IStatus status = connector.performQuery(query, repository, monitor, collector);
-		
+
 //		IStatus resultingStatus; 
 //		if(regexp!=null && regexp.length()>0) {
 //			resultingStatus = WebRepositoryConnector.performQuery(buffer, regexp, null, monitor, collector,
@@ -100,8 +100,7 @@ public class LiveWebConnectorTemplatesTest extends TestCase {
 //			resultingStatus = WebRepositoryConnector.performRssQuery(queryUrl, monitor, collector, repository);
 //		}
 
-		assertTrue("Query failed\n" + queryUrl + "\n" + regexp + "\n" + status.toString(),
-				queryStatus.isOK());
+		assertTrue("Query failed\n" + queryUrl + "\n" + regexp + "\n" + status.toString(), queryStatus.isOK());
 		try {
 			assertTrue("Expected non-empty query result\n" + queryUrl + "\n" + regexp, hits.size() > 0);
 		} catch (Throwable t) {

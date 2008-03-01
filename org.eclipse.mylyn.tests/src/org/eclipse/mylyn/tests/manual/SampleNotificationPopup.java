@@ -26,6 +26,7 @@ public class SampleNotificationPopup extends AbstractNotificationPopup {
 		super(display);
 	}
 
+	@Override
 	protected void createTitleArea(Composite parent) {
 		((GridData) parent.getLayoutData()).heightHint = 24;
 
@@ -39,12 +40,14 @@ public class SampleNotificationPopup extends AbstractNotificationPopup {
 		closeButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 		closeButton.setCursor(parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND));
 		closeButton.addMouseListener(new MouseAdapter() {
+			@Override
 			public void mouseUp(MouseEvent e) {
 				close();
 			}
 		});
 	}
 
+	@Override
 	protected void createContentArea(Composite parent) {
 		for (int i = 0; i < 5; i++) {
 			Label l = new Label(parent, SWT.None);

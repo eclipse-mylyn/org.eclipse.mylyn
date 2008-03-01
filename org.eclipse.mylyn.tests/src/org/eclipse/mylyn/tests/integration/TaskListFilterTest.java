@@ -31,7 +31,7 @@ public class TaskListFilterTest extends TestCase {
 
 	private TaskListView view;
 
-	private TaskListManager manager = TasksUiPlugin.getTaskListManager();
+	private final TaskListManager manager = TasksUiPlugin.getTaskListManager();
 
 	private Set<AbstractTaskListFilter> previousFilters;
 
@@ -44,7 +44,7 @@ public class TaskListFilterTest extends TestCase {
 	private AbstractTask taskDueToday;
 
 	private AbstractTask taskCompletedToday;
-	
+
 	private AbstractTask taskScheduledLastWeek;
 
 	@Override
@@ -78,13 +78,12 @@ public class TaskListFilterTest extends TestCase {
 		taskCompletedToday.setScheduledForDate(TaskActivityUtil.snapEndOfWorkDay(Calendar.getInstance()).getTime());
 		taskCompletedToday.setCompleted(true);
 		manager.getTaskList().addTask(taskCompletedToday);
-		
 
 		taskScheduledLastWeek = new LocalTask("6", "t-scheduledLastWeek");
 		manager.getTaskList().addTask(taskScheduledLastWeek);
 		Calendar lastWeek = Calendar.getInstance();
 		lastWeek.add(Calendar.WEEK_OF_MONTH, -1);
-		TasksUiPlugin.getTaskActivityManager().setScheduledFor(taskScheduledLastWeek,lastWeek.getTime(), true);
+		TasksUiPlugin.getTaskActivityManager().setScheduledFor(taskScheduledLastWeek, lastWeek.getTime(), true);
 	}
 
 	@Override
