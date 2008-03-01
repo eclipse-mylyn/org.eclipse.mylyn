@@ -51,7 +51,6 @@ public class AllTasksTests {
 		suite.addTestSuite(AttachmentJobTest.class);
 		suite.addTestSuite(RepositorySettingsPageTest.class);
 		suite.addTestSuite(TaskHistoryTest.class);
-		suite.addTestSuite(UrlConnectionUtilTest.class);
 		suite.addTestSuite(CommentQuoterTest.class);
 		suite.addTestSuite(OfflineStorageTest.class);
 		suite.addTestSuite(OfflineCachingStorageTest.class);
