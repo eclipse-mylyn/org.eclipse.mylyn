@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.mylyn.context_feature"
       label="Mylyn Focused UI (Recommended)"
-      version="2.3.0.qualifier"
+      version="3.0.0.qualifier"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylyn">
 
@@ -233,7 +233,7 @@ litigation.
       <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.eclipse.compare"/>
       <import plugin="org.eclipse.mylyn"/>
-      <import feature="org.eclipse.mylyn_feature" version="2.3.0.qualifier" match="greaterOrEqual"/>
+      <import feature="org.eclipse.mylyn_feature" version="3.0.0.qualifier" match="greaterOrEqual"/>
       <import plugin="org.eclipse.mylyn.context.ui"/>
       <import plugin="org.eclipse.ui.browser"/>
    </requires>
@@ -242,21 +242,21 @@ litigation.
          id="org.eclipse.mylyn.context.ui"
          download-size="0"
          install-size="0"
-         version="2.3.0.qualifier"
+         version="3.0.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn.resources.ui"
          download-size="0"
          install-size="0"
-         version="2.3.0.qualifier"
+         version="3.0.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn.web.ui"
          download-size="0"
          install-size="0"
-         version="2.3.0.qualifier"
+         version="3.0.0.qualifier"
          unpack="false"/>
 
 </feature>
