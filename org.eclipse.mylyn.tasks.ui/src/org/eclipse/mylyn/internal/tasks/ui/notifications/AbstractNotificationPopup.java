@@ -26,6 +26,7 @@ import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -39,6 +40,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
@@ -218,9 +220,19 @@ public abstract class AbstractNotificationPopup extends Window {
 		titleTextLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
 		titleTextLabel.setCursor(parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND));
 
-		Label button = new Label(parent, SWT.NONE);
+		final Label button = new Label(parent, SWT.NONE);
 		button.setImage(TasksUiImages.getImage(TasksUiImages.NOTIFICATION_CLOSE));
+		button.addMouseTrackListener(new MouseTrackAdapter() {
+			@Override
+			public void mouseEnter(MouseEvent e) {
+				button.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_TOOL_DELETE));
+			}
 
+			@Override
+			public void mouseExit(MouseEvent e) {
+				button.setImage(TasksUiImages.getImage(TasksUiImages.NOTIFICATION_CLOSE));
+			}
+		});
 		button.addMouseListener(new MouseListener() {
 
 			public void mouseDoubleClick(MouseEvent e) {
