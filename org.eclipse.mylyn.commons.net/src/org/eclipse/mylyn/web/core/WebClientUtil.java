@@ -272,6 +272,11 @@ public class WebClientUtil {
 		}
 	}
 
+	/**
+	 * @deprecated use {@link #createHostConfiguration(HttpClient, String, AbstractWebLocation, IProgressMonitor)}
+	 *             instead
+	 */
+	@Deprecated
 	public static void setupHttpClient(HttpClient client, Proxy proxySettings, String repositoryUrl, String user,
 			String password) {
 
@@ -477,11 +482,10 @@ public class WebClientUtil {
 	}
 
 	/**
-	 * It is recommended to use {@link #createHostConfiguration(HttpClient, String, AbstractWebLocation)} instead.
-	 * 
-	 * @since 2.2
+	 * @deprecated use {@link #createHostConfiguration(HttpClient, String, AbstractWebLocation, IProgressMonitor)}
+	 *             instead
 	 */
-	// API-3.0 remove
+	@Deprecated
 	public static void setupHttpClient(HttpClient client, String userAgent, AbstractWebLocation location) {
 		if (client == null || location == null) {
 			throw new IllegalArgumentException();
