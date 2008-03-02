@@ -222,26 +222,25 @@ litigation.
    <requires>
       <import plugin="org.eclipse.ui" version="3.4.0.I20070918" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui.forms"/>
-      <import plugin="org.eclipse.mylyn.tasks.core"/>
-      <import plugin="org.eclipse.mylyn.tasks.ui"/>
       <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.mylyn"/>
-      <import plugin="org.eclipse.mylyn.monitor.core"/>
+      <import plugin="org.eclipse.core.expressions"/>
       <import plugin="org.eclipse.jface.text"/>
-      <import plugin="org.eclipse.mylyn.context.core"/>
       <import plugin="org.eclipse.update.core"/>
       <import plugin="org.eclipse.ui.browser"/>
       <import plugin="org.eclipse.ui.editors"/>
       <import plugin="org.eclipse.ui.views"/>
       <import plugin="org.eclipse.ui.workbench.texteditor"/>
-      <import plugin="org.eclipse.mylyn.monitor.ui"/>
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.eclipse.search"/>
+      <import plugin="org.eclipse.mylyn"/>
       <import plugin="org.eclipse.ui.net"/>
-      <import plugin="org.eclipse.mylyn.web.core"/>
       <import plugin="org.eclipse.core.net"/>
-      <import plugin="org.eclipse.core.expressions"/>
+      <import plugin="org.eclipse.compare"/>
+      <import plugin="org.apache.commons.codec" version="1.3.0" match="greaterOrEqual"/>
+      <import plugin="org.apache.commons.httpclient" version="3.1.0" match="greaterOrEqual"/>
+      <import plugin="org.apache.commons.lang" version="2.3.0" match="greaterOrEqual"/>
+      <import plugin="org.apache.commons.logging" version="1.0.4" match="greaterOrEqual"/>
    </requires>
 
    <plugin
@@ -305,6 +304,27 @@ litigation.
          download-size="0"
          install-size="0"
          version="3.0.0.qualifier"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.commons.logging"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.commons.codec"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.commons.httpclient"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
          unpack="false"/>
 
 </feature>
