@@ -90,5 +90,6 @@ plugin@org.apache.commons.httpclient,3.1.0=GET,http://download.eclipse.org/tools
 plugin@org.apache.commons.lang,2.3.0=GET,http://download.eclipse.org/tools/orbit/downloads/drops/I20080228221323/bundles/org.apache.commons.lang_2.3.0.v200802271310.jar
 plugin@org.apache.xerces,2.8.0=GET,http://download.eclipse.org/tools/orbit/downloads/drops/I20080228221323/bundles/org.apache.xerces_2.8.0.v200705301630.jar
 plugin@org.apache.xml.resolver,1.2.0=GET,http://download.eclipse.org/tools/orbit/downloads/drops/I20080228221323/bundles/org.apache.xml.resolver_1.2.0.v200801282000.jar
+plugin@org.apache.xmlrpc,3.0.0=GET,http://download.eclipse.org/tools/orbit/downloads/drops/I20080228221323/bundles/org.apache.xmlrpc_3.0.0.v200706111329.jar
 plugin@org.apache.ws.commons.util,1.0.0=GET,http://download.eclipse.org/tools/orbit/downloads/drops/I20080228221323/bundles/org.apache.ws.commons.util_1.0.0.v200706111329.jar
 plugin@org.jdom,1.0.0=GET,http://download.eclipse.org/tools/orbit/downloads/drops/I20080228221323/bundles/org.jdom_1.0.0.v200802271225.jar
