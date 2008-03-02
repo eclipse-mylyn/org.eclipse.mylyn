@@ -149,7 +149,11 @@
 	<!-- ===================================================================== -->
 	<target name="postBuild">
 		<antcall target="gatherLogs" />
-		<property name="ExtrasUpdateSiteLocation" value="${buildDirectory}/extrasUpdateSite" />
+		<exec executable="${buildDirectory}/../../copy-orbit-bundles.sh">
+	       <arg value="${buildDirectory}" />
+	    </exec>
+
+		<antcall target="copyBundle"></antcall>
 		<antcall target="generateUpdateSite">
 			<param name="UpdateSiteLocation" value="${buildDirectory}/standardUpdateSite" />
 			<param name="SiteXmlFile" value="standard-site.xml" />
