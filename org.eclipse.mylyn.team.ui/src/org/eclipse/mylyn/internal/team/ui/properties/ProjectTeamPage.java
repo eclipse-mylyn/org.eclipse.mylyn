@@ -12,7 +12,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.fieldassist.IControlContentAdapter;
-import org.eclipse.jface.fieldassist.IControlCreator;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.PreferenceDialog;
@@ -21,8 +20,6 @@ import org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin;
 import org.eclipse.mylyn.internal.team.ui.preferences.FocusedTeamPreferencePage;
 import org.eclipse.mylyn.internal.team.ui.templates.TemplateHandlerContentProposalProvider;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
@@ -35,7 +32,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.dialogs.PropertyPage;
-import org.eclipse.ui.fieldassist.ContentAssistField;
+import org.eclipse.ui.fieldassist.ContentAssistCommandAdapter;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.Hyperlink;
@@ -158,21 +155,10 @@ public class ProjectTeamPage extends PropertyPage {
 
 	private Text addTemplateField(final Composite parent, final String text, IContentProposalProvider provider) {
 		IControlContentAdapter adapter = new TextContentAdapter();
-		IControlCreator controlCreator = new IControlCreator() {
-			public Control createControl(Composite parent, int style) {
-				Text control = new Text(parent, style);
-				control.setText(text);
-				control.addModifyListener(new ModifyListener() {
-					public void modifyText(ModifyEvent e) {
-						modified = true;
-					}
-				});
-				return control;
-			}
-		};
+		Text control = new Text(parent, SWT.BORDER | SWT.MULTI);
+		control.setText(text);
 
-		ContentAssistField field = new ContentAssistField(parent, SWT.BORDER | SWT.MULTI, controlCreator, adapter,
-				provider, null, new char[] { '$' });
+		new ContentAssistCommandAdapter(control, adapter, provider, null, new char[] { '$' }, true);
 
 		GridData gd = new GridData();
 		gd.heightHint = 60;
@@ -180,9 +166,9 @@ public class ProjectTeamPage extends PropertyPage {
 		gd.grabExcessHorizontalSpace = true;
 		gd.verticalAlignment = GridData.CENTER;
 		gd.grabExcessVerticalSpace = false;
-		field.getLayoutControl().setLayoutData(gd);
+		control.setLayoutData(gd);
 
-		return (Text) field.getControl();
+		return control;
 	}
 
 	private void initialize() {
