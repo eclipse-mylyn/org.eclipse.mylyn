@@ -10,7 +10,6 @@ package org.eclipse.mylyn.internal.team.ui.preferences;
 
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.fieldassist.IControlContentAdapter;
-import org.eclipse.jface.fieldassist.IControlCreator;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin;
@@ -26,7 +25,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.eclipse.ui.fieldassist.ContentAssistField;
+import org.eclipse.ui.fieldassist.ContentAssistCommandAdapter;
 
 /**
  * @author Mik Kersten
@@ -114,19 +113,12 @@ public class FocusedTeamPreferencePage extends PreferencePage implements IWorkbe
 		commitTemplate = addTemplateField(group, completedTemplate, new TemplateHandlerContentProposalProvider());
 	}
 
-	@SuppressWarnings("deprecation")
 	private Text addTemplateField(final Composite parent, final String text, IContentProposalProvider provider) {
 		IControlContentAdapter adapter = new TextContentAdapter();
-		IControlCreator controlCreator = new IControlCreator() {
-			public Control createControl(Composite parent, int style) {
-				Text control = new Text(parent, style);
-				control.setText(text);
-				return control;
-			}
-		};
+		Text control = new Text(parent, SWT.BORDER | SWT.MULTI);
+		control.setText(text);
 
-		ContentAssistField field = new ContentAssistField(parent, SWT.BORDER | SWT.MULTI, controlCreator, adapter,
-				provider, null, new char[] { '$' });
+		new ContentAssistCommandAdapter(control, adapter, provider, null, new char[] { '$' }, true);
 
 		GridData gd = new GridData();
 		gd.heightHint = 60;
@@ -134,8 +126,8 @@ public class FocusedTeamPreferencePage extends PreferencePage implements IWorkbe
 		gd.grabExcessHorizontalSpace = true;
 		gd.verticalAlignment = GridData.CENTER;
 		gd.grabExcessVerticalSpace = false;
-		field.getLayoutControl().setLayoutData(gd);
+		control.setLayoutData(gd);
 
-		return (Text) field.getControl();
+		return control;
 	}
 }

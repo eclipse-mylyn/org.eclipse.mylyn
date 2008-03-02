@@ -45,7 +45,6 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
  * @author Steffen Pingel
  * @see Adapted from org.eclipse.ui.internal.ide.dialogs.ProjectReferencePage
  */
-@SuppressWarnings("deprecation")
 public class ProjectTeamPage extends PropertyPage {
 
 	private IProject project;
