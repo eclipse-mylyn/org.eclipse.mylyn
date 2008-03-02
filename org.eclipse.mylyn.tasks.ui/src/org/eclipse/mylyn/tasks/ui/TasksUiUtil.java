@@ -341,6 +341,10 @@ public class TasksUiUtil {
 							wasOpen = refreshIfOpen(task, editorInput);
 
 							if (!wasOpen) {
+								if (task.getSynchronizationState() == RepositoryTaskSyncState.SYNCHRONIZED) {
+									TasksUiPlugin.getSynchronizationManager().setTaskRead(task, true);
+								}
+
 								IEditorPart part = openEditor(editorInput, taskEditorId, page);
 								if (newTask && part instanceof TaskEditor) {
 									TaskEditor taskEditor = (TaskEditor) part;
@@ -384,6 +388,10 @@ public class TasksUiUtil {
 				if (openWithBrowser) {
 					openUrl(task.getUrl(), false);
 				} else {
+					if (task.getSynchronizationState() == RepositoryTaskSyncState.SYNCHRONIZED) {
+						TasksUiPlugin.getSynchronizationManager().setTaskRead(task, true);
+					}
+
 					IWorkbenchPage page = window.getActivePage();
 					openEditor(editorInput, taskEditorId, page);
 				}
