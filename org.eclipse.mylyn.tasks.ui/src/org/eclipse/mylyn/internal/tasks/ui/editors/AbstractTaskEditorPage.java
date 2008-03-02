@@ -110,15 +110,14 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 // TODO EDITOR rename/merge with TaskFormPage
 public abstract class AbstractTaskEditorPage extends FormPage {
 
-	// API-3.0 rename ATTRIBTUES_SECTION to ATTRIBUTES_SECTION (bug 208629)
-	protected enum SECTION_NAME {
-		ACTIONS_SECTION("Actions"), ATTACHMENTS_SECTION("Attachments"), ATTRIBTUES_SECTION("Attributes"), COMMENTS_SECTION(
+	private enum SectionName {
+		ACTIONS_SECTION("Actions"), ATTACHMENTS_SECTION("Attachments"), ATTRIBUTES_SECTION("Attributes"), COMMENTS_SECTION(
 				"Comments"), DESCRIPTION_SECTION("Description"), NEWCOMMENT_SECTION("New Comment"), PEOPLE_SECTION(
 				"People"), PLANNING_SECTION("Personal Planning"), RELATEDBUGS_SECTION("Related Tasks");
 
 		private String prettyName;
 
-		SECTION_NAME(String prettyName) {
+		SectionName(String prettyName) {
 			this.prettyName = prettyName;
 		}
 
@@ -462,7 +461,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 	 * performed on the bug.
 	 */
 	private void createActionsSection(Composite composite) {
-		Section section = createSection(composite, getSectionLabel(SECTION_NAME.ACTIONS_SECTION));
+		Section section = createSection(composite, getSectionLabel(SectionName.ACTIONS_SECTION));
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, true).applyTo(section);
 
 		actionPart = new TaskEditorActionPart(this);
@@ -471,7 +470,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 	private void createAttachmentSection(Composite composite) {
 		// TODO: expand to show new attachments
-		Section section = createSection(composite, getSectionLabel(SECTION_NAME.ATTACHMENTS_SECTION));
+		Section section = createSection(composite, getSectionLabel(SectionName.ATTACHMENTS_SECTION));
 		section.setText(section.getText() + " (" + taskData.getAttachments().size() + ")");
 		section.setExpanded(false);
 
@@ -516,7 +515,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 			String storageId);
 
 	private void createAttributeSection() {
-		attributesSection = createSection(editorComposite, getSectionLabel(SECTION_NAME.ATTRIBTUES_SECTION));
+		attributesSection = createSection(editorComposite, getSectionLabel(SectionName.ATTRIBUTES_SECTION));
 		attributesSection.setExpanded(expandedStateAttributes
 				|| getAttributeManager().hasVisibleOutgoingChanges(taskData));
 
@@ -525,7 +524,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 	}
 
 	private void createCommentSection(Composite composite) {
-		Section commentsSection = createSection(composite, getSectionLabel(SECTION_NAME.COMMENTS_SECTION));
+		Section commentsSection = createSection(composite, getSectionLabel(SectionName.COMMENTS_SECTION));
 
 		commentPart = new TaskEditorCommentPart(this, commentsSection);
 		commentPart.setSupportsDelete(supportsCommentDelete());
@@ -536,7 +535,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		RepositoryTaskAttribute attribute = getAttributeManager().getTaskData().getAttribute(
 				RepositoryTaskAttribute.DESCRIPTION);
 		if (attribute != null) {
-			Section descriptionSection = createSection(composite, getSectionLabel(SECTION_NAME.DESCRIPTION_SECTION));
+			Section descriptionSection = createSection(composite, getSectionLabel(SectionName.DESCRIPTION_SECTION));
 			descriptionPart = new TaskEditorDescriptionPart(this, attribute);
 			initializePart(descriptionSection, descriptionPart);
 		}
@@ -586,7 +585,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 				RepositoryTaskAttribute.COMMENT_NEW);
 		if (attribute != null) {
 			Section newCommentSection = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR);
-			newCommentSection.setText(getSectionLabel(SECTION_NAME.NEWCOMMENT_SECTION));
+			newCommentSection.setText(getSectionLabel(SectionName.NEWCOMMENT_SECTION));
 			newCommentSection.setLayout(new GridLayout());
 			newCommentSection.setLayoutData(new GridData(GridData.FILL_BOTH));
 
@@ -596,7 +595,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 	}
 
 	private void createPeopleSection(Composite composite) {
-		Section peopleSection = createSection(composite, getSectionLabel(SECTION_NAME.PEOPLE_SECTION));
+		Section peopleSection = createSection(composite, getSectionLabel(SectionName.PEOPLE_SECTION));
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, true).applyTo(peopleSection);
 
 		TaskEditorPeoplePart peoplePart = new TaskEditorPeoplePart(this);
@@ -604,7 +603,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 	}
 
 	private void createPlanningSection(Composite composite) {
-		Section planningSection = createSection(composite, getSectionLabel(SECTION_NAME.PLANNING_SECTION));
+		Section planningSection = createSection(composite, getSectionLabel(SectionName.PLANNING_SECTION));
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, true).applyTo(planningSection);
 
 		planningPart = new TaskEditorPlanningPart(this);
@@ -880,7 +879,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		return (TaskEditor) getEditor();
 	}
 
-	private String getSectionLabel(SECTION_NAME labelName) {
+	private String getSectionLabel(SectionName labelName) {
 		return labelName.getPrettyName();
 	}
 
