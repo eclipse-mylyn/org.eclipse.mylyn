@@ -24,8 +24,8 @@ import org.eclipse.mylyn.internal.tasks.ui.SwtUtil.IFadeListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
@@ -40,7 +40,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
@@ -225,7 +224,7 @@ public abstract class AbstractNotificationPopup extends Window {
 		button.addMouseTrackListener(new MouseTrackAdapter() {
 			@Override
 			public void mouseEnter(MouseEvent e) {
-				button.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_TOOL_DELETE));
+				button.setImage(TasksUiImages.getImage(TasksUiImages.NOTIFICATION_CLOSE_ACTIVE));
 			}
 
 			@Override
@@ -233,16 +232,9 @@ public abstract class AbstractNotificationPopup extends Window {
 				button.setImage(TasksUiImages.getImage(TasksUiImages.NOTIFICATION_CLOSE));
 			}
 		});
-		button.addMouseListener(new MouseListener() {
+		button.addMouseListener(new MouseAdapter() {
 
-			public void mouseDoubleClick(MouseEvent e) {
-				// ignore
-			}
-
-			public void mouseDown(MouseEvent e) {
-				// ignore
-			}
-
+			@Override
 			public void mouseUp(MouseEvent e) {
 				close();
 			}

@@ -248,6 +248,8 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor NOTIFICATION_CLOSE = create(T_EVIEW, "notification-close.gif");
 
+	public static final ImageDescriptor NOTIFICATION_CLOSE_ACTIVE = create(T_EVIEW, "notification-close-active.gif");
+
 	public static final ImageDescriptor EXPAND_ALL = create(T_ELCL, "expandall.gif");
 
 	public static final ImageDescriptor REPLY = create(T_ELCL, "reply.gif");
