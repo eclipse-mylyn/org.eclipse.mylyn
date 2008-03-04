@@ -281,7 +281,7 @@ public class WebClientUtil {
 	public static void setupHttpClient(HttpClient client, Proxy proxySettings, String repositoryUrl, String user,
 			String password) {
 
-		setupHttpClientParams(client, null);
+		configureHttpClient(client, null);
 
 		if (proxySettings != null && !Proxy.NO_PROXY.equals(proxySettings)
 		/* && !WebClientUtil.repositoryUsesHttps(repositoryUrl) */
@@ -496,7 +496,7 @@ public class WebClientUtil {
 		String host = WebClientUtil.getDomain(url);
 		int port = WebClientUtil.getPort(url);
 
-		setupHttpClientParams(client, userAgent);
+		configureHttpClient(client, userAgent);
 		setupHttpClientProxy(client, client.getHostConfiguration(), location);
 
 		AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.HTTP);
@@ -519,9 +519,21 @@ public class WebClientUtil {
 
 	/**
 	 * @since 2.3
+	 * @deprecated use {@link #createHostConfiguration(HttpClient, AbstractWebLocation, IProgressMonitor)} and
+	 *             {@link #configureHttpClient(HttpClient, String)}
 	 */
+	@Deprecated
 	public static HostConfiguration createHostConfiguration(HttpClient client, String userAgent,
 			AbstractWebLocation location, IProgressMonitor monitor) {
+		configureHttpClient(client, userAgent);
+		return createHostConfiguration(client, userAgent, location, monitor);
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public static HostConfiguration createHostConfiguration(HttpClient client, AbstractWebLocation location,
+			IProgressMonitor monitor) {
 		if (client == null || location == null) {
 			throw new IllegalArgumentException();
 		}
@@ -530,9 +542,9 @@ public class WebClientUtil {
 		String host = WebClientUtil.getDomain(url);
 		int port = WebClientUtil.getPort(url);
 
-		HostConfiguration hostConfiguration = new CloneableHostConfiguration();
+		configureHttpClientConnectionManager(client);
 
-		setupHttpClientParams(client, userAgent);
+		HostConfiguration hostConfiguration = new CloneableHostConfiguration();
 		setupHttpClientProxy(client, hostConfiguration, location);
 
 		AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.HTTP);
@@ -580,9 +592,18 @@ public class WebClientUtil {
 		}
 	}
 
-	private static void setupHttpClientParams(HttpClient client, String userAgent) {
+	/**
+	 * @since 3.0
+	 */
+	public static void configureHttpClient(HttpClient client, String userAgent) {
 		client.getParams().setBooleanParameter(HttpClientParams.ALLOW_CIRCULAR_REDIRECTS, true);
 		client.getParams().setParameter(HttpMethodParams.USER_AGENT, getUserAgent(userAgent));
+		// API REVIEW consider setting this as the default
+		//client.getParams().setCookiePolicy(CookiePolicy.RFC_2109);
+		configureHttpClientConnectionManager(client);
+	}
+
+	private static void configureHttpClientConnectionManager(HttpClient client) {
 		client.getHttpConnectionManager().getParams().setSoTimeout(WebClientUtil.SOCKET_TIMEOUT);
 		client.getHttpConnectionManager().getParams().setConnectionTimeout(WebClientUtil.CONNNECT_TIMEOUT);
 	}
