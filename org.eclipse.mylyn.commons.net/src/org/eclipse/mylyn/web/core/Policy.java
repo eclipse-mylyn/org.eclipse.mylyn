@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.ProgressMonitorWrapper;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.internal.web.core.InfiniteSubProgressMonitor;
 
@@ -30,15 +31,52 @@ public class Policy {
 		}
 	}
 
+	public static void advance(IProgressMonitor monitor, int worked) {
+		if (monitor.isCanceled()) {
+			throw new OperationCanceledException();
+		}
+		monitor.worked(worked);
+	}
+
 	public static void checkCanceled(IProgressMonitor monitor) {
 		if (monitor != null && monitor.isCanceled()) {
 			throw new OperationCanceledException();
 		}
 	}
 
+	/**
+	 * @since 3.0
+	 */
+	public static boolean isBackgroundMonitor(IProgressMonitor monitor) {
+		return monitor instanceof BackgroundProgressMonitor;
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public static IProgressMonitor backgroundMonitorFor(IProgressMonitor monitor) {
+		if (monitor == null) {
+			return new NullProgressMonitor();
+		}
+		return new BackgroundProgressMonitor(monitor);
+	}
+
 	public static IProgressMonitor monitorFor(IProgressMonitor monitor) {
 		if (monitor == null) {
 			return new NullProgressMonitor();
+		}
+		return monitor;
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public static IProgressMonitor monitorFor(IProgressMonitor monitor, boolean backgroundOperation) {
+		if (monitor == null) {
+			return new NullProgressMonitor();
+		}
+		if (backgroundOperation) {
+			return backgroundMonitorFor(monitor);
 		}
 		return monitor;
 	}
@@ -50,6 +88,9 @@ public class Policy {
 		if (monitor instanceof NullProgressMonitor) {
 			return monitor;
 		}
+		if (monitor instanceof BackgroundProgressMonitor) {
+			return new BackgroundProgressMonitor(new SubProgressMonitor(monitor, ticks));
+		}
 		return new SubProgressMonitor(monitor, ticks);
 	}
 
@@ -60,6 +101,21 @@ public class Policy {
 		if (monitor instanceof NullProgressMonitor) {
 			return monitor;
 		}
+		if (monitor instanceof BackgroundProgressMonitor) {
+			return new BackgroundProgressMonitor(new InfiniteSubProgressMonitor(monitor, ticks));
+		}
 		return new InfiniteSubProgressMonitor(monitor, ticks);
 	}
+
+	/**
+	 * Wrapped progress monitor for background operations.
+	 */
+	private static class BackgroundProgressMonitor extends ProgressMonitorWrapper {
+
+		protected BackgroundProgressMonitor(IProgressMonitor monitor) {
+			super(monitor);
+		}
+
+	}
+
 }

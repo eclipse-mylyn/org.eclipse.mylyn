@@ -100,7 +100,7 @@ public class GzipGetMethod extends GetMethod {
 			try {
 				return new java.util.zip.GZIPInputStream(input);
 			} catch (IOException e) {
-				// TODO log this
+				// FIXME log this
 			}
 		}
 		return input;
