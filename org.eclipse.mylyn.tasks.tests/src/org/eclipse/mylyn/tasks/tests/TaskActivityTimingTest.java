@@ -60,6 +60,7 @@ public class TaskActivityTimingTest extends TestCase {
 
 		Calendar start = Calendar.getInstance();
 		Calendar end = Calendar.getInstance();
+		end.setTimeInMillis(start.getTimeInMillis());
 		end.add(Calendar.HOUR_OF_DAY, 2);
 
 		Calendar start2 = Calendar.getInstance();
@@ -80,7 +81,12 @@ public class TaskActivityTimingTest extends TestCase {
 
 		long expectedTotalTime = end.getTime().getTime() - start.getTime().getTime();
 		assertEquals(2 * expectedTotalTime, activityManager.getElapsedTime(task1));
-		assertEquals(expectedTotalTime, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1, start, end));
+		Calendar startEarly = Calendar.getInstance();
+		startEarly.setTimeInMillis(start.getTimeInMillis());
+		startEarly.add(Calendar.MONTH, -1);
+		Calendar endLate = Calendar.getInstance();
+		endLate.setTimeInMillis(end.getTimeInMillis() + 60 * 5000);
+		assertEquals(expectedTotalTime, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1, startEarly, end));
 		assertEquals(expectedTotalTime, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1, start2, end2));
 		assertEquals(2 * expectedTotalTime, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1, start, end2));
 	}
