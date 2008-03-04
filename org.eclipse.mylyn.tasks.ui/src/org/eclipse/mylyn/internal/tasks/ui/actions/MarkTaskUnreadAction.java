@@ -13,7 +13,6 @@ import java.util.List;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
@@ -49,8 +48,7 @@ public class MarkTaskUnreadAction extends AbstractTaskAction {
 
 	@Override
 	protected void performActionOnTask(AbstractTask repositoryTask) {
-		repositoryTask.setSynchronizationState(RepositoryTaskSyncState.INCOMING);
-		TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(repositoryTask, false);
+		TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, false);
 	}
 
 }
