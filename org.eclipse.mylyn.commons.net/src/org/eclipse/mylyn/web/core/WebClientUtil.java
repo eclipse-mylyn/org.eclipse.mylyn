@@ -41,6 +41,7 @@ import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 import org.eclipse.core.net.proxy.IProxyData;
 import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.mylyn.internal.web.core.CloneableHostConfiguration;
 import org.eclipse.mylyn.internal.web.core.PollingProtocolSocketFactory;
@@ -617,7 +618,7 @@ public class WebClientUtil {
 	}
 
 	/**
-	 * @since 2.3
+	 * @since 3.0
 	 */
 	public static int execute(final HttpClient client, final HostConfiguration hostConfiguration,
 			final HttpMethod method, IProgressMonitor monitor) throws IOException {
@@ -627,22 +628,21 @@ public class WebClientUtil {
 
 		monitor = Policy.monitorFor(monitor);
 
-		Callable<Integer> executor = new Callable<Integer>() {
+		AbortableCallable<Integer> executor = new AbortableCallable<Integer>() {
 			public Integer call() throws Exception {
 				return client.executeMethod(hostConfiguration, method);
 			}
+
+			public void abort() {
+				method.abort();
+			}
 		};
 
-		try {
-			return poll(monitor, executor);
-		} catch (IOException e) {
-			method.abort();
-			throw e;
-		}
+		return pollIo(monitor, executor);
 	}
 
 	/**
-	 * @since 2.3
+	 * @since 3.0
 	 */
 	public static void connect(final Socket socket, final InetSocketAddress address, final int timeout,
 			IProgressMonitor monitor) throws IOException {
@@ -650,29 +650,63 @@ public class WebClientUtil {
 			throw new IllegalArgumentException();
 		}
 
-		Callable<?> executor = new Callable<Object>() {
+		AbortableCallable<?> executor = new AbortableCallable<Object>() {
 			public Object call() throws Exception {
 				socket.connect(address, timeout);
 				return null;
 			}
+
+			public void abort() {
+				try {
+					socket.close();
+				} catch (IOException e) {
+					// ignore
+				}
+			}
+
 		};
 
+		pollIo(monitor, executor);
+	}
+
+	@SuppressWarnings("unchecked")
+	private static <T> T pollIo(IProgressMonitor monitor, AbortableCallable<?> executor) throws IOException {
 		try {
-			poll(monitor, executor);
+			return (T) poll(monitor, executor);
 		} catch (IOException e) {
-			socket.close();
 			throw e;
+		} catch (RuntimeException e) {
+			throw e;
+		} catch (Error e) {
+			throw e;
+		} catch (Throwable e) {
+			throw new RuntimeException(e);
 		}
 	}
 
-	private static <T> T poll(IProgressMonitor monitor, Callable<T> executor) throws IOException {
+	/**
+	 * @since 3.0
+	 */
+	public static <T> T poll(IProgressMonitor monitor, AbortableCallable<T> executor) throws Throwable {
 		monitor = Policy.monitorFor(monitor);
 
 		Future<T> future = service.submit(executor);
 		while (true) {
 			if (monitor.isCanceled()) {
-				future.cancel(true);
-				throw new InterruptedIOException();
+				if (!future.cancel(false)) {
+					executor.abort();
+				}
+				// wait for executor to finish
+				try {
+					if (!future.isCancelled()) {
+						future.get();
+					}
+				} catch (InterruptedException e) {
+					// ignore
+				} catch (ExecutionException e) {
+					// ignore
+				}
+				throw new OperationCanceledException();
 			}
 
 			try {
@@ -680,15 +714,19 @@ public class WebClientUtil {
 			} catch (InterruptedException e) {
 				throw new InterruptedIOException();
 			} catch (ExecutionException e) {
-				if (e.getCause() instanceof Error) {
-					throw (Error) e.getCause();
-				} else if (e.getCause() instanceof RuntimeException) {
-					throw (RuntimeException) e.getCause();
-				}
-				throw (IOException) e.getCause();
+				throw e.getCause();
 			} catch (TimeoutException ignored) {
 			}
 		}
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public interface AbortableCallable<T> extends Callable<T> {
+
+		public void abort();
+
 	}
 
 }
