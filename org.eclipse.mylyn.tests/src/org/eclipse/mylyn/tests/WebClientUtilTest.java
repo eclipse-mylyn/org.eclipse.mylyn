@@ -23,7 +23,7 @@ import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.params.HttpClientParams;
+import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.tests.TestProxy.Message;
 import org.eclipse.mylyn.web.core.AbstractWebLocation;
@@ -94,7 +94,7 @@ public class WebClientUtilTest extends TestCase {
 		HttpClient client = new HttpClient();
 		String url = "http://eclipse.org/";
 		WebLocation location = new WebLocation(url);
-		HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(client, null, location, monitor);
+		HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(client, location, monitor);
 
 		GetMethod method = new GetMethod(url);
 		try {
@@ -110,7 +110,7 @@ public class WebClientUtilTest extends TestCase {
 		HttpClient client = new HttpClient();
 		String url = "http://google.com:9999/";
 		WebLocation location = new WebLocation(url);
-		HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(client, null, location, monitor);
+		HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(client, location, monitor);
 
 		GetMethod method = new GetMethod(url);
 		try {
@@ -139,7 +139,7 @@ public class WebClientUtilTest extends TestCase {
 		HttpClient client = new HttpClient();
 		String url = "http://eclipse.org/";
 		WebLocation location = new WebLocation(url);
-		HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(client, null, location, monitor);
+		HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(client, location, monitor);
 
 		GetMethod method = new GetMethod(url);
 		try {
@@ -152,235 +152,30 @@ public class WebClientUtilTest extends TestCase {
 		}
 	}
 
-	public void testConnect() throws Exception {
-		String url = "http://" + proxyAddress.getHostName() + ":" + proxyAddress.getPort() + "/";
-		WebClientUtil.setupHttpClient(client, null, url, "", "");
-
-		testProxy.addResponse(TestProxy.OK);
-
-		GetMethod method = new GetMethod("/");
-		int statusCode = client.executeMethod(method);
-		assertEquals(200, statusCode);
-
-		Message request = testProxy.getRequest();
-		assertEquals("GET / HTTP/1.1", request.request);
-	}
-
-	public void testConnectSsl() throws Exception {
-		String url = "https://" + proxyAddress.getHostName() + ":" + proxyAddress.getPort() + "/";
-		WebClientUtil.setupHttpClient(client, null, url, "", "");
-
-		GetMethod method = new GetMethod("/");
-		try {
-			int statusCode = client.executeMethod(method);
-			fail("Expected SSLHandshakeException, got status: " + statusCode);
-		} catch (SSLHandshakeException e) {
-		}
-
-		assertFalse(testProxy.hasRequest());
-	}
-
-	public void testConnectProxy() throws Exception {
-		String url = "http://foo/bar";
-		Proxy proxy = new Proxy(Type.HTTP, proxyAddress);
-		WebClientUtil.setupHttpClient(client, proxy, url, "", "");
-
-		testProxy.addResponse(TestProxy.OK);
-
-		GetMethod method = new GetMethod(WebClientUtil.getRequestPath(url));
-		int statusCode = client.executeMethod(method);
-		assertEquals(200, statusCode);
-
-		Message request = testProxy.getRequest();
-		assertEquals("GET http://foo/bar HTTP/1.1", request.request);
-	}
-
-	public void testConnectProxyHttpAuthPreemptive() throws Exception {
-		String url = "http://foo/bar";
-		Proxy proxy = new Proxy(Type.HTTP, proxyAddress);
-		WebClientUtil.setupHttpClient(client, proxy, url, "user", "pass");
-		client.getParams().setAuthenticationPreemptive(true);
-
-		Message response = new Message("HTTP/1.1 401 Authentication required");
-		response.headers.add("WWW-Authenticate: Basic realm=\"Foo\"");
-		testProxy.addResponse(response);
-		testProxy.addResponse(TestProxy.OK);
-
-		GetMethod method = new GetMethod(url);
-		int statusCode = client.executeMethod(method);
-		assertEquals(401, statusCode);
-
-		Message request = testProxy.getRequest();
-		assertEquals("GET http://foo/bar HTTP/1.1", request.request);
-		assertEquals("Basic dXNlcjpwYXNz", request.getHeaderValue("Authorization"));
-	}
-
-	public void testConnectProxyNoProxyCredentials() throws Exception {
-		String url = "http://foo/bar";
-		Proxy proxy = new Proxy(Type.HTTP, proxyAddress);
-		WebClientUtil.setupHttpClient(client, proxy, url, "user", "pass");
-
-		Message response = new Message("HTTP/1.1 407 Proxy authentication required");
-		response.headers.add("Proxy-Authenticate: Basic realm=\"Foo\"");
-		testProxy.addResponse(response);
-		testProxy.addResponse(TestProxy.OK);
-
-		GetMethod method = new GetMethod(url);
-		int statusCode = client.executeMethod(method);
-		assertEquals(407, statusCode);
-
-		Message request = testProxy.getRequest();
-		assertEquals("GET http://foo/bar HTTP/1.1", request.request);
-
-		assertFalse("Expected HttpClient to close connection", testProxy.hasRequest());
-	}
-
-	public void testConnectProxyProxyCredentialsPreemptive() throws Exception {
-		String url = "http://foo/bar";
-		Proxy proxy = new AuthenticatedProxy(Type.HTTP, proxyAddress, "proxyUser", "proxyPass");
-		WebClientUtil.setupHttpClient(client, proxy, url, "user", "pass");
-		client.getParams().setAuthenticationPreemptive(true);
-
-		Message response = new Message("HTTP/1.1 407 Proxy authentication required");
-		response.headers.add("Proxy-Authenticate: Basic realm=\"Foo\"");
-		testProxy.addResponse(response);
-		testProxy.addResponse(TestProxy.OK);
-
-		GetMethod method = new GetMethod(url);
-		int statusCode = client.executeMethod(method);
-		assertEquals(407, statusCode);
-
-		Message request = testProxy.getRequest();
-		assertEquals("GET http://foo/bar HTTP/1.1", request.request);
-		assertEquals("Basic cHJveHlVc2VyOnByb3h5UGFzcw==", request.getHeaderValue("Proxy-Authorization"));
-	}
-
-	public void testConnectProxyProxyCredentialsHttpAuthPreemptive() throws Exception {
-		String url = "http://foo/bar";
-		Proxy proxy = new AuthenticatedProxy(Type.HTTP, proxyAddress, "proxyUser", "proxyPass");
-		WebClientUtil.setupHttpClient(client, proxy, url, "user", "pass");
-		client.getParams().setAuthenticationPreemptive(true);
-
-		testProxy.addResponse(TestProxy.OK);
-
-		GetMethod method = new GetMethod(url);
-		int statusCode = client.executeMethod(method);
-		assertEquals(200, statusCode);
-
-		Message request = testProxy.getRequest();
-		assertEquals("GET http://foo/bar HTTP/1.1", request.request);
-		assertEquals("Basic cHJveHlVc2VyOnByb3h5UGFzcw==", request.getHeaderValue("Proxy-Authorization"));
-		assertEquals("Basic dXNlcjpwYXNz", request.getHeaderValue("Authorization"));
-	}
-
-	public void testSslConnectProxy() throws Exception {
-		String url = "https://foo/bar";
-		Proxy proxy = new Proxy(Type.HTTP, proxyAddress);
-		WebClientUtil.setupHttpClient(client, proxy, url, "", "");
-
-		testProxy.addResponse(TestProxy.SERVICE_UNVAILABLE);
-
-		GetMethod method = new GetMethod("/");
-		int statusCode = client.executeMethod(method);
-		assertEquals(503, statusCode);
-
-		Message request = testProxy.getRequest();
-		assertEquals("CONNECT foo:443 HTTP/1.1", request.request);
-	}
-
-	public void testSslConnectProxyProxyCredentials() throws Exception {
-		String url = "https://foo/bar";
-		Proxy proxy = new AuthenticatedProxy(Type.HTTP, proxyAddress, "proxyUser", "proxyPass");
-		WebClientUtil.setupHttpClient(client, proxy, url, "", "");
-		client.getParams().setAuthenticationPreemptive(true);
-
-		testProxy.addResponse(TestProxy.SERVICE_UNVAILABLE);
-
-		GetMethod method = new GetMethod("/");
-		int statusCode = client.executeMethod(method);
-		assertEquals(503, statusCode);
-
-		Message request = testProxy.getRequest();
-		assertEquals("CONNECT foo:443 HTTP/1.1", request.request);
-		assertEquals("Basic cHJveHlVc2VyOnByb3h5UGFzcw==", request.getHeaderValue("Proxy-Authorization"));
-	}
-
-	public void testSslConnectProxyNoProxyCredentials() throws Exception {
-		String url = "https://foo/bar";
-		Proxy proxy = new Proxy(Type.HTTP, proxyAddress);
-		WebClientUtil.setupHttpClient(client, proxy, url, "", "");
-
-		Message response = new Message("HTTP/1.1 407 Proxy authentication required");
-		response.headers.add("Proxy-Authenticate: Basic realm=\"Foo\"");
-		testProxy.addResponse(response);
-		testProxy.addResponse(TestProxy.SERVICE_UNVAILABLE);
-
-		GetMethod method = new GetMethod("/");
-		int statusCode = client.executeMethod(method);
-		assertEquals(407, statusCode);
-
-		Message request = testProxy.getRequest();
-		assertEquals("CONNECT foo:443 HTTP/1.1", request.request);
-
-		assertFalse("Expected HttpClient to close connection", testProxy.hasRequest());
-	}
-
-	public void testSslConnectProxyTimeout() throws Exception {
-		String url = "https://foo/bar";
-		Proxy proxy = new Proxy(Type.HTTP, proxyAddress);
-		WebClientUtil.setupHttpClient(client, proxy, url, "", "");
-		client.getParams().setAuthenticationPreemptive(true);
-
-		testProxy.addResponse(TestProxy.OK);
-
-		GetMethod method = new GetMethod("/");
-		try {
-			int statusCode = client.executeMethod(method);
-			fail("Expected SSLHandshakeException, got status: " + statusCode);
-		} catch (SSLHandshakeException e) {
-		}
-
-		Message request = testProxy.getRequest();
-		assertEquals("CONNECT foo:443 HTTP/1.1", request.request);
-	}
-
-	public void testConnectSslClientCert() throws Exception {
-		if (!SslProtocolSocketFactory.getInstance().hasKeyManager()) {
-			// skip if keystore property is not set
-			return;
-		}
-
-		String url = "https://mylyn.eclipse.org/secure/";
-		WebClientUtil.setupHttpClient(client, null, url, "", "");
-
-		GetMethod method = new GetMethod(WebClientUtil.getRequestPath(url));
-		int statusCode = client.executeMethod(method);
-		assertEquals(200, statusCode);
-	}
-
-	public void testSetupHttpClientUserAgent() {
+	public void testConfigureHttpClient() {
 		HttpClient client = new HttpClient();
-		AbstractWebLocation location = new WebLocation("url");
 
-		WebClientUtil.setupHttpClient(client, "", location);
-		assertEquals(WebClientUtil.USER_AGENT, client.getParams().getParameter(HttpClientParams.USER_AGENT));
+		WebClientUtil.configureHttpClient(client, "");
+		assertEquals(WebClientUtil.USER_AGENT, client.getParams().getParameter(HttpMethodParams.USER_AGENT));
 
-		WebClientUtil.setupHttpClient(client, null, location);
-		assertEquals(WebClientUtil.USER_AGENT, client.getParams().getParameter(HttpClientParams.USER_AGENT));
+		WebClientUtil.configureHttpClient(client, null);
+		assertEquals(WebClientUtil.USER_AGENT, client.getParams().getParameter(HttpMethodParams.USER_AGENT));
 
-		WebClientUtil.setupHttpClient(client, "myagent", location);
-		assertTrue(-1 != client.getParams().getParameter(HttpClientParams.USER_AGENT).toString().indexOf("myagent"));
+		WebClientUtil.configureHttpClient(client, "myagent");
+		assertTrue(-1 != client.getParams().getParameter(HttpMethodParams.USER_AGENT).toString().indexOf("myagent"));
+
+		// TODO test timeouts
 	}
 
 	public void testLocationConnect() throws Exception {
 		String url = "http://" + proxyAddress.getHostName() + ":" + proxyAddress.getPort() + "/";
 		AbstractWebLocation location = new WebLocation(url, null, null, null);
-		WebClientUtil.setupHttpClient(client, null, location);
+		HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(client, location, null);
 
 		testProxy.addResponse(TestProxy.OK);
 
 		GetMethod method = new GetMethod("/");
-		int statusCode = client.executeMethod(method);
+		int statusCode = client.executeMethod(hostConfiguration, method);
 		assertEquals(200, statusCode);
 
 		Message request = testProxy.getRequest();
@@ -390,11 +185,11 @@ public class WebClientUtilTest extends TestCase {
 	public void testLocationConnectSsl() throws Exception {
 		String url = "https://" + proxyAddress.getHostName() + ":" + proxyAddress.getPort() + "/";
 		AbstractWebLocation location = new WebLocation(url, null, null, null);
-		WebClientUtil.setupHttpClient(client, null, location);
+		HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(client, location, null);
 
 		GetMethod method = new GetMethod("/");
 		try {
-			int statusCode = client.executeMethod(method);
+			int statusCode = client.executeMethod(hostConfiguration, method);
 			fail("Expected SSLHandshakeException, got status: " + statusCode);
 		} catch (SSLHandshakeException e) {
 		}
@@ -410,12 +205,12 @@ public class WebClientUtilTest extends TestCase {
 				return proxy;
 			}
 		});
-		WebClientUtil.setupHttpClient(client, null, location);
+		HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(client, location, null);
 
 		testProxy.addResponse(TestProxy.OK);
 
 		GetMethod method = new GetMethod(WebClientUtil.getRequestPath(url));
-		int statusCode = client.executeMethod(method);
+		int statusCode = client.executeMethod(hostConfiguration, method);
 		assertEquals(200, statusCode);
 
 		Message request = testProxy.getRequest();
@@ -431,7 +226,7 @@ public class WebClientUtilTest extends TestCase {
 			}
 		});
 		location.setCredentials(AuthenticationType.HTTP, "user", "pass");
-		WebClientUtil.setupHttpClient(client, null, location);
+		HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(client, location, null);
 		client.getParams().setAuthenticationPreemptive(true);
 
 		Message response = new Message("HTTP/1.1 401 Authentication required");
@@ -440,7 +235,7 @@ public class WebClientUtilTest extends TestCase {
 		testProxy.addResponse(TestProxy.OK);
 
 		GetMethod method = new GetMethod(url);
-		int statusCode = client.executeMethod(method);
+		int statusCode = client.executeMethod(hostConfiguration, method);
 		assertEquals(401, statusCode);
 
 		Message request = testProxy.getRequest();
@@ -456,7 +251,7 @@ public class WebClientUtilTest extends TestCase {
 				return proxy;
 			}
 		});
-		WebClientUtil.setupHttpClient(client, null, location);
+		HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(client, location, null);
 
 		Message response = new Message("HTTP/1.1 407 Proxy authentication required");
 		response.headers.add("Proxy-Authenticate: Basic realm=\"Foo\"");
@@ -464,7 +259,7 @@ public class WebClientUtilTest extends TestCase {
 		testProxy.addResponse(TestProxy.OK);
 
 		GetMethod method = new GetMethod(url);
-		int statusCode = client.executeMethod(method);
+		int statusCode = client.executeMethod(hostConfiguration, method);
 		assertEquals(407, statusCode);
 
 		Message request = testProxy.getRequest();
@@ -481,7 +276,7 @@ public class WebClientUtilTest extends TestCase {
 				return proxy;
 			}
 		});
-		WebClientUtil.setupHttpClient(client, null, location);
+		HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(client, location, null);
 		client.getParams().setAuthenticationPreemptive(true);
 
 		Message response = new Message("HTTP/1.1 407 Proxy authentication required");
@@ -490,7 +285,7 @@ public class WebClientUtilTest extends TestCase {
 		testProxy.addResponse(TestProxy.OK);
 
 		GetMethod method = new GetMethod(url);
-		int statusCode = client.executeMethod(method);
+		int statusCode = client.executeMethod(hostConfiguration, method);
 		assertEquals(407, statusCode);
 
 		Message request = testProxy.getRequest();
@@ -508,13 +303,13 @@ public class WebClientUtilTest extends TestCase {
 		});
 		location.setCredentials(AuthenticationType.HTTP, "user", "pass");
 
-		WebClientUtil.setupHttpClient(client, null, location);
+		HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(client, location, null);
 		client.getParams().setAuthenticationPreemptive(true);
 
 		testProxy.addResponse(TestProxy.OK);
 
 		GetMethod method = new GetMethod(url);
-		int statusCode = client.executeMethod(method);
+		int statusCode = client.executeMethod(hostConfiguration, method);
 		assertEquals(200, statusCode);
 
 		Message request = testProxy.getRequest();
@@ -531,12 +326,13 @@ public class WebClientUtilTest extends TestCase {
 				return proxy;
 			}
 		});
-		WebClientUtil.setupHttpClient(client, null, location);
+		HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(client, location, null);
+		;
 
 		testProxy.addResponse(TestProxy.SERVICE_UNVAILABLE);
 
 		GetMethod method = new GetMethod("/");
-		int statusCode = client.executeMethod(method);
+		int statusCode = client.executeMethod(hostConfiguration, method);
 		assertEquals(503, statusCode);
 
 		Message request = testProxy.getRequest();
@@ -551,13 +347,14 @@ public class WebClientUtilTest extends TestCase {
 				return proxy;
 			}
 		});
-		WebClientUtil.setupHttpClient(client, null, location);
+		HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(client, location, null);
+		;
 		client.getParams().setAuthenticationPreemptive(true);
 
 		testProxy.addResponse(TestProxy.SERVICE_UNVAILABLE);
 
 		GetMethod method = new GetMethod("/");
-		int statusCode = client.executeMethod(method);
+		int statusCode = client.executeMethod(hostConfiguration, method);
 		assertEquals(503, statusCode);
 
 		Message request = testProxy.getRequest();
@@ -573,7 +370,8 @@ public class WebClientUtilTest extends TestCase {
 				return proxy;
 			}
 		});
-		WebClientUtil.setupHttpClient(client, null, location);
+		HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(client, location, null);
+		;
 
 		Message response = new Message("HTTP/1.1 407 Proxy authentication required");
 		response.headers.add("Proxy-Authenticate: Basic realm=\"Foo\"");
@@ -581,7 +379,7 @@ public class WebClientUtilTest extends TestCase {
 		testProxy.addResponse(TestProxy.SERVICE_UNVAILABLE);
 
 		GetMethod method = new GetMethod("/");
-		int statusCode = client.executeMethod(method);
+		int statusCode = client.executeMethod(hostConfiguration, method);
 		assertEquals(407, statusCode);
 
 		Message request = testProxy.getRequest();
@@ -598,13 +396,13 @@ public class WebClientUtilTest extends TestCase {
 				return proxy;
 			}
 		});
-		WebClientUtil.setupHttpClient(client, null, location);
+		HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(client, location, null);
 
 		testProxy.addResponse(TestProxy.OK);
 
 		GetMethod method = new GetMethod("/");
 		try {
-			int statusCode = client.executeMethod(method);
+			int statusCode = client.executeMethod(hostConfiguration, method);
 			fail("Expected SSLHandshakeException, got status: " + statusCode);
 		} catch (SSLHandshakeException e) {
 		}
@@ -621,10 +419,10 @@ public class WebClientUtilTest extends TestCase {
 
 		String url = "https://mylyn.eclipse.org/secure/";
 		AbstractWebLocation location = new WebLocation(url, null, null, null);
-		WebClientUtil.setupHttpClient(client, null, location);
+		HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(client, location, null);
 
 		GetMethod method = new GetMethod(WebClientUtil.getRequestPath(url));
-		int statusCode = client.executeMethod(method);
+		int statusCode = client.executeMethod(hostConfiguration, method);
 		assertEquals(200, statusCode);
 	}
 
