@@ -125,7 +125,7 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 			}
 
 			String url = config.getServerURL().toString();
-			hostConfiguration = WebClientUtil.createHostConfiguration(httpClient, USER_AGENT, location, monitor);
+			hostConfiguration = WebClientUtil.createHostConfiguration(httpClient, location, monitor);
 			if (cookies != null) {
 				httpClient.getState().addCookies(cookies);
 			}

@@ -85,7 +85,7 @@ public class TracWebClient extends AbstractTracClient {
 		}
 
 		public GetMethod execute() throws TracLoginException, IOException, TracHttpException {
-			hostConfiguration = WebClientUtil.createHostConfiguration(httpClient, USER_AGENT, location, monitor);
+			hostConfiguration = WebClientUtil.createHostConfiguration(httpClient, location, monitor);
 
 			for (int attempt = 0; attempt < 2; attempt++) {
 				// force authentication
@@ -175,7 +175,7 @@ public class TracWebClient extends AbstractTracClient {
 				throw new TracLoginException();
 			}
 
-			hostConfiguration = WebClientUtil.createHostConfiguration(httpClient, USER_AGENT, location, monitor);
+			hostConfiguration = WebClientUtil.createHostConfiguration(httpClient, location, monitor);
 
 			return true;
 		}
@@ -192,6 +192,8 @@ public class TracWebClient extends AbstractTracClient {
 		httpClient = new HttpClient();
 		httpClient.setHttpConnectionManager(new MultiThreadedHttpConnectionManager());
 		httpClient.getParams().setCookiePolicy(CookiePolicy.RFC_2109);
+
+		WebClientUtil.configureHttpClient(httpClient, USER_AGENT);
 	}
 
 	private synchronized GetMethod connect(String requestUrl) throws TracException {

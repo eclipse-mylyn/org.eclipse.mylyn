@@ -99,8 +99,8 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 
 				// try form-based authentication via AccountManagerPlugin as a
 				// fall-back
-				HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(httpClient, USER_AGENT,
-						location, monitor);
+				HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(httpClient, location,
+						monitor);
 				try {
 					authenticateAccountManager(httpClient, hostConfiguration, credentials, monitor);
 				} catch (TracLoginException loginException) {
@@ -193,6 +193,7 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		httpClient = new HttpClient();
 		httpClient.setHttpConnectionManager(new MultiThreadedHttpConnectionManager());
 		httpClient.getParams().setCookiePolicy(CookiePolicy.RFC_2109);
+		WebClientUtil.configureHttpClient(httpClient, USER_AGENT);
 	}
 
 	public synchronized XmlRpcClient getClient() throws TracException {
