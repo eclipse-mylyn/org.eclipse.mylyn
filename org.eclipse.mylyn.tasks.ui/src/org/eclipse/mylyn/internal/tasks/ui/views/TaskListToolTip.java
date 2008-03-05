@@ -155,22 +155,16 @@ public class TaskListToolTip extends ToolTip {
 		}
 	}
 
-	private String getDetailsText(AbstractTaskContainer element, TaskListView taskListView) {
+	private String getDetailsText(AbstractTaskContainer element) {
 		if (element instanceof ScheduledTaskContainer) {
 			ScheduledTaskContainer container = (ScheduledTaskContainer) element;
 			int estimateTotal = 0;
 			long elapsedTotal = 0;
-			if (taskListView != null) {
-				Object[] children = ((TaskListContentProvider) taskListView.getViewer().getContentProvider()).getChildren(element);
-				for (Object object : children) {
-					if (object instanceof AbstractTask) {
-						estimateTotal += ((AbstractTask) object).getEstimateTimeHours();
-						elapsedTotal += TasksUiPlugin.getTaskActivityManager().getElapsedTime((AbstractTask) object,
-								container.getStart(), container.getEnd());
-					}
-				}
+			for (AbstractTask child : container.getChildren()) {
+				estimateTotal += (child).getEstimateTimeHours();
+				elapsedTotal += TasksUiPlugin.getTaskActivityManager().getElapsedTime(child, container.getStart(),
+						container.getEnd());
 			}
-
 			StringBuilder sb = new StringBuilder();
 			sb.append("Estimate: ");
 			sb.append(estimateTotal);
@@ -336,17 +330,13 @@ public class TaskListToolTip extends ToolTip {
 		return super.getLocation(tipSize, event);//control.toDisplay(event.x + xShift, event.y + yShift);
 	}
 
-	private ProgressData getProgressData(AbstractTaskContainer element, TaskListView taskListView) {
+	private ProgressData getProgressData(AbstractTaskContainer element) {
 		if (element instanceof AbstractTask) {
 			return null;
 		}
 		Object[] children = new Object[0];
 
-		if (element instanceof ScheduledTaskContainer && taskListView != null) {
-			children = ((TaskListContentProvider) taskListView.getViewer().getContentProvider()).getChildren(element);
-		} else {
-			children = element.getChildren().toArray();
-		}
+		children = element.getChildren().toArray();
 
 		int total = children.length;
 		int completed = 0;
@@ -444,13 +434,11 @@ public class TaskListToolTip extends ToolTip {
 	protected Composite createToolTipContentArea(Event event, Composite parent) {
 		assert currentTipElement != null;
 
-		TaskListView taskListView = TaskListView.getFromActivePerspective();
-
 		Composite composite = createToolTipContentAreaComposite(parent);
 
 		addIconAndLabel(composite, getImage(currentTipElement), getTitleText(currentTipElement));
 
-		String detailsText = getDetailsText(currentTipElement, taskListView);
+		String detailsText = getDetailsText(currentTipElement);
 		if (detailsText != null) {
 			addIconAndLabel(composite, null, detailsText);
 		}
@@ -477,7 +465,7 @@ public class TaskListToolTip extends ToolTip {
 			addIconAndLabel(composite, image, incommingText);
 		}
 
-		ProgressData progress = getProgressData(currentTipElement, taskListView);
+		ProgressData progress = getProgressData(currentTipElement);
 		if (progress != null) {
 			addIconAndLabel(composite, null, progress.text);
 
@@ -536,9 +524,9 @@ public class TaskListToolTip extends ToolTip {
 									TasksUiPreferenceConstants.FILTER_COMPLETE_MODE)) {
 						Object[] children = ((TaskListContentProvider) taskListView.getViewer().getContentProvider()).getChildren(element);
 						boolean hasIncoming = false;
-						for (Object object : children) {
-							if (object instanceof AbstractTask) {
-								if (((AbstractTask) object).getSynchronizationState().equals(
+						for (Object child : children) {
+							if (child instanceof AbstractTask) {
+								if (((AbstractTask) child).getSynchronizationState().equals(
 										RepositoryTaskSyncState.INCOMING)) {
 									hasIncoming = true;
 									break;
