@@ -46,10 +46,10 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 					task = (AbstractTask) child;
 				}
 				if (task != null) {
-					if (isUninteresting(parent, task)) {
-						return false;
-					} else if (isInteresting(parent, task)) {
+					if (isInteresting(parent, task)) {
 						return true;
+					} else {
+						return false;
 					}
 				}
 			} else if (child instanceof AbstractTaskContainer) {
@@ -84,30 +84,21 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		//return TasksUiPlugin.getTaskActivityManager().isWeekDay(container);
 	}
 
-	/**
-	 * TODO: Consider merging with isInteresting
-	 */
-	protected boolean isUninteresting(Object parent, AbstractTask task) {
-		return !task.isActive()
-				&& !hasInterestingSubTasks(parent, task, ITasksCoreConstants.MAX_SUBTASK_DEPTH)
-				&& ((task.isCompleted() && !TaskActivityManager.getInstance().isCompletedToday(task) && !hasChanges(
-						parent, task)) || (TaskActivityManager.getInstance().isScheduledAfterThisWeek(task))
-						&& !hasChanges(parent, task) && !TasksUiPlugin.getTaskActivityManager().isOverdue(task));
-	}
-
 	// TODO: make meta-context more explicit
 	protected boolean isInteresting(Object parent, AbstractTask task) {
 		return shouldAlwaysShow(parent, task, ITasksCoreConstants.MAX_SUBTASK_DEPTH);
 	}
 
 	public boolean shouldAlwaysShow(Object parent, AbstractTask task, int depth) {
-		return task.isActive() || hasChanges(parent, task)
-				|| (TaskActivityManager.getInstance().isCompletedToday(task))
-				|| shouldShowInFocusedWorkweekDateContainer(parent, task)
-				|| (isInterestingForThisWeek(parent, task) && !task.isCompleted())
-				|| (TaskActivityManager.getInstance().isOverdue(task)) || hasInterestingSubTasks(parent, task, depth)
-				|| LocalRepositoryConnector.DEFAULT_SUMMARY.equals(task.getSummary());
-		// || isCurrentlySelectedInEditor(task);
+
+		return task.isActive()
+				|| TaskActivityManager.getInstance().isCompletedToday(task)
+				|| hasChanges(parent, task)
+				|| !task.isCompleted()
+				&& (LocalRepositoryConnector.DEFAULT_SUMMARY.equals(task.getSummary())
+						|| shouldShowInFocusedWorkweekDateContainer(parent, task)
+						|| TaskActivityManager.getInstance().isOverdue(task) || isInterestingForThisWeek(parent, task) || hasInterestingSubTasks(
+						parent, task, depth));
 	}
 
 	private boolean hasInterestingSubTasks(Object parent, AbstractTask task, int depth) {
