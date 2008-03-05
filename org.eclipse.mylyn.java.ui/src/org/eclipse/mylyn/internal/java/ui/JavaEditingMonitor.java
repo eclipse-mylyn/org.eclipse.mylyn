@@ -83,7 +83,8 @@ public class JavaEditingMonitor extends AbstractUserInteractionMonitor {
 					TextSelection textSelection = (TextSelection) selection;
 					selectedElement = SelectionConverter.resolveEnclosingElement(currentEditor, textSelection);
 					if (selectedElement instanceof IPackageDeclaration) {
-						return; // HACK: ignoring these selections
+						// HACK: ignoring these selections
+						return;
 					}
 					IJavaElement[] resolved = SelectionConverter.codeResolve(currentEditor);
 					if (resolved != null && resolved.length == 1 && !resolved[0].equals(selectedElement)) {
@@ -92,6 +93,7 @@ public class JavaEditingMonitor extends AbstractUserInteractionMonitor {
 
 					boolean selectionResolved = false;
 					if (selectedElement instanceof IMethod && lastSelectedElement instanceof IMethod) {
+						// navigation between two elements
 						if (lastResolvedElement != null && lastSelectedElement != null
 								&& lastResolvedElement.equals(selectedElement)
 								&& !lastSelectedElement.equals(lastResolvedElement)) {
@@ -107,6 +109,7 @@ public class JavaEditingMonitor extends AbstractUserInteractionMonitor {
 					} else if (selectedElement != null && lastSelectedElement != null
 							&& !lastSelectedElement.equals(selectedElement)) {
 						if (lastSelectedElement.getElementName().equals(selectedElement.getElementName())) {
+							// navigation between two elements
 							if (selectedElement instanceof IMethod && lastSelectedElement instanceof IMethod) {
 								super.handleNavigation(part, selectedElement, JavaImplementorsProvider.ID,
 										contributeToContext);
@@ -119,6 +122,7 @@ public class JavaEditingMonitor extends AbstractUserInteractionMonitor {
 						}
 					}
 					if (selectedElement != null) {
+						// selection of an element
 						if (!selectionResolved && selectedElement.equals(lastSelectedElement)) {
 							super.handleElementEdit(part, selectedElement, contributeToContext);
 						} else if (!selectedElement.equals(lastSelectedElement)) {
