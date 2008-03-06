@@ -59,16 +59,18 @@ public class RepositoryTextViewerConfiguration extends TextSourceViewerConfigura
 
 	private static final String ID_CONTEXT_EDITOR_TEXT = "org.eclipse.ui.DefaultTextEditor";
 
-	private RepositoryTextScanner scanner = null;
+	private RepositoryTextScanner scanner;
 
-	private boolean spellcheck = false;
+	private final boolean spellCheck;
 
 	private final TaskRepository taskRepository;
 
-	public RepositoryTextViewerConfiguration(TaskRepository taskRepository, boolean spellchecking) {
+	public RepositoryTextViewerConfiguration(TaskRepository taskRepository, boolean spellCheck) {
 		super(EditorsUI.getPreferenceStore());
+		// API 3.0 add this check
+		//Assert.isNotNull(taskRepository);
 		this.taskRepository = taskRepository;
-		this.spellcheck = spellchecking;
+		this.spellCheck = spellCheck;
 	}
 
 	@Override
@@ -125,7 +127,7 @@ public class RepositoryTextViewerConfiguration extends TextSourceViewerConfigura
 
 	@Override
 	public IReconciler getReconciler(ISourceViewer sourceViewer) {
-		if (spellcheck) {
+		if (spellCheck) {
 			return super.getReconciler(sourceViewer);
 		} else {
 			return null;
@@ -245,8 +247,8 @@ public class RepositoryTextViewerConfiguration extends TextSourceViewerConfigura
 	@Override
 	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
 		ContentAssistant assistant = new ContentAssistant();
-		assistant.setContentAssistProcessor(new RepositoryCompletionProcessor(getTaskRepository()),
-				IDocument.DEFAULT_CONTENT_TYPE);
+		RepositoryCompletionProcessor processor = new RepositoryCompletionProcessor(taskRepository);
+		assistant.setContentAssistProcessor(processor, IDocument.DEFAULT_CONTENT_TYPE);
 		return assistant;
 	}
 
