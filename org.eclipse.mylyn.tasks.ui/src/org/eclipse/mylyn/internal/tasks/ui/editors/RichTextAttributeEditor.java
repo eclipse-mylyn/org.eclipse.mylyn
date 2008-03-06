@@ -21,7 +21,6 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.LayoutHint.ColumnSpan;
 import org.eclipse.mylyn.internal.tasks.ui.editors.LayoutHint.RowSpan;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.editors.TaskTextViewerConfiguration;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -126,7 +125,8 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 
 		// NOTE: configuration must be applied before the document is set in order for
 		// hyper link coloring to work, the Presenter requires the document object up front
-		TextSourceViewerConfiguration viewerConfig = new TaskTextViewerConfiguration(spellCheckingEnabled);
+		TextSourceViewerConfiguration viewerConfig = new RepositoryTextViewerConfiguration(taskRepository,
+				spellCheckingEnabled);
 		viewer.configure(viewerConfig);
 
 		Document document = new Document(getValue());

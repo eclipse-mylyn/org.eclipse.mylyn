@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.ui.editors;
+package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -19,6 +19,8 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.TextPresentation;
+import org.eclipse.jface.text.contentassist.ContentAssistant;
+import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.hyperlink.DefaultHyperlinkPresenter;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkPresenter;
@@ -34,8 +36,6 @@ import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
-import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTextViewer;
-import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTextViewerConfiguration;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -50,11 +50,10 @@ import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 
 /**
  * @author Rob Elves
- * @since 2.1
- * @deprecated moved to internal class {@link RepositoryTextViewerConfiguration}
+ * @author Frank Becker
+ * @author Steffen Pingel
  */
-@Deprecated
-public class TaskTextViewerConfiguration extends TextSourceViewerConfiguration {
+public class RepositoryTextViewerConfiguration extends TextSourceViewerConfiguration {
 
 	private static final String ID_CONTEXT_EDITOR_TASK = "org.eclipse.mylyn.tasks.ui.TaskEditor";
 
@@ -64,8 +63,11 @@ public class TaskTextViewerConfiguration extends TextSourceViewerConfiguration {
 
 	private boolean spellcheck = false;
 
-	public TaskTextViewerConfiguration(boolean spellchecking) {
+	private final TaskRepository taskRepository;
+
+	public RepositoryTextViewerConfiguration(TaskRepository taskRepository, boolean spellchecking) {
 		super(EditorsUI.getPreferenceStore());
+		this.taskRepository = taskRepository;
 		this.spellcheck = spellchecking;
 	}
 
@@ -94,9 +96,7 @@ public class TaskTextViewerConfiguration extends TextSourceViewerConfiguration {
 		IAdaptable context = new IAdaptable() {
 			public Object getAdapter(Class adapter) {
 				if (adapter == TaskRepository.class) {
-					if (sourceViewer instanceof RepositoryTextViewer) {
-						return ((RepositoryTextViewer) sourceViewer).getRepository();
-					}
+					return getTaskRepository();
 				}
 				return null;
 			}
@@ -106,6 +106,10 @@ public class TaskTextViewerConfiguration extends TextSourceViewerConfiguration {
 		targets.put(ID_CONTEXT_EDITOR_TEXT, context);
 		targets.put(ID_CONTEXT_EDITOR_TASK, context);
 		return targets;
+	}
+
+	public TaskRepository getTaskRepository() {
+		return taskRepository;
 	}
 
 	@Override
@@ -236,6 +240,14 @@ public class TaskTextViewerConfiguration extends TextSourceViewerConfiguration {
 			setRules(rules);
 		}
 
+	}
+
+	@Override
+	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
+		ContentAssistant assistant = new ContentAssistant();
+		assistant.setContentAssistProcessor(new RepositoryCompletionProcessor(getTaskRepository()),
+				IDocument.DEFAULT_CONTENT_TYPE);
+		return assistant;
 	}
 
 }

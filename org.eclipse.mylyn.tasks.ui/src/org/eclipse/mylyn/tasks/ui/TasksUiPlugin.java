@@ -810,6 +810,13 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		}
 	}
 
+	/**
+	 * @since 3.0
+	 */
+	public static AbstractRepositoryConnector getConnector(String kind) {
+		return getRepositoryManager().getRepositoryConnector(kind);
+	}
+
 	public static AbstractRepositoryConnectorUi getConnectorUi(String kind) {
 		return repositoryConnectorUiMap.get(kind);
 	}

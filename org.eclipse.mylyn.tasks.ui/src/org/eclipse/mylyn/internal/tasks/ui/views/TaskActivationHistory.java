@@ -9,15 +9,20 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.ui.IWorkingSet;
 
 /**
  * @author Ken Sueda (original prototype)
@@ -126,8 +131,34 @@ public class TaskActivationHistory {
 		}
 	}
 
+	// FIXME need to return a copy and not a reference - history could change at any time
 	public List<AbstractTask> getPreviousTasks() {
 		return Collections.unmodifiableList(history);
+	}
+
+	public List<AbstractTask> getPreviousTasks(Set<IWorkingSet> sets) {
+		if (sets.isEmpty()) {
+			return getPreviousTasks();
+		}
+
+		Set<AbstractTask> allWorkingSetTasks = new HashSet<AbstractTask>();
+		for (IWorkingSet workingSet : sets) {
+			IAdaptable[] elements = workingSet.getElements();
+			for (IAdaptable adaptable : elements) {
+				if (adaptable instanceof AbstractTaskContainer) {
+					allWorkingSetTasks.addAll(((AbstractTaskContainer) adaptable).getChildren());
+				}
+			}
+		}
+
+		List<AbstractTask> allScopedTasks = new ArrayList<AbstractTask>(history);
+		for (AbstractTask task : history) {
+			if (!allWorkingSetTasks.contains(task)) {
+				allScopedTasks.remove(task);
+			}
+		}
+
+		return Collections.unmodifiableList(allScopedTasks);
 	}
 
 	public boolean hasPrevious() {

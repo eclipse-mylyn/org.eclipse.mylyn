@@ -41,6 +41,7 @@ import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTextViewer;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionContributor;
+import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTextViewerConfiguration;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -99,6 +100,8 @@ public class TaskFormPage extends FormPage {
 	protected List<TextViewer> textViewers = new ArrayList<TextViewer>();
 
 	private IHandlerActivation handlerActivation;
+
+	private IHandlerActivation handlerCompletion;
 
 	private void addTextViewer(TextViewer viewer) {
 		textViewers.add(viewer);
@@ -276,7 +279,7 @@ public class TaskFormPage extends FormPage {
 		// order for
 		// Hyperlink colouring to work. (Presenter needs document object up
 		// front)
-		TaskTextViewerConfiguration repositoryViewerConfig = new TaskTextViewerConfiguration(false);
+		RepositoryTextViewerConfiguration repositoryViewerConfig = new RepositoryTextViewerConfiguration(repository, false);
 		commentViewer.configure(repositoryViewerConfig);
 
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
@@ -382,13 +385,24 @@ public class TaskFormPage extends FormPage {
 			private void activate() {
 				deactivate();
 				if (handlerActivation == null) {
-					handlerActivation = handlerService.activateHandler(ITextEditorActionDefinitionIds.QUICK_ASSIST,
-							createQuickFixActionHandler(commentViewer), new ActiveShellExpression(
-									commentViewer.getTextWidget().getShell()));
+					handlerActivation = handlerService.activateHandler( //
+							ITextEditorActionDefinitionIds.QUICK_ASSIST, //
+							createQuickFixActionHandler(commentViewer), // 
+							new ActiveShellExpression(commentViewer.getTextWidget().getShell()));
+				}
+				if (handlerCompletion == null) {
+					handlerCompletion = handlerService.activateHandler( //
+							ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS, //
+							createContentAssistActionHandler(commentViewer), //
+							new ActiveShellExpression(commentViewer.getTextWidget().getShell()));
 				}
 			}
 
 			private void deactivate() {
+				if (handlerCompletion != null) {
+					handlerService.deactivateHandler(handlerCompletion);
+					handlerCompletion = null;
+				}
 				if (handlerActivation != null) {
 					handlerService.deactivateHandler(handlerActivation);
 					handlerActivation = null;
@@ -410,7 +424,7 @@ public class TaskFormPage extends FormPage {
 
 		// NOTE: Configuration must be applied before the document is set in order for
 		// Hyperlink coloring to work. (Presenter needs document object up front)
-		TextSourceViewerConfiguration viewerConfig = new TaskTextViewerConfiguration(spellCheck);
+		TextSourceViewerConfiguration viewerConfig = new RepositoryTextViewerConfiguration(repository, spellCheck);
 		commentViewer.configure(viewerConfig);
 
 		commentViewer.setDocument(document, annotationModel);
@@ -448,6 +462,19 @@ public class TaskFormPage extends FormPage {
 			}
 		};
 		quickFixAction.setActionDefinitionId(ITextEditorActionDefinitionIds.QUICK_ASSIST);
+		return new ActionHandler(quickFixAction);
+	}
+
+	private IHandler createContentAssistActionHandler(final SourceViewer viewer) {
+		Action quickFixAction = new Action() {
+			@Override
+			public void run() {
+				if (viewer.canDoOperation(ISourceViewer.CONTENTASSIST_PROPOSALS)) {
+					viewer.doOperation(ISourceViewer.CONTENTASSIST_PROPOSALS);
+				}
+			}
+		};
+		quickFixAction.setActionDefinitionId(ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
 		return new ActionHandler(quickFixAction);
 	}
 
