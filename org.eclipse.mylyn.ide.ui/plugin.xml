@@ -2,24 +2,6 @@
 <?eclipse version="3.0"?>
 <plugin> 
 
- 	<extension point="org.eclipse.ui.preferencePages">
-      <page 
-         name="Resources"
-         class="org.eclipse.mylyn.internal.resources.ui.preferences.FocusedResourcesPreferencePage"
-         id="org.eclipse.mylyn.ide.preferences.resources"
-         category="org.eclipse.mylyn.ui.preferences">
-         <keywordReference id="org.eclipse.mylyn.ide.keywords"/>
-      </page> 
-   </extension>
-   
-   <extension
-   		point="org.eclipse.ui.keywords">
-      <keyword
-            label="mylyn resources"
-            id="org.eclipse.mylyn.ide.keywords"/>
-   </extension>
- 
-
     <extension point="org.eclipse.ui.viewActions"> 
 	  <viewContribution 
 		id="org.eclipse.mylyn.ui.projectexplorer.filter" 

@@ -4,6 +4,23 @@
  
    <extension-point id="changeMonitoring" name="Resource Change Monitorin" schema="schema/changeMonitoring.exsd"/>
  
+   <extension point="org.eclipse.ui.preferencePages">
+      <page 
+         name="Resources"
+         class="org.eclipse.mylyn.internal.resources.ui.preferences.FocusedResourcesPreferencePage"
+         id="org.eclipse.mylyn.resources.preferences.resources"
+         category="org.eclipse.mylyn.ui.preferences">
+         <keywordReference id="org.eclipse.mylyn.resources.keywords"/>
+      </page> 
+   </extension>
+   
+   <extension
+   		point="org.eclipse.ui.keywords">
+      <keyword
+            label="mylyn resources"
+            id="org.eclipse.mylyn.resources.keywords"/>
+   </extension>
+  
     <extension
          point="org.eclipse.mylyn.resources.ui.changeMonitoring">
 		<exclude
