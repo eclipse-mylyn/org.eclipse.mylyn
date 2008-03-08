@@ -156,25 +156,25 @@
 			<param name="UpdateSiteLocation" value="${buildDirectory}/standardUpdateSite" />
 			<param name="SiteXmlFile" value="standard-site.xml" />
 			<param name="ElementsTarget" value="standardElements" />
-			<param name="SiteName" value="standardSite" />
+			<param name="SiteName" value="e3.4" />
 		</antcall>
 		<antcall target="generateUpdateSite">
 			<param name="UpdateSiteLocation" value="${buildDirectory}/extrasUpdateSite" />
 			<param name="SiteXmlFile" value="extras-site.xml" />
 			<param name="ElementsTarget" value="extrasElements" />
-			<param name="SiteName" value="extrasSite" />
+			<param name="SiteName" value="extras" />
 		</antcall>
 		<antcall target="generateUpdateSite">
 			<param name="UpdateSiteLocation" value="${buildDirectory}/experimentalUpdateSite" />
 			<param name="SiteXmlFile" value="experimental-site.xml" />
 			<param name="ElementsTarget" value="experimentalElements" />
-			<param name="SiteName" value="experimentalSite" />
+			<param name="SiteName" value="experimental" />
 		</antcall>
 		<antcall target="generateUpdateSite">
 			<param name="UpdateSiteLocation" value="${buildDirectory}/allUpdateSite" />
 			<param name="SiteXmlFile" value="all-site.xml" />
 			<param name="ElementsTarget" value="allElements" />
-			<param name="SiteName" value="allSite" />
+			<param name="SiteName" value="all" />
 		</antcall>
 	</target>
 
@@ -197,7 +197,7 @@
 			<param name="target" value="updateSiteExport" />
 		</antcall>
 
-		<zip destfile="${UpdateSiteLocation}/${SiteName}-${org.eclipse.mylyn_feature}.zip" basedir="${UpdateSiteLocation}" />
+		<zip destfile="${UpdateSiteLocation}/mylyn-${org.eclipse.mylyn_feature}-${SiteName}.zip" basedir="${UpdateSiteLocation}" />
 		<!--<exec dir="${UpdateSiteLocation}" executable="scp" failonerror="true">
 			<arg value="${UpdateSiteLocation}/update-${org.eclipse.mylyn_feature}.zip"/>
 		    <arg value="username@host:/destination/folder/"/>
