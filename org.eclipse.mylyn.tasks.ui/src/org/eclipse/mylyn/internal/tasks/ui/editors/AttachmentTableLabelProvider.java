@@ -34,6 +34,8 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 
 	private final AbstractRepositoryTaskEditor AbstractTaskEditor;
 
+	private final AttachmentSizeFormatter sizeFormatter = AttachmentSizeFormatter.getInstance();
+
 	private final IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
 
 	private static final String[] IMAGE_EXTENSIONS = { "jpg", "gif", "png", "tiff", "tif", "bmp" };
@@ -96,7 +98,7 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 			return attachment.getContentType();
 //			}
 		case 3:
-			return AttachmentSizeFormatter.format(attachment.getSize());
+			return sizeFormatter.format(attachment.getSize());
 		case 4:
 			return attachment.getCreator();
 		case 5:

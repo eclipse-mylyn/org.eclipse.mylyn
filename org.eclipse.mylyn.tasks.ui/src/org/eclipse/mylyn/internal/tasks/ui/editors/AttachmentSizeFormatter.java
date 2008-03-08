@@ -9,9 +9,11 @@
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 /**
- * Format attachment size values originally in bytes to nice messages
+ * Format attachment size values originally in bytes to nice messages.
  * <p>
  * This formatter tries to use the most applicable measure unit based on size magnitude, i.e.:
  * <p>
@@ -30,6 +32,7 @@ import java.text.DecimalFormat;
  * decoded, for any reason, it returns {@link #UNKNOWN_SIZE}
  * 
  * @author Willian Mitsuda
+ * @author Frank Becker
  */
 public class AttachmentSizeFormatter {
 
@@ -38,7 +41,21 @@ public class AttachmentSizeFormatter {
 	 */
 	public static final String UNKNOWN_SIZE = "-";
 
-	public static String format(String sizeInBytes) {
+	public final static AttachmentSizeFormatter getInstance() {
+		return new AttachmentSizeFormatter();
+	}
+
+	private final DecimalFormat decimalFormat;
+
+	public AttachmentSizeFormatter() {
+		this(Locale.getDefault());
+	}
+
+	public AttachmentSizeFormatter(Locale locale) {
+		this.decimalFormat = (DecimalFormat) NumberFormat.getInstance(locale);
+	}
+
+	public String format(String sizeInBytes) {
 		// Ensures it can be converted to an int
 		if (sizeInBytes == null) {
 			return UNKNOWN_SIZE;
@@ -64,19 +81,19 @@ public class AttachmentSizeFormatter {
 		} else if (size >= 1024 && size <= 1048575) {
 			// Format as KB
 			double formattedValue = size / 1024.0;
-			DecimalFormat fmt = new DecimalFormat("0.00 KB");
-			return fmt.format(formattedValue);
+			decimalFormat.applyPattern("0.00 KB");
+			return decimalFormat.format(formattedValue);
 		} else if (size >= 1048576 && size <= 1073741823) {
 			// Format as MB
 			double formattedValue = size / 1048576.0;
-			DecimalFormat fmt = new DecimalFormat("0.00 MB");
-			return fmt.format(formattedValue);
+			decimalFormat.applyPattern("0.00 MB");
+			return decimalFormat.format(formattedValue);
 		}
 
 		// Format as GB
 		double formattedValue = size / 1073741824.0;
-		DecimalFormat fmt = new DecimalFormat("0.00 GB");
-		return fmt.format(formattedValue);
+		decimalFormat.applyPattern("0.00 GB");
+		return decimalFormat.format(formattedValue);
 	}
 
 }

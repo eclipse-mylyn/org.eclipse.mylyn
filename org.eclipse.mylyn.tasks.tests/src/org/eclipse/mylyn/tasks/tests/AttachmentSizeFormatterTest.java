@@ -5,8 +5,9 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-
 package org.eclipse.mylyn.tasks.tests;
+
+import java.util.Locale;
 
 import junit.framework.TestCase;
 
@@ -19,37 +20,55 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.AttachmentSizeFormatter;
  * change your locale to en_US or append the following parameter to program arguments on JUnit plug-in test: "-nl en_US"</strong>
  * 
  * @author Willian Mitsuda
+ * @author Frank Becker
  */
 public class AttachmentSizeFormatterTest extends TestCase {
 
 	public void testInvalidString() {
-		assertEquals(AttachmentSizeFormatter.UNKNOWN_SIZE, AttachmentSizeFormatter.format(null));
-		assertEquals(AttachmentSizeFormatter.UNKNOWN_SIZE, AttachmentSizeFormatter.format("x"));
+		AttachmentSizeFormatter formatter = AttachmentSizeFormatter.getInstance();
+		assertEquals(AttachmentSizeFormatter.UNKNOWN_SIZE, formatter.format(null));
+		assertEquals(AttachmentSizeFormatter.UNKNOWN_SIZE, formatter.format("x"));
 	}
 
 	public void testNotAValidNumber() {
-		assertEquals(AttachmentSizeFormatter.UNKNOWN_SIZE, AttachmentSizeFormatter.format("-5"));
-		assertEquals(AttachmentSizeFormatter.UNKNOWN_SIZE, AttachmentSizeFormatter.format("1.0"));
+		AttachmentSizeFormatter formatter = AttachmentSizeFormatter.getInstance();
+		assertEquals(AttachmentSizeFormatter.UNKNOWN_SIZE, formatter.format("-5"));
+		assertEquals(AttachmentSizeFormatter.UNKNOWN_SIZE, formatter.format("1.0"));
 	}
 
 	public void testByteFormatter() {
-		assertEquals("1 byte", AttachmentSizeFormatter.format("1"));
-		assertEquals("2 bytes", AttachmentSizeFormatter.format("2"));
-		assertEquals("1023 bytes", AttachmentSizeFormatter.format("1023"));
+		AttachmentSizeFormatter formatter = new AttachmentSizeFormatter(Locale.ENGLISH);
+		assertEquals("1 byte", formatter.format("1"));
+		assertEquals("2 bytes", formatter.format("2"));
+		assertEquals("1023 bytes", formatter.format("1023"));
 	}
 
 	public void testKBFormatter() {
-		assertEquals("1.00 KB", AttachmentSizeFormatter.format("1024"));
-		assertEquals("1024.00 KB", AttachmentSizeFormatter.format("1048575"));
+		AttachmentSizeFormatter formatterEnglish = new AttachmentSizeFormatter(Locale.ENGLISH);
+		assertEquals("1.00 KB", formatterEnglish.format("1024"));
+		assertEquals("1024.00 KB", formatterEnglish.format("1048575"));
+
+		AttachmentSizeFormatter formatterGerman = new AttachmentSizeFormatter(Locale.GERMAN);
+		assertEquals("1,00 KB", formatterGerman.format("1024"));
+		assertEquals("1024,00 KB", formatterGerman.format("1048575"));
 	}
 
 	public void testMBFormatter() {
-		assertEquals("1.00 MB", AttachmentSizeFormatter.format("1048576"));
-		assertEquals("1024.00 MB", AttachmentSizeFormatter.format("1073741823"));
+		AttachmentSizeFormatter formatterEnglish = new AttachmentSizeFormatter(Locale.ENGLISH);
+		assertEquals("1.00 MB", formatterEnglish.format("1048576"));
+		assertEquals("1024.00 MB", formatterEnglish.format("1073741823"));
+
+		AttachmentSizeFormatter formatterGerman = new AttachmentSizeFormatter(Locale.GERMAN);
+		assertEquals("1,00 MB", formatterGerman.format("1048576"));
+		assertEquals("1024,00 MB", formatterGerman.format("1073741823"));
 	}
 
 	public void testGBFormatter() {
-		assertEquals("1.00 GB", AttachmentSizeFormatter.format("1073741824"));
+		AttachmentSizeFormatter formatterEnglish = new AttachmentSizeFormatter(Locale.ENGLISH);
+		assertEquals("1.00 GB", formatterEnglish.format("1073741824"));
+
+		AttachmentSizeFormatter formatterGerman = new AttachmentSizeFormatter(Locale.GERMAN);
+		assertEquals("1,00 GB", formatterGerman.format("1073741824"));
 	}
 
 }
