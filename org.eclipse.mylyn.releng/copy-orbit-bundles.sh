@@ -33,7 +33,4 @@ cp -v javax.xml.soap*.jar $DEST/extrasUpdateSite/plugins
 cp -v org.apache.axis*.jar $DEST/extrasUpdateSite/plugins
 cp -v org.apache.commons.discovery*.jar $DEST/extrasUpdateSite/plugins
 cp -v org.apache.commons.logging*.jar $DEST/extrasUpdateSite/plugins
-cp -v org.apache.ws.commons.util*.jar $DEST/extrasUpdateSite/plugins
-cp -v org.apache.xerces*.jar $DEST/extrasUpdateSite/plugins
-cp -v org.apache.xml.resolver*.jar $DEST/extrasUpdateSite/plugins
 cp -v org.jdom*.jar $DEST/extrasUpdateSite/plugins
