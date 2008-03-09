@@ -11,8 +11,10 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -23,19 +25,169 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskActivationHistory;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Frank Becker
  * @author Steffen Pingel
  */
 public class RepositoryCompletionProcessor implements IContentAssistProcessor {
+
+	private class ProposalComputer {
+
+		public static final String LABEL_SEPARATOR = " -------------------------------------------- ";
+
+		private final Set<AbstractTask> addedTasks = new HashSet<AbstractTask>();
+
+		private boolean addSeparator;
+
+		private final int offset;
+
+		private final String prefix;
+
+		private final List<CompletionProposal> resultList = new ArrayList<CompletionProposal>();
+
+		public ProposalComputer(ITextViewer viewer, int offset) {
+			this.offset = offset;
+			this.prefix = extractPrefix(viewer, offset).toLowerCase();
+		}
+
+		private void addProposal(AbstractTask task, String replacement, boolean includeTaskPrefix) {
+			if (addSeparator) {
+				if (!addedTasks.isEmpty()) {
+					resultList.add(createSeparator());
+				}
+				addSeparator = false;
+			}
+
+			replacement = getReplacement(task, replacement, includeTaskPrefix);
+			String displayString = labelProvider.getText(task);
+			resultList.add(new CompletionProposal(replacement, offset - prefix.length(), prefix.length(),
+					replacement.length(), labelProvider.getImage(task), displayString, null, null));
+
+			addedTasks.add(task);
+		}
+
+		public void addSeparator() {
+			addSeparator = true;
+		}
+
+		public void addTasks(List<AbstractTask> tasks) {
+			for (AbstractTask task : tasks) {
+				addTask(task);
+			}
+		}
+
+		public void addTask(AbstractTask task) {
+			if (addedTasks.contains(task)) {
+				return;
+			}
+
+			String taskKey = task.getTaskKey();
+			if (prefix.length() == 0) {
+				addProposal(task, taskKey, true);
+			} else if (taskKey != null && taskKey.startsWith(prefix)) {
+				addProposal(task, taskKey, false);
+			} else if (containsPrefix(task)) {
+				addProposal(task, taskKey, true);
+			}
+		}
+
+		private String getReplacement(AbstractTask task, String text, boolean includeTaskPrefix) {
+			// add an absolute reference to the task if the viewer does not have a repository
+			if (taskRepository == null || text == null || !taskRepository.getUrl().equals(task.getRepositoryUrl())) {
+				return CopyTaskDetailsAction.getTextForTask(task);
+			}
+
+			if (includeTaskPrefix) {
+				return getTaskPrefix(task) + text;
+			} else {
+				return text;
+			}
+		}
+
+		private boolean containsPrefix(AbstractTask task) {
+			String searchTest = getTaskPrefix(task) + " " + labelProvider.getText(task);
+			String[] tokens = searchTest.split("\\s");
+			for (String token : tokens) {
+				if (token.toLowerCase().startsWith(prefix)) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		private CompletionProposal createSeparator() {
+			return new CompletionProposal("", offset, 0, 0,
+					TasksUiImages.getImage(TasksUiImages.CONTENT_ASSIST_SEPARATOR), LABEL_SEPARATOR, null, null);
+		}
+
+		/**
+		 * Returns the prefix of the currently completed text. Assumes that any character that is not a line break or
+		 * white space can be part of a task id.
+		 */
+		private String extractPrefix(ITextViewer viewer, int offset) {
+			int i = offset;
+			IDocument document = viewer.getDocument();
+			if (i > document.getLength()) {
+				return "";
+			}
+
+			try {
+				while (i > 0) {
+					char ch = document.getChar(i - 1);
+					if (Character.isWhitespace(ch)) {
+						break;
+					}
+					i--;
+				}
+
+				return document.get(i, offset - i);
+			} catch (BadLocationException e) {
+				return "";
+			}
+		}
+
+		public void filterTasks(List<AbstractTask> tasks) {
+			for (Iterator<AbstractTask> it = tasks.iterator(); it.hasNext();) {
+				AbstractTask task = it.next();
+				if (!select(task)) {
+					it.remove();
+				}
+			}
+		}
+
+		private boolean select(AbstractTask task) {
+			return !task.isLocal() //
+					&& (taskRepository == null || task.getRepositoryUrl().equals(taskRepository.getUrl()));
+		}
+
+		public ICompletionProposal[] getResult() {
+			return resultList.toArray(new ICompletionProposal[resultList.size()]);
+		}
+
+	}
+
+	private static final int MAX_OPEN_EDITORS = 10;
+
+	private static final int MAX_ACTIVATED_TASKS = 10;
+
+	private final TaskElementLabelProvider labelProvider = new TaskElementLabelProvider(false);
 
 	private final TaskRepository taskRepository;
 
@@ -50,64 +202,74 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 			offset = selection.getOffset() + selection.getLength();
 		}
 
-		String prefix = extractPrefix(viewer, offset);
-		List<CompletionProposal> resultList = new ArrayList<CompletionProposal>();
+		ProposalComputer proposalComputer = new ProposalComputer(viewer, offset);
 
-		TaskActivationHistory taskHistory = TasksUiPlugin.getTaskListManager().getTaskActivationHistory();
-		List<AbstractTask> tasks = new ArrayList<AbstractTask>(
-				taskHistory.getPreviousTasks(TaskListView.getActiveWorkingSets()));
-		filterTasks(tasks);
-		Collections.reverse(tasks);
-		addTasks(resultList, tasks, prefix, offset);
+		// add tasks from navigation history
+//		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+//		if (window != null) {
+//			IWorkbenchPage page = window.getActivePage();
+//			if (page != null) {
+//				INavigationHistory history = page.getNavigationHistory();
+//				INavigationLocation[] locations = history.getLocations();
+//				if (locations != null) {
+//					for (INavigationLocation location : locations) {
+//						// location is always null
+//					}
+//				}
+//			}
+//		}
 
-		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
-		tasks = new ArrayList<AbstractTask>(taskList.getAllTasks());
-		filterTasks(tasks);
-		Collections.sort(tasks, new Comparator<AbstractTask>() {
-			public int compare(AbstractTask o1, AbstractTask o2) {
-				return o1.getTaskKey().compareTo(o2.getTaskKey());
-			}
-		});
-		addTasks(resultList, tasks, prefix, offset);
-
-		return resultList.toArray(new ICompletionProposal[resultList.size()]);
-	}
-
-	private void filterTasks(List<AbstractTask> tasks) {
-		for (Iterator<AbstractTask> it = tasks.iterator(); it.hasNext();) {
-			AbstractTask task = it.next();
-			if (task.getTaskKey() == null || taskRepository != null
-					&& !task.getRepositoryUrl().equals(taskRepository.getUrl())) {
-				it.remove();
-			}
-		}
-	}
-
-	private void addTasks(List<CompletionProposal> resultList, List<AbstractTask> tasks, String prefix, int offset) {
-		for (AbstractTask task : tasks) {
-			String replacement = getTaskPrefix(task) + task.getTaskKey();
-			if (replacement.startsWith(prefix)) {
-				String displayString = replacement + ": " + task.getSummary();
-				replacement = replacement.substring(prefix.length());
-				resultList.add(new CompletionProposal(replacement, offset, 0, replacement.length(), null,
-						displayString, null, task.getSummary()));
-			} else {
-				replacement = task.getTaskKey();
-				if (replacement.startsWith(prefix)) {
-					String displayString = replacement + ": " + task.getSummary();
-					replacement = replacement.substring(prefix.length());
-					resultList.add(new CompletionProposal(replacement, offset, 0, replacement.length(), null,
-							displayString, null, null));
+		// add open editor
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		if (window != null) {
+			IWorkbenchPage page = window.getActivePage();
+			if (page != null) {
+				IEditorReference[] editorReferences = page.getEditorReferences();
+				int count = 0;
+				for (int i = editorReferences.length - 1; i >= 0 && count < MAX_OPEN_EDITORS; i--) {
+					try {
+						if (editorReferences[i].getEditorInput() instanceof TaskEditorInput) {
+							TaskEditorInput input = (TaskEditorInput) editorReferences[i].getEditorInput();
+							AbstractTask task = input.getTask();
+							if (task != null && !task.isLocal()) {
+								proposalComputer.addTask(task);
+								count++;
+							}
+						}
+					} catch (PartInitException e) {
+						// ignore
+					}
 				}
 			}
 		}
-	}
 
-	private String getTaskPrefix(AbstractTask task) {
-		AbstractRepositoryConnector connector = TasksUiPlugin.getConnector(task.getConnectorKind());
-		String prefix = connector.getTaskIdPrefix();
-		// FIXME work around for Trac "#" prefix
-		return (prefix.length() > 1) ? prefix + " " : prefix;
+		// add tasks from activation history
+		TaskActivationHistory taskHistory = TasksUiPlugin.getTaskListManager().getTaskActivationHistory();
+		List<AbstractTask> tasks = taskHistory.getPreviousTasks(TaskListView.getActiveWorkingSets());
+		int count = 0;
+		for (int i = tasks.size() - 1; i >= 0 && count < MAX_ACTIVATED_TASKS; i--) {
+			AbstractTask task = tasks.get(i);
+			if (!task.isLocal()) {
+				proposalComputer.addTask(task);
+			}
+		}
+
+		// add all remaining tasks for repository
+		if (taskRepository != null) {
+			proposalComputer.addSeparator();
+
+			TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+			tasks = new ArrayList<AbstractTask>(taskList.getAllTasks());
+			proposalComputer.filterTasks(tasks);
+			Collections.sort(tasks, new Comparator<AbstractTask>() {
+				public int compare(AbstractTask o1, AbstractTask o2) {
+					return labelProvider.getText(o1).compareTo(labelProvider.getText(o2));
+				}
+			});
+			proposalComputer.addTasks(tasks);
+		}
+
+		return proposalComputer.getResult();
 	}
 
 	public IContextInformation[] computeContextInformation(ITextViewer viewer, int offset) {
@@ -130,30 +292,11 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 		return null;
 	}
 
-	/**
-	 * Returns the prefix of the currently completed text. Assumes that any character that is not a line break or white
-	 * space can be part of a task id.
-	 */
-	private String extractPrefix(ITextViewer viewer, int offset) {
-		int i = offset;
-		IDocument document = viewer.getDocument();
-		if (i > document.getLength()) {
-			return "";
-		}
-
-		try {
-			while (i > 0) {
-				char ch = document.getChar(i - 1);
-				if (Character.isWhitespace(ch)) {
-					break;
-				}
-				i--;
-			}
-
-			return document.get(i, offset - i);
-		} catch (BadLocationException e) {
-			return "";
-		}
+	private String getTaskPrefix(AbstractTask task) {
+		AbstractRepositoryConnector connector = TasksUiPlugin.getConnector(task.getConnectorKind());
+		String prefix = connector.getTaskIdPrefix();
+		// FIXME work around for Trac "#" prefix
+		return (prefix.length() > 1) ? prefix + " " : prefix;
 	}
 
 }

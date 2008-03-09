@@ -57,7 +57,7 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 		}
 	}
 
-	// TODO: make API?
+	// API 3.0: move to TasksUiUtil / into core
 	public static String getTextForTask(Object object) {
 		String text = "";
 		if (object instanceof AbstractTask) {

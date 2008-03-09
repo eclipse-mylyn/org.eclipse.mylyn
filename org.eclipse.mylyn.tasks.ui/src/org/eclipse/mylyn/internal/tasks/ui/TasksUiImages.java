@@ -294,6 +294,8 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor QUESTION = create(T_OBJ, "question.gif");
 
+	public static final ImageDescriptor CONTENT_ASSIST_SEPARATOR = create(T_TOOL, "content-assist-separator.gif");
+
 	private static ImageDescriptor create(String prefix, String name) {
 		try {
 			return ImageDescriptor.createFromURL(makeIconFileURL(prefix, name));
