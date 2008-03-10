@@ -25,6 +25,7 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
+import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskActivationHistory;
@@ -173,7 +174,7 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 		}
 
 		private boolean select(AbstractTask task) {
-			return !task.isLocal() //
+			return !(task instanceof LocalTask) //
 					&& (taskRepository == null || task.getRepositoryUrl().equals(taskRepository.getUrl()));
 		}
 
@@ -231,7 +232,7 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 						if (editorReferences[i].getEditorInput() instanceof TaskEditorInput) {
 							TaskEditorInput input = (TaskEditorInput) editorReferences[i].getEditorInput();
 							AbstractTask task = input.getTask();
-							if (task != null && !task.isLocal()) {
+							if (task != null && !(task instanceof LocalTask)) {
 								proposalComputer.addTask(task);
 								count++;
 							}
@@ -249,7 +250,7 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 		int count = 0;
 		for (int i = tasks.size() - 1; i >= 0 && count < MAX_ACTIVATED_TASKS; i--) {
 			AbstractTask task = tasks.get(i);
-			if (!task.isLocal()) {
+			if (!(task instanceof LocalTask)) {
 				proposalComputer.addTask(task);
 			}
 		}
