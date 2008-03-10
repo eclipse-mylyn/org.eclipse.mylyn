@@ -14,10 +14,7 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.internal.tasks.ui.editors.AttachmentSizeFormatter;
 
 /**
- * Tests attachment size value format for many situations
- * <p>
- * <strong>This test may fail if run in non-english locales because the decimal point is localized; the workaround is to
- * change your locale to en_US or append the following parameter to program arguments on JUnit plug-in test: "-nl en_US"</strong>
+ * Tests attachment size value formatting.
  * 
  * @author Willian Mitsuda
  * @author Frank Becker
