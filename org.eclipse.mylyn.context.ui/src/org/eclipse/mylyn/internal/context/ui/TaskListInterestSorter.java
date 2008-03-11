@@ -136,6 +136,10 @@ public class TaskListInterestSorter extends ViewerSorter {
 			return 1;
 		} else if (!task1.internalIsFloatingScheduledDate() && task2.internalIsFloatingScheduledDate()) {
 			return -1;
+		} else if (task1.internalIsFloatingScheduledDate() && task2.internalIsFloatingScheduledDate()) {
+			if (task1.getScheduledForDate() != null && task2.getScheduledForDate() != null) {
+				return 0;
+			}
 		}
 
 		if (isToday(task1) && !isToday(task2)) {
