@@ -217,7 +217,6 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 	 */
 	public abstract boolean isLocal();
 
-	// API-3.0 rename to getRepositoryKind()
 	public abstract String getConnectorKind();
 
 	public String getLastReadTimeStamp() {
@@ -329,6 +328,7 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 
 	@Override
 	public int hashCode() {
+		// API 3.0 REVIEW use immutable id for hashing?
 		return this.getHandleIdentifier().hashCode();
 	}
 

@@ -33,7 +33,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class OpenRepositoryTaskJob extends Job {
 
-	private final String serverUrl;
+	private final String repositoryUrl;
 
 	private final IWorkbenchPage page;
 
@@ -43,13 +43,13 @@ public class OpenRepositoryTaskJob extends Job {
 
 	private final String taskUrl;
 
-	public OpenRepositoryTaskJob(String repositoryKind, String serverUrl, String taskId, String taskUrl,
+	public OpenRepositoryTaskJob(String repositoryKind, String repositoryUrl, String taskId, String taskUrl,
 			IWorkbenchPage page) {
 		super("Opening repository task " + taskId);
 
 		this.repositoryKind = repositoryKind;
 		this.taskId = taskId;
-		this.serverUrl = serverUrl;
+		this.repositoryUrl = repositoryUrl;
 		this.taskUrl = taskUrl;
 		this.page = page;
 	}
@@ -57,12 +57,12 @@ public class OpenRepositoryTaskJob extends Job {
 	@Override
 	public IStatus run(IProgressMonitor monitor) {
 		monitor.beginTask("Opening Remote Task", 10);
-		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryKind, serverUrl);
+		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryKind, repositoryUrl);
 		if (repository == null) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					MessageDialog.openError(null, "Repository Not Found",
-							"Could not find repository configuration for " + serverUrl
+							"Could not find repository configuration for " + repositoryUrl
 									+ ". \nPlease set up repository via " + TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".");
 					TasksUiUtil.openUrl(taskUrl, false);
 				}

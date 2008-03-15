@@ -408,4 +408,11 @@ public class TaskRepositoryManager {
 		return false;
 	}
 
+	/**
+	 * @since 3.0
+	 */
+	public TaskRepository getRepository(AbstractTask task) {
+		return getRepository(task.getConnectorKind(), task.getRepositoryUrl());
+	}
+
 }
