@@ -203,7 +203,7 @@ final class DelegatingTaskExternalizer {
 			node.setAttribute(KEY_ISSUEURL, task.getUrl());
 		}
 		node.setAttribute(KEY_NOTES, stripControlCharacters(task.getNotes()));
-		node.setAttribute(KEY_TIME_ESTIMATED, "" + task.getEstimateTimeHours());
+		node.setAttribute(KEY_TIME_ESTIMATED, "" + task.getEstimatedTimeHours());
 		node.setAttribute(KEY_DATE_END, formatExternDate(task.getCompletionDate()));
 		node.setAttribute(KEY_DATE_CREATION, formatExternDate(task.getCreationDate()));
 		node.setAttribute(KEY_DATE_DUE, formatExternDate(task.getDueDate()));

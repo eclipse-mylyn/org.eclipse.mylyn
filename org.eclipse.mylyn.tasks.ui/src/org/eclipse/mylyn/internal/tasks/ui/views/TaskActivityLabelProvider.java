@@ -89,7 +89,7 @@ public class TaskActivityLabelProvider extends TaskElementLabelProvider implemen
 						activityDelegate.getDateRangeContainer().getStart(), activityDelegate.getDateRangeContainer()
 								.getEnd()));
 			case 4:
-				return task.getEstimateTimeHours() + UNITS_HOURS;
+				return task.getEstimatedTimeHours() + UNITS_HOURS;
 			case 5:
 				if (task.getScheduledForDate() != null) {
 					return DateFormat.getDateInstance(DateFormat.MEDIUM).format(task.getScheduledForDate());
@@ -139,7 +139,7 @@ public class TaskActivityLabelProvider extends TaskElementLabelProvider implemen
 				long estimated = 0;
 				for (Object o : contentProvider.getChildren(taskCategory)) {
 					if (o instanceof AbstractTask) {
-						estimated += ((AbstractTask) o).getEstimateTimeHours();
+						estimated += ((AbstractTask) o).getEstimatedTimeHours();
 					}
 				}
 				return estimated + UNITS_HOURS;

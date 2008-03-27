@@ -235,14 +235,14 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		for (AbstractTask task : tasksThisWeek) {
 			if (task.isCompleted()) {
 				completeTasks++;
-				if (task.getEstimateTimeHours() > 0) {
-					completeTime += task.getEstimateTimeHours();
+				if (task.getEstimatedTimeHours() > 0) {
+					completeTime += task.getEstimatedTimeHours();
 				} else {
 					completeTime++;
 				}
 			} else {
-				if (task.getEstimateTimeHours() > 0) {
-					incompleteTime += task.getEstimateTimeHours();
+				if (task.getEstimatedTimeHours() > 0) {
+					incompleteTime += task.getEstimatedTimeHours();
 				} else {
 					incompleteTime++;
 				}

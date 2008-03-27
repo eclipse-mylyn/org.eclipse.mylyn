@@ -153,7 +153,7 @@ public class TaskActivityEditorInput implements IEditorInput {
 	public int getTotalTimeEstimated() {
 		int duration = 0;
 		for (AbstractTask task : inProgressTasks) {
-			duration += task.getEstimateTimeHours();
+			duration += task.getEstimatedTimeHours();
 		}
 		return duration;
 	}
@@ -177,7 +177,7 @@ public class TaskActivityEditorInput implements IEditorInput {
 	public int getPlannedEstimate() {
 		int estimated = 0;
 		for (AbstractTask task : plannedTasks) {
-			estimated += task.getEstimateTimeHours();
+			estimated += task.getEstimatedTimeHours();
 		}
 		return estimated;
 	}

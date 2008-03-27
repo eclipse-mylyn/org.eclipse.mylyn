@@ -161,7 +161,7 @@ public class TaskListToolTip extends ToolTip {
 			int estimateTotal = 0;
 			long elapsedTotal = 0;
 			for (AbstractTask child : container.getChildren()) {
-				estimateTotal += (child).getEstimateTimeHours();
+				estimateTotal += (child).getEstimatedTimeHours();
 				elapsedTotal += TasksUiPlugin.getTaskActivityManager().getElapsedTime(child, container.getStart(),
 						container.getEnd());
 			}

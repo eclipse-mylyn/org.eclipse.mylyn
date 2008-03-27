@@ -734,7 +734,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		estimated = new Spinner(nameValueComp, SWT.FLAT);
 		toolkit.adapt(estimated, true, true);
-		estimated.setSelection(task.getEstimateTimeHours());
+		estimated.setSelection(task.getEstimatedTimeHours());
 		estimated.setDigits(0);
 		estimated.setMaximum(100);
 		estimated.setMinimum(0);

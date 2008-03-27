@@ -71,7 +71,7 @@ public class TaskPlannerLabelProvider extends TaskElementLabelProvider implement
 					return DateUtil.getFormattedDurationShort(TasksUiPlugin.getTaskActivityManager().getElapsedTime(
 							task, startDate, endDate));
 				case 4:
-					return task.getEstimateTimeHours() + " hours";
+					return task.getEstimatedTimeHours() + " hours";
 				case 5:
 					if (task.getCreationDate() != null) {
 						return DateFormat.getDateInstance(DateFormat.MEDIUM).format(task.getCreationDate());
@@ -110,7 +110,7 @@ public class TaskPlannerLabelProvider extends TaskElementLabelProvider implement
 					long estimated = 0;
 					for (Object o : contentProvider.getChildren(container)) {
 						if (o instanceof AbstractTask) {
-							estimated += ((AbstractTask) o).getEstimateTimeHours();
+							estimated += ((AbstractTask) o).getEstimatedTimeHours();
 						}
 					}
 					return estimated + " hours";

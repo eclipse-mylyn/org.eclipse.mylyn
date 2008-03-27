@@ -94,9 +94,17 @@ public class ScheduledTaskDelegate extends AbstractTask {
 		return task.getSummary();
 	}
 
+	/**
+	 * @deprecated Use {@link #getEstimatedTimeHours()} instead
+	 */
 	@Override
 	public int getEstimateTimeHours() {
-		return task.getEstimateTimeHours();
+		return getEstimatedTimeHours();
+	}
+
+	@Override
+	public int getEstimatedTimeHours() {
+		return task.getEstimatedTimeHours();
 	}
 
 	@Override

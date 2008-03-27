@@ -366,7 +366,18 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 		this.notes = notes;
 	}
 
+	/**
+	 * @deprecated Use {@link #getEstimatedTimeHours()} instead
+	 */
+	@Deprecated
 	public int getEstimateTimeHours() {
+		return getEstimatedTimeHours();
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public int getEstimatedTimeHours() {
 		return estimatedTimeHours;
 	}
 

@@ -561,7 +561,7 @@ public class TaskActivityEditorPart extends EditorPart {
 
 				String elapsedTimeString = DateUtil.getFormattedDuration(TasksUiPlugin.getTaskActivityManager()
 						.getElapsedTime(currentTask), false);
-				String estimatedTimeString = currentTask.getEstimateTimeHours() + " hours";
+				String estimatedTimeString = currentTask.getEstimatedTimeHours() + " hours";
 				if (elapsedTimeString.equals("")) {
 					elapsedTimeString = BLANK_CELL;
 				}
@@ -611,7 +611,7 @@ public class TaskActivityEditorPart extends EditorPart {
 
 				String elapsedTimeString = DateUtil.getFormattedDuration(TasksUiPlugin.getTaskActivityManager()
 						.getElapsedTime(currentTask), false);
-				String estimatedTimeString = currentTask.getEstimateTimeHours() + " hours";
+				String estimatedTimeString = currentTask.getEstimatedTimeHours() + " hours";
 				if (elapsedTimeString.equals("")) {
 					elapsedTimeString = NO_TIME_ELAPSED;
 				}

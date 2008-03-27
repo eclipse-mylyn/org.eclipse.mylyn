@@ -76,7 +76,7 @@ public class TaskActivitySorter extends ViewerSorter {
 	}
 
 	protected int compareEstimated(AbstractTask task1, AbstractTask task2) {
-		return task2.getEstimateTimeHours() - task1.getEstimateTimeHours();
+		return task2.getEstimatedTimeHours() - task1.getEstimatedTimeHours();
 	}
 
 	protected int compareCreationDate(AbstractTask task1, AbstractTask task2) {

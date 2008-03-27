@@ -87,7 +87,7 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 	public long getTotalEstimated() {
 		long totalEstimated = 0;
 		for (AbstractTask task : dateRangeDelegates) {
-			totalEstimated += task.getEstimateTimeHours();
+			totalEstimated += task.getEstimatedTimeHours();
 		}
 		return totalEstimated;
 	}
