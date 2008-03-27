@@ -589,36 +589,43 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		super.createFormContent(managedForm);
 		form = managedForm.getForm();
 		form.setRedraw(false);
+		try {
+			refreshEnabled = false;
 
-		toolkit = managedForm.getToolkit();
-		registerDropListener(form);
+			toolkit = managedForm.getToolkit();
+			registerDropListener(form);
 
-		editorComposite = form.getBody();
-		GridLayout editorLayout = new GridLayout();
-		editorComposite.setLayout(editorLayout);
-		editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
+			editorComposite = form.getBody();
+			GridLayout editorLayout = new GridLayout();
+			editorComposite.setLayout(editorLayout);
+			editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		if (taskData != null) {
-			createSections();
+			if (taskData != null) {
+				createSections();
+			}
+
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
+			if (connectorUi == null) {
+				parentEditor.setMessage("The editor may not be fully loaded", IMessageProvider.INFORMATION,
+						new HyperlinkAdapter() {
+							@Override
+							public void linkActivated(HyperlinkEvent e) {
+								refreshEditor();
+							}
+						});
+			}
+
+			updateHeaderControls();
+			if (summaryTextViewer != null) {
+				summaryTextViewer.getTextWidget().setFocus();
+			}
+
+			form.setRedraw(true);
+		} finally {
+			refreshEnabled = true;
 		}
 
-		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
-		if (connectorUi == null) {
-			parentEditor.setMessage("The editor may not be fully loaded", IMessageProvider.INFORMATION,
-					new HyperlinkAdapter() {
-						@Override
-						public void linkActivated(HyperlinkEvent e) {
-							refreshEditor();
-						}
-					});
-		}
-
-		updateHeaderControls();
-		if (summaryTextViewer != null) {
-			summaryTextViewer.getTextWidget().setFocus();
-		}
-
-		form.setRedraw(true);
+		form.reflow(true);
 	}
 
 	private void updateHeaderControls() {
@@ -771,7 +778,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		createActionsLayout(bottomComposite);
 		createPeopleLayout(bottomComposite);
 		bottomComposite.pack(true);
-		form.reflow(true);
+
 		getSite().getPage().addSelectionListener(selectionListener);
 		getSite().setSelectionProvider(selectionProvider);
 	}
@@ -2085,8 +2092,33 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	}
 
+	private boolean expandCommentSection() {
+		for (final TaskComment taskComment : taskData.getComments()) {
+			if ((repositoryTask != null && repositoryTask.getLastReadTimeStamp() == null)
+					|| editorInput.getOldTaskData() == null) {
+				return true;
+			} else if (isNewComment(taskComment)) {
+				return true;
+			}
+		}
+
+		if (taskData.getComments() == null || taskData.getComments().size() == 0) {
+			return false;
+		} else if (editorInput.getTaskData() != null && editorInput.getOldTaskData() != null) {
+			List<TaskComment> newTaskComments = editorInput.getTaskData().getComments();
+			List<TaskComment> oldTaskComments = editorInput.getOldTaskData().getComments();
+			if (newTaskComments == null || oldTaskComments == null) {
+				return true;
+			} else if (newTaskComments.size() != oldTaskComments.size()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	protected void createCommentLayout(Composite composite) {
-		commentsSection = createSection(composite, getSectionLabel(SECTION_NAME.COMMENTS_SECTION), false);
+		commentsSection = createSection(composite, getSectionLabel(SECTION_NAME.COMMENTS_SECTION),
+				expandCommentSection());
 		commentsSection.setText(commentsSection.getText() + " (" + taskData.getComments().size() + ")");
 
 		final Composite commentsSectionClient = toolkit.createComposite(commentsSection);
@@ -2341,7 +2373,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			}
 		}
 		if (foundNew) {
-			commentsSection.setExpanded(true);
 			if (supportsCommentSort()) {
 				sortHyperlinkState(true);
 			}
@@ -2353,12 +2384,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			List<TaskComment> newTaskComments = editorInput.getTaskData().getComments();
 			List<TaskComment> oldTaskComments = editorInput.getOldTaskData().getComments();
 			if (newTaskComments == null || oldTaskComments == null) {
-				commentsSection.setExpanded(true);
 				if (supportsCommentSort()) {
 					sortHyperlinkState(true);
 				}
 			} else if (newTaskComments.size() != oldTaskComments.size()) {
-				commentsSection.setExpanded(true);
 				if (supportsCommentSort()) {
 					sortHyperlinkState(true);
 				}
@@ -2698,11 +2727,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * @Since 2.3
 	 */
 	private Section createSection(Composite composite, String title, boolean expandedState) {
-		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
-		section.setText(title);
-		if (section.isExpanded() != expandedState) {
-			section.setExpanded(expandedState);
+		int style = ExpandableComposite.TITLE_BAR | Section.TWISTIE;
+		if (expandedState) {
+			style |= ExpandableComposite.EXPANDED;
 		}
+		Section section = toolkit.createSection(composite, style);
+		section.setText(title);
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		return section;
 	}
@@ -3663,6 +3693,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 								removeSections();
 								editorComposite.setMenu(menu);
 								createSections();
+								form.reflow(true);
 								// setFormHeaderLabel();
 								markDirty(false);
 								parentEditor.setMessage(null, 0);
