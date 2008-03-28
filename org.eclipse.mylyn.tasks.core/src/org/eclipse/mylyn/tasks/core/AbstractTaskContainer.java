@@ -42,7 +42,9 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	 * Use {@link TaskList} methods instead.
 	 */
 	public void internalAddChild(AbstractTask task) {
-		children.add(task);
+		if (task != null) {
+			children.add(task);
+		}
 	}
 
 	/**
@@ -71,7 +73,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 
 		Set<AbstractTask> childrenWithoutCycles = new HashSet<AbstractTask>(children.size());
 		for (AbstractTask child : children) {
-			if (!child.contains(this.getHandleIdentifier())) {
+			if (child != null && !child.contains(this.getHandleIdentifier())) {
 				childrenWithoutCycles.add(child);
 			}
 		}
@@ -101,8 +103,10 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	private boolean containsHelper(Set<AbstractTask> children, String handle, int depth) {
 		if (depth < ITasksCoreConstants.MAX_SUBTASK_DEPTH && children != null && !children.isEmpty()) {
 			for (AbstractTask child : children) {
-				if (handle.equals(child.getHandleIdentifier())
-						|| containsHelper(child.getChildrenInternal(), handle, depth + 1)) {
+				if (child != null
+						&& handle != null
+						&& (handle.equals(child.getHandleIdentifier()) || containsHelper(child.getChildrenInternal(),
+								handle, depth + 1))) {
 					return true;
 				}
 			}
