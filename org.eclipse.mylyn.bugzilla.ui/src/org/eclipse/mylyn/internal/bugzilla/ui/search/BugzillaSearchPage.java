@@ -27,11 +27,11 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylyn.internal.bugzilla.ui.editor.KeywordsDialog;
 import org.eclipse.mylyn.internal.tasks.ui.util.WebBrowserDialog;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
@@ -84,7 +84,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	private static ArrayList<BugzillaSearchData> previousEmailPatterns = new ArrayList<BugzillaSearchData>(20);
 
 	private static ArrayList<BugzillaSearchData> previousEmailPatterns2 = new ArrayList<BugzillaSearchData>(20);
-	
+
 	private static ArrayList<BugzillaSearchData> previousCommentPatterns = new ArrayList<BugzillaSearchData>(20);
 
 	private static ArrayList<BugzillaSearchData> previousKeywords = new ArrayList<BugzillaSearchData>(20);
@@ -107,16 +107,16 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 	private static final String[] emailRoleValues = { "emailassigned_to1", "emailreporter1", "emailcc1",
 			"emaillongdesc1" };
-	
+
 	private static final String[] emailRoleValues2 = { "emailassigned_to2", "emailreporter2", "emailcc2",
-	"emaillongdesc2" };
+			"emaillongdesc2" };
 
 	private BugzillaRepositoryQuery originalQuery = null;
 
 	protected boolean restoring = false;
 
 	private boolean restoreQueryOptions = true;
-	
+
 	protected Combo summaryPattern;
 
 	protected Combo summaryOperation;
@@ -150,13 +150,13 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	protected Combo emailOperation2;
 
 	protected Combo emailPattern;
-	
+
 	protected Combo emailPattern2;
-	
+
 	protected Button[] emailButtons;
 
 	protected Button[] emailButtons2;
-	
+
 	private Combo keywords;
 
 	private Combo keywordsOperation;
@@ -208,11 +208,11 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	private static final String STORE_COMMENTMATCH_ID = PAGE_NAME + ".COMMENTMATCH";
 
 	private static final String STORE_EMAILMATCH_ID = PAGE_NAME + ".EMAILMATCH";
-	
+
 	private static final String STORE_EMAIL2MATCH_ID = PAGE_NAME + ".EMAIL2MATCH";
 
 	private static final String STORE_EMAILBUTTON_ID = PAGE_NAME + ".EMAILATTR";
-	
+
 	private static final String STORE_EMAIL2BUTTON_ID = PAGE_NAME + ".EMAIL2ATTR";
 
 	private static final String STORE_SUMMARYTEXT_ID = PAGE_NAME + ".SUMMARYTEXT";
@@ -220,7 +220,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	private static final String STORE_COMMENTTEXT_ID = PAGE_NAME + ".COMMENTTEXT";
 
 	private static final String STORE_EMAILADDRESS_ID = PAGE_NAME + ".EMAILADDRESS";
-	
+
 	private static final String STORE_EMAIL2ADDRESS_ID = PAGE_NAME + ".EMAIL2ADDRESS";
 
 	private static final String STORE_KEYWORDS_ID = PAGE_NAME + ".KEYWORDS";
@@ -228,7 +228,9 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	private static final String STORE_KEYWORDSMATCH_ID = PAGE_NAME + ".KEYWORDSMATCH";
 
 	// private static final String STORE_REPO_ID = PAGE_NAME + ".REPO";
-	
+
+	private RepositoryConfiguration repositoryConfiguration;
+
 	private SelectionAdapter updateActionSelectionAdapter = new SelectionAdapter() {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
@@ -237,7 +239,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			}
 		}
 	};
-
 
 	private final class ModifyListenerImplementation implements ModifyListener {
 		public void modifyText(ModifyEvent e) {
@@ -282,6 +283,17 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		// setDescription(DESCRIPTION);
 		// setImageDescriptor(TaskListImages.BANNER_REPOSITORY);
 		// setPageComplete(false);
+//		try {
+//			repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository, false);
+//		} catch (final CoreException e) {
+//			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+//				public void run() {
+//					MessageDialog.openError(Display.getDefault().getActiveShell(), "Bugzilla Search Page",
+//							"Unable to get configuration. Ensure proper repository configuration in "
+//									+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".\n\n");
+//				}
+//			});
+//		}
 	}
 
 	public BugzillaSearchPage(TaskRepository repository, BugzillaRepositoryQuery origQuery) {
@@ -293,6 +305,17 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		// setTitle(TITLE);
 		// setDescription(DESCRIPTION);
 		// setPageComplete(false);
+//		try {
+//			repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository, false);
+//		} catch (final CoreException e) {
+//			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+//				public void run() {
+//					MessageDialog.openError(Display.getDefault().getActiveShell(), "Bugzilla Search Page",
+//							"Unable to get configuration. Ensure proper repository configuration in "
+//									+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".\n\n");
+//				}
+//			});
+//		}
 	}
 
 	public void createControl(Composite parent) {
@@ -374,7 +397,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			title.setFocus();
 		}
 
-
 		// Info text
 		Label labelSummary = new Label(composite, SWT.LEFT);
 		labelSummary.setText("&Summary:");
@@ -455,15 +477,13 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		button3.setText("commenter");
 
 		emailButtons = new Button[] { button0, button1, button2, button3 };
-		
-		
+
 		// operation combo
 		emailOperation = new Combo(composite, SWT.SINGLE | SWT.READ_ONLY | SWT.BORDER);
 		emailOperation.setItems(emailOperationText);
 		emailOperation.setText(emailOperationText[0]);
 		emailOperation.select(0);
 
-		
 		// Email2
 
 		Label labelEmail2 = new Label(composite, SWT.LEFT);
@@ -503,16 +523,14 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		e2button3.setText("commenter");
 
 		emailButtons2 = new Button[] { e2button0, e2button1, e2button2, e2button3 };
-		
-		
+
 		// operation combo
 		emailOperation2 = new Combo(composite, SWT.SINGLE | SWT.READ_ONLY | SWT.BORDER);
 		emailOperation2.setItems(emailOperationText);
 		emailOperation2.setText(emailOperationText[0]);
 		emailOperation2.select(0);
-		
+
 		/////
-		
 
 		Label labelKeywords = new Label(composite, SWT.NONE);
 		labelKeywords.setText("&Keywords:");
@@ -546,11 +564,12 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		Button keywordsSelectButton = new Button(keywordsComposite, SWT.NONE);
 		keywordsSelectButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				KeywordsDialog dialog = new KeywordsDialog(getShell(), keywords.getText(), //
-						Arrays.asList(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_KEYWORDS, //
-								null, repository.getUrl())));
-				if (dialog.open() == Window.OK) {
-					keywords.setText(dialog.getSelectedKeywordsString());
+				if (repositoryConfiguration != null) {
+					KeywordsDialog dialog = new KeywordsDialog(getShell(), keywords.getText(), //
+							repositoryConfiguration.getKeywords());
+					if (dialog.open() == Window.OK) {
+						keywords.setText(dialog.getSelectedKeywordsString());
+					}
 				}
 			}
 		});
@@ -589,9 +608,9 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			public void widgetSelected(SelectionEvent e) {
 				if (product.getSelectionIndex() != -1) {
 					String[] selectedProducts = product.getSelection();
-					updateAttributesFromRepository(repository.getUrl(), selectedProducts, false, false);
+					updateAttributesFromConfiguration(selectedProducts);
 				} else {
-					updateAttributesFromRepository(repository.getUrl(), null, false, false);
+					updateAttributesFromConfiguration(null);
 				}
 				if (restoring) {
 					restoring = false;
@@ -799,7 +818,19 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (repository != null) {
-					updateAttributesFromRepository(repository.getUrl(), null, true, true);
+//					try {
+						
+						updateConfiguration(true);
+						
+//					} catch (final CoreException e1) {
+//						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+//							public void run() {
+//								MessageDialog.openError(Display.getDefault().getActiveShell(), "Bugzilla Search Page",
+//										"Unable to get configuration. Ensure proper repository configuration in "
+//												+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".\n\n");
+//							}
+//						});
+//					}
 				} else {
 					MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
 							IBugzillaConstants.TITLE_MESSAGE_DIALOG, TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
@@ -967,11 +998,11 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				for (String email : getPreviousPatterns(previousEmailPatterns)) {
 					emailPattern.add(email);
 				}
-				
+
 				for (String email : getPreviousPatterns(previousEmailPatterns2)) {
 					emailPattern2.add(email);
 				}
-				
+
 				// emailPattern.setItems(getPreviousPatterns(previousEmailPatterns));
 				for (String keyword : getPreviousPatterns(previousKeywords)) {
 					keywords.add(keyword);
@@ -979,9 +1010,21 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 				// TODO: update status, resolution, severity etc if possible...
 				if (repository != null) {
-					updateAttributesFromRepository(repository.getUrl(), null, false, false);
+					updateAttributesFromConfiguration(null);
 					if (product.getItemCount() == 0) {
-						updateAttributesFromRepository(repository.getUrl(), null, true, false);
+						try {
+							repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository, true);
+							updateAttributesFromConfiguration(null);
+						} catch (final CoreException e1) {
+							PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+								public void run() {
+									MessageDialog.openError(Display.getDefault().getActiveShell(),
+											"Bugzilla Search Page",
+											"Unable to get configuration. Ensure proper repository configuration in "
+													+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".\n\n");
+								}
+							});
+						}
 					}
 				}
 				if (originalQuery != null) {
@@ -1005,7 +1048,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 						&& product != null) {
 					product.setSelection(nonNullArray(settings, STORE_PRODUCT_ID + repoId));
 					if (product.getSelection().length > 0) {
-						updateAttributesFromRepository(repository.getUrl(), product.getSelection(), false, false);
+						updateAttributesFromConfiguration(product.getSelection());
 					}
 					restoreWidgetValues();
 				}
@@ -1030,7 +1073,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 					|| severity.getSelectionCount() > 0 || priority.getSelectionCount() > 0
 					|| hardware.getSelectionCount() > 0 || os.getSelectionCount() > 0
 					|| summaryPattern.getText().length() > 0 || commentPattern.getText().length() > 0
-					|| emailPattern.getText().length() > 0 || emailPattern2.getText().length() > 0 || keywords.getText().length() > 0;
+					|| emailPattern.getText().length() > 0 || emailPattern2.getText().length() > 0
+					|| keywords.getText().length() > 0;
 		} else {
 			return false;
 		}
@@ -1203,7 +1247,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			sb.append(URLEncoder.encode(os.getItem(selected[i]), repository.getCharacterEncoding()));
 		}
 
-		
 		if (emailPattern.getText() != null && !emailPattern.getText().trim().equals("")) {
 			boolean selectionMade = false;
 			for (Button button : emailButtons) {
@@ -1226,7 +1269,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				sb.append(URLEncoder.encode(emailPattern.getText(), repository.getCharacterEncoding()));
 			}
 		}
-		
+
 		if (emailPattern2.getText() != null && !emailPattern2.getText().trim().equals("")) {
 			boolean selectionMade = false;
 			for (Button button : emailButtons2) {
@@ -1249,7 +1292,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				sb.append(URLEncoder.encode(emailPattern2.getText(), repository.getCharacterEncoding()));
 			}
 		}
-		
 
 		if (daysText.getText() != null && !daysText.getText().equals("")) {
 			try {
@@ -1271,7 +1313,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		return sb;
 	}
 
-
 	public IDialogSettings getDialogSettings() {
 		IDialogSettings settings = BugzillaUiPlugin.getDefault().getDialogSettings();
 		fDialogSettings = settings.getSection(PAGE_NAME);
@@ -1287,139 +1328,41 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		getDialogSettings();
 	}
 
-	private void updateAttributesFromRepository(final String repositoryUrl, String[] selectedProducts,
-			boolean updateAttributes, final boolean userFoced) {
-
-		// no info, do update but not forced, if still no data force
-		// if user initiated, force update
-
-		if (updateAttributes) {
-			final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-					repository.getConnectorKind());
-
-			IRunnableWithProgress updateRunnable = new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					if (monitor == null) {
-						monitor = new NullProgressMonitor();
-					}
-					try {
-						monitor.beginTask("Updating search options...", IProgressMonitor.UNKNOWN);
-						if (userFoced) {
-							connector.updateAttributes(repository, monitor);
-						}
-						BugzillaUiPlugin.updateQueryOptions(repository, monitor);
-						String[] productsList = BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_PRODUCT,
-								null, repositoryUrl);
-						if (productsList == null || productsList.length == 0) {
-							connector.updateAttributes(repository, monitor);
-							BugzillaUiPlugin.updateQueryOptions(repository, monitor);
-						}
-					} catch (final Exception e) {
-						throw new InvocationTargetException(e);
-						/*catch (final CoreException ce) {
-							StatusHandler.displayStatus("Update failed", ce.getStatus());
-							if (ce.getCause() != null) {
-								StatusHandler.fail(ce.getCause(), ce.getCause().getMessage(), false);
-							}*/
-					} finally {
-						monitor.done();
-					}
-				}
-			};
-
-			try {
-				// TODO: make cancelable (bug 143011)
-				if (getContainer() != null) {
-					getContainer().run(true, false, updateRunnable);
-				} else {
-					IProgressService service = PlatformUI.getWorkbench().getProgressService();
-					service.busyCursorWhile(updateRunnable);
-				}
-
-			} catch (InvocationTargetException e) {
-				Shell shell = null;
-				if (getWizard() != null && getWizard().getContainer() != null) {
-					shell = getWizard().getContainer().getShell();
-				}
-				if (shell == null && getControl() != null) {
-					shell = getControl().getShell();
-				}
-				if (e.getCause() instanceof CoreException) {
-					CoreException cause = ((CoreException) e.getCause());
-					if (cause.getStatus() instanceof RepositoryStatus
-							&& ((RepositoryStatus) cause.getStatus()).isHtmlMessage()) {
-						// TOOD: use StatusManager
-
-//						this.setControlsEnabled(false);
-//						scontainer.setPerformActionEnabled(false);
-						if (shell != null) {
-							shell.setEnabled(false);
-						}
-						WebBrowserDialog dialog = new WebBrowserDialog(shell, "Error updating search options", null,
-								cause.getStatus().getMessage(), NONE, new String[] { IDialogConstants.OK_LABEL }, 0,
-								((RepositoryStatus) cause.getStatus()).getHtmlMessage());
-						dialog.setBlockOnOpen(true);
-						dialog.open();
-						if (shell != null) {
-							shell.setEnabled(true);
-						}
-						return;
-//						this.setPageComplete(this.isPageComplete());
-//						this.setControlsEnabled(true);
-					} else {
-						StatusHandler.log(new Status(IStatus.ERROR, BugzillaUiPlugin.PLUGIN_ID, cause.getMessage(), cause));
-					}
-				}
-
-				MessageDialog.openError(shell, "Error updating search options", "Error was: "
-						+ e.getCause().getMessage());
-				return;
-
-			} catch (InterruptedException e) {
-				return;
+	private void updateAttributesFromConfiguration(String[] selectedProducts) {
+		if(repositoryConfiguration == null) {
+			updateConfiguration(false);
+		}
+		if (repositoryConfiguration != null) {
+			if (selectedProducts == null) {
+				java.util.List<String> products = repositoryConfiguration.getProducts();
+				String[] productsList = products.toArray(new String[products.size()]);
+				Arrays.sort(productsList, String.CASE_INSENSITIVE_ORDER);
+				product.setItems(productsList);
 			}
-		}
 
-		if (selectedProducts == null) {
-			String[] productsList = BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_PRODUCT, null,
-					repositoryUrl);
-			Arrays.sort(productsList, String.CASE_INSENSITIVE_ORDER);
-			product.setItems(productsList);
-		}
+			String[] componentsList = BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_COMPONENT,
+					selectedProducts, repositoryConfiguration);
+			Arrays.sort(componentsList, String.CASE_INSENSITIVE_ORDER);
+			component.setItems(componentsList);
 
-		String[] componentsList = BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_COMPONENT,
-				selectedProducts, repositoryUrl);
-		Arrays.sort(componentsList, String.CASE_INSENSITIVE_ORDER);
-		component.setItems(componentsList);
+			version.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_VERSION, selectedProducts,
 
-		version.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_VERSION, selectedProducts,
-				repositoryUrl));
+			repositoryConfiguration));
+			
+			target.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_TARGET, selectedProducts,
 
-		target.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_TARGET, selectedProducts,
-				repositoryUrl));
-
-		if (selectedProducts == null) {
-			status.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_STATUS, selectedProducts,
-					repositoryUrl));
-
-			// status.setSelection(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUSE_STATUS_PRESELECTED,
-			// repositoryUrl));
-
-			resolution.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_RESOLUTION,
-					selectedProducts, repositoryUrl));
-
-			severity.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_SEVERITY, selectedProducts,
-					repositoryUrl));
-
-			priority.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_PRIORITY, selectedProducts,
-					repositoryUrl));
-
-			hardware.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_HARDWARE, selectedProducts,
-					repositoryUrl));
-
-			os.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_OS, selectedProducts, repositoryUrl));
+					repositoryConfiguration));
+			
+			status.setItems(convertStringListToArray(repositoryConfiguration.getStatusValues()));
+			resolution.setItems(convertStringListToArray(repositoryConfiguration.getResolutions()));
+			severity.setItems(convertStringListToArray(repositoryConfiguration.getSeverities()));
+			priority.setItems(convertStringListToArray(repositoryConfiguration.getPriorities()));
+			hardware.setItems(convertStringListToArray(repositoryConfiguration.getPlatforms()));
+			os.setItems(convertStringListToArray(repositoryConfiguration.getOSs()));
 		}
 	}
+	
+	
 
 	public TaskRepository getRepository() {
 		return repository;
@@ -1498,7 +1441,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				selList.add(value);
 				sel = new String[selList.size()];
 				product.setSelection(selList.toArray(sel));
-				updateAttributesFromRepository(repository.getUrl(), selList.toArray(sel), false, false);
+				updateAttributesFromConfiguration(selList.toArray(sel));
 			} else if (key.equals("component")) {
 				String[] sel = component.getSelection();
 				java.util.List<String> selList = Arrays.asList(sel);
@@ -1672,7 +1615,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 					emailOperation2.select(index);
 				}
 			} else if (key.equals("email2")) {
-					emailPattern2.setText(value);
+				emailPattern2.setText(value);
 			} else if (key.equals("changedin")) {
 				daysText.setText(value);
 			} else if (key.equals("keywords")) {
@@ -1793,7 +1736,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		for (int i = 0; i < emailButtons2.length; i++) {
 			settings.put(STORE_EMAIL2BUTTON_ID + i + repoId, emailButtons2[i].getSelection());
 		}
-		
+
 		settings.put(STORE_KEYWORDS_ID + repoId, keywords.getText());
 		settings.put(STORE_KEYWORDSMATCH_ID + repoId, keywordsOperation.getSelectionIndex());
 		// settings.put(STORE_REPO_ID, repositoryCombo.getText());
@@ -1810,5 +1753,87 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 	public void setRestoreQueryOptions(boolean restoreQueryOptions) {
 		this.restoreQueryOptions = restoreQueryOptions;
+	}
+
+	private String[] convertStringListToArray(java.util.List<String> stringList) {
+		return stringList.toArray(new String[stringList.size()]);
+	}
+
+	private void updateConfiguration(final boolean force) {
+		if (repository != null) {
+			IRunnableWithProgress updateRunnable = new IRunnableWithProgress() {
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+					if (monitor == null) {
+						monitor = new NullProgressMonitor();
+					}
+					try {
+						monitor.beginTask("Updating search options...", IProgressMonitor.UNKNOWN);
+						repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository, force);
+					} catch (final Exception e) {
+						throw new InvocationTargetException(e);
+					} finally {
+						monitor.done();
+					}
+				}
+			};
+
+			try {
+				// TODO: make cancelable (bug 143011)
+				if (getContainer() != null) {
+					getContainer().run(true, false, updateRunnable);
+				} else if (scontainer != null) {
+					scontainer.getRunnableContext().run(true, false, updateRunnable);
+				} else {
+					IProgressService service = PlatformUI.getWorkbench().getProgressService();
+					service.busyCursorWhile(updateRunnable);
+				}
+			
+
+			} catch (InvocationTargetException ex) {
+				Shell shell = null;
+				if (getWizard() != null && getWizard().getContainer() != null) {
+					shell = getWizard().getContainer().getShell();
+				}
+				if (shell == null && getControl() != null) {
+					shell = getControl().getShell();
+				}
+				if (ex.getCause() instanceof CoreException) {
+					CoreException cause = ((CoreException) ex.getCause());
+					if (cause.getStatus() instanceof RepositoryStatus
+							&& ((RepositoryStatus) cause.getStatus()).isHtmlMessage()) {
+						// TOOD: use StatusManager
+
+//									this.setControlsEnabled(false);
+//									scontainer.setPerformActionEnabled(false);
+						if (shell != null) {
+							shell.setEnabled(false);
+						}
+						WebBrowserDialog dialog = new WebBrowserDialog(shell, "Error updating search options", null,
+								cause.getStatus().getMessage(), NONE, new String[] { IDialogConstants.OK_LABEL }, 0,
+								((RepositoryStatus) cause.getStatus()).getHtmlMessage());
+						dialog.setBlockOnOpen(true);
+						dialog.open();
+						if (shell != null) {
+							shell.setEnabled(true);
+						}
+						return;
+//									this.setPageComplete(this.isPageComplete());
+//									this.setControlsEnabled(true);
+					} else {
+						StatusHandler.log(new Status(IStatus.ERROR, BugzillaUiPlugin.PLUGIN_ID, cause.getMessage(),
+								cause));
+					}
+				}
+
+				MessageDialog.openError(shell, "Error updating search options", "Error was: "
+						+ ex.getCause().getMessage());
+				return;
+
+			} catch (InterruptedException ex) {
+				return;
+			}
+
+			updateAttributesFromConfiguration(null);
+		}
 	}
 }

@@ -142,27 +142,14 @@ public interface IBugzillaConstants {
 	// names for the resources used to hold the different attributes of a bug
 	static final String VALUES_STATUS = "org.eclipse.mylyn.bugzilla.values.status";
 
-	static final String VALUSE_STATUS_PRESELECTED = "org.eclipse.mylyn.bugzilla.values.status.preselected";
-
 	static final String VALUES_RESOLUTION = "org.eclipse.mylyn.bugzilla.values.resolution";
 
-	static final String VALUES_SEVERITY = "org.eclipse.mylyn.bugzilla.values.severity";
-
-	static final String VALUES_PRIORITY = "org.eclipse.mylyn.bugzilla.values.priority";
-
-	static final String VALUES_HARDWARE = "org.eclipse.mylyn.bugzilla.values.hardware";
-
-	static final String VALUES_OS = "org.eclipse.mylyn.bugzilla.values.os";
-
-	static final String VALUES_PRODUCT = "org.eclipse.mylyn.bugzilla.values.product";
 
 	static final String VALUES_COMPONENT = "org.eclipse.mylyn.bugzilla.values.component";
 
 	static final String VALUES_VERSION = "org.eclipse.mylyn.bugzilla.values.version";
 
 	static final String VALUES_TARGET = "org.eclipse.mylyn.bugzilla.values.target";
-
-	static final String VALUES_KEYWORDS = "org.eclipse.mylyn.bugzilla.values.keywords";
 
 	static final String ECLIPSE_BUGZILLA_URL = "https://bugs.eclipse.org/bugs";
 

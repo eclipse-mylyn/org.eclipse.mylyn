@@ -43,6 +43,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -249,12 +250,24 @@ public class BugzillaProductPage extends WizardPage {
 								}
 								return;
 							}
-							BugzillaUiPlugin.updateQueryOptions(repository, monitor);
 
+							RepositoryConfiguration repositoryConfiguration = null;
+							try {
+								repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository, false);
+							} catch (final CoreException e) {
+								PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+									public void run() {
+										MessageDialog.openError(Display.getDefault().getActiveShell(), "Bugzilla Search Page",
+												"Unable to get configuration. Ensure proper repository configuration in "
+														+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".\n\n");
+									}
+								});
+							}
 							products = new ArrayList<String>();
-							for (String product : BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_PRODUCT,
-									null, repository.getUrl())) {
-								products.add(product);
+							if (repositoryConfiguration != null) {
+								for (String product : repositoryConfiguration.getProducts()) {
+									products.add(product);
+								}
 							}
 						}
 					});

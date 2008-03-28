@@ -11,19 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
-import org.eclipse.mylyn.monitor.core.StatusHandler;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -149,151 +142,46 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 		return AbstractUIPlugin.imageDescriptorFromPlugin(PLUGIN_ID, path);
 	}
 
-	public static String[] getQueryOptions(String prefId, String[] selectedProducts, String repositoryUrl) {
-		IPreferenceStore prefs = BugzillaUiPlugin.getDefault().getPreferenceStore();
-		if ((prefId.equals(IBugzillaConstants.VALUES_COMPONENT) || prefId.equals(IBugzillaConstants.VALUES_VERSION) || prefId.equals(IBugzillaConstants.VALUES_TARGET))
-				&& selectedProducts != null) {
-			List<String> options = new ArrayList<String>();
-			for (String product : selectedProducts) {
-				for (String option : convertQueryOptionsToArray(prefs.getString(prefId + PREF_DELIM_REPOSITORY
-						+ repositoryUrl + PREF_DELIM_REPOSITORY + product))) {
-					if (!options.contains(option))
-						options.add(option);
-				}
-			}
-			return options.toArray(new String[options.size()]);
-		} else {
-			return convertQueryOptionsToArray(prefs.getString(prefId + PREF_DELIM_REPOSITORY + repositoryUrl));
-		}
-	}
-
-	private static String queryOptionsToString(List<String> array) {
-
-		StringBuffer buffer = new StringBuffer();
-		for (String string : array) {
-			buffer.append(string);
-			buffer.append("!");
-		}
-
-		return buffer.toString();
-	}
-
-	private static String[] convertQueryOptionsToArray(String values) {
-		// create a new string buffer and array list
-		StringBuffer buffer = new StringBuffer();
+	public static String[] getQueryOptions(String prefId, String[] selectedProducts, RepositoryConfiguration repositoryConfiguration) {
 		List<String> options = new ArrayList<String>();
-
-		char[] chars = values.toCharArray();
-		for (int i = 0; i < chars.length; i++) {
-			if (chars[i] == '!') {
-				options.add(buffer.toString());
-				buffer = new StringBuffer();
-			} else {
-				buffer.append(chars[i]);
+		if ((prefId.equals(IBugzillaConstants.VALUES_COMPONENT) || prefId.equals(IBugzillaConstants.VALUES_VERSION) || prefId.equals(IBugzillaConstants.VALUES_TARGET))
+		&& selectedProducts != null) {
+				for (String product : selectedProducts) {
+					if (prefId.equals(IBugzillaConstants.VALUES_COMPONENT)) {
+						for (String option : repositoryConfiguration.getComponents(product)) {
+							if (!options.contains(option))
+							options.add(option);						
+						}
+					}	
+					if (prefId.equals(IBugzillaConstants.VALUES_VERSION)) {
+						for (String option : repositoryConfiguration.getVersions(product)) {
+							if (!options.contains(option))
+							options.add(option);						
+						}
+					}
+					if (prefId.equals(IBugzillaConstants.VALUES_TARGET)) {
+						for (String option : repositoryConfiguration.getTargetMilestones(product)) {
+							if (!options.contains(option))
+							options.add(option);						
+						}
+					}
+				}
+		} else {
+			if (prefId.equals(IBugzillaConstants.VALUES_COMPONENT)) {
+				options = repositoryConfiguration.getComponents();
+			}
+			if (prefId.equals(IBugzillaConstants.VALUES_VERSION)) {
+				options = repositoryConfiguration.getVersions();
+			}
+			if (prefId.equals(IBugzillaConstants.VALUES_TARGET)) {
+				options = repositoryConfiguration.getTargetMilestones();
 			}
 		}
-
-		// create a new string array with the same size as the array list
-		String[] array = new String[options.size()];
-
-		// put each element from the list into the array
-		for (int j = 0; j < options.size(); j++)
-			array[j] = options.get(j);
-		return array;
+		return options.toArray(new String[options.size()]);
 	}
 
 	public static String getMostRecentQuery() {
 		return plugin.getPreferenceStore().getString(IBugzillaConstants.MOST_RECENT_QUERY);
-	}
-
-	/**
-	 * Update all of the query options for the bugzilla search page TODO: unify update of search options with update of
-	 * bug attributes (BugzillaServerFacade.updateBugAttributeOptions)
-	 */
-	public static void updateQueryOptions(TaskRepository repository, IProgressMonitor monitor) {
-
-		String repositoryUrl = repository.getUrl();
-
-		if (monitor.isCanceled())
-			throw new OperationCanceledException();
-
-		// TODO: pass monitor along since it is this call that does the work and
-		// can hang due to network IO
-		RepositoryConfiguration config = null;
-		try {
-			config = BugzillaCorePlugin.getRepositoryConfiguration(repository, false);
-		} catch (Exception e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, BugzillaUiPlugin.PLUGIN_ID, "Could not retrieve repository configuration for: " + repository, e));
-			return;
-		}
-
-		if (monitor.isCanceled())
-			throw new OperationCanceledException();
-
-		// get the preferences store so that we can change the data in it
-		IPreferenceStore prefs = BugzillaUiPlugin.getDefault().getPreferenceStore();
-
-		prefs.setValue(IBugzillaConstants.VALUES_STATUS + PREF_DELIM_REPOSITORY + repositoryUrl,
-				queryOptionsToString(config.getStatusValues()));
-		monitor.worked(1);
-
-		prefs.setValue(IBugzillaConstants.VALUSE_STATUS_PRESELECTED + PREF_DELIM_REPOSITORY + repositoryUrl,
-				queryOptionsToString(config.getOpenStatusValues()));
-		monitor.worked(1);
-
-		prefs.setValue(IBugzillaConstants.VALUES_RESOLUTION + PREF_DELIM_REPOSITORY + repositoryUrl,
-				queryOptionsToString(config.getResolutions()));
-		monitor.worked(1);
-
-		prefs.setValue(IBugzillaConstants.VALUES_SEVERITY + PREF_DELIM_REPOSITORY + repositoryUrl,
-				queryOptionsToString(config.getSeverities()));
-		monitor.worked(1);
-
-		prefs.setValue(IBugzillaConstants.VALUES_PRIORITY + PREF_DELIM_REPOSITORY + repositoryUrl,
-				queryOptionsToString(config.getPriorities()));
-		monitor.worked(1);
-
-		prefs.setValue(IBugzillaConstants.VALUES_HARDWARE + PREF_DELIM_REPOSITORY + repositoryUrl,
-				queryOptionsToString(config.getPlatforms()));
-		monitor.worked(1);
-
-		prefs.setValue(IBugzillaConstants.VALUES_OS + PREF_DELIM_REPOSITORY + repositoryUrl,
-				queryOptionsToString(config.getOSs()));
-		monitor.worked(1);
-
-		prefs.setValue(IBugzillaConstants.VALUES_PRODUCT + PREF_DELIM_REPOSITORY + repositoryUrl,
-				queryOptionsToString(config.getProducts()));
-		monitor.worked(1);
-
-		prefs.setValue(IBugzillaConstants.VALUES_COMPONENT + PREF_DELIM_REPOSITORY + repositoryUrl,
-				queryOptionsToString(config.getComponents()));
-		monitor.worked(1);
-
-		prefs.setValue(IBugzillaConstants.VALUES_VERSION + PREF_DELIM_REPOSITORY + repositoryUrl,
-				queryOptionsToString(config.getVersions()));
-		monitor.worked(1);
-
-		prefs.setValue(IBugzillaConstants.VALUES_TARGET + PREF_DELIM_REPOSITORY + repositoryUrl,
-				queryOptionsToString(config.getTargetMilestones()));
-		monitor.worked(1);
-
-		prefs.setValue(IBugzillaConstants.VALUES_KEYWORDS + PREF_DELIM_REPOSITORY + repositoryUrl,
-				queryOptionsToString(config.getKeywords()));
-		monitor.worked(1);
-
-		for (String product : config.getProducts()) {
-			prefs.setValue(IBugzillaConstants.VALUES_COMPONENT + PREF_DELIM_REPOSITORY + repositoryUrl
-					+ PREF_DELIM_REPOSITORY + product, queryOptionsToString(config.getComponents(product)));
-			monitor.worked(1);
-
-			prefs.setValue(IBugzillaConstants.VALUES_VERSION + PREF_DELIM_REPOSITORY + repositoryUrl
-					+ PREF_DELIM_REPOSITORY + product, queryOptionsToString(config.getVersions(product)));
-			monitor.worked(1);
-
-			prefs.setValue(IBugzillaConstants.VALUES_TARGET + PREF_DELIM_REPOSITORY + repositoryUrl
-					+ PREF_DELIM_REPOSITORY + product, queryOptionsToString(config.getTargetMilestones(product)));
-			monitor.worked(1);
-		}
 	}
 
 	/**
