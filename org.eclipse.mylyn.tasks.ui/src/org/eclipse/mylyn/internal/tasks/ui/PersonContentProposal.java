@@ -8,6 +8,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.swt.graphics.Image;
 
@@ -20,9 +21,21 @@ public class PersonContentProposal implements IContentProposal, Comparable<Perso
 
 	private boolean isCurrentUser = false;
 
-	public PersonContentProposal(String address, boolean isCurrentUser) {
+	private final String replacementText;
+
+	private final int cursorPosition;
+
+	public PersonContentProposal(String address, boolean isCurrentUser, String replacementText, int cursorPosition) {
+		Assert.isNotNull(address);
+		Assert.isNotNull(replacementText);
 		this.address = address;
 		this.isCurrentUser = isCurrentUser;
+		this.replacementText = replacementText;
+		this.cursorPosition = cursorPosition;
+	}
+
+	public PersonContentProposal(String address, boolean isCurrentUser) {
+		this(address, isCurrentUser, address, address.length());
 	}
 
 	public String getLabel() {
@@ -34,11 +47,11 @@ public class PersonContentProposal implements IContentProposal, Comparable<Perso
 	}
 
 	public int getCursorPosition() {
-		return address.length();
+		return cursorPosition;
 	}
 
 	public String getContent() {
-		return address;
+		return replacementText;
 	}
 
 	public Image getImage() {

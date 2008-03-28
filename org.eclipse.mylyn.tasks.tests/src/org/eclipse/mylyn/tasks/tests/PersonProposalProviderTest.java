@@ -14,6 +14,10 @@ import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalProvider;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryTask;
 
+/**
+ * @author Frank Becker
+ * @author Steffen Pingel
+ */
 public class PersonProposalProviderTest extends TestCase {
 
 	public void testGetProposalsNullParameters() {
@@ -49,6 +53,89 @@ public class PersonProposalProviderTest extends TestCase {
 		assertNotNull(result);
 		assertEquals(1, result.length);
 		assertEquals("foo", result[0].getContent());
+	}
+
+	public void testGetProposalsMultipleAddresses() {
+		IContentProposal[] result;
+
+		MockRepositoryTask task = new MockRepositoryTask(null, "1", null);
+		task.setOwner("foo");
+		PersonProposalProvider provider = new PersonProposalProvider(task, null);
+
+		result = provider.getProposals("f,xx", 1);
+		assertNotNull(result);
+		assertEquals(1, result.length);
+		assertEquals("foo,xx", result[0].getContent());
+		assertEquals("foo", result[0].getLabel());
+		assertEquals(3, result[0].getCursorPosition());
+
+		result = provider.getProposals("f xx", 1);
+		assertNotNull(result);
+		assertEquals(1, result.length);
+		assertEquals("foo xx", result[0].getContent());
+		assertEquals("foo", result[0].getLabel());
+		assertEquals(3, result[0].getCursorPosition());
+
+		result = provider.getProposals("a,xx", 1);
+		assertNotNull(result);
+		assertEquals(0, result.length);
+
+		result = provider.getProposals("xx,f", 4);
+		assertNotNull(result);
+		assertEquals(1, result.length);
+		assertEquals("xx,foo", result[0].getContent());
+		assertEquals("foo", result[0].getLabel());
+		assertEquals(6, result[0].getCursorPosition());
+
+		result = provider.getProposals("xx f", 4);
+		assertNotNull(result);
+		assertEquals(1, result.length);
+		assertEquals("xx foo", result[0].getContent());
+		assertEquals("foo", result[0].getLabel());
+		assertEquals(6, result[0].getCursorPosition());
+
+		result = provider.getProposals("xx,a", 4);
+		assertNotNull(result);
+		assertEquals(0, result.length);
+
+		result = provider.getProposals("xyz,f,yy", 4);
+		assertNotNull(result);
+		assertEquals(1, result.length);
+		assertEquals("xyz,foo,yy", result[0].getContent());
+		assertEquals("foo", result[0].getLabel());
+		assertEquals(7, result[0].getCursorPosition());
+
+		result = provider.getProposals("xx f yy", 4);
+		assertNotNull(result);
+		assertEquals(1, result.length);
+		assertEquals("xx foo yy", result[0].getContent());
+		assertEquals("foo", result[0].getLabel());
+		assertEquals(6, result[0].getCursorPosition());
+
+		result = provider.getProposals("xx,a,yy", 4);
+		assertNotNull(result);
+		assertEquals(0, result.length);
+
+		result = provider.getProposals("xx,,yy", 3);
+		assertNotNull(result);
+		assertEquals(1, result.length);
+		assertEquals("xx,foo,yy", result[0].getContent());
+		assertEquals("foo", result[0].getLabel());
+		assertEquals(6, result[0].getCursorPosition());
+
+		result = provider.getProposals("x yy", 2);
+		assertNotNull(result);
+		assertEquals(1, result.length);
+		assertEquals("x foo", result[0].getContent());
+		assertEquals("foo", result[0].getLabel());
+		assertEquals(5, result[0].getCursorPosition());
+
+		result = provider.getProposals(", ", 1);
+		assertNotNull(result);
+		assertEquals(1, result.length);
+		assertEquals("x,foo ", result[0].getContent());
+		assertEquals("foo", result[0].getLabel());
+		assertEquals(5, result[0].getCursorPosition());
 	}
 
 }

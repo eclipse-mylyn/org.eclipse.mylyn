@@ -28,6 +28,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 /**
  * @author Shawn Minto
  * @author Eugene Kuleshov
+ * @author Steffen Pingel
  */
 public class PersonProposalProvider implements IContentProposalProvider {
 
@@ -49,23 +50,52 @@ public class PersonProposalProvider implements IContentProposalProvider {
 			throw new IllegalArgumentException();
 		}
 
+		int leftSeparator = getIndexOfLeftSeparator(contents, position);
+		int rightSeparator = getIndexOfRightSeparator(contents, position);
+
+		assert leftSeparator <= position;
+		assert position <= rightSeparator;
+
+		String searchText = contents.substring(leftSeparator + 1, position);
+		String resultPrefix = contents.substring(0, leftSeparator + 1);
+		String resultPostfix = contents.substring(rightSeparator);
+
+		// retrieve subset of the tree set using key range
 		SortedSet<String> addressSet = getAddressSet();
-		if (position > 0) {
-			// retrieve subset of the tree set using key range
-			char[] chars = contents.toLowerCase().toCharArray();
-			String contents1 = new String(chars, 0, position);
-			chars[position - 1]++;
-			String contents2 = new String(chars, 0, position);
-			addressSet = addressSet.subSet(contents1, contents2);
+		if (!searchText.equals("")) {
+			searchText = searchText.toLowerCase();
+			char[] nextWord = searchText.toCharArray();
+			nextWord[searchText.length() - 1]++;
+			addressSet = addressSet.subSet(searchText, new String(nextWord));
 		}
 
 		IContentProposal[] result = new IContentProposal[addressSet.size()];
 		int i = 0;
 		for (final String address : addressSet) {
-			result[i++] = new PersonContentProposal(address, address.equalsIgnoreCase(currentUser));
+			result[i++] = new PersonContentProposal(address, address.equalsIgnoreCase(currentUser), resultPrefix
+					+ address + resultPostfix, resultPrefix.length() + address.length());
 		}
 		Arrays.sort(result);
 		return result;
+	}
+
+	private int getIndexOfLeftSeparator(String contents, int position) {
+		int i = contents.lastIndexOf(' ', position - 1);
+		i = Math.max(contents.lastIndexOf(',', position - 1), i);
+		return i;
+	}
+
+	private int getIndexOfRightSeparator(String contents, int position) {
+		int index = contents.length();
+		int i = contents.indexOf(' ', position);
+		if (i != -1) {
+			index = Math.min(i, index);
+		}
+		i = contents.indexOf(',', position);
+		if (i != -1) {
+			index = Math.min(i, index);
+		}
+		return index;
 	}
 
 	private SortedSet<String> getAddressSet() {
