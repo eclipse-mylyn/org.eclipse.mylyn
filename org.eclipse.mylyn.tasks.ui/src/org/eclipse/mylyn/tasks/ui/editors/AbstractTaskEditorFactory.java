@@ -18,6 +18,7 @@ import org.eclipse.ui.IEditorPart;
  * @author Mik Kersten
  * @since 2.0
  */
+// API 3.0 deprecate
 public abstract class AbstractTaskEditorFactory {
 
 	public abstract IEditorPart createEditor(TaskEditor parentEditor, IEditorInput editorInput);

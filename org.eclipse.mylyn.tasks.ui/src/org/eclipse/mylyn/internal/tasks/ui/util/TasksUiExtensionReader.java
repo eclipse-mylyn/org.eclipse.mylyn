@@ -33,6 +33,7 @@ import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.AbstractTaskRepositoryLinkProvider;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorFactory;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
@@ -108,6 +109,8 @@ public class TasksUiExtensionReader {
 
 	public static final String ELMNT_EDITOR_FACTORY = "editorFactory";
 
+	public static final String ELMNT_TASK_EDITOR_PAGE_FACTORY = "pageFactory";
+
 	public static final String ELMNT_HYPERLINK_LISTENER = "hyperlinkListener";
 
 	public static final String ELMNT_HYPERLINK_DETECTOR = "hyperlinkDetector";
@@ -180,6 +183,8 @@ public class TasksUiExtensionReader {
 				for (IConfigurationElement element : elements) {
 					if (element.getName().equals(ELMNT_EDITOR_FACTORY)) {
 						readEditorFactory(element);
+					} else if (element.getName().equals(ELMNT_TASK_EDITOR_PAGE_FACTORY)) {
+						readTaskEditorPageFactory(element);
 					}
 				}
 			}
@@ -330,6 +335,30 @@ public class TasksUiExtensionReader {
 			}
 		} catch (CoreException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load editor", e));
+		}
+	}
+
+	private static void readTaskEditorPageFactory(IConfigurationElement element) {
+		String id = element.getAttribute(ATTR_ID);
+		if (id == null) {
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Editor page factory must specify id"));
+			return;
+		}
+
+		try {
+			Object item = element.createExecutableExtension(ATTR_CLASS);
+			if (item instanceof AbstractTaskEditorPageFactory) {
+				AbstractTaskEditorPageFactory editorPageFactory = (AbstractTaskEditorPageFactory) item;
+				editorPageFactory.setId(id);
+				TasksUiPlugin.getDefault().addTaskEditorPageFactory(editorPageFactory);
+			} else {
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						"Could not load editor page factory " + item.getClass().getCanonicalName() + " must implement "
+								+ AbstractTaskEditorPageFactory.class.getCanonicalName()));
+			}
+		} catch (CoreException e) {
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load page editor factory",
+					e));
 		}
 	}
 

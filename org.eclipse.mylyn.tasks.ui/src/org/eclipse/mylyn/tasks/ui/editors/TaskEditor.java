@@ -9,9 +9,13 @@
 package org.eclipse.mylyn.tasks.ui.editors;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -29,7 +33,6 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorBusyIndicator;
 import org.eclipse.mylyn.internal.tasks.ui.editors.IBusyEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionContributor;
-import org.eclipse.mylyn.internal.tasks.ui.editors.TaskPlanningEditor;
 import org.eclipse.mylyn.internal.tasks.ui.util.SelectionProviderAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDragSourceListener;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
@@ -66,8 +69,6 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 
 	protected AbstractTask task;
 
-	private final TaskPlanningEditor taskPlanningEditor;
-
 	private TaskEditorInput taskEditorInput;
 
 	private final List<IEditorPart> editors = new ArrayList<IEditorPart>();
@@ -85,9 +86,6 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 	private TaskDragSourceListener titleDragSourceListener;
 
 	public TaskEditor() {
-		super();
-		taskPlanningEditor = new TaskPlanningEditor(this);
-		taskPlanningEditor.setParentEditor(this);
 	}
 
 	protected void contextMenuAboutToShow(IMenuManager manager) {
@@ -147,11 +145,6 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 	}
 
 	@Override
-	public IEditorPart getActiveEditor() {
-		return super.getActiveEditor();
-	}
-
-	@Override
 	public void doSave(IProgressMonitor monitor) {
 		for (IFormPage page : getPages()) {
 			if (page.isDirty()) {
@@ -164,7 +157,6 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 
 	@SuppressWarnings("unchecked")
 	IFormPage[] getPages() {
-
 		ArrayList formPages = new ArrayList();
 		if (pages != null) {
 			for (int i = 0; i < pages.size(); i++) {
@@ -189,26 +181,27 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 		}
 	}
 
-	/**
-	 * Saves the multi-page editor's document as another file. Also updates the text for page 0's tab, and updates this
-	 * multi-page editor's input to correspond to the nested editor's.
-	 * 
-	 * @see org.eclipse.ui.ISaveablePart#doSaveAs()
-	 */
 	@Override
 	public void doSaveAs() {
-		IEditorPart editor = getEditor(0);
-		if (editor != null) {
-			editor.doSaveAs();
-			setPageText(0, editor.getTitle());
-			setInput(editor.getEditorInput());
-		}
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
+		// API REVIEW remove the commented parts
+		//		if (!(input instanceof TaskEditorInput)) {
+//			throw new PartInitException("Invalid editor input \"" + input.getClass() + "\"");
+//		}
+
 		super.init(site, input);
-		setSite(site);
+
+		// API REVIEW remove the instanceof check
+		if (input instanceof TaskEditorInput) {
+			this.taskEditorInput = (TaskEditorInput) input;
+			this.task = taskEditorInput.getTask();
+		}
+
+		setPartName(input.getName());
 	}
 
 	@Override
@@ -226,18 +219,12 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 		return false;
 	}
 
-	/**
-	 * Updates the tab title
-	 */
-	public void changeTitle() {
-		this.setPartName(taskEditorInput.getLabel());
-	}
-
+	@Deprecated
 	public void markDirty() {
 		firePropertyChange(PROP_DIRTY);
-		return;
 	}
 
+	// API 3.0 is this method needed?
 	public void setFocusOfActivePage() {
 		if (this.getActivePage() > -1) {
 			IFormPage page = this.getPages()[this.getActivePage()];
@@ -248,11 +235,6 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 	}
 
 	@Override
-	protected void pageChange(int newPageIndex) {
-		super.pageChange(newPageIndex);
-	}
-
-	@Override
 	public void dispose() {
 		if (editorBusyIndicator != null) {
 			editorBusyIndicator.stop();
@@ -260,9 +242,6 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 
 		for (IEditorPart part : editors) {
 			part.dispose();
-		}
-		if (taskPlanningEditor != null) {
-			taskPlanningEditor.dispose();
 		}
 
 		super.dispose();
@@ -276,97 +255,127 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 	protected void addPages() {
 		editorBusyIndicator = new EditorBusyIndicator(this);
 
-		try {
-			menuManager = new MenuManager();
-			configureContextMenuManager(menuManager);
-			getContainer().setMenu(menuManager.createContextMenu(getContainer()));
-			int index = -1;
-			if (getEditorInput() instanceof TaskEditorInput) {
-				addPage(taskPlanningEditor);
-				index++;
-				taskEditorInput = (TaskEditorInput) getEditorInput();
-				task = taskEditorInput.getTask();
-				setPartName(taskEditorInput.getLabel());
-				setPageImage(0, TasksUiImages.getImage(TasksUiImages.CALENDAR_SMALL));
-			}
+		menuManager = new MenuManager();
+		configureContextMenuManager(menuManager);
+		getContainer().setMenu(menuManager.createContextMenu(getContainer()));
 
-			int selectedIndex = index;
-
-			List<AbstractTaskEditorFactory> factories = new ArrayList<AbstractTaskEditorFactory>(
-					TasksUiPlugin.getDefault().getTaskEditorFactories());
-			Collections.sort(factories, new Comparator<AbstractTaskEditorFactory>() {
-
-				public int compare(AbstractTaskEditorFactory o1, AbstractTaskEditorFactory o2) {
-					return o1.getTabOrderPriority() - o2.getTabOrderPriority();
-				}
-			});
-			for (AbstractTaskEditorFactory factory : TasksUiPlugin.getDefault().getTaskEditorFactories()) {
-				if (factory.canCreateEditorFor(task) || factory.canCreateEditorFor(getEditorInput())) {
-					try {
-						IEditorPart editor = factory.createEditor(this, getEditorInput());
-						IEditorInput input = task != null ? factory.createEditorInput(task) : getEditorInput();
-						if (editor != null && input != null) {
-							FormPage taskEditor = (FormPage) editor;
-							editor.init(getEditorSite(), input);
-							index = addPage(taskEditor);
-							if (input.getImageDescriptor() != null) {
-								setPageImage(index, TasksUiImages.getImage(input.getImageDescriptor()));
-							}
-							if (editor instanceof AbstractRepositoryTaskEditor) {
-								((AbstractRepositoryTaskEditor) editor).setParentEditor(this);
-
-								if (getEditorInput() instanceof RepositoryTaskEditorInput) {
-									RepositoryTaskEditorInput existingInput = (RepositoryTaskEditorInput) getEditorInput();
-									setPartName(existingInput.getName());
-								} else if (getEditorInput() instanceof NewTaskEditorInput) {
-									String label = ((NewTaskEditorInput) getEditorInput()).getName();
-									setPartName(label);
-								}
-								setPageText(index, factory.getTitle());
-								selectedIndex = index;
-							}
-						}
-
-						// HACK: overwrites if multiple present
-						if (factory.providesOutline()) {
-							contentOutlineProvider = editor;
-						}
-					} catch (Exception e) {
-						StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-								"Could not create editor via factory: " + factory, e));
+		// API REVIEW remove check
+		if (taskEditorInput != null) {
+			// determine factories
+			Set<String> conflictingIds = new HashSet<String>();
+			ArrayList<AbstractTaskEditorPageFactory> pageFactories = new ArrayList<AbstractTaskEditorPageFactory>();
+			for (AbstractTaskEditorPageFactory pageFactory : TasksUiPlugin.getDefault().getTaskEditorPageFactories()) {
+				if (pageFactory.canCreatePageFor(getTaskEditorInput())) {
+					pageFactories.add(pageFactory);
+					String[] ids = pageFactory.getConflictingIds(getTaskEditorInput());
+					if (ids != null) {
+						conflictingIds.addAll(Arrays.asList(ids));
 					}
 				}
 			}
-//			String urlToOpen = getUrl();
-//			if (urlToOpen != null && !urlToOpen.equals("")) {
-//				browserPageIndex = createBrowserPage(urlToOpen);
-//				setPageImage(browserPageIndex, TasksUiImages.getImage(TasksUiImages.BROWSER_SMALL));
-//				if (selectedIndex == 0 && taskEditorInput != null && !taskEditorInput.isNewTask()) {
-//					selectedIndex = browserPageIndex;
-//				}
-//			}
-
-			if (selectedIndex != -1) {
-				setActivePage(selectedIndex);
+			for (Iterator<AbstractTaskEditorPageFactory> it = pageFactories.iterator(); it.hasNext();) {
+				if (conflictingIds.contains(it.next().getId())) {
+					it.remove();
+				}
 			}
 
-			if (task != null) {
-				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(task.getConnectorKind());
-				if (connectorUi != null) {
-					ImageDescriptor overlayDescriptor = connectorUi.getTaskKindOverlay(task);
-					setTitleImage(TasksUiImages.getCompositeTaskImage(TasksUiImages.TASK, overlayDescriptor, false));
-				} else {
-					setTitleImage(TasksUiImages.getImage(TasksUiImages.TASK));
+			// sort by priority
+			Collections.sort(pageFactories, new Comparator<AbstractTaskEditorPageFactory>() {
+				public int compare(AbstractTaskEditorPageFactory o1, AbstractTaskEditorPageFactory o2) {
+					return o1.getPriority() - o2.getPriority();
 				}
-			} else if (getEditorInput() instanceof AbstractRepositoryTaskEditorInput) {
-				this.setTitleImage(TasksUiImages.getImage(TasksUiImages.TASK_REMOTE));
+			});
+
+			// createPages
+			for (AbstractTaskEditorPageFactory factory : pageFactories) {
+				try {
+					FormPage page = factory.createPage(this);
+					int index = addPage(page);
+					setPageImage(index, factory.getPageImage());
+					setPageText(index, factory.getPageText());
+				} catch (Exception e) {
+					StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+							"Could not create editor via factory: " + factory, e));
+				}
+			}
+		}
+
+		// API REVIEW remove code
+		List<AbstractTaskEditorFactory> factories = new ArrayList<AbstractTaskEditorFactory>(TasksUiPlugin.getDefault()
+				.getTaskEditorFactories());
+		Collections.sort(factories, new Comparator<AbstractTaskEditorFactory>() {
+			public int compare(AbstractTaskEditorFactory o1, AbstractTaskEditorFactory o2) {
+				return o1.getTabOrderPriority() - o2.getTabOrderPriority();
+			}
+		});
+		for (AbstractTaskEditorFactory factory : factories) {
+			addPage(factory);
+		}
+
+		updateTitleImage();
+	}
+
+	private void addPage(AbstractTaskEditorFactory factory) {
+		IEditorInput editorInput;
+		if (taskEditorInput != null && taskEditorInput.getTask() == null) {
+			editorInput = new RepositoryTaskEditorInput(taskEditorInput.getTaskRepository(),
+					taskEditorInput.getTaskData().getId(), "");
+		} else {
+			editorInput = getEditorInput();
+		}
+		if (factory.canCreateEditorFor(task) || factory.canCreateEditorFor(editorInput)) {
+			try {
+				IEditorPart editor = factory.createEditor(this, editorInput);
+				IEditorInput input = task != null ? factory.createEditorInput(task) : editorInput;
+				if (editor != null && input != null) {
+					FormPage taskEditor = (FormPage) editor;
+					editor.init(getEditorSite(), input);
+					int index = addPage(taskEditor);
+					if (input.getImageDescriptor() != null) {
+						setPageImage(index, TasksUiImages.getImage(input.getImageDescriptor()));
+					}
+					if (editor instanceof AbstractRepositoryTaskEditor) {
+						((AbstractRepositoryTaskEditor) editor).setParentEditor(this);
+
+						if (editorInput instanceof RepositoryTaskEditorInput) {
+							RepositoryTaskEditorInput existingInput = (RepositoryTaskEditorInput) editorInput;
+							setPartName(existingInput.getName());
+						} else if (editorInput instanceof NewTaskEditorInput) {
+							String label = ((NewTaskEditorInput) editorInput).getName();
+							setPartName(label);
+						}
+						setPageText(index, factory.getTitle());
+
+						// TODO review
+						setActivePage(index);
+					}
+				}
+
+				// HACK: overwrites if multiple present
+				if (factory.providesOutline()) {
+					contentOutlineProvider = editor;
+				}
+			} catch (Exception e) {
+				StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						"Could not create editor via factory: " + factory, e));
+			}
+		}
+
+	}
+
+	private void updateTitleImage() {
+		if (task != null) {
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(task.getConnectorKind());
+			if (connectorUi != null) {
+				ImageDescriptor overlayDescriptor = connectorUi.getTaskKindOverlay(task);
+				setTitleImage(TasksUiImages.getCompositeTaskImage(TasksUiImages.TASK, overlayDescriptor, false));
 			} else {
 				setTitleImage(TasksUiImages.getImage(TasksUiImages.TASK));
 			}
-
-		} catch (PartInitException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to create task editor pages",
-					e));
+		} else if (getEditorInput() instanceof AbstractRepositoryTaskEditorInput) {
+			this.setTitleImage(TasksUiImages.getImage(TasksUiImages.TASK_REMOTE));
+		} else {
+			setTitleImage(TasksUiImages.getImage(TasksUiImages.TASK));
 		}
 	}
 
@@ -382,6 +391,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 	/**
 	 * Update the title of the editor
 	 */
+	// API 3.0 rename to setTitle()
 	public void updateTitle(String name) {
 		// setContentDescription(name);
 		setPartName(name);
@@ -422,7 +432,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 		updateFormTitle();
 	}
 
-	private void installTitleDrag(Form form, final AbstractTask task, final RepositoryTaskData taskData) {
+	private void installTitleDrag(Form form, final RepositoryTaskData taskData) {
 		if (taskData != null && taskData.isNew()) {
 			return;
 		}
@@ -451,19 +461,16 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 	}
 
 	protected void updateFormTitle() {
-		AbstractTask task = null;
 		RepositoryTaskData taskData = null;
 		IEditorInput input = getEditorInput();
 		if (input instanceof TaskEditorInput) {
-			task = ((TaskEditorInput) input).getTask();
 			if (task instanceof LocalTask) {
 				getHeaderForm().getForm().setText("Task: " + task.getSummary());
-			} else {
+			} else if (task != null) {
 				setFormHeaderImage(task.getConnectorKind());
 				setFormHeaderLabel(task);
 			}
 		} else if (input instanceof RepositoryTaskEditorInput) {
-			task = ((RepositoryTaskEditorInput) input).getRepositoryTask();
 			taskData = ((RepositoryTaskEditorInput) input).getTaskData();
 			if (task != null && taskData != null && !taskData.isNew()) {
 				setFormHeaderImage(task.getConnectorKind());
@@ -475,7 +482,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 				}
 			}
 		}
-		installTitleDrag(getHeaderForm().getForm().getForm(), task, taskData);
+		installTitleDrag(getHeaderForm().getForm().getForm(), taskData);
 	}
 
 	private void setFormHeaderImage(String repositoryKind) {

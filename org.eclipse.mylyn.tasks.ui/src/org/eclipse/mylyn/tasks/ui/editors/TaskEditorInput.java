@@ -10,22 +10,25 @@
  */
 package org.eclipse.mylyn.tasks.ui.editors;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorInputFactory;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPersistableElement;
 
 /**
- * Input for task editors that can have nested pages.
- * 
- * NOTE: likely to change for 3.0
+ * Input for task editors.
  * 
  * @author Eric Booth
  * @author Rob Elves
  * @author Mik Kersten
- * @since 1.0
+ * @author Steffen Pingel
+ * @since 2.0
  */
 public class TaskEditorInput implements IEditorInput, IPersistableElement {
 
@@ -33,110 +36,29 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 
 	private final AbstractTask task;
 
-	private String summary;
+	private final String taskId;
 
-	private boolean newTask = false;
+	private final TaskRepository taskRepository;
 
+	@Deprecated
 	public TaskEditorInput(AbstractTask task, boolean newTask) {
-		this.newTask = newTask;
+		this(TasksUiPlugin.getRepositoryManager().getRepository(task.getConnectorKind(), task.getRepositoryUrl()), task);
+	}
+
+	public TaskEditorInput(TaskRepository taskRepository, AbstractTask task) {
+		Assert.isNotNull(taskRepository);
+		Assert.isNotNull(task);
+		this.taskRepository = taskRepository;
 		this.task = task;
-		summary = truncateDescription(task.getSummary());
+		this.taskId = task.getTaskId();
 	}
 
-	private String truncateDescription(String description) {
-		if (description == null || description.length() <= MAX_LABEL_LENGTH) {
-			return description;
-		} else {
-			return description.substring(0, MAX_LABEL_LENGTH) + "...";
-		}
-	}
-
-	public boolean exists() {
-		return true;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.IEditorInput#getImageDescriptor()
-	 */
-	public ImageDescriptor getImageDescriptor() {
-		return null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.IEditorInput#getName()
-	 */
-	public String getName() {
-		return this.getLabel();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.IEditorInput#getPersistable()
-	 */
-	public IPersistableElement getPersistable() {
-		return this;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.IEditorInput#getToolTipText()
-	 */
-	public String getToolTipText() {
-		return summary;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-	 */
-	@SuppressWarnings("unchecked")
-	public Object getAdapter(Class adapter) {
-		if (adapter == IEditorInput.class) {
-			return this;
-		}
-		return null;
-	}
-
-	/**
-	 * @return Returns the task.
-	 */
-	public AbstractTask getTask() {
-		return task;
-	}
-
-	/**
-	 * @return Returns the label.
-	 */
-	public String getLabel() {
-		if (task != null) {
-			AbstractTask repositoryTask = task;
-			String idLabel = repositoryTask.getTaskKey();
-
-			summary = "";
-			if (idLabel != null) {
-				summary += idLabel + ": ";
-			}
-			summary += truncateDescription(task.getSummary());
-		} else if (task != null) {
-			summary = truncateDescription(task.getSummary());
-		}
-		return summary;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		//result = prime * result + (newTask ? 1231 : 1237);
-		result = prime * result + ((task == null) ? 0 : task.hashCode());
-		return result;
+	public TaskEditorInput(TaskRepository taskRepository, String taskId) {
+		Assert.isNotNull(taskRepository);
+		Assert.isNotNull(taskId);
+		this.taskRepository = taskRepository;
+		this.taskId = taskId;
+		this.task = null;
 	}
 
 	@Override
@@ -151,27 +73,106 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 			return false;
 		}
 		final TaskEditorInput other = (TaskEditorInput) obj;
-		//if (newTask != other.newTask)
-		//	return false;
-		if (task == null) {
-			if (other.task != null) {
-				return false;
-			}
-		} else if (!task.equals(other.task)) {
-			return false;
+		if (task != null) {
+			return task.equals(other.task);
+		} else {
+			return taskRepository.equals(other.taskRepository) && taskId.equals(other.taskId);
 		}
-		return true;
 	}
 
-	public boolean isNewTask() {
-		return newTask;
+	public boolean exists() {
+		return task != null;
+	}
+
+	@SuppressWarnings("unchecked")
+	public Object getAdapter(Class adapter) {
+		if (adapter == IEditorInput.class) {
+			return this;
+		}
+		return null;
 	}
 
 	public String getFactoryId() {
 		return TaskEditorInputFactory.ID_FACTORY;
 	}
 
+	public ImageDescriptor getImageDescriptor() {
+		return null;
+	}
+
+	/**
+	 * @deprecated use {@link #getName()}
+	 */
+	@Deprecated
+	public String getLabel() {
+		return getName();
+	}
+
+	public String getName() {
+		String toolTipText = getToolTipText();
+		if (toolTipText == null) {
+			return null;
+		}
+
+		if (task != null) {
+			String taskKey = task.getTaskKey();
+			if (taskKey != null) {
+				return truncate(taskKey + ": " + toolTipText);
+			}
+		}
+		return truncate(toolTipText);
+	}
+
+	public IPersistableElement getPersistable() {
+		return this;
+	}
+
+	/**
+	 * Returns the task if the task is in the task list; returns <code>null</code> otherwise.
+	 */
+	public AbstractTask getTask() {
+		return task;
+	}
+
+	public RepositoryTaskData getTaskData() {
+		return TasksUiPlugin.getTaskDataManager().getNewTaskData(taskRepository.getUrl(), taskId);
+	}
+
+	public TaskRepository getTaskRepository() {
+		return taskRepository;
+	}
+
+	public String getToolTipText() {
+		if (task != null) {
+			return task.getSummary();
+		} else {
+			RepositoryTaskData taskData = getTaskData();
+			if (taskData != null) {
+				return taskData.getSummary();
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public int hashCode() {
+		return taskId.hashCode();
+	}
+
+	@Deprecated
+	public boolean isNewTask() {
+		return false;
+	}
+
 	public void saveState(IMemento memento) {
 		TaskEditorInputFactory.saveState(memento, this);
+	}
+
+	private String truncate(String description) {
+		if (description == null || description.length() <= MAX_LABEL_LENGTH) {
+			return description;
+		} else {
+			return description.substring(0, MAX_LABEL_LENGTH) + "...";
+		}
 	}
 }

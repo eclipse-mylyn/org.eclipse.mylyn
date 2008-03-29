@@ -761,17 +761,19 @@
    
   <extension
          point="org.eclipse.mylyn.tasks.ui.editors">
+     <hyperlinkDetector
+           class="org.eclipse.mylyn.internal.tasks.ui.editors.TaskHyperlinkDetector"
+           id="org.eclipse.mylyn.tasks.ui.hyperlink.detector.tasks">
+     </hyperlinkDetector>
       <hyperlinkDetector
             class="org.eclipse.mylyn.internal.tasks.ui.editors.TaskUrlHyperlinkDetector"
             id="org.eclipse.mylyn.tasks.ui.hyperlink.detector.url"/>
+      <pageFactory
+            class="org.eclipse.mylyn.internal.tasks.ui.editors.PlanningPageFactory"
+            id="org.eclipse.mylyn.tasks.ui.pageFactory.Planning">
+      </pageFactory>
       
    </extension>
-   <extension
-          point="org.eclipse.mylyn.tasks.ui.editors">
-       <hyperlinkDetector
-             class="org.eclipse.mylyn.internal.tasks.ui.editors.TaskHyperlinkDetector"
-             id="org.eclipse.mylyn.tasks.ui.hyperlink.detector.tasks"/>
-    </extension>
    
    <extension
          point="org.eclipse.ui.actionSets">

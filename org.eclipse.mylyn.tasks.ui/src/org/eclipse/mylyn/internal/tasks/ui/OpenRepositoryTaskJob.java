@@ -21,9 +21,8 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
-import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditorInput;
-import org.eclipse.mylyn.tasks.ui.editors.RepositoryTaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 
@@ -105,8 +104,7 @@ public class OpenRepositoryTaskJob extends Job {
 				if (taskData == null) {
 					TasksUiUtil.openUrl(taskUrl, false);
 				} else {
-					AbstractRepositoryTaskEditorInput editorInput = new RepositoryTaskEditorInput(repository,
-							taskData.getId(), taskUrl);
+					TaskEditorInput editorInput = new TaskEditorInput(repository, taskData.getId());
 					TasksUiUtil.openEditor(editorInput, TaskEditor.ID_EDITOR, page);
 				}
 			}

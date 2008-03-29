@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.mylyn.tasks.ui">
+<schema targetNamespace="org.eclipse.mylyn.tasks.ui" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appInfo>
          <meta.schema plugin="org.eclipse.mylyn.tasks.ui" id="editors" name="Task Editors"/>
@@ -14,7 +14,8 @@
       <complexType>
          <sequence>
             <element ref="editorFactory" minOccurs="0" maxOccurs="unbounded"/>
-            <element ref="hyperlinkDetector" minOccurs="0" maxOccurs="1"/>
+            <element ref="hyperlinkDetector" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="pageFactory" minOccurs="0" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -87,6 +88,28 @@
       </complexType>
    </element>
 
+   <element name="pageFactory">
+      <complexType>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="class" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory:"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
    <annotation>
       <appInfo>
          <meta.section type="since"/>
@@ -120,15 +143,6 @@
       </appInfo>
       <documentation>
          [Enter information about supplied implementation of this extension point.]
-      </documentation>
-   </annotation>
-
-   <annotation>
-      <appInfo>
-         <meta.section type="copyright"/>
-      </appInfo>
-      <documentation>
-         
       </documentation>
    </annotation>
 

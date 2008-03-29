@@ -66,7 +66,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.IManagedForm;
-import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
@@ -144,7 +143,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private ImageHyperlink openUrlLink;
 
-	private TaskEditor parentEditor = null;
+	private final TaskEditor parentEditor;
 
 	private final ITaskListChangeListener TASK_LIST_LISTENER = new ITaskListChangeListener() {
 
@@ -176,8 +175,9 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private ITaskTimingListener timingListener;
 
-	public TaskPlanningEditor(FormEditor editor) {
+	public TaskPlanningEditor(TaskEditor editor) {
 		super(editor, ID, "Planning");
+		this.parentEditor = editor;
 		TasksUiPlugin.getTaskListManager().getTaskList().addChangeListener(TASK_LIST_LISTENER);
 	}
 
@@ -202,7 +202,6 @@ public class TaskPlanningEditor extends TaskFormPage {
 				TaskPlanningEditor.this.markDirty(wasDirty);
 			}
 			if (parentEditor != null) {
-				parentEditor.changeTitle();
 				parentEditor.updateTitle(updateTask.getSummary());
 			}
 		}
@@ -940,10 +939,6 @@ public class TaskPlanningEditor extends TaskFormPage {
 			pathText.setEnabled(true);
 		}
 		toolkit.paintBordersFor(container);
-	}
-
-	public void setParentEditor(TaskEditor parentEditor) {
-		this.parentEditor = parentEditor;
 	}
 
 	@Override

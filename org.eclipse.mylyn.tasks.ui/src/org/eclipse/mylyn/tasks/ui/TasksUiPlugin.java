@@ -26,6 +26,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ISaveContext;
 import org.eclipse.core.resources.ISaveParticipant;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -82,6 +83,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorFactory;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory;
 import org.eclipse.mylyn.web.core.WebClientUtil;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IStartup;
@@ -139,6 +141,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	private TaskDataManager taskDataManager;
 
 	private final Set<AbstractTaskEditorFactory> taskEditorFactories = new HashSet<AbstractTaskEditorFactory>();
+
+	private final Set<AbstractTaskEditorPageFactory> taskEditorPageFactories = new HashSet<AbstractTaskEditorPageFactory>();
 
 	private final Set<IHyperlinkDetector> hyperlinkDetectors = new HashSet<IHyperlinkDetector>();
 
@@ -731,6 +735,13 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		this.highlighter = highlighter;
 	}
 
+	/**
+	 * @since 3.0
+	 */
+	public AbstractTaskEditorPageFactory[] getTaskEditorPageFactories() {
+		return taskEditorPageFactories.toArray(new AbstractTaskEditorPageFactory[0]);
+	}
+
 	public Set<AbstractTaskEditorFactory> getTaskEditorFactories() {
 		return taskEditorFactories;
 	}
@@ -739,6 +750,22 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		if (contextEditor != null) {
 			this.taskEditorFactories.add(contextEditor);
 		}
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public void addTaskEditorPageFactory(AbstractTaskEditorPageFactory factory) {
+		Assert.isNotNull(factory);
+		taskEditorPageFactories.add(factory);
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public void removeTaskEditorPageFactory(AbstractTaskEditorPageFactory factory) {
+		Assert.isNotNull(factory);
+		taskEditorPageFactories.remove(factory);
 	}
 
 	public static TaskRepositoryManager getRepositoryManager() {
