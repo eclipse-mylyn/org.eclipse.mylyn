@@ -843,9 +843,6 @@
       <command id="org.eclipse.mylyn.tasks.ui.command.previousTask"
                defaultHandler="org.eclipse.mylyn.internal.tasks.ui.TaskHistoryHandler"
                name="Previous Task Command"/>
-      <command id="org.eclipse.mylyn.ui.context.capture.pause.command"
-               name="Pause Capturing Context Command"
-               defaultHandler="org.eclipse.mylyn.internal.tasks.ui.ContextCapturePauseHandler"/>
    </extension>
 
   <!-- command-based implementation of the previousTask/history dropdown, 
