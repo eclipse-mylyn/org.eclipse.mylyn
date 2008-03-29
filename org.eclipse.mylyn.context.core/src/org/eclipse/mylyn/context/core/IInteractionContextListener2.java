@@ -13,12 +13,12 @@ import java.util.List;
 /**
  * Notified of changes to the context model activity.
  * 
- * API-3.0: fold into super interface
- * 
  * @author Shawn Minto
  * @author Mik Kersten
  * @since 2.2
  */
+// API-3.0: fold into super interface
+// API 3.0 add event for pause/resume of context capturing (see ContextCapturePauseHandler)
 public interface IInteractionContextListener2 extends IInteractionContextListener {
 
 	/**
