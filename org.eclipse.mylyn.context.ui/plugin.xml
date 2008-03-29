@@ -285,6 +285,9 @@
                optional="false">
          </commandParameter>
       </command>
+      <command id="org.eclipse.mylyn.ui.context.capture.pause.command"
+               name="Pause Capturing Context Command"
+               defaultHandler="org.eclipse.mylyn.internal.context.ui.commands.ContextCapturePauseHandler"/>
    </extension>
      
    <extension point="org.eclipse.ui.bindings">     
