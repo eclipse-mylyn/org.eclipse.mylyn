@@ -133,9 +133,16 @@ public class PersonProposalProviderTest extends TestCase {
 		result = provider.getProposals(", ", 1);
 		assertNotNull(result);
 		assertEquals(1, result.length);
-		assertEquals("x,foo ", result[0].getContent());
+		assertEquals(",foo ", result[0].getContent());
 		assertEquals("foo", result[0].getLabel());
-		assertEquals(5, result[0].getCursorPosition());
+		assertEquals(4, result[0].getCursorPosition());
+
+		result = provider.getProposals(", ", 0);
+		assertNotNull(result);
+		assertEquals(1, result.length);
+		assertEquals("foo, ", result[0].getContent());
+		assertEquals("foo", result[0].getLabel());
+		assertEquals(3, result[0].getCursorPosition());
 	}
 
 }
