@@ -49,7 +49,6 @@ public class AllTracTests {
 		suite.addTestSuite(TracRepositorySettingsPageTest.class);
 		suite.addTestSuite(TracClientProxyTest.class);
 		suite.addTestSuite(TracHyperlinkUtilTest.class);
-		suite.addTestSuite(AllTracTests.class);
 		// $JUnit-END$
 		return suite;
 	}
