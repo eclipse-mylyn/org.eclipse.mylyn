@@ -527,9 +527,8 @@ public class TasksUiUtil {
 	 * @since 3.0
 	 */
 	public static boolean openTask(TaskRepository repository, String taskId) {
-		if (repository == null || taskId == null) {
-			return false;
-		}
+		Assert.isNotNull(repository);
+		Assert.isNotNull(taskId);
 
 		AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(), taskId);
 		if (task == null) {
