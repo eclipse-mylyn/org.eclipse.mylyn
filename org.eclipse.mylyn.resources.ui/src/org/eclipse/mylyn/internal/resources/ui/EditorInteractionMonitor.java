@@ -21,6 +21,7 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
+import org.eclipse.mylyn.monitor.core.CoreUtil;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.ui.AbstractEditorTracker;
 import org.eclipse.ui.IEditorPart;
@@ -98,11 +99,15 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 					&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
 							ContextUiPrefContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING)) {
 				try {
-					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-							"Mylyn", "Closing a file automatically removes it from the Task Context. "
-									+ "This is recommended in order to make the open editors match "
-									+ "the focused views. It can be disabled via Preferences -> Mylyn -> Context.\n\n"
-									+ "This dialog will not show again.");
+					if (!CoreUtil.TEST_MODE) {
+						MessageDialog.openInformation(
+								PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+								"Mylyn",
+								"Closing a file automatically removes it from the Task Context. "
+										+ "This is recommended in order to make the open editors match "
+										+ "the focused views. It can be disabled via Preferences -> Mylyn -> Context.\n\n"
+										+ "This dialog will not show again.");
+					}
 				} finally {
 					ContextUiPlugin.getDefault().getPreferenceStore().setValue(
 							ContextUiPrefContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING, false);
