@@ -640,7 +640,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 					String accountCreationUrl = TasksUiPlugin.getConnectorUi(connector.getConnectorKind())
 							.getAccountCreationUrl(repository);
 					if (accountCreationUrl != null) {
-						TasksUiUtil.openUrl(accountCreationUrl, false);
+						TasksUiUtil.openUrl(accountCreationUrl);
 					}
 				}
 			}
@@ -659,7 +659,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 					String accountManagementUrl = TasksUiPlugin.getConnectorUi(connector.getConnectorKind())
 							.getAccountManagementUrl(repository);
 					if (accountManagementUrl != null) {
-						TasksUiUtil.openUrl(accountManagementUrl, false);
+						TasksUiUtil.openUrl(accountManagementUrl);
 					}
 				}
 			}

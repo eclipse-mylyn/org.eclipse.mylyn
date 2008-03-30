@@ -88,7 +88,7 @@ public class OpenRepositoryTask extends Action implements IWorkbenchWindowAction
 		} else {
 			boolean openSuccessful = false;
 			for (String id : selectedIds) {
-				boolean opened = TasksUiUtil.openRepositoryTask(dlg.getSelectedTaskRepository(), id);
+				boolean opened = TasksUiUtil.openTask(dlg.getSelectedTaskRepository(), id);
 				if (opened) {
 					openSuccessful = true;
 				}

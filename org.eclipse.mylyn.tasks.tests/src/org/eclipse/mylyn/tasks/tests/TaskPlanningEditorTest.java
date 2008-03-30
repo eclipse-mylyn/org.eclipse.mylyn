@@ -32,7 +32,7 @@ public class TaskPlanningEditorTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		super.setUp();
+		TasksUiPlugin.getDefault().getLocalTaskRepository();
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class TaskPlanningEditorTest extends TestCase {
 		LocalTask task = new LocalTask("1", MOCK_LABEL);
 		task.setSummary(DESCRIPTION);
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
-		TasksUiUtil.openEditor(task, false, true);
+		TasksUiUtil.openTask(task);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		assertTrue(page.getActiveEditor() instanceof TaskEditor);
 		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
@@ -70,7 +70,7 @@ public class TaskPlanningEditorTest extends TestCase {
 		LocalTask task = new LocalTask("1", MOCK_LABEL);
 		task.setSummary(DESCRIPTION);
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
-		TasksUiUtil.openEditor(task, false, true);
+		TasksUiUtil.openTask(task);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		assertTrue(page.getActiveEditor() instanceof TaskEditor);
 		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
@@ -93,7 +93,7 @@ public class TaskPlanningEditorTest extends TestCase {
 		LocalTask task = new LocalTask("1", MOCK_LABEL);
 		task.setSummary(DESCRIPTION);
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
-		TasksUiUtil.openEditor(task, false, true);
+		TasksUiUtil.openTask(task);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		assertTrue(page.getActiveEditor() instanceof TaskEditor);
 		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();

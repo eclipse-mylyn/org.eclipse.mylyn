@@ -80,7 +80,7 @@ public class TracTaskEditorFactory extends AbstractTaskEditorFactory {
 		if (TracRepositoryConnector.hasRichEditor(repository)) {
 			return new RepositoryTaskEditorInput(repository, tracTask.getTaskId(), tracTask.getUrl());
 		} else {
-			return new TaskEditorInput(task, false) {
+			return new TaskEditorInput(repository, task) {
 				@Override
 				public ImageDescriptor getImageDescriptor() {
 					return TasksUiImages.BROWSER_SMALL;

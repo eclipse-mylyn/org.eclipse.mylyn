@@ -491,15 +491,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	}
 
 	private void loadTemplateRepositories() {
-
 		// Add standard local task repository
-		if (taskRepositoryManager.getRepository(LocalRepositoryConnector.REPOSITORY_URL) == null) {
-			TaskRepository localRepository = new TaskRepository(LocalRepositoryConnector.CONNECTOR_KIND,
-					LocalRepositoryConnector.REPOSITORY_URL, LocalRepositoryConnector.REPOSITORY_VERSION);
-			localRepository.setRepositoryLabel(LocalRepositoryConnector.REPOSITORY_LABEL);
-			localRepository.setAnonymous(true);
-			taskRepositoryManager.addRepository(localRepository, getRepositoriesFilePath());
-		}
+		getLocalTaskRepository();
 
 		// Add the automatically created templates
 		for (AbstractRepositoryConnector connector : taskRepositoryManager.getRepositoryConnectors()) {
@@ -512,8 +505,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 						TaskRepository taskRepository = taskRepositoryManager.getRepository(
 								connector.getConnectorKind(), template.repositoryUrl);
 						if (taskRepository == null) {
-							taskRepository = new TaskRepository(connector.getConnectorKind(), template.repositoryUrl,
-									template.version);
+							taskRepository = new TaskRepository(connector.getConnectorKind(), template.repositoryUrl);
+							taskRepository.setVersion(template.version);
 							taskRepository.setRepositoryLabel(template.label);
 							taskRepository.setAnonymous(true);
 							taskRepository.setCharacterEncoding(template.characterEncoding);
@@ -527,6 +520,26 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Returns the local task repository. If the repository does not exist it is created and added to the task
+	 * repository manager.
+	 * 
+	 * @return the local task repository; never <code>null</code>
+	 * @since 3.0
+	 */
+	public TaskRepository getLocalTaskRepository() {
+		TaskRepository localRepository = taskRepositoryManager.getRepository(LocalRepositoryConnector.REPOSITORY_URL);
+		if (localRepository == null) {
+			localRepository = new TaskRepository(LocalRepositoryConnector.CONNECTOR_KIND,
+					LocalRepositoryConnector.REPOSITORY_URL);
+			localRepository.setVersion(LocalRepositoryConnector.REPOSITORY_VERSION);
+			localRepository.setRepositoryLabel(LocalRepositoryConnector.REPOSITORY_LABEL);
+			localRepository.setAnonymous(true);
+			taskRepositoryManager.addRepository(localRepository, getRepositoriesFilePath());
+		}
+		return localRepository;
 	}
 
 	@Override

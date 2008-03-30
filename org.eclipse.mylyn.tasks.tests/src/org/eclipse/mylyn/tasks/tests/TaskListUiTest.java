@@ -34,7 +34,6 @@ import org.eclipse.mylyn.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.PartInitException;
 
 /**
  * Tests TaskListView's filtering mechanism.
@@ -81,13 +80,15 @@ public class TaskListUiTest extends TestCase {
 	private final static int CHECK_PRIORITY_FILTER = 3;
 
 	@Override
-	public void setUp() throws PartInitException {
+	public void setUp() throws Exception {
 		TaskListView.openInActivePerspective();
 		manager = TasksUiPlugin.getTaskListManager();
 
 		// make sure no unfiled folders exist
 		TasksUiPlugin.getRepositoryManager().clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		manager.resetTaskList();
+
+		TasksUiPlugin.getDefault().getLocalTaskRepository();
 
 		cat1 = new TaskCategory("First Category");
 		manager.getTaskList().addCategory(cat1);
@@ -163,7 +164,7 @@ public class TaskListUiTest extends TestCase {
 	}
 
 	@Override
-	public void tearDown() {
+	public void tearDown() throws Exception {
 		// clear everything
 	}
 
@@ -207,7 +208,6 @@ public class TaskListUiTest extends TestCase {
 	 * Tests that TaskEditors remove all listeners when closed
 	 */
 	public void testListenersRemoved() {
-
 		int numListenersBefore = 0;
 		int numListenersDuring = 0;
 		int numListenersAfter = 0;
@@ -216,13 +216,8 @@ public class TaskListUiTest extends TestCase {
 		Set<ITaskListChangeListener> listeners = manager.getTaskList().getChangeListeners();
 		numListenersBefore = listeners.size();
 
-		// open a task in editor
-		// cat1task1.setForceSyncOpen(true);
-		TasksUiUtil.openEditor(cat1task1, false, true);
-		// cat1task1.openTaskInEditor(false);
-		// cat1task2.setForceSyncOpen(true);
-		// cat1task2.openTaskInEditor(false);
-		TasksUiUtil.openEditor(cat1task2, false, true);
+		TasksUiUtil.openTask(cat1task1);
+		TasksUiUtil.openTask(cat1task2);
 
 		listeners = manager.getTaskList().getChangeListeners();
 		numListenersDuring = listeners.size();
@@ -234,7 +229,6 @@ public class TaskListUiTest extends TestCase {
 		listeners = manager.getTaskList().getChangeListeners();
 		numListenersAfter = listeners.size();
 		assertEquals(numListenersBefore, numListenersAfter);
-
 	}
 
 	/**

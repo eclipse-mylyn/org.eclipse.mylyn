@@ -71,29 +71,34 @@ public class TaskActivityListenerTest extends TestCase {
 		}
 	}
 
+	@Override
+	protected void setUp() throws Exception {
+		TasksUiPlugin.getTaskListManager().deactivateAllTasks();
+	}
+
 	public void testTaskActivation() {
 		MockRepositoryTask task = new MockRepositoryTask("test:activation");
-
 		MockTaskActivityListener listener = new MockTaskActivityListener();
+		try {
+			TasksUiPlugin.getTaskListManager().addActivityListener(listener);
+			try {
+				TasksUiPlugin.getTaskListManager().activateTask(task);
+				assertTrue(listener.hasPreActivated);
+				assertTrue(listener.hasActivated);
+				assertFalse(listener.hasPreDeactivated);
+				assertFalse(listener.hasDeactivated);
 
-		TasksUiPlugin.getTaskListManager().addActivityListener(listener);
-
-		TasksUiPlugin.getTaskListManager().activateTask(task);
-		assertTrue(listener.hasPreActivated);
-		assertTrue(listener.hasActivated);
-		assertFalse(listener.hasPreDeactivated);
-		assertFalse(listener.hasDeactivated);
-
-		listener.reset();
-
-		TasksUiPlugin.getTaskListManager().deactivateTask(task);
-		assertFalse(listener.hasPreActivated);
-		assertFalse(listener.hasActivated);
-		assertTrue(listener.hasPreDeactivated);
-		assertTrue(listener.hasDeactivated);
-
-		TasksUiPlugin.getTaskListManager().removeActivityListener(listener);
-
+				listener.reset();
+			} finally {
+				TasksUiPlugin.getTaskListManager().deactivateTask(task);
+			}
+			assertFalse(listener.hasPreActivated);
+			assertFalse(listener.hasActivated);
+			assertTrue(listener.hasPreDeactivated);
+			assertTrue(listener.hasDeactivated);
+		} finally {
+			TasksUiPlugin.getTaskListManager().removeActivityListener(listener);
+		}
 	}
 
 }

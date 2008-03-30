@@ -455,7 +455,7 @@ public class UiLegendDialog extends PopupDialog {
 		gettingStartedLink.addHyperlinkListener(new IHyperlinkListener() {
 			public void linkActivated(HyperlinkEvent e) {
 				close();
-				TasksUiUtil.openUrl("http://www.eclipse.org/mylyn/start/", false);
+				TasksUiUtil.openUrl("http://www.eclipse.org/mylyn/start/");
 			}
 
 			public void linkEntered(HyperlinkEvent e) {

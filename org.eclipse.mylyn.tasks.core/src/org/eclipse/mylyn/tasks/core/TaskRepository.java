@@ -173,10 +173,12 @@ public class TaskRepository extends PlatformObject {
 	 * for testing purposes sets repository time zone to local default time zone sets character encoding to
 	 * DEFAULT_CHARACTER_ENCODING
 	 */
+	@Deprecated
 	public TaskRepository(String kind, String serverUrl, String version) {
 		this(kind, serverUrl, version, DEFAULT_CHARACTER_ENCODING, TimeZone.getDefault().getID());
 	}
 
+	@Deprecated
 	public TaskRepository(String kind, String serverUrl, String version, String encoding, String timeZoneId) {
 		this.properties.put(IRepositoryConstants.PROPERTY_CONNECTOR_KIND, kind);
 		this.properties.put(IRepositoryConstants.PROPERTY_URL, serverUrl);

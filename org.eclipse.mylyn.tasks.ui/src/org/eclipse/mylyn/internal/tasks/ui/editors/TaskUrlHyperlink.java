@@ -23,8 +23,7 @@ public class TaskUrlHyperlink extends URLHyperlink {
 
 	@Override
 	public void open() {
-		String url = getURLString();
-		TasksUiUtil.openUrl(url, true);
+		TasksUiUtil.openTask(getURLString());
 	}
 
 }

@@ -58,7 +58,7 @@ public final class TaskHyperlink implements IHyperlink {
 
 	public void open() {
 		if (repository != null) {
-			TasksUiUtil.openRepositoryTask(repository, taskId);
+			TasksUiUtil.openTask(repository, taskId);
 		} else {
 			MessageDialog.openError(null, "Mylyn", "Could not determine repository for report");
 		}

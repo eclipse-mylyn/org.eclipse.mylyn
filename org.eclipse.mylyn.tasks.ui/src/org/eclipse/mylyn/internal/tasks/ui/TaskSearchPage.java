@@ -94,7 +94,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		String key = keyText.getText();
 		if (key != null && key.trim().length() > 0) {
 			key = key.trim();
-			boolean openSuccessful = TasksUiUtil.openRepositoryTask(repository, key);
+			boolean openSuccessful = TasksUiUtil.openTask(repository, key);
 			if (!openSuccessful) {
 				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 						ITasksUiConstants.TITLE_DIALOG, "No task found matching key: " + key);

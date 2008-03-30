@@ -70,19 +70,9 @@ public abstract class AbstractRepositoryConnectorUi {
 	public abstract IWizard getQueryWizard(TaskRepository repository, AbstractRepositoryQuery queryToEdit);
 
 	/**
-	 * @deprecated use {@link #getNewTaskWizard(TaskRepository, TaskSelection)} instead
-	 */
-	@Deprecated
-	public abstract IWizard getNewTaskWizard(TaskRepository taskRepository);
-
-	/**
-	 * API-3.0 replace with default implementation that invokes NewTaskWizard
-	 * 
 	 * @since 2.2
 	 */
-	public IWizard getNewTaskWizard(TaskRepository taskRepository, TaskSelection selection) {
-		return null;
-	}
+	public abstract IWizard getNewTaskWizard(TaskRepository taskRepository, TaskSelection selection);
 
 	/**
 	 * Override to return a custom task editor ID. If overriding this method the connector becomes responsible for

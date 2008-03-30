@@ -23,32 +23,15 @@ public class NewTaskPage extends SelectRepositoryPage {
 
 	private final TaskSelection taskSelection;
 
-	// API-3.0: remove legacy support
-	private boolean supportsTaskSelection;
-
 	public NewTaskPage(ITaskRepositoryFilter taskRepositoryFilter, TaskSelection taskSelection) {
 		super(taskRepositoryFilter);
 		this.taskSelection = taskSelection;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	protected IWizard createWizard(TaskRepository taskRepository) {
 		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskRepository.getConnectorKind());
-		IWizard wizard = connectorUi.getNewTaskWizard(taskRepository, taskSelection);
-		if (wizard == null) {
-			// API-3.0: remove legacy support
-			wizard = connectorUi.getNewTaskWizard(taskRepository);
-			supportsTaskSelection = false;
-		} else {
-			supportsTaskSelection = true;
-		}
-		return wizard;
-	}
-
-	// API-3.0: remove legacy support
-	public boolean supportsTaskSelection() {
-		return supportsTaskSelection;
+		return connectorUi.getNewTaskWizard(taskRepository, taskSelection);
 	}
 
 }

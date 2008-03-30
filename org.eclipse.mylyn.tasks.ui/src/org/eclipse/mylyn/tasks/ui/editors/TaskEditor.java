@@ -224,7 +224,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 		firePropertyChange(PROP_DIRTY);
 	}
 
-	// API 3.0 is this method needed?
+	@Deprecated
 	public void setFocusOfActivePage() {
 		if (this.getActivePage() > -1) {
 			IFormPage page = this.getPages()[this.getActivePage()];

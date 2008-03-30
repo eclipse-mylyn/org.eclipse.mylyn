@@ -37,6 +37,8 @@ public class TaskListDnDTest extends TestCase {
 		TreeViewer viewer = TaskListView.getFromActivePerspective().getViewer();
 		assertNotNull(viewer);
 		dropAdapter = new TaskListDropAdapter(viewer);
+
+		TasksUiPlugin.getDefault().getLocalTaskRepository();
 	}
 
 	@Override

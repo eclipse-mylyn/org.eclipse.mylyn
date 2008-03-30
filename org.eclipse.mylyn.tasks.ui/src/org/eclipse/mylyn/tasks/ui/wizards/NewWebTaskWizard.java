@@ -54,7 +54,7 @@ public class NewWebTaskWizard extends Wizard implements INewWizard {
 
 	@Override
 	public boolean performFinish() {
-		TasksUiUtil.openUrl(newTaskUrl, false);
+		TasksUiUtil.openUrl(newTaskUrl);
 		return true;
 	}
 

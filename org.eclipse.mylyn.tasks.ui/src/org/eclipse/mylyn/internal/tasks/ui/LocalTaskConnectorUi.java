@@ -31,11 +31,6 @@ public class LocalTaskConnectorUi extends AbstractRepositoryConnectorUi {
 	}
 
 	@Override
-	public IWizard getNewTaskWizard(TaskRepository taskRepository) {
-		return new NewLocalTaskWizard();
-	}
-
-	@Override
 	public IWizard getNewTaskWizard(TaskRepository taskRepository, TaskSelection selection) {
 		return new NewLocalTaskWizard(selection);
 	}

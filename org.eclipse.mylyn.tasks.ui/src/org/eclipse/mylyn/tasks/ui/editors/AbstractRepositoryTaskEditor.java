@@ -724,7 +724,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				historyAction = new Action() {
 					@Override
 					public void run() {
-						TasksUiUtil.openUrl(getHistoryUrl(), false);
+						TasksUiUtil.openUrl(getHistoryUrl());
 					}
 				};
 
@@ -745,7 +745,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					openBrowserAction = new Action() {
 						@Override
 						public void run() {
-							TasksUiUtil.openUrl(taskUrlToOpen, false);
+							TasksUiUtil.openUrl(taskUrlToOpen);
 						}
 					};
 
@@ -1481,7 +1481,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					if (!event.getSelection().isEmpty()) {
 						StructuredSelection selection = (StructuredSelection) event.getSelection();
 						RepositoryAttachment attachment = (RepositoryAttachment) selection.getFirstElement();
-						TasksUiUtil.openUrl(attachment.getUrl(), false);
+						TasksUiUtil.openUrl(attachment.getUrl());
 					}
 				}
 			});
@@ -1493,7 +1493,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				public void run() {
 					RepositoryAttachment attachment = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer.getSelection()).getFirstElement());
 					if (attachment != null) {
-						TasksUiUtil.openUrl(attachment.getUrl(), false);
+						TasksUiUtil.openUrl(attachment.getUrl());
 					}
 				}
 			};
@@ -1508,7 +1508,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					}
 
 					if (attachment.getContentType().endsWith(CTYPE_HTML)) {
-						TasksUiUtil.openUrl(attachment.getUrl(), false);
+						TasksUiUtil.openUrl(attachment.getUrl());
 						return;
 					}
 
@@ -3610,8 +3610,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						// open local then via web browser...
 						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 							public void run() {
-								TasksUiUtil.openRepositoryTask(repository.getUrl(), taskData.getId(),
-										connector.getTaskUrl(taskData.getRepositoryUrl(), taskData.getId()));
+								TasksUiUtil.openTask(repository.getUrl(), taskData.getId(), connector.getTaskUrl(
+										taskData.getRepositoryUrl(), taskData.getId()));
 							}
 						});
 					}
@@ -3993,7 +3993,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				if (task != null) {
 					TasksUiUtil.refreshAndOpenTaskListElement(task);
 				} else {
-					TasksUiUtil.openRepositoryTask(repository.getUrl(), taskId, taskUrl);
+					TasksUiUtil.openTask(repository.getUrl(), taskId, taskUrl);
 				}
 			}
 		});

@@ -40,7 +40,7 @@ public class WebHyperlink implements IHyperlink {
 	}
 
 	public void open() {
-		TasksUiUtil.openUrl(url, true);
+		TasksUiUtil.openTask(url);
 	}
 
 	public String getURLString() {

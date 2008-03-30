@@ -72,7 +72,7 @@ public class TracTaskEditorTest extends TestCase {
 		RepositoryTaskData taskData = taskDataHandler.getTaskData(repository, "1", new NullProgressMonitor());
 		AbstractTask task = connector.createTaskFromTaskData(repository, taskData, false, new NullProgressMonitor());
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
-		TasksUiUtil.openEditor(task, false, false);
+		TasksUiUtil.openTask(task);
 
 		TaskListView taskListView = TaskListView.getFromActivePerspective();
 		// force refresh since automatic reresh is delayed  

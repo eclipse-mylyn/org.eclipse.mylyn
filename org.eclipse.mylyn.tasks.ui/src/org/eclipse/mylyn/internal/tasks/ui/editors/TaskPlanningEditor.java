@@ -565,7 +565,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		openUrlLink.addHyperlinkListener(new IHyperlinkListener() {
 
 			public void linkActivated(HyperlinkEvent e) {
-				TasksUiUtil.openUrl(issueReportURL.getText(), false);
+				TasksUiUtil.openUrl(issueReportURL.getText());
 			}
 
 			public void linkEntered(HyperlinkEvent e) {

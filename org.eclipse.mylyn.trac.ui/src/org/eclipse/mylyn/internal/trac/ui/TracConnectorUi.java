@@ -73,23 +73,13 @@ public class TracConnectorUi extends AbstractRepositoryConnectorUi {
 		return true;
 	}
 
-	// API-3.0 remove
-	@Override
-	public IWizard getNewTaskWizard(TaskRepository repository) {
-		if (TracRepositoryConnector.hasRichEditor(repository)) {
-			return new NewTaskWizard(repository);
-		} else {
-			return new NewWebTaskWizard(repository, repository.getUrl() + ITracClient.NEW_TICKET_URL);
-		}
-	}
-
 	@Override
 	public IWizard getNewTaskWizard(TaskRepository repository, TaskSelection selection) {
 		if (TracRepositoryConnector.hasRichEditor(repository)) {
 			return new NewTaskWizard(repository, selection);
 		} else {
 			// API-3.0 extend NewWebTaskWizard to support copying taskSelection to clipboard and return wizard here
-			return null;
+			return new NewWebTaskWizard(repository, repository.getUrl() + ITracClient.NEW_TICKET_URL);
 		}
 	}
 

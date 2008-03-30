@@ -667,7 +667,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 				historyAction = new Action() {
 					@Override
 					public void run() {
-						TasksUiUtil.openUrl(getHistoryUrl(), false);
+						TasksUiUtil.openUrl(getHistoryUrl());
 					}
 				};
 
@@ -688,7 +688,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 					openBrowserAction = new Action() {
 						@Override
 						public void run() {
-							TasksUiUtil.openUrl(taskUrlToOpen, false);
+							TasksUiUtil.openUrl(taskUrlToOpen);
 						}
 					};
 

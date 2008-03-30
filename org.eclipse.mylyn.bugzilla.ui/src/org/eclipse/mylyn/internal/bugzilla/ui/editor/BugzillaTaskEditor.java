@@ -571,8 +571,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				if (BugzillaTaskEditor.this.getEditor() instanceof TaskEditor) {
-					TasksUiUtil.openUrl(repository.getUrl() + IBugzillaConstants.URL_SHOW_VOTES + taskData.getId(),
-							false);
+					TasksUiUtil.openUrl(repository.getUrl() + IBugzillaConstants.URL_SHOW_VOTES + taskData.getId());
 				}
 			}
 		});
@@ -582,7 +581,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				if (BugzillaTaskEditor.this.getEditor() instanceof TaskEditor) {
-					TasksUiUtil.openUrl(repository.getUrl() + IBugzillaConstants.URL_VOTE + taskData.getId(), false);
+					TasksUiUtil.openUrl(repository.getUrl() + IBugzillaConstants.URL_VOTE + taskData.getId());
 				}
 			}
 		});
