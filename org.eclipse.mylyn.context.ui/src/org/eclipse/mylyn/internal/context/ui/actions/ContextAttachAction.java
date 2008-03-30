@@ -15,10 +15,10 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.internal.context.ui.wizards.ContextAttachWizard;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.internal.tasks.ui.wizards.ContextAttachWizard;
 import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -81,7 +81,7 @@ public class ContextAttachAction extends Action implements IViewActionDelegate {
 		if (shell != null && !shell.isDisposed()) {
 			WizardDialog dialog = new WizardDialog(shell, wizard);
 			dialog.create();
-			dialog.setTitle(ContextAttachWizard.WIZARD_TITLE);
+			dialog.setTitle("Attach Context");
 			dialog.setBlockOnOpen(true);
 			if (dialog.open() == Window.CANCEL) {
 				dialog.close();

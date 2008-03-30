@@ -49,6 +49,7 @@ import org.eclipse.mylyn.internal.context.ui.HighlighterList;
 import org.eclipse.mylyn.internal.context.ui.UiUtil;
 import org.eclipse.mylyn.internal.context.ui.actions.ContextRetrieveAction;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
+import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.PlanningPerspectiveFactory;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
@@ -190,7 +191,7 @@ public class ContextUiPlugin extends AbstractContextUiPlugin {
 						repositoryTask.getRepositoryUrl());
 
 				if (connector != null && connector.getAttachmentHandler() != null
-						&& connector.getAttachmentHandler().hasRepositoryContext(repository, repositoryTask)) {
+						&& AttachmentUtil.hasContext(repository, repositoryTask)) {
 					boolean getRemote = MessageDialog.openQuestion(PlatformUI.getWorkbench()
 							.getActiveWorkbenchWindow()
 							.getShell(), ITasksUiConstants.TITLE_DIALOG,
