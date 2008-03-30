@@ -13,9 +13,9 @@ import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.swt.graphics.Color;
@@ -49,7 +49,7 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 	public Image getColumnImage(Object element, int columnIndex) {
 		RepositoryAttachment attachment = (RepositoryAttachment) element;
 		if (columnIndex == 0) {
-			if (isContext(attachment)) {
+			if (AttachmentUtil.isContext(attachment)) {
 				return TasksUiImages.getImage(TasksUiImages.CONTEXT_TRANSFER);
 			} else if (attachment.isPatch()) {
 				return TasksUiImages.getImage(TasksUiImages.ATTACHMENT_PATCH);
@@ -73,16 +73,11 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 		return null;
 	}
 
-	private boolean isContext(RepositoryAttachment attachment) {
-		return AbstractAttachmentHandler.MYLAR_CONTEXT_DESCRIPTION.equals(attachment.getDescription())
-				|| AbstractAttachmentHandler.MYLAR_CONTEXT_DESCRIPTION_LEGACY.equals(attachment.getDescription());
-	}
-
 	public String getColumnText(Object element, int columnIndex) {
 		RepositoryAttachment attachment = (RepositoryAttachment) element;
 		switch (columnIndex) {
 		case 0:
-			if (isContext(attachment)) {
+			if (AttachmentUtil.isContext(attachment)) {
 				return " Task Context";
 			} else if (attachment.isPatch()) {
 				return " Patch";

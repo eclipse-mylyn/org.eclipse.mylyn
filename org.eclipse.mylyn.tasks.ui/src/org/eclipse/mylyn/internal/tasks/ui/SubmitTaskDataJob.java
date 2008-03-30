@@ -88,7 +88,7 @@ public class SubmitTaskDataJob extends Job {
 
 			// attach context if required
 			if (attachContext && connector.getAttachmentHandler() != null) {
-				connector.getAttachmentHandler().attachContext(taskRepository, task, "",
+				AttachmentUtil.attachContext(connector.getAttachmentHandler(), taskRepository, task, "",
 						new SubProgressMonitor(monitor, 1));
 			}
 

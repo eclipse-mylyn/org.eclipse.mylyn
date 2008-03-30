@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -115,7 +116,7 @@ public class CompareAttachmentsAction extends BaseSelectionListenerAction implem
 	private static final String[] IMAGE_EXTENSIONS = { ".jpg", ".gif", ".png", ".tiff", ".tif", ".bmp" };
 
 	private Image getImage(RepositoryAttachment attachment) {
-		if (isContext(attachment)) {
+		if (AttachmentUtil.isContext(attachment)) {
 			return TasksUiImages.getImage(TasksUiImages.CONTEXT_TRANSFER);
 		} else if (attachment.isPatch()) {
 			return TasksUiImages.getImage(TasksUiImages.ATTACHMENT_PATCH);
@@ -131,11 +132,6 @@ public class CompareAttachmentsAction extends BaseSelectionListenerAction implem
 			}
 			return WorkbenchImages.getImage(ISharedImages.IMG_OBJ_FILE);
 		}
-	}
-
-	private boolean isContext(RepositoryAttachment attachment) {
-		return AbstractAttachmentHandler.MYLAR_CONTEXT_DESCRIPTION.equals(attachment.getDescription())
-				|| AbstractAttachmentHandler.MYLAR_CONTEXT_DESCRIPTION_LEGACY.equals(attachment.getDescription());
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {

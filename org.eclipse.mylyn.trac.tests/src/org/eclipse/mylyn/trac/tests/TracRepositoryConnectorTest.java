@@ -25,6 +25,7 @@ import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.tests.support.TestUtil;
 import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
 import org.eclipse.mylyn.context.tests.support.TestUtil.PrivilegeLevel;
+import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.EditRepositoryWizard;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.InvalidTicketException;
@@ -327,7 +328,8 @@ public class TracRepositoryConnectorTest extends TestCase {
 		sourceContextFile.createNewFile();
 		sourceContextFile.deleteOnExit();
 
-		assertTrue(connector.getAttachmentHandler().attachContext(repository, task, "", new NullProgressMonitor()));
+		assertTrue(AttachmentUtil.attachContext(connector.getAttachmentHandler(), repository, task, "",
+				new NullProgressMonitor()));
 
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		// TODO attachment may have been overridden therefore size may not have changed
@@ -347,7 +349,8 @@ public class TracRepositoryConnectorTest extends TestCase {
 		sourceContextFile.deleteOnExit();
 
 		try {
-			connector.getAttachmentHandler().attachContext(repository, task, "", new NullProgressMonitor());
+			AttachmentUtil.attachContext(connector.getAttachmentHandler(), repository, task, "",
+					new NullProgressMonitor());
 			fail("expected CoreException"); // operation should not be supported
 		} catch (CoreException e) {
 		}

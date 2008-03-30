@@ -29,6 +29,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.LocalAttachment;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
+import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
@@ -193,7 +194,7 @@ public class NewAttachmentWizard extends Wizard {
 					}
 
 					if (attachContext && connector.getAttachmentHandler() != null) {
-						connector.getAttachmentHandler().attachContext(repository, task, "",
+						AttachmentUtil.attachContext(connector.getAttachmentHandler(), repository, task, "",
 								new SubProgressMonitor(monitor, 1));
 					}
 				} catch (CoreException e) {

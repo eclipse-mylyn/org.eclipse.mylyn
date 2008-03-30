@@ -71,6 +71,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.mylyn.internal.tasks.core.CommentQuoter;
+import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalProvider;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
@@ -3574,8 +3575,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					if (modifiedTask != null) {
 						// Attach context if required
 						if (attachContext && connector.getAttachmentHandler() != null) {
-							connector.getAttachmentHandler().attachContext(repository, modifiedTask, "",
-									new SubProgressMonitor(monitor, 1));
+							AttachmentUtil.attachContext(connector.getAttachmentHandler(), repository, modifiedTask,
+									"", new SubProgressMonitor(monitor, 1));
 						}
 
 						modifiedTask.setSubmitting(true);

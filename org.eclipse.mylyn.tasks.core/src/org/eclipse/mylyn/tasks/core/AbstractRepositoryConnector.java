@@ -29,7 +29,6 @@ import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
  * @author Rob Elves
  * @since 2.0
  */
-// API-3.0 rename to AbstractTaskRepositoryConnector?
 public abstract class AbstractRepositoryConnector {
 
 	protected Set<RepositoryTemplate> templates = new LinkedHashSet<RepositoryTemplate>();
@@ -53,10 +52,6 @@ public abstract class AbstractRepositoryConnector {
 	 */
 	public void setTaskDataManager(TaskDataManager taskDataManager) {
 		this.taskDataManager = taskDataManager;
-		AbstractAttachmentHandler handler = getAttachmentHandler();
-		if (handler != null) {
-			handler.setTaskDataManager(taskDataManager);
-		}
 	}
 
 	/**

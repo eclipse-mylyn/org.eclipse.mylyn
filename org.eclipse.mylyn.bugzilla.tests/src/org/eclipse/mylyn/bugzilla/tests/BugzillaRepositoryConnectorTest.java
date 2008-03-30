@@ -27,6 +27,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.tasks.core.LocalAttachment;
+import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryOperation;
@@ -136,7 +137,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		repository.setAuthenticationCredentials("wrong", "wrong");
 		TasksUiPlugin.getRepositoryManager().notifyRepositorySettingsChanged(repository);
 		try {
-			connector.getAttachmentHandler().attachContext(repository, task, "", new NullProgressMonitor());
+			AttachmentUtil.attachContext(connector.getAttachmentHandler(), repository, task, "", new NullProgressMonitor());
 		} catch (CoreException e) {
 			assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSynchronizationState());
 			assertTrue(e.getStatus().getMessage().indexOf("Invalid repository credentials.") != -1);
@@ -454,7 +455,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		sourceContextFile.deleteOnExit();
 		repository.setAuthenticationCredentials("wrong", "wrong");
 		try {
-			connector.getAttachmentHandler().attachContext(repository, task, "", new NullProgressMonitor());
+			AttachmentUtil.attachContext(connector.getAttachmentHandler(), repository, task, "", new NullProgressMonitor());
 		} catch (CoreException e) {
 			assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSynchronizationState());
 			return;
