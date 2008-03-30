@@ -27,6 +27,7 @@ import org.eclipse.mylyn.internal.monitor.ui.ActivityContextManager;
 import org.eclipse.mylyn.internal.monitor.ui.IMonitoredWindow;
 import org.eclipse.mylyn.internal.monitor.ui.ShellLifecycleListener;
 import org.eclipse.mylyn.internal.monitor.ui.WorkbenchUserActivityMonitor;
+import org.eclipse.mylyn.monitor.core.CoreUtil;
 import org.eclipse.mylyn.monitor.core.IInteractionEventListener;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
@@ -151,30 +152,16 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 		getPreferenceStore().setDefault(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED, true);
 		getPreferenceStore().addPropertyChangeListener(PROPERTY_LISTENER);
 
-		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				try {
-					getWorkbench().addWindowListener(WINDOW_LISTENER);
-					launchingWorkbenchWindow = getWorkbench().getActiveWorkbenchWindow();
-
-					for (IWorkbenchWindow window : getWorkbench().getWorkbenchWindows()) {
-						addListenersToWindow(window);
-					}
-
-					shellLifecycleListener = new ShellLifecycleListener(ContextCorePlugin.getContextManager());
-					getWorkbench().getActiveWorkbenchWindow().getShell().addShellListener(shellLifecycleListener);
-
-					monitors.add(new WorkbenchUserActivityMonitor());
-					new MonitorUiExtensionPointReader().initExtensions();
-
-					activityContextManager = new ActivityContextManager(TIMEOUT_INACTIVITY_MILLIS, monitors);
-					setInactivityTimeout(getPreferenceStore().getInt(ActivityContextManager.ACTIVITY_TIMEOUT));
-					activityContextManager.start();
-				} catch (Exception e) {
-					StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN, "Monitor UI start failed", e));
+		if (CoreUtil.TEST_MODE) {
+			init();
+		} else {
+			// delay initialization until workbench is realized
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					init();
 				}
-			}
-		});
+			});
+		}
 	}
 
 	@Override
@@ -420,5 +407,28 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 	 */
 	public IWorkbenchWindow getLaunchingWorkbenchWindow() {
 		return launchingWorkbenchWindow;
+	}
+
+	private void init() {
+		try {
+			getWorkbench().addWindowListener(WINDOW_LISTENER);
+			launchingWorkbenchWindow = getWorkbench().getActiveWorkbenchWindow();
+
+			for (IWorkbenchWindow window : getWorkbench().getWorkbenchWindows()) {
+				addListenersToWindow(window);
+			}
+
+			shellLifecycleListener = new ShellLifecycleListener(ContextCorePlugin.getContextManager());
+			getWorkbench().getActiveWorkbenchWindow().getShell().addShellListener(shellLifecycleListener);
+
+			monitors.add(new WorkbenchUserActivityMonitor());
+			new MonitorUiExtensionPointReader().initExtensions();
+
+			activityContextManager = new ActivityContextManager(TIMEOUT_INACTIVITY_MILLIS, monitors);
+			setInactivityTimeout(getPreferenceStore().getInt(ActivityContextManager.ACTIVITY_TIMEOUT));
+			activityContextManager.start();
+		} catch (Exception e) {
+			StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN, "Monitor UI start failed", e));
+		}
 	}
 }
