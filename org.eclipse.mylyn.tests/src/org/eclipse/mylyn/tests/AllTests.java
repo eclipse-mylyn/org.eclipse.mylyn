@@ -32,13 +32,12 @@ import org.eclipse.mylyn.trac.tests.AllTracTests;
 public class AllTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.tests");
-
 		StatusHandler.addStatusHandler(new TestingStatusNotifier());
 //		ResourcesUiBridgePlugin.getDefault().setResourceMonitoringEnabled(false);
 
 		// TODO: the order of these tests might still matter, but shouldn't
 
+		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.tests");
 		// $JUnit-BEGIN$
 		suite.addTest(AllContextTests.suite());
 		suite.addTest(AllJavaTests.suite());
@@ -48,13 +47,11 @@ public class AllTests {
 		suite.addTest(AllTasksTests.suite());
 		suite.addTest(AllResourcesTests.suite());
 		suite.addTest(AllTeamTests.suite());
-		suite.addTest(AllBugzillaTests.suite());
+		suite.addTest(AllCoreTests.suite());
 		suite.addTest(AllMiscTests.suite());
+		suite.addTest(AllBugzillaTests.suite());
 		suite.addTest(AllJiraTests.suite());
 		suite.addTest(AllTracTests.suite());
-		suite.addTestSuite(WebClientUtilTest.class);
-		suite.addTestSuite(SslProtocolSocketFactoryTest.class);
-		suite.addTestSuite(UrlConnectionUtilTest.class);
 		// $JUnit-END$
 		return suite;
 	}

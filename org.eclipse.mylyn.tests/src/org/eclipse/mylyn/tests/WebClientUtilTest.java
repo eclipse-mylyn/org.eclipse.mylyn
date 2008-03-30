@@ -8,8 +8,6 @@
 
 package org.eclipse.mylyn.tests;
 
-import java.io.IOException;
-import java.io.InterruptedIOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Socket;
@@ -25,6 +23,7 @@ import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.mylyn.tests.TestProxy.Message;
 import org.eclipse.mylyn.web.core.AbstractWebLocation;
 import org.eclipse.mylyn.web.core.AuthenticatedProxy;
@@ -83,8 +82,8 @@ public class WebClientUtilTest extends TestCase {
 			};
 			new Thread(runner).start();
 			WebClientUtil.connect(new Socket(), new InetSocketAddress(host, port), 5000, monitor);
-			fail("Expected InterruptedIOException");
-		} catch (InterruptedIOException e) {
+			fail("Expected OperationCanceledException");
+		} catch (OperationCanceledException expected) {
 			assertTrue(monitor.isCanceled());
 		}
 	}
@@ -126,8 +125,8 @@ public class WebClientUtilTest extends TestCase {
 			new Thread(runner).start();
 			WebClientUtil.execute(client, hostConfiguration, method, monitor);
 			client.executeMethod(method);
-			fail("Expected exception");
-		} catch (IOException e) {
+			fail("Expected OperationCanceledException");
+		} catch (OperationCanceledException expected) {
 			assertTrue(monitor.isCanceled());
 		} finally {
 			method.releaseConnection();
@@ -146,7 +145,7 @@ public class WebClientUtilTest extends TestCase {
 			monitor.canceled = true;
 			WebClientUtil.execute(client, hostConfiguration, method, monitor);
 			fail("Expected InterruptedIOException");
-		} catch (InterruptedIOException expected) {
+		} catch (OperationCanceledException expected) {
 		} finally {
 			method.releaseConnection();
 		}
