@@ -121,7 +121,7 @@ public class RecommendedPreferencesWizardPage extends WizardPage {
 		hyperlink.addHyperlinkListener(new IHyperlinkListener() {
 
 			public void linkActivated(HyperlinkEvent e) {
-				TasksUiUtil.openUrl("http://eclipse.org/mylyn/start.php", false);
+				TasksUiUtil.openUrl("http://eclipse.org/mylyn/start.php");
 			}
 
 			public void linkEntered(HyperlinkEvent e) {

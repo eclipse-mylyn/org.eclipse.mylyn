@@ -270,7 +270,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 				info = reconcile(info);
 				final AbstractTask task = info.getTask();
 				if (task != null) {
-					TasksUiUtil.refreshAndOpenTaskListElement(task);
+					TasksUiUtil.openTaskAndRefresh(task);
 					return Status.OK_STATUS;
 				}
 				if (info.getRepositoryUrl() != null && info.getTaskId() != null) {
@@ -289,7 +289,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 				if (taskFullUrl != null) {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 						public void run() {
-							TasksUiUtil.openUrl(taskFullUrl, false);
+							TasksUiUtil.openUrl(taskFullUrl);
 						}
 					});
 

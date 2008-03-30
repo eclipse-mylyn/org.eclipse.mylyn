@@ -17,7 +17,7 @@ import junit.framework.TestSuite;
 public class AllContextTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.core.tests");
+		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.context.tests");
 		// $JUnit-BEGIN$
 		suite.addTestSuite(InteractionContextListeningTest.class);
 		suite.addTestSuite(ScalingFactorsTest.class);

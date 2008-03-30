@@ -202,7 +202,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 			InterruptedException {
 		assertEquals(0, page.getEditorReferences().length);
 		AbstractTask task = new LocalTask(contextId, contextId);
-		TasksUiUtil.openEditor(task, false, false);
+		TasksUiUtil.openTask(task);
 		assertEquals(1, page.getEditorReferences().length);
 		manager.activateContext(contextId);
 		assertEquals(1, page.getEditorReferences().length);
