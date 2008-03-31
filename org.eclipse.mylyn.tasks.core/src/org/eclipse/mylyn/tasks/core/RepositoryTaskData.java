@@ -308,8 +308,15 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 		}
 	}
 
-	// API 3.0 rename to getConnectorKind()
+	/**
+	 * @deprecated Use {@link #getConnectorKind()} instead
+	 */
+	@Deprecated
 	public String getRepositoryKind() {
+		return getConnectorKind();
+	}
+
+	public String getConnectorKind() {
 		return repositoryKind;
 	}
 
@@ -324,7 +331,6 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 		}
 	}
 
-	// API 3.0 rename to getConnectorKind()
 	public String getTaskKind() {
 		return taskKind;
 	}

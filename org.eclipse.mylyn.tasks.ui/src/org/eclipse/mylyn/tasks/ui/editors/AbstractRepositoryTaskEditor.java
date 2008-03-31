@@ -383,7 +383,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		public ISelection getSelection() {
 			RepositoryTaskSelection selection = new RepositoryTaskSelection(taskData.getId(),
-					taskData.getRepositoryUrl(), taskData.getRepositoryKind(), "", selectedComment,
+					taskData.getRepositoryUrl(), taskData.getConnectorKind(), "", selectedComment,
 					taskData.getSummary());
 			selection.setIsDescription(true);
 			return selection;
@@ -2080,7 +2080,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		public void handleEvent(Event event) {
 			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
 					new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(),
-							taskData.getRepositoryKind(), getSectionLabel(SECTION_NAME.DESCRIPTION_SECTION), true,
+							taskData.getConnectorKind(), getSectionLabel(SECTION_NAME.DESCRIPTION_SECTION), true,
 							taskData.getSummary()))));
 		}
 	}
@@ -3245,7 +3245,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		public void handleEvent(Event event) {
 			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
 					new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(),
-							taskData.getRepositoryKind(), getSectionLabel(SECTION_NAME.NEWCOMMENT_SECTION), false,
+							taskData.getConnectorKind(), getSectionLabel(SECTION_NAME.NEWCOMMENT_SECTION), false,
 							taskData.getSummary()))));
 		}
 	}

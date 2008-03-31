@@ -56,6 +56,11 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 	}
 
 	@Override
+	public String getTaskHistoryUrl(TaskRepository taskRepository, String taskId) {
+		return taskRepository.getUrl() + IBugzillaConstants.URL_BUG_ACTIVITY + taskId;
+	}
+	
+	@Override
 	public List<AbstractTaskContainer> getLegendItems() {
 		List<AbstractTaskContainer> legendItems = new ArrayList<AbstractTaskContainer>();
 

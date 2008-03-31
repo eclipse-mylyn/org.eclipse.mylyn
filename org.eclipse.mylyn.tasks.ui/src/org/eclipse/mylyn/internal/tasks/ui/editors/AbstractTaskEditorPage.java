@@ -51,6 +51,7 @@ import org.eclipse.mylyn.tasks.core.TaskComment;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
@@ -663,17 +664,21 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 				}
 			}
 
-			if (getHistoryUrl() != null) {
-				historyAction = new Action() {
-					@Override
-					public void run() {
-						TasksUiUtil.openUrl(getHistoryUrl());
-					}
-				};
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskData.getConnectorKind());
+			if (connectorUi != null) {
+				final String historyUrl = connectorUi.getTaskHistoryUrl(taskRepository, taskData.getTaskKey());
+				if (historyUrl != null) {
+					historyAction = new Action() {
+						@Override
+						public void run() {
+							TasksUiUtil.openUrl(historyUrl);
+						}
+					};
 
-				historyAction.setImageDescriptor(TasksUiImages.TASK_REPOSITORY_HISTORY);
-				historyAction.setToolTipText(LABEL_HISTORY);
-				toolBarManager.add(historyAction);
+					historyAction.setImageDescriptor(TasksUiImages.TASK_REPOSITORY_HISTORY);
+					historyAction.setToolTipText(LABEL_HISTORY);
+					toolBarManager.add(historyAction);
+				}
 			}
 
 			if (connector != null) {
@@ -798,16 +803,6 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 	 */
 	public Composite getEditorComposite() {
 		return editorComposite;
-	}
-
-	/**
-	 * Override to make hyperlink available. If not overridden hyperlink will simply not be displayed.
-	 * 
-	 * @return url String form of url that points to task's past activity
-	 */
-	// TODO EDITOR move to tasks core
-	protected String getHistoryUrl() {
-		return null;
 	}
 
 	public RepositoryTaskOutlinePage getOutline() {

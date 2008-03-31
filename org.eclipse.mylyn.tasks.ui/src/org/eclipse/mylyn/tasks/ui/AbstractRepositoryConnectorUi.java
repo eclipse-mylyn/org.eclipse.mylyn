@@ -194,6 +194,16 @@ public abstract class AbstractRepositoryConnectorUi {
 	}
 
 	/**
+	 * Override to return a URL that provides the user with a history page for the task
+	 * 
+	 * @return a url of a page for the history of the task; null, if no history url is available
+	 * @since 3.0
+	 */
+	public String getTaskHistoryUrl(TaskRepository taskRepository, String taskKey) {
+		return null;
+	}
+
+	/**
 	 * Only override if task should be opened by a custom editor, default behavior is to open with a rich editor,
 	 * falling back to the web browser if not available.
 	 * 

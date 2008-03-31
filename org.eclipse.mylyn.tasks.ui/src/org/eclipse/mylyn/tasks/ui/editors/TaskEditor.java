@@ -477,7 +477,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 				setFormHeaderLabel(task);
 			} else {
 				if (taskData != null) {
-					setFormHeaderImage(taskData.getRepositoryKind());
+					setFormHeaderImage(taskData.getConnectorKind());
 					setFormHeaderLabel(taskData);
 				}
 			}
@@ -529,7 +529,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 	}
 
 	private void setFormHeaderLabel(RepositoryTaskData taskData) {
-		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskData.getRepositoryKind());
+		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskData.getConnectorKind());
 
 		String kindLabel = taskData.getTaskKind();
 

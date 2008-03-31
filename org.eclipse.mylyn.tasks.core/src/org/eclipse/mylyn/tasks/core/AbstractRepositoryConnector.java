@@ -295,18 +295,22 @@ public abstract class AbstractRepositoryConnector {
 	public abstract boolean markStaleTasks(TaskRepository repository, Set<AbstractTask> tasks, IProgressMonitor monitor)
 			throws CoreException;
 
+	// API 3.0 move to template manager
 	public void addTemplate(RepositoryTemplate template) {
 		this.templates.add(template);
 	}
 
+	// API 3.0 move to template manager
 	public Set<RepositoryTemplate> getTemplates() {
 		return templates;
 	}
 
+	// API 3.0 move to template manager
 	public void removeTemplate(RepositoryTemplate template) {
 		this.templates.remove(template);
 	}
 
+	// API 3.0 move to template manager
 	/** returns null if template not found */
 	public RepositoryTemplate getTemplate(String label) {
 		for (RepositoryTemplate template : getTemplates()) {
@@ -317,6 +321,7 @@ public abstract class AbstractRepositoryConnector {
 		return null;
 	}
 
+	// API 3.0 move to RepositoryConnectorUi?
 	/**
 	 * Used for referring to the task in the UI.
 	 * 
@@ -349,6 +354,7 @@ public abstract class AbstractRepositoryConnector {
 		return isStale;
 	}
 
+	// API 3.0 remove and let connectors override isUserManaged? Can this property change in the life cycle of the connector?
 	public void setUserManaged(boolean userManaged) {
 		this.userManaged = userManaged;
 	}
