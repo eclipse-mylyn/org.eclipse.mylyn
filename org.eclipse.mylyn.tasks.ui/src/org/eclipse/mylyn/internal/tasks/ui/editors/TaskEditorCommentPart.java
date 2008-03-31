@@ -259,6 +259,30 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		setControl(addCommentsComposite);
 	}
 
+//	private boolean shouldExpandCommentSection() {
+//		for (final TaskComment taskComment : taskData.getComments()) {
+//			if ((repositoryTask != null && repositoryTask.getLastReadTimeStamp() == null)
+//					|| editorInput.getOldTaskData() == null) {
+//				return true;
+//			} else if (isNewComment(taskComment)) {
+//				return true;
+//			}
+//		}
+//
+//		if (taskData.getComments() == null || taskData.getComments().size() == 0) {
+//			return false;
+//		} else if (editorInput.getTaskData() != null && editorInput.getOldTaskData() != null) {
+//			List<TaskComment> newTaskComments = editorInput.getTaskData().getComments();
+//			List<TaskComment> oldTaskComments = editorInput.getOldTaskData().getComments();
+//			if (newTaskComments == null || oldTaskComments == null) {
+//				return true;
+//			} else if (newTaskComments.size() != oldTaskComments.size()) {
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
+
 	// TODO EDITOR merge with AbstractReplyToAction
 	private ImageHyperlink createReplyHyperlink(Composite composite, FormToolkit toolkit, final TaskComment taskComment) {
 		final ImageHyperlink replyLink = new ImageHyperlink(composite, SWT.NULL);

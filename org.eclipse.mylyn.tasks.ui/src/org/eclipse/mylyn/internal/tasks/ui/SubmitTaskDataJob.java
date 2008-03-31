@@ -12,6 +12,7 @@ import java.util.Collections;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
@@ -107,6 +108,8 @@ public class SubmitTaskDataJob extends Job {
 			TasksUiPlugin.getSynchronizationManager().setTaskRead(task, true);
 		} catch (CoreException e) {
 			errorStatus = e.getStatus();
+		} catch (OperationCanceledException e) {
+			return Status.CANCEL_STATUS;
 		} catch (Exception e) {
 			errorStatus = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, e.getMessage(), e);
 		} finally {

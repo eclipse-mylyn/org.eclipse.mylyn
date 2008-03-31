@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -36,12 +37,14 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.tasks.ui.SubmitTaskDataJob;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.internal.tasks.ui.actions.ClearOutgoingAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewSubTaskAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ToggleTaskActivationAction;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
@@ -242,6 +245,8 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 	private final List<ISelectionChangedListener> selectionChangedListeners = new ArrayList<ISelectionChangedListener>();
 
+	private Action clearOutgoingAction;
+
 	/**
 	 * Focuses on form widgets when an item in the outline is selected.
 	 */
@@ -294,7 +299,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 				selectedComment = commentPart.getSelectedComment();
 			}
 			RepositoryTaskSelection selection = new RepositoryTaskSelection(taskData.getId(),
-					taskData.getRepositoryUrl(), taskData.getRepositoryKind(), "", selectedComment,
+					taskData.getRepositoryUrl(), taskData.getConnectorKind(), "", selectedComment,
 					taskData.getSummary());
 			selection.setIsDescription(true);
 			return selection;
@@ -334,8 +339,8 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 					public void run() {
 						if (task.getSynchronizationState() == RepositoryTaskSyncState.INCOMING
 								|| task.getSynchronizationState() == RepositoryTaskSyncState.CONFLICT) {
-							getParentEditor().setMessage("Task has incoming changes, synchronize to view",
-									IMessageProvider.WARNING, new HyperlinkAdapter() {
+							getParentEditor().setMessage("Task has incoming changes", IMessageProvider.WARNING,
+									new HyperlinkAdapter() {
 										@Override
 										public void linkActivated(HyperlinkEvent e) {
 											refreshEditor();
@@ -367,7 +372,20 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		attributesListeners.add(listener);
 	}
 
-	private void addHeaderControls() {
+	private void updateHeaderControls() {
+		if (taskData == null) {
+			getParentEditor().setMessage(
+					"Task data not available. Press synchronize button (right) to retrieve latest data.",
+					IMessageProvider.WARNING, new HyperlinkAdapter() {
+						@Override
+						public void linkActivated(HyperlinkEvent e) {
+							if (synchronizeEditorAction != null) {
+								synchronizeEditorAction.run();
+							}
+						}
+					});
+		}
+
 		ControlContribution repositoryLabelControl = new ControlContribution("Title") { //$NON-NLS-1$
 			@Override
 			protected Control createControl(Composite parent) {
@@ -456,9 +474,8 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 	private void createAttachmentSection(Composite composite) {
 		// TODO: expand to show new attachments
-		Section section = createSection(composite, getSectionLabel(SectionName.ATTACHMENTS_SECTION));
+		Section section = createSection(composite, getSectionLabel(SectionName.ATTACHMENTS_SECTION), false);
 		section.setText(section.getText() + " (" + taskData.getAttachments().size() + ")");
-		section.setExpanded(false);
 
 		TaskEditorAttachmentPart attachmentPart = new TaskEditorAttachmentPart(this);
 		attachmentPart.setSupportsDelete(supportsAttachmentDelete());
@@ -469,9 +486,8 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 			String storageId);
 
 	private void createAttributeSection() {
-		attributesSection = createSection(editorComposite, getSectionLabel(SectionName.ATTRIBUTES_SECTION));
-		attributesSection.setExpanded(expandedStateAttributes
-				|| getAttributeManager().hasVisibleOutgoingChanges(taskData));
+		attributesSection = createSection(editorComposite, getSectionLabel(SectionName.ATTRIBUTES_SECTION),
+				expandedStateAttributes || getAttributeManager().hasVisibleOutgoingChanges(taskData));
 
 		TaskEditorAttributePart attributePart = new TaskEditorAttributePart(this);
 		initializePart(attributesSection, attributePart);
@@ -503,24 +519,45 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 		super.createFormContent(managedForm);
 
-		form = managedForm.getForm();
-		toolkit = managedForm.getToolkit();
-		registerDropListener(form);
+		try {
+			reflow = false;
 
-		editorComposite = form.getBody();
-		GridLayout editorLayout = new GridLayout();
-		editorComposite.setLayout(editorLayout);
-		editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
+			form = managedForm.getForm();
+			toolkit = managedForm.getToolkit();
+			registerDropListener(form);
 
-		if (taskData == null) {
-			getParentEditor().setMessage(
-					"Task data not available. Press synchronize button (right) to retrieve latest data.",
-					IMessageProvider.WARNING);
-		} else {
-			createSections();
+			editorComposite = form.getBody();
+			GridLayout editorLayout = new GridLayout();
+			editorComposite.setLayout(editorLayout);
+			editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskRepository.getConnectorKind());
+			if (connectorUi == null) {
+				getParentEditor().setMessage("The editor may not be fully loaded", IMessageProvider.INFORMATION,
+						new HyperlinkAdapter() {
+							@Override
+							public void linkActivated(HyperlinkEvent e) {
+								refreshEditor();
+							}
+						});
+			}
+
+			if (taskData == null) {
+				getParentEditor().setMessage(
+						"Task data not available. Press synchronize button (right) to retrieve latest data.",
+						IMessageProvider.WARNING);
+			} else {
+				createSections();
+			}
+
+			updateHeaderControls();
+
+			form.setRedraw(true);
+		} finally {
+			reflow = true;
 		}
 
-		addHeaderControls();
+		form.reflow(true);
 	}
 
 	private void createNewCommentSection(Composite composite) {
@@ -554,9 +591,16 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 	}
 
 	private Section createSection(Composite composite, String title) {
-		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE);
+		return createSection(composite, title, true);
+	}
+
+	private Section createSection(Composite composite, String title, boolean expandedState) {
+		int style = ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE;
+		if (expandedState) {
+			style |= ExpandableComposite.EXPANDED;
+		}
+		Section section = toolkit.createSection(composite, style);
 		section.setText(title);
-		section.setExpanded(true);
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		return section;
 	}
@@ -589,7 +633,6 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		createPeopleSection(bottomComposite);
 
 		bottomComposite.pack(true);
-		form.reflow(true);
 
 		getSite().getPage().addSelectionListener(selectionListener);
 		getSite().setSelectionProvider(selectionProvider);
@@ -638,6 +681,8 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		}
 
 		getManagedForm().dirtyStateChanged();
+
+		updateHeaderControls();
 	}
 
 	@Override
@@ -651,11 +696,19 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 	 * @since 2.1 (NOTE: likely to change for 3.0)
 	 */
 	protected void fillToolBar(IToolBarManager toolBarManager) {
+		if ((taskData != null && !taskData.isNew()) || task != null) {
+			synchronizeEditorAction = new SynchronizeEditorAction();
+			synchronizeEditorAction.selectionChanged(new StructuredSelection(this));
+			toolBarManager.add(synchronizeEditorAction);
+		}
+
 		if (taskData != null && !taskData.isNew()) {
 			if (task != null) {
-				synchronizeEditorAction = new SynchronizeEditorAction();
-				synchronizeEditorAction.selectionChanged(new StructuredSelection(this));
-				toolBarManager.add(synchronizeEditorAction);
+				clearOutgoingAction = new ClearOutgoingAction(Collections.singletonList((AbstractTaskContainer) task));
+
+				if (clearOutgoingAction.isEnabled()) {
+					toolBarManager.add(clearOutgoingAction);
+				}
 
 				newSubTaskAction = new NewSubTaskAction();
 				newSubTaskAction.selectionChanged(newSubTaskAction, new StructuredSelection(task));
@@ -841,7 +894,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 			return;
 		}
 
-		taskRepository = TasksUiPlugin.getRepositoryManager().getRepository(taskData.getRepositoryKind(),
+		taskRepository = TasksUiPlugin.getRepositoryManager().getRepository(taskData.getConnectorKind(),
 				taskData.getRepositoryUrl());
 		if (task != null) {
 			attributeManager = createAttributeManager(taskRepository, task.getRepositoryUrl(), task.getTaskId());
@@ -938,6 +991,8 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 			controlBySelectableObject.clear();
 
 			refreshInput();
+
+			updateHeaderControls();
 
 			if (task != null) {
 				TasksUiPlugin.getSynchronizationManager().setTaskRead(task, true);
@@ -1149,6 +1204,10 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 			if (newSubTaskAction != null) {
 				newSubTaskAction.setEnabled(!busy);
+			}
+
+			if (clearOutgoingAction != null) {
+				clearOutgoingAction.setEnabled(!busy);
 			}
 
 			EditorUtil.setEnabledState(editorComposite, !busy);
