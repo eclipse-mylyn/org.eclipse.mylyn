@@ -32,6 +32,7 @@ public class NewAttachmentWizardDialog extends WizardDialog {
 		}
 		setMinimumPageSize(600, 300);
 		setPageSize(600, 300);
+		setBlockOnOpen(modal);
 	}
 
 	@Override

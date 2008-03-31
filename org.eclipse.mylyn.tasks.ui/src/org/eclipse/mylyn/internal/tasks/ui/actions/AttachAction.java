@@ -9,7 +9,6 @@
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
 import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
@@ -57,13 +56,19 @@ public class AttachAction extends AbstractTaskEditorAction {
 			NewAttachmentWizard attachmentWizard = new NewAttachmentWizard(repository, repositoryTask);
 			NewAttachmentWizardDialog dialog = new NewAttachmentWizardDialog(PlatformUI.getWorkbench()
 					.getActiveWorkbenchWindow()
-					.getShell(), attachmentWizard, true);
+					.getShell(), attachmentWizard, false) {
+				@Override
+				public boolean close() {
+					boolean closed = super.close();
+					if (closed && editor != null) {
+						editor.showBusy(false);
+					}
+					return closed;
+				}
+			};
 			attachmentWizard.setDialog(dialog);
 			dialog.create();
-			int result = dialog.open();
-			if (result != Window.OK && editor != null) {
-				editor.showBusy(false);
-			}
+			dialog.open();
 		}
 	}
 
