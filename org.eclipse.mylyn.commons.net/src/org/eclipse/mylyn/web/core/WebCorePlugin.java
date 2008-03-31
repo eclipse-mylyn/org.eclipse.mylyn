@@ -85,7 +85,6 @@ public class WebCorePlugin extends Plugin {
 
 		public void addProxyChangeListener(IProxyChangeListener listener) {
 			// ignore
-
 		}
 
 		public String[] getNonProxiedHosts() {
@@ -136,6 +135,20 @@ public class WebCorePlugin extends Plugin {
 		public void setProxyData(IProxyData[] proxies) throws CoreException {
 			// ignore
 
+		}
+
+		public boolean hasSystemProxies() {
+			// ignore
+			return false;
+		}
+
+		public boolean isSystemProxiesEnabled() {
+			// ignore
+			return false;
+		}
+
+		public void setSystemProxiesEnabled(boolean enabled) {
+			// ignore
 		}
 
 	}
