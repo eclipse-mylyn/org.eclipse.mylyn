@@ -270,7 +270,11 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 				info = reconcile(info);
 				final AbstractTask task = info.getTask();
 				if (task != null) {
-					TasksUiUtil.openTaskAndRefresh(task);
+					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+						public void run() {
+							TasksUiUtil.openTaskAndRefresh(task);
+						}
+					});
 					return Status.OK_STATUS;
 				}
 				if (info.getRepositoryUrl() != null && info.getTaskId() != null) {
