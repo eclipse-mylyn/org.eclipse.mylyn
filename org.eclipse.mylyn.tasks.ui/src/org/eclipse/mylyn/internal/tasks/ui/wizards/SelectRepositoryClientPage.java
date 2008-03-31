@@ -34,6 +34,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * @author Mik Kersten
  */
+// API 3.0 rename to SelectConnectorPage
 public class SelectRepositoryClientPage extends WizardPage {
 
 	private static final String DESCRIPTION = "You can connect to an existing account using one of the installed connectors.";
