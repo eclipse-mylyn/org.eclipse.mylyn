@@ -383,7 +383,7 @@ public class OfflineFileStorage implements ITaskDataStorage {
 		parent.putString(ATTRIBUTE_ID, getCleanText(newTaskData.getId()));
 		parent.putString(ATTRIBUTE_TASK_KIND, getCleanText(newTaskData.getTaskKind()));
 		parent.putString(ATTRIBUTE_REPOSITORY_URL, getCleanText(newTaskData.getRepositoryUrl()));
-		parent.putString(ATTRIBUTE_REPOSITORY_KIND, getCleanText(newTaskData.getRepositoryKind()));
+		parent.putString(ATTRIBUTE_REPOSITORY_KIND, getCleanText(newTaskData.getConnectorKind()));
 
 		IMemento attributes = parent.createChild(ELEMENT_ATTRIBUTES);
 		addAttributes(attributes, newTaskData.getAttributes());

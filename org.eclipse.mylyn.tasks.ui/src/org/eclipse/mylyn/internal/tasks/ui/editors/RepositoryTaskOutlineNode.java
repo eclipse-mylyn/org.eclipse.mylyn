@@ -220,10 +220,10 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 
 		String bugId = bug.getId();
 		String bugServer = bug.getRepositoryUrl();
-		RepositoryTaskOutlineNode topNode = new RepositoryTaskOutlineNode(bugId, bugServer, bug.getRepositoryKind(),
+		RepositoryTaskOutlineNode topNode = new RepositoryTaskOutlineNode(bugId, bugServer, bug.getConnectorKind(),
 				bug.getLabel(), bug, bug.getSummary());
 
-		RepositoryTaskOutlineNode desc = new RepositoryTaskOutlineNode(bugId, bugServer, bug.getRepositoryKind(),
+		RepositoryTaskOutlineNode desc = new RepositoryTaskOutlineNode(bugId, bugServer, bug.getConnectorKind(),
 				LABEL_DESCRIPTION, bug.getDescription(), bug.getSummary());
 		desc.setIsDescription(true);
 
@@ -236,11 +236,11 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 				continue;
 			}
 			if (comments == null) {
-				comments = new RepositoryTaskOutlineNode(bugId, bugServer, bug.getRepositoryKind(), LABEL_COMMENTS,
+				comments = new RepositoryTaskOutlineNode(bugId, bugServer, bug.getConnectorKind(), LABEL_COMMENTS,
 						taskComment, bug.getSummary());
 				comments.setIsCommentHeader(true);
 			}
-			comments.addChild(new RepositoryTaskOutlineNode(bugId, bugServer, bug.getRepositoryKind(),
+			comments.addChild(new RepositoryTaskOutlineNode(bugId, bugServer, bug.getConnectorKind(),
 					taskComment.getCreated(), taskComment, bug.getSummary()));
 		}
 		if (comments != null) {
@@ -248,11 +248,11 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 		}
 
 		if (hasNewComment) {
-			topNode.addChild(new RepositoryTaskOutlineNode(bugId, bugServer, bug.getRepositoryKind(),
+			topNode.addChild(new RepositoryTaskOutlineNode(bugId, bugServer, bug.getConnectorKind(),
 					LABEL_NEW_COMMENT, null, bug.getSummary()));
 		}
 
-		RepositoryTaskOutlineNode titleNode = new RepositoryTaskOutlineNode(bugId, bugServer, bug.getRepositoryKind(),
+		RepositoryTaskOutlineNode titleNode = new RepositoryTaskOutlineNode(bugId, bugServer, bug.getConnectorKind(),
 				"BugReport Object", null, bug.getSummary());
 		titleNode.addChild(topNode);
 

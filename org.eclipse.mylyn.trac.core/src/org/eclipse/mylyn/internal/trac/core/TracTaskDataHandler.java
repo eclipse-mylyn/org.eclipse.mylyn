@@ -97,7 +97,7 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 
 	@Override
 	public AbstractAttributeFactory getAttributeFactory(RepositoryTaskData taskData) {
-		return getAttributeFactory(taskData.getRepositoryUrl(), taskData.getRepositoryKind(), taskData.getTaskKind());
+		return getAttributeFactory(taskData.getRepositoryUrl(), taskData.getConnectorKind(), taskData.getTaskKind());
 	}
 
 	public static void updateTaskData(TaskRepository repository, AbstractAttributeFactory factory,

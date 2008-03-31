@@ -78,7 +78,7 @@ public class OfflineCachingStorageTest extends TestCase {
 		assertNotNull(retrieved);
 		RepositoryTaskData newTaskData = retrieved.getNewTaskData();
 		assertNotNull(newTaskData);
-		assertEquals(MockRepositoryConnector.REPOSITORY_KIND, newTaskData.getRepositoryKind());
+		assertEquals(MockRepositoryConnector.REPOSITORY_KIND, newTaskData.getConnectorKind());
 		assertEquals("description", newTaskData.getDescription());
 		assertEquals("new comment", newTaskData.getNewComment());
 		assertEquals("task key", newTaskData.getTaskKey());

@@ -308,7 +308,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		public void handleEvent(Event event) {
 			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
 					new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(),
-							taskData.getRepositoryKind(), "New Description", false, taskData.getSummary()))));
+							taskData.getConnectorKind(), "New Description", false, taskData.getSummary()))));
 		}
 	}
 

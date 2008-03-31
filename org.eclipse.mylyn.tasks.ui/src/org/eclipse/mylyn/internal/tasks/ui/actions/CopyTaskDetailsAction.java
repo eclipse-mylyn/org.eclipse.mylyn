@@ -78,7 +78,7 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 
 			text += taskData.getSummary();
 			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-					taskData.getRepositoryKind());
+					taskData.getConnectorKind());
 			if (connector != null) {
 				text += "\n" + connector.getTaskUrl(taskData.getRepositoryUrl(), taskData.getId());
 			}

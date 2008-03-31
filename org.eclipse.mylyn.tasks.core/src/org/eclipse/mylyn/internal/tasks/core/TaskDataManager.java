@@ -257,7 +257,7 @@ public class TaskDataManager {
 			return;
 		}
 		taskData.refresh();
-		AbstractRepositoryConnector connector = taskRepositoryManager.getRepositoryConnector(taskData.getRepositoryKind());
+		AbstractRepositoryConnector connector = taskRepositoryManager.getRepositoryConnector(taskData.getConnectorKind());
 		if (connector != null && connector.getTaskDataHandler() != null) {
 			AbstractAttributeFactory factory = connector.getTaskDataHandler().getAttributeFactory(taskData);
 			if (factory != null) {

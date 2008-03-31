@@ -336,7 +336,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 				attachment.setAttributeValue(RepositoryTaskAttribute.ATTACHMENT_URL,
 						repositoryTaskData.getRepositoryUrl() + IBugzillaConstants.URL_GET_ATTACHMENT_SUFFIX
 								+ attachment.getId());
-				attachment.setRepositoryKind(repositoryTaskData.getRepositoryKind());
+				attachment.setRepositoryKind(repositoryTaskData.getConnectorKind());
 				attachment.setRepositoryUrl(repositoryTaskData.getRepositoryUrl());
 				attachment.setTaskId(repositoryTaskData.getId());
 			}

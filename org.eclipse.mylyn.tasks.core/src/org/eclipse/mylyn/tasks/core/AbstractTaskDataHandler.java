@@ -125,7 +125,7 @@ public abstract class AbstractTaskDataHandler {
 	public void cloneTaskData(RepositoryTaskData sourceTaskData, RepositoryTaskData targetTaskData) {
 		targetTaskData.setSummary(sourceTaskData.getSummary());
 		targetTaskData.setDescription(sourceTaskData.getDescription());
-		if (sourceTaskData.getRepositoryKind().equals(targetTaskData.getRepositoryKind())
+		if (sourceTaskData.getConnectorKind().equals(targetTaskData.getConnectorKind())
 				&& sourceTaskData.getTaskKind().equals(targetTaskData.getTaskKind())) {
 			// task data objects are from the same connector, copy all attributes
 			for (RepositoryTaskAttribute sourceAttribute : sourceTaskData.getAttributes()) {

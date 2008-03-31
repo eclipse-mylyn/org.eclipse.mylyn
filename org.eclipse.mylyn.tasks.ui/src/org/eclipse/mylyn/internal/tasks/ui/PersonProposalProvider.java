@@ -125,7 +125,7 @@ public class PersonProposalProvider implements IContentProposalProvider {
 		if (repositoryUrl == null || repositoryKind == null) {
 			if (currentTaskData != null) {
 				repositoryUrl = currentTaskData.getRepositoryUrl();
-				repositoryKind = currentTaskData.getRepositoryKind();
+				repositoryKind = currentTaskData.getConnectorKind();
 			}
 		}
 
