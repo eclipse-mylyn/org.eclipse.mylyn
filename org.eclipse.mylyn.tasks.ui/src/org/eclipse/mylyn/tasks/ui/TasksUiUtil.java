@@ -83,6 +83,14 @@ public class TasksUiUtil {
 
 	public static final String PREFS_PAGE_ID_COLORS_AND_FONTS = "org.eclipse.ui.preferencePages.ColorsAndFonts";
 
+	/**
+	 * Flag that is passed along to the workbench browser support when a task is opened in a browser because no rich
+	 * editor was available.
+	 * 
+	 * @see #openTask(String)
+	 */
+	public static final int FLAG_NO_RICH_EDITOR = 1 << 17;
+
 	public static void closeEditorInActivePage(AbstractTask task, boolean save) {
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window == null) {
@@ -473,7 +481,7 @@ public class TasksUiUtil {
 				opened = openTask(repository, id);
 			}
 			if (!opened) {
-				openUrl(url);
+				openUrl(url, FLAG_NO_RICH_EDITOR);
 			}
 		}
 	}
@@ -579,6 +587,13 @@ public class TasksUiUtil {
 	 * @since 3.0
 	 */
 	public static void openUrl(String location) {
+		openUrl(location, 0);
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	private static void openUrl(String location, int customFlags) {
 		try {
 			URL url = new URL(location);
 			if (WebBrowserPreference.getBrowserChoice() == WebBrowserPreference.EXTERNAL) {
