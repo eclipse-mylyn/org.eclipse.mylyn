@@ -8,11 +8,11 @@ else
 fi
 
 sed -e s/QUALIFIER=.*/QUALIFIER=$BUILD/ -i local.sh
+
+BUILD_ROOT=$(cd $(dirname $0); pwd)
 source $BUILD_ROOT/local.sh
 
 echo "Building $QUALIFIER"
-
-BUILD_ROOT=$(cd $(dirname $0); pwd)
 
 $BUILD_ROOT/build-3.3.sh
 $BUILD_ROOT/build-3.4.sh
