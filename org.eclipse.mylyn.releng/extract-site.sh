@@ -1,8 +1,21 @@
 #!/bin/sh -e
 
+release() {
+  WEEKLY_TARGET=$HOME/downloads/tools/mylyn/update/$1
+
+  rm -r $WEEKLY_TARGET.old | true
+  mv $WEEKLY_TARGET $WEEKLY_TARGET.old
+
+  cp -a $TARGET $WEEKLY_TARGET
+
+  echo
+  echo Updated site at $WEEKLY_TARGET
+  ls $WEEKLY_TARGET/*
+}
+
 if [ $# -lt 2 ]
 then
-  echo "usage: extract-site.sh version qualifier [-force] [-weekly]"
+  echo "usage: extract-site.sh version qualifier [-force] [-weekly|-dev]"
   exit 1
 fi
 
@@ -28,14 +41,10 @@ ls $TARGET/*
 
 if [ "$3" == "-weekly" ] || [ "$4" == "-weekly" ]
 then
-  WEEKLY_TARGET=$HOME/downloads/tools/mylyn/update/weekly
+	release weekly
+fi
 
-  rm -r $WEEKLY_TARGET.old | true
-  mv $WEEKLY_TARGET $WEEKLY_TARGET.old
-
-  cp -a $TARGET $WEEKLY_TARGET
-
-  echo
-  echo Updated weekly site in $WEEKLY_TARGET
-  ls $WEEKLY_TARGET/*
+if [ "$3" == "-dev" ] || [ "$4" == "-dev" ]
+then
+	release dev
 fi
