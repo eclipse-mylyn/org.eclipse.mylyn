@@ -18,7 +18,9 @@ Require-Bundle: org.junit,
  org.eclipse.jface.text,
  org.eclipse.mylyn.web.core,
  org.apache.xmlrpc;bundle-version="3.0.0"
-Export-Package: org.eclipse.mylyn.trac.tests
+Export-Package: org.eclipse.mylyn.internal.trac.ui;x-internal:=true,
+ org.eclipse.mylyn.trac.tests;x-internal:=true,
+ org.eclipse.mylyn.trac.tests.support;x-internal:=true
 Bundle-Activator: org.eclipse.mylyn.trac.tests.TracTestPlugin
 Eclipse-LazyStart: true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

@@ -3,8 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins">
 		<accessrules>
-			<accessrule kind="discouraged" pattern="**/mylyn/**/internal/**"/>
-			<accessrule kind="accessible" pattern="**/internal/**"/>
 			<accessrule kind="nonaccessible" pattern="**/System"/>
 		</accessrules>
 	</classpathentry>

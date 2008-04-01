@@ -319,6 +319,8 @@ public class TaskRepository extends PlatformObject {
 		addAuthInfo(map);
 	}
 
+	// TODO e3.4 move to new api
+	@SuppressWarnings("deprecation")
 	public void flushAuthenticationCredentials() {
 		synchronized (LOCK) {
 			isCachedUserName = false;
@@ -349,6 +351,8 @@ public class TaskRepository extends PlatformObject {
 		}
 	}
 
+	// TODO e3.4 move to new api
+	@SuppressWarnings("deprecation")
 	private void addAuthInfo(Map<String, String> map) {
 		synchronized (LOCK) {
 			try {
@@ -371,7 +375,8 @@ public class TaskRepository extends PlatformObject {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	// TODO e3.4 move to new api
+	@SuppressWarnings( { "unchecked", "deprecation" })
 	private Map<String, String> getAuthInfo() {
 		synchronized (LOCK) {
 			if (Platform.isRunning()) {

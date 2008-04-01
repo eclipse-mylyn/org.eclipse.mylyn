@@ -11,6 +11,6 @@ Require-Bundle: org.eclipse.core.runtime,
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
 Bundle-ClassPath: .
-Export-Package: org.eclipse.mylyn.internal.bugzilla.core,
- org.eclipse.mylyn.internal.bugzilla.core.history
+Export-Package: org.eclipse.mylyn.internal.bugzilla.core;x-friends:="org.eclipse.mylyn.bugzilla.ide,org.eclipse.mylyn.bugzilla.ui",
+ org.eclipse.mylyn.internal.bugzilla.core.history;x-friends:="org.eclipse.mylyn.bugzilla.ide,org.eclipse.mylyn.bugzilla.ui"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

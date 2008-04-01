@@ -20,7 +20,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.workbench.texteditor,
  org.eclipse.mylyn.web.core;bundle-version="[3.0.0,4.0.0)"
 Eclipse-LazyStart: true
-Export-Package: org.eclipse.mylyn.internal.trac.ui,
- org.eclipse.mylyn.internal.trac.ui.editor,
- org.eclipse.mylyn.internal.trac.ui.wizard
+Export-Package: org.eclipse.mylyn.internal.trac.ui;x-internal:=true,
+ org.eclipse.mylyn.internal.trac.ui.editor;x-internal:=true,
+ org.eclipse.mylyn.internal.trac.ui.wizard;x-internal:=true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

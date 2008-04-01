@@ -27,5 +27,6 @@ Require-Bundle: org.eclipse.ui,
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
 Bundle-ClassPath: bugzilla-test.jar
-Export-Package: org.eclipse.mylyn.bugzilla.tests
+Export-Package: org.eclipse.mylyn.bugzilla.tests,
+ org.eclipse.mylyn.bugzilla.tests.headless;x-internal:=true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

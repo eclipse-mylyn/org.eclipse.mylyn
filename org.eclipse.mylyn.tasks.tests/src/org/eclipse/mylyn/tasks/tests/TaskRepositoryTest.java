@@ -83,6 +83,8 @@ public class TaskRepositoryTest extends TestCase {
 		assertTrue(Platform.isRunning());
 	}
 
+	// TODO e3.4 move to new api 
+	@SuppressWarnings("deprecation")
 	public void password(AuthenticationType authType) throws Exception {
 		URL url = new URL("http://url");
 		TaskRepository taskRepository = new TaskRepository("kind", url.toString());

@@ -50,8 +50,8 @@ public class BugzillaSearchDialogTest extends TestCase {
 	 */
 	public void testSearchDialogInit() throws Exception {
 		TaskRepository repo = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND,
-				IBugzillaConstants.TEST_BUGZILLA_222_URL,
-				IBugzillaConstants.BugzillaServerVersion.SERVER_222.toString());
+				IBugzillaConstants.TEST_BUGZILLA_222_URL);
+		repo.setVersion(IBugzillaConstants.BugzillaServerVersion.SERVER_222.toString());
 		manager.addRepository(repo, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		BugzillaSearchPage page = new BugzillaSearchPage(repo);
 		Shell shell = BugzillaTestPlugin.getDefault().getWorkbench().getDisplay().getShells()[0];

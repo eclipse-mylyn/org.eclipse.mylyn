@@ -11,8 +11,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn.web.core;bundle-version="[3.0.0,4.0.0)",
  org.apache.xmlrpc;bundle-version="3.0.0"
 Eclipse-LazyStart: true
-Export-Package: org.eclipse.mylyn.internal.trac.core,
- org.eclipse.mylyn.internal.trac.core.model,
- org.eclipse.mylyn.internal.trac.core.util
+Export-Package: org.eclipse.mylyn.internal.trac.core;x-friends:="org.eclipse.mylyn.trac.ui",
+ org.eclipse.mylyn.internal.trac.core.model;x-friends:="org.eclipse.mylyn.trac.ui",
+ org.eclipse.mylyn.internal.trac.core.util;x-friends:="org.eclipse.mylyn.trac.ui"
 Bundle-Activator: org.eclipse.mylyn.internal.trac.core.TracCorePlugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
