@@ -17,7 +17,6 @@ import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
-import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -92,12 +91,12 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 	public boolean shouldAlwaysShow(Object parent, AbstractTask task, int depth) {
 
 		return task.isActive()
-				|| TaskActivityManager.getInstance().isCompletedToday(task)
+				|| TasksUiPlugin.getTaskActivityManager().isCompletedToday(task)
 				|| hasChanges(parent, task)
 				|| !task.isCompleted()
 				&& (LocalRepositoryConnector.DEFAULT_SUMMARY.equals(task.getSummary())
 						|| shouldShowInFocusedWorkweekDateContainer(parent, task)
-						|| TaskActivityManager.getInstance().isOverdue(task) || isInterestingForThisWeek(parent, task) || hasInterestingSubTasks(
+						|| TasksUiPlugin.getTaskActivityManager().isOverdue(task) || isInterestingForThisWeek(parent, task) || hasInterestingSubTasks(
 						parent, task, depth));
 	}
 
@@ -125,7 +124,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 			if (!TasksUiPlugin.getTaskActivityManager().isWeekDay((ScheduledTaskContainer) parent)) {
 				return false;
 			}
-			if (TaskActivityManager.getInstance().isOverdue(task) || task.isPastReminder()) {
+			if (TasksUiPlugin.getTaskActivityManager().isOverdue(task) || task.isPastReminder()) {
 				return true;
 			}
 
