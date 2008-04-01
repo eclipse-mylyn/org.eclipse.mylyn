@@ -31,6 +31,9 @@ public class Policy {
 		}
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public static void advance(IProgressMonitor monitor, int worked) {
 		if (monitor.isCanceled()) {
 			throw new OperationCanceledException();

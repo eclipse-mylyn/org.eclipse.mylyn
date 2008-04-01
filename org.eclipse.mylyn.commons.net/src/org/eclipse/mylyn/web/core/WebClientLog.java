@@ -16,6 +16,7 @@ import org.apache.commons.logging.impl.SimpleLog;
 /**
  * @author Rob Elves
  */
+// API 3.0 remove or move to internal class
 public class WebClientLog extends SimpleLog {
 
 	private static final long serialVersionUID = -8631869110301753325L;

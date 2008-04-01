@@ -52,9 +52,9 @@ import org.eclipse.mylyn.internal.web.core.PollingSslProtocolSocketFactory;
  * @author Steffen Pingel
  * @author Leo Dos Santos - getFaviconForUrl
  * @author Rob Elves
- * 
- * API-3.0 rename to WebUtil
+ * @since 2.0
  */
+// API-3.0 rename to WebUtil
 public class WebClientUtil {
 
 	private static final int MAX_THREADS = 10;

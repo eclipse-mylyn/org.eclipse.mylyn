@@ -22,7 +22,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn
 Eclipse-AutoStart: true
 Bundle-ClassPath: mylyn-monitor-tests.jar
-Export-Package: org.eclipse.mylyn.monitor.reports.tests,
- org.eclipse.mylyn.monitor.tests,
- org.eclipse.mylyn.monitor.tests.usage.tests
+Export-Package: org.eclipse.mylyn.monitor.reports.tests;x-internal:=true,
+ org.eclipse.mylyn.monitor.tests;x-internal:=true,
+ org.eclipse.mylyn.monitor.tests.usage.tests;x-internal:=true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
