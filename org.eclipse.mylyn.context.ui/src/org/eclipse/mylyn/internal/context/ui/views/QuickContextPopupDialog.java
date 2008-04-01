@@ -71,6 +71,8 @@ public class QuickContextPopupDialog extends PopupDialog implements IInformation
 
 	private ContextNodeOpenListener openListener;
 
+	// TODO e3.4 move to new api
+	@SuppressWarnings("deprecation")
 	public QuickContextPopupDialog(Shell parent) {
 		super(parent, SWT.RESIZE, true, true, true, true, null, "Task Context");
 		create();
@@ -230,6 +232,8 @@ public class QuickContextPopupDialog extends PopupDialog implements IInformation
 		// See IInformationControlExtension2
 	}
 
+	// TODO e3.4 move to new api
+	@SuppressWarnings("deprecation")
 	public void setLocation(Point location) {
 		/*
 		 * If the location is persisted, it gets managed by PopupDialog - fine. Otherwise, the location is

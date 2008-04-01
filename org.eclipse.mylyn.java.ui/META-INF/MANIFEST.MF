@@ -32,11 +32,12 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.editors
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
-Export-Package: org.eclipse.mylyn.internal.java.ui,
- org.eclipse.mylyn.internal.java.ui.actions,
- org.eclipse.mylyn.internal.java.ui.editor,
- org.eclipse.mylyn.internal.java.ui.junit,
- org.eclipse.mylyn.internal.java.ui.search,
- org.eclipse.mylyn.internal.java.ui.views,
- org.eclipse.mylyn.internal.java.ui.wizards
+Export-Package: org.eclipse.mylyn.internal.java.ui;x-internal:=true,
+ org.eclipse.mylyn.internal.java.ui.actions;x-internal:=true,
+ org.eclipse.mylyn.internal.java.ui.editor;x-internal:=true,
+ org.eclipse.mylyn.internal.java.ui.junit;x-internal:=true,
+ org.eclipse.mylyn.internal.java.ui.search;x-internal:=true,
+ org.eclipse.mylyn.internal.java.ui.views;x-internal:=true,
+ org.eclipse.mylyn.internal.java.ui.wizards;x-internal:=true,
+ org.eclipse.mylyn.java.ui
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
