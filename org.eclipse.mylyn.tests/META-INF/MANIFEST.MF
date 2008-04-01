@@ -5,7 +5,10 @@ Bundle-SymbolicName: org.eclipse.mylyn.tests
 Bundle-Version: 0.0.0
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
-Export-Package: org.eclipse.mylyn.tests
+Export-Package: org.eclipse.mylyn.tests;x-internal:=true,
+ org.eclipse.mylyn.tests.integration;x-internal:=true,
+ org.eclipse.mylyn.tests.manual;x-internal:=true,
+ org.eclipse.mylyn.tests.misc;x-internal:=true
 Bundle-ClassPath: mylyn-tests.jar
 Require-Bundle: org.junit,
  org.eclipse.core.runtime,
