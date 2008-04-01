@@ -51,6 +51,7 @@ import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.OfflineCachingStorage;
 import org.eclipse.mylyn.internal.tasks.ui.OfflineFileStorage;
 import org.eclipse.mylyn.internal.tasks.ui.RepositoryAwareStatusHandler;
+import org.eclipse.mylyn.internal.tasks.ui.TaskActivityMonitor;
 import org.eclipse.mylyn.internal.tasks.ui.TaskEditorBloatMonitor;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListBackupManager;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
@@ -328,6 +329,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		}
 	};
 
+	private TaskActivityMonitor taskActivityMonitor;
+
 	private class TasksUiInitializationJob extends UIJob {
 
 		public TasksUiInitializationJob() {
@@ -459,10 +462,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			initialized = true;
 
 			// if the taskListManager didn't initialize do it here
-			if (!taskActivityManager.isInitialized()) {
-				taskActivityManager.init(taskRepositoryManager, taskListManager.getTaskList());
-				taskActivityManager.setEndHour(getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
-			}
+			initTaskActivityManager();
 
 			saveParticipant = new ISaveParticipant() {
 
@@ -487,6 +487,16 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			new TasksUiInitializationJob().schedule();
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Task list initialization failed", e));
+		}
+	}
+
+	void initTaskActivityManager() {
+		if (!taskActivityManager.isInitialized()) {
+			taskActivityManager.init(taskRepositoryManager, taskListManager.getTaskList());
+			taskActivityManager.setEndHour(getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
+
+			taskActivityMonitor = new TaskActivityMonitor(taskActivityManager, ContextCorePlugin.getContextManager());
+			taskActivityMonitor.start();
 		}
 	}
 
@@ -545,6 +555,9 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		try {
+			if (taskActivityMonitor != null) {
+				taskActivityMonitor.stop();
+			}
 
 			if (ResourcesPlugin.getWorkspace() != null) {
 				ResourcesPlugin.getWorkspace().removeSaveParticipant(this);

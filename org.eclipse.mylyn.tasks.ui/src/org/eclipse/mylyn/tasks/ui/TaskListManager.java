@@ -469,16 +469,17 @@ public class TaskListManager implements IPropertyChangeListener {
 	 * public for testing TODO: Move to TaskActivityManager
 	 */
 	public void resetAndRollOver(Date startDate) {
-		if (!TaskActivityManager.getInstance().isInitialized()) {
-			TaskActivityManager.getInstance().init(TasksUiPlugin.getRepositoryManager(), taskList);
-			TaskActivityManager.getInstance()
-					.setEndHour(
-							TasksUiPlugin.getDefault().getPreferenceStore().getInt(
-									TasksUiPreferenceConstants.PLANNING_ENDHOUR));
-		}
+		TasksUiPlugin.getDefault().initTaskActivityManager();
+
 		startTime = startDate;
 		if (isTaskListInitialized()) {
 			TaskActivityManager.getInstance().reloadTimingData(startDate);
+			List<InteractionEvent> events = ContextCorePlugin.getContextManager()
+					.getActivityMetaContext()
+					.getInteractionHistory();
+			for (InteractionEvent event : events) {
+				TaskActivityManager.getInstance().parseInteractionEvent(event);
+			}
 		}
 		for (ITaskActivityListener listener : activityListeners) {
 			listener.activityChanged(null);

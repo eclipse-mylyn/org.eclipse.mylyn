@@ -24,11 +24,6 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.context.core.IInteractionContext;
-import org.eclipse.mylyn.context.core.IInteractionContextListener;
-import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -90,13 +85,9 @@ public class TaskActivityManager {
 
 	private ScheduledTaskContainer scheduledPrevious;
 
-	private int timeTicks;
-
 	private int startHour = 9;
 
 	private int endHour = 17;
-
-	private boolean taskActivityHistoryInitialized = false;
 
 	private TaskList taskList;
 
@@ -107,6 +98,8 @@ public class TaskActivityManager {
 	private int endDay = Calendar.SUNDAY;
 
 	private Date startTime = new Date();
+
+	private boolean initialized;
 
 	private static TaskActivityManager INSTANCE;
 
@@ -124,14 +117,11 @@ public class TaskActivityManager {
 	public void init(TaskRepositoryManager repositoryManager, TaskList taskList) {
 		this.taskList = taskList;
 		this.repositoryManager = repositoryManager;
-		if (!isInitialized) {
-			ContextCorePlugin.getContextManager().addActivityMetaContextListener(CONTEXT_LISTENER);
-		}
-		isInitialized = true;
+		initialized = true;
 	}
 
+	@Deprecated
 	public void dispose() {
-		ContextCorePlugin.getContextManager().removeActivityMetaContextListener(CONTEXT_LISTENER);
 	}
 
 	public int getStartDay() {
@@ -175,45 +165,27 @@ public class TaskActivityManager {
 
 	public void reloadTimingData(Date date) {
 		startTime = date;
-		taskActivityHistoryInitialized = false;
 		clear();
-		List<InteractionEvent> events = ContextCorePlugin.getContextManager()
-				.getActivityMetaContext()
-				.getInteractionHistory();
-		for (InteractionEvent event : events) {
-			parseInteractionEvent(event);
-		}
 		reloadScheduledData();
 		setupCalendarRanges();
-		taskActivityHistoryInitialized = true;
 	}
 
 	/** public for testing * */
-	public void parseInteractionEvent(InteractionEvent event) {
+	public boolean parseInteractionEvent(InteractionEvent event) {
 		try {
 			if (event.getKind().equals(InteractionEvent.Kind.ATTENTION)
-					&& (event.getDelta().equals(InteractionContextManager.ACTIVITY_DELTA_ADDED) || event.getDelta()
-							.equals("add"))) {
+					&& (event.getDelta().equals("added") || event.getDelta().equals("add"))) {
 				AbstractTask activatedTask = taskList.getTask(event.getStructureHandle());
-
 				if (activatedTask != null) {
-
 					addElapsedTimeForEvent(activatedTask, event);
-
-					timeTicks++;
-					if (taskActivityHistoryInitialized && timeTicks > 3) {
-						// Save in case of system failure.
-						// TODO: request asynchronous save
-						ContextCorePlugin.getContextManager().saveActivityContext();
-						timeTicks = 0;
-					}
+					return true;
 				}
-				return;
 			}
 		} catch (Throwable t) {
 			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
 					"Error parsing interaction event", t));
 		}
+		return false;
 	}
 
 	private void addElapsedTimeForEvent(AbstractTask activatedTask, InteractionEvent event) {
@@ -383,48 +355,6 @@ public class TaskActivityManager {
 		return result;
 	}
 
-	private final IInteractionContextListener CONTEXT_LISTENER = new IInteractionContextListener() {
-
-		public void contextActivated(IInteractionContext context) {
-			// ignore
-		}
-
-		public void contextDeactivated(IInteractionContext context) {
-			// ignore
-		}
-
-		public void contextCleared(IInteractionContext context) {
-			// ignore
-		}
-
-		public void interestChanged(List<IInteractionElement> elements) {
-			List<InteractionEvent> events = ContextCorePlugin.getContextManager()
-					.getActivityMetaContext()
-					.getInteractionHistory();
-			InteractionEvent event = events.get(events.size() - 1);
-			parseInteractionEvent(event);
-
-		}
-
-		public void elementDeleted(IInteractionElement element) {
-			// ignore
-		}
-
-		public void landmarkAdded(IInteractionElement element) {
-			// ignore
-		}
-
-		public void landmarkRemoved(IInteractionElement element) {
-			// ignore
-		}
-
-		public void relationsChanged(IInteractionElement element) {
-			// ignore
-		}
-	};
-
-	private boolean isInitialized = false;
-
 	// TODO: remove, copied from TaskListManager
 	private void snapToStartOfHour(Calendar cal) {
 		cal.set(Calendar.MINUTE, 0);
@@ -499,7 +429,7 @@ public class TaskActivityManager {
 	}
 
 	public boolean isInitialized() {
-		return isInitialized;
+		return initialized;
 	}
 
 	/**
