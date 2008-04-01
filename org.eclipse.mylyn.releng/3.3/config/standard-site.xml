@@ -24,7 +24,7 @@
    <feature url="features/org.eclipse.mylyn.trac_feature_@core@.jar" id="org.eclipse.mylyn.trac_feature" version="@core@">
       <category name="Integration"/>
    </feature>
-   <category-def name="Features" label="Features"/>
-   <category-def name="Integration" label="Integration"/>
+   <category-def name="Features" label="Mylyn Features"/>
+   <category-def name="Integration" label="Mylyn Integration"/>
 </site>
 

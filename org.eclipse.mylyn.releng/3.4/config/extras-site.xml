@@ -15,6 +15,6 @@
    <feature url="features/org.eclipse.mylyn.monitor_feature_@core@.jar" id="org.eclipse.mylyn.monitor_feature" version="@core@">
       <category name="Feedback"/>
    </feature>
-   <category-def name="Integration" label="Integration"/>
-   <category-def name="Feedback" label="Feedback"/>
+   <category-def name="Integration" label="Mylyn Integration Extras"/>
+   <category-def name="Feedback" label="Mylyn Feedback"/>
 </site>
