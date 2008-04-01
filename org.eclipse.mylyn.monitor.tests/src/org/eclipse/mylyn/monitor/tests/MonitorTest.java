@@ -23,7 +23,7 @@ import org.eclipse.mylyn.internal.monitor.ui.PerspectiveChangeMonitor;
 import org.eclipse.mylyn.internal.monitor.usage.InteractionEventLogger;
 import org.eclipse.mylyn.internal.monitor.usage.UiUsageMonitorPlugin;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
-import org.eclipse.mylyn.monitor.ui.IMylarMonitorLifecycleListener;
+import org.eclipse.mylyn.monitor.ui.IMonitorLifecycleListener;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IPerspectiveRegistry;
 import org.eclipse.ui.PlatformUI;
@@ -31,7 +31,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Mik Kersten
  */
-public class MonitorTest extends TestCase implements IMylarMonitorLifecycleListener {
+public class MonitorTest extends TestCase implements IMonitorLifecycleListener {
 
 	private final InteractionEventLogger logger = UiUsageMonitorPlugin.getDefault().getInteractionLogger();
 

@@ -9,14 +9,12 @@
 package org.eclipse.mylyn.monitor.ui;
 
 /**
- * Notified of monitor lifecycle changes.
- * 
- * TODO: rename to IMylynMonitorLifecycleListener
+ * Notified of monitor life-cycle changes.
  * 
  * @author Brian de Alwis
- * @since 2.0
+ * @since 3.0
  */
-public interface IMylarMonitorLifecycleListener {
+public interface IMonitorLifecycleListener {
 
 	void startMonitoring();
 
