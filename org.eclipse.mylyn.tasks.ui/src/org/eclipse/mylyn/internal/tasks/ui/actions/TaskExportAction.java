@@ -88,7 +88,20 @@ public class TaskExportAction extends Action implements IViewActionDelegate {
 			dialog.setFilterExtensions(new String[] { "*" + ITasksUiConstants.FILE_EXTENSION });
 
 			AbstractTask task = tasks.get(0);
-			dialog.setFileName(encodeName(task) + ITasksUiConstants.FILE_EXTENSION);
+			String fileName = task.getSummary();
+
+			if (fileName.length() > 50) {
+				fileName = fileName.substring(0, 50);
+			}
+
+			try {
+				fileName = URLEncoder.encode(fileName, ITasksUiConstants.FILENAME_ENCODING);
+			} catch (UnsupportedEncodingException e) {
+				MessageDialog.openError(shell, "Task Export Error", "Could not determine name for the selected task");
+				return;
+			}
+
+			dialog.setFileName(fileName + ITasksUiConstants.FILE_EXTENSION);
 			String path = dialog.open();
 
 			if (path != null) {
@@ -98,7 +111,6 @@ public class TaskExportAction extends Action implements IViewActionDelegate {
 							"Could not export task because specified location is a folder");
 					return;
 				}
-
 				taskFiles.put(task, file);
 			}
 		} else {
