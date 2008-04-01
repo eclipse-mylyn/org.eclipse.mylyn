@@ -24,6 +24,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
 import org.eclipse.mylyn.resources.tests.ResourceTestUtil;
+import org.eclipse.mylyn.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
@@ -54,6 +57,37 @@ public class TaskWorkingSetTest extends TestCase {
 		if (project != null) {
 			ResourceTestUtil.deleteProject(project);
 		}
+	}
+
+	public void testDeleteQuery() {
+		MockRepositoryQuery query = new MockRepositoryQuery("description");
+		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+		taskList.addQuery(query);
+		workingSet = createWorkingSet(query);
+		assertTrue(Arrays.asList(workingSet.getElements()).contains(query));
+		TasksUiPlugin.getTaskListManager().getTaskList().deleteQuery(query);
+		assertFalse(Arrays.asList(workingSet.getElements()).contains(query));
+	}
+
+	public void testRenameQuery() {
+		MockRepositoryQuery query = new MockRepositoryQuery("description");
+		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+		taskList.addQuery(query);
+		workingSet = createWorkingSet(query);
+		assertTrue(workingSet.getElements().length == 1);
+		IAdaptable[] elements = workingSet.getElements();
+		assertTrue(elements.length == 1);
+		assertTrue(elements[0] instanceof MockRepositoryQuery);
+		assertTrue(((MockRepositoryQuery) elements[0]).getHandleIdentifier().equals("description"));
+		assertTrue(Arrays.asList(workingSet.getElements()).contains(query));
+
+		query.setHandleIdentifier("Test");
+		assertTrue(workingSet.getElements().length == 1);
+		elements = workingSet.getElements();
+		assertTrue(elements.length == 1);
+		assertTrue(elements[0] instanceof MockRepositoryQuery);
+		assertTrue(((MockRepositoryQuery) elements[0]).getHandleIdentifier().equals("Test"));
+		assertTrue(Arrays.asList(workingSet.getElements()).contains(query));
 	}
 
 	// XXX see bug 212962
