@@ -43,6 +43,7 @@ import org.eclipse.mylyn.internal.context.core.ContextPreferenceContstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
+import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskHighlighter;
@@ -326,6 +327,11 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 					reloadDataDirectory(true);
 				}
 			}
+
+			if (event.getProperty().equals(TasksUiPreferenceConstants.PLANNING_STARTHOUR)
+					|| event.getProperty().equals(TasksUiPreferenceConstants.PLANNING_ENDHOUR)) {
+				updateTaskActivityManager();
+			}
 		}
 	};
 
@@ -391,7 +397,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 				getPreferenceStore().addPropertyChangeListener(PROPERTY_LISTENER);
 				getPreferenceStore().addPropertyChangeListener(synchronizationScheduler);
-				getPreferenceStore().addPropertyChangeListener(taskListManager);
 
 				// TODO: get rid of this, hack to make decorators show
 				// up on startup
@@ -433,8 +438,9 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			File taskListFile = new File(path);
 			taskListManager = new TaskListManager(taskListWriter, taskListFile);
-			taskActivityManager = TaskActivityManager.getInstance();
 			taskRepositoryManager = new TaskRepositoryManager(taskListManager.getTaskList());
+			taskActivityManager = new TaskActivityManager(taskRepositoryManager, taskListManager.getTaskList());
+			updateTaskActivityManager();
 
 			IProxyService proxyService = ProxyManager.getProxyManager();
 			IProxyChangeListener proxyChangeListener = new TasksUiProxyChangeListener(taskRepositoryManager);
@@ -461,8 +467,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			taskListManager.readExistingOrCreateNewList();
 			initialized = true;
 
-			// if the taskListManager didn't initialize do it here
-			initTaskActivityManager();
+			taskActivityMonitor = new TaskActivityMonitor(taskActivityManager, ContextCorePlugin.getContextManager());
+			taskActivityMonitor.start();
 
 			saveParticipant = new ISaveParticipant() {
 
@@ -490,14 +496,15 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		}
 	}
 
-	void initTaskActivityManager() {
-		if (!taskActivityManager.isInitialized()) {
-			taskActivityManager.init(taskRepositoryManager, taskListManager.getTaskList());
-			taskActivityManager.setEndHour(getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
+	private void updateTaskActivityManager() {
+		int endHour = getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR);
+		taskActivityManager.setEndHour(endHour);
+		TaskActivityUtil.setEndHour(endHour);
 
-			taskActivityMonitor = new TaskActivityMonitor(taskActivityManager, ContextCorePlugin.getContextManager());
-			taskActivityMonitor.start();
-		}
+		// event.getProperty().equals(TaskListPreferenceConstants.PLANNING_STARTDAY)
+		// scheduledStartHour =
+		// TasksUiPlugin.getDefault().getPreferenceStore().getInt(
+		// TaskListPreferenceConstants.PLANNING_STARTHOUR);
 	}
 
 	private void loadTemplateRepositories() {
@@ -566,7 +573,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			if (PlatformUI.isWorkbenchRunning()) {
 				getPreferenceStore().removePropertyChangeListener(taskListNotificationManager);
 				getPreferenceStore().removePropertyChangeListener(taskListBackupManager);
-				getPreferenceStore().removePropertyChangeListener(taskListManager);
 				getPreferenceStore().removePropertyChangeListener(synchronizationScheduler);
 				getPreferenceStore().removePropertyChangeListener(PROPERTY_LISTENER);
 				taskListManager.getTaskList().removeChangeListener(taskListSaveManager);

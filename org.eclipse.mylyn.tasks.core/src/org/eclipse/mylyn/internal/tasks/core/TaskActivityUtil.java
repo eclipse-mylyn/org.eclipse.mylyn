@@ -15,6 +15,10 @@ import java.util.Calendar;
  */
 public class TaskActivityUtil {
 
+	private static int startDay = Calendar.MONDAY;
+
+	private static int endHour = 17;
+
 	public static Calendar snapStartOfDay(Calendar cal) {
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.set(Calendar.MINUTE, 0);
@@ -56,7 +60,7 @@ public class TaskActivityUtil {
 	}
 
 	public static Calendar snapStartOfWorkWeek(Calendar cal) {
-		cal.set(Calendar.DAY_OF_WEEK, TaskActivityManager.getInstance().getStartDay());
+		cal.set(Calendar.DAY_OF_WEEK, startDay);
 		snapStartOfDay(cal);
 		return cal;
 	}
@@ -84,7 +88,7 @@ public class TaskActivityUtil {
 
 	public static Calendar snapForwardNumDays(Calendar calendar, int days) {
 		calendar.add(Calendar.DAY_OF_MONTH, days);
-		calendar.set(Calendar.HOUR_OF_DAY, TaskActivityManager.getInstance().getEndHour());
+		calendar.set(Calendar.HOUR_OF_DAY, endHour);
 		calendar.set(Calendar.MINUTE, 0);
 		calendar.set(Calendar.SECOND, 0);
 		calendar.set(Calendar.MILLISECOND, 0);
@@ -92,7 +96,7 @@ public class TaskActivityUtil {
 	}
 
 	public static Calendar snapEndOfWorkDay(Calendar calendar) {
-		calendar.set(Calendar.HOUR_OF_DAY, TaskActivityManager.getInstance().getEndHour());
+		calendar.set(Calendar.HOUR_OF_DAY, endHour);
 		calendar.set(Calendar.MINUTE, 0);
 		calendar.set(Calendar.SECOND, 0);
 		calendar.set(Calendar.MILLISECOND, 0);
@@ -163,7 +167,7 @@ public class TaskActivityUtil {
 
 	public static Calendar getCalendar() {
 		Calendar cal = Calendar.getInstance();
-		cal.setFirstDayOfWeek(TaskActivityManager.getInstance().getStartDay());
+		cal.setFirstDayOfWeek(startDay);
 		cal.getTime();
 		return cal;
 	}
@@ -180,6 +184,14 @@ public class TaskActivityUtil {
 
 	public static boolean isBetween(Calendar time, Calendar start, Calendar end) {
 		return (time.compareTo(start) >= 0 && time.compareTo(end) <= 0);
+	}
+
+	public static void setStartDay(int startDay) {
+		TaskActivityUtil.startDay = startDay;
+	}
+
+	public static void setEndHour(int endHour) {
+		TaskActivityUtil.endHour = endHour;
 	}
 
 }

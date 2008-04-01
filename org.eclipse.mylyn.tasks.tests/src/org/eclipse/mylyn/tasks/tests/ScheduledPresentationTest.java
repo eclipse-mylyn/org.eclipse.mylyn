@@ -18,7 +18,6 @@ import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
-import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -88,14 +87,14 @@ public class ScheduledPresentationTest extends TestCase {
 		AbstractTask task1 = new LocalTask("task 1", "Task 1");
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
 
-		assertEquals(0, TaskActivityManager.getInstance()
+		assertEquals(0, TasksUiPlugin.getTaskActivityManager()
 				.getScheduledTasks(thisWeek.getStart(), thisWeek.getEnd())
 				.size());
 
-		TaskActivityManager.getInstance().setScheduledFor(task1, thisWeek.getStart().getTime());
+		TasksUiPlugin.getTaskActivityManager().setScheduledFor(task1, thisWeek.getStart().getTime());
 
 //		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event2);
-		assertEquals(1, TaskActivityManager.getInstance()
+		assertEquals(1, TasksUiPlugin.getTaskActivityManager()
 				.getScheduledTasks(thisWeek.getStart(), thisWeek.getEnd())
 				.size());
 		// assertEquals(thisWeekTaskStop.getTime().getTime() -
@@ -126,9 +125,9 @@ public class ScheduledPresentationTest extends TestCase {
 		assertFalse(newThisWeek.isPresent());
 		assertTrue(newThisWeek.isFuture());
 
-		assertEquals(0, TaskActivityManager.getInstance().getScheduledTasks(newThisWeek.getStart(),
+		assertEquals(0, TasksUiPlugin.getTaskActivityManager().getScheduledTasks(newThisWeek.getStart(),
 				newThisWeek.getEnd()).size());
-		assertEquals(1, TaskActivityManager.getInstance().getScheduledTasks(newPreviousWeek.getStart(),
+		assertEquals(1, TasksUiPlugin.getTaskActivityManager().getScheduledTasks(newPreviousWeek.getStart(),
 				newPreviousWeek.getEnd()).size());
 
 		TasksUiPlugin.getTaskListManager().resetAndRollOver(oldStart);
@@ -156,8 +155,8 @@ public class ScheduledPresentationTest extends TestCase {
 				InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
 				InteractionContextManager.ACTIVITY_DELTA_ADDED, 2f, startDate.getTime(), endDate.getTime());
 
-		TaskActivityManager.getInstance().parseInteractionEvent(event1);
-		TaskActivityManager.getInstance().parseInteractionEvent(event2);
+		TasksUiPlugin.getTaskActivityManager().parseInteractionEvent(event1);
+		TasksUiPlugin.getTaskActivityManager().parseInteractionEvent(event2);
 
 		ScheduledTaskContainer container = TasksUiPlugin.getTaskActivityManager().getActivityPast();
 		assertEquals(2, container.getChildren().size());

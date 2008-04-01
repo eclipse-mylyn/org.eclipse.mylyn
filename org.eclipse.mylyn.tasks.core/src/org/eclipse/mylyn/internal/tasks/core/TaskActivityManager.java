@@ -89,9 +89,9 @@ public class TaskActivityManager {
 
 	private int endHour = 17;
 
-	private TaskList taskList;
+	private final TaskList taskList;
 
-	private TaskRepositoryManager repositoryManager;
+	private final TaskRepositoryManager repositoryManager;
 
 	private int startDay = Calendar.MONDAY;
 
@@ -99,29 +99,11 @@ public class TaskActivityManager {
 
 	private Date startTime = new Date();
 
-	private boolean initialized;
+	public static TaskActivityManager INSTANCE;
 
-	private static TaskActivityManager INSTANCE;
-
-	private TaskActivityManager() {
-		// SINGLETON
-	}
-
-	public static synchronized TaskActivityManager getInstance() {
-		if (INSTANCE == null) {
-			INSTANCE = new TaskActivityManager();
-		}
-		return INSTANCE;
-	}
-
-	public void init(TaskRepositoryManager repositoryManager, TaskList taskList) {
+	public TaskActivityManager(TaskRepositoryManager repositoryManager, TaskList taskList) {
 		this.taskList = taskList;
 		this.repositoryManager = repositoryManager;
-		initialized = true;
-	}
-
-	@Deprecated
-	public void dispose() {
 	}
 
 	public int getStartDay() {
@@ -428,10 +410,6 @@ public class TaskActivityManager {
 		taskList.notifyTaskChanged(task, false);
 	}
 
-	public boolean isInitialized() {
-		return initialized;
-	}
-
 	/**
 	 * @return if a repository task, will only return true if the user is a
 	 */
@@ -586,7 +564,7 @@ public class TaskActivityManager {
 		scheduleContainers.clear();
 		scheduleWeekDays.clear();
 
-		int startDay = TaskActivityManager.getInstance().getStartDay();
+		int startDay = getStartDay();
 		//int endDay = TaskActivityManager.getInstance().getEndDay();
 		// scheduledStartHour =
 		// TasksUiPlugin.getDefault().getPreferenceStore().getInt(
@@ -810,6 +788,12 @@ public class TaskActivityManager {
 			}
 		}
 		return false;
+	}
+
+	public Set<AbstractTask> getScheduledForThisWeek() {
+		Calendar startWeek = TaskActivityUtil.getStartOfCurrentWeek();
+		Calendar endWeek = TaskActivityUtil.getEndOfCurrentWeek();
+		return getScheduledTasks(startWeek, endWeek);
 	}
 
 }

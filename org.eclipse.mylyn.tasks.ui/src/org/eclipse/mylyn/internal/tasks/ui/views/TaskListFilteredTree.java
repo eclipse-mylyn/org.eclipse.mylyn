@@ -220,13 +220,12 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		return searchComposite;
 	}
 
-	@SuppressWarnings("deprecation")
 	private void updateTaskProgressBar() {
 		if (taskProgressBar.isDisposed()) {
 			return;
 		}
 
-		Set<AbstractTask> tasksThisWeek = TasksUiPlugin.getTaskListManager().getScheduledForThisWeek();
+		Set<AbstractTask> tasksThisWeek = TasksUiPlugin.getTaskActivityManager().getScheduledForThisWeek();
 
 		totalTasks = tasksThisWeek.size();
 		completeTime = 0;

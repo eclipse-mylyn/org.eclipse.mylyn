@@ -16,7 +16,6 @@ import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.mylyn.internal.tasks.core.Person;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
-import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskGroup;
@@ -252,7 +251,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		if (object instanceof AbstractTaskContainer && object instanceof AbstractTask) {
 			AbstractTask task = getCorrespondingTask((AbstractTaskContainer) object);
 			if (task != null) {
-				if (TaskActivityManager.getInstance().isCompletedToday(task)) {
+				if (TasksUiPlugin.getTaskActivityManager().isCompletedToday(task)) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(
 							TaskListColorsAndFonts.THEME_COLOR_TASK_TODAY_COMPLETED);
 				} else if (task.isCompleted()) {
@@ -260,16 +259,16 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 							TaskListColorsAndFonts.THEME_COLOR_COMPLETED);
 				} else if (task.isActive()) {
 					return TaskListColorsAndFonts.COLOR_TASK_ACTIVE;
-				} else if (TaskActivityManager.getInstance().isOverdue(task)) {
+				} else if (TasksUiPlugin.getTaskActivityManager().isOverdue(task)) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(
 							TaskListColorsAndFonts.THEME_COLOR_TASK_PAST_DUE);
 				} else if (!task.internalIsFloatingScheduledDate() && task.isPastReminder()) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(
 							TaskListColorsAndFonts.THEME_COLOR_TASK_PAST_SCHEDULED);
-				} else if (TaskActivityManager.getInstance().isScheduledForToday(task)) {
+				} else if (TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task)) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(
 							TaskListColorsAndFonts.THEME_COLOR_TASK_TODAY_SCHEDULED);
-				} else if (TaskActivityManager.getInstance().isScheduledForThisWeek(task)) {
+				} else if (TasksUiPlugin.getTaskActivityManager().isScheduledForThisWeek(task)) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(
 							TaskListColorsAndFonts.THEME_COLOR_TASK_THISWEEK_SCHEDULED);
 				}
@@ -278,7 +277,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			for (AbstractTask child : ((AbstractTaskContainer) object).getChildren()) {
 				if (child.isActive() || showHasActiveChild(child)) {
 					return TaskListColorsAndFonts.COLOR_TASK_ACTIVE;
-				} else if (TaskActivityManager.getInstance().isOverdue(child)) {
+				} else if (TasksUiPlugin.getTaskActivityManager().isOverdue(child)) {
 //				} else if ((child.isPastReminder() && !child.isCompleted()) || showHasChildrenPastDue(child)) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(
 							TaskListColorsAndFonts.THEME_COLOR_TASK_PAST_DUE);

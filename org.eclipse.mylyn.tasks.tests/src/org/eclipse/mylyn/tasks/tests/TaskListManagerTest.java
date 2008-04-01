@@ -28,6 +28,7 @@ import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
+import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.ScheduledTaskListSynchJob;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListSynchronizationScheduler;
@@ -261,7 +262,6 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals("http://b/task/123", task.getUrl());
 	}
 
-	@SuppressWarnings("deprecation")
 	public void testRefactorMetaContextHandles() {
 		String firstUrl = "http://repository1.com/bugs";
 		String secondUrl = "http://repository2.com/bugs";
@@ -295,26 +295,27 @@ public class TaskListManagerTest extends TestCase {
 						endDate2.getTime()));
 
 		assertEquals(2, metaContext.getInteractionHistory().size());
-		assertEquals(60 * 1000 * 5, manager.getElapsedTime(task1));
-		assertEquals(2 * 60 * 1000 * 5, manager.getElapsedTime(task2));
+		assertEquals(60 * 1000 * 5, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1));
+		assertEquals(2 * 60 * 1000 * 5, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task2));
 		manager.refactorRepositoryUrl(firstUrl, secondUrl);
 		metaContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
 		assertEquals(2, metaContext.getInteractionHistory().size());
-		assertEquals(60 * 1000 * 5, manager.getElapsedTime(new MockRepositoryTask(secondUrl, "1")));
-		assertEquals(2 * 60 * 1000 * 5, manager.getElapsedTime(new MockRepositoryTask(secondUrl, "2")));
+		assertEquals(60 * 1000 * 5, TasksUiPlugin.getTaskActivityManager().getElapsedTime(
+				new MockRepositoryTask(secondUrl, "1")));
+		assertEquals(2 * 60 * 1000 * 5, TasksUiPlugin.getTaskActivityManager().getElapsedTime(
+				new MockRepositoryTask(secondUrl, "2")));
 		assertEquals(secondUrl + "-1", metaContext.getInteractionHistory().get(0).getStructureHandle());
 	}
 
-	@SuppressWarnings("deprecation")
 	public void testIsActiveToday() {
 		AbstractTask task = new LocalTask("1", "task-1");
-		assertFalse(manager.isScheduledForToday(task));
+		assertFalse(TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task));
 
 		task.setScheduledForDate(new Date());
-		assertTrue(manager.isScheduledForToday(task));
+		assertTrue(TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task));
 
 		task.setReminded(true);
-		assertTrue(manager.isScheduledForToday(task));
+		assertTrue(TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task));
 		task.setReminded(true);
 
 		Calendar inAnHour = Calendar.getInstance();
@@ -322,50 +323,48 @@ public class TaskListManagerTest extends TestCase {
 		inAnHour.getTime();
 		task.setScheduledForDate(inAnHour.getTime());
 		Calendar tomorrow = Calendar.getInstance();
-		manager.snapToNextDay(tomorrow);
+		TasksUiPlugin.getTaskActivityManager().snapToNextDay(tomorrow);
 		assertEquals(-1, inAnHour.compareTo(tomorrow));
 
-		assertTrue(manager.isScheduledForToday(task));
+		assertTrue(TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task));
 	}
 
-	@SuppressWarnings("deprecation")
 	public void testScheduledForToday() {
 		AbstractTask task = new LocalTask("1", "task-1");
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.MINUTE, 2);
 		task.setScheduledForDate(cal.getTime());
-		assertTrue(manager.isScheduledForToday(task));
-		manager.setSecheduledIn(cal, 1);
+		assertTrue(TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task));
+		TaskActivityUtil.snapForwardNumDays(cal, 1);
 		task.setScheduledForDate(cal.getTime());
-		assertFalse(manager.isScheduledForToday(task));
+		assertFalse(TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task));
 		cal = Calendar.getInstance();
-		manager.setScheduledEndOfDay(cal);
+		TaskActivityUtil.snapEndOfWorkDay(cal);
 		task.setScheduledForDate(cal.getTime());
-		assertTrue(manager.isScheduledForToday(task));
+		assertTrue(TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task));
 	}
 
-	@SuppressWarnings("deprecation")
 	public void testSchedulePastEndOfMonth() {
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(Calendar.MONTH, Calendar.SEPTEMBER);
 		calendar.set(Calendar.DAY_OF_MONTH, 30);
-		manager.setSecheduledIn(calendar, 1);
+		TaskActivityUtil.snapForwardNumDays(calendar, 1);
 		assertEquals("Should be October", Calendar.OCTOBER, calendar.get(Calendar.MONTH));
 	}
 
-	@SuppressWarnings("deprecation")
 	public void testIsCompletedToday() {
 		AbstractTask task = new LocalTask("1", "task 1");
 		task.setCompleted(true);
 		task.setCompletionDate(new Date());
-		assertTrue(manager.isCompletedToday(task));
+		assertTrue(TasksUiPlugin.getTaskActivityManager().isCompletedToday(task));
 
 		MockRepositoryTask mockTask = new MockRepositoryTask("1");
 		mockTask.setOwner("unknown");
 		manager.getTaskList().addTask(mockTask);
 		mockTask.setCompleted(true);
 		mockTask.setCompletionDate(new Date());
-		assertFalse("completed: " + mockTask.getCompletionDate(), manager.isCompletedToday(mockTask));
+		assertFalse("completed: " + mockTask.getCompletionDate(), TasksUiPlugin.getTaskActivityManager()
+				.isCompletedToday(mockTask));
 
 		mockTask = new MockRepositoryTask("2");
 		manager.getTaskList().addTask(mockTask);
@@ -373,7 +372,7 @@ public class TaskListManagerTest extends TestCase {
 		mockTask.setCompletionDate(new Date());
 		repository.setAuthenticationCredentials("testUser", "testPassword");
 		mockTask.setOwner("testUser");
-		assertTrue(manager.isCompletedToday(mockTask));
+		assertTrue(TasksUiPlugin.getTaskActivityManager().isCompletedToday(mockTask));
 
 	}
 

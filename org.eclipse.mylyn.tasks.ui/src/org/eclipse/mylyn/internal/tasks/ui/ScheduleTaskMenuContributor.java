@@ -50,7 +50,6 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 
 	private static final String LABEL_NOT_SCHEDULED = "Not Scheduled";
 
-	@SuppressWarnings("deprecation")
 	public MenuManager getSubMenuManager(final List<AbstractTaskContainer> selectedElements) {
 
 		final TaskListManager tasklistManager = TasksUiPlugin.getTaskListManager();
@@ -106,7 +105,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 				public void run() {
 					Calendar reminderCalendar = TaskActivityUtil.getCalendar();
 					int dueIn = day - today;
-					TasksUiPlugin.getTaskListManager().setSecheduledIn(reminderCalendar, dueIn);
+					TaskActivityUtil.snapForwardNumDays(reminderCalendar, dueIn);
 					for (AbstractTaskContainer element : taskListElementsToSchedule) {
 						AbstractTask task = tasklistManager.getTaskForElement(element, true);
 						setScheduledDate(task, reminderCalendar, false);

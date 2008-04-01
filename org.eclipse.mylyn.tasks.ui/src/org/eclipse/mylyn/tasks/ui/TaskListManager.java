@@ -26,8 +26,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
@@ -36,13 +34,10 @@ import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
-import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
-import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.WorkspaceAwareContextStore;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskListSaveManager;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskListWriter;
@@ -76,7 +71,7 @@ import org.eclipse.swt.widgets.Display;
  * @author Jevgeni Holodkov (insertQueries)
  * @since 2.0
  */
-public class TaskListManager implements IPropertyChangeListener {
+public class TaskListManager {
 
 	private static final long SECOND = 1000;
 
@@ -86,24 +81,6 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	// TODO: Remove
 	public static final String ARCHIVE_CATEGORY_DESCRIPTION = "Archive";
-
-	@Deprecated
-	public static final String[] ESTIMATE_TIMES = new String[] { "0 Hours", "1 Hours", "2 Hours", "3 Hours", "4 Hours",
-			"5 Hours", "6 Hours", "7 Hours", "8 Hours", "9 Hours", "10 Hours" };
-
-	//private ScheduledTaskContainer scheduledThisWeek;
-
-	//private List<ScheduledTaskContainer> scheduleWeekDays = new ArrayList<ScheduledTaskContainer>();
-//
-//	private ScheduledTaskContainer scheduledNextWeek;
-//
-//	private ScheduledTaskContainer scheduledFuture;
-//
-//	private ScheduledTaskContainer scheduledPast;
-//
-//	private ScheduledTaskContainer scheduledPrevious;
-
-	//private ArrayList<ScheduledTaskContainer> scheduleContainers = new ArrayList<ScheduledTaskContainer>();
 
 	private final List<ITaskActivityListener> activityListeners = new ArrayList<ITaskActivityListener>();
 
@@ -287,7 +264,8 @@ public class TaskListManager implements IPropertyChangeListener {
 				resetTaskList();
 			}
 			taskListInitialized = true;
-			resetAndRollOver();
+			// invoked from initActivityHistory()
+			//resetAndRollOver();
 			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
 				listener.taskListRead();
 			}
@@ -444,20 +422,6 @@ public class TaskListManager implements IPropertyChangeListener {
 		return taskListFile;
 	}
 
-	public void propertyChange(PropertyChangeEvent event) {
-		if (event.getProperty().equals(TasksUiPreferenceConstants.PLANNING_STARTHOUR)
-				|| event.getProperty().equals(TasksUiPreferenceConstants.PLANNING_ENDHOUR)) {
-			// event.getProperty().equals(TaskListPreferenceConstants.PLANNING_STARTDAY)
-			// scheduledStartHour =
-			// TasksUiPlugin.getDefault().getPreferenceStore().getInt(
-			// TaskListPreferenceConstants.PLANNING_STARTHOUR);
-			TaskActivityManager.getInstance()
-					.setEndHour(
-							TasksUiPlugin.getDefault().getPreferenceStore().getInt(
-									TasksUiPreferenceConstants.PLANNING_ENDHOUR));
-		}
-	}
-
 	/**
 	 * public for testing TODO: Move to TaskActivityManager
 	 */
@@ -469,16 +433,14 @@ public class TaskListManager implements IPropertyChangeListener {
 	 * public for testing TODO: Move to TaskActivityManager
 	 */
 	public void resetAndRollOver(Date startDate) {
-		TasksUiPlugin.getDefault().initTaskActivityManager();
-
 		startTime = startDate;
 		if (isTaskListInitialized()) {
-			TaskActivityManager.getInstance().reloadTimingData(startDate);
+			TasksUiPlugin.getTaskActivityManager().reloadTimingData(startDate);
 			List<InteractionEvent> events = ContextCorePlugin.getContextManager()
 					.getActivityMetaContext()
 					.getInteractionHistory();
 			for (InteractionEvent event : events) {
-				TaskActivityManager.getInstance().parseInteractionEvent(event);
+				TasksUiPlugin.getTaskActivityManager().parseInteractionEvent(event);
 			}
 		}
 		for (ITaskActivityListener listener : activityListeners) {
@@ -648,295 +610,4 @@ public class TaskListManager implements IPropertyChangeListener {
 		return handle;
 	}
 
-	/** deprecated post 2.0 *********************************************** */
-
-	/**
-	 * @deprecated use TaskActivityManager.getScheduledTasks
-	 */
-	@Deprecated
-	public Set<AbstractTask> getScheduledForThisWeek() {
-		Calendar startWeek = TaskActivityUtil.getStartOfCurrentWeek();
-		Calendar endWeek = TaskActivityUtil.getEndOfCurrentWeek();
-		return TaskActivityManager.getInstance().getScheduledTasks(startWeek, endWeek);
-	}
-
-	/**
-	 * @deprecated use TaskActivityUtil.isScheduledAfterThisWeek
-	 */
-	@Deprecated
-	public boolean isScheduledAfterThisWeek(AbstractTask task) {
-		return TaskActivityManager.getInstance().isScheduledAfterThisWeek(task);
-	}
-
-	/**
-	 * @deprecated use TaskActivityUtil.isScheduledForFuture
-	 */
-	@Deprecated
-	public boolean isScheduledForLater(AbstractTask task) {
-		return TaskActivityManager.getInstance().isScheduledForFuture(task);
-	}
-
-	/**
-	 * @deprecated use TaskActivityUtil.isScheduledForThisWeek
-	 */
-	@Deprecated
-	public boolean isScheduledForThisWeek(AbstractTask task) {
-		return TaskActivityManager.getInstance().isScheduledForThisWeek(task);
-	}
-
-	/**
-	 * @deprecated use TaskActivityManager.isScheduledForToday
-	 */
-	@Deprecated
-	public boolean isScheduledForToday(AbstractTask task) {
-		return TaskActivityManager.getInstance().isScheduledForToday(task);
-	}
-
-	/**
-	 * @deprecated use TaskRepositoryManager.isOwnedBuyUser
-	 */
-	@Deprecated
-	public boolean isOwnedByUser(AbstractTask task) {
-		return TasksUiPlugin.getRepositoryManager().isOwnedByUser(task);
-	}
-
-	/**
-	 * @deprecated use ActivityManager
-	 */
-	@Deprecated
-	public void setScheduledFor(AbstractTask task, Date reminderDate) {
-		TaskActivityManager.getInstance().setScheduledFor(task, reminderDate);
-	}
-
-	/**
-	 * @deprecated use TaskActivityManager.setDueDate
-	 */
-	@Deprecated
-	public void setDueDate(AbstractTask task, Date dueDate) {
-		TaskActivityManager.getInstance().setDueDate(task, dueDate);
-	}
-
-	/**
-	 * @deprecated use TaskActivityManager
-	 * @return true if task due date != null and has past
-	 */
-	@Deprecated
-	public boolean isOverdue(AbstractTask task) {
-		return TaskActivityManager.getInstance().isOverdue(task);
-	}
-
-	/**
-	 * @deprecated use TaskActivityManager.isActiveThisWeek
-	 */
-	@Deprecated
-	public boolean isActiveThisWeek(AbstractTask task) {
-		return TaskActivityManager.getInstance().isActiveThisWeek(task);
-	}
-
-	/**
-	 * @deprecated use TaskActivityManager.isCompletedToday
-	 * @return if a repository task, will only return true if the user is a
-	 */
-	@Deprecated
-	public boolean isCompletedToday(AbstractTask task) {
-		return TaskActivityManager.getInstance().isCompletedToday(task);
-	}
-
-	@Deprecated
-	public void parseFutureReminders() {
-		// no longer required
-	}
-
-	/**
-	 * @deprecated use same method on TaskActivityManager
-	 */
-	@Deprecated
-	public long getElapsedTime(AbstractTask task) {
-		return TasksUiPlugin.getTaskActivityManager().getElapsedTime(task);
-	}
-
-	/**
-	 * @deprecated use TaskActivityUtil.snapStartOfDay
-	 */
-	@Deprecated
-	public void snapToStartOfDay(Calendar cal) {
-		TaskActivityUtil.snapStartOfDay(cal);
-	}
-
-	/**
-	 * @deprecated use TaskActivityUtil.snapStartOfHour
-	 */
-	@Deprecated
-	public void snapToStartOfHour(Calendar cal) {
-		TaskActivityUtil.snapStartOfHour(cal);
-	}
-
-	/**
-	 * @deprecated use TaskActivityUtil.snapEndOfHour
-	 */
-	@Deprecated
-	public void snapToEndOfHour(Calendar cal) {
-		TaskActivityUtil.snapEndOfHour(cal);
-	}
-
-	/**
-	 * @deprecated use TaskActivityUtil.snapEndOfDay
-	 */
-	@Deprecated
-	public void snapToEndOfDay(Calendar cal) {
-		TaskActivityUtil.snapEndOfDay(cal);
-	}
-
-	/**
-	 * @deprecated use TaskActivityUtil.snapNextDay
-	 */
-	@Deprecated
-	public void snapToNextDay(Calendar cal) {
-		TaskActivityUtil.snapNextDay(cal);
-	}
-
-	/**
-	 * @deprecated use TaskActivityUtil.snapStartOfWorkWeek
-	 */
-	@Deprecated
-	public void snapToStartOfWeek(Calendar cal) {
-		TaskActivityUtil.snapStartOfWorkWeek(cal);
-	}
-
-	/**
-	 * @deprecated use TaskActivityUtil.snapEndOfWeek
-	 */
-	@Deprecated
-	public void snapToEndOfWeek(Calendar cal) {
-		TaskActivityUtil.snapEndOfWeek(cal);
-	}
-
-	/**
-	 * @deprecated use TaskActivityUtil.snapForwardNumDays
-	 */
-	@Deprecated
-	public Calendar setSecheduledIn(Calendar calendar, int days) {
-		return TaskActivityUtil.snapForwardNumDays(calendar, days);
-	}
-
-	/**
-	 * @deprecated use TaskActivityUtil.snapEndOfWorkDay
-	 */
-	@Deprecated
-	public Calendar setScheduledEndOfDay(Calendar calendar) {
-		return TaskActivityUtil.snapEndOfWorkDay(calendar);
-	}
-
-	/**
-	 * @deprecated use TaskActivityUtil.snapNextWorkWeek
-	 */
-	@Deprecated
-	public void setScheduledNextWeek(Calendar calendar) {
-		TaskActivityUtil.snapNextWorkWeek(calendar);
-	}
-
-	/**
-	 * @deprecated use TaskActivityManager.getDateRanges()
-	 */
-	@Deprecated
-	public List<ScheduledTaskContainer> getDateRanges() {
-		return TasksUiPlugin.getTaskActivityManager().getDateRanges();
-	}
-
-	/**
-	 * @deprecated use TaskActivityManager.getActivityWeekDays()
-	 */
-	@Deprecated
-	public List<ScheduledTaskContainer> getActivityWeekDays() {
-		return TasksUiPlugin.getTaskActivityManager().getActivityWeekDays();
-	}
-
-	/**
-	 * @deprecated use TaskActivityManager.isWeekDay()
-	 */
-	@Deprecated
-	public boolean isWeekDay(ScheduledTaskContainer dateRangeTaskContainer) {
-		return TasksUiPlugin.getTaskActivityManager().isWeekDay(dateRangeTaskContainer);
-	}
-
-	/**
-	 * public for testing
-	 * 
-	 * @deprecated
-	 */
-	@Deprecated
-	public ScheduledTaskContainer getActivityThisWeek() {
-		return TasksUiPlugin.getTaskActivityManager().getActivityThisWeek();
-	}
-
-	/**
-	 * public for testing
-	 * 
-	 * @deprecated
-	 */
-	@Deprecated
-	public ScheduledTaskContainer getActivityPast() {
-		return TasksUiPlugin.getTaskActivityManager().getActivityPast();
-	}
-
-	/**
-	 * public for testing
-	 * 
-	 * @deprecated
-	 */
-	@Deprecated
-	public ScheduledTaskContainer getActivityFuture() {
-		return TasksUiPlugin.getTaskActivityManager().getActivityFuture();
-	}
-
-	/**
-	 * public for testing
-	 * 
-	 * @deprecated
-	 */
-	@Deprecated
-	public ScheduledTaskContainer getActivityNextWeek() {
-		return TasksUiPlugin.getTaskActivityManager().getActivityNextWeek();
-	}
-
-	/**
-	 * public for testing
-	 * 
-	 * @deprecated
-	 */
-	@Deprecated
-	public ScheduledTaskContainer getActivityPrevious() {
-		return TasksUiPlugin.getTaskActivityManager().getActivityPrevious();
-	}
-
-	/**
-	 * Use TaskActivityManager.getStartHour()
-	 * 
-	 * @deprecated
-	 */
-	@Deprecated
-	public int getStartHour() {
-		return TasksUiPlugin.getDefault().getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR);
-	}
-
-	/**
-	 * Use TaskActivityManager.scheduleNewTask()
-	 * 
-	 * @deprecated
-	 */
-	@Deprecated
-	public static void scheduleNewTask(AbstractTask newTask) {
-		newTask.setCreationDate(new Date());
-
-		Calendar newTaskSchedule = Calendar.getInstance();
-		int scheduledEndHour = TasksUiPlugin.getDefault().getPreferenceStore().getInt(
-				TasksUiPreferenceConstants.PLANNING_ENDHOUR);
-		// If past scheduledEndHour set for following day
-		if (newTaskSchedule.get(Calendar.HOUR_OF_DAY) >= scheduledEndHour) {
-			TasksUiPlugin.getTaskListManager().setSecheduledIn(newTaskSchedule, 1);
-		} else {
-			TasksUiPlugin.getTaskListManager().setScheduledEndOfDay(newTaskSchedule);
-		}
-		TasksUiPlugin.getTaskActivityManager().setScheduledFor(newTask, newTaskSchedule.getTime());
-	}
 }
