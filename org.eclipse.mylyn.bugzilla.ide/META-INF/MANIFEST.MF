@@ -15,9 +15,9 @@ Bundle-Vendor: Eclipse.org
 Bundle-ClassPath: .
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.mylyn.bugzilla.ide,
- org.eclipse.mylyn.internal.bugzilla.ide,
- org.eclipse.mylyn.internal.bugzilla.ide.actions,
- org.eclipse.mylyn.internal.bugzilla.ide.wizards
+ org.eclipse.mylyn.internal.bugzilla.ide;x-internal:=true,
+ org.eclipse.mylyn.internal.bugzilla.ide.actions;x-internal:=true,
+ org.eclipse.mylyn.internal.bugzilla.ide.wizards;x-internal:=true
 Bundle-Localization: plugin
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.eclipse.mylyn.internal.bugzilla.ide.BugzillaIdePlugin

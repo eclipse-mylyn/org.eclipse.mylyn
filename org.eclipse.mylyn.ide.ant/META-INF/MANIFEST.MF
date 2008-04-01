@@ -24,5 +24,5 @@ Require-Bundle: org.eclipse.ui,
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Activator: org.eclipse.mylyn.internal.ide.ant.AntUiBridgePlugin
 Bundle-ClassPath: .
-Export-Package: org.eclipse.mylyn.internal.ide.ant
+Export-Package: org.eclipse.mylyn.internal.ide.ant;x-internal:=true
 Eclipse-LazyStart: true

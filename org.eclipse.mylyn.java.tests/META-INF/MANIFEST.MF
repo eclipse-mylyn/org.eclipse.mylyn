@@ -38,6 +38,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn.context.tests
 Eclipse-AutoStart: true
 Bundle-ClassPath: mylyn-java-tests.jar
-Export-Package: org.eclipse.mylyn.java.tests,
- org.eclipse.mylyn.java.tests.search
+Export-Package: org.eclipse.mylyn.java.tests;x-internal:=true,
+ org.eclipse.mylyn.java.tests.search;x-internal:=true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

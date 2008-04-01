@@ -33,5 +33,6 @@ Require-Bundle: org.eclipse.ui,
 Bundle-Activator: org.eclipse.mylyn.internal.pde.ui.PdeUiBridgePlugin
 Eclipse-LazyStart: true
 Bundle-ClassPath: .
-Export-Package: org.eclipse.mylyn.internal.pde.ui
+Export-Package: org.eclipse.mylyn.internal.pde.ui;x-internal:=true,
+ org.eclipse.mylyn.internal.pde.ui.junit;x-internal:=true
 
