@@ -1,7 +1,14 @@
 #!/bin/bash -e
 
-BUILD=`date +I%Y%m%d-%H00`
+if [ "$1" == "-release" ]
+then
+  BUILD=`date +v%Y%m%d-%H00`
+else
+  BUILD=`date +I%Y%m%d-%H00`
+fi
+
 sed -e s/QUALIFIER=.*/QUALIFIER=$BUILD/ -i local.sh
+echo "Building $BUILD"
 
 BUILD_ROOT=$(cd $(dirname $0); pwd)
 
