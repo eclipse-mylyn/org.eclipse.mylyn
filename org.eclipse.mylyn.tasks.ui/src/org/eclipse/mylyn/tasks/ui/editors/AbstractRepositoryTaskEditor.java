@@ -1852,6 +1852,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		descriptionSection.setTextClient(replyComp);
 		addDuplicateDetection(sectionComposite);
 		toolkit.paintBordersFor(sectionComposite);
+
+		if (descriptionTextViewer.isEditable()) {
+			descriptionSection.setExpanded(true);
+		}
 	}
 
 	protected ImageHyperlink createReplyHyperlink(final int commentNum, Composite composite, final String commentBody) {
