@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryLocation;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.web.core.AuthenticationCredentials;
 import org.eclipse.mylyn.web.core.AuthenticationType;
@@ -47,8 +48,7 @@ import org.eclipse.mylyn.web.core.WebClientUtil;
  * @author Steffen Pingel
  * @since 2.0
  */
-// API-3.0 make this class final
-public class TaskRepository extends PlatformObject {
+public final class TaskRepository extends PlatformObject {
 
 	public static final String DEFAULT_CHARACTER_ENCODING = "UTF-8";
 
@@ -135,10 +135,6 @@ public class TaskRepository extends PlatformObject {
 	// HACK: private credentials for headless operation
 	private static Map<String, Map<String, String>> credentials = new HashMap<String, Map<String, String>>();
 
-	private boolean isCachedUserName;
-
-	private String cachedUserName;
-
 	static {
 		URL url = null;
 		try {
@@ -148,6 +144,22 @@ public class TaskRepository extends PlatformObject {
 		}
 		DEFAULT_URL = url;
 	}
+
+	private static String getKeyPrefix(AuthenticationType type) {
+		switch (type) {
+		case HTTP:
+			return AUTH_HTTP;
+		case PROXY:
+			return AUTH_PROXY;
+		case REPOSITORY:
+			return AUTH_REPOSITORY;
+		}
+		throw new IllegalArgumentException("Unknown authentication type: " + type);
+	}
+
+	private boolean isCachedUserName;
+
+	private String cachedUserName;
 
 	private final Map<String, String> properties = new LinkedHashMap<String, String>();
 
@@ -162,11 +174,20 @@ public class TaskRepository extends PlatformObject {
 	 */
 	private boolean isBugRepository = false;
 
-	/**
-	 * for testing purposes
-	 */
 	public TaskRepository(String kind, String serverUrl) {
 		this(kind, serverUrl, NO_VERSION_SPECIFIED);
+	}
+
+	/**
+	 * @deprecated use {@link #setProperty(String, String)} instead of passing a map
+	 */
+	@Deprecated
+	public TaskRepository(String kind, String serverUrl, Map<String, String> properties) {
+		this.properties.put(IRepositoryConstants.PROPERTY_CONNECTOR_KIND, kind);
+		this.properties.put(IRepositoryConstants.PROPERTY_URL, serverUrl);
+		this.properties.putAll(properties);
+		// use platform proxy by default (headless will need to set this to false)
+		this.setProperty(TaskRepository.PROXY_USEDEFAULT, new Boolean(true).toString());
 	}
 
 	/**
@@ -194,129 +215,55 @@ public class TaskRepository extends PlatformObject {
 		this.setProperty(AUTH_PROXY + SAVE_PASSWORD, String.valueOf(true));
 	}
 
-	/**
-	 * @deprecated use {@link #setProperty(String, String)} instead of passing a map
-	 */
-	@Deprecated
-	public TaskRepository(String kind, String serverUrl, Map<String, String> properties) {
-		this.properties.put(IRepositoryConstants.PROPERTY_CONNECTOR_KIND, kind);
-		this.properties.put(IRepositoryConstants.PROPERTY_URL, serverUrl);
-		this.properties.putAll(properties);
-		// use platform proxy by default (headless will need to set this to false)
-		this.setProperty(TaskRepository.PROXY_USEDEFAULT, new Boolean(true).toString());
-	}
-
-	public String getUrl() {
-		return properties.get(IRepositoryConstants.PROPERTY_URL);
-	}
-
-	public void setUrl(String newUrl) {
-		properties.put(IRepositoryConstants.PROPERTY_URL, newUrl);
-	}
-
-	/**
-	 * <b>Note: </b> This method will be deprecated in 2.3.
-	 * 
-	 * @see #getCredentials(AuthenticationType)
-	 */
-	public boolean hasCredentials() {
-		String username = getUserName();
-		String password = getPassword();
-		return username != null && username.length() > 0 && password != null && password.length() > 0;
-	}
-
-	/**
-	 * The username is cached since it needs to be retrieved frequently (e.g. for Task List decoration).
-	 */
-	public String getUserName() {
-		// NOTE: if anonymous, user name is "" string so we won't go to keyring
-		if (!isCachedUserName) {
-			cachedUserName = getUserName(AuthenticationType.REPOSITORY);
-			isCachedUserName = true;
+	// TODO e3.4 move to new api
+	@SuppressWarnings("deprecation")
+	private void addAuthInfo(Map<String, String> map) {
+		synchronized (LOCK) {
+			try {
+				if (Platform.isRunning()) {
+					// write the map to the keyring
+					try {
+						Platform.addAuthorizationInfo(new URL(getUrl()), AUTH_REALM, AUTH_SCHEME, map);
+					} catch (MalformedURLException ex) {
+						Platform.addAuthorizationInfo(DEFAULT_URL, getUrl(), AUTH_SCHEME, map);
+					}
+				} else {
+					Map<String, String> headlessCreds = getAuthInfo();
+					headlessCreds.putAll(map);
+				}
+			} catch (CoreException e) {
+				// API 3.0 propagate exception
+				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+						"Could not set authorization credentials", e));
+			}
 		}
-		return cachedUserName;
 	}
 
-	public String getPassword() {
-		return getPassword(AuthenticationType.REPOSITORY);
+	public void clearCredentials() {
 	}
 
-	/**
-	 * <b>Note: </b> This method will be deprecated in 2.3.
-	 * 
-	 * @see #getCredentials(AuthenticationType)
-	 */
-	public String getProxyUsername() {
-		return getUserName(AuthenticationType.PROXY);
-	}
+	@Override
+	public boolean equals(Object object) {
+		if (object instanceof TaskRepository) {
+			TaskRepository repository = (TaskRepository) object;
+			if (getUrl() == null) {
+				if (repository.getUrl() != null) {
+					return false;
+				}
+			} else {
+				if (!getUrl().equals(repository.getUrl())) {
+					return false;
+				}
+			}
+			if (getConnectorKind() == null) {
+				return repository.getConnectorKind() == null;
+			} else {
+				return getConnectorKind().equals(repository.getConnectorKind());
+			}
 
-	/**
-	 * <b>Note: </b> This method will be deprecated in 2.3.
-	 * 
-	 * @see #getCredentials(AuthenticationType)
-	 */
-	public String getProxyPassword() {
-		return getPassword(AuthenticationType.PROXY);
-	}
-
-	/**
-	 * <b>Note: </b> This method will be deprecated in 2.3.
-	 * 
-	 * @see #getCredentials(AuthenticationType)
-	 */
-	public String getHttpUser() {
-		return getUserName(AuthenticationType.HTTP);
-	}
-
-	/**
-	 * <b>Note: </b> This method will be deprecated in 2.3.
-	 * 
-	 * @see #getCredentials(AuthenticationType)
-	 */
-	public String getHttpPassword() {
-		return getPassword(AuthenticationType.HTTP);
-	}
-
-	/**
-	 * <b>Note: </b> This method will be deprecated in 2.3.
-	 * 
-	 * @see #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)
-	 */
-	public void setAuthenticationCredentials(String username, String password) {
-		setCredentials(AuthenticationType.REPOSITORY, username, password);
-	}
-
-	/**
-	 * <b>Note: </b> This method will be deprecated in 2.3.
-	 * 
-	 * @see #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)
-	 */
-	public void setProxyAuthenticationCredentials(String username, String password) {
-		setCredentials(AuthenticationType.PROXY, username, password);
-	}
-
-	/**
-	 * <b>Note: </b> This method will be deprecated in 2.3.
-	 * 
-	 * @see #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)
-	 */
-	public void setHttpAuthenticationCredentials(String username, String password) {
-		setCredentials(AuthenticationType.HTTP, username, password);
-	}
-
-	private void setCredentialsInternal(String username, String password, String userProperty, String passwordProperty) {
-		Map<String, String> map = getAuthInfo();
-		if (map == null) {
-			map = new HashMap<String, String>();
+		} else {
+			return super.equals(object);
 		}
-
-		if (username != null) {
-			map.put(userProperty, username);
-		}
-		if (password != null) {
-			map.put(passwordProperty, password);
-		}
-		addAuthInfo(map);
 	}
 
 	// TODO e3.4 move to new api
@@ -352,30 +299,6 @@ public class TaskRepository extends PlatformObject {
 	}
 
 	// TODO e3.4 move to new api
-	@SuppressWarnings("deprecation")
-	private void addAuthInfo(Map<String, String> map) {
-		synchronized (LOCK) {
-			try {
-				if (Platform.isRunning()) {
-					// write the map to the keyring
-					try {
-						Platform.addAuthorizationInfo(new URL(getUrl()), AUTH_REALM, AUTH_SCHEME, map);
-					} catch (MalformedURLException ex) {
-						Platform.addAuthorizationInfo(DEFAULT_URL, getUrl(), AUTH_SCHEME, map);
-					}
-				} else {
-					Map<String, String> headlessCreds = getAuthInfo();
-					headlessCreds.putAll(map);
-				}
-			} catch (CoreException e) {
-				// API 3.0 propagate exception
-				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-						"Could not set authorization credentials", e));
-			}
-		}
-	}
-
-	// TODO e3.4 move to new api
 	@SuppressWarnings( { "unchecked", "deprecation" })
 	private Map<String, String> getAuthInfo() {
 		synchronized (LOCK) {
@@ -405,43 +328,26 @@ public class TaskRepository extends PlatformObject {
 		return map == null ? null : map.get(property);
 	}
 
-	public void clearCredentials() {
-
+	public String getCharacterEncoding() {
+		final String encoding = properties.get(IRepositoryConstants.PROPERTY_ENCODING);
+		return encoding == null || "".equals(encoding) ? DEFAULT_CHARACTER_ENCODING : encoding;
 	}
 
-	@Override
-	public boolean equals(Object object) {
-		if (object instanceof TaskRepository) {
-			TaskRepository repository = (TaskRepository) object;
-			if (getUrl() == null) {
-				if (repository.getUrl() != null) {
-					return false;
-				}
-			} else {
-				if (!getUrl().equals(repository.getUrl())) {
-					return false;
-				}
-			}
-			if (getConnectorKind() == null) {
-				return repository.getConnectorKind() == null;
-			} else {
-				return getConnectorKind().equals(repository.getConnectorKind());
-			}
+	/**
+	 * Get the last refresh date as initialized {@link Date} object, null if not set<br />
+	 * 
+	 * @return {@link Date} configuration date, null if not set
+	 */
+	public Date getConfigurationDate() {
+		Date configDate = null;
+		String value = this.getProperty(PROPERTY_CONFIG_TIMESTAMP);
+		try {
+			configDate = new Date(Long.valueOf(value).longValue());
 
-		} else {
-			return super.equals(object);
+		} catch (Exception e) {
+
 		}
-	}
-
-	@Override
-	public int hashCode() {
-		int res = getUrl() == null ? 1 : getUrl().hashCode();
-		return res * 31 + (getConnectorKind() == null ? 1 : getConnectorKind().hashCode());
-	}
-
-	@Override
-	public String toString() {
-		return getUrl();
+		return configDate;
 	}
 
 	/**
@@ -454,168 +360,6 @@ public class TaskRepository extends PlatformObject {
 		} else {
 			return IRepositoryConstants.KIND_UNKNOWN;
 		}
-	}
-
-	public String getVersion() {
-		final String version = properties.get(IRepositoryConstants.PROPERTY_VERSION);
-		return version == null || "".equals(version) ? NO_VERSION_SPECIFIED : version;
-	}
-
-	public void setVersion(String ver) {
-		properties.put(IRepositoryConstants.PROPERTY_VERSION, ver == null ? NO_VERSION_SPECIFIED : ver);
-	}
-
-	public String getCharacterEncoding() {
-		final String encoding = properties.get(IRepositoryConstants.PROPERTY_ENCODING);
-		return encoding == null || "".equals(encoding) ? DEFAULT_CHARACTER_ENCODING : encoding;
-	}
-
-	/**
-	 * for testing purposes
-	 */
-	public void setCharacterEncoding(String characterEncoding) {
-		properties.put(IRepositoryConstants.PROPERTY_ENCODING, characterEncoding == null ? DEFAULT_CHARACTER_ENCODING
-				: characterEncoding);
-	}
-
-	public String getTimeZoneId() {
-		final String timeZoneId = properties.get(IRepositoryConstants.PROPERTY_TIMEZONE);
-		return timeZoneId == null || "".equals(timeZoneId) ? TimeZone.getDefault().getID() : timeZoneId;
-	}
-
-	public void setTimeZoneId(String timeZoneId) {
-		this.properties.put(IRepositoryConstants.PROPERTY_TIMEZONE, timeZoneId == null ? TimeZone.getDefault().getID()
-				: timeZoneId);
-	}
-
-	public String getSynchronizationTimeStamp() {
-		return this.properties.get(IRepositoryConstants.PROPERTY_SYNCTIMESTAMP);
-	}
-
-	/**
-	 * ONLY for use by IRepositoryConstants. To set the sync time call IRepositoryConstants.setSyncTime(repository,
-	 * date);
-	 */
-	public void setSynchronizationTimeStamp(String syncTime) {
-		this.properties.put(IRepositoryConstants.PROPERTY_SYNCTIMESTAMP, syncTime);
-	}
-
-	public void setRepositoryLabel(String repositoryLabel) {
-		this.properties.put(IRepositoryConstants.PROPERTY_LABEL, repositoryLabel);
-	}
-
-	/**
-	 * @return the URL if the label property is not set
-	 */
-	public String getRepositoryLabel() {
-		String label = properties.get(IRepositoryConstants.PROPERTY_LABEL);
-		if (label != null && label.length() > 0) {
-			return label;
-		} else {
-			return getUrl();
-		}
-	}
-
-	public Map<String, String> getProperties() {
-		return new LinkedHashMap<String, String>(this.properties);
-	}
-
-	public String getProperty(String name) {
-		return this.properties.get(name);
-	}
-
-	public void setProperty(String name, String value) {
-		this.properties.put(name, value);
-	}
-
-	public boolean hasProperty(String name) {
-		String value = getProperty(name);
-		return value != null && value.trim().length() > 0;
-	}
-
-	public void removeProperty(String key) {
-		this.properties.remove(key);
-	}
-
-	@Deprecated
-	public Proxy getProxy() {
-		Proxy proxy = Proxy.NO_PROXY;
-		if (isDefaultProxyEnabled()) {
-			proxy = WebClientUtil.getPlatformProxy(getUrl());
-		} else {
-
-			String proxyHost = getProperty(PROXY_HOSTNAME);
-			String proxyPort = getProperty(PROXY_PORT);
-			String proxyUsername = "";
-			String proxyPassword = "";
-			if (proxyHost != null && proxyHost.length() > 0) {
-				proxyUsername = getProxyUsername();
-				proxyPassword = getProxyPassword();
-			}
-			proxy = WebClientUtil.getProxy(proxyHost, proxyPort, proxyUsername, proxyPassword);
-		}
-		return proxy;
-	}
-
-	/**
-	 * Use platform proxy settings
-	 */
-	public boolean isDefaultProxyEnabled() {
-		return "true".equals(getProperty(PROXY_USEDEFAULT));
-	}
-
-	/**
-	 * <b>Note: </b> This method will be deprecated in 2.3.
-	 * 
-	 * @see #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)
-	 */
-	public void setAnonymous(boolean b) {
-		properties.put(ANONYMOUS_LOGIN, String.valueOf(b));
-	}
-
-	/**
-	 * <b>Note: </b> This method will be deprecated in 2.3.
-	 * 
-	 * @see #getCredentials(AuthenticationType)
-	 */
-	public boolean isAnonymous() {
-		return getProperty(ANONYMOUS_LOGIN) == null || "true".equals(getProperty(ANONYMOUS_LOGIN));
-	}
-
-	public boolean isBugRepository() {
-		return isBugRepository;
-	}
-
-	public void setBugRepository(boolean isBugRepository) {
-		this.isBugRepository = isBugRepository;
-	}
-
-	public void setOffline(boolean offline) {
-		properties.put(OFFLINE, String.valueOf(offline));
-	}
-
-	public boolean isOffline() {
-		return getProperty(OFFLINE) != null && "true".equals(getProperty(OFFLINE));
-	}
-
-	/**
-	 * @since 2.2
-	 */
-	public boolean getSavePassword(AuthenticationType authType) {
-		String value = getProperty(getKeyPrefix(authType) + SAVE_PASSWORD);
-		return value != null && "true".equals(value);
-	}
-
-	private static String getKeyPrefix(AuthenticationType type) {
-		switch (type) {
-		case HTTP:
-			return AUTH_HTTP;
-		case PROXY:
-			return AUTH_PROXY;
-		case REPOSITORY:
-			return AUTH_REPOSITORY;
-		}
-		throw new IllegalArgumentException("Unknown authentication type: " + type);
 	}
 
 	/**
@@ -657,6 +401,228 @@ public class TaskRepository extends PlatformObject {
 		} else {
 			return null;
 		}
+	}
+
+	/**
+	 * @deprecated use {@link #getCredentials(AuthenticationType)} instead
+	 */
+	@Deprecated
+	public String getHttpPassword() {
+		return getPassword(AuthenticationType.HTTP);
+	}
+
+	/**
+	 * @deprecated use {@link #getCredentials(AuthenticationType)} instead
+	 */
+	@Deprecated
+	public String getHttpUser() {
+		return getUserName(AuthenticationType.HTTP);
+	}
+
+	/**
+	 * @deprecated use {@link #getCredentials(AuthenticationType)} instead
+	 */
+	@Deprecated
+	public String getPassword() {
+		return getPassword(AuthenticationType.REPOSITORY);
+	}
+
+	/**
+	 * Legacy support for < 2.2. Remove in 2.3.
+	 */
+	private String getPassword(AuthenticationType authType) {
+		AuthenticationCredentials credentials = getCredentials(authType);
+		return (credentials != null) ? credentials.getPassword() : null;
+	}
+
+	public Map<String, String> getProperties() {
+		return new LinkedHashMap<String, String>(this.properties);
+	}
+
+	public String getProperty(String name) {
+		return this.properties.get(name);
+	}
+
+	/**
+	 * @deprecated use {@link TaskRepositoryLocation#getProxyForHost(String, String)} instead
+	 */
+	@Deprecated
+	public Proxy getProxy() {
+		Proxy proxy = Proxy.NO_PROXY;
+		if (isDefaultProxyEnabled()) {
+			proxy = WebClientUtil.getPlatformProxy(getUrl());
+		} else {
+
+			String proxyHost = getProperty(PROXY_HOSTNAME);
+			String proxyPort = getProperty(PROXY_PORT);
+			String proxyUsername = "";
+			String proxyPassword = "";
+			if (proxyHost != null && proxyHost.length() > 0) {
+				proxyUsername = getProxyUsername();
+				proxyPassword = getProxyPassword();
+			}
+			proxy = WebClientUtil.getProxy(proxyHost, proxyPort, proxyUsername, proxyPassword);
+		}
+		return proxy;
+	}
+
+	/**
+	 * @deprecated use {@link #getCredentials(AuthenticationType)} instead
+	 */
+	@Deprecated
+	public String getProxyPassword() {
+		return getPassword(AuthenticationType.PROXY);
+	}
+
+	/**
+	 * @deprecated use {@link #getCredentials(AuthenticationType)} instead
+	 */
+	@Deprecated
+	public String getProxyUsername() {
+		return getUserName(AuthenticationType.PROXY);
+	}
+
+	/**
+	 * @return the URL if the label property is not set
+	 */
+	public String getRepositoryLabel() {
+		String label = properties.get(IRepositoryConstants.PROPERTY_LABEL);
+		if (label != null && label.length() > 0) {
+			return label;
+		} else {
+			return getUrl();
+		}
+	}
+
+	/**
+	 * @since 2.2
+	 */
+	public boolean getSavePassword(AuthenticationType authType) {
+		String value = getProperty(getKeyPrefix(authType) + SAVE_PASSWORD);
+		return value != null && "true".equals(value);
+	}
+
+	public String getSynchronizationTimeStamp() {
+		return this.properties.get(IRepositoryConstants.PROPERTY_SYNCTIMESTAMP);
+	}
+
+	public String getTimeZoneId() {
+		final String timeZoneId = properties.get(IRepositoryConstants.PROPERTY_TIMEZONE);
+		return timeZoneId == null || "".equals(timeZoneId) ? TimeZone.getDefault().getID() : timeZoneId;
+	}
+
+	public String getUrl() {
+		return properties.get(IRepositoryConstants.PROPERTY_URL);
+	}
+
+	/**
+	 * The username is cached since it needs to be retrieved frequently (e.g. for Task List decoration).
+	 */
+	public String getUserName() {
+		// NOTE: if anonymous, user name is "" string so we won't go to keyring
+		if (!isCachedUserName) {
+			cachedUserName = getUserName(AuthenticationType.REPOSITORY);
+			isCachedUserName = true;
+		}
+		return cachedUserName;
+	}
+
+	/**
+	 * Legacy support for < 2.2. Remove in 2.3.
+	 */
+	private String getUserName(AuthenticationType authType) {
+		AuthenticationCredentials credentials = getCredentials(authType);
+		return (credentials != null) ? credentials.getUserName() : null;
+	}
+
+	public String getVersion() {
+		final String version = properties.get(IRepositoryConstants.PROPERTY_VERSION);
+		return version == null || "".equals(version) ? NO_VERSION_SPECIFIED : version;
+	}
+
+	/**
+	 * @deprecated use #getCredentials(AuthenticationType) instead
+	 */
+	@Deprecated
+	public boolean hasCredentials() {
+		String username = getUserName();
+		String password = getPassword();
+		return username != null && username.length() > 0 && password != null && password.length() > 0;
+	}
+
+	@Override
+	public int hashCode() {
+		int res = getUrl() == null ? 1 : getUrl().hashCode();
+		return res * 31 + (getConnectorKind() == null ? 1 : getConnectorKind().hashCode());
+	}
+
+	public boolean hasProperty(String name) {
+		String value = getProperty(name);
+		return value != null && value.trim().length() > 0;
+	}
+
+	/**
+	 * @deprecated #getCredentials(AuthenticationType) instead
+	 */
+	@Deprecated
+	public boolean isAnonymous() {
+		return getProperty(ANONYMOUS_LOGIN) == null || "true".equals(getProperty(ANONYMOUS_LOGIN));
+	}
+
+	public boolean isBugRepository() {
+		return isBugRepository;
+	}
+
+	/**
+	 * Use platform proxy settings
+	 */
+	public boolean isDefaultProxyEnabled() {
+		return "true".equals(getProperty(PROXY_USEDEFAULT));
+	}
+
+	public boolean isOffline() {
+		return getProperty(OFFLINE) != null && "true".equals(getProperty(OFFLINE));
+	}
+
+	public void removeProperty(String key) {
+		this.properties.remove(key);
+	}
+
+	/**
+	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} instead
+	 */
+	@Deprecated
+	public void setAnonymous(boolean b) {
+		properties.put(ANONYMOUS_LOGIN, String.valueOf(b));
+	}
+
+	/**
+	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} instead
+	 */
+	@Deprecated
+	public void setAuthenticationCredentials(String username, String password) {
+		setCredentials(AuthenticationType.REPOSITORY, username, password);
+	}
+
+	public void setBugRepository(boolean isBugRepository) {
+		this.isBugRepository = isBugRepository;
+	}
+
+	public void setCharacterEncoding(String characterEncoding) {
+		properties.put(IRepositoryConstants.PROPERTY_ENCODING, characterEncoding == null ? DEFAULT_CHARACTER_ENCODING
+				: characterEncoding);
+	}
+
+	/**
+	 * Set the Configuration date to the {@link Date} indicated.
+	 * 
+	 * @param configuration
+	 *            date {@link {@link Date}}
+	 */
+	final public void setConfigurationDate(final Date date) {
+		this.setProperty(PROPERTY_CONFIG_TIMESTAMP, String.valueOf(date.getTime()));
+		//  should persist here, but that can only be done by the TaskRepositoryManager
+		// However this is also included when persisting ordinary sync time
 	}
 
 	/**
@@ -716,49 +682,73 @@ public class TaskRepository extends PlatformObject {
 
 	}
 
-	/**
-	 * Legacy support for < 2.2. Remove in 2.3.
-	 */
-	private String getUserName(AuthenticationType authType) {
-		AuthenticationCredentials credentials = getCredentials(authType);
-		return (credentials != null) ? credentials.getUserName() : null;
-	}
-
-	/**
-	 * Legacy support for < 2.2. Remove in 2.3.
-	 */
-	private String getPassword(AuthenticationType authType) {
-		AuthenticationCredentials credentials = getCredentials(authType);
-		return (credentials != null) ? credentials.getPassword() : null;
-	}
-
-	/**
-	 * Get the last refresh date as initialized {@link Date} object, null if not set<br />
-	 * 
-	 * @return {@link Date} configuration date, null if not set
-	 */
-	final public Date getConfigurationDate() {
-		Date configDate = null;
-		String value = this.getProperty(PROPERTY_CONFIG_TIMESTAMP);
-		try {
-			configDate = new Date(Long.valueOf(value).longValue());
-
-		} catch (Exception e) {
-
+	private void setCredentialsInternal(String username, String password, String userProperty, String passwordProperty) {
+		Map<String, String> map = getAuthInfo();
+		if (map == null) {
+			map = new HashMap<String, String>();
 		}
-		return configDate;
+
+		if (username != null) {
+			map.put(userProperty, username);
+		}
+		if (password != null) {
+			map.put(passwordProperty, password);
+		}
+		addAuthInfo(map);
 	}
 
 	/**
-	 * Set the Configuration date to the {@link Date} indicated.
-	 * 
-	 * @param configuration
-	 *            date {@link {@link Date}}
+	 * @deprecated use esetCredentials(AuthenticationType, AuthenticationCredentials, boolean)
 	 */
-	final public void setConfigurationDate(final Date date) {
-		this.setProperty(PROPERTY_CONFIG_TIMESTAMP, String.valueOf(date.getTime()));
-		//  should persist here, but that can only be done by the TaskRepositoryManager
-		// However this is also included when persisting ordinary sync time
+	@Deprecated
+	public void setHttpAuthenticationCredentials(String username, String password) {
+		setCredentials(AuthenticationType.HTTP, username, password);
+	}
+
+	public void setOffline(boolean offline) {
+		properties.put(OFFLINE, String.valueOf(offline));
+	}
+
+	public void setProperty(String name, String value) {
+		this.properties.put(name, value);
+	}
+
+	/**
+	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} instead
+	 */
+	@Deprecated
+	public void setProxyAuthenticationCredentials(String username, String password) {
+		setCredentials(AuthenticationType.PROXY, username, password);
+	}
+
+	public void setRepositoryLabel(String repositoryLabel) {
+		this.properties.put(IRepositoryConstants.PROPERTY_LABEL, repositoryLabel);
+	}
+
+	/**
+	 * ONLY for use by IRepositoryConstants. To set the sync time call IRepositoryConstants.setSyncTime(repository,
+	 * date);
+	 */
+	public void setSynchronizationTimeStamp(String syncTime) {
+		this.properties.put(IRepositoryConstants.PROPERTY_SYNCTIMESTAMP, syncTime);
+	}
+
+	public void setTimeZoneId(String timeZoneId) {
+		this.properties.put(IRepositoryConstants.PROPERTY_TIMEZONE, timeZoneId == null ? TimeZone.getDefault().getID()
+				: timeZoneId);
+	}
+
+	public void setUrl(String newUrl) {
+		properties.put(IRepositoryConstants.PROPERTY_URL, newUrl);
+	}
+
+	public void setVersion(String ver) {
+		properties.put(IRepositoryConstants.PROPERTY_VERSION, ver == null ? NO_VERSION_SPECIFIED : ver);
+	}
+
+	@Override
+	public String toString() {
+		return getUrl();
 	}
 
 }
