@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.web.core;
+package org.eclipse.mylyn.internal.web.core;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -25,6 +25,7 @@ import javax.net.ssl.TrustManager;
 import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.apache.commons.httpclient.params.HttpConnectionParams;
 import org.apache.commons.httpclient.protocol.SecureProtocolSocketFactory;
+import org.eclipse.mylyn.web.core.WebCorePlugin;
 
 /**
  * Provides support for managing SSL connections.
@@ -34,7 +35,7 @@ import org.apache.commons.httpclient.protocol.SecureProtocolSocketFactory;
  * @author Steffen Pingel
  * @since 2.0
  */
-// API-3.0 move to internal package and merge with PollingSslProtocolSocketFactory
+// API 3.0 with PollingSslProtocolSocketFactory
 public class SslProtocolSocketFactory implements SecureProtocolSocketFactory {
 
 	private static final String KEY_STORE = "javax.net.ssl.keyStore";

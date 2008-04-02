@@ -20,7 +20,7 @@ import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.apache.commons.httpclient.params.HttpConnectionParams;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.mylyn.web.core.WebClientUtil;
+import org.eclipse.mylyn.web.core.WebUtil;
 
 /**
  * @author Steffen Pingel
@@ -53,7 +53,7 @@ public class PollingProtocolSocketFactory implements ProtocolSocketFactory {
 		int timeout = params.getConnectionTimeout();
 		Socket socket = factory.createSocket();
 		socket.bind(new InetSocketAddress(localAddress, localPort));
-		WebClientUtil.connect(socket, new InetSocketAddress(host, port), timeout, monitor);
+		WebUtil.connect(socket, new InetSocketAddress(host, port), timeout, monitor);
 		return socket;
 	}
 

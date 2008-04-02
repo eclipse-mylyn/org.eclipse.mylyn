@@ -18,8 +18,7 @@ import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.apache.commons.httpclient.params.HttpConnectionParams;
 import org.apache.commons.httpclient.protocol.SecureProtocolSocketFactory;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.mylyn.web.core.SslProtocolSocketFactory;
-import org.eclipse.mylyn.web.core.WebClientUtil;
+import org.eclipse.mylyn.web.core.WebUtil;
 
 /**
  * @author Steffen Pingel
@@ -58,7 +57,7 @@ public class PollingSslProtocolSocketFactory implements SecureProtocolSocketFact
 		int timeout = params.getConnectionTimeout();
 		Socket socket = factory.getSocketFactory().createSocket();
 		socket.bind(new InetSocketAddress(localAddress, localPort));
-		WebClientUtil.connect(socket, new InetSocketAddress(host, port), timeout, monitor);
+		WebUtil.connect(socket, new InetSocketAddress(host, port), timeout, monitor);
 		return socket;
 	}
 

@@ -46,6 +46,7 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.mylyn.internal.web.core.CloneableHostConfiguration;
 import org.eclipse.mylyn.internal.web.core.PollingProtocolSocketFactory;
 import org.eclipse.mylyn.internal.web.core.PollingSslProtocolSocketFactory;
+import org.eclipse.mylyn.internal.web.core.SslProtocolSocketFactory;
 
 /**
  * @author Mik Kersten
@@ -53,8 +54,9 @@ import org.eclipse.mylyn.internal.web.core.PollingSslProtocolSocketFactory;
  * @author Leo Dos Santos - getFaviconForUrl
  * @author Rob Elves
  * @since 2.0
+ * @deprecated use {@link WebUtil} instead
  */
-// API-3.0 rename to WebUtil
+@Deprecated
 public class WebClientUtil {
 
 	private static final int MAX_THREADS = 10;

@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.web.core;
+package org.eclipse.mylyn.internal.web.core;
 
 import javax.net.ssl.X509TrustManager;
 
