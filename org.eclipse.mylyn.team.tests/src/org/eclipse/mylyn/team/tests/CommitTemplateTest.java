@@ -15,7 +15,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryTask;
+import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 
 /**
  * @author Mik Kersten
@@ -26,7 +26,7 @@ public class CommitTemplateTest extends TestCase {
 		String template = FocusedTeamUiPlugin.getDefault().getPreferenceStore().getString(
 				FocusedTeamUiPlugin.COMMIT_TEMPLATE);
 
-		AbstractTask task = new MockRepositoryTask("12345");
+		AbstractTask task = new MockTask("12345");
 		String comment = FocusedTeamUiPlugin.getDefault().getCommitTemplateManager().generateComment(task, template);
 
 		String taskId = FocusedTeamUiPlugin.getDefault()
@@ -39,7 +39,7 @@ public class CommitTemplateTest extends TestCase {
 		String template = FocusedTeamUiPlugin.getDefault().getPreferenceStore().getString(
 				FocusedTeamUiPlugin.COMMIT_TEMPLATE);
 
-		AbstractTask task = new MockRepositoryTask("12345");
+		AbstractTask task = new MockTask("12345");
 		String comment = FocusedTeamUiPlugin.getDefault().getCommitTemplateManager().generateComment(task, template)
 				+ "\n";
 

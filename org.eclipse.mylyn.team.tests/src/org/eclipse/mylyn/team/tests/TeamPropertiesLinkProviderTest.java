@@ -23,7 +23,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.internal.team.ui.ContextChangeSet;
 import org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin;
 import org.eclipse.mylyn.internal.team.ui.properties.TeamPropertiesLinkProvider;
-import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryTask;
+import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.team.core.diff.IDiff;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
 
@@ -59,7 +59,7 @@ public class TeamPropertiesLinkProviderTest extends TestCase {
 	}
 
 	public void testCommitCommentTemplate() throws Exception {
-		MockRepositoryTask task = new MockRepositoryTask("1");
+		MockTask task = new MockTask("1");
 		task.setSummary("summary");
 		task.setUrl("http://url");
 
@@ -102,7 +102,7 @@ public class TeamPropertiesLinkProviderTest extends TestCase {
 	}
 
 	public void testChangeSetCommitCommentMultipleProjects() throws Exception {
-		MockRepositoryTask task = new MockRepositoryTask("1");
+		MockTask task = new MockTask("1");
 		task.setSummary("summary");
 		task.setUrl("http://url");
 
@@ -130,7 +130,7 @@ public class TeamPropertiesLinkProviderTest extends TestCase {
 	}
 
 	public void testChangeSetCommitCommentChangedResources() throws Exception {
-		MockRepositoryTask task = new MockRepositoryTask("1");
+		MockTask task = new MockTask("1");
 		task.setSummary("summary");
 		task.setUrl("http://url");
 
