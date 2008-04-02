@@ -12,7 +12,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalProvider;
-import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryTask;
+import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 
 /**
  * @author Frank Becker
@@ -32,7 +32,7 @@ public class PersonProposalProviderTest extends TestCase {
 	}
 
 	public void testGetProposalsCurrentTask() {
-		MockRepositoryTask task = new MockRepositoryTask(null, "1", null);
+		MockTask task = new MockTask(null, "1", null);
 		task.setOwner("foo");
 		PersonProposalProvider provider = new PersonProposalProvider(task, null);
 		IContentProposal[] result = provider.getProposals("", 0);
@@ -58,7 +58,7 @@ public class PersonProposalProviderTest extends TestCase {
 	public void testGetProposalsMultipleAddresses() {
 		IContentProposal[] result;
 
-		MockRepositoryTask task = new MockRepositoryTask(null, "1", null);
+		MockTask task = new MockTask(null, "1", null);
 		task.setOwner("foo");
 		PersonProposalProvider provider = new PersonProposalProvider(task, null);
 

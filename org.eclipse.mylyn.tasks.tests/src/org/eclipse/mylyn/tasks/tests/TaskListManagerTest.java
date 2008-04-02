@@ -47,7 +47,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.tests.connector.MockAttributeFactory;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
-import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryTask;
+import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.mylyn.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
@@ -93,7 +93,7 @@ public class TaskListManagerTest extends TestCase {
 	public void testUncategorizedTasksNotLost() {
 		MockRepositoryQuery query = new MockRepositoryQuery("Test");
 		manager.getTaskList().addQuery(query);
-		MockRepositoryTask task = new MockRepositoryTask("1");
+		MockTask task = new MockTask("1");
 		manager.getTaskList().addTask(task, query);
 		manager.getTaskList().moveTask(task, manager.getTaskList().getDefaultCategory());
 		assertTrue(manager.getTaskList().getDefaultCategory().contains(task.getHandleIdentifier()));
@@ -147,7 +147,7 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testSingleTaskDeletion() {
-		MockRepositoryTask task = new MockRepositoryTask("1");
+		MockTask task = new MockTask("1");
 		task.setLastReadTimeStamp("now");
 		manager.getTaskList().moveTask(task,
 				manager.getTaskList().getOrphanContainer(LocalRepositoryConnector.REPOSITORY_URL));
@@ -224,8 +224,8 @@ public class TaskListManagerTest extends TestCase {
 // }
 
 	public void testMigrateTaskHandles() {
-		AbstractTask task = new MockRepositoryTask("http://a", "123");
-		AbstractTask task2 = new MockRepositoryTask("http://other", "other");
+		AbstractTask task = new MockTask("http://a", "123");
+		AbstractTask task2 = new MockTask("http://other", "other");
 		manager.getTaskList().addTask(task);
 		manager.getTaskList().addTask(task2);
 
@@ -253,7 +253,7 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testMigrateTaskHandlesWithExplicitSet() {
-		AbstractTask task = new MockRepositoryTask("http://a", "123");
+		AbstractTask task = new MockTask("http://a", "123");
 		task.setUrl("http://a/task/123");
 		manager.getTaskList().addTask(task);
 		manager.refactorRepositoryUrl("http://a", "http://b");
@@ -265,8 +265,8 @@ public class TaskListManagerTest extends TestCase {
 	public void testRefactorMetaContextHandles() {
 		String firstUrl = "http://repository1.com/bugs";
 		String secondUrl = "http://repository2.com/bugs";
-		AbstractTask task1 = new MockRepositoryTask(firstUrl, "1");
-		AbstractTask task2 = new MockRepositoryTask(firstUrl, "2");
+		AbstractTask task1 = new MockTask(firstUrl, "1");
+		AbstractTask task2 = new MockTask(firstUrl, "2");
 		manager.getTaskList().addTask(task1);
 		manager.getTaskList().addTask(task2);
 		Calendar startDate = Calendar.getInstance();
@@ -301,9 +301,9 @@ public class TaskListManagerTest extends TestCase {
 		metaContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
 		assertEquals(2, metaContext.getInteractionHistory().size());
 		assertEquals(60 * 1000 * 5, TasksUiPlugin.getTaskActivityManager().getElapsedTime(
-				new MockRepositoryTask(secondUrl, "1")));
+				new MockTask(secondUrl, "1")));
 		assertEquals(2 * 60 * 1000 * 5, TasksUiPlugin.getTaskActivityManager().getElapsedTime(
-				new MockRepositoryTask(secondUrl, "2")));
+				new MockTask(secondUrl, "2")));
 		assertEquals(secondUrl + "-1", metaContext.getInteractionHistory().get(0).getStructureHandle());
 	}
 
@@ -358,7 +358,7 @@ public class TaskListManagerTest extends TestCase {
 		task.setCompletionDate(new Date());
 		assertTrue(TasksUiPlugin.getTaskActivityManager().isCompletedToday(task));
 
-		MockRepositoryTask mockTask = new MockRepositoryTask("1");
+		MockTask mockTask = new MockTask("1");
 		mockTask.setOwner("unknown");
 		manager.getTaskList().addTask(mockTask);
 		mockTask.setCompleted(true);
@@ -366,7 +366,7 @@ public class TaskListManagerTest extends TestCase {
 		assertFalse("completed: " + mockTask.getCompletionDate(), TasksUiPlugin.getTaskActivityManager()
 				.isCompletedToday(mockTask));
 
-		mockTask = new MockRepositoryTask("2");
+		mockTask = new MockTask("2");
 		manager.getTaskList().addTask(mockTask);
 		mockTask.setCompleted(true);
 		mockTask.setCompletionDate(new Date());
@@ -435,7 +435,7 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testCategoryPersistance() {
-		MockRepositoryTask task = new MockRepositoryTask("1");
+		MockTask task = new MockTask("1");
 		TaskCategory category = new TaskCategory("cat");
 		manager.getTaskList().addCategory(category);
 		manager.getTaskList().moveTask(task, category);
@@ -460,7 +460,7 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testDeleteCategoryMovesTasksToRoot() {
-		AbstractTask task = new MockRepositoryTask("delete");
+		AbstractTask task = new MockTask("delete");
 		TaskCategory category = new TaskCategory("cat");
 		manager.getTaskList().addTask(task, category);
 		manager.getTaskList().addCategory(category);
@@ -547,7 +547,7 @@ public class TaskListManagerTest extends TestCase {
 		repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, repositoryUrl);
 		TasksUiPlugin.getRepositoryManager().addRepository(repository,
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
-		MockRepositoryTask task = new MockRepositoryTask(repositoryUrl, "1");
+		MockTask task = new MockTask(repositoryUrl, "1");
 		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 		taskList.moveTask(task, manager.getTaskList().getDefaultCategory());
 		MockRepositoryQuery query = new MockRepositoryQuery("query");
@@ -561,7 +561,7 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testCreate() {
-		MockRepositoryTask repositoryTask = new MockRepositoryTask("1");
+		MockTask repositoryTask = new MockTask("1");
 		repositoryTask.setLastReadTimeStamp("now");
 		manager.getTaskList().addTask(repositoryTask, manager.getTaskList().getDefaultCategory());
 		assertEquals(1, manager.getTaskList().getDefaultCategory().getChildren().size());
@@ -573,7 +573,7 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testCreateAndMove() {
-		MockRepositoryTask repositoryTask = new MockRepositoryTask("1");
+		MockTask repositoryTask = new MockTask("1");
 		repositoryTask.setLastReadTimeStamp("now");
 		manager.getTaskList().addTask(repositoryTask);
 		assertEquals(1, manager.getTaskList().getAllTasks().size());
@@ -594,7 +594,7 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testArchiveRepositoryTaskExternalization() {
-		MockRepositoryTask repositoryTask = new MockRepositoryTask("1");
+		MockTask repositoryTask = new MockTask("1");
 		repositoryTask.setLastReadTimeStamp("now");
 		manager.getTaskList().addTask(repositoryTask);
 		assertEquals(1, manager.getTaskList()
@@ -615,7 +615,7 @@ public class TaskListManagerTest extends TestCase {
 		TaskCategory cat1 = new TaskCategory("Category 1");
 		manager.getTaskList().addCategory(cat1);
 
-		MockRepositoryTask reportInCat1 = new MockRepositoryTask("123");
+		MockTask reportInCat1 = new MockTask("123");
 		manager.getTaskList().moveTask(reportInCat1, cat1);
 		assertEquals(cat1, TaskCategory.getParentTaskCategory(reportInCat1));
 
@@ -725,7 +725,7 @@ public class TaskListManagerTest extends TestCase {
 		manager.getTaskList().moveTask(task4, cat1);
 		cat1Contents.add(task4);
 
-		MockRepositoryTask reportInCat1 = new MockRepositoryTask("123");
+		MockTask reportInCat1 = new MockTask("123");
 		manager.getTaskList().moveTask(reportInCat1, cat1);
 		assertEquals(cat1, TaskCategory.getParentTaskCategory(reportInCat1));
 		cat1Contents.add(reportInCat1);
@@ -817,13 +817,13 @@ public class TaskListManagerTest extends TestCase {
 	public void testgetQueriesAndHitsForHandle() {
 		TaskList taskList = manager.getTaskList();
 
-		MockRepositoryTask hit1 = new MockRepositoryTask("1");
-		MockRepositoryTask hit2 = new MockRepositoryTask("2");
-		MockRepositoryTask hit3 = new MockRepositoryTask("3");
+		MockTask hit1 = new MockTask("1");
+		MockTask hit2 = new MockTask("2");
+		MockTask hit3 = new MockTask("3");
 
-		MockRepositoryTask hit1twin = new MockRepositoryTask("1");
-		MockRepositoryTask hit2twin = new MockRepositoryTask("2");
-		MockRepositoryTask hit3twin = new MockRepositoryTask("3");
+		MockTask hit1twin = new MockTask("1");
+		MockTask hit2twin = new MockTask("2");
+		MockTask hit3twin = new MockTask("3");
 
 		MockRepositoryQuery query1 = new MockRepositoryQuery("query1");
 		MockRepositoryQuery query2 = new MockRepositoryQuery("query2");
@@ -874,13 +874,13 @@ public class TaskListManagerTest extends TestCase {
 	public void testUpdateQueryHits() {
 		TaskList taskList = manager.getTaskList();
 
-		MockRepositoryTask hit1 = new MockRepositoryTask("1");
-		MockRepositoryTask hit2 = new MockRepositoryTask("2");
-		MockRepositoryTask hit3 = new MockRepositoryTask("3");
+		MockTask hit1 = new MockTask("1");
+		MockTask hit2 = new MockTask("2");
+		MockTask hit3 = new MockTask("3");
 
-		MockRepositoryTask hit1twin = new MockRepositoryTask("1");
-		MockRepositoryTask hit2twin = new MockRepositoryTask("2");
-		MockRepositoryTask hit3twin = new MockRepositoryTask("3");
+		MockTask hit1twin = new MockTask("1");
+		MockTask hit2twin = new MockTask("2");
+		MockTask hit3twin = new MockTask("3");
 
 		MockRepositoryQuery query1 = new MockRepositoryQuery("query1");
 		taskList.addQuery(query1);
@@ -923,10 +923,10 @@ public class TaskListManagerTest extends TestCase {
 
 		String bugNumber = "106939";
 
-		MockRepositoryTask task1 = new MockRepositoryTask(repositoryUrl, bugNumber);
+		MockTask task1 = new MockTask(repositoryUrl, bugNumber);
 		manager.getTaskList().addTask(task1);
 
-		MockRepositoryTask task2 = new MockRepositoryTask("https://unresolved", bugNumber);
+		MockTask task2 = new MockTask("https://unresolved", bugNumber);
 		manager.getTaskList().addTask(task2);
 
 		TaskList taskList = manager.getTaskList();
@@ -954,8 +954,8 @@ public class TaskListManagerTest extends TestCase {
 
 	public void testMarkTaskRead() {
 		String repositoryUrl = "http://mylyn.eclipse.org/bugs222";
-		MockRepositoryTask task1 = new MockRepositoryTask(repositoryUrl, "1");
-		MockRepositoryTask task2 = new MockRepositoryTask(repositoryUrl, "2");
+		MockTask task1 = new MockTask(repositoryUrl, "1");
+		MockTask task2 = new MockTask(repositoryUrl, "2");
 		task1.setSynchronizationState(RepositoryTaskSyncState.INCOMING);
 		task2.setSynchronizationState(RepositoryTaskSyncState.INCOMING);
 		List<AbstractTaskContainer> elements = new ArrayList<AbstractTaskContainer>();
@@ -967,8 +967,8 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task2.getSynchronizationState());
 
 		manager.getTaskList().reset();
-		MockRepositoryTask hit1 = new MockRepositoryTask("1");
-		MockRepositoryTask hit2 = new MockRepositoryTask("2");
+		MockTask hit1 = new MockTask("1");
+		MockTask hit2 = new MockTask("2");
 		MockRepositoryQuery query = new MockRepositoryQuery("summary");
 		manager.getTaskList().addQuery(query);
 		manager.getTaskList().addTask(hit1, query);
@@ -980,8 +980,8 @@ public class TaskListManagerTest extends TestCase {
 		readAction.run();
 		assertEquals(2, query.getChildren().size());
 		for (AbstractTaskContainer element : query.getChildren()) {
-			if (element instanceof MockRepositoryTask) {
-				MockRepositoryTask mockTask = (MockRepositoryTask) element;
+			if (element instanceof MockTask) {
+				MockTask mockTask = (MockTask) element;
 				assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, mockTask.getSynchronizationState());
 			}
 		}
@@ -990,8 +990,8 @@ public class TaskListManagerTest extends TestCase {
 
 	public void testMarkUnRead() {
 		String repositoryUrl = "http://mylyn.eclipse.org/bugs222";
-		MockRepositoryTask task1 = new MockRepositoryTask(repositoryUrl, "1");
-		MockRepositoryTask task2 = new MockRepositoryTask(repositoryUrl, "2");
+		MockTask task1 = new MockTask(repositoryUrl, "1");
+		MockTask task2 = new MockTask(repositoryUrl, "2");
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task1.getSynchronizationState());
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task2.getSynchronizationState());
 		List<AbstractTaskContainer> elements = new ArrayList<AbstractTaskContainer>();
@@ -1003,8 +1003,8 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(RepositoryTaskSyncState.INCOMING, task2.getSynchronizationState());
 
 		manager.getTaskList().reset();
-		MockRepositoryTask hit1 = new MockRepositoryTask("1");
-		MockRepositoryTask hit2 = new MockRepositoryTask("2");
+		MockTask hit1 = new MockTask("1");
+		MockTask hit2 = new MockTask("2");
 		MockRepositoryQuery query = new MockRepositoryQuery("summary");
 		manager.getTaskList().addQuery(query);
 		manager.getTaskList().addTask(hit1, query);
@@ -1016,8 +1016,8 @@ public class TaskListManagerTest extends TestCase {
 		readAction.run();
 		assertEquals(2, query.getChildren().size());
 		for (AbstractTaskContainer element : query.getChildren()) {
-			if (element instanceof MockRepositoryTask) {
-				MockRepositoryTask mockTask = (MockRepositoryTask) element;
+			if (element instanceof MockTask) {
+				MockTask mockTask = (MockTask) element;
 				assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, mockTask.getSynchronizationState());
 			} else {
 				fail();
@@ -1028,8 +1028,8 @@ public class TaskListManagerTest extends TestCase {
 		unreadAction.run();
 		assertEquals(2, query.getChildren().size());
 		for (AbstractTaskContainer element : query.getChildren()) {
-			if (element instanceof MockRepositoryTask) {
-				MockRepositoryTask mockTask = (MockRepositoryTask) element;
+			if (element instanceof MockTask) {
+				MockTask mockTask = (MockTask) element;
 				assertEquals(RepositoryTaskSyncState.INCOMING, mockTask.getSynchronizationState());
 			} else {
 				fail();
@@ -1038,8 +1038,8 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testQueryHitsNotDropped() {
-		MockRepositoryTask task1 = new MockRepositoryTask("1");
-		MockRepositoryTask task2 = new MockRepositoryTask("2");
+		MockTask task1 = new MockTask("1");
+		MockTask task2 = new MockTask("2");
 		task1.setLastReadTimeStamp("today");
 		task2.setLastReadTimeStamp("today");
 		MockRepositoryQuery query = new MockRepositoryQuery("summary");

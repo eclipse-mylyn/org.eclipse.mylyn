@@ -19,7 +19,7 @@ import org.eclipse.mylyn.internal.tasks.ui.wizards.NewTaskWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.SelectRepositoryPage;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
-import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryTask;
+import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -38,7 +38,7 @@ public class NewTaskWizardRepositorySelectionTest extends TestCase {
 
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		TaskListView view = TaskListView.openInActivePerspective();
-		MockRepositoryTask mockTask = new MockRepositoryTask("mock.task");
+		MockTask mockTask = new MockTask("mock.task");
 		TasksUiPlugin.getTaskActivityManager().scheduleNewTask(mockTask);
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(mockTask);
 

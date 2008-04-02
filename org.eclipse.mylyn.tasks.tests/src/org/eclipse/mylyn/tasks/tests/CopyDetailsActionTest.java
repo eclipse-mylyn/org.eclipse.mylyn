@@ -11,7 +11,7 @@ package org.eclipse.mylyn.tasks.tests;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
-import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryTask;
+import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 
 /**
  * @author Mik Kersten
@@ -19,7 +19,7 @@ import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryTask;
 public class CopyDetailsActionTest extends TestCase {
 
 	public void testIdLabelIncluded() {
-		MockRepositoryTask task = new MockRepositoryTask("123");
+		MockTask task = new MockTask("123");
 		String text = CopyTaskDetailsAction.getTextForTask(task);
 		assertTrue(text.startsWith(task.getTaskKey()));
 	}

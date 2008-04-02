@@ -20,7 +20,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
-import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryTask;
+import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
@@ -92,7 +92,7 @@ public class OrphanedTasksTest extends TestCase {
 	 * Query removed with task in category, just query removed task remains.
 	 */
 	public void testTaskRemovedFromQuery() {
-		MockRepositoryTask mockTask = new MockRepositoryTask("1");
+		MockTask mockTask = new MockTask("1");
 		mockTask.setLastReadTimeStamp("now");
 		MockRepositoryQuery mockQuery = new MockRepositoryQuery("mock query");
 		taskList.addQuery(mockQuery);
@@ -109,7 +109,7 @@ public class OrphanedTasksTest extends TestCase {
 	 * Query removed with task in category, just query removed task remains.
 	 */
 	public void testTaskRemovedFromQueryButInCategory() {
-		MockRepositoryTask mockTask = new MockRepositoryTask("1");
+		MockTask mockTask = new MockTask("1");
 		mockTask.setLastReadTimeStamp("now");
 		MockRepositoryQuery mockQuery = new MockRepositoryQuery("mock query");
 		taskList.addQuery(mockQuery);
@@ -136,7 +136,7 @@ public class OrphanedTasksTest extends TestCase {
 	 * Repository tasks that exists in a query are not orphaned.
 	 */
 	public void testRepositoryTaskInDeletedCategory() {
-		MockRepositoryTask mockTask = new MockRepositoryTask("1");
+		MockTask mockTask = new MockTask("1");
 		MockRepositoryQuery mockQuery = new MockRepositoryQuery("mock query");
 		taskList.addQuery(mockQuery);
 		taskList.addTask(mockTask, mockQuery);
@@ -155,7 +155,7 @@ public class OrphanedTasksTest extends TestCase {
 	 * Repository tasks in deleted queries are orphaned.
 	 */
 	public void testRepositoryTaskInDeletedQuery() {
-		MockRepositoryTask mockTask = new MockRepositoryTask("1");
+		MockTask mockTask = new MockTask("1");
 		MockRepositoryQuery mockQuery = new MockRepositoryQuery("mock query");
 		taskList.addQuery(mockQuery);
 		assertTrue(taskList.getQueries().size() > 0);
@@ -171,7 +171,7 @@ public class OrphanedTasksTest extends TestCase {
 	 * If a task exists in a category and is a query hit it should not be removed from the category
 	 */
 	public void testQueryRemovedTaskInCategory() {
-		MockRepositoryTask mockTask = new MockRepositoryTask("1");
+		MockTask mockTask = new MockTask("1");
 		MockRepositoryQuery mockQuery = new MockRepositoryQuery("mock query");
 		taskList.addQuery(mockQuery);
 		taskList.addTask(mockTask, mockQuery);
@@ -199,7 +199,7 @@ public class OrphanedTasksTest extends TestCase {
 	 * Repository tasks that exist in another query are not orphaned
 	 */
 	public void testRemovalOfTaskInTwoQueries() {
-		MockRepositoryTask mockTask = new MockRepositoryTask("1");
+		MockTask mockTask = new MockTask("1");
 		MockRepositoryQuery mockQuery = new MockRepositoryQuery("mock query 1");
 		MockRepositoryQuery mockQuery2 = new MockRepositoryQuery("mock query 2");
 		taskList.addQuery(mockQuery);
@@ -227,7 +227,7 @@ public class OrphanedTasksTest extends TestCase {
 	}
 
 	public void testAddRepositoryTask() {
-		MockRepositoryTask mockTask = new MockRepositoryTask("1");
+		MockTask mockTask = new MockTask("1");
 		MockRepositoryQuery mockQuery = new MockRepositoryQuery("mock query");
 		TasksUiPlugin.getTaskListManager().getTaskList().addQuery(mockQuery);
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(mockTask, mockQuery);
@@ -249,7 +249,7 @@ public class OrphanedTasksTest extends TestCase {
 		TaskList tasklist = TasksUiPlugin.getTaskListManager().getTaskList();
 		assertTrue(tasklist.getAllTasks().isEmpty());
 
-		MockRepositoryTask mockTask = new MockRepositoryTask("1");
+		MockTask mockTask = new MockTask("1");
 		MockRepositoryQuery mockQuery = new MockRepositoryQuery("mock query");
 		TasksUiPlugin.getTaskListManager().getTaskList().addQuery(mockQuery);
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(mockTask, mockQuery);
@@ -265,7 +265,7 @@ public class OrphanedTasksTest extends TestCase {
 	}
 
 	public void testRefactorOrphanedHandle() {
-		MockRepositoryTask mockTask = new MockRepositoryTask("1");
+		MockTask mockTask = new MockTask("1");
 		mockTask.setLastReadTimeStamp("now");
 		MockRepositoryQuery mockQuery = new MockRepositoryQuery("mock query");
 		taskList.addQuery(mockQuery);
@@ -284,8 +284,8 @@ public class OrphanedTasksTest extends TestCase {
 	}
 
 	public void testOrphanedSubtasks() {
-		MockRepositoryTask mockTask = new MockRepositoryTask("1");
-		MockRepositoryTask mockTask2 = new MockRepositoryTask("2");
+		MockTask mockTask = new MockTask("1");
+		MockTask mockTask2 = new MockTask("2");
 		MockRepositoryQuery mockQuery = new MockRepositoryQuery("mock query");
 		TasksUiPlugin.getTaskListManager().getTaskList().addQuery(mockQuery);
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(mockTask, mockQuery);
@@ -316,9 +316,9 @@ public class OrphanedTasksTest extends TestCase {
 	 * they shouldn't be in the archive.
 	 */
 	public void testOrphanedSubtaskWithOtherParent() {
-		MockRepositoryTask mockTask = new MockRepositoryTask("1");
-		MockRepositoryTask mockTask2 = new MockRepositoryTask("2");
-		MockRepositoryTask mockTask3 = new MockRepositoryTask("3");
+		MockTask mockTask = new MockTask("1");
+		MockTask mockTask2 = new MockTask("2");
+		MockTask mockTask3 = new MockTask("3");
 		MockRepositoryQuery mockQuery = new MockRepositoryQuery("mock query");
 		TasksUiPlugin.getTaskListManager().getTaskList().addQuery(mockQuery);
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(mockTask, mockQuery);

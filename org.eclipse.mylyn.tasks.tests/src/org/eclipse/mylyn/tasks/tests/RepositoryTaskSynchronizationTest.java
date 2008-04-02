@@ -27,7 +27,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.tests.connector.MockAttributeFactory;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
-import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryTask;
+import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
@@ -63,7 +63,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 	}
 
 	public void testHasIncoming() {
-		AbstractTask task = new MockRepositoryTask(MOCCK_ID);
+		AbstractTask task = new MockTask(MOCCK_ID);
 		RepositoryTaskData taskData = new RepositoryTaskData(new MockAttributeFactory(), connector.getConnectorKind(),
 				MockRepositoryConnector.REPOSITORY_URL, MOCCK_ID);
 		task.setLastReadTimeStamp("never");
@@ -81,7 +81,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 
 	public void testHasIncomingDateComparison() {
 		final Stack<Date> dates = new Stack<Date>();
-		AbstractTask task = new MockRepositoryTask(MOCCK_ID);
+		AbstractTask task = new MockTask(MOCCK_ID);
 		RepositoryTaskData taskData = new RepositoryTaskData(new MockAttributeFactory() {
 			private static final long serialVersionUID = 1L;
 
@@ -464,7 +464,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 
 	private AbstractTask primeTaskAndRepository(RepositoryTaskSyncState localState, RepositoryTaskSyncState remoteState) {
 		RepositoryTaskData taskData = null;
-		AbstractTask task = new MockRepositoryTask(MOCCK_ID);
+		AbstractTask task = new MockTask(MOCCK_ID);
 
 		taskData = new RepositoryTaskData(new MockAttributeFactory(), connector.getConnectorKind(),
 				MockRepositoryConnector.REPOSITORY_URL, MOCCK_ID);

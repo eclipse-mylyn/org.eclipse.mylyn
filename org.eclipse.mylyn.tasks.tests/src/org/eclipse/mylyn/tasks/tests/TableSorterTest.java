@@ -17,7 +17,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListTableSorter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryTask;
+import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.swt.widgets.Control;
 
 /**
@@ -72,12 +72,12 @@ public class TableSorterTest extends TestCase {
 	public void testSummaryOrderSorting() {
 		final TaskListTableSorter sorter = new TaskListTableSorter(TaskListView.getFromActivePerspective());
 
-		final MockRepositoryTask[] tasks = new MockRepositoryTask[5];
-		tasks[0] = new MockRepositoryTask("local", "4", "c");
-		tasks[1] = new MockRepositoryTask("local", "1", "b");
-		tasks[2] = new MockRepositoryTask("local", "11", "a");
-		tasks[3] = new MockRepositoryTask("local", "3", "c");
-		tasks[4] = new MockRepositoryTask("local", "5", "a");
+		final MockTask[] tasks = new MockTask[5];
+		tasks[0] = new MockTask("local", "4", "c");
+		tasks[1] = new MockTask("local", "1", "b");
+		tasks[2] = new MockTask("local", "11", "a");
+		tasks[3] = new MockTask("local", "3", "c");
+		tasks[4] = new MockTask("local", "5", "a");
 
 		sorter.sort(new EmptyViewer(), tasks);
 
@@ -89,12 +89,12 @@ public class TableSorterTest extends TestCase {
 	public void testModuleSummaryOrderSorting() {
 		final TaskListTableSorter sorter = new TaskListTableSorter(TaskListView.getFromActivePerspective());
 
-		final MockRepositoryTask[] tasks = new MockRepositoryTask[5];
-		tasks[0] = new MockRepositoryTask("local", "MYLN:4", "c");
-		tasks[1] = new MockRepositoryTask("local", "MYLN:1", "b");
-		tasks[2] = new MockRepositoryTask("local", "MYLN:11", "a");
-		tasks[3] = new MockRepositoryTask("local", "MYLN:11", "b");
-		tasks[4] = new MockRepositoryTask("local", "MYLN:5", "a");
+		final MockTask[] tasks = new MockTask[5];
+		tasks[0] = new MockTask("local", "MYLN:4", "c");
+		tasks[1] = new MockTask("local", "MYLN:1", "b");
+		tasks[2] = new MockTask("local", "MYLN:11", "a");
+		tasks[3] = new MockTask("local", "MYLN:11", "b");
+		tasks[4] = new MockTask("local", "MYLN:5", "a");
 
 		sorter.sort(new EmptyViewer(), tasks);
 

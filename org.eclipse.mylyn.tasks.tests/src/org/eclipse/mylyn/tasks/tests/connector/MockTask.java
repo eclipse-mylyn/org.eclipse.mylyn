@@ -12,22 +12,20 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 
 /**
  * @author Mik Kersten
- * 
- * API-3.0: rename to MockTask
  */
-public class MockRepositoryTask extends AbstractTask {
+public class MockTask extends AbstractTask {
 
 	private String ownerId;
 
-	public MockRepositoryTask(String taskId) {
+	public MockTask(String taskId) {
 		super(MockRepositoryConnector.REPOSITORY_URL, taskId, taskId);
 	}
 
-	public MockRepositoryTask(String repositoryUrl, String taskId) {
+	public MockTask(String repositoryUrl, String taskId) {
 		super(repositoryUrl, taskId, taskId);
 	}
 
-	public MockRepositoryTask(String repositoryUrl, String taskId, String summary) {
+	public MockTask(String repositoryUrl, String taskId, String summary) {
 		super(repositoryUrl, taskId, summary);
 	}
 

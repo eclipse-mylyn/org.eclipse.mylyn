@@ -22,7 +22,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
-import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryTask;
+import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
@@ -73,7 +73,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 		TasksUiPlugin.getRepositoryManager().addRepository(repository,
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
-		MockRepositoryTask task = new MockRepositoryTask("1");
+		MockTask task = new MockTask("1");
 		task.setLastReadTimeStamp("now");
 		MockRepositoryQuery query = new MockRepositoryQuery("Test");
 		TasksUiPlugin.getTaskListManager().getTaskList().addQuery(query);

@@ -13,7 +13,7 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener2;
-import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryTask;
+import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
@@ -77,7 +77,7 @@ public class TaskActivityListenerTest extends TestCase {
 	}
 
 	public void testTaskActivation() {
-		MockRepositoryTask task = new MockRepositoryTask("test:activation");
+		MockTask task = new MockTask("test:activation");
 		MockTaskActivityListener listener = new MockTaskActivityListener();
 		try {
 			TasksUiPlugin.getTaskListManager().addActivityListener(listener);

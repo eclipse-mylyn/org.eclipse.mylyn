@@ -26,7 +26,7 @@ public class MockTaskListFactory extends AbstractTaskListFactory {
 
 	@Override
 	public boolean canCreate(AbstractTask task) {
-		return task instanceof MockRepositoryTask;
+		return task instanceof MockTask;
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class MockTaskListFactory extends AbstractTaskListFactory {
 
 	@Override
 	public AbstractTask createTask(String repositoryUrl, String taskId, String summary, Element element) {
-		MockRepositoryTask task = new MockRepositoryTask(repositoryUrl, taskId, summary);
+		MockTask task = new MockTask(repositoryUrl, taskId, summary);
 		return task;
 	}
 

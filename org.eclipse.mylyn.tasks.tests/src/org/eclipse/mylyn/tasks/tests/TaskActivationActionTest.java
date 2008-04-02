@@ -12,7 +12,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ToggleTaskActivationAction;
-import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryTask;
+import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
@@ -21,7 +21,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 public class TaskActivationActionTest extends TestCase {
 
 	public void testUpdateOnExternalActivation() {
-		MockRepositoryTask task = new MockRepositoryTask("test:activation");
+		MockTask task = new MockTask("test:activation");
 		ToggleTaskActivationAction action = new ToggleTaskActivationAction(task, new ToolBarManager());
 		assertFalse(action.isChecked());
 

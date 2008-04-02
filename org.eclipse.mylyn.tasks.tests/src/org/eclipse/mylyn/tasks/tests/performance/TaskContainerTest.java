@@ -9,7 +9,7 @@
 package org.eclipse.mylyn.tasks.tests.performance;
 
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryTask;
+import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.test.performance.PerformanceTestCase;
 
 /**
@@ -21,7 +21,7 @@ public class TaskContainerTest extends PerformanceTestCase {
 
 	private void addChildren(AbstractTask parent, int[] childCount, int depth) {
 		for (int i = 0; i < childCount[depth]; i++) {
-			MockRepositoryTask task = new MockRepositoryTask("task", ++counter + "");
+			MockTask task = new MockTask("task", ++counter + "");
 			parent.internalAddChild(task);
 			if (depth < childCount.length - 1) {
 				addChildren(task, childCount, depth + 1);
@@ -30,7 +30,7 @@ public class TaskContainerTest extends PerformanceTestCase {
 	}
 
 	public void testContains() {
-		MockRepositoryTask task = new MockRepositoryTask(++counter + "");
+		MockTask task = new MockTask(++counter + "");
 		addChildren(task, new int[] { 1000, 10, 2 }, 0);
 
 		for (int i = 0; i < 10; i++) {
