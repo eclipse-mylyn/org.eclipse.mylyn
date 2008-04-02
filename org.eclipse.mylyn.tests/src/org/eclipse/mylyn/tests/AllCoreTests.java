@@ -18,9 +18,8 @@ public class AllCoreTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.core.tests");
-		suite.addTestSuite(WebClientUtilTest.class);
+		suite.addTestSuite(WebUtilTest.class);
 		suite.addTestSuite(SslProtocolSocketFactoryTest.class);
-		suite.addTestSuite(UrlConnectionUtilTest.class);
 		return suite;
 	}
 

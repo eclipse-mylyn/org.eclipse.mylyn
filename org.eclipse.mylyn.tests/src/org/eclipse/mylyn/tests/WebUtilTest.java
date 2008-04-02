@@ -20,23 +20,25 @@ import junit.framework.TestCase;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.NTCredentials;
+import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.mylyn.internal.web.core.SslProtocolSocketFactory;
 import org.eclipse.mylyn.tests.TestProxy.Message;
 import org.eclipse.mylyn.web.core.AbstractWebLocation;
 import org.eclipse.mylyn.web.core.AuthenticatedProxy;
 import org.eclipse.mylyn.web.core.AuthenticationType;
 import org.eclipse.mylyn.web.core.IProxyProvider;
-import org.eclipse.mylyn.web.core.SslProtocolSocketFactory;
-import org.eclipse.mylyn.web.core.WebClientUtil;
 import org.eclipse.mylyn.web.core.WebLocation;
+import org.eclipse.mylyn.web.core.WebUtil;
 
 /**
  * @author Steffen Pingel
  */
-public class WebClientUtilTest extends TestCase {
+public class WebUtilTest extends TestCase {
 
 	private TestProxy testProxy;
 
@@ -44,7 +46,7 @@ public class WebClientUtilTest extends TestCase {
 
 	private InetSocketAddress proxyAddress;
 
-	public WebClientUtilTest() {
+	public WebUtilTest() {
 	}
 
 	@Override
@@ -81,7 +83,7 @@ public class WebClientUtilTest extends TestCase {
 				}
 			};
 			new Thread(runner).start();
-			WebClientUtil.connect(new Socket(), new InetSocketAddress(host, port), 5000, monitor);
+			WebUtil.connect(new Socket(), new InetSocketAddress(host, port), 5000, monitor);
 			fail("Expected OperationCanceledException");
 		} catch (OperationCanceledException expected) {
 			assertTrue(monitor.isCanceled());
@@ -93,11 +95,11 @@ public class WebClientUtilTest extends TestCase {
 		HttpClient client = new HttpClient();
 		String url = "http://eclipse.org/";
 		WebLocation location = new WebLocation(url);
-		HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(client, location, monitor);
+		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, monitor);
 
 		GetMethod method = new GetMethod(url);
 		try {
-			int result = WebClientUtil.execute(client, hostConfiguration, method, monitor);
+			int result = WebUtil.execute(client, hostConfiguration, method, monitor);
 			assertEquals(HttpStatus.SC_OK, result);
 		} finally {
 			method.releaseConnection();
@@ -109,7 +111,7 @@ public class WebClientUtilTest extends TestCase {
 		HttpClient client = new HttpClient();
 		String url = "http://google.com:9999/";
 		WebLocation location = new WebLocation(url);
-		HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(client, location, monitor);
+		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, monitor);
 
 		GetMethod method = new GetMethod(url);
 		try {
@@ -123,7 +125,7 @@ public class WebClientUtilTest extends TestCase {
 				}
 			};
 			new Thread(runner).start();
-			WebClientUtil.execute(client, hostConfiguration, method, monitor);
+			WebUtil.execute(client, hostConfiguration, method, monitor);
 			client.executeMethod(method);
 			fail("Expected OperationCanceledException");
 		} catch (OperationCanceledException expected) {
@@ -138,12 +140,12 @@ public class WebClientUtilTest extends TestCase {
 		HttpClient client = new HttpClient();
 		String url = "http://eclipse.org/";
 		WebLocation location = new WebLocation(url);
-		HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(client, location, monitor);
+		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, monitor);
 
 		GetMethod method = new GetMethod(url);
 		try {
 			monitor.canceled = true;
-			WebClientUtil.execute(client, hostConfiguration, method, monitor);
+			WebUtil.execute(client, hostConfiguration, method, monitor);
 			fail("Expected InterruptedIOException");
 		} catch (OperationCanceledException expected) {
 		} finally {
@@ -154,13 +156,13 @@ public class WebClientUtilTest extends TestCase {
 	public void testConfigureHttpClient() {
 		HttpClient client = new HttpClient();
 
-		WebClientUtil.configureHttpClient(client, "");
-		assertEquals(WebClientUtil.USER_AGENT, client.getParams().getParameter(HttpMethodParams.USER_AGENT));
+		WebUtil.configureHttpClient(client, "");
+		assertEquals(WebUtil.getUserAgent(""), client.getParams().getParameter(HttpMethodParams.USER_AGENT));
 
-		WebClientUtil.configureHttpClient(client, null);
-		assertEquals(WebClientUtil.USER_AGENT, client.getParams().getParameter(HttpMethodParams.USER_AGENT));
+		WebUtil.configureHttpClient(client, null);
+		assertEquals(WebUtil.getUserAgent(""), client.getParams().getParameter(HttpMethodParams.USER_AGENT));
 
-		WebClientUtil.configureHttpClient(client, "myagent");
+		WebUtil.configureHttpClient(client, "myagent");
 		assertTrue(-1 != client.getParams().getParameter(HttpMethodParams.USER_AGENT).toString().indexOf("myagent"));
 
 		// TODO test timeouts
@@ -169,7 +171,7 @@ public class WebClientUtilTest extends TestCase {
 	public void testLocationConnect() throws Exception {
 		String url = "http://" + proxyAddress.getHostName() + ":" + proxyAddress.getPort() + "/";
 		AbstractWebLocation location = new WebLocation(url, null, null, null);
-		HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(client, location, null);
+		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, null);
 
 		testProxy.addResponse(TestProxy.OK);
 
@@ -184,7 +186,7 @@ public class WebClientUtilTest extends TestCase {
 	public void testLocationConnectSsl() throws Exception {
 		String url = "https://" + proxyAddress.getHostName() + ":" + proxyAddress.getPort() + "/";
 		AbstractWebLocation location = new WebLocation(url, null, null, null);
-		HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(client, location, null);
+		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, null);
 
 		GetMethod method = new GetMethod("/");
 		try {
@@ -204,11 +206,11 @@ public class WebClientUtilTest extends TestCase {
 				return proxy;
 			}
 		});
-		HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(client, location, null);
+		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, null);
 
 		testProxy.addResponse(TestProxy.OK);
 
-		GetMethod method = new GetMethod(WebClientUtil.getRequestPath(url));
+		GetMethod method = new GetMethod(WebUtil.getRequestPath(url));
 		int statusCode = client.executeMethod(hostConfiguration, method);
 		assertEquals(200, statusCode);
 
@@ -225,7 +227,7 @@ public class WebClientUtilTest extends TestCase {
 			}
 		});
 		location.setCredentials(AuthenticationType.HTTP, "user", "pass");
-		HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(client, location, null);
+		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, null);
 		client.getParams().setAuthenticationPreemptive(true);
 
 		Message response = new Message("HTTP/1.1 401 Authentication required");
@@ -250,7 +252,7 @@ public class WebClientUtilTest extends TestCase {
 				return proxy;
 			}
 		});
-		HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(client, location, null);
+		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, null);
 
 		Message response = new Message("HTTP/1.1 407 Proxy authentication required");
 		response.headers.add("Proxy-Authenticate: Basic realm=\"Foo\"");
@@ -275,7 +277,7 @@ public class WebClientUtilTest extends TestCase {
 				return proxy;
 			}
 		});
-		HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(client, location, null);
+		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, null);
 		client.getParams().setAuthenticationPreemptive(true);
 
 		Message response = new Message("HTTP/1.1 407 Proxy authentication required");
@@ -302,7 +304,7 @@ public class WebClientUtilTest extends TestCase {
 		});
 		location.setCredentials(AuthenticationType.HTTP, "user", "pass");
 
-		HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(client, location, null);
+		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, null);
 		client.getParams().setAuthenticationPreemptive(true);
 
 		testProxy.addResponse(TestProxy.OK);
@@ -325,7 +327,7 @@ public class WebClientUtilTest extends TestCase {
 				return proxy;
 			}
 		});
-		HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(client, location, null);
+		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, null);
 		;
 
 		testProxy.addResponse(TestProxy.SERVICE_UNVAILABLE);
@@ -346,7 +348,7 @@ public class WebClientUtilTest extends TestCase {
 				return proxy;
 			}
 		});
-		HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(client, location, null);
+		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, null);
 		;
 		client.getParams().setAuthenticationPreemptive(true);
 
@@ -369,7 +371,7 @@ public class WebClientUtilTest extends TestCase {
 				return proxy;
 			}
 		});
-		HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(client, location, null);
+		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, null);
 		;
 
 		Message response = new Message("HTTP/1.1 407 Proxy authentication required");
@@ -395,7 +397,7 @@ public class WebClientUtilTest extends TestCase {
 				return proxy;
 			}
 		});
-		HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(client, location, null);
+		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, null);
 
 		testProxy.addResponse(TestProxy.OK);
 
@@ -418,25 +420,85 @@ public class WebClientUtilTest extends TestCase {
 
 		String url = "https://mylyn.eclipse.org/secure/";
 		AbstractWebLocation location = new WebLocation(url, null, null, null);
-		HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(client, location, null);
+		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, null);
 
-		GetMethod method = new GetMethod(WebClientUtil.getRequestPath(url));
+		GetMethod method = new GetMethod(WebUtil.getRequestPath(url));
 		int statusCode = client.executeMethod(hostConfiguration, method);
 		assertEquals(200, statusCode);
 	}
 
 	public void testGetUserAgent() {
-		String userAgent = WebClientUtil.getUserAgent(null);
-		assertEquals(userAgent, WebClientUtil.getUserAgent(""));
+		String userAgent = WebUtil.getUserAgent(null);
+		assertEquals(userAgent, WebUtil.getUserAgent(""));
 		assertEquals(-1, userAgent.indexOf("null"));
 		assertEquals(-1, userAgent.indexOf("  "));
 		assertEquals(0, userAgent.indexOf("Mylyn"));
 
-		userAgent = WebClientUtil.getUserAgent("abc");
+		userAgent = WebUtil.getUserAgent("abc");
 		assertEquals(-1, userAgent.indexOf("null"));
 		assertEquals(-1, userAgent.indexOf("  "));
 		assertEquals(0, userAgent.indexOf("Mylyn"));
 		assertTrue(userAgent.contains(" abc "));
+	}
+
+	public void testUrlParsers() {
+		String url = "https://example.com:444/folder/file.txt";
+		assertEquals(444, WebUtil.getPort(url));
+		assertEquals("example.com", WebUtil.getHost(url));
+		assertEquals("/folder/file.txt", WebUtil.getRequestPath(url));
+
+		url = "http://example.com/";
+		assertEquals(80, WebUtil.getPort(url));
+		assertEquals("example.com", WebUtil.getHost(url));
+		assertEquals("/", WebUtil.getRequestPath(url));
+
+		url = "http://example.com";
+		assertEquals(80, WebUtil.getPort(url));
+		assertEquals("example.com", WebUtil.getHost(url));
+		assertEquals("", WebUtil.getRequestPath(url));
+
+		url = "https://example.com:321";
+		assertEquals(321, WebUtil.getPort(url));
+		assertEquals("example.com", WebUtil.getHost(url));
+		assertEquals("", WebUtil.getRequestPath(url));
+
+		url = "example.com:321";
+		assertEquals(321, WebUtil.getPort(url));
+		assertEquals("example.com", WebUtil.getHost(url));
+		assertEquals("", WebUtil.getRequestPath(url));
+
+		url = "https://example.com:444/folder/file.txt?search=https://example.com:812/folder/file.txt";
+		assertEquals(444, WebUtil.getPort(url));
+		assertEquals("example.com", WebUtil.getHost(url));
+		assertEquals("/folder/file.txt?search=https://example.com:812/folder/file.txt", WebUtil.getRequestPath(url));
+
+		url = "https://example.com/folder/file.txt?search=https://example.com:812/folder/file.txt";
+		assertEquals(443, WebUtil.getPort(url));
+		assertEquals("example.com", WebUtil.getHost(url));
+		assertEquals("/folder/file.txt?search=https://example.com:812/folder/file.txt", WebUtil.getRequestPath(url));
+
+		url = "https://jira.codehaus.org/sr/jira.issueviews:searchrequest-xml/temp/SearchRequest.xml?&pid=11093&resolution=-1&sorter/field=updated&sorter/order=DESC&tempMax=1000";
+		assertEquals(443, WebUtil.getPort(url));
+		assertEquals("jira.codehaus.org", WebUtil.getHost(url));
+		assertEquals(
+				"/sr/jira.issueviews:searchrequest-xml/temp/SearchRequest.xml?&pid=11093&resolution=-1&sorter/field=updated&sorter/order=DESC&tempMax=1000",
+				WebUtil.getRequestPath(url));
+	}
+
+	public void testCredentials() {
+		AuthenticatedProxy proxy = new AuthenticatedProxy(Type.HTTP, new InetSocketAddress(4567), "user", "password");
+		UsernamePasswordCredentials credentials = (UsernamePasswordCredentials) WebUtil.getCredentials(proxy,
+				new InetSocketAddress(1234));
+		assertEquals("user", credentials.getUserName());
+		assertEquals("password", credentials.getPassword());
+
+		proxy = new AuthenticatedProxy(Type.HTTP, new InetSocketAddress(4567), "domain\\user", "password");
+		InetSocketAddress testAddress = new InetSocketAddress("mylyn.eclipse.org", 1234);
+		NTCredentials ntCredentials = (NTCredentials) WebUtil.getCredentials(proxy, testAddress);
+		assertEquals("user", ntCredentials.getUserName());
+		assertEquals("password", ntCredentials.getPassword());
+		assertEquals("domain", ntCredentials.getDomain());
+		assertEquals("mylyn.eclipse.org", ntCredentials.getHost());
 	}
 
 	private class StubProgressMonitor implements IProgressMonitor {

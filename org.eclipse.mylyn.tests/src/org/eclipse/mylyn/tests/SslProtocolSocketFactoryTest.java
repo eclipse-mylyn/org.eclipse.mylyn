@@ -14,7 +14,7 @@ import java.net.Socket;
 import junit.framework.TestCase;
 
 import org.apache.commons.httpclient.params.HttpConnectionParams;
-import org.eclipse.mylyn.web.core.SslProtocolSocketFactory;
+import org.eclipse.mylyn.internal.web.core.SslProtocolSocketFactory;
 
 public class SslProtocolSocketFactoryTest extends TestCase {
 
