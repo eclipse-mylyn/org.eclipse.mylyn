@@ -271,6 +271,7 @@ public abstract class AbstractRepositoryConnector {
 		return (existingProperty == null) ? true : !existingProperty.equals(newProperty);
 	}
 
+	@Deprecated
 	public String[] getPepositoryPropertyNames() {
 		return new String[] { IRepositoryConstants.PROPERTY_VERSION, IRepositoryConstants.PROPERTY_TIMEZONE,
 				IRepositoryConstants.PROPERTY_ENCODING };
