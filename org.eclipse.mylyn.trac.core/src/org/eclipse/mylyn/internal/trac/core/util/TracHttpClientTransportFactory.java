@@ -43,7 +43,7 @@ import org.apache.xmlrpc.util.XmlRpcIOException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.mylyn.web.core.AbstractWebLocation;
-import org.eclipse.mylyn.web.core.WebClientUtil;
+import org.eclipse.mylyn.web.core.WebUtil;
 import org.xml.sax.SAXException;
 
 /**
@@ -110,7 +110,7 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 
 		@Override
 		protected String getUserAgent() {
-			return WebClientUtil.USER_AGENT;
+			return WebUtil.getUserAgent("");
 		}
 
 		@Override
@@ -125,11 +125,11 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 			}
 
 			String url = config.getServerURL().toString();
-			hostConfiguration = WebClientUtil.createHostConfiguration(httpClient, location, monitor);
+			hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, monitor);
 			if (cookies != null) {
 				httpClient.getState().addCookies(cookies);
 			}
-			method = new PostMethod(WebClientUtil.getRequestPath(url));
+			method = new PostMethod(WebUtil.getRequestPath(url));
 
 			super.initHttpHeaders(request);
 
@@ -223,7 +223,7 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 			});
 
 			try {
-				WebClientUtil.execute(httpClient, hostConfiguration, method, monitor);
+				WebUtil.execute(httpClient, hostConfiguration, method, monitor);
 			} catch (InterruptedIOException e) {
 				throw new OperationCanceledException();
 			} catch (XmlRpcIOException e) {

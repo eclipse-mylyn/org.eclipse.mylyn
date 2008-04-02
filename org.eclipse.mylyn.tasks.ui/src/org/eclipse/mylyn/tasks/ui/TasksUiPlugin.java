@@ -86,7 +86,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorFactory;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory;
-import org.eclipse.mylyn.web.core.WebClientUtil;
+import org.eclipse.mylyn.web.core.WebClientLog;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.PlatformUI;
@@ -428,7 +428,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		// NOTE: startup order is very sensitive
 		try {
 			StatusHandler.setDefaultStatusHandler(new RepositoryAwareStatusHandler());
-			WebClientUtil.setLoggingEnabled(DEBUG_HTTPCLIENT);
+			WebClientLog.setLoggingEnabled(DEBUG_HTTPCLIENT);
 			initializeDefaultPreferences(getPreferenceStore());
 			taskListWriter = new TaskListWriter();
 

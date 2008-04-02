@@ -31,7 +31,7 @@ import org.eclipse.mylyn.internal.trac.core.model.TracTicketType;
 import org.eclipse.mylyn.internal.trac.core.model.TracVersion;
 import org.eclipse.mylyn.web.core.AbstractWebLocation;
 import org.eclipse.mylyn.web.core.AuthenticationCredentials;
-import org.eclipse.mylyn.web.core.WebClientUtil;
+import org.eclipse.mylyn.web.core.WebUtil;
 
 /**
  * @author Steffen Pingel
@@ -79,7 +79,7 @@ public abstract class AbstractTracClient implements ITracClient {
 
 	protected void authenticateAccountManager(HttpClient httpClient, HostConfiguration hostConfiguration,
 			AuthenticationCredentials credentials, IProgressMonitor monitor) throws IOException, TracLoginException {
-		PostMethod post = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl + LOGIN_URL));
+		PostMethod post = new PostMethod(WebUtil.getRequestPath(repositoryUrl + LOGIN_URL));
 		post.setFollowRedirects(false);
 		String formToken = getFormToken(httpClient);
 		NameValuePair[] data = { new NameValuePair("referer", ""),
@@ -88,7 +88,7 @@ public abstract class AbstractTracClient implements ITracClient {
 
 		post.setRequestBody(data);
 		try {
-			int code = WebClientUtil.execute(httpClient, hostConfiguration, post, monitor);
+			int code = WebUtil.execute(httpClient, hostConfiguration, post, monitor);
 			// code should be a redirect in case of success  
 			if (code == HttpURLConnection.HTTP_OK) {
 				throw new TracLoginException();

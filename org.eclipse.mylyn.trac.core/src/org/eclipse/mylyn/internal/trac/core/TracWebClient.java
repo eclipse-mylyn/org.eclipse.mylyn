@@ -60,7 +60,7 @@ import org.eclipse.mylyn.web.core.AuthenticationCredentials;
 import org.eclipse.mylyn.web.core.AuthenticationType;
 import org.eclipse.mylyn.web.core.HtmlStreamTokenizer;
 import org.eclipse.mylyn.web.core.HtmlTag;
-import org.eclipse.mylyn.web.core.WebClientUtil;
+import org.eclipse.mylyn.web.core.WebUtil;
 import org.eclipse.mylyn.web.core.AbstractWebLocation.ResultType;
 import org.eclipse.mylyn.web.core.HtmlStreamTokenizer.Token;
 
@@ -85,7 +85,7 @@ public class TracWebClient extends AbstractTracClient {
 		}
 
 		public GetMethod execute() throws TracLoginException, IOException, TracHttpException {
-			hostConfiguration = WebClientUtil.createHostConfiguration(httpClient, location, monitor);
+			hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, monitor);
 
 			for (int attempt = 0; attempt < 2; attempt++) {
 				// force authentication
@@ -96,10 +96,10 @@ public class TracWebClient extends AbstractTracClient {
 					}
 				}
 
-				GetMethod method = new GetMethod(WebClientUtil.getRequestPath(url));
+				GetMethod method = new GetMethod(WebUtil.getRequestPath(url));
 				int code;
 				try {
-					code = WebClientUtil.execute(httpClient, hostConfiguration, method, monitor);
+					code = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
 				} catch (IOException e) {
 					method.releaseConnection();
 					throw e;
@@ -130,14 +130,14 @@ public class TracWebClient extends AbstractTracClient {
 				// try standard basic/digest authentication first
 				AuthScope authScope = new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT, AuthScope.ANY_REALM);
 				httpClient.getState().setCredentials(authScope,
-						WebClientUtil.getHttpClientCredentials(credentials, WebClientUtil.getDomain(repositoryUrl)));
+						WebUtil.getHttpClientCredentials(credentials, WebUtil.getHost(repositoryUrl)));
 
-				GetMethod method = new GetMethod(WebClientUtil.getRequestPath(repositoryUrl + LOGIN_URL));
+				GetMethod method = new GetMethod(WebUtil.getRequestPath(repositoryUrl + LOGIN_URL));
 				method.setFollowRedirects(false);
 				int code;
 				try {
 					httpClient.getParams().setAuthenticationPreemptive(true);
-					code = WebClientUtil.execute(httpClient, hostConfiguration, method, monitor);
+					code = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
 					if (needsReauthentication(code)) {
 						continue;
 					}
@@ -175,7 +175,7 @@ public class TracWebClient extends AbstractTracClient {
 				throw new TracLoginException();
 			}
 
-			hostConfiguration = WebClientUtil.createHostConfiguration(httpClient, location, monitor);
+			hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, monitor);
 
 			return true;
 		}
@@ -193,7 +193,7 @@ public class TracWebClient extends AbstractTracClient {
 		httpClient.setHttpConnectionManager(new MultiThreadedHttpConnectionManager());
 		httpClient.getParams().setCookiePolicy(CookiePolicy.RFC_2109);
 
-		WebClientUtil.configureHttpClient(httpClient, USER_AGENT);
+		WebUtil.configureHttpClient(httpClient, USER_AGENT);
 	}
 
 	private synchronized GetMethod connect(String requestUrl) throws TracException {

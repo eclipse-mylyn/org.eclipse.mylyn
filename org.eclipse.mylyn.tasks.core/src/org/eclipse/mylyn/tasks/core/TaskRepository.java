@@ -537,6 +537,7 @@ public class TaskRepository extends PlatformObject {
 		this.properties.remove(key);
 	}
 
+	@Deprecated
 	public Proxy getProxy() {
 		Proxy proxy = Proxy.NO_PROXY;
 		if (isDefaultProxyEnabled()) {

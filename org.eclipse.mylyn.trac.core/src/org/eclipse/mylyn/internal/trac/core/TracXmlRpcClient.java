@@ -59,7 +59,7 @@ import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.web.core.AbstractWebLocation;
 import org.eclipse.mylyn.web.core.AuthenticationCredentials;
 import org.eclipse.mylyn.web.core.AuthenticationType;
-import org.eclipse.mylyn.web.core.WebClientUtil;
+import org.eclipse.mylyn.web.core.WebUtil;
 import org.eclipse.mylyn.web.core.AbstractWebLocation.ResultType;
 
 /**
@@ -99,8 +99,7 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 
 				// try form-based authentication via AccountManagerPlugin as a
 				// fall-back
-				HostConfiguration hostConfiguration = WebClientUtil.createHostConfiguration(httpClient, location,
-						monitor);
+				HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, monitor);
 				try {
 					authenticateAccountManager(httpClient, hostConfiguration, credentials, monitor);
 				} catch (TracLoginException loginException) {
@@ -193,7 +192,7 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		httpClient = new HttpClient();
 		httpClient.setHttpConnectionManager(new MultiThreadedHttpConnectionManager());
 		httpClient.getParams().setCookiePolicy(CookiePolicy.RFC_2109);
-		WebClientUtil.configureHttpClient(httpClient, USER_AGENT);
+		WebUtil.configureHttpClient(httpClient, USER_AGENT);
 	}
 
 	public synchronized XmlRpcClient getClient() throws TracException {
@@ -202,8 +201,8 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 			config.setEncoding(ITracClient.CHARSET);
 			config.setTimeZone(TimeZone.getTimeZone(ITracClient.TIME_ZONE));
 			config.setContentLengthOptional(false);
-			config.setConnectionTimeout(WebClientUtil.CONNNECT_TIMEOUT);
-			config.setReplyTimeout(WebClientUtil.SOCKET_TIMEOUT);
+			config.setConnectionTimeout(WebUtil.getConnectionTimeout());
+			config.setReplyTimeout(WebUtil.getSocketTimeout());
 
 			xmlrpc = new XmlRpcClient();
 			xmlrpc.setConfig(config);
