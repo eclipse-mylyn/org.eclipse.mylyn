@@ -49,6 +49,7 @@ public class TaskEditorBloatMonitor extends AbstractEditorTracker {
 							toClose.add(editorReference);
 						} else if (!taskEditor.equals(editorPartOpened)
 								&& !taskEditor.isDirty()
+								&& taskEditorInput.getTask() != null
 								&& RepositoryTaskSyncState.SYNCHRONIZED.equals(taskEditorInput.getTask()
 										.getSynchronizationState())) {
 							toClose.add(editorReference);
