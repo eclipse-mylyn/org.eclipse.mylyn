@@ -12,5 +12,8 @@
    <feature url="features/org.eclipse.mylyn.sandbox.dev_feature_@core@.jar" id="org.eclipse.mylyn.sandbox.dev_feature" version="@core@">
       <category name="Sandbox"/>
    </feature>
+   <feature url="features/org.eclipse.mylyn.monitor_feature_@core@.jar" id="org.eclipse.mylyn.monitor_feature" version="@core@">
+      <category name="Sandbox"/>
+   </feature>
    <category-def name="Sandbox" label="Mylyn Sandbox"/>
 </site>

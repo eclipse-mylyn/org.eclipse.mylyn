@@ -12,9 +12,5 @@
    <feature url="features/org.eclipse.mylyn.web.tasks_feature_@core@.jar" id="org.eclipse.mylyn.web.tasks_feature" version="@core@">
       <category name="IntegrationExtras"/>
    </feature>
-   <feature url="features/org.eclipse.mylyn.monitor_feature_@core@.jar" id="org.eclipse.mylyn.monitor_feature" version="@core@">
-      <category name="Feedback"/>
-   </feature>
    <category-def name="IntegrationExtras" label="Mylyn Integration Extras"/>
-   <category-def name="Feedback" label="Mylyn Feedback"/>
 </site>
