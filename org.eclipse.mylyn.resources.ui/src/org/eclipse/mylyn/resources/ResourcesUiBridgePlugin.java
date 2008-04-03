@@ -23,24 +23,33 @@ import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.internal.context.ui.AbstractContextUiPlugin;
+import org.eclipse.mylyn.context.ui.IContextUiStartup;
 import org.eclipse.mylyn.internal.resources.ui.ContextEditorManager;
 import org.eclipse.mylyn.internal.resources.ui.EditorInteractionMonitor;
 import org.eclipse.mylyn.internal.resources.ui.ResourceChangeMonitor;
 import org.eclipse.mylyn.internal.resources.ui.ResourceInteractionMonitor;
 import org.eclipse.mylyn.internal.resources.ui.ResourceInterestUpdater;
 import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
  * Main entry point for the Resource Structure Bridge. Initialization order is very important.
  * 
  * @author Mik Kersten
+ * @author Steffen Pingel
  * @since 2.0
  */
-public class ResourcesUiBridgePlugin extends AbstractContextUiPlugin {
+public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
+
+	public static class ResourcesUiBridgeStartup implements IContextUiStartup {
+
+		public void lazyStartup() {
+			ResourcesUiBridgePlugin.getDefault().lazyStart();
+		}
+
+	}
 
 	public static final String PLUGIN_ID = "org.eclipse.mylyn.resources.ui";
 
@@ -77,8 +86,7 @@ public class ResourcesUiBridgePlugin extends AbstractContextUiPlugin {
 		interestUpdater = new ResourceInterestUpdater();
 	}
 
-	@Override
-	protected void lazyStart(IWorkbench workbench) {
+	protected void lazyStart() {
 		resourceChangeMonitor = new ResourceChangeMonitor();
 		editorManager = new ContextEditorManager();
 		resourceInteractionMonitor = new ResourceInteractionMonitor();
@@ -93,12 +101,19 @@ public class ResourcesUiBridgePlugin extends AbstractContextUiPlugin {
 		interestEditorTracker.install(PlatformUI.getWorkbench());
 	}
 
-	@Override
 	protected void lazyStop() {
-		ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceChangeMonitor);
-		ContextCorePlugin.getContextManager().removeListener(editorManager);
-		MonitorUiPlugin.getDefault().getSelectionMonitors().remove(resourceInteractionMonitor);
-		interestEditorTracker.dispose(PlatformUI.getWorkbench());
+		if (resourceChangeMonitor != null) {
+			ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceChangeMonitor);
+		}
+		if (editorManager != null) {
+			ContextCorePlugin.getContextManager().removeListener(editorManager);
+		}
+		if (resourceInteractionMonitor != null) {
+			MonitorUiPlugin.getDefault().getSelectionMonitors().remove(resourceInteractionMonitor);
+		}
+		if (interestEditorTracker != null) {
+			interestEditorTracker.dispose(PlatformUI.getWorkbench());
+		}
 	}
 
 	/**
@@ -106,6 +121,8 @@ public class ResourcesUiBridgePlugin extends AbstractContextUiPlugin {
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
+		lazyStop();
+
 		super.stop(context);
 		INSTANCE = null;
 	}

@@ -17,7 +17,7 @@ import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.context.ui.AbstractContextUiPlugin;
+import org.eclipse.mylyn.context.ui.IContextUiStartup;
 import org.eclipse.mylyn.internal.java.ui.editor.ActiveFoldingListener;
 import org.eclipse.mylyn.internal.java.ui.wizards.RecommendedPreferencesWizard;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
@@ -33,8 +33,9 @@ import org.osgi.framework.BundleContext;
 
 /**
  * @author Mik Kersten
+ * @author Steffen Pingel
  */
-public class JavaUiBridgePlugin extends AbstractContextUiPlugin {
+public class JavaUiBridgePlugin extends AbstractUIPlugin {
 
 	public static final String PLUGIN_ID = "org.eclipse.mylyn.java.ui";
 
@@ -55,8 +56,6 @@ public class JavaUiBridgePlugin extends AbstractContextUiPlugin {
 	private InterestUpdateDeltaListener javaElementChangeListener;
 
 	public JavaUiBridgePlugin() {
-		super();
-		INSTANCE = this;
 	}
 
 	/**
@@ -65,6 +64,8 @@ public class JavaUiBridgePlugin extends AbstractContextUiPlugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		INSTANCE = this;
+
 		initDefaultPrefs();
 
 		// NOTE: moved out of wizard and first task activation to avoid bug 194766
@@ -74,14 +75,13 @@ public class JavaUiBridgePlugin extends AbstractContextUiPlugin {
 		}
 	}
 
-	@Override
-	protected void lazyStart(IWorkbench workbench) {
+	private void lazyStart() {
 		landmarkMarkerManager = new LandmarkMarkerManager();
 		ContextCorePlugin.getContextManager().addListener(landmarkMarkerManager);
 
 		javaEditingMonitor = new JavaEditingMonitor();
 		MonitorUiPlugin.getDefault().getSelectionMonitors().add(javaEditingMonitor);
-		installEditorTracker(workbench);
+		installEditorTracker(PlatformUI.getWorkbench());
 
 		javaElementChangeListener = new InterestUpdateDeltaListener();
 		JavaCore.addElementChangedListener(javaElementChangeListener);
@@ -107,18 +107,29 @@ public class JavaUiBridgePlugin extends AbstractContextUiPlugin {
 		getPreferenceStore().setDefault(RecommendedPreferencesWizard.MYLYN_FIRST_RUN, true);
 	}
 
-	@Override
-	protected void lazyStop() {
-		ContextCorePlugin.getContextManager().removeListener(typeHistoryManager);
-		ContextCorePlugin.getContextManager().removeListener(landmarkMarkerManager);
-		MonitorUiPlugin.getDefault().getSelectionMonitors().remove(javaEditingMonitor);
-		getPreferenceStore().removePropertyChangeListener(problemListener);
-		JavaCore.removeElementChangedListener(javaElementChangeListener);
+	private void lazyStop() {
+		if (typeHistoryManager != null) {
+			ContextCorePlugin.getContextManager().removeListener(typeHistoryManager);
+		}
+		if (landmarkMarkerManager != null) {
+			ContextCorePlugin.getContextManager().removeListener(landmarkMarkerManager);
+		}
+		if (javaEditingMonitor != null) {
+			MonitorUiPlugin.getDefault().getSelectionMonitors().remove(javaEditingMonitor);
+		}
+		if (problemListener != null) {
+			getPreferenceStore().removePropertyChangeListener(problemListener);
+		}
+		if (javaElementChangeListener != null) {
+			JavaCore.removeElementChangedListener(javaElementChangeListener);
+		}
 		// TODO: uninstall editor tracker
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
+		lazyStop();
+
 		super.stop(context);
 		INSTANCE = null;
 		resourceBundle = null;
@@ -205,6 +216,14 @@ public class JavaUiBridgePlugin extends AbstractContextUiPlugin {
 	 */
 	public ActiveFoldingEditorTracker getEditorTracker() {
 		return editorTracker;
+	}
+
+	public static class JavaUiBridgeStartup implements IContextUiStartup {
+
+		public void lazyStartup() {
+			JavaUiBridgePlugin.getDefault().lazyStart();
+		}
+
 	}
 
 }
