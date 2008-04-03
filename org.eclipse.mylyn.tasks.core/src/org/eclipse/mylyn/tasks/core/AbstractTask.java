@@ -336,6 +336,9 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 		return completed;
 	}
 
+	/**
+	 * API 3.0 do not set completion date as part of this method call
+	 */
 	public void setCompleted(boolean completed) {
 		this.completed = completed;
 		if (completed) {
