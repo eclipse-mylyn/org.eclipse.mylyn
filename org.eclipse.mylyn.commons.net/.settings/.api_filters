@@ -3,10 +3,13 @@
     <resource path="src/org/eclipse/mylyn/web/core/WebClientUtil.java">
         <filter id="1141899266" messageargs="3.0# 2.4"/>
     </resource>
-    <resource path="src/org/eclipse/mylyn/web/core/WebClientLog.java">
+    <resource path="src/org/eclipse/mylyn/web/core/Policy.java">
         <filter id="1141899266" messageargs="3.0# 2.4"/>
     </resource>
     <resource path="META-INF/MANIFEST.MF">
         <filter id="925892614" messageargs="2.3.1.v20080312-1300#3.0.0.qualifier"/>
+    </resource>
+    <resource path="src/org/eclipse/mylyn/web/core/WebClientLog.java">
+        <filter id="1141899266" messageargs="3.0# 2.4"/>
     </resource>
 </component>
