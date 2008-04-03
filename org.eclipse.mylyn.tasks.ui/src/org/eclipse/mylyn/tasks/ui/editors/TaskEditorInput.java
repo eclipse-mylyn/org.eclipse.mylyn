@@ -40,11 +40,17 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 
 	private final TaskRepository taskRepository;
 
+	/**
+	 * @since 2.0
+	 */
 	@Deprecated
 	public TaskEditorInput(AbstractTask task, boolean newTask) {
 		this(TasksUiPlugin.getRepositoryManager().getRepository(task.getConnectorKind(), task.getRepositoryUrl()), task);
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public TaskEditorInput(TaskRepository taskRepository, AbstractTask task) {
 		Assert.isNotNull(taskRepository);
 		Assert.isNotNull(task);
@@ -53,6 +59,9 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 		this.taskId = task.getTaskId();
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public TaskEditorInput(TaskRepository taskRepository, String taskId) {
 		Assert.isNotNull(taskRepository);
 		Assert.isNotNull(taskId);
@@ -61,6 +70,9 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 		this.task = null;
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -80,10 +92,16 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 		}
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public boolean exists() {
 		return task != null;
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	@SuppressWarnings("unchecked")
 	public Object getAdapter(Class adapter) {
 		if (adapter == IEditorInput.class) {
@@ -92,22 +110,32 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 		return null;
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public String getFactoryId() {
 		return TaskEditorInputFactory.ID_FACTORY;
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public ImageDescriptor getImageDescriptor() {
 		return null;
 	}
 
 	/**
 	 * @deprecated use {@link #getName()}
+	 * @since 2.0
 	 */
 	@Deprecated
 	public String getLabel() {
 		return getName();
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public String getName() {
 		String toolTipText = getToolTipText();
 		if (toolTipText == null) {
@@ -123,6 +151,9 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 		return truncate(toolTipText);
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public IPersistableElement getPersistable() {
 		return this;
 	}
@@ -134,14 +165,23 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 		return task;
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public RepositoryTaskData getTaskData() {
 		return TasksUiPlugin.getTaskDataManager().getNewTaskData(taskRepository.getUrl(), taskId);
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public TaskRepository getTaskRepository() {
 		return taskRepository;
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public String getToolTipText() {
 		if (task != null) {
 			return task.getSummary();
@@ -154,16 +194,25 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 		return null;
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	@Override
 	public int hashCode() {
 		return taskId.hashCode();
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	@Deprecated
 	public boolean isNewTask() {
 		return false;
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public void saveState(IMemento memento) {
 		TaskEditorInputFactory.saveState(memento, this);
 	}

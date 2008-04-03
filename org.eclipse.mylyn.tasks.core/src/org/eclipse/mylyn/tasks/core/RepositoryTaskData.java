@@ -316,6 +316,9 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 		return getConnectorKind();
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public String getConnectorKind() {
 		return repositoryKind;
 	}

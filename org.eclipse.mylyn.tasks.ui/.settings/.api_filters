@@ -6,4 +6,7 @@
     <resource path="src/org/eclipse/mylyn/tasks/ui/TasksUiPlugin.java">
         <filter id="1141899266" messageargs="3.0# 2.4"/>
     </resource>
+    <resource path="src/org/eclipse/mylyn/tasks/ui/AbstractRepositoryConnectorUi.java">
+        <filter id="1141899266" messageargs="3.0#2.4"/>
+    </resource>
 </component>

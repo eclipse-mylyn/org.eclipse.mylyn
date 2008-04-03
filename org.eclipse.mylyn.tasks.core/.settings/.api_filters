@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<component id="org.eclipse.mylyn.tasks.core" version="1">
+    <resource path="src/org/eclipse/mylyn/tasks/core/TaskRepositoryManager.java">
+        <filter id="1141899266" messageargs="3.0#2.4"/>
+    </resource>
+    <resource path="src/org/eclipse/mylyn/tasks/core/RepositoryTaskData.java">
+        <filter id="1141899266" messageargs="3.0#2.4"/>
+    </resource>
+</component>
