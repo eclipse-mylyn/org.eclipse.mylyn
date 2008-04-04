@@ -8,44 +8,27 @@
 
 package org.eclipse.mylyn.web.core;
 
-import java.io.IOException;
-import java.io.InterruptedIOException;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
-import java.net.Socket;
 import java.net.UnknownHostException;
 import java.net.Proxy.Type;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.NTCredentials;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.params.DefaultHttpParams;
-import org.apache.commons.httpclient.params.HttpClientParams;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 import org.eclipse.core.net.proxy.IProxyData;
 import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.mylyn.internal.web.core.CloneableHostConfiguration;
-import org.eclipse.mylyn.internal.web.core.PollingProtocolSocketFactory;
-import org.eclipse.mylyn.internal.web.core.PollingSslProtocolSocketFactory;
 import org.eclipse.mylyn.internal.web.core.SslProtocolSocketFactory;
 
 /**
@@ -58,8 +41,6 @@ import org.eclipse.mylyn.internal.web.core.SslProtocolSocketFactory;
  */
 @Deprecated
 public class WebClientUtil {
-
-	private static final int MAX_THREADS = 10;
 
 	/**
 	 * like Mylyn/2.1.0 (Rally Connector 1.0) Eclipse/3.3.0 (JBuilder 2007) HttpClient/3.0.1 Java/1.5.0_11 (Sun)
@@ -79,8 +60,6 @@ public class WebClientUtil {
 
 	private static final int SOCKS_PORT = 1080;
 
-	private static final long POLL_INTERVAL = 1000;
-
 	private static OutputStream logOutputStream = System.err;
 
 	private static boolean loggingEnabled = false;
@@ -88,9 +67,6 @@ public class WebClientUtil {
 	private static final String USER_AGENT_PREFIX;
 
 	private static final String USER_AGENT_POSTFIX;
-
-	private static final ExecutorService service = new ThreadPoolExecutor(1, MAX_THREADS, 60L, TimeUnit.SECONDS,
-			new SynchronousQueue<Runnable>());
 
 	private static String stripQualifier(String longVersion) {
 		if (longVersion == null) {
@@ -236,7 +212,6 @@ public class WebClientUtil {
 		return Integer.parseInt(port);
 	}
 
-	// API-3.0 rename to getHost
 	public static String getDomain(String repositoryUrl) {
 		String result = repositoryUrl;
 		int colonSlashSlash = repositoryUrl.indexOf("://");
@@ -283,7 +258,7 @@ public class WebClientUtil {
 	public static void setupHttpClient(HttpClient client, Proxy proxySettings, String repositoryUrl, String user,
 			String password) {
 
-		configureHttpClient(client, null);
+		WebUtil.configureHttpClient(client, null);
 
 		if (proxySettings != null && !Proxy.NO_PROXY.equals(proxySettings)
 		/* && !WebClientUtil.repositoryUsesHttps(repositoryUrl) */
@@ -498,7 +473,7 @@ public class WebClientUtil {
 		String host = WebClientUtil.getDomain(url);
 		int port = WebClientUtil.getPort(url);
 
-		configureHttpClient(client, userAgent);
+		WebUtil.configureHttpClient(client, userAgent);
 		setupHttpClientProxy(client, client.getHostConfiguration(), location);
 
 		AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.HTTP);
@@ -527,45 +502,8 @@ public class WebClientUtil {
 	@Deprecated
 	public static HostConfiguration createHostConfiguration(HttpClient client, String userAgent,
 			AbstractWebLocation location, IProgressMonitor monitor) {
-		configureHttpClient(client, userAgent);
+		WebUtil.configureHttpClient(client, userAgent);
 		return createHostConfiguration(client, userAgent, location, monitor);
-	}
-
-	/**
-	 * @since 3.0
-	 */
-	public static HostConfiguration createHostConfiguration(HttpClient client, AbstractWebLocation location,
-			IProgressMonitor monitor) {
-		if (client == null || location == null) {
-			throw new IllegalArgumentException();
-		}
-
-		String url = location.getUrl();
-		String host = WebClientUtil.getDomain(url);
-		int port = WebClientUtil.getPort(url);
-
-		configureHttpClientConnectionManager(client);
-
-		HostConfiguration hostConfiguration = new CloneableHostConfiguration();
-		setupHttpClientProxy(client, hostConfiguration, location);
-
-		AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.HTTP);
-		if (credentials != null) {
-			AuthScope authScope = new AuthScope(host, port, AuthScope.ANY_REALM);
-			client.getState().setCredentials(authScope, getHttpClientCredentials(credentials, host));
-		}
-
-		if (WebClientUtil.isRepositoryHttps(url)) {
-			ProtocolSocketFactory socketFactory = new PollingSslProtocolSocketFactory(monitor);
-			Protocol protocol = new Protocol("https", socketFactory, port);
-			hostConfiguration.setHost(host, port, protocol);
-		} else {
-			ProtocolSocketFactory socketFactory = new PollingProtocolSocketFactory(monitor);
-			Protocol protocol = new Protocol("http", socketFactory, port);
-			hostConfiguration.setHost(host, port, protocol);
-		}
-
-		return hostConfiguration;
 	}
 
 	private static void setupHttpClientProxy(HttpClient client, HostConfiguration hostConfiguration,
@@ -592,22 +530,6 @@ public class WebClientUtil {
 		} else {
 			hostConfiguration.setProxyHost(null);
 		}
-	}
-
-	/**
-	 * @since 3.0
-	 */
-	public static void configureHttpClient(HttpClient client, String userAgent) {
-		client.getParams().setBooleanParameter(HttpClientParams.ALLOW_CIRCULAR_REDIRECTS, true);
-		client.getParams().setParameter(HttpMethodParams.USER_AGENT, getUserAgent(userAgent));
-		// API REVIEW consider setting this as the default
-		//client.getParams().setCookiePolicy(CookiePolicy.RFC_2109);
-		configureHttpClientConnectionManager(client);
-	}
-
-	private static void configureHttpClientConnectionManager(HttpClient client) {
-		client.getHttpConnectionManager().getParams().setSoTimeout(WebClientUtil.SOCKET_TIMEOUT);
-		client.getHttpConnectionManager().getParams().setConnectionTimeout(WebClientUtil.CONNNECT_TIMEOUT);
 	}
 
 	/**
@@ -638,118 +560,6 @@ public class WebClientUtil {
 		} else {
 			return USER_AGENT;
 		}
-	}
-
-	/**
-	 * @since 3.0
-	 */
-	public static int execute(final HttpClient client, final HostConfiguration hostConfiguration,
-			final HttpMethod method, IProgressMonitor monitor) throws IOException {
-		if (client == null || method == null) {
-			throw new IllegalArgumentException();
-		}
-
-		monitor = Policy.monitorFor(monitor);
-
-		AbortableCallable<Integer> executor = new AbortableCallable<Integer>() {
-			public Integer call() throws Exception {
-				return client.executeMethod(hostConfiguration, method);
-			}
-
-			public void abort() {
-				method.abort();
-			}
-		};
-
-		return pollIo(monitor, executor);
-	}
-
-	/**
-	 * @since 3.0
-	 */
-	public static void connect(final Socket socket, final InetSocketAddress address, final int timeout,
-			IProgressMonitor monitor) throws IOException {
-		if (socket == null) {
-			throw new IllegalArgumentException();
-		}
-
-		AbortableCallable<?> executor = new AbortableCallable<Object>() {
-			public Object call() throws Exception {
-				socket.connect(address, timeout);
-				return null;
-			}
-
-			public void abort() {
-				try {
-					socket.close();
-				} catch (IOException e) {
-					// ignore
-				}
-			}
-
-		};
-
-		pollIo(monitor, executor);
-	}
-
-	@SuppressWarnings("unchecked")
-	private static <T> T pollIo(IProgressMonitor monitor, AbortableCallable<?> executor) throws IOException {
-		try {
-			return (T) poll(monitor, executor);
-		} catch (IOException e) {
-			throw e;
-		} catch (RuntimeException e) {
-			throw e;
-		} catch (Error e) {
-			throw e;
-		} catch (Throwable e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	/**
-	 * @since 3.0
-	 */
-	public static <T> T poll(IProgressMonitor monitor, AbortableCallable<T> executor) throws Throwable {
-		monitor = Policy.monitorFor(monitor);
-
-		Future<T> future = service.submit(executor);
-		while (true) {
-			if (monitor.isCanceled()) {
-				if (!future.cancel(false)) {
-					executor.abort();
-				}
-				// wait for executor to finish
-				try {
-					if (!future.isCancelled()) {
-						future.get();
-					}
-				} catch (InterruptedException e) {
-					// ignore
-				} catch (ExecutionException e) {
-					// ignore
-				}
-				throw new OperationCanceledException();
-			}
-
-			try {
-				return future.get(POLL_INTERVAL, TimeUnit.MILLISECONDS);
-			} catch (InterruptedException e) {
-				throw new InterruptedIOException();
-			} catch (ExecutionException e) {
-				throw e.getCause();
-			} catch (TimeoutException ignored) {
-			}
-		}
-	}
-
-	/**
-	 * @since 3.0
-	 */
-	public interface AbortableCallable<T> extends Callable<T> {
-
-		public void abort();
-
 	}
 
 }
