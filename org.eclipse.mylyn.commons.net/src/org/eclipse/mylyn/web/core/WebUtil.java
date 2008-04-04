@@ -515,4 +515,8 @@ public class WebUtil {
 
 	}
 
+	public static void init() {
+		// initialization is done in the static initializer		
+	}
+
 }
