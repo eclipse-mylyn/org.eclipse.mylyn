@@ -43,6 +43,9 @@ import org.osgi.framework.BundleContext;
  */
 public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 
+	/**
+	 * @since 3.0
+	 */
 	public static class ResourcesUiBridgeStartup implements IContextUiStartup {
 
 		public void lazyStartup() {
@@ -86,6 +89,9 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 		interestUpdater = new ResourceInterestUpdater();
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	protected void lazyStart() {
 		resourceChangeMonitor = new ResourceChangeMonitor();
 		editorManager = new ContextEditorManager();
