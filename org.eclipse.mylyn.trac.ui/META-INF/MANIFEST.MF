@@ -5,19 +5,15 @@ Bundle-SymbolicName: org.eclipse.mylyn.trac.ui;singleton:=true
 Bundle-Version: 3.0.0.qualifier
 Bundle-Activator: org.eclipse.mylyn.internal.trac.ui.TracUiPlugin
 Bundle-Vendor: Eclipse.org
-Require-Bundle: org.eclipse.ui,
- org.eclipse.ui.forms,
- org.eclipse.core.runtime,
- org.eclipse.mylyn.context.core;bundle-version="[3.0.0,4.0.0)",
- org.eclipse.mylyn.tasks.ui;bundle-version="[3.0.0,4.0.0)",
- org.eclipse.mylyn.tasks.core;bundle-version="[3.0.0,4.0.0)",
- org.eclipse.search,
- org.eclipse.mylyn.trac.core;bundle-version="[3.0.0,4.0.0)",
- org.eclipse.mylyn.monitor.core;bundle-version="[3.0.0,4.0.0)",
- org.eclipse.ui.editors,
+Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.jface.text,
- org.eclipse.core.resources,
- org.eclipse.ui.workbench.texteditor,
+ org.eclipse.search;bundle-version="3.4.0",
+ org.eclipse.ui,
+ org.eclipse.ui.forms,
+ org.eclipse.mylyn.monitor.core;bundle-version="[3.0.0,4.0.0)",
+ org.eclipse.mylyn.tasks.core;bundle-version="[3.0.0,4.0.0)",
+ org.eclipse.mylyn.tasks.ui;bundle-version="[3.0.0,4.0.0)",
+ org.eclipse.mylyn.trac.core;bundle-version="[3.0.0,4.0.0)",
  org.eclipse.mylyn.web.core;bundle-version="[3.0.0,4.0.0)"
 Eclipse-LazyStart: true
 Export-Package: org.eclipse.mylyn.internal.trac.ui;x-internal:=true,
