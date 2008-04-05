@@ -22,6 +22,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.text.ITextListener;
+import org.eclipse.jface.text.TextEvent;
+import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaReportElement;
@@ -39,6 +42,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -173,8 +177,31 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		if (attribute != null && !attribute.isReadOnly()) {
 			Label label = createLabel(composite, attribute);
 			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
-			Text urlField = createTextField(composite, attribute, SWT.FLAT);
-			GridDataFactory.fillDefaults().hint(135, SWT.DEFAULT).applyTo(urlField);
+			TextViewer urlTextViewer = addTextEditor(repository, composite, attribute.getValue(), //
+					false, SWT.FLAT);
+			//			false, SWT.FLAT | SWT.SINGLE);
+			final StyledText urlText = urlTextViewer.getTextWidget();
+			urlText.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+			urlText.setIndent(2);
+
+			final RepositoryTaskAttribute urlAttribute = attribute;
+
+			urlTextViewer.setEditable(true);
+			urlTextViewer.addTextListener(new ITextListener() {
+				public void textChanged(TextEvent event) {
+					String newValue = urlText.getText();
+					if (!newValue.equals(urlAttribute.getValue())) {
+						urlAttribute.setValue(newValue);
+						attributeChanged(urlAttribute);
+					}
+				}
+			});
+
+			GridDataFactory.fillDefaults().hint(135, SWT.DEFAULT).applyTo(urlText);
+
+			if (hasChanged(attribute)) {
+				urlText.setBackground(getColorIncoming());
+			}
 		}
 
 		attribute = this.taskData.getAttribute(BugzillaReportElement.STATUS_WHITEBOARD.getKeyString());
