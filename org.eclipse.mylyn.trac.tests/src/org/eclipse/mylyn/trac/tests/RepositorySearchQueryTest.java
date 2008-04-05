@@ -27,6 +27,8 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylyn.trac.tests.support.TestFixture;
 import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
+import org.eclipse.mylyn.web.core.AuthenticationCredentials;
+import org.eclipse.mylyn.web.core.AuthenticationType;
 
 /**
  * @author Steffen Pingel
@@ -60,7 +62,8 @@ public class RepositorySearchQueryTest extends TestCase {
 		Credentials credentials = TestUtil.readCredentials(PrivilegeLevel.USER);
 
 		repository = new TaskRepository(TracCorePlugin.REPOSITORY_KIND, url);
-		repository.setAuthenticationCredentials(credentials.username, credentials.password);
+		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials(credentials.username,
+				credentials.password), false);
 		repository.setTimeZoneId(ITracClient.TIME_ZONE);
 		repository.setCharacterEncoding(ITracClient.CHARSET);
 		repository.setVersion(version.name());

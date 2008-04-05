@@ -12,7 +12,6 @@ import java.io.BufferedOutputStream;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InterruptedIOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 
@@ -41,7 +40,6 @@ import org.apache.xmlrpc.common.XmlRpcStreamRequestConfig;
 import org.apache.xmlrpc.util.HttpUtil;
 import org.apache.xmlrpc.util.XmlRpcIOException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.mylyn.web.core.AbstractWebLocation;
 import org.eclipse.mylyn.web.core.WebUtil;
 import org.xml.sax.SAXException;
@@ -224,8 +222,6 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 
 			try {
 				WebUtil.execute(httpClient, hostConfiguration, method, monitor);
-			} catch (InterruptedIOException e) {
-				throw new OperationCanceledException();
 			} catch (XmlRpcIOException e) {
 				Throwable t = e.getLinkedException();
 				if (t instanceof XmlRpcException) {

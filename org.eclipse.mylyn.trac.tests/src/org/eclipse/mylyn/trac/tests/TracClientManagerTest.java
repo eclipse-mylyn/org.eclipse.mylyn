@@ -21,6 +21,7 @@ import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.model.TracMilestone;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
+import org.eclipse.mylyn.web.core.AuthenticationType;
 
 /**
  * @author Steffen Pingel
@@ -57,6 +58,7 @@ public class TracClientManagerTest extends TestCase {
 		TaskRepository taskRepository = new TaskRepository(TracCorePlugin.REPOSITORY_KIND,
 				TracTestConstants.TEST_TRAC_096_URL);
 		taskRepository.setVersion(Version.TRAC_0_9.name());
+		taskRepository.setCredentials(AuthenticationType.REPOSITORY, null, false);
 
 		File file = File.createTempFile("mylyn", null);
 		file.deleteOnExit();

@@ -1,27 +1,25 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Trac Connector Tests
-Bundle-SymbolicName: org.eclipse.mylyn.trac.tests
+Bundle-SymbolicName: org.eclipse.mylyn.trac.tests;singleton:=true
 Bundle-Version: 0.0.0
-Require-Bundle: org.junit,
- org.eclipse.ui,
+Require-Bundle: org.apache.xmlrpc;bundle-version="3.0.0",
+ org.junit,
  org.eclipse.core.runtime,
+ org.eclipse.jface.text,
+ org.eclipse.search,
+ org.eclipse.ui,
+ org.eclipse.ui.workbench.texteditor,
  org.eclipse.mylyn.context.core,
+ org.eclipse.mylyn.context.tests,
  org.eclipse.mylyn.tasks.ui,
  org.eclipse.mylyn.tasks.core,
- org.eclipse.mylyn.context.tests,
  org.eclipse.mylyn.trac.ui,
  org.eclipse.mylyn.trac.core,
- org.eclipse.search,
- org.eclipse.mylyn,
- org.eclipse.ui.workbench.texteditor,
- org.eclipse.jface.text,
- org.eclipse.mylyn.web.core,
- org.apache.xmlrpc;bundle-version="3.0.0"
+ org.eclipse.mylyn.web.core
 Export-Package: org.eclipse.mylyn.internal.trac.ui;x-internal:=true,
  org.eclipse.mylyn.trac.tests;x-internal:=true,
  org.eclipse.mylyn.trac.tests.support;x-internal:=true
-Bundle-Activator: org.eclipse.mylyn.trac.tests.TracTestPlugin
-Eclipse-LazyStart: true
+Eclipse-LazyStart: false
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: Eclipse.org

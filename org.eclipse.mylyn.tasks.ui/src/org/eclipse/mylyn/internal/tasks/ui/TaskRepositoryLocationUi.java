@@ -11,6 +11,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryLocation;
 import org.eclipse.mylyn.internal.tasks.ui.dialogs.TaskRepositoryCredentialsDialog;
+import org.eclipse.mylyn.monitor.core.CoreUtil;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.web.core.AuthenticationCredentials;
@@ -32,6 +33,10 @@ public class TaskRepositoryLocationUi extends TaskRepositoryLocation {
 
 	@Override
 	public ResultType requestCredentials(AuthenticationType authType, String message) {
+		if (CoreUtil.TEST_MODE) {
+			return ResultType.NOT_SUPPORTED;
+		}
+
 		AuthenticationCredentials oldCredentials = taskRepository.getCredentials(authType);
 		// synchronize on a static lock to ensure that only one password dialog is displayed at a time
 		synchronized (lock) {

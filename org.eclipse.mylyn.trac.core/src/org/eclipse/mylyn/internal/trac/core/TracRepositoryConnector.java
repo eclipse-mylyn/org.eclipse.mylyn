@@ -39,6 +39,8 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
+import org.eclipse.mylyn.web.core.AuthenticationCredentials;
+import org.eclipse.mylyn.web.core.AuthenticationType;
 
 /**
  * @author Steffen Pingel
@@ -395,7 +397,8 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	public static String getDisplayUsername(TaskRepository repository) {
-		if (!repository.hasCredentials()) {
+		AuthenticationCredentials credentials = repository.getCredentials(AuthenticationType.REPOSITORY);
+		if (credentials != null && credentials.getUserName().length() > 0) {
 			return ITracClient.DEFAULT_USERNAME;
 		}
 		return repository.getUserName();

@@ -7,12 +7,13 @@
  *******************************************************************************/
 package org.eclipse.mylyn.trac.tests;
 
+import java.net.InetSocketAddress;
 import java.net.Proxy;
+import java.net.Proxy.Type;
 
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.TracException;
 import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
-import org.eclipse.mylyn.web.core.WebClientUtil;
 
 public class TracClientProxyTest extends AbstractTracClientTest {
 
@@ -62,7 +63,7 @@ public class TracClientProxyTest extends AbstractTracClientTest {
 
 	private void connectProxy(String url, String expectedMethod) throws Exception {
 		testProxy.setResponse(TestProxy.NOT_FOUND);
-		proxy = WebClientUtil.getProxy("localhost", proxyPort + "", "", "");
+		proxy = new Proxy(Type.HTTP, new InetSocketAddress("localhost", proxyPort));
 		ITracClient client = connect(url, proxy);
 		try {
 			client.validate(callback);
