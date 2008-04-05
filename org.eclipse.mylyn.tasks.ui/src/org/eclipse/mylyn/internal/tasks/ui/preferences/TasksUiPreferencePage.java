@@ -341,9 +341,6 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		taskDataGroup.setLayout(new GridLayout(1, false));
 		taskDataGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		Label label = new Label(taskDataGroup, SWT.NULL);
-		label.setText("Default data directory will move with workspace (Recommended)");
-
 		Composite dataDirComposite = new Composite(taskDataGroup, SWT.NULL);
 		GridLayout gridLayout = new GridLayout(3, false);
 		gridLayout.marginWidth = 0;
@@ -351,7 +348,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		dataDirComposite.setLayout(gridLayout);
 		dataDirComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		label = new Label(dataDirComposite, SWT.NULL);
+		Label label = new Label(dataDirComposite, SWT.NULL);
 		label.setText("Data directory: ");
 
 		String taskDirectory = TasksUiPlugin.getDefault().getDataDirectory();
