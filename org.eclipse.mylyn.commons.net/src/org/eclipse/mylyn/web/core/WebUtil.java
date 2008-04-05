@@ -9,7 +9,6 @@
 package org.eclipse.mylyn.web.core;
 
 import java.io.IOException;
-import java.io.InterruptedIOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -456,8 +455,6 @@ public class WebUtil {
 
 			try {
 				return future.get(POLL_INTERVAL, TimeUnit.MILLISECONDS);
-			} catch (InterruptedException e) {
-				throw new InterruptedIOException();
 			} catch (ExecutionException e) {
 				throw e.getCause();
 			} catch (TimeoutException ignored) {
