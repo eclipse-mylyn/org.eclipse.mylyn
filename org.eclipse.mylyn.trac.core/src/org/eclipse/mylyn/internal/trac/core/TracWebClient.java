@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import javax.security.auth.login.LoginException;
 import javax.swing.text.html.HTML.Tag;
 
 import org.apache.commons.httpclient.HostConfiguration;
@@ -72,13 +71,13 @@ import org.eclipse.mylyn.web.core.HtmlStreamTokenizer.Token;
  */
 public class TracWebClient extends AbstractTracClient {
 
-	private class WebRequest {
+	private class Request {
 
 		private final String url;
 
 		private HostConfiguration hostConfiguration;
 
-		public WebRequest(String url) {
+		public Request(String url) {
 			this.url = url;
 		}
 
@@ -198,7 +197,7 @@ public class TracWebClient extends AbstractTracClient {
 	private synchronized GetMethod connect(String requestUrl, IProgressMonitor monitor) throws TracException {
 		monitor = Policy.monitorFor(monitor);
 		try {
-			WebRequest request = new WebRequest(requestUrl);
+			Request request = new Request(requestUrl);
 			return request.execute(monitor);
 		} catch (TracException e) {
 			throw e;
@@ -212,76 +211,79 @@ public class TracWebClient extends AbstractTracClient {
 	 * 
 	 * @param id
 	 *            Trac id of ticket
-	 * @throws LoginException
 	 */
 	public TracTicket getTicket(int id, IProgressMonitor monitor) throws TracException {
 		GetMethod method = connect(repositoryUrl + ITracClient.TICKET_URL + id, monitor);
 		try {
 			TracTicket ticket = new TracTicket(id);
 
-			BufferedReader reader = new BufferedReader(new InputStreamReader(method.getResponseBodyAsStream(),
-					ITracClient.CHARSET));
-			HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(reader, null);
-			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
-				if (token.getType() == Token.TAG) {
-					HtmlTag tag = (HtmlTag) token.getValue();
-					if (tag.getTagType() == Tag.TD) {
-						String headers = tag.getAttribute("headers");
-						if ("h_component".equals(headers)) {
-							ticket.putBuiltinValue(Key.COMPONENT, getText(tokenizer));
-						} else if ("h_milestone".equals(headers)) {
-							ticket.putBuiltinValue(Key.MILESTONE, getText(tokenizer));
-						} else if ("h_priority".equals(headers)) {
-							ticket.putBuiltinValue(Key.PRIORITY, getText(tokenizer));
-						} else if ("h_severity".equals(headers)) {
-							ticket.putBuiltinValue(Key.SEVERITY, getText(tokenizer));
-						} else if ("h_version".equals(headers)) {
-							ticket.putBuiltinValue(Key.VERSION, getText(tokenizer));
-						} else if ("h_keywords".equals(headers)) {
-							ticket.putBuiltinValue(Key.KEYWORDS, getText(tokenizer));
-						} else if ("h_cc".equals(headers)) {
-							ticket.putBuiltinValue(Key.CC, getText(tokenizer));
-						} else if ("h_owner".equals(headers)) {
-							ticket.putBuiltinValue(Key.OWNER, getText(tokenizer));
-						} else if ("h_reporter".equals(headers)) {
-							ticket.putBuiltinValue(Key.REPORTER, getText(tokenizer));
-						}
-						// TODO handle custom fields
-					} else if (tag.getTagType() == Tag.H2 && "summary".equals(tag.getAttribute("class"))) {
-						ticket.putBuiltinValue(Key.SUMMARY, getText(tokenizer));
-					} else if (tag.getTagType() == Tag.H3 && "status".equals(tag.getAttribute("class"))) {
-						String text = getStrongText(tokenizer);
-						if (text.length() > 0) {
-							// Trac 0.9 format: status / status (resolution)
-							int i = text.indexOf(" (");
-							if (i != -1) {
-								ticket.putBuiltinValue(Key.STATUS, text.substring(0, i));
-								ticket.putBuiltinValue(Key.RESOLUTION, text.substring(i + 2, text.length() - 1));
-							} else {
-								ticket.putBuiltinValue(Key.STATUS, text);
+			InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
+			try {
+				BufferedReader reader = new BufferedReader(new InputStreamReader(in, ITracClient.CHARSET));
+				HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(reader, null);
+				for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
+					if (token.getType() == Token.TAG) {
+						HtmlTag tag = (HtmlTag) token.getValue();
+						if (tag.getTagType() == Tag.TD) {
+							String headers = tag.getAttribute("headers");
+							if ("h_component".equals(headers)) {
+								ticket.putBuiltinValue(Key.COMPONENT, getText(tokenizer));
+							} else if ("h_milestone".equals(headers)) {
+								ticket.putBuiltinValue(Key.MILESTONE, getText(tokenizer));
+							} else if ("h_priority".equals(headers)) {
+								ticket.putBuiltinValue(Key.PRIORITY, getText(tokenizer));
+							} else if ("h_severity".equals(headers)) {
+								ticket.putBuiltinValue(Key.SEVERITY, getText(tokenizer));
+							} else if ("h_version".equals(headers)) {
+								ticket.putBuiltinValue(Key.VERSION, getText(tokenizer));
+							} else if ("h_keywords".equals(headers)) {
+								ticket.putBuiltinValue(Key.KEYWORDS, getText(tokenizer));
+							} else if ("h_cc".equals(headers)) {
+								ticket.putBuiltinValue(Key.CC, getText(tokenizer));
+							} else if ("h_owner".equals(headers)) {
+								ticket.putBuiltinValue(Key.OWNER, getText(tokenizer));
+							} else if ("h_reporter".equals(headers)) {
+								ticket.putBuiltinValue(Key.REPORTER, getText(tokenizer));
 							}
-						}
-					} else if (tag.getTagType() == Tag.SPAN) {
-						String clazz = tag.getAttribute("class");
-						if ("status".equals(clazz)) {
-							// Trac 0.10 format: (status type) / (status type: resolution)
-							String text = getText(tokenizer);
-							if (text.startsWith("(") && text.endsWith(")")) {
-								StringTokenizer t = new StringTokenizer(text.substring(1, text.length() - 1), " :");
-								if (t.hasMoreTokens()) {
-									ticket.putBuiltinValue(Key.STATUS, t.nextToken());
-								}
-								if (t.hasMoreTokens()) {
-									ticket.putBuiltinValue(Key.TYPE, t.nextToken());
-								}
-								if (t.hasMoreTokens()) {
-									ticket.putBuiltinValue(Key.RESOLUTION, t.nextToken());
+							// TODO handle custom fields
+						} else if (tag.getTagType() == Tag.H2 && "summary".equals(tag.getAttribute("class"))) {
+							ticket.putBuiltinValue(Key.SUMMARY, getText(tokenizer));
+						} else if (tag.getTagType() == Tag.H3 && "status".equals(tag.getAttribute("class"))) {
+							String text = getStrongText(tokenizer);
+							if (text.length() > 0) {
+								// Trac 0.9 format: status / status (resolution)
+								int i = text.indexOf(" (");
+								if (i != -1) {
+									ticket.putBuiltinValue(Key.STATUS, text.substring(0, i));
+									ticket.putBuiltinValue(Key.RESOLUTION, text.substring(i + 2, text.length() - 1));
+								} else {
+									ticket.putBuiltinValue(Key.STATUS, text);
 								}
 							}
+						} else if (tag.getTagType() == Tag.SPAN) {
+							String clazz = tag.getAttribute("class");
+							if ("status".equals(clazz)) {
+								// Trac 0.10 format: (status type) / (status type: resolution)
+								String text = getText(tokenizer);
+								if (text.startsWith("(") && text.endsWith(")")) {
+									StringTokenizer t = new StringTokenizer(text.substring(1, text.length() - 1), " :");
+									if (t.hasMoreTokens()) {
+										ticket.putBuiltinValue(Key.STATUS, t.nextToken());
+									}
+									if (t.hasMoreTokens()) {
+										ticket.putBuiltinValue(Key.TYPE, t.nextToken());
+									}
+									if (t.hasMoreTokens()) {
+										ticket.putBuiltinValue(Key.RESOLUTION, t.nextToken());
+									}
+								}
+							}
 						}
+						// TODO parse description
 					}
-					// TODO parse description
 				}
+			} finally {
+				in.close();
 			}
 
 			if (ticket.isValid() && ticket.getValue(Key.SUMMARY) != null) {
@@ -301,53 +303,57 @@ public class TracWebClient extends AbstractTracClient {
 	public void search(TracSearch query, List<TracTicket> tickets, IProgressMonitor monitor) throws TracException {
 		GetMethod method = connect(repositoryUrl + ITracClient.QUERY_URL + query.toUrl(), monitor);
 		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(method.getResponseBodyAsStream(),
-					ITracClient.CHARSET));
-			String line;
+			InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
+			try {
+				BufferedReader reader = new BufferedReader(new InputStreamReader(in, ITracClient.CHARSET));
+				String line;
 
-			Map<String, String> constantValues = getExactMatchValues(query);
+				Map<String, String> constantValues = getExactMatchValues(query);
 
-			// first line contains names of returned ticket fields
-			line = reader.readLine();
-			if (line == null) {
-				throw new InvalidTicketException();
-			}
-			StringTokenizer t = new StringTokenizer(line, "\t");
-			Key[] fields = new Key[t.countTokens()];
-			for (int i = 0; i < fields.length; i++) {
-				fields[i] = Key.fromKey(t.nextToken());
-			}
+				// first line contains names of returned ticket fields
+				line = reader.readLine();
+				if (line == null) {
+					throw new InvalidTicketException();
+				}
+				StringTokenizer t = new StringTokenizer(line, "\t");
+				Key[] fields = new Key[t.countTokens()];
+				for (int i = 0; i < fields.length; i++) {
+					fields[i] = Key.fromKey(t.nextToken());
+				}
 
-			// create a ticket for each following line of output
-			while ((line = reader.readLine()) != null) {
-				t = new StringTokenizer(line, "\t");
-				TracTicket ticket = new TracTicket();
-				for (int i = 0; i < fields.length && t.hasMoreTokens(); i++) {
-					if (fields[i] != null) {
-						try {
-							if (fields[i] == Key.ID) {
-								ticket.setId(Integer.parseInt(t.nextToken()));
-							} else if (fields[i] == Key.TIME) {
-								ticket.setCreated(TracUtils.parseDate(Integer.parseInt(t.nextToken())));
-							} else if (fields[i] == Key.CHANGE_TIME) {
-								ticket.setLastChanged(TracUtils.parseDate(Integer.parseInt(t.nextToken())));
-							} else {
-								ticket.putBuiltinValue(fields[i], parseTicketValue(t.nextToken()));
+				// create a ticket for each following line of output
+				while ((line = reader.readLine()) != null) {
+					t = new StringTokenizer(line, "\t");
+					TracTicket ticket = new TracTicket();
+					for (int i = 0; i < fields.length && t.hasMoreTokens(); i++) {
+						if (fields[i] != null) {
+							try {
+								if (fields[i] == Key.ID) {
+									ticket.setId(Integer.parseInt(t.nextToken()));
+								} else if (fields[i] == Key.TIME) {
+									ticket.setCreated(TracUtils.parseDate(Integer.parseInt(t.nextToken())));
+								} else if (fields[i] == Key.CHANGE_TIME) {
+									ticket.setLastChanged(TracUtils.parseDate(Integer.parseInt(t.nextToken())));
+								} else {
+									ticket.putBuiltinValue(fields[i], parseTicketValue(t.nextToken()));
+								}
+							} catch (NumberFormatException e) {
+								StatusHandler.log(new Status(IStatus.WARNING, TracCorePlugin.PLUGIN_ID,
+										"Error parsing response: '" + line + "'", e));
 							}
-						} catch (NumberFormatException e) {
-							StatusHandler.log(new Status(IStatus.WARNING, TracCorePlugin.PLUGIN_ID,
-									"Error parsing response: '" + line + "'", e));
 						}
 					}
-				}
 
-				if (ticket.isValid()) {
-					for (String key : constantValues.keySet()) {
-						ticket.putValue(key, parseTicketValue(constantValues.get(key)));
+					if (ticket.isValid()) {
+						for (String key : constantValues.keySet()) {
+							ticket.putValue(key, parseTicketValue(constantValues.get(key)));
+						}
+
+						tickets.add(ticket);
 					}
-
-					tickets.add(ticket);
 				}
+			} finally {
+				in.close();
 			}
 		} catch (IOException e) {
 			throw new TracException(e);
@@ -384,38 +390,42 @@ public class TracWebClient extends AbstractTracClient {
 	public void validate(IProgressMonitor monitor) throws TracException {
 		GetMethod method = connect(repositoryUrl + "/", monitor);
 		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(method.getResponseBodyAsStream(),
-					ITracClient.CHARSET));
+			InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
+			try {
+				BufferedReader reader = new BufferedReader(new InputStreamReader(in, ITracClient.CHARSET));
 
-			boolean inFooter = false;
-			boolean valid = false;
-			String version = null;
+				boolean inFooter = false;
+				boolean valid = false;
+				String version = null;
 
-			HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(reader, null);
-			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
-				if (token.getType() == Token.TAG) {
-					HtmlTag tag = (HtmlTag) token.getValue();
-					if (tag.getTagType() == Tag.DIV) {
-						String id = tag.getAttribute("id");
-						inFooter = !tag.isEndTag() && "footer".equals(id);
-					} else if (tag.getTagType() == Tag.STRONG && inFooter) {
-						version = getText(tokenizer);
-					} else if (tag.getTagType() == Tag.A) {
-						String id = tag.getAttribute("id");
-						if ("tracpowered".equals(id)) {
-							valid = true;
+				HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(reader, null);
+				for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
+					if (token.getType() == Token.TAG) {
+						HtmlTag tag = (HtmlTag) token.getValue();
+						if (tag.getTagType() == Tag.DIV) {
+							String id = tag.getAttribute("id");
+							inFooter = !tag.isEndTag() && "footer".equals(id);
+						} else if (tag.getTagType() == Tag.STRONG && inFooter) {
+							version = getText(tokenizer);
+						} else if (tag.getTagType() == Tag.A) {
+							String id = tag.getAttribute("id");
+							if ("tracpowered".equals(id)) {
+								valid = true;
+							}
 						}
 					}
 				}
-			}
 
-			if (version != null && !(version.startsWith("Trac 0.9") || version.startsWith("Trac 0.10"))) {
-				throw new TracException("The Trac version " + version
-						+ " is unsupported. Please use version 0.9.x or 0.10.x.");
-			}
+				if (version != null && !(version.startsWith("Trac 0.9") || version.startsWith("Trac 0.10"))) {
+					throw new TracException("The Trac version " + version
+							+ " is unsupported. Please use version 0.9.x or 0.10.x.");
+				}
 
-			if (!valid) {
-				throw new TracException("Not a valid Trac repository");
+				if (!valid) {
+					throw new TracException("Not a valid Trac repository");
+				}
+			} finally {
+				in.close();
 			}
 		} catch (IOException e) {
 			throw new TracException(e);
@@ -432,26 +442,30 @@ public class TracWebClient extends AbstractTracClient {
 
 		GetMethod method = connect(repositoryUrl + ITracClient.CUSTOM_QUERY_URL, monitor);
 		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(method.getResponseBodyAsStream(),
-					ITracClient.CHARSET));
-			HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(reader, null);
-			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
-				if (monitor.isCanceled()) {
-					throw new OperationCanceledException();
-				}
+			InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
+			try {
+				BufferedReader reader = new BufferedReader(new InputStreamReader(in, ITracClient.CHARSET));
+				HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(reader, null);
+				for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
+					if (monitor.isCanceled()) {
+						throw new OperationCanceledException();
+					}
 
-				if (token.getType() == Token.TAG) {
-					HtmlTag tag = (HtmlTag) token.getValue();
-					if (tag.getTagType() == Tag.SCRIPT) {
-						String text = getText(tokenizer).trim();
-						if (text.startsWith("var properties=")) {
-							parseAttributes(text);
+					if (token.getType() == Token.TAG) {
+						HtmlTag tag = (HtmlTag) token.getValue();
+						if (tag.getTagType() == Tag.SCRIPT) {
+							String text = getText(tokenizer).trim();
+							if (text.startsWith("var properties=")) {
+								parseAttributes(text);
+							}
 						}
 					}
 				}
-			}
 
-			addResolutionAndStatus();
+				addResolutionAndStatus();
+			} finally {
+				in.close();
+			}
 		} catch (IOException e) {
 			throw new TracException(e);
 		} catch (ParseException e) {
@@ -599,60 +613,64 @@ public class TracWebClient extends AbstractTracClient {
 
 		GetMethod method = connect(repositoryUrl + ITracClient.NEW_TICKET_URL, monitor);
 		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(method.getResponseBodyAsStream(),
-					ITracClient.CHARSET));
-			HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(reader, null);
-			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
-				if (monitor.isCanceled()) {
-					throw new OperationCanceledException();
-				}
+			InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
+			try {
+				BufferedReader reader = new BufferedReader(new InputStreamReader(in, ITracClient.CHARSET));
+				HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(reader, null);
+				for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
+					if (monitor.isCanceled()) {
+						throw new OperationCanceledException();
+					}
 
-				if (token.getType() == Token.TAG) {
-					HtmlTag tag = (HtmlTag) token.getValue();
-					if (tag.getTagType() == Tag.SELECT) {
-						String name = tag.getAttribute("id");
-						if ("component".equals(name)) {
-							List<String> values = getOptionValues(tokenizer);
-							data.components = new ArrayList<TracComponent>(values.size());
-							for (String value : values) {
-								data.components.add(new TracComponent(value));
-							}
-						} else if ("milestone".equals(name)) {
-							List<String> values = getOptionValues(tokenizer);
-							data.milestones = new ArrayList<TracMilestone>(values.size());
-							for (String value : values) {
-								data.milestones.add(new TracMilestone(value));
-							}
-						} else if ("priority".equals(name)) {
-							List<String> values = getOptionValues(tokenizer);
-							data.priorities = new ArrayList<TracPriority>(values.size());
-							for (int i = 0; i < values.size(); i++) {
-								data.priorities.add(new TracPriority(values.get(i), i + 1));
-							}
-						} else if ("severity".equals(name)) {
-							List<String> values = getOptionValues(tokenizer);
-							data.severities = new ArrayList<TracSeverity>(values.size());
-							for (int i = 0; i < values.size(); i++) {
-								data.severities.add(new TracSeverity(values.get(i), i + 1));
-							}
-						} else if ("type".equals(name)) {
-							List<String> values = getOptionValues(tokenizer);
-							data.ticketTypes = new ArrayList<TracTicketType>(values.size());
-							for (int i = 0; i < values.size(); i++) {
-								data.ticketTypes.add(new TracTicketType(values.get(i), i + 1));
-							}
-						} else if ("version".equals(name)) {
-							List<String> values = getOptionValues(tokenizer);
-							data.versions = new ArrayList<TracVersion>(values.size());
-							for (String value : values) {
-								data.versions.add(new TracVersion(value));
+					if (token.getType() == Token.TAG) {
+						HtmlTag tag = (HtmlTag) token.getValue();
+						if (tag.getTagType() == Tag.SELECT) {
+							String name = tag.getAttribute("id");
+							if ("component".equals(name)) {
+								List<String> values = getOptionValues(tokenizer);
+								data.components = new ArrayList<TracComponent>(values.size());
+								for (String value : values) {
+									data.components.add(new TracComponent(value));
+								}
+							} else if ("milestone".equals(name)) {
+								List<String> values = getOptionValues(tokenizer);
+								data.milestones = new ArrayList<TracMilestone>(values.size());
+								for (String value : values) {
+									data.milestones.add(new TracMilestone(value));
+								}
+							} else if ("priority".equals(name)) {
+								List<String> values = getOptionValues(tokenizer);
+								data.priorities = new ArrayList<TracPriority>(values.size());
+								for (int i = 0; i < values.size(); i++) {
+									data.priorities.add(new TracPriority(values.get(i), i + 1));
+								}
+							} else if ("severity".equals(name)) {
+								List<String> values = getOptionValues(tokenizer);
+								data.severities = new ArrayList<TracSeverity>(values.size());
+								for (int i = 0; i < values.size(); i++) {
+									data.severities.add(new TracSeverity(values.get(i), i + 1));
+								}
+							} else if ("type".equals(name)) {
+								List<String> values = getOptionValues(tokenizer);
+								data.ticketTypes = new ArrayList<TracTicketType>(values.size());
+								for (int i = 0; i < values.size(); i++) {
+									data.ticketTypes.add(new TracTicketType(values.get(i), i + 1));
+								}
+							} else if ("version".equals(name)) {
+								List<String> values = getOptionValues(tokenizer);
+								data.versions = new ArrayList<TracVersion>(values.size());
+								for (String value : values) {
+									data.versions.add(new TracVersion(value));
+								}
 							}
 						}
 					}
 				}
-			}
 
-			addResolutionAndStatus();
+				addResolutionAndStatus();
+			} finally {
+				in.close();
+			}
 		} catch (IOException e) {
 			throw new TracException(e);
 		} catch (ParseException e) {

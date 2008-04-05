@@ -80,6 +80,9 @@ public class TracCorePlugin extends Plugin {
 			return RepositoryStatus.createLoginError(repository.getUrl(), PLUGIN_ID);
 		} else if (e instanceof TracPermissionDeniedException) {
 			return TracStatus.createPermissionDeniedError(repository.getUrl(), PLUGIN_ID);
+		} else if (e instanceof InvalidTicketException) {
+			return new RepositoryStatus(repository.getUrl(), IStatus.ERROR, PLUGIN_ID, RepositoryStatus.ERROR_IO,
+					"The server returned an unexpected response", e);
 		} else if (e instanceof TracException) {
 			String message = e.getMessage();
 			if (message == null) {
