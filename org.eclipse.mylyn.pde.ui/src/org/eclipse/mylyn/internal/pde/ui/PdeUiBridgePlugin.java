@@ -8,43 +8,61 @@
 
 package org.eclipse.mylyn.internal.pde.ui;
 
-import org.eclipse.mylyn.internal.context.ui.AbstractContextUiPlugin;
+import org.eclipse.core.runtime.Plugin;
+import org.eclipse.mylyn.context.ui.IContextUiStartup;
 import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
-import org.eclipse.ui.IWorkbench;
 import org.osgi.framework.BundleContext;
 
 /**
  * @author Mik Kersten
+ * @author Steffen Pingel
  */
-public class PdeUiBridgePlugin extends AbstractContextUiPlugin {
+public class PdeUiBridgePlugin extends Plugin {
+
+	public static class PdeUiBrideStartup implements IContextUiStartup {
+
+		public void lazyStartup() {
+			PdeUiBridgePlugin.getDefault().lazyStart();
+		}
+
+	}
 
 	public static final String ID_PLUGIN = "org.eclipse.mylyn.pde.ui";
+
+	private static PdeUiBridgePlugin INSTANCE;
+
+	public static PdeUiBridgePlugin getDefault() {
+		return INSTANCE;
+	}
 
 	private PdeEditingMonitor pdeEditingMonitor;
 
 	public PdeUiBridgePlugin() {
-		// ignore
+	}
+
+	private void lazyStart() {
+		pdeEditingMonitor = new PdeEditingMonitor();
+		MonitorUiPlugin.getDefault().getSelectionMonitors().add(pdeEditingMonitor);
+	}
+
+	private void lazyStop() {
+		if (pdeEditingMonitor != null) {
+			MonitorUiPlugin.getDefault().getSelectionMonitors().remove(pdeEditingMonitor);
+		}
 	}
 
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-	}
-
-	@Override
-	protected void lazyStart(IWorkbench workbench) {
-		pdeEditingMonitor = new PdeEditingMonitor();
-		MonitorUiPlugin.getDefault().getSelectionMonitors().add(pdeEditingMonitor);
-	}
-
-	@Override
-	protected void lazyStop() {
-		MonitorUiPlugin.getDefault().getSelectionMonitors().remove(pdeEditingMonitor);
+		INSTANCE = this;
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
+		lazyStop();
+
 		super.stop(context);
+		INSTANCE = null;
 	}
 
 }

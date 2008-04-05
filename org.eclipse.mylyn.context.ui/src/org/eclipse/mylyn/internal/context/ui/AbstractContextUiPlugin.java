@@ -27,11 +27,10 @@ import org.osgi.framework.BundleContext;
 /**
  * Self-registering. De-registers itself after running.
  * 
- * API-3.0: alternate names to consider are AbstractUiBridgePlugin and AbstractFocusedUiPlugin
- * 
  * @author Mik Kersten
  * @since 2.2
  */
+@Deprecated
 public abstract class AbstractContextUiPlugin extends AbstractUIPlugin implements IInteractionContextListener2 {
 
 	private final AtomicBoolean lazyStarted = new AtomicBoolean(false);

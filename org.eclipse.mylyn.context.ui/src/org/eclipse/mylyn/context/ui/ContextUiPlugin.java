@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -35,10 +36,11 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.IInteractionContext;
+import org.eclipse.mylyn.context.core.IInteractionContextListener2;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
 import org.eclipse.mylyn.internal.context.ui.AbstractContextLabelProvider;
-import org.eclipse.mylyn.internal.context.ui.AbstractContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.ContentOutlineManager;
 import org.eclipse.mylyn.internal.context.ui.ContextHighlighterInitializer;
 import org.eclipse.mylyn.internal.context.ui.ContextPerspectiveManager;
@@ -75,11 +77,67 @@ import org.osgi.framework.BundleContext;
  * Main entry point for the Context UI.
  * 
  * @author Mik Kersten
+ * @author Steffen Pingel
  * @since 2.0
  */
-public class ContextUiPlugin extends AbstractContextUiPlugin {
+public class ContextUiPlugin extends AbstractUIPlugin {
 
 	public static final String ID_PLUGIN = "org.eclipse.mylyn.context.ui";
+
+	private class ContextActivationListener implements IInteractionContextListener2 {
+
+		public void contextPreActivated(IInteractionContext context) {
+			initLazyStart();
+		}
+
+		public void elementsDeleted(List<IInteractionElement> elements) {
+			// ignore
+
+		}
+
+		public void contextActivated(IInteractionContext context) {
+			// ignore
+
+		}
+
+		public void contextCleared(IInteractionContext context) {
+			// ignore
+
+		}
+
+		public void contextDeactivated(IInteractionContext context) {
+			// ignore
+
+		}
+
+		public void elementDeleted(IInteractionElement element) {
+			// ignore
+
+		}
+
+		public void interestChanged(List<IInteractionElement> elements) {
+			// ignore
+
+		}
+
+		public void landmarkAdded(IInteractionElement element) {
+			// ignore
+
+		}
+
+		public void landmarkRemoved(IInteractionElement element) {
+			// ignore
+
+		}
+
+		public void relationsChanged(IInteractionElement element) {
+			// ignore
+
+		}
+
+	}
+
+	private final ContextActivationListener contextActivationListener = new ContextActivationListener();
 
 	private final Map<String, AbstractContextUiBridge> bridges = new HashMap<String, AbstractContextUiBridge>();
 
@@ -214,14 +272,20 @@ public class ContextUiPlugin extends AbstractContextUiPlugin {
 		}
 	};
 
+	private final AtomicBoolean lazyStarted = new AtomicBoolean(false);
+
 	public ContextUiPlugin() {
-		super();
 		INSTANCE = this;
 	}
 
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+
+		ContextCorePlugin.getContextManager().addListener(contextActivationListener);
+		if (ContextCorePlugin.getContextManager().isContextActive()) {
+			initLazyStart();
+		}
 
 		initializeDefaultPreferences(getPreferenceStore());
 		initializeHighlighters();
@@ -230,8 +294,22 @@ public class ContextUiPlugin extends AbstractContextUiPlugin {
 		perspectiveManager.addManagedPerspective(PlanningPerspectiveFactory.ID_PERSPECTIVE);
 	}
 
-	@Override
-	protected void lazyStart(IWorkbench workbench) {
+	private void initLazyStart() {
+		if (!lazyStarted.getAndSet(true)) {
+			IWorkbench workbench = PlatformUI.getWorkbench();
+			try {
+				lazyStart(workbench);
+			} catch (Throwable t) {
+				StatusHandler.log(new Status(IStatus.ERROR, super.getBundle().getSymbolicName(), IStatus.ERROR,
+						"Could not lazy start context plug-in", t));
+			}
+			if (TasksUiPlugin.getTaskListManager() != null) {
+				ContextCorePlugin.getContextManager().removeListener(contextActivationListener);
+			}
+		}
+	}
+
+	private void lazyStart(IWorkbench workbench) {
 		try {
 			ContextCorePlugin.getContextManager().addListener(viewerManager);
 			MonitorUiPlugin.getDefault().addWindowPartListener(contentOutlineManager);
@@ -273,8 +351,7 @@ public class ContextUiPlugin extends AbstractContextUiPlugin {
 		}
 	}
 
-	@Override
-	protected void lazyStop() {
+	private void lazyStop() {
 		ContextCorePlugin.getContextManager().removeListener(viewerManager);
 		MonitorUiPlugin.getDefault().removeWindowPartListener(contentOutlineManager);
 
@@ -288,6 +365,13 @@ public class ContextUiPlugin extends AbstractContextUiPlugin {
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
+		if (lazyStarted.get()) {
+			lazyStop();
+		}
+		if (TasksUiPlugin.getTaskListManager() != null) {
+			ContextCorePlugin.getContextManager().removeListener(contextActivationListener);
+		}
+
 		super.stop(context);
 		perspectiveManager.removeManagedPerspective(PlanningPerspectiveFactory.ID_PERSPECTIVE);
 		viewerManager.dispose();

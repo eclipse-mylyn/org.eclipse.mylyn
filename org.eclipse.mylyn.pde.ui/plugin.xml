@@ -12,6 +12,12 @@
           class="org.eclipse.mylyn.internal.pde.ui.PdeContextLabelProvider"
           contentType="plugin.xml"/>
   </extension>
+   <extension
+         point="org.eclipse.mylyn.context.ui.startup">
+      <startup
+            class="org.eclipse.mylyn.internal.pde.ui.PdeUiBridgePlugin$PdeUiBrideStartup">
+      </startup>
+   </extension>
 
    	<extension point="org.eclipse.mylyn.context.core.bridges">
 		<structureBridge
