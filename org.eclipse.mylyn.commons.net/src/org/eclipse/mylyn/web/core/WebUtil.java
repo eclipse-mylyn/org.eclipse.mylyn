@@ -9,11 +9,11 @@
 package org.eclipse.mylyn.web.core;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Socket;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -26,6 +26,7 @@ import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.NTCredentials;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
@@ -39,8 +40,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.mylyn.internal.web.core.CloneableHostConfiguration;
+import org.eclipse.mylyn.internal.web.core.PollingInputStream;
 import org.eclipse.mylyn.internal.web.core.PollingProtocolSocketFactory;
 import org.eclipse.mylyn.internal.web.core.PollingSslProtocolSocketFactory;
+import org.eclipse.mylyn.internal.web.core.TimeoutInputStream;
 
 /**
  * @author Mik Kersten
@@ -49,15 +52,6 @@ import org.eclipse.mylyn.internal.web.core.PollingSslProtocolSocketFactory;
  * @since 3.0
  */
 public class WebUtil {
-
-	/**
-	 * @since 3.0
-	 */
-	public interface AbortableCallable<T> extends Callable<T> {
-
-		public void abort();
-
-	}
 
 	private static final int MAX_THREADS = 10;
 
@@ -71,6 +65,10 @@ public class WebUtil {
 
 	private static final int SOCKET_TIMEOUT = 60000;
 
+	private static final int POLL_TIMEOUT = 1000;
+
+	private static final int POLL_ATTEMPTS = SOCKET_TIMEOUT / POLL_TIMEOUT;
+
 	private static final int HTTP_PORT = 80;
 
 	private static final int HTTPS_PORT = 443;
@@ -83,6 +81,13 @@ public class WebUtil {
 
 	private static final ExecutorService service = new ThreadPoolExecutor(1, MAX_THREADS, 60L, TimeUnit.SECONDS,
 			new SynchronousQueue<Runnable>());
+
+	private static final int BUFFER_SIZE = 1024;
+
+	/**
+	 * Block indefinitely.
+	 */
+	private static final long CLOSE_TIMEOUT = 0;
 
 	static {
 		initCommonsLoggingSettings();
@@ -182,7 +187,8 @@ public class WebUtil {
 			throw new IllegalArgumentException();
 		}
 
-		AbortableCallable<?> executor = new AbortableCallable<Object>() {
+		WebRequest<?> executor = new WebRequest<Object>() {
+			@Override
 			public void abort() {
 				try {
 					socket.close();
@@ -198,7 +204,7 @@ public class WebUtil {
 
 		};
 
-		pollIo(monitor, executor);
+		executeInternal(monitor, executor);
 	}
 
 	/**
@@ -249,7 +255,8 @@ public class WebUtil {
 
 		monitor = Policy.monitorFor(monitor);
 
-		AbortableCallable<Integer> executor = new AbortableCallable<Integer>() {
+		WebRequest<Integer> executor = new WebRequest<Integer>() {
+			@Override
 			public void abort() {
 				method.abort();
 			}
@@ -259,7 +266,56 @@ public class WebUtil {
 			}
 		};
 
-		return pollIo(monitor, executor);
+		return executeInternal(monitor, executor);
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public static <T> T execute(IProgressMonitor monitor, WebRequest<T> request) throws Throwable {
+		monitor = Policy.monitorFor(monitor);
+
+		Future<T> future = service.submit(request);
+		while (true) {
+			if (monitor.isCanceled()) {
+				if (!future.cancel(false)) {
+					request.abort();
+				}
+				// wait for executor to finish
+				try {
+					if (!future.isCancelled()) {
+						future.get();
+					}
+				} catch (InterruptedException e) {
+					// ignore
+				} catch (ExecutionException e) {
+					// ignore
+				}
+				throw new OperationCanceledException();
+			}
+
+			try {
+				return future.get(POLL_INTERVAL, TimeUnit.MILLISECONDS);
+			} catch (ExecutionException e) {
+				throw e.getCause();
+			} catch (TimeoutException ignored) {
+			}
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private static <T> T executeInternal(IProgressMonitor monitor, WebRequest<?> request) throws IOException {
+		try {
+			return (T) execute(monitor, request);
+		} catch (IOException e) {
+			throw e;
+		} catch (RuntimeException e) {
+			throw e;
+		} catch (Error e) {
+			throw e;
+		} catch (Throwable e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	private static String getBundleVersion(Plugin plugin) {
@@ -379,6 +435,12 @@ public class WebUtil {
 		}
 	}
 
+	public static InputStream getResponseBodyAsStream(HttpMethodBase method, IProgressMonitor monitor)
+			throws IOException {
+		return new PollingInputStream(new TimeoutInputStream(method.getResponseBodyAsStream(), BUFFER_SIZE,
+				SOCKET_TIMEOUT, CLOSE_TIMEOUT), POLL_ATTEMPTS, monitor);
+	}
+
 	/**
 	 * @since 3.0
 	 */
@@ -416,6 +478,10 @@ public class WebUtil {
 		}
 	}
 
+	public static void init() {
+		// initialization is done in the static initializer		
+	}
+
 	private static void initCommonsLoggingSettings() {
 		// remove?
 		System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
@@ -426,55 +492,6 @@ public class WebUtil {
 
 	private static boolean isRepositoryHttps(String repositoryUrl) {
 		return repositoryUrl.matches("https.*");
-	}
-
-	/**
-	 * @since 3.0
-	 */
-	public static <T> T poll(IProgressMonitor monitor, AbortableCallable<T> executor) throws Throwable {
-		monitor = Policy.monitorFor(monitor);
-
-		Future<T> future = service.submit(executor);
-		while (true) {
-			if (monitor.isCanceled()) {
-				if (!future.cancel(false)) {
-					executor.abort();
-				}
-				// wait for executor to finish
-				try {
-					if (!future.isCancelled()) {
-						future.get();
-					}
-				} catch (InterruptedException e) {
-					// ignore
-				} catch (ExecutionException e) {
-					// ignore
-				}
-				throw new OperationCanceledException();
-			}
-
-			try {
-				return future.get(POLL_INTERVAL, TimeUnit.MILLISECONDS);
-			} catch (ExecutionException e) {
-				throw e.getCause();
-			} catch (TimeoutException ignored) {
-			}
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	private static <T> T pollIo(IProgressMonitor monitor, AbortableCallable<?> executor) throws IOException {
-		try {
-			return (T) poll(monitor, executor);
-		} catch (IOException e) {
-			throw e;
-		} catch (RuntimeException e) {
-			throw e;
-		} catch (Error e) {
-			throw e;
-		} catch (Throwable e) {
-			throw new RuntimeException(e);
-		}
 	}
 
 	private static String stripQualifier(String longVersion) {
@@ -498,10 +515,6 @@ public class WebUtil {
 		}
 		return version.toString();
 
-	}
-
-	public static void init() {
-		// initialization is done in the static initializer		
 	}
 
 }

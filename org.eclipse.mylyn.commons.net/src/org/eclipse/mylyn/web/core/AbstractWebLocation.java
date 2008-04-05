@@ -18,28 +18,49 @@ import javax.net.ssl.X509TrustManager;
  */
 public abstract class AbstractWebLocation {
 
+	/**
+	 * @since 2.2
+	 */
 	public enum ResultType {
 		NOT_SUPPORTED, CREDENTIALS_CHANGED, PROPERTIES_CHANGED
 	};
 
 	private final String url;
 
+	/**
+	 * @since 2.2
+	 */
 	public AbstractWebLocation(String url) {
 		this.url = url;
 	}
 
+	/**
+	 * @since 2.2
+	 */
 	public abstract AuthenticationCredentials getCredentials(AuthenticationType type);
 
+	/**
+	 * @since 2.2
+	 */
 	public abstract Proxy getProxyForHost(String host, String proxyType);
 
+	/**
+	 * @since 2.2
+	 */
 	public X509TrustManager getTrustManager() {
 		return null;
 	}
 
+	/**
+	 * @since 2.2
+	 */
 	public String getUrl() {
 		return url;
 	}
 
+	/**
+	 * @since 2.2
+	 */
 	public abstract ResultType requestCredentials(AuthenticationType type, String message);
 
 }

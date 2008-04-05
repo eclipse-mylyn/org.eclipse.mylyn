@@ -23,6 +23,9 @@ import org.eclipse.mylyn.internal.web.core.InfiniteSubProgressMonitor;
  */
 public class Policy {
 
+	/**
+	 * @since 2.3
+	 */
 	public static boolean DEBUG_STREAMS = false;
 
 	static {
@@ -64,6 +67,9 @@ public class Policy {
 		return new BackgroundProgressMonitor(monitor);
 	}
 
+	/**
+	 * @since 2.3
+	 */
 	public static IProgressMonitor monitorFor(IProgressMonitor monitor) {
 		if (monitor == null) {
 			return new NullProgressMonitor();
@@ -84,6 +90,9 @@ public class Policy {
 		return monitor;
 	}
 
+	/**
+	 * @since 2.3
+	 */
 	public static IProgressMonitor subMonitorFor(IProgressMonitor monitor, int ticks) {
 		if (monitor == null) {
 			return new NullProgressMonitor();
@@ -97,6 +106,9 @@ public class Policy {
 		return new SubProgressMonitor(monitor, ticks);
 	}
 
+	/**
+	 * @since 2.3
+	 */
 	public static IProgressMonitor infiniteSubMonitorFor(IProgressMonitor monitor, int ticks) {
 		if (monitor == null) {
 			return new NullProgressMonitor();
