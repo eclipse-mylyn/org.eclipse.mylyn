@@ -240,18 +240,6 @@ public class WebUtil {
 	}
 
 	/**
-	 * @since 2.3
-	 * @deprecated use {@link #createHostConfiguration(HttpClient, AbstractWebLocation, IProgressMonitor)} and
-	 *             {@link #configureHttpClient(HttpClient, String)}
-	 */
-	@Deprecated
-	public static HostConfiguration createHostConfiguration(HttpClient client, String userAgent,
-			AbstractWebLocation location, IProgressMonitor monitor) {
-		configureHttpClient(client, userAgent);
-		return createHostConfiguration(client, userAgent, location, monitor);
-	}
-
-	/**
 	 * @since 3.0
 	 */
 	public static int execute(final HttpClient client, final HostConfiguration hostConfiguration,
