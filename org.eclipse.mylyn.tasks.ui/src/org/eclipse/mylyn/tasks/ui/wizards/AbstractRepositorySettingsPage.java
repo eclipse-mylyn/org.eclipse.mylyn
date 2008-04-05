@@ -17,6 +17,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -1376,6 +1377,9 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 						}
 					} catch (CoreException e) {
 						validator.setStatus(e.getStatus());
+					} catch (OperationCanceledException e) {
+						validator.setStatus(Status.CANCEL_STATUS);
+						throw new InterruptedException();
 					} catch (Exception e) {
 						throw new InvocationTargetException(e);
 					} finally {
