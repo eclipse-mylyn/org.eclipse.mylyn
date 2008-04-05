@@ -146,7 +146,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		if (repositoryTask instanceof TracTask) {
 			try {
 				ITracClient client = getClientManager().getRepository(repository);
-				TracTicket ticket = client.getTicket(getTicketId(repositoryTask.getTaskId()));
+				TracTicket ticket = client.getTicket(getTicketId(repositoryTask.getTaskId()), monitor);
 				updateTaskFromTicket((TracTask) repositoryTask, ticket, false, client);
 			} catch (Exception e) {
 				throw new CoreException(TracCorePlugin.toStatus(e, repository));
@@ -178,7 +178,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		try {
 			client = getClientManager().getRepository(repository);
 			if (query instanceof TracRepositoryQuery) {
-				client.search(((TracRepositoryQuery) query).getTracSearch(), tickets);
+				client.search(((TracRepositoryQuery) query).getTracSearch(), tickets, monitor);
 			}
 
 			for (TracTicket ticket : tickets) {
@@ -225,7 +225,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 			try {
 				ITracClient client = getClientManager().getRepository(repository);
-				Set<Integer> ids = client.getChangedTickets(since);
+				Set<Integer> ids = client.getChangedTickets(since, monitor);
 				if (ids.isEmpty()) {
 					// repository is unchanged
 					return false;
@@ -237,7 +237,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 					// the repository synchronization timestamp is set to the
 					// most recent modification date
 					Integer id = ids.iterator().next();
-					Date lastChanged = client.getTicketLastChanged(id);
+					Date lastChanged = client.getTicketLastChanged(id, monitor);
 					if (since.equals(lastChanged)) {
 						// repository didn't actually change
 						return false;
@@ -272,7 +272,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			try {
 				int taskIdInt = getTicketId(taskId);
 				ITracClient client = getClientManager().getRepository(repository);
-				TracTicket ticket = client.getTicket(taskIdInt);
+				TracTicket ticket = client.getTicket(taskIdInt, monitor);
 
 				task = createTask(repository.getUrl(), taskId, "");
 				updateTaskFromTicket((TracTask) task, ticket, false, client);

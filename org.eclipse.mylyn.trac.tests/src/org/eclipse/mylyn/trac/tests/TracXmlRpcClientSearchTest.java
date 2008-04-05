@@ -39,7 +39,7 @@ public class TracXmlRpcClientSearchTest extends AbstractTracClientSearchTest {
 		TracSearch search = new TracSearch();
 		search.addFilter("summary", "summary1");
 		List<TracTicket> result = new ArrayList<TracTicket>();
-		repository.search(search, result);
+		repository.search(search, result, null);
 		assertEquals(1, result.size());
 		assertTicketEquals(tickets.get(0), result.get(0));
 		assertEquals("component1", result.get(0).getValue(Key.COMPONENT));

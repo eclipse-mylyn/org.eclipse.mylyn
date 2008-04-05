@@ -95,11 +95,13 @@ public interface ITracClient {
 	 * 
 	 * @param id
 	 *            the id of the ticket to get
+	 * @param monitor
+	 *            TODO
 	 * @return the ticket
 	 * @throws TracException
 	 *             thrown in case of a connection error
 	 */
-	TracTicket getTicket(int id) throws TracException;
+	TracTicket getTicket(int id, IProgressMonitor monitor) throws TracException;
 
 	/**
 	 * Returns the access type.
@@ -113,10 +115,12 @@ public interface ITracClient {
 	 *            the search criteria
 	 * @param result
 	 *            the list of found tickets
+	 * @param monitor
+	 *            TODO
 	 * @throws TracException
 	 *             thrown in case of a connection error
 	 */
-	void search(TracSearch query, List<TracTicket> result) throws TracException;
+	void search(TracSearch query, List<TracTicket> result, IProgressMonitor monitor) throws TracException;
 
 	/**
 	 * Validates the repository connection.
@@ -124,7 +128,7 @@ public interface ITracClient {
 	 * @throws TracException
 	 *             thrown in case of a connection error
 	 */
-	void validate(IProgressMonitor callback) throws TracException;
+	void validate(IProgressMonitor monitor) throws TracException;
 
 	/**
 	 * Returns true, if the repository details are cached. If this method returns true, invoking
@@ -160,18 +164,19 @@ public interface ITracClient {
 
 	TracVersion[] getVersions();
 
-	InputStream getAttachmentData(int ticketId, String filename) throws TracException;
+	InputStream getAttachmentData(int ticketId, String filename, IProgressMonitor monitor) throws TracException;
 
-	void putAttachmentData(int ticketId, String name, String description, InputStream source) throws TracException;
+	void putAttachmentData(int ticketId, String name, String description, InputStream source, IProgressMonitor monitor)
+			throws TracException;
 
-	void deleteAttachment(int ticketId, String filename) throws TracException;
+	void deleteAttachment(int ticketId, String filename, IProgressMonitor monitor) throws TracException;
 
 	/**
 	 * @return the id of the created ticket
 	 */
-	int createTicket(TracTicket ticket) throws TracException;
+	int createTicket(TracTicket ticket, IProgressMonitor monitor) throws TracException;
 
-	void updateTicket(TracTicket ticket, String comment) throws TracException;
+	void updateTicket(TracTicket ticket, String comment, IProgressMonitor monitor) throws TracException;
 
 	/**
 	 * Sets a reference to the cached repository attributes.
@@ -181,8 +186,8 @@ public interface ITracClient {
 	 */
 	void setData(TracClientData data);
 
-	Set<Integer> getChangedTickets(Date since) throws TracException;
+	Set<Integer> getChangedTickets(Date since, IProgressMonitor monitor) throws TracException;
 
-	Date getTicketLastChanged(Integer id) throws TracException;
+	Date getTicketLastChanged(Integer id, IProgressMonitor monitor) throws TracException;
 
 }

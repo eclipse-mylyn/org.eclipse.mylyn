@@ -46,7 +46,7 @@ public class TracAttachmentHandler extends AbstractAttachmentHandler {
 		try {
 			ITracClient client = connector.getClientManager().getRepository(repository);
 			int id = Integer.parseInt(attachment.getTaskId());
-			return client.getAttachmentData(id, filename);
+			return client.getAttachmentData(id, filename, monitor);
 		} catch (Exception e) {
 			throw new CoreException(TracCorePlugin.toStatus(e, repository));
 		}
@@ -66,10 +66,10 @@ public class TracAttachmentHandler extends AbstractAttachmentHandler {
 				ITracClient client = connector.getClientManager().getRepository(repository);
 				int id = Integer.parseInt(task.getTaskId());
 				client.putAttachmentData(id, attachment.getFilename(), attachment.getDescription(),
-						attachment.createInputStream());
+						attachment.createInputStream(), monitor);
 				if (comment != null && comment.length() > 0) {
 					TracTicket ticket = new TracTicket(id);
-					client.updateTicket(ticket, comment);
+					client.updateTicket(ticket, comment, monitor);
 				}
 			} catch (Exception e) {
 				throw new CoreException(TracCorePlugin.toStatus(e, repository));

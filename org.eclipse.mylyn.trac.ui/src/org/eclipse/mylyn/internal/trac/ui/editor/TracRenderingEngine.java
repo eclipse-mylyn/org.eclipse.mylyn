@@ -38,7 +38,7 @@ public class TracRenderingEngine extends AbstractRenderingEngine {
 					.getRepository(repository);
 			if (client instanceof TracXmlRpcClient) {
 				TracXmlRpcClient tracXmlRpcClient = (TracXmlRpcClient) client;
-				String htmlText = tracXmlRpcClient.wikiToHtml(text);
+				String htmlText = tracXmlRpcClient.wikiToHtml(text, monitor);
 				if (monitor.isCanceled()) {
 					throw new OperationCanceledException();
 				}

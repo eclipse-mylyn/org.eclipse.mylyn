@@ -47,11 +47,11 @@ public class TracTestCleanupUtil extends AbstractTracClientTest {
 	}
 
 	private void cleanup() throws TracException {
-		TracTicket ticket = repository.getTicket(data.attachmentTicketId);
+		TracTicket ticket = repository.getTicket(data.attachmentTicketId, null);
 		TracAttachment[] attachments = ticket.getAttachments();
 		// skips the first attachment
 		for (int i = 1; i < attachments.length; i++) {
-			repository.deleteAttachment(data.attachmentTicketId, attachments[i].getFilename());
+			repository.deleteAttachment(data.attachmentTicketId, attachments[i].getFilename(), null);
 		}
 	}
 

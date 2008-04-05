@@ -173,7 +173,7 @@ public class TracAttachmentHandlerTest extends TestCase {
 		attachmentHandler.uploadAttachment(repository, task, attachment, "comment", new NullProgressMonitor());
 
 		ITracClient client = connector.getClientManager().getRepository(repository);
-		InputStream in = client.getAttachmentData(data.attachmentTicketId, file.getName());
+		InputStream in = client.getAttachmentData(data.attachmentTicketId, file.getName(), null);
 		byte[] result = new byte[5];
 		in.read(result);
 		assertEquals("Mylar", new String(result));

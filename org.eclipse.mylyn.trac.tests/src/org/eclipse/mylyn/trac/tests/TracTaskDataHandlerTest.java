@@ -167,7 +167,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 		// change ticket making sure it gets a new change time
 		Thread.sleep(1000);
 		ticket.putBuiltinValue(Key.DESCRIPTION, lastModified + "");
-		client.updateTicket(ticket, "comment");
+		client.updateTicket(ticket, "comment", null);
 
 		task.setStale(false);
 		repository.setSynchronizationTimeStamp((lastModified + 1) + "");

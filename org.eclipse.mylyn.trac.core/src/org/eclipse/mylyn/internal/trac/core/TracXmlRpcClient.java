@@ -59,6 +59,7 @@ import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.web.core.AbstractWebLocation;
 import org.eclipse.mylyn.web.core.AuthenticationCredentials;
 import org.eclipse.mylyn.web.core.AuthenticationType;
+import org.eclipse.mylyn.web.core.Policy;
 import org.eclipse.mylyn.web.core.WebUtil;
 import org.eclipse.mylyn.web.core.AbstractWebLocation.ResultType;
 
@@ -240,11 +241,8 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		}
 	}
 
-	private Object call(String method, Object... parameters) throws TracException {
-		return call(null, method, parameters);
-	}
-
 	private Object call(IProgressMonitor monitor, String method, Object... parameters) throws TracException {
+		monitor = Policy.monitorFor(monitor);
 		while (true) {
 			getClient();
 
@@ -265,10 +263,6 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 				}
 			}
 		}
-	}
-
-	private Object[] multicall(Map<String, Object>... calls) throws TracException {
-		return multicall(null, calls);
 	}
 
 	private Object[] multicall(IProgressMonitor monitor, Map<String, Object>... calls) throws TracException {
@@ -328,40 +322,40 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 							+ REQUIRED_REVISION + " or later");
 		}
 
-		if (!isAPIVersionOrHigher(REQUIRED_EPOCH, REQUIRED_MAJOR, REQUIRED_MINOR)) {
+		if (!isAPIVersionOrHigher(REQUIRED_EPOCH, REQUIRED_MAJOR, REQUIRED_MINOR, monitor)) {
 			throw new TracException("The API version " + majorAPIVersion + "." + minorAPIVersion
 					+ " is unsupported, please update your Trac XML-RPC Plugin to revision " + REQUIRED_REVISION
 					+ " or later");
 		}
 	}
 
-	private void updateAPIVersion() throws TracException {
+	private void updateAPIVersion(IProgressMonitor monitor) throws TracException {
 		if (epochAPIVersion == -1 || majorAPIVersion == -1 || minorAPIVersion == -1) {
-			// TODO
-			validate(DEFAULT_MONITOR);
+			validate(monitor);
 		}
 	}
 
-	private boolean isAPIVersionOrHigher(int epoch, int major, int minor) throws TracException {
-		updateAPIVersion();
+	private boolean isAPIVersionOrHigher(int epoch, int major, int minor, IProgressMonitor monitor)
+			throws TracException {
+		updateAPIVersion(monitor);
 		return (epochAPIVersion > epoch || (epochAPIVersion == epoch && majorAPIVersion > major || (majorAPIVersion == major && minorAPIVersion >= minor)));
 	}
 
-	public TracTicket getTicket(int id) throws TracException {
-		Object[] result = (Object[]) call("ticket.get", id);
+	public TracTicket getTicket(int id, IProgressMonitor monitor) throws TracException {
+		Object[] result = (Object[]) call(monitor, "ticket.get", id);
 		TracTicket ticket = parseTicket(result);
 
-		result = (Object[]) call("ticket.changeLog", id, 0);
+		result = (Object[]) call(monitor, "ticket.changeLog", id, 0);
 		for (Object item : result) {
 			ticket.addComment(parseChangeLogEntry((Object[]) item));
 		}
 
-		result = (Object[]) call("ticket.listAttachments", id);
+		result = (Object[]) call(monitor, "ticket.listAttachments", id);
 		for (Object item : result) {
 			ticket.addAttachment(parseAttachment((Object[]) item));
 		}
 
-		String[] actions = getActions(id);
+		String[] actions = getActions(id, monitor);
 		ticket.setActions(actions);
 
 		updateAttributes(new NullProgressMonitor(), false);
@@ -400,13 +394,13 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 
 	/* public for testing */
 	@SuppressWarnings("unchecked")
-	public List<TracTicket> getTickets(int[] ids) throws TracException {
+	public List<TracTicket> getTickets(int[] ids, IProgressMonitor monitor) throws TracException {
 		Map<String, Object>[] calls = new Map[ids.length];
 		for (int i = 0; i < calls.length; i++) {
 			calls[i] = createMultiCall("ticket.get", ids[i]);
 		}
 
-		Object[] result = multicall(calls);
+		Object[] result = multicall(monitor, calls);
 		assert result.length == ids.length;
 
 		List<TracTicket> tickets = new ArrayList<TracTicket>(result.length);
@@ -419,15 +413,15 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 	}
 
 	@SuppressWarnings("unchecked")
-	public void search(TracSearch query, List<TracTicket> tickets) throws TracException {
+	public void search(TracSearch query, List<TracTicket> tickets, IProgressMonitor monitor) throws TracException {
 		// an empty query string is not valid, therefore prepend order
-		Object[] result = (Object[]) call("ticket.query", "order=id" + query.toQuery());
+		Object[] result = (Object[]) call(monitor, "ticket.query", "order=id" + query.toQuery());
 
 		Map<String, Object>[] calls = new Map[result.length];
 		for (int i = 0; i < calls.length; i++) {
 			calls[i] = createMultiCall("ticket.get", result[i]);
 		}
-		result = multicall(calls);
+		result = multicall(monitor, calls);
 
 		for (Object item : result) {
 			Object[] ticketResult = (Object[]) getMultiCallResult(item);
@@ -497,7 +491,7 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		Collections.sort(data.severities);
 		advance(monitor, 1);
 
-		boolean trac011 = isAPIVersionOrHigher(1, 0, 0);
+		boolean trac011 = isAPIVersionOrHigher(1, 0, 0, monitor);
 		attributes = getTicketAttributes("ticket.status", trac011, monitor);
 		data.ticketStatus = new ArrayList<TracTicketStatus>(result.length);
 		for (TicketAttributeResult attribute : attributes) {
@@ -598,7 +592,7 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 			calls[i] = createMultiCall(attributeType + ".get", ids[i]);
 		}
 
-		Object[] result = multicall(calls);
+		Object[] result = multicall(monitor, calls);
 		assert result.length == ids.length;
 
 		return result;
@@ -647,20 +641,20 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		return attributes;
 	}
 
-	public InputStream getAttachmentData(int ticketId, String filename) throws TracException {
-		byte[] data = (byte[]) call("ticket.getAttachment", ticketId, filename);
+	public InputStream getAttachmentData(int ticketId, String filename, IProgressMonitor monitor) throws TracException {
+		byte[] data = (byte[]) call(monitor, "ticket.getAttachment", ticketId, filename);
 		return new ByteArrayInputStream(data);
 	}
 
-	public void putAttachmentData(int ticketId, String filename, String description, InputStream in)
-			throws TracException {
+	public void putAttachmentData(int ticketId, String filename, String description, InputStream in,
+			IProgressMonitor monitor) throws TracException {
 		byte[] data;
 		try {
 			data = readData(in, new NullProgressMonitor());
 		} catch (IOException e) {
 			throw new TracException(e);
 		}
-		call("ticket.putAttachment", ticketId, filename, description, data, false);
+		call(monitor, "ticket.putAttachment", ticketId, filename, description, data, false);
 	}
 
 	private byte[] readData(InputStream in, IProgressMonitor monitor) throws IOException {
@@ -690,8 +684,8 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		}
 	}
 
-	public void deleteAttachment(int ticketId, String filename) throws TracException {
-		call("ticket.deleteAttachment", ticketId, filename);
+	public void deleteAttachment(int ticketId, String filename, IProgressMonitor monitor) throws TracException {
+		call(monitor, "ticket.deleteAttachment", ticketId, filename);
 	}
 
 	private class TicketAttributeResult {
@@ -702,34 +696,34 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 
 	}
 
-	public int createTicket(TracTicket ticket) throws TracException {
+	public int createTicket(TracTicket ticket, IProgressMonitor monitor) throws TracException {
 		Map<String, String> attributes = ticket.getValues();
 		String summary = attributes.remove(Key.SUMMARY.getKey());
 		String description = attributes.remove(Key.DESCRIPTION.getKey());
 		if (summary == null || description == null) {
 			throw new InvalidTicketException();
 		}
-		if (isAPIVersionOrHigher(0, 0, 2)) {
-			return (Integer) call("ticket.create", summary, description, attributes, true);
+		if (isAPIVersionOrHigher(0, 0, 2, monitor)) {
+			return (Integer) call(monitor, "ticket.create", summary, description, attributes, true);
 		} else {
-			return (Integer) call("ticket.create", summary, description, attributes);
+			return (Integer) call(monitor, "ticket.create", summary, description, attributes);
 		}
 	}
 
-	public void updateTicket(TracTicket ticket, String comment) throws TracException {
-		updateAPIVersion();
+	public void updateTicket(TracTicket ticket, String comment, IProgressMonitor monitor) throws TracException {
+		updateAPIVersion(monitor);
 
 		Map<String, String> attributes = ticket.getValues();
-		if (isAPIVersionOrHigher(0, 0, 2)) {
-			call("ticket.update", ticket.getId(), comment, attributes, true);
+		if (isAPIVersionOrHigher(0, 0, 2, monitor)) {
+			call(monitor, "ticket.update", ticket.getId(), comment, attributes, true);
 		} else {
-			call("ticket.update", ticket.getId(), comment, attributes);
+			call(monitor, "ticket.update", ticket.getId(), comment, attributes);
 		}
 	}
 
-	public Set<Integer> getChangedTickets(Date since) throws TracException {
+	public Set<Integer> getChangedTickets(Date since, IProgressMonitor monitor) throws TracException {
 		Object[] ids;
-		ids = (Object[]) call("ticket.getRecentChanges", since);
+		ids = (Object[]) call(monitor, "ticket.getRecentChanges", since);
 		Set<Integer> result = new HashSet<Integer>();
 		for (Object id : ids) {
 			result.add((Integer) id);
@@ -737,8 +731,8 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		return result;
 	}
 
-	public String[] getActions(int id) throws TracException {
-		Object[] actions = (Object[]) call("ticket.getAvailableActions", id);
+	public String[] getActions(int id, IProgressMonitor monitor) throws TracException {
+		Object[] actions = (Object[]) call(monitor, "ticket.getAvailableActions", id);
 		String[] result = new String[actions.length];
 		for (int i = 0; i < result.length; i++) {
 			result[i] = (String) actions[i];
@@ -746,23 +740,23 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		return result;
 	}
 
-	public Date getTicketLastChanged(Integer id) throws TracException {
-		Object[] result = (Object[]) call("ticket.get", id);
+	public Date getTicketLastChanged(Integer id, IProgressMonitor monitor) throws TracException {
+		Object[] result = (Object[]) call(monitor, "ticket.get", id);
 		return parseDate(result[2]);
 	}
 
-	public void validateWikiRpcApi() throws TracException {
-		if (((Integer) call("wiki.getRPCVersionSupported")) < 2) {
-			validate(new NullProgressMonitor());
+	public void validateWikiRpcApi(IProgressMonitor monitor) throws TracException {
+		if (((Integer) call(monitor, "wiki.getRPCVersionSupported")) < 2) {
+			validate(monitor);
 		}
 	}
 
-	public String wikiToHtml(String sourceText) throws TracException {
-		return (String) call("wiki.wikiToHtml", sourceText);
+	public String wikiToHtml(String sourceText, IProgressMonitor monitor) throws TracException {
+		return (String) call(monitor, "wiki.wikiToHtml", sourceText);
 	}
 
-	public String[] getAllWikiPageNames() throws TracException {
-		Object[] result = (Object[]) call("wiki.getAllPages");
+	public String[] getAllWikiPageNames(IProgressMonitor monitor) throws TracException {
+		Object[] result = (Object[]) call(monitor, "wiki.getAllPages");
 		String[] wikiPageNames = new String[result.length];
 		for (int i = 0; i < wikiPageNames.length; i++) {
 			wikiPageNames[i] = (String) result[i];
@@ -770,31 +764,33 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		return wikiPageNames;
 	}
 
-	public TracWikiPageInfo getWikiPageInfo(String pageName) throws TracException {
-		return getWikiPageInfo(pageName, LATEST_VERSION);
+	public TracWikiPageInfo getWikiPageInfo(String pageName, IProgressMonitor monitor) throws TracException {
+		return getWikiPageInfo(pageName, LATEST_VERSION, null);
 	}
 
-	public TracWikiPageInfo getWikiPageInfo(String pageName, int version) throws TracException {
+	public TracWikiPageInfo getWikiPageInfo(String pageName, int version, IProgressMonitor monitor)
+			throws TracException {
 		// Note: if an unexpected null value is passed to XmlRpcPlugin, XmlRpcClient will throw a TracRemoteException. 
 		//       So, this null-parameter checking may be omitted if resorting to XmlRpcClient is more appropriate.
 		if (pageName == null) {
 			throw new IllegalArgumentException("Wiki page name cannot be null");
 		}
 
-		Object result = (version == LATEST_VERSION) ? call("wiki.getPageInfo", pageName) //
-				: call("wiki.getPageInfoVersion", pageName, version);
+		Object result = (version == LATEST_VERSION) ? call(monitor, "wiki.getPageInfo", pageName) //
+				: call(monitor, "wiki.getPageInfoVersion", pageName, version);
 		return parseWikiPageInfo(result);
 	}
 
 	@SuppressWarnings("unchecked")
-	public TracWikiPageInfo[] getWikiPageInfoAllVersions(String pageName) throws TracException {
-		TracWikiPageInfo latestVersion = getWikiPageInfo(pageName);
+	public TracWikiPageInfo[] getWikiPageInfoAllVersions(String pageName, IProgressMonitor monitor)
+			throws TracException {
+		TracWikiPageInfo latestVersion = getWikiPageInfo(pageName, null);
 		Map<String, Object>[] calls = new Map[latestVersion.getVersion() - 1];
 		for (int i = 0; i < calls.length; i++) {
 			calls[i] = createMultiCall("wiki.getPageInfoVersion", pageName, i + 1);
 		}
 
-		Object[] result = multicall(calls);
+		Object[] result = multicall(monitor, calls);
 
 		TracWikiPageInfo[] versions = new TracWikiPageInfo[result.length + 1];
 		for (int i = 0; i < result.length; i++) {
@@ -822,11 +818,11 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		}
 	}
 
-	public String getWikiPageContent(String pageName) throws TracException {
-		return getWikiPageContent(pageName, LATEST_VERSION);
+	public String getWikiPageContent(String pageName, IProgressMonitor monitor) throws TracException {
+		return getWikiPageContent(pageName, LATEST_VERSION, null);
 	}
 
-	public String getWikiPageContent(String pageName, int version) throws TracException {
+	public String getWikiPageContent(String pageName, int version, IProgressMonitor monitor) throws TracException {
 		// Note: if an unexpected null value is passed to XmlRpcPlugin, XmlRpcClient will throw a TracRemoteException. 
 		//       So, this null-parameter checking may be omitted if resorting to XmlRpcClient is more appropriate.
 		if (pageName == null) {
@@ -834,35 +830,35 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		}
 		if (version == LATEST_VERSION) {
 			// XmlRpcClient throws a TracRemoteException if pageName or version doesn't exist
-			return (String) call("wiki.getPage", pageName);
+			return (String) call(monitor, "wiki.getPage", pageName);
 		} else {
-			return (String) call("wiki.getPageVersion", pageName, version);
+			return (String) call(monitor, "wiki.getPageVersion", pageName, version);
 		}
 	}
 
-	public String getWikiPageHtml(String pageName) throws TracException {
-		return getWikiPageHtml(pageName, LATEST_VERSION);
+	public String getWikiPageHtml(String pageName, IProgressMonitor monitor) throws TracException {
+		return getWikiPageHtml(pageName, LATEST_VERSION, null);
 	}
 
-	public String getWikiPageHtml(String pageName, int version) throws TracException {
+	public String getWikiPageHtml(String pageName, int version, IProgressMonitor monitor) throws TracException {
 		if (pageName == null) {
 			throw new IllegalArgumentException("Wiki page name cannot be null");
 		}
 
 		if (version == LATEST_VERSION) {
 			// XmlRpcClient throws a TracRemoteException if pageName or version doesn't exist
-			return (String) call("wiki.getPageHTML", pageName);
+			return (String) call(monitor, "wiki.getPageHTML", pageName);
 		} else {
-			return (String) call("wiki.getPageHTMLVersion", pageName, version);
+			return (String) call(monitor, "wiki.getPageHTMLVersion", pageName, version);
 		}
 	}
 
-	public TracWikiPageInfo[] getRecentWikiChanges(Date since) throws TracException {
+	public TracWikiPageInfo[] getRecentWikiChanges(Date since, IProgressMonitor monitor) throws TracException {
 		if (since == null) {
 			throw new IllegalArgumentException("Date parameter cannot be null");
 		}
 
-		Object[] result = (Object[]) call("wiki.getRecentChanges", since);
+		Object[] result = (Object[]) call(monitor, "wiki.getRecentChanges", since);
 		TracWikiPageInfo[] changes = new TracWikiPageInfo[result.length];
 		for (int i = 0; i < result.length; i++) {
 			changes[i] = parseWikiPageInfo(result[i]);
@@ -870,25 +866,26 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		return changes;
 	}
 
-	public TracWikiPage getWikiPage(String pageName) throws TracException {
-		return getWikiPage(pageName, LATEST_VERSION);
+	public TracWikiPage getWikiPage(String pageName, IProgressMonitor monitor) throws TracException {
+		return getWikiPage(pageName, LATEST_VERSION, null);
 	}
 
-	public TracWikiPage getWikiPage(String pageName, int version) throws TracException {
+	public TracWikiPage getWikiPage(String pageName, int version, IProgressMonitor monitor) throws TracException {
 		TracWikiPage page = new TracWikiPage();
-		page.setPageInfo(getWikiPageInfo(pageName, version));
-		page.setContent(getWikiPageContent(pageName, version));
-		page.setPageHTML(getWikiPageHtml(pageName, version));
+		page.setPageInfo(getWikiPageInfo(pageName, version, null));
+		page.setContent(getWikiPageContent(pageName, version, null));
+		page.setPageHTML(getWikiPageHtml(pageName, version, null));
 		return page;
 	}
 
-	public boolean putWikipage(String pageName, String content, Map<String, Object> attributes) throws TracException {
-		Boolean result = (Boolean) call("wiki.putPage", pageName, content, attributes);
+	public boolean putWikipage(String pageName, String content, Map<String, Object> attributes, IProgressMonitor monitor)
+			throws TracException {
+		Boolean result = (Boolean) call(monitor, "wiki.putPage", pageName, content, attributes);
 		return result.booleanValue();
 	}
 
-	public String[] listWikiPageAttachments(String pageName) throws TracException {
-		Object[] result = (Object[]) call("wiki.listAttachments", pageName);
+	public String[] listWikiPageAttachments(String pageName, IProgressMonitor monitor) throws TracException {
+		Object[] result = (Object[]) call(monitor, "wiki.listAttachments", pageName);
 		String[] attachments = new String[result.length];
 		for (int i = 0; i < attachments.length; i++) {
 			attachments[i] = (String) result[i];
@@ -896,9 +893,10 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		return attachments;
 	}
 
-	public InputStream getWikiPageAttachmentData(String pageName, String fileName) throws TracException {
+	public InputStream getWikiPageAttachmentData(String pageName, String fileName, IProgressMonitor monitor)
+			throws TracException {
 		String attachmentName = pageName + "/" + fileName;
-		byte[] data = (byte[]) call("wiki.getAttachment", attachmentName);
+		byte[] data = (byte[]) call(monitor, "wiki.getAttachment", attachmentName);
 		return new ByteArrayInputStream(data);
 	}
 
@@ -924,13 +922,13 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 	 * @throws TracException
 	 */
 	public String putWikiPageAttachmentData(String pageName, String fileName, String description, InputStream in,
-			boolean replace) throws TracException {
+			boolean replace, IProgressMonitor monitor) throws TracException {
 		byte[] data;
 		try {
 			data = readData(in, new NullProgressMonitor());
 		} catch (IOException e) {
 			throw new TracException(e);
 		}
-		return (String) call("wiki.putAttachmentEx", pageName, fileName, description, data, replace);
+		return (String) call(monitor, "wiki.putAttachmentEx", pageName, fileName, description, data, replace);
 	}
 }

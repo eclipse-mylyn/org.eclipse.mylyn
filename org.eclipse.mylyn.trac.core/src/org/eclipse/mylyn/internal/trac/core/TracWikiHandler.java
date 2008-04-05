@@ -32,7 +32,7 @@ public class TracWikiHandler extends AbstractWikiHandler {
 	public String[] downloadAllPageNames(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
 		monitor.beginTask("Download Wiki Page Names", IProgressMonitor.UNKNOWN);
 		try {
-			String[] names = getTracWikiClient(repository).getAllWikiPageNames();
+			String[] names = getTracWikiClient(repository).getAllWikiPageNames(monitor);
 			return names;
 		} catch (TracException e) {
 			throw new CoreException(TracCorePlugin.toStatus(e, repository));
@@ -46,7 +46,7 @@ public class TracWikiHandler extends AbstractWikiHandler {
 			throws CoreException {
 		monitor.beginTask("Download Wiki Page", IProgressMonitor.UNKNOWN);
 		try {
-			TracWikiPage page = getTracWikiClient(repository).getWikiPage(pageName);
+			TracWikiPage page = getTracWikiClient(repository).getWikiPage(pageName, monitor);
 			return page;
 		} catch (TracException e) {
 			throw new CoreException(TracCorePlugin.toStatus(e, repository));
@@ -65,7 +65,7 @@ public class TracWikiHandler extends AbstractWikiHandler {
 			Map<String, Object> attributes = new HashMap<String, Object>();
 			attributes.put("comment", newPage.getPageInfo().getComment());
 			attributes.put("author", newPage.getPageInfo().getAuthor());
-			boolean success = getTracWikiClient(repository).putWikipage(pageName, content, attributes);
+			boolean success = getTracWikiClient(repository).putWikipage(pageName, content, attributes, monitor);
 			if (success) {
 				return;
 			} else {
@@ -84,7 +84,7 @@ public class TracWikiHandler extends AbstractWikiHandler {
 			throws CoreException {
 		monitor.beginTask("Retrieve Wiki Page History", IProgressMonitor.UNKNOWN);
 		try {
-			TracWikiPageInfo[] versions = getTracWikiClient(repository).getWikiPageInfoAllVersions(pageName);
+			TracWikiPageInfo[] versions = getTracWikiClient(repository).getWikiPageInfoAllVersions(pageName, monitor);
 			return versions;
 		} catch (TracException e) {
 			throw new CoreException(TracCorePlugin.toStatus(e, repository));

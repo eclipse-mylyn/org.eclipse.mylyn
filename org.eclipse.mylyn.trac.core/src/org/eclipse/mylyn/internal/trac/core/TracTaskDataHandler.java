@@ -63,10 +63,11 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 	@Override
 	public RepositoryTaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
 			throws CoreException {
-		return downloadTaskData(repository, TracRepositoryConnector.getTicketId(taskId));
+		return downloadTaskData(repository, TracRepositoryConnector.getTicketId(taskId), monitor);
 	}
 
-	public RepositoryTaskData downloadTaskData(TaskRepository repository, int id) throws CoreException {
+	public RepositoryTaskData downloadTaskData(TaskRepository repository, int id, IProgressMonitor monitor)
+			throws CoreException {
 		if (!TracRepositoryConnector.hasRichEditor(repository)) {
 			// offline mode is only supported for XML-RPC
 			return null;
@@ -76,8 +77,8 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 			RepositoryTaskData data = new RepositoryTaskData(attributeFactory, TracCorePlugin.REPOSITORY_KIND,
 					repository.getUrl(), id + "");
 			ITracClient client = connector.getClientManager().getRepository(repository);
-			client.updateAttributes(new NullProgressMonitor(), false);
-			TracTicket ticket = client.getTicket(id);
+			client.updateAttributes(monitor, false);
+			TracTicket ticket = client.getTicket(id, monitor);
 			createDefaultAttributes(attributeFactory, data, client, true);
 			updateTaskData(repository, attributeFactory, data, ticket);
 			return data;
@@ -337,10 +338,10 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 			TracTicket ticket = TracRepositoryConnector.getTracTicket(repository, taskData);
 			ITracClient server = connector.getClientManager().getRepository(repository);
 			if (taskData.isNew()) {
-				int id = server.createTicket(ticket);
+				int id = server.createTicket(ticket, monitor);
 				return id + "";
 			} else {
-				server.updateTicket(ticket, taskData.getNewComment());
+				server.updateTicket(ticket, taskData.getNewComment(), monitor);
 				return null;
 			}
 		} catch (OperationCanceledException e) {

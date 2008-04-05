@@ -19,7 +19,6 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.internal.trac.core.model.TracComponent;
 import org.eclipse.mylyn.internal.trac.core.model.TracMilestone;
 import org.eclipse.mylyn.internal.trac.core.model.TracPriority;
@@ -41,8 +40,6 @@ public abstract class AbstractTracClient implements ITracClient {
 	protected static final String USER_AGENT = "TracConnector";
 
 	private static final String LOGIN_COOKIE_NAME = "trac_auth";
-
-	protected static final IProgressMonitor DEFAULT_MONITOR = new NullProgressMonitor();
 
 	protected final String repositoryUrl;
 

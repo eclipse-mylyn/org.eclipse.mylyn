@@ -21,8 +21,8 @@ public class TracTestUtil {
 		TracTicket ticket = new TracTicket();
 		ticket.putBuiltinValue(Key.SUMMARY, summary);
 		ticket.putBuiltinValue(Key.DESCRIPTION, "");
-		int id = client.createTicket(ticket);
-		return client.getTicket(id);
+		int id = client.createTicket(ticket, null);
+		return client.getTicket(id, null);
 	}
 
 }

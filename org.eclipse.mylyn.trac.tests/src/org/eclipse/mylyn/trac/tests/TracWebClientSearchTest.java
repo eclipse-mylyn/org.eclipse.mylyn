@@ -40,7 +40,7 @@ public class TracWebClientSearchTest extends AbstractTracClientSearchTest {
 		search.addFilter("milestone", "mile&stone");
 		search.setOrderBy("id");
 		List<TracTicket> result = new ArrayList<TracTicket>();
-		repository.search(search, result);
+		repository.search(search, result, null);
 		assertEquals(1, result.size());
 		assertTicketEquals(tickets.get(7), result.get(0));
 	}
