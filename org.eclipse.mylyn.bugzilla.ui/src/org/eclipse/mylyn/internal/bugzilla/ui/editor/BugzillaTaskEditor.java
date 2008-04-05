@@ -183,7 +183,6 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			final StyledText urlText = urlTextViewer.getTextWidget();
 			urlText.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 			urlText.setIndent(2);
-
 			final RepositoryTaskAttribute urlAttribute = attribute;
 
 			urlTextViewer.setEditable(true);
@@ -196,9 +195,10 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 					}
 				}
 			});
-
-			GridDataFactory.fillDefaults().hint(135, SWT.DEFAULT).applyTo(urlText);
-
+			GridData textData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+			textData.horizontalSpan = 1;
+			textData.widthHint = 135;
+			urlText.setLayoutData(textData);
 			if (hasChanged(attribute)) {
 				urlText.setBackground(getColorIncoming());
 			}
