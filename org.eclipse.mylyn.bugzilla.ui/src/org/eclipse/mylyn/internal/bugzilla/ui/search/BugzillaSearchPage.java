@@ -1082,6 +1082,23 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 	@Override
 	public boolean isPageComplete() {
+		String message = null;
+		if (daysText != null) {
+			String days = daysText.getText();
+			if (days.length() > 0) {
+				try {
+					if (Integer.parseInt(days) < 0) {
+						message = NUM_DAYS_POSITIVE + days + " is invalid.";
+						setErrorMessage(message);
+						return false;
+					}
+				} catch (NumberFormatException ex) {
+					message = NUM_DAYS_POSITIVE + days + " is invalid.";
+					setErrorMessage(message);
+					return false;
+				}
+			}
+		}
 		return getWizard() == null ? canQuery() : canQuery() && super.isPageComplete();
 	}
 
@@ -1381,22 +1398,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	}
 
 	public void handleEvent(Event event) {
-		String message = null;
-		if (event.widget == daysText) {
-			String days = daysText.getText();
-			if (days.length() > 0) {
-				try {
-					if (Integer.parseInt(days) < 0) {
-						message = NUM_DAYS_POSITIVE + days + " is invalid.";
-					}
-				} catch (NumberFormatException ex) {
-					message = NUM_DAYS_POSITIVE + days + " is invalid.";
-				}
-			}
-		}
-
-		setPageComplete(message == null);
-		setErrorMessage(message);
 		if (getWizard() != null) {
 			getWizard().getContainer().updateButtons();
 		}
