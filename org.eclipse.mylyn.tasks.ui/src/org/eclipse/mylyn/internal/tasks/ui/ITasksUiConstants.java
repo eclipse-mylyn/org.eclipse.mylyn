@@ -25,7 +25,9 @@ public interface ITasksUiConstants {
 
 	public static final String DEFAULT_BACKUP_FOLDER_NAME = "backup";
 
-	public static final String DEFAULT_TASK_LIST_FILE = "tasklist" + FILE_EXTENSION;
+	public static final String PREFIX_TASKLIST = "tasklist";
+
+	public static final String DEFAULT_TASK_LIST_FILE = PREFIX_TASKLIST + FILE_EXTENSION;
 
 	public static final String FILENAME_ENCODING = "UTF-8";
 

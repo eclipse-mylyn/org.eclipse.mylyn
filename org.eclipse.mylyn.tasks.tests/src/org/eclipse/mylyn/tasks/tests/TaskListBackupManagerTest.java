@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.tasks.tests;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
@@ -63,12 +64,28 @@ public class TaskListBackupManagerTest extends TestCase {
 		assertFalse(TasksUiPlugin.getDefault().getPreferenceStore().getLong(TasksUiPreferenceConstants.BACKUP_LAST) == 0);
 		assertTrue(backupFileFolder.exists());
 		assertTrue(backupFileFolder.isDirectory());
-		assertTrue(backupFileFolder.listFiles().length == 1);
+		assertTrue(backupFileFolder.listFiles(new FilenameFilter() {
+			public boolean accept(File dir, String name) {
+				if (name.matches("mylyndata-.*")) {
+					return true;
+				}
+				return false;
+			}
+
+		}).length == 1);
 
 		// Test removal of old backups
 		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TasksUiPreferenceConstants.BACKUP_MAXFILES, 0);
-		backupManager.removeOldBackups(backupFileFolder);
-		assertEquals(0, backupFileFolder.listFiles().length);
+		TasksUiPlugin.getDefault().getBackupManager().removeOldBackups(backupFileFolder);
+		assertTrue(backupFileFolder.listFiles(new FilenameFilter() {
+			public boolean accept(File dir, String name) {
+				if (name.matches("mylyndata-.*")) {
+					return true;
+				}
+				return false;
+			}
+
+		}).length == 0);
 
 		// TODO: Test that OLDEST backups are deleted first.
 

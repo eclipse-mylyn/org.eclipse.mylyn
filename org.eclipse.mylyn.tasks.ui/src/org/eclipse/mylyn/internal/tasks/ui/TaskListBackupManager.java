@@ -10,12 +10,19 @@ package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Locale;
+import java.util.SortedMap;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -25,6 +32,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDataExportJob;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataExportWizard;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -35,6 +43,8 @@ import org.eclipse.ui.progress.IProgressService;
  * @author Rob Elves
  */
 public class TaskListBackupManager implements IPropertyChangeListener {
+
+	public static final String TIMESTAMP_FORMAT = "yyyy-MM-dd-HHmmss";
 
 	private static final String TITLE_TASKLIST_BACKUP = "Tasklist Backup";
 
@@ -51,6 +61,8 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 	private static final long DAY = 24 * HOUR;
 
 	private Timer timer;
+
+	//private static final Pattern zipPattern = Pattern.compile("^" + TaskDataExportWizard.ZIP_FILE_PREFIX + ".*");
 
 	public TaskListBackupManager() {
 		int days = TasksUiPlugin.getDefault().getPreferenceStore().getInt(TasksUiPreferenceConstants.BACKUP_SCHEDULE);
@@ -142,6 +154,98 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 				for (int x = 0; x < toomany; x++) {
 					if (backupFileArray[x] != null) {
 						backupFileArray[x].delete();
+					}
+				}
+			}
+		}
+	}
+
+	/** public for testing purposes */
+	public synchronized static void removeOldBackups(File folder, Pattern pattern, int maxBackups) {
+
+		if (maxBackups <= 0) {
+			maxBackups = 1;
+		}
+
+		File[] files = folder.listFiles();
+		ArrayList<File> backupFiles = new ArrayList<File>();
+		for (File file : files) {
+			Matcher matcher = pattern.matcher(file.getName());
+			if (matcher.find()) {
+				backupFiles.add(file);
+			}
+		}
+
+		File[] backupFileArray = backupFiles.toArray(new File[backupFiles.size()]);
+
+		if (backupFileArray != null && backupFileArray.length > 0) {
+			Arrays.sort(backupFileArray, new Comparator<File>() {
+				public int compare(File file1, File file2) {
+					return new Long((file1).lastModified()).compareTo(new Long((file2).lastModified()));
+				}
+			});
+
+			SortedMap<Long, File> filesMap = new TreeMap<Long, File>();
+			for (File file2 : backupFileArray) {
+				String name = file2.getName();
+				if (name.startsWith(ITasksUiConstants.PREFIX_TASKLIST)) {
+					try {
+						String dateString = name.substring(ITasksUiConstants.PREFIX_TASKLIST.length() + 1,
+								ITasksUiConstants.PREFIX_TASKLIST.length() + TIMESTAMP_FORMAT.length() + 1);
+						SimpleDateFormat format = new SimpleDateFormat(TIMESTAMP_FORMAT, Locale.ENGLISH);
+						Date date = format.parse(dateString);
+						filesMap.put(new Long(date.getTime()), file2);
+					} catch (Exception e) {
+						continue;
+					}
+				}
+			}
+
+			if (filesMap.size() > 0) {
+
+				Calendar rangeStart = TaskActivityUtil.getCalendar();
+				rangeStart.setTimeInMillis(filesMap.lastKey());
+				TaskActivityUtil.snapStartOfHour(rangeStart);
+				int startHour = rangeStart.get(Calendar.HOUR_OF_DAY);
+				Calendar rangeEnd = TaskActivityUtil.getCalendar();
+				rangeEnd.setTimeInMillis(rangeStart.getTimeInMillis());
+				rangeEnd.add(Calendar.HOUR_OF_DAY, 1);
+				// Keep one backup for last 8 hours of today
+				for (int x = 1; x <= startHour && x < 9; x++) {
+					SortedMap<Long, File> subMap = filesMap.subMap(rangeStart.getTimeInMillis(),
+							rangeEnd.getTimeInMillis());
+					if (subMap.size() > 1) {
+						while (subMap.size() > 1) {
+							File toDelete = subMap.remove(subMap.firstKey());
+							toDelete.delete();
+						}
+					}
+					rangeStart.add(Calendar.HOUR_OF_DAY, -1);
+					rangeEnd.add(Calendar.HOUR_OF_DAY, -1);
+				}
+
+				// Keep one backup a day for the past 12 days
+				rangeEnd.setTimeInMillis(rangeStart.getTimeInMillis());
+				rangeStart.add(Calendar.DAY_OF_YEAR, -1);
+				for (int x = 1; x <= 12; x++) {
+					SortedMap<Long, File> subMap = filesMap.subMap(rangeStart.getTimeInMillis(),
+							rangeEnd.getTimeInMillis());
+					if (subMap.size() > 1) {
+						while (subMap.size() > 1) {
+							File toDelete = subMap.remove(subMap.firstKey());
+							toDelete.delete();
+						}
+					}
+					rangeStart.add(Calendar.DAY_OF_YEAR, -1);
+					rangeEnd.add(Calendar.DAY_OF_YEAR, -1);
+				}
+
+				// Remove all older backups
+				SortedMap<Long, File> subMap = filesMap.subMap(0l, rangeStart.getTimeInMillis());
+				if (subMap.size() > 0) {
+					while (subMap.size() > 0) {
+						File toDelete = subMap.remove(subMap.firstKey());
+						toDelete.delete();
 					}
 				}
 			}

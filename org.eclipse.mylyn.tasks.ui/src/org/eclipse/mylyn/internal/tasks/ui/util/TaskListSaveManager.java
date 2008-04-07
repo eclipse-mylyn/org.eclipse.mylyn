@@ -14,11 +14,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Queue;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -29,6 +33,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListBackupManager;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
@@ -51,6 +56,10 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 	private final TaskListSaverJob taskListSaverJob;
 
 	private boolean initializationWarningDialogShow = false;
+
+	private static final int MAX_TASKLIST_SNAPSHOTS = 8;
+
+	public static final Pattern SNAPSHOT_REGEXP = Pattern.compile("^tasklist-.*");
 
 	public TaskListSaveManager() {
 		saveTimer = new BackgroundSaveTimer(this);
@@ -124,7 +133,33 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 	}
 
 	private synchronized void internalSaveTaskList() {
+		// copy original file to saved copy, write new file.
 		TaskListManager taskListManager = TasksUiPlugin.getTaskListManager();
+		File current = taskListManager.getTaskListFile();
+		SimpleDateFormat format = new SimpleDateFormat(TaskListBackupManager.TIMESTAMP_FORMAT, Locale.ENGLISH);
+		String date = format.format(new Date());
+		String backupFileName = ITasksUiConstants.PREFIX_TASKLIST + "-" + date + ITasksUiConstants.FILE_EXTENSION;
+
+		String destination = TasksUiPlugin.getDefault().getBackupFolderPath();
+
+		File backupFolder = new File(destination);
+		if (!backupFolder.exists()) {
+			backupFolder.mkdir();
+		}
+
+		File backup = new File(backupFolder, backupFileName);
+		if (current.renameTo(backup)) {
+			TaskListBackupManager.removeOldBackups(backupFolder, SNAPSHOT_REGEXP, MAX_TASKLIST_SNAPSHOTS);
+
+			String newTasklistPath = TasksUiPlugin.getDefault().getDataDirectory() + File.separator
+					+ ITasksUiConstants.DEFAULT_TASK_LIST_FILE;
+			File newTaskListFile = new File(newTasklistPath);
+			taskListManager.setTaskListFile(newTaskListFile);
+		} else {
+			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
+					"Unable to create task list snapshot " + backup.getAbsolutePath()));
+		}
+
 		taskListManager.getTaskListWriter().writeTaskList(taskListManager.getTaskList(),
 				taskListManager.getTaskListFile());
 	}
