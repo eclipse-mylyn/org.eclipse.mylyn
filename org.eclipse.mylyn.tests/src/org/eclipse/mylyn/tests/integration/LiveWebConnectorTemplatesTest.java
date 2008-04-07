@@ -48,7 +48,7 @@ public class LiveWebConnectorTemplatesTest extends TestCase {
 	public void testRepositoryTemplate() throws Throwable {
 		IProgressMonitor monitor = new NullProgressMonitor();
 		MultiStatus queryStatus = new MultiStatus(TasksUiPlugin.ID_PLUGIN, IStatus.OK, "Query result", null);
-		final List<AbstractTask> hits = new ArrayList<AbstractTask>();
+		final List<RepositoryTaskData> hits = new ArrayList<RepositoryTaskData>();
 		QueryHitCollector collector = new QueryHitCollector(new ITaskFactory() {
 
 			public AbstractTask createTask(RepositoryTaskData taskData, IProgressMonitor monitor) throws CoreException {
@@ -57,7 +57,7 @@ public class LiveWebConnectorTemplatesTest extends TestCase {
 			}
 		}) {
 			@Override
-			public void accept(AbstractTask hit) {
+			public void accept(RepositoryTaskData hit) {
 				hits.add(hit);
 			}
 		};
@@ -90,7 +90,7 @@ public class LiveWebConnectorTemplatesTest extends TestCase {
 				repositoryUrl, params);
 
 		WebRepositoryConnector connector = new WebRepositoryConnector();
-		IStatus status = connector.performQuery(query, repository, monitor, collector);
+		IStatus status = connector.performQuery(repository, query, collector, null, monitor);
 
 //		IStatus resultingStatus; 
 //		if(regexp!=null && regexp.length()>0) {
