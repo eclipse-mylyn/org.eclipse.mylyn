@@ -24,6 +24,8 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskComment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.web.core.AuthenticationCredentials;
+import org.eclipse.mylyn.web.core.AuthenticationType;
 
 /**
  * @author Shawn Minto
@@ -40,9 +42,27 @@ public class PersonProposalProvider implements IContentProposalProvider {
 
 	private SortedSet<String> addressSet = null;
 
-	public PersonProposalProvider(AbstractTask repositoryTask, RepositoryTaskData taskData) {
-		this.currentTask = repositoryTask;
+	private String repositoryUrl;
+
+	private String connectorKind;
+
+	public PersonProposalProvider(AbstractTask task, RepositoryTaskData taskData) {
+		this.currentTask = task;
 		this.currentTaskData = taskData;
+		if (task != null) {
+			repositoryUrl = task.getRepositoryUrl();
+			connectorKind = task.getConnectorKind();
+		} else if (taskData != null) {
+			repositoryUrl = taskData.getRepositoryUrl();
+			connectorKind = taskData.getConnectorKind();
+		}
+	}
+
+	public PersonProposalProvider(String repositoryUrl, String repositoryKind) {
+		this.currentTask = null;
+		this.currentTaskData = null;
+		this.repositoryUrl = repositoryUrl;
+		this.connectorKind = repositoryKind;
 	}
 
 	public IContentProposal[] getProposals(String contents, int position) {
@@ -112,46 +132,31 @@ public class PersonProposalProvider implements IContentProposalProvider {
 		if (currentTask != null) {
 			addAddress(currentTask.getOwner(), addressSet);
 		}
-		addAddresses(currentTaskData, addressSet);
 
-		String repositoryUrl = null;
-		String repositoryKind = null;
-
-		if (currentTask != null) {
-			repositoryUrl = currentTask.getRepositoryUrl();
-			repositoryKind = currentTask.getConnectorKind();
+		if (currentTaskData != null) {
+			addAddresses(currentTaskData, addressSet);
 		}
 
-		if (repositoryUrl == null || repositoryKind == null) {
-			if (currentTaskData != null) {
-				repositoryUrl = currentTaskData.getRepositoryUrl();
-				repositoryKind = currentTaskData.getConnectorKind();
-			}
-		}
-
-		if (repositoryUrl != null && repositoryKind != null) {
+		if (repositoryUrl != null && connectorKind != null) {
 			Set<AbstractTask> tasks = new HashSet<AbstractTask>();
 			if (currentTask != null) {
 				tasks.add(currentTask);
 			}
 
-			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryKind,
-					repositoryUrl);
+			TaskRepository repository = TasksUiPlugin.getRepositoryManager()
+					.getRepository(connectorKind, repositoryUrl);
 
 			if (repository != null) {
-				currentUser = repository.getUserName();
-				if (currentUser != null && !repository.isAnonymous()) {
-					addressSet.add(currentUser);
+				AuthenticationCredentials credentials = repository.getCredentials(AuthenticationType.REPOSITORY);
+				if (credentials != null && credentials.getUserName().length() > 0) {
+					addressSet.add(credentials.getUserName());
 				}
 			}
 
 			Collection<AbstractTask> allTasks = TasksUiPlugin.getTaskListManager().getTaskList().getAllTasks();
 			for (AbstractTask task : allTasks) {
-				if (task != null) {
-					AbstractTask repositoryTask = task;
-					if (repositoryTask.getRepositoryUrl().equals(repositoryUrl)) {
-						tasks.add(repositoryTask);
-					}
+				if (repositoryUrl.equals(task.getRepositoryUrl())) {
+					tasks.add(task);
 				}
 			}
 
@@ -170,18 +175,16 @@ public class PersonProposalProvider implements IContentProposalProvider {
 	}
 
 	private void addAddresses(RepositoryTaskData data, Set<String> addressSet) {
-		if (data != null) {
-			// addressSet.add(data.getAssignedTo());  // owner
-			addAddress(data.getReporter(), addressSet); // ??
-			for (String address : data.getCc()) {
-				addAddress(address, addressSet);
-			}
-			for (TaskComment comment : currentTaskData.getComments()) {
-				addAddress(comment.getAuthor(), addressSet);
-			}
-			for (RepositoryAttachment attachment : currentTaskData.getAttachments()) {
-				addAddress(attachment.getCreator(), addressSet);
-			}
+		// addressSet.add(data.getAssignedTo());  // owner
+		addAddress(data.getReporter(), addressSet); // ??
+		for (String address : data.getCc()) {
+			addAddress(address, addressSet);
+		}
+		for (TaskComment comment : currentTaskData.getComments()) {
+			addAddress(comment.getAuthor(), addressSet);
+		}
+		for (RepositoryAttachment attachment : currentTaskData.getAttachments()) {
+			addAddress(attachment.getCreator(), addressSet);
 		}
 	}
 

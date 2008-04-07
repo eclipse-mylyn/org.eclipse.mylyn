@@ -22,7 +22,14 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.fieldassist.ComboContentAdapter;
+import org.eclipse.jface.fieldassist.ContentProposalAdapter;
+import org.eclipse.jface.fieldassist.ControlDecoration;
+import org.eclipse.jface.fieldassist.FieldDecoration;
+import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
+import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
@@ -30,6 +37,8 @@ import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylyn.internal.bugzilla.ui.editor.KeywordsDialog;
+import org.eclipse.mylyn.internal.tasks.ui.PersonProposalLabelProvider;
+import org.eclipse.mylyn.internal.tasks.ui.PersonProposalProvider;
 import org.eclipse.mylyn.internal.tasks.ui.util.WebBrowserDialog;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
@@ -37,6 +46,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.search.AbstractRepositoryQueryPage;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.ModifyEvent;
@@ -58,15 +68,17 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.fieldassist.ContentAssistCommandAdapter;
 import org.eclipse.ui.internal.help.WorkbenchHelpSystem;
+import org.eclipse.ui.keys.IBindingService;
 import org.eclipse.ui.progress.IProgressService;
 
 /**
  * Bugzilla search page
  * 
  * @author Mik Kersten (hardening of prototype)
+ * @author Frank Becker
  */
-@SuppressWarnings("restriction")
 public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements Listener {
 
 	private static final int LABEL_WIDTH = 58;
@@ -454,7 +466,14 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				handleWidgetSelected(emailPattern, emailOperation, previousEmailPatterns);
 			}
 		});
-
+		ContentAssistCommandAdapter adapter = applyContentAssist(emailPattern,
+				createContentProposalProvider());
+		ILabelProvider propsalLabelProvider = createProposalLabelProvider();
+		if (propsalLabelProvider != null) {
+			adapter.setLabelProvider(propsalLabelProvider);
+		}
+		adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
+		
 		Composite emailComposite = new Composite(composite, SWT.NONE);
 		emailComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		GridLayout emailLayout = new GridLayout();
@@ -500,6 +519,13 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				handleWidgetSelected(emailPattern2, emailOperation2, previousEmailPatterns2);
 			}
 		});
+		ContentAssistCommandAdapter adapter2 = applyContentAssist(emailPattern2,
+				createContentProposalProvider());
+		ILabelProvider propsalLabelProvider2 = createProposalLabelProvider();
+		if (propsalLabelProvider2 != null) {
+			adapter2.setLabelProvider(propsalLabelProvider2);
+		}
+		adapter2.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 
 		Composite emailComposite2 = new Composite(composite, SWT.NONE);
 		emailComposite2.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -1755,6 +1781,57 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	public void setRestoreQueryOptions(boolean restoreQueryOptions) {
 		this.restoreQueryOptions = restoreQueryOptions;
 	}
+
+
+	/**
+	 * Adds content assist to the given text field.
+	 * 
+	 * @param text
+	 *            text field to decorate.
+	 * @param proposalProvider
+	 *            instance providing content proposals
+	 * @return the ContentAssistCommandAdapter for the field.
+	 */
+	// API 3.0 get this from the AttributeEditorToolkit
+	private ContentAssistCommandAdapter applyContentAssist(Combo text, IContentProposalProvider proposalProvider) {
+		ControlDecoration controlDecoration = new ControlDecoration(text, (SWT.TOP | SWT.LEFT));
+		controlDecoration.setMarginWidth(0);
+		controlDecoration.setShowHover(true);
+		controlDecoration.setShowOnlyOnFocus(true);
+
+		FieldDecoration contentProposalImage = FieldDecorationRegistry.getDefault().getFieldDecoration(
+				FieldDecorationRegistry.DEC_CONTENT_PROPOSAL);
+		controlDecoration.setImage(contentProposalImage.getImage());
+
+		ComboContentAdapter textContentAdapter = new ComboContentAdapter();
+
+		ContentAssistCommandAdapter adapter = new ContentAssistCommandAdapter(text, textContentAdapter,
+				proposalProvider, "org.eclipse.ui.edit.text.contentAssist.proposals", new char[0]);
+
+		IBindingService bindingService = (IBindingService) PlatformUI.getWorkbench().getService(IBindingService.class);
+		controlDecoration.setDescriptionText(NLS.bind("Content Assist Available ({0})",
+				bindingService.getBestActiveBindingFormattedFor(adapter.getCommandId())));
+
+		return adapter;
+	}
+
+	/**
+	 * Creates an IContentProposalProvider to provide content assist proposals for the given attribute.
+	 * 
+	 * @param attribute
+	 *            attribute for which to provide content assist.
+	 * @return the IContentProposalProvider.
+	 */
+	// API 3.0 get this from the AttributeEditorToolkit?
+	private IContentProposalProvider createContentProposalProvider() {
+		return new PersonProposalProvider(repository.getUrl(), repository.getConnectorKind());
+	}
+
+	// API 3.0 get this from the AttributeEditorToolkit?
+	private ILabelProvider createProposalLabelProvider() {
+		return new PersonProposalLabelProvider();
+	}
+
 
 	private String[] convertStringListToArray(java.util.List<String> stringList) {
 		return stringList.toArray(new String[stringList.size()]);
