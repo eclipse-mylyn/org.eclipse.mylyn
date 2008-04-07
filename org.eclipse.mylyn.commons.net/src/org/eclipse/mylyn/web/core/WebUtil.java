@@ -437,6 +437,7 @@ public class WebUtil {
 
 	public static InputStream getResponseBodyAsStream(HttpMethodBase method, IProgressMonitor monitor)
 			throws IOException {
+		monitor = Policy.monitorFor(monitor);
 		return new PollingInputStream(new TimeoutInputStream(method.getResponseBodyAsStream(), BUFFER_SIZE,
 				SOCKET_TIMEOUT, CLOSE_TIMEOUT), POLL_ATTEMPTS, monitor);
 	}
