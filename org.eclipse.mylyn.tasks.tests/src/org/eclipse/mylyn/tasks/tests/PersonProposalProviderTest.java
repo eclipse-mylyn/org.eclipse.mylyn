@@ -14,13 +14,31 @@ import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalProvider;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
+import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
+import org.eclipse.mylyn.tasks.ui.TaskListManager;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Frank Becker
  * @author Steffen Pingel
  */
 public class PersonProposalProviderTest extends TestCase {
+
+	private TaskListManager manager;
+
+	@Override
+	protected void setUp() throws Exception {
+		manager = TasksUiPlugin.getTaskListManager();
+		manager.resetTaskList();
+	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		manager.resetTaskList();
+		TasksUiPlugin.getRepositoryManager().clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
+	}
 
 	public void testGetProposalsNullParameters() {
 		PersonProposalProvider provider = new PersonProposalProvider((AbstractTask) null, (RepositoryTaskData) null);
@@ -143,6 +161,25 @@ public class PersonProposalProviderTest extends TestCase {
 		assertNotNull(result);
 		assertEquals(1, result.length);
 		assertEquals("foo, ", result[0].getContent());
+		assertEquals("foo", result[0].getLabel());
+		assertEquals(3, result[0].getCursorPosition());
+	}
+
+	public void testConstructorRepositoryUrlKind() throws Exception {
+		IContentProposal[] result;
+
+		MockTask task1 = new MockTask(MockRepositoryConnector.REPOSITORY_URL, "1");
+		task1.setOwner("foo");
+		PersonProposalProvider provider = new PersonProposalProvider(MockRepositoryConnector.REPOSITORY_URL,
+				MockRepositoryConnector.REPOSITORY_KIND);
+		MockRepositoryQuery query = new MockRepositoryQuery("summary");
+		manager.getTaskList().addQuery(query);
+		manager.getTaskList().addTask(task1, query);
+
+		result = provider.getProposals("f,xx", 1);
+		assertNotNull(result);
+		assertEquals(1, result.length);
+		assertEquals("foo,xx", result[0].getContent());
 		assertEquals("foo", result[0].getLabel());
 		assertEquals(3, result[0].getCursorPosition());
 	}
