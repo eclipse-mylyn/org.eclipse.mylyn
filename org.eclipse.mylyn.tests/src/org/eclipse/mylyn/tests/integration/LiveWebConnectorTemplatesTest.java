@@ -70,7 +70,7 @@ public class LiveWebConnectorTemplatesTest extends TestCase {
 			repository.setProperty(e.getKey(), e.getValue());
 		}
 
-		String url = repository.getUrl();
+		String url = repository.getRepositoryUrl();
 		// HACK: repositories that require auth
 		if ("http://demo.otrs.org".equals(url)) {
 			repository.setAuthenticationCredentials("skywalker", "skywalker");
