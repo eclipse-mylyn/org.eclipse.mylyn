@@ -218,7 +218,7 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 	 */
 	protected static RepositoryTaskOutlineNode parseExistingBugReport(RepositoryTaskData bug, boolean hasNewComment) {
 
-		String bugId = bug.getId();
+		String bugId = bug.getTaskId();
 		String bugServer = bug.getRepositoryUrl();
 		RepositoryTaskOutlineNode topNode = new RepositoryTaskOutlineNode(bugId, bugServer, bug.getConnectorKind(),
 				bug.getLabel(), bug, bug.getSummary());

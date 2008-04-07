@@ -279,7 +279,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 				ITracClient client = getClientManager().getRepository(repository);
 				TracTicket ticket = client.getTicket(taskIdInt, monitor);
 
-				task = createTask(repository.getUrl(), taskId, "");
+				task = createTask(repository.getRepositoryUrl(), taskId, "");
 				updateTaskFromTicket((TracTask) task, ticket, false, client);
 				taskList.addTask(task);
 			} catch (Exception e) {
@@ -305,7 +305,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		task.setSummary(taskData.getSummary());
 		task.setOwner(taskData.getAttributeValue(RepositoryTaskAttribute.USER_ASSIGNED));
 		task.setCompleted(TracTask.isCompleted(taskData.getStatus()));
-		task.setUrl(taskRepository.getUrl() + ITracClient.TICKET_URL + taskData.getId());
+		task.setUrl(taskRepository.getRepositoryUrl() + ITracClient.TICKET_URL + taskData.getTaskId());
 
 		String priority = taskData.getAttributeValue(Attribute.PRIORITY.getTracKey());
 		TracPriority[] tracPriorities = client.getPriorities();
@@ -397,7 +397,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			ITracClient client = getClientManager().getRepository(repository);
 			client.updateAttributes(monitor, true);
 		} catch (Exception e) {
-			throw new CoreException(RepositoryStatus.createStatus(repository.getUrl(), IStatus.WARNING,
+			throw new CoreException(RepositoryStatus.createStatus(repository.getRepositoryUrl(), IStatus.WARNING,
 					TracCorePlugin.PLUGIN_ID, "Could not update attributes"));
 		}
 	}
@@ -417,7 +417,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	public static TracTicket getTracTicket(TaskRepository repository, RepositoryTaskData data)
 			throws InvalidTicketException, CoreException {
-		TracTicket ticket = new TracTicket(getTicketId(data.getId()));
+		TracTicket ticket = new TracTicket(getTicketId(data.getTaskId()));
 
 		List<RepositoryTaskAttribute> attributes = data.getAttributes();
 		for (RepositoryTaskAttribute attribute : attributes) {

@@ -46,7 +46,7 @@ public class TaskDataManager {
 	 * Add a RepositoryTaskData to the offline reports file.
 	 */
 	public void setNewTaskData(RepositoryTaskData data) {
-		if (data == null || data.getRepositoryUrl() == null || data.getId() == null) {
+		if (data == null || data.getRepositoryUrl() == null || data.getTaskId() == null) {
 			return;
 		}
 
@@ -54,7 +54,7 @@ public class TaskDataManager {
 		if (state != null) {
 			state.setNewTaskData(data);
 		} else {
-			state = new TaskDataState(data.getRepositoryUrl(), data.getId());
+			state = new TaskDataState(data.getRepositoryUrl(), data.getTaskId());
 			state.setNewTaskData(data);
 		}
 		saveState(state);
@@ -75,7 +75,7 @@ public class TaskDataManager {
 	}
 
 	public void setOldTaskData(RepositoryTaskData data) {
-		if (data == null || data.getRepositoryUrl() == null || data.getId() == null) {
+		if (data == null || data.getRepositoryUrl() == null || data.getTaskId() == null) {
 			return;
 		}
 		TaskDataState state = retrieveState(data);
@@ -324,7 +324,7 @@ public class TaskDataManager {
 	}
 
 	private TaskDataState retrieveState(RepositoryTaskData data) {
-		return retrieveState(data.getRepositoryUrl(), data.getId());
+		return retrieveState(data.getRepositoryUrl(), data.getTaskId());
 	}
 
 	private TaskDataState retrieveState(String repositoryUrl, String id) {

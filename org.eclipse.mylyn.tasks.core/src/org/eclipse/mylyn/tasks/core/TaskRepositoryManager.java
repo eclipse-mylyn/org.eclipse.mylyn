@@ -101,7 +101,7 @@ public class TaskRepositoryManager {
 		repositories.add(repository);
 		saveRepositories(repositoryFilePath);
 
-		taskList.addOrphanContainer(new UnmatchedTaskContainer(repository.getConnectorKind(), repository.getUrl()));
+		taskList.addOrphanContainer(new UnmatchedTaskContainer(repository.getConnectorKind(), repository.getRepositoryUrl()));
 
 		for (ITaskRepositoryListener listener : listeners) {
 			listener.repositoryAdded(repository);
@@ -113,7 +113,7 @@ public class TaskRepositoryManager {
 		if (repositories != null) {
 			repository.flushAuthenticationCredentials();
 			repositories.remove(repository);
-			taskList.removeOrphanContainer(repository.getUrl());
+			taskList.removeOrphanContainer(repository.getRepositoryUrl());
 		}
 		saveRepositories(repositoryFilePath);
 		for (ITaskRepositoryListener listener : listeners) {
@@ -142,7 +142,7 @@ public class TaskRepositoryManager {
 		urlString = stripSlashes(urlString);
 		if (repositoryMap.containsKey(kind)) {
 			for (TaskRepository repository : repositoryMap.get(kind)) {
-				if (stripSlashes(repository.getUrl()).equals(urlString)) {
+				if (stripSlashes(repository.getRepositoryUrl()).equals(urlString)) {
 					return repository;
 				}
 			}
@@ -157,7 +157,7 @@ public class TaskRepositoryManager {
 		urlString = stripSlashes(urlString);
 		for (String kind : repositoryMap.keySet()) {
 			for (TaskRepository repository : repositoryMap.get(kind)) {
-				if (stripSlashes(repository.getUrl()).equals(urlString)) {
+				if (stripSlashes(repository.getRepositoryUrl()).equals(urlString)) {
 					return repository;
 				}
 			}
@@ -172,7 +172,7 @@ public class TaskRepositoryManager {
 		for (AbstractRepositoryConnector connector : getRepositoryConnectors()) {
 			if (connector.getRepositoryUrlFromTaskUrl(url) != null) {
 				for (TaskRepository repository : getRepositories(connector.getConnectorKind())) {
-					if (url.startsWith(repository.getUrl())) {
+					if (url.startsWith(repository.getRepositoryUrl())) {
 						return connector;
 					}
 				}
@@ -204,7 +204,7 @@ public class TaskRepositoryManager {
 		if (activeTask != null) {
 			String repositoryUrl = activeTask.getRepositoryUrl();
 			for (TaskRepository repository : getRepositories(repositoryKind)) {
-				if (repository.getUrl().equals(repositoryUrl)) {
+				if (repository.getRepositoryUrl().equals(repositoryUrl)) {
 					return repository;
 				}
 			}
@@ -388,7 +388,7 @@ public class TaskRepositoryManager {
 
 	public void insertRepositories(Set<TaskRepository> repositories, String repositoryFilePath) {
 		for (TaskRepository repository : repositories) {
-			if (getRepository(repository.getConnectorKind(), repository.getUrl()) == null) {
+			if (getRepository(repository.getConnectorKind(), repository.getRepositoryUrl()) == null) {
 				addRepository(repository, repositoryFilePath);
 			}
 		}

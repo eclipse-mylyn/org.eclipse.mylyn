@@ -24,7 +24,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 public class NewTaskEditorInput extends RepositoryTaskEditorInput {
 
 	public NewTaskEditorInput(TaskRepository repository, RepositoryTaskData taskData) {
-		super(repository, taskData.getId(), "");
+		super(repository, taskData.getTaskId(), "");
 		setOldTaskData(taskData);
 		Set<RepositoryTaskAttribute> edits = Collections.emptySet();
 		setOldEdits(edits);

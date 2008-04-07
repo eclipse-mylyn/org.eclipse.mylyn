@@ -169,7 +169,7 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 	 * @since 3.0
 	 */
 	public RepositoryTaskData getTaskData() {
-		return TasksUiPlugin.getTaskDataManager().getNewTaskData(taskRepository.getUrl(), taskId);
+		return TasksUiPlugin.getTaskDataManager().getNewTaskData(taskRepository.getRepositoryUrl(), taskId);
 	}
 
 	/**

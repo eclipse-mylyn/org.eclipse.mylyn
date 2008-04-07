@@ -104,7 +104,7 @@ public class OpenRepositoryTaskJob extends Job {
 				if (taskData == null) {
 					TasksUiUtil.openUrl(taskUrl);
 				} else {
-					TaskEditorInput editorInput = new TaskEditorInput(repository, taskData.getId());
+					TaskEditorInput editorInput = new TaskEditorInput(repository, taskData.getTaskId());
 					TasksUiUtil.openEditor(editorInput, TaskEditor.ID_EDITOR, page);
 				}
 			}

@@ -232,7 +232,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			searchPage.setContainer(pageContainer);
 			searchPage.createControl(fParentComposite);
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Error occurred while constructing search page for " + repository.getUrl() + " ["
+					"Error occurred while constructing search page for " + repository.getRepositoryUrl() + " ["
 							+ repository.getConnectorKind() + "]", e));
 			searchPage.getControl().setData(PAGE_KEY, searchPage);
 			return searchPage.getControl();
@@ -339,7 +339,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 				if (repository != null && repository.equals(currRepsitory)) {
 					indexToSelect = i;
 				}
-				repositoryUrls[i] = currRepsitory.getUrl();
+				repositoryUrls[i] = currRepsitory.getRepositoryUrl();
 				i++;
 			}
 

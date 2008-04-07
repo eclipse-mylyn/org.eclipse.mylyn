@@ -50,16 +50,16 @@ public class TracClientManager implements ITaskRepositoryListener {
 
 	// API 3.0 rename to getTracClient
 	public synchronized ITracClient getRepository(TaskRepository taskRepository) {
-		ITracClient repository = clientByUrl.get(taskRepository.getUrl());
+		ITracClient repository = clientByUrl.get(taskRepository.getRepositoryUrl());
 		if (repository == null) {
 			AbstractWebLocation location = taskRepositoryLocationFactory.createWebLocation(taskRepository);
 			repository = TracClientFactory.createClient(location, Version.fromVersion(taskRepository.getVersion()));
-			clientByUrl.put(taskRepository.getUrl(), repository);
+			clientByUrl.put(taskRepository.getRepositoryUrl(), repository);
 
-			TracClientData data = clientDataByUrl.get(taskRepository.getUrl());
+			TracClientData data = clientDataByUrl.get(taskRepository.getRepositoryUrl());
 			if (data == null) {
 				data = new TracClientData();
-				clientDataByUrl.put(taskRepository.getUrl(), data);
+				clientDataByUrl.put(taskRepository.getRepositoryUrl(), data);
 			}
 			repository.setData(data);
 		}
@@ -72,17 +72,17 @@ public class TracClientManager implements ITaskRepositoryListener {
 
 	public synchronized void repositoryAdded(TaskRepository repository) {
 		// make sure there is no stale client still in the cache, bug #149939
-		clientByUrl.remove(repository.getUrl());
-		clientDataByUrl.remove(repository.getUrl());
+		clientByUrl.remove(repository.getRepositoryUrl());
+		clientDataByUrl.remove(repository.getRepositoryUrl());
 	}
 
 	public synchronized void repositoryRemoved(TaskRepository repository) {
-		clientByUrl.remove(repository.getUrl());
-		clientDataByUrl.remove(repository.getUrl());
+		clientByUrl.remove(repository.getRepositoryUrl());
+		clientDataByUrl.remove(repository.getRepositoryUrl());
 	}
 
 	public synchronized void repositorySettingsChanged(TaskRepository repository) {
-		clientByUrl.remove(repository.getUrl());
+		clientByUrl.remove(repository.getRepositoryUrl());
 		// if url is changed a stale data object will be left in
 		// clientDataByUrl, bug #149939
 	}

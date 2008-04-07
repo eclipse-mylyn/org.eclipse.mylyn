@@ -251,12 +251,12 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 			}
 
 			return this.repository.getConnectorKind().equals(that.repository.getConnectorKind())
-					&& this.repository.getUrl().equals(that.repository.getUrl());
+					&& this.repository.getRepositoryUrl().equals(that.repository.getRepositoryUrl());
 		}
 
 		@Override
 		public int hashCode() {
-			return 31 * this.repository.getUrl().hashCode() + this.repository.getConnectorKind().hashCode();
+			return 31 * this.repository.getRepositoryUrl().hashCode() + this.repository.getConnectorKind().hashCode();
 		}
 
 	}

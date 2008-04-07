@@ -450,7 +450,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 
 	@Override
 	public TracRepositoryQuery getQuery() {
-		return new TracRepositoryQuery(repository.getUrl(), getQueryUrl(repository.getUrl()), getTitleText());
+		return new TracRepositoryQuery(repository.getRepositoryUrl(), getQueryUrl(repository.getRepositoryUrl()), getTitleText());
 	}
 
 	private String getTitleText() {
@@ -489,7 +489,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 
 	private boolean restoreWidgetValues() {
 		IDialogSettings settings = getDialogSettings();
-		String repoId = "." + repository.getUrl();
+		String repoId = "." + repository.getRepositoryUrl();
 
 		String searchUrl = settings.get(SEARCH_URL_ID + repoId);
 		if (searchUrl == null) {
@@ -502,7 +502,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 
 	@Override
 	public void saveState() {
-		String repoId = "." + repository.getUrl();
+		String repoId = "." + repository.getRepositoryUrl();
 		IDialogSettings settings = getDialogSettings();
 		settings.put(SEARCH_URL_ID + repoId, getTracSearch().toUrl());
 	}

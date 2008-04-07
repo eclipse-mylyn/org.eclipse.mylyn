@@ -319,7 +319,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 		IEditorInput editorInput;
 		if (taskEditorInput != null && taskEditorInput.getTask() == null) {
 			editorInput = new RepositoryTaskEditorInput(taskEditorInput.getTaskRepository(),
-					taskEditorInput.getTaskData().getId(), "");
+					taskEditorInput.getTaskData().getTaskId(), "");
 		} else {
 			editorInput = getEditorInput();
 		}

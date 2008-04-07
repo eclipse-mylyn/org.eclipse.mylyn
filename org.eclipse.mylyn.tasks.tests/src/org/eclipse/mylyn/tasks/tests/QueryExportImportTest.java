@@ -111,11 +111,11 @@ public class QueryExportImportTest extends TestCase {
 		List<AbstractRepositoryQuery> queries = new ArrayList<AbstractRepositoryQuery>();
 
 		MockRepositoryQuery query1 = new MockRepositoryQuery("Test Query");
-		query1.setRepositoryUrl(repository.getUrl());
+		query1.setRepositoryUrl(repository.getRepositoryUrl());
 		MockRepositoryQuery query2 = new MockRepositoryQuery("Test Query");
-		query2.setRepositoryUrl(repository.getUrl());
+		query2.setRepositoryUrl(repository.getRepositoryUrl());
 		MockRepositoryQuery query3 = new MockRepositoryQuery("Test Query");
-		query3.setRepositoryUrl(repository.getUrl());
+		query3.setRepositoryUrl(repository.getRepositoryUrl());
 
 		queries.add(query1);
 		queries.add(query2);
@@ -149,11 +149,11 @@ public class QueryExportImportTest extends TestCase {
 		List<AbstractRepositoryQuery> queries = new ArrayList<AbstractRepositoryQuery>();
 
 		MockRepositoryQuery query1 = new MockRepositoryQuery("Test2");
-		query1.setRepositoryUrl(repository.getUrl());
+		query1.setRepositoryUrl(repository.getRepositoryUrl());
 		MockRepositoryQuery query2 = new MockRepositoryQuery("Test2[1]");
-		query2.setRepositoryUrl(repository.getUrl());
+		query2.setRepositoryUrl(repository.getRepositoryUrl());
 		MockRepositoryQuery query3 = new MockRepositoryQuery("Test2");
-		query3.setRepositoryUrl(repository.getUrl());
+		query3.setRepositoryUrl(repository.getRepositoryUrl());
 
 		queries.add(query1);
 		queries.add(query2);
@@ -188,15 +188,15 @@ public class QueryExportImportTest extends TestCase {
 		List<AbstractRepositoryQuery> queries = new ArrayList<AbstractRepositoryQuery>();
 
 		MockRepositoryQuery query1 = new MockRepositoryQuery("Test[-10]");
-		query1.setRepositoryUrl(repository.getUrl());
+		query1.setRepositoryUrl(repository.getRepositoryUrl());
 		MockRepositoryQuery query2 = new MockRepositoryQuery("Test[ABC]");
-		query2.setRepositoryUrl(repository.getUrl());
+		query2.setRepositoryUrl(repository.getRepositoryUrl());
 		MockRepositoryQuery query3 = new MockRepositoryQuery("Test[1]");
-		query3.setRepositoryUrl(repository.getUrl());
+		query3.setRepositoryUrl(repository.getRepositoryUrl());
 		MockRepositoryQuery query4 = new MockRepositoryQuery("Test");
-		query4.setRepositoryUrl(repository.getUrl());
+		query4.setRepositoryUrl(repository.getRepositoryUrl());
 		MockRepositoryQuery query5 = new MockRepositoryQuery("Test");
-		query5.setRepositoryUrl(repository.getUrl());
+		query5.setRepositoryUrl(repository.getRepositoryUrl());
 
 		queries.add(query1);
 		queries.add(query2);
@@ -234,7 +234,7 @@ public class QueryExportImportTest extends TestCase {
 		List<AbstractRepositoryQuery> queries = new ArrayList<AbstractRepositoryQuery>();
 
 		MockRepositoryQuery query1 = new MockRepositoryQuery("Test Query");
-		query1.setRepositoryUrl(repository.getUrl());
+		query1.setRepositoryUrl(repository.getRepositoryUrl());
 		MockRepositoryQuery query2 = new MockRepositoryQuery("Bad Query");
 		query2.setRepositoryUrl("bad url");
 
@@ -275,7 +275,7 @@ public class QueryExportImportTest extends TestCase {
 		// create test data
 		List<AbstractRepositoryQuery> queries = new ArrayList<AbstractRepositoryQuery>();
 		MockRepositoryQuery query1 = new MockRepositoryQuery("Test Query");
-		query1.setRepositoryUrl(repository.getUrl());
+		query1.setRepositoryUrl(repository.getRepositoryUrl());
 		queries.add(query1);
 
 		File outFile = new File(dest, "test-repository-query.xml.zip");

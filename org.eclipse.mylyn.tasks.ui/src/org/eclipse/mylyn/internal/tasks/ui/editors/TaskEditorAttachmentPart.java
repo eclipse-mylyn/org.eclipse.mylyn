@@ -346,7 +346,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		attachScreenshotButton.setImage(TasksUiImages.getImage(TasksUiImages.IMAGE_CAPTURE));
 
 		final AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
-				getTaskRepository().getUrl(), getTaskData().getId());
+				getTaskRepository().getRepositoryUrl(), getTaskData().getTaskId());
 		if (task == null) {
 			attachFileButton.setEnabled(false);
 			attachScreenshotButton.setEnabled(false);
@@ -389,7 +389,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 
 				public void widgetSelected(SelectionEvent e) {
 					AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
-							getTaskRepository().getUrl(), getTaskData().getId());
+							getTaskRepository().getRepositoryUrl(), getTaskData().getTaskId());
 					if (task == null) {
 						// Should not happen
 						return;

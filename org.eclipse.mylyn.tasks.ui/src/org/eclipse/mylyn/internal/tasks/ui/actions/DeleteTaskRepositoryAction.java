@@ -63,7 +63,7 @@ public class DeleteTaskRepositoryAction extends AbstractTaskRepositoryAction {
 						TaskRepository taskRepository = (TaskRepository) selectedObject;
 						if (queries != null && queries.size() > 0) {
 							for (AbstractRepositoryQuery query : queries) {
-								if (query.getRepositoryUrl().equals(taskRepository.getUrl())) {
+								if (query.getRepositoryUrl().equals(taskRepository.getRepositoryUrl())) {
 									repositoriesInUse.add(taskRepository);
 									break;
 								}
@@ -79,7 +79,7 @@ public class DeleteTaskRepositoryAction extends AbstractTaskRepositoryAction {
 					TasksUiPlugin.getRepositoryManager().removeRepository(taskRepository,
 							TasksUiPlugin.getDefault().getRepositoriesFilePath());
 					// if repository is contributed via template, ensure it isn't added again
-					TaskRepositoryUtil.disableAddAutomatically(taskRepository.getUrl());
+					TaskRepositoryUtil.disableAddAutomatically(taskRepository.getRepositoryUrl());
 				}
 
 				if (repositoriesInUse.size() > 0) {

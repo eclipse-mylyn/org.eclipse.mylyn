@@ -67,7 +67,7 @@ public class AttachmentJobTest extends TestCase {
 
 		attachment = new RepositoryAttachment(null);
 		attachment.setRepositoryKind(repository.getConnectorKind());
-		attachment.setRepositoryUrl(repository.getUrl());
+		attachment.setRepositoryUrl(repository.getRepositoryUrl());
 	}
 
 	@Override

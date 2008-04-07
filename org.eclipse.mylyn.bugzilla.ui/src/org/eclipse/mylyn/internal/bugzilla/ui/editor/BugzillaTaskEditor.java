@@ -276,8 +276,8 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		if (values != null && values.length() > 0) {
 			for (String bugNumber : values.split(",")) {
 				final String bugId = bugNumber.trim();
-				final String bugUrl = repository.getUrl() + IBugzillaConstants.URL_GET_SHOW_BUG + bugId;
-				final AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(),
+				final String bugUrl = repository.getRepositoryUrl() + IBugzillaConstants.URL_GET_SHOW_BUG + bugId;
+				final AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getRepositoryUrl(),
 						bugId);
 				createTaskListHyperlink(hyperlinksComposite, bugId, bugUrl, task);
 			}
@@ -598,7 +598,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				if (BugzillaTaskEditor.this.getEditor() instanceof TaskEditor) {
-					TasksUiUtil.openUrl(repository.getUrl() + IBugzillaConstants.URL_SHOW_VOTES + taskData.getId());
+					TasksUiUtil.openUrl(repository.getRepositoryUrl() + IBugzillaConstants.URL_SHOW_VOTES + taskData.getTaskId());
 				}
 			}
 		});
@@ -608,7 +608,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				if (BugzillaTaskEditor.this.getEditor() instanceof TaskEditor) {
-					TasksUiUtil.openUrl(repository.getUrl() + IBugzillaConstants.URL_VOTE + taskData.getId());
+					TasksUiUtil.openUrl(repository.getRepositoryUrl() + IBugzillaConstants.URL_VOTE + taskData.getTaskId());
 				}
 			}
 		});
@@ -622,7 +622,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 	@Override
 	protected String getHistoryUrl() {
 		if (repository != null && taskData != null) {
-			return repository.getUrl() + IBugzillaConstants.URL_BUG_ACTIVITY + taskData.getId();
+			return repository.getRepositoryUrl() + IBugzillaConstants.URL_BUG_ACTIVITY + taskData.getTaskId();
 		} else {
 			return null;
 		}

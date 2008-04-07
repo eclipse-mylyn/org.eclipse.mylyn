@@ -179,8 +179,8 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 
 		toolkit.createLabel(buttonComposite, "    ");
 
-		AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(getTaskRepository().getUrl(),
-				getTaskData().getId());
+		AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(getTaskRepository().getRepositoryUrl(),
+				getTaskData().getTaskId());
 		if (needsAttachContext && task != null) {
 			addAttachContextButton(buttonComposite, task, toolkit);
 		}
@@ -408,7 +408,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		if (submitButton != null && !submitButton.isDisposed()) {
 			submitButton.setEnabled(enabled);
 			if (enabled) {
-				submitButton.setToolTipText("Submit to " + getTaskRepository().getUrl());
+				submitButton.setToolTipText("Submit to " + getTaskRepository().getRepositoryUrl());
 			}
 		}
 	}

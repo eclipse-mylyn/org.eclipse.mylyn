@@ -246,7 +246,7 @@ public class BugzillaProductPage extends WizardPage {
 											+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".", e));
 								} else {
 									StatusHandler.fail(new Status(IStatus.WARNING, BugzillaUiPlugin.PLUGIN_ID, "Error updating repository attributes for "
-											+ repository.getUrl(), e));
+											+ repository.getRepositoryUrl(), e));
 								}
 								return;
 							}

@@ -125,7 +125,7 @@ public class BugzillaCorePlugin extends Plugin {
 				readRepositoryConfigurationFile();
 				cacheFileRead = true;
 			}
-			if (repositoryConfigurations.get(repository.getUrl()) == null || forceRefresh) {
+			if (repositoryConfigurations.get(repository.getRepositoryUrl()) == null || forceRefresh) {
 				BugzillaClient client = connector.getClientManager().getClient(repository);
 				RepositoryConfiguration config = client.getRepositoryConfiguration();
 				if (config != null) {
@@ -133,7 +133,7 @@ public class BugzillaCorePlugin extends Plugin {
 				}
 
 			}
-			return repositoryConfigurations.get(repository.getUrl());
+			return repositoryConfigurations.get(repository.getRepositoryUrl());
 		} catch (IOException e) {
 			throw new CoreException(new Status(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID, 1,
 					"Error updating attributes.\n\n" + e.getMessage(), e));

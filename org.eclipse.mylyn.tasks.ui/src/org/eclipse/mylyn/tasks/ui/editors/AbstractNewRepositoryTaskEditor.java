@@ -307,7 +307,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	protected class DescriptionListener implements Listener {
 		public void handleEvent(Event event) {
 			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
-					new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(),
+					new RepositoryTaskSelection(taskData.getTaskId(), taskData.getRepositoryUrl(),
 							taskData.getConnectorKind(), "New Description", false, taskData.getSummary()))));
 		}
 	}
@@ -430,7 +430,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 				submitToRepository();
 			}
 		});
-		submitButton.setToolTipText("Submit to " + this.repository.getUrl());
+		submitButton.setToolTipText("Submit to " + this.repository.getRepositoryUrl());
 	}
 
 	protected boolean prepareSubmit() {

@@ -29,7 +29,7 @@ public class TaskRepositoryLocation extends AbstractWebLocation {
 	protected final TaskRepository taskRepository;
 
 	public TaskRepositoryLocation(TaskRepository taskRepository) {
-		super(taskRepository.getUrl());
+		super(taskRepository.getRepositoryUrl());
 
 		this.taskRepository = taskRepository;
 	}

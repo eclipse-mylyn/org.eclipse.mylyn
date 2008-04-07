@@ -218,7 +218,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			bugzillaTask.setPriority(priority);
 
 			// Task Web Url
-			String url = getTaskUrl(repository.getUrl(), taskData.getId());
+			String url = getTaskUrl(repository.getRepositoryUrl(), taskData.getTaskId());
 			if (url != null) {
 				bugzillaTask.setUrl(url);
 			}
@@ -309,7 +309,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				dateString = "";
 			}
 
-			String urlQueryBase = repository.getUrl() + CHANGED_BUGS_CGI_QUERY
+			String urlQueryBase = repository.getRepositoryUrl() + CHANGED_BUGS_CGI_QUERY
 					+ URLEncoder.encode(dateString, repository.getCharacterEncoding()) + CHANGED_BUGS_CGI_ENDDATE;
 
 			String urlQueryString = urlQueryBase + BUG_ID;
@@ -374,11 +374,11 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 			public AbstractTask createTask(RepositoryTaskData taskData, IProgressMonitor monitor) {
 				// do not construct actual task objects here as query shouldn't result in new tasks
-				return taskList.getTask(taskData.getRepositoryUrl(), taskData.getId());
+				return taskList.getTask(taskData.getRepositoryUrl(), taskData.getTaskId());
 			}
 		});
 
-		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(repository.getUrl(), urlQueryString, "");
+		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(repository.getRepositoryUrl(), urlQueryString, "");
 		performQuery(repository, query, collector, null, new NullProgressMonitor());
 		
 		changedTasks.addAll(collector.getTasks());
@@ -498,7 +498,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 					}
 				}
 			} catch (MalformedURLException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, "Error retrieving configuration timestamp for " + repository.getUrl(), e));
+				StatusHandler.log(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, "Error retrieving configuration timestamp for " + repository.getRepositoryUrl(), e));
 			}
 			return result;
 		}

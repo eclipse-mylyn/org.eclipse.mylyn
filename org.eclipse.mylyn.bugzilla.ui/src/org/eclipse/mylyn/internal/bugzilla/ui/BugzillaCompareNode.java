@@ -186,7 +186,7 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 	 */
 	public static BugzillaCompareNode parseBugReport(RepositoryTaskData bug) {
 		Image defaultImage = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_DEF_VIEW);
-		BugzillaCompareNode topNode = new BugzillaCompareNode("Bug #" + bug.getId(), null, defaultImage);
+		BugzillaCompareNode topNode = new BugzillaCompareNode("Bug #" + bug.getTaskId(), null, defaultImage);
 
 		Image attributeImage = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT);
 		BugzillaCompareNode attributes = new BugzillaCompareNode("Attributes", null, attributeImage);

@@ -76,12 +76,12 @@ public class TaskRepositoriesExternalizerTest extends TestCase {
 		taskRepositories.contains(repository1);
 		taskRepositories.contains(repository2);
 		for (TaskRepository repository : taskRepositories) {
-			if (repository.getUrl().equals(REPURL1)) {
+			if (repository.getRepositoryUrl().equals(REPURL1)) {
 				assertEquals(TIMEZONE, repository.getTimeZoneId());
 				assertEquals(VERSION, repository.getVersion());
 				assertEquals(ENCODING, repository.getCharacterEncoding());
 				assertEquals(TIMESTAMP, repository.getSynchronizationTimeStamp());
-			} else if (repository.getUrl().equals(REPURL2)) {
+			} else if (repository.getRepositoryUrl().equals(REPURL2)) {
 				assertEquals(TIMEZONE + SUFFIX, repository.getTimeZoneId());
 				assertEquals(VERSION + SUFFIX, repository.getVersion());
 				assertEquals(ENCODING + SUFFIX, repository.getCharacterEncoding());

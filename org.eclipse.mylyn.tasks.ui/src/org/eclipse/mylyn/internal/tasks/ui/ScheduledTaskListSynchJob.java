@@ -109,11 +109,11 @@ public class ScheduledTaskListSynchJob extends Job {
 				}
 
 				RepositorySynchronizationManager synchronizationManager = TasksUiPlugin.getSynchronizationManager();
-				Set<AbstractRepositoryQuery> queries = taskList.getRepositoryQueries(repository.getUrl());
+				Set<AbstractRepositoryQuery> queries = taskList.getRepositoryQueries(repository.getRepositoryUrl());
 				try {
 					// Occasionally request update of repository configuration attributes
 					if (queries != null && queries.size() > 0 && connector.isRepositoryConfigurationStale(repository)) {
-						Job updateJob = new Job("Updating attributes for " + repository.getUrl()) {
+						Job updateJob = new Job("Updating attributes for " + repository.getRepositoryUrl()) {
 
 							@Override
 							protected IStatus run(IProgressMonitor monitor) {

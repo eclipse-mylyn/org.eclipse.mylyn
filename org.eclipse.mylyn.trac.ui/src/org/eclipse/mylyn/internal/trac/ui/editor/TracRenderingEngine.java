@@ -55,7 +55,7 @@ public class TracRenderingEngine extends AbstractRenderingEngine {
 				String htmlBody = "<body> " + htmlText + "</body>";
 				String htmlFooter = "</html>";
 
-				String html = htmlHeader.replace("REPOSITORY_URL", repository.getUrl()) + htmlBody + htmlFooter;
+				String html = htmlHeader.replace("REPOSITORY_URL", repository.getRepositoryUrl()) + htmlBody + htmlFooter;
 				return html;
 			} else {
 				throw new CoreException(TracCorePlugin.toStatus(new TracException(

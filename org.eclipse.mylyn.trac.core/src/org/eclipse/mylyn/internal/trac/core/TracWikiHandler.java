@@ -105,6 +105,6 @@ public class TracWikiHandler extends AbstractWikiHandler {
 
 	@Override
 	public String getWikiUrl(TaskRepository repository) {
-		return repository.getUrl() + ITracClient.WIKI_URL;
+		return repository.getRepositoryUrl() + ITracClient.WIKI_URL;
 	}
 }

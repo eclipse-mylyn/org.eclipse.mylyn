@@ -223,9 +223,9 @@ public final class TaskRepository extends PlatformObject {
 				if (Platform.isRunning()) {
 					// write the map to the keyring
 					try {
-						Platform.addAuthorizationInfo(new URL(getUrl()), AUTH_REALM, AUTH_SCHEME, map);
+						Platform.addAuthorizationInfo(new URL(getRepositoryUrl()), AUTH_REALM, AUTH_SCHEME, map);
 					} catch (MalformedURLException ex) {
-						Platform.addAuthorizationInfo(DEFAULT_URL, getUrl(), AUTH_SCHEME, map);
+						Platform.addAuthorizationInfo(DEFAULT_URL, getRepositoryUrl(), AUTH_SCHEME, map);
 					}
 				} else {
 					Map<String, String> headlessCreds = getAuthInfo();
@@ -246,12 +246,12 @@ public final class TaskRepository extends PlatformObject {
 	public boolean equals(Object object) {
 		if (object instanceof TaskRepository) {
 			TaskRepository repository = (TaskRepository) object;
-			if (getUrl() == null) {
-				if (repository.getUrl() != null) {
+			if (getRepositoryUrl() == null) {
+				if (repository.getRepositoryUrl() != null) {
 					return false;
 				}
 			} else {
-				if (!getUrl().equals(repository.getUrl())) {
+				if (!getRepositoryUrl().equals(repository.getRepositoryUrl())) {
 					return false;
 				}
 			}
@@ -282,9 +282,9 @@ public final class TaskRepository extends PlatformObject {
 			try {
 				if (Platform.isRunning()) {
 					try {
-						Platform.flushAuthorizationInfo(new URL(getUrl()), AUTH_REALM, AUTH_SCHEME);
+						Platform.flushAuthorizationInfo(new URL(getRepositoryUrl()), AUTH_REALM, AUTH_SCHEME);
 					} catch (MalformedURLException ex) {
-						Platform.flushAuthorizationInfo(DEFAULT_URL, getUrl(), AUTH_SCHEME);
+						Platform.flushAuthorizationInfo(DEFAULT_URL, getRepositoryUrl(), AUTH_SCHEME);
 					}
 				} else {
 					Map<String, String> headlessCreds = getAuthInfo();
@@ -304,18 +304,18 @@ public final class TaskRepository extends PlatformObject {
 		synchronized (LOCK) {
 			if (Platform.isRunning()) {
 				try {
-					return Platform.getAuthorizationInfo(new URL(getUrl()), AUTH_REALM, AUTH_SCHEME);
+					return Platform.getAuthorizationInfo(new URL(getRepositoryUrl()), AUTH_REALM, AUTH_SCHEME);
 				} catch (MalformedURLException ex) {
-					return Platform.getAuthorizationInfo(DEFAULT_URL, getUrl(), AUTH_SCHEME);
+					return Platform.getAuthorizationInfo(DEFAULT_URL, getRepositoryUrl(), AUTH_SCHEME);
 				} catch (Exception e) {
 					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
 							"Could not retrieve authorization credentials", e));
 				}
 			} else {
-				Map<String, String> headlessCreds = credentials.get(getUrl());
+				Map<String, String> headlessCreds = credentials.get(getRepositoryUrl());
 				if (headlessCreds == null) {
 					headlessCreds = new HashMap<String, String>();
-					credentials.put(getUrl(), headlessCreds);
+					credentials.put(getRepositoryUrl(), headlessCreds);
 				}
 				return headlessCreds;
 			}
@@ -450,7 +450,7 @@ public final class TaskRepository extends PlatformObject {
 	public Proxy getProxy() {
 		Proxy proxy = Proxy.NO_PROXY;
 		if (isDefaultProxyEnabled()) {
-			proxy = WebClientUtil.getPlatformProxy(getUrl());
+			proxy = WebClientUtil.getPlatformProxy(getRepositoryUrl());
 		} else {
 
 			String proxyHost = getProperty(PROXY_HOSTNAME);
@@ -490,7 +490,7 @@ public final class TaskRepository extends PlatformObject {
 		if (label != null && label.length() > 0) {
 			return label;
 		} else {
-			return getUrl();
+			return getRepositoryUrl();
 		}
 	}
 
@@ -511,8 +511,18 @@ public final class TaskRepository extends PlatformObject {
 		return timeZoneId == null || "".equals(timeZoneId) ? TimeZone.getDefault().getID() : timeZoneId;
 	}
 
-	// API 3.0 rename to getRepositoryUrl()
+	/**
+	 * @deprecated Use {@link #getRepositoryUrl()} instead
+	 */
+	@Deprecated
 	public String getUrl() {
+		return getRepositoryUrl();
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public String getRepositoryUrl() {
 		return properties.get(IRepositoryConstants.PROPERTY_URL);
 	}
 
@@ -553,7 +563,7 @@ public final class TaskRepository extends PlatformObject {
 
 	@Override
 	public int hashCode() {
-		int res = getUrl() == null ? 1 : getUrl().hashCode();
+		int res = getRepositoryUrl() == null ? 1 : getRepositoryUrl().hashCode();
 		return res * 31 + (getConnectorKind() == null ? 1 : getConnectorKind().hashCode());
 	}
 
@@ -739,7 +749,18 @@ public final class TaskRepository extends PlatformObject {
 				: timeZoneId);
 	}
 
+	/**
+	 * @deprecated Use {@link #setRepositoryUrl(String)} instead
+	 */
+	@Deprecated
 	public void setUrl(String newUrl) {
+		setRepositoryUrl(newUrl);
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public void setRepositoryUrl(String newUrl) {
 		properties.put(IRepositoryConstants.PROPERTY_URL, newUrl);
 	}
 
@@ -749,7 +770,7 @@ public final class TaskRepository extends PlatformObject {
 
 	@Override
 	public String toString() {
-		return getUrl();
+		return getRepositoryUrl();
 	}
 
 }

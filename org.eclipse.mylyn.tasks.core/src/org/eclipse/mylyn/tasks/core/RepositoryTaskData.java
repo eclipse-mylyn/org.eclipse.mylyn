@@ -271,17 +271,26 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 		return attachments;
 	}
 
-	// API 3.0 rename to getTaskId()
+	/**
+	 * @deprecated Use {@link #getTaskId()} instead
+	 */
 	public String getId() {
-		return reportID;
+		return getTaskId();
 	}
 
+	/**
+	 * @since 3.0
+	 */
+	public String getTaskId() {
+		return reportID;
+	}
+	
 	public String getTaskKey() {
 		RepositoryTaskAttribute attr = getAttribute(RepositoryTaskAttribute.TASK_KEY);
 		if (attr != null) {
 			return attr.getValue();
 		}
-		return getId();
+		return getTaskId();
 	}
 
 	public void setTaskKey(String key) {
@@ -356,7 +365,7 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 	}
 
 	public final String getHandleIdentifier() {
-		return RepositoryTaskHandleUtil.getHandle(getRepositoryUrl(), getId());
+		return RepositoryTaskHandleUtil.getHandle(getRepositoryUrl(), getTaskId());
 	}
 
 	@Override

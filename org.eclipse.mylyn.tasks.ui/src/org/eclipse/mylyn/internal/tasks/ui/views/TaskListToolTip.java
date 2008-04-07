@@ -201,7 +201,7 @@ public class TaskListToolTip extends ToolTip {
 		if (repository != null) {
 			String label = repository.getRepositoryLabel();
 			if (label.indexOf("//") != -1) {
-				return label.substring((repository.getUrl().indexOf("//") + 2));
+				return label.substring((repository.getRepositoryUrl().indexOf("//") + 2));
 			}
 			return label + "";
 		}

@@ -79,7 +79,7 @@ public class TracConnectorUi extends AbstractRepositoryConnectorUi {
 			return new NewTaskWizard(repository, selection);
 		} else {
 			// API-3.0 extend NewWebTaskWizard to support copying taskSelection to clipboard and return wizard here
-			return new NewWebTaskWizard(repository, repository.getUrl() + ITracClient.NEW_TICKET_URL);
+			return new NewWebTaskWizard(repository, repository.getRepositoryUrl() + ITracClient.NEW_TICKET_URL);
 		}
 	}
 

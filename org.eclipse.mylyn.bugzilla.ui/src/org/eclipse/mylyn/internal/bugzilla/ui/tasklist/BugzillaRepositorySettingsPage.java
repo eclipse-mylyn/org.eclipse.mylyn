@@ -189,7 +189,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 //		}
 
 		if (null != repository) {
-			repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository.getUrl());
+			repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository.getRepositoryUrl());
 			platform = repository.getProperty(IBugzillaConstants.BUGZILLA_DEF_PLATFORM);
 			os = repository.getProperty(IBugzillaConstants.BUGZILLA_DEF_OS);
 		}

@@ -44,7 +44,7 @@ public class TaskRepositoriesSorter extends ViewerSorter {
 				} else if (label1 != null && label2 != null) {
 					return label1.compareTo(label2);
 				} else {
-					return (t1.getUrl()).compareTo(t2.getUrl());
+					return (t1.getRepositoryUrl()).compareTo(t2.getRepositoryUrl());
 				}
 			}
 		} else {

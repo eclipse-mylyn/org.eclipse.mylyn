@@ -41,7 +41,7 @@ public class BugzillaAttachmentHandler extends AbstractAttachmentHandler {
 			return client.getAttachmentData(attachment.getId());
 		} catch (IOException e) {
 			throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
-					RepositoryStatus.ERROR_IO, repository.getUrl(), e));
+					RepositoryStatus.ERROR_IO, repository.getRepositoryUrl(), e));
 		}
 	}
 
@@ -54,7 +54,7 @@ public class BugzillaAttachmentHandler extends AbstractAttachmentHandler {
 			client.postAttachment(bugId, comment, attachment);
 		} catch (IOException e) {
 			throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
-					RepositoryStatus.ERROR_IO, repository.getUrl(), e));
+					RepositoryStatus.ERROR_IO, repository.getRepositoryUrl(), e));
 		}
 	}
 

@@ -163,7 +163,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 		manager.addRepository(repository1, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		manager.readRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
-		TaskRepository temp = manager.getRepository(repository1.getConnectorKind(), repository1.getUrl());
+		TaskRepository temp = manager.getRepository(repository1.getConnectorKind(), repository1.getRepositoryUrl());
 		assertNotNull(temp);
 		assertEquals(version, temp.getVersion());
 		assertTrue(temp.isAnonymous());
@@ -177,15 +177,15 @@ public class TaskRepositoryManagerTest extends TestCase {
 
 		TaskRepository repository = new TaskRepository(DEFAULT_KIND, DEFAULT_URL);
 		manager.addRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
-		assertNotNull(manager.getRepository(repository.getConnectorKind(), repository.getUrl()));
+		assertNotNull(manager.getRepository(repository.getConnectorKind(), repository.getRepositoryUrl()));
 
 		TaskRepository repository2 = new TaskRepository(DEFAULT_KIND, ANOTHER_URL);
 		manager.addRepository(repository2, TasksUiPlugin.getDefault().getRepositoriesFilePath());
-		assertNotNull(manager.getRepository(repository2.getConnectorKind(), repository2.getUrl()));
+		assertNotNull(manager.getRepository(repository2.getConnectorKind(), repository2.getRepositoryUrl()));
 
 		manager.removeRepository(repository2, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
-		assertNull(manager.getRepository(repository2.getConnectorKind(), repository2.getUrl()));
+		assertNull(manager.getRepository(repository2.getConnectorKind(), repository2.getRepositoryUrl()));
 	}
 
 	public void testRepositoryWithUnnownUrlHandler() {
@@ -212,7 +212,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 
 		manager.readRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
-		TaskRepository temp = manager.getRepository(repository.getConnectorKind(), repository.getUrl());
+		TaskRepository temp = manager.getRepository(repository.getConnectorKind(), repository.getRepositoryUrl());
 		assertNotNull(temp);
 		assertEquals("euxx", temp.getProperty("owner"));
 	}

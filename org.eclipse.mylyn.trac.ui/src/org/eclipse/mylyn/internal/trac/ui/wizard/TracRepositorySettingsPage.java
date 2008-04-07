@@ -175,7 +175,7 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 		private Version result;
 
 		public TracValidator(TaskRepository taskRepository, Version version) {
-			this.repositoryUrl = taskRepository.getUrl();
+			this.repositoryUrl = taskRepository.getRepositoryUrl();
 			this.taskRepository = taskRepository;
 			this.version = version;
 		}

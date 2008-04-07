@@ -115,7 +115,7 @@ public class SynchronizeQueriesJob extends SynchronizeJob {
 					allTasks.addAll(query.getChildren());
 				}
 			} else {
-				allTasks = Collections.unmodifiableSet(taskList.getRepositoryTasks(repository.getUrl()));
+				allTasks = Collections.unmodifiableSet(taskList.getRepositoryTasks(repository.getRepositoryUrl()));
 			}
 
 			// check if the repository has changed at all and have the connector mark tasks that need synchronization
@@ -239,9 +239,9 @@ public class SynchronizeQueriesJob extends SynchronizeJob {
 		@Override
 		public void accept(RepositoryTaskData taskData) {
 			boolean changed;
-			AbstractTask task = taskList.getTask(taskData.getRepositoryUrl(), taskData.getId());
+			AbstractTask task = taskList.getTask(taskData.getRepositoryUrl(), taskData.getTaskId());
 			if (task == null) {
-				task = connector.createTask(taskData.getRepositoryUrl(), taskData.getId(), "");
+				task = connector.createTask(taskData.getRepositoryUrl(), taskData.getTaskId(), "");
 				task.setStale(true);
 				changed = connector.updateTaskFromTaskData(repository, task, taskData);
 			} else {

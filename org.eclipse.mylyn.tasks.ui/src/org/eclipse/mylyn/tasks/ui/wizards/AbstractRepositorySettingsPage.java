@@ -229,7 +229,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	public void createControl(Composite parent) {
 
 		if (repository != null) {
-			originalUrl = repository.getUrl();
+			originalUrl = repository.getRepositoryUrl();
 			oldUsername = repository.getUserName();
 			oldPassword = repository.getPassword();
 
@@ -382,7 +382,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 					// repositoryLabelCombo.select(0);
 					repositoryLabelEditor.setStringValue(repositoryLabel);
 				}
-				serverUrlCombo.setText(repository.getUrl());
+				serverUrlCombo.setText(repository.getRepositoryUrl());
 				repositoryUserNameEditor.setStringValue(repository.getUserName());
 				repositoryPasswordEditor.setStringValue(repository.getPassword());
 			} catch (Throwable t) {
@@ -1155,7 +1155,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 				List<TaskRepository> repositories = TasksUiPlugin.getRepositoryManager().getAllRepositories();
 				repositoryUrls = new HashSet<String>(repositories.size());
 				for (TaskRepository repository : repositories) {
-					repositoryUrls.add(repository.getUrl());
+					repositoryUrls.add(repository.getRepositoryUrl());
 				}
 			}
 

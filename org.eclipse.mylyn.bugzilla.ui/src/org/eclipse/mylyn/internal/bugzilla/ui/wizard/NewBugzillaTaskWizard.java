@@ -58,7 +58,7 @@ public class NewBugzillaTaskWizard extends Wizard implements INewWizard {
 	public NewBugzillaTaskWizard(TaskRepository repository) {
 		this(false, repository);
 		taskData = new RepositoryTaskData(new BugzillaAttributeFactory(), BugzillaCorePlugin.REPOSITORY_KIND,
-				repository.getUrl(), TasksUiPlugin.getDefault().getNextNewRepositoryTaskId());
+				repository.getRepositoryUrl(), TasksUiPlugin.getDefault().getNextNewRepositoryTaskId());
 		taskData.setNew(true);
 		super.setDefaultPageImageDescriptor(BugzillaUiPlugin.imageDescriptorFromPlugin(
 				"org.eclipse.mylyn.internal.bugzilla.ui", "icons/wizban/bug-wizard.gif"));
@@ -115,7 +115,7 @@ public class NewBugzillaTaskWizard extends Wizard implements INewWizard {
 			return true;
 		} catch (Exception e) {
 			productPage.applyToStatusLine(new Status(IStatus.ERROR, "not_used", 0,
-					"Problem occurred retrieving repository configuration from " + repository.getUrl(), null));
+					"Problem occurred retrieving repository configuration from " + repository.getRepositoryUrl(), null));
 		}
 		return false;
 	}

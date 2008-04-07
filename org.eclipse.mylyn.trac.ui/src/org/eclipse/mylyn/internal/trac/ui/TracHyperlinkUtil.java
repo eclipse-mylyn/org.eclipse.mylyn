@@ -128,7 +128,7 @@ public class TracHyperlinkUtil {
 		while (m.find()) {
 			if (isInRegion(lineOffset, m)) {
 				String id = m.group(1);
-				links.add(new WebHyperlink(determineRegion(regionOffset, m), repository.getUrl()
+				links.add(new WebHyperlink(determineRegion(regionOffset, m), repository.getRepositoryUrl()
 						+ ITracClient.REPORT_URL + id));
 			}
 		}
@@ -137,7 +137,7 @@ public class TracHyperlinkUtil {
 		while (m.find()) {
 			if (isInRegion(lineOffset, m)) {
 				String id = m.group(1);
-				links.add(new WebHyperlink(determineRegion(regionOffset, m), repository.getUrl()
+				links.add(new WebHyperlink(determineRegion(regionOffset, m), repository.getRepositoryUrl()
 						+ ITracClient.REPORT_URL + id));
 			}
 		}
@@ -147,7 +147,7 @@ public class TracHyperlinkUtil {
 			if (isInRegion(lineOffset, m)) {
 				String rev = m.group(1);
 				String stopRev = m.group(2);
-				String url = repository.getUrl() + ITracClient.REVISION_LOG_URL + "?rev=" + rev + "&stop_rev="
+				String url = repository.getRepositoryUrl() + ITracClient.REVISION_LOG_URL + "?rev=" + rev + "&stop_rev="
 						+ stopRev;
 				links.add(new WebHyperlink(determineRegion(regionOffset, m), url));
 			}
@@ -158,7 +158,7 @@ public class TracHyperlinkUtil {
 			if (isInRegion(lineOffset, m)) {
 				String rev = m.group(1);
 				String stopRev = m.group(2);
-				String url = repository.getUrl() + ITracClient.REVISION_LOG_URL + "?rev=" + rev + "&stop_rev="
+				String url = repository.getRepositoryUrl() + ITracClient.REVISION_LOG_URL + "?rev=" + rev + "&stop_rev="
 						+ stopRev;
 				links.add(new WebHyperlink(determineRegion(regionOffset, m), url));
 			}
@@ -170,7 +170,7 @@ public class TracHyperlinkUtil {
 				String branch = m.group(1);
 				String rev = m.group(2);
 				String stopRev = m.group(3);
-				String url = repository.getUrl() + ITracClient.REVISION_LOG_URL;
+				String url = repository.getRepositoryUrl() + ITracClient.REVISION_LOG_URL;
 				if (branch != null) {
 					url += branch;
 				}
@@ -184,7 +184,7 @@ public class TracHyperlinkUtil {
 			if (isInRegion(lineOffset, m)) {
 				String rev = m.group(2);
 				String branch = m.group(3);
-				String url = repository.getUrl() + ITracClient.CHANGESET_URL + rev;
+				String url = repository.getRepositoryUrl() + ITracClient.CHANGESET_URL + rev;
 				if (branch != null) {
 					url += branch;
 				}
@@ -197,7 +197,7 @@ public class TracHyperlinkUtil {
 			if (isInRegion(lineOffset, m)) {
 				String rev = m.group(1);
 				String branch = m.group(2);
-				String url = repository.getUrl() + ITracClient.CHANGESET_URL + rev;
+				String url = repository.getRepositoryUrl() + ITracClient.CHANGESET_URL + rev;
 				if (branch != null) {
 					url += branch;
 				}
@@ -210,7 +210,7 @@ public class TracHyperlinkUtil {
 			if (isInRegion(lineOffset, m)) {
 				String old_rev = m.group(1);
 				String new_rev = m.group(2);
-				String url = repository.getUrl() + ITracClient.CHANGESET_URL;
+				String url = repository.getRepositoryUrl() + ITracClient.CHANGESET_URL;
 				url += "?new=" + new_rev + "&old=" + old_rev;
 				links.add(new WebHyperlink(determineRegion(regionOffset, m), url));
 			}
@@ -223,7 +223,7 @@ public class TracHyperlinkUtil {
 				String old_rev = m.group(3);
 				String new_path = m.group(4);
 				String new_rev = m.group(6);
-				String url = repository.getUrl() + ITracClient.CHANGESET_URL;
+				String url = repository.getRepositoryUrl() + ITracClient.CHANGESET_URL;
 				try {
 					url += "?new_path=" + URLEncoder.encode(new_path, "UTF-8");
 					url += "&old_path=" + URLEncoder.encode(old_path, "UTF-8");
@@ -245,7 +245,7 @@ public class TracHyperlinkUtil {
 		while (m.find()) {
 			if (isInRegion(lineOffset, m)) {
 				String page = m.group(1);
-				links.add(new WebHyperlink(determineRegion(regionOffset, m), repository.getUrl() + ITracClient.WIKI_URL
+				links.add(new WebHyperlink(determineRegion(regionOffset, m), repository.getRepositoryUrl() + ITracClient.WIKI_URL
 						+ page));
 			}
 		}
@@ -254,7 +254,7 @@ public class TracHyperlinkUtil {
 		while (m.find()) {
 			if (isInRegion(lineOffset, m)) {
 				String page = m.group(0);
-				links.add(new WebHyperlink(determineRegion(regionOffset, m), repository.getUrl() + ITracClient.WIKI_URL
+				links.add(new WebHyperlink(determineRegion(regionOffset, m), repository.getRepositoryUrl() + ITracClient.WIKI_URL
 						+ page));
 			}
 		}
@@ -263,7 +263,7 @@ public class TracHyperlinkUtil {
 		while (m.find()) {
 			if (isInRegion(lineOffset, m)) {
 				String milestone = m.group(1);
-				links.add(new WebHyperlink(determineRegion(regionOffset, m), repository.getUrl()
+				links.add(new WebHyperlink(determineRegion(regionOffset, m), repository.getRepositoryUrl()
 						+ ITracClient.MILESTONE_URL + milestone));
 			}
 		}
@@ -283,7 +283,7 @@ public class TracHyperlinkUtil {
 				String filename = m.group(1);
 				String rev = m.group(3);
 				String line = m.group(5);
-				String url = repository.getUrl() + ITracClient.BROWSER_URL + filename;
+				String url = repository.getRepositoryUrl() + ITracClient.BROWSER_URL + filename;
 				if (rev != null) {
 					url += "?rev=" + rev;
 					if (line != null) {

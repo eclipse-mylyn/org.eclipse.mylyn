@@ -38,8 +38,8 @@ public class TracAttachmentHandler extends AbstractAttachmentHandler {
 			IProgressMonitor monitor) throws CoreException {
 		String filename = attachment.getAttributeValue(RepositoryTaskAttribute.ATTACHMENT_FILENAME);
 		if (filename == null) {
-			throw new CoreException(new RepositoryStatus(repository.getUrl(), IStatus.ERROR, TracCorePlugin.PLUGIN_ID,
-					RepositoryStatus.ERROR_REPOSITORY, "Attachment download from " + repository.getUrl()
+			throw new CoreException(new RepositoryStatus(repository.getRepositoryUrl(), IStatus.ERROR, TracCorePlugin.PLUGIN_ID,
+					RepositoryStatus.ERROR_REPOSITORY, "Attachment download from " + repository.getRepositoryUrl()
 							+ " failed, missing attachment filename."));
 		}
 
@@ -56,7 +56,7 @@ public class TracAttachmentHandler extends AbstractAttachmentHandler {
 	public void uploadAttachment(TaskRepository repository, AbstractTask task, ITaskAttachment attachment,
 			String comment, IProgressMonitor monitor) throws CoreException {
 		if (!TracRepositoryConnector.hasAttachmentSupport(repository, task)) {
-			throw new CoreException(new RepositoryStatus(repository.getUrl(), IStatus.INFO, TracCorePlugin.PLUGIN_ID,
+			throw new CoreException(new RepositoryStatus(repository.getRepositoryUrl(), IStatus.INFO, TracCorePlugin.PLUGIN_ID,
 					RepositoryStatus.ERROR_REPOSITORY, "Attachments are not supported by this repository access type"));
 		}
 

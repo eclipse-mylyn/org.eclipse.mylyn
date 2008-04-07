@@ -52,7 +52,7 @@ public class RefreshRepositoryTasksAction extends AbstractTaskRepositoryAction i
 				repository.getConnectorKind());
 		if (connector != null) {
 			Set<AbstractTask> repositoryTasks = TasksUiPlugin.getTaskListManager().getTaskList().getRepositoryTasks(
-					repository.getUrl());
+					repository.getRepositoryUrl());
 			TasksUi.synchronize(connector, repositoryTasks, true, null);
 		}
 	}

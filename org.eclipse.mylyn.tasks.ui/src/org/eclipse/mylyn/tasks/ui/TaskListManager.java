@@ -148,7 +148,7 @@ public class TaskListManager {
 		for (TaskRepository repository : TasksUiPlugin.getRepositoryManager().getAllRepositories()) {
 			if (!repository.getConnectorKind().equals(LocalRepositoryConnector.CONNECTOR_KIND)) {
 				taskList.addOrphanContainer(new UnmatchedTaskContainer(repository.getConnectorKind(),
-						repository.getUrl()));
+						repository.getRepositoryUrl()));
 			}
 		}
 
@@ -563,7 +563,7 @@ public class TaskListManager {
 			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 					repository.getConnectorKind());
 			if (connector != null) {
-				TasksUiPlugin.getSynchronizationManager().synchronize(connector, query, null, true);
+				TasksUi.synchronize(connector, query, null, true);
 			}
 
 		}

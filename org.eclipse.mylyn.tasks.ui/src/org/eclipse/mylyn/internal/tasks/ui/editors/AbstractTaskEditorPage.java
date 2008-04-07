@@ -298,7 +298,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 			if (commentPart != null) {
 				selectedComment = commentPart.getSelectedComment();
 			}
-			RepositoryTaskSelection selection = new RepositoryTaskSelection(taskData.getId(),
+			RepositoryTaskSelection selection = new RepositoryTaskSelection(taskData.getTaskId(),
 					taskData.getRepositoryUrl(), taskData.getConnectorKind(), "", selectedComment,
 					taskData.getSummary());
 			selection.setIsDescription(true);
@@ -394,7 +394,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 				composite.setBackground(null);
 				String label = taskRepository.getRepositoryLabel();
 				if (label.indexOf("//") != -1) {
-					label = label.substring((taskRepository.getUrl().indexOf("//") + 2));
+					label = label.substring((taskRepository.getRepositoryUrl().indexOf("//") + 2));
 				}
 
 				Hyperlink link = new Hyperlink(composite, SWT.NONE);
@@ -899,7 +899,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		if (task != null) {
 			attributeManager = createAttributeManager(taskRepository, task.getRepositoryUrl(), task.getTaskId());
 		} else {
-			attributeManager = createAttributeManager(taskRepository, taskData.getRepositoryUrl(), taskData.getId());
+			attributeManager = createAttributeManager(taskRepository, taskData.getRepositoryUrl(), taskData.getTaskId());
 		}
 
 		connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(taskRepository.getConnectorKind());

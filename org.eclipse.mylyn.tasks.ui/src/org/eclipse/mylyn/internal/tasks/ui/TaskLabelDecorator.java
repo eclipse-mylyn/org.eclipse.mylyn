@@ -38,7 +38,7 @@ public class TaskLabelDecorator implements ILightweightLabelDecorator {
 			String repositoryUrl = query.getRepositoryUrl();
 			TaskRepository taskRepository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryUrl);
 			if (repositoryUrl != null && taskRepository != null) {
-				if (taskRepository.getUrl().equals(taskRepository.getRepositoryLabel())) {
+				if (taskRepository.getRepositoryUrl().equals(taskRepository.getRepositoryLabel())) {
 					try {
 						URL url = new URL(repositoryUrl);
 						decoration.addSuffix("   [" + url.getHost() + "]");

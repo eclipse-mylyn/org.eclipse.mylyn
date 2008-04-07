@@ -37,17 +37,17 @@ public class TracRepositoryQueryTest extends TestCase {
 		manager.addRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		TracSearch search = new TracSearch();
-		String queryUrl = repository.getUrl() + ITracClient.QUERY_URL + search.toUrl();
-		TracRepositoryQuery query = new TracRepositoryQuery(repository.getUrl(), queryUrl, "description");
+		String queryUrl = repository.getRepositoryUrl() + ITracClient.QUERY_URL + search.toUrl();
+		TracRepositoryQuery query = new TracRepositoryQuery(repository.getRepositoryUrl(), queryUrl, "description");
 		TasksUiPlugin.getTaskListManager().getTaskList().addQuery(query);
 
 		TracTask task = new TracTask(TracTestConstants.TEST_TRAC_096_URL, "" + 123, "desc");
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
 
-		String oldUrl = repository.getUrl();
+		String oldUrl = repository.getRepositoryUrl();
 		String newUrl = TracTestConstants.TEST_TRAC_010_URL;
 		TasksUiPlugin.getTaskListManager().refactorRepositoryUrl(oldUrl, newUrl);
-		repository.setUrl(newUrl);
+		repository.setRepositoryUrl(newUrl);
 
 		assertEquals(newUrl, query.getRepositoryUrl());
 		assertEquals(newUrl + ITracClient.QUERY_URL + search.toUrl(), query.getUrl());

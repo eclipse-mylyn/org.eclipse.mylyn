@@ -111,7 +111,7 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 
 		private String getReplacement(AbstractTask task, String text, boolean includeTaskPrefix) {
 			// add an absolute reference to the task if the viewer does not have a repository
-			if (taskRepository == null || text == null || !taskRepository.getUrl().equals(task.getRepositoryUrl())) {
+			if (taskRepository == null || text == null || !taskRepository.getRepositoryUrl().equals(task.getRepositoryUrl())) {
 				return CopyTaskDetailsAction.getTextForTask(task);
 			}
 
@@ -175,7 +175,7 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 
 		private boolean select(AbstractTask task) {
 			return !(task instanceof LocalTask) //
-					&& (taskRepository == null || task.getRepositoryUrl().equals(taskRepository.getUrl()));
+					&& (taskRepository == null || task.getRepositoryUrl().equals(taskRepository.getRepositoryUrl()));
 		}
 
 		public ICompletionProposal[] getResult() {

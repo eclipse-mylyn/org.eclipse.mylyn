@@ -131,7 +131,7 @@ public class SearchHitCollector extends AbstractTaskCollector implements ISearch
 
 	public ISearchResult getSearchResult() {
 		if (searchResult.getMatchCount() >= AbstractTaskCollector.MAX_HITS) {
-			StatusHandler.displayStatus("Maximum hits reached", RepositoryStatus.createStatus(repository.getUrl(),
+			StatusHandler.displayStatus("Maximum hits reached", RepositoryStatus.createStatus(repository.getRepositoryUrl(),
 					IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, LABEL_MAX_HITS_REACHED));
 		}
 		return searchResult;

@@ -134,7 +134,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 				List<IAdaptable> taskContainers = new ArrayList<IAdaptable>();
 				for (AbstractTaskContainer element : TasksUiPlugin.getTaskListManager()
 						.getTaskList()
-						.getRepositoryQueries(((TaskRepository) parentElement).getUrl())) {
+						.getRepositoryQueries(((TaskRepository) parentElement).getRepositoryUrl())) {
 					if (element instanceof AbstractRepositoryQuery) {
 						taskContainers.add(element);
 					}

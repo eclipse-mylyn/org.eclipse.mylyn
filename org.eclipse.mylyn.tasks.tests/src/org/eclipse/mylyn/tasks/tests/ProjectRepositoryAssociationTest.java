@@ -51,7 +51,7 @@ public class ProjectRepositoryAssociationTest extends TestCase {
 				projectWrapper.getProject(), true);
 		assertNotNull(returnedRepository);
 		assertEquals(REPOSITORY_KIND, returnedRepository.getConnectorKind());
-		assertEquals(REPOSITORY_URL, returnedRepository.getUrl());
+		assertEquals(REPOSITORY_URL, returnedRepository.getRepositoryUrl());
 
 		TasksUiPlugin.getRepositoryManager().removeRepository(repository,
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
@@ -68,7 +68,7 @@ public class ProjectRepositoryAssociationTest extends TestCase {
 		TaskRepository returnedRepository = TasksUiPlugin.getDefault().getRepositoryForResource(folder, true);
 		assertNotNull(returnedRepository);
 		assertEquals(REPOSITORY_KIND, returnedRepository.getConnectorKind());
-		assertEquals(REPOSITORY_URL, returnedRepository.getUrl());
+		assertEquals(REPOSITORY_URL, returnedRepository.getRepositoryUrl());
 
 		TasksUiPlugin.getRepositoryManager().removeRepository(repository,
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());

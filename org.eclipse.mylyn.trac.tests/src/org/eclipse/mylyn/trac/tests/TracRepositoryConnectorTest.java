@@ -149,7 +149,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 		assertNotNull(task);
 		assertEquals(TracTask.class, task.getClass());
 		assertTrue(task.getSummary().contains("summary1"));
-		assertEquals(repository.getUrl() + ITracClient.TICKET_URL + id, task.getUrl());
+		assertEquals(repository.getRepositoryUrl() + ITracClient.TICKET_URL + id, task.getUrl());
 
 		try {
 			task = connector.createTaskFromExistingId(repository, "does not exist", new NullProgressMonitor());
@@ -231,9 +231,9 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 		assertTrue(queryStatus.isOK());
 		assertEquals(3, result.size());
-		assertEquals(data.tickets.get(0).getId() + "", result.get(0).getId());
-		assertEquals(data.tickets.get(1).getId() + "", result.get(1).getId());
-		assertEquals(data.tickets.get(2).getId() + "", result.get(2).getId());
+		assertEquals(data.tickets.get(0).getId() + "", result.get(0).getTaskId());
+		assertEquals(data.tickets.get(1).getId() + "", result.get(1).getTaskId());
+		assertEquals(data.tickets.get(2).getId() + "", result.get(2).getTaskId());
 	}
 
 	public void testUpdateTaskDetails() throws InvalidTicketException {

@@ -143,7 +143,7 @@ public class TaskDragSourceListener extends DragSourceAdapter {
 				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 						taskData.getConnectorKind());
 				if (connector != null) {
-					event.data = connector.getTaskUrl(taskData.getRepositoryUrl(), taskData.getId());
+					event.data = connector.getTaskUrl(taskData.getRepositoryUrl(), taskData.getTaskId());
 				} else {
 					event.data = taskData.getSummary();
 				}

@@ -258,7 +258,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 	private void attachmentChangesLastModifiedDate() throws Exception {
 		RepositoryTaskData taskData = taskDataHandler.getTaskData(repository, data.attachmentTicketId + "",
 				new NullProgressMonitor());
-		TracTask task = new TracTask(repository.getUrl(), data.attachmentTicketId + "", "");
+		TracTask task = new TracTask(repository.getRepositoryUrl(), data.attachmentTicketId + "", "");
 		connector.updateTaskFromTaskData(repository, task, taskData);
 		Date lastModified = taskDataHandler.getAttributeFactory(taskData).getDateForAttributeType(
 				RepositoryTaskAttribute.DATE_MODIFIED, taskData.getLastModified());
@@ -345,7 +345,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 		assertEquals("", subTaskData.getSummary());
 		assertEquals("", subTaskData.getDescription());
 		assertEquals(component, subTaskData.getAttributeValue(TracAttributeFactory.Attribute.COMPONENT.getTracKey()));
-		assertEquals(parentTaskData.getId(), subTaskData.getAttributeValue(TracTaskDataHandler.ATTRIBUTE_BLOCKING));
+		assertEquals(parentTaskData.getTaskId(), subTaskData.getAttributeValue(TracTaskDataHandler.ATTRIBUTE_BLOCKING));
 		assertEquals("", parentTaskData.getAttributeValue(TracTaskDataHandler.ATTRIBUTE_BLOCKED_BY));
 	}
 

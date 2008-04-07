@@ -13,6 +13,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.mylyn.internal.tasks.core.sync.RepositorySynchronizationManager;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
@@ -28,7 +29,9 @@ import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
  * NOTE: likely to change for 3.0.
  * 
  * @author Rob Elves
+ * @deprecated
  */
+@Deprecated
 public class TaskFactory implements ITaskFactory {
 
 	private final AbstractRepositoryConnector connector;
@@ -69,7 +72,7 @@ public class TaskFactory implements ITaskFactory {
 	 * @throws CoreException
 	 */
 	public AbstractTask createTask(RepositoryTaskData taskData, IProgressMonitor monitor) throws CoreException {
-		AbstractTask repositoryTask = taskList.getTask(taskData.getRepositoryUrl(), taskData.getId());
+		AbstractTask repositoryTask = taskList.getTask(taskData.getRepositoryUrl(), taskData.getTaskId());
 		if (repositoryTask == null) {
 			repositoryTask = connector.createTaskFromTaskData(repository, taskData, updateTasklist, monitor);
 			repositoryTask.setSynchronizationState(RepositoryTaskSyncState.INCOMING);

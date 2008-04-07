@@ -48,13 +48,13 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 	@Override
 	public boolean performFinish() {
 		if (canFinish()) {
-			String oldUrl = repository.getUrl();
+			String oldUrl = repository.getRepositoryUrl();
 			String newUrl = abstractRepositorySettingsPage.getServerUrl();
 			TasksUiPlugin.getTaskListManager().refactorRepositoryUrl(oldUrl, newUrl);
 
 			repository.flushAuthenticationCredentials();
 
-			repository.setUrl(newUrl);
+			repository.setRepositoryUrl(newUrl);
 			abstractRepositorySettingsPage.applyTo(repository);
 			abstractRepositorySettingsPage.updateProperties(repository);
 			TasksUiPlugin.getRepositoryManager().notifyRepositorySettingsChanged(repository);

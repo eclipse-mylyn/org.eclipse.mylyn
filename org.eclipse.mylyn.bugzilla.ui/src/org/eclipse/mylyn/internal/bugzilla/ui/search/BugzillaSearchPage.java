@@ -1069,7 +1069,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			 */
 			if (repository != null) {
 				IDialogSettings settings = getDialogSettings();
-				String repoId = "." + repository.getUrl();
+				String repoId = "." + repository.getRepositoryUrl();
 				if (getWizard() == null && restoreQueryOptions && settings.getArray(STORE_PRODUCT_ID + repoId) != null
 						&& product != null) {
 					product.setSelection(nonNullArray(settings, STORE_PRODUCT_ID + repoId));
@@ -1199,7 +1199,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	 * Example: https://bugs.eclipse.org/bugs/buglist.cgi?
 	 */
 	private StringBuffer getQueryURLStart(TaskRepository repository) {
-		StringBuffer sb = new StringBuffer(repository.getUrl());
+		StringBuffer sb = new StringBuffer(repository.getRepositoryUrl());
 
 		if (sb.charAt(sb.length() - 1) != '/') {
 			sb.append('/');
@@ -1664,7 +1664,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	public BugzillaRepositoryQuery getQuery() {
 		if (originalQuery == null) {
 			try {
-				originalQuery = new BugzillaRepositoryQuery(repository.getUrl(), getQueryURL(repository,
+				originalQuery = new BugzillaRepositoryQuery(repository.getRepositoryUrl(), getQueryURL(repository,
 						getQueryParameters()), getQueryTitle());
 			} catch (UnsupportedEncodingException e) {
 				return null;
@@ -1693,7 +1693,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	private void restoreWidgetValues() {
 		try {
 			IDialogSettings settings = getDialogSettings();
-			String repoId = "." + repository.getUrl();
+			String repoId = "." + repository.getRepositoryUrl();
 			if (!restoreQueryOptions || settings.getArray(STORE_PRODUCT_ID + repoId) == null || product == null) {
 				return;
 			}
@@ -1737,7 +1737,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	}
 
 	public void saveState() {
-		String repoId = "." + repository.getUrl();
+		String repoId = "." + repository.getRepositoryUrl();
 		IDialogSettings settings = getDialogSettings();
 		settings.put(STORE_PRODUCT_ID + repoId, product.getSelection());
 		settings.put(STORE_COMPONENT_ID + repoId, component.getSelection());
@@ -1824,7 +1824,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	 */
 	// API 3.0 get this from the AttributeEditorToolkit?
 	private IContentProposalProvider createContentProposalProvider() {
-		return new PersonProposalProvider(repository.getUrl(), repository.getConnectorKind());
+		return new PersonProposalProvider(repository.getRepositoryUrl(), repository.getConnectorKind());
 	}
 
 	// API 3.0 get this from the AttributeEditorToolkit?

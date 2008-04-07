@@ -28,6 +28,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -190,9 +191,9 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 					super.performUpdate(repository, connector, monitor);
 					if (connector != null) {
 						final AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
-								TaskEditorAttributePart.this.getTaskRepository().getUrl(), getTaskData().getId());
+								TaskEditorAttributePart.this.getTaskRepository().getRepositoryUrl(), getTaskData().getTaskId());
 						if (task != null) {
-							TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true,
+							TasksUi.synchronize(connector, task, true,
 									new JobChangeAdapter() {
 
 										@Override

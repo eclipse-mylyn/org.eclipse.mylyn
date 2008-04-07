@@ -105,7 +105,7 @@ class RepositoryTaskEditorDropListener implements DropTargetListener {
 		if (textTransfer.isSupportedType(event.currentDataType)) {
 			String text = (String) event.data;
 			AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
-					this.AbstractTaskEditor.repository.getUrl(), this.AbstractTaskEditor.taskData.getId());
+					this.AbstractTaskEditor.repository.getRepositoryUrl(), this.AbstractTaskEditor.taskData.getTaskId());
 			if (!(task != null)) {
 				// Should not happen
 				return;
@@ -119,7 +119,7 @@ class RepositoryTaskEditorDropListener implements DropTargetListener {
 			String[] files = (String[]) event.data;
 			if (files.length > 0) {
 				AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
-						this.AbstractTaskEditor.repository.getUrl(), this.AbstractTaskEditor.taskData.getId());
+						this.AbstractTaskEditor.repository.getRepositoryUrl(), this.AbstractTaskEditor.taskData.getTaskId());
 				if (task == null) {
 					// Should not happen
 					return;

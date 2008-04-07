@@ -51,12 +51,12 @@ public class RepositoryStatus extends Status {
 	protected String repositoryUrl;
 
 	public RepositoryStatus(TaskRepository repository, int severity, String pluginId, int code, String message) {
-		this(repository.getUrl(), severity, pluginId, code, message, null);
+		this(repository.getRepositoryUrl(), severity, pluginId, code, message, null);
 	}
 
 	public RepositoryStatus(TaskRepository repository, int severity, String pluginId, int code, String message,
 			Throwable e) {
-		this(repository.getUrl(), severity, pluginId, code, message, e);
+		this(repository.getRepositoryUrl(), severity, pluginId, code, message, e);
 	}
 
 	public RepositoryStatus(String repositoryUrl, int severity, String pluginId, int code, String message) {
@@ -145,7 +145,7 @@ public class RepositoryStatus extends Status {
 	}
 
 	public static RepositoryStatus createStatus(TaskRepository repository, int severity, String pluginId, String message) {
-		return createStatus(repository.getUrl(), severity, pluginId, message);
+		return createStatus(repository.getRepositoryUrl(), severity, pluginId, message);
 	}
 
 	public static RepositoryStatus createStatus(String repositoryUrl, int severity, String pluginId, String message) {

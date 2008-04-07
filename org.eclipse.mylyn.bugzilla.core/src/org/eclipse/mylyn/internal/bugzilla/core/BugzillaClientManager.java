@@ -27,7 +27,7 @@ public class BugzillaClientManager implements ITaskRepositoryListener {
 	}
 
 	public synchronized BugzillaClient getClient(TaskRepository taskRepository) throws MalformedURLException {
-		BugzillaClient client = clientByUrl.get(taskRepository.getUrl());
+		BugzillaClient client = clientByUrl.get(taskRepository.getRepositoryUrl());
 		if (client == null) {
 
 			String htUser = taskRepository.getHttpUser() != null ? taskRepository.getHttpUser() : "";
@@ -39,10 +39,10 @@ public class BugzillaClientManager implements ITaskRepositoryListener {
 			}
 			BugzillaLanguageSettings languageSettings = BugzillaCorePlugin.getDefault().getLanguageSetting(language);
 
-			client = BugzillaClientFactory.createClient(taskRepository.getUrl(), taskRepository.getUserName(),
+			client = BugzillaClientFactory.createClient(taskRepository.getRepositoryUrl(), taskRepository.getUserName(),
 					taskRepository.getPassword(), htUser, htPass, taskRepository.getProxy(),
 					taskRepository.getCharacterEncoding(), taskRepository.getProperties(), languageSettings);
-			clientByUrl.put(taskRepository.getUrl(), client);
+			clientByUrl.put(taskRepository.getRepositoryUrl(), client);
 		}
 		return client;
 	}
@@ -53,14 +53,14 @@ public class BugzillaClientManager implements ITaskRepositoryListener {
 
 	public synchronized void repositoryAdded(TaskRepository repository) {
 		// make sure there is no stale client still in the cache, bug #149939
-		clientByUrl.remove(repository.getUrl());
+		clientByUrl.remove(repository.getRepositoryUrl());
 	}
 
 	public synchronized void repositoryRemoved(TaskRepository repository) {
-		clientByUrl.remove(repository.getUrl());
+		clientByUrl.remove(repository.getRepositoryUrl());
 	}
 
 	public synchronized void repositorySettingsChanged(TaskRepository repository) {
-		clientByUrl.remove(repository.getUrl());
+		clientByUrl.remove(repository.getRepositoryUrl());
 	}
 }

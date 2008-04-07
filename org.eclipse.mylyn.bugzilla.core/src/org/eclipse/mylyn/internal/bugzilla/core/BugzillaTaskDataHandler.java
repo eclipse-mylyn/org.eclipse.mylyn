@@ -103,7 +103,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 		} catch (IOException e) {
 			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
-					RepositoryStatus.ERROR_IO, repository.getUrl(), e));
+					RepositoryStatus.ERROR_IO, repository.getRepositoryUrl(), e));
 		}
 	}
 
@@ -145,7 +145,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 		} catch (IOException e) {
 			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
-					RepositoryStatus.ERROR_IO, repository.getUrl(), e));
+					RepositoryStatus.ERROR_IO, repository.getRepositoryUrl(), e));
 		}
 	}
 
@@ -168,7 +168,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 		} catch (IOException e) {
 			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
-					RepositoryStatus.ERROR_IO, repository.getUrl(), e));
+					RepositoryStatus.ERROR_IO, repository.getRepositoryUrl(), e));
 		}
 	}
 
@@ -478,7 +478,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		taskData.setAttributeValue(RepositoryTaskAttribute.PRODUCT, project);
 		initializeTaskData(taskRepository, taskData, monitor);
 		cloneTaskData(parentTaskData, taskData);
-		taskData.setAttributeValue(BugzillaReportElement.BLOCKED.getKeyString(), parentTaskData.getId());
+		taskData.setAttributeValue(BugzillaReportElement.BLOCKED.getKeyString(), parentTaskData.getTaskId());
 		taskData.setAttributeValue(RepositoryTaskAttribute.USER_ASSIGNED, parentTaskData.getAssignedTo());
 		taskData.setDescription("");
 		taskData.setSummary("");

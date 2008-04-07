@@ -151,7 +151,7 @@ public class SynchronizeTasksJob extends SynchronizeJob {
 		if (newTaskData != null && newTaskData.size() > 0) {
 			for (RepositoryTaskData taskData : newTaskData) {
 				if (taskData != null) {
-					AbstractTask task = idToTask.remove(taskData.getId());
+					AbstractTask task = idToTask.remove(taskData.getTaskId());
 					if (task != null) {
 						updateFromTaskData(new SubProgressMonitor(monitor, 1), repository, task, taskData);
 						monitor.worked(1);

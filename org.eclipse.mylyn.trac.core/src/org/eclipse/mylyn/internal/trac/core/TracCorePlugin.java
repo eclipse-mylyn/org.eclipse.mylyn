@@ -77,18 +77,18 @@ public class TracCorePlugin extends Plugin {
 
 	public static IStatus toStatus(Throwable e, TaskRepository repository) {
 		if (e instanceof TracLoginException) {
-			return RepositoryStatus.createLoginError(repository.getUrl(), PLUGIN_ID);
+			return RepositoryStatus.createLoginError(repository.getRepositoryUrl(), PLUGIN_ID);
 		} else if (e instanceof TracPermissionDeniedException) {
-			return TracStatus.createPermissionDeniedError(repository.getUrl(), PLUGIN_ID);
+			return TracStatus.createPermissionDeniedError(repository.getRepositoryUrl(), PLUGIN_ID);
 		} else if (e instanceof InvalidTicketException) {
-			return new RepositoryStatus(repository.getUrl(), IStatus.ERROR, PLUGIN_ID, RepositoryStatus.ERROR_IO,
+			return new RepositoryStatus(repository.getRepositoryUrl(), IStatus.ERROR, PLUGIN_ID, RepositoryStatus.ERROR_IO,
 					"The server returned an unexpected response", e);
 		} else if (e instanceof TracException) {
 			String message = e.getMessage();
 			if (message == null) {
 				message = "I/O error has occured";
 			}
-			return new RepositoryStatus(repository.getUrl(), IStatus.ERROR, PLUGIN_ID, RepositoryStatus.ERROR_IO,
+			return new RepositoryStatus(repository.getRepositoryUrl(), IStatus.ERROR, PLUGIN_ID, RepositoryStatus.ERROR_IO,
 					message, e);
 		} else if (e instanceof ClassCastException) {
 			return new RepositoryStatus(IStatus.ERROR, PLUGIN_ID, RepositoryStatus.ERROR_IO,

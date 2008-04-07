@@ -106,8 +106,8 @@ public class BugzillaSearchEngineTest extends TestCase {
 				BugzillaCorePlugin.REPOSITORY_KIND, repositoryURL);
 		assertNotNull(repository);
 
-		final BugzillaRepositoryQuery repositoryQuery = new BugzillaRepositoryQuery(repository.getUrl(),
-				repository.getUrl() + BUG_DESC_SUBSTRING_SEARCH + SearchString, QUERY_NAME);
+		final BugzillaRepositoryQuery repositoryQuery = new BugzillaRepositoryQuery(repository.getRepositoryUrl(),
+				repository.getRepositoryUrl() + BUG_DESC_SUBSTRING_SEARCH + SearchString, QUERY_NAME);
 
 		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 				BugzillaCorePlugin.REPOSITORY_KIND);

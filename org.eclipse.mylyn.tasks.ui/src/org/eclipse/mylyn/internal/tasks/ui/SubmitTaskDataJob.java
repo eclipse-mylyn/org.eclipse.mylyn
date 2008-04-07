@@ -79,8 +79,8 @@ public class SubmitTaskDataJob extends Job {
 							"Task could not be created. No additional information was provided by the connector."));
 				}
 			} else {
-				task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(taskRepository.getUrl(),
-						taskData.getId());
+				task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(taskRepository.getRepositoryUrl(),
+						taskData.getTaskId());
 			}
 
 			if (task == null) {

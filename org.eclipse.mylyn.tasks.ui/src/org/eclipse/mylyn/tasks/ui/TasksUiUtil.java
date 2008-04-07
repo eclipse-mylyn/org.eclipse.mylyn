@@ -270,7 +270,7 @@ public class TasksUiUtil {
 									AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
 											.getRepositoryConnector(repositoryTask.getConnectorKind());
 									if (connector != null) {
-										TasksUiPlugin.getSynchronizationManager().synchronize(connector,
+										TasksUi.synchronize(connector,
 												repositoryTask, false, null);
 									}
 
@@ -538,9 +538,9 @@ public class TasksUiUtil {
 		Assert.isNotNull(repository);
 		Assert.isNotNull(taskId);
 
-		AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(), taskId);
+		AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getRepositoryUrl(), taskId);
 		if (task == null) {
-			task = TasksUiPlugin.getTaskListManager().getTaskList().getTaskByKey(repository.getUrl(), taskId);
+			task = TasksUiPlugin.getTaskListManager().getTaskList().getTaskByKey(repository.getRepositoryUrl(), taskId);
 		}
 		if (task != null) {
 			return TasksUiUtil.openTaskAndRefresh(task);
@@ -548,7 +548,7 @@ public class TasksUiUtil {
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
 			if (connectorUi != null) {
 				try {
-					return connectorUi.openRepositoryTask(repository.getUrl(), taskId);
+					return connectorUi.openRepositoryTask(repository.getRepositoryUrl(), taskId);
 				} catch (Exception e) {
 					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 							"Internal error while opening repository task", e));
@@ -570,7 +570,7 @@ public class TasksUiUtil {
 						AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
 								.getRepositoryConnector(task.getConnectorKind());
 						if (connector != null) {
-							TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, false, null);
+							TasksUi.synchronize(connector, task, false, null);
 						}
 					}
 					return Status.OK_STATUS;
@@ -682,7 +682,7 @@ public class TasksUiUtil {
 						TasksUiUtil.openTaskAndRefresh(task);
 					} else {
 						// TODO consider moving this into the editor, i.e. have the editor refresh the task if task data is missing
-						TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true,
+						TasksUi.synchronize(connector, task, true,
 								new JobChangeAdapter() {
 									@Override
 									public void done(IJobChangeEvent event) {

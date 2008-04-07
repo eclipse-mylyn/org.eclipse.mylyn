@@ -47,17 +47,17 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 
 	@Override
 	public String getAccountCreationUrl(TaskRepository taskRepository) {
-		return taskRepository.getUrl() + "/createaccount.cgi";
+		return taskRepository.getRepositoryUrl() + "/createaccount.cgi";
 	}
 
 	@Override
 	public String getAccountManagementUrl(TaskRepository taskRepository) {
-		return taskRepository.getUrl() + "/userprefs.cgi";
+		return taskRepository.getRepositoryUrl() + "/userprefs.cgi";
 	}
 
 	@Override
 	public String getTaskHistoryUrl(TaskRepository taskRepository, String taskId) {
-		return taskRepository.getUrl() + IBugzillaConstants.URL_BUG_ACTIVITY + taskId;
+		return taskRepository.getRepositoryUrl() + IBugzillaConstants.URL_BUG_ACTIVITY + taskId;
 	}
 	
 	@Override

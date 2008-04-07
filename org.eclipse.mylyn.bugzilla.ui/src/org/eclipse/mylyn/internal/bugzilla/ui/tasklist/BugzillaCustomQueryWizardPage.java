@@ -112,7 +112,7 @@ public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 	@Override
 	public BugzillaRepositoryQuery getQuery() {
 		if (query == null) {
-			query = new BugzillaRepositoryQuery(repository.getUrl(), queryText.getText(), this.getQueryTitle());
+			query = new BugzillaRepositoryQuery(repository.getRepositoryUrl(), queryText.getText(), this.getQueryTitle());
 			query.setCustomQuery(true);
 		} else {
 			query.setHandleIdentifier(this.getQueryTitle());

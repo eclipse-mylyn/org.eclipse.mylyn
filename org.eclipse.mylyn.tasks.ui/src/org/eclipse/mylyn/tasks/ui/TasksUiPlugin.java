@@ -45,6 +45,7 @@ import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
+import org.eclipse.mylyn.internal.tasks.core.sync.RepositorySynchronizationManager;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskHighlighter;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskListNotificationProvider;
@@ -281,7 +282,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				if (connectorUi != null && !connectorUi.isCustomNotificationHandling()) {
 					for (AbstractTask repositoryTask : TasksUiPlugin.getTaskListManager()
 							.getTaskList()
-							.getRepositoryTasks(repository.getUrl())) {
+							.getRepositoryTasks(repository.getRepositoryUrl())) {
 						if ((repositoryTask.getLastReadTimeStamp() == null || repositoryTask.getSynchronizationState() == RepositoryTaskSyncState.INCOMING)
 								&& repositoryTask.isNotified() == false) {
 							TaskListNotification notification = INSTANCE.getIncommingNotification(connector,
@@ -448,8 +449,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			IProxyChangeListener proxyChangeListener = new TasksUiProxyChangeListener(taskRepositoryManager);
 			proxyService.addProxyChangeListener(proxyChangeListener);
 
-			synchronizationManager = new RepositorySynchronizationManager();
-
 			// NOTE: initializing extensions in start(..) has caused race
 			// conditions previously
 			TasksUiExtensionReader.initStartupExtensions(taskListWriter);
@@ -458,6 +457,9 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			// instantiates taskDataManager
 			startOfflineStorageManager();
+
+			synchronizationManager = new RepositorySynchronizationManager(taskDataManager,
+					taskListManager.getTaskList());
 
 			loadTemplateRepositories();
 
@@ -886,6 +888,9 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		return synchronizationScheduler;
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public static RepositorySynchronizationManager getSynchronizationManager() {
 		return synchronizationManager;
 	}

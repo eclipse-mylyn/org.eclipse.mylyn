@@ -383,7 +383,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 
 		public ISelection getSelection() {
-			RepositoryTaskSelection selection = new RepositoryTaskSelection(taskData.getId(),
+			RepositoryTaskSelection selection = new RepositoryTaskSelection(taskData.getTaskId(),
 					taskData.getRepositoryUrl(), taskData.getConnectorKind(), "", selectedComment,
 					taskData.getSummary());
 			selection.setIsDescription(true);
@@ -653,7 +653,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				composite.setBackground(null);
 				String label = repository.getRepositoryLabel();
 				if (label.indexOf("//") != -1) {
-					label = label.substring((repository.getUrl().indexOf("//") + 2));
+					label = label.substring((repository.getRepositoryUrl().indexOf("//") + 2));
 				}
 
 				Hyperlink link = new Hyperlink(composite, SWT.NONE);
@@ -1664,8 +1664,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				SWT.PUSH);
 		attachScreenshotButton.setImage(TasksUiImages.getImage(TasksUiImages.IMAGE_CAPTURE));
 
-		final AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(),
-				taskData.getId());
+		final AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getRepositoryUrl(),
+				taskData.getTaskId());
 		if (task == null) {
 			attachFileButton.setEnabled(false);
 			attachScreenshotButton.setEnabled(false);
@@ -1707,8 +1707,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				}
 
 				public void widgetSelected(SelectionEvent e) {
-					AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(),
-							taskData.getId());
+					AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getRepositoryUrl(),
+							taskData.getTaskId());
 					if (task == null) {
 						// Should not happen
 						return;
@@ -2084,7 +2084,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		public void handleEvent(Event event) {
 			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
-					new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(),
+					new RepositoryTaskSelection(taskData.getTaskId(), taskData.getRepositoryUrl(),
 							taskData.getConnectorKind(), getSectionLabel(SECTION_NAME.DESCRIPTION_SECTION), true,
 							taskData.getSummary()))));
 		}
@@ -2765,8 +2765,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		toolkit.createLabel(buttonComposite, "    ");
 
-		AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(),
-				taskData.getId());
+		AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getRepositoryUrl(),
+				taskData.getTaskId());
 		if (attachContextEnabled && task != null) {
 			addAttachContextButton(buttonComposite, task);
 		}
@@ -2776,7 +2776,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		if (submitButton != null && !submitButton.isDisposed()) {
 			submitButton.setEnabled(enabled);
 			if (enabled) {
-				submitButton.setToolTipText("Submit to " + this.repository.getUrl());
+				submitButton.setToolTipText("Submit to " + this.repository.getRepositoryUrl());
 			}
 		}
 	}
@@ -3249,7 +3249,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	private class NewCommentListener implements Listener {
 		public void handleEvent(Event event) {
 			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
-					new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(),
+					new RepositoryTaskSelection(taskData.getTaskId(), taskData.getRepositoryUrl(),
 							taskData.getConnectorKind(), getSectionLabel(SECTION_NAME.NEWCOMMENT_SECTION), false,
 							taskData.getSummary()))));
 		}
@@ -3572,8 +3572,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 											"Task could not be created. No additional information was provided by the connector."));
 						}
 					} else {
-						modifiedTask = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(),
-								taskData.getId());
+						modifiedTask = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getRepositoryUrl(),
+								taskData.getTaskId());
 					}
 
 					// Synchronization accounting...
@@ -3615,8 +3615,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						// open local then via web browser...
 						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 							public void run() {
-								TasksUiUtil.openTask(repository.getUrl(), taskData.getId(), connector.getTaskUrl(
-										taskData.getRepositoryUrl(), taskData.getId()));
+								TasksUiUtil.openTask(repository.getRepositoryUrl(), taskData.getTaskId(), connector.getTaskUrl(
+										taskData.getRepositoryUrl(), taskData.getTaskId()));
 							}
 						});
 					}
@@ -3998,7 +3998,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				if (task != null) {
 					TasksUiUtil.refreshAndOpenTaskListElement(task);
 				} else {
-					TasksUiUtil.openTask(repository.getUrl(), taskId, taskUrl);
+					TasksUiUtil.openTask(repository.getRepositoryUrl(), taskId, taskUrl);
 				}
 			}
 		});

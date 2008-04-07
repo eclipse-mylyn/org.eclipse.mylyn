@@ -27,7 +27,7 @@ public class TaskRepositoryTest extends TestCase {
 
 	public void testLabel() {
 		TaskRepository repository = new TaskRepository("kind", "http://foo.bar");
-		assertTrue(repository.getRepositoryLabel().equals(repository.getUrl()));
+		assertTrue(repository.getRepositoryLabel().equals(repository.getRepositoryUrl()));
 
 		repository.setProperty(IRepositoryConstants.PROPERTY_LABEL, "label");
 		assertTrue(repository.getRepositoryLabel().equals("label"));

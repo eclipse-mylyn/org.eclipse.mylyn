@@ -231,7 +231,7 @@ public class TracQueryWizardPage extends WizardPage {
 	}
 
 	public TracRepositoryQuery getQuery() {
-		return new TracRepositoryQuery(repository.getUrl(), getQueryUrl(repository.getUrl()), titleText.getText());
+		return new TracRepositoryQuery(repository.getRepositoryUrl(), getQueryUrl(repository.getRepositoryUrl()), titleText.getText());
 	}
 
 	private void hideSearchField(SearchField field) {

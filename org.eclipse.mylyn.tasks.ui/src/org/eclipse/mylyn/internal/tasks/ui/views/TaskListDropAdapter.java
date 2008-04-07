@@ -262,7 +262,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			}
 			for (TaskRepository repository : TasksUiPlugin.getRepositoryManager().getRepositories(
 					connector.getConnectorKind())) {
-				if (repository.getUrl().equals(repositoryUrl)) {
+				if (repository.getRepositoryUrl().equals(repositoryUrl)) {
 					try {
 						newTask = connector.createTaskFromExistingId(repository, id, new NullProgressMonitor());
 						TasksUiUtil.refreshAndOpenTaskListElement(newTask);

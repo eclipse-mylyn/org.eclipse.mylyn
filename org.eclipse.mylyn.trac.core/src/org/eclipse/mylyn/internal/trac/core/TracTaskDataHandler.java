@@ -75,10 +75,28 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 
 		try {
 			RepositoryTaskData data = new RepositoryTaskData(attributeFactory, TracCorePlugin.REPOSITORY_KIND,
-					repository.getUrl(), id + "");
+					repository.getRepositoryUrl(), id + "");
 			ITracClient client = connector.getClientManager().getRepository(repository);
 			client.updateAttributes(monitor, false);
 			TracTicket ticket = client.getTicket(id, monitor);
+			createDefaultAttributes(attributeFactory, data, client, true);
+			updateTaskData(repository, attributeFactory, data, ticket);
+			return data;
+		} catch (OperationCanceledException e) {
+			throw e;
+		} catch (Exception e) {
+			// TODO catch TracException
+			throw new CoreException(TracCorePlugin.toStatus(e, repository));
+		}
+	}
+
+	public RepositoryTaskData createTaskDataFromTicket(TaskRepository repository, TracTicket ticket,
+			IProgressMonitor monitor) throws CoreException {
+		try {
+			RepositoryTaskData data = new RepositoryTaskData(attributeFactory, TracCorePlugin.REPOSITORY_KIND,
+					repository.getRepositoryUrl(), ticket.getId() + "");
+			ITracClient client = connector.getClientManager().getRepository(repository);
+			client.updateAttributes(monitor, false);
 			createDefaultAttributes(attributeFactory, data, client, true);
 			updateTaskData(repository, attributeFactory, data, ticket);
 			return data;
@@ -142,7 +160,7 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 				RepositoryAttachment taskAttachment = new RepositoryAttachment(factory);
 				taskAttachment.setCreator(attachments[i].getAuthor());
 				taskAttachment.setRepositoryKind(TracCorePlugin.REPOSITORY_KIND);
-				taskAttachment.setRepositoryUrl(repository.getUrl());
+				taskAttachment.setRepositoryUrl(repository.getRepositoryUrl());
 				taskAttachment.setTaskId("" + ticket.getId());
 				taskAttachment.setAttributeValue(Attribute.DESCRIPTION.getTracKey(), attachments[i].getDescription());
 				taskAttachment.setAttributeValue(RepositoryTaskAttribute.ATTACHMENT_FILENAME,
@@ -157,7 +175,7 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 					taskAttachment.setAttributeValue(RepositoryTaskAttribute.ATTACHMENT_DATE,
 							attachments[i].getCreated().toString());
 				}
-				taskAttachment.setAttributeValue(RepositoryTaskAttribute.ATTACHMENT_URL, repository.getUrl()
+				taskAttachment.setAttributeValue(RepositoryTaskAttribute.ATTACHMENT_URL, repository.getRepositoryUrl()
 						+ ITracClient.TICKET_ATTACHMENT_URL + ticket.getId() + "/" + attachments[i].getFilename());
 				taskAttachment.setAttributeValue(RepositoryTaskAttribute.ATTACHMENT_ID, i + "");
 				data.addAttachment(taskAttachment);
@@ -380,7 +398,7 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 		cloneTaskData(parentTaskData, taskData);
 		taskData.setDescription("");
 		taskData.setSummary("");
-		attribute.setValue(parentTaskData.getId());
+		attribute.setValue(parentTaskData.getTaskId());
 		return true;
 	}
 
