@@ -12,6 +12,8 @@ import junit.framework.TestCase;
 
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalProvider;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 
 /**
@@ -21,7 +23,7 @@ import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 public class PersonProposalProviderTest extends TestCase {
 
 	public void testGetProposalsNullParameters() {
-		PersonProposalProvider provider = new PersonProposalProvider(null, null);
+		PersonProposalProvider provider = new PersonProposalProvider((AbstractTask) null, (RepositoryTaskData) null);
 		IContentProposal[] result = provider.getProposals("", 0);
 		assertNotNull(result);
 		assertEquals(0, result.length);
