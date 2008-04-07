@@ -56,7 +56,7 @@ public class CvsLinkedTaskInfoAdapterFactory implements IAdapterFactory {
 		if (resource != null) {
 			TaskRepository repository = TasksUiPlugin.getDefault().getRepositoryForResource(resource, true);
 			if (repository != null) {
-				return new LinkedTaskInfo(repository.getUrl(), null, null, comment);
+				return new LinkedTaskInfo(repository.getRepositoryUrl(), null, null, comment);
 			}
 		}
 

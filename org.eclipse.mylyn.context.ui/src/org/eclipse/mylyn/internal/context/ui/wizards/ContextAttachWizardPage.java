@@ -53,7 +53,7 @@ public class ContextAttachWizardPage extends WizardPage {
 		summary.setText("Task: " + task.getSummary());
 		summary.setEditable(false);
 		Text repositoryText = new Text(composite, SWT.NONE);
-		repositoryText.setText("Repository: " + repository.getUrl());
+		repositoryText.setText("Repository: " + repository.getRepositoryUrl());
 		repositoryText.setEditable(false);
 
 		new Label(composite, SWT.NONE).setText("Comment: ");

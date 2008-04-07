@@ -156,7 +156,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 						taskId = ids[0];
 						connector = c;
 						repository = r;
-						repositoryUrl = r.getUrl();
+						repositoryUrl = r.getRepositoryUrl();
 						break REPOSITORIES;
 					}
 				}
@@ -284,7 +284,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 					if (repository != null && taskId != null) {
 						AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
 						if (connectorUi != null) {
-							connectorUi.openRepositoryTask(repository.getUrl(), taskId);
+							connectorUi.openRepositoryTask(repository.getRepositoryUrl(), taskId);
 							return Status.OK_STATUS;
 						}
 					}

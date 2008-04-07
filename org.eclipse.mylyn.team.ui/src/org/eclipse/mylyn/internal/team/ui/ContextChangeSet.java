@@ -122,7 +122,7 @@ public class ContextChangeSet extends CVSActiveChangeSet/*ActiveChangeSet*/imple
 			for (IProject project : projects) {
 				TaskRepository repository = TasksUiPlugin.getDefault().getRepositoryForResource(project, true);
 				if (repository != null) {
-					if (!repository.getUrl().equals(task.getRepositoryUrl())) {
+					if (!repository.getRepositoryUrl().equals(task.getRepositoryUrl())) {
 						unmatchedRepositoryFound = true;
 					}
 				}

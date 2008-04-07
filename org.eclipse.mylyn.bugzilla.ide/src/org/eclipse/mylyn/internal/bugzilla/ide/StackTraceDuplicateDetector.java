@@ -46,7 +46,7 @@ public class StackTraceDuplicateDetector extends AbstractDuplicateDetector {
 		}
 
 		try {
-			queryUrl = repository.getUrl() + "/buglist.cgi?long_desc_type=allwordssubstr&long_desc="
+			queryUrl = repository.getRepositoryUrl() + "/buglist.cgi?long_desc_type=allwordssubstr&long_desc="
 					+ URLEncoder.encode(searchString, repository.getCharacterEncoding());
 		} catch (UnsupportedEncodingException e) {
 			StatusHandler.log(new Status(IStatus.WARNING, BugzillaIdePlugin.ID_PLUGIN, "Error during duplicate detection", e));
@@ -55,7 +55,7 @@ public class StackTraceDuplicateDetector extends AbstractDuplicateDetector {
 
 		queryUrl += "&product=" + taskData.getProduct();
 
-		BugzillaRepositoryQuery bugzillaQuery = new BugzillaRepositoryQuery(repository.getUrl(), queryUrl, "search");
+		BugzillaRepositoryQuery bugzillaQuery = new BugzillaRepositoryQuery(repository.getRepositoryUrl(), queryUrl, "search");
 
 		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
 				repository, bugzillaQuery, new TaskFactory(repository, false, false));
