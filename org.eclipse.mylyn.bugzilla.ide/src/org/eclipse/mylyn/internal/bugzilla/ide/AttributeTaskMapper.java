@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.mylyn.internal.tasks.core.DefaultTaskSchema;
+import org.eclipse.mylyn.tasks.core.DefaultTaskSchema;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskSelection;

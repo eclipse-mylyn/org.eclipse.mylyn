@@ -25,6 +25,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchSite;
@@ -125,7 +126,7 @@ public class ContextUiUtil {
 				if (site instanceof IViewSite) {
 					IStatusLineManager statusLineManager = ((IViewSite) site).getActionBars().getStatusLineManager();
 					statusLineManager.setMessage("Context attached to task: " + task.getSummary());
-					TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+					TasksUi.synchronize(connector, task, true, null);
 				}
 			}
 		} catch (InvocationTargetException e) {
