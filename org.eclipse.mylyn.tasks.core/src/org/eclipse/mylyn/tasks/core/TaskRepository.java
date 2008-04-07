@@ -511,6 +511,7 @@ public final class TaskRepository extends PlatformObject {
 		return timeZoneId == null || "".equals(timeZoneId) ? TimeZone.getDefault().getID() : timeZoneId;
 	}
 
+	// API 3.0 rename to getRepositoryUrl()
 	public String getUrl() {
 		return properties.get(IRepositoryConstants.PROPERTY_URL);
 	}

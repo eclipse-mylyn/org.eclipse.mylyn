@@ -116,6 +116,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.AbstractDuplicateDetector;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.search.SearchHitCollector;
@@ -960,7 +961,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				try {
 					super.performUpdate(repository, connector, monitor);
 					if (connector != null) {
-						TasksUiPlugin.getSynchronizationManager().synchronize(connector, repositoryTask, true,
+						TasksUi.synchronize(connector, repositoryTask, true,
 								new JobChangeAdapter() {
 
 									@Override
@@ -3585,7 +3586,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 						modifiedTask.setSubmitting(true);
 						final AbstractTask finalModifiedTask = modifiedTask;
-						TasksUiPlugin.getSynchronizationManager().synchronize(connector, modifiedTask, true,
+						TasksUi.synchronize(connector, modifiedTask, true,
 								new JobChangeAdapter() {
 
 									@Override

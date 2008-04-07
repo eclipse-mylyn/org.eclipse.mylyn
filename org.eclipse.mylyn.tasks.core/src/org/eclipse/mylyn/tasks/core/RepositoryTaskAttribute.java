@@ -156,6 +156,21 @@ public class RepositoryTaskAttribute implements Serializable {
 	 */
 	public static final String TYPE_TASK_DEPENDENCY = "taskDepenedency";
 
+	/**
+	 * @since 3.0
+	 */
+	public static final String TASK_URL = "task.common.url";
+
+	/**
+	 * @since 3.0
+	 */
+	public static final String COMPLETED = "task.common.completed";
+
+	/**
+	 * @since 3.0
+	 */
+	public static final String DATE_DUE = "task.common.date.due";
+
 	private boolean hidden = false;
 
 	private boolean isReadOnly = false;

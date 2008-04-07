@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.web.tasks.WebRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.ITaskCollector;
+import org.eclipse.mylyn.tasks.core.AbstractTaskCollector;
 import org.eclipse.mylyn.tasks.core.ITaskFactory;
 import org.eclipse.mylyn.tasks.core.QueryHitCollector;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
@@ -28,6 +28,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
  * @author George Lindholm
+ * @author Steffen Pingel
  */
 public class HtmlDecodeEntityTest extends TestCase {
 
@@ -35,43 +36,32 @@ public class HtmlDecodeEntityTest extends TestCase {
 
 	private final TaskRepository repository = new TaskRepository("localhost", "file:///tmp/a");
 
-	private final List<AbstractTask> queryHits = new ArrayList<AbstractTask>();
+	private final List<RepositoryTaskData> queryHits = new ArrayList<RepositoryTaskData>();
 
-	private final ITaskCollector resultCollector = new QueryHitCollector(new ITaskFactory() {
-
+	private final ITaskFactory taskFactory = new ITaskFactory() {
 		public AbstractTask createTask(RepositoryTaskData taskData, IProgressMonitor monitor) throws CoreException {
 			return null;
 		}
-	}) {
+	};
 
+	private final AbstractTaskCollector resultCollector = new QueryHitCollector(taskFactory) {
 		@Override
-		public void accept(AbstractTask hit) {
+		public void accept(RepositoryTaskData hit) {
 			queryHits.add(hit);
 		}
 	};
 
 	public void testEntities() {
-
 		assertQuery("1:A quote &quot;", "(\\d+?):(.+)", "A quote \""); // Simple quote
-
 		assertQuery("2:A quote '&quot;'", "(\\d+?):(.+)", "A quote '\"'"); // Simple quote
-
 		assertQuery("3:A quote &quot;&quot; doubled", "({Id}\\d+?):({Description}.+)", "A quote \"\" doubled"); // Double quotes
-
 		assertQuery("4:A quote &quot ;", "(\\d+?):(.+)", "A quote &quot ;"); // Bad entity syntax
-
 		assertQuery("5:A quote & quot;", "(\\d+?):(.+)", "A quote & quot;"); // Bad entity syntax
-
 		assertQuery("6:foo & boo", "(\\d+?):(.+)", "foo & boo"); // Non entity syntax
-
 		assertQuery("7:foo&boo poo", "(\\d+?):(.+)", "foo&boo poo"); // Non entity  syntax
-
 		assertQuery("8:foo&boo ;poo", "(\\d+?):(.+)", "foo&boo ;poo"); // Bad, non entity syntax
-
 		assertQuery("9:foo&boo;poo", "(\\d+?):(.+)", "foo&boo;poo"); // Invalid entity
-
 		assertQuery("10:&#32;", "(\\d+?):(.+)", " "); // HTML decimal entity
-
 		assertQuery("11:&#X20;", "(\\d+?):(.+)", " "); // Hexadecimal entity
 	}
 
@@ -80,7 +70,6 @@ public class HtmlDecodeEntityTest extends TestCase {
 		IStatus status = WebRepositoryConnector.performQuery(entity, regex, "", monitor, resultCollector, repository);
 		assertTrue(status == Status.OK_STATUS);
 		assertEquals(queryHits.get(0).getSummary(), expected);
-
 	}
 
 }

@@ -47,9 +47,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.bugzilla.core.history.BugzillaTaskHistoryParser;
 import org.eclipse.mylyn.internal.bugzilla.core.history.TaskHistory;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.AbstractTaskCollector;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
-import org.eclipse.mylyn.tasks.core.ITaskCollector;
-import org.eclipse.mylyn.tasks.core.QueryHitCollector;
 import org.eclipse.mylyn.tasks.core.RepositoryOperation;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
@@ -467,7 +466,7 @@ public class BugzillaClient {
 //		}
 	}
 
-	public boolean getSearchHits(AbstractRepositoryQuery query, ITaskCollector collector) throws IOException,
+	public boolean getSearchHits(AbstractRepositoryQuery query, AbstractTaskCollector collector) throws IOException,
 			CoreException {
 		GzipPostMethod postMethod = null;
 
@@ -506,8 +505,8 @@ public class BugzillaClient {
 					if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
 						RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory(
 								postMethod.getResponseBodyAsUnzippedStream(), characterEncoding);
-						queryFactory.performQuery(repositoryUrl.toString(), collector, QueryHitCollector.MAX_HITS);
-						return !collector.getTasks().isEmpty();
+						int count = queryFactory.performQuery(repositoryUrl.toString(), collector, AbstractTaskCollector.MAX_HITS);
+						return count > 0;
 					}
 				}
 			}

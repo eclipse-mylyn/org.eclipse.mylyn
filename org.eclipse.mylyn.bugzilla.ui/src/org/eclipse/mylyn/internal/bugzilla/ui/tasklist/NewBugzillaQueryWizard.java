@@ -19,6 +19,7 @@ import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.search.AbstractRepositoryQueryPage;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
@@ -70,7 +71,7 @@ public class NewBugzillaQueryWizard extends Wizard {
 				try {
 					AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
 							.getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
-					TasksUiPlugin.getSynchronizationManager().synchronize(connector, queryCategory, null, true);
+					TasksUi.synchronize(connector, queryCategory, null, true);
 				} finally {
 					monitor.done();
 				}

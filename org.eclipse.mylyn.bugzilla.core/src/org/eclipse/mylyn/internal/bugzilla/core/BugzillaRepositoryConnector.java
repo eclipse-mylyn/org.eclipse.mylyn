@@ -30,16 +30,18 @@ import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskCollector;
 import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
-import org.eclipse.mylyn.tasks.core.ITaskCollector;
 import org.eclipse.mylyn.tasks.core.ITaskFactory;
 import org.eclipse.mylyn.tasks.core.QueryHitCollector;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.core.SynchronizationEvent;
 import org.eclipse.mylyn.tasks.core.TaskComment;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
+import org.eclipse.mylyn.web.core.Policy;
 
 /**
  * @author Mik Kersten
@@ -119,11 +121,17 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public void updateTaskFromTaskData(TaskRepository repository, AbstractTask repositoryTask,
+	public boolean updateTaskFromTaskData(TaskRepository repository, AbstractTask repositoryTask,
 			RepositoryTaskData taskData) {
 		BugzillaTask bugzillaTask = (BugzillaTask) repositoryTask;
 		if (taskData != null) {
-
+			if (taskData.isPartial()) {
+				bugzillaTask.setSummary(taskData.getAttributeValue(RepositoryTaskAttribute.SUMMARY));
+				bugzillaTask.setPriority(taskData.getAttributeValue(RepositoryTaskAttribute.PRIORITY));
+				bugzillaTask.setOwner(taskData.getAttributeValue(RepositoryTaskAttribute.USER_OWNER));
+				return false;
+			}
+			
 ////			// subtasks
 //			repositoryTask.dropSubTasks();
 //			Set<String> subTaskIds = taskDataHandler.getSubTaskIds(taskData);
@@ -245,6 +253,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			}
 
 		}
+		return false;
 	}
 
 	@Override
@@ -277,19 +286,22 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public boolean markStaleTasks(TaskRepository repository, Set<AbstractTask> tasks, IProgressMonitor monitor)
+	public void preSynchronization(SynchronizationEvent event, IProgressMonitor monitor)
 			throws CoreException {
+		TaskRepository repository = event.taskRepository;	
+		if (event.tasks.isEmpty()) {
+			return;
+		}
+		
+		monitor = Policy.monitorFor(monitor);
 		try {
-			
-			if(tasks.isEmpty()) return true;
-			
 			monitor.beginTask("Checking for changed tasks", IProgressMonitor.UNKNOWN);
 
 			if (repository.getSynchronizationTimeStamp() == null) {
-				for (AbstractTask task : tasks) {
+				for (AbstractTask task : event.tasks) {
 					task.setStale(true);
 				}
-				return true;
+				return;
 			}
 
 			String dateString = repository.getSynchronizationTimeStamp();
@@ -317,7 +329,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 //			queryForChanged(repository, changedTasks, urlQueryString);
 			
 			Set<AbstractTask> changedTasks = new HashSet<AbstractTask>();
-			Iterator<AbstractTask> itr = tasks.iterator();
+			Iterator<AbstractTask> itr = event.tasks.iterator();
 			int queryCounter = 0;
 			Set<AbstractTask> checking = new HashSet<AbstractTask>();
 			while (itr.hasNext()) {
@@ -339,7 +351,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				}
 			}
 			
-			for (AbstractTask task : tasks) {
+			for (AbstractTask task : event.tasks) {
 				if (changedTasks.contains(task)) {
 					task.setStale(true);
 				}
@@ -347,12 +359,10 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 			// FIXME check if new tasks were added
 			//return changedTasks.isEmpty();
-			return true;
+			return;
 		} catch (UnsupportedEncodingException e) {
-			// XXX throw CoreException instead?
-			StatusHandler.fail(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, "Repository configured with unsupported encoding: "
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, "Repository configured with unsupported encoding: "
 					+ repository.getCharacterEncoding() + "\n\n Unable to determine changed tasks.", e));
-			return false;
 		} finally {
 			monitor.done();
 		}
@@ -369,7 +379,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		});
 
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(repository.getUrl(), urlQueryString, "");
-		performQuery(query, repository, new NullProgressMonitor(), collector);
+		performQuery(repository, query, collector, null, new NullProgressMonitor());
 		
 		changedTasks.addAll(collector.getTasks());
 	}
@@ -385,8 +395,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public IStatus performQuery(final AbstractRepositoryQuery query, TaskRepository repository,
-			IProgressMonitor monitor, ITaskCollector resultCollector) {
+	public IStatus performQuery(TaskRepository repository, final AbstractRepositoryQuery query,
+			AbstractTaskCollector resultCollector, SynchronizationEvent event, IProgressMonitor monitor) {
 		try {
 			monitor.beginTask("Running query", IProgressMonitor.UNKNOWN);
 			BugzillaClient client = getClientManager().getClient(repository);

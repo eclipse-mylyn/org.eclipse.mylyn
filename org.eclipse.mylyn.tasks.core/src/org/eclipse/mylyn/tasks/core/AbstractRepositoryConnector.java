@@ -74,6 +74,7 @@ public abstract class AbstractRepositoryConnector {
 		return null;
 	}
 
+	// API 3.0 rename to canCreateTaskFromId?
 	public abstract boolean canCreateTaskFromKey(TaskRepository repository);
 
 	public abstract boolean canCreateNewTask(TaskRepository repository);
@@ -81,6 +82,7 @@ public abstract class AbstractRepositoryConnector {
 	/**
 	 * create task and necessary subtasks (1 level nesting)
 	 */
+	// API 3.0 rename to createTaskFromId
 	public AbstractTask createTaskFromExistingId(TaskRepository repository, String id, IProgressMonitor monitor)
 			throws CoreException {
 		return createTaskFromExistingId(repository, id, true, monitor);
@@ -147,7 +149,7 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 	/**
-	 * Utility method for construction of connector specific task object TODO: Move to 'task' factory
+	 * Utility method for construction of connector specific task object.
 	 * 
 	 * @return instance of AbstractTask
 	 */
@@ -156,15 +158,22 @@ public abstract class AbstractRepositoryConnector {
 	/**
 	 * Implementors must execute query synchronously.
 	 * 
-	 * @param query
-	 * @param repository
-	 *            TODO
-	 * @param monitor
-	 * @param resultCollector
-	 *            IQueryHitCollector that collects the hits found
+	 * @since 3.0
 	 */
-	public abstract IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository,
-			IProgressMonitor monitor, ITaskCollector resultCollector);
+	public abstract IStatus performQuery(TaskRepository repository, AbstractRepositoryQuery query,
+			final AbstractTaskCollector resultCollector, SynchronizationEvent event, IProgressMonitor monitor);
+
+	/**
+	 * @since 2.0
+	 * @deprecated use
+	 *             {@link #performQuery(TaskRepository, AbstractRepositoryQuery, AbstractTaskCollector, SynchronizationEvent, IProgressMonitor)}
+	 *             instead
+	 */
+	@Deprecated
+	public IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository, IProgressMonitor monitor,
+			final ITaskCollector resultCollector) {
+		return null;
+	}
 
 	/**
 	 * The connector's summary i.e. "JIRA (supports 3.3.1 and later)"
@@ -220,11 +229,12 @@ public abstract class AbstractRepositoryConnector {
 			IProgressMonitor monitor) throws CoreException;
 
 	/**
-	 * Updates task with latest information from {@code taskData}
+	 * Updates task with latest information from <code>taskData</code>.
 	 * 
-	 * @since 2.0
+	 * @return true, if properties of <code>task</code> were changed
+	 * @since 3.0
 	 */
-	public abstract void updateTaskFromTaskData(TaskRepository repository, AbstractTask repositoryTask,
+	public abstract boolean updateTaskFromTaskData(TaskRepository repository, AbstractTask task,
 			RepositoryTaskData taskData);
 
 	/**
@@ -232,7 +242,9 @@ public abstract class AbstractRepositoryConnector {
 	 * 
 	 * @return true, if properties of <code>existingTask</code> were changed
 	 * @since 2.0
+	 * @deprecated use {@link #updateTaskFromTaskData(TaskRepository, AbstractTask, RepositoryTaskData)} instead
 	 */
+	@Deprecated
 	public boolean updateTaskFromQueryHit(TaskRepository repository, AbstractTask existingTask, AbstractTask queryHit) {
 		boolean changed = false;
 		if (existingTask.isCompleted() != queryHit.isCompleted()) {
@@ -263,6 +275,7 @@ public abstract class AbstractRepositoryConnector {
 		return changed;
 	}
 
+	@Deprecated
 	protected final boolean hasTaskPropertyChanged(Object existingProperty, Object newProperty) {
 		// the query hit does not have this property
 		if (newProperty == null) {
@@ -292,9 +305,13 @@ public abstract class AbstractRepositoryConnector {
 	 *         <code>tasks</code> collection), so empty collection means that there are some other tasks changed
 	 * 
 	 * @throws CoreException
+	 * @deprecated use {@link #preQuerySynchronization(TaskRepository, SynchronizationEvent, IProgressMonitor)} instead
 	 */
-	public abstract boolean markStaleTasks(TaskRepository repository, Set<AbstractTask> tasks, IProgressMonitor monitor)
-			throws CoreException;
+	@Deprecated
+	public boolean markStaleTasks(TaskRepository repository, Set<AbstractTask> tasks, IProgressMonitor monitor)
+			throws CoreException {
+		return false;
+	}
 
 	// API 3.0 move to template manager
 	public void addTemplate(RepositoryTemplate template) {
@@ -377,7 +394,11 @@ public abstract class AbstractRepositoryConnector {
 	/**
 	 * Following synchronization, the timestamp needs to be recorded. This provides a default implementation for
 	 * determining the last synchronization timestamp. Override to return actual timestamp from repository.
+	 * 
+	 * @deprecated
 	 */
+	// API 3.0 move to utility class
+	@Deprecated
 	public String getSynchronizationTimestamp(TaskRepository repository, Set<AbstractTask> changedTasks) {
 		Date mostRecent = new Date(0);
 		String mostRecentTimeStamp = repository.getSynchronizationTimeStamp();
@@ -408,6 +429,23 @@ public abstract class AbstractRepositoryConnector {
 
 	private TaskDataManager getTaskDataManager() {
 		return taskDataManager;
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public void preSynchronization(SynchronizationEvent event, IProgressMonitor monitor) throws CoreException {
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public void postSynchronization(SynchronizationEvent event, IProgressMonitor monitor) throws CoreException {
+		if (event.fullSynchronization) {
+			event.taskRepository.setSynchronizationTimeStamp(getSynchronizationTimestamp(event.taskRepository,
+					event.changedTasks));
+		}
+		// TODO save repository
 	}
 
 }

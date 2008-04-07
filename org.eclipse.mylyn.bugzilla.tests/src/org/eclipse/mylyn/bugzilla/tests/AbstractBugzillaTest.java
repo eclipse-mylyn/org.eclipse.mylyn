@@ -30,6 +30,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.TaskFactory;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
@@ -117,7 +118,7 @@ public abstract class AbstractBugzillaTest extends TestCase {
 
 		taskFactory = new TaskFactory(repository);
 //		connector.setForceSynchExecForTesting(true);
-		TasksUiPlugin.getSynchronizationManager().setForceSyncExec(true);
+		TasksUi.setForceSyncExec(true);
 	}
 
 	protected BugzillaTask generateLocalTaskAndDownload(String taskNumber) throws CoreException {
@@ -146,7 +147,7 @@ public abstract class AbstractBugzillaTest extends TestCase {
 
 	protected void synchAndAssertState(Set<AbstractTask> tasks, RepositoryTaskSyncState state) {
 		for (AbstractTask task : tasks) {
-			TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+			TasksUi.synchronize(connector, task, true, null);
 			assertEquals(task.getSynchronizationState(), state);
 		}
 	}

@@ -47,6 +47,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.ui.TaskFactory;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.trac.tests.support.TestFixture;
 import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
@@ -106,7 +107,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 		assertEquals(abstractConnector.getConnectorKind(), kind);
 
 		connector = (TracRepositoryConnector) abstractConnector;
-		TasksUiPlugin.getSynchronizationManager().setForceSyncExec(true);
+		TasksUi.setForceSyncExec(true);
 	}
 
 	public void testGetRepositoryUrlFromTaskUrl() {
@@ -219,25 +220,20 @@ public class TracRepositoryConnectorTest extends TestCase {
 		TracRepositoryQuery query = new TracRepositoryQuery(url, queryUrl, "description");
 
 		//MultiStatus queryStatus = new MultiStatus(TracUiPlugin.PLUGIN_ID, IStatus.OK, "Query result", null);
-		final List<AbstractTask> result = new ArrayList<AbstractTask>();
+		final List<RepositoryTaskData> result = new ArrayList<RepositoryTaskData>();
 		QueryHitCollector hitCollector = new QueryHitCollector(new TaskFactory(repository)) {
 			@Override
-			public void accept(RepositoryTaskData data) {
-				fail("Unexpected call to accept()");
-			}
-
-			@Override
-			public void accept(AbstractTask hit) {
+			public void accept(RepositoryTaskData hit) {
 				result.add(hit);
 			}
 		};
-		IStatus queryStatus = connector.performQuery(query, repository, new NullProgressMonitor(), hitCollector);
+		IStatus queryStatus = connector.performQuery(repository, query, hitCollector, null, new NullProgressMonitor());
 
 		assertTrue(queryStatus.isOK());
 		assertEquals(3, result.size());
-		assertEquals(data.tickets.get(0).getId() + "", result.get(0).getTaskId());
-		assertEquals(data.tickets.get(1).getId() + "", result.get(1).getTaskId());
-		assertEquals(data.tickets.get(2).getId() + "", result.get(2).getTaskId());
+		assertEquals(data.tickets.get(0).getId() + "", result.get(0).getId());
+		assertEquals(data.tickets.get(1).getId() + "", result.get(1).getId());
+		assertEquals(data.tickets.get(2).getId() + "", result.get(2).getId());
 	}
 
 	public void testUpdateTaskDetails() throws InvalidTicketException {
@@ -323,7 +319,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
 		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.attachmentTicketId + "",
 				new NullProgressMonitor());
-		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+		TasksUi.synchronize(connector, task, true, null);
 
 		//int size = task.getTaskData().getAttachments().size();
 
@@ -334,7 +330,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 		assertTrue(AttachmentUtil.attachContext(connector.getAttachmentHandler(), repository, task, "",
 				new NullProgressMonitor()));
 
-		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+		TasksUi.synchronize(connector, task, true, null);
 		// TODO attachment may have been overridden therefore size may not have changed
 		//assertEquals(size + 1, task.getTaskData().getAttachments().size());
 

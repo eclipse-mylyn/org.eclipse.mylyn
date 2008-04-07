@@ -17,6 +17,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -52,7 +53,7 @@ public class RefreshRepositoryTasksAction extends AbstractTaskRepositoryAction i
 		if (connector != null) {
 			Set<AbstractTask> repositoryTasks = TasksUiPlugin.getTaskListManager().getTaskList().getRepositoryTasks(
 					repository.getUrl());
-			TasksUiPlugin.getSynchronizationManager().synchronize(connector, repositoryTasks, true, null);
+			TasksUi.synchronize(connector, repositoryTasks, true, null);
 		}
 	}
 

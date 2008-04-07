@@ -18,6 +18,7 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.search.SearchHitCollector;
 import org.eclipse.search.ui.ISearchQuery;
@@ -73,7 +74,7 @@ public class CreateQueryFromSearchAction extends Action {
 					if (dialogResult == Window.OK) {
 						query.setHandleIdentifier(dialog.getValue());
 						TasksUiPlugin.getTaskListManager().getTaskList().addQuery(query);
-						TasksUiPlugin.getSynchronizationManager().synchronize(connector, query, null, true);
+						TasksUi.synchronize(connector, query, null, true);
 					}
 				}
 			}

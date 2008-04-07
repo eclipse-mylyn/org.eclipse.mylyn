@@ -21,9 +21,8 @@ import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.ITaskCollector;
+import org.eclipse.mylyn.tasks.core.AbstractTaskCollector;
 import org.eclipse.mylyn.tasks.core.ITaskFactory;
-import org.eclipse.mylyn.tasks.core.QueryHitCollector;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskList;
@@ -41,7 +40,7 @@ import org.eclipse.ui.PlatformUI;
  * @author Rob Elves
  * @since 2.0
  */
-public class SearchHitCollector implements ISearchQuery, ITaskCollector {
+public class SearchHitCollector extends AbstractTaskCollector implements ISearchQuery {
 
 	private static final String LABEL_MAX_HITS_REACHED = "Max allowed number of hits returned exceeded. Some hits may not be displayed. Please narrow query scope.";
 
@@ -85,29 +84,36 @@ public class SearchHitCollector implements ISearchQuery, ITaskCollector {
 		});
 	}
 
-	public void accept(AbstractTask task) {
-		if (task == null) {
-			throw new IllegalArgumentException();
-		}
+//	public void accept(AbstractTask task) {
+//		if (task == null) {
+//			throw new IllegalArgumentException();
+//		}
+//
+//		AbstractTask hitTask = taskList.getTask(task.getHandleIdentifier());
+//		if (hitTask == null) {
+//			hitTask = task;
+//		}
+//
+//		taskResults.add(hitTask);
+//		this.searchResult.addMatch(new Match(hitTask, 0, 0));
+//	}
 
-		AbstractTask hitTask = taskList.getTask(task.getHandleIdentifier());
-		if (hitTask == null) {
-			hitTask = task;
-		}
-
-		taskResults.add(hitTask);
-		this.searchResult.addMatch(new Match(hitTask, 0, 0));
-	}
-
-	public void accept(RepositoryTaskData taskData) throws CoreException {
+	@Override
+	public void accept(RepositoryTaskData taskData) {
 		if (taskData == null) {
 			throw new IllegalArgumentException();
 		}
 
-		AbstractTask task = taskFactory.createTask(taskData, new SubProgressMonitor(new NullProgressMonitor(), 1));
-		if (task != null) {
-			taskResults.add(task);
-			this.searchResult.addMatch(new Match(task, 0, 0));
+		AbstractTask task;
+		try {
+			task = taskFactory.createTask(taskData, new SubProgressMonitor(new NullProgressMonitor(), 1));
+			if (task != null) {
+				taskResults.add(task);
+				this.searchResult.addMatch(new Match(task, 0, 0));
+			}
+		} catch (CoreException e) {
+			// FIXME
+			e.printStackTrace();
 		}
 	}
 
@@ -124,7 +130,7 @@ public class SearchHitCollector implements ISearchQuery, ITaskCollector {
 	}
 
 	public ISearchResult getSearchResult() {
-		if (searchResult.getMatchCount() >= QueryHitCollector.MAX_HITS) {
+		if (searchResult.getMatchCount() >= AbstractTaskCollector.MAX_HITS) {
 			StatusHandler.displayStatus("Maximum hits reached", RepositoryStatus.createStatus(repository.getUrl(),
 					IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, LABEL_MAX_HITS_REACHED));
 		}
@@ -145,7 +151,7 @@ public class SearchHitCollector implements ISearchQuery, ITaskCollector {
 		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 				repositoryQuery.getRepositoryKind());
 		if (connector != null) {
-			IStatus status = connector.performQuery(repositoryQuery, repository, monitor, this);
+			IStatus status = connector.performQuery(repository, repositoryQuery, this, null, monitor);
 			if (!status.isOK()) {
 				StatusHandler.displayStatus("Search failed", status);
 			}

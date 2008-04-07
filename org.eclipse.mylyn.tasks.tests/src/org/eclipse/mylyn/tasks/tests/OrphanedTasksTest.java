@@ -18,6 +18,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
@@ -32,15 +33,18 @@ public class OrphanedTasksTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		super.setUp();
 		TasksUiPlugin.getTaskListManager().resetTaskList();
 		taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 		assertTrue(taskList.getDefaultCategory().isEmpty());
+
+		TaskRepository taskRepository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND,
+				MockRepositoryConnector.REPOSITORY_URL);
+		TasksUiPlugin.getRepositoryManager().addRepository(taskRepository,
+				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();
 	}
 
 	/**

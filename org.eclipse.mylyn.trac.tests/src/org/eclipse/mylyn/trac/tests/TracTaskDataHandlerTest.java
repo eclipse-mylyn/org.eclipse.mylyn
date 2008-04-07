@@ -35,8 +35,10 @@ import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.core.SynchronizationEvent;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.trac.tests.support.TestFixture;
 import org.eclipse.mylyn.trac.tests.support.TracTestUtil;
@@ -74,7 +76,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		connector = (TracRepositoryConnector) manager.getRepositoryConnector(TracCorePlugin.REPOSITORY_KIND);
-		TasksUiPlugin.getSynchronizationManager().setForceSyncExec(true);
+		TasksUi.setForceSyncExec(true);
 
 		taskDataHandler = connector.getTaskDataHandler();
 	}
@@ -101,17 +103,22 @@ public class TracTaskDataHandlerTest extends TestCase {
 
 		Set<AbstractTask> tasks = new HashSet<AbstractTask>();
 		tasks.add(task);
+		SynchronizationEvent event = new SynchronizationEvent();
+		event.performQueries = true;
+		event.taskRepository = repository;
+		event.fullSynchronization = true;
+		event.tasks = tasks;
 
 		assertEquals(null, repository.getSynchronizationTimeStamp());
-		boolean changed = connector.markStaleTasks(repository, tasks, new NullProgressMonitor());
-		assertEquals(true, changed);
+		connector.preSynchronization(event, null);
+		assertTrue(event.performQueries);
 		assertEquals(null, repository.getSynchronizationTimeStamp());
 		assertFalse(task.isStale());
 
 		int time = (int) (System.currentTimeMillis() / 1000) + 1;
 		repository.setSynchronizationTimeStamp(time + "");
-		changed = connector.markStaleTasks(repository, tasks, new NullProgressMonitor());
-		assertEquals(true, changed);
+		connector.preSynchronization(event, null);
+		assertTrue(event.performQueries);
 		assertFalse(task.isStale());
 	}
 
@@ -129,7 +136,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 		TracTicket ticket = TracTestUtil.createTicket(client, "markStaleTasks");
 		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, ticket.getId() + "",
 				new NullProgressMonitor());
-		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+		TasksUi.synchronize(connector, task, true, null);
 		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(),
 				task.getTaskId());
 
@@ -137,31 +144,38 @@ public class TracTaskDataHandlerTest extends TestCase {
 
 		Set<AbstractTask> tasks = new HashSet<AbstractTask>();
 		tasks.add(task);
+		SynchronizationEvent event = new SynchronizationEvent();
+		event.performQueries = true;
+		event.taskRepository = repository;
+		event.fullSynchronization = true;
 
 		// an empty set should not cause contact to the repository
 		repository.setSynchronizationTimeStamp(null);
-		boolean changed = connector.markStaleTasks(repository, new HashSet<AbstractTask>(), new NullProgressMonitor());
-		assertTrue(changed);
+		event.tasks = new HashSet<AbstractTask>();
+		connector.preSynchronization(event, null);
+		assertTrue(event.performQueries);
 		assertNull(repository.getSynchronizationTimeStamp());
 
 		repository.setSynchronizationTimeStamp(null);
-		changed = connector.markStaleTasks(repository, tasks, new NullProgressMonitor());
-		assertTrue(changed);
+		event.tasks = tasks;
+		connector.preSynchronization(event, null);
+		assertTrue(event.performQueries);
 		assertTrue(task.isStale());
 
 		// always returns the ticket because time comparison mode is >=
 		task.setStale(false);
 		repository.setSynchronizationTimeStamp(lastModified + "");
-		changed = connector.markStaleTasks(repository, tasks, new NullProgressMonitor());
+		connector.preSynchronization(event, null);
 		// TODO this was fixed so it returns false now but only if the 
 		// query returns a single task
-		assertFalse(changed);
+		assertFalse(event.performQueries);
 		assertFalse(task.isStale());
 
 		task.setStale(false);
 		repository.setSynchronizationTimeStamp((lastModified + 1) + "");
-		changed = connector.markStaleTasks(repository, tasks, new NullProgressMonitor());
-		assertFalse(changed);
+		event.performQueries = true;
+		connector.preSynchronization(event, null);
+		assertFalse(event.performQueries);
 		assertFalse(task.isStale());
 
 		// change ticket making sure it gets a new change time
@@ -171,8 +185,9 @@ public class TracTaskDataHandlerTest extends TestCase {
 
 		task.setStale(false);
 		repository.setSynchronizationTimeStamp((lastModified + 1) + "");
-		changed = connector.markStaleTasks(repository, tasks, new NullProgressMonitor());
-		assertTrue(changed);
+		event.performQueries = true;
+		connector.preSynchronization(event, null);
+		assertTrue(event.performQueries);
 		assertTrue(task.isStale());
 	}
 
@@ -191,29 +206,34 @@ public class TracTaskDataHandlerTest extends TestCase {
 				new NullProgressMonitor());
 		Set<AbstractTask> tasks = new HashSet<AbstractTask>();
 		tasks.add(task);
+		SynchronizationEvent event = new SynchronizationEvent();
+		event.performQueries = true;
+		event.taskRepository = repository;
+		event.fullSynchronization = true;
+		event.tasks = tasks;
 
 		task.setStale(false);
 		repository.setSynchronizationTimeStamp(null);
-		boolean changed = connector.markStaleTasks(repository, tasks, new NullProgressMonitor());
-		assertTrue(changed);
+		connector.preSynchronization(event, null);
+		assertTrue(event.performQueries);
 		assertTrue(task.isStale());
 
 		task.setStale(false);
 		repository.setSynchronizationTimeStamp("");
-		changed = connector.markStaleTasks(repository, tasks, new NullProgressMonitor());
-		assertTrue(changed);
+		connector.preSynchronization(event, null);
+		assertTrue(event.performQueries);
 		assertTrue(task.isStale());
 
 		task.setStale(false);
 		repository.setSynchronizationTimeStamp("0");
-		changed = connector.markStaleTasks(repository, tasks, new NullProgressMonitor());
-		assertTrue(changed);
+		connector.preSynchronization(event, null);
+		assertTrue(event.performQueries);
 		assertTrue(task.isStale());
 
 		task.setStale(false);
 		repository.setSynchronizationTimeStamp("abc");
-		changed = connector.markStaleTasks(repository, tasks, new NullProgressMonitor());
-		assertTrue(changed);
+		connector.preSynchronization(event, null);
+		assertTrue(event.performQueries);
 		assertTrue(task.isStale());
 	}
 
@@ -267,7 +287,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 	private void postTaskDataInvalidCredentials() throws Exception {
 		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.offlineHandlerTicketId + "",
 				new NullProgressMonitor());
-		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+		TasksUi.synchronize(connector, task, true, null);
 		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(),
 				task.getTaskId());
 

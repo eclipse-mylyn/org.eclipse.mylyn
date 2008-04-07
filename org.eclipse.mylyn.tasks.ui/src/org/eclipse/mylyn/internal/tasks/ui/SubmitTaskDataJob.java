@@ -21,6 +21,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
@@ -99,7 +100,7 @@ public class SubmitTaskDataJob extends Job {
 			// synchronize task
 			task.setSubmitting(true);
 			try {
-				Job synchronizeJob = TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+				Job synchronizeJob = TasksUi.synchronize(connector, task, true, null);
 				synchronizeJob.join();
 			} finally {
 				task.setSubmitting(false);

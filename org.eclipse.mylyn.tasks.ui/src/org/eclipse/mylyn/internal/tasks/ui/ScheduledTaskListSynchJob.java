@@ -18,12 +18,13 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.mylyn.internal.tasks.core.sync.RepositorySynchronizationManager;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.RepositorySynchronizationManager;
 import org.eclipse.mylyn.tasks.ui.TaskListManager;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
@@ -140,7 +141,7 @@ public class ScheduledTaskListSynchJob extends Job {
 					// ignore, since we might not be connected
 				}
 
-				synchronizationManager.synchronize(connector, repository, queries, null, Job.DECORATE, 0, false,
+				TasksUi.synchronize(connector, repository, queries, null, Job.DECORATE, 0, false,
 						fullSynchronization);
 
 				monitor.worked(1);

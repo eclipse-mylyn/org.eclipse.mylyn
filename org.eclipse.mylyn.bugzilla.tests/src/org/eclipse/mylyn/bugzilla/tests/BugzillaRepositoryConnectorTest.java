@@ -33,7 +33,9 @@ import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryOperation;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.core.SynchronizationEvent;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.search.RepositorySearchResult;
 import org.eclipse.mylyn.tasks.ui.search.SearchHitCollector;
@@ -181,23 +183,23 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		if (taskData.getAssignedTo().equals("rob.elves@eclipse.org")) {
 			assertEquals("rob.elves@eclipse.org", taskData.getAssignedTo());
 			reassingToUser31(task, taskData);
-			TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+			TasksUi.synchronize(connector, task, true, null);
 			taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
 			assertEquals("tests2@mylyn.eclipse.org", taskData.getAssignedTo());
 
 			reassignToDefault31(task, taskData);
-			TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+			TasksUi.synchronize(connector, task, true, null);
 			taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
 			assertEquals("rob.elves@eclipse.org", taskData.getAssignedTo());
 		} else if (taskData.getAssignedTo().equals("tests2@mylyn.eclipse.org")) {
 			assertEquals("tests2@mylyn.eclipse.org", taskData.getAssignedTo());
 			reassignToDefault31(task, taskData);
-			TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+			TasksUi.synchronize(connector, task, true, null);
 			taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
 			assertEquals("rob.elves@eclipse.org", taskData.getAssignedTo());
 
 			reassingToUser31(task, taskData);
-			TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+			TasksUi.synchronize(connector, task, true, null);
 			taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
 			assertEquals("tests2@mylyn.eclipse.org", taskData.getAssignedTo());
 		} else {
@@ -254,23 +256,23 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		if (taskData.getAssignedTo().equals(defaultAssignee)) {
 			assertEquals(defaultAssignee, taskData.getAssignedTo());
 			reassingToUserOld(task, taskData);
-			TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+			TasksUi.synchronize(connector, task, true, null);
 			taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
 			assertEquals("tests2@mylyn.eclipse.org", taskData.getAssignedTo());
 
 			reassignToDefaultOld(task, taskData);
-			TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+			TasksUi.synchronize(connector, task, true, null);
 			taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
 			assertEquals(defaultAssignee, taskData.getAssignedTo());
 		} else if (taskData.getAssignedTo().equals("tests2@mylyn.eclipse.org")) {
 			assertEquals("tests2@mylyn.eclipse.org", taskData.getAssignedTo());
 			reassignToDefaultOld(task, taskData);
-			TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+			TasksUi.synchronize(connector, task, true, null);
 			taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
 			assertEquals(defaultAssignee, taskData.getAssignedTo());
 
 			reassingToUserOld(task, taskData);
-			TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+			TasksUi.synchronize(connector, task, true, null);
 			taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
 			assertEquals("tests2@mylyn.eclipse.org", taskData.getAssignedTo());
 		} else {
@@ -335,7 +337,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 	public void testFocedQuerySynchronization() throws CoreException {
 		init222();
-		TasksUiPlugin.getSynchronizationManager().setForceSyncExec(true);
+		TasksUi.setForceSyncExec(true);
 		TasksUiPlugin.getTaskDataManager().clear();
 		assertEquals(0, taskList.getAllTasks().size());
 		BugzillaRepositoryQuery bugQuery = new BugzillaRepositoryQuery(
@@ -345,14 +347,14 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 		taskList.addQuery(bugQuery);
 
-		TasksUiPlugin.getSynchronizationManager().synchronize(connector, bugQuery, null, false);
+		TasksUi.synchronize(connector, bugQuery, null, false);
 
 		assertEquals(1, bugQuery.getChildren().size());
 		AbstractTask hit = (AbstractTask) bugQuery.getChildren().toArray()[0];
 		assertTrue(TasksUiPlugin.getTaskDataManager().getNewTaskData(hit.getRepositoryUrl(), hit.getTaskId()) != null);
 		TasksUiPlugin.getTaskDataManager().remove(hit.getRepositoryUrl(), hit.getTaskId());
 
-		TasksUiPlugin.getSynchronizationManager().synchronize(connector, bugQuery, null, true);
+		TasksUi.synchronize(connector, bugQuery, null, true);
 		assertEquals(1, bugQuery.getChildren().size());
 		hit = (AbstractTask) bugQuery.getChildren().toArray()[0];
 		assertTrue(TasksUiPlugin.getTaskDataManager().getNewTaskData(hit.getRepositoryUrl(), hit.getTaskId()) != null);
@@ -488,7 +490,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		// Submit changes
 		submit(task, taskData);
 
-		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+		TasksUi.synchronize(connector, task, true, null);
 		// After submit task should be in SYNCHRONIZED state
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSynchronizationState());
 		RepositoryTaskData taskData2 = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(),
@@ -505,7 +507,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		// Result: retrieved with no incoming status
 		// task.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
 		TasksUiPlugin.getTaskDataManager().remove(task.getRepositoryUrl(), task.getTaskId());
-		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, false, null);
+		TasksUi.synchronize(connector, task, false, null);
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSynchronizationState());
 		RepositoryTaskData bugReport2 = null;
 		bugReport2 = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
@@ -594,7 +596,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		// Proxy.NO_PROXY));
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSynchronizationState());
 		task = (BugzillaTask) connector.createTaskFromExistingId(repository, taskNumber, new NullProgressMonitor());
-		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+		TasksUi.synchronize(connector, task, true, null);
 
 		assertEquals(numAttached, taskData.getAttachments().size());
 
@@ -614,7 +616,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		} catch (Exception e) {
 		}
 		task = (BugzillaTask) connector.createTaskFromExistingId(repository, taskNumber, new NullProgressMonitor());
-		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+		TasksUi.synchronize(connector, task, true, null);
 		taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
 		assertEquals(numAttached, taskData.getAttachments().size());
 
@@ -632,7 +634,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		client.postAttachment(attachment.getReport().getId(), attachment.getComment(), attachment);
 
 		task = (BugzillaTask) connector.createTaskFromExistingId(repository, taskNumber, new NullProgressMonitor());
-		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+		TasksUi.synchronize(connector, task, true, null);
 		taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
 		assertEquals(numAttached + 1, taskData.getAttachments().size());
 
@@ -671,8 +673,12 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		TasksUiPlugin.getRepositoryManager().setSynchronizationTime(repository, task5.getLastReadTimeStamp(),
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
-		boolean changed = connector.markStaleTasks(repository, tasks, new NullProgressMonitor());
-		assertTrue(changed);
+		SynchronizationEvent event = new SynchronizationEvent();
+		event.tasks = new HashSet<AbstractTask>();
+		event.taskRepository = repository;
+		event.fullSynchronization = true;
+		connector.preSynchronization(event, null);
+		assertTrue(event.performQueries);
 		// Always last known changed returned
 		assertFalse(task4.isStale());
 		assertTrue(task5.isStale());
@@ -701,12 +707,16 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		submit(task4, taskData4);
 		submit(task5, taskData5);
 
-		changed = connector.markStaleTasks(repository, tasks, new NullProgressMonitor());
+		event = new SynchronizationEvent();
+		event.tasks = new HashSet<AbstractTask>();
+		event.taskRepository = repository;
+		event.fullSynchronization = true;
+		connector.preSynchronization(event, null);
 
 		assertTrue(task4.isStale());
 		assertTrue(task5.isStale());
 
-		TasksUiPlugin.getSynchronizationManager().synchronize(connector, tasks, true, null);
+		TasksUi.synchronize(connector, tasks, true, null);
 
 		for (AbstractTask task : tasks) {
 			if (task.getTaskId() == "4") {
@@ -758,7 +768,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		// REMOVE ALL TASK DATA
 		TasksUiPlugin.getTaskDataManager().clear();
 		connector.getTaskDataHandler().postTaskData(repository, recentTaskData, new NullProgressMonitor());
-		TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector, repository);
+		TasksUi.synchronizeChanged(connector, repository);
 		assertEquals(RepositoryTaskSyncState.INCOMING, task7.getSynchronizationState());
 	}
 

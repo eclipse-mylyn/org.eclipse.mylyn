@@ -31,16 +31,18 @@ import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskCollector;
 import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
-import org.eclipse.mylyn.tasks.core.ITaskCollector;
 import org.eclipse.mylyn.tasks.core.RepositoryOperation;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.core.SynchronizationEvent;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 import org.eclipse.mylyn.web.core.AuthenticationCredentials;
 import org.eclipse.mylyn.web.core.AuthenticationType;
+import org.eclipse.mylyn.web.core.Policy;
 
 /**
  * @author Steffen Pingel
@@ -169,8 +171,8 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository, IProgressMonitor monitor,
-			ITaskCollector resultCollector) {
+	public IStatus performQuery(TaskRepository repository, AbstractRepositoryQuery query, AbstractTaskCollector resultCollector,
+			SynchronizationEvent event, IProgressMonitor monitor) {
 
 		final List<TracTicket> tickets = new ArrayList<TracTicket>();
 
@@ -182,9 +184,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			}
 
 			for (TracTicket ticket : tickets) {
-				AbstractTask task = createTask(repository.getUrl(), ticket.getId() + "", "");
-				updateTaskFromTicket((TracTask) task, ticket, false, client);
-				resultCollector.accept(task);
+				resultCollector.accept(taskDataHandler.createTaskDataFromTicket(repository, ticket, monitor));
 			}
 		} catch (Throwable e) {
 			return TracCorePlugin.toStatus(e, repository);
@@ -194,27 +194,32 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public boolean markStaleTasks(TaskRepository repository, Set<AbstractTask> tasks, IProgressMonitor monitor)
-			throws CoreException {
+	public void preSynchronization(SynchronizationEvent event, IProgressMonitor monitor) throws CoreException {
+		monitor = Policy.monitorFor(monitor);
+		TaskRepository repository = event.taskRepository;
 		try {
+			if (!event.fullSynchronization) {
+				return;
+			}
+
 			monitor.beginTask("Getting changed tasks", IProgressMonitor.UNKNOWN);
 
 			// there are no Trac tasks in the task list, skip contacting the repository
-			if (tasks.isEmpty()) {
-				return true;
+			if (event.tasks.isEmpty()) {
+				return;
 			}
 
 			if (!TracRepositoryConnector.hasChangedSince(repository)) {
 				// always run the queries for web mode
-				return true;
+				return;
 			}
 
 			if (repository.getSynchronizationTimeStamp() == null
 					|| repository.getSynchronizationTimeStamp().length() == 0) {
-				for (AbstractTask task : tasks) {
+				for (AbstractTask task : event.tasks) {
 					task.setStale(true);
 				}
-				return true;
+				return;
 			}
 
 			Date since = new Date(0);
@@ -228,7 +233,8 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 				Set<Integer> ids = client.getChangedTickets(since, monitor);
 				if (ids.isEmpty()) {
 					// repository is unchanged
-					return false;
+					event.performQueries = false;
+					return;
 				}
 
 				if (ids.size() == 1) {
@@ -240,18 +246,17 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 					Date lastChanged = client.getTicketLastChanged(id, monitor);
 					if (since.equals(lastChanged)) {
 						// repository didn't actually change
-						return false;
+						event.performQueries = false;
+						return;
 					}
 				}
 
-				for (AbstractTask task : tasks) {
+				for (AbstractTask task : event.tasks) {
 					Integer id = getTicketId(task.getTaskId());
 					if (ids.contains(id)) {
 						task.setStale(true);
 					}
 				}
-
-				return true;
 			} catch (OperationCanceledException e) {
 				throw e;
 			} catch (Exception e) {
@@ -293,26 +298,27 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public void updateTaskFromTaskData(TaskRepository taskRepository, AbstractTask task, RepositoryTaskData taskData) {
-		// API 3.0 taskData should never be null
-		if (taskData != null && task instanceof TracTask) {
-			ITracClient client = getClientManager().getRepository(taskRepository);
+	public boolean updateTaskFromTaskData(TaskRepository taskRepository, AbstractTask task, RepositoryTaskData taskData) {
+		TracTask tracTask = (TracTask) task;
+		ITracClient client = getClientManager().getRepository(taskRepository);
 
-			task.setSummary(taskData.getSummary());
-			task.setOwner(taskData.getAttributeValue(RepositoryTaskAttribute.USER_ASSIGNED));
-			task.setCompleted(TracTask.isCompleted(taskData.getStatus()));
-			task.setUrl(taskRepository.getUrl() + ITracClient.TICKET_URL + taskData.getId());
+		task.setSummary(taskData.getSummary());
+		task.setOwner(taskData.getAttributeValue(RepositoryTaskAttribute.USER_ASSIGNED));
+		task.setCompleted(TracTask.isCompleted(taskData.getStatus()));
+		task.setUrl(taskRepository.getUrl() + ITracClient.TICKET_URL + taskData.getId());
 
-			String priority = taskData.getAttributeValue(Attribute.PRIORITY.getTracKey());
-			TracPriority[] tracPriorities = client.getPriorities();
-			task.setPriority(TracTask.getTaskPriority(priority, tracPriorities));
+		String priority = taskData.getAttributeValue(Attribute.PRIORITY.getTracKey());
+		TracPriority[] tracPriorities = client.getPriorities();
+		task.setPriority(TracTask.getTaskPriority(priority, tracPriorities));
 
-			Kind kind = TracTask.Kind.fromType(taskData.getAttributeValue(Attribute.TYPE.getTracKey()));
-			task.setTaskKind((kind != null) ? kind.toString() : null);
+		Kind kind = TracTask.Kind.fromType(taskData.getAttributeValue(Attribute.TYPE.getTracKey()));
+		task.setTaskKind((kind != null) ? kind.toString() : null);
 
-			((TracTask) task).setSupportsSubtasks(taskDataHandler.canInitializeSubTaskData(null, taskData));
-			// TODO: Completion Date
-		}
+		tracTask.setSupportsSubtasks(taskDataHandler.canInitializeSubTaskData(null, taskData));
+		// TODO: Completion Date
+
+		// TODO check return value
+		return false;
 	}
 
 	public static int getTicketId(String taskId) throws CoreException {

@@ -36,7 +36,7 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 
 	private final String repositoryKind;
 
-	private final String taskKind;
+	private String taskKind;
 
 	private final List<TaskComment> taskComments = new ArrayList<TaskComment>();
 
@@ -47,6 +47,8 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 
 	/** The repositoryOperations that can be done on the report */
 	private final List<RepositoryOperation> repositoryOperations = new ArrayList<RepositoryOperation>();
+
+	private boolean partial;
 
 	public RepositoryTaskData(AbstractAttributeFactory factory, String repositoryKind, String repositoryURL, String id) {
 		this(factory, repositoryKind, repositoryURL, id, AbstractTask.DEFAULT_TASK_KIND);
@@ -269,6 +271,7 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 		return attachments;
 	}
 
+	// API 3.0 rename to getTaskId()
 	public String getId() {
 		return reportID;
 	}
@@ -338,6 +341,13 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 		return taskKind;
 	}
 
+	/**
+	 * @since 3.0
+	 */
+	public void setTaskKind(String taskKind) {
+		this.taskKind = taskKind;
+	}
+
 	public void setRepositoryURL(String repositoryURL) {
 		this.repositoryURL = repositoryURL;
 		for (RepositoryAttachment attachment : attachments) {
@@ -363,6 +373,20 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 		for (AttributeContainer container : attachments) {
 			container.setTaskData(this);
 		}
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public void setPartial(boolean complete) {
+		this.partial = complete;
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public boolean isPartial() {
+		return partial;
 	}
 
 }

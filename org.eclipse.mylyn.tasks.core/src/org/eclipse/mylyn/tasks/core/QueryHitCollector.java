@@ -20,12 +20,16 @@ import org.eclipse.core.runtime.NullProgressMonitor;
  * @author Rob Elves (generalized from bugzilla)
  * @author Steffen Pingel
  * @since 2.0
+ * @deprecated
  */
-public class QueryHitCollector implements ITaskCollector {
+@Deprecated
+public class QueryHitCollector extends AbstractTaskCollector {
 
-	public static final int MAX_HITS = 5000;
-
-	public static final String MAX_HITS_REACHED = "Max allowed number of hits returned exceeded. Some hits may not be displayed. Please narrow query scope.";
+	/**
+	 * @deprecated Use {@link AbstractTaskCollector#MAX_HITS} instead
+	 */
+	@Deprecated
+	public static final int MAX_HITS = AbstractTaskCollector.MAX_HITS;
 
 	private final Set<AbstractTask> taskResults = new HashSet<AbstractTask>();
 
@@ -35,23 +39,30 @@ public class QueryHitCollector implements ITaskCollector {
 		this.taskFactory = taskFactory;
 	}
 
-	public void accept(AbstractTask task) {
-		if (task == null) {
-			throw new IllegalArgumentException();
-		}
-		if (taskResults.size() < MAX_HITS) {
-			taskResults.add(task);
-		}
-	}
+//	public void accept(AbstractTask task) {
+//		if (task == null) {
+//			throw new IllegalArgumentException();
+//		}
+//		if (taskResults.size() < MAX_HITS) {
+//			taskResults.add(task);
+//		}
+//	}
 
-	public void accept(RepositoryTaskData taskData) throws CoreException {
+	@Override
+	public void accept(RepositoryTaskData taskData) {
 		if (taskData == null) {
 			throw new IllegalArgumentException();
 		}
 
-		AbstractTask task = taskFactory.createTask(taskData, new NullProgressMonitor());
-		if (taskResults.size() < MAX_HITS) {
-			taskResults.add(task);
+		AbstractTask task;
+		try {
+			task = taskFactory.createTask(taskData, new NullProgressMonitor());
+			if (taskResults.size() < AbstractTaskCollector.MAX_HITS) {
+				taskResults.add(task);
+			}
+		} catch (CoreException e) {
+			// FIXMEx
+			e.printStackTrace();
 		}
 	}
 

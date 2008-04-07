@@ -8,23 +8,12 @@
 
 package org.eclipse.mylyn.tasks.core;
 
-import java.util.Set;
+import org.eclipse.core.runtime.jobs.Job;
 
-import org.eclipse.core.runtime.CoreException;
+public abstract class SynchronizeJob extends Job {
 
-/**
- * Abstraction used for collecting tasks, e.g. when performing queries on the repository.
- * 
- * @author Rob Elves
- * @since 2.0
- * @deprecated use {@link AbstractTaskCollector} instead
- */
-@Deprecated
-public interface ITaskCollector {
+	public SynchronizeJob(String name) {
+		super(name);
+	}
 
-	public void accept(AbstractTask task);
-
-	public void accept(RepositoryTaskData taskData) throws CoreException;
-
-	public Set<AbstractTask> getTasks();
 }

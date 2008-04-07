@@ -39,6 +39,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditorInput;
@@ -210,7 +211,7 @@ public class NewAttachmentWizard extends Wizard {
 		try {
 			getContainer().run(true, true, op);
 
-			TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, false, new JobChangeAdapter() {
+			TasksUi.synchronize(connector, task, false, new JobChangeAdapter() {
 				@Override
 				public void done(final IJobChangeEvent event) {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {

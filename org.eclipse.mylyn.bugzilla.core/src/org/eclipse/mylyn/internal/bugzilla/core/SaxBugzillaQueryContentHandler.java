@@ -11,7 +11,9 @@ package org.eclipse.mylyn.internal.bugzilla.core;
 import java.util.Locale;
 
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.ITaskCollector;
+import org.eclipse.mylyn.tasks.core.AbstractTaskCollector;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -36,11 +38,13 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 	
 	private StringBuffer characters;
 
-	private ITaskCollector collector;
+	private AbstractTaskCollector collector;
 
 	private String repositoryUrl;
 
-	public SaxBugzillaQueryContentHandler(String repositoryUrl, ITaskCollector collector) {
+	private int resultCount;
+
+	public SaxBugzillaQueryContentHandler(String repositoryUrl, AbstractTaskCollector collector) {
 		this.repositoryUrl = repositoryUrl;
 		this.collector = collector;
 	}
@@ -109,11 +113,14 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 				description = parsedText;
 				break;
 			case LI:
-				BugzillaTask task = new BugzillaTask(repositoryUrl, id, description);
-				task.setPriority(priority);
-				task.setOwner(owner);
-				// TODO set state
-				collector.accept(task);
+				RepositoryTaskData taskData = new RepositoryTaskData(new BugzillaAttributeFactory(),
+						BugzillaCorePlugin.REPOSITORY_KIND, repositoryUrl, id);
+				taskData.setAttributeValue(RepositoryTaskAttribute.SUMMARY, description);
+				taskData.setAttributeValue(RepositoryTaskAttribute.PRIORITY, priority);
+				taskData.setAttributeValue(RepositoryTaskAttribute.USER_OWNER, owner);
+				taskData.setPartial(true);
+				collector.accept(taskData);
+				resultCount++;
 			}
 		} catch (RuntimeException e) {
 			if (e instanceof IllegalArgumentException) {
@@ -124,4 +131,9 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 		}
 
 	}
+	
+	public int getResultCount() {
+		return resultCount;
+	}
+	
 }

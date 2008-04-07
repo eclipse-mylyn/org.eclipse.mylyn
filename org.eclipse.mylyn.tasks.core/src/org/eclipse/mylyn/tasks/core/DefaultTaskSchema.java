@@ -6,19 +6,17 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.tasks.core;
+package org.eclipse.mylyn.tasks.core;
 
 import java.util.Date;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.internal.tasks.core.AbstractAttributeMapper;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 
 /**
  * @author Steffen Pingel
- * 
- * TODO url, due date, completed
+ * @since 3.0
  */
 public class DefaultTaskSchema {
 
@@ -30,8 +28,52 @@ public class DefaultTaskSchema {
 		this.taskData = taskData;
 	}
 
+	public boolean applyTo(AbstractTask task) {
+		boolean changed = false;
+		if (taskData.getAttribute(RepositoryTaskAttribute.COMPLETED) != null && getCompleted() != task.isCompleted()) {
+			task.setCompleted(getCompleted());
+			changed = true;
+		}
+		if (hasTaskPropertyChanged(task.getSummary(), getSummary())) {
+			task.setSummary(getSummary());
+		}
+		if (hasTaskPropertyChanged(task.getDueDate(), getDueDate())) {
+			task.setDueDate(getDueDate());
+			changed = true;
+		}
+		if (hasTaskPropertyChanged(task.getOwner(), getOwner())) {
+			task.setOwner(getOwner());
+			changed = true;
+		}
+		if (getPriority() != null && hasTaskPropertyChanged(task.getPriority(), getPriority().toString())) {
+			task.setPriority(getPriority().toString());
+			changed = true;
+		}
+		if (hasTaskPropertyChanged(task.getUrl(), getTaskUrl())) {
+			task.setUrl(getTaskUrl());
+			changed = true;
+		}
+		return changed;
+	}
+
+	public boolean getBooleanValue(String attributeKey) {
+		RepositoryTaskAttribute attribute = taskData.getAttribute(attributeKey);
+		if (attribute != null) {
+			return taskData.getAttributeFactory().getAttributeMapper().getBooleanValue(attribute);
+		}
+		return false;
+	}
+
+	public boolean getCompleted() {
+		return getBooleanValue(RepositoryTaskAttribute.COMPLETED);
+	}
+
 	public String getComponent() {
 		return getValue(RepositoryTaskAttribute.COMPONENT);
+	}
+
+	public Date getCreationDate() {
+		return getDateValue(RepositoryTaskAttribute.DATE_CREATION);
 	}
 
 	public Date getDateCreated() {
@@ -54,6 +96,10 @@ public class DefaultTaskSchema {
 		return getValue(RepositoryTaskAttribute.DESCRIPTION);
 	}
 
+	public Date getDueDate() {
+		return getDateValue(RepositoryTaskAttribute.DATE_DUE);
+	}
+
 	public String getOwner() {
 		return getValue(RepositoryTaskAttribute.USER_OWNER);
 	}
@@ -70,7 +116,15 @@ public class DefaultTaskSchema {
 		return getValue(RepositoryTaskAttribute.SUMMARY);
 	}
 
-	private String getValue(String attributeKey) {
+	public String getTaskKind() {
+		return taskData.getTaskKind();
+	}
+
+	public String getTaskUrl() {
+		return getValue(RepositoryTaskAttribute.TASK_URL);
+	}
+
+	public String getValue(String attributeKey) {
 		RepositoryTaskAttribute attribute = taskData.getAttribute(attributeKey);
 		if (attribute != null) {
 			return taskData.getAttributeFactory().getAttributeMapper().getValue(attribute);
@@ -78,8 +132,40 @@ public class DefaultTaskSchema {
 		return null;
 	}
 
+	protected final boolean hasTaskPropertyChanged(Object existingProperty, Object newProperty) {
+		// the query hit does not have this property
+		if (newProperty == null) {
+			return false;
+		}
+		return (existingProperty == null) ? true : !existingProperty.equals(newProperty);
+	}
+
+	public RepositoryTaskAttribute setBooleanValue(String attributeKey, boolean value) {
+		RepositoryTaskAttribute attribute = taskData.getAttribute(attributeKey);
+		if (attribute == null) {
+			attribute = new RepositoryTaskAttribute(attributeKey, null, false);
+			taskData.addAttribute(attributeKey, attribute);
+		}
+
+		AbstractAttributeMapper attributeMapper = taskData.getAttributeFactory().getAttributeMapper();
+		if (attributeMapper != null) {
+			attributeMapper.setBooleanValue(attribute, value);
+		} else {
+			attribute.setValue(value + "");
+		}
+		return attribute;
+	}
+
+	public void setCompleted(boolean completed) {
+		setBooleanValue(RepositoryTaskAttribute.COMPLETED, completed);
+	}
+
 	public void setComponent(String component) {
 		setValue(RepositoryTaskAttribute.COMPONENT, component);
+	}
+
+	public void setCreationDate(Date date) {
+		setDateValue(RepositoryTaskAttribute.DATE_CREATION, date);
 	}
 
 	public void setDateCreated(Date dateCreated) {
@@ -98,6 +184,10 @@ public class DefaultTaskSchema {
 
 	public void setDescription(String description) {
 		setValue(RepositoryTaskAttribute.DESCRIPTION, description);
+	}
+
+	public void setDueDate(Date value) {
+		setDateValue(RepositoryTaskAttribute.DATE_DUE, value);
 	}
 
 	// TODO use Person class?
@@ -122,7 +212,15 @@ public class DefaultTaskSchema {
 		setValue(RepositoryTaskAttribute.SUMMARY, summary);
 	}
 
-	private RepositoryTaskAttribute setValue(String attributeKey, String value) {
+	public void setTaskKind(String taskKind) {
+		taskData.setTaskKind(taskKind);
+	}
+
+	public void setTaskUrl(String taskUrl) {
+		setValue(RepositoryTaskAttribute.TASK_URL, taskUrl);
+	}
+
+	public RepositoryTaskAttribute setValue(String attributeKey, String value) {
 		RepositoryTaskAttribute attribute = taskData.getAttribute(attributeKey);
 		if (attribute == null) {
 			attribute = new RepositoryTaskAttribute(attributeKey, null, false);

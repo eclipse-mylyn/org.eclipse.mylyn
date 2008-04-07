@@ -8,11 +8,9 @@
 
 package org.eclipse.mylyn.tasks.core;
 
-import java.util.Date;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.internal.tasks.core.AbstractAttributeMapper;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
@@ -60,49 +58,6 @@ public class TaskSelection {
 
 	public RepositoryTaskData getTaskData() {
 		return taskData;
-	}
-
-	private class IdentityAttributeFactory extends AbstractAttributeFactory {
-
-		private static final long serialVersionUID = 1L;
-
-		private final AbstractAttributeMapper attributeMapper = new AbstractAttributeMapper(this) {
-			@Override
-			public String getType(RepositoryTaskAttribute taskAttribute) {
-				return RepositoryTaskAttribute.TYPE_SHORT_TEXT;
-			}
-		};
-
-		@Override
-		public AbstractAttributeMapper getAttributeMapper() {
-			return attributeMapper;
-		}
-
-		@Override
-		public Date getDateForAttributeType(String attributeKey, String dateString) {
-			return null;
-		}
-
-		@Override
-		public String getName(String key) {
-			return null;
-		}
-
-		@Override
-		public boolean isHidden(String key) {
-			return false;
-		}
-
-		@Override
-		public boolean isReadOnly(String key) {
-			return false;
-		}
-
-		@Override
-		public String mapCommonAttributeKey(String key) {
-			return key;
-		}
-
 	}
 
 }
