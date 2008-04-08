@@ -2,7 +2,13 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins">
 		<accessrules>
-			<accessrule kind="accessible" pattern="**/internal/**"/>
+			<accessrule kind="accessible" pattern="org/eclipse/core/internal/resources/Marker"/>
+			<accessrule kind="accessible" pattern="org/eclipse/debug/internal/**"/>
+			<accessrule kind="accessible" pattern="org/eclipse/jdt/internal/**"/>
+			<accessrule kind="accessible" pattern="org/eclipse/search/internal/ui/**"/>
+			<accessrule kind="accessible" pattern="org/eclipse/search2/internal/ui/*"/>
+			<accessrule kind="accessible" pattern="org/eclipse/ui/internal/*"/>
+			<accessrule kind="accessible" pattern="org/eclipse/ui/views/markers/internal/ConcreteMarker"/>
 		</accessrules>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>

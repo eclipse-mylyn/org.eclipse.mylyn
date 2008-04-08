@@ -3,9 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins">
 		<accessrules>
-			<accessrule kind="accessible" pattern="**/TasksUiImages"/>
-			<accessrule kind="accessible" pattern="**/TaskListColorsAndFonts"/>
-			<accessrule kind="accessible" pattern="**/TaskListPreferenceConstants"/>
 			<accessrule kind="accessible" pattern="org/eclipse/ui/internal/views/log/*"/>
 		</accessrules>
 	</classpathentry>
