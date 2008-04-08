@@ -58,6 +58,8 @@ public class TaskListViewCommands {
 		if (commandSupport != null && handlerService != null && contextSupport != null) {
 			contextSupport.activateContext(TaskListView.ID);
 
+			// TODO extract these into separate classes that are registered through the command extension point
+
 			AbstractHandler handler = new AbstractHandler() {
 				@Override
 				public Object execute(ExecutionEvent event) throws ExecutionException {

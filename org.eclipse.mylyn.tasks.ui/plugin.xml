@@ -429,6 +429,7 @@
 	        enablesFor="*"
 	        icon="icons/etool16/task-new.gif"
 	        id="org.eclipse.mylyn.tasks.ui.new.local.task"
+	        definitionId="org.eclipse.mylyn.tasks.ui.command.new.local.task"
 	        label="Local Task"
 	        menubarPath="org.eclipse.mylyn.tasks.ui.menu.new/local"
 	        tooltip="New Task"/>
@@ -453,16 +454,36 @@
               tooltip="New Query"> 
   		</action>
   		
+  		<action
+          class="org.eclipse.mylyn.internal.tasks.ui.actions.NewSubTaskAction"
+          definitionId="org.eclipse.mylyn.tasks.ui.command.new.subtask"
+          enablesFor="1"
+          icon="icons/etool16/sub-task-new.gif"
+          id="org.eclipse.mylyn.tasks.ui.new.subtask"
+          label="Subtask"
+          menubarPath="org.eclipse.mylyn.tasks.ui.menu.new/afterRepository"
+          tooltip="New Subtask">
+     <enablement>
+           <objectClass
+                 name="org.eclipse.mylyn.tasks.core.AbstractTask">
+           </objectClass>
+     </enablement>
+  </action>
+  		
   <menu
         id="org.eclipse.mylyn.tasks.ui.menu.new"
         label="New"
         path="new">
      <separator
-           name="local">
-     </separator>
-     <separator
            name="repository">
      </separator>
+     <groupMarker
+           name="afterRepository">
+     </groupMarker>
+     <separator
+           name="local">
+     </separator>
+     
   </menu>
 
   <menu
@@ -1162,6 +1183,21 @@
             id="org.eclipse.mylyn.tasks.ui.command.markTaskReadGoToPreviousUnread"
             name="Mark Task Read and Go To Previous Unread Task">
       </command>
+      <command
+            category="org.eclipse.mylyn.tasks.ui.commands"
+            categoryId="org.eclipse.mylyn.tasks.ui.tasklist"
+            defaultHandler="org.eclipse.mylyn.internal.tasks.ui.commands.NewSubTaskHandler"
+            id="org.eclipse.mylyn.tasks.ui.command.new.subtask"
+            name="New Subtask">
+      </command>
+      <command
+            category="org.eclipse.mylyn.tasks.ui.commands"
+            categoryId="org.eclipse.mylyn.tasks.ui.tasklist"
+            defaultHandler="org.eclipse.mylyn.internal.tasks.ui.commands.NewLocalTaskHandler"
+            id="org.eclipse.mylyn.tasks.ui.command.new.local.task"
+            name="New Local Task">
+      </command>
+      
       <category
             id="org.eclipse.mylyn.tasks.ui.tasklist"
             name="Task List">
@@ -1211,6 +1247,18 @@
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M2+M3+ARROW_UP">
       </key>
+      <key
+            commandId="org.eclipse.mylyn.tasks.ui.command.new.subtask"
+            contextId="org.eclipse.mylyn.tasks.ui.views.tasks"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M2+INSERT">
+      </key>
+      <key
+            commandId="org.eclipse.mylyn.tasks.ui.command.new.local.task"
+            contextId="org.eclipse.mylyn.tasks.ui.views.tasks"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="INSERT">
+      </key>
    </extension>
    <extension
          point="org.eclipse.ui.contexts">
@@ -1228,6 +1276,5 @@
                id="org.eclipse.mylyn.tasks.ui.views.tasks">
          </part>
       </actionSetPartAssociation>
-   </extension>
-   
+   </extension>  
 </plugin>

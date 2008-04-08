@@ -78,7 +78,6 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.GroupSubTasksAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.LinkWithEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskCompleteAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskIncompleteAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.NewSubTaskAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenTaskListElementAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenTasksUiPreferencesAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenWithBrowserAction;
@@ -91,7 +90,6 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskListElementPropertiesAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDragSourceListener;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListTableSorter.SortByIndex;
-import org.eclipse.mylyn.internal.tasks.ui.wizards.NewLocalTaskWizard;
 import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
@@ -184,13 +182,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private static final String MEMENTO_PRESENTATION = "presentation";
 
-	private static final String ID_MENU_NEW = "org.eclipse.mylyn.tasks.ui.menu.new";
-
 	private static final String ID_SEPARATOR_NEW = "new";
-
-	private static final String ID_SEPARATOR_NEW_LOCAL = "local";
-
-	private static final String ID_SEPARATOR_NEW_REPOSITORY = "repository";
 
 	private static final String ID_SEPARATOR_OPERATIONS = "operations";
 
@@ -818,9 +810,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		getViewer().getTree().addKeyListener(new KeyListener() {
 
 			public void keyPressed(KeyEvent e) {
-				if (e.keyCode == SWT.INSERT) {
-					new NewLocalTaskWizard().performFinish();
-				} else if (e.keyCode == SWT.F2 && e.stateMask == 0) {
+				if (e.keyCode == SWT.F2 && e.stateMask == 0) {
 					if (renameAction.isEnabled()) {
 						renameAction.run();
 					}
@@ -1134,25 +1124,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			task = (AbstractTask) element;
 		}
 
-		if (task != null) {
-			NewSubTaskAction action = new NewSubTaskAction();
-			action.selectionChanged(action, new StructuredSelection(task));
-			if (action.isEnabled()) {
-				IMenuManager subMenu = manager.findMenuUsingPath(ID_MENU_NEW);
-				if (subMenu == null) {
-					subMenu = new MenuManager("New", ID_MENU_NEW);
-					manager.add(subMenu);
-				}
-
-				subMenu.add(new Separator(ID_SEPARATOR_NEW_REPOSITORY));
-				subMenu.add(action);
-				subMenu.add(new Separator(ID_SEPARATOR_NEW_LOCAL));
-			} else {
-				manager.add(new Separator(ID_SEPARATOR_NEW));
-			}
-		} else {
-			manager.add(new Separator(ID_SEPARATOR_NEW));
-		}
+		manager.add(new Separator(ID_SEPARATOR_NEW));
 		manager.add(new Separator());
 
 		if (element instanceof AbstractTask) {
