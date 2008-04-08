@@ -168,7 +168,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	public static final String ID = "org.eclipse.mylyn.tasks.ui.views.tasks";
 
-	public static final String LABEL_VIEW = "Task List";
+	public static final String LABEL_VIEW = "Tasks";
 
 	private static final String MEMENTO_KEY_SORT_DIRECTION = "sortDirection";
 
