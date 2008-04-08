@@ -9,23 +9,18 @@
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
-import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
@@ -88,20 +83,8 @@ public class TaskExportAction extends Action implements IViewActionDelegate {
 			dialog.setFilterExtensions(new String[] { "*" + ITasksUiConstants.FILE_EXTENSION });
 
 			AbstractTask task = tasks.get(0);
-			String fileName = task.getSummary();
 
-			if (fileName.length() > 50) {
-				fileName = fileName.substring(0, 50);
-			}
-
-			try {
-				fileName = URLEncoder.encode(fileName, ITasksUiConstants.FILENAME_ENCODING);
-			} catch (UnsupportedEncodingException e) {
-				MessageDialog.openError(shell, "Task Export Error", "Could not determine name for the selected task");
-				return;
-			}
-
-			dialog.setFileName(fileName + ITasksUiConstants.FILE_EXTENSION);
+			dialog.setFileName(encodeName(task));
 			String path = dialog.open();
 
 			if (path != null) {
@@ -118,7 +101,7 @@ public class TaskExportAction extends Action implements IViewActionDelegate {
 			DirectoryDialog dialog = new DirectoryDialog(shell, SWT.PRIMARY_MODAL | SWT.SAVE);
 			String path = dialog.open();
 			for (AbstractTask task : tasks) {
-				File file = new File(path, encodeName(task) + ITasksUiConstants.FILE_EXTENSION);
+				File file = new File(path, encodeName(task));
 				taskFiles.put(task, file);
 			}
 		}
@@ -141,15 +124,12 @@ public class TaskExportAction extends Action implements IViewActionDelegate {
 	}
 
 	private String encodeName(AbstractTask task) {
-		String encodedName = null;
-		try {
-			encodedName = URLEncoder.encode(task.getHandleIdentifier(), ITasksUiConstants.FILENAME_ENCODING);
-		} catch (UnsupportedEncodingException e) {
-			// FIXME propagate RuntimeException? a null return value is not handled properly
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Could not determine name for the selected task", e));
+		String fileName = task.getSummary();
+		if (fileName.length() > 50) {
+			fileName = fileName.substring(0, 50);
 		}
-		return encodedName;
+		fileName = task.getTaskId() + " - " + fileName + ITasksUiConstants.FILE_EXTENSION;
+		return fileName;
 	}
 
 }
