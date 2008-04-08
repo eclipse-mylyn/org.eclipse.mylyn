@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
@@ -33,9 +34,14 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 	public MenuManager getSubMenuManager(final List<AbstractTaskContainer> selectedElements) {
 		final MenuManager subMenuManager = new MenuManager(LABEL);
 
-		//subMenuManager.setVisible(selectedElements.size() > 0 && !(selectedElements.get(0) instanceof AbstractTaskContainer || selectedElements.get(0) instanceof AbstractRepositoryQuery));
-
-		subMenuManager.setVisible(selectedElements.size() > 0 && selectedElements.get(0) instanceof AbstractTask);
+		// Compute selected tasks
+		List<AbstractTask> selectedTasks = new ArrayList<AbstractTask>(selectedElements.size());
+		for (AbstractTaskContainer elemement : selectedElements) {
+			if (elemement instanceof AbstractTask) {
+				selectedTasks.add((AbstractTask) elemement);
+			}
+		}
+		subMenuManager.setVisible(!selectedTasks.isEmpty());
 
 		List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(TasksUiPlugin.getTaskListManager()
 				.getTaskList()
@@ -43,15 +49,19 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 		Collections.sort(categories);
 		for (final AbstractTaskCategory category : categories) {
 			if (!(category instanceof UnmatchedTaskContainer)) {
-				Action action = new Action() {
+				String text = handleAcceleratorKeys(category.getSummary());
+				Action action = new Action(text, IAction.AS_RADIO_BUTTON) {
 					@Override
 					public void run() {
 						moveToCategory(selectedElements, category);
 					}
 				};
-				String text = handleAcceleratorKeys(category.getSummary());
-				action.setText(text);
 				action.setImageDescriptor(TasksUiImages.CATEGORY);
+				if (selectedTasks.size() == 1) {
+					if (category.contains(selectedTasks.get(0).getHandleIdentifier())) {
+						action.setChecked(true);
+					}
+				}
 				subMenuManager.add(action);
 			}
 		}
