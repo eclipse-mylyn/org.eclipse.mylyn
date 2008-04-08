@@ -42,10 +42,12 @@ public class PerspectiveChangeMonitor extends PerspectiveAdapter {
 	@Override
 	public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective,
 			IWorkbenchPartReference partRef, String changeId) {
-		String source = partRef.getId();
-		InteractionEvent interactionEvent = InteractionEvent.makePreference(source, PERSPECTIVE_CHANGED + ": "
-				+ changeId);
-		MonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
+		if (partRef != null) {
+			String source = partRef.getId();
+			InteractionEvent interactionEvent = InteractionEvent.makePreference(source, PERSPECTIVE_CHANGED + ": "
+					+ changeId);
+			MonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
+		}
 	}
 
 	@Override
