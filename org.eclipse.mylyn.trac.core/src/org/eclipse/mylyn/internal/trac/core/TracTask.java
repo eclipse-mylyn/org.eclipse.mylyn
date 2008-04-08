@@ -186,17 +186,17 @@ public class TracTask extends AbstractTask {
 
 	private static int TASK_PRIORITY_LEVELS = 5;
 
-	public static String getTaskPriority(String tracPriority) {
+	public static PriorityLevel getTaskPriority(String tracPriority) {
 		if (tracPriority != null) {
 			TracPriorityLevel priority = TracPriorityLevel.fromPriority(tracPriority);
 			if (priority != null) {
-				return priority.toPriorityLevel().toString();
+				return priority.toPriorityLevel();
 			}
 		}
-		return PriorityLevel.getDefault().toString();
+		return PriorityLevel.getDefault();
 	}
 
-	public static String getTaskPriority(String priority, TracPriority[] tracPriorities) {
+	public static PriorityLevel getTaskPriority(String priority, TracPriority[] tracPriorities) {
 		if (priority != null && tracPriorities != null && tracPriorities.length > 0) {
 			int minValue = tracPriorities[0].getValue();
 			int range = tracPriorities[tracPriorities.length - 1].getValue() - minValue;
@@ -204,11 +204,10 @@ public class TracTask extends AbstractTask {
 				if (priority.equals(tracPriority.getName())) {
 					float relativeValue = (float) (tracPriority.getValue() - minValue) / range;
 					int value = (int) (relativeValue * TASK_PRIORITY_LEVELS) + 1;
-					return AbstractTask.PriorityLevel.fromLevel(value).toString();
+					return AbstractTask.PriorityLevel.fromLevel(value);
 				}
 			}
 		}
-
 		return getTaskPriority(priority);
 	}
 

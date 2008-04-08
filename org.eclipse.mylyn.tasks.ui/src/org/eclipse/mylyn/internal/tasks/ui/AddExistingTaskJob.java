@@ -23,7 +23,6 @@ import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -68,10 +67,8 @@ public class AddExistingTaskJob extends Job {
 
 	@Override
 	public IStatus run(IProgressMonitor monitor) {
-		final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-				repository.getConnectorKind());
 		try {
-			final AbstractTask newTask = connector.createTaskFromExistingId(repository, taskId, monitor);
+			final AbstractTask newTask = TasksUiUtil.createTask(repository, taskId, monitor);
 			if (newTask != null) {
 				Calendar newSchedule = TaskActivityUtil.getCalendar();
 				TaskActivityUtil.snapEndOfWorkDay(newSchedule);

@@ -25,6 +25,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.web.core.AuthenticationCredentials;
@@ -51,7 +52,7 @@ public class TracTaskEditorTest extends TestCase {
 		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		connector = (TracRepositoryConnector) manager.getRepositoryConnector(TracCorePlugin.REPOSITORY_KIND);
-		TasksUiPlugin.getSynchronizationManager().setForceSyncExec(true);
+		TasksUi.setForceSyncExec(true);
 
 		taskDataHandler = connector.getTaskDataHandler();
 	}
@@ -73,7 +74,8 @@ public class TracTaskEditorTest extends TestCase {
 		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
 
 		RepositoryTaskData taskData = taskDataHandler.getTaskData(repository, "1", new NullProgressMonitor());
-		AbstractTask task = connector.createTaskFromTaskData(repository, taskData, false, new NullProgressMonitor());
+		AbstractTask task = connector.createTask(repository.getRepositoryUrl(), taskData.getTaskId(), "");
+		connector.updateTaskFromTaskData(repository, task, taskData);
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
 		TasksUiUtil.openTask(task);
 

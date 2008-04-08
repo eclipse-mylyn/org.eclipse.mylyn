@@ -16,10 +16,13 @@ import java.util.List;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
@@ -39,6 +42,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskDelegate;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
+import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiMessages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.editors.CategoryEditor;
@@ -53,11 +57,13 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskSelection;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
+import org.eclipse.mylyn.web.core.Policy;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -81,8 +87,6 @@ import org.eclipse.ui.internal.browser.WorkbenchBrowserSupport;
  */
 public class TasksUiUtil {
 
-	public static final String PREFS_PAGE_ID_COLORS_AND_FONTS = "org.eclipse.ui.preferencePages.ColorsAndFonts";
-
 	/**
 	 * Flag that is passed along to the workbench browser support when a task is opened in a browser because no rich
 	 * editor was available.
@@ -90,6 +94,8 @@ public class TasksUiUtil {
 	 * @see #openTask(String)
 	 */
 	public static final int FLAG_NO_RICH_EDITOR = 1 << 17;
+
+	public static final String PREFS_PAGE_ID_COLORS_AND_FONTS = "org.eclipse.ui.preferencePages.ColorsAndFonts";
 
 	public static void closeEditorInActivePage(AbstractTask task, boolean save) {
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
@@ -107,6 +113,90 @@ public class TasksUiUtil {
 		if (editor != null) {
 			page.closeEditor(editor, save);
 		}
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	// API 3.0 consider moving this somewhere else and renaming to addToTaskList
+	public static AbstractTask createTask(TaskRepository repository, String id, IProgressMonitor monitor)
+			throws CoreException {
+		monitor = Policy.monitorFor(monitor);
+		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+		AbstractTask task = taskList.getTask(repository.getRepositoryUrl(), id);
+		if (task == null) {
+			AbstractRepositoryConnector connector = TasksUiPlugin.getConnector(repository.getConnectorKind());
+			RepositoryTaskData taskData = connector.getTaskData(repository, id, new SubProgressMonitor(monitor, 1));
+			if (taskData != null) {
+				task = createTaskFromTaskData(connector, taskList, repository, taskData, true, new SubProgressMonitor(
+						monitor, 1));
+				if (task != null) {
+					task.setSynchronizationState(RepositoryTaskSyncState.INCOMING);
+					taskList.addTask(task);
+				}
+			}
+		}
+		return task;
+	}
+
+	/**
+	 * Create new repository task, adding result to tasklist
+	 */
+	private static AbstractTask createTaskFromExistingId(AbstractRepositoryConnector connector, TaskList taskList,
+			TaskRepository repository, String id, boolean retrieveSubTasks, IProgressMonitor monitor)
+			throws CoreException {
+		AbstractTask task = taskList.getTask(repository.getRepositoryUrl(), id);
+		if (task == null) {
+			RepositoryTaskData taskData = connector.getTaskData(repository, id, new SubProgressMonitor(monitor, 1));
+			if (taskData != null) {
+				task = createTaskFromTaskData(connector, taskList, repository, taskData, retrieveSubTasks,
+						new SubProgressMonitor(monitor, 1));
+				if (task != null) {
+					task.setSynchronizationState(RepositoryTaskSyncState.INCOMING);
+					taskList.addTask(task);
+				}
+			}
+		}
+		return task;
+	}
+
+	/**
+	 * Creates a new task from the given task data. Does NOT add resulting task to the task list.
+	 */
+	private static AbstractTask createTaskFromTaskData(AbstractRepositoryConnector connector, TaskList taskList,
+			TaskRepository repository, RepositoryTaskData taskData, boolean retrieveSubTasks, IProgressMonitor monitor)
+			throws CoreException {
+		AbstractTask task = null;
+		if (monitor == null) {
+			monitor = new NullProgressMonitor();
+		}
+		try {
+			TaskDataManager taskDataManager = TasksUiPlugin.getTaskDataManager();
+			if (taskData != null) {
+				// Use connector task factory
+				task = connector.createTask(repository.getRepositoryUrl(), taskData.getTaskId(), taskData.getTaskId()
+						+ ": " + taskData.getDescription());
+				connector.updateTaskFromTaskData(repository, task, taskData);
+				taskDataManager.setNewTaskData(taskData);
+
+				if (retrieveSubTasks) {
+					monitor.beginTask("Creating task", connector.getTaskDataHandler().getSubTaskIds(taskData).size());
+					for (String subId : connector.getTaskDataHandler().getSubTaskIds(taskData)) {
+						if (subId == null || subId.trim().equals("")) {
+							continue;
+						}
+						AbstractTask subTask = createTaskFromExistingId(connector, taskList, repository, subId, false,
+								new SubProgressMonitor(monitor, 1));
+						if (subTask != null) {
+							taskList.addTask(subTask, task);
+						}
+					}
+				}
+			}
+		} finally {
+			monitor.done();
+		}
+		return task;
 	}
 
 	public static List<TaskEditor> getActiveRepositoryTaskEditors() {
@@ -270,8 +360,7 @@ public class TasksUiUtil {
 									AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
 											.getRepositoryConnector(repositoryTask.getConnectorKind());
 									if (connector != null) {
-										TasksUi.synchronize(connector,
-												repositoryTask, false, null);
+										TasksUi.synchronize(connector, repositoryTask, false, null);
 									}
 
 								}
@@ -538,7 +627,8 @@ public class TasksUiUtil {
 		Assert.isNotNull(repository);
 		Assert.isNotNull(taskId);
 
-		AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getRepositoryUrl(), taskId);
+		AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getRepositoryUrl(),
+				taskId);
 		if (task == null) {
 			task = TasksUiPlugin.getTaskListManager().getTaskList().getTaskByKey(repository.getRepositoryUrl(), taskId);
 		}
@@ -591,6 +681,18 @@ public class TasksUiUtil {
 	}
 
 	/**
+	 * @deprecated use {@link #openTask(String)} or {@link #openUrl(String)} instead
+	 */
+	@Deprecated
+	public static void openUrl(String url, boolean useRichEditorIfAvailable) {
+		if (useRichEditorIfAvailable) {
+			openTask(url);
+		} else {
+			openUrl(url);
+		}
+	}
+
+	/**
 	 * @since 3.0
 	 */
 	private static void openUrl(String location, int customFlags) {
@@ -632,18 +734,6 @@ public class TasksUiUtil {
 		}
 	}
 
-	/**
-	 * @deprecated use {@link #openTask(String)} or {@link #openUrl(String)} instead
-	 */
-	@Deprecated
-	public static void openUrl(String url, boolean useRichEditorIfAvailable) {
-		if (useRichEditorIfAvailable) {
-			openTask(url);
-		} else {
-			openUrl(url);
-		}
-	}
-
 	// API 3.0 move to internal class?
 	public static void refreshAndOpenTaskListElement(AbstractTaskContainer element) {
 		if (element instanceof AbstractTask || element instanceof ScheduledTaskDelegate) {
@@ -682,17 +772,16 @@ public class TasksUiUtil {
 						TasksUiUtil.openTaskAndRefresh(task);
 					} else {
 						// TODO consider moving this into the editor, i.e. have the editor refresh the task if task data is missing
-						TasksUi.synchronize(connector, task, true,
-								new JobChangeAdapter() {
-									@Override
-									public void done(IJobChangeEvent event) {
-										PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-											public void run() {
-												TasksUiUtil.openTask(task);
-											}
-										});
+						TasksUi.synchronize(connector, task, true, new JobChangeAdapter() {
+							@Override
+							public void done(IJobChangeEvent event) {
+								PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+									public void run() {
+										TasksUiUtil.openTask(task);
 									}
 								});
+							}
+						});
 					}
 				}
 			}
@@ -726,6 +815,8 @@ public class TasksUiUtil {
 
 	/**
 	 * Use PreferencesUtil.createPreferenceDialogOn(..) instead.
+	 * 
+	 * @since 3.0
 	 */
 	@Deprecated
 	public static void showPreferencePage(String id, IPreferencePage page) {
@@ -745,5 +836,4 @@ public class TasksUiUtil {
 			}
 		});
 	}
-
 }

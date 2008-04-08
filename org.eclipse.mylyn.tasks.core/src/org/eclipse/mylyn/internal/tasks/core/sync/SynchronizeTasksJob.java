@@ -121,16 +121,12 @@ public class SynchronizeTasksJob extends SynchronizeJob {
 		task.setSynchronizationStatus(null);
 		taskList.notifyTaskChanged(task, false);
 		try {
-			if (taskDataHandler != null) {
-				String taskId = task.getTaskId();
-				RepositoryTaskData downloadedTaskData = taskDataHandler.getTaskData(taskRepository, taskId, monitor);
-				if (downloadedTaskData != null) {
-					updateFromTaskData(monitor, taskRepository, task, downloadedTaskData);
-				} else {
-					updateFromRepository(taskRepository, task, monitor);
-				}
+			String taskId = task.getTaskId();
+			RepositoryTaskData downloadedTaskData = connector.getTaskData(taskRepository, taskId, monitor);
+			if (downloadedTaskData != null) {
+				updateFromTaskData(monitor, taskRepository, task, downloadedTaskData);
 			} else {
-				updateFromRepository(taskRepository, task, monitor);
+				// FIXME log/set error
 			}
 		} catch (final CoreException e) {
 			updateStatus(taskRepository, task, e.getStatus());
@@ -163,12 +159,6 @@ public class SynchronizeTasksJob extends SynchronizeJob {
 		if (newTaskData != null && newTaskData.size() < tasks.size()) {
 			// set error status
 		}
-	}
-
-	private void updateFromRepository(TaskRepository repository, AbstractTask task, IProgressMonitor monitor)
-			throws CoreException {
-		connector.updateTaskFromRepository(repository, task, new SubProgressMonitor(monitor, 1));
-		updateTask(task);
 	}
 
 	private void updateFromTaskData(IProgressMonitor monitor, TaskRepository repository, AbstractTask task,

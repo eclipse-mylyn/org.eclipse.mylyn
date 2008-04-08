@@ -24,8 +24,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.mylyn.internal.trac.core.TracAttributeFactory.Attribute;
+import org.eclipse.mylyn.internal.trac.core.TracTask.Kind;
 import org.eclipse.mylyn.internal.trac.core.model.TracAttachment;
 import org.eclipse.mylyn.internal.trac.core.model.TracComment;
+import org.eclipse.mylyn.internal.trac.core.model.TracPriority;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicketField;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
@@ -33,6 +35,7 @@ import org.eclipse.mylyn.internal.trac.core.util.TracUtils;
 import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
+import org.eclipse.mylyn.tasks.core.DefaultTaskSchema;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryOperation;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
@@ -66,22 +69,21 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 		return downloadTaskData(repository, TracRepositoryConnector.getTicketId(taskId), monitor);
 	}
 
-	public RepositoryTaskData downloadTaskData(TaskRepository repository, int id, IProgressMonitor monitor)
+	public RepositoryTaskData downloadTaskData(TaskRepository repository, int taskId, IProgressMonitor monitor)
 			throws CoreException {
-		if (!TracRepositoryConnector.hasRichEditor(repository)) {
-			// offline mode is only supported for XML-RPC
-			return null;
-		}
-
+		RepositoryTaskData taskData = new RepositoryTaskData(attributeFactory, TracCorePlugin.REPOSITORY_KIND,
+				repository.getRepositoryUrl(), taskId + "");
+		ITracClient client = connector.getClientManager().getRepository(repository);
 		try {
-			RepositoryTaskData data = new RepositoryTaskData(attributeFactory, TracCorePlugin.REPOSITORY_KIND,
-					repository.getRepositoryUrl(), id + "");
-			ITracClient client = connector.getClientManager().getRepository(repository);
 			client.updateAttributes(monitor, false);
-			TracTicket ticket = client.getTicket(id, monitor);
-			createDefaultAttributes(attributeFactory, data, client, true);
-			updateTaskData(repository, attributeFactory, data, ticket);
-			return data;
+			TracTicket ticket = client.getTicket(taskId, monitor);
+			if (!TracRepositoryConnector.hasRichEditor(repository)) {
+				updateTaskDataFromTicket(taskData, ticket, client);
+			} else {
+				createDefaultAttributes(attributeFactory, taskData, client, true);
+				updateTaskData(repository, attributeFactory, taskData, ticket);
+			}
+			return taskData;
 		} catch (OperationCanceledException e) {
 			throw e;
 		} catch (Exception e) {
@@ -426,4 +428,33 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 		return false;
 	}
 
+	/**
+	 * Updates attributes of <code>taskData</code> from <code>ticket</code>.
+	 */
+	public void updateTaskDataFromTicket(RepositoryTaskData taskData, TracTicket ticket, ITracClient client) {
+		DefaultTaskSchema schema = new DefaultTaskSchema(taskData);
+		if (ticket.getValue(Key.SUMMARY) != null) {
+			schema.setSummary(ticket.getValue(Key.SUMMARY));
+		}
+
+		schema.setCompleted(TracTask.isCompleted(ticket.getValue(Key.STATUS)));
+
+		String priority = ticket.getValue(Key.PRIORITY);
+		TracPriority[] tracPriorities = client.getPriorities();
+		schema.setPriority(TracTask.getTaskPriority(priority, tracPriorities));
+
+		if (ticket.getValue(Key.TYPE) != null) {
+			Kind kind = TracTask.Kind.fromType(ticket.getValue(Key.TYPE));
+			schema.setTaskKind((kind != null) ? kind.toString() : ticket.getValue(Key.TYPE));
+		}
+
+		if (ticket.getCreated() != null) {
+			schema.setCreationDate(ticket.getCreated());
+		}
+
+		if (ticket.getCustomValue(TracTaskDataHandler.ATTRIBUTE_BLOCKING) != null) {
+			taskData.addAttribute(ATTRIBUTE_BLOCKED_BY, new RepositoryTaskAttribute(ATTRIBUTE_BLOCKED_BY, "Blocked by",
+					true));
+		}
+	}
 }

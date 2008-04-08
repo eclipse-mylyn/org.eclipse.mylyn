@@ -49,6 +49,7 @@ import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.mylyn.tasks.ui.TaskListManager;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
@@ -65,7 +66,7 @@ public class TaskListManagerTest extends TestCase {
 		super.setUp();
 		TasksUiPlugin.getDefault().getPreferenceStore().setValue(
 				TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
-		TasksUiPlugin.getSynchronizationManager().setForceSyncExec(true);
+		TasksUi.setForceSyncExec(true);
 		manager = TasksUiPlugin.getTaskListManager();
 		for (TaskRepository repository : TasksUiPlugin.getRepositoryManager().getAllRepositories()) {
 			TasksUiPlugin.getRepositoryManager().removeRepository(repository,
@@ -1052,7 +1053,7 @@ public class TaskListManagerTest extends TestCase {
 				MockRepositoryConnector.REPOSITORY_URL);
 		Set<AbstractRepositoryQuery> queries = new HashSet<AbstractRepositoryQuery>();
 		queries.add(query);
-		TasksUiPlugin.getSynchronizationManager().synchronize(new MockRepositoryConnector(), repository, queries, null,
+		TasksUi.synchronize(new MockRepositoryConnector(), repository, queries, null,
 				Job.INTERACTIVE, 0, true);
 		//assertEquals(2, manager.getTaskList().getArchiveContainer().getChildren().size());
 		assertEquals(0, query.getChildren().size());

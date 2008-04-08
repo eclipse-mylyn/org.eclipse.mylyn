@@ -23,6 +23,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 
 /**
  * @author Steffen Pingel
@@ -72,7 +73,7 @@ public class SubmitTaskDataJob extends Job {
 							"Task could not be created. No additional information was provided by the connector."));
 				}
 
-				task = connector.createTaskFromExistingId(taskRepository, taskId, new SubProgressMonitor(monitor, 1));
+				task = TasksUiUtil.createTask(taskRepository, taskId, new SubProgressMonitor(monitor, 1));
 				if (task == null) {
 					throw new CoreException(new RepositoryStatus(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 							RepositoryStatus.ERROR_INTERNAL,

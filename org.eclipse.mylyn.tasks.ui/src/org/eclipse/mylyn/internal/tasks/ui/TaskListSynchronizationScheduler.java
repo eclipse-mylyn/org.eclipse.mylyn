@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.PlatformUI;
 
@@ -57,7 +58,7 @@ public class TaskListSynchronizationScheduler implements IPropertyChangeListener
 		}
 		if (jobsQueue.size() > 0) {
 			refreshJob = jobsQueue.remove(0);
-			if (!TasksUiPlugin.getSynchronizationManager().isForcedSyncExec()) {
+			if (!TasksUi.isForcedSyncExec()) {
 				refreshJob.schedule(refreshJob.getScheduleDelay());
 			} else {
 				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {

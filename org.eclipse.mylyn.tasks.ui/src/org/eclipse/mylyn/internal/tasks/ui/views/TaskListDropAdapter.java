@@ -264,7 +264,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 					connector.getConnectorKind())) {
 				if (repository.getRepositoryUrl().equals(repositoryUrl)) {
 					try {
-						newTask = connector.createTaskFromExistingId(repository, id, new NullProgressMonitor());
+						newTask = TasksUiUtil.createTask(repository, id, new NullProgressMonitor());
 						TasksUiUtil.refreshAndOpenTaskListElement(newTask);
 						return true;
 					} catch (CoreException e) {

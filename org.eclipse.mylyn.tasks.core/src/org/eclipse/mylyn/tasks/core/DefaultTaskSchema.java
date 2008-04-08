@@ -53,6 +53,10 @@ public class DefaultTaskSchema {
 			task.setUrl(getTaskUrl());
 			changed = true;
 		}
+		if (hasTaskPropertyChanged(task.getTaskKind(), getTaskKind())) {
+			task.setTaskKind(getTaskKind());
+			changed = true;
+		}
 		return changed;
 	}
 

@@ -12,7 +12,9 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.sync.RepositorySynchronizationManager;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -74,7 +76,7 @@ public class TaskFactory implements ITaskFactory {
 	public AbstractTask createTask(RepositoryTaskData taskData, IProgressMonitor monitor) throws CoreException {
 		AbstractTask repositoryTask = taskList.getTask(taskData.getRepositoryUrl(), taskData.getTaskId());
 		if (repositoryTask == null) {
-			repositoryTask = connector.createTaskFromTaskData(repository, taskData, updateTasklist, monitor);
+			repositoryTask = createTaskFromTaskData(connector, repository, taskData, updateTasklist, monitor);
 			repositoryTask.setSynchronizationState(RepositoryTaskSyncState.INCOMING);
 			if (updateTasklist) {
 				taskList.addTask(repositoryTask);
@@ -95,7 +97,7 @@ public class TaskFactory implements ITaskFactory {
 							if (subId == null || subId.trim().equals("")) {
 								continue;
 							}
-							AbstractTask subTask = connector.createTaskFromExistingId(repository, subId, false,
+							AbstractTask subTask = createTaskFromExistingId(connector, repository, subId, false,
 									new SubProgressMonitor(monitor, 1));
 							if (subTask != null) {
 								taskList.addTask(subTask, repositoryTask);
@@ -108,69 +110,65 @@ public class TaskFactory implements ITaskFactory {
 		return repositoryTask;
 	}
 
-	// TODO: Move all task construction code here
+	/**
+	 * Creates a new task from the given task data. Does NOT add resulting task to the tasklist
+	 */
+	private AbstractTask createTaskFromTaskData(AbstractRepositoryConnector connector, TaskRepository repository,
+			RepositoryTaskData taskData, boolean retrieveSubTasks, IProgressMonitor monitor) throws CoreException {
+		AbstractTask repositoryTask = null;
+		if (monitor == null) {
+			monitor = new NullProgressMonitor();
+		}
+		try {
+			TaskDataManager taskDataManager = TasksUiPlugin.getTaskDataManager();
+			if (taskData != null) {
+				// Use connector task factory
+				repositoryTask = connector.createTask(repository.getRepositoryUrl(), taskData.getTaskId(),
+						taskData.getTaskId() + ": " + taskData.getDescription());
+				connector.updateTaskFromTaskData(repository, repositoryTask, taskData);
+				taskDataManager.setNewTaskData(taskData);
 
-//	/**
-//	 * Create new repository task, adding result to tasklist
-//	 */
-//	public AbstractTask createTaskFromExistingId(TaskRepository repository, String id,
-//			boolean retrieveSubTasks, IProgressMonitor monitor) throws CoreException {
-//		ITask task = taskList.getTask(repository.getUrl(), id);
-//		AbstractTask repositoryTask = null;
-//		if (task instanceof AbstractTask) {
-//			repositoryTask = (AbstractTask) task;
-//		} else if (task == null && dataHandler != null) {
-//			RepositoryTaskData taskData = null;
-//			taskData = dataHandler.getTaskData(repository, id, new SubProgressMonitor(monitor, 1));
-//			if (taskData != null) {
-//				repositoryTask = createTaskFromTaskData(repository, taskData, retrieveSubTasks, new SubProgressMonitor(
-//						monitor, 1));
-//				if (repositoryTask != null) {
-//					taskList.addTask(repositoryTask);
-//				}
-//			}
-//		} // TODO: Handle case similar to web tasks (no taskDataHandler but
-//		// have tasks)
-//
-//		return repositoryTask;
-//	}
-//
-//	/**
-//	 * Creates a new task from the given task data. Does NOT add resulting task
-//	 * to the tasklist
-//	 */
-//	public AbstractTask createTaskFromTaskData(TaskRepository repository, RepositoryTaskData taskData,
-//			boolean retrieveSubTasks, IProgressMonitor monitor) throws CoreException {
-//		AbstractTask repositoryTask = null;
-//		if (monitor == null) {
-//			monitor = new NullProgressMonitor();
-//		}
-//		try {
-//			if (taskData != null && dataHandler != null) {
-//				// Use connector task factory
-//				repositoryTask = connector.createTask(repository.getUrl(), taskData.getId(), taskData.getId() + ": "
-//						+ taskData.getDescription());
-//				connector.updateTaskFromTaskData(repository, repositoryTask, taskData);
-//				dataManager.setNewTaskData(repositoryTask.getHandleIdentifier(), taskData);
-//
-//				if (retrieveSubTasks) {
-//					monitor.beginTask("Creating task", dataHandler.getSubTaskIds(taskData).size());
-//					for (String subId : dataHandler.getSubTaskIds(taskData)) {
-//						if (subId == null || subId.trim().equals("")) {
-//							continue;
-//						}
-//						AbstractTask subTask = createTaskFromExistingId(repository, subId, false,
-//								new SubProgressMonitor(monitor, 1));
-//						if (subTask != null) {
-//							repositoryTask.addSubTask(subTask);
-//						}
-//					}
-//				}
-//			}
-//		} finally {
-//			monitor.done();
-//		}
-//		return repositoryTask;
-//	}
+				if (retrieveSubTasks) {
+					monitor.beginTask("Creating task", connector.getTaskDataHandler().getSubTaskIds(taskData).size());
+					for (String subId : connector.getTaskDataHandler().getSubTaskIds(taskData)) {
+						if (subId == null || subId.trim().equals("")) {
+							continue;
+						}
+						AbstractTask subTask = createTaskFromExistingId(connector, repository, subId, false,
+								new SubProgressMonitor(monitor, 1));
+						if (subTask != null) {
+							taskList.addTask(subTask, repositoryTask);
+						}
+					}
+				}
+			}
+		} finally {
+			monitor.done();
+		}
+		return repositoryTask;
+	}
+
+	/**
+	 * Create new repository task, adding result to tasklist
+	 */
+	private AbstractTask createTaskFromExistingId(AbstractRepositoryConnector connector, TaskRepository repository,
+			String id, boolean retrieveSubTasks, IProgressMonitor monitor) throws CoreException {
+		AbstractTask repositoryTask = taskList.getTask(repository.getRepositoryUrl(), id);
+		if (repositoryTask == null && connector.getTaskDataHandler() != null) {
+			RepositoryTaskData taskData = null;
+			taskData = connector.getTaskDataHandler().getTaskData(repository, id, new SubProgressMonitor(monitor, 1));
+			if (taskData != null) {
+				repositoryTask = createTaskFromTaskData(connector, repository, taskData, retrieveSubTasks,
+						new SubProgressMonitor(monitor, 1));
+				if (repositoryTask != null) {
+					repositoryTask.setSynchronizationState(RepositoryTaskSyncState.INCOMING);
+					taskList.addTask(repositoryTask);
+				}
+			}
+		} // TODO: Handle case similar to web tasks (no taskDataHandler but
+		// have tasks)
+
+		return repositoryTask;
+	}
 
 }

@@ -30,14 +30,14 @@ public class TracTaskTest extends TestCase {
 	}
 
 	public void testGetTaskPriority() {
-		assertEquals("P1", TracTask.getTaskPriority("blocker"));
-		assertEquals("P2", TracTask.getTaskPriority("critical"));
-		assertEquals("P3", TracTask.getTaskPriority("major"));
-		assertEquals("P3", TracTask.getTaskPriority(null));
-		assertEquals("P3", TracTask.getTaskPriority(""));
-		assertEquals("P3", TracTask.getTaskPriority("foo bar"));
-		assertEquals("P4", TracTask.getTaskPriority("minor"));
-		assertEquals("P5", TracTask.getTaskPriority("trivial"));
+		assertEquals("P1", TracTask.getTaskPriority("blocker").toString());
+		assertEquals("P2", TracTask.getTaskPriority("critical").toString());
+		assertEquals("P3", TracTask.getTaskPriority("major").toString());
+		assertEquals("P3", TracTask.getTaskPriority(null).toString());
+		assertEquals("P3", TracTask.getTaskPriority("").toString());
+		assertEquals("P3", TracTask.getTaskPriority("foo bar").toString());
+		assertEquals("P4", TracTask.getTaskPriority("minor").toString());
+		assertEquals("P5", TracTask.getTaskPriority("trivial").toString());
 	}
 
 	public void testGetTaskPriorityFromTracPriorities() {
@@ -45,17 +45,17 @@ public class TracTaskTest extends TestCase {
 		TracPriority p2 = new TracPriority("b", 2);
 		TracPriority p3 = new TracPriority("c", 3);
 		TracPriority[] priorities = new TracPriority[] { p1, p2, p3 };
-		assertEquals("P1", TracTask.getTaskPriority("a", priorities));
-		assertEquals("P3", TracTask.getTaskPriority("b", priorities));
-		assertEquals("P5", TracTask.getTaskPriority("c", priorities));
-		assertEquals("P3", TracTask.getTaskPriority("foo", priorities));
-		assertEquals("P3", TracTask.getTaskPriority(null, priorities));
+		assertEquals("P1", TracTask.getTaskPriority("a", priorities).toString());
+		assertEquals("P3", TracTask.getTaskPriority("b", priorities).toString());
+		assertEquals("P5", TracTask.getTaskPriority("c", priorities).toString());
+		assertEquals("P3", TracTask.getTaskPriority("foo", priorities).toString());
+		assertEquals("P3", TracTask.getTaskPriority(null, priorities).toString());
 
 		p1 = new TracPriority("a", 10);
 		priorities = new TracPriority[] { p1 };
-		assertEquals("P1", TracTask.getTaskPriority("a", priorities));
-		assertEquals("P3", TracTask.getTaskPriority("b", priorities));
-		assertEquals("P3", TracTask.getTaskPriority(null, priorities));
+		assertEquals("P1", TracTask.getTaskPriority("a", priorities).toString());
+		assertEquals("P3", TracTask.getTaskPriority("b", priorities).toString());
+		assertEquals("P3", TracTask.getTaskPriority(null, priorities).toString());
 
 		p1 = new TracPriority("1", 10);
 		p2 = new TracPriority("2", 20);
@@ -64,12 +64,12 @@ public class TracTaskTest extends TestCase {
 		TracPriority p5 = new TracPriority("5", 70);
 		TracPriority p6 = new TracPriority("6", 100);
 		priorities = new TracPriority[] { p1, p2, p3, p4, p5, p6 };
-		assertEquals("P1", TracTask.getTaskPriority("1", priorities));
-		assertEquals("P1", TracTask.getTaskPriority("2", priorities));
-		assertEquals("P2", TracTask.getTaskPriority("3", priorities));
-		assertEquals("P2", TracTask.getTaskPriority("4", priorities));
-		assertEquals("P4", TracTask.getTaskPriority("5", priorities));
-		assertEquals("P5", TracTask.getTaskPriority("6", priorities));
+		assertEquals("P1", TracTask.getTaskPriority("1", priorities).toString());
+		assertEquals("P1", TracTask.getTaskPriority("2", priorities).toString());
+		assertEquals("P2", TracTask.getTaskPriority("3", priorities).toString());
+		assertEquals("P2", TracTask.getTaskPriority("4", priorities).toString());
+		assertEquals("P4", TracTask.getTaskPriority("5", priorities).toString());
+		assertEquals("P5", TracTask.getTaskPriority("6", priorities).toString());
 	}
 
 }

@@ -457,13 +457,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public void updateTaskFromRepository(TaskRepository repository, AbstractTask repositoryTask,
-			IProgressMonitor monitor) throws CoreException {
-		StatusHandler.log(new Status(IStatus.WARNING, BugzillaCorePlugin.PLUGIN_ID, "updateTaskFromRepository called!" + repositoryTask.getTaskKey() + " [" + repositoryTask.getRepositoryUrl() + "]"));
-		throw new CoreException(new Status(Status.WARNING, BugzillaCorePlugin.PLUGIN_ID, "Unable to retrieve data for task"));
-	}
-
-	@Override
 	public String getTaskIdPrefix() {
 		return "bug";
 	}
@@ -532,6 +525,12 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			}
 		}
 		return BugzillaCorePlugin.getDefault().getLanguageSetting(IBugzillaConstants.DEFAULT_LANG);
+	}
+
+	@Override
+	public RepositoryTaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
+			throws CoreException {
+		return getTaskDataHandler().getTaskData(repository, taskId, monitor);
 	}
 
 }

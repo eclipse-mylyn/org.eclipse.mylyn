@@ -92,21 +92,14 @@ public class LocalRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public IStatus performQuery(TaskRepository repository, AbstractRepositoryQuery query, AbstractTaskCollector resultCollector,
-			SynchronizationEvent event, IProgressMonitor monitor) {
+	public IStatus performQuery(TaskRepository repository, AbstractRepositoryQuery query,
+			AbstractTaskCollector resultCollector, SynchronizationEvent event, IProgressMonitor monitor) {
 		// ignore
 		return null;
 	}
 
 	@Override
 	public void updateAttributes(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
-		// ignore
-
-	}
-
-	@Override
-	public void updateTaskFromRepository(TaskRepository repository, AbstractTask repositoryTask,
-			IProgressMonitor monitor) throws CoreException {
 		// ignore
 
 	}
@@ -120,6 +113,12 @@ public class LocalRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public boolean isUserManaged() {
 		return false;
+	}
+
+	@Override
+	public RepositoryTaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
+			throws CoreException {
+		return null;
 	}
 
 }

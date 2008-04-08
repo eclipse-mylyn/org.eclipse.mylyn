@@ -37,6 +37,7 @@ public abstract class AbstractRepositoryConnector {
 
 	private static final long DAY = HOUR * 24L;
 
+	@Deprecated
 	protected TaskList taskList;
 
 	private boolean userManaged = true;
@@ -70,6 +71,14 @@ public abstract class AbstractRepositoryConnector {
 
 	public abstract String getTaskUrl(String repositoryUrl, String taskId);
 
+	/**
+	 * Retrieves and returns a copy of task data from repository.
+	 * 
+	 * @since 3.0
+	 */
+	public abstract RepositoryTaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
+			throws CoreException;
+
 	public String[] getTaskIdsFromComment(TaskRepository repository, String comment) {
 		return null;
 	}
@@ -81,8 +90,10 @@ public abstract class AbstractRepositoryConnector {
 
 	/**
 	 * create task and necessary subtasks (1 level nesting)
+	 * 
+	 * @deprecated use {@link TasksUiUtil#createTask(TaskRepository, String, IProgressMonitor)} instead
 	 */
-	// API 3.0 rename to createTaskFromId
+	@Deprecated
 	public AbstractTask createTaskFromExistingId(TaskRepository repository, String id, IProgressMonitor monitor)
 			throws CoreException {
 		return createTaskFromExistingId(repository, id, true, monitor);
@@ -90,7 +101,10 @@ public abstract class AbstractRepositoryConnector {
 
 	/**
 	 * Create new repository task, adding result to tasklist
+	 * 
+	 * @deprecated use {@link TasksUiUtil#createTask(TaskRepository, String, IProgressMonitor)} instead
 	 */
+	@Deprecated
 	public AbstractTask createTaskFromExistingId(TaskRepository repository, String id, boolean retrieveSubTasks,
 			IProgressMonitor monitor) throws CoreException {
 		AbstractTask repositoryTask = taskList.getTask(repository.getRepositoryUrl(), id);
@@ -113,7 +127,10 @@ public abstract class AbstractRepositoryConnector {
 
 	/**
 	 * Creates a new task from the given task data. Does NOT add resulting task to the tasklist
+	 * 
+	 * @deprecated use {@link TasksUiUtil#createTask(TaskRepository, String, IProgressMonitor)} instead
 	 */
+	@Deprecated
 	public AbstractTask createTaskFromTaskData(TaskRepository repository, RepositoryTaskData taskData,
 			boolean retrieveSubTasks, IProgressMonitor monitor) throws CoreException {
 		AbstractTask repositoryTask = null;
@@ -123,8 +140,8 @@ public abstract class AbstractRepositoryConnector {
 		try {
 			if (taskData != null && getTaskDataManager() != null) {
 				// Use connector task factory
-				repositoryTask = createTask(repository.getRepositoryUrl(), taskData.getTaskId(), taskData.getTaskId() + ": "
-						+ taskData.getDescription());
+				repositoryTask = createTask(repository.getRepositoryUrl(), taskData.getTaskId(), taskData.getTaskId()
+						+ ": " + taskData.getDescription());
 				updateTaskFromTaskData(repository, repositoryTask, taskData);
 				getTaskDataManager().setNewTaskData(taskData);
 
@@ -225,8 +242,10 @@ public abstract class AbstractRepositoryConnector {
 	 *             thrown in case of error while synchronizing
 	 * @see {@link #getTaskDataHandler()}
 	 */
-	public abstract void updateTaskFromRepository(TaskRepository repository, AbstractTask repositoryTask,
-			IProgressMonitor monitor) throws CoreException;
+	@Deprecated
+	public void updateTaskFromRepository(TaskRepository repository, AbstractTask repositoryTask,
+			IProgressMonitor monitor) throws CoreException {
+	}
 
 	/**
 	 * Updates task with latest information from <code>taskData</code>.

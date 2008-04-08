@@ -28,16 +28,13 @@ import org.eclipse.mylyn.context.tests.support.TestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.EditRepositoryWizard;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
-import org.eclipse.mylyn.internal.trac.core.InvalidTicketException;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryQuery;
 import org.eclipse.mylyn.internal.trac.core.TracTask;
 import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
-import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
 import org.eclipse.mylyn.internal.trac.core.model.TracVersion;
-import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylyn.internal.trac.ui.wizard.TracRepositorySettingsPage;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -49,6 +46,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.ui.TaskFactory;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.trac.tests.support.TestFixture;
 import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
 import org.eclipse.mylyn.web.core.AuthenticationCredentials;
@@ -145,14 +143,14 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 	protected void createTaskFromExistingKey() throws CoreException {
 		String id = data.tickets.get(0).getId() + "";
-		AbstractTask task = connector.createTaskFromExistingId(repository, id, new NullProgressMonitor());
+		AbstractTask task = TasksUiUtil.createTask(repository, id, null);
 		assertNotNull(task);
 		assertEquals(TracTask.class, task.getClass());
 		assertTrue(task.getSummary().contains("summary1"));
 		assertEquals(repository.getRepositoryUrl() + ITracClient.TICKET_URL + id, task.getUrl());
 
 		try {
-			task = connector.createTaskFromExistingId(repository, "does not exist", new NullProgressMonitor());
+			task = TasksUiUtil.createTask(repository, "does not exist", null);
 			fail("Expected CoreException");
 		} catch (CoreException e) {
 		}
@@ -236,45 +234,6 @@ public class TracRepositoryConnectorTest extends TestCase {
 		assertEquals(data.tickets.get(2).getId() + "", result.get(2).getTaskId());
 	}
 
-	public void testUpdateTaskDetails() throws InvalidTicketException {
-		init(TracTestConstants.TEST_TRAC_010_URL, Version.TRAC_0_9);
-
-		TracTicket ticket = new TracTicket(123);
-		ticket.putBuiltinValue(Key.DESCRIPTION, "mydescription");
-		ticket.putBuiltinValue(Key.PRIORITY, "mypriority");
-		ticket.putBuiltinValue(Key.SUMMARY, "mysummary");
-		ticket.putBuiltinValue(Key.TYPE, "mytype");
-
-		TracTask task = new TracTask(TracTestConstants.TEST_TRAC_010_URL, "" + 123, "desc");
-		assertEquals(TracTestConstants.TEST_TRAC_010_URL + ITracClient.TICKET_URL + "123", task.getUrl());
-		assertEquals("desc", task.getSummary());
-
-		ITracClient client = connector.getClientManager().getRepository(repository);
-		connector.updateTaskFromTicket(task, ticket, false, client);
-		assertEquals(TracTestConstants.TEST_TRAC_010_URL + ITracClient.TICKET_URL + "123", task.getUrl());
-		assertEquals("123", task.getTaskKey());
-		assertEquals("mysummary", task.getSummary());
-		assertEquals("P3", task.getPriority());
-		assertEquals("mytype", task.getTaskKind());
-	}
-
-	public void testUpdateTaskDetailsSummaryOnly() throws InvalidTicketException {
-		init(TracTestConstants.TEST_TRAC_010_URL, Version.TRAC_0_9);
-
-		TracTicket ticket = new TracTicket(456);
-		ticket.putBuiltinValue(Key.SUMMARY, "mysummary");
-
-		TracTask task = new TracTask(TracTestConstants.TEST_TRAC_010_URL, "" + 456, "desc");
-
-		ITracClient client = connector.getClientManager().getRepository(repository);
-		connector.updateTaskFromTicket(task, ticket, false, client);
-		assertEquals(TracTestConstants.TEST_TRAC_010_URL + ITracClient.TICKET_URL + "456", task.getUrl());
-		assertEquals("456", task.getTaskKey());
-		assertEquals("mysummary", task.getSummary());
-		assertEquals("P3", task.getPriority());
-		assertEquals(AbstractTask.DEFAULT_TASK_KIND, task.getTaskKind());
-	}
-
 	public void testUpdateAttributesWeb011() throws Exception {
 		init(TracTestConstants.TEST_TRAC_011_URL, Version.TRAC_0_9);
 		updateAttributes();
@@ -317,8 +276,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 	public void testContextXmlRpc010() throws Exception {
 		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
-		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.attachmentTicketId + "",
-				new NullProgressMonitor());
+		TracTask task = (TracTask) TasksUiUtil.createTask(repository, data.attachmentTicketId + "", null);
 		TasksUi.synchronize(connector, task, true, null);
 
 		//int size = task.getTaskData().getAttachments().size();
@@ -340,8 +298,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 	public void testContextWeb096() throws Exception {
 		init(TracTestConstants.TEST_TRAC_096_URL, Version.TRAC_0_9);
-		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.attachmentTicketId + "",
-				new NullProgressMonitor());
+		TracTask task = (TracTask) TasksUiUtil.createTask(repository, data.attachmentTicketId + "", null);
 
 		File sourceContextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
 		sourceContextFile.createNewFile();

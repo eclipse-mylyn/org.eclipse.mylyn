@@ -32,6 +32,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.TaskFactory;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 
 /**
  * @author Mik Kersten
@@ -122,7 +123,7 @@ public abstract class AbstractBugzillaTest extends TestCase {
 	}
 
 	protected BugzillaTask generateLocalTaskAndDownload(String taskNumber) throws CoreException {
-		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingId(repository, taskNumber,
+		BugzillaTask task = (BugzillaTask) TasksUiUtil.createTask(repository, taskNumber,
 				new NullProgressMonitor());
 		TasksUiPlugin.getSynchronizationManager().setTaskRead(task, true);
 		assertNotNull(task);

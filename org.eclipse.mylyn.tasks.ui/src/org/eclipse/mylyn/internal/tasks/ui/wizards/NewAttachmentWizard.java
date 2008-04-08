@@ -256,7 +256,7 @@ public class NewAttachmentWizard extends Wizard {
 					AbstractRepositoryTaskEditorInput input = (AbstractRepositoryTaskEditorInput) editor.getEditorInput();
 					if (input.getTaskData() != null) {
 						String handle = RepositoryTaskHandleUtil.getHandle(input.getTaskData().getRepositoryUrl(),
-								input.getTaskData().getId());
+								input.getTaskData().getTaskId());
 						if (handle.equals(handleTarget)) {
 							editor.refreshEditorContents();
 							editor.getEditorSite().getPage().activate(editor);

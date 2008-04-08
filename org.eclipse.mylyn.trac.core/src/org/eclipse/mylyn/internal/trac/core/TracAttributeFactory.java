@@ -31,19 +31,24 @@ public class TracAttributeFactory extends AbstractAttributeFactory {
 	private static Map<String, String> tracKeyByTaskKey = new HashMap<String, String>();
 
 	public enum Attribute {
-		CC(Key.CC, "CC:", RepositoryTaskAttribute.USER_CC, true, false), CHANGE_TIME(Key.CHANGE_TIME,
-				"Last Modification:", RepositoryTaskAttribute.DATE_MODIFIED, true, true), COMPONENT(Key.COMPONENT,
-				"Component:", RepositoryTaskAttribute.PRODUCT), DESCRIPTION(Key.DESCRIPTION, "Description:",
-				RepositoryTaskAttribute.DESCRIPTION, true, false), ID(Key.ID, "<used by search engine>", null, true), KEYWORDS(
-				Key.KEYWORDS, "Keywords:", RepositoryTaskAttribute.KEYWORDS), MILESTONE(Key.MILESTONE, "Milestone:",
-				null), NEW_CC(RepositoryTaskAttribute.NEW_CC, "Add CC:"), OWNER(Key.OWNER, "Assigned to:",
-				RepositoryTaskAttribute.USER_ASSIGNED, true, true), PRIORITY(Key.PRIORITY, "Priority:", null), REPORTER(
-				Key.REPORTER, "Reporter:", RepositoryTaskAttribute.USER_REPORTER, true, true), RESOLUTION(
-				Key.RESOLUTION, "Resolution:", RepositoryTaskAttribute.RESOLUTION, false, true), SEVERITY(Key.SEVERITY,
-				"Severity:", null), STATUS(Key.STATUS, "Status:", RepositoryTaskAttribute.STATUS, false, true), SUMMARY(
-				Key.SUMMARY, "Summary:", RepositoryTaskAttribute.SUMMARY, true), TIME(Key.TIME, "Created:",
-				RepositoryTaskAttribute.DATE_CREATION, true, true), TYPE(Key.TYPE, "Type:", null), VERSION(Key.VERSION,
-				"Version:", null);
+		CC(Key.CC, "CC:", RepositoryTaskAttribute.USER_CC, true, false), //
+		CHANGE_TIME(Key.CHANGE_TIME, "Last Modification:", RepositoryTaskAttribute.DATE_MODIFIED, true, true), //
+		COMPONENT(Key.COMPONENT, "Component:", RepositoryTaskAttribute.PRODUCT), //
+		DESCRIPTION(Key.DESCRIPTION, "Description:", RepositoryTaskAttribute.DESCRIPTION, true, false), //
+		ID(Key.ID, "<used by search engine>", null, true), //
+		KEYWORDS(Key.KEYWORDS, "Keywords:", RepositoryTaskAttribute.KEYWORDS), // 
+		MILESTONE(Key.MILESTONE, "Milestone:", null), //
+		NEW_CC(RepositoryTaskAttribute.NEW_CC, "Add CC:"), //
+		OWNER(Key.OWNER, "Assigned to:", RepositoryTaskAttribute.USER_ASSIGNED, true, true), //
+		PRIORITY(Key.PRIORITY, "Priority:", null), //
+		REPORTER(Key.REPORTER, "Reporter:", RepositoryTaskAttribute.USER_REPORTER, true, true), //
+		RESOLUTION(Key.RESOLUTION, "Resolution:", RepositoryTaskAttribute.RESOLUTION, false, true), //
+		SEVERITY(Key.SEVERITY, "Severity:", null), //
+		STATUS(Key.STATUS, "Status:", RepositoryTaskAttribute.STATUS, false, true), //
+		SUMMARY(Key.SUMMARY, "Summary:", RepositoryTaskAttribute.SUMMARY, true), //
+		TIME(Key.TIME, "Created:", RepositoryTaskAttribute.DATE_CREATION, true, true), //
+		TYPE(Key.TYPE, "Type:", null), //
+		VERSION(Key.VERSION, "Version:", null);
 
 		private final boolean isHidden;
 

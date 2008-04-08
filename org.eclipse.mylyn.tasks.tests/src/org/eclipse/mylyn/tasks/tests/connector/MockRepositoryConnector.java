@@ -153,8 +153,8 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public IStatus performQuery(TaskRepository repository, AbstractRepositoryQuery query, AbstractTaskCollector resultCollector,
-			SynchronizationEvent event, IProgressMonitor monitor) {
+	public IStatus performQuery(TaskRepository repository, AbstractRepositoryQuery query,
+			AbstractTaskCollector resultCollector, SynchronizationEvent event, IProgressMonitor monitor) {
 		return Status.OK_STATUS;
 	}
 
@@ -170,4 +170,11 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 		templates.add(template);
 		return templates;
 	}
+
+	@Override
+	public RepositoryTaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
+			throws CoreException {
+		return null;
+	}
+
 }
