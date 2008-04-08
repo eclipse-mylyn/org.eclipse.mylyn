@@ -10,6 +10,7 @@ package org.eclipse.mylyn.internal.bugzilla.core;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -31,10 +32,10 @@ public class MultiBugReportFactory extends AbstractReportFactory {
 
 	private static BugzillaAttributeFactory bugzillaAttributeFactory = new BugzillaAttributeFactory();
 
-	public void populateReport(Map<String, RepositoryTaskData> bugMap) throws IOException, CoreException {
+	public void populateReport(Map<String, RepositoryTaskData> bugMap, List<BugzillaCustomField> customFields) throws IOException, CoreException {
 
 		SaxMultiBugReportContentHandler contentHandler = new SaxMultiBugReportContentHandler(bugzillaAttributeFactory,
-				bugMap);
+				bugMap, customFields);
 		collectResults(contentHandler, false);
 
 		if (contentHandler.errorOccurred()) {

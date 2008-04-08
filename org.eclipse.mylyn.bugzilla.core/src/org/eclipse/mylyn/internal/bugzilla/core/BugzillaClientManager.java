@@ -12,6 +12,7 @@ import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryListener;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
@@ -26,7 +27,7 @@ public class BugzillaClientManager implements ITaskRepositoryListener {
 	public BugzillaClientManager() {
 	}
 
-	public synchronized BugzillaClient getClient(TaskRepository taskRepository) throws MalformedURLException {
+	public synchronized BugzillaClient getClient(TaskRepository taskRepository) throws MalformedURLException, CoreException {
 		BugzillaClient client = clientByUrl.get(taskRepository.getRepositoryUrl());
 		if (client == null) {
 
@@ -43,6 +44,7 @@ public class BugzillaClientManager implements ITaskRepositoryListener {
 					taskRepository.getPassword(), htUser, htPass, taskRepository.getProxy(),
 					taskRepository.getCharacterEncoding(), taskRepository.getProperties(), languageSettings);
 			clientByUrl.put(taskRepository.getRepositoryUrl(), client);
+			client.setRepositoryConfiguration(BugzillaCorePlugin.getRepositoryConfiguration(taskRepository, false));
 		}
 		return client;
 	}

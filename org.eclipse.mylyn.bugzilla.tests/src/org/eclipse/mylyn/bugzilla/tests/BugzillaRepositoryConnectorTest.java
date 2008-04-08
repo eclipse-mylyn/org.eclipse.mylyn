@@ -50,7 +50,7 @@ import org.eclipse.mylyn.tasks.ui.search.SearchHitCollector;
 public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 	int counter = 0;
-	
+
 //	public void testMissingHits() throws Exception {
 //		// query for all mylyn bugzilla tasks.
 //		// reset sync date
@@ -92,7 +92,54 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 //		}
 //	}
 	
-	
+	BugzillaTask fruitTask;
+	RepositoryTaskData fruitTaskData;
+	private void setFruitValueTo(String newValue) throws CoreException {
+		Set<RepositoryTaskAttribute> changed = new HashSet<RepositoryTaskAttribute>();
+		fruitTaskData.setAttributeValue("cf_fruit", newValue);
+		assertEquals(newValue, fruitTaskData.getAttributeValue("cf_fruit"));
+		changed.add(fruitTaskData.getAttribute("cf_fruit"));
+		submit(fruitTask, fruitTaskData);
+		TasksUi.synchronize(connector, fruitTask, true, null);
+		fruitTaskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(fruitTask.getRepositoryUrl(), fruitTask.getTaskId());
+		assertEquals(newValue, fruitTaskData.getAttributeValue("cf_fruit"));
+
+	}
+
+	public void testCustomFields() throws Exception {
+		init(IBugzillaConstants.TEST_BUGZILLA_303_URL);
+
+		String taskNumber = "1";
+		TasksUiPlugin.getTaskDataManager().clear();
+
+		// Get the task
+		fruitTask = generateLocalTaskAndDownload(taskNumber);
+
+		fruitTaskData = TasksUiPlugin.getTaskDataManager().getEditableCopy(fruitTask.getRepositoryUrl(),
+				fruitTask.getTaskId());
+		assertNotNull(fruitTaskData);
+
+		if (fruitTaskData.getAttributeValue("cf_fruit").equals("---")) {
+			setFruitValueTo("apple");
+			setFruitValueTo("orange");
+			setFruitValueTo("---");
+		} else if (fruitTaskData.getAttributeValue("cf_fruit").equals("apple")) {
+			setFruitValueTo("orange");
+			setFruitValueTo("apple");
+			setFruitValueTo("---");
+		} else if (fruitTaskData.getAttributeValue("cf_fruit").equals("orange")) {
+			setFruitValueTo("apple");
+			setFruitValueTo("orange");
+			setFruitValueTo("---");
+		}
+		if (fruitTask!=null) {
+			fruitTask = null;
+		}
+		if (fruitTaskData!=null) {
+			fruitTaskData = null;
+		}
+	}
+
 	public void testMidAirCollision() throws Exception {
 		init30();
 		String taskNumber = "5";

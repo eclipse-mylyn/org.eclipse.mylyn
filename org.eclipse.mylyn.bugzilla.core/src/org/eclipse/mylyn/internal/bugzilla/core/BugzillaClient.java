@@ -152,6 +152,8 @@ public class BugzillaClient {
 
 	private BugzillaLanguageSettings bugzillaLanguageSettings;
 
+	private RepositoryConfiguration repositoryConfiguration;
+	
 	public BugzillaClient(URL url, String username, String password, String htAuthUser, String htAuthPass,
 			String characterEncoding) {
 		this(url, username, password, htAuthUser, htAuthPass, characterEncoding, new HashMap<String, String>(),
@@ -634,10 +636,10 @@ public class BugzillaClient {
 						RepositoryConfigurationFactory configFactory = new RepositoryConfigurationFactory(stream,
 								characterEncoding);
 
-						RepositoryConfiguration configuration = configFactory.getConfiguration();
-						if (configuration != null) {
-							configuration.setRepositoryUrl(repositoryUrl.toString());
-							return configuration;
+						repositoryConfiguration = configFactory.getConfiguration();
+						if (repositoryConfiguration != null) {
+							repositoryConfiguration.setRepositoryUrl(repositoryUrl.toString());
+							return repositoryConfiguration;
 						}
 					}
 				}
@@ -1215,13 +1217,14 @@ public class BugzillaClient {
 				}
 				
 				boolean parseable = false;
+				List<BugzillaCustomField> customFields = repositoryConfiguration.getCustomFields();
 				if (method.getResponseHeader("Content-Type") != null) {
 					Header responseTypeHeader = method.getResponseHeader("Content-Type");
 					for (String type : VALID_CONFIG_CONTENT_TYPES) {
 						if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
 							MultiBugReportFactory factory = new MultiBugReportFactory(
 									method.getResponseBodyAsUnzippedStream(), characterEncoding);
-							factory.populateReport(taskDataMap);
+							factory.populateReport(taskDataMap, customFields);
 							taskIds.removeAll(idsToRetrieve);
 							parseable = true;
 							break;
@@ -1337,6 +1340,10 @@ public class BugzillaClient {
 		throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 				RepositoryStatus.ERROR_INTERNAL, "All connection attempts to " + repositoryUrl.toString()
 						+ " failed. Please verify connection and authentication information."));
+	}
+
+	public void setRepositoryConfiguration(RepositoryConfiguration repositoryConfiguration) {
+		this.repositoryConfiguration = repositoryConfiguration;
 	}
 
 }

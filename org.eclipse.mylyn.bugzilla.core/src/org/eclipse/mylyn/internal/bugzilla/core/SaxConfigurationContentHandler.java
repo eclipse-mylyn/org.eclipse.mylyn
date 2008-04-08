@@ -56,6 +56,12 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 
 	private static final String ELEMENT_PRODUCTS = "products";
 
+	private static final String ELEMENT_DESCRIPTION = "description";
+
+	private static final String ELEMENT_FIELDS = "fields";
+
+	private static final String ELEMENT_FIELD = "field";
+
 	private static final String ELEMENT_SEVERITY = "severity";
 
 	private static final String ELEMENT_PRIORITY = "priority";
@@ -112,9 +118,17 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 
 	private static final int IN_STATUS_CLOSED = 1 << 20;
 
+	private static final int IN_FIELDS = 1 << 21;
+
+	private static final int IN_FIELD = 1 << 22;
+
+	private static final int IN_CUSTOM_OPTION = 1 << 23;
+
 	private int state = EXPECTING_ROOT;
 
 	private String currentProduct = "";
+	
+	private String currentName = "";
 
 	private StringBuffer characters = new StringBuffer();
 
@@ -133,6 +147,10 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 	private Map<String, String> versionNames = new HashMap<String, String>();
 
 	private Map<String, String> milestoneNames = new HashMap<String, String>();
+
+	private Map<String, List<String>> customOption = new HashMap<String, List<String>>();
+
+	private String currentCustomOptionName = "";
 
 	public RepositoryConfiguration getConfiguration() {
 		return configuration;
@@ -190,6 +208,14 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			state = state | IN_RESOLUTION;
 		} else if (localName.equals(ELEMENT_KEYWORD)) {
 			state = state | IN_KEYWORD;
+		} else if (localName.equals(ELEMENT_FIELDS)) {
+			state = state | IN_FIELDS;
+		} else if (localName.equals(ELEMENT_FIELD)) {
+			state = state | IN_FIELD;
+			parseResource(attributes);
+		} else if (localName.startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX)) {
+			state = state | IN_CUSTOM_OPTION;
+			currentCustomOptionName = localName;
 		}
 	}
 
@@ -224,6 +250,18 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 				configuration.addPriority(characters.toString());
 			} else if (state == (IN_SEVERITY)) {
 				configuration.addSeverity(characters.toString());
+			} else if (state == (IN_CUSTOM_OPTION)) {
+				// Option for CutstomFields
+				if (currentCustomOptionName != null) {
+					if (characters.length() > 0) {
+						List<String> customOptionList = customOption.get(currentCustomOptionName);
+						if (customOptionList == null) {
+							customOptionList = new ArrayList<String>();
+							customOption.put(currentCustomOptionName, customOptionList);
+						}
+						customOptionList.add(characters.toString());
+					}
+				}
 			}
 		} else if (localName.equals(ELEMENT_PLATFORM)) {
 			state = state & ~IN_PLATFORM;
@@ -264,6 +302,9 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 						milestoneNames.put(about, characters.toString());
 					}
 				}
+			} else if (state == (IN_FIELDS | IN_LI | IN_FIELD)) {
+				// FIELDS NAME
+				currentName = characters.toString();
 			}
 		} else if (localName.equals(ELEMENT_COMPONENTS)) {
 			state = state & ~IN_COMPONENTS;
@@ -286,6 +327,21 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			state = state & ~IN_RESOLUTION;
 		} else if (localName.equals(ELEMENT_KEYWORD)) {
 			state = state & ~IN_KEYWORD;
+		} else if (localName.equals(ELEMENT_FIELDS)) {
+			state = state & ~IN_FIELDS;
+		} else if (localName.equals(ELEMENT_FIELD)) {
+			state = state & ~IN_FIELD;
+		} else if (localName.equals(ELEMENT_DESCRIPTION)) {
+			if (currentName.startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX)) {
+				BugzillaCustomField newField = new BugzillaCustomField(characters.toString(), currentName);
+				List<String> customOptionList = customOption.get(currentName);
+				if (customOptionList != null && !customOptionList.isEmpty())
+					newField.setOptions(customOptionList);
+				configuration.addCustomField(newField);
+			}
+		} else if (localName.startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX)) {
+			state = state & ~IN_CUSTOM_OPTION;
+			currentCustomOptionName = "";
 		}
 	}
 
@@ -343,6 +399,11 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			break;
 
 		case IN_TARGET_MILESTONES | IN_LI | IN_TARGET_MILESTONE:
+			if (attributes != null) {
+				about = attributes.getValue(ATTRIBUTE_RDF_ABOUT);
+			}
+			break;
+		case IN_FIELDS | IN_LI | IN_FIELD:
 			if (attributes != null) {
 				about = attributes.getValue(ATTRIBUTE_RDF_ABOUT);
 			}

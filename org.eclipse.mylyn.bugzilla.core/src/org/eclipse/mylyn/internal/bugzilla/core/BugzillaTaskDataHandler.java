@@ -11,6 +11,7 @@ package org.eclipse.mylyn.internal.bugzilla.core;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -194,7 +195,8 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		try {
 			status = BUGZILLA_REPORT_STATUS.valueOf(bugReport.getStatus());
 		} catch (RuntimeException e) {
-			StatusHandler.log(new Status(IStatus.INFO, BugzillaCorePlugin.PLUGIN_ID, "Unrecognized status: " + bugReport.getStatus(), e));
+			StatusHandler.log(new Status(IStatus.INFO, BugzillaCorePlugin.PLUGIN_ID, "Unrecognized status: "
+					+ bugReport.getStatus(), e));
 			status = BUGZILLA_REPORT_STATUS.NEW;
 		}
 		switch (status) {
@@ -316,7 +318,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 	@Override
 	public boolean initializeTaskData(TaskRepository repository, RepositoryTaskData data, IProgressMonitor monitor)
-	throws CoreException {
+			throws CoreException {
 
 		if (data == null)
 			return false;
@@ -494,35 +496,50 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			throws CoreException {
 		String product = existingReport.getAttributeValue(BugzillaReportElement.PRODUCT.getKeyString());
 		for (RepositoryTaskAttribute attribute : existingReport.getAttributes()) {
-			BugzillaReportElement element = BugzillaReportElement.valueOf(attribute.getId().trim().toUpperCase(
-					Locale.ENGLISH));
-			attribute.clearOptions();
-			List<String> optionValues = BugzillaCorePlugin.getRepositoryConfiguration(taskRepository, false)
-					.getOptionValues(element, product);
-			if (element != BugzillaReportElement.OP_SYS && element != BugzillaReportElement.BUG_SEVERITY
-					&& element != BugzillaReportElement.PRIORITY && element != BugzillaReportElement.BUG_STATUS) {
-				Collections.sort(optionValues);
+			if (attribute.getId().startsWith("cf_")) {
+				attribute.clearOptions();
+				List<BugzillaCustomField> customFields = BugzillaCorePlugin.getRepositoryConfiguration(taskRepository,
+						false).getCustomFields();
+
+				for (BugzillaCustomField bugzillaCustomField : customFields) {
+					if (bugzillaCustomField.getName().equals(attribute.getId())) {
+						List<String> optionList = bugzillaCustomField.getOptions();
+						for (String option : optionList) {
+							attribute.addOption(option, option);
+						}
+					}
+				}
+			} else {
+				BugzillaReportElement element = BugzillaReportElement.valueOf(attribute.getId().trim().toUpperCase(
+						Locale.ENGLISH));
+				attribute.clearOptions();
+				List<String> optionValues = BugzillaCorePlugin.getRepositoryConfiguration(taskRepository, false)
+						.getOptionValues(element, product);
+				if (element != BugzillaReportElement.OP_SYS && element != BugzillaReportElement.BUG_SEVERITY
+						&& element != BugzillaReportElement.PRIORITY && element != BugzillaReportElement.BUG_STATUS) {
+					Collections.sort(optionValues);
+				}
+				if (element == BugzillaReportElement.TARGET_MILESTONE && optionValues.isEmpty()) {
+
+					existingReport.removeAttribute(BugzillaReportElement.TARGET_MILESTONE);
+					continue;
+				}
+				attribute.clearOptions();
+				for (String option : optionValues) {
+					attribute.addOption(option, option);
+				}
+
+				// TODO: bug#162428, bug#150680 - something along the lines of...
+				// but must think about the case of multiple values selected etc.
+				// if(attribute.hasOptions()) {
+				// if(!attribute.getOptionValues().containsKey(attribute.getValue()))
+				// {
+				// // updateAttributes()
+				// }
+				// }
 			}
-			if (element == BugzillaReportElement.TARGET_MILESTONE && optionValues.isEmpty()) {
-	
-				existingReport.removeAttribute(BugzillaReportElement.TARGET_MILESTONE);
-				continue;
-			}
-			attribute.clearOptions();
-			for (String option : optionValues) {
-				attribute.addOption(option, option);
-			}
-	
-			// TODO: bug#162428, bug#150680 - something along the lines of...
-			// but must think about the case of multiple values selected etc.
-			// if(attribute.hasOptions()) {
-			// if(!attribute.getOptionValues().containsKey(attribute.getValue()))
-			// {
-			// // updateAttributes()
-			// }
-			// }
 		}
-	
+
 	}
 
 }
