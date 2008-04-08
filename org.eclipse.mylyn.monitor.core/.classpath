@@ -2,8 +2,7 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins">
 		<accessrules>
-			<accessrule kind="accessible" pattern="**/internal/**"/>
-			<accessrule kind="nonaccessible" pattern="com/sun/**"/>
+			<accessrule kind="accessible" pattern="org/eclipse/core/internal/runtime/*"/>
 		</accessrules>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
