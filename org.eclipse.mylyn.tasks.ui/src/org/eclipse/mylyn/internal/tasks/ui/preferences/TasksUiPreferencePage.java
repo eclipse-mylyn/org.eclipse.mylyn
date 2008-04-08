@@ -196,8 +196,8 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		getPreferenceStore().setValue(TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS,
 				"" + miliseconds);
 
-		///getPreferenceStore().setValue(TasksUiPreferenceConstants.PLANNING_STARTHOUR, hourDayStart.getSelection());
-		///getPreferenceStore().setValue(TasksUiPreferenceConstants.PLANNING_ENDHOUR, hourDayEnd.getSelection());
+		getPreferenceStore().setValue(TasksUiPreferenceConstants.PLANNING_STARTHOUR, hourDayStart.getSelection());
+		getPreferenceStore().setValue(TasksUiPreferenceConstants.PLANNING_ENDHOUR, hourDayEnd.getSelection());
 		MonitorUiPlugin.getDefault().getPreferenceStore().setValue(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED,
 				timeoutEnabledButton.getSelection());
 		MonitorUiPlugin.getDefault().getPreferenceStore().setValue(ActivityContextManager.ACTIVITY_TIMEOUT,
@@ -221,8 +221,8 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 				TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
 		synchScheduleTime.setText(getMinutesString());
 
-		///hourDayStart.setSelection(getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_STARTHOUR));
-		///hourDayEnd.setSelection(getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
+		hourDayStart.setSelection(getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_STARTHOUR));
+		hourDayEnd.setSelection(getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
 		backupNow.setEnabled(true);
 		int minutes = MonitorUiPlugin.getDefault().getPreferenceStore().getInt(ActivityContextManager.ACTIVITY_TIMEOUT)
 				/ MS_MINUTES;
@@ -265,8 +265,8 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		long minutes = miliseconds / 60000;
 		synchScheduleTime.setText("" + minutes);
 
-		///hourDayStart.setSelection(getPreferenceStore().getDefaultInt(TasksUiPreferenceConstants.PLANNING_STARTHOUR));
-		///hourDayEnd.setSelection(getPreferenceStore().getDefaultInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
+		hourDayStart.setSelection(getPreferenceStore().getDefaultInt(TasksUiPreferenceConstants.PLANNING_STARTHOUR));
+		hourDayEnd.setSelection(getPreferenceStore().getDefaultInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
 		int activityTimeoutMinutes = MonitorUiPlugin.getDefault().getPreferenceStore().getDefaultInt(
 				ActivityContextManager.ACTIVITY_TIMEOUT)
 				/ MS_MINUTES;

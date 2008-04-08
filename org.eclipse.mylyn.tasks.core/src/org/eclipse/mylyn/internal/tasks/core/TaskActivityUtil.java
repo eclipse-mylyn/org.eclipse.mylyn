@@ -37,9 +37,9 @@ public class TaskActivityUtil {
 	}
 
 	public static Calendar snapEndOfHour(Calendar cal) {
-		cal.set(Calendar.MINUTE, cal.getMaximum(Calendar.MINUTE));
-		cal.set(Calendar.SECOND, cal.getMaximum(Calendar.SECOND));
-		cal.set(Calendar.MILLISECOND, cal.getMaximum(Calendar.MILLISECOND));
+		cal.set(Calendar.MINUTE, cal.getActualMaximum(Calendar.MINUTE));
+		cal.set(Calendar.SECOND, cal.getActualMaximum(Calendar.SECOND));
+		cal.set(Calendar.MILLISECOND, cal.getActualMaximum(Calendar.MILLISECOND));
 		cal.getTime();
 		return cal;
 	}
