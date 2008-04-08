@@ -65,13 +65,14 @@ public class TaskList {
 	 * @since 2.2
 	 */
 	private void addOrphan(AbstractTask task, Set<TaskContainerDelta> delta) {
-		addOrphan(task, delta, 0);
+		addOrphan(task, delta, new HashSet<AbstractTaskContainer>());
 	}
 
 	/**
 	 * @since 2.2
 	 */
-	private void addOrphan(AbstractTask task, Set<TaskContainerDelta> delta, int depth) {
+	private void addOrphan(AbstractTask task, Set<TaskContainerDelta> delta,
+			Set<AbstractTaskContainer> visitedContainers) {
 		if (!task.getParentContainers().isEmpty()) {
 			// Current policy is not to archive/orphan if the task exists in some other container
 			return;
@@ -101,9 +102,13 @@ public class TaskList {
 			//StatusHandler.log("Orphan container not found for: " + task.getRepositoryUrl(), this);
 		}
 
-		if (depth < ITasksCoreConstants.MAX_SUBTASK_DEPTH && !task.isEmpty()) {
+		if (!task.isEmpty()) {
 			for (AbstractTask child : task.getChildren()) {
-				addOrphan(child, delta, depth + 1);
+				if (visitedContainers.contains(child)) {
+					continue;
+				}
+				visitedContainers.add(child);
+				addOrphan(child, delta, visitedContainers);
 			}
 		}
 
@@ -113,13 +118,13 @@ public class TaskList {
 	 * @since 2.2
 	 */
 	private void removeOrphan(AbstractTask task, Set<TaskContainerDelta> delta) {
-		removeOrphan(task, delta, 0);
+		removeOrphan(task, delta, new HashSet<AbstractTaskContainer>());
 	}
 
 	/**
 	 * @since 2.2
 	 */
-	private void removeOrphan(AbstractTask task, Set<TaskContainerDelta> delta, int depth) {
+	private void removeOrphan(AbstractTask task, Set<TaskContainerDelta> delta, Set<AbstractTaskContainer> visitedTasks) {
 		UnmatchedTaskContainer orphans = repositoryOrphansMap.get(task.getRepositoryUrl());
 		if (orphans != null) {
 			if (orphans.contains(task.getHandleIdentifier())) {
@@ -128,9 +133,13 @@ public class TaskList {
 					delta.add(new TaskContainerDelta(orphans, TaskContainerDelta.Kind.CHANGED));
 				}
 
-				if (depth < ITasksCoreConstants.MAX_SUBTASK_DEPTH && !task.isEmpty()) {
+				if (!task.isEmpty()) {
 					for (AbstractTask child : task.getChildren()) {
-						removeOrphan(child, delta, depth + 1);
+						if (visitedTasks.contains(child)) {
+							continue;
+						}
+						visitedTasks.add(child);
+						removeOrphan(child, delta, visitedTasks);
 					}
 				}
 

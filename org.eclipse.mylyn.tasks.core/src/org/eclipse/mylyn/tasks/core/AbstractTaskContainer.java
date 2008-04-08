@@ -12,8 +12,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.PlatformObject;
-import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 
 /**
@@ -97,18 +97,21 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	 * TODO: review policy
 	 */
 	public boolean contains(String handle) {
-		return containsHelper(getChildrenInternal(), handle, 0);
+		Assert.isNotNull(handle);
+		return containsHelper(getChildrenInternal(), handle, new HashSet<AbstractTaskContainer>());
 	}
 
-	private boolean containsHelper(Set<AbstractTask> children, String handle, int depth) {
-		if (depth < ITasksCoreConstants.MAX_SUBTASK_DEPTH && children != null && !children.isEmpty()) {
-			for (AbstractTask child : children) {
-				if (child != null
-						&& handle != null
-						&& (handle.equals(child.getHandleIdentifier()) || containsHelper(child.getChildrenInternal(),
-								handle, depth + 1))) {
-					return true;
-				}
+	private boolean containsHelper(Set<AbstractTask> children, String handle,
+			Set<AbstractTaskContainer> visitedContainers) {
+		for (AbstractTask child : children) {
+			if (visitedContainers.contains(child)) {
+				continue;
+			}
+			visitedContainers.add(child);
+
+			if (handle.equals(child.getHandleIdentifier())
+					|| containsHelper(child.getChildrenInternal(), handle, visitedContainers)) {
+				return true;
 			}
 		}
 		return false;

@@ -20,6 +20,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
  * 
  * @author Mik Kersten
  */
+//API 3.0 duplicate implementation in hasDescendantIncoming/hasIncompleteDescendant: consider replacing this by a visitor 
 public abstract class AbstractTaskListFilter {
 
 	public abstract boolean select(Object parent, Object element);
