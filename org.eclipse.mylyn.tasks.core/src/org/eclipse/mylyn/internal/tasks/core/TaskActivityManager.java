@@ -452,6 +452,17 @@ public class TaskActivityManager {
 		}
 	}
 
+	public boolean isDueToday(AbstractTask task) {
+		if (repositoryManager.isOwnedByUser(task) && !task.isCompleted() && task.getDueDate() != null) {
+			Calendar cal = TaskActivityUtil.getCalendar();
+			cal.setTimeInMillis(task.getDueDate().getTime());
+			if (TaskActivityUtil.isToday(cal)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public boolean isOverdue(AbstractTask task) {
 		return (!task.isCompleted() && task.getDueDate() != null && new Date().after(task.getDueDate()))
 				&& repositoryManager.isOwnedByUser(task);

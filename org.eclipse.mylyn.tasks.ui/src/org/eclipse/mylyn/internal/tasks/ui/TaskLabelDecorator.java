@@ -51,7 +51,9 @@ public class TaskLabelDecorator implements ILightweightLabelDecorator {
 			}
 		} else if (element instanceof AbstractTask) {
 			AbstractTask task = (AbstractTask) element;
-			if (!task.isCompleted() && TasksUiPlugin.getTaskActivityManager().isOverdue(task)) {
+			if (!task.isCompleted()
+					&& (TasksUiPlugin.getTaskActivityManager().isDueToday(task) || TasksUiPlugin.getTaskActivityManager()
+							.isOverdue(task))) {
 				decoration.addOverlay(TasksUiImages.OVERLAY_OVER_DUE, IDecoration.TOP_RIGHT);
 			} else if (!task.isCompleted() && task.getDueDate() != null) {
 				decoration.addOverlay(TasksUiImages.OVERLAY_HAS_DUE, IDecoration.TOP_RIGHT);
