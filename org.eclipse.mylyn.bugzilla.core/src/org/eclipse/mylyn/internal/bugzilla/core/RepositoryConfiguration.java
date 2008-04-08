@@ -22,7 +22,7 @@ import java.util.Map;
  */
 public class RepositoryConfiguration implements Serializable {
 
-	private static final long serialVersionUID = -3623617786905114255L;
+	private static final long serialVersionUID = -482656956042521023L;
 
 	private static final String VERSION_UNKNOWN = "unknown";
 
@@ -54,6 +54,8 @@ public class RepositoryConfiguration implements Serializable {
 
 	private List<String> milestones = new ArrayList<String>();
 
+	private List<BugzillaCustomField> customFields = new ArrayList<BugzillaCustomField>();
+	
 	private String version = VERSION_UNKNOWN;
 
 	public RepositoryConfiguration() {
@@ -377,6 +379,17 @@ public class RepositoryConfiguration implements Serializable {
 		default:
 			return new ArrayList<String>();
 		}
+	}
+
+	/**
+	 * Adds a field to the configuration.
+	 */
+	public void addCustomField(BugzillaCustomField newField) {
+		customFields.add(newField);
+	}
+
+	public List<BugzillaCustomField> getCustomFields() {
+		return customFields;
 	}
 
 }

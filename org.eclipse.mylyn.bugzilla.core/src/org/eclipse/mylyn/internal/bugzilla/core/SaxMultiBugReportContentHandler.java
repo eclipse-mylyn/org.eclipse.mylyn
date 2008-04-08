@@ -54,11 +54,14 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 
 	private AbstractAttributeFactory attributeFactory;
 
+	private List<BugzillaCustomField> customFields;
+	
 	//private int retrieved = 1;
 
-	public SaxMultiBugReportContentHandler(AbstractAttributeFactory factory, Map<String, RepositoryTaskData> taskDataMap) {
+	public SaxMultiBugReportContentHandler(AbstractAttributeFactory factory, Map<String, RepositoryTaskData> taskDataMap, List<BugzillaCustomField> customFields) {
 		this.attributeFactory = factory;
 		this.taskDataMap = taskDataMap;
+		this.customFields = customFields;
 	}
 
 	public boolean errorOccurred() {
@@ -86,6 +89,8 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		characters = new StringBuffer();
 		BugzillaReportElement tag = BugzillaReportElement.UNKNOWN;
+				if (localName.startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX))
+						return;
 		try {
 			tag = BugzillaReportElement.valueOf(localName.trim().toUpperCase(Locale.ENGLISH));
 		} catch (RuntimeException e) {
@@ -162,6 +167,24 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 
 		String parsedText = characters.toString();
+
+		if (localName.startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX)) {
+			RepositoryTaskAttribute attribute = repositoryTaskData.getAttribute(localName);
+			if (attribute == null) {
+				String desc = "???";
+				for (BugzillaCustomField bugzillaCustomField : customFields) {
+					if (localName.equals(bugzillaCustomField.getName())) {
+						desc = bugzillaCustomField.getDescription();
+					}
+				}
+				RepositoryTaskAttribute newattribute = new RepositoryTaskAttribute(localName, desc, true);
+				newattribute.setReadOnly(false);
+				newattribute.setValue(parsedText);
+				repositoryTaskData.addAttribute(localName, newattribute);
+			} else {
+				attribute.addValue(parsedText);
+			}
+		}
 
 		BugzillaReportElement tag = BugzillaReportElement.UNKNOWN;
 		try {

@@ -163,6 +163,8 @@ public interface IBugzillaConstants {
 
 	static final String TEST_BUGZILLA_30_URL = "http://mylyn.eclipse.org/bugs30";
 
+	static final String TEST_BUGZILLA_303_URL = "http://mylyn.eclipse.org/bugs303";
+
 	static final String TEST_BUGZILLA_31_URL = "http://mylyn.eclipse.org/bugs31";
 
 	// Default values for keys
