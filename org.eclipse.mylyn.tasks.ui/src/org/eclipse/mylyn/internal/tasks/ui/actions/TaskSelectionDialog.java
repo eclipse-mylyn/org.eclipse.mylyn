@@ -27,6 +27,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -51,9 +52,14 @@ import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.search.internal.ui.SearchDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -305,6 +311,12 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 
 	private boolean showCompletedTasks;
 
+	private Button createTaskButton;
+
+	private static final int SEARCH_ID = IDialogConstants.CLIENT_ID + 1;
+
+	private static final int CREATE_ID = SEARCH_ID + 1;
+
 	private class ShowCompletedTasksAction extends Action {
 
 		public ShowCompletedTasksAction() {
@@ -422,6 +434,44 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 			}
 
 		});
+
+		return composite;
+	}
+
+	@Override
+	protected Control createButtonBar(Composite parent) {
+		Composite composite = new Composite(parent, SWT.NONE);
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 0; // create 
+		layout.marginHeight = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_MARGIN);
+		layout.marginWidth = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_MARGIN);
+		layout.verticalSpacing = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_SPACING);
+		layout.horizontalSpacing = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
+
+		composite.setLayout(layout);
+		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+		// create help control if needed
+		if (isHelpAvailable()) {
+			createHelpControl(composite);
+		}
+		createTaskButton = createButton(composite, CREATE_ID, "New Task...", true);
+		createTaskButton.addSelectionListener(new SelectionListener() {
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// ignore
+			}
+
+			public void widgetSelected(SelectionEvent e) {
+				close();
+				new NewTaskAction().run();
+			}
+		});
+
+		Label filler = new Label(composite, SWT.NONE);
+		filler.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
+		layout.numColumns++;
+		super.createButtonsForButtonBar(composite); // cancel button
 
 		return composite;
 	}
