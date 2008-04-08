@@ -201,6 +201,8 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 
 	private final TaskElementLabelProvider labelProvider;
 
+	private boolean canCreateTask = true;
+
 	public TaskSelectionDialog(Shell parent) {
 		super(parent);
 		setSelectionHistory(new TaskSelectionHistory());
@@ -455,18 +457,20 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 		if (isHelpAvailable()) {
 			createHelpControl(composite);
 		}
-		createTaskButton = createButton(composite, CREATE_ID, "New Task...", true);
-		createTaskButton.addSelectionListener(new SelectionListener() {
+		if (canCreateTask) {
+			createTaskButton = createButton(composite, CREATE_ID, "New Task...", true);
+			createTaskButton.addSelectionListener(new SelectionListener() {
 
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// ignore
-			}
+				public void widgetDefaultSelected(SelectionEvent e) {
+					// ignore
+				}
 
-			public void widgetSelected(SelectionEvent e) {
-				close();
-				new NewTaskAction().run();
-			}
-		});
+				public void widgetSelected(SelectionEvent e) {
+					close();
+					new NewTaskAction().run();
+				}
+			});
+		}
 
 		Label filler = new Label(composite, SWT.NONE);
 		filler.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
@@ -685,6 +689,10 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 			return Status.OK_STATUS;
 		}
 		return new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Selected item is not a task");
+	}
+
+	public void setCanCreateTask(boolean value) {
+		canCreateTask = value;
 	}
 
 }
