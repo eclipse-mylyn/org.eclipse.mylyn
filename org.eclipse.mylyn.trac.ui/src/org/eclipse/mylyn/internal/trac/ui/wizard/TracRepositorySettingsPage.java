@@ -29,7 +29,6 @@ import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylyn.web.core.AbstractWebLocation;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Combo;
@@ -59,33 +58,24 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 	}
 
 	@Override
-	protected void createAdditionalControls(final Composite parent) {
+	protected void repositoryTemplateSelected(RepositoryTemplate template) {
+		repositoryLabelEditor.setStringValue(template.label);
+		setUrl(template.repositoryUrl);
+		setAnonymous(template.anonymous);
 
-		for (RepositoryTemplate template : connector.getTemplates()) {
-			serverUrlCombo.add(template.label);
+		try {
+			Version version = Version.valueOf(template.version);
+			setTracVersion(version);
+		} catch (RuntimeException ex) {
+			setTracVersion(Version.TRAC_0_9);
 		}
-		serverUrlCombo.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				String text = serverUrlCombo.getText();
-				RepositoryTemplate template = connector.getTemplate(text);
-				if (template != null) {
-					repositoryLabelEditor.setStringValue(template.label);
-					setUrl(template.repositoryUrl);
-					setAnonymous(template.anonymous);
 
-					try {
-						Version version = Version.valueOf(template.version);
-						setTracVersion(version);
-					} catch (RuntimeException ex) {
-						setTracVersion(Version.TRAC_0_9);
-					}
+		getContainer().updateButtons();
+	}
 
-					getContainer().updateButtons();
-					return;
-				}
-			}
-		});
+	@Override
+	protected void createAdditionalControls(final Composite parent) {
+		addRepositoryTemplatesToServerUrlCombo();
 
 		Label accessTypeLabel = new Label(parent, SWT.NONE);
 		accessTypeLabel.setText("Access Type: ");

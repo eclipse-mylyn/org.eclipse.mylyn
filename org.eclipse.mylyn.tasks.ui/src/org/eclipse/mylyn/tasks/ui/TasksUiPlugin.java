@@ -41,6 +41,7 @@ import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.ContextPreferenceContstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
@@ -143,6 +144,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	private TaskListBackupManager taskListBackupManager;
 
 	private TaskDataManager taskDataManager;
+
+	private RepositoryTemplateManager repositoryTemplateManager;
 
 	private final Set<AbstractTaskEditorFactory> taskEditorFactories = new HashSet<AbstractTaskEditorFactory>();
 
@@ -448,6 +451,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			IProxyService proxyService = ProxyManager.getProxyManager();
 			IProxyChangeListener proxyChangeListener = new TasksUiProxyChangeListener(taskRepositoryManager);
 			proxyService.addProxyChangeListener(proxyChangeListener);
+
+			repositoryTemplateManager = new RepositoryTemplateManager();
 
 			// NOTE: initializing extensions in start(..) has caused race
 			// conditions previously
@@ -806,6 +811,13 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	public static TaskRepositoryManager getRepositoryManager() {
 		return taskRepositoryManager;
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public static RepositoryTemplateManager getRepositoryTemplateManager() {
+		return INSTANCE.repositoryTemplateManager;
 	}
 
 	public void addBrandingIcon(String repositoryType, Image icon) {

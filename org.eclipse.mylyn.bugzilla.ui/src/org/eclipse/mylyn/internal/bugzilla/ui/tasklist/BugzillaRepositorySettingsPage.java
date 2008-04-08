@@ -98,29 +98,20 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 	}
 
 	@Override
-	protected void createAdditionalControls(Composite parent) {
-
-		for (RepositoryTemplate template : connector.getTemplates()) {
-			serverUrlCombo.add(template.label);
+	protected void repositoryTemplateSelected(RepositoryTemplate template) {
+		repositoryLabelEditor.setStringValue(template.label);
+		setUrl(template.repositoryUrl);
+		// setAnonymous(info.anonymous);
+		setBugzillaVersion(template.version);
+		if (template.characterEncoding != null) {
+			setEncoding(template.characterEncoding);
 		}
-		serverUrlCombo.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				String text = serverUrlCombo.getText();
-				RepositoryTemplate template = connector.getTemplate(text);
-				if (template != null) {
-					repositoryLabelEditor.setStringValue(template.label);
-					setUrl(template.repositoryUrl);
-					// setAnonymous(info.anonymous);
-					setBugzillaVersion(template.version);
-					if (template.characterEncoding != null) {
-						setEncoding(template.characterEncoding);
-					}
-					getContainer().updateButtons();
-					return;
-				}
-			}
-		});
+		getContainer().updateButtons();
+		
+	}
+	@Override
+	protected void createAdditionalControls(Composite parent) {
+		addRepositoryTemplatesToServerUrlCombo();
 
 		Label repositoryVersionLabel = new Label(parent, SWT.NONE);
 		repositoryVersionLabel.setText("Repository version: ");

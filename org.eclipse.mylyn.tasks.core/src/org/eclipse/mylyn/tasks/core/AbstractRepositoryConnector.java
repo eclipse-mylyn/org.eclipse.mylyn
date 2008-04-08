@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 
@@ -332,23 +333,34 @@ public abstract class AbstractRepositoryConnector {
 		return false;
 	}
 
-	// API 3.0 move to template manager
+	/**
+	 * @deprecated use {@link RepositoryTemplateManager#addTemplate(String, RepositoryTemplate)} instead
+	 */
+	@Deprecated
 	public void addTemplate(RepositoryTemplate template) {
 		this.templates.add(template);
 	}
 
-	// API 3.0 move to template manager
+	/**
+	 * @deprecated use {@link RepositoryTemplateManager#getTemplates(String)} instead
+	 */
+	@Deprecated
 	public Set<RepositoryTemplate> getTemplates() {
 		return templates;
 	}
 
-	// API 3.0 move to template manager
+	/**
+	 * @deprecated use {@link RepositoryTemplateManager#removeTemplate(String, RepositoryTemplate)} instead
+	 */
+	@Deprecated
 	public void removeTemplate(RepositoryTemplate template) {
 		this.templates.remove(template);
 	}
 
-	// API 3.0 move to template manager
-	/** returns null if template not found */
+	/**
+	 * @deprecated use {@link RepositoryTemplateManager#getTemplate(String, String)} instead
+	 */
+	@Deprecated
 	public RepositoryTemplate getTemplate(String label) {
 		for (RepositoryTemplate template : getTemplates()) {
 			if (template.label.equals(label)) {

@@ -441,11 +441,9 @@ public class TasksUiExtensionReader {
 
 		if (serverUrl != null && label != null && repKind != null
 				&& TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repKind) != null) {
-			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
-					.getRepositoryConnector(repKind);
 			RepositoryTemplate template = new RepositoryTemplate(label, serverUrl, encoding, version, newTaskUrl,
 					taskPrefix, taskQueryUrl, newAccountUrl, anonymous, addAuto);
-			connector.addTemplate(template);
+			TasksUiPlugin.getRepositoryTemplateManager().addTemplate(repKind, template);
 
 			for (IConfigurationElement configElement : element.getChildren()) {
 				String name = configElement.getAttribute("name");

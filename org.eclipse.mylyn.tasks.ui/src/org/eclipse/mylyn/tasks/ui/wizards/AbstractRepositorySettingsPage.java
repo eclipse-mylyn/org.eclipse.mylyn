@@ -26,8 +26,10 @@ import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
@@ -986,6 +988,34 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	 */
 	public boolean getProxyAuth() {
 		return proxyAuthButton.getSelection();
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	protected void addRepositoryTemplatesToServerUrlCombo() {
+		final RepositoryTemplateManager templateManager = TasksUiPlugin.getRepositoryTemplateManager();
+		for (RepositoryTemplate template : templateManager.getTemplates(connector.getConnectorKind())) {
+			serverUrlCombo.add(template.label);
+		}
+		serverUrlCombo.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String text = serverUrlCombo.getText();
+				RepositoryTemplate template = templateManager.getTemplate(connector.getConnectorKind(), text);
+				if (template != null) {
+					repositoryTemplateSelected(template);
+					return;
+				}
+			}
+
+		});
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	protected void repositoryTemplateSelected(RepositoryTemplate template) {
 	}
 
 	protected abstract void createAdditionalControls(Composite parent);
