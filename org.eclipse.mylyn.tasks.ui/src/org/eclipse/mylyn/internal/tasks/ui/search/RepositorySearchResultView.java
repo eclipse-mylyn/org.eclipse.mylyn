@@ -23,6 +23,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.AddExistingTaskJob;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListPatternFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -34,9 +35,14 @@ import org.eclipse.search.internal.ui.SearchMessages;
 import org.eclipse.search.ui.IContextMenuConstants;
 import org.eclipse.search.ui.text.AbstractTextSearchViewPage;
 import org.eclipse.search.ui.text.Match;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Layout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.part.IShowInTargetList;
 import org.eclipse.ui.progress.IProgressService;
 
@@ -47,6 +53,7 @@ import org.eclipse.ui.progress.IProgressService;
  * 
  * @author Rob Elves
  * @author Mik Kersten
+ * @author Shawn Minto
  */
 public class RepositorySearchResultView extends AbstractTextSearchViewPage implements IAdaptable {
 
@@ -156,6 +163,24 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 	}
 
 	@Override
+	protected TreeViewer createTreeViewer(Composite parent) {
+		// create a filtered tree
+		Composite treeComposite = parent;
+		Layout parentLayout = parent.getLayout();
+		if (!(parentLayout instanceof GridLayout)) {
+			treeComposite = new Composite(parent, SWT.NONE);
+			GridLayout layout = new GridLayout();
+			layout.marginHeight = 0;
+			layout.marginWidth = 0;
+			treeComposite.setLayout(layout);
+		}
+
+		FilteredTree searchTree = new FilteredTree(treeComposite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL,
+				new TaskListPatternFilter());
+		return searchTree.getViewer();
+	}
+
+	@Override
 	protected void configureTableViewer(TableViewer viewer) {
 //		viewer.setUseHashlookup(true);
 //		String[] columnNames = new String[] { "Summary" };
@@ -245,8 +270,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 			throws PartInitException {
 		AbstractTask repositoryHit = (AbstractTask) match.getElement();
 
-		TasksUiUtil.openTask(repositoryHit.getRepositoryUrl(), repositoryHit.getTaskId(),
-				repositoryHit.getUrl());
+		TasksUiUtil.openTask(repositoryHit.getRepositoryUrl(), repositoryHit.getTaskId(), repositoryHit.getUrl());
 	}
 
 	@Override
