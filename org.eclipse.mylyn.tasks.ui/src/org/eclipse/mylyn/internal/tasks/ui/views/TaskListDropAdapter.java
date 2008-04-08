@@ -28,6 +28,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
+import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
@@ -36,6 +37,7 @@ import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.RetrieveTitleFromUrlJob;
 import org.eclipse.mylyn.internal.tasks.ui.TaskTransfer;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.actions.QueryImportAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskImportAction;
@@ -167,42 +169,54 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			}
 		}
 
-		for (AbstractTask task : tasksToMove) {
-			if (currentTarget instanceof UncategorizedTaskContainer) {
-				TasksUiPlugin.getTaskListManager().getTaskList().moveTask(task,
-						(UncategorizedTaskContainer) currentTarget);
-			} else if (currentTarget instanceof TaskCategory) {
-				TasksUiPlugin.getTaskListManager().getTaskList().moveTask(task, (TaskCategory) currentTarget);
-			} else if (currentTarget instanceof UnmatchedTaskContainer) {
-				if (((UnmatchedTaskContainer) currentTarget).getRepositoryUrl().equals(task.getRepositoryUrl())) {
+		if (currentTarget instanceof LocalTask
+				&& areAllLocalTasks(tasksToMove)
+				&& getCurrentLocation() == LOCATION_ON
+				&& TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
+						TasksUiPreferenceConstants.LOCAL_SUB_TASKS_ENABLED)) {
+			for (AbstractTask task : tasksToMove) {
+				if (!task.contains(((LocalTask) currentTarget).getHandleIdentifier())) {
+					TasksUiPlugin.getTaskListManager().getTaskList().moveTask(task, (LocalTask) currentTarget);
+				}
+			}
+		} else {
+			for (AbstractTask task : tasksToMove) {
+				if (currentTarget instanceof UncategorizedTaskContainer) {
 					TasksUiPlugin.getTaskListManager().getTaskList().moveTask(task,
-							(AbstractTaskCategory) currentTarget);
-				}
-			} else if (currentTarget instanceof AbstractTask) {
-				AbstractTask targetTask = (AbstractTask) currentTarget;
-				AbstractTaskCategory targetCategory = null;
-				// TODO: TaskCategory only used what about AbstractTaskCategory descendants?
-				AbstractTaskContainer container = TaskCategory.getParentTaskCategory(targetTask);
-				if (container instanceof TaskCategory || container instanceof UncategorizedTaskContainer) {
-					targetCategory = (AbstractTaskCategory) container;
-				} else if (container instanceof UnmatchedTaskContainer) {
-					if (((UnmatchedTaskContainer) container).getRepositoryUrl().equals(task.getRepositoryUrl())) {
-						targetCategory = (AbstractTaskCategory) container;
+							(UncategorizedTaskContainer) currentTarget);
+				} else if (currentTarget instanceof TaskCategory) {
+					TasksUiPlugin.getTaskListManager().getTaskList().moveTask(task, (TaskCategory) currentTarget);
+				} else if (currentTarget instanceof UnmatchedTaskContainer) {
+					if (((UnmatchedTaskContainer) currentTarget).getRepositoryUrl().equals(task.getRepositoryUrl())) {
+						TasksUiPlugin.getTaskListManager().getTaskList().moveTask(task,
+								(AbstractTaskCategory) currentTarget);
 					}
+				} else if (currentTarget instanceof AbstractTask) {
+					AbstractTask targetTask = (AbstractTask) currentTarget;
+					AbstractTaskCategory targetCategory = null;
+					// TODO: TaskCategory only used what about AbstractTaskCategory descendants?
+					AbstractTaskContainer container = TaskCategory.getParentTaskCategory(targetTask);
+					if (container instanceof TaskCategory || container instanceof UncategorizedTaskContainer) {
+						targetCategory = (AbstractTaskCategory) container;
+					} else if (container instanceof UnmatchedTaskContainer) {
+						if (((UnmatchedTaskContainer) container).getRepositoryUrl().equals(task.getRepositoryUrl())) {
+							targetCategory = (AbstractTaskCategory) container;
+						}
+					}
+					if (targetCategory != null) {
+						TasksUiPlugin.getTaskListManager().getTaskList().moveTask(task, targetCategory);
+					}
+				} else if (currentTarget instanceof ScheduledTaskContainer) {
+					ScheduledTaskContainer container = (ScheduledTaskContainer) currentTarget;
+					Calendar newSchedule = TaskActivityUtil.getCalendar();
+					newSchedule.setTimeInMillis(container.getStart().getTimeInMillis());
+					TaskActivityUtil.snapEndOfWorkDay(newSchedule);
+					TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, newSchedule.getTime(),
+							container.isCaptureFloating());
+				} else if (currentTarget == null) {
+					TasksUiPlugin.getTaskListManager().getTaskList().moveTask(newTask,
+							TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 				}
-				if (targetCategory != null) {
-					TasksUiPlugin.getTaskListManager().getTaskList().moveTask(task, targetCategory);
-				}
-			} else if (currentTarget instanceof ScheduledTaskContainer) {
-				ScheduledTaskContainer container = (ScheduledTaskContainer) currentTarget;
-				Calendar newSchedule = TaskActivityUtil.getCalendar();
-				newSchedule.setTimeInMillis(container.getStart().getTimeInMillis());
-				TaskActivityUtil.snapEndOfWorkDay(newSchedule);
-				TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, newSchedule.getTime(),
-						container.isCaptureFloating());
-			} else if (currentTarget == null) {
-				TasksUiPlugin.getTaskListManager().getTaskList().moveTask(newTask,
-						TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 			}
 		}
 
@@ -215,6 +229,15 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 
 		return true;
 
+	}
+
+	private boolean areAllLocalTasks(List<AbstractTask> tasksToMove) {
+		for (AbstractTask task : tasksToMove) {
+			if (!(task instanceof LocalTask)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -330,6 +353,11 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 				return true;
 			} else if (getCurrentTarget() instanceof AbstractTaskContainer
 					&& (getCurrentLocation() == ViewerDropAdapter.LOCATION_AFTER || getCurrentLocation() == ViewerDropAdapter.LOCATION_BEFORE)) {
+				return true;
+			} else if (getCurrentTarget() instanceof LocalTask
+					&& getCurrentLocation() == ViewerDropAdapter.LOCATION_ON
+					&& TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
+							TasksUiPreferenceConstants.LOCAL_SUB_TASKS_ENABLED)) {
 				return true;
 			} else {
 				return false;

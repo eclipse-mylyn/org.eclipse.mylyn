@@ -257,6 +257,45 @@ public class TaskList {
 		}
 
 		if (parentContainer != null) {
+			// ensure that we don't have loops
+			if (task.contains(parentContainer.getHandleIdentifier())) {
+				parentContainer = null;
+			}
+		}
+
+		if (parentContainer != null) {
+			// ensure local tasks aren't duplicated in the uncategorized category when subtasks are enabled
+			if (task instanceof LocalTask && parentContainer instanceof LocalTask) {
+				if (!tasks.containsKey(task.getHandleIdentifier())) {
+					tasks.put(task.getHandleIdentifier(), task);
+				}
+
+				Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
+				delta.add(new TaskContainerDelta(parentContainer, TaskContainerDelta.Kind.CHANGED));
+
+				AbstractTaskCategory category = TaskCategory.getParentTaskCategory(task);
+				if (category != null) {
+					task.removeParentContainer(category);
+					category.internalRemoveChild(task);
+					delta.add(new TaskContainerDelta(category, TaskContainerDelta.Kind.CHANGED));
+				} else if (!task.getParentContainers().isEmpty()) {
+
+					// local tasks should only have 1 parent
+					for (AbstractTaskContainer parent : task.getParentContainers()) {
+						if (parent != null) {
+							task.removeParentContainer(parent);
+							parent.internalRemoveChild(task);
+							delta.add(new TaskContainerDelta(parent, TaskContainerDelta.Kind.CHANGED));
+						}
+					}
+				}
+				if (!delta.isEmpty()) {
+					for (ITaskListChangeListener listener : changeListeners) {
+						listener.containersChanged(delta);
+					}
+				}
+			}
+
 			if (parentContainer instanceof AbstractTask) {
 				// Ensure the parent task exists in the task list
 				tasks.put(parentContainer.getHandleIdentifier(), (AbstractTask) parentContainer);
@@ -287,6 +326,12 @@ public class TaskList {
 		if (!tasks.containsKey(task.getHandleIdentifier())) {
 			tasks.put(task.getHandleIdentifier(), task);
 		}
+
+		// ensure that we don't have loops
+		if (container != null && task.contains(container.getHandleIdentifier())) {
+			return;
+		}
+
 		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
 		delta.add(new TaskContainerDelta(container, TaskContainerDelta.Kind.CHANGED));
 
@@ -295,7 +340,18 @@ public class TaskList {
 			task.removeParentContainer(category);
 			category.internalRemoveChild(task);
 			delta.add(new TaskContainerDelta(category, TaskContainerDelta.Kind.CHANGED));
+		} else if (task instanceof LocalTask && !task.getParentContainers().isEmpty()) {
+
+			// local tasks should only have 1 parent
+			for (AbstractTaskContainer parent : task.getParentContainers()) {
+				if (parent != null) {
+					task.removeParentContainer(parent);
+					parent.internalRemoveChild(task);
+					delta.add(new TaskContainerDelta(parent, TaskContainerDelta.Kind.CHANGED));
+				}
+			}
 		}
+
 		if (container != null) {
 			addTask(task, container);
 			//internalAddTask(task, container);
