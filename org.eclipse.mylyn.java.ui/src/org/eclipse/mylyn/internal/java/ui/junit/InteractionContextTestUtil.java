@@ -32,7 +32,6 @@ import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
 import org.eclipse.mylyn.internal.java.ui.JavaUiBridgePlugin;
 import org.eclipse.mylyn.internal.java.ui.search.JUnitReferencesProvider;
@@ -75,7 +74,7 @@ public class InteractionContextTestUtil {
 		List<IInteractionElement> interesting = ContextCore.getContextManager()
 				.getActiveContext()
 				.getInteresting();
-		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
+		AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(
 				JavaStructureBridge.CONTENT_TYPE);
 		try {
 			for (IInteractionElement element : interesting) {

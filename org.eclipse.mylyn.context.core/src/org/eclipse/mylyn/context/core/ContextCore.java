@@ -30,4 +30,19 @@ public final class ContextCore {
 		return commonContextScaling;
 	}
 
+	/**
+	 * @return null if there are no bridges loaded, null bridge otherwise
+	 */
+	public static AbstractContextStructureBridge getStructureBridge(Object object) {
+		return ContextCorePlugin.getDefault().getStructureBridge(object);
+	}
+
+	public static AbstractContextStructureBridge getStructureBridge(String contentType) {
+		return ContextCorePlugin.getDefault().getStructureBridge(contentType);
+	}
+
+	public static AbstractContextStore getContextStore() {
+		return ContextCorePlugin.getDefault().getContextStore();
+	}
+
 }

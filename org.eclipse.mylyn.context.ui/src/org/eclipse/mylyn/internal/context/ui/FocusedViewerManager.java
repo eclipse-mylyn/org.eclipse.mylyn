@@ -221,7 +221,7 @@ public class FocusedViewerManager implements IInteractionContextListener2, ISele
 	}
 
 	public void elementDeleted(IInteractionElement node) {
-		AbstractContextStructureBridge structureBridge = ContextCorePlugin.getDefault().getStructureBridge(
+		AbstractContextStructureBridge structureBridge = ContextCore.getStructureBridge(
 				node.getContentType());
 		IInteractionElement parent = ContextCore.getContextManager().getElement(
 				structureBridge.getParentHandle(node.getHandleIdentifier()));

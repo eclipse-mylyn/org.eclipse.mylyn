@@ -17,7 +17,6 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextListener2;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetUpdater;
@@ -127,7 +126,7 @@ public class ContextWorkingSetManager implements IWorkingSetUpdater, IInteractio
 
 	public static void getElementsFromTaskscape(List<IAdaptable> elements) {
 		for (IInteractionElement node : ContextCore.getContextManager().getInterestingDocuments()) {
-			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
+			AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(
 					node.getContentType());
 
 			// HACK comparing extension to string

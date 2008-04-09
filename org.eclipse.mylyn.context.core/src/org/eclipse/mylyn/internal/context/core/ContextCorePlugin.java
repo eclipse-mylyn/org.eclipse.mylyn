@@ -205,8 +205,6 @@ public class ContextCorePlugin extends Plugin {
 
 	/**
 	 * TODO: cache this to improve performance?
-	 * 
-	 * @return null if there are no bridges loaded, null bridge otherwise
 	 */
 	public AbstractContextStructureBridge getStructureBridge(Object object) {
 		BridgesExtensionPointReader.initExtensions();

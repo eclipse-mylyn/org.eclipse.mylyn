@@ -121,7 +121,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 		int includeMask = IJavaSearchScope.SOURCES;
 		if (degreeOfSeparation == 1) {
 			for (IInteractionElement landmark : landmarks) {
-				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
+				AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(
 						landmark.getContentType());
 				if (includeNodeInScope(landmark, bridge)) {
 					Object o = bridge.getObjectForHandle(landmark.getHandleIdentifier());
@@ -139,7 +139,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 			}
 		} else if (degreeOfSeparation == 2) {
 			for (IInteractionElement interesting : interestingElements) {
-				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
+				AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(
 						interesting.getContentType());
 				if (includeNodeInScope(interesting, bridge)) {
 					Object object = bridge.getObjectForHandle(interesting.getHandleIdentifier());
@@ -157,7 +157,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 			}
 		} else if (degreeOfSeparation == 3 || degreeOfSeparation == 4) {
 			for (IInteractionElement interesting : interestingElements) {
-				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
+				AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(
 						interesting.getContentType());
 				if (includeNodeInScope(interesting, bridge)) {
 					// TODO what to do when the element is not a java element,

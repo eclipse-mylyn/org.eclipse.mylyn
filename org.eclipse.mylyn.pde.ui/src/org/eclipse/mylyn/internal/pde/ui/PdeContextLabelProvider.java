@@ -9,9 +9,9 @@
 package org.eclipse.mylyn.internal.pde.ui;
 
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.ui.AbstractContextLabelProvider;
 import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
 import org.eclipse.mylyn.internal.ide.ui.IdeUiBridgePlugin;
@@ -36,8 +36,7 @@ public class PdeContextLabelProvider extends AbstractContextLabelProvider {
 
 	@Override
 	protected String getText(IInteractionElement node) {
-		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
-				PdeStructureBridge.CONTENT_TYPE);
+		AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(PdeStructureBridge.CONTENT_TYPE);
 		return bridge.getLabel(bridge.getObjectForHandle(node.getHandleIdentifier()));
 	}
 
@@ -53,8 +52,7 @@ public class PdeContextLabelProvider extends AbstractContextLabelProvider {
 
 	@Override
 	protected String getTextForObject(Object object) {
-		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
-				PdeStructureBridge.CONTENT_TYPE);
+		AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(PdeStructureBridge.CONTENT_TYPE);
 		return bridge.getLabel(object);
 	}
 }

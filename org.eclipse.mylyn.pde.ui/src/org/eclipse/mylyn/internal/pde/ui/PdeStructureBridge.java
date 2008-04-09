@@ -24,8 +24,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.ide.xml.XmlNodeHelper;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.pde.internal.core.text.build.BuildEntry;
@@ -99,8 +99,7 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 			}
 		} else if (object instanceof IFile) {
 			// String fileHandle = parentBridge.getParentHandle(handle);
-			AbstractContextStructureBridge parentBridge = ContextCorePlugin.getDefault().getStructureBridge(
-					parentContentType);
+			AbstractContextStructureBridge parentBridge = ContextCore.getStructureBridge(parentContentType);
 			return parentBridge.getParentHandle(handle);
 		} else {
 			return null;
@@ -118,8 +117,7 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 		int first = handle.indexOf(";");
 		String filename = "";
 		if (first == -1) {
-			AbstractContextStructureBridge parentBridge = ContextCorePlugin.getDefault().getStructureBridge(
-					parentContentType);
+			AbstractContextStructureBridge parentBridge = ContextCore.getStructureBridge(parentContentType);
 			return parentBridge.getObjectForHandle(handle);
 		} else {
 			// extract the filename from the handle since it represents a node

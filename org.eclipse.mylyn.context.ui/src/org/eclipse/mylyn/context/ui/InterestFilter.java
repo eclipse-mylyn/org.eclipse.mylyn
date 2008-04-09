@@ -24,7 +24,6 @@ import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IImplicitlyIntersting;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.swt.widgets.Tree;
@@ -62,7 +61,7 @@ public class InterestFilter extends ViewerFilter {
 			} else if (object instanceof IInteractionElement) {
 				element = (IInteractionElement) object;
 			} else {
-				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(object);
+				AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(object);
 				if (bridge.getContentType() == null) {
 					// try to resolve the resource
 					if (object instanceof IAdaptable) {
@@ -70,7 +69,7 @@ public class InterestFilter extends ViewerFilter {
 						if (adapted instanceof IResource) {
 							object = adapted;
 						}
-						bridge = ContextCorePlugin.getDefault().getStructureBridge(object);
+						bridge = ContextCore.getStructureBridge(object);
 					} else {
 						return false;
 					}

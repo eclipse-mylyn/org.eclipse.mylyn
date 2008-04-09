@@ -13,8 +13,8 @@ import java.util.List;
 import org.eclipse.core.internal.resources.File;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.AbstractRelationProvider;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.tests.support.search.TestActiveSearchListener;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.ide.xml.XmlNodeHelper;
 import org.eclipse.search.internal.ui.text.FileSearchResult;
 import org.eclipse.search.ui.text.Match;
@@ -53,7 +53,7 @@ public class XmlTestActiveSearchListener extends TestActiveSearchListener {
 					for (Match m : mar) {
 						try {
 
-							AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
+							AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(
 									f.getName());
 
 							String handle = bridge.getHandleForOffsetInObject(f, m.getOffset());

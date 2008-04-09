@@ -58,7 +58,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 
 		externalizer.writeContextToXml(context, file);
 
-		File dataDirectory = ContextCorePlugin.getDefault().getContextStore().getRootDirectory();
+		File dataDirectory = ContextCore.getContextStore().getRootDirectory();
 		File contextsDirectory = new File(dataDirectory, "contexts"/*WorkspaceAwareContextStore.CONTEXTS_DIRECTORY*/);
 		File zippedContextFile = new File(contextsDirectory, context.getHandleIdentifier()
 				+ IInteractionContextManager.CONTEXT_FILE_EXTENSION);
@@ -156,7 +156,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 
 		externalizer.writeContextToXml(context, file);
 
-		File dataDirectory = ContextCorePlugin.getDefault().getContextStore().getRootDirectory();
+		File dataDirectory = ContextCore.getContextStore().getRootDirectory();
 		File contextsDirectory = new File(dataDirectory, "contexts"/*WorkspaceAwareContextStore.CONTEXTS_DIRECTORY*/);
 		File zippedContextFile = new File(contextsDirectory, context.getHandleIdentifier()
 				+ IInteractionContextManager.CONTEXT_FILE_EXTENSION);

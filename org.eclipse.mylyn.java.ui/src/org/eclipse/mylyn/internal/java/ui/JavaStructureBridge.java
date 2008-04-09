@@ -115,7 +115,7 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 							childHandles.add(childHandle);
 						}
 					}
-					AbstractContextStructureBridge parentBridge = ContextCorePlugin.getDefault().getStructureBridge(
+					AbstractContextStructureBridge parentBridge = ContextCore.getStructureBridge(
 							parentContentType);
 					if (parentBridge != null && parentBridge instanceof ResourceStructureBridge) {
 						if (element.getElementType() < IJavaElement.TYPE) {
@@ -129,7 +129,7 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 					return childHandles;
 				} catch (JavaModelException e) {
 					// NOTE: it would be better if this was not hard-wired but used the parent/child bridge mapping
-					AbstractContextStructureBridge parentBridge = ContextCorePlugin.getDefault().getStructureBridge(
+					AbstractContextStructureBridge parentBridge = ContextCore.getStructureBridge(
 							ContextCorePlugin.CONTENT_TYPE_RESOURCE);
 					return parentBridge.getChildHandles(handle);
 				} catch (Exception e) {

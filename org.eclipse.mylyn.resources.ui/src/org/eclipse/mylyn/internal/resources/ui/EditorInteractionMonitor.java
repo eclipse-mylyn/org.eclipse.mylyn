@@ -43,7 +43,7 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 		Object object = part.getEditorInput().getAdapter(IResource.class);
 		if (object instanceof IResource) {
 			IResource resource = (IResource) object;
-			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(resource);
+			AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(resource);
 			InteractionEvent selectionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION,
 					bridge.getContentType(), bridge.getHandleIdentifier(resource), part.getSite().getId());
 			ContextCore.getContextManager().processInteractionEvent(selectionEvent);
@@ -60,7 +60,7 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 				Object adapter;
 				adapter = editorReference.getEditorInput().getAdapter(IResource.class);
 				if (adapter instanceof IFile) {
-					String handle = ContextCorePlugin.getDefault().getStructureBridge(adapter).getHandleIdentifier(
+					String handle = ContextCore.getStructureBridge(adapter).getHandleIdentifier(
 							adapter);
 					element = ContextCore.getContextManager().getElement(handle);
 				}
@@ -119,7 +119,7 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 			AbstractContextUiBridge uiBridge = ContextUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
 			Object object = uiBridge.getObjectForTextSelection(null, editorPart);
 			if (object != null) {
-				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(object);
+				AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(object);
 				element = ContextCore.getContextManager().getElement(bridge.getHandleIdentifier(object));
 			}
 			// TODO: probably should be refactored into delegation
@@ -127,7 +127,7 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 				Object adapter = editorPart.getEditorInput().getAdapter(IResource.class);
 				if (adapter instanceof IResource) {
 					IResource resource = (IResource) adapter;
-					AbstractContextStructureBridge resourceBridge = ContextCorePlugin.getDefault().getStructureBridge(
+					AbstractContextStructureBridge resourceBridge = ContextCore.getStructureBridge(
 							resource);
 					element = ContextCore.getContextManager().getElement(
 							resourceBridge.getHandleIdentifier(resource));

@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
@@ -53,8 +54,7 @@ public class ResourceStructureBridge extends AbstractContextStructureBridge {
 			// try to adapt to the corresponding content type's parent
 			if (resource instanceof IFile) {
 				for (String contentType : ContextCorePlugin.getDefault().getChildContentTypes(CONTENT_TYPE)) {
-					AbstractContextStructureBridge parentBridge = ContextCorePlugin.getDefault().getStructureBridge(
-							contentType);
+					AbstractContextStructureBridge parentBridge = ContextCore.getStructureBridge(contentType);
 					Object adaptedParent = parentBridge.getAdaptedParent(resource);
 					// HACK: only returns first
 					if (adaptedParent != null) {

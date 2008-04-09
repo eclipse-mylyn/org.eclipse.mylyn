@@ -11,9 +11,9 @@ package org.eclipse.mylyn.internal.resources.ui;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.ui.AbstractContextLabelProvider;
 import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
 import org.eclipse.swt.graphics.Image;
@@ -25,8 +25,7 @@ public class ResourceContextLabelProvider extends AbstractContextLabelProvider {
 
 	@Override
 	public Image getImage(IInteractionElement node) {
-		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
-				ResourceStructureBridge.CONTENT_TYPE);
+		AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(ResourceStructureBridge.CONTENT_TYPE);
 		Object object = bridge.getObjectForHandle(node.getHandleIdentifier());
 		return getImageForObject(object);
 	}
@@ -43,7 +42,7 @@ public class ResourceContextLabelProvider extends AbstractContextLabelProvider {
 
 	@Override
 	protected String getTextForObject(Object object) {
-		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(object);
+		AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(object);
 		return bridge.getLabel(object);
 	}
 
@@ -52,8 +51,7 @@ public class ResourceContextLabelProvider extends AbstractContextLabelProvider {
 	 */
 	@Override
 	public String getText(IInteractionElement node) {
-		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
-				ResourceStructureBridge.CONTENT_TYPE);
+		AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(ResourceStructureBridge.CONTENT_TYPE);
 		return bridge.getLabel(bridge.getObjectForHandle(node.getHandleIdentifier()));
 	}
 

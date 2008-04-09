@@ -180,7 +180,7 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 		if (element == null) {
 			return null;
 		}
-		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
+		AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(
 				element.getContentType());
 		Object object = bridge.getObjectForHandle(element.getHandleIdentifier());
 		if (object instanceof IResource) {

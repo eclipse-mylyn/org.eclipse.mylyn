@@ -84,7 +84,7 @@ public class ContextContentProvider implements IStructuredContentProvider, ITree
 			}
 			List<Object> resolvedNodes = new ArrayList<Object>();
 			for (IInteractionElement node : nodes) {
-				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
+				AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(
 						node.getContentType());
 				Object object = bridge.getObjectForHandle(node.getHandleIdentifier());
 				if (object != null) {
@@ -125,7 +125,7 @@ public class ContextContentProvider implements IStructuredContentProvider, ITree
 			if (parent instanceof IInteractionElement) {
 				node = (IInteractionElement) parent;
 			} else {
-				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(parent);
+				AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(parent);
 				node = ContextCore.getContextManager().getElement(bridge.getHandleIdentifier(parent));
 			}
 			if (node != null) {
@@ -153,7 +153,7 @@ public class ContextContentProvider implements IStructuredContentProvider, ITree
 		for (InteractionContextRelation edge : edges) {
 			if (edge.getRelationshipHandle().equals(kind)) {
 				IInteractionElement target = edge.getTarget();
-				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
+				AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(
 						target.getContentType());
 				Object object = bridge.getObjectForHandle(target.getHandleIdentifier());
 				if (object != null) {

@@ -41,7 +41,7 @@ public class ResourceUiBridge extends AbstractContextUiBridge {
 
 	@Override
 	public void open(IInteractionElement element) {
-		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
+		AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(
 				element.getContentType());
 		if (bridge == null) {
 			return;
@@ -78,7 +78,7 @@ public class ResourceUiBridge extends AbstractContextUiBridge {
 
 	@Override
 	public void close(IInteractionElement element) {
-		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
+		AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(
 				element.getContentType());
 		Object object = bridge.getObjectForHandle(element.getHandleIdentifier());
 		if (object instanceof IFile) {
@@ -122,7 +122,7 @@ public class ResourceUiBridge extends AbstractContextUiBridge {
 		Object adapter = input.getAdapter(IResource.class);
 		if (adapter instanceof IFile) {
 			IFile javaElement = (IFile) adapter;
-			String handle = ContextCorePlugin.getDefault().getStructureBridge(javaElement).getHandleIdentifier(
+			String handle = ContextCore.getStructureBridge(javaElement).getHandleIdentifier(
 					javaElement);
 			return ContextCore.getContextManager().getElement(handle);
 		} else {

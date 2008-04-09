@@ -15,7 +15,6 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContextRelation;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -37,7 +36,7 @@ public class InterestDecorator implements ILabelDecorator, IFontDecorator, IColo
 		if (element instanceof IInteractionElement) {
 			node = (IInteractionElement) element;
 		} else {
-			AbstractContextStructureBridge adapter = ContextCorePlugin.getDefault().getStructureBridge(element);
+			AbstractContextStructureBridge adapter = ContextCore.getStructureBridge(element);
 			node = ContextCore.getContextManager().getElement(adapter.getHandleIdentifier(element));
 		}
 		return node;

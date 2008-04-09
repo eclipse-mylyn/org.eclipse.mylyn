@@ -60,7 +60,7 @@ public class ResourceInterestUpdater {
 		List<InteractionEvent> interactionEvents = new ArrayList<InteractionEvent>();
 		for (IResource resource : resources) {
 			if (acceptResource(resource)) {
-				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(resource);
+				AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(resource);
 				String handle = bridge.getHandleIdentifier(resource);
 				if (handle != null) {
 					IInteractionElement element = ContextCore.getContextManager().getElement(handle);

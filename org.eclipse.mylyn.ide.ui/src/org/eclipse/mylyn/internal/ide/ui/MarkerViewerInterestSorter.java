@@ -37,7 +37,7 @@ public class MarkerViewerInterestSorter extends ViewerSorter {
 				return 1;
 			} else {
 				if (ContextCore.getContextManager().isContextActive()) {
-					AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
+					AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(
 							marker1.getResource().getFileExtension());
 					IInteractionElement node1 = ContextCore.getContextManager().getElement(
 							bridge.getHandleForOffsetInObject(marker1, 0));

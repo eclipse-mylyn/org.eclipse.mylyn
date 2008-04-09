@@ -146,7 +146,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 			// create a search scope for the projects of landmarks
 			Set<IProject> projectsToSearch = new HashSet<IProject>();
 			for (IInteractionElement landmark : landmarks) {
-				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
+				AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(
 						landmark.getContentType());
 				IResource resource = ResourcesUiBridgePlugin.getDefault().getResourceForElement(landmark, true);
 				IProject project = null;

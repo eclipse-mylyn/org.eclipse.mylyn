@@ -212,7 +212,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 
 	public void interestChanged(List<IInteractionElement> elements) {
 		for (IInteractionElement element : elements) {
-			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
+			AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(
 					element.getContentType());
 			try {
 				if (bridge.isDocument(element.getHandleIdentifier())) {

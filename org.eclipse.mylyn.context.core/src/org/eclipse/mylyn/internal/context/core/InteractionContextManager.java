@@ -467,8 +467,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 		List<IInteractionElement> allLandmarks = activeContext.getLandmarks();
 		List<IInteractionElement> acceptedLandmarks = new ArrayList<IInteractionElement>();
 		for (IInteractionElement node : allLandmarks) {
-			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
-					node.getContentType());
+			AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(node.getContentType());
 
 			if (bridge.canBeLandmark(node.getHandleIdentifier())) {
 				acceptedLandmarks.add(node);
@@ -530,7 +529,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 		String encoded;
 		try {
 			encoded = URLEncoder.encode(handleIdentifier, IInteractionContextManager.CONTEXT_FILENAME_ENCODING);
-			File contextDirectory = ContextCorePlugin.getDefault().getContextStore().getContextDirectory();
+			File contextDirectory = ContextCore.getContextStore().getContextDirectory();
 			File contextFile = new File(contextDirectory, encoded + IInteractionContextManager.CONTEXT_FILE_EXTENSION);
 			return contextFile;
 		} catch (UnsupportedEncodingException e) {
@@ -555,8 +554,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 		} else {
 			List<IInteractionElement> allIntersting = context.getInteresting();
 			for (IInteractionElement node : allIntersting) {
-				if (ContextCorePlugin.getDefault().getStructureBridge(node.getContentType()).isDocument(
-						node.getHandleIdentifier())) {
+				if (ContextCore.getStructureBridge(node.getContentType()).isDocument(node.getHandleIdentifier())) {
 					set.add(node);
 				}
 			}
@@ -580,7 +578,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 		}
 		if (contextFiles == null) {
 			contextFiles = new HashSet<File>();
-			File contextDirectory = ContextCorePlugin.getDefault().getContextStore().getContextDirectory();
+			File contextDirectory = ContextCore.getContextStore().getContextDirectory();
 			File[] files = contextDirectory.listFiles();
 			for (File file : files) {
 				contextFiles.add(file);
@@ -726,7 +724,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 	}
 
 	public void loadActivityMetaContext() {
-		if (ContextCorePlugin.getDefault().getContextStore() != null) {
+		if (ContextCore.getContextStore() != null) {
 			for (IInteractionContextListener listener : activityMetaContextListeners) {
 				if (listener instanceof IInteractionContextListener2) {
 					((IInteractionContextListener2) listener).contextPreActivated(activityMetaContext);
@@ -821,8 +819,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 		}
 		float originalValue = element.getInterest().getValue();
 		float changeValue = 0;
-		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
-				element.getContentType());
+		AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(element.getContentType());
 		if (!increment) {
 			if (element.getInterest().isLandmark() && bridge.canBeLandmark(element.getHandleIdentifier())) {
 				// keep it interesting
@@ -974,7 +971,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 	 */
 	public IInteractionElement processInteractionEvent(Object object, Kind eventKind, String origin,
 			IInteractionContext context) {
-		AbstractContextStructureBridge structureBridge = ContextCorePlugin.getDefault().getStructureBridge(object);
+		AbstractContextStructureBridge structureBridge = ContextCore.getStructureBridge(object);
 		if (structureBridge != null) {
 			String structureKind = structureBridge.getContentType();
 			String handle = structureBridge.getHandleIdentifier(object);
@@ -1031,11 +1028,10 @@ public class InteractionContextManager implements IInteractionContextManager {
 
 		// check if should use child bridge
 		for (String contentType : ContextCorePlugin.getDefault().getChildContentTypes(bridge.getContentType())) {
-			AbstractContextStructureBridge childBridge = ContextCorePlugin.getDefault().getStructureBridge(contentType);
+			AbstractContextStructureBridge childBridge = ContextCore.getStructureBridge(contentType);
 			Object resolved = childBridge.getObjectForHandle(parentHandle);
 			if (resolved != null) {
-				AbstractContextStructureBridge canonicalBridge = ContextCorePlugin.getDefault().getStructureBridge(
-						resolved);
+				AbstractContextStructureBridge canonicalBridge = ContextCore.getStructureBridge(resolved);
 				// HACK: hard-coded resource content type
 				if (!canonicalBridge.getContentType().equals(ContextCorePlugin.CONTENT_TYPE_RESOURCE)) {
 					// NOTE: resetting bridge
@@ -1150,7 +1146,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 	}
 
 	public void saveActivityContext() {
-		if (ContextCorePlugin.getDefault().getContextStore() == null) {
+		if (ContextCore.getContextStore() == null) {
 			return;
 		}
 		boolean wasPaused = contextCapturePaused;

@@ -313,7 +313,7 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 	private void closeEditor(IInteractionElement element, boolean force) {
 		if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(ContextUiPrefContstants.AUTO_MANAGE_EDITORS)) {
 			if (force || !element.getInterest().isInteresting()) {
-				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
+				AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(
 						element.getContentType());
 				if (bridge.isDocument(element.getHandleIdentifier())) {
 					AbstractContextUiBridge uiBridge = ContextUiPlugin.getDefault().getUiBridge(

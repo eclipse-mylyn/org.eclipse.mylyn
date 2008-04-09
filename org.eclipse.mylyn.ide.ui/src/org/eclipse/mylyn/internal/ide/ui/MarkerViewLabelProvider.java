@@ -36,7 +36,7 @@ public class MarkerViewLabelProvider implements ITableLabelProvider, IColorProvi
 
 	public Font getFont(Object element) {
 		if (element instanceof ConcreteMarker) {
-			String handle = ContextCorePlugin.getDefault().getStructureBridge(
+			String handle = ContextCore.getStructureBridge(
 					((ConcreteMarker) element).getResource().getFileExtension()).getHandleForOffsetInObject((element),
 					0);
 			IInteractionElement node = ContextCore.getContextManager().getElement(handle);
@@ -59,7 +59,7 @@ public class MarkerViewLabelProvider implements ITableLabelProvider, IColorProvi
 
 	public Color getForeground(Object element) {
 		if (element instanceof ConcreteMarker) {
-			String handle = ContextCorePlugin.getDefault().getStructureBridge(
+			String handle = ContextCore.getStructureBridge(
 					((ConcreteMarker) element).getResource().getFileExtension()).getHandleForOffsetInObject((element),
 					0);
 			return InterestDecorator.getForegroundForElement(ContextCore.getContextManager().getElement(handle));
@@ -71,7 +71,7 @@ public class MarkerViewLabelProvider implements ITableLabelProvider, IColorProvi
 	public Color getBackground(Object element) {
 		return null;
 //		if (element instanceof ConcreteMarker) {
-//			String handle = ContextCorePlugin.getDefault().getStructureBridge(
+//			String handle = ContextCore.getStructureBridge(
 //					((ConcreteMarker) element).getResource().getFileExtension()).getHandleForOffsetInObject((element),
 //					0);
 //			return UiUtil.getBackgroundForElement(ContextCorePlugin.getContextManager().getElement(handle));

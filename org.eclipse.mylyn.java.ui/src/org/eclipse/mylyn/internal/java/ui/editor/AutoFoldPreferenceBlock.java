@@ -27,7 +27,7 @@ public class AutoFoldPreferenceBlock implements IJavaFoldingPreferenceBlock {
 	// private Text minimumLines;
 
 	public AutoFoldPreferenceBlock() {
-		// preferences = ContextCorePlugin.getDefault().getPreferenceStore(); XXX
+		// preferences = ContextCore.getPreferenceStore(); XXX
 		// never used
 	}
 

@@ -33,7 +33,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.ide.xml.XmlNodeHelper;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.ui.IEditorPart;
@@ -100,7 +100,7 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 				}
 			}
 		} else if (o instanceof IFile) {
-			AbstractContextStructureBridge parentBridge = ContextCorePlugin.getDefault().getStructureBridge(
+			AbstractContextStructureBridge parentBridge = ContextCore.getStructureBridge(
 					parentContentType);
 			return parentBridge.getParentHandle(handle);
 		} else {
