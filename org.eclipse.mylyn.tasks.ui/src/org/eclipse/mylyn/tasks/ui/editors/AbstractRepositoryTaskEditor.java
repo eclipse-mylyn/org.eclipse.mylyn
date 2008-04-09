@@ -203,8 +203,6 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 /**
  * Extend to provide customized task editing.
  * 
- * NOTE: likely to change for 3.0
- * 
  * @author Mik Kersten
  * @author Rob Elves
  * @author Jeff Pound (Attachment work)
@@ -212,6 +210,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  * @author Xiaoyang Guan (Wiki HTML preview)
  * @since 2.0
  */
+// API 3.0 deprecate this class
 public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private static final String PREF_SORT_ORDER_PREFIX = "org.eclipse.mylyn.editor.comments.sortDirectionUp.";

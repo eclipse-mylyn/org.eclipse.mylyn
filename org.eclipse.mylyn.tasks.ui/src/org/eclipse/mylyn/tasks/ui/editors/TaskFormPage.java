@@ -95,7 +95,7 @@ public class TaskFormPage extends FormPage {
 
 	private TaskEditor taskEditor = null;
 
-	protected TaskEditorActionContributor actionContributor;
+	private TaskEditorActionContributor actionContributor;
 
 	protected List<TextViewer> textViewers = new ArrayList<TextViewer>();
 

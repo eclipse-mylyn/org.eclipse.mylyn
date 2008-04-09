@@ -63,7 +63,7 @@ import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
  * @author Eric Booth (initial prototype)
  * @author Rob Elves
  */
-public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
+public class TaskEditor extends SharedHeaderFormEditor {
 
 	public static final String ID_EDITOR = "org.eclipse.mylyn.tasks.ui.editors.task";
 
@@ -253,7 +253,15 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 
 	@Override
 	protected void addPages() {
-		editorBusyIndicator = new EditorBusyIndicator(this);
+		editorBusyIndicator = new EditorBusyIndicator(new IBusyEditor() {
+			public Image getTitleImage() {
+				return TaskEditor.this.getTitleImage();
+			}
+
+			public void setTitleImage(Image image) {
+				TaskEditor.this.setTitleImage(image);
+			}
+		});
 
 		menuManager = new MenuManager();
 		configureContextMenuManager(menuManager);
@@ -573,11 +581,6 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 		} else if (getHeaderForm() != null && getHeaderForm().getForm() != null) {
 			getHeaderForm().getForm().setText(kindLabel);
 		}
-	}
-
-	@Override
-	public void setTitleImage(Image titleImage) {
-		super.setTitleImage(titleImage);
 	}
 
 }
