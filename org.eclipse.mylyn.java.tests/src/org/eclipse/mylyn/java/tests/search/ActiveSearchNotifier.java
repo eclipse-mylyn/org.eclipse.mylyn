@@ -10,7 +10,7 @@ package org.eclipse.mylyn.java.tests.search;
 import java.io.IOException;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.tests.AbstractContextTest;
 import org.eclipse.mylyn.internal.context.core.CompositeInteractionContext;
@@ -55,8 +55,8 @@ public class ActiveSearchNotifier extends AbstractContextTest {
 
 	public IInteractionElement getElement(String handle, String kind) {
 		IInteractionElement node = context.addEvent(mockSelection(handle, kind, source));
-		ContextCorePlugin.getContextManager().processInteractionEvent(
-				mockUserEvent(handle, kind, source, (1 / InteractionContextManager.getCommonContextScaling()
+		ContextCore.getContextManager().processInteractionEvent(
+				mockUserEvent(handle, kind, source, (1 / ContextCore.getCommonContextScaling()
 						.getLandmark())
 						* -2), true);
 		return node;
@@ -66,8 +66,8 @@ public class ActiveSearchNotifier extends AbstractContextTest {
 		WorkspaceSetupHelper.clearDoiModel();
 		try {
 			InteractionContext workspaceContext = WorkspaceSetupHelper.getContext();
-			ContextCorePlugin.getContextManager().activateContext(workspaceContext.getHandleIdentifier());
-			context = (CompositeInteractionContext) ContextCorePlugin.getContextManager().getActiveContext();
+			ContextCore.getContextManager().activateContext(workspaceContext.getHandleIdentifier());
+			context = (CompositeInteractionContext) ContextCore.getContextManager().getActiveContext();
 		} catch (Exception e) {
 			fail();
 		}
@@ -79,7 +79,7 @@ public class ActiveSearchNotifier extends AbstractContextTest {
 
 	private InteractionEvent mockUserEvent(String handle, String kind, String origin, float scale) {
 		InteractionEvent e = new InteractionEvent(InteractionEvent.Kind.MANIPULATION, kind, handle, origin, scale
-				* InteractionContextManager.getCommonContextScaling().getLandmark());
+				* ContextCore.getCommonContextScaling().getLandmark());
 		e.getInterestContribution();
 		return e;
 	}

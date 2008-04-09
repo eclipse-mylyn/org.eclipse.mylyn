@@ -10,9 +10,9 @@ package org.eclipse.mylyn.context.tests;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.core.DegreeOfInterest;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
-import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
@@ -34,7 +34,7 @@ public class DegreeOfInterestTest extends TestCase {
 	}
 
 	public void testPredictedInterest() {
-		DegreeOfInterest doi = new DegreeOfInterest(mockContext, InteractionContextManager.getCommonContextScaling());
+		DegreeOfInterest doi = new DegreeOfInterest(mockContext, ContextCore.getCommonContextScaling());
 		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.PREDICTION, "kind", "handle", "source-id",
 				"id", null, 1);
 		doi.addEvent(event);
@@ -46,7 +46,7 @@ public class DegreeOfInterestTest extends TestCase {
 	}
 
 	public void testPredictedInterestWithPropagated() {
-		DegreeOfInterest doi = new DegreeOfInterest(mockContext, InteractionContextManager.getCommonContextScaling());
+		DegreeOfInterest doi = new DegreeOfInterest(mockContext, ContextCore.getCommonContextScaling());
 		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.SELECTION, "kind", "handle", "source-id",
 				"id", null, 20);
 		doi.addEvent(event);
@@ -70,7 +70,7 @@ public class DegreeOfInterestTest extends TestCase {
 	}
 
 	public void testPropagatedInterest() {
-		DegreeOfInterest doi = new DegreeOfInterest(mockContext, InteractionContextManager.getCommonContextScaling());
+		DegreeOfInterest doi = new DegreeOfInterest(mockContext, ContextCore.getCommonContextScaling());
 		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.PROPAGATION, "kind", "handle", "source-id",
 				"id", null, 1);
 		doi.addEvent(event);
@@ -82,7 +82,7 @@ public class DegreeOfInterestTest extends TestCase {
 	}
 
 	public void testCreation() {
-		DegreeOfInterest doi = new DegreeOfInterest(mockContext, InteractionContextManager.getCommonContextScaling());
+		DegreeOfInterest doi = new DegreeOfInterest(mockContext, ContextCore.getCommonContextScaling());
 		assertFalse(doi.isInteresting());
 		assertFalse(doi.isLandmark());
 		assertFalse(doi.isPropagated());

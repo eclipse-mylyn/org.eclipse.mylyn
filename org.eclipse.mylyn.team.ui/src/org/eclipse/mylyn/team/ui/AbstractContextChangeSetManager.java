@@ -10,7 +10,7 @@ package org.eclipse.mylyn.team.ui;
 
 import java.util.Set;
 
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
@@ -39,15 +39,15 @@ public abstract class AbstractContextChangeSetManager implements IInteractionCon
 				initContextChangeSets(); // otherwise listener will do it
 			}
 
-			if (ContextCorePlugin.getContextManager().isContextActive()) {
-				contextActivated(ContextCorePlugin.getContextManager().getActiveContext());
+			if (ContextCore.getContextManager().isContextActive()) {
+				contextActivated(ContextCore.getContextManager().getActiveContext());
 			}
-			ContextCorePlugin.getContextManager().addListener(this);
+			ContextCore.getContextManager().addListener(this);
 		}
 	}
 
 	public void disable() {
-		ContextCorePlugin.getContextManager().removeListener(this);
+		ContextCore.getContextManager().removeListener(this);
 		TasksUiPlugin.getTaskListManager().removeActivityListener(TASK_ACTIVITY_LISTENER);
 		TasksUiPlugin.getTaskListManager().getTaskList().removeChangeListener(TASK_CHANGE_LISTENER);
 		isEnabled = false;

@@ -37,7 +37,7 @@ import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionElement;
@@ -172,7 +172,7 @@ public class ActiveHierarchyView extends ViewPart {
 				root.removeAllChildren();
 			}
 			nodeMap.clear();
-			List<IInteractionElement> landmarks = ContextCorePlugin.getContextManager().getActiveLandmarks();
+			List<IInteractionElement> landmarks = ContextCore.getContextManager().getActiveLandmarks();
 			for (IInteractionElement node : landmarks) {
 				IJavaElement element = null;
 				if (node.getContentType().equals(JavaStructureBridge.CONTENT_TYPE)) {
@@ -237,7 +237,7 @@ public class ActiveHierarchyView extends ViewPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		try {
-			ContextCorePlugin.getContextManager().addListener(MODEL_LISTENER);
+			ContextCore.getContextManager().addListener(MODEL_LISTENER);
 			refreshHierarchy();
 
 			viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);

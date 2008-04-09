@@ -12,7 +12,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.ui.IViewActionDelegate;
 
@@ -42,7 +42,7 @@ public abstract class TaskContextAction extends Action implements IViewActionDel
 		this.selection = selection;
 		AbstractTask selectedTask = getSelectedTask(selection);
 		if (selectedTask != null) {
-			action.setEnabled(ContextCorePlugin.getContextManager().hasContext(selectedTask.getHandleIdentifier()));
+			action.setEnabled(ContextCore.getContextManager().hasContext(selectedTask.getHandleIdentifier()));
 		} else {
 			action.setEnabled(false);
 		}

@@ -18,7 +18,7 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.ui.actions.AbstractInterestManipulationAction;
 import org.eclipse.mylyn.internal.resources.ui.ResourceInteractionMonitor;
@@ -72,22 +72,22 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 		ResourceStructureBridge bridge = new ResourceStructureBridge();
 		new ResourceInteractionMonitor().selectionChanged(part, new StructuredSelection(file));
 
-		IInteractionElement fileElement = ContextCorePlugin.getContextManager().getElement(
+		IInteractionElement fileElement = ContextCore.getContextManager().getElement(
 				bridge.getHandleIdentifier(file));
 
-		IInteractionElement projectElement = ContextCorePlugin.getContextManager().getElement(
+		IInteractionElement projectElement = ContextCore.getContextManager().getElement(
 				new ResourceStructureBridge().getHandleIdentifier(nonJavaProject.getProject()));
 
 		assertTrue(fileElement.getInterest().isInteresting());
 		assertTrue(projectElement.getInterest().isInteresting());
 
-		assertTrue(ContextCorePlugin.getContextManager().manipulateInterestForElement(projectElement, false, false,
+		assertTrue(ContextCore.getContextManager().manipulateInterestForElement(projectElement, false, false,
 				false, "test"));
 
-		projectElement = ContextCorePlugin.getContextManager().getElement(
+		projectElement = ContextCore.getContextManager().getElement(
 				new ResourceStructureBridge().getHandleIdentifier(nonJavaProject.getProject()));
 
-		fileElement = ContextCorePlugin.getContextManager().getElement(bridge.getHandleIdentifier(file));
+		fileElement = ContextCore.getContextManager().getElement(bridge.getHandleIdentifier(file));
 
 		assertFalse(projectElement.getInterest().isInteresting());
 		assertFalse(fileElement.getInterest().isInteresting());
@@ -95,7 +95,7 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 
 	public void testDecrementAcrossBridges() throws CoreException, InvocationTargetException, InterruptedException {
 		monitor.selectionChanged(part, new StructuredSelection(javaMethod));
-		method = ContextCorePlugin.getContextManager().getElement(javaMethod.getHandleIdentifier());
+		method = ContextCore.getContextManager().getElement(javaMethod.getHandleIdentifier());
 
 		IFile file = project.getProject().getFile("foo.txt");
 		file.create(null, true, null);
@@ -103,18 +103,18 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 		ResourceStructureBridge bridge = new ResourceStructureBridge();
 		new ResourceInteractionMonitor().selectionChanged(part, new StructuredSelection(file));
 
-		IInteractionElement fileElement = ContextCorePlugin.getContextManager().getElement(
+		IInteractionElement fileElement = ContextCore.getContextManager().getElement(
 				bridge.getHandleIdentifier(file));
-		IInteractionElement projectElement = ContextCorePlugin.getContextManager().getElement(
+		IInteractionElement projectElement = ContextCore.getContextManager().getElement(
 				javaCu.getJavaProject().getHandleIdentifier());
 
 		assertTrue(fileElement.getInterest().isInteresting());
 		assertTrue(method.getInterest().isInteresting());
 
-		assertTrue(ContextCorePlugin.getContextManager().manipulateInterestForElement(projectElement, false, false,
+		assertTrue(ContextCore.getContextManager().manipulateInterestForElement(projectElement, false, false,
 				false, "test"));
 
-		fileElement = ContextCorePlugin.getContextManager().getElement(bridge.getHandleIdentifier(file));
+		fileElement = ContextCore.getContextManager().getElement(bridge.getHandleIdentifier(file));
 		assertFalse(fileElement.getInterest().isInteresting());
 		// TODO: re-enable, fails in AllTests
 		// assertFalse(method.getInterest().isInteresting());
@@ -123,25 +123,25 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 	public void testDecrementInterestOfCompilationUnit() throws JavaModelException {
 		monitor.selectionChanged(part, new StructuredSelection(javaMethod));
 		monitor.selectionChanged(part, new StructuredSelection(javaCu));
-		method = ContextCorePlugin.getContextManager().getElement(javaMethod.getHandleIdentifier());
-		clazz = ContextCorePlugin.getContextManager().getElement(javaType.getHandleIdentifier());
-		cu = ContextCorePlugin.getContextManager().getElement(javaCu.getHandleIdentifier());
+		method = ContextCore.getContextManager().getElement(javaMethod.getHandleIdentifier());
+		clazz = ContextCore.getContextManager().getElement(javaType.getHandleIdentifier());
+		cu = ContextCore.getContextManager().getElement(javaCu.getHandleIdentifier());
 
-		IInteractionElement packageNode = ContextCorePlugin.getContextManager().getElement(
+		IInteractionElement packageNode = ContextCore.getContextManager().getElement(
 				javaPackage.getHandleIdentifier());
 
 		assertTrue(method.getInterest().isInteresting());
 		assertTrue(clazz.getInterest().isInteresting());
 		assertTrue(cu.getInterest().isInteresting());
 
-		assertTrue(ContextCorePlugin.getContextManager().manipulateInterestForElement(packageNode, false, false, false,
+		assertTrue(ContextCore.getContextManager().manipulateInterestForElement(packageNode, false, false, false,
 				"test"));
 
-		method = ContextCorePlugin.getContextManager().getElement(javaMethod.getHandleIdentifier());
-		clazz = ContextCorePlugin.getContextManager().getElement(javaType.getHandleIdentifier());
-		cu = ContextCorePlugin.getContextManager().getElement(javaCu.getHandleIdentifier());
+		method = ContextCore.getContextManager().getElement(javaMethod.getHandleIdentifier());
+		clazz = ContextCore.getContextManager().getElement(javaType.getHandleIdentifier());
+		cu = ContextCore.getContextManager().getElement(javaCu.getHandleIdentifier());
 
-		packageNode = ContextCorePlugin.getContextManager().getElement(javaPackage.getHandleIdentifier());
+		packageNode = ContextCore.getContextManager().getElement(javaPackage.getHandleIdentifier());
 
 		assertFalse(packageNode.getInterest().isInteresting());
 		assertFalse(cu.getInterest().isInteresting());
@@ -156,9 +156,9 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 		IMethod m1 = type1.createMethod("void m22() { }", null, true, null);
 		StructuredSelection sm1 = new StructuredSelection(m1);
 		monitor.selectionChanged(part, sm1);
-		IInteractionElement node = ContextCorePlugin.getContextManager().getElement(m1.getHandleIdentifier());
+		IInteractionElement node = ContextCore.getContextManager().getElement(m1.getHandleIdentifier());
 		assertFalse(node.getInterest().isLandmark());
-		assertNotNull(ContextCorePlugin.getContextManager().getActiveElement());
+		assertNotNull(ContextCore.getContextManager().getActiveElement());
 		action.changeInterestForSelected(true);
 		assertTrue(node.getInterest().isLandmark());
 		action.changeInterestForSelected(true);
@@ -168,7 +168,7 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 
 		action.changeInterestForSelected(false);
 
-		node = ContextCorePlugin.getContextManager().getElement(m1.getHandleIdentifier());
+		node = ContextCore.getContextManager().getElement(m1.getHandleIdentifier());
 		assertFalse(node.getInterest().isLandmark());
 		assertTrue(node.getInterest().isInteresting());
 		action.changeInterestForSelected(false);
@@ -186,8 +186,8 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 		}
 
 		public void changeInterestForSelected(boolean increment) {
-			assertTrue(ContextCorePlugin.getContextManager().manipulateInterestForElement(
-					ContextCorePlugin.getContextManager().getActiveElement(), increment, false, true, ""));
+			assertTrue(ContextCore.getContextManager().manipulateInterestForElement(
+					ContextCore.getContextManager().getActiveElement(), increment, false, true, ""));
 		}
 	}
 }

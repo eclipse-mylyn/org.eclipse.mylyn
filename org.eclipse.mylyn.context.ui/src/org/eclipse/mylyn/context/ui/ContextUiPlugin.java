@@ -35,7 +35,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextListener2;
 import org.eclipse.mylyn.context.core.IInteractionElement;
@@ -240,7 +240,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		}
 
 		public void taskActivated(AbstractTask task) {
-			boolean hasLocalContext = ContextCorePlugin.getContextManager().hasContext(task.getHandleIdentifier());
+			boolean hasLocalContext = ContextCore.getContextManager().hasContext(task.getHandleIdentifier());
 			if (!hasLocalContext) {
 				AbstractTask repositoryTask = task;
 				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
@@ -282,8 +282,8 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 
-		ContextCorePlugin.getContextManager().addListener(contextActivationListener);
-		if (ContextCorePlugin.getContextManager().isContextActive()) {
+		ContextCore.getContextManager().addListener(contextActivationListener);
+		if (ContextCore.getContextManager().isContextActive()) {
 			initLazyStart();
 		}
 
@@ -304,14 +304,14 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 						"Could not lazy start context plug-in", t));
 			}
 			if (TasksUiPlugin.getTaskListManager() != null) {
-				ContextCorePlugin.getContextManager().removeListener(contextActivationListener);
+				ContextCore.getContextManager().removeListener(contextActivationListener);
 			}
 		}
 	}
 
 	private void lazyStart(IWorkbench workbench) {
 		try {
-			ContextCorePlugin.getContextManager().addListener(viewerManager);
+			ContextCore.getContextManager().addListener(viewerManager);
 			MonitorUiPlugin.getDefault().addWindowPartListener(contentOutlineManager);
 
 			// NOTE: can't init within this class because ..mylyn.tasks.ui activation will be triggered on activation
@@ -352,7 +352,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	}
 
 	private void lazyStop() {
-		ContextCorePlugin.getContextManager().removeListener(viewerManager);
+		ContextCore.getContextManager().removeListener(viewerManager);
 		MonitorUiPlugin.getDefault().removeWindowPartListener(contentOutlineManager);
 
 		TasksUiPlugin.getTaskListManager().removeActivityListener(perspectiveManager);
@@ -369,7 +369,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			lazyStop();
 		}
 		if (TasksUiPlugin.getTaskListManager() != null) {
-			ContextCorePlugin.getContextManager().removeListener(contextActivationListener);
+			ContextCore.getContextManager().removeListener(contextActivationListener);
 		}
 
 		super.stop(context);

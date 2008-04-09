@@ -21,12 +21,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextListener2;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
@@ -73,10 +74,10 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 			previousCloseEditorsSetting = workbench.getPreferenceStore().getBoolean(
 					IPreferenceConstants.REUSE_EDITORS_BOOLEAN);
 			workbench.getPreferenceStore().setValue(IPreferenceConstants.REUSE_EDITORS_BOOLEAN, false);
-			boolean wasPaused = ContextCorePlugin.getContextManager().isContextCapturePaused();
+			boolean wasPaused = ContextCore.getContextManager().isContextCapturePaused();
 			try {
 				if (!wasPaused) {
-					ContextCorePlugin.getContextManager().setContextCapturePaused(true);
+					ContextCore.getContextManager().setContextCapturePaused(true);
 				}
 				WorkbenchPage page = (WorkbenchPage) workbench.getActiveWorkbenchWindow().getActivePage();
 
@@ -106,7 +107,7 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 				StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.PLUGIN_ID,
 						"Failed to open editors on activation", e));
 			} finally {
-				ContextCorePlugin.getContextManager().setContextCapturePaused(false);
+				ContextCore.getContextManager().setContextCapturePaused(false);
 			}
 		}
 	}

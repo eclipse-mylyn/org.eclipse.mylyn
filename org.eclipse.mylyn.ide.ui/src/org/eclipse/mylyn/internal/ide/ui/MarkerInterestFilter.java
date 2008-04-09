@@ -13,8 +13,9 @@ package org.eclipse.mylyn.internal.ide.ui;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.ui.InterestFilter;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.ui.views.markers.MarkerItem;
 
 /**
@@ -72,7 +73,7 @@ public class MarkerInterestFilter extends InterestFilter {
 			if (handle == null) {
 				return false;
 			} else {
-				return super.select(viewer, parent, ContextCorePlugin.getContextManager().getElement(handle));
+				return super.select(viewer, parent, ContextCore.getContextManager().getElement(handle));
 			}
 		}
 

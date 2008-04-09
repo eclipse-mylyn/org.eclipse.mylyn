@@ -16,7 +16,7 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.tests.UiTestUtil;
 import org.eclipse.mylyn.internal.java.ui.views.ActiveHierarchyView;
 import org.eclipse.swt.widgets.Tree;
@@ -42,7 +42,7 @@ public class ActiveHierarchyTest extends AbstractJavaContextTest {
 	 */
 	public void testElementDuplication() throws JavaModelException {
 		assertEquals(0, tree.getItemCount());
-		assertEquals(0, ContextCorePlugin.getContextManager().getActiveLandmarks().size());
+		assertEquals(0, ContextCore.getContextManager().getActiveLandmarks().size());
 
 		IType superType = project.createType(p1, "Super.java", "public class Super { }");
 		makeLandmark(superType);

@@ -20,7 +20,7 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionContextListener2;
@@ -144,7 +144,7 @@ public class ContextEditorFormPage extends FormPage {
 	@Override
 	protected void createFormContent(IManagedForm managedForm) {
 		super.createFormContent(managedForm);
-		ContextCorePlugin.getContextManager().addListener(CONTEXT_LISTENER);
+		ContextCore.getContextManager().addListener(CONTEXT_LISTENER);
 		task = ((TaskEditorInput) getEditorInput()).getTask();
 
 		form = managedForm.getForm();
@@ -167,7 +167,7 @@ public class ContextEditorFormPage extends FormPage {
 		super.dispose();
 		// ContextUiPlugin.getViewerManager().removeManagedViewer(commonViewer,
 		// this);
-		ContextCorePlugin.getContextManager().removeListener(CONTEXT_LISTENER);
+		ContextCore.getContextManager().removeListener(CONTEXT_LISTENER);
 	}
 
 	private void createActionsSection(Composite composite) {

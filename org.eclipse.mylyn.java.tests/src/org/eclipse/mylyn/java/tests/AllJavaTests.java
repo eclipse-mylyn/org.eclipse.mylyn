@@ -45,7 +45,6 @@ public class AllJavaTests {
 		suite.addTestSuite(TypeHistoryManagerTest.class);
 		suite.addTestSuite(PackageExplorerRefreshTest.class);
 		suite.addTestSuite(ActiveHierarchyTest.class);
-		suite.addTestSuite(ActiveSearchTest.class);
 		// Enable?
 		//suite.addTestSuite(ResultUpdaterTest.class);
 		suite.addTestSuite(ProblemsListTest.class);

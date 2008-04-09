@@ -16,9 +16,10 @@ import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContextRelation;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -33,7 +34,7 @@ public class InterestDecoratorLightweight implements ILightweightLabelDecorator 
 	}
 
 	public void decorate(Object element, IDecoration decoration) {
-		if (ContextCorePlugin.getContextManager() != null && !ContextCorePlugin.getContextManager().isContextActive()) {
+		if (ContextCore.getContextManager() != null && !ContextCore.getContextManager().isContextActive()) {
 			return;
 		}
 
@@ -56,7 +57,7 @@ public class InterestDecoratorLightweight implements ILightweightLabelDecorator 
 					node = (IInteractionElement) element;
 				} else {
 					if (bridge != null && bridge.getContentType() != null) {
-						node = ContextCorePlugin.getContextManager().getElement(bridge.getHandleIdentifier(element));
+						node = ContextCore.getContextManager().getElement(bridge.getHandleIdentifier(element));
 					}
 				}
 				if (node != null) {

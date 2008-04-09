@@ -25,8 +25,8 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.eclipse.mylyn.context.core.IInteractionContextWriter;
-import org.eclipse.mylyn.internal.context.core.InteractionContext;
+import org.eclipse.mylyn.context.core.IInteractionContext;
+import org.eclipse.mylyn.internal.context.core.IInteractionContextWriter;
 import org.eclipse.mylyn.internal.monitor.core.util.XmlStringConverter;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.w3c.dom.Document;
@@ -54,7 +54,7 @@ public class DomContextWriter implements IInteractionContextWriter {
 		doc = dbf.newDocumentBuilder().newDocument();
 	}
 
-	public void writeContextToStream(InteractionContext context) throws IOException {
+	public void writeContextToStream(IInteractionContext context) throws IOException {
 		if (outputStream == null) {
 			IOException ioe = new IOException("OutputStream not set");
 			throw ioe;

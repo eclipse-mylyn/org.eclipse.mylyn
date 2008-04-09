@@ -16,8 +16,9 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
@@ -62,7 +63,7 @@ public class ResourceInterestUpdater {
 				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(resource);
 				String handle = bridge.getHandleIdentifier(resource);
 				if (handle != null) {
-					IInteractionElement element = ContextCorePlugin.getContextManager().getElement(handle);
+					IInteractionElement element = ContextCore.getContextManager().getElement(handle);
 					if (element != null && !element.getInterest().isInteresting()) {
 						InteractionEvent interactionEvent = new InteractionEvent(interactionKind,
 								bridge.getContentType(), handle, SOURCE_ID);
@@ -72,9 +73,9 @@ public class ResourceInterestUpdater {
 			}
 		}
 		if (InteractionEvent.Kind.SELECTION.equals(interactionKind)) {
-			ContextCorePlugin.getContextManager().processInteractionEvents(interactionEvents, true);
+			ContextCore.getContextManager().processInteractionEvents(interactionEvents, true);
 		} else {
-			ContextCorePlugin.getContextManager().processInteractionEvents(interactionEvents, false);
+			ContextCore.getContextManager().processInteractionEvents(interactionEvents, false);
 		}
 	}
 

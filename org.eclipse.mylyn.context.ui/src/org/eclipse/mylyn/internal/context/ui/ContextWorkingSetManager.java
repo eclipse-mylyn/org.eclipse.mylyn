@@ -13,10 +13,11 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextListener2;
 import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetUpdater;
@@ -38,7 +39,7 @@ public class ContextWorkingSetManager implements IWorkingSetUpdater, IInteractio
 			workingSetUpdaters = new ArrayList<ContextWorkingSetManager>();
 		}
 		workingSetUpdaters.add(updater);
-		ContextCorePlugin.getContextManager().addListener(updater);
+		ContextCore.getContextManager().addListener(updater);
 	}
 
 	public ContextWorkingSetManager getWorkingSetUpdater() {
@@ -125,7 +126,7 @@ public class ContextWorkingSetManager implements IWorkingSetUpdater, IInteractio
 	}
 
 	public static void getElementsFromTaskscape(List<IAdaptable> elements) {
-		for (IInteractionElement node : ContextCorePlugin.getContextManager().getInterestingDocuments()) {
+		for (IInteractionElement node : ContextCore.getContextManager().getInterestingDocuments()) {
 			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
 					node.getContentType());
 

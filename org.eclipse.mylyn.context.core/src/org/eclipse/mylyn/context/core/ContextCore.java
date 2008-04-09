@@ -6,21 +6,28 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.context.tests;
+package org.eclipse.mylyn.context.core;
 
-import junit.framework.TestCase;
-
-import org.eclipse.mylyn.context.core.IInteractionContextScaling;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
 
 /**
  * @author Mik Kersten
+ * @since 3.0
  */
-public class ScalingFactorsTest extends TestCase {
+public final class ContextCore {
 
-	public void testLandmarkDefaults() {
-		IInteractionContextScaling scalingFactors = new InteractionContextScaling();
-		assertEquals(7 * scalingFactors.getLandmark(), scalingFactors.getForcedLandmark());
+	private static InteractionContextScaling commonContextScaling = new InteractionContextScaling();
+
+	/**
+	 * @since 3.0
+	 */
+	public static IInteractionContextManager getContextManager() {
+		return ContextCorePlugin.getContextManager();
+	}
+
+	public static IInteractionContextScaling getCommonContextScaling() {
+		return commonContextScaling;
 	}
 
 }

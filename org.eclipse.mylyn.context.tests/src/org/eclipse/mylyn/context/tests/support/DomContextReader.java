@@ -20,9 +20,9 @@ import java.util.zip.ZipInputStream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.eclipse.mylyn.context.core.IInteractionContextReader;
+import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.internal.context.core.IInteractionContextReader;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
-import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.monitor.core.util.XmlStringConverter;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.core.InteractionEvent.Kind;
@@ -47,7 +47,7 @@ public class DomContextReader implements IInteractionContextReader {
 			Element root = doc.getDocumentElement();
 			// readVersion = Integer.parseInt(root.getAttribute("Version"));
 			// String id = root.getAttribute("Id");
-			InteractionContext t = new InteractionContext(handle, InteractionContextManager.getCommonContextScaling());
+			InteractionContext t = new InteractionContext(handle, ContextCore.getCommonContextScaling());
 			NodeList list = root.getChildNodes();
 			for (int i = 0; i < list.getLength(); i++) {
 				Node child = list.item(i);

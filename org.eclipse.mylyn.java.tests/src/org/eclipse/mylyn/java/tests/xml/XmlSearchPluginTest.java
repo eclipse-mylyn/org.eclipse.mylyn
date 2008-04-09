@@ -16,7 +16,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.tests.support.search.ISearchPluginTest;
 import org.eclipse.mylyn.internal.context.core.CompositeInteractionContext;
@@ -76,23 +76,23 @@ public class XmlSearchPluginTest extends TestCase implements ISearchPluginTest {
 		plugin2 = WorkspaceSetupHelper.getFile(jp2, "plugin.xml");
 
 		InteractionContext t = WorkspaceSetupHelper.getContext();
-		ContextCorePlugin.getContextManager().activateContext(t.getHandleIdentifier());
+		ContextCore.getContextManager().activateContext(t.getHandleIdentifier());
 		helper = new SearchPluginTestHelper(this);
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		WorkspaceSetupHelper.clearDoiModel();
-		ContextCorePlugin.getContextManager()
+		ContextCore.getContextManager()
 				.deactivateContext(WorkspaceSetupHelper.getContext().getHandleIdentifier());
-		assertFalse(ContextCorePlugin.getContextManager().isContextActive());
+		assertFalse(ContextCore.getContextManager().isContextActive());
 	}
 
 	public void testXMLSearchDOS1() throws IOException, CoreException {
 
 		int dos = 1;
 
-		CompositeInteractionContext t = (CompositeInteractionContext) ContextCorePlugin.getContextManager()
+		CompositeInteractionContext t = (CompositeInteractionContext) ContextCore.getContextManager()
 				.getActiveContext();
 		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
 		IInteractionElement searchNode = notifier.getElement(type1.getHandleIdentifier(),
@@ -163,7 +163,7 @@ public class XmlSearchPluginTest extends TestCase implements ISearchPluginTest {
 
 		int dos = 2;
 
-		CompositeInteractionContext t = (CompositeInteractionContext) ContextCorePlugin.getContextManager()
+		CompositeInteractionContext t = (CompositeInteractionContext) ContextCore.getContextManager()
 				.getActiveContext();
 		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
 		IInteractionElement searchNode = notifier.getElement(type1.getHandleIdentifier(),
@@ -220,7 +220,7 @@ public class XmlSearchPluginTest extends TestCase implements ISearchPluginTest {
 
 		int dos = 3;
 
-		CompositeInteractionContext t = (CompositeInteractionContext) ContextCorePlugin.getContextManager()
+		CompositeInteractionContext t = (CompositeInteractionContext) ContextCore.getContextManager()
 				.getActiveContext();
 		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
 		IInteractionElement searchNode = notifier.getElement(type1.getHandleIdentifier(),
@@ -268,7 +268,7 @@ public class XmlSearchPluginTest extends TestCase implements ISearchPluginTest {
 
 		int dos = 4;
 
-		CompositeInteractionContext t = (CompositeInteractionContext) ContextCorePlugin.getContextManager()
+		CompositeInteractionContext t = (CompositeInteractionContext) ContextCore.getContextManager()
 				.getActiveContext();
 		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
 		IInteractionElement searchNode = notifier.getElement(type1.getHandleIdentifier(),

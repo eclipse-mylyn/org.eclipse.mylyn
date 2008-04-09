@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.team.ui.properties.TeamPropertiesLinkProvider;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
@@ -221,7 +221,7 @@ public class ContextChangeSet extends CVSActiveChangeSet/*ActiveChangeSet*/imple
 			// TODO: if super is always managed correctly should remove
 			// following line
 			allResources.addAll(ResourcesUiBridgePlugin.getDefault().getInterestingResources(
-					ContextCorePlugin.getContextManager().getActiveContext()));
+					ContextCore.getContextManager().getActiveContext()));
 		}
 		return new ArrayList<IResource>(allResources);
 	}

@@ -11,9 +11,10 @@ package org.eclipse.mylyn.context.ui;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.InterestComparator;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 
 /**
  * Sorts view elements by degree-of-interest.
@@ -42,7 +43,7 @@ public class InterestSorter extends ViewerSorter {
 		} else {
 			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(object);
 			String handle = bridge.getHandleIdentifier(object);
-			return ContextCorePlugin.getContextManager().getElement(handle);
+			return ContextCore.getContextManager().getElement(handle);
 		}
 	}
 

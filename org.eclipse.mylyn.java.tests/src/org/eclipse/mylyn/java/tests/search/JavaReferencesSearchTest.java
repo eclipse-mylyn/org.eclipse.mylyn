@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.tests.support.search.ISearchPluginTest;
 import org.eclipse.mylyn.context.tests.support.search.TestActiveSearchListener;
@@ -62,23 +62,23 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 		plugin1 = WorkspaceSetupHelper.getFile(jp1, "plugin.xml");
 
 		InteractionContext context = WorkspaceSetupHelper.getContext();
-		ContextCorePlugin.getContextManager().activateContext(context.getHandleIdentifier());
+		ContextCore.getContextManager().activateContext(context.getHandleIdentifier());
 		helper = new SearchPluginTestHelper(this);
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		WorkspaceSetupHelper.clearDoiModel();
-		ContextCorePlugin.getContextManager()
+		ContextCore.getContextManager()
 				.deactivateContext(WorkspaceSetupHelper.getContext().getHandleIdentifier());
-		assertFalse(ContextCorePlugin.getContextManager().isContextActive());
+		assertFalse(ContextCore.getContextManager().isContextActive());
 	}
 
 	public void testJavaReferencesSearchDOS1() throws IOException, CoreException {
 
 		int dos = 1;
 
-		CompositeInteractionContext t = (CompositeInteractionContext) ContextCorePlugin.getContextManager()
+		CompositeInteractionContext t = (CompositeInteractionContext) ContextCore.getContextManager()
 				.getActiveContext();
 		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
 		IInteractionElement searchNode = notifier.getElement(type1.getHandleIdentifier(),
@@ -119,7 +119,7 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 	public void testJavaReferencesSearchDOS2() throws CoreException, IOException {
 		int dos = 2;
 
-		CompositeInteractionContext t = (CompositeInteractionContext) ContextCorePlugin.getContextManager()
+		CompositeInteractionContext t = (CompositeInteractionContext) ContextCore.getContextManager()
 				.getActiveContext();
 		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
 		IInteractionElement searchNode = notifier.getElement(type1.getHandleIdentifier(),
@@ -169,7 +169,7 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 	public void testJavaReferencesSearchDOS3() throws Exception {
 		int dos = 3;
 
-		CompositeInteractionContext t = (CompositeInteractionContext) ContextCorePlugin.getContextManager()
+		CompositeInteractionContext t = (CompositeInteractionContext) ContextCore.getContextManager()
 				.getActiveContext();
 		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
 		IInteractionElement searchNode = notifier.getElement(type1.getHandleIdentifier(),
@@ -221,7 +221,7 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 
 		int dos = 4;
 
-		CompositeInteractionContext t = (CompositeInteractionContext) ContextCorePlugin.getContextManager()
+		CompositeInteractionContext t = (CompositeInteractionContext) ContextCore.getContextManager()
 				.getActiveContext();
 		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
 		IInteractionElement searchNode = notifier.getElement(type1.getHandleIdentifier(),
@@ -271,7 +271,7 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 		int dos = 5;
 
 		// NOTE: as of 3.2M3 there is a plugin.xml reference
-		CompositeInteractionContext t = (CompositeInteractionContext) ContextCorePlugin.getContextManager()
+		CompositeInteractionContext t = (CompositeInteractionContext) ContextCore.getContextManager()
 				.getActiveContext();
 		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
 		IInteractionElement searchNode = notifier.getElement(type1.getHandleIdentifier(),

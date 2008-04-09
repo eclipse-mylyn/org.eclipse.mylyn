@@ -11,8 +11,8 @@ package org.eclipse.mylyn.internal.context.ui.actions;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.context.core.InteractionContext;
+import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskSelectionDialog;
@@ -76,8 +76,7 @@ public class ContextCopyAction extends TaskContextAction {
 
 		if (targetTask != null) {
 			TasksUiPlugin.getTaskListManager().deactivateAllTasks();
-			InteractionContext source = ContextCorePlugin.getContextManager().loadContext(
-					sourceTask.getHandleIdentifier());
+			IInteractionContext source = ContextCore.getContextManager().loadContext(sourceTask.getHandleIdentifier());
 
 			if (targetTask.equals(sourceTask)) {
 				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
@@ -87,7 +86,7 @@ public class ContextCopyAction extends TaskContextAction {
 						ITasksUiConstants.TITLE_DIALOG, "Source task does not have a context.");
 			} else {
 
-				ContextCorePlugin.getContextManager().cloneContext(sourceTask.getHandleIdentifier(),
+				ContextCore.getContextManager().cloneContext(sourceTask.getHandleIdentifier(),
 						targetTask.getHandleIdentifier());
 
 				TasksUiPlugin.getTaskListManager().activateTask(targetTask);

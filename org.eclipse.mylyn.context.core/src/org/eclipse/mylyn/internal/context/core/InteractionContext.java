@@ -19,6 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.mylyn.context.core.IInteractionContext;
+import org.eclipse.mylyn.context.core.IInteractionContextScaling;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
@@ -46,7 +47,7 @@ public class InteractionContext implements IInteractionContext {
 
 	private int numUserEvents = 0;
 
-	protected InteractionContextScaling contextScaling;
+	protected IInteractionContextScaling contextScaling;
 
 	void parseInteractionHistory() {
 		elementMap = new ConcurrentHashMap<String, InteractionContextElement>();
@@ -58,7 +59,7 @@ public class InteractionContext implements IInteractionContext {
 		activeNode = lastEdgeNode;
 	}
 
-	public InteractionContext(String id, InteractionContextScaling scaling) {
+	public InteractionContext(String id, IInteractionContextScaling scaling) {
 		this.handleIdentifier = id;
 		this.contextScaling = scaling;
 		parseInteractionHistory();
@@ -266,7 +267,7 @@ public class InteractionContext implements IInteractionContext {
 		return result;
 	}
 
-	public InteractionContextScaling getScaling() {
+	public IInteractionContextScaling getScaling() {
 		return contextScaling;
 	}
 

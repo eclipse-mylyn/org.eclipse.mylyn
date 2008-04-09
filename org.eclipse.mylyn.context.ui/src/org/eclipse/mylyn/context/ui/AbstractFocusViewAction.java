@@ -26,10 +26,11 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
@@ -193,7 +194,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 		setToolTipText(ACTION_LABEL);
 		setImageDescriptor(ContextUiImages.INTEREST_FILTERING);
 		PlatformUI.getWorkbench().addWorkbenchListener(WORKBENCH_LISTENER);
-		ContextCorePlugin.getContextManager().addListener(CONTEXT_LISTENER);
+		ContextCore.getContextManager().addListener(CONTEXT_LISTENER);
 	}
 
 	public void dispose() {
@@ -204,7 +205,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 			}
 		}
 		MonitorUiPlugin.getDefault().removeWindowPostSelectionListener(this);
-		ContextCorePlugin.getContextManager().removeListener(CONTEXT_LISTENER);
+		ContextCore.getContextManager().removeListener(CONTEXT_LISTENER);
 		PlatformUI.getWorkbench().removeWorkbenchListener(WORKBENCH_LISTENER);
 	}
 
@@ -257,10 +258,10 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 			return;
 		}
 
-		boolean wasPaused = ContextCorePlugin.getContextManager().isContextCapturePaused();
+		boolean wasPaused = ContextCore.getContextManager().isContextCapturePaused();
 		try {
 			if (!wasPaused) {
-				ContextCorePlugin.getContextManager().setContextCapturePaused(true);
+				ContextCore.getContextManager().setContextCapturePaused(true);
 			}
 			setChecked(on);
 			action.setChecked(on);
@@ -285,7 +286,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 					"Could not install viewer manager on: " + globalPrefId, t));
 		} finally {
 			if (!wasPaused) {
-				ContextCorePlugin.getContextManager().setContextCapturePaused(false);
+				ContextCore.getContextManager().setContextCapturePaused(false);
 			}
 		}
 	}
@@ -293,7 +294,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 	@SuppressWarnings("deprecation")
 	protected void updateEnablement(IAction action) {
 		if (updateEnablementWithContextActivation()) {
-			action.setEnabled(ContextCorePlugin.getContextManager().isContextActivePropertySet());
+			action.setEnabled(ContextCore.getContextManager().isContextActivePropertySet());
 		}
 	}
 

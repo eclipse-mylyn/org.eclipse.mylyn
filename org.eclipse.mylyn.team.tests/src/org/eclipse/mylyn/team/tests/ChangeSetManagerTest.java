@@ -15,7 +15,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.ide.ui.IdeUiBridgePlugin;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
@@ -95,7 +95,7 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 		assertEquals(1, collector.getSets().length);
 
 		TasksUiPlugin.getTaskListManager().deactivateTask(task1);
-		assertFalse(ContextCorePlugin.getContextManager().isContextActive());
+		assertFalse(ContextCore.getContextManager().isContextActive());
 		assertEquals(0, changeSetManager.getActiveChangeSets().size());
 		assertEquals(0, collector.getSets().length); // deleted because no
 		// active resources
@@ -112,7 +112,7 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 		TasksUiPlugin.getTaskListManager().activateTask(task1);
 
 		monitor.selectionChanged(navigator, new StructuredSelection(file));
-		IInteractionElement fileElement = ContextCorePlugin.getContextManager().getElement(
+		IInteractionElement fileElement = ContextCore.getContextManager().getElement(
 				structureBridge.getHandleIdentifier(file));
 		assertTrue(fileElement.getInterest().isInteresting());
 
@@ -124,7 +124,7 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 		assertTrue("length: " + resources.length, resources.length <= 2);
 
 		for (int i = 0; i < 1 / (scaling.getDecay()) * 3; i++) {
-			ContextCorePlugin.getContextManager().processInteractionEvent(mockSelection());
+			ContextCore.getContextManager().processInteractionEvent(mockSelection());
 		}
 		assertTrue("" + fileElement.getInterest().getValue(), fileElement.getInterest().getValue() < 0);
 		assertTrue("length: " + resources.length, resources.length <= 2);

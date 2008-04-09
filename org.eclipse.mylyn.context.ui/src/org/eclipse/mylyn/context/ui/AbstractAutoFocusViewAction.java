@@ -13,7 +13,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionElement;
@@ -37,13 +37,13 @@ public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewActio
 	public AbstractAutoFocusViewAction(InterestFilter interestFilter, boolean manageViewer, boolean manageFilters,
 			boolean manageLinking) {
 		super(interestFilter, manageViewer, manageFilters, manageLinking);
-		ContextCorePlugin.getContextManager().addListener(this);
+		ContextCore.getContextManager().addListener(this);
 	}
 
 	@Override
 	public void dispose() {
 		super.dispose();
-		ContextCorePlugin.getContextManager().removeListener(this);
+		ContextCore.getContextManager().removeListener(this);
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewActio
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				try {
-					if (ContextCorePlugin.getContextManager().isContextActive()
+					if (ContextCore.getContextManager().isContextActive()
 							&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
 									ContextUiPrefContstants.NAVIGATORS_AUTO_FILTER_ENABLE)) {
 						internalSuppressExpandAll = true;

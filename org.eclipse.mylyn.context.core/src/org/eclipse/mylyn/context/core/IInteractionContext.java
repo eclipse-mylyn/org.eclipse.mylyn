@@ -10,7 +10,6 @@ package org.eclipse.mylyn.context.core;
 
 import java.util.List;
 
-import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
 /**
@@ -49,7 +48,10 @@ public interface IInteractionContext {
 
 	public abstract List<IInteractionElement> getAllElements();
 
-	public InteractionContextScaling getScaling();
+	/**
+	 * @since 3.0
+	 */
+	public IInteractionContextScaling getScaling();
 
 	/**
 	 * @since 2.2

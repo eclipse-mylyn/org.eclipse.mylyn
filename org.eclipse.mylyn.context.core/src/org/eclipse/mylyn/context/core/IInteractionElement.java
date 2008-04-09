@@ -28,7 +28,10 @@ public interface IInteractionElement extends IInteractionObject {
 
 	public abstract Collection<InteractionContextRelation> getRelations();
 
-	public abstract InteractionContextRelation getRelation(String targetHandle);
+	/**
+	 * @since 3.0
+	 */
+	public abstract IInteractionRelation getRelation(String targetHandle);
 
 	public abstract void clearRelations();
 }

@@ -10,7 +10,7 @@ package org.eclipse.mylyn.internal.context.ui.actions;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -59,7 +59,7 @@ public class ContextClearAction extends TaskContextAction {
 			return false;
 		}
 
-		ContextCorePlugin.getContextManager().deleteContext(task.getHandleIdentifier());
+		ContextCore.getContextManager().deleteContext(task.getHandleIdentifier());
 		TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(task, false);
 		return true;
 	}

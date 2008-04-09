@@ -20,7 +20,7 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.tests.support.ResourceHelper;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
@@ -76,7 +76,7 @@ public class WorkspaceSetupHelper {
 	}
 
 	public static void clearDoiModel() throws CoreException {
-		ContextCorePlugin.getContextManager().deleteContext(HELPER_CONTEXT_ID);
+		ContextCore.getContextManager().deleteContext(HELPER_CONTEXT_ID);
 		taskscape = new InteractionContext(HELPER_CONTEXT_ID, new InteractionContextScaling());
 	}
 

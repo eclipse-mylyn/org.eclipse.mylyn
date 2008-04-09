@@ -10,7 +10,7 @@ package org.eclipse.mylyn.internal.ide.ui.actions;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.ui.views.ActiveSearchQuickView;
 import org.eclipse.swt.widgets.Shell;
@@ -34,7 +34,7 @@ public class OpenRelatedElementsQuickView implements IWorkbenchWindowActionDeleg
 	}
 
 	public void run(IAction action) {
-		IInteractionElement activeNode = ContextCorePlugin.getContextManager().getActiveElement();
+		IInteractionElement activeNode = ContextCore.getContextManager().getActiveElement();
 
 		Shell parent = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		inplaceDialog = new ActiveSearchQuickView(parent);

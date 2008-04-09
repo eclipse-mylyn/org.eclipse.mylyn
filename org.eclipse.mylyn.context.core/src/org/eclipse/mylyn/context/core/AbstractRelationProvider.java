@@ -11,6 +11,7 @@ package org.eclipse.mylyn.context.core;
 import java.util.List;
 
 import org.eclipse.mylyn.internal.context.core.CompositeContextElement;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.IActiveSearchOperation;
 import org.eclipse.mylyn.internal.context.core.InteractionContextElement;
 import org.eclipse.mylyn.internal.context.core.InteractionContextRelation;
@@ -105,7 +106,7 @@ public abstract class AbstractRelationProvider implements IInteractionContextLis
 		// TaskscapeManager.getScalingFactors().getDegreeOfSeparationScale();
 		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.PREDICTION, elementKind, elementHandle,
 				getSourceId(), getId(), null, predictedInterest);
-		ContextCorePlugin.getContextManager().processInteractionEvent(event, false, false);
+		ContextCore.getContextManager().processInteractionEvent(event, false, false);
 		createEdge(node, elementKind, elementHandle);
 	}
 
@@ -113,8 +114,8 @@ public abstract class AbstractRelationProvider implements IInteractionContextLis
 	 * Public for testing
 	 */
 	public void createEdge(IInteractionElement toNode, String elementKind, String targetHandle) {
-		CompositeContextElement targetNode = (CompositeContextElement) ContextCorePlugin.getContextManager()
-				.getElement(targetHandle);
+		CompositeContextElement targetNode = (CompositeContextElement) ContextCore.getContextManager().getElement(
+				targetHandle);
 		if (targetNode == null) {
 			return;
 		}

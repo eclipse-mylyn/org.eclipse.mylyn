@@ -12,7 +12,7 @@ package org.eclipse.mylyn.context.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.ui.IViewPart;
@@ -33,18 +33,18 @@ public abstract class AbstractContextTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		if (ContextCorePlugin.getContextManager() != null) {
-			assertFalse("" + ContextCorePlugin.getContextManager().getActiveContexts(),
-					ContextCorePlugin.getContextManager().isContextActive());
+		if (ContextCore.getContextManager() != null) {
+			assertFalse("" + ContextCore.getContextManager().getActiveContexts(),
+					ContextCore.getContextManager().isContextActive());
 		}
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		if (ContextCorePlugin.getContextManager() != null) {
-			assertFalse("" + ContextCorePlugin.getContextManager().getActiveContexts(),
-					ContextCorePlugin.getContextManager().isContextActive());
+		if (ContextCore.getContextManager() != null) {
+			assertFalse("" + ContextCore.getContextManager().getActiveContexts(),
+					ContextCore.getContextManager().isContextActive());
 		}
 	}
 

@@ -70,32 +70,6 @@ public class XmlNodeHelper {
 		this.end = s;
 	}
 
-	// /**
-	// * Constructor
-	// * @param fei The FileEditorInput for the editor the node is in
-	// * @param offset The offset of the node
-	// * @throws CoreException
-	// * @throws BadLocationException
-	// */
-	// public XmlNodeHelper(FileEditorInput fei, int offset) throws
-	// CoreException {
-	//
-	// this.filename = fei.getFile().getFullPath().toString();
-	// InputStream i = fei.getFile().getContents();
-	// String contents = getContents(i);
-	// Document d = new Document(contents);
-	// try{
-	// startOffset = d.getLineOfOffset(offset - 1);
-	// } catch (BadLocationException e){
-	// // SHAWNTODO this happens when the document has not been saved and
-	// selections
-	// // are made to new nodes
-	// startOffset = 0;
-	// ContextCorePlugin.log(e, "Unable to get start line from the editor: " +
-	// filename + ":" + offset);
-	// }
-	// }
-
 	/**
 	 * Get the handle for the node Format: filename;startOffset
 	 * 

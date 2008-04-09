@@ -13,9 +13,10 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.ui.UiUtil;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.swt.widgets.Display;
@@ -61,11 +62,11 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 	 * Override to return a different context.
 	 */
 	protected IInteractionContext getContext() {
-		return ContextCorePlugin.getContextManager().getActiveContext();
+		return ContextCore.getContextManager().getActiveContext();
 	}
 
 	public void run(IAction action) {
-		if (!ContextCorePlugin.getContextManager().isContextActive()) {
+		if (!ContextCore.getContextManager().isContextActive()) {
 			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), ITasksUiConstants.TITLE_DIALOG,
 					MESSAGE_NO_CONTEXT);
 			return;
@@ -93,7 +94,7 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 							// ignore
 						}
 					}
-					boolean manipulated = ContextCorePlugin.getContextManager().manipulateInterestForElement(node,
+					boolean manipulated = ContextCore.getContextManager().manipulateInterestForElement(node,
 							increment, false, preserveUninteresting, SOURCE_ID, getContext());
 					if (!manipulated) {
 						UiUtil.displayInterestManipulationFailure();
@@ -101,9 +102,9 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 				}
 			}
 		} else {
-			IInteractionElement node = ContextCorePlugin.getContextManager().getActiveElement();
+			IInteractionElement node = ContextCore.getContextManager().getActiveElement();
 			if (node != null) {
-				boolean manipulated = ContextCorePlugin.getContextManager().manipulateInterestForElement(node,
+				boolean manipulated = ContextCore.getContextManager().manipulateInterestForElement(node,
 						increment, false, false, SOURCE_ID, getContext());
 				if (!manipulated) {
 					UiUtil.displayInterestManipulationFailure();
@@ -125,7 +126,7 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 		} else {
 			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(object);
 			String handle = bridge.getHandleIdentifier(object);
-			node = ContextCorePlugin.getContextManager().getElement(handle);
+			node = ContextCore.getContextManager().getElement(handle);
 		}
 		return node;
 	}

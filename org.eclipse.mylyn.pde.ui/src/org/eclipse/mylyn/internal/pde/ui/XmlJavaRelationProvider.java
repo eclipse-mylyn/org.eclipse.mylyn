@@ -36,9 +36,10 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.AbstractRelationProvider;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IDegreeOfSeparation;
 import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.DegreeOfSeparation;
 import org.eclipse.mylyn.internal.context.core.IActiveSearchListener;
 import org.eclipse.mylyn.internal.context.core.IActiveSearchOperation;
@@ -106,7 +107,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 	}
 
 	protected TextSearchScope createTextSearchScope(int degreeOfSeparation) {
-		List<IInteractionElement> landmarks = ContextCorePlugin.getContextManager().getActiveLandmarks();
+		List<IInteractionElement> landmarks = ContextCore.getContextManager().getActiveLandmarks();
 
 		switch (degreeOfSeparation) {
 		case 1:

@@ -14,7 +14,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.ui.wizards.ContextAttachWizard;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
@@ -100,7 +100,7 @@ public class ContextAttachAction extends Action implements IViewActionDelegate {
 			AbstractAttachmentHandler handler = connector.getAttachmentHandler();
 			action.setEnabled(handler != null
 					&& handler.canUploadAttachment(repository, task)
-					&& (task.isActive() || ContextCorePlugin.getContextManager().hasContext(task.getHandleIdentifier())));
+					&& (task.isActive() || ContextCore.getContextManager().hasContext(task.getHandleIdentifier())));
 		} else {
 			task = null;
 			action.setEnabled(false);

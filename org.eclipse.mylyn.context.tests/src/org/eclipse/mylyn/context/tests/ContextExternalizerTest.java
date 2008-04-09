@@ -11,16 +11,17 @@ package org.eclipse.mylyn.context.tests;
 import java.io.File;
 
 import org.eclipse.core.runtime.Path;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.context.core.IInteractionContextManager;
+import org.eclipse.mylyn.context.core.IInteractionContextScaling;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
 import org.eclipse.mylyn.context.tests.support.DomContextReader;
 import org.eclipse.mylyn.context.tests.support.DomContextWriter;
 import org.eclipse.mylyn.context.tests.support.FileTool;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextExternalizer;
-import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
-import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
 import org.eclipse.mylyn.internal.context.core.SaxContextReader;
 
 /**
@@ -33,13 +34,13 @@ public class ContextExternalizerTest extends AbstractContextTest {
 
 	private InteractionContext context;
 
-	private InteractionContextScaling scaling;
+	private IInteractionContextScaling scaling;
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		scaling = InteractionContextManager.getCommonContextScaling();
-		context = new InteractionContext(CONTEXT_HANDLE, InteractionContextManager.getCommonContextScaling());
+		scaling = ContextCore.getCommonContextScaling();
+		context = new InteractionContext(CONTEXT_HANDLE, ContextCore.getCommonContextScaling());
 	}
 
 	@Override
@@ -49,7 +50,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 
 	public void testContentAttributeExternalization() {
 		// Gets a file to write to and creates contexts folder if necessary
-		File file = ContextCorePlugin.getContextManager().getFileForContext(context.getHandleIdentifier());
+		File file = ContextCore.getContextManager().getFileForContext(context.getHandleIdentifier());
 		file.deleteOnExit();
 		InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
 		context.parseEvent(mockSelection("1"));
@@ -60,7 +61,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		File dataDirectory = ContextCorePlugin.getDefault().getContextStore().getRootDirectory();
 		File contextsDirectory = new File(dataDirectory, "contexts"/*WorkspaceAwareContextStore.CONTEXTS_DIRECTORY*/);
 		File zippedContextFile = new File(contextsDirectory, context.getHandleIdentifier()
-				+ InteractionContextManager.CONTEXT_FILE_EXTENSION);
+				+ IInteractionContextManager.CONTEXT_FILE_EXTENSION);
 		assertTrue(zippedContextFile.exists());
 		InteractionContext loaded = externalizer.readContextFromXML(CONTEXT_HANDLE, zippedContextFile, scaling);
 		assertNotNull(loaded);
@@ -134,7 +135,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 
 	public void testExternalization() {
 		// Gets a file to write to and creates contexts folder if necessary
-		File file = ContextCorePlugin.getContextManager().getFileForContext(context.getHandleIdentifier());
+		File file = ContextCore.getContextManager().getFileForContext(context.getHandleIdentifier());
 		file.deleteOnExit();
 		InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
 
@@ -158,7 +159,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		File dataDirectory = ContextCorePlugin.getDefault().getContextStore().getRootDirectory();
 		File contextsDirectory = new File(dataDirectory, "contexts"/*WorkspaceAwareContextStore.CONTEXTS_DIRECTORY*/);
 		File zippedContextFile = new File(contextsDirectory, context.getHandleIdentifier()
-				+ InteractionContextManager.CONTEXT_FILE_EXTENSION);
+				+ IInteractionContextManager.CONTEXT_FILE_EXTENSION);
 		assertTrue(zippedContextFile.exists());
 		InteractionContext loaded = externalizer.readContextFromXML(CONTEXT_HANDLE, zippedContextFile, scaling);
 		assertNotNull(loaded);

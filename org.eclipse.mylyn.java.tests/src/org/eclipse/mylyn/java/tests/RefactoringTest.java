@@ -16,7 +16,7 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.java.ui.InterestUpdateDeltaListener;
 import org.eclipse.ui.IViewPart;
@@ -45,7 +45,7 @@ public class RefactoringTest extends AbstractJavaContextTest {
 
 		IMethod method = type.createMethod("public void deleteMe() { }", null, true, null);
 		monitor.selectionChanged(view, new StructuredSelection(method));
-		IInteractionElement node = ContextCorePlugin.getContextManager().getElement(method.getHandleIdentifier());
+		IInteractionElement node = ContextCore.getContextManager().getElement(method.getHandleIdentifier());
 		assertTrue(node.getInterest().isInteresting());
 		project.build();
 		TestProgressMonitor monitor = new TestProgressMonitor();
@@ -53,7 +53,7 @@ public class RefactoringTest extends AbstractJavaContextTest {
 		if (!monitor.isDone()) {
 			Thread.sleep(100);
 		}
-		IInteractionElement deletedNode = ContextCorePlugin.getContextManager()
+		IInteractionElement deletedNode = ContextCore.getContextManager()
 				.getElement(method.getHandleIdentifier());
 		assertFalse(deletedNode.getInterest().isInteresting());
 	}
@@ -67,8 +67,8 @@ public class RefactoringTest extends AbstractJavaContextTest {
 		monitor.selectionChanged(view, new StructuredSelection(type));
 		monitor.selectionChanged(view, new StructuredSelection(type.getParent()));
 		project.build();
-		IInteractionElement node = ContextCorePlugin.getContextManager().getElement(type.getHandleIdentifier());
-		IInteractionElement parentNode = ContextCorePlugin.getContextManager().getElement(
+		IInteractionElement node = ContextCore.getContextManager().getElement(type.getHandleIdentifier());
+		IInteractionElement parentNode = ContextCore.getContextManager().getElement(
 				type.getParent().getHandleIdentifier());
 		assertTrue(node.getInterest().isInteresting());
 		assertTrue(parentNode.getInterest().isInteresting());
@@ -82,10 +82,10 @@ public class RefactoringTest extends AbstractJavaContextTest {
 		ICompilationUnit unit = (ICompilationUnit) p1.getChildren()[0];
 
 		IType newType = unit.getTypes()[0];
-		IInteractionElement oldParentNode = ContextCorePlugin.getContextManager().getElement(
+		IInteractionElement oldParentNode = ContextCore.getContextManager().getElement(
 				parentNode.getHandleIdentifier());
 		assertFalse(oldParentNode.getInterest().isInteresting());
-		IInteractionElement newParentNode = ContextCorePlugin.getContextManager().getElement(
+		IInteractionElement newParentNode = ContextCore.getContextManager().getElement(
 				newType.getParent().getHandleIdentifier());
 		assertTrue(newParentNode.getInterest().isInteresting());
 	}
@@ -98,7 +98,7 @@ public class RefactoringTest extends AbstractJavaContextTest {
 		assertEquals(1, type.getMethods().length);
 
 		monitor.selectionChanged(view, new StructuredSelection(method));
-		IInteractionElement node = ContextCorePlugin.getContextManager().getElement(method.getHandleIdentifier());
+		IInteractionElement node = ContextCore.getContextManager().getElement(method.getHandleIdentifier());
 		assertTrue(node.getInterest().isInteresting());
 
 		project.build();
@@ -109,10 +109,10 @@ public class RefactoringTest extends AbstractJavaContextTest {
 		}
 		IMethod newMethod = type.getMethods()[0];
 		assertTrue(newMethod.getElementName().equals("refactored"));
-		IInteractionElement newNode = ContextCorePlugin.getContextManager().getElement(newMethod.getHandleIdentifier());
+		IInteractionElement newNode = ContextCore.getContextManager().getElement(newMethod.getHandleIdentifier());
 		assertTrue(newNode.getInterest().isInteresting());
 
-		IInteractionElement goneNode = ContextCorePlugin.getContextManager().getElement(node.getHandleIdentifier());
+		IInteractionElement goneNode = ContextCore.getContextManager().getElement(node.getHandleIdentifier());
 		assertFalse(goneNode.getInterest().isInteresting());
 	}
 }

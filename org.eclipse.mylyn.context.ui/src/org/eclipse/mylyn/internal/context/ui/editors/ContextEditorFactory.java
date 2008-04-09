@@ -8,7 +8,7 @@
 
 package org.eclipse.mylyn.internal.context.ui.editors;
 
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorFactory;
 import org.eclipse.mylyn.tasks.ui.editors.RepositoryTaskEditorInput;
@@ -26,7 +26,7 @@ public class ContextEditorFactory extends AbstractTaskEditorFactory {
 
 	@Override
 	public boolean canCreateEditorFor(AbstractTask task) {
-		return task != null && ContextCorePlugin.getContextManager().hasContext(task.getHandleIdentifier());
+		return task != null && ContextCore.getContextManager().hasContext(task.getHandleIdentifier());
 	}
 
 	/**

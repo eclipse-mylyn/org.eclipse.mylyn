@@ -6,18 +6,29 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.context.ui.actions;
+package org.eclipse.mylyn.context.core;
 
-import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.ui.IActionFilter;
+import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
 /**
  * @author Mik Kersten
  */
-public class ContextActiveActionFilter implements IActionFilter {
+public interface IInteractionContextScaling {
 
-	public boolean testAttribute(Object target, String name, String value) {
-		return ContextCore.getContextManager().isContextActive();
-	}
+	public abstract float get(InteractionEvent.Kind kind);
+
+	public abstract float getDecay();
+
+	public abstract float getInteresting();
+
+	public abstract float getLandmark();
+
+	public abstract float getForcedLandmark();
+
+	@Deprecated
+	public abstract int getMaxNumInterestingErrors();
+
+	@Deprecated
+	public abstract float getErrorInterest();
 
 }

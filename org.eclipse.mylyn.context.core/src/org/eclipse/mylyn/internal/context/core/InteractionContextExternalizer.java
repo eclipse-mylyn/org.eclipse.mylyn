@@ -19,9 +19,8 @@ import java.util.zip.ZipOutputStream;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.context.core.IInteractionContextReader;
-import org.eclipse.mylyn.context.core.IInteractionContextWriter;
+import org.eclipse.mylyn.context.core.IInteractionContextManager;
+import org.eclipse.mylyn.context.core.IInteractionContextScaling;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 
 /**
@@ -109,8 +108,8 @@ public class InteractionContextExternalizer {
 	public void writeContext(InteractionContext context, ZipOutputStream outputStream, IInteractionContextWriter writer)
 			throws IOException {
 		String handleIdentifier = context.getHandleIdentifier();
-		String encoded = URLEncoder.encode(handleIdentifier, InteractionContextManager.CONTEXT_FILENAME_ENCODING);
-		ZipEntry zipEntry = new ZipEntry(encoded + InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD);
+		String encoded = URLEncoder.encode(handleIdentifier, IInteractionContextManager.CONTEXT_FILENAME_ENCODING);
+		ZipEntry zipEntry = new ZipEntry(encoded + IInteractionContextManager.CONTEXT_FILE_EXTENSION_OLD);
 		outputStream.putNextEntry(zipEntry);
 		outputStream.setMethod(ZipOutputStream.DEFLATED);
 
@@ -120,7 +119,7 @@ public class InteractionContextExternalizer {
 		outputStream.closeEntry();
 	}
 
-	public InteractionContext readContextFromXML(String handleIdentifier, File file, InteractionContextScaling scaling) {
+	public InteractionContext readContextFromXML(String handleIdentifier, File file, IInteractionContextScaling scaling) {
 		return readContextFromXML(handleIdentifier, file, new SaxContextReader(), scaling);
 	}
 
@@ -128,7 +127,7 @@ public class InteractionContextExternalizer {
 	 * Public for testing
 	 */
 	public InteractionContext readContextFromXML(String handleIdentifier, File file, IInteractionContextReader reader,
-			InteractionContextScaling scaling) {
+			IInteractionContextScaling scaling) {
 		try {
 			if (!file.exists()) {
 				return null;

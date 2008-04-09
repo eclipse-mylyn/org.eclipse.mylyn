@@ -24,11 +24,12 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextListener2;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
@@ -223,7 +224,7 @@ public class FocusedViewerManager implements IInteractionContextListener2, ISele
 	public void elementDeleted(IInteractionElement node) {
 		AbstractContextStructureBridge structureBridge = ContextCorePlugin.getDefault().getStructureBridge(
 				node.getContentType());
-		IInteractionElement parent = ContextCorePlugin.getContextManager().getElement(
+		IInteractionElement parent = ContextCore.getContextManager().getElement(
 				structureBridge.getParentHandle(node.getHandleIdentifier()));
 
 		if (parent != null) {

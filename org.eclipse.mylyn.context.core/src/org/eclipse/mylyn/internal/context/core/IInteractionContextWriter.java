@@ -6,18 +6,20 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.context.core;
+package org.eclipse.mylyn.internal.context.core;
 
-import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 
-import org.eclipse.mylyn.internal.context.core.InteractionContext;
+import org.eclipse.mylyn.context.core.IInteractionContext;
 
 /**
  * @author Mik Kersten
- * @since 2.0
  */
-public interface IInteractionContextReader {
+public interface IInteractionContextWriter {
 
-	public abstract InteractionContext readContext(String handleIdentifier, File file);
+	public abstract void setOutputStream(OutputStream outputStream);
+
+	public abstract void writeContextToStream(IInteractionContext context) throws IOException;
 
 }

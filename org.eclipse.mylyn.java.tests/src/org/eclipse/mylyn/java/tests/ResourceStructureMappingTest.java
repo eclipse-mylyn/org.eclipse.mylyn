@@ -12,7 +12,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 import org.eclipse.ui.IWorkbenchPart;
@@ -28,7 +28,7 @@ public class ResourceStructureMappingTest extends AbstractJavaContextTest {
 		IMethod m1 = type1.createMethod("public void m1() { }", null, true, null);
 
 		monitor.selectionChanged(part, new StructuredSelection(m1));
-		IInteractionElement m1Node = ContextCorePlugin.getContextManager().getElement(m1.getHandleIdentifier());
+		IInteractionElement m1Node = ContextCore.getContextManager().getElement(m1.getHandleIdentifier());
 		assertTrue(m1Node.getInterest().isInteresting());
 
 		IResource containingResource = ResourcesUiBridgePlugin.getDefault().getResourceForElement(m1Node, true);

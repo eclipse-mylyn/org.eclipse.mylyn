@@ -16,7 +16,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.ui.IContextUiStartup;
 import org.eclipse.mylyn.internal.java.ui.editor.ActiveFoldingListener;
 import org.eclipse.mylyn.internal.java.ui.wizards.RecommendedPreferencesWizard;
@@ -77,7 +77,7 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 
 	private void lazyStart() {
 		landmarkMarkerManager = new LandmarkMarkerManager();
-		ContextCorePlugin.getContextManager().addListener(landmarkMarkerManager);
+		ContextCore.getContextManager().addListener(landmarkMarkerManager);
 
 		javaEditingMonitor = new JavaEditingMonitor();
 		MonitorUiPlugin.getDefault().getSelectionMonitors().add(javaEditingMonitor);
@@ -94,7 +94,7 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 
 		try {
 			typeHistoryManager = new TypeHistoryManager();
-			ContextCorePlugin.getContextManager().addListener(typeHistoryManager);
+			ContextCore.getContextManager().addListener(typeHistoryManager);
 		} catch (Throwable t) {
 			// FIXME review error message
 			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID,
@@ -109,10 +109,10 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 
 	private void lazyStop() {
 		if (typeHistoryManager != null) {
-			ContextCorePlugin.getContextManager().removeListener(typeHistoryManager);
+			ContextCore.getContextManager().removeListener(typeHistoryManager);
 		}
 		if (landmarkMarkerManager != null) {
-			ContextCorePlugin.getContextManager().removeListener(landmarkMarkerManager);
+			ContextCore.getContextManager().removeListener(landmarkMarkerManager);
 		}
 		if (javaEditingMonitor != null) {
 			MonitorUiPlugin.getDefault().getSelectionMonitors().remove(javaEditingMonitor);

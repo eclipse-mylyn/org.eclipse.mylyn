@@ -17,7 +17,7 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.internal.ui.text.java.AbstractJavaCompletionProposal;
 import org.eclipse.jdt.internal.ui.text.java.JavaCompletionProposal;
 import org.eclipse.jdt.ui.text.java.IJavaCompletionProposalComputer;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
@@ -67,7 +67,7 @@ public class FocusedJavaProposalProcessor {
 	@SuppressWarnings("unchecked")
 	public List projectInterestModel(IJavaCompletionProposalComputer proposalComputer, List proposals) {
 		try {
-			if (!ContextCorePlugin.getContextManager().isContextActive()) {
+			if (!ContextCore.getContextManager().isContextActive()) {
 				return proposals;
 			} else {
 				boolean hasInterestingProposals = false;
@@ -115,10 +115,10 @@ public class FocusedJavaProposalProcessor {
 		boolean hasInteresting = false;
 		IJavaElement javaElement = proposal.getJavaElement();
 		if (javaElement != null) {
-			IInteractionElement interactionElement = ContextCorePlugin.getContextManager().getElement(
+			IInteractionElement interactionElement = ContextCore.getContextManager().getElement(
 					javaElement.getHandleIdentifier());
 			float interest = interactionElement.getInterest().getValue();
-			if (interest > InteractionContextManager.getCommonContextScaling().getInteresting()) {
+			if (interest > ContextCore.getCommonContextScaling().getInteresting()) {
 				// TODO: losing precision here, only going to one decimal place
 				proposal.setRelevance(THRESHOLD_INTEREST + (int) (interest * 10));
 				hasInteresting = true;

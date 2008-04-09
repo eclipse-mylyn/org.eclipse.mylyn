@@ -14,7 +14,7 @@ import java.util.Map;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionElement;
@@ -32,18 +32,18 @@ public class ContextCapturePauseHandler extends AbstractHandler //
 		implements IElementUpdater, IInteractionContextListener {
 
 	public ContextCapturePauseHandler() {
-		ContextCorePlugin.getContextManager().addListener(this);
+		ContextCore.getContextManager().addListener(this);
 	}
 
 	@Override
 	public void dispose() {
-		ContextCorePlugin.getContextManager().removeListener(this);
+		ContextCore.getContextManager().removeListener(this);
 		super.dispose();
 	}
 
 	@Override
 	public Object execute(ExecutionEvent e) throws ExecutionException {
-		if (ContextCorePlugin.getContextManager().isContextCapturePaused()) {
+		if (ContextCore.getContextManager().isContextCapturePaused()) {
 			resume();
 		} else {
 			pause();
@@ -52,7 +52,7 @@ public class ContextCapturePauseHandler extends AbstractHandler //
 	}
 
 	public void resume() {
-		ContextCorePlugin.getContextManager().setContextCapturePaused(false);
+		ContextCore.getContextManager().setContextCapturePaused(false);
 		if (TaskListView.getFromActivePerspective() != null) {
 			TaskListView.getFromActivePerspective().indicatePaused(false);
 		}
@@ -60,7 +60,7 @@ public class ContextCapturePauseHandler extends AbstractHandler //
 	}
 
 	public void pause() {
-		ContextCorePlugin.getContextManager().setContextCapturePaused(true);
+		ContextCore.getContextManager().setContextCapturePaused(true);
 		TaskListView.getFromActivePerspective().indicatePaused(true);
 
 		refreshCommands();
@@ -78,7 +78,7 @@ public class ContextCapturePauseHandler extends AbstractHandler //
 
 	@SuppressWarnings("unchecked")
 	public void updateElement(UIElement element, Map parameters) {
-		element.setChecked(ContextCorePlugin.getContextManager().isContextCapturePaused());
+		element.setChecked(ContextCore.getContextManager().isContextCapturePaused());
 	}
 
 	// IInteractionContextListener

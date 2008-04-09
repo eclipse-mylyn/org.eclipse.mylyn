@@ -19,10 +19,11 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylyn.internal.java.ui.ActiveFoldingEditorTracker;
@@ -109,7 +110,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 			InterruptedException {
 
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
-		ContextCorePlugin.getContextManager().setContextCapturePaused(true);
+		ContextCore.getContextManager().setContextCapturePaused(true);
 
 		IType typeA = project.createType(p1, "TypeAa.java", "public class TypeD{ }");
 		IType typeB = project.createType(p1, "TypeBb.java", "public class TypeC{ }");
@@ -119,28 +120,28 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 
 		AbstractContextStructureBridge structureBridge = ContextCorePlugin.getDefault().getStructureBridge(fileA);
 
-		IInteractionElement elementA = ContextCorePlugin.getContextManager().getElement(
+		IInteractionElement elementA = ContextCore.getContextManager().getElement(
 				structureBridge.getHandleIdentifier(fileA));
-		IInteractionElement elementB = ContextCorePlugin.getContextManager().getElement(
+		IInteractionElement elementB = ContextCore.getContextManager().getElement(
 				structureBridge.getHandleIdentifier(fileB));
 
 		assertFalse(elementA.getInterest().isInteresting());
 		assertFalse(elementB.getInterest().isInteresting());
-		ContextCorePlugin.getContextManager().setContextCapturePaused(false);
+		ContextCore.getContextManager().setContextCapturePaused(false);
 
-		elementA = ContextCorePlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(fileA));
+		elementA = ContextCore.getContextManager().getElement(structureBridge.getHandleIdentifier(fileA));
 		assertFalse(elementA.getInterest().isInteresting());
 
 		IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), fileA, true);
-		elementA = ContextCorePlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(fileA));
-		float selectionFactor = InteractionContextManager.getCommonContextScaling()
+		elementA = ContextCore.getContextManager().getElement(structureBridge.getHandleIdentifier(fileA));
+		float selectionFactor = ContextCore.getCommonContextScaling()
 				.get(InteractionEvent.Kind.SELECTION);
 		// TODO: should use selectionFactor test instead
 		assertTrue(elementA.getInterest().getValue() <= selectionFactor && elementA.getInterest().isInteresting());
 //		assertEquals(selectionFactor, elementA.getInterest().getValue());
 		IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), fileB, true);
 		IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), fileA, true);
-		elementA = ContextCorePlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(fileA));
+		elementA = ContextCore.getContextManager().getElement(structureBridge.getHandleIdentifier(fileA));
 		// TODO: punting on decay
 //		assertEquals(selectionFactor-decayFactor*2, elementA.getInterest().getValue());
 		assertTrue(elementA.getInterest().getValue() > 1 && elementA.getInterest().getValue() < 2);
@@ -185,7 +186,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 		monitor.selectionChanged(view, new StructuredSelection(m1));
 
 		int numListeners = ContextCorePlugin.getContextManager().getListeners().size();
-		IInteractionElement element = ContextCorePlugin.getContextManager().getElement(type1.getHandleIdentifier());
+		IInteractionElement element = ContextCore.getContextManager().getElement(type1.getHandleIdentifier());
 		bridge.open(element);
 
 		assertEquals(numListeners + 1, ContextCorePlugin.getContextManager().getListeners().size());
@@ -215,23 +216,23 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 		AbstractContextUiBridge bridge = ContextUiPlugin.getDefault().getUiBridge(JavaStructureBridge.CONTENT_TYPE);
 		IMethod m1 = type1.createMethod("void m111() { }", null, true, null);
 		monitor.selectionChanged(view, new StructuredSelection(m1));
-		IInteractionElement element = ContextCorePlugin.getContextManager().getElement(type1.getHandleIdentifier());
+		IInteractionElement element = ContextCore.getContextManager().getElement(type1.getHandleIdentifier());
 		bridge.open(element);
 
 		IType typeA = project.createType(p1, "TypeA.java", "public class TypeA{ }");
 		monitor.selectionChanged(view, new StructuredSelection(typeA));
-		IInteractionElement elementA = ContextCorePlugin.getContextManager().getElement(typeA.getHandleIdentifier());
+		IInteractionElement elementA = ContextCore.getContextManager().getElement(typeA.getHandleIdentifier());
 		bridge.open(elementA);
 
 		assertEquals(2, page.getEditors().length);
 		for (int i = 0; i < 1 / (scaling.getDecay()) * 3; i++) {
-			ContextCorePlugin.getContextManager().processInteractionEvent(mockSelection());
+			ContextCore.getContextManager().processInteractionEvent(mockSelection());
 		}
 		assertFalse(element.getInterest().isInteresting());
 		assertFalse(elementA.getInterest().isInteresting());
 		IType typeB = project.createType(p1, "TypeB.java", "public class TypeB{ }");
 		monitor.selectionChanged(view, new StructuredSelection(typeB));
-		IInteractionElement elementB = ContextCorePlugin.getContextManager().getElement(typeB.getHandleIdentifier());
+		IInteractionElement elementB = ContextCore.getContextManager().getElement(typeB.getHandleIdentifier());
 		bridge.open(elementB);
 		monitor.selectionChanged(view, new StructuredSelection(typeB));
 		assertEquals(1, page.getEditors().length);
@@ -244,7 +245,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 		AbstractContextUiBridge bridge = ContextUiPlugin.getDefault().getUiBridge(JavaStructureBridge.CONTENT_TYPE);
 		IMethod m1 = type1.createMethod("void m111() { }", null, true, null);
 		monitor.selectionChanged(view, new StructuredSelection(m1));
-		IInteractionElement element = ContextCorePlugin.getContextManager().getElement(type1.getHandleIdentifier());
+		IInteractionElement element = ContextCore.getContextManager().getElement(type1.getHandleIdentifier());
 		bridge.open(element);
 
 		assertEquals(1, page.getEditors().length);

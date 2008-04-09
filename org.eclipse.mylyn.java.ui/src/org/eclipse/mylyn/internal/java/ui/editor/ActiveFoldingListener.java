@@ -26,11 +26,12 @@ import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jdt.ui.text.folding.IJavaFoldingStructureProvider;
 import org.eclipse.jdt.ui.text.folding.IJavaFoldingStructureProviderExtension;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
 import org.eclipse.mylyn.internal.java.ui.JavaUiBridgePlugin;
@@ -68,7 +69,7 @@ public class ActiveFoldingListener implements IInteractionContextListener {
 			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not update folding",
 					new Exception()));
 		} else {
-			ContextCorePlugin.getContextManager().addListener(this);
+			ContextCore.getContextManager().addListener(this);
 			ContextUiPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
 
 			enabled = ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
@@ -91,7 +92,7 @@ public class ActiveFoldingListener implements IInteractionContextListener {
 	}
 
 	public void dispose() {
-		ContextCorePlugin.getContextManager().removeListener(this);
+		ContextCore.getContextManager().removeListener(this);
 		ContextUiPlugin.getDefault().getPluginPreferences().removePropertyChangeListener(PREFERENCE_LISTENER);
 	}
 
@@ -100,7 +101,7 @@ public class ActiveFoldingListener implements IInteractionContextListener {
 	}
 
 	public void updateFolding() {
-		if (!enabled || !ContextCorePlugin.getContextManager().isContextActive()) {
+		if (!enabled || !ContextCore.getContextManager().isContextActive()) {
 			editor.resetProjection();
 		} else if (editor.getEditorInput() == null) {
 			return;
@@ -114,7 +115,7 @@ public class ActiveFoldingListener implements IInteractionContextListener {
 					ICompilationUnit compilationUnit = (ICompilationUnit) element;
 					List<IJavaElement> allChildren = getAllChildren(compilationUnit);
 					for (IJavaElement child : allChildren) {
-						IInteractionElement interactionElement = ContextCorePlugin.getContextManager().getElement(
+						IInteractionElement interactionElement = ContextCore.getContextManager().getElement(
 								bridge.getHandleIdentifier(child));
 						if (interactionElement != null && interactionElement.getInterest().isInteresting()) {
 							toExpand.add(child);

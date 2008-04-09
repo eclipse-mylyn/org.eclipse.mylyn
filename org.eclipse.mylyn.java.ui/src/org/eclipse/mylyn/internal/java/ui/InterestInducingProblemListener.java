@@ -17,8 +17,9 @@ import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.viewsupport.IProblemChangedListener;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 
 /**
@@ -33,20 +34,20 @@ public class InterestInducingProblemListener implements IProblemChangedListener,
 
 	public void problemsChanged(IResource[] changedResources, boolean isMarkerChange) {
 		try {
-			if (!ContextCorePlugin.getContextManager().isContextActive()) {
+			if (!ContextCore.getContextManager().isContextActive()) {
 				return;
 			} else {
 				for (IResource resource : changedResources) {
 					if (resource instanceof IFile) {
 						IJavaElement javaElement = (IJavaElement) resource.getAdapter(IJavaElement.class);
 						if (javaElement != null) {
-							IInteractionElement element = ContextCorePlugin.getContextManager().getElement(
+							IInteractionElement element = ContextCore.getContextManager().getElement(
 									javaElement.getHandleIdentifier());
 							if (!javaStructureBridge.containsProblem(element)) {
-								ContextCorePlugin.getContextManager().removeErrorPredictedInterest(
+								((InteractionContextManager) ContextCore.getContextManager()).removeErrorPredictedInterest(
 										element.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, true);
 							} else {
-								ContextCorePlugin.getContextManager().addErrorPredictedInterest(
+								((InteractionContextManager) ContextCore.getContextManager()).addErrorPredictedInterest(
 										element.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, true);
 							}
 						}

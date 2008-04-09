@@ -42,8 +42,9 @@ import org.eclipse.jdt.internal.ui.packageview.PackageFragmentRootContainer;
 import org.eclipse.jdt.internal.ui.util.ExceptionHandler;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.AbstractRelationProvider;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.java.ui.search.JUnitReferencesProvider;
 import org.eclipse.mylyn.internal.java.ui.search.JavaImplementorsProvider;
 import org.eclipse.mylyn.internal.java.ui.search.JavaReadAccessProvider;
@@ -250,7 +251,7 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 			for (Object element2 : children) {
 				if (element2 instanceof JarPackageFragmentRoot) {
 					JarPackageFragmentRoot element = (JarPackageFragmentRoot) element2;
-					IInteractionElement node = ContextCorePlugin.getContextManager().getElement(
+					IInteractionElement node = ContextCore.getContextManager().getElement(
 							element.getHandleIdentifier());
 					if (node != null && node.getInterest().isInteresting()) {
 						return false;
@@ -262,7 +263,7 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 				WorkingSet workingSet = (WorkingSet) object;
 				IAdaptable[] elements = workingSet.getElements();
 				for (IAdaptable adaptable : elements) {
-					IInteractionElement interactionElement = ContextCorePlugin.getContextManager().getElement(
+					IInteractionElement interactionElement = ContextCore.getContextManager().getElement(
 							getHandleIdentifier(adaptable));
 					if (interactionElement != null && interactionElement.getInterest().isInteresting()) {
 						return false;

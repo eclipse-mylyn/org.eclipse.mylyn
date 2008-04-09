@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.mylyn.context.core.IDegreeOfInterest;
+import org.eclipse.mylyn.context.core.IInteractionContextScaling;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
 /**
@@ -23,9 +24,9 @@ public class CompositeDegreeOfInterest implements IDegreeOfInterest {
 
 	private final Set<IDegreeOfInterest> composed = new HashSet<IDegreeOfInterest>();
 
-	protected InteractionContextScaling contextScaling;
+	protected IInteractionContextScaling contextScaling;
 
-	public CompositeDegreeOfInterest(InteractionContextScaling contextScaling) {
+	public CompositeDegreeOfInterest(IInteractionContextScaling contextScaling) {
 		this.contextScaling = contextScaling;
 	}
 

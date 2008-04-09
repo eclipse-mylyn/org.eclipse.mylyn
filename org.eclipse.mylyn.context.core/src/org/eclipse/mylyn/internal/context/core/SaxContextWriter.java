@@ -21,8 +21,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.context.core.IInteractionContextWriter;
+import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.internal.monitor.core.util.XmlStringConverter;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
@@ -50,7 +49,7 @@ public class SaxContextWriter implements IInteractionContextWriter {
 		this.outputStream = outputStream;
 	}
 
-	public void writeContextToStream(InteractionContext context) throws IOException {
+	public void writeContextToStream(IInteractionContext context) throws IOException {
 		if (outputStream == null) {
 			IOException ioe = new IOException("OutputStream not set");
 			throw ioe;
@@ -67,13 +66,13 @@ public class SaxContextWriter implements IInteractionContextWriter {
 	}
 
 	private static class InteractionContextInputSource extends InputSource {
-		private InteractionContext context;
+		private IInteractionContext context;
 
-		public InteractionContextInputSource(InteractionContext context) {
+		public InteractionContextInputSource(IInteractionContext context) {
 			this.context = context;
 		}
 
-		public InteractionContext getContext() {
+		public IInteractionContext getContext() {
 			return this.context;
 		}
 
@@ -140,7 +139,7 @@ public class SaxContextWriter implements IInteractionContextWriter {
 				throw new SAXException("Can only parse writable input sources");
 			}
 
-			InteractionContext context = ((InteractionContextInputSource) input).getContext();
+			IInteractionContext context = ((InteractionContextInputSource) input).getContext();
 
 			handler.startDocument();
 			AttributesImpl rootAttributes = new AttributesImpl();

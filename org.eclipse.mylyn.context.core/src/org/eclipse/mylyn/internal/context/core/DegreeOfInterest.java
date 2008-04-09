@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.mylyn.context.core.IDegreeOfInterest;
+import org.eclipse.mylyn.context.core.IInteractionContextScaling;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
 /**
@@ -27,7 +28,7 @@ public class DegreeOfInterest implements IDegreeOfInterest {
 
 	private final Map<InteractionEvent.Kind, InteractionEvent> collapsedEvents = new HashMap<InteractionEvent.Kind, InteractionEvent>();
 
-	protected InteractionContextScaling contextScaling;
+	protected IInteractionContextScaling contextScaling;
 
 	private float edits = 0;
 
@@ -45,7 +46,7 @@ public class DegreeOfInterest implements IDegreeOfInterest {
 
 	private final int eventCountOnCreation;
 
-	public DegreeOfInterest(InteractionContext context, InteractionContextScaling scaling) {
+	public DegreeOfInterest(InteractionContext context, IInteractionContextScaling scaling) {
 		this.context = context;
 		this.eventCountOnCreation = context.getUserEventCount();
 		this.contextScaling = scaling;

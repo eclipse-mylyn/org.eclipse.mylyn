@@ -11,6 +11,7 @@ package org.eclipse.mylyn.internal.context.core;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.mylyn.context.core.IInteractionContextScaling;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
 /**
@@ -18,7 +19,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
  * 
  * @author Mik Kersten
  */
-public class InteractionContextScaling {
+public class InteractionContextScaling implements IInteractionContextScaling {
 
 	private static final float DEFAULT_INTERESTING = 0f;
 

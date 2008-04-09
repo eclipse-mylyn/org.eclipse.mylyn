@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Context Core
 Bundle-SymbolicName: org.eclipse.mylyn.context.core;singleton:=true
 Bundle-Version: 3.0.0.qualifier
-Bundle-Activator: org.eclipse.mylyn.context.core.ContextCorePlugin
+Bundle-Activator: org.eclipse.mylyn.internal.context.core.ContextCorePlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn.monitor.core;bundle-version="[3.0.0,4.0.0)"

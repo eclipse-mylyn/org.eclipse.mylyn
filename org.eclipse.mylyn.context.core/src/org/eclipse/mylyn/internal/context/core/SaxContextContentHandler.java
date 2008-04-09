@@ -14,7 +14,7 @@ import java.util.Locale;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.IInteractionContextScaling;
 import org.eclipse.mylyn.internal.monitor.core.util.XmlStringConverter;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
@@ -37,7 +37,7 @@ public class SaxContextContentHandler extends DefaultHandler {
 
 	private InteractionContext context;
 
-	private final InteractionContextScaling contextScaling;
+	private final IInteractionContextScaling contextScaling;
 
 	private final String contextHandleIdentifier;
 
@@ -45,7 +45,7 @@ public class SaxContextContentHandler extends DefaultHandler {
 
 	static final String ATTRIBUTE_CONTENT = "Content";
 
-	public SaxContextContentHandler(String contextHandleIdentifier, InteractionContextScaling contextScaling) {
+	public SaxContextContentHandler(String contextHandleIdentifier, IInteractionContextScaling contextScaling) {
 		this.contextHandleIdentifier = contextHandleIdentifier;
 		this.contextScaling = contextScaling;
 	}

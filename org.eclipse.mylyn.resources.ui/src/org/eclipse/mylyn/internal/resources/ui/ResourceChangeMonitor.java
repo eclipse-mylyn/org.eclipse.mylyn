@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
@@ -37,7 +37,7 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 	}
 
 	public void resourceChanged(IResourceChangeEvent event) {
-		if (!enabled || !ContextCorePlugin.getContextManager().isContextActive()) {
+		if (!enabled || !ContextCore.getContextManager().isContextActive()) {
 			return;
 		}
 		if (event.getType() != IResourceChangeEvent.POST_CHANGE) {

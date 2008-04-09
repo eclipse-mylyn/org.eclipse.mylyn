@@ -17,10 +17,11 @@ import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.widgets.Tree;
@@ -45,7 +46,7 @@ public class ContextNodeOpenListener implements IOpenListener, IDoubleClickListe
 		} else if (!(object instanceof IInteractionRelation)) {
 			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(object);
 			String handle = bridge.getHandleIdentifier(object);
-			node = ContextCorePlugin.getContextManager().getElement(handle);
+			node = ContextCore.getContextManager().getElement(handle);
 		}
 		if (node != null) {
 			ContextUiPlugin.getDefault().getUiBridge(node.getContentType()).open(node);

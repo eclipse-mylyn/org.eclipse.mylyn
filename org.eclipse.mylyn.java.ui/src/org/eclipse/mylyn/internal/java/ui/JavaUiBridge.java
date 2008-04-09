@@ -23,9 +23,10 @@ import org.eclipse.jdt.internal.ui.javaeditor.JavaOutlinePage;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -106,7 +107,7 @@ public class JavaUiBridge extends AbstractContextUiBridge {
 			IJavaElement javaElement = (IJavaElement) adapter;
 			String handle = ContextCorePlugin.getDefault().getStructureBridge(javaElement).getHandleIdentifier(
 					javaElement);
-			return ContextCorePlugin.getContextManager().getElement(handle);
+			return ContextCore.getContextManager().getElement(handle);
 		} else {
 			return null;
 		}

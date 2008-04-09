@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.mylyn.context.core.IInteractionContext;
+import org.eclipse.mylyn.context.core.IInteractionContextScaling;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
@@ -33,11 +34,11 @@ public class CompositeInteractionContext implements IInteractionContext {
 
 	protected IInteractionElement activeNode = null;
 
-	private final InteractionContextScaling contextScaling;
+	private final IInteractionContextScaling contextScaling;
 
 	public String contentLimitedTo = null;
 
-	public CompositeInteractionContext(InteractionContextScaling contextScaling) {
+	public CompositeInteractionContext(IInteractionContextScaling contextScaling) {
 		this.contextScaling = contextScaling;
 	}
 
@@ -156,7 +157,7 @@ public class CompositeInteractionContext implements IInteractionContext {
 		}
 	}
 
-	public InteractionContextScaling getScaling() {
+	public IInteractionContextScaling getScaling() {
 		return contextScaling;
 	}
 

@@ -22,7 +22,7 @@ import org.eclipse.jdt.internal.debug.core.JavaDebugUtils;
 import org.eclipse.jdt.internal.debug.core.model.JDIDebugElement;
 import org.eclipse.jdt.internal.debug.core.model.JDIStackFrame;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 
 /**
@@ -68,7 +68,7 @@ public class JavaDebugStructureBridge extends AbstractContextStructureBridge {
 						indexOfCurrentFrame = i;
 					}
 
-					IInteractionElement correspondingElement = ContextCorePlugin.getContextManager().getElement(
+					IInteractionElement correspondingElement = ContextCore.getContextManager().getElement(
 							getHandleIdentifier(frame));
 					if (correspondingElement != null && correspondingElement.getInterest().isInteresting()) {
 						indexOfInterestingFrame = i;

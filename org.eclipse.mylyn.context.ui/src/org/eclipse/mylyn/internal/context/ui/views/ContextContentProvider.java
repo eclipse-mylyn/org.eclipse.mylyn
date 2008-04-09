@@ -18,9 +18,10 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContextRelation;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
@@ -69,7 +70,7 @@ public class ContextContentProvider implements IStructuredContentProvider, ITree
 		if (matchesParent(parent)) {
 			List<IInteractionElement> nodes;
 			if (landmarkOnlyMode) {
-				List<IInteractionElement> landmarks = ContextCorePlugin.getContextManager().getActiveLandmarks();
+				List<IInteractionElement> landmarks = ContextCore.getContextManager().getActiveLandmarks();
 				nodes = new ArrayList<IInteractionElement>();
 				for (IInteractionElement node : landmarks) {
 					if (!node.getContentType().equals(ContextCorePlugin.CONTENT_TYPE_RESOURCE)
@@ -79,7 +80,7 @@ public class ContextContentProvider implements IStructuredContentProvider, ITree
 					}
 				}
 			} else {
-				nodes = ContextCorePlugin.getContextManager().getActiveContext().getAllElements();
+				nodes = ContextCore.getContextManager().getActiveContext().getAllElements();
 			}
 			List<Object> resolvedNodes = new ArrayList<Object>();
 			for (IInteractionElement node : nodes) {
@@ -115,7 +116,7 @@ public class ContextContentProvider implements IStructuredContentProvider, ITree
 		}
 		if (parent instanceof InteractionContextRelation) {
 			IInteractionRelation edge = (IInteractionRelation) parent;
-			IInteractionElement source = ContextCorePlugin.getContextManager().getElement(
+			IInteractionElement source = ContextCore.getContextManager().getElement(
 					((IInteractionRelation) parent).getSource().getHandleIdentifier());
 
 			return getAllTagetsForSource(source, edge.getRelationshipHandle());
@@ -125,7 +126,7 @@ public class ContextContentProvider implements IStructuredContentProvider, ITree
 				node = (IInteractionElement) parent;
 			} else {
 				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(parent);
-				node = ContextCorePlugin.getContextManager().getElement(bridge.getHandleIdentifier(parent));
+				node = ContextCore.getContextManager().getElement(bridge.getHandleIdentifier(parent));
 			}
 			if (node != null) {
 				return getAllEdgeTypes(node.getRelations());

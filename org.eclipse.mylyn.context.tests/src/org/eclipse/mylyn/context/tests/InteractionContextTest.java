@@ -30,7 +30,7 @@ public class InteractionContextTest extends AbstractContextTest {
 		InteractionContext globalContext = new InteractionContext("global", oldScalingFactors);
 		assertEquals(oldScalingFactors, globalContext.getScaling());
 //		globalContext.setScaling(newScalingFactors);
-		globalContext.getScaling().set(InteractionEvent.Kind.EDIT, 10f);
+		((InteractionContextScaling) globalContext.getScaling()).set(InteractionEvent.Kind.EDIT, 10f);
 //		assertEquals(newScalingFactors, globalContext.getScaling());
 		assertEquals(10f, globalContext.getScaling().get(InteractionEvent.Kind.EDIT));
 	}

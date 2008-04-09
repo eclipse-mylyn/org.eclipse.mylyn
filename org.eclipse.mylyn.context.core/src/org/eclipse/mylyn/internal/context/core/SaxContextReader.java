@@ -18,8 +18,8 @@ import java.util.zip.ZipInputStream;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.context.core.IInteractionContextReader;
+import org.eclipse.mylyn.context.core.IInteractionContextManager;
+import org.eclipse.mylyn.context.core.IInteractionContextScaling;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
@@ -32,9 +32,9 @@ import org.xml.sax.helpers.XMLReaderFactory;
  */
 public class SaxContextReader implements IInteractionContextReader {
 
-	private InteractionContextScaling contextScaling;
+	private IInteractionContextScaling contextScaling;
 
-	public void setContextScaling(InteractionContextScaling contextScaling) {
+	public void setContextScaling(IInteractionContextScaling contextScaling) {
 		this.contextScaling = contextScaling;
 	}
 
@@ -49,8 +49,8 @@ public class SaxContextReader implements IInteractionContextReader {
 			zipInputStream = new ZipInputStream(fileInputStream);
 
 			// search for context entry
-			String encoded = URLEncoder.encode(handleIdentifier, InteractionContextManager.CONTEXT_FILENAME_ENCODING);
-			String contextFileName = encoded + InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD;
+			String encoded = URLEncoder.encode(handleIdentifier, IInteractionContextManager.CONTEXT_FILENAME_ENCODING);
+			String contextFileName = encoded + IInteractionContextManager.CONTEXT_FILE_EXTENSION_OLD;
 			ZipEntry entry = zipInputStream.getNextEntry();
 			while (entry != null) {
 				if (contextFileName.equals(entry.getName())) {

@@ -10,7 +10,7 @@ package org.eclipse.mylyn.internal.context.core;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 
@@ -28,7 +28,7 @@ public class LegacyActivityAdaptor {
 
 	public InteractionEvent parseInteractionEvent(InteractionEvent event) {
 		try {
-			if (event.getDelta() != null && event.getDelta().equals(InteractionContextManager.ACTIVITY_DELTA_ACTIVATED)) {
+			if (event.getDelta() != null && event.getDelta().equals(IInteractionContextManager.ACTIVITY_DELTA_ACTIVATED)) {
 				if (event.getStructureHandle() != null && !event.getStructureHandle().equals(LEGACY_HANDLE_ATTENTION)) {
 					String activatedTask = event.getStructureHandle();
 					if (activatedTask != null) {
@@ -38,16 +38,16 @@ public class LegacyActivityAdaptor {
 						&& event.getStructureHandle().equals(LEGACY_HANDLE_ATTENTION)) {
 					if (currentTask != null && !currentTask.equals("")) {
 						return new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-								InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, currentTask,
-								InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
-								InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, event.getDate(), event.getEndDate());
+								IInteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, currentTask,
+								IInteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
+								IInteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, event.getDate(), event.getEndDate());
 					} else if (currentTask == null) {
 						// bogus event remove.
 						return null;
 					}
 				}
 			} else if (event.getDelta() != null
-					&& event.getDelta().equals(InteractionContextManager.ACTIVITY_DELTA_DEACTIVATED)) {
+					&& event.getDelta().equals(IInteractionContextManager.ACTIVITY_DELTA_DEACTIVATED)) {
 				if (event.getStructureHandle() != null && !event.getStructureHandle().equals(LEGACY_HANDLE_ATTENTION)
 						&& currentTask != null && currentTask.equals(event.getStructureHandle())) {
 					currentTask = null;

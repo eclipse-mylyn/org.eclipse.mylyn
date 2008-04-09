@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package org.eclipse.mylyn.context.core;
+package org.eclipse.mylyn.internal.context.core;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,8 +25,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
-import org.eclipse.mylyn.internal.monitor.core.util.IStatusHandler;
+import org.eclipse.mylyn.context.core.AbstractContextStore;
+import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
+import org.eclipse.mylyn.context.core.AbstractRelationProvider;
+import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.monitor.core.IStatusHandler;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.osgi.framework.BundleContext;
 
@@ -153,7 +156,7 @@ public class ContextCorePlugin extends Plugin {
 		}
 		providers.add(provider);
 		// TODO: need facility for removing
-		getContextManager().addListener(provider);
+		ContextCore.getContextManager().addListener(provider);
 	}
 
 	/**

@@ -19,9 +19,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 import org.eclipse.ui.IEditorDescriptor;
@@ -123,7 +124,7 @@ public class ResourceUiBridge extends AbstractContextUiBridge {
 			IFile javaElement = (IFile) adapter;
 			String handle = ContextCorePlugin.getDefault().getStructureBridge(javaElement).getHandleIdentifier(
 					javaElement);
-			return ContextCorePlugin.getContextManager().getElement(handle);
+			return ContextCore.getContextManager().getElement(handle);
 		} else {
 			return null;
 		}

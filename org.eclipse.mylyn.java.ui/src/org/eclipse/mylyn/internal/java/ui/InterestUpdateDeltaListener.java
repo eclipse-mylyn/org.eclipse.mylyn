@@ -15,7 +15,7 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IElementChangedListener;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaElementDelta;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.ui.IWorkbench;
@@ -61,14 +61,14 @@ public class InterestUpdateDeltaListener implements IElementChangedListener {
 			}
 
 			if (added != null && removed != null) {
-				IInteractionElement element = ContextCorePlugin.getContextManager().getElement(
+				IInteractionElement element = ContextCore.getContextManager().getElement(
 						removed.getHandleIdentifier());
 				if (element != null) {
 					resetHandle(element, added.getHandleIdentifier());
 				}
 			} else if (removed != null) {
 
-				IInteractionElement element = ContextCorePlugin.getContextManager().getElement(
+				IInteractionElement element = ContextCore.getContextManager().getElement(
 						removed.getHandleIdentifier());
 				if (element != null) {
 					delete(element);
@@ -81,13 +81,13 @@ public class InterestUpdateDeltaListener implements IElementChangedListener {
 
 	private void resetHandle(final IInteractionElement element, final String newHandle) {
 		if (!asyncExecMode) {
-			ContextCorePlugin.getContextManager().updateHandle(element, newHandle);
+			ContextCore.getContextManager().updateHandle(element, newHandle);
 		} else {
 			IWorkbench workbench = PlatformUI.getWorkbench();
 			if (workbench != null) {
 				workbench.getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						ContextCorePlugin.getContextManager().updateHandle(element, newHandle);
+						ContextCore.getContextManager().updateHandle(element, newHandle);
 					}
 				});
 			}
@@ -96,13 +96,13 @@ public class InterestUpdateDeltaListener implements IElementChangedListener {
 
 	private void delete(final IInteractionElement element) {
 		if (!asyncExecMode) {
-			ContextCorePlugin.getContextManager().delete(element);
+			ContextCore.getContextManager().delete(element);
 		} else {
 			IWorkbench workbench = PlatformUI.getWorkbench();
 			if (workbench != null) {
 				workbench.getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						ContextCorePlugin.getContextManager().delete(element);
+						ContextCore.getContextManager().delete(element);
 					}
 				});
 			}

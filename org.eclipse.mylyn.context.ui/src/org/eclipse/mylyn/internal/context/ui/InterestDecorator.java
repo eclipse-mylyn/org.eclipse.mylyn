@@ -13,8 +13,9 @@ import org.eclipse.jface.viewers.IFontDecorator;
 import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContextRelation;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -37,7 +38,7 @@ public class InterestDecorator implements ILabelDecorator, IFontDecorator, IColo
 			node = (IInteractionElement) element;
 		} else {
 			AbstractContextStructureBridge adapter = ContextCorePlugin.getDefault().getStructureBridge(element);
-			node = ContextCorePlugin.getContextManager().getElement(adapter.getHandleIdentifier(element));
+			node = ContextCore.getContextManager().getElement(adapter.getHandleIdentifier(element));
 		}
 		return node;
 	}

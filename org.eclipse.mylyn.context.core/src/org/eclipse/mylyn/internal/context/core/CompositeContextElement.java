@@ -17,10 +17,11 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IDegreeOfInterest;
 import org.eclipse.mylyn.context.core.IInteractionContext;
+import org.eclipse.mylyn.context.core.IInteractionContextScaling;
 import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.context.core.IInteractionRelation;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 
 /**
@@ -33,10 +34,10 @@ public class CompositeContextElement implements IInteractionElement {
 
 	private String handle = "<no handle>";
 
-	private final InteractionContextScaling contextScaling;
+	private final IInteractionContextScaling contextScaling;
 
 	public CompositeContextElement(String handle, List<InteractionContextElement> nodes,
-			InteractionContextScaling contextScaling) {
+			IInteractionContextScaling contextScaling) {
 		this.nodes = nodes;
 		this.handle = handle;
 		this.contextScaling = contextScaling;
@@ -107,8 +108,8 @@ public class CompositeContextElement implements IInteractionElement {
 	/**
 	 * TODO: need composite edges here
 	 */
-	public InteractionContextRelation getRelation(String targetHandle) {
-		Set<InteractionContextRelation> edges = new HashSet<InteractionContextRelation>();
+	public IInteractionRelation getRelation(String targetHandle) {
+		Set<IInteractionRelation> edges = new HashSet<IInteractionRelation>();
 		for (IInteractionElement node : nodes) {
 			edges.add(node.getRelation(targetHandle));
 		}

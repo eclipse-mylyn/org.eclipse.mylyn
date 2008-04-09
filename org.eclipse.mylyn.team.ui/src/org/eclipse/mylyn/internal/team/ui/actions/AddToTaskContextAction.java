@@ -20,7 +20,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
 import org.eclipse.mylyn.internal.team.ui.LinkedTaskInfo;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
@@ -70,7 +70,7 @@ public class AddToTaskContextAction extends Action implements IViewActionDelegat
 	}
 
 	private void run(StructuredSelection selection) {
-		if (!ContextCorePlugin.getContextManager().isContextActive()) {
+		if (!ContextCore.getContextManager().isContextActive()) {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), LABEL,
 					"Activate a task to add resources.");
 		}

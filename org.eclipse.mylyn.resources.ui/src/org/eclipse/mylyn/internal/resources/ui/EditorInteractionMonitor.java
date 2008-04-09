@@ -16,10 +16,11 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylyn.monitor.core.CoreUtil;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
@@ -45,7 +46,7 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(resource);
 			InteractionEvent selectionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION,
 					bridge.getContentType(), bridge.getHandleIdentifier(resource), part.getSite().getId());
-			ContextCorePlugin.getContextManager().processInteractionEvent(selectionEvent);
+			ContextCore.getContextManager().processInteractionEvent(selectionEvent);
 		}
 	}
 
@@ -61,9 +62,9 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 				if (adapter instanceof IFile) {
 					String handle = ContextCorePlugin.getDefault().getStructureBridge(adapter).getHandleIdentifier(
 							adapter);
-					element = ContextCorePlugin.getContextManager().getElement(handle);
+					element = ContextCore.getContextManager().getElement(handle);
 				}
-				if (!ContextCorePlugin.getContextManager().isContextCapturePaused() && element != null
+				if (!ContextCore.getContextManager().isContextCapturePaused() && element != null
 						&& !element.getInterest().isInteresting() && !isSameEditor(editorPartOpened, editorReference)) {
 					toClose.add(editorReference);
 				}
@@ -95,7 +96,7 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 				&& !(editorPart instanceof CompareEditor)
 				&& !(editorPart instanceof IContextAwareEditor)) {
 
-			if (ContextCorePlugin.getContextManager().isContextActive()
+			if (ContextCore.getContextManager().isContextActive()
 					&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
 							ContextUiPrefContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING)) {
 				try {
@@ -119,7 +120,7 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 			Object object = uiBridge.getObjectForTextSelection(null, editorPart);
 			if (object != null) {
 				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(object);
-				element = ContextCorePlugin.getContextManager().getElement(bridge.getHandleIdentifier(object));
+				element = ContextCore.getContextManager().getElement(bridge.getHandleIdentifier(object));
 			}
 			// TODO: probably should be refactored into delegation
 			if (element == null) {
@@ -128,12 +129,12 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 					IResource resource = (IResource) adapter;
 					AbstractContextStructureBridge resourceBridge = ContextCorePlugin.getDefault().getStructureBridge(
 							resource);
-					element = ContextCorePlugin.getContextManager().getElement(
+					element = ContextCore.getContextManager().getElement(
 							resourceBridge.getHandleIdentifier(resource));
 				}
 			}
 			if (element != null) {
-				ContextCorePlugin.getContextManager().manipulateInterestForElement(element, false, false, false,
+				ContextCore.getContextManager().manipulateInterestForElement(element, false, false, false,
 						SOURCE_ID);
 			}
 		}

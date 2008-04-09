@@ -28,7 +28,7 @@ import org.eclipse.jdt.core.ISourceRange;
 import org.eclipse.jdt.core.ISourceReference;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionElement;
@@ -65,7 +65,7 @@ public class LandmarkMarkerManager implements IInteractionContextListener {
 				landmarkRemoved(node);
 			}
 			markerMap.clear();
-			for (IInteractionElement node : ContextCorePlugin.getContextManager().getActiveLandmarks()) {
+			for (IInteractionElement node : ContextCore.getContextManager().getActiveLandmarks()) {
 				landmarkAdded(node);
 			}
 		} catch (Throwable t) {

@@ -18,7 +18,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.tests.support.ResourceHelper;
 import org.eclipse.mylyn.context.tests.support.search.ISearchPluginTest;
@@ -52,7 +52,7 @@ public class ResultUpdaterTest extends TestCase implements ISearchPluginTest {
 		plugin1 = WorkspaceSetupHelper.getFile(jp1, "plugin.xml");
 
 		InteractionContext t = WorkspaceSetupHelper.getContext();
-		ContextCorePlugin.getContextManager().activateContext(t.getHandleIdentifier());// ,
+		ContextCore.getContextManager().activateContext(t.getHandleIdentifier());// ,
 		// t.getId());
 		helper = new SearchPluginTestHelper(this);
 	}
@@ -67,7 +67,7 @@ public class ResultUpdaterTest extends TestCase implements ISearchPluginTest {
 
 		int dos = 4;
 
-		CompositeInteractionContext t = (CompositeInteractionContext) ContextCorePlugin.getContextManager()
+		CompositeInteractionContext t = (CompositeInteractionContext) ContextCore.getContextManager()
 				.getActiveContext();
 		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
 		IInteractionElement searchNode = notifier.getElement(type1.getHandleIdentifier(),
@@ -92,7 +92,7 @@ public class ResultUpdaterTest extends TestCase implements ISearchPluginTest {
 	public void testRemoveProject() throws Exception {
 		int dos = 4;
 
-		CompositeInteractionContext t = (CompositeInteractionContext) ContextCorePlugin.getContextManager()
+		CompositeInteractionContext t = (CompositeInteractionContext) ContextCore.getContextManager()
 				.getActiveContext();
 		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
 		IInteractionElement searchNode = notifier.getElement(type1.getHandleIdentifier(),

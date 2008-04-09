@@ -17,7 +17,7 @@ import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.tests.UiTestUtil;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
@@ -55,15 +55,15 @@ public class FocusViewActionTest extends AbstractJavaContextTest {
 
 	public void testPreservationOfContextPause() {
 		FocusPackageExplorerAction action = new FocusPackageExplorerAction();
-		ContextCorePlugin.getContextManager().setContextCapturePaused(true);
+		ContextCore.getContextManager().setContextCapturePaused(true);
 		action.update(true);
-		assertTrue(ContextCorePlugin.getContextManager().isContextCapturePaused());
+		assertTrue(ContextCore.getContextManager().isContextCapturePaused());
 
-		ContextCorePlugin.getContextManager().setContextCapturePaused(false);
+		ContextCore.getContextManager().setContextCapturePaused(false);
 		action.update(false);
-		assertFalse(ContextCorePlugin.getContextManager().isContextCapturePaused());
+		assertFalse(ContextCore.getContextManager().isContextCapturePaused());
 		action.update(true);
-		assertFalse(ContextCorePlugin.getContextManager().isContextCapturePaused());
+		assertFalse(ContextCore.getContextManager().isContextCapturePaused());
 	}
 
 	@SuppressWarnings("deprecation")

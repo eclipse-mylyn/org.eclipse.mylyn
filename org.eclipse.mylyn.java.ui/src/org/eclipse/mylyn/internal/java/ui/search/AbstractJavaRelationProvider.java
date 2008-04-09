@@ -39,9 +39,10 @@ import org.eclipse.jdt.ui.search.ElementQuerySpecification;
 import org.eclipse.jdt.ui.search.QuerySpecification;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.AbstractRelationProvider;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IDegreeOfSeparation;
 import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.DegreeOfSeparation;
 import org.eclipse.mylyn.internal.context.core.IActiveSearchListener;
 import org.eclipse.mylyn.internal.context.core.IActiveSearchOperation;
@@ -111,8 +112,8 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 	}
 
 	private IJavaSearchScope createJavaSearchScope(IJavaElement element, int degreeOfSeparation) {
-		List<IInteractionElement> landmarks = ContextCorePlugin.getContextManager().getActiveLandmarks();
-		List<IInteractionElement> interestingElements = ContextCorePlugin.getContextManager()
+		List<IInteractionElement> landmarks = ContextCore.getContextManager().getActiveLandmarks();
+		List<IInteractionElement> interestingElements = ContextCore.getContextManager()
 				.getActiveContext()
 				.getInteresting();
 

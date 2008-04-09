@@ -20,10 +20,11 @@ import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.IContextUiStartup;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.resources.ui.ContextEditorManager;
 import org.eclipse.mylyn.internal.resources.ui.EditorInteractionMonitor;
 import org.eclipse.mylyn.internal.resources.ui.ResourceChangeMonitor;
@@ -98,7 +99,7 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 		resourceInteractionMonitor = new ResourceInteractionMonitor();
 		interestEditorTracker = new EditorInteractionMonitor();
 
-		ContextCorePlugin.getContextManager().addListener(editorManager);
+		ContextCore.getContextManager().addListener(editorManager);
 		MonitorUiPlugin.getDefault().getSelectionMonitors().add(resourceInteractionMonitor);
 
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceChangeMonitor,
@@ -112,7 +113,7 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 			ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceChangeMonitor);
 		}
 		if (editorManager != null) {
-			ContextCorePlugin.getContextManager().removeListener(editorManager);
+			ContextCore.getContextManager().removeListener(editorManager);
 		}
 		if (resourceInteractionMonitor != null) {
 			MonitorUiPlugin.getDefault().getSelectionMonitors().remove(resourceInteractionMonitor);
@@ -139,7 +140,7 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 
 	public List<IResource> getInterestingResources(IInteractionContext context) {
 		List<IResource> interestingResources = new ArrayList<IResource>();
-		Collection<IInteractionElement> resourceElements = ContextCorePlugin.getContextManager()
+		Collection<IInteractionElement> resourceElements = ContextCore.getContextManager()
 				.getInterestingDocuments(context);
 		for (IInteractionElement element : resourceElements) {
 			IResource resource = getResourceForElement(element, false);
@@ -195,7 +196,7 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 			if (element.getHandleIdentifier().equals(parentHandle)) {
 				return null;
 			} else {
-				return getResourceForElement(ContextCorePlugin.getContextManager().getElement(parentHandle), true);
+				return getResourceForElement(ContextCore.getContextManager().getElement(parentHandle), true);
 			}
 		} else {
 			return null;

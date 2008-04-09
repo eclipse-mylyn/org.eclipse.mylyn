@@ -15,7 +15,7 @@ import java.util.Properties;
 import junit.framework.AssertionFailedError;
 
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.tests.ContextTestsPlugin;
 import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
 
@@ -123,8 +123,8 @@ public class TestUtil {
 		// make sure monitor UI is started and logs the start interaction event 
 		MonitorUiPlugin.getDefault();
 
-		ContextCorePlugin.getContextManager().activateContext("startup");
-		ContextCorePlugin.getContextManager().deactivateContext("startup");
+		ContextCore.getContextManager().activateContext("startup");
+		ContextCore.getContextManager().deactivateContext("startup");
 	}
 
 }
