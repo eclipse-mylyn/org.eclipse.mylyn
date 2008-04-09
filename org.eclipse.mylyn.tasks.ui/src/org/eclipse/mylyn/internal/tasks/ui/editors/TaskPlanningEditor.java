@@ -609,7 +609,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		if (url.length() > 10 && (url.startsWith("http://") || url.startsWith("https://"))) {
 			// String defaultPrefix =
-			// ContextCorePlugin.getDefault().getPreferenceStore().getString(
+			// ContextCore.getPreferenceStore().getString(
 			// TaskListPreferenceConstants.DEFAULT_URL_PREFIX);
 			// if (url.equals(defaultPrefix)) {
 			// getDescButton.setEnabled(false);

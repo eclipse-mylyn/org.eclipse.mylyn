@@ -667,7 +667,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		getTaskListManager().saveTaskList();
 		ContextCore.getContextManager().saveActivityContext();
 		getPreferenceStore().setValue(ContextPreferenceContstants.PREF_DATA_DIR, newPath);
-		ContextCorePlugin.getDefault().getContextStore().contextStoreMoved();
+		ContextCore.getContextStore().contextStoreMoved();
 	}
 
 	/**

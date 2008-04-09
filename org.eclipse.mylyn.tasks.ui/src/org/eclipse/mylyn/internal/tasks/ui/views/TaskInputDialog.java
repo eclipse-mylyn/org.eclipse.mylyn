@@ -190,7 +190,7 @@ public class TaskInputDialog extends Dialog {
 		String url = issueURLTextWidget.getText();
 
 		if (url.length() > 10 && (url.startsWith("http://") || url.startsWith("https://"))) {
-//			String defaultPrefix = ContextCorePlugin.getDefault().getPreferenceStore().getString(
+//			String defaultPrefix = ContextCore.getPreferenceStore().getString(
 //					TaskListPreferenceConstants.DEFAULT_URL_PREFIX);
 //			if (url.equals(defaultPrefix)) {
 //				getDescButton.setEnabled(false);
@@ -214,7 +214,7 @@ public class TaskInputDialog extends Dialog {
 		} else {
 			return taskURL;
 		}
-//		String defaultPrefix = ContextCorePlugin.getDefault().getPreferenceStore().getString(
+//		String defaultPrefix = ContextCore.getPreferenceStore().getString(
 //				TaskListPreferenceConstants.DEFAULT_URL_PREFIX);
 //		if (!defaultPrefix.equals("")) {
 //			return defaultPrefix;
