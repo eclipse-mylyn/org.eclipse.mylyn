@@ -12,7 +12,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.monitor.ui.IMonitoredWindow;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
@@ -62,7 +63,7 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 		if (selection == null || selection.isEmpty()) {
 			return;
 		}
-		if (!ContextCorePlugin.getContextManager().isContextActive()) {
+		if (!ContextCore.getContextManager().isContextActive()) {
 			handleWorkbenchPartSelection(part, selection, false);
 		} else {
 			handleWorkbenchPartSelection(part, selection, true);
@@ -90,7 +91,7 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 			selectionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION, null, null, part.getSite().getId());
 		}
 		if (handleIdentifier != null && contributeToContext) {
-			ContextCorePlugin.getContextManager().processInteractionEvent(selectionEvent);
+			ContextCore.getContextManager().processInteractionEvent(selectionEvent);
 		}
 		MonitorUiPlugin.getDefault().notifyInteractionObserved(selectionEvent);
 		return selectionEvent;
@@ -108,7 +109,7 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 		InteractionEvent editEvent = new InteractionEvent(InteractionEvent.Kind.EDIT, bridge.getContentType(),
 				handleIdentifier, part.getSite().getId());
 		if (handleIdentifier != null && contributeToContext) {
-			ContextCorePlugin.getContextManager().processInteractionEvent(editEvent);
+			ContextCore.getContextManager().processInteractionEvent(editEvent);
 		}
 		MonitorUiPlugin.getDefault().notifyInteractionObserved(editEvent);
 	}
@@ -123,7 +124,7 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 			InteractionEvent navigationEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION,
 					adapter.getContentType(), handleIdentifier, part.getSite().getId(), kind);
 			if (handleIdentifier != null && contributeToContext) {
-				ContextCorePlugin.getContextManager().processInteractionEvent(navigationEvent);
+				ContextCore.getContextManager().processInteractionEvent(navigationEvent);
 			}
 			MonitorUiPlugin.getDefault().notifyInteractionObserved(navigationEvent);
 		}

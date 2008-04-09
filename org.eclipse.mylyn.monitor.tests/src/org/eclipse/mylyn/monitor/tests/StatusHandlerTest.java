@@ -14,7 +14,7 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.mylyn.internal.monitor.core.util.IStatusHandler;
+import org.eclipse.mylyn.monitor.core.IStatusHandler;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 
 /**

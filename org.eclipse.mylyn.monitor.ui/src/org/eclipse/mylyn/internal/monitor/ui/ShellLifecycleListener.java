@@ -9,8 +9,8 @@
 package org.eclipse.mylyn.internal.monitor.ui;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
+import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
@@ -22,35 +22,35 @@ import org.eclipse.swt.events.ShellListener;
  */
 public class ShellLifecycleListener implements ShellListener {
 
-	private final InteractionContextManager manager;
+	private final IInteractionContextManager manager;
 
-	public ShellLifecycleListener(InteractionContextManager manager) {
+	public ShellLifecycleListener(IInteractionContextManager manager) {
 		this.manager = manager;
 
-		String productId = InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH;
+		String productId = IInteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH;
 		if (Platform.getProduct() != null) {
 			productId = Platform.getProduct().getId();
 		}
 
 		manager.processActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-				InteractionContextManager.ACTIVITY_STRUCTUREKIND_LIFECYCLE, productId,
-				InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
-				InteractionContextManager.ACTIVITY_DELTA_STARTED, 1f));
+				IInteractionContextManager.ACTIVITY_STRUCTUREKIND_LIFECYCLE, productId,
+				IInteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
+				IInteractionContextManager.ACTIVITY_DELTA_STARTED, 1f));
 	}
 
 	public void shellClosed(ShellEvent shellEvent) {
 		manager.deactivateAllContexts();
 
-		String productId = InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH;
+		String productId = IInteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH;
 		if (Platform.getProduct() != null) {
 			productId = Platform.getProduct().getId();
 		}
 
 		manager.processActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-				InteractionContextManager.ACTIVITY_STRUCTUREKIND_LIFECYCLE, productId,
-				InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
-				InteractionContextManager.ACTIVITY_DELTA_STOPPED, 1f));
-		ContextCorePlugin.getContextManager().saveActivityContext();
+				IInteractionContextManager.ACTIVITY_STRUCTUREKIND_LIFECYCLE, productId,
+				IInteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
+				IInteractionContextManager.ACTIVITY_DELTA_STOPPED, 1f));
+		ContextCore.getContextManager().saveActivityContext();
 	}
 
 	public void shellDeactivated(ShellEvent arg0) {

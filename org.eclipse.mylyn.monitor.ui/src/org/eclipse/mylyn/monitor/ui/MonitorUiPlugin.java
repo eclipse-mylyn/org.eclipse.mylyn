@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.monitor.ui.ActivityContextManager;
 import org.eclipse.mylyn.internal.monitor.ui.IMonitoredWindow;
 import org.eclipse.mylyn.internal.monitor.ui.ShellLifecycleListener;
@@ -418,7 +418,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 				addListenersToWindow(window);
 			}
 
-			shellLifecycleListener = new ShellLifecycleListener(ContextCorePlugin.getContextManager());
+			shellLifecycleListener = new ShellLifecycleListener(ContextCore.getContextManager());
 			getWorkbench().getActiveWorkbenchWindow().getShell().addShellListener(shellLifecycleListener);
 
 			monitors.add(new WorkbenchUserActivityMonitor());

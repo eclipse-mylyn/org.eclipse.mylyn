@@ -16,7 +16,6 @@ import org.eclipse.core.internal.runtime.PlatformActivator;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.internal.monitor.core.util.IStatusHandler;
 
 /**
  * @author Mik Kersten
@@ -35,7 +34,7 @@ public class StatusHandler {
 	private static IStatusHandler defaultHandler;
 
 	/**
-	 * @since 2.2
+	 * @since 3.0
 	 */
 	// API 3.0 remove
 	public static IStatusHandler getDefaultStatusHandler() {
@@ -51,7 +50,7 @@ public class StatusHandler {
 	}
 
 	/**
-	 * @since 2.2
+	 * @since 3.0
 	 */
 	// API 3.0 remove
 	public static void setDefaultStatusHandler(IStatusHandler handler) {
@@ -60,6 +59,9 @@ public class StatusHandler {
 	}
 
 	// API 3.0 remove
+	/**
+	 * @since 3.0
+	 */
 	public static void addStatusHandler(IStatusHandler handler) {
 		if (handler == null) {
 			return;
@@ -71,6 +73,9 @@ public class StatusHandler {
 	}
 
 	// API 3.0 remove
+	/**
+	 * @since 3.0
+	 */
 	public static void removeStatusHandler(IStatusHandler handler) {
 		internalRemoveStatusHandler(handler, true);
 	}

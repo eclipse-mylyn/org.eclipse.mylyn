@@ -18,8 +18,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
+import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.ui.AbstractUserActivityMonitor;
 import org.eclipse.mylyn.monitor.ui.IUserAttentionListener;
@@ -67,10 +67,10 @@ public class ActivityContextManager {
 
 	public void fireActive(long start, long end) {
 		if (end > start) {
-			ContextCorePlugin.getContextManager().processActivityMetaContextEvent(
+			ContextCore.getContextManager().processActivityMetaContextEvent(
 					new InteractionEvent(InteractionEvent.Kind.ATTENTION, userActivityMonitor.getStructureKind(),
 							userActivityMonitor.getStructureHandle(), userActivityMonitor.getOriginId(), null,
-							InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, new Date(start), new Date(end)));
+							IInteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, new Date(start), new Date(end)));
 			for (IUserAttentionListener attentionListener : attentionListeners) {
 				attentionListener.userAttentionGained();
 			}

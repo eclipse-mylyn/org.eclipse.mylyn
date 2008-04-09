@@ -6,13 +6,13 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.monitor.core.util;
+package org.eclipse.mylyn.monitor.core;
 
 import org.eclipse.core.runtime.IStatus;
 
 /**
  * @author Mik Kersten
- * 
+ * @since 3.0
  */
 public interface IStatusHandler {
 
@@ -23,6 +23,7 @@ public interface IStatusHandler {
 	 *            IStatus representing failure
 	 * @param inform
 	 *            inform user via dialog, if no only status is logged
+	 * @since 3.0
 	 */
 	public abstract void fail(IStatus status, boolean informUser);
 
@@ -33,6 +34,7 @@ public interface IStatusHandler {
 	 *            Title of dialog to display
 	 * @param status
 	 *            IStatus to display
+	 * @since 3.0
 	 */
 	public abstract void displayStatus(final String title, final IStatus status);
 }
