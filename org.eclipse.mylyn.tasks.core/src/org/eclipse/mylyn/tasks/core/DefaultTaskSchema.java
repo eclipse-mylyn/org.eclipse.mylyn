@@ -11,7 +11,6 @@ package org.eclipse.mylyn.tasks.core;
 import java.util.Date;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.mylyn.internal.tasks.core.AbstractAttributeMapper;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 
 /**

@@ -270,7 +270,7 @@ public class TaskFormPage extends FormPage {
 	protected TextViewer addTextViewer(TaskRepository repository, Composite composite, String text, int style) {
 
 		if (actionContributor == null) {
-			actionContributor = taskEditor.getContributor();
+			actionContributor = (TaskEditorActionContributor) getEditorSite().getActionBarContributor();
 		}
 
 		final RepositoryTextViewer commentViewer = new RepositoryTextViewer(repository, composite, style);
@@ -279,7 +279,8 @@ public class TaskFormPage extends FormPage {
 		// order for
 		// Hyperlink colouring to work. (Presenter needs document object up
 		// front)
-		RepositoryTextViewerConfiguration repositoryViewerConfig = new RepositoryTextViewerConfiguration(repository, false);
+		RepositoryTextViewerConfiguration repositoryViewerConfig = new RepositoryTextViewerConfiguration(repository,
+				false);
 		commentViewer.configure(repositoryViewerConfig);
 
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
@@ -329,7 +330,7 @@ public class TaskFormPage extends FormPage {
 			int style) {
 
 		if (actionContributor == null) {
-			actionContributor = taskEditor.getContributor();
+			actionContributor = (TaskEditorActionContributor) getEditorSite().getActionBarContributor();
 		}
 
 		AnnotationModel annotationModel = new AnnotationModel();

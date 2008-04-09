@@ -10,7 +10,7 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.mylyn.internal.tasks.core.AbstractAttributeMapper;
+import org.eclipse.mylyn.tasks.core.AbstractAttributeMapper;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;

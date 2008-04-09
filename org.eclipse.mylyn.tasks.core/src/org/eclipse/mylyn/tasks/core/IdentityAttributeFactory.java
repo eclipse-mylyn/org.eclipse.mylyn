@@ -10,7 +10,6 @@ package org.eclipse.mylyn.tasks.core;
 
 import java.util.Date;
 
-import org.eclipse.mylyn.internal.tasks.core.AbstractAttributeMapper;
 
 /**
  * @since 3.0

@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package org.eclipse.mylyn.internal.tasks.core;
+package org.eclipse.mylyn.tasks.core;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -13,11 +13,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
-
 /**
  * @author Steffen Pingel
+ * @since 3.0
  */
 // TODO EDITOR return null if attribute value invalid for primitive types? 
 public abstract class AbstractAttributeMapper {

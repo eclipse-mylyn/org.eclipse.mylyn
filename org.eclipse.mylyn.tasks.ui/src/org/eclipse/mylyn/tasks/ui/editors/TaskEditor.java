@@ -96,7 +96,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 		}
 	}
 
-	public TaskEditorActionContributor getContributor() {
+	private TaskEditorActionContributor getContributor() {
 		return (TaskEditorActionContributor) getEditorSite().getActionBarContributor();
 	}
 
