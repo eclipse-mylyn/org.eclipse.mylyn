@@ -41,7 +41,7 @@ public class TaskExportImportTest extends AbstractContextTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		removeFiles(new File(TasksUiPlugin.getDefault().getDataDirectory()));
-		ContextCorePlugin.getDefault().getContextStore().init();
+		ContextCore.getContextStore().init();
 
 		// Create test export destination directory
 		dest = new File(TasksUiPlugin.getDefault().getDataDirectory() + File.separator + "TestDir");
@@ -77,7 +77,7 @@ public class TaskExportImportTest extends AbstractContextTest {
 		mockContext.parseEvent(event);
 		ContextCore.getContextManager().deactivateContext(mockContext.getHandleIdentifier());
 
-		assertTrue(ContextCorePlugin.getDefault().getContextStore().getContextDirectory().exists());
+		assertTrue(ContextCore.getContextStore().getContextDirectory().exists());
 		ContextCore.getContextManager().saveContext(mockContext.getHandleIdentifier());
 		assertTrue(ContextCore.getContextManager().hasContext(task.getHandleIdentifier()));
 

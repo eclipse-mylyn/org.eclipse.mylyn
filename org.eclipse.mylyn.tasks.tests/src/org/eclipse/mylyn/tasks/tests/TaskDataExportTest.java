@@ -50,7 +50,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 		super.setUp();
 
 		removeFiles(new File(TasksUiPlugin.getDefault().getDataDirectory()));
-		ContextCorePlugin.getDefault().getContextStore().init();
+		ContextCore.getContextStore().init();
 
 		// Create the export wizard
 		wizard = new TaskDataExportWizard();
@@ -77,7 +77,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 		ContextCorePlugin.getContextManager().internalActivateContext(mockContext);
 
 		// Save the context file and check that it exists
-		assertTrue(ContextCorePlugin.getDefault().getContextStore().getContextDirectory().exists());
+		assertTrue(ContextCore.getContextStore().getContextDirectory().exists());
 		ContextCore.getContextManager().saveContext(mockContext.getHandleIdentifier());
 		File taskFile = ContextCore.getContextManager().getFileForContext(task1.getHandleIdentifier());
 		assertTrue(ContextCore.getContextManager().hasContext(task1.getHandleIdentifier()));
