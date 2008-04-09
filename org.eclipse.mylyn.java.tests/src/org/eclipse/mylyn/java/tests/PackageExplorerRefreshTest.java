@@ -19,8 +19,8 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylyn.context.tests.UiTestUtil;
 import org.eclipse.mylyn.context.ui.AbstractFocusViewAction;
-import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.context.ui.InterestFilter;
+import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 
 /**
  * @author Mik Kersten

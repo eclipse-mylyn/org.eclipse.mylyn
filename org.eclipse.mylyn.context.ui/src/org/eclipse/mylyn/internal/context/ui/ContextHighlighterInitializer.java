@@ -8,7 +8,6 @@
 
 package org.eclipse.mylyn.internal.context.ui;
 
-import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskHighlighter;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;

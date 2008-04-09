@@ -13,7 +13,6 @@ import java.net.URL;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
-import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.swt.graphics.Image;
 
 /**

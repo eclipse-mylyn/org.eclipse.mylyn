@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.context.ui;
+package org.eclipse.mylyn.internal.context.ui;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,15 +40,8 @@ import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextListener2;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
-import org.eclipse.mylyn.internal.context.ui.AbstractContextLabelProvider;
-import org.eclipse.mylyn.internal.context.ui.ContentOutlineManager;
-import org.eclipse.mylyn.internal.context.ui.ContextHighlighterInitializer;
-import org.eclipse.mylyn.internal.context.ui.ContextPerspectiveManager;
-import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
-import org.eclipse.mylyn.internal.context.ui.FocusedViewerManager;
-import org.eclipse.mylyn.internal.context.ui.Highlighter;
-import org.eclipse.mylyn.internal.context.ui.HighlighterList;
-import org.eclipse.mylyn.internal.context.ui.UiUtil;
+import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
+import org.eclipse.mylyn.context.ui.IContextUiStartup;
 import org.eclipse.mylyn.internal.context.ui.actions.ContextRetrieveAction;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;

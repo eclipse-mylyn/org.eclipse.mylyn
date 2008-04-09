@@ -18,6 +18,8 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent.Kind;
 
 public interface IInteractionContextManager {
 
+	// API-3.0: move constants
+
 	public static final String PROPERTY_CONTEXT_ACTIVE = "org.eclipse.mylyn.context.core.context.active";
 
 	public static final String CONTEXT_FILENAME_ENCODING = "UTF-8";

@@ -49,8 +49,6 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 
 	private LandmarkMarkerManager landmarkMarkerManager;
 
-	private InterestInducingProblemListener problemListener;
-
 	private JavaEditingMonitor javaEditingMonitor;
 
 	private InterestUpdateDeltaListener javaElementChangeListener;
@@ -86,12 +84,6 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 		javaElementChangeListener = new InterestUpdateDeltaListener();
 		JavaCore.addElementChangedListener(javaElementChangeListener);
 
-		problemListener = new InterestInducingProblemListener();
-		getPreferenceStore().addPropertyChangeListener(problemListener);
-		if (getPreferenceStore().getBoolean(InterestInducingProblemListener.PREDICTED_INTEREST_ERRORS)) {
-			problemListener.enable();
-		}
-
 		try {
 			typeHistoryManager = new TypeHistoryManager();
 			ContextCore.getContextManager().addListener(typeHistoryManager);
@@ -103,7 +95,6 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 	}
 
 	private void initDefaultPrefs() {
-		getPreferenceStore().setDefault(InterestInducingProblemListener.PREDICTED_INTEREST_ERRORS, false);
 		getPreferenceStore().setDefault(RecommendedPreferencesWizard.MYLYN_FIRST_RUN, true);
 	}
 
@@ -116,9 +107,6 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 		}
 		if (javaEditingMonitor != null) {
 			MonitorUiPlugin.getDefault().getSelectionMonitors().remove(javaEditingMonitor);
-		}
-		if (problemListener != null) {
-			getPreferenceStore().removePropertyChangeListener(problemListener);
 		}
 		if (javaElementChangeListener != null) {
 			JavaCore.removeElementChangedListener(javaElementChangeListener);

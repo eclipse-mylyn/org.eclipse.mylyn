@@ -12,7 +12,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractTask;

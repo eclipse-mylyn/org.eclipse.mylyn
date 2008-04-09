@@ -12,7 +12,7 @@
 package org.eclipse.mylyn.internal.context.ui.preferences;
 
 import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.mylyn.context.ui.ContextUiPlugin;
+import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;

@@ -9,8 +9,8 @@
 package org.eclipse.mylyn.internal.context.ui.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
+import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
 
 /**

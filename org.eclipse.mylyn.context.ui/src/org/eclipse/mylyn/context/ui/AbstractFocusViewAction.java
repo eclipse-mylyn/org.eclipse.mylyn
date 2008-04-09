@@ -32,6 +32,7 @@ import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
+import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
 import org.eclipse.swt.widgets.Event;
@@ -291,7 +292,6 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	protected void updateEnablement(IAction action) {
 		if (updateEnablementWithContextActivation()) {
 			action.setEnabled(ContextCore.getContextManager().isContextActivePropertySet());
@@ -301,7 +301,6 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 	private void updateLinking(boolean on) {
 		if (on) {
 			wasLinkingEnabled = isDefaultLinkingEnabled();
-//			setDefaultLinkingEnabled(false);
 			MonitorUiPlugin.getDefault().addWindowPostSelectionListener(this);
 		} else {
 			MonitorUiPlugin.getDefault().removeWindowPostSelectionListener(this);

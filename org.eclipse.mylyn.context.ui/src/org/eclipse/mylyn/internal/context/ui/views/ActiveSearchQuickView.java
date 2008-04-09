@@ -24,7 +24,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.context.ui.ContextUiPlugin;
+import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.DoiOrderSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;

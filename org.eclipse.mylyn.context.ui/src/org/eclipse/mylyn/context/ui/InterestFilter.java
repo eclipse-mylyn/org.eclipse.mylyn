@@ -25,6 +25,7 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IImplicitlyIntersting;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.swt.widgets.Tree;
 

@@ -17,6 +17,7 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.ui.IViewPart;
