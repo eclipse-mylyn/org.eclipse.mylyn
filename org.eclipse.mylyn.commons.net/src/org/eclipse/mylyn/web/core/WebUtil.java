@@ -8,12 +8,15 @@
 
 package org.eclipse.mylyn.web.core;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Socket;
+import java.text.ParseException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -22,19 +25,24 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import javax.swing.text.html.HTML.Tag;
+
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpMethodBase;
+import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.NTCredentials;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.DefaultHttpParams;
 import org.apache.commons.httpclient.params.HttpClientParams;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.core.net.proxy.IProxyData;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -44,6 +52,7 @@ import org.eclipse.mylyn.internal.web.core.PollingInputStream;
 import org.eclipse.mylyn.internal.web.core.PollingProtocolSocketFactory;
 import org.eclipse.mylyn.internal.web.core.PollingSslProtocolSocketFactory;
 import org.eclipse.mylyn.internal.web.core.TimeoutInputStream;
+import org.eclipse.mylyn.web.core.HtmlStreamTokenizer.Token;
 
 /**
  * @author Mik Kersten
@@ -447,6 +456,71 @@ public class WebUtil {
 	 */
 	public static int getSocketTimeout() {
 		return SOCKET_TIMEOUT;
+	}
+
+	/**
+	 * Returns the title of a web page.
+	 * 
+	 * @throws IOException
+	 *             if a network occurs
+	 * @return the title; null, if the title could not be determined;
+	 * 
+	 * @since 3.0
+	 */
+	public static String getTitleFromUrl(AbstractWebLocation location, IProgressMonitor monitor) throws IOException {
+		monitor = Policy.monitorFor(monitor);
+		try {
+			monitor.beginTask("Retrieving " + location.getUrl(), IProgressMonitor.UNKNOWN);
+
+			HttpClient client = new HttpClient();
+			WebUtil.configureHttpClient(client, "");
+			HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, monitor);
+
+			GetMethod method = new GetMethod(location.getUrl());
+			try {
+				int result = WebUtil.execute(client, hostConfiguration, method, monitor);
+				if (result == HttpStatus.SC_OK) {
+					InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
+					try {
+						BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+						HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(reader, null);
+						try {
+							for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
+								if (token.getType() == Token.TAG) {
+									HtmlTag tag = (HtmlTag) token.getValue();
+									if (tag.getTagType() == Tag.TITLE) {
+										return getText(tokenizer);
+									}
+								}
+							}
+						} catch (ParseException e) {
+							throw new IOException("Error reading url");
+						}
+					} finally {
+						in.close();
+					}
+				}
+			} finally {
+				method.releaseConnection();
+			}
+		} finally {
+			monitor.done();
+		}
+		return null;
+	}
+
+	private static String getText(HtmlStreamTokenizer tokenizer) throws IOException, ParseException {
+		StringBuffer sb = new StringBuffer();
+		for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
+			if (token.getType() == Token.TEXT) {
+				sb.append(token.toString());
+			} else if (token.getType() == Token.COMMENT) {
+				// ignore
+			} else {
+				break;
+			}
+		}
+		return StringEscapeUtils.unescapeHtml(sb.toString());
 	}
 
 	/**
