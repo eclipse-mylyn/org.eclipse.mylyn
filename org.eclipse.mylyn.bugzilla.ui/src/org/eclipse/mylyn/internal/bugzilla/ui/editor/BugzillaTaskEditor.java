@@ -178,13 +178,13 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			addBugHyperlinks(composite, BugzillaReportElement.BLOCKED.getKeyString());
 		}
 
+		// NOTE: urlText should not be back ported to 3.3 due to background color failure
 		attribute = this.taskData.getAttribute(BugzillaReportElement.BUG_FILE_LOC.getKeyString());
 		if (attribute != null && !attribute.isReadOnly()) {
 			Label label = createLabel(composite, attribute);
 			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
 			TextViewer urlTextViewer = addTextEditor(repository, composite, attribute.getValue(), //
 					false, SWT.FLAT);
-			//			false, SWT.FLAT | SWT.SINGLE);
 			final StyledText urlText = urlTextViewer.getTextWidget();
 			urlText.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 			urlText.setIndent(2);
