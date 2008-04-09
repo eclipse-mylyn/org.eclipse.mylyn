@@ -19,8 +19,8 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
-import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.sync.IRepositorySynchronizationManager;
 
 /**
  * Encapsulates common operations that can be performed on a task repository. Extend to connect with a Java API or WS
@@ -44,7 +44,9 @@ public abstract class AbstractRepositoryConnector {
 
 	private boolean userManaged = true;
 
-	private TaskDataManager taskDataManager;
+	private ITaskDataManager taskDataManager;
+
+	private IRepositorySynchronizationManager synchronizationManager;
 
 	public void init(TaskList taskList) {
 		this.taskList = taskList;
@@ -52,9 +54,12 @@ public abstract class AbstractRepositoryConnector {
 
 	/**
 	 * Set upon construction
+	 * 
+	 * @since 3.0
 	 */
-	public void setTaskDataManager(TaskDataManager taskDataManager) {
+	public void init2(ITaskDataManager taskDataManager, IRepositorySynchronizationManager synchronizationManager) {
 		this.taskDataManager = taskDataManager;
+		this.synchronizationManager = synchronizationManager;
 	}
 
 	/**
@@ -459,8 +464,18 @@ public abstract class AbstractRepositoryConnector {
 		return null;
 	}
 
-	private TaskDataManager getTaskDataManager() {
+	/**
+	 * @since 3.0
+	 */
+	protected ITaskDataManager getTaskDataManager() {
 		return taskDataManager;
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	protected IRepositorySynchronizationManager getSynchronizationManager() {
+		return synchronizationManager;
 	}
 
 	/**

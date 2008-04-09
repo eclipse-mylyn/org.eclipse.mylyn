@@ -12,4 +12,5 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn.web.core;bundle-version="[3.0.0,4.0.0)"
 Export-Package: org.eclipse.mylyn.internal.tasks.core;x-friends:="org.eclipse.mylyn.tasks.ui",
  org.eclipse.mylyn.internal.tasks.core.sync;x-friends:="org.eclipse.mylyn.tasks.ui",
- org.eclipse.mylyn.tasks.core
+ org.eclipse.mylyn.tasks.core,
+ org.eclipse.mylyn.tasks.core.sync

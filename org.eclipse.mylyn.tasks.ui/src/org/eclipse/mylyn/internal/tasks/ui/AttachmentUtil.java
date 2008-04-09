@@ -21,11 +21,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.FileAttachment;
+import org.eclipse.mylyn.tasks.core.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
@@ -85,7 +85,7 @@ public class AttachmentUtil {
 	 * @return an empty set if no contexts
 	 */
 	public static Set<RepositoryAttachment> getContextAttachments(TaskRepository repository, AbstractTask task) {
-		TaskDataManager taskDataManager = TasksUiPlugin.getTaskDataManager();
+		ITaskDataManager taskDataManager = TasksUiPlugin.getTaskDataManager();
 		Set<RepositoryAttachment> contextAttachments = new HashSet<RepositoryAttachment>();
 		if (taskDataManager != null) {
 			RepositoryTaskData newData = taskDataManager.getNewTaskData(task.getRepositoryUrl(), task.getTaskId());

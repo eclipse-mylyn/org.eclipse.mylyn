@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
@@ -29,7 +30,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
  * 
  * @author Rob Elves
  */
-public class TaskDataManager {
+public class TaskDataManager implements ITaskDataManager {
 
 	private final TaskRepositoryManager taskRepositoryManager;
 

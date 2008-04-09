@@ -19,6 +19,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.sync.IRepositorySynchronizationManager;
 
 /**
  * Encapsulates synchronization policy.
@@ -27,7 +28,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
  * @author Rob Elves
  * @author Steffen Pingel
  */
-public final class RepositorySynchronizationManager {
+public final class RepositorySynchronizationManager implements IRepositorySynchronizationManager {
 
 	private final TaskDataManager taskDataManager;
 

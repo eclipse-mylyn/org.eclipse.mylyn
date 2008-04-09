@@ -29,6 +29,7 @@ import org.eclipse.mylyn.tasks.core.SynchronizeJob;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.sync.IRepositorySynchronizationManager;
 import org.eclipse.mylyn.web.core.Policy;
 
 /**
@@ -46,7 +47,7 @@ public class SynchronizeTasksJob extends SynchronizeJob {
 
 	private boolean forced = false;
 
-	private final RepositorySynchronizationManager synchronizationManager;
+	private final IRepositorySynchronizationManager synchronizationManager;
 
 	private final AbstractTaskDataHandler taskDataHandler;
 
@@ -56,7 +57,7 @@ public class SynchronizeTasksJob extends SynchronizeJob {
 
 	private final Set<AbstractTask> tasks;
 
-	public SynchronizeTasksJob(TaskList taskList, RepositorySynchronizationManager synchronizationManager,
+	public SynchronizeTasksJob(TaskList taskList, IRepositorySynchronizationManager synchronizationManager,
 			AbstractRepositoryConnector connector, TaskRepository taskRepository, Set<AbstractTask> tasks) {
 		super(LABEL_SYNCHRONIZE_TASK + " (" + tasks.size() + " tasks)");
 		this.taskList = taskList;

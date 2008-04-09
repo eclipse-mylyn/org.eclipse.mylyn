@@ -21,12 +21,12 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
-import org.eclipse.mylyn.internal.tasks.core.sync.RepositorySynchronizationManager;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.sync.IRepositorySynchronizationManager;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IActionBars;
@@ -79,7 +79,7 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 				}
 			}
 
-			RepositorySynchronizationManager syncManager = TasksUiPlugin.getSynchronizationManager();
+			IRepositorySynchronizationManager syncManager = TasksUiPlugin.getSynchronizationManager();
 			if (!queriesToSyncMap.isEmpty()) {
 
 				// determine which repositories to synch changed tasks for

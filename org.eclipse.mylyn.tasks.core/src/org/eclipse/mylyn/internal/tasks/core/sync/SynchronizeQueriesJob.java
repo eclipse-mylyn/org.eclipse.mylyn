@@ -32,6 +32,7 @@ import org.eclipse.mylyn.tasks.core.SynchronizeJob;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.sync.IRepositorySynchronizationManager;
 
 /**
  * @author Mik Kersten
@@ -58,9 +59,9 @@ public class SynchronizeQueriesJob extends SynchronizeJob {
 
 	private boolean fullSynchronization = true;
 
-	private final RepositorySynchronizationManager synchronizationManager;
+	private final IRepositorySynchronizationManager synchronizationManager;
 
-	public SynchronizeQueriesJob(TaskList taskList, RepositorySynchronizationManager synchronizationManager,
+	public SynchronizeQueriesJob(TaskList taskList, IRepositorySynchronizationManager synchronizationManager,
 			AbstractRepositoryConnector connector, TaskRepository repository, Set<AbstractRepositoryQuery> queries) {
 		super("Synchronizing queries for " + repository.getRepositoryLabel());
 		this.taskList = taskList;

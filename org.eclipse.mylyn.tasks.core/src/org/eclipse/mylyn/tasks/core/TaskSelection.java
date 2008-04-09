@@ -8,12 +8,11 @@
 
 package org.eclipse.mylyn.tasks.core;
 
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
-import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
+import org.eclipse.mylyn.internal.tasks.core.TaskDataManager.ObjectCloner;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 
 /**
@@ -30,7 +29,7 @@ public class TaskSelection {
 		}
 
 		try {
-			this.taskData = (RepositoryTaskData) TaskDataManager.ObjectCloner.deepCopy(taskData);
+			this.taskData = (RepositoryTaskData) ObjectCloner.deepCopy(taskData);
 			this.taskData.setAttributeFactory(taskData.getAttributeFactory());
 			this.taskData.refresh();
 		} catch (Exception e) {

@@ -19,7 +19,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.eclipse.core.internal.net.ProxyManager;
 import org.eclipse.core.net.proxy.IProxyChangeListener;
 import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.core.resources.IResource;
@@ -97,6 +96,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 
 /**
  * Main entry point for the Tasks UI.
@@ -343,6 +343,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private TaskActivityMonitor taskActivityMonitor;
 
+	private ServiceReference proxyServiceReference;
+
 	private class TasksUiInitializationJob extends UIJob {
 
 		public TasksUiInitializationJob() {
@@ -449,9 +451,14 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			taskActivityManager = new TaskActivityManager(taskRepositoryManager, taskListManager.getTaskList());
 			updateTaskActivityManager();
 
-			IProxyService proxyService = ProxyManager.getProxyManager();
-			IProxyChangeListener proxyChangeListener = new TasksUiProxyChangeListener(taskRepositoryManager);
-			proxyService.addProxyChangeListener(proxyChangeListener);
+			proxyServiceReference = context.getServiceReference(IProxyService.class.getName());
+			if (proxyServiceReference != null) {
+				IProxyService proxyService = (IProxyService) context.getService(proxyServiceReference);
+				if (proxyService != null) {
+					IProxyChangeListener proxyChangeListener = new TasksUiProxyChangeListener(taskRepositoryManager);
+					proxyService.addProxyChangeListener(proxyChangeListener);
+				}
+			}
 
 			repositoryTemplateManager = new RepositoryTemplateManager();
 
@@ -466,6 +473,10 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			synchronizationManager = new RepositorySynchronizationManager(taskDataManager,
 					taskListManager.getTaskList());
+
+			for (AbstractRepositoryConnector connector : taskRepositoryManager.getRepositoryConnectors()) {
+				connector.init2(taskDataManager, synchronizationManager);
+			}
 
 			loadTemplateRepositories();
 
@@ -523,9 +534,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 		// Add the automatically created templates
 		for (AbstractRepositoryConnector connector : taskRepositoryManager.getRepositoryConnectors()) {
-			connector.setTaskDataManager(taskDataManager);
-
-			for (RepositoryTemplate template : connector.getTemplates()) {
+			for (RepositoryTemplate template : repositoryTemplateManager.getTemplates(connector.getConnectorKind())) {
 
 				if (template.addAutomatically && !TaskRepositoryUtil.isAddAutomaticallyDisabled(template.repositoryUrl)) {
 					try {
@@ -535,7 +544,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 							taskRepository = new TaskRepository(connector.getConnectorKind(), template.repositoryUrl);
 							taskRepository.setVersion(template.version);
 							taskRepository.setRepositoryLabel(template.label);
-							taskRepository.setAnonymous(true);
 							taskRepository.setCharacterEncoding(template.characterEncoding);
 							taskRepository.setAnonymous(template.anonymous);
 							taskRepositoryManager.addRepository(taskRepository, getRepositoriesFilePath());
@@ -578,6 +586,11 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			if (ResourcesPlugin.getWorkspace() != null) {
 				ResourcesPlugin.getWorkspace().removeSaveParticipant(this);
+			}
+
+			if (proxyServiceReference != null) {
+				// TODO remove proxy listener?
+				context.ungetService(proxyServiceReference);
 			}
 
 			if (PlatformUI.isWorkbenchRunning()) {
