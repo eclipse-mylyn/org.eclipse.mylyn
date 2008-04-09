@@ -49,9 +49,6 @@
 	          contentType="java"
 	          activeSearchIcon="icons/elcl16/edge-ref-java.gif"
            	  activeSearchLabel="Java Search"/>
-	    <labelProvider
-	          class="org.eclipse.mylyn.internal.java.ui.JavaContextLabelProvider"
-	          contentType="java"/>
         <preservedFilters
             viewId="org.eclipse.jdt.ui.PackageExplorer">
        	 	<filter
