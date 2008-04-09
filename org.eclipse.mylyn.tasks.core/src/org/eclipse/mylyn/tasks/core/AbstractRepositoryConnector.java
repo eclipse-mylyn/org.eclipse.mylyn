@@ -32,6 +32,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
  */
 public abstract class AbstractRepositoryConnector {
 
+	@Deprecated
 	protected Set<RepositoryTemplate> templates = new LinkedHashSet<RepositoryTemplate>();
 
 	private static final long HOUR = 1000L * 3600L;
