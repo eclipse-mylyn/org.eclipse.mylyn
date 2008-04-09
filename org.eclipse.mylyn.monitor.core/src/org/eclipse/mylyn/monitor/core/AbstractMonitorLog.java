@@ -48,7 +48,7 @@ public abstract class AbstractMonitorLog {
 			}
 			outputStream = new FileOutputStream(outputFile, true);
 		} catch (Exception e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, IMonitorCoreConstants.ID_PLUGIN, "Could not log to file: "
+			StatusHandler.log(new Status(IStatus.ERROR, IMonitorCoreConstants.ID_PLUGIN, "Could not log to file: "
 					+ outputFile.getAbsolutePath(), e));
 		}
 	}
@@ -80,7 +80,7 @@ public abstract class AbstractMonitorLog {
 			}
 			this.outputFile = newFile;
 		} catch (Exception e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, IMonitorCoreConstants.ID_PLUGIN,
+			StatusHandler.log(new Status(IStatus.ERROR, IMonitorCoreConstants.ID_PLUGIN,
 					"Could not set logger output file", e));
 		}
 		startMonitoring();
