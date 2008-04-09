@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.tests.AbstractContextTest;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.monitor.core.util.ZipFileUtil;
 import org.eclipse.mylyn.internal.monitor.usage.UiUsageMonitorPlugin;
 import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
@@ -38,8 +38,7 @@ public class MonitorPackagingTest extends AbstractContextTest {
 		files.add(monitorFile);
 		// files.add(logFile);
 
-		File zipFile = new File(ContextCorePlugin.getDefault().getContextStore().getRootDirectory()
-				+ "/mylarUpload.zip");
+		File zipFile = new File(ContextCore.getContextStore().getRootDirectory() + "/mylarUpload.zip");
 
 		ZipFileUtil.createZipFile(zipFile, files);
 
@@ -49,7 +48,7 @@ public class MonitorPackagingTest extends AbstractContextTest {
 		// pretend to upload
 		Thread.sleep(1000);
 
-		zipFile = new File(ContextCorePlugin.getDefault().getContextStore().getRootDirectory() + "/mylarUpload.zip");
+		zipFile = new File(ContextCore.getContextStore().getRootDirectory() + "/mylarUpload.zip");
 
 		// Open the ZIP file
 		ZipFile zf = new ZipFile(zipFile);

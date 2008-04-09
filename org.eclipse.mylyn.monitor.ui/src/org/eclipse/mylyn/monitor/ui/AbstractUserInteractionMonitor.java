@@ -13,7 +13,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.monitor.ui.IMonitoredWindow;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
@@ -81,7 +80,7 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 		if (selectedElement == null || selectedElement.equals(lastSelectedElement)) {
 			return null;
 		}
-		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(selectedElement);
+		AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(selectedElement);
 		String handleIdentifier = bridge.getHandleIdentifier(selectedElement);
 		InteractionEvent selectionEvent;
 		if (bridge.getContentType() != null) {
@@ -104,7 +103,7 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 		if (selectedElement == null) {
 			return;
 		}
-		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(selectedElement);
+		AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(selectedElement);
 		String handleIdentifier = bridge.getHandleIdentifier(selectedElement);
 		InteractionEvent editEvent = new InteractionEvent(InteractionEvent.Kind.EDIT, bridge.getContentType(),
 				handleIdentifier, part.getSite().getId());
@@ -118,7 +117,7 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 	 * Intended to be called back by subclasses.
 	 */
 	protected void handleNavigation(IWorkbenchPart part, Object targetElement, String kind, boolean contributeToContext) {
-		AbstractContextStructureBridge adapter = ContextCorePlugin.getDefault().getStructureBridge(targetElement);
+		AbstractContextStructureBridge adapter = ContextCore.getStructureBridge(targetElement);
 		if (adapter.getContentType() != null) {
 			String handleIdentifier = adapter.getHandleIdentifier(targetElement);
 			InteractionEvent navigationEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION,
