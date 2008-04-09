@@ -375,7 +375,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 		try {
 			RetrieveTitleFromUrlJob job = new RetrieveTitleFromUrlJob(url) {
 				@Override
-				protected void setTitle(final String pageTitle) {
+				protected void titleRetrieved(final String pageTitle) {
 					newTask.setSummary(pageTitle);
 					TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(newTask, false);
 				}

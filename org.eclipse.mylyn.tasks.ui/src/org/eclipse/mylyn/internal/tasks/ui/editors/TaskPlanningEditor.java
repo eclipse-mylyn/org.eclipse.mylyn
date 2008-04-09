@@ -583,22 +583,17 @@ public class TaskPlanningEditor extends TaskFormPage {
 	 * Attempts to set the task pageTitle to the title from the specified url
 	 */
 	protected void retrieveTaskDescription(final String url) {
-		try {
-			RetrieveTitleFromUrlJob job = new RetrieveTitleFromUrlJob(issueReportURL.getText()) {
-
-				@Override
-				protected void setTitle(final String pageTitle) {
+		RetrieveTitleFromUrlJob job = new RetrieveTitleFromUrlJob(issueReportURL.getText()) {
+			@Override
+			protected void titleRetrieved(String pageTitle) {
+				if (!getControl().isDisposed()) {
 					summaryEditor.getTextWidget().setText(pageTitle);
 					TaskPlanningEditor.this.markDirty(true);
 				}
+			}
 
-			};
-			job.schedule();
-
-		} catch (RuntimeException e) {
-			// FIXME what exception is caught here?
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not open task web page", e));
-		}
+		};
+		job.schedule();
 	}
 
 	/**

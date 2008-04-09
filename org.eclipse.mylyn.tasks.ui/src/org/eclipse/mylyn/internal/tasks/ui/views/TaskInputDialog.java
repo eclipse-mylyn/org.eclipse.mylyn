@@ -228,7 +228,7 @@ public class TaskInputDialog extends Dialog {
 		try {
 			RetrieveTitleFromUrlJob job = new RetrieveTitleFromUrlJob(issueURLTextWidget.getText()) {
 				@Override
-				protected void setTitle(final String pageTitle) {
+				protected void titleRetrieved(final String pageTitle) {
 					taskNameTextWidget.setText(pageTitle);
 				}
 			};

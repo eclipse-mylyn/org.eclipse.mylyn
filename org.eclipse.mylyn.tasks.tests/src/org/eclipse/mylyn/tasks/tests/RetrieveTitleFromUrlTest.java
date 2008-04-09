@@ -12,29 +12,33 @@ import java.lang.reflect.InvocationTargetException;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.internal.tasks.ui.RetrieveTitleFromUrlJob;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
+ * @author Steffen Pingel
  */
 public class RetrieveTitleFromUrlTest extends TestCase {
 
-	// XXX broken due to hang that causes the scheduled job to never complete
+	private String retrievedTitle;
+
 	public void testRetrieve() throws InterruptedException, InvocationTargetException {
 		final String url = "http://eclipse.org/mylyn";
-		final String knownTitle = "Mylar Technology Project";
-
+		final String knownTitle = "Eclipse Mylyn Open Source Project";
 		RetrieveTitleFromUrlJob job = new RetrieveTitleFromUrlJob(url) {
-
 			@Override
-			public void setTitle(String title) {
-				assertEquals(knownTitle, title);
+			public void titleRetrieved(String title) {
+				retrievedTitle = title;
 			}
 		};
-		job.run(new NullProgressMonitor());
-
-		assertTrue(job.isTitleRetrieved());
+		job.schedule();
+		job.join();
 		assertEquals(knownTitle, job.getPageTitle());
+		// process pending events
+		while (PlatformUI.getWorkbench().getDisplay().readAndDispatch()) {
+		}
+		assertEquals(knownTitle, retrievedTitle);
 	}
+
 }
