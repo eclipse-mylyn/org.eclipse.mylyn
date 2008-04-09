@@ -30,8 +30,8 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
+import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListBackupManager;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
@@ -102,7 +102,7 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 				taskListSaverJob.requestSave();
 			} else {
 				taskListSaverJob.waitSaveCompleted();
-				InteractionContextManager contextManager = ContextCorePlugin.getContextManager();
+				IInteractionContextManager contextManager = ContextCore.getContextManager();
 				if (saveContext) {
 					for (AbstractTask task : new ArrayList<AbstractTask>(taskListManager.getTaskList().getActiveTasks())) {
 						contextManager.saveContext(task.getHandleIdentifier());
@@ -299,7 +299,7 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 				if (saveRequested) {
 					saveRequested = false;
 					saveCompleted = false;
-					InteractionContextManager contextManager = ContextCorePlugin.getContextManager();
+					IInteractionContextManager contextManager = ContextCore.getContextManager();
 					while (!taskQueue.isEmpty()) {
 						AbstractTask task = taskQueue.poll();
 						if (task != null) {

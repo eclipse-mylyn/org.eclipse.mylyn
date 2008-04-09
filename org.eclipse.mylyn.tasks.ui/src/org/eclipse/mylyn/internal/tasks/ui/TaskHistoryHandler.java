@@ -13,7 +13,7 @@ import java.util.Map;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskActivationHistory;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -41,7 +41,7 @@ public class TaskHistoryHandler extends AbstractHandler implements IElementUpdat
 		if (TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask() == null) {
 			element.setIcon(TasksUiImages.NAVIGATE_PREVIOUS);
 		} else {
-			if (ContextCorePlugin.getContextManager().isContextCapturePaused()) {
+			if (ContextCore.getContextManager().isContextCapturePaused()) {
 				element.setIcon(TasksUiImages.NAVIGATE_PREVIOUS_PAUSE);
 			} else {
 				element.setIcon(TasksUiImages.NAVIGATE_PREVIOUS_ACTIVE);

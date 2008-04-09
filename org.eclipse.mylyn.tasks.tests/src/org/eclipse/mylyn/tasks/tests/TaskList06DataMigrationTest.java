@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
+import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.internal.monitor.core.util.ZipFileUtil;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.WorkspaceAwareContextStore;
@@ -77,9 +77,9 @@ public class TaskList06DataMigrationTest extends TestCase {
 
 	public void testOldContextMigration() throws Exception {
 		String contextFileName1 = URLEncoder.encode("http://oldcontext1.xml",
-				InteractionContextManager.CONTEXT_FILENAME_ENCODING);
+				IInteractionContextManager.CONTEXT_FILENAME_ENCODING);
 		String contextFileName2 = URLEncoder.encode("http://oldcontext2.xml",
-				InteractionContextManager.CONTEXT_FILENAME_ENCODING);
+				IInteractionContextManager.CONTEXT_FILENAME_ENCODING);
 		String contextFileName3 = "task-1.xml";
 		File oldContextFile1 = new File(sourceDirFile, contextFileName1);
 		oldContextFile1.createNewFile();
@@ -100,16 +100,16 @@ public class TaskList06DataMigrationTest extends TestCase {
 	}
 
 	public void testOldActivityMigration() throws Exception {
-		File oldActivityFile = new File(sourceDirFile, InteractionContextManager.OLD_CONTEXT_HISTORY_FILE_NAME
-				+ InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD);
+		File oldActivityFile = new File(sourceDirFile, IInteractionContextManager.OLD_CONTEXT_HISTORY_FILE_NAME
+				+ IInteractionContextManager.CONTEXT_FILE_EXTENSION_OLD);
 		oldActivityFile.createNewFile();
 		File contextFolder = new File(sourceDirFile, WorkspaceAwareContextStore.CONTEXTS_DIRECTORY);
 		assertTrue(!contextFolder.exists());
 		assertTrue(migrator.migrateActivityData(new NullProgressMonitor()));
 		assertFalse(oldActivityFile.exists());
 		assertTrue(contextFolder.exists());
-		assertTrue(new File(contextFolder, InteractionContextManager.CONTEXT_HISTORY_FILE_NAME
-				+ InteractionContextManager.CONTEXT_FILE_EXTENSION).exists());
+		assertTrue(new File(contextFolder, IInteractionContextManager.CONTEXT_HISTORY_FILE_NAME
+				+ IInteractionContextManager.CONTEXT_FILE_EXTENSION).exists());
 	}
 
 	private void deleteAllFiles(File folder) {
@@ -265,8 +265,8 @@ class TaskListDataMigration implements IRunnableWithProgress {
 	}
 
 	public boolean migrateActivityData(IProgressMonitor monitor) throws Exception {
-		File oldActivityFile = new File(dataDirectory, InteractionContextManager.OLD_CONTEXT_HISTORY_FILE_NAME
-				+ InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD);
+		File oldActivityFile = new File(dataDirectory, IInteractionContextManager.OLD_CONTEXT_HISTORY_FILE_NAME
+				+ IInteractionContextManager.CONTEXT_FILE_EXTENSION_OLD);
 		if (!oldActivityFile.exists()) {
 			return false;
 		}
@@ -278,8 +278,8 @@ class TaskListDataMigration implements IRunnableWithProgress {
 			}
 		}
 
-		File newActivityFile = new File(contextsFolder, InteractionContextManager.CONTEXT_HISTORY_FILE_NAME
-				+ InteractionContextManager.CONTEXT_FILE_EXTENSION);
+		File newActivityFile = new File(contextsFolder, IInteractionContextManager.CONTEXT_HISTORY_FILE_NAME
+				+ IInteractionContextManager.CONTEXT_FILE_EXTENSION);
 
 		if (newActivityFile.exists()) {
 			if (!newActivityFile.delete()) {

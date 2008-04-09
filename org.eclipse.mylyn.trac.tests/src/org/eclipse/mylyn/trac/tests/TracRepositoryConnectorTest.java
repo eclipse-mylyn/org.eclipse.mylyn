@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.tests.support.TestUtil;
 import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
 import org.eclipse.mylyn.context.tests.support.TestUtil.PrivilegeLevel;
@@ -281,7 +281,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 		//int size = task.getTaskData().getAttachments().size();
 
-		File sourceContextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
+		File sourceContextFile = ContextCore.getContextManager().getFileForContext(task.getHandleIdentifier());
 		sourceContextFile.createNewFile();
 		sourceContextFile.deleteOnExit();
 
@@ -300,7 +300,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 		init(TracTestConstants.TEST_TRAC_096_URL, Version.TRAC_0_9);
 		TracTask task = (TracTask) TasksUiUtil.createTask(repository, data.attachmentTicketId + "", null);
 
-		File sourceContextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
+		File sourceContextFile = ContextCore.getContextManager().getFileForContext(task.getHandleIdentifier());
 		sourceContextFile.createNewFile();
 		sourceContextFile.deleteOnExit();
 

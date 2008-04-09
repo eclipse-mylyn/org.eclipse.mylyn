@@ -26,7 +26,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
@@ -112,8 +113,8 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 				if (confirmed) {
 					String path = names[0];
 					File file = new File(path);
-					if (ContextCorePlugin.getContextManager().isValidContextFile(file)) {
-						ContextCorePlugin.getContextManager().copyContext(targetTask.getHandleIdentifier(), file);
+					if (ContextCore.getContextManager().isValidContextFile(file)) {
+						ContextCore.getContextManager().copyContext(targetTask.getHandleIdentifier(), file);
 						new TaskActivateAction().run(targetTask);
 					}
 				}

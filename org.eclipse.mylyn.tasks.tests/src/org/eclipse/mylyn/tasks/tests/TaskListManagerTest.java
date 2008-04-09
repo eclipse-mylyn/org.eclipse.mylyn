@@ -22,9 +22,9 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
-import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
@@ -176,12 +176,12 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testMigrateTaskContextFiles() throws IOException {
-		File fileA = ContextCorePlugin.getContextManager().getFileForContext("http://a-1");
+		File fileA = ContextCore.getContextManager().getFileForContext("http://a-1");
 		fileA.createNewFile();
 		fileA.deleteOnExit();
 		assertTrue(fileA.exists());
 		manager.refactorRepositoryUrl("http://a", "http://b");
-		File fileB = ContextCorePlugin.getContextManager().getFileForContext("http://b-1");
+		File fileB = ContextCore.getContextManager().getFileForContext("http://b-1");
 		assertTrue(fileB.exists());
 		assertFalse(fileA.exists());
 	}
@@ -279,27 +279,27 @@ public class TaskListManagerTest extends TestCase {
 		Calendar endDate2 = Calendar.getInstance();
 		endDate2.add(Calendar.MINUTE, 25);
 
-		ContextCorePlugin.getContextManager().resetActivityHistory();
-		InteractionContext metaContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
+		ContextCore.getContextManager().resetActivityHistory();
+		InteractionContext metaContext = ContextCore.getContextManager().getActivityMetaContext();
 		assertEquals(0, metaContext.getInteractionHistory().size());
 
-		ContextCorePlugin.getContextManager().processActivityMetaContextEvent(
+		ContextCore.getContextManager().processActivityMetaContextEvent(
 				new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-						InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task1.getHandleIdentifier(), "origin",
-						null, InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startDate.getTime(),
+						IInteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task1.getHandleIdentifier(), "origin",
+						null, IInteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startDate.getTime(),
 						endDate.getTime()));
 
-		ContextCorePlugin.getContextManager().processActivityMetaContextEvent(
+		ContextCore.getContextManager().processActivityMetaContextEvent(
 				new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-						InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task2.getHandleIdentifier(), "origin",
-						null, InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startDate2.getTime(),
+						IInteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task2.getHandleIdentifier(), "origin",
+						null, IInteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startDate2.getTime(),
 						endDate2.getTime()));
 
 		assertEquals(2, metaContext.getInteractionHistory().size());
 		assertEquals(60 * 1000 * 5, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1));
 		assertEquals(2 * 60 * 1000 * 5, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task2));
 		manager.refactorRepositoryUrl(firstUrl, secondUrl);
-		metaContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
+		metaContext = ContextCore.getContextManager().getActivityMetaContext();
 		assertEquals(2, metaContext.getInteractionHistory().size());
 		assertEquals(60 * 1000 * 5, TasksUiPlugin.getTaskActivityManager().getElapsedTime(
 				new MockTask(secondUrl, "1")));

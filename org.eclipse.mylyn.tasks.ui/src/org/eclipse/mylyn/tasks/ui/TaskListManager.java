@@ -27,9 +27,10 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.context.core.IInteractionContextManager;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
-import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
@@ -177,14 +178,14 @@ public class TaskListManager {
 					String storedHandle;
 					try {
 						storedHandle = URLDecoder.decode(file.getName().substring(0, dotIndex),
-								InteractionContextManager.CONTEXT_FILENAME_ENCODING);
+								IInteractionContextManager.CONTEXT_FILENAME_ENCODING);
 						int delimIndex = storedHandle.lastIndexOf(RepositoryTaskHandleUtil.HANDLE_DELIM);
 						if (delimIndex != -1) {
 							String storedUrl = storedHandle.substring(0, delimIndex);
 							if (oldUrl.equals(storedUrl)) {
 								String id = RepositoryTaskHandleUtil.getTaskId(storedHandle);
 								String newHandle = RepositoryTaskHandleUtil.getHandle(newUrl, id);
-								File newFile = ContextCorePlugin.getContextManager().getFileForContext(newHandle);
+								File newFile = ContextCore.getContextManager().getFileForContext(newHandle);
 								file.renameTo(newFile);
 							}
 						}
@@ -200,9 +201,9 @@ public class TaskListManager {
 	}
 
 	private void refactorMetaContextHandles(String oldRepositoryUrl, String newRepositoryUrl) {
-		InteractionContext metaContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
-		ContextCorePlugin.getContextManager().resetActivityHistory();
-		InteractionContext newMetaContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
+		InteractionContext metaContext = ContextCore.getContextManager().getActivityMetaContext();
+		ContextCore.getContextManager().resetActivityHistory();
+		InteractionContext newMetaContext = ContextCore.getContextManager().getActivityMetaContext();
 		for (InteractionEvent event : metaContext.getInteractionHistory()) {
 			if (event.getStructureHandle() != null) {
 				String storedUrl = RepositoryTaskHandleUtil.getRepositoryUrl(event.getStructureHandle());
@@ -220,7 +221,7 @@ public class TaskListManager {
 			}
 			newMetaContext.parseEvent(event);
 		}
-		ContextCorePlugin.getContextManager().saveActivityContext();
+		ContextCore.getContextManager().saveActivityContext();
 		initActivityHistory();
 	}
 
@@ -436,7 +437,7 @@ public class TaskListManager {
 		startTime = startDate;
 		if (isTaskListInitialized()) {
 			TasksUiPlugin.getTaskActivityManager().reloadTimingData(startDate);
-			List<InteractionEvent> events = ContextCorePlugin.getContextManager()
+			List<InteractionEvent> events = ContextCore.getContextManager()
 					.getActivityMetaContext()
 					.getInteractionHistory();
 			for (InteractionEvent event : events) {

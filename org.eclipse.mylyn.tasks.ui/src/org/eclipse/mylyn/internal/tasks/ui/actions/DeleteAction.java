@@ -14,7 +14,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
@@ -105,7 +105,7 @@ public class DeleteAction extends Action {
 				task = (AbstractTask) selectedObject;
 				TasksUiPlugin.getTaskListManager().deactivateTask(task);
 				TasksUiPlugin.getTaskListManager().getTaskList().deleteTask(task);
-				ContextCorePlugin.getContextManager().deleteContext(task.getHandleIdentifier());
+				ContextCore.getContextManager().deleteContext(task.getHandleIdentifier());
 				TasksUiUtil.closeEditorInActivePage(task, false);
 			} else if (selectedObject instanceof AbstractRepositoryQuery) {
 				// boolean deleteConfirmed =
@@ -125,7 +125,7 @@ public class DeleteAction extends Action {
 				// return;
 				TaskCategory cat = (TaskCategory) selectedObject;
 				for (AbstractTask task : cat.getChildren()) {
-					ContextCorePlugin.getContextManager().deleteContext(task.getHandleIdentifier());
+					ContextCore.getContextManager().deleteContext(task.getHandleIdentifier());
 					TasksUiUtil.closeEditorInActivePage(task, false);
 				}
 				TasksUiPlugin.getTaskListManager().getTaskList().deleteCategory(cat);

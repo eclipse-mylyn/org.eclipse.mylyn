@@ -20,8 +20,8 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
+import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDataExportJob;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
@@ -119,8 +119,8 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 
 		final File destTaskListFile = new File(destDir + File.separator + ITasksUiConstants.DEFAULT_TASK_LIST_FILE);
 		final File destActivationHistoryFile = new File(destDir + File.separator
-				+ InteractionContextManager.CONTEXT_HISTORY_FILE_NAME
-				+ InteractionContextManager.CONTEXT_FILE_EXTENSION);
+				+ IInteractionContextManager.CONTEXT_HISTORY_FILE_NAME
+				+ IInteractionContextManager.CONTEXT_FILE_EXTENSION);
 		final File destZipFile = new File(destDir + File.separator + getZipFileName());
 
 		// Prompt the user to confirm if ANY of the save repositoryOperations will cause
@@ -152,7 +152,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 
 				if (exportPage.exportTaskContexts()) {
 					for (AbstractTask task : taskContextsToExport) {
-						File contextFile = ContextCorePlugin.getContextManager().getFileForContext(
+						File contextFile = ContextCore.getContextManager().getFileForContext(
 								task.getHandleIdentifier());
 						File destTaskFile = new File(destDir + File.separator + contextFile.getName());
 						if (destTaskFile.exists()) {

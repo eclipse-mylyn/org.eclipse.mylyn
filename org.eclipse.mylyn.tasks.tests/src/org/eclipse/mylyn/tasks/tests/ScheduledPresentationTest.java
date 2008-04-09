@@ -14,8 +14,8 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
+import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
@@ -29,8 +29,8 @@ public class ScheduledPresentationTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		ContextCorePlugin.getContextManager().getActivityMetaContext().reset();
-		ContextCorePlugin.getContextManager().saveActivityContext();
+		ContextCore.getContextManager().getActivityMetaContext().reset();
+		ContextCore.getContextManager().saveActivityContext();
 		TasksUiPlugin.getTaskListManager().resetTaskList();
 		TasksUiPlugin.getTaskListManager().saveTaskList();
 	}
@@ -146,14 +146,14 @@ public class ScheduledPresentationTest extends TestCase {
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task2);
 
 		InteractionEvent event1 = new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-				InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task1.getHandleIdentifier(),
-				InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
-				InteractionContextManager.ACTIVITY_DELTA_ADDED, 2f, startDate.getTime(), endDate.getTime());
+				IInteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task1.getHandleIdentifier(),
+				IInteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
+				IInteractionContextManager.ACTIVITY_DELTA_ADDED, 2f, startDate.getTime(), endDate.getTime());
 
 		InteractionEvent event2 = new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-				InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task2.getHandleIdentifier(),
-				InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
-				InteractionContextManager.ACTIVITY_DELTA_ADDED, 2f, startDate.getTime(), endDate.getTime());
+				IInteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task2.getHandleIdentifier(),
+				IInteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
+				IInteractionContextManager.ACTIVITY_DELTA_ADDED, 2f, startDate.getTime(), endDate.getTime());
 
 		TasksUiPlugin.getTaskActivityManager().parseInteractionEvent(event1);
 		TasksUiPlugin.getTaskActivityManager().parseInteractionEvent(event2);

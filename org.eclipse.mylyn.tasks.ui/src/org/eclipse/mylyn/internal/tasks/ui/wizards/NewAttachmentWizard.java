@@ -26,7 +26,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.tasks.core.LocalAttachment;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
@@ -287,7 +287,7 @@ public class NewAttachmentWizard extends Wizard {
 	}
 
 	protected boolean hasContext() {
-		return ContextCorePlugin.getContextManager().hasContext(task.getHandleIdentifier());
+		return ContextCore.getContextManager().hasContext(task.getHandleIdentifier());
 	}
 
 	@Override

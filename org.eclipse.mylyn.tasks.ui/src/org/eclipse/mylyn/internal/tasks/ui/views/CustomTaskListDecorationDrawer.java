@@ -8,7 +8,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
@@ -77,7 +77,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 			AbstractTask task = (AbstractTask) data;
 			if (task.isActive()) {
 				activationImage = taskActive;
-			} else if (ContextCorePlugin.getContextManager().hasContext(task.getHandleIdentifier())) {
+			} else if (ContextCore.getContextManager().hasContext(task.getHandleIdentifier())) {
 				activationImage = taskInactiveContext;
 			} else {
 				activationImage = taskInactive;

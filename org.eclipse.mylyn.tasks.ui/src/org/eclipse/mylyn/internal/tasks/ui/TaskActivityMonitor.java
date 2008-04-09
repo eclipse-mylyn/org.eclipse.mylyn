@@ -10,11 +10,11 @@ package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.util.List;
 
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextListener;
+import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
@@ -45,7 +45,7 @@ public class TaskActivityMonitor {
 		}
 
 		public void interestChanged(List<IInteractionElement> elements) {
-			List<InteractionEvent> events = ContextCorePlugin.getContextManager()
+			List<InteractionEvent> events = ContextCore.getContextManager()
 					.getActivityMetaContext()
 					.getInteractionHistory();
 			InteractionEvent event = events.get(events.size() - 1);
@@ -66,13 +66,13 @@ public class TaskActivityMonitor {
 		}
 	};
 
-	private final InteractionContextManager contextManager;
+	private final IInteractionContextManager contextManager;
 
 	private final TaskActivityManager taskActivityManager;
 
 	private int timeTicks;
 
-	public TaskActivityMonitor(TaskActivityManager taskActivityManager, InteractionContextManager contextManager) {
+	public TaskActivityMonitor(TaskActivityManager taskActivityManager, IInteractionContextManager contextManager) {
 		this.taskActivityManager = taskActivityManager;
 		this.contextManager = contextManager;
 	}
@@ -87,7 +87,7 @@ public class TaskActivityMonitor {
 			if (timeTicks > 3) {
 				// Save in case of system failure.
 				// TODO: request asynchronous save
-				ContextCorePlugin.getContextManager().saveActivityContext();
+				ContextCore.getContextManager().saveActivityContext();
 				timeTicks = 0;
 			}
 		}

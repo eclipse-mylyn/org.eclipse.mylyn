@@ -16,7 +16,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -53,7 +53,7 @@ public class TaskActivationHistory {
 	public void loadPersistentHistory() {
 		int tasksAdded = 0;
 		history.clear();
-		for (int i = ContextCorePlugin.getContextManager().getActivityMetaContext().getInteractionHistory().size() - 1; i >= 0; i--) {
+		for (int i = ContextCore.getContextManager().getActivityMetaContext().getInteractionHistory().size() - 1; i >= 0; i--) {
 			AbstractTask prevTask = getHistoryTaskAt(i);
 
 			if (prevTask != null && !history.contains(prevTask)) {
@@ -73,7 +73,7 @@ public class TaskActivationHistory {
 	 * Returns the task corresponding to the interaction event history item at the specified position
 	 */
 	protected AbstractTask getHistoryTaskAt(int pos) {
-		InteractionEvent event = ContextCorePlugin.getContextManager()
+		InteractionEvent event = ContextCore.getContextManager()
 				.getActivityMetaContext()
 				.getInteractionHistory()
 				.get(pos);

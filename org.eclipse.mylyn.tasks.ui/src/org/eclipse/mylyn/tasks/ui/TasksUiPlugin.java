@@ -38,7 +38,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.ContextPreferenceContstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
@@ -242,11 +243,11 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	private static ITaskActivityListener CONTEXT_TASK_ACTIVITY_LISTENER = new ITaskActivityListener() {
 
 		public void taskActivated(final AbstractTask task) {
-			ContextCorePlugin.getContextManager().activateContext(task.getHandleIdentifier());
+			ContextCore.getContextManager().activateContext(task.getHandleIdentifier());
 		}
 
 		public void taskDeactivated(final AbstractTask task) {
-			ContextCorePlugin.getContextManager().deactivateContext(task.getHandleIdentifier());
+			ContextCore.getContextManager().deactivateContext(task.getHandleIdentifier());
 		}
 
 		public void activityChanged(ScheduledTaskContainer week) {
@@ -476,7 +477,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			taskListManager.readExistingOrCreateNewList();
 			initialized = true;
 
-			taskActivityMonitor = new TaskActivityMonitor(taskActivityManager, ContextCorePlugin.getContextManager());
+			taskActivityMonitor = new TaskActivityMonitor(taskActivityManager, ContextCore.getContextManager());
 			taskActivityMonitor.start();
 
 			saveParticipant = new ISaveParticipant() {
@@ -651,7 +652,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	public void setDataDirectory(String newPath) {
 		getTaskListManager().saveTaskList();
-		ContextCorePlugin.getContextManager().saveActivityContext();
+		ContextCore.getContextManager().saveActivityContext();
 		getPreferenceStore().setValue(ContextPreferenceContstants.PREF_DATA_DIR, newPath);
 		ContextCorePlugin.getDefault().getContextStore().contextStoreMoved();
 	}
@@ -668,7 +669,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		getTaskListManager().resetTaskList();
 		getTaskListManager().setTaskListFile(
 				new File(getDataDirectory() + File.separator + ITasksUiConstants.DEFAULT_TASK_LIST_FILE));
-		ContextCorePlugin.getContextManager().loadActivityMetaContext();
+		ContextCore.getContextManager().loadActivityMetaContext();
 		getTaskListManager().readExistingOrCreateNewList();
 		getTaskListManager().initActivityHistory();
 	}

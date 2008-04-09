@@ -13,8 +13,9 @@ import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.tests.AbstractContextTest;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataExportWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataExportWizardPage;
@@ -77,9 +78,9 @@ public class TaskDataExportTest extends AbstractContextTest {
 
 		// Save the context file and check that it exists
 		assertTrue(ContextCorePlugin.getDefault().getContextStore().getContextDirectory().exists());
-		ContextCorePlugin.getContextManager().saveContext(mockContext.getHandleIdentifier());
-		File taskFile = ContextCorePlugin.getContextManager().getFileForContext(task1.getHandleIdentifier());
-		assertTrue(ContextCorePlugin.getContextManager().hasContext(task1.getHandleIdentifier()));
+		ContextCore.getContextManager().saveContext(mockContext.getHandleIdentifier());
+		File taskFile = ContextCore.getContextManager().getFileForContext(task1.getHandleIdentifier());
+		assertTrue(ContextCore.getContextManager().hasContext(task1.getHandleIdentifier()));
 		assertTrue(taskFile.exists());
 	}
 
@@ -88,7 +89,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 		removeFiles(destinationDir);
 		destinationDir.delete();
 		assertFalse(destinationDir.exists());
-		ContextCorePlugin.getContextManager().deactivateContext(mockContext.getHandleIdentifier());
+		ContextCore.getContextManager().deactivateContext(mockContext.getHandleIdentifier());
 		super.tearDown();
 	}
 

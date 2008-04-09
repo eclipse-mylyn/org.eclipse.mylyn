@@ -25,8 +25,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
+import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.internal.monitor.core.util.ZipFileUtil;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.WorkspaceAwareContextStore;
@@ -165,16 +165,16 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 		if (exportActivationHistory) {
 			try {
 				File sourceActivationHistoryFile = new File(contextsDirectory,
-						InteractionContextManager.CONTEXT_HISTORY_FILE_NAME
-								+ InteractionContextManager.CONTEXT_FILE_EXTENSION);
+						IInteractionContextManager.CONTEXT_HISTORY_FILE_NAME
+								+ IInteractionContextManager.CONTEXT_FILE_EXTENSION);
 
 				if (sourceActivationHistoryFile.exists()) {
 
-					ContextCorePlugin.getContextManager().saveActivityContext();
+					ContextCore.getContextManager().saveActivityContext();
 
 					File destActivationHistoryFile = new File(destinationDirectory + File.separator
-							+ InteractionContextManager.CONTEXT_HISTORY_FILE_NAME
-							+ InteractionContextManager.CONTEXT_FILE_EXTENSION);
+							+ IInteractionContextManager.CONTEXT_HISTORY_FILE_NAME
+							+ IInteractionContextManager.CONTEXT_FILE_EXTENSION);
 
 					if (zip) {
 						filesToZip.add(sourceActivationHistoryFile);
@@ -198,12 +198,12 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 			boolean errorDisplayed = false;
 			for (AbstractTask task : tasks) {
 
-				if (!ContextCorePlugin.getContextManager().hasContext(task.getHandleIdentifier())) {
+				if (!ContextCore.getContextManager().hasContext(task.getHandleIdentifier())) {
 					continue; // Tasks without a context have no file to
 					// copy
 				}
 
-				File sourceTaskContextFile = ContextCorePlugin.getContextManager().getFileForContext(
+				File sourceTaskContextFile = ContextCore.getContextManager().getFileForContext(
 						task.getHandleIdentifier());
 
 				File destTaskFile = new File(destinationDirectory + File.separator + sourceTaskContextFile.getName());

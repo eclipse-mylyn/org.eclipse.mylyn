@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
@@ -51,8 +51,8 @@ public class AttachmentUtil {
 	 */
 	public static boolean attachContext(AbstractAttachmentHandler attachmentHandler, TaskRepository repository,
 			AbstractTask task, String longComment, IProgressMonitor monitor) throws CoreException {
-		ContextCorePlugin.getContextManager().saveContext(task.getHandleIdentifier());
-		final File sourceContextFile = ContextCorePlugin.getContextManager().getFileForContext(
+		ContextCore.getContextManager().saveContext(task.getHandleIdentifier());
+		final File sourceContextFile = ContextCore.getContextManager().getFileForContext(
 				task.getHandleIdentifier());
 
 		RepositoryTaskSyncState previousState = task.getSynchronizationState();
@@ -125,7 +125,7 @@ public class AttachmentUtil {
 			AbstractTask task, RepositoryAttachment attachment, String destinationPath, IProgressMonitor monitor)
 			throws CoreException {
 
-		File destinationContextFile = ContextCorePlugin.getContextManager().getFileForContext(
+		File destinationContextFile = ContextCore.getContextManager().getFileForContext(
 				task.getHandleIdentifier());
 
 		// TODO: add functionality for not overwriting previous context
