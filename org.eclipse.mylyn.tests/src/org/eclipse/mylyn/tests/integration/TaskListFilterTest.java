@@ -106,7 +106,7 @@ public class TaskListFilterTest extends TestCase {
 	}
 
 	public void testCompletedTaskWithDueDateNotRevealed() {
-
+		fail();
 	}
 
 	public void testInterestFilter() {
