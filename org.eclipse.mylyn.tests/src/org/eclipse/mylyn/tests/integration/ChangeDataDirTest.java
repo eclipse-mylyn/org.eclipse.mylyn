@@ -15,8 +15,8 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
-import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.monitor.usage.UiUsageMonitorPlugin;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
@@ -75,7 +75,7 @@ public class ChangeDataDirTest extends TestCase {
 
 		assertTrue(UiUsageMonitorPlugin.getDefault().getInteractionLogger().getOutputFile().exists());
 		String monitorFileName = UiUsageMonitorPlugin.MONITOR_LOG_NAME
-				+ InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD;
+				+ IInteractionContextManager.CONTEXT_FILE_EXTENSION_OLD;
 		List<String> newFiles = Arrays.asList(new File(newDataDir).list());
 		assertTrue(newFiles.toString(), newFiles.contains(monitorFileName));
 
