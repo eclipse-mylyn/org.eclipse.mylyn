@@ -74,7 +74,7 @@ public class CreateQueryFromSearchAction extends Action {
 					if (dialogResult == Window.OK) {
 						query.setHandleIdentifier(dialog.getValue());
 						TasksUiPlugin.getTaskListManager().getTaskList().addQuery(query);
-						TasksUi.synchronize(connector, query, null, true);
+						TasksUi.synchronizeQuery(connector, query, null, true);
 					}
 				}
 			}

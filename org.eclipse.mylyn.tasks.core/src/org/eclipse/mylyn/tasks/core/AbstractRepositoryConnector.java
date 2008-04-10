@@ -185,7 +185,7 @@ public abstract class AbstractRepositoryConnector {
 	 * @since 3.0
 	 */
 	public abstract IStatus performQuery(TaskRepository repository, AbstractRepositoryQuery query,
-			final AbstractTaskCollector resultCollector, SynchronizationEvent event, IProgressMonitor monitor);
+			AbstractTaskCollector resultCollector, SynchronizationEvent event, IProgressMonitor monitor);
 
 	/**
 	 * @since 2.0
@@ -482,17 +482,28 @@ public abstract class AbstractRepositoryConnector {
 	 * @since 3.0
 	 */
 	public void preSynchronization(SynchronizationEvent event, IProgressMonitor monitor) throws CoreException {
+		try {
+			monitor.beginTask("", 1);
+		} finally {
+			monitor.done();
+		}
 	}
 
 	/**
 	 * @since 3.0
 	 */
 	public void postSynchronization(SynchronizationEvent event, IProgressMonitor monitor) throws CoreException {
-		if (event.fullSynchronization) {
-			event.taskRepository.setSynchronizationTimeStamp(getSynchronizationTimestamp(event.taskRepository,
-					event.changedTasks));
+		try {
+			monitor.beginTask("", 1);
+
+			if (event.fullSynchronization) {
+				event.taskRepository.setSynchronizationTimeStamp(getSynchronizationTimestamp(event.taskRepository,
+						event.changedTasks));
+			}
+			// TODO save repository
+		} finally {
+			monitor.done();
 		}
-		// TODO save repository
 	}
 
 }

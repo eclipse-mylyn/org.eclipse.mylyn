@@ -71,7 +71,7 @@ public class NewBugzillaQueryWizard extends Wizard {
 				try {
 					AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
 							.getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
-					TasksUi.synchronize(connector, queryCategory, null, true);
+					TasksUi.synchronizeQuery(connector, queryCategory, null, true);
 				} finally {
 					monitor.done();
 				}

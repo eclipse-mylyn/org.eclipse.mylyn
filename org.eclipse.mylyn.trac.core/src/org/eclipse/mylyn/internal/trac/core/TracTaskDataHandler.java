@@ -43,6 +43,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskComment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.web.core.Policy;
 
 /**
  * @author Steffen Pingel
@@ -66,7 +67,13 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 	@Override
 	public RepositoryTaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
 			throws CoreException {
-		return downloadTaskData(repository, TracRepositoryConnector.getTicketId(taskId), monitor);
+		monitor = Policy.monitorFor(monitor);
+		try {
+			monitor.beginTask("Task Download", IProgressMonitor.UNKNOWN);
+			return downloadTaskData(repository, TracRepositoryConnector.getTicketId(taskId), monitor);
+		} finally {
+			monitor.done();
+		}
 	}
 
 	public RepositoryTaskData downloadTaskData(TaskRepository repository, int taskId, IProgressMonitor monitor)

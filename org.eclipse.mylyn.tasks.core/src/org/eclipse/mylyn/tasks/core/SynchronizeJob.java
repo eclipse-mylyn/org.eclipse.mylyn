@@ -10,10 +10,34 @@ package org.eclipse.mylyn.tasks.core;
 
 import org.eclipse.core.runtime.jobs.Job;
 
+/**
+ * @author Steffen Pingel
+ * @since 3.0
+ */
 public abstract class SynchronizeJob extends Job {
+
+	private boolean changedTasksSynchronization = true;
+
+	private boolean fullSynchronization = false;
 
 	public SynchronizeJob(String name) {
 		super(name);
+	}
+
+	public boolean isChangedTasksSynchronization() {
+		return changedTasksSynchronization;
+	}
+
+	public boolean isFullSynchronization() {
+		return fullSynchronization;
+	}
+
+	public void setChangedTasksSynchronization(boolean synchronizeChangedTasks) {
+		this.changedTasksSynchronization = synchronizeChangedTasks;
+	}
+
+	public void setFullSynchronization(boolean fullSynchronization) {
+		this.fullSynchronization = fullSynchronization;
 	}
 
 }

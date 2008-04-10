@@ -39,13 +39,7 @@ import org.eclipse.mylyn.web.core.Policy;
  */
 public class SynchronizeTasksJob extends SynchronizeJob {
 
-	private static final String LABEL_SYNCHRONIZE_TASK = "Task Synchronization";
-
-	private static final String LABEL_SYNCHRONIZING = "Synchronizing task ";
-
 	private final AbstractRepositoryConnector connector;
-
-	private boolean forced = false;
 
 	private final IRepositorySynchronizationManager synchronizationManager;
 
@@ -59,7 +53,7 @@ public class SynchronizeTasksJob extends SynchronizeJob {
 
 	public SynchronizeTasksJob(TaskList taskList, IRepositorySynchronizationManager synchronizationManager,
 			AbstractRepositoryConnector connector, TaskRepository taskRepository, Set<AbstractTask> tasks) {
-		super(LABEL_SYNCHRONIZE_TASK + " (" + tasks.size() + " tasks)");
+		super("Task Synchronization (" + tasks.size() + " tasks)");
 		this.taskList = taskList;
 		this.synchronizationManager = synchronizationManager;
 		this.connector = connector;
@@ -68,22 +62,15 @@ public class SynchronizeTasksJob extends SynchronizeJob {
 		this.taskDataHandler = connector.getTaskDataHandler();
 	}
 
-	/**
-	 * Returns true, if synchronization was triggered manually and not by an automatic background job.
-	 */
-	public boolean isForced() {
-		return forced;
-	}
-
 	@Override
 	public IStatus run(IProgressMonitor monitor) {
 		try {
-			monitor.beginTask(LABEL_SYNCHRONIZING, tasks.size());
+			monitor.beginTask("Retrieving tasks", tasks.size() * 100);
 
 			if (taskDataHandler != null && taskDataHandler.canGetMultiTaskData()) {
 				try {
-					synchronizeTasks(new SubProgressMonitor(monitor, tasks.size()), taskRepository, tasks);
-				} catch (final CoreException e) {
+					synchronizeTasks(new SubProgressMonitor(monitor, tasks.size() * 100), taskRepository, tasks);
+				} catch (CoreException e) {
 					for (AbstractTask task : tasks) {
 						updateStatus(taskRepository, task, e.getStatus());
 					}
@@ -91,8 +78,7 @@ public class SynchronizeTasksJob extends SynchronizeJob {
 			} else {
 				for (AbstractTask task : tasks) {
 					Policy.checkCanceled(monitor);
-					synchronizeTask(monitor, task);
-					monitor.worked(1);
+					synchronizeTask(new SubProgressMonitor(monitor, 100), task);
 				}
 			}
 		} catch (OperationCanceledException e) {
@@ -110,13 +96,6 @@ public class SynchronizeTasksJob extends SynchronizeJob {
 		return Status.OK_STATUS;
 	}
 
-	/**
-	 * Indicates a manual synchronization. If set to true, a dialog will be displayed in case of errors.
-	 */
-	public void setForced(boolean forced) {
-		this.forced = forced;
-	}
-
 	private void synchronizeTask(IProgressMonitor monitor, AbstractTask task) {
 		monitor.subTask(task.getSummary());
 		task.setSynchronizationStatus(null);
@@ -125,7 +104,7 @@ public class SynchronizeTasksJob extends SynchronizeJob {
 			String taskId = task.getTaskId();
 			RepositoryTaskData downloadedTaskData = connector.getTaskData(taskRepository, taskId, monitor);
 			if (downloadedTaskData != null) {
-				updateFromTaskData(monitor, taskRepository, task, downloadedTaskData);
+				updateFromTaskData(taskRepository, task, downloadedTaskData);
 			} else {
 				// FIXME log/set error
 			}
@@ -136,7 +115,7 @@ public class SynchronizeTasksJob extends SynchronizeJob {
 
 	private void synchronizeTasks(IProgressMonitor monitor, TaskRepository repository, Set<AbstractTask> tasks)
 			throws CoreException {
-		monitor.subTask("Synchronizing tasks from: " + repository.getRepositoryLabel());
+		monitor.subTask(repository.getRepositoryLabel());
 		Set<String> taskIds = new HashSet<String>();
 		Map<String, AbstractTask> idToTask = new HashMap<String, AbstractTask>();
 		for (AbstractTask task : tasks) {
@@ -150,7 +129,7 @@ public class SynchronizeTasksJob extends SynchronizeJob {
 				if (taskData != null) {
 					AbstractTask task = idToTask.remove(taskData.getTaskId());
 					if (task != null) {
-						updateFromTaskData(new SubProgressMonitor(monitor, 1), repository, task, taskData);
+						updateFromTaskData(repository, task, taskData);
 						monitor.worked(1);
 					}
 				}
@@ -162,13 +141,12 @@ public class SynchronizeTasksJob extends SynchronizeJob {
 		}
 	}
 
-	private void updateFromTaskData(IProgressMonitor monitor, TaskRepository repository, AbstractTask task,
-			RepositoryTaskData taskData) {
+	private void updateFromTaskData(TaskRepository repository, AbstractTask task, RepositoryTaskData taskData) {
 		// HACK: part of hack below
 		//Date oldDueDate = repositoryTask.getDueDate();
 
 		connector.updateTaskFromTaskData(repository, task, taskData);
-		synchronizationManager.saveIncoming(task, taskData, forced);
+		synchronizationManager.saveIncoming(task, taskData, isUser());
 
 		// HACK: Remove once connectors can get access to
 		// TaskDataManager and do this themselves
@@ -180,21 +158,6 @@ public class SynchronizeTasksJob extends SynchronizeJob {
 //			TasksUiPlugin.getTaskActivityManager().setDueDate(repositoryTask, repositoryTask.getDueDate());
 //		}
 
-		updateTask(task);
-	}
-
-	/**
-	 * Does not report synchronization failures if repository is offline.
-	 */
-	private void updateStatus(TaskRepository repository, AbstractTask task, IStatus status) {
-		if (!forced && repository != null && repository.isOffline()) {
-			task.setSynchronizing(false);
-		} else {
-			task.setSynchronizationStatus(status);
-		}
-	}
-
-	private void updateTask(AbstractTask task) {
 		task.setStale(false);
 		task.setSynchronizing(false);
 		if (task.getSynchronizationState() == RepositoryTaskSyncState.INCOMING
@@ -204,4 +167,13 @@ public class SynchronizeTasksJob extends SynchronizeJob {
 			taskList.notifyTaskChanged(task, false);
 		}
 	}
+
+	private void updateStatus(TaskRepository repository, AbstractTask task, IStatus status) {
+		task.setSynchronizationStatus(status);
+		if (!isUser()) {
+			task.setSynchronizing(false);
+		}
+		taskList.notifyTaskChanged(task, false);
+	}
+
 }

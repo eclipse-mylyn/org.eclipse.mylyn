@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -107,14 +106,14 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 					AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
 							.getRepositoryConnector(repository.getConnectorKind());
 					Set<AbstractRepositoryQuery> queries = entry.getValue();
-					TasksUi.synchronize(connector, repository, queries, null, Job.LONG, 0L, true);
+					TasksUi.synchronizeQueries(connector, repository, queries, null, true);
 				}
 			}
 			if (!tasksToSyncMap.isEmpty()) {
 				for (AbstractRepositoryConnector connector : tasksToSyncMap.keySet()) {
 					List<AbstractTask> tasksToSync = tasksToSyncMap.get(connector);
 					if (tasksToSync != null && tasksToSync.size() > 0) {
-						TasksUi.synchronize(connector, new HashSet<AbstractTask>(tasksToSync), true, null);
+						TasksUi.synchronizeTasks(connector, new HashSet<AbstractTask>(tasksToSync), true, null);
 					}
 				}
 			}

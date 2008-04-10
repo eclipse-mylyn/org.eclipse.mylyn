@@ -105,7 +105,6 @@ public class TracRepositoryConnectorTest extends TestCase {
 		assertEquals(abstractConnector.getConnectorKind(), kind);
 
 		connector = (TracRepositoryConnector) abstractConnector;
-		TasksUi.setForceSyncExec(true);
 	}
 
 	public void testGetRepositoryUrlFromTaskUrl() {
@@ -277,7 +276,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 	public void testContextXmlRpc010() throws Exception {
 		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
 		TracTask task = (TracTask) TasksUiUtil.createTask(repository, data.attachmentTicketId + "", null);
-		TasksUi.synchronize(connector, task, true, null);
+		TasksUi.synchronizeTask(connector, task, true, null);
 
 		//int size = task.getTaskData().getAttachments().size();
 
@@ -288,7 +287,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 		assertTrue(AttachmentUtil.attachContext(connector.getAttachmentHandler(), repository, task, "",
 				new NullProgressMonitor()));
 
-		TasksUi.synchronize(connector, task, true, null);
+		TasksUi.synchronizeTask(connector, task, true, null);
 		// TODO attachment may have been overridden therefore size may not have changed
 		//assertEquals(size + 1, task.getTaskData().getAttachments().size());
 

@@ -54,7 +54,7 @@ public abstract class AbstractEditQueryWizard extends Wizard {
 			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 					repository.getConnectorKind());
 			if (connector != null) {
-				TasksUi.synchronize(connector, queryToRun, null, true);
+				TasksUi.synchronizeQuery(connector, queryToRun, null, true);
 			}
 		}
 

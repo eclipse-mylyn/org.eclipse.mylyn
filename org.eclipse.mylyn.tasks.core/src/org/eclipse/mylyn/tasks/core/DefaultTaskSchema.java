@@ -105,7 +105,8 @@ public class DefaultTaskSchema {
 	}
 
 	public PriorityLevel getPriority() {
-		return PriorityLevel.fromString(getValue(RepositoryTaskAttribute.PRIORITY));
+		String value = getValue(RepositoryTaskAttribute.PRIORITY);
+		return (value != null) ? PriorityLevel.fromString(value) : null;
 	}
 
 	public String getProduct() {

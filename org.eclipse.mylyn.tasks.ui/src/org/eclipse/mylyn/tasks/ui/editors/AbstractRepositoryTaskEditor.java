@@ -960,7 +960,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				try {
 					super.performUpdate(repository, connector, monitor);
 					if (connector != null) {
-						TasksUi.synchronize(connector, repositoryTask, true, new JobChangeAdapter() {
+						TasksUi.synchronizeTask(connector, repositoryTask, true, new JobChangeAdapter() {
 
 							@Override
 							public void done(IJobChangeEvent event) {
@@ -3584,7 +3584,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 						modifiedTask.setSubmitting(true);
 						final AbstractTask finalModifiedTask = modifiedTask;
-						TasksUi.synchronize(connector, modifiedTask, true, new JobChangeAdapter() {
+						TasksUi.synchronizeTask(connector, modifiedTask, true, new JobChangeAdapter() {
 
 							@Override
 							public void done(IJobChangeEvent event) {
@@ -3602,8 +3602,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 								}
 							}
 						});
-						TasksUiPlugin.getSynchronizationScheduler().synchNow(0, Collections.singletonList(repository),
-								false);
+						TasksUiPlugin.getSynchronizationScheduler().synchronize(repository);
 					} else {
 						close();
 						// For some reason the task wasn't retrieved.

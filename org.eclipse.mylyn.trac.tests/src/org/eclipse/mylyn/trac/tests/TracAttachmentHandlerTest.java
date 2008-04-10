@@ -84,7 +84,6 @@ public class TracAttachmentHandlerTest extends TestCase {
 
 		AbstractRepositoryConnector abstractConnector = manager.getRepositoryConnector(kind);
 		connector = (TracRepositoryConnector) abstractConnector;
-		TasksUi.setForceSyncExec(true);
 
 		attachmentHandler = connector.getAttachmentHandler();
 	}
@@ -101,7 +100,7 @@ public class TracAttachmentHandlerTest extends TestCase {
 		init(url, Version.XML_RPC);
 		TracTask task = (TracTask) TasksUiUtil.createTask(repository, data.attachmentTicketId + "",
 				new NullProgressMonitor());
-		TasksUi.synchronize(connector, task, true, null);
+		TasksUi.synchronizeTask(connector, task, true, null);
 		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(),
 				task.getTaskId());
 
@@ -134,7 +133,7 @@ public class TracAttachmentHandlerTest extends TestCase {
 		init(url, Version.XML_RPC);
 		TracTask task = (TracTask) TasksUiUtil.createTask(repository, data.attachmentTicketId + "",
 				new NullProgressMonitor());
-		TasksUi.synchronize(connector, task, true, null);
+		TasksUi.synchronizeTask(connector, task, true, null);
 		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(),
 				task.getTaskId());
 

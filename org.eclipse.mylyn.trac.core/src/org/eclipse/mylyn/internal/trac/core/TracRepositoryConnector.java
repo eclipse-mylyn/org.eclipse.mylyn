@@ -145,42 +145,47 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public IStatus performQuery(TaskRepository repository, AbstractRepositoryQuery query,
 			AbstractTaskCollector resultCollector, SynchronizationEvent event, IProgressMonitor monitor) {
-
-		final List<TracTicket> tickets = new ArrayList<TracTicket>();
-
-		ITracClient client;
 		try {
-			client = getClientManager().getRepository(repository);
-			if (query instanceof TracRepositoryQuery) {
-				client.search(((TracRepositoryQuery) query).getTracSearch(), tickets, monitor);
+			monitor.beginTask("Querying repository", IProgressMonitor.UNKNOWN);
+
+			final List<TracTicket> tickets = new ArrayList<TracTicket>();
+
+			ITracClient client;
+			try {
+				client = getClientManager().getRepository(repository);
+				if (query instanceof TracRepositoryQuery) {
+					client.search(((TracRepositoryQuery) query).getTracSearch(), tickets, monitor);
+				}
+
+				for (TracTicket ticket : tickets) {
+					resultCollector.accept(taskDataHandler.createTaskDataFromTicket(repository, ticket, monitor));
+				}
+			} catch (Throwable e) {
+				return TracCorePlugin.toStatus(e, repository);
 			}
 
-			for (TracTicket ticket : tickets) {
-				resultCollector.accept(taskDataHandler.createTaskDataFromTicket(repository, ticket, monitor));
-			}
-		} catch (Throwable e) {
-			return TracCorePlugin.toStatus(e, repository);
+			return Status.OK_STATUS;
+		} finally {
+			monitor.done();
 		}
-
-		return Status.OK_STATUS;
 	}
 
 	@Override
 	public void preSynchronization(SynchronizationEvent event, IProgressMonitor monitor) throws CoreException {
 		monitor = Policy.monitorFor(monitor);
-		TaskRepository repository = event.taskRepository;
 		try {
+			monitor.beginTask("Getting changed tasks", IProgressMonitor.UNKNOWN);
+
 			if (!event.fullSynchronization) {
 				return;
 			}
-
-			monitor.beginTask("Getting changed tasks", IProgressMonitor.UNKNOWN);
 
 			// there are no Trac tasks in the task list, skip contacting the repository
 			if (event.tasks.isEmpty()) {
 				return;
 			}
 
+			TaskRepository repository = event.taskRepository;
 			if (!TracRepositoryConnector.hasChangedSince(repository)) {
 				// always run the queries for web mode
 				return;

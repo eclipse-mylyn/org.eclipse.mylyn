@@ -17,6 +17,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -174,8 +175,8 @@ public final class TaskRepository extends PlatformObject {
 	 */
 	private boolean isBugRepository = false;
 
-	public TaskRepository(String kind, String serverUrl) {
-		this(kind, serverUrl, NO_VERSION_SPECIFIED);
+	public TaskRepository(String connectorKind, String repositoryUrl) {
+		this(connectorKind, repositoryUrl, NO_VERSION_SPECIFIED);
 	}
 
 	/**
@@ -200,9 +201,11 @@ public final class TaskRepository extends PlatformObject {
 	}
 
 	@Deprecated
-	public TaskRepository(String kind, String serverUrl, String version, String encoding, String timeZoneId) {
-		this.properties.put(IRepositoryConstants.PROPERTY_CONNECTOR_KIND, kind);
-		this.properties.put(IRepositoryConstants.PROPERTY_URL, serverUrl);
+	public TaskRepository(String connectorKind, String repositoryUrl, String version, String encoding, String timeZoneId) {
+		Assert.isNotNull(connectorKind);
+		Assert.isNotNull(repositoryUrl);
+		this.properties.put(IRepositoryConstants.PROPERTY_CONNECTOR_KIND, connectorKind);
+		this.properties.put(IRepositoryConstants.PROPERTY_URL, repositoryUrl);
 		this.properties.put(IRepositoryConstants.PROPERTY_VERSION, version);
 		this.properties.put(IRepositoryConstants.PROPERTY_ENCODING, encoding);
 		this.properties.put(IRepositoryConstants.PROPERTY_TIMEZONE, timeZoneId);
@@ -244,26 +247,15 @@ public final class TaskRepository extends PlatformObject {
 
 	@Override
 	public boolean equals(Object object) {
+		if (object == this) {
+			return true;
+		}
 		if (object instanceof TaskRepository) {
 			TaskRepository repository = (TaskRepository) object;
-			if (getRepositoryUrl() == null) {
-				if (repository.getRepositoryUrl() != null) {
-					return false;
-				}
-			} else {
-				if (!getRepositoryUrl().equals(repository.getRepositoryUrl())) {
-					return false;
-				}
-			}
-			if (getConnectorKind() == null) {
-				return repository.getConnectorKind() == null;
-			} else {
-				return getConnectorKind().equals(repository.getConnectorKind());
-			}
-
-		} else {
-			return super.equals(object);
+			return getConnectorKind().equals(repository.getConnectorKind())
+					&& getRepositoryUrl().equals(repository.getRepositoryUrl());
 		}
+		return false;
 	}
 
 	// TODO e3.4 move to new api
@@ -563,8 +555,7 @@ public final class TaskRepository extends PlatformObject {
 
 	@Override
 	public int hashCode() {
-		int res = getRepositoryUrl() == null ? 1 : getRepositoryUrl().hashCode();
-		return res * 31 + (getConnectorKind() == null ? 1 : getConnectorKind().hashCode());
+		return getRepositoryUrl().hashCode() * 31 + getConnectorKind().hashCode();
 	}
 
 	public boolean hasProperty(String name) {
@@ -760,8 +751,9 @@ public final class TaskRepository extends PlatformObject {
 	/**
 	 * @since 3.0
 	 */
-	public void setRepositoryUrl(String newUrl) {
-		properties.put(IRepositoryConstants.PROPERTY_URL, newUrl);
+	public void setRepositoryUrl(String repositoryUrl) {
+		Assert.isNotNull(repositoryUrl);
+		properties.put(IRepositoryConstants.PROPERTY_URL, repositoryUrl);
 	}
 
 	public void setVersion(String ver) {

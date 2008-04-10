@@ -360,7 +360,7 @@ public class TasksUiUtil {
 									AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
 											.getRepositoryConnector(repositoryTask.getConnectorKind());
 									if (connector != null) {
-										TasksUi.synchronize(connector, repositoryTask, false, null);
+										TasksUi.synchronizeTask(connector, repositoryTask, false, null);
 									}
 
 								}
@@ -660,7 +660,7 @@ public class TasksUiUtil {
 						AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
 								.getRepositoryConnector(task.getConnectorKind());
 						if (connector != null) {
-							TasksUi.synchronize(connector, task, false, null);
+							TasksUi.synchronizeTask(connector, task, false, null);
 						}
 					}
 					return Status.OK_STATUS;
@@ -772,7 +772,7 @@ public class TasksUiUtil {
 						TasksUiUtil.openTaskAndRefresh(task);
 					} else {
 						// TODO consider moving this into the editor, i.e. have the editor refresh the task if task data is missing
-						TasksUi.synchronize(connector, task, true, new JobChangeAdapter() {
+						TasksUi.synchronizeTask(connector, task, true, new JobChangeAdapter() {
 							@Override
 							public void done(IJobChangeEvent event) {
 								PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {

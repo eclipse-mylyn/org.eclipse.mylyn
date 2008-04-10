@@ -23,7 +23,6 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.ui.TaskFactory;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylyn.trac.tests.support.TestFixture;
@@ -56,7 +55,6 @@ public class RepositorySearchQueryTest extends TestCase {
 		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 //		connector = (TracRepositoryConnector) manager.getRepositoryConnector(TracUiPlugin.REPOSITORY_KIND);
-		TasksUi.setForceSyncExec(true);
 	}
 
 	protected void init(String url, Version version) {

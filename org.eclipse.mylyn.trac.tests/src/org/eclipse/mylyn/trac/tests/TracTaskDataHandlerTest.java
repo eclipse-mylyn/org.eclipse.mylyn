@@ -79,7 +79,6 @@ public class TracTaskDataHandlerTest extends TestCase {
 		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		connector = (TracRepositoryConnector) manager.getRepositoryConnector(TracCorePlugin.REPOSITORY_KIND);
-		TasksUi.setForceSyncExec(true);
 
 		taskDataHandler = (TracTaskDataHandler) connector.getTaskDataHandler();
 	}
@@ -137,7 +136,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 	private void markStaleTasks() throws Exception {
 		TracTicket ticket = TracTestUtil.createTicket(client, "markStaleTasks");
 		TracTask task = (TracTask) TasksUiUtil.createTask(repository, ticket.getId() + "", null);
-		TasksUi.synchronize(connector, task, true, null);
+		TasksUi.synchronizeTask(connector, task, true, null);
 		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(),
 				task.getTaskId());
 
@@ -286,7 +285,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 
 	private void postTaskDataInvalidCredentials() throws Exception {
 		TracTask task = (TracTask) TasksUiUtil.createTask(repository, data.offlineHandlerTicketId + "", null);
-		TasksUi.synchronize(connector, task, true, null);
+		TasksUi.synchronizeTask(connector, task, true, null);
 		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(),
 				task.getTaskId());
 

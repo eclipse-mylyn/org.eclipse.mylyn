@@ -34,8 +34,6 @@ public class SynchronizeAllTasksJob extends SynchronizeJob {
 
 	private final AbstractRepositoryConnector connector;
 
-	private boolean forced = false;
-
 	private final IRepositorySynchronizationManager synchronizationManager;
 
 	private final TaskList taskList;
@@ -54,44 +52,37 @@ public class SynchronizeAllTasksJob extends SynchronizeJob {
 		this.tasks = tasks;
 	}
 
-	/**
-	 * Returns true, if synchronization was triggered manually and not by an automatic background job.
-	 */
-	public boolean isForced() {
-		return forced;
-	}
-
 	@Override
 	public IStatus run(IProgressMonitor monitor) {
-		Map<TaskRepository, Set<AbstractTask>> repToTasks = new HashMap<TaskRepository, Set<AbstractTask>>();
-		for (AbstractTask task : tasks) {
-			TaskRepository repository = repositoryManager.getRepository(task.getConnectorKind(),
-					task.getRepositoryUrl());
-			Set<AbstractTask> tasks = repToTasks.get(repository);
-			if (tasks == null) {
-				tasks = new HashSet<AbstractTask>();
-				repToTasks.put(repository, tasks);
-			}
-			tasks.add(task);
-		}
+		try {
+			monitor.beginTask("Retrieving tasks", tasks.size() * 100);
 
-		for (TaskRepository taskRepository : repToTasks.keySet()) {
-			SynchronizeTasksJob job = new SynchronizeTasksJob(taskList, synchronizationManager, connector,
-					taskRepository, repToTasks.get(taskRepository));
-			job.setForced(forced);
-			IStatus status = job.run(new SubProgressMonitor(monitor, 40));
-			if (!status.isOK()) {
-				return status;
+			Map<TaskRepository, Set<AbstractTask>> tasksByRepository = new HashMap<TaskRepository, Set<AbstractTask>>();
+			for (AbstractTask task : tasks) {
+				TaskRepository repository = repositoryManager.getRepository(task.getConnectorKind(),
+						task.getRepositoryUrl());
+				Set<AbstractTask> tasks = tasksByRepository.get(repository);
+				if (tasks == null) {
+					tasks = new HashSet<AbstractTask>();
+					tasksByRepository.put(repository, tasks);
+				}
+				tasks.add(task);
 			}
-		}
-		return Status.OK_STATUS;
-	}
 
-	/**
-	 * Indicates a manual synchronization. If set to true, a dialog will be displayed in case of errors.
-	 */
-	public void setForced(boolean forced) {
-		this.forced = forced;
+			for (TaskRepository taskRepository : tasksByRepository.keySet()) {
+				Set<AbstractTask> repositoryTasks = tasksByRepository.get(taskRepository);
+				SynchronizeTasksJob job = new SynchronizeTasksJob(taskList, synchronizationManager, connector,
+						taskRepository, repositoryTasks);
+				job.setUser(isUser());
+				IStatus status = job.run(new SubProgressMonitor(monitor, repositoryTasks.size() * 100));
+				if (!status.isOK()) {
+					return status;
+				}
+			}
+			return Status.OK_STATUS;
+		} finally {
+			monitor.done();
+		}
 	}
 
 }

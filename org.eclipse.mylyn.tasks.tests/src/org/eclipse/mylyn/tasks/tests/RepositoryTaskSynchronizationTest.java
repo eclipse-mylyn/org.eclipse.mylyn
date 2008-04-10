@@ -28,7 +28,6 @@ import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.tests.connector.MockAttributeFactory;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
@@ -51,17 +50,6 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 	private final TestOfflineTaskHandler handler = new TestOfflineTaskHandler();
 
 	private RepositoryTaskData newData;
-
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		TasksUi.setForceSyncExec(true);
-	}
-
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
 
 	public void testHasIncoming() {
 		AbstractTask task = new MockTask(MOCCK_ID);

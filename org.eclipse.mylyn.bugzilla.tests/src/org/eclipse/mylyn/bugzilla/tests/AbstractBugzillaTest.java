@@ -118,8 +118,6 @@ public abstract class AbstractBugzillaTest extends TestCase {
 		connector = (BugzillaRepositoryConnector) abstractRepositoryClient;
 
 		taskFactory = new TaskFactory(repository);
-//		connector.setForceSynchExecForTesting(true);
-		TasksUi.setForceSyncExec(true);
 	}
 
 	protected BugzillaTask generateLocalTaskAndDownload(String taskNumber) throws CoreException {
@@ -148,7 +146,7 @@ public abstract class AbstractBugzillaTest extends TestCase {
 
 	protected void synchAndAssertState(Set<AbstractTask> tasks, RepositoryTaskSyncState state) {
 		for (AbstractTask task : tasks) {
-			TasksUi.synchronize(connector, task, true, null);
+			TasksUi.synchronizeTask(connector, task, true, null);
 			assertEquals(task.getSynchronizationState(), state);
 		}
 	}

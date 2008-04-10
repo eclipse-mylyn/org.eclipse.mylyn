@@ -21,7 +21,6 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
@@ -30,8 +29,6 @@ import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
-import org.eclipse.mylyn.internal.tasks.ui.ScheduledTaskListSynchJob;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListSynchronizationScheduler;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskReadAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskUnreadAction;
@@ -66,7 +63,6 @@ public class TaskListManagerTest extends TestCase {
 		super.setUp();
 		TasksUiPlugin.getDefault().getPreferenceStore().setValue(
 				TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
-		TasksUi.setForceSyncExec(true);
 		manager = TasksUiPlugin.getTaskListManager();
 		for (TaskRepository repository : TasksUiPlugin.getRepositoryManager().getAllRepositories()) {
 			TasksUiPlugin.getRepositoryManager().removeRepository(repository,
@@ -793,24 +789,6 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(rootTasks, manager.getTaskList().getDefaultCategory().getChildren());
 	}
 
-	public void testScheduledRefreshJob() throws InterruptedException {
-		int counter = 3;
-		ScheduledTaskListSynchJob.resetCount();
-		assertEquals(0, ScheduledTaskListSynchJob.getCount());
-		TasksUiPlugin.getDefault().getPreferenceStore().setValue(
-				TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, true);
-		TasksUiPlugin.getDefault().getPreferenceStore().setValue(
-				TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS, 1000L);
-		TaskListSynchronizationScheduler manager = new TaskListSynchronizationScheduler(false);
-		manager.startSynchJob();
-		Thread.sleep(3000);
-		assertTrue(ScheduledTaskListSynchJob.getCount() + " smaller than " + counter,
-				ScheduledTaskListSynchJob.getCount() >= counter);
-		manager.cancelAll();
-		TasksUiPlugin.getDefault().getPreferenceStore().setValue(
-				TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
-	}
-
 	public void testgetQueriesAndHitsForHandle() {
 		TaskList taskList = manager.getTaskList();
 
@@ -1049,7 +1027,7 @@ public class TaskListManagerTest extends TestCase {
 				MockRepositoryConnector.REPOSITORY_URL);
 		Set<AbstractRepositoryQuery> queries = new HashSet<AbstractRepositoryQuery>();
 		queries.add(query);
-		TasksUi.synchronize(new MockRepositoryConnector(), repository, queries, null, Job.INTERACTIVE, 0, true);
+		TasksUi.synchronizeQueries(new MockRepositoryConnector(), repository, queries, null, true);
 		//assertEquals(2, manager.getTaskList().getArchiveContainer().getChildren().size());
 		assertEquals(0, query.getChildren().size());
 	}

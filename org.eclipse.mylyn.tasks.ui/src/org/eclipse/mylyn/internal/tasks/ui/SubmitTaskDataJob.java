@@ -7,8 +7,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.ui;
 
-import java.util.Collections;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -96,12 +94,12 @@ public class SubmitTaskDataJob extends Job {
 			}
 
 			// initiate task list update
-			TasksUiPlugin.getSynchronizationScheduler().synchNow(0, Collections.singletonList(taskRepository), false);
+			TasksUiPlugin.getSynchronizationScheduler().synchronize(taskRepository);
 
 			// synchronize task
 			task.setSubmitting(true);
 			try {
-				Job synchronizeJob = TasksUi.synchronize(connector, task, true, null);
+				Job synchronizeJob = TasksUi.synchronizeTask(connector, task, true, null);
 				synchronizeJob.join();
 			} finally {
 				task.setSubmitting(false);

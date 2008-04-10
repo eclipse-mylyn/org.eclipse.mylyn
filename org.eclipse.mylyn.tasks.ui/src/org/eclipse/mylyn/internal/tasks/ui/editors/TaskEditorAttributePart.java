@@ -193,7 +193,7 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 						final AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
 								TaskEditorAttributePart.this.getTaskRepository().getRepositoryUrl(), getTaskData().getTaskId());
 						if (task != null) {
-							TasksUi.synchronize(connector, task, true,
+							TasksUi.synchronizeTask(connector, task, true,
 									new JobChangeAdapter() {
 
 										@Override

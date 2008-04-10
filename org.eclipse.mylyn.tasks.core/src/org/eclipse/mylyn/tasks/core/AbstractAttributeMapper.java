@@ -55,7 +55,11 @@ public abstract class AbstractAttributeMapper {
 	}
 
 	public void setDateValue(RepositoryTaskAttribute attribute, Date date) {
-		attribute.setValue(Long.toString(date.getTime()));
+		if (date != null) {
+			attribute.setValue(Long.toString(date.getTime()));
+		} else {
+			attribute.clearValues();
+		}
 	}
 
 	/**

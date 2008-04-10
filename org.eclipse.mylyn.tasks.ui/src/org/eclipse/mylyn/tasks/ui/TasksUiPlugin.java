@@ -61,6 +61,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListNotificationManager;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListSynchronizationScheduler;
 import org.eclipse.mylyn.internal.tasks.ui.TaskRepositoryUtil;
+import org.eclipse.mylyn.internal.tasks.ui.TasksJobFactory;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.AbstractNotification;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotification;
@@ -106,6 +107,8 @@ import org.osgi.framework.ServiceReference;
  */
 public class TasksUiPlugin extends AbstractUIPlugin {
 
+	private static final int DELAY_QUERY_REFRESH_ON_STARTUP = 20 * 1000;
+
 	private static final int MAX_CHANGED_ATTRIBUTES = 2;
 
 	private static final int LINK_PROVIDER_TIMEOUT_SECONDS = 5;
@@ -130,7 +133,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private static TaskActivityManager taskActivityManager;
 
-	private static TaskRepositoryManager taskRepositoryManager;
+	private static TaskRepositoryManager repositoryManager;
 
 	private static TaskListSynchronizationScheduler synchronizationScheduler;
 
@@ -172,6 +175,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	private ISaveParticipant saveParticipant;
 
 	private TaskEditorBloatMonitor taskEditorBloatManager;
+
+	private TasksJobFactory tasksJobFactory;
 
 	private static final boolean DEBUG_HTTPCLIENT = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.mylyn.tasks.ui/debug/httpclient"));
 
@@ -338,6 +343,11 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 					|| event.getProperty().equals(TasksUiPreferenceConstants.PLANNING_ENDHOUR)) {
 				updateTaskActivityManager();
 			}
+
+			if (event.getProperty().equals(TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED)
+					|| event.getProperty().equals(TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS)) {
+				updateSynchronizationScheduler(false);
+			}
 		}
 	};
 
@@ -389,8 +399,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				taskListBackupManager = new TaskListBackupManager();
 				getPreferenceStore().addPropertyChangeListener(taskListBackupManager);
 
-				synchronizationScheduler = new TaskListSynchronizationScheduler(true);
-				synchronizationScheduler.startSynchJob();
+				synchronizationScheduler = new TaskListSynchronizationScheduler(tasksJobFactory);
+				updateSynchronizationScheduler(true);
 			} catch (Throwable t) {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 						"Could not initialize task list backup and synchronization", t));
@@ -404,7 +414,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				ContextCorePlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
 
 				getPreferenceStore().addPropertyChangeListener(PROPERTY_LISTENER);
-				getPreferenceStore().addPropertyChangeListener(synchronizationScheduler);
 
 				// TODO: get rid of this, hack to make decorators show
 				// up on startup
@@ -430,6 +439,22 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		INSTANCE = this;
 	}
 
+	private void updateSynchronizationScheduler(boolean initial) {
+		boolean enabled = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
+				TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED);
+		if (enabled) {
+			long interval = TasksUiPlugin.getDefault().getPreferenceStore().getLong(
+					TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
+			if (initial) {
+				synchronizationScheduler.setInterval(DELAY_QUERY_REFRESH_ON_STARTUP, interval);
+			} else {
+				synchronizationScheduler.setInterval(interval);
+			}
+		} else {
+			synchronizationScheduler.setInterval(0);
+		}
+	}
+
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
@@ -447,15 +472,15 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			File taskListFile = new File(path);
 			taskListManager = new TaskListManager(taskListWriter, taskListFile);
-			taskRepositoryManager = new TaskRepositoryManager(taskListManager.getTaskList());
-			taskActivityManager = new TaskActivityManager(taskRepositoryManager, taskListManager.getTaskList());
+			repositoryManager = new TaskRepositoryManager(taskListManager.getTaskList());
+			taskActivityManager = new TaskActivityManager(repositoryManager, taskListManager.getTaskList());
 			updateTaskActivityManager();
 
 			proxyServiceReference = context.getServiceReference(IProxyService.class.getName());
 			if (proxyServiceReference != null) {
 				IProxyService proxyService = (IProxyService) context.getService(proxyServiceReference);
 				if (proxyService != null) {
-					IProxyChangeListener proxyChangeListener = new TasksUiProxyChangeListener(taskRepositoryManager);
+					IProxyChangeListener proxyChangeListener = new TasksUiProxyChangeListener(repositoryManager);
 					proxyService.addProxyChangeListener(proxyChangeListener);
 				}
 			}
@@ -466,7 +491,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			// conditions previously
 			TasksUiExtensionReader.initStartupExtensions(taskListWriter);
 
-			taskRepositoryManager.readRepositories(getRepositoriesFilePath());
+			repositoryManager.readRepositories(getRepositoriesFilePath());
 
 			// instantiates taskDataManager
 			startOfflineStorageManager();
@@ -474,11 +499,14 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			synchronizationManager = new RepositorySynchronizationManager(taskDataManager,
 					taskListManager.getTaskList());
 
-			for (AbstractRepositoryConnector connector : taskRepositoryManager.getRepositoryConnectors()) {
+			for (AbstractRepositoryConnector connector : repositoryManager.getRepositoryConnectors()) {
 				connector.init2(taskDataManager, synchronizationManager);
 			}
 
 			loadTemplateRepositories();
+
+			tasksJobFactory = new TasksJobFactory(taskListManager.getTaskList(), synchronizationManager,
+					repositoryManager);
 
 			// NOTE: task list must be read before Task List view can be
 			// initialized
@@ -533,20 +561,20 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		getLocalTaskRepository();
 
 		// Add the automatically created templates
-		for (AbstractRepositoryConnector connector : taskRepositoryManager.getRepositoryConnectors()) {
+		for (AbstractRepositoryConnector connector : repositoryManager.getRepositoryConnectors()) {
 			for (RepositoryTemplate template : repositoryTemplateManager.getTemplates(connector.getConnectorKind())) {
 
 				if (template.addAutomatically && !TaskRepositoryUtil.isAddAutomaticallyDisabled(template.repositoryUrl)) {
 					try {
-						TaskRepository taskRepository = taskRepositoryManager.getRepository(
-								connector.getConnectorKind(), template.repositoryUrl);
+						TaskRepository taskRepository = repositoryManager.getRepository(connector.getConnectorKind(),
+								template.repositoryUrl);
 						if (taskRepository == null) {
 							taskRepository = new TaskRepository(connector.getConnectorKind(), template.repositoryUrl);
 							taskRepository.setVersion(template.version);
 							taskRepository.setRepositoryLabel(template.label);
 							taskRepository.setCharacterEncoding(template.characterEncoding);
 							taskRepository.setAnonymous(template.anonymous);
-							taskRepositoryManager.addRepository(taskRepository, getRepositoriesFilePath());
+							repositoryManager.addRepository(taskRepository, getRepositoriesFilePath());
 						}
 					} catch (Throwable t) {
 						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
@@ -565,14 +593,14 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	 * @since 3.0
 	 */
 	public TaskRepository getLocalTaskRepository() {
-		TaskRepository localRepository = taskRepositoryManager.getRepository(LocalRepositoryConnector.REPOSITORY_URL);
+		TaskRepository localRepository = repositoryManager.getRepository(LocalRepositoryConnector.REPOSITORY_URL);
 		if (localRepository == null) {
 			localRepository = new TaskRepository(LocalRepositoryConnector.CONNECTOR_KIND,
 					LocalRepositoryConnector.REPOSITORY_URL);
 			localRepository.setVersion(LocalRepositoryConnector.REPOSITORY_VERSION);
 			localRepository.setRepositoryLabel(LocalRepositoryConnector.REPOSITORY_LABEL);
 			localRepository.setAnonymous(true);
-			taskRepositoryManager.addRepository(localRepository, getRepositoriesFilePath());
+			repositoryManager.addRepository(localRepository, getRepositoriesFilePath());
 		}
 		return localRepository;
 	}
@@ -596,7 +624,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			if (PlatformUI.isWorkbenchRunning()) {
 				getPreferenceStore().removePropertyChangeListener(taskListNotificationManager);
 				getPreferenceStore().removePropertyChangeListener(taskListBackupManager);
-				getPreferenceStore().removePropertyChangeListener(synchronizationScheduler);
 				getPreferenceStore().removePropertyChangeListener(PROPERTY_LISTENER);
 				taskListManager.getTaskList().removeChangeListener(taskListSaveManager);
 				taskListManager.dispose();
@@ -824,7 +851,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	}
 
 	public static TaskRepositoryManager getRepositoryManager() {
-		return taskRepositoryManager;
+		return repositoryManager;
 	}
 
 	/**
@@ -879,7 +906,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		File root = new File(this.getDataDirectory() + '/' + FOLDER_OFFLINE);
 		OfflineFileStorage storage = new OfflineFileStorage(root);
 		OfflineCachingStorage cachedStorage = new OfflineCachingStorage(storage);
-		taskDataManager = new TaskDataManager(taskRepositoryManager, cachedStorage);
+		taskDataManager = new TaskDataManager(repositoryManager, cachedStorage);
 		taskDataManager.start();
 	}
 
@@ -919,6 +946,13 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	 */
 	public static RepositorySynchronizationManager getSynchronizationManager() {
 		return synchronizationManager;
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public static TasksJobFactory getTasksJobFactory() {
+		return INSTANCE.tasksJobFactory;
 	}
 
 	public void addDuplicateDetector(AbstractDuplicateDetector duplicateDetector) {
