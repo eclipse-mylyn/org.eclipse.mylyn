@@ -126,7 +126,7 @@ public class ContextUiUtil {
 				if (site instanceof IViewSite) {
 					IStatusLineManager statusLineManager = ((IViewSite) site).getActionBars().getStatusLineManager();
 					statusLineManager.setMessage("Context attached to task: " + task.getSummary());
-					TasksUi.synchronize(connector, task, true, null);
+					TasksUi.synchronizeTask(connector, task, true, null);
 				}
 			}
 		} catch (InvocationTargetException e) {
