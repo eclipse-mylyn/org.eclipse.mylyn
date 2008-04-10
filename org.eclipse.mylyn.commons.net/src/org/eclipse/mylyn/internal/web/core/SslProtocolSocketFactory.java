@@ -25,7 +25,6 @@ import javax.net.ssl.TrustManager;
 import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.apache.commons.httpclient.params.HttpConnectionParams;
 import org.apache.commons.httpclient.protocol.SecureProtocolSocketFactory;
-import org.eclipse.mylyn.web.core.WebCorePlugin;
 
 /**
  * Provides support for managing SSL connections.

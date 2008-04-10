@@ -14,6 +14,10 @@ import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InterruptedIOException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.eclipse.mylyn.web.core.Policy;
 
@@ -36,7 +40,7 @@ public class TimeoutInputStream extends FilterInputStream {
 	private boolean closeRequested = false; // if true, close requested
 
 	// responses from the thread (synchronized)
-	private Thread thread; // if null, thread has terminated
+	private final Future<?> future;
 
 	private byte[] iobuffer; // circular buffer
 
@@ -70,13 +74,11 @@ public class TimeoutInputStream extends FilterInputStream {
 		this.readTimeout = readTimeout;
 		this.closeTimeout = closeTimeout;
 		this.iobuffer = new byte[bufferSize];
-		thread = new Thread(new Runnable() {
+		this.future = WebCorePlugin.getExecutorService().submit(new Runnable() {
 			public void run() {
 				runThread();
 			}
-		}, "TimeoutInputStream");//$NON-NLS-1$
-		thread.setDaemon(true);
-		thread.start();
+		});
 	}
 
 	public TimeoutInputStream(InputStream in, int bufferSize, long readTimeout, long closeTimeout, boolean growWhenFull) {
@@ -96,27 +98,29 @@ public class TimeoutInputStream extends FilterInputStream {
 	 */
 	@Override
 	public void close() throws IOException {
-		Thread oldThread;
 		synchronized (this) {
-			if (thread == null) {
+			if (future.isDone()) {
 				return;
 			}
-			oldThread = thread;
 			closeRequested = true;
-			thread.interrupt();
+			future.cancel(true);
 			checkError();
 		}
 		if (closeTimeout == -1) {
 			return;
 		}
 		try {
-			oldThread.join(closeTimeout);
+			future.get(closeTimeout, TimeUnit.MILLISECONDS);
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt(); // we weren't expecting to be interrupted
+		} catch (ExecutionException e) {
+			// ignore, checkError should catch this
+		} catch (TimeoutException e) {
+			// ignore, isDone() should catch this
 		}
 		synchronized (this) {
 			checkError();
-			if (thread != null) {
+			if (!future.isDone()) {
 				throw new InterruptedIOException();
 			}
 		}
@@ -286,7 +290,6 @@ public class TimeoutInputStream extends FilterInputStream {
 				}
 			} finally {
 				synchronized (this) {
-					thread = null;
 					notify();
 				}
 			}

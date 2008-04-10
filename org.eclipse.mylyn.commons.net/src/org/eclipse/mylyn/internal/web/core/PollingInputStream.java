@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.mylyn.web.core.Policy;
-import org.eclipse.mylyn.web.core.WebCorePlugin;
 
 /**
  * Polls a progress monitor periodically and handles timeouts over extended durations. For this class to be effective, a

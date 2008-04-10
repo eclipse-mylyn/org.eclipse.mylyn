@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.ProgressMonitorWrapper;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.internal.web.core.InfiniteSubProgressMonitor;
+import org.eclipse.mylyn.internal.web.core.WebCorePlugin;
 
 /**
  * @since 2.3

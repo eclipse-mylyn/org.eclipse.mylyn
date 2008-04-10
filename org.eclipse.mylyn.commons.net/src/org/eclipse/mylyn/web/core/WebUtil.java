@@ -18,10 +18,7 @@ import java.net.Proxy;
 import java.net.Socket;
 import java.text.ParseException;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -44,6 +41,7 @@ import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.core.net.proxy.IProxyData;
+import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Plugin;
@@ -52,6 +50,7 @@ import org.eclipse.mylyn.internal.web.core.PollingInputStream;
 import org.eclipse.mylyn.internal.web.core.PollingProtocolSocketFactory;
 import org.eclipse.mylyn.internal.web.core.PollingSslProtocolSocketFactory;
 import org.eclipse.mylyn.internal.web.core.TimeoutInputStream;
+import org.eclipse.mylyn.internal.web.core.WebCorePlugin;
 import org.eclipse.mylyn.web.core.HtmlStreamTokenizer.Token;
 
 /**
@@ -61,8 +60,6 @@ import org.eclipse.mylyn.web.core.HtmlStreamTokenizer.Token;
  * @since 3.0
  */
 public class WebUtil {
-
-	private static final int MAX_THREADS = 10;
 
 	/**
 	 * like Mylyn/2.1.0 (Rally Connector 1.0) Eclipse/3.3.0 (JBuilder 2007) HttpClient/3.0.1 Java/1.5.0_11 (Sun)
@@ -87,9 +84,6 @@ public class WebUtil {
 	private static final String USER_AGENT_PREFIX;
 
 	private static final String USER_AGENT_POSTFIX;
-
-	private static final ExecutorService service = new ThreadPoolExecutor(1, MAX_THREADS, 60L, TimeUnit.SECONDS,
-			new SynchronousQueue<Runnable>());
 
 	private static final int BUFFER_SIZE = 1024;
 
@@ -284,7 +278,7 @@ public class WebUtil {
 	public static <T> T execute(IProgressMonitor monitor, WebRequest<T> request) throws Throwable {
 		monitor = Policy.monitorFor(monitor);
 
-		Future<T> future = service.submit(request);
+		Future<T> future = WebCorePlugin.getExecutorService().submit(request);
 		while (true) {
 			if (monitor.isCanceled()) {
 				if (!future.cancel(false)) {
@@ -590,6 +584,17 @@ public class WebUtil {
 		}
 		return version.toString();
 
+	}
+
+	/**
+	 * For standalone applications that want to provide a global proxy service.
+	 * 
+	 * @param proxyService
+	 *            the proxy service
+	 * @since 3.0
+	 */
+	public static void setProxyService(IProxyService proxyService) {
+		WebCorePlugin.setProxyService(proxyService);
 	}
 
 }

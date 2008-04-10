@@ -30,6 +30,7 @@ import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.mylyn.internal.web.core.SslProtocolSocketFactory;
+import org.eclipse.mylyn.internal.web.core.WebCorePlugin;
 
 /**
  * @author Mik Kersten
