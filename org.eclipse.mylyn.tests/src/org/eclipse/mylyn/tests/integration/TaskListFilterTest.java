@@ -10,6 +10,7 @@ package org.eclipse.mylyn.tests.integration;
 
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -70,7 +71,6 @@ public class TaskListFilterTest extends TestCase {
 		assertEquals(0, manager.getTaskList().getAllTasks().size());
 
 		taskCompleted = new LocalTask("1", "completed");
-		taskCompleted.setCompleted(true);
 		taskCompleted.setCompletionDate(TaskActivityUtil.snapForwardNumDays(Calendar.getInstance(), -1).getTime());
 		manager.getTaskList().addTask(taskCompleted);
 
@@ -87,7 +87,7 @@ public class TaskListFilterTest extends TestCase {
 
 		taskCompletedToday = new LocalTask("5", "t-donetoday");
 		taskCompletedToday.setScheduledForDate(TaskActivityUtil.snapEndOfWorkDay(Calendar.getInstance()).getTime());
-		taskCompletedToday.setCompleted(true);
+		taskCompletedToday.setCompletionDate(new Date());
 		manager.getTaskList().addTask(taskCompletedToday);
 
 		taskScheduledLastWeek = new LocalTask("6", "t-scheduledLastWeek");
@@ -101,7 +101,6 @@ public class TaskListFilterTest extends TestCase {
 		Calendar cal = TaskActivityUtil.getCalendar();
 		cal.add(Calendar.DAY_OF_MONTH, -1);
 		TasksUiPlugin.getTaskActivityManager().setDueDate(taskCompleteAndOverdue, cal.getTime());
-		taskCompleteAndOverdue.setCompleted(true);
 		taskCompleteAndOverdue.setCompletionDate(cal.getTime());
 	}
 
@@ -120,6 +119,7 @@ public class TaskListFilterTest extends TestCase {
 		manager.getTaskList().moveTask(taskOverdue, category);
 		manager.getTaskList().moveTask(taskIncomplete, category);
 		view.getViewer().refresh();
+		view.getViewer().expandAll();
 		List<Object> items = UiTestUtil.getAllData(view.getViewer().getTree());
 		assertTrue(items.contains(taskCompleted));
 		assertTrue(items.contains(taskOverdue));
@@ -134,7 +134,7 @@ public class TaskListFilterTest extends TestCase {
 		IWorkingSet[] workingSets = { workingSet };
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().setWorkingSets(workingSets);
 		view.getFilteredTree().setFilterText("over");
-		view.getFilteredTree().getRefreshPolicy().runRefreshNow();
+		view.getFilteredTree().getRefreshPolicy().internalForceRefresh();
 
 		items = UiTestUtil.getAllData(view.getViewer().getTree());
 		assertFalse(items.contains(taskCompleted));
@@ -142,6 +142,10 @@ public class TaskListFilterTest extends TestCase {
 		workingSets = new IWorkingSet[0];
 		view.removeFilter(workingSetFilter);
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().setWorkingSets(workingSets);
+		manager.getTaskList().removeFromCategory(category, taskOverdue);
+		manager.getTaskList().removeFromCategory(category, taskIncomplete);
+		view.getFilteredTree().setFilterText("");
+		view.getFilteredTree().getRefreshPolicy().internalForceRefresh();
 	}
 
 	public void testInterestFilter() {
