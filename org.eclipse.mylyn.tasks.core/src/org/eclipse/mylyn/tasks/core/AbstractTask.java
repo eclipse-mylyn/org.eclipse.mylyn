@@ -326,8 +326,7 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 
 	@Override
 	public int hashCode() {
-		// API 3.0 REVIEW use immutable id for hashing?
-		return this.getHandleIdentifier().hashCode();
+		return taskId.hashCode();
 	}
 
 	public boolean isCompleted() {
