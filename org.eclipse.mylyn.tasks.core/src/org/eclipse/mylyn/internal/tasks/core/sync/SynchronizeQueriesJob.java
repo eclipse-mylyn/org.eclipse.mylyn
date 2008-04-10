@@ -167,7 +167,7 @@ public class SynchronizeQueriesJob extends SynchronizeJob {
 				// hook into the connector for checking for changed tasks and have the connector mark tasks that need synchronization
 				try {
 					Policy.checkCanceled(monitor);
-					monitor.subTask("Querying " + repository.getRepositoryLabel());
+					monitor.subTask("Querying repository");
 					connector.preSynchronization(event, new SubProgressMonitor(monitor, 20));
 					if (!event.performQueries && !isUser()) {
 						updateQueryStatus(null);

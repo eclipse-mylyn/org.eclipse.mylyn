@@ -53,7 +53,7 @@ public class SynchronizeRepositoriesJob extends SynchronizeJob {
 	@Override
 	public IStatus run(IProgressMonitor monitor) {
 		try {
-			monitor.beginTask("Receiving tasks", repositories.size() * 100);
+			monitor.beginTask("Processing", repositories.size() * 100);
 
 			for (TaskRepository repository : repositories) {
 				if (monitor.isCanceled()) {
@@ -64,6 +64,8 @@ public class SynchronizeRepositoriesJob extends SynchronizeJob {
 					monitor.worked(100);
 					continue;
 				}
+
+				monitor.setTaskName("Processing " + repository.getRepositoryLabel());
 
 				final AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(repository.getConnectorKind());
 				Set<AbstractRepositoryQuery> queries = taskList.getRepositoryQueries(repository.getRepositoryUrl());
