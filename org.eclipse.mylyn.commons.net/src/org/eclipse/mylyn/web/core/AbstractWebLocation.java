@@ -12,18 +12,13 @@ import java.net.Proxy;
 
 import javax.net.ssl.X509TrustManager;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+
 /**
  * @since 2.2
  * @author Steffen Pingel
  */
 public abstract class AbstractWebLocation {
-
-	/**
-	 * @since 2.2
-	 */
-	public enum ResultType {
-		NOT_SUPPORTED, CREDENTIALS_CHANGED, PROPERTIES_CHANGED
-	};
 
 	private final String url;
 
@@ -59,8 +54,11 @@ public abstract class AbstractWebLocation {
 	}
 
 	/**
-	 * @since 2.2
+	 * @since 3.0
 	 */
-	public abstract ResultType requestCredentials(AuthenticationType type, String message);
+	public void requestCredentials(AuthenticationType type, String message, IProgressMonitor monitor)
+			throws UnsupportedRequestException {
+		throw new UnsupportedRequestException();
+	}
 
 }

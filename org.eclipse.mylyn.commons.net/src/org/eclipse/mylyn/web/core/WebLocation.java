@@ -54,11 +54,6 @@ public class WebLocation extends AbstractWebLocation {
 		return null;
 	}
 
-	@Override
-	public ResultType requestCredentials(AuthenticationType authType, String url) {
-		return ResultType.NOT_SUPPORTED;
-	}
-
 	public void setCredentials(AuthenticationType authType, String username, String password) {
 		credentialsByType.put(authType, new AuthenticationCredentials(username, password));
 	}

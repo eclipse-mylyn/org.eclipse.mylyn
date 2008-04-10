@@ -56,6 +56,7 @@ public class Policy {
 	 */
 	public static boolean isBackgroundMonitor(IProgressMonitor monitor) {
 		return monitor instanceof BackgroundProgressMonitor;
+
 	}
 
 	/**
