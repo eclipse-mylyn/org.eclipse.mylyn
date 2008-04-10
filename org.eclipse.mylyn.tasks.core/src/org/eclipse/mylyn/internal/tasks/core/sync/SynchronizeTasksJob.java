@@ -145,8 +145,14 @@ public class SynchronizeTasksJob extends SynchronizeJob {
 		// HACK: part of hack below
 		//Date oldDueDate = repositoryTask.getDueDate();
 
-		connector.updateTaskFromTaskData(repository, task, taskData);
-		synchronizationManager.saveIncoming(task, taskData, isUser());
+		boolean changed = connector.updateTaskFromTaskData(repository, task, taskData);
+		if (!taskData.isPartial()) {
+			synchronizationManager.saveIncoming(task, taskData, isUser());
+		} else if (changed && !task.isStale() && task.getSynchronizationState() == RepositoryTaskSyncState.SYNCHRONIZED) {
+			// TODO move to synchronizationManager
+			// set incoming marker for web tasks 
+			task.setSynchronizationState(RepositoryTaskSyncState.INCOMING);
+		}
 
 		// HACK: Remove once connectors can get access to
 		// TaskDataManager and do this themselves

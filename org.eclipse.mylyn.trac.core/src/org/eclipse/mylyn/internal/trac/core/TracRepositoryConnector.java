@@ -157,8 +157,11 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 					client.search(((TracRepositoryQuery) query).getTracSearch(), tickets, monitor);
 				}
 
+				client.updateAttributes(monitor, false);
 				for (TracTicket ticket : tickets) {
-					resultCollector.accept(taskDataHandler.createTaskDataFromTicket(repository, ticket, monitor));
+					RepositoryTaskData taskData = taskDataHandler.createTaskDataFromTicket(client, repository, ticket,
+							monitor);
+					resultCollector.accept(taskData);
 				}
 			} catch (Throwable e) {
 				return TracCorePlugin.toStatus(e, repository);

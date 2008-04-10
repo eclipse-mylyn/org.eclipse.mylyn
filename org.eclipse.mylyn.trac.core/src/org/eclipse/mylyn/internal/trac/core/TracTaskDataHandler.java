@@ -78,37 +78,33 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 
 	public RepositoryTaskData downloadTaskData(TaskRepository repository, int taskId, IProgressMonitor monitor)
 			throws CoreException {
-		RepositoryTaskData taskData = new RepositoryTaskData(attributeFactory, TracCorePlugin.REPOSITORY_KIND,
-				repository.getRepositoryUrl(), taskId + "");
 		ITracClient client = connector.getClientManager().getRepository(repository);
+		TracTicket ticket;
 		try {
 			client.updateAttributes(monitor, false);
-			TracTicket ticket = client.getTicket(taskId, monitor);
-			if (!TracRepositoryConnector.hasRichEditor(repository)) {
-				updateTaskDataFromTicket(taskData, ticket, client);
-			} else {
-				createDefaultAttributes(attributeFactory, taskData, client, true);
-				updateTaskData(repository, attributeFactory, taskData, ticket);
-			}
-			return taskData;
+			ticket = client.getTicket(taskId, monitor);
 		} catch (OperationCanceledException e) {
 			throw e;
 		} catch (Exception e) {
 			// TODO catch TracException
 			throw new CoreException(TracCorePlugin.toStatus(e, repository));
 		}
+		return createTaskDataFromTicket(client, repository, ticket, monitor);
 	}
 
-	public RepositoryTaskData createTaskDataFromTicket(TaskRepository repository, TracTicket ticket,
-			IProgressMonitor monitor) throws CoreException {
+	public RepositoryTaskData createTaskDataFromTicket(ITracClient client, TaskRepository repository,
+			TracTicket ticket, IProgressMonitor monitor) throws CoreException {
+		RepositoryTaskData taskData = new RepositoryTaskData(attributeFactory, TracCorePlugin.REPOSITORY_KIND,
+				repository.getRepositoryUrl(), ticket.getId() + "");
 		try {
-			RepositoryTaskData data = new RepositoryTaskData(attributeFactory, TracCorePlugin.REPOSITORY_KIND,
-					repository.getRepositoryUrl(), ticket.getId() + "");
-			ITracClient client = connector.getClientManager().getRepository(repository);
-			client.updateAttributes(monitor, false);
-			createDefaultAttributes(attributeFactory, data, client, true);
-			updateTaskData(repository, attributeFactory, data, ticket);
-			return data;
+			if (!TracRepositoryConnector.hasRichEditor(repository)) {
+				updateTaskDataFromTicket(taskData, ticket, client);
+				taskData.setPartial(true);
+			} else {
+				createDefaultAttributes(attributeFactory, taskData, client, true);
+				updateTaskData(repository, attributeFactory, taskData, ticket);
+			}
+			return taskData;
 		} catch (OperationCanceledException e) {
 			throw e;
 		} catch (Exception e) {
@@ -468,4 +464,5 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 					true));
 		}
 	}
+	
 }
