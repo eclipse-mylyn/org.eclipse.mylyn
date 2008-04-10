@@ -298,11 +298,15 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 				final long now = new Date().getTime();
 
 				if ((now - lastBackup) > waitPeriod) {
-					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							backupNow(false);
-						}
-					});
+					if (Platform.isRunning() && !PlatformUI.getWorkbench().isClosing()
+							&& PlatformUI.getWorkbench().getDisplay() != null
+							&& !PlatformUI.getWorkbench().getDisplay().isDisposed()) {
+						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+							public void run() {
+								backupNow(false);
+							}
+						});
+					}
 				}
 			}
 		}
