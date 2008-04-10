@@ -48,3 +48,17 @@ if [ "$3" == "-dev" ] || [ "$4" == "-dev" ]
 then
 	release dev
 fi
+
+if [ "$3" == "-dev" ] || [ "$4" == "-dev" ]
+then
+  DEV_TARGET=$HOME/downloads/tools/mylyn/update/dev
+
+  rm -r $DEV_TARGET.old | true
+  mv $DEV_TARGET $DEV_TARGET.old
+
+  cp -a $TARGET $DEV_TARGET
+
+  echo
+  echo Updated dev site in $DEV_TARGET
+  ls $DEV_TARGET/*
+fi

@@ -34,3 +34,20 @@ cp -v org.apache.axis*.jar $DEST/extrasUpdateSite/plugins
 cp -v org.apache.commons.discovery*.jar $DEST/extrasUpdateSite/plugins
 cp -v org.apache.commons.logging*.jar $DEST/extrasUpdateSite/plugins
 cp -v org.jdom*.jar $DEST/extrasUpdateSite/plugins
+
+mkdir -p $DEST/allUpdateSite/plugins
+cp -v javax.xml.bind*.jar $DEST/allUpdateSite/plugins
+cp -v org.apache.commons.codec*.jar $DEST/allUpdateSite/plugins
+cp -v org.apache.commons.httpclient*.jar $DEST/allUpdateSite/plugins
+cp -v org.apache.commons.lang*.jar $DEST/allUpdateSite/plugins
+cp -v org.apache.commons.logging*.jar $DEST/allUpdateSite/plugins
+cp -v org.apache.xmlrpc*.jar $DEST/allUpdateSite/plugins
+cp -v org.apache.ws.commons.util*.jar $DEST/allUpdateSite/plugins
+cp -v com.sun.syndication*.jar $DEST/allUpdateSite/plugins
+cp -v javax.wsdl*.jar $DEST/allUpdateSite/plugins
+cp -v javax.xml.rpc*.jar $DEST/allUpdateSite/plugins
+cp -v javax.xml.soap*.jar $DEST/allUpdateSite/plugins
+cp -v org.apache.axis*.jar $DEST/allUpdateSite/plugins
+cp -v org.apache.commons.discovery*.jar $DEST/allUpdateSite/plugins
+cp -v org.apache.commons.logging*.jar $DEST/allUpdateSite/plugins
+cp -v org.jdom*.jar $DEST/allUpdateSite/plugins
