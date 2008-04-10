@@ -53,7 +53,7 @@ public class SynchronizeTasksJob extends SynchronizeJob {
 
 	public SynchronizeTasksJob(TaskList taskList, IRepositorySynchronizationManager synchronizationManager,
 			AbstractRepositoryConnector connector, TaskRepository taskRepository, Set<AbstractTask> tasks) {
-		super("Task Synchronization (" + tasks.size() + " tasks)");
+		super("Synchronizing Tasks (" + tasks.size() + " tasks)");
 		this.taskList = taskList;
 		this.synchronizationManager = synchronizationManager;
 		this.connector = connector;
@@ -65,7 +65,7 @@ public class SynchronizeTasksJob extends SynchronizeJob {
 	@Override
 	public IStatus run(IProgressMonitor monitor) {
 		try {
-			monitor.beginTask("Retrieving tasks", tasks.size() * 100);
+			monitor.beginTask("Processing", tasks.size() * 100);
 
 			if (taskDataHandler != null && taskDataHandler.canGetMultiTaskData()) {
 				try {
@@ -97,7 +97,7 @@ public class SynchronizeTasksJob extends SynchronizeJob {
 	}
 
 	private void synchronizeTask(IProgressMonitor monitor, AbstractTask task) {
-		monitor.subTask(task.getSummary());
+		monitor.subTask("Receiving task " + task.getSummary());
 		task.setSynchronizationStatus(null);
 		taskList.notifyTaskChanged(task, false);
 		try {
@@ -115,7 +115,7 @@ public class SynchronizeTasksJob extends SynchronizeJob {
 
 	private void synchronizeTasks(IProgressMonitor monitor, TaskRepository repository, Set<AbstractTask> tasks)
 			throws CoreException {
-		monitor.subTask(repository.getRepositoryLabel());
+		monitor.subTask("Receiving " + tasks.size() + " tasks from " + repository.getRepositoryLabel());
 		Set<String> taskIds = new HashSet<String>();
 		Map<String, AbstractTask> idToTask = new HashMap<String, AbstractTask>();
 		for (AbstractTask task : tasks) {

@@ -43,7 +43,7 @@ public class SynchronizeRepositoriesJob extends SynchronizeJob {
 
 	public SynchronizeRepositoriesJob(TaskList taskList, IRepositorySynchronizationManager synchronizationManager,
 			TaskRepositoryManager repositoryManager, Set<TaskRepository> repositories) {
-		super("Task Repository Synchronization");
+		super("Synchronizing Task List");
 		this.taskList = taskList;
 		this.synchronizationManager = synchronizationManager;
 		this.repositoryManager = repositoryManager;
@@ -53,7 +53,7 @@ public class SynchronizeRepositoriesJob extends SynchronizeJob {
 	@Override
 	public IStatus run(IProgressMonitor monitor) {
 		try {
-			monitor.beginTask("Synchronizing tasks", repositories.size() * 100);
+			monitor.beginTask("Receiving tasks", repositories.size() * 100);
 
 			for (TaskRepository repository : repositories) {
 				if (monitor.isCanceled()) {

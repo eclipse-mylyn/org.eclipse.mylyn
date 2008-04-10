@@ -131,7 +131,7 @@ public class SynchronizeQueriesJob extends SynchronizeJob {
 
 	public SynchronizeQueriesJob(TaskList taskList, IRepositorySynchronizationManager synchronizationManager,
 			AbstractRepositoryConnector connector, TaskRepository repository, Set<AbstractRepositoryQuery> queries) {
-		super("Query Synchronization (" + queries.size() + " queries)");
+		super("Synchronizing Queries (" + repository.getRepositoryLabel() + ")");
 		this.taskList = taskList;
 		this.synchronizationManager = synchronizationManager;
 		this.connector = connector;
@@ -142,7 +142,7 @@ public class SynchronizeQueriesJob extends SynchronizeJob {
 	@Override
 	public IStatus run(IProgressMonitor monitor) {
 		try {
-			monitor.beginTask("Retrieving results", 20 + queries.size() * 20 + 40 + 10);
+			monitor.beginTask("Processing", 20 + queries.size() * 20 + 40 + 10);
 
 			Set<AbstractTask> allTasks;
 			if (!isFullSynchronization()) {
@@ -184,7 +184,7 @@ public class SynchronizeQueriesJob extends SynchronizeJob {
 					Policy.checkCanceled(monitor);
 					repositoryQuery.setSynchronizationStatus(null);
 
-					monitor.subTask("Synchronizing " + repositoryQuery.getSummary());
+					monitor.subTask("Synchronizing query " + repositoryQuery.getSummary());
 					synchronizeQuery(repositoryQuery, event, new SubProgressMonitor(monitor, 20));
 
 					repositoryQuery.setSynchronizing(false);

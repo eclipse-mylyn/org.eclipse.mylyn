@@ -30,8 +30,6 @@ import org.eclipse.mylyn.tasks.core.sync.IRepositorySynchronizationManager;
  */
 public class SynchronizeAllTasksJob extends SynchronizeJob {
 
-	private static final String LABEL_SYNCHRONIZE_TASK = "Task Synchronization";
-
 	private final AbstractRepositoryConnector connector;
 
 	private final IRepositorySynchronizationManager synchronizationManager;
@@ -44,7 +42,7 @@ public class SynchronizeAllTasksJob extends SynchronizeJob {
 
 	public SynchronizeAllTasksJob(TaskList taskList, IRepositorySynchronizationManager synchronizationManager,
 			TaskRepositoryManager repositoryManager, AbstractRepositoryConnector connector, Set<AbstractTask> tasks) {
-		super(LABEL_SYNCHRONIZE_TASK + " (" + tasks.size() + " tasks)");
+		super("Synchronizing Tasks (" + tasks.size() + " tasks)");
 		this.taskList = taskList;
 		this.synchronizationManager = synchronizationManager;
 		this.repositoryManager = repositoryManager;
@@ -55,7 +53,7 @@ public class SynchronizeAllTasksJob extends SynchronizeJob {
 	@Override
 	public IStatus run(IProgressMonitor monitor) {
 		try {
-			monitor.beginTask("Retrieving tasks", tasks.size() * 100);
+			monitor.beginTask("Processing", tasks.size() * 100);
 
 			Map<TaskRepository, Set<AbstractTask>> tasksByRepository = new HashMap<TaskRepository, Set<AbstractTask>>();
 			for (AbstractTask task : tasks) {
@@ -70,6 +68,7 @@ public class SynchronizeAllTasksJob extends SynchronizeJob {
 			}
 
 			for (TaskRepository taskRepository : tasksByRepository.keySet()) {
+				setName("Synchronizing Tasks (" + taskRepository.getRepositoryLabel() + ")");
 				Set<AbstractTask> repositoryTasks = tasksByRepository.get(taskRepository);
 				SynchronizeTasksJob job = new SynchronizeTasksJob(taskList, synchronizationManager, connector,
 						taskRepository, repositoryTasks);

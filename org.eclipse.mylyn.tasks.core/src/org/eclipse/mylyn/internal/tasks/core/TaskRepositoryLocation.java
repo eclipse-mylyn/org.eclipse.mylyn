@@ -14,12 +14,12 @@ import java.net.Proxy.Type;
 
 import org.eclipse.core.net.proxy.IProxyData;
 import org.eclipse.core.net.proxy.IProxyService;
+import org.eclipse.mylyn.internal.web.core.WebCorePlugin;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.web.core.AbstractWebLocation;
 import org.eclipse.mylyn.web.core.AuthenticatedProxy;
 import org.eclipse.mylyn.web.core.AuthenticationCredentials;
 import org.eclipse.mylyn.web.core.AuthenticationType;
-import org.eclipse.mylyn.web.core.WebCorePlugin;
 
 /**
  * @author Steffen Pingel
