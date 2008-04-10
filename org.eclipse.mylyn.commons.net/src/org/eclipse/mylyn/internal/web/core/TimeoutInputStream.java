@@ -14,10 +14,7 @@ import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InterruptedIOException;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import org.eclipse.mylyn.web.core.Policy;
 
@@ -109,15 +106,15 @@ public class TimeoutInputStream extends FilterInputStream {
 		if (closeTimeout == -1) {
 			return;
 		}
-		try {
-			future.get(closeTimeout, TimeUnit.MILLISECONDS);
-		} catch (InterruptedException e) {
-			Thread.currentThread().interrupt(); // we weren't expecting to be interrupted
-		} catch (ExecutionException e) {
-			// ignore, checkError should catch this
-		} catch (TimeoutException e) {
-			// ignore, isDone() should catch this
-		}
+//		try {
+//			future.get(closeTimeout, TimeUnit.MILLISECONDS);
+//		} catch (InterruptedException e) {
+//			Thread.currentThread().interrupt(); // we weren't expecting to be interrupted
+//		} catch (ExecutionException e) {
+//			// ignore, checkError should catch this
+//		} catch (TimeoutException e) {
+//			// ignore, isDone() should catch this
+//		}
 		synchronized (this) {
 			checkError();
 			if (!future.isDone()) {

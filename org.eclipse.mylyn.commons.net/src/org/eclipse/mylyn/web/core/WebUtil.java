@@ -88,9 +88,9 @@ public class WebUtil {
 	private static final int BUFFER_SIZE = 1024;
 
 	/**
-	 * Block indefinitely.
+	 * Do not block.
 	 */
-	private static final long CLOSE_TIMEOUT = 0;
+	private static final long CLOSE_TIMEOUT = -1;
 
 	static {
 		initCommonsLoggingSettings();
