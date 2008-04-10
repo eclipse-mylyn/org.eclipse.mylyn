@@ -68,11 +68,6 @@ public class TaskRepositoryLocation extends AbstractWebLocation {
 	}
 
 	@Override
-	public ResultType requestCredentials(AuthenticationType type, String message) {
-		return ResultType.NOT_SUPPORTED;
-	}
-
-	@Override
 	public AuthenticationCredentials getCredentials(AuthenticationType type) {
 		return taskRepository.getCredentials(type);
 	}

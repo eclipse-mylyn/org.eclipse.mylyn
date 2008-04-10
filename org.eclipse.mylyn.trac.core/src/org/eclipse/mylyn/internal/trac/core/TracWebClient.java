@@ -60,8 +60,8 @@ import org.eclipse.mylyn.web.core.AuthenticationType;
 import org.eclipse.mylyn.web.core.HtmlStreamTokenizer;
 import org.eclipse.mylyn.web.core.HtmlTag;
 import org.eclipse.mylyn.web.core.Policy;
+import org.eclipse.mylyn.web.core.UnsupportedRequestException;
 import org.eclipse.mylyn.web.core.WebUtil;
-import org.eclipse.mylyn.web.core.AbstractWebLocation.ResultType;
 import org.eclipse.mylyn.web.core.HtmlStreamTokenizer.Token;
 
 /**
@@ -169,12 +169,13 @@ public class TracWebClient extends AbstractTracClient {
 				return false;
 			}
 
-			if (location.requestCredentials(authenticationType, null) == ResultType.NOT_SUPPORTED) {
+			try {
+				location.requestCredentials(authenticationType, null, monitor);
+			} catch (UnsupportedRequestException e) {
 				throw new TracLoginException();
 			}
 
 			hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, monitor);
-
 			return true;
 		}
 

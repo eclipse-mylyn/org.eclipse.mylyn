@@ -16,10 +16,10 @@ import junit.framework.TestCase;
 import org.eclipse.core.net.proxy.IProxyData;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryLocation;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.web.core.AbstractWebLocation;
 import org.eclipse.mylyn.web.core.AuthenticatedProxy;
 import org.eclipse.mylyn.web.core.AuthenticationCredentials;
 import org.eclipse.mylyn.web.core.AuthenticationType;
+import org.eclipse.mylyn.web.core.UnsupportedRequestException;
 
 public class TaskRepositoryLocationTest extends TestCase {
 
@@ -74,8 +74,10 @@ public class TaskRepositoryLocationTest extends TestCase {
 	public void testRequestCredentials() {
 		TaskRepository taskRepository = new TaskRepository("kind", "http://url");
 		TaskRepositoryLocation location = new TaskRepositoryLocation(taskRepository);
-		assertEquals(AbstractWebLocation.ResultType.NOT_SUPPORTED, location.requestCredentials(
-				AuthenticationType.REPOSITORY, null));
+		try {
+			location.requestCredentials(AuthenticationType.REPOSITORY, null, null);
+			fail("Expected UnsupportedRequestException");
+		} catch (UnsupportedRequestException expected) {
+		}
 	}
-
 }

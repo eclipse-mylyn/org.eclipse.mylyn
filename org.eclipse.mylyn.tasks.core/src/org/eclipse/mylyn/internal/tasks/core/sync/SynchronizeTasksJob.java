@@ -103,6 +103,9 @@ public class SynchronizeTasksJob extends SynchronizeJob {
 		taskList.notifyTaskChanged(task, false);
 		try {
 			String taskId = task.getTaskId();
+			if (!isUser()) {
+				monitor = Policy.backgroundMonitorFor(monitor);
+			}
 			RepositoryTaskData downloadedTaskData = connector.getTaskData(taskRepository, taskId, monitor);
 			if (downloadedTaskData != null) {
 				updateFromTaskData(taskRepository, task, downloadedTaskData);
@@ -133,6 +136,9 @@ public class SynchronizeTasksJob extends SynchronizeJob {
 			}
 		};
 
+		if (!isUser()) {
+			monitor = Policy.backgroundMonitorFor(monitor);
+		}
 		taskDataHandler.getMultiTaskData(repository, Collections.unmodifiableSet(idToTask.keySet()), collector, monitor);
 	}
 

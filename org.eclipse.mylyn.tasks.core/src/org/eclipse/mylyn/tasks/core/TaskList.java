@@ -522,6 +522,13 @@ public class TaskList {
 //		}
 	}
 
+	public void removeFromQuery(AbstractRepositoryQuery repositoryQuery, Set<AbstractTask> tasks) {
+		// FIXME do a bulk remove
+		for (AbstractTask task : tasks) {
+			removeFromQuery(repositoryQuery, task);
+		}
+	}
+
 	public void renameTask(AbstractTask task, String description) {
 		task.setSummary(description);
 

@@ -25,6 +25,7 @@ import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.sync.IRepositorySynchronizationManager;
+import org.eclipse.mylyn.web.core.Policy;
 
 /**
  * @author Steffen Pingel
@@ -70,10 +71,10 @@ public class SynchronizeRepositoriesJob extends SynchronizeJob {
 				final AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(repository.getConnectorKind());
 				Set<AbstractRepositoryQuery> queries = taskList.getRepositoryQueries(repository.getRepositoryUrl());
 
-				// occasionally request update of repository configuration attributes
 				if (isUser() || queries.isEmpty()) {
 					monitor.worked(20);
 				} else {
+					// occasionally request update of repository configuration attributes
 					updateRepositoryConfiguration(repository, connector, new SubProgressMonitor(monitor, 20));
 				}
 
@@ -84,7 +85,7 @@ public class SynchronizeRepositoriesJob extends SynchronizeJob {
 						return SynchronizeRepositoriesJob.this.family == family;
 					}
 				};
-				job.setUser(false);
+				job.setUser(isUser());
 				job.setFullSynchronization(true);
 				job.setPriority(Job.DECORATE);
 				if (isUser()) {
@@ -110,11 +111,14 @@ public class SynchronizeRepositoriesJob extends SynchronizeJob {
 		return family;
 	}
 
-	private void updateRepositoryConfiguration(TaskRepository repository, final AbstractRepositoryConnector connector,
-			final SubProgressMonitor monitor) throws InterruptedException {
+	private void updateRepositoryConfiguration(TaskRepository repository, AbstractRepositoryConnector connector,
+			IProgressMonitor monitor) throws InterruptedException {
 		try {
 			monitor.beginTask("Updating repository configuration for " + repository.getRepositoryUrl(), 100);
 			if (connector.isRepositoryConfigurationStale(repository)) {
+				if (!isUser()) {
+					monitor = Policy.backgroundMonitorFor(monitor);
+				}
 				connector.updateAttributes(repository, monitor);
 			}
 		} catch (CoreException e) {

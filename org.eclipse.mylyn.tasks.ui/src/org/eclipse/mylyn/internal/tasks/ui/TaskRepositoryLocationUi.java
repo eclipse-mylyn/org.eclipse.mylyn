@@ -7,6 +7,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.ui;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryLocation;
@@ -16,6 +17,8 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.web.core.AuthenticationCredentials;
 import org.eclipse.mylyn.web.core.AuthenticationType;
+import org.eclipse.mylyn.web.core.Policy;
+import org.eclipse.mylyn.web.core.UnsupportedRequestException;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -32,9 +35,10 @@ public class TaskRepositoryLocationUi extends TaskRepositoryLocation {
 	}
 
 	@Override
-	public ResultType requestCredentials(AuthenticationType authType, String message) {
+	public void requestCredentials(AuthenticationType authType, String message, IProgressMonitor monitor)
+			throws UnsupportedRequestException {
 		if (CoreUtil.TEST_MODE) {
-			return ResultType.NOT_SUPPORTED;
+			throw new UnsupportedRequestException();
 		}
 
 		AuthenticationCredentials oldCredentials = taskRepository.getCredentials(authType);
@@ -42,18 +46,21 @@ public class TaskRepositoryLocationUi extends TaskRepositoryLocation {
 		synchronized (lock) {
 			// check if the credentials changed while the thread was waiting for the lock
 			if (!areEqual(oldCredentials, taskRepository.getCredentials(authType))) {
-				return ResultType.CREDENTIALS_CHANGED;
+				return;
+			}
+
+			if (Policy.isBackgroundMonitor(monitor)) {
+				throw new UnsupportedRequestException();
 			}
 
 			PasswordRunner runner = new PasswordRunner(authType, message);
 			PlatformUI.getWorkbench().getDisplay().syncExec(runner);
-			if (runner.isCancelled()) {
+			if (runner.isCanceled()) {
 				throw new OperationCanceledException();
 			}
-			if (runner.getResult() == null) {
-				return ResultType.NOT_SUPPORTED;
+			if (!runner.isChanged()) {
+				throw new UnsupportedRequestException();
 			}
-			return runner.getResult();
 		}
 	}
 
@@ -69,23 +76,23 @@ public class TaskRepositoryLocationUi extends TaskRepositoryLocation {
 
 		private final AuthenticationType authType;
 
-		private boolean canceled;
-
-		private ResultType result;
+		private boolean changed;
 
 		private final String message;
+
+		private boolean canceled;
 
 		public PasswordRunner(AuthenticationType credentialType, String message) {
 			this.authType = credentialType;
 			this.message = message;
 		}
 
-		public boolean isCancelled() {
-			return canceled;
+		public boolean isChanged() {
+			return changed;
 		}
 
-		public ResultType getResult() {
-			return result;
+		public boolean isCanceled() {
+			return canceled;
 		}
 
 		public void run() {
@@ -95,12 +102,10 @@ public class TaskRepositoryLocationUi extends TaskRepositoryLocation {
 				initializeDialog(dialog);
 				int resultCode = dialog.open();
 				if (resultCode == Window.OK) {
-					saveDialog(dialog);
-					result = ResultType.CREDENTIALS_CHANGED;
-					canceled = false;
+					apply(dialog);
+					changed = true;
 				} else if (resultCode == TaskRepositoryCredentialsDialog.TASK_REPOSITORY_CHANGED) {
-					result = ResultType.PROPERTIES_CHANGED;
-					canceled = false;
+					changed = true;
 				} else {
 					canceled = true;
 				}
@@ -135,11 +140,7 @@ public class TaskRepositoryLocationUi extends TaskRepositoryLocation {
 			return null;
 		}
 
-		private void saveDialog(TaskRepositoryCredentialsDialog dialog) {
-			if (AuthenticationType.REPOSITORY.equals(authType)) {
-				taskRepository.setAnonymous(false);
-			}
-
+		private void apply(TaskRepositoryCredentialsDialog dialog) {
 			AuthenticationCredentials credentials = new AuthenticationCredentials(dialog.getUserName(),
 					dialog.getPassword());
 			taskRepository.setCredentials(authType, credentials, dialog.getSavePassword());

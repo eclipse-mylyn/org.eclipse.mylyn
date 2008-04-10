@@ -60,8 +60,8 @@ import org.eclipse.mylyn.web.core.AbstractWebLocation;
 import org.eclipse.mylyn.web.core.AuthenticationCredentials;
 import org.eclipse.mylyn.web.core.AuthenticationType;
 import org.eclipse.mylyn.web.core.Policy;
+import org.eclipse.mylyn.web.core.UnsupportedRequestException;
 import org.eclipse.mylyn.web.core.WebUtil;
-import org.eclipse.mylyn.web.core.AbstractWebLocation.ResultType;
 
 /**
  * Represents a Trac repository that is accessed through the Trac XmlRpcPlugin.
@@ -250,15 +250,21 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 				XmlRpcRequest request = new XmlRpcRequest(method, parameters);
 				return request.execute(monitor);
 			} catch (TracLoginException e) {
-				if (location.requestCredentials(AuthenticationType.REPOSITORY, null) == ResultType.NOT_SUPPORTED) {
+				try {
+					location.requestCredentials(AuthenticationType.REPOSITORY, null, monitor);
+				} catch (UnsupportedRequestException ignored) {
 					throw e;
 				}
 			} catch (TracPermissionDeniedException e) {
-				if (location.requestCredentials(AuthenticationType.REPOSITORY, null) == ResultType.NOT_SUPPORTED) {
+				try {
+					location.requestCredentials(AuthenticationType.REPOSITORY, null, monitor);
+				} catch (UnsupportedRequestException ignored) {
 					throw e;
 				}
 			} catch (TracProxyAuthenticationException e) {
-				if (location.requestCredentials(AuthenticationType.PROXY, null) == ResultType.NOT_SUPPORTED) {
+				try {
+					location.requestCredentials(AuthenticationType.PROXY, null, monitor);
+				} catch (UnsupportedRequestException ignored) {
 					throw e;
 				}
 			}

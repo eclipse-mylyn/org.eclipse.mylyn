@@ -165,31 +165,10 @@ public class SynchronizeQueriesJob extends SynchronizeJob {
 				event.performQueries = true;
 
 				// hook into the connector for checking for changed tasks and have the connector mark tasks that need synchronization
-				try {
-					Policy.checkCanceled(monitor);
-					monitor.subTask("Querying repository");
-					connector.preSynchronization(event, new SubProgressMonitor(monitor, 20));
-					if (!event.performQueries && !isUser()) {
-						updateQueryStatus(null);
-						return Status.OK_STATUS;
-					}
-				} catch (CoreException e) {
-					// synchronization is unlikely to succeed, inform user and exit
-					updateQueryStatus(e.getStatus());
-					return Status.OK_STATUS;
-				}
+				firePreSynchronization(event, new SubProgressMonitor(monitor, 20));
 
 				// synchronize queries, tasks changed within query are added to set of tasks to be synchronized
-				for (AbstractRepositoryQuery repositoryQuery : queries) {
-					Policy.checkCanceled(monitor);
-					repositoryQuery.setSynchronizationStatus(null);
-
-					monitor.subTask("Synchronizing query " + repositoryQuery.getSummary());
-					synchronizeQuery(repositoryQuery, event, new SubProgressMonitor(monitor, 20));
-
-					repositoryQuery.setSynchronizing(false);
-					taskList.notifyContainersUpdated(Collections.singleton(repositoryQuery));
-				}
+				synchronizeQueries(monitor, event);
 
 				// for background synchronizations all changed tasks are synchronized including the ones that are not part of a query
 				if (!isUser()) {
@@ -211,15 +190,7 @@ public class SynchronizeQueriesJob extends SynchronizeJob {
 				}
 
 				// hook into the connector for synchronization time stamp management
-				try {
-					Policy.checkCanceled(monitor);
-					monitor.subTask("Updating repository state");
-					event.changedTasks = tasksToBeSynchronized;
-					connector.postSynchronization(event, new SubProgressMonitor(monitor, 10));
-				} catch (CoreException e) {
-					updateQueryStatus(e.getStatus());
-					return Status.OK_STATUS;
-				}
+				firePostSynchronization(event, new SubProgressMonitor(monitor, 10));
 			} finally {
 				Job.getJobManager().endRule(rule);
 			}
@@ -233,27 +204,76 @@ public class SynchronizeQueriesJob extends SynchronizeJob {
 		}
 	}
 
+	private void synchronizeQueries(IProgressMonitor monitor, SynchronizationEvent event) {
+		for (AbstractRepositoryQuery repositoryQuery : queries) {
+			Policy.checkCanceled(monitor);
+			repositoryQuery.setSynchronizationStatus(null);
+
+			monitor.subTask("Synchronizing query " + repositoryQuery.getSummary());
+			synchronizeQuery(repositoryQuery, event, new SubProgressMonitor(monitor, 20));
+
+			repositoryQuery.setSynchronizing(false);
+			taskList.notifyContainersUpdated(Collections.singleton(repositoryQuery));
+		}
+	}
+
+	private boolean firePostSynchronization(SynchronizationEvent event, IProgressMonitor monitor) {
+		try {
+			Policy.checkCanceled(monitor);
+			monitor.subTask("Updating repository state");
+			event.changedTasks = tasksToBeSynchronized;
+			if (!isUser()) {
+				monitor = Policy.backgroundMonitorFor(monitor);
+			}
+			connector.postSynchronization(event, monitor);
+			return true;
+		} catch (CoreException e) {
+			updateQueryStatus(e.getStatus());
+			return false;
+		}
+	}
+
+	private boolean firePreSynchronization(SynchronizationEvent event, IProgressMonitor monitor) {
+		try {
+			Policy.checkCanceled(monitor);
+			monitor.subTask("Querying repository");
+			if (!isUser()) {
+				monitor = Policy.backgroundMonitorFor(monitor);
+			}
+			connector.preSynchronization(event, monitor);
+			if (!event.performQueries && !isUser()) {
+				updateQueryStatus(null);
+				return false;
+			}
+			return true;
+		} catch (CoreException e) {
+			// synchronization is unlikely to succeed, inform user and exit
+			updateQueryStatus(e.getStatus());
+			return false;
+		}
+	}
+
 	private void synchronizeQuery(AbstractRepositoryQuery repositoryQuery, SynchronizationEvent event,
 			IProgressMonitor monitor) {
 		TaskCollector collector = new TaskCollector(repositoryQuery);
 
-		final IStatus resultingStatus = connector.performQuery(repository, repositoryQuery, collector, event, monitor);
-		if (resultingStatus.getSeverity() == IStatus.CANCEL) {
+		if (!isUser()) {
+			monitor = Policy.backgroundMonitorFor(monitor);
+		}
+		IStatus result = connector.performQuery(repository, repositoryQuery, collector, event, monitor);
+		if (result.getSeverity() == IStatus.CANCEL) {
 			// do nothing
-		} else if (resultingStatus.isOK()) {
+		} else if (result.isOK()) {
 			if (collector.getResultCount() >= AbstractTaskCollector.MAX_HITS) {
 				StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, MAX_HITS_REACHED + "\n"
 						+ repositoryQuery.getSummary()));
 			}
 
-			// API 3.0 do a bulk remove
-			for (AbstractTask removedTask : collector.getRemovedChildren()) {
-				taskList.removeFromQuery(repositoryQuery, removedTask);
-			}
+			taskList.removeFromQuery(repositoryQuery, collector.getRemovedChildren());
 
 			repositoryQuery.setLastSynchronizedStamp(DateUtil.getFormattedDate(new Date(), "MMM d, H:mm:ss"));
 		} else {
-			repositoryQuery.setSynchronizationStatus(resultingStatus);
+			repositoryQuery.setSynchronizationStatus(result);
 		}
 	}
 
@@ -270,7 +290,6 @@ public class SynchronizeQueriesJob extends SynchronizeJob {
 			repositoryQuery.setSynchronizing(false);
 		}
 		taskList.notifyContainersUpdated(queries);
-
 	}
 
 }
