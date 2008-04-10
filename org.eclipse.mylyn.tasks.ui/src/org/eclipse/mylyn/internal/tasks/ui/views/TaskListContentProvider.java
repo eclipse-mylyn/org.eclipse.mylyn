@@ -14,14 +14,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
-import org.eclipse.ui.IWorkingSet;
 
 /**
  * Provides custom content for the task list, e.g. guaranteed visibility of some elements, ability to suppress
@@ -103,34 +101,14 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	}
 
 	protected List<AbstractTaskContainer> applyFilter(Set<AbstractTaskContainer> roots) {
-		String filterText = (taskListView.getFilteredTree().getFilterControl()).getText();
-		if (containsNoFilterText(filterText)) {
-			List<AbstractTaskContainer> filteredRoots = new ArrayList<AbstractTaskContainer>();
-			for (AbstractTaskContainer element : roots) {
-				// NOTE: tasks can no longer appear as root elements
-				if (selectContainer(element)) {
-					filteredRoots.add(element);
-				}
-			}
-			return filteredRoots;
-		} else {
-			// only match working sets when filter is on
-			Set<IWorkingSet> workingSets = TaskListView.getActiveWorkingSets();
-			Set<AbstractTaskContainer> workingSetContainers = new HashSet<AbstractTaskContainer>();
-			if (workingSets.isEmpty()) {
-				return new ArrayList<AbstractTaskContainer>(roots);
-			} else {
-				for (IWorkingSet workingSet : workingSets) {
-					IAdaptable[] elements = workingSet.getElements();
-					for (IAdaptable adaptable : elements) {
-						if (adaptable instanceof AbstractTaskContainer && roots.contains(adaptable)) {
-							workingSetContainers.add((AbstractTaskContainer) adaptable);
-						}
-					}
-				}
-				return new ArrayList<AbstractTaskContainer>(workingSetContainers);
+		List<AbstractTaskContainer> filteredRoots = new ArrayList<AbstractTaskContainer>();
+		for (AbstractTaskContainer element : roots) {
+			// NOTE: tasks can no longer appear as root elements
+			if (selectContainer(element)) {
+				filteredRoots.add(element);
 			}
 		}
+		return filteredRoots;
 	}
 
 	/**

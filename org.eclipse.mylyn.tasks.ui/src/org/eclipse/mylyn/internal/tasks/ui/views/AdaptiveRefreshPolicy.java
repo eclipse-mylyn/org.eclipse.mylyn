@@ -11,11 +11,13 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.progress.WorkbenchJob;
 
 /**
  * @author Mik Kersten
@@ -97,6 +99,13 @@ public class AdaptiveRefreshPolicy {
 		refreshJob.schedule(refreshDelay);
 
 		oldText = text;
+	}
+
+	/**
+	 * for testing purposes only
+	 */
+	public void internalForceRefresh() {
+		((WorkbenchJob) refreshJob).runInUIThread(new NullProgressMonitor());
 	}
 
 	public void addListener(IFilteredTreeListener listener) {

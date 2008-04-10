@@ -85,6 +85,14 @@ public class TaskListSaveManagerTest extends TestCase {
 		assertFalse(previousDay5.exists());
 	}
 
+	public void testAddTaskDuringSave() {
+		// add task
+		// save 
+		// try to add task during save 
+	}
+
+	// test cancellation
+
 	private File createFile(File backupFolder, Calendar time) {
 		SimpleDateFormat format = new SimpleDateFormat(TaskListBackupManager.TIMESTAMP_FORMAT, Locale.ENGLISH);
 		File newFile = new File(backupFolder, ITasksUiConstants.PREFIX_TASKLIST + "-" + format.format(time.getTime())
