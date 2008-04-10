@@ -43,8 +43,6 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 
 	private String priority = PriorityLevel.getDefault().toString();
 
-	private boolean completed;
-
 	private boolean isNotifiedIncoming = false;
 
 	private boolean reminded = false;
@@ -333,14 +331,16 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 	}
 
 	public boolean isCompleted() {
-		return completed;
+		return completionDate != null;
 	}
 
 	/**
-	 * API 3.0 do not set completion date as part of this method call
+	 * API 3.0
+	 * 
+	 * @deprecated use setCompletionDate()
 	 */
+	@Deprecated
 	public void setCompleted(boolean completed) {
-		this.completed = completed;
 		if (completed) {
 			completionDate = new Date();
 		} else {
@@ -451,7 +451,7 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 	}
 
 	/**
-	 * @API-3.0: Deprecate. Use TaskActivityManager.isPastReminder(Abstract task)
+	 * API 3.0: Deprecate. Use TaskActivityManager.isPastReminder(Abstract task)
 	 */
 	public boolean isPastReminder() {
 		if (isCompleted() || scheduledForDate == null) {

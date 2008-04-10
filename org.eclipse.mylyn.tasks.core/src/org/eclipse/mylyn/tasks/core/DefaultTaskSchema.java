@@ -29,12 +29,13 @@ public class DefaultTaskSchema {
 
 	public boolean applyTo(AbstractTask task) {
 		boolean changed = false;
-		if (taskData.getAttribute(RepositoryTaskAttribute.COMPLETED) != null && getCompleted() != task.isCompleted()) {
-			task.setCompleted(getCompleted());
+		if (hasTaskPropertyChanged(task.getCompletionDate(), getCompletionDate())) {
+			task.setCompletionDate(getCompletionDate());
 			changed = true;
 		}
 		if (hasTaskPropertyChanged(task.getSummary(), getSummary())) {
 			task.setSummary(getSummary());
+			changed = true;
 		}
 		if (hasTaskPropertyChanged(task.getDueDate(), getDueDate())) {
 			task.setDueDate(getDueDate());
@@ -67,10 +68,6 @@ public class DefaultTaskSchema {
 		return false;
 	}
 
-	public boolean getCompleted() {
-		return getBooleanValue(RepositoryTaskAttribute.COMPLETED);
-	}
-
 	public String getComponent() {
 		return getValue(RepositoryTaskAttribute.COMPONENT);
 	}
@@ -79,11 +76,11 @@ public class DefaultTaskSchema {
 		return getDateValue(RepositoryTaskAttribute.DATE_CREATION);
 	}
 
-	public Date getDateCreated() {
-		return getDateValue(RepositoryTaskAttribute.DATE_CREATION);
+	public Date getCompletionDate() {
+		return getDateValue(RepositoryTaskAttribute.DATE_COMPLETION);
 	}
 
-	public Date getDateModified() {
+	public Date getModificationDate() {
 		return getDateValue(RepositoryTaskAttribute.DATE_MODIFIED);
 	}
 
@@ -159,20 +156,20 @@ public class DefaultTaskSchema {
 		return attribute;
 	}
 
-	public void setCompleted(boolean completed) {
-		setBooleanValue(RepositoryTaskAttribute.COMPLETED, completed);
-	}
-
 	public void setComponent(String component) {
 		setValue(RepositoryTaskAttribute.COMPONENT, component);
 	}
 
-	public void setCreationDate(Date date) {
-		setDateValue(RepositoryTaskAttribute.DATE_CREATION, date);
+	public void setCreationDate(Date dateCreated) {
+		setDateValue(RepositoryTaskAttribute.DATE_CREATION, dateCreated);
 	}
 
-	public void setDateCreated(Date dateCreated) {
-		setDateValue(RepositoryTaskAttribute.DATE_CREATION, dateCreated);
+	public void setCompletionDate(Date dateCompleted) {
+		setDateValue(RepositoryTaskAttribute.DATE_COMPLETION, dateCompleted);
+	}
+
+	public void setModificationDate(Date dateModified) {
+		setDateValue(RepositoryTaskAttribute.DATE_MODIFIED, dateModified);
 	}
 
 	private RepositoryTaskAttribute setDateValue(String attributeKey, Date value) {

@@ -83,6 +83,8 @@ public class RepositoryTaskAttribute implements Serializable {
 
 	public static final String DATE_CREATION = "task.common.date.created";
 
+	public static final String DATE_COMPLETION = "task.common.date.completed";
+
 	public static final String KEYWORDS = "task.common.keywords";
 
 	/**
@@ -160,11 +162,6 @@ public class RepositoryTaskAttribute implements Serializable {
 	 * @since 3.0
 	 */
 	public static final String TASK_URL = "task.common.url";
-
-	/**
-	 * @since 3.0
-	 */
-	public static final String COMPLETED = "task.common.completed";
 
 	/**
 	 * @since 3.0

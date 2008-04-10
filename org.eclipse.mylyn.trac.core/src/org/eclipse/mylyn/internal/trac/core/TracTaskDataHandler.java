@@ -437,7 +437,11 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 			schema.setSummary(ticket.getValue(Key.SUMMARY));
 		}
 
-		schema.setCompleted(TracTask.isCompleted(ticket.getValue(Key.STATUS)));
+		if (TracTask.isCompleted(ticket.getValue(Key.STATUS))) {
+			schema.setCompletionDate(ticket.getLastChanged());
+		} else {
+			schema.setCompletionDate(null);
+		}
 
 		String priority = ticket.getValue(Key.PRIORITY);
 		TracPriority[] tracPriorities = client.getPriorities();

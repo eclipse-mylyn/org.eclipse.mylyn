@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -69,7 +70,8 @@ public class MarkTaskCompleteAction extends AbstractChangeCompletionAction {
 
 		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 		for (AbstractTask task : toComplete) {
-			taskList.markComplete(task, true);
+			task.setCompletionDate(new Date());
+			taskList.notifyTaskChanged(task, false);
 		}
 	}
 }

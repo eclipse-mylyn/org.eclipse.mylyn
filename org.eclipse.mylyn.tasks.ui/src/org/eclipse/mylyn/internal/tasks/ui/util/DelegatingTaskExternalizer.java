@@ -92,8 +92,6 @@ final class DelegatingTaskExternalizer {
 
 	static final String KEY_ACTIVE = "Active";
 
-	static final String KEY_COMPLETE = "Complete";
-
 	static final String KEY_PRIORITY = "Priority";
 
 	static final String KEY_PATH = "Path";
@@ -188,11 +186,6 @@ final class DelegatingTaskExternalizer {
 		node.setAttribute(KEY_PRIORITY, task.getPriority());
 		node.setAttribute(KEY_KIND, task.getTaskKind());
 
-		if (task.isCompleted()) {
-			node.setAttribute(KEY_COMPLETE, VAL_TRUE);
-		} else {
-			node.setAttribute(KEY_COMPLETE, VAL_FALSE);
-		}
 		if (task.isActive()) {
 			node.setAttribute(KEY_ACTIVE, VAL_TRUE);
 		} else {
@@ -408,12 +401,6 @@ final class DelegatingTaskExternalizer {
 			}
 		} else {
 			task.setEstimatedTimeHours(0);
-		}
-		// NOTE: do not change the order of complete and end date!!
-		if (element.getAttribute(KEY_COMPLETE).compareTo(VAL_TRUE) == 0) {
-			task.setCompleted(true);
-		} else {
-			task.setCompleted(false);
 		}
 		if (element.hasAttribute(KEY_DATE_END)) {
 			task.setCompletionDate(getDateFromString(element.getAttribute(KEY_DATE_END)));

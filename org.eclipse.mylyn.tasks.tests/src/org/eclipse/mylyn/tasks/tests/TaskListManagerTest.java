@@ -285,14 +285,14 @@ public class TaskListManagerTest extends TestCase {
 
 		ContextCore.getContextManager().processActivityMetaContextEvent(
 				new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-						IInteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task1.getHandleIdentifier(), "origin",
-						null, IInteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startDate.getTime(),
+						IInteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task1.getHandleIdentifier(),
+						"origin", null, IInteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startDate.getTime(),
 						endDate.getTime()));
 
 		ContextCore.getContextManager().processActivityMetaContextEvent(
 				new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-						IInteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task2.getHandleIdentifier(), "origin",
-						null, IInteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startDate2.getTime(),
+						IInteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task2.getHandleIdentifier(),
+						"origin", null, IInteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startDate2.getTime(),
 						endDate2.getTime()));
 
 		assertEquals(2, metaContext.getInteractionHistory().size());
@@ -301,8 +301,7 @@ public class TaskListManagerTest extends TestCase {
 		manager.refactorRepositoryUrl(firstUrl, secondUrl);
 		metaContext = ContextCore.getContextManager().getActivityMetaContext();
 		assertEquals(2, metaContext.getInteractionHistory().size());
-		assertEquals(60 * 1000 * 5, TasksUiPlugin.getTaskActivityManager().getElapsedTime(
-				new MockTask(secondUrl, "1")));
+		assertEquals(60 * 1000 * 5, TasksUiPlugin.getTaskActivityManager().getElapsedTime(new MockTask(secondUrl, "1")));
 		assertEquals(2 * 60 * 1000 * 5, TasksUiPlugin.getTaskActivityManager().getElapsedTime(
 				new MockTask(secondUrl, "2")));
 		assertEquals(secondUrl + "-1", metaContext.getInteractionHistory().get(0).getStructureHandle());
@@ -355,21 +354,18 @@ public class TaskListManagerTest extends TestCase {
 
 	public void testIsCompletedToday() {
 		AbstractTask task = new LocalTask("1", "task 1");
-		task.setCompleted(true);
 		task.setCompletionDate(new Date());
 		assertTrue(TasksUiPlugin.getTaskActivityManager().isCompletedToday(task));
 
 		MockTask mockTask = new MockTask("1");
 		mockTask.setOwner("unknown");
 		manager.getTaskList().addTask(mockTask);
-		mockTask.setCompleted(true);
 		mockTask.setCompletionDate(new Date());
 		assertFalse("completed: " + mockTask.getCompletionDate(), TasksUiPlugin.getTaskActivityManager()
 				.isCompletedToday(mockTask));
 
 		mockTask = new MockTask("2");
 		manager.getTaskList().addTask(mockTask);
-		mockTask.setCompleted(true);
 		mockTask.setCompletionDate(new Date());
 		repository.setAuthenticationCredentials("testUser", "testPassword");
 		mockTask.setOwner("testUser");
@@ -1053,8 +1049,7 @@ public class TaskListManagerTest extends TestCase {
 				MockRepositoryConnector.REPOSITORY_URL);
 		Set<AbstractRepositoryQuery> queries = new HashSet<AbstractRepositoryQuery>();
 		queries.add(query);
-		TasksUi.synchronize(new MockRepositoryConnector(), repository, queries, null,
-				Job.INTERACTIVE, 0, true);
+		TasksUi.synchronize(new MockRepositoryConnector(), repository, queries, null, Job.INTERACTIVE, 0, true);
 		//assertEquals(2, manager.getTaskList().getArchiveContainer().getChildren().size());
 		assertEquals(0, query.getChildren().size());
 	}

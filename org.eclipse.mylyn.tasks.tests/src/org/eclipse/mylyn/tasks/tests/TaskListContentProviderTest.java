@@ -8,6 +8,8 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import java.util.Date;
+
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
@@ -51,12 +53,12 @@ public class TaskListContentProviderTest extends TestCase {
 
 		AbstractTask parent = new LocalTask("parent", "parent label");
 		AbstractTask completedChild = new LocalTask("completed child", "completed child label");
-		completedChild.setCompleted(true);
+		completedChild.setCompletionDate(new Date());
 		taskList.addTask(completedChild, parent);
 		assertFalse(provider.hasChildren(parent));
 
 		AbstractTask incompleteChild = new LocalTask("incomplete child", "incomplete child label");
-		incompleteChild.setCompleted(false);
+		incompleteChild.setCompletionDate(null);
 		taskList.addTask(incompleteChild, parent);
 		assertTrue(provider.hasChildren(parent));
 	}
