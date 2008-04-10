@@ -11,6 +11,7 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 import java.io.File;
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -239,10 +240,10 @@ public class TaskPlanningEditor extends TaskFormPage {
 			if (level != null) {
 				task.setPriority(level.toString());
 			}
-			if (statusCombo.getSelectionIndex() == 0) {
-				task.setCompleted(true);
+			if (!task.isCompleted() && statusCombo.getSelectionIndex() == 0) {
+				task.setCompletionDate(new Date());
 			} else {
-				task.setCompleted(false);
+				task.setCompletionDate(null);
 			}
 		}
 
@@ -481,11 +482,6 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					if (statusCombo.getSelectionIndex() == 0) {
-						task.setCompleted(true);
-					} else {
-						task.setCompleted(false);
-					}
 					TaskPlanningEditor.this.markDirty(true);
 				}
 			});
