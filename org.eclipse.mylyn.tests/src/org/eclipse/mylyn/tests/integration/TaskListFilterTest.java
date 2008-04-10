@@ -8,21 +8,30 @@
 
 package org.eclipse.mylyn.tests.integration;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylyn.context.tests.UiTestUtil;
 import org.eclipse.mylyn.internal.context.ui.TaskListInterestFilter;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
+import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
+import org.eclipse.mylyn.internal.tasks.ui.TaskWorkingSetFilter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.ui.IWorkingSet;
+import org.eclipse.ui.IWorkingSetManager;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.Workbench;
 
 /**
  * @author Mik Kersten
@@ -105,8 +114,34 @@ public class TaskListFilterTest extends TestCase {
 		}
 	}
 
-	public void testCompletedTaskWithDueDateNotRevealed() {
-		fail();
+	public void testSearchScheduledWorkingSet() throws InterruptedException {
+		TaskCategory category = new TaskCategory("category");
+		manager.getTaskList().addCategory(category);
+		manager.getTaskList().moveTask(taskOverdue, category);
+		manager.getTaskList().moveTask(taskIncomplete, category);
+		view.getViewer().refresh();
+		List<Object> items = UiTestUtil.getAllData(view.getViewer().getTree());
+		assertTrue(items.contains(taskCompleted));
+		assertTrue(items.contains(taskOverdue));
+		IWorkingSetManager workingSetManager = Workbench.getInstance().getWorkingSetManager();
+		IWorkingSet workingSet = workingSetManager.createWorkingSet("Task Working Set", new IAdaptable[] { category });
+		workingSet.setId(TaskWorkingSetUpdater.ID_TASK_WORKING_SET);
+		assertTrue(Arrays.asList(workingSet.getElements()).contains(category));
+		workingSetManager.addWorkingSet(workingSet);
+
+		TaskWorkingSetFilter workingSetFilter = new TaskWorkingSetFilter();
+		view.addFilter(workingSetFilter);
+		IWorkingSet[] workingSets = { workingSet };
+		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().setWorkingSets(workingSets);
+		view.getFilteredTree().setFilterText("over");
+		view.getFilteredTree().getRefreshPolicy().runRefreshNow();
+
+		items = UiTestUtil.getAllData(view.getViewer().getTree());
+		assertFalse(items.contains(taskCompleted));
+		assertTrue(items.contains(taskOverdue));
+		workingSets = new IWorkingSet[0];
+		view.removeFilter(workingSetFilter);
+		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().setWorkingSets(workingSets);
 	}
 
 	public void testInterestFilter() {
