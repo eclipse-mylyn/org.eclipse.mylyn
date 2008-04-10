@@ -39,8 +39,10 @@ public abstract class AbstractTaskDataHandler {
 	 * 
 	 * Override getMultiTaskData() to return true and implement this method if connector supports download of multiple
 	 * task data in one request.
+	 * 
+	 * @since 3.0
 	 */
-	public Set<RepositoryTaskData> getMultiTaskData(TaskRepository repository, Set<String> taskIds,
+	public void getMultiTaskData(TaskRepository repository, Set<String> taskIds, AbstractTaskCollector collector,
 			IProgressMonitor monitor) throws CoreException {
 		throw new UnsupportedOperationException();
 	}

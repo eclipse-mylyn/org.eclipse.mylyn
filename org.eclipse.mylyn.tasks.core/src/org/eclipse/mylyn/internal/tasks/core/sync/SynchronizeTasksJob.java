@@ -8,8 +8,8 @@
 
 package org.eclipse.mylyn.internal.tasks.core.sync;
 
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -23,6 +23,7 @@ import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskCollector;
 import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.SynchronizeJob;
@@ -113,32 +114,26 @@ public class SynchronizeTasksJob extends SynchronizeJob {
 		}
 	}
 
-	private void synchronizeTasks(IProgressMonitor monitor, TaskRepository repository, Set<AbstractTask> tasks)
+	private void synchronizeTasks(IProgressMonitor monitor, final TaskRepository repository, Set<AbstractTask> tasks)
 			throws CoreException {
 		monitor.subTask("Receiving " + tasks.size() + " tasks from " + repository.getRepositoryLabel());
-		Set<String> taskIds = new HashSet<String>();
-		Map<String, AbstractTask> idToTask = new HashMap<String, AbstractTask>();
+
+		final Map<String, AbstractTask> idToTask = new HashMap<String, AbstractTask>();
 		for (AbstractTask task : tasks) {
-			taskIds.add(task.getTaskId());
 			idToTask.put(task.getTaskId(), task);
 		}
-		Set<RepositoryTaskData> newTaskData = taskDataHandler.getMultiTaskData(repository, taskIds,
-				new SubProgressMonitor(monitor, tasks.size()));
-		if (newTaskData != null && newTaskData.size() > 0) {
-			for (RepositoryTaskData taskData : newTaskData) {
-				if (taskData != null) {
-					AbstractTask task = idToTask.remove(taskData.getTaskId());
-					if (task != null) {
-						updateFromTaskData(repository, task, taskData);
-						monitor.worked(1);
-					}
+
+		AbstractTaskCollector collector = new AbstractTaskCollector() {
+			@Override
+			public void accept(RepositoryTaskData taskData) {
+				AbstractTask task = idToTask.remove(taskData.getTaskId());
+				if (task != null) {
+					updateFromTaskData(repository, task, taskData);
 				}
 			}
-		}
+		};
 
-		if (newTaskData != null && newTaskData.size() < tasks.size()) {
-			// set error status
-		}
+		taskDataHandler.getMultiTaskData(repository, Collections.unmodifiableSet(idToTask.keySet()), collector, monitor);
 	}
 
 	private void updateFromTaskData(TaskRepository repository, AbstractTask task, RepositoryTaskData taskData) {

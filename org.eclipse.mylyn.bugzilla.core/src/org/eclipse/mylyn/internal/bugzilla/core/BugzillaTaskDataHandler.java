@@ -28,6 +28,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_RESO
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskCollector;
 import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryOperation;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
@@ -109,10 +110,11 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 	}
 
 	@Override
-	public Set<RepositoryTaskData> getMultiTaskData(TaskRepository repository, Set<String> taskIds,
+	public void getMultiTaskData(TaskRepository repository, Set<String> taskIds, AbstractTaskCollector collector,
 			IProgressMonitor monitor) throws CoreException {
 		try {
-
+			monitor.beginTask("Receiving tasks", taskIds.size());
+			
 			Set<RepositoryTaskData> result = new HashSet<RepositoryTaskData>();
 			BugzillaClient client = connector.getClientManager().getClient(repository);
 			try {
@@ -141,12 +143,15 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 					configureTaskData(repository, repositoryTaskData);
 					//	}
 				}
+				
+				collector.accept(repositoryTaskData);
+				monitor.worked(1);
 			}
-			return result;
-
 		} catch (IOException e) {
 			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 					RepositoryStatus.ERROR_IO, repository.getRepositoryUrl(), e));
+		} finally {
+			monitor.done();
 		}
 	}
 

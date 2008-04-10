@@ -1182,6 +1182,8 @@ public class BugzillaClient {
 	public Map<String, RepositoryTaskData> getTaskData(Set<String> taskIds) throws IOException, CoreException {
 		GzipPostMethod method = null;
 		HashMap<String, RepositoryTaskData> taskDataMap = new HashMap<String, RepositoryTaskData>();
+		// make a copy to modify set
+		taskIds = new HashSet<String>(taskIds);
 		while (taskIds.size() > 0) {
 
 			try {
