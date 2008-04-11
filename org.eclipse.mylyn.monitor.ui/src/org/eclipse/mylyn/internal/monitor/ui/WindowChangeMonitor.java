@@ -9,7 +9,6 @@
 package org.eclipse.mylyn.internal.monitor.ui;
 
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
-import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
 import org.eclipse.ui.IWindowListener;
 import org.eclipse.ui.IWorkbenchWindow;
 

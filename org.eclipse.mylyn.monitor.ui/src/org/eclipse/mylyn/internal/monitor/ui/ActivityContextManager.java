@@ -23,7 +23,6 @@ import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.ui.AbstractUserActivityMonitor;
 import org.eclipse.mylyn.monitor.ui.IUserAttentionListener;
-import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
 
 /**
  * Manages the meta task-activity context.

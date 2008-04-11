@@ -11,7 +11,6 @@ package org.eclipse.mylyn.internal.monitor.ui;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.ui.IActionExecutionListener;
-import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
 
 /**
  * @author Mik Kersten
