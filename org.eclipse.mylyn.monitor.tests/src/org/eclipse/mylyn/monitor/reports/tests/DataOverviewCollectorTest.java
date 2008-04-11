@@ -18,10 +18,10 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.mylyn.internal.monitor.core.collection.DataOverviewCollector;
 import org.eclipse.mylyn.internal.monitor.core.collection.IUsageCollector;
 import org.eclipse.mylyn.internal.monitor.usage.InteractionEventLogger;
+import org.eclipse.mylyn.internal.monitor.usage.ReportGenerator;
 import org.eclipse.mylyn.internal.monitor.usage.UiUsageMonitorPlugin;
 import org.eclipse.mylyn.monitor.core.AbstractMonitorLog;
 import org.eclipse.mylyn.monitor.tests.MonitorTestsPlugin;
-import org.eclipse.mylyn.monitor.usage.ReportGenerator;
 
 /**
  * 

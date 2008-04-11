@@ -19,7 +19,7 @@ import org.eclipse.mylyn.internal.monitor.core.collection.IUsageCollector;
 import org.eclipse.mylyn.internal.monitor.core.collection.InteractionEventSummary;
 import org.eclipse.mylyn.internal.monitor.core.collection.SummaryCollector;
 import org.eclipse.mylyn.internal.monitor.usage.InteractionEventLogger;
-import org.eclipse.mylyn.monitor.usage.ReportGenerator;
+import org.eclipse.mylyn.internal.monitor.usage.ReportGenerator;
 
 /**
  * @author Mik Kersten
