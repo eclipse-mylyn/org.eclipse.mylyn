@@ -8,9 +8,27 @@
 
 package org.eclipse.mylyn.monitor.ui;
 
+import java.util.List;
+
+import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
+import org.eclipse.mylyn.monitor.core.IInteractionEventListener;
+
 /**
  * @author Steffen Pingel
+ * @since 3.0
  */
 public class MonitorUi {
+
+	public static void addInteractionListener(IInteractionEventListener listener) {
+		MonitorUiPlugin.getDefault().addInteractionListener(listener);
+	}
+
+	public static List<AbstractUserInteractionMonitor> getSelectionMonitors() {
+		return MonitorUiPlugin.getDefault().getSelectionMonitors();
+	}
+
+	public static void removeInteractionListener(IInteractionEventListener listener) {
+		MonitorUiPlugin.getDefault().removeInteractionListener(listener);
+	}
 
 }
