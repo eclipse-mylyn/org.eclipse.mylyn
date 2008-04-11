@@ -93,8 +93,10 @@ public class WebCorePlugin extends Plugin {
 	public void stop(BundleContext context) throws Exception {
 		tracker.close();
 		tracker = null;
-		service.shutdown();
-		service = null;
+		if (service != null) {
+			service.shutdown();
+			service = null;
+		}
 		super.stop(context);
 	}
 
