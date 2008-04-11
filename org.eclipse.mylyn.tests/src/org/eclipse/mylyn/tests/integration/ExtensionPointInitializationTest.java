@@ -11,7 +11,7 @@ package org.eclipse.mylyn.tests.integration;
 import junit.framework.TestCase;
 
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
-import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Mik Kersten

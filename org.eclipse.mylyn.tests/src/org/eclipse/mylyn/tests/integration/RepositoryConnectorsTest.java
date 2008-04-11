@@ -12,8 +12,8 @@ import junit.extensions.ActiveTestSuite;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * Test harness for iterating over all connectors and performing a test.
