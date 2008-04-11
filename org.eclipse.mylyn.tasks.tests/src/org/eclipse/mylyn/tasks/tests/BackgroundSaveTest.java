@@ -13,9 +13,9 @@ import java.util.Locale;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.BackgroundSaveTimer;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskListSaveManager;
-import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * Tests the mechanism for saving the task data periodically. If this test fails unexpectedly, try adjusting the timing.

@@ -42,7 +42,7 @@
          name="Task List Startup (required)"
          point="org.eclipse.ui.startup">
        <startup
-             class="org.eclipse.mylyn.tasks.ui.TasksUiPlugin$TasksUiStartup">
+             class="org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin$TasksUiStartup">
        </startup>
     </extension>
 

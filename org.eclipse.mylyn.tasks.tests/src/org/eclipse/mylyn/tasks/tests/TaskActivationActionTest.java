@@ -11,9 +11,9 @@ package org.eclipse.mylyn.tasks.tests;
 import junit.framework.TestCase;
 
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ToggleTaskActivationAction;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
-import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Mik Kersten

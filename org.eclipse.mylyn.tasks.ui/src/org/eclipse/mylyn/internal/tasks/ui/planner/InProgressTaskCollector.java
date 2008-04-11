@@ -14,8 +14,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * Collects tasks that are not complete but have been worked on during the specified date range.

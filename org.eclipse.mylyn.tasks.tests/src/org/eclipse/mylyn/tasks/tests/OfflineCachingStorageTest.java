@@ -17,11 +17,11 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataState;
 import org.eclipse.mylyn.internal.tasks.ui.OfflineCachingStorage;
 import org.eclipse.mylyn.internal.tasks.ui.OfflineFileStorage;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.tests.connector.MockAttributeFactory;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
-import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Rob Elves

@@ -13,8 +13,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.commands.IParameterValues;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * Compute repository connectors type/label map

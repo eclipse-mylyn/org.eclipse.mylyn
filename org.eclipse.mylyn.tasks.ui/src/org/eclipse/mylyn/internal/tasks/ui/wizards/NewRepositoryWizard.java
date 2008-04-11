@@ -9,8 +9,8 @@
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AddRepositoryAction;
-import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.ui.IWorkbench;
 

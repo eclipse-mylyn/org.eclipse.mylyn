@@ -10,11 +10,11 @@ package org.eclipse.mylyn.tasks.tests.performance;
 
 import java.io.File;
 
+import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskListWriter;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
-import org.eclipse.mylyn.tasks.ui.TaskListManager;
-import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.test.performance.PerformanceTestCase;
 
 public class TaskListPerformanceTest extends PerformanceTestCase {

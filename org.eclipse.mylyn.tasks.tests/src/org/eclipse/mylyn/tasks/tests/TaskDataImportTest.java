@@ -11,10 +11,10 @@ import java.io.File;
 
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.tests.AbstractContextTest;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataImportWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataImportWizardPage;
-import org.eclipse.mylyn.tasks.ui.TaskListManager;
-import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.widgets.Shell;
 
 /**

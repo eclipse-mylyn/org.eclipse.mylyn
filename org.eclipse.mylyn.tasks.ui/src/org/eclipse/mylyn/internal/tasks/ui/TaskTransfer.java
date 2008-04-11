@@ -15,7 +15,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.dnd.ByteArrayTransfer;
 import org.eclipse.swt.dnd.TransferData;
 

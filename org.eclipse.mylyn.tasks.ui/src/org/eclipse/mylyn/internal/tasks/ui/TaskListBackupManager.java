@@ -35,7 +35,6 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDataExportJob;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataExportWizard;
-import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 

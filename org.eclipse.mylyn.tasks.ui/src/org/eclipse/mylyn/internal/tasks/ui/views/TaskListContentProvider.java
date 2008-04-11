@@ -16,10 +16,10 @@ import java.util.Set;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * Provides custom content for the task list, e.g. guaranteed visibility of some elements, ability to suppress

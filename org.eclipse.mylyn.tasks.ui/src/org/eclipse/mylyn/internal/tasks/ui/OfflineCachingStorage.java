@@ -23,7 +23,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.internal.tasks.core.ITaskDataStorage;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataState;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
-import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * Least Recently Used (LRU) cache

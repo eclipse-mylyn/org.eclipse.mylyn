@@ -19,8 +19,11 @@ import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
+import org.eclipse.mylyn.internal.tasks.ui.ITaskListManager;
 import org.eclipse.mylyn.internal.tasks.ui.MoveToCategoryMenuContributor;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.internal.tasks.ui.TaskPriorityFilter;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskCompleteAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewCategoryAction;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
@@ -30,8 +33,6 @@ import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
-import org.eclipse.mylyn.tasks.ui.TaskListManager;
-import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.widgets.TreeItem;
 
@@ -212,7 +213,7 @@ public class TaskListUiTest extends TestCase {
 		int numListenersDuring = 0;
 		int numListenersAfter = 0;
 
-		TaskListManager manager = TasksUiPlugin.getTaskListManager();
+		ITaskListManager manager = TasksUiPlugin.getTaskListManager();
 		Set<ITaskListChangeListener> listeners = manager.getTaskList().getChangeListeners();
 		numListenersBefore = listeners.size();
 

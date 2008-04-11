@@ -7,9 +7,9 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.trac.ui;
 
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.tasks.ui.TaskRepositoryLocationUiFactory;
-import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 

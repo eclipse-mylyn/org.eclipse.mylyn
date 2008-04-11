@@ -11,7 +11,6 @@ package org.eclipse.mylyn.internal.tasks.ui;
 import java.io.File;
 
 import org.eclipse.mylyn.context.core.AbstractContextStore;
-import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Mik Kersten

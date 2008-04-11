@@ -17,9 +17,9 @@ import java.util.Set;
 
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.ui.AbstractDuplicateDetector;
-import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.search.SearchHitCollector;
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.swt.SWT;

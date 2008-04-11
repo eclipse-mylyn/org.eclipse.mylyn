@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Tasks UI
 Bundle-SymbolicName: org.eclipse.mylyn.tasks.ui;singleton:=true
 Bundle-Version: 3.0.0.qualifier
-Bundle-Activator: org.eclipse.mylyn.tasks.ui.TasksUiPlugin
+Bundle-Activator: org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.expressions,

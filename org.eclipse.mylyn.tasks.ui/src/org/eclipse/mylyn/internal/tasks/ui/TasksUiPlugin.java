@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package org.eclipse.mylyn.tasks.ui;
+package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -47,22 +47,6 @@ import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.sync.RepositorySynchronizationManager;
-import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
-import org.eclipse.mylyn.internal.tasks.ui.ITaskHighlighter;
-import org.eclipse.mylyn.internal.tasks.ui.ITaskListNotificationProvider;
-import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
-import org.eclipse.mylyn.internal.tasks.ui.OfflineCachingStorage;
-import org.eclipse.mylyn.internal.tasks.ui.OfflineFileStorage;
-import org.eclipse.mylyn.internal.tasks.ui.RepositoryAwareStatusHandler;
-import org.eclipse.mylyn.internal.tasks.ui.TaskActivityMonitor;
-import org.eclipse.mylyn.internal.tasks.ui.TaskEditorBloatMonitor;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListBackupManager;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListNotificationManager;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListSynchronizationScheduler;
-import org.eclipse.mylyn.internal.tasks.ui.TaskRepositoryUtil;
-import org.eclipse.mylyn.internal.tasks.ui.TasksJobFactory;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.AbstractNotification;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotification;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationQueryIncoming;
@@ -87,6 +71,10 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.ui.AbstractDuplicateDetector;
+import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylyn.tasks.ui.AbstractTaskRepositoryLinkProvider;
+import org.eclipse.mylyn.tasks.ui.TasksUiProxyChangeListener;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorFactory;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory;
 import org.eclipse.mylyn.web.core.WebClientLog;
@@ -508,9 +496,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			tasksJobFactory = new TasksJobFactory(taskListManager.getTaskList(), synchronizationManager,
 					repositoryManager);
 
-			// NOTE: task list must be read before Task List view can be
-			// initialized
-			taskListManager.init();
+			// NOTE: task list must be read before Task List view can be initialized
 			taskListManager.addActivityListener(CONTEXT_TASK_ACTIVITY_LISTENER);
 			// readExistingOrCreateNewList() must be called after repositories have been read in
 			taskListManager.readExistingOrCreateNewList();
@@ -626,7 +612,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				getPreferenceStore().removePropertyChangeListener(taskListBackupManager);
 				getPreferenceStore().removePropertyChangeListener(PROPERTY_LISTENER);
 				taskListManager.getTaskList().removeChangeListener(taskListSaveManager);
-				taskListManager.dispose();
 				TaskListColorsAndFonts.dispose();
 				if (ContextCorePlugin.getDefault() != null) {
 					ContextCorePlugin.getDefault().getPluginPreferences().removePropertyChangeListener(
@@ -790,6 +775,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		return menuContributors;
 	}
 
+	// API-3.0: move to a standard dynamic menu mechanism?
 	public void addDynamicPopupContributor(String menuPath, IDynamicSubMenuContributor contributor) {
 		List<IDynamicSubMenuContributor> contributors = menuContributors.get(menuPath);
 		if (contributors == null) {

@@ -17,6 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.jface.window.Window;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.planner.DateSelectionDialog;
 import org.eclipse.swt.SWT;

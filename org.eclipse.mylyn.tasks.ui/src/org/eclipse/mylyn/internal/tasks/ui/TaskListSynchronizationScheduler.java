@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.mylyn.tasks.core.SynchronizeJob;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.ITasksJobFactory;
-import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Steffen Pingel

@@ -32,14 +32,15 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
+import org.eclipse.mylyn.internal.tasks.ui.ITaskListManager;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListBackupManager;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
-import org.eclipse.mylyn.tasks.ui.TaskListManager;
-import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -92,7 +93,7 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 	 */
 	public void saveTaskList(boolean saveContext, boolean async) {
 		if (TasksUiPlugin.getDefault() != null && TasksUiPlugin.getDefault().isInitialized()) {
-			TaskListManager taskListManager = TasksUiPlugin.getTaskListManager();
+			ITaskListManager taskListManager = TasksUiPlugin.getTaskListManager();
 			if (async) {
 				if (saveContext) {
 					for (AbstractTask task : taskListManager.getTaskList().getActiveTasks()) {

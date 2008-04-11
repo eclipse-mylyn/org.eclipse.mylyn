@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.ui;
+package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.io.File;
 import java.net.URLDecoder;
@@ -38,8 +38,6 @@ import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
-import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
-import org.eclipse.mylyn.internal.tasks.ui.WorkspaceAwareContextStore;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskListSaveManager;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskListWriter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskActivationHistory;
@@ -60,6 +58,7 @@ import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -72,16 +71,13 @@ import org.eclipse.swt.widgets.Display;
  * @author Jevgeni Holodkov (insertQueries)
  * @since 2.0
  */
-public class TaskListManager {
+public class TaskListManager implements ITaskListManager {
 
 	private static final long SECOND = 1000;
 
 	private static final long MINUTE = 60 * SECOND;
 
 	private static final long ROLLOVER_DELAY = 30 * MINUTE;
-
-	// TODO: Remove
-	public static final String ARCHIVE_CATEGORY_DESCRIPTION = "Archive";
 
 	private final List<ITaskActivityListener> activityListeners = new ArrayList<ITaskActivityListener>();
 
@@ -128,12 +124,6 @@ public class TaskListManager {
 		timer = new Timer();
 		timer.schedule(new RolloverCheck(), ROLLOVER_DELAY, ROLLOVER_DELAY);
 		taskList.addChangeListener(CHANGE_LISTENER);
-	}
-
-	public void init() {
-	}
-
-	public void dispose() {
 	}
 
 	public TaskList resetTaskList() {
@@ -334,6 +324,7 @@ public class TaskListManager {
 		activateTask(task, true);
 	}
 
+	@Deprecated
 	public void activateTask(AbstractTask task, boolean addToHistory) {
 		deactivateAllTasks();
 
