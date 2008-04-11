@@ -10,7 +10,7 @@ package org.eclipse.mylyn.internal.pde.ui;
 
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.mylyn.context.ui.IContextUiStartup;
-import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
+import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.osgi.framework.BundleContext;
 
 /**

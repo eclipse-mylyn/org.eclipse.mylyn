@@ -24,7 +24,7 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.IContextUiStartup;
-import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
+import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;

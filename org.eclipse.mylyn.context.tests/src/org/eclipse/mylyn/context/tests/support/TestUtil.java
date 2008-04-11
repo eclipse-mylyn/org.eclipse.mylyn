@@ -17,7 +17,7 @@ import junit.framework.AssertionFailedError;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.tests.ContextTestsPlugin;
-import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
+import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 
 /**
  * @author Steffen Pingel
