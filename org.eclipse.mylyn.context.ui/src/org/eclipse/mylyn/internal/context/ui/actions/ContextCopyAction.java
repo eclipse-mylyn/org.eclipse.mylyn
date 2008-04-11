@@ -15,10 +15,10 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskSelectionDialog;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 
@@ -75,7 +75,7 @@ public class ContextCopyAction extends TaskContextAction {
 		}
 
 		if (targetTask != null) {
-			TasksUiPlugin.getTaskListManager().deactivateAllTasks();
+			TasksUi.getTaskListManager().deactivateAllTasks();
 			IInteractionContext source = ContextCore.getContextManager().loadContext(sourceTask.getHandleIdentifier());
 
 			if (targetTask.equals(sourceTask)) {
@@ -89,7 +89,7 @@ public class ContextCopyAction extends TaskContextAction {
 				ContextCore.getContextManager().cloneContext(sourceTask.getHandleIdentifier(),
 						targetTask.getHandleIdentifier());
 
-				TasksUiPlugin.getTaskListManager().activateTask(targetTask);
+				TasksUi.getTaskListManager().activateTask(targetTask);
 				TaskListView view = TaskListView.getFromActivePerspective();
 				if (view != null) {
 					view.refresh();

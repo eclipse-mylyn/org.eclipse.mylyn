@@ -24,9 +24,9 @@ import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.team.ui.AbstractActiveChangeSetProvider;
 import org.eclipse.mylyn.team.ui.AbstractContextChangeSetManager;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
@@ -130,7 +130,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 				if (!(restoredSet instanceof ContextChangeSet)) {
 					String encodedTitle = restoredSet.getName();
 					String taskHandle = ContextChangeSet.getHandleFromPersistedTitle(encodedTitle);
-					AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(taskHandle);
+					AbstractTask task = TasksUi.getTaskListManager().getTaskList().getTask(taskHandle);
 					if (task != null) {
 						try {
 							ContextChangeSet contextChangeSet = new ContextChangeSet(task, collector);
@@ -249,7 +249,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 	}
 
 	private AbstractTask getTask(IInteractionContext context) {
-		return TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
+		return TasksUi.getTaskListManager().getTaskList().getActiveTask();
 	}
 
 	/**

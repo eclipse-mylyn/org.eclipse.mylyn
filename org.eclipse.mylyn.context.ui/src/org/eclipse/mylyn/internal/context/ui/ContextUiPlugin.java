@@ -54,6 +54,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -296,7 +297,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 				StatusHandler.log(new Status(IStatus.ERROR, super.getBundle().getSymbolicName(), IStatus.ERROR,
 						"Could not lazy start context plug-in", t));
 			}
-			if (TasksUiPlugin.getTaskListManager() != null) {
+			if (TasksUi.getTaskListManager() != null) {
 				ContextCore.getContextManager().removeListener(contextActivationListener);
 			}
 		}
@@ -310,9 +311,9 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			// NOTE: can't init within this class because ..mylyn.tasks.ui activation will be triggered on activation
 			ContextHighlighterInitializer.init();
 
-			TasksUiPlugin.getTaskListManager().addActivityListener(perspectiveManager);
+			TasksUi.getTaskListManager().addActivityListener(perspectiveManager);
 			MonitorUiPlugin.getDefault().addWindowPerspectiveListener(perspectiveManager);
-			TasksUiPlugin.getTaskListManager().addActivityListener(TASK_ACTIVATION_LISTENER);
+			TasksUi.getTaskListManager().addActivityListener(TASK_ACTIVATION_LISTENER);
 		} catch (Exception e) {
 			StatusHandler.fail(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Context UI initialization failed",
 					e));
@@ -348,9 +349,9 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		ContextCore.getContextManager().removeListener(viewerManager);
 		MonitorUiPlugin.getDefault().removeWindowPartListener(contentOutlineManager);
 
-		TasksUiPlugin.getTaskListManager().removeActivityListener(perspectiveManager);
+		TasksUi.getTaskListManager().removeActivityListener(perspectiveManager);
 		MonitorUiPlugin.getDefault().removeWindowPerspectiveListener(perspectiveManager);
-		TasksUiPlugin.getTaskListManager().removeActivityListener(TASK_ACTIVATION_LISTENER);
+		TasksUi.getTaskListManager().removeActivityListener(TASK_ACTIVATION_LISTENER);
 	}
 
 	/**
@@ -361,7 +362,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		if (lazyStarted.get()) {
 			lazyStop();
 		}
-		if (TasksUiPlugin.getTaskListManager() != null) {
+		if (TasksUi.getTaskListManager() != null) {
 			ContextCore.getContextManager().removeListener(contextActivationListener);
 		}
 

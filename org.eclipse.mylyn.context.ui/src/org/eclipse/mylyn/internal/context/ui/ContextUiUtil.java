@@ -48,7 +48,7 @@ public class ContextUiUtil {
 		final String directory = TasksUiPlugin.getDefault().getDataDirectory();
 		try {
 			if (task.isActive()) {
-				TasksUiPlugin.getTaskListManager().deactivateTask(task);
+				TasksUi.getTaskListManager().deactivateTask(task);
 			}
 
 			final boolean[] result = new boolean[1];
@@ -72,8 +72,8 @@ public class ContextUiUtil {
 				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 						TITLE_DIALOG, MESSAGE_ATTACHMENTS_NOT_SUPPORTED + connector.getLabel());
 			} else {
-				TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(task, false);
-				TasksUiPlugin.getTaskListManager().activateTask(task);
+				TasksUi.getTaskListManager().getTaskList().notifyTaskChanged(task, false);
+				TasksUi.getTaskListManager().activateTask(task);
 			}
 		} catch (InvocationTargetException e) {
 			if (e.getCause() instanceof CoreException) {

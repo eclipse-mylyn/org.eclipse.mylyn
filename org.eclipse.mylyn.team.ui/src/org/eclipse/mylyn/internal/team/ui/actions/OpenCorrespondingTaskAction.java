@@ -36,6 +36,7 @@ import org.eclipse.mylyn.tasks.core.ILinkedTaskInfo;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -179,12 +180,12 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 				// XXX fix this hack (jira ids don't work here)
 				if (!taskId.contains(RepositoryTaskHandleUtil.HANDLE_DELIM)) {
 //					String handle = AbstractTask.getHandle(repositoryUrl, taskId);
-					task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repositoryUrl, taskId);
+					task = TasksUi.getTaskListManager().getTaskList().getTask(repositoryUrl, taskId);
 				}
 			}
 			if (task == null && taskFullUrl != null) {
 				// search by fullUrl
-				for (AbstractTask currTask : TasksUiPlugin.getTaskListManager().getTaskList().getAllTasks()) {
+				for (AbstractTask currTask : TasksUi.getTaskListManager().getTaskList().getAllTasks()) {
 					if (currTask != null) {
 						String currUrl = currTask.getUrl();
 						if (taskFullUrl.equals(currUrl)) {

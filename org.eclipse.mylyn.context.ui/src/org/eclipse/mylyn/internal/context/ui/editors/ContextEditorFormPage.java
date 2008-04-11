@@ -33,10 +33,10 @@ import org.eclipse.mylyn.internal.context.ui.actions.ContextCopyAction;
 import org.eclipse.mylyn.internal.context.ui.actions.ContextRetrieveAction;
 import org.eclipse.mylyn.internal.context.ui.views.ContextNodeOpenListener;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
@@ -219,7 +219,7 @@ public class ContextEditorFormPage extends FormPage {
 			}
 		});
 
-		if (!task.equals(TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask())) {
+		if (!task.equals(TasksUi.getTaskListManager().getTaskList().getActiveTask())) {
 			doiScale.setEnabled(false);
 		}
 
@@ -322,7 +322,7 @@ public class ContextEditorFormPage extends FormPage {
 		Composite sectionClient = toolkit.createComposite(section);
 		section.setClient(sectionClient);
 
-		if (task.equals(TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask())) {
+		if (task.equals(TasksUi.getTaskListManager().getTaskList().getActiveTask())) {
 			sectionClient.setLayout(new Layout() {
 
 				@Override
