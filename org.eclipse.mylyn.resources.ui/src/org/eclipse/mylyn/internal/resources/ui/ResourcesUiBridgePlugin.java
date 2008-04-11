@@ -24,7 +24,7 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.IContextUiStartup;
-import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
+import org.eclipse.mylyn.monitor.ui.MonitorUi;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -94,7 +94,7 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 		interestEditorTracker = new EditorInteractionMonitor();
 
 		ContextCore.getContextManager().addListener(editorManager);
-		MonitorUiPlugin.getDefault().getSelectionMonitors().add(resourceInteractionMonitor);
+		MonitorUi.getSelectionMonitors().add(resourceInteractionMonitor);
 
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceChangeMonitor,
 				IResourceChangeEvent.POST_CHANGE);
@@ -110,7 +110,7 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 			ContextCore.getContextManager().removeListener(editorManager);
 		}
 		if (resourceInteractionMonitor != null) {
-			MonitorUiPlugin.getDefault().getSelectionMonitors().remove(resourceInteractionMonitor);
+			MonitorUi.getSelectionMonitors().remove(resourceInteractionMonitor);
 		}
 		if (interestEditorTracker != null) {
 			interestEditorTracker.dispose(PlatformUI.getWorkbench());

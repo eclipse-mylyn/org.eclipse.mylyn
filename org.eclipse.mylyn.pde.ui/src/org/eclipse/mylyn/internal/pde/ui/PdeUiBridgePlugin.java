@@ -10,7 +10,7 @@ package org.eclipse.mylyn.internal.pde.ui;
 
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.mylyn.context.ui.IContextUiStartup;
-import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
+import org.eclipse.mylyn.monitor.ui.MonitorUi;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -42,12 +42,12 @@ public class PdeUiBridgePlugin extends Plugin {
 
 	private void lazyStart() {
 		pdeEditingMonitor = new PdeEditingMonitor();
-		MonitorUiPlugin.getDefault().getSelectionMonitors().add(pdeEditingMonitor);
+		MonitorUi.getSelectionMonitors().add(pdeEditingMonitor);
 	}
 
 	private void lazyStop() {
 		if (pdeEditingMonitor != null) {
-			MonitorUiPlugin.getDefault().getSelectionMonitors().remove(pdeEditingMonitor);
+			MonitorUi.getSelectionMonitors().remove(pdeEditingMonitor);
 		}
 	}
 

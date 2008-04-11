@@ -10,7 +10,7 @@ package org.eclipse.mylyn.internal.ide.ant;
 
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.mylyn.context.ui.IContextUiStartup;
-import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
+import org.eclipse.mylyn.monitor.ui.MonitorUi;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -43,7 +43,7 @@ public class AntUiBridgePlugin extends Plugin {
 
 	private void lazyStart() {
 		antEditingMonitor = new AntEditingMonitor();
-		MonitorUiPlugin.getDefault().getSelectionMonitors().add(antEditingMonitor);
+		MonitorUi.getSelectionMonitors().add(antEditingMonitor);
 	}
 
 	@Override
@@ -54,7 +54,7 @@ public class AntUiBridgePlugin extends Plugin {
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		if (antEditingMonitor != null) {
-			MonitorUiPlugin.getDefault().getSelectionMonitors().remove(antEditingMonitor);
+			MonitorUi.getSelectionMonitors().remove(antEditingMonitor);
 		}
 
 		super.stop(context);

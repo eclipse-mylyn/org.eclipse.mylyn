@@ -20,8 +20,8 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.ui.IContextUiStartup;
 import org.eclipse.mylyn.internal.java.ui.editor.ActiveFoldingListener;
 import org.eclipse.mylyn.internal.java.ui.wizards.RecommendedPreferencesWizard;
-import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.monitor.ui.MonitorUi;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbench;
@@ -78,7 +78,7 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 		ContextCore.getContextManager().addListener(landmarkMarkerManager);
 
 		javaEditingMonitor = new JavaEditingMonitor();
-		MonitorUiPlugin.getDefault().getSelectionMonitors().add(javaEditingMonitor);
+		MonitorUi.getSelectionMonitors().add(javaEditingMonitor);
 		installEditorTracker(PlatformUI.getWorkbench());
 
 		javaElementChangeListener = new InterestUpdateDeltaListener();
@@ -106,7 +106,7 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 			ContextCore.getContextManager().removeListener(landmarkMarkerManager);
 		}
 		if (javaEditingMonitor != null) {
-			MonitorUiPlugin.getDefault().getSelectionMonitors().remove(javaEditingMonitor);
+			MonitorUi.getSelectionMonitors().remove(javaEditingMonitor);
 		}
 		if (javaElementChangeListener != null) {
 			JavaCore.removeElementChangedListener(javaElementChangeListener);
