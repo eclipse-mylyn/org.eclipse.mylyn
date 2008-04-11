@@ -16,6 +16,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Mik Kersten
@@ -33,7 +34,7 @@ public class TaskDeactivateAction extends Action {
 	public void run(AbstractTask task) {
 		try {
 			if (task != null) {
-				TasksUiPlugin.getTaskListManager().deactivateTask(task);
+				TasksUi.getTaskListManager().deactivateTask(task);
 			}
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,

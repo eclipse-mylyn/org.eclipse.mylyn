@@ -40,6 +40,7 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoryLabelProvider;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.ModifyEvent;
@@ -94,7 +95,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 				List<IAdaptable> taskRepositoriesContainers = new ArrayList<IAdaptable>();
 				List<IAdaptable> resourcesRepositoriesContainers = new ArrayList<IAdaptable>();
 
-				for (AbstractTaskContainer category : TasksUiPlugin.getTaskListManager().getTaskList().getCategories()) {
+				for (AbstractTaskContainer category : TasksUi.getTaskListManager().getTaskList().getCategories()) {
 					if (!(category instanceof TaskArchive)) {
 						taskRepositoriesContainers.add(category);
 					}
@@ -132,7 +133,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 						new ElementCategory("Resources", resourcesRepositoriesContainers) };
 			} else if (parentElement instanceof TaskRepository) {
 				List<IAdaptable> taskContainers = new ArrayList<IAdaptable>();
-				for (AbstractTaskContainer element : TasksUiPlugin.getTaskListManager()
+				for (AbstractTaskContainer element : TasksUi.getTaskListManager()
 						.getTaskList()
 						.getRepositoryQueries(((TaskRepository) parentElement).getRepositoryUrl())) {
 					if (element instanceof AbstractRepositoryQuery) {
@@ -316,7 +317,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 			if (element instanceof AbstractRepositoryQuery) {
 				AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
 				if (query.getRepositoryUrl() != null) {
-					UnmatchedTaskContainer orphansContainer = TasksUiPlugin.getTaskListManager()
+					UnmatchedTaskContainer orphansContainer = TasksUi.getTaskListManager()
 							.getTaskList()
 							.getOrphanContainer(query.getRepositoryUrl());
 					if (orphansContainer != null) {

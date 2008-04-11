@@ -50,6 +50,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTargetEvent;
@@ -177,20 +178,19 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 						TasksUiPreferenceConstants.LOCAL_SUB_TASKS_ENABLED)) {
 			for (AbstractTask task : tasksToMove) {
 				if (!task.contains(((LocalTask) currentTarget).getHandleIdentifier())) {
-					TasksUiPlugin.getTaskListManager().getTaskList().moveTask(task, (LocalTask) currentTarget);
+					TasksUi.getTaskListManager().getTaskList().moveTask(task, (LocalTask) currentTarget);
 				}
 			}
 		} else {
 			for (AbstractTask task : tasksToMove) {
 				if (currentTarget instanceof UncategorizedTaskContainer) {
-					TasksUiPlugin.getTaskListManager().getTaskList().moveTask(task,
+					TasksUi.getTaskListManager().getTaskList().moveTask(task,
 							(UncategorizedTaskContainer) currentTarget);
 				} else if (currentTarget instanceof TaskCategory) {
-					TasksUiPlugin.getTaskListManager().getTaskList().moveTask(task, (TaskCategory) currentTarget);
+					TasksUi.getTaskListManager().getTaskList().moveTask(task, (TaskCategory) currentTarget);
 				} else if (currentTarget instanceof UnmatchedTaskContainer) {
 					if (((UnmatchedTaskContainer) currentTarget).getRepositoryUrl().equals(task.getRepositoryUrl())) {
-						TasksUiPlugin.getTaskListManager().getTaskList().moveTask(task,
-								(AbstractTaskCategory) currentTarget);
+						TasksUi.getTaskListManager().getTaskList().moveTask(task, (AbstractTaskCategory) currentTarget);
 					}
 				} else if (currentTarget instanceof AbstractTask) {
 					AbstractTask targetTask = (AbstractTask) currentTarget;
@@ -205,7 +205,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 						}
 					}
 					if (targetCategory != null) {
-						TasksUiPlugin.getTaskListManager().getTaskList().moveTask(task, targetCategory);
+						TasksUi.getTaskListManager().getTaskList().moveTask(task, targetCategory);
 					}
 				} else if (currentTarget instanceof ScheduledTaskContainer) {
 					ScheduledTaskContainer container = (ScheduledTaskContainer) currentTarget;
@@ -215,8 +215,8 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 					TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, newSchedule.getTime(),
 							container.isCaptureFloating());
 				} else if (currentTarget == null) {
-					TasksUiPlugin.getTaskListManager().getTaskList().moveTask(newTask,
-							TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
+					TasksUi.getTaskListManager().getTaskList().moveTask(newTask,
+							TasksUi.getTaskListManager().getTaskList().getDefaultCategory());
 				}
 			}
 		}
@@ -377,7 +377,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 				@Override
 				protected void titleRetrieved(final String pageTitle) {
 					newTask.setSummary(pageTitle);
-					TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(newTask, false);
+					TasksUi.getTaskListManager().getTaskList().notifyTaskChanged(newTask, false);
 				}
 			};
 			job.schedule();

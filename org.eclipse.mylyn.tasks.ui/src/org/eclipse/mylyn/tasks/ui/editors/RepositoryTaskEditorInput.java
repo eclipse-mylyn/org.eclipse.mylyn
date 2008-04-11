@@ -7,9 +7,9 @@
  *******************************************************************************/
 package org.eclipse.mylyn.tasks.ui.editors;
 
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * Input to editors for existing tasks (i.e., those that exist present in the repository).
@@ -31,7 +31,7 @@ public class RepositoryTaskEditorInput extends AbstractRepositoryTaskEditorInput
 		super(repository, taskId);
 		this.taskId = taskId;
 		this.url = taskUrl;
-		AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getRepositoryUrl(), taskId);
+		AbstractTask task = TasksUi.getTaskListManager().getTaskList().getTask(repository.getRepositoryUrl(), taskId);
 		if (task != null) {
 			this.repositoryTask = task;
 		}

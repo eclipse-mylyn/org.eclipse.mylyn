@@ -36,6 +36,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.NewTaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
@@ -73,7 +74,7 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 
 		if (selectedTask instanceof LocalTask) {
 			// XXX code copied from NewLocalTaskWizard.performFinish() and TaskListManager.createNewLocalTask()
-			TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+			TaskList taskList = TasksUi.getTaskListManager().getTaskList();
 			LocalTask newTask = new LocalTask("" + taskList.getNextLocalTaskId(),
 					LocalRepositoryConnector.DEFAULT_SUMMARY);
 			newTask.setPriority(PriorityLevel.P3.toString());

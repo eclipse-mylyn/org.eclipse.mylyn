@@ -45,6 +45,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
@@ -140,7 +141,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 			}
 
 		});
-		tasksViewer.setInput(TasksUiPlugin.getTaskListManager().getTaskList().getAllTasks());
+		tasksViewer.setInput(TasksUi.getTaskListManager().getTaskList().getAllTasks());
 		idText.addModifyListener(new ModifyListener() {
 
 			public void modifyText(ModifyEvent e) {
@@ -218,7 +219,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 
 		categoryViewer = new ComboViewer(addToTaskListComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
 		categoryViewer.setContentProvider(new ArrayContentProvider());
-		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+		TaskList taskList = TasksUi.getTaskListManager().getTaskList();
 		LinkedList<AbstractTaskContainer> categories = new LinkedList<AbstractTaskContainer>(taskList.getCategories());
 		categories.addFirst(taskList.getDefaultCategory());
 		categoryViewer.setInput(categories);

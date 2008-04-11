@@ -53,8 +53,6 @@ public class TaskList {
 
 	private List<AbstractTask> activeTasks;
 
-	private TaskArchive archiveContainer;
-
 	private UncategorizedTaskContainer defaultCategory;
 
 	public TaskList() {
@@ -200,7 +198,6 @@ public class TaskList {
 		categories = new ConcurrentHashMap<String, AbstractTaskCategory>();
 		queries = new ConcurrentHashMap<String, AbstractRepositoryQuery>();
 
-		archiveContainer = new TaskArchive(this);
 		defaultCategory = new UncategorizedTaskContainer();
 
 		activeTasks = new CopyOnWriteArrayList<AbstractTask>();
@@ -893,15 +890,6 @@ public class TaskList {
 
 	public AbstractTaskCategory getDefaultCategory() {
 		return defaultCategory;
-	}
-
-	/**
-	 * @API 3.0: remove
-	 * @deprecated
-	 */
-	@Deprecated
-	public TaskArchive getArchiveContainer() {
-		return archiveContainer;
 	}
 
 	/**

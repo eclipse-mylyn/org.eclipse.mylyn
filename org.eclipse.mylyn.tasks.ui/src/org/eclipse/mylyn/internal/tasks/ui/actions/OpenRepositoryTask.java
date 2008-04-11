@@ -19,6 +19,7 @@ import org.eclipse.mylyn.internal.tasks.ui.AddExistingTaskJob;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.commands.RemoteTaskSelectionDialog;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -61,7 +62,7 @@ public class OpenRepositoryTask extends Action implements IWorkbenchWindowAction
 	 */
 	private void openExistingTask(RemoteTaskSelectionDialog dlg) {
 		if (dlg.shouldAddToTaskList()) {
-			TasksUiPlugin.getTaskListManager().getTaskList().moveTask(dlg.getSelectedTask(), dlg.getSelectedCategory());
+			TasksUi.getTaskListManager().getTaskList().moveTask(dlg.getSelectedTask(), dlg.getSelectedCategory());
 		}
 		TasksUiUtil.refreshAndOpenTaskListElement(dlg.getSelectedTask());
 	}

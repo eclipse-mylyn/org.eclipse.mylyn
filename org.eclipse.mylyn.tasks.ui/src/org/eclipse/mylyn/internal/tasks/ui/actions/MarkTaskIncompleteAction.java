@@ -13,10 +13,10 @@ import java.util.List;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -66,7 +66,7 @@ public class MarkTaskIncompleteAction extends AbstractChangeCompletionAction {
 			}
 		}
 
-		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+		TaskList taskList = TasksUi.getTaskListManager().getTaskList();
 		for (AbstractTask task : toComplete) {
 			task.setCompletionDate(null);
 			taskList.notifyTaskChanged(task, false);

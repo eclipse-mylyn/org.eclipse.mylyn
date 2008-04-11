@@ -24,6 +24,7 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
 
@@ -64,19 +65,19 @@ public class RemoveFromCategoryAction extends Action {
 
 					if (item.getParentItem() != null && item.getParent().getData() instanceof TaskCategory) {
 						TaskCategory category = (TaskCategory) item.getParentItem().getData();
-						TasksUiPlugin.getTaskListManager().getTaskList().removeFromCategory(category, task);
+						TasksUi.getTaskListManager().getTaskList().removeFromCategory(category, task);
 					}
 //						TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task,
 //								TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 					else if (!parentContainers.isEmpty() && TaskCategory.getParentTaskCategory(task) != null) {
-						TasksUiPlugin.getTaskListManager().getTaskList().removeFromCategory(
+						TasksUi.getTaskListManager().getTaskList().removeFromCategory(
 								TaskCategory.getParentTaskCategory(task), task);
 						//TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task, null);
 					} else if (!task.isLocal()) {
-						TasksUiPlugin.getTaskListManager().getTaskList().moveTask(task, null);
+						TasksUi.getTaskListManager().getTaskList().moveTask(task, null);
 					} else {
-						TasksUiPlugin.getTaskListManager().getTaskList().moveTask(task,
-								TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
+						TasksUi.getTaskListManager().getTaskList().moveTask(task,
+								TasksUi.getTaskListManager().getTaskList().getDefaultCategory());
 					}
 
 				}

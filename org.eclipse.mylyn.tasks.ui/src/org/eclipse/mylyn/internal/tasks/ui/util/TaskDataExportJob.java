@@ -34,6 +34,7 @@ import org.eclipse.mylyn.internal.tasks.ui.WorkspaceAwareContextStore;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * Job that performs exporting (copying or zipping) of the Task List data Assumes that check with user for overwrite
@@ -65,7 +66,7 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 
 	/** export all data */
 	public TaskDataExportJob(String destinationDirectory, boolean zipIt, String zipFileName) {
-		this(destinationDirectory, true, true, true, zipIt, zipFileName, TasksUiPlugin.getTaskListManager()
+		this(destinationDirectory, true, true, true, zipIt, zipFileName, TasksUi.getTaskListManager()
 				.getTaskList()
 				.getAllTasks());
 	}

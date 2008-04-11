@@ -47,6 +47,7 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.NewTaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.RepositoryTaskEditorInput;
@@ -188,7 +189,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 		if (editor.getTaskEditorInput() == null && !(editor.getEditorInput() instanceof NewTaskEditorInput)) {
 			final MenuManager subMenuManager = new MenuManager("Add to " + TaskListView.LABEL_VIEW);
 			List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(
-					TasksUiPlugin.getTaskListManager().getTaskList().getCategories());
+					TasksUi.getTaskListManager().getTaskList().getCategories());
 
 			Collections.sort(categories);
 			for (final AbstractTaskCategory category : categories) {

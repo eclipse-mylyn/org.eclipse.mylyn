@@ -21,6 +21,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.ui.TaskFactory;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractEditQueryWizard;
 import org.eclipse.search.ui.ISearchPage;
 import org.eclipse.search.ui.ISearchPageContainer;
@@ -104,8 +105,8 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 
 	@Override
 	public boolean isPageComplete() {
-		Set<AbstractRepositoryQuery> queries = TasksUiPlugin.getTaskListManager().getTaskList().getQueries();
-		Set<AbstractTaskCategory> categories = TasksUiPlugin.getTaskListManager().getTaskList().getCategories();
+		Set<AbstractRepositoryQuery> queries = TasksUi.getTaskListManager().getTaskList().getQueries();
+		Set<AbstractTaskCategory> categories = TasksUi.getTaskListManager().getTaskList().getCategories();
 
 		if (title == null || title.getText().equals("")) {
 			setErrorMessage("Please specify a title for the query.");
@@ -165,7 +166,7 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 				repository.getConnectorKind());
 		if (connector != null) {
-			SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
+			SearchHitCollector collector = new SearchHitCollector(TasksUi.getTaskListManager().getTaskList(),
 					repository, getQuery(), new TaskFactory(repository, false, false));
 			NewSearchUI.runQueryInBackground(collector);
 		}

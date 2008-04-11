@@ -56,6 +56,7 @@ import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
@@ -167,7 +168,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		}
 
 		private void updateTask(AbstractTask task) {
-			TasksUiPlugin.getTaskListManager().getTaskList().moveTask(task, actionPart.getCategory());
+			TasksUi.getTaskListManager().getTaskList().moveTask(task, actionPart.getCategory());
 
 			AbstractTaskEditorPage.this.task = task;
 
@@ -657,7 +658,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 	@Override
 	public void dispose() {
-		TasksUiPlugin.getTaskListManager().getTaskList().removeChangeListener(TASKLIST_CHANGE_LISTENER);
+		TasksUi.getTaskListManager().getTaskList().removeChangeListener(TASKLIST_CHANGE_LISTENER);
 		getSite().getPage().removeSelectionListener(selectionListener);
 		if (activateAction != null) {
 			activateAction.dispose();
@@ -677,7 +678,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 		if (task != null) {
 			task.setSynchronizationState(RepositoryTaskSyncState.OUTGOING);
-			TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(task, false);
+			TasksUi.getTaskListManager().getTaskList().notifyTaskChanged(task, false);
 		}
 
 		getManagedForm().dirtyStateChanged();
@@ -912,7 +913,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 		refreshInput();
 
-		TasksUiPlugin.getTaskListManager().getTaskList().addChangeListener(TASKLIST_CHANGE_LISTENER);
+		TasksUi.getTaskListManager().getTaskList().addChangeListener(TASKLIST_CHANGE_LISTENER);
 	}
 
 	private void initializePart(Section section, AbstractTaskEditorPart part) {

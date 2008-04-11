@@ -40,6 +40,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryOperation;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.ui.DatePicker;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
@@ -365,7 +366,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			for (String bugNumber : values.split(",")) {
 				final String bugId = bugNumber.trim();
 				final String bugUrl = repository.getRepositoryUrl() + IBugzillaConstants.URL_GET_SHOW_BUG + bugId;
-				final AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getRepositoryUrl(),
+				final AbstractTask task = TasksUi.getTaskListManager().getTaskList().getTask(repository.getRepositoryUrl(),
 						bugId);
 				createTaskListHyperlink(hyperlinksComposite, bugId, bugUrl, task);
 			}

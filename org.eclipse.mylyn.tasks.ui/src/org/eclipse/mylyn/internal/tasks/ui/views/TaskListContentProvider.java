@@ -20,6 +20,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * Provides custom content for the task list, e.g. guaranteed visibility of some elements, ability to suppress
@@ -45,7 +46,7 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 
 	public Object[] getElements(Object parent) {
 		if (parent.equals(this.taskListView.getViewSite())) {
-			return applyFilter(TasksUiPlugin.getTaskListManager().getTaskList().getRootElements()).toArray();
+			return applyFilter(TasksUi.getTaskListManager().getTaskList().getRootElements()).toArray();
 		}
 		return getChildren(parent);
 	}
@@ -56,14 +57,14 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	public Object getParent(Object child) {
 		// Return first parent found, first search within queries then categories.
 		if (child instanceof AbstractTask) {
-			Set<AbstractRepositoryQuery> queries = TasksUiPlugin.getTaskListManager()
+			Set<AbstractRepositoryQuery> queries = TasksUi.getTaskListManager()
 					.getTaskList()
 					.getQueriesForHandle(((AbstractTask) child).getHandleIdentifier());
 			if (queries.size() > 0) {
 				return queries.toArray()[0];
 			}
 
-			AbstractTaskContainer container = TasksUiPlugin.getTaskListManager().getTaskList().getContainerForHandle(
+			AbstractTaskContainer container = TasksUi.getTaskListManager().getTaskList().getContainerForHandle(
 					((AbstractTask) child).getHandleIdentifier());
 
 			if (container != null) {

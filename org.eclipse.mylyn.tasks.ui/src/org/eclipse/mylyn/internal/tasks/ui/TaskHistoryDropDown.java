@@ -27,6 +27,7 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.PlatformUI;
@@ -100,7 +101,7 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 		Separator separator = new Separator();
 		items.add(separator);
 
-		AbstractTask active = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
+		AbstractTask active = TasksUi.getTaskListManager().getTaskList().getActiveTask();
 		if (active != null) {
 			IContributionItem pauseContributionItem = new CommandContributionItem(PlatformUI.getWorkbench(),
 					"org.eclipse.mylyn.ui.context.capture.pause", // id 
@@ -193,9 +194,9 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 
 		@Override
 		public void run() {
-			AbstractTask active = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
+			AbstractTask active = TasksUi.getTaskListManager().getTaskList().getActiveTask();
 			if (active != null) {
-				TasksUiPlugin.getTaskListManager().deactivateTask(active);
+				TasksUi.getTaskListManager().deactivateTask(active);
 			}
 		}
 

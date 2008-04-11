@@ -521,7 +521,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			taskOutlineModel = RepositoryTaskOutlineNode.parseBugReport(taskData);
 		}
 		hasAttributeChanges = hasVisibleAttributeChanges();
-		TasksUiPlugin.getTaskListManager().getTaskList().addChangeListener(TASKLIST_CHANGE_LISTENER);
+		TasksUi.getTaskListManager().getTaskList().addChangeListener(TASKLIST_CHANGE_LISTENER);
 	}
 
 	protected void initTaskEditor(IEditorSite site, RepositoryTaskEditorInput input) {
@@ -1662,7 +1662,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				SWT.PUSH);
 		attachScreenshotButton.setImage(TasksUiImages.getImage(TasksUiImages.IMAGE_CAPTURE));
 
-		final AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
+		final AbstractTask task = TasksUi.getTaskListManager().getTaskList().getTask(
 				repository.getRepositoryUrl(), taskData.getTaskId());
 		if (task == null) {
 			attachFileButton.setEnabled(false);
@@ -1705,7 +1705,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				}
 
 				public void widgetSelected(SelectionEvent e) {
-					AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
+					AbstractTask task = TasksUi.getTaskListManager().getTaskList().getTask(
 							repository.getRepositoryUrl(), taskData.getTaskId());
 					if (task == null) {
 						// Should not happen
@@ -2763,7 +2763,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		toolkit.createLabel(buttonComposite, "    ");
 
-		AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getRepositoryUrl(),
+		AbstractTask task = TasksUi.getTaskListManager().getTaskList().getTask(repository.getRepositoryUrl(),
 				taskData.getTaskId());
 		if (attachContextEnabled && task != null) {
 			addAttachContextButton(buttonComposite, task);
@@ -2796,7 +2796,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			TasksUiPlugin.getSynchronizationManager().saveOutgoing(repositoryTask, changedAttributes);
 		}
 		if (repositoryTask != null) {
-			TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(repositoryTask, false);
+			TasksUi.getTaskListManager().getTaskList().notifyTaskChanged(repositoryTask, false);
 		}
 		markDirty(false);
 	}
@@ -2853,7 +2853,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	@Override
 	public void dispose() {
-		TasksUiPlugin.getTaskListManager().getTaskList().removeChangeListener(TASKLIST_CHANGE_LISTENER);
+		TasksUi.getTaskListManager().getTaskList().removeChangeListener(TASKLIST_CHANGE_LISTENER);
 		getSite().getPage().removeSelectionListener(selectionListener);
 		if (waitCursor != null) {
 			waitCursor.dispose();
@@ -3570,7 +3570,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 											"Task could not be created. No additional information was provided by the connector."));
 						}
 					} else {
-						modifiedTask = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
+						modifiedTask = TasksUi.getTaskListManager().getTaskList().getTask(
 								repository.getRepositoryUrl(), taskData.getTaskId());
 					}
 
@@ -3800,7 +3800,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					if (getCategory() != null) {
-						TasksUiPlugin.getTaskListManager().getTaskList().moveTask(newTask, getCategory());
+						TasksUi.getTaskListManager().getTaskList().moveTask(newTask, getCategory());
 					}
 				}
 			});

@@ -21,6 +21,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.NewCategoryAction;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Mik Kersten
@@ -42,7 +43,7 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 		}
 		subMenuManager.setVisible(!selectedTasks.isEmpty());
 
-		List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(TasksUiPlugin.getTaskListManager()
+		List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(TasksUi.getTaskListManager()
 				.getTaskList()
 				.getCategories());
 		Collections.sort(categories);
@@ -109,7 +110,7 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 	private void moveToCategory(final List<AbstractTaskContainer> selectedElements, AbstractTaskCategory category) {
 		for (AbstractTaskContainer element : selectedElements) {
 			if (element instanceof AbstractTask) {
-				TasksUiPlugin.getTaskListManager().getTaskList().moveTask((AbstractTask) element, category);
+				TasksUi.getTaskListManager().getTaskList().moveTask((AbstractTask) element, category);
 			}
 		}
 	}

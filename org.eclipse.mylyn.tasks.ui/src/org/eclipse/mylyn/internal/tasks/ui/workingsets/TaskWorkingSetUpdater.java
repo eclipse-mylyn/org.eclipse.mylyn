@@ -23,13 +23,13 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetUpdater;
 import org.eclipse.ui.PlatformUI;
@@ -81,14 +81,14 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 	}
 
 	public TaskWorkingSetUpdater() {
-		TasksUiPlugin.getTaskListManager().getTaskList().addChangeListener(this);
-		TasksUiPlugin.getTaskListManager().addActivityListener(this);
+		TasksUi.getTaskListManager().getTaskList().addChangeListener(this);
+		TasksUi.getTaskListManager().addActivityListener(this);
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
 	}
 
 	public void dispose() {
-		TasksUiPlugin.getTaskListManager().getTaskList().removeChangeListener(this);
-		TasksUiPlugin.getTaskListManager().removeActivityListener(this);
+		TasksUi.getTaskListManager().getTaskList().removeChangeListener(this);
+		TasksUi.getTaskListManager().removeActivityListener(this);
 	}
 
 	public void add(IWorkingSet workingSet) {
@@ -103,7 +103,7 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 		for (IAdaptable adaptable : workingSet.getElements()) {
 			if (adaptable instanceof AbstractTaskContainer) {
 				String handle = ((AbstractTaskContainer) adaptable).getHandleIdentifier();
-				for (AbstractTaskContainer element : TasksUiPlugin.getTaskListManager().getTaskList().getRootElements()) {
+				for (AbstractTaskContainer element : TasksUi.getTaskListManager().getTaskList().getRootElements()) {
 					if (element != null && element.getHandleIdentifier().equals(handle)) {
 						list.add(adaptable);
 					}

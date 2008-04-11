@@ -57,7 +57,7 @@ public class TaskFactory implements ITaskFactory {
 		this.forced = forced;
 		connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getConnectorKind());
 		synchManager = TasksUiPlugin.getSynchronizationManager();
-		taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+		taskList = TasksUi.getTaskListManager().getTaskList();
 		//dataManager = TasksUiPlugin.getTaskDataManager();
 		dataHandler = connector.getTaskDataHandler();
 	}

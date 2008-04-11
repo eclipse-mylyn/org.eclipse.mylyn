@@ -20,7 +20,6 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.editors.LayoutHint.ColumnSpan;
 import org.eclipse.mylyn.internal.tasks.ui.editors.LayoutHint.RowSpan;
 import org.eclipse.mylyn.internal.tasks.ui.views.ResetRepositoryConfigurationAction;
@@ -190,7 +189,7 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 				try {
 					super.performUpdate(repository, connector, monitor);
 					if (connector != null) {
-						final AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
+						final AbstractTask task = TasksUi.getTaskListManager().getTaskList().getTask(
 								TaskEditorAttributePart.this.getTaskRepository().getRepositoryUrl(), getTaskData().getTaskId());
 						if (task != null) {
 							TasksUi.synchronizeTask(connector, task, true,

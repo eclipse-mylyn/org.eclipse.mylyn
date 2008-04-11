@@ -18,9 +18,9 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
@@ -57,8 +57,8 @@ public class NewCategoryAction extends Action implements IViewActionDelegate {
 		int dialogResult = dialog.open();
 		if (dialogResult == Window.OK) {
 			String name = dialog.getValue();
-			Set<AbstractRepositoryQuery> queries = TasksUiPlugin.getTaskListManager().getTaskList().getQueries();
-			Set<AbstractTaskCategory> categories = TasksUiPlugin.getTaskListManager().getTaskList().getCategories();
+			Set<AbstractRepositoryQuery> queries = TasksUi.getTaskListManager().getTaskList().getQueries();
+			Set<AbstractTaskCategory> categories = TasksUi.getTaskListManager().getTaskList().getCategories();
 
 			for (AbstractTaskCategory category : categories) {
 				if (name != null && name.equals(category.getSummary())) {
@@ -76,7 +76,7 @@ public class NewCategoryAction extends Action implements IViewActionDelegate {
 			}
 
 			this.cat = new TaskCategory(name);
-			TasksUiPlugin.getTaskListManager().getTaskList().addCategory(cat);
+			TasksUi.getTaskListManager().getTaskList().addCategory(cat);
 //			this.view.getViewer().refresh();
 		}
 	}

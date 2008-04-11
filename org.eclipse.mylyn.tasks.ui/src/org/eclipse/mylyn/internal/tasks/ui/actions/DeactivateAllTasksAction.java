@@ -9,7 +9,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.IAction;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.actions.ActionDelegate;
@@ -25,7 +25,7 @@ public class DeactivateAllTasksAction extends ActionDelegate implements IWorkben
 
 	@Override
 	public void run(IAction action) {
-		TasksUiPlugin.getTaskListManager().deactivateAllTasks();
+		TasksUi.getTaskListManager().deactivateAllTasks();
 	}
 
 }

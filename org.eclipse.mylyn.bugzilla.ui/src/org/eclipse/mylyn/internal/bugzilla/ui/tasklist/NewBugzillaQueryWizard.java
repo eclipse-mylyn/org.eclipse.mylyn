@@ -63,7 +63,7 @@ public class NewBugzillaQueryWizard extends Wizard {
 
 		final BugzillaRepositoryQuery queryCategory = (BugzillaRepositoryQuery) page.getQuery();
 
-		TasksUiPlugin.getTaskListManager().getTaskList().addQuery(queryCategory);
+		TasksUi.getTaskListManager().getTaskList().addQuery(queryCategory);
 		WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
 			@Override
 			protected void execute(IProgressMonitor monitor) throws CoreException {

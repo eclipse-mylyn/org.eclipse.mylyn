@@ -21,6 +21,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.TreeItem;
 
@@ -78,7 +79,7 @@ class TaskListCellModifier implements ICellModifier {
 				switch (columnIndex) {
 				case 0:
 					if (task != null) {
-						TasksUiPlugin.getTaskListManager().getTaskList().renameTask(task, ((String) value).trim());
+						TasksUi.getTaskListManager().getTaskList().renameTask(task, ((String) value).trim());
 					}
 					break;
 				case 1:
@@ -92,7 +93,7 @@ class TaskListCellModifier implements ICellModifier {
 				AbstractTaskContainer container = (AbstractTaskContainer) ((TreeItem) element).getData();
 				switch (columnIndex) {
 				case 0:
-					TasksUiPlugin.getTaskListManager()
+					TasksUi.getTaskListManager()
 							.getTaskList()
 							.renameContainer(container, ((String) value).trim());
 				case 1:

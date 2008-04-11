@@ -43,6 +43,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.DatePicker;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
@@ -179,7 +180,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 	public TaskPlanningEditor(TaskEditor editor) {
 		super(editor, ID, "Planning");
 		this.parentEditor = editor;
-		TasksUiPlugin.getTaskListManager().getTaskList().addChangeListener(TASK_LIST_LISTENER);
+		TasksUi.getTaskListManager().getTaskList().addChangeListener(TASK_LIST_LISTENER);
 	}
 
 	/** public for testing */
@@ -231,7 +232,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		if (task instanceof LocalTask) {
 			String label = summaryEditor.getTextWidget().getText();
 			// task.setDescription(label);
-			TasksUiPlugin.getTaskListManager().getTaskList().renameTask(task, label);
+			TasksUi.getTaskListManager().getTaskList().renameTask(task, label);
 
 			// TODO: refactor mutation into TaskList?
 			task.setUrl(issueReportURL.getText());
@@ -937,7 +938,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		if (timingListener != null) {
 			TasksUiPlugin.getTaskListManager().removeTimingListener(timingListener);
 		}
-		TasksUiPlugin.getTaskListManager().getTaskList().removeChangeListener(TASK_LIST_LISTENER);
+		TasksUi.getTaskListManager().getTaskList().removeChangeListener(TASK_LIST_LISTENER);
 	}
 
 	@Override

@@ -17,11 +17,11 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
@@ -103,8 +103,8 @@ public class DeleteAction extends Action {
 			if (selectedObject instanceof AbstractTask) {
 				AbstractTask task = null;
 				task = (AbstractTask) selectedObject;
-				TasksUiPlugin.getTaskListManager().deactivateTask(task);
-				TasksUiPlugin.getTaskListManager().getTaskList().deleteTask(task);
+				TasksUi.getTaskListManager().deactivateTask(task);
+				TasksUi.getTaskListManager().getTaskList().deleteTask(task);
 				ContextCore.getContextManager().deleteContext(task.getHandleIdentifier());
 				TasksUiUtil.closeEditorInActivePage(task, false);
 			} else if (selectedObject instanceof AbstractRepositoryQuery) {
@@ -113,7 +113,7 @@ public class DeleteAction extends Action {
 				// .getActiveWorkbenchWindow().getShell(), "Confirm delete",
 				// "Delete the selected query? Task data will not be deleted.");
 				// if (deleteConfirmed) {
-				TasksUiPlugin.getTaskListManager().getTaskList().deleteQuery((AbstractRepositoryQuery) selectedObject);
+				TasksUi.getTaskListManager().getTaskList().deleteQuery((AbstractRepositoryQuery) selectedObject);
 				// }
 			} else if (selectedObject instanceof TaskCategory) {
 				// boolean deleteConfirmed =
@@ -128,7 +128,7 @@ public class DeleteAction extends Action {
 					ContextCore.getContextManager().deleteContext(task.getHandleIdentifier());
 					TasksUiUtil.closeEditorInActivePage(task, false);
 				}
-				TasksUiPlugin.getTaskListManager().getTaskList().deleteCategory(cat);
+				TasksUi.getTaskListManager().getTaskList().deleteCategory(cat);
 			} else if (selectedObject instanceof UnmatchedTaskContainer) {
 				// ignore
 			} else {

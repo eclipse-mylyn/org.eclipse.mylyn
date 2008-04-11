@@ -21,6 +21,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
@@ -55,7 +56,7 @@ public class DeleteTaskRepositoryAction extends AbstractTaskRepositoryAction {
 					.getShell(), "Confirm Delete", "Delete the selected task repositories?");
 			if (deleteConfirmed) {
 				IStructuredSelection selection = getStructuredSelection();
-				Set<AbstractRepositoryQuery> queries = TasksUiPlugin.getTaskListManager().getTaskList().getQueries();
+				Set<AbstractRepositoryQuery> queries = TasksUi.getTaskListManager().getTaskList().getQueries();
 				List<TaskRepository> repositoriesInUse = new ArrayList<TaskRepository>();
 				List<TaskRepository> repositoriesToDelete = new ArrayList<TaskRepository>();
 				for (Object selectedObject : selection.toList()) {

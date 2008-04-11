@@ -12,9 +12,9 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Mik Kersten
@@ -43,11 +43,11 @@ public class ToggleTaskActivationAction extends Action implements ITaskActivityL
 		setId(ID);
 		setImageDescriptor(TasksUiImages.TASK_ACTIVE_CENTERED);
 		update();
-		TasksUiPlugin.getTaskListManager().addActivityListener(this);
+		TasksUi.getTaskListManager().addActivityListener(this);
 	}
 
 	public void dispose() {
-		TasksUiPlugin.getTaskListManager().removeActivityListener(this);
+		TasksUi.getTaskListManager().removeActivityListener(this);
 	}
 
 	private void update() {
@@ -64,9 +64,9 @@ public class ToggleTaskActivationAction extends Action implements ITaskActivityL
 	@Override
 	public void run() {
 		if (!task.isActive()) {
-			TasksUiPlugin.getTaskListManager().activateTask(task);
+			TasksUi.getTaskListManager().activateTask(task);
 		} else {
-			TasksUiPlugin.getTaskListManager().deactivateTask(task);
+			TasksUi.getTaskListManager().deactivateTask(task);
 		}
 		update();
 //		toolBarManager.add(this);

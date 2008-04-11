@@ -101,6 +101,7 @@ import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.SWT;
@@ -567,15 +568,15 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	public TaskListView() {
 		PlatformUI.getWorkbench().getWorkingSetManager().addPropertyChangeListener(this);
 
-		TasksUiPlugin.getTaskListManager().addActivityListener(TASK_ACTIVITY_LISTENER);
-		TasksUiPlugin.getTaskListManager().getTaskList().addChangeListener(TASK_REFERESH_LISTENER);
+		TasksUi.getTaskListManager().addActivityListener(TASK_ACTIVITY_LISTENER);
+		TasksUi.getTaskListManager().getTaskList().addChangeListener(TASK_REFERESH_LISTENER);
 	}
 
 	@Override
 	public void dispose() {
 		super.dispose();
-		TasksUiPlugin.getTaskListManager().getTaskList().removeChangeListener(TASK_REFERESH_LISTENER);
-		TasksUiPlugin.getTaskListManager().removeActivityListener(TASK_ACTIVITY_LISTENER);
+		TasksUi.getTaskListManager().getTaskList().removeChangeListener(TASK_REFERESH_LISTENER);
+		TasksUi.getTaskListManager().removeActivityListener(TASK_ACTIVITY_LISTENER);
 
 		PlatformUI.getWorkbench().getWorkingSetManager().removePropertyChangeListener(this);
 		if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
@@ -596,7 +597,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	}
 
 	private void updateDescription() {
-		List<AbstractTask> activeTasks = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTasks();
+		List<AbstractTask> activeTasks = TasksUi.getTaskListManager().getTaskList().getActiveTasks();
 		if (activeTasks.size() > 0) {
 			updateDescription(activeTasks.get(0));
 		} else {
@@ -1042,7 +1043,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		final IWorkbench workbench = PlatformUI.getWorkbench();
 		workbench.getDisplay().asyncExec(new Runnable() {
 			public void run() {
-				List<AbstractTask> activeTasks = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTasks();
+				List<AbstractTask> activeTasks = TasksUi.getTaskListManager().getTaskList().getActiveTasks();
 				for (AbstractTask t : activeTasks) {
 					getViewer().expandToLevel(t, 0);
 				}
@@ -1332,7 +1333,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	 * @return <code>true</code> if the taskId was found in the node or any of its children
 	 */
 	protected boolean lookForId(String taskId) {
-		return (TasksUiPlugin.getTaskListManager().getTaskList().getTask(taskId) == null);
+		return (TasksUi.getTaskListManager().getTaskList().getTask(taskId) == null);
 	}
 
 	private void hookOpenAction() {
@@ -1685,9 +1686,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			// TODO: move logic into deltas
 			refreshJob.refreshTask(task);
 			Set<AbstractTaskContainer> containers = new HashSet<AbstractTaskContainer>(
-					TasksUiPlugin.getTaskListManager().getTaskList().getParentQueries(task));
+					TasksUi.getTaskListManager().getTaskList().getParentQueries(task));
 			containers.addAll(task.getParentContainers());
-			containers.add(TasksUiPlugin.getTaskListManager().getTaskList().getOrphanContainer(task.getRepositoryUrl()));
+			containers.add(TasksUi.getTaskListManager().getTaskList().getOrphanContainer(task.getRepositoryUrl()));
 //			containers.add(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer());
 //			containers.add(TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 			for (AbstractTaskContainer container : containers) {

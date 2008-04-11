@@ -13,8 +13,8 @@ import java.util.Set;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
@@ -63,7 +63,7 @@ public class CategoryEditorInput implements IEditorInput {
 	}
 
 	public void setCategoryName(String description) {
-		TasksUiPlugin.getTaskListManager().getTaskList().renameContainer(category, description);
+		TasksUi.getTaskListManager().getTaskList().renameContainer(category, description);
 //		category.setDescription(summary);
 	}
 
@@ -71,7 +71,7 @@ public class CategoryEditorInput implements IEditorInput {
 		category.setUrl(url);
 		Set<AbstractTaskContainer> updated = new HashSet<AbstractTaskContainer>();
 		updated.add(category);
-		TasksUiPlugin.getTaskListManager().getTaskList().notifyContainersUpdated(updated);
+		TasksUi.getTaskListManager().getTaskList().notifyContainersUpdated(updated);
 //		.notifyContainerUpdated(category);
 	}
 

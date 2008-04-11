@@ -30,6 +30,7 @@ import org.eclipse.mylyn.internal.monitor.core.util.ZipFileUtil;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
@@ -89,8 +90,8 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 	@Override
 	public boolean performFinish() {
 
-		TasksUiPlugin.getTaskListManager().deactivateTask(
-				TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask());
+		TasksUi.getTaskListManager().deactivateTask(
+				TasksUi.getTaskListManager().getTaskList().getActiveTask());
 
 		File sourceDirFile = null;
 		File sourceZipFile = null;

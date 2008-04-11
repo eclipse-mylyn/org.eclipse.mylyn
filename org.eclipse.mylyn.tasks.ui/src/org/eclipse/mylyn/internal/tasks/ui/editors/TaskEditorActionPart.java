@@ -16,12 +16,12 @@ import java.util.List;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.RepositoryOperation;
 import org.eclipse.mylyn.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.ModifyEvent;
@@ -179,7 +179,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 
 		toolkit.createLabel(buttonComposite, "    ");
 
-		AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(getTaskRepository().getRepositoryUrl(),
+		AbstractTask task = TasksUi.getTaskListManager().getTaskList().getTask(getTaskRepository().getRepositoryUrl(),
 				getTaskData().getTaskId());
 		if (needsAttachContext && task != null) {
 			addAttachContextButton(buttonComposite, task, toolkit);
@@ -199,14 +199,14 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		categoryChooser.setLayoutData(GridDataFactory.swtDefaults().hint(150, SWT.DEFAULT).create());
 		toolkit.adapt(categoryChooser, true, true);
 		categoryChooser.setFont(TEXT_FONT);
-		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+		TaskList taskList = TasksUi.getTaskListManager().getTaskList();
 		List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(taskList.getCategories());
 		Collections.sort(categories, new Comparator<AbstractTaskContainer>() {
 
 			public int compare(AbstractTaskContainer c1, AbstractTaskContainer c2) {
-				if (c1.equals(TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory())) {
+				if (c1.equals(TasksUi.getTaskListManager().getTaskList().getDefaultCategory())) {
 					return -1;
-				} else if (c2.equals(TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory())) {
+				} else if (c2.equals(TasksUi.getTaskListManager().getTaskList().getDefaultCategory())) {
 					return 1;
 				} else {
 					return c1.getSummary().compareToIgnoreCase(c2.getSummary());

@@ -42,6 +42,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
@@ -345,7 +346,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 				SWT.PUSH);
 		attachScreenshotButton.setImage(TasksUiImages.getImage(TasksUiImages.IMAGE_CAPTURE));
 
-		final AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
+		final AbstractTask task = TasksUi.getTaskListManager().getTaskList().getTask(
 				getTaskRepository().getRepositoryUrl(), getTaskData().getTaskId());
 		if (task == null) {
 			attachFileButton.setEnabled(false);
@@ -388,7 +389,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 				}
 
 				public void widgetSelected(SelectionEvent e) {
-					AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
+					AbstractTask task = TasksUi.getTaskListManager().getTaskList().getTask(
 							getTaskRepository().getRepositoryUrl(), getTaskData().getTaskId());
 					if (task == null) {
 						// Should not happen

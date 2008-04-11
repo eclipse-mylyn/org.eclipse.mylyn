@@ -36,6 +36,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
@@ -111,7 +112,8 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 
 		private String getReplacement(AbstractTask task, String text, boolean includeTaskPrefix) {
 			// add an absolute reference to the task if the viewer does not have a repository
-			if (taskRepository == null || text == null || !taskRepository.getRepositoryUrl().equals(task.getRepositoryUrl())) {
+			if (taskRepository == null || text == null
+					|| !taskRepository.getRepositoryUrl().equals(task.getRepositoryUrl())) {
 				return CopyTaskDetailsAction.getTextForTask(task);
 			}
 
@@ -259,7 +261,7 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 		if (taskRepository != null) {
 			proposalComputer.addSeparator();
 
-			TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+			TaskList taskList = TasksUi.getTaskListManager().getTaskList();
 			tasks = new ArrayList<AbstractTask>(taskList.getAllTasks());
 			proposalComputer.filterTasks(tasks);
 			Collections.sort(tasks, new Comparator<AbstractTask>() {

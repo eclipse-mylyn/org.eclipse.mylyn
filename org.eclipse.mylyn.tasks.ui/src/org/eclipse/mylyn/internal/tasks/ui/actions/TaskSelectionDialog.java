@@ -50,6 +50,7 @@ import org.eclipse.mylyn.internal.tasks.ui.workingsets.WorkingSetLabelComparator
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.search.internal.ui.SearchDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -603,7 +604,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 
 		if (allTasks == null) {
 			allTasks = new HashSet<AbstractTask>();
-			TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+			TaskList taskList = TasksUi.getTaskListManager().getTaskList();
 			allTasks.addAll(taskList.getAllTasks());
 		}
 		progressMonitor.worked(10);

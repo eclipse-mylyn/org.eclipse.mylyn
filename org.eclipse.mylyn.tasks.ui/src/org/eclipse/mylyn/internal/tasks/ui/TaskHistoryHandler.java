@@ -17,6 +17,7 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskActivationHistory;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.menus.UIElement;
 
@@ -37,7 +38,7 @@ public class TaskHistoryHandler extends AbstractHandler implements IElementUpdat
 
 	@SuppressWarnings("unchecked")
 	public void updateElement(UIElement element, Map parameters) {
-		if (TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask() == null) {
+		if (TasksUi.getTaskListManager().getTaskList().getActiveTask() == null) {
 			element.setIcon(TasksUiImages.NAVIGATE_PREVIOUS);
 		} else {
 			if (ContextCore.getContextManager().isContextCapturePaused()) {

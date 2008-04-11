@@ -40,6 +40,10 @@ public class TasksUi {
 		return TasksUiPlugin.getTasksJobFactory();
 	}
 
+	public static ITaskListManager getTaskListManager() {
+		return TasksUiPlugin.getTaskListManager();
+	}
+
 	public static IRepositorySynchronizationManager getSynchronizationManager() {
 		return TasksUiPlugin.getSynchronizationManager();
 	}
@@ -59,7 +63,7 @@ public class TasksUi {
 			Set<AbstractRepositoryQuery> queries, IJobChangeListener listener, boolean force) {
 		Assert.isTrue(queries.size() > 0);
 
-		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+		TaskList taskList = TasksUi.getTaskListManager().getTaskList();
 		for (AbstractRepositoryQuery query : queries) {
 			query.setSynchronizing(true);
 		}
@@ -134,7 +138,7 @@ public class TasksUi {
 	 */
 	public static Job synchronizeTasks(AbstractRepositoryConnector connector, Set<AbstractTask> tasks, boolean force,
 			IJobChangeListener listener) {
-		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+		TaskList taskList = TasksUi.getTaskListManager().getTaskList();
 		for (AbstractTask task : tasks) {
 			task.setSynchronizing(true);
 			taskList.notifyTaskChanged(task, false);

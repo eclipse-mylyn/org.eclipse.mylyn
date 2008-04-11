@@ -15,6 +15,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.dnd.ByteArrayTransfer;
 import org.eclipse.swt.dnd.TransferData;
 
@@ -100,7 +101,7 @@ public class TaskTransfer extends ByteArrayTransfer {
 
 	private AbstractTask readTask(DataInputStream dataIn) throws IOException {
 		String handle = dataIn.readUTF();
-		return TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle);
+		return TasksUi.getTaskListManager().getTaskList().getTask(handle);
 	}
 
 	private void writeTask(DataOutputStream dataOut, AbstractTask task) throws IOException {

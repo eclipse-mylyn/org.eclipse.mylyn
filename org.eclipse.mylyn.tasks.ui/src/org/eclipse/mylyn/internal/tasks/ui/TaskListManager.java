@@ -58,6 +58,7 @@ import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
+import org.eclipse.mylyn.tasks.ui.ITaskListManager;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.widgets.Display;
 
@@ -512,7 +513,7 @@ public class TaskListManager implements ITaskListManager {
 			} else if (view != null && view.getDrilledIntoCategory() instanceof TaskCategory) {
 				taskList.addTask(newTask, view.getDrilledIntoCategory());
 			} else {
-				taskList.addTask(newTask, TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
+				taskList.addTask(newTask, TasksUi.getTaskListManager().getTaskList().getDefaultCategory());
 			}
 		} else if (view != null && view.getDrilledIntoCategory() instanceof TaskCategory) {
 			taskList.addTask(newTask, view.getDrilledIntoCategory());
@@ -521,7 +522,7 @@ public class TaskListManager implements ITaskListManager {
 				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), ITasksUiConstants.TITLE_DIALOG,
 						"The new task has been added to the root of the list, since tasks can not be added to a query.");
 			}
-			taskList.addTask(newTask, TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
+			taskList.addTask(newTask, TasksUi.getTaskListManager().getTaskList().getDefaultCategory());
 		}
 		return newTask;
 	}
@@ -550,7 +551,7 @@ public class TaskListManager implements ITaskListManager {
 			query.setHandleIdentifier(handle);
 
 			// add query
-			TasksUiPlugin.getTaskListManager().getTaskList().addQuery(query);
+			TasksUi.getTaskListManager().getTaskList().addQuery(query);
 
 			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 					repository.getConnectorKind());

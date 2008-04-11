@@ -6,9 +6,10 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.tasks.ui;
+package org.eclipse.mylyn.tasks.ui;
 
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.TaskList;
 
 public interface ITaskListManager {
@@ -20,5 +21,9 @@ public interface ITaskListManager {
 	public abstract void deactivateAllTasks();
 
 	public abstract void deactivateTask(AbstractTask task);
+
+	public abstract void addActivityListener(ITaskActivityListener activityListener);
+
+	public abstract void removeActivityListener(ITaskActivityListener activityListener);
 
 }

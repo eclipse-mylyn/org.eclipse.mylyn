@@ -12,10 +12,10 @@ import java.io.File;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.DropTargetListener;
@@ -104,7 +104,7 @@ class RepositoryTaskEditorDropListener implements DropTargetListener {
 	public void drop(DropTargetEvent event) {
 		if (textTransfer.isSupportedType(event.currentDataType)) {
 			String text = (String) event.data;
-			AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
+			AbstractTask task = TasksUi.getTaskListManager().getTaskList().getTask(
 					this.AbstractTaskEditor.repository.getRepositoryUrl(), this.AbstractTaskEditor.taskData.getTaskId());
 			if (!(task != null)) {
 				// Should not happen
@@ -118,7 +118,7 @@ class RepositoryTaskEditorDropListener implements DropTargetListener {
 		if (fileTransfer.isSupportedType(event.currentDataType)) {
 			String[] files = (String[]) event.data;
 			if (files.length > 0) {
-				AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
+				AbstractTask task = TasksUi.getTaskListManager().getTaskList().getTask(
 						this.AbstractTaskEditor.repository.getRepositoryUrl(), this.AbstractTaskEditor.taskData.getTaskId());
 				if (task == null) {
 					// Should not happen

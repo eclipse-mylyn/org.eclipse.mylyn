@@ -33,6 +33,7 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MenuDetectEvent;
@@ -109,7 +110,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 	};
 
 	public TaskTrimWidget() {
-		TasksUiPlugin.getTaskListManager().addActivityListener(TASK_CHANGE_LISTENER);
+		TasksUi.getTaskListManager().addActivityListener(TASK_CHANGE_LISTENER);
 		TasksUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(SHOW_TRIM_LISTENER);
 		hookContextMenu();
 	}
@@ -141,7 +142,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		}
 		menu = null;
 
-		TasksUiPlugin.getTaskListManager().removeActivityListener(TASK_CHANGE_LISTENER);
+		TasksUi.getTaskListManager().removeActivityListener(TASK_CHANGE_LISTENER);
 		TasksUiPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(SHOW_TRIM_LISTENER);
 	}
 
@@ -185,7 +186,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		activeTaskLabel.setLayoutData(gridData);
 		activeTaskLabel.setText("<no task active>");
 
-		activeTask = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
+		activeTask = TasksUi.getTaskListManager().getTaskList().getActiveTask();
 		if (activeTask != null) {
 			indicateActiveTask();
 		}
@@ -207,7 +208,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 				if (taskListView != null && taskListView.getDrilledIntoCategory() != null) {
 					taskListView.goUpToRoot();
 				}
-				TasksUiUtil.refreshAndOpenTaskListElement((TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask()));
+				TasksUiUtil.refreshAndOpenTaskListElement((TasksUi.getTaskListManager().getTaskList().getActiveTask()));
 			}
 		});
 

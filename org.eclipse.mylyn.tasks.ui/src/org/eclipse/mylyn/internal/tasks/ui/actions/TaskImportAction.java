@@ -26,6 +26,7 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
@@ -108,7 +109,7 @@ public class TaskImportAction extends Action implements IViewActionDelegate {
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		for (AbstractTask loadedTask : taskContexts.keySet()) {
-			TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+			TaskList taskList = TasksUi.getTaskListManager().getTaskList();
 			if (taskList.getTask(loadedTask.getHandleIdentifier()) != null) {
 				boolean confirmed = MessageDialog.openConfirm(shell, ITasksUiConstants.TITLE_DIALOG, "Task '"
 						+ loadedTask.getSummary()
@@ -118,7 +119,7 @@ public class TaskImportAction extends Action implements IViewActionDelegate {
 				}
 			} else {
 				ContextCorePlugin.getContextManager().importContext(taskContexts.get(loadedTask));
-				TasksUiPlugin.getTaskListManager().getTaskList().insertTask(loadedTask, null, null);
+				TasksUi.getTaskListManager().getTaskList().insertTask(loadedTask, null, null);
 			}
 		}
 

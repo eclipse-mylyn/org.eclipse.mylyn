@@ -20,11 +20,11 @@ import java.util.Set;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
-import org.eclipse.mylyn.internal.tasks.ui.ITaskListManager;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.ui.DatePicker;
+import org.eclipse.mylyn.tasks.ui.ITaskListManager;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -211,7 +211,7 @@ public class TaskActivityWizardPage extends WizardPage {
 		categorySelectionGroup.setFont(composite.getFont());
 
 		createFilterTable(categorySelectionGroup, true);
-		ITaskListManager manager = TasksUiPlugin.getTaskListManager();
+		ITaskListManager manager = TasksUi.getTaskListManager();
 		if (manager == null) {
 			filtersTable.setEnabled(false);
 			return;
@@ -224,9 +224,9 @@ public class TaskActivityWizardPage extends WizardPage {
 		Collections.sort(containers, new Comparator<AbstractTaskContainer>() {
 
 			public int compare(AbstractTaskContainer c1, AbstractTaskContainer c2) {
-				if (c1.equals(TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory())) {
+				if (c1.equals(TasksUi.getTaskListManager().getTaskList().getDefaultCategory())) {
 					return -1;
-				} else if (c2.equals(TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory())) {
+				} else if (c2.equals(TasksUi.getTaskListManager().getTaskList().getDefaultCategory())) {
 					return 1;
 				} else {
 					return c1.getSummary().compareToIgnoreCase(c2.getSummary());

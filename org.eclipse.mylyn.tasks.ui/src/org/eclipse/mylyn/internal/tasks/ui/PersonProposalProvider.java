@@ -23,6 +23,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskComment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.web.core.AuthenticationCredentials;
 import org.eclipse.mylyn.web.core.AuthenticationType;
 
@@ -152,7 +153,7 @@ public class PersonProposalProvider implements IContentProposalProvider {
 				}
 			}
 
-			Collection<AbstractTask> allTasks = TasksUiPlugin.getTaskListManager().getTaskList().getAllTasks();
+			Collection<AbstractTask> allTasks = TasksUi.getTaskListManager().getTaskList().getAllTasks();
 			for (AbstractTask task : allTasks) {
 				if (repositoryUrl.equals(task.getRepositoryUrl())) {
 					tasks.add(task);

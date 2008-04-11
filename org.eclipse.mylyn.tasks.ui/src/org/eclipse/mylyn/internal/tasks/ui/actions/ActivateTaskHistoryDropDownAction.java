@@ -26,6 +26,7 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowPulldownDelegate;
 import org.eclipse.ui.IWorkingSet;
@@ -41,12 +42,12 @@ public class ActivateTaskHistoryDropDownAction extends TaskNavigateDropDownActio
 
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.navigate.previous";
 
-	private boolean scopeToWorkingSet = false;
+	private final boolean scopeToWorkingSet;
 
 	private static final String LABEL = "Activate Previous Task";
 
 	public ActivateTaskHistoryDropDownAction() {
-		this(TasksUiPlugin.getTaskListManager().getTaskActivationHistory(), false);
+		this(TasksUiPlugin.getDefault().getTaskListManager().getTaskActivationHistory(), false);
 	}
 
 	public ActivateTaskHistoryDropDownAction(TaskActivationHistory history, boolean scopeToWorkingSet) {
@@ -106,7 +107,7 @@ public class ActivateTaskHistoryDropDownAction extends TaskNavigateDropDownActio
 		Separator separator = new Separator();
 		separator.fill(dropDownMenu, -1);
 
-		AbstractTask active = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
+		AbstractTask active = TasksUi.getTaskListManager().getTaskList().getActiveTask();
 		if (active != null) {
 			Action deactivateAction = new DeactivateTaskAction();
 			ActionContributionItem item = new ActionContributionItem(deactivateAction);
@@ -146,9 +147,9 @@ public class ActivateTaskHistoryDropDownAction extends TaskNavigateDropDownActio
 
 		@Override
 		public void run() {
-			AbstractTask active = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
+			AbstractTask active = TasksUi.getTaskListManager().getTaskList().getActiveTask();
 			if (active != null) {
-				TasksUiPlugin.getTaskListManager().deactivateTask(active);
+				TasksUi.getTaskListManager().deactivateTask(active);
 			}
 		}
 

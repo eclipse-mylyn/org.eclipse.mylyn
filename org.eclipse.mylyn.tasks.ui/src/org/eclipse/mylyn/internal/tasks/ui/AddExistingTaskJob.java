@@ -26,6 +26,7 @@ import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -84,11 +85,11 @@ public class AddExistingTaskJob extends Job {
 							if (selectedObject instanceof TaskCategory) {
 								category = (TaskCategory) selectedObject;
 							} else {
-								category = TasksUiPlugin.getTaskListManager().getTaskList().getOrphanContainer(
+								category = TasksUi.getTaskListManager().getTaskList().getOrphanContainer(
 										LocalRepositoryConnector.REPOSITORY_URL);
 							}
 						}
-						TasksUiPlugin.getTaskListManager().getTaskList().moveTask(newTask, category);
+						TasksUi.getTaskListManager().getTaskList().moveTask(newTask, category);
 						taskListView.getViewer().setSelection(new StructuredSelection(newTask));
 					}
 				});

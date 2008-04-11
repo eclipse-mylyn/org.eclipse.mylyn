@@ -27,6 +27,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDataExportJob;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IExportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
@@ -104,7 +105,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 		boolean overwrite = exportPage.overwrite();
 		boolean zip = exportPage.zip();
 
-		Collection<AbstractTask> taskContextsToExport = TasksUiPlugin.getTaskListManager().getTaskList().getAllTasks();
+		Collection<AbstractTask> taskContextsToExport = TasksUi.getTaskListManager().getTaskList().getAllTasks();
 
 		// Get file paths to check for existence
 		String destDir = exportPage.getDestinationDirectory();
