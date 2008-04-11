@@ -11,7 +11,6 @@ package org.eclipse.mylyn.internal.bugzilla.core;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;

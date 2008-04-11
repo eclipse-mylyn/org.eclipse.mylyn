@@ -8,6 +8,8 @@
 
 package org.eclipse.mylyn.bugzilla.tests;
 
+import junit.framework.TestCase;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.context.tests.support.TestUtil;
@@ -21,8 +23,6 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-
-import junit.framework.TestCase;
 
 /**
  * @author Frank Becker
