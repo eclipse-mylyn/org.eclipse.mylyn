@@ -35,28 +35,107 @@ import org.eclipse.ui.actions.CompoundContributionItem;
 import org.eclipse.ui.menus.CommandContributionItem;
 
 /**
- * Copied from ActivateTaskHistoryDropDownAction
- * 
- * TODO: refactor that one into command contribution
+ * @author Wesley Coelho
+ * @author Mik Kersten
+ * @author Leo Dos Santos
+ * @author Steffen Pingel
  */
 public class TaskHistoryDropDown extends CompoundContributionItem {
 
+	private class ActivateDialogAction extends Action {
+
+		private final ActivateTaskDialogAction dialogAction;
+
+		public ActivateDialogAction(ActivateTaskDialogAction action) {
+			dialogAction = action;
+			dialogAction.init(PlatformUI.getWorkbench().getActiveWorkbenchWindow());
+
+			setText("Activate Task...");
+			setToolTipText("Activate Task...");
+			setEnabled(true);
+			setChecked(false);
+			setImageDescriptor(null);
+			//TasksUiImages.TASK_ACTIVE);
+		}
+
+		@Override
+		public void run() {
+			dialogAction.run(null);
+		}
+	}
+
+	private class DeactivateTaskAction extends Action {
+
+		public DeactivateTaskAction() {
+			setText("Deactivate Task");
+			setToolTipText("Deactivate Task");
+			setEnabled(true);
+			setChecked(false);
+			setImageDescriptor(null);
+			//TasksUiImages.TASK_INACTIVE);
+		}
+
+		@Override
+		public void run() {
+			AbstractTask active = TasksUi.getTaskListManager().getTaskList().getActiveTask();
+			if (active != null) {
+				TasksUi.getTaskListManager().deactivateTask(active);
+			}
+		}
+
+	}
+
+	/**
+	 * Action for navigating to a specified task. This class should be protected but has been made public for testing
+	 * only
+	 */
+	private class ActivateTaskAction extends Action {
+
+		private static final int MAX_LABEL_LENGTH = 40;
+
+		private final AbstractTask targetTask;
+
+		public ActivateTaskAction(AbstractTask task) {
+			targetTask = task;
+			String taskDescription = task.getSummary();
+			if (taskDescription.length() > MAX_LABEL_LENGTH) {
+				taskDescription = taskDescription.subSequence(0, MAX_LABEL_LENGTH - 3) + "...";
+			}
+			setText(taskDescription);
+			setEnabled(true);
+			setToolTipText(task.getSummary());
+			Image image = labelProvider.getImage(task);
+			setImageDescriptor(ImageDescriptor.createFromImage(image));
+		}
+
+		@Override
+		public void run() {
+			if (targetTask.isActive()) {
+				return;
+			}
+			new TaskActivateAction().run(targetTask);
+		}
+	}
+
 	private final static int MAX_ITEMS_TO_DISPLAY = 12;
 
-	private final boolean scopeToWorkingSet;
+	private final TaskElementLabelProvider labelProvider = new TaskElementLabelProvider(false);
+
+	private boolean scopedToWorkingSet;
 
 	private final TaskActivationHistory taskHistory;
-
-	private final TaskElementLabelProvider labelProvider = new TaskElementLabelProvider(false);
 
 	public TaskHistoryDropDown() {
 		this(null);
 	}
 
 	public TaskHistoryDropDown(String id) {
+		this(id, TasksUiPlugin.getTaskListManager().getTaskActivationHistory());
+	}
+
+	public TaskHistoryDropDown(String id, TaskActivationHistory taskHistory) {
 		super(id);
-		scopeToWorkingSet = false;
-		taskHistory = TasksUiPlugin.getTaskListManager().getTaskActivationHistory();
+		this.taskHistory = taskHistory;
 	}
 
 	@Override
@@ -64,7 +143,7 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 	protected IContributionItem[] getContributionItems() {
 		List<AbstractTask> tasks = new ArrayList<AbstractTask>(taskHistory.getPreviousTasks());
 		Set<IWorkingSet> sets = TaskListView.getActiveWorkingSets();
-		if (scopeToWorkingSet && !sets.isEmpty()) {
+		if (scopedToWorkingSet && !sets.isEmpty()) {
 			Set<AbstractTask> allWorkingSetTasks = new HashSet<AbstractTask>();
 			for (IWorkingSet workingSet : sets) {
 				IAdaptable[] elements = workingSet.getElements();
@@ -90,7 +169,7 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 		List<IContributionItem> items = new ArrayList<IContributionItem>();
 		for (int i = tasks.size() - 1; i >= 0; i--) {
 			AbstractTask currTask = tasks.get(i);
-			Action taskNavAction = new TaskNavigateAction(currTask);
+			Action taskNavAction = new ActivateTaskAction(currTask);
 			ActionContributionItem item = new ActionContributionItem(taskNavAction);
 			if (currTask.isActive()) {
 				taskNavAction.setChecked(true);
@@ -126,80 +205,15 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 		return items.toArray(new IContributionItem[items.size()]);
 	}
 
+	public boolean isScopedToWorkingSet() {
+		return scopedToWorkingSet;
+	}
+
 	/**
-	 * Action for navigating to a specified task. This class should be protected but has been made public for testing
-	 * only
+	 * If <code>scopedToWorkingSet</code> is set to true only tasks from the current working set are contributed.
 	 */
-	public class TaskNavigateAction extends Action {
-
-		private static final int MAX_LABEL_LENGTH = 40;
-
-		private final AbstractTask targetTask;
-
-		public TaskNavigateAction(AbstractTask task) {
-			targetTask = task;
-			String taskDescription = task.getSummary();
-			if (taskDescription.length() > MAX_LABEL_LENGTH) {
-				taskDescription = taskDescription.subSequence(0, MAX_LABEL_LENGTH - 3) + "...";
-			}
-			setText(taskDescription);
-			setEnabled(true);
-			setToolTipText(task.getSummary());
-			Image image = labelProvider.getImage(task);
-			setImageDescriptor(ImageDescriptor.createFromImage(image));
-		}
-
-		@Override
-		public void run() {
-			if (targetTask.isActive()) {
-				return;
-			}
-			new TaskActivateAction().run(targetTask);
-//			taskHistory.addTask(targetTask);
-		}
-	}
-
-	public class ActivateDialogAction extends Action {
-
-		private final ActivateTaskDialogAction dialogAction;
-
-		public ActivateDialogAction(ActivateTaskDialogAction action) {
-			dialogAction = action;
-			dialogAction.init(PlatformUI.getWorkbench().getActiveWorkbenchWindow());
-
-			setText("Activate Task...");
-			setToolTipText("Activate Task...");
-			setEnabled(true);
-			setChecked(false);
-			setImageDescriptor(null);
-			//TasksUiImages.TASK_ACTIVE);
-		}
-
-		@Override
-		public void run() {
-			dialogAction.run(null);
-		}
-	}
-
-	public class DeactivateTaskAction extends Action {
-
-		public DeactivateTaskAction() {
-			setText("Deactivate Task");
-			setToolTipText("Deactivate Task");
-			setEnabled(true);
-			setChecked(false);
-			setImageDescriptor(null);
-			//TasksUiImages.TASK_INACTIVE);
-		}
-
-		@Override
-		public void run() {
-			AbstractTask active = TasksUi.getTaskListManager().getTaskList().getActiveTask();
-			if (active != null) {
-				TasksUi.getTaskListManager().deactivateTask(active);
-			}
-		}
-
+	public void setScopedToWorkingSet(boolean scopedToWorkingSet) {
+		this.scopedToWorkingSet = scopedToWorkingSet;
 	}
 
 }

@@ -42,7 +42,6 @@ import javax.xml.transform.stream.StreamResult;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextExternalizer;

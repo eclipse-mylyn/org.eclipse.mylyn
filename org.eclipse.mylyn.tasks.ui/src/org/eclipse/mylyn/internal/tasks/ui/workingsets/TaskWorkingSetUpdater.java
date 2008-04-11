@@ -21,12 +21,9 @@ import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -39,14 +36,14 @@ import org.eclipse.ui.PlatformUI;
  * @author Mik Kersten
  * @author Steffen Pingel
  */
-public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChangeListener, ITaskActivityListener,
-		IResourceChangeListener {
+public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChangeListener, IResourceChangeListener {
 
 	public static String ID_TASK_WORKING_SET = "org.eclipse.mylyn.tasks.ui.workingSet";
 
 	private final List<IWorkingSet> workingSets = new CopyOnWriteArrayList<IWorkingSet>();
 
 	private static class TaskWorkingSetDelta {
+
 		private final IWorkingSet workingSet;
 
 		private final List<Object> elements;
@@ -82,13 +79,11 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 
 	public TaskWorkingSetUpdater() {
 		TasksUi.getTaskListManager().getTaskList().addChangeListener(this);
-		TasksUi.getTaskListManager().addActivityListener(this);
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
 	}
 
 	public void dispose() {
 		TasksUi.getTaskListManager().getTaskList().removeChangeListener(this);
-		TasksUi.getTaskListManager().removeActivityListener(this);
 	}
 
 	public void add(IWorkingSet workingSet) {
@@ -165,12 +160,8 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 		}
 	}
 
-	public void activityChanged(ScheduledTaskContainer week) {
-		// ignore
-	}
-
 	// TODO: consider putting back, but evaluate policy and note bug 197257
-	public void taskActivated(AbstractTask task) {
+//	public void taskActivated(AbstractTask task) {
 //		Set<AbstractTaskContainer> taskContainers = new HashSet<AbstractTaskContainer>(
 //				TasksUiPlugin.getTaskListManager().getTaskList().getQueriesForHandle(task.getHandleIdentifier()));
 //		taskContainers.addAll(task.getParentContainers());
@@ -215,15 +206,7 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 //				new ToggleAllWorkingSetsAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow()).run();
 //			}
 //		}
-	}
-
-	public void taskDeactivated(AbstractTask task) {
-		// ignore
-	}
-
-	public void taskListRead() {
-		// ignore
-	}
+//	}
 
 	public static IWorkingSet[] getEnabledSets() {
 		return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getWorkingSets();

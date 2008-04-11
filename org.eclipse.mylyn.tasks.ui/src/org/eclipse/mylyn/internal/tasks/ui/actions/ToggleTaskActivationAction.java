@@ -10,7 +10,6 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
@@ -72,7 +71,7 @@ public class ToggleTaskActivationAction extends Action implements ITaskActivityL
 //		toolBarManager.add(this);
 	}
 
-	public void activityChanged(ScheduledTaskContainer week) {
+	public void activityChanged() {
 		// ignore
 	}
 
@@ -88,6 +87,14 @@ public class ToggleTaskActivationAction extends Action implements ITaskActivityL
 
 	public void taskListRead() {
 		// ignore
-
 	}
+
+	public void preTaskActivated(AbstractTask task) {
+		// ignore
+	}
+
+	public void preTaskDeactivated(AbstractTask task) {
+		// ignore		
+	}
+
 }

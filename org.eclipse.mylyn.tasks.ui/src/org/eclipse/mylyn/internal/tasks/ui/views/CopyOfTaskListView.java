@@ -430,7 +430,7 @@
 //
 //	private boolean gradientListenerAdded = false;
 //
-//	private final ITaskActivityListener TASK_ACTIVITY_LISTENER = new ITaskActivityListener() {
+//	private final ITaskActivityListener TASK_ACTIVITY_LISTENER = new TaskActivityAdapter() {
 //
 //		public void taskActivated(final AbstractTask task) {
 //			if (task != null) {

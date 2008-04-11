@@ -8,27 +8,35 @@
 
 package org.eclipse.mylyn.tasks.core;
 
-import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
-
 /**
  * Notified of task activity changes.
  * 
  * @author Mik Kersten
  * @author Rob Elves
+ * @author Shawn Minto
  * @since 2.0
  */
 public interface ITaskActivityListener {
+
+	/**
+	 * @since 3.0
+	 */
+	public abstract void activityChanged();
+
+	/**
+	 * @since 3.0
+	 */
+	public abstract void preTaskActivated(AbstractTask task);
+
+	/**
+	 * @since 3.0
+	 */
+	public abstract void preTaskDeactivated(AbstractTask task);
 
 	public abstract void taskActivated(AbstractTask task);
 
 	public abstract void taskDeactivated(AbstractTask task);
 
 	public abstract void taskListRead();
-
-	/**
-	 * @param week
-	 *            can be null
-	 */
-	public abstract void activityChanged(ScheduledTaskContainer week);
 
 }

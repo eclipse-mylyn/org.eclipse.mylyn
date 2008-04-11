@@ -25,13 +25,13 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
+import org.eclipse.mylyn.internal.tasks.ui.TaskHistoryDropDown;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.TaskSearchPage;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskDialogAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskHistoryDropDownAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenTaskListElementAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
@@ -39,8 +39,8 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskWorkingSetAction;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
+import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -59,6 +59,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PatternFilter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.internal.ObjectActionContributorManager;
@@ -168,18 +169,21 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			}
 		});
 
-		TasksUi.getTaskListManager().addActivityListener(new ITaskActivityListener() {
+		TasksUi.getTaskListManager().addActivityListener(new TaskActivityAdapter() {
 
 			public void activityChanged(ScheduledTaskContainer week) {
 				updateTaskProgressBar();
 			}
 
+			@Override
 			public void taskActivated(AbstractTask task) {
 			}
 
+			@Override
 			public void taskDeactivated(AbstractTask task) {
 			}
 
+			@Override
 			public void taskListRead() {
 			}
 		});
@@ -364,20 +368,26 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			indicateActiveTask(activeTask);
 		}
 
-		final ActivateTaskHistoryDropDownAction action = new ActivateTaskHistoryDropDownAction(
-				TasksUiPlugin.getTaskListManager().getTaskActivationHistory(), true);
-
 		activeTaskButton.addHyperlinkListener(new IHyperlinkListener() {
 
-			public void linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent e) {
-				action.getMenu(activeTaskButton).setVisible(true);
+			private Menu dropDownMenu;
+
+			public void linkActivated(HyperlinkEvent event) {
+				if (dropDownMenu != null) {
+					dropDownMenu.dispose();
+				}
+				TaskHistoryDropDown taskHistory = new TaskHistoryDropDown();
+				taskHistory.setScopedToWorkingSet(true);
+				dropDownMenu = new Menu(activeTaskButton);
+				taskHistory.fill(dropDownMenu, 0);
+				dropDownMenu.setVisible(true);
 			}
 
-			public void linkEntered(org.eclipse.ui.forms.events.HyperlinkEvent e) {
+			public void linkEntered(HyperlinkEvent event) {
 				activeTaskButton.setImage(TasksUiImages.getImage(TasksUiImages.TOOLBAR_ARROW_DOWN));
 			}
 
-			public void linkExited(org.eclipse.ui.forms.events.HyperlinkEvent e) {
+			public void linkExited(HyperlinkEvent event) {
 				activeTaskButton.setImage(TasksUiImages.getImage(TasksUiImages.TOOLBAR_ARROW_RIGHT));
 			}
 		});

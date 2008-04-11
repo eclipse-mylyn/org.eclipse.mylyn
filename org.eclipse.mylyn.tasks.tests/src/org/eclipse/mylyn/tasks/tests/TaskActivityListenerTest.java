@@ -10,10 +10,9 @@ package org.eclipse.mylyn.tasks.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.ITaskActivityListener2;
+import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 
 /**
@@ -21,7 +20,7 @@ import org.eclipse.mylyn.tasks.tests.connector.MockTask;
  */
 public class TaskActivityListenerTest extends TestCase {
 
-	private class MockTaskActivityListener implements ITaskActivityListener2 {
+	private class MockTaskActivityListener implements ITaskActivityListener {
 
 		private boolean hasActivated = false;
 
@@ -50,7 +49,7 @@ public class TaskActivityListenerTest extends TestCase {
 			hasPreDeactivated = true;
 		}
 
-		public void activityChanged(ScheduledTaskContainer week) {
+		public void activityChanged() {
 			// ignore
 
 		}

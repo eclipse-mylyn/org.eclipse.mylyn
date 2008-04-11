@@ -48,7 +48,6 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
@@ -99,6 +98,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
+import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -389,8 +389,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private boolean gradientListenerAdded = false;
 
-	private final ITaskActivityListener TASK_ACTIVITY_LISTENER = new ITaskActivityListener() {
+	private final ITaskActivityListener TASK_ACTIVITY_LISTENER = new TaskActivityAdapter() {
 
+		@Override
 		public void taskActivated(final AbstractTask task) {
 			if (task != null) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -404,6 +405,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			}
 		}
 
+		@Override
 		public void taskDeactivated(final AbstractTask task) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
@@ -414,16 +416,18 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			});
 		}
 
-		public void activityChanged(final ScheduledTaskContainer week) {
+		@Override
+		public void activityChanged() {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					if (ScheduledPresentation.ID.equals(getCurrentPresentation().getId())) {
-						refreshJob.refreshTask(week);
+						refreshJob.refresh();
 					}
 				}
 			});
 		}
 
+		@Override
 		public void taskListRead() {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
@@ -1685,8 +1689,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		default:
 			// TODO: move logic into deltas
 			refreshJob.refreshTask(task);
-			Set<AbstractTaskContainer> containers = new HashSet<AbstractTaskContainer>(
-					TasksUi.getTaskListManager().getTaskList().getParentQueries(task));
+			Set<AbstractTaskContainer> containers = new HashSet<AbstractTaskContainer>(TasksUi.getTaskListManager()
+					.getTaskList()
+					.getParentQueries(task));
 			containers.addAll(task.getParentContainers());
 			containers.add(TasksUi.getTaskListManager().getTaskList().getOrphanContainer(task.getRepositoryUrl()));
 //			containers.add(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer());

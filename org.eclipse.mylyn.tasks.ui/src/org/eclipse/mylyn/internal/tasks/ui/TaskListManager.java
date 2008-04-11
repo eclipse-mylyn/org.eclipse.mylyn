@@ -49,7 +49,6 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
-import org.eclipse.mylyn.tasks.core.ITaskActivityListener2;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.ITaskTimingListener;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
@@ -332,9 +331,7 @@ public class TaskListManager implements ITaskListManager {
 		// notify that a task is about to be activated
 		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
 			try {
-				if (listener instanceof ITaskActivityListener2) {
-					((ITaskActivityListener2) listener).preTaskActivated(task);
-				}
+				listener.preTaskActivated(task);
 			} catch (Throwable t) {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Task activity listener failed: "
 						+ listener, t));
@@ -374,9 +371,7 @@ public class TaskListManager implements ITaskListManager {
 			// notify that a task is about to be deactivated
 			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
 				try {
-					if (listener instanceof ITaskActivityListener2) {
-						((ITaskActivityListener2) listener).preTaskDeactivated(task);
-					}
+					listener.preTaskDeactivated(task);
 				} catch (Throwable t) {
 					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Notification failed for: "
 							+ listener, t));
@@ -437,7 +432,7 @@ public class TaskListManager implements ITaskListManager {
 			}
 		}
 		for (ITaskActivityListener listener : activityListeners) {
-			listener.activityChanged(null);
+			listener.activityChanged();
 		}
 	}
 

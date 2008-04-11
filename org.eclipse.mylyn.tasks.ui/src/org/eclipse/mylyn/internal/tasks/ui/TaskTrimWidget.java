@@ -23,7 +23,6 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenTaskListElementAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenWithBrowserAction;
@@ -33,6 +32,7 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
+import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
@@ -81,7 +81,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 
 	private Point p;
 
-	private final ITaskActivityListener TASK_CHANGE_LISTENER = new ITaskActivityListener() {
+	private final ITaskActivityListener TASK_CHANGE_LISTENER = new TaskActivityAdapter() {
 
 		public void taskActivated(AbstractTask task) {
 			activeTask = task;
@@ -93,7 +93,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 			indicateNoActiveTask();
 		}
 
-		public void activityChanged(ScheduledTaskContainer week) {
+		public void activityChanged() {
 		}
 
 		public void taskListRead() {

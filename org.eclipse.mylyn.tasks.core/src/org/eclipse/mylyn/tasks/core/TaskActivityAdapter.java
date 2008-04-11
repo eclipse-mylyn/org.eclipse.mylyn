@@ -9,15 +9,27 @@
 package org.eclipse.mylyn.tasks.core;
 
 /**
- * Notified of task activity changes. Provides extended activity support.
- * 
- * @author Shawn Minto
- * @since 2.3
+ * @author Steffen Pingel
+ * @since 3.0
  */
-public interface ITaskActivityListener2 extends ITaskActivityListener {
+public class TaskActivityAdapter implements ITaskActivityListener {
 
-	public abstract void preTaskActivated(AbstractTask task);
+	public void activityChanged() {
+	}
 
-	public abstract void preTaskDeactivated(AbstractTask task);
+	public void preTaskActivated(AbstractTask task) {
+	}
+
+	public void preTaskDeactivated(AbstractTask task) {
+	}
+
+	public void taskActivated(AbstractTask task) {
+	}
+
+	public void taskDeactivated(AbstractTask task) {
+	}
+
+	public void taskListRead() {
+	}
 
 }

@@ -18,9 +18,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskHistoryDropDownAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.TaskNavigateDropDownAction.TaskNavigateAction;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskActivationHistory;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 
 /**
@@ -29,31 +27,24 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
  */
 public class TaskHistoryTest extends TestCase {
 
-	protected TaskListManager manager = TasksUiPlugin.getTaskListManager();
+	private final TaskListManager manager = TasksUiPlugin.getTaskListManager();
 
-	protected TaskActivationHistory history;
+	private TaskActivationHistory history;
 
-	protected TaskListView taskView = null;
+	private AbstractTask task1;
 
-	protected AbstractTask task1 = null;
+	private AbstractTask task2;
 
-	protected AbstractTask task2 = null;
+	private AbstractTask task3;
 
-	protected AbstractTask task3 = null;
+	private AbstractTask task4;
 
-	protected AbstractTask task4 = null;
+	private AbstractTask task5;
 
-	protected AbstractTask task5 = null;
-
-	private final ActivateTaskHistoryDropDownAction previousTaskAction = new ActivateTaskHistoryDropDownAction(
-			TasksUiPlugin.getTaskListManager().getTaskActivationHistory(), false);
+	private ActivateTaskHistoryDropDownAction previousTaskAction;
 
 	@Override
 	protected void setUp() throws Exception {
-		super.setUp();
-
-		taskView = TaskListView.openInActivePerspective();
-
 		resetHistory();
 
 		task1 = manager.createNewLocalTask("task 1");
@@ -72,6 +63,8 @@ public class TaskHistoryTest extends TestCase {
 		manager.getTaskList().addTask(task5);
 
 		history = manager.getTaskActivationHistory();
+
+		previousTaskAction = new ActivateTaskHistoryDropDownAction();
 	}
 
 	private void resetHistory() {
@@ -171,9 +164,7 @@ public class TaskHistoryTest extends TestCase {
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 4) == task1);
 
 		// Get a task from the list and activate it
-		ActivateTaskHistoryDropDownAction prevAction = new ActivateTaskHistoryDropDownAction(history, false);
-		TaskNavigateAction navigateAction = prevAction.new TaskNavigateAction(task2);
-		navigateAction.run();
+		(new TaskActivateAction()).run(task2);
 		assertTrue(task2.isActive());
 
 		// Now check that the next and prev lists look right
@@ -192,8 +183,7 @@ public class TaskHistoryTest extends TestCase {
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 4) == task1);
 
 		// Pick a task from drop down history
-		navigateAction = prevAction.new TaskNavigateAction(task4);
-		navigateAction.run();
+		(new TaskActivateAction()).run(task4);
 		assertTrue(task4.isActive());
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 1) == task4);
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 2) == task3);
@@ -238,11 +228,6 @@ public class TaskHistoryTest extends TestCase {
 		// prevHistoryList = taskHistory.getPreviousTasks();
 		// assertTrue(prevHistoryList.get(prevHistoryList.size() - 1) == task5);
 
-	}
-
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
 	}
 
 }

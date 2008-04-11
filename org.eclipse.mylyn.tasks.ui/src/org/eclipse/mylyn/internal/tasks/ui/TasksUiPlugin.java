@@ -42,7 +42,6 @@ import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.ContextPreferenceContstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
-import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
@@ -66,6 +65,7 @@ import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
+import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.core.TaskComment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
@@ -233,7 +233,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		EDITOR, INTERNAL_BROWSER, EXTERNAL_BROWSER;
 	}
 
-	private static ITaskActivityListener CONTEXT_TASK_ACTIVITY_LISTENER = new ITaskActivityListener() {
+	private static ITaskActivityListener CONTEXT_TASK_ACTIVITY_LISTENER = new TaskActivityAdapter() {
 
 		public void taskActivated(final AbstractTask task) {
 			ContextCore.getContextManager().activateContext(task.getHandleIdentifier());
@@ -243,7 +243,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			ContextCore.getContextManager().deactivateContext(task.getHandleIdentifier());
 		}
 
-		public void activityChanged(ScheduledTaskContainer week) {
+		public void activityChanged() {
 			// ignore
 		}
 
