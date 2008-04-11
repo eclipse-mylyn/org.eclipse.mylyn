@@ -44,7 +44,6 @@ import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.IContextUiStartup;
 import org.eclipse.mylyn.internal.context.ui.actions.ContextRetrieveAction;
 import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
-import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.PlanningPerspectiveFactory;
@@ -53,6 +52,7 @@ import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
+import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.graphics.Image;
@@ -227,9 +227,9 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		}
 	};
 
-	private static final ITaskActivityListener TASK_ACTIVATION_LISTENER = new ITaskActivityListener() {
+	private static final ITaskActivityListener TASK_ACTIVATION_LISTENER = new TaskActivityAdapter() {
 
-		public void activityChanged(ScheduledTaskContainer week) {
+		public void activityChanged() {
 			// ignore
 		}
 

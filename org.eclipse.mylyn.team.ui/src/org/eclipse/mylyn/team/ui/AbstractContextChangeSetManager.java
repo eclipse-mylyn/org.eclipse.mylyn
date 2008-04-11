@@ -13,11 +13,11 @@ import java.util.Set;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
+import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
@@ -58,21 +58,25 @@ public abstract class AbstractContextChangeSetManager implements IInteractionCon
 
 	protected abstract void updateChangeSetLabel(AbstractTask task);
 
-	private final ITaskActivityListener TASK_ACTIVITY_LISTENER = new ITaskActivityListener() {
+	private final ITaskActivityListener TASK_ACTIVITY_LISTENER = new TaskActivityAdapter() {
 
+		@Override
 		public void taskListRead() {
 			initContextChangeSets();
 		}
 
+		@Override
 		public void taskActivated(AbstractTask task) {
 			// ignore
 		}
 
+		@Override
 		public void taskDeactivated(AbstractTask task) {
 			// ignore
 		}
 
-		public void activityChanged(ScheduledTaskContainer week) {
+		@Override
+		public void activityChanged() {
 			// ignore
 		}
 	};

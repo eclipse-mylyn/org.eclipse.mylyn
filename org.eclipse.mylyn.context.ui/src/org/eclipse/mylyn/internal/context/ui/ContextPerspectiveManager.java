@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
-import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.ui.IPerspectiveDescriptor;
@@ -106,7 +105,7 @@ public class ContextPerspectiveManager implements ITaskActivityListener, IPerspe
 		}
 	}
 
-	public void activityChanged(ScheduledTaskContainer week) {
+	public void activityChanged() {
 		// ignore
 	}
 
@@ -172,4 +171,13 @@ public class ContextPerspectiveManager implements ITaskActivityListener, IPerspe
 	public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective, String changeId) {
 		// ignore
 	}
+
+	public void preTaskActivated(AbstractTask task) {
+		// ignore	
+	}
+
+	public void preTaskDeactivated(AbstractTask task) {
+		// ignore		
+	}
+
 }
