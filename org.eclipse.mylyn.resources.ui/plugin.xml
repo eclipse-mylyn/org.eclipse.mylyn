@@ -8,9 +8,9 @@
       <page 
          name="Resources"
          class="org.eclipse.mylyn.internal.resources.ui.preferences.FocusedResourcesPreferencePage"
-         id="org.eclipse.mylyn.resources.preferences.resources"
+         id="org.eclipse.mylyn.resources.ui.preferences.resources"
          category="org.eclipse.mylyn.ui.preferences">
-         <keywordReference id="org.eclipse.mylyn.resources.keywords"/>
+         <keywordReference id="org.eclipse.mylyn.resources.ui.keywords"/>
       </page> 
    </extension>
    
@@ -18,7 +18,7 @@
    		point="org.eclipse.ui.keywords">
       <keyword
             label="mylyn resources"
-            id="org.eclipse.mylyn.resources.keywords"/>
+            id="org.eclipse.mylyn.resources.ui.keywords"/>
    </extension>
   
     <extension
@@ -45,14 +45,14 @@
       <preservedFilters
 			viewId="org.eclipse.ui.navigator.ProjectExplorer">
 			<filter
-				id="org.eclipse.mylyn.resources.ui.navigator.filters.tasks">
+				id="org.eclipse.mylyn.resources.ui.ui.navigator.filters.tasks">
 			</filter>
 	  </preservedFilters>
    </extension>
    <extension
          point="org.eclipse.mylyn.context.ui.startup">
       <startup
-            class="org.eclipse.mylyn.resources.ResourcesUiBridgePlugin$ResourcesUiBridgeStartup">
+            class="org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin$ResourcesUiBridgeStartup">
       </startup>
    </extension>
 
@@ -61,14 +61,14 @@
 			viewerId="org.eclipse.ui.navigator.ProjectExplorer">
 			<includes>
 				<contentExtension
-					pattern="org.eclipse.mylyn.resources.ui.navigator.filters.*" />
+					pattern="org.eclipse.mylyn.resources.ui.ui.navigator.filters.*" />
 			</includes>
 		</viewerContentBinding>
 	</extension>
    
    	<extension point="org.eclipse.ui.navigator.navigatorContent">
 		<commonFilter
-			id="org.eclipse.mylyn.resources.ui.navigator.filters.tasks"
+			id="org.eclipse.mylyn.resources.ui.ui.navigator.filters.tasks"
 			name="Task List Elements (Recommended)"
 			description="Hides Task List Elements from Common Navigators" 
 			activeByDefault="true">
@@ -103,7 +103,7 @@
               definitionId="org.eclipse.mylyn.context.ui.commands.interest.decrement"
               enablesFor="*"
               icon="icons/elcl16/interest-decrease.gif"
-              id="org.eclipse.mylyn.resources.ui.interest.remove.element"
+              id="org.eclipse.mylyn.resources.ui.ui.interest.remove.element"
               label="Remove from Context"
               menubarPath="group.reorganize"
               tooltip="Mark selected element as uninteresting">
@@ -124,7 +124,7 @@
            definitionId="org.eclipse.mylyn.context.ui.commands.interest.increment"
            enablesFor="*"
            icon="icons/elcl16/interest-increase.gif"
-           id="org.eclipse.mylyn.resources.ui.interest.increase.element"
+           id="org.eclipse.mylyn.resources.ui.ui.interest.increase.element"
            label="Mark as Landmark"
            menubarPath="group.reorganize"
            tooltip="Make selected element a landmark">

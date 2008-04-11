@@ -13,7 +13,7 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
+import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
 
 /**
  * @author Mik Kersten

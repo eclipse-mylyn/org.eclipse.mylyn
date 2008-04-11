@@ -18,7 +18,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.tests.support.TestUtil;
-import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
+import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
 
 /**
  * @author Mik Kersten

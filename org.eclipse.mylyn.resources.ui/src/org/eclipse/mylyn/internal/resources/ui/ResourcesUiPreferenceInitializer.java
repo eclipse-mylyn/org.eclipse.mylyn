@@ -13,7 +13,6 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
-import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 
 /**
  * This class is responsible for creating, storing and retrieving the values for the default context in the preference

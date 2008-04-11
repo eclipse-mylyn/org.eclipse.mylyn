@@ -8,11 +8,28 @@
 
 package org.eclipse.mylyn.context.ui;
 
+import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
+import org.eclipse.ui.IEditorPart;
+
 /**
  * @author Mik Kersten
  * @author Steffen Pingel
  * @since 3.0
  */
 public final class ContextUi {
+
+	/**
+	 * @return the corresponding adapter if found, or an adapter with no behavior otherwise (so null is never returned)
+	 */
+	public static AbstractContextUiBridge getUiBridge(String contentType) {
+		return ContextUiPlugin.getDefault().getUiBridge(contentType);
+	}
+
+	/**
+	 * TODO: cache this to improve performance?
+	 */
+	public static AbstractContextUiBridge getUiBridgeForEditor(IEditorPart editorPart) {
+		return ContextUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
+	}
 
 }

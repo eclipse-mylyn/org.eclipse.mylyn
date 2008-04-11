@@ -18,6 +18,7 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.AbstractFocusViewAction;
+import org.eclipse.mylyn.context.ui.ContextUi;
 import org.eclipse.mylyn.context.ui.InterestFilter;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.ui.IEditorPart;
@@ -48,7 +49,7 @@ public class FocusOutlineAction extends AbstractFocusViewAction {
 		}
 		boolean on = ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(getGlobalPrefId());
 
-		AbstractContextUiBridge bridge = ContextUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
+		AbstractContextUiBridge bridge = ContextUi.getUiBridgeForEditor(editorPart);
 		List<TreeViewer> outlineViewers = bridge.getContentOutlineViewers(editorPart);
 		for (TreeViewer viewer : outlineViewers) {
 			if (viewPart != null) {
@@ -83,7 +84,7 @@ public class FocusOutlineAction extends AbstractFocusViewAction {
 			if (page != null) {
 				IEditorPart[] parts = page.getEditors();
 				for (IEditorPart part : parts) {
-					AbstractContextUiBridge bridge = ContextUiPlugin.getDefault().getUiBridgeForEditor(part);
+					AbstractContextUiBridge bridge = ContextUi.getUiBridgeForEditor(part);
 					List<TreeViewer> outlineViewers = bridge.getContentOutlineViewers(part);
 					for (TreeViewer viewer : outlineViewers) {
 						if (viewer != null && !viewers.contains(viewer)) {

@@ -23,9 +23,10 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
 import org.eclipse.mylyn.internal.team.ui.properties.TeamPropertiesLinkProvider;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
-import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
+import org.eclipse.mylyn.resources.ui.ResourcesUi;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ILinkedTaskInfo;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -165,8 +166,7 @@ public class ContextChangeSet extends CVSActiveChangeSet/*ActiveChangeSet*/imple
 			Set<IResource> resources = new HashSet<IResource>();
 			resources.add(resource);
 			if (ResourcesUiBridgePlugin.getDefault() != null) {
-				ResourcesUiBridgePlugin.getInterestUpdater().addResourceToContext(resources,
-						InteractionEvent.Kind.SELECTION);
+				ResourcesUi.addResourceToContext(resources, InteractionEvent.Kind.SELECTION);
 			}
 		}
 	}

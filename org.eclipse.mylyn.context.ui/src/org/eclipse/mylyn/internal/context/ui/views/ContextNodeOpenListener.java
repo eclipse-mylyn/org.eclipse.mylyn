@@ -20,7 +20,7 @@ import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
-import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
+import org.eclipse.mylyn.context.ui.ContextUi;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.widgets.Tree;
@@ -48,7 +48,7 @@ public class ContextNodeOpenListener implements IOpenListener, IDoubleClickListe
 			node = ContextCore.getContextManager().getElement(handle);
 		}
 		if (node != null) {
-			ContextUiPlugin.getDefault().getUiBridge(node.getContentType()).open(node);
+			ContextUi.getUiBridge(node.getContentType()).open(node);
 		}
 	}
 

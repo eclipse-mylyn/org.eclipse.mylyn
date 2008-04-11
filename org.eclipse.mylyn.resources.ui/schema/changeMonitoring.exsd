@@ -46,7 +46,7 @@
       <documentation>
          Use example:
 
-   &lt;extension point=&quot;org.eclipse.mylyn.resources.mylyn_resources_to_ignore&quot;&gt;
+   &lt;extension point=&quot;org.eclipse.mylyn.resources.ui.mylyn_resources_to_ignore&quot;&gt;
      &lt;resource_to_ignore pattern=&quot;*.pyc&quot;/&gt;
      &lt;resource_to_ignore pattern=&quot;*.pyo&quot;/&gt;
    &lt;/extension&gt;

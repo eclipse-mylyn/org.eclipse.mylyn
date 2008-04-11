@@ -18,10 +18,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
-import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 
@@ -30,7 +28,10 @@ import org.eclipse.ui.PlatformUI;
  */
 public class ResourceInterestUpdater {
 
-	public static final String SOURCE_ID = "org.eclipse.mylyn.ide.resource.interest.updater";
+	/**
+	 * In Mylyn 2.0 was: "org.eclipse.mylyn.ide.resource.interest.updater"
+	 */
+	public static final String SOURCE_ID = "org.eclipse.mylyn.resources.ui.interest.updater";
 
 	private boolean syncExec = false;
 

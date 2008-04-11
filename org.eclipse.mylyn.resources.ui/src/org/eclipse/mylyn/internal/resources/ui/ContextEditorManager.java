@@ -26,12 +26,11 @@ import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextListener2;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.ui.ContextUi;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
-import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.editors.NewTaskEditorInput;
@@ -82,6 +81,7 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 				WorkbenchPage page = (WorkbenchPage) workbench.getActiveWorkbenchWindow().getActivePage();
 
 				String mementoString = null;
+				// API-3.0: remove coupling to AbstractTask, change where memento is stored
 				AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
 						context.getHandleIdentifier());
 				if (task != null) {
@@ -101,7 +101,7 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 				}
 				IInteractionElement activeNode = context.getActiveNode();
 				if (activeNode != null) {
-					ContextUiPlugin.getDefault().getUiBridge(activeNode.getContentType()).open(activeNode);
+					ContextUi.getUiBridge(activeNode.getContentType()).open(activeNode);
 				}
 			} catch (Exception e) {
 				StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.PLUGIN_ID,
@@ -313,11 +313,9 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 	private void closeEditor(IInteractionElement element, boolean force) {
 		if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(ContextUiPrefContstants.AUTO_MANAGE_EDITORS)) {
 			if (force || !element.getInterest().isInteresting()) {
-				AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(
-						element.getContentType());
+				AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(element.getContentType());
 				if (bridge.isDocument(element.getHandleIdentifier())) {
-					AbstractContextUiBridge uiBridge = ContextUiPlugin.getDefault().getUiBridge(
-							element.getContentType());
+					AbstractContextUiBridge uiBridge = ContextUi.getUiBridge(element.getContentType());
 					uiBridge.close(element);
 				}
 			}

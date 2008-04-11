@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package org.eclipse.mylyn.resources;
+package org.eclipse.mylyn.internal.resources.ui;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,12 +24,6 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.IContextUiStartup;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.resources.ui.ContextEditorManager;
-import org.eclipse.mylyn.internal.resources.ui.EditorInteractionMonitor;
-import org.eclipse.mylyn.internal.resources.ui.ResourceChangeMonitor;
-import org.eclipse.mylyn.internal.resources.ui.ResourceInteractionMonitor;
-import org.eclipse.mylyn.internal.resources.ui.ResourceInterestUpdater;
 import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -140,8 +134,8 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 
 	public List<IResource> getInterestingResources(IInteractionContext context) {
 		List<IResource> interestingResources = new ArrayList<IResource>();
-		Collection<IInteractionElement> resourceElements = ContextCore.getContextManager()
-				.getInterestingDocuments(context);
+		Collection<IInteractionElement> resourceElements = ContextCore.getContextManager().getInterestingDocuments(
+				context);
 		for (IInteractionElement element : resourceElements) {
 			IResource resource = getResourceForElement(element, false);
 			if (resource != null) {
@@ -180,8 +174,7 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 		if (element == null) {
 			return null;
 		}
-		AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(
-				element.getContentType());
+		AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(element.getContentType());
 		Object object = bridge.getObjectForHandle(element.getHandleIdentifier());
 		if (object instanceof IResource) {
 			return (IResource) object;
