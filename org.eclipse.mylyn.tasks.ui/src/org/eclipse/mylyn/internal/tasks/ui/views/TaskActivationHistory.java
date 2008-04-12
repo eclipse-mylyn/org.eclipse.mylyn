@@ -74,10 +74,8 @@ public class TaskActivationHistory {
 	 * Returns the task corresponding to the interaction event history item at the specified position
 	 */
 	protected AbstractTask getHistoryTaskAt(int pos) {
-		InteractionEvent event = ContextCore.getContextManager()
-				.getActivityMetaContext()
-				.getInteractionHistory()
-				.get(pos);
+		InteractionEvent event = ContextCore.getContextManager().getActivityMetaContext().getInteractionHistory().get(
+				pos);
 		return TasksUi.getTaskListManager().getTaskList().getTask(event.getStructureHandle());
 	}
 
@@ -116,8 +114,11 @@ public class TaskActivationHistory {
 			}
 
 			if (hasPrevious()) {
-				if (currentIndex < history.size() - 1
-						&& ((currentIndex == 0 && !history.get(currentIndex).isActive()) || !active)) {
+				if (!active) {
+					return history.get(currentIndex);
+				}
+
+				if (currentIndex < history.size() - 1 && ((currentIndex == 0 && !history.get(currentIndex).isActive()))) {
 					return history.get(currentIndex);
 				} else if (currentIndex > 0 && currentIndex < history.size()) {
 					return history.get(--currentIndex);

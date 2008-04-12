@@ -22,6 +22,7 @@ import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
@@ -364,9 +365,8 @@ public class TaskListManager implements ITaskListManager {
 	}
 
 	public void deactivateTask(AbstractTask task) {
-		if (task == null) {
-			return;
-		}
+		Assert.isNotNull(task);
+
 		if (task.isActive()) {
 			// notify that a task is about to be deactivated
 			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {

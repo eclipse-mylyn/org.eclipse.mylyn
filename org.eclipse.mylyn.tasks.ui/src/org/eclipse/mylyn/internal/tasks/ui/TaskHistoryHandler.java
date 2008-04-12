@@ -11,27 +11,63 @@ package org.eclipse.mylyn.internal.tasks.ui;
 import java.util.Map;
 
 import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.SafeRunner;
+import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskDialogAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskActivationHistory;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.commands.IElementUpdater;
+import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.menus.UIElement;
 
 /**
  * @author Eugene Kuleshov
+ * @author Steffen Pingel
  */
 public class TaskHistoryHandler extends AbstractHandler implements IElementUpdater {
 
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
-		TaskActivationHistory taskHistory = TasksUiPlugin.getTaskListManager().getTaskActivationHistory();
-		if (taskHistory.hasPrevious()) {
-			AbstractTask previousTask = taskHistory.getPreviousTask();
-			new TaskActivateAction().run(previousTask);
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
+		if (TasksUi.getTaskListManager().getTaskList().getActiveTask() != null) {
+			if (ContextCore.getContextManager().isContextCapturePaused()) {
+				IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
+				if (window != null) {
+					ICommandService commandService = (ICommandService) window.getService(ICommandService.class);
+					if (commandService != null) {
+						final Command command = commandService.getCommand("org.eclipse.mylyn.ui.context.capture.pause.command");
+						if (command != null) {
+							SafeRunner.run(new SafeRunnable() {
+								public void run() throws Exception {
+									command.executeWithChecks(event);
+								}
+							});
+						}
+					}
+				}
+			} else {
+				TasksUi.getTaskListManager().deactivateAllTasks();
+			}
+		} else {
+			TaskActivationHistory taskHistory = TasksUiPlugin.getTaskListManager().getTaskActivationHistory();
+			if (taskHistory.hasPrevious()) {
+				AbstractTask previousTask = taskHistory.getPreviousTask();
+				new TaskActivateAction().run(previousTask);
+			} else {
+				IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
+				if (window != null) {
+					ActivateTaskDialogAction action = new ActivateTaskDialogAction();
+					action.init(window);
+					action.run(null);
+				}
+			}
 		}
 		return null;
 	}
