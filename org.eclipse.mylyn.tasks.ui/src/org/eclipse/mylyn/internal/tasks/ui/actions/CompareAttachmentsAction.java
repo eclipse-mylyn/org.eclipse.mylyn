@@ -26,11 +26,11 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IViewActionDelegate;
@@ -94,9 +94,9 @@ public class CompareAttachmentsAction extends BaseSelectionListenerAction implem
 				private byte[] downloadAttachment(RepositoryAttachment attachment, IProgressMonitor pm)
 						throws InvocationTargetException {
 					try {
-						TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+						TaskRepository repository = TasksUi.getRepositoryManager().getRepository(
 								attachment.getRepositoryKind(), attachment.getRepositoryUrl());
-						AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
+						AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
 								.getRepositoryConnector(attachment.getRepositoryKind());
 						AbstractAttachmentHandler handler = connector.getAttachmentHandler();
 

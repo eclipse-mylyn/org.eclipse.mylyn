@@ -16,6 +16,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -31,7 +32,7 @@ public class TaskDetailLabelProvider extends LabelProvider implements ILabelProv
 			return super.getImage(element);
 		}
 
-		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				(AbstractTask) element);
 		ImageDescriptor overlay = TasksUiPlugin.getDefault().getOverlayIcon(connector.getConnectorKind());
 		if (overlay != null) {
@@ -47,7 +48,7 @@ public class TaskDetailLabelProvider extends LabelProvider implements ILabelProv
 			return super.getText(element);
 		}
 
-		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(
 				((AbstractTask) element).getRepositoryUrl());
 		return repository.getRepositoryLabel();
 	}

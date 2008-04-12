@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.core;
+package org.eclipse.mylyn.internal.tasks.core;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -21,10 +21,13 @@ import java.util.Set;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
-import org.eclipse.mylyn.internal.tasks.core.TaskRepositoriesExternalizer;
-import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITaskRepositoryListener;
+import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
+import org.eclipse.mylyn.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
  * Provides facilities for managing the lifecycle of and access to task repositories.
@@ -34,7 +37,7 @@ import org.eclipse.mylyn.monitor.core.StatusHandler;
  * @author Jevgeni Holodkov
  * @since 2.0
  */
-public class TaskRepositoryManager {
+public class TaskRepositoryManager implements ITaskRepositoryManager {
 
 	public static final String OLD_REPOSITORIES_FILE = "repositories.xml";
 
@@ -101,7 +104,8 @@ public class TaskRepositoryManager {
 		repositories.add(repository);
 		saveRepositories(repositoryFilePath);
 
-		taskList.addOrphanContainer(new UnmatchedTaskContainer(repository.getConnectorKind(), repository.getRepositoryUrl()));
+		taskList.addOrphanContainer(new UnmatchedTaskContainer(repository.getConnectorKind(),
+				repository.getRepositoryUrl()));
 
 		for (ITaskRepositoryListener listener : listeners) {
 			listener.repositoryAdded(repository);
@@ -318,30 +322,7 @@ public class TaskRepositoryManager {
 		return false;
 	}
 
-	/**
-	 * for testing purposes
-	 */
-	public void setVersion(TaskRepository repository, String version, String repositoriesFilePath) {
-		repository.setVersion(version);
-		saveRepositories(repositoriesFilePath);
-	}
-
-	/**
-	 * for testing purposes
-	 */
-	public void setEncoding(TaskRepository repository, String encoding, String repositoriesFilePath) {
-		repository.setCharacterEncoding(encoding);
-		saveRepositories(repositoriesFilePath);
-	}
-
-	/**
-	 * for testing purposes
-	 */
-	public void setTimeZoneId(TaskRepository repository, String timeZoneId, String repositoriesFilePath) {
-		repository.setTimeZoneId(timeZoneId);
-		saveRepositories(repositoriesFilePath);
-	}
-
+	@Deprecated
 	public void setSynchronizationTime(TaskRepository repository, String syncTime, String repositoriesFilePath) {
 		repository.setSynchronizationTimeStamp(syncTime);
 		saveRepositories(repositoriesFilePath);

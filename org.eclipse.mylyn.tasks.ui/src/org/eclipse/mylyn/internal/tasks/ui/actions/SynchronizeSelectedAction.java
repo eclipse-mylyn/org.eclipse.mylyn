@@ -53,7 +53,7 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 			for (Object obj : ((IStructuredSelection) selection).toList()) {
 				if (obj instanceof AbstractRepositoryQuery) {
 					final AbstractRepositoryQuery repositoryQuery = (AbstractRepositoryQuery) obj;
-					AbstractRepositoryConnector client = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+					AbstractRepositoryConnector client = TasksUi.getRepositoryManager().getRepositoryConnector(
 							repositoryQuery.getRepositoryKind());
 					if (client != null) {
 						List<AbstractRepositoryQuery> queriesToSync = queriesToSyncMap.get(client);
@@ -66,13 +66,13 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 				} else if (obj instanceof TaskCategory) {
 					TaskCategory cat = (TaskCategory) obj;
 					for (AbstractTask task : cat.getChildren()) {
-						AbstractRepositoryConnector client = TasksUiPlugin.getRepositoryManager()
+						AbstractRepositoryConnector client = TasksUi.getRepositoryManager()
 								.getRepositoryConnector(task.getConnectorKind());
 						addTaskToSync(client, task);
 					}
 				} else if (obj instanceof AbstractTask) {
 					AbstractTask repositoryTask = (AbstractTask) obj;
-					AbstractRepositoryConnector client = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+					AbstractRepositoryConnector client = TasksUi.getRepositoryManager().getRepositoryConnector(
 							repositoryTask.getConnectorKind());
 					addTaskToSync(client, repositoryTask);
 				}
@@ -90,7 +90,7 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 					}
 
 					for (AbstractRepositoryQuery query : queriesToSync) {
-						TaskRepository repos = TasksUiPlugin.getRepositoryManager().getRepository(
+						TaskRepository repos = TasksUi.getRepositoryManager().getRepository(
 								query.getRepositoryKind(), query.getRepositoryUrl());
 						Set<AbstractRepositoryQuery> queries = repositoriesToSync.get(repos);
 						if (queries == null) {
@@ -103,7 +103,7 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 
 				for (Map.Entry<TaskRepository, Set<AbstractRepositoryQuery>> entry : repositoriesToSync.entrySet()) {
 					TaskRepository repository = entry.getKey();
-					AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
+					AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
 							.getRepositoryConnector(repository.getConnectorKind());
 					Set<AbstractRepositoryQuery> queries = entry.getValue();
 					TasksUi.synchronizeQueries(connector, repository, queries, null, true);

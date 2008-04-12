@@ -15,6 +15,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -182,7 +183,7 @@ public class TaskRepositoryCredentialsDialog extends TitleAreaDialog {
 		setTitle(TITLE);
 		Control control = super.createContents(parent);
 		if (taskRepository != null) {
-			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 					taskRepository.getConnectorKind());
 			if (connector != null) {
 				setTitle(connector.getShortLabel() + " " + TITLE);

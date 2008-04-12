@@ -10,6 +10,7 @@ package org.eclipse.mylyn.internal.tasks.ui;
 
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Rob Elves
@@ -53,7 +54,7 @@ public class TaskRepositoryUtil {
 	 * Template exists and is auto add enabled
 	 */
 	private static boolean isAddAutomatically(String repositoryUrl) {
-		for (AbstractRepositoryConnector connector : TasksUiPlugin.getRepositoryManager().getRepositoryConnectors()) {
+		for (AbstractRepositoryConnector connector : TasksUi.getRepositoryManager().getRepositoryConnectors()) {
 			for (RepositoryTemplate template : connector.getTemplates()) {
 				if (template.repositoryUrl != null && template.repositoryUrl.equalsIgnoreCase(repositoryUrl)
 						&& template.addAutomatically) {

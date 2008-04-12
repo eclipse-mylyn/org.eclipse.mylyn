@@ -23,6 +23,7 @@ import org.eclipse.mylyn.monitor.core.CoreUtil;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.SynchronizeJob;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -101,13 +102,13 @@ public class TasksUi {
 	 */
 	public static final Job synchronizeQuery(AbstractRepositoryConnector connector,
 			AbstractRepositoryQuery repositoryQuery, IJobChangeListener listener, boolean force) {
-		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
-				repositoryQuery.getRepositoryKind(), repositoryQuery.getRepositoryUrl());
+		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(repositoryQuery.getRepositoryKind(),
+				repositoryQuery.getRepositoryUrl());
 		return synchronizeQueries(connector, repository, Collections.singleton(repositoryQuery), listener, force);
 	}
 
 	public static SynchronizeJob synchronizeAlllRepositories(boolean force) {
-		Set<TaskRepository> repositories = new HashSet<TaskRepository>(TasksUiPlugin.getRepositoryManager()
+		Set<TaskRepository> repositories = new HashSet<TaskRepository>(TasksUi.getRepositoryManager()
 				.getAllRepositories());
 		SynchronizeJob job = TasksUiPlugin.getTasksJobFactory().createSynchronizeRepositoriesJob(repositories);
 		job.setUser(force);
@@ -169,6 +170,10 @@ public class TasksUi {
 		job.schedule();
 		joinIfInTestMode(job);
 		return job;
+	}
+
+	public static ITaskRepositoryManager getRepositoryManager() {
+		return TasksUiPlugin.getRepositoryManager();
 	}
 
 }

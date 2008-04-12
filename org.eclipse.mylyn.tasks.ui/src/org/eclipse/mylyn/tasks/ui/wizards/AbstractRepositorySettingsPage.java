@@ -27,13 +27,14 @@ import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.web.core.AuthenticationCredentials;
 import org.eclipse.mylyn.web.core.AuthenticationType;
@@ -206,7 +207,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		super(title);
 		super.setTitle(title);
 		super.setDescription(description);
-		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				repositoryUi.getConnectorKind());
 		this.connector = connector;
 
@@ -1182,7 +1183,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	protected String isUniqueUrl(String urlString) {
 		if (!urlString.equals(originalUrl)) {
 			if (repositoryUrls == null) {
-				List<TaskRepository> repositories = TasksUiPlugin.getRepositoryManager().getAllRepositories();
+				List<TaskRepository> repositories = TasksUi.getRepositoryManager().getAllRepositories();
 				repositoryUrls = new HashSet<String>(repositories.size());
 				for (TaskRepository repository : repositories) {
 					repositoryUrls.add(repository.getRepositoryUrl());

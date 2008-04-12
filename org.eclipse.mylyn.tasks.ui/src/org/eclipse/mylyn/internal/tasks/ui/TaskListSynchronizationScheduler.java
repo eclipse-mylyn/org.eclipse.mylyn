@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.mylyn.tasks.core.SynchronizeJob;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.ITasksJobFactory;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Steffen Pingel
@@ -34,7 +35,7 @@ public class TaskListSynchronizationScheduler {
 	}
 
 	private SynchronizeJob createRefreshJob() {
-		Set<TaskRepository> repositories = new HashSet<TaskRepository>(TasksUiPlugin.getRepositoryManager()
+		Set<TaskRepository> repositories = new HashSet<TaskRepository>(TasksUi.getRepositoryManager()
 				.getAllRepositories());
 		SynchronizeJob job = jobFactory.createSynchronizeRepositoriesJob(repositories);
 		job.setUser(false);

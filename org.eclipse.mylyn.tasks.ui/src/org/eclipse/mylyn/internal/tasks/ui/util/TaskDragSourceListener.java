@@ -30,6 +30,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.dnd.DragSourceAdapter;
 import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.FileTransfer;
@@ -140,7 +141,7 @@ public class TaskDragSourceListener extends DragSourceAdapter {
 		} else if (TextTransfer.getInstance().isSupportedType(event.dataType)) {
 			if (selection.getFirstElement() instanceof RepositoryTaskData) {
 				RepositoryTaskData taskData = (RepositoryTaskData) selection.getFirstElement();
-				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 						taskData.getConnectorKind());
 				if (connector != null) {
 					event.data = connector.getTaskUrl(taskData.getRepositoryUrl(), taskData.getTaskId());

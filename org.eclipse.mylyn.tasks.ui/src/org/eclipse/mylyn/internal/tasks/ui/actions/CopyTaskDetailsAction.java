@@ -10,13 +10,13 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskSelection;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
@@ -77,7 +77,7 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 			}
 
 			text += taskData.getSummary();
-			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 					taskData.getConnectorKind());
 			if (connector != null) {
 				text += "\n" + connector.getTaskUrl(taskData.getRepositoryUrl(), taskData.getTaskId());
@@ -92,7 +92,7 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 		} else if (object instanceof RepositoryTaskSelection) {
 			RepositoryTaskSelection selection = (RepositoryTaskSelection) object;
 			text += selection.getId() + ": " + selection.getBugSummary();
-			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 					selection.getRepositoryKind());
 			if (connector != null) {
 				text += "\n" + connector.getTaskUrl(selection.getRepositoryUrl(), selection.getId());

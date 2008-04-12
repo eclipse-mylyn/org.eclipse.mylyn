@@ -28,6 +28,7 @@ import org.eclipse.mylyn.internal.tasks.ui.wizards.NewQueryWizard;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
@@ -46,7 +47,7 @@ public class NewQueryAction extends Action implements IViewActionDelegate, IExec
 
 	public void run(IAction action) {
 		IWizard wizard = null;
-		List<TaskRepository> repositories = TasksUiPlugin.getRepositoryManager().getAllRepositories();
+		List<TaskRepository> repositories = TasksUi.getRepositoryManager().getAllRepositories();
 		if (repositories.size() == 2) {
 			// NOTE: this click-saving should be generalized
 			for (TaskRepository taskRepository : repositories) {

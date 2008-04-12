@@ -13,8 +13,8 @@ import junit.framework.TestCase;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.ui.AbstractTaskRepositoryLinkProvider;
 
 /**
@@ -28,7 +28,7 @@ public class LinkProviderTest extends TestCase {
 		int executions = 0;
 
 		@Override
-		public TaskRepository getTaskRepository(IResource resource, TaskRepositoryManager repositoryManager) {
+		public TaskRepository getTaskRepository(IResource resource, ITaskRepositoryManager repositoryManager) {
 			executions++;
 			try {
 				Thread.sleep(5010);

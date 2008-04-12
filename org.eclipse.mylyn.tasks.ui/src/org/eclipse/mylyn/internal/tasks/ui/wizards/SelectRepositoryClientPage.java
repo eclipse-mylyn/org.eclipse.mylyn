@@ -26,6 +26,7 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesSorter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoryLabelProvider;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -55,7 +56,7 @@ public class SelectRepositoryClientPage extends WizardPage {
 
 		public Object[] getElements(Object parent) {
 			List<AbstractRepositoryConnector> userManagedRepositories = new ArrayList<AbstractRepositoryConnector>();
-			for (AbstractRepositoryConnector connector : TasksUiPlugin.getRepositoryManager().getRepositoryConnectors()) {
+			for (AbstractRepositoryConnector connector : TasksUi.getRepositoryManager().getRepositoryConnectors()) {
 				if (connector.isUserManaged()) {
 					userManagedRepositories.add(connector);
 				}
@@ -87,7 +88,7 @@ public class SelectRepositoryClientPage extends WizardPage {
 		viewer.setContentProvider(new RepositoryContentProvider());
 		viewer.setSorter(new TaskRepositoriesSorter());
 		viewer.setLabelProvider(new TaskRepositoryLabelProvider());
-		viewer.setInput(TasksUiPlugin.getRepositoryManager().getRepositoryConnectors());
+		viewer.setInput(TasksUi.getRepositoryManager().getRepositoryConnectors());
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
 			public void selectionChanged(SelectionChangedEvent event) {

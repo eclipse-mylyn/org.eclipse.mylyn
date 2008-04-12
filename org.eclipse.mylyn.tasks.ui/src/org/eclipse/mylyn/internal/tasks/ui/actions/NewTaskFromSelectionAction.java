@@ -14,12 +14,12 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskSelection;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskComment;
-import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskSelection;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -72,7 +72,7 @@ public class NewTaskFromSelectionAction extends Action {
 			}
 		} else if (selection instanceof RepositoryTaskSelection) {
 			RepositoryTaskSelection repositoryTaskSelection = (RepositoryTaskSelection) selection;
-			TaskRepositoryManager repositoryManager = TasksUiPlugin.getRepositoryManager();
+			ITaskRepositoryManager repositoryManager = TasksUi.getRepositoryManager();
 			AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(repositoryTaskSelection.getRepositoryKind());
 
 			TaskComment comment = repositoryTaskSelection.getComment();

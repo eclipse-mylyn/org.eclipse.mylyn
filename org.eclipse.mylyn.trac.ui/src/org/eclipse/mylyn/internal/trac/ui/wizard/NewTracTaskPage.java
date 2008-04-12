@@ -24,6 +24,7 @@ import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
@@ -96,7 +97,7 @@ public class NewTracTaskPage extends WizardPage {
 	}
 
 	private void updateAttributesFromRepository() {
-		TracRepositoryConnector connector = (TracRepositoryConnector) TasksUiPlugin.getRepositoryManager()
+		TracRepositoryConnector connector = (TracRepositoryConnector) TasksUi.getRepositoryManager()
 				.getRepositoryConnector(TracCorePlugin.REPOSITORY_KIND);
 		final ITracClient client = connector.getClientManager().getRepository(taskRepository);
 

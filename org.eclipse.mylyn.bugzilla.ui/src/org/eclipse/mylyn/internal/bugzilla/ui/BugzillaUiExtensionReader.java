@@ -18,8 +18,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaLanguageSettings;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Frank Becker
@@ -74,7 +74,7 @@ public class BugzillaUiExtensionReader {
 		String languageName = element.getAttribute(ELMNT_LANG_NAME);
 
 		if (languageName != null) {
-			BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUiPlugin.getRepositoryManager()
+			BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUi.getRepositoryManager()
 					.getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
 
 			BugzillaLanguageSettings bugzillaLanguageSettings = new BugzillaLanguageSettings(languageName);

@@ -11,6 +11,7 @@ package org.eclipse.mylyn.internal.tasks.ui.wizards;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AddRepositoryAction;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.ui.IWorkbench;
 
@@ -35,7 +36,7 @@ public class NewRepositoryWizard extends AbstractRepositoryClientWizard {
 		if (canFinish()) {
 			repository = abstractRepositorySettingsPage.createTaskRepository();
 			abstractRepositorySettingsPage.updateProperties(repository);
-			TasksUiPlugin.getRepositoryManager().addRepository(repository,
+			TasksUi.getRepositoryManager().addRepository(repository,
 					TasksUiPlugin.getDefault().getRepositoriesFilePath());
 			return true;
 		}

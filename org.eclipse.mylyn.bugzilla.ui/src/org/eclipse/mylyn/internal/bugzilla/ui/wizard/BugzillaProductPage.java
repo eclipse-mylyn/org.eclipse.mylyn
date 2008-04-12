@@ -52,6 +52,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -226,7 +227,7 @@ public class BugzillaProductPage extends WizardPage {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
-					final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
+					final AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
 							.getRepositoryConnector(repository.getConnectorKind());
 
 					getContainer().run(true, false, new IRunnableWithProgress() {
@@ -407,7 +408,7 @@ public class BugzillaProductPage extends WizardPage {
 		RepositoryTaskData model = bugWizard.taskData;
 		model.setAttributeValue(BugzillaReportElement.PRODUCT.getKeyString(),
 				(String) ((IStructuredSelection) productList.getViewer().getSelection()).getFirstElement());
-		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				repository.getConnectorKind());
 		if (connector == null) {
 			throw new CoreException(new Status(Status.ERROR, BugzillaUiPlugin.PLUGIN_ID,

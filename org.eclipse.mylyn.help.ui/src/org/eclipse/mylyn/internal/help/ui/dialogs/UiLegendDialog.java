@@ -23,6 +23,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -393,7 +394,7 @@ public class UiLegendDialog extends PopupDialog {
 		composite.setLayout(layout);
 		composite.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 
-		Collection<AbstractRepositoryConnector> connectors = TasksUiPlugin.getRepositoryManager()
+		Collection<AbstractRepositoryConnector> connectors = TasksUi.getRepositoryManager()
 				.getRepositoryConnectors();
 		for (AbstractRepositoryConnector connector : connectors) {
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(connector.getConnectorKind());

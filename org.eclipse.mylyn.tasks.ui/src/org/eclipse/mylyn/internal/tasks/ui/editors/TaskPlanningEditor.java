@@ -397,7 +397,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		TaskRepository repository = null;
 		if (task != null && !(task instanceof LocalTask)) {
 			AbstractTask repositoryTask = task;
-			repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryTask.getConnectorKind(),
+			repository = TasksUi.getRepositoryManager().getRepository(repositoryTask.getConnectorKind(),
 					repositoryTask.getRepositoryUrl());
 		}
 		summaryEditor = addTextEditor(repository, summaryComposite, task.getSummary(), true, SWT.FLAT | SWT.SINGLE);
@@ -847,7 +847,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		TaskRepository repository = null;
 		if (task != null && !(task instanceof LocalTask)) {
 			AbstractTask repositoryTask = task;
-			repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryTask.getConnectorKind(),
+			repository = TasksUi.getRepositoryManager().getRepository(repositoryTask.getConnectorKind(),
 					repositoryTask.getRepositoryUrl());
 		}
 

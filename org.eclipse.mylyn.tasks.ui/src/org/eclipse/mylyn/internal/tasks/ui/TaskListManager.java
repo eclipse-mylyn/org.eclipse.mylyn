@@ -137,7 +137,7 @@ public class TaskListManager implements ITaskListManager {
 	}
 
 	private void prepareOrphanContainers() {
-		for (TaskRepository repository : TasksUiPlugin.getRepositoryManager().getAllRepositories()) {
+		for (TaskRepository repository : TasksUi.getRepositoryManager().getAllRepositories()) {
 			if (!repository.getConnectorKind().equals(LocalRepositoryConnector.CONNECTOR_KIND)) {
 				taskList.addOrphanContainer(new UnmatchedTaskContainer(repository.getConnectorKind(),
 						repository.getRepositoryUrl()));
@@ -535,7 +535,7 @@ public class TaskListManager implements ITaskListManager {
 
 		for (AbstractRepositoryQuery query : queries) {
 
-			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(query.getRepositoryKind(),
+			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(query.getRepositoryKind(),
 					query.getRepositoryUrl());
 			if (repository == null) {
 				badQueries.add(query);
@@ -548,7 +548,7 @@ public class TaskListManager implements ITaskListManager {
 			// add query
 			TasksUi.getTaskListManager().getTaskList().addQuery(query);
 
-			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 					repository.getConnectorKind());
 			if (connector != null) {
 				TasksUi.synchronizeQuery(connector, query, null, true);

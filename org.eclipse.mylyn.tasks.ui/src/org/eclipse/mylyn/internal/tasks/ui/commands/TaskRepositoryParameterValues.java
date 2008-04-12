@@ -13,8 +13,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.commands.IParameterValues;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * Compute repository connectors type/label map
@@ -24,7 +24,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 public class TaskRepositoryParameterValues implements IParameterValues {
 
 	public Map<String, String> getParameterValues() {
-		Collection<AbstractRepositoryConnector> connectors = TasksUiPlugin.getRepositoryManager()
+		Collection<AbstractRepositoryConnector> connectors = TasksUi.getRepositoryManager()
 				.getRepositoryConnectors();
 		Map<String, String> values = new HashMap<String, String>();
 		for (AbstractRepositoryConnector connector : connectors) {

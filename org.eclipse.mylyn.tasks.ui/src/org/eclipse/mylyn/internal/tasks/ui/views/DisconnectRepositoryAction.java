@@ -17,6 +17,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Steffen Pingel
@@ -50,7 +51,7 @@ public class DisconnectRepositoryAction extends Action implements ISelectionChan
 		if (selection instanceof IStructuredSelection) {
 			Object selectedObject = ((IStructuredSelection) selection).getFirstElement();
 			if (selectedObject instanceof TaskRepository) {
-				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 						((TaskRepository) selectedObject).getConnectorKind());
 				if (connector.isUserManaged()) {
 					this.repository = (TaskRepository) selectedObject;

@@ -12,9 +12,9 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.bugzilla.ui.editor.BugzillaTaskEditor;
 import org.eclipse.mylyn.internal.bugzilla.ui.editor.NewBugzillaTaskEditor;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorFactory;
 import org.eclipse.mylyn.tasks.ui.editors.RepositoryTaskEditorInput;
@@ -51,7 +51,7 @@ public class BugzillaTaskEditorFactory extends AbstractTaskEditorFactory {
 	public IEditorInput createEditorInput(AbstractTask task) {
 		if (task instanceof BugzillaTask) {
 			BugzillaTask bugzillaTask = (BugzillaTask) task;
-			final TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+			final TaskRepository repository = TasksUi.getRepositoryManager().getRepository(
 					BugzillaCorePlugin.REPOSITORY_KIND, bugzillaTask.getRepositoryUrl());
 			BugzillaTaskEditorInput input = new BugzillaTaskEditorInput(repository, bugzillaTask, true);
 			return input;

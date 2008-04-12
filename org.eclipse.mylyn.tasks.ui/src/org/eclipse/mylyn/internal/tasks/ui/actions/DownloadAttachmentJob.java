@@ -24,6 +24,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Steffen Pingel
@@ -50,9 +51,9 @@ public class DownloadAttachmentJob extends Job {
 
 	@Override
 	protected IStatus run(IProgressMonitor monitor) {
-		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(attachment.getRepositoryKind(),
+		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(attachment.getRepositoryKind(),
 				this.attachment.getRepositoryUrl());
-		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				this.attachment.getRepositoryKind());
 		AbstractAttachmentHandler handler = connector.getAttachmentHandler();
 		if (handler == null) {

@@ -20,10 +20,10 @@ import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.SynchronizeJob;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.sync.IRepositorySynchronizationManager;
 import org.eclipse.mylyn.web.core.Policy;
 
@@ -36,14 +36,14 @@ public class SynchronizeRepositoriesJob extends SynchronizeJob {
 
 	private final IRepositorySynchronizationManager synchronizationManager;
 
-	private final TaskRepositoryManager repositoryManager;
+	private final ITaskRepositoryManager repositoryManager;
 
 	private final Set<TaskRepository> repositories;
 
 	private final Object family = new Object();
 
 	public SynchronizeRepositoriesJob(TaskList taskList, IRepositorySynchronizationManager synchronizationManager,
-			TaskRepositoryManager repositoryManager, Set<TaskRepository> repositories) {
+			ITaskRepositoryManager repositoryManager, Set<TaskRepository> repositories) {
 		super("Synchronizing Task List");
 		this.taskList = taskList;
 		this.synchronizationManager = synchronizationManager;

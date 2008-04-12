@@ -9,11 +9,11 @@
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -41,7 +41,7 @@ public class AttachScreenshotAction extends AttachAction {
 				return;
 			}
 			AbstractTask repositoryTask = (AbstractTask) selection;
-			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(
 					repositoryTask.getConnectorKind(), repositoryTask.getRepositoryUrl());
 
 			NewAttachmentWizard attachmentWizard = new NewAttachmentWizard(repository, repositoryTask, true);

@@ -19,12 +19,12 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AddRepositoryAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.DeleteTaskRepositoryAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.EditRepositoryPropertiesAction;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryListener;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -108,12 +108,12 @@ public class TaskRepositoriesView extends ViewPart {
 		}
 
 		public Object[] getElements(Object parent) {
-			return TasksUiPlugin.getRepositoryManager().getAllRepositories().toArray();
+			return TasksUi.getRepositoryManager().getAllRepositories().toArray();
 		}
 	}
 
 	public TaskRepositoriesView() {
-		TasksUiPlugin.getRepositoryManager().addListener(REPOSITORY_LISTENER);
+		TasksUi.getRepositoryManager().addListener(REPOSITORY_LISTENER);
 	}
 
 	public static TaskRepositoriesView getFromActivePerspective() {
@@ -174,7 +174,7 @@ public class TaskRepositoriesView extends ViewPart {
 			}
 		});
 
-		TasksUiPlugin.getRepositoryManager().addListener(new TaskRepositoryListener());
+		TasksUi.getRepositoryManager().addListener(new TaskRepositoryListener());
 
 		makeActions();
 		hookContextMenu();

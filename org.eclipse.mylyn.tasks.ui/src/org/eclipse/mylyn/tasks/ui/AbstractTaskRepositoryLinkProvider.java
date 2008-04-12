@@ -11,8 +11,8 @@ package org.eclipse.mylyn.tasks.ui;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 
 /**
  * Extend to provide linking between repositories and tasks.
@@ -42,9 +42,10 @@ public abstract class AbstractTaskRepositoryLinkProvider implements IExecutableE
 
 	/**
 	 * This operation is invoked frequently by hyperlink detectors and needs to be fast (i.e. cannot do network access
-	 * or invoke long-running refreshes). Return null if the repository cannot be resolved without excessive file I/O.
+	 * or invoke long-running refreshes). Return null if the repository cannot be resolved without excessive file I/O.@since 3.0
+	 * @since 3.0
 	 */
-	public abstract TaskRepository getTaskRepository(IResource resource, TaskRepositoryManager repositoryManager);
+	public abstract TaskRepository getTaskRepository(IResource resource, ITaskRepositoryManager repositoryManager);
 
 	public boolean canSetTaskRepository(IResource resource) {
 		return false;

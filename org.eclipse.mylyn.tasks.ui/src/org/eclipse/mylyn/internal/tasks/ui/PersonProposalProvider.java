@@ -143,7 +143,7 @@ public class PersonProposalProvider implements IContentProposalProvider {
 				tasks.add(currentTask);
 			}
 
-			TaskRepository repository = TasksUiPlugin.getRepositoryManager()
+			TaskRepository repository = TasksUi.getRepositoryManager()
 					.getRepository(connectorKind, repositoryUrl);
 
 			if (repository != null) {

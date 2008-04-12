@@ -19,6 +19,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
@@ -55,7 +56,7 @@ public class OpenRepositoryTaskJob extends Job {
 	@Override
 	public IStatus run(IProgressMonitor monitor) {
 		monitor.beginTask("Opening Remote Task", 10);
-		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryKind, repositoryUrl);
+		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(repositoryKind, repositoryUrl);
 		if (repository == null) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
@@ -69,7 +70,7 @@ public class OpenRepositoryTaskJob extends Job {
 			return Status.OK_STATUS;
 		}
 
-		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				repositoryKind);
 		try {
 

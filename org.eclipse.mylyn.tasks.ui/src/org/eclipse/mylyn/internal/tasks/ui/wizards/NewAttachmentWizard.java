@@ -151,7 +151,7 @@ public class NewAttachmentWizard extends Wizard {
 		}
 
 		// upload the attachment
-		final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+		final AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				repository.getConnectorKind());
 		final AbstractAttachmentHandler attachmentHandler = connector.getAttachmentHandler();
 		if (attachmentHandler == null) {

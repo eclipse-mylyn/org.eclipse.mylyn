@@ -27,6 +27,7 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesSorter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoryLabelProvider;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -98,7 +99,7 @@ public class ProjectTaskRepositoryPage extends PropertyPage {
 			}
 
 			public Object[] getElements(Object parent) {
-				return TasksUiPlugin.getRepositoryManager().getAllRepositories().toArray();
+				return TasksUi.getRepositoryManager().getAllRepositories().toArray();
 			}
 
 		});

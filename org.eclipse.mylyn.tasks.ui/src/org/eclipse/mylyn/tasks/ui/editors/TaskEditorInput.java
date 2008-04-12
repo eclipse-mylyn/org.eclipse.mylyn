@@ -17,6 +17,7 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorInputFactory;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPersistableElement;
@@ -45,7 +46,7 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 	 */
 	@Deprecated
 	public TaskEditorInput(AbstractTask task, boolean newTask) {
-		this(TasksUiPlugin.getRepositoryManager().getRepository(task.getConnectorKind(), task.getRepositoryUrl()), task);
+		this(TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(), task.getRepositoryUrl()), task);
 	}
 
 	/**

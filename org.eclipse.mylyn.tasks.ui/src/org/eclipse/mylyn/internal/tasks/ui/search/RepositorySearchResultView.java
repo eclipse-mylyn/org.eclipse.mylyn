@@ -322,7 +322,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 			Object selectedObject = iterator.next();
 			if (selectedObject instanceof AbstractTask) {
 				AbstractTask task = (AbstractTask) selectedObject;
-				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(task.getRepositoryUrl());
+				TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getRepositoryUrl());
 				final AddExistingTaskJob job = new AddExistingTaskJob(repository, task.getTaskId(), category);
 				job.schedule();
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {

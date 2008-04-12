@@ -28,6 +28,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.search.ui.ISearchQuery;
 import org.eclipse.search.ui.ISearchResult;
 import org.eclipse.search.ui.NewSearchUI;
@@ -148,7 +149,7 @@ public class SearchHitCollector extends AbstractTaskCollector implements ISearch
 		if (monitor.isCanceled()) {
 			throw new OperationCanceledException("Search cancelled");
 		}
-		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				repositoryQuery.getRepositoryKind());
 		if (connector != null) {
 			IStatus status = connector.performQuery(repository, repositoryQuery, this, null, monitor);

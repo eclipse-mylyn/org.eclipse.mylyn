@@ -32,6 +32,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -125,7 +126,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 					compositeDescriptor.icon = TasksUiImages.CALENDAR;
 				} else if (element instanceof Person) {
 					compositeDescriptor.icon = TasksUiImages.PERSON;
-					TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+					TaskRepository repository = TasksUi.getRepositoryManager().getRepository(
 							((Person) element).getRepositoryUrl());
 
 //					for (TaskRepository repository : TasksUiPlugin.getRepositoryManager().getAllRepositories()) {
@@ -231,7 +232,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			UnmatchedTaskContainer container = (UnmatchedTaskContainer) object;
 
 			String result = container.getSummary();
-			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(
 					container.getConnectorKind(), container.getRepositoryUrl());
 			if (repository != null) {
 				result = "Unmatched [" + repository.getRepositoryLabel() + "]";

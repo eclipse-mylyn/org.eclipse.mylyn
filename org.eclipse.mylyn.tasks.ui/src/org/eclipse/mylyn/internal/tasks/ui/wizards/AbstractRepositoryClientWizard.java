@@ -16,6 +16,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.ui.INewWizard;
 
@@ -60,12 +61,12 @@ public abstract class AbstractRepositoryClientWizard extends Wizard implements I
 
 	@Override
 	public void addPages() {
-		Collection<AbstractRepositoryConnector> connectors = TasksUiPlugin.getRepositoryManager()
+		Collection<AbstractRepositoryConnector> connectors = TasksUi.getRepositoryManager()
 				.getRepositoryConnectors();
 		if (repositoryType != null || connectors.size() == 1) {
 			AbstractRepositoryConnector connector = null;
 			if (repositoryType != null) {
-				connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repositoryType);
+				connector = TasksUi.getRepositoryManager().getRepositoryConnector(repositoryType);
 			} else {
 				connector = connectors.toArray(new AbstractRepositoryConnector[1])[0];
 			}

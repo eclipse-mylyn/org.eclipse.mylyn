@@ -57,6 +57,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTaskListFactory;
 import org.eclipse.mylyn.tasks.core.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -537,7 +538,7 @@ public class TaskListWriter {
 	public void writeQueries(List<AbstractRepositoryQuery> queries, File outFile) {
 		Set<TaskRepository> repositories = new HashSet<TaskRepository>();
 		for (AbstractRepositoryQuery query : queries) {
-			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(query.getRepositoryUrl());
+			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(query.getRepositoryUrl());
 			if (repository != null) {
 				repositories.add(repository);
 			}
@@ -649,7 +650,7 @@ public class TaskListWriter {
 	public void writeTask(AbstractTask task, OutputStream stream) {
 		Set<TaskRepository> repositories = new HashSet<TaskRepository>();
 		if (!task.isLocal()) {
-			repositories.add(TasksUiPlugin.getRepositoryManager().getRepository(task.getRepositoryUrl()));
+			repositories.add(TasksUi.getRepositoryManager().getRepository(task.getRepositoryUrl()));
 		}
 
 		Document doc = createTaskListDocument();

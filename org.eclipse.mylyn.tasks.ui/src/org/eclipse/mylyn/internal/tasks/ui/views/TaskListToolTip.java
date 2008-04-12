@@ -40,6 +40,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -197,7 +198,7 @@ public class TaskListToolTip extends ToolTip {
 	}
 
 	private String getRepositoryLabel(String repositoryKind, String repositoryUrl) {
-		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryKind, repositoryUrl);
+		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(repositoryKind, repositoryUrl);
 		if (repository != null) {
 			String label = repository.getRepositoryLabel();
 			if (label.indexOf("//") != -1) {
@@ -269,7 +270,7 @@ public class TaskListToolTip extends ToolTip {
 		if (element instanceof AbstractTask) {
 			AbstractTask task = (AbstractTask) element;
 			if (task.getSynchronizationState() == RepositoryTaskSyncState.INCOMING) {
-				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 						task);
 				if (connector != null) {
 					AbstractNotification notification = TasksUiPlugin.getDefault().getIncommingNotification(connector,
@@ -353,14 +354,14 @@ public class TaskListToolTip extends ToolTip {
 	private Image getImage(AbstractTaskContainer element) {
 		if (element instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
-			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 					query.getRepositoryKind());
 			if (connector != null) {
 				return TasksUiPlugin.getDefault().getBrandingIcon(connector.getConnectorKind());
 			}
 		} else if (element instanceof AbstractTask) {
 			AbstractTask repositoryTask = (AbstractTask) element;
-			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 					repositoryTask.getConnectorKind());
 			if (connector != null) {
 				return TasksUiPlugin.getDefault().getBrandingIcon(connector.getConnectorKind());

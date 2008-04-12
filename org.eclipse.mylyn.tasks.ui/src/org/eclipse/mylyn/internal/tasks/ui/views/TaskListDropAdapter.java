@@ -284,7 +284,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			if (repositoryUrl == null || id == null) {
 				return false;
 			}
-			for (TaskRepository repository : TasksUiPlugin.getRepositoryManager().getRepositories(
+			for (TaskRepository repository : TasksUi.getRepositoryManager().getRepositories(
 					connector.getConnectorKind())) {
 				if (repository.getRepositoryUrl().equals(repositoryUrl)) {
 					try {

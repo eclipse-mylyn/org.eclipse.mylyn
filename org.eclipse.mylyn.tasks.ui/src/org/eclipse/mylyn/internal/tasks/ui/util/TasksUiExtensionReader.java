@@ -32,6 +32,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.ui.AbstractDuplicateDetector;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.AbstractTaskRepositoryLinkProvider;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorFactory;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -440,7 +441,7 @@ public class TasksUiExtensionReader {
 		anonymous = Boolean.parseBoolean(element.getAttribute(ELMNT_TMPL_ANONYMOUS));
 
 		if (serverUrl != null && label != null && repKind != null
-				&& TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repKind) != null) {
+				&& TasksUi.getRepositoryManager().getRepositoryConnector(repKind) != null) {
 			RepositoryTemplate template = new RepositoryTemplate(label, serverUrl, encoding, version, newTaskUrl,
 					taskPrefix, taskQueryUrl, newAccountUrl, anonymous, addAuto);
 			TasksUiPlugin.getRepositoryTemplateManager().addTemplate(repKind, template);

@@ -895,7 +895,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 			return;
 		}
 
-		taskRepository = TasksUiPlugin.getRepositoryManager().getRepository(taskData.getConnectorKind(),
+		taskRepository = TasksUi.getRepositoryManager().getRepository(taskData.getConnectorKind(),
 				taskData.getRepositoryUrl());
 		if (task != null) {
 			attributeManager = createAttributeManager(taskRepository, task.getRepositoryUrl(), task.getTaskId());
@@ -903,7 +903,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 			attributeManager = createAttributeManager(taskRepository, taskData.getRepositoryUrl(), taskData.getTaskId());
 		}
 
-		connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(taskRepository.getConnectorKind());
+		connector = TasksUi.getRepositoryManager().getRepositoryConnector(taskRepository.getConnectorKind());
 
 		attributeManager.addAttributeManagerListener(new IAttributeManagerListener() {
 			public void attributeChanged(RepositoryTaskAttribute attribute) {

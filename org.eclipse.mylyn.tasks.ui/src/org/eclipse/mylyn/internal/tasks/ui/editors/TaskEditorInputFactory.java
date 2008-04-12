@@ -9,7 +9,6 @@
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -30,7 +29,7 @@ public class TaskEditorInputFactory implements IElementFactory {
 		String handle = memento.getString(TAG_TASK_HANDLE);
 		AbstractTask task = TasksUi.getTaskListManager().getTaskList().getTask(handle);
 		if (task != null) {
-			TaskRepository taskRepository = TasksUiPlugin.getRepositoryManager().getRepository(task.getConnectorKind(),
+			TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
 					task.getRepositoryUrl());
 			return new TaskEditorInput(taskRepository, task);
 		}

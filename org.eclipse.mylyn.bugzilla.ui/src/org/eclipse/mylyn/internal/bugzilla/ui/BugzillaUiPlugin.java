@@ -17,7 +17,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -86,10 +86,10 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 			BugzillaCorePlugin.setConfigurationCacheFile(repConfigCacheFile.toFile());
 		}
 
-		BugzillaRepositoryConnector bugzillaConnector = (BugzillaRepositoryConnector) TasksUiPlugin.getRepositoryManager()
+		BugzillaRepositoryConnector bugzillaConnector = (BugzillaRepositoryConnector) TasksUi.getRepositoryManager()
 				.getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
 
-		TasksUiPlugin.getRepositoryManager().addListener(bugzillaConnector.getClientManager());
+		TasksUi.getRepositoryManager().addListener(bugzillaConnector.getClientManager());
 
 		// NOTE: initializing extensions in start(..) has caused race
 		// conditions previously
@@ -115,10 +115,10 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	@Override
 	public void stop(BundleContext context) throws Exception {
 
-		BugzillaRepositoryConnector bugzillaConnector = (BugzillaRepositoryConnector) TasksUiPlugin.getRepositoryManager()
+		BugzillaRepositoryConnector bugzillaConnector = (BugzillaRepositoryConnector) TasksUi.getRepositoryManager()
 				.getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
 
-		TasksUiPlugin.getRepositoryManager().removeListener(bugzillaConnector.getClientManager());
+		TasksUi.getRepositoryManager().removeListener(bugzillaConnector.getClientManager());
 
 		super.stop(context);
 		plugin = null;

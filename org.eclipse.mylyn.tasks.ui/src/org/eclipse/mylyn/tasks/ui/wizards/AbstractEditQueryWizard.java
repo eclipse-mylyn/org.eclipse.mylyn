@@ -10,7 +10,6 @@ package org.eclipse.mylyn.tasks.ui.wizards;
 
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -51,7 +50,7 @@ public abstract class AbstractEditQueryWizard extends Wizard {
 		if (queryToRun != null) {
 			TasksUi.getTaskListManager().getTaskList().addQuery(queryToRun);
 
-			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 					repository.getConnectorKind());
 			if (connector != null) {
 				TasksUi.synchronizeQuery(connector, queryToRun, null, true);

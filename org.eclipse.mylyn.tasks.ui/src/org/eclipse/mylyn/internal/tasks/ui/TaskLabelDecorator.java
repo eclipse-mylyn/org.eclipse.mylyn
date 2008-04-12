@@ -19,6 +19,7 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Mik Kersten
@@ -35,7 +36,7 @@ public class TaskLabelDecorator implements ILightweightLabelDecorator {
 		if (element instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
 			String repositoryUrl = query.getRepositoryUrl();
-			TaskRepository taskRepository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryUrl);
+			TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(repositoryUrl);
 			if (repositoryUrl != null && taskRepository != null) {
 				if (taskRepository.getRepositoryUrl().equals(taskRepository.getRepositoryLabel())) {
 					try {

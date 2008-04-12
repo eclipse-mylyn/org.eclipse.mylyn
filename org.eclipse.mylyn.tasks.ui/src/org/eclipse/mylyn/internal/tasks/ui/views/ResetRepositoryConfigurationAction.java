@@ -21,6 +21,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.AbstractTaskRepositoryAction;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Mik Kersten
@@ -44,7 +45,7 @@ public class ResetRepositoryConfigurationAction extends AbstractTaskRepositoryAc
 			for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
 				final TaskRepository repository = getTaskRepository(iter.next());
 				if (repository != null) {
-					final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
+					final AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
 							.getRepositoryConnector(repository.getConnectorKind());
 					if (connector != null) {
 						final String jobName = "Updating attributes for: " + repository.getRepositoryUrl();

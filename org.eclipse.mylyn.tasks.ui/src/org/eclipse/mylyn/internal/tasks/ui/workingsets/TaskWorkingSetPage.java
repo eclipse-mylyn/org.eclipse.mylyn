@@ -392,7 +392,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		treeViewer.setSorter(new CustomSorter());
 
 		ArrayList<Object> containers = new ArrayList<Object>();
-		for (TaskRepository repository : TasksUiPlugin.getRepositoryManager().getAllRepositories()) {
+		for (TaskRepository repository : TasksUi.getRepositoryManager().getAllRepositories()) {
 			containers.add(repository);
 		}
 

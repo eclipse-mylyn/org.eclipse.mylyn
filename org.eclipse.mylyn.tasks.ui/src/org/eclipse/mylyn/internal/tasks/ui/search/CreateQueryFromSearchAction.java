@@ -14,7 +14,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
@@ -61,7 +60,7 @@ public class CreateQueryFromSearchAction extends Action {
 			if (structuredSelection.getFirstElement() instanceof AbstractTask) {
 				ISearchQuery[] queries = NewSearchUI.getQueries();
 				AbstractTask task = (AbstractTask) structuredSelection.getFirstElement();
-				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 						task.getConnectorKind());
 				if (queries.length != 0 && connector != null) {
 					SearchHitCollector searchHitCollector = (SearchHitCollector) queries[0];

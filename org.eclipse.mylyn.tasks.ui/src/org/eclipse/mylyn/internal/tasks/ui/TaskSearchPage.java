@@ -17,14 +17,15 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
@@ -274,7 +275,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 					if (hasSearchPage && searchPage != null && searchPage instanceof ISearchPage) {
 						queryPages[pageIndex] = createPage(repository, (ISearchPage) searchPage);
 					} else {
-						AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
+						AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
 								.getRepositoryConnector(repository.getConnectorKind());
 						if (connector.canCreateTaskFromKey(repository)) {
 							queryPages[pageIndex] = createPage(repository, new NoSearchPage(repository));
@@ -287,7 +288,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 
 		// update enablement of the task id field
 		if (repository != null) {
-			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 					repository.getConnectorKind());
 			if (connector.canCreateTaskFromKey(repository)) {
 				keyText.setEnabled(true);
@@ -319,11 +320,11 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		if (firstView) {
 			getControl().setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
 
-			List<TaskRepository> repositories = TasksUiPlugin.getRepositoryManager().getAllRepositories();
+			List<TaskRepository> repositories = TasksUi.getRepositoryManager().getAllRepositories();
 			List<TaskRepository> searchableRepositories = new ArrayList<TaskRepository>();
 			for (TaskRepository repository : repositories) {
 				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
-				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 						repository.getConnectorKind());
 				if ((connectorUi != null && connectorUi.hasSearchPage() && !repository.isOffline())
 						|| connector.canCreateTaskFromKey(repository)) {
@@ -398,7 +399,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		}
 
 		if (selectedTask != null) {
-			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(
 					selectedTask.getRepositoryUrl());
 			if (repository != null) {
 				int index = 0;

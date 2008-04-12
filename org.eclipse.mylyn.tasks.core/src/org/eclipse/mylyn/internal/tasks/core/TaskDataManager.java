@@ -21,9 +21,9 @@ import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITaskDataManager;
+import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
-import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 
 /**
  * Manager for persisting RepositoryTaskData offline
@@ -32,13 +32,13 @@ import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
  */
 public class TaskDataManager implements ITaskDataManager {
 
-	private final TaskRepositoryManager taskRepositoryManager;
+	private final ITaskRepositoryManager taskRepositoryManager;
 
 	private final ITaskDataStorage storage;
 
 	private int nextNewId = 1;
 
-	public TaskDataManager(TaskRepositoryManager taskRepositoryManager, ITaskDataStorage storage) {
+	public TaskDataManager(ITaskRepositoryManager taskRepositoryManager, ITaskDataStorage storage) {
 		this.taskRepositoryManager = taskRepositoryManager;
 		this.storage = storage;
 	}

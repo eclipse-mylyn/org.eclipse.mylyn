@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.eclipse.core.net.proxy.IProxyChangeEvent;
 import org.eclipse.core.net.proxy.IProxyChangeListener;
 import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.core.resources.IResource;
@@ -45,6 +46,7 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.core.sync.RepositorySynchronizationManager;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.AbstractNotification;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotification;
@@ -68,13 +70,11 @@ import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.core.TaskComment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.AbstractDuplicateDetector;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.AbstractTaskRepositoryLinkProvider;
-import org.eclipse.mylyn.tasks.ui.TasksUiProxyChangeListener;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorFactory;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory;
 import org.eclipse.mylyn.web.core.WebClientLog;
@@ -235,18 +235,22 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private static ITaskActivityListener CONTEXT_TASK_ACTIVITY_LISTENER = new TaskActivityAdapter() {
 
+		@Override
 		public void taskActivated(final AbstractTask task) {
 			ContextCore.getContextManager().activateContext(task.getHandleIdentifier());
 		}
 
+		@Override
 		public void taskDeactivated(final AbstractTask task) {
 			ContextCore.getContextManager().deactivateContext(task.getHandleIdentifier());
 		}
 
+		@Override
 		public void activityChanged() {
 			// ignore
 		}
 
+		@Override
 		public void taskListRead() {
 			// ignore
 		}
@@ -342,6 +346,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	private TaskActivityMonitor taskActivityMonitor;
 
 	private ServiceReference proxyServiceReference;
+
+	private IProxyChangeListener proxyChangeListener;
 
 	private class TasksUiInitializationJob extends UIJob {
 
@@ -468,7 +474,16 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			if (proxyServiceReference != null) {
 				IProxyService proxyService = (IProxyService) context.getService(proxyServiceReference);
 				if (proxyService != null) {
-					IProxyChangeListener proxyChangeListener = new TasksUiProxyChangeListener(repositoryManager);
+					proxyChangeListener = new IProxyChangeListener() {
+						public void proxyInfoChanged(IProxyChangeEvent event) {
+							List<TaskRepository> repos = repositoryManager.getAllRepositories();
+							for (TaskRepository repo : repos) {
+								if (repo.isDefaultProxyEnabled()) {
+									repositoryManager.notifyRepositorySettingsChanged(repo);
+								}
+							}
+						}
+					};
 					proxyService.addProxyChangeListener(proxyChangeListener);
 				}
 			}
@@ -603,7 +618,10 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			}
 
 			if (proxyServiceReference != null) {
-				// TODO remove proxy listener?
+				IProxyService proxyService = (IProxyService) context.getService(proxyServiceReference);
+				if (proxyService != null) {
+					proxyService.removeProxyChangeListener(proxyChangeListener);
+				}
 				context.ungetService(proxyServiceReference);
 			}
 

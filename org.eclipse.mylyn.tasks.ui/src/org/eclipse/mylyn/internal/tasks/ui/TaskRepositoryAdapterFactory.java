@@ -13,6 +13,7 @@ import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IActionFilter;
 
 /**
@@ -41,7 +42,7 @@ public class TaskRepositoryAdapterFactory implements IAdapterFactory {
 						AbstractRepositoryConnectorUi connector = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
 						return null != connector.getQueryWizard(repository, null);
 					} else if ("supportNewTask".equals(name)) {
-						AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
+						AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
 								.getRepositoryConnector(repository.getConnectorKind());
 						return connector.canCreateNewTask(repository);
 					} else if ("hasRepository".equals(name)) {

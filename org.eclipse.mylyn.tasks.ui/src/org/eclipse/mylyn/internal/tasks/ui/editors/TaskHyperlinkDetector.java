@@ -22,6 +22,7 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -66,7 +67,7 @@ public class TaskHyperlinkDetector extends AbstractHyperlinkDetector {
 		if (selectedRepository != null) {
 			repositories.add(selectedRepository);
 		} else {
-			repositories.addAll(TasksUiPlugin.getRepositoryManager().getAllRepositories());
+			repositories.addAll(TasksUi.getRepositoryManager().getAllRepositories());
 		}
 
 		List<IHyperlink> hyperlinks = new ArrayList<IHyperlink>();

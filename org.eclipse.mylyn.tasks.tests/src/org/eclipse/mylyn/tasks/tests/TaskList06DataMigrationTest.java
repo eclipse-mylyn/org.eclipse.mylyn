@@ -21,10 +21,10 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.internal.monitor.core.util.ZipFileUtil;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.WorkspaceAwareContextStore;
-import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 
 /**
  * Tests unused code that was live up to Mylyn 1.0.1, {@link TasksUiPlugin}

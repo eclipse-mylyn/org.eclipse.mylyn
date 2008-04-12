@@ -16,7 +16,6 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -69,7 +68,7 @@ public class NewBugzillaQueryWizard extends Wizard {
 			protected void execute(IProgressMonitor monitor) throws CoreException {
 				monitor.beginTask("Executing query", 50);
 				try {
-					AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
+					AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
 							.getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
 					TasksUi.synchronizeQuery(connector, queryCategory, null, true);
 				} finally {

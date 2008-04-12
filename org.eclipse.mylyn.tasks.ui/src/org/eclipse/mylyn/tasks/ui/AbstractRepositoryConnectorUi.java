@@ -29,9 +29,9 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskSelection;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
@@ -153,7 +153,7 @@ public abstract class AbstractRepositoryConnectorUi {
 
 	public void openEditQueryDialog(AbstractRepositoryQuery query) {
 		try {
-			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(query.getRepositoryKind(),
+			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(query.getRepositoryKind(),
 					query.getRepositoryUrl());
 			if (repository == null) {
 				return;
@@ -222,7 +222,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * @return true if the task was successfully opened
 	 */
 	public boolean openRepositoryTask(String repositoryUrl, String id) {
-		TaskRepositoryManager repositoryManager = TasksUiPlugin.getRepositoryManager();
+		ITaskRepositoryManager repositoryManager = TasksUi.getRepositoryManager();
 		AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(getConnectorKind());
 		String taskUrl = connector.getTaskUrl(repositoryUrl, id);
 		if (taskUrl == null) {

@@ -7,9 +7,9 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.trac.ui;
 
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.tasks.ui.TaskRepositoryLocationUiFactory;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -37,12 +37,12 @@ public class TracUiPlugin extends AbstractUIPlugin {
 
 		TracCorePlugin.getDefault().getConnector().setTaskRepositoryLocationFactory(
 				new TaskRepositoryLocationUiFactory());
-		TasksUiPlugin.getRepositoryManager().addListener(TracCorePlugin.getDefault().getConnector().getClientManager());
+		TasksUi.getRepositoryManager().addListener(TracCorePlugin.getDefault().getConnector().getClientManager());
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		TasksUiPlugin.getRepositoryManager().removeListener(
+		TasksUi.getRepositoryManager().removeListener(
 				TracCorePlugin.getDefault().getConnector().getClientManager());
 
 		plugin = null;

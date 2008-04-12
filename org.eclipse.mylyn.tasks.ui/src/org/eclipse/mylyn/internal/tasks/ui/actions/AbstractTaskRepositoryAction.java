@@ -9,10 +9,10 @@
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
 /**
@@ -46,7 +46,7 @@ public abstract class AbstractTaskRepositoryAction extends BaseSelectionListener
 			taskRepository = (TaskRepository) selectedObject;
 		} else if (selectedObject instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) selectedObject;
-			taskRepository = TasksUiPlugin.getRepositoryManager().getRepository(query.getRepositoryKind(),
+			taskRepository = TasksUi.getRepositoryManager().getRepository(query.getRepositoryKind(),
 					query.getRepositoryUrl());
 		}
 
@@ -57,7 +57,7 @@ public abstract class AbstractTaskRepositoryAction extends BaseSelectionListener
 	}
 
 	protected boolean isUserManaged(TaskRepository taskRepository) {
-		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				taskRepository.getConnectorKind());
 		return connector != null && connector.isUserManaged();
 	}

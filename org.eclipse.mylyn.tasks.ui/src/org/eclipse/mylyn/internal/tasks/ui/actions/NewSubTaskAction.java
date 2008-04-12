@@ -84,7 +84,7 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 			return;
 		}
 
-		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				selectedTask.getConnectorKind());
 		final AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 		if (taskDataHandler == null) {
@@ -105,7 +105,7 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 			return;
 		}
 
-		final TaskRepository taskRepository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryUrl);
+		final TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(repositoryUrl);
 		AbstractAttributeFactory attributeFactory = taskDataHandler.getAttributeFactory(taskRepository.getRepositoryUrl(),
 				taskRepository.getConnectorKind(), AbstractTask.DEFAULT_TASK_KIND);
 		final RepositoryTaskData taskData = new RepositoryTaskData(attributeFactory, selectedTask.getConnectorKind(),
@@ -163,7 +163,7 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 			} else if (selectedObject instanceof AbstractTask) {
 				selectedTask = (AbstractTask) selectedObject;
 
-				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 						selectedTask.getConnectorKind());
 				final AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 				if (taskDataHandler == null || !taskDataHandler.canInitializeSubTaskData(selectedTask, null)) {

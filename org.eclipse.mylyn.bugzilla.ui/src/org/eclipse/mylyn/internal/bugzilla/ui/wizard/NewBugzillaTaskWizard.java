@@ -20,6 +20,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskSelection;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.NewTaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
@@ -101,7 +102,7 @@ public class NewBugzillaTaskWizard extends Wizard implements INewWizard {
 			productPage.saveDataToModel();
 
 			if (taskSelection != null) {
-				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 						repository.getConnectorKind());
 				AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 				if (taskDataHandler != null) {

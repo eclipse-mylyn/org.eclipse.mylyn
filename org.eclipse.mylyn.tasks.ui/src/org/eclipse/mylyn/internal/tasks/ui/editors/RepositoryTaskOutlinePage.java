@@ -20,6 +20,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.TaskComment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.ISelectionListener;
@@ -67,7 +68,7 @@ public class RepositoryTaskOutlinePage extends ContentOutlinePage {
 	public RepositoryTaskOutlinePage(RepositoryTaskOutlineNode topTreeNode) {
 		super();
 		this.topTreeNode = topTreeNode;
-		repository = TasksUiPlugin.getRepositoryManager().getRepository(topTreeNode.getConnectorKind(),
+		repository = TasksUi.getRepositoryManager().getRepository(topTreeNode.getConnectorKind(),
 				topTreeNode.getRepositoryUrl());
 	}
 

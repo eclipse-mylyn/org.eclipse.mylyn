@@ -9,13 +9,13 @@
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
 import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.WorkbenchImages;
@@ -50,7 +50,7 @@ public class AttachAction extends AbstractTaskEditorAction {
 			}
 
 			AbstractTask repositoryTask = (AbstractTask) selection;
-			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(
 					repositoryTask.getConnectorKind(), repositoryTask.getRepositoryUrl());
 
 			NewAttachmentWizard attachmentWizard = new NewAttachmentWizard(repository, repositoryTask);
@@ -76,10 +76,10 @@ public class AttachAction extends AbstractTaskEditorAction {
 	protected boolean updateSelection(IStructuredSelection selection) {
 		if (selection.getFirstElement() instanceof AbstractTask) {
 			AbstractTask task = (AbstractTask) selection.getFirstElement();
-			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(task.getConnectorKind(),
+			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
 					task.getRepositoryUrl());
 			if (repository != null) {
-				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 						task.getConnectorKind());
 				if (connector != null) {
 					AbstractAttachmentHandler handler = connector.getAttachmentHandler();

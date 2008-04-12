@@ -14,9 +14,9 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskDataHandler;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.RepositoryTaskEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
@@ -80,7 +80,7 @@ public class BugzillaTaskEditorInput extends RepositoryTaskEditorInput {
 	private void updateOptions(RepositoryTaskData taskData) {
 		try {
 			if (taskData != null) {
-				BugzillaRepositoryConnector bugzillaConnector = (BugzillaRepositoryConnector) TasksUiPlugin.getRepositoryManager()
+				BugzillaRepositoryConnector bugzillaConnector = (BugzillaRepositoryConnector) TasksUi.getRepositoryManager()
 						.getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
 				((BugzillaTaskDataHandler)bugzillaConnector.getTaskDataHandler()).updateAttributeOptions(repository, taskData);
 			}
