@@ -38,7 +38,7 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.bugzilla.ide.AttributeTaskMapper;
 import org.eclipse.mylyn.internal.bugzilla.ide.IRepositoryConstants;
 import org.eclipse.mylyn.internal.bugzilla.ide.PluginRepositoryMappingManager;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridLayout;
@@ -159,7 +159,7 @@ public class SelectProductPage extends WizardPage {
 			}
 
 		});
-		viewer.setInput(TasksUiPlugin.getRepositoryManager().getRepositoryConnectors());
+		viewer.setInput(TasksUi.getRepositoryManager().getRepositoryConnectors());
 
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {

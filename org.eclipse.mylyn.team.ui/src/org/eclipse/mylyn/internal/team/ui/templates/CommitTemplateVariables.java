@@ -18,6 +18,7 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.TaskPlanningEditor;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.team.ui.AbstractCommitTemplateVariable;
 
 /**
@@ -46,7 +47,7 @@ public class CommitTemplateVariables {
 		@Override
 		public String getValue(AbstractTask task) {
 			if (task != null) {
-				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 						task);
 				if (connector != null) {
 					return connector.getTaskIdPrefix();

@@ -19,13 +19,13 @@ import org.eclipse.mylyn.internal.context.ui.ContextUiUtil;
 import org.eclipse.mylyn.internal.context.ui.wizards.ContextRetrieveWizard;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
@@ -126,9 +126,9 @@ public class ContextRetrieveAction extends Action implements IViewActionDelegate
 			}
 		} else {
 			task = selectedTask;
-			repository = TasksUiPlugin.getRepositoryManager().getRepository(task.getConnectorKind(),
+			repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
 					task.getRepositoryUrl());
-			connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(task.getConnectorKind());
+			connector = TasksUi.getRepositoryManager().getRepositoryConnector(task.getConnectorKind());
 			AbstractAttachmentHandler handler = connector.getAttachmentHandler();
 			action.setEnabled(handler != null && handler.canDownloadAttachment(repository, task)
 					&& connector.getAttachmentHandler() != null && AttachmentUtil.hasContext(repository, task));

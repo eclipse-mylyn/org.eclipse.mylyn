@@ -47,7 +47,6 @@ import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.PlanningPerspectiveFactory;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -237,9 +236,9 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			boolean hasLocalContext = ContextCore.getContextManager().hasContext(task.getHandleIdentifier());
 			if (!hasLocalContext) {
 				AbstractTask repositoryTask = task;
-				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 						repositoryTask);
-				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+				TaskRepository repository = TasksUi.getRepositoryManager().getRepository(
 						repositoryTask.getRepositoryUrl());
 
 				if (connector != null && connector.getAttachmentHandler() != null

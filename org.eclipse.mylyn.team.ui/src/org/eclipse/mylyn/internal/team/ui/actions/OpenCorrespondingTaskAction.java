@@ -23,6 +23,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -34,7 +35,6 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ILinkedTaskInfo;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -147,10 +147,10 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 		// XXX: clean up and remove break to label
 		if (taskId == null && comment != null) {
 			Collection<AbstractRepositoryConnector> connectors = connector != null ? Collections.singletonList(connector)
-					: TasksUiPlugin.getRepositoryManager().getRepositoryConnectors();
+					: TasksUi.getRepositoryManager().getRepositoryConnectors();
 			REPOSITORIES: for (AbstractRepositoryConnector c : connectors) {
 				Collection<TaskRepository> repositories = repository != null ? Collections.singletonList(repository)
-						: TasksUiPlugin.getRepositoryManager().getRepositories(c.getConnectorKind());
+						: TasksUi.getRepositoryManager().getRepositories(c.getConnectorKind());
 				for (TaskRepository r : repositories) {
 					String[] ids = c.getTaskIdsFromComment(r, comment);
 					if (ids != null && ids.length > 0) {
@@ -279,8 +279,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 					return Status.OK_STATUS;
 				}
 				if (info.getRepositoryUrl() != null && info.getTaskId() != null) {
-					TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
-							info.getRepositoryUrl());
+					TaskRepository repository = TasksUi.getRepositoryManager().getRepository(info.getRepositoryUrl());
 					String taskId = info.getTaskId();
 					if (repository != null && taskId != null) {
 						AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());

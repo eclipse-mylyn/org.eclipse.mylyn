@@ -18,13 +18,13 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.ui.wizards.ContextAttachWizard;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -94,9 +94,9 @@ public class ContextAttachAction extends Action implements IViewActionDelegate {
 		AbstractTask selectedTask = TaskListView.getSelectedTask(selection);
 		if (selectedTask != null) {
 			task = selectedTask;
-			repository = TasksUiPlugin.getRepositoryManager().getRepository(task.getConnectorKind(),
+			repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
 					task.getRepositoryUrl());
-			connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(task.getConnectorKind());
+			connector = TasksUi.getRepositoryManager().getRepositoryConnector(task.getConnectorKind());
 			AbstractAttachmentHandler handler = connector.getAttachmentHandler();
 			action.setEnabled(handler != null
 					&& handler.canUploadAttachment(repository, task)

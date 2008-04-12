@@ -42,8 +42,8 @@ public class ContextUiUtil {
 
 	public static boolean downloadContext(final AbstractTask task, final RepositoryAttachment attachment,
 			final IRunnableContext context) {
-		final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(task);
-		final TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+		final AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(task);
+		final TaskRepository repository = TasksUi.getRepositoryManager().getRepository(
 				attachment.getRepositoryUrl());
 		final String directory = TasksUiPlugin.getDefault().getDataDirectory();
 		try {
@@ -92,7 +92,7 @@ public class ContextUiUtil {
 
 	public static boolean uploadContext(final TaskRepository repository, final AbstractTask task, final String comment,
 			final IRunnableContext context) {
-		final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+		final AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				repository.getConnectorKind());
 		try {
 			final boolean[] result = new boolean[1];
