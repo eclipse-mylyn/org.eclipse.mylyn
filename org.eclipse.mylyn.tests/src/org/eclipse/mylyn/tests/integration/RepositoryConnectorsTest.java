@@ -12,8 +12,8 @@ import junit.extensions.ActiveTestSuite;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * Test harness for iterating over all connectors and performing a test.
@@ -37,7 +37,7 @@ public class RepositoryConnectorsTest extends TestCase {
 	public static TestSuite suite() {
 		TestSuite suite = new ActiveTestSuite(RepositoryConnectorsTest.class.getName());
 
-		for (AbstractRepositoryConnector repositoryConnector : TasksUiPlugin.getRepositoryManager()
+		for (AbstractRepositoryConnector repositoryConnector : TasksUi.getRepositoryManager()
 				.getRepositoryConnectors()) {
 			suite.addTest(new RepositoryConnectorsTest(repositoryConnector));
 		}
