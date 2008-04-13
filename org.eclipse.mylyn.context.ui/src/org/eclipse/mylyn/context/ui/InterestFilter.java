@@ -100,11 +100,12 @@ public class InterestFilter extends ViewerFilter {
 	}
 
 	protected boolean isInteresting(IInteractionElement element) {
-		if (element.getInterest().isPredicted()) {
-			return false;
-		} else {
-			return element.getInterest().isInteresting();
-		}
+		// FIXME temporarily disabled, see bug 210011
+		//		if (element.getInterest().isPredicted()) {
+//			return false;
+//		} else {
+		return element.getInterest().isInteresting();
+//		}
 	}
 
 	private boolean isTemporarilyUnfiltered(Object parent) {
