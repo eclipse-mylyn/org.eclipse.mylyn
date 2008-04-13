@@ -19,7 +19,6 @@ import org.eclipse.mylyn.context.core.IInteractionRelation;
 import org.eclipse.mylyn.context.tests.support.DomContextReader;
 import org.eclipse.mylyn.context.tests.support.DomContextWriter;
 import org.eclipse.mylyn.context.tests.support.FileTool;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextExternalizer;
 import org.eclipse.mylyn.internal.context.core.SaxContextReader;

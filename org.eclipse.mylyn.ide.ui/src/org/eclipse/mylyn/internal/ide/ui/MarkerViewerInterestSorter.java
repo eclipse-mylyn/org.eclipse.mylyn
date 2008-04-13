@@ -15,7 +15,6 @@ import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.InterestComparator;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.ui.views.markers.internal.ProblemMarker;
 
 /**
