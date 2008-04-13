@@ -184,7 +184,7 @@ public class TaskActivityManager {
 		}
 
 		// granularity to the hour
-		Calendar hourOfDay = Calendar.getInstance();
+		Calendar hourOfDay = TaskActivityUtil.getCalendar();
 		hourOfDay.setTime(event.getDate());
 		snapToStartOfHour(hourOfDay);
 		Long daysActivity = activityMap.get(hourOfDay);
@@ -216,7 +216,7 @@ public class TaskActivityManager {
 	}
 
 	private void addScheduledTask(AbstractTask task) {
-		Calendar time = Calendar.getInstance();
+		Calendar time = TaskActivityUtil.getCalendar();
 		time.setTime(task.getScheduledForDate());
 		snapToStartOfHour(time);
 		Set<AbstractTask> tasks = scheduledTasks.get(time);
@@ -236,7 +236,7 @@ public class TaskActivityManager {
 	}
 
 	private void addDueTask(AbstractTask task) {
-		Calendar time = Calendar.getInstance();
+		Calendar time = TaskActivityUtil.getCalendar();
 		time.setTime(task.getDueDate());
 		snapToStartOfHour(time);
 		Set<AbstractTask> tasks = dueTasks.get(time);
@@ -314,11 +314,11 @@ public class TaskActivityManager {
 	public long getElapsedTime(AbstractTask task, Calendar start, Calendar end) {
 		long result = 0;
 
-		Calendar startRange = Calendar.getInstance();
+		Calendar startRange = TaskActivityUtil.getCalendar();
 		startRange.setTimeInMillis(start.getTimeInMillis());
 		snapToStartOfHour(startRange);
 
-		Calendar endRange = Calendar.getInstance();
+		Calendar endRange = TaskActivityUtil.getCalendar();
 		endRange.setTimeInMillis(end.getTimeInMillis());
 		snapToEndOfHour(endRange);
 
@@ -472,9 +472,9 @@ public class TaskActivityManager {
 	}
 
 	public boolean isActiveThisWeek(AbstractTask task) {
-		Calendar calStart = Calendar.getInstance();
+		Calendar calStart = TaskActivityUtil.getCalendar();
 		TaskActivityUtil.snapStartOfWorkWeek(calStart);
-		Calendar calEnd = Calendar.getInstance();
+		Calendar calEnd = TaskActivityUtil.getCalendar();
 		TaskActivityUtil.snapEndOfWeek(calEnd);
 		return getElapsedTime(task, calStart, calEnd) > 0;
 	}
@@ -762,7 +762,7 @@ public class TaskActivityManager {
 
 	public void scheduleNewTask(AbstractTask newTask) {
 		newTask.setCreationDate(new Date());
-		Calendar newTaskSchedule = Calendar.getInstance();
+		Calendar newTaskSchedule = TaskActivityUtil.getCalendar();
 		// If past scheduledEndHour set for following day
 		if (newTaskSchedule.get(Calendar.HOUR_OF_DAY) >= getEndHour()) {
 			TaskActivityUtil.snapForwardNumDays(newTaskSchedule, 1);
