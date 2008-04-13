@@ -6,7 +6,9 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.core;
+package org.eclipse.mylyn.tasks.core.data;
+
+import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 
 /**
  * This class is used for collecting tasks, e.g. when performing queries on a repository.
@@ -14,7 +16,7 @@ package org.eclipse.mylyn.tasks.core;
  * @author Rob Elves
  * @since 3.0
  */
-public abstract class AbstractTaskCollector {
+public abstract class AbstractTaskDataCollector {
 
 	public static final int MAX_HITS = 5000;
 

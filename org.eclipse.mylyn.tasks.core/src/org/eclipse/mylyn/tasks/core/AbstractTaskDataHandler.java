@@ -14,6 +14,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataCollector;
 
 /**
  * Responsible for retrieving and posting task data to a repository.
@@ -42,7 +43,7 @@ public abstract class AbstractTaskDataHandler {
 	 * 
 	 * @since 3.0
 	 */
-	public void getMultiTaskData(TaskRepository repository, Set<String> taskIds, AbstractTaskCollector collector,
+	public void getMultiTaskData(TaskRepository repository, Set<String> taskIds, AbstractTaskDataCollector collector,
 			IProgressMonitor monitor) throws CoreException {
 		throw new UnsupportedOperationException();
 	}

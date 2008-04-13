@@ -27,14 +27,14 @@ import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskCollector;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
-import org.eclipse.mylyn.tasks.core.SynchronizationEvent;
-import org.eclipse.mylyn.tasks.core.SynchronizeJob;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataCollector;
 import org.eclipse.mylyn.tasks.core.sync.IRepositorySynchronizationManager;
+import org.eclipse.mylyn.tasks.core.sync.SynchronizationEvent;
+import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
 import org.eclipse.mylyn.web.core.Policy;
 
 /**
@@ -42,7 +42,7 @@ import org.eclipse.mylyn.web.core.Policy;
  * @author Rob Elves
  * @author Steffen Pingel
  */
-public class SynchronizeQueriesJob extends SynchronizeJob {
+public class SynchronizeQueriesJob extends SynchronizationJob {
 
 	private static class MutexRule implements ISchedulingRule {
 
@@ -64,7 +64,7 @@ public class SynchronizeQueriesJob extends SynchronizeJob {
 		}
 	}
 
-	private class TaskCollector extends AbstractTaskCollector {
+	private class TaskCollector extends AbstractTaskDataCollector {
 
 		private final Set<AbstractTask> children;
 
@@ -264,7 +264,7 @@ public class SynchronizeQueriesJob extends SynchronizeJob {
 		if (result.getSeverity() == IStatus.CANCEL) {
 			// do nothing
 		} else if (result.isOK()) {
-			if (collector.getResultCount() >= AbstractTaskCollector.MAX_HITS) {
+			if (collector.getResultCount() >= AbstractTaskDataCollector.MAX_HITS) {
 				StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, MAX_HITS_REACHED + "\n"
 						+ repositoryQuery.getSummary()));
 			}

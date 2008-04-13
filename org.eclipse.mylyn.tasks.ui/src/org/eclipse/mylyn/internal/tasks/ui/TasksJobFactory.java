@@ -19,10 +19,10 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
-import org.eclipse.mylyn.tasks.core.SynchronizeJob;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.sync.IRepositorySynchronizationManager;
+import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
 import org.eclipse.mylyn.tasks.ui.ITasksJobFactory;
 import org.eclipse.ui.progress.IProgressConstants;
 
@@ -44,7 +44,7 @@ public class TasksJobFactory implements ITasksJobFactory {
 		this.repositoryManager = repositoryManager;
 	}
 
-	public SynchronizeJob createSynchronizeTasksJob(AbstractRepositoryConnector connector, Set<AbstractTask> tasks) {
+	public SynchronizationJob createSynchronizeTasksJob(AbstractRepositoryConnector connector, Set<AbstractTask> tasks) {
 		SynchronizeAllTasksJob job = new SynchronizeAllTasksJob(taskList, synchronizationManager, repositoryManager,
 				connector, tasks);
 		job.setProperty(IProgressConstants.ICON_PROPERTY, TasksUiImages.REPOSITORY_SYNCHRONIZE);
@@ -52,7 +52,7 @@ public class TasksJobFactory implements ITasksJobFactory {
 		return job;
 	}
 
-	public SynchronizeJob createSynchronizeTasksJob(AbstractRepositoryConnector connector,
+	public SynchronizationJob createSynchronizeTasksJob(AbstractRepositoryConnector connector,
 			TaskRepository taskRepository, Set<AbstractTask> tasks) {
 		SynchronizeTasksJob job = new SynchronizeTasksJob(taskList, synchronizationManager, connector, taskRepository,
 				tasks);
@@ -61,15 +61,15 @@ public class TasksJobFactory implements ITasksJobFactory {
 		return job;
 	}
 
-	public SynchronizeJob createSynchronizeQueriesJob(AbstractRepositoryConnector connector, TaskRepository repository,
+	public SynchronizationJob createSynchronizeQueriesJob(AbstractRepositoryConnector connector, TaskRepository repository,
 			Set<AbstractRepositoryQuery> queries) {
-		SynchronizeJob job = new SynchronizeQueriesJob(taskList, synchronizationManager, connector, repository, queries);
+		SynchronizationJob job = new SynchronizeQueriesJob(taskList, synchronizationManager, connector, repository, queries);
 		job.setProperty(IProgressConstants.ICON_PROPERTY, TasksUiImages.REPOSITORY_SYNCHRONIZE);
 		job.setPriority(Job.DECORATE);
 		return job;
 	}
 
-	public SynchronizeJob createSynchronizeRepositoriesJob(Set<TaskRepository> repositories) {
+	public SynchronizationJob createSynchronizeRepositoriesJob(Set<TaskRepository> repositories) {
 		SynchronizeRepositoriesJob job = new SynchronizeRepositoriesJob(taskList, synchronizationManager,
 				repositoryManager, repositories);
 		job.setProperty(IProgressConstants.ICON_PROPERTY, TasksUiImages.REPOSITORY_SYNCHRONIZE);

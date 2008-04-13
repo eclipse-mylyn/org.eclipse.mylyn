@@ -15,11 +15,11 @@ import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskCollector;
 import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
-import org.eclipse.mylyn.tasks.core.SynchronizationEvent;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataCollector;
+import org.eclipse.mylyn.tasks.core.sync.SynchronizationEvent;
 
 /**
  * @author Rob Elves
@@ -93,7 +93,7 @@ public class LocalRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public IStatus performQuery(TaskRepository repository, AbstractRepositoryQuery query,
-			AbstractTaskCollector resultCollector, SynchronizationEvent event, IProgressMonitor monitor) {
+			AbstractTaskDataCollector resultCollector, SynchronizationEvent event, IProgressMonitor monitor) {
 		// ignore
 		return null;
 	}

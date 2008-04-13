@@ -14,8 +14,8 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.mylyn.tasks.core.SynchronizeJob;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
 import org.eclipse.mylyn.tasks.ui.ITasksJobFactory;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
@@ -28,22 +28,22 @@ public class TaskListSynchronizationScheduler {
 
 	private final ITasksJobFactory jobFactory;
 
-	private SynchronizeJob refreshJob;
+	private SynchronizationJob refreshJob;
 
 	public TaskListSynchronizationScheduler(ITasksJobFactory jobFactory) {
 		this.jobFactory = jobFactory;
 	}
 
-	private SynchronizeJob createRefreshJob() {
+	private SynchronizationJob createRefreshJob() {
 		Set<TaskRepository> repositories = new HashSet<TaskRepository>(TasksUi.getRepositoryManager()
 				.getAllRepositories());
-		SynchronizeJob job = jobFactory.createSynchronizeRepositoriesJob(repositories);
+		SynchronizationJob job = jobFactory.createSynchronizeRepositoriesJob(repositories);
 		job.setUser(false);
 		job.setFullSynchronization(true);
 		return job;
 	}
 
-	public synchronized SynchronizeJob getRefreshJob() {
+	public synchronized SynchronizationJob getRefreshJob() {
 		return refreshJob;
 	}
 
@@ -79,9 +79,9 @@ public class TaskListSynchronizationScheduler {
 		}
 	}
 
-	public SynchronizeJob synchronize(TaskRepository repository) {
+	public SynchronizationJob synchronize(TaskRepository repository) {
 		// TODO check if a synchronization for repository is already running
-		SynchronizeJob job = jobFactory.createSynchronizeRepositoriesJob(Collections.singleton(repository));
+		SynchronizationJob job = jobFactory.createSynchronizeRepositoriesJob(Collections.singleton(repository));
 		job.setUser(false);
 		job.setFullSynchronization(false);
 		job.schedule();

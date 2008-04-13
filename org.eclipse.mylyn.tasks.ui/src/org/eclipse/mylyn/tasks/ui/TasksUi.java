@@ -24,10 +24,10 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
-import org.eclipse.mylyn.tasks.core.SynchronizeJob;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.sync.IRepositorySynchronizationManager;
+import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
@@ -49,7 +49,7 @@ public class TasksUi {
 		return TasksUiPlugin.getSynchronizationManager();
 	}
 
-	private static void joinIfInTestMode(SynchronizeJob job) {
+	private static void joinIfInTestMode(SynchronizationJob job) {
 		// FIXME the client code should join the job
 		if (CoreUtil.TEST_MODE) {
 			try {
@@ -70,7 +70,7 @@ public class TasksUi {
 		}
 		taskList.notifyContainersUpdated(queries);
 
-		SynchronizeJob job = TasksUiPlugin.getTasksJobFactory().createSynchronizeQueriesJob(connector, repository,
+		SynchronizationJob job = TasksUiPlugin.getTasksJobFactory().createSynchronizeQueriesJob(connector, repository,
 				queries);
 		job.setUser(force);
 		if (listener != null) {
@@ -107,17 +107,17 @@ public class TasksUi {
 		return synchronizeQueries(connector, repository, Collections.singleton(repositoryQuery), listener, force);
 	}
 
-	public static SynchronizeJob synchronizeAlllRepositories(boolean force) {
+	public static SynchronizationJob synchronizeAlllRepositories(boolean force) {
 		Set<TaskRepository> repositories = new HashSet<TaskRepository>(TasksUi.getRepositoryManager()
 				.getAllRepositories());
-		SynchronizeJob job = TasksUiPlugin.getTasksJobFactory().createSynchronizeRepositoriesJob(repositories);
+		SynchronizationJob job = TasksUiPlugin.getTasksJobFactory().createSynchronizeRepositoriesJob(repositories);
 		job.setUser(force);
 		job.schedule();
 		joinIfInTestMode(job);
 		return job;
 	}
 
-	public static SynchronizeJob synchronizeRepository(TaskRepository repository, boolean force) {
+	public static SynchronizationJob synchronizeRepository(TaskRepository repository, boolean force) {
 		return TasksUiPlugin.getSynchronizationScheduler().synchronize(repository);
 	}
 
@@ -146,7 +146,7 @@ public class TasksUi {
 		}
 		// TODO notify task list?
 
-		SynchronizeJob job = TasksUiPlugin.getTasksJobFactory().createSynchronizeTasksJob(connector, tasks);
+		SynchronizationJob job = TasksUiPlugin.getTasksJobFactory().createSynchronizeTasksJob(connector, tasks);
 		job.setUser(force);
 		job.setPriority(Job.DECORATE);
 		if (listener != null) {

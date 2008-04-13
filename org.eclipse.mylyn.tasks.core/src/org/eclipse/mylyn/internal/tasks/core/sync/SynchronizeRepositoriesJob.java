@@ -21,16 +21,16 @@ import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
-import org.eclipse.mylyn.tasks.core.SynchronizeJob;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.sync.IRepositorySynchronizationManager;
+import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
 import org.eclipse.mylyn.web.core.Policy;
 
 /**
  * @author Steffen Pingel
  */
-public class SynchronizeRepositoriesJob extends SynchronizeJob {
+public class SynchronizeRepositoriesJob extends SynchronizationJob {
 
 	private final TaskList taskList;
 

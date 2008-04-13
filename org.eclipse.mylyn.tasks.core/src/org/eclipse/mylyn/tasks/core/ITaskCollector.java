@@ -11,13 +11,14 @@ package org.eclipse.mylyn.tasks.core;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataCollector;
 
 /**
  * Abstraction used for collecting tasks, e.g. when performing queries on the repository.
  * 
  * @author Rob Elves
  * @since 2.0
- * @deprecated use {@link AbstractTaskCollector} instead
+ * @deprecated use {@link AbstractTaskDataCollector} instead
  */
 @Deprecated
 public interface ITaskCollector {

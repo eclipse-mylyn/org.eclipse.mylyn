@@ -13,8 +13,8 @@ import java.util.Set;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.SynchronizeJob;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
 
 /**
  * @since 3.0
@@ -22,12 +22,12 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  */
 public interface ITasksJobFactory {
 
-	public abstract SynchronizeJob createSynchronizeTasksJob(AbstractRepositoryConnector connector,
+	public abstract SynchronizationJob createSynchronizeTasksJob(AbstractRepositoryConnector connector,
 			TaskRepository taskRepository, Set<AbstractTask> tasks);
 
-	public abstract SynchronizeJob createSynchronizeQueriesJob(AbstractRepositoryConnector connector,
+	public abstract SynchronizationJob createSynchronizeQueriesJob(AbstractRepositoryConnector connector,
 			TaskRepository repository, Set<AbstractRepositoryQuery> queries);
 
-	public abstract SynchronizeJob createSynchronizeRepositoriesJob(Set<TaskRepository> repositories);
+	public abstract SynchronizationJob createSynchronizeRepositoriesJob(Set<TaskRepository> repositories);
 
 }

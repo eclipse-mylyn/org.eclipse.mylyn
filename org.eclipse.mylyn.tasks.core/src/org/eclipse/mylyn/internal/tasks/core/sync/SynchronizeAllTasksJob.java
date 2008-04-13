@@ -20,15 +20,15 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
-import org.eclipse.mylyn.tasks.core.SynchronizeJob;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.sync.IRepositorySynchronizationManager;
+import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
 
 /**
  * @author Steffen Pingel
  */
-public class SynchronizeAllTasksJob extends SynchronizeJob {
+public class SynchronizeAllTasksJob extends SynchronizationJob {
 
 	private final AbstractRepositoryConnector connector;
 

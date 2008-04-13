@@ -20,7 +20,9 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataCollector;
 import org.eclipse.mylyn.tasks.core.sync.IRepositorySynchronizationManager;
+import org.eclipse.mylyn.tasks.core.sync.SynchronizationEvent;
 
 /**
  * Encapsulates common operations that can be performed on a task repository. Extend to connect with a Java API or WS
@@ -185,12 +187,12 @@ public abstract class AbstractRepositoryConnector {
 	 * @since 3.0
 	 */
 	public abstract IStatus performQuery(TaskRepository repository, AbstractRepositoryQuery query,
-			AbstractTaskCollector resultCollector, SynchronizationEvent event, IProgressMonitor monitor);
+			AbstractTaskDataCollector resultCollector, SynchronizationEvent event, IProgressMonitor monitor);
 
 	/**
 	 * @since 2.0
 	 * @deprecated use
-	 *             {@link #performQuery(TaskRepository, AbstractRepositoryQuery, AbstractTaskCollector, SynchronizationEvent, IProgressMonitor)}
+	 *             {@link #performQuery(TaskRepository, AbstractRepositoryQuery, AbstractTaskDataCollector, SynchronizationEvent, IProgressMonitor)}
 	 *             instead
 	 */
 	@Deprecated

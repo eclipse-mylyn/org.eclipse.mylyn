@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.core;
+package org.eclipse.mylyn.tasks.core.sync;
 
 import org.eclipse.core.runtime.jobs.Job;
 
@@ -14,13 +14,13 @@ import org.eclipse.core.runtime.jobs.Job;
  * @author Steffen Pingel
  * @since 3.0
  */
-public abstract class SynchronizeJob extends Job {
+public abstract class SynchronizationJob extends Job {
 
 	private boolean changedTasksSynchronization = true;
 
 	private boolean fullSynchronization = false;
 
-	public SynchronizeJob(String name) {
+	public SynchronizationJob(String name) {
 		super(name);
 	}
 

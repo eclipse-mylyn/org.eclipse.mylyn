@@ -23,14 +23,14 @@ import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskCollector;
 import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
-import org.eclipse.mylyn.tasks.core.SynchronizeJob;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataCollector;
 import org.eclipse.mylyn.tasks.core.sync.IRepositorySynchronizationManager;
+import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
 import org.eclipse.mylyn.web.core.Policy;
 
 /**
@@ -38,7 +38,7 @@ import org.eclipse.mylyn.web.core.Policy;
  * @author Rob Elves
  * @author Steffen Pingel
  */
-public class SynchronizeTasksJob extends SynchronizeJob {
+public class SynchronizeTasksJob extends SynchronizationJob {
 
 	private final AbstractRepositoryConnector connector;
 
@@ -126,7 +126,7 @@ public class SynchronizeTasksJob extends SynchronizeJob {
 			idToTask.put(task.getTaskId(), task);
 		}
 
-		AbstractTaskCollector collector = new AbstractTaskCollector() {
+		AbstractTaskDataCollector collector = new AbstractTaskDataCollector() {
 			@Override
 			public void accept(RepositoryTaskData taskData) {
 				AbstractTask task = idToTask.remove(taskData.getTaskId());

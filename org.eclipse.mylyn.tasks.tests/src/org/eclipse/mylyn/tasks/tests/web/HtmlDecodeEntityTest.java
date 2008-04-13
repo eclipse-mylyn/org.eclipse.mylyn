@@ -20,11 +20,11 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.web.tasks.WebRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskCollector;
 import org.eclipse.mylyn.tasks.core.ITaskFactory;
 import org.eclipse.mylyn.tasks.core.QueryHitCollector;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataCollector;
 
 /**
  * @author George Lindholm
@@ -44,7 +44,7 @@ public class HtmlDecodeEntityTest extends TestCase {
 		}
 	};
 
-	private final AbstractTaskCollector resultCollector = new QueryHitCollector(taskFactory) {
+	private final AbstractTaskDataCollector resultCollector = new QueryHitCollector(taskFactory) {
 		@Override
 		public void accept(RepositoryTaskData hit) {
 			queryHits.add(hit);
