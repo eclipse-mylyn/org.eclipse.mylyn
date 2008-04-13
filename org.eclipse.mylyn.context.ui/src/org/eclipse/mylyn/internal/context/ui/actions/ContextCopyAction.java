@@ -59,7 +59,7 @@ public class ContextCopyAction extends TaskContextAction {
 		TaskSelectionDialog dialog = new TaskSelectionDialog(PlatformUI.getWorkbench()
 				.getActiveWorkbenchWindow()
 				.getShell());
-		dialog.setCanCreateTask(false);
+		dialog.setNeedsCreateTask(false);
 		dialog.setTitle("Select Target Task");
 		dialog.setMessage("&Select the target task (? = any character, * = any String):");
 
