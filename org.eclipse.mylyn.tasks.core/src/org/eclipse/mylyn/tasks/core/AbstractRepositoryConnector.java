@@ -30,6 +30,7 @@ import org.eclipse.mylyn.tasks.core.sync.SynchronizationEvent;
  * 
  * @author Mik Kersten
  * @author Rob Elves
+ * @author Shawn Minto
  * @since 2.0
  */
 public abstract class AbstractRepositoryConnector {
@@ -96,6 +97,10 @@ public abstract class AbstractRepositoryConnector {
 	public abstract boolean canCreateTaskFromKey(TaskRepository repository);
 
 	public abstract boolean canCreateNewTask(TaskRepository repository);
+
+	public boolean canQuery(TaskRepository repository) {
+		return true;
+	}
 
 	/**
 	 * create task and necessary subtasks (1 level nesting)

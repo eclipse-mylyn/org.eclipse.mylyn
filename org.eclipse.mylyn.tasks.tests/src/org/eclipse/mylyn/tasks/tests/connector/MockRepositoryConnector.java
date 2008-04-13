@@ -31,6 +31,7 @@ import org.eclipse.mylyn.tasks.core.sync.SynchronizationEvent;
 /**
  * @author Mik Kersten
  * @author Rob Elves
+ * @author Shawn Minto
  */
 public class MockRepositoryConnector extends AbstractRepositoryConnector {
 
@@ -40,14 +41,43 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 
 	private AbstractAttachmentHandler attachmentHandler;
 
+	private boolean canQuery = false;
+
+	private boolean canCreateNewTask = false;
+
+	private boolean canCreateTaskFromKey = false;
+
+	public void resetDefaults() {
+		canQuery = false;
+		canCreateNewTask = false;
+		canCreateTaskFromKey = false;
+	}
+
+	public void setCanCreateNewTask(boolean canCreateNewTask) {
+		this.canCreateNewTask = canCreateNewTask;
+	}
+
+	public void setCanCreateTaskFromKey(boolean canCreateTaskFromKey) {
+		this.canCreateTaskFromKey = canCreateTaskFromKey;
+	}
+
+	public void setCanQuery(boolean canQuery) {
+		this.canQuery = canQuery;
+	}
+
+	@Override
+	public boolean canQuery(TaskRepository repository) {
+		return canQuery;
+	}
+
 	@Override
 	public boolean canCreateNewTask(TaskRepository repository) {
-		return true;
+		return canCreateNewTask;
 	}
 
 	@Override
 	public boolean canCreateTaskFromKey(TaskRepository repository) {
-		return false;
+		return canCreateTaskFromKey;
 	}
 
 	@Override

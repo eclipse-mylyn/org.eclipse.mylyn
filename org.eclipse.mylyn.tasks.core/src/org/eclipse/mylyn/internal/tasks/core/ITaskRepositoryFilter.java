@@ -27,7 +27,8 @@ public interface ITaskRepositoryFilter {
 
 	public static ITaskRepositoryFilter CAN_QUERY = new ITaskRepositoryFilter() {
 		public boolean accept(TaskRepository repository, AbstractRepositoryConnector connector) {
-			return !(connector instanceof LocalRepositoryConnector) && !repository.isOffline();
+			return !(connector instanceof LocalRepositoryConnector) && !repository.isOffline()
+					&& connector.canQuery(repository);
 		}
 	};
 

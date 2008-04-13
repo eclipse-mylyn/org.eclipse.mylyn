@@ -21,6 +21,7 @@ import org.eclipse.mylyn.internal.tasks.ui.ITaskCommandIds;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.swt.widgets.Shell;
@@ -70,7 +71,11 @@ public class AddRepositoryAction extends Action {
 			Object result = handlerSvc.executeCommand(ITaskCommandIds.ADD_TASK_REPOSITORY, null);
 			if (result instanceof TaskRepository) {
 				if (getPromptToAddQuery()) {
-					promptToAddQuery((TaskRepository) result);
+					TaskRepository repository = (TaskRepository) result;
+					AbstractRepositoryConnector connector = TasksUiPlugin.getConnector(repository.getConnectorKind());
+					if (connector != null && connector.canQuery(repository)) {
+						promptToAddQuery(repository);
+					}
 				}
 				return (TaskRepository) result;
 			}

@@ -39,8 +39,10 @@ public class TaskRepositoryAdapterFactory implements IAdapterFactory {
 					if ("offline".equals(name)) {
 						return Boolean.valueOf(value).booleanValue() == repository.isOffline();
 					} else if ("supportQuery".equals(name)) {
-						AbstractRepositoryConnectorUi connector = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
-						return null != connector.getQueryWizard(repository, null);
+						AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
+						AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
+								.getRepositoryConnector(repository.getConnectorKind());
+						return null != connectorUi.getQueryWizard(repository, null) && connector.canQuery(repository);
 					} else if ("supportNewTask".equals(name)) {
 						AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
 								.getRepositoryConnector(repository.getConnectorKind());

@@ -72,6 +72,7 @@ public class AllTasksTests {
 		suite.addTestSuite(org.eclipse.mylyn.tasks.tests.web.HtmlDecodeEntityTest.class);
 
 		suite.addTestSuite(TaskActivityListenerTest.class);
+		suite.addTestSuite(TaskRepositoryFilterTests.class);
 
 		return suite;
 	}
