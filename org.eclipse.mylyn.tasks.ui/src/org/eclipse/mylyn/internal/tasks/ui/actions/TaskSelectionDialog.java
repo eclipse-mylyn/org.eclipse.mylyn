@@ -202,7 +202,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 
 	private final TaskElementLabelProvider labelProvider;
 
-	private boolean canCreateTask = true;
+	private boolean needsCreateTask = true;
 
 	public TaskSelectionDialog(Shell parent) {
 		super(parent);
@@ -458,7 +458,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 		if (isHelpAvailable()) {
 			createHelpControl(composite);
 		}
-		if (canCreateTask) {
+		if (needsCreateTask) {
 			createTaskButton = createButton(composite, CREATE_ID, "New Task...", true);
 			createTaskButton.addSelectionListener(new SelectionListener() {
 
@@ -692,8 +692,12 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 		return new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Selected item is not a task");
 	}
 
-	public void setCanCreateTask(boolean value) {
-		canCreateTask = value;
+	public boolean needsCreateTask() {
+		return needsCreateTask;
+	}
+
+	public void setNeedsCreateTask(boolean value) {
+		needsCreateTask = value;
 	}
 
 }
