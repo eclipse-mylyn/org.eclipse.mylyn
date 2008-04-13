@@ -38,8 +38,10 @@ public abstract class AbstractRepositoryConnector {
 	@Deprecated
 	protected Set<RepositoryTemplate> templates = new LinkedHashSet<RepositoryTemplate>();
 
+	@Deprecated
 	private static final long HOUR = 1000L * 3600L;
 
+	@Deprecated
 	private static final long DAY = HOUR * 24L;
 
 	@Deprecated
@@ -51,6 +53,7 @@ public abstract class AbstractRepositoryConnector {
 
 	private IRepositorySynchronizationManager synchronizationManager;
 
+	@Deprecated
 	public void init(TaskList taskList) {
 		this.taskList = taskList;
 	}
