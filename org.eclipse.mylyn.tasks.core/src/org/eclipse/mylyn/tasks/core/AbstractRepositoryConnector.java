@@ -98,6 +98,9 @@ public abstract class AbstractRepositoryConnector {
 
 	public abstract boolean canCreateNewTask(TaskRepository repository);
 
+	/**
+	 * @since 3.0
+	 */
 	public boolean canQuery(TaskRepository repository) {
 		return true;
 	}
