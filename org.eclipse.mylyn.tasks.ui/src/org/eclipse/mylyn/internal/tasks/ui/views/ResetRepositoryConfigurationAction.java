@@ -72,7 +72,7 @@ public class ResetRepositoryConfigurationAction extends AbstractTaskRepositoryAc
 	public void performUpdate(final TaskRepository repository, final AbstractRepositoryConnector connector,
 			IProgressMonitor monitor) {
 		try {
-			connector.updateAttributes(repository, monitor);
+			connector.updateRepositoryConfiguration(repository, monitor);
 		} catch (CoreException ce) {
 			StatusHandler.displayStatus("Error updating attributes", ce.getStatus());
 		}

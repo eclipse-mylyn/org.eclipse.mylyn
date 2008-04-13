@@ -160,7 +160,7 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public void updateAttributes(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
+	public void updateRepositoryConfiguration(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
 		// ignore
 	}
 

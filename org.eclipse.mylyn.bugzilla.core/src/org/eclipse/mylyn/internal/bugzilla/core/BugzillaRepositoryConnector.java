@@ -469,7 +469,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public void updateAttributes(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
+	public void updateRepositoryConfiguration(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
 		if (repository != null) {
 			BugzillaCorePlugin.getRepositoryConfiguration(repository, true);
 		}

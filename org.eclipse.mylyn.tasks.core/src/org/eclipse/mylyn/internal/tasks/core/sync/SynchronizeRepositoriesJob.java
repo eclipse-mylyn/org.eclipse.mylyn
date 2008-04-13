@@ -119,7 +119,7 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 				if (!isUser()) {
 					monitor = Policy.backgroundMonitorFor(monitor);
 				}
-				connector.updateAttributes(repository, monitor);
+				connector.updateRepositoryConfiguration(repository, monitor);
 			}
 		} catch (CoreException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,

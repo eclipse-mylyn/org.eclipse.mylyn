@@ -235,7 +235,7 @@ public class BugzillaProductPage extends WizardPage {
 								InterruptedException {
 							monitor.beginTask("Updating repository report options...", IProgressMonitor.UNKNOWN);
 							try {
-								connector.updateAttributes(repository, monitor);
+								connector.updateRepositoryConfiguration(repository, monitor);
 							} catch (CoreException e) {
 								// TODO: remove exceptions from communication of connectivity errors to the user
 								if (e.getStatus().getException() instanceof GeneralSecurityException) {

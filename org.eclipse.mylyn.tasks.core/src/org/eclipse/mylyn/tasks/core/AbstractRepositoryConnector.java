@@ -400,8 +400,20 @@ public abstract class AbstractRepositoryConnector {
 	 * Reset and update the repository attributes from the server (e.g. products, components)
 	 * 
 	 * API-3.0: Rename to updateRepositoryConfiguration()
+	 * 
+	 * @deprecated Use {@link #updateRepositoryConfiguration(TaskRepository,IProgressMonitor)} instead
 	 */
-	public abstract void updateAttributes(TaskRepository repository, IProgressMonitor monitor) throws CoreException;
+	@Deprecated
+	public void updateAttributes(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
+	}
+
+	/**
+	 * Reset and update the repository attributes from the server (e.g. products, components)
+	 * 
+	 * @since 3.0
+	 */
+	public abstract void updateRepositoryConfiguration(TaskRepository repository, IProgressMonitor monitor)
+			throws CoreException;
 
 	/**
 	 * Default implementation returns true every 24hrs
@@ -434,6 +446,7 @@ public abstract class AbstractRepositoryConnector {
 	/**
 	 * @since 2.2
 	 */
+	@Deprecated
 	public boolean hasCredentialsManagement() {
 		return false;
 	}
@@ -467,6 +480,7 @@ public abstract class AbstractRepositoryConnector {
 		return mostRecentTimeStamp;
 	}
 
+	@Deprecated
 	private RepositoryTaskData getTaskData(AbstractTask task) {
 		if (taskDataManager != null) {
 			return taskDataManager.getNewTaskData(task.getRepositoryUrl(), task.getTaskId());

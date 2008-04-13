@@ -318,7 +318,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public void updateAttributes(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
+	public void updateRepositoryConfiguration(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
 		try {
 			ITracClient client = getClientManager().getRepository(repository);
 			client.updateAttributes(monitor, true);
@@ -413,11 +413,6 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		if (this.clientManager != null) {
 			clientManager.setTaskRepositoryLocationFactory(taskRepositoryLocationFactory);
 		}
-	}
-
-	@Override
-	public boolean hasCredentialsManagement() {
-		return true;
 	}
 
 	@Override
