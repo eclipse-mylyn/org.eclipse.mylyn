@@ -127,8 +127,75 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 
 	@Override
 	protected void createCustomAttributeLayout(Composite composite) {
+		RepositoryTaskAttribute attribute = null;
+		try {
+			RepositoryConfiguration configuration = BugzillaCorePlugin.getRepositoryConfiguration(this.repository,
+					false);
+			if (configuration != null) {
+				List<BugzillaCustomField> customFields = configuration.getCustomFields();
+				if (!customFields.isEmpty()) {
+					for (BugzillaCustomField bugzillaCustomField : customFields) {
+						List<String> optionList = bugzillaCustomField.getOptions();
+						attribute = this.taskData.getAttribute(bugzillaCustomField.getName());
+						if (attribute == null) {
+							RepositoryTaskAttribute newattribute = new RepositoryTaskAttribute(
+									bugzillaCustomField.getName(), bugzillaCustomField.getDescription(), false);
+							newattribute.setReadOnly(false);
+							this.taskData.addAttribute(bugzillaCustomField.getName(), newattribute);
+						}
+						final RepositoryTaskAttribute cfattribute = this.taskData.getAttribute(bugzillaCustomField.getName());
+						Label label = createLabel(composite, cfattribute);
+						GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
+						if (optionList != null && !optionList.isEmpty()) {
+							GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+							data.horizontalSpan = 1;
+							final CCombo attributeCombo = new CCombo(composite, SWT.FLAT | SWT.READ_ONLY);
+							getManagedForm().getToolkit().adapt(attributeCombo, true, true);
+							attributeCombo.setFont(TEXT_FONT);
+							attributeCombo.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+							if (hasChanged(cfattribute)) {
+								attributeCombo.setBackground(getColorIncoming());
+							}
+							attributeCombo.setLayoutData(data);
 
-		RepositoryTaskAttribute attribute = this.taskData.getAttribute(BugzillaReportElement.DEPENDSON.getKeyString());
+							for (String val : optionList) {
+								if (val != null) {
+									attributeCombo.add(val);
+								}
+							}
+							String value = cfattribute.getValue();
+							if (value == null) {
+								value = "";
+							}
+							if (attributeCombo.indexOf(value) != -1) {
+								attributeCombo.select(attributeCombo.indexOf(value));
+							}
+							attributeCombo.clearSelection();
+							attributeCombo.addSelectionListener(new SelectionAdapter() {
+								@Override
+								public void widgetSelected(SelectionEvent event) {
+									if (attributeCombo.getSelectionIndex() > -1) {
+										String sel = attributeCombo.getItem(attributeCombo.getSelectionIndex());
+										cfattribute.setValue(sel);
+										attributeChanged(cfattribute);
+										attributeCombo.clearSelection();
+									}
+								}
+							});
+						} else {
+							Text cfField = createTextField(composite, cfattribute, SWT.FLAT);
+							GridDataFactory.fillDefaults().hint(135, SWT.DEFAULT).applyTo(cfField);
+						}
+					}
+
+					getManagedForm().getToolkit().paintBordersFor(composite);
+				}
+			}
+		} catch (CoreException e) {
+			// ignore
+		}
+
+		attribute = this.taskData.getAttribute(BugzillaReportElement.DEPENDSON.getKeyString());
 		if (attribute != null && !attribute.isReadOnly()) {
 			Label label = createLabel(composite, attribute);
 			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
@@ -239,90 +306,6 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 
 		if (taskData.getAttribute(BugzillaReportElement.ESTIMATED_TIME.getKeyString()) != null)
 			addBugzillaTimeTracker(getManagedForm().getToolkit(), composite);
-
-		try {
-			RepositoryConfiguration configuration = BugzillaCorePlugin.getRepositoryConfiguration(this.repository,
-					false);
-			if (configuration != null) {
-				List<BugzillaCustomField> customFields = configuration.getCustomFields();
-				if (!customFields.isEmpty()) {
-					Section cfSection = getManagedForm().getToolkit().createSection(composite,
-							ExpandableComposite.SHORT_TITLE_BAR);
-					cfSection.setText(LABEL_CUSTOM_FIELD);
-					GridLayout gl = new GridLayout();
-					GridData gd = new GridData(SWT.FILL, SWT.NONE, false, false);
-					gd.horizontalSpan = 4;
-					cfSection.setLayout(gl);
-					cfSection.setLayoutData(gd);
-
-					Composite cfComposite = getManagedForm().getToolkit().createComposite(cfSection);
-					gl = new GridLayout(4, false);
-					cfComposite.setLayout(gl);
-					gd = new GridData();
-					gd.horizontalSpan = 5;
-					cfComposite.setLayoutData(gd);
-					for (BugzillaCustomField bugzillaCustomField : customFields) {
-						List<String> optionList = bugzillaCustomField.getOptions();
-						attribute = this.taskData.getAttribute(bugzillaCustomField.getName());
-						if (attribute == null) {
-							RepositoryTaskAttribute newattribute = new RepositoryTaskAttribute(
-									bugzillaCustomField.getName(), bugzillaCustomField.getDescription(), false);
-							newattribute.setReadOnly(false);
-							this.taskData.addAttribute(bugzillaCustomField.getName(), newattribute);
-						}
-						final RepositoryTaskAttribute cfattribute = this.taskData.getAttribute(bugzillaCustomField.getName());
-						Label label = createLabel(cfComposite, cfattribute);
-						GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
-						if (optionList != null && !optionList.isEmpty()) {
-							GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-							data.horizontalSpan = 1;
-							final CCombo attributeCombo = new CCombo(cfComposite, SWT.FLAT | SWT.READ_ONLY);
-							getManagedForm().getToolkit().adapt(attributeCombo, true, true);
-							attributeCombo.setFont(TEXT_FONT);
-							attributeCombo.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-							if (hasChanged(cfattribute)) {
-								attributeCombo.setBackground(getColorIncoming());
-							}
-							attributeCombo.setLayoutData(data);
-
-							for (String val : optionList) {
-								if (val != null) {
-									attributeCombo.add(val);
-								}
-							}
-							String value = cfattribute.getValue();
-							if (value == null) {
-								value = "";
-							}
-							if (attributeCombo.indexOf(value) != -1) {
-								attributeCombo.select(attributeCombo.indexOf(value));
-							}
-							attributeCombo.clearSelection();
-							attributeCombo.addSelectionListener(new SelectionAdapter() {
-								@Override
-								public void widgetSelected(SelectionEvent event) {
-									if (attributeCombo.getSelectionIndex() > -1) {
-										String sel = attributeCombo.getItem(attributeCombo.getSelectionIndex());
-										cfattribute.setValue(sel);
-										attributeChanged(cfattribute);
-										attributeCombo.clearSelection();
-									}
-								}
-							});
-						} else {
-							Text cfField = createTextField(cfComposite, cfattribute, SWT.FLAT);
-							GridDataFactory.fillDefaults().hint(135, SWT.DEFAULT).applyTo(cfField);
-						}
-					}
-
-					getManagedForm().getToolkit().paintBordersFor(cfComposite);
-					cfSection.setClient(cfComposite);
-				}
-			}
-		} catch (CoreException e) {
-			// ignore
-		}
-
 	}
 
 	private boolean hasCustomAttributeChanges() {
