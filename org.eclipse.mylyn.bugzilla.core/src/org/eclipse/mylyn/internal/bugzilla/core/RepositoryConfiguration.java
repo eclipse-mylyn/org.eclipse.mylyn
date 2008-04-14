@@ -13,7 +13,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_OPERATION;
+import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPORT_STATUS;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.tasks.core.RepositoryOperation;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 
 /**
  * Class describing the configuration of products and components for a given Bugzilla installation.
@@ -21,6 +31,28 @@ import java.util.Map;
  * @author Rob Elves
  */
 public class RepositoryConfiguration implements Serializable {
+	
+	private static final String OPERATION_INPUT_ASSIGNED_TO = "assigned_to";
+
+	private static final String OPERATION_INPUT_DUP_ID = "dup_id";
+
+	private static final String OPERATION_OPTION_RESOLUTION = "resolution";
+
+	private static final String OPERATION_LABEL_CLOSE = "Mark as CLOSED";
+
+	private static final String OPERATION_LABEL_VERIFY = "Mark as VERIFIED";
+
+	private static final String OPERATION_LABEL_REOPEN = "Reopen bug";
+
+	private static final String OPERATION_LABEL_REASSIGN_DEFAULT = "Reassign to default assignee";
+
+	private static final String OPERATION_LABEL_REASSIGN = "Reassign to";
+
+	private static final String OPERATION_LABEL_DUPLICATE = "Mark as duplicate of #";
+
+	private static final String OPERATION_LABEL_RESOLVE = "Resolve as";
+
+	private static final String OPERATION_LABEL_ACCEPT = "Accept (change status to ASSIGNED)";
 
 	private static final long serialVersionUID = -482656956042521023L;
 
@@ -390,6 +422,162 @@ public class RepositoryConfiguration implements Serializable {
 
 	public List<BugzillaCustomField> getCustomFields() {
 		return customFields;
+	}
+
+	
+	public void configureTaskData(RepositoryTaskData taskData) {
+		updateAttributeOptions(taskData);
+		addValidOperations(taskData);
+	}
+
+	public void updateAttributeOptions(RepositoryTaskData existingReport)
+			{
+		String product = existingReport.getAttributeValue(BugzillaReportElement.PRODUCT.getKeyString());
+		for (RepositoryTaskAttribute attribute : existingReport.getAttributes()) {
+			if (attribute.getId().startsWith("cf_")) {
+				attribute.clearOptions();
+				List<BugzillaCustomField> customFields = getCustomFields();
+
+				for (BugzillaCustomField bugzillaCustomField : customFields) {
+					if (bugzillaCustomField.getName().equals(attribute.getId())) {
+						List<String> optionList = bugzillaCustomField.getOptions();
+						for (String option : optionList) {
+							attribute.addOption(option, option);
+						}
+					}
+				}
+			} else {
+				BugzillaReportElement element = BugzillaReportElement.valueOf(attribute.getId().trim().toUpperCase(
+						Locale.ENGLISH));
+				attribute.clearOptions();
+				List<String> optionValues = getOptionValues(element, product);
+				if (element != BugzillaReportElement.OP_SYS && element != BugzillaReportElement.BUG_SEVERITY
+						&& element != BugzillaReportElement.PRIORITY && element != BugzillaReportElement.BUG_STATUS) {
+					Collections.sort(optionValues);
+				}
+				if (element == BugzillaReportElement.TARGET_MILESTONE && optionValues.isEmpty()) {
+
+					existingReport.removeAttribute(BugzillaReportElement.TARGET_MILESTONE);
+					continue;
+				}
+				attribute.clearOptions();
+				for (String option : optionValues) {
+					attribute.addOption(option, option);
+				}
+
+				// TODO: bug#162428, bug#150680 - something along the lines of...
+				// but must think about the case of multiple values selected etc.
+				// if(attribute.hasOptions()) {
+				// if(!attribute.getOptionValues().containsKey(attribute.getValue()))
+				// {
+				// // updateAttributes()
+				// }
+				// }
+			}
+		}
+
+	}
+
+	private void addValidOperations(RepositoryTaskData bugReport)
+			 {
+		BUGZILLA_REPORT_STATUS status;
+		try {
+			status = BUGZILLA_REPORT_STATUS.valueOf(bugReport.getStatus());
+		} catch (RuntimeException e) {
+			StatusHandler.log(new Status(IStatus.INFO, BugzillaCorePlugin.PLUGIN_ID, "Unrecognized status: "
+					+ bugReport.getStatus(), e));
+			status = BUGZILLA_REPORT_STATUS.NEW;
+		}
+		switch (status) {
+		case UNCONFIRMED:
+		case REOPENED:
+		case NEW:
+			addOperation(bugReport, BUGZILLA_OPERATION.none);
+			addOperation(bugReport, BUGZILLA_OPERATION.accept);
+			addOperation(bugReport, BUGZILLA_OPERATION.resolve);
+			addOperation(bugReport, BUGZILLA_OPERATION.duplicate);
+			break;
+		case ASSIGNED:
+			addOperation(bugReport, BUGZILLA_OPERATION.none);
+			addOperation(bugReport, BUGZILLA_OPERATION.resolve);
+			addOperation(bugReport, BUGZILLA_OPERATION.duplicate);
+			break;
+		case RESOLVED:
+			addOperation(bugReport, BUGZILLA_OPERATION.none);
+			addOperation(bugReport, BUGZILLA_OPERATION.reopen);
+			addOperation(bugReport, BUGZILLA_OPERATION.verify);
+			addOperation(bugReport, BUGZILLA_OPERATION.close);
+			break;
+		case CLOSED:
+			addOperation(bugReport, BUGZILLA_OPERATION.none);
+			addOperation(bugReport, BUGZILLA_OPERATION.reopen);
+			break;
+		case VERIFIED:
+			addOperation(bugReport, BUGZILLA_OPERATION.none);
+			addOperation(bugReport, BUGZILLA_OPERATION.reopen);
+			addOperation(bugReport, BUGZILLA_OPERATION.close);
+		}
+		String bugzillaVersion = getInstallVersion();
+		if (bugzillaVersion == null) {
+			bugzillaVersion = "2.18";
+		}
+		if (bugzillaVersion.compareTo("3.1") < 0
+				&& (status == BUGZILLA_REPORT_STATUS.NEW || status == BUGZILLA_REPORT_STATUS.ASSIGNED
+						|| status == BUGZILLA_REPORT_STATUS.REOPENED || status == BUGZILLA_REPORT_STATUS.UNCONFIRMED)) {
+			// old bugzilla workflow is used
+			addOperation(bugReport, BUGZILLA_OPERATION.reassign);
+			addOperation(bugReport, BUGZILLA_OPERATION.reassignbycomponent);
+		}
+	}
+
+	private void addOperation(RepositoryTaskData bugReport, BUGZILLA_OPERATION opcode) {
+		RepositoryOperation newOperation = null;
+		switch (opcode) {
+		case none:
+			newOperation = new RepositoryOperation(opcode.toString(), "Leave as " + bugReport.getStatus() + " "
+					+ bugReport.getResolution());
+			newOperation.setChecked(true);
+			break;
+		case accept:
+			newOperation = new RepositoryOperation(opcode.toString(), OPERATION_LABEL_ACCEPT);
+			break;
+		case resolve:
+			newOperation = new RepositoryOperation(opcode.toString(), OPERATION_LABEL_RESOLVE);
+			newOperation.setUpOptions(OPERATION_OPTION_RESOLUTION);
+				for (String resolution : getResolutions()) {
+					// DUPLICATE and MOVED have special meanings so do not show as resolution
+					if (resolution.compareTo("DUPLICATE") != 0 && resolution.compareTo("MOVED") != 0)
+						newOperation.addOption(resolution, resolution);
+				}
+			break;
+		case duplicate:
+			newOperation = new RepositoryOperation(opcode.toString(), OPERATION_LABEL_DUPLICATE);
+			newOperation.setInputName(OPERATION_INPUT_DUP_ID);
+			newOperation.setInputValue("");
+			break;
+		case reassign:
+			newOperation = new RepositoryOperation(opcode.toString(), OPERATION_LABEL_REASSIGN);
+			newOperation.setInputName(OPERATION_INPUT_ASSIGNED_TO);
+			newOperation.setInputValue("");
+			break;
+		case reassignbycomponent:
+			newOperation = new RepositoryOperation(opcode.toString(), OPERATION_LABEL_REASSIGN_DEFAULT);
+			break;
+		case reopen:
+			newOperation = new RepositoryOperation(opcode.toString(), OPERATION_LABEL_REOPEN);
+			break;
+		case verify:
+			newOperation = new RepositoryOperation(opcode.toString(), OPERATION_LABEL_VERIFY);
+			break;
+		case close:
+			newOperation = new RepositoryOperation(opcode.toString(), OPERATION_LABEL_CLOSE);
+			break;
+		default:
+			break;
+		}
+		if (newOperation != null) {
+			bugReport.addOperation(newOperation);
+		}
 	}
 
 }

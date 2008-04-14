@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataCollector;
 
 /**
  * Reads bug reports from repository.
@@ -32,9 +33,9 @@ public class MultiBugReportFactory extends AbstractReportFactory {
 
 	private static BugzillaAttributeFactory bugzillaAttributeFactory = new BugzillaAttributeFactory();
 
-	public void populateReport(Map<String, RepositoryTaskData> bugMap, List<BugzillaCustomField> customFields) throws IOException, CoreException {
+	public void populateReport(Map<String, RepositoryTaskData> bugMap, AbstractTaskDataCollector collector, List<BugzillaCustomField> customFields) throws IOException, CoreException {
 
-		SaxMultiBugReportContentHandler contentHandler = new SaxMultiBugReportContentHandler(bugzillaAttributeFactory,
+		SaxMultiBugReportContentHandler contentHandler = new SaxMultiBugReportContentHandler(bugzillaAttributeFactory, collector, 
 				bugMap, customFields);
 		collectResults(contentHandler, false);
 

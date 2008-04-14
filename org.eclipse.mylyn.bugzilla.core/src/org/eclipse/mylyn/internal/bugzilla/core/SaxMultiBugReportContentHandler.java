@@ -19,6 +19,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskComment;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataCollector;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -55,13 +56,17 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 	private AbstractAttributeFactory attributeFactory;
 
 	private List<BugzillaCustomField> customFields;
+
+	private AbstractTaskDataCollector collector;
+	
 	
 	//private int retrieved = 1;
 
-	public SaxMultiBugReportContentHandler(AbstractAttributeFactory factory, Map<String, RepositoryTaskData> taskDataMap, List<BugzillaCustomField> customFields) {
+	public SaxMultiBugReportContentHandler(AbstractAttributeFactory factory, AbstractTaskDataCollector collector, Map<String, RepositoryTaskData> taskDataMap, List<BugzillaCustomField> customFields) {
 		this.attributeFactory = factory;
 		this.taskDataMap = taskDataMap;
 		this.customFields = customFields;
+		this.collector = collector;
 	}
 
 	public boolean errorOccurred() {
@@ -363,6 +368,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 				attachment.setRepositoryUrl(repositoryTaskData.getRepositoryUrl());
 				attachment.setTaskId(repositoryTaskData.getTaskId());
 			}
+			collector.accept(repositoryTaskData);
 			break;
 
 		case BLOCKED:

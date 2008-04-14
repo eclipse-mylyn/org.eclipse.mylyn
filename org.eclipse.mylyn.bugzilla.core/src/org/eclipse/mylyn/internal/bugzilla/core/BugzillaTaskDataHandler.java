@@ -12,25 +12,15 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_OPERATION;
-import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPORT_STATUS;
-import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_RESOLUTION_2_0;
-import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_RESOLUTION_3_0;
-import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
-import org.eclipse.mylyn.tasks.core.RepositoryOperation;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
@@ -42,28 +32,6 @@ import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataCollector;
  * @author Rob Elves
  */
 public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
-
-	private static final String OPERATION_INPUT_ASSIGNED_TO = "assigned_to";
-
-	private static final String OPERATION_INPUT_DUP_ID = "dup_id";
-
-	private static final String OPERATION_OPTION_RESOLUTION = "resolution";
-
-	private static final String OPERATION_LABEL_CLOSE = "Mark as CLOSED";
-
-	private static final String OPERATION_LABEL_VERIFY = "Mark as VERIFIED";
-
-	private static final String OPERATION_LABEL_REOPEN = "Reopen bug";
-
-	private static final String OPERATION_LABEL_REASSIGN_DEFAULT = "Reassign to default assignee";
-
-	private static final String OPERATION_LABEL_REASSIGN = "Reassign to";
-
-	private static final String OPERATION_LABEL_DUPLICATE = "Mark as duplicate of #";
-
-	private static final String OPERATION_LABEL_RESOLVE = "Resolve as";
-
-	private static final String OPERATION_LABEL_ACCEPT = "Accept (change status to ASSIGNED)";
 
 	private AbstractAttributeFactory attributeFactory = new BugzillaAttributeFactory();
 
@@ -77,32 +45,12 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 	public RepositoryTaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
 			throws CoreException {
 		try {
-			BugzillaClient client = connector.getClientManager().getClient(repository, new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN));
+			BugzillaClient client = connector.getClientManager().getClient(repository,
+					new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN));
 			int bugId = BugzillaRepositoryConnector.getBugId(taskId);
 			RepositoryTaskData taskData;
-			try {
-				taskData = client.getTaskData(bugId, monitor);
-			} catch (CoreException e) {
-				// TODO: Move retry handling into client
-				if (e.getStatus().getCode() == RepositoryStatus.ERROR_REPOSITORY_LOGIN) {
-					taskData = client.getTaskData(bugId, monitor);
-				} else {
-					throw e;
-				}
-			}
-			if (taskData != null) {
-				try {
-					configureTaskData(client.getRepositoryConfiguration(), repository, taskData);
-				} catch (CoreException ce) {
-					// retry since data retrieved may be corrupt
-					taskData = client.getTaskData(bugId, monitor);
-					if (taskData != null) {
-						configureTaskData(client.getRepositoryConfiguration(), repository, taskData);
-					}
-				}
-				return taskData;
-			}
-			return null;
+			taskData = client.getTaskData(bugId, monitor);
+			return taskData;
 
 		} catch (IOException e) {
 			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
@@ -115,30 +63,9 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor.beginTask("Receiving tasks", taskIds.size());
-			
-			Set<RepositoryTaskData> result = new HashSet<RepositoryTaskData>();
-			BugzillaClient client = connector.getClientManager().getClient(repository, new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN));
-			try {
-				Map<String, RepositoryTaskData> dataReturned = client.getTaskData(taskIds, monitor);
-				for (RepositoryTaskData repositoryTaskData : dataReturned.values()) {
-					result.add(repositoryTaskData);
-				}
-			} catch (CoreException e) {
-				// TODO: Move retry handling into client
-				if (e.getStatus().getCode() == RepositoryStatus.ERROR_REPOSITORY_LOGIN) {
-					Map<String, RepositoryTaskData> dataReturned = client.getTaskData(taskIds, monitor);
-					for (RepositoryTaskData repositoryTaskData : dataReturned.values()) {
-						result.add(repositoryTaskData);
-					}
-				} else {
-					throw e;
-				}
-			}
-			for (RepositoryTaskData repositoryTaskData : result) {
-				configureTaskData(client.getRepositoryConfiguration(), repository, repositoryTaskData);
-				collector.accept(repositoryTaskData);
-				monitor.worked(1);
-			}
+			BugzillaClient client = connector.getClientManager().getClient(repository,
+					new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN));
+			client.getTaskData(taskIds, collector, monitor);
 		} catch (IOException e) {
 			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 					RepositoryStatus.ERROR_IO, repository.getRepositoryUrl(), e));
@@ -151,7 +78,8 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 	public String postTaskData(TaskRepository repository, RepositoryTaskData taskData, IProgressMonitor monitor)
 			throws CoreException {
 		try {
-			BugzillaClient client = connector.getClientManager().getClient(repository, new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN));
+			BugzillaClient client = connector.getClientManager().getClient(repository,
+					new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN));
 			try {
 				return client.postTaskData(taskData, monitor);
 			} catch (CoreException e) {
@@ -179,130 +107,6 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 	@Override
 	public AbstractAttributeFactory getAttributeFactory(RepositoryTaskData taskData) {
 		return getAttributeFactory(taskData.getRepositoryUrl(), taskData.getConnectorKind(), taskData.getTaskKind());
-	}
-
-	public void configureTaskData(RepositoryConfiguration configuration, TaskRepository repository, RepositoryTaskData taskData) throws CoreException {
-		updateAttributeOptions(configuration, taskData);
-		addValidOperations(configuration, taskData, repository.getUserName());
-	}
-
-	private void addValidOperations(RepositoryConfiguration configuration, RepositoryTaskData bugReport,String userName)
-			throws CoreException {
-		BUGZILLA_REPORT_STATUS status;
-		try {
-			status = BUGZILLA_REPORT_STATUS.valueOf(bugReport.getStatus());
-		} catch (RuntimeException e) {
-			StatusHandler.log(new Status(IStatus.INFO, BugzillaCorePlugin.PLUGIN_ID, "Unrecognized status: "
-					+ bugReport.getStatus(), e));
-			status = BUGZILLA_REPORT_STATUS.NEW;
-		}
-		switch (status) {
-		case UNCONFIRMED:
-		case REOPENED:
-		case NEW:
-			addOperation(configuration, bugReport, BUGZILLA_OPERATION.none, userName);
-			addOperation(configuration, bugReport, BUGZILLA_OPERATION.accept, userName);
-			addOperation(configuration, bugReport, BUGZILLA_OPERATION.resolve, userName);
-			addOperation(configuration, bugReport, BUGZILLA_OPERATION.duplicate, userName);
-			break;
-		case ASSIGNED:
-			addOperation(configuration, bugReport, BUGZILLA_OPERATION.none, userName);
-			addOperation(configuration, bugReport, BUGZILLA_OPERATION.resolve, userName);
-			addOperation(configuration, bugReport, BUGZILLA_OPERATION.duplicate, userName);
-			break;
-		case RESOLVED:
-			addOperation(configuration, bugReport, BUGZILLA_OPERATION.none, userName);
-			addOperation(configuration, bugReport, BUGZILLA_OPERATION.reopen, userName);
-			addOperation(configuration, bugReport, BUGZILLA_OPERATION.verify, userName);
-			addOperation(configuration, bugReport, BUGZILLA_OPERATION.close, userName);
-			break;
-		case CLOSED:
-			addOperation(configuration, bugReport, BUGZILLA_OPERATION.none, userName);
-			addOperation(configuration, bugReport, BUGZILLA_OPERATION.reopen, userName);
-			break;
-		case VERIFIED:
-			addOperation(configuration, bugReport, BUGZILLA_OPERATION.none, userName);
-			addOperation(configuration, bugReport, BUGZILLA_OPERATION.reopen, userName);
-			addOperation(configuration, bugReport, BUGZILLA_OPERATION.close, userName);
-		}
-		String bugzillaVersion = configuration.getInstallVersion();
-		if (bugzillaVersion == null) {
-			bugzillaVersion = "2.18";
-		}
-		if (bugzillaVersion.compareTo("3.1") < 0
-				&& (status == BUGZILLA_REPORT_STATUS.NEW || status == BUGZILLA_REPORT_STATUS.ASSIGNED
-						|| status == BUGZILLA_REPORT_STATUS.REOPENED || status == BUGZILLA_REPORT_STATUS.UNCONFIRMED)) {
-			// old bugzilla workflow is used
-			addOperation(configuration, bugReport, BUGZILLA_OPERATION.reassign, userName);
-			addOperation(configuration, bugReport, BUGZILLA_OPERATION.reassignbycomponent, userName);
-		}
-	}
-
-	private void addOperation(RepositoryConfiguration config, RepositoryTaskData bugReport, BUGZILLA_OPERATION opcode,
-			String userName) {
-		RepositoryOperation newOperation = null;
-		switch (opcode) {
-		case none:
-			newOperation = new RepositoryOperation(opcode.toString(), "Leave as " + bugReport.getStatus() + " "
-					+ bugReport.getResolution());
-			newOperation.setChecked(true);
-			break;
-		case accept:
-			newOperation = new RepositoryOperation(opcode.toString(), OPERATION_LABEL_ACCEPT);
-			break;
-		case resolve:
-			newOperation = new RepositoryOperation(opcode.toString(), OPERATION_LABEL_RESOLVE);
-			newOperation.setUpOptions(OPERATION_OPTION_RESOLUTION);
-			if (config != null) {
-				for (String resolution : config.getResolutions()) {
-					// DUPLICATE and MOVED have special meanings so do not show as resolution
-					if (resolution.compareTo("DUPLICATE") != 0 && resolution.compareTo("MOVED") != 0)
-						newOperation.addOption(resolution, resolution);
-				}
-			} else {
-				StatusHandler.log(new Status(IStatus.INFO, BugzillaCorePlugin.PLUGIN_ID, "Configuration is null"));
-//				// LATER and REMIND must not be there in Bugzilla >= 3.0 is used
-//				//If getVersion() returns "Automatic (Use Validate Settings)" we use the Version 3 Resolution 
-//				if (repository.getVersion().compareTo("3.0") >= 0) {
-//					for (BUGZILLA_RESOLUTION_3_0 resolution : BUGZILLA_RESOLUTION_3_0.values()) {
-//						newOperation.addOption(resolution.toString(), resolution.toString());
-//					}
-//				} else {
-//					for (BUGZILLA_RESOLUTION_2_0 resolution : BUGZILLA_RESOLUTION_2_0.values()) {
-//						newOperation.addOption(resolution.toString(), resolution.toString());
-//					}
-//				}
-			}
-			break;
-		case duplicate:
-			newOperation = new RepositoryOperation(opcode.toString(), OPERATION_LABEL_DUPLICATE);
-			newOperation.setInputName(OPERATION_INPUT_DUP_ID);
-			newOperation.setInputValue("");
-			break;
-		case reassign:
-			String localUser = userName;
-			newOperation = new RepositoryOperation(opcode.toString(), OPERATION_LABEL_REASSIGN);
-			newOperation.setInputName(OPERATION_INPUT_ASSIGNED_TO);
-			newOperation.setInputValue(localUser);
-			break;
-		case reassignbycomponent:
-			newOperation = new RepositoryOperation(opcode.toString(), OPERATION_LABEL_REASSIGN_DEFAULT);
-			break;
-		case reopen:
-			newOperation = new RepositoryOperation(opcode.toString(), OPERATION_LABEL_REOPEN);
-			break;
-		case verify:
-			newOperation = new RepositoryOperation(opcode.toString(), OPERATION_LABEL_VERIFY);
-			break;
-		case close:
-			newOperation = new RepositoryOperation(opcode.toString(), OPERATION_LABEL_CLOSE);
-			break;
-		default:
-			break;
-		}
-		if (newOperation != null) {
-			bugReport.addOperation(newOperation);
-		}
 	}
 
 	@Override
@@ -479,54 +283,6 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 	@Override
 	public boolean canInitializeSubTaskData(AbstractTask task, RepositoryTaskData parentTaskData) {
 		return true;
-	}
-
-	public void updateAttributeOptions(RepositoryConfiguration configuration, RepositoryTaskData existingReport)
-			throws CoreException {
-		String product = existingReport.getAttributeValue(BugzillaReportElement.PRODUCT.getKeyString());
-		for (RepositoryTaskAttribute attribute : existingReport.getAttributes()) {
-			if (attribute.getId().startsWith("cf_")) {
-				attribute.clearOptions();
-				List<BugzillaCustomField> customFields = configuration.getCustomFields();
-
-				for (BugzillaCustomField bugzillaCustomField : customFields) {
-					if (bugzillaCustomField.getName().equals(attribute.getId())) {
-						List<String> optionList = bugzillaCustomField.getOptions();
-						for (String option : optionList) {
-							attribute.addOption(option, option);
-						}
-					}
-				}
-			} else {
-				BugzillaReportElement element = BugzillaReportElement.valueOf(attribute.getId().trim().toUpperCase(
-						Locale.ENGLISH));
-				attribute.clearOptions();
-				List<String> optionValues = configuration.getOptionValues(element, product);
-				if (element != BugzillaReportElement.OP_SYS && element != BugzillaReportElement.BUG_SEVERITY
-						&& element != BugzillaReportElement.PRIORITY && element != BugzillaReportElement.BUG_STATUS) {
-					Collections.sort(optionValues);
-				}
-				if (element == BugzillaReportElement.TARGET_MILESTONE && optionValues.isEmpty()) {
-
-					existingReport.removeAttribute(BugzillaReportElement.TARGET_MILESTONE);
-					continue;
-				}
-				attribute.clearOptions();
-				for (String option : optionValues) {
-					attribute.addOption(option, option);
-				}
-
-				// TODO: bug#162428, bug#150680 - something along the lines of...
-				// but must think about the case of multiple values selected etc.
-				// if(attribute.hasOptions()) {
-				// if(!attribute.getOptionValues().containsKey(attribute.getValue()))
-				// {
-				// // updateAttributes()
-				// }
-				// }
-			}
-		}
-
 	}
 
 }

@@ -63,8 +63,6 @@ import org.eclipse.mylyn.web.core.AuthenticationType;
 import org.eclipse.mylyn.web.core.HtmlStreamTokenizer;
 import org.eclipse.mylyn.web.core.HtmlTag;
 import org.eclipse.mylyn.web.core.Policy;
-import org.eclipse.mylyn.web.core.WebClientUtil;
-import org.eclipse.mylyn.web.core.WebUtil;
 import org.eclipse.mylyn.web.core.WebUtil;
 import org.eclipse.mylyn.web.core.HtmlStreamTokenizer.Token;
 
@@ -74,7 +72,7 @@ import org.eclipse.mylyn.web.core.HtmlStreamTokenizer.Token;
  * @author Steffen Pingel
  */
 public class BugzillaClient {
-
+	
 	protected static final String USER_AGENT = "BugzillaConnector";
 
 	private static final int MAX_RETRIEVED_PER_QUERY = 100;
@@ -152,10 +150,6 @@ public class BugzillaClient {
 
 	private boolean authenticated;
 
-	private String htAuthUser;
-
-	private String htAuthPass;
-
 	private Map<String, String> configParameters;
 
 	private HttpClient httpClient = new HttpClient(new MultiThreadedHttpConnectionManager());
@@ -179,11 +173,6 @@ public class BugzillaClient {
 		}
 		this.repositoryUrl = new URL(location.getUrl());
 		this.location = location;
-		credentials = location.getCredentials(AuthenticationType.HTTP);
-		if (credentials != null) {
-			this.htAuthUser = credentials.getUserName();
-			this.htAuthPass = credentials.getPassword();
-		}
 		this.characterEncoding = characterEncoding;
 		this.configParameters = configParameters;
 		this.bugzillaLanguageSettings = languageSettings;
@@ -452,42 +441,18 @@ public class BugzillaClient {
 		final String idString = String.valueOf(id);
 		Set<String> data = new HashSet<String>();
 		data.add(idString);
+		
+		AbstractTaskDataCollector collector = new AbstractTaskDataCollector() {
+			@Override
+			public void accept(RepositoryTaskData taskData) {
+				getRepositoryConfiguration().configureTaskData(taskData);
+			}
+		};
 
-		Map<String, RepositoryTaskData> returnedData = getTaskData(data, monitor);
+		Map<String, RepositoryTaskData> returnedData = getTaskData(data, collector, monitor);
 
 		return returnedData.get(idString);
 
-//		GetMethod method = null;
-//		try {
-//
-//			method = getConnect(repositoryUrl + IBugzillaConstants.URL_GET_SHOW_BUG_XML + id);
-//			RepositoryTaskData taskData = null;
-//			if (method.getResponseHeader("Content-Type") != null) {
-//				Header responseTypeHeader = method.getResponseHeader("Content-Type");
-//				for (String type : VALID_CONFIG_CONTENT_TYPES) {
-//					if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
-//						taskData = new RepositoryTaskData(new BugzillaAttributeFactory(),
-//								BugzillaCorePlugin.REPOSITORY_KIND, repositoryUrl.toString(), "" + id,
-//								IBugzillaConstants.BUGZILLA_TASK_KIND);
-//						setupExistingBugAttributes(repositoryUrl.toString(), taskData);
-//						RepositoryReportFactory reportFactory = new RepositoryReportFactory(
-//								method.getResponseBodyAsStream(), characterEncoding);
-//						reportFactory.populateReport(taskData);
-//
-//						return taskData;
-//					}
-//				}
-//			}
-//
-//			parseHtmlError(new BufferedReader(
-//					new InputStreamReader(method.getResponseBodyAsStream(), characterEncoding)));
-//
-//			return null;
-//		} finally {
-//			if (method != null) {
-//				method.releaseConnection();
-//			}
-//		}
 	}
 
 	public boolean getSearchHits(AbstractRepositoryQuery query, AbstractTaskDataCollector collector,
@@ -1199,7 +1164,7 @@ public class BugzillaClient {
 		return null;
 	}
 
-	public Map<String, RepositoryTaskData> getTaskData(Set<String> taskIds, IProgressMonitor monitor)
+	public Map<String, RepositoryTaskData> getTaskData(Set<String> taskIds, final AbstractTaskDataCollector collector, final IProgressMonitor monitor)
 			throws IOException, CoreException {
 		GzipPostMethod method = null;
 		HashMap<String, RepositoryTaskData> taskDataMap = new HashMap<String, RepositoryTaskData>();
@@ -1232,9 +1197,7 @@ public class BugzillaClient {
 				}
 				formData[x++] = new NameValuePair("ctype", "xml");
 				formData[x] = new NameValuePair("excludefield", "attachmentdata");
-
 				method = postFormData(IBugzillaConstants.URL_POST_SHOW_BUG, formData, monitor);
-
 				if (method == null) {
 					throw new IOException("Could not post form, client returned null method.");
 				}
@@ -1247,7 +1210,17 @@ public class BugzillaClient {
 						if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
 							MultiBugReportFactory factory = new MultiBugReportFactory(
 									method.getResponseBodyAsUnzippedStream(), characterEncoding);
-							factory.populateReport(taskDataMap, customFields);
+							
+							AbstractTaskDataCollector collector2 = new AbstractTaskDataCollector() {
+
+								@Override
+								public void accept(RepositoryTaskData taskData) {
+									getRepositoryConfiguration().configureTaskData(taskData);
+									collector.accept(taskData);
+									monitor.worked(1);
+								}};							
+							
+							factory.populateReport(taskDataMap, collector2, customFields);
 							taskIds.removeAll(idsToRetrieve);
 							parseable = true;
 							break;

@@ -12,13 +12,10 @@ package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskDataHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.RepositoryTaskEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
@@ -50,11 +47,6 @@ public class BugzillaTaskEditorInput extends RepositoryTaskEditorInput {
 		return true;
 	}
 
-//	@Override
-//	public ImageDescriptor getImageDescriptor() {
-//		return null;
-//	}
-
 	@Override
 	public IPersistableElement getPersistable() {
 		return null;
@@ -78,14 +70,12 @@ public class BugzillaTaskEditorInput extends RepositoryTaskEditorInput {
 		return bugTask;
 	}
 
-	// TODO: repository configuration update (remove at some point)
 	private void updateOptions(RepositoryTaskData taskData) {
 		try {
 			if (taskData != null) {
-				BugzillaRepositoryConnector bugzillaConnector = (BugzillaRepositoryConnector) TasksUi.getRepositoryManager()
-						.getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
-				RepositoryConfiguration config = BugzillaCorePlugin.getRepositoryConfiguration(repository, false, new NullProgressMonitor());
-				((BugzillaTaskDataHandler)bugzillaConnector.getTaskDataHandler()).updateAttributeOptions(config, taskData);
+				RepositoryConfiguration config = BugzillaCorePlugin.getRepositoryConfiguration(repository, false,
+						new NullProgressMonitor());
+				config.updateAttributeOptions(taskData);
 			}
 		} catch (Exception e) {
 			// ignore
