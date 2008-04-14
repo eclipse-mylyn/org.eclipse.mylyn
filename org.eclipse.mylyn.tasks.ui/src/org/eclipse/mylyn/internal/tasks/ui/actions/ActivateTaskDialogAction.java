@@ -35,7 +35,6 @@ public class ActivateTaskDialogAction extends ActionDelegate implements IWorkben
 		TaskSelectionDialog dlg = new TaskSelectionDialog(window.getShell());
 		dlg.setTitle("Activate Task");
 		dlg.setMessage("&Select a task to activate (? = any character, * = any String):");
-		dlg.setInsertInHistory(true);
 
 		if (dlg.open() != Window.OK) {
 			return;

@@ -426,6 +426,7 @@ public abstract class AbstractRepositoryConnector {
 	 * 
 	 * @return true to indicate that the repository configuration is stale and requires update
 	 * @throws CoreException
+	 * @since 3.0
 	 */
 	public boolean isRepositoryConfigurationStale(TaskRepository repository, IProgressMonitor monitor)
 			throws CoreException {

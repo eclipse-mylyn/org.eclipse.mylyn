@@ -189,4 +189,13 @@ public class TaskActivationHistory {
 		}
 	}
 
+	public int indexOf(AbstractTask task) {
+		return history.indexOf(task);
+
+	}
+
+	public int getSize() {
+		return history.size();
+	}
+
 }

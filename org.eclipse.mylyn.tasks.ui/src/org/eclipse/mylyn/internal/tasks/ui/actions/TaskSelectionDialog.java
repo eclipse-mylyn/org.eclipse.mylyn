@@ -11,8 +11,10 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -79,39 +81,119 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
  * @author Willian Mitsuda
  * @author Mik Kersten
  * @author Eugene Kuleshov
+ * @author Shawn Minto
  */
 public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 
-	private Button openInBrowserCheck;
+	private class DeselectWorkingSetAction extends Action {
 
-	private static final String TASK_SELECTION_DIALOG_SECTION = "TaskSelectionDialogSection";
+		public DeselectWorkingSetAction() {
+			super("&Deselect Working Set", IAction.AS_PUSH_BUTTON);
+		}
 
-	private static final String OPEN_IN_BROWSER_SETTING = "OpenInBrowser";
-
-	private static final String SHOW_COMPLETED_TASKS_SETTING = "ShowCompletedTasks";
-
-	private static final String IS_USING_WINDOW_WORKING_SET_SETTING = "IsUsingWindowWorkingSet";
-
-	private static final String WORKING_SET_NAME_SETTING = "WorkingSetName";
-
-	private boolean openInBrowser;
-
-	public boolean getOpenInBrowser() {
-		return openInBrowser;
+		@Override
+		public void run() {
+			setSelectedWorkingSet(null);
+		}
 	}
 
-	public void setOpenInBrowser(boolean openInBrowser) {
-		this.openInBrowser = openInBrowser;
+	private class EditWorkingSetAction extends Action {
+
+		public EditWorkingSetAction() {
+			super("&Edit Active Working Set...", IAction.AS_PUSH_BUTTON);
+		}
+
+		@Override
+		public void run() {
+			IWorkingSetEditWizard wizard = PlatformUI.getWorkbench().getWorkingSetManager().createWorkingSetEditWizard(
+					selectedWorkingSet);
+			if (wizard != null) {
+				WizardDialog dlg = new WizardDialog(getShell(), wizard);
+				dlg.open();
+			}
+		}
 	}
 
-	private boolean insertInHistory;
+	private class FilterWorkingSetAction extends Action {
 
-	public void setInsertInHistory(boolean insertInHistory) {
-		this.insertInHistory = insertInHistory;
+		private final IWorkingSet workingSet;
+
+		public FilterWorkingSetAction(IWorkingSet workingSet, int shortcutKeyNumber) {
+			super("", IAction.AS_RADIO_BUTTON);
+			this.workingSet = workingSet;
+			if (shortcutKeyNumber >= 1 && shortcutKeyNumber <= 9) {
+				setText("&" + String.valueOf(shortcutKeyNumber) + " " + workingSet.getLabel());
+			} else {
+				setText(workingSet.getLabel());
+			}
+			setImageDescriptor(workingSet.getImageDescriptor());
+		}
+
+		@Override
+		public void run() {
+			setSelectedWorkingSet(workingSet);
+		}
 	}
 
-	public boolean getInsertInHistory() {
-		return insertInHistory;
+	private class SelectWorkingSetAction extends Action {
+
+		public SelectWorkingSetAction() {
+			super("Select &Working Set...", IAction.AS_PUSH_BUTTON);
+		}
+
+		@Override
+		public void run() {
+			IWorkingSetSelectionDialog dlg = PlatformUI.getWorkbench()
+					.getWorkingSetManager()
+					.createWorkingSetSelectionDialog(getShell(), false,
+							new String[] { TaskWorkingSetUpdater.ID_TASK_WORKING_SET });
+			if (selectedWorkingSet != null) {
+				dlg.setSelection(new IWorkingSet[] { selectedWorkingSet });
+			}
+			if (dlg.open() == Window.OK) {
+				IWorkingSet[] selection = dlg.getSelection();
+				if (selection.length == 0) {
+					setSelectedWorkingSet(null);
+				} else {
+					setSelectedWorkingSet(selection[0]);
+				}
+			}
+		}
+	}
+
+	private class ShowCompletedTasksAction extends Action {
+
+		public ShowCompletedTasksAction() {
+			super("Show &Completed Tasks", IAction.AS_CHECK_BOX);
+		}
+
+		@Override
+		public void run() {
+			showCompletedTasks = isChecked();
+			applyFilter();
+		}
+
+	}
+
+	private class TaskHistoryItemsComparator implements Comparator<Object> {
+
+		Map<AbstractTask, Integer> positionByTask = new HashMap<AbstractTask, Integer>();
+
+		public TaskHistoryItemsComparator(List<AbstractTask> history) {
+			for (int i = 0; i < history.size(); i++) {
+				positionByTask.put(history.get(i), i);
+			}
+		}
+
+		public int compare(Object o1, Object o2) {
+			Integer p1 = positionByTask.get(o1);
+			Integer p2 = positionByTask.get(o2);
+			if (p1 != null && p2 != null) {
+				return p2.compareTo(p1);
+			}
+			return labelProvider.getText(o1).compareTo(labelProvider.getText(o2));
+		}
+
 	}
 
 	/**
@@ -121,31 +203,24 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 	 */
 	private class TaskSelectionHistory extends SelectionHistory {
 
-		/**
-		 * Mylyn's task activation history
-		 */
-		private final TaskActivationHistory history = TasksUiPlugin.getTaskListManager().getTaskActivationHistory();
-
 		@Override
 		public synchronized void accessed(Object object) {
-			if (insertInHistory) {
-				history.addTask((AbstractTask) object);
-			}
+			history.add((AbstractTask) object);
 		}
 
 		@Override
 		public synchronized boolean contains(Object object) {
-			return history.containsTask((AbstractTask) object);
+			return history.contains(object);
 		}
 
 		@Override
-		public synchronized boolean remove(Object object) {
-			return history.removeTask((AbstractTask) object);
+		public synchronized Object[] getHistoryItems() {
+			return history.toArray();
 		}
 
 		@Override
 		public synchronized boolean isEmpty() {
-			return !history.hasPrevious();
+			return history.isEmpty();
 		}
 
 		@Override
@@ -154,8 +229,8 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 		}
 
 		@Override
-		public void save(IMemento memento) {
-			// do nothing because tasklist history handles this
+		public synchronized boolean remove(Object object) {
+			return history.remove(object);
 		}
 
 		@Override
@@ -165,25 +240,167 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 		}
 
 		@Override
-		protected void storeItemToMemento(Object item, IMemento memento) {
+		public void save(IMemento memento) {
 			// do nothing because tasklist history handles this
 		}
 
 		@Override
-		public synchronized Object[] getHistoryItems() {
-			return history.getPreviousTasks().toArray();
+		protected void storeItemToMemento(Object item, IMemento memento) {
+			// do nothing because tasklist history handles this
 		}
 	}
 
 	/**
-	 * Caches the window working set
+	 * Supports filtering of completed tasks.
 	 */
-	private final IWorkingSet windowWorkingSet;
+	private class TasksFilter extends ItemsFilter {
+
+		private Set<AbstractTask> allTasksFromWorkingSets;
+
+		/**
+		 * Stores the task containers from selected working set; empty, which can come from no working set selection or
+		 * working set with no task containers selected, means no filtering
+		 */
+		private final Set<AbstractTaskContainer> elements;
+
+		private final boolean showCompletedTasks;
+
+		public TasksFilter(boolean showCompletedTasks, IWorkingSet selectedWorkingSet) {
+			super(new SearchPattern());
+			// Little hack to force always a match inside any part of task text
+			patternMatcher.setPattern("*" + patternMatcher.getPattern());
+			this.showCompletedTasks = showCompletedTasks;
+
+			elements = new HashSet<AbstractTaskContainer>();
+			if (selectedWorkingSet != null) {
+				for (IAdaptable adaptable : selectedWorkingSet.getElements()) {
+					AbstractTaskContainer container = (AbstractTaskContainer) adaptable.getAdapter(AbstractTaskContainer.class);
+					if (container != null) {
+						elements.add(container);
+					}
+				}
+			}
+		}
+
+		@Override
+		public boolean equalsFilter(ItemsFilter filter) {
+			if (!super.equalsFilter(filter)) {
+				return false;
+			}
+			if (filter instanceof TasksFilter) {
+				TasksFilter tasksFilter = (TasksFilter) filter;
+				if (showCompletedTasks != tasksFilter.showCompletedTasks) {
+					return false;
+				}
+				return elements.equals(tasksFilter.elements);
+			}
+			return true;
+		}
+
+		@Override
+		public boolean isConsistentItem(Object item) {
+			return item instanceof AbstractTask;
+		}
+
+		@Override
+		public boolean isSubFilter(ItemsFilter filter) {
+			if (!super.isSubFilter(filter)) {
+				return false;
+			}
+			if (filter instanceof TasksFilter) {
+				TasksFilter tasksFilter = (TasksFilter) filter;
+				if (!showCompletedTasks && tasksFilter.showCompletedTasks) {
+					return false;
+				}
+				if (elements.isEmpty()) {
+					return true;
+				}
+				if (tasksFilter.elements.isEmpty()) {
+					return false;
+				}
+				return elements.containsAll(tasksFilter.elements);
+			}
+			return true;
+		}
+
+		@Override
+		public boolean matchItem(Object item) {
+			if (!(item instanceof AbstractTask)) {
+				return false;
+			}
+			if (!showCompletedTasks && ((AbstractTask) item).isCompleted()) {
+				return false;
+			}
+			if (!elements.isEmpty()) {
+				if (allTasksFromWorkingSets == null) {
+					populateTasksFromWorkingSets();
+				}
+				if (!allTasksFromWorkingSets.contains(item)) {
+					return false;
+				}
+			}
+			return matches(labelProvider.getText(item));
+		}
+
+		private void populateTasksFromWorkingSets() {
+			allTasksFromWorkingSets = new HashSet<AbstractTask>(1000);
+			for (AbstractTaskContainer container : elements) {
+				allTasksFromWorkingSets.addAll(container.getChildren());
+			}
+		}
+	}
+
+	private static final int SEARCH_ID = IDialogConstants.CLIENT_ID + 1;
+
+	private static final int CREATE_ID = SEARCH_ID + 1;
+
+	private static final String IS_USING_WINDOW_WORKING_SET_SETTING = "IsUsingWindowWorkingSet";
+
+	private static final String OPEN_IN_BROWSER_SETTING = "OpenInBrowser";
+
+	private static final String SHOW_COMPLETED_TASKS_SETTING = "ShowCompletedTasks";
+
+	private static final String TASK_SELECTION_DIALOG_SECTION = "TaskSelectionDialogSection";
+
+	private static final String WORKING_SET_NAME_SETTING = "WorkingSetName";
+
+	/**
+	 * Caches all tasks; populated at first access
+	 */
+	private Set<AbstractTask> allTasks;
+
+	private Button createTaskButton;
+
+	/**
+	 * Mylyn's task activation history
+	 */
+	private final List<AbstractTask> history;
+
+	private final TaskHistoryItemsComparator itemsComparator;
+
+	private final TaskElementLabelProvider labelProvider;
+
+	private boolean needsCreateTask;
+
+	private boolean openInBrowser;
+
+	private Button openInBrowserCheck;
 
 	/**
 	 * Set of filtered working sets
 	 */
 	private IWorkingSet selectedWorkingSet;
+
+	private boolean showCompletedTasks;
+
+	private final ShowCompletedTasksAction showCompletedTasksAction;
+
+	private boolean showExtendedOpeningOptions;
+
+	/**
+	 * Caches the window working set
+	 */
+	private final IWorkingSet windowWorkingSet;
 
 	/**
 	 * Refilters if the current working set content has changed
@@ -200,16 +417,16 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 
 	};
 
-	private final TaskElementLabelProvider labelProvider;
-
-	private boolean needsCreateTask = true;
-
 	public TaskSelectionDialog(Shell parent) {
 		super(parent);
+		TaskActivationHistory taskActivationHistory = TasksUiPlugin.getTaskListManager().getTaskActivationHistory();
+		this.history = new ArrayList<AbstractTask>(taskActivationHistory.getPreviousTasks());
+		this.itemsComparator = new TaskHistoryItemsComparator(this.history);
+		this.needsCreateTask = true;
+		this.labelProvider = new TaskElementLabelProvider(false);
+		this.showCompletedTasksAction = new ShowCompletedTasksAction();
+
 		setSelectionHistory(new TaskSelectionHistory());
-
-		labelProvider = new TaskElementLabelProvider(false);
-
 		setListLabelProvider(labelProvider);
 
 //		setListLabelProvider(new DecoratingLabelProvider(labelProvider, PlatformUI.getWorkbench()
@@ -237,17 +454,113 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 		PlatformUI.getWorkbench().getWorkingSetManager().addPropertyChangeListener(workingSetListener);
 	}
 
-	private boolean showExtendedOpeningOptions;
-
-	public void setShowExtendedOpeningOptions(boolean showExtendedOpeningOptions) {
-		this.showExtendedOpeningOptions = showExtendedOpeningOptions;
+	@Override
+	public boolean close() {
+		PlatformUI.getWorkbench().getWorkingSetManager().removePropertyChangeListener(workingSetListener);
+		if (openInBrowserCheck != null) {
+			openInBrowser = openInBrowserCheck.getSelection();
+		}
+		return super.close();
 	}
 
-	public boolean getShowExtendedOpeningOptions() {
-		return showExtendedOpeningOptions;
+	@Override
+	protected Control createButtonBar(Composite parent) {
+		Composite composite = new Composite(parent, SWT.NONE);
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 0; // create 
+		layout.marginHeight = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_MARGIN);
+		layout.marginWidth = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_MARGIN);
+		layout.verticalSpacing = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_SPACING);
+		layout.horizontalSpacing = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
+
+		composite.setLayout(layout);
+		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+		// create help control if needed
+		if (isHelpAvailable()) {
+			createHelpControl(composite);
+		}
+		if (needsCreateTask) {
+			createTaskButton = createButton(composite, CREATE_ID, "New Task...", true);
+			createTaskButton.addSelectionListener(new SelectionListener() {
+
+				public void widgetDefaultSelected(SelectionEvent e) {
+					// ignore
+				}
+
+				public void widgetSelected(SelectionEvent e) {
+					close();
+					new NewTaskAction().run();
+				}
+			});
+		}
+
+		Label filler = new Label(composite, SWT.NONE);
+		filler.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
+		layout.numColumns++;
+		super.createButtonsForButtonBar(composite); // cancel button
+
+		return composite;
 	}
 
-	private final ShowCompletedTasksAction showCompletedTasksAction = new ShowCompletedTasksAction();
+	@Override
+	protected Control createExtendedContentArea(Composite parent) {
+		if (!showExtendedOpeningOptions) {
+			return null;
+		}
+
+		Composite composite = new Composite(parent, SWT.NONE);
+		composite.setLayout(GridLayoutFactory.swtDefaults().margins(0, 5).create());
+		composite.setLayoutData(GridDataFactory.fillDefaults().create());
+
+		openInBrowserCheck = new Button(composite, SWT.CHECK);
+		openInBrowserCheck.setText("Open with &Browser");
+		openInBrowserCheck.setSelection(openInBrowser);
+
+		ImageHyperlink openHyperlink = new ImageHyperlink(composite, SWT.NONE);
+		openHyperlink.setText(TaskListFilteredTree.LABEL_SEARCH);
+		openHyperlink.setForeground(TaskListColorsAndFonts.COLOR_HYPERLINK_WIDGET);
+		openHyperlink.setUnderlined(true);
+		openHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+
+			@Override
+			public void linkActivated(HyperlinkEvent e) {
+				getShell().close();
+				new SearchDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), TaskSearchPage.ID).open();
+			}
+
+		});
+
+		return composite;
+	}
+
+	@Override
+	protected ItemsFilter createFilter() {
+		return new TasksFilter(showCompletedTasks, selectedWorkingSet);
+	}
+
+	@Override
+	protected void fillContentProvider(AbstractContentProvider contentProvider, ItemsFilter itemsFilter,
+			IProgressMonitor progressMonitor) throws CoreException {
+		progressMonitor.beginTask("Search for tasks", 100);
+
+		if (allTasks == null) {
+			allTasks = new HashSet<AbstractTask>();
+			TaskList taskList = TasksUi.getTaskListManager().getTaskList();
+			allTasks.addAll(taskList.getAllTasks());
+		}
+		progressMonitor.worked(10);
+
+		SubProgressMonitor subMonitor = new SubProgressMonitor(progressMonitor, 90);
+		subMonitor.beginTask("Scanning tasks", allTasks.size());
+		for (AbstractTask task : allTasks) {
+			contentProvider.add(task, itemsFilter);
+			subMonitor.worked(1);
+		}
+		subMonitor.done();
+
+		progressMonitor.done();
+	}
 
 	@Override
 	protected void fillViewMenu(IMenuManager menuManager) {
@@ -300,326 +613,6 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 		});
 	}
 
-	/**
-	 * All working set filter changes should be made through this method; ensures proper history handling and triggers
-	 * refiltering
-	 */
-	private void setSelectedWorkingSet(IWorkingSet workingSet) {
-		selectedWorkingSet = workingSet;
-		if (workingSet != null) {
-			PlatformUI.getWorkbench().getWorkingSetManager().addRecentWorkingSet(workingSet);
-		}
-		applyFilter();
-	}
-
-	private boolean showCompletedTasks;
-
-	private Button createTaskButton;
-
-	private static final int SEARCH_ID = IDialogConstants.CLIENT_ID + 1;
-
-	private static final int CREATE_ID = SEARCH_ID + 1;
-
-	private class ShowCompletedTasksAction extends Action {
-
-		public ShowCompletedTasksAction() {
-			super("Show &Completed Tasks", IAction.AS_CHECK_BOX);
-		}
-
-		@Override
-		public void run() {
-			showCompletedTasks = isChecked();
-			applyFilter();
-		}
-
-	}
-
-	private class SelectWorkingSetAction extends Action {
-
-		public SelectWorkingSetAction() {
-			super("Select &Working Set...", IAction.AS_PUSH_BUTTON);
-		}
-
-		@Override
-		public void run() {
-			IWorkingSetSelectionDialog dlg = PlatformUI.getWorkbench()
-					.getWorkingSetManager()
-					.createWorkingSetSelectionDialog(getShell(), false,
-							new String[] { TaskWorkingSetUpdater.ID_TASK_WORKING_SET });
-			if (selectedWorkingSet != null) {
-				dlg.setSelection(new IWorkingSet[] { selectedWorkingSet });
-			}
-			if (dlg.open() == Window.OK) {
-				IWorkingSet[] selection = dlg.getSelection();
-				if (selection.length == 0) {
-					setSelectedWorkingSet(null);
-				} else {
-					setSelectedWorkingSet(selection[0]);
-				}
-			}
-		}
-	}
-
-	private class DeselectWorkingSetAction extends Action {
-
-		public DeselectWorkingSetAction() {
-			super("&Deselect Working Set", IAction.AS_PUSH_BUTTON);
-		}
-
-		@Override
-		public void run() {
-			setSelectedWorkingSet(null);
-		}
-	}
-
-	private class EditWorkingSetAction extends Action {
-
-		public EditWorkingSetAction() {
-			super("&Edit Active Working Set...", IAction.AS_PUSH_BUTTON);
-		}
-
-		@Override
-		public void run() {
-			IWorkingSetEditWizard wizard = PlatformUI.getWorkbench().getWorkingSetManager().createWorkingSetEditWizard(
-					selectedWorkingSet);
-			if (wizard != null) {
-				WizardDialog dlg = new WizardDialog(getShell(), wizard);
-				dlg.open();
-			}
-		}
-	}
-
-	private class FilterWorkingSetAction extends Action {
-
-		private final IWorkingSet workingSet;
-
-		public FilterWorkingSetAction(IWorkingSet workingSet, int shortcutKeyNumber) {
-			super("", IAction.AS_RADIO_BUTTON);
-			this.workingSet = workingSet;
-			if (shortcutKeyNumber >= 1 && shortcutKeyNumber <= 9) {
-				setText("&" + String.valueOf(shortcutKeyNumber) + " " + workingSet.getLabel());
-			} else {
-				setText(workingSet.getLabel());
-			}
-			setImageDescriptor(workingSet.getImageDescriptor());
-		}
-
-		@Override
-		public void run() {
-			setSelectedWorkingSet(workingSet);
-		}
-	}
-
-	@Override
-	protected Control createExtendedContentArea(Composite parent) {
-		if (!showExtendedOpeningOptions) {
-			return null;
-		}
-
-		Composite composite = new Composite(parent, SWT.NONE);
-		composite.setLayout(GridLayoutFactory.swtDefaults().margins(0, 5).create());
-		composite.setLayoutData(GridDataFactory.fillDefaults().create());
-
-		openInBrowserCheck = new Button(composite, SWT.CHECK);
-		openInBrowserCheck.setText("Open with &Browser");
-		openInBrowserCheck.setSelection(openInBrowser);
-
-		ImageHyperlink openHyperlink = new ImageHyperlink(composite, SWT.NONE);
-		openHyperlink.setText(TaskListFilteredTree.LABEL_SEARCH);
-		openHyperlink.setForeground(TaskListColorsAndFonts.COLOR_HYPERLINK_WIDGET);
-		openHyperlink.setUnderlined(true);
-		openHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
-
-			@Override
-			public void linkActivated(HyperlinkEvent e) {
-				getShell().close();
-				new SearchDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), TaskSearchPage.ID).open();
-			}
-
-		});
-
-		return composite;
-	}
-
-	@Override
-	protected Control createButtonBar(Composite parent) {
-		Composite composite = new Composite(parent, SWT.NONE);
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 0; // create 
-		layout.marginHeight = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_MARGIN);
-		layout.marginWidth = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_MARGIN);
-		layout.verticalSpacing = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_SPACING);
-		layout.horizontalSpacing = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
-
-		composite.setLayout(layout);
-		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
-		// create help control if needed
-		if (isHelpAvailable()) {
-			createHelpControl(composite);
-		}
-		if (needsCreateTask) {
-			createTaskButton = createButton(composite, CREATE_ID, "New Task...", true);
-			createTaskButton.addSelectionListener(new SelectionListener() {
-
-				public void widgetDefaultSelected(SelectionEvent e) {
-					// ignore
-				}
-
-				public void widgetSelected(SelectionEvent e) {
-					close();
-					new NewTaskAction().run();
-				}
-			});
-		}
-
-		Label filler = new Label(composite, SWT.NONE);
-		filler.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
-		layout.numColumns++;
-		super.createButtonsForButtonBar(composite); // cancel button
-
-		return composite;
-	}
-
-	@Override
-	public boolean close() {
-		PlatformUI.getWorkbench().getWorkingSetManager().removePropertyChangeListener(workingSetListener);
-		if (openInBrowserCheck != null) {
-			openInBrowser = openInBrowserCheck.getSelection();
-		}
-		return super.close();
-	}
-
-	private class TasksFilter extends ItemsFilter {
-
-		private final boolean showCompletedTasks;
-
-		/**
-		 * Stores the task containers from selected working set; empty, which can come from no working set selection or
-		 * working set with no task containers selected, means no filtering
-		 */
-		private final Set<AbstractTaskContainer> elements;
-
-		private Set<AbstractTask> allTasksFromWorkingSets;
-
-		public TasksFilter(boolean showCompletedTasks, IWorkingSet selectedWorkingSet) {
-			super(new SearchPattern());
-			// Little hack to force always a match inside any part of task text
-			patternMatcher.setPattern("*" + patternMatcher.getPattern());
-			this.showCompletedTasks = showCompletedTasks;
-
-			elements = new HashSet<AbstractTaskContainer>();
-			if (selectedWorkingSet != null) {
-				for (IAdaptable adaptable : selectedWorkingSet.getElements()) {
-					AbstractTaskContainer container = (AbstractTaskContainer) adaptable.getAdapter(AbstractTaskContainer.class);
-					if (container != null) {
-						elements.add(container);
-					}
-				}
-			}
-		}
-
-		@Override
-		public boolean isSubFilter(ItemsFilter filter) {
-			if (!super.isSubFilter(filter)) {
-				return false;
-			}
-			if (filter instanceof TasksFilter) {
-				TasksFilter tasksFilter = (TasksFilter) filter;
-				if (!showCompletedTasks && tasksFilter.showCompletedTasks) {
-					return false;
-				}
-				if (elements.isEmpty()) {
-					return true;
-				}
-				if (tasksFilter.elements.isEmpty()) {
-					return false;
-				}
-				return elements.containsAll(tasksFilter.elements);
-			}
-			return true;
-		}
-
-		@Override
-		public boolean equalsFilter(ItemsFilter filter) {
-			if (!super.equalsFilter(filter)) {
-				return false;
-			}
-			if (filter instanceof TasksFilter) {
-				TasksFilter tasksFilter = (TasksFilter) filter;
-				if (showCompletedTasks != tasksFilter.showCompletedTasks) {
-					return false;
-				}
-				return elements.equals(tasksFilter.elements);
-			}
-			return true;
-		}
-
-		@Override
-		public boolean isConsistentItem(Object item) {
-			return item instanceof AbstractTask;
-		}
-
-		@Override
-		public boolean matchItem(Object item) {
-			if (!(item instanceof AbstractTask)) {
-				return false;
-			}
-			if (!showCompletedTasks && ((AbstractTask) item).isCompleted()) {
-				return false;
-			}
-			if (!elements.isEmpty()) {
-				if (allTasksFromWorkingSets == null) {
-					populateTasksFromWorkingSets();
-				}
-				if (!allTasksFromWorkingSets.contains(item)) {
-					return false;
-				}
-			}
-			return matches(labelProvider.getText(item));
-		}
-
-		private void populateTasksFromWorkingSets() {
-			allTasksFromWorkingSets = new HashSet<AbstractTask>(1000);
-			for (AbstractTaskContainer container : elements) {
-				allTasksFromWorkingSets.addAll(container.getChildren());
-			}
-		}
-	}
-
-	@Override
-	protected ItemsFilter createFilter() {
-		return new TasksFilter(showCompletedTasks, selectedWorkingSet);
-	}
-
-	/**
-	 * Caches all tasks; populated at first access
-	 */
-	private Set<AbstractTask> allTasks;
-
-	@Override
-	protected void fillContentProvider(AbstractContentProvider contentProvider, ItemsFilter itemsFilter,
-			IProgressMonitor progressMonitor) throws CoreException {
-		progressMonitor.beginTask("Search for tasks", 100);
-
-		if (allTasks == null) {
-			allTasks = new HashSet<AbstractTask>();
-			TaskList taskList = TasksUi.getTaskListManager().getTaskList();
-			allTasks.addAll(taskList.getAllTasks());
-		}
-		progressMonitor.worked(10);
-
-		SubProgressMonitor subMonitor = new SubProgressMonitor(progressMonitor, 90);
-		subMonitor.beginTask("Scanning tasks", allTasks.size());
-		for (AbstractTask task : allTasks) {
-			contentProvider.add(task, itemsFilter);
-			subMonitor.worked(1);
-		}
-		subMonitor.done();
-
-		progressMonitor.done();
-	}
-
 	@Override
 	protected IDialogSettings getDialogSettings() {
 		IDialogSettings settings = TasksUiPlugin.getDefault().getDialogSettings();
@@ -632,6 +625,32 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 			section.put(WORKING_SET_NAME_SETTING, "");
 		}
 		return section;
+	}
+
+	@Override
+	public String getElementName(Object item) {
+		return labelProvider.getText(item);
+	}
+
+	/**
+	 * Sort tasks by summary
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	protected Comparator getItemsComparator() {
+		return itemsComparator;
+	}
+
+	public boolean getOpenInBrowser() {
+		return openInBrowser;
+	}
+
+	public boolean getShowExtendedOpeningOptions() {
+		return showExtendedOpeningOptions;
+	}
+
+	public boolean needsCreateTask() {
+		return needsCreateTask;
 	}
 
 	@Override
@@ -651,6 +670,30 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 		super.restoreDialog(settings);
 	}
 
+	public void setNeedsCreateTask(boolean value) {
+		needsCreateTask = value;
+	}
+
+	public void setOpenInBrowser(boolean openInBrowser) {
+		this.openInBrowser = openInBrowser;
+	}
+
+	/**
+	 * All working set filter changes should be made through this method; ensures proper history handling and triggers
+	 * refiltering
+	 */
+	private void setSelectedWorkingSet(IWorkingSet workingSet) {
+		selectedWorkingSet = workingSet;
+		if (workingSet != null) {
+			PlatformUI.getWorkbench().getWorkingSetManager().addRecentWorkingSet(workingSet);
+		}
+		applyFilter();
+	}
+
+	public void setShowExtendedOpeningOptions(boolean showExtendedOpeningOptions) {
+		this.showExtendedOpeningOptions = showExtendedOpeningOptions;
+	}
+
 	@Override
 	protected void storeDialog(IDialogSettings settings) {
 		settings.put(OPEN_IN_BROWSER_SETTING, openInBrowser);
@@ -665,39 +708,11 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 	}
 
 	@Override
-	public String getElementName(Object item) {
-		return labelProvider.getText(item);
-	}
-
-	/**
-	 * Sort tasks by summary
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	protected Comparator getItemsComparator() {
-		return new Comparator() {
-
-			public int compare(Object o1, Object o2) {
-				return labelProvider.getText(o1).compareTo(labelProvider.getText(o2));
-			}
-
-		};
-	}
-
-	@Override
 	protected IStatus validateItem(Object item) {
 		if (item instanceof AbstractTask) {
 			return Status.OK_STATUS;
 		}
 		return new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Selected item is not a task");
-	}
-
-	public boolean needsCreateTask() {
-		return needsCreateTask;
-	}
-
-	public void setNeedsCreateTask(boolean value) {
-		needsCreateTask = value;
 	}
 
 }
