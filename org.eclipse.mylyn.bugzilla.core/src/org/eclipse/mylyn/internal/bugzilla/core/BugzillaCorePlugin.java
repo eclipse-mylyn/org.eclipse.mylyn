@@ -19,6 +19,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
@@ -27,6 +28,7 @@ import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.web.core.Policy;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -118,16 +120,17 @@ public class BugzillaCorePlugin extends Plugin {
 	/**
 	 * Retrieves the latest repository configuration from the server
 	 */
-	public static RepositoryConfiguration getRepositoryConfiguration(TaskRepository repository, boolean forceRefresh)
+	public static RepositoryConfiguration getRepositoryConfiguration(TaskRepository repository, boolean forceRefresh, IProgressMonitor monitor)
 			throws CoreException {
+		monitor = Policy.monitorFor(monitor);
 		try {
 			if (!cacheFileRead) {
 				readRepositoryConfigurationFile();
 				cacheFileRead = true;
 			}
 			if (repositoryConfigurations.get(repository.getRepositoryUrl()) == null || forceRefresh) {
-				BugzillaClient client = connector.getClientManager().getClient(repository);
-				RepositoryConfiguration config = client.getRepositoryConfiguration();
+				BugzillaClient client = connector.getClientManager().getClient(repository, monitor);
+				RepositoryConfiguration config = client.getRepositoryConfiguration(monitor);
 				if (config != null) {
 					addRepositoryConfiguration(config);
 				}

@@ -460,7 +460,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		}
 
 		// test anonymous update of configuration
-		RepositoryConfiguration config = BugzillaCorePlugin.getRepositoryConfiguration(repository, false);
+		RepositoryConfiguration config = BugzillaCorePlugin.getRepositoryConfiguration(repository, false, null);
 		assertNotNull(config);
 		assertTrue(config.getComponents().size() > 0);
 	}
@@ -630,9 +630,9 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		attachment.setFilename("real-file");
 		// IAttachmentHandler attachmentHandler =
 		// connector.getAttachmentHandler();
-		BugzillaClient client = connector.getClientManager().getClient(repository);
+		BugzillaClient client = connector.getClientManager().getClient(repository, new NullProgressMonitor());
 		try {
-			client.postAttachment(attachment.getReport().getTaskId(), attachment.getComment(), attachment);
+			client.postAttachment(attachment.getReport().getTaskId(), attachment.getComment(), attachment, null);
 			fail();
 		} catch (Exception e) {
 		}
@@ -658,7 +658,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		// repository.getUserName(), repository.getPassword(),
 		// Proxy.NO_PROXY));
 		try {
-			client.postAttachment(attachment.getReport().getTaskId(), attachment.getComment(), attachment);
+			client.postAttachment(attachment.getReport().getTaskId(), attachment.getComment(), attachment, null);
 			fail();
 		} catch (Exception e) {
 		}
@@ -678,7 +678,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		assertTrue(fileToAttach.exists());
 		attachment.setFile(fileToAttach);
 		attachment.setFilename(fileToAttach.getName());
-		client.postAttachment(attachment.getReport().getTaskId(), attachment.getComment(), attachment);
+		client.postAttachment(attachment.getReport().getTaskId(), attachment.getComment(), attachment, null);
 
 		task = (BugzillaTask) TasksUiUtil.createTask(repository, taskNumber, new NullProgressMonitor());
 		TasksUi.synchronizeTask(connector, task, true, null);

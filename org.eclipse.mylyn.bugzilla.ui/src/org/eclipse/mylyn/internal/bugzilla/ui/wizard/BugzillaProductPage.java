@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -254,7 +255,7 @@ public class BugzillaProductPage extends WizardPage {
 
 							RepositoryConfiguration repositoryConfiguration = null;
 							try {
-								repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository, false);
+								repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository, false, monitor);
 							} catch (final CoreException e) {
 								PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 									public void run() {
@@ -292,7 +293,7 @@ public class BugzillaProductPage extends WizardPage {
 	private void initProducts() {
 		// try to get the list of products from the server
 		try {
-			products = BugzillaCorePlugin.getRepositoryConfiguration(repository, false).getProducts();
+			products = BugzillaCorePlugin.getRepositoryConfiguration(repository, false, new NullProgressMonitor()).getProducts();
 
 		} catch (final CoreException e) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {

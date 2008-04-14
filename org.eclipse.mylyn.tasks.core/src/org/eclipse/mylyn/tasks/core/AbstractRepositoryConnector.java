@@ -421,10 +421,14 @@ public abstract class AbstractRepositoryConnector {
 	/**
 	 * Default implementation returns true every 24hrs
 	 * 
+	 * @param monitor
+	 *            TODO
+	 * 
 	 * @return true to indicate that the repository configuration is stale and requires update
 	 * @throws CoreException
 	 */
-	public boolean isRepositoryConfigurationStale(TaskRepository repository) throws CoreException {
+	public boolean isRepositoryConfigurationStale(TaskRepository repository, IProgressMonitor monitor)
+			throws CoreException {
 		boolean isStale = true;
 		Date configDate = repository.getConfigurationDate();
 		if (configDate != null) {

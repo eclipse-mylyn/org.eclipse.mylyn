@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryListener;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
@@ -27,24 +28,17 @@ public class BugzillaClientManager implements ITaskRepositoryListener {
 	public BugzillaClientManager() {
 	}
 
-	public synchronized BugzillaClient getClient(TaskRepository taskRepository) throws MalformedURLException, CoreException {
+	public synchronized BugzillaClient getClient(TaskRepository taskRepository, IProgressMonitor monitor) throws MalformedURLException, CoreException {
 		BugzillaClient client = clientByUrl.get(taskRepository.getRepositoryUrl());
 		if (client == null) {
-
-			String htUser = taskRepository.getHttpUser() != null ? taskRepository.getHttpUser() : "";
-			String htPass = taskRepository.getHttpPassword() != null ? taskRepository.getHttpPassword() : "";
 
 			String language = taskRepository.getProperty(IBugzillaConstants.BUGZILLA_LANGUAGE_SETTING);
 			if (language == null || language.equals("")) {
 				language = IBugzillaConstants.DEFAULT_LANG;
 			}
-			BugzillaLanguageSettings languageSettings = BugzillaCorePlugin.getDefault().getLanguageSetting(language);
-
-			client = BugzillaClientFactory.createClient(taskRepository.getRepositoryUrl(), taskRepository.getUserName(),
-					taskRepository.getPassword(), htUser, htPass, taskRepository.getProxy(),
-					taskRepository.getCharacterEncoding(), taskRepository.getProperties(), languageSettings);
+			client = BugzillaClientFactory.createClient(taskRepository);
 			clientByUrl.put(taskRepository.getRepositoryUrl(), client);
-			client.setRepositoryConfiguration(BugzillaCorePlugin.getRepositoryConfiguration(taskRepository, false));
+			client.setRepositoryConfiguration(BugzillaCorePlugin.getRepositoryConfiguration(taskRepository, false, monitor));
 		}
 		return client;
 	}

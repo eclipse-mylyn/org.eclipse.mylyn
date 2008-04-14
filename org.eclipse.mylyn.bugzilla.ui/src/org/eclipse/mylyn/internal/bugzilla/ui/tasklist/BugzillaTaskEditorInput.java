@@ -10,10 +10,12 @@
  */
 package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskDataHandler;
+import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -82,7 +84,8 @@ public class BugzillaTaskEditorInput extends RepositoryTaskEditorInput {
 			if (taskData != null) {
 				BugzillaRepositoryConnector bugzillaConnector = (BugzillaRepositoryConnector) TasksUi.getRepositoryManager()
 						.getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
-				((BugzillaTaskDataHandler)bugzillaConnector.getTaskDataHandler()).updateAttributeOptions(repository, taskData);
+				RepositoryConfiguration config = BugzillaCorePlugin.getRepositoryConfiguration(repository, false, new NullProgressMonitor());
+				((BugzillaTaskDataHandler)bugzillaConnector.getTaskDataHandler()).updateAttributeOptions(config, taskData);
 			}
 		} catch (Exception e) {
 			// ignore

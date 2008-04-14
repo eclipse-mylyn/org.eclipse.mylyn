@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -1039,7 +1040,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 					updateAttributesFromConfiguration(null);
 					if (product.getItemCount() == 0) {
 						try {
-							repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository, true);
+							repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository, true, new NullProgressMonitor());
 							updateAttributesFromConfiguration(null);
 						} catch (final CoreException e1) {
 							PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -1846,7 +1847,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 					}
 					try {
 						monitor.beginTask("Updating search options...", IProgressMonitor.UNKNOWN);
-						repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository, force);
+						repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository, force, monitor);
 					} catch (final Exception e) {
 						throw new InvocationTargetException(e);
 					} finally {
@@ -1858,9 +1859,9 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			try {
 				// TODO: make cancelable (bug 143011)
 				if (getContainer() != null) {
-					getContainer().run(true, false, updateRunnable);
+					getContainer().run(true, true, updateRunnable);
 				} else if (scontainer != null) {
-					scontainer.getRunnableContext().run(true, false, updateRunnable);
+					scontainer.getRunnableContext().run(true, true, updateRunnable);
 				} else {
 					IProgressService service = PlatformUI.getWorkbench().getProgressService();
 					service.busyCursorWhile(updateRunnable);
@@ -1901,6 +1902,9 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 						StatusHandler.log(new Status(IStatus.ERROR, BugzillaUiPlugin.PLUGIN_ID, cause.getMessage(),
 								cause));
 					}
+				} 
+				if(ex.getCause() instanceof OperationCanceledException) {
+					return;
 				}
 
 				MessageDialog.openError(shell, "Error updating search options", "Error was: "

@@ -37,8 +37,8 @@ public class BugzillaAttachmentHandler extends AbstractAttachmentHandler {
 	public InputStream getAttachmentAsStream(TaskRepository repository, RepositoryAttachment attachment,
 			IProgressMonitor monitor) throws CoreException {
 		try {
-			BugzillaClient client = connector.getClientManager().getClient(repository);
-			return client.getAttachmentData(attachment.getId());
+			BugzillaClient client = connector.getClientManager().getClient(repository, monitor);
+			return client.getAttachmentData(attachment.getId(), monitor);
 		} catch (IOException e) {
 			throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 					RepositoryStatus.ERROR_IO, repository.getRepositoryUrl(), e));
@@ -50,8 +50,8 @@ public class BugzillaAttachmentHandler extends AbstractAttachmentHandler {
 			String comment, IProgressMonitor monitor) throws CoreException {
 		try {
 			String bugId = task.getTaskId();
-			BugzillaClient client = connector.getClientManager().getClient(repository);
-			client.postAttachment(bugId, comment, attachment);
+			BugzillaClient client = connector.getClientManager().getClient(repository, monitor);
+			client.postAttachment(bugId, comment, attachment, monitor);
 		} catch (IOException e) {
 			throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 					RepositoryStatus.ERROR_IO, repository.getRepositoryUrl(), e));

@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -130,7 +131,8 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		RepositoryTaskAttribute attribute = null;
 		try {
 			RepositoryConfiguration configuration = BugzillaCorePlugin.getRepositoryConfiguration(this.repository,
-					false);
+					false, new NullProgressMonitor());
+		
 			if (configuration != null) {
 				List<BugzillaCustomField> customFields = configuration.getCustomFields();
 				if (!customFields.isEmpty()) {
@@ -621,7 +623,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 
 				List<String> validKeywords = new ArrayList<String>();
 				try {
-					validKeywords = BugzillaCorePlugin.getRepositoryConfiguration(repository, false).getKeywords();
+					validKeywords = BugzillaCorePlugin.getRepositoryConfiguration(repository, false, new NullProgressMonitor()).getKeywords();
 				} catch (Exception ex) {
 					// ignore
 				}
@@ -709,7 +711,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		if (assignedAttribute != null) {
 			String bugzillaVersion;
 			try {
-				bugzillaVersion = BugzillaCorePlugin.getRepositoryConfiguration(repository, false).getInstallVersion();
+				bugzillaVersion = BugzillaCorePlugin.getRepositoryConfiguration(repository, false, new NullProgressMonitor()).getInstallVersion();
 			} catch (CoreException e1) {
 				// ignore
 				bugzillaVersion = "2.18";

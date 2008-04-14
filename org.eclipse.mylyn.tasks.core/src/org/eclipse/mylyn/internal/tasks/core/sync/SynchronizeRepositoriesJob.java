@@ -114,11 +114,11 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 	private void updateRepositoryConfiguration(TaskRepository repository, AbstractRepositoryConnector connector,
 			IProgressMonitor monitor) throws InterruptedException {
 		try {
+			if (!isUser()) {
+				monitor = Policy.backgroundMonitorFor(monitor);
+			}
 			monitor.beginTask("Updating repository configuration for " + repository.getRepositoryUrl(), 100);
-			if (connector.isRepositoryConfigurationStale(repository)) {
-				if (!isUser()) {
-					monitor = Policy.backgroundMonitorFor(monitor);
-				}
+			if (connector.isRepositoryConfigurationStale(repository, monitor)) {
 				connector.updateRepositoryConfiguration(repository, monitor);
 			}
 		} catch (CoreException e) {

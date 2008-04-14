@@ -399,13 +399,13 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			AbstractTaskDataCollector resultCollector, SynchronizationEvent event, IProgressMonitor monitor) {
 		try {
 			monitor.beginTask("Running query", IProgressMonitor.UNKNOWN);
-			BugzillaClient client = getClientManager().getClient(repository);
-			boolean hitsReceived = client.getSearchHits(query, resultCollector);
+			BugzillaClient client = getClientManager().getClient(repository, monitor);
+			boolean hitsReceived = client.getSearchHits(query, resultCollector, monitor);
 			if (!hitsReceived) {
 				// XXX: HACK in case of ip change bugzilla can return 0 hits
 				// due to invalid authorization token, forcing relogin fixes
-				client.logout();
-				client.getSearchHits(query, resultCollector);
+				client.logout(monitor);
+				client.getSearchHits(query, resultCollector, monitor);
 			}
 
 			return Status.OK_STATUS;
@@ -471,17 +471,18 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public void updateRepositoryConfiguration(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
 		if (repository != null) {
-			BugzillaCorePlugin.getRepositoryConfiguration(repository, true);
+			BugzillaCorePlugin.getRepositoryConfiguration(repository, true, monitor);
 		}
 	}
 
-	public boolean isRepositoryConfigurationStale(TaskRepository repository) throws CoreException {
-		if (super.isRepositoryConfigurationStale(repository)) {
+	public boolean isRepositoryConfigurationStale(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
+		if (super.isRepositoryConfigurationStale(repository, monitor)) {
 			boolean result = true;
 			try {
-				BugzillaClient client = getClientManager().getClient(repository);
+				BugzillaClient client = getClientManager().getClient(repository, monitor);
 				if (client != null) {
-					String timestamp = client.getConfigurationTimestamp();
+					int x;
+					String timestamp = client.getConfigurationTimestamp(monitor);
 					if (timestamp != null) {
 						String oldTimestamp = repository.getProperty(IBugzillaConstants.PROPERTY_CONFIGTIMESTAMP);
 						if (oldTimestamp != null) {

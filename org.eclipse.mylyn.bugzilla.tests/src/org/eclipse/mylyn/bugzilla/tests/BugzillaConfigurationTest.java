@@ -12,19 +12,24 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClientFactory;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClientManager;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.core.SaxConfigurationContentHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.XmlCleaner;
-import org.eclipse.mylyn.web.core.WebClientUtil;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.web.core.AuthenticationCredentials;
+import org.eclipse.mylyn.web.core.AuthenticationType;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -34,6 +39,8 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 public class BugzillaConfigurationTest extends TestCase {
 
+	BugzillaClientManager bugzillaClientManager = new BugzillaClientManager();
+	
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -44,10 +51,24 @@ public class BugzillaConfigurationTest extends TestCase {
 		super.tearDown();
 	}
 
+	private BugzillaClient createClient(String hostUrl, String username, String password, String htAuthUser,
+			String htAuthPass, String encoding) throws MalformedURLException, CoreException {
+		TaskRepository taskRepository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND, hostUrl);
+
+		AuthenticationCredentials credentials = new AuthenticationCredentials(username, password);
+		taskRepository.setCredentials(AuthenticationType.REPOSITORY, credentials, false);
+
+		AuthenticationCredentials webCredentials = new AuthenticationCredentials(htAuthUser,
+				htAuthPass);
+		taskRepository.setCredentials(AuthenticationType.HTTP, webCredentials, false);
+		taskRepository.setCharacterEncoding(encoding);
+		return bugzillaClientManager.getClient(taskRepository, null);
+	}
+	
 	public void test222RDFProductConfig() throws Exception {
 
-		BugzillaClient client = BugzillaClientFactory.createClient(IBugzillaConstants.TEST_BUGZILLA_222_URL, "", "",
-				"", "", WebClientUtil.getPlatformProxy(), "UTF-8");
+		BugzillaClient client = createClient(IBugzillaConstants.TEST_BUGZILLA_222_URL, "", "",
+				"", "", "UTF-8");
 		RepositoryConfiguration config = client.getRepositoryConfiguration();
 		assertNotNull(config);
 		assertEquals("2.22.1", config.getInstallVersion());
@@ -65,8 +86,8 @@ public class BugzillaConfigurationTest extends TestCase {
 	}
 
 	public void test2201RDFProductConfig() throws Exception {
-		BugzillaClient client = BugzillaClientFactory.createClient(IBugzillaConstants.TEST_BUGZILLA_2201_URL, "", "",
-				"", "", WebClientUtil.getPlatformProxy(), "UTF-8");
+		BugzillaClient client = createClient(IBugzillaConstants.TEST_BUGZILLA_2201_URL, "", "",
+				"", "", "UTF-8");
 		RepositoryConfiguration config = client.getRepositoryConfiguration();
 		assertNotNull(config);
 		assertEquals("2.20.1", config.getInstallVersion());
@@ -84,8 +105,8 @@ public class BugzillaConfigurationTest extends TestCase {
 	}
 
 	public void test220RDFProductConfig() throws Exception {
-		BugzillaClient client = BugzillaClientFactory.createClient(IBugzillaConstants.TEST_BUGZILLA_220_URL, "", "",
-				"", "", WebClientUtil.getPlatformProxy(), "UTF-8");
+		BugzillaClient client = createClient(IBugzillaConstants.TEST_BUGZILLA_220_URL, "", "",
+				"", "", "UTF-8");
 		RepositoryConfiguration config = client.getRepositoryConfiguration();
 		assertNotNull(config);
 		assertEquals("2.20.3", config.getInstallVersion());
@@ -103,8 +124,8 @@ public class BugzillaConfigurationTest extends TestCase {
 	}
 
 	public void test218RDFProductConfig() throws Exception {
-		BugzillaClient client = BugzillaClientFactory.createClient(IBugzillaConstants.TEST_BUGZILLA_218_URL, "", "",
-				"", "", WebClientUtil.getPlatformProxy(), "UTF-8");
+		BugzillaClient client = createClient(IBugzillaConstants.TEST_BUGZILLA_218_URL, "", "",
+				"", "", "UTF-8");
 		RepositoryConfiguration config = client.getRepositoryConfiguration();
 		assertNotNull(config);
 		assertEquals("2.18.6", config.getInstallVersion());
@@ -122,8 +143,8 @@ public class BugzillaConfigurationTest extends TestCase {
 	}
 
 	public void testEclipseRDFProductConfig() throws Exception {
-		BugzillaClient client = BugzillaClientFactory.createClient(IBugzillaConstants.ECLIPSE_BUGZILLA_URL, "", "", "",
-				"", WebClientUtil.getPlatformProxy(), "UTF-8");
+		BugzillaClient client = createClient(IBugzillaConstants.ECLIPSE_BUGZILLA_URL, "", "", "",
+				"", "UTF-8");
 		RepositoryConfiguration config = client.getRepositoryConfiguration();
 		assertNotNull(config);
 		assertEquals("3.0.1", config.getInstallVersion());

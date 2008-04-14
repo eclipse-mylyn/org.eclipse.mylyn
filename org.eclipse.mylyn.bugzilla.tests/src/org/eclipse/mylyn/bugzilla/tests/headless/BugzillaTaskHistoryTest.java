@@ -52,9 +52,9 @@ public class BugzillaTaskHistoryTest extends AbstractBugzillaTest {
 
 	public void testGetBugHistory() throws Exception {
 
-		BugzillaClient client = connector.getClientManager().getClient(repository);
+		BugzillaClient client = connector.getClientManager().getClient(repository, null);
 		assertNotNull(client);
-		TaskHistory history = client.getHistory("1");
+		TaskHistory history = client.getHistory("1", null);
 		assertNotNull(history);
 
 		assertEquals(1, history.getAssignmentEvents().size());
@@ -64,9 +64,9 @@ public class BugzillaTaskHistoryTest extends AbstractBugzillaTest {
 	}
 
 	public void testAssignmentEvent() throws Exception {
-		BugzillaClient client = connector.getClientManager().getClient(repository);
+		BugzillaClient client = connector.getClientManager().getClient(repository, null);
 		assertNotNull(client);
-		TaskHistory history = client.getHistory("1");
+		TaskHistory history = client.getHistory("1", null);
 		assertNotNull(history);
 
 		AssignmentEvent assignment = history.getAssignmentEvents().get(0);
@@ -80,9 +80,9 @@ public class BugzillaTaskHistoryTest extends AbstractBugzillaTest {
 
 	public void testStatusEvent() throws Exception {
 
-		BugzillaClient client = connector.getClientManager().getClient(repository);
+		BugzillaClient client = connector.getClientManager().getClient(repository, null);
 		assertNotNull(client);
-		TaskHistory history = client.getHistory("1");
+		TaskHistory history = client.getHistory("1", null);
 		assertNotNull(history);
 
 		StatusEvent statusChange = history.getStatusEvents().get(0);
@@ -94,9 +94,9 @@ public class BugzillaTaskHistoryTest extends AbstractBugzillaTest {
 	}
 
 	public void testResolutionEvent() throws Exception {
-		BugzillaClient client = connector.getClientManager().getClient(repository);
+		BugzillaClient client = connector.getClientManager().getClient(repository, null);
 		assertNotNull(client);
-		TaskHistory history = client.getHistory(REPORT_ID);
+		TaskHistory history = client.getHistory(REPORT_ID, null);
 		assertNotNull(history);
 
 		ResolutionEvent resolutionChange = history.getResolutionEvents().get(0);
@@ -108,9 +108,9 @@ public class BugzillaTaskHistoryTest extends AbstractBugzillaTest {
 	}
 
 	public void testStoredHistory() throws Exception {
-		BugzillaClient client = connector.getClientManager().getClient(repository);
+		BugzillaClient client = connector.getClientManager().getClient(repository, null);
 		assertNotNull(client);
-		TaskHistory history = client.getHistory(REPORT_ID);
+		TaskHistory history = client.getHistory(REPORT_ID, null);
 		assertNotNull(history);
 		storeHistory(history);
 

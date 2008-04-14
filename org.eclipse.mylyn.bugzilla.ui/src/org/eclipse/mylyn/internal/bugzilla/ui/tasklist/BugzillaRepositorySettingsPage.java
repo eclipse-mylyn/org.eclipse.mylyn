@@ -11,7 +11,6 @@ package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
-import java.net.Proxy;
 import java.net.URL;
 import java.util.List;
 
@@ -213,7 +212,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 								try {
 									monitor.beginTask("Retrieving repository configuration", IProgressMonitor.UNKNOWN);
 									repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository,
-											false);
+											false, monitor);
 									if (repositoryConfiguration != null) {
 										platform = repository.getProperty(IBugzillaConstants.BUGZILLA_DEF_PLATFORM);
 										os = repository.getProperty(IBugzillaConstants.BUGZILLA_DEF_OS);
@@ -423,34 +422,37 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 	public class BugzillaValidator extends Validator {
 
-		final String serverUrl;
-
-		final String newUserId;
-
-		final String newPassword;
-
-		final boolean isAnonymous;
-
-		final String newEncoding;
-
-		final String httpAuthUser;
-
-		final String httpAuthPass;
-
-		final Proxy proxy;
+//		final String serverUrl;
+//
+//		final String newUserId;
+//
+//		final String newPassword;
+//
+//		final boolean isAnonymous;
+//
+//		final String newEncoding;
+//
+//		final String httpAuthUser;
+//
+//		final String httpAuthPass;
+//
+//		final Proxy proxy;
+		
+		final TaskRepository repository;
 
 		private String[] versions = new String[1];;
 
 		public BugzillaValidator(TaskRepository repository, String version) {
-			serverUrl = getServerUrl();
-			newUserId = getUserName();
-			newPassword = getPassword();
-			isAnonymous = isAnonymousAccess();
-			newEncoding = getCharacterEncoding();
-			httpAuthUser = getHttpAuthUserId();
-			httpAuthPass = getHttpAuthPassword();
-			proxy = repository.getProxy();
+//			serverUrl = getServerUrl();
+//			newUserId = getUserName();
+//			newPassword = getPassword();
+//			isAnonymous = isAnonymousAccess();
+//			newEncoding = getCharacterEncoding();
+//			httpAuthUser = getHttpAuthUserId();
+//			httpAuthPass = getHttpAuthPassword();
+//			proxy = repository.getProxy();
 			versions[0] = version;
+			this.repository = repository;
 		}
 
 		@Override
@@ -458,7 +460,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 			try {
 				validate(monitor);
 			} catch (Exception e) {
-				displayError(serverUrl, e);
+				displayError(repository.getRepositoryUrl(), e);
 			}
 		}
 
@@ -505,9 +507,8 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 //					client.logout();
 //				} else 
 				if (versions != null) {
-					client = BugzillaClientFactory.createClient(serverUrl, newUserId, newPassword, httpAuthUser,
-							httpAuthPass, proxy, newEncoding);
-					client.validate();
+					client = BugzillaClientFactory.createClient(repository);
+					client.validate(monitor);
 				}
 				if (checkVersion && client != null) {
 					RepositoryConfiguration config = client.getRepositoryConfiguration();

@@ -9,6 +9,7 @@ package org.eclipse.mylyn.internal.bugzilla.ui.editor;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -164,7 +165,7 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 		if (assignedAttribute != null) {
 			String bugzillaVersion;
 			try {
-				bugzillaVersion = BugzillaCorePlugin.getRepositoryConfiguration(repository, false).getInstallVersion();
+				bugzillaVersion = BugzillaCorePlugin.getRepositoryConfiguration(repository, false, new NullProgressMonitor()).getInstallVersion();
 			} catch (CoreException e1) {
 				// ignore
 				bugzillaVersion = "2.18";

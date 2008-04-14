@@ -21,7 +21,6 @@ import java.util.StringTokenizer;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.mylyn.internal.trac.core.TracAttributeFactory.Attribute;
 import org.eclipse.mylyn.internal.trac.core.TracTask.Kind;
@@ -380,7 +379,7 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 			throws CoreException {
 		try {
 			ITracClient client = connector.getClientManager().getRepository(repository);
-			client.updateAttributes(new NullProgressMonitor(), false);
+			client.updateAttributes(monitor, false);
 			createDefaultAttributes(attributeFactory, data, client, false);
 			return true;
 		} catch (OperationCanceledException e) {
@@ -464,5 +463,5 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 					true));
 		}
 	}
-	
+
 }
