@@ -52,6 +52,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListFactory;
 import org.eclipse.mylyn.tasks.core.ITaskDataManager;
@@ -294,7 +295,12 @@ public class TaskListWriter {
 							if (task == null) {
 								orphanedTaskNodes.add(child);
 							} else {
-								taskList.insertTask(task, null, null);
+//								taskList.insertTask(task, null, null);
+								taskList.addTask(task);
+								AbstractTaskCategory category = taskList.getContainerForHandle(task.getCategoryHandle());
+								if (category != null) {
+									taskList.moveTask(task, category);
+								}
 								if (child.getChildNodes() != null && child.getChildNodes().getLength() > 0) {
 									tasksWithSubtasks.put(task, child.getChildNodes());
 								}

@@ -93,6 +93,7 @@ public class TaskListManagerTest extends TestCase {
 		MockTask task = new MockTask("1");
 		manager.getTaskList().addTask(task, query);
 		manager.getTaskList().moveTask(task, manager.getTaskList().getDefaultCategory());
+		assertTrue(query.contains(task.getHandleIdentifier()));
 		assertTrue(manager.getTaskList().getDefaultCategory().contains(task.getHandleIdentifier()));
 
 		manager.saveTaskList();
@@ -455,8 +456,8 @@ public class TaskListManagerTest extends TestCase {
 	public void testDeleteCategoryMovesTasksToRoot() {
 		AbstractTask task = new MockTask("delete");
 		TaskCategory category = new TaskCategory("cat");
-		manager.getTaskList().addTask(task, category);
 		manager.getTaskList().addCategory(category);
+		manager.getTaskList().addTask(task, category);
 		assertEquals(0, manager.getTaskList().getDefaultCategory().getChildren().size());
 		manager.getTaskList().deleteCategory(category);
 		manager.getTaskList().getOrphanContainer(MockRepositoryConnector.REPOSITORY_URL);

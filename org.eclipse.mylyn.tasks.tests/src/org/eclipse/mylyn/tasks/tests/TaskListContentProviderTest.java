@@ -54,6 +54,7 @@ public class TaskListContentProviderTest extends TestCase {
 		AbstractTask parent = new LocalTask("parent", "parent label");
 		AbstractTask completedChild = new LocalTask("completed child", "completed child label");
 		completedChild.setCompletionDate(new Date());
+		taskList.addTask(parent);
 		taskList.addTask(completedChild, parent);
 		assertFalse(provider.hasChildren(parent));
 

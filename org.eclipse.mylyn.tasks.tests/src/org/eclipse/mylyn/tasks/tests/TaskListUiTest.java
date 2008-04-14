@@ -128,7 +128,7 @@ public class TaskListUiTest extends TestCase {
 		assertEquals(cat1.getChildren().size(), 5);
 
 		cat2 = new TaskCategory("Second Category");
-
+		manager.getTaskList().addCategory(cat2);
 		cat2task1 = manager.createNewLocalTask("task 1");
 		cat2task1.setPriority(PriorityLevel.P1.toString());
 		cat2task1.addParentContainer(cat2);

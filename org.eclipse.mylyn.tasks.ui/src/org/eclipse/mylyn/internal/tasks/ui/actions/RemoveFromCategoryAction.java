@@ -65,12 +65,12 @@ public class RemoveFromCategoryAction extends Action {
 
 					if (item.getParentItem() != null && item.getParent().getData() instanceof TaskCategory) {
 						TaskCategory category = (TaskCategory) item.getParentItem().getData();
-						TasksUi.getTaskListManager().getTaskList().removeFromCategory(category, task);
+						TasksUi.getTaskListManager().getTaskList().removeFromContainer(category, task);
 					}
 //						TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task,
 //								TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 					else if (!parentContainers.isEmpty() && TaskCategory.getParentTaskCategory(task) != null) {
-						TasksUi.getTaskListManager().getTaskList().removeFromCategory(
+						TasksUi.getTaskListManager().getTaskList().removeFromContainer(
 								TaskCategory.getParentTaskCategory(task), task);
 						//TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task, null);
 					} else if (!task.isLocal()) {
