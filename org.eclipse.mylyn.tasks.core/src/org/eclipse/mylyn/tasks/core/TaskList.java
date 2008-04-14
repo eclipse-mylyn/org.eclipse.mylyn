@@ -623,6 +623,9 @@ public class TaskList implements ISchedulingRule {
 		removeFromContainer(query, task);
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public void removeFromContainer(AbstractTaskContainer container, AbstractTask task) {
 		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
 		removeFromContainer(container, task, delta);
@@ -1384,10 +1387,16 @@ public class TaskList implements ISchedulingRule {
 		this.setActive(task, task.isActive());
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public boolean contains(ISchedulingRule rule) {
 		return isConflicting(rule);
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public boolean isConflicting(ISchedulingRule rule) {
 		return rule instanceof TaskList || rule instanceof AbstractTaskContainer;
 	}
