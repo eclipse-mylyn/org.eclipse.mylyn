@@ -14,7 +14,9 @@ import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InterruptedIOException;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.mylyn.web.core.Policy;
 
@@ -50,6 +52,8 @@ public class TimeoutInputStream extends FilterInputStream {
 	private boolean waitingForClose = false; // if true, thread is waiting for close()
 
 	private boolean growWhenFull = false; // if true, buffer will grow when it is full
+
+	private final CountDownLatch closeLatch = new CountDownLatch(1); // if 0, runThread() has finished
 
 	/**
 	 * Creates a timeout wrapper for an input stream.
@@ -95,10 +99,10 @@ public class TimeoutInputStream extends FilterInputStream {
 	 */
 	@Override
 	public void close() throws IOException {
+		if (closeLatch.getCount() == 0) {
+			return;
+		}
 		synchronized (this) {
-			if (future.isDone()) {
-				return;
-			}
 			closeRequested = true;
 			future.cancel(true);
 			checkError();
@@ -106,18 +110,15 @@ public class TimeoutInputStream extends FilterInputStream {
 		if (closeTimeout == -1) {
 			return;
 		}
-//		try {
-//			future.get(closeTimeout, TimeUnit.MILLISECONDS);
-//		} catch (InterruptedException e) {
-//			Thread.currentThread().interrupt(); // we weren't expecting to be interrupted
-//		} catch (ExecutionException e) {
-//			// ignore, checkError should catch this
-//		} catch (TimeoutException e) {
-//			// ignore, isDone() should catch this
-//		}
+		boolean closed = false;
+		try {
+			closed = closeLatch.await(closeTimeout, TimeUnit.MILLISECONDS);
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt(); // we weren't expecting to be interrupted
+		}
 		synchronized (this) {
 			checkError();
-			if (!future.isDone()) {
+			if (!closed) {
 				throw new InterruptedIOException();
 			}
 		}
@@ -286,9 +287,7 @@ public class TimeoutInputStream extends FilterInputStream {
 					ioe = e;
 				}
 			} finally {
-				synchronized (this) {
-					notify();
-				}
+				closeLatch.countDown();
 			}
 		}
 	}
