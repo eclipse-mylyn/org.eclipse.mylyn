@@ -16,7 +16,6 @@ import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.mylyn.internal.tasks.core.Person;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
-import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskGroup;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
@@ -89,7 +88,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 
 	private CompositeImageDescriptor getImageDescriptor(Object object) {
 		CompositeImageDescriptor compositeDescriptor = new CompositeImageDescriptor();
-		if (object instanceof TaskArchive || object instanceof UncategorizedTaskContainer) {
+		if (object instanceof UncategorizedTaskContainer) {
 			compositeDescriptor.icon = TasksUiImages.CATEGORY_ARCHIVE;
 			return compositeDescriptor;
 		} else if (object instanceof TaskCategory) {
@@ -232,8 +231,8 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			UnmatchedTaskContainer container = (UnmatchedTaskContainer) object;
 
 			String result = container.getSummary();
-			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(
-					container.getConnectorKind(), container.getRepositoryUrl());
+			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(container.getConnectorKind(),
+					container.getRepositoryUrl());
 			if (repository != null) {
 				result = "Unmatched [" + repository.getRepositoryLabel() + "]";
 			}

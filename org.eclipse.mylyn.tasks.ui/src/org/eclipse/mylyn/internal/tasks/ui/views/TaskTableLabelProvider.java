@@ -17,8 +17,6 @@ import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableFontProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
-import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
@@ -80,12 +78,7 @@ public class TaskTableLabelProvider extends DecoratingLabelProvider implements I
 
 	public Color getBackground(Object element, int columnIndex) {
 		if (element instanceof AbstractTaskContainer && !(element instanceof AbstractTask)) {
-			AbstractTaskContainer category = (AbstractTaskContainer) element;
-			if (category instanceof TaskArchive) {
-				return TaskListColorsAndFonts.BACKGROUND_ARCHIVE;
-			} else {
-				return categoryBackgroundColor;
-			}
+			return categoryBackgroundColor;
 		} else if (element instanceof AbstractRepositoryQuery) {
 			return categoryBackgroundColor;
 		}

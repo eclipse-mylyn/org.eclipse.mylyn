@@ -31,7 +31,6 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
@@ -95,9 +94,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 				List<IAdaptable> resourcesRepositoriesContainers = new ArrayList<IAdaptable>();
 
 				for (AbstractTaskContainer category : TasksUi.getTaskListManager().getTaskList().getCategories()) {
-					if (!(category instanceof TaskArchive)) {
-						taskRepositoriesContainers.add(category);
-					}
+					taskRepositoriesContainers.add(category);
 				}
 
 				IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();

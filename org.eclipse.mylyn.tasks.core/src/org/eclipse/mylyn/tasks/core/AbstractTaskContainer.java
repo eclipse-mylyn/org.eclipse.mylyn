@@ -7,7 +7,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.tasks.core;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -43,16 +42,18 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	 * Use {@link TaskList} methods instead.
 	 */
 	public void internalAddChild(AbstractTask task) {
-		if (task != null) {
-			children.add(task);
-		}
+		Assert.isNotNull(task);
+		children.add(task);
 	}
 
 	/**
 	 * Use {@link TaskList} methods instead.
+	 * 
+	 * @return
+	 * @since 3.0
 	 */
-	public void internalRemoveChild(AbstractTask task) {
-		children.remove(task);
+	public boolean internalRemoveChild(AbstractTask task) {
+		return children.remove(task);
 	}
 
 	/**
@@ -68,17 +69,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	 * TODO: review to make sure that this is too expensive, or move to creation.
 	 */
 	public Set<AbstractTask> getChildren() {
-		if (children.isEmpty()) {
-			return Collections.emptySet();
-		}
-
-		Set<AbstractTask> childrenWithoutCycles = new HashSet<AbstractTask>(children.size());
-		for (AbstractTask child : children) {
-			if (child != null && !child.contains(this.getHandleIdentifier())) {
-				childrenWithoutCycles.add(child);
-			}
-		}
-		return childrenWithoutCycles;
+		return children;
 	}
 
 	/**

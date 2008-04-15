@@ -613,11 +613,8 @@ public class TaskList implements ISchedulingRule, ITaskList {
 	private void removeOrphan(AbstractTask task, Set<TaskContainerDelta> delta) {
 		AbstractTaskContainer orphans = getUnmatchedContainer(task.getRepositoryUrl());
 		if (orphans != null) {
-			if (orphans.contains(task.getHandleIdentifier())) {
-				orphans.internalRemoveChild(task);
-				if (delta != null) {
-					delta.add(new TaskContainerDelta(orphans, TaskContainerDelta.Kind.CHANGED));
-				}
+			if (orphans.internalRemoveChild(task)) {
+				delta.add(new TaskContainerDelta(orphans, TaskContainerDelta.Kind.CHANGED));
 				task.removeParentContainer(orphans);
 			}
 		}
