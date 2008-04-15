@@ -57,13 +57,6 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	}
 
 	/**
-	 * Remove all children held by this container Does not delete tasks from TaskList
-	 */
-	public void clear() {
-		children.clear();
-	}
-
-	/**
 	 * Removes any cyclic dependencies in children.
 	 * 
 	 * TODO: review to make sure that this is too expensive, or move to creation.

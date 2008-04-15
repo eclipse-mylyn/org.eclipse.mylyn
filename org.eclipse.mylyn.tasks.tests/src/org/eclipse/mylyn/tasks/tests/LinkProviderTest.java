@@ -23,7 +23,7 @@ import org.eclipse.mylyn.tasks.ui.AbstractTaskRepositoryLinkProvider;
  */
 public class LinkProviderTest extends TestCase {
 
-	class LinkProviderStub extends AbstractTaskRepositoryLinkProvider {
+	public class LinkProviderStub extends AbstractTaskRepositoryLinkProvider {
 
 		int executions = 0;
 

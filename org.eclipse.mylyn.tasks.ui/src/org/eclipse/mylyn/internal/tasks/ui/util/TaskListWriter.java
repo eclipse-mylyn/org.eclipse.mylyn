@@ -323,7 +323,7 @@ public class TaskListWriter {
 						AbstractTaskCategory category = taskList.getContainerForHandle(delagatingExternalizer.getLegacyParentCategoryMap()
 								.get(task));
 						if (category != null) {
-							taskList.moveTask(task, category);
+							taskList.addTask(task, category);
 						}
 					}
 				}

@@ -37,8 +37,7 @@ public interface ITaskList {
 	 * @param container
 	 *            task container, query or parent task must not be null
 	 */
-	public abstract void addTask(AbstractTask task, AbstractTaskContainer parentContainer)
-			throws IllegalArgumentException;
+	public abstract boolean addTask(AbstractTask task, AbstractTaskContainer parentContainer);
 
 	public abstract void deleteCategory(AbstractTaskCategory category);
 

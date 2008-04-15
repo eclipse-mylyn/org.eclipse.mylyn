@@ -180,7 +180,7 @@ public class OrphanedTasksTest extends TestCase {
 		taskList.addQuery(mockQuery);
 		taskList.addTask(mockTask, mockQuery);
 		assertTrue(taskList.getDefaultCategory().isEmpty());
-		taskList.moveTask(mockTask, taskList.getDefaultCategory());
+		taskList.addTask(mockTask, taskList.getDefaultCategory());
 		assertEquals(1, taskList.getCategories().size());
 		assertFalse(taskList.getDefaultCategory().isEmpty());
 		// save tasklist, restore tasklist
@@ -226,7 +226,7 @@ public class OrphanedTasksTest extends TestCase {
 		LocalTask newTask = new LocalTask("" + taskList.getNextLocalTaskId(), "new local task");
 		taskList.addTask(newTask, null);
 		assertTrue(taskList.getDefaultCategory().contains(newTask.getHandleIdentifier()));
-		taskList.moveTask(newTask, category);
+		taskList.addTask(newTask, category);
 		assertFalse(taskList.getDefaultCategory().contains(newTask.getHandleIdentifier()));
 	}
 
@@ -258,7 +258,7 @@ public class OrphanedTasksTest extends TestCase {
 		TaskCategory category = new TaskCategory("taskCategoryHandle");
 		taskList.addCategory(category);
 
-		taskList.moveTask(mockTask, category);
+		taskList.addTask(mockTask, category);
 		assertTrue(taskList.getDefaultCategory().isEmpty());
 		assertTrue(category.contains(mockTask.getHandleIdentifier()));
 		assertTrue(mockQuery.contains(mockTask.getHandleIdentifier()));

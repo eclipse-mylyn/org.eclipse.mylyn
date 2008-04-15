@@ -24,6 +24,8 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
+import org.eclipse.mylyn.web.core.AuthenticationCredentials;
+import org.eclipse.mylyn.web.core.AuthenticationType;
 
 /**
  * @author Mik Kersten
@@ -124,24 +126,20 @@ public class TaskRepositoryManagerTest extends TestCase {
 	public void testRepositoryPersistance() throws MalformedURLException {
 		TaskRepository repository1 = new TaskRepository("bugzilla", "http://bugzilla");
 		TaskRepository repository2 = new TaskRepository("jira", "http://jira");
+		TaskRepository repository3 = new TaskRepository("local", "http://local");
+		manager.addRepository(repository3, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		manager.addRepository(repository1, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		manager.addRepository(repository2, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
-		List<TaskRepository> repositoryList = new ArrayList<TaskRepository>();
-		repositoryList.add(repository2);
-		repositoryList.add(repository1);
 		manager.readRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
-		// NOTE: different conditions for running with and without the JIRA
-		// Connector
-		if (manager.getRepositoryConnectors().size() > 1) {
-			assertTrue(manager.getAllRepositories().contains(repository1));
+		if (manager.getRepositoryConnector("bugzilla") != null) {
 			assertTrue(manager.getAllRepositories().contains(repository2));
-			// assertEquals(repositoryList, manager.getAllRepositories());
-		} else {
-			// TODO there is something wrong with this
-			assertEquals("all: " + manager.getAllRepositories(), 1, manager.getAllRepositories().size());
 		}
+		if (manager.getRepositoryConnector("jira") != null) {
+			assertTrue(manager.getAllRepositories().contains(repository2));
+		}
+		assertTrue(manager.getAllRepositories().contains(repository3));
 	}
 
 	public void testRepositoryAttributePersistance() throws MalformedURLException {
@@ -154,19 +152,17 @@ public class TaskRepositoryManagerTest extends TestCase {
 		Date now = new Date();
 		String dateString = now.toString();
 
-		TaskRepository repository1 = new TaskRepository("bugzilla", "http://bugzilla");
+		TaskRepository repository1 = new TaskRepository("local", "http://bugzilla");
 		repository1.setVersion(version);
 		repository1.setCharacterEncoding(encoding);
 		repository1.setTimeZoneId(fakeTimeZone);
 		repository1.setSynchronizationTimeStamp(dateString);
-		repository1.setAnonymous(true);
 		manager.addRepository(repository1, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		manager.readRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		TaskRepository temp = manager.getRepository(repository1.getConnectorKind(), repository1.getRepositoryUrl());
 		assertNotNull(temp);
 		assertEquals(version, temp.getVersion());
-		assertTrue(temp.isAnonymous());
 		assertEquals(encoding, temp.getCharacterEncoding());
 		assertEquals(fakeTimeZone, temp.getTimeZoneId());
 		assertEquals(dateString, temp.getSynchronizationTimeStamp());
@@ -190,12 +186,15 @@ public class TaskRepositoryManagerTest extends TestCase {
 
 	public void testRepositoryWithUnnownUrlHandler() {
 		TaskRepository repository = new TaskRepository("eclipse.technology.mylar",
-				"nntp://news.eclipse.org/eclipse.technology.mylar");
+				"abc://news.eclipse.org/eclipse.technology.mylar");
 
-		repository.setAuthenticationCredentials("testUser", "testPassword");
+		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("testUser",
+				"testPassword"), true);
 
-		assertEquals("testUser", repository.getUserName());
-		assertEquals("testPassword", repository.getPassword());
+		AuthenticationCredentials credentials = repository.getCredentials(AuthenticationType.REPOSITORY);
+		assertNotNull(credentials);
+		assertEquals("testUser", credentials.getUserName());
+		assertEquals("testPassword", credentials.getPassword());
 	}
 
 	public void testRepositoryWithCustomAttributes() throws Exception {
@@ -218,8 +217,8 @@ public class TaskRepositoryManagerTest extends TestCase {
 	}
 
 	public void testRepositoryPersistanceSameUrl() throws MalformedURLException {
-		TaskRepository repository1 = new TaskRepository("bugzilla", "http://repository");
-		TaskRepository repository2 = new TaskRepository("jira", "http://repository");
+		TaskRepository repository1 = new TaskRepository("local", "http://repository");
+		TaskRepository repository2 = new TaskRepository("web", "http://repository");
 		manager.addRepository(repository1, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		manager.addRepository(repository2, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		assertEquals(2, manager.getAllRepositories().size());

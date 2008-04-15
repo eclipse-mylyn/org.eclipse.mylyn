@@ -116,27 +116,62 @@ public class TaskList implements ISchedulingRule, ITaskList {
 		addTask(task, null);
 	}
 
-	/**
-	 * Precondition: {@code container} already exists in tasklist (be it a parent task, category, or query) If the
-	 * parentContainer is null the task is considered an orphan and added to the appropriate repository's orphaned tasks
-	 * container.
-	 * 
-	 * @param task
-	 *            to be added
-	 * @param container
-	 *            task container, query or parent task must not be null
-	 */
-	public void addTask(AbstractTask task, AbstractTaskContainer parentContainer) {
-		moveTask(task, parentContainer);
+	public boolean addTask(AbstractTask task, AbstractTaskContainer container) {
+		Assert.isNotNull(task);
+		Assert.isLegal(!(container instanceof UnmatchedTaskContainer));
+
+		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
+		try {
+			lock.acquire();
+
+			task = getOrCreateTask(task);
+			if (container == null) {
+				container = getUnmatchedContainer(task.getRepositoryUrl());
+			} else {
+				container = getValidElement(container);
+			}
+
+			// ensure parent is valid and does not contain task already
+			if (container == null || task.getParentContainers().contains(container)) {
+				return false;
+			}
+
+			// ensure that we don't create cycles
+			if (task.contains(container.getHandleIdentifier())) {
+				return false;
+			}
+
+			if (task instanceof LocalTask && task.getParentContainers().size() > 0) {
+				// local tasks should only have 1 parent
+				for (AbstractTaskContainer parent : task.getParentContainers()) {
+					removeFromContainerInternal(parent, task, delta);
+				}
+			} else if (container instanceof AbstractTaskCategory) {
+				// tasks can only be in one task category at a time
+				AbstractTaskCategory tempCat = TaskCategory.getParentTaskCategory(task);
+				if (tempCat != null) {
+					removeFromContainerInternal(tempCat, task, delta);
+				}
+			}
+
+			removeOrphan(task, delta);
+
+			task.addParentContainer(container);
+			container.internalAddChild(task);
+		} finally {
+			lock.release();
+		}
+
+		delta.add(new TaskContainerDelta(task, TaskContainerDelta.Kind.CHANGED));
+		delta.add(new TaskContainerDelta(container, TaskContainerDelta.Kind.CHANGED));
+		fireDelta(delta);
+		return true;
 	}
 
 	public void addUnmatchedContainer(UnmatchedTaskContainer orphanedTasksContainer) {
 		repositoryOrphansMap.put(orphanedTasksContainer.getRepositoryUrl(), orphanedTasksContainer);
 	}
 
-	/**
-	 * @since 3.0
-	 */
 	public boolean contains(ISchedulingRule rule) {
 		return isConflicting(rule);
 	}
@@ -192,8 +227,6 @@ public class TaskList implements ISchedulingRule, ITaskList {
 				removeFromContainerInternal(task, child, delta);
 				addOrphan(child, delta);
 			}
-
-			task.clear();
 
 			tasks.remove(task.getHandleIdentifier());
 		} finally {
@@ -257,12 +290,16 @@ public class TaskList implements ISchedulingRule, ITaskList {
 	private AbstractTask getOrCreateTask(AbstractTask taskListElement) {
 		AbstractTask task = tasks.get(taskListElement.getHandleIdentifier());
 		if (task == null) {
-			if (task instanceof LocalTask) {
-				int taskId = Integer.parseInt(task.getTaskId());
-				maxLocalTaskId = Math.max(maxLocalTaskId, taskId);
-			}
 			tasks.put(taskListElement.getHandleIdentifier(), taskListElement);
 			task = taskListElement;
+			if (task instanceof LocalTask) {
+				try {
+					int taskId = Integer.parseInt(task.getTaskId());
+					maxLocalTaskId = Math.max(maxLocalTaskId, taskId);
+				} catch (NumberFormatException e) {
+					// ignore
+				}
+			}
 		}
 		return task;
 	}
@@ -331,9 +368,6 @@ public class TaskList implements ISchedulingRule, ITaskList {
 		}
 	}
 
-	/**
-	 * @since 2.0
-	 */
 	public AbstractTask getTask(String repositoryUrl, String taskId) {
 		if (!RepositoryTaskHandleUtil.isValidTaskId(taskId)) {
 			return null;
@@ -343,12 +377,6 @@ public class TaskList implements ISchedulingRule, ITaskList {
 		return getTask(handle);
 	}
 
-	/**
-	 * Searches for a task whose key matches.
-	 * 
-	 * @return first task with a key, null if no matching task is found
-	 * @since 2.0
-	 */
 	public AbstractTask getTaskByKey(String repositoryUrl, String taskKey) {
 		for (AbstractTask task : tasks.values()) {
 			String currentTaskKey = task.getTaskKey();
@@ -360,9 +388,6 @@ public class TaskList implements ISchedulingRule, ITaskList {
 		return null;
 	}
 
-	/**
-	 * Returns all categories except for the Uncategorized container. Does not return Unmatched containers.
-	 */
 	public Set<AbstractTaskCategory> getTaskContainers() {
 		Set<AbstractTaskCategory> containers = new HashSet<AbstractTaskCategory>();
 		for (AbstractTaskCategory container : categories.values()) {
@@ -419,66 +444,8 @@ public class TaskList implements ISchedulingRule, ITaskList {
 		}
 	}
 
-	/**
-	 * @since 3.0
-	 */
 	public boolean isConflicting(ISchedulingRule rule) {
 		return rule instanceof TaskList || rule instanceof AbstractTaskContainer;
-	}
-
-	/**
-	 * @since 2.2
-	 */
-	public boolean moveTask(AbstractTask task, AbstractTaskContainer container) {
-		Assert.isNotNull(task);
-		Assert.isLegal(!(container instanceof UnmatchedTaskContainer));
-
-		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
-		try {
-			lock.acquire();
-
-			task = getOrCreateTask(task);
-			if (container == null) {
-				container = getUnmatchedContainer(task.getRepositoryUrl());
-			} else {
-				container = getValidElement(container);
-			}
-
-			// ensure parent is valid and does not contain task already
-			if (container == null || task.getParentContainers().contains(container)) {
-				return false;
-			}
-
-			// ensure that we don't create cycles
-			if (task.contains(container.getHandleIdentifier())) {
-				return false;
-			}
-
-			if (task instanceof LocalTask && task.getParentContainers().size() > 0) {
-				// local tasks should only have 1 parent
-				for (AbstractTaskContainer parent : task.getParentContainers()) {
-					removeFromContainerInternal(parent, task, delta);
-				}
-			} else if (container instanceof AbstractTaskCategory) {
-				// tasks can only be in one task category at a time
-				AbstractTaskCategory tempCat = TaskCategory.getParentTaskCategory(task);
-				if (tempCat != null) {
-					removeFromContainerInternal(tempCat, task, delta);
-				}
-			}
-
-			removeOrphan(task, delta);
-
-			task.addParentContainer(container);
-			container.internalAddChild(task);
-		} finally {
-			lock.release();
-		}
-
-		delta.add(new TaskContainerDelta(task, TaskContainerDelta.Kind.CHANGED));
-		delta.add(new TaskContainerDelta(container, TaskContainerDelta.Kind.CHANGED));
-		fireDelta(delta);
-		return true;
 	}
 
 	public void notifyContainersUpdated(Set<? extends AbstractTaskContainer> containers) {
@@ -501,11 +468,6 @@ public class TaskList implements ISchedulingRule, ITaskList {
 		}
 	}
 
-	/**
-	 * @param task
-	 * @param content
-	 *            true if the content for the task (e.g. repository task data) has changed
-	 */
 	public void notifyTaskChanged(AbstractTask task, boolean content) {
 		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
 		TaskContainerDelta.Kind kind;

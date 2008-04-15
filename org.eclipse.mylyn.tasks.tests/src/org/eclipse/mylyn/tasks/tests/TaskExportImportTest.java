@@ -67,7 +67,7 @@ public class TaskExportImportTest extends AbstractContextTest {
 
 		LocalTask task = TasksUiPlugin.getTaskListManager().createNewLocalTask("Test local task");
 		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
-		taskList.moveTask(task, taskList.getDefaultCategory());
+		taskList.addTask(task, taskList.getDefaultCategory());
 		assertTrue(taskList.getAllTasks().size() > 0);
 
 		InteractionContext mockContext = ContextCorePlugin.getContextManager().loadContext(task.getHandleIdentifier());

@@ -91,7 +91,9 @@ public class TaskFactory implements ITaskFactory {
 				synchManager.saveIncoming(repositoryTask, taskData, forced);
 				connector.updateTaskFromTaskData(repository, repositoryTask, taskData);
 				if (dataHandler != null) {
-					repositoryTask.clear();
+					for (AbstractTask child : repositoryTask.getChildren()) {
+						taskList.removeFromContainer(repositoryTask, child);
+					}
 					Set<String> subTaskIds = dataHandler.getSubTaskIds(taskData);
 					if (subTaskIds != null) {
 						for (String subId : subTaskIds) {

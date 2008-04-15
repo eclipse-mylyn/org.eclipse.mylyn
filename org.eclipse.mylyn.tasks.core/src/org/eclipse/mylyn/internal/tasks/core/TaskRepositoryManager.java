@@ -19,7 +19,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -317,9 +316,9 @@ public class TaskRepositoryManager implements ITaskRepositoryManager {
 
 	// TODO: Passing path here seems a little odd
 	public synchronized boolean saveRepositories(String destinationPath) {
-		if (!Platform.isRunning()) {// || TasksUiPlugin.getDefault() == null) {
-			return false;
-		}
+//		if (!Platform.isRunning()) {// || TasksUiPlugin.getDefault() == null) {
+//			return false;
+//		}
 		Set<TaskRepository> repositoriesToWrite = new HashSet<TaskRepository>(getAllRepositories());
 		// if for some reason a repository is added/changed to equal one in the
 		// orphaned set the orphan is discarded

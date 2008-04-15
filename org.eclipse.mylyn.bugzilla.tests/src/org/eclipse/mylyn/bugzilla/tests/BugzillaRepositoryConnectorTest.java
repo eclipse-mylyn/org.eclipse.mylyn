@@ -298,7 +298,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 				task.getTaskId());
 		assertNotNull(taskData);
 
-		TasksUiPlugin.getTaskListManager().getTaskList().moveTask(task,
+		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task,
 				TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 
 		if (taskData.getAssignedTo().equals(defaultAssignee)) {
