@@ -22,7 +22,6 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IWorkingSet;
 
 /**
@@ -76,7 +75,7 @@ public class TaskActivationHistory {
 	protected AbstractTask getHistoryTaskAt(int pos) {
 		InteractionEvent event = ContextCore.getContextManager().getActivityMetaContext().getInteractionHistory().get(
 				pos);
-		return TasksUi.getTaskListManager().getTaskList().getTask(event.getStructureHandle());
+		return TasksUiPlugin.getTaskListManager().getTaskList().getTask(event.getStructureHandle());
 	}
 
 	public void addTask(AbstractTask task) {

@@ -178,19 +178,20 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 						TasksUiPreferenceConstants.LOCAL_SUB_TASKS_ENABLED)) {
 			for (AbstractTask task : tasksToMove) {
 				if (!task.contains(((LocalTask) currentTarget).getHandleIdentifier())) {
-					TasksUi.getTaskListManager().getTaskList().moveTask(task, (LocalTask) currentTarget);
+					TasksUi.getTaskListManager().getTaskList().addTask(task, (LocalTask) currentTarget);
 				}
 			}
 		} else {
 			for (AbstractTask task : tasksToMove) {
 				if (currentTarget instanceof UncategorizedTaskContainer) {
-					TasksUi.getTaskListManager().getTaskList().moveTask(task,
-							(UncategorizedTaskContainer) currentTarget);
+					TasksUi.getTaskListManager()
+							.getTaskList()
+							.addTask(task, (UncategorizedTaskContainer) currentTarget);
 				} else if (currentTarget instanceof TaskCategory) {
-					TasksUi.getTaskListManager().getTaskList().moveTask(task, (TaskCategory) currentTarget);
+					TasksUi.getTaskListManager().getTaskList().addTask(task, (TaskCategory) currentTarget);
 				} else if (currentTarget instanceof UnmatchedTaskContainer) {
 					if (((UnmatchedTaskContainer) currentTarget).getRepositoryUrl().equals(task.getRepositoryUrl())) {
-						TasksUi.getTaskListManager().getTaskList().moveTask(task, (AbstractTaskCategory) currentTarget);
+						TasksUi.getTaskListManager().getTaskList().addTask(task, (AbstractTaskCategory) currentTarget);
 					}
 				} else if (currentTarget instanceof AbstractTask) {
 					AbstractTask targetTask = (AbstractTask) currentTarget;
@@ -205,7 +206,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 						}
 					}
 					if (targetCategory != null) {
-						TasksUi.getTaskListManager().getTaskList().moveTask(task, targetCategory);
+						TasksUi.getTaskListManager().getTaskList().addTask(task, targetCategory);
 					}
 				} else if (currentTarget instanceof ScheduledTaskContainer) {
 					ScheduledTaskContainer container = (ScheduledTaskContainer) currentTarget;
@@ -215,8 +216,8 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 					TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, newSchedule.getTime(),
 							container.isCaptureFloating());
 				} else if (currentTarget == null) {
-					TasksUi.getTaskListManager().getTaskList().moveTask(newTask,
-							TasksUi.getTaskListManager().getTaskList().getDefaultCategory());
+					TasksUi.getTaskListManager().getTaskList().addTask(newTask,
+							TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 				}
 			}
 		}

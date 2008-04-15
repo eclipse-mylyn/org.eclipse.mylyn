@@ -22,6 +22,7 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
@@ -98,7 +99,7 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 		for (IAdaptable adaptable : workingSet.getElements()) {
 			if (adaptable instanceof AbstractTaskContainer) {
 				String handle = ((AbstractTaskContainer) adaptable).getHandleIdentifier();
-				for (AbstractTaskContainer element : TasksUi.getTaskListManager().getTaskList().getRootElements()) {
+				for (AbstractTaskContainer element : TasksUiPlugin.getTaskListManager().getTaskList().getRootElements()) {
 					if (element != null && element.getHandleIdentifier().equals(handle)) {
 						list.add(adaptable);
 					}

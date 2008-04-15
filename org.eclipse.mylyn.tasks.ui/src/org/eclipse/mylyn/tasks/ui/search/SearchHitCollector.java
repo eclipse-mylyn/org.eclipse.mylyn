@@ -23,9 +23,9 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskFactory;
+import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
-import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataCollector;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -55,7 +55,7 @@ public class SearchHitCollector extends AbstractTaskDataCollector implements ISe
 //	/** The string to display to the user when we have multiple or no matches */
 //	private static final String MATCHES = "{0} matches";
 
-	private final TaskList taskList;
+	private final ITaskList taskList;
 
 	private final ITaskFactory taskFactory;
 
@@ -65,7 +65,10 @@ public class SearchHitCollector extends AbstractTaskDataCollector implements ISe
 
 	private final RepositorySearchResult searchResult;
 
-	public SearchHitCollector(TaskList tasklist, TaskRepository repository, AbstractRepositoryQuery repositoryQuery,
+	/**
+	 * @since 3.0
+	 */
+	public SearchHitCollector(ITaskList tasklist, TaskRepository repository, AbstractRepositoryQuery repositoryQuery,
 			ITaskFactory taskFactory) {
 		this.taskList = tasklist;
 		this.repository = repository;

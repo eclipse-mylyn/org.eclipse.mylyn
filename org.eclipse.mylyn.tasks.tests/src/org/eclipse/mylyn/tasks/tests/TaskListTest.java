@@ -12,7 +12,8 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
-import org.eclipse.mylyn.tasks.core.TaskList;
+import org.eclipse.mylyn.internal.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.core.ITaskList;
 
 /**
  * @author Mik Kersten
@@ -28,7 +29,7 @@ public class TaskListTest extends TestCase {
 	}
 
 	public void testLocalSubTaskAdd() {
-		TaskList taskList = new TaskList();
+		ITaskList taskList = new TaskList();
 		LocalTask task = new LocalTask("1", "summary");
 		LocalTask subTask = new LocalTask("2", "subTask");
 

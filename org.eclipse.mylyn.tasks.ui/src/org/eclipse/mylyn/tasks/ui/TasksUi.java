@@ -17,14 +17,15 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.RepositoryAwareStatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.monitor.core.CoreUtil;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
-import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.sync.IRepositorySynchronizationManager;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
@@ -64,7 +65,7 @@ public class TasksUi {
 			Set<AbstractRepositoryQuery> queries, IJobChangeListener listener, boolean force) {
 		Assert.isTrue(queries.size() > 0);
 
-		TaskList taskList = TasksUi.getTaskListManager().getTaskList();
+		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 		for (AbstractRepositoryQuery query : queries) {
 			query.setSynchronizing(true);
 		}
@@ -139,7 +140,7 @@ public class TasksUi {
 	 */
 	public static Job synchronizeTasks(AbstractRepositoryConnector connector, Set<AbstractTask> tasks, boolean force,
 			IJobChangeListener listener) {
-		TaskList taskList = TasksUi.getTaskListManager().getTaskList();
+		ITaskList taskList = TasksUi.getTaskListManager().getTaskList();
 		for (AbstractTask task : tasks) {
 			task.setSynchronizing(true);
 			taskList.notifyTaskChanged(task, false);

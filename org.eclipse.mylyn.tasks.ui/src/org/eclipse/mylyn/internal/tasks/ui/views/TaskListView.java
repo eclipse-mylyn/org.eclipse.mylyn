@@ -48,7 +48,6 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
@@ -396,7 +395,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			if (task != null) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						updateDescription(task);
+						updateDescription();
 						selectedAndFocusTask(task);
 						filteredTree.indicateActiveTask(task);
 						refresh();
@@ -410,7 +409,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					refreshTask(new TaskContainerDelta(task, TaskContainerDelta.Kind.CHANGED));
-					updateDescription(null);
+					updateDescription();
 					filteredTree.indicateNoActiveTask();
 				}
 			});
@@ -601,15 +600,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	}
 
 	private void updateDescription() {
-		List<AbstractTask> activeTasks = TasksUi.getTaskListManager().getTaskList().getActiveTasks();
-		if (activeTasks.size() > 0) {
-			updateDescription(activeTasks.get(0));
-		} else {
-			updateDescription(null);
-		}
-	}
-
-	private void updateDescription(AbstractTask task) {
+		AbstractTask task = TasksUi.getTaskListManager().getActiveTask();
 		if (getSite() == null || getSite().getPage() == null) {
 			return;
 		}
@@ -1047,9 +1038,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		final IWorkbench workbench = PlatformUI.getWorkbench();
 		workbench.getDisplay().asyncExec(new Runnable() {
 			public void run() {
-				List<AbstractTask> activeTasks = TasksUi.getTaskListManager().getTaskList().getActiveTasks();
-				for (AbstractTask t : activeTasks) {
-					getViewer().expandToLevel(t, 0);
+				AbstractTask task = TasksUi.getTaskListManager().getActiveTask();
+				if (task != null) {
+					getViewer().expandToLevel(task, 0);
 				}
 			}
 		});
@@ -1264,8 +1255,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			} else if (action instanceof MarkTaskIncompleteAction) {
 				action.setEnabled(false);
 			} else if (action instanceof DeleteAction) {
-				if (element instanceof TaskArchive || element instanceof UncategorizedTaskContainer
-						|| element instanceof UnmatchedTaskContainer) {
+				if (element instanceof UncategorizedTaskContainer || element instanceof UnmatchedTaskContainer) {
 					action.setEnabled(false);
 				} else {
 					action.setEnabled(true);
@@ -1324,20 +1314,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 		filteredTree.getViewer().addSelectionChangedListener(openWithBrowser);
 		filteredTree.getViewer().addSelectionChangedListener(copyDetailsAction);
-	}
-
-	/**
-	 * Recursive function that checks for the occurrence of a certain task taskId. All children of the supplied node
-	 * will be checked.
-	 * 
-	 * @param task
-	 *            The <code>ITask</code> object that is to be searched.
-	 * @param taskId
-	 *            The taskId that is being searched for.
-	 * @return <code>true</code> if the taskId was found in the node or any of its children
-	 */
-	protected boolean lookForId(String taskId) {
-		return (TasksUi.getTaskListManager().getTaskList().getTask(taskId) == null);
 	}
 
 	private void hookOpenAction() {
@@ -1689,11 +1665,10 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		default:
 			// TODO: move logic into deltas
 			refreshJob.refreshTask(task);
-			Set<AbstractTaskContainer> containers = new HashSet<AbstractTaskContainer>(TasksUi.getTaskListManager()
-					.getTaskList()
-					.getParentQueries(task));
+			Set<AbstractTaskContainer> containers = new HashSet<AbstractTaskContainer>(
+					TasksUiPlugin.getTaskListManager().getTaskList().getParentQueries(task));
 			containers.addAll(task.getParentContainers());
-			containers.add(TasksUi.getTaskListManager().getTaskList().getOrphanContainer(task.getRepositoryUrl()));
+			containers.add(TasksUiPlugin.getTaskListManager().getTaskList().getOrphanContainer(task.getRepositoryUrl()));
 //			containers.add(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer());
 //			containers.add(TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 			for (AbstractTaskContainer container : containers) {

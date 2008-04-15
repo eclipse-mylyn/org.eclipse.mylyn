@@ -85,11 +85,11 @@ public class AddExistingTaskJob extends Job {
 							if (selectedObject instanceof TaskCategory) {
 								category = (TaskCategory) selectedObject;
 							} else {
-								category = TasksUi.getTaskListManager().getTaskList().getOrphanContainer(
+								category = TasksUiPlugin.getTaskListManager().getTaskList().getOrphanContainer(
 										LocalRepositoryConnector.REPOSITORY_URL);
 							}
 						}
-						TasksUi.getTaskListManager().getTaskList().moveTask(newTask, category);
+						TasksUi.getTaskListManager().getTaskList().addTask(newTask, category);
 						taskListView.getViewer().setSelection(new StructuredSelection(newTask));
 					}
 				});

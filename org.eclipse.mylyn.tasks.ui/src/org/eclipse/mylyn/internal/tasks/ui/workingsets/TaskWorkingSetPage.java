@@ -133,7 +133,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 						new ElementCategory("Resources", resourcesRepositoriesContainers) };
 			} else if (parentElement instanceof TaskRepository) {
 				List<IAdaptable> taskContainers = new ArrayList<IAdaptable>();
-				for (AbstractTaskContainer element : TasksUi.getTaskListManager()
+				for (AbstractTaskContainer element : TasksUiPlugin.getTaskListManager()
 						.getTaskList()
 						.getRepositoryQueries(((TaskRepository) parentElement).getRepositoryUrl())) {
 					if (element instanceof AbstractRepositoryQuery) {
@@ -317,7 +317,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 			if (element instanceof AbstractRepositoryQuery) {
 				AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
 				if (query.getRepositoryUrl() != null) {
-					UnmatchedTaskContainer orphansContainer = TasksUi.getTaskListManager()
+					UnmatchedTaskContainer orphansContainer = TasksUiPlugin.getTaskListManager()
 							.getTaskList()
 							.getOrphanContainer(query.getRepositoryUrl());
 					if (orphansContainer != null) {

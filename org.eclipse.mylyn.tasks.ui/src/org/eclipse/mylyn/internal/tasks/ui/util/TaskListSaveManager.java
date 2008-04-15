@@ -40,8 +40,6 @@ import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
-import org.eclipse.mylyn.tasks.ui.ITaskListManager;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -94,7 +92,7 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 	 */
 	public void saveTaskList(boolean saveContext, boolean async) {
 		if (TasksUiPlugin.getDefault() != null && TasksUiPlugin.getDefault().isInitialized()) {
-			ITaskListManager taskListManager = TasksUi.getTaskListManager();
+			TaskListManager taskListManager = TasksUiPlugin.getTaskListManager();
 			if (async) {
 				if (saveContext) {
 					for (AbstractTask task : taskListManager.getTaskList().getActiveTasks()) {

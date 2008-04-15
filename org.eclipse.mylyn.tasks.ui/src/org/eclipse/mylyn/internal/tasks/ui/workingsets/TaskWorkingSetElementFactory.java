@@ -13,11 +13,10 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.TaskList;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IElementFactory;
 import org.eclipse.ui.IMemento;
 
@@ -38,7 +37,7 @@ public class TaskWorkingSetElementFactory implements IElementFactory {
 		String taskHandle = memento.getString(HANDLE_TASK);
 		if (taskHandle != null) {
 			// TOOD: this does not support projects and categories/queries have the same name
-			TaskList taskList = TasksUi.getTaskListManager().getTaskList();
+			TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 			for (AbstractTaskContainer element : taskList.getRootElements()) {
 				if (element.getHandleIdentifier().equals(taskHandle)) {
 					return element;

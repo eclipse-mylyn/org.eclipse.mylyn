@@ -38,6 +38,7 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
+import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskListSaveManager;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskListWriter;
@@ -50,12 +51,12 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
+import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.ITaskTimingListener;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
-import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.ITaskListManager;
@@ -127,7 +128,7 @@ public class TaskListManager implements ITaskListManager {
 		taskList.addChangeListener(CHANGE_LISTENER);
 	}
 
-	public TaskList resetTaskList() {
+	public ITaskList resetTaskList() {
 		resetAndRollOver();
 		taskList.reset();
 		prepareOrphanContainers();
@@ -514,7 +515,7 @@ public class TaskListManager implements ITaskListManager {
 			} else if (view != null && view.getDrilledIntoCategory() instanceof TaskCategory) {
 				taskList.addTask(newTask, view.getDrilledIntoCategory());
 			} else {
-				taskList.addTask(newTask, TasksUi.getTaskListManager().getTaskList().getDefaultCategory());
+				taskList.addTask(newTask, TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 			}
 		} else if (view != null && view.getDrilledIntoCategory() instanceof TaskCategory) {
 			taskList.addTask(newTask, view.getDrilledIntoCategory());
@@ -523,7 +524,7 @@ public class TaskListManager implements ITaskListManager {
 				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), ITasksUiConstants.TITLE_DIALOG,
 						"The new task has been added to the root of the list, since tasks can not be added to a query.");
 			}
-			taskList.addTask(newTask, TasksUi.getTaskListManager().getTaskList().getDefaultCategory());
+			taskList.addTask(newTask, TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 		}
 		return newTask;
 	}
@@ -602,6 +603,10 @@ public class TaskListManager implements ITaskListManager {
 		}
 
 		return handle;
+	}
+
+	public AbstractTask getActiveTask() {
+		return getTaskList().getActiveTask();
 	}
 
 }

@@ -15,9 +15,9 @@ import java.util.Set;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
-import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.core.sync.IRepositorySynchronizationManager;
 
@@ -32,9 +32,9 @@ public final class RepositorySynchronizationManager implements IRepositorySynchr
 
 	private final TaskDataManager taskDataManager;
 
-	private final TaskList taskList;
+	private final ITaskList taskList;
 
-	public RepositorySynchronizationManager(TaskDataManager taskDataManager, TaskList taskList) {
+	public RepositorySynchronizationManager(TaskDataManager taskDataManager, ITaskList taskList) {
 		this.taskDataManager = taskDataManager;
 		this.taskList = taskList;
 	}

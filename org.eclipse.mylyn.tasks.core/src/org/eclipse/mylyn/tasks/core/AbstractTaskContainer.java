@@ -14,8 +14,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.PlatformObject;
-import org.eclipse.core.runtime.jobs.ILock;
-import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 
 /**
@@ -35,8 +34,6 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	 */
 	protected String url = null;
 
-	private final ILock lock = Job.getJobManager().newLock();
-
 	public AbstractTaskContainer(String handleAndDescription) {
 		assert handleIdentifier != null;
 		this.handleIdentifier = handleAndDescription;
@@ -47,12 +44,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	 */
 	public void internalAddChild(AbstractTask task) {
 		if (task != null) {
-			try {
-				lock.acquire();
-				children.add(task);
-			} finally {
-				lock.release();
-			}
+			children.add(task);
 		}
 	}
 
@@ -60,24 +52,14 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	 * Use {@link TaskList} methods instead.
 	 */
 	public void internalRemoveChild(AbstractTask task) {
-		try {
-			lock.acquire();
-			children.remove(task);
-		} finally {
-			lock.release();
-		}
+		children.remove(task);
 	}
 
 	/**
 	 * Remove all children held by this container Does not delete tasks from TaskList
 	 */
 	public void clear() {
-		try {
-			lock.acquire();
-			children.clear();
-		} finally {
-			lock.release();
-		}
+		children.clear();
 	}
 
 	/**
@@ -86,21 +68,15 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	 * TODO: review to make sure that this is too expensive, or move to creation.
 	 */
 	public Set<AbstractTask> getChildren() {
-		Set<AbstractTask> childrenWithoutCycles = new HashSet<AbstractTask>();
-		try {
-			lock.acquire();
-			if (children.isEmpty()) {
-				return Collections.emptySet();
-			}
+		if (children.isEmpty()) {
+			return Collections.emptySet();
+		}
 
-			childrenWithoutCycles = new HashSet<AbstractTask>(children.size());
-			for (AbstractTask child : children) {
-				if (child != null && !child.contains(this.getHandleIdentifier())) {
-					childrenWithoutCycles.add(child);
-				}
+		Set<AbstractTask> childrenWithoutCycles = new HashSet<AbstractTask>(children.size());
+		for (AbstractTask child : children) {
+			if (child != null && !child.contains(this.getHandleIdentifier())) {
+				childrenWithoutCycles.add(child);
 			}
-		} finally {
-			lock.release();
 		}
 		return childrenWithoutCycles;
 	}
@@ -113,12 +89,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	 * @since 2.2
 	 */
 	public Set<AbstractTask> getChildrenInternal() {
-		try {
-			lock.acquire();
-			return Collections.unmodifiableSet(children);
-		} finally {
-			lock.release();
-		}
+		return children;
 	}
 
 	/**
@@ -148,70 +119,35 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	}
 
 	public String getSummary() {
-		try {
-			lock.acquire();
-			return handleIdentifier;
-		} finally {
-			lock.release();
-		}
+		return handleIdentifier;
 	}
 
 	public boolean isEmpty() {
-		try {
-			lock.acquire();
-			return children.isEmpty();
-		} finally {
-			lock.release();
-		}
+		return children.isEmpty();
 	}
 
 	public String getHandleIdentifier() {
-		try {
-			lock.acquire();
-			return handleIdentifier;
-		} finally {
-			lock.release();
-		}
+		return handleIdentifier;
 	}
 
 	public void setHandleIdentifier(String handleIdentifier) {
-		try {
-			lock.acquire();
-			this.handleIdentifier = handleIdentifier;
-		} finally {
-			lock.release();
-		}
+		this.handleIdentifier = handleIdentifier;
 	}
 
 	@Override
 	public int hashCode() {
-		try {
-			lock.acquire();
-			return handleIdentifier.hashCode();
-		} finally {
-			lock.release();
-		}
+		return handleIdentifier.hashCode();
 	}
 
 	public void setUrl(String url) {
-		try {
-			lock.acquire();
-			this.url = url;
-		} finally {
-			lock.release();
-		}
+		this.url = url;
 	}
 
 	/**
 	 * @return can be null
 	 */
 	public String getUrl() {
-		try {
-			lock.acquire();
-			return url;
-		} finally {
-			lock.release();
-		}
+		return url;
 	}
 
 	@Override

@@ -232,7 +232,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		if (task instanceof LocalTask) {
 			String label = summaryEditor.getTextWidget().getText();
 			// task.setDescription(label);
-			TasksUi.getTaskListManager().getTaskList().renameTask(task, label);
+			TasksUiPlugin.getTaskListManager().getTaskList().renameTask(task, label);
 
 			// TODO: refactor mutation into TaskList?
 			task.setUrl(issueReportURL.getText());

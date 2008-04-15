@@ -19,8 +19,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
-import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.sync.IRepositorySynchronizationManager;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
@@ -34,13 +34,13 @@ public class SynchronizeAllTasksJob extends SynchronizationJob {
 
 	private final IRepositorySynchronizationManager synchronizationManager;
 
-	private final TaskList taskList;
+	private final ITaskList taskList;
 
 	private final Set<AbstractTask> tasks;
 
 	private final ITaskRepositoryManager repositoryManager;
 
-	public SynchronizeAllTasksJob(TaskList taskList, IRepositorySynchronizationManager synchronizationManager,
+	public SynchronizeAllTasksJob(ITaskList taskList, IRepositorySynchronizationManager synchronizationManager,
 			ITaskRepositoryManager repositoryManager, AbstractRepositoryConnector connector, Set<AbstractTask> tasks) {
 		super("Synchronizing Tasks (" + tasks.size() + " tasks)");
 		this.taskList = taskList;

@@ -36,7 +36,7 @@ public class TaskHistoryHandler extends AbstractHandler implements IElementUpdat
 
 	@Override
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
-		if (TasksUi.getTaskListManager().getTaskList().getActiveTask() != null) {
+		if (TasksUi.getTaskListManager().getActiveTask() != null) {
 			if (ContextCore.getContextManager().isContextCapturePaused()) {
 				IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
 				if (window != null) {
@@ -74,7 +74,7 @@ public class TaskHistoryHandler extends AbstractHandler implements IElementUpdat
 
 	@SuppressWarnings("unchecked")
 	public void updateElement(UIElement element, Map parameters) {
-		if (TasksUi.getTaskListManager().getTaskList().getActiveTask() == null) {
+		if (TasksUi.getTaskListManager().getActiveTask() == null) {
 			element.setIcon(TasksUiImages.NAVIGATE_PREVIOUS);
 		} else {
 			if (ContextCore.getContextManager().isContextCapturePaused()) {

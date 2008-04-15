@@ -28,7 +28,6 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskTimingListener;
-import org.eclipse.mylyn.tasks.core.TaskList;
 
 /**
  * Manager for Task timing, scheduling, due dates, and activation history

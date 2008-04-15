@@ -1662,8 +1662,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				SWT.PUSH);
 		attachScreenshotButton.setImage(TasksUiImages.getImage(TasksUiImages.IMAGE_CAPTURE));
 
-		final AbstractTask task = TasksUi.getTaskListManager().getTaskList().getTask(
-				repository.getRepositoryUrl(), taskData.getTaskId());
+		final AbstractTask task = TasksUi.getTaskListManager().getTaskList().getTask(repository.getRepositoryUrl(),
+				taskData.getTaskId());
 		if (task == null) {
 			attachFileButton.setEnabled(false);
 			attachScreenshotButton.setEnabled(false);
@@ -3800,7 +3800,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					if (getCategory() != null) {
-						TasksUi.getTaskListManager().getTaskList().moveTask(newTask, getCategory());
+						TasksUi.getTaskListManager().getTaskList().addTask(newTask, getCategory());
 					}
 				}
 			});

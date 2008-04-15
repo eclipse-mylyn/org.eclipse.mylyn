@@ -110,7 +110,7 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 	private void moveToCategory(final List<AbstractTaskContainer> selectedElements, AbstractTaskCategory category) {
 		for (AbstractTaskContainer element : selectedElements) {
 			if (element instanceof AbstractTask) {
-				TasksUi.getTaskListManager().getTaskList().moveTask((AbstractTask) element, category);
+				TasksUi.getTaskListManager().getTaskList().addTask((AbstractTask) element, category);
 			}
 		}
 	}

@@ -25,7 +25,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
 import org.eclipse.mylyn.resources.tests.ResourceTestUtil;
-import org.eclipse.mylyn.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
@@ -61,7 +61,7 @@ public class TaskWorkingSetTest extends TestCase {
 
 	public void testDeleteQuery() {
 		MockRepositoryQuery query = new MockRepositoryQuery("description");
-		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+		ITaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 		taskList.addQuery(query);
 		workingSet = createWorkingSet(query);
 		assertTrue(Arrays.asList(workingSet.getElements()).contains(query));
@@ -71,7 +71,7 @@ public class TaskWorkingSetTest extends TestCase {
 
 	public void testRenameQuery() {
 		MockRepositoryQuery query = new MockRepositoryQuery("description");
-		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+		ITaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 		taskList.addQuery(query);
 		workingSet = createWorkingSet(query);
 		assertTrue(workingSet.getElements().length == 1);

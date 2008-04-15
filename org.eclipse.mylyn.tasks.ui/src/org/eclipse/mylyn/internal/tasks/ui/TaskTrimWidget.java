@@ -186,7 +186,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		activeTaskLabel.setLayoutData(gridData);
 		activeTaskLabel.setText("<no task active>");
 
-		activeTask = TasksUi.getTaskListManager().getTaskList().getActiveTask();
+		activeTask = TasksUi.getTaskListManager().getActiveTask();
 		if (activeTask != null) {
 			indicateActiveTask();
 		}
@@ -208,7 +208,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 				if (taskListView != null && taskListView.getDrilledIntoCategory() != null) {
 					taskListView.goUpToRoot();
 				}
-				TasksUiUtil.refreshAndOpenTaskListElement((TasksUi.getTaskListManager().getTaskList().getActiveTask()));
+				TasksUiUtil.refreshAndOpenTaskListElement((TasksUi.getTaskListManager().getActiveTask()));
 			}
 		});
 

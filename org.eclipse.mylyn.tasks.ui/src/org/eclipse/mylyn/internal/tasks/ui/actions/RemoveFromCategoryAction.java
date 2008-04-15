@@ -74,10 +74,10 @@ public class RemoveFromCategoryAction extends Action {
 								TaskCategory.getParentTaskCategory(task), task);
 						//TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task, null);
 					} else if (!task.isLocal()) {
-						TasksUi.getTaskListManager().getTaskList().moveTask(task, null);
+						TasksUi.getTaskListManager().getTaskList().addTask(task, null);
 					} else {
-						TasksUi.getTaskListManager().getTaskList().moveTask(task,
-								TasksUi.getTaskListManager().getTaskList().getDefaultCategory());
+						TasksUi.getTaskListManager().getTaskList().addTask(task,
+								TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 					}
 
 				}

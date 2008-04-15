@@ -10,11 +10,15 @@ package org.eclipse.mylyn.tasks.ui;
 
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
-import org.eclipse.mylyn.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.core.ITaskList;
 
+/**
+ * @author Steffen Pingel
+ * @since 3.0
+ */
 public interface ITaskListManager {
 
-	public abstract TaskList getTaskList();
+	public abstract ITaskList getTaskList();
 
 	public abstract void activateTask(AbstractTask task);
 
@@ -25,5 +29,7 @@ public interface ITaskListManager {
 	public abstract void addActivityListener(ITaskActivityListener activityListener);
 
 	public abstract void removeActivityListener(ITaskActivityListener activityListener);
+
+	public abstract AbstractTask getActiveTask();
 
 }

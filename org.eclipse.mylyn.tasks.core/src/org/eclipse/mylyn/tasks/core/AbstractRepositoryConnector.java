@@ -45,7 +45,7 @@ public abstract class AbstractRepositoryConnector {
 	private static final long DAY = HOUR * 24L;
 
 	@Deprecated
-	protected TaskList taskList;
+	protected ITaskList taskList;
 
 	private boolean userManaged = true;
 
@@ -53,8 +53,11 @@ public abstract class AbstractRepositoryConnector {
 
 	private IRepositorySynchronizationManager synchronizationManager;
 
+	/**
+	 * @since 3.0
+	 */
 	@Deprecated
-	public void init(TaskList taskList) {
+	public void init(ITaskList taskList) {
 		this.taskList = taskList;
 	}
 

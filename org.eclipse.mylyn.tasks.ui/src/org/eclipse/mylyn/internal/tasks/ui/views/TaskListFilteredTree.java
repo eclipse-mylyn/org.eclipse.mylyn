@@ -123,7 +123,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		activeTaskMenuManager.setRemoveAllWhenShown(true);
 		activeTaskMenuManager.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
-				fillContextMenu(manager, TasksUi.getTaskListManager().getTaskList().getActiveTask());
+				fillContextMenu(manager, TasksUi.getTaskListManager().getActiveTask());
 			}
 		});
 	}
@@ -363,7 +363,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 		taskListToolTip = new TaskListToolTip(activeTaskLink);
 
-		AbstractTask activeTask = TasksUi.getTaskListManager().getTaskList().getActiveTask();
+		AbstractTask activeTask = TasksUi.getTaskListManager().getActiveTask();
 		if (activeTask != null) {
 			indicateActiveTask(activeTask);
 		}
@@ -407,7 +407,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			@Override
 			public void mouseDown(MouseEvent e) {
 				if (e.button == 1) {
-					AbstractTask activeTask = (TasksUi.getTaskListManager().getTaskList().getActiveTask());
+					AbstractTask activeTask = (TasksUi.getTaskListManager().getActiveTask());
 					if (activeTask == null) {
 						ActivateTaskDialogAction activateAction = new ActivateTaskDialogAction();
 						activateAction.init(PlatformUI.getWorkbench().getActiveWorkbenchWindow());

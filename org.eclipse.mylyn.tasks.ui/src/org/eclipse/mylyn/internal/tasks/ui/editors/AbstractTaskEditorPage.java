@@ -168,7 +168,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		}
 
 		private void updateTask(AbstractTask task) {
-			TasksUi.getTaskListManager().getTaskList().moveTask(task, actionPart.getCategory());
+			TasksUi.getTaskListManager().getTaskList().addTask(task, actionPart.getCategory());
 
 			AbstractTaskEditorPage.this.task = task;
 

@@ -18,6 +18,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -76,7 +77,7 @@ public class NewCategoryAction extends Action implements IViewActionDelegate {
 			}
 
 			this.cat = new TaskCategory(name);
-			TasksUi.getTaskListManager().getTaskList().addCategory(cat);
+			TasksUiPlugin.getTaskListManager().getTaskList().addCategory(cat);
 //			this.view.getViewer().refresh();
 		}
 	}

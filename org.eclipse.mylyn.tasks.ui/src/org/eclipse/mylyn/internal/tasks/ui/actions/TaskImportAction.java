@@ -20,11 +20,11 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
+import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.widgets.FileDialog;
@@ -109,7 +109,7 @@ public class TaskImportAction extends Action implements IViewActionDelegate {
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		for (AbstractTask loadedTask : taskContexts.keySet()) {
-			TaskList taskList = TasksUi.getTaskListManager().getTaskList();
+			TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 			if (taskList.getTask(loadedTask.getHandleIdentifier()) != null) {
 				boolean confirmed = MessageDialog.openConfirm(shell, ITasksUiConstants.TITLE_DIALOG, "Task '"
 						+ loadedTask.getSummary()

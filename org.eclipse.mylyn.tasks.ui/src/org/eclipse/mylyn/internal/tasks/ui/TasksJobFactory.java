@@ -11,6 +11,7 @@ package org.eclipse.mylyn.internal.tasks.ui;
 import java.util.Set;
 
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizeAllTasksJob;
 import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizeQueriesJob;
 import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizeRepositoriesJob;
@@ -19,7 +20,6 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
-import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.sync.IRepositorySynchronizationManager;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;

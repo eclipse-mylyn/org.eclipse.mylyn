@@ -57,8 +57,8 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
-import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskSelection;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
@@ -123,7 +123,7 @@ public class TasksUiUtil {
 	public static AbstractTask createTask(TaskRepository repository, String id, IProgressMonitor monitor)
 			throws CoreException {
 		monitor = Policy.monitorFor(monitor);
-		TaskList taskList = TasksUi.getTaskListManager().getTaskList();
+		ITaskList taskList = TasksUi.getTaskListManager().getTaskList();
 		AbstractTask task = taskList.getTask(repository.getRepositoryUrl(), id);
 		if (task == null) {
 			AbstractRepositoryConnector connector = TasksUiPlugin.getConnector(repository.getConnectorKind());
@@ -143,7 +143,7 @@ public class TasksUiUtil {
 	/**
 	 * Create new repository task, adding result to tasklist
 	 */
-	private static AbstractTask createTaskFromExistingId(AbstractRepositoryConnector connector, TaskList taskList,
+	private static AbstractTask createTaskFromExistingId(AbstractRepositoryConnector connector, ITaskList taskList,
 			TaskRepository repository, String id, boolean retrieveSubTasks, IProgressMonitor monitor)
 			throws CoreException {
 		AbstractTask task = taskList.getTask(repository.getRepositoryUrl(), id);
@@ -164,7 +164,7 @@ public class TasksUiUtil {
 	/**
 	 * Creates a new task from the given task data. Does NOT add resulting task to the task list.
 	 */
-	private static AbstractTask createTaskFromTaskData(AbstractRepositoryConnector connector, TaskList taskList,
+	private static AbstractTask createTaskFromTaskData(AbstractRepositoryConnector connector, ITaskList taskList,
 			TaskRepository repository, RepositoryTaskData taskData, boolean retrieveSubTasks, IProgressMonitor monitor)
 			throws CoreException {
 		AbstractTask task = null;
@@ -555,7 +555,7 @@ public class TasksUiUtil {
 	 * @since 3.0
 	 */
 	public static void openTask(String url) {
-		AbstractTask task = TasksUi.getTaskListManager().getTaskList().getRepositoryTask(url);
+		AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getRepositoryTask(url);
 		if (task != null && !(task instanceof LocalTask)) {
 			openTaskAndRefresh(task);
 		} else {
@@ -586,7 +586,7 @@ public class TasksUiUtil {
 			task = TasksUi.getTaskListManager().getTaskList().getTask(repositoryUrl, taskId);
 		}
 		if (task == null && fullUrl != null) {
-			task = TasksUi.getTaskListManager().getTaskList().getRepositoryTask(fullUrl);
+			task = TasksUiPlugin.getTaskListManager().getTaskList().getRepositoryTask(fullUrl);
 		}
 		if (task == null && repositoryUrl != null && taskId != null) {
 			task = TasksUi.getTaskListManager().getTaskList().getTaskByKey(repositoryUrl, taskId);

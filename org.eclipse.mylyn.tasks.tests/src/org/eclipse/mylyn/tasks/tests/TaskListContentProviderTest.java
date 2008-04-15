@@ -18,7 +18,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListContentProvider;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.core.ITaskList;
 
 /**
  * @author Felix Schwarz
@@ -29,7 +29,7 @@ public class TaskListContentProviderTest extends TestCase {
 
 	private TaskListView view;
 
-	private TaskList taskList;
+	private ITaskList taskList;
 
 	@Override
 	protected void setUp() throws Exception {

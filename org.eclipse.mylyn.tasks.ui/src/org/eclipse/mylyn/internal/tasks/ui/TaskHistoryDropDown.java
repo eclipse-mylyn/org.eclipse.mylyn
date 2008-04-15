@@ -77,7 +77,7 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 
 		@Override
 		public void run() {
-			AbstractTask active = TasksUi.getTaskListManager().getTaskList().getActiveTask();
+			AbstractTask active = TasksUi.getTaskListManager().getActiveTask();
 			if (active != null) {
 				TasksUi.getTaskListManager().deactivateTask(active);
 			}
@@ -180,7 +180,7 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 		Separator separator = new Separator();
 		items.add(separator);
 
-		AbstractTask active = TasksUi.getTaskListManager().getTaskList().getActiveTask();
+		AbstractTask active = TasksUi.getTaskListManager().getActiveTask();
 		if (active != null) {
 			IContributionItem pauseContributionItem = new CommandContributionItem(PlatformUI.getWorkbench(),
 					"org.eclipse.mylyn.ui.context.capture.pause", // id 
