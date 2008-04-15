@@ -274,6 +274,7 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 	/**
 	 * @deprecated Use {@link #getTaskId()} instead
 	 */
+	@Deprecated
 	public String getId() {
 		return getTaskId();
 	}
@@ -284,7 +285,7 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 	public String getTaskId() {
 		return reportID;
 	}
-	
+
 	public String getTaskKey() {
 		RepositoryTaskAttribute attr = getAttribute(RepositoryTaskAttribute.TASK_KEY);
 		if (attr != null) {
@@ -387,8 +388,8 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 	/**
 	 * @since 3.0
 	 */
-	public void setPartial(boolean complete) {
-		this.partial = complete;
+	public void setPartial(boolean partial) {
+		this.partial = partial;
 	}
 
 	/**
