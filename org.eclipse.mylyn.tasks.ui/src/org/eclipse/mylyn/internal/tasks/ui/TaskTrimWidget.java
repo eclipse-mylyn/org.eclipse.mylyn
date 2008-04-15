@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.internal.ObjectActionContributorManager;
@@ -83,19 +84,23 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 
 	private final ITaskActivityListener TASK_CHANGE_LISTENER = new TaskActivityAdapter() {
 
+		@Override
 		public void taskActivated(AbstractTask task) {
 			activeTask = task;
 			indicateActiveTask();
 		}
 
+		@Override
 		public void taskDeactivated(AbstractTask task) {
 			activeTask = null;
 			indicateNoActiveTask();
 		}
 
+		@Override
 		public void activityChanged() {
 		}
 
+		@Override
 		public void taskListRead() {
 		}
 	};
@@ -116,11 +121,12 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 	}
 
 	private void setTrimVisible(boolean visible) {
-		IWorkbenchWindow window = TasksUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
-		IWindowTrim trim = ((WorkbenchWindow) window).getTrimManager().getTrim(
-				"org.eclipse.mylyn.tasks.ui.trim.container");
-		if (trim != null) {
-			((WorkbenchWindow) window).getTrimManager().setTrimVisible(trim, visible);
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		if (window instanceof WorkbenchWindow) {
+			IWindowTrim trim = ((WorkbenchWindow) window).getTrimManager().getTrim(ID_CONTAINER);
+			if (trim != null) {
+				((WorkbenchWindow) window).getTrimManager().setTrimVisible(trim, visible);
+			}
 		}
 	}
 
