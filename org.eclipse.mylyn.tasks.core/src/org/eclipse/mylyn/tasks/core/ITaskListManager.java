@@ -6,11 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.tasks.core;
-
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
-import org.eclipse.mylyn.tasks.core.ITaskList;
+package org.eclipse.mylyn.tasks.core;
 
 /**
  * @author Steffen Pingel
@@ -18,18 +14,18 @@ import org.eclipse.mylyn.tasks.core.ITaskList;
  */
 public interface ITaskListManager {
 
-	public abstract ITaskList getTaskList();
-
 	public abstract void activateTask(AbstractTask task);
+
+	public abstract void addActivityListener(ITaskActivityListener activityListener);
 
 	public abstract void deactivateAllTasks();
 
 	public abstract void deactivateTask(AbstractTask task);
 
-	public abstract void addActivityListener(ITaskActivityListener activityListener);
+	public abstract AbstractTask getActiveTask();
+
+	public abstract ITaskList getTaskList();
 
 	public abstract void removeActivityListener(ITaskActivityListener activityListener);
-
-	public abstract AbstractTask getActiveTask();
 
 }
