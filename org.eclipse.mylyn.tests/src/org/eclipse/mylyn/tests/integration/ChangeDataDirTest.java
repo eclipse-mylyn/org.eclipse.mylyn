@@ -95,7 +95,7 @@ public class ChangeDataDirTest extends TestCase {
 	public void testTaskMove() {
 		AbstractTask task = manager.createNewLocalTask("label");
 		String handle = task.getHandleIdentifier();
-		manager.getTaskList().moveTask(task,
+		manager.getTaskList().addTask(task,
 				manager.getTaskList().getUnmatchedContainer(LocalRepositoryConnector.REPOSITORY_URL));
 
 		AbstractTask readTaskBeforeMove = manager.getTaskList().getTask(handle);
