@@ -21,6 +21,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.RepositoryAwareStatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.monitor.core.CoreUtil;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -86,7 +87,7 @@ public class TasksUi {
 					if (query.getSynchronizationStatus() != null) {
 						Display display = PlatformUI.getWorkbench().getDisplay();
 						if (!display.isDisposed()) {
-							RepositoryAwareStatusHandler.getInstance().displayStatus("Query Synchronization Failed",
+							StatusHandler.displayStatus("Query Synchronization Failed",
 									query.getSynchronizationStatus());
 						}
 					}
