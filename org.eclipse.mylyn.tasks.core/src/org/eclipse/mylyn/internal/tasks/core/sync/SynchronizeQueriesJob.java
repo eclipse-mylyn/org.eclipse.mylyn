@@ -164,38 +164,40 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 				event.tasks = allTasks;
 				event.performQueries = true;
 
-				// hook into the connector for checking for changed tasks and have the connector mark tasks that need synchronization
-				firePreSynchronization(event, new SubProgressMonitor(monitor, 20));
+				try {
+					// hook into the connector for checking for changed tasks and have the connector mark tasks that need synchronization
+					if (firePreSynchronization(event, new SubProgressMonitor(monitor, 20))) {
+						// synchronize queries, tasks changed within query are added to set of tasks to be synchronized
+						synchronizeQueries(monitor, event);
 
-				// synchronize queries, tasks changed within query are added to set of tasks to be synchronized
-				synchronizeQueries(monitor, event);
-
-				// for background synchronizations all changed tasks are synchronized including the ones that are not part of a query
-				if (!isUser()) {
-					for (AbstractTask task : allTasks) {
-						if (task.isStale()) {
-							tasksToBeSynchronized.add(task);
-							task.setSynchronizing(true);
+						// for background synchronizations all changed tasks are synchronized including the ones that are not part of a query
+						if (!isUser()) {
+							for (AbstractTask task : allTasks) {
+								if (task.isStale()) {
+									tasksToBeSynchronized.add(task);
+									task.setSynchronizing(true);
+								}
+							}
 						}
+
+						// synchronize tasks that were marked by the connector
+						if (!tasksToBeSynchronized.isEmpty()) {
+							Policy.checkCanceled(monitor);
+							monitor.subTask("Synchronizing " + tasksToBeSynchronized.size() + " changed tasks");
+							synchronizeTasks(new SubProgressMonitor(monitor, 40));
+						} else {
+							monitor.worked(40);
+						}
+
+						// hook into the connector for synchronization time stamp management
+						firePostSynchronization(event, new SubProgressMonitor(monitor, 10));
 					}
+				} finally {
+					taskList.notifyContainersUpdated(null);
 				}
-
-				// synchronize tasks that were marked by the connector
-				if (!tasksToBeSynchronized.isEmpty()) {
-					Policy.checkCanceled(monitor);
-					monitor.subTask("Synchronizing " + tasksToBeSynchronized.size() + " changed tasks");
-					synchronizeTasks(new SubProgressMonitor(monitor, 40));
-				} else {
-					monitor.worked(40);
-				}
-
-				// hook into the connector for synchronization time stamp management
-				firePostSynchronization(event, new SubProgressMonitor(monitor, 10));
 			} finally {
 				Job.getJobManager().endRule(rule);
 			}
-
-			taskList.notifyContainersUpdated(null);
 			return Status.OK_STATUS;
 		} catch (OperationCanceledException e) {
 			return Status.CANCEL_STATUS;
