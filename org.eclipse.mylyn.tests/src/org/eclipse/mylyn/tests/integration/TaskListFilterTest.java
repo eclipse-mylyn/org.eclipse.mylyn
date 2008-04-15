@@ -23,12 +23,12 @@ import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.internal.tasks.ui.TaskWorkingSetFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.ui.ITaskListManager;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.PlatformUI;
@@ -41,7 +41,7 @@ public class TaskListFilterTest extends TestCase {
 
 	private TaskListView view;
 
-	private final ITaskListManager manager = TasksUiPlugin.getTaskListManager();
+	private final TaskListManager manager = TasksUiPlugin.getTaskListManager();
 
 	private Set<AbstractTaskListFilter> previousFilters;
 
@@ -116,8 +116,8 @@ public class TaskListFilterTest extends TestCase {
 	public void testSearchScheduledWorkingSet() throws InterruptedException {
 		TaskCategory category = new TaskCategory("category");
 		manager.getTaskList().addCategory(category);
-		manager.getTaskList().moveTask(taskOverdue, category);
-		manager.getTaskList().moveTask(taskIncomplete, category);
+		manager.getTaskList().addTask(taskOverdue, category);
+		manager.getTaskList().addTask(taskIncomplete, category);
 		view.getViewer().refresh();
 		view.getViewer().expandAll();
 		List<Object> items = UiTestUtil.getAllData(view.getViewer().getTree());
