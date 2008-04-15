@@ -103,7 +103,7 @@ public class TaskRepositoryManager implements ITaskRepositoryManager {
 		repositories.add(repository);
 		saveRepositories(repositoryFilePath);
 
-		taskList.addOrphanContainer(new UnmatchedTaskContainer(repository.getConnectorKind(),
+		taskList.addUnmatchedContainer(new UnmatchedTaskContainer(repository.getConnectorKind(),
 				repository.getRepositoryUrl()));
 
 		for (ITaskRepositoryListener listener : listeners) {
@@ -116,7 +116,8 @@ public class TaskRepositoryManager implements ITaskRepositoryManager {
 		if (repositories != null) {
 			repository.flushAuthenticationCredentials();
 			repositories.remove(repository);
-			taskList.removeOrphanContainer(repository.getRepositoryUrl());
+			// XXX 
+			//taskList.removeUnmatchedContainer(taskList.getUnmatchedContainer(repository.getRepositoryUrl()));
 		}
 		saveRepositories(repositoryFilePath);
 		for (ITaskRepositoryListener listener : listeners) {
@@ -200,19 +201,6 @@ public class TaskRepositoryManager implements ITaskRepositoryManager {
 			}
 		}
 		return repositories;
-	}
-
-	public TaskRepository getRepositoryForActiveTask(String repositoryKind, TaskList taskList) {
-		AbstractTask activeTask = taskList.getActiveTask();
-		if (activeTask != null) {
-			String repositoryUrl = activeTask.getRepositoryUrl();
-			for (TaskRepository repository : getRepositories(repositoryKind)) {
-				if (repository.getRepositoryUrl().equals(repositoryUrl)) {
-					return repository;
-				}
-			}
-		}
-		return null;
 	}
 
 	/**

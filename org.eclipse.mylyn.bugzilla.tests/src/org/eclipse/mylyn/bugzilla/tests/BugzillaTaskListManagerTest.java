@@ -98,11 +98,11 @@ public class BugzillaTaskListManagerTest extends TestCase {
 		// manager.setTaskList(list);
 		manager.readExistingOrCreateNewList();
 		assertEquals(1, manager.getTaskList()
-				.getOrphanContainer(IBugzillaConstants.ECLIPSE_BUGZILLA_URL)
+				.getUnmatchedContainer(IBugzillaConstants.ECLIPSE_BUGZILLA_URL)
 				.getChildren()
 				.size());
 		AbstractTask readTask = manager.getTaskList()
-				.getOrphanContainer(IBugzillaConstants.ECLIPSE_BUGZILLA_URL)
+				.getUnmatchedContainer(IBugzillaConstants.ECLIPSE_BUGZILLA_URL)
 				.getChildren()
 				.iterator()
 				.next();
@@ -200,7 +200,7 @@ public class BugzillaTaskListManagerTest extends TestCase {
 		assertEquals(allRoots.size(), manager.getTaskList().getRootElements().size());
 		assertEquals(allTasks.size(), manager.getTaskList().getAllTasks().size());
 
-		manager.deactivateTask(manager.getTaskList().getActiveTask());
+		manager.deactivateTask(manager.getActiveTask());
 	}
 
 	public void testDeleteQuery() {

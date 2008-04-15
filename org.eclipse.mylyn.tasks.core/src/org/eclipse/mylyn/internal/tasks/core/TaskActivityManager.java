@@ -99,7 +99,11 @@ public class TaskActivityManager {
 
 	public static TaskActivityManager INSTANCE;
 
-	public TaskActivityManager(TaskRepositoryManager repositoryManager, TaskList taskList) {
+	private final ITaskListManager taskListManager;
+
+	public TaskActivityManager(TaskRepositoryManager repositoryManager, ITaskListManager taskListManager,
+			TaskList taskList) {
+		this.taskListManager = taskListManager;
 		this.taskList = taskList;
 		this.repositoryManager = repositoryManager;
 	}
@@ -358,7 +362,7 @@ public class TaskActivityManager {
 	}
 
 	public AbstractTask getActiveTask() {
-		return taskList.getActiveTask();
+		return taskListManager.getActiveTask();
 	}
 
 	private void reloadScheduledData() {

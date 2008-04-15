@@ -12,7 +12,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -26,7 +25,6 @@ import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
-import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
@@ -149,12 +147,12 @@ public class TaskListManagerTest extends TestCase {
 		MockTask task = new MockTask("1");
 		task.setLastReadTimeStamp("now");
 		manager.getTaskList().moveTask(task,
-				manager.getTaskList().getOrphanContainer(LocalRepositoryConnector.REPOSITORY_URL));
+				manager.getTaskList().getUnmatchedContainer(LocalRepositoryConnector.REPOSITORY_URL));
 		assertEquals(1, manager.getTaskList().getAllTasks().size());
 		manager.getTaskList().deleteTask(task);
 		assertEquals(0, manager.getTaskList().getAllTasks().size());
 		manager.getTaskList().moveTask(task,
-				manager.getTaskList().getOrphanContainer(LocalRepositoryConnector.REPOSITORY_URL));
+				manager.getTaskList().getUnmatchedContainer(LocalRepositoryConnector.REPOSITORY_URL));
 		assertEquals(1, manager.getTaskList().getAllTasks().size());
 
 		manager.saveTaskList();
@@ -404,7 +402,7 @@ public class TaskListManagerTest extends TestCase {
 
 		AbstractTask task1 = new LocalTask("t1", "t1");
 		manager.getTaskList().moveTask(task1,
-				manager.getTaskList().getOrphanContainer(LocalRepositoryConnector.REPOSITORY_URL));
+				manager.getTaskList().getUnmatchedContainer(LocalRepositoryConnector.REPOSITORY_URL));
 		assertEquals(1, manager.getTaskList().getDefaultCategory().getChildren().size());
 		assertEquals(manager.getTaskList().getDefaultCategory(), TaskCategory.getParentTaskCategory(task1));
 
@@ -416,17 +414,10 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(cat1, TaskCategory.getParentTaskCategory(task1));
 
 		manager.getTaskList().moveTask(task1,
-				manager.getTaskList().getOrphanContainer(LocalRepositoryConnector.REPOSITORY_URL));
+				manager.getTaskList().getUnmatchedContainer(LocalRepositoryConnector.REPOSITORY_URL));
 		assertEquals(1, manager.getTaskList().getDefaultCategory().getChildren().size());
 		assertEquals(0, cat1.getChildren().size());
 		assertEquals(manager.getTaskList().getDefaultCategory(), TaskCategory.getParentTaskCategory(task1));
-	}
-
-	public void testEmpty() {
-		manager.resetTaskList();
-		assertTrue(manager.getTaskList().isEmpty());
-		manager.getTaskList().addTask(new LocalTask("", ""));
-		assertFalse(manager.getTaskList().isEmpty());
 	}
 
 	public void testCategoryPersistance() {
@@ -461,7 +452,7 @@ public class TaskListManagerTest extends TestCase {
 		manager.getTaskList().addTask(task, category);
 		assertEquals(0, manager.getTaskList().getDefaultCategory().getChildren().size());
 		manager.getTaskList().deleteCategory(category);
-		manager.getTaskList().getOrphanContainer(MockRepositoryConnector.REPOSITORY_URL);
+		manager.getTaskList().getUnmatchedContainer(MockRepositoryConnector.REPOSITORY_URL);
 	}
 
 	public void testRenameCategory() {
@@ -582,7 +573,7 @@ public class TaskListManagerTest extends TestCase {
 		manager.readExistingOrCreateNewList();
 		assertEquals(1, manager.getTaskList().getAllTasks().size());
 		assertEquals(1, manager.getTaskList()
-				.getOrphanContainer(MockRepositoryConnector.REPOSITORY_URL)
+				.getUnmatchedContainer(MockRepositoryConnector.REPOSITORY_URL)
 				.getChildren()
 				.size());
 
@@ -593,7 +584,7 @@ public class TaskListManagerTest extends TestCase {
 		repositoryTask.setLastReadTimeStamp("now");
 		manager.getTaskList().addTask(repositoryTask);
 		assertEquals(1, manager.getTaskList()
-				.getOrphanContainer(MockRepositoryConnector.REPOSITORY_URL)
+				.getUnmatchedContainer(MockRepositoryConnector.REPOSITORY_URL)
 				.getChildren()
 				.size());
 		manager.saveTaskList();
@@ -601,7 +592,7 @@ public class TaskListManagerTest extends TestCase {
 		manager.resetTaskList();
 		manager.readExistingOrCreateNewList();
 		assertEquals(1, manager.getTaskList()
-				.getOrphanContainer(MockRepositoryConnector.REPOSITORY_URL)
+				.getUnmatchedContainer(MockRepositoryConnector.REPOSITORY_URL)
 				.getChildren()
 				.size());
 	}
@@ -819,20 +810,11 @@ public class TaskListManagerTest extends TestCase {
 
 		assertEquals(3, query2.getChildren().size());
 
-		Set<AbstractRepositoryQuery> queriesReturned = taskList.getParentQueries(hit1);
+		Set<AbstractTaskContainer> queriesReturned = hit1.getParentContainers();
 		assertNotNull(queriesReturned);
 		assertEquals(2, queriesReturned.size());
 		assertTrue(queriesReturned.contains(query1));
 		assertTrue(queriesReturned.contains(query2));
-
-		Set<String> handles = new HashSet<String>();
-		handles.add(RepositoryTaskHandleUtil.getHandle(MockRepositoryConnector.REPOSITORY_URL, "2"));
-		Collection<AbstractTask> hitsReturned = taskList.getTasks(handles);
-		assertNotNull(hitsReturned);
-		assertEquals(1, hitsReturned.size());
-		assertTrue(hitsReturned.contains(hit2));
-		assertTrue(hitsReturned.contains(hit2twin));
-
 	}
 
 // public void testQueryHitHasParent() {
@@ -920,13 +902,13 @@ public class TaskListManagerTest extends TestCase {
 		TaskList taskList = manager.getTaskList();
 		taskList.addTask(task1);
 		taskList.addTask(task2);
-		assertNull(taskList.getActiveTask());
+		assertNull(manager.getActiveTask());
 
 		manager.activateTask(task2);
-		assertEquals(task2, taskList.getActiveTask());
+		assertEquals(task2, manager.getActiveTask());
 
 		manager.deactivateAllTasks();
-		assertNull(taskList.getActiveTask());
+		assertNull(manager.getActiveTask());
 	}
 
 	public void testMarkTaskRead() {

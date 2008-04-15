@@ -68,7 +68,7 @@ public class RepositoryTaskHandleTest extends TestCase {
 		manager.readExistingOrCreateNewList();
 
 		BugzillaTask readReport = (BugzillaTask) manager.getTaskList()
-				.getOrphanContainer(repositoryUrl)
+				.getUnmatchedContainer(repositoryUrl)
 				.getChildren()
 				.iterator()
 				.next();

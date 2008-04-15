@@ -32,6 +32,7 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
+import org.eclipse.mylyn.internal.tasks.core.ITaskListManager;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
@@ -59,7 +60,6 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
-import org.eclipse.mylyn.tasks.ui.ITaskListManager;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.widgets.Display;
 
@@ -97,6 +97,8 @@ public class TaskListManager implements ITaskListManager {
 
 	private final Timer timer;
 
+	private AbstractTask activeTask;
+
 	/**
 	 * public for testing
 	 * 
@@ -129,6 +131,7 @@ public class TaskListManager implements ITaskListManager {
 	}
 
 	public ITaskList resetTaskList() {
+		deactivateAllTasks();
 		resetAndRollOver();
 		taskList.reset();
 		prepareOrphanContainers();
@@ -139,13 +142,12 @@ public class TaskListManager implements ITaskListManager {
 			view.refresh();
 		}
 		return taskList;
-
 	}
 
 	private void prepareOrphanContainers() {
 		for (TaskRepository repository : TasksUi.getRepositoryManager().getAllRepositories()) {
 			if (!repository.getConnectorKind().equals(LocalRepositoryConnector.CONNECTOR_KIND)) {
-				taskList.addOrphanContainer(new UnmatchedTaskContainer(repository.getConnectorKind(),
+				taskList.addUnmatchedContainer(new UnmatchedTaskContainer(repository.getConnectorKind(),
 						repository.getRepositoryUrl()));
 			}
 		}
@@ -158,10 +160,8 @@ public class TaskListManager implements ITaskListManager {
 		if (oldUrl == null || newUrl == null || oldUrl.equals(newUrl)) {
 			return;
 		}
-		List<AbstractTask> activeTasks = taskList.getActiveTasks();
-		for (AbstractTask task : new ArrayList<AbstractTask>(activeTasks)) {
-			deactivateTask(task);
-		}
+		deactivateAllTasks();
+
 		refactorOfflineHandles(oldUrl, newUrl);
 		taskList.refactorRepositoryUrl(oldUrl, newUrl);
 		refactorMetaContextHandles(oldUrl, newUrl);
@@ -345,35 +345,32 @@ public class TaskListManager implements ITaskListManager {
 			}
 		}
 
-		try {
-			taskList.setActive(task, true);
-			if (addToHistory) {
-				taskActivityHistory.addTask(task);
+		activeTask = task;
+		activeTask.setActive(true);
+		if (addToHistory) {
+			taskActivityHistory.addTask(task);
+		}
+
+		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
+			try {
+				listener.taskActivated(task);
+			} catch (Throwable t) {
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Task activity listener failed: "
+						+ listener, t));
 			}
-			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
-				try {
-					listener.taskActivated(task);
-				} catch (Throwable t) {
-					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-							"Task activity listener failed: " + listener, t));
-				}
-			}
-		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not activate task", t));
 		}
 	}
 
 	public void deactivateAllTasks() {
-		List<AbstractTask> activeTasks = taskList.getActiveTasks();
-		for (AbstractTask task : activeTasks) {
-			deactivateTask(task);
+		if (activeTask != null) {
+			deactivateTask(activeTask);
 		}
 	}
 
 	public void deactivateTask(AbstractTask task) {
 		Assert.isNotNull(task);
 
-		if (task.isActive()) {
+		if (task.isActive() && task == activeTask) {
 			// notify that a task is about to be deactivated
 			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
 				try {
@@ -384,7 +381,9 @@ public class TaskListManager implements ITaskListManager {
 				}
 			}
 
-			taskList.setActive(task, false);
+			activeTask.setActive(false);
+			activeTask = null;
+
 			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
 				try {
 					listener.taskDeactivated(task);
@@ -606,7 +605,7 @@ public class TaskListManager implements ITaskListManager {
 	}
 
 	public AbstractTask getActiveTask() {
-		return getTaskList().getActiveTask();
+		return activeTask;
 	}
 
 }

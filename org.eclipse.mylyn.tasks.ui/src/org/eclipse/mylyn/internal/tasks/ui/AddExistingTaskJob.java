@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
@@ -84,9 +83,6 @@ public class AddExistingTaskJob extends Job {
 							Object selectedObject = ((IStructuredSelection) taskListView.getViewer().getSelection()).getFirstElement();
 							if (selectedObject instanceof TaskCategory) {
 								category = (TaskCategory) selectedObject;
-							} else {
-								category = TasksUiPlugin.getTaskListManager().getTaskList().getOrphanContainer(
-										LocalRepositoryConnector.REPOSITORY_URL);
 							}
 						}
 						TasksUi.getTaskListManager().getTaskList().addTask(newTask, category);

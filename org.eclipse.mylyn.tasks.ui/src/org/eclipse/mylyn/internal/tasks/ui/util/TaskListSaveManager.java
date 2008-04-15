@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -95,7 +94,8 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 			TaskListManager taskListManager = TasksUiPlugin.getTaskListManager();
 			if (async) {
 				if (saveContext) {
-					for (AbstractTask task : taskListManager.getTaskList().getActiveTasks()) {
+					AbstractTask task = taskListManager.getActiveTask();
+					if (task != null) {
 						taskListSaverJob.addTaskContext(task);
 					}
 				}
@@ -104,7 +104,8 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 				taskListSaverJob.waitSaveCompleted();
 				IInteractionContextManager contextManager = ContextCore.getContextManager();
 				if (saveContext) {
-					for (AbstractTask task : new ArrayList<AbstractTask>(taskListManager.getTaskList().getActiveTasks())) {
+					AbstractTask task = taskListManager.getActiveTask();
+					if (task != null) {
 						contextManager.saveContext(task.getHandleIdentifier());
 					}
 				}

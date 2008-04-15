@@ -11,14 +11,16 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 
 /**
@@ -54,22 +56,19 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	 * @return first parent found
 	 */
 	public Object getParent(Object child) {
-		// Return first parent found, first search within queries then categories.
+		// return first parent found, first search within categories then queries
 		if (child instanceof AbstractTask) {
-			Set<AbstractRepositoryQuery> queries = TasksUiPlugin.getTaskListManager()
-					.getTaskList()
-					.getQueriesForHandle(((AbstractTask) child).getHandleIdentifier());
-			if (queries.size() > 0) {
-				return queries.toArray()[0];
+			AbstractTask task = (AbstractTask) child;
+			AbstractTaskCategory parent = TaskCategory.getParentTaskCategory(task);
+			if (parent != null) {
+				return parent;
 			}
 
-			AbstractTaskContainer container = TasksUiPlugin.getTaskListManager().getTaskList().getContainerForHandle(
-					((AbstractTask) child).getHandleIdentifier());
-
-			if (container != null) {
-				return container;
+			Set<AbstractTaskContainer> parents = task.getParentContainers();
+			Iterator<AbstractTaskContainer> it = parents.iterator();
+			if (it.hasNext()) {
+				return parents.iterator().next();
 			}
-
 		}
 		// no parent found
 		return null;

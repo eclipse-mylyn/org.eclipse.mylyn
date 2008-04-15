@@ -12,7 +12,6 @@ import java.util.Arrays;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
-import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.ui.IWorkingSet;
@@ -30,7 +29,7 @@ public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 
 	@Override
 	public boolean select(Object parent, Object element) {
-		if (parent instanceof AbstractTask || element instanceof TaskArchive) {
+		if (parent instanceof AbstractTask) {
 			return true;
 		}
 
@@ -41,8 +40,7 @@ public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 		if (parent == null && element instanceof AbstractTaskContainer) {
 			return isContainedInWorkingSet((AbstractTaskContainer) element);
 		}
-		if (!(parent instanceof TaskArchive) && parent instanceof AbstractTaskContainer
-				&& !(parent instanceof ScheduledTaskContainer)) {
+		if (parent instanceof AbstractTaskContainer && !(parent instanceof ScheduledTaskContainer)) {
 			return isContainedInWorkingSet((AbstractTaskContainer) parent);
 		}
 		if (element instanceof LocalTask) {

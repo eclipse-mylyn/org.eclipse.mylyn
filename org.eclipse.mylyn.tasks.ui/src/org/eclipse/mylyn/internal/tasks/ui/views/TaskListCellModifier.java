@@ -78,7 +78,8 @@ class TaskListCellModifier implements ICellModifier {
 				switch (columnIndex) {
 				case 0:
 					if (task != null) {
-						TasksUiPlugin.getTaskListManager().getTaskList().renameTask(task, ((String) value).trim());
+						task.setSummary(((String) value).trim());
+						TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(task, false);
 					}
 					break;
 				case 1:

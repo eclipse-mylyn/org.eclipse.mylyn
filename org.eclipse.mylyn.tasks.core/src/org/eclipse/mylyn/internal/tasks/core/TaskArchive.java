@@ -55,7 +55,7 @@ public class TaskArchive extends AbstractTaskCategory {
 	@Override
 	public Set<AbstractTask> getChildren() {
 		Set<AbstractTask> children = new HashSet<AbstractTask>();
-		for (UnmatchedTaskContainer container : taskList.getOrphanContainers()) {
+		for (UnmatchedTaskContainer container : taskList.getUnmatchedContainers()) {
 			children.addAll(container.getChildren());
 		}
 		return children;

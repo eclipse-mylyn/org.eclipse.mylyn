@@ -271,7 +271,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 						+ repositoryQuery.getSummary()));
 			}
 
-			taskList.removeFromQuery(repositoryQuery, collector.getRemovedChildren());
+			taskList.removeFromContainer(repositoryQuery, collector.getRemovedChildren());
 
 			repositoryQuery.setLastSynchronizedStamp(DateUtil.getFormattedDate(new Date(), "MMM d, H:mm:ss"));
 		} else {

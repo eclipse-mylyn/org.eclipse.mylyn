@@ -327,13 +327,6 @@ public class TaskListWriter {
 						}
 					}
 				}
-
-				// bug#173710 - task number incorrect resulting in invalid task
-				// list
-				// Doing count each time
-				int largest = taskList.findLargestTaskId();
-				taskList.setLastLocalTaskId(largest);
-
 			}
 		} catch (Exception e) {
 			handleException(inFile, null, e);

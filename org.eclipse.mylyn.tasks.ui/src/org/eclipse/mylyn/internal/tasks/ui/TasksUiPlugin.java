@@ -367,8 +367,11 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				TasksUiExtensionReader.initWorkbenchUiExtensions();
 
 				// Needs to happen asynchronously to avoid bug 159706
-				if (taskListManager.getTaskList().getActiveTask() != null) {
-					taskListManager.activateTask(taskListManager.getTaskList().getActiveTask());
+				for (AbstractTask task : taskListManager.getTaskList().getAllTasks()) {
+					if (task.isActive()) {
+						taskListManager.activateTask(task);
+						break;
+					}
 				}
 				taskListManager.initActivityHistory();
 			} catch (Throwable t) {
@@ -467,7 +470,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			File taskListFile = new File(path);
 			taskListManager = new TaskListManager(taskListWriter, taskListFile);
 			repositoryManager = new TaskRepositoryManager(taskListManager.getTaskList());
-			taskActivityManager = new TaskActivityManager(repositoryManager, taskListManager.getTaskList());
+			taskActivityManager = new TaskActivityManager(repositoryManager, taskListManager,
+					taskListManager.getTaskList());
 			updateTaskActivityManager();
 
 			proxyServiceReference = context.getServiceReference(IProxyService.class.getName());

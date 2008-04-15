@@ -12,6 +12,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.resources.IResource;
@@ -555,7 +556,7 @@ public class TasksUiUtil {
 	 * @since 3.0
 	 */
 	public static void openTask(String url) {
-		AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getRepositoryTask(url);
+		AbstractTask task = TasksUiUtil.getTaskByUrl(url);
 		if (task != null && !(task instanceof LocalTask)) {
 			openTaskAndRefresh(task);
 		} else {
@@ -586,7 +587,7 @@ public class TasksUiUtil {
 			task = TasksUi.getTaskListManager().getTaskList().getTask(repositoryUrl, taskId);
 		}
 		if (task == null && fullUrl != null) {
-			task = TasksUiPlugin.getTaskListManager().getTaskList().getRepositoryTask(fullUrl);
+			task = TasksUiUtil.getTaskByUrl(fullUrl);
 		}
 		if (task == null && repositoryUrl != null && taskId != null) {
 			task = TasksUi.getTaskListManager().getTaskList().getTaskByKey(repositoryUrl, taskId);
@@ -618,6 +619,23 @@ public class TasksUiUtil {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Searches for a task whose URL matches
+	 * 
+	 * @return first task with a matching URL.
+	 * @since 2.0
+	 */
+	private static AbstractTask getTaskByUrl(String taskUrl) {
+		Collection<AbstractTask> tasks = TasksUi.getTaskListManager().getTaskList().getAllTasks();
+		for (AbstractTask task : tasks) {
+			String currUrl = task.getUrl();
+			if (currUrl != null && !currUrl.equals("") && currUrl.equals(taskUrl)) {
+				return task;
+			}
+		}
+		return null;
 	}
 
 	/**

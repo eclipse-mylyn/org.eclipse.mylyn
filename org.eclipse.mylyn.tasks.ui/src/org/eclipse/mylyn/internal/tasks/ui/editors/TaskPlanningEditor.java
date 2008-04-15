@@ -231,8 +231,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 	public void doSave(IProgressMonitor monitor) {
 		if (task instanceof LocalTask) {
 			String label = summaryEditor.getTextWidget().getText();
-			// task.setDescription(label);
-			TasksUiPlugin.getTaskListManager().getTaskList().renameTask(task, label);
+			task.setSummary(label);
 
 			// TODO: refactor mutation into TaskList?
 			task.setUrl(issueReportURL.getText());
@@ -246,6 +245,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 			} else {
 				task.setCompletionDate(null);
 			}
+			TasksUi.getTaskListManager().getTaskList().notifyTaskChanged(task, false);
 		}
 
 		String note = noteEditor.getTextWidget().getText();// notes.getText();

@@ -46,7 +46,7 @@ public class TaskListDnDTest extends TestCase {
 		super.tearDown();
 		manager.resetTaskList();
 		manager.saveTaskList();
-		assertNull(manager.getTaskList().getActiveTask());
+		assertNull(manager.getActiveTask());
 	}
 
 	public void testisUrl() {
