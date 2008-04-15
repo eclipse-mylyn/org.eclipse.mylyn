@@ -48,7 +48,7 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 				.next();
 		collector = CVSUIPlugin.getPlugin().getChangeSetManager();
 		assertNotNull(changeSetManager);
-		assertNull(TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask());
+		assertNull(TasksUiPlugin.getTaskListManager().getActiveTask());
 	}
 
 	@Override
