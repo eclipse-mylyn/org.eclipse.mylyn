@@ -66,7 +66,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 
 	private class TaskCollector extends AbstractTaskDataCollector {
 
-		private final Set<AbstractTask> children;
+		private final Set<AbstractTask> removedQueryResults;
 
 		private final AbstractRepositoryQuery repositoryQuery;
 
@@ -74,7 +74,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 
 		public TaskCollector(AbstractRepositoryQuery repositoryQuery) {
 			this.repositoryQuery = repositoryQuery;
-			this.children = repositoryQuery.getChildren();
+			this.removedQueryResults = new HashSet<AbstractTask>(repositoryQuery.getChildren());
 		}
 
 		@Override
@@ -87,7 +87,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 				changed = connector.updateTaskFromTaskData(repository, task, taskData);
 			} else {
 				changed = connector.updateTaskFromTaskData(repository, task, taskData);
-				children.remove(task);
+				removedQueryResults.remove(task);
 			}
 			taskList.addTask(task, repositoryQuery);
 			if (!taskData.isPartial()) {
@@ -106,7 +106,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 		}
 
 		public Set<AbstractTask> getRemovedChildren() {
-			return children;
+			return removedQueryResults;
 		}
 
 		public int getResultCount() {

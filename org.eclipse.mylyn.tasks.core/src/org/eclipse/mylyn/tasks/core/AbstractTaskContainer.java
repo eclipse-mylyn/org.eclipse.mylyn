@@ -7,6 +7,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.tasks.core;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -62,7 +63,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	 * TODO: review to make sure that this is too expensive, or move to creation.
 	 */
 	public Set<AbstractTask> getChildren() {
-		return children;
+		return Collections.unmodifiableSet(children);
 	}
 
 	/**
@@ -73,7 +74,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	 * @since 2.2
 	 */
 	public Set<AbstractTask> getChildrenInternal() {
-		return children;
+		return Collections.unmodifiableSet(children);
 	}
 
 	/**
