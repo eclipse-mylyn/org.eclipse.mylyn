@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
-import org.eclipse.mylyn.internal.tasks.ui.RepositoryAwareStatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.monitor.core.CoreUtil;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
@@ -163,8 +162,7 @@ public class TasksUi {
 					if (task.getSynchronizationStatus() != null) {
 						Display display = PlatformUI.getWorkbench().getDisplay();
 						if (!display.isDisposed()) {
-							RepositoryAwareStatusHandler.getInstance().displayStatus("Task Synchronization Failed",
-									task.getSynchronizationStatus());
+							StatusHandler.displayStatus("Task Synchronization Failed", task.getSynchronizationStatus());
 						}
 					}
 				}
