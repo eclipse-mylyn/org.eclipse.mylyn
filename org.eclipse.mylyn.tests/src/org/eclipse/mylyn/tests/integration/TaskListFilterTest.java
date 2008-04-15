@@ -142,8 +142,8 @@ public class TaskListFilterTest extends TestCase {
 		workingSets = new IWorkingSet[0];
 		view.removeFilter(workingSetFilter);
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().setWorkingSets(workingSets);
-		manager.getTaskList().removeFromCategory(category, taskOverdue);
-		manager.getTaskList().removeFromCategory(category, taskIncomplete);
+		manager.getTaskList().removeFromContainer(category, taskOverdue);
+		manager.getTaskList().removeFromContainer(category, taskIncomplete);
 		view.getFilteredTree().setFilterText("");
 		view.getFilteredTree().getRefreshPolicy().internalForceRefresh();
 	}

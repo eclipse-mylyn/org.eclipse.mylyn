@@ -48,7 +48,6 @@ public class ChangeDataDirTest extends TestCase {
 		dir.mkdir();
 		dir.deleteOnExit();
 		manager.resetTaskList();
-		assertTrue(manager.getTaskList().isEmpty());
 		TasksUiPlugin.getTaskListManager().saveTaskList();
 //		TasksUiPlugin.getDefault().getTaskListSaveManager().saveTaskList(true);
 	}
@@ -97,7 +96,7 @@ public class ChangeDataDirTest extends TestCase {
 		AbstractTask task = manager.createNewLocalTask("label");
 		String handle = task.getHandleIdentifier();
 		manager.getTaskList().moveTask(task,
-				manager.getTaskList().getOrphanContainer(LocalRepositoryConnector.REPOSITORY_URL));
+				manager.getTaskList().getUnmatchedContainer(LocalRepositoryConnector.REPOSITORY_URL));
 
 		AbstractTask readTaskBeforeMove = manager.getTaskList().getTask(handle);
 		TasksUiPlugin.getTaskListManager().copyDataDirContentsTo(newDataDir);
