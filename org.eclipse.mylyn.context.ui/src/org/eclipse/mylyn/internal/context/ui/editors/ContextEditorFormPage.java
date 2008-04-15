@@ -219,7 +219,7 @@ public class ContextEditorFormPage extends FormPage {
 			}
 		});
 
-		if (!task.equals(TasksUi.getTaskListManager().getTaskList().getActiveTask())) {
+		if (!task.equals(TasksUi.getTaskListManager().getActiveTask())) {
 			doiScale.setEnabled(false);
 		}
 
@@ -322,7 +322,7 @@ public class ContextEditorFormPage extends FormPage {
 		Composite sectionClient = toolkit.createComposite(section);
 		section.setClient(sectionClient);
 
-		if (task.equals(TasksUi.getTaskListManager().getTaskList().getActiveTask())) {
+		if (task.equals(TasksUi.getTaskListManager().getActiveTask())) {
 			sectionClient.setLayout(new Layout() {
 
 				@Override

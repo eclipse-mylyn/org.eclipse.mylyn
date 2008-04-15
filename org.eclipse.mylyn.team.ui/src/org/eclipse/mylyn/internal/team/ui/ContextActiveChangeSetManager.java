@@ -23,6 +23,7 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -129,7 +130,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 				if (!(restoredSet instanceof ContextChangeSet)) {
 					String encodedTitle = restoredSet.getName();
 					String taskHandle = ContextChangeSet.getHandleFromPersistedTitle(encodedTitle);
-					AbstractTask task = TasksUi.getTaskListManager().getTaskList().getTask(taskHandle);
+					AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(taskHandle);
 					if (task != null) {
 						try {
 							ContextChangeSet contextChangeSet = new ContextChangeSet(task, collector);
@@ -211,8 +212,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 
 	public void interestChanged(List<IInteractionElement> elements) {
 		for (IInteractionElement element : elements) {
-			AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(
-					element.getContentType());
+			AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(element.getContentType());
 			try {
 				if (bridge.isDocument(element.getHandleIdentifier())) {
 					IResource resource = ResourcesUiBridgePlugin.getDefault().getResourceForElement(element, false);
@@ -248,7 +248,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 	}
 
 	private AbstractTask getTask(IInteractionContext context) {
-		return TasksUi.getTaskListManager().getTaskList().getActiveTask();
+		return TasksUi.getTaskListManager().getActiveTask();
 	}
 
 	/**

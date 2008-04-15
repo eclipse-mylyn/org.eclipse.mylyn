@@ -30,9 +30,9 @@ import org.eclipse.mylyn.context.ui.ContextUi;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.NewTaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.ui.IEditorInput;
@@ -82,7 +82,7 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 
 				String mementoString = null;
 				// API-3.0: remove coupling to AbstractTask, change where memento is stored
-				AbstractTask task = TasksUi.getTaskListManager().getTaskList().getTask(
+				AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
 						context.getHandleIdentifier());
 				if (task != null) {
 					try {
@@ -122,7 +122,7 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 			((WorkbenchPage) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()).getEditorManager()
 					.saveState(memento);
 
-			AbstractTask task = TasksUi.getTaskListManager().getTaskList().getTask(context.getHandleIdentifier());
+			AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(context.getHandleIdentifier());
 			if (task != null) {
 				// TODO: avoid storing with preferences due to bloat?
 				StringWriter writer = new StringWriter();
@@ -147,7 +147,7 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 			return;
 		}
 		closeAllButActiveTaskEditor(context.getHandleIdentifier());
-		AbstractTask task = TasksUi.getTaskListManager().getTaskList().getTask(context.getHandleIdentifier());
+		AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(context.getHandleIdentifier());
 		XMLMemento memento = XMLMemento.createWriteRoot(KEY_CONTEXT_EDITORS);
 
 		if (task != null) {
