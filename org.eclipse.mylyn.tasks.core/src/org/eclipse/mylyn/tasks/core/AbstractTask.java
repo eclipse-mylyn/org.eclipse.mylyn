@@ -49,8 +49,6 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 
 	private boolean floatingScheduledDate = false;
 
-	private String categoryHandle = "";
-
 	private final Set<AbstractTaskContainer> containers = new HashSet<AbstractTaskContainer>();
 
 	// ************ Synch ****************
@@ -505,20 +503,6 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 
 	public void setStale(boolean stale) {
 		this.stale = stale;
-	}
-
-	/**
-	 * @API 3.0: deprecate?
-	 */
-	public String getCategoryHandle() {
-		return categoryHandle;
-	}
-
-	/**
-	 * @API 3.0: deprecate?
-	 */
-	public void setCategoryHandle(String categoryHandle) {
-		this.categoryHandle = categoryHandle;
 	}
 
 	/**

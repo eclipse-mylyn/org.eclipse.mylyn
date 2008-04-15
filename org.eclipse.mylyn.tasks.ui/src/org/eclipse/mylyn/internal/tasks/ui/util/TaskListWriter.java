@@ -143,36 +143,25 @@ public class TaskListWriter {
 
 		Element root = createTaskListRoot(doc);
 
-		// create the categories
-		for (AbstractTaskContainer category : taskList.getCategories()) {
-			// if (!category.getHandleIdentifier().equals(TaskArchive.HANDLE)) {
-			delagatingExternalizer.createCategoryElement(category, doc, root);
-			// }
+		// create task nodes...
+		for (AbstractTask task : taskList.getAllTasks()) {
+			delagatingExternalizer.createTaskElement(task, doc, root);
 		}
 
+		// create the categorie nodes...
+		for (AbstractTaskContainer category : taskList.getCategories()) {
+			delagatingExternalizer.createCategoryElement(category, doc, root);
+		}
+
+		// create query nodes...
 		for (AbstractRepositoryQuery query : taskList.getQueries()) {
-//			Element element = null;
 			try {
-//				for (ITaskListElementFactory externalizer : externalizers) {
-//					if (externalizer.canCreateElementFor(query))
-//						element = externalizer.createQueryElement(query, doc, root);
-//				}
-//				if (element == null && delagatingExternalizer.canCreateElementFor(query)) {
 				delagatingExternalizer.createQueryElement(query, doc, root);
-//				}
 			} catch (Throwable t) {
 				// FIXME use log?
 				StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Did not externalize: "
 						+ query.getSummary(), t));
 			}
-//			if (element == null) {
-//				StatusManager.log("Did not externalize: " + query, this);
-//			}
-		}
-
-		for (AbstractTask task : taskList.getAllTasks()) {
-			delagatingExternalizer.createTaskElement(task, doc, root);
-//			createTaskElement(doc, root, task);
 		}
 
 		// Persist orphaned tasks...
@@ -250,6 +239,7 @@ public class TaskListWriter {
 	 */
 	public void readTaskList(TaskList taskList, File inFile, ITaskDataManager taskDataManager) {
 		hasCaughtException = false;
+		delagatingExternalizer.getLegacyParentCategoryMap().clear();
 		Map<AbstractTask, NodeList> tasksWithSubtasks = new HashMap<AbstractTask, NodeList>();
 		orphanedTaskNodes.clear();
 		orphanedQueryNodes.clear();
@@ -272,19 +262,7 @@ public class TaskListWriter {
 			} else {
 				NodeList list = root.getChildNodes();
 
-				// NOTE: order is important, first read the categories
-				for (int i = 0; i < list.getLength(); i++) {
-					Node child = list.item(i);
-					try {
-						if (child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_CATEGORY)) {
-							delagatingExternalizer.readCategory(child, taskList);
-						}
-					} catch (Exception e) {
-						handleException(inFile, child, e);
-					}
-				}
-
-				// then read the tasks
+				// Read Tasks
 				for (int i = 0; i < list.getLength(); i++) {
 					Node child = list.item(i);
 					try {
@@ -295,12 +273,7 @@ public class TaskListWriter {
 							if (task == null) {
 								orphanedTaskNodes.add(child);
 							} else {
-//								taskList.insertTask(task, null, null);
 								taskList.addTask(task);
-								AbstractTaskCategory category = taskList.getContainerForHandle(task.getCategoryHandle());
-								if (category != null) {
-									taskList.moveTask(task, category);
-								}
 								if (child.getChildNodes() != null && child.getChildNodes().getLength() > 0) {
 									tasksWithSubtasks.put(task, child.getChildNodes());
 								}
@@ -317,10 +290,10 @@ public class TaskListWriter {
 
 				for (AbstractTask task : tasksWithSubtasks.keySet()) {
 					NodeList nodes = tasksWithSubtasks.get(task);
-					delagatingExternalizer.readSubTasks(task, nodes, taskList);
+					delagatingExternalizer.readTaskReferences(task, nodes, taskList);
 				}
 
-				// then queries and hits which get linked to tasks
+				// Read Queries
 				for (int i = 0; i < list.getLength(); i++) {
 					Node child = list.item(i);
 					try {
@@ -329,6 +302,29 @@ public class TaskListWriter {
 						}
 					} catch (Exception e) {
 						handleException(inFile, child, e);
+					}
+				}
+
+				// Read Categories
+				for (int i = 0; i < list.getLength(); i++) {
+					Node child = list.item(i);
+					try {
+						if (child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_CATEGORY)) {
+							delagatingExternalizer.readCategory(child, taskList);
+						}
+					} catch (Exception e) {
+						handleException(inFile, child, e);
+					}
+				}
+
+				// Legacy migration for task nodes that have the old Category handle on the element
+				if (delagatingExternalizer.getLegacyParentCategoryMap().size() > 0) {
+					for (AbstractTask task : delagatingExternalizer.getLegacyParentCategoryMap().keySet()) {
+						AbstractTaskCategory category = taskList.getContainerForHandle(delagatingExternalizer.getLegacyParentCategoryMap()
+								.get(task));
+						if (category != null) {
+							taskList.moveTask(task, category);
+						}
 					}
 				}
 
@@ -376,8 +372,10 @@ public class TaskListWriter {
 
 	/**
 	 * Reads the Query from the specified Node. If taskList is not null, then also adds this query to the TaskList
+	 * 
+	 * @throws TaskExternalizationException
 	 */
-	private AbstractRepositoryQuery readQuery(TaskList taskList, Node child) {
+	private AbstractRepositoryQuery readQuery(TaskList taskList, Node child) throws TaskExternalizationException {
 		AbstractRepositoryQuery query = null;
 		for (AbstractTaskListFactory externalizer : externalizers) {
 			Set<String> queryTagNames = externalizer.getQueryElementNames();
@@ -405,18 +403,15 @@ public class TaskListWriter {
 				// add created Query to the TaskList and read QueryHits (Tasks related to the Query)
 				if (taskList != null) {
 					if (query != null) {
-						taskList.internalAddQuery(query);
+						taskList.addQuery(query);
 					}
 
 					NodeList queryChildren = child.getChildNodes();
-					for (int ii = 0; ii < queryChildren.getLength(); ii++) {
-						Node queryNode = queryChildren.item(ii);
-						try {
-							delagatingExternalizer.readQueryHit((Element) queryNode, taskList, query);
-						} catch (TaskExternalizationException e) {
-							hasCaughtException = true;
-						}
-					}
+//					try {
+					delagatingExternalizer.readTaskReferences(query, queryChildren, taskList);
+//					} catch (TaskExternalizationException e) {
+//						hasCaughtException = true;
+//					}
 				}
 
 				break;

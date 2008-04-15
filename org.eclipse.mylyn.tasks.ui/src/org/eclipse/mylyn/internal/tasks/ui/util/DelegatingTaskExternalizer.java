@@ -13,13 +13,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
-import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskExternalizationException;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
@@ -104,6 +105,8 @@ final class DelegatingTaskExternalizer {
 
 	static final String KEY_QUERY_HIT = "QueryHit";
 
+	static final String KEY_TASK_REFERENCE = "TaskReference";
+
 	static final String KEY_DATE_CREATION = "CreationDate";
 
 	static final String KEY_DATE_REMINDER = "ReminderDate";
@@ -131,19 +134,23 @@ final class DelegatingTaskExternalizer {
 
 	private List<AbstractTaskListFactory> factories = new ArrayList<AbstractTaskListFactory>();
 
+	// 2.0 -> 3.0 migration holds tasks to category handles 
+	private final Map<AbstractTask, String> parentCategoryMap = new HashMap<AbstractTask, String>();
+
 	public void setFactories(List<AbstractTaskListFactory> externalizers) {
 		this.factories = externalizers;
 	}
 
 	public Element createCategoryElement(AbstractTaskContainer category, Document doc, Element parent) {
-		if (category instanceof TaskArchive) {
-			return parent;
-		} else if (category instanceof UncategorizedTaskContainer) {
+		if (category instanceof UncategorizedTaskContainer) {
 			return parent;
 		} else {
 			Element node = doc.createElement(getCategoryTagName());
 			node.setAttribute(DelegatingTaskExternalizer.KEY_NAME, category.getSummary());
 			parent.appendChild(node);
+			for (AbstractTask task : category.getChildren()) {
+				createTaskReference(KEY_TASK_REFERENCE, task, doc, node);
+			}
 			return node;
 		}
 	}
@@ -171,16 +178,14 @@ final class DelegatingTaskExternalizer {
 		node.setAttribute(KEY_HANDLE, task.getHandleIdentifier());
 		node.setAttribute(KEY_REPOSITORY_URL, task.getRepositoryUrl());
 
+		//**** TODO API 3.0 to be removed
 		AbstractTaskContainer container = TaskCategory.getParentTaskCategory(task);
-
 		if (container != null) {
 			if (container.getHandleIdentifier().equals(UncategorizedTaskContainer.HANDLE)) {
 				node.setAttribute(KEY_CATEGORY, VAL_ROOT);
 			} else {
 				node.setAttribute(KEY_CATEGORY, container.getHandleIdentifier());
 			}
-		} else {
-			// TODO: if/when subtasks are supported this should be handled
 		}
 
 		node.setAttribute(KEY_PRIORITY, task.getPriority());
@@ -239,32 +244,57 @@ final class DelegatingTaskExternalizer {
 		}
 
 		for (AbstractTask t : task.getChildren()) {
-			createSubTaskElement(t, doc, node);
+			createTaskReference(KEY_SUBTASK, t, doc, node);
 		}
 
 		parent.appendChild(node);
 		return node;
 	}
 
-	public void readSubTasks(AbstractTask task, NodeList nodes, TaskList tasklist) {
+	/**
+	 * creates nested task reference nodes named nodeName which include a handle to the task
+	 * 
+	 * @return
+	 */
+	public Element createTaskReference(String nodeName, AbstractTask task, Document doc, Element parent) {
+		Element node = doc.createElement(nodeName);
+		node.setAttribute(KEY_HANDLE, task.getHandleIdentifier());
+		parent.appendChild(node);
+		return node;
+	}
+
+	/**
+	 * create tasks from the nodes provided and places them within the given container
+	 */
+	public void readTaskReferences(AbstractTaskContainer task, NodeList nodes, TaskList tasklist)
+			throws TaskExternalizationException {
+		boolean hasCaughtException = false;
 		for (int j = 0; j < nodes.getLength(); j++) {
-			Node child = nodes.item(j);
-			Element element = (Element) child;
-			if (element.hasAttribute(KEY_HANDLE)) {
-				String handle = element.getAttribute(KEY_HANDLE);
-				AbstractTask subTask = tasklist.getTask(handle);
-				if (subTask != null) {
-					tasklist.addTask(subTask, task);
+			try {
+				Node child = nodes.item(j);
+				Element element = (Element) child;
+				if (element.hasAttribute(KEY_HANDLE)) {
+					String handle = element.getAttribute(KEY_HANDLE);
+					AbstractTask subTask = tasklist.getTask(handle);
+					if (subTask != null) {
+						tasklist.addTask(subTask, task);
+					}
 				}
+			} catch (Throwable t) {
+				hasCaughtException = true;
 			}
+		}
+
+		if (hasCaughtException) {
+			throw new TaskExternalizationException("Failed to load all tasks");
 		}
 	}
 
-	public void createSubTaskElement(AbstractTask task, Document doc, Element parent) {
-		Element node = doc.createElement(KEY_SUBTASK);
-		node.setAttribute(KEY_HANDLE, task.getHandleIdentifier());
-		parent.appendChild(node);
-	}
+//	public void createSubTaskElement(AbstractTask task, Document doc, Element parent) {
+//		Element node = doc.createElement(KEY_SUBTASK);
+//		node.setAttribute(KEY_HANDLE, task.getHandleIdentifier());
+//		parent.appendChild(node);
+//	}
 
 	private String stripControlCharacters(String text) {
 		if (text == null) {
@@ -283,13 +313,11 @@ final class DelegatingTaskExternalizer {
 	}
 
 	public void readCategory(Node node, TaskList taskList) throws TaskExternalizationException {
-		boolean hasCaughtException = false;
 		Element element = (Element) node;
-
 		AbstractTaskCategory category = null;
 		if (element.hasAttribute(DelegatingTaskExternalizer.KEY_NAME)) {
 			category = new TaskCategory(element.getAttribute(DelegatingTaskExternalizer.KEY_NAME));
-			taskList.internalAddCategory((TaskCategory) category);
+			taskList.addCategory((TaskCategory) category);
 		} else {
 			// LEGACY: registry categories did not have names
 			// category = taskList.getArchiveContainer();
@@ -297,22 +325,7 @@ final class DelegatingTaskExternalizer {
 		}
 
 		NodeList list = node.getChildNodes();
-		for (int i = 0; i < list.getLength(); i++) {
-			Node child = list.item(i);
-			try {
-				// LEGACY: categories used to contain tasks?
-				AbstractTask task = readTask(child, category, null);
-				if (category != null) {
-					category.internalAddChild(task);
-				}
-				taskList.insertTask(task, category, null);
-			} catch (Throwable t) {
-				hasCaughtException = true;
-			}
-		}
-		if (hasCaughtException) {
-			throw new TaskExternalizationException("Failed to load all tasks");
-		}
+		readTaskReferences(category, list, taskList);
 	}
 
 	public final AbstractTask readTask(Node node, AbstractTaskCategory legacyCategory, AbstractTask parent)
@@ -359,11 +372,16 @@ final class DelegatingTaskExternalizer {
 			return;
 		}
 
-		String categoryHandle = element.getAttribute(KEY_CATEGORY);
-		if (categoryHandle.equals(VAL_ROOT)) {
-			categoryHandle = UncategorizedTaskContainer.HANDLE;
+		if (element.hasAttribute(KEY_CATEGORY)) {
+			// Migration 2.0 -> 3.0 task list.  Category no longer maintained on the task element but
+			// task handles held within category nodes similar to query children
+			String categoryHandle = element.getAttribute(KEY_CATEGORY);
+			if (categoryHandle.equals(VAL_ROOT)) {
+				categoryHandle = UncategorizedTaskContainer.HANDLE;
+			}
+			//task.setCategoryHandle(categoryHandle);
+			parentCategoryMap.put(task, categoryHandle);
 		}
-		task.setCategoryHandle(categoryHandle);
 
 		if (element.hasAttribute(KEY_PRIORITY)) {
 			task.setPriority(element.getAttribute(KEY_PRIORITY));
@@ -525,7 +543,7 @@ final class DelegatingTaskExternalizer {
 		}
 		for (AbstractTask hit : query.getChildren()) {
 			try {
-				createQueryHitElement(hit, doc, node);
+				createTaskReference(KEY_QUERY_HIT, hit, doc, node);
 			} catch (Exception e) {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, e.getMessage(), e));
 			}
@@ -551,12 +569,12 @@ final class DelegatingTaskExternalizer {
 //		return AbstractTaskListElementFactory.KEY_QUERY_HIT;
 //	}
 
-	public Element createQueryHitElement(AbstractTask queryHit, Document doc, Element parent) {
-		Element node = doc.createElement(KEY_QUERY_HIT);
-		node.setAttribute(KEY_HANDLE, queryHit.getHandleIdentifier());
-		parent.appendChild(node);
-		return node;
-	}
+//	public Element createQueryHitElement(AbstractTask queryHit, Document doc, Element parent) {
+//		Element node = doc.createElement(KEY_QUERY_HIT);
+//		node.setAttribute(KEY_HANDLE, queryHit.getHandleIdentifier());
+//		parent.appendChild(node);
+//		return node;
+//	}
 
 //	public boolean canReadQueryHit(Node node) {
 //		return false;
@@ -578,5 +596,9 @@ final class DelegatingTaskExternalizer {
 
 	public List<AbstractTaskListFactory> getDelegateExternalizers() {
 		return factories;
+	}
+
+	public Map<AbstractTask, String> getLegacyParentCategoryMap() {
+		return parentCategoryMap;
 	}
 }

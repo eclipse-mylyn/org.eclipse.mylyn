@@ -133,7 +133,12 @@ public class TaskListManager implements ITaskListManager {
 		prepareOrphanContainers();
 
 		taskListInitialized = true;
+		TaskListView view = TaskListView.getFromActivePerspective();
+		if (view != null) {
+			view.refresh();
+		}
 		return taskList;
+
 	}
 
 	private void prepareOrphanContainers() {
@@ -488,6 +493,7 @@ public class TaskListManager implements ITaskListManager {
 		}
 		LocalTask newTask = new LocalTask("" + taskList.getNextLocalTaskId(), summary);
 		newTask.setPriority(PriorityLevel.P3.toString());
+		TasksUi.getTaskListManager().getTaskList().addTask(newTask);
 
 		TasksUiPlugin.getTaskActivityManager().scheduleNewTask(newTask);
 

@@ -28,7 +28,6 @@ import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
-import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
@@ -58,8 +57,6 @@ public class TaskList implements ISchedulingRule {
 	private List<AbstractTask> activeTasks;
 
 	private UncategorizedTaskContainer defaultCategory;
-
-//	private final IJobManager jobManager = Job.getJobManager();
 
 	private static ILock lock = Job.getJobManager().newLock();
 
@@ -224,7 +221,6 @@ public class TaskList implements ISchedulingRule {
 			activeTasks = new CopyOnWriteArrayList<AbstractTask>();
 			lastLocalTaskId = 0;
 			categories.put(defaultCategory.getHandleIdentifier(), defaultCategory);
-//		categories.put(archiveContainer.getHandleIdentifier(), archiveContainer);
 		} finally {
 			lock.release();
 		}
@@ -502,53 +498,6 @@ public class TaskList implements ISchedulingRule {
 		}
 	}
 
-	/**
-	 * @deprecated use moveTask
-	 */
-	@Deprecated
-	public void moveToContainer(AbstractTask task, AbstractTaskCategory container) {
-		try {
-			lock.acquire();
-			if (!tasks.containsKey(task.getHandleIdentifier())) {
-				tasks.put(task.getHandleIdentifier(), task);
-			}
-		} finally {
-			lock.release();
-		}
-		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
-		delta.add(new TaskContainerDelta(container, TaskContainerDelta.Kind.CHANGED));
-
-		Set<AbstractTaskContainer> currentContainers = task.getParentContainers();
-		for (AbstractTaskContainer taskContainer : currentContainers) {
-			if (taskContainer instanceof AbstractTaskCategory) {
-				if (!(taskContainer instanceof UnmatchedTaskContainer)) {
-					(taskContainer).internalRemoveChild(task);
-				}
-//				if (!(taskContainer instanceof TaskArchive)) {
-//					(taskContainer).internalRemoveChild(task);
-//				}
-				task.removeParentContainer(taskContainer);
-				delta.add(new TaskContainerDelta(taskContainer, TaskContainerDelta.Kind.CHANGED));
-			}
-		}
-		if (container != null) {
-			internalAddTask(task, container);
-			delta.add(new TaskContainerDelta(container, TaskContainerDelta.Kind.CHANGED));
-			if (!(container instanceof UnmatchedTaskContainer)) {
-				removeOrphan(task, delta);
-			}
-//			if (archiveContainer.contains(task.getHandleIdentifier())) {
-//				archiveContainer.internalRemoveChild(task);
-//				delta.add(new TaskContainerDelta(archiveContainer, TaskContainerDelta.Kind.CHANGED));
-//			}
-		} else {
-			internalAddTask(task, null);
-		}
-		for (ITaskListChangeListener listener : changeListeners) {
-			listener.containersChanged(delta);
-		}
-	}
-
 	public void refactorRepositoryUrl(String oldRepositoryUrl, String newRepositoryUrl) {
 		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
 		try {
@@ -679,7 +628,7 @@ public class TaskList implements ISchedulingRule {
 			lock.acquire();
 			if (container instanceof AbstractTask) {
 				return;
-			} else if (!(container instanceof TaskArchive) && !(container instanceof UnmatchedTaskContainer)) {
+			} else if (!(container instanceof UnmatchedTaskContainer)) {
 				if (queries.remove(container.getHandleIdentifier()) != null) {
 					if (container instanceof AbstractTaskCategory) {
 						((AbstractTaskCategory) container).setHandleIdentifier(newDescription);
@@ -821,92 +770,7 @@ public class TaskList implements ISchedulingRule {
 		changeListeners.remove(listener);
 	}
 
-	/**
-	 * @deprecated
-	 */
 	@Deprecated
-	public void internalAddCategory(TaskCategory category) {
-		try {
-			lock.acquire();
-			categories.put(category.getHandleIdentifier(), category);
-		} finally {
-			lock.release();
-		}
-	}
-
-	/**
-	 * @deprecated
-	 */
-	@Deprecated
-	public void internalAddTask(AbstractTask task, AbstractTaskCategory container) {
-		internalAddTask(task, (AbstractTaskContainer) container);
-//		//tasks.put(task.getHandleIdentifier(), task);
-//		if (container != null) {
-//			tasks.put(task.getHandleIdentifier(), task);
-//			container.internalAddChild(task);
-//			if (container instanceof TaskCategory || container instanceof OrphanedTasksContainer) {
-//				task.addParentContainer(container);
-//			}
-//		} else {
-//			if (task.getLastReadTimeStamp() != null) {
-//				// any unread task (hit) that is an orphan is discarded
-//				tasks.put(task.getHandleIdentifier(), task);
-//				addOrphan(task, null);
-//			}
-////			defaultCategory.internalAddChild(task);
-////			task.addParentContainer(defaultCategory);
-//		}
-	}
-
-	/**
-	 * @deprecated
-	 */
-	@Deprecated
-	private void internalAddTask(AbstractTask task, AbstractTaskContainer container) {
-		try {
-			lock.acquire();
-			tasks.put(task.getHandleIdentifier(), task);
-		} finally {
-			lock.release();
-		}
-		if (container != null) {
-			container.internalAddChild(task);
-			if (container instanceof TaskCategory || container instanceof UnmatchedTaskContainer
-					|| container instanceof UncategorizedTaskContainer) {
-				task.addParentContainer(container);
-			}
-		} else {
-			//if (task.getLastReadTimeStamp() != null) {
-			// any unread task (hit) that is an orphan is discarded
-			addOrphan(task, null);
-			//}
-//			defaultCategory.internalAddChild(task);
-//			task.addParentContainer(defaultCategory);
-		}
-	}
-
-	/**
-	 * @API-3.0 remove
-	 * @deprecated
-	 */
-	@Deprecated
-	public void internalAddRootTask(AbstractTask task) {
-		internalAddTask(task, null);
-	}
-
-	/**
-	 * @deprecated
-	 */
-	@Deprecated
-	public void internalAddQuery(AbstractRepositoryQuery query) {
-		try {
-			lock.acquire();
-			queries.put(query.getHandleIdentifier(), query);
-		} finally {
-			lock.release();
-		}
-	}
-
 	public void setActive(AbstractTask task, boolean active) {
 		task.setActive(active);
 		try {
@@ -1019,7 +883,7 @@ public class TaskList implements ISchedulingRule {
 		try {
 			lock.acquire();
 			for (AbstractTaskCategory container : categories.values()) {
-				if (container instanceof TaskCategory || container instanceof TaskArchive) {
+				if (container instanceof TaskCategory) {
 					containers.add(container);
 				}
 			}
@@ -1360,34 +1224,6 @@ public class TaskList implements ISchedulingRule {
 	}
 
 	/**
-	 * 
-	 * @API-3.0 review/deprecate, use addTask directly?
-	 * 
-	 * @since 2.
-	 * @deprecated
-	 */
-	@Deprecated
-	public final void insertTask(AbstractTask task, AbstractTaskCategory legacyCategory, AbstractTask parent) {
-		if (task.getCategoryHandle().length() > 0) {
-			AbstractTaskCategory category = this.getContainerForHandle(task.getCategoryHandle());
-
-			if (category != null) {
-				this.internalAddTask(task, category);
-			} else if (parent == null) {
-				this.internalAddRootTask(task);
-			}
-		} else if (legacyCategory != null && !(legacyCategory instanceof TaskArchive)
-				&& getCategories().contains(legacyCategory)) {
-			task.addParentContainer(legacyCategory);
-			legacyCategory.internalAddChild(task);
-		} else {
-			this.internalAddTask(task, null);
-		}
-
-		this.setActive(task, task.isActive());
-	}
-
-	/**
 	 * @since 3.0
 	 */
 	public boolean contains(ISchedulingRule rule) {
@@ -1401,4 +1237,161 @@ public class TaskList implements ISchedulingRule {
 		return rule instanceof TaskList || rule instanceof AbstractTaskContainer;
 	}
 
+//	/**
+//	 * @deprecated use moveTask
+//	 */
+//	@Deprecated
+//	public void moveToContainer(AbstractTask task, AbstractTaskCategory container) {
+//		try {
+//			lock.acquire();
+//			if (!tasks.containsKey(task.getHandleIdentifier())) {
+//				tasks.put(task.getHandleIdentifier(), task);
+//			}
+//		} finally {
+//			lock.release();
+//		}
+//		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
+//		delta.add(new TaskContainerDelta(container, TaskContainerDelta.Kind.CHANGED));
+//
+//		Set<AbstractTaskContainer> currentContainers = task.getParentContainers();
+//		for (AbstractTaskContainer taskContainer : currentContainers) {
+//			if (taskContainer instanceof AbstractTaskCategory) {
+//				if (!(taskContainer instanceof UnmatchedTaskContainer)) {
+//					(taskContainer).internalRemoveChild(task);
+//				}
+////				if (!(taskContainer instanceof TaskArchive)) {
+////					(taskContainer).internalRemoveChild(task);
+////				}
+//				task.removeParentContainer(taskContainer);
+//				delta.add(new TaskContainerDelta(taskContainer, TaskContainerDelta.Kind.CHANGED));
+//			}
+//		}
+//		if (container != null) {
+//			internalAddTask(task, container);
+//			delta.add(new TaskContainerDelta(container, TaskContainerDelta.Kind.CHANGED));
+//			if (!(container instanceof UnmatchedTaskContainer)) {
+//				removeOrphan(task, delta);
+//			}
+////			if (archiveContainer.contains(task.getHandleIdentifier())) {
+////				archiveContainer.internalRemoveChild(task);
+////				delta.add(new TaskContainerDelta(archiveContainer, TaskContainerDelta.Kind.CHANGED));
+////			}
+//		} else {
+//			internalAddTask(task, null);
+//		}
+//		for (ITaskListChangeListener listener : changeListeners) {
+//			listener.containersChanged(delta);
+//		}
+//	}
+
+//	/**
+//	 * 
+//	 * @API-3.0 review/deprecate, use addTask directly?
+//	 * 
+//	 * @since 2.
+//	 * @deprecated
+//	 */
+//	@Deprecated
+//	public final void insertTask(AbstractTask task, AbstractTaskCategory legacyCategory, AbstractTask parent) {
+//		if (task.getCategoryHandle().length() > 0) {
+//			AbstractTaskCategory category = this.getContainerForHandle(task.getCategoryHandle());
+//
+//			if (category != null) {
+//				this.internalAddTask(task, category);
+//			} else if (parent == null) {
+//				this.internalAddRootTask(task);
+//			}
+//		} else if (legacyCategory != null && !(legacyCategory instanceof TaskArchive)
+//				&& getCategories().contains(legacyCategory)) {
+//			task.addParentContainer(legacyCategory);
+//			legacyCategory.internalAddChild(task);
+//		} else {
+//			this.internalAddTask(task, null);
+//		}
+//
+//		this.setActive(task, task.isActive());
+//	}
+//	/**
+//	 * @deprecated
+//	 */
+//	@Deprecated
+//	public void internalAddCategory(TaskCategory category) {
+//		try {
+//			lock.acquire();
+//			categories.put(category.getHandleIdentifier(), category);
+//		} finally {
+//			lock.release();
+//		}
+//	}
+
+	/**
+	 * @deprecated
+	 */
+//	@Deprecated
+//	public void internalAddTask(AbstractTask task, AbstractTaskCategory container) {
+//		internalAddTask(task, (AbstractTaskContainer) container);
+//		//tasks.put(task.getHandleIdentifier(), task);
+//		if (container != null) {
+//			tasks.put(task.getHandleIdentifier(), task);
+//			container.internalAddChild(task);
+//			if (container instanceof TaskCategory || container instanceof OrphanedTasksContainer) {
+//				task.addParentContainer(container);
+//			}
+//		} else {
+//			if (task.getLastReadTimeStamp() != null) {
+//				// any unread task (hit) that is an orphan is discarded
+//				tasks.put(task.getHandleIdentifier(), task);
+//				addOrphan(task, null);
+//			}
+////			defaultCategory.internalAddChild(task);
+////			task.addParentContainer(defaultCategory);
+//		}
+//	}
+//	/**
+//	 * @deprecated
+//	 */
+//	@Deprecated
+//	private void internalAddTask(AbstractTask task, AbstractTaskContainer container) {
+//		try {
+//			lock.acquire();
+//			tasks.put(task.getHandleIdentifier(), task);
+//		} finally {
+//			lock.release();
+//		}
+//		if (container != null) {
+//			container.internalAddChild(task);
+//			if (container instanceof TaskCategory || container instanceof UnmatchedTaskContainer
+//					|| container instanceof UncategorizedTaskContainer) {
+//				task.addParentContainer(container);
+//			}
+//		} else {
+//			//if (task.getLastReadTimeStamp() != null) {
+//			// any unread task (hit) that is an orphan is discarded
+//			addOrphan(task, null);
+//			//}
+////			defaultCategory.internalAddChild(task);
+////			task.addParentContainer(defaultCategory);
+//		}
+//	}
+//
+//	/**
+//	 * @API-3.0 remove
+//	 * @deprecated
+//	 */
+//	@Deprecated
+//	public void internalAddRootTask(AbstractTask task) {
+//		internalAddTask(task, null);
+//	}
+//	/**
+//	 * @deprecated
+//	 */
+//	@Deprecated
+//	public void internalAddQuery(AbstractRepositoryQuery query) {
+//		try {
+//			lock.acquire();
+//			queries.put(query.getHandleIdentifier(), query);
+//		} finally {
+//			lock.release();
+//		}
+//	}
 }

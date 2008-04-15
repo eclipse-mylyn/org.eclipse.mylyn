@@ -120,7 +120,7 @@ public class TaskExportImportTest extends AbstractContextTest {
 
 		// import data
 		for (AbstractTask loadedTask : tasks) {
-			taskList.insertTask(loadedTask, null, null);
+			taskList.addTask(loadedTask);
 		}
 		ContextCorePlugin.getContextManager().importContext(loadedContext);
 
