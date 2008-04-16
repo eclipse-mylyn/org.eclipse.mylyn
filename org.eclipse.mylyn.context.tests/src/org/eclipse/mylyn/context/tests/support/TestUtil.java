@@ -62,9 +62,14 @@ public class TestUtil {
 		try {
 			String filename = System.getProperty(KEY_CREDENTIALS_FILE);
 			if (filename == null) {
-				URL localURL = FileLocator.toFileURL(ContextTestsPlugin.getDefault().getBundle().getEntry(
-						"credentials.properties"));
-				filename = localURL.getFile();
+				if (ContextTestsPlugin.getDefault() != null) {
+					URL localURL = FileLocator.toFileURL(ContextTestsPlugin.getDefault().getBundle().getEntry(
+							"credentials.properties"));
+					filename = localURL.getFile();
+				} else {
+					URL localURL = TestUtil.class.getResource("");
+					filename = localURL.getFile() + "../../../../../../../credentials.properties";
+				}
 			}
 			properties.load(new FileInputStream(new File(filename)));
 		} catch (Exception e) {
