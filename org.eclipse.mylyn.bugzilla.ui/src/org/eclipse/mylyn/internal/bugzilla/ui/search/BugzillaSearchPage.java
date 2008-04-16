@@ -412,7 +412,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 		// Info text
 		Label labelSummary = new Label(composite, SWT.LEFT);
-		labelSummary.setText("&Summary:");
+		labelSummary.setText("Summar&y:");
 		labelSummary.setLayoutData(new GridData(LABEL_WIDTH, SWT.DEFAULT));
 		//labelSummary.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 
