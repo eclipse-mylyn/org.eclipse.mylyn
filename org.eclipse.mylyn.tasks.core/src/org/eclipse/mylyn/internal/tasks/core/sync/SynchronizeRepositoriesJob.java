@@ -8,6 +8,7 @@
 
 package org.eclipse.mylyn.internal.tasks.core.sync;
 
+import java.util.Date;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -120,6 +121,8 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 			monitor.beginTask("Updating repository configuration for " + repository.getRepositoryUrl(), 100);
 			if (connector.isRepositoryConfigurationStale(repository, monitor)) {
 				connector.updateRepositoryConfiguration(repository, monitor);
+				repository.setConfigurationDate(new Date());
+				// FIXME save repositories
 			}
 		} catch (CoreException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
@@ -128,5 +131,4 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 			monitor.done();
 		}
 	}
-
 }

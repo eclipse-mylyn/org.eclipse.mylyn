@@ -305,29 +305,33 @@ public class BugzillaClient {
 		GzipGetMethod method = null;
 		try {
 			method = getConnect(loginUrl, monitor);
-			BufferedReader responseReader = new BufferedReader(new InputStreamReader(WebUtil.getResponseBodyAsStream(method, monitor),
-					characterEncoding));
+			InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
+			try {
+				BufferedReader responseReader = new BufferedReader(new InputStreamReader(in,
+						characterEncoding));
 
-			HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(responseReader, null);
-			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
+				HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(responseReader, null);
+				for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
 
-				if (token.getType() == Token.TAG) {
-					HtmlTag tag = (HtmlTag) token.getValue();
-					if (tag.getTagType() == HtmlTag.Type.A) {
-						if (tag.hasAttribute("href")) {
-							String id = tag.getAttribute("href");
-							if (id != null && id.toLowerCase(Locale.ENGLISH).contains(LOGIN_REQUIRED)) {
-								authenticated = false;
-								return;
+					if (token.getType() == Token.TAG) {
+						HtmlTag tag = (HtmlTag) token.getValue();
+						if (tag.getTagType() == HtmlTag.Type.A) {
+							if (tag.hasAttribute("href")) {
+								String id = tag.getAttribute("href");
+								if (id != null && id.toLowerCase(Locale.ENGLISH).contains(LOGIN_REQUIRED)) {
+									authenticated = false;
+									return;
+								}
 							}
 						}
 					}
 				}
+
+				throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+						RepositoryStatus.ERROR_NETWORK, repositoryUrl.toString(), "Logout unsuccessful."));
+			} finally {
+				in.close();
 			}
-
-			throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
-					RepositoryStatus.ERROR_NETWORK, repositoryUrl.toString(), "Logout unsuccessful."));
-
 		} catch (ParseException e) {
 			authenticated = false;
 			throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
@@ -611,25 +615,29 @@ public class BugzillaClient {
 				throw new IOException("Could not retrieve configuratoin. HttpClient return null method.");
 			}
 
-			if (method.getResponseHeader("Content-Type") != null) {
-				Header responseTypeHeader = method.getResponseHeader("Content-Type");
-				for (String type : VALID_CONFIG_CONTENT_TYPES) {
-					if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
-						InputStream stream = WebUtil.getResponseBodyAsStream(method, monitor);
-						RepositoryConfigurationFactory configFactory = new RepositoryConfigurationFactory(stream,
-								characterEncoding);
+			InputStream stream = WebUtil.getResponseBodyAsStream(method, monitor);
+			try {
+				if (method.getResponseHeader("Content-Type") != null) {
+					Header responseTypeHeader = method.getResponseHeader("Content-Type");
+					for (String type : VALID_CONFIG_CONTENT_TYPES) {
+						if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
+							RepositoryConfigurationFactory configFactory = new RepositoryConfigurationFactory(stream,
+									characterEncoding);
 
-						repositoryConfiguration = configFactory.getConfiguration();
-						if (repositoryConfiguration != null) {
-							repositoryConfiguration.setRepositoryUrl(repositoryUrl.toString());
-							return repositoryConfiguration;
+							repositoryConfiguration = configFactory.getConfiguration();
+							if (repositoryConfiguration != null) {
+								repositoryConfiguration.setRepositoryUrl(repositoryUrl.toString());
+								return repositoryConfiguration;
+							}
 						}
 					}
-				}
 
+				}
+				parseHtmlError(new BufferedReader(new InputStreamReader(stream,
+						characterEncoding)));
+			} finally {
+				stream.close();
 			}
-			parseHtmlError(new BufferedReader(new InputStreamReader(method.getResponseBodyAsUnzippedStream(),
-					characterEncoding)));
 			return null;
 		} finally {
 			if (method != null) {
@@ -1139,20 +1147,24 @@ public class BugzillaClient {
 			String url = repositoryUrl + IBugzillaConstants.SHOW_ACTIVITY + taskId;
 			method = getConnectGzip(url, monitor);
 			if (method != null) {
-				BugzillaTaskHistoryParser parser = new BugzillaTaskHistoryParser(
-						WebUtil.getResponseBodyAsStream(method, monitor), characterEncoding);
+				InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
 				try {
-					return parser.retrieveHistory(bugzillaLanguageSettings);
-				} catch (LoginException e) {
-					authenticated = false;
-					throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
-							RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(),
-							IBugzillaConstants.INVALID_CREDENTIALS));
-				} catch (ParseException e) {
-					authenticated = false;
-					throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
-							RepositoryStatus.ERROR_INTERNAL, "Unable to parse response from "
-									+ repositoryUrl.toString() + "."));
+					BugzillaTaskHistoryParser parser = new BugzillaTaskHistoryParser(in, characterEncoding);
+					try {
+						return parser.retrieveHistory(bugzillaLanguageSettings);
+					} catch (LoginException e) {
+						authenticated = false;
+						throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+								RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(),
+								IBugzillaConstants.INVALID_CREDENTIALS));
+					} catch (ParseException e) {
+						authenticated = false;
+						throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+								RepositoryStatus.ERROR_INTERNAL, "Unable to parse response from "
+										+ repositoryUrl.toString() + "."));
+					}
+				} finally {
+					in.close();
 				}
 			}
 
