@@ -296,7 +296,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			}
 			// New query hits
 			for (AbstractRepositoryQuery query : TasksUiPlugin.getTaskListManager().getTaskList().getQueries()) {
-				AbstractRepositoryConnectorUi connectorUi = getConnectorUi(query.getRepositoryKind());
+				AbstractRepositoryConnectorUi connectorUi = getConnectorUi(query.getConnectorKind());
 				if (!connectorUi.isCustomNotificationHandling()) {
 					for (AbstractTask hit : query.getChildren()) {
 						if (hit.isNotified() == false) {
@@ -780,7 +780,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		}
 
 		if (container instanceof AbstractRepositoryQuery) {
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(((AbstractRepositoryQuery) container).getRepositoryKind());
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(((AbstractRepositoryQuery) container).getConnectorKind());
 			if (connectorUi != null) {
 				if (connectorUi.forceSubtaskHierarchy()) {
 					groupSubtasks = true;

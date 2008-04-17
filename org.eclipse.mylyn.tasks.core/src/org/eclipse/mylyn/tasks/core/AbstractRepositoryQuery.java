@@ -28,8 +28,10 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 
 	protected IStatus status = null;
 
-	// API 3.0 rename to getConnectorKind()
-	public abstract String getRepositoryKind();
+	/**
+	 * @since 3.0
+	 */
+	public abstract String getConnectorKind();
 
 	public AbstractRepositoryQuery(String description) {
 		super(description);

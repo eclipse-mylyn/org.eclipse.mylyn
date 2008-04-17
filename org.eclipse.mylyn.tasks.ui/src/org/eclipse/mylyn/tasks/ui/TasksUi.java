@@ -104,7 +104,7 @@ public class TasksUi {
 	 */
 	public static final Job synchronizeQuery(AbstractRepositoryConnector connector,
 			AbstractRepositoryQuery repositoryQuery, IJobChangeListener listener, boolean force) {
-		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(repositoryQuery.getRepositoryKind(),
+		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(repositoryQuery.getConnectorKind(),
 				repositoryQuery.getRepositoryUrl());
 		return synchronizeQueries(connector, repository, Collections.singleton(repositoryQuery), listener, force);
 	}

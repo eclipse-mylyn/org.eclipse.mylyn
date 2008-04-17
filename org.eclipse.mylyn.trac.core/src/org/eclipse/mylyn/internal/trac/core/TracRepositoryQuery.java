@@ -26,7 +26,7 @@ public class TracRepositoryQuery extends AbstractRepositoryQuery {
 	}
 
 	@Override
-	public String getRepositoryKind() {
+	public String getConnectorKind() {
 		return TracCorePlugin.REPOSITORY_KIND;
 	}
 

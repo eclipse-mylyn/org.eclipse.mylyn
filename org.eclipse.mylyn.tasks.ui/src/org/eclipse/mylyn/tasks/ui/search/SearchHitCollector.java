@@ -153,7 +153,7 @@ public class SearchHitCollector extends AbstractTaskDataCollector implements ISe
 			throw new OperationCanceledException("Search cancelled");
 		}
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-				repositoryQuery.getRepositoryKind());
+				repositoryQuery.getConnectorKind());
 		if (connector != null) {
 			IStatus status = connector.performQuery(repository, repositoryQuery, this, null, monitor);
 			if (!status.isOK()) {

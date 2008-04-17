@@ -46,7 +46,7 @@ public abstract class AbstractTaskRepositoryAction extends BaseSelectionListener
 			taskRepository = (TaskRepository) selectedObject;
 		} else if (selectedObject instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) selectedObject;
-			taskRepository = TasksUi.getRepositoryManager().getRepository(query.getRepositoryKind(),
+			taskRepository = TasksUi.getRepositoryManager().getRepository(query.getConnectorKind(),
 					query.getRepositoryUrl());
 		}
 

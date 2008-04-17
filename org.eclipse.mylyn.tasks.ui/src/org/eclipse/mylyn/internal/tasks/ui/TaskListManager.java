@@ -541,7 +541,7 @@ public class TaskListManager implements ITaskListManager {
 
 		for (AbstractRepositoryQuery query : queries) {
 
-			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(query.getRepositoryKind(),
+			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(query.getConnectorKind(),
 					query.getRepositoryUrl());
 			if (repository == null) {
 				badQueries.add(query);

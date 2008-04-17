@@ -254,7 +254,7 @@ public class TasksUiUtil {
 			return (TaskRepository) selection.getFirstElement();
 		} else if (element instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
-			return TasksUi.getRepositoryManager().getRepository(query.getRepositoryKind(), query.getRepositoryUrl());
+			return TasksUi.getRepositoryManager().getRepository(query.getConnectorKind(), query.getRepositoryUrl());
 		} else if (element instanceof AbstractTask) {
 			AbstractTask task = (AbstractTask) element;
 			return TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(), task.getRepositoryUrl());
@@ -806,7 +806,7 @@ public class TasksUiUtil {
 			TasksUiUtil.openEditor((TaskCategory) element);
 		} else if (element instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(query.getRepositoryKind());
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(query.getConnectorKind());
 			connectorUi.openEditQueryDialog(query);
 		}
 	}

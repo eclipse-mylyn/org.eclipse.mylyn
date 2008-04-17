@@ -25,7 +25,7 @@ public class BugzillaRepositoryQuery extends AbstractRepositoryQuery {
 	}
 
 	@Override
-	public String getRepositoryKind() {
+	public String getConnectorKind() {
 		return BugzillaCorePlugin.REPOSITORY_KIND;
 	}
 

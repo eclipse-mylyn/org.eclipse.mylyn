@@ -108,7 +108,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 					compositeDescriptor.overlayKind = connectorUi.getTaskKindOverlay(repositoryTask);
 				}
 			} else if (element instanceof AbstractRepositoryQuery) {
-				connectorUi = TasksUiPlugin.getConnectorUi(((AbstractRepositoryQuery) element).getRepositoryKind());
+				connectorUi = TasksUiPlugin.getConnectorUi(((AbstractRepositoryQuery) element).getConnectorKind());
 			}
 
 			if (connectorUi != null) {

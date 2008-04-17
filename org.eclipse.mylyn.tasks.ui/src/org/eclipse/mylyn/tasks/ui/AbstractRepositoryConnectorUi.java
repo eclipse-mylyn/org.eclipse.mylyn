@@ -153,7 +153,7 @@ public abstract class AbstractRepositoryConnectorUi {
 
 	public void openEditQueryDialog(AbstractRepositoryQuery query) {
 		try {
-			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(query.getRepositoryKind(),
+			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(query.getConnectorKind(),
 					query.getRepositoryUrl());
 			if (repository == null) {
 				return;

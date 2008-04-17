@@ -148,7 +148,7 @@ public class TaskListToolTip extends ToolTip {
 			StringBuilder sb = new StringBuilder();
 			sb.append(element.getSummary());
 			sb.append("  [");
-			sb.append(getRepositoryLabel(query.getRepositoryKind(), query.getRepositoryUrl()));
+			sb.append(getRepositoryLabel(query.getConnectorKind(), query.getRepositoryUrl()));
 			sb.append("]");
 			return sb.toString();
 		} else {
@@ -355,7 +355,7 @@ public class TaskListToolTip extends ToolTip {
 		if (element instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
 			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-					query.getRepositoryKind());
+					query.getConnectorKind());
 			if (connector != null) {
 				return TasksUiPlugin.getDefault().getBrandingIcon(connector.getConnectorKind());
 			}

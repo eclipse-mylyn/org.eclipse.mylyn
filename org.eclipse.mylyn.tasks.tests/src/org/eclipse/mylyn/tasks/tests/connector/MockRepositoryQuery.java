@@ -29,7 +29,7 @@ public class MockRepositoryQuery extends AbstractRepositoryQuery {
 	}
 
 	@Override
-	public String getRepositoryKind() {
+	public String getConnectorKind() {
 		return "mock";
 	}
 
