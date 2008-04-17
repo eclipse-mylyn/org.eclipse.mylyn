@@ -81,6 +81,7 @@ import org.eclipse.mylyn.web.core.WebClientLog;
 import org.eclipse.mylyn.web.core.WebUtil;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IStartup;
+import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
@@ -1121,6 +1122,11 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 					+ task, t));
 		}
 		return notification;
+	}
+
+	public static boolean isAnimationsEnabled() {
+		IPreferenceStore store = PlatformUI.getPreferenceStore();
+		return store.getBoolean(IWorkbenchPreferenceConstants.ENABLE_ANIMATIONS);
 	}
 
 	private static String getChangedDescription(RepositoryTaskData newTaskData, RepositoryTaskData oldTaskData) {

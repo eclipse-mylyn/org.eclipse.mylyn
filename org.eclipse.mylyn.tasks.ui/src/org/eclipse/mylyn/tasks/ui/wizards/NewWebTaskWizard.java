@@ -8,12 +8,19 @@
 
 package org.eclipse.mylyn.tasks.ui.wizards;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewWebTaskPage;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.TaskSelection;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
@@ -31,9 +38,15 @@ public class NewWebTaskWizard extends Wizard implements INewWizard {
 
 	protected String newTaskUrl;
 
-	public NewWebTaskWizard(TaskRepository taskRepository, String newTaskUrl) {
+	private final TaskSelection taskSelection;
+
+	/**
+	 * @since 3.0
+	 */
+	public NewWebTaskWizard(TaskRepository taskRepository, String newTaskUrl, TaskSelection taskSelection) {
 		this.taskRepository = taskRepository;
 		this.newTaskUrl = newTaskUrl;
+		this.taskSelection = taskSelection;
 
 		setWindowTitle("New Task");
 		setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
@@ -44,7 +57,7 @@ public class NewWebTaskWizard extends Wizard implements INewWizard {
 
 	@Override
 	public void addPages() {
-		addPage(new NewWebTaskPage());
+		addPage(new NewWebTaskPage(taskSelection));
 	}
 
 	@Override
@@ -54,8 +67,29 @@ public class NewWebTaskWizard extends Wizard implements INewWizard {
 
 	@Override
 	public boolean performFinish() {
+		handleSelection(taskSelection);
 		TasksUiUtil.openUrl(newTaskUrl);
 		return true;
+	}
+
+	private void handleSelection(final TaskSelection taskSelection) {
+		if (taskSelection == null) {
+			return;
+		}
+
+		RepositoryTaskData taskData = taskSelection.getTaskData();
+		String summary = taskData.getSummary();
+		String description = taskData.getDescription();
+
+		Clipboard clipboard = new Clipboard(getShell().getDisplay());
+		clipboard.setContents(new Object[] { summary + "\n" + description },
+				new Transfer[] { TextTransfer.getInstance() });
+
+		MessageDialog.openInformation(
+				getShell(),
+				ITasksUiConstants.TITLE_DIALOG,
+				"This connector does not provide a rich task editor for creating tasks.\n\n"
+						+ "The error contents have been placed in the clipboard so that you can paste them into the entry form.");
 	}
 
 }

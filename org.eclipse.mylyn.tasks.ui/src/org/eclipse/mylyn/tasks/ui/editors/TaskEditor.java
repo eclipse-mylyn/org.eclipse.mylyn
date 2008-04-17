@@ -40,7 +40,6 @@ import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
-import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
@@ -410,7 +409,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	@Override
 	public void showBusy(boolean busy) {
 		if (busy) {
-			if (TasksUiUtil.isAnimationsEnabled()) {
+			if (TasksUiPlugin.isAnimationsEnabled()) {
 				editorBusyIndicator.start();
 			}
 		} else {

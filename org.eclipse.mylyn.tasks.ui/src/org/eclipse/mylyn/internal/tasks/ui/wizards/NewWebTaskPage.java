@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.mylyn.tasks.core.TaskSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
@@ -22,12 +23,14 @@ import org.eclipse.swt.widgets.Text;
  */
 public class NewWebTaskPage extends WizardPage {
 
-	public NewWebTaskPage() {
+	public NewWebTaskPage(TaskSelection taskSelection) {
 		super("New Task");
 
 		setTitle("Create via Web Browser");
 		setDescription("This will open a web browser that can be used to create a new task.\n"
 				+ "NOTE: you may need to log in via the web UI.");
+
+		// TODO display selection 
 	}
 
 	public void createControl(Composite parent) {
