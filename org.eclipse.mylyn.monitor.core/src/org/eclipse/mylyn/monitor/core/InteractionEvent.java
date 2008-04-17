@@ -11,6 +11,8 @@ package org.eclipse.mylyn.monitor.core;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.eclipse.core.runtime.Assert;
+
 /**
  * Immutable. Encapsulates interaction made by the user or on behalf of the user.
  * 
@@ -214,13 +216,14 @@ public class InteractionEvent {
 
 	/**
 	 * For parameter description see this class's getters.
-	 * 
-	 * API-3.0: assert that parameter values are not null, e.g. bug 216059
 	 */
 	public InteractionEvent(Kind kind, String structureKind, String handle, String originId, String navigatedRelation,
 			String delta, float interestContribution) {
-		this.date = Calendar.getInstance().getTime();
-		this.endDate = Calendar.getInstance().getTime();
+		Assert.isNotNull(kind);
+		Assert.isNotNull(handle);
+		Assert.isNotNull(originId);
+		Assert.isNotNull(navigatedRelation);
+		Assert.isNotNull(delta);
 		this.kind = kind;
 		this.structureKind = structureKind;
 		this.structureHandle = handle;
@@ -228,6 +231,8 @@ public class InteractionEvent {
 		this.navigation = navigatedRelation;
 		this.delta = delta;
 		this.interestContribution = interestContribution;
+		this.date = Calendar.getInstance().getTime();
+		this.endDate = this.date;
 	}
 
 	/**
@@ -235,8 +240,13 @@ public class InteractionEvent {
 	 */
 	public InteractionEvent(Kind kind, String structureKind, String handle, String originId, String navigatedRelation,
 			String delta, float interestContribution, Date startDate, Date endDate) {
-		this.date = startDate;
-		this.endDate = endDate;
+		Assert.isNotNull(kind);
+		Assert.isNotNull(handle);
+		Assert.isNotNull(originId);
+		Assert.isNotNull(navigatedRelation);
+		Assert.isNotNull(delta);
+		Assert.isNotNull(startDate);
+		Assert.isNotNull(endDate);
 		this.kind = kind;
 		this.structureKind = structureKind;
 		this.structureHandle = handle;
@@ -244,6 +254,8 @@ public class InteractionEvent {
 		this.navigation = navigatedRelation;
 		this.delta = delta;
 		this.interestContribution = interestContribution;
+		this.date = startDate;
+		this.endDate = endDate;
 	}
 
 	@Override
