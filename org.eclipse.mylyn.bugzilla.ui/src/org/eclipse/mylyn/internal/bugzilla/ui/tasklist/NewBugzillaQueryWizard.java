@@ -8,20 +8,13 @@
 
 package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
-import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
-import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.search.AbstractRepositoryQueryPage;
-import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
 /**
  * @author Mik Kersten
@@ -60,29 +53,11 @@ public class NewBugzillaQueryWizard extends Wizard {
 			return false;
 		}
 
-		final BugzillaRepositoryQuery queryCategory = (BugzillaRepositoryQuery) page.getQuery();
-
+		BugzillaRepositoryQuery queryCategory = (BugzillaRepositoryQuery) page.getQuery();
 		TasksUi.getTaskListManager().getTaskList().addQuery(queryCategory);
-		WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
-			@Override
-			protected void execute(IProgressMonitor monitor) throws CoreException {
-				monitor.beginTask("Executing query", 50);
-				try {
-					AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
-							.getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
-					TasksUi.synchronizeQuery(connector, queryCategory, null, true);
-				} finally {
-					monitor.done();
-				}
-			}
-		};
-
-		try {
-			getContainer().run(true, false, op);
-		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.INFO, BugzillaUiPlugin.PLUGIN_ID, "There was a problem executing the query refresh", e));
-		}
-
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+				BugzillaCorePlugin.REPOSITORY_KIND);
+		TasksUi.synchronizeQuery(connector, queryCategory, null, true);
 		return true;
 	}
 
