@@ -224,7 +224,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 				}
 
 				// Keep one backup a day for the past 12 days
-				rangeEnd.setTimeInMillis(rangeStart.getTimeInMillis());
+				TaskActivityUtil.snapStartOfDay(rangeEnd);
 				rangeStart.add(Calendar.DAY_OF_YEAR, -1);
 				for (int x = 1; x <= 12; x++) {
 					SortedMap<Long, File> subMap = filesMap.subMap(rangeStart.getTimeInMillis(),
