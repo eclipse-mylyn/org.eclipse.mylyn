@@ -12,7 +12,6 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.context.tests.support.TestUtil;
-import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
 import org.eclipse.mylyn.java.tests.search.JUnitReferencesSearchPluginTest;
 import org.eclipse.mylyn.java.tests.search.JavaImplementorsSearchPluginTest;
 import org.eclipse.mylyn.java.tests.search.JavaReadAccessSearchPluginTest;
@@ -26,25 +25,18 @@ import org.eclipse.mylyn.java.tests.xml.XmlSearchPluginTest;
 public class AllJavaTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Tests for org.eclipse.mylyn.java.tests");
-
-		// API-3.0 replace with context UI lazy start extension 
-		// NOTE: used to trigger activation on start
-		ResourcesUiBridgePlugin.getDefault();
-
 		TestUtil.triggerContextUiLazyStart();
 
-		// $JUnit-BEGIN$
+		TestSuite suite = new TestSuite("Tests for org.eclipse.mylyn.java.tests");
 		suite.addTestSuite(ContentSpecificContextTest.class);
 		suite.addTestSuite(ResourceStructureMappingTest.class);
-		// XXX: Put back
 		suite.addTestSuite(InterestManipulationTest.class);
 		suite.addTestSuite(EditorManagerTest.class);
 		suite.addTestSuite(RefactoringTest.class);
 		suite.addTestSuite(ContentOutlineRefreshTest.class);
 		suite.addTestSuite(TypeHistoryManagerTest.class);
 		suite.addTestSuite(PackageExplorerRefreshTest.class);
-		// Enable?
+		// XXX reenable test case?
 		//suite.addTestSuite(ResultUpdaterTest.class);
 		suite.addTestSuite(ProblemsListTest.class);
 		suite.addTestSuite(InterestFilterTest.class);
@@ -56,9 +48,6 @@ public class AllJavaTests {
 		suite.addTestSuite(JavaWriteAccessSearchPluginTest.class);
 		suite.addTestSuite(JUnitReferencesSearchPluginTest.class);
 		suite.addTestSuite(XmlSearchPluginTest.class);
-		// $JUnit-END$
-
-//		ResourcesUiBridgePlugin.getDefault().setResourceMonitoringEnabled(true);
 		return suite;
 	}
 }
