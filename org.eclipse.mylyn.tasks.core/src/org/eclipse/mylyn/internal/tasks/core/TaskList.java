@@ -323,23 +323,6 @@ public class TaskList implements ISchedulingRule, ITaskList {
 		return repositoryQueries;
 	}
 
-	/**
-	 * Returns all tasks for the given repository url.
-	 * 
-	 * API-3.0: add a parameter for the kind
-	 */
-	public Set<AbstractTask> getRepositoryTasks(String repositoryUrl) {
-		Set<AbstractTask> repositoryTasks = new HashSet<AbstractTask>();
-		if (repositoryUrl != null) {
-			for (AbstractTask task : tasks.values()) {
-				if (task.getRepositoryUrl().equals(repositoryUrl)) {
-					repositoryTasks.add(task);
-				}
-			}
-		}
-		return repositoryTasks;
-	}
-
 	public Set<AbstractTaskContainer> getRootElements() {
 		Set<AbstractTaskContainer> roots = new HashSet<AbstractTaskContainer>();
 		roots.add(defaultCategory);
@@ -396,6 +379,21 @@ public class TaskList implements ISchedulingRule, ITaskList {
 			}
 		}
 		return containers;
+	}
+
+	/**
+	 * Returns all tasks for the given repository url.
+	 */
+	public Set<AbstractTask> getTasks(String repositoryUrl) {
+		Set<AbstractTask> repositoryTasks = new HashSet<AbstractTask>();
+		if (repositoryUrl != null) {
+			for (AbstractTask task : tasks.values()) {
+				if (task.getRepositoryUrl().equals(repositoryUrl)) {
+					repositoryTasks.add(task);
+				}
+			}
+		}
+		return repositoryTasks;
 	}
 
 	public AbstractTaskContainer getUnmatchedContainer(String repositoryUrl) {

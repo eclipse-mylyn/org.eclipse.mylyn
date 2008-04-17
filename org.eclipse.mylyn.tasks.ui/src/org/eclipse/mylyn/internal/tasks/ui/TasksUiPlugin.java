@@ -284,7 +284,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				if (connectorUi != null && !connectorUi.isCustomNotificationHandling()) {
 					for (AbstractTask repositoryTask : TasksUiPlugin.getTaskListManager()
 							.getTaskList()
-							.getRepositoryTasks(repository.getRepositoryUrl())) {
+							.getTasks(repository.getRepositoryUrl())) {
 						if ((repositoryTask.getLastReadTimeStamp() == null || repositoryTask.getSynchronizationState() == RepositoryTaskSyncState.INCOMING)
 								&& repositoryTask.isNotified() == false) {
 							TaskListNotification notification = INSTANCE.getIncommingNotification(connector,

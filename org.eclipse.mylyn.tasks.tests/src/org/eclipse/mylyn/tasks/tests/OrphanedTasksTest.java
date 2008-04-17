@@ -51,7 +51,7 @@ public class OrphanedTasksTest extends TestCase {
 	 * y New local tasks should automatically be created in the Local orphaned folder
 	 */
 	public void testAddLocalTask() {
-		Set<AbstractTask> tasks = TasksUiPlugin.getTaskListManager().getTaskList().getRepositoryTasks(
+		Set<AbstractTask> tasks = TasksUiPlugin.getTaskListManager().getTaskList().getTasks(
 				LocalRepositoryConnector.REPOSITORY_URL);
 		assertTrue(tasks.isEmpty());
 		AbstractTask localTask = TasksUiPlugin.getTaskListManager().createNewLocalTask("Task 1");
@@ -235,7 +235,7 @@ public class OrphanedTasksTest extends TestCase {
 		MockRepositoryQuery mockQuery = new MockRepositoryQuery("mock query");
 		TasksUiPlugin.getTaskListManager().getTaskList().addQuery(mockQuery);
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(mockTask, mockQuery);
-		Set<AbstractTask> tasks = TasksUiPlugin.getTaskListManager().getTaskList().getRepositoryTasks(
+		Set<AbstractTask> tasks = TasksUiPlugin.getTaskListManager().getTaskList().getTasks(
 				MockRepositoryConnector.REPOSITORY_URL);
 		assertFalse(tasks.isEmpty());
 

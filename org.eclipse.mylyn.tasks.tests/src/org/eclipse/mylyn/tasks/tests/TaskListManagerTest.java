@@ -892,7 +892,7 @@ public class TaskListManagerTest extends TestCase {
 
 		TaskList taskList = manager.getTaskList();
 		assertEquals(2, taskList.getAllTasks().size());
-		Set<AbstractTask> tasksReturned = taskList.getRepositoryTasks(repositoryUrl);
+		Set<AbstractTask> tasksReturned = taskList.getTasks(repositoryUrl);
 		assertNotNull(tasksReturned);
 		assertEquals(1, tasksReturned.size());
 		assertTrue(tasksReturned.contains(task1));

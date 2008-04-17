@@ -151,7 +151,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 					allTasks.addAll(query.getChildren());
 				}
 			} else {
-				allTasks = Collections.unmodifiableSet(taskList.getRepositoryTasks(repository.getRepositoryUrl()));
+				allTasks = Collections.unmodifiableSet(taskList.getTasks(repository.getRepositoryUrl()));
 			}
 
 			MutexRule rule = new MutexRule(repository);

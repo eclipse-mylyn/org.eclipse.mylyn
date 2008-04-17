@@ -78,7 +78,7 @@ public class BugzillaTaskListManagerTest extends TestCase {
 
 		TaskList taskList = manager.getTaskList();
 		assertEquals(1, taskList.getAllTasks().size());
-		Set<AbstractTask> tasksReturned = taskList.getRepositoryTasks(repositoryUrl);
+		Set<AbstractTask> tasksReturned = taskList.getTasks(repositoryUrl);
 		assertNotNull(tasksReturned);
 		assertEquals(1, tasksReturned.size());
 		for (AbstractTask task : tasksReturned) {
