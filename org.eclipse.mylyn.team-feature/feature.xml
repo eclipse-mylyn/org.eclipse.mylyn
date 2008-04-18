@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.eclipse.mylyn.pde_feature"
-      label="Mylyn Bridge: PDE, CVS and Ant"
+      id="org.eclipse.mylyn.team_feature"
+      label="Mylyn Bridge: Team"
       version="3.0.0.qualifier"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylyn">
 
    <description url="http://eclipse.org/mylyn">
-      Mylyn Task-Focused UI extensions for PDE, Ant, Team Support and CVS.
+      Mylyn Task-Focused UI extensions for Team version control.
    </description>
 
    <copyright>
@@ -106,34 +106,6 @@ Java and all Java-based trademarks are trademarks of Sun Microsystems, Inc. in t
       <import feature="org.eclipse.mylyn.ide_feature" version="3.0.0.qualifier" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui.views.log"/>
    </requires>
-
-   <plugin
-         id="org.eclipse.mylyn.pde.ui"
-         download-size="0"
-         install-size="0"
-         version="3.0.0.qualifier"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.mylyn.ide.ant"
-         download-size="0"
-         install-size="0"
-         version="3.0.0.qualifier"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.mylyn.team.cvs"
-         download-size="0"
-         install-size="0"
-         version="3.0.0.qualifier"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.mylyn.bugzilla.ide"
-         download-size="0"
-         install-size="0"
-         version="3.0.0.qualifier"
-         unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn.team.ui"
