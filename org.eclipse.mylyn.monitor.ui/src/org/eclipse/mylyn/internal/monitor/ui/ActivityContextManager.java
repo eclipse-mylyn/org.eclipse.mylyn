@@ -22,6 +22,7 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.ui.AbstractUserActivityMonitor;
+import org.eclipse.mylyn.monitor.ui.IActivityContextManager;
 import org.eclipse.mylyn.monitor.ui.IUserAttentionListener;
 
 /**
@@ -31,7 +32,7 @@ import org.eclipse.mylyn.monitor.ui.IUserAttentionListener;
  * @author Rob Elves
  * @since 2.0
  */
-public class ActivityContextManager {
+public class ActivityContextManager implements IActivityContextManager {
 
 	private final int TICK = 30 * 1000;
 
@@ -64,24 +65,6 @@ public class ActivityContextManager {
 		this.timeout = timeout;
 	}
 
-	public void fireActive(long start, long end) {
-		if (end > start) {
-			ContextCore.getContextManager().processActivityMetaContextEvent(
-					new InteractionEvent(InteractionEvent.Kind.ATTENTION, userActivityMonitor.getStructureKind(),
-							userActivityMonitor.getStructureHandle(), userActivityMonitor.getOriginId(), null,
-							IInteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, new Date(start), new Date(end)));
-			for (IUserAttentionListener attentionListener : attentionListeners) {
-				attentionListener.userAttentionGained();
-			}
-		}
-	}
-
-	public void fireInactive() {
-		for (IUserAttentionListener attentionListener : attentionListeners) {
-			attentionListener.userAttentionLost();
-		}
-	}
-
 	public void start() {
 		for (AbstractUserActivityMonitor monitor : activityMonitors) {
 			monitor.start();
@@ -109,7 +92,45 @@ public class ActivityContextManager {
 		attentionListeners.remove(listener);
 	}
 
-	public long getLastEventTime() {
+	private void addMonitoredActivityTime(long start, long end) {
+		if (end > start) {
+			ContextCore.getContextManager().processActivityMetaContextEvent(
+					new InteractionEvent(InteractionEvent.Kind.ATTENTION, userActivityMonitor.getStructureKind(),
+							userActivityMonitor.getStructureHandle(), userActivityMonitor.getOriginId(), null,
+							IInteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, new Date(start), new Date(end)));
+			for (IUserAttentionListener attentionListener : attentionListeners) {
+				attentionListener.userAttentionGained();
+			}
+		}
+	}
+
+	public void addActivityTime(String handle, long start, long end) {
+		if (handle != null) {
+			ContextCore.getContextManager().processActivityMetaContextEvent(
+					new InteractionEvent(InteractionEvent.Kind.ATTENTION,
+							IInteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, handle,
+							IInteractionContextManager.ACTIVITY_ORIGINID_USER, null,
+							IInteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, new Date(start), new Date(end)));
+		}
+	}
+
+	public void removeActivityTime(String handle, long start, long end) {
+		if (handle != null) {
+			ContextCore.getContextManager().processActivityMetaContextEvent(
+					new InteractionEvent(InteractionEvent.Kind.ATTENTION,
+							IInteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, handle,
+							IInteractionContextManager.ACTIVITY_ORIGINID_USER, null,
+							IInteractionContextManager.ACTIVITY_DELTA_REMOVED, 1f, new Date(start), new Date(end)));
+		}
+	}
+
+	private void fireInactive() {
+		for (IUserAttentionListener attentionListener : attentionListeners) {
+			attentionListener.userAttentionLost();
+		}
+	}
+
+	private long getLastEventTime() {
 		for (AbstractUserActivityMonitor monitor : activityMonitors) {
 			if (monitor.isEnabled()) {
 				userActivityMonitor = monitor;
@@ -120,13 +141,13 @@ public class ActivityContextManager {
 		return -1;
 	}
 
-	public long getStartTime() {
+	private long getStartTime() {
 		synchronized (startTimeLock) {
 			return startTime;
 		}
 	}
 
-	public void setStartTime(long startTime) {
+	private void setStartTime(long startTime) {
 		synchronized (startTimeLock) {
 			this.startTime = startTime;
 		}
@@ -160,7 +181,7 @@ public class ActivityContextManager {
 								// back...
 								setStartTime(localLastEventTime);
 							} else {
-								fireActive(localStartTime, currentTime);
+								addMonitoredActivityTime(localStartTime, currentTime);
 								setStartTime(currentTime);
 							}
 							wait = TICK;
@@ -179,5 +200,9 @@ public class ActivityContextManager {
 
 	public void setInactivityTimeout(int inactivityTimeout) {
 		timeout = inactivityTimeout;
+	}
+
+	public int getInactivityTimeout() {
+		return timeout;
 	}
 }

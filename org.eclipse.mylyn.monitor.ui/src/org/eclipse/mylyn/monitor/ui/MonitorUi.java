@@ -31,4 +31,8 @@ public class MonitorUi {
 		MonitorUiPlugin.getDefault().removeInteractionListener(listener);
 	}
 
+	public static IActivityContextManager getActivityContextManager() {
+		return MonitorUiPlugin.getDefault().getActivityContextManager();
+	}
+
 }

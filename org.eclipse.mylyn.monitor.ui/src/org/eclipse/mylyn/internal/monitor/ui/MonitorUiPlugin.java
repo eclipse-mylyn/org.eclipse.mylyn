@@ -29,6 +29,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.monitor.ui.AbstractUserActivityMonitor;
 import org.eclipse.mylyn.monitor.ui.AbstractUserInteractionMonitor;
+import org.eclipse.mylyn.monitor.ui.IActivityContextManager;
 import org.eclipse.ui.IPageListener;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IPerspectiveListener;
@@ -50,13 +51,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 	public static final String ID_PLUGIN = "org.eclipse.mylyn.monitor.ui";
 
-	/**
-	 * @deprecated
-	 */
-	@Deprecated
-	public static final int TIMEOUT_INACTIVITY_MILLIS = 60 * 1000;
-
-	private int inactivityTimeout = TIMEOUT_INACTIVITY_MILLIS;
+	private static final int TIMEOUT_INACTIVITY_MILLIS = 60 * 1000;
 
 	private static MonitorUiPlugin INSTANCE;
 
@@ -91,14 +86,14 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 		public void propertyChange(org.eclipse.jface.util.PropertyChangeEvent event) {
 			if (event.getProperty().equals(ActivityContextManager.ACTIVITY_TIMEOUT)) {
-				MonitorUiPlugin.getDefault().setInactivityTimeout(
-						getPreferenceStore().getInt(ActivityContextManager.ACTIVITY_TIMEOUT));
+				activityContextManager.setInactivityTimeout(getPreferenceStore().getInt(
+						ActivityContextManager.ACTIVITY_TIMEOUT));
 			} else if (event.getProperty().equals(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED)) {
 				if (getPreferenceStore().getBoolean(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED)) {
-					MonitorUiPlugin.getDefault().setInactivityTimeout(
-							getPreferenceStore().getInt(ActivityContextManager.ACTIVITY_TIMEOUT));
+					activityContextManager.setInactivityTimeout(getPreferenceStore().getInt(
+							ActivityContextManager.ACTIVITY_TIMEOUT));
 				} else {
-					MonitorUiPlugin.getDefault().setInactivityTimeout(0);
+					activityContextManager.setInactivityTimeout(0);
 				}
 
 			}
@@ -196,18 +191,6 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 	public ShellLifecycleListener getShellLifecycleListener() {
 		return shellLifecycleListener;
-	}
-
-	/**
-	 * @return timeout in mililiseconds
-	 */
-	public int getInactivityTimeout() {
-		return inactivityTimeout;
-	}
-
-	public void setInactivityTimeout(int timeout) {
-		inactivityTimeout = timeout;
-		activityContextManager.setInactivityTimeout(inactivityTimeout);
 	}
 
 	public void addWindowPartListener(IPartListener listener) {
@@ -346,7 +329,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 		}
 	}
 
-	public ActivityContextManager getActivityContextManager() {
+	public IActivityContextManager getActivityContextManager() {
 		return activityContextManager;
 	}
 
@@ -423,7 +406,8 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 			new MonitorUiExtensionPointReader().initExtensions();
 
 			activityContextManager = new ActivityContextManager(TIMEOUT_INACTIVITY_MILLIS, monitors);
-			setInactivityTimeout(getPreferenceStore().getInt(ActivityContextManager.ACTIVITY_TIMEOUT));
+			activityContextManager.setInactivityTimeout(getPreferenceStore().getInt(
+					ActivityContextManager.ACTIVITY_TIMEOUT));
 			activityContextManager.start();
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN, "Monitor UI start failed", e));
