@@ -204,7 +204,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 
 		@Override
 		public synchronized void accessed(Object object) {
-			history.add((AbstractTask) object);
+			// ignore, handled by TaskActivationHistory
 		}
 
 		@Override
@@ -229,6 +229,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 
 		@Override
 		public synchronized boolean remove(Object object) {
+			taskActivationHistory.removeTask((AbstractTask) object);
 			return history.remove(object);
 		}
 
@@ -416,9 +417,11 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 
 	};
 
+	private final TaskActivationHistory taskActivationHistory;
+
 	public TaskSelectionDialog(Shell parent) {
 		super(parent);
-		TaskActivationHistory taskActivationHistory = TasksUiPlugin.getTaskListManager().getTaskActivationHistory();
+		this.taskActivationHistory = TasksUiPlugin.getTaskListManager().getTaskActivationHistory();
 		this.history = new ArrayList<AbstractTask>(taskActivationHistory.getPreviousTasks());
 		this.itemsComparator = new TaskHistoryItemsComparator(this.history);
 		this.needsCreateTask = true;
