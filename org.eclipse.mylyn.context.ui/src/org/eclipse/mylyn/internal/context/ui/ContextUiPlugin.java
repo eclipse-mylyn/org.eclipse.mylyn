@@ -138,8 +138,6 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	private static ContextUiPlugin INSTANCE;
 
-	private HighlighterList highlighters = null;
-
 	private FocusedViewerManager viewerManager;
 
 	private final ContextPerspectiveManager perspectiveManager = new ContextPerspectiveManager();
@@ -228,10 +226,12 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	private static final ITaskActivityListener TASK_ACTIVATION_LISTENER = new TaskActivityAdapter() {
 
+		@Override
 		public void activityChanged() {
 			// ignore
 		}
 
+		@Override
 		public void taskActivated(AbstractTask task) {
 			boolean hasLocalContext = ContextCore.getContextManager().hasContext(task.getHandleIdentifier());
 			if (!hasLocalContext) {
@@ -254,11 +254,13 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			}
 		}
 
+		@Override
 		public void taskDeactivated(AbstractTask task) {
 			// ignore
 
 		}
 
+		@Override
 		public void taskListRead() {
 			// ignore
 
@@ -281,7 +283,6 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		}
 
 		initializeDefaultPreferences(getPreferenceStore());
-		initializeHighlighters();
 
 		viewerManager = new FocusedViewerManager();
 		perspectiveManager.addManagedPerspective(PlanningPerspectiveFactory.ID_PERSPECTIVE);
@@ -306,9 +307,6 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		try {
 			ContextCore.getContextManager().addListener(viewerManager);
 			MonitorUiPlugin.getDefault().addWindowPartListener(contentOutlineManager);
-
-			// NOTE: can't init within this class because ..mylyn.tasks.ui activation will be triggered on activation
-			ContextHighlighterInitializer.init();
 
 			TasksUi.getTaskListManager().addActivityListener(perspectiveManager);
 			MonitorUiPlugin.getDefault().addWindowPerspectiveListener(perspectiveManager);
@@ -368,19 +366,6 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		super.stop(context);
 		perspectiveManager.removeManagedPerspective(PlanningPerspectiveFactory.ID_PERSPECTIVE);
 		viewerManager.dispose();
-		highlighters.dispose();
-	}
-
-	private void initializeHighlighters() {
-		String hlist = getPreferenceStore().getString(ContextUiPrefContstants.HIGHLIGHTER_PREFIX);
-		if (hlist != null && hlist.length() != 0) {
-			highlighters = new HighlighterList(hlist);
-		} else {
-			highlighters = new HighlighterList();
-			highlighters.setToDefaultList();
-			getPreferenceStore().setValue(ContextUiPrefContstants.HIGHLIGHTER_PREFIX,
-					this.highlighters.externalizeToString());
-		}
 	}
 
 	@Override
@@ -392,15 +377,6 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		store.setDefault(ContextUiPrefContstants.AUTO_MANAGE_EXPANSION, true);
 		store.setDefault(ContextUiPrefContstants.AUTO_MANAGE_EDITOR_CLOSE_ACTION, true);
 		store.setDefault(ContextUiPrefContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING, true);
-
-		store.setDefault(ContextUiPrefContstants.GAMMA_SETTING_LIGHTENED, false);
-		store.setDefault(ContextUiPrefContstants.GAMMA_SETTING_STANDARD, true);
-		store.setDefault(ContextUiPrefContstants.GAMMA_SETTING_DARKENED, false);
-	}
-
-	public void setHighlighterMapping(String id, String name) {
-		String prefId = ContextUiPrefContstants.TASK_HIGHLIGHTER_PREFIX + id;
-		getPreferenceStore().putValue(prefId, name);
 	}
 
 	/**
@@ -498,40 +474,6 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	private void internalAddContextLabelProvider(String extension, ILabelProvider provider) {
 		this.contextLabelProviders.put(extension, provider);
-	}
-
-	/**
-	 * @return null if not found
-	 */
-	public Highlighter getHighlighter(String name) {
-		if (highlighters == null) {
-			this.initializeHighlighters();
-		}
-		return highlighters.getHighlighter(name);
-	}
-
-	/**
-	 * API-3.0: remove
-	 */
-	@Deprecated
-	public Highlighter getHighlighterForContextId(String id) {
-		String prefId = ContextUiPrefContstants.TASK_HIGHLIGHTER_PREFIX + id;
-		String highlighterName = getPreferenceStore().getString(prefId);
-		return getHighlighter(highlighterName);
-	}
-
-	public HighlighterList getHighlighterList() {
-		if (this.highlighters == null) {
-			this.initializeHighlighters();
-		}
-		return this.highlighters;
-	}
-
-	public List<Highlighter> getHighlighters() {
-		if (highlighters == null) {
-			this.initializeHighlighters();
-		}
-		return highlighters.getHighlighters();
 	}
 
 	public static FocusedViewerManager getViewerManager() {

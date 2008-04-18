@@ -89,8 +89,6 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 		getPreferenceStore().setValue(ContextUiPrefContstants.NAVIGATORS_AUTO_FILTER_ENABLE,
 				autoFocusNavigatorsButton.getSelection());
 
-		getPreferenceStore().setValue(ContextUiPrefContstants.HIGHLIGHTER_PREFIX,
-				ContextUiPlugin.getDefault().getHighlighterList().externalizeToString());
 //		getPreferenceStore().setValue(ContextUiPrefContstants.INTEREST_FILTER_EXCLUSION,
 //				exclusionFieldEditor.getStringValue());
 

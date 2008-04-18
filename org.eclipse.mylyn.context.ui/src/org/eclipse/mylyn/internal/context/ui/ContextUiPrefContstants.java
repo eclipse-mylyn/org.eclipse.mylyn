@@ -36,21 +36,11 @@ public class ContextUiPrefContstants {
 
 	public static final String AUTO_MANAGE_EXPANSION = "org.eclipse.mylyn.ide.ui.expansion.auto.manage";
 
-	public static final String HIGHLIGHTER_PREFIX = "org.eclipse.mylyn.ui.interest.highlighters";
-
-	public static final String GAMMA_SETTING_DARKENED = "org.eclipse.mylyn.ui.gamma.darkened";
-
-	public static final String GAMMA_SETTING_STANDARD = "org.eclipse.mylyn.ui.gamma.standard";
-
-	public static final String GAMMA_SETTING_LIGHTENED = "org.eclipse.mylyn.ui.gamma.lightened";
-
 	public static final String INTERSECTION_MODE = "org.eclipse.mylyn.ui.interest.intersection";
 
 	public static final String DECORATE_INTEREST_LEVEL = "org.eclipse.mylyn.context.ui.interest.decoration";
 
 	public static final Font ITALIC = JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT);
-
-	public static final String TASK_HIGHLIGHTER_PREFIX = "org.eclipse.mylyn.ui.interest.highlighters.task.";
 
 	public static final Font BOLD = JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT);
 
