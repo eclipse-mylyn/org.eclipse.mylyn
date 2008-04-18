@@ -64,8 +64,10 @@ public class TaskActivityManager {
 
 	private final SortedMap<Calendar, Set<AbstractTask>> dueTasks = Collections.synchronizedSortedMap(new TreeMap<Calendar, Set<AbstractTask>>());
 
+	// Map of Calendar (hour) to Tasks active during that hour
 	private final SortedMap<Calendar, Set<AbstractTask>> activeTasks = Collections.synchronizedSortedMap(new TreeMap<Calendar, Set<AbstractTask>>());
 
+	// For a given tasks maps Calendar Hour to duration of time spent (milliseconds) with task active 
 	private final Map<AbstractTask, SortedMap<Calendar, Long>> taskElapsedTimeMap = new ConcurrentHashMap<AbstractTask, SortedMap<Calendar, Long>>();
 
 	private final List<ScheduledTaskContainer> scheduleWeekDays = new ArrayList<ScheduledTaskContainer>();
@@ -158,12 +160,19 @@ public class TaskActivityManager {
 	/** public for testing * */
 	public boolean parseInteractionEvent(InteractionEvent event) {
 		try {
-			if (event.getKind().equals(InteractionEvent.Kind.ATTENTION)
-					&& (event.getDelta().equals("added") || event.getDelta().equals("add"))) {
-				AbstractTask activatedTask = taskList.getTask(event.getStructureHandle());
-				if (activatedTask != null) {
-					addElapsedTimeForEvent(activatedTask, event);
-					return true;
+			if (event.getKind().equals(InteractionEvent.Kind.ATTENTION)) {
+				if ((event.getDelta().equals("added") || event.getDelta().equals("add"))) {
+					AbstractTask activatedTask = taskList.getTask(event.getStructureHandle());
+					if (activatedTask != null) {
+						addElapsedTimeForEvent(activatedTask, event);
+						return true;
+					}
+				} else if (event.getDelta().equals("removed")) {
+					AbstractTask task = taskList.getTask(event.getStructureHandle());
+					if (task != null) {
+						removeElapsedTimeForTask(task, event.getDate(), event.getEndDate());
+						return true;
+					}
 				}
 			}
 		} catch (Throwable t) {
@@ -173,7 +182,39 @@ public class TaskActivityManager {
 		return false;
 	}
 
+	/**
+	 * remove all active time allocated to a task between startDate (inclusive) and endDate (exclusive) where both are
+	 * snapped to the start of the given hour
+	 */
+	private void removeElapsedTimeForTask(AbstractTask task, Date startDate, Date endDate) {
+
+		// remove any time that has already accumulated in data structures
+		SortedMap<Calendar, Long> activityMap = taskElapsedTimeMap.get(task);
+		if (activityMap != null) {
+			Calendar start = TaskActivityUtil.getCalendar();
+			start.setTime(startDate);
+			TaskActivityUtil.snapStartOfHour(start);
+			Calendar end = TaskActivityUtil.getCalendar();
+			end.setTime(endDate);
+			TaskActivityUtil.snapEndOfHour(end);
+			activityMap = activityMap.subMap(start, end);
+			for (Calendar cal : new HashSet<Calendar>(activityMap.keySet())) {
+				activityMap.remove(cal);
+			}
+			for (ITaskTimingListener listener : new ArrayList<ITaskTimingListener>(timingListeners)) {
+				try {
+					listener.elapsedTimeUpdated(task, getElapsedTime(task));
+				} catch (Throwable t) {
+					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+							"Task activity listener failed: \"" + listener + "\"", t));
+				}
+			}
+		}
+
+	}
+
 	private void addElapsedTimeForEvent(AbstractTask activatedTask, InteractionEvent event) {
+
 		SortedMap<Calendar, Long> activityMap = taskElapsedTimeMap.get(activatedTask);
 		if (activityMap == null) {
 			activityMap = Collections.synchronizedSortedMap(new TreeMap<Calendar, Long>());
@@ -219,6 +260,12 @@ public class TaskActivityManager {
 		}
 	}
 
+	private Calendar getNewInstance(Calendar cal) {
+		Calendar newCal = TaskActivityUtil.getCalendar();
+		newCal.setTimeInMillis(cal.getTimeInMillis());
+		return newCal;
+	}
+
 	private void addScheduledTask(AbstractTask task) {
 		Calendar time = TaskActivityUtil.getCalendar();
 		time.setTime(task.getScheduledForDate());
@@ -243,12 +290,14 @@ public class TaskActivityManager {
 		Calendar time = TaskActivityUtil.getCalendar();
 		time.setTime(task.getDueDate());
 		snapToStartOfHour(time);
-		Set<AbstractTask> tasks = dueTasks.get(time);
-		if (tasks == null) {
-			tasks = new CopyOnWriteArraySet<AbstractTask>();
-			dueTasks.put(time, tasks);
+		synchronized (dueTasks) {
+			Set<AbstractTask> tasks = dueTasks.get(time);
+			if (tasks == null) {
+				tasks = new CopyOnWriteArraySet<AbstractTask>();
+				dueTasks.put(time, tasks);
+			}
+			tasks.add(task);
 		}
-		tasks.add(task);
 	}
 
 	private void removeDueTask(AbstractTask task) {
@@ -259,11 +308,21 @@ public class TaskActivityManager {
 		}
 	}
 
+	/**
+	 * returns active tasks from start to end (exclusive) where both are snapped to the beginning of the hour
+	 */
 	public Set<AbstractTask> getActiveTasks(Calendar start, Calendar end) {
 		Set<AbstractTask> resultingTasks = new HashSet<AbstractTask>();
+		Calendar startInternal = TaskActivityUtil.getCalendar();
+		startInternal.setTimeInMillis(start.getTimeInMillis());
+		TaskActivityUtil.snapStartOfHour(startInternal);
 
-		SortedMap<Calendar, Set<AbstractTask>> result = activeTasks.subMap(start, end);
+		Calendar endInternal = TaskActivityUtil.getCalendar();
+		endInternal.setTimeInMillis(end.getTimeInMillis());
+		TaskActivityUtil.snapStartOfHour(endInternal);
+
 		synchronized (activeTasks) {
+			SortedMap<Calendar, Set<AbstractTask>> result = activeTasks.subMap(startInternal, endInternal);
 			for (Set<AbstractTask> set : result.values()) {
 				resultingTasks.addAll(set);
 			}
@@ -273,8 +332,8 @@ public class TaskActivityManager {
 
 	public Set<AbstractTask> getScheduledTasks(Calendar start, Calendar end) {
 		Set<AbstractTask> resultingTasks = new HashSet<AbstractTask>();
-		SortedMap<Calendar, Set<AbstractTask>> result = scheduledTasks.subMap(start, end);
 		synchronized (scheduledTasks) {
+			SortedMap<Calendar, Set<AbstractTask>> result = scheduledTasks.subMap(start, end);
 			for (Set<AbstractTask> set : result.values()) {
 				resultingTasks.addAll(set);
 			}
@@ -318,13 +377,9 @@ public class TaskActivityManager {
 	public long getElapsedTime(AbstractTask task, Calendar start, Calendar end) {
 		long result = 0;
 
-		Calendar startRange = TaskActivityUtil.getCalendar();
-		startRange.setTimeInMillis(start.getTimeInMillis());
-		snapToStartOfHour(startRange);
+		Calendar startRange = snapToStartOfHour(getNewInstance(start));
 
-		Calendar endRange = TaskActivityUtil.getCalendar();
-		endRange.setTimeInMillis(end.getTimeInMillis());
-		snapToEndOfHour(endRange);
+		Calendar endRange = snapToEndOfHour(getNewInstance(end));
 
 		SortedMap<Calendar, Long> activityMap = taskElapsedTimeMap.get(task);
 		if (activityMap != null) {
@@ -341,19 +396,21 @@ public class TaskActivityManager {
 	}
 
 	// TODO: remove, copied from TaskListManager
-	private void snapToStartOfHour(Calendar cal) {
+	private Calendar snapToStartOfHour(Calendar cal) {
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
 		cal.getTime();
+		return cal;
 	}
 
 	// TODO: remove, copied from TaskListManager
-	private void snapToEndOfHour(Calendar cal) {
+	private Calendar snapToEndOfHour(Calendar cal) {
 		cal.set(Calendar.MINUTE, cal.getMaximum(Calendar.MINUTE));
 		cal.set(Calendar.SECOND, cal.getMaximum(Calendar.SECOND));
 		cal.set(Calendar.MILLISECOND, cal.getMaximum(Calendar.MILLISECOND));
 		cal.getTime();
+		return cal;
 	}
 
 	// TODO: copy from TaskListManager

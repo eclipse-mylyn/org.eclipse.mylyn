@@ -18,12 +18,12 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.text.ITextListener;
 import org.eclipse.jface.text.TextEvent;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
@@ -35,6 +35,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.ToggleTaskActivationAction;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.monitor.core.DateUtil;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.monitor.ui.MonitorUi;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.ITaskTimingListener;
@@ -86,6 +87,8 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public class TaskPlanningEditor extends TaskFormPage {
 
+	private static final String RESET = "Reset";
+
 	private static final int WIDTH_SUMMARY = 500;
 
 	private static final int NOTES_MINSIZE = 100;
@@ -97,9 +100,6 @@ public class TaskPlanningEditor extends TaskFormPage {
 	private static final String LABEL_DUE = "Due:";
 
 	private static final String LABEL_SCHEDULE = "Scheduled for:";
-
-	private static final String DESCRIPTION_ESTIMATED = "Time that the task has been actively worked on in Eclipse.\n Inactivity timeout is "
-			+ MonitorUiPlugin.getDefault().getInactivityTimeout() / (60 * 1000) + " minutes.";
 
 	public static final String LABEL_INCOMPLETE = "Incomplete";
 
@@ -755,11 +755,11 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		// Active Time
 		nameValueComp = makeComposite(sectionClient, 3);
-		// GridDataFactory.fillDefaults().span(2, 1).align(SWT.LEFT,
-		// SWT.DEFAULT).applyTo(nameValueComp);
+		GridDataFactory.fillDefaults().applyTo(nameValueComp);
+
 		label = toolkit.createLabel(nameValueComp, "Active:");
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-		label.setToolTipText(DESCRIPTION_ESTIMATED);
+		label.setToolTipText("Time working on this task");
 
 		String elapsedTimeString = NO_TIME_ELAPSED;
 		try {
@@ -773,10 +773,11 @@ public class TaskPlanningEditor extends TaskFormPage {
 			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not format elapsed time", e));
 		}
 
-		final Text elapsedTimeText = new Text(nameValueComp, SWT.READ_ONLY | SWT.FLAT);
+		final Text elapsedTimeText = toolkit.createText(nameValueComp, elapsedTimeString);
 		elapsedTimeText.setText(elapsedTimeString);
-		GridData td = new GridData(GridData.FILL_HORIZONTAL);
-		td.widthHint = 120;
+
+		GridData td = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL);
+		td.grabExcessHorizontalSpace = true;
 		elapsedTimeText.setLayoutData(td);
 		elapsedTimeText.setEditable(false);
 
@@ -810,6 +811,22 @@ public class TaskPlanningEditor extends TaskFormPage {
 		};
 
 		TasksUiPlugin.getTaskListManager().addTimingListener(timingListener);
+
+		ImageHyperlink resetActivityTimeButton = toolkit.createImageHyperlink(nameValueComp, SWT.NONE);
+		resetActivityTimeButton.setImage(TasksUiImages.getImage(TasksUiImages.REMOVE));
+		resetActivityTimeButton.setToolTipText(RESET);
+		resetActivityTimeButton.addHyperlinkListener(new HyperlinkAdapter() {
+
+			@Override
+			public void linkActivated(HyperlinkEvent e) {
+				if (MessageDialog.openConfirm(TaskPlanningEditor.this.getSite().getShell(),
+						"Confirm Activity Time Deletion",
+						"Do you wish to reset your activity time on this task?\n\nThis will take immediate affect and can not be undone.")) {
+					MonitorUi.getActivityContextManager().removeActivityTime(task.getHandleIdentifier(), 0l,
+							System.currentTimeMillis());
+				}
+			}
+		});
 
 		toolkit.paintBordersFor(sectionClient);
 	}

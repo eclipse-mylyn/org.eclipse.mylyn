@@ -21,6 +21,7 @@ import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
 import org.eclipse.mylyn.internal.context.core.LegacyActivityAdaptor;
+import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
@@ -91,6 +92,138 @@ public class TaskActivityTimingTest extends TestCase {
 		assertEquals(expectedTotalTime, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1, start2, end2));
 		assertEquals(2 * expectedTotalTime, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1, start, end2));
 	}
+
+	public void testActivityDelete() {
+
+		AbstractTask task1 = new LocalTask("1", "Task 1");
+		manager.getTaskList().addTask(task1);
+		assertEquals(0, activityManager.getElapsedTime(task1));
+
+		Calendar start = Calendar.getInstance();
+		Calendar end = Calendar.getInstance();
+		end.setTimeInMillis(start.getTimeInMillis());
+		end.add(Calendar.HOUR_OF_DAY, 2);
+
+		Calendar start2 = Calendar.getInstance();
+		start2.add(Calendar.DAY_OF_MONTH, 1);
+		Calendar end2 = Calendar.getInstance();
+		end2.setTime(start2.getTime());
+		end2.add(Calendar.HOUR_OF_DAY, 2);
+
+		InteractionEvent event1 = new InteractionEvent(InteractionEvent.Kind.ATTENTION, "structureKind",
+				task1.getHandleIdentifier(), "originId", "navigatedRelation",
+				IInteractionContextManager.ACTIVITY_DELTA_ADDED, 2f, start.getTime(), end.getTime());
+		InteractionEvent event2 = new InteractionEvent(InteractionEvent.Kind.ATTENTION, "structureKind",
+				task1.getHandleIdentifier(), "originId", "navigatedRelation",
+				IInteractionContextManager.ACTIVITY_DELTA_ADDED, 2f, start2.getTime(), end2.getTime());
+
+		ContextCore.getContextManager().getActivityMetaContext().parseEvent(event1);
+		TasksUiPlugin.getTaskActivityManager().parseInteractionEvent(event1);
+		ContextCore.getContextManager().getActivityMetaContext().parseEvent(event2);
+		TasksUiPlugin.getTaskActivityManager().parseInteractionEvent(event2);
+
+		long expectedTotalTime = end.getTime().getTime() - start.getTime().getTime();
+		assertEquals(2 * expectedTotalTime, activityManager.getElapsedTime(task1));
+		Calendar startEarly = Calendar.getInstance();
+		startEarly.setTimeInMillis(start.getTimeInMillis());
+		startEarly.add(Calendar.MONTH, -1);
+		Calendar endLate = Calendar.getInstance();
+		endLate.setTimeInMillis(end.getTimeInMillis() + 60 * 5000);
+		assertEquals(expectedTotalTime, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1, startEarly, end));
+		assertEquals(expectedTotalTime, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1, start2, end2));
+		assertEquals(2 * expectedTotalTime, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1, start, end2));
+
+		MonitorUiPlugin.getDefault().getActivityContextManager().removeActivityTime(task1.getHandleIdentifier(),
+				start.getTimeInMillis(), end.getTimeInMillis());
+		// Half gone since end date is exclusive (removes up to but not including hour)
+		assertEquals(expectedTotalTime, activityManager.getElapsedTime(task1));
+
+		ContextCore.getContextManager().saveActivityContext();
+		ContextCore.getContextManager().loadActivityMetaContext();
+		TasksUiPlugin.getTaskListManager().resetAndRollOver();
+
+		assertEquals(expectedTotalTime, activityManager.getElapsedTime(task1));
+
+		MonitorUiPlugin.getDefault().getActivityContextManager().removeActivityTime(task1.getHandleIdentifier(),
+				start2.getTimeInMillis(), end2.getTimeInMillis());
+
+		assertEquals(0, activityManager.getElapsedTime(task1));
+	}
+
+//	public void testActivityReset() {
+//
+//		AbstractTask task1 = new LocalTask("1", "Task 1");
+//		manager.getTaskList().addTask(task1);
+//		assertEquals(0, activityManager.getElapsedTime(task1));
+//
+//		Calendar start = Calendar.getInstance();
+//		Calendar end = Calendar.getInstance();
+//		end.setTimeInMillis(start.getTimeInMillis());
+//		end.add(Calendar.HOUR_OF_DAY, 2);
+//
+//		Calendar start2 = Calendar.getInstance();
+//		start2.add(Calendar.DAY_OF_MONTH, 1);
+//		Calendar end2 = Calendar.getInstance();
+//		end2.setTime(start2.getTime());
+//		end2.add(Calendar.HOUR_OF_DAY, 2);
+//
+//		InteractionEvent event1 = new InteractionEvent(InteractionEvent.Kind.ATTENTION, "structureKind",
+//				task1.getHandleIdentifier(), "originId", "navigatedRelation",
+//				IInteractionContextManager.ACTIVITY_DELTA_ADDED, 2f, start.getTime(), end.getTime());
+//		InteractionEvent event2 = new InteractionEvent(InteractionEvent.Kind.ATTENTION, "structureKind",
+//				task1.getHandleIdentifier(), "originId", "navigatedRelation",
+//				IInteractionContextManager.ACTIVITY_DELTA_ADDED, 2f, start2.getTime(), end2.getTime());
+//
+//		ContextCore.getContextManager().getActivityMetaContext().parseEvent(event1);
+//		TasksUiPlugin.getTaskActivityManager().parseInteractionEvent(event1);
+//		ContextCore.getContextManager().getActivityMetaContext().parseEvent(event2);
+//		TasksUiPlugin.getTaskActivityManager().parseInteractionEvent(event2);
+//
+//		long expectedTotalTime = end.getTime().getTime() - start.getTime().getTime();
+//		assertEquals(2 * expectedTotalTime, activityManager.getElapsedTime(task1));
+//		Calendar startEarly = Calendar.getInstance();
+//		startEarly.setTimeInMillis(start.getTimeInMillis());
+//		startEarly.add(Calendar.MONTH, -1);
+//		Calendar endLate = Calendar.getInstance();
+//		endLate.setTimeInMillis(end.getTimeInMillis() + 60 * 5000);
+//		assertEquals(expectedTotalTime, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1, startEarly, end));
+//		assertEquals(expectedTotalTime, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1, start2, end2));
+//		assertEquals(2 * expectedTotalTime, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1, start, end2));
+//
+//		MonitorUiPlugin.getDefault().getActivityContextManager().clearActivityTime(task1.getHandleIdentifier(),
+//				start.getTimeInMillis(), end.getTimeInMillis());
+//		// Half gone since end date is exclusive (removes up to but not including hour)
+//		assertEquals(expectedTotalTime, activityManager.getElapsedTime(task1));
+//		assertTrue(activityManager.getActiveTasks(start, end).isEmpty());
+//		assertFalse(activityManager.getActiveTasks(start2, end2).isEmpty());
+//
+//		MonitorUiPlugin.getDefault().getActivityContextManager().clearActivityTime(task1.getHandleIdentifier(),
+//				start.getTimeInMillis(), end2.getTimeInMillis() + (1000 * 60 * 60));
+//
+//		// with end = hour beyond should result in zero
+//		assertEquals(0, activityManager.getElapsedTime(task1));
+//
+//		TasksUiPlugin.getTaskActivityManager().parseInteractionEvent(event1);
+//		TasksUiPlugin.getTaskActivityManager().parseInteractionEvent(event2);
+//		// one event blocked now by activity date filter so only half time collected 
+//		assertEquals(expectedTotalTime, activityManager.getElapsedTime(task1));
+//		assertFalse(activityManager.getActiveTasks(start, end).isEmpty());
+//		assertTrue(activityManager.getActiveTasks(start2, end2).isEmpty());
+//
+//		ContextCore.getContextManager().saveActivityContext();
+//		ContextCore.getContextManager().loadActivityMetaContext();
+//		TasksUiPlugin.getTaskListManager().resetAndRollOver();
+//
+////		assertEquals(expectedTotalTime, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1, startEarly, end));
+////		assertEquals(expectedTotalTime, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1, start2, end2));
+////		assertEquals(2 * expectedTotalTime, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1, start, end2));
+//
+//		// reset still valid after restart
+//		assertEquals(expectedTotalTime, activityManager.getElapsedTime(task1));
+//		assertFalse(activityManager.getActiveTasks(start, end).isEmpty());
+//		assertTrue(activityManager.getActiveTasks(start2, end2).isEmpty());
+//
+//	}
 
 	public void testNegativeActivity() {
 
