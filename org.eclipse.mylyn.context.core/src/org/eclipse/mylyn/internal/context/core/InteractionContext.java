@@ -170,6 +170,18 @@ public class InteractionContext implements IInteractionContext {
 	public void delete(IInteractionElement node) {
 		landmarkMap.remove(node.getHandleIdentifier());
 		elementMap.remove(node.getHandleIdentifier());
+
+		List<InteractionEvent> toRemove = new ArrayList<InteractionEvent>();
+		for (InteractionEvent event : interactionHistory) {
+			if (node.getHandleIdentifier().equals(event.getStructureHandle())) {
+				toRemove.add(event);
+			}
+		}
+		interactionHistory.remove(toRemove);
+
+		if (activeNode != null && node.getHandleIdentifier().equals(activeNode.getHandleIdentifier())) {
+			activeNode = null;
+		}
 	}
 
 	public List<IInteractionElement> getAllElements() {
@@ -193,7 +205,6 @@ public class InteractionContext implements IInteractionContext {
 	}
 
 	public void reset() {
-		interactionHistory.clear();
 		elementMap.clear();
 		interactionHistory.clear();
 		landmarkMap.clear();

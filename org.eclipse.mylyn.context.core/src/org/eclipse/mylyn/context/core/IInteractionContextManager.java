@@ -16,6 +16,9 @@ import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.core.InteractionEvent.Kind;
 
+/**
+ * @since 3.0
+ */
 public interface IInteractionContextManager {
 
 	// API-3.0: move constants

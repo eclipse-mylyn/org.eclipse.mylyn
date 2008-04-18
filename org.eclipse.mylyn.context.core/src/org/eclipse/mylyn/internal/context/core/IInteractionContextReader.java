@@ -12,6 +12,7 @@ import java.io.File;
 
 /**
  * @author Mik Kersten
+ * @since 3.0
  */
 public interface IInteractionContextReader {
 

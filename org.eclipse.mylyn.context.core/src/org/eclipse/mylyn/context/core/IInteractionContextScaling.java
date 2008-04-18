@@ -12,6 +12,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
 /**
  * @author Mik Kersten
+ * @since 3.0
  */
 public interface IInteractionContextScaling {
 

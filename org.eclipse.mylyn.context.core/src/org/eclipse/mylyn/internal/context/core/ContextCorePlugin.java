@@ -37,7 +37,7 @@ import org.osgi.framework.BundleContext;
  * Main entry point for the Context Core API.
  * 
  * @author Mik Kersten
- * @since 2.0
+ * @since 3.0
  */
 public class ContextCorePlugin extends Plugin {
 
