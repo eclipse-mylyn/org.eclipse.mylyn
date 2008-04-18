@@ -277,15 +277,14 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 
+		initializeDefaultPreferences(getPreferenceStore());
+
+		viewerManager = new FocusedViewerManager();
+
 		ContextCore.getContextManager().addListener(contextActivationListener);
 		if (ContextCore.getContextManager().isContextActive()) {
 			initLazyStart();
 		}
-
-		initializeDefaultPreferences(getPreferenceStore());
-
-		viewerManager = new FocusedViewerManager();
-		perspectiveManager.addManagedPerspective(PlanningPerspectiveFactory.ID_PERSPECTIVE);
 	}
 
 	private void initLazyStart() {
@@ -308,6 +307,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			ContextCore.getContextManager().addListener(viewerManager);
 			MonitorUiPlugin.getDefault().addWindowPartListener(contentOutlineManager);
 
+			perspectiveManager.addManagedPerspective(PlanningPerspectiveFactory.ID_PERSPECTIVE);
 			TasksUi.getTaskListManager().addActivityListener(perspectiveManager);
 			MonitorUiPlugin.getDefault().addWindowPerspectiveListener(perspectiveManager);
 			TasksUi.getTaskListManager().addActivityListener(TASK_ACTIVATION_LISTENER);
