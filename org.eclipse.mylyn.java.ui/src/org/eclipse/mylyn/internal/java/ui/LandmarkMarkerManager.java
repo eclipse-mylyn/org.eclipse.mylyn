@@ -69,7 +69,7 @@ public class LandmarkMarkerManager implements IInteractionContextListener {
 				landmarkAdded(node);
 			}
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID,
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
 					"Could not update landmark markers", t));
 		}
 	}
@@ -107,10 +107,10 @@ public class LandmarkMarkerManager implements IInteractionContextListener {
 						resource.getWorkspace().run(runnable, null);
 					}
 				} catch (JavaModelException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID,
+					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
 							"Could not update marker", e));
 				} catch (CoreException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID,
+					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
 							"Could not update marker", e));
 				}
 			}
@@ -144,7 +144,7 @@ public class LandmarkMarkerManager implements IInteractionContextListener {
 									}
 								} catch (NullPointerException e) {
 									// FIXME avoid NPE
-									StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID,
+									StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
 											"Could not update marker", e));
 								}
 							}
@@ -154,7 +154,7 @@ public class LandmarkMarkerManager implements IInteractionContextListener {
 				} catch (JavaModelException e) {
 					// ignore the Java Model errors
 				} catch (CoreException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID,
+					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
 							"Could not update landmark marker", e));
 				}
 			}

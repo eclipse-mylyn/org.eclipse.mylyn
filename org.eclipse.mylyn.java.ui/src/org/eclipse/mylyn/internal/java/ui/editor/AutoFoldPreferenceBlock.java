@@ -11,7 +11,7 @@ package org.eclipse.mylyn.internal.java.ui.editor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.ui.text.folding.IJavaFoldingPreferenceBlock;
-import org.eclipse.mylyn.internal.java.ui.JavaUiBridge;
+import org.eclipse.mylyn.internal.java.ui.JavaUiBridgePlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
@@ -70,7 +70,7 @@ public class AutoFoldPreferenceBlock implements IJavaFoldingPreferenceBlock {
 
 			return inner;
 		} catch (Throwable t) {
-			StatusHandler.fail(new Status(IStatus.ERROR, JavaUiBridge.ID_PLUGIN,
+			StatusHandler.fail(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
 					"Could not create folding preferences page", t));
 		}
 		return null;

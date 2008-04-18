@@ -19,7 +19,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.ui.IContextUiStartup;
 import org.eclipse.mylyn.internal.java.ui.editor.ActiveFoldingListener;
-import org.eclipse.mylyn.internal.java.ui.wizards.RecommendedPreferencesWizard;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.monitor.ui.MonitorUi;
 import org.eclipse.ui.IEditorPart;
@@ -37,7 +36,7 @@ import org.osgi.framework.BundleContext;
  */
 public class JavaUiBridgePlugin extends AbstractUIPlugin {
 
-	public static final String PLUGIN_ID = "org.eclipse.mylyn.java.ui";
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.java.ui";
 
 	private static JavaUiBridgePlugin INSTANCE;
 
@@ -53,6 +52,8 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 
 	private InterestUpdateDeltaListener javaElementChangeListener;
 
+	private static final String MYLYN_FIRST_RUN = "org.eclipse.mylyn.ui.first.run.0_4_9";
+
 	public JavaUiBridgePlugin() {
 	}
 
@@ -67,8 +68,8 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 		initDefaultPrefs();
 
 		// NOTE: moved out of wizard and first task activation to avoid bug 194766
-		if (getPreferenceStore().getBoolean(RecommendedPreferencesWizard.MYLYN_FIRST_RUN)) {
-			getPreferenceStore().setValue(RecommendedPreferencesWizard.MYLYN_FIRST_RUN, false);
+		if (getPreferenceStore().getBoolean(MYLYN_FIRST_RUN)) {
+			getPreferenceStore().setValue(MYLYN_FIRST_RUN, false);
 			JavaUiUtil.installContentAssist(JavaPlugin.getDefault().getPreferenceStore(), true);
 		}
 	}
@@ -89,13 +90,13 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 			ContextCore.getContextManager().addListener(typeHistoryManager);
 		} catch (Throwable t) {
 			// FIXME review error message
-			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID,
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
 					"Could not install type history manager: incompatible Eclipse version", t));
 		}
 	}
 
 	private void initDefaultPrefs() {
-		getPreferenceStore().setDefault(RecommendedPreferencesWizard.MYLYN_FIRST_RUN, true);
+		getPreferenceStore().setDefault(MYLYN_FIRST_RUN, true);
 	}
 
 	private void lazyStop() {
@@ -196,7 +197,7 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 	 * @return the image descriptor
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
-		return AbstractUIPlugin.imageDescriptorFromPlugin(PLUGIN_ID, path);
+		return AbstractUIPlugin.imageDescriptorFromPlugin(ID_PLUGIN, path);
 	}
 
 	/**

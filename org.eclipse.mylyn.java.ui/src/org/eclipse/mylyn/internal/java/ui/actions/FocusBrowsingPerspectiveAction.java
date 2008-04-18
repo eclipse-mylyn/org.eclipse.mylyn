@@ -103,7 +103,7 @@ public class FocusBrowsingPerspectiveAction extends AbstractFocusViewAction impl
 							}
 						}
 					} catch (Exception e) {
-						StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not get \""
+						StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not get \""
 								+ id + "\" view tree viewer", e));
 						return null;
 					}
@@ -113,7 +113,7 @@ public class FocusBrowsingPerspectiveAction extends AbstractFocusViewAction impl
 
 			}
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not get \"" + id
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not get \"" + id
 					+ "\" view tree viewer", e));
 		}
 		return null;

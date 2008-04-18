@@ -124,7 +124,7 @@ public class JavaUiUtil {
 			}
 			return null;
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not find element for: "
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not find element for: "
 					+ marker, t));
 			return null;
 		}

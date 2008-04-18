@@ -133,7 +133,7 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 							ContextCorePlugin.CONTENT_TYPE_RESOURCE);
 					return parentBridge.getChildHandles(handle);
 				} catch (Exception e) {
-					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not get children",
+					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not get children",
 							e));
 				}
 			}
@@ -146,7 +146,7 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 		try {
 			return JavaCore.create(handle);
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.WARNING, JavaUiBridgePlugin.PLUGIN_ID,
+			StatusHandler.log(new Status(IStatus.WARNING, JavaUiBridgePlugin.ID_PLUGIN,
 					"Could not create java element for handle: " + handle, t));
 			return null;
 		}
@@ -331,7 +331,7 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 			}
 			return null;
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Could not find element for: "
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not find element for: "
 					+ marker, t));
 			return null;
 		}

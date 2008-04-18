@@ -60,7 +60,7 @@ public class TypeHistoryManager implements IInteractionContextListener2 {
 					}
 				}
 			} catch (JavaModelException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID,
+				StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
 						"Failed to update history for a type", e));
 			}
 		}

@@ -93,7 +93,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 			return;
 		}
 		if (node.getContentType() == null) {
-			StatusHandler.log(new Status(IStatus.WARNING, JavaUiBridgePlugin.PLUGIN_ID, "Null content type for: "
+			StatusHandler.log(new Status(IStatus.WARNING, JavaUiBridgePlugin.ID_PLUGIN, "Null content type for: "
 					+ node));
 			return;
 		}
@@ -205,7 +205,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 		} else {
 			if (interesting.getContentType() == null) {
 				// TODO: remove
-				StatusHandler.log(new Status(IStatus.WARNING, JavaUiBridgePlugin.PLUGIN_ID, "Null content type for: "
+				StatusHandler.log(new Status(IStatus.WARNING, JavaUiBridgePlugin.ID_PLUGIN, "Null content type for: "
 						+ interesting.getHandleIdentifier()));
 				return false;
 			} else {
@@ -354,7 +354,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 				}
 				return runStatus;
 			} catch (Throwable t) {
-				StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID, "Java search failed", t));
+				StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Java search failed", t));
 			}
 
 			IStatus status = new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID, IStatus.OK,

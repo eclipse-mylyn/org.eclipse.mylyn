@@ -104,7 +104,7 @@ public class FocusedJavaProposalProcessor {
 				return proposals;
 			}
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.PLUGIN_ID,
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
 					"Failed to project interest onto propsals", t));
 			return proposals;
 		}

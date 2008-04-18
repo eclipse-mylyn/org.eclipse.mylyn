@@ -99,24 +99,6 @@
 		</viewerContentBinding>
 	</extension>
 
-  	<!-- ==================== Editors ==================== -->
-
-	<extension
-          point="org.eclipse.mylyn.tasks.ui.editors"> 
-       <hyperlinkDetector
-             class="org.eclipse.mylyn.internal.java.ui.JavaStackTraceHyperlinkDetector"
-             id="org.eclipse.mylyn.java.hyperlink.detector.stack"/>
-    </extension>
-    
-   <extension
-         point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
-      <hyperlinkDetector            
-            class="org.eclipse.mylyn.internal.java.ui.JavaStackTraceHyperlinkDetector"
-            id="org.eclipse.mylyn.java.hyperlink.detector.stack"
-            name="Mylyn Stack Trace"
-            targetId="org.eclipse.ui.DefaultTextEditor"/>
-   </extension>
-	
   	<!-- ==================== Content Assist ==================== -->
 
 	<extension
@@ -509,18 +491,5 @@
          name="Toggle Active Folding">
       </command>
     </extension>
-   
-    <extension point="org.eclipse.ui.popupMenus">
-        <viewerContribution
-		    id="org.eclipse.mylyn.bugzilla.ui.contribution"
-            targetID="org.eclipse.jdt.junit.ResultView">
-      	<action
-	      	class="org.eclipse.mylyn.internal.java.ui.actions.NewTaskFromJunitResultViewAction"
-	        icon="icons/etool16/task-new.gif"
-	        id="org.eclipse.mylyn.bugzilla.actions.newTaskFromJunitResultView"
-	        label="New Task from Failure..."
-	        menubarPath="org.eclipse.jdt.junit.ResultView"/>
-      </viewerContribution>
-   </extension>
    
 </plugin>
