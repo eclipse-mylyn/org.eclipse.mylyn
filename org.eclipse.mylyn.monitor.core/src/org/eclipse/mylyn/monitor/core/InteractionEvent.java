@@ -220,10 +220,7 @@ public class InteractionEvent {
 	public InteractionEvent(Kind kind, String structureKind, String handle, String originId, String navigatedRelation,
 			String delta, float interestContribution) {
 		Assert.isNotNull(kind);
-		Assert.isNotNull(handle);
 		Assert.isNotNull(originId);
-		Assert.isNotNull(navigatedRelation);
-		Assert.isNotNull(delta);
 		this.kind = kind;
 		this.structureKind = structureKind;
 		this.structureHandle = handle;
@@ -241,10 +238,7 @@ public class InteractionEvent {
 	public InteractionEvent(Kind kind, String structureKind, String handle, String originId, String navigatedRelation,
 			String delta, float interestContribution, Date startDate, Date endDate) {
 		Assert.isNotNull(kind);
-		Assert.isNotNull(handle);
 		Assert.isNotNull(originId);
-		Assert.isNotNull(navigatedRelation);
-		Assert.isNotNull(delta);
 		Assert.isNotNull(startDate);
 		Assert.isNotNull(endDate);
 		this.kind = kind;
@@ -318,6 +312,7 @@ public class InteractionEvent {
 		return structureHandle != null && !structureHandle.equals("null") && !structureHandle.trim().equals(ID_UNKNOWN);
 	}
 
+	// API-3.0: change to getHandleIdentifier()
 	public String getStructureHandle() {
 		return structureHandle;
 	}
