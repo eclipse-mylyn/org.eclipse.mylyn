@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mylyn Bug Reporting
+Bundle-SymbolicName: org.eclipse.mylyn.tasks.bugs;singleton:=true
+Bundle-Version: 3.0.0.qualifier
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.ui,
+ org.eclipse.ui.views.log,
+ org.eclipse.mylyn.monitor.core;bundle-version="[3.0.0,4.0.0)",
+ org.eclipse.mylyn.tasks.core;bundle-version="[3.0.0,4.0.0)",
+ org.eclipse.mylyn.tasks.ui;bundle-version="[3.0.0,4.0.0)"
+Bundle-Vendor: Eclipse.org
+Bundle-ClassPath: .
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Export-Package: org.eclipse.mylyn.internal.tasks.bugs;x-internal:=true,
+ org.eclipse.mylyn.internal.tasks.bugs.actions;x-internal:=true,
+ org.eclipse.mylyn.internal.tasks.bugs.wizards;x-internal:=true,
+ org.eclipse.mylyn.tasks.bugs
+Bundle-Localization: plugin
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: org.eclipse.mylyn.internal.tasks.bugs.TasksBugsPlugin

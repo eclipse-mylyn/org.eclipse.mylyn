@@ -72,4 +72,14 @@
           </perspectiveExtension>
 	</extension>
 
+
+   <extension
+   		point="org.eclipse.mylyn.tasks.ui.duplicateDetectors">
+            <detector
+                  class="org.eclipse.mylyn.internal.bugzilla.ui.StackTraceDuplicateDetector"
+                  kind="bugzilla"
+                  name="Stack Trace">
+            </detector>       
+   </extension>
+   
 </plugin>
