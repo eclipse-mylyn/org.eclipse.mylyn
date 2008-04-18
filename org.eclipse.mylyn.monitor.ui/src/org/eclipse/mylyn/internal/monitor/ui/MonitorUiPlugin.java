@@ -44,6 +44,7 @@ import org.osgi.framework.BundleContext;
 /**
  * @author Mik Kersten
  * @author Shawn Minto
+ * @since 3.0
  */
 public class MonitorUiPlugin extends AbstractUIPlugin {
 
