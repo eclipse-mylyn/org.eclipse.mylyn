@@ -1,25 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
-   <extension-point id="pluginRepositoryMappings" name="Plug-in to Repository Mappings" schema="schema/pluginRepositoryMappings.exsd"/>
-   <extension-point id="taskContributors" name="Task Contributors" schema="schema/taskContributors.exsd"/>
-   
-   <extension point="org.eclipse.ui.popupMenus">
-        <objectContribution
-              adaptable="false"
-              id="org.eclipse.mylyn.bugzilla.ide.objectContribution"
-              objectClass="org.eclipse.ui.internal.views.log.LogEntry">
-			<action
-		         class="org.eclipse.mylyn.internal.bugzilla.ide.actions.NewTaskFromErrorAction"
-		         enablesFor="1"
-		         icon="icons/etool16/task-repository-new.gif"
-		         menubarPath="org.eclipse.pde.runtime.LogView"
-		         id="org.eclipse.mylyn.tasklist.actions.newTaskFromErrorLog"
-		         label="Report as Bug">
-             </action>
-        </objectContribution>
-   </extension>
-      
    <extension
          point="org.eclipse.mylyn.tasks.core.templates">
       <repository
@@ -30,39 +11,4 @@
             urlRepository="https://bugs.eclipse.org/bugs"
             version="3.0"/>
    </extension>
-      
-   <extension
-   		point="org.eclipse.mylyn.tasks.ui.duplicateDetectors">
-            <detector
-                  class="org.eclipse.mylyn.internal.bugzilla.ide.StackTraceDuplicateDetector"
-                  kind="bugzilla"
-                  name="Stack Trace">
-            </detector>       
-   </extension>
-   
-   <extension
-         point="org.eclipse.mylyn.monitor.core.errorReporters">
-      <errorReporter
-            class="org.eclipse.mylyn.internal.bugzilla.ide.TaskErrorReporter"
-            id="org.eclipse.mylyn.bugzilla.ide.errorReporter"
-            label="Report Error as Bug">
-      </errorReporter>
-   </extension>    
-
-   <extension point="org.eclipse.ui.actionSets">
-		<actionSet
-            id="org.eclipse.mylyn.doc.actionSet"
-            label="Mylyn Help"
-            visible="true"> 
-        <action
-              class="org.eclipse.mylyn.internal.bugzilla.ide.actions.ReportBugAction"
-              icon="icons/etool16/report-bug.gif"
-              id="org.eclipse.mylyn.tasks.ui.bug.report"
-              label="Report Bug or Enhancement..."
-              menubarPath="help/helpStart"
-              style="push"
-              tooltip="Report Bug or Enhancement"/> 
-    	</actionSet>
-   </extension>
-  
 </plugin>
