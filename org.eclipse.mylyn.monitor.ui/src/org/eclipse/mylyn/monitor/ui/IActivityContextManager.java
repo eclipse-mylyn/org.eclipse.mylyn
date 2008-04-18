@@ -9,7 +9,10 @@
 package org.eclipse.mylyn.monitor.ui;
 
 /**
+ * API-3.0: review
+ * 
  * @author Rob Elves
+ * @since 3.0
  */
 public interface IActivityContextManager {
 
