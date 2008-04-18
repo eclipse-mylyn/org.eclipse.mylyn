@@ -6,13 +6,13 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.bugzilla.tests;
+package org.eclipse.mylyn.tasks.tests.bugs;
 
 import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.internal.bugzilla.ide.KeyValueParser;
+import org.eclipse.mylyn.internal.tasks.bugs.KeyValueParser;
 
 /**
  * @author Steffen Pingel
