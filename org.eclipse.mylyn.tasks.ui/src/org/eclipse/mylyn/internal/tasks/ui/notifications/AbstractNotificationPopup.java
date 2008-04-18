@@ -491,8 +491,25 @@ public abstract class AbstractNotificationPopup extends Window {
 		if (supportsFading) {
 			fadeJob = SwtUtil.fadeOut(getShell(), new IFadeListener() {
 				public void faded(Shell shell, int alpha) {
-					if (!shell.isDisposed() && alpha == 0) {
-						shell.close();
+					if (!shell.isDisposed()) {
+						if (alpha == 0) {
+							shell.close();
+						} else if (isMouseOver(shell)) {
+							if (fadeJob != null) {
+								fadeJob.cancelAndWait(false);
+							}
+							fadeJob = SwtUtil.fastFadeIn(shell, new IFadeListener() {
+								public void faded(Shell shell, int alpha) {
+									if (shell.isDisposed()) {
+										return;
+									}
+
+									if (alpha == 255) {
+										scheduleAutoClose();
+									}
+								}
+							});
+						}
 					}
 				}
 			});
