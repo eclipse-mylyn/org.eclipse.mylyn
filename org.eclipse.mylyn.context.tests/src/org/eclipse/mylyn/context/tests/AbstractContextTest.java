@@ -24,6 +24,8 @@ import org.eclipse.ui.PlatformUI;
  */
 public abstract class AbstractContextTest extends TestCase {
 
+	protected static final String MOCK_HANDLE = "<mock-handle>";
+
 	private static final String MOCK_PROVIDER = "<mock-provider>";
 
 	protected static final String MOCK_ORIGIN = "<mock-origin>";
@@ -57,7 +59,7 @@ public abstract class AbstractContextTest extends TestCase {
 	}
 
 	protected InteractionEvent mockSelection() {
-		return mockSelection("<mock-handle>");
+		return mockSelection(MOCK_HANDLE);
 	}
 
 	protected InteractionEvent mockNavigation(String toHandle) {

@@ -9,15 +9,15 @@
 package org.eclipse.mylyn.internal.team.ui;
 
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.ILinkedTaskInfo;
+import org.eclipse.mylyn.team.ui.AbstractTaskReference;
 import org.eclipse.team.internal.core.subscribers.ChangeSet;
 
 /**
- * Default implementation of {@link ILinkedTaskInfo}
+ * Default implementation of {@link AbstractTaskReference}
  * 
  * @author Eugene Kuleshov
  */
-public class LinkedTaskInfo implements ILinkedTaskInfo {
+public class LinkedTaskInfo extends AbstractTaskReference {
 
 	private AbstractTask task;
 
@@ -47,6 +47,7 @@ public class LinkedTaskInfo implements ILinkedTaskInfo {
 		this.comment = comment;
 	}
 
+	@Override
 	public String getRepositoryUrl() {
 		return repositoryUrl;
 	}
@@ -55,15 +56,18 @@ public class LinkedTaskInfo implements ILinkedTaskInfo {
 		return task;
 	}
 
+	@Override
 	public String getTaskUrl() {
 		return taskFullUrl;
 	}
 
+	@Override
 	public String getTaskId() {
 		return taskId;
 	}
 
-	public String getComment() {
+	@Override
+	public String getText() {
 		return comment;
 	}
 

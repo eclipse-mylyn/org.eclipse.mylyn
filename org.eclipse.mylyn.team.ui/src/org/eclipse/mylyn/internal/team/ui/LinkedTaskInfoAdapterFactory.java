@@ -14,8 +14,8 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.core.ILinkedTaskInfo;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.team.ui.AbstractTaskReference;
 import org.eclipse.team.core.history.IFileRevision;
 import org.eclipse.team.internal.core.subscribers.ChangeSet;
 import org.eclipse.team.internal.core.subscribers.DiffChangeSet;
@@ -30,11 +30,11 @@ import org.eclipse.team.internal.ui.synchronize.SynchronizeModelElement;
 public class LinkedTaskInfoAdapterFactory implements IAdapterFactory {
 
 	@SuppressWarnings("unchecked")
-	private static final Class[] ADAPTER_TYPES = new Class[] { ILinkedTaskInfo.class };
+	private static final Class[] ADAPTER_TYPES = new Class[] { AbstractTaskReference.class };
 
 	@SuppressWarnings("unchecked")
 	public Object getAdapter(Object object, Class adapterType) {
-		if (!ILinkedTaskInfo.class.equals(adapterType)) {
+		if (!AbstractTaskReference.class.equals(adapterType)) {
 			return null;
 		}
 
@@ -52,25 +52,25 @@ public class LinkedTaskInfoAdapterFactory implements IAdapterFactory {
 		return ADAPTER_TYPES;
 	}
 
-	private ILinkedTaskInfo adaptChangeSetDiffNode(Object object) {
+	private AbstractTaskReference adaptChangeSetDiffNode(Object object) {
 		ChangeSetDiffNode diffNode = (ChangeSetDiffNode) object;
 		ChangeSet set = diffNode.getSet();
 
 		Object adapter = null;
 		if (set instanceof IAdaptable) {
-			adapter = ((IAdaptable) set).getAdapter(ILinkedTaskInfo.class);
+			adapter = ((IAdaptable) set).getAdapter(AbstractTaskReference.class);
 		}
 		if (adapter == null) {
-			adapter = Platform.getAdapterManager().getAdapter(set, ILinkedTaskInfo.class);
+			adapter = Platform.getAdapterManager().getAdapter(set, AbstractTaskReference.class);
 		}
 		if (adapter != null) {
-			return (ILinkedTaskInfo) adapter;
+			return (AbstractTaskReference) adapter;
 		}
 
 		return adaptFromComment(object);
 	}
 
-	private ILinkedTaskInfo adaptFromComment(Object object) {
+	private AbstractTaskReference adaptFromComment(Object object) {
 		String comment = getCommentForElement(object);
 		if (comment == null) {
 			return null;
@@ -88,7 +88,9 @@ public class LinkedTaskInfoAdapterFactory implements IAdapterFactory {
 	}
 
 	private static String getCommentForElement(Object element) {
-		if (element instanceof DiffChangeSet) {
+		if (element instanceof ContextChangeSet) {
+			return ((ContextChangeSet) element).getComment(false);
+		} else if (element instanceof DiffChangeSet) {
 			return ((DiffChangeSet) element).getComment();
 		} else if (element instanceof ChangeSetDiffNode) {
 			return ((ChangeSetDiffNode) element).getName();

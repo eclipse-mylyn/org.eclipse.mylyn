@@ -36,7 +36,7 @@
 
      	<objectContribution
 				id="org.eclipse.mylyn.ui.team.synchronize.open.report.contribution"
-				objectClass="org.eclipse.mylyn.tasks.core.ILinkedTaskInfo"
+				objectClass="org.eclipse.mylyn.team.ui.AbstractTaskReference"
 				adaptable="true">
 			<action
 				class="org.eclipse.mylyn.internal.team.ui.actions.OpenCorrespondingTaskAction"
@@ -91,7 +91,7 @@
 	   	 class="org.eclipse.mylyn.internal.team.ui.actions.TaskResourceMappingActionProvider"
 	     id="org.eclipse.mylyn.ide.ui.actions.TaskResourceMappingActionProvider">
 	     <enablement>
-	       <adapt type="org.eclipse.core.resources.mapping.ResourceMapping"/>
+	       <adapt type="org.eclipse.mylyn.team.ui.AbstractTaskReference"/>
 	     </enablement>
 	   </actionProvider>
 	</extension>
@@ -239,19 +239,19 @@
    <extension point="org.eclipse.core.runtime.adapters">
      <factory adaptableType="org.eclipse.mylyn.internal.team.ui.ContextChangeSet"
              class="org.eclipse.mylyn.internal.team.ui.LinkedTaskInfoAdapterFactory">
-       <adapter type="org.eclipse.mylyn.tasks.core.ILinkedTaskInfo"/>
+       <adapter type="org.eclipse.mylyn.team.ui.AbstractTaskReference"/>
      </factory>
     <factory adaptableType="org.eclipse.team.core.history.IFileRevision"
              class="org.eclipse.mylyn.internal.team.ui.LinkedTaskInfoAdapterFactory">
-       <adapter type="org.eclipse.mylyn.tasks.core.ILinkedTaskInfo"/>
+       <adapter type="org.eclipse.mylyn.team.ui.AbstractTaskReference"/>
     </factory>
     <factory adaptableType="org.eclipse.team.internal.core.subscribers.DiffChangeSet"
              class="org.eclipse.mylyn.internal.team.ui.LinkedTaskInfoAdapterFactory">
-       <adapter type="org.eclipse.mylyn.tasks.core.ILinkedTaskInfo"/>
+       <adapter type="org.eclipse.mylyn.team.ui.AbstractTaskReference"/>
     </factory>
     <factory adaptableType="org.eclipse.team.internal.ui.synchronize.ChangeSetDiffNode"
              class="org.eclipse.mylyn.internal.team.ui.LinkedTaskInfoAdapterFactory">
-       <adapter type="org.eclipse.mylyn.tasks.core.ILinkedTaskInfo"/>
+       <adapter type="org.eclipse.mylyn.team.ui.AbstractTaskReference"/>
     </factory>
   </extension>
    <extension

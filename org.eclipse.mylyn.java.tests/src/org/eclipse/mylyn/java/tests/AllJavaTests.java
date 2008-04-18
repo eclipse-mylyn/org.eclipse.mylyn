@@ -12,6 +12,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.context.tests.support.TestUtil;
+import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
 import org.eclipse.mylyn.java.tests.search.JUnitReferencesSearchPluginTest;
 import org.eclipse.mylyn.java.tests.search.JavaImplementorsSearchPluginTest;
 import org.eclipse.mylyn.java.tests.search.JavaReadAccessSearchPluginTest;
@@ -25,6 +26,9 @@ import org.eclipse.mylyn.java.tests.xml.XmlSearchPluginTest;
 public class AllJavaTests {
 
 	public static Test suite() {
+		// API-3.0 replace with context UI lazy start extension 
+		// NOTE: used to trigger activation on start
+		ResourcesUiBridgePlugin.getDefault();
 		TestUtil.triggerContextUiLazyStart();
 
 		TestSuite suite = new TestSuite("Tests for org.eclipse.mylyn.java.tests");
@@ -40,7 +44,7 @@ public class AllJavaTests {
 		//suite.addTestSuite(ResultUpdaterTest.class);
 		suite.addTestSuite(ProblemsListTest.class);
 		suite.addTestSuite(InterestFilterTest.class);
-		suite.addTestSuite(ContextManagerTest.class);
+		suite.addTestSuite(InteractionContextManagerTest.class);
 		suite.addTestSuite(JavaStructureTest.class);
 		suite.addTestSuite(JavaImplementorsSearchPluginTest.class);
 		suite.addTestSuite(JavaReadAccessSearchPluginTest.class);

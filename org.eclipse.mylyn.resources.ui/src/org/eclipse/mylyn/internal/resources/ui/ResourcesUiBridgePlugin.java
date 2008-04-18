@@ -34,7 +34,7 @@ import org.osgi.framework.BundleContext;
  * 
  * @author Mik Kersten
  * @author Steffen Pingel
- * @since 2.0
+ * @since 3.0
  */
 public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 

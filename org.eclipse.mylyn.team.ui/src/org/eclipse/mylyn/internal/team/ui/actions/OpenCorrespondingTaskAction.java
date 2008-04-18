@@ -33,11 +33,11 @@ import org.eclipse.mylyn.internal.team.ui.LinkedTaskInfo;
 import org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateManager;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.ILinkedTaskInfo;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.team.ui.AbstractTaskReference;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -45,7 +45,9 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.ObjectPluginAction;
 
 /**
- * Action used to open linked task
+ * Action used to open linked task.
+ * 
+ * TODO: this class has evolved into a complete mess and has to be fixed.
  * 
  * @author Mik Kersten
  * @author Eugene Kuleshov
@@ -103,8 +105,14 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 	 * 
 	 * This is used in order to keep LinkedTaskInfo lightweight with minimal dependencies.
 	 */
-	private static ILinkedTaskInfo reconcile(ILinkedTaskInfo info) {
-		AbstractTask task = info.getTask();
+	private static AbstractTaskReference reconcile(AbstractTaskReference info) {
+		AbstractTask task;
+		if (info instanceof LinkedTaskInfo) {
+			task = ((LinkedTaskInfo) info).getTask();
+		} else {
+			task = null;
+		}
+
 		if (task != null) {
 			return info;
 		}
@@ -112,7 +120,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 		String repositoryUrl = info.getRepositoryUrl();
 		String taskId = info.getTaskId();
 		String taskFullUrl = info.getTaskUrl();
-		String comment = info.getComment();
+		String comment = info.getText();
 
 		TaskRepositoryManager repositoryManager = TasksUiPlugin.getRepositoryManager();
 
@@ -257,19 +265,24 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
-			ILinkedTaskInfo info = null;
-			if (element instanceof ILinkedTaskInfo) {
-				info = (ILinkedTaskInfo) element;
+			AbstractTaskReference info = null;
+			if (element instanceof AbstractTaskReference) {
+				info = (AbstractTaskReference) element;
 			} else if (element instanceof IAdaptable) {
-				info = (ILinkedTaskInfo) ((IAdaptable) element).getAdapter(ILinkedTaskInfo.class);
+				info = (AbstractTaskReference) ((IAdaptable) element).getAdapter(AbstractTaskReference.class);
 			}
 			if (info == null) {
-				info = (ILinkedTaskInfo) Platform.getAdapterManager().getAdapter(element, ILinkedTaskInfo.class);
+				info = (AbstractTaskReference) Platform.getAdapterManager().getAdapter(element, AbstractTaskReference.class);
 			}
 
 			if (info != null) {
 				info = reconcile(info);
-				final AbstractTask task = info.getTask();
+				final AbstractTask task;
+				if (info instanceof LinkedTaskInfo) {
+					task = ((LinkedTaskInfo) info).getTask();
+				} else {
+					task = null;
+				}
 				if (task != null) {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 						public void run() {

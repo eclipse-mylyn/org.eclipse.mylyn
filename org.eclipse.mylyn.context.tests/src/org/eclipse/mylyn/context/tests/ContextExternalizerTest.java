@@ -40,6 +40,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		super.setUp();
 		scaling = ContextCore.getCommonContextScaling();
 		context = new InteractionContext(CONTEXT_HANDLE, ContextCore.getCommonContextScaling());
+		assertNotNull(ContextCore.getContextManager());
 	}
 
 	@Override

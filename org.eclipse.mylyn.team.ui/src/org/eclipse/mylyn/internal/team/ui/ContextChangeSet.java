@@ -17,7 +17,6 @@ import java.util.Set;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.resources.mapping.ResourceMapping;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
@@ -29,14 +28,13 @@ import org.eclipse.mylyn.internal.team.ui.properties.TeamPropertiesLinkProvider;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.resources.ui.ResourcesUi;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.ILinkedTaskInfo;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.team.ui.AbstractTaskReference;
 import org.eclipse.team.core.TeamException;
 import org.eclipse.team.core.diff.IDiff;
 import org.eclipse.team.core.diff.provider.ThreeWayDiff;
 import org.eclipse.team.core.mapping.provider.ResourceDiff;
-import org.eclipse.team.internal.ccvs.core.mapping.CVSActiveChangeSet;
-import org.eclipse.team.internal.ccvs.core.mapping.ChangeSetResourceMapping;
+import org.eclipse.team.internal.core.subscribers.ActiveChangeSet;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
 import org.eclipse.ui.PlatformUI;
 import org.osgi.service.prefs.Preferences;
@@ -45,7 +43,7 @@ import org.osgi.service.prefs.Preferences;
  * @author Mik Kersten
  * @author Steffen Pingel
  */
-public class ContextChangeSet extends CVSActiveChangeSet/*ActiveChangeSet*/implements IAdaptable {
+public class ContextChangeSet extends ActiveChangeSet /*CVSActiveChangeSet*/implements IAdaptable {
 
 	// HACK: copied from super
 	private static final String CTX_TITLE = "title";
@@ -97,10 +95,10 @@ public class ContextChangeSet extends CVSActiveChangeSet/*ActiveChangeSet*/imple
 
 	@Override
 	public String getComment() {
-		return internalGetComment(true);
+		return getComment(true);
 	}
 
-	private String internalGetComment(boolean checkTaskRepository) {
+	String getComment(boolean checkTaskRepository) {
 		String template = null;
 		Set<IProject> projects = new HashSet<IProject>();
 		IResource[] resources = getChangedResources();
@@ -196,7 +194,7 @@ public class ContextChangeSet extends CVSActiveChangeSet/*ActiveChangeSet*/imple
 		suppressInterestContribution = true;
 		try {
 			super.add(newResources);
-			setComment(internalGetComment(false));
+			setComment(getComment(false));
 		} catch (TeamException e) {
 			throw e;
 		} finally {
@@ -259,14 +257,15 @@ public class ContextChangeSet extends CVSActiveChangeSet/*ActiveChangeSet*/imple
 
 	@SuppressWarnings("unchecked")
 	public Object getAdapter(Class adapter) {
-		if (adapter == ResourceMapping.class) {
-			return new ChangeSetResourceMapping(this);
-		} else if (adapter == AbstractTask.class) {
+//		if (adapter == ResourceMapping.class) {
+//			return null;
+//			return new ChangeSetResourceMapping(this);
+//		}
+		if (adapter == AbstractTask.class) {
 			return task;
-		} else if (adapter == ILinkedTaskInfo.class) {
+		} else if (adapter == AbstractTaskReference.class) {
 			return new LinkedTaskInfo(getTask(), this);
-		} else {
-			return null;
 		}
+		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}
 }

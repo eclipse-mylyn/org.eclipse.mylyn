@@ -26,6 +26,7 @@ import org.eclipse.ui.menus.UIElement;
 
 /**
  * @author Eugene Kuleshov
+ * @since 3.0
  */
 // TODO remove dependency on tasks ui
 public class ContextCapturePauseHandler extends AbstractHandler //

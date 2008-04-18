@@ -15,8 +15,8 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.team.ui.LinkedTaskInfo;
-import org.eclipse.mylyn.tasks.core.ILinkedTaskInfo;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.team.ui.AbstractTaskReference;
 import org.eclipse.team.core.variants.IResourceVariant;
 import org.eclipse.team.internal.ccvs.core.CVSException;
 import org.eclipse.team.internal.ccvs.core.ICVSResource;
@@ -30,7 +30,7 @@ import org.eclipse.team.internal.ccvs.core.resources.RemoteResource;
 public class CvsLinkedTaskInfoAdapterFactory implements IAdapterFactory {
 
 	@SuppressWarnings("unchecked")
-	private static final Class[] ADAPTER_TYPES = new Class[] { ILinkedTaskInfo.class };
+	private static final Class[] ADAPTER_TYPES = new Class[] { AbstractTaskReference.class };
 
 	@SuppressWarnings("unchecked")
 	public Class[] getAdapterList() {
@@ -39,14 +39,14 @@ public class CvsLinkedTaskInfoAdapterFactory implements IAdapterFactory {
 
 	@SuppressWarnings("unchecked")
 	public Object getAdapter(Object object, Class adapterType) {
-		if (!ILinkedTaskInfo.class.equals(adapterType)) {
+		if (!AbstractTaskReference.class.equals(adapterType)) {
 			return null;
 		}
 
 		return adaptFromComment(object);
 	}
 
-	private ILinkedTaskInfo adaptFromComment(Object object) {
+	private AbstractTaskReference adaptFromComment(Object object) {
 		String comment = getCommentForElement(object);
 		if (comment == null) {
 			return null;

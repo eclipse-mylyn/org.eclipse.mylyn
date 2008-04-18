@@ -6,22 +6,21 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.resources.ui;
-
-import java.util.Set;
-
-import org.eclipse.core.resources.IResource;
-import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
-import org.eclipse.mylyn.monitor.core.InteractionEvent;
+package org.eclipse.mylyn.team.ui;
 
 /**
+ * @author Eugene Kuleshov
  * @author Mik Kersten
  * @since 3.0
  */
-public final class ResourcesUi {
+public abstract class AbstractTaskReference {
 
-	public static void addResourceToContext(final Set<IResource> resources, final InteractionEvent.Kind interactionKind) {
-		ResourcesUiBridgePlugin.getInterestUpdater().addResourceToContext(resources, interactionKind);
-	}
+	public abstract String getTaskId();
+
+	public abstract String getTaskUrl();
+
+	public abstract String getRepositoryUrl();
+
+	public abstract String getText();
 
 }

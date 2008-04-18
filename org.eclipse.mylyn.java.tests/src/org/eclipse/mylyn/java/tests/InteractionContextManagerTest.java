@@ -41,7 +41,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Mik Kersten
  */
-public class ContextManagerTest extends AbstractJavaContextTest {
+public class InteractionContextManagerTest extends AbstractJavaContextTest {
 
 	private PackageExplorerPart explorer;
 
@@ -189,6 +189,48 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 		manager.deactivateContext("1");
 		assertTrue(manager.hasContext("1"));
 		manager.getFileForContext("1").delete();
+	}
+
+	public void testDelete() {
+		manager.getFileForContext("1").delete();
+		assertFalse(manager.getFileForContext("1").exists());
+		assertFalse(manager.hasContext("1"));
+		manager.internalActivateContext(manager.loadContext("1"));
+		assertTrue(manager.isContextActive());
+
+		InteractionContext activeContext = ((CompositeInteractionContext) manager.getActiveContext()).getContextMap()
+				.values()
+				.iterator()
+				.next();
+		activeContext.parseEvent(mockSelection());
+		assertTrue(containsHandle(activeContext, MOCK_HANDLE));
+		activeContext.delete(activeContext.get(MOCK_HANDLE));
+		assertFalse(containsHandle(activeContext, MOCK_HANDLE));
+
+		manager.deactivateContext("1");
+		assertFalse(manager.hasContext("1"));
+
+		manager.activateContext("1");
+		activeContext = ((CompositeInteractionContext) manager.getActiveContext()).getContextMap()
+				.values()
+				.iterator()
+				.next();
+		assertFalse(containsHandle(activeContext, MOCK_HANDLE));
+
+		manager.internalActivateContext(manager.loadContext("1"));
+		manager.processInteractionEvent(mockSelection());
+		manager.deactivateContext("1");
+		assertTrue(manager.hasContext("1"));
+		manager.getFileForContext("1").delete();
+	}
+
+	private boolean containsHandle(InteractionContext context, String mockHandle) {
+		for (IInteractionElement element : context.getAllElements()) {
+			if (element.getHandleIdentifier().equals(mockHandle)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public void testEdgeReset() throws CoreException, InterruptedException, InvocationTargetException {
