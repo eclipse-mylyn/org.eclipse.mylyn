@@ -36,9 +36,9 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 
 		// Compute selected tasks
 		List<AbstractTask> selectedTasks = new ArrayList<AbstractTask>(selectedElements.size());
-		for (AbstractTaskContainer elemement : selectedElements) {
-			if (elemement instanceof AbstractTask) {
-				selectedTasks.add((AbstractTask) elemement);
+		for (AbstractTaskContainer element : selectedElements) {
+			if (element instanceof AbstractTask) {
+				selectedTasks.add((AbstractTask) element);
 			}
 		}
 		subMenuManager.setVisible(!selectedTasks.isEmpty());

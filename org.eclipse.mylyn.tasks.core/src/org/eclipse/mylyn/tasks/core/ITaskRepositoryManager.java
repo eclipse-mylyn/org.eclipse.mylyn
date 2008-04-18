@@ -14,6 +14,7 @@ import java.util.Set;
 
 /**
  * @author Steffen Pingel
+ * @since 3.0
  */
 public interface ITaskRepositoryManager {
 

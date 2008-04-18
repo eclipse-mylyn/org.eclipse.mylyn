@@ -46,6 +46,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Frank Becker
  * @author Steffen Pingel
+ * @since 3.0
  */
 public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 

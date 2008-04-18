@@ -33,7 +33,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  * @author Mik Kersten
  * @author Rob Elves
  * @author Jevgeni Holodkov
- * @since 2.0
+ * @since 3.0
  */
 public class TaskRepositoryManager implements ITaskRepositoryManager {
 

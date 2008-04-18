@@ -92,7 +92,7 @@ import org.osgi.framework.ServiceReference;
  * Main entry point for the Tasks UI.
  * 
  * @author Mik Kersten
- * @since 2.0
+ * @since 3.0
  */
 public class TasksUiPlugin extends AbstractUIPlugin {
 

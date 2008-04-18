@@ -71,7 +71,7 @@ import org.eclipse.swt.widgets.Display;
  * @author Mik Kersten
  * @author Rob Elves (task activity)
  * @author Jevgeni Holodkov (insertQueries)
- * @since 2.0
+ * @since 3.0
  */
 public class TaskListManager implements ITaskListManager {
 

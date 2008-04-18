@@ -36,7 +36,7 @@ import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
  * 
  * @author Mik Kersten
  * @author Rob Elves
- * @since 2.0
+ * @since 3.0
  */
 public class TaskList implements ISchedulingRule, ITaskList {
 

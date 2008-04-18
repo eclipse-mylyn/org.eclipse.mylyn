@@ -23,6 +23,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
  * 
  * @author Robert Elves
  * @author Steffen Pingel
+ * @since 3.0
  */
 public class TaskActivityMonitor {
 

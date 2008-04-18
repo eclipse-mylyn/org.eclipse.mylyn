@@ -28,6 +28,7 @@ import org.eclipse.ui.progress.IProgressConstants;
 
 /**
  * @author Steffen Pingel
+ * @since 3.0
  */
 public class TasksJobFactory implements ITasksJobFactory {
 
