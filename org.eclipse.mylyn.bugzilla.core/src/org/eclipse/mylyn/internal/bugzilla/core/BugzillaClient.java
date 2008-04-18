@@ -403,7 +403,7 @@ public class BugzillaClient {
 
 			if (hasAuthenticationCredentials()) {
 				BufferedReader responseReader = new BufferedReader(new InputStreamReader(
-						postMethod.getResponseBodyAsUnzippedStream(), characterEncoding));
+						postMethod.getResponseBodyAsStream(), characterEncoding));
 
 				HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(responseReader, null);
 				for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
@@ -499,7 +499,7 @@ public class BugzillaClient {
 				for (String type : VALID_CONFIG_CONTENT_TYPES) {
 					if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
 						RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory(
-								postMethod.getResponseBodyAsUnzippedStream(), characterEncoding);
+								postMethod.getResponseBodyAsStream(), characterEncoding);
 						int count = queryFactory.performQuery(repositoryUrl.toString(), collector,
 								AbstractTaskDataCollector.MAX_HITS);
 						return count > 0;
@@ -507,7 +507,7 @@ public class BugzillaClient {
 				}
 			}
 
-			parseHtmlError(new BufferedReader(new InputStreamReader(postMethod.getResponseBodyAsUnzippedStream(),
+			parseHtmlError(new BufferedReader(new InputStreamReader(postMethod.getResponseBodyAsStream(),
 					characterEncoding)));
 		} finally {
 			if (postMethod != null) {
@@ -707,7 +707,7 @@ public class BugzillaClient {
 			// httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(CONNECT_TIMEOUT);
 			int status = WebUtil.execute(httpClient, hostConfiguration, postMethod, monitor);
 			if (status == HttpStatus.SC_OK) {
-				InputStreamReader reader = new InputStreamReader(postMethod.getResponseBodyAsUnzippedStream(),
+				InputStreamReader reader = new InputStreamReader(postMethod.getResponseBodyAsStream(),
 						postMethod.getResponseCharSet());
 				BufferedReader bufferedReader = new BufferedReader(reader);
 
@@ -799,7 +799,7 @@ public class BugzillaClient {
 			if (method == null) {
 				throw new IOException("Could not post form, client returned null method.");
 			}
-			BufferedReader in = new BufferedReader(new InputStreamReader(method.getResponseBodyAsUnzippedStream(),
+			BufferedReader in = new BufferedReader(new InputStreamReader(method.getResponseBodyAsStream(),
 					method.getRequestCharSet()));
 			in.mark(1028);
 			HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(in, null);
@@ -1221,7 +1221,7 @@ public class BugzillaClient {
 					for (String type : VALID_CONFIG_CONTENT_TYPES) {
 						if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
 							MultiBugReportFactory factory = new MultiBugReportFactory(
-									method.getResponseBodyAsUnzippedStream(), characterEncoding);
+									method.getResponseBodyAsStream(), characterEncoding);
 							
 							AbstractTaskDataCollector collector2 = new AbstractTaskDataCollector() {
 
@@ -1241,7 +1241,7 @@ public class BugzillaClient {
 				}
 
 				if (!parseable) {
-					parseHtmlError(new BufferedReader(new InputStreamReader(method.getResponseBodyAsUnzippedStream(),
+					parseHtmlError(new BufferedReader(new InputStreamReader(method.getResponseBodyAsStream(),
 							characterEncoding)));
 					break;
 				}

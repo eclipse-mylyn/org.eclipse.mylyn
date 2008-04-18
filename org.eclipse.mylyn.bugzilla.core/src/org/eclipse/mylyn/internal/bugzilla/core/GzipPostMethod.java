@@ -88,22 +88,13 @@ public class GzipPostMethod extends PostMethod {
 		super.getResponseBody();
 	}
 
-	/**
-	 * getResponseBodyAsUnzippedStream checks a usable (decoded if necessary) stream. It checks the headers and decides
-	 * accordingly.
-	 * 
-	 * @return a decoded stream to be used as plain stream.
-	 * @throws IOException
-	 */
-	public InputStream getResponseBodyAsUnzippedStream() throws IOException {
+	@Override
+	public InputStream getResponseBodyAsStream() throws IOException {
 		InputStream input = super.getResponseBodyAsStream();
 		if (gzipReceived) {
-			try {
-				return new java.util.zip.GZIPInputStream(input);
-			} catch (IOException e) {
-				// TODO log this
-			}
+			return new java.util.zip.GZIPInputStream(input);
 		}
 		return input;
 	}
+	
 }

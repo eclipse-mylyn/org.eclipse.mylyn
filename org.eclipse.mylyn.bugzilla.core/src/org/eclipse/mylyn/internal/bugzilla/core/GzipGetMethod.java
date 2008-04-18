@@ -88,21 +88,11 @@ public class GzipGetMethod extends GetMethod {
 		super.getResponseBody();
 	}
 
-	/**
-	 * getResponseBodyAsUnzippedStream checks a usable (decoded if necessary) stream. It checks the headers the headers
-	 * and decides accordingly.
-	 * 
-	 * @return a decoded stream to be used as plain stream.
-	 * @throws IOException
-	 */
-	public InputStream getResponseBodyAsUnzippedStream() throws IOException {
+	@Override
+	public InputStream getResponseBodyAsStream() throws IOException {
 		InputStream input = super.getResponseBodyAsStream();
 		if (gzipReceived) {
-			try {
 				return new java.util.zip.GZIPInputStream(input);
-			} catch (IOException e) {
-				// FIXME log this
-			}
 		}
 		return input;
 	}
