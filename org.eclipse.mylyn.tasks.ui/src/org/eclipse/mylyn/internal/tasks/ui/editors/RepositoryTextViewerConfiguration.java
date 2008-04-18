@@ -52,6 +52,7 @@ import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
  * @author Rob Elves
  * @author Frank Becker
  * @author Steffen Pingel
+ * @since 3.0
  */
 public class RepositoryTextViewerConfiguration extends TextSourceViewerConfiguration {
 

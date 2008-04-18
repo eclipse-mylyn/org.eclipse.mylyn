@@ -34,6 +34,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 
 /**
  * @author Steffen Pingel
+ * @since 3.0
  */
 public class AttachmentUtil {
 

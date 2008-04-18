@@ -60,6 +60,10 @@ public class SwtUtil {
 		}
 	}
 
+	public static FadeJob fastFadeIn(Shell shell, IFadeListener listener) {
+		return new FadeJob(shell, 2 * FADE_IN_INCREMENT, FADE_RESCHEDULE_DELAY, listener);
+	}
+
 	public static FadeJob fadeIn(Shell shell, IFadeListener listener) {
 		return new FadeJob(shell, FADE_IN_INCREMENT, FADE_RESCHEDULE_DELAY, listener);
 	}
