@@ -30,6 +30,8 @@ public interface IInteractionContextManager {
 
 	public static final String ACTIVITY_DELTA_ADDED = "added";
 
+	public static final String ACTIVITY_DELTA_REMOVED = "removed";
+
 	public static final String ACTIVITY_DELTA_STARTED = "started";
 
 	public static final String ACTIVITY_DELTA_STOPPED = "stopped";
@@ -37,6 +39,8 @@ public interface IInteractionContextManager {
 	public static final String ACTIVITY_ORIGINID_WORKBENCH = "org.eclipse.ui.workbench";
 
 	public static final String ACTIVITY_ORIGINID_OS = "os";
+
+	public static final String ACTIVITY_ORIGINID_USER = "user";
 
 	public static final String ACTIVITY_STRUCTUREKIND_LIFECYCLE = "lifecycle";
 
