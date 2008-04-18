@@ -25,10 +25,10 @@ import org.eclipse.core.runtime.Status;
 // API 3.0 review for concurrency bugs
 public class StatusHandler {
 
-	// API 3.0 remove
+	@Deprecated
 	private static final String ID_PLUGIN = "org.eclipse.mylyn";
 
-	// API 3.0 remove
+	@Deprecated
 	private static Set<IStatusHandler> handlers = new HashSet<IStatusHandler>();
 
 	private static IStatusHandler defaultHandler;
@@ -36,7 +36,7 @@ public class StatusHandler {
 	/**
 	 * @since 3.0
 	 */
-	// API 3.0 remove
+	@Deprecated
 	public static IStatusHandler getDefaultStatusHandler() {
 		return defaultHandler;
 	}
@@ -44,7 +44,7 @@ public class StatusHandler {
 	/**
 	 * @since 2.2
 	 */
-	// API 3.0 remove
+	@Deprecated
 	public static Set<IStatusHandler> getStatusHandlers() {
 		return handlers;
 	}
@@ -52,16 +52,16 @@ public class StatusHandler {
 	/**
 	 * @since 3.0
 	 */
-	// API 3.0 remove
+	@Deprecated
 	public static void setDefaultStatusHandler(IStatusHandler handler) {
 		defaultHandler = handler;
 		handlers.add(handler);
 	}
 
-	// API 3.0 remove
 	/**
 	 * @since 3.0
 	 */
+	@Deprecated
 	public static void addStatusHandler(IStatusHandler handler) {
 		if (handler == null) {
 			return;
@@ -72,15 +72,15 @@ public class StatusHandler {
 		handlers.add(handler);
 	}
 
-	// API 3.0 remove
 	/**
 	 * @since 3.0
 	 */
+	@Deprecated
 	public static void removeStatusHandler(IStatusHandler handler) {
 		internalRemoveStatusHandler(handler, true);
 	}
 
-	// API 3.0 remove
+	@Deprecated
 	private static void internalRemoveStatusHandler(IStatusHandler handler, boolean restoreDefault) {
 		if (handler == null) {
 			return;
