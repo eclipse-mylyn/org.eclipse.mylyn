@@ -715,7 +715,7 @@ public class TracWebClient extends AbstractTracClient {
 	}
 
 	private String getText(HtmlStreamTokenizer tokenizer) throws IOException, ParseException {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
 			if (token.getType() == Token.TEXT) {
 				sb.append(token.toString());

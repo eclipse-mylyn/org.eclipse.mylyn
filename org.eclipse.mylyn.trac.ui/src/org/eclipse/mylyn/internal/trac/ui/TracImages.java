@@ -40,7 +40,7 @@ public class TracImages {
 			throw new MalformedURLException();
 		}
 
-		StringBuffer buffer = new StringBuffer(prefix);
+		StringBuilder buffer = new StringBuilder(prefix);
 		if (prefix != "") {
 			buffer.append('/');
 		}
