@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.resources.ui;
+package org.eclipse.mylyn.internal.context.ui;
 
 /**
  * Tag interface for editors that do not get closed when a context is deactivated. The editor can specify whether or not

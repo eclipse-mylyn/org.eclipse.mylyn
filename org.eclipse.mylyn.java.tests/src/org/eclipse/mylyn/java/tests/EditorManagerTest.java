@@ -29,7 +29,6 @@ import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylyn.internal.java.ui.ActiveFoldingEditorTracker;
 import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
 import org.eclipse.mylyn.internal.java.ui.JavaUiBridgePlugin;
-import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -65,7 +64,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		ResourcesUiBridgePlugin.getEditorManager().closeAllEditors();
+		ContextUiPlugin.getEditorManager().closeAllEditors();
 
 		ContextUiPlugin.getDefault().getPreferenceStore().setValue(
 				ContextUiPrefContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING,
@@ -134,8 +133,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 
 		IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), fileA, true);
 		elementA = ContextCore.getContextManager().getElement(structureBridge.getHandleIdentifier(fileA));
-		float selectionFactor = ContextCore.getCommonContextScaling()
-				.get(InteractionEvent.Kind.SELECTION);
+		float selectionFactor = ContextCore.getCommonContextScaling().get(InteractionEvent.Kind.SELECTION);
 		// TODO: should use selectionFactor test instead
 		assertTrue(elementA.getInterest().getValue() <= selectionFactor && elementA.getInterest().isInteresting());
 //		assertEquals(selectionFactor, elementA.getInterest().getValue());
@@ -150,7 +148,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 
 	public void testWaitingListenersDoNotLeakOnEditorActivation() throws JavaModelException {
 		manager.deleteContext(contextId);
-		ResourcesUiBridgePlugin.getEditorManager().closeAllEditors();
+		ContextUiPlugin.getEditorManager().closeAllEditors();
 
 		int initialNumListeners = manager.getListeners().size();
 		manager.activateContext(contextId);
@@ -176,7 +174,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 	}
 
 	public void testEditorTrackerListenerRegistration() throws JavaModelException {
-		ResourcesUiBridgePlugin.getEditorManager().closeAllEditors();
+		ContextUiPlugin.getEditorManager().closeAllEditors();
 
 		ActiveFoldingEditorTracker tracker = JavaUiBridgePlugin.getDefault().getEditorTracker();
 		assertTrue(tracker.getEditorListenerMap().isEmpty());
@@ -192,7 +190,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 		assertEquals(numListeners + 1, ContextCorePlugin.getContextManager().getListeners().size());
 		assertEquals(1, page.getEditorReferences().length);
 		assertEquals(1, tracker.getEditorListenerMap().size());
-		ResourcesUiBridgePlugin.getEditorManager().closeAllEditors();
+		ContextUiPlugin.getEditorManager().closeAllEditors();
 
 		assertEquals(numListeners, ContextCorePlugin.getContextManager().getListeners().size());
 		assertEquals(0, page.getEditorReferences().length);
@@ -211,7 +209,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 
 	@SuppressWarnings("deprecation")
 	public void testAutoCloseWithDecay() throws JavaModelException, InvocationTargetException, InterruptedException {
-		ResourcesUiBridgePlugin.getEditorManager().closeAllEditors();
+		ContextUiPlugin.getEditorManager().closeAllEditors();
 		assertEquals(0, page.getEditors().length);
 		AbstractContextUiBridge bridge = ContextUi.getUiBridge(JavaStructureBridge.CONTENT_TYPE);
 		IMethod m1 = type1.createMethod("void m111() { }", null, true, null);
@@ -240,7 +238,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 
 	@SuppressWarnings("deprecation")
 	public void testAutoClose() throws JavaModelException, InvocationTargetException, InterruptedException {
-		ResourcesUiBridgePlugin.getEditorManager().closeAllEditors();
+		ContextUiPlugin.getEditorManager().closeAllEditors();
 		assertEquals(0, page.getEditors().length);
 		AbstractContextUiBridge bridge = ContextUi.getUiBridge(JavaStructureBridge.CONTENT_TYPE);
 		IMethod m1 = type1.createMethod("void m111() { }", null, true, null);

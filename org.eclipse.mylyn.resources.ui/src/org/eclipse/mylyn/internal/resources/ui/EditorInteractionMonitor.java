@@ -22,6 +22,7 @@ import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.ContextUi;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
+import org.eclipse.mylyn.internal.context.ui.IContextAwareEditor;
 import org.eclipse.mylyn.monitor.core.CoreUtil;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.ui.AbstractEditorTracker;
@@ -36,7 +37,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class EditorInteractionMonitor extends AbstractEditorTracker {
 
-	public static final String SOURCE_ID = "org.eclipse.mylyn.ide.editor.tracker.interest";
+	public static final String SOURCE_ID = "org.eclipse.mylyn.resources.ui.editor.tracker.interest";
 
 	@Override
 	protected void editorBroughtToTop(IEditorPart part) {

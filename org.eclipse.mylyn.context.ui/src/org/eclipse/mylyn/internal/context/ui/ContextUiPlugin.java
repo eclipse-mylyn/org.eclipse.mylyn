@@ -269,6 +269,8 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	private final AtomicBoolean lazyStarted = new AtomicBoolean(false);
 
+	private ContextEditorManager editorManager;
+
 	public ContextUiPlugin() {
 		INSTANCE = this;
 	}
@@ -311,6 +313,9 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			TasksUi.getTaskListManager().addActivityListener(perspectiveManager);
 			MonitorUiPlugin.getDefault().addWindowPerspectiveListener(perspectiveManager);
 			TasksUi.getTaskListManager().addActivityListener(TASK_ACTIVATION_LISTENER);
+
+			editorManager = new ContextEditorManager();
+			ContextCore.getContextManager().addListener(editorManager);
 		} catch (Exception e) {
 			StatusHandler.fail(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Context UI initialization failed",
 					e));
@@ -343,6 +348,10 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	}
 
 	private void lazyStop() {
+		if (editorManager != null) {
+			ContextCore.getContextManager().removeListener(editorManager);
+		}
+
 		ContextCore.getContextManager().removeListener(viewerManager);
 		MonitorUiPlugin.getDefault().removeWindowPartListener(contentOutlineManager);
 
@@ -716,6 +725,10 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		} else {
 			return Collections.emptySet();
 		}
+	}
+
+	public static ContextEditorManager getEditorManager() {
+		return INSTANCE.editorManager;
 	}
 
 	public static ContextPerspectiveManager getPerspectiveManager() {

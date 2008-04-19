@@ -65,19 +65,6 @@
 			</includes>
 		</viewerContentBinding>
 	</extension>
-   
-   	<extension point="org.eclipse.ui.navigator.navigatorContent">
-		<commonFilter
-			id="org.eclipse.mylyn.resources.ui.ui.navigator.filters.tasks"
-			name="Task List Elements (Recommended)"
-			description="Hides Task List Elements from Common Navigators" 
-			activeByDefault="true">
-			<filterExpression>
-				<instanceof
-					value="org.eclipse.mylyn.tasks.core.AbstractTaskContainer" />
-			</filterExpression>
-		</commonFilter>
-	</extension>
 
    <extension point="org.eclipse.core.runtime.preferences">
       <initializer class="org.eclipse.mylyn.internal.resources.ui.ResourcesUiPreferenceInitializer"/>

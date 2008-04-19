@@ -55,8 +55,6 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 
 	private ResourceChangeMonitor resourceChangeMonitor;
 
-	private ContextEditorManager editorManager;
-
 	private ResourceInteractionMonitor resourceInteractionMonitor;
 
 	private EditorInteractionMonitor interestEditorTracker;
@@ -89,11 +87,9 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 	 */
 	protected void lazyStart() {
 		resourceChangeMonitor = new ResourceChangeMonitor();
-		editorManager = new ContextEditorManager();
 		resourceInteractionMonitor = new ResourceInteractionMonitor();
 		interestEditorTracker = new EditorInteractionMonitor();
 
-		ContextCore.getContextManager().addListener(editorManager);
 		MonitorUi.getSelectionMonitors().add(resourceInteractionMonitor);
 
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceChangeMonitor,
@@ -105,9 +101,6 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 	protected void lazyStop() {
 		if (resourceChangeMonitor != null) {
 			ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceChangeMonitor);
-		}
-		if (editorManager != null) {
-			ContextCore.getContextManager().removeListener(editorManager);
 		}
 		if (resourceInteractionMonitor != null) {
 			MonitorUi.getSelectionMonitors().remove(resourceInteractionMonitor);
@@ -198,10 +191,6 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 
 	public void setResourceMonitoringEnabled(boolean enabled) {
 		resourceChangeMonitor.setEnabled(enabled);
-	}
-
-	public static ContextEditorManager getEditorManager() {
-		return INSTANCE.editorManager;
 	}
 
 	public static ResourcesUiBridgePlugin getDefault() {

@@ -16,13 +16,14 @@ import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiPreferenceInitializer;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -36,6 +37,8 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
  * @author Mik Kersten
  */
 public class FocusedResourcesPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+
+	public static final Color GRAY = new Color(Display.getDefault(), 100, 100, 100);
 
 	private static final String LABEL_AUTOMATIC = "[automatic]";
 
@@ -156,7 +159,7 @@ public class FocusedResourcesPreferencePage extends PreferencePage implements IW
 		for (String pattern : forced) {
 			TableItem item = new TableItem(ignoreTable, SWT.NONE);
 			item.setText(pattern + " " + LABEL_AUTOMATIC);
-			item.setForeground(TaskListColorsAndFonts.GRAY);
+			item.setForeground(GRAY);
 		}
 	}
 
@@ -169,7 +172,7 @@ public class FocusedResourcesPreferencePage extends PreferencePage implements IW
 		}
 		String pattern = dialog.getValue();
 		if (pattern.equals("")) {
-			return; //$NON-NLS-1$
+			return;
 		}
 		TableItem item = new TableItem(ignoreTable, SWT.NONE);
 		item.setText(pattern);
