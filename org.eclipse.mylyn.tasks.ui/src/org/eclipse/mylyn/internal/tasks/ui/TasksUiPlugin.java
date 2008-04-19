@@ -64,11 +64,11 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
-import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
+import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
-import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
+import org.eclipse.mylyn.tasks.core.TaskActivationAdapter;
 import org.eclipse.mylyn.tasks.core.TaskComment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
@@ -235,7 +235,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		EDITOR, INTERNAL_BROWSER, EXTERNAL_BROWSER;
 	}
 
-	private static ITaskActivityListener CONTEXT_TASK_ACTIVITY_LISTENER = new TaskActivityAdapter() {
+	private static ITaskActivationListener CONTEXT_TASK_ACTIVATION_LISTENER = new TaskActivationAdapter() {
 
 		@Override
 		public void taskActivated(final AbstractTask task) {
@@ -247,15 +247,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			ContextCore.getContextManager().deactivateContext(task.getHandleIdentifier());
 		}
 
-		@Override
-		public void activityChanged() {
-			// ignore
-		}
-
-		@Override
-		public void taskListRead() {
-			// ignore
-		}
 	};
 
 	private static ITaskListNotificationProvider REMINDER_NOTIFICATION_PROVIDER = new ITaskListNotificationProvider() {
@@ -517,7 +508,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 					repositoryManager);
 
 			// NOTE: task list must be read before Task List view can be initialized
-			taskListManager.addActivityListener(CONTEXT_TASK_ACTIVITY_LISTENER);
+			taskListManager.addActivationListener(CONTEXT_TASK_ACTIVATION_LISTENER);
 			// readExistingOrCreateNewList() must be called after repositories have been read in
 			taskListManager.readExistingOrCreateNewList();
 			initialized = true;

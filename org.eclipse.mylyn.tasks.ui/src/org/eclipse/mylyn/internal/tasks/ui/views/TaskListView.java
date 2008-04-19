@@ -87,6 +87,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeAutomaticallyActio
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskListElementPropertiesAction;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskListChangeAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDragSourceListener;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListTableSorter.SortByIndex;
 import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
@@ -95,8 +96,10 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
+import org.eclipse.mylyn.tasks.core.TaskActivationAdapter;
 import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
@@ -391,6 +394,20 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	private final ITaskActivityListener TASK_ACTIVITY_LISTENER = new TaskActivityAdapter() {
 
 		@Override
+		public void activityReset() {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					if (ScheduledPresentation.ID.equals(getCurrentPresentation().getId())) {
+						refreshJob.refresh();
+					}
+				}
+			});
+		}
+	};
+
+	private final ITaskActivationListener TASK_ACTIVATION_LISTENER = new TaskActivationAdapter() {
+
+		@Override
 		public void taskActivated(final AbstractTask task) {
 			if (task != null) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -415,16 +432,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			});
 		}
 
-		@Override
-		public void activityChanged() {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					if (ScheduledPresentation.ID.equals(getCurrentPresentation().getId())) {
-						refreshJob.refresh();
-					}
-				}
-			});
-		}
+	};
+
+	private final ITaskListChangeListener TASKLIST_CHANGE_LISTENER = new TaskListChangeAdapter() {
 
 		@Override
 		public void taskListRead() {
@@ -434,10 +444,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				}
 			});
 		}
-	};
 
-	private final ITaskListChangeListener TASK_REFERESH_LISTENER = new ITaskListChangeListener() {
-
+		@Override
 		public void containersChanged(final Set<TaskContainerDelta> deltas) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
@@ -567,16 +575,17 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	public TaskListView() {
 		PlatformUI.getWorkbench().getWorkingSetManager().addPropertyChangeListener(this);
-
-		TasksUi.getTaskListManager().addActivityListener(TASK_ACTIVITY_LISTENER);
-		TasksUi.getTaskListManager().getTaskList().addChangeListener(TASK_REFERESH_LISTENER);
+		TasksUi.getTaskListManager().addActivationListener(TASK_ACTIVATION_LISTENER);
+		TasksUiPlugin.getTaskActivityManager().addActivityListener(TASK_ACTIVITY_LISTENER);
+		TasksUi.getTaskListManager().getTaskList().addChangeListener(TASKLIST_CHANGE_LISTENER);
 	}
 
 	@Override
 	public void dispose() {
 		super.dispose();
-		TasksUi.getTaskListManager().getTaskList().removeChangeListener(TASK_REFERESH_LISTENER);
-		TasksUi.getTaskListManager().removeActivityListener(TASK_ACTIVITY_LISTENER);
+		TasksUi.getTaskListManager().getTaskList().removeChangeListener(TASKLIST_CHANGE_LISTENER);
+		TasksUi.getTaskListManager().removeActivationListener(TASK_ACTIVATION_LISTENER);
+		TasksUiPlugin.getTaskActivityManager().removeActivityListener(TASK_ACTIVITY_LISTENER);
 
 		PlatformUI.getWorkbench().getWorkingSetManager().removePropertyChangeListener(this);
 		if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {

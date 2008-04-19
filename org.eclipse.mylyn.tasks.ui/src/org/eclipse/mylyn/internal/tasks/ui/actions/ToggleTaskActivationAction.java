@@ -12,13 +12,13 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
+import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Mik Kersten
  */
-public class ToggleTaskActivationAction extends Action implements ITaskActivityListener {
+public class ToggleTaskActivationAction extends Action implements ITaskActivationListener {
 
 	public static final String ID = "org.eclipse.mylyn.tasks.ui.actions.task.activation.toggle";
 
@@ -42,11 +42,11 @@ public class ToggleTaskActivationAction extends Action implements ITaskActivityL
 		setId(ID);
 		setImageDescriptor(TasksUiImages.TASK_ACTIVE_CENTERED);
 		update();
-		TasksUi.getTaskListManager().addActivityListener(this);
+		TasksUi.getTaskListManager().addActivationListener(this);
 	}
 
 	public void dispose() {
-		TasksUi.getTaskListManager().removeActivityListener(this);
+		TasksUi.getTaskListManager().addActivationListener(this);
 	}
 
 	private void update() {
@@ -71,10 +71,6 @@ public class ToggleTaskActivationAction extends Action implements ITaskActivityL
 //		toolBarManager.add(this);
 	}
 
-	public void activityChanged() {
-		// ignore
-	}
-
 	public void taskActivated(AbstractTask task) {
 		update();
 		toolBarManager.update(true);
@@ -83,10 +79,6 @@ public class ToggleTaskActivationAction extends Action implements ITaskActivityL
 	public void taskDeactivated(AbstractTask task) {
 		update();
 		toolBarManager.update(true);
-	}
-
-	public void taskListRead() {
-		// ignore
 	}
 
 	public void preTaskActivated(AbstractTask task) {

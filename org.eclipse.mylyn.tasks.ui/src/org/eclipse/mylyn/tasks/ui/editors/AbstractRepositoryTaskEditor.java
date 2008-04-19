@@ -96,6 +96,7 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryAttachmentEditorInp
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskOutlineNode;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskOutlinePage;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskSelection;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskListChangeAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskUrlHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.views.ResetRepositoryConfigurationAction;
 import org.eclipse.mylyn.monitor.core.DateUtil;
@@ -397,8 +398,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 	};
 
-	private final ITaskListChangeListener TASKLIST_CHANGE_LISTENER = new ITaskListChangeListener() {
+	private final ITaskListChangeListener TASKLIST_CHANGE_LISTENER = new TaskListChangeAdapter() {
 
+		@Override
 		public void containersChanged(Set<TaskContainerDelta> containers) {
 			AbstractTask taskToRefresh = null;
 			for (TaskContainerDelta taskContainerDelta : containers) {

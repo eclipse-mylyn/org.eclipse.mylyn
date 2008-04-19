@@ -8,18 +8,19 @@
 
 package org.eclipse.mylyn.tasks.core;
 
-import java.util.Set;
 
 /**
- * Listener for task list modifications and task content modifications.
- * 
- * @author Mik Kersten
- * @since 2.0
+ * @author Rob Elves
+ * @since 3.0
  */
-public interface ITaskListChangeListener {
+public interface ITaskActivationListener {
 
-	public abstract void containersChanged(Set<TaskContainerDelta> containers);
+	public abstract void preTaskActivated(AbstractTask task);
 
-	public abstract void taskListRead();
+	public abstract void preTaskDeactivated(AbstractTask task);
+
+	public abstract void taskActivated(AbstractTask task);
+
+	public abstract void taskDeactivated(AbstractTask task);
 
 }

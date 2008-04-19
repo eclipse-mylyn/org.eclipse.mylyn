@@ -12,7 +12,7 @@ package org.eclipse.mylyn.tasks.core;
  * @Since 2.3
  * @author Rob Elves
  */
-public interface ITaskTimingListener {
+interface ITaskTimingListener {
 
 	/**
 	 * Warning: This is called frequently (i.e. every 15s) Implementers are responsible for launching jobs for long

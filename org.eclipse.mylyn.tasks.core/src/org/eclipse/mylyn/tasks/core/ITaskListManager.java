@@ -16,7 +16,7 @@ public interface ITaskListManager {
 
 	public abstract void activateTask(AbstractTask task);
 
-	public abstract void addActivityListener(ITaskActivityListener activityListener);
+	public abstract void addActivationListener(ITaskActivationListener activityListener);
 
 	public abstract void deactivateAllTasks();
 
@@ -26,6 +26,6 @@ public interface ITaskListManager {
 
 	public abstract ITaskList getTaskList();
 
-	public abstract void removeActivityListener(ITaskActivityListener activityListener);
+	public abstract void removeActivationListener(ITaskActivationListener activityListener);
 
 }

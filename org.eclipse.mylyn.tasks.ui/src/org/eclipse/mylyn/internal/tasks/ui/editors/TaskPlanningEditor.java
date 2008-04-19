@@ -37,8 +37,9 @@ import org.eclipse.mylyn.monitor.core.DateUtil;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.monitor.ui.MonitorUi;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
-import org.eclipse.mylyn.tasks.core.ITaskTimingListener;
+import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
@@ -147,8 +148,9 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private final TaskEditor parentEditor;
 
-	private final ITaskListChangeListener TASK_LIST_LISTENER = new ITaskListChangeListener() {
+	private final ITaskListChangeListener TASK_LIST_LISTENER = new TaskListChangeAdapter() {
 
+		@Override
 		public void containersChanged(Set<TaskContainerDelta> containers) {
 			for (TaskContainerDelta taskContainerDelta : containers) {
 				if (taskContainerDelta.getContainer() instanceof AbstractTask) {
@@ -175,7 +177,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private ToggleTaskActivationAction activateAction;
 
-	private ITaskTimingListener timingListener;
+	private ITaskActivityListener timingListener;
 
 	public TaskPlanningEditor(TaskEditor editor) {
 		super(editor, ID, "Planning");
@@ -781,8 +783,9 @@ public class TaskPlanningEditor extends TaskFormPage {
 		elapsedTimeText.setLayoutData(td);
 		elapsedTimeText.setEditable(false);
 
-		timingListener = new ITaskTimingListener() {
+		timingListener = new TaskActivityAdapter() {
 
+			@Override
 			public void elapsedTimeUpdated(AbstractTask task, long newElapsedTime) {
 				if (task.equals(TaskPlanningEditor.this.task)) {
 					String elapsedTimeString = NO_TIME_ELAPSED;
@@ -810,7 +813,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 			}
 		};
 
-		TasksUiPlugin.getTaskListManager().addTimingListener(timingListener);
+		TasksUiPlugin.getTaskActivityManager().addActivityListener(timingListener);
 
 		ImageHyperlink resetActivityTimeButton = toolkit.createImageHyperlink(nameValueComp, SWT.NONE);
 		resetActivityTimeButton.setImage(TasksUiImages.getImage(TasksUiImages.REMOVE));
@@ -953,7 +956,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 	@Override
 	public void dispose() {
 		if (timingListener != null) {
-			TasksUiPlugin.getTaskListManager().removeTimingListener(timingListener);
+			TasksUiPlugin.getTaskActivityManager().removeActivityListener(timingListener);
 		}
 		TasksUi.getTaskListManager().getTaskList().removeChangeListener(TASK_LIST_LISTENER);
 	}

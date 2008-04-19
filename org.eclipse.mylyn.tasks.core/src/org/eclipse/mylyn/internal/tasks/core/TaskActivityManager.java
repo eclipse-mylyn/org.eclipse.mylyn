@@ -27,11 +27,12 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskListManager;
-import org.eclipse.mylyn.tasks.core.ITaskTimingListener;
 
 /**
- * Manager for Task timing, scheduling, due dates, and activation history
+ * Manages task elapsed time, scheduling, due dates, and the date range containers
+ * 
  * 
  * TODO: Consider extracting a TaskPlanningManager to hold scheduling and calendar ranges
  * 
@@ -60,6 +61,8 @@ public class TaskActivityManager {
 
 	private static final String DESCRIPTION_PAST = "Past";
 
+	private final List<ITaskActivityListener> activityListeners = new ArrayList<ITaskActivityListener>();
+
 	private final SortedMap<Calendar, Set<AbstractTask>> scheduledTasks = Collections.synchronizedSortedMap(new TreeMap<Calendar, Set<AbstractTask>>());
 
 	private final SortedMap<Calendar, Set<AbstractTask>> dueTasks = Collections.synchronizedSortedMap(new TreeMap<Calendar, Set<AbstractTask>>());
@@ -73,8 +76,6 @@ public class TaskActivityManager {
 	private final List<ScheduledTaskContainer> scheduleWeekDays = new ArrayList<ScheduledTaskContainer>();
 
 	private final ArrayList<ScheduledTaskContainer> scheduleContainers = new ArrayList<ScheduledTaskContainer>();
-
-	private final List<ITaskTimingListener> timingListeners = new ArrayList<ITaskTimingListener>();
 
 	private ScheduledTaskContainer scheduledThisWeek;
 
@@ -155,18 +156,28 @@ public class TaskActivityManager {
 		return endHour;
 	}
 
-	private void clear() {
+	public void addActivityListener(ITaskActivityListener listener) {
+		activityListeners.add(listener);
+	}
+
+	public void removeActivityListener(ITaskActivityListener listener) {
+		activityListeners.remove(listener);
+	}
+
+	public void clear(Date date) {
+		startTime = date;
 		dueTasks.clear();
 		scheduledTasks.clear();
 		activeTasks.clear();
 		taskElapsedTimeMap.clear();
+		setupCalendarRanges();
 	}
 
-	public void reloadTimingData(Date date) {
-		startTime = date;
-		clear();
+	public void reloadTimingData() {
 		reloadScheduledData();
-		setupCalendarRanges();
+		for (ITaskActivityListener listener : activityListeners) {
+			listener.activityReset();
+		}
 	}
 
 	/** public for testing * */
@@ -213,7 +224,7 @@ public class TaskActivityManager {
 			for (Calendar cal : new HashSet<Calendar>(activityMap.keySet())) {
 				activityMap.remove(cal);
 			}
-			for (ITaskTimingListener listener : new ArrayList<ITaskTimingListener>(timingListeners)) {
+			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
 				try {
 					listener.elapsedTimeUpdated(task, getElapsedTime(task));
 				} catch (Throwable t) {
@@ -262,7 +273,7 @@ public class TaskActivityManager {
 
 		long totalElapsed = getElapsedTime(activityMap);
 
-		for (ITaskTimingListener listener : new ArrayList<ITaskTimingListener>(timingListeners)) {
+		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
 			try {
 				listener.elapsedTimeUpdated(activatedTask, totalElapsed);
 			} catch (Throwable t) {
@@ -831,14 +842,6 @@ public class TaskActivityManager {
 			return TaskActivityUtil.isThisWeek(cal);
 		}
 		return false;
-	}
-
-	public void addTimingListener(ITaskTimingListener listener) {
-		timingListeners.add(listener);
-	}
-
-	public void removeTimingListener(ITaskTimingListener listener) {
-		timingListeners.remove(listener);
 	}
 
 	public boolean isFloatingThisWeek(AbstractTask singleTaskSelection) {

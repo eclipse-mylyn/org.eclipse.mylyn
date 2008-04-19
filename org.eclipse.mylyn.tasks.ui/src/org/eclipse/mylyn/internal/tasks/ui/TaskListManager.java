@@ -51,14 +51,11 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
+import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
 import org.eclipse.mylyn.tasks.core.ITaskList;
-import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.ITaskListManager;
-import org.eclipse.mylyn.tasks.core.ITaskTimingListener;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
-import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -82,7 +79,7 @@ public class TaskListManager implements ITaskListManager {
 
 	private static final long ROLLOVER_DELAY = 30 * MINUTE;
 
-	private final List<ITaskActivityListener> activityListeners = new ArrayList<ITaskActivityListener>();
+	private final List<ITaskActivationListener> taskActivationListeners = new ArrayList<ITaskActivationListener>();
 
 	private final TaskListWriter taskListWriter;
 
@@ -100,35 +97,40 @@ public class TaskListManager implements ITaskListManager {
 
 	private AbstractTask activeTask;
 
-	/**
-	 * public for testing
-	 * 
-	 * @deprecated use TaskActivityManager.getStartTime()
-	 */
-	@Deprecated
-	public Date startTime = new Date();
-
-	private final ITaskListChangeListener CHANGE_LISTENER = new ITaskListChangeListener() {
-
-		public void containersChanged(Set<TaskContainerDelta> containers) {
-			for (TaskContainerDelta taskContainerDelta : containers) {
-				if (taskContainerDelta.getContainer() instanceof AbstractTask) {
-					switch (taskContainerDelta.getKind()) {
-					case REMOVED:
-						TaskListManager.this.resetAndRollOver();
-						return;
-					}
-				}
-			}
-		}
-	};
+//	private final ITaskListChangeListener CHANGE_LISTENER = new ITaskListChangeListener() {
+//
+//		public void containersChanged(Set<TaskContainerDelta> containers) {
+//			for (TaskContainerDelta taskContainerDelta : containers) {
+//				if (taskContainerDelta.getContainer() instanceof AbstractTask) {
+//					switch (taskContainerDelta.getKind()) {
+//					case REMOVED:
+//						TaskListManager.this.resetAndRollOver();
+//						return;
+//					}
+//				}
+//			}
+//		}
+//
+//		public void taskListRead() {
+//			// ignore
+//
+//		}
+//	};
 
 	public TaskListManager(TaskListWriter taskListWriter, File file) {
 		this.taskListFile = file;
 		this.taskListWriter = taskListWriter;
 		timer = new Timer();
 		timer.schedule(new RolloverCheck(), ROLLOVER_DELAY, ROLLOVER_DELAY);
-		taskList.addChangeListener(CHANGE_LISTENER);
+		//taskList.addChangeListener(CHANGE_LISTENER);
+	}
+
+	public void addActivationListener(ITaskActivationListener listener) {
+		taskActivationListeners.add(listener);
+	}
+
+	public void removeActivationListener(ITaskActivationListener listener) {
+		taskActivationListeners.remove(listener);
 	}
 
 	public ITaskList resetTaskList() {
@@ -258,16 +260,18 @@ public class TaskListManager implements ITaskListManager {
 		try {
 			if (taskListFile.exists()) {
 				prepareOrphanContainers();
+				taskList.readStart();
 				taskListWriter.readTaskList(taskList, taskListFile, TasksUiPlugin.getTaskDataManager());
+				taskList.readComplete();
 			} else {
 				resetTaskList();
 			}
 			taskListInitialized = true;
 			// invoked from initActivityHistory()
 			//resetAndRollOver();
-			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
-				listener.taskListRead();
-			}
+//			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
+//				listener.taskListRead();
+//			}
 		} catch (Throwable t) {
 			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 					"Could not read task list, consider restoring via view menu", t));
@@ -306,27 +310,29 @@ public class TaskListManager implements ITaskListManager {
 		return taskList;
 	}
 
-	public void addActivityListener(ITaskActivityListener listener) {
-		activityListeners.add(listener);
-	}
+//	public void addActivityListener(ITaskActivityListener listener) {
+//		activityListeners.add(listener);
+//	}
+//
+//	public void removeActivityListener(ITaskActivityListener listener) {
+//		activityListeners.remove(listener);
+//	}
 
-	public void removeActivityListener(ITaskActivityListener listener) {
-		activityListeners.remove(listener);
-	}
-
-	/**
-	 * @API-3.0 this should be moved to TaskActivityManager
-	 */
-	public void addTimingListener(ITaskTimingListener listener) {
-		TasksUiPlugin.getTaskActivityManager().addTimingListener(listener);
-	}
-
-	/**
-	 * @API-3.0 this should be moved to TaskActivityManager
-	 */
-	public void removeTimingListener(ITaskTimingListener listener) {
-		TasksUiPlugin.getTaskActivityManager().removeTimingListener(listener);
-	}
+//	/**
+//	 * @deprecated use <code>TaskActivityManager.addTimingListener</code>
+//	 */
+//	@Deprecated
+//	public void addTimingListener(ITaskTimingListener listener) {
+//		TasksUiPlugin.getTaskActivityManager().addTimingListener(listener);
+//	}
+//
+//	/**
+//	 * @deprecated use <code>TaskActivityManager.removeTimingListener</code>
+//	 */
+//	@Deprecated
+//	public void removeTimingListener(ITaskTimingListener listener) {
+//		TasksUiPlugin.getTaskActivityManager().removeTimingListener(listener);
+//	}
 
 	public void activateTask(AbstractTask task) {
 		activateTask(task, true);
@@ -337,7 +343,7 @@ public class TaskListManager implements ITaskListManager {
 		deactivateAllTasks();
 
 		// notify that a task is about to be activated
-		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
+		for (ITaskActivationListener listener : new ArrayList<ITaskActivationListener>(taskActivationListeners)) {
 			try {
 				listener.preTaskActivated(task);
 			} catch (Throwable t) {
@@ -352,7 +358,7 @@ public class TaskListManager implements ITaskListManager {
 			taskActivityHistory.addTask(task);
 		}
 
-		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
+		for (ITaskActivationListener listener : new ArrayList<ITaskActivationListener>(taskActivationListeners)) {
 			try {
 				listener.taskActivated(task);
 			} catch (Throwable t) {
@@ -373,7 +379,7 @@ public class TaskListManager implements ITaskListManager {
 
 		if (task.isActive() && task == activeTask) {
 			// notify that a task is about to be deactivated
-			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
+			for (ITaskActivationListener listener : new ArrayList<ITaskActivationListener>(taskActivationListeners)) {
 				try {
 					listener.preTaskDeactivated(task);
 				} catch (Throwable t) {
@@ -385,7 +391,7 @@ public class TaskListManager implements ITaskListManager {
 			activeTask.setActive(false);
 			activeTask = null;
 
-			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
+			for (ITaskActivationListener listener : new ArrayList<ITaskActivationListener>(taskActivationListeners)) {
 				try {
 					listener.taskDeactivated(task);
 				} catch (Throwable t) {
@@ -427,18 +433,15 @@ public class TaskListManager implements ITaskListManager {
 	 * public for testing TODO: Move to TaskActivityManager
 	 */
 	public void resetAndRollOver(Date startDate) {
-		startTime = startDate;
 		if (isTaskListInitialized()) {
-			TasksUiPlugin.getTaskActivityManager().reloadTimingData(startDate);
+			TasksUiPlugin.getTaskActivityManager().clear(startDate);
 			List<InteractionEvent> events = ContextCore.getContextManager()
 					.getActivityMetaContext()
 					.getInteractionHistory();
 			for (InteractionEvent event : events) {
 				TasksUiPlugin.getTaskActivityManager().parseInteractionEvent(event);
 			}
-		}
-		for (ITaskActivityListener listener : activityListeners) {
-			listener.activityChanged();
+			TasksUiPlugin.getTaskActivityManager().reloadTimingData();
 		}
 	}
 
@@ -449,7 +452,7 @@ public class TaskListManager implements ITaskListManager {
 			if (!Platform.isRunning() || ContextCorePlugin.getDefault() == null) {
 				return;
 			} else {
-				Calendar now = Calendar.getInstance();
+				Calendar now = TaskActivityUtil.getCalendar();
 				ScheduledTaskContainer thisWeek = TasksUiPlugin.getTaskActivityManager().getActivityThisWeek();
 				if (!thisWeek.includes(now)) {
 					resetAndRollOver();

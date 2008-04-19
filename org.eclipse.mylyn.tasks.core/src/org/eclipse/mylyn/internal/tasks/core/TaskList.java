@@ -56,6 +56,8 @@ public class TaskList implements ISchedulingRule, ITaskList {
 
 	private Map<String, AbstractTask> tasks;
 
+	private boolean readComplete;
+
 	public TaskList() {
 		reset();
 	}
@@ -634,6 +636,17 @@ public class TaskList implements ISchedulingRule, ITaskList {
 			categories.put(defaultCategory.getHandleIdentifier(), defaultCategory);
 		} finally {
 			lock.release();
+		}
+	}
+
+	public void readStart() {
+		readComplete = false;
+	}
+
+	public void readComplete() {
+		readComplete = true;
+		for (ITaskListChangeListener listener : changeListeners) {
+			listener.taskListRead();
 		}
 	}
 

@@ -31,8 +31,8 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
-import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
+import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
+import org.eclipse.mylyn.tasks.core.TaskActivationAdapter;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
@@ -82,7 +82,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 
 	private Point p;
 
-	private final ITaskActivityListener TASK_CHANGE_LISTENER = new TaskActivityAdapter() {
+	private final ITaskActivationListener TASK_CHANGE_LISTENER = new TaskActivationAdapter() {
 
 		@Override
 		public void taskActivated(AbstractTask task) {
@@ -96,13 +96,6 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 			indicateNoActiveTask();
 		}
 
-		@Override
-		public void activityChanged() {
-		}
-
-		@Override
-		public void taskListRead() {
-		}
 	};
 
 	private final IPropertyChangeListener SHOW_TRIM_LISTENER = new IPropertyChangeListener() {
@@ -115,7 +108,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 	};
 
 	public TaskTrimWidget() {
-		TasksUi.getTaskListManager().addActivityListener(TASK_CHANGE_LISTENER);
+		TasksUi.getTaskListManager().addActivationListener(TASK_CHANGE_LISTENER);
 		TasksUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(SHOW_TRIM_LISTENER);
 		hookContextMenu();
 	}
@@ -148,7 +141,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		}
 		menu = null;
 
-		TasksUi.getTaskListManager().removeActivityListener(TASK_CHANGE_LISTENER);
+		TasksUi.getTaskListManager().removeActivationListener(TASK_CHANGE_LISTENER);
 		TasksUiPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(SHOW_TRIM_LISTENER);
 	}
 

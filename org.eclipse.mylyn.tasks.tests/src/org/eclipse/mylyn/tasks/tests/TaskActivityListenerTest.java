@@ -12,7 +12,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
+import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 
 /**
@@ -20,7 +20,7 @@ import org.eclipse.mylyn.tasks.tests.connector.MockTask;
  */
 public class TaskActivityListenerTest extends TestCase {
 
-	private class MockTaskActivityListener implements ITaskActivityListener {
+	private class MockTaskActivationListener implements ITaskActivationListener {
 
 		private boolean hasActivated = false;
 
@@ -49,11 +49,6 @@ public class TaskActivityListenerTest extends TestCase {
 			hasPreDeactivated = true;
 		}
 
-		public void activityChanged() {
-			// ignore
-
-		}
-
 		public void taskActivated(AbstractTask task) {
 			assertTrue(hasPreActivated);
 			hasActivated = true;
@@ -64,10 +59,6 @@ public class TaskActivityListenerTest extends TestCase {
 			hasDeactivated = true;
 		}
 
-		public void taskListRead() {
-			// ignore
-
-		}
 	}
 
 	@Override
@@ -77,9 +68,9 @@ public class TaskActivityListenerTest extends TestCase {
 
 	public void testTaskActivation() {
 		MockTask task = new MockTask("test:activation");
-		MockTaskActivityListener listener = new MockTaskActivityListener();
+		MockTaskActivationListener listener = new MockTaskActivationListener();
 		try {
-			TasksUiPlugin.getTaskListManager().addActivityListener(listener);
+			TasksUiPlugin.getTaskListManager().addActivationListener(listener);
 			try {
 				TasksUiPlugin.getTaskListManager().activateTask(task);
 				assertTrue(listener.hasPreActivated);
@@ -96,7 +87,7 @@ public class TaskActivityListenerTest extends TestCase {
 			assertTrue(listener.hasPreDeactivated);
 			assertTrue(listener.hasDeactivated);
 		} finally {
-			TasksUiPlugin.getTaskListManager().removeActivityListener(listener);
+			TasksUiPlugin.getTaskListManager().removeActivationListener(listener);
 		}
 	}
 

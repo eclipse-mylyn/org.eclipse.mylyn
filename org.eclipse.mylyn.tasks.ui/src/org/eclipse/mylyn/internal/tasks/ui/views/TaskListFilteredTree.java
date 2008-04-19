@@ -23,7 +23,6 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.TaskHistoryDropDown;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
@@ -37,6 +36,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.OpenTaskListElementAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskWorkingSetAction;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskListChangeAdapter;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
@@ -157,8 +157,9 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		taskProgressBar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		updateTaskProgressBar();
 
-		TasksUi.getTaskListManager().getTaskList().addChangeListener(new ITaskListChangeListener() {
+		TasksUi.getTaskListManager().getTaskList().addChangeListener(new TaskListChangeAdapter() {
 
+			@Override
 			public void containersChanged(Set<TaskContainerDelta> containers) {
 				for (TaskContainerDelta taskContainerDelta : containers) {
 					if (taskContainerDelta.getContainer() instanceof AbstractTask) {
@@ -169,23 +170,13 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			}
 		});
 
-		TasksUi.getTaskListManager().addActivityListener(new TaskActivityAdapter() {
+		TasksUiPlugin.getTaskActivityManager().addActivityListener(new TaskActivityAdapter() {
 
-			public void activityChanged(ScheduledTaskContainer week) {
+			@Override
+			public void activityReset() {
 				updateTaskProgressBar();
 			}
 
-			@Override
-			public void taskActivated(AbstractTask task) {
-			}
-
-			@Override
-			public void taskDeactivated(AbstractTask task) {
-			}
-
-			@Override
-			public void taskListRead() {
-			}
 		});
 
 		return progressComposite;
@@ -331,7 +322,8 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 		activeTaskLink = new TaskListHyperlink(container, SWT.LEFT);
 
-		changeListener = new ITaskListChangeListener() {
+		changeListener = new TaskListChangeAdapter() {
+			@Override
 			public void containersChanged(Set<TaskContainerDelta> containers) {
 				for (TaskContainerDelta taskContainerDelta : containers) {
 					if (taskContainerDelta.getContainer() instanceof AbstractTask) {

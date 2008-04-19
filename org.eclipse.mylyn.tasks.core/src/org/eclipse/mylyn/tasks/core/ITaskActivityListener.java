@@ -21,22 +21,12 @@ public interface ITaskActivityListener {
 	/**
 	 * @since 3.0
 	 */
-	public abstract void activityChanged();
+	public abstract void activityReset();
 
 	/**
-	 * @since 3.0
+	 * Warning: This is called frequently (i.e. every 15s) Implementers are responsible for launching jobs for long
+	 * running activity.
 	 */
-	public abstract void preTaskActivated(AbstractTask task);
-
-	/**
-	 * @since 3.0
-	 */
-	public abstract void preTaskDeactivated(AbstractTask task);
-
-	public abstract void taskActivated(AbstractTask task);
-
-	public abstract void taskDeactivated(AbstractTask task);
-
-	public abstract void taskListRead();
+	public abstract void elapsedTimeUpdated(AbstractTask task, long newElapsedTime);
 
 }

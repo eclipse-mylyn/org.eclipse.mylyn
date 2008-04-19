@@ -66,6 +66,7 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 		saveTimer.start();
 
 		taskListSaverJob = new TaskListSaverJob();
+		//taskListSaverJob.setRule(TasksUiPlugin.getTaskListManager().getTaskList());
 		taskListSaverJob.schedule();
 	}
 
@@ -263,10 +264,6 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 		// ignore
 	}
 
-	public void tasklistRead() {
-		// ignore
-	}
-
 	/** For testing only * */
 	public BackgroundSaveTimer getSaveTimer() {
 		return saveTimer;
@@ -349,6 +346,9 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 				}
 			}
 		}
+	}
+
+	public void taskListRead() {
 	}
 
 }

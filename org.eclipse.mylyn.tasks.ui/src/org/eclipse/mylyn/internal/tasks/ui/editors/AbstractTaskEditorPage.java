@@ -323,8 +323,9 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 	private RepositoryTaskData taskData;
 
-	private final ITaskListChangeListener TASKLIST_CHANGE_LISTENER = new ITaskListChangeListener() {
+	private final ITaskListChangeListener TASKLIST_CHANGE_LISTENER = new TaskListChangeAdapter() {
 
+		@Override
 		public void containersChanged(Set<TaskContainerDelta> containers) {
 			AbstractTask taskToRefresh = null;
 			for (TaskContainerDelta taskContainerDelta : containers) {
