@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-BUILD=`date +I%Y%m%d-%H00`
+BUILD=`date -u +I%Y%m%d-%H00`
 sed -e s/QUALIFIER=.*/QUALIFIER=$BUILD/ -i local.sh
 
 BUILD_ROOT=$(cd $(dirname $0); pwd)
