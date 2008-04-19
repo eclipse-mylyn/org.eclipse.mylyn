@@ -31,4 +31,11 @@ public abstract class AbstractActiveChangeSetProvider {
 		return null;
 	}
 
+//	/**
+//	 * @since 3.0
+//	 */
+//	public ActiveChangeSet createChangeSet(AbstractTask task, ActiveChangeSetManager manager) {
+//		return new ContextChangeSet(task, manager);
+//	}
+
 }
