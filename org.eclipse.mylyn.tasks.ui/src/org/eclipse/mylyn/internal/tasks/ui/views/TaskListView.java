@@ -397,9 +397,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		public void activityReset() {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					if (ScheduledPresentation.ID.equals(getCurrentPresentation().getId())) {
-						refreshJob.refresh();
-					}
+					refreshJob.refresh();
 				}
 			});
 		}

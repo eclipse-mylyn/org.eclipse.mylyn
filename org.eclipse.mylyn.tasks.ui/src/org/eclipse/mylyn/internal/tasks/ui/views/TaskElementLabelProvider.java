@@ -8,6 +8,8 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -378,15 +380,20 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			return false;
 		}
 
-		return showHasActiveChildHelper(container);
+		return showHasActiveChildHelper(container, new HashSet<AbstractTaskContainer>());
 	}
 
-	private boolean showHasActiveChildHelper(AbstractTaskContainer container) {
+	private boolean showHasActiveChildHelper(AbstractTaskContainer container,
+			Set<AbstractTaskContainer> visitedContainers) {
 		for (AbstractTaskContainer child : container.getChildren()) {
+			if (visitedContainers.contains(child)) {
+				continue;
+			}
+			visitedContainers.add(child);
 			if (child instanceof AbstractTask && ((AbstractTask) child).isActive()) {
 				return true;
 			} else {
-				if (showHasActiveChildHelper(child)) {
+				if (showHasActiveChildHelper(child, visitedContainers)) {
 					return true;
 				}
 			}
