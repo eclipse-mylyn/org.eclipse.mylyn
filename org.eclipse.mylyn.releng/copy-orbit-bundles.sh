@@ -27,6 +27,7 @@ cp -v org.apache.ws.commons.util*.jar $DEST/standardUpdateSite/plugins
 
 mkdir -p $DEST/extrasUpdateSite/plugins
 cp -v com.sun.syndication*.jar $DEST/extrasUpdateSite/plugins
+cp -v javax.servlet*.jar $DEST/extrasUpdateSite/plugins
 cp -v javax.wsdl*.jar $DEST/extrasUpdateSite/plugins
 cp -v javax.xml.rpc*.jar $DEST/extrasUpdateSite/plugins
 cp -v javax.xml.soap*.jar $DEST/extrasUpdateSite/plugins
@@ -44,6 +45,7 @@ cp -v org.apache.commons.logging*.jar $DEST/allUpdateSite/plugins
 cp -v org.apache.xmlrpc*.jar $DEST/allUpdateSite/plugins
 cp -v org.apache.ws.commons.util*.jar $DEST/allUpdateSite/plugins
 cp -v com.sun.syndication*.jar $DEST/allUpdateSite/plugins
+cp -v javax.servlet*.jar $DEST/allUpdateSite/plugins
 cp -v javax.wsdl*.jar $DEST/allUpdateSite/plugins
 cp -v javax.xml.rpc*.jar $DEST/allUpdateSite/plugins
 cp -v javax.xml.soap*.jar $DEST/allUpdateSite/plugins
