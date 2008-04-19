@@ -15,9 +15,7 @@ import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
-import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
@@ -34,8 +32,7 @@ public abstract class AbstractContextChangeSetManager implements IInteractionCon
 	public void enable() {
 		if (!isEnabled) {
 			isEnabled = true;
-			TasksUi.getTaskListManager().getTaskList().addChangeListener(TASK_CHANGE_LISTENER);
-			TasksUi.getTaskListManager().addActivityListener(TASK_ACTIVITY_LISTENER);
+			TasksUi.getTaskListManager().getTaskList().addChangeListener(TASKLIST_CHANGE_LISTENER);
 			if (TasksUiPlugin.getTaskListManager().isTaskListInitialized()) {
 				initContextChangeSets(); // otherwise listener will do it
 			}
@@ -49,8 +46,7 @@ public abstract class AbstractContextChangeSetManager implements IInteractionCon
 
 	public void disable() {
 		ContextCore.getContextManager().removeListener(this);
-		TasksUi.getTaskListManager().removeActivityListener(TASK_ACTIVITY_LISTENER);
-		TasksUi.getTaskListManager().getTaskList().removeChangeListener(TASK_CHANGE_LISTENER);
+		TasksUi.getTaskListManager().getTaskList().removeChangeListener(TASKLIST_CHANGE_LISTENER);
 		isEnabled = false;
 	}
 
@@ -58,30 +54,11 @@ public abstract class AbstractContextChangeSetManager implements IInteractionCon
 
 	protected abstract void updateChangeSetLabel(AbstractTask task);
 
-	private final ITaskActivityListener TASK_ACTIVITY_LISTENER = new TaskActivityAdapter() {
+	private final ITaskListChangeListener TASKLIST_CHANGE_LISTENER = new ITaskListChangeListener() {
 
-		@Override
 		public void taskListRead() {
 			initContextChangeSets();
 		}
-
-		@Override
-		public void taskActivated(AbstractTask task) {
-			// ignore
-		}
-
-		@Override
-		public void taskDeactivated(AbstractTask task) {
-			// ignore
-		}
-
-		@Override
-		public void activityChanged() {
-			// ignore
-		}
-	};
-
-	private final ITaskListChangeListener TASK_CHANGE_LISTENER = new ITaskListChangeListener() {
 
 		public void containersChanged(Set<TaskContainerDelta> containers) {
 			for (TaskContainerDelta taskContainerDelta : containers) {
@@ -95,6 +72,7 @@ public abstract class AbstractContextChangeSetManager implements IInteractionCon
 				}
 			}
 		}
+
 	};
 
 	public void elementDeleted(IInteractionElement node) {

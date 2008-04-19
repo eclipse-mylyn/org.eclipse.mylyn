@@ -9,12 +9,11 @@
 package org.eclipse.mylyn.internal.context.ui;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
+import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IPerspectiveListener4;
 import org.eclipse.ui.IWorkbenchPage;
@@ -29,7 +28,7 @@ import org.eclipse.ui.internal.registry.IActionSetDescriptor;
  * @author Mik Kersten
  * @author Shawn Minto
  */
-public class ContextPerspectiveManager implements ITaskActivityListener, IPerspectiveListener4 {
+public class ContextPerspectiveManager implements ITaskActivationListener, IPerspectiveListener4 {
 
 	private final Set<String> managedPerspectiveIds = new HashSet<String>();
 
@@ -103,22 +102,6 @@ public class ContextPerspectiveManager implements ITaskActivityListener, IPerspe
 				}
 			}
 		}
-	}
-
-	public void activityChanged() {
-		// ignore
-	}
-
-	public void taskListRead() {
-		// ignore
-	}
-
-	public void tasksActivated(List<AbstractTask> tasks) {
-		// ignore
-	}
-
-	public void calendarChanged() {
-		// ignore
 	}
 
 	public void perspectivePreDeactivate(IWorkbenchPage page, IPerspectiveDescriptor perspective) {

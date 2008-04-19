@@ -50,8 +50,8 @@ import org.eclipse.mylyn.internal.tasks.ui.PlanningPerspectiveFactory;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
-import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
+import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
+import org.eclipse.mylyn.tasks.core.TaskActivationAdapter;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.graphics.Image;
@@ -224,12 +224,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		}
 	};
 
-	private static final ITaskActivityListener TASK_ACTIVATION_LISTENER = new TaskActivityAdapter() {
-
-		@Override
-		public void activityChanged() {
-			// ignore
-		}
+	private static final ITaskActivationListener TASK_ACTIVATION_LISTENER = new TaskActivationAdapter() {
 
 		@Override
 		public void taskActivated(AbstractTask task) {
@@ -252,18 +247,6 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 					}
 				}
 			}
-		}
-
-		@Override
-		public void taskDeactivated(AbstractTask task) {
-			// ignore
-
-		}
-
-		@Override
-		public void taskListRead() {
-			// ignore
-
 		}
 	};
 
@@ -310,9 +293,9 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			MonitorUiPlugin.getDefault().addWindowPartListener(contentOutlineManager);
 
 			perspectiveManager.addManagedPerspective(PlanningPerspectiveFactory.ID_PERSPECTIVE);
-			TasksUi.getTaskListManager().addActivityListener(perspectiveManager);
+			TasksUi.getTaskListManager().addActivationListener(perspectiveManager);
 			MonitorUiPlugin.getDefault().addWindowPerspectiveListener(perspectiveManager);
-			TasksUi.getTaskListManager().addActivityListener(TASK_ACTIVATION_LISTENER);
+			TasksUi.getTaskListManager().addActivationListener(TASK_ACTIVATION_LISTENER);
 
 			editorManager = new ContextEditorManager();
 			ContextCore.getContextManager().addListener(editorManager);
@@ -355,9 +338,9 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		ContextCore.getContextManager().removeListener(viewerManager);
 		MonitorUiPlugin.getDefault().removeWindowPartListener(contentOutlineManager);
 
-		TasksUi.getTaskListManager().removeActivityListener(perspectiveManager);
+		TasksUi.getTaskListManager().removeActivationListener(perspectiveManager);
 		MonitorUiPlugin.getDefault().removeWindowPerspectiveListener(perspectiveManager);
-		TasksUi.getTaskListManager().removeActivityListener(TASK_ACTIVATION_LISTENER);
+		TasksUi.getTaskListManager().removeActivationListener(TASK_ACTIVATION_LISTENER);
 	}
 
 	/**
