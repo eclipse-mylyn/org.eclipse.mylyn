@@ -298,7 +298,8 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			if (longDescsSize == 0) {
 				repositoryTaskData.setAttributeValue(RepositoryTaskAttribute.DESCRIPTION, longDescs.get(0).getText());
 			} else if (longDescsSize == 1) {
-				if (longDescs.get(0).getCreated().compareTo(longDescs.get(1).getCreated()) < 0) {
+				if (longDescs.get(0).getCreated().compareTo(longDescs.get(1).getCreated()) <= 0) {
+					// if created_0 is equal to created_1 we assume that longDescs at index 0 is the description.
 					repositoryTaskData.setAttributeValue(RepositoryTaskAttribute.DESCRIPTION, longDescs.get(0)
 							.getText());
 					repositoryTaskData.addComment(longDescs.get(1));
@@ -314,7 +315,8 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 				String created_1 = longDescs.get(1).getCreated();
 				String created_n = longDescs.get(longDescsSize).getCreated();
 				commentNum = 1;
-				if (created_0.compareTo(created_1) < 0 && created_0.compareTo(created_n) < 0) {
+				if (created_0.compareTo(created_1) <= 0 && created_0.compareTo(created_n) < 0) {
+					// if created_0 is equal to created_1 we assume that longDescs at index 0 is the description.
 					repositoryTaskData.setAttributeValue(RepositoryTaskAttribute.DESCRIPTION, longDescs.get(0)
 							.getText());
 					if (created_1.compareTo(created_n) < 0) {
