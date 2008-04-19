@@ -1276,5 +1276,19 @@
                id="org.eclipse.mylyn.tasks.ui.views.tasks">
          </part>
       </actionSetPartAssociation>
-   </extension>  
+   </extension>
+      
+   <extension point="org.eclipse.ui.navigator.navigatorContent">
+		<commonFilter
+			id="org.eclipse.mylyn.tasks.ui.navigator.filters.tasks"
+			name="Task List Elements (Recommended)"
+			description="Hides Task List Elements from Common Navigators" 
+			activeByDefault="true">
+			<filterExpression>
+				<instanceof
+					value="org.eclipse.mylyn.tasks.core.AbstractTaskContainer" />
+			</filterExpression>
+		</commonFilter>
+   </extension>
+     
 </plugin>
