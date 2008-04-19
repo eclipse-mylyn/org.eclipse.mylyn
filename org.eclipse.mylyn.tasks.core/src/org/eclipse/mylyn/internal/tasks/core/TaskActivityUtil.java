@@ -45,10 +45,10 @@ public class TaskActivityUtil {
 	}
 
 	public static Calendar snapEndOfDay(Calendar cal) {
-		cal.set(Calendar.HOUR_OF_DAY, cal.getMaximum(Calendar.HOUR_OF_DAY));
-		cal.set(Calendar.MINUTE, cal.getMaximum(Calendar.MINUTE));
-		cal.set(Calendar.SECOND, cal.getMaximum(Calendar.SECOND));
-		cal.set(Calendar.MILLISECOND, cal.getMaximum(Calendar.MILLISECOND));
+		cal.set(Calendar.HOUR_OF_DAY, cal.getActualMaximum(Calendar.HOUR_OF_DAY));
+		cal.set(Calendar.MINUTE, cal.getActualMaximum(Calendar.MINUTE));
+		cal.set(Calendar.SECOND, cal.getActualMaximum(Calendar.SECOND));
+		cal.set(Calendar.MILLISECOND, cal.getActualMaximum(Calendar.MILLISECOND));
 		cal.getTime();
 		return cal;
 	}

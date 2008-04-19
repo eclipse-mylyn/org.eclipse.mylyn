@@ -29,6 +29,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
@@ -109,6 +110,8 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 	private Button timeoutEnabledButton;
 
 	private ExpandableComposite advancedComposite;
+
+	private Combo weekStartCombo;
 
 	public TasksUiPreferencePage() {
 		super();
@@ -196,7 +199,8 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		getPreferenceStore().setValue(TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS,
 				"" + miliseconds);
 
-		getPreferenceStore().setValue(TasksUiPreferenceConstants.PLANNING_STARTHOUR, hourDayStart.getSelection());
+		getPreferenceStore().setValue(TasksUiPreferenceConstants.WEEK_START_DAY, getWeekStartValue());
+		//getPreferenceStore().setValue(TasksUiPreferenceConstants.PLANNING_STARTHOUR, hourDayStart.getSelection());
 		getPreferenceStore().setValue(TasksUiPreferenceConstants.PLANNING_ENDHOUR, hourDayEnd.getSelection());
 		MonitorUiPlugin.getDefault().getPreferenceStore().setValue(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED,
 				timeoutEnabledButton.getSelection());
@@ -204,6 +208,10 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 				timeoutMinutes.getSelection() * (60 * 1000));
 		backupNow.setEnabled(true);
 		return true;
+	}
+
+	private int getWeekStartValue() {
+		return weekStartCombo.getSelectionIndex() + 1;
 	}
 
 	@Override
@@ -221,7 +229,8 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 				TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
 		synchScheduleTime.setText(getMinutesString());
 
-		hourDayStart.setSelection(getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_STARTHOUR));
+		weekStartCombo.select(getPreferenceStore().getInt(TasksUiPreferenceConstants.WEEK_START_DAY) - 1);
+		//hourDayStart.setSelection(getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_STARTHOUR));
 		hourDayEnd.setSelection(getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
 		backupNow.setEnabled(true);
 		int minutes = MonitorUiPlugin.getDefault().getPreferenceStore().getInt(ActivityContextManager.ACTIVITY_TIMEOUT)
@@ -264,8 +273,8 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 				TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
 		long minutes = miliseconds / 60000;
 		synchScheduleTime.setText("" + minutes);
-
-		hourDayStart.setSelection(getPreferenceStore().getDefaultInt(TasksUiPreferenceConstants.PLANNING_STARTHOUR));
+		weekStartCombo.select(getPreferenceStore().getDefaultInt(TasksUiPreferenceConstants.WEEK_START_DAY) - 1);
+		//	hourDayStart.setSelection(getPreferenceStore().getDefaultInt(TasksUiPreferenceConstants.PLANNING_STARTHOUR));
 		hourDayEnd.setSelection(getPreferenceStore().getDefaultInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
 		int activityTimeoutMinutes = MonitorUiPlugin.getDefault().getPreferenceStore().getDefaultInt(
 				ActivityContextManager.ACTIVITY_TIMEOUT)
@@ -436,50 +445,58 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		group.setLayout(new GridLayout(5, false));
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		// Label workWeekBeginLabel = new Label(group, SWT.NONE);
-		// workWeekBeginLabel.setText(START_DAY_LABEL);
-		// workWeekBegin = new Combo(group, SWT.READ_ONLY);
-		// // Calendar.SUNDAY = 1
-		// workWeekBegin.add("SUNDAY");
-		// workWeekBegin.add("MONDAY");
-		// workWeekBegin.add("TUESDAY");
-		// workWeekBegin.add("WEDNESDAY");
-		// workWeekBegin.add("THURSDAY");
-		// workWeekBegin.add("FRIDAY");
-		// workWeekBegin.add("SATURDAY");
-		// workWeekBegin.select(getPreferenceStore().getInt(TaskListPreferenceConstants.PLANNING_STARTDAY)
-		// - 1);
-		//		
-		// Label workWeekEndLabel = new Label(group, SWT.NONE);
-		// workWeekEndLabel.setText(END_DAY_LABEL);
-		// workWeekEnd = new Combo(group, SWT.READ_ONLY);
-		// workWeekEnd.add("SUNDAY");
-		// workWeekEnd.add("MONDAY");
-		// workWeekEnd.add("TUESDAY");
-		// workWeekEnd.add("WEDNESDAY");
-		// workWeekEnd.add("THURSDAY");
-		// workWeekEnd.add("FRIDAY");
-		// workWeekEnd.add("SATURDAY");
-		// workWeekEnd.select(getPreferenceStore().getInt(TaskListPreferenceConstants.PLANNING_ENDDAY)
-		// - 1);
+		Label weekStartLabel = new Label(group, SWT.NONE);
+		weekStartLabel.setText("Week Start:");
+		weekStartCombo = new Combo(group, SWT.READ_ONLY);
+		// Note: Calendar.SUNDAY = 1
+		weekStartCombo.add("SUNDAY");
+		weekStartCombo.add("MONDAY");
+		weekStartCombo.select(getPreferenceStore().getInt(TasksUiPreferenceConstants.WEEK_START_DAY) - 1);
 
-		Label hourDayStartLabel = new Label(group, SWT.NONE);
-		hourDayStartLabel.setText(START_HOUR_LABEL);
-		hourDayStart = new Spinner(group, SWT.BORDER);
-		hourDayStart.setDigits(0);
-		hourDayStart.setIncrement(1);
-		hourDayStart.setMaximum(23);
-		hourDayStart.setMinimum(0);
-		hourDayStart.setSelection(getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_STARTHOUR));
-		hourDayStart.addSelectionListener(new SelectionAdapter() {
+//		 Label workWeekBeginLabel = new Label(group, SWT.NONE);
+//		 workWeekBeginLabel.setText(START_DAY_LABEL);
+//		 workWeekBegin = new Combo(group, SWT.READ_ONLY);
+//		 // Calendar.SUNDAY = 1
+//		 workWeekBegin.add("SUNDAY");
+//		 workWeekBegin.add("MONDAY");
+//		 workWeekBegin.add("TUESDAY");
+//		 workWeekBegin.add("WEDNESDAY");
+//		 workWeekBegin.add("THURSDAY");
+//		 workWeekBegin.add("FRIDAY");
+//		 workWeekBegin.add("SATURDAY");
+//		 workWeekBegin.select(getPreferenceStore().getInt(TaskListPreferenceConstants.PLANNING_STARTDAY)
+//		 - 1);
 
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				updateRefreshGroupEnablements();
-			}
+//		 Label workWeekEndLabel = new Label(group, SWT.NONE);
+//		 workWeekEndLabel.setText(END_DAY_LABEL);
+//		 workWeekEnd = new Combo(group, SWT.READ_ONLY);
+//		 workWeekEnd.add("SUNDAY");
+//		 workWeekEnd.add("MONDAY");
+//		 workWeekEnd.add("TUESDAY");
+//		 workWeekEnd.add("WEDNESDAY");
+//		 workWeekEnd.add("THURSDAY");
+//		 workWeekEnd.add("FRIDAY");
+//		 workWeekEnd.add("SATURDAY");
+//		 workWeekEnd.select(getPreferenceStore().getInt(TaskListPreferenceConstants.PLANNING_ENDDAY)
+//		 - 1);
 
-		});
-
+//		Label hourDayStartLabel = new Label(group, SWT.NONE);
+//		hourDayStartLabel.setText(START_HOUR_LABEL);
+//		hourDayStart = new Spinner(group, SWT.BORDER);
+//		hourDayStart.setDigits(0);
+//		hourDayStart.setIncrement(1);
+//		hourDayStart.setMaximum(23);
+//		hourDayStart.setMinimum(0);
+//		hourDayStart.setSelection(getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_STARTHOUR));
+//		hourDayStart.addSelectionListener(new SelectionAdapter() {
+//
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				updateRefreshGroupEnablements();
+//			}
+//
+//		});
+//
 		Label spacer = new Label(group, SWT.NONE);
 		GridDataFactory.fillDefaults().hint(40, SWT.DEFAULT).applyTo(spacer);
 

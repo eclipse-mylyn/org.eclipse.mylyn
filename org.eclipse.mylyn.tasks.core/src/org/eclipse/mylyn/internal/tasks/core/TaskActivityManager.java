@@ -86,7 +86,7 @@ public class TaskActivityManager {
 
 	private ScheduledTaskContainer scheduledPrevious;
 
-	private int startHour = 9;
+//	private int startHour = 9;
 
 	private int endHour = 17;
 
@@ -95,8 +95,6 @@ public class TaskActivityManager {
 	private final TaskRepositoryManager repositoryManager;
 
 	private int startDay = Calendar.MONDAY;
-
-	private int endDay = Calendar.SUNDAY;
 
 	private Date startTime = new Date();
 
@@ -109,32 +107,46 @@ public class TaskActivityManager {
 		this.taskListManager = taskListManager;
 		this.taskList = taskList;
 		this.repositoryManager = repositoryManager;
+
 	}
 
-	public int getStartDay() {
+	/**
+	 * Get the user specified first day of the week (Calendar.SUNDAY | Calendar.MONDAY)
+	 * 
+	 * @see http://en.wikipedia.org/wiki/Days_of_the_week#First_day_of_the_week
+	 */
+	public int getWeekStartDay() {
 		return startDay;
 	}
 
-	public void setStartDay(int startDay) {
+	/**
+	 * Set the first day of the week (Calendar.SUNDAY | Calendar.MONDAY)
+	 * 
+	 * @see http://en.wikipedia.org/wiki/Days_of_the_week#First_day_of_the_week
+	 * 
+	 * @param startDay
+	 *            (Calendar.SUNDAY | Calendar.MONDAY)
+	 */
+	public void setWeekStartDay(int startDay) {
 		this.startDay = startDay;
 	}
 
-	public int getEndDay() {
-		return endDay;
-	}
+//	public int getEndDay() {
+//		return endDay;
+//	}
 
-	public void setEndDay(int endDay) {
-		this.endDay = endDay;
-	}
+//	public void setEndDay(int endDay) {
+//		this.endDay = endDay;
+//	}
 
-	public int getStartHour() {
-		return startHour;
-	}
-
-	public void setStartHour(int startHour) {
-		this.startHour = startHour;
-	}
-
+//	public int getStartHour() {
+//		return startHour;
+//	}
+//
+//	public void setStartHour(int startHour) {
+//		this.startHour = startHour;
+//	}
+//
 	public void setEndHour(int endHour) {
 		this.endHour = endHour;
 	}
@@ -635,7 +647,7 @@ public class TaskActivityManager {
 		scheduleContainers.clear();
 		scheduleWeekDays.clear();
 
-		int startDay = getStartDay();
+		int startDay = getWeekStartDay();
 		//int endDay = TaskActivityManager.getInstance().getEndDay();
 		// scheduledStartHour =
 		// TasksUiPlugin.getDefault().getPreferenceStore().getInt(
@@ -660,10 +672,9 @@ public class TaskActivityManager {
 
 		scheduleWeekDays.clear();
 		for (int x = startDay; x < (startDay + 7); x++) {
-			GregorianCalendar dayStart = new GregorianCalendar();
-			GregorianCalendar dayEnd = new GregorianCalendar();
-			dayStart.setFirstDayOfWeek(startDay);
-			dayEnd.setFirstDayOfWeek(startDay);
+			Calendar dayStart = TaskActivityUtil.getCalendar();
+			Calendar dayEnd = TaskActivityUtil.getCalendar();
+
 			if (x > 7) {
 				dayStart.set(Calendar.DAY_OF_WEEK, x % 7);
 				dayEnd.set(Calendar.DAY_OF_WEEK, x % 7);
@@ -672,17 +683,8 @@ public class TaskActivityManager {
 				dayEnd.set(Calendar.DAY_OF_WEEK, x);
 			}
 
-			dayStart.set(Calendar.HOUR_OF_DAY, 0);
-			dayStart.set(Calendar.MINUTE, 0);
-			dayStart.set(Calendar.SECOND, 0);
-			dayStart.set(Calendar.MILLISECOND, 0);
-			dayStart.getTime();
-
-			dayEnd.set(Calendar.HOUR_OF_DAY, dayEnd.getMaximum(Calendar.HOUR_OF_DAY));
-			dayEnd.set(Calendar.MINUTE, dayEnd.getMaximum(Calendar.MINUTE));
-			dayEnd.set(Calendar.SECOND, dayEnd.getMaximum(Calendar.SECOND));
-			dayEnd.set(Calendar.MILLISECOND, dayEnd.getMaximum(Calendar.MILLISECOND));
-			dayEnd.getTime();
+			TaskActivityUtil.snapStartOfDay(dayStart);
+			TaskActivityUtil.snapEndOfDay(dayEnd);
 
 			String summary = "<unknown>";
 			switch (dayStart.get(Calendar.DAY_OF_WEEK)) {
@@ -735,13 +737,11 @@ public class TaskActivityManager {
 //		scheduledThisWeek.setCaptureFloating(true);
 //		//scheduleContainers.add(scheduledThisWeek);
 
-		GregorianCalendar nextStart = new GregorianCalendar();
-		nextStart.setFirstDayOfWeek(startDay);
+		Calendar nextStart = TaskActivityUtil.getCalendar();
 		nextStart.setTime(startTime);
 		nextStart.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_NEXT);
 		TaskActivityUtil.snapStartOfWorkWeek(nextStart);
-		GregorianCalendar nextEnd = new GregorianCalendar();
-		nextEnd.setFirstDayOfWeek(startDay);
+		Calendar nextEnd = TaskActivityUtil.getCalendar();
 		nextEnd.setTime(startTime);
 		nextEnd.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_NEXT);
 		TaskActivityUtil.snapEndOfWeek(nextEnd);
@@ -750,13 +750,11 @@ public class TaskActivityManager {
 		scheduledNextWeek.setCaptureFloating(true);
 		scheduleContainers.add(scheduledNextWeek);
 
-		GregorianCalendar futureStart = new GregorianCalendar();
-		futureStart.setFirstDayOfWeek(startDay);
+		Calendar futureStart = TaskActivityUtil.getCalendar();
 		futureStart.setTime(startTime);
 		futureStart.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_FUTURE_START);
 		TaskActivityUtil.snapStartOfWorkWeek(futureStart);
-		GregorianCalendar futureEnd = new GregorianCalendar();
-		futureEnd.setFirstDayOfWeek(startDay);
+		Calendar futureEnd = TaskActivityUtil.getCalendar();
 		futureEnd.setTime(startTime);
 		futureEnd.add(Calendar.YEAR, 1);
 		TaskActivityUtil.snapEndOfWeek(futureEnd);
@@ -765,13 +763,11 @@ public class TaskActivityManager {
 		scheduledFuture.setCaptureFloating(true);
 		scheduleContainers.add(scheduledFuture);
 
-		GregorianCalendar previousStart = new GregorianCalendar();
-		previousStart.setFirstDayOfWeek(startDay);
+		Calendar previousStart = TaskActivityUtil.getCalendar();
 		previousStart.setTime(startTime);
 		previousStart.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_PREVIOUS_START);
 		TaskActivityUtil.snapStartOfWorkWeek(previousStart);
-		GregorianCalendar previousEnd = new GregorianCalendar();
-		previousEnd.setFirstDayOfWeek(startDay);
+		Calendar previousEnd = TaskActivityUtil.getCalendar();
 		previousEnd.setTime(startTime);
 		previousEnd.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_PREVIOUS_END);
 		TaskActivityUtil.snapEndOfWeek(previousEnd);
@@ -823,14 +819,8 @@ public class TaskActivityManager {
 
 	public void scheduleNewTask(AbstractTask newTask) {
 		newTask.setCreationDate(new Date());
-		Calendar newTaskSchedule = TaskActivityUtil.getCalendar();
-		// If past scheduledEndHour set for following day
-		if (newTaskSchedule.get(Calendar.HOUR_OF_DAY) >= getEndHour()) {
-			TaskActivityUtil.snapForwardNumDays(newTaskSchedule, 1);
-		} else {
-			TaskActivityUtil.snapEndOfWorkDay(newTaskSchedule);
-		}
-		setScheduledFor(newTask, newTaskSchedule.getTime());
+		// TODO: set based on preference? see bug#158461
+		setScheduledFor(newTask, TaskActivityUtil.getCalendar().getTime());
 	}
 
 	public boolean isDueThisWeek(AbstractTask task) {

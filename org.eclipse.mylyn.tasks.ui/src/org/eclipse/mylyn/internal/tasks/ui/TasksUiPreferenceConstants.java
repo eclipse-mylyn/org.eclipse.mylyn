@@ -43,9 +43,11 @@ public final class TasksUiPreferenceConstants {
 
 	public static final String NOTIFICATIONS_ENABLED = "org.eclipse.mylyn.tasks.ui.notifications.enabled";
 
+	public static final String WEEK_START_DAY = "org.eclipse.mylyn.tasks.ui.planning.week.start.day";
+
 	public static final String PLANNING_ENDHOUR = "org.eclipse.mylyn.tasks.ui.planning.end.hour";
 
-	public static final String PLANNING_STARTHOUR = "org.eclipse.mylyn.tasks.ui.planning.start.hour";
+//	public static final String PLANNING_STARTHOUR = "org.eclipse.mylyn.tasks.ui.planning.start.hour";
 
 	public static final String EDITOR_TASKS_RICH = "org.eclipse.mylyn.tasks.ui.reporting.open.editor";
 

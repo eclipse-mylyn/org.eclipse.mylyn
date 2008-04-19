@@ -16,8 +16,10 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
+import org.eclipse.mylyn.internal.context.ui.TaskListInterestFilter;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -46,6 +48,40 @@ public class ScheduledPresentationTest extends TestCase {
 		List<ScheduledTaskContainer> days = TasksUiPlugin.getTaskActivityManager().getActivityWeekDays();
 		assertNotNull(days);
 		assertEquals(7, days.size());
+	}
+
+	public void testWeekStartChange() {
+		TasksUiPlugin.getTaskActivityManager().setWeekStartDay(Calendar.SUNDAY);
+		TaskActivityUtil.setStartDay(Calendar.SUNDAY);
+		Calendar startOfWeekDate = TaskActivityUtil.getCalendar();
+		TaskActivityUtil.snapEndOfWeek(startOfWeekDate);
+		assertEquals(Calendar.SATURDAY, startOfWeekDate.get(Calendar.DAY_OF_WEEK));
+		TasksUiPlugin.getTaskListManager().resetAndRollOver(startOfWeekDate.getTime());
+
+		AbstractTask task1 = new LocalTask("task 1", "Task 1");
+		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
+		Calendar endOfWeek = TaskActivityUtil.getCalendar();
+		TaskActivityUtil.snapEndOfWeek(endOfWeek);
+		assertEquals(Calendar.SATURDAY, endOfWeek.get(Calendar.DAY_OF_WEEK));
+		TasksUiPlugin.getTaskActivityManager().setScheduledFor(task1, endOfWeek.getTime(), false);
+		assertTrue(TaskListInterestFilter.isInterestingForThisWeek(null, task1));
+
+		AbstractTask task2 = new LocalTask("task 2", "Task 2");
+		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task2);
+		Calendar nextWeek = TaskActivityUtil.getCalendar();
+		TaskActivityUtil.snapEndOfWeek(nextWeek);
+		nextWeek.add(Calendar.DAY_OF_YEAR, 1);
+		assertTrue(nextWeek.after(endOfWeek));
+		assertEquals(Calendar.SUNDAY, nextWeek.get(Calendar.DAY_OF_WEEK));
+		TasksUiPlugin.getTaskActivityManager().setScheduledFor(task2, nextWeek.getTime(), false);
+		assertFalse(TaskListInterestFilter.isInterestingForThisWeek(null, task2));
+
+		TasksUiPlugin.getTaskActivityManager().setWeekStartDay(Calendar.MONDAY);
+		TaskActivityUtil.setStartDay(Calendar.MONDAY);
+		TasksUiPlugin.getTaskListManager().resetAndRollOver(startOfWeekDate.getTime());
+
+		assertTrue(TaskListInterestFilter.isInterestingForThisWeek(null, task1));
+		assertTrue(TaskListInterestFilter.isInterestingForThisWeek(null, task2));
 	}
 
 	public void testResetAndRollOver() {

@@ -9,6 +9,7 @@ package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
@@ -282,9 +283,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 						repository.getConnectorKind());
 				AbstractRepositoryConnectorUi connectorUi = getConnectorUi(repository.getConnectorKind());
 				if (connectorUi != null && !connectorUi.isCustomNotificationHandling()) {
-					for (AbstractTask repositoryTask : TasksUiPlugin.getTaskListManager()
-							.getTaskList()
-							.getTasks(repository.getRepositoryUrl())) {
+					for (AbstractTask repositoryTask : TasksUiPlugin.getTaskListManager().getTaskList().getTasks(
+							repository.getRepositoryUrl())) {
 						if ((repositoryTask.getLastReadTimeStamp() == null || repositoryTask.getSynchronizationState() == RepositoryTaskSyncState.INCOMING)
 								&& repositoryTask.isNotified() == false) {
 							TaskListNotification notification = INSTANCE.getIncommingNotification(connector,
@@ -332,8 +332,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				}
 			}
 
-			if (event.getProperty().equals(TasksUiPreferenceConstants.PLANNING_STARTHOUR)
-					|| event.getProperty().equals(TasksUiPreferenceConstants.PLANNING_ENDHOUR)) {
+			if (event.getProperty().equals(TasksUiPreferenceConstants.PLANNING_ENDHOUR)
+					|| event.getProperty().equals(TasksUiPreferenceConstants.WEEK_START_DAY)) {
 				updateTaskActivityManager();
 			}
 
@@ -553,8 +553,18 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private void updateTaskActivityManager() {
 		int endHour = getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR);
-		taskActivityManager.setEndHour(endHour);
-		TaskActivityUtil.setEndHour(endHour);
+		if (taskActivityManager.getEndHour() != endHour) {
+			taskActivityManager.setEndHour(endHour);
+			TaskActivityUtil.setEndHour(endHour);
+		}
+
+		int newWeekStartDay = getPreferenceStore().getInt(TasksUiPreferenceConstants.WEEK_START_DAY);
+		int oldWeekStartDay = taskActivityManager.getWeekStartDay();
+		if (oldWeekStartDay != newWeekStartDay) {
+			taskActivityManager.setWeekStartDay(newWeekStartDay);
+			TaskActivityUtil.setStartDay(newWeekStartDay);
+			taskListManager.resetAndRollOver();
+		}
 
 		// event.getProperty().equals(TaskListPreferenceConstants.PLANNING_STARTDAY)
 		// scheduledStartHour =
@@ -744,7 +754,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		store.setDefault(TasksUiPreferenceConstants.ACTIVATE_MULTIPLE, false);
 		store.setValue(TasksUiPreferenceConstants.ACTIVATE_MULTIPLE, false);
 
-		store.setDefault(TasksUiPreferenceConstants.PLANNING_STARTHOUR, 9);
+		store.setDefault(TasksUiPreferenceConstants.WEEK_START_DAY, Calendar.getInstance().getFirstDayOfWeek());
+		//store.setDefault(TasksUiPreferenceConstants.PLANNING_STARTHOUR, 9);
 		store.setDefault(TasksUiPreferenceConstants.PLANNING_ENDHOUR, 18);
 	}
 

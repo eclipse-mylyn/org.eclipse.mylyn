@@ -36,6 +36,7 @@ import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
@@ -419,7 +420,7 @@ public class TaskListManager implements ITaskListManager {
 	 * public for testing TODO: Move to TaskActivityManager
 	 */
 	public void resetAndRollOver() {
-		resetAndRollOver(new Date());
+		resetAndRollOver(TaskActivityUtil.getCalendar().getTime());
 	}
 
 	/**
