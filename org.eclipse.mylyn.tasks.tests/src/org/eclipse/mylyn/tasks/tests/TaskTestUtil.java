@@ -33,6 +33,17 @@ public class TaskTestUtil {
 		}
 	}
 
+	public static File getFile(String path) throws IOException {
+		if (TasksTestsPlugin.getDefault() != null) {
+			URL installURL = TasksTestsPlugin.getDefault().getBundle().getEntry(path);
+			URL localURL = FileLocator.toFileURL(installURL);
+			return new File(localURL.getFile());
+		} else {
+			URL localURL = TaskTestUtil.class.getResource("");
+			return new File(localURL.getFile() + "../../../../../../" + path);
+		}
+	}
+
 	/**
 	 * Adaptred from Java Developers' almanac
 	 */

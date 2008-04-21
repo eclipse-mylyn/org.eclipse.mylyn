@@ -12,10 +12,8 @@ package org.eclipse.mylyn.tasks.ui.editors;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorInputFactory;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IEditorInput;
@@ -37,8 +35,6 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 
 	private final AbstractTask task;
 
-	private final String taskId;
-
 	private final TaskRepository taskRepository;
 
 	/**
@@ -57,18 +53,6 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 		Assert.isNotNull(task);
 		this.taskRepository = taskRepository;
 		this.task = task;
-		this.taskId = task.getTaskId();
-	}
-
-	/**
-	 * @since 3.0
-	 */
-	public TaskEditorInput(TaskRepository taskRepository, String taskId) {
-		Assert.isNotNull(taskRepository);
-		Assert.isNotNull(taskId);
-		this.taskRepository = taskRepository;
-		this.taskId = taskId;
-		this.task = null;
 	}
 
 	/**
@@ -85,12 +69,8 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		final TaskEditorInput other = (TaskEditorInput) obj;
-		if (task != null) {
-			return task.equals(other.task);
-		} else {
-			return taskRepository.equals(other.taskRepository) && taskId.equals(other.taskId);
-		}
+		TaskEditorInput other = (TaskEditorInput) obj;
+		return task.equals(other.task);
 	}
 
 	/**
@@ -169,13 +149,6 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 	/**
 	 * @since 3.0
 	 */
-	public RepositoryTaskData getTaskData() {
-		return TasksUiPlugin.getTaskDataManager().getNewTaskData(taskRepository.getRepositoryUrl(), taskId);
-	}
-
-	/**
-	 * @since 3.0
-	 */
 	public TaskRepository getTaskRepository() {
 		return taskRepository;
 	}
@@ -184,15 +157,7 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 	 * @since 2.0
 	 */
 	public String getToolTipText() {
-		if (task != null) {
-			return task.getSummary();
-		} else {
-			RepositoryTaskData taskData = getTaskData();
-			if (taskData != null) {
-				return taskData.getSummary();
-			}
-		}
-		return null;
+		return task.getSummary();
 	}
 
 	/**
@@ -200,7 +165,7 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 	 */
 	@Override
 	public int hashCode() {
-		return taskId.hashCode();
+		return task.getTaskId().hashCode();
 	}
 
 	/**
@@ -225,4 +190,5 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 			return description.substring(0, MAX_LABEL_LENGTH) + "...";
 		}
 	}
+
 }

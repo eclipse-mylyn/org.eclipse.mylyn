@@ -885,6 +885,8 @@ public class ScreenshotAttachmentPage extends WizardPage implements IImageCreato
 
 	private final List<GrabPoint> grabPoints = new ArrayList<GrabPoint>(8);
 
+	private boolean dirty;
+
 	/**
 	 * Creates the final screenshot
 	 * 
@@ -904,12 +906,22 @@ public class ScreenshotAttachmentPage extends WizardPage implements IImageCreato
 		}
 		gc.dispose();
 
+		this.dirty = false;
+
 		return screenshot;
 	}
 
 	private void markAttachmentDirty() {
-		NewAttachmentWizard wizard = (NewAttachmentWizard) getWizard();
-		((ImageAttachment) wizard.getAttachment()).markDirty();
+		// API 3.0 remove
+		if (getWizard() instanceof NewAttachmentWizard) {
+			NewAttachmentWizard wizard = (NewAttachmentWizard) getWizard();
+			((ImageAttachment) wizard.getAttachment()).markDirty();
+		}
+		this.dirty = true;
+	}
+
+	public boolean isDirty() {
+		return dirty;
 	}
 
 }

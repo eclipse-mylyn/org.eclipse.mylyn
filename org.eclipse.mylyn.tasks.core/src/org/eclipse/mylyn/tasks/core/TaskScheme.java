@@ -1,0 +1,280 @@
+/*******************************************************************************
+ * Copyright (c) 2004, 2007 Mylyn project committers and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *******************************************************************************/
+
+package org.eclipse.mylyn.tasks.core;
+
+import java.util.Date;
+import java.util.Map;
+
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
+import org.eclipse.mylyn.tasks.core.data.AbstractAttributeMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskAttachment;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskComment;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.data.TaskOperation;
+
+/**
+ * @author Steffen Pingel
+ * @since 3.0
+ */
+public class TaskScheme {
+
+	private final TaskData taskData;
+
+	public TaskScheme(TaskData taskData) {
+		Assert.isNotNull(taskData);
+
+		this.taskData = taskData;
+	}
+
+	public boolean applyTo(AbstractTask task) {
+		boolean changed = false;
+		if (hasTaskPropertyChanged(task.getCompletionDate(), getCompletionDate())) {
+			task.setCompletionDate(getCompletionDate());
+			changed = true;
+		}
+		if (hasTaskPropertyChanged(task.getSummary(), getSummary())) {
+			task.setSummary(getSummary());
+			changed = true;
+		}
+		if (hasTaskPropertyChanged(task.getDueDate(), getDueDate())) {
+			task.setDueDate(getDueDate());
+			changed = true;
+		}
+		if (hasTaskPropertyChanged(task.getOwner(), getOwner())) {
+			task.setOwner(getOwner());
+			changed = true;
+		}
+		if (getPriority() != null && hasTaskPropertyChanged(task.getPriority(), getPriority().toString())) {
+			task.setPriority(getPriority().toString());
+			changed = true;
+		}
+		if (hasTaskPropertyChanged(task.getUrl(), getTaskUrl())) {
+			task.setUrl(getTaskUrl());
+			changed = true;
+		}
+		if (hasTaskPropertyChanged(task.getTaskKind(), getTaskKind())) {
+			task.setTaskKind(getTaskKind());
+			changed = true;
+		}
+		return changed;
+	}
+
+	public boolean getBooleanValue(String attributeKey) {
+		TaskAttribute attribute = taskData.getRoot().getAttribute(attributeKey);
+		if (attribute != null) {
+			return taskData.getAttributeMapper().getBooleanValue(attribute);
+		}
+		return false;
+	}
+
+	public String getComponent() {
+		return getValue(TaskAttribute.COMPONENT);
+	}
+
+	public Date getCreationDate() {
+		return getDateValue(TaskAttribute.DATE_CREATION);
+	}
+
+	public Date getCompletionDate() {
+		return getDateValue(TaskAttribute.DATE_COMPLETION);
+	}
+
+	public Date getModificationDate() {
+		return getDateValue(TaskAttribute.DATE_MODIFIED);
+	}
+
+	private Date getDateValue(String attributeKey) {
+		TaskAttribute attribute = taskData.getRoot().getAttribute(attributeKey);
+		if (attribute != null) {
+			return taskData.getAttributeMapper().getDateValue(attribute);
+		}
+		return null;
+	}
+
+	public String getDescription() {
+		return getValue(TaskAttribute.DESCRIPTION);
+	}
+
+	public Date getDueDate() {
+		return getDateValue(TaskAttribute.DATE_DUE);
+	}
+
+	public String getOwner() {
+		return getValue(TaskAttribute.USER_OWNER);
+	}
+
+	public PriorityLevel getPriority() {
+		String value = getValue(TaskAttribute.PRIORITY);
+		return (value != null) ? PriorityLevel.fromString(value) : null;
+	}
+
+	public String getProduct() {
+		return getValue(TaskAttribute.PRODUCT);
+	}
+
+	public String getSummary() {
+		return getValue(TaskAttribute.SUMMARY);
+	}
+
+	public String getTaskKind() {
+		return getValue(TaskAttribute.TASK_KIND);
+	}
+
+	public String getTaskUrl() {
+		return getValue(TaskAttribute.TASK_URL);
+	}
+
+	public String getValue(String attributeKey) {
+		TaskAttribute attribute = taskData.getRoot().getAttribute(attributeKey);
+		if (attribute != null) {
+			return taskData.getAttributeMapper().getValue(attribute);
+		}
+		return null;
+	}
+
+	protected final boolean hasTaskPropertyChanged(Object existingProperty, Object newProperty) {
+		// the query hit does not have this property
+		if (newProperty == null) {
+			return false;
+		}
+		return (existingProperty == null) ? true : !existingProperty.equals(newProperty);
+	}
+
+	public TaskAttribute setBooleanValue(String attributeKey, boolean value) {
+		TaskAttribute attribute = taskData.getRoot().getAttribute(attributeKey);
+		if (attribute == null) {
+			attribute = taskData.getRoot().createAttribute(attributeKey);
+		}
+		taskData.getAttributeMapper().setBooleanValue(attribute, value);
+		return attribute;
+	}
+
+	public void setComponent(String component) {
+		setValue(TaskAttribute.COMPONENT, component);
+	}
+
+	public void setCreationDate(Date dateCreated) {
+		setDateValue(TaskAttribute.DATE_CREATION, dateCreated);
+	}
+
+	public void setCompletionDate(Date dateCompleted) {
+		setDateValue(TaskAttribute.DATE_COMPLETION, dateCompleted);
+	}
+
+	public void setModificationDate(Date dateModified) {
+		setDateValue(TaskAttribute.DATE_MODIFIED, dateModified);
+	}
+
+	private TaskAttribute setDateValue(String attributeKey, Date value) {
+		TaskAttribute attribute = taskData.getRoot().getAttribute(attributeKey);
+		if (attribute == null) {
+			attribute = taskData.getRoot().createAttribute(attributeKey);
+		}
+		taskData.getAttributeMapper().setDateValue(attribute, value);
+		return attribute;
+	}
+
+	public void setDescription(String description) {
+		setValue(TaskAttribute.DESCRIPTION, description);
+	}
+
+	public void setDueDate(Date value) {
+		setDateValue(TaskAttribute.DATE_DUE, value);
+	}
+
+	// TODO use Person class?
+	public void setOwner(String owner) {
+		setValue(TaskAttribute.USER_OWNER, owner);
+	}
+
+	public void setPriority(PriorityLevel priority) {
+		setValue(TaskAttribute.PRIORITY, priority.toString());
+	}
+
+	public void setProduct(String product) {
+		setValue(TaskAttribute.PRODUCT, product);
+	}
+
+	// TODO use Person class?
+	public void setReporter(String reporter) {
+		setValue(TaskAttribute.USER_REPORTER, reporter);
+	}
+
+	public void setSummary(String summary) {
+		setValue(TaskAttribute.SUMMARY, summary);
+	}
+
+	public void setTaskKind(String taskKind) {
+		setValue(TaskAttribute.TASK_KIND, taskKind);
+	}
+
+	public void setTaskUrl(String taskUrl) {
+		setValue(TaskAttribute.TASK_URL, taskUrl);
+	}
+
+	public TaskAttribute setValue(String attributeKey, String value) {
+		TaskAttribute attribute = taskData.getRoot().getAttribute(attributeKey);
+		if (attribute == null) {
+			attribute = taskData.getRoot().createAttribute(attributeKey);
+		}
+		taskData.getAttributeMapper().setValue(attribute, value);
+		return attribute;
+	}
+
+	public TaskComment[] getComments() {
+		TaskAttribute attribute = taskData.getRoot().getAttribute(TaskAttribute.CONTAINER_COMMENTS);
+		if (attribute != null) {
+			AbstractAttributeMapper attributeMapper = taskData.getAttributeMapper();
+			Map<String, TaskAttribute> children = attribute.getAttributes();
+			int i = 0;
+			TaskComment[] comments = new TaskComment[children.size()];
+			for (TaskAttribute child : children.values()) {
+				comments[i] = attributeMapper.getTaskComment(child);
+				i++;
+			}
+			return comments;
+		}
+		return null;
+	}
+
+	public TaskAttachment[] getAttachments() {
+		TaskAttribute attribute = taskData.getRoot().getAttribute(TaskAttribute.CONTAINER_ATTACHMENTS);
+		if (attribute != null) {
+			AbstractAttributeMapper attributeMapper = taskData.getAttributeMapper();
+			Map<String, TaskAttribute> children = attribute.getAttributes();
+			int i = 0;
+			TaskAttachment[] attachments = new TaskAttachment[children.size()];
+			for (TaskAttribute child : children.values()) {
+				attachments[i] = attributeMapper.getTaskAttachment(child);
+				i++;
+			}
+			return attachments;
+		}
+		return null;
+	}
+
+	public TaskOperation[] getOperations() {
+		TaskAttribute attribute = taskData.getRoot().getAttribute(TaskAttribute.CONTAINER_OPERATIONS);
+		if (attribute != null) {
+			AbstractAttributeMapper attributeMapper = taskData.getAttributeMapper();
+			Map<String, TaskAttribute> children = attribute.getAttributes();
+			int i = 0;
+			TaskOperation[] operations = new TaskOperation[children.size()];
+			for (TaskAttribute child : children.values()) {
+				operations[i] = attributeMapper.getTaskOperation(child);
+				i++;
+			}
+			return operations;
+		}
+		return null;
+	}
+
+}

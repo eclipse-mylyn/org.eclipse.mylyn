@@ -196,7 +196,7 @@ public class TaskRepositoriesView extends ViewPart {
 		repositoryPropertiesAction = new EditRepositoryPropertiesAction();
 		viewer.addSelectionChangedListener(repositoryPropertiesAction);
 
-		resetConfigurationAction = new ResetRepositoryConfigurationAction();
+		resetConfigurationAction = new UpdateRepositoryConfigurationAction();
 		resetConfigurationAction.setActionDefinitionId("org.eclipse.ui.file.refresh");
 		viewer.addSelectionChangedListener(resetConfigurationAction);
 

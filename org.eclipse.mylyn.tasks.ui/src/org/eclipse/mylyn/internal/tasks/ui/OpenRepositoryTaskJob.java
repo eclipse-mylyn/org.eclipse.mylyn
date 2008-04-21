@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -70,8 +71,7 @@ public class OpenRepositoryTaskJob extends Job {
 			return Status.OK_STATUS;
 		}
 
-		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-				repositoryKind);
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(repositoryKind);
 		try {
 
 			AbstractTaskDataHandler offlineHandler = connector.getTaskDataHandler();
@@ -82,7 +82,7 @@ public class OpenRepositoryTaskJob extends Job {
 				if (downloadedTaskData != null) {
 					TasksUiPlugin.getTaskDataManager().setNewTaskData(downloadedTaskData);
 				}
-				openEditor(repository, downloadedTaskData);
+				openEditor(repository, connector, repository, downloadedTaskData);
 			} else {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
@@ -98,13 +98,17 @@ public class OpenRepositoryTaskJob extends Job {
 		return new Status(IStatus.OK, TasksUiPlugin.ID_PLUGIN, IStatus.OK, "", null);
 	}
 
-	private void openEditor(final TaskRepository repository, final RepositoryTaskData taskData) {
+	private void openEditor(final TaskRepository repository, final AbstractRepositoryConnector connector,
+			final TaskRepository taskRepository, final RepositoryTaskData taskData) {
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				if (taskData == null) {
 					TasksUiUtil.openUrl(taskUrl);
 				} else {
-					TaskEditorInput editorInput = new TaskEditorInput(repository, taskData.getTaskId());
+					AbstractTask task = connector.createTask(taskData.getRepositoryUrl(), taskData.getTaskId(),
+							taskData.getSummary());
+					connector.updateTaskFromTaskData(taskRepository, task, taskData);
+					TaskEditorInput editorInput = new TaskEditorInput(repository, task);
 					TasksUiUtil.openEditor(editorInput, TaskEditor.ID_EDITOR, page);
 				}
 			}

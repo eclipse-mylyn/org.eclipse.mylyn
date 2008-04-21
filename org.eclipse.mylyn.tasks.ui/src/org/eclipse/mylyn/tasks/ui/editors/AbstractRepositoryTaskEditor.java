@@ -98,7 +98,7 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskOutlinePage;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskSelection;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskListChangeAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskUrlHyperlink;
-import org.eclipse.mylyn.internal.tasks.ui.views.ResetRepositoryConfigurationAction;
+import org.eclipse.mylyn.internal.tasks.ui.views.UpdateRepositoryConfigurationAction;
 import org.eclipse.mylyn.monitor.core.DateUtil;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -947,7 +947,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		rowLayout.marginTop = 0;
 		rowLayout.marginBottom = 0;
 		toolbarComposite.setLayout(rowLayout);
-		ResetRepositoryConfigurationAction repositoryConfigRefresh = new ResetRepositoryConfigurationAction() {
+		UpdateRepositoryConfigurationAction repositoryConfigRefresh = new UpdateRepositoryConfigurationAction() {
 			@Override
 			public void performUpdate(TaskRepository repository, AbstractRepositoryConnector connector,
 					IProgressMonitor monitor) {

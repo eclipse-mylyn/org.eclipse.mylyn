@@ -20,6 +20,9 @@ public interface ITaskListChangeListener {
 
 	public abstract void containersChanged(Set<TaskContainerDelta> containers);
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract void taskListRead();
 
 }

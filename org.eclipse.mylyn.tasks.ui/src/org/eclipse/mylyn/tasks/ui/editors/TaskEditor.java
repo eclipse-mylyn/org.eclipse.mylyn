@@ -325,8 +325,8 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	private void addPage(AbstractTaskEditorFactory factory) {
 		IEditorInput editorInput;
 		if (taskEditorInput != null && taskEditorInput.getTask() == null) {
-			editorInput = new RepositoryTaskEditorInput(taskEditorInput.getTaskRepository(),
-					taskEditorInput.getTaskData().getTaskId(), "");
+			editorInput = new RepositoryTaskEditorInput(taskEditorInput.getTaskRepository(), taskEditorInput.getTask()
+					.getTaskId(), "");
 		} else {
 			editorInput = getEditorInput();
 		}
@@ -540,8 +540,8 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 		String kindLabel = taskData.getTaskKind();
 
-		if (connectorUi != null) {
-			kindLabel = connectorUi.getTaskKindLabel(taskData);
+		if (connectorUi != null && task != null) {
+			kindLabel = connectorUi.getTaskKindLabel(task);
 		}
 
 		String idLabel = taskData.getTaskKey();

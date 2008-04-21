@@ -35,7 +35,9 @@ import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.core.data.TaskAttachment;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
@@ -55,7 +57,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
-import org.eclipse.ui.views.navigator.ResourceSorter;
+import org.eclipse.ui.views.navigator.ResourceComparator;
 
 /**
  * A wizard to input the source of the attachment.
@@ -67,7 +69,6 @@ import org.eclipse.ui.views.navigator.ResourceSorter;
  * @author Jeff Pound - modified for attachment input
  * @author Chris Aniszczyk <caniszczyk@gmail.com> - bug 209572
  */
-@SuppressWarnings("deprecation")
 public class InputAttachmentSourcePage extends WizardPage {
 
 	// constants
@@ -109,8 +110,6 @@ public class InputAttachmentSourcePage extends WizardPage {
 
 	private TreeViewer treeViewer;
 
-	private final NewAttachmentWizard wizard;
-
 	private String clipboardContents;
 
 	private boolean initUseClipboard = false;
@@ -119,9 +118,10 @@ public class InputAttachmentSourcePage extends WizardPage {
 
 	private final String S_LAST_SELECTION = "lastSelection"; //$NON-NLS-1$
 
+	private TaskAttachment taskAttachment;
+
 	public InputAttachmentSourcePage(NewAttachmentWizard wizard) {
 		super("InputAttachmentPage");
-		this.wizard = wizard;
 		setTitle("Select attachment source");
 		setDescription("Clipboard contents are for text attachments only.");
 		// setMessage("Please select the source for the attachment");
@@ -177,11 +177,14 @@ public class InputAttachmentSourcePage extends WizardPage {
 
 	@Override
 	public IWizardPage getNextPage() {
+		if (taskAttachment != null) {
+			taskAttachment.setSource(getSource());
+		}
 		if (getInputMethod() == SCREENSHOT) {
-			return wizard.getPage("ScreenShotAttachment");
+			return getWizard().getPage("ScreenShotAttachment");
 		} else {
 			saveDialogSettings();
-			return wizard.getNextPage(this);
+			return getWizard().getNextPage(this);
 		}
 	}
 
@@ -232,7 +235,9 @@ public class InputAttachmentSourcePage extends WizardPage {
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.widthHint = SIZING_TEXT_FIELD_WIDTH;
 		fileNameField.setLayoutData(gd);
-		fileNameField.setText(wizard.getAttachment().getFilePath());
+		if (getWizard() instanceof NewAttachmentWizard) {
+			fileNameField.setText(((NewAttachmentWizard) getWizard()).getAttachment().getFilePath());
+		}
 
 		fileBrowseButton = new Button(composite, SWT.PUSH);
 		fileBrowseButton.setText("Browse...");
@@ -366,7 +371,7 @@ public class InputAttachmentSourcePage extends WizardPage {
 								treeViewer.expandToLevel(res, 1);
 							}
 						} else if (res instanceof IFile) {
-							wizard.showPage(getNextPage());
+							getContainer().showPage(getNextPage());
 						}
 					}
 				}
@@ -393,7 +398,7 @@ public class InputAttachmentSourcePage extends WizardPage {
 
 		treeViewer.setLabelProvider(new WorkbenchLabelProvider());
 		treeViewer.setContentProvider(new WorkbenchContentProvider());
-		treeViewer.setSorter(new ResourceSorter(ResourceSorter.NAME));
+		treeViewer.setComparator(new ResourceComparator(ResourceComparator.NAME));
 		treeViewer.setInput(ResourcesPlugin.getWorkspace().getRoot());
 	}
 
@@ -457,7 +462,10 @@ public class InputAttachmentSourcePage extends WizardPage {
 		}
 
 		setPageComplete(attachmentFound);
-		wizard.getAttachment().setFilePath(getAbsoluteAttachmentPath());
+		if (getWizard() instanceof NewAttachmentWizard) {
+			((NewAttachmentWizard) getWizard()).getAttachment().setFilePath(getAbsoluteAttachmentPath());
+		}
+		// API 3.0 set attachment source
 
 		if (showError) {
 			setErrorMessage(error);
@@ -565,7 +573,10 @@ public class InputAttachmentSourcePage extends WizardPage {
 		if (fileNameField != null) {
 			return fileNameField.getText();
 		}
-		return wizard.getAttachment().getFilePath();
+		if (getWizard() instanceof NewAttachmentWizard) {
+			return ((NewAttachmentWizard) getWizard()).getAttachment().getFilePath();
+		}
+		return null;
 	}
 
 	public String getAbsoluteAttachmentPath() {
@@ -674,6 +685,30 @@ public class InputAttachmentSourcePage extends WizardPage {
 			section = settings.addNewSection(DIALOG_SETTINGS);
 		}
 		return section;
+	}
+
+	public AbstractTaskAttachmentSource getSource() {
+		switch (getInputMethod()) {
+		case CLIPBOARD:
+			return new TaskAttachmentWizard.ClipboardSource();
+		case WORKSPACE:
+			IResource[] resources = getResources(treeViewer.getSelection());
+			if (resources.length > 0) {
+				return new TaskAttachmentWizard.FileSource(resources[0].getLocation().toFile());
+			} else {
+				return null;
+			}
+		default: // FILE
+			return new TaskAttachmentWizard.FileSource(new File(getAttachmentFilePath()));
+		}
+	}
+
+	public TaskAttachment getTaskAttachment() {
+		return taskAttachment;
+	}
+
+	public void setTaskAttachment(TaskAttachment taskAttachment) {
+		this.taskAttachment = taskAttachment;
 	}
 
 }

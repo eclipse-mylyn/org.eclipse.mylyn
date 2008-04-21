@@ -9,8 +9,9 @@
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.mylyn.tasks.core.AbstractAttributeMapper;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.AbstractAttributeMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.VerifyKeyListener;
 import org.eclipse.swt.events.VerifyEvent;
@@ -48,17 +49,17 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 
 	private RichTextAttributeEditor summaryEditor;
 
-	public TaskEditorSummaryPart(AbstractTaskEditorPage taskEditorPage) {
-		super(taskEditorPage);
+	public TaskEditorSummaryPart() {
+		setPartName("Summary");
 	}
 
-	private void addAttribute(Composite composite, FormToolkit toolkit, RepositoryTaskAttribute attribute) {
+	private void addAttribute(Composite composite, FormToolkit toolkit, TaskAttribute attribute) {
 		if (attribute == null) {
 			return;
 		}
 
+		AbstractAttributeMapper attributeMapper = getTaskData().getAttributeMapper();
 		AttributeEditorFactory attributeEditorFactory = getTaskEditorPage().getAttributeEditorFactory();
-		AbstractAttributeMapper attributeMapper = getTaskData().getAttributeFactory().getAttributeMapper();
 
 		String type = attributeMapper.getType(attribute);
 		if (type != null) {
@@ -71,8 +72,9 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 	}
 
 	private void addSummaryText(Composite composite, FormToolkit toolkit) {
-		RepositoryTaskAttribute attribute = getTaskData().getAttribute(RepositoryTaskAttribute.SUMMARY);
-		summaryEditor = new RichTextAttributeEditor(getTaskEditorPage().getAttributeManager(), attribute, SWT.SINGLE);
+		TaskAttribute attribute = getTaskData().getMappedAttribute(RepositoryTaskAttribute.SUMMARY);
+		summaryEditor = new RichTextAttributeEditor(getAttributeManager(), attribute,
+				getTaskEditorPage().getTaskRepository(), SWT.SINGLE);
 		summaryEditor.createControl(composite, toolkit);
 		// FIXME what does this do? 
 		//summaryTextViewer.getTextWidget().setIndent(2);
@@ -110,13 +112,13 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 		layout.marginWidth = 1;
 		headerComposite.setLayout(layout);
 
-		RepositoryTaskAttribute statusAtribute = getTaskData().getAttribute(RepositoryTaskAttribute.STATUS);
+		TaskAttribute statusAtribute = getTaskData().getRoot().getAttribute(RepositoryTaskAttribute.STATUS);
 		addAttribute(headerComposite, toolkit, statusAtribute);
 
-		RepositoryTaskAttribute priorityAttribute = getTaskData().getAttribute(RepositoryTaskAttribute.PRIORITY);
+		TaskAttribute priorityAttribute = getTaskData().getRoot().getAttribute(RepositoryTaskAttribute.PRIORITY);
 		addAttribute(headerComposite, toolkit, priorityAttribute);
 
-		String key = getTaskData().getTaskKey();
+		TaskAttribute key = getTaskData().getRoot().getAttribute(RepositoryTaskAttribute.TASK_KEY);
 		if (key != null) {
 			Label label = toolkit.createLabel(headerComposite, "ID:");
 			label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
@@ -124,13 +126,13 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 
 			Text text = new Text(headerComposite, SWT.FLAT | SWT.READ_ONLY);
 			toolkit.adapt(text, true, true);
-			text.setText(key);
+			text.setText(key.getValue());
 		}
 
-		RepositoryTaskAttribute dateCreation = getTaskData().getAttribute(RepositoryTaskAttribute.DATE_CREATION);
+		TaskAttribute dateCreation = getTaskData().getRoot().getAttribute(RepositoryTaskAttribute.DATE_CREATION);
 		addAttribute(headerComposite, toolkit, dateCreation);
 
-		RepositoryTaskAttribute dateModified = getTaskData().getAttribute(RepositoryTaskAttribute.DATE_MODIFIED);
+		TaskAttribute dateModified = getTaskData().getRoot().getAttribute(RepositoryTaskAttribute.DATE_MODIFIED);
 		addAttribute(headerComposite, toolkit, dateModified);
 	}
 

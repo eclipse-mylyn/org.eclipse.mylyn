@@ -19,8 +19,9 @@ import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.editors.LayoutHint.ColumnSpan;
 import org.eclipse.mylyn.internal.tasks.ui.editors.LayoutHint.RowSpan;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.AttributeManager;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -55,18 +56,21 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 	// TODO EDITOR
 	private boolean spellCheckingEnabled;
 
-	private final int style;
+	private int style;
 
-	public RichTextAttributeEditor(AttributeManager manager, RepositoryTaskAttribute taskAttribute) {
-		this(manager, taskAttribute, getDefaultStyle(taskAttribute));
+	private final TaskRepository taskRepository;
+
+	public RichTextAttributeEditor(AttributeManager manager, TaskRepository taskRepository, TaskAttribute taskAttribute) {
+		this(manager, taskAttribute, taskRepository, SWT.MULTI);
+		if (!isReadOnly()) {
+			this.style |= SWT.V_SCROLL;
+		}
 	}
 
-	private static int getDefaultStyle(RepositoryTaskAttribute taskAttribute) {
-		return (taskAttribute.isReadOnly()) ? SWT.MULTI : SWT.V_SCROLL | SWT.MULTI;
-	}
-
-	public RichTextAttributeEditor(AttributeManager manager, RepositoryTaskAttribute taskAttribute, int style) {
+	public RichTextAttributeEditor(AttributeManager manager, TaskAttribute taskAttribute,
+			TaskRepository taskRepository, int style) {
 		super(manager, taskAttribute);
+		this.taskRepository = taskRepository;
 		this.style = style;
 		setLayoutHint(new LayoutHint(RowSpan.MULTIPLE, ColumnSpan.MULTIPLE));
 	}
@@ -120,7 +124,6 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
-		TaskRepository taskRepository = getAttributeEditorManager().getTaskRepository();
 		viewer = new RepositoryTextViewer(taskRepository, parent, SWT.FLAT | SWT.WRAP | style);
 
 		// NOTE: configuration must be applied before the document is set in order for
@@ -130,7 +133,7 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 		viewer.configure(viewerConfig);
 
 		Document document = new Document(getValue());
-		if (getTaskAttribute().isReadOnly()) {
+		if (isReadOnly()) {
 			viewer.setEditable(false);
 			viewer.setDocument(document);
 		} else {

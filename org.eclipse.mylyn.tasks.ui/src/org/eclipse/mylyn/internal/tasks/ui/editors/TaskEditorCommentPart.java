@@ -14,20 +14,25 @@ import java.util.List;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.mylyn.internal.tasks.core.CommentQuoter;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
-import org.eclipse.mylyn.tasks.core.TaskComment;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskComment;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
@@ -37,8 +42,10 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.themes.IThemeManager;
 
 /**
+ * @author Robert Elves
  * @author Steffen Pingel
  */
 public class TaskEditorCommentPart extends AbstractTaskEditorPart {
@@ -49,35 +56,48 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 	private TaskComment selectedComment;
 
-	private final Section commentsSection;
+	private Section section;
 
-	private boolean supportsDelete;
+	private List<ExpandableComposite> commentComposites;
 
-	private final List<ExpandableComposite> commentComposites = new ArrayList<ExpandableComposite>();
+	private ArrayList<TaskAttribute> comments;
 
-	public TaskEditorCommentPart(AbstractTaskEditorPage taskEditorPage, Section commentsSection) {
-		super(taskEditorPage);
-		this.commentsSection = commentsSection;
+	private boolean hasIncoming;
+
+	public TaskEditorCommentPart() {
+		setPartName("Comments");
+	}
+
+	private void initialize() {
+		TaskAttribute container = getTaskData().getMappedAttribute(TaskAttribute.CONTAINER_COMMENTS);
+		comments = new ArrayList<TaskAttribute>(container.getAttributes().values());
+
+		for (TaskAttribute commentAttribute : comments) {
+			if (getAttributeManager().hasIncomingChanges(commentAttribute)) {
+				hasIncoming = true;
+				break;
+			}
+		}
 	}
 
 	@Override
-	public void createControl(Composite composite, final FormToolkit toolkit) {
-		commentsSection.setText(commentsSection.getText() + " (" + getTaskData().getComments().size() + ")");
-		if (getTaskData().getComments().size() == 0) {
-			commentsSection.setEnabled(false);
-		}
+	public void createControl(Composite parent, final FormToolkit toolkit) {
+		initialize();
+
+		section = createSection(parent, toolkit, hasIncoming);
+		section.setText(section.getText() + " (" + comments.size() + ")");
 
 		// Additional (read-only) Comments Area
-		final Composite addCommentsComposite = toolkit.createComposite(commentsSection);
-		commentsSection.setClient(addCommentsComposite);
+		final Composite addCommentsComposite = toolkit.createComposite(section);
+		section.setClient(addCommentsComposite);
 		GridLayout addCommentsLayout = new GridLayout();
 		addCommentsLayout.numColumns = 1;
 		addCommentsComposite.setLayout(addCommentsLayout);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(addCommentsComposite);
 
-		boolean foundNew = false;
-
-		for (final TaskComment taskComment : getTaskData().getComments()) {
+		commentComposites = new ArrayList<ExpandableComposite>();
+		for (final TaskAttribute commentAttribute : comments) {
+			final TaskComment taskComment = getTaskData().getAttributeMapper().getTaskComment(commentAttribute);
 			final ExpandableComposite expandableComposite = toolkit.createExpandableComposite(addCommentsComposite,
 					ExpandableComposite.TREE_NODE | ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT);
 
@@ -97,22 +117,25 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			formHyperlink.setFont(expandableComposite.getFont());
 			formHyperlink.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 			if (taskComment.getAuthor() != null
-					&& taskComment.getAuthor().equalsIgnoreCase(getTaskRepository().getUserName())) {
+					&& taskComment.getAuthor().getPersonId().equalsIgnoreCase(
+							getTaskEditorPage().getTaskRepository().getUserName())) {
 				formHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.PERSON_ME_NARROW));
 			} else {
 				formHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.PERSON_NARROW));
 			}
 
-			String authorName = taskComment.getAuthorName();
-			String tooltipText = taskComment.getAuthor();
-			if (authorName.length() == 0) {
-				authorName = taskComment.getAuthor();
+			String authorName;
+			String tooltipText;
+			if (taskComment.getAuthor().getName() != null) {
+				authorName = taskComment.getAuthor().getName();
+				tooltipText = taskComment.getAuthor().getPersonId();
+			} else {
+				authorName = taskComment.getAuthor().getPersonId();
 				tooltipText = null;
 			}
 
 			formHyperlink.setText(taskComment.getNumber() + ": " + authorName + ", "
-					+ formatDate(taskComment.getCreated()));
-
+					+ getTaskEditorPage().getAttributeEditorToolkit().formatDate(taskComment.getCreationDate()));
 			formHyperlink.setToolTipText(tooltipText);
 			formHyperlink.setEnabled(true);
 			formHyperlink.setUnderlined(false);
@@ -123,23 +146,6 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			buttonCompLayout.marginTop = 0;
 			toolbarButtonComp.setLayout(buttonCompLayout);
 			toolbarButtonComp.setBackground(null);
-
-			if (supportsDelete()) {
-				final ImageHyperlink deleteComment = new ImageHyperlink(toolbarButtonComp, SWT.NULL);
-				toolkit.adapt(deleteComment, true, true);
-				deleteComment.setImage(TasksUiImages.getImage(TasksUiImages.REMOVE));
-				deleteComment.setToolTipText("Remove");
-
-				deleteComment.addHyperlinkListener(new HyperlinkAdapter() {
-
-					@Override
-					public void linkActivated(HyperlinkEvent e) {
-						getTaskEditorPage().deleteComment(taskComment);
-						getTaskEditorPage().submitToRepository();
-					}
-				});
-
-			}
 
 			final ImageHyperlink replyLink = createReplyHyperlink(toolbarButtonComp, toolkit, taskComment);
 			formHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
@@ -192,12 +198,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 					toolbarButtonComp.setVisible(expandableComposite.isExpanded());
 					TextViewer viewer = null;
 					if (e.getState() && expandableComposite.getData("viewer") == null) {
-						RichTextAttributeEditor editor = new RichTextAttributeEditor(
-								getTaskEditorPage().getAttributeManager(),
-								taskComment.getAttribute(RepositoryTaskAttribute.COMMENT_TEXT));
-						editor.setDecorationEnabled(false);
-						editor.createControl(ecComposite, toolkit);
-						viewer = editor.getViewer();
+						viewer = createViewer(ecComposite, toolkit, taskComment.getText());
 						expandableComposite.setData("viewer", viewer.getTextWidget());
 						viewer.getTextWidget().addFocusListener(new FocusListener() {
 
@@ -225,38 +226,34 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 				}
 			});
 
-			AbstractTask repositoryTask = getTaskEditorPage().getTask();
-			if ((repositoryTask != null && repositoryTask.getLastReadTimeStamp() == null)
-					|| getTaskEditorPage().getAttributeManager().getOldTaskData() == null) {
-				// hit or lost task data, expose all comments
-				EditorUtil.toggleExpandableComposite(true, expandableComposite);
-				foundNew = true;
-			} else if (getTaskEditorPage().getAttributeManager().isNewComment(taskComment)) {
-				// TODO EDITOR getTaskEditorPage().getAttributeEditorManager().decorate(taskAttribute, control)
+			if (getAttributeManager().hasIncomingChanges(commentAttribute)) {
 				expandableComposite.setBackground(getTaskEditorPage().getColorIncoming());
 				EditorUtil.toggleExpandableComposite(true, expandableComposite);
-				foundNew = true;
-			}
-
-		}
-		if (foundNew) {
-			commentsSection.setExpanded(true);
-		} else if (getTaskData().getComments() == null || getTaskData().getComments().size() == 0) {
-			commentsSection.setExpanded(false);
-		} else if (getTaskEditorPage().getAttributeManager().getTaskData() != null
-				&& getTaskEditorPage().getAttributeManager().getOldTaskData() != null) {
-			List<TaskComment> newTaskComments = getTaskEditorPage().getAttributeManager().getTaskData().getComments();
-			List<TaskComment> oldTaskComments = getTaskEditorPage().getAttributeManager()
-					.getOldTaskData()
-					.getComments();
-			if (newTaskComments == null || oldTaskComments == null) {
-				commentsSection.setExpanded(true);
-			} else {
-				commentsSection.setExpanded(newTaskComments.size() != oldTaskComments.size());
 			}
 		}
 
-		setControl(addCommentsComposite);
+		setSection(toolkit, section);
+	}
+
+	private RepositoryTextViewer createViewer(Composite parent, FormToolkit toolkit, String text) {
+		TaskRepository taskRepository = getTaskEditorPage().getTaskRepository();
+		RepositoryTextViewer viewer = new RepositoryTextViewer(taskRepository, parent, SWT.FLAT | SWT.WRAP | SWT.MULTI);
+
+		// NOTE: configuration must be applied before the document is set in order for
+		// hyper link coloring to work, the Presenter requires the document object up front
+		TextSourceViewerConfiguration viewerConfig = new RepositoryTextViewerConfiguration(taskRepository, false);
+		viewer.configure(viewerConfig);
+
+		Document document = new Document(text);
+		viewer.setEditable(false);
+		viewer.setDocument(document);
+
+		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
+		Font font = themeManager.getCurrentTheme().getFontRegistry().get(TaskListColorsAndFonts.TASK_EDITOR_FONT);
+		viewer.getTextWidget().setFont(font);
+		toolkit.adapt(viewer.getTextWidget(), true, true);
+
+		return viewer;
 	}
 
 //	private boolean shouldExpandCommentSection() {
@@ -272,7 +269,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 //		if (taskData.getComments() == null || taskData.getComments().size() == 0) {
 //			return false;
 //		} else if (editorInput.getTaskData() != null && editorInput.getOldTaskData() != null) {
-//			List<TaskComment> newTaskComments = editorInput.getTaskData().getComments();
+//			List<TaskComment> newTaskComments = editorInput.comments;
 //			List<TaskComment> oldTaskComments = editorInput.getOldTaskData().getComments();
 //			if (newTaskComments == null || oldTaskComments == null) {
 //				return true;
@@ -308,7 +305,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 	@Override
 	protected void fillToolBar(ToolBarManager barManager) {
-		if (getTaskData().getComments().isEmpty()) {
+		if (comments.isEmpty()) {
 			return;
 		}
 
@@ -408,8 +405,8 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		try {
 			getTaskEditorPage().setReflow(false);
 
-			if (commentsSection != null) {
-				commentsSection.setExpanded(true);
+			if (section != null) {
+				section.setExpanded(true);
 			}
 			for (ExpandableComposite composite : commentComposites) {
 				if (composite.isDisposed()) {
@@ -443,21 +440,8 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		}
 	}
 
-	public void setSupportsDelete(boolean supportsDelete) {
-		this.supportsDelete = supportsDelete;
-	}
-
-	private boolean supportsDelete() {
-		return supportsDelete;
-	}
-
 	public TaskComment getSelectedComment() {
 		return selectedComment;
-	}
-
-	// TODO EDITOR where should this go?
-	public String formatDate(String dateString) {
-		return dateString;
 	}
 
 }

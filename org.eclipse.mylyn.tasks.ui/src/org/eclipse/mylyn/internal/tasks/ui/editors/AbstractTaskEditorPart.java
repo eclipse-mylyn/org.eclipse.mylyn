@@ -10,15 +10,17 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
+import org.eclipse.mylyn.tasks.core.data.AttributeManager;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.AbstractFormPart;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * @author Steffen Pingel
@@ -29,18 +31,25 @@ public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 	// XXX why is this required?
 	protected static final Font TEXT_FONT = JFaceResources.getDefaultFont();
 
-	private RepositoryTaskData taskData;
+	private TaskData taskData;
 
 	private Control control;
 
-	private TaskRepository taskRepository;
+	private AbstractTaskEditorPage taskEditorPage;
 
-	private AbstractRepositoryConnector connector;
+	private String partName;
 
-	private final AbstractTaskEditorPage taskEditorPage;
+	public AbstractTaskEditorPart() {
+	}
 
-	public AbstractTaskEditorPart(AbstractTaskEditorPage taskEditorPage) {
-		this.taskEditorPage = taskEditorPage;
+	protected Section createSection(Composite parent, FormToolkit toolkit, boolean expandedState) {
+		int style = ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE;
+		if (expandedState) {
+			style |= ExpandableComposite.EXPANDED;
+		}
+		Section section = toolkit.createSection(parent, style);
+		section.setText(getPartName());
+		return section;
 	}
 
 	public abstract void createControl(Composite parent, FormToolkit toolkit);
@@ -49,21 +58,12 @@ public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 		return control;
 	}
 
-	public AbstractRepositoryConnector getConnector() {
-		return connector;
+	public AttributeManager getAttributeManager() {
+		return getTaskEditorPage().getAttributeManager();
 	}
 
-	public RepositoryTaskData getTaskData() {
-		return taskData;
-	}
-
-	public TaskRepository getTaskRepository() {
-		return taskRepository;
-	}
-
-	// TODO EDITOR review if this is required
-	public TaskEditor getTaskEditor() {
-		return getTaskEditorPage().getParentEditor();
+	public TaskData getTaskData() {
+		return getTaskEditorPage().getAttributeManager().getTaskData();
 	}
 
 	public AbstractTaskEditorPage getTaskEditorPage() {
@@ -74,14 +74,41 @@ public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 		this.control = control;
 	}
 
-	public void setInput(AbstractRepositoryConnector connector, TaskRepository taskRepository,
-			RepositoryTaskData taskData) {
-		this.connector = connector;
-		this.taskRepository = taskRepository;
-		this.taskData = taskData;
+	public void initialize(AbstractTaskEditorPage taskEditorPage) {
+		this.taskEditorPage = taskEditorPage;
 	}
 
 	protected void fillToolBar(ToolBarManager toolBarManager) {
+	}
+
+	public String getPartName() {
+		return partName;
+	}
+
+	protected void setPartName(String partName) {
+		this.partName = partName;
+	}
+
+	protected void setSection(FormToolkit toolkit, Section section) {
+		if (section.getTextClient() == null) {
+			ToolBarManager toolBarManager = new ToolBarManager(SWT.FLAT);
+			fillToolBar(toolBarManager);
+
+			// TODO EDITOR toolBarManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+
+			if (toolBarManager.getSize() > 0) {
+				Composite toolbarComposite = toolkit.createComposite(section);
+				toolbarComposite.setBackground(null);
+				RowLayout rowLayout = new RowLayout();
+				rowLayout.marginTop = 0;
+				rowLayout.marginBottom = 0;
+				toolbarComposite.setLayout(rowLayout);
+
+				toolBarManager.createControl(toolbarComposite);
+				section.setTextClient(toolbarComposite);
+			}
+		}
+		setControl(section);
 	}
 
 }

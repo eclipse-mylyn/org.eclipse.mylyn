@@ -63,7 +63,7 @@ public class DefaultTaskSchema {
 	public boolean getBooleanValue(String attributeKey) {
 		RepositoryTaskAttribute attribute = taskData.getAttribute(attributeKey);
 		if (attribute != null) {
-			return taskData.getAttributeFactory().getAttributeMapper().getBooleanValue(attribute);
+			return Boolean.parseBoolean(attribute.getValue());
 		}
 		return false;
 	}
@@ -87,7 +87,7 @@ public class DefaultTaskSchema {
 	private Date getDateValue(String attributeKey) {
 		RepositoryTaskAttribute attribute = taskData.getAttribute(attributeKey);
 		if (attribute != null) {
-			return taskData.getAttributeFactory().getAttributeMapper().getDateValue(attribute);
+			return taskData.getAttributeFactory().getDateForAttributeType(attributeKey, attribute.getValue());
 		}
 		return null;
 	}
@@ -128,7 +128,7 @@ public class DefaultTaskSchema {
 	public String getValue(String attributeKey) {
 		RepositoryTaskAttribute attribute = taskData.getAttribute(attributeKey);
 		if (attribute != null) {
-			return taskData.getAttributeFactory().getAttributeMapper().getValue(attribute);
+			return attribute.getValue();
 		}
 		return null;
 	}
@@ -148,12 +148,7 @@ public class DefaultTaskSchema {
 			taskData.addAttribute(attributeKey, attribute);
 		}
 
-		AbstractAttributeMapper attributeMapper = taskData.getAttributeFactory().getAttributeMapper();
-		if (attributeMapper != null) {
-			attributeMapper.setBooleanValue(attribute, value);
-		} else {
-			attribute.setValue(value + "");
-		}
+		attribute.setValue(value + "");
 		return attribute;
 	}
 
@@ -179,7 +174,7 @@ public class DefaultTaskSchema {
 			attribute = new RepositoryTaskAttribute(attributeKey, null, false);
 			taskData.addAttribute(attributeKey, attribute);
 		}
-		taskData.getAttributeFactory().getAttributeMapper().setDateValue(attribute, value);
+		attribute.setValue(value.toString());
 		return attribute;
 	}
 
@@ -228,12 +223,7 @@ public class DefaultTaskSchema {
 			taskData.addAttribute(attributeKey, attribute);
 		}
 
-		AbstractAttributeMapper attributeMapper = taskData.getAttributeFactory().getAttributeMapper();
-		if (attributeMapper != null) {
-			attributeMapper.setValue(attribute, value);
-		} else {
-			attribute.setValue(value);
-		}
+		attribute.setValue(value);
 		return attribute;
 	}
 

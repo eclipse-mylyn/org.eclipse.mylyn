@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
+import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager2;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.monitor.core.CoreUtil;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
@@ -28,6 +29,7 @@ import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.ITaskListManager;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.ITaskDataManager2;
 import org.eclipse.mylyn.tasks.core.sync.IRepositorySynchronizationManager;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
 import org.eclipse.swt.widgets.Display;
@@ -41,6 +43,10 @@ public class TasksUi {
 
 	public static ITasksJobFactory getJobFactory() {
 		return TasksUiPlugin.getTasksJobFactory();
+	}
+
+	public static ITaskDataManager2 getTaskDataManager() {
+		return new TaskDataManager2(getRepositoryManager());
 	}
 
 	public static ITaskListManager getTaskListManager() {

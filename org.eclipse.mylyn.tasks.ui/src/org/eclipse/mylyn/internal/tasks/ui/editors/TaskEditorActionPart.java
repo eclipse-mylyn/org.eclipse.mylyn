@@ -9,119 +9,72 @@
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITaskList;
-import org.eclipse.mylyn.tasks.core.RepositoryOperation;
+import org.eclipse.mylyn.tasks.core.data.AbstractAttributeMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskOperation;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Section;
 
 public class TaskEditorActionPart extends AbstractTaskEditorPart {
 
-	/**
-	 * Class to handle the selection change of the radio buttons.
-	 */
-	private class RadioButtonListener implements SelectionListener, ModifyListener {
+	private class RadioButtonListener extends SelectionAdapter {
 
 		public void modifyText(ModifyEvent e) {
-			Button selected = null;
-			for (Button element : radios) {
-				if (element.getSelection()) {
-					selected = element;
+			for (Button button : operationButtons) {
+				if (button != e.widget) {
+					button.setSelection(false);
 				}
 			}
-			// determine the operation to do to the bug
-			for (int i = 0; i < radios.length; i++) {
-				if (radios[i] != e.widget && radios[i] != selected) {
-					radios[i].setSelection(false);
-				}
 
-				if (e.widget == radios[i]) {
-					RepositoryOperation o = getTaskData().getOperation(radios[i].getText());
-					getTaskData().setSelectedOperation(o);
-					getTaskEditorPage().getAttributeManager().operationChanged(o);
-				} else if (e.widget == radioOptions[i]) {
-					RepositoryOperation o = getTaskData().getOperation(radios[i].getText());
-					o.setInputValue(((Text) radioOptions[i]).getText());
+			TaskOperation operation = (TaskOperation) e.widget.getData();
+			getTaskData().getAttributeMapper().setTaskOperation(getTaskData(), operation);
+		}
 
-					if (getTaskData().getSelectedOperation() != null) {
-						getTaskData().getSelectedOperation().setChecked(false);
-					}
-					o.setChecked(true);
+	}
 
-					getTaskData().setSelectedOperation(o);
-					radios[i].setSelection(true);
-					if (selected != null && selected != radios[i]) {
-						selected.setSelection(false);
-					}
-					getTaskEditorPage().getAttributeManager().operationChanged(o);
+	private class FocusListener extends FocusAdapter {
+
+		private final Button button;
+
+		public FocusListener(Button button) {
+			this.button = button;
+		}
+
+		@Override
+		public void focusGained(FocusEvent e) {
+			this.button.setSelection(true);
+			for (Button button : operationButtons) {
+				if (button != this.button) {
+					button.setSelection(false);
 				}
 			}
 		}
 
-		public void widgetDefaultSelected(SelectionEvent e) {
-			widgetSelected(e);
-		}
-
-		public void widgetSelected(SelectionEvent e) {
-			Button selected = null;
-			for (Button element : radios) {
-				if (element.getSelection()) {
-					selected = element;
-				}
-			}
-			// determine the operation to do to the bug
-			for (int i = 0; i < radios.length; i++) {
-				if (radios[i] != e.widget && radios[i] != selected) {
-					radios[i].setSelection(false);
-				}
-
-				if (e.widget == radios[i]) {
-					RepositoryOperation o = getTaskData().getOperation(radios[i].getText());
-					getTaskData().setSelectedOperation(o);
-					getTaskEditorPage().getAttributeManager().operationChanged(o);
-				} else if (e.widget == radioOptions[i]) {
-					RepositoryOperation o = getTaskData().getOperation(radios[i].getText());
-					o.setOptionSelection(((CCombo) radioOptions[i]).getItem(((CCombo) radioOptions[i]).getSelectionIndex()));
-
-					if (getTaskData().getSelectedOperation() != null) {
-						getTaskData().getSelectedOperation().setChecked(false);
-					}
-					o.setChecked(true);
-
-					getTaskData().setSelectedOperation(o);
-					radios[i].setSelection(true);
-					if (selected != null && selected != radios[i]) {
-						selected.setSelection(false);
-					}
-					getTaskEditorPage().getAttributeManager().operationChanged(o);
-				}
-			}
-		}
 	}
 
 	private static final int DEFAULT_FIELD_WIDTH = 150;
@@ -130,9 +83,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 
 	private static final int RADIO_OPTION_WIDTH = 120;
 
-	private Control[] radioOptions;
-
-	private Button[] radios;
+	private List<Button> operationButtons;
 
 	private Button submitButton;
 
@@ -148,11 +99,11 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 
 	private AbstractTaskCategory category;
 
-	public TaskEditorActionPart(AbstractTaskEditorPage taskEditorPage) {
-		super(taskEditorPage);
+	public TaskEditorActionPart() {
+		setPartName("Actions");
 	}
 
-	protected void addAttachContextButton(Composite buttonComposite, AbstractTask task, FormToolkit toolkit) {
+	protected void addAttachContextButton(Composite buttonComposite, FormToolkit toolkit) {
 		attachContextButton = toolkit.createButton(buttonComposite, "Attach Context", SWT.CHECK);
 		attachContextButton.setImage(TasksUiImages.getImage(TasksUiImages.CONTEXT_ATTACH));
 	}
@@ -180,10 +131,8 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 
 		toolkit.createLabel(buttonComposite, "    ");
 
-		AbstractTask task = TasksUi.getTaskListManager().getTaskList().getTask(getTaskRepository().getRepositoryUrl(),
-				getTaskData().getTaskId());
-		if (needsAttachContext && task != null) {
-			addAttachContextButton(buttonComposite, task, toolkit);
+		if (needsAttachContext) {
+			addAttachContextButton(buttonComposite, toolkit);
 		}
 	}
 
@@ -251,6 +200,8 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
+		Section section = createSection(parent, toolkit, true);
+
 		Composite buttonComposite = toolkit.createComposite(parent);
 		GridLayout buttonLayout = new GridLayout();
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(buttonComposite);
@@ -264,103 +215,47 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		createRadioButtons(buttonComposite, toolkit);
 		createActionButtons(buttonComposite, toolkit);
 
-		setControl(buttonComposite);
+		setSection(toolkit, section);
+	}
+
+	private void addAttribute(Composite composite, FormToolkit toolkit, TaskAttribute attribute, Button button) {
+		AbstractAttributeMapper attributeMapper = getTaskData().getAttributeMapper();
+		AttributeEditorFactory attributeEditorFactory = getTaskEditorPage().getAttributeEditorFactory();
+
+		String type = attributeMapper.getType(attribute);
+		if (type != null) {
+			AbstractAttributeEditor editor = attributeEditorFactory.createEditor(type, attribute);
+			editor.createControl(composite, toolkit);
+			GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+			gd.horizontalSpan = 3;
+			gd.widthHint = RADIO_OPTION_WIDTH;
+			editor.getControl().setLayoutData(gd);
+			editor.getControl().addFocusListener(new FocusListener(button));
+			getTaskEditorPage().getAttributeEditorToolkit().adapt(editor);
+		}
 	}
 
 	private void createRadioButtons(Composite buttonComposite, FormToolkit toolkit) {
-		int i = 0;
-		Button selected = null;
-		radios = new Button[getTaskData().getOperations().size()];
-		radioOptions = new Control[getTaskData().getOperations().size()];
-		for (RepositoryOperation o : getTaskData().getOperations()) {
-			radios[i] = toolkit.createButton(buttonComposite, "", SWT.RADIO);
-			radios[i].setFont(TEXT_FONT);
-			GridData radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-			if (!o.hasOptions() && !o.isInput()) {
-				radioData.horizontalSpan = 4;
-			} else {
-				radioData.horizontalSpan = 1;
-			}
-			radioData.heightHint = 20;
-			String opName = o.getOperationName();
-			opName = opName.replaceAll("</.*>", "");
-			opName = opName.replaceAll("<.*>", "");
-			radios[i].setText(opName);
-			radios[i].setLayoutData(radioData);
-			// radios[i].setBackground(background);
-			radios[i].addSelectionListener(new RadioButtonListener());
-
-			if (o.hasOptions()) {
-				radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-				radioData.horizontalSpan = 3;
-				radioData.heightHint = 20;
-				radioData.widthHint = RADIO_OPTION_WIDTH;
-				radioOptions[i] = new CCombo(buttonComposite, SWT.FLAT | SWT.READ_ONLY);
-				radioOptions[i].setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-				toolkit.adapt(radioOptions[i], true, true);
-				radioOptions[i].setFont(TEXT_FONT);
-				radioOptions[i].setLayoutData(radioData);
-
-				Object[] a = o.getOptionNames().toArray();
-				Arrays.sort(a);
-				for (int j = 0; j < a.length; j++) {
-					if (a[j] != null) {
-						((CCombo) radioOptions[i]).add((String) a[j]);
-						if (((String) a[j]).equals(o.getOptionSelection())) {
-							((CCombo) radioOptions[i]).select(j);
-						}
-					}
+		TaskAttribute container = getTaskData().getMappedAttribute(TaskAttribute.CONTAINER_OPERATIONS);
+		Map<String, TaskAttribute> attributes = container.getAttributes();
+		for (TaskAttribute attribute : attributes.values()) {
+			TaskOperation operation = getTaskData().getAttributeMapper().getTaskOperation(attribute);
+			if (operation != null) {
+				Button button = toolkit.createButton(buttonComposite, operation.getLabel(), SWT.RADIO);
+				button.setData(operation);
+				GridData radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+				TaskAttribute associatedAttribute = getTaskData().getAttributeMapper().getAssoctiatedAttribute(
+						attribute);
+				if (associatedAttribute != null) {
+					radioData.horizontalSpan = 1;
+					addAttribute(buttonComposite, toolkit, associatedAttribute, button);
+				} else {
+					radioData.horizontalSpan = 4;
 				}
-				((CCombo) radioOptions[i]).addSelectionListener(new RadioButtonListener());
-			} else if (o.isInput()) {
-				radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-				radioData.horizontalSpan = 3;
-				radioData.widthHint = RADIO_OPTION_WIDTH - 10;
-
-				String assignmentValue = "";
-				// NOTE: removed this because we now have content assit
-// if (opName.equals(REASSIGN_BUG_TO)) {
-// assignmentValue = repository.getUserName();
-// }
-				radioOptions[i] = toolkit.createText(buttonComposite, assignmentValue);
-				radioOptions[i].setFont(TEXT_FONT);
-				radioOptions[i].setLayoutData(radioData);
-				// radioOptions[i].setBackground(background);
-				((Text) radioOptions[i]).setText(o.getInputValue());
-				((Text) radioOptions[i]).addModifyListener(new RadioButtonListener());
-
-				// FIXME EDITOR use attributes instead of operations
-//				if (getTaskEditorPage().getAttributeEditorToolkit().hasContentAssist(o)) {
-//					ContentAssistCommandAdapter adapter = applyContentAssist((Text) radioOptions[i],
-//							getTaskEditorPage().getAttributeEditorToolkit().createContentProposalProvider(o));
-//					ILabelProvider propsalLabelProvider = getTaskEditorPage().getAttributeEditorToolkit()
-//							.createProposalLabelProvider(o);
-//					if (propsalLabelProvider != null) {
-//						adapter.setLabelProvider(propsalLabelProvider);
-//					}
-//					adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
-//				}
+				button.setLayoutData(radioData);
+				button.addSelectionListener(new RadioButtonListener());
+				operationButtons.add(button);
 			}
-
-			if (i == 0 || o.isChecked()) {
-				if (selected != null) {
-					selected.setSelection(false);
-				}
-				selected = radios[i];
-				radios[i].setSelection(true);
-				if (o.hasOptions() && o.getOptionSelection() != null) {
-					int j = 0;
-					for (String s : ((CCombo) radioOptions[i]).getItems()) {
-						if (s.compareTo(o.getOptionSelection()) == 0) {
-							((CCombo) radioOptions[i]).select(j);
-						}
-						j++;
-					}
-				}
-				getTaskData().setSelectedOperation(o);
-			}
-
-			i++;
 		}
 
 		toolkit.paintBordersFor(buttonComposite);
@@ -409,7 +304,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		if (submitButton != null && !submitButton.isDisposed()) {
 			submitButton.setEnabled(enabled);
 			if (enabled) {
-				submitButton.setToolTipText("Submit to " + getTaskRepository().getRepositoryUrl());
+				submitButton.setToolTipText("Submit to " + getTaskEditorPage().getTaskRepository().getRepositoryUrl());
 			}
 		}
 	}

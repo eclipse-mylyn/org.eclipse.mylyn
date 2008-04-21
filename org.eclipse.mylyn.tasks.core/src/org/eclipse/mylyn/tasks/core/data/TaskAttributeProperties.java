@@ -6,15 +6,14 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.tasks.ui.editors;
+package org.eclipse.mylyn.tasks.core.data;
 
-import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
+public class TaskAttributeProperties {
 
-/**
- * @author Steffen Pingel
- */
-public interface IAttributeManagerListener {
+	public boolean showInTaskEditor;
 
-	public void attributeChanged(RepositoryTaskAttribute attribute);
+	public boolean showInToolTip;
+
+	public boolean readOnly;
 
 }

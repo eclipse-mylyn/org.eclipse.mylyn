@@ -85,6 +85,7 @@ public abstract class AbstractRepositoryConnector {
 
 	public abstract String getTaskIdFromTaskUrl(String taskFullUrl);
 
+	// API 3.0 change type of taskId to AbstractTask
 	public abstract String getTaskUrl(String repositoryUrl, String taskId);
 
 	/**

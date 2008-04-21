@@ -25,15 +25,13 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Mik Kersten
- * 
- * API-3.0: rename to Refresh...
  */
-public class ResetRepositoryConfigurationAction extends AbstractTaskRepositoryAction {
+public class UpdateRepositoryConfigurationAction extends AbstractTaskRepositoryAction {
 
 	private static final String ID = "org.eclipse.mylyn.tasklist.repositories.reset";
 
-	public ResetRepositoryConfigurationAction() {
-		super("Update Attributes");
+	public UpdateRepositoryConfigurationAction() {
+		super("Update Repository Configuration");
 		setId(ID);
 		setEnabled(false);
 	}
@@ -48,15 +46,16 @@ public class ResetRepositoryConfigurationAction extends AbstractTaskRepositoryAc
 					final AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
 							.getRepositoryConnector(repository.getConnectorKind());
 					if (connector != null) {
-						final String jobName = "Updating attributes for: " + repository.getRepositoryUrl();
+						final String jobName = "Updating repository configuration for " + repository.getRepositoryUrl();
 						Job updateJob = new Job(jobName) {
-
 							@Override
 							protected IStatus run(IProgressMonitor monitor) {
 								monitor.beginTask(jobName, IProgressMonitor.UNKNOWN);
-								performUpdate(repository, connector, monitor);
-
-								monitor.done();
+								try {
+									performUpdate(repository, connector, monitor);
+								} finally {
+									monitor.done();
+								}
 								return Status.OK_STATUS;
 							}
 						};
@@ -74,7 +73,7 @@ public class ResetRepositoryConfigurationAction extends AbstractTaskRepositoryAc
 		try {
 			connector.updateRepositoryConfiguration(repository, monitor);
 		} catch (CoreException ce) {
-			StatusHandler.displayStatus("Error updating attributes", ce.getStatus());
+			StatusHandler.displayStatus("Error updating repository configuration", ce.getStatus());
 		}
 	}
 

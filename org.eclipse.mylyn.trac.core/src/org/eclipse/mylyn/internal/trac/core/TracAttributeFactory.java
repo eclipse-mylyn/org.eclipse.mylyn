@@ -15,8 +15,6 @@ import java.util.Map;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylyn.internal.trac.core.util.TracUtils;
 import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
-import org.eclipse.mylyn.tasks.core.AbstractAttributeMapper;
-import org.eclipse.mylyn.tasks.core.IdentityAttributeFactory;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 
 /**
@@ -129,11 +127,6 @@ public class TracAttributeFactory extends AbstractAttributeFactory {
 
 		Attribute attribute = attributeByTracKey.get(key);
 		return (attribute != null) ? attribute.isHidden() : false;
-	}
-
-	@Override
-	public AbstractAttributeMapper getAttributeMapper() {
-		return IdentityAttributeFactory.getInstance().getAttributeMapper();
 	}
 
 	@Override

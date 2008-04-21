@@ -10,7 +10,6 @@ package org.eclipse.mylyn.tasks.core;
 
 import java.util.Date;
 
-
 /**
  * @since 3.0
  * @author Steffen Pingel
@@ -25,16 +24,7 @@ public class IdentityAttributeFactory extends AbstractAttributeFactory {
 		return INSTANCE;
 	}
 
-	private final AbstractAttributeMapper attributeMapper = new AbstractAttributeMapper(this) {
-		@Override
-		public String getType(RepositoryTaskAttribute taskAttribute) {
-			return RepositoryTaskAttribute.TYPE_SHORT_TEXT;
-		}
-	};
-
-	@Override
-	public AbstractAttributeMapper getAttributeMapper() {
-		return attributeMapper;
+	private IdentityAttributeFactory() {
 	}
 
 	@Override

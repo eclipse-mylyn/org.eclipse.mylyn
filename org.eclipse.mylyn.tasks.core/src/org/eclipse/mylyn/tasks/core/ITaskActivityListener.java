@@ -26,6 +26,7 @@ public interface ITaskActivityListener {
 	/**
 	 * Warning: This is called frequently (i.e. every 15s) Implementers are responsible for launching jobs for long
 	 * running activity.
+	 * @since 3.0
 	 */
 	public abstract void elapsedTimeUpdated(AbstractTask task, long newElapsedTime);
 

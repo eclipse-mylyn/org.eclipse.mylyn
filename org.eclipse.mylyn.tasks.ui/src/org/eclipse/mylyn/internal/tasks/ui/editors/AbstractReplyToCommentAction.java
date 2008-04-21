@@ -12,7 +12,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.mylyn.internal.tasks.core.CommentQuoter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 
-public abstract class AbstractReplyToCommenAction extends Action {
+public abstract class AbstractReplyToCommentAction extends Action {
 
 	private static final String LABEL_REPLY = "Reply";
 
@@ -20,7 +20,7 @@ public abstract class AbstractReplyToCommenAction extends Action {
 
 	private final AbstractTaskEditorPage editor;
 
-	public AbstractReplyToCommenAction(AbstractTaskEditorPage editor, int commentNum) {
+	public AbstractReplyToCommentAction(AbstractTaskEditorPage editor, int commentNum) {
 		this.editor = editor;
 		this.commentNum = commentNum;
 		setImageDescriptor(TasksUiImages.REPLY);

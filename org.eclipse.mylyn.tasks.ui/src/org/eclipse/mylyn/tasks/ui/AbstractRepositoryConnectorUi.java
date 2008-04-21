@@ -108,14 +108,14 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * @param repositoryTask
 	 *            can be null
 	 */
-	public String getTaskKindLabel(AbstractTask repositoryTask) {
+	public String getTaskKindLabel(AbstractTask task) {
 		return LABEL_TASK_DEFAULT;
 	}
 
 	/**
-	 * @param taskData
-	 *            can be null
+	 * @deprecated use {@link #getTaskKindLabel(AbstractTask)} instead
 	 */
+	@Deprecated
 	public String getTaskKindLabel(RepositoryTaskData taskData) {
 		return LABEL_TASK_DEFAULT;
 	}
@@ -211,7 +211,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * @return a url of a page for the history of the task; null, if no history url is available
 	 * @since 3.0
 	 */
-	public String getTaskHistoryUrl(TaskRepository taskRepository, String taskKey) {
+	public String getTaskHistoryUrl(TaskRepository taskRepository, AbstractTask task) {
 		return null;
 	}
 

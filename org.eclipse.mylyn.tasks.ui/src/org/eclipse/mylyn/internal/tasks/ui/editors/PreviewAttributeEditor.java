@@ -22,7 +22,9 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.AttributeManager;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractRenderingEngine;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
@@ -45,13 +47,15 @@ public class PreviewAttributeEditor extends AbstractAttributeEditor {
 
 	private final AbstractRenderingEngine renderingEngine;
 
-	public PreviewAttributeEditor(AttributeManager manager, RepositoryTaskAttribute taskAttribute,
+	private final TaskRepository taskRepository;
+
+	public PreviewAttributeEditor(AttributeManager manager, TaskAttribute taskAttribute, TaskRepository taskRepository,
 			AbstractRenderingEngine renderingEngine, RichTextAttributeEditor editor) {
 		super(manager, taskAttribute);
-
+		Assert.isNotNull(taskRepository);
 		Assert.isNotNull(editor);
 		Assert.isNotNull(renderingEngine);
-
+		this.taskRepository = taskRepository;
 		this.editor = editor;
 		this.renderingEngine = renderingEngine;
 	}
@@ -195,16 +199,14 @@ public class PreviewAttributeEditor extends AbstractAttributeEditor {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				if (renderingEngine == null) {
-					jobStatus = new RepositoryStatus(getAttributeEditorManager().getTaskRepository(), IStatus.INFO,
-							TasksUiPlugin.ID_PLUGIN, RepositoryStatus.ERROR_INTERNAL,
-							"The repository does not support HTML preview.");
+					jobStatus = new RepositoryStatus(taskRepository, IStatus.INFO, TasksUiPlugin.ID_PLUGIN,
+							RepositoryStatus.ERROR_INTERNAL, "The repository does not support HTML preview.");
 					return Status.OK_STATUS;
 				}
 
 				jobStatus = Status.OK_STATUS;
 				try {
-					htmlText = renderingEngine.renderAsHtml(getAttributeEditorManager().getTaskRepository(),
-							sourceText, monitor);
+					htmlText = renderingEngine.renderAsHtml(taskRepository, sourceText, monitor);
 				} catch (CoreException e) {
 					jobStatus = e.getStatus();
 				}

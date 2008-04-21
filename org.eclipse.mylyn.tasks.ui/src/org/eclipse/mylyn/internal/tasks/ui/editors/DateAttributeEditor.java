@@ -13,7 +13,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.AttributeManager;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.DatePicker;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -34,7 +35,7 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 
 	private DatePicker deadlinePicker;
 
-	public DateAttributeEditor(AttributeManager manager, RepositoryTaskAttribute taskAttribute) {
+	public DateAttributeEditor(AttributeManager manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
 	}
 
@@ -53,7 +54,7 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 		}
 
 		deadlinePicker = new DatePicker(dateWithClear, /* SWT.NONE */SWT.BORDER, value);
-		deadlinePicker.setEnabled(!getTaskAttribute().isReadOnly());
+		deadlinePicker.setEnabled(!isReadOnly());
 		deadlinePicker.setFont(TEXT_FONT);
 		deadlinePicker.setDatePattern("yyyy-MM-dd");
 		deadlinePicker.addPickerSelectionListener(new SelectionListener() {

@@ -12,22 +12,23 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.editors.LayoutHint.ColumnSpan;
 import org.eclipse.mylyn.internal.tasks.ui.editors.LayoutHint.RowSpan;
-import org.eclipse.mylyn.internal.tasks.ui.views.ResetRepositoryConfigurationAction;
-import org.eclipse.mylyn.tasks.core.AbstractAttributeMapper;
+import org.eclipse.mylyn.internal.tasks.ui.views.UpdateRepositoryConfigurationAction;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.AbstractAttributeMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeProperties;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -40,25 +41,30 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * @author Steffen Pingel
  */
 public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 
-	private static final int MULTI_ROW_HEIGHT = 55;
-
 	private static final int COLUMN_WIDTH = 140;
 
 	private static final int MULTI_COLUMN_WIDTH = 380;
 
-	public TaskEditorAttributePart(AbstractTaskEditorPage taskEditorPage) {
-		super(taskEditorPage);
+	private static final int MULTI_ROW_HEIGHT = 55;
+
+	private List<AbstractAttributeEditor> attributeEditors;
+
+	private boolean hasIncoming;
+
+	private boolean expandOnCreation;
+
+	public TaskEditorAttributePart() {
+		setPartName("Attributes");
 	}
 
 	private void createAttributeControls(Composite attributesComposite, FormToolkit toolkit) {
-		List<AbstractAttributeEditor> attributeEditors = createAttributeEditors();
-
 		int columnCount = ((GridLayout) attributesComposite.getLayout()).numColumns;
 		((GridLayout) attributesComposite.getLayout()).verticalSpacing = 6;
 
@@ -105,48 +111,22 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 				gd.horizontalSpan = 1;
 			}
 			attributeEditor.getControl().setLayoutData(gd);
-			currentColumn += gd.horizontalSpan;
 
+			getTaskEditorPage().getAttributeEditorToolkit().adapt(attributeEditor);
+
+			currentColumn += gd.horizontalSpan;
 			currentColumn %= columnCount;
 		}
 	}
 
-	private List<AbstractAttributeEditor> createAttributeEditors() {
-		List<AbstractAttributeEditor> attributeEditors = new ArrayList<AbstractAttributeEditor>();
-
-		AttributeEditorFactory attributeEditorFactory = getTaskEditorPage().getAttributeEditorFactory();
-		AbstractAttributeMapper attributeMapper = getTaskData().getAttributeFactory().getAttributeMapper();
-		for (final RepositoryTaskAttribute attribute : getTaskData().getAttributes()) {
-			if (attribute.isHidden()
-					|| (attribute.isReadOnly() && (attribute.getValue() == null || attribute.getValue().length() == 0))) {
-				continue;
-			}
-
-			String type = attributeMapper.getType(attribute);
-			if (type != null) {
-				attributeEditorFactory.createEditor(type, attribute);
-				AbstractAttributeEditor attributeEditor = attributeEditorFactory.createEditor(type, attribute);
-				if (attributeEditor != null) {
-					attributeEditors.add(attributeEditor);
-				}
-			}
-		}
-
-		Collections.sort(attributeEditors, new Comparator<AbstractAttributeEditor>() {
-			public int compare(AbstractAttributeEditor o1, AbstractAttributeEditor o2) {
-				int p1 = (o1.getLayoutHint() != null) ? o1.getLayoutHint().getPriority() : LayoutHint.DEFAULT_PRIORITY;
-				int p2 = (o2.getLayoutHint() != null) ? o2.getLayoutHint().getPriority() : LayoutHint.DEFAULT_PRIORITY;
-				return p1 - p2;
-			}
-		});
-
-		return attributeEditors;
-	}
-
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
+		initialize();
+
+		Section section = createSection(parent, toolkit, isExpandOnCreation() || hasIncoming);
+
 		// Attributes Composite- this holds all the combo fields and text fields
-		Composite attributesComposite = toolkit.createComposite(parent);
+		Composite attributesComposite = toolkit.createComposite(section);
 		attributesComposite.addListener(SWT.MouseDown, new Listener() {
 			public void handleEvent(Event event) {
 				Control focus = event.display.getFocusControl();
@@ -170,47 +150,30 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 		createAttributeControls(attributesComposite, toolkit);
 		toolkit.paintBordersFor(attributesComposite);
 
-		setControl(attributesComposite);
+		section.setClient(attributesComposite);
+		setSection(toolkit, section);
 	}
 
 	@Override
 	protected void fillToolBar(ToolBarManager toolBar) {
-		ResetRepositoryConfigurationAction repositoryConfigRefresh = new ResetRepositoryConfigurationAction() {
+		UpdateRepositoryConfigurationAction repositoryConfigRefresh = new UpdateRepositoryConfigurationAction() {
 			@Override
 			public void performUpdate(TaskRepository repository, AbstractRepositoryConnector connector,
 					IProgressMonitor monitor) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-
 					public void run() {
 						getTaskEditorPage().setGlobalBusy(true);
-
 					}
 				});
 				try {
 					super.performUpdate(repository, connector, monitor);
-					if (connector != null) {
-						final AbstractTask task = TasksUi.getTaskListManager().getTaskList().getTask(
-								TaskEditorAttributePart.this.getTaskRepository().getRepositoryUrl(), getTaskData().getTaskId());
-						if (task != null) {
-							TasksUi.synchronizeTask(connector, task, true,
-									new JobChangeAdapter() {
-
-										@Override
-										public void done(IJobChangeEvent event) {
-											PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-
-												public void run() {
-													getTaskEditorPage().refreshEditor();
-												}
-											});
-
-										}
-									});
-						}
-					}
-				} catch (Exception e) {
+					AbstractTask task = getTaskEditorPage().getTask();
+					Job job = TasksUi.synchronizeTask(connector, task, true, null);
+					job.join();
+				} catch (InterruptedException e) {
+					// ignore
+				} finally {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-
 						public void run() {
 							getTaskEditorPage().refreshEditor();
 						}
@@ -219,9 +182,51 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 			}
 		};
 		repositoryConfigRefresh.setImageDescriptor(TasksUiImages.REPOSITORY_SYNCHRONIZE);
-		repositoryConfigRefresh.selectionChanged(new StructuredSelection(getTaskRepository()));
+		repositoryConfigRefresh.selectionChanged(new StructuredSelection(getTaskEditorPage().getTaskRepository()));
 		repositoryConfigRefresh.setToolTipText("Refresh attributes");
 		toolBar.add(repositoryConfigRefresh);
 	}
 
+	private void initialize() {
+		attributeEditors = new ArrayList<AbstractAttributeEditor>();
+		hasIncoming = false;
+
+		AttributeEditorFactory attributeEditorFactory = getTaskEditorPage().getAttributeEditorFactory();
+		AbstractAttributeMapper attributeMapper = getTaskData().getAttributeMapper();
+		Map<String, TaskAttribute> attributes = getTaskData().getRoot().getAttributes();
+		for (TaskAttribute attribute : attributes.values()) {
+			TaskAttributeProperties properties = attributeMapper.getProperties(attribute);
+			if (!properties.showInTaskEditor) {
+				continue;
+			}
+
+			String type = attributeMapper.getType(attribute);
+			if (type != null) {
+				attributeEditorFactory.createEditor(type, attribute);
+				AbstractAttributeEditor attributeEditor = attributeEditorFactory.createEditor(type, attribute);
+				if (attributeEditor != null) {
+					attributeEditors.add(attributeEditor);
+					if (getAttributeManager().hasIncomingChanges(attribute)) {
+						hasIncoming = true;
+					}
+				}
+			}
+		}
+
+		Collections.sort(attributeEditors, new Comparator<AbstractAttributeEditor>() {
+			public int compare(AbstractAttributeEditor o1, AbstractAttributeEditor o2) {
+				int p1 = (o1.getLayoutHint() != null) ? o1.getLayoutHint().getPriority() : LayoutHint.DEFAULT_PRIORITY;
+				int p2 = (o2.getLayoutHint() != null) ? o2.getLayoutHint().getPriority() : LayoutHint.DEFAULT_PRIORITY;
+				return p1 - p2;
+			}
+		});
+	}
+
+	public void setExpandOnCreation(boolean expandOnCreation) {
+		this.expandOnCreation = expandOnCreation;
+	}
+
+	public boolean isExpandOnCreation() {
+		return expandOnCreation;
+	}
 }

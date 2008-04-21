@@ -1195,7 +1195,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				MenuManager subMenu = new MenuManager("Repository");
 				manager.add(subMenu);
 
-				ResetRepositoryConfigurationAction resetRepositoryConfigurationAction = new ResetRepositoryConfigurationAction();
+				UpdateRepositoryConfigurationAction resetRepositoryConfigurationAction = new UpdateRepositoryConfigurationAction();
 				resetRepositoryConfigurationAction.selectionChanged(new StructuredSelection(element));
 				subMenu.add(resetRepositoryConfigurationAction);
 				subMenu.add(new Separator());

@@ -29,7 +29,6 @@ import org.eclipse.mylyn.internal.trac.ui.wizard.TracRepositorySettingsPage;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskSelection;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
@@ -50,11 +49,6 @@ public class TracConnectorUi extends AbstractRepositoryConnectorUi {
 
 	@Override
 	public String getTaskKindLabel(AbstractTask repositoryTask) {
-		return "Ticket";
-	}
-
-	@Override
-	public String getTaskKindLabel(RepositoryTaskData taskData) {
 		return "Ticket";
 	}
 

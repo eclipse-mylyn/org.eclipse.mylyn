@@ -10,6 +10,9 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.AttributeManager;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
 /**
  * @since 2.3
@@ -19,11 +22,14 @@ public class AttributeEditorFactory {
 
 	private final AttributeManager manager;
 
-	public AttributeEditorFactory(AttributeManager manager) {
+	private final TaskRepository taskRepository;
+
+	public AttributeEditorFactory(AttributeManager manager, TaskRepository taskRepository) {
 		this.manager = manager;
+		this.taskRepository = taskRepository;
 	}
 
-	public AbstractAttributeEditor createEditor(String type, RepositoryTaskAttribute taskAttribute) {
+	public AbstractAttributeEditor createEditor(String type, TaskAttribute taskAttribute) {
 		Assert.isNotNull(type);
 
 		if (RepositoryTaskAttribute.TYPE_DATE.equals(type)) {
@@ -43,7 +49,11 @@ public class AttributeEditorFactory {
 		} else if (RepositoryTaskAttribute.TYPE_SINGLE_SELECT.equals(type)) {
 			return new SingleSelectionAttributeEditor(manager, taskAttribute);
 		} else if (RepositoryTaskAttribute.TYPE_TASK_DEPENDENCY.equals(type)) {
-			return new TaskDependendyAttributeEditor(manager, taskAttribute);
+			return new TaskDependendyAttributeEditor(manager, taskAttribute, taskRepository);
+		} else if (RepositoryTaskAttribute.TYPE_PERSON.equals(type)) {
+			return new PersonAttributeEditor(manager, taskAttribute);
+		} else if (RepositoryTaskAttribute.TYPE_BOOLEAN.equals(type)) {
+			return new BooleanAttributeEditor(manager, taskAttribute);
 		}
 
 		throw new IllegalArgumentException("Unsupported editor type: \"" + type + "\"");

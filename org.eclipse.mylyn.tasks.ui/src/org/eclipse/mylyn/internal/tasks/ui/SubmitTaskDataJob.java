@@ -14,11 +14,13 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.mylyn.internal.tasks.core.data.TaskDataUtil;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.IdentityAttributeFactory;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 
@@ -31,7 +33,7 @@ public class SubmitTaskDataJob extends Job {
 
 	private final TaskRepository taskRepository;
 
-	private final RepositoryTaskData taskData;
+	private final TaskData taskData;
 
 	private final AbstractRepositoryConnector connector;
 
@@ -41,8 +43,7 @@ public class SubmitTaskDataJob extends Job {
 
 	private AbstractTask task;
 
-	public SubmitTaskDataJob(AbstractRepositoryConnector connector, TaskRepository taskRepository,
-			RepositoryTaskData taskData) {
+	public SubmitTaskDataJob(AbstractRepositoryConnector connector, TaskRepository taskRepository, TaskData taskData) {
 		super(LABEL_JOB_SUBMIT);
 		this.connector = connector;
 		this.taskRepository = taskRepository;
@@ -61,7 +62,8 @@ public class SubmitTaskDataJob extends Job {
 	protected IStatus run(IProgressMonitor monitor) {
 		try {
 			monitor.beginTask("Submitting task", 3);
-			String taskId = connector.getTaskDataHandler().postTaskData(taskRepository, taskData,
+			String taskId = connector.getTaskDataHandler().postTaskData(taskRepository,
+					TaskDataUtil.toLegacyData(taskData, IdentityAttributeFactory.getInstance()),
 					new SubProgressMonitor(monitor, 1));
 			if (taskData.isNew()) {
 				if (taskId == null) {

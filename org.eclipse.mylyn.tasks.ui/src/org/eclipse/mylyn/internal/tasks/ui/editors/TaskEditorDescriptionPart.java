@@ -17,8 +17,10 @@ import java.util.Set;
 
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.mylyn.internal.tasks.core.data.TaskDataUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
+import org.eclipse.mylyn.tasks.core.IdentityAttributeFactory;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.AbstractDuplicateDetector;
 import org.eclipse.mylyn.tasks.ui.search.SearchHitCollector;
 import org.eclipse.search.ui.NewSearchUI;
@@ -41,8 +43,9 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 
 	private static final String LABEL_SELECT_DETECTOR = "Duplicate Detection";
 
-	public TaskEditorDescriptionPart(AbstractTaskEditorPage taskEditorPage, RepositoryTaskAttribute attribute) {
-		super(taskEditorPage, attribute);
+	public TaskEditorDescriptionPart(TaskAttribute attribute) {
+		super(attribute);
+		setPartName("Description");
 	}
 
 	private void addDuplicateDetection(Composite composite, FormToolkit toolkit) {
@@ -111,10 +114,10 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 
 	@Override
 	protected void fillToolBar(ToolBarManager toolBar) {
-		AbstractReplyToCommenAction replyAction = new AbstractReplyToCommenAction(getTaskEditorPage(), 0) {
+		AbstractReplyToCommentAction replyAction = new AbstractReplyToCommentAction(getTaskEditorPage(), 0) {
 			@Override
 			protected String getReplyText() {
-				return getTaskData().getDescription();
+				return getEditor().getValue();
 			}
 		};
 		toolBar.add(replyAction);
@@ -126,7 +129,8 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 
 		for (AbstractDuplicateDetector detector : allDetectors) {
 			if (detector.getName().equals(duplicateDetectorName)) {
-				return detector.getSearchHitCollector(getTaskRepository(), getTaskData());
+				return detector.getSearchHitCollector(getTaskEditorPage().getTaskRepository(),
+						TaskDataUtil.toLegacyData(getTaskData(), IdentityAttributeFactory.getInstance()));
 			}
 		}
 		// didn't find it
@@ -138,7 +142,7 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 		for (AbstractDuplicateDetector abstractDuplicateDetector : TasksUiPlugin.getDefault()
 				.getDuplicateSearchCollectorsList()) {
 			if (abstractDuplicateDetector.getKind() == null
-					|| abstractDuplicateDetector.getKind().equals(getConnector().getConnectorKind())) {
+					|| abstractDuplicateDetector.getKind().equals(getTaskEditorPage().getConnectorKind())) {
 				duplicateDetectors.add(abstractDuplicateDetector);
 			}
 		}

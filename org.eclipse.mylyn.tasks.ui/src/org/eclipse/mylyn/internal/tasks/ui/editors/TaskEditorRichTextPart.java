@@ -10,7 +10,7 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractRenderingEngine;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
@@ -20,12 +20,13 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Section;
 
 public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 
 	private RichTextAttributeEditor editor;
 
-	private final RepositoryTaskAttribute attribute;
+	private final TaskAttribute attribute;
 
 //	/**
 //	 * A listener for selection of the textbox where a new comment is entered in.
@@ -39,8 +40,7 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 //		}
 //	}
 
-	public TaskEditorRichTextPart(AbstractTaskEditorPage taskEditorPage, RepositoryTaskAttribute attribute) {
-		super(taskEditorPage);
+	public TaskEditorRichTextPart(TaskAttribute attribute) {
 		Assert.isNotNull(attribute);
 		this.attribute = attribute;
 	}
@@ -58,7 +58,7 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 		strBuilder.append(oldText);
 		strBuilder.append(text);
 		editor.getViewer().getDocument().set(strBuilder.toString());
-		RepositoryTaskAttribute attribute = getTaskData().getAttribute(RepositoryTaskAttribute.COMMENT_NEW);
+		TaskAttribute attribute = getTaskData().getMappedAttribute(TaskAttribute.COMMENT_NEW);
 		if (attribute != null) {
 			attribute.setValue(strBuilder.toString());
 			getTaskEditorPage().getAttributeManager().attributeChanged(attribute);
@@ -66,26 +66,32 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 		editor.getViewer().getTextWidget().setCaretOffset(strBuilder.length());
 	}
 
+	protected RichTextAttributeEditor getEditor() {
+		return editor;
+	}
+
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
+		Section section = createSection(parent, toolkit, true);
+
 		final Composite composite = toolkit.createComposite(parent);
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 1;
 		composite.setLayout(layout);
 
-		editor = new RichTextAttributeEditor(getTaskEditorPage().getAttributeManager(), attribute);
+		editor = new RichTextAttributeEditor(getAttributeManager(), getTaskEditorPage().getTaskRepository(), attribute);
 
 		AbstractRenderingEngine renderingEngine = getTaskEditorPage().getAttributeEditorToolkit().getRenderingEngine(
 				attribute);
 		if (renderingEngine != null) {
-			PreviewAttributeEditor previewEditor = new PreviewAttributeEditor(
-					getTaskEditorPage().getAttributeManager(), attribute, renderingEngine, editor);
+			PreviewAttributeEditor previewEditor = new PreviewAttributeEditor(getAttributeManager(), attribute,
+					getTaskEditorPage().getTaskRepository(), renderingEngine, editor);
 			previewEditor.createControl(composite, toolkit);
 			GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).applyTo(
 					previewEditor.getControl());
 		} else {
 			editor.createControl(composite, toolkit);
-			if (attribute.isReadOnly()) {
+			if (editor.isReadOnly()) {
 				GridDataFactory.fillDefaults().hint(AbstractAttributeEditor.MAXIMUM_WIDTH, SWT.DEFAULT).applyTo(
 						editor.getControl());
 			} else {
@@ -123,7 +129,8 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 		}
 
 		toolkit.paintBordersFor(composite);
-		setControl(composite);
+		section.setClient(composite);
+		setSection(toolkit, section);
 	}
 
 	@Override

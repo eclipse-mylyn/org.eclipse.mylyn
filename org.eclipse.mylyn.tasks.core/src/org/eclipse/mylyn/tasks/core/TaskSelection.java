@@ -40,15 +40,15 @@ public class TaskSelection {
 	}
 
 	public TaskSelection(AbstractTask task) {
-		RepositoryTaskData taskData = new RepositoryTaskData(new IdentityAttributeFactory(), task.getConnectorKind(),
-				task.getRepositoryUrl(), task.getTaskId(), task.getTaskKind());
+		RepositoryTaskData taskData = new RepositoryTaskData(IdentityAttributeFactory.getInstance(),
+				task.getConnectorKind(), task.getRepositoryUrl(), task.getTaskId(), task.getTaskKind());
 		taskData.setSummary(task.getSummary());
 		taskData.setAttributeValue(RepositoryTaskAttribute.PRIORITY, task.getPriority());
 		this.taskData = taskData;
 	}
 
 	public TaskSelection(String summary, String description) {
-		RepositoryTaskData taskData = new RepositoryTaskData(new IdentityAttributeFactory(),
+		RepositoryTaskData taskData = new RepositoryTaskData(IdentityAttributeFactory.getInstance(),
 				LocalRepositoryConnector.CONNECTOR_KIND, LocalRepositoryConnector.REPOSITORY_URL, "");
 		taskData.setSummary(summary);
 		taskData.setDescription(description);

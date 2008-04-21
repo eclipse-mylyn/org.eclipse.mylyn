@@ -10,8 +10,9 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.mylyn.tasks.core.AbstractAttributeMapper;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.AbstractAttributeMapper;
+import org.eclipse.mylyn.tasks.core.data.AttributeManager;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Composite;
@@ -42,9 +43,11 @@ public abstract class AbstractAttributeEditor {
 
 	private final AttributeManager manager;
 
-	private final RepositoryTaskAttribute taskAttribute;
+	private final TaskAttribute taskAttribute;
 
-	public AbstractAttributeEditor(AttributeManager manager, RepositoryTaskAttribute taskAttribute) {
+	private boolean readOnly;
+
+	public AbstractAttributeEditor(AttributeManager manager, TaskAttribute taskAttribute) {
 		Assert.isNotNull(manager);
 		Assert.isNotNull(taskAttribute);
 
@@ -75,7 +78,7 @@ public abstract class AbstractAttributeEditor {
 	}
 
 	protected AbstractAttributeMapper getAttributeMapper() {
-		return getTaskAttribute().getTaskData().getAttributeFactory().getAttributeMapper();
+		return getTaskAttribute().getTaskData().getAttributeMapper();
 	}
 
 	public Control getControl() {
@@ -94,7 +97,7 @@ public abstract class AbstractAttributeEditor {
 		return layoutHint;
 	}
 
-	public RepositoryTaskAttribute getTaskAttribute() {
+	public TaskAttribute getTaskAttribute() {
 		return taskAttribute;
 	}
 
@@ -123,6 +126,14 @@ public abstract class AbstractAttributeEditor {
 		if (isDecorationEnabled()) {
 			getControl().setBackground(color);
 		}
+	}
+
+	public boolean isReadOnly() {
+		return readOnly;
+	}
+
+	public void setReadOnly(boolean readOnly) {
+		this.readOnly = readOnly;
 	}
 
 }

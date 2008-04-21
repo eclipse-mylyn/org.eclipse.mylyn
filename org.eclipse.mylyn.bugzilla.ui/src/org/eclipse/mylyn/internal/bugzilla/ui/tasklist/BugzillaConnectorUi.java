@@ -56,8 +56,8 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 	}
 
 	@Override
-	public String getTaskHistoryUrl(TaskRepository taskRepository, String taskId) {
-		return taskRepository.getRepositoryUrl() + IBugzillaConstants.URL_BUG_ACTIVITY + taskId;
+	public String getTaskHistoryUrl(TaskRepository taskRepository, AbstractTask task) {
+		return taskRepository.getRepositoryUrl() + IBugzillaConstants.URL_BUG_ACTIVITY + task.getTaskId();
 	}
 	
 	@Override
@@ -163,11 +163,6 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 
 	@Override
 	public String getTaskKindLabel(AbstractTask repositoryTask) {
-		return IBugzillaConstants.BUGZILLA_TASK_KIND;
-	}
-
-	@Override
-	public String getTaskKindLabel(RepositoryTaskData taskData) {
 		return IBugzillaConstants.BUGZILLA_TASK_KIND;
 	}
 

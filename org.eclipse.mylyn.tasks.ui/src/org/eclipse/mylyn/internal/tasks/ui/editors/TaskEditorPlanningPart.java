@@ -28,6 +28,7 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
+import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * @author Steffen Pingel
@@ -40,9 +41,8 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 
 	private Spinner estimatedTime;
 
-	public TaskEditorPlanningPart(AbstractTaskEditorPage taskEditorPage) {
-		super(taskEditorPage);
-		// ignore
+	public TaskEditorPlanningPart() {
+		setPartName("Personal Planning");
 	}
 
 	@Override
@@ -67,7 +67,9 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
-		Composite sectionClient = getManagedForm().getToolkit().createComposite(parent);
+		Section section = createSection(parent, toolkit, true);
+
+		Composite sectionClient = getManagedForm().getToolkit().createComposite(section);
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 7;
 		layout.makeColumnsEqualWidth = false;
@@ -145,7 +147,7 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 		});
 
 		getManagedForm().getToolkit().paintBordersFor(sectionClient);
-		setControl(sectionClient);
+		section.setClient(sectionClient);
+		setSection(toolkit, section);
 	}
-
 }

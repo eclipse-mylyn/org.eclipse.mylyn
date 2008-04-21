@@ -11,13 +11,14 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 import java.util.Date;
 
 import org.eclipse.mylyn.monitor.core.DateUtil;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.AttributeManager;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
 class SimpleDateAttributeEditor extends TextAttributeEditor {
 
 	static final String DATE_FORMAT = "yyyy-MM-dd HH:mm";
 
-	public SimpleDateAttributeEditor(AttributeManager manager, RepositoryTaskAttribute taskAttribute) {
+	public SimpleDateAttributeEditor(AttributeManager manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
 		setDecorationEnabled(false);
 	}
@@ -32,7 +33,7 @@ class SimpleDateAttributeEditor extends TextAttributeEditor {
 	}
 
 	@Override
-	protected boolean isReadOnly() {
+	public boolean isReadOnly() {
 		return true;
 	}
 

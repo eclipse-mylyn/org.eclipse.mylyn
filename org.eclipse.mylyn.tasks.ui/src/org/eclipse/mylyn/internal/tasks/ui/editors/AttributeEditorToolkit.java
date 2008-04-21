@@ -7,6 +7,9 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
+import java.text.DateFormat;
+import java.util.Date;
+
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
@@ -23,9 +26,11 @@ import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.mylyn.internal.tasks.core.data.TaskDataUtil;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalProvider;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
+import org.eclipse.mylyn.tasks.core.IdentityAttributeFactory;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractRenderingEngine;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
@@ -189,11 +194,12 @@ public class AttributeEditorToolkit {
 	 *            attribute for which to provide content assist.
 	 * @return the IContentProposalProvider.
 	 */
-	protected IContentProposalProvider createContentProposalProvider(RepositoryTaskAttribute attribute) {
-		return new PersonProposalProvider(null, attribute.getTaskData());
+	protected IContentProposalProvider createContentProposalProvider(TaskAttribute attribute) {
+		return new PersonProposalProvider(null, TaskDataUtil.toLegacyData(attribute.getTaskData(),
+				IdentityAttributeFactory.getInstance()));
 	}
 
-	protected ILabelProvider createLabelProposalProvider(RepositoryTaskAttribute attribute) {
+	protected ILabelProvider createLabelProposalProvider(TaskAttribute attribute) {
 		return new PersonProposalLabelProvider();
 	}
 
@@ -204,7 +210,7 @@ public class AttributeEditorToolkit {
 	 * @return <code>null</code> if HTML preview is not supported for the repository (default)
 	 * @since 2.1
 	 */
-	public AbstractRenderingEngine getRenderingEngine(RepositoryTaskAttribute attribute) {
+	public AbstractRenderingEngine getRenderingEngine(TaskAttribute attribute) {
 		return null;
 	}
 
@@ -216,17 +222,26 @@ public class AttributeEditorToolkit {
 	 * @return true if content assist is available for the specified attribute.
 	 */
 	// TODO EDITOR make private
-	boolean hasContentAssist(RepositoryTaskAttribute taskAttribute) {
-		// TODO EDITOR implement
+	boolean hasContentAssist(TaskAttribute taskAttribute) {
+		if (TaskAttribute.TYPE_PERSON.equals(taskAttribute.getTaskData().getAttributeMapper().getType(taskAttribute))) {
+			return true;
+		} else if (TaskAttribute.TYPE_TASK_DEPENDENCY.equals(taskAttribute.getTaskData().getAttributeMapper().getType(
+				taskAttribute))) {
+			return true;
+		}
 		return false;
 	}
 
-	private boolean hasSpellChecking(RepositoryTaskAttribute taskAttribute) {
+	private boolean hasSpellChecking(TaskAttribute taskAttribute) {
 		// TODO EDITOR
 		return false;
 	}
 
 	protected void configureContextMenuManager(MenuManager menuManager, TextViewer textViewer) {
+	}
+
+	public String formatDate(Date date) {
+		return DateFormat.getDateInstance().format(date);
 	}
 
 //	/**
