@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
@@ -182,18 +183,13 @@ public class InteractionContextManager implements IInteractionContextManager {
 	}
 
 	public void addListener(IInteractionContextListener listener) {
-		if (listener != null) {
-			if (suppressListenerNotification && !waitingContextListeners.contains(listener)) {
-				waitingContextListeners.add(listener);
-			} else {
-				if (!contextListeners.contains(listener)) {
-					contextListeners.add(listener);
-				}
-			}
+		Assert.isNotNull(listener);
+		if (suppressListenerNotification && !waitingContextListeners.contains(listener)) {
+			waitingContextListeners.add(listener);
 		} else {
-			// API 3.0 FIXME replace by Assert.isNotNull(listener)
-			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Attempted to add null lisetener",
-					new Exception()));
+			if (!contextListeners.contains(listener)) {
+				contextListeners.add(listener);
+			}
 		}
 	}
 
