@@ -165,8 +165,9 @@ public class StatusHandler {
 	/**
 	 * Logs <code>status</code> to this bundle's log if a platform is running. Forwards <code>status</code> to
 	 * registered status handlers.
-	 * 
-	 * API 3.0 add comment that method does not block
+	 * <p>
+	 * Listeners should not block.
+	 * </p>
 	 * 
 	 * @see #log(IStatus)
 	 * @since 2.3
