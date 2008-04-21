@@ -211,7 +211,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  * @author Xiaoyang Guan (Wiki HTML preview)
  * @since 2.0
  */
-// API 3.0 deprecate this class
+// API 3.0 deprecate
 public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private static final String PREF_SORT_ORDER_PREFIX = "org.eclipse.mylyn.editor.comments.sortDirectionUp.";

@@ -262,7 +262,11 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 		task.setSummary(taskData.getSummary());
 		task.setOwner(taskData.getAttributeValue(RepositoryTaskAttribute.USER_ASSIGNED));
-		task.setCompleted(TracTask.isCompleted(taskData.getStatus()));
+		if (TracTask.isCompleted(taskData.getStatus())) {
+			task.setCompletionDate(TracUtils.parseDate(Integer.valueOf(taskData.getLastModified())));
+		} else {
+			task.setCompletionDate(null);
+		}
 		task.setUrl(taskRepository.getRepositoryUrl() + ITracClient.TICKET_URL + taskData.getTaskId());
 
 		String priority = taskData.getAttributeValue(Attribute.PRIORITY.getTracKey());
@@ -273,7 +277,6 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		task.setTaskKind((kind != null) ? kind.toString() : null);
 
 		tracTask.setSupportsSubtasks(taskDataHandler.canInitializeSubTaskData(null, taskData));
-		// TODO: Completion Date
 
 		// TODO check return value
 		return false;

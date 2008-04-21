@@ -23,7 +23,6 @@ import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.TaskFactory;
 import org.eclipse.mylyn.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylyn.trac.tests.support.TestFixture;
 import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
@@ -77,7 +76,7 @@ public class RepositorySearchQueryTest extends TestCase {
 		String queryUrl = repository.getRepositoryUrl() + ITracClient.QUERY_URL + search.toUrl();
 		TracRepositoryQuery query = new TracRepositoryQuery(repository.getRepositoryUrl(), queryUrl, "description");
 		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
-				repository, query, new TaskFactory(repository, false, false));
+				repository, query);
 
 		collector.run(new NullProgressMonitor());
 		for (AbstractTask task : collector.getTasks()) {

@@ -17,7 +17,6 @@ import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter.CompareOperator;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
-import org.eclipse.mylyn.tasks.ui.TaskFactory;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractNewRepositoryTaskEditor;
 import org.eclipse.mylyn.tasks.ui.search.SearchHitCollector;
@@ -58,10 +57,11 @@ public class NewTracTaskEditor extends AbstractNewRepositoryTaskEditor {
 		sb.append(ITracClient.QUERY_URL);
 		sb.append(search.toUrl());
 
-		TracRepositoryQuery query = new TracRepositoryQuery(repository.getRepositoryUrl(), sb.toString(), "<Duplicate Search>");
+		TracRepositoryQuery query = new TracRepositoryQuery(repository.getRepositoryUrl(), sb.toString(),
+				"<Duplicate Search>");
 
-		SearchHitCollector collector = new SearchHitCollector(TasksUi.getTaskListManager().getTaskList(),
-				repository, query, new TaskFactory(repository, false, false));
+		SearchHitCollector collector = new SearchHitCollector(TasksUi.getTaskListManager().getTaskList(), repository,
+				query);
 		return collector;
 	}
 

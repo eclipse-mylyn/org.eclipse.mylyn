@@ -19,7 +19,6 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.TaskFactory;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractEditQueryWizard;
 import org.eclipse.search.ui.ISearchPage;
@@ -166,7 +165,7 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 				repository.getConnectorKind());
 		if (connector != null) {
 			SearchHitCollector collector = new SearchHitCollector(TasksUi.getTaskListManager().getTaskList(),
-					repository, getQuery(), new TaskFactory(repository, false, false));
+					repository, getQuery());
 			NewSearchUI.runQueryInBackground(collector);
 		}
 		return true;

@@ -73,10 +73,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	/**
 	 * @since 2.2
 	 */
-	// API 3.0 remove default implementation
-	public IWizard getNewTaskWizard(TaskRepository taskRepository, TaskSelection selection) {
-		return null;
-	}
+	public abstract IWizard getNewTaskWizard(TaskRepository taskRepository, TaskSelection selection);
 
 	/**
 	 * @deprecated use {@link #getNewTaskWizard(TaskRepository, TaskSelection)} instead

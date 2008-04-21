@@ -24,7 +24,7 @@ import org.eclipse.mylyn.monitor.core.StatusHandler;
  * @author Rob Elves
  * @since 2.0
  */
-// API 3.0 convert all error logging to assertions
+//API 3.0 deprecate
 public class AttributeContainer implements Serializable {
 
 	public static final String ERROR_NO_ATTRIBUTE_FACTORY = "Attribute factory not available.";

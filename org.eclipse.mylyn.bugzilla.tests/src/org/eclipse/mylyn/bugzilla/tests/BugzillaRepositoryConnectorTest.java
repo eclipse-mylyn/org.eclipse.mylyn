@@ -447,7 +447,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		String queryUrl = "http://mylyn.eclipse.org/bugs218/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=search-match-test&product=TestProduct&long_desc_type=substring&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&deadlinefrom=&deadlineto=&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailassigned_to1=1&emailtype1=substring&email1=&emailassigned_to2=1&emailreporter2=1&emailcc2=1&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
 		BugzillaRepositoryQuery bugzillaQuery = new BugzillaRepositoryQuery(repository.getRepositoryUrl(), queryUrl, "search");
 
-		SearchHitCollector collector = new SearchHitCollector(taskList, repository, bugzillaQuery, taskFactory);
+		SearchHitCollector collector = new SearchHitCollector(taskList, repository, bugzillaQuery);
 		RepositorySearchResult result = (RepositorySearchResult) collector.getSearchResult();
 
 		// operation.run(new NullProgressMonitor());

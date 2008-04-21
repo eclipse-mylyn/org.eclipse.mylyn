@@ -24,6 +24,7 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
  * @author Rob Elves
  * @since 2.0
  */
+//API 3.0 deprecate
 public final class RepositoryTaskData extends AttributeContainer implements Serializable {
 
 	private static final long serialVersionUID = 2304501248225237699L;

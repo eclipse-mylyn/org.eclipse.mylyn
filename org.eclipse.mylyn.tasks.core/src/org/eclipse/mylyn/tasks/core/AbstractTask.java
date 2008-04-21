@@ -332,8 +332,6 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 	}
 
 	/**
-	 * API 3.0
-	 * 
 	 * @deprecated use setCompletionDate()
 	 */
 	@Deprecated

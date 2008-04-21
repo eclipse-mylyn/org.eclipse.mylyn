@@ -16,6 +16,7 @@ import java.io.Serializable;
  * @author Rob Elves
  * @since 2.0
  */
+//API 3.0 deprecate
 public class TaskComment extends AttributeContainer implements Serializable {
 
 	private static final long serialVersionUID = 1076016406335550318L;

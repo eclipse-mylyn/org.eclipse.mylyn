@@ -88,7 +88,7 @@ import org.eclipse.ui.themes.IThemeManager;
  * @ref: PDEFormPage.class ref:
  * @ref: http://dev.eclipse.org/newslists/news.eclipse.platform.swt/msg19676.html
  */
-// API 3.0 deprecate class
+// API 3.0 deprecate
 public class TaskFormPage extends FormPage {
 
 	protected boolean isDirty;

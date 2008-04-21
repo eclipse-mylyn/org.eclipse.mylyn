@@ -170,7 +170,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private static final boolean DEBUG_HTTPCLIENT = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.mylyn.tasks.ui/debug/httpclient"));
 
-	// API 3.0 reconsider if this is necessary - move to internal class either way
+	// XXX reconsider if this is necessary
 	public static class TasksUiStartup implements IStartup {
 
 		public void earlyStartup() {

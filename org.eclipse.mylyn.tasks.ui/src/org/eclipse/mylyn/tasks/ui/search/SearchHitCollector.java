@@ -10,19 +10,16 @@ package org.eclipse.mylyn.tasks.ui.search;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.ITaskFactory;
 import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
@@ -57,24 +54,23 @@ public class SearchHitCollector extends AbstractTaskDataCollector implements ISe
 
 	private final ITaskList taskList;
 
-	private final ITaskFactory taskFactory;
-
 	private final TaskRepository repository;
 
 	private final AbstractRepositoryQuery repositoryQuery;
 
 	private final RepositorySearchResult searchResult;
 
+	private final AbstractRepositoryConnector connector;
+
 	/**
 	 * @since 3.0
 	 */
-	public SearchHitCollector(ITaskList tasklist, TaskRepository repository, AbstractRepositoryQuery repositoryQuery,
-			ITaskFactory taskFactory) {
+	public SearchHitCollector(ITaskList tasklist, TaskRepository repository, AbstractRepositoryQuery repositoryQuery) {
 		this.taskList = tasklist;
 		this.repository = repository;
 		this.repositoryQuery = repositoryQuery;
+		this.connector = TasksUi.getRepositoryManager().getRepositoryConnector(repository.getConnectorKind());
 		this.searchResult = new RepositorySearchResult(this);
-		this.taskFactory = taskFactory;
 	}
 
 	public void aboutToStart() {
@@ -104,21 +100,13 @@ public class SearchHitCollector extends AbstractTaskDataCollector implements ISe
 
 	@Override
 	public void accept(RepositoryTaskData taskData) {
-		if (taskData == null) {
-			throw new IllegalArgumentException();
+		AbstractTask task = taskList.getTask(repository.getRepositoryUrl(), taskData.getTaskId());
+		if (task == null) {
+			task = connector.createTask(taskData.getRepositoryUrl(), taskData.getTaskId(), "");
+			connector.updateTaskFromTaskData(repository, task, taskData);
 		}
-
-		AbstractTask task;
-		try {
-			task = taskFactory.createTask(taskData, new SubProgressMonitor(new NullProgressMonitor(), 1));
-			if (task != null) {
-				taskResults.add(task);
-				this.searchResult.addMatch(new Match(task, 0, 0));
-			}
-		} catch (CoreException e) {
-			// FIXME
-			e.printStackTrace();
-		}
+		taskResults.add(task);
+		this.searchResult.addMatch(new Match(task, 0, 0));
 	}
 
 	public String getLabel() {
@@ -135,8 +123,8 @@ public class SearchHitCollector extends AbstractTaskDataCollector implements ISe
 
 	public ISearchResult getSearchResult() {
 		if (searchResult.getMatchCount() >= AbstractTaskDataCollector.MAX_HITS) {
-			StatusHandler.displayStatus("Maximum hits reached", RepositoryStatus.createStatus(repository.getRepositoryUrl(),
-					IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, LABEL_MAX_HITS_REACHED));
+			StatusHandler.displayStatus("Maximum hits reached", RepositoryStatus.createStatus(
+					repository.getRepositoryUrl(), IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, LABEL_MAX_HITS_REACHED));
 		}
 		return searchResult;
 	}

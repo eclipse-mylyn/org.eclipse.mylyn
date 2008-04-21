@@ -26,11 +26,9 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.ITaskFactory;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
-import org.eclipse.mylyn.tasks.ui.TaskFactory;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 
@@ -50,8 +48,6 @@ public abstract class AbstractBugzillaTest extends TestCase {
 	protected TaskRepository repository;
 
 	protected TaskList taskList;
-
-	protected ITaskFactory taskFactory;
 
 	public AbstractBugzillaTest() {
 		super();
@@ -116,8 +112,6 @@ public abstract class AbstractBugzillaTest extends TestCase {
 		assertEquals(abstractRepositoryClient.getConnectorKind(), DEFAULT_KIND);
 
 		connector = (BugzillaRepositoryConnector) abstractRepositoryClient;
-
-		taskFactory = new TaskFactory(repository);
 	}
 
 	protected BugzillaTask generateLocalTaskAndDownload(String taskNumber) throws CoreException {
