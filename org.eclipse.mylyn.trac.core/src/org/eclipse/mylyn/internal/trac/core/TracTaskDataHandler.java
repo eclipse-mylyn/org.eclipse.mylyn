@@ -77,7 +77,7 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 
 	public RepositoryTaskData downloadTaskData(TaskRepository repository, int taskId, IProgressMonitor monitor)
 			throws CoreException {
-		ITracClient client = connector.getClientManager().getRepository(repository);
+		ITracClient client = connector.getClientManager().getTracClient(repository);
 		TracTicket ticket;
 		try {
 			client.updateAttributes(monitor, false);
@@ -358,7 +358,7 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 			throws CoreException {
 		try {
 			TracTicket ticket = TracRepositoryConnector.getTracTicket(repository, taskData);
-			ITracClient server = connector.getClientManager().getRepository(repository);
+			ITracClient server = connector.getClientManager().getTracClient(repository);
 			if (taskData.isNew()) {
 				int id = server.createTicket(ticket, monitor);
 				return id + "";
@@ -378,7 +378,7 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 	public boolean initializeTaskData(TaskRepository repository, RepositoryTaskData data, IProgressMonitor monitor)
 			throws CoreException {
 		try {
-			ITracClient client = connector.getClientManager().getRepository(repository);
+			ITracClient client = connector.getClientManager().getTracClient(repository);
 			client.updateAttributes(monitor, false);
 			createDefaultAttributes(attributeFactory, data, client, false);
 			return true;

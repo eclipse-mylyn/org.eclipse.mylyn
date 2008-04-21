@@ -95,7 +95,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 
 		manager.addRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
-		client = connector.getClientManager().getRepository(repository);
+		client = connector.getClientManager().getTracClient(repository);
 	}
 
 	public void testGetChangedSinceLastSyncWeb096() throws Exception {
@@ -391,7 +391,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 		ticket.putBuiltinValue(Key.SUMMARY, "mysummary");
 		ticket.putBuiltinValue(Key.TYPE, "mytype");
 
-		ITracClient client = connector.getClientManager().getRepository(repository);
+		ITracClient client = connector.getClientManager().getTracClient(repository);
 		RepositoryTaskData taskData = new RepositoryTaskData(IdentityAttributeFactory.getInstance(),
 				TracCorePlugin.REPOSITORY_KIND, repository.getRepositoryUrl(), ticket.getId() + "");
 		taskDataHandler.updateTaskDataFromTicket(taskData, ticket, client);
@@ -418,7 +418,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 
 		TracTask task = new TracTask(TracTestConstants.TEST_TRAC_010_URL, "" + 456, "desc");
 
-		ITracClient client = connector.getClientManager().getRepository(repository);
+		ITracClient client = connector.getClientManager().getTracClient(repository);
 		RepositoryTaskData taskData = new RepositoryTaskData(IdentityAttributeFactory.getInstance(),
 				TracCorePlugin.REPOSITORY_KIND, repository.getRepositoryUrl(), ticket.getId() + "");
 		taskDataHandler.updateTaskDataFromTicket(taskData, ticket, client);

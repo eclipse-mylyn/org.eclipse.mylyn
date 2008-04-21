@@ -88,7 +88,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	public boolean hasWiki(TaskRepository repository) {
 		// check the access mode to validate Wiki support
-		ITracClient client = getClientManager().getRepository(repository);
+		ITracClient client = getClientManager().getTracClient(repository);
 		if (client instanceof ITracWikiClient) {
 			return true;
 		}
@@ -152,7 +152,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 			ITracClient client;
 			try {
-				client = getClientManager().getRepository(repository);
+				client = getClientManager().getTracClient(repository);
 				if (query instanceof TracRepositoryQuery) {
 					client.search(((TracRepositoryQuery) query).getTracSearch(), tickets, monitor);
 				}
@@ -209,7 +209,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			}
 
 			try {
-				ITracClient client = getClientManager().getRepository(repository);
+				ITracClient client = getClientManager().getTracClient(repository);
 				Set<Integer> ids = client.getChangedTickets(since, monitor);
 				if (ids.isEmpty()) {
 					// repository is unchanged
@@ -258,7 +258,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public boolean updateTaskFromTaskData(TaskRepository taskRepository, AbstractTask task, RepositoryTaskData taskData) {
 		TracTask tracTask = (TracTask) task;
-		ITracClient client = getClientManager().getRepository(taskRepository);
+		ITracClient client = getClientManager().getTracClient(taskRepository);
 
 		task.setSummary(taskData.getSummary());
 		task.setOwner(taskData.getAttributeValue(RepositoryTaskAttribute.USER_ASSIGNED));
@@ -323,7 +323,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public void updateRepositoryConfiguration(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
 		try {
-			ITracClient client = getClientManager().getRepository(repository);
+			ITracClient client = getClientManager().getTracClient(repository);
 			client.updateAttributes(monitor, true);
 		} catch (Exception e) {
 			throw new CoreException(RepositoryStatus.createStatus(repository.getRepositoryUrl(), IStatus.WARNING,

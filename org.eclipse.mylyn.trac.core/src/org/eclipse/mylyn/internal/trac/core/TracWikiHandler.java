@@ -94,7 +94,7 @@ public class TracWikiHandler extends AbstractWikiHandler {
 	}
 
 	private ITracWikiClient getTracWikiClient(TaskRepository repository) throws TracException {
-		ITracClient client = connector.getClientManager().getRepository(repository);
+		ITracClient client = connector.getClientManager().getTracClient(repository);
 		if (client instanceof ITracWikiClient) {
 			return (ITracWikiClient) client;
 		} else {

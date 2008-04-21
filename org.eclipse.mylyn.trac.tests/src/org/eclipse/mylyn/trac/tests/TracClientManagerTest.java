@@ -34,7 +34,7 @@ public class TracClientManagerTest extends TestCase {
 		taskRepository.setVersion(Version.TRAC_0_9.name());
 
 		TracClientManager manager = new TracClientManager(null, new TaskRepositoryLocationFactory());
-		ITracClient client = manager.getRepository(taskRepository);
+		ITracClient client = manager.getTracClient(taskRepository);
 		assertNull(client.getMilestones());
 
 		manager.writeCache();
@@ -50,7 +50,7 @@ public class TracClientManagerTest extends TestCase {
 		file.deleteOnExit();
 
 		TracClientManager manager = new TracClientManager(file, new TaskRepositoryLocationFactory());
-		ITracClient client = manager.getRepository(taskRepository);
+		ITracClient client = manager.getTracClient(taskRepository);
 		assertNull(client.getMilestones());
 	}
 
@@ -64,7 +64,7 @@ public class TracClientManagerTest extends TestCase {
 		file.deleteOnExit();
 
 		TracClientManager manager = new TracClientManager(file, new TaskRepositoryLocationFactory());
-		ITracClient client = manager.getRepository(taskRepository);
+		ITracClient client = manager.getTracClient(taskRepository);
 		assertNull(client.getMilestones());
 
 		client.updateAttributes(new NullProgressMonitor(), false);

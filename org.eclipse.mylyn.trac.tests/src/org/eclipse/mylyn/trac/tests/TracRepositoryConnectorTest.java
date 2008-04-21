@@ -164,7 +164,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 	public void testClientManagerChangeTaskRepositorySettings() throws MalformedURLException {
 		init(TracTestConstants.TEST_TRAC_010_URL, Version.TRAC_0_9);
-		ITracClient client = connector.getClientManager().getRepository(repository);
+		ITracClient client = connector.getClientManager().getTracClient(repository);
 		assertEquals(Version.TRAC_0_9, client.getVersion());
 
 		EditRepositoryWizard wizard = new EditRepositoryWizard(repository);
@@ -176,7 +176,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 			((TracRepositorySettingsPage) wizard.getSettingsPage()).setTracVersion(Version.XML_RPC);
 			assertTrue(wizard.performFinish());
 
-			client = connector.getClientManager().getRepository(repository);
+			client = connector.getClientManager().getTracClient(repository);
 			assertEquals(Version.XML_RPC, client.getVersion());
 		} finally {
 			dialog.close();
@@ -259,7 +259,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 	protected void updateAttributes() throws Exception {
 		connector.updateRepositoryConfiguration(repository, new NullProgressMonitor());
 
-		ITracClient server = connector.getClientManager().getRepository(repository);
+		ITracClient server = connector.getClientManager().getTracClient(repository);
 		TracVersion[] versions = server.getVersions();
 		assertEquals(2, versions.length);
 		Arrays.sort(versions, new Comparator<TracVersion>() {

@@ -44,7 +44,7 @@ public class TracAttachmentHandler extends AbstractAttachmentHandler {
 		}
 
 		try {
-			ITracClient client = connector.getClientManager().getRepository(repository);
+			ITracClient client = connector.getClientManager().getTracClient(repository);
 			int id = Integer.parseInt(attachment.getTaskId());
 			return client.getAttachmentData(id, filename, monitor);
 		} catch (Exception e) {
@@ -63,7 +63,7 @@ public class TracAttachmentHandler extends AbstractAttachmentHandler {
 		monitor.beginTask("Uploading attachment", IProgressMonitor.UNKNOWN);
 		try {
 			try {
-				ITracClient client = connector.getClientManager().getRepository(repository);
+				ITracClient client = connector.getClientManager().getTracClient(repository);
 				int id = Integer.parseInt(task.getTaskId());
 				client.putAttachmentData(id, attachment.getFilename(), attachment.getDescription(),
 						attachment.createInputStream(), monitor);

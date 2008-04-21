@@ -657,46 +657,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				+ NAME_DATA_DIR;
 	}
 
-	/**
-	 * Only attempt once per startup.
-	 */
-	private boolean attemptMigration = true;
-
 	public synchronized String getDataDirectory() {
-		if (attemptMigration) {
-			migrateFromLegacyDirectory();
-			attemptMigration = false;
-		}
 		return getPreferenceStore().getString(ContextPreferenceContstants.PREF_DATA_DIR);
-	}
-
-	/**
-	 * API-3.0: remove
-	 */
-	@Deprecated
-	private void migrateFromLegacyDirectory() {
-		// Migrate .mylar data folder to .metadata/.mylyn
-		String oldDefaultDataPath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toString() + '/' + ".mylar";
-		File oldDefaultDataDir = new File(oldDefaultDataPath);
-		if (oldDefaultDataDir.exists()) { // && !newDefaultDataDir.exists()) {
-			File metadata = new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toString() + '/'
-					+ DIRECTORY_METADATA);
-			if (!metadata.exists()) {
-				if (!metadata.mkdirs()) {
-					StatusHandler.log("Unable to create metadata folder: " + metadata.getAbsolutePath(), this);
-				}
-			}
-			File newDefaultDataDir = new File(getPreferenceStore().getString(ContextPreferenceContstants.PREF_DATA_DIR));
-			if (metadata.exists()) {
-				if (!oldDefaultDataDir.renameTo(newDefaultDataDir)) {
-					StatusHandler.log("Could not migrate legacy data from " + oldDefaultDataDir.getAbsolutePath()
-							+ " to " + TasksUiPlugin.getDefault().getDefaultDataDirectory(), this);
-				} else {
-					StatusHandler.log("Migrated legacy task data from " + oldDefaultDataDir.getAbsolutePath() + " to "
-							+ TasksUiPlugin.getDefault().getDefaultDataDirectory(), this);
-				}
-			}
-		}
 	}
 
 	public void setDataDirectory(String newPath) {

@@ -99,7 +99,7 @@ public class NewTracTaskPage extends WizardPage {
 	private void updateAttributesFromRepository() {
 		TracRepositoryConnector connector = (TracRepositoryConnector) TasksUi.getRepositoryManager()
 				.getRepositoryConnector(TracCorePlugin.REPOSITORY_KIND);
-		final ITracClient client = connector.getClientManager().getRepository(taskRepository);
+		final ITracClient client = connector.getClientManager().getTracClient(taskRepository);
 
 		if (!client.hasAttributes()) {
 			try {

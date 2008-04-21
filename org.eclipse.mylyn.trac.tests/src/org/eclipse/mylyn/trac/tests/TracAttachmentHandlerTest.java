@@ -173,7 +173,7 @@ public class TracAttachmentHandlerTest extends TestCase {
 		attachment.setDescription("");
 		attachmentHandler.uploadAttachment(repository, task, attachment, "comment", new NullProgressMonitor());
 
-		ITracClient client = connector.getClientManager().getRepository(repository);
+		ITracClient client = connector.getClientManager().getTracClient(repository);
 		InputStream in = client.getAttachmentData(data.attachmentTicketId, file.getName(), null);
 		byte[] result = new byte[5];
 		in.read(result);

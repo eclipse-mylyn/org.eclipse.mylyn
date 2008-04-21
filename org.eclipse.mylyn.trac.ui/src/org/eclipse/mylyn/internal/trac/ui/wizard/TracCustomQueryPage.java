@@ -363,14 +363,14 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 	private boolean hasAttributes() {
 		TracRepositoryConnector connector = (TracRepositoryConnector) TasksUi.getRepositoryManager()
 				.getRepositoryConnector(TracCorePlugin.REPOSITORY_KIND);
-		ITracClient client = connector.getClientManager().getRepository(repository);
+		ITracClient client = connector.getClientManager().getTracClient(repository);
 		return client.hasAttributes();
 	}
 
 	private void updateAttributesFromRepository(final boolean force) {
 		TracRepositoryConnector connector = (TracRepositoryConnector) TasksUi.getRepositoryManager()
 				.getRepositoryConnector(TracCorePlugin.REPOSITORY_KIND);
-		final ITracClient client = connector.getClientManager().getRepository(repository);
+		final ITracClient client = connector.getClientManager().getTracClient(repository);
 
 		if (!client.hasAttributes() || force) {
 			try {

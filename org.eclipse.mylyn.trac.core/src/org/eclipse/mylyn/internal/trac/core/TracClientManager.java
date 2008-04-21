@@ -48,8 +48,7 @@ public class TracClientManager implements ITaskRepositoryListener {
 		readCache();
 	}
 
-	// API 3.0 rename to getTracClient
-	public synchronized ITracClient getRepository(TaskRepository taskRepository) {
+	public synchronized ITracClient getTracClient(TaskRepository taskRepository) {
 		ITracClient repository = clientByUrl.get(taskRepository.getRepositoryUrl());
 		if (repository == null) {
 			AbstractWebLocation location = taskRepositoryLocationFactory.createWebLocation(taskRepository);
