@@ -7,9 +7,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.java.ui;
 
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.JavaCore;
@@ -39,8 +36,6 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 	public static final String ID_PLUGIN = "org.eclipse.mylyn.java.ui";
 
 	private static JavaUiBridgePlugin INSTANCE;
-
-	private ResourceBundle resourceBundle;
 
 	private ActiveFoldingEditorTracker editorTracker;
 
@@ -121,7 +116,6 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 
 		super.stop(context);
 		INSTANCE = null;
-		resourceBundle = null;
 	}
 
 	private void installEditorTracker(IWorkbench workbench) {
@@ -159,34 +153,6 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 	 */
 	public static JavaUiBridgePlugin getDefault() {
 		return INSTANCE;
-	}
-
-	/**
-	 * Returns the string from the plugin's resource bundle, or 'key' if not found.
-	 */
-	@Deprecated
-	public static String getResourceString(String key) {
-		ResourceBundle bundle = JavaUiBridgePlugin.getDefault().getResourceBundle();
-		try {
-			return (bundle != null) ? bundle.getString(key) : key;
-		} catch (MissingResourceException e) {
-			return key;
-		}
-	}
-
-	/**
-	 * Returns the plugin's resource bundle,
-	 */
-	@Deprecated
-	public ResourceBundle getResourceBundle() {
-		try {
-			if (resourceBundle == null) {
-				resourceBundle = ResourceBundle.getBundle("org.eclipse.mylyn.java.JavaPluginResources");
-			}
-		} catch (MissingResourceException x) {
-			resourceBundle = null;
-		}
-		return resourceBundle;
 	}
 
 	/**
