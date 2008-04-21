@@ -21,8 +21,6 @@ public class AllContextTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.context.tests");
 
-		// API-3.0 replace with context UI lazy start extension 
-		// NOTE: used to trigger activation on start
 		TestUtil.triggerContextUiLazyStart();
 
 		// $JUnit-BEGIN$
