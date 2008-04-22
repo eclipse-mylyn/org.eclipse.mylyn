@@ -434,7 +434,7 @@ public class RepositoryConfiguration implements Serializable {
 			{
 		String product = existingReport.getAttributeValue(BugzillaReportElement.PRODUCT.getKeyString());
 		for (RepositoryTaskAttribute attribute : existingReport.getAttributes()) {
-			if (attribute.getId().startsWith("cf_")) {
+			if (attribute.getId().startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX)) {
 				attribute.clearOptions();
 				List<BugzillaCustomField> customFields = getCustomFields();
 
