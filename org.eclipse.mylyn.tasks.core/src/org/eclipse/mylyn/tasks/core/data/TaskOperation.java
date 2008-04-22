@@ -15,8 +15,6 @@ package org.eclipse.mylyn.tasks.core.data;
  */
 public class TaskOperation {
 
-	private String associatedAttributeId;
-
 	private final String connectorKind;
 
 	private String label;
@@ -32,10 +30,6 @@ public class TaskOperation {
 		this.repositoryUrl = repositoryUrl;
 		this.taskId = taskId;
 		this.operationId = operationId;
-	}
-
-	public String getAssociatedAttributeId() {
-		return associatedAttributeId;
 	}
 
 	public String getConnectorKind() {
@@ -56,10 +50,6 @@ public class TaskOperation {
 
 	public String getTaskId() {
 		return taskId;
-	}
-
-	public void setAssociatedAttributeId(String associatedAttributeId) {
-		this.associatedAttributeId = associatedAttributeId;
 	}
 
 	public void setLabel(String label) {

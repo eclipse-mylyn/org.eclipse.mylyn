@@ -212,6 +212,8 @@ public class TaskAttachmentWizard extends Wizard {
 
 	private Mode mode = Mode.DEFAULT;
 
+	private AbstractTaskAttachmentSource source;
+
 	private final TaskAttachment taskAttachment;
 
 	private final TaskRepository taskRepository;
@@ -234,10 +236,10 @@ public class TaskAttachmentWizard extends Wizard {
 
 	@Override
 	public void addPages() {
-		if (taskAttachment.getSource() == null) {
+		if (getSource() == null) {
 			if (mode == Mode.SCREENSHOT) {
 				ScreenshotAttachmentPage shotPage = new ScreenshotAttachmentPage();
-				taskAttachment.setSource(new ImageSource(shotPage));
+				setSource(new ImageSource(shotPage));
 				addPage(shotPage);
 			} else {
 				InputAttachmentSourcePage inputPage = new InputAttachmentSourcePage(null);
@@ -255,6 +257,10 @@ public class TaskAttachmentWizard extends Wizard {
 
 	public TaskAttachment getAttachment() {
 		return taskAttachment;
+	}
+
+	public AbstractTaskAttachmentSource getSource() {
+		return source;
 	}
 
 	private void handleSubmitError(final CoreException exception) {
@@ -305,6 +311,10 @@ public class TaskAttachmentWizard extends Wizard {
 
 	public void setMode(Mode mode) {
 		this.mode = mode;
+	}
+
+	public void setSource(AbstractTaskAttachmentSource source) {
+		this.source = source;
 	}
 
 }

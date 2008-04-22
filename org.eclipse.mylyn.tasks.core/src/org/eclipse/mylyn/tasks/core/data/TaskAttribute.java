@@ -33,7 +33,7 @@ public final class TaskAttribute {
 
 	public static final String ATTACHMENT_AUTHOR = "task.common.attachment.author";
 
-	public static final String ATTACHMENT_CTYPE = "task.common.attachment.ctype";
+	public static final String ATTACHMENT_CONTENT_TYPE = "task.common.attachment.ctype";
 
 	public static final String ATTACHMENT_DATE = "task.common.attachment.date";
 
@@ -42,8 +42,6 @@ public final class TaskAttribute {
 	public static final String ATTACHMENT_ID = "task.common.attachment.id";
 
 	public static final String ATTACHMENT_SIZE = "task.common.attachment.size";
-
-	public static final String ATTACHMENT_TYPE = "task.common.attachment.type";
 
 	public static final String ATTACHMENT_URL = "task.common.attachment.url";
 
@@ -64,6 +62,8 @@ public final class TaskAttribute {
 	public static final String COMMENT_HAS_ATTACHMENT = "task.common.comment.attachment";
 
 	public static final String COMMENT_ATTACHMENT_ID = "task.common.comment.attachment.id";
+
+	public static final String COMMENT_URL = "task.common.comment.url";
 
 	/**
 	 * @since 3.0
@@ -186,6 +186,8 @@ public final class TaskAttribute {
 	 */
 	public static final String TYPE_SINGLE_SELECT = "singleSelect";
 
+	public static final String TYPE_OPERATION = "operation";
+
 	/**
 	 * @since 3.0
 	 */
@@ -280,6 +282,12 @@ public final class TaskAttribute {
 	public TaskAttribute getAttribute(String attributeId) {
 		Assert.isNotNull(attributeId);
 		return (attributeById != null) ? attributeById.get(attributeId) : null;
+	}
+
+	public TaskAttribute getMappedAttribute(String attributeId) {
+		Assert.isNotNull(attributeId);
+		return (attributeById != null) ? attributeById.get(getTaskData().getAttributeMapper().mapToRepositoryKey(this,
+				attributeId)) : null;
 	}
 
 	public Map<String, TaskAttribute> getAttributes() {

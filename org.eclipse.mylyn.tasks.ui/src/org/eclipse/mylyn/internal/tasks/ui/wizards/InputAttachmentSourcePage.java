@@ -177,9 +177,6 @@ public class InputAttachmentSourcePage extends WizardPage {
 
 	@Override
 	public IWizardPage getNextPage() {
-		if (taskAttachment != null) {
-			taskAttachment.setSource(getSource());
-		}
 		if (getInputMethod() == SCREENSHOT) {
 			return getWizard().getPage("ScreenShotAttachment");
 		} else {

@@ -21,13 +21,13 @@ public class TaskComment {
 
 	private RepositoryPerson author;
 
-	private String authorName;
-
 	private final String commentId;
 
 	private final String connectorKind;
 
 	private Date creationDate;
+
+	private int number;
 
 	private final String repositoryUrl;
 
@@ -35,7 +35,7 @@ public class TaskComment {
 
 	private String text;
 
-	private int number;
+	private String url;
 
 	public TaskComment(String connectorKind, String repositoryUrl, String taskId, String commentId) {
 		this.connectorKind = connectorKind;
@@ -60,6 +60,10 @@ public class TaskComment {
 		return creationDate;
 	}
 
+	public int getNumber() {
+		return number;
+	}
+
 	public String getRepositoryUrl() {
 		return repositoryUrl;
 	}
@@ -72,6 +76,10 @@ public class TaskComment {
 		return text;
 	}
 
+	public String getUrl() {
+		return url;
+	}
+
 	public void setAuthor(RepositoryPerson author) {
 		this.author = author;
 	}
@@ -80,16 +88,15 @@ public class TaskComment {
 		this.creationDate = creationDate;
 	}
 
-	public void setText(String text) {
-		this.text = text;
-	}
-
-	public int getNumber() {
-		return number;
-	}
-
 	public void setNumber(int number) {
 		this.number = number;
 	}
 
+	public void setText(String text) {
+		this.text = text;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
 }

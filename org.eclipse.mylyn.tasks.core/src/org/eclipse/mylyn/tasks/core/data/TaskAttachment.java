@@ -10,8 +10,6 @@ package org.eclipse.mylyn.tasks.core.data;
 
 import java.util.Date;
 
-import org.eclipse.mylyn.internal.tasks.core.AbstractTaskAttachmentSource;
-
 /**
  * @since 3.0
  * @author Steffen Pingel
@@ -19,6 +17,8 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTaskAttachmentSource;
 public class TaskAttachment {
 
 	private final String attachmentId;
+
+	private RepositoryPerson author;
 
 	private String comment;
 
@@ -28,21 +28,21 @@ public class TaskAttachment {
 
 	private Date creationDate;
 
+	private boolean deprecated;
+
 	private String description;
+
+	private String fileName;
+
+	private long length;
 
 	private boolean patch;
 
 	private final String repositoryUrl;
 
-	private AbstractTaskAttachmentSource source;
-
 	private final String taskId;
 
 	private String url;
-
-	private RepositoryPerson author;
-
-	private boolean deprecated;
 
 	public TaskAttachment(String connectorKind, String repositoryUrl, String taskId, String attachmentId) {
 		this.connectorKind = connectorKind;
@@ -51,12 +51,12 @@ public class TaskAttachment {
 		this.attachmentId = attachmentId;
 	}
 
-	public RepositoryPerson getAuthor() {
-		return author;
-	}
-
 	public String getAttachmentId() {
 		return attachmentId;
+	}
+
+	public RepositoryPerson getAuthor() {
+		return author;
 	}
 
 	public String getComment() {
@@ -68,7 +68,7 @@ public class TaskAttachment {
 	}
 
 	public String getContentType() {
-		return source != null ? source.getContentType() : null;
+		return contentType;
 	}
 
 	public Date getCreationDate() {
@@ -79,20 +79,16 @@ public class TaskAttachment {
 		return description;
 	}
 
-	public long getLength() {
-		return source != null ? source.getLength() : null;
+	public String getFileName() {
+		return fileName;
 	}
 
-	public String getName() {
-		return source != null ? source.getName() : null;
+	public long getLength() {
+		return length;
 	}
 
 	public String getRepositoryUrl() {
 		return repositoryUrl;
-	}
-
-	public AbstractTaskAttachmentSource getSource() {
-		return source;
 	}
 
 	public String getTaskId() {
@@ -103,8 +99,8 @@ public class TaskAttachment {
 		return url;
 	}
 
-	public boolean isLocal() {
-		return source != null && source.isLocal();
+	public boolean isDeprecated() {
+		return deprecated;
 	}
 
 	public boolean isPatch() {
@@ -127,28 +123,28 @@ public class TaskAttachment {
 		this.creationDate = creationDate;
 	}
 
+	public void setDeprecated(boolean deprecated) {
+		this.deprecated = deprecated;
+	}
+
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public void setLength(long length) {
+		this.length = length;
 	}
 
 	public void setPatch(boolean patch) {
 		this.patch = patch;
 	}
 
-	public void setSource(AbstractTaskAttachmentSource source) {
-		this.source = source;
-	}
-
 	public void setUrl(String url) {
 		this.url = url;
-	}
-
-	public boolean isDeprecated() {
-		return deprecated;
-	}
-
-	public void setDeprecated(boolean deprecated) {
-		this.deprecated = deprecated;
 	}
 
 }

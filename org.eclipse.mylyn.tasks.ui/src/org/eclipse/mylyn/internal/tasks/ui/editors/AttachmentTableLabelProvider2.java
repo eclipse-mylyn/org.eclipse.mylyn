@@ -50,7 +50,7 @@ public class AttachmentTableLabelProvider2 extends ColumnLabelProvider {
 			} else if (attachment.isPatch()) {
 				return TasksUiImages.getImage(TasksUiImages.ATTACHMENT_PATCH);
 			} else {
-				String filename = attachment.getSource().getName();
+				String filename = attachment.getFileName();
 				if (filename != null) {
 					int dotIndex = filename.lastIndexOf('.');
 					if (dotIndex != -1) {
@@ -78,7 +78,7 @@ public class AttachmentTableLabelProvider2 extends ColumnLabelProvider {
 			} else if (attachment.isPatch()) {
 				return " Patch";
 			} else {
-				return " " + attachment.getSource().getName();
+				return " " + attachment.getFileName();
 			}
 		case 1:
 			return attachment.getDescription();
@@ -89,11 +89,12 @@ public class AttachmentTableLabelProvider2 extends ColumnLabelProvider {
 			return attachment.getContentType();
 //			}
 		case 3:
-			return sizeFormatter.format(attachment.getSource().getLength());
+			return sizeFormatter.format(attachment.getLength());
 		case 4:
 			return (attachment.getAuthor() != null) ? attachment.getAuthor().toString() : "";
 		case 5:
-			return attributeToolkit.formatDate(attachment.getCreationDate());
+			return (attachment.getCreationDate() != null) ? attributeToolkit.formatDate(attachment.getCreationDate())
+					: "";
 		}
 		return "unrecognized column";
 	}
@@ -138,7 +139,7 @@ public class AttachmentTableLabelProvider2 extends ColumnLabelProvider {
 	@Override
 	public String getToolTipText(Object element) {
 		TaskAttachment attachment = (TaskAttachment) element;
-		return "File: " + attachment.getSource().getName();
+		return "File: " + attachment.getFileName();
 		/*"\nFilename\t\t"  + attachment.getAttributeValue("filename")
 			  +"ID\t\t\t"        + attachment.getAttributeValue("attachid")
 		      + "\nDate\t\t\t"    + attachment.getAttributeValue("date")

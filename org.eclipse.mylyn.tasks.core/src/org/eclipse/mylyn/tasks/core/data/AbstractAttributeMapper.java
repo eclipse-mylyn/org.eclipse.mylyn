@@ -7,8 +7,10 @@
  *******************************************************************************/
 package org.eclipse.mylyn.tasks.core.data;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,7 +23,7 @@ public abstract class AbstractAttributeMapper {
 	public AbstractAttributeMapper() {
 	}
 
-	public String mapToRepositoryKey(TaskData taskData, String key) {
+	public String mapToRepositoryKey(TaskAttribute parent, String key) {
 		return key;
 	}
 
@@ -52,6 +54,46 @@ public abstract class AbstractAttributeMapper {
 	public void setDateValue(TaskAttribute attribute, Date date) {
 		if (date != null) {
 			attribute.setValue(Long.toString(date.getTime()));
+		} else {
+			attribute.clearValues();
+		}
+	}
+
+	public Long getLongValue(TaskAttribute attribute) {
+		String longString = attribute.getValue();
+		try {
+			if (longString != null) {
+				return Long.parseLong(longString);
+			}
+		} catch (NumberFormatException e) {
+			// ignore
+		}
+		return null;
+	}
+
+	public void setLongValue(TaskAttribute attribute, Long value) {
+		if (value != null) {
+			attribute.setValue(value.toString());
+		} else {
+			attribute.clearValues();
+		}
+	}
+
+	public Integer getIntegerValue(TaskAttribute attribute) {
+		String integerString = attribute.getValue();
+		try {
+			if (integerString != null) {
+				return Integer.parseInt(integerString);
+			}
+		} catch (NumberFormatException e) {
+			// ignore
+		}
+		return null;
+	}
+
+	public void setIntegerValue(TaskAttribute attribute, Integer value) {
+		if (value != null) {
+			attribute.setValue(value.toString());
 		} else {
 			attribute.clearValues();
 		}
@@ -102,9 +144,47 @@ public abstract class AbstractAttributeMapper {
 
 	public TaskAttachment getTaskAttachment(TaskAttribute taskAttribute) {
 		TaskData taskData = taskAttribute.getTaskData();
-		String attachmentId = "";
 		TaskAttachment attachment = new TaskAttachment(taskData.getRepositoryUrl(), taskData.getConnectorKind(),
-				taskData.getTaskId(), attachmentId);
+				taskData.getTaskId(), taskAttribute.getId());
+		TaskAttribute child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_AUTHOR);
+		if (child != null) {
+			attachment.setAuthor(getRepositoryPerson(child));
+		}
+		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_CONTENT_TYPE);
+		if (child != null) {
+			attachment.setContentType(getValue(child));
+		}
+		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_DATE);
+		if (child != null) {
+			attachment.setCreationDate(getDateValue(child));
+		}
+		child = taskAttribute.getMappedAttribute(TaskAttribute.DESCRIPTION);
+		if (child != null) {
+			attachment.setDescription(getValue(child));
+		}
+		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_FILENAME);
+		if (child != null) {
+			attachment.setFileName(getValue(child));
+		}
+		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_IS_DEPRECATED);
+		if (child != null) {
+			attachment.setDeprecated(getBooleanValue(child));
+		}
+		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_IS_PATCH);
+		if (child != null) {
+			attachment.setPatch(getBooleanValue(child));
+		}
+		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_SIZE);
+		if (child != null) {
+			Long value = getLongValue(child);
+			if (value != null) {
+				attachment.setLength(value);
+			}
+		}
+		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_URL);
+		if (child != null) {
+			attachment.setUrl(getValue(child));
+		}
 		return attachment;
 	}
 
@@ -116,9 +196,30 @@ public abstract class AbstractAttributeMapper {
 
 	public TaskComment getTaskComment(TaskAttribute taskAttribute) {
 		TaskData taskData = taskAttribute.getTaskData();
-		String commentId = "";
 		TaskComment comment = new TaskComment(taskData.getRepositoryUrl(), taskData.getConnectorKind(),
-				taskData.getTaskId(), commentId);
+				taskData.getTaskId(), taskAttribute.getId());
+		try {
+			comment.setNumber(Integer.parseInt(taskAttribute.getId()));
+		} catch (NumberFormatException e) {
+			// ignore
+		}
+		TaskAttribute child = taskAttribute.getMappedAttribute(TaskAttribute.COMMENT_AUTHOR);
+		if (child != null) {
+			comment.setAuthor(getRepositoryPerson(child,
+					taskAttribute.getMappedAttribute(TaskAttribute.COMMENT_AUTHOR_NAME)));
+		}
+		child = taskAttribute.getMappedAttribute(TaskAttribute.COMMENT_DATE);
+		if (child != null) {
+			comment.setCreationDate(getDateValue(child));
+		}
+		child = taskAttribute.getMappedAttribute(TaskAttribute.COMMENT_URL);
+		if (child != null) {
+			comment.setUrl(getValue(child));
+		}
+		child = taskAttribute.getMappedAttribute(TaskAttribute.COMMENT_TEXT);
+		if (child != null) {
+			comment.setText(getValue(child));
+		}
 		return comment;
 	}
 
@@ -130,12 +231,21 @@ public abstract class AbstractAttributeMapper {
 		return properties;
 	}
 
-	public TaskAttribute getContainer(TaskData taskData, String key) {
-		return taskData.getRoot().getAttribute(key);
+	public List<TaskAttribute> getAttributesByType(TaskData taskData, String type) {
+		TaskAttribute container = null;
+		if (type.equals(TaskAttribute.TYPE_COMMENT)) {
+			container = taskData.getMappedAttribute(TaskAttribute.CONTAINER_COMMENTS);
+		} else if (type.equals(TaskAttribute.TYPE_ATTACHMENT)) {
+			container = taskData.getMappedAttribute(TaskAttribute.CONTAINER_ATTACHMENTS);
+
+		} else if (type.equals(TaskAttribute.TYPE_OPERATION)) {
+			container = taskData.getMappedAttribute(TaskAttribute.CONTAINER_OPERATIONS);
+		}
+		return (container != null) ? new ArrayList<TaskAttribute>(container.getAttributes().values()) : null;
 	}
 
-	public void setTaskOperation(TaskData taskData, TaskOperation operation) {
-		taskData.getRoot().getAttribute(TaskAttribute.CONTAINER_OPERATIONS).setValue(operation.getOperationId());
+	public void setTaskOperation(TaskData taskData, TaskAttribute operation) {
+		taskData.getRoot().getAttribute(TaskAttribute.CONTAINER_OPERATIONS).setValue(operation.getId());
 	}
 
 	public TaskAttribute getAssoctiatedAttribute(TaskAttribute taskAttribute) {
@@ -151,13 +261,25 @@ public abstract class AbstractAttributeMapper {
 		String operationId = "";
 		TaskOperation operation = new TaskOperation(taskData.getRepositoryUrl(), taskData.getConnectorKind(),
 				taskData.getTaskId(), operationId);
+		TaskAttribute child = taskAttribute.getAttribute(TaskAttribute.OPERATION_NAME);
+		if (child != null) {
+			operation.setLabel(getValue(child));
+		}
 		return operation;
 	}
 
 	public RepositoryPerson getRepositoryPerson(TaskAttribute taskAttribute) {
+		return getRepositoryPerson(taskAttribute, null);
+	}
+
+	private RepositoryPerson getRepositoryPerson(TaskAttribute taskAttribute, TaskAttribute taskAttributeName) {
 		TaskData taskData = taskAttribute.getTaskData();
-		return new RepositoryPerson(taskData.getConnectorKind(), taskData.getRepositoryUrl(), taskData.getTaskId(),
-				taskAttribute.getValue());
+		RepositoryPerson person = new RepositoryPerson(taskData.getConnectorKind(), taskData.getRepositoryUrl(),
+				taskData.getTaskId(), taskAttribute.getValue());
+		if (taskAttributeName != null) {
+			person.setName(getValue(taskAttributeName));
+		}
+		return person;
 	}
 
 }

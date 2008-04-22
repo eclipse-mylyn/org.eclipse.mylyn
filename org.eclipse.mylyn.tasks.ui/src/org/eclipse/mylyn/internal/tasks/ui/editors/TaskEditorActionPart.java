@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
@@ -51,7 +50,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 				}
 			}
 
-			TaskOperation operation = (TaskOperation) e.widget.getData();
+			TaskAttribute operation = (TaskAttribute) e.widget.getData();
 			getTaskData().getAttributeMapper().setTaskOperation(getTaskData(), operation);
 		}
 
@@ -237,15 +236,15 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 	}
 
 	private void createRadioButtons(Composite buttonComposite, FormToolkit toolkit) {
-		TaskAttribute container = getTaskData().getMappedAttribute(TaskAttribute.CONTAINER_OPERATIONS);
-		if (container != null) {
-			Map<String, TaskAttribute> attributes = container.getAttributes();
+		List<TaskAttribute> attributes = getTaskData().getAttributeMapper().getAttributesByType(getTaskData(),
+				TaskAttribute.TYPE_OPERATION);
+		if (attributes != null) {
 			operationButtons = new ArrayList<Button>();
-			for (TaskAttribute attribute : attributes.values()) {
+			for (TaskAttribute attribute : attributes) {
 				TaskOperation operation = getTaskData().getAttributeMapper().getTaskOperation(attribute);
 				if (operation != null) {
 					Button button = toolkit.createButton(buttonComposite, operation.getLabel(), SWT.RADIO);
-					button.setData(operation);
+					button.setData(attribute);
 					GridData radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 					TaskAttribute associatedAttribute = getTaskData().getAttributeMapper().getAssoctiatedAttribute(
 							attribute);

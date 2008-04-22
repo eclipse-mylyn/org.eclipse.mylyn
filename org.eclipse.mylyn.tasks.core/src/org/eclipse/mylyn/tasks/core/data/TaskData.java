@@ -82,7 +82,7 @@ public final class TaskData {
 	}
 
 	public TaskAttribute getMappedAttribute(String key) {
-		key = getAttributeMapper().mapToRepositoryKey(this, key);
+		key = getAttributeMapper().mapToRepositoryKey(getRoot(), key);
 		return getRoot().getAttribute(key);
 	}
 

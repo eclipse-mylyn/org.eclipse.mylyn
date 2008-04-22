@@ -208,7 +208,7 @@ public class TaskAttachmentPage extends WizardPage {
 			}
 		});
 
-		filePath.setText(attachment.getName() == null ? "" : attachment.getName()); //$NON-NLS-1$
+		filePath.setText(attachment.getFileName() == null ? "" : attachment.getFileName()); //$NON-NLS-1$
 
 		/* Listener for isPatch */
 		isPatchButton.addSelectionListener(new SelectionListener() {
