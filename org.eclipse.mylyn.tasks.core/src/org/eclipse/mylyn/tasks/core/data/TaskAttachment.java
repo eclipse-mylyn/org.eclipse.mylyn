@@ -40,11 +40,19 @@ public class TaskAttachment {
 
 	private String url;
 
+	private RepositoryPerson author;
+
+	private boolean deprecated;
+
 	public TaskAttachment(String connectorKind, String repositoryUrl, String taskId, String attachmentId) {
 		this.connectorKind = connectorKind;
 		this.repositoryUrl = repositoryUrl;
 		this.taskId = taskId;
 		this.attachmentId = attachmentId;
+	}
+
+	public RepositoryPerson getAuthor() {
+		return author;
 	}
 
 	public String getAttachmentId() {
@@ -103,6 +111,10 @@ public class TaskAttachment {
 		return patch;
 	}
 
+	public void setAuthor(RepositoryPerson author) {
+		this.author = author;
+	}
+
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
@@ -130,4 +142,13 @@ public class TaskAttachment {
 	public void setUrl(String url) {
 		this.url = url;
 	}
+
+	public boolean isDeprecated() {
+		return deprecated;
+	}
+
+	public void setDeprecated(boolean deprecated) {
+		this.deprecated = deprecated;
+	}
+
 }

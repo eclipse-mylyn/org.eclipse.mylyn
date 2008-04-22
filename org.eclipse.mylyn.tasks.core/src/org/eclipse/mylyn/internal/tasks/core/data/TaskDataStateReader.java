@@ -99,11 +99,11 @@ public class TaskDataStateReader extends DefaultHandler {
 				state = new TaskDataState(data.getConnectorKind(), data.getRepositoryUrl(), data.getTaskId());
 			}
 			if (ITaskDataConstants.ELEMENT_NEW_DATA.equals(elementHandler.getElementName())) {
-				state.setNewTaskData(taskDataHandler.getTaskData());
+				state.setRepositoryData(taskDataHandler.getTaskData());
 			} else if (ITaskDataConstants.ELEMENT_OLD_DATA.equals(elementHandler.getElementName())) {
-				state.setOldTaskData(taskDataHandler.getTaskData());
+				state.setLastReadData(taskDataHandler.getTaskData());
 			} else if (ITaskDataConstants.ELEMENT_EDITS_DATA.equals(elementHandler.getElementName())) {
-				state.setEditsTaskData(taskDataHandler.getTaskData());
+				state.setEditsData(taskDataHandler.getTaskData());
 			}
 			super.done(elementHandler);
 		}

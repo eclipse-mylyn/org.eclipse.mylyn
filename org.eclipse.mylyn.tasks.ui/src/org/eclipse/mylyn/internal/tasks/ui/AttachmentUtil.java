@@ -31,6 +31,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.data.TaskAttachment;
 
 /**
  * @author Steffen Pingel
@@ -52,8 +53,7 @@ public class AttachmentUtil {
 	public static boolean attachContext(AbstractAttachmentHandler attachmentHandler, TaskRepository repository,
 			AbstractTask task, String longComment, IProgressMonitor monitor) throws CoreException {
 		ContextCore.getContextManager().saveContext(task.getHandleIdentifier());
-		final File sourceContextFile = ContextCore.getContextManager().getFileForContext(
-				task.getHandleIdentifier());
+		final File sourceContextFile = ContextCore.getContextManager().getFileForContext(task.getHandleIdentifier());
 
 		RepositoryTaskSyncState previousState = task.getSynchronizationState();
 
@@ -116,6 +116,11 @@ public class AttachmentUtil {
 				|| CONTEXT_DESCRIPTION_LEGACY.equals(attachment.getDescription());
 	}
 
+	public static boolean isContext(TaskAttachment attachment) {
+		return CONTEXT_DESCRIPTION.equals(attachment.getDescription())
+				|| CONTEXT_DESCRIPTION_LEGACY.equals(attachment.getDescription());
+	}
+
 	/**
 	 * Retrieves a context stored in <code>attachment</code> from <code>task</code>.
 	 * 
@@ -125,8 +130,7 @@ public class AttachmentUtil {
 			AbstractTask task, RepositoryAttachment attachment, String destinationPath, IProgressMonitor monitor)
 			throws CoreException {
 
-		File destinationContextFile = ContextCore.getContextManager().getFileForContext(
-				task.getHandleIdentifier());
+		File destinationContextFile = ContextCore.getContextManager().getFileForContext(task.getHandleIdentifier());
 
 		// TODO: add functionality for not overwriting previous context
 		if (destinationContextFile.exists()) {

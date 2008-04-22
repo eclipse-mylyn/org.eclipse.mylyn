@@ -33,6 +33,7 @@ import java.util.Locale;
  * 
  * @author Willian Mitsuda
  * @author Frank Becker
+ * @author Steffen Pingel
  */
 public class AttachmentSizeFormatter {
 
@@ -56,41 +57,40 @@ public class AttachmentSizeFormatter {
 	}
 
 	public String format(String sizeInBytes) {
-		// Ensures it can be converted to an int
 		if (sizeInBytes == null) {
 			return UNKNOWN_SIZE;
 		}
-		int size = 0;
 		try {
-			size = Integer.parseInt(sizeInBytes);
+			return format(Long.parseLong(sizeInBytes));
 		} catch (NumberFormatException e) {
 			return UNKNOWN_SIZE;
 		}
+	}
 
-		// Discover the magnitude
+	public String format(long size) {
 		if (size < 0) {
 			return UNKNOWN_SIZE;
 		}
 		if (size < 1024) {
-			// Format as byte
+			// format as byte
 			if (size == 1) {
 				return "1 byte";
 			}
 			DecimalFormat fmt = new DecimalFormat("0 bytes");
 			return fmt.format(size);
 		} else if (size >= 1024 && size <= 1048575) {
-			// Format as KB
+			// format as KB
 			double formattedValue = size / 1024.0;
 			decimalFormat.applyPattern("0.00 KB");
 			return decimalFormat.format(formattedValue);
 		} else if (size >= 1048576 && size <= 1073741823) {
-			// Format as MB
+			// format as MB
 			double formattedValue = size / 1048576.0;
 			decimalFormat.applyPattern("0.00 MB");
 			return decimalFormat.format(formattedValue);
 		}
 
-		// Format as GB
+		// format as GB
 		double formattedValue = size / 1073741824.0;
 		decimalFormat.applyPattern("0.00 GB");
 		return decimalFormat.format(formattedValue);

@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
@@ -20,6 +21,7 @@ import org.eclipse.mylyn.internal.tasks.core.CommentQuoter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.RepositoryPerson;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskComment;
 import org.eclipse.swt.SWT;
@@ -60,7 +62,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 	private List<ExpandableComposite> commentComposites;
 
-	private ArrayList<TaskAttribute> comments;
+	private List<TaskAttribute> comments;
 
 	private boolean hasIncoming;
 
@@ -70,13 +72,16 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 	private void initialize() {
 		TaskAttribute container = getTaskData().getMappedAttribute(TaskAttribute.CONTAINER_COMMENTS);
-		comments = new ArrayList<TaskAttribute>(container.getAttributes().values());
-
-		for (TaskAttribute commentAttribute : comments) {
-			if (getAttributeManager().hasIncomingChanges(commentAttribute)) {
-				hasIncoming = true;
-				break;
+		if (container != null) {
+			comments = new ArrayList<TaskAttribute>(container.getAttributes().values());
+			for (TaskAttribute commentAttribute : comments) {
+				if (getAttributeManager().hasIncomingChanges(commentAttribute)) {
+					hasIncoming = true;
+					break;
+				}
 			}
+		} else {
+			comments = Collections.emptyList();
 		}
 	}
 
@@ -112,33 +117,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			toolbarComp.setLayout(rowLayout);
 			toolbarComp.setBackground(null);
 
-			ImageHyperlink formHyperlink = toolkit.createImageHyperlink(toolbarComp, SWT.NONE);
-			formHyperlink.setBackground(null);
-			formHyperlink.setFont(expandableComposite.getFont());
-			formHyperlink.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-			if (taskComment.getAuthor() != null
-					&& taskComment.getAuthor().getPersonId().equalsIgnoreCase(
-							getTaskEditorPage().getTaskRepository().getUserName())) {
-				formHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.PERSON_ME_NARROW));
-			} else {
-				formHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.PERSON_NARROW));
-			}
-
-			String authorName;
-			String tooltipText;
-			if (taskComment.getAuthor().getName() != null) {
-				authorName = taskComment.getAuthor().getName();
-				tooltipText = taskComment.getAuthor().getPersonId();
-			} else {
-				authorName = taskComment.getAuthor().getPersonId();
-				tooltipText = null;
-			}
-
-			formHyperlink.setText(taskComment.getNumber() + ": " + authorName + ", "
-					+ getTaskEditorPage().getAttributeEditorToolkit().formatDate(taskComment.getCreationDate()));
-			formHyperlink.setToolTipText(tooltipText);
-			formHyperlink.setEnabled(true);
-			formHyperlink.setUnderlined(false);
+			ImageHyperlink formHyperlink = createTitleHyperLink(toolkit, toolbarComp, taskComment);
 
 			final Composite toolbarButtonComp = toolkit.createComposite(toolbarComp);
 			RowLayout buttonCompLayout = new RowLayout();
@@ -233,6 +212,40 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		}
 
 		setSection(toolkit, section);
+	}
+
+	private ImageHyperlink createTitleHyperLink(final FormToolkit toolkit, final Composite toolbarComp,
+			final TaskComment taskComment) {
+		ImageHyperlink formHyperlink = toolkit.createImageHyperlink(toolbarComp, SWT.NONE);
+		formHyperlink.setBackground(null);
+		//formHyperlink.setFont(expandableComposite.getFont());
+		formHyperlink.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+		RepositoryPerson author = taskComment.getAuthor();
+		if (author != null
+				&& author.getPersonId().equalsIgnoreCase(getTaskEditorPage().getTaskRepository().getUserName())) {
+			formHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.PERSON_ME_NARROW));
+		} else {
+			formHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.PERSON_NARROW));
+		}
+		StringBuilder sb = new StringBuilder();
+		sb.append(taskComment.getNumber());
+		sb.append(": ");
+		if (author != null) {
+			if (author.getName() != null) {
+				sb.append(author.getName());
+				formHyperlink.setToolTipText(author.getPersonId());
+			} else {
+				sb.append(author.getPersonId());
+			}
+		}
+		if (taskComment.getCreationDate() != null) {
+			sb.append(", ");
+			sb.append(getTaskEditorPage().getAttributeEditorToolkit().formatDate(taskComment.getCreationDate()));
+		}
+		formHyperlink.setText(sb.toString());
+		formHyperlink.setEnabled(true);
+		formHyperlink.setUnderlined(false);
+		return formHyperlink;
 	}
 
 	private RepositoryTextViewer createViewer(Composite parent, FormToolkit toolkit, String text) {

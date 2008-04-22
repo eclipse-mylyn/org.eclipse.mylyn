@@ -15,6 +15,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.Assert;
+
 /**
  * Encapsulates attributes for task data.
  * 
@@ -276,7 +278,8 @@ public final class TaskAttribute {
 	}
 
 	public TaskAttribute getAttribute(String attributeId) {
-		return (attributeId != null) ? attributeById.get(attributeId) : null;
+		Assert.isNotNull(attributeId);
+		return (attributeById != null) ? attributeById.get(attributeId) : null;
 	}
 
 	public Map<String, TaskAttribute> getAttributes() {
@@ -419,15 +422,17 @@ public final class TaskAttribute {
 
 	public void deepAddCopy(TaskAttribute source) {
 		TaskAttribute target = createAttribute(source.getId());
-		target.setValues(source.getValues());
+		target.values.addAll(source.values);
 		if (source.metaData != null) {
 			target.metaData = new LinkedHashMap<String, String>(source.metaData);
 		}
 		if (source.optionByKey != null) {
 			target.optionByKey = new LinkedHashMap<String, String>(source.optionByKey);
 		}
-		for (TaskAttribute child : source.attributeById.values()) {
-			target.deepAddCopy(child);
+		if (source.attributeById != null) {
+			for (TaskAttribute child : source.attributeById.values()) {
+				target.deepAddCopy(child);
+			}
 		}
 	}
 

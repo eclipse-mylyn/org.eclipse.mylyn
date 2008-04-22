@@ -9,14 +9,13 @@
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -26,8 +25,8 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AbstractTaskEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AttachAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AttachScreenshotAction;
-import org.eclipse.mylyn.tasks.core.TaskScheme;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachment;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -39,7 +38,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.internal.WorkbenchImages;
@@ -82,7 +80,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 
 	private TableViewer attachmentsTableViewer;
 
-	private List<TaskAttachment> attachments;
+	private List<TaskAttribute> attachments;
 
 	private boolean hasIncoming;
 
@@ -129,10 +127,14 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 			}
 		});
 
-		attachmentsTableViewer.setContentProvider(new AttachmentsTableContentProvider2(attachments));
+		List<TaskAttachment> attachmentList = new ArrayList<TaskAttachment>(attachments.size());
+		for (TaskAttribute attribute : attachments) {
+			attachmentList.add(getTaskData().getAttributeMapper().getTaskAttachment(attribute));
+		}
+		attachmentsTableViewer.setContentProvider(new AttachmentsTableContentProvider2(attachmentList));
 
-		attachmentsTableViewer.setLabelProvider(new AttachmentTableLabelProvider(null, new LabelProvider(),
-				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
+		attachmentsTableViewer.setLabelProvider(new AttachmentTableLabelProvider2(
+				getTaskEditorPage().getAttributeEditorToolkit()));
 
 		attachmentsTableViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
@@ -373,8 +375,12 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 	}
 
 	private void initialize() {
-		TaskScheme scheme = new TaskScheme(getTaskData());
-		attachments = new ArrayList<TaskAttachment>(Arrays.asList(scheme.getAttachments()));
+		TaskAttribute container = getTaskData().getMappedAttribute(TaskAttribute.CONTAINER_ATTACHMENTS);
+		if (container != null) {
+			attachments = new ArrayList<TaskAttribute>(container.getAttributes().values());
+		} else {
+			attachments = Collections.emptyList();
+		}
 	}
 
 }

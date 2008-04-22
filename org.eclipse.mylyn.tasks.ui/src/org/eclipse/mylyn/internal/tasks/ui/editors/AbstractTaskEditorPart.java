@@ -31,8 +31,6 @@ public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 	// XXX why is this required?
 	protected static final Font TEXT_FONT = JFaceResources.getDefaultFont();
 
-	private TaskData taskData;
-
 	private Control control;
 
 	private AbstractTaskEditorPage taskEditorPage;

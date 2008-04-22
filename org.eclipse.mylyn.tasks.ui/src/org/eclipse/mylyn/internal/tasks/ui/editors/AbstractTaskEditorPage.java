@@ -172,8 +172,6 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 	private final List<IRepositoryTaskAttributeListener> attributesListeners = new ArrayList<IRepositoryTaskAttributeListener>();
 
-	private Section attributesSection;
-
 	private Action clearOutgoingAction;
 
 	private Color colorIncoming;
@@ -328,10 +326,10 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		initializePart(composite, attachmentPart);
 	}
 
-	private void createAttributeSection() {
+	private void createAttributeSection(Composite composite) {
 		TaskEditorAttributePart attributePart = new TaskEditorAttributePart();
 		attributePart.setExpandOnCreation(expandedStateAttributes);
-		initializePart(attributesSection, attributePart);
+		initializePart(composite, attributePart);
 	}
 
 	private void createCommentSection(Composite composite) {
@@ -421,7 +419,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 	private void createSections() {
 		createSummarySection(editorComposite);
 
-		createAttributeSection();
+		createAttributeSection(editorComposite);
 
 		if (needsAttachments()) {
 			createAttachmentSection(editorComposite);
@@ -709,7 +707,8 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 	@Override
 	public boolean isDirty() {
-		return getAttributeManager().isDirty() || (getManagedForm() != null && getManagedForm().isDirty());
+		return (getAttributeManager() != null && getAttributeManager().isDirty())
+				|| (getManagedForm() != null && getManagedForm().isDirty());
 	}
 
 	@Override

@@ -28,6 +28,8 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 
 	private final TaskAttribute attribute;
 
+	private Composite composite;
+
 //	/**
 //	 * A listener for selection of the textbox where a new comment is entered in.
 //	 */
@@ -70,11 +72,15 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 		return editor;
 	}
 
+	protected Composite getComposite() {
+		return composite;
+	}
+
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
 		Section section = createSection(parent, toolkit, true);
 
-		final Composite composite = toolkit.createComposite(parent);
+		composite = toolkit.createComposite(section);
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 1;
 		composite.setLayout(layout);

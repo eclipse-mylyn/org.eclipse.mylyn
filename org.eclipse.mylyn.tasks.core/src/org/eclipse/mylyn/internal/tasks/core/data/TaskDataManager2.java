@@ -74,7 +74,7 @@ public class TaskDataManager2 implements ITaskDataManager2 {
 		if (state == null) {
 			state = new TaskDataState(task.getConnectorKind(), task.getRepositoryUrl(), task.getTaskId());
 		}
-		state.setNewTaskData(data);
+		state.setRepositoryData(data);
 		writeState(task, kind, state);
 	}
 

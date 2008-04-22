@@ -106,15 +106,15 @@ public class TaskDataState implements ITaskDataState {
 		return result;
 	}
 
-	public void setEditsTaskData(TaskData editsTaskData) {
+	public void setEditsData(TaskData editsTaskData) {
 		this.editsTaskData = editsTaskData;
 	}
 
-	public void setNewTaskData(TaskData newTaskData) {
+	public void setRepositoryData(TaskData newTaskData) {
 		this.repositoryTaskData = newTaskData;
 	}
 
-	public void setOldTaskData(TaskData oldTaskData) {
+	public void setLastReadData(TaskData oldTaskData) {
 		this.lastReadTaskData = oldTaskData;
 	}
 
@@ -122,7 +122,13 @@ public class TaskDataState implements ITaskDataState {
 		localTaskData = new TaskData(repositoryTaskData.getAttributeMapper(), repositoryTaskData.getConnectorKind(),
 				repositoryTaskData.getRepositoryUrl(), repositoryTaskData.getTaskId());
 		localTaskData.getRoot().deepCopyFrom(repositoryTaskData.getRoot());
-		localTaskData.getRoot().deepCopyFrom(editsTaskData.getRoot());
+		if (editsTaskData != null) {
+			localTaskData.getRoot().deepCopyFrom(editsTaskData.getRoot());
+		} else {
+			editsTaskData = new TaskData(repositoryTaskData.getAttributeMapper(),
+					repositoryTaskData.getConnectorKind(), repositoryTaskData.getRepositoryUrl(),
+					repositoryTaskData.getTaskId());
+		}
 	}
 
 	public void refresh(IProgressMonitor monitor) throws CoreException {

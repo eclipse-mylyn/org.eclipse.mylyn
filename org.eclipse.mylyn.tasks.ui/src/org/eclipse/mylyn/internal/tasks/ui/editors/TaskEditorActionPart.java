@@ -202,7 +202,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 	public void createControl(Composite parent, FormToolkit toolkit) {
 		Section section = createSection(parent, toolkit, true);
 
-		Composite buttonComposite = toolkit.createComposite(parent);
+		Composite buttonComposite = toolkit.createComposite(section);
 		GridLayout buttonLayout = new GridLayout();
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(buttonComposite);
 		buttonLayout.numColumns = 4;
@@ -215,6 +215,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		createRadioButtons(buttonComposite, toolkit);
 		createActionButtons(buttonComposite, toolkit);
 
+		section.setClient(buttonComposite);
 		setSection(toolkit, section);
 	}
 
@@ -237,27 +238,29 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 
 	private void createRadioButtons(Composite buttonComposite, FormToolkit toolkit) {
 		TaskAttribute container = getTaskData().getMappedAttribute(TaskAttribute.CONTAINER_OPERATIONS);
-		Map<String, TaskAttribute> attributes = container.getAttributes();
-		for (TaskAttribute attribute : attributes.values()) {
-			TaskOperation operation = getTaskData().getAttributeMapper().getTaskOperation(attribute);
-			if (operation != null) {
-				Button button = toolkit.createButton(buttonComposite, operation.getLabel(), SWT.RADIO);
-				button.setData(operation);
-				GridData radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-				TaskAttribute associatedAttribute = getTaskData().getAttributeMapper().getAssoctiatedAttribute(
-						attribute);
-				if (associatedAttribute != null) {
-					radioData.horizontalSpan = 1;
-					addAttribute(buttonComposite, toolkit, associatedAttribute, button);
-				} else {
-					radioData.horizontalSpan = 4;
+		if (container != null) {
+			Map<String, TaskAttribute> attributes = container.getAttributes();
+			operationButtons = new ArrayList<Button>();
+			for (TaskAttribute attribute : attributes.values()) {
+				TaskOperation operation = getTaskData().getAttributeMapper().getTaskOperation(attribute);
+				if (operation != null) {
+					Button button = toolkit.createButton(buttonComposite, operation.getLabel(), SWT.RADIO);
+					button.setData(operation);
+					GridData radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+					TaskAttribute associatedAttribute = getTaskData().getAttributeMapper().getAssoctiatedAttribute(
+							attribute);
+					if (associatedAttribute != null) {
+						radioData.horizontalSpan = 1;
+						addAttribute(buttonComposite, toolkit, associatedAttribute, button);
+					} else {
+						radioData.horizontalSpan = 4;
+					}
+					button.setLayoutData(radioData);
+					button.addSelectionListener(new RadioButtonListener());
+					operationButtons.add(button);
 				}
-				button.setLayoutData(radioData);
-				button.addSelectionListener(new RadioButtonListener());
-				operationButtons.add(button);
 			}
 		}
-
 		toolkit.paintBordersFor(buttonComposite);
 	}
 
