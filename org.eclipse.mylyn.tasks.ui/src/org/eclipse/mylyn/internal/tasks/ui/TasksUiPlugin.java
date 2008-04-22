@@ -48,6 +48,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager2;
 import org.eclipse.mylyn.internal.tasks.core.sync.RepositorySynchronizationManager;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.AbstractNotification;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotification;
@@ -138,6 +139,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	private TaskListBackupManager taskListBackupManager;
 
 	private TaskDataManager taskDataManager;
+
+	private TaskDataManager2 taskDataManager2;
 
 	private RepositoryTemplateManager repositoryTemplateManager;
 
@@ -493,7 +496,14 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			repositoryManager.readRepositories(getRepositoriesFilePath());
 
 			// instantiates taskDataManager
-			startOfflineStorageManager();
+			File root = new File(this.getDataDirectory() + '/' + FOLDER_OFFLINE);
+			OfflineFileStorage storage = new OfflineFileStorage(root);
+			OfflineCachingStorage cachedStorage = new OfflineCachingStorage(storage);
+			taskDataManager = new TaskDataManager(repositoryManager, cachedStorage);
+			taskDataManager.start();
+
+			taskDataManager2 = new TaskDataManager2(repositoryManager);
+			taskDataManager2.setDataPath(getDataDirectory());
 
 			synchronizationManager = new RepositorySynchronizationManager(taskDataManager,
 					taskListManager.getTaskList());
@@ -874,23 +884,12 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		return taskListBackupManager;
 	}
 
-	private void startOfflineStorageManager() {
-		//IPath offlineReportsPath = Platform.getStateLocation(TasksUiPlugin.getDefault().getBundle());
-		File root = new File(this.getDataDirectory() + '/' + FOLDER_OFFLINE);
-		OfflineFileStorage storage = new OfflineFileStorage(root);
-		OfflineCachingStorage cachedStorage = new OfflineCachingStorage(storage);
-		taskDataManager = new TaskDataManager(repositoryManager, cachedStorage);
-		taskDataManager.start();
+	public static TaskDataManager getTaskDataManager() {
+		return INSTANCE.taskDataManager;
 	}
 
-	public static TaskDataManager getTaskDataManager() {
-		if (INSTANCE == null || INSTANCE.taskDataManager == null) {
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Offline reports file not created, try restarting."));
-			return null;
-		} else {
-			return INSTANCE.taskDataManager;
-		}
+	public static TaskDataManager2 getTaskDataManager2() {
+		return INSTANCE.taskDataManager2;
 	}
 
 	public void addRepositoryConnectorUi(AbstractRepositoryConnectorUi repositoryConnectorUi) {

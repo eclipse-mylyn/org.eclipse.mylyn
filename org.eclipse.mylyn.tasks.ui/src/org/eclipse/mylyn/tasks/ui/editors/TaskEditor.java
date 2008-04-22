@@ -301,7 +301,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 					setPageImage(index, factory.getPageImage());
 					setPageText(index, factory.getPageText());
 				} catch (Exception e) {
-					StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 							"Could not create editor via factory: " + factory, e));
 				}
 			}

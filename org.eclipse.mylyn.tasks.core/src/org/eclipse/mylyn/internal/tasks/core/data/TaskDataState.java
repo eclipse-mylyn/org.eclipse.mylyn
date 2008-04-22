@@ -8,14 +8,11 @@
 
 package org.eclipse.mylyn.internal.tasks.core.data;
 
-import java.util.Set;
-
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataState;
-import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 /**
@@ -28,9 +25,9 @@ public class TaskDataState implements ITaskDataState {
 
 	private TaskData editsTaskData;
 
-	private TaskData newTaskData;
+	private TaskData repositoryTaskData;
 
-	private TaskData oldTaskData;
+	private TaskData lastReadTaskData;
 
 	private final String repositoryUrl;
 
@@ -39,6 +36,8 @@ public class TaskDataState implements ITaskDataState {
 	private TaskDataManager2 taskDataManager;
 
 	private AbstractTask task;
+
+	private TaskData localTaskData;
 
 	public TaskDataState(String connectorKind, String repositoryUrl, String taskId) {
 		Assert.isNotNull(connectorKind);
@@ -69,16 +68,24 @@ public class TaskDataState implements ITaskDataState {
 		return connectorKind;
 	}
 
-	public TaskData getLocalData() {
+	public TaskData getEditsData() {
 		return editsTaskData;
 	}
 
+	public TaskData getLocalData() {
+		return localTaskData;
+	}
+
+	public void setLocalTaskData(TaskData localTaskData) {
+		this.localTaskData = localTaskData;
+	}
+
 	public TaskData getRepositoryData() {
-		return newTaskData;
+		return repositoryTaskData;
 	}
 
 	public TaskData getLastReadData() {
-		return oldTaskData;
+		return lastReadTaskData;
 	}
 
 	public String getRepositoryUrl() {
@@ -104,25 +111,21 @@ public class TaskDataState implements ITaskDataState {
 	}
 
 	public void setNewTaskData(TaskData newTaskData) {
-		this.newTaskData = newTaskData;
+		this.repositoryTaskData = newTaskData;
 	}
 
 	public void setOldTaskData(TaskData oldTaskData) {
-		this.oldTaskData = oldTaskData;
+		this.lastReadTaskData = oldTaskData;
 	}
 
-	public void addEdit(TaskAttribute attribute) {
-		// ignore
-
-	}
-
-	public Set<TaskAttribute> getEditedAttributes() {
-		// ignore
-		return null;
+	void createLocalData() {
+		localTaskData = new TaskData(repositoryTaskData.getAttributeMapper(), repositoryTaskData.getConnectorKind(),
+				repositoryTaskData.getRepositoryUrl(), repositoryTaskData.getTaskId());
+		localTaskData.getRoot().deepCopyFrom(repositoryTaskData.getRoot());
+		localTaskData.getRoot().deepCopyFrom(editsTaskData.getRoot());
 	}
 
 	public void refresh(IProgressMonitor monitor) throws CoreException {
-		// ignore
 
 	}
 

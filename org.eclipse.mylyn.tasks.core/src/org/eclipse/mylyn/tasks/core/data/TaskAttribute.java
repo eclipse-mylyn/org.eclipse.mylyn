@@ -411,4 +411,24 @@ public final class TaskAttribute {
 		}
 	}
 
+	public void deepCopyFrom(TaskAttribute source) {
+		for (TaskAttribute child : source.attributeById.values()) {
+			deepAddCopy(child);
+		}
+	}
+
+	public void deepAddCopy(TaskAttribute source) {
+		TaskAttribute target = createAttribute(source.getId());
+		target.setValues(source.getValues());
+		if (source.metaData != null) {
+			target.metaData = new LinkedHashMap<String, String>(source.metaData);
+		}
+		if (source.optionByKey != null) {
+			target.optionByKey = new LinkedHashMap<String, String>(source.optionByKey);
+		}
+		for (TaskAttribute child : source.attributeById.values()) {
+			target.deepAddCopy(child);
+		}
+	}
+
 }

@@ -13,6 +13,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.zip.ZipInputStream;
 
 import javax.xml.transform.OutputKeys;
@@ -43,6 +45,10 @@ import org.xml.sax.helpers.XMLReaderFactory;
  */
 public class TaskDataManager2 implements ITaskDataManager2 {
 
+	private static final String FOLDER_DATA = "tasks";
+
+	private static final String FOLDER_DATA_1_0 = "offline";
+
 	private static final String FILE_NAME_INTERNAL = "data.xml";
 
 	private final ITaskRepositoryManager taskRepositoryManager;
@@ -52,6 +58,8 @@ public class TaskDataManager2 implements ITaskDataManager2 {
 	private static final String SCHEMA_VERSION = "1.0";
 
 	private static final String EXTENSION = ".zip";
+
+	private String dataPath;
 
 	public TaskDataManager2(ITaskRepositoryManager taskRepositoryManager) {
 		this.taskRepositoryManager = taskRepositoryManager;
@@ -63,6 +71,9 @@ public class TaskDataManager2 implements ITaskDataManager2 {
 		Assert.isNotNull(data);
 
 		TaskDataState state = readState(task, kind);
+		if (state == null) {
+			state = new TaskDataState(task.getConnectorKind(), task.getRepositoryUrl(), task.getTaskId());
+		}
 		state.setNewTaskData(data);
 		writeState(task, kind, state);
 	}
@@ -93,8 +104,7 @@ public class TaskDataManager2 implements ITaskDataManager2 {
 					in.close();
 				}
 			}
-			TaskDataState state = new TaskDataState(task.getConnectorKind(), task.getRepositoryUrl(), task.getTaskId());
-			return state;
+			return null;
 		} catch (IOException e) {
 			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Error reading task data",
 					e));
@@ -102,7 +112,24 @@ public class TaskDataManager2 implements ITaskDataManager2 {
 	}
 
 	private File getFile(AbstractTask task, String kind) {
-		return new File("/tmp/data");
+		try {
+			String folder = task.getConnectorKind() + "-" + URLEncoder.encode(task.getRepositoryUrl(), ENCODING_UTF_8);
+			File repositoryFolder = new File(dataPath + File.separator + FOLDER_DATA, folder);
+			File dataFile = new File(repositoryFolder, URLEncoder.encode(task.getTaskId(), ENCODING_UTF_8) + EXTENSION);
+			if (dataFile.exists()) {
+				return dataFile;
+			}
+			return getFile10(task, kind);
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private File getFile10(AbstractTask task, String kind) throws UnsupportedEncodingException {
+		String folder = URLEncoder.encode(task.getRepositoryUrl(), ENCODING_UTF_8);
+		File repositoryFolder = new File(dataPath + File.separator + FOLDER_DATA_1_0, folder);
+		File dataFile = new File(repositoryFolder, task.getTaskId() + EXTENSION);
+		return dataFile;
 	}
 
 	public TaskDataState readState(InputStream in) throws IOException {
@@ -137,12 +164,26 @@ public class TaskDataManager2 implements ITaskDataManager2 {
 
 	public ITaskDataState createWorkingCopy(AbstractTask task, String kind) throws CoreException {
 		TaskDataState state = readState(task, kind);
+		if (state == null) {
+			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Task data for task "
+					+ task.getHandleIdentifier() + " not found"));
+		}
 		state.init(this, task);
+		state.createLocalData();
+
 		return state;
 	}
 
 	public boolean hasTaskData(AbstractTask task, String kind) {
 		return getFile(task, kind).exists();
+	}
+
+	public String getDataPath() {
+		return dataPath;
+	}
+
+	public void setDataPath(String dataPath) {
+		this.dataPath = dataPath;
 	}
 
 	//	/**

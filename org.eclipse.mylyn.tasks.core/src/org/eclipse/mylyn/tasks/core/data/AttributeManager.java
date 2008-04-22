@@ -9,7 +9,9 @@
 package org.eclipse.mylyn.tasks.core.data;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -23,8 +25,11 @@ public class AttributeManager {
 
 	private final ITaskDataState taskDataState;
 
+	private final Set<TaskAttribute> editedAttributes;
+
 	public AttributeManager(ITaskDataState taskDataState) {
 		this.taskDataState = taskDataState;
+		this.editedAttributes = new HashSet<TaskAttribute>();
 	}
 
 	public void addAttributeManagerListener(IAttributeManagerListener listener) {
@@ -41,7 +46,7 @@ public class AttributeManager {
 	 *            changed attribute
 	 */
 	public void attributeChanged(TaskAttribute attribute) {
-		taskDataState.addEdit(attribute);
+		editedAttributes.add(attribute);
 
 		if (listeners != null) {
 			for (IAttributeManagerListener listener : listeners.toArray(new IAttributeManagerListener[0])) {
@@ -77,11 +82,11 @@ public class AttributeManager {
 	}
 
 	public boolean hasOutgoingChanges(TaskAttribute taskAttribute) {
-		return taskDataState.getEditedAttributes().contains(taskAttribute);
+		return taskDataState.getEditsData().getRoot().getAttribute(taskAttribute.getId()) != null;
 	}
 
 	public boolean isDirty() {
-		return !taskDataState.getEditedAttributes().isEmpty();
+		return !taskDataState.getEditsData().getRoot().getAttributes().isEmpty();
 	}
 
 	public void refresh(IProgressMonitor monitor) throws CoreException {

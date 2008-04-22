@@ -8,8 +8,6 @@
 
 package org.eclipse.mylyn.tasks.core.data;
 
-import java.util.Set;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
@@ -18,9 +16,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
  */
 public interface ITaskDataState {
 
-	public abstract void addEdit(TaskAttribute attribute);
-
-	public abstract Set<TaskAttribute> getEditedAttributes();
+	public abstract TaskData getEditsData();
 
 	public abstract TaskData getLastReadData();
 
