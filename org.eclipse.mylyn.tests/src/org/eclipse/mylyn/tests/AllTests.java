@@ -25,6 +25,7 @@ import org.eclipse.mylyn.tests.integration.AllIntegrationTests;
 import org.eclipse.mylyn.tests.integration.TestingStatusNotifier;
 import org.eclipse.mylyn.tests.misc.AllMiscTests;
 import org.eclipse.mylyn.trac.tests.AllTracTests;
+import org.eclipse.mylyn.xplanner.tests.AllXPlannerTests;
 
 /**
  * @author Mik Kersten
@@ -52,6 +53,7 @@ public class AllTests {
 		suite.addTest(AllBugzillaTests.suite());
 		suite.addTest(AllJiraTests.suite());
 		suite.addTest(AllTracTests.suite());
+		suite.addTest(AllXPlannerTests.suite());
 		// $JUnit-END$
 		return suite;
 	}
