@@ -11,15 +11,9 @@ package org.eclipse.mylyn.internal.trac.ui.editor;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.mylyn.internal.trac.core.ITracClient;
-import org.eclipse.mylyn.internal.trac.core.TracRepositoryQuery;
-import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
-import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter;
-import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter.CompareOperator;
+import org.eclipse.mylyn.tasks.core.AbstractDuplicateDetector;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractNewRepositoryTaskEditor;
-import org.eclipse.mylyn.tasks.ui.search.SearchHitCollector;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -40,29 +34,8 @@ public class NewTracTaskEditor extends AbstractNewRepositoryTaskEditor {
 	}
 
 	@Override
-	public SearchHitCollector getDuplicateSearchCollector(String name) {
-		TracSearchFilter filter = new TracSearchFilter("description");
-		filter.setOperator(CompareOperator.CONTAINS);
-
-		String searchString = AbstractNewRepositoryTaskEditor.getStackTraceFromDescription(taskData.getDescription());
-
-		filter.addValue(searchString);
-
-		TracSearch search = new TracSearch();
-		search.addFilter(filter);
-
-		// TODO copied from TracCustomQueryPage.getQueryUrl()
-		StringBuilder sb = new StringBuilder();
-		sb.append(repository.getRepositoryUrl());
-		sb.append(ITracClient.QUERY_URL);
-		sb.append(search.toUrl());
-
-		TracRepositoryQuery query = new TracRepositoryQuery(repository.getRepositoryUrl(), sb.toString(),
-				"<Duplicate Search>");
-
-		SearchHitCollector collector = new SearchHitCollector(TasksUi.getTaskListManager().getTaskList(), repository,
-				query);
-		return collector;
+	public AbstractDuplicateDetector getDuplicateDetector(String name) {
+		return new TracDuplicateDetector();
 	}
 
 	@Override

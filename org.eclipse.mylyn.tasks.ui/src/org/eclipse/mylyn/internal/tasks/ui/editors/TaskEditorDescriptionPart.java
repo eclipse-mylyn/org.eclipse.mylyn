@@ -19,9 +19,11 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.core.AbstractDuplicateDetector;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.IdentityAttributeFactory;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
-import org.eclipse.mylyn.tasks.ui.AbstractDuplicateDetector;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.search.SearchHitCollector;
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.swt.SWT;
@@ -122,13 +124,13 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 		toolBar.add(replyAction);
 	}
 
-	protected SearchHitCollector getDuplicateSearchCollector(String name) {
+	protected AbstractRepositoryQuery getDuplicateSearchCollector(String name) {
 		String duplicateDetectorName = name.equals("default") ? "Stack Trace" : name;
 		Set<AbstractDuplicateDetector> allDetectors = getDuplicateSearchCollectorsList();
 
 		for (AbstractDuplicateDetector detector : allDetectors) {
 			if (detector.getName().equals(duplicateDetectorName)) {
-				return detector.getSearchHitCollector(getTaskEditorPage().getTaskRepository(),
+				return detector.getDiplicatesQuery(getTaskEditorPage().getTaskRepository(),
 						TaskDataUtil.toLegacyData(getTaskData(), IdentityAttributeFactory.getInstance()));
 			}
 		}
@@ -149,10 +151,14 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 	}
 
 	public boolean searchForDuplicates(String duplicateDetectorName) {
-		SearchHitCollector collector = getDuplicateSearchCollector(duplicateDetectorName);
-		if (collector != null) {
-			NewSearchUI.runQueryInBackground(collector);
-			return true;
+		AbstractRepositoryQuery duplicatesQuery = getDuplicateSearchCollector(duplicateDetectorName);
+		if (duplicatesQuery != null) {
+			SearchHitCollector collector = new SearchHitCollector(TasksUi.getTaskListManager().getTaskList(),
+					getTaskEditorPage().getTaskRepository(), duplicatesQuery);
+			if (collector != null) {
+				NewSearchUI.runQueryInBackground(collector);
+				return true;
+			}
 		}
 
 		return false;

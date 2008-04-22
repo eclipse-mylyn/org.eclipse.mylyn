@@ -12,8 +12,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -516,51 +514,6 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 				MessageDialog.INFORMATION, new String[] { IDialogConstants.OK_LABEL }, 0).open();
 		monitor.setCanceled(true);
 		return;
-	}
-
-	public static String getStackTraceFromDescription(String description) {
-		String stackTrace = null;
-
-		if (description == null) {
-			return null;
-		}
-
-		String punct = "!\"#$%&'\\(\\)*+,-./:;\\<=\\>?@\\[\\]^_`\\{|\\}~\n";
-		String lineRegex = " *at\\s+[\\w" + punct + "]+ ?\\(.*\\) *\n?";
-		Pattern tracePattern = Pattern.compile(lineRegex);
-		Matcher match = tracePattern.matcher(description);
-
-		if (match.find()) {
-			// record the index of the first stack trace line
-			int start = match.start();
-			int lastEnd = match.end();
-
-			// find the last stack trace line
-			while (match.find()) {
-				lastEnd = match.end();
-			}
-
-			// make sure there's still room to find the exception
-			if (start <= 0) {
-				return null;
-			}
-
-			// count back to the line before the stack trace to find the
-			// exception
-			int stackStart = 0;
-			int index = start - 1;
-			while (index > 1 && description.charAt(index) == ' ') {
-				index--;
-			}
-
-			// locate the exception line index
-			stackStart = description.substring(0, index - 1).lastIndexOf("\n");
-			stackStart = (stackStart == -1) ? 0 : stackStart + 1;
-
-			stackTrace = description.substring(stackStart, lastEnd);
-		}
-
-		return stackTrace;
 	}
 
 	@Override
