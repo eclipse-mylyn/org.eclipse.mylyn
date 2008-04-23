@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.jface.resource.JFaceResources;
@@ -69,7 +68,6 @@ public class RepositoryTextViewerConfiguration extends TextSourceViewerConfigura
 
 	public RepositoryTextViewerConfiguration(TaskRepository taskRepository, boolean spellCheck) {
 		super(EditorsUI.getPreferenceStore());
-		Assert.isNotNull(taskRepository);
 		this.taskRepository = taskRepository;
 		this.spellCheck = spellCheck;
 	}
