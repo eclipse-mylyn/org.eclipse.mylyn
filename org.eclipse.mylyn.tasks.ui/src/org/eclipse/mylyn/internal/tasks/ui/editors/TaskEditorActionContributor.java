@@ -188,8 +188,9 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 
 		if (editor.getTaskEditorInput() == null && !(editor.getEditorInput() instanceof NewTaskEditorInput)) {
 			final MenuManager subMenuManager = new MenuManager("Add to " + TaskListView.LABEL_VIEW);
-			List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(
-					TasksUi.getTaskListManager().getTaskList().getCategories());
+			List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(TasksUi.getTaskListManager()
+					.getTaskList()
+					.getCategories());
 
 			Collections.sort(categories);
 			for (final AbstractTaskCategory category : categories) {
@@ -569,6 +570,10 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 	// FIXME these are never removed: this is a problem when the editor is refreshed 
 	public void addTextViewer(TextViewer textViewer) {
 		textViewers.add(textViewer);
+	}
+
+	public void removeTextViewer(TextViewer textViewer) {
+		textViewers.remove(textViewer);
 	}
 
 	private boolean canDoGlobalAction(String actionId, TextViewer textViewer) {

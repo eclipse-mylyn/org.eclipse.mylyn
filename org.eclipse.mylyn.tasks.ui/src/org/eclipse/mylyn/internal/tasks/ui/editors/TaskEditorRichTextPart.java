@@ -134,6 +134,8 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 			}
 		}
 
+		getTaskEditorPage().getAttributeEditorToolkit().adapt(editor);
+
 		toolkit.paintBordersFor(composite);
 		section.setClient(composite);
 		setSection(toolkit, section);

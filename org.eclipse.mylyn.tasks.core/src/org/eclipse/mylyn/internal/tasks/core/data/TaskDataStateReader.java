@@ -8,9 +8,12 @@
 
 package org.eclipse.mylyn.internal.tasks.core.data;
 
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler2;
+import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.IdentityAttributeMapper;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractAttributeMapper;
-import org.eclipse.mylyn.tasks.core.data.ITaskDataState;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.xml.sax.Attributes;
@@ -22,17 +25,14 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class TaskDataStateReader extends DefaultHandler {
 
-	TaskStateHandler handler;
+	private TaskStateHandler handler;
 
-	private enum Version {
-		V_1_0, V_2_0
-	};
+	private TaskDataState result;
 
-	TaskDataState result;
+	private final ITaskRepositoryManager repositoryManager;
 
-	private Version version;
-
-	public TaskDataStateReader() {
+	public TaskDataStateReader(ITaskRepositoryManager repositoryManager) {
+		this.repositoryManager = repositoryManager;
 	}
 
 	@Override
@@ -41,11 +41,11 @@ public class TaskDataStateReader extends DefaultHandler {
 			handler.startElement(uri, localName, name, attributes);
 		}
 		if (ITaskDataConstants.ELEMENT_TASK_STATE.equals(name)) {
-			if ("1.0".equals(attributes.getValue(ITaskDataConstants.ATTRIBUTE_VERSION))) {
-				version = Version.V_1_0;
+			String version = attributes.getValue(ITaskDataConstants.ATTRIBUTE_VERSION);
+			if ("1.0".equals(version)) {
+				handler = new TaskStateHandler(version);
+				handler.start(uri, localName, name, attributes);
 			}
-			handler = new TaskStateHandler();
-			handler.start(uri, localName, name, attributes);
 		}
 	}
 
@@ -67,12 +67,23 @@ public class TaskDataStateReader extends DefaultHandler {
 		}
 	}
 
-	public ITaskDataState getResult() {
-		return (handler != null) ? handler.getState() : null;
-	}
+	private AbstractAttributeMapper getAttributeMapper(String connectorKind, String repositoryUrl) throws SAXException {
+		AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(connectorKind);
+		if (connector == null) {
+			throw new SAXException("No repository connector for kind \"" + connectorKind + "\" found");
+		}
 
-	private AbstractAttributeMapper getAttributeMapper(String connectorKind, String repositoryUrl) {
-		return IdentityAttributeMapper.getInstance();
+		TaskRepository taskRepository = repositoryManager.getRepository(connectorKind, repositoryUrl);
+		if (taskRepository == null) {
+			throw new SAXException("Repository \"" + repositoryUrl + "\" not found for kind \"" + connectorKind + "\"");
+		}
+
+		AbstractAttributeMapper attributeMapper = IdentityAttributeMapper.getInstance();
+		AbstractTaskDataHandler2 taskDataHandler = connector.getTaskDataHandler2();
+		if (taskDataHandler != null) {
+			attributeMapper = taskDataHandler.getAttributeMapper(taskRepository);
+		}
+		return attributeMapper;
 	}
 
 	public TaskDataState getTaskDataState() {
@@ -83,8 +94,11 @@ public class TaskDataStateReader extends DefaultHandler {
 
 		private TaskDataState state;
 
-		public TaskStateHandler() {
+		private final String version;
+
+		public TaskStateHandler(String version) {
 			super(null, ITaskDataConstants.ELEMENT_TASK_STATE);
+			this.version = version;
 
 			addElementHandler(new TaskDataHandler(this, ITaskDataConstants.ELEMENT_NEW_DATA));
 			addElementHandler(new TaskDataHandler(this, ITaskDataConstants.ELEMENT_OLD_DATA));
@@ -113,16 +127,21 @@ public class TaskDataStateReader extends DefaultHandler {
 		}
 
 		public TaskData createTaskData(Attributes attributes) throws SAXException {
+			TaskData taskData;
 			if (state == null) {
 				String connectorKind = getValue(attributes, ITaskDataConstants.ATTRIBUTE_REPOSITORY_KIND);
 				String repositoryUrl = getValue(attributes, ITaskDataConstants.ATTRIBUTE_REPOSITORY_URL);
 				String taskId = getValue(attributes, ITaskDataConstants.ATTRIBUTE_ID);
-				return new TaskData(getAttributeMapper(connectorKind, repositoryUrl), connectorKind, repositoryUrl,
-						taskId);
+				AbstractAttributeMapper attributeMapper = getAttributeMapper(connectorKind, repositoryUrl);
+				taskData = new TaskData(attributeMapper, connectorKind, repositoryUrl, taskId);
 			} else {
-				return new TaskData(getAttributeMapper(state.getConnectorKind(), state.getRepositoryUrl()),
-						state.getConnectorKind(), state.getRepositoryUrl(), state.getTaskId());
+				AbstractAttributeMapper attributeMapper = getAttributeMapper(state.getConnectorKind(),
+						state.getRepositoryUrl());
+				taskData = new TaskData(attributeMapper, state.getConnectorKind(), state.getRepositoryUrl(),
+						state.getTaskId());
 			}
+			taskData.setVersion(version);
+			return taskData;
 		}
 	}
 
@@ -175,11 +194,23 @@ public class TaskDataStateReader extends DefaultHandler {
 			attribute = parentAttribute.createAttribute(id);
 			attribute.putMetaDataValue(TaskAttribute.META_LABEL, label);
 			attribute.putMetaDataValue(TaskAttribute.META_READ_ONLY, Boolean.toString(readOnly));
-			attribute.putMetaDataValue(TaskAttribute.META_SHOW_IN_EDITOR, Boolean.toString(!hidden));
+			attribute.putMetaDataValue(TaskAttribute.META_SHOW_IN_ATTRIBUTES_SECTION, Boolean.toString(!hidden));
 
 			addElementHandler(new OptionHandler(this, attribute));
 			addElementHandler(new ValueHandler(this, attribute));
 			addElementHandler(new MetaDataHandler(this, attribute));
+		}
+
+		@Override
+		protected void end(String uri, String localName, String name) {
+			// detect type
+			if (attribute.getOptions().size() > 0) {
+				if (attribute.getValues().size() > 1) {
+					attribute.putMetaDataValue(TaskAttribute.META_TYPE, TaskAttribute.TYPE_MULTI_SELECT);
+				} else {
+					attribute.putMetaDataValue(TaskAttribute.META_TYPE, TaskAttribute.TYPE_SINGLE_SELECT);
+				}
+			}
 		}
 
 	}
@@ -270,16 +301,33 @@ public class TaskDataStateReader extends DefaultHandler {
 		public void start(String uri, String localName, String name, Attributes attributes) throws SAXException {
 			if (container == null) {
 				container = createAttribute(parentAttribute, TaskAttribute.CONTAINER_COMMENTS);
+				container.putMetaDataValue(TaskAttribute.META_TYPE, TaskAttribute.TYPE_CONTAINER);
 			}
 
 			String commentId = getValue(attributes, ITaskDataConstants.ATTRIBUTE_NUMBER);
 			attribute = container.createAttribute(commentId);
-			createAttribute(attribute, TaskAttribute.COMMENT_ATTACHMENT_ID).setValue(
-					getValue(attributes, ITaskDataConstants.ATTRIBUTE_ATTACHMENT_ID));
-			createAttribute(attribute, TaskAttribute.COMMENT_HAS_ATTACHMENT).setValue(
-					getValue(attributes, ITaskDataConstants.ATTRIBUTE_HAS_ATTACHMENT));
+			attribute.putMetaDataValue(TaskAttribute.META_READ_ONLY, Boolean.toString(true));
+			attribute.putMetaDataValue(TaskAttribute.META_SHOW_IN_ATTRIBUTES_SECTION, Boolean.toString(false));
+			attribute.putMetaDataValue(TaskAttribute.META_TYPE, TaskAttribute.TYPE_COMMENT);
+			attribute.putMetaDataValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, TaskAttribute.COMMENT_TEXT);
+
+			TaskAttribute child = createAttribute(attribute, TaskAttribute.COMMENT_ATTACHMENT_ID);
+			child.setValue(getValue(attributes, ITaskDataConstants.ATTRIBUTE_ATTACHMENT_ID));
+
+			child = createAttribute(attribute, TaskAttribute.COMMENT_HAS_ATTACHMENT);
+			child.setValue(getValue(attributes, ITaskDataConstants.ATTRIBUTE_HAS_ATTACHMENT));
+			child.putMetaDataValue(TaskAttribute.META_TYPE, TaskAttribute.TYPE_BOOLEAN);
 
 			addElementHandler(new AttributeHandler(this, attribute));
+		}
+
+		@Override
+		protected void end(String uri, String localName, String name) {
+			TaskAttribute child = attribute.getMappedAttribute(TaskAttribute.COMMENT_TEXT);
+			if (child != null) {
+				child.putMetaDataValue(TaskAttribute.META_READ_ONLY, Boolean.toString(true));
+				child.putMetaDataValue(TaskAttribute.META_TYPE, TaskAttribute.TYPE_RICH_TEXT);
+			}
 		}
 
 	}
@@ -307,12 +355,18 @@ public class TaskDataStateReader extends DefaultHandler {
 
 			// create a unique id for each attachment since the actual id is in a child attribute
 			attribute = container.createAttribute(++attachmentId + "");
-			createAttribute(attribute, TaskAttribute.ATTACHMENT_AUTHOR).setValue(
-					getValue(attributes, ITaskDataConstants.ATTRIBUTE_CREATOR));
-			createAttribute(attribute, TaskAttribute.ATTACHMENT_IS_DEPRECATED).setValue(
-					getValue(attributes, ITaskDataConstants.ATTRIBUTE_IS_OBSOLETE));
-			createAttribute(attribute, TaskAttribute.ATTACHMENT_IS_PATCH).setValue(
-					getValue(attributes, ITaskDataConstants.ATTRIBUTE_IS_PATCH));
+
+			TaskAttribute child = createAttribute(attribute, TaskAttribute.ATTACHMENT_AUTHOR);
+			child.setValue(getValue(attributes, ITaskDataConstants.ATTRIBUTE_CREATOR));
+			child.putMetaDataValue(TaskAttribute.META_TYPE, TaskAttribute.TYPE_PERSON);
+
+			child = createAttribute(attribute, TaskAttribute.ATTACHMENT_IS_DEPRECATED);
+			child.setValue(getValue(attributes, ITaskDataConstants.ATTRIBUTE_IS_OBSOLETE));
+			child.putMetaDataValue(TaskAttribute.META_TYPE, TaskAttribute.TYPE_BOOLEAN);
+
+			child = createAttribute(attribute, TaskAttribute.ATTACHMENT_IS_PATCH);
+			child.setValue(getValue(attributes, ITaskDataConstants.ATTRIBUTE_IS_PATCH));
+			child.putMetaDataValue(TaskAttribute.META_TYPE, TaskAttribute.TYPE_BOOLEAN);
 
 			addElementHandler(new AttributeHandler(this, attribute));
 		}
@@ -340,8 +394,11 @@ public class TaskDataStateReader extends DefaultHandler {
 
 			String operationId = getValue(attributes, ITaskDataConstants.ATTRIBUTE_KNOB_NAME);
 			attribute = container.createAttribute(operationId);
-			createAttribute(attribute, TaskAttribute.OPERATION_NAME).setValue(
-					getValue(attributes, ITaskDataConstants.ATTRIBUTE_OPERATION_NAME));
+			attribute.putMetaDataValue(TaskAttribute.META_TYPE, TaskAttribute.TYPE_CONTAINER);
+
+			TaskAttribute child = createAttribute(attribute, TaskAttribute.OPERATION_NAME);
+			child.setValue(getValue(attributes, ITaskDataConstants.ATTRIBUTE_OPERATION_NAME));
+
 			if (Boolean.parseBoolean(getValue(attributes, ITaskDataConstants.ATTRIBUTE_IS_CHECKED))) {
 				container.setValue(operationId);
 			}
@@ -349,15 +406,20 @@ public class TaskDataStateReader extends DefaultHandler {
 			String value = getOptionalValue(attributes, ITaskDataConstants.ATTRIBUTE_OPTION_NAME);
 			if (value.length() > 0) {
 				attribute.putMetaDataValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, value);
-				TaskAttribute child = createAttribute(attribute, value);
+				child = createAttribute(attribute, value);
 				child.setValue(getOptionalValue(attributes, ITaskDataConstants.ATTRIBUTE_OPTION_SELECTION));
+				child.putMetaDataValue(TaskAttribute.META_READ_ONLY, Boolean.toString(false));
+				child.putMetaDataValue(TaskAttribute.META_TYPE, TaskAttribute.TYPE_SINGLE_SELECT);
+				child.putMetaDataValue(TaskAttribute.META_SHOW_IN_ATTRIBUTES_SECTION, Boolean.toString(false));
 				addElementHandler(new NameHandler(this, child));
 			} else {
 				value = getOptionalValue(attributes, ITaskDataConstants.ATTRIBUTE_INPUT_NAME);
 				if (value.length() > 0) {
 					attribute.putMetaDataValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, value);
-					TaskAttribute child = createAttribute(attribute, value);
+					child = createAttribute(attribute, value);
 					child.setValue(getOptionalValue(attributes, ITaskDataConstants.ATTRIBUTE_INPUT_VALUE));
+					child.putMetaDataValue(TaskAttribute.META_READ_ONLY, Boolean.toString(false));
+					child.putMetaDataValue(TaskAttribute.META_SHOW_IN_ATTRIBUTES_SECTION, Boolean.toString(false));
 				}
 			}
 		}
@@ -391,8 +453,9 @@ public class TaskDataStateReader extends DefaultHandler {
 	private TaskAttribute createAttribute(TaskAttribute parent, String id) {
 		TaskAttribute attribute = parent.createAttribute(id);
 		attribute.putMetaDataValue(TaskAttribute.META_LABEL, null);
-		attribute.putMetaDataValue(TaskAttribute.META_READ_ONLY, Boolean.toString(false));
-		attribute.putMetaDataValue(TaskAttribute.META_SHOW_IN_EDITOR, Boolean.toString(false));
+		attribute.putMetaDataValue(TaskAttribute.META_READ_ONLY, Boolean.toString(true));
+		attribute.putMetaDataValue(TaskAttribute.META_SHOW_IN_ATTRIBUTES_SECTION, Boolean.toString(false));
+		attribute.putMetaDataValue(TaskAttribute.META_TYPE, TaskAttribute.TYPE_SHORT_TEXT);
 		attribute.putMetaDataValue(TaskAttribute.META_ARTIFICIAL, Boolean.toString(true));
 		return attribute;
 	}

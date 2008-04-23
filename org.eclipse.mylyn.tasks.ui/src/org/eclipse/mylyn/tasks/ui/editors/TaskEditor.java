@@ -88,14 +88,14 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	}
 
 	protected void contextMenuAboutToShow(IMenuManager manager) {
-		TaskEditorActionContributor contributor = getContributor();
+		TaskEditorActionContributor contributor = getActionBarContributor();
 		// IFormPage page = getActivePageInstance();
 		if (contributor != null) {
 			contributor.contextMenuAboutToShow(manager);
 		}
 	}
 
-	private TaskEditorActionContributor getContributor() {
+	private TaskEditorActionContributor getActionBarContributor() {
 		return (TaskEditorActionContributor) getEditorSite().getActionBarContributor();
 	}
 
@@ -117,7 +117,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		manager.addMenuListener(listener);
 
 		if (textViewer != null) {
-			TaskEditorActionContributor contributor = getContributor();
+			TaskEditorActionContributor contributor = getActionBarContributor();
 			if (contributor != null) {
 				contributor.addTextViewer(textViewer);
 			}

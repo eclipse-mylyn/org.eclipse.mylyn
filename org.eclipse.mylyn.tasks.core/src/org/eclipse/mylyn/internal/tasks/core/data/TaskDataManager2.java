@@ -30,8 +30,11 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler2;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager2;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataState;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -51,7 +54,7 @@ public class TaskDataManager2 implements ITaskDataManager2 {
 
 	private static final String FILE_NAME_INTERNAL = "data.xml";
 
-	private final ITaskRepositoryManager taskRepositoryManager;
+	private final ITaskRepositoryManager repositoryManager;
 
 	private static final String ENCODING_UTF_8 = "UTF-8";
 
@@ -62,7 +65,7 @@ public class TaskDataManager2 implements ITaskDataManager2 {
 	private String dataPath;
 
 	public TaskDataManager2(ITaskRepositoryManager taskRepositoryManager) {
-		this.taskRepositoryManager = taskRepositoryManager;
+		this.repositoryManager = taskRepositoryManager;
 	}
 
 	public void setTaskData(AbstractTask task, String kind, TaskData data) throws CoreException {
@@ -135,13 +138,44 @@ public class TaskDataManager2 implements ITaskDataManager2 {
 	public TaskDataState readState(InputStream in) throws IOException {
 		try {
 			XMLReader parser = XMLReaderFactory.createXMLReader();
-			TaskDataStateReader handler = new TaskDataStateReader();
+			TaskDataStateReader handler = new TaskDataStateReader(repositoryManager);
 			parser.setContentHandler(handler);
 			parser.parse(new InputSource(in));
-			return handler.getTaskDataState();
+			TaskDataState taskDataState = handler.getTaskDataState();
+			if (taskDataState != null) {
+				migrate(taskDataState);
+			}
+			return taskDataState;
 		} catch (SAXException e) {
 			e.printStackTrace();
 			throw new IOException("Error parsing task data: " + e.getMessage());
+		}
+	}
+
+	private void migrate(TaskDataState taskDataState) throws IOException {
+		String connectorKind = taskDataState.getConnectorKind();
+		AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(connectorKind);
+		if (connector == null) {
+			throw new IOException("No repository connector for kind \"" + connectorKind + "\" found");
+		}
+
+		String repositoryUrl = taskDataState.getRepositoryUrl();
+		TaskRepository taskRepository = repositoryManager.getRepository(connectorKind, repositoryUrl);
+		if (taskRepository == null) {
+			throw new IOException("Repository \"" + repositoryUrl + "\" not found for kind \"" + connectorKind + "\"");
+		}
+
+		AbstractTaskDataHandler2 taskDataHandler = connector.getTaskDataHandler2();
+		if (taskDataHandler != null) {
+			if (taskDataState.getLastReadData() != null) {
+				taskDataHandler.migrateTaskData(taskRepository, taskDataState.getLastReadData());
+			}
+			if (taskDataState.getRepositoryData() != null) {
+				taskDataHandler.migrateTaskData(taskRepository, taskDataState.getRepositoryData());
+			}
+			if (taskDataState.getEditsData() != null) {
+				taskDataHandler.migrateTaskData(taskRepository, taskDataState.getEditsData());
+			}
 		}
 	}
 

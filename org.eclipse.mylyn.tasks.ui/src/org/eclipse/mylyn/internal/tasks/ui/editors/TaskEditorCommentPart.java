@@ -15,26 +15,16 @@ import java.util.List;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.text.Document;
-import org.eclipse.jface.text.TextViewer;
 import org.eclipse.mylyn.internal.tasks.core.CommentQuoter;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.RepositoryPerson;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskComment;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
@@ -44,7 +34,6 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.themes.IThemeManager;
 
 /**
  * @author Robert Elves
@@ -52,11 +41,71 @@ import org.eclipse.ui.themes.IThemeManager;
  */
 public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
+	private class ExpandCompositeListener extends HyperlinkAdapter {
+
+		private final ExpandableComposite expandableComposite;
+
+		public ExpandCompositeListener(ExpandableComposite expandableComposite) {
+			this.expandableComposite = expandableComposite;
+		}
+
+		@Override
+		public void linkActivated(HyperlinkEvent e) {
+			EditorUtil.toggleExpandableComposite(!expandableComposite.isExpanded(), expandableComposite);
+		}
+
+	}
+
+	private class ExpansionListener extends ExpansionAdapter {
+
+		private static final String KEY_EDITOR = "viewer";
+
+		private final TaskAttribute attribute;
+
+		private final Composite toolBarComposite;
+
+		private final FormToolkit toolkit;
+
+		private final Composite composite;
+
+		public ExpansionListener(FormToolkit toolkit, Composite composite, Composite toolBarComposite,
+				TaskAttribute attribute) {
+			this.toolkit = toolkit;
+			this.composite = composite;
+			this.attribute = attribute;
+			this.toolBarComposite = toolBarComposite;
+		}
+
+		@Override
+		public void expansionStateChanged(ExpansionEvent e) {
+			toolBarComposite.setVisible(e.getState());
+			if (e.getState() && composite.getData(KEY_EDITOR) == null) {
+				// create viewer
+				TaskAttribute textAttribute = getTaskData().getAttributeMapper().getAssoctiatedAttribute(attribute);
+				AbstractAttributeEditor editor = createEditor(textAttribute);
+				if (editor != null) {
+					editor.createControl(composite, toolkit);
+					composite.setData(KEY_EDITOR, editor);
+
+					GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(editor.getControl());
+
+					getTaskEditorPage().getAttributeEditorToolkit().adapt(editor);
+					getTaskEditorPage().resetLayout();
+				}
+			} else if (!e.getState() && composite.getData(KEY_EDITOR) != null) {
+				// dispose viewer
+				AbstractAttributeEditor editor = (AbstractAttributeEditor) composite.getData(KEY_EDITOR);
+				getTaskEditorPage().getAttributeEditorToolkit().dispose(editor);
+				editor.getControl().dispose();
+				composite.setData(KEY_EDITOR, null);
+				getTaskEditorPage().resetLayout();
+			}
+		}
+	}
+
 	private static final int DESCRIPTION_WIDTH = 79 * 7; // 500;
 
 	private static final String LABEL_REPLY = "Reply";
-
-	private TaskComment selectedComment;
 
 	private Section section;
 
@@ -102,111 +151,61 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 		commentComposites = new ArrayList<ExpandableComposite>();
 		for (final TaskAttribute commentAttribute : comments) {
-			final TaskComment taskComment = getTaskData().getAttributeMapper().getTaskComment(commentAttribute);
-			final ExpandableComposite expandableComposite = toolkit.createExpandableComposite(addCommentsComposite,
+			TaskComment taskComment = getTaskData().getAttributeMapper().getTaskComment(commentAttribute);
+			ExpandableComposite expandableComposite = toolkit.createExpandableComposite(addCommentsComposite,
 					ExpandableComposite.TREE_NODE | ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT);
-
+			expandableComposite.setLayout(new GridLayout());
+			expandableComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			expandableComposite.setTitleBarForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 
-			final Composite toolbarComp = toolkit.createComposite(expandableComposite);
+			// always visible
+			Composite titleComposite = toolkit.createComposite(expandableComposite);
+			expandableComposite.setTextClient(titleComposite);
 			RowLayout rowLayout = new RowLayout();
 			rowLayout.pack = true;
 			rowLayout.marginLeft = 0;
 			rowLayout.marginBottom = 0;
 			rowLayout.marginTop = 0;
-			toolbarComp.setLayout(rowLayout);
-			toolbarComp.setBackground(null);
+			titleComposite.setLayout(rowLayout);
+			titleComposite.setBackground(null);
 
-			ImageHyperlink formHyperlink = createTitleHyperLink(toolkit, toolbarComp, taskComment);
+			ImageHyperlink formHyperlink = createTitleHyperLink(toolkit, titleComposite, taskComment);
+			formHyperlink.addHyperlinkListener(new ExpandCompositeListener(expandableComposite));
 
-			final Composite toolbarButtonComp = toolkit.createComposite(toolbarComp);
+			// only visible when section is expanded
+			Composite buttonComposite = toolkit.createComposite(titleComposite);
 			RowLayout buttonCompLayout = new RowLayout();
 			buttonCompLayout.marginBottom = 0;
 			buttonCompLayout.marginTop = 0;
-			toolbarButtonComp.setLayout(buttonCompLayout);
-			toolbarButtonComp.setBackground(null);
+			buttonComposite.setLayout(buttonCompLayout);
+			buttonComposite.setBackground(null);
+			buttonComposite.setVisible(expandableComposite.isExpanded());
 
-			final ImageHyperlink replyLink = createReplyHyperlink(toolbarButtonComp, toolkit, taskComment);
-			formHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
-
-				@Override
-				public void linkActivated(HyperlinkEvent e) {
-					EditorUtil.toggleExpandableComposite(!expandableComposite.isExpanded(), expandableComposite);
-				}
-
-				@Override
-				public void linkEntered(HyperlinkEvent e) {
-					replyLink.setUnderlined(true);
-					super.linkEntered(e);
-				}
-
-				@Override
-				public void linkExited(HyperlinkEvent e) {
-					replyLink.setUnderlined(false);
-					super.linkExited(e);
-				}
-			});
-
-			expandableComposite.setTextClient(toolbarComp);
-
-			toolbarButtonComp.setVisible(expandableComposite.isExpanded());
+			createReplyHyperlink(buttonComposite, toolkit, taskComment);
 
 			// HACK: This is necessary
 			// due to a bug in SWT's ExpandableComposite.
 			// 165803: Expandable bars should expand when clicking anywhere
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?taskId=165803
-			expandableComposite.setData(toolbarButtonComp);
+			expandableComposite.setData(buttonComposite);
+			commentComposites.add(expandableComposite);
 
-			expandableComposite.setLayout(new GridLayout());
-			expandableComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
-			final Composite ecComposite = toolkit.createComposite(expandableComposite);
+			Composite commentComposite = toolkit.createComposite(expandableComposite);
 			GridLayout ecLayout = new GridLayout();
 			ecLayout.marginHeight = 0;
 			ecLayout.marginBottom = 3;
 			ecLayout.marginLeft = 15;
-			ecComposite.setLayout(ecLayout);
-			ecComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-			expandableComposite.setClient(ecComposite);
+			commentComposite.setLayout(ecLayout);
+			commentComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			expandableComposite.setClient(commentComposite);
 			// code for outline
-			commentComposites.add(expandableComposite);
-			getTaskEditorPage().addSelectableControl(taskComment, expandableComposite);
-			expandableComposite.addExpansionListener(new ExpansionAdapter() {
-				@Override
-				public void expansionStateChanged(ExpansionEvent e) {
-					toolbarButtonComp.setVisible(expandableComposite.isExpanded());
-					TextViewer viewer = null;
-					if (e.getState() && expandableComposite.getData("viewer") == null) {
-						viewer = createViewer(ecComposite, toolkit, taskComment.getText());
-						expandableComposite.setData("viewer", viewer.getTextWidget());
-						viewer.getTextWidget().addFocusListener(new FocusListener() {
-
-							public void focusGained(FocusEvent e) {
-								selectedComment = taskComment;
-
-							}
-
-							public void focusLost(FocusEvent e) {
-								selectedComment = null;
-							}
-						});
-
-						StyledText styledText = viewer.getTextWidget();
-						GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(styledText);
-						getTaskEditorPage().resetLayout();
-					} else {
-						// dispose viewer
-						if (expandableComposite.getData("viewer") instanceof StyledText) {
-							((StyledText) expandableComposite.getData("viewer")).dispose();
-							expandableComposite.setData("viewer", null);
-						}
-						getTaskEditorPage().resetLayout();
-					}
-				}
-			});
+			//getTaskEditorPage().addSelectableControl(taskComment, expandableComposite);
+			expandableComposite.addExpansionListener(new ExpansionListener(toolkit, commentComposite, buttonComposite,
+					commentAttribute));
 
 			if (getAttributeManager().hasIncomingChanges(commentAttribute)) {
-				expandableComposite.setBackground(getTaskEditorPage().getColorIncoming());
+				expandableComposite.setBackground(getTaskEditorPage().getAttributeEditorToolkit().getColorIncoming());
+				// TODO move to construction to improve performance
 				EditorUtil.toggleExpandableComposite(true, expandableComposite);
 			}
 		}
@@ -246,27 +245,6 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		formHyperlink.setEnabled(true);
 		formHyperlink.setUnderlined(false);
 		return formHyperlink;
-	}
-
-	private RepositoryTextViewer createViewer(Composite parent, FormToolkit toolkit, String text) {
-		TaskRepository taskRepository = getTaskEditorPage().getTaskRepository();
-		RepositoryTextViewer viewer = new RepositoryTextViewer(taskRepository, parent, SWT.FLAT | SWT.WRAP | SWT.MULTI);
-
-		// NOTE: configuration must be applied before the document is set in order for
-		// hyper link coloring to work, the Presenter requires the document object up front
-		TextSourceViewerConfiguration viewerConfig = new RepositoryTextViewerConfiguration(taskRepository, false);
-		viewer.configure(viewerConfig);
-
-		Document document = new Document(text);
-		viewer.setEditable(false);
-		viewer.setDocument(document);
-
-		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
-		Font font = themeManager.getCurrentTheme().getFontRegistry().get(TaskListColorsAndFonts.TASK_EDITOR_FONT);
-		viewer.getTextWidget().setFont(font);
-		toolkit.adapt(viewer.getTextWidget(), true, true);
-
-		return viewer;
 	}
 
 //	private boolean shouldExpandCommentSection() {
@@ -311,6 +289,17 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 				strBuilder.append(quoter.quote(taskComment.getText()));
 				getTaskEditorPage().appendTextToNewComment(strBuilder.toString());
 			}
+
+			@Override
+			public void linkEntered(HyperlinkEvent e) {
+				replyLink.setUnderlined(true);
+			}
+
+			@Override
+			public void linkExited(HyperlinkEvent e) {
+				replyLink.setUnderlined(false);
+			}
+
 		});
 
 		return replyLink;
@@ -451,10 +440,6 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		} finally {
 			getTaskEditorPage().setReflow(true);
 		}
-	}
-
-	public TaskComment getSelectedComment() {
-		return selectedComment;
 	}
 
 }

@@ -10,7 +10,7 @@ package org.eclipse.mylyn.tasks.core.data;
 
 public class TaskAttributeProperties {
 
-	public boolean showInTaskEditor;
+	public boolean showInAttributesSection;
 
 	public boolean showInToolTip;
 

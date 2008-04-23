@@ -8,10 +8,14 @@
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
@@ -29,6 +33,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataUtil;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalProvider;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.tasks.core.IdentityAttributeFactory;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractRenderingEngine;
@@ -36,14 +41,18 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.ActiveShellExpression;
+import org.eclipse.ui.IEditorActionBarContributor;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.fieldassist.ContentAssistCommandAdapter;
 import org.eclipse.ui.handlers.IHandlerActivation;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.keys.IBindingService;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
+import org.eclipse.ui.themes.IThemeManager;
 
 /**
  * @author Steffen Pingel
@@ -51,75 +60,83 @@ import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 // TODO EDITOR rename to AttributeUiToolkit?
 public class AttributeEditorToolkit {
 
-	private class StyledTextFocusListener implements org.eclipse.swt.events.FocusListener {
-
-		private final SourceViewer viewer;
+	private class StyledTextFocusListener implements FocusListener {
 
 		private final boolean spellCheck;
+
+		private final SourceViewer viewer;
 
 		public StyledTextFocusListener(SourceViewer viewer, boolean spellCheck) {
 			this.viewer = viewer;
 			this.spellCheck = spellCheck;
 		}
 
-		private void activate() {
-			if (spellCheck) {
-				deactivate();
-				if (spellFixHandlerActivation == null) {
-					spellFixHandlerActivation = handlerService.activateHandler(
-							ITextEditorActionDefinitionIds.QUICK_ASSIST, createQuickFixActionHandler(viewer),
-							new ActiveShellExpression(viewer.getTextWidget().getShell()));
-				}
-			}
-		}
-
-		private IHandler createQuickFixActionHandler(final SourceViewer viewer) {
-			Action quickFixAction = new Action() {
-				@Override
-				public void run() {
-					if (viewer.canDoOperation(ISourceViewer.QUICK_ASSIST)) {
-						viewer.doOperation(ISourceViewer.QUICK_ASSIST);
-					}
-				}
-			};
-			quickFixAction.setActionDefinitionId(ITextEditorActionDefinitionIds.QUICK_ASSIST);
-			return new ActionHandler(quickFixAction);
-		}
-
-		private void deactivate() {
-			if (spellCheck) {
-				if (spellFixHandlerActivation != null) {
-					handlerService.deactivateHandler(spellFixHandlerActivation);
-					spellFixHandlerActivation = null;
-				}
-			}
-		}
-
 		public void focusGained(FocusEvent e) {
-			actionContributor.updateSelectableActions(viewer.getSelection());
-			activate();
+			if (actionContributor != null) {
+				actionContributor.updateSelectableActions(viewer.getSelection());
+			}
+			activateHandlers(viewer, spellCheck);
 		}
 
 		public void focusLost(FocusEvent e) {
-			StyledText st = (StyledText) e.widget;
-			st.setSelectionRange(st.getCaretOffset(), 0);
-			actionContributor.forceActionsEnabled();
-
-			deactivate();
+			deactivateHandlers();
+			if (actionContributor != null) {
+				StyledText st = (StyledText) e.widget;
+				st.setSelectionRange(st.getCaretOffset(), 0);
+				actionContributor.forceActionsEnabled();
+			}
 		}
 
 	}
 
-	// TODO EDITOR
-	private TaskEditorActionContributor actionContributor;
+	private final TaskEditorActionContributor actionContributor;
 
-	// TODO EDITOR  
-	private IHandlerActivation spellFixHandlerActivation;
+	public IHandlerActivation contentAssistHandlerActivation;
 
 	private final IHandlerService handlerService;
 
-	public AttributeEditorToolkit() {
-		handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
+	private IHandlerActivation quickAssistHandlerActivation;
+
+	private final List<TextViewer> textViewers;
+
+	private final Color colorIncoming;
+
+	public AttributeEditorToolkit(IHandlerService handlerService, IEditorActionBarContributor actionContributor) {
+		this.handlerService = handlerService;
+		if (actionContributor instanceof TaskEditorActionContributor) {
+			this.actionContributor = (TaskEditorActionContributor) actionContributor;
+		} else {
+			this.actionContributor = null;
+		}
+		this.textViewers = new ArrayList<TextViewer>();
+		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
+		colorIncoming = themeManager.getCurrentTheme().getColorRegistry().get(
+				TaskListColorsAndFonts.THEME_COLOR_TASKS_INCOMING_BACKGROUND);
+	}
+
+	private IHandlerActivation activateHandler(SourceViewer viewer, int operation, String actionDefinitionId) {
+		IHandler handler = createActionHandler(viewer, operation, actionDefinitionId);
+		return handlerService.activateHandler(actionDefinitionId, handler, //
+				new ActiveShellExpression(viewer.getTextWidget().getShell()));
+	}
+
+	private void activateHandlers(SourceViewer viewer, boolean spellCheck) {
+		deactivateHandlers();
+		if (spellCheck) {
+			quickAssistHandlerActivation = activateHandler(viewer, ISourceViewer.QUICK_ASSIST,
+					ITextEditorActionDefinitionIds.QUICK_ASSIST);
+		}
+		contentAssistHandlerActivation = activateHandler(viewer, ISourceViewer.CONTENTASSIST_PROPOSALS,
+				ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
+
+	}
+
+	public void dispose(AbstractAttributeEditor editor) {
+		if (actionContributor != null) {
+			if (editor instanceof RichTextAttributeEditor) {
+				actionContributor.removeTextViewer(((RichTextAttributeEditor) editor).getViewer());
+			}
+		}
 	}
 
 	public void adapt(AbstractAttributeEditor editor) {
@@ -139,20 +156,24 @@ public class AttributeEditorToolkit {
 			boolean spellCheck = hasSpellChecking(editor.getTaskAttribute());
 			final SourceViewer viewer = richTextEditor.getViewer();
 			viewer.getControl().addFocusListener(new StyledTextFocusListener(viewer, spellCheck));
-			viewer.addSelectionChangedListener(actionContributor);
-			viewer.addTextListener(new ITextListener() {
-				public void textChanged(TextEvent event) {
-					actionContributor.updateSelectableActions(viewer.getSelection());
-				}
-			});
+			if (actionContributor != null) {
+				viewer.addSelectionChangedListener(actionContributor);
+				viewer.addTextListener(new ITextListener() {
+					public void textChanged(TextEvent event) {
+						actionContributor.updateSelectableActions(viewer.getSelection());
+					}
+				});
 
-			if (viewer instanceof RepositoryTextViewer) {
-				RepositoryTextViewer textViewer = (RepositoryTextViewer) viewer;
-				MenuManager menuManager = textViewer.getMenuManager();
-				configureContextMenuManager(menuManager, textViewer);
-				textViewer.setMenu(menuManager.createContextMenu(viewer.getTextWidget()));
+				if (viewer instanceof RepositoryTextViewer) {
+					RepositoryTextViewer textViewer = (RepositoryTextViewer) viewer;
+					MenuManager menuManager = textViewer.getMenuManager();
+					configureContextMenuManager(menuManager, textViewer);
+					textViewer.setMenu(menuManager.createContextMenu(viewer.getTextWidget()));
+				}
 			}
 		}
+
+		editor.decorate(getColorIncoming());
 	}
 
 	/**
@@ -164,8 +185,7 @@ public class AttributeEditorToolkit {
 	 *            instance providing content proposals
 	 * @return the ContentAssistCommandAdapter for the field.
 	 */
-	// TODO EDITOR make private
-	protected ContentAssistCommandAdapter applyContentAssist(Text text, IContentProposalProvider proposalProvider) {
+	private ContentAssistCommandAdapter applyContentAssist(Text text, IContentProposalProvider proposalProvider) {
 		ControlDecoration controlDecoration = new ControlDecoration(text, (SWT.TOP | SWT.LEFT));
 		controlDecoration.setMarginWidth(0);
 		controlDecoration.setShowHover(true);
@@ -187,6 +207,32 @@ public class AttributeEditorToolkit {
 		return adapter;
 	}
 
+	private void configureContextMenuManager(MenuManager manager, TextViewer textViewer) {
+		IMenuListener listener = new IMenuListener() {
+			public void menuAboutToShow(IMenuManager manager) {
+				actionContributor.contextMenuAboutToShow(manager);
+			}
+		};
+		manager.setRemoveAllWhenShown(true);
+		manager.addMenuListener(listener);
+
+		textViewers.add(textViewer);
+		actionContributor.addTextViewer(textViewer);
+	}
+
+	private IHandler createActionHandler(final SourceViewer viewer, final int operation, String actionDefinitionId) {
+		Action quickFixAction = new Action() {
+			@Override
+			public void run() {
+				if (viewer.canDoOperation(operation)) {
+					viewer.doOperation(operation);
+				}
+			}
+		};
+		quickFixAction.setActionDefinitionId(actionDefinitionId);
+		return new ActionHandler(quickFixAction);
+	}
+
 	/**
 	 * Creates an IContentProposalProvider to provide content assist proposals for the given attribute.
 	 * 
@@ -194,13 +240,37 @@ public class AttributeEditorToolkit {
 	 *            attribute for which to provide content assist.
 	 * @return the IContentProposalProvider.
 	 */
-	protected IContentProposalProvider createContentProposalProvider(TaskAttribute attribute) {
+	private IContentProposalProvider createContentProposalProvider(TaskAttribute attribute) {
 		return new PersonProposalProvider(null, TaskDataUtil.toLegacyData(attribute.getTaskData(),
 				IdentityAttributeFactory.getInstance()));
 	}
 
-	protected ILabelProvider createLabelProposalProvider(TaskAttribute attribute) {
+	private ILabelProvider createLabelProposalProvider(TaskAttribute attribute) {
 		return new PersonProposalLabelProvider();
+	}
+
+	private void deactivateHandlers() {
+		if (quickAssistHandlerActivation != null) {
+			handlerService.deactivateHandler(quickAssistHandlerActivation);
+			quickAssistHandlerActivation = null;
+		}
+		if (contentAssistHandlerActivation != null) {
+			handlerService.deactivateHandler(contentAssistHandlerActivation);
+			contentAssistHandlerActivation = null;
+		}
+	}
+
+	public void dispose() {
+		deactivateHandlers();
+		if (actionContributor != null) {
+			for (TextViewer textViewer : textViewers) {
+				actionContributor.removeTextViewer(textViewer);
+			}
+		}
+	}
+
+	public String formatDate(Date date) {
+		return DateFormat.getDateInstance().format(date);
 	}
 
 	/**
@@ -237,40 +307,8 @@ public class AttributeEditorToolkit {
 		return false;
 	}
 
-	protected void configureContextMenuManager(MenuManager menuManager, TextViewer textViewer) {
+	public Color getColorIncoming() {
+		return colorIncoming;
 	}
-
-	public String formatDate(Date date) {
-		return DateFormat.getDateInstance().format(date);
-	}
-
-//	/**
-//	 * Creates an IContentProposalProvider to provide content assist proposals for the given operation.
-//	 * 
-//	 * @param operation
-//	 *            operation for which to provide content assist.
-//	 * @return the IContentProposalProvider.
-//	 */
-//	protected IContentProposalProvider createContentProposalProvider(RepositoryOperation operation) {
-//
-//		return new PersonProposalProvider(repositoryTask, taskData);
-//	}
-
-//	protected ILabelProvider createProposalLabelProvider(RepositoryOperation operation) {
-//
-//		return new PersonProposalLabelProvider();
-//	}
-
-//	/**
-//	 * Called to check if there's content assist available for the given operation.
-//	 * 
-//	 * @param operation
-//	 *            the operation
-//	 * @return true if content assist is available for the specified operation.
-//	 */
-//	protected boolean hasContentAssist(RepositoryOperation operation) {
-//		return false;
-//	}
-//
 
 }

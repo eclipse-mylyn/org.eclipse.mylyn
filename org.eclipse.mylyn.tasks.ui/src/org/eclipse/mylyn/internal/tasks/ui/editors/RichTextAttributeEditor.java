@@ -56,15 +56,12 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 	// TODO EDITOR
 	private boolean spellCheckingEnabled;
 
-	private int style;
+	private final int style;
 
 	private final TaskRepository taskRepository;
 
 	public RichTextAttributeEditor(AttributeManager manager, TaskRepository taskRepository, TaskAttribute taskAttribute) {
 		this(manager, taskAttribute, taskRepository, SWT.MULTI);
-		if (!isReadOnly()) {
-			this.style |= SWT.V_SCROLL;
-		}
 	}
 
 	public RichTextAttributeEditor(AttributeManager manager, TaskAttribute taskAttribute,
@@ -124,6 +121,10 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
+		int style = this.style;
+		if (!isReadOnly()) {
+			style |= SWT.V_SCROLL;
+		}
 		viewer = new RepositoryTextViewer(taskRepository, parent, SWT.FLAT | SWT.WRAP | style);
 
 		// NOTE: configuration must be applied before the document is set in order for

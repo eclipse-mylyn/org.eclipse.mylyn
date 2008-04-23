@@ -82,7 +82,7 @@ public class TaskDataUtil {
 			}
 
 			String name = attribute.getMetaData(TaskAttribute.META_LABEL);
-			boolean hidden = !Boolean.parseBoolean(attribute.getMetaData(TaskAttribute.META_SHOW_IN_EDITOR));
+			boolean hidden = !Boolean.parseBoolean(attribute.getMetaData(TaskAttribute.META_SHOW_IN_ATTRIBUTES_SECTION));
 			RepositoryTaskAttribute legacyAttribute = new RepositoryTaskAttribute(attribute.getId(), name, hidden);
 			legacyAttribute.setReadOnly(Boolean.parseBoolean(attribute.getMetaData(TaskAttribute.META_READ_ONLY)));
 			legacyAttribute.setValues(attribute.getValues());
@@ -173,7 +173,7 @@ public class TaskDataUtil {
 			}
 			attribute.putMetaDataValue(TaskAttribute.META_LABEL, legacyAttribute.getName());
 			attribute.putMetaDataValue(TaskAttribute.META_READ_ONLY, Boolean.toString(legacyAttribute.isReadOnly()));
-			attribute.putMetaDataValue(TaskAttribute.META_SHOW_IN_EDITOR, Boolean.toString(!legacyAttribute.isHidden()));
+			attribute.putMetaDataValue(TaskAttribute.META_SHOW_IN_ATTRIBUTES_SECTION, Boolean.toString(!legacyAttribute.isHidden()));
 		}
 
 		public void addAttributes(TaskAttribute parent, List<RepositoryTaskAttribute> list) {
@@ -220,7 +220,7 @@ public class TaskDataUtil {
 			TaskAttribute attribute = parent.createAttribute(id);
 			attribute.putMetaDataValue(TaskAttribute.META_LABEL, null);
 			attribute.putMetaDataValue(TaskAttribute.META_READ_ONLY, Boolean.toString(false));
-			attribute.putMetaDataValue(TaskAttribute.META_SHOW_IN_EDITOR, Boolean.toString(false));
+			attribute.putMetaDataValue(TaskAttribute.META_SHOW_IN_ATTRIBUTES_SECTION, Boolean.toString(false));
 			attribute.putMetaDataValue(TaskAttribute.META_ARTIFICIAL, Boolean.toString(true));
 			return attribute;
 		}

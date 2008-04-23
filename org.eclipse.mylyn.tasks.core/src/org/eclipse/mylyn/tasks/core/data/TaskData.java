@@ -22,6 +22,8 @@ public final class TaskData {
 
 	private boolean partial;
 
+	private String version;
+
 	private final String repositoryUrl;
 
 	private final String taskId;
@@ -56,6 +58,14 @@ public final class TaskData {
 
 	public String getTaskId() {
 		return taskId;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
 	}
 
 	/**

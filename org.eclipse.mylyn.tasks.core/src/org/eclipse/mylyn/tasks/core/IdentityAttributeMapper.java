@@ -9,7 +9,6 @@
 package org.eclipse.mylyn.tasks.core;
 
 import org.eclipse.mylyn.tasks.core.data.AbstractAttributeMapper;
-import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
 /**
  * @since 3.0
@@ -24,11 +23,6 @@ public class IdentityAttributeMapper extends AbstractAttributeMapper {
 	}
 
 	private IdentityAttributeMapper() {
-	}
-
-	@Override
-	public String getType(TaskAttribute taskAttribute) {
-		return TaskAttribute.TYPE_SHORT_TEXT;
 	}
 
 }

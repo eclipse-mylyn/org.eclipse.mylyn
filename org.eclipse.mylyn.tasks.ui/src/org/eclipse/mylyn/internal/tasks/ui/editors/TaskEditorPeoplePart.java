@@ -9,7 +9,6 @@
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.mylyn.tasks.core.data.AbstractAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -28,20 +27,13 @@ public class TaskEditorPeoplePart extends AbstractTaskEditorPart {
 	}
 
 	private void addAttribute(Composite composite, FormToolkit toolkit, TaskAttribute attribute) {
-		if (attribute == null) {
-			return;
-		}
-
-		AbstractAttributeMapper attributeMapper = getTaskData().getAttributeMapper();
-		AttributeEditorFactory attributeEditorFactory = getTaskEditorPage().getAttributeEditorFactory();
-
-		String type = attributeMapper.getType(attribute);
-		if (type != null) {
-			AbstractAttributeEditor editor = attributeEditorFactory.createEditor(type, attribute);
+		AbstractAttributeEditor editor = createEditor(attribute);
+		if (editor != null) {
 			editor.createLabelControl(composite, toolkit);
 			GridDataFactory.defaultsFor(editor.getLabelControl()).indent(COLUMN_MARGIN, 0).applyTo(
 					editor.getLabelControl());
 			editor.createControl(composite, toolkit);
+			getTaskEditorPage().getAttributeEditorToolkit().adapt(editor);
 		}
 	}
 

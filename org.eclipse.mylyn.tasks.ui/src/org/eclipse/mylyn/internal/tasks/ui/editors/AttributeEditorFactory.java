@@ -9,7 +9,6 @@
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AttributeManager;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -32,28 +31,30 @@ public class AttributeEditorFactory {
 	public AbstractAttributeEditor createEditor(String type, TaskAttribute taskAttribute) {
 		Assert.isNotNull(type);
 
-		if (RepositoryTaskAttribute.TYPE_DATE.equals(type)) {
+		if (TaskAttribute.TYPE_DATE.equals(type)) {
 			// FIXME map attribute ids
-			if (RepositoryTaskAttribute.DATE_CREATION.equals(taskAttribute.getId())
-					|| RepositoryTaskAttribute.DATE_MODIFIED.equals(taskAttribute.getId())) {
+			if (TaskAttribute.DATE_CREATION.equals(taskAttribute.getId())
+					|| TaskAttribute.DATE_MODIFIED.equals(taskAttribute.getId())) {
 				return new SimpleDateAttributeEditor(manager, taskAttribute);
 			} else {
 				return new DateAttributeEditor(manager, taskAttribute);
 			}
-		} else if (RepositoryTaskAttribute.TYPE_LONG_TEXT.equals(type)) {
+		} else if (TaskAttribute.TYPE_LONG_TEXT.equals(type)) {
 			return new LongTextAttributeEditor(manager, taskAttribute);
-		} else if (RepositoryTaskAttribute.TYPE_MULTI_SELECT.equals(type)) {
+		} else if (TaskAttribute.TYPE_MULTI_SELECT.equals(type)) {
 			return new MultiSelectionAttributeEditor(manager, taskAttribute);
-		} else if (RepositoryTaskAttribute.TYPE_SHORT_TEXT.equals(type)) {
+		} else if (TaskAttribute.TYPE_SHORT_TEXT.equals(type)) {
 			return new TextAttributeEditor(manager, taskAttribute);
-		} else if (RepositoryTaskAttribute.TYPE_SINGLE_SELECT.equals(type)) {
+		} else if (TaskAttribute.TYPE_SINGLE_SELECT.equals(type)) {
 			return new SingleSelectionAttributeEditor(manager, taskAttribute);
-		} else if (RepositoryTaskAttribute.TYPE_TASK_DEPENDENCY.equals(type)) {
+		} else if (TaskAttribute.TYPE_TASK_DEPENDENCY.equals(type)) {
 			return new TaskDependendyAttributeEditor(manager, taskAttribute, taskRepository);
-		} else if (RepositoryTaskAttribute.TYPE_PERSON.equals(type)) {
+		} else if (TaskAttribute.TYPE_PERSON.equals(type)) {
 			return new PersonAttributeEditor(manager, taskAttribute);
-		} else if (RepositoryTaskAttribute.TYPE_BOOLEAN.equals(type)) {
+		} else if (TaskAttribute.TYPE_BOOLEAN.equals(type)) {
 			return new BooleanAttributeEditor(manager, taskAttribute);
+		} else if (TaskAttribute.TYPE_RICH_TEXT.equals(type)) {
+			return new RichTextAttributeEditor(manager, taskRepository, taskAttribute);
 		}
 
 		throw new IllegalArgumentException("Unsupported editor type: \"" + type + "\"");

@@ -21,7 +21,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 public class TracDuplicateDetector extends AbstractDuplicateDetector {
 
 	@Override
-	public AbstractRepositoryQuery getDiplicatesQuery(TaskRepository repository, RepositoryTaskData taskData) {
+	public AbstractRepositoryQuery getDuplicatesQuery(TaskRepository repository, RepositoryTaskData taskData) {
 		TracSearchFilter filter = new TracSearchFilter("description");
 		filter.setOperator(CompareOperator.CONTAINS);
 

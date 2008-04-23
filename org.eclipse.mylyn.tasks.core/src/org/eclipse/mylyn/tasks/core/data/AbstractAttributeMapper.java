@@ -140,7 +140,9 @@ public abstract class AbstractAttributeMapper {
 		return taskAttribute.getValues().toArray(new String[0]);
 	}
 
-	public abstract String getType(TaskAttribute taskAttribute);
+	public String getType(TaskAttribute taskAttribute) {
+		return taskAttribute.getMetaData(TaskAttribute.META_TYPE);
+	}
 
 	public TaskAttachment getTaskAttachment(TaskAttribute taskAttribute) {
 		TaskData taskData = taskAttribute.getTaskData();
@@ -226,7 +228,7 @@ public abstract class AbstractAttributeMapper {
 	public TaskAttributeProperties getProperties(TaskAttribute taskAttribute) {
 		TaskAttributeProperties properties = new TaskAttributeProperties();
 		properties.readOnly = Boolean.parseBoolean(taskAttribute.getMetaData(TaskAttribute.META_READ_ONLY));
-		properties.showInTaskEditor = Boolean.parseBoolean(taskAttribute.getMetaData(TaskAttribute.META_SHOW_IN_EDITOR));
+		properties.showInAttributesSection = Boolean.parseBoolean(taskAttribute.getMetaData(TaskAttribute.META_SHOW_IN_ATTRIBUTES_SECTION));
 		properties.showInToolTip = Boolean.parseBoolean(taskAttribute.getMetaData(TaskAttribute.META_SHOW_IN_TOOL_TIP));
 		return properties;
 	}
@@ -251,7 +253,7 @@ public abstract class AbstractAttributeMapper {
 	public TaskAttribute getAssoctiatedAttribute(TaskAttribute taskAttribute) {
 		String id = taskAttribute.getMetaData(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID);
 		if (id != null) {
-			taskAttribute.getAttribute(id);
+			return taskAttribute.getAttribute(id);
 		}
 		return null;
 	}

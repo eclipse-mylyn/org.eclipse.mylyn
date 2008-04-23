@@ -18,6 +18,7 @@ import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
@@ -35,36 +36,45 @@ public class SingleSelectionAttributeEditor extends AbstractAttributeEditor {
 
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
-		combo = new CCombo(parent, SWT.FLAT | SWT.READ_ONLY);
-		toolkit.adapt(combo, true, true);
-		combo.setFont(TEXT_FONT);
-		combo.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+		if (isReadOnly()) {
+			Text text = new Text(parent, SWT.FLAT | SWT.READ_ONLY);
+			text.setFont(TEXT_FONT);
+			toolkit.adapt(text, true, true);
+			text.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
+			text.setText(getValue());
+			setControl(text);
+		} else {
+			combo = new CCombo(parent, SWT.FLAT | SWT.READ_ONLY);
+			toolkit.adapt(combo, true, true);
+			combo.setFont(TEXT_FONT);
+			combo.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 
-		Map<String, String> labelByValue = getAttributeMapper().getOptions(getTaskAttribute());
-		if (labelByValue != null) {
-			values = labelByValue.keySet().toArray(new String[0]);
-			for (String value : values) {
-				combo.add(labelByValue.get(value));
-			}
-		}
-
-		select(getValue(), getValueLabel());
-
-		if (values != null) {
-			combo.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent event) {
-					int index = combo.getSelectionIndex();
-					if (index > -1) {
-						Assert.isNotNull(values);
-						Assert.isLegal(index >= 0 && index <= values.length - 1);
-						setValue(values[index]);
-					}
+			Map<String, String> labelByValue = getAttributeMapper().getOptions(getTaskAttribute());
+			if (labelByValue != null) {
+				values = labelByValue.keySet().toArray(new String[0]);
+				for (String value : values) {
+					combo.add(labelByValue.get(value));
 				}
-			});
-		}
+			}
 
-		setControl(combo);
+			select(getValue(), getValueLabel());
+
+			if (values != null) {
+				combo.addSelectionListener(new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent event) {
+						int index = combo.getSelectionIndex();
+						if (index > -1) {
+							Assert.isNotNull(values);
+							Assert.isLegal(index >= 0 && index <= values.length - 1);
+							setValue(values[index]);
+						}
+					}
+				});
+			}
+
+			setControl(combo);
+		}
 	}
 
 	public String getValue() {

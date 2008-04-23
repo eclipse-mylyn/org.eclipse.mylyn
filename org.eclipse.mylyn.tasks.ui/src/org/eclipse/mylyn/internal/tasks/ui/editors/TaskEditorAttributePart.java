@@ -175,7 +175,7 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 				} finally {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 						public void run() {
-							getTaskEditorPage().refreshEditor();
+							getTaskEditorPage().refreshFormContent();
 						}
 					});
 				}
@@ -196,7 +196,7 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 		Map<String, TaskAttribute> attributes = getTaskData().getRoot().getAttributes();
 		for (TaskAttribute attribute : attributes.values()) {
 			TaskAttributeProperties properties = attributeMapper.getProperties(attribute);
-			if (!properties.showInTaskEditor) {
+			if (!properties.showInAttributesSection) {
 				continue;
 			}
 

@@ -53,6 +53,8 @@ public abstract class AbstractAttributeEditor {
 
 		this.manager = manager;
 		this.taskAttribute = taskAttribute;
+		setDecorationEnabled(true);
+		setReadOnly(taskAttribute.getTaskData().getAttributeMapper().getProperties(taskAttribute).readOnly);
 	}
 
 	protected void attributeChanged() {
@@ -62,11 +64,7 @@ public abstract class AbstractAttributeEditor {
 	public abstract void createControl(Composite parent, FormToolkit toolkit);
 
 	public void createLabelControl(Composite composite, FormToolkit toolkit) {
-		if (manager.hasOutgoingChanges(getTaskAttribute())) {
-			labelControl = toolkit.createLabel(composite, "*" + getLabel());
-		} else {
-			labelControl = toolkit.createLabel(composite, getLabel());
-		}
+		labelControl = toolkit.createLabel(composite, getLabel());
 		labelControl.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 	}
 
@@ -124,7 +122,14 @@ public abstract class AbstractAttributeEditor {
 
 	public void decorate(Color color) {
 		if (isDecorationEnabled()) {
-			getControl().setBackground(color);
+			if (manager.hasIncomingChanges(getTaskAttribute())) {
+				getControl().setBackground(color);
+			}
+			if (manager.hasOutgoingChanges(getTaskAttribute())) {
+				if (labelControl != null) {
+					labelControl.setText("*" + labelControl.getText());
+				}
+			}
 		}
 	}
 

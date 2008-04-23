@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
  * Extend to provide task duplicate detection facilities to the task editor (e.g. Java stack trace matching).
  * 
  * @author Gail Murphy
- * @since 2.0
+ * @since 3.0
  */
 public abstract class AbstractDuplicateDetector {
 
@@ -23,7 +23,7 @@ public abstract class AbstractDuplicateDetector {
 
 	protected String kind;
 
-	public abstract AbstractRepositoryQuery getDiplicatesQuery(TaskRepository repository, RepositoryTaskData taskData);
+	public abstract AbstractRepositoryQuery getDuplicatesQuery(TaskRepository repository, RepositoryTaskData taskData);
 
 	public void setName(String name) {
 		this.name = name;

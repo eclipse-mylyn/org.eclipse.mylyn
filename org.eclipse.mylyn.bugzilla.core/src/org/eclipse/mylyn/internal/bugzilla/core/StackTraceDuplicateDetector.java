@@ -28,7 +28,7 @@ public class StackTraceDuplicateDetector extends AbstractDuplicateDetector {
 	//private static final String NO_STACK_MESSAGE = "Unable to locate a stack trace in the description text.";
 
 	@Override
-	public AbstractRepositoryQuery getDiplicatesQuery(TaskRepository repository, RepositoryTaskData taskData) {
+	public AbstractRepositoryQuery getDuplicatesQuery(TaskRepository repository, RepositoryTaskData taskData) {
 		String queryUrl = "";
 		String searchString = AbstractDuplicateDetector.getStackTraceFromDescription(taskData.getDescription());
 		if (searchString != null && searchString.length() > DESCRIPTION_MAX_CHARS) {

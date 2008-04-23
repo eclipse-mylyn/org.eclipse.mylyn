@@ -19,7 +19,6 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITaskList;
-import org.eclipse.mylyn.tasks.core.data.AbstractAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskOperation;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -219,16 +218,18 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 	}
 
 	private void addAttribute(Composite composite, FormToolkit toolkit, TaskAttribute attribute, Button button) {
-		AbstractAttributeMapper attributeMapper = getTaskData().getAttributeMapper();
-		AttributeEditorFactory attributeEditorFactory = getTaskEditorPage().getAttributeEditorFactory();
-
-		String type = attributeMapper.getType(attribute);
-		if (type != null) {
-			AbstractAttributeEditor editor = attributeEditorFactory.createEditor(type, attribute);
+		AbstractAttributeEditor editor = createEditor(attribute);
+		if (editor != null) {
 			editor.createControl(composite, toolkit);
 			GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 			gd.horizontalSpan = 3;
-			gd.widthHint = RADIO_OPTION_WIDTH;
+			if (editor.getControl() instanceof CCombo) {
+				// XXX combo boxes are too tall by default and wider than other controls
+				gd.heightHint = 20;
+				gd.widthHint = RADIO_OPTION_WIDTH;
+			} else {
+				gd.widthHint = RADIO_OPTION_WIDTH - 5;
+			}
 			editor.getControl().setLayoutData(gd);
 			editor.getControl().addFocusListener(new FocusListener(button));
 			getTaskEditorPage().getAttributeEditorToolkit().adapt(editor);
@@ -244,6 +245,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 				TaskOperation operation = getTaskData().getAttributeMapper().getTaskOperation(attribute);
 				if (operation != null) {
 					Button button = toolkit.createButton(buttonComposite, operation.getLabel(), SWT.RADIO);
+					button.setFont(TEXT_FONT);
 					button.setData(attribute);
 					GridData radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 					TaskAttribute associatedAttribute = getTaskData().getAttributeMapper().getAssoctiatedAttribute(

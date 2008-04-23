@@ -100,7 +100,7 @@ public final class TaskAttribute {
 
 	public static final String META_READ_ONLY = "task.meta.readOnly";
 
-	public static final String META_SHOW_IN_EDITOR = "task.meta.showInTaskEditor";
+	public static final String META_SHOW_IN_ATTRIBUTES_SECTION = "task.meta.showInTaskEditorAttributesSection";
 
 	public static final String META_SHOW_IN_TOOL_TIP = "task.meta.showInToolTip";
 
@@ -210,6 +210,8 @@ public final class TaskAttribute {
 	public static final String USER_REPORTER_NAME = "task.common.user.reporter.name";
 
 	public static final String OPERATION_NAME = "task.common.operation.name";
+
+	public static final String TYPE_RICH_TEXT = "richText";
 
 	private Map<String, TaskAttribute> attributeById;
 

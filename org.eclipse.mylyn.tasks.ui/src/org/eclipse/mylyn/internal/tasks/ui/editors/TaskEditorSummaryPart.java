@@ -9,17 +9,12 @@
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
-import org.eclipse.mylyn.tasks.core.data.AbstractAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.VerifyKeyListener;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
@@ -54,31 +49,33 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 	}
 
 	private void addAttribute(Composite composite, FormToolkit toolkit, TaskAttribute attribute) {
-		if (attribute == null) {
-			return;
-		}
+		addAttribute(composite, toolkit, attribute, COLUMN_MARGIN);
+	}
 
-		AbstractAttributeMapper attributeMapper = getTaskData().getAttributeMapper();
-		AttributeEditorFactory attributeEditorFactory = getTaskEditorPage().getAttributeEditorFactory();
+	private void addAttribute(Composite composite, FormToolkit toolkit, TaskAttribute attribute, int indent) {
+		AbstractAttributeEditor editor = createEditor(attribute);
+		if (editor != null) {
+			// having editable controls in the header looks odd
+			editor.setReadOnly(true);
+			editor.setDecorationEnabled(false);
 
-		String type = attributeMapper.getType(attribute);
-		if (type != null) {
-			AbstractAttributeEditor editor = attributeEditorFactory.createEditor(type, attribute);
 			editor.createLabelControl(composite, toolkit);
-			GridDataFactory.defaultsFor(editor.getLabelControl()).indent(COLUMN_MARGIN, 0).applyTo(
-					editor.getLabelControl());
+			GridDataFactory.defaultsFor(editor.getLabelControl()).indent(indent, 0).applyTo(editor.getLabelControl());
 			editor.createControl(composite, toolkit);
+			getTaskEditorPage().getAttributeEditorToolkit().adapt(editor);
 		}
 	}
 
 	private void addSummaryText(Composite composite, FormToolkit toolkit) {
-		TaskAttribute attribute = getTaskData().getMappedAttribute(RepositoryTaskAttribute.SUMMARY);
+		TaskAttribute attribute = getTaskData().getMappedAttribute(TaskAttribute.SUMMARY);
 		summaryEditor = new RichTextAttributeEditor(getAttributeManager(), attribute,
 				getTaskEditorPage().getTaskRepository(), SWT.SINGLE);
 		summaryEditor.createControl(composite, toolkit);
 		// FIXME what does this do? 
 		//summaryTextViewer.getTextWidget().setIndent(2);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(summaryEditor.getControl());
+
+		getTaskEditorPage().getAttributeEditorToolkit().adapt(summaryEditor);
 
 		// API EDITOR move to RichTextEditor?
 		summaryEditor.getViewer().prependVerifyKeyListener(new TabVerifyKeyListener());
@@ -87,7 +84,9 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
 		Composite composite = toolkit.createComposite(parent);
-		composite.setLayout(new GridLayout());
+		GridLayout layout = new GridLayout();
+		layout.verticalSpacing = 5;
+		composite.setLayout(layout);
 
 		addSummaryText(composite, toolkit);
 
@@ -112,27 +111,19 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 		layout.marginWidth = 1;
 		headerComposite.setLayout(layout);
 
-		TaskAttribute statusAtribute = getTaskData().getRoot().getAttribute(RepositoryTaskAttribute.STATUS);
-		addAttribute(headerComposite, toolkit, statusAtribute);
+		TaskAttribute statusAtribute = getTaskData().getMappedAttribute(TaskAttribute.STATUS);
+		addAttribute(headerComposite, toolkit, statusAtribute, 0);
 
-		TaskAttribute priorityAttribute = getTaskData().getRoot().getAttribute(RepositoryTaskAttribute.PRIORITY);
+		TaskAttribute priorityAttribute = getTaskData().getMappedAttribute(TaskAttribute.PRIORITY);
 		addAttribute(headerComposite, toolkit, priorityAttribute);
 
-		TaskAttribute key = getTaskData().getRoot().getAttribute(RepositoryTaskAttribute.TASK_KEY);
-		if (key != null) {
-			Label label = toolkit.createLabel(headerComposite, "ID:");
-			label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-			GridDataFactory.defaultsFor(label).indent(COLUMN_MARGIN, 0).applyTo(label);
+		TaskAttribute keyAttribute = getTaskData().getMappedAttribute(TaskAttribute.TASK_KEY);
+		addAttribute(headerComposite, toolkit, keyAttribute);
 
-			Text text = new Text(headerComposite, SWT.FLAT | SWT.READ_ONLY);
-			toolkit.adapt(text, true, true);
-			text.setText(key.getValue());
-		}
-
-		TaskAttribute dateCreation = getTaskData().getRoot().getAttribute(RepositoryTaskAttribute.DATE_CREATION);
+		TaskAttribute dateCreation = getTaskData().getMappedAttribute(TaskAttribute.DATE_CREATION);
 		addAttribute(headerComposite, toolkit, dateCreation);
 
-		TaskAttribute dateModified = getTaskData().getRoot().getAttribute(RepositoryTaskAttribute.DATE_MODIFIED);
+		TaskAttribute dateModified = getTaskData().getMappedAttribute(TaskAttribute.DATE_MODIFIED);
 		addAttribute(headerComposite, toolkit, dateModified);
 	}
 

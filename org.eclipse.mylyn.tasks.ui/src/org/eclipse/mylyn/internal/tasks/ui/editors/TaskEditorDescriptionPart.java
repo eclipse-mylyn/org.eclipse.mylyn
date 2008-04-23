@@ -130,7 +130,7 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 
 		for (AbstractDuplicateDetector detector : allDetectors) {
 			if (detector.getName().equals(duplicateDetectorName)) {
-				return detector.getDiplicatesQuery(getTaskEditorPage().getTaskRepository(),
+				return detector.getDuplicatesQuery(getTaskEditorPage().getTaskRepository(),
 						TaskDataUtil.toLegacyData(getTaskData(), IdentityAttributeFactory.getInstance()));
 			}
 		}

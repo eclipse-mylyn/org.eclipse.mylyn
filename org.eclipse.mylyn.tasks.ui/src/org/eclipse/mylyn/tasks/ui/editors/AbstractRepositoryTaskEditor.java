@@ -1195,6 +1195,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 //		}
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	protected AbstractDuplicateDetector getDuplicateDetector(String name) {
 		String duplicateDetectorName = name.equals("default") ? "Stack Trace" : name;
 		Set<AbstractDuplicateDetector> allDetectors = getDuplicateDetectorList();
@@ -1208,6 +1211,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		return null;
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	protected Set<AbstractDuplicateDetector> getDuplicateDetectorList() {
 		Set<AbstractDuplicateDetector> duplicateDetectors = new HashSet<AbstractDuplicateDetector>();
 		for (AbstractDuplicateDetector abstractDuplicateDetector : TasksUiPlugin.getDefault()
@@ -1224,7 +1230,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		String duplicateDetectorName = duplicateDetectorChooser.getItem(duplicateDetectorChooser.getSelectionIndex());
 		AbstractDuplicateDetector duplicateDetector = getDuplicateDetector(duplicateDetectorName);
 		if (duplicateDetector != null) {
-			AbstractRepositoryQuery duplicatesQuery = duplicateDetector.getDiplicatesQuery(repository, taskData);
+			AbstractRepositoryQuery duplicatesQuery = duplicateDetector.getDuplicatesQuery(repository, taskData);
 			if (duplicatesQuery != null) {
 				SearchHitCollector collector = new SearchHitCollector(TasksUi.getTaskListManager().getTaskList(),
 						repository, duplicatesQuery);

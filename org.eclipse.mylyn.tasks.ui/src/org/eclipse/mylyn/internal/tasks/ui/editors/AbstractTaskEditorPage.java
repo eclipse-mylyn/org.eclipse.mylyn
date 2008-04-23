@@ -8,10 +8,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -27,13 +24,9 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.util.SafeRunnable;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.tasks.ui.SubmitTaskDataJob;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ClearOutgoingAction;
@@ -65,7 +58,6 @@ import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -82,12 +74,9 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
-import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
-import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.themes.IThemeManager;
 
 /**
  * Extend to provide customized task editing.
@@ -117,7 +106,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 							updateTask(task);
 						}
 
-						refreshEditor();
+						refreshFormContent();
 					} else {
 						handleSubmitError(job.getError());
 					}
@@ -170,11 +159,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 	private AttributeManager attributeManager;
 
-	private final List<IRepositoryTaskAttributeListener> attributesListeners = new ArrayList<IRepositoryTaskAttributeListener>();
-
 	private Action clearOutgoingAction;
-
-	private Color colorIncoming;
 
 	private TaskEditorCommentPart commentPart;
 
@@ -182,13 +167,11 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 	private final String connectorKind;
 
-	private final HashMap<Object, Control> controlBySelectableObject = new HashMap<Object, Control>();
-
 	private TaskEditorDescriptionPart descriptionPart;
 
 	private Composite editorComposite;
 
-	private boolean expandedStateAttributes = false;
+	private boolean expandedStateAttributes;
 
 	// once the following bug is fixed, this check for first focus is probably
 	// not needed -> Bug# 172033: Restore editor focus
@@ -196,11 +179,9 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 	private ScrolledForm form;
 
-	private boolean formBusy = false;
+	private boolean formBusy;
 
 	private Action historyAction;
-
-	private Menu menu;
 
 	private boolean needsAttachments;
 
@@ -216,13 +197,11 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 	private Action openBrowserAction;
 
-	private final RepositoryTaskOutlinePage outlinePage = null;
+	private RepositoryTaskOutlinePage outlinePage;
 
 	private TaskEditorPlanningPart planningPart;
 
 	private boolean reflow = true;
-
-	private final List<ISelectionChangedListener> selectionChangedListeners = new ArrayList<ISelectionChangedListener>();
 
 	private TaskEditorSummaryPart summaryPart;
 
@@ -254,7 +233,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 									new HyperlinkAdapter() {
 										@Override
 										public void linkActivated(HyperlinkEvent e) {
-											refreshEditor();
+											refreshFormContent();
 										}
 									});
 
@@ -263,7 +242,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 								actionPart.setSubmitEnabled(false);
 							}
 						} else {
-							refreshEditor();
+							refreshFormContent();
 						}
 					}
 				});
@@ -278,17 +257,6 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 	public AbstractTaskEditorPage(TaskEditor editor, String connectorKind) {
 		super(editor, "id", "label"); //$NON-NLS-1$ //$NON-NLS-2$
 		this.connectorKind = connectorKind;
-	}
-
-	public void addAttributeListener(IRepositoryTaskAttributeListener listener) {
-		attributesListeners.add(listener);
-	}
-
-	/**
-	 * @see #select(Object, boolean)
-	 */
-	public void addSelectableControl(Object item, Control control) {
-		controlBySelectableObject.put(item, control);
 	}
 
 	public void appendTextToNewComment(String text) {
@@ -347,10 +315,6 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 	@Override
 	protected void createFormContent(final IManagedForm managedForm) {
-		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
-		colorIncoming = themeManager.getCurrentTheme().getColorRegistry().get(
-				TaskListColorsAndFonts.THEME_COLOR_TASKS_INCOMING_BACKGROUND);
-
 		super.createFormContent(managedForm);
 
 		try {
@@ -360,33 +324,32 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 			toolkit = managedForm.getToolkit();
 			registerDropListener(form);
 
-			editorComposite = form.getBody();
-			GridLayout editorLayout = new GridLayout();
-			editorComposite.setLayout(editorLayout);
-			editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
+			try {
+				form.setRedraw(false);
+				editorComposite = form.getBody();
+				GridLayout editorLayout = new GridLayout();
+				editorComposite.setLayout(editorLayout);
+				editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskRepository.getConnectorKind());
-			if (connectorUi == null) {
-				getParentEditor().setMessage("The editor may not be fully loaded", IMessageProvider.INFORMATION,
-						new HyperlinkAdapter() {
-							@Override
-							public void linkActivated(HyperlinkEvent e) {
-								refreshEditor();
-							}
-						});
+				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskRepository.getConnectorKind());
+				if (connectorUi == null) {
+					getParentEditor().setMessage("The editor may not be fully loaded", IMessageProvider.INFORMATION,
+							new HyperlinkAdapter() {
+								@Override
+								public void linkActivated(HyperlinkEvent e) {
+									refreshFormContent();
+								}
+							});
+				}
+
+				if (taskData != null) {
+					createSections();
+				}
+
+				updateHeaderControls();
+			} finally {
+				form.setRedraw(true);
 			}
-
-			if (taskData == null) {
-				getParentEditor().setMessage(
-						"Task data not available. Press synchronize button (right) to retrieve latest data.",
-						IMessageProvider.WARNING);
-			} else {
-				createSections();
-			}
-
-			updateHeaderControls();
-
-			form.setRedraw(true);
 		} finally {
 			reflow = true;
 		}
@@ -560,81 +523,12 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		}
 	}
 
-	/**
-	 * Fires a <code>SelectionChangedEvent</code> to all listeners registered under
-	 * <code>selectionChangedListeners</code>.
-	 * 
-	 * @param event
-	 *            The selection event.
-	 */
-	protected void fireSelectionChanged(final SelectionChangedEvent event) {
-		Object[] listeners = selectionChangedListeners.toArray();
-		for (Object element : listeners) {
-			final ISelectionChangedListener l = (ISelectionChangedListener) element;
-			SafeRunnable.run(new SafeRunnable() {
-				public void run() {
-					l.selectionChanged(event);
-				}
-			});
-		}
-	}
-
-	/**
-	 * Scroll to a specified piece of text
-	 * 
-	 * @param selectionComposite
-	 *            The StyledText to scroll to
-	 */
-	private void focusOn(Control selectionComposite, boolean highlight) {
-		int pos = 0;
-		// if (previousText != null && !previousText.isDisposed()) {
-		// previousText.setsetSelection(0);
-		// }
-
-		// if (selectionComposite instanceof FormText)
-		// previousText = (FormText) selectionComposite;
-
-		if (selectionComposite != null) {
-
-			// if (highlight && selectionComposite instanceof FormText &&
-			// !selectionComposite.isDisposed())
-			// ((FormText) selectionComposite).set.setSelection(0, ((FormText)
-			// selectionComposite).getText().length());
-
-			// get the position of the text in the composite
-			pos = 0;
-			Control s = selectionComposite;
-			if (s.isDisposed()) {
-				return;
-			}
-			s.setEnabled(true);
-			s.setFocus();
-			s.forceFocus();
-			while (s != null && s != getEditorComposite()) {
-				if (!s.isDisposed()) {
-					pos += s.getLocation().y;
-					s = s.getParent();
-				}
-			}
-
-			pos = pos - 60; // form.getOrigin().y;
-
-		}
-		if (!form.getBody().isDisposed()) {
-			form.setOrigin(0, pos);
-		}
-	}
-
 	protected abstract AttributeEditorFactory getAttributeEditorFactory();
 
 	public abstract AttributeEditorToolkit getAttributeEditorToolkit();
 
 	protected AttributeManager getAttributeManager() {
 		return attributeManager;
-	}
-
-	protected Color getColorIncoming() {
-		return colorIncoming;
 	}
 
 	public AbstractRepositoryConnector getConnector() {
@@ -733,16 +627,9 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 	}
 
 	/**
-	 * @since 2.0 If existing task editor, update contents in place
+	 * Update editor contents in place.
 	 */
-	public void refreshEditor() {
-		// Note: Marking read must run synchronously
-		// If not, incomings resulting from subsequent synchronization
-		// can get marked as read (without having been viewed by user
-		if (task != null) {
-			TasksUiPlugin.getSynchronizationManager().setTaskRead(task, true);
-		}
-
+	public void refreshFormContent() {
 		if (getManagedForm().getForm().isDisposed()) {
 			// editor possibly closed as part of submit, mark read
 			return;
@@ -752,27 +639,21 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 			setGlobalBusy(true);
 
 			doSave(new NullProgressMonitor());
-
-			// TODO EDITOR commentComposites.clear();
-			controlBySelectableObject.clear();
-
 			refreshInput();
 
 			updateHeaderControls();
 
-			if (task != null) {
-				TasksUiPlugin.getSynchronizationManager().setTaskRead(task, true);
-			}
+			if (taskData != null) {
+				// save menu
+				Menu menu = editorComposite.getMenu();
+				setMenu(editorComposite, null);
 
-			if (taskData == null) {
-				// FIXME make message a hyperlink
-				getParentEditor().setMessage(
-						"Task data not available. Press synchronize button (right) to retrieve latest data.",
-						IMessageProvider.WARNING);
-			} else {
 				// clear old controls
-				menu = editorComposite.getMenu();
-				removeSections();
+				for (Control control : editorComposite.getChildren()) {
+					control.dispose();
+				}
+
+				// restore menu
 				editorComposite.setMenu(menu);
 
 				createSections();
@@ -819,25 +700,6 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		//target.addDropListener(new RepositoryTaskEditorDropListener(this, fileTransfer, textTransfer, control));
 	}
 
-	public void removeAttributeListener(IRepositoryTaskAttributeListener listener) {
-		attributesListeners.remove(listener);
-	}
-
-	private void removeSections() {
-		menu = editorComposite.getMenu();
-		setMenu(editorComposite, null);
-		for (Control control : editorComposite.getChildren()) {
-			control.dispose();
-		}
-	}
-
-	/**
-	 * @see #addSelectableControl(Object, Control)
-	 */
-	public void removeSelectableControl(Object item) {
-		controlBySelectableObject.remove(item);
-	}
-
 	/**
 	 * force a re-layout of entire form
 	 */
@@ -846,56 +708,6 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 			form.layout(true, true);
 			form.reflow(true);
 		}
-	}
-
-	/**
-	 * Selects the given object in the editor.
-	 * 
-	 * @param o
-	 *            The object to be selected.
-	 * @param highlight
-	 *            Whether or not the object should be highlighted.
-	 */
-	public boolean select(Object o, boolean highlight) {
-		Control control = controlBySelectableObject.get(o);
-		if (control != null && !control.isDisposed()) {
-
-			// expand all children
-			if (control instanceof ExpandableComposite) {
-				ExpandableComposite ex = (ExpandableComposite) control;
-				if (!ex.isExpanded()) {
-					EditorUtil.toggleExpandableComposite(true, ex);
-				}
-			}
-
-			// expand all parents of control
-			Composite comp = control.getParent();
-			while (comp != null) {
-				if (comp instanceof Section) {
-					((Section) comp).setExpanded(true);
-				} else if (comp instanceof ExpandableComposite) {
-					ExpandableComposite ex = (ExpandableComposite) comp;
-					if (!ex.isExpanded()) {
-						EditorUtil.toggleExpandableComposite(true, ex);
-					}
-
-					// HACK: This is necessary
-					// due to a bug in SWT's ExpandableComposite.
-					// 165803: Expandable bars should expand when clicking anywhere
-					// https://bugs.eclipse.org/bugs/show_bug.cgi?taskId=165803
-					if (ex.getData() != null && ex.getData() instanceof Composite) {
-						((Composite) ex.getData()).setVisible(true);
-					}
-				}
-				comp = comp.getParent();
-			}
-			focusOn(control, highlight);
-		} else if (o instanceof TaskData) {
-			focusOn(null, highlight);
-		} else {
-			return false;
-		}
-		return true;
 	}
 
 	public void setExpandAttributeSection(boolean expandAttributeSection) {

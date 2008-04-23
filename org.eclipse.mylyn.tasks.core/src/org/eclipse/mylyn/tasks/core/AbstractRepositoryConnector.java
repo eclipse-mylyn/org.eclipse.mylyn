@@ -81,6 +81,13 @@ public abstract class AbstractRepositoryConnector {
 	 */
 	public abstract AbstractTaskDataHandler getTaskDataHandler();
 
+	/**
+	 * @since 3.0
+	 */
+	public AbstractTaskDataHandler2 getTaskDataHandler2() {
+		return null;
+	}
+
 	public abstract String getRepositoryUrlFromTaskUrl(String taskFullUrl);
 
 	public abstract String getTaskIdFromTaskUrl(String taskFullUrl);
