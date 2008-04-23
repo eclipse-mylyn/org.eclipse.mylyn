@@ -126,10 +126,11 @@ public class TaskDataManager2 implements ITaskDataManager2 {
 
 	private File getFile(AbstractTask task, String kind) {
 		try {
-			String folder = task.getConnectorKind() + "-" + URLEncoder.encode(task.getRepositoryUrl(), ENCODING_UTF_8);
-			File repositoryFolder = new File(dataPath + File.separator + FOLDER_DATA, folder);
-			File dataFile = new File(repositoryFolder, URLEncoder.encode(task.getTaskId(), ENCODING_UTF_8) + EXTENSION);
-			return dataFile;
+			String pathName = task.getConnectorKind() + "-"
+					+ URLEncoder.encode(task.getRepositoryUrl(), ENCODING_UTF_8);
+			String fileName = kind + "-" + URLEncoder.encode(task.getTaskId(), ENCODING_UTF_8) + EXTENSION;
+			File path = new File(dataPath + File.separator + FOLDER_DATA, pathName);
+			return new File(path, fileName);
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
 		}
@@ -145,10 +146,10 @@ public class TaskDataManager2 implements ITaskDataManager2 {
 
 	private File getFile10(AbstractTask task, String kind) {
 		try {
-			String folder = URLEncoder.encode(task.getRepositoryUrl(), ENCODING_UTF_8);
-			File repositoryFolder = new File(dataPath + File.separator + FOLDER_DATA_1_0, folder);
-			File dataFile = new File(repositoryFolder, task.getTaskId() + EXTENSION);
-			return dataFile;
+			String pathName = URLEncoder.encode(task.getRepositoryUrl(), ENCODING_UTF_8);
+			String fileName = task.getTaskId() + EXTENSION;
+			File path = new File(dataPath + File.separator + FOLDER_DATA_1_0, pathName);
+			return new File(path, fileName);
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
 		}

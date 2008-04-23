@@ -86,7 +86,7 @@ public class AttributeManager {
 	}
 
 	public boolean isDirty() {
-		return !taskDataState.getEditsData().getRoot().getAttributes().isEmpty();
+		return !editedAttributes.isEmpty();
 	}
 
 	public void refresh(IProgressMonitor monitor) throws CoreException {
