@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn CDT Integrator
 Bundle-SymbolicName: org.eclipse.cdt.mylyn.ui;singleton:=true
-Bundle-Version: 1.0.0
+Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Red Hat, Inc.
 Require-Bundle: org.eclipse.cdt.core,
  org.eclipse.mylyn.context.core,
