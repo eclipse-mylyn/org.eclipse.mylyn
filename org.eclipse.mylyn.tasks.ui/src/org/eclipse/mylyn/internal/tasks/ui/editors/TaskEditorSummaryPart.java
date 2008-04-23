@@ -68,17 +68,19 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 
 	private void addSummaryText(Composite composite, FormToolkit toolkit) {
 		TaskAttribute attribute = getTaskData().getMappedAttribute(TaskAttribute.SUMMARY);
-		summaryEditor = new RichTextAttributeEditor(getAttributeManager(), attribute,
-				getTaskEditorPage().getTaskRepository(), SWT.SINGLE);
-		summaryEditor.createControl(composite, toolkit);
-		// FIXME what does this do? 
-		//summaryTextViewer.getTextWidget().setIndent(2);
-		GridDataFactory.fillDefaults().grab(true, false).applyTo(summaryEditor.getControl());
+		if (attribute != null) {
+			summaryEditor = new RichTextAttributeEditor(getAttributeManager(), attribute,
+					getTaskEditorPage().getTaskRepository(), SWT.SINGLE);
+			summaryEditor.createControl(composite, toolkit);
+			// FIXME what does this do? 
+			//summaryTextViewer.getTextWidget().setIndent(2);
+			GridDataFactory.fillDefaults().grab(true, false).applyTo(summaryEditor.getControl());
 
-		getTaskEditorPage().getAttributeEditorToolkit().adapt(summaryEditor);
+			getTaskEditorPage().getAttributeEditorToolkit().adapt(summaryEditor);
 
-		// API EDITOR move to RichTextEditor?
-		summaryEditor.getViewer().prependVerifyKeyListener(new TabVerifyKeyListener());
+			// API EDITOR move to RichTextEditor?
+			summaryEditor.getViewer().prependVerifyKeyListener(new TabVerifyKeyListener());
+		}
 	}
 
 	@Override
@@ -133,7 +135,9 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 
 	@Override
 	public void setFocus() {
-		summaryEditor.getViewer().getControl().setFocus();
+		if (summaryEditor != null) {
+			summaryEditor.getViewer().getControl().setFocus();
+		}
 	}
 
 	public void setNeedsHeader(boolean needsHeader) {

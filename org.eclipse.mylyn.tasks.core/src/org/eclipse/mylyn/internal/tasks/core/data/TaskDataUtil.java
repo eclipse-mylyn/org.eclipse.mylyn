@@ -173,7 +173,8 @@ public class TaskDataUtil {
 			}
 			attribute.putMetaDataValue(TaskAttribute.META_LABEL, legacyAttribute.getName());
 			attribute.putMetaDataValue(TaskAttribute.META_READ_ONLY, Boolean.toString(legacyAttribute.isReadOnly()));
-			attribute.putMetaDataValue(TaskAttribute.META_SHOW_IN_ATTRIBUTES_SECTION, Boolean.toString(!legacyAttribute.isHidden()));
+			attribute.putMetaDataValue(TaskAttribute.META_SHOW_IN_ATTRIBUTES_SECTION,
+					Boolean.toString(!legacyAttribute.isHidden()));
 		}
 
 		public void addAttributes(TaskAttribute parent, List<RepositoryTaskAttribute> list) {
@@ -218,7 +219,6 @@ public class TaskDataUtil {
 
 		private TaskAttribute createAttribute(TaskAttribute parent, String id) {
 			TaskAttribute attribute = parent.createAttribute(id);
-			attribute.putMetaDataValue(TaskAttribute.META_LABEL, null);
 			attribute.putMetaDataValue(TaskAttribute.META_READ_ONLY, Boolean.toString(false));
 			attribute.putMetaDataValue(TaskAttribute.META_SHOW_IN_ATTRIBUTES_SECTION, Boolean.toString(false));
 			attribute.putMetaDataValue(TaskAttribute.META_ARTIFICIAL, Boolean.toString(true));

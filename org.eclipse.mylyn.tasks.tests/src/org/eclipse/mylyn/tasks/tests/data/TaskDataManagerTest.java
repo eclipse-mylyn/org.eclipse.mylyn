@@ -8,6 +8,8 @@
 
 package org.eclipse.mylyn.tasks.tests.data;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.zip.ZipInputStream;
@@ -15,6 +17,7 @@ import java.util.zip.ZipInputStream;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager2;
+import org.eclipse.mylyn.internal.tasks.core.data.TaskDataState;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataUtil;
 import org.eclipse.mylyn.tasks.core.IdentityAttributeFactory;
 import org.eclipse.mylyn.tasks.core.IdentityAttributeMapper;
@@ -36,17 +39,46 @@ public class TaskDataManagerTest extends TestCase {
 	public void testRead() throws Exception {
 		File file = TaskTestUtil.getFile("testdata/taskdata-1.0-bug-219897.zip");
 		ZipInputStream in = new ZipInputStream(new FileInputStream(file));
-
-		in.getNextEntry();
-		ITaskDataState state = taskDataManager.readState(in);
+		try {
+			in.getNextEntry();
+			ITaskDataState state = taskDataManager.readState(in);
+		} finally {
+			in.close();
+		}
 	}
 
-	public void testMap() throws Exception {
+	public void testReadWrite() throws Exception {
 		File file = TaskTestUtil.getFile("testdata/taskdata-1.0-bug-219897.zip");
 		ZipInputStream in = new ZipInputStream(new FileInputStream(file));
+		ITaskDataState state;
+		try {
+			in.getNextEntry();
+			state = taskDataManager.readState(in);
+		} finally {
+			in.close();
+		}
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		taskDataManager.writeState(out, state);
+		System.err.println(new String(out.toByteArray()));
+		TaskDataState state2 = taskDataManager.readState(new ByteArrayInputStream(out.toByteArray()));
+		assertEquals(state.getConnectorKind(), state2.getConnectorKind());
+		assertEquals(state.getRepositoryUrl(), state2.getRepositoryUrl());
+		assertEquals(state.getTaskId(), state2.getTaskId());
 
-		in.getNextEntry();
-		ITaskDataState state = taskDataManager.readState(in);
+		assertEquals(state.getRepositoryData().getRoot().toString(), state2.getRepositoryData().getRoot().toString());
+
+	}
+
+	public void testMapFromLegacy() throws Exception {
+		File file = TaskTestUtil.getFile("testdata/taskdata-1.0-bug-219897.zip");
+		ZipInputStream in = new ZipInputStream(new FileInputStream(file));
+		ITaskDataState state;
+		try {
+			in.getNextEntry();
+			state = taskDataManager.readState(in);
+		} finally {
+			in.close();
+		}
 
 		TaskData taskData = state.getRepositoryData();
 		TaskScheme taskScheme = new TaskScheme(taskData);

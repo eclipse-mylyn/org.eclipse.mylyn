@@ -15,7 +15,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-abstract class ElementHandler extends DefaultHandler {
+class ElementHandler extends DefaultHandler {
 
 	protected final StringBuilder currentElementText;
 

@@ -7,6 +7,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.core.data;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -15,7 +17,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -83,8 +87,14 @@ public class TaskDataManager2 implements ITaskDataManager2 {
 
 	void writeState(AbstractTask task, String kind, ITaskDataState state) throws CoreException {
 		try {
-			FileOutputStream out = new FileOutputStream(getFile(task, kind));
+			ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(
+					new FileOutputStream(getFile(task, kind))));
 			try {
+				out.setMethod(ZipOutputStream.DEFLATED);
+
+				ZipEntry entry = new ZipEntry(FILE_NAME_INTERNAL);
+				out.putNextEntry(entry);
+
 				writeState(out, state);
 			} finally {
 				out.close();
@@ -97,9 +107,9 @@ public class TaskDataManager2 implements ITaskDataManager2 {
 
 	private TaskDataState readState(AbstractTask task, String kind) throws CoreException {
 		try {
-			File file = getFile(task, kind);
+			File file = findFile(task, kind);
 			if (file.exists()) {
-				ZipInputStream in = new ZipInputStream(new FileInputStream(file));
+				ZipInputStream in = new ZipInputStream(new BufferedInputStream(new FileInputStream(file)));
 				try {
 					in.getNextEntry();
 					return readState(in);
@@ -119,20 +129,30 @@ public class TaskDataManager2 implements ITaskDataManager2 {
 			String folder = task.getConnectorKind() + "-" + URLEncoder.encode(task.getRepositoryUrl(), ENCODING_UTF_8);
 			File repositoryFolder = new File(dataPath + File.separator + FOLDER_DATA, folder);
 			File dataFile = new File(repositoryFolder, URLEncoder.encode(task.getTaskId(), ENCODING_UTF_8) + EXTENSION);
-			if (dataFile.exists()) {
-				return dataFile;
-			}
-			return getFile10(task, kind);
+			return dataFile;
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	private File getFile10(AbstractTask task, String kind) throws UnsupportedEncodingException {
-		String folder = URLEncoder.encode(task.getRepositoryUrl(), ENCODING_UTF_8);
-		File repositoryFolder = new File(dataPath + File.separator + FOLDER_DATA_1_0, folder);
-		File dataFile = new File(repositoryFolder, task.getTaskId() + EXTENSION);
-		return dataFile;
+	private File findFile(AbstractTask task, String kind) {
+		File file = getFile(task, kind);
+		if (file.exists()) {
+			return file;
+		}
+		return getFile10(task, kind);
+	}
+
+	private File getFile10(AbstractTask task, String kind) {
+		try {
+			String folder = URLEncoder.encode(task.getRepositoryUrl(), ENCODING_UTF_8);
+			File repositoryFolder = new File(dataPath + File.separator + FOLDER_DATA_1_0, folder);
+			File dataFile = new File(repositoryFolder, task.getTaskId() + EXTENSION);
+			return dataFile;
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
+
 	}
 
 	public TaskDataState readState(InputStream in) throws IOException {
@@ -153,6 +173,11 @@ public class TaskDataManager2 implements ITaskDataManager2 {
 	}
 
 	private void migrate(TaskDataState taskDataState) throws IOException {
+		// for testing
+		if (repositoryManager == null) {
+			return;
+		}
+
 		String connectorKind = taskDataState.getConnectorKind();
 		AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(connectorKind);
 		if (connector == null) {
@@ -179,7 +204,7 @@ public class TaskDataManager2 implements ITaskDataManager2 {
 		}
 	}
 
-	private void writeState(OutputStream out, ITaskDataState state) throws IOException {
+	public void writeState(OutputStream out, ITaskDataState state) throws IOException {
 		try {
 			SAXTransformerFactory transformerFactory = (SAXTransformerFactory) TransformerFactory.newInstance();
 			TransformerHandler handler = transformerFactory.newTransformerHandler();
@@ -209,7 +234,7 @@ public class TaskDataManager2 implements ITaskDataManager2 {
 	}
 
 	public boolean hasTaskData(AbstractTask task, String kind) {
-		return getFile(task, kind).exists();
+		return findFile(task, kind).exists();
 	}
 
 	public String getDataPath() {

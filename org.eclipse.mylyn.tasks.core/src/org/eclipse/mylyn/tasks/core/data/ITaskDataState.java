@@ -28,4 +28,10 @@ public interface ITaskDataState {
 
 	public abstract void save(IProgressMonitor monitor) throws CoreException;
 
+	public abstract String getConnectorKind();
+
+	public abstract String getRepositoryUrl();
+
+	public abstract String getTaskId();
+
 }

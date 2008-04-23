@@ -10,7 +10,6 @@ package org.eclipse.mylyn.tasks.core.data;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -353,8 +352,10 @@ public final class TaskAttribute {
 	}
 
 	public void putMetaDataValue(String key, String value) {
+		Assert.isNotNull(key);
+		Assert.isNotNull(value);
 		if (metaData == null) {
-			metaData = new HashMap<String, String>();
+			metaData = new LinkedHashMap<String, String>();
 		}
 		metaData.put(key, value);
 	}
@@ -368,6 +369,8 @@ public final class TaskAttribute {
 	 *            The option value used when sending the form to the server
 	 */
 	public void putOption(String key, String value) {
+		Assert.isNotNull(key);
+		Assert.isNotNull(value);
 		if (optionByKey == null) {
 			optionByKey = new LinkedHashMap<String, String>();
 		}
