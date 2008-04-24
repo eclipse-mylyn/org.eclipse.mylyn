@@ -8,8 +8,10 @@
 
 package org.eclipse.mylyn.tasks.core.sync;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 /**
  * @author Steffen Pingel
@@ -24,5 +26,7 @@ public interface IRepositorySynchronizationManager {
 	 */
 	public abstract boolean saveIncoming(final AbstractTask repositoryTask, final RepositoryTaskData newTaskData,
 			boolean forceSync);
+
+	public abstract void putTaskData(AbstractTask task, TaskData taskData, boolean user) throws CoreException;
 
 }

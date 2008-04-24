@@ -13,12 +13,18 @@ import java.util.Date;
 import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskList;
+import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.data.ITaskDataManager2;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.sync.IRepositorySynchronizationManager;
 
 /**
@@ -34,8 +40,15 @@ public final class RepositorySynchronizationManager implements IRepositorySynchr
 
 	private final ITaskList taskList;
 
-	public RepositorySynchronizationManager(TaskDataManager taskDataManager, ITaskList taskList) {
+	private final ITaskDataManager2 taskDataManager2;
+
+	private final ITaskRepositoryManager repositoryManager;
+
+	public RepositorySynchronizationManager(TaskDataManager taskDataManager, ITaskDataManager2 taskDataManager2,
+			ITaskRepositoryManager repositoryManager, ITaskList taskList) {
 		this.taskDataManager = taskDataManager;
+		this.taskDataManager2 = taskDataManager2;
+		this.repositoryManager = repositoryManager;
 		this.taskList = taskList;
 	}
 
@@ -203,6 +216,38 @@ public final class RepositorySynchronizationManager implements IRepositorySynchr
 		taskDataManager.discardEdits(repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId());
 		repositoryTask.setSynchronizationState(RepositoryTaskSyncState.SYNCHRONIZED);
 		taskList.notifyTaskChanged(repositoryTask, true);
+	}
+
+	public void putTaskData(AbstractTask task, TaskData taskData, boolean user) throws CoreException {
+		AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(task.getConnectorKind());
+		TaskRepository repository = repositoryManager.getRepository(task.getConnectorKind(), task.getRepositoryUrl());
+
+		boolean changed = connector.hasChanged(task, taskData);
+		if (changed || user) {
+			connector.updateTaskFromTaskData(repository, task, taskData);
+
+			if (!taskData.isPartial()) {
+				taskDataManager2.setTaskData(task, task.getConnectorKind(), taskData);
+			}
+		}
+
+		if (changed) {
+			RepositoryTaskSyncState state = task.getSynchronizationState();
+			switch (state) {
+			case OUTGOING:
+				state = RepositoryTaskSyncState.CONFLICT;
+				break;
+			case SYNCHRONIZED:
+				state = RepositoryTaskSyncState.INCOMING;
+				break;
+			}
+			task.setSynchronizationState(state);
+
+			task.setStale(false);
+			task.setSynchronizing(false);
+
+			taskList.notifyTaskChanged(task, false);
+		}
 	}
 
 }

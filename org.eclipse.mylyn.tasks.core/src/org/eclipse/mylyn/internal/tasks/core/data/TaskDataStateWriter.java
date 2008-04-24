@@ -60,7 +60,9 @@ public class TaskDataStateWriter {
 		atts.addAttribute("", "", ITaskDataConstants.ATTRIBUTE_CONNECTOR_KIND, CDATA, taskData.getConnectorKind());
 		atts.addAttribute("", "", ITaskDataConstants.ATTRIBUTE_REPOSITORY_URL, CDATA, taskData.getRepositoryUrl());
 		atts.addAttribute("", "", ITaskDataConstants.ATTRIBUTE_TASK_ID, CDATA, taskData.getTaskId());
-		atts.addAttribute("", "", ITaskDataConstants.ATTRIBUTE_VERSION, CDATA, taskData.getVersion());
+		if (taskData.getVersion() != null) {
+			atts.addAttribute("", "", ITaskDataConstants.ATTRIBUTE_VERSION, CDATA, taskData.getVersion());
+		}
 		handler.startElement("", "", elementName, atts);
 		atts.clear();
 		handler.startElement("", "", ITaskDataConstants.ELEMENT_ATTRIBUTES, atts);

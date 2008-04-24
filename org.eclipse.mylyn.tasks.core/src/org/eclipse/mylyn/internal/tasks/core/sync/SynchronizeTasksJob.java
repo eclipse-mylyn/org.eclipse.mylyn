@@ -29,6 +29,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataCollector;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.sync.IRepositorySynchronizationManager;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
 import org.eclipse.mylyn.web.core.Policy;
@@ -106,11 +107,16 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 			if (!isUser()) {
 				monitor = Policy.backgroundMonitorFor(monitor);
 			}
-			RepositoryTaskData downloadedTaskData = connector.getTaskData(taskRepository, taskId, monitor);
-			if (downloadedTaskData != null) {
-				updateFromTaskData(taskRepository, task, downloadedTaskData);
+			TaskData taskData = connector.getTaskData2(taskRepository, taskId, monitor);
+			if (taskData != null) {
+				updateFromTaskData(taskRepository, task, taskData);
 			} else {
-				// FIXME log/set error
+				RepositoryTaskData downloadedTaskData = connector.getTaskData(taskRepository, taskId, monitor);
+				if (downloadedTaskData != null) {
+					updateFromTaskData(taskRepository, task, downloadedTaskData);
+				} else {
+					// FIXME log/set error
+				}
 			}
 		} catch (final CoreException e) {
 			updateStatus(taskRepository, task, e.getStatus());
@@ -129,6 +135,14 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 		AbstractTaskDataCollector collector = new AbstractTaskDataCollector() {
 			@Override
 			public void accept(RepositoryTaskData taskData) {
+				AbstractTask task = idToTask.remove(taskData.getTaskId());
+				if (task != null) {
+					updateFromTaskData(repository, task, taskData);
+				}
+			}
+
+			@Override
+			public void accept(TaskData taskData) {
 				AbstractTask task = idToTask.remove(taskData.getTaskId());
 				if (task != null) {
 					updateFromTaskData(repository, task, taskData);
@@ -172,6 +186,14 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 			taskList.notifyTaskChanged(task, true);
 		} else {
 			taskList.notifyTaskChanged(task, false);
+		}
+	}
+
+	private void updateFromTaskData(TaskRepository taskRepository, AbstractTask task, TaskData taskData) {
+		try {
+			synchronizationManager.putTaskData(task, taskData, isUser());
+		} catch (CoreException e) {
+			updateStatus(taskRepository, task, e.getStatus());
 		}
 	}
 

@@ -18,11 +18,18 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
  */
 public abstract class AbstractTaskDataCollector {
 
+	/**
+	 * @since 3.0
+	 */
 	public static final int MAX_HITS = 5000;
 
 	/**
 	 * @since 3.0
 	 */
 	public abstract void accept(RepositoryTaskData taskData);
+
+	public void accept(TaskData taskData) {
+		throw new UnsupportedOperationException();
+	}
 
 }

@@ -40,8 +40,12 @@ public class TaskScheme {
 			task.setCompletionDate(getCompletionDate());
 			changed = true;
 		}
-		if (hasTaskPropertyChanged(task.getSummary(), getSummary())) {
-			task.setSummary(getSummary());
+		if (hasTaskPropertyChanged(task.getCreationDate(), getCreationDate())) {
+			task.setCreationDate(getCreationDate());
+			changed = true;
+		}
+		if (hasTaskPropertyChanged(task.getModificationDate(), getModificationDate())) {
+			task.setModificationDate(getModificationDate());
 			changed = true;
 		}
 		if (hasTaskPropertyChanged(task.getDueDate(), getDueDate())) {
@@ -56,14 +60,19 @@ public class TaskScheme {
 			task.setPriority(getPriority().toString());
 			changed = true;
 		}
-		if (hasTaskPropertyChanged(task.getUrl(), getTaskUrl())) {
-			task.setUrl(getTaskUrl());
+		if (hasTaskPropertyChanged(task.getSummary(), getSummary())) {
+			task.setSummary(getSummary());
 			changed = true;
 		}
 		if (hasTaskPropertyChanged(task.getTaskKind(), getTaskKind())) {
 			task.setTaskKind(getTaskKind());
 			changed = true;
 		}
+		if (hasTaskPropertyChanged(task.getUrl(), getTaskUrl())) {
+			task.setUrl(getTaskUrl());
+			changed = true;
+		}
+		// TODO task key
 		return changed;
 	}
 
@@ -126,6 +135,10 @@ public class TaskScheme {
 
 	public String getTaskKind() {
 		return getValue(TaskAttribute.TASK_KIND);
+	}
+
+	public String getTaskKey() {
+		return getValue(TaskAttribute.TASK_KEY);
 	}
 
 	public String getTaskUrl() {

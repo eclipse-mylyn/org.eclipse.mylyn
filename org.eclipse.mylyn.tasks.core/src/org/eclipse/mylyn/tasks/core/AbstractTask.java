@@ -77,6 +77,8 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 
 	private Date creationDate = null;
 
+	private Date modificationDate = null;
+
 	private Date scheduledForDate = null;
 
 	private Date dueDate = null;
@@ -517,6 +519,20 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 	 */
 	public void internalSetFloatingScheduledDate(boolean floatingScheduledDate) {
 		this.floatingScheduledDate = floatingScheduledDate;
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public Date getModificationDate() {
+		return modificationDate;
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public void setModificationDate(Date modificationDate) {
+		this.modificationDate = modificationDate;
 	}
 
 }

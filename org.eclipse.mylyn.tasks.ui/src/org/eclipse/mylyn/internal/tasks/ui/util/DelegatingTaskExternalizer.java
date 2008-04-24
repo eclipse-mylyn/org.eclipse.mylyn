@@ -111,6 +111,8 @@ final class DelegatingTaskExternalizer {
 
 	static final String KEY_DATE_REMINDER = "ReminderDate";
 
+	static final String KEY_DATE_MODIFICATION = "ModificationDate";
+
 	static final String KEY_DATE_DUE = "DueDate";
 
 	static final String KEY_REMINDED = "Reminded";
@@ -204,6 +206,7 @@ final class DelegatingTaskExternalizer {
 		node.setAttribute(KEY_TIME_ESTIMATED, "" + task.getEstimatedTimeHours());
 		node.setAttribute(KEY_DATE_END, formatExternDate(task.getCompletionDate()));
 		node.setAttribute(KEY_DATE_CREATION, formatExternDate(task.getCreationDate()));
+		node.setAttribute(KEY_DATE_MODIFICATION, formatExternDate(task.getModificationDate()));
 		node.setAttribute(KEY_DATE_DUE, formatExternDate(task.getDueDate()));
 		node.setAttribute(KEY_DATE_REMINDER, formatExternDate(task.getScheduledForDate()));
 		if (task.isReminded()) {
@@ -429,6 +432,11 @@ final class DelegatingTaskExternalizer {
 			task.setCreationDate(getDateFromString(element.getAttribute(KEY_DATE_CREATION)));
 		} else {
 			task.setCreationDate(Calendar.getInstance().getTime());
+		}
+		if (element.hasAttribute(KEY_DATE_MODIFICATION)) {
+			task.setModificationDate(getDateFromString(element.getAttribute(KEY_DATE_MODIFICATION)));
+		} else {
+			task.setModificationDate(null);
 		}
 		if (element.hasAttribute(KEY_DATE_DUE)) {
 			task.setDueDate(getDateFromString(element.getAttribute(KEY_DATE_DUE)));

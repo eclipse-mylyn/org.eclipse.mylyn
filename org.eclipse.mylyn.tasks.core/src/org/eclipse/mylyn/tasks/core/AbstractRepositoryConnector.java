@@ -21,6 +21,7 @@ import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataCollector;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.sync.IRepositorySynchronizationManager;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationEvent;
 
@@ -547,6 +548,28 @@ public abstract class AbstractRepositoryConnector {
 		} finally {
 			monitor.done();
 		}
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public boolean hasChanged(AbstractTask task, TaskData taskData) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public void updateTaskFromTaskData(TaskRepository repository, AbstractTask task, TaskData taskData) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public TaskData getTaskData2(TaskRepository taskRepository, String taskId, IProgressMonitor monitor)
+			throws CoreException {
+		return null;
 	}
 
 }

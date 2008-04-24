@@ -142,17 +142,22 @@ public class TaskComment {
 
 		taskAttribute.putMetaDataValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, TaskAttribute.COMMENT_TEXT);
 
-		TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.COMMENT_AUTHOR);
-		mapper.setRepositoryPerson(child, getAuthor());
-
-		child = taskAttribute.createAttribute(TaskAttribute.COMMENT_DATE);
-		mapper.setDateValue(child, getCreationDate());
-
-		child = taskAttribute.createAttribute(TaskAttribute.COMMENT_URL);
-		mapper.setValue(child, getUrl());
-
-		child = taskAttribute.createAttribute(TaskAttribute.COMMENT_TEXT);
-		mapper.setValue(child, getText());
+		if (getAuthor() != null) {
+			TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.COMMENT_AUTHOR);
+			mapper.setRepositoryPerson(child, getAuthor());
+		}
+		if (getCreationDate() != null) {
+			TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.COMMENT_DATE);
+			mapper.setDateValue(child, getCreationDate());
+		}
+		if (getUrl() != null) {
+			TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.COMMENT_URL);
+			mapper.setValue(child, getUrl());
+		}
+		if (getText() != null) {
+			TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.COMMENT_TEXT);
+			mapper.setValue(child, getText());
+		}
 	}
 
 }

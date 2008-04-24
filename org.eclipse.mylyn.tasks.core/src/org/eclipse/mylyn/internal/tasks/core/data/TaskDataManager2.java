@@ -93,6 +93,14 @@ public class TaskDataManager2 implements ITaskDataManager2 {
 		return dataPath;
 	}
 
+	private File getFileAndCreatePath(AbstractTask task, String kind) {
+		File file = getFile(task, kind);
+		if (!file.getParentFile().exists()) {
+			file.getParentFile().mkdirs();
+		}
+		return file;
+	}
+
 	private File getFile(AbstractTask task, String kind) {
 		try {
 			String pathName = task.getConnectorKind() + "-"
@@ -211,7 +219,13 @@ public class TaskDataManager2 implements ITaskDataManager2 {
 		Assert.isNotNull(kind);
 		Assert.isNotNull(data);
 
-		TaskDataState state = readState(task, kind);
+		TaskDataState state = null;
+		try {
+			state = readState(task, kind);
+		} catch (CoreException e) {
+			// FIME: handle
+			e.printStackTrace();
+		}
 		if (state == null) {
 			state = new TaskDataState(task.getConnectorKind(), task.getRepositoryUrl(), task.getTaskId());
 		}
@@ -221,8 +235,8 @@ public class TaskDataManager2 implements ITaskDataManager2 {
 
 	void writeState(AbstractTask task, String kind, ITaskDataState state) throws CoreException {
 		try {
-			ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(
-					new FileOutputStream(getFile(task, kind))));
+			File file = getFileAndCreatePath(task, kind);
+			ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
 			try {
 				out.setMethod(ZipOutputStream.DEFLATED);
 

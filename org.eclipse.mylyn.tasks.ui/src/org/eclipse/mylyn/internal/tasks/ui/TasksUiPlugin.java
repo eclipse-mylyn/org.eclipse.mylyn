@@ -505,8 +505,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			taskDataManager2 = new TaskDataManager2(repositoryManager);
 			taskDataManager2.setDataPath(getDataDirectory());
 
-			synchronizationManager = new RepositorySynchronizationManager(taskDataManager,
-					taskListManager.getTaskList());
+			synchronizationManager = new RepositorySynchronizationManager(taskDataManager, taskDataManager2,
+					repositoryManager, taskListManager.getTaskList());
 
 			for (AbstractRepositoryConnector connector : repositoryManager.getRepositoryConnectors()) {
 				connector.init2(taskDataManager, synchronizationManager);

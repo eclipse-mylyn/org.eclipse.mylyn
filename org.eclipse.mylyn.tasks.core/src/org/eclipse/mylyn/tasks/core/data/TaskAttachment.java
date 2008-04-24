@@ -198,32 +198,37 @@ public class TaskAttachment {
 		TaskData taskData = taskAttribute.getTaskData();
 		AbstractAttributeMapper mapper = taskData.getAttributeMapper();
 
-		TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.ATTACHMENT_AUTHOR);
-		mapper.setRepositoryPerson(child, getAuthor());
-
-		child = taskAttribute.createAttribute(TaskAttribute.ATTACHMENT_CONTENT_TYPE);
-		mapper.setValue(child, getContentType());
-
-		child = taskAttribute.createAttribute(TaskAttribute.ATTACHMENT_DATE);
-		mapper.setDateValue(child, getCreationDate());
-
-		child = taskAttribute.createAttribute(TaskAttribute.DESCRIPTION);
-		mapper.setValue(child, getDescription());
-
-		child = taskAttribute.createAttribute(TaskAttribute.ATTACHMENT_FILENAME);
-		mapper.setValue(child, getFileName());
-
+		TaskAttribute child;
+		if (getAuthor() != null) {
+			child = taskAttribute.createAttribute(TaskAttribute.ATTACHMENT_AUTHOR);
+			mapper.setRepositoryPerson(child, getAuthor());
+		}
+		if (getContentType() != null) {
+			child = taskAttribute.createAttribute(TaskAttribute.ATTACHMENT_CONTENT_TYPE);
+			mapper.setValue(child, getContentType());
+		}
+		if (getCreationDate() != null) {
+			child = taskAttribute.createAttribute(TaskAttribute.ATTACHMENT_DATE);
+			mapper.setDateValue(child, getCreationDate());
+		}
+		if (getDescription() != null) {
+			child = taskAttribute.createAttribute(TaskAttribute.DESCRIPTION);
+			mapper.setValue(child, getDescription());
+		}
+		if (getFileName() != null) {
+			child = taskAttribute.createAttribute(TaskAttribute.ATTACHMENT_FILENAME);
+			mapper.setValue(child, getFileName());
+		}
 		child = taskAttribute.createAttribute(TaskAttribute.ATTACHMENT_IS_DEPRECATED);
 		mapper.setBooleanValue(child, isDeprecated());
-
 		child = taskAttribute.createAttribute(TaskAttribute.ATTACHMENT_IS_PATCH);
 		mapper.setBooleanValue(child, isPatch());
-
 		child = taskAttribute.createAttribute(TaskAttribute.ATTACHMENT_SIZE);
 		mapper.setLongValue(child, getLength());
-
-		child = taskAttribute.createAttribute(TaskAttribute.ATTACHMENT_URL);
-		mapper.setValue(child, getUrl());
+		if (getUrl() != null) {
+			child = taskAttribute.createAttribute(TaskAttribute.ATTACHMENT_URL);
+			mapper.setValue(child, getUrl());
+		}
 	}
 
 }
