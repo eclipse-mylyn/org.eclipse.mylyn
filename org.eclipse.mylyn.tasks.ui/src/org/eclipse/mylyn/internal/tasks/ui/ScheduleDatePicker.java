@@ -17,6 +17,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.ui.DatePicker;
@@ -43,8 +45,7 @@ public class ScheduleDatePicker extends Composite {
 
 	private final List<SelectionListener> pickerListeners = new LinkedList<SelectionListener>();
 
-	private final SimpleDateFormat simpleDateFormat = (SimpleDateFormat) DateFormat.getDateTimeInstance(
-			DateFormat.MEDIUM, DateFormat.SHORT);
+	private final SimpleDateFormat simpleDateFormat = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.MEDIUM);
 
 	private final String initialText = DatePicker.LABEL_CHOOSE;
 
@@ -54,13 +55,22 @@ public class ScheduleDatePicker extends Composite {
 
 	private Date scheduledDate;
 
-	private boolean isFloating;
+	private boolean isFloating = false;
+
+	private ScheduledTaskContainer scheduledContainer;
 
 	public ScheduleDatePicker(Composite parent, AbstractTask task, int style) {
 		super(parent, style);
-		this.scheduledDate = task.getScheduledForDate();
-		this.isFloating = task.internalIsFloatingScheduledDate();
-		this.setDatePattern("yyyy-MM-dd");
+		if (task != null) {
+			if (task.getScheduledForDate() != null) {
+				Calendar cal = TaskActivityUtil.getCalendar();
+				cal.setTime(task.getScheduledForDate());
+				scheduledContainer = TasksUiPlugin.getTaskActivityManager().getActivityContainer(cal, isFloating);
+				this.scheduledDate = task.getScheduledForDate();
+			}
+			this.isFloating = task.internalIsFloatingScheduledDate();
+		}
+
 		initialize((style & SWT.FLAT) > 0 ? SWT.FLAT : 0);
 		contributor = new ScheduleTaskMenuContributor() {
 
@@ -75,13 +85,16 @@ public class ScheduleDatePicker extends Composite {
 			}
 
 			@Override
-			protected void setScheduledDate(AbstractTask task, Calendar scheduledDate, boolean floating) {
-				if (scheduledDate != null) {
-					ScheduleDatePicker.this.scheduledDate = scheduledDate.getTime();
+			protected void setScheduledDate(ScheduledTaskContainer container) {
+				if (container != null) {
+					scheduledContainer = container;
+					ScheduleDatePicker.this.scheduledDate = container.getStart().getTime();
+					ScheduleDatePicker.this.isFloating = container.isCaptureFloating();
 				} else {
+					scheduledContainer = null;
 					ScheduleDatePicker.this.scheduledDate = null;
+					ScheduleDatePicker.this.isFloating = false;
 				}
-				ScheduleDatePicker.this.isFloating = floating;
 				updateDateText();
 				notifyPickerListeners();
 			}
@@ -124,7 +137,6 @@ public class ScheduleDatePicker extends Composite {
 				Menu menu = menuManager.createContextMenu(pickButton);
 				pickButton.setMenu(menu);
 				menu.setVisible(true);
-
 			}
 		});
 
@@ -150,7 +162,11 @@ public class ScheduleDatePicker extends Composite {
 
 	private void updateDateText() {
 		if (scheduledDate != null) {
-			scheduledDateText.setText(simpleDateFormat.format(scheduledDate));
+			if (scheduledContainer != null && !scheduledContainer.getSummary().equals("")) {
+				scheduledDateText.setText(scheduledContainer.getSummary());
+			} else {
+				scheduledDateText.setText(simpleDateFormat.format(scheduledDate));
+			}
 		} else {
 			scheduledDateText.setEnabled(false);
 			scheduledDateText.setText(DatePicker.LABEL_CHOOSE);
@@ -169,7 +185,15 @@ public class ScheduleDatePicker extends Composite {
 		return scheduledDate;
 	}
 
-	public void setScheduledDate(Date date) {
+	public void setScheduledDate(Date date, boolean isFloating) {
+		if (date != null) {
+			Calendar cal = TaskActivityUtil.getCalendar();
+			cal.setTime(date);
+			scheduledContainer = TasksUiPlugin.getTaskActivityManager().getActivityContainer(cal, isFloating);
+			this.isFloating = isFloating;
+		} else {
+			scheduledContainer = null;
+		}
 		scheduledDate = date;
 		updateDateText();
 	}

@@ -8,9 +8,9 @@
 package org.eclipse.mylyn.tasks.ui.editors;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -22,11 +22,10 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
+import org.eclipse.mylyn.internal.tasks.ui.ScheduleDatePicker;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskOutlineNode;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskSelection;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
@@ -34,7 +33,6 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITaskList;
-import org.eclipse.mylyn.tasks.ui.DatePicker;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
@@ -84,7 +82,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 
 	private static final String ERROR_CREATING_BUG_REPORT = "Error creating bug report";
 
-	protected DatePicker scheduledForDate;
+	protected ScheduleDatePicker scheduledForDate;
 
 	protected Spinner estimatedTime;
 
@@ -210,22 +208,22 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		GridData clientDataLayout = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		sectionClient.setLayoutData(clientDataLayout);
 
-		// Reminder
+		// Scheduled date
 		getManagedForm().getToolkit().createLabel(sectionClient, "Scheduled for:");
 		// label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		scheduledForDate = new DatePicker(sectionClient, SWT.FLAT, DatePicker.LABEL_CHOOSE);
+		scheduledForDate = new ScheduleDatePicker(sectionClient, null, SWT.FLAT);
 		scheduledForDate.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		scheduledForDate.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-		Calendar newTaskSchedule = Calendar.getInstance();
-		int scheduledEndHour = TasksUiPlugin.getDefault().getPreferenceStore().getInt(
-				TasksUiPreferenceConstants.PLANNING_ENDHOUR);
+//		Calendar newTaskSchedule = TaskActivityUtil.getCalendar();
+//		int scheduledEndHour = TasksUiPlugin.getDefault().getPreferenceStore().getInt(
+//				TasksUiPreferenceConstants.PLANNING_ENDHOUR);
 		// If past scheduledEndHour set for following day
-		if (newTaskSchedule.get(Calendar.HOUR_OF_DAY) >= scheduledEndHour) {
-			TaskActivityUtil.snapForwardNumDays(newTaskSchedule, 1);
-		} else {
-			TaskActivityUtil.snapEndOfWorkDay(newTaskSchedule);
-		}
-		scheduledForDate.setDate(newTaskSchedule);
+//		if (newTaskSchedule.get(Calendar.HOUR_OF_DAY) >= scheduledEndHour) {
+//			TaskActivityUtil.snapForwardNumDays(newTaskSchedule, 1);
+//		} else {
+//			TaskActivityUtil.snapEndOfWorkDay(newTaskSchedule);
+//		}
+//		scheduledForDate.setDate(newTaskSchedule);
 //		Button removeReminder = getManagedForm().getToolkit().createButton(sectionClient, "Clear",
 //				SWT.PUSH | SWT.CENTER);
 //		removeReminder.addSelectionListener(new SelectionAdapter() {
@@ -241,7 +239,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		clearReminder.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
-				scheduledForDate.setDate(null);
+				scheduledForDate.setScheduledDate(null, false);
 			}
 		});
 
@@ -477,13 +475,12 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		if (newTask != null) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					Calendar selectedDate = null;
+					Date selectedDate = null;
 					if (scheduledForDate != null) {
-						selectedDate = scheduledForDate.getDate();
+						selectedDate = scheduledForDate.getScheduledDate();
 					}
 					if (selectedDate != null) {
-						// NewLocalTaskAction.scheduleNewTask(newTask);
-						TasksUiPlugin.getTaskActivityManager().setScheduledFor(newTask, selectedDate.getTime());
+						TasksUiPlugin.getTaskActivityManager().setScheduledFor(newTask, selectedDate);
 					}
 
 					if (estimatedTime != null) {

@@ -189,9 +189,10 @@ public class TaskPlanningEditor extends TaskFormPage {
 	public void updateTaskData(final AbstractTask updateTask) {
 		if (scheduleDatePicker != null && !scheduleDatePicker.isDisposed()) {
 			if (updateTask.getScheduledForDate() != null) {
-				scheduleDatePicker.setScheduledDate(updateTask.getScheduledForDate());
+				scheduleDatePicker.setScheduledDate(updateTask.getScheduledForDate(),
+						updateTask.internalIsFloatingScheduledDate());
 			} else {
-				scheduleDatePicker.setScheduledDate(null);
+				scheduleDatePicker.setScheduledDate(null, false);
 			}
 		}
 
@@ -669,7 +670,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
-				scheduleDatePicker.setScheduledDate(null);
+				scheduleDatePicker.setScheduledDate(null, false);
 				task.setReminded(false);
 				TaskPlanningEditor.this.markDirty(true);
 			}

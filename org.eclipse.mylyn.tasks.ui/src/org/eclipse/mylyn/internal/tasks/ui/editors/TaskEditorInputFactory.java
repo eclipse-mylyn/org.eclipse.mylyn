@@ -9,7 +9,10 @@
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -32,7 +35,15 @@ public class TaskEditorInputFactory implements IElementFactory {
 		if (task != null) {
 			TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
 					task.getRepositoryUrl());
-			return new TaskEditorInput(taskRepository, task);
+			if (taskRepository != null) {
+				return new TaskEditorInput(taskRepository, task);
+			} else {
+				StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Repository for connector kind "
+						+ task.getConnectorKind() + " with url " + task.getRepositoryUrl() + " cannont be found."));
+			}
+		} else {
+			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Task with handle \"" + handle
+					+ "\" could not be found in task list."));
 		}
 		return null;
 	}

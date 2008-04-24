@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -673,7 +672,7 @@ public class TaskActivityManager {
 //		pastStart.setTime(startTime);
 //		pastStart.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_PAST_START);
 //		TaskActivityUtil.snapToStartOfWeek(pastStart);
-		GregorianCalendar pastEnd = new GregorianCalendar();
+		Calendar pastEnd = TaskActivityUtil.getStartOfCurrentWeek();
 		pastEnd.setFirstDayOfWeek(startDay);
 		pastEnd.setTime(startTime);
 		pastEnd.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_PAST_END);
@@ -858,6 +857,42 @@ public class TaskActivityManager {
 		Calendar startWeek = TaskActivityUtil.getStartOfCurrentWeek();
 		Calendar endWeek = TaskActivityUtil.getEndOfCurrentWeek();
 		return getScheduledTasks(startWeek, endWeek);
+	}
+
+	public ScheduledTaskContainer getActivityToday() {
+		for (ScheduledTaskContainer container : scheduleWeekDays) {
+			if (container.isToday()) {
+				return container;
+			}
+		}
+		return null;
+	}
+
+	public ScheduledTaskContainer getActivityContainer(Calendar calendar, boolean isFloating) {
+		if (calendar == null) {
+			return null;
+		}
+		if (isPastReminder(calendar.getTime(), false)) {
+			return getActivityToday();
+		}
+
+		if (!isFloating) {
+			for (ScheduledTaskContainer container : scheduleWeekDays) {
+				if (container.includes(calendar)) {
+					return container;
+				}
+			}
+		} else {
+			if (scheduledThisWeek.includes(calendar)) {
+				return scheduledThisWeek;
+			} else if (scheduledNextWeek.includes(calendar)) {
+				return scheduledNextWeek;
+			} else {
+				return scheduledFuture;
+			}
+		}
+
+		return null;
 	}
 
 }
