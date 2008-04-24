@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Red Hat Inc. - Modification for CDT usage
+ *     Anton Leherbauer (Wind River Systems) - Project Explorer integration
  *******************************************************************************/
 
 package org.eclipse.cdt.mylyn.internal.ui.actions;
@@ -18,10 +19,9 @@ import java.util.List;
 import org.eclipse.cdt.core.model.ICElement;
 import org.eclipse.cdt.core.model.IMethod;
 import org.eclipse.cdt.internal.ui.actions.SelectionConverter;
-import org.eclipse.cdt.internal.ui.cview.CView;
-import org.eclipse.cdt.internal.ui.cview.ToggleLinkingAction;
 import org.eclipse.cdt.internal.ui.editor.CEditor;
 import org.eclipse.cdt.mylyn.internal.ui.CDTDeclarationsFilter;
+import org.eclipse.cdt.mylyn.internal.ui.CDTUIBridgePlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IContributionItem;
@@ -35,15 +35,25 @@ import org.eclipse.mylyn.context.ui.AbstractAutoFocusViewAction;
 import org.eclipse.mylyn.context.ui.InterestFilter;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.internal.navigator.actions.LinkEditorAction;
+import org.eclipse.ui.navigator.CommonNavigator;
+import org.eclipse.ui.navigator.CommonViewer;
 
 /**
  * @author Mik Kersten
  * @author Jeff Johnston
  */
-public class FocusCViewAction extends AbstractAutoFocusViewAction {
+public class FocusCommonNavigatorAction extends AbstractAutoFocusViewAction {
 
-	public FocusCViewAction() {
+	public FocusCommonNavigatorAction() {
 		super(new InterestFilter(), true, true, true);
+		setText(CDTUIBridgePlugin.getResourceString("FocusActiveTask.label")); //$NON-NLS-1$
+		setToolTipText(CDTUIBridgePlugin.getResourceString("FocusActiveTask.tooltip")); //$NON-NLS-1$
+	}
+
+	@Override
+	public void run() {
+		super.run(this);
 	}
 
 	@Override
@@ -73,48 +83,17 @@ public class FocusCViewAction extends AbstractAutoFocusViewAction {
 	// TODO: should have better way of doing this
 	protected void setManualFilteringAndLinkingEnabled(boolean enabled) {
 		IViewPart part = super.getPartForAction();
-		if (part instanceof CView) {
-			for (IContributionItem item : ((CView) part).getViewSite()
+		if (part instanceof CommonNavigator) {
+			for (IContributionItem item : ((CommonNavigator) part).getViewSite()
 					.getActionBars()
 					.getToolBarManager()
 					.getItems()) {
 				if (item instanceof ActionContributionItem) {
 					ActionContributionItem actionItem = (ActionContributionItem) item;
-					if (actionItem.getAction() instanceof ToggleLinkingAction) {
+					if (actionItem.getAction() instanceof LinkEditorAction) {
 						actionItem.getAction().setEnabled(enabled);
 					}
 				}
-			}
-			for (IContributionItem item : ((CView) part).getViewSite()
-					.getActionBars()
-					.getMenuManager()
-					.getItems()) {
-				if (item instanceof ActionContributionItem) {
-					ActionContributionItem actionItem = (ActionContributionItem) item;
-					// TODO: file bug asking for extensibility
-					if (actionItem.getAction().getClass().getSimpleName().equals("ShowFilterDialogAction")) { // $NON-NLS-1$
-						actionItem.getAction().setEnabled(enabled);
-					}
-				}
-				// NOTE: turning off dynamically contributed filter items is not currently feasible
-//				else if (item instanceof ContributionItem) {
-//					ContributionItem contributionItem = (ContributionItem) item;
-//					
-//					if (contributionItem.getClass().getSimpleName().equals("FilterActionMenuContributionItem")) {
-//						try {
-//							Class<?> clazz = contributionItem.getClass();
-//							Field field = clazz.getDeclaredField("fActionGroup");
-//							field.setAccessible(true);
-//							Object object = field.get(contributionItem);
-//							if (object instanceof CustomFiltersActionGroup) {
-//								CustomFiltersActionGroup group = (CustomFiltersActionGroup) object;
-//								group.setFilters(new String[] { });
-//							}
-//						} catch (Exception e) {
-//							e.printStackTrace();
-//						}
-//					}
-//				}
 			}
 		}
 	}
@@ -122,16 +101,16 @@ public class FocusCViewAction extends AbstractAutoFocusViewAction {
 	@Override
 	protected void setDefaultLinkingEnabled(boolean on) {
 		IViewPart part = super.getPartForAction();
-		if (part instanceof CView) {
-			((CView) part).setLinkingEnabled(on);
+		if (part instanceof CommonNavigator) {
+			((CommonNavigator) part).setLinkingEnabled(on);
 		}
 	}
 
 	@Override
 	protected boolean isDefaultLinkingEnabled() {
 		IViewPart part = super.getPartForAction();
-		if (part instanceof CView) {
-			return ((CView) part).isLinkingEnabled();
+		if (part instanceof CommonNavigator) {
+			return ((CommonNavigator) part).isLinkingEnabled();
 		}
 		return false;
 	}
@@ -141,8 +120,8 @@ public class FocusCViewAction extends AbstractAutoFocusViewAction {
 		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
 		// TODO: get from super
 		IViewPart part = super.getPartForAction();
-		if (part instanceof CView) {
-			viewers.add(((CView) part).getViewer());
+		if (part instanceof CommonNavigator) {
+			viewers.add((StructuredViewer)part.getAdapter(CommonViewer.class));
 		}
 		return viewers;
 	}
