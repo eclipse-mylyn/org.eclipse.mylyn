@@ -21,10 +21,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.internal.monitor.core.util.ZipFileUtil;
@@ -34,6 +34,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.WorkspaceAwareContextStore;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.ui.TaskListModifyOperation;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
@@ -44,7 +45,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  * @author Mik Kersten
  * @author Rob Elves
  */
-public class TaskDataExportJob implements IRunnableWithProgress {
+public class TaskDataExportJob extends TaskListModifyOperation {
 
 	private static final String JOB_LABEL = "Exporting Mylyn Task Data";
 
@@ -83,7 +84,9 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 		this.tasks = taskContextsToExport;
 	}
 
-	public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+	@Override
+	protected void operations(IProgressMonitor monitor) throws CoreException, InvocationTargetException,
+			InterruptedException {
 		int jobSize = 1; // 1 for repositories.xml
 		if (exportTaskList) {
 			jobSize++;
@@ -243,7 +246,6 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 			}
 		}
 		monitor.done();
-
 	}
 
 	private boolean copy(File src, File dst) {

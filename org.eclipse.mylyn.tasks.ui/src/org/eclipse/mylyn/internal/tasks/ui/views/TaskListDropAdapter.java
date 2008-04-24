@@ -10,6 +10,7 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -19,6 +20,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
@@ -50,6 +52,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TaskListModifyOperation;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.dnd.DND;
@@ -58,6 +61,7 @@ import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.progress.IProgressService;
 
 /**
  * @author Mik Kersten
@@ -86,147 +90,170 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 	}
 
 	@Override
-	public boolean performDrop(Object data) {
+	public boolean performDrop(final Object data) {
 		if (data == null) {
 			return false;
 		}
 
-		Object currentTarget = getCurrentTarget();
-		List<AbstractTask> tasksToMove = new ArrayList<AbstractTask>();
-		if (isUrl(data) && createTaskFromUrl(data)) {
-			tasksToMove.add(newTask);
-		} else if (TaskTransfer.getInstance().isSupportedType(currentTransfer) && data instanceof AbstractTask[]) {
-			AbstractTask[] tasks = (AbstractTask[]) data;
-			for (AbstractTask task : tasks) {
-				if (task != null) {
-					tasksToMove.add(task);
-				}
-			}
-		} else if (data instanceof String && createTaskFromString((String) data)) {
-			tasksToMove.add(newTask);
-		} else if (FileTransfer.getInstance().isSupportedType(currentTransfer)) {
-			// transfer the context if the target is a Task
-			if (getCurrentTarget() instanceof AbstractTask) {
-				AbstractTask targetTask = (AbstractTask) getCurrentTarget();
-				final String[] names = (String[]) data;
-				boolean confirmed = MessageDialog.openConfirm(getViewer().getControl().getShell(),
-						ITasksUiConstants.TITLE_DIALOG, "Overwrite the context of the target task with the source's?");
-				if (confirmed) {
-					String path = names[0];
-					File file = new File(path);
-					if (ContextCore.getContextManager().isValidContextFile(file)) {
-						ContextCore.getContextManager().copyContext(targetTask.getHandleIdentifier(), file);
-						new TaskActivateAction().run(targetTask);
-					}
-				}
-			} else {
-				// otherwise it is queries or tasks
-				final String[] names = (String[]) data;
-				List<AbstractRepositoryQuery> queries = new ArrayList<AbstractRepositoryQuery>();
-				Map<AbstractTask, InteractionContext> taskContexts = new HashMap<AbstractTask, InteractionContext>();
-				Set<TaskRepository> repositories = new HashSet<TaskRepository>();
+		TaskListModifyOperation modOperation = new TaskListModifyOperation() {
 
-				for (String path : names) {
-					File file = new File(path);
-					if (file.isFile()) {
-						List<AbstractRepositoryQuery> readQueries;
-						try {
-							readQueries = TasksUiPlugin.getTaskListManager().getTaskListWriter().readQueries(file);
-							if (readQueries.size() > 0) {
-								queries.addAll(readQueries);
-								repositories.addAll(TasksUiPlugin.getTaskListManager()
-										.getTaskListWriter()
-										.readRepositories(file));
-							} else {
-								List<AbstractTask> readTasks = TasksUiPlugin.getTaskListManager()
-										.getTaskListWriter()
-										.readTasks(file);
-								for (AbstractTask task : readTasks) {
-									taskContexts.put(task, ContextCorePlugin.getContextManager().loadContext(
-											task.getHandleIdentifier(), file));
-								}
-								repositories.addAll(TasksUiPlugin.getTaskListManager()
-										.getTaskListWriter()
-										.readRepositories(file));
+			@Override
+			protected void operations(IProgressMonitor monitor) throws CoreException, InvocationTargetException,
+					InterruptedException {
+				Object currentTarget = getCurrentTarget();
+				List<AbstractTask> tasksToMove = new ArrayList<AbstractTask>();
+				if (isUrl(data) && createTaskFromUrl(data)) {
+					tasksToMove.add(newTask);
+				} else if (TaskTransfer.getInstance().isSupportedType(currentTransfer)
+						&& data instanceof AbstractTask[]) {
+					AbstractTask[] tasks = (AbstractTask[]) data;
+					for (AbstractTask task : tasks) {
+						if (task != null) {
+							tasksToMove.add(task);
+						}
+					}
+				} else if (data instanceof String && createTaskFromString((String) data)) {
+					tasksToMove.add(newTask);
+				} else if (FileTransfer.getInstance().isSupportedType(currentTransfer)) {
+					// transfer the context if the target is a Task
+					if (getCurrentTarget() instanceof AbstractTask) {
+						AbstractTask targetTask = (AbstractTask) getCurrentTarget();
+						final String[] names = (String[]) data;
+						boolean confirmed = MessageDialog.openConfirm(getViewer().getControl().getShell(),
+								ITasksUiConstants.TITLE_DIALOG,
+								"Overwrite the context of the target task with the source's?");
+						if (confirmed) {
+							String path = names[0];
+							File file = new File(path);
+							if (ContextCore.getContextManager().isValidContextFile(file)) {
+								ContextCore.getContextManager().copyContext(targetTask.getHandleIdentifier(), file);
+								new TaskActivateAction().run(targetTask);
 							}
-						} catch (IOException e) {
-							PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-								public void run() {
-									MessageDialog.openError(null, "Query Import Error",
-											"The specified file is not an exported query. Please, check that you have provided the correct file.");
+						}
+					} else {
+						// otherwise it is queries or tasks
+						final String[] names = (String[]) data;
+						List<AbstractRepositoryQuery> queries = new ArrayList<AbstractRepositoryQuery>();
+						Map<AbstractTask, InteractionContext> taskContexts = new HashMap<AbstractTask, InteractionContext>();
+						Set<TaskRepository> repositories = new HashSet<TaskRepository>();
+
+						for (String path : names) {
+							File file = new File(path);
+							if (file.isFile()) {
+								List<AbstractRepositoryQuery> readQueries;
+								try {
+									readQueries = TasksUiPlugin.getTaskListManager().getTaskListWriter().readQueries(
+											file);
+									if (readQueries.size() > 0) {
+										queries.addAll(readQueries);
+										repositories.addAll(TasksUiPlugin.getTaskListManager()
+												.getTaskListWriter()
+												.readRepositories(file));
+									} else {
+										List<AbstractTask> readTasks = TasksUiPlugin.getTaskListManager()
+												.getTaskListWriter()
+												.readTasks(file);
+										for (AbstractTask task : readTasks) {
+											taskContexts.put(task, ContextCorePlugin.getContextManager().loadContext(
+													task.getHandleIdentifier(), file));
+										}
+										repositories.addAll(TasksUiPlugin.getTaskListManager()
+												.getTaskListWriter()
+												.readRepositories(file));
+									}
+								} catch (IOException e) {
+									PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+										public void run() {
+											MessageDialog.openError(null, "Query Import Error",
+													"The specified file is not an exported query. Please, check that you have provided the correct file.");
+										}
+									});
 								}
-							});
+							}
+
+						}
+
+						if (queries.size() > 0) {
+							new QueryImportAction().importQueries(queries, repositories, getViewer().getControl()
+									.getShell());
+						} else {
+							TaskImportAction action = new TaskImportAction();
+							action.importTasks(taskContexts, repositories, getViewer().getControl().getShell());
+							action.refreshTaskListView();
 						}
 					}
-
 				}
 
-				if (queries.size() > 0) {
-					new QueryImportAction().importQueries(queries, repositories, getViewer().getControl().getShell());
+				if (currentTarget instanceof LocalTask
+						&& areAllLocalTasks(tasksToMove)
+						&& getCurrentLocation() == LOCATION_ON
+						&& TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
+								TasksUiPreferenceConstants.LOCAL_SUB_TASKS_ENABLED)) {
+					for (AbstractTask task : tasksToMove) {
+						if (!task.contains(((LocalTask) currentTarget).getHandleIdentifier())) {
+							TasksUi.getTaskListManager().getTaskList().addTask(task, (LocalTask) currentTarget);
+						}
+					}
 				} else {
-					TaskImportAction action = new TaskImportAction();
-					action.importTasks(taskContexts, repositories, getViewer().getControl().getShell());
-					action.refreshTaskListView();
-				}
-			}
-		}
-
-		if (currentTarget instanceof LocalTask
-				&& areAllLocalTasks(tasksToMove)
-				&& getCurrentLocation() == LOCATION_ON
-				&& TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-						TasksUiPreferenceConstants.LOCAL_SUB_TASKS_ENABLED)) {
-			for (AbstractTask task : tasksToMove) {
-				if (!task.contains(((LocalTask) currentTarget).getHandleIdentifier())) {
-					TasksUi.getTaskListManager().getTaskList().addTask(task, (LocalTask) currentTarget);
-				}
-			}
-		} else {
-			for (AbstractTask task : tasksToMove) {
-				if (currentTarget instanceof UncategorizedTaskContainer) {
-					TasksUi.getTaskListManager()
-							.getTaskList()
-							.addTask(task, (UncategorizedTaskContainer) currentTarget);
-				} else if (currentTarget instanceof TaskCategory) {
-					TasksUi.getTaskListManager().getTaskList().addTask(task, (TaskCategory) currentTarget);
-				} else if (currentTarget instanceof UnmatchedTaskContainer) {
-					if (((UnmatchedTaskContainer) currentTarget).getRepositoryUrl().equals(task.getRepositoryUrl())) {
-						TasksUi.getTaskListManager().getTaskList().addTask(task, (AbstractTaskCategory) currentTarget);
-					}
-				} else if (currentTarget instanceof AbstractTask) {
-					AbstractTask targetTask = (AbstractTask) currentTarget;
-					AbstractTaskCategory targetCategory = null;
-					// TODO: TaskCategory only used what about AbstractTaskCategory descendants?
-					AbstractTaskContainer container = TaskCategory.getParentTaskCategory(targetTask);
-					if (container instanceof TaskCategory || container instanceof UncategorizedTaskContainer) {
-						targetCategory = (AbstractTaskCategory) container;
-					} else if (container instanceof UnmatchedTaskContainer) {
-						if (((UnmatchedTaskContainer) container).getRepositoryUrl().equals(task.getRepositoryUrl())) {
-							targetCategory = (AbstractTaskCategory) container;
+					for (AbstractTask task : tasksToMove) {
+						if (currentTarget instanceof UncategorizedTaskContainer) {
+							TasksUi.getTaskListManager().getTaskList().addTask(task,
+									(UncategorizedTaskContainer) currentTarget);
+						} else if (currentTarget instanceof TaskCategory) {
+							TasksUi.getTaskListManager().getTaskList().addTask(task, (TaskCategory) currentTarget);
+						} else if (currentTarget instanceof UnmatchedTaskContainer) {
+							if (((UnmatchedTaskContainer) currentTarget).getRepositoryUrl().equals(
+									task.getRepositoryUrl())) {
+								TasksUi.getTaskListManager().getTaskList().addTask(task,
+										(AbstractTaskCategory) currentTarget);
+							}
+						} else if (currentTarget instanceof AbstractTask) {
+							AbstractTask targetTask = (AbstractTask) currentTarget;
+							AbstractTaskCategory targetCategory = null;
+							// TODO: TaskCategory only used what about AbstractTaskCategory descendants?
+							AbstractTaskContainer container = TaskCategory.getParentTaskCategory(targetTask);
+							if (container instanceof TaskCategory || container instanceof UncategorizedTaskContainer) {
+								targetCategory = (AbstractTaskCategory) container;
+							} else if (container instanceof UnmatchedTaskContainer) {
+								if (((UnmatchedTaskContainer) container).getRepositoryUrl().equals(
+										task.getRepositoryUrl())) {
+									targetCategory = (AbstractTaskCategory) container;
+								}
+							}
+							if (targetCategory != null) {
+								TasksUi.getTaskListManager().getTaskList().addTask(task, targetCategory);
+							}
+						} else if (currentTarget instanceof ScheduledTaskContainer) {
+							ScheduledTaskContainer container = (ScheduledTaskContainer) currentTarget;
+							Calendar newSchedule = TaskActivityUtil.getCalendar();
+							newSchedule.setTimeInMillis(container.getStart().getTimeInMillis());
+							TaskActivityUtil.snapEndOfWorkDay(newSchedule);
+							TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, newSchedule.getTime(),
+									container.isCaptureFloating());
+						} else if (currentTarget == null) {
+							TasksUi.getTaskListManager().getTaskList().addTask(newTask,
+									TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 						}
 					}
-					if (targetCategory != null) {
-						TasksUi.getTaskListManager().getTaskList().addTask(task, targetCategory);
-					}
-				} else if (currentTarget instanceof ScheduledTaskContainer) {
-					ScheduledTaskContainer container = (ScheduledTaskContainer) currentTarget;
-					Calendar newSchedule = TaskActivityUtil.getCalendar();
-					newSchedule.setTimeInMillis(container.getStart().getTimeInMillis());
-					TaskActivityUtil.snapEndOfWorkDay(newSchedule);
-					TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, newSchedule.getTime(),
-							container.isCaptureFloating());
-				} else if (currentTarget == null) {
-					TasksUi.getTaskListManager().getTaskList().addTask(newTask,
-							TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 				}
-			}
-		}
 
-		// Make new task the current selection in the view
-		if (newTask != null) {
-			StructuredSelection ss = new StructuredSelection(newTask);
-			getViewer().setSelection(ss);
-			getViewer().refresh();
+				// Make new task the current selection in the view
+				if (newTask != null) {
+					StructuredSelection ss = new StructuredSelection(newTask);
+					getViewer().setSelection(ss);
+					getViewer().refresh();
+				}
+
+			}
+		};
+
+		IProgressService service = PlatformUI.getWorkbench().getProgressService();
+		try {
+			service.run(true, true, modOperation);
+		} catch (InterruptedException e) {
+			// ignore
+		} catch (InvocationTargetException e) {
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Drop failed", e.getCause()));
 		}
 
 		return true;

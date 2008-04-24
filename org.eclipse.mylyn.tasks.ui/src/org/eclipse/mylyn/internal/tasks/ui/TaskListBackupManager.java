@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.SortedMap;
 import java.util.Timer;
@@ -35,6 +36,7 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDataExportJob;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataExportWizard;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
@@ -66,7 +68,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 	public TaskListBackupManager() {
 		int days = TasksUiPlugin.getDefault().getPreferenceStore().getInt(TasksUiPreferenceConstants.BACKUP_SCHEDULE);
 		if (days > 0) {
-			start(2 * MINUTE);
+			start(500);///2 * MINUTE
 		}
 	}
 
@@ -108,7 +110,8 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 
 		} else {
 
-			final TaskDataExportJob backupJob = new TaskDataExportJob(destination, true, fileName);
+			final TaskDataExportJob backupJob = new TaskDataExportJob(destination, true, true, false, false, fileName,
+					new HashSet<AbstractTask>());
 
 			IProgressService service = PlatformUI.getWorkbench().getProgressService();
 			try {
@@ -286,28 +289,33 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 
 		@Override
 		public void run() {
-			if (!Platform.isRunning() || TasksUiPlugin.getDefault() == null) {
-				return;
-			} else {
-				long lastBackup = TasksUiPlugin.getDefault().getPreferenceStore().getLong(
-						TasksUiPreferenceConstants.BACKUP_LAST);
-				int days = TasksUiPlugin.getDefault().getPreferenceStore().getInt(
-						TasksUiPreferenceConstants.BACKUP_SCHEDULE);
-				long waitPeriod = days * DAY;
-				final long now = new Date().getTime();
-
-				if ((now - lastBackup) > waitPeriod) {
-					if (Platform.isRunning() && !PlatformUI.getWorkbench().isClosing()
-							&& PlatformUI.getWorkbench().getDisplay() != null
-							&& !PlatformUI.getWorkbench().getDisplay().isDisposed()) {
-						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-							public void run() {
-								backupNow(false);
-							}
-						});
-					}
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					backupNow(false);
 				}
-			}
+			});
+//			if (!Platform.isRunning() || TasksUiPlugin.getDefault() == null) {
+//				return;
+//			} else {
+//				long lastBackup = TasksUiPlugin.getDefault().getPreferenceStore().getLong(
+//						TasksUiPreferenceConstants.BACKUP_LAST);
+//				int days = TasksUiPlugin.getDefault().getPreferenceStore().getInt(
+//						TasksUiPreferenceConstants.BACKUP_SCHEDULE);
+//				long waitPeriod = days * DAY;
+//				final long now = new Date().getTime();
+//
+//				if ((now - lastBackup) > waitPeriod) {
+//					if (Platform.isRunning() && !PlatformUI.getWorkbench().isClosing()
+//							&& PlatformUI.getWorkbench().getDisplay() != null
+//							&& !PlatformUI.getWorkbench().getDisplay().isDisposed()) {
+//						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+//							public void run() {
+//								backupNow(false);
+//							}
+//						});
+//					}
+//				}
+//			}
 		}
 	}
 

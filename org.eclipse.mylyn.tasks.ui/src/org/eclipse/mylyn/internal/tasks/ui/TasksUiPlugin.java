@@ -519,8 +519,12 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			// NOTE: task list must be read before Task List view can be initialized
 			taskListManager.addActivationListener(CONTEXT_TASK_ACTIVATION_LISTENER);
-			// readExistingOrCreateNewList() must be called after repositories have been read in
+
 			taskListManager.readExistingOrCreateNewList();
+
+			// readExistingOrCreateNewList() must be called after repositories have been read in
+			//taskListManager.readExistingOrCreateNewList();
+
 			initialized = true;
 
 			taskActivityMonitor = new TaskActivityMonitor(taskActivityManager, ContextCore.getContextManager());

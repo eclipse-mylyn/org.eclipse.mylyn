@@ -17,8 +17,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.ILock;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
@@ -41,6 +45,8 @@ import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 public class TaskList implements ISchedulingRule, ITaskList {
 
 	private static ILock lock = Job.getJobManager().newLock();
+
+	private static ILock writeLock = Job.getJobManager().newLock();
 
 	private Map<String, AbstractTaskCategory> categories;
 
@@ -648,6 +654,35 @@ public class TaskList implements ISchedulingRule, ITaskList {
 		for (ITaskListChangeListener listener : changeListeners) {
 			listener.taskListRead();
 		}
+	}
+
+	public void run(ITaskListRunnable runnable, IProgressMonitor monitor) throws CoreException {
+		try {
+			lock(new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN));
+
+			runnable.execute(monitor);
+
+		} finally {
+			unlock();
+		}
+
+	}
+
+	private void lock(IProgressMonitor monitor) throws CoreException {
+		while (!monitor.isCanceled()) {
+			try {
+				if (lock.acquire(3000)) {
+					return;
+				}
+			} catch (InterruptedException e) {
+				throw new OperationCanceledException();
+			}
+		}
+		throw new OperationCanceledException();
+	}
+
+	private void unlock() {
+		lock.release();
 	}
 
 }

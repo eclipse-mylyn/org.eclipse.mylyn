@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -23,6 +24,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
@@ -58,8 +61,11 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
+import org.eclipse.mylyn.tasks.ui.TaskListModifyOperation;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.progress.IProgressService;
 
 /**
  * Provides facilities for using and managing the Task List and task activity information.
@@ -257,26 +263,40 @@ public class TaskListManager implements ITaskListManager {
 	}
 
 	public boolean readExistingOrCreateNewList() {
-		try {
-			if (taskListFile.exists()) {
-				prepareOrphanContainers();
-				taskList.readStart();
-				taskListWriter.readTaskList(taskList, taskListFile, TasksUiPlugin.getTaskDataManager());
-				taskList.readComplete();
-			} else {
-				resetTaskList();
+		IProgressService service = PlatformUI.getWorkbench().getProgressService();
+		TaskListModifyOperation modOperation = new TaskListModifyOperation() {
+
+			@Override
+			protected void operations(IProgressMonitor monitor) throws CoreException, InvocationTargetException,
+					InterruptedException {
+				try {
+					if (taskListFile.exists()) {
+						prepareOrphanContainers();
+						taskList.readStart();
+						taskListWriter.readTaskList(taskList, taskListFile, TasksUiPlugin.getTaskDataManager());
+						taskList.readComplete();
+					} else {
+						resetTaskList();
+					}
+					taskListInitialized = true;
+				} catch (Throwable t) {
+					throw new InvocationTargetException(t);
+				}
 			}
-			taskListInitialized = true;
-			// invoked from initActivityHistory()
-			//resetAndRollOver();
-//			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
-//				listener.taskListRead();
-//			}
-		} catch (Throwable t) {
+		};
+
+		try {
+			service.run(false, false, modOperation);
+		} catch (InvocationTargetException e) {
 			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Could not read task list, consider restoring via view menu", t));
+					"Could not read task list, consider restoring via view menu", e.getCause()));
+			return false;
+		} catch (InterruptedException e) {
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Read of task list file cancelled.",
+					e));
 			return false;
 		}
+
 		return true;
 	}
 
@@ -309,30 +329,6 @@ public class TaskListManager implements ITaskListManager {
 	public TaskList getTaskList() {
 		return taskList;
 	}
-
-//	public void addActivityListener(ITaskActivityListener listener) {
-//		activityListeners.add(listener);
-//	}
-//
-//	public void removeActivityListener(ITaskActivityListener listener) {
-//		activityListeners.remove(listener);
-//	}
-
-//	/**
-//	 * @deprecated use <code>TaskActivityManager.addTimingListener</code>
-//	 */
-//	@Deprecated
-//	public void addTimingListener(ITaskTimingListener listener) {
-//		TasksUiPlugin.getTaskActivityManager().addTimingListener(listener);
-//	}
-//
-//	/**
-//	 * @deprecated use <code>TaskActivityManager.removeTimingListener</code>
-//	 */
-//	@Deprecated
-//	public void removeTimingListener(ITaskTimingListener listener) {
-//		TasksUiPlugin.getTaskActivityManager().removeTimingListener(listener);
-//	}
 
 	public void activateTask(AbstractTask task) {
 		activateTask(task, true);
@@ -429,9 +425,6 @@ public class TaskListManager implements ITaskListManager {
 		resetAndRollOver(TaskActivityUtil.getCalendar().getTime());
 	}
 
-	/**
-	 * public for testing TODO: Move to TaskActivityManager
-	 */
 	public void resetAndRollOver(Date startDate) {
 		if (isTaskListInitialized()) {
 			TasksUiPlugin.getTaskActivityManager().clear(startDate);
@@ -463,21 +456,6 @@ public class TaskListManager implements ITaskListManager {
 
 	public TaskActivationHistory getTaskActivationHistory() {
 		return taskActivityHistory;
-	}
-
-	/**
-	 * @param element
-	 *            tasklist element to retrieve a task for currently will work for (ITask, AbstractQueryHit)
-	 * @param force -
-	 *            if a query hit is passed you can either force construction of the task or not (if not and no task,
-	 *            null is returned) TODO: Move into TaskList?
-	 */
-	public AbstractTask getTaskForElement(AbstractTaskContainer element, boolean force) {
-		AbstractTask task = null;
-		if (element instanceof AbstractTask) {
-			task = (AbstractTask) element;
-		}
-		return task;
 	}
 
 	protected void setTaskListSaveManager(TaskListSaveManager taskListSaveManager) {

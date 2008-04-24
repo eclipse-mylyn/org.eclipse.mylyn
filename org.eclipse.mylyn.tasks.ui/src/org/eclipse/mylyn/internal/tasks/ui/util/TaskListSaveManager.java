@@ -135,7 +135,6 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 	}
 
 	private synchronized void internalSaveTaskList() {
-		// copy original file to saved copy, write new file.
 		TaskListManager taskListManager = TasksUiPlugin.getTaskListManager();
 		File current = taskListManager.getTaskListFile();
 		SimpleDateFormat format = new SimpleDateFormat(TaskListBackupManager.TIMESTAMP_FORMAT, Locale.ENGLISH);

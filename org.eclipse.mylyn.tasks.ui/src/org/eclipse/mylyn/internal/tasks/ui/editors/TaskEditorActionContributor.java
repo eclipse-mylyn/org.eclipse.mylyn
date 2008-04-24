@@ -264,6 +264,8 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 						selectedElements.add(task);
 						MenuManager subMenuManager = contributor.getSubMenuManager(selectedElements);
 						if (subMenuManager != null) {
+							subMenuManager.setVisible(selectedElements.size() > 0
+									&& selectedElements.get(0) instanceof AbstractTask);
 							manager.add(subMenuManager);
 						}
 					}
