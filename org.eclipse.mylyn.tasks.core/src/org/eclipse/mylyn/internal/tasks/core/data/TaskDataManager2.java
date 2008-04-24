@@ -126,7 +126,7 @@ public class TaskDataManager2 implements ITaskDataManager2 {
 	}
 
 	public boolean hasTaskData(AbstractTask task, String kind) {
-		return findFile(task, kind).exists();
+		return getFile(task, kind).exists();
 	}
 
 	private void migrate(TaskDataState taskDataState) throws IOException {
