@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.tasks.core.data.AbstractAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataCollector;
+import org.eclipse.mylyn.tasks.core.data.ITaskDataState;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 /**
@@ -45,18 +46,8 @@ public abstract class AbstractTaskDataHandler2 {
 	/**
 	 * Return a reference to the newly created report in the case of new task submission, null otherwise
 	 */
-	public abstract String postTaskData(TaskRepository repository, TaskData taskData, IProgressMonitor monitor)
-			throws CoreException;
-
-	/**
-	 * @param repositoryUrl
-	 * @param repositoryKind
-	 * @param taskKind
-	 *            AbstractTask.DEFAULT_KIND or connector specific task kind string
-	 * @return
-	 */
-	public abstract AbstractAttributeFactory getAttributeFactory(String repositoryUrl, String repositoryKind,
-			String taskKind);
+	public abstract String postTaskData(TaskRepository repository, ITaskDataState taskDataState,
+			IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * Initialize a new task data object with default attributes and values

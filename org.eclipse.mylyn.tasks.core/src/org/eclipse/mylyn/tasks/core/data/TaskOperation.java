@@ -56,4 +56,25 @@ public class TaskOperation {
 		this.label = label;
 	}
 
+	public static TaskOperation createFrom(TaskAttribute taskAttribute) {
+		TaskData taskData = taskAttribute.getTaskData();
+		AbstractAttributeMapper mapper = taskData.getAttributeMapper();
+		String operationId = "";
+		TaskOperation operation = new TaskOperation(taskData.getRepositoryUrl(), taskData.getConnectorKind(),
+				taskData.getTaskId(), operationId);
+		TaskAttribute child = taskAttribute.getMappedAttribute(TaskAttribute.OPERATION_NAME);
+		if (child != null) {
+			operation.setLabel(mapper.getValue(child));
+		}
+		return operation;
+	}
+
+	public void applyTo(TaskAttribute taskAttribute) {
+		TaskData taskData = taskAttribute.getTaskData();
+		AbstractAttributeMapper mapper = taskData.getAttributeMapper();
+
+		TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.OPERATION_NAME);
+		mapper.setValue(child, getLabel());
+	}
+
 }

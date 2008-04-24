@@ -46,6 +46,11 @@ public class AttributeManager {
 	 *            changed attribute
 	 */
 	public void attributeChanged(TaskAttribute attribute) {
+		if (attribute.getParentAttribute() != getTaskData().getRoot()) {
+			throw new RuntimeException(
+					"Editing is only supported for attributes that are attached to the root of task data");
+		}
+
 		editedAttributes.add(attribute);
 
 		if (listeners != null) {
@@ -98,7 +103,13 @@ public class AttributeManager {
 	}
 
 	public void save(IProgressMonitor monitor) throws CoreException {
-		taskDataState.save(monitor);
+		taskDataState.save(monitor, editedAttributes);
+		editedAttributes.clear();
+	}
+
+	public void revert() {
+		editedAttributes.clear();
+		taskDataState.revert();
 	}
 
 }

@@ -147,4 +147,83 @@ public class TaskAttachment {
 		this.url = url;
 	}
 
+	public static TaskAttachment createFrom(TaskAttribute taskAttribute) {
+		TaskData taskData = taskAttribute.getTaskData();
+		AbstractAttributeMapper mapper = taskAttribute.getTaskData().getAttributeMapper();
+		TaskAttachment attachment = new TaskAttachment(taskData.getRepositoryUrl(), taskData.getConnectorKind(),
+				taskData.getTaskId(), taskAttribute.getId());
+		TaskAttribute child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_AUTHOR);
+		if (child != null) {
+			attachment.setAuthor(mapper.getRepositoryPerson(child));
+		}
+		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_CONTENT_TYPE);
+		if (child != null) {
+			attachment.setContentType(mapper.getValue(child));
+		}
+		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_DATE);
+		if (child != null) {
+			attachment.setCreationDate(mapper.getDateValue(child));
+		}
+		child = taskAttribute.getMappedAttribute(TaskAttribute.DESCRIPTION);
+		if (child != null) {
+			attachment.setDescription(mapper.getValue(child));
+		}
+		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_FILENAME);
+		if (child != null) {
+			attachment.setFileName(mapper.getValue(child));
+		}
+		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_IS_DEPRECATED);
+		if (child != null) {
+			attachment.setDeprecated(mapper.getBooleanValue(child));
+		}
+		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_IS_PATCH);
+		if (child != null) {
+			attachment.setPatch(mapper.getBooleanValue(child));
+		}
+		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_SIZE);
+		if (child != null) {
+			Long value = mapper.getLongValue(child);
+			if (value != null) {
+				attachment.setLength(value);
+			}
+		}
+		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_URL);
+		if (child != null) {
+			attachment.setUrl(mapper.getValue(child));
+		}
+		return attachment;
+	}
+
+	public void applyTo(TaskAttribute taskAttribute) {
+		TaskData taskData = taskAttribute.getTaskData();
+		AbstractAttributeMapper mapper = taskData.getAttributeMapper();
+
+		TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.ATTACHMENT_AUTHOR);
+		mapper.setRepositoryPerson(child, getAuthor());
+
+		child = taskAttribute.createAttribute(TaskAttribute.ATTACHMENT_CONTENT_TYPE);
+		mapper.setValue(child, getContentType());
+
+		child = taskAttribute.createAttribute(TaskAttribute.ATTACHMENT_DATE);
+		mapper.setDateValue(child, getCreationDate());
+
+		child = taskAttribute.createAttribute(TaskAttribute.DESCRIPTION);
+		mapper.setValue(child, getDescription());
+
+		child = taskAttribute.createAttribute(TaskAttribute.ATTACHMENT_FILENAME);
+		mapper.setValue(child, getFileName());
+
+		child = taskAttribute.createAttribute(TaskAttribute.ATTACHMENT_IS_DEPRECATED);
+		mapper.setBooleanValue(child, isDeprecated());
+
+		child = taskAttribute.createAttribute(TaskAttribute.ATTACHMENT_IS_PATCH);
+		mapper.setBooleanValue(child, isPatch());
+
+		child = taskAttribute.createAttribute(TaskAttribute.ATTACHMENT_SIZE);
+		mapper.setLongValue(child, getLength());
+
+		child = taskAttribute.createAttribute(TaskAttribute.ATTACHMENT_URL);
+		mapper.setValue(child, getUrl());
+	}
+
 }

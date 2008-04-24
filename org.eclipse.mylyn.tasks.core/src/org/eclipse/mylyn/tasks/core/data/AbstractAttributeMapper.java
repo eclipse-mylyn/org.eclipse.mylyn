@@ -141,96 +141,22 @@ public abstract class AbstractAttributeMapper {
 	}
 
 	public String getType(TaskAttribute taskAttribute) {
-		return taskAttribute.getMetaData(TaskAttribute.META_TYPE);
+		return taskAttribute.getMetaData(TaskAttribute.META_ATTRIBUTE_TYPE);
 	}
 
 	public TaskAttachment getTaskAttachment(TaskAttribute taskAttribute) {
-		TaskData taskData = taskAttribute.getTaskData();
-		TaskAttachment attachment = new TaskAttachment(taskData.getRepositoryUrl(), taskData.getConnectorKind(),
-				taskData.getTaskId(), taskAttribute.getId());
-		TaskAttribute child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_AUTHOR);
-		if (child != null) {
-			attachment.setAuthor(getRepositoryPerson(child));
-		}
-		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_CONTENT_TYPE);
-		if (child != null) {
-			attachment.setContentType(getValue(child));
-		}
-		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_DATE);
-		if (child != null) {
-			attachment.setCreationDate(getDateValue(child));
-		}
-		child = taskAttribute.getMappedAttribute(TaskAttribute.DESCRIPTION);
-		if (child != null) {
-			attachment.setDescription(getValue(child));
-		}
-		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_FILENAME);
-		if (child != null) {
-			attachment.setFileName(getValue(child));
-		}
-		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_IS_DEPRECATED);
-		if (child != null) {
-			attachment.setDeprecated(getBooleanValue(child));
-		}
-		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_IS_PATCH);
-		if (child != null) {
-			attachment.setPatch(getBooleanValue(child));
-		}
-		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_SIZE);
-		if (child != null) {
-			Long value = getLongValue(child);
-			if (value != null) {
-				attachment.setLength(value);
-			}
-		}
-		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_URL);
-		if (child != null) {
-			attachment.setUrl(getValue(child));
-		}
-		return attachment;
+		return TaskAttachment.createFrom(taskAttribute);
 	}
 
 	public TaskAttachment createTaskAttachment(TaskData taskData) {
+		// FIXME implement
 		TaskAttachment attachment = new TaskAttachment(taskData.getRepositoryUrl(), taskData.getConnectorKind(),
 				taskData.getTaskId(), "");
 		return attachment;
 	}
 
 	public TaskComment getTaskComment(TaskAttribute taskAttribute) {
-		TaskData taskData = taskAttribute.getTaskData();
-		TaskComment comment = new TaskComment(taskData.getRepositoryUrl(), taskData.getConnectorKind(),
-				taskData.getTaskId(), taskAttribute.getId());
-		try {
-			comment.setNumber(Integer.parseInt(taskAttribute.getId()));
-		} catch (NumberFormatException e) {
-			// ignore
-		}
-		TaskAttribute child = taskAttribute.getMappedAttribute(TaskAttribute.COMMENT_AUTHOR);
-		if (child != null) {
-			comment.setAuthor(getRepositoryPerson(child,
-					taskAttribute.getMappedAttribute(TaskAttribute.COMMENT_AUTHOR_NAME)));
-		}
-		child = taskAttribute.getMappedAttribute(TaskAttribute.COMMENT_DATE);
-		if (child != null) {
-			comment.setCreationDate(getDateValue(child));
-		}
-		child = taskAttribute.getMappedAttribute(TaskAttribute.COMMENT_URL);
-		if (child != null) {
-			comment.setUrl(getValue(child));
-		}
-		child = taskAttribute.getMappedAttribute(TaskAttribute.COMMENT_TEXT);
-		if (child != null) {
-			comment.setText(getValue(child));
-		}
-		return comment;
-	}
-
-	public TaskAttributeProperties getProperties(TaskAttribute taskAttribute) {
-		TaskAttributeProperties properties = new TaskAttributeProperties();
-		properties.readOnly = Boolean.parseBoolean(taskAttribute.getMetaData(TaskAttribute.META_READ_ONLY));
-		properties.showInAttributesSection = Boolean.parseBoolean(taskAttribute.getMetaData(TaskAttribute.META_SHOW_IN_ATTRIBUTES_SECTION));
-		properties.showInToolTip = Boolean.parseBoolean(taskAttribute.getMetaData(TaskAttribute.META_SHOW_IN_TOOL_TIP));
-		return properties;
+		return TaskComment.createFrom(taskAttribute);
 	}
 
 	public List<TaskAttribute> getAttributesByType(TaskData taskData, String type) {
@@ -259,29 +185,26 @@ public abstract class AbstractAttributeMapper {
 	}
 
 	public TaskOperation getTaskOperation(TaskAttribute taskAttribute) {
-		TaskData taskData = taskAttribute.getTaskData();
-		String operationId = "";
-		TaskOperation operation = new TaskOperation(taskData.getRepositoryUrl(), taskData.getConnectorKind(),
-				taskData.getTaskId(), operationId);
-		TaskAttribute child = taskAttribute.getAttribute(TaskAttribute.OPERATION_NAME);
-		if (child != null) {
-			operation.setLabel(getValue(child));
-		}
-		return operation;
+		return TaskOperation.createFrom(taskAttribute);
 	}
 
 	public RepositoryPerson getRepositoryPerson(TaskAttribute taskAttribute) {
-		return getRepositoryPerson(taskAttribute, null);
-	}
-
-	private RepositoryPerson getRepositoryPerson(TaskAttribute taskAttribute, TaskAttribute taskAttributeName) {
 		TaskData taskData = taskAttribute.getTaskData();
 		RepositoryPerson person = new RepositoryPerson(taskData.getConnectorKind(), taskData.getRepositoryUrl(),
-				taskData.getTaskId(), taskAttribute.getValue());
-		if (taskAttributeName != null) {
-			person.setName(getValue(taskAttributeName));
+				taskAttribute.getValue());
+		TaskAttribute child = taskAttribute.getMappedAttribute(TaskAttribute.PERSON_NAME);
+		if (child != null) {
+			person.setName(getValue(child));
 		}
 		return person;
+	}
+
+	public void setRepositoryPerson(TaskAttribute taskAttribute, RepositoryPerson person) {
+		setValue(taskAttribute, person.getPersonId());
+		if (person.getName() != null) {
+			TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.PERSON_NAME);
+			setValue(child, person.getName());
+		}
 	}
 
 }

@@ -13,6 +13,7 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.mylyn.tasks.core.data.AbstractAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.AttributeManager;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeProperties;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Composite;
@@ -54,7 +55,7 @@ public abstract class AbstractAttributeEditor {
 		this.manager = manager;
 		this.taskAttribute = taskAttribute;
 		setDecorationEnabled(true);
-		setReadOnly(taskAttribute.getTaskData().getAttributeMapper().getProperties(taskAttribute).readOnly);
+		setReadOnly(TaskAttributeProperties.createFrom(taskAttribute).isReadOnly());
 	}
 
 	protected void attributeChanged() {

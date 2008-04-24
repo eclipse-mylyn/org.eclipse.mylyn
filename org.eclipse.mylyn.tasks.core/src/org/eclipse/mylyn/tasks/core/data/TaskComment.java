@@ -99,4 +99,60 @@ public class TaskComment {
 	public void setUrl(String url) {
 		this.url = url;
 	}
+
+	public static TaskComment createFrom(TaskAttribute taskAttribute) {
+		TaskData taskData = taskAttribute.getTaskData();
+		AbstractAttributeMapper mapper = taskData.getAttributeMapper();
+		TaskComment comment = new TaskComment(taskData.getRepositoryUrl(), taskData.getConnectorKind(),
+				taskData.getTaskId(), taskAttribute.getId());
+		try {
+			comment.setNumber(Integer.parseInt(taskAttribute.getId()));
+		} catch (NumberFormatException e) {
+			// ignore
+		}
+		TaskAttribute child = taskAttribute.getMappedAttribute(TaskAttribute.COMMENT_AUTHOR);
+		if (child != null) {
+			RepositoryPerson person = mapper.getRepositoryPerson(child);
+			if (person.getName() == null) {
+				child = taskAttribute.getMappedAttribute(TaskAttribute.COMMENT_AUTHOR_NAME);
+				if (child != null) {
+					person.setName(child.getValue());
+				}
+			}
+			comment.setAuthor(person);
+		}
+		child = taskAttribute.getMappedAttribute(TaskAttribute.COMMENT_DATE);
+		if (child != null) {
+			comment.setCreationDate(mapper.getDateValue(child));
+		}
+		child = taskAttribute.getMappedAttribute(TaskAttribute.COMMENT_URL);
+		if (child != null) {
+			comment.setUrl(mapper.getValue(child));
+		}
+		child = taskAttribute.getMappedAttribute(TaskAttribute.COMMENT_TEXT);
+		if (child != null) {
+			comment.setText(mapper.getValue(child));
+		}
+		return comment;
+	}
+
+	public void applyTo(TaskAttribute taskAttribute) {
+		TaskData taskData = taskAttribute.getTaskData();
+		AbstractAttributeMapper mapper = taskData.getAttributeMapper();
+
+		taskAttribute.putMetaDataValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, TaskAttribute.COMMENT_TEXT);
+
+		TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.COMMENT_AUTHOR);
+		mapper.setRepositoryPerson(child, getAuthor());
+
+		child = taskAttribute.createAttribute(TaskAttribute.COMMENT_DATE);
+		mapper.setDateValue(child, getCreationDate());
+
+		child = taskAttribute.createAttribute(TaskAttribute.COMMENT_URL);
+		mapper.setValue(child, getUrl());
+
+		child = taskAttribute.createAttribute(TaskAttribute.COMMENT_TEXT);
+		mapper.setValue(child, getText());
+	}
+
 }

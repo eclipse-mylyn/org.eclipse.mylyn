@@ -11,6 +11,7 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 import java.util.Collections;
 import java.util.Set;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -111,7 +112,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 						handleSubmitError(job.getError());
 					}
 
-					setGlobalBusy(false);
+					showEditorBusy(false);
 				}
 			});
 		}
@@ -211,8 +212,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 	private TaskData taskData;
 
-	private final ITaskListChangeListener TASKLIST_CHANGE_LISTENER = new TaskListChangeAdapter() {
-
+	private final ITaskListChangeListener taskListChangeListener = new TaskListChangeAdapter() {
 		@Override
 		public void containersChanged(Set<TaskContainerDelta> containers) {
 			AbstractTask taskToRefresh = null;
@@ -256,6 +256,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 	public AbstractTaskEditorPage(TaskEditor editor, String connectorKind) {
 		super(editor, "id", "label"); //$NON-NLS-1$ //$NON-NLS-2$
+		Assert.isNotNull(connectorKind);
 		this.connectorKind = connectorKind;
 	}
 
@@ -418,7 +419,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 	@Override
 	public void dispose() {
-		TasksUi.getTaskListManager().getTaskList().removeChangeListener(TASKLIST_CHANGE_LISTENER);
+		TasksUi.getTaskListManager().getTaskList().removeChangeListener(taskListChangeListener);
 		if (activateAction != null) {
 			activateAction.dispose();
 		}
@@ -589,7 +590,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 		refreshInput();
 
-		TasksUi.getTaskListManager().getTaskList().addChangeListener(TASKLIST_CHANGE_LISTENER);
+		TasksUi.getTaskListManager().getTaskList().addChangeListener(taskListChangeListener);
 	}
 
 	private void initializePart(Composite parent, AbstractTaskEditorPart part) {
@@ -631,12 +632,12 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 	 */
 	public void refreshFormContent() {
 		if (getManagedForm().getForm().isDisposed()) {
-			// editor possibly closed as part of submit, mark read
+			// editor possibly closed as part of submit
 			return;
 		}
 
 		try {
-			setGlobalBusy(true);
+			showEditorBusy(true);
 
 			doSave(new NullProgressMonitor());
 			refreshInput();
@@ -657,8 +658,9 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 				editorComposite.setMenu(menu);
 
 				createSections();
+
 				getParentEditor().setMessage(null, 0);
-				getParentEditor().setActivePage(AbstractTaskEditorPage.this.getId());
+				getParentEditor().setActivePage(getId());
 
 				if (actionPart != null) {
 					actionPart.setSubmitEnabled(true);
@@ -667,7 +669,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 			getManagedForm().dirtyStateChanged();
 		} finally {
-			setGlobalBusy(false);
+			showEditorBusy(false);
 		}
 	}
 
@@ -726,12 +728,8 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		}
 	}
 
-	public void setGlobalBusy(boolean busy) {
-		if (getParentEditor() != null) {
-			getParentEditor().showBusy(busy);
-		} else {
-			showBusy(busy);
-		}
+	public void showEditorBusy(boolean busy) {
+		getParentEditor().showBusy(busy);
 	}
 
 	/**
@@ -793,7 +791,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 	}
 
 	public void submitToRepository() {
-		setGlobalBusy(true);
+		showEditorBusy(true);
 
 		doSave(new NullProgressMonitor());
 

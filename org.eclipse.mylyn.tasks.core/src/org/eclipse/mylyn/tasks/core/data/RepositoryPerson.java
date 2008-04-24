@@ -22,7 +22,7 @@ public class RepositoryPerson {
 
 	private String name;
 
-	public RepositoryPerson(String connectorKind, String repositoryUrl, String taskId, String personId) {
+	public RepositoryPerson(String connectorKind, String repositoryUrl, String personId) {
 		this.connectorKind = connectorKind;
 		this.repositoryUrl = repositoryUrl;
 		this.personId = personId;

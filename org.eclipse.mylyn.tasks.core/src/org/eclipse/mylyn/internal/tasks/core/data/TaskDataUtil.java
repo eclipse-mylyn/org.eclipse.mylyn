@@ -82,7 +82,7 @@ public class TaskDataUtil {
 			}
 
 			String name = attribute.getMetaData(TaskAttribute.META_LABEL);
-			boolean hidden = !Boolean.parseBoolean(attribute.getMetaData(TaskAttribute.META_SHOW_IN_ATTRIBUTES_SECTION));
+			boolean hidden = !TaskAttribute.META_ATTRIBUTE_KIND.equals(attribute.getMetaData(TaskAttribute.META_ATTRIBUTE_KIND));
 			RepositoryTaskAttribute legacyAttribute = new RepositoryTaskAttribute(attribute.getId(), name, hidden);
 			legacyAttribute.setReadOnly(Boolean.parseBoolean(attribute.getMetaData(TaskAttribute.META_READ_ONLY)));
 			legacyAttribute.setValues(attribute.getValues());
@@ -114,14 +114,14 @@ public class TaskDataUtil {
 			String id = attribute.getMetaData(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID);
 			if (id != null) {
 				TaskAttribute associatedAttribute = attribute.getAttribute(id);
-				if (TaskAttribute.TYPE_SINGLE_SELECT.equals(associatedAttribute.getMetaData(TaskAttribute.META_TYPE))) {
+				if (TaskAttribute.TYPE_SINGLE_SELECT.equals(associatedAttribute.getMetaData(TaskAttribute.META_ATTRIBUTE_TYPE))) {
 					legacyOperation.setUpOptions(associatedAttribute.getId());
 					legacyOperation.setOptionSelection(associatedAttribute.getValue());
 					Map<String, String> options = associatedAttribute.getOptions();
 					for (String key : options.keySet()) {
 						legacyOperation.addOption(options.get(key), key);
 					}
-				} else if (TaskAttribute.TYPE_SHORT_TEXT.equals(associatedAttribute.getMetaData(TaskAttribute.META_TYPE))) {
+				} else if (TaskAttribute.TYPE_SHORT_TEXT.equals(associatedAttribute.getMetaData(TaskAttribute.META_ATTRIBUTE_TYPE))) {
 					legacyOperation.setInputName(associatedAttribute.getId());
 					legacyOperation.setInputValue(associatedAttribute.getValue());
 				}
@@ -173,8 +173,8 @@ public class TaskDataUtil {
 			}
 			attribute.putMetaDataValue(TaskAttribute.META_LABEL, legacyAttribute.getName());
 			attribute.putMetaDataValue(TaskAttribute.META_READ_ONLY, Boolean.toString(legacyAttribute.isReadOnly()));
-			attribute.putMetaDataValue(TaskAttribute.META_SHOW_IN_ATTRIBUTES_SECTION,
-					Boolean.toString(!legacyAttribute.isHidden()));
+			String kind = (legacyAttribute.isHidden()) ? null : TaskAttribute.META_ATTRIBUTE_KIND;
+			attribute.putMetaDataValue(TaskAttribute.META_ATTRIBUTE_KIND, kind);
 		}
 
 		public void addAttributes(TaskAttribute parent, List<RepositoryTaskAttribute> list) {
@@ -204,7 +204,7 @@ public class TaskDataUtil {
 				attribute.putMetaDataValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, legacyOperation.getOptionName());
 				TaskAttribute child = createAttribute(attribute, legacyOperation.getOptionName());
 				child.setValue(legacyOperation.getOptionSelection());
-				child.putMetaDataValue(TaskAttribute.META_TYPE, TaskAttribute.TYPE_SINGLE_SELECT);
+				child.putMetaDataValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_SINGLE_SELECT);
 				List<String> options = legacyOperation.getOptionNames();
 				for (String option : options) {
 					child.putOption(legacyOperation.getOptionValue(option), option);
@@ -212,7 +212,7 @@ public class TaskDataUtil {
 			} else if (legacyOperation.getInputName() != null) {
 				attribute.putMetaDataValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, legacyOperation.getInputName());
 				TaskAttribute child = createAttribute(attribute, legacyOperation.getInputName());
-				child.putMetaDataValue(TaskAttribute.META_TYPE, TaskAttribute.TYPE_SHORT_TEXT);
+				child.putMetaDataValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_SHORT_TEXT);
 				child.setValue(legacyOperation.getInputValue());
 			}
 		}
@@ -220,7 +220,7 @@ public class TaskDataUtil {
 		private TaskAttribute createAttribute(TaskAttribute parent, String id) {
 			TaskAttribute attribute = parent.createAttribute(id);
 			attribute.putMetaDataValue(TaskAttribute.META_READ_ONLY, Boolean.toString(false));
-			attribute.putMetaDataValue(TaskAttribute.META_SHOW_IN_ATTRIBUTES_SECTION, Boolean.toString(false));
+			attribute.removeMetaDataValue(TaskAttribute.META_ATTRIBUTE_KIND);
 			attribute.putMetaDataValue(TaskAttribute.META_ARTIFICIAL, Boolean.toString(true));
 			return attribute;
 		}

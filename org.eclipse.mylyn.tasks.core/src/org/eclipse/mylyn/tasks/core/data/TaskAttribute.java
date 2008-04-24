@@ -99,13 +99,21 @@ public final class TaskAttribute {
 
 	public static final String META_READ_ONLY = "task.meta.readOnly";
 
-	public static final String META_SHOW_IN_ATTRIBUTES_SECTION = "task.meta.showInTaskEditorAttributesSection";
+	//public static final String META_SHOW_IN_ATTRIBUTES_SECTION = "task.meta.showInTaskEditorAttributesSection";
 
 	public static final String META_SHOW_IN_TOOL_TIP = "task.meta.showInToolTip";
 
-	public static final String META_TYPE = "task.meta.type";
+	public static final String META_ATTRIBUTE_TYPE = "task.meta.type";
 
 	public static final String META_ARTIFICIAL = "task.meta.artificial";
+
+	public static final String META_ATTRIBUTE_KIND = "task.meta.attributeKind";
+
+	public static final String META_KIND_DEFAULT = "task.meta.kind.default";
+
+	public static final String META_KIND_PEOPLE = "task.meta.kind.default";
+
+	public static final String META_KIND_OPERATION = "task.meta.kind.operation";
 
 	public static final String NEW_CC = "task.common.newcc";
 
@@ -212,6 +220,8 @@ public final class TaskAttribute {
 
 	public static final String TYPE_RICH_TEXT = "richText";
 
+	public static final String PERSON_NAME = "task.common.person.name";
+
 	private Map<String, TaskAttribute> attributeById;
 
 	private final String attributeId;
@@ -227,13 +237,17 @@ public final class TaskAttribute {
 	 */
 	private final List<String> values;
 
-	TaskAttribute(TaskData taskData, String attributeId) {
+	private final TaskAttribute parentAttribute;
+
+	TaskAttribute(TaskData taskData, TaskAttribute parentAttribute, String attributeId) {
 		this.taskData = taskData;
+		this.parentAttribute = parentAttribute;
 		this.attributeId = attributeId;
 		this.values = new ArrayList<String>(1);
 	}
 
 	public void addValue(String value) {
+		Assert.isNotNull(value);
 		values.add(value);
 	}
 
@@ -250,7 +264,7 @@ public final class TaskAttribute {
 	}
 
 	public TaskAttribute createAttribute(String attributeId) {
-		TaskAttribute attribute = new TaskAttribute(getTaskData(), attributeId);
+		TaskAttribute attribute = new TaskAttribute(getTaskData(), this, attributeId);
 		if (attributeById == null) {
 			attributeById = new LinkedHashMap<String, TaskAttribute>();
 		}
@@ -289,6 +303,10 @@ public final class TaskAttribute {
 		Assert.isNotNull(attributeId);
 		return (attributeById != null) ? attributeById.get(getTaskData().getAttributeMapper().mapToRepositoryKey(this,
 				attributeId)) : null;
+	}
+
+	public TaskAttribute getParentAttribute() {
+		return parentAttribute;
 	}
 
 	public Map<String, TaskAttribute> getAttributes() {
@@ -398,6 +416,7 @@ public final class TaskAttribute {
 	}
 
 	public void setValue(String value) {
+		Assert.isNotNull(value);
 		if (values.size() > 0) {
 			values.clear();
 		}

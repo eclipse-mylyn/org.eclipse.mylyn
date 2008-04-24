@@ -8,6 +8,8 @@
 
 package org.eclipse.mylyn.tasks.core.data;
 
+import java.util.Set;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
@@ -24,9 +26,11 @@ public interface ITaskDataState {
 
 	public abstract TaskData getRepositoryData();
 
+	public abstract void revert();
+
 	public abstract void refresh(IProgressMonitor monitor) throws CoreException;
 
-	public abstract void save(IProgressMonitor monitor) throws CoreException;
+	public abstract void save(IProgressMonitor monitor, Set<TaskAttribute> edits) throws CoreException;
 
 	public abstract String getConnectorKind();
 

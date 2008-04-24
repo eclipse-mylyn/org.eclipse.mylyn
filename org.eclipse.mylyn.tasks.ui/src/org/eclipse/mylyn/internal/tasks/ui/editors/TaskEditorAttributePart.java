@@ -162,7 +162,7 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 					IProgressMonitor monitor) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						getTaskEditorPage().setGlobalBusy(true);
+						getTaskEditorPage().showEditorBusy(true);
 					}
 				});
 				try {
@@ -195,8 +195,8 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 		AbstractAttributeMapper attributeMapper = getTaskData().getAttributeMapper();
 		Map<String, TaskAttribute> attributes = getTaskData().getRoot().getAttributes();
 		for (TaskAttribute attribute : attributes.values()) {
-			TaskAttributeProperties properties = attributeMapper.getProperties(attribute);
-			if (!properties.showInAttributesSection) {
+			TaskAttributeProperties properties = TaskAttributeProperties.createFrom(attribute);
+			if (!TaskAttribute.META_KIND_DEFAULT.equals(properties.getKind())) {
 				continue;
 			}
 

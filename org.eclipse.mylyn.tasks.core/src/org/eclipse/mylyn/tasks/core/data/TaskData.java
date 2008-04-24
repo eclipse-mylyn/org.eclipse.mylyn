@@ -41,7 +41,7 @@ public final class TaskData {
 		this.connectorKind = connectorKind;
 		this.repositoryUrl = repositoryUrl;
 		this.taskId = taskId;
-		this.root = new TaskAttribute(this, "root");
+		this.root = new TaskAttribute(this, null, "root");
 	}
 
 	public TaskAttribute getRoot() {

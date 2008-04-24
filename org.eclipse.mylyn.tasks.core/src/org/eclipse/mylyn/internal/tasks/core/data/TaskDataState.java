@@ -8,11 +8,14 @@
 
 package org.eclipse.mylyn.internal.tasks.core.data;
 
+import java.util.Set;
+
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataState;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 /**
@@ -118,7 +121,14 @@ public class TaskDataState implements ITaskDataState {
 		this.lastReadTaskData = oldTaskData;
 	}
 
-	void createLocalData() {
+	public void save(IProgressMonitor monitor, Set<TaskAttribute> edits) throws CoreException {
+		for (TaskAttribute edit : edits) {
+			editsTaskData.getRoot().deepAddCopy(edit);
+		}
+		taskDataManager.setEdits(task, getConnectorKind(), editsTaskData);
+	}
+
+	public void revert() {
 		localTaskData = new TaskData(repositoryTaskData.getAttributeMapper(), repositoryTaskData.getConnectorKind(),
 				repositoryTaskData.getRepositoryUrl(), repositoryTaskData.getTaskId());
 		localTaskData.getRoot().deepCopyFrom(repositoryTaskData.getRoot());
@@ -132,11 +142,11 @@ public class TaskDataState implements ITaskDataState {
 	}
 
 	public void refresh(IProgressMonitor monitor) throws CoreException {
-
-	}
-
-	public void save(IProgressMonitor monitor) throws CoreException {
-		taskDataManager.writeState(task, getConnectorKind(), this);
+		ITaskDataState state = taskDataManager.createWorkingCopy(task, connectorKind);
+		setRepositoryData(state.getRepositoryData());
+		setEditsData(state.getRepositoryData());
+		setLastReadData(state.getLastReadData());
+		revert();
 	}
 
 	void init(TaskDataManager2 taskDataManager, AbstractTask task) {
