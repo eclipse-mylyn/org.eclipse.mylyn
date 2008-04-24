@@ -18,7 +18,11 @@ public interface ITaskDataManager2 {
 
 	public abstract ITaskDataState createWorkingCopy(AbstractTask task, String kind) throws CoreException;
 
-	public abstract void setTaskData(AbstractTask task, String kind, TaskData taskData) throws CoreException;
+	public abstract void discardEdits(AbstractTask task, String kind) throws CoreException;
+
+	public abstract TaskData getTaskData(AbstractTask task, String kind) throws CoreException;
+
+	public abstract void putTaskData(AbstractTask task, String kind, TaskData taskData) throws CoreException;
 
 	public abstract boolean hasTaskData(AbstractTask task, String connectorKind);
 

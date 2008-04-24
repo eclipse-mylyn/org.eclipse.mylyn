@@ -201,7 +201,7 @@ public class TaskDataManager2 implements ITaskDataManager2 {
 		this.dataPath = dataPath;
 	}
 
-	public void setEdits(AbstractTask task, String kind, TaskData data) throws CoreException {
+	public void putEdits(AbstractTask task, String kind, TaskData data) throws CoreException {
 		Assert.isNotNull(task);
 		Assert.isNotNull(kind);
 		Assert.isNotNull(data);
@@ -214,7 +214,7 @@ public class TaskDataManager2 implements ITaskDataManager2 {
 		writeState(task, kind, state);
 	}
 
-	public void setTaskData(AbstractTask task, String kind, TaskData data) throws CoreException {
+	public void putTaskData(AbstractTask task, String kind, TaskData data) throws CoreException {
 		Assert.isNotNull(task);
 		Assert.isNotNull(kind);
 		Assert.isNotNull(data);
@@ -268,6 +268,22 @@ public class TaskDataManager2 implements ITaskDataManager2 {
 		} catch (SAXException e) {
 			throw new IOException("Error writing task data" + e.getMessage());
 		}
+	}
+
+	public void discardEdits(AbstractTask task, String kind) throws CoreException {
+		TaskDataState state = readState(task, kind);
+		if (state != null) {
+			state.setEditsData(null);
+		}
+		writeState(task, kind, state);
+	}
+
+	public TaskData getTaskData(AbstractTask task, String kind) throws CoreException {
+		TaskDataState state = readState(task, kind);
+		if (state == null) {
+			return null;
+		}
+		return state.getRepositoryData();
 	}
 
 }

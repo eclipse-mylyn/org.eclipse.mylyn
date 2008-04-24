@@ -170,6 +170,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			titleComposite.setBackground(null);
 
 			ImageHyperlink formHyperlink = createTitleHyperLink(toolkit, titleComposite, taskComment);
+			formHyperlink.setFont(expandableComposite.getFont());
 			formHyperlink.addHyperlinkListener(new ExpandCompositeListener(expandableComposite));
 
 			// only visible when section is expanded
@@ -217,7 +218,6 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			final TaskComment taskComment) {
 		ImageHyperlink formHyperlink = toolkit.createImageHyperlink(toolbarComp, SWT.NONE);
 		formHyperlink.setBackground(null);
-		//formHyperlink.setFont(expandableComposite.getFont());
 		formHyperlink.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		RepositoryPerson author = taskComment.getAuthor();
 		if (author != null

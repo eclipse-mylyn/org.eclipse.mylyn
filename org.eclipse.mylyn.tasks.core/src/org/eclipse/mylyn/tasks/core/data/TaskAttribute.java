@@ -109,11 +109,11 @@ public final class TaskAttribute {
 
 	public static final String META_ATTRIBUTE_KIND = "task.meta.attributeKind";
 
-	public static final String META_KIND_DEFAULT = "task.meta.kind.default";
+	public static final String KIND_DEFAULT = "task.common.kind.default";
 
-	public static final String META_KIND_PEOPLE = "task.meta.kind.default";
+	public static final String KIND_PEOPLE = "task.common.kind.default";
 
-	public static final String META_KIND_OPERATION = "task.meta.kind.operation";
+	public static final String KIND_OPERATION = "task.common.kind.operation";
 
 	public static final String NEW_CC = "task.common.newcc";
 
@@ -199,6 +199,8 @@ public final class TaskAttribute {
 	 * @since 3.0
 	 */
 	public static final String TYPE_TASK_DEPENDENCY = "taskDepenedency";
+
+	public static final String TYPE_URL = "url";
 
 	public static final String USER_ASSIGNED = "task.common.user.assigned";
 
@@ -447,8 +449,10 @@ public final class TaskAttribute {
 	}
 
 	public void deepCopyFrom(TaskAttribute source) {
-		for (TaskAttribute child : source.attributeById.values()) {
-			deepAddCopy(child);
+		if (source.attributeById != null) {
+			for (TaskAttribute child : source.attributeById.values()) {
+				deepAddCopy(child);
+			}
 		}
 	}
 

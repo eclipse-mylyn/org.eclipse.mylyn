@@ -140,22 +140,27 @@ public class TaskComment {
 		TaskData taskData = taskAttribute.getTaskData();
 		AbstractAttributeMapper mapper = taskData.getAttributeMapper();
 
+		TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_COMMENT).applyTo(taskAttribute);
 		taskAttribute.putMetaDataValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, TaskAttribute.COMMENT_TEXT);
 
 		if (getAuthor() != null) {
 			TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.COMMENT_AUTHOR);
+			TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_PERSON).applyTo(child);
 			mapper.setRepositoryPerson(child, getAuthor());
 		}
 		if (getCreationDate() != null) {
 			TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.COMMENT_DATE);
+			TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_DATE).applyTo(child);
 			mapper.setDateValue(child, getCreationDate());
 		}
 		if (getUrl() != null) {
 			TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.COMMENT_URL);
+			TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_URL).applyTo(child);
 			mapper.setValue(child, getUrl());
 		}
 		if (getText() != null) {
 			TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.COMMENT_TEXT);
+			TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_LONG_TEXT).applyTo(child);
 			mapper.setValue(child, getText());
 		}
 	}

@@ -41,7 +41,7 @@ public class SingleSelectionAttributeEditor extends AbstractAttributeEditor {
 			text.setFont(TEXT_FONT);
 			toolkit.adapt(text, true, true);
 			text.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
-			text.setText(getValue());
+			text.setText(getValueLabel());
 			setControl(text);
 		} else {
 			combo = new CCombo(parent, SWT.FLAT | SWT.READ_ONLY);

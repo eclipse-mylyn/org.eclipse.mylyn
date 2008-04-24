@@ -195,8 +195,8 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 		AbstractAttributeMapper attributeMapper = getTaskData().getAttributeMapper();
 		Map<String, TaskAttribute> attributes = getTaskData().getRoot().getAttributes();
 		for (TaskAttribute attribute : attributes.values()) {
-			TaskAttributeProperties properties = TaskAttributeProperties.createFrom(attribute);
-			if (!TaskAttribute.META_KIND_DEFAULT.equals(properties.getKind())) {
+			TaskAttributeProperties properties = TaskAttributeProperties.from(attribute);
+			if (!TaskAttribute.KIND_DEFAULT.equals(properties.getKind())) {
 				continue;
 			}
 

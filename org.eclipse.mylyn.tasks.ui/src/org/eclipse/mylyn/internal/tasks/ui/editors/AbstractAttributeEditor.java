@@ -55,7 +55,7 @@ public abstract class AbstractAttributeEditor {
 		this.manager = manager;
 		this.taskAttribute = taskAttribute;
 		setDecorationEnabled(true);
-		setReadOnly(TaskAttributeProperties.createFrom(taskAttribute).isReadOnly());
+		setReadOnly(TaskAttributeProperties.from(taskAttribute).isReadOnly());
 	}
 
 	protected void attributeChanged() {
@@ -85,7 +85,8 @@ public abstract class AbstractAttributeEditor {
 	}
 
 	public String getLabel() {
-		return getAttributeMapper().getLabel(getTaskAttribute());
+		String label = getAttributeMapper().getLabel(getTaskAttribute());
+		return (label != null) ? label.replace("&", "&&") : null; // mask & from SWT
 	}
 
 	public Label getLabelControl() {

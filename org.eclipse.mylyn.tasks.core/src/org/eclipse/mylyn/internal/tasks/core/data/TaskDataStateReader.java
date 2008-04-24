@@ -97,7 +97,7 @@ public class TaskDataStateReader extends DefaultHandler {
 			boolean hidden = Boolean.parseBoolean(getValue(attributes, ITaskDataConstants.ATTRIBUTE_HIDDEN));
 			boolean readOnly = Boolean.parseBoolean(getValue(attributes, ITaskDataConstants.ATTRIBUTE_READONLY));
 			attribute = parentAttribute.createAttribute(id);
-			String kind = (hidden) ? null : TaskAttribute.META_KIND_DEFAULT;
+			String kind = (hidden) ? null : TaskAttribute.KIND_DEFAULT;
 			TaskAttributeProperties.defaults().setLabel(label).setReadOnly(readOnly).setKind(kind).applyTo(attribute);
 
 			addElementHandler(new OptionHandler10(this, attribute));

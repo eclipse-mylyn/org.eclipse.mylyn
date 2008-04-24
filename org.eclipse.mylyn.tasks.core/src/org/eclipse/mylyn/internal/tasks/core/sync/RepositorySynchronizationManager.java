@@ -213,6 +213,13 @@ public final class RepositorySynchronizationManager implements IRepositorySynchr
 	}
 
 	public void discardOutgoing(AbstractTask repositoryTask) {
+		try {
+			// FIXME discard for all connector kinds?
+			taskDataManager2.discardEdits(repositoryTask, repositoryTask.getConnectorKind());
+		} catch (CoreException e) {
+			// FIXME handle
+			e.printStackTrace();
+		}
 		taskDataManager.discardEdits(repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId());
 		repositoryTask.setSynchronizationState(RepositoryTaskSyncState.SYNCHRONIZED);
 		taskList.notifyTaskChanged(repositoryTask, true);
@@ -227,7 +234,7 @@ public final class RepositorySynchronizationManager implements IRepositorySynchr
 			connector.updateTaskFromTaskData(repository, task, taskData);
 
 			if (!taskData.isPartial()) {
-				taskDataManager2.setTaskData(task, task.getConnectorKind(), taskData);
+				taskDataManager2.putTaskData(task, task.getConnectorKind(), taskData);
 			}
 		}
 

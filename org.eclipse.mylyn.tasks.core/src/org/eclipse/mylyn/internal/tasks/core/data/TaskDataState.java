@@ -125,7 +125,7 @@ public class TaskDataState implements ITaskDataState {
 		for (TaskAttribute edit : edits) {
 			editsTaskData.getRoot().deepAddCopy(edit);
 		}
-		taskDataManager.setEdits(task, getConnectorKind(), editsTaskData);
+		taskDataManager.putEdits(task, getConnectorKind(), editsTaskData);
 	}
 
 	public void revert() {
@@ -144,7 +144,7 @@ public class TaskDataState implements ITaskDataState {
 	public void refresh(IProgressMonitor monitor) throws CoreException {
 		ITaskDataState state = taskDataManager.createWorkingCopy(task, connectorKind);
 		setRepositoryData(state.getRepositoryData());
-		setEditsData(state.getRepositoryData());
+		setEditsData(state.getEditsData());
 		setLastReadData(state.getLastReadData());
 		revert();
 	}

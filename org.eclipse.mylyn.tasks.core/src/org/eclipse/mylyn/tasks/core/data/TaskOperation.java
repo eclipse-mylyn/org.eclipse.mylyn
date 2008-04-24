@@ -73,7 +73,10 @@ public class TaskOperation {
 		TaskData taskData = taskAttribute.getTaskData();
 		AbstractAttributeMapper mapper = taskData.getAttributeMapper();
 
+		TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_OPERATION).applyTo(taskAttribute);
+
 		TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.OPERATION_NAME);
+		TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_SHORT_TEXT).applyTo(child);
 		mapper.setValue(child, getLabel());
 	}
 

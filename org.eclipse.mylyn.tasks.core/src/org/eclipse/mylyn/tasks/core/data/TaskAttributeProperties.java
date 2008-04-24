@@ -15,7 +15,7 @@ public class TaskAttributeProperties {
 
 	//public boolean showInAttributesSection;
 
-	public static TaskAttributeProperties createFrom(TaskAttribute taskAttribute) {
+	public static TaskAttributeProperties from(TaskAttribute taskAttribute) {
 		TaskAttributeProperties properties = new TaskAttributeProperties();
 		properties.setKind(taskAttribute.getMetaData(TaskAttribute.META_ATTRIBUTE_KIND));
 		properties.setLabel(taskAttribute.getMetaData(TaskAttribute.META_LABEL));
@@ -57,6 +57,11 @@ public class TaskAttributeProperties {
 			attribute.putMetaDataValue(TaskAttribute.META_ATTRIBUTE_TYPE, getType());
 		} else {
 			attribute.removeMetaDataValue(TaskAttribute.META_ATTRIBUTE_TYPE);
+		}
+		if (getLabel() != null) {
+			attribute.putMetaDataValue(TaskAttribute.META_LABEL, getLabel());
+		} else {
+			attribute.removeMetaDataValue(TaskAttribute.META_LABEL);
 		}
 	}
 

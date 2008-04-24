@@ -123,25 +123,38 @@ public abstract class AbstractAttributeMapper {
 	}
 
 	public String getLabel(TaskAttribute taskAttribute) {
-		return taskAttribute.getMetaData(TaskAttribute.META_LABEL);
+		return TaskAttributeProperties.from(taskAttribute).getLabel();
 	}
 
 	public String getValueLabel(TaskAttribute taskAttribute) {
 		StringBuilder sb = new StringBuilder();
 		String sep = "";
-		for (String key : taskAttribute.getValues()) {
-			sb.append(sep).append(key);
+		for (String value : taskAttribute.getValues()) {
+			String option = taskAttribute.getOption(value);
+			if (option != null) {
+				value = option;
+			}
+			sb.append(sep).append(value);
 			sep = ", ";
 		}
 		return sb.toString();
 	}
 
 	public String[] getValueLabels(TaskAttribute taskAttribute) {
-		return taskAttribute.getValues().toArray(new String[0]);
+		List<String> values = taskAttribute.getValues();
+		List<String> result = new ArrayList<String>(values.size());
+		for (String value : values) {
+			String option = taskAttribute.getOption(value);
+			if (option != null) {
+				value = option;
+			}
+			result.add(value);
+		}
+		return result.toArray(new String[0]);
 	}
 
 	public String getType(TaskAttribute taskAttribute) {
-		return taskAttribute.getMetaData(TaskAttribute.META_ATTRIBUTE_TYPE);
+		return TaskAttributeProperties.from(taskAttribute).getType();
 	}
 
 	public TaskAttachment getTaskAttachment(TaskAttribute taskAttribute) {

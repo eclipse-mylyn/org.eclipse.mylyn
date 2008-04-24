@@ -111,9 +111,8 @@ public class TaskDataUtil {
 			String operationName = getValue(attribute.getAttribute(TaskAttribute.OPERATION_NAME));
 			RepositoryOperation legacyOperation = new RepositoryOperation(knobName, operationName);
 
-			String id = attribute.getMetaData(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID);
-			if (id != null) {
-				TaskAttribute associatedAttribute = attribute.getAttribute(id);
+			TaskAttribute associatedAttribute = mapper.getAssoctiatedAttribute(attribute);
+			if (associatedAttribute != null) {
 				if (TaskAttribute.TYPE_SINGLE_SELECT.equals(associatedAttribute.getMetaData(TaskAttribute.META_ATTRIBUTE_TYPE))) {
 					legacyOperation.setUpOptions(associatedAttribute.getId());
 					legacyOperation.setOptionSelection(associatedAttribute.getValue());
@@ -126,6 +125,7 @@ public class TaskDataUtil {
 					legacyOperation.setInputValue(associatedAttribute.getValue());
 				}
 			}
+
 			return legacyOperation;
 		}
 
