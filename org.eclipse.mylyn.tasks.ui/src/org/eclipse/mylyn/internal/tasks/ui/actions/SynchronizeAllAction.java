@@ -25,7 +25,7 @@ public class SynchronizeAllAction implements IViewActionDelegate {
 	}
 
 	public void run(IAction action) {
-		TasksUi.synchronizeAlllRepositories(true);
+		TasksUi.synchronizeAllRepositories(true);
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {

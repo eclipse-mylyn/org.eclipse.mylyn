@@ -70,7 +70,7 @@ public class TaskListNotificationPopup extends AbstractNotificationPopup {
 						notificationLabelIcon.addMouseListener(new MouseAdapter() {
 							@Override
 							public void mouseUp(MouseEvent e) {
-								TasksUiPlugin.getSynchronizationManager().setTaskRead(task, true);
+								TasksUiPlugin.getTaskDataManager().setTaskRead(task, true);
 								notificationLabelIcon.setImage(null);
 								notificationLabelIcon.setToolTipText(null);
 							}

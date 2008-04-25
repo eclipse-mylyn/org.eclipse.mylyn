@@ -10,8 +10,8 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.mylyn.tasks.core.data.AbstractAttributeMapper;
-import org.eclipse.mylyn.tasks.core.data.AttributeManager;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeProperties;
 import org.eclipse.swt.graphics.Color;
@@ -42,13 +42,13 @@ public abstract class AbstractAttributeEditor {
 
 	private LayoutHint layoutHint;
 
-	private final AttributeManager manager;
+	private final TaskDataModel manager;
 
 	private final TaskAttribute taskAttribute;
 
 	private boolean readOnly;
 
-	public AbstractAttributeEditor(AttributeManager manager, TaskAttribute taskAttribute) {
+	public AbstractAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		Assert.isNotNull(manager);
 		Assert.isNotNull(taskAttribute);
 
@@ -72,11 +72,11 @@ public abstract class AbstractAttributeEditor {
 	public void dispose() {
 	}
 
-	public AttributeManager getAttributeEditorManager() {
+	public TaskDataModel getAttributeEditorManager() {
 		return manager;
 	}
 
-	protected AbstractAttributeMapper getAttributeMapper() {
+	protected TaskAttributeMapper getAttributeMapper() {
 		return getTaskAttribute().getTaskData().getAttributeMapper();
 	}
 

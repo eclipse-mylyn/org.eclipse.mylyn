@@ -28,9 +28,9 @@ import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
-import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataCollector;
+import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
+import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-import org.eclipse.mylyn.tasks.core.sync.IRepositorySynchronizationManager;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
 import org.eclipse.mylyn.web.core.Policy;
 
@@ -43,7 +43,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 
 	private final AbstractRepositoryConnector connector;
 
-	private final IRepositorySynchronizationManager synchronizationManager;
+	private final ITaskDataManager synchronizationManager;
 
 	private final AbstractTaskDataHandler taskDataHandler;
 
@@ -53,7 +53,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 
 	private final Set<AbstractTask> tasks;
 
-	public SynchronizeTasksJob(ITaskList taskList, IRepositorySynchronizationManager synchronizationManager,
+	public SynchronizeTasksJob(ITaskList taskList, ITaskDataManager synchronizationManager,
 			AbstractRepositoryConnector connector, TaskRepository taskRepository, Set<AbstractTask> tasks) {
 		super("Synchronizing Tasks (" + tasks.size() + " tasks)");
 		this.taskList = taskList;
@@ -132,7 +132,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 			idToTask.put(task.getTaskId(), task);
 		}
 
-		AbstractTaskDataCollector collector = new AbstractTaskDataCollector() {
+		TaskDataCollector collector = new TaskDataCollector() {
 			@Override
 			public void accept(RepositoryTaskData taskData) {
 				AbstractTask task = idToTask.remove(taskData.getTaskId());

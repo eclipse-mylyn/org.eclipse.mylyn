@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
@@ -30,7 +29,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
  * 
  * @author Rob Elves
  */
-public class TaskDataManager implements ITaskDataManager {
+public class TaskDataStorageManager {
 
 	private final ITaskRepositoryManager taskRepositoryManager;
 
@@ -38,7 +37,7 @@ public class TaskDataManager implements ITaskDataManager {
 
 	private int nextNewId = 1;
 
-	public TaskDataManager(ITaskRepositoryManager taskRepositoryManager, ITaskDataStorage storage) {
+	public TaskDataStorageManager(ITaskRepositoryManager taskRepositoryManager, ITaskDataStorage storage) {
 		this.taskRepositoryManager = taskRepositoryManager;
 		this.storage = storage;
 	}

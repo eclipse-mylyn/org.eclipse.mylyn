@@ -101,7 +101,7 @@ public class TracAttachmentHandlerTest extends TestCase {
 		TracTask task = (TracTask) TasksUiUtil.createTask(repository, data.attachmentTicketId + "",
 				new NullProgressMonitor());
 		TasksUi.synchronizeTask(connector, task, true, null);
-		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(),
+		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task.getRepositoryUrl(),
 				task.getTaskId());
 
 		assertTrue(taskData.getAttachments().size() > 0);
@@ -134,7 +134,7 @@ public class TracAttachmentHandlerTest extends TestCase {
 		TracTask task = (TracTask) TasksUiUtil.createTask(repository, data.attachmentTicketId + "",
 				new NullProgressMonitor());
 		TasksUi.synchronizeTask(connector, task, true, null);
-		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(),
+		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task.getRepositoryUrl(),
 				task.getTaskId());
 
 		assertTrue(taskData.getAttachments().size() > 0);

@@ -26,7 +26,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.sync.IRepositorySynchronizationManager;
+import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewActionDelegate;
@@ -78,7 +78,7 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 				}
 			}
 
-			IRepositorySynchronizationManager syncManager = TasksUiPlugin.getSynchronizationManager();
+			ITaskDataManager syncManager = TasksUiPlugin.getTaskDataManager();
 			if (!queriesToSyncMap.isEmpty()) {
 
 				// determine which repositories to synch changed tasks for

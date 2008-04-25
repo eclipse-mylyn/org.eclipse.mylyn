@@ -25,7 +25,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataCollector;
+import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 
 /**
  * @author Mik Kersten
@@ -59,7 +59,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 	}
 
 	@Override
-	public void getMultiTaskData(TaskRepository repository, Set<String> taskIds, AbstractTaskDataCollector collector,
+	public void getMultiTaskData(TaskRepository repository, Set<String> taskIds, TaskDataCollector collector,
 			IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor.beginTask("Receiving tasks", taskIds.size());

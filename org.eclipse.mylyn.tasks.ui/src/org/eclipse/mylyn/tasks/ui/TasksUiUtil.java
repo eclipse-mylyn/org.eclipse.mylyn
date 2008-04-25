@@ -42,7 +42,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskDelegate;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
-import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
+import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiMessages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
@@ -171,7 +171,7 @@ public class TasksUiUtil {
 			monitor = new NullProgressMonitor();
 		}
 		try {
-			TaskDataManager taskDataManager = TasksUiPlugin.getTaskDataManager();
+			TaskDataStorageManager taskDataManager = TasksUiPlugin.getTaskDataStorageManager();
 			if (taskData != null) {
 				// Use connector task factory
 				task = connector.createTask(repository.getRepositoryUrl(), taskData.getTaskId(), taskData.getTaskId()
@@ -343,7 +343,7 @@ public class TasksUiUtil {
 								if (task != null) {
 									AbstractTask repositoryTask = task;
 									if (!wasOpen) {
-										TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
+										TasksUiPlugin.getTaskDataManager().setTaskRead(repositoryTask, true);
 									}
 									// Synchronization must happen after marked
 									// read.
@@ -374,7 +374,7 @@ public class TasksUiUtil {
 					openEditor(editorInput, taskEditorId, page);
 				}
 				if (task != null) {
-					TasksUiPlugin.getSynchronizationManager().setTaskRead(task, true);
+					TasksUiPlugin.getTaskDataManager().setTaskRead(task, true);
 				}
 			} else {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unable to open editor for \""
@@ -527,7 +527,7 @@ public class TasksUiUtil {
 					IWorkbenchPage page = window.getActivePage();
 					IEditorPart editor = openEditor(editorInput, getTaskEditorId(task), page);
 					if (editor != null) {
-						TasksUiPlugin.getSynchronizationManager().setTaskRead(task, true);
+						TasksUiPlugin.getTaskDataManager().setTaskRead(task, true);
 						return true;
 					}
 				}
@@ -772,7 +772,7 @@ public class TasksUiUtil {
 				}
 
 				if (connector != null) {
-					RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(
+					RepositoryTaskData taskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(
 							task.getRepositoryUrl(), task.getTaskId());
 					if (taskData != null || connector.getTaskDataHandler() == null) {
 						TasksUiUtil.openTaskAndRefresh(task);

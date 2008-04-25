@@ -28,11 +28,11 @@ public final class TaskData {
 
 	private final String taskId;
 
-	private final AbstractAttributeMapper mapper;
+	private final TaskAttributeMapper mapper;
 
 	private final TaskAttribute root;
 
-	public TaskData(AbstractAttributeMapper mapper, String connectorKind, String repositoryUrl, String taskId) {
+	public TaskData(TaskAttributeMapper mapper, String connectorKind, String repositoryUrl, String taskId) {
 		Assert.isNotNull(mapper);
 		Assert.isNotNull(connectorKind);
 		Assert.isNotNull(repositoryUrl);
@@ -87,7 +87,7 @@ public final class TaskData {
 		this.partial = complete;
 	}
 
-	public AbstractAttributeMapper getAttributeMapper() {
+	public TaskAttributeMapper getAttributeMapper() {
 		return mapper;
 	}
 

@@ -8,7 +8,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
-import org.eclipse.mylyn.tasks.core.data.AttributeManager;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -22,7 +22,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  */
 public class BooleanAttributeEditor extends AbstractAttributeEditor {
 
-	public BooleanAttributeEditor(AttributeManager manager, TaskAttribute taskAttribute) {
+	public BooleanAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
 		// ignore
 	}

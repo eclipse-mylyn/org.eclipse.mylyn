@@ -92,7 +92,7 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 		}
 
 		String repositoryUrl = selectedTask.getRepositoryUrl();
-		final RepositoryTaskData selectedTaskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(repositoryUrl,
+		final RepositoryTaskData selectedTaskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(repositoryUrl,
 				selectedTask.getTaskId());
 		if (selectedTaskData == null) {
 			StatusHandler.displayStatus("Unable to create subtask", new Status(IStatus.WARNING,

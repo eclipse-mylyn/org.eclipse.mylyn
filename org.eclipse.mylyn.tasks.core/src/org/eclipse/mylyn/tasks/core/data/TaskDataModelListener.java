@@ -6,29 +6,13 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.core.sync;
-
-import java.util.Set;
-
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
+package org.eclipse.mylyn.tasks.core.data;
 
 /**
  * @author Steffen Pingel
- * @since 3.0
  */
-public class SynchronizationEvent {
+public abstract class TaskDataModelListener {
 
-	public boolean fullSynchronization;
-
-	public boolean performQueries;
-
-	public Set<AbstractTask> tasks;
-
-	public Set<AbstractTask> changedTasks;
-
-	public TaskRepository taskRepository;
-
-	public Object data;
+	public abstract void attributeChanged(TaskAttribute attribute);
 
 }

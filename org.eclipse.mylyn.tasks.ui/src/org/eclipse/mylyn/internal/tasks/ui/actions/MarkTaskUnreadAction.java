@@ -48,7 +48,7 @@ public class MarkTaskUnreadAction extends AbstractTaskAction {
 
 	@Override
 	protected void performActionOnTask(AbstractTask repositoryTask) {
-		TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, false);
+		TasksUiPlugin.getTaskDataManager().setTaskRead(repositoryTask, false);
 	}
 
 }

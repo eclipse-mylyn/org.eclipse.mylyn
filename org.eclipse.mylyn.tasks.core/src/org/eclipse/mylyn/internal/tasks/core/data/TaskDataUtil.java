@@ -18,7 +18,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryOperation;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskComment;
-import org.eclipse.mylyn.tasks.core.data.AbstractAttributeMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
@@ -29,7 +29,7 @@ public class TaskDataUtil {
 
 	private static class TaskDataAccessor {
 
-		private final AbstractAttributeMapper mapper;
+		private final TaskAttributeMapper mapper;
 
 		private final TaskData taskData;
 
@@ -262,7 +262,7 @@ public class TaskDataUtil {
 		return legacyData;
 	}
 
-	public static TaskData toTaskData(RepositoryTaskData legacyData, AbstractAttributeMapper mapper) {
+	public static TaskData toTaskData(RepositoryTaskData legacyData, TaskAttributeMapper mapper) {
 		TaskData taskData = new TaskData(mapper, legacyData.getConnectorKind(), legacyData.getRepositoryUrl(),
 				legacyData.getTaskId());
 		taskData.setNew(legacyData.isNew());

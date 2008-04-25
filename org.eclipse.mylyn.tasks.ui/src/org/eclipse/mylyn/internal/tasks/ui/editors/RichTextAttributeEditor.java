@@ -20,7 +20,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.editors.LayoutHint.ColumnSpan;
 import org.eclipse.mylyn.internal.tasks.ui.editors.LayoutHint.RowSpan;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.data.AttributeManager;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -60,11 +60,11 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 
 	private final TaskRepository taskRepository;
 
-	public RichTextAttributeEditor(AttributeManager manager, TaskRepository taskRepository, TaskAttribute taskAttribute) {
+	public RichTextAttributeEditor(TaskDataModel manager, TaskRepository taskRepository, TaskAttribute taskAttribute) {
 		this(manager, taskAttribute, taskRepository, SWT.MULTI);
 	}
 
-	public RichTextAttributeEditor(AttributeManager manager, TaskAttribute taskAttribute,
+	public RichTextAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute,
 			TaskRepository taskRepository, int style) {
 		super(manager, taskAttribute);
 		this.taskRepository = taskRepository;

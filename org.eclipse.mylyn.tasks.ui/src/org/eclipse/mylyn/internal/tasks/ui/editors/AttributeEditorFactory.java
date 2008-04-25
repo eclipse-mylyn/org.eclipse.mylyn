@@ -10,7 +10,7 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.data.AttributeManager;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
 /**
@@ -19,11 +19,11 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
  */
 public class AttributeEditorFactory {
 
-	private final AttributeManager manager;
+	private final TaskDataModel manager;
 
 	private final TaskRepository taskRepository;
 
-	public AttributeEditorFactory(AttributeManager manager, TaskRepository taskRepository) {
+	public AttributeEditorFactory(TaskDataModel manager, TaskRepository taskRepository) {
 		this.manager = manager;
 		this.taskRepository = taskRepository;
 	}

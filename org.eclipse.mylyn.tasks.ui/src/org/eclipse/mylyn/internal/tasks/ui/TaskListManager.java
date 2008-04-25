@@ -41,7 +41,7 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
-import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
+import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskListSaveManager;
@@ -232,7 +232,7 @@ public class TaskListManager implements ITaskListManager {
 	}
 
 	private void refactorOfflineHandles(String oldRepositoryUrl, String newRepositoryUrl) {
-		TaskDataManager taskDataManager = TasksUiPlugin.getTaskDataManager();
+		TaskDataStorageManager taskDataManager = TasksUiPlugin.getTaskDataStorageManager();
 		for (AbstractTask task : taskList.getAllTasks()) {
 			if (task != null) {
 				AbstractTask repositoryTask = task;
@@ -259,7 +259,7 @@ public class TaskListManager implements ITaskListManager {
 				}
 			}
 		}
-		TasksUiPlugin.getTaskDataManager().saveNow();
+		TasksUiPlugin.getTaskDataStorageManager().saveNow();
 	}
 
 	public boolean readExistingOrCreateNewList() {
@@ -273,7 +273,7 @@ public class TaskListManager implements ITaskListManager {
 					if (taskListFile.exists()) {
 						prepareOrphanContainers();
 						taskList.readStart();
-						taskListWriter.readTaskList(taskList, taskListFile, TasksUiPlugin.getTaskDataManager());
+						taskListWriter.readTaskList(taskList, taskListFile, TasksUiPlugin.getTaskDataStorageManager());
 						taskList.readComplete();
 					} else {
 						resetTaskList();

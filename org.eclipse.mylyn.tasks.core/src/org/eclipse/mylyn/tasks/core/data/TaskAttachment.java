@@ -149,7 +149,7 @@ public class TaskAttachment {
 
 	public static TaskAttachment createFrom(TaskAttribute taskAttribute) {
 		TaskData taskData = taskAttribute.getTaskData();
-		AbstractAttributeMapper mapper = taskAttribute.getTaskData().getAttributeMapper();
+		TaskAttributeMapper mapper = taskAttribute.getTaskData().getAttributeMapper();
 		TaskAttachment attachment = new TaskAttachment(taskData.getRepositoryUrl(), taskData.getConnectorKind(),
 				taskData.getTaskId(), taskAttribute.getId());
 		TaskAttribute child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_AUTHOR);
@@ -196,7 +196,7 @@ public class TaskAttachment {
 
 	public void applyTo(TaskAttribute taskAttribute) {
 		TaskData taskData = taskAttribute.getTaskData();
-		AbstractAttributeMapper mapper = taskData.getAttributeMapper();
+		TaskAttributeMapper mapper = taskData.getAttributeMapper();
 
 		TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_ATTACHMENT).applyTo(taskAttribute);
 

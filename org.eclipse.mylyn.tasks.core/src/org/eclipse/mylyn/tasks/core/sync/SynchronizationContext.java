@@ -8,25 +8,27 @@
 
 package org.eclipse.mylyn.tasks.core.sync;
 
-import org.eclipse.core.runtime.CoreException;
+import java.util.Set;
+
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
-import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
  * @author Steffen Pingel
  * @since 3.0
  */
-public interface IRepositorySynchronizationManager {
+public class SynchronizationContext {
 
-	/**
-	 * Saves incoming data and updates task sync state appropriately
-	 * 
-	 * @return true if call results in change of sync state
-	 */
-	public abstract boolean saveIncoming(final AbstractTask repositoryTask, final RepositoryTaskData newTaskData,
-			boolean forceSync);
+	public boolean fullSynchronization;
 
-	public abstract void putTaskData(AbstractTask task, TaskData taskData, boolean user) throws CoreException;
+	public boolean performQueries;
+
+	public Set<AbstractTask> tasks;
+
+	public Set<AbstractTask> changedTasks;
+
+	public TaskRepository taskRepository;
+
+	public Object data;
 
 }

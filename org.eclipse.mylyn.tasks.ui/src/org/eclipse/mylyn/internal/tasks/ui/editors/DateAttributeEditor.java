@@ -13,7 +13,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.tasks.core.data.AttributeManager;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.DatePicker;
 import org.eclipse.swt.SWT;
@@ -35,7 +35,7 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 
 	private DatePicker deadlinePicker;
 
-	public DateAttributeEditor(AttributeManager manager, TaskAttribute taskAttribute) {
+	public DateAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
 	}
 

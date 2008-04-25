@@ -56,7 +56,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryOperation;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
-import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataCollector;
+import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.web.core.AbstractWebLocation;
 import org.eclipse.mylyn.web.core.AuthenticationCredentials;
 import org.eclipse.mylyn.web.core.AuthenticationType;
@@ -446,7 +446,7 @@ public class BugzillaClient {
 		Set<String> data = new HashSet<String>();
 		data.add(idString);
 		
-		AbstractTaskDataCollector collector = new AbstractTaskDataCollector() {
+		TaskDataCollector collector = new TaskDataCollector() {
 			@Override
 			public void accept(RepositoryTaskData taskData) {
 				getRepositoryConfiguration().configureTaskData(taskData);
@@ -459,7 +459,7 @@ public class BugzillaClient {
 
 	}
 
-	public boolean getSearchHits(AbstractRepositoryQuery query, AbstractTaskDataCollector collector,
+	public boolean getSearchHits(AbstractRepositoryQuery query, TaskDataCollector collector,
 			IProgressMonitor monitor) throws IOException, CoreException {
 		GzipPostMethod postMethod = null;
 
@@ -501,7 +501,7 @@ public class BugzillaClient {
 						RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory(
 								postMethod.getResponseBodyAsStream(), characterEncoding);
 						int count = queryFactory.performQuery(repositoryUrl.toString(), collector,
-								AbstractTaskDataCollector.MAX_HITS);
+								TaskDataCollector.MAX_HITS);
 						return count > 0;
 					}
 				}
@@ -1176,7 +1176,7 @@ public class BugzillaClient {
 		return null;
 	}
 
-	public Map<String, RepositoryTaskData> getTaskData(Set<String> taskIds, final AbstractTaskDataCollector collector, final IProgressMonitor monitor)
+	public Map<String, RepositoryTaskData> getTaskData(Set<String> taskIds, final TaskDataCollector collector, final IProgressMonitor monitor)
 			throws IOException, CoreException {
 		GzipPostMethod method = null;
 		HashMap<String, RepositoryTaskData> taskDataMap = new HashMap<String, RepositoryTaskData>();
@@ -1223,7 +1223,7 @@ public class BugzillaClient {
 							MultiBugReportFactory factory = new MultiBugReportFactory(
 									method.getResponseBodyAsStream(), characterEncoding);
 							
-							AbstractTaskDataCollector collector2 = new AbstractTaskDataCollector() {
+							TaskDataCollector collector2 = new TaskDataCollector() {
 
 								@Override
 								public void accept(RepositoryTaskData taskData) {

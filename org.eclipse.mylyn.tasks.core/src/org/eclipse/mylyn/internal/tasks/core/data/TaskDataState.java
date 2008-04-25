@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.data.ITaskDataState;
+import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
@@ -22,25 +22,25 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
  * @author Rob Elves
  * @author Steffen Pingel
  */
-public class TaskDataState implements ITaskDataState {
+public class TaskDataState implements ITaskDataWorkingCopy {
 
 	private final String connectorKind;
 
 	private TaskData editsTaskData;
 
-	private TaskData repositoryTaskData;
-
 	private TaskData lastReadTaskData;
+
+	private TaskData localTaskData;
+
+	private TaskData repositoryTaskData;
 
 	private final String repositoryUrl;
 
-	private final String taskId;
-
-	private TaskDataManager2 taskDataManager;
-
 	private AbstractTask task;
 
-	private TaskData localTaskData;
+	private final String taskId;
+
+	private TaskDataManager taskSynchronizationManager;
 
 	public TaskDataState(String connectorKind, String repositoryUrl, String taskId) {
 		Assert.isNotNull(connectorKind);
@@ -75,20 +75,16 @@ public class TaskDataState implements ITaskDataState {
 		return editsTaskData;
 	}
 
+	public TaskData getLastReadData() {
+		return lastReadTaskData;
+	}
+
 	public TaskData getLocalData() {
 		return localTaskData;
 	}
 
-	public void setLocalTaskData(TaskData localTaskData) {
-		this.localTaskData = localTaskData;
-	}
-
 	public TaskData getRepositoryData() {
 		return repositoryTaskData;
-	}
-
-	public TaskData getLastReadData() {
-		return lastReadTaskData;
 	}
 
 	public String getRepositoryUrl() {
@@ -109,23 +105,17 @@ public class TaskDataState implements ITaskDataState {
 		return result;
 	}
 
-	public void setEditsData(TaskData editsTaskData) {
-		this.editsTaskData = editsTaskData;
+	void init(TaskDataManager taskSynchronizationManager, AbstractTask task) {
+		this.taskSynchronizationManager = taskSynchronizationManager;
+		this.task = task;
 	}
 
-	public void setRepositoryData(TaskData newTaskData) {
-		this.repositoryTaskData = newTaskData;
-	}
-
-	public void setLastReadData(TaskData oldTaskData) {
-		this.lastReadTaskData = oldTaskData;
-	}
-
-	public void save(IProgressMonitor monitor, Set<TaskAttribute> edits) throws CoreException {
-		for (TaskAttribute edit : edits) {
-			editsTaskData.getRoot().deepAddCopy(edit);
-		}
-		taskDataManager.putEdits(task, getConnectorKind(), editsTaskData);
+	public void refresh(IProgressMonitor monitor) throws CoreException {
+		ITaskDataWorkingCopy state = taskSynchronizationManager.createWorkingCopy(task, connectorKind);
+		setRepositoryData(state.getRepositoryData());
+		setEditsData(state.getEditsData());
+		setLastReadData(state.getLastReadData());
+		revert();
 	}
 
 	public void revert() {
@@ -141,25 +131,27 @@ public class TaskDataState implements ITaskDataState {
 		}
 	}
 
-	public void refresh(IProgressMonitor monitor) throws CoreException {
-		ITaskDataState state = taskDataManager.createWorkingCopy(task, connectorKind);
-		setRepositoryData(state.getRepositoryData());
-		setEditsData(state.getEditsData());
-		setLastReadData(state.getLastReadData());
-		revert();
+	public void save(IProgressMonitor monitor, Set<TaskAttribute> edits) throws CoreException {
+		for (TaskAttribute edit : edits) {
+			editsTaskData.getRoot().deepAddCopy(edit);
+		}
+		taskSynchronizationManager.putEdits(task, getConnectorKind(), editsTaskData);
 	}
 
-	void init(TaskDataManager2 taskDataManager, AbstractTask task) {
-		this.taskDataManager = taskDataManager;
-		this.task = task;
+	public void setEditsData(TaskData editsTaskData) {
+		this.editsTaskData = editsTaskData;
 	}
 
-	TaskDataManager2 getTaskDataManager() {
-		return taskDataManager;
+	public void setLastReadData(TaskData oldTaskData) {
+		this.lastReadTaskData = oldTaskData;
 	}
 
-	AbstractTask getTask() {
-		return task;
+	public void setLocalTaskData(TaskData localTaskData) {
+		this.localTaskData = localTaskData;
+	}
+
+	public void setRepositoryData(TaskData newTaskData) {
+		this.repositoryTaskData = newTaskData;
 	}
 
 }

@@ -58,7 +58,7 @@ public class TaskOperation {
 
 	public static TaskOperation createFrom(TaskAttribute taskAttribute) {
 		TaskData taskData = taskAttribute.getTaskData();
-		AbstractAttributeMapper mapper = taskData.getAttributeMapper();
+		TaskAttributeMapper mapper = taskData.getAttributeMapper();
 		String operationId = "";
 		TaskOperation operation = new TaskOperation(taskData.getRepositoryUrl(), taskData.getConnectorKind(),
 				taskData.getTaskId(), operationId);
@@ -71,7 +71,7 @@ public class TaskOperation {
 
 	public void applyTo(TaskAttribute taskAttribute) {
 		TaskData taskData = taskAttribute.getTaskData();
-		AbstractAttributeMapper mapper = taskData.getAttributeMapper();
+		TaskAttributeMapper mapper = taskData.getAttributeMapper();
 
 		TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_OPERATION).applyTo(taskAttribute);
 

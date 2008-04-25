@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 /**
  * @author Steffen Pingel
  */
-public interface ITaskDataState {
+public interface ITaskDataWorkingCopy {
 
 	public abstract TaskData getEditsData();
 

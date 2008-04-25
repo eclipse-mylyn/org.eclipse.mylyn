@@ -38,8 +38,8 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
-import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataCollector;
-import org.eclipse.mylyn.tasks.core.sync.SynchronizationEvent;
+import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
+import org.eclipse.mylyn.tasks.core.sync.SynchronizationContext;
 import org.eclipse.mylyn.web.core.AuthenticationCredentials;
 import org.eclipse.mylyn.web.core.AuthenticationType;
 import org.eclipse.mylyn.web.core.Policy;
@@ -144,7 +144,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public IStatus performQuery(TaskRepository repository, AbstractRepositoryQuery query,
-			AbstractTaskDataCollector resultCollector, SynchronizationEvent event, IProgressMonitor monitor) {
+			TaskDataCollector resultCollector, SynchronizationContext event, IProgressMonitor monitor) {
 		try {
 			monitor.beginTask("Querying repository", IProgressMonitor.UNKNOWN);
 
@@ -174,7 +174,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public void preSynchronization(SynchronizationEvent event, IProgressMonitor monitor) throws CoreException {
+	public void preSynchronization(SynchronizationContext event, IProgressMonitor monitor) throws CoreException {
 		monitor = Policy.monitorFor(monitor);
 		try {
 			monitor.beginTask("Getting changed tasks", IProgressMonitor.UNKNOWN);

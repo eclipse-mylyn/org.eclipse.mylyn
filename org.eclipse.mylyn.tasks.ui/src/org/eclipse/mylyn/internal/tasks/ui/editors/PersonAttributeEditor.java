@@ -8,7 +8,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
-import org.eclipse.mylyn.tasks.core.data.AttributeManager;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
 /**
@@ -16,7 +16,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
  */
 public class PersonAttributeEditor extends TextAttributeEditor {
 
-	public PersonAttributeEditor(AttributeManager manager, TaskAttribute taskAttribute) {
+	public PersonAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
 	}
 

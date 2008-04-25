@@ -46,10 +46,10 @@ import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
-import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
+import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
-import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager2;
-import org.eclipse.mylyn.internal.tasks.core.sync.RepositorySynchronizationManager;
+import org.eclipse.mylyn.internal.tasks.core.data.TaskDataStore;
+import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.AbstractNotification;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotification;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationQueryIncoming;
@@ -128,7 +128,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private static TaskListSynchronizationScheduler synchronizationScheduler;
 
-	private static RepositorySynchronizationManager synchronizationManager;
+	private static TaskDataManager taskDataManager;
 
 	private static Map<String, AbstractRepositoryConnectorUi> repositoryConnectorUiMap = new HashMap<String, AbstractRepositoryConnectorUi>();
 
@@ -138,9 +138,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private TaskListBackupManager taskListBackupManager;
 
-	private TaskDataManager taskDataManager;
-
-	private TaskDataManager2 taskDataManager2;
+	private TaskDataStorageManager taskDataStorageManager;
 
 	private RepositoryTemplateManager repositoryTemplateManager;
 
@@ -499,23 +497,22 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			File root = new File(this.getDataDirectory() + '/' + FOLDER_OFFLINE);
 			OfflineFileStorage storage = new OfflineFileStorage(root);
 			OfflineCachingStorage cachedStorage = new OfflineCachingStorage(storage);
-			taskDataManager = new TaskDataManager(repositoryManager, cachedStorage);
-			taskDataManager.start();
+			taskDataStorageManager = new TaskDataStorageManager(repositoryManager, cachedStorage);
+			taskDataStorageManager.start();
 
-			taskDataManager2 = new TaskDataManager2(repositoryManager);
-			taskDataManager2.setDataPath(getDataDirectory());
+			TaskDataStore taskDataStore = new TaskDataStore(repositoryManager);
 
-			synchronizationManager = new RepositorySynchronizationManager(taskDataManager, taskDataManager2,
-					repositoryManager, taskListManager.getTaskList());
+			taskDataManager = new TaskDataManager(taskDataStorageManager, taskDataStore, repositoryManager,
+					taskListManager.getTaskList());
+			taskDataManager.setDataPath(getDataDirectory());
 
 			for (AbstractRepositoryConnector connector : repositoryManager.getRepositoryConnectors()) {
-				connector.init2(taskDataManager, synchronizationManager);
+				connector.init2(taskDataManager);
 			}
 
 			loadTemplateRepositories();
 
-			tasksJobFactory = new TasksJobFactory(taskListManager.getTaskList(), synchronizationManager,
-					repositoryManager);
+			tasksJobFactory = new TasksJobFactory(taskListManager.getTaskList(), taskDataManager, repositoryManager);
 
 			// NOTE: task list must be read before Task List view can be initialized
 			taskListManager.addActivationListener(CONTEXT_TASK_ACTIVATION_LISTENER);
@@ -544,7 +541,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				public void saving(ISaveContext context) throws CoreException {
 					if (context.getKind() == ISaveContext.FULL_SAVE) {
 						taskListManager.saveTaskList();
-						taskDataManager.stop();
+						taskDataStorageManager.stop();
 					}
 				}
 			};
@@ -888,12 +885,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		return taskListBackupManager;
 	}
 
-	public static TaskDataManager getTaskDataManager() {
-		return INSTANCE.taskDataManager;
-	}
-
-	public static TaskDataManager2 getTaskDataManager2() {
-		return INSTANCE.taskDataManager2;
+	public static TaskDataStorageManager getTaskDataStorageManager() {
+		return INSTANCE.taskDataStorageManager;
 	}
 
 	public void addRepositoryConnectorUi(AbstractRepositoryConnectorUi repositoryConnectorUi) {
@@ -920,8 +913,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	/**
 	 * @since 3.0
 	 */
-	public static RepositorySynchronizationManager getSynchronizationManager() {
-		return synchronizationManager;
+	public static TaskDataManager getTaskDataManager() {
+		return taskDataManager;
 	}
 
 	/**
@@ -1039,7 +1032,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	}
 
 	public String getNextNewRepositoryTaskId() {
-		return getTaskDataManager().getNewRepositoryTaskId();
+		return getTaskDataStorageManager().getNewRepositoryTaskId();
 	}
 
 	/**
@@ -1050,8 +1043,10 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	public TaskListNotification getIncommingNotification(AbstractRepositoryConnector connector, AbstractTask task) {
 
 		TaskListNotification notification = new TaskListNotification(task);
-		RepositoryTaskData newTaskData = getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
-		RepositoryTaskData oldTaskData = getTaskDataManager().getOldTaskData(task.getRepositoryUrl(), task.getTaskId());
+		RepositoryTaskData newTaskData = getTaskDataStorageManager().getNewTaskData(task.getRepositoryUrl(),
+				task.getTaskId());
+		RepositoryTaskData oldTaskData = getTaskDataStorageManager().getOldTaskData(task.getRepositoryUrl(),
+				task.getTaskId());
 
 		try {
 			if (task.getSynchronizationState().equals(RepositoryTaskSyncState.INCOMING)

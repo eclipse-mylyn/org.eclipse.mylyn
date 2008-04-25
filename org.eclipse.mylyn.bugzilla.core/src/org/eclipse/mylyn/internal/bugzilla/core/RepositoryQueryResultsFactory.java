@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
 
-import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataCollector;
+import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 
 /**
  * @author Rob Elves
@@ -28,7 +28,7 @@ public class RepositoryQueryResultsFactory extends AbstractReportFactory {
 	 * 
 	 * @throws GeneralSecurityException
 	 */
-	public int performQuery(String repositoryUrl, AbstractTaskDataCollector collector, int maxHits) throws IOException {
+	public int performQuery(String repositoryUrl, TaskDataCollector collector, int maxHits) throws IOException {
 		SaxBugzillaQueryContentHandler contentHandler = new SaxBugzillaQueryContentHandler(repositoryUrl, collector);
 		collectResults(contentHandler, false);
 		return contentHandler.getResultCount();

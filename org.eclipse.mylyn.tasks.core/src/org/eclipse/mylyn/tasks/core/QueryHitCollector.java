@@ -12,7 +12,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataCollector;
+import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 
 /**
  * Collects QueryHits resulting from repository search.
@@ -24,13 +24,13 @@ import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataCollector;
  * @deprecated
  */
 @Deprecated
-public class QueryHitCollector extends AbstractTaskDataCollector {
+public class QueryHitCollector extends TaskDataCollector {
 
 	/**
-	 * @deprecated Use {@link AbstractTaskDataCollector#MAX_HITS} instead
+	 * @deprecated Use {@link TaskDataCollector#MAX_HITS} instead
 	 */
 	@Deprecated
-	public static final int MAX_HITS = AbstractTaskDataCollector.MAX_HITS;
+	public static final int MAX_HITS = TaskDataCollector.MAX_HITS;
 
 	private final Set<AbstractTask> taskResults = new HashSet<AbstractTask>();
 
@@ -58,7 +58,7 @@ public class QueryHitCollector extends AbstractTaskDataCollector {
 		AbstractTask task;
 		try {
 			task = taskFactory.createTask(taskData, new NullProgressMonitor());
-			if (taskResults.size() < AbstractTaskDataCollector.MAX_HITS) {
+			if (taskResults.size() < TaskDataCollector.MAX_HITS) {
 				taskResults.add(task);
 			}
 		} catch (CoreException e) {

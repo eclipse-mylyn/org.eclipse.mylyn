@@ -8,12 +8,28 @@
 
 package org.eclipse.mylyn.tasks.core.data;
 
+import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 
 /**
- * @author Steffen Pingel
+ * This class is used for collecting tasks, e.g. when performing queries on a repository.
+ * 
+ * @author Rob Elves
+ * @since 3.0
  */
-public interface IAttributeManagerListener {
+public abstract class TaskDataCollector {
 
-	public void attributeChanged(TaskAttribute attribute);
+	/**
+	 * @since 3.0
+	 */
+	public static final int MAX_HITS = 5000;
+
+	/**
+	 * @since 3.0
+	 */
+	public abstract void accept(RepositoryTaskData taskData);
+
+	public void accept(TaskData taskData) {
+		throw new UnsupportedOperationException();
+	}
 
 }

@@ -2803,7 +2803,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			return;
 		}
 		if (repositoryTask != null) {
-			TasksUiPlugin.getSynchronizationManager().saveOutgoing(repositoryTask, changedAttributes);
+			TasksUiPlugin.getTaskDataManager().saveOutgoing(repositoryTask, changedAttributes);
 		}
 		if (repositoryTask != null) {
 			TasksUi.getTaskListManager().getTaskList().notifyTaskChanged(repositoryTask, false);
@@ -3601,7 +3601,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 								if (isNew) {
 									close();
-									TasksUiPlugin.getSynchronizationManager().setTaskRead(finalModifiedTask, true);
+									TasksUiPlugin.getTaskDataManager().setTaskRead(finalModifiedTask, true);
 									TasksUiUtil.openEditor(finalModifiedTask, false);
 								} else {
 									PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -3686,7 +3686,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				// If not, incomings resulting from subsequent synchronization
 				// can get marked as read (without having been viewed by user
 				if (repositoryTask != null) {
-					TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
+					TasksUiPlugin.getTaskDataManager().setTaskRead(repositoryTask, true);
 				}
 
 				this.setInputWithNotify(this.getEditorInput());
@@ -3725,7 +3725,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 								}
 
 								if (repositoryTask != null) {
-									TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
+									TasksUiPlugin.getTaskDataManager().setTaskRead(repositoryTask, true);
 								}
 
 								setSubmitEnabled(true);
@@ -3741,7 +3741,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				// If not, incomings resulting from subsequent synchronization
 				// can get marked as read (without having been viewed by user
 				if (repositoryTask != null) {
-					TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
+					TasksUiPlugin.getTaskDataManager().setTaskRead(repositoryTask, true);
 				}
 			}
 		} finally {

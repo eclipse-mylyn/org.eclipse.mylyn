@@ -43,9 +43,9 @@ import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
-import org.eclipse.mylyn.tasks.core.data.AttributeManager;
-import org.eclipse.mylyn.tasks.core.data.IAttributeManagerListener;
-import org.eclipse.mylyn.tasks.core.data.ITaskDataState;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModelListener;
+import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
@@ -158,7 +158,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 	private ToggleTaskActivationAction activateAction;
 
-	private AttributeManager attributeManager;
+	private TaskDataModel attributeManager;
 
 	private Action clearOutgoingAction;
 
@@ -528,7 +528,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 	public abstract AttributeEditorToolkit getAttributeEditorToolkit();
 
-	protected AttributeManager getAttributeManager() {
+	protected TaskDataModel getAttributeManager() {
 		return attributeManager;
 	}
 
@@ -571,8 +571,9 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		task = taskEditorInput.getTask();
 
 		try {
-			ITaskDataState taskDataState = TasksUi.getTaskDataManager().createWorkingCopy(task, getConnectorKind());
-			attributeManager = new AttributeManager(taskDataState);
+			ITaskDataWorkingCopy taskDataState = TasksUi.getTaskDataManager().createWorkingCopy(task,
+					getConnectorKind());
+			attributeManager = new TaskDataModel(taskDataState);
 		} catch (CoreException e) {
 			// FIXME
 			e.printStackTrace();
@@ -582,7 +583,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 				attributeManager.getTaskData().getRepositoryUrl());
 		connector = TasksUi.getRepositoryManager().getRepositoryConnector(getConnectorKind());
 
-		attributeManager.addAttributeManagerListener(new IAttributeManagerListener() {
+		attributeManager.addAttributeManagerListener(new TaskDataModelListener() {
 			public void attributeChanged(TaskAttribute attribute) {
 				getManagedForm().dirtyStateChanged();
 			}

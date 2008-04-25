@@ -58,7 +58,7 @@ public abstract class AbstractBugzillaTest extends TestCase {
 		super.setUp();
 		TasksUiPlugin.getDefault().getPreferenceStore().setValue(
 				TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
-		TasksUiPlugin.getTaskDataManager().clear();
+		TasksUiPlugin.getTaskDataStorageManager().clear();
 		manager = TasksUiPlugin.getRepositoryManager();
 		TasksUiPlugin.getTaskListManager().resetTaskList();//getTaskList().reset();
 		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
@@ -117,7 +117,7 @@ public abstract class AbstractBugzillaTest extends TestCase {
 	protected BugzillaTask generateLocalTaskAndDownload(String taskNumber) throws CoreException {
 		BugzillaTask task = (BugzillaTask) TasksUiUtil.createTask(repository, taskNumber,
 				new NullProgressMonitor());
-		TasksUiPlugin.getSynchronizationManager().setTaskRead(task, true);
+		TasksUiPlugin.getTaskDataManager().setTaskRead(task, true);
 		assertNotNull(task);
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task,
 				TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());

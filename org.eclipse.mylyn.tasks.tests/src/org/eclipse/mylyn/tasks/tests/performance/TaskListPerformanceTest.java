@@ -62,7 +62,7 @@ public class TaskListPerformanceTest extends PerformanceTestCase {
 
 		for (int i = 0; i < 10; i++) {
 			startMeasuring();
-			taskListWriter.readTaskList(taskList, file, TasksUiPlugin.getTaskDataManager());
+			taskListWriter.readTaskList(taskList, file, TasksUiPlugin.getTaskDataStorageManager());
 			stopMeasuring();
 			taskList.reset();
 		}

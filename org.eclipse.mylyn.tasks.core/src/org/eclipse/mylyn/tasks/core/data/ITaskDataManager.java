@@ -10,13 +10,25 @@ package org.eclipse.mylyn.tasks.core.data;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 
 /**
  * @author Steffen Pingel
+ * @since 3.0
  */
-public interface ITaskDataManager2 {
+public interface ITaskDataManager {
 
-	public abstract ITaskDataState createWorkingCopy(AbstractTask task, String kind) throws CoreException;
+	/**
+	 * Saves incoming data and updates task sync state appropriately
+	 * 
+	 * @return true if call results in change of sync state
+	 */
+	public abstract boolean saveIncoming(final AbstractTask repositoryTask, final RepositoryTaskData newTaskData,
+			boolean forceSync);
+
+	public abstract void putTaskData(AbstractTask task, TaskData taskData, boolean user) throws CoreException;
+
+	public abstract ITaskDataWorkingCopy createWorkingCopy(AbstractTask task, String kind) throws CoreException;
 
 	public abstract void discardEdits(AbstractTask task, String kind) throws CoreException;
 
@@ -25,5 +37,11 @@ public interface ITaskDataManager2 {
 	public abstract void putTaskData(AbstractTask task, String kind, TaskData taskData) throws CoreException;
 
 	public abstract boolean hasTaskData(AbstractTask task, String connectorKind);
+
+	@Deprecated
+	public abstract void setNewTaskData(RepositoryTaskData taskData);
+
+	@Deprecated
+	public abstract RepositoryTaskData getNewTaskData(String repositoryUrl, String taskId);
 
 }

@@ -58,7 +58,7 @@ public class TaskEditorTest extends TestCase {
 				IBugzillaConstants.TEST_BUGZILLA_222_URL);
 
 		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(),
-				BugzillaCorePlugin.REPOSITORY_KIND, repository.getRepositoryUrl(), TasksUiPlugin.getTaskDataManager()
+				BugzillaCorePlugin.REPOSITORY_KIND, repository.getRepositoryUrl(), TasksUiPlugin.getTaskDataStorageManager()
 						.getNewRepositoryTaskId());
 		model.setNew(true);
 		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
@@ -89,7 +89,7 @@ public class TaskEditorTest extends TestCase {
 
 
 		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(),
-				BugzillaCorePlugin.REPOSITORY_KIND, repository.getRepositoryUrl(), TasksUiPlugin.getTaskDataManager()
+				BugzillaCorePlugin.REPOSITORY_KIND, repository.getRepositoryUrl(), TasksUiPlugin.getTaskDataStorageManager()
 						.getNewRepositoryTaskId());
 		model.setNew(true);
 		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(

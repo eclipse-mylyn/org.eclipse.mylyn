@@ -228,22 +228,22 @@ public class TaskListManagerTest extends TestCase {
 
 		RepositoryTaskData taskData = new RepositoryTaskData(new MockAttributeFactory(), task.getConnectorKind(),
 				task.getRepositoryUrl(), task.getTaskId(), task.getTaskKind());
-		TasksUiPlugin.getTaskDataManager().setNewTaskData(taskData);
-		assertNotNull(TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId()));
+		TasksUiPlugin.getTaskDataStorageManager().setNewTaskData(taskData);
+		assertNotNull(TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId()));
 
 		RepositoryTaskData taskData2 = new RepositoryTaskData(new MockAttributeFactory(), task2.getConnectorKind(),
 				task2.getRepositoryUrl(), task2.getTaskId(), task2.getTaskKind());
 		taskData2.setNewComment("TEST");
-		TasksUiPlugin.getTaskDataManager().setNewTaskData(taskData2);
-		assertNotNull(TasksUiPlugin.getTaskDataManager().getNewTaskData(task2.getRepositoryUrl(), task2.getTaskId()));
-		assertEquals("TEST", TasksUiPlugin.getTaskDataManager().getNewTaskData(task2.getRepositoryUrl(),
+		TasksUiPlugin.getTaskDataStorageManager().setNewTaskData(taskData2);
+		assertNotNull(TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task2.getRepositoryUrl(), task2.getTaskId()));
+		assertEquals("TEST", TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task2.getRepositoryUrl(),
 				task2.getTaskId()).getNewComment());
 
 		manager.refactorRepositoryUrl("http://a", "http://b");
 		assertNull(manager.getTaskList().getTask("http://a-123"));
 		assertNotNull(manager.getTaskList().getTask("http://b-123"));
-		assertNotNull(TasksUiPlugin.getTaskDataManager().getNewTaskData("http://b", "123"));
-		RepositoryTaskData otherData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task2.getRepositoryUrl(),
+		assertNotNull(TasksUiPlugin.getTaskDataStorageManager().getNewTaskData("http://b", "123"));
+		RepositoryTaskData otherData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task2.getRepositoryUrl(),
 				task2.getTaskId());
 		assertNotNull(otherData);
 		assertEquals("TEST", otherData.getNewComment());

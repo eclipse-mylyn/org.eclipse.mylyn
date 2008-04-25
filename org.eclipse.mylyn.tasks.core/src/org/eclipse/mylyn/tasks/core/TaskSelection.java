@@ -12,7 +12,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
-import org.eclipse.mylyn.internal.tasks.core.TaskDataManager.ObjectCloner;
+import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager.ObjectCloner;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 
 /**

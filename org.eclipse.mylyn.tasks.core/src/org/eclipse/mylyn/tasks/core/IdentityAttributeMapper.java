@@ -8,17 +8,17 @@
 
 package org.eclipse.mylyn.tasks.core;
 
-import org.eclipse.mylyn.tasks.core.data.AbstractAttributeMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 
 /**
  * @since 3.0
  * @author Steffen Pingel
  */
-public class IdentityAttributeMapper extends AbstractAttributeMapper {
+public class IdentityAttributeMapper extends TaskAttributeMapper {
 
 	private static final IdentityAttributeMapper INSTANCE = new IdentityAttributeMapper();
 
-	public static AbstractAttributeMapper getInstance() {
+	public static TaskAttributeMapper getInstance() {
 		return INSTANCE;
 	}
 

@@ -80,7 +80,7 @@ public class OpenRepositoryTaskJob extends Job {
 				RepositoryTaskData downloadedTaskData = null;
 				downloadedTaskData = offlineHandler.getTaskData(repository, taskId, monitor);
 				if (downloadedTaskData != null) {
-					TasksUiPlugin.getTaskDataManager().setNewTaskData(downloadedTaskData);
+					TasksUiPlugin.getTaskDataStorageManager().setNewTaskData(downloadedTaskData);
 				}
 				openEditor(repository, connector, repository, downloadedTaskData);
 			} else {

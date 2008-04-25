@@ -25,8 +25,8 @@ import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataCollector;
-import org.eclipse.mylyn.tasks.core.sync.SynchronizationEvent;
+import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
+import org.eclipse.mylyn.tasks.core.sync.SynchronizationContext;
 
 /**
  * @author Mik Kersten
@@ -184,7 +184,7 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public IStatus performQuery(TaskRepository repository, AbstractRepositoryQuery query,
-			AbstractTaskDataCollector resultCollector, SynchronizationEvent event, IProgressMonitor monitor) {
+			TaskDataCollector resultCollector, SynchronizationContext event, IProgressMonitor monitor) {
 		return Status.OK_STATUS;
 	}
 

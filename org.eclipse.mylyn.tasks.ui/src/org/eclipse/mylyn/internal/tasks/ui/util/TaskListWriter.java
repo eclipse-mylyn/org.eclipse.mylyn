@@ -45,6 +45,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextExternalizer;
+import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskExternalizationException;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoriesExternalizer;
@@ -56,7 +57,6 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListFactory;
-import org.eclipse.mylyn.tasks.core.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.w3c.dom.Document;
@@ -237,7 +237,7 @@ public class TaskListWriter {
 	/**
 	 * TODO: fix this old mess
 	 */
-	public void readTaskList(TaskList taskList, File inFile, ITaskDataManager taskDataManager) {
+	public void readTaskList(TaskList taskList, File inFile, TaskDataStorageManager taskDataManager) {
 		hasCaughtException = false;
 		delagatingExternalizer.getLegacyParentCategoryMap().clear();
 		Map<AbstractTask, NodeList> tasksWithSubtasks = new HashMap<AbstractTask, NodeList>();

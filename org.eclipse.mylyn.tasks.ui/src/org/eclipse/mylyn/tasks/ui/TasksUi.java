@@ -28,8 +28,7 @@ import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.ITaskListManager;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.data.ITaskDataManager2;
-import org.eclipse.mylyn.tasks.core.sync.IRepositorySynchronizationManager;
+import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
@@ -44,16 +43,12 @@ public class TasksUi {
 		return TasksUiPlugin.getTasksJobFactory();
 	}
 
-	public static ITaskDataManager2 getTaskDataManager() {
-		return TasksUiPlugin.getTaskDataManager2();
-	}
-
 	public static ITaskListManager getTaskListManager() {
 		return TasksUiPlugin.getTaskListManager();
 	}
 
-	public static IRepositorySynchronizationManager getSynchronizationManager() {
-		return TasksUiPlugin.getSynchronizationManager();
+	public static ITaskDataManager getTaskDataManager() {
+		return TasksUiPlugin.getTaskDataManager();
 	}
 
 	private static void joinIfInTestMode(SynchronizationJob job) {
@@ -114,7 +109,7 @@ public class TasksUi {
 		return synchronizeQueries(connector, repository, Collections.singleton(repositoryQuery), listener, force);
 	}
 
-	public static SynchronizationJob synchronizeAlllRepositories(boolean force) {
+	public static SynchronizationJob synchronizeAllRepositories(boolean force) {
 		Set<TaskRepository> repositories = new HashSet<TaskRepository>(TasksUi.getRepositoryManager()
 				.getAllRepositories());
 		SynchronizationJob job = TasksUiPlugin.getTasksJobFactory().createSynchronizeRepositoriesJob(repositories);

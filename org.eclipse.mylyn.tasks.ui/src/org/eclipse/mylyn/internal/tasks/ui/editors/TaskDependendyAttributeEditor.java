@@ -11,7 +11,7 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 import org.eclipse.mylyn.internal.tasks.ui.editors.LayoutHint.ColumnSpan;
 import org.eclipse.mylyn.internal.tasks.ui.editors.LayoutHint.RowSpan;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.data.AttributeManager;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.swt.SWT;
 
@@ -20,7 +20,7 @@ import org.eclipse.swt.SWT;
  */
 public class TaskDependendyAttributeEditor extends RichTextAttributeEditor {
 
-	public TaskDependendyAttributeEditor(AttributeManager manager, TaskAttribute taskAttribute,
+	public TaskDependendyAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute,
 			TaskRepository taskRepository) {
 		super(manager, taskAttribute, taskRepository, SWT.MULTI);
 		setLayoutHint(new LayoutHint(RowSpan.SINGLE, ColumnSpan.MULTIPLE));

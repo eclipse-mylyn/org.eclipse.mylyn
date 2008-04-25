@@ -64,7 +64,7 @@ public class EncodingTest extends AbstractBugzillaTest {
 		repository.setCharacterEncoding("UTF-8");
 		BugzillaTask task = (BugzillaTask) TasksUiUtil.createTask(repository, "57",
 				new NullProgressMonitor());
-		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(),
+		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task.getRepositoryUrl(),
 				task.getTaskId());
 		assertNotNull(task);
 		assertTrue(task.getSummary().equals("\u00E6"));//"\u05D0"));

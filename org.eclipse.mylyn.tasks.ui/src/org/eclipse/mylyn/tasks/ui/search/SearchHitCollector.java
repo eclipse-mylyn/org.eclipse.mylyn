@@ -24,7 +24,7 @@ import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataCollector;
+import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.search.ui.ISearchQuery;
 import org.eclipse.search.ui.ISearchResult;
@@ -38,7 +38,7 @@ import org.eclipse.ui.PlatformUI;
  * @author Rob Elves
  * @since 2.0
  */
-public class SearchHitCollector extends AbstractTaskDataCollector implements ISearchQuery {
+public class SearchHitCollector extends TaskDataCollector implements ISearchQuery {
 
 	private static final String LABEL_MAX_HITS_REACHED = "Max allowed number of hits returned exceeded. Some hits may not be displayed. Please narrow query scope.";
 
@@ -122,7 +122,7 @@ public class SearchHitCollector extends AbstractTaskDataCollector implements ISe
 	}
 
 	public ISearchResult getSearchResult() {
-		if (searchResult.getMatchCount() >= AbstractTaskDataCollector.MAX_HITS) {
+		if (searchResult.getMatchCount() >= TaskDataCollector.MAX_HITS) {
 			StatusHandler.displayStatus("Maximum hits reached", RepositoryStatus.createStatus(
 					repository.getRepositoryUrl(), IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, LABEL_MAX_HITS_REACHED));
 		}

@@ -16,7 +16,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.internal.tasks.ui.editors.LayoutHint.ColumnSpan;
 import org.eclipse.mylyn.internal.tasks.ui.editors.LayoutHint.RowSpan;
-import org.eclipse.mylyn.tasks.core.data.AttributeManager;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -34,7 +34,7 @@ public class MultiSelectionAttributeEditor extends AbstractAttributeEditor {
 
 	private List list;
 
-	public MultiSelectionAttributeEditor(AttributeManager manager, TaskAttribute taskAttribute) {
+	public MultiSelectionAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
 		setLayoutHint(new LayoutHint(RowSpan.MULTIPLE, ColumnSpan.SINGLE));
 	}

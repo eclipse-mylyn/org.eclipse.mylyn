@@ -15,7 +15,7 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
+import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
@@ -27,12 +27,12 @@ import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
  */
 public class TaskDataManagerTest extends TestCase {
 
-	TaskDataManager offlineTaskDataManager;
+	TaskDataStorageManager offlineTaskDataManager;
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		offlineTaskDataManager = TasksUiPlugin.getTaskDataManager();
+		offlineTaskDataManager = TasksUiPlugin.getTaskDataStorageManager();
 		offlineTaskDataManager.clear();
 		offlineTaskDataManager.saveNow();
 	}

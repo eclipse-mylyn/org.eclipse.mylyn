@@ -106,7 +106,7 @@ public class SubmitTaskDataJob extends Job {
 				task.setSubmitting(false);
 			}
 
-			TasksUiPlugin.getSynchronizationManager().setTaskRead(task, true);
+			TasksUiPlugin.getTaskDataManager().setTaskRead(task, true);
 		} catch (CoreException e) {
 			errorStatus = e.getStatus();
 		} catch (OperationCanceledException e) {

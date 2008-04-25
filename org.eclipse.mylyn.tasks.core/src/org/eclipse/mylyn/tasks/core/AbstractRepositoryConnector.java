@@ -20,10 +20,10 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
-import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataCollector;
+import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
+import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-import org.eclipse.mylyn.tasks.core.sync.IRepositorySynchronizationManager;
-import org.eclipse.mylyn.tasks.core.sync.SynchronizationEvent;
+import org.eclipse.mylyn.tasks.core.sync.SynchronizationContext;
 
 /**
  * Encapsulates common operations that can be performed on a task repository. Extend to connect with a Java API or WS
@@ -52,8 +52,6 @@ public abstract class AbstractRepositoryConnector {
 
 	private ITaskDataManager taskDataManager;
 
-	private IRepositorySynchronizationManager synchronizationManager;
-
 	/**
 	 * @since 3.0
 	 */
@@ -67,9 +65,8 @@ public abstract class AbstractRepositoryConnector {
 	 * 
 	 * @since 3.0
 	 */
-	public void init2(ITaskDataManager taskDataManager, IRepositorySynchronizationManager synchronizationManager) {
+	public void init2(ITaskDataManager taskDataManager) {
 		this.taskDataManager = taskDataManager;
-		this.synchronizationManager = synchronizationManager;
 	}
 
 	/**
@@ -210,12 +207,12 @@ public abstract class AbstractRepositoryConnector {
 	 * @since 3.0
 	 */
 	public abstract IStatus performQuery(TaskRepository repository, AbstractRepositoryQuery query,
-			AbstractTaskDataCollector resultCollector, SynchronizationEvent event, IProgressMonitor monitor);
+			TaskDataCollector resultCollector, SynchronizationContext event, IProgressMonitor monitor);
 
 	/**
 	 * @since 2.0
 	 * @deprecated use
-	 *             {@link #performQuery(TaskRepository, AbstractRepositoryQuery, AbstractTaskDataCollector, SynchronizationEvent, IProgressMonitor)}
+	 *             {@link #performQuery(TaskRepository, AbstractRepositoryQuery, TaskDataCollector, SynchronizationContext, IProgressMonitor)}
 	 *             instead
 	 */
 	@Deprecated
@@ -356,7 +353,8 @@ public abstract class AbstractRepositoryConnector {
 	 *         <code>tasks</code> collection), so empty collection means that there are some other tasks changed
 	 * 
 	 * @throws CoreException
-	 * @deprecated use {@link #preQuerySynchronization(TaskRepository, SynchronizationEvent, IProgressMonitor)} instead
+	 * @deprecated use {@link #preQuerySynchronization(TaskRepository, SynchronizationContext, IProgressMonitor)}
+	 *             instead
 	 */
 	@Deprecated
 	public boolean markStaleTasks(TaskRepository repository, Set<AbstractTask> tasks, IProgressMonitor monitor)
@@ -518,14 +516,7 @@ public abstract class AbstractRepositoryConnector {
 	/**
 	 * @since 3.0
 	 */
-	protected IRepositorySynchronizationManager getSynchronizationManager() {
-		return synchronizationManager;
-	}
-
-	/**
-	 * @since 3.0
-	 */
-	public void preSynchronization(SynchronizationEvent event, IProgressMonitor monitor) throws CoreException {
+	public void preSynchronization(SynchronizationContext event, IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor.beginTask("", 1);
 		} finally {
@@ -536,7 +527,7 @@ public abstract class AbstractRepositoryConnector {
 	/**
 	 * @since 3.0
 	 */
-	public void postSynchronization(SynchronizationEvent event, IProgressMonitor monitor) throws CoreException {
+	public void postSynchronization(SynchronizationContext event, IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor.beginTask("", 1);
 

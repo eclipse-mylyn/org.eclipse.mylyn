@@ -31,9 +31,9 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
-import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataCollector;
-import org.eclipse.mylyn.tasks.core.sync.IRepositorySynchronizationManager;
-import org.eclipse.mylyn.tasks.core.sync.SynchronizationEvent;
+import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
+import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
+import org.eclipse.mylyn.tasks.core.sync.SynchronizationContext;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
 import org.eclipse.mylyn.web.core.Policy;
 
@@ -64,7 +64,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 		}
 	}
 
-	private class TaskCollector extends AbstractTaskDataCollector {
+	private class TaskCollector extends TaskDataCollector {
 
 		private final Set<AbstractTask> removedQueryResults;
 
@@ -123,13 +123,13 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 
 	private final TaskRepository repository;
 
-	private final IRepositorySynchronizationManager synchronizationManager;
+	private final ITaskDataManager synchronizationManager;
 
 	private final TaskList taskList;
 
 	private final HashSet<AbstractTask> tasksToBeSynchronized = new HashSet<AbstractTask>();
 
-	public SynchronizeQueriesJob(TaskList taskList, IRepositorySynchronizationManager synchronizationManager,
+	public SynchronizeQueriesJob(TaskList taskList, ITaskDataManager synchronizationManager,
 			AbstractRepositoryConnector connector, TaskRepository repository, Set<AbstractRepositoryQuery> queries) {
 		super("Synchronizing Queries (" + repository.getRepositoryLabel() + ")");
 		this.taskList = taskList;
@@ -158,7 +158,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 			try {
 				Job.getJobManager().beginRule(rule, monitor);
 
-				SynchronizationEvent event = new SynchronizationEvent();
+				SynchronizationContext event = new SynchronizationContext();
 				event.taskRepository = repository;
 				event.fullSynchronization = isFullSynchronization();
 				event.tasks = allTasks;
@@ -206,7 +206,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 		}
 	}
 
-	private void synchronizeQueries(IProgressMonitor monitor, SynchronizationEvent event) {
+	private void synchronizeQueries(IProgressMonitor monitor, SynchronizationContext event) {
 		for (AbstractRepositoryQuery repositoryQuery : queries) {
 			Policy.checkCanceled(monitor);
 			repositoryQuery.setSynchronizationStatus(null);
@@ -219,7 +219,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 		}
 	}
 
-	private boolean firePostSynchronization(SynchronizationEvent event, IProgressMonitor monitor) {
+	private boolean firePostSynchronization(SynchronizationContext event, IProgressMonitor monitor) {
 		try {
 			Policy.checkCanceled(monitor);
 			monitor.subTask("Updating repository state");
@@ -235,7 +235,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 		}
 	}
 
-	private boolean firePreSynchronization(SynchronizationEvent event, IProgressMonitor monitor) {
+	private boolean firePreSynchronization(SynchronizationContext event, IProgressMonitor monitor) {
 		try {
 			Policy.checkCanceled(monitor);
 			monitor.subTask("Querying repository");
@@ -255,7 +255,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 		}
 	}
 
-	private void synchronizeQuery(AbstractRepositoryQuery repositoryQuery, SynchronizationEvent event,
+	private void synchronizeQuery(AbstractRepositoryQuery repositoryQuery, SynchronizationContext event,
 			IProgressMonitor monitor) {
 		TaskCollector collector = new TaskCollector(repositoryQuery);
 
@@ -266,7 +266,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 		if (result.getSeverity() == IStatus.CANCEL) {
 			// do nothing
 		} else if (result.isOK()) {
-			if (collector.getResultCount() >= AbstractTaskDataCollector.MAX_HITS) {
+			if (collector.getResultCount() >= TaskDataCollector.MAX_HITS) {
 				StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, MAX_HITS_REACHED + "\n"
 						+ repositoryQuery.getSummary()));
 			}

@@ -12,7 +12,7 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.mylyn.internal.tasks.ui.editors.LayoutHint.ColumnSpan;
 import org.eclipse.mylyn.internal.tasks.ui.editors.LayoutHint.RowSpan;
-import org.eclipse.mylyn.tasks.core.data.AttributeManager;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -26,7 +26,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  */
 public class LongTextAttributeEditor extends AbstractAttributeEditor {
 
-	public LongTextAttributeEditor(AttributeManager manager, TaskAttribute taskAttribute) {
+	public LongTextAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
 		setLayoutHint(new LayoutHint(RowSpan.MULTIPLE, ColumnSpan.MULTIPLE));
 	}

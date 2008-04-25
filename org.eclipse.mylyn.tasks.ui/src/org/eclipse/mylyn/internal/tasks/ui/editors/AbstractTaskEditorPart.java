@@ -10,8 +10,8 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.mylyn.tasks.core.data.AbstractAttributeMapper;
-import org.eclipse.mylyn.tasks.core.data.AttributeManager;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.swt.SWT;
@@ -58,7 +58,7 @@ public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 			return null;
 		}
 
-		AbstractAttributeMapper attributeMapper = getTaskData().getAttributeMapper();
+		TaskAttributeMapper attributeMapper = getTaskData().getAttributeMapper();
 		String type = attributeMapper.getType(attribute);
 		if (type != null) {
 			AttributeEditorFactory attributeEditorFactory = getTaskEditorPage().getAttributeEditorFactory();
@@ -72,7 +72,7 @@ public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 		return control;
 	}
 
-	public AttributeManager getAttributeManager() {
+	public TaskDataModel getAttributeManager() {
 		return getTaskEditorPage().getAttributeManager();
 	}
 

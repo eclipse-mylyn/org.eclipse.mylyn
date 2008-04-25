@@ -39,8 +39,8 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskComment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
-import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataCollector;
-import org.eclipse.mylyn.tasks.core.sync.SynchronizationEvent;
+import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
+import org.eclipse.mylyn.tasks.core.sync.SynchronizationContext;
 import org.eclipse.mylyn.web.core.Policy;
 
 /**
@@ -286,7 +286,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public void preSynchronization(SynchronizationEvent event, IProgressMonitor monitor)
+	public void preSynchronization(SynchronizationContext event, IProgressMonitor monitor)
 			throws CoreException {
 		TaskRepository repository = event.taskRepository;	
 		if (event.tasks.isEmpty()) {
@@ -396,7 +396,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public IStatus performQuery(TaskRepository repository, final AbstractRepositoryQuery query,
-			AbstractTaskDataCollector resultCollector, SynchronizationEvent event, IProgressMonitor monitor) {
+			TaskDataCollector resultCollector, SynchronizationContext event, IProgressMonitor monitor) {
 		try {
 			monitor.beginTask("Running query", IProgressMonitor.UNKNOWN);
 			BugzillaClient client = getClientManager().getClient(repository, monitor);

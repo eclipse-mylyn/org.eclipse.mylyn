@@ -13,7 +13,7 @@ import java.util.Locale;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
-import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataCollector;
+import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -38,13 +38,13 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 	
 	private StringBuffer characters;
 
-	private AbstractTaskDataCollector collector;
+	private TaskDataCollector collector;
 
 	private String repositoryUrl;
 
 	private int resultCount;
 
-	public SaxBugzillaQueryContentHandler(String repositoryUrl, AbstractTaskDataCollector collector) {
+	public SaxBugzillaQueryContentHandler(String repositoryUrl, TaskDataCollector collector) {
 		this.repositoryUrl = repositoryUrl;
 		this.collector = collector;
 	}

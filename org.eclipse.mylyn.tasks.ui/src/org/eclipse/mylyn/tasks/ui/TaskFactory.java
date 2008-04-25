@@ -14,8 +14,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
-import org.eclipse.mylyn.internal.tasks.core.sync.RepositorySynchronizationManager;
+import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
+import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -39,7 +39,7 @@ public class TaskFactory implements ITaskFactory {
 
 	private final AbstractRepositoryConnector connector;
 
-	private final RepositorySynchronizationManager synchManager;
+	private final TaskDataManager synchManager;
 
 	private final TaskRepository repository;
 
@@ -56,7 +56,7 @@ public class TaskFactory implements ITaskFactory {
 		this.updateTasklist = updateTasklist;
 		this.forced = forced;
 		connector = TasksUi.getRepositoryManager().getRepositoryConnector(repository.getConnectorKind());
-		synchManager = TasksUiPlugin.getSynchronizationManager();
+		synchManager = TasksUiPlugin.getTaskDataManager();
 		taskList = TasksUi.getTaskListManager().getTaskList();
 		//dataManager = TasksUiPlugin.getTaskDataManager();
 		dataHandler = connector.getTaskDataHandler();
@@ -123,7 +123,7 @@ public class TaskFactory implements ITaskFactory {
 			monitor = new NullProgressMonitor();
 		}
 		try {
-			TaskDataManager taskDataManager = TasksUiPlugin.getTaskDataManager();
+			TaskDataStorageManager taskDataManager = TasksUiPlugin.getTaskDataStorageManager();
 			if (taskData != null) {
 				// Use connector task factory
 				repositoryTask = connector.createTask(repository.getRepositoryUrl(), taskData.getTaskId(),

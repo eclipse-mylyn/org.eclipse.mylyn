@@ -19,7 +19,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskComment;
-import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataCollector;
+import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -57,12 +57,12 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 
 	private List<BugzillaCustomField> customFields;
 
-	private AbstractTaskDataCollector collector;
+	private TaskDataCollector collector;
 	
 	
 	//private int retrieved = 1;
 
-	public SaxMultiBugReportContentHandler(AbstractAttributeFactory factory, AbstractTaskDataCollector collector, Map<String, RepositoryTaskData> taskDataMap, List<BugzillaCustomField> customFields) {
+	public SaxMultiBugReportContentHandler(AbstractAttributeFactory factory, TaskDataCollector collector, Map<String, RepositoryTaskData> taskDataMap, List<BugzillaCustomField> customFields) {
 		this.attributeFactory = factory;
 		this.taskDataMap = taskDataMap;
 		this.customFields = customFields;

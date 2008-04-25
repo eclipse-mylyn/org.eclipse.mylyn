@@ -47,7 +47,7 @@ public class MarkTaskReadAction extends AbstractTaskAction {
 
 	@Override
 	protected void performActionOnTask(AbstractTask repositoryTask) {
-		TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
+		TasksUiPlugin.getTaskDataManager().setTaskRead(repositoryTask, true);
 	}
 
 }

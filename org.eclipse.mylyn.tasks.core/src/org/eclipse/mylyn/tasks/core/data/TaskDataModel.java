@@ -19,22 +19,22 @@ import org.eclipse.core.runtime.IProgressMonitor;
 /**
  * @author Steffen Pingel
  */
-public class AttributeManager {
+public class TaskDataModel {
 
-	private List<IAttributeManagerListener> listeners;
+	private List<TaskDataModelListener> listeners;
 
-	private final ITaskDataState taskDataState;
+	private final ITaskDataWorkingCopy taskDataState;
 
 	private final Set<TaskAttribute> editedAttributes;
 
-	public AttributeManager(ITaskDataState taskDataState) {
+	public TaskDataModel(ITaskDataWorkingCopy taskDataState) {
 		this.taskDataState = taskDataState;
 		this.editedAttributes = new HashSet<TaskAttribute>();
 	}
 
-	public void addAttributeManagerListener(IAttributeManagerListener listener) {
+	public void addAttributeManagerListener(TaskDataModelListener listener) {
 		if (listeners == null) {
-			listeners = new ArrayList<IAttributeManagerListener>();
+			listeners = new ArrayList<TaskDataModelListener>();
 		}
 		listeners.add(listener);
 	}
@@ -54,7 +54,7 @@ public class AttributeManager {
 		editedAttributes.add(attribute);
 
 		if (listeners != null) {
-			for (IAttributeManagerListener listener : listeners.toArray(new IAttributeManagerListener[0])) {
+			for (TaskDataModelListener listener : listeners.toArray(new TaskDataModelListener[0])) {
 				listener.attributeChanged(attribute);
 			}
 		}
@@ -98,7 +98,7 @@ public class AttributeManager {
 		taskDataState.refresh(monitor);
 	}
 
-	public void removeAttributeManagerListener(IAttributeManagerListener listener) {
+	public void removeAttributeManagerListener(TaskDataModelListener listener) {
 		listeners.remove(listener);
 	}
 

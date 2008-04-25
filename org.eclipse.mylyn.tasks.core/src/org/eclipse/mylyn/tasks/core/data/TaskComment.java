@@ -102,7 +102,7 @@ public class TaskComment {
 
 	public static TaskComment createFrom(TaskAttribute taskAttribute) {
 		TaskData taskData = taskAttribute.getTaskData();
-		AbstractAttributeMapper mapper = taskData.getAttributeMapper();
+		TaskAttributeMapper mapper = taskData.getAttributeMapper();
 		TaskComment comment = new TaskComment(taskData.getRepositoryUrl(), taskData.getConnectorKind(),
 				taskData.getTaskId(), taskAttribute.getId());
 		try {
@@ -138,7 +138,7 @@ public class TaskComment {
 
 	public void applyTo(TaskAttribute taskAttribute) {
 		TaskData taskData = taskAttribute.getTaskData();
-		AbstractAttributeMapper mapper = taskData.getAttributeMapper();
+		TaskAttributeMapper mapper = taskData.getAttributeMapper();
 
 		TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_COMMENT).applyTo(taskAttribute);
 		taskAttribute.putMetaDataValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, TaskAttribute.COMMENT_TEXT);

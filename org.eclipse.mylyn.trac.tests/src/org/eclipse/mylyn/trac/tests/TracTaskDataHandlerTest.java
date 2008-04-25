@@ -40,7 +40,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.sync.SynchronizationEvent;
+import org.eclipse.mylyn.tasks.core.sync.SynchronizationContext;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.trac.tests.support.TestFixture;
@@ -104,7 +104,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 
 		Set<AbstractTask> tasks = new HashSet<AbstractTask>();
 		tasks.add(task);
-		SynchronizationEvent event = new SynchronizationEvent();
+		SynchronizationContext event = new SynchronizationContext();
 		event.performQueries = true;
 		event.taskRepository = repository;
 		event.fullSynchronization = true;
@@ -137,14 +137,14 @@ public class TracTaskDataHandlerTest extends TestCase {
 		TracTicket ticket = TracTestUtil.createTicket(client, "markStaleTasks");
 		TracTask task = (TracTask) TasksUiUtil.createTask(repository, ticket.getId() + "", null);
 		TasksUi.synchronizeTask(connector, task, true, null);
-		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(),
+		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task.getRepositoryUrl(),
 				task.getTaskId());
 
 		int lastModified = Integer.parseInt(taskData.getLastModified());
 
 		Set<AbstractTask> tasks = new HashSet<AbstractTask>();
 		tasks.add(task);
-		SynchronizationEvent event = new SynchronizationEvent();
+		SynchronizationContext event = new SynchronizationContext();
 		event.performQueries = true;
 		event.taskRepository = repository;
 		event.fullSynchronization = true;
@@ -205,7 +205,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 		TracTask task = (TracTask) TasksUiUtil.createTask(repository, data.offlineHandlerTicketId + "", null);
 		Set<AbstractTask> tasks = new HashSet<AbstractTask>();
 		tasks.add(task);
-		SynchronizationEvent event = new SynchronizationEvent();
+		SynchronizationContext event = new SynchronizationContext();
 		event.performQueries = true;
 		event.taskRepository = repository;
 		event.fullSynchronization = true;
@@ -286,7 +286,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 	private void postTaskDataInvalidCredentials() throws Exception {
 		TracTask task = (TracTask) TasksUiUtil.createTask(repository, data.offlineHandlerTicketId + "", null);
 		TasksUi.synchronizeTask(connector, task, true, null);
-		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(),
+		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task.getRepositoryUrl(),
 				task.getTaskId());
 
 		taskData.setNewComment("new comment");

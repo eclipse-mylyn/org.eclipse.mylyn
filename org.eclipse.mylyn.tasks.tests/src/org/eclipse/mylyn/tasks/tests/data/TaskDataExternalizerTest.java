@@ -16,24 +16,24 @@ import java.util.zip.ZipInputStream;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager2;
+import org.eclipse.mylyn.internal.tasks.core.data.TaskDataExternalizer;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataState;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataUtil;
 import org.eclipse.mylyn.tasks.core.IdentityAttributeFactory;
 import org.eclipse.mylyn.tasks.core.IdentityAttributeMapper;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskScheme;
-import org.eclipse.mylyn.tasks.core.data.ITaskDataState;
+import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 
-public class TaskDataManagerTest extends TestCase {
+public class TaskDataExternalizerTest extends TestCase {
 
-	TaskDataManager2 taskDataManager;
+	TaskDataExternalizer externalizer;
 
 	@Override
 	protected void setUp() throws Exception {
-		taskDataManager = new TaskDataManager2(null);
+		externalizer = new TaskDataExternalizer(null);
 	}
 
 	public void testRead() throws Exception {
@@ -41,7 +41,7 @@ public class TaskDataManagerTest extends TestCase {
 		ZipInputStream in = new ZipInputStream(new FileInputStream(file));
 		try {
 			in.getNextEntry();
-			ITaskDataState state = taskDataManager.readState(in);
+			ITaskDataWorkingCopy state = externalizer.readState(in);
 		} finally {
 			in.close();
 		}
@@ -50,17 +50,17 @@ public class TaskDataManagerTest extends TestCase {
 	public void testReadWrite() throws Exception {
 		File file = TaskTestUtil.getFile("testdata/taskdata-1.0-bug-219897.zip");
 		ZipInputStream in = new ZipInputStream(new FileInputStream(file));
-		ITaskDataState state;
+		ITaskDataWorkingCopy state;
 		try {
 			in.getNextEntry();
-			state = taskDataManager.readState(in);
+			state = externalizer.readState(in);
 		} finally {
 			in.close();
 		}
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		taskDataManager.writeState(out, state);
+		externalizer.writeState(out, state);
 		System.err.println(new String(out.toByteArray()));
-		TaskDataState state2 = taskDataManager.readState(new ByteArrayInputStream(out.toByteArray()));
+		TaskDataState state2 = externalizer.readState(new ByteArrayInputStream(out.toByteArray()));
 		assertEquals(state.getConnectorKind(), state2.getConnectorKind());
 		assertEquals(state.getRepositoryUrl(), state2.getRepositoryUrl());
 		assertEquals(state.getTaskId(), state2.getTaskId());
@@ -72,10 +72,10 @@ public class TaskDataManagerTest extends TestCase {
 	public void testMapFromLegacy() throws Exception {
 		File file = TaskTestUtil.getFile("testdata/taskdata-1.0-bug-219897.zip");
 		ZipInputStream in = new ZipInputStream(new FileInputStream(file));
-		ITaskDataState state;
+		ITaskDataWorkingCopy state;
 		try {
 			in.getNextEntry();
-			state = taskDataManager.readState(in);
+			state = externalizer.readState(in);
 		} finally {
 			in.close();
 		}

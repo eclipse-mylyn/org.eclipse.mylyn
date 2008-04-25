@@ -14,9 +14,9 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.mylyn.tasks.core.data.AbstractAttributeMapper;
-import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataCollector;
-import org.eclipse.mylyn.tasks.core.data.ITaskDataState;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
+import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 /**
@@ -38,7 +38,7 @@ public abstract class AbstractTaskDataHandler2 {
 	 * 
 	 * @since 3.0
 	 */
-	public void getMultiTaskData(TaskRepository repository, Set<String> taskIds, AbstractTaskDataCollector collector,
+	public void getMultiTaskData(TaskRepository repository, Set<String> taskIds, TaskDataCollector collector,
 			IProgressMonitor monitor) throws CoreException {
 		throw new UnsupportedOperationException();
 	}
@@ -46,7 +46,7 @@ public abstract class AbstractTaskDataHandler2 {
 	/**
 	 * Return a reference to the newly created report in the case of new task submission, null otherwise
 	 */
-	public abstract String postTaskData(TaskRepository repository, ITaskDataState taskDataState,
+	public abstract String postTaskData(TaskRepository repository, ITaskDataWorkingCopy taskDataState,
 			IProgressMonitor monitor) throws CoreException;
 
 	/**
@@ -75,7 +75,7 @@ public abstract class AbstractTaskDataHandler2 {
 		return false;
 	}
 
-	public abstract AbstractAttributeMapper getAttributeMapper(TaskRepository taskRepository);
+	public abstract TaskAttributeMapper getAttributeMapper(TaskRepository taskRepository);
 
 	/**
 	 * @return Task id for any sub tasks referenced by the provided task data

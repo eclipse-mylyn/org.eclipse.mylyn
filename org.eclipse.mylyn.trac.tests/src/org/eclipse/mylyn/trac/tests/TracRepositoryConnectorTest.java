@@ -43,7 +43,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
-import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataCollector;
+import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.trac.tests.support.TestFixture;
@@ -216,7 +216,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 		//MultiStatus queryStatus = new MultiStatus(TracUiPlugin.PLUGIN_ID, IStatus.OK, "Query result", null);
 		final List<RepositoryTaskData> result = new ArrayList<RepositoryTaskData>();
-		AbstractTaskDataCollector hitCollector = new AbstractTaskDataCollector() {
+		TaskDataCollector hitCollector = new TaskDataCollector() {
 			@Override
 			public void accept(RepositoryTaskData hit) {
 				result.add(hit);

@@ -11,7 +11,7 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.mylyn.tasks.core.data.AttributeManager;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
@@ -30,7 +30,7 @@ public class SingleSelectionAttributeEditor extends AbstractAttributeEditor {
 
 	private CCombo combo;
 
-	public SingleSelectionAttributeEditor(AttributeManager manager, TaskAttribute taskAttribute) {
+	public SingleSelectionAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
 	}
 

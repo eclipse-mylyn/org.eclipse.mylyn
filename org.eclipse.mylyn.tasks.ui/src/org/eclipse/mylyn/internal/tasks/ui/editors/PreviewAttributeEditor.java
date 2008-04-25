@@ -23,7 +23,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.data.AttributeManager;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractRenderingEngine;
 import org.eclipse.swt.SWT;
@@ -49,7 +49,7 @@ public class PreviewAttributeEditor extends AbstractAttributeEditor {
 
 	private final TaskRepository taskRepository;
 
-	public PreviewAttributeEditor(AttributeManager manager, TaskAttribute taskAttribute, TaskRepository taskRepository,
+	public PreviewAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute, TaskRepository taskRepository,
 			AbstractRenderingEngine renderingEngine, RichTextAttributeEditor editor) {
 		super(manager, taskAttribute);
 		Assert.isNotNull(taskRepository);

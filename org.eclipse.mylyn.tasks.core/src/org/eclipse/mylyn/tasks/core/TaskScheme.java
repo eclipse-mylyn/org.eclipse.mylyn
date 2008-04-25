@@ -13,7 +13,7 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
-import org.eclipse.mylyn.tasks.core.data.AbstractAttributeMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachment;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskComment;
@@ -245,7 +245,7 @@ public class TaskScheme {
 	public TaskComment[] getComments() {
 		TaskAttribute attribute = taskData.getRoot().getAttribute(TaskAttribute.CONTAINER_COMMENTS);
 		if (attribute != null) {
-			AbstractAttributeMapper attributeMapper = taskData.getAttributeMapper();
+			TaskAttributeMapper attributeMapper = taskData.getAttributeMapper();
 			Map<String, TaskAttribute> children = attribute.getAttributes();
 			int i = 0;
 			TaskComment[] comments = new TaskComment[children.size()];
@@ -261,7 +261,7 @@ public class TaskScheme {
 	public TaskAttachment[] getAttachments() {
 		TaskAttribute attribute = taskData.getRoot().getAttribute(TaskAttribute.CONTAINER_ATTACHMENTS);
 		if (attribute != null) {
-			AbstractAttributeMapper attributeMapper = taskData.getAttributeMapper();
+			TaskAttributeMapper attributeMapper = taskData.getAttributeMapper();
 			Map<String, TaskAttribute> children = attribute.getAttributes();
 			int i = 0;
 			TaskAttachment[] attachments = new TaskAttachment[children.size()];
@@ -277,7 +277,7 @@ public class TaskScheme {
 	public TaskOperation[] getOperations() {
 		TaskAttribute attribute = taskData.getRoot().getAttribute(TaskAttribute.CONTAINER_OPERATIONS);
 		if (attribute != null) {
-			AbstractAttributeMapper attributeMapper = taskData.getAttributeMapper();
+			TaskAttributeMapper attributeMapper = taskData.getAttributeMapper();
 			Map<String, TaskAttribute> children = attribute.getAttributes();
 			int i = 0;
 			TaskOperation[] operations = new TaskOperation[children.size()];
