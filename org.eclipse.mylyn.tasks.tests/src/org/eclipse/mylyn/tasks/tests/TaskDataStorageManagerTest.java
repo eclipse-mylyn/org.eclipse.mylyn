@@ -25,7 +25,7 @@ import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 /**
  * @author Rob Elves
  */
-public class TaskDataManagerTest extends TestCase {
+public class TaskDataStorageManagerTest extends TestCase {
 
 	TaskDataStorageManager offlineTaskDataManager;
 

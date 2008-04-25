@@ -25,7 +25,7 @@ public class AllTasksTests {
 		suite.addTestSuite(TaskListPresentationTest.class);
 		suite.addTestSuite(TaskRepositoryTest.class);
 		suite.addTestSuite(TaskRepositorySorterTest.class);
-		suite.addTestSuite(TaskDataManagerTest.class);
+		suite.addTestSuite(TaskDataStorageManagerTest.class);
 		suite.addTestSuite(CopyDetailsActionTest.class);
 		suite.addTestSuite(NewTaskFromSelectionActionTest.class);
 		suite.addTestSuite(TaskListTest.class);

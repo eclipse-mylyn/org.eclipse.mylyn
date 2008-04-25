@@ -62,7 +62,7 @@ public class TaskDataStore {
 		writeState(file, state);
 	}
 
-	public synchronized void putTaskData(File file, TaskData data) throws CoreException {
+	public synchronized void putTaskData(File file, TaskData data, boolean setLastRead) throws CoreException {
 		Assert.isNotNull(file);
 		Assert.isNotNull(data);
 
@@ -70,11 +70,14 @@ public class TaskDataStore {
 		try {
 			state = readState(file);
 		} catch (CoreException e) {
-			// FIME: handle
+			// FIME: now what? reading failed: purge user edits or propagate exception?
 			e.printStackTrace();
 		}
 		if (state == null) {
 			state = new TaskDataState(data.getConnectorKind(), data.getRepositoryUrl(), data.getTaskId());
+		}
+		if (setLastRead) {
+			state.setLastReadData(state.getRepositoryData());
 		}
 		state.setRepositoryData(data);
 		writeState(file, state);
@@ -115,6 +118,22 @@ public class TaskDataStore {
 			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Error reading task data",
 					e));
 		}
+	}
+
+	public synchronized void putLastRead(File file, TaskData data) throws CoreException {
+		Assert.isNotNull(file);
+		Assert.isNotNull(data);
+
+		TaskDataState state = readState(file);
+		if (state == null) {
+			state = new TaskDataState(data.getConnectorKind(), data.getRepositoryUrl(), data.getTaskId());
+		}
+		state.setLastReadData(data);
+		writeState(file, state);
+	}
+
+	public void putTaskData(File file, TaskDataState state) throws CoreException {
+		writeState(file, state);
 	}
 
 }

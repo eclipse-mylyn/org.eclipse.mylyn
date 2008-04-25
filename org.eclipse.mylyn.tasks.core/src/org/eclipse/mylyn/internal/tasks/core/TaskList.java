@@ -22,7 +22,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.ILock;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
@@ -34,6 +33,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
+import org.eclipse.mylyn.web.core.Policy;
 
 /**
  * Stores and manages task list elements and their containment hierarchy.
@@ -656,9 +656,14 @@ public class TaskList implements ISchedulingRule, ITaskList {
 		}
 	}
 
+	public void run(ITaskListRunnable runnable) throws CoreException {
+		run(runnable, null);
+	}
+
 	public void run(ITaskListRunnable runnable, IProgressMonitor monitor) throws CoreException {
+		monitor = Policy.monitorFor(monitor);
 		try {
-			lock(new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN));
+			lock(monitor);
 
 			runnable.execute(monitor);
 

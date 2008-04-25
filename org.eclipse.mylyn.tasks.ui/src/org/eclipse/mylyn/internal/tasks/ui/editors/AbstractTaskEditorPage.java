@@ -43,11 +43,11 @@ import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
-import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
-import org.eclipse.mylyn.tasks.core.data.TaskDataModelListener;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModelListener;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -158,7 +158,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 	private ToggleTaskActivationAction activateAction;
 
-	private TaskDataModel attributeManager;
+	private TaskDataModel model;
 
 	private Action clearOutgoingAction;
 
@@ -435,7 +435,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		getManagedForm().commit(true);
 
 		try {
-			attributeManager.save(monitor);
+			model.save(monitor);
 		} catch (CoreException e) {
 			// FIXME
 			e.printStackTrace();
@@ -500,26 +500,18 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 				}
 			}
 
-			if (connector != null) {
-				String taskUrl = connector.getTaskUrl(taskData.getRepositoryUrl(), taskData.getTaskId());
-				if (taskUrl == null && task != null && task.hasValidUrl()) {
-					taskUrl = task.getUrl();
-				}
+			final String taskUrlToOpen = task.getUrl();
+			if (taskUrlToOpen != null) {
+				openBrowserAction = new Action() {
+					@Override
+					public void run() {
+						TasksUiUtil.openUrl(taskUrlToOpen);
+					}
+				};
 
-				final String taskUrlToOpen = taskUrl;
-
-				if (taskUrlToOpen != null) {
-					openBrowserAction = new Action() {
-						@Override
-						public void run() {
-							TasksUiUtil.openUrl(taskUrlToOpen);
-						}
-					};
-
-					openBrowserAction.setImageDescriptor(TasksUiImages.BROWSER_OPEN_TASK);
-					openBrowserAction.setToolTipText("Open with Web Browser");
-					toolBarManager.add(openBrowserAction);
-				}
+				openBrowserAction.setImageDescriptor(TasksUiImages.BROWSER_OPEN_TASK);
+				openBrowserAction.setToolTipText("Open with Web Browser");
+				toolBarManager.add(openBrowserAction);
 			}
 		}
 	}
@@ -529,7 +521,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 	public abstract AttributeEditorToolkit getAttributeEditorToolkit();
 
 	protected TaskDataModel getAttributeManager() {
-		return attributeManager;
+		return model;
 	}
 
 	public AbstractRepositoryConnector getConnector() {
@@ -573,23 +565,23 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		try {
 			ITaskDataWorkingCopy taskDataState = TasksUi.getTaskDataManager().createWorkingCopy(task,
 					getConnectorKind());
-			attributeManager = new TaskDataModel(taskDataState);
+			model = new TaskDataModel(taskDataState);
 		} catch (CoreException e) {
 			// FIXME
 			e.printStackTrace();
 		}
 
 		taskRepository = TasksUi.getRepositoryManager().getRepository(getConnectorKind(),
-				attributeManager.getTaskData().getRepositoryUrl());
+				model.getTaskData().getRepositoryUrl());
 		connector = TasksUi.getRepositoryManager().getRepositoryConnector(getConnectorKind());
 
-		attributeManager.addAttributeManagerListener(new TaskDataModelListener() {
+		setTaskData(model.getTaskData());
+		model.addModelListener(new TaskDataModelListener() {
+			@Override
 			public void attributeChanged(TaskAttribute attribute) {
 				getManagedForm().dirtyStateChanged();
 			}
 		});
-
-		refreshInput();
 
 		TasksUi.getTaskListManager().getTaskList().addChangeListener(taskListChangeListener);
 	}
@@ -676,13 +668,18 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 	private void refreshInput() {
 		try {
-			attributeManager.refresh(null);
+			model.refresh(null);
 		} catch (CoreException e) {
-			// FIXME
-			e.printStackTrace();
+			getParentEditor().setMessage("Failed to read task data: " + e.getMessage(), IMessageProvider.ERROR);
+			taskData = null;
+			return;
 		}
 
-		taskData = attributeManager.getTaskData();
+		setTaskData(model.getTaskData());
+	}
+
+	private void setTaskData(TaskData taskData) {
+		this.taskData = taskData;
 
 		needsComments = !taskData.isNew();
 		needsAttachments = !taskData.isNew();

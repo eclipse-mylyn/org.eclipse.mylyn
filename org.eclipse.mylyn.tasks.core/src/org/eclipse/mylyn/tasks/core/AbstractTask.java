@@ -87,6 +87,8 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 
 	private int estimatedTimeHours = 1;
 
+	private boolean markReadPending;
+
 	public enum PriorityLevel {
 		P1, P2, P3, P4, P5;
 
@@ -533,6 +535,20 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 	 */
 	public void setModificationDate(Date modificationDate) {
 		this.modificationDate = modificationDate;
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public boolean isMarkReadPending() {
+		return markReadPending;
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public void setMarkReadPending(boolean markReadPending) {
+		this.markReadPending = markReadPending;
 	}
 
 }

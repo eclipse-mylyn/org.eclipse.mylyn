@@ -18,6 +18,19 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
  */
 public interface ITaskDataManager {
 
+	public abstract ITaskDataWorkingCopy createWorkingCopy(AbstractTask task, String kind) throws CoreException;
+
+	public abstract void discardEdits(AbstractTask task, String kind) throws CoreException;
+
+	@Deprecated
+	public abstract RepositoryTaskData getNewTaskData(String repositoryUrl, String taskId);
+
+	public abstract TaskData getTaskData(AbstractTask task, String kind) throws CoreException;
+
+	public abstract boolean hasTaskData(AbstractTask task, String connectorKind);
+
+	public abstract void putTaskData(AbstractTask task, TaskData taskData, boolean user) throws CoreException;
+
 	/**
 	 * Saves incoming data and updates task sync state appropriately
 	 * 
@@ -26,22 +39,7 @@ public interface ITaskDataManager {
 	public abstract boolean saveIncoming(final AbstractTask repositoryTask, final RepositoryTaskData newTaskData,
 			boolean forceSync);
 
-	public abstract void putTaskData(AbstractTask task, TaskData taskData, boolean user) throws CoreException;
-
-	public abstract ITaskDataWorkingCopy createWorkingCopy(AbstractTask task, String kind) throws CoreException;
-
-	public abstract void discardEdits(AbstractTask task, String kind) throws CoreException;
-
-	public abstract TaskData getTaskData(AbstractTask task, String kind) throws CoreException;
-
-	public abstract void putTaskData(AbstractTask task, String kind, TaskData taskData) throws CoreException;
-
-	public abstract boolean hasTaskData(AbstractTask task, String connectorKind);
-
 	@Deprecated
 	public abstract void setNewTaskData(RepositoryTaskData taskData);
-
-	@Deprecated
-	public abstract RepositoryTaskData getNewTaskData(String repositoryUrl, String taskId);
 
 }

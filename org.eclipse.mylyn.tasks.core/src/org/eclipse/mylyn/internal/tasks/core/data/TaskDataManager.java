@@ -17,13 +17,16 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.internal.tasks.core.ITaskListRunnable;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
+import org.eclipse.mylyn.internal.tasks.core.TaskList;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
@@ -54,21 +57,23 @@ public final class TaskDataManager implements ITaskDataManager {
 
 	private final ITaskRepositoryManager repositoryManager;
 
-	private final TaskDataStorageManager taskDataManager;
+	@Deprecated
+	private final TaskDataStorageManager taskDataStorageManager;
 
 	private final TaskDataStore taskDataStore;
 
-	private final ITaskList taskList;
+	private final TaskList taskList;
 
 	public TaskDataManager(TaskDataStorageManager taskDataManager, TaskDataStore taskDataStore,
-			ITaskRepositoryManager repositoryManager, ITaskList taskList) {
-		this.taskDataManager = taskDataManager;
+			ITaskRepositoryManager repositoryManager, TaskList taskList) {
+		this.taskDataStorageManager = taskDataManager;
 		this.taskDataStore = taskDataStore;
 		this.repositoryManager = repositoryManager;
 		this.taskList = taskList;
 	}
 
 	/** public for testing purposes */
+	@Deprecated
 	public boolean checkHasIncoming(AbstractTask repositoryTask, RepositoryTaskData newData) {
 		if (repositoryTask.getSynchronizationState() == RepositoryTaskSyncState.INCOMING) {
 			return true;
@@ -96,24 +101,55 @@ public final class TaskDataManager implements ITaskDataManager {
 		return true;
 	}
 
-	public ITaskDataWorkingCopy createWorkingCopy(AbstractTask task, String kind) throws CoreException {
-		File file = getFile(task, kind);
-		TaskDataState state = taskDataStore.getTaskDataState(file);
+	public ITaskDataWorkingCopy createWorkingCopy(final AbstractTask task, String kind) throws CoreException {
+		final TaskDataState state;
+		final File file = getFile(task, kind);
+		if (!file.exists()) {
+			File oldFile = getFile10(task, kind);
+			state = taskDataStore.getTaskDataState(oldFile);
+			// save migrated task data right away
+			taskDataStore.putTaskData(file, state);
+		} else {
+			state = taskDataStore.getTaskDataState(file);
+		}
 		if (state == null) {
 			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Task data at \"" + file
 					+ "\" not found"));
 		}
 		state.init(this, task);
 		state.revert();
+		taskList.run(new ITaskListRunnable() {
+			public void execute(IProgressMonitor monitor) throws CoreException {
+				task.setMarkReadPending(false);
+				taskDataStore.putLastRead(file, state.getRepositoryData());
+				if (task.getSynchronizationState() == RepositoryTaskSyncState.OUTGOING) {
+					task.setSynchronizationState(RepositoryTaskSyncState.SYNCHRONIZED);
+				} else if (task.getSynchronizationState() == RepositoryTaskSyncState.CONFLICT) {
+					task.setSynchronizationState(RepositoryTaskSyncState.OUTGOING);
+				}
+			}
+		});
+		taskList.notifyTaskChanged(task, false);
 		return state;
 	}
 
-	public void discardEdits(AbstractTask task, String kind) throws CoreException {
-		taskDataStore.discardEdits(getFile(task, kind));
+	public void discardEdits(final AbstractTask task, final String kind) throws CoreException {
+		taskList.run(new ITaskListRunnable() {
+			public void execute(IProgressMonitor monitor) throws CoreException {
+				taskDataStore.discardEdits(getFile(task, kind));
+				if (task.getSynchronizationState() == RepositoryTaskSyncState.OUTGOING) {
+					task.setSynchronizationState(RepositoryTaskSyncState.SYNCHRONIZED);
+				} else if (task.getSynchronizationState() == RepositoryTaskSyncState.CONFLICT) {
+					task.setSynchronizationState(RepositoryTaskSyncState.OUTGOING);
+				}
+			}
+		});
+		taskList.notifyTaskChanged(task, true);
 	}
 
+	@Deprecated
 	public void discardOutgoing(AbstractTask repositoryTask) {
-		taskDataManager.discardEdits(repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId());
+		taskDataStorageManager.discardEdits(repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId());
 		repositoryTask.setSynchronizationState(RepositoryTaskSyncState.SYNCHRONIZED);
 		taskList.notifyTaskChanged(repositoryTask, true);
 	}
@@ -174,38 +210,40 @@ public final class TaskDataManager implements ITaskDataManager {
 		return getFile(task, kind).exists();
 	}
 
-	public void putTaskData(AbstractTask task, String kind, TaskData taskData) throws CoreException {
-		taskDataStore.putTaskData(getFileAndCreatePath(task, kind), taskData);
-	}
+	public void putTaskData(final AbstractTask task, final TaskData taskData, boolean user) throws CoreException {
+		final AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(task.getConnectorKind());
+		final TaskRepository repository = repositoryManager.getRepository(task.getConnectorKind(),
+				task.getRepositoryUrl());
 
-	public void putTaskData(AbstractTask task, TaskData taskData, boolean user) throws CoreException {
-		AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(task.getConnectorKind());
-		TaskRepository repository = repositoryManager.getRepository(task.getConnectorKind(), task.getRepositoryUrl());
-
-		boolean changed = connector.hasChanged(task, taskData);
+		final boolean changed = connector.hasChanged(task, taskData);
 		if (changed || user) {
-			connector.updateTaskFromTaskData(repository, task, taskData);
+			taskList.run(new ITaskListRunnable() {
+				public void execute(IProgressMonitor monitor) throws CoreException {
+					if (!taskData.isPartial()) {
+						// TODO migrate old task data?
+						File file = getFileAndCreatePath(task, task.getConnectorKind());
+						taskDataStore.putTaskData(file, taskData, task.isMarkReadPending());
+						task.setMarkReadPending(false);
+					}
 
-			if (!taskData.isPartial()) {
-				putTaskData(task, task.getConnectorKind(), taskData);
-			}
-		}
+					connector.updateTaskFromTaskData(repository, task, taskData);
 
-		if (changed) {
-			RepositoryTaskSyncState state = task.getSynchronizationState();
-			switch (state) {
-			case OUTGOING:
-				state = RepositoryTaskSyncState.CONFLICT;
-				break;
-			case SYNCHRONIZED:
-				state = RepositoryTaskSyncState.INCOMING;
-				break;
-			}
-			task.setSynchronizationState(state);
-
-			task.setStale(false);
-			task.setSynchronizing(false);
-
+					if (changed) {
+						RepositoryTaskSyncState state = task.getSynchronizationState();
+						switch (state) {
+						case OUTGOING:
+							state = RepositoryTaskSyncState.CONFLICT;
+							break;
+						case SYNCHRONIZED:
+							state = RepositoryTaskSyncState.INCOMING;
+							break;
+						}
+						task.setSynchronizationState(state);
+					}
+					task.setStale(false);
+					task.setSynchronizing(false);
+				}
+			});
 			taskList.notifyTaskChanged(task, false);
 		}
 	}
@@ -215,22 +253,23 @@ public final class TaskDataManager implements ITaskDataManager {
 	 * 
 	 * @return true if call results in change of sync state
 	 */
+	@Deprecated
 	public synchronized boolean saveIncoming(final AbstractTask repositoryTask, final RepositoryTaskData newTaskData,
 			boolean forceSync) {
 		Assert.isNotNull(newTaskData);
 		final RepositoryTaskSyncState startState = repositoryTask.getSynchronizationState();
 		RepositoryTaskSyncState status = repositoryTask.getSynchronizationState();
 
-		RepositoryTaskData previousTaskData = taskDataManager.getNewTaskData(repositoryTask.getRepositoryUrl(),
+		RepositoryTaskData previousTaskData = taskDataStorageManager.getNewTaskData(repositoryTask.getRepositoryUrl(),
 				repositoryTask.getTaskId());
 
 		if (repositoryTask.isSubmitting()) {
 			status = RepositoryTaskSyncState.SYNCHRONIZED;
 			repositoryTask.setSubmitting(false);
-			TaskDataStorageManager dataManager = taskDataManager;
+			TaskDataStorageManager dataManager = taskDataStorageManager;
 			dataManager.discardEdits(repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId());
 
-			taskDataManager.setNewTaskData(newTaskData);
+			taskDataStorageManager.setNewTaskData(newTaskData);
 			/**
 			 * If we set both so we don't see our own changes
 			 * 
@@ -245,7 +284,7 @@ public final class TaskDataManager implements ITaskDataManager {
 				if (checkHasIncoming(repositoryTask, newTaskData)) {
 					status = RepositoryTaskSyncState.CONFLICT;
 				}
-				taskDataManager.setNewTaskData(newTaskData);
+				taskDataStorageManager.setNewTaskData(newTaskData);
 				break;
 
 			case CONFLICT:
@@ -254,7 +293,7 @@ public final class TaskDataManager implements ITaskDataManager {
 				// only most recent incoming will be displayed if two
 				// sequential incoming's /conflicts happen
 
-				taskDataManager.setNewTaskData(newTaskData);
+				taskDataStorageManager.setNewTaskData(newTaskData);
 				break;
 			case SYNCHRONIZED:
 				boolean hasIncoming = checkHasIncoming(repositoryTask, newTaskData);
@@ -263,7 +302,7 @@ public final class TaskDataManager implements ITaskDataManager {
 					repositoryTask.setNotified(false);
 				}
 				if (hasIncoming || previousTaskData == null || forceSync) {
-					taskDataManager.setNewTaskData(newTaskData);
+					taskDataStorageManager.setNewTaskData(newTaskData);
 				}
 				break;
 			}
@@ -272,8 +311,9 @@ public final class TaskDataManager implements ITaskDataManager {
 		return startState != repositoryTask.getSynchronizationState();
 	}
 
+	@Deprecated
 	public void saveOffline(AbstractTask task, RepositoryTaskData taskData) {
-		taskDataManager.setNewTaskData(taskData);
+		taskDataStorageManager.setNewTaskData(taskData);
 	}
 
 	/**
@@ -282,9 +322,10 @@ public final class TaskDataManager implements ITaskDataManager {
 	 * @param modifiedAttributes
 	 *            attributes that have changed during edit session
 	 */
+	@Deprecated
 	public synchronized void saveOutgoing(AbstractTask repositoryTask, Set<RepositoryTaskAttribute> modifiedAttributes) {
 		repositoryTask.setSynchronizationState(RepositoryTaskSyncState.OUTGOING);
-		taskDataManager.saveEdits(repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId(),
+		taskDataStorageManager.saveEdits(repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId(),
 				Collections.unmodifiableSet(modifiedAttributes));
 		taskList.notifyTaskChanged(repositoryTask, false);
 	}
@@ -294,19 +335,52 @@ public final class TaskDataManager implements ITaskDataManager {
 	}
 
 	/**
-	 * @param repositoryTask -
+	 * @param task
 	 *            repository task to mark as read or unread
-	 * @param read -
+	 * @param read
 	 *            true to mark as read, false to mark as unread
 	 */
-	public void setTaskRead(AbstractTask repositoryTask, boolean read) {
-		RepositoryTaskData taskData = taskDataManager.getNewTaskData(repositoryTask.getRepositoryUrl(),
+	public void setTaskRead(final AbstractTask task, final boolean read) {
+		if (!getFile(task, task.getConnectorKind()).exists()) {
+			setTaskReadDeprecated(task, read);
+			return;
+		}
+
+		try {
+			taskList.run(new ITaskListRunnable() {
+				public void execute(IProgressMonitor monitor) throws CoreException {
+					if (read) {
+						if (task.getSynchronizationState() == RepositoryTaskSyncState.INCOMING) {
+							task.setSynchronizationState(RepositoryTaskSyncState.SYNCHRONIZED);
+							task.setMarkReadPending(true);
+						} else if (task.getSynchronizationState() == RepositoryTaskSyncState.CONFLICT) {
+							task.setSynchronizationState(RepositoryTaskSyncState.OUTGOING);
+							task.setMarkReadPending(true);
+						}
+					} else {
+						if (task.getSynchronizationState() == RepositoryTaskSyncState.SYNCHRONIZED) {
+							task.setSynchronizationState(RepositoryTaskSyncState.INCOMING);
+							task.setMarkReadPending(false);
+						}
+					}
+				}
+			});
+		} catch (CoreException e) {
+			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+					"Unexpected error while marking task read", e));
+		}
+		taskList.notifyTaskChanged(task, false);
+	}
+
+	@Deprecated
+	private void setTaskReadDeprecated(AbstractTask repositoryTask, boolean read) {
+		RepositoryTaskData taskData = taskDataStorageManager.getNewTaskData(repositoryTask.getRepositoryUrl(),
 				repositoryTask.getTaskId());
 
 		if (read && repositoryTask.getSynchronizationState().equals(RepositoryTaskSyncState.INCOMING)) {
 			if (taskData != null && taskData.getLastModified() != null) {
 				repositoryTask.setLastReadTimeStamp(taskData.getLastModified());
-				taskDataManager.setOldTaskData(taskData);
+				taskDataStorageManager.setOldTaskData(taskData);
 			}
 			repositoryTask.setSynchronizationState(RepositoryTaskSyncState.SYNCHRONIZED);
 			taskList.notifyTaskChanged(repositoryTask, false);
@@ -327,7 +401,7 @@ public final class TaskDataManager implements ITaskDataManager {
 				// if
 				// (dataManager.getOldTaskData(repositoryTask.getHandleIdentifier())
 				// == null) {
-				taskDataManager.setOldTaskData(taskData);
+				taskDataStorageManager.setOldTaskData(taskData);
 				// }
 			}
 //			else if (repositoryTask.getLastReadTimeStamp() == null && repositoryTask.isLocal()) {
@@ -346,18 +420,18 @@ public final class TaskDataManager implements ITaskDataManager {
 		}
 	}
 
-	public void putEdits(AbstractTask task, String kind, TaskData data) throws CoreException {
-		taskDataStore.putEdits(getFile(task, kind), data);
+	public void putEdits(AbstractTask task, String kind, TaskData editsData) throws CoreException {
+		taskDataStore.putEdits(getFile(task, kind), editsData);
 	}
 
 	@Deprecated
 	public RepositoryTaskData getNewTaskData(String repositoryUrl, String taskId) {
-		return taskDataManager.getNewTaskData(repositoryUrl, taskId);
+		return taskDataStorageManager.getNewTaskData(repositoryUrl, taskId);
 	}
 
 	@Deprecated
 	public void setNewTaskData(RepositoryTaskData taskData) {
-		taskDataManager.setNewTaskData(taskData);
+		taskDataStorageManager.setNewTaskData(taskData);
 	}
 
 }

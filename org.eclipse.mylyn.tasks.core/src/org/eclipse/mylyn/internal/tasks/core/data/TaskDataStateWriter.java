@@ -13,7 +13,7 @@ import java.util.Map;
 
 import javax.xml.transform.sax.TransformerHandler;
 
-import org.eclipse.mylyn.tasks.core.data.ITaskDataState;
+import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.xml.sax.SAXException;
@@ -34,7 +34,7 @@ public class TaskDataStateWriter {
 		this.handler = handler;
 	}
 
-	public void write(ITaskDataState state) throws SAXException {
+	public void write(ITaskDataWorkingCopy state) throws SAXException {
 		handler.startDocument();
 		AttributesImpl atts = new AttributesImpl();
 		atts.addAttribute("", "", ITaskDataConstants.ATTRIBUTE_CONNECTOR_KIND, CDATA, state.getConnectorKind());

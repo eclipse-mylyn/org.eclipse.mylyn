@@ -32,7 +32,7 @@ public class TaskDataModel {
 		this.editedAttributes = new HashSet<TaskAttribute>();
 	}
 
-	public void addAttributeManagerListener(TaskDataModelListener listener) {
+	public void addModelListener(TaskDataModelListener listener) {
 		if (listeners == null) {
 			listeners = new ArrayList<TaskDataModelListener>();
 		}
@@ -98,7 +98,7 @@ public class TaskDataModel {
 		taskDataState.refresh(monitor);
 	}
 
-	public void removeAttributeManagerListener(TaskDataModelListener listener) {
+	public void removeModelListener(TaskDataModelListener listener) {
 		listeners.remove(listener);
 	}
 

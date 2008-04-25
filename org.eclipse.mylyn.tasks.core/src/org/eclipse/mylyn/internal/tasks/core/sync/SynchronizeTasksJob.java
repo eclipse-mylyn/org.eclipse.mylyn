@@ -28,9 +28,9 @@ import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
-import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
 import org.eclipse.mylyn.web.core.Policy;
 
@@ -43,7 +43,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 
 	private final AbstractRepositoryConnector connector;
 
-	private final ITaskDataManager synchronizationManager;
+	private final ITaskDataManager taskDataManager;
 
 	private final AbstractTaskDataHandler taskDataHandler;
 
@@ -57,7 +57,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 			AbstractRepositoryConnector connector, TaskRepository taskRepository, Set<AbstractTask> tasks) {
 		super("Synchronizing Tasks (" + tasks.size() + " tasks)");
 		this.taskList = taskList;
-		this.synchronizationManager = synchronizationManager;
+		this.taskDataManager = synchronizationManager;
 		this.connector = connector;
 		this.taskRepository = taskRepository;
 		this.tasks = tasks;
@@ -162,7 +162,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 
 		boolean changed = connector.updateTaskFromTaskData(repository, task, taskData);
 		if (!taskData.isPartial()) {
-			synchronizationManager.saveIncoming(task, taskData, isUser());
+			taskDataManager.saveIncoming(task, taskData, isUser());
 		} else if (changed && !task.isStale() && task.getSynchronizationState() == RepositoryTaskSyncState.SYNCHRONIZED) {
 			// TODO move to synchronizationManager
 			// set incoming marker for web tasks 
@@ -191,7 +191,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 
 	private void updateFromTaskData(TaskRepository taskRepository, AbstractTask task, TaskData taskData) {
 		try {
-			synchronizationManager.putTaskData(task, taskData, isUser());
+			taskDataManager.putTaskData(task, taskData, isUser());
 		} catch (CoreException e) {
 			updateStatus(taskRepository, task, e.getStatus());
 		}
