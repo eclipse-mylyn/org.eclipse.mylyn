@@ -398,7 +398,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	/**
 	 * Update the title of the editor
 	 */
-	// API 3.0 rename to setTitle()
+	@Deprecated
 	public void updateTitle(String name) {
 		// setContentDescription(name);
 		setPartName(name);
