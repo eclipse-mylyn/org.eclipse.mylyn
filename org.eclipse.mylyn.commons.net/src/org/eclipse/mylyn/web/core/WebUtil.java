@@ -468,10 +468,10 @@ public class WebUtil {
 
 			HttpClient client = new HttpClient();
 			WebUtil.configureHttpClient(client, "");
-			HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, monitor);
 
 			GetMethod method = new GetMethod(location.getUrl());
 			try {
+				HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, monitor);
 				int result = WebUtil.execute(client, hostConfiguration, method, monitor);
 				if (result == HttpStatus.SC_OK) {
 					InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
