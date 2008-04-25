@@ -111,11 +111,11 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 	}
 
 	public boolean isFuture() {
-		return !isPresent() && getStart().after(Calendar.getInstance());
+		return !isPresent() && getStart().after(TaskActivityUtil.getCalendar());
 	}
 
 	public boolean isPresent() {
-		return getStart().before(Calendar.getInstance()) && getEnd().after(Calendar.getInstance());
+		return getStart().before(TaskActivityUtil.getCalendar()) && getEnd().after(TaskActivityUtil.getCalendar());
 	}
 
 	public boolean isToday() {
@@ -177,7 +177,7 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 	@Override
 	public Set<AbstractTask> getChildren() {
 		Set<AbstractTask> children = new HashSet<AbstractTask>();
-		Calendar beginning = Calendar.getInstance();
+		Calendar beginning = TaskActivityUtil.getCalendar();
 		beginning.setTimeInMillis(0);
 		if (isCaptureFloating() && !isFuture()) {
 			for (AbstractTask task : activityManager.getScheduledTasks(beginning, getEnd())) {
@@ -187,7 +187,7 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 			}
 		} else if (isPresent()) {
 			// add all due/overdue
-			Calendar end = Calendar.getInstance();
+			Calendar end = TaskActivityUtil.getCalendar();
 			end.set(5000, 12, 1);
 			for (AbstractTask task : activityManager.getDueTasks(beginning, getEnd())) {
 				if (activityManager.isOwnedByUser(task)) {
@@ -241,4 +241,11 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 		this.captureFloating = captureFloating;
 	}
 
+	@Override
+	public String getSummary() {
+		if (isToday()) {
+			return "Today";
+		}
+		return super.getSummary();
+	}
 }
