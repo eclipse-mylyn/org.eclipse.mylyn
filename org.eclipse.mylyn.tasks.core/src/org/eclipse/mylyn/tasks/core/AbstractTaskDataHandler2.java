@@ -14,10 +14,10 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
-import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
-import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 
 /**
  * Responsible for retrieving and posting task data to a repository.
@@ -46,8 +46,8 @@ public abstract class AbstractTaskDataHandler2 {
 	/**
 	 * Return a reference to the newly created report in the case of new task submission, null otherwise
 	 */
-	public abstract String postTaskData(TaskRepository repository, ITaskDataWorkingCopy taskDataState,
-			IProgressMonitor monitor) throws CoreException;
+	public abstract RepositoryResponse postTaskData(TaskRepository repository, TaskData taskData,
+			Set<TaskAttribute> changedAttributes, IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * Initialize a new task data object with default attributes and values
