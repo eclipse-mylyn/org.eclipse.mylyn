@@ -132,6 +132,8 @@ final class DelegatingTaskExternalizer {
 
 	static final String KEY_STALE = "Stale";
 
+	static final String KEY_MARK_READ_PENDING = "MarkReadPending";
+
 	static final String KEY_LAST_REFRESH = "LastRefreshTimeStamp";
 
 	private List<AbstractTaskListFactory> factories = new ArrayList<AbstractTaskListFactory>();
@@ -223,6 +225,11 @@ final class DelegatingTaskExternalizer {
 			node.setAttribute(KEY_STALE, VAL_TRUE);
 		} else {
 			node.setAttribute(KEY_STALE, VAL_FALSE);
+		}
+		if (task.isMarkReadPending()) {
+			node.setAttribute(KEY_MARK_READ_PENDING, VAL_TRUE);
+		} else {
+			node.setAttribute(KEY_MARK_READ_PENDING, VAL_FALSE);
 		}
 
 		AbstractTask abstractTask = task;
@@ -462,6 +469,12 @@ final class DelegatingTaskExternalizer {
 			task.setStale(true);
 		} else {
 			task.setStale(false);
+		}
+		if (element.hasAttribute(KEY_MARK_READ_PENDING)
+				&& element.getAttribute(KEY_MARK_READ_PENDING).compareTo(VAL_TRUE) == 0) {
+			task.setMarkReadPending(true);
+		} else {
+			task.setMarkReadPending(false);
 		}
 
 		AbstractTask abstractTask = task;

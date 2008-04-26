@@ -101,36 +101,48 @@ public final class TaskDataManager implements ITaskDataManager {
 		return true;
 	}
 
-	public ITaskDataWorkingCopy createWorkingCopy(final AbstractTask task, String kind) throws CoreException {
-		final TaskDataState state;
-		final File file = getFile(task, kind);
-		if (!file.exists()) {
-			File oldFile = getFile10(task, kind);
-			state = taskDataStore.getTaskDataState(oldFile);
-			// save migrated task data right away
-			taskDataStore.putTaskData(file, state);
-		} else {
-			state = taskDataStore.getTaskDataState(file);
-		}
-		if (state == null) {
-			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Task data at \"" + file
-					+ "\" not found"));
-		}
-		state.init(this, task);
-		state.revert();
+	public ITaskDataWorkingCopy createWorkingCopy(final AbstractTask task, final String kind) throws CoreException {
+		final TaskDataState[] result = new TaskDataState[1];
 		taskList.run(new ITaskListRunnable() {
 			public void execute(IProgressMonitor monitor) throws CoreException {
-				task.setMarkReadPending(false);
-				taskDataStore.putLastRead(file, state.getRepositoryData());
-				if (task.getSynchronizationState() == RepositoryTaskSyncState.OUTGOING) {
+				final File file = getMigratedFile(task, kind);
+				final TaskDataState state = taskDataStore.getTaskDataState(file);
+				if (state == null) {
+					throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Task data at \""
+							+ file + "\" not found"));
+				}
+				if (task.isMarkReadPending()) {
+					state.setLastReadData(state.getRepositoryData());
+				}
+				state.init(TaskDataManager.this, task);
+				state.revert();
+				if (task.getSynchronizationState() == RepositoryTaskSyncState.INCOMING) {
 					task.setSynchronizationState(RepositoryTaskSyncState.SYNCHRONIZED);
 				} else if (task.getSynchronizationState() == RepositoryTaskSyncState.CONFLICT) {
 					task.setSynchronizationState(RepositoryTaskSyncState.OUTGOING);
 				}
+				task.setMarkReadPending(true);
+				result[0] = state;
 			}
 		});
 		taskList.notifyTaskChanged(task, false);
-		return state;
+		return result[0];
+	}
+
+	private File getMigratedFile(AbstractTask task, String kind) throws CoreException {
+		File file = getFile(task, kind);
+		if (!file.exists()) {
+			File oldFile = getFile10(task, kind);
+			if (oldFile.exists()) {
+				TaskDataState state = taskDataStore.getTaskDataState(oldFile);
+				// save migrated task data right away
+				if (!file.getParentFile().exists()) {
+					file.getParentFile().mkdirs();
+				}
+				taskDataStore.putTaskData(file, state);
+			}
+		}
+		return file;
 	}
 
 	public void discardEdits(final AbstractTask task, final String kind) throws CoreException {
@@ -190,14 +202,6 @@ public final class TaskDataManager implements ITaskDataManager {
 
 	}
 
-	private File getFileAndCreatePath(AbstractTask task, String kind) {
-		File file = getFile(task, kind);
-		if (!file.getParentFile().exists()) {
-			file.getParentFile().mkdirs();
-		}
-		return file;
-	}
-
 	public TaskData getTaskData(AbstractTask task, String kind) throws CoreException {
 		TaskDataState state = taskDataStore.getTaskDataState(findFile(task, kind));
 		if (state == null) {
@@ -220,8 +224,10 @@ public final class TaskDataManager implements ITaskDataManager {
 			taskList.run(new ITaskListRunnable() {
 				public void execute(IProgressMonitor monitor) throws CoreException {
 					if (!taskData.isPartial()) {
-						// TODO migrate old task data?
-						File file = getFileAndCreatePath(task, task.getConnectorKind());
+						File file = getMigratedFile(task, task.getConnectorKind());
+						if (!file.getParentFile().exists()) {
+							file.getParentFile().mkdirs();
+						}
 						taskDataStore.putTaskData(file, taskData, task.isMarkReadPending());
 						task.setMarkReadPending(false);
 					}

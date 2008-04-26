@@ -120,17 +120,17 @@ public class TaskDataStore {
 		}
 	}
 
-	public synchronized void putLastRead(File file, TaskData data) throws CoreException {
-		Assert.isNotNull(file);
-		Assert.isNotNull(data);
-
-		TaskDataState state = readState(file);
-		if (state == null) {
-			state = new TaskDataState(data.getConnectorKind(), data.getRepositoryUrl(), data.getTaskId());
-		}
-		state.setLastReadData(data);
-		writeState(file, state);
-	}
+//	public synchronized void putLastRead(File file, TaskData data) throws CoreException {
+//		Assert.isNotNull(file);
+//		Assert.isNotNull(data);
+//
+//		TaskDataState state = readState(file);
+//		if (state == null) {
+//			state = new TaskDataState(data.getConnectorKind(), data.getRepositoryUrl(), data.getTaskId());
+//		}
+//		state.setLastReadData(data);
+//		writeState(file, state);
+//	}
 
 	public void putTaskData(File file, TaskDataState state) throws CoreException {
 		writeState(file, state);
