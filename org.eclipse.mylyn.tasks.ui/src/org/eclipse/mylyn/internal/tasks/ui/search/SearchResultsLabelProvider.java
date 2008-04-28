@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.search;
 
 import org.eclipse.mylyn.internal.tasks.core.Person;
+import org.eclipse.mylyn.internal.tasks.core.TaskGroup;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 
 /**
@@ -25,7 +26,7 @@ public class SearchResultsLabelProvider extends TaskElementLabelProvider {
 
 	@Override
 	public String getText(Object object) {
-		if (object instanceof Person) {
+		if (object instanceof Person || object instanceof TaskGroup) {
 			return super.getText(object) + " (" + contentProvider.getChildren(object).length + ")";
 		} else {
 			return super.getText(object);

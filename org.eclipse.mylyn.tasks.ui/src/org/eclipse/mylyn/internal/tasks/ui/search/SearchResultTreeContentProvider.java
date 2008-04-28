@@ -16,6 +16,7 @@ import java.util.Set;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.internal.tasks.core.Person;
+import org.eclipse.mylyn.internal.tasks.core.TaskGroup;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.search.RepositorySearchResult;
 
@@ -25,6 +26,7 @@ import org.eclipse.mylyn.tasks.ui.search.RepositorySearchResult;
  * 
  * @author Rob Elves (moved into task.ui)
  * @author Mik Kersten
+ * @author Frank Becker
  */
 public class SearchResultTreeContentProvider extends SearchResultContentProvider {
 
@@ -35,7 +37,13 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 
 	private final Map<String, Person> owners = new HashMap<String, Person>();
 
-	private boolean groupByOwner = false;
+	private final Map<String, TaskGroup> completeState = new HashMap<String, TaskGroup>();
+
+	public enum GroupBy {
+		NONE, OWNER, COMPLETION;
+	}
+
+	private GroupBy selectedGroup;
 
 	public SearchResultTreeContentProvider(RepositorySearchResultView page) {
 		searchResultsPage = page;
@@ -53,8 +61,10 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 	 */
 	public Object[] getElements(Object inputElement) {
 		if (inputElement instanceof RepositorySearchResult) {
-			if (groupByOwner) {
+			if (selectedGroup == GroupBy.OWNER) {
 				return owners.values().toArray();
+			} else if (selectedGroup == GroupBy.COMPLETION) {
+				return completeState.values().toArray();
 			} else {
 				return elements.toArray();
 			}
@@ -64,8 +74,15 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 	}
 
 	public Object[] getChildren(Object parentElement) {
-		if (groupByOwner && parentElement instanceof Person) {
+		if (selectedGroup == GroupBy.OWNER && parentElement instanceof Person) {
 			Set<AbstractTask> children = ((Person) parentElement).getChildren();
+			if (children != null) {
+				return children.toArray();
+			} else {
+				return EMPTY_ARR;
+			}
+		} else if (selectedGroup == GroupBy.COMPLETION && parentElement instanceof TaskGroup) {
+			Set<AbstractTask> children = ((TaskGroup) parentElement).getChildren();
 			if (children != null) {
 				return children.toArray();
 			} else {
@@ -81,7 +98,7 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 	}
 
 	public boolean hasChildren(Object element) {
-		if (groupByOwner && element instanceof String) {
+		if (selectedGroup == GroupBy.OWNER && element instanceof String) {
 			Set<AbstractTask> children = ((Person) element).getChildren();
 			if (children != null) {
 				return !children.isEmpty();
@@ -110,7 +127,22 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 					owners.put(owner, person);
 				}
 				person.internalAddChild(task);
-
+				boolean completed = task.isCompleted();
+				TaskGroup completeIncomplete = null;
+				if (completed) {
+					completeIncomplete = completeState.get("Complete");
+					if (completeIncomplete == null) {
+						completeIncomplete = new TaskGroup("group-complete", "Complete", GroupBy.COMPLETION.name());
+						completeState.put("Complete", completeIncomplete);
+					}
+				} else {
+					completeIncomplete = completeState.get("Incomplete");
+					if (completeIncomplete == null) {
+						completeIncomplete = new TaskGroup("group-incomplete", "Incomplete", GroupBy.COMPLETION.name());
+						completeState.put("Incomplete", completeIncomplete);
+					}
+				}
+				completeIncomplete.internalAddChild(task);
 			}
 		}
 
@@ -133,15 +165,16 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 	public void clear() {
 		elements.clear();
 		owners.clear();
+		completeState.clear();
 		searchResultsPage.getViewer().refresh();
 	}
 
-	public boolean getGroupByOwner() {
-		return groupByOwner;
+	public GroupBy getSelectedGroup() {
+		return selectedGroup;
 	}
 
-	public void setGroupByOwner(boolean grouping) {
-		this.groupByOwner = grouping;
+	public void setSelectedGroup(GroupBy selectedGroup) {
+		this.selectedGroup = selectedGroup;
 		searchResultsPage.getViewer().setInput(searchResultsPage.getViewer().getInput());
 	}
 }

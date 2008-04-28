@@ -28,11 +28,14 @@ import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
-import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.search.AbstractRepositoryQueryPage;
+import org.eclipse.mylyn.tasks.ui.search.SearchHitCollector;
 import org.eclipse.search.internal.ui.SearchPlugin;
 import org.eclipse.search.ui.ISearchPage;
 import org.eclipse.search.ui.ISearchPageContainer;
+import org.eclipse.search.ui.ISearchQuery;
+import org.eclipse.search.ui.ISearchResultViewPart;
+import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
@@ -49,6 +52,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
@@ -58,6 +64,7 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 /**
  * @author Rob Elves
  * @author Mik Kersten
+ * @author Steffen Pingel
  */
 public class TaskSearchPage extends DialogPage implements ISearchPage {
 
@@ -275,8 +282,8 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 					if (hasSearchPage && searchPage != null && searchPage instanceof ISearchPage) {
 						queryPages[pageIndex] = createPage(repository, (ISearchPage) searchPage);
 					} else {
-						AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
-								.getRepositoryConnector(repository.getConnectorKind());
+						AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+								repository.getConnectorKind());
 						if (connector.canCreateTaskFromKey(repository)) {
 							queryPages[pageIndex] = createPage(repository, new NoSearchPage(repository));
 						}
@@ -386,30 +393,48 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 
 	private void setDefaultValuesAndFocus() {
 		// TODO: generalize selection resolution
-		IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-		AbstractTask selectedTask = null;
-		if (editor instanceof TaskEditor && ((TaskEditor) editor).getEditorInput() instanceof TaskEditorInput) {
-			selectedTask = ((TaskEditorInput) ((TaskEditor) editor).getEditorInput()).getTask();
-		}
-		if (selectedTask == null) {
-			TaskListView taskListView = TaskListView.getFromActivePerspective();
-			if (taskListView != null) {
-				selectedTask = taskListView.getSelectedTask();
-			}
-		}
-
-		if (selectedTask != null) {
-			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(
-					selectedTask.getRepositoryUrl());
-			if (repository != null) {
-				int index = 0;
-				for (String repositoryLabel : repositoryCombo.getItems()) {
-					if (repositoryLabel.equals(repository.getRepositoryLabel())) {
-						repositoryCombo.select(index);
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		if (window != null) {
+			IWorkbenchPage page = window.getActivePage();
+			if (page != null) {
+				String repositoryUrl = null;
+				IWorkbenchPart part = page.getActivePart();
+				if (part instanceof ISearchResultViewPart) {
+					ISearchQuery[] queries = NewSearchUI.getQueries();
+					if (queries.length > 0) {
+						if (queries[0] instanceof SearchHitCollector) {
+							repositoryUrl = ((SearchHitCollector) queries[0]).getRepositoryQuery().getRepositoryUrl();
+						}
 					}
-					index++;
 				}
-				displayQueryPage(repositoryCombo.getSelectionIndex());
+				if (repositoryUrl == null) {
+					IEditorPart editor = page.getActiveEditor();
+					if (editor instanceof TaskEditor) {
+						repositoryUrl = ((TaskEditor) editor).getTaskEditorInput().getTask().getRepositoryUrl();
+					}
+				}
+				if (repositoryUrl == null) {
+					TaskListView taskListView = TaskListView.getFromActivePerspective();
+					if (taskListView != null) {
+						AbstractTask selectedTask = taskListView.getSelectedTask();
+						if (selectedTask != null) {
+							repositoryUrl = selectedTask.getRepositoryUrl();
+						}
+					}
+				}
+				if (repositoryUrl != null) {
+					TaskRepository repository = TasksUi.getRepositoryManager().getRepository(repositoryUrl);
+					if (repository != null) {
+						int index = 0;
+						for (String repositoryLabel : repositoryCombo.getItems()) {
+							if (repositoryLabel.equals(repository.getRepositoryLabel())) {
+								repositoryCombo.select(index);
+							}
+							index++;
+						}
+						displayQueryPage(repositoryCombo.getSelectionIndex());
+					}
+				}
 			}
 		}
 

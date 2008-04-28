@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
@@ -26,6 +27,9 @@ import org.eclipse.mylyn.internal.tasks.ui.AddExistingTaskJob;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListPatternFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.actions.OpenTaskSearchAction;
+import org.eclipse.mylyn.internal.tasks.ui.search.SearchResultTreeContentProvider.GroupBy;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListToolTip;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
@@ -55,10 +59,40 @@ import org.eclipse.ui.progress.IProgressService;
  * @author Rob Elves
  * @author Mik Kersten
  * @author Shawn Minto
+ * @author Frank Becker
+ * @author Steffen Pingel
  */
 public class RepositorySearchResultView extends AbstractTextSearchViewPage implements IAdaptable {
 
-	// The categories to sort bug results by
+	private class GroupingAction extends Action {
+
+		private final GroupBy groupBy;
+
+		public GroupingAction(String text, GroupBy groupBy) {
+			super(text, IAction.AS_CHECK_BOX);
+			this.groupBy = groupBy;
+			groupingActions.add(this);
+		}
+
+		public GroupBy getGroupBy() {
+			return groupBy;
+		}
+
+		@Override
+		public void run() {
+			for (GroupingAction action : groupingActions) {
+				action.setChecked(false);
+			}
+
+			SearchResultTreeContentProvider contentProvider = (SearchResultTreeContentProvider) getViewer().getContentProvider();
+			if (contentProvider.getSelectedGroup() == groupBy) {
+				contentProvider.setSelectedGroup(GroupBy.NONE);
+			} else {
+				contentProvider.setSelectedGroup(groupBy);
+				setChecked(true);
+			}
+		}
+	}
 
 	public static final int ORDER_PRIORITY = 1;
 
@@ -86,9 +120,13 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 
 	private final CreateQueryFromSearchAction addTaskListAction;
 
+	private final Action refineSearchAction;
+
 	private static final String[] SHOW_IN_TARGETS = new String[] { IPageLayout.ID_RES_NAV };
 
-	private final Action groupByAction;
+	private TaskListToolTip toolTip;
+
+	private final List<GroupingAction> groupingActions;
 
 	private static final IShowInTargetList SHOW_IN_TARGET_LIST = new IShowInTargetList() {
 		public String[] getShowInTargetIds() {
@@ -106,26 +144,12 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 
 		openInEditorAction = new OpenSearchResultAction("Open in Editor", this);
 		addTaskListAction = new CreateQueryFromSearchAction("Create Query from Search...", this);
+		refineSearchAction = new OpenTaskSearchAction();
+		refineSearchAction.setText("Refine Search...");
 
-		groupByAction = new Action() {
-
-			@Override
-			public String getText() {
-				return "Group By Owner";
-			}
-
-			@Override
-			public void run() {
-				if (((SearchResultTreeContentProvider) getViewer().getContentProvider()).getGroupByOwner()) {
-					((SearchResultTreeContentProvider) getViewer().getContentProvider()).setGroupByOwner(false);
-					setChecked(false);
-				} else {
-					((SearchResultTreeContentProvider) getViewer().getContentProvider()).setGroupByOwner(true);
-					setChecked(true);
-				}
-
-			}
-		};
+		groupingActions = new ArrayList<GroupingAction>();
+		new GroupingAction("Group By Owner", GroupBy.OWNER);
+		new GroupingAction("Group By Complete", GroupBy.COMPLETION);
 	}
 
 	@Override
@@ -161,6 +185,8 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		// Set the order when the search view is loading so that the items are
 		// sorted right away
 		setSortOrder(currentSortOrder);
+
+		toolTip = new TaskListToolTip(viewer.getControl());
 	}
 
 	@Override
@@ -222,6 +248,12 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 //		setSortOrder(currentSortOrder);
 //
 //		taskContentProvider = (SearchResultContentProvider) viewer.getContentProvider();
+	}
+
+	@Override
+	public void dispose() {
+		toolTip.dispose();
+		super.dispose();
 	}
 
 	/**
@@ -286,10 +318,13 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 
 		// Add the new context menu items
 		menuManager.appendToGroup(IContextMenuConstants.GROUP_VIEWER_SETUP, sortMenuManager);
-		menuManager.appendToGroup(IContextMenuConstants.GROUP_VIEWER_SETUP, groupByAction);
+		for (Action action : groupingActions) {
+			menuManager.appendToGroup(IContextMenuConstants.GROUP_VIEWER_SETUP, action);
+		}
 
 		menuManager.appendToGroup(IContextMenuConstants.GROUP_OPEN, openInEditorAction);
 		menuManager.appendToGroup(IContextMenuConstants.GROUP_OPEN, addTaskListAction);
+		menuManager.appendToGroup(IContextMenuConstants.GROUP_OPEN, refineSearchAction);
 
 		// HACK: this should be a contribution
 		final MenuManager subMenuManager = new MenuManager("Add to " + TaskListView.LABEL_VIEW + " Category");
@@ -331,6 +366,15 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 					}
 				});
 			}
+		}
+	}
+
+	@Override
+	public void createControl(Composite parent) {
+		super.createControl(parent);
+		IMenuManager menuManager = getSite().getActionBars().getMenuManager();
+		for (Action action : groupingActions) {
+			menuManager.appendToGroup(IContextMenuConstants.GROUP_VIEWER_SETUP, action);
 		}
 	}
 
