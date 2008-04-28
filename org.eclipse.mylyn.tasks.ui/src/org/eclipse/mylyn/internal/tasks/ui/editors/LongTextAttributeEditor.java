@@ -12,8 +12,8 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.mylyn.internal.tasks.ui.editors.LayoutHint.ColumnSpan;
 import org.eclipse.mylyn.internal.tasks.ui.editors.LayoutHint.RowSpan;
-import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.ModifyEvent;
@@ -33,7 +33,11 @@ public class LongTextAttributeEditor extends AbstractAttributeEditor {
 
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
-		TextViewer viewer = new TextViewer(parent, SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		int style = SWT.FLAT | SWT.MULTI | SWT.WRAP;
+		if (!isReadOnly()) {
+			style |= SWT.V_SCROLL;
+		}
+		TextViewer viewer = new TextViewer(parent, style);
 		viewer.setDocument(new Document(getValue()));
 
 		final StyledText text = viewer.getTextWidget();
