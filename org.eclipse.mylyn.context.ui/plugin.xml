@@ -19,7 +19,9 @@
  
  	<extension
          point="org.eclipse.mylyn.tasks.ui.editors">
-      	<editorFactory class="org.eclipse.mylyn.internal.context.ui.editors.ContextEditorFactory"/>
+      	<pageFactory
+             id="org.eclipse.mylyn.context.ui.pageFactory.Context"
+			 class="org.eclipse.mylyn.internal.context.ui.editors.ContextPageFactory"/>
    	</extension>
  
   	<extension point = "org.eclipse.ui.popupMenus">
