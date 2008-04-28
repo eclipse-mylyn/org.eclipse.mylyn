@@ -96,4 +96,15 @@ public final class TaskData {
 		return getRoot().getAttribute(key);
 	}
 
+	public TaskAttribute getMappedAttribute(String[] path) {
+		TaskAttribute attribute = getRoot();
+		for (String id : path) {
+			attribute = attribute.getMappedAttribute(id);
+			if (attribute == null) {
+				break;
+			}
+		}
+		return attribute;
+	}
+
 }

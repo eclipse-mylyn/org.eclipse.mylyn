@@ -13,6 +13,6 @@ package org.eclipse.mylyn.tasks.core.data;
  */
 public abstract class TaskDataModelListener {
 
-	public abstract void attributeChanged(TaskAttribute attribute);
+	public abstract void attributeChanged(TaskDataModelEvent event);
 
 }

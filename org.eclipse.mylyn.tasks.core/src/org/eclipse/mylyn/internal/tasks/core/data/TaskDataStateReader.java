@@ -13,8 +13,8 @@ import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler2;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.IdentityAttributeMapper;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeProperties;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.xml.sax.Attributes;
@@ -149,7 +149,7 @@ public class TaskDataStateReader extends DefaultHandler {
 			TaskAttribute child = attribute.getMappedAttribute(TaskAttribute.COMMENT_TEXT);
 			if (child != null) {
 				child.putMetaDataValue(TaskAttribute.META_READ_ONLY, Boolean.toString(true));
-				child.putMetaDataValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_RICH_TEXT);
+				child.putMetaDataValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_LONG_RICH_TEXT);
 			}
 		}
 

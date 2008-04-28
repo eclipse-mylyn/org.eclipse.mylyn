@@ -61,11 +61,11 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 	private final TaskRepository taskRepository;
 
 	public RichTextAttributeEditor(TaskDataModel manager, TaskRepository taskRepository, TaskAttribute taskAttribute) {
-		this(manager, taskAttribute, taskRepository, SWT.MULTI);
+		this(manager, taskRepository, taskAttribute, SWT.MULTI);
 	}
 
-	public RichTextAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute,
-			TaskRepository taskRepository, int style) {
+	public RichTextAttributeEditor(TaskDataModel manager, TaskRepository taskRepository,
+			TaskAttribute taskAttribute, int style) {
 		super(manager, taskAttribute);
 		this.taskRepository = taskRepository;
 		this.style = style;

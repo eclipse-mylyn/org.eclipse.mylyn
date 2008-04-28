@@ -220,4 +220,9 @@ public abstract class TaskAttributeMapper {
 		}
 	}
 
+	public boolean equals(TaskAttribute newAttribute, TaskAttribute oldAttribute) {
+		return newAttribute.getId().equals(oldAttribute.getId())
+				&& newAttribute.getValues().equals(oldAttribute.getValues());
+	}
+
 }

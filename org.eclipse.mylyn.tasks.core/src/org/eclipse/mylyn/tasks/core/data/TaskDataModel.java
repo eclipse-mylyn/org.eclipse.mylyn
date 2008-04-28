@@ -15,6 +15,13 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.ISafeRunnable;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.SafeRunner;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModelEvent.EventKind;
 
 /**
  * @author Steffen Pingel
@@ -53,9 +60,19 @@ public class TaskDataModel {
 
 		unsavedChanedAttributes.add(attribute);
 
-		if (listeners != null) {
-			for (TaskDataModelListener listener : listeners.toArray(new TaskDataModelListener[0])) {
-				listener.attributeChanged(attribute);
+		if (this.listeners != null) {
+			final TaskDataModelEvent event = new TaskDataModelEvent(this, EventKind.CHANGED, attribute);
+			TaskDataModelListener[] listeners = this.listeners.toArray(new TaskDataModelListener[0]);
+			for (final TaskDataModelListener listener : listeners) {
+				SafeRunner.run(new ISafeRunnable() {
+					public void handleException(Throwable e) {
+						StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Listener failed", e));
+					}
+
+					public void run() throws Exception {
+						listener.attributeChanged(event);
+					}
+				});
 			}
 		}
 	}
@@ -65,29 +82,25 @@ public class TaskDataModel {
 	}
 
 	public boolean hasIncomingChanges(TaskAttribute taskAttribute) {
-		TaskData oldTaskData = taskDataState.getLastReadData();
-		if (oldTaskData == null) {
-			return false;
+		TaskData lastReadData = taskDataState.getLastReadData();
+		if (lastReadData == null) {
+			return true;
 		}
 
 		if (hasOutgoingChanges(taskAttribute)) {
 			return false;
 		}
 
-		TaskAttribute oldAttribute = oldTaskData.getMappedAttribute(taskAttribute.getId());
+		TaskAttribute oldAttribute = lastReadData.getMappedAttribute(taskAttribute.getPath());
 		if (oldAttribute == null) {
 			return true;
 		}
-		if (oldAttribute.getValue() != null && !oldAttribute.getValue().equals(taskAttribute.getValue())) {
-			return true;
-		} else if (oldAttribute.getValues() != null && !oldAttribute.getValues().equals(taskAttribute.getValues())) {
-			return true;
-		}
-		return false;
+
+		return !getTaskData().getAttributeMapper().equals(taskAttribute, oldAttribute);
 	}
 
 	public boolean hasOutgoingChanges(TaskAttribute taskAttribute) {
-		return taskDataState.getEditsData().getRoot().getAttribute(taskAttribute.getId()) != null;
+		return taskDataState.getEditsData().getMappedAttribute(taskAttribute.getPath()) != null;
 	}
 
 	public boolean isDirty() {

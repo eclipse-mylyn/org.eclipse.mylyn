@@ -160,7 +160,7 @@ public class TaskComment {
 		}
 		if (getText() != null) {
 			TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.COMMENT_TEXT);
-			TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_LONG_TEXT).applyTo(child);
+			TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_LONG_RICH_TEXT).applyTo(child);
 			mapper.setValue(child, getText());
 		}
 	}

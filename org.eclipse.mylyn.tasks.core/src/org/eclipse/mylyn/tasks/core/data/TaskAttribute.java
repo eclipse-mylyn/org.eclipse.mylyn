@@ -171,6 +171,11 @@ public final class TaskAttribute {
 	/**
 	 * @since 3.0
 	 */
+	public static final String TYPE_LONG_RICH_TEXT = "longRichText";
+
+	/**
+	 * @since 3.0
+	 */
 	public static final String TYPE_MULTI_SELECT = "multiSelect";
 
 	/**
@@ -187,6 +192,11 @@ public final class TaskAttribute {
 	 * @since 3.0
 	 */
 	public static final String TYPE_SHORT_TEXT = "shortText";
+
+	/**
+	 * @since 3.0
+	 */
+	public static final String TYPE_SHORT_RICH_TEXT = "shortRichText";
 
 	/**
 	 * @since 3.0
@@ -219,8 +229,6 @@ public final class TaskAttribute {
 	public static final String USER_REPORTER_NAME = "task.common.user.reporter.name";
 
 	public static final String OPERATION_NAME = "task.common.operation.name";
-
-	public static final String TYPE_RICH_TEXT = "richText";
 
 	public static final String PERSON_NAME = "task.common.person.name";
 
@@ -470,6 +478,17 @@ public final class TaskAttribute {
 				target.deepAddCopy(child);
 			}
 		}
+	}
+
+	public String[] getPath() {
+		List<String> path = new ArrayList<String>();
+		TaskAttribute attribute = this;
+		while (attribute.getParentAttribute() != null) {
+			path.add(attribute.getId());
+			attribute = attribute.getParentAttribute();
+		}
+		Collections.reverse(path);
+		return path.toArray(new String[0]);
 	}
 
 }

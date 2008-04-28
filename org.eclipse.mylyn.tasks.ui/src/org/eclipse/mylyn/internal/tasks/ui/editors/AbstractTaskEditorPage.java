@@ -46,6 +46,7 @@ import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModelEvent;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModelListener;
 import org.eclipse.mylyn.tasks.core.sync.SubmitJobEvent;
 import org.eclipse.mylyn.tasks.core.sync.SubmitJobListener;
@@ -593,7 +594,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		setTaskData(model.getTaskData());
 		model.addModelListener(new TaskDataModelListener() {
 			@Override
-			public void attributeChanged(TaskAttribute attribute) {
+			public void attributeChanged(TaskDataModelEvent event) {
 				getManagedForm().dirtyStateChanged();
 			}
 		});
