@@ -2798,6 +2798,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		return null;
 	}
 
+	@SuppressWarnings("deprecation")
 	protected void saveTaskOffline(IProgressMonitor progressMonitor) {
 		if (taskData == null) {
 			return;
@@ -2831,6 +2832,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * Updates the title of the editor
 	 * 
 	 */
+	@SuppressWarnings("deprecation")
 	protected void updateEditorTitle() {
 		setPartName(editorInput.getName());
 		((TaskEditor) this.getEditor()).updateTitle(editorInput.getName());
@@ -3596,6 +3598,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						final AbstractTask finalModifiedTask = modifiedTask;
 						TasksUi.synchronizeTask(connector, modifiedTask, true, new JobChangeAdapter() {
 
+							@SuppressWarnings("deprecation")
 							@Override
 							public void done(IJobChangeEvent event) {
 

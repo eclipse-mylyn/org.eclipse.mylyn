@@ -40,6 +40,7 @@ public interface ITaskDataManager {
 	 * 
 	 * @return true if call results in change of sync state
 	 */
+	@Deprecated
 	public abstract boolean saveIncoming(final AbstractTask repositoryTask, final RepositoryTaskData newTaskData,
 			boolean forceSync);
 
