@@ -19,7 +19,7 @@ public class PlanningPageFactory extends AbstractTaskEditorPageFactory {
 
 	@Override
 	public boolean canCreatePageFor(TaskEditorInput input) {
-		return input.getTask() != null;
+		return true;
 	}
 
 	@Override

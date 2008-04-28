@@ -16,23 +16,21 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylyn.internal.tasks.core.sync.SubmitTaskJob;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ClearOutgoingAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewSubTaskAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeEditorAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.ToggleTaskActivationAction;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -48,6 +46,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModelEvent;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModelListener;
+import org.eclipse.mylyn.tasks.core.sync.SubmitJob;
 import org.eclipse.mylyn.tasks.core.sync.SubmitJobEvent;
 import org.eclipse.mylyn.tasks.core.sync.SubmitJobListener;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
@@ -105,6 +104,38 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		}
 
 		@Override
+		public void done(SubmitJobEvent event) {
+			final SubmitJob job = event.getJob();
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				private void openNewTask(AbstractTask newTask) {
+					AbstractTaskContainer parent = null;
+					if (actionPart != null) {
+						parent = actionPart.getCategory();
+					}
+					// TODO copy context and scheduling
+					TasksUi.getTaskListManager().getTaskList().addTask(newTask, parent);
+					close();
+					TasksUi.getTaskListManager().getTaskList().deleteTask(getTask());
+					TasksUiUtil.openTaskInBackground(newTask);
+				}
+
+				public void run() {
+					if (job.getError() == null) {
+						if (job.getTask().equals(getTask())) {
+							refreshFormContent();
+						} else {
+							openNewTask(job.getTask());
+						}
+					} else {
+						handleSubmitError(job);
+					}
+
+					showEditorBusy(false);
+				}
+			});
+		}
+
+		@Override
 		public void taskDataPosted(SubmitJobEvent event, IProgressMonitor monitor) throws CoreException {
 			// attach context if required
 			if (attachContext && connector.getAttachmentHandler() != null) {
@@ -114,52 +145,6 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 		@Override
 		public void taskSynchronized(SubmitJobEvent event, IProgressMonitor monitor) {
-			final SubmitTaskJob job = (SubmitTaskJob) event.getJob();
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					if (job.getStatus() == null) {
-						AbstractTask task = job.getTask();
-						if (task != null) {
-							updateTask(task);
-						}
-
-						refreshFormContent();
-					} else {
-						handleSubmitError(job.getStatus());
-					}
-
-					showEditorBusy(false);
-				}
-			});
-		}
-
-		private void handleSubmitError(IStatus status) {
-			if (form != null && !form.isDisposed()) {
-				if (status.getCode() == RepositoryStatus.ERROR_IO) {
-					getParentEditor().setMessage(ERROR_NOCONNECTIVITY, IMessageProvider.ERROR);
-					StatusHandler.log(status);
-				} else if (status.getCode() == RepositoryStatus.REPOSITORY_COMMENT_REQUIRED) {
-					StatusHandler.displayStatus("Comment required", status);
-					if (!getManagedForm().getForm().isDisposed() && newCommentPart != null) {
-						newCommentPart.setFocus();
-					}
-				} else if (status.getCode() == RepositoryStatus.ERROR_REPOSITORY_LOGIN) {
-					if (TasksUiUtil.openEditRepositoryWizard(taskRepository) == Window.OK) {
-						submitToRepository();
-						return;
-					}
-				} else {
-					StatusHandler.displayStatus("Submit failed", status);
-				}
-			}
-		}
-
-		private void updateTask(AbstractTask task) {
-//			TasksUi.getTaskListManager().getTaskList().addTask(task, actionPart.getCategory());
-
-			AbstractTaskEditorPage.this.task = task;
-
-			// FIXME refresh editor
 		}
 
 	}
@@ -171,10 +156,6 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 	private static final Font TITLE_FONT = JFaceResources.getBannerFont();
 
 	private TaskEditorActionPart actionPart;
-
-	private ToggleTaskActivationAction activateAction;
-
-	private TaskDataModel model;
 
 	private Action clearOutgoingAction;
 
@@ -199,6 +180,10 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 	private boolean formBusy;
 
 	private Action historyAction;
+
+	private TaskDataModel model;
+
+	private boolean needsAddToCategory;
 
 	private boolean needsAttachments;
 
@@ -233,7 +218,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		public void containersChanged(Set<TaskContainerDelta> containers) {
 			AbstractTask taskToRefresh = null;
 			for (TaskContainerDelta taskContainerDelta : containers) {
-				if (task != null && task.equals(taskContainerDelta.getContainer())) {
+				if (task.equals(taskContainerDelta.getContainer())) {
 					if (taskContainerDelta.getKind().equals(TaskContainerDelta.Kind.CONTENT)) {
 						taskToRefresh = (AbstractTask) taskContainerDelta.getContainer();
 						break;
@@ -253,7 +238,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 										}
 									});
 
-							// API EDITOR this needs to be tracked somewhere else
+							// TODO EDITOR this needs to be tracked somewhere else
 							if (actionPart != null) {
 								actionPart.setSubmitEnabled(false);
 							}
@@ -302,6 +287,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 	 */
 	private void createActionsSection(Composite composite) {
 		actionPart = new TaskEditorActionPart();
+		actionPart.setNeedsAddToCategory(needsAddToCategory);
 		initializePart(composite, actionPart);
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, true).applyTo(actionPart.getControl());
 	}
@@ -332,46 +318,42 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 	@Override
 	protected void createFormContent(final IManagedForm managedForm) {
-		super.createFormContent(managedForm);
+		form = managedForm.getForm();
+		toolkit = managedForm.getToolkit();
+		registerDropListener(form);
 
 		try {
-			reflow = false;
+			setReflow(false);
 
-			form = managedForm.getForm();
-			toolkit = managedForm.getToolkit();
-			registerDropListener(form);
+			editorComposite = form.getBody();
+			GridLayout editorLayout = new GridLayout();
+			editorComposite.setLayout(editorLayout);
+			editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-			try {
-				form.setRedraw(false);
-				editorComposite = form.getBody();
-				GridLayout editorLayout = new GridLayout();
-				editorComposite.setLayout(editorLayout);
-				editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskRepository.getConnectorKind());
+			if (connectorUi == null) {
+				getParentEditor().setMessage("The editor may not be fully loaded", IMessageProvider.INFORMATION,
+						new HyperlinkAdapter() {
+							@Override
+							public void linkActivated(HyperlinkEvent e) {
+								refreshFormContent();
+							}
+						});
+			}
 
-				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskRepository.getConnectorKind());
-				if (connectorUi == null) {
-					getParentEditor().setMessage("The editor may not be fully loaded", IMessageProvider.INFORMATION,
-							new HyperlinkAdapter() {
-								@Override
-								public void linkActivated(HyperlinkEvent e) {
-									refreshFormContent();
-								}
-							});
-				}
-
-				if (taskData != null) {
-					createSections();
-				}
-
-				updateHeaderControls();
-			} finally {
-				form.setRedraw(true);
+			updateHeaderControls();
+			if (taskData != null) {
+				createSections();
 			}
 		} finally {
-			reflow = true;
+			setReflow(true);
 		}
+		resetLayout();
+	}
 
-		form.reflow(true);
+	protected TaskDataModel createModel(TaskEditorInput input) throws CoreException {
+		ITaskDataWorkingCopy taskDataState = TasksUi.getTaskDataManager().getWorkingCopy(task, getConnectorKind());
+		return new TaskDataModel(taskDataState);
 	}
 
 	private void createNewCommentSection(Composite composite) {
@@ -436,9 +418,6 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 	@Override
 	public void dispose() {
 		TasksUi.getTaskListManager().getTaskList().removeChangeListener(taskListChangeListener);
-		if (activateAction != null) {
-			activateAction.dispose();
-		}
 		super.dispose();
 	}
 
@@ -452,18 +431,17 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 		try {
 			model.save(monitor);
-		} catch (CoreException e) {
-			// FIXME
-			e.printStackTrace();
-		}
-
-		if (task != null) {
-			task.setSynchronizationState(RepositoryTaskSyncState.OUTGOING);
-			TasksUi.getTaskListManager().getTaskList().notifyTaskChanged(task, false);
+		} catch (final CoreException e) {
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error saving task", e));
+			getParentEditor().setMessage("Could not save task", IMessageProvider.ERROR, new HyperlinkAdapter() {
+				@Override
+				public void linkActivated(HyperlinkEvent event) {
+					StatusHandler.displayStatus("Save failed", e.getStatus());
+				}
+			});
 		}
 
 		getManagedForm().dirtyStateChanged();
-
 		updateHeaderControls();
 	}
 
@@ -472,31 +450,63 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		throw new UnsupportedOperationException();
 	}
 
+	public void doSubmit() {
+		showEditorBusy(true);
+
+		doSave(new NullProgressMonitor());
+
+		SubmitJob submitJob = TasksUi.getJobFactory().createSubmitJob(connector, taskRepository, task,
+				getModel().getTaskData(), getModel().getChangedAttributes());
+		submitJob.addSubmitJobListener(new SubmitTaskJobListener(actionPart.getAttachContext()));
+		submitJob.schedule();
+	}
+
 	/**
 	 * Override for customizing the toolbar.
-	 * 
-	 * @since 2.1 (NOTE: likely to change for 3.0)
 	 */
-	protected void fillToolBar(IToolBarManager toolBarManager) {
-		if ((taskData != null && !taskData.isNew()) || task != null) {
-			synchronizeEditorAction = new SynchronizeEditorAction();
-			synchronizeEditorAction.selectionChanged(new StructuredSelection(this));
-			toolBarManager.add(synchronizeEditorAction);
-		}
+	public void fillToolBar(IToolBarManager toolBarManager) {
+		ControlContribution repositoryLabelControl = new ControlContribution("Title") { //$NON-NLS-1$
+			@Override
+			protected Control createControl(Composite parent) {
+				Composite composite = toolkit.createComposite(parent);
+				composite.setLayout(new RowLayout());
+				composite.setBackground(null);
+				String label = taskRepository.getRepositoryLabel();
+				if (label.indexOf("//") != -1) {
+					label = label.substring((taskRepository.getRepositoryUrl().indexOf("//") + 2));
+				}
+
+				Hyperlink link = new Hyperlink(composite, SWT.NONE);
+				link.setText(label);
+				link.setFont(TITLE_FONT);
+				link.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+				link.addHyperlinkListener(new HyperlinkAdapter() {
+
+					@Override
+					public void linkActivated(HyperlinkEvent e) {
+						TasksUiUtil.openEditRepositoryWizard(taskRepository);
+					}
+				});
+
+				return composite;
+			}
+		};
+		toolBarManager.add(repositoryLabelControl);
 
 		if (taskData != null && !taskData.isNew()) {
-			if (task != null) {
-				clearOutgoingAction = new ClearOutgoingAction(Collections.singletonList((AbstractTaskContainer) task));
+			synchronizeEditorAction = new SynchronizeEditorAction();
+			synchronizeEditorAction.selectionChanged(new StructuredSelection(getParentEditor()));
+			toolBarManager.add(synchronizeEditorAction);
 
-				if (clearOutgoingAction.isEnabled()) {
-					toolBarManager.add(clearOutgoingAction);
-				}
+			clearOutgoingAction = new ClearOutgoingAction(Collections.singletonList((AbstractTaskContainer) task));
+			if (clearOutgoingAction.isEnabled()) {
+				toolBarManager.add(clearOutgoingAction);
+			}
 
-				newSubTaskAction = new NewSubTaskAction();
-				newSubTaskAction.selectionChanged(newSubTaskAction, new StructuredSelection(task));
-				if (newSubTaskAction.isEnabled()) {
-					toolBarManager.add(newSubTaskAction);
-				}
+			newSubTaskAction = new NewSubTaskAction();
+			newSubTaskAction.selectionChanged(newSubTaskAction, new StructuredSelection(task));
+			if (newSubTaskAction.isEnabled()) {
+				toolBarManager.add(newSubTaskAction);
 			}
 
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskData.getConnectorKind());
@@ -536,10 +546,6 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 	public abstract AttributeEditorToolkit getAttributeEditorToolkit();
 
-	protected TaskDataModel getModel() {
-		return model;
-	}
-
 	public AbstractRepositoryConnector getConnector() {
 		return connector;
 	}
@@ -553,6 +559,10 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 	 */
 	public Composite getEditorComposite() {
 		return editorComposite;
+	}
+
+	protected TaskDataModel getModel() {
+		return model;
 	}
 
 	public RepositoryTaskOutlinePage getOutline() {
@@ -571,6 +581,37 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		return taskRepository;
 	}
 
+	private void handleSubmitError(SubmitJob job) {
+		if (form != null && !form.isDisposed()) {
+			final IStatus status = job.getError();
+			if (status.getCode() == RepositoryStatus.REPOSITORY_COMMENT_REQUIRED) {
+				StatusHandler.displayStatus("Comment required", status);
+				if (newCommentPart != null) {
+					newCommentPart.setFocus();
+				}
+			} else if (status.getCode() == RepositoryStatus.ERROR_REPOSITORY_LOGIN) {
+				if (TasksUiUtil.openEditRepositoryWizard(taskRepository) == Window.OK) {
+					doSubmit();
+				}
+			} else {
+				String message;
+				if (status.getCode() == RepositoryStatus.ERROR_IO) {
+					message = ERROR_NOCONNECTIVITY;
+				} else if (status.getMessage().length() > 0) {
+					message = "Submit failed: " + status.getMessage();
+				} else {
+					message = "Submit failed";
+				}
+				getParentEditor().setMessage(message, IMessageProvider.ERROR, new HyperlinkAdapter() {
+					@Override
+					public void linkActivated(HyperlinkEvent e) {
+						StatusHandler.displayStatus("Submit failed", status);
+					}
+				});
+			}
+		}
+	}
+
 	@Override
 	public void init(IEditorSite site, IEditorInput input) {
 		super.init(site, input);
@@ -579,25 +620,16 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		task = taskEditorInput.getTask();
 
 		try {
-			ITaskDataWorkingCopy taskDataState = TasksUi.getTaskDataManager().createWorkingCopy(task,
-					getConnectorKind());
-			model = new TaskDataModel(taskDataState);
-		} catch (CoreException e) {
-			// FIXME
-			e.printStackTrace();
+			setModel(createModel(taskEditorInput));
+		} catch (final CoreException e) {
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error opening task", e));
+			getParentEditor().setMessage("Could not open task", IMessageProvider.ERROR, new HyperlinkAdapter() {
+				@Override
+				public void linkActivated(HyperlinkEvent event) {
+					StatusHandler.displayStatus("Open failed", e.getStatus());
+				}
+			});
 		}
-
-		taskRepository = TasksUi.getRepositoryManager().getRepository(getConnectorKind(),
-				model.getTaskData().getRepositoryUrl());
-		connector = TasksUi.getRepositoryManager().getRepositoryConnector(getConnectorKind());
-
-		setTaskData(model.getTaskData());
-		model.addModelListener(new TaskDataModelListener() {
-			@Override
-			public void attributeChanged(TaskDataModelEvent event) {
-				getManagedForm().dirtyStateChanged();
-			}
-		});
 
 		TasksUi.getTaskListManager().getTaskList().addChangeListener(taskListChangeListener);
 	}
@@ -617,6 +649,10 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 	@Override
 	public boolean isSaveAsAllowed() {
 		return false;
+	}
+
+	public boolean needsAddToCategory() {
+		return needsAddToCategory;
 	}
 
 	public boolean needsAttachments() {
@@ -651,34 +687,38 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 			refreshInput();
 
 			updateHeaderControls();
-
 			if (taskData != null) {
-				// save menu
-				Menu menu = editorComposite.getMenu();
-				setMenu(editorComposite, null);
+				try {
+					setReflow(false);
+					// save menu
+					Menu menu = editorComposite.getMenu();
+					setMenu(editorComposite, null);
 
-				// clear old controls
-				for (Control control : editorComposite.getChildren()) {
-					control.dispose();
-				}
+					// clear old controls
+					for (Control control : editorComposite.getChildren()) {
+						control.dispose();
+					}
 
-				// restore menu
-				editorComposite.setMenu(menu);
+					// restore menu
+					editorComposite.setMenu(menu);
 
-				createSections();
+					createSections();
 
-				getParentEditor().setMessage(null, 0);
-				getParentEditor().setActivePage(getId());
+					getParentEditor().setMessage(null, 0);
+					getParentEditor().setActivePage(getId());
 
-				if (actionPart != null) {
-					actionPart.setSubmitEnabled(true);
+					if (actionPart != null) {
+						actionPart.setSubmitEnabled(true);
+					}
+				} finally {
+					setReflow(true);
 				}
 			}
-
 			getManagedForm().dirtyStateChanged();
 		} finally {
 			showEditorBusy(false);
 		}
+		resetLayout();
 	}
 
 	private void refreshInput() {
@@ -691,15 +731,6 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		}
 
 		setTaskData(model.getTaskData());
-	}
-
-	private void setTaskData(TaskData taskData) {
-		this.taskData = taskData;
-
-		needsComments = !taskData.isNew();
-		needsAttachments = !taskData.isNew();
-		needsHeader = !taskData.isNew();
-		needsPlanning = taskData.isNew();
 	}
 
 	private void registerDropListener(final Control control) {
@@ -741,10 +772,6 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		}
 	}
 
-	public void showEditorBusy(boolean busy) {
-		getParentEditor().showBusy(busy);
-	}
-
 	/**
 	 * Used to prevent form menu from being disposed when disposing elements on the form during refresh
 	 */
@@ -760,42 +787,63 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		}
 	}
 
-	public void setReflow(boolean refreshEnabled) {
-		this.reflow = refreshEnabled;
+	private void setModel(TaskDataModel model) {
+		Assert.isNotNull(model);
+		this.model = model;
+		this.taskRepository = TasksUi.getRepositoryManager().getRepository(getConnectorKind(),
+				model.getTaskData().getRepositoryUrl());
+		this.connector = TasksUi.getRepositoryManager().getRepositoryConnector(getConnectorKind());
+		setTaskData(model.getTaskData());
+		model.addModelListener(new TaskDataModelListener() {
+			@Override
+			public void attributeChanged(TaskDataModelEvent event) {
+				getManagedForm().dirtyStateChanged();
+			}
+		});
+	}
+
+	public void setReflow(boolean redrawEnabled) {
+		this.reflow = redrawEnabled;
 		form.setRedraw(reflow);
+	}
+
+	private void setTaskData(TaskData taskData) {
+		this.taskData = taskData;
+
+		needsComments = !taskData.isNew();
+		needsAttachments = !taskData.isNew();
+		needsHeader = !taskData.isNew();
+		needsPlanning = taskData.isNew();
+		needsAddToCategory = taskData.isNew();
 	}
 
 	@Override
 	public void showBusy(boolean busy) {
 		if (!getManagedForm().getForm().isDisposed() && busy != formBusy) {
 			// parentEditor.showBusy(busy);
-			if (synchronizeEditorAction != null) {
-				synchronizeEditorAction.setEnabled(!busy);
-			}
-
-			if (activateAction != null) {
-				activateAction.setEnabled(!busy);
-			}
-
-			if (openBrowserAction != null) {
-				openBrowserAction.setEnabled(!busy);
-			}
-
-			if (historyAction != null) {
-				historyAction.setEnabled(!busy);
-			}
-
-			if (actionPart != null) {
-				actionPart.setSubmitEnabled(!busy);
-			}
-
-			if (newSubTaskAction != null) {
-				newSubTaskAction.setEnabled(!busy);
-			}
-
-			if (clearOutgoingAction != null) {
-				clearOutgoingAction.setEnabled(!busy);
-			}
+//			if (synchronizeEditorAction != null) {
+//				synchronizeEditorAction.setEnabled(!busy);
+//			}
+//
+//			if (openBrowserAction != null) {
+//				openBrowserAction.setEnabled(!busy);
+//			}
+//
+//			if (historyAction != null) {
+//				historyAction.setEnabled(!busy);
+//			}
+//
+//			if (actionPart != null) {
+//				actionPart.setSubmitEnabled(!busy);
+//			}
+//
+//			if (newSubTaskAction != null) {
+//				newSubTaskAction.setEnabled(!busy);
+//			}
+//
+//			if (clearOutgoingAction != null) {
+//				clearOutgoingAction.setEnabled(!busy);
+//			}
 
 			EditorUtil.setEnabledState(editorComposite, !busy);
 
@@ -803,15 +851,8 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		}
 	}
 
-	public void submitToRepository() {
-		showEditorBusy(true);
-
-		doSave(new NullProgressMonitor());
-
-		SubmitTaskJob submitJob = new SubmitTaskJob(TasksUi.getTaskDataManager(), connector, taskRepository, task,
-				getModel().getTaskData(), getModel().getChangedAttributes());
-		submitJob.addSubmitJobListener(new SubmitTaskJobListener(actionPart.getAttachContext()));
-		submitJob.schedule();
+	public void showEditorBusy(boolean busy) {
+		getParentEditor().showBusy(busy);
 	}
 
 	protected boolean supportsRefreshAttributes() {
@@ -831,52 +872,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 						}
 					});
 		}
-
-		ControlContribution repositoryLabelControl = new ControlContribution("Title") { //$NON-NLS-1$
-			@Override
-			protected Control createControl(Composite parent) {
-				Composite composite = toolkit.createComposite(parent);
-				composite.setLayout(new RowLayout());
-				composite.setBackground(null);
-				String label = taskRepository.getRepositoryLabel();
-				if (label.indexOf("//") != -1) {
-					label = label.substring((taskRepository.getRepositoryUrl().indexOf("//") + 2));
-				}
-
-				Hyperlink link = new Hyperlink(composite, SWT.NONE);
-				link.setText(label);
-				link.setFont(TITLE_FONT);
-				link.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-				link.addHyperlinkListener(new HyperlinkAdapter() {
-
-					@Override
-					public void linkActivated(HyperlinkEvent e) {
-						TasksUiUtil.openEditRepositoryWizard(taskRepository);
-					}
-				});
-
-				return composite;
-			}
-		};
-
-		if (getParentEditor().getTopForm() != null) {
-			IToolBarManager toolBarManager = getParentEditor().getTopForm().getToolBarManager();
-
-			// TODO: Remove? Added to debug bug#197355
-			toolBarManager.removeAll();
-			toolBarManager.update(true);
-
-			toolBarManager.add(repositoryLabelControl);
-			fillToolBar(getParentEditor().getTopForm().getToolBarManager());
-
-			if (task != null && taskData != null && !taskData.isNew()) {
-				activateAction = new ToggleTaskActivationAction(task, toolBarManager);
-				toolBarManager.add(new Separator("activation"));
-				toolBarManager.add(activateAction);
-			}
-
-			toolBarManager.update(true);
-		}
+		getParentEditor().updateHeader();
 	}
 
 }

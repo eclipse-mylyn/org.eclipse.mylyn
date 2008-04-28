@@ -101,7 +101,20 @@ public class TaskDataManager implements ITaskDataManager {
 		return true;
 	}
 
-	public ITaskDataWorkingCopy createWorkingCopy(final AbstractTask task, final String kind) throws CoreException {
+	public ITaskDataWorkingCopy createWorkingCopy(final AbstractTask task, final String kind, final TaskData taskData) {
+		Assert.isNotNull(task);
+		Assert.isNotNull(kind);
+		final TaskDataState state = new TaskDataState(taskData.getConnectorKind(), taskData.getRepositoryUrl(),
+				taskData.getTaskId());
+		state.setRepositoryData(taskData);
+		state.setLastReadData(taskData);
+		state.init(TaskDataManager.this, task);
+		state.setSaved(false);
+		state.revert();
+		return state;
+	}
+
+	public ITaskDataWorkingCopy getWorkingCopy(final AbstractTask task, final String kind) throws CoreException {
 		Assert.isNotNull(task);
 		Assert.isNotNull(kind);
 		final TaskDataState[] result = new TaskDataState[1];
@@ -131,6 +144,21 @@ public class TaskDataManager implements ITaskDataManager {
 		return result[0];
 	}
 
+	public void saveWorkingCopy(final AbstractTask task, final String kind, final TaskDataState state)
+			throws CoreException {
+		Assert.isNotNull(task);
+		Assert.isNotNull(kind);
+		taskList.run(new ITaskListRunnable() {
+			public void execute(IProgressMonitor monitor) throws CoreException {
+				final File file = getFile(task, kind);
+				taskDataStore.putTaskData(ensurePathExists(file), state);
+				task.setSynchronizationState(RepositoryTaskSyncState.OUTGOING);
+				taskList.addTask(task);
+			}
+		});
+		taskList.notifyTaskChanged(task, true);
+	}
+
 	public void putUpdatedTaskData(final AbstractTask task, final TaskData taskData, boolean user) throws CoreException {
 		Assert.isNotNull(task);
 		Assert.isNotNull(taskData);
@@ -143,10 +171,7 @@ public class TaskDataManager implements ITaskDataManager {
 				public void execute(IProgressMonitor monitor) throws CoreException {
 					if (!taskData.isPartial()) {
 						File file = getMigratedFile(task, task.getConnectorKind());
-						if (!file.getParentFile().exists()) {
-							file.getParentFile().mkdirs();
-						}
-						taskDataStore.putTaskData(file, taskData, task.isMarkReadPending());
+						taskDataStore.putTaskData(ensurePathExists(file), taskData, task.isMarkReadPending());
 						task.setMarkReadPending(false);
 					}
 
@@ -168,8 +193,15 @@ public class TaskDataManager implements ITaskDataManager {
 					task.setSynchronizing(false);
 				}
 			});
-			taskList.notifyTaskChanged(task, false);
+			taskList.notifyTaskChanged(task, true);
 		}
+	}
+
+	private File ensurePathExists(File file) {
+		if (!file.getParentFile().exists()) {
+			file.getParentFile().mkdirs();
+		}
+		return file;
 	}
 
 	private File getMigratedFile(AbstractTask task, String kind) throws CoreException {
@@ -181,10 +213,7 @@ public class TaskDataManager implements ITaskDataManager {
 			if (oldFile.exists()) {
 				TaskDataState state = taskDataStore.getTaskDataState(oldFile);
 				// save migrated task data right away
-				if (!file.getParentFile().exists()) {
-					file.getParentFile().mkdirs();
-				}
-				taskDataStore.putTaskData(file, state);
+				taskDataStore.putTaskData(ensurePathExists(file), state);
 			}
 		}
 		return file;
@@ -275,10 +304,7 @@ public class TaskDataManager implements ITaskDataManager {
 			public void execute(IProgressMonitor monitor) throws CoreException {
 				if (!taskData.isPartial()) {
 					File file = getMigratedFile(task, task.getConnectorKind());
-					if (!file.getParentFile().exists()) {
-						file.getParentFile().mkdirs();
-					}
-					taskDataStore.setTaskData(file, taskData);
+					taskDataStore.setTaskData(ensurePathExists(file), taskData);
 					task.setMarkReadPending(false);
 				}
 
@@ -287,6 +313,7 @@ public class TaskDataManager implements ITaskDataManager {
 				task.setSynchronizationState(RepositoryTaskSyncState.SYNCHRONIZED);
 				task.setStale(false);
 				task.setSynchronizing(false);
+				task.setSubmitting(false);
 			}
 		});
 		taskList.notifyTaskChanged(task, false);

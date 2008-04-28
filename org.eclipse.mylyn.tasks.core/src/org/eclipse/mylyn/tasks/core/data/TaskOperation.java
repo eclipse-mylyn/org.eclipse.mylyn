@@ -58,26 +58,19 @@ public class TaskOperation {
 
 	public static TaskOperation createFrom(TaskAttribute taskAttribute) {
 		TaskData taskData = taskAttribute.getTaskData();
-		TaskAttributeMapper mapper = taskData.getAttributeMapper();
-		String operationId = "";
+		String operationId = taskData.getAttributeMapper().getValue(taskAttribute);
 		TaskOperation operation = new TaskOperation(taskData.getRepositoryUrl(), taskData.getConnectorKind(),
 				taskData.getTaskId(), operationId);
-		TaskAttribute child = taskAttribute.getMappedAttribute(TaskAttribute.OPERATION_NAME);
-		if (child != null) {
-			operation.setLabel(mapper.getValue(child));
-		}
+		TaskAttributeProperties properties = TaskAttributeProperties.from(taskAttribute);
+		operation.setLabel(properties.getLabel());
 		return operation;
 	}
 
 	public void applyTo(TaskAttribute taskAttribute) {
 		TaskData taskData = taskAttribute.getTaskData();
-		TaskAttributeMapper mapper = taskData.getAttributeMapper();
-
-		TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_OPERATION).applyTo(taskAttribute);
-
-		TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.OPERATION_NAME);
-		TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_SHORT_TEXT).applyTo(child);
-		mapper.setValue(child, getLabel());
+		taskData.getAttributeMapper().setValue(taskAttribute, getOperationId());
+		TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_OPERATION).setLabel(getLabel()).applyTo(
+				taskAttribute);
 	}
 
 }

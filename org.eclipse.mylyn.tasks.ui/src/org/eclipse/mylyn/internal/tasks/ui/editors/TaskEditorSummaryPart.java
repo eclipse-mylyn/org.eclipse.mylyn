@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
+ * @author Raphael Ackermann (bug 195514)
  * @author Steffen Pingel
  */
 public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
@@ -99,10 +100,6 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 		setControl(composite);
 	}
 
-	/**
-	 * @author Raphael Ackermann (modifications) (bug 195514)
-	 * @param toolkit
-	 */
 	protected void createHeaderLayout(Composite composite, FormToolkit toolkit) {
 		headerComposite = toolkit.createComposite(composite);
 		GridLayout layout = new GridLayout(11, false);
@@ -113,6 +110,8 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 
 		TaskAttribute statusAtribute = getTaskData().getMappedAttribute(TaskAttribute.STATUS);
 		addAttribute(headerComposite, toolkit, statusAtribute, 0);
+
+		// TODO show resolution
 
 		TaskAttribute priorityAttribute = getTaskData().getMappedAttribute(TaskAttribute.PRIORITY);
 		addAttribute(headerComposite, toolkit, priorityAttribute);

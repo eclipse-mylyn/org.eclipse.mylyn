@@ -49,7 +49,7 @@ public class TaskDataStateReader extends DefaultHandler {
 
 			// create a unique id for each attachment since the actual id is in a child attribute
 			attribute = container.createAttribute(++attachmentId + "");
-
+			attribute.setValue(attachmentId + "");
 			TaskAttribute child = createAttribute(attribute, TaskAttribute.ATTACHMENT_AUTHOR);
 			child.setValue(getValue(attributes, ITaskDataConstants.ATTRIBUTE_CREATOR));
 			child.putMetaDataValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_PERSON);
@@ -133,6 +133,8 @@ public class TaskDataStateReader extends DefaultHandler {
 
 	private class CommentHandler10 extends ElementHandler {
 
+		private int id;
+
 		private TaskAttribute attribute;
 
 		private TaskAttribute container;
@@ -160,8 +162,8 @@ public class TaskDataStateReader extends DefaultHandler {
 				container.putMetaDataValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_CONTAINER);
 			}
 
-			String commentId = getValue(attributes, ITaskDataConstants.ATTRIBUTE_NUMBER);
-			attribute = container.createAttribute(commentId);
+			attribute = container.createAttribute(++id + "");
+			attribute.setValue(getValue(attributes, ITaskDataConstants.ATTRIBUTE_NUMBER));
 			TaskAttributeProperties.defaults().setReadOnly(true).setType(TaskAttribute.TYPE_COMMENT).applyTo(attribute);
 			attribute.putMetaDataValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, TaskAttribute.COMMENT_TEXT);
 
@@ -231,7 +233,11 @@ public class TaskDataStateReader extends DefaultHandler {
 
 		private TaskAttribute container;
 
+		private TaskAttribute operationAttribute;
+
 		private final TaskAttribute parentAttribute;
+
+		private int id;
 
 		public OperationHandler10(ElementHandler parent, TaskAttribute parentAttribute) {
 			super(parent, ITaskDataConstants.ELEMENT_OPERATION);
@@ -242,20 +248,22 @@ public class TaskDataStateReader extends DefaultHandler {
 		public void start(String uri, String localName, String name, Attributes attributes) throws SAXException {
 			if (container == null) {
 				container = createAttribute(parentAttribute, TaskAttribute.CONTAINER_OPERATIONS);
+				operationAttribute = createAttribute(parentAttribute, TaskAttribute.OPERATION);
 			}
 
+			attribute = container.createAttribute(++id + "");
 			String operationId = getValue(attributes, ITaskDataConstants.ATTRIBUTE_KNOB_NAME);
-			attribute = container.createAttribute(operationId);
+			attribute.setValue(operationId);
 			attribute.putMetaDataValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_CONTAINER);
-
-			TaskAttribute child = createAttribute(attribute, TaskAttribute.OPERATION_NAME);
-			child.setValue(getValue(attributes, ITaskDataConstants.ATTRIBUTE_OPERATION_NAME));
+			attribute.putMetaDataValue(TaskAttribute.META_LABEL, getValue(attributes,
+					ITaskDataConstants.ATTRIBUTE_OPERATION_NAME));
 
 			if (Boolean.parseBoolean(getValue(attributes, ITaskDataConstants.ATTRIBUTE_IS_CHECKED))) {
-				container.setValue(operationId);
+				operationAttribute.setValue(operationId);
 			}
 
 			String value = getOptionalValue(attributes, ITaskDataConstants.ATTRIBUTE_OPTION_NAME);
+			TaskAttribute child;
 			if (value.length() > 0) {
 				attribute.putMetaDataValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, value);
 				child = createAttribute(attribute, value);

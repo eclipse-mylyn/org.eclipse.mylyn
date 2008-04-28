@@ -95,6 +95,7 @@ public class SubmitTaskJob extends SubmitJob {
 		} finally {
 			monitor.done();
 		}
+		fireDone();
 		return Status.OK_STATUS;
 	}
 
@@ -106,7 +107,7 @@ public class SubmitTaskJob extends SubmitJob {
 	}
 
 	@Override
-	public IStatus getStatus() {
+	public IStatus getError() {
 		return errorStatus;
 	}
 

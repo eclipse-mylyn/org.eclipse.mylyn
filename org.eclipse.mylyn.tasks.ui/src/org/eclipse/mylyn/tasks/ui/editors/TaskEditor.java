@@ -22,7 +22,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.viewers.ISelection;
@@ -31,7 +33,10 @@ import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.TaskTransfer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.actions.ToggleTaskActivationAction;
+import org.eclipse.mylyn.internal.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorBusyIndicator;
+import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.IBusyEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionContributor;
 import org.eclipse.mylyn.internal.tasks.ui.util.SelectionProviderAdapter;
@@ -55,6 +60,7 @@ import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.forms.editor.SharedHeaderFormEditor;
 import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.Form;
+import org.eclipse.ui.part.WorkbenchPart;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 
 /**
@@ -83,6 +89,8 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	private IHyperlinkListener messageHyperLinkListener;
 
 	private TaskDragSourceListener titleDragSourceListener;
+
+	private ToggleTaskActivationAction activateAction;
 
 	public TaskEditor() {
 	}
@@ -238,11 +246,12 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		if (editorBusyIndicator != null) {
 			editorBusyIndicator.stop();
 		}
-
 		for (IEditorPart part : editors) {
 			part.dispose();
 		}
-
+		if (activateAction != null) {
+			activateAction.dispose();
+		}
 		super.dispose();
 	}
 
@@ -300,6 +309,9 @@ public class TaskEditor extends SharedHeaderFormEditor {
 					int index = addPage(page);
 					setPageImage(index, factory.getPageImage());
 					setPageText(index, factory.getPageText());
+					if (factory.getPriority() == AbstractTaskEditorPageFactory.PRIORITY_TASK) {
+						setActivePage(index);
+					}
 				} catch (Exception e) {
 					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 							"Could not create editor via factory: " + factory, e));
@@ -415,11 +427,12 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		} else {
 			editorBusyIndicator.stop();
 		}
-
+		Form form = getHeaderForm().getForm().getForm();
+		EditorUtil.setEnabledState(form.getBody(), !busy);
 		for (IFormPage page : getPages()) {
-			if (page instanceof AbstractRepositoryTaskEditor) {
-				AbstractRepositoryTaskEditor editor = (AbstractRepositoryTaskEditor) page;
-				editor.showBusy(busy);
+			if (page instanceof WorkbenchPart) {
+				WorkbenchPart part = (WorkbenchPart) page;
+				part.showBusy(busy);
 			}
 		}
 	}
@@ -500,6 +513,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		}
 	}
 
+	@Deprecated
 	public Form getTopForm() {
 		return this.getHeaderForm().getForm().getForm();
 	}
@@ -508,15 +522,15 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	 * @since 2.3
 	 */
 	public void setMessage(String message, int type, IHyperlinkListener listener) {
-		if (this.getHeaderForm() != null && this.getHeaderForm().getForm() != null) {
-			if (!this.getHeaderForm().getForm().isDisposed()) {
-				getTopForm().setMessage(message, type);
-
+		if (getHeaderForm() != null && getHeaderForm().getForm() != null) {
+			if (!getHeaderForm().getForm().isDisposed()) {
+				Form form = getHeaderForm().getForm().getForm();
+				form.setMessage(message, type);
 				if (messageHyperLinkListener != null) {
-					getTopForm().removeMessageHyperlinkListener(messageHyperLinkListener);
+					form.removeMessageHyperlinkListener(messageHyperLinkListener);
 				}
 				if (listener != null) {
-					getTopForm().addMessageHyperlinkListener(listener);
+					form.addMessageHyperlinkListener(listener);
 				}
 				messageHyperLinkListener = listener;
 			}
@@ -580,6 +594,32 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		} else if (getHeaderForm() != null && getHeaderForm().getForm() != null) {
 			getHeaderForm().getForm().setText(kindLabel);
 		}
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public void updateHeader() {
+		Form form = getHeaderForm().getForm().getForm();
+		IToolBarManager toolBarManager = form.getToolBarManager();
+
+		toolBarManager.removeAll();
+		toolBarManager.update(true);
+
+		for (IFormPage page : getPages()) {
+			if (page instanceof AbstractTaskEditorPage) {
+				AbstractTaskEditorPage taskEditorPage = (AbstractTaskEditorPage) page;
+				taskEditorPage.fillToolBar(toolBarManager);
+			}
+		}
+
+		if (activateAction == null) {
+			activateAction = new ToggleTaskActivationAction(task, toolBarManager);
+		}
+		toolBarManager.add(new Separator("activation"));
+		toolBarManager.add(activateAction);
+
+		toolBarManager.update(true);
 	}
 
 }

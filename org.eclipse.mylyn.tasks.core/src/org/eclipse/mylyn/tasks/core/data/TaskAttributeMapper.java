@@ -185,8 +185,8 @@ public abstract class TaskAttributeMapper {
 		return (container != null) ? new ArrayList<TaskAttribute>(container.getAttributes().values()) : null;
 	}
 
-	public void setTaskOperation(TaskData taskData, TaskAttribute operation) {
-		taskData.getRoot().getAttribute(TaskAttribute.CONTAINER_OPERATIONS).setValue(operation.getId());
+	public void setTaskOperation(TaskAttribute taskAttribute, TaskOperation taskOperation) {
+		taskOperation.applyTo(taskAttribute);
 	}
 
 	public TaskAttribute getAssoctiatedAttribute(TaskAttribute taskAttribute) {
@@ -221,8 +221,7 @@ public abstract class TaskAttributeMapper {
 	}
 
 	public boolean equals(TaskAttribute newAttribute, TaskAttribute oldAttribute) {
-		return newAttribute.getId().equals(oldAttribute.getId())
-				&& newAttribute.getValues().equals(oldAttribute.getValues());
+		return newAttribute.getValues().equals(oldAttribute.getValues());
 	}
 
 }

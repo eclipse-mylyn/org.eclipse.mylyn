@@ -18,7 +18,9 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
  */
 public interface ITaskDataManager {
 
-	public abstract ITaskDataWorkingCopy createWorkingCopy(AbstractTask task, String kind) throws CoreException;
+	public ITaskDataWorkingCopy createWorkingCopy(AbstractTask task, String kind, TaskData taskData);
+
+	public abstract ITaskDataWorkingCopy getWorkingCopy(AbstractTask task, String kind) throws CoreException;
 
 	public abstract void discardEdits(AbstractTask task, String kind) throws CoreException;
 

@@ -506,6 +506,29 @@ public class TasksUiUtil {
 	/**
 	 * @since 3.0
 	 */
+	public static boolean openTaskInBackground(AbstractTask task) {
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		if (window != null) {
+			IEditorPart activeEditor = null;
+			IWorkbenchPage activePage = window.getActivePage();
+			if (activePage != null) {
+				activeEditor = activePage.getActiveEditor();
+			}
+			boolean opened = openTask(task);
+			if (opened && activePage != null && activeEditor != null) {
+				activePage.bringToTop(activeEditor);
+			}
+			return opened;
+		} else {
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unable to open editor for \""
+					+ task.getSummary() + "\": no active workbench window"));
+		}
+		return false;
+	}
+
+	/**
+	 * @since 3.0
+	 */
 	public static boolean openTask(AbstractTask task) {
 		Assert.isNotNull(task);
 
@@ -774,7 +797,8 @@ public class TasksUiUtil {
 				if (connector != null) {
 					RepositoryTaskData taskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(
 							task.getRepositoryUrl(), task.getTaskId());
-					if (taskData != null || connector.getTaskDataHandler() == null) {
+					if (taskData != null || connector.getTaskDataHandler() == null
+							|| connector.getTaskDataHandler2() != null) {
 						TasksUiUtil.openTaskAndRefresh(task);
 					} else {
 						// TODO consider moving this into the editor, i.e. have the editor refresh the task if task data is missing

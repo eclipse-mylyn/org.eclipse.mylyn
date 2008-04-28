@@ -19,11 +19,11 @@ public abstract class AbstractTaskEditorPageFactory {
 
 	public static final int PRIORITY_ADDITIONS = 100;
 
-	public static final int PRIORITY_CONTEXT = 30;
+	public static final int PRIORITY_CONTEXT = 20;
 
 	public static final int PRIORITY_PLANNING = 10;
 
-	public static final int PRIORITY_TASK = 20;
+	public static final int PRIORITY_TASK = 30;
 
 	private String id;
 

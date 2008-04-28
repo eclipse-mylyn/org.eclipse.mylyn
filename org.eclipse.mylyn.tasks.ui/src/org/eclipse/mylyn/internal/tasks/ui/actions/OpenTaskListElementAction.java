@@ -17,6 +17,8 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Event;
 
 /**
  * @author Mik Kersten
@@ -36,11 +38,17 @@ public class OpenTaskListElementAction extends Action {
 
 	@Override
 	public void run() {
+		runWithEvent(null);
+	}
+
+	@Override
+	public void runWithEvent(Event event) {
 		ISelection selection = viewer.getSelection();
 		List<?> list = ((IStructuredSelection) selection).toList();
 		for (Object element : list) {
-			//			if (element instanceof ITaskListElement && !(element instanceof AbstractTaskContainer)) {
-			if (element instanceof AbstractTask) {
+			if (element instanceof AbstractTask && event != null && (event.keyCode & SWT.MOD1) != 0) {
+				TasksUiUtil.openTaskInBackground((AbstractTask) element);
+			} else if (element instanceof AbstractTaskContainer) {
 				TasksUiUtil.refreshAndOpenTaskListElement((AbstractTaskContainer) element);
 			}
 		}

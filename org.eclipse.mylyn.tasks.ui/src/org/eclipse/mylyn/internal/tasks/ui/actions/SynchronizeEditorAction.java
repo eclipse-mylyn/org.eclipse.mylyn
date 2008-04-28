@@ -43,49 +43,43 @@ public class SynchronizeEditorAction extends BaseSelectionListenerAction {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void run() {
-		if (super.getStructuredSelection() != null) {
-			for (Iterator iter = super.getStructuredSelection().iterator(); iter.hasNext();) {
-				runWithSelection(iter.next());
+		if (getStructuredSelection() != null) {
+			for (Iterator it = getStructuredSelection().iterator(); it.hasNext();) {
+				runWithSelection(it.next());
 			}
 		}
 	}
 
 	private void runWithSelection(final Object selectedObject) {
-		AbstractTask repositoryTask = null;
+		AbstractTask task = null;
 		if (selectedObject instanceof TaskEditor) {
 			TaskEditor editor = (TaskEditor) selectedObject;
-			AbstractTask task = editor.getTaskEditorInput().getTask();
-			if (task != null) {
-				repositoryTask = task;
-			}
+			task = editor.getTaskEditorInput().getTask();
 		} else if (selectedObject instanceof AbstractRepositoryTaskEditor) {
 			AbstractRepositoryTaskEditor editor = (AbstractRepositoryTaskEditor) selectedObject;
-			repositoryTask = editor.getRepositoryTask();
+			task = editor.getRepositoryTask();
 		}
 
-		if (repositoryTask != null) {
+		if (task != null) {
 			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-					repositoryTask.getConnectorKind());
+					task.getConnectorKind());
 			if (connector != null) {
-				TasksUi.synchronizeTask(connector, repositoryTask, true,
-						new JobChangeAdapter() {
-
-							@Override
-							public void done(IJobChangeEvent event) {
-								PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-
-									public void run() {
-										if (selectedObject instanceof TaskEditor) {
-											TaskEditor editor = (TaskEditor) selectedObject;
-											editor.refreshEditorContents();
-										} else if (selectedObject instanceof AbstractRepositoryTaskEditor) {
-											((AbstractRepositoryTaskEditor) selectedObject).refreshEditor();
-										}
-									}
-								});
-
+				TasksUi.synchronizeTask(connector, task, true, new JobChangeAdapter() {
+					@Override
+					public void done(IJobChangeEvent event) {
+						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+							public void run() {
+								if (selectedObject instanceof TaskEditor) {
+									TaskEditor editor = (TaskEditor) selectedObject;
+									editor.refreshEditorContents();
+								} else if (selectedObject instanceof AbstractRepositoryTaskEditor) {
+									((AbstractRepositoryTaskEditor) selectedObject).refreshEditor();
+								}
 							}
 						});
+
+					}
+				});
 			}
 		}
 

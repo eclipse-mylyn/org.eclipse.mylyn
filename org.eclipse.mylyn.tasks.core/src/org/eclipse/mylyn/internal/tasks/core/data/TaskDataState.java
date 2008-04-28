@@ -32,6 +32,8 @@ public class TaskDataState implements ITaskDataWorkingCopy {
 
 	private TaskData localTaskData;
 
+	private boolean saved;
+
 	private TaskData repositoryTaskData;
 
 	private final String repositoryUrl;
@@ -40,7 +42,7 @@ public class TaskDataState implements ITaskDataWorkingCopy {
 
 	private final String taskId;
 
-	private TaskDataManager taskSynchronizationManager;
+	private TaskDataManager taskDataManager;
 
 	public TaskDataState(String connectorKind, String repositoryUrl, String taskId) {
 		Assert.isNotNull(connectorKind);
@@ -49,6 +51,7 @@ public class TaskDataState implements ITaskDataWorkingCopy {
 		this.connectorKind = connectorKind;
 		this.repositoryUrl = repositoryUrl;
 		this.taskId = taskId;
+		this.saved = true;
 	}
 
 	@Override
@@ -106,12 +109,16 @@ public class TaskDataState implements ITaskDataWorkingCopy {
 	}
 
 	void init(TaskDataManager taskSynchronizationManager, AbstractTask task) {
-		this.taskSynchronizationManager = taskSynchronizationManager;
+		this.taskDataManager = taskSynchronizationManager;
 		this.task = task;
 	}
 
+	public boolean isSaved() {
+		return saved;
+	}
+
 	public void refresh(IProgressMonitor monitor) throws CoreException {
-		ITaskDataWorkingCopy state = taskSynchronizationManager.createWorkingCopy(task, connectorKind);
+		ITaskDataWorkingCopy state = taskDataManager.getWorkingCopy(task, connectorKind);
 		setRepositoryData(state.getRepositoryData());
 		setEditsData(state.getEditsData());
 		setLastReadData(state.getLastReadData());
@@ -135,7 +142,12 @@ public class TaskDataState implements ITaskDataWorkingCopy {
 		for (TaskAttribute edit : edits) {
 			editsTaskData.getRoot().deepAddCopy(edit);
 		}
-		taskSynchronizationManager.putEdits(task, getConnectorKind(), editsTaskData);
+		if (saved) {
+			taskDataManager.putEdits(task, getConnectorKind(), editsTaskData);
+		} else {
+			taskDataManager.saveWorkingCopy(task, getConnectorKind(), this);
+			setSaved(true);
+		}
 	}
 
 	public void setEditsData(TaskData editsTaskData) {
@@ -148,6 +160,10 @@ public class TaskDataState implements ITaskDataWorkingCopy {
 
 	public void setLocalTaskData(TaskData localTaskData) {
 		this.localTaskData = localTaskData;
+	}
+
+	void setSaved(boolean saved) {
+		this.saved = saved;
 	}
 
 	public void setRepositoryData(TaskData newTaskData) {

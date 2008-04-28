@@ -37,6 +37,8 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 
 	private final TaskRepository taskRepository;
 
+	private Object data;
+
 	/**
 	 * @since 2.0
 	 */
@@ -189,6 +191,20 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 		} else {
 			return description.substring(0, MAX_LABEL_LENGTH) + "...";
 		}
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public Object getData() {
+		return data;
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public void setData(Object data) {
+		this.data = data;
 	}
 
 }

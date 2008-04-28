@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.web.core.Policy;
 
 /**
@@ -45,7 +46,7 @@ public abstract class SubmitJob extends Job {
 		return submitJobListeners.toArray(new SubmitJobListener[0]);
 	}
 
-	public abstract IStatus getStatus();
+	public abstract IStatus getError();
 
 	protected void fireTaskDataPosted(final IProgressMonitor monitor) throws CoreException {
 		SubmitJobListener[] listeners = submitJobListeners.toArray(new SubmitJobListener[0]);
@@ -74,5 +75,25 @@ public abstract class SubmitJob extends Job {
 			}
 		}
 	}
+
+	protected void fireDone() {
+		SubmitJobListener[] listeners = submitJobListeners.toArray(new SubmitJobListener[0]);
+		if (listeners.length > 0) {
+			final SubmitJobEvent event = new SubmitJobEvent(this);
+			for (final SubmitJobListener listener : listeners) {
+				SafeRunner.run(new ISafeRunnable() {
+					public void handleException(Throwable e) {
+						StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Listener failed", e));
+					}
+
+					public void run() throws Exception {
+						listener.done(event);
+					}
+				});
+			}
+		}
+	}
+
+	public abstract AbstractTask getTask();
 
 }

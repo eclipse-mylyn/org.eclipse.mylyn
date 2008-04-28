@@ -18,8 +18,8 @@ import org.eclipse.mylyn.tasks.core.RepositoryOperation;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskComment;
-import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 /**
@@ -107,8 +107,8 @@ public class TaskDataUtil {
 		}
 
 		public RepositoryOperation mapOperation(TaskAttribute attribute, AbstractAttributeFactory factory) {
-			String knobName = attribute.getId();
-			String operationName = getValue(attribute.getAttribute(TaskAttribute.OPERATION_NAME));
+			String knobName = attribute.getValue();
+			String operationName = attribute.getMetaData(TaskAttribute.META_LABEL);
 			RepositoryOperation legacyOperation = new RepositoryOperation(knobName, operationName);
 
 			TaskAttribute associatedAttribute = mapper.getAssoctiatedAttribute(attribute);
@@ -198,7 +198,8 @@ public class TaskDataUtil {
 		public void addOperation(TaskAttribute parent, RepositoryOperation legacyOperation) {
 			String operationId = legacyOperation.getKnobName();
 			TaskAttribute attribute = parent.createAttribute(operationId);
-			createAttribute(attribute, TaskAttribute.OPERATION_NAME).setValue(legacyOperation.getOperationName());
+			attribute.setValue(operationId);
+			attribute.putMetaDataValue(TaskAttribute.META_LABEL, legacyOperation.getOperationName());
 
 			if (legacyOperation.getOptionName() != null) {
 				attribute.putMetaDataValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, legacyOperation.getOptionName());
@@ -265,8 +266,6 @@ public class TaskDataUtil {
 	public static TaskData toTaskData(RepositoryTaskData legacyData, TaskAttributeMapper mapper) {
 		TaskData taskData = new TaskData(mapper, legacyData.getConnectorKind(), legacyData.getRepositoryUrl(),
 				legacyData.getTaskId());
-		taskData.setNew(legacyData.isNew());
-
 		LegacyDataAccessor accessor = new LegacyDataAccessor(taskData);
 		accessor.createAttribute(taskData.getRoot(), TaskAttribute.TASK_KIND).setValue(legacyData.getTaskKind());
 		accessor.addAttributes(taskData.getRoot(), legacyData.getAttributes());

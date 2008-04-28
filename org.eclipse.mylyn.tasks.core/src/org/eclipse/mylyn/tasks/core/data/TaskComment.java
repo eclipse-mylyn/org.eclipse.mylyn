@@ -103,8 +103,9 @@ public class TaskComment {
 	public static TaskComment createFrom(TaskAttribute taskAttribute) {
 		TaskData taskData = taskAttribute.getTaskData();
 		TaskAttributeMapper mapper = taskData.getAttributeMapper();
+		String commentId = mapper.getValue(taskAttribute);
 		TaskComment comment = new TaskComment(taskData.getRepositoryUrl(), taskData.getConnectorKind(),
-				taskData.getTaskId(), taskAttribute.getId());
+				taskData.getTaskId(), commentId);
 		try {
 			comment.setNumber(Integer.parseInt(taskAttribute.getId()));
 		} catch (NumberFormatException e) {
@@ -140,6 +141,7 @@ public class TaskComment {
 		TaskData taskData = taskAttribute.getTaskData();
 		TaskAttributeMapper mapper = taskData.getAttributeMapper();
 
+		mapper.setValue(taskAttribute, getCommentId());
 		TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_COMMENT).applyTo(taskAttribute);
 		taskAttribute.putMetaDataValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, TaskAttribute.COMMENT_TEXT);
 

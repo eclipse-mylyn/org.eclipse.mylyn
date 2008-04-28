@@ -72,15 +72,11 @@ public final class TaskData {
 	 * Returns true if this is a new, unsubmitted task; false otherwise.
 	 */
 	public boolean isNew() {
-		return isNew;
+		return getTaskId().length() == 0;
 	}
 
 	public boolean isPartial() {
 		return partial;
-	}
-
-	public void setNew(boolean isNew) {
-		this.isNew = isNew;
 	}
 
 	public void setPartial(boolean complete) {

@@ -94,8 +94,6 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private static final int NOTES_MINSIZE = 100;
 
-	public static final String ID = "org.eclipse.mylyn.tasks.ui.editors.planning";
-
 	private static final String CLEAR = "Clear";
 
 	private static final String LABEL_DUE = "Due:";
@@ -180,7 +178,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 	private ITaskActivityListener timingListener;
 
 	public TaskPlanningEditor(TaskEditor editor) {
-		super(editor, ID, "Planning");
+		super(editor, TasksUi.ID_PLANNING_PAGE, "Planning");
 		this.parentEditor = editor;
 		TasksUi.getTaskListManager().getTaskList().addChangeListener(TASK_LIST_LISTENER);
 	}

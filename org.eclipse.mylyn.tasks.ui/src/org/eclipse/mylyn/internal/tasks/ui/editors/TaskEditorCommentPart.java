@@ -91,7 +91,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		if (container != null) {
 			comments = new ArrayList<TaskAttribute>(container.getAttributes().values());
 			for (TaskAttribute commentAttribute : comments) {
-				if (getAttributeManager().hasIncomingChanges(commentAttribute)) {
+				if (getModel().hasIncomingChanges(commentAttribute)) {
 					hasIncoming = true;
 					break;
 				}
@@ -115,7 +115,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 		commentComposites = new ArrayList<ExpandableComposite>();
 		for (final TaskAttribute commentAttribute : comments) {
-			boolean hasIncomingChanges = getAttributeManager().hasIncomingChanges(commentAttribute);
+			boolean hasIncomingChanges = getModel().hasIncomingChanges(commentAttribute);
 			TaskComment taskComment = getTaskData().getAttributeMapper().getTaskComment(commentAttribute);
 			int style = ExpandableComposite.TREE_NODE | ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT;
 			if (hasIncomingChanges) {

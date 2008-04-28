@@ -117,6 +117,8 @@ public final class TaskAttribute {
 
 	public static final String NEW_CC = "task.common.newcc";
 
+	public static final String OPERATION = "task.common.operation";
+
 	public static final String PRIORITY = "task.common.priority";
 
 	public static final String PRODUCT = "task.common.product";
@@ -227,8 +229,6 @@ public final class TaskAttribute {
 	public static final String USER_REPORTER = "task.common.user.reporter";
 
 	public static final String USER_REPORTER_NAME = "task.common.user.reporter.name";
-
-	public static final String OPERATION_NAME = "task.common.operation.name";
 
 	public static final String PERSON_NAME = "task.common.person.name";
 

@@ -85,12 +85,12 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 		layout.numColumns = 1;
 		composite.setLayout(layout);
 
-		editor = new RichTextAttributeEditor(getAttributeManager(), getTaskEditorPage().getTaskRepository(), attribute);
+		editor = new RichTextAttributeEditor(getModel(), getTaskEditorPage().getTaskRepository(), attribute);
 
 		AbstractRenderingEngine renderingEngine = getTaskEditorPage().getAttributeEditorToolkit().getRenderingEngine(
 				attribute);
 		if (renderingEngine != null) {
-			PreviewAttributeEditor previewEditor = new PreviewAttributeEditor(getAttributeManager(), attribute,
+			PreviewAttributeEditor previewEditor = new PreviewAttributeEditor(getModel(), attribute,
 					getTaskEditorPage().getTaskRepository(), renderingEngine, editor);
 			previewEditor.createControl(composite, toolkit);
 			GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).applyTo(

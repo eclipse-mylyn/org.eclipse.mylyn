@@ -20,13 +20,13 @@ import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeProperties;
 import org.eclipse.mylyn.tasks.core.data.TaskOperation;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -40,17 +40,16 @@ import org.eclipse.ui.forms.widgets.Section;
 
 public class TaskEditorActionPart extends AbstractTaskEditorPart {
 
+	private static final String KEY_OPERATION = "operation";
+
 	private class RadioButtonListener extends SelectionAdapter {
 
-		public void modifyText(ModifyEvent e) {
-			for (Button button : operationButtons) {
-				if (button != e.widget) {
-					button.setSelection(false);
-				}
-			}
-
-			TaskAttribute operation = (TaskAttribute) e.widget.getData();
-			getTaskData().getAttributeMapper().setTaskOperation(getTaskData(), operation);
+		@Override
+		public void widgetSelected(SelectionEvent event) {
+			setSelectedRadionButton((Button) event.widget);
+			TaskOperation taskOperation = (TaskOperation) event.widget.getData(KEY_OPERATION);
+			getTaskData().getAttributeMapper().setTaskOperation(selectedOperationAttribute, taskOperation);
+			getModel().attributeChanged(selectedOperationAttribute);
 		}
 
 	}
@@ -64,13 +63,8 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		}
 
 		@Override
-		public void focusGained(FocusEvent e) {
-			this.button.setSelection(true);
-			for (Button button : operationButtons) {
-				if (button != this.button) {
-					button.setSelection(false);
-				}
-			}
+		public void focusGained(FocusEvent event) {
+			setSelectedRadionButton(button);
 		}
 
 	}
@@ -97,6 +91,8 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 
 	private AbstractTaskCategory category;
 
+	private TaskAttribute selectedOperationAttribute;
+
 	public TaskEditorActionPart() {
 		setPartName("Actions");
 	}
@@ -121,7 +117,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		submitButton.setLayoutData(submitButtonData);
 		submitButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event e) {
-				getTaskEditorPage().submitToRepository();
+				getTaskEditorPage().doSubmit();
 			}
 		});
 
@@ -148,7 +144,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		toolkit.adapt(categoryChooser, true, true);
 		categoryChooser.setFont(TEXT_FONT);
 		ITaskList taskList = TasksUi.getTaskListManager().getTaskList();
-		List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(taskList.getCategories());
+		final List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(taskList.getCategories());
 		Collections.sort(categories, new Comparator<AbstractTaskContainer>() {
 
 			public int compare(AbstractTaskContainer c1, AbstractTaskContainer c2) {
@@ -162,34 +158,35 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 			}
 
 		});
-
 		for (AbstractTaskContainer category : categories) {
 			categoryChooser.add(category.getSummary());
 		}
-
 		categoryChooser.select(0);
+		categoryChooser.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent event) {
+				if (categoryChooser.getSelectionIndex() != -1) {
+					category = categories.get(categoryChooser.getSelectionIndex());
+				}
+			}
+		});
 		categoryChooser.setEnabled(false);
-		categoryChooser.setData(categories);
-		addToCategory.addSelectionListener(new SelectionAdapter() {
 
+		addToCategory.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				markDirty();
+				if (!addToCategory.getSelection()) {
+					category = null;
+				} else if (categoryChooser.getSelectionIndex() != -1) {
+					category = categories.get(categoryChooser.getSelectionIndex());
+				}
 				categoryChooser.setEnabled(addToCategory.getSelection());
 			}
-
 		});
 
 		GridDataFactory.fillDefaults().hint(DEFAULT_FIELD_WIDTH, SWT.DEFAULT).span(3, SWT.DEFAULT).applyTo(
 				categoryChooser);
-	}
-
-	@Override
-	public void commit(boolean onSave) {
-		if (needsAddToCategory()) {
-			category = getCategoryInternal();
-		}
-
-		super.commit(onSave);
 	}
 
 	public AbstractTaskCategory getCategory() {
@@ -210,7 +207,13 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 			createCategoryChooser(buttonComposite, toolkit);
 		}
 
-		createRadioButtons(buttonComposite, toolkit);
+		selectedOperationAttribute = getTaskData().getMappedAttribute(TaskAttribute.OPERATION);
+		if (selectedOperationAttribute != null
+				&& TaskAttribute.TYPE_OPERATION.equals(TaskAttributeProperties.from(selectedOperationAttribute)
+						.getType())) {
+			createRadioButtons(buttonComposite, toolkit);
+		}
+
 		createActionButtons(buttonComposite, toolkit);
 
 		section.setClient(buttonComposite);
@@ -241,12 +244,13 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 				TaskAttribute.TYPE_OPERATION);
 		if (attributes != null) {
 			operationButtons = new ArrayList<Button>();
+			Button selectedButton = null;
 			for (TaskAttribute attribute : attributes) {
 				TaskOperation operation = getTaskData().getAttributeMapper().getTaskOperation(attribute);
 				if (operation != null) {
 					Button button = toolkit.createButton(buttonComposite, operation.getLabel(), SWT.RADIO);
 					button.setFont(TEXT_FONT);
-					button.setData(attribute);
+					button.setData(KEY_OPERATION, operation);
 					GridData radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 					TaskAttribute associatedAttribute = getTaskData().getAttributeMapper().getAssoctiatedAttribute(
 							attribute);
@@ -259,8 +263,17 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 					button.setLayoutData(radioData);
 					button.addSelectionListener(new RadioButtonListener());
 					operationButtons.add(button);
+
+					if (getTaskData().getAttributeMapper().equals(attribute, selectedOperationAttribute)) {
+						selectedButton = button;
+					}
 				}
 			}
+			// do this last to ensure only a single button is selected
+			if (selectedButton == null && !operationButtons.isEmpty()) {
+				selectedButton = operationButtons.get(0);
+			}
+			setSelectedRadionButton(selectedButton);
 		}
 		toolkit.paintBordersFor(buttonComposite);
 	}
@@ -271,21 +284,6 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		} else {
 			return attachContextButton.getSelection();
 		}
-	}
-
-	/**
-	 * Returns the {@link AbstractTaskContainer category} the new task belongs to
-	 * 
-	 * @return {@link AbstractTaskContainer category} where the new task must be added to, or null if it must not be
-	 *         added to the task list
-	 */
-	@SuppressWarnings("unchecked")
-	private AbstractTaskCategory getCategoryInternal() {
-		int index = categoryChooser.getSelectionIndex();
-		if (addToCategory.getSelection() && index != -1) {
-			return ((List<AbstractTaskCategory>) categoryChooser.getData()).get(index);
-		}
-		return null;
 	}
 
 	boolean needsAddToCategory() {
@@ -309,6 +307,15 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 			submitButton.setEnabled(enabled);
 			if (enabled) {
 				submitButton.setToolTipText("Submit to " + getTaskEditorPage().getTaskRepository().getRepositoryUrl());
+			}
+		}
+	}
+
+	private void setSelectedRadionButton(Button selectedButton) {
+		selectedButton.setSelection(true);
+		for (Button button : operationButtons) {
+			if (button != selectedButton) {
+				button.setSelection(false);
 			}
 		}
 	}

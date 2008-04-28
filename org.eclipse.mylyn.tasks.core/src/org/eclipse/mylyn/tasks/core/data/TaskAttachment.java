@@ -16,8 +16,6 @@ import java.util.Date;
  */
 public class TaskAttachment {
 
-	private final String attachmentId;
-
 	private RepositoryPerson author;
 
 	private String comment;
@@ -43,6 +41,8 @@ public class TaskAttachment {
 	private final String taskId;
 
 	private String url;
+
+	private final String attachmentId;
 
 	public TaskAttachment(String connectorKind, String repositoryUrl, String taskId, String attachmentId) {
 		this.connectorKind = connectorKind;
@@ -150,8 +150,9 @@ public class TaskAttachment {
 	public static TaskAttachment createFrom(TaskAttribute taskAttribute) {
 		TaskData taskData = taskAttribute.getTaskData();
 		TaskAttributeMapper mapper = taskAttribute.getTaskData().getAttributeMapper();
+		String attachmentId = mapper.getValue(taskAttribute);
 		TaskAttachment attachment = new TaskAttachment(taskData.getRepositoryUrl(), taskData.getConnectorKind(),
-				taskData.getTaskId(), taskAttribute.getId());
+				taskData.getTaskId(), attachmentId);
 		TaskAttribute child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_AUTHOR);
 		if (child != null) {
 			attachment.setAuthor(mapper.getRepositoryPerson(child));
@@ -198,6 +199,7 @@ public class TaskAttachment {
 		TaskData taskData = taskAttribute.getTaskData();
 		TaskAttributeMapper mapper = taskData.getAttributeMapper();
 
+		mapper.setValue(taskAttribute, getAttachmentId());
 		TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_ATTACHMENT).applyTo(taskAttribute);
 
 		TaskAttribute child;

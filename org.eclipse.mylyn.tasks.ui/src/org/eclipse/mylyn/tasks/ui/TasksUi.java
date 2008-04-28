@@ -39,6 +39,8 @@ import org.eclipse.ui.PlatformUI;
  */
 public class TasksUi {
 
+	public static final String ID_PLANNING_PAGE = "org.eclipse.mylyn.tasks.ui.pageFactory.Planning";
+
 	public static ITasksJobFactory getJobFactory() {
 		return TasksUiPlugin.getTasksJobFactory();
 	}

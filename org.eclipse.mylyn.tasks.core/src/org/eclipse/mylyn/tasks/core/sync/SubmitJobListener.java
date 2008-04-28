@@ -20,4 +20,6 @@ public abstract class SubmitJobListener {
 
 	public abstract void taskSynchronized(SubmitJobEvent event, IProgressMonitor monitor);
 
+	public abstract void done(SubmitJobEvent event);
+
 }

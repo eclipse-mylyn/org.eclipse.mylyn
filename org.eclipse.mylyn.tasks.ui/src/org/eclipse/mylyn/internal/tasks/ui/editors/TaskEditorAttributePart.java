@@ -206,7 +206,7 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 				AbstractAttributeEditor attributeEditor = attributeEditorFactory.createEditor(type, attribute);
 				if (attributeEditor != null) {
 					attributeEditors.add(attributeEditor);
-					if (getAttributeManager().hasIncomingChanges(attribute)) {
+					if (getModel().hasIncomingChanges(attribute)) {
 						hasIncoming = true;
 					}
 				}
