@@ -10,10 +10,10 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
-import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeProperties;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Composite;
@@ -59,7 +59,7 @@ public abstract class AbstractAttributeEditor {
 	}
 
 	protected void attributeChanged() {
-		getAttributeEditorManager().attributeChanged(getTaskAttribute());
+		getModel().attributeChanged(getTaskAttribute());
 	}
 
 	public abstract void createControl(Composite parent, FormToolkit toolkit);
@@ -72,12 +72,12 @@ public abstract class AbstractAttributeEditor {
 	public void dispose() {
 	}
 
-	public TaskDataModel getAttributeEditorManager() {
+	public TaskDataModel getModel() {
 		return manager;
 	}
 
 	protected TaskAttributeMapper getAttributeMapper() {
-		return getTaskAttribute().getTaskData().getAttributeMapper();
+		return getModel().getTaskData().getAttributeMapper();
 	}
 
 	public Control getControl() {
