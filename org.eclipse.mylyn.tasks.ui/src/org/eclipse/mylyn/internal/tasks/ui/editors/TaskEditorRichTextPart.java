@@ -63,7 +63,7 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 		TaskAttribute attribute = getTaskData().getMappedAttribute(TaskAttribute.COMMENT_NEW);
 		if (attribute != null) {
 			attribute.setValue(strBuilder.toString());
-			getTaskEditorPage().getAttributeManager().attributeChanged(attribute);
+			getTaskEditorPage().getModel().attributeChanged(attribute);
 		}
 		editor.getViewer().getTextWidget().setCaretOffset(strBuilder.length());
 	}

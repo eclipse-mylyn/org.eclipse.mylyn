@@ -73,11 +73,11 @@ public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 	}
 
 	public TaskDataModel getAttributeManager() {
-		return getTaskEditorPage().getAttributeManager();
+		return getTaskEditorPage().getModel();
 	}
 
 	public TaskData getTaskData() {
-		return getTaskEditorPage().getAttributeManager().getTaskData();
+		return getTaskEditorPage().getModel().getTaskData();
 	}
 
 	public AbstractTaskEditorPage getTaskEditorPage() {

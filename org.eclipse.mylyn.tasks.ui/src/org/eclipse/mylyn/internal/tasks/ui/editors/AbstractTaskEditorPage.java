@@ -16,8 +16,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.action.IToolBarManager;
@@ -27,7 +25,8 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylyn.internal.tasks.ui.SubmitTaskDataJob;
+import org.eclipse.mylyn.internal.tasks.core.sync.SubmitTaskJob;
+import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ClearOutgoingAction;
@@ -48,6 +47,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModelListener;
+import org.eclipse.mylyn.tasks.core.sync.SubmitJobEvent;
+import org.eclipse.mylyn.tasks.core.sync.SubmitJobListener;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -94,14 +95,28 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 // TODO EDITOR outline
 public abstract class AbstractTaskEditorPage extends FormPage {
 
-	private class SubmitTaskJobListener extends JobChangeAdapter {
+	private class SubmitTaskJobListener extends SubmitJobListener {
+
+		private final boolean attachContext;
+
+		public SubmitTaskJobListener(boolean attachContext) {
+			this.attachContext = attachContext;
+		}
 
 		@Override
-		public void done(IJobChangeEvent event) {
-			final SubmitTaskDataJob job = (SubmitTaskDataJob) event.getJob();
+		public void taskDataPosted(SubmitJobEvent event, IProgressMonitor monitor) throws CoreException {
+			// attach context if required
+			if (attachContext && connector.getAttachmentHandler() != null) {
+				AttachmentUtil.attachContext(connector.getAttachmentHandler(), taskRepository, task, "", monitor);
+			}
+		}
+
+		@Override
+		public void taskSynchronized(SubmitJobEvent event, IProgressMonitor monitor) {
+			final SubmitTaskJob job = (SubmitTaskJob) event.getJob();
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					if (job.getError() == null) {
+					if (job.getStatus() == null) {
 						AbstractTask task = job.getTask();
 						if (task != null) {
 							updateTask(task);
@@ -109,7 +124,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 						refreshFormContent();
 					} else {
-						handleSubmitError(job.getError());
+						handleSubmitError(job.getStatus());
 					}
 
 					showEditorBusy(false);
@@ -139,7 +154,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		}
 
 		private void updateTask(AbstractTask task) {
-			TasksUi.getTaskListManager().getTaskList().addTask(task, actionPart.getCategory());
+//			TasksUi.getTaskListManager().getTaskList().addTask(task, actionPart.getCategory());
 
 			AbstractTaskEditorPage.this.task = task;
 
@@ -307,7 +322,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 	}
 
 	private void createDescriptionSection(Composite composite) {
-		TaskAttribute attribute = getAttributeManager().getTaskData().getMappedAttribute(TaskAttribute.DESCRIPTION);
+		TaskAttribute attribute = getModel().getTaskData().getMappedAttribute(TaskAttribute.DESCRIPTION);
 		if (attribute != null) {
 			descriptionPart = new TaskEditorDescriptionPart(attribute);
 			initializePart(composite, descriptionPart);
@@ -359,7 +374,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 	}
 
 	private void createNewCommentSection(Composite composite) {
-		TaskAttribute attribute = getAttributeManager().getTaskData().getMappedAttribute(TaskAttribute.COMMENT_NEW);
+		TaskAttribute attribute = getModel().getTaskData().getMappedAttribute(TaskAttribute.COMMENT_NEW);
 		if (attribute != null) {
 			newCommentPart = new TaskEditorRichTextPart(attribute);
 			newCommentPart.setPartName("New Comment");
@@ -520,7 +535,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 	public abstract AttributeEditorToolkit getAttributeEditorToolkit();
 
-	protected TaskDataModel getAttributeManager() {
+	protected TaskDataModel getModel() {
 		return model;
 	}
 
@@ -595,8 +610,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 	@Override
 	public boolean isDirty() {
-		return (getAttributeManager() != null && getAttributeManager().isDirty())
-				|| (getManagedForm() != null && getManagedForm().isDirty());
+		return (getModel() != null && getModel().isDirty()) || (getManagedForm() != null && getManagedForm().isDirty());
 	}
 
 	@Override
@@ -793,9 +807,9 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 		doSave(new NullProgressMonitor());
 
-		SubmitTaskDataJob submitJob = new SubmitTaskDataJob(connector, taskRepository, taskData);
-		submitJob.setAttachContext(actionPart.getAttachContext());
-		submitJob.addJobChangeListener(new SubmitTaskJobListener());
+		SubmitTaskJob submitJob = new SubmitTaskJob(TasksUi.getTaskDataManager(), connector, taskRepository, task,
+				getModel().getTaskData(), getModel().getChangedAttributes());
+		submitJob.addSubmitJobListener(new SubmitTaskJobListener(actionPart.getAttachContext()));
 		submitJob.schedule();
 	}
 

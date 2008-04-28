@@ -25,11 +25,11 @@ public class TaskDataModel {
 
 	private final ITaskDataWorkingCopy taskDataState;
 
-	private final Set<TaskAttribute> editedAttributes;
+	private final Set<TaskAttribute> unsavedChanedAttributes;
 
 	public TaskDataModel(ITaskDataWorkingCopy taskDataState) {
 		this.taskDataState = taskDataState;
-		this.editedAttributes = new HashSet<TaskAttribute>();
+		this.unsavedChanedAttributes = new HashSet<TaskAttribute>();
 	}
 
 	public void addModelListener(TaskDataModelListener listener) {
@@ -51,7 +51,7 @@ public class TaskDataModel {
 					"Editing is only supported for attributes that are attached to the root of task data");
 		}
 
-		editedAttributes.add(attribute);
+		unsavedChanedAttributes.add(attribute);
 
 		if (listeners != null) {
 			for (TaskDataModelListener listener : listeners.toArray(new TaskDataModelListener[0])) {
@@ -91,7 +91,7 @@ public class TaskDataModel {
 	}
 
 	public boolean isDirty() {
-		return !editedAttributes.isEmpty();
+		return !unsavedChanedAttributes.isEmpty();
 	}
 
 	public void refresh(IProgressMonitor monitor) throws CoreException {
@@ -103,13 +103,17 @@ public class TaskDataModel {
 	}
 
 	public void save(IProgressMonitor monitor) throws CoreException {
-		taskDataState.save(monitor, editedAttributes);
-		editedAttributes.clear();
+		taskDataState.save(monitor, unsavedChanedAttributes);
+		unsavedChanedAttributes.clear();
 	}
 
 	public void revert() {
-		editedAttributes.clear();
 		taskDataState.revert();
+		unsavedChanedAttributes.clear();
+	}
+
+	public Set<TaskAttribute> getChangedAttributes() {
+		return new HashSet<TaskAttribute>(taskDataState.getEditsData().getRoot().getAttributes().values());
 	}
 
 }

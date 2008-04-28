@@ -83,6 +83,19 @@ public class TaskDataStore {
 		writeState(file, state);
 	}
 
+	public synchronized void setTaskData(File file, TaskData data) throws CoreException {
+		Assert.isNotNull(file);
+		Assert.isNotNull(data);
+
+		// TODO consider reading old task data and compare submitted results to check if all outgoing changes were accepted by repository
+
+		TaskDataState state = new TaskDataState(data.getConnectorKind(), data.getRepositoryUrl(), data.getTaskId());
+		state.setRepositoryData(data);
+		state.setEditsData(null);
+		state.setLastReadData(data);
+		writeState(file, state);
+	}
+
 	private TaskDataState readState(File file) throws CoreException {
 		try {
 			if (file.exists()) {

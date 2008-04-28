@@ -6,36 +6,21 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.core;
+package org.eclipse.mylyn.tasks.core.sync;
 
 /**
  * @author Steffen Pingel
  */
-public class RepositoryResponse {
+public class SubmitJobEvent {
 
-	public enum ResponseKind {
-		TASK_CREATED, TASK_UPDATED;
-	};
+	private final SubmitJob job;
 
-	private final String taskId;
-
-	private final ResponseKind reposonseKind;
-
-	public RepositoryResponse(ResponseKind reposonseKind, String taskId) {
-		this.reposonseKind = reposonseKind;
-		this.taskId = taskId;
+	public SubmitJobEvent(SubmitJob job) {
+		this.job = job;
 	}
 
-	public RepositoryResponse() {
-		this(null, null);
-	}
-
-	public String getTaskId() {
-		return taskId;
-	}
-
-	public ResponseKind getReposonseKind() {
-		return reposonseKind;
+	public SubmitJob getJob() {
+		return job;
 	}
 
 }

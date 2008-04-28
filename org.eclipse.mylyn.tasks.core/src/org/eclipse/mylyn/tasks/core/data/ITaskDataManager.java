@@ -29,7 +29,9 @@ public interface ITaskDataManager {
 
 	public abstract boolean hasTaskData(AbstractTask task, String connectorKind);
 
-	public abstract void putTaskData(AbstractTask task, TaskData taskData, boolean user) throws CoreException;
+	public abstract void putUpdatedTaskData(AbstractTask task, TaskData taskData, boolean user) throws CoreException;
+
+	public abstract void putSubmittedTaskData(AbstractTask task, TaskData taskData) throws CoreException;
 
 	/**
 	 * Saves incoming data and updates task sync state appropriately

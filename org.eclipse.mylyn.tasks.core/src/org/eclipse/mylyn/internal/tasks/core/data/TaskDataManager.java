@@ -43,7 +43,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
  * @author Rob Elves
  * @author Steffen Pingel
  */
-public final class TaskDataManager implements ITaskDataManager {
+public class TaskDataManager implements ITaskDataManager {
 
 	private static final String ENCODING_UTF_8 = "UTF-8";
 
@@ -102,6 +102,8 @@ public final class TaskDataManager implements ITaskDataManager {
 	}
 
 	public ITaskDataWorkingCopy createWorkingCopy(final AbstractTask task, final String kind) throws CoreException {
+		Assert.isNotNull(task);
+		Assert.isNotNull(kind);
 		final TaskDataState[] result = new TaskDataState[1];
 		taskList.run(new ITaskListRunnable() {
 			public void execute(IProgressMonitor monitor) throws CoreException {
@@ -129,7 +131,50 @@ public final class TaskDataManager implements ITaskDataManager {
 		return result[0];
 	}
 
+	public void putUpdatedTaskData(final AbstractTask task, final TaskData taskData, boolean user) throws CoreException {
+		Assert.isNotNull(task);
+		Assert.isNotNull(taskData);
+		final AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(task.getConnectorKind());
+		final TaskRepository repository = repositoryManager.getRepository(task.getConnectorKind(),
+				task.getRepositoryUrl());
+		final boolean changed = connector.hasChanged(task, taskData);
+		if (changed || user) {
+			taskList.run(new ITaskListRunnable() {
+				public void execute(IProgressMonitor monitor) throws CoreException {
+					if (!taskData.isPartial()) {
+						File file = getMigratedFile(task, task.getConnectorKind());
+						if (!file.getParentFile().exists()) {
+							file.getParentFile().mkdirs();
+						}
+						taskDataStore.putTaskData(file, taskData, task.isMarkReadPending());
+						task.setMarkReadPending(false);
+					}
+
+					connector.updateTaskFromTaskData(repository, task, taskData);
+
+					if (changed) {
+						RepositoryTaskSyncState state = task.getSynchronizationState();
+						switch (state) {
+						case OUTGOING:
+							state = RepositoryTaskSyncState.CONFLICT;
+							break;
+						case SYNCHRONIZED:
+							state = RepositoryTaskSyncState.INCOMING;
+							break;
+						}
+						task.setSynchronizationState(state);
+					}
+					task.setStale(false);
+					task.setSynchronizing(false);
+				}
+			});
+			taskList.notifyTaskChanged(task, false);
+		}
+	}
+
 	private File getMigratedFile(AbstractTask task, String kind) throws CoreException {
+		Assert.isNotNull(task);
+		Assert.isNotNull(kind);
 		File file = getFile(task, kind);
 		if (!file.exists()) {
 			File oldFile = getFile10(task, kind);
@@ -146,6 +191,8 @@ public final class TaskDataManager implements ITaskDataManager {
 	}
 
 	public void discardEdits(final AbstractTask task, final String kind) throws CoreException {
+		Assert.isNotNull(task);
+		Assert.isNotNull(kind);
 		taskList.run(new ITaskListRunnable() {
 			public void execute(IProgressMonitor monitor) throws CoreException {
 				taskDataStore.discardEdits(getFile(task, kind));
@@ -203,6 +250,8 @@ public final class TaskDataManager implements ITaskDataManager {
 	}
 
 	public TaskData getTaskData(AbstractTask task, String kind) throws CoreException {
+		Assert.isNotNull(task);
+		Assert.isNotNull(kind);
 		TaskDataState state = taskDataStore.getTaskDataState(findFile(task, kind));
 		if (state == null) {
 			return null;
@@ -211,47 +260,36 @@ public final class TaskDataManager implements ITaskDataManager {
 	}
 
 	public boolean hasTaskData(AbstractTask task, String kind) {
+		Assert.isNotNull(task);
+		Assert.isNotNull(kind);
 		return getFile(task, kind).exists();
 	}
 
-	public void putTaskData(final AbstractTask task, final TaskData taskData, boolean user) throws CoreException {
+	public void putSubmittedTaskData(final AbstractTask task, final TaskData taskData) throws CoreException {
+		Assert.isNotNull(task);
+		Assert.isNotNull(taskData);
 		final AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(task.getConnectorKind());
 		final TaskRepository repository = repositoryManager.getRepository(task.getConnectorKind(),
 				task.getRepositoryUrl());
-
-		final boolean changed = connector.hasChanged(task, taskData);
-		if (changed || user) {
-			taskList.run(new ITaskListRunnable() {
-				public void execute(IProgressMonitor monitor) throws CoreException {
-					if (!taskData.isPartial()) {
-						File file = getMigratedFile(task, task.getConnectorKind());
-						if (!file.getParentFile().exists()) {
-							file.getParentFile().mkdirs();
-						}
-						taskDataStore.putTaskData(file, taskData, task.isMarkReadPending());
-						task.setMarkReadPending(false);
+		taskList.run(new ITaskListRunnable() {
+			public void execute(IProgressMonitor monitor) throws CoreException {
+				if (!taskData.isPartial()) {
+					File file = getMigratedFile(task, task.getConnectorKind());
+					if (!file.getParentFile().exists()) {
+						file.getParentFile().mkdirs();
 					}
-
-					connector.updateTaskFromTaskData(repository, task, taskData);
-
-					if (changed) {
-						RepositoryTaskSyncState state = task.getSynchronizationState();
-						switch (state) {
-						case OUTGOING:
-							state = RepositoryTaskSyncState.CONFLICT;
-							break;
-						case SYNCHRONIZED:
-							state = RepositoryTaskSyncState.INCOMING;
-							break;
-						}
-						task.setSynchronizationState(state);
-					}
-					task.setStale(false);
-					task.setSynchronizing(false);
+					taskDataStore.setTaskData(file, taskData);
+					task.setMarkReadPending(false);
 				}
-			});
-			taskList.notifyTaskChanged(task, false);
-		}
+
+				connector.updateTaskFromTaskData(repository, task, taskData);
+
+				task.setSynchronizationState(RepositoryTaskSyncState.SYNCHRONIZED);
+				task.setStale(false);
+				task.setSynchronizing(false);
+			}
+		});
+		taskList.notifyTaskChanged(task, false);
 	}
 
 	/**
@@ -347,11 +385,13 @@ public final class TaskDataManager implements ITaskDataManager {
 	 *            true to mark as read, false to mark as unread
 	 */
 	public void setTaskRead(final AbstractTask task, final boolean read) {
+		Assert.isNotNull(task);
+		// legacy support
 		if (!getFile(task, task.getConnectorKind()).exists()) {
 			setTaskReadDeprecated(task, read);
 			return;
 		}
-
+		// current api
 		try {
 			taskList.run(new ITaskListRunnable() {
 				public void execute(IProgressMonitor monitor) throws CoreException {
@@ -426,7 +466,10 @@ public final class TaskDataManager implements ITaskDataManager {
 		}
 	}
 
-	public void putEdits(AbstractTask task, String kind, TaskData editsData) throws CoreException {
+	void putEdits(AbstractTask task, String kind, TaskData editsData) throws CoreException {
+		Assert.isNotNull(task);
+		Assert.isNotNull(kind);
+		Assert.isNotNull(editsData);
 		taskDataStore.putEdits(getFile(task, kind), editsData);
 	}
 

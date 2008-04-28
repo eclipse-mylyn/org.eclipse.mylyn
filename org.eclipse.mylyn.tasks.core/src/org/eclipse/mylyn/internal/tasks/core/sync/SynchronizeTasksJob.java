@@ -191,7 +191,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 
 	private void updateFromTaskData(TaskRepository taskRepository, AbstractTask task, TaskData taskData) {
 		try {
-			taskDataManager.putTaskData(task, taskData, isUser());
+			taskDataManager.putUpdatedTaskData(task, taskData, isUser());
 		} catch (CoreException e) {
 			updateStatus(taskRepository, task, e.getStatus());
 		}
