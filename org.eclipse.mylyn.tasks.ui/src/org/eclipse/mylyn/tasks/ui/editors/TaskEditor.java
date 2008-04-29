@@ -231,6 +231,16 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		firePropertyChange(PROP_DIRTY);
 	}
 
+	@Override
+	public void setFocus() {
+		IFormPage page = getActivePageInstance();
+		if (page != null) {
+			page.setFocus();
+		} else {
+			super.setFocus();
+		}
+	}
+
 	@Deprecated
 	public void setFocusOfActivePage() {
 		if (this.getActivePage() > -1) {
@@ -395,15 +405,6 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			this.setTitleImage(TasksUiImages.getImage(TasksUiImages.TASK_REMOTE));
 		} else {
 			setTitleImage(TasksUiImages.getImage(TasksUiImages.TASK));
-		}
-	}
-
-	@Override
-	public void setFocus() {
-		if (getActivePageInstance() instanceof AbstractNewRepositoryTaskEditor) {
-			getActivePageInstance().setFocus();
-		} else {
-			super.setFocus();
 		}
 	}
 

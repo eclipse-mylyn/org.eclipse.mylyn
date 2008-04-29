@@ -130,6 +130,7 @@ import org.eclipse.swt.browser.LocationAdapter;
 import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.custom.VerifyKeyListener;
@@ -141,6 +142,7 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.KeyEvent;
@@ -159,17 +161,22 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Spinner;
+import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
@@ -181,6 +188,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.fieldassist.ContentAssistCommandAdapter;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.IManagedForm;
@@ -492,6 +500,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private NewSubTaskAction newSubTaskAction;
 
+	private Control lastFocusControl;
+
 	/**
 	 * Call upon change to attribute value
 	 * 
@@ -782,6 +792,31 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		getSite().getPage().addSelectionListener(selectionListener);
 		getSite().setSelectionProvider(selectionProvider);
+
+		FocusListener listener = new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				lastFocusControl = (Control) e.widget;
+			}
+		};
+		addFocusListener(editorComposite, listener);
+	}
+
+	private void addFocusListener(Composite composite, FocusListener listener) {
+		Control[] children = composite.getChildren();
+		for (Control control : children) {
+			if ((control instanceof Text) || (control instanceof Button) || (control instanceof Combo)
+					|| (control instanceof CCombo) || (control instanceof Tree) || (control instanceof Table)
+					|| (control instanceof Spinner) || (control instanceof Link) || (control instanceof List)
+					|| (control instanceof TabFolder) || (control instanceof CTabFolder)
+					|| (control instanceof Hyperlink) || (control instanceof FilteredTree)
+					|| (control instanceof StyledText)) {
+				control.addFocusListener(listener);
+			}
+			if (control instanceof Composite) {
+				addFocusListener((Composite) control, listener);
+			}
+		}
 	}
 
 	private void removeSections() {
@@ -2818,13 +2853,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	@Override
 	public void setFocus() {
-		if (summaryTextViewer != null && !summaryTextViewer.getTextWidget().isDisposed()) {
-			if (firstFocus) {
-				summaryTextViewer.getTextWidget().setFocus();
-				firstFocus = false;
-			}
-		} else {
-			form.setFocus();
+		if (lastFocusControl != null) {
+			lastFocusControl.setFocus();
+		} else if (firstFocus && summaryTextViewer != null) {
+			summaryTextViewer.getControl().setFocus();
+			firstFocus = false;
 		}
 	}
 

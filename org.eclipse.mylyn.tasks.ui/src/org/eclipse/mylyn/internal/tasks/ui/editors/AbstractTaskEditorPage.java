@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
@@ -55,22 +56,37 @@ import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Spinner;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormPage;
@@ -171,15 +187,13 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 	private boolean expandedStateAttributes;
 
-	// once the following bug is fixed, this check for first focus is probably
-	// not needed -> Bug# 172033: Restore editor focus
-	private boolean firstFocus = true;
-
 	private ScrolledForm form;
 
 	private boolean formBusy;
 
 	private Action historyAction;
+
+	protected Control lastFocusControl;
 
 	private TaskDataModel model;
 
@@ -259,6 +273,23 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		super(editor, "id", "label"); //$NON-NLS-1$ //$NON-NLS-2$
 		Assert.isNotNull(connectorKind);
 		this.connectorKind = connectorKind;
+	}
+
+	private void addFocusListener(Composite composite, FocusListener listener) {
+		Control[] children = composite.getChildren();
+		for (Control control : children) {
+			if ((control instanceof Text) || (control instanceof Button) || (control instanceof Combo)
+					|| (control instanceof CCombo) || (control instanceof Tree) || (control instanceof Table)
+					|| (control instanceof Spinner) || (control instanceof Link) || (control instanceof List)
+					|| (control instanceof TabFolder) || (control instanceof CTabFolder)
+					|| (control instanceof Hyperlink) || (control instanceof FilteredTree)
+					|| (control instanceof StyledText)) {
+				control.addFocusListener(listener);
+			}
+			if (control instanceof Composite) {
+				addFocusListener((Composite) control, listener);
+			}
+		}
 	}
 
 	public void appendTextToNewComment(String text) {
@@ -406,6 +437,17 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		createPeopleSection(bottomComposite);
 
 		bottomComposite.pack(true);
+
+		FocusListener listener = new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				lastFocusControl = (Control) e.widget;
+			}
+		};
+		addFocusListener(editorComposite, listener);
+		if (summaryPart != null) {
+			lastFocusControl = summaryPart.getControl();
+		}
 	}
 
 	private void createSummarySection(Composite composite) {
@@ -762,13 +804,8 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 	@Override
 	public void setFocus() {
-		if (summaryPart != null) {
-			if (firstFocus) {
-				summaryPart.setFocus();
-				firstFocus = false;
-			}
-		} else {
-			form.setFocus();
+		if (lastFocusControl != null) {
+			lastFocusControl.setFocus();
 		}
 	}
 
