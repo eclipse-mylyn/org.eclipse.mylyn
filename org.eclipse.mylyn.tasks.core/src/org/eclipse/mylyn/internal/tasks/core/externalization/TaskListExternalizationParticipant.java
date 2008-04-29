@@ -70,15 +70,14 @@ public class TaskListExternalizationParticipant implements IExternalizationParti
 		switch (context.getKind()) {
 		case SAVE:
 			ITaskListRunnable saveRunnable = new ITaskListRunnable() {
-
 				public void execute(IProgressMonitor monitor) throws CoreException {
+					//System.err.println(">>> saving");
 					taskListWriter.writeTaskList(taskList, taskListFile);
 					synchronized (TaskListExternalizationParticipant.this) {
 						dirty = false;
 					}
 				}
 			};
-
 			taskList.run(saveRunnable, monitor);
 			break;
 		case LOAD:

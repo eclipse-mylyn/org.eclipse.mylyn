@@ -44,7 +44,7 @@ public class TaskListBackupManagerTest extends TestCase {
 	}
 
 	public void testAutoBackupDisabled() throws InterruptedException {
-		TaskListBackupManager backupManager = TasksUiPlugin.getDefault().getBackupManager();
+		TaskListBackupManager backupManager = TasksUiPlugin.getBackupManager();
 		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TasksUiPreferenceConstants.BACKUP_SCHEDULE, 1);
 		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TasksUiPreferenceConstants.BACKUP_LAST, 0f);
 		assertEquals(0, TasksUiPlugin.getDefault().getPreferenceStore().getLong(TasksUiPreferenceConstants.BACKUP_LAST));
@@ -54,14 +54,13 @@ public class TaskListBackupManagerTest extends TestCase {
 	}
 
 	public void testAutoBackupEnabled() throws InterruptedException, InvocationTargetException, IOException {
-		TaskListBackupManager backupManager = TasksUiPlugin.getDefault().getBackupManager();
+		TaskListBackupManager backupManager = TasksUiPlugin.getBackupManager();
 		String backupFolder = TasksUiPlugin.getDefault().getBackupFolderPath();
 		File backupFileFolder = new File(backupFolder);
 		deleteBackupFolder(backupFileFolder);
-		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TasksUiPreferenceConstants.BACKUP_SCHEDULE, 1);
-		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TasksUiPreferenceConstants.BACKUP_LAST, 0f);
 		backupManager.backupNow(true);
-		assertFalse(TasksUiPlugin.getDefault().getPreferenceStore().getLong(TasksUiPreferenceConstants.BACKUP_LAST) == 0);
+		Thread.sleep(3000);
+		backupManager.backupNow(true);
 		assertTrue(backupFileFolder.exists());
 		assertTrue(backupFileFolder.isDirectory());
 		assertTrue(backupFileFolder.listFiles(new FilenameFilter() {
@@ -72,10 +71,9 @@ public class TaskListBackupManagerTest extends TestCase {
 				return false;
 			}
 
-		}).length == 1);
+		}).length == 2);
 
 		// Test removal of old backups
-		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TasksUiPreferenceConstants.BACKUP_MAXFILES, 0);
 		TasksUiPlugin.getBackupManager().removeOldBackups();
 		assertTrue(backupFileFolder.listFiles(new FilenameFilter() {
 			public boolean accept(File dir, String name) {
@@ -85,10 +83,7 @@ public class TaskListBackupManagerTest extends TestCase {
 				return false;
 			}
 
-		}).length == 0);
-
-		// TODO: Test that OLDEST backups are deleted first.
-
+		}).length == 1);
 	}
 
 	private void deleteBackupFolder(File backupFileFolder) {

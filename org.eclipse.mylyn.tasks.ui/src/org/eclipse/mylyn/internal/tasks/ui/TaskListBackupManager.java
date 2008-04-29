@@ -14,7 +14,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Locale;
 import java.util.SortedMap;
 import java.util.Timer;
@@ -36,7 +35,6 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylyn.internal.context.core.ContextPreferenceContstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDataExportOperation;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
@@ -71,7 +69,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 
 	public TaskListBackupManager(String backupFolderPath) {
 		this.backupFolderPath = backupFolderPath;
-		start(30 * MINUTE);//HOUR
+		start(7000);//HOUR
 	}
 
 	public void start(long delay) {
@@ -98,10 +96,10 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 			backupFolder.mkdir();
 		}
 
-		String backkupFilePath = backupFolderPath + File.separator + getBackupFileName();
+//		String backkupFilePath = backupFolderPath + File.separator + getBackupFileName();
+		TasksUiPlugin.getExternalizationManager().requestSave();
 
 		if (!synchronous) {
-
 			ExportJob export = new ExportJob(backupFolderPath, getBackupFileName());
 			export.addJobChangeListener(new JobChangeAdapter() {
 
@@ -115,12 +113,14 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 
 		} else {
 
-			final TaskDataExportOperation backupJob = new TaskDataExportOperation(destination, true, true, false,
-					false, backkupFilePath, new HashSet<AbstractTask>());
+			final TaskDataExportOperation backupJob = new TaskDataExportOperation(destination, true,
+					getBackupFileName());
+//			final TaskDataExportOperation backupJob = new TaskDataExportOperation(destination, true, true, false,
+//					false, backkupFilePath, new HashSet<AbstractTask>());
 
 			IProgressService service = PlatformUI.getWorkbench().getProgressService();
 			try {
-				service.run(true, false, backupJob);
+				service.run(false, true, backupJob);
 
 //				TasksUiPlugin.getDefault().getPreferenceStore().setValue(TasksUiPreferenceConstants.BACKUP_LAST,
 //						new Date().getTime());
@@ -307,7 +307,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 		if (event.getProperty().equals(ContextPreferenceContstants.PREF_DATA_DIR)) {
 			if (event.getNewValue() instanceof String) {
 				backupFolderPath = (String) event.getNewValue();
-				System.err.println(">>> backup path changed: " + backupFolderPath);
+				//System.err.println(">>> backup path changed: " + backupFolderPath);
 			}
 		}
 	}

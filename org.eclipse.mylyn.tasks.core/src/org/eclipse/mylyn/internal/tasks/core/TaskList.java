@@ -46,17 +46,6 @@ public class TaskList implements ISchedulingRule, ITaskList {
 
 	private static ILock lock = Job.getJobManager().newLock();
 
-	private static ISchedulingRule TASK_LIST_RULE = new ISchedulingRule() {
-
-		public boolean contains(ISchedulingRule rule) {
-			return isConflicting(rule);
-		}
-
-		public boolean isConflicting(ISchedulingRule rule) {
-			return rule == TASK_LIST_RULE;
-		}
-	};
-
 	private Map<String, AbstractTaskCategory> categories;
 
 	private final Set<ITaskListChangeListener> changeListeners = new CopyOnWriteArraySet<ITaskListChangeListener>();
@@ -700,6 +689,6 @@ public class TaskList implements ISchedulingRule, ITaskList {
 	}
 
 	public static ISchedulingRule getSchedulingRule() {
-		return TASK_LIST_RULE;
+		return ITasksCoreConstants.TASKLIST_SCHEDULING_RULE;
 	}
 }

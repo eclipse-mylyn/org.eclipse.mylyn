@@ -93,7 +93,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 	private Button notificationEnabledButton = null;
 
-	private Text backupScheduleTimeText;
+//	private Text backupScheduleTimeText;
 
 	private Text backupFolderText;
 
@@ -180,7 +180,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 //				TasksUiPlugin.getTaskListManager().copyDataDirContentsTo(taskDirectory);
 //				TasksUiPlugin.getDefault().setDataDirectory(taskDirectory);
 //			} else if (taskDataDirectoryAction == LOAD_EXISTING) {
-				TasksUiPlugin.getDefault().getBackupManager().backupNow(true);
+				TasksUiPlugin.getBackupManager().backupNow(true);
 				TasksUiPlugin.getDefault().setDataDirectory(taskDirectory);
 
 			} else if (taskDataDirectoryAction == IDialogConstants.CANCEL_ID) {
@@ -189,7 +189,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		}
 		getPreferenceStore().setValue(TasksUiPreferenceConstants.NOTIFICATIONS_ENABLED,
 				notificationEnabledButton.getSelection());
-		getPreferenceStore().setValue(TasksUiPreferenceConstants.BACKUP_SCHEDULE, backupScheduleTimeText.getText());
+		//getPreferenceStore().setValue(TasksUiPreferenceConstants.BACKUP_SCHEDULE, backupScheduleTimeText.getText());
 
 		getPreferenceStore().setValue(TasksUiPreferenceConstants.EDITOR_TASKS_RICH, useRichEditor.getSelection());
 
@@ -219,7 +219,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		taskDirectoryText.setText(TasksUiPlugin.getDefault().getDefaultDataDirectory());
 		notificationEnabledButton.setSelection(getPreferenceStore().getBoolean(
 				TasksUiPreferenceConstants.NOTIFICATIONS_ENABLED));
-		backupScheduleTimeText.setText(getPreferenceStore().getString(TasksUiPreferenceConstants.BACKUP_SCHEDULE));
+		//backupScheduleTimeText.setText(getPreferenceStore().getString(TasksUiPreferenceConstants.BACKUP_SCHEDULE));
 		backupFolderText.setText(TasksUiPlugin.getDefault().getBackupFolderPath());
 
 		useRichEditor.setSelection(getPreferenceStore().getBoolean(TasksUiPreferenceConstants.EDITOR_TASKS_RICH));
@@ -260,7 +260,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 		notificationEnabledButton.setSelection(getPreferenceStore().getDefaultBoolean(
 				TasksUiPreferenceConstants.NOTIFICATIONS_ENABLED));
-		backupScheduleTimeText.setText(getPreferenceStore().getDefaultString(TasksUiPreferenceConstants.BACKUP_SCHEDULE));
+		//backupScheduleTimeText.setText(getPreferenceStore().getDefaultString(TasksUiPreferenceConstants.BACKUP_SCHEDULE));
 
 		useRichEditor.setSelection(getPreferenceStore().getDefaultBoolean(TasksUiPreferenceConstants.EDITOR_TASKS_RICH));
 
@@ -403,22 +403,22 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		backupComposite.setLayout(gridLayout);
 		backupComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		label = new Label(backupComposite, SWT.NULL);
-		label.setText("Backup every");
-		backupScheduleTimeText = new Text(backupComposite, SWT.BORDER | SWT.RIGHT);
-		final GridData gridData_1 = new GridData();
-		gridData_1.widthHint = 13;
-		backupScheduleTimeText.setLayoutData(gridData_1);
-
-		backupScheduleTimeText.setText("" + getPreferenceStore().getInt(TasksUiPreferenceConstants.BACKUP_SCHEDULE));
-		backupScheduleTimeText.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				updateRefreshGroupEnablements();
-			}
-		});
-
-		label = new Label(backupComposite, SWT.NONE);
-		label.setText("days to");
+//		label = new Label(backupComposite, SWT.NULL);
+//		label.setText("Backup every");
+//		backupScheduleTimeText = new Text(backupComposite, SWT.BORDER | SWT.RIGHT);
+//		final GridData gridData_1 = new GridData();
+//		gridData_1.widthHint = 13;
+//		backupScheduleTimeText.setLayoutData(gridData_1);
+//
+//		backupScheduleTimeText.setText("" + getPreferenceStore().getInt(TasksUiPreferenceConstants.BACKUP_SCHEDULE));
+//		backupScheduleTimeText.addModifyListener(new ModifyListener() {
+//			public void modifyText(ModifyEvent e) {
+//				updateRefreshGroupEnablements();
+//			}
+//		});
+//
+//		label = new Label(backupComposite, SWT.NONE);
+//		label.setText("days to");
 
 		String backupDirectory = TasksUiPlugin.getDefault().getBackupFolderPath();// getPreferenceStore().getString(TaskListPreferenceConstants.BACKUP_FOLDER);
 		backupDirectory = backupDirectory.replaceAll(BACKSLASH_MULTI, FORWARDSLASH);
@@ -434,7 +434,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				TasksUiPlugin.getDefault().getBackupManager().backupNow(true);
+				TasksUiPlugin.getBackupManager().backupNow(true);
 			}
 		});
 	}
@@ -663,16 +663,16 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 	public void updateRefreshGroupEnablements() {
 		String errorMessage = null;
 
-		try {
-			long number = Integer.parseInt(backupScheduleTimeText.getText());
-			if (number <= 0) {
-				errorMessage = "Backup schedule time must be > 0";
-			} else if (backupFolderText.getText() == "") {
-				errorMessage = "Backup destination folder must be specified";
-			}
-		} catch (NumberFormatException e) {
-			errorMessage = "Backup schedule time must be valid integer";
-		}
+//		try {
+//			long number = Integer.parseInt(backupScheduleTimeText.getText());
+//			if (number <= 0) {
+//				errorMessage = "Backup schedule time must be > 0";
+//			} else if (backupFolderText.getText() == "") {
+//				errorMessage = "Backup destination folder must be specified";
+//			}
+//		} catch (NumberFormatException e) {
+//			errorMessage = "Backup schedule time must be valid integer";
+//		}
 
 		if (enableBackgroundSynch.getSelection()) {
 			try {

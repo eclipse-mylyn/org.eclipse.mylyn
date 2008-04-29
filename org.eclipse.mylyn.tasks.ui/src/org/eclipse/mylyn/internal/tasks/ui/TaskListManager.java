@@ -22,7 +22,6 @@ import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
@@ -32,6 +31,7 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
@@ -176,8 +176,7 @@ public class TaskListManager implements ITaskListManager {
 		taskList.refactorRepositoryUrl(oldUrl, newUrl);
 		refactorMetaContextHandles(oldUrl, newUrl);
 
-		File dataDir = new File(TasksUiPlugin.getDefault().getDataDirectory(),
-				WorkspaceAwareContextStore.CONTEXTS_DIRECTORY);
+		File dataDir = new File(TasksUiPlugin.getDefault().getDataDirectory(), ITasksCoreConstants.CONTEXTS_DIRECTORY);
 		if (dataDir.exists() && dataDir.isDirectory()) {
 			for (File file : dataDir.listFiles()) {
 				int dotIndex = file.getName().lastIndexOf(".xml");
@@ -274,6 +273,7 @@ public class TaskListManager implements ITaskListManager {
 		}
 
 		TasksUiPlugin.getExternalizationManager().load(taskListSaveParticipant);
+		taskListInitialized = true;
 
 //		IProgressService service = PlatformUI.getWorkbench().getProgressService();
 //		TaskListModifyOperation modOperation = new TaskListModifyOperation() {
@@ -387,7 +387,9 @@ public class TaskListManager implements ITaskListManager {
 	}
 
 	public void deactivateTask(AbstractTask task) {
-		Assert.isNotNull(task);
+		if (task == null) {
+			return;
+		}
 
 		if (task.isActive() && task == activeTask) {
 			// notify that a task is about to be deactivated

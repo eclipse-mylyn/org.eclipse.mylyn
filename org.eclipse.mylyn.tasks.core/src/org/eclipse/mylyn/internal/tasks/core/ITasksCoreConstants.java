@@ -8,6 +8,8 @@
 
 package org.eclipse.mylyn.internal.tasks.core;
 
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+
 /**
  * @author Rob Elves
  */
@@ -28,5 +30,35 @@ public interface ITasksCoreConstants {
 	public static final String FILE_EXTENSION = ".xml.zip";
 
 	public static final String DEFAULT_TASK_LIST_FILE = PREFIX_TASKLIST + FILE_EXTENSION;
+
+	public static final String CONTEXTS_DIRECTORY = "contexts";
+
+	public static final TaskListSchedulingRule TASKLIST_SCHEDULING_RULE = new TaskListSchedulingRule();
+
+	public static final ISchedulingRule ROOT_SCHEDULING_RULE = new RootSchedulingRule();
+
+	static class TaskListSchedulingRule extends RootSchedulingRule {
+		@Override
+		public boolean isConflicting(ISchedulingRule rule) {
+			if (rule instanceof TaskListSchedulingRule) {
+				return true;
+			}
+			return super.isConflicting(rule);
+		}
+	}
+
+	static class RootSchedulingRule implements ISchedulingRule {
+
+		public boolean contains(ISchedulingRule rule) {
+			return isConflicting(rule);
+		}
+
+		public boolean isConflicting(ISchedulingRule rule) {
+			if (rule instanceof RootSchedulingRule) {
+				return true;
+			}
+			return false;
+		}
+	}
 
 }

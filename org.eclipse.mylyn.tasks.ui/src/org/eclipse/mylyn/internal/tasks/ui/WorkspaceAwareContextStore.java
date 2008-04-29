@@ -11,13 +11,12 @@ package org.eclipse.mylyn.internal.tasks.ui;
 import java.io.File;
 
 import org.eclipse.mylyn.context.core.AbstractContextStore;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 
 /**
  * @author Mik Kersten
  */
 public class WorkspaceAwareContextStore extends AbstractContextStore {
-
-	public static final String CONTEXTS_DIRECTORY = "contexts";
 
 	private File rootDirectory;
 
@@ -30,7 +29,7 @@ public class WorkspaceAwareContextStore extends AbstractContextStore {
 			rootDirectory.mkdir();
 		}
 
-		contextDirectory = new File(rootDirectory, CONTEXTS_DIRECTORY);
+		contextDirectory = new File(rootDirectory, ITasksCoreConstants.CONTEXTS_DIRECTORY);
 		if (!contextDirectory.exists()) {
 			contextDirectory.mkdir();
 		}

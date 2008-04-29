@@ -24,7 +24,6 @@ import org.eclipse.mylyn.internal.monitor.core.util.ZipFileUtil;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.WorkspaceAwareContextStore;
 
 /**
  * Tests unused code that was live up to Mylyn 1.0.1, {@link TasksUiPlugin}
@@ -87,7 +86,7 @@ public class TaskList06DataMigrationTest extends TestCase {
 		oldContextFile2.createNewFile();
 		File oldContextFile3 = new File(sourceDirFile, contextFileName3);
 		oldContextFile3.createNewFile();
-		File contextFolder = new File(sourceDirFile, WorkspaceAwareContextStore.CONTEXTS_DIRECTORY);
+		File contextFolder = new File(sourceDirFile, ITasksCoreConstants.CONTEXTS_DIRECTORY);
 		assertTrue(!contextFolder.exists());
 		assertTrue(migrator.migrateTaskContextData(new NullProgressMonitor()));
 		assertFalse(oldContextFile1.exists());
@@ -103,7 +102,7 @@ public class TaskList06DataMigrationTest extends TestCase {
 		File oldActivityFile = new File(sourceDirFile, IInteractionContextManager.OLD_CONTEXT_HISTORY_FILE_NAME
 				+ IInteractionContextManager.CONTEXT_FILE_EXTENSION_OLD);
 		oldActivityFile.createNewFile();
-		File contextFolder = new File(sourceDirFile, WorkspaceAwareContextStore.CONTEXTS_DIRECTORY);
+		File contextFolder = new File(sourceDirFile, ITasksCoreConstants.CONTEXTS_DIRECTORY);
 		assertTrue(!contextFolder.exists());
 		assertTrue(migrator.migrateActivityData(new NullProgressMonitor()));
 		assertFalse(oldActivityFile.exists());
@@ -234,7 +233,7 @@ class TaskListDataMigration implements IRunnableWithProgress {
 		try {
 			monitor.beginTask("Task Context Migration", contextFiles.size());
 
-			File contextsFolder = new File(dataDirectory, WorkspaceAwareContextStore.CONTEXTS_DIRECTORY);
+			File contextsFolder = new File(dataDirectory, ITasksCoreConstants.CONTEXTS_DIRECTORY);
 			if (!contextsFolder.exists()) {
 				if (!contextsFolder.mkdir()) {
 					throw new Exception(
@@ -271,7 +270,7 @@ class TaskListDataMigration implements IRunnableWithProgress {
 			return false;
 		}
 
-		File contextsFolder = new File(dataDirectory, WorkspaceAwareContextStore.CONTEXTS_DIRECTORY);
+		File contextsFolder = new File(dataDirectory, ITasksCoreConstants.CONTEXTS_DIRECTORY);
 		if (!contextsFolder.exists()) {
 			if (!contextsFolder.mkdir()) {
 				throw new Exception("Could not create contexts folder. Check read/write permission on data directory.");
