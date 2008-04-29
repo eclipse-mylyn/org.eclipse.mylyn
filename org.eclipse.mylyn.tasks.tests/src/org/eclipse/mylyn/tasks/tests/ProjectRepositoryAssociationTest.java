@@ -42,13 +42,13 @@ public class ProjectRepositoryAssociationTest extends TestCase {
 	}
 
 	public void testRepositoryForProject() throws CoreException {
-		assertNull(TasksUiPlugin.getDefault().getRepositoryForResource(projectWrapper.getProject(), true));
+		assertNull(TasksUiPlugin.getDefault().getRepositoryForResource(projectWrapper.getProject()));
 		TaskRepository repository = new TaskRepository(REPOSITORY_KIND, REPOSITORY_URL);
 		TasksUiPlugin.getRepositoryManager().addRepository(repository,
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		TasksUiPlugin.getDefault().setRepositoryForResource(projectWrapper.getProject(), repository);
 		TaskRepository returnedRepository = TasksUiPlugin.getDefault().getRepositoryForResource(
-				projectWrapper.getProject(), true);
+				projectWrapper.getProject());
 		assertNotNull(returnedRepository);
 		assertEquals(REPOSITORY_KIND, returnedRepository.getConnectorKind());
 		assertEquals(REPOSITORY_URL, returnedRepository.getRepositoryUrl());
@@ -60,12 +60,12 @@ public class ProjectRepositoryAssociationTest extends TestCase {
 	public void testRepositoryForFolder() throws CoreException {
 		IFolder folder = projectWrapper.createFolder("testFolder");
 		assertTrue(folder.exists());
-		assertNull(TasksUiPlugin.getDefault().getRepositoryForResource(folder, true));
+		assertNull(TasksUiPlugin.getDefault().getRepositoryForResource(folder));
 		TaskRepository repository = new TaskRepository(REPOSITORY_KIND, REPOSITORY_URL);
 		TasksUiPlugin.getRepositoryManager().addRepository(repository,
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		TasksUiPlugin.getDefault().setRepositoryForResource(folder, repository);
-		TaskRepository returnedRepository = TasksUiPlugin.getDefault().getRepositoryForResource(folder, true);
+		TaskRepository returnedRepository = TasksUiPlugin.getDefault().getRepositoryForResource(folder);
 		assertNotNull(returnedRepository);
 		assertEquals(REPOSITORY_KIND, returnedRepository.getConnectorKind());
 		assertEquals(REPOSITORY_URL, returnedRepository.getRepositoryUrl());

@@ -42,10 +42,10 @@ public class LinkProviderTest extends TestCase {
 	public void testTimeout() {
 		LinkProviderStub provider = new LinkProviderStub();
 		TasksUiPlugin.getDefault().addRepositoryLinkProvider(provider);
-		TasksUiPlugin.getDefault().getRepositoryForResource(ResourcesPlugin.getWorkspace().getRoot(), true);
+		TasksUiPlugin.getDefault().getRepositoryForResource(ResourcesPlugin.getWorkspace().getRoot());
 		assertEquals(1, provider.executions);
 
-		TasksUiPlugin.getDefault().getRepositoryForResource(ResourcesPlugin.getWorkspace().getRoot(), true);
+		TasksUiPlugin.getDefault().getRepositoryForResource(ResourcesPlugin.getWorkspace().getRoot());
 		assertEquals(1, provider.executions);
 	}
 
