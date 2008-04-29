@@ -78,7 +78,7 @@ public class LinkedTaskInfoAdapterFactory implements IAdapterFactory {
 
 		IResource resource = getResourceForElement(object);
 		if (resource != null) {
-			TaskRepository repository = TasksUiPlugin.getDefault().getRepositoryForResource(resource, true);
+			TaskRepository repository = TasksUiPlugin.getDefault().getRepositoryForResource(resource);
 			if (repository != null) {
 				return new LinkedTaskInfo(repository.getRepositoryUrl(), null, null, comment);
 			}

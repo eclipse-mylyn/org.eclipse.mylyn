@@ -119,7 +119,7 @@ public class ContextChangeSet extends ActiveChangeSet /*CVSActiveChangeSet*/impl
 		if (checkTaskRepository) {
 			boolean unmatchedRepositoryFound = false;
 			for (IProject project : projects) {
-				TaskRepository repository = TasksUiPlugin.getDefault().getRepositoryForResource(project, true);
+				TaskRepository repository = TasksUiPlugin.getDefault().getRepositoryForResource(project);
 				if (repository != null) {
 					if (!repository.getRepositoryUrl().equals(task.getRepositoryUrl())) {
 						unmatchedRepositoryFound = true;
