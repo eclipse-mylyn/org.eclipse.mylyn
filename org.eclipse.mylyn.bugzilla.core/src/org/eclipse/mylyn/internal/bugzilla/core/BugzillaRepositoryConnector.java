@@ -534,4 +534,16 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		return getTaskDataHandler().getTaskData(repository, taskId, monitor);
 	}
 
+	public void postSynchronization(SynchronizationContext event, IProgressMonitor monitor) throws CoreException {
+		try {
+			monitor.beginTask("", 1);
+			if (event.fullSynchronization) {
+				event.taskRepository.setSynchronizationTimeStamp(getSynchronizationTimestamp(event.taskRepository,
+						event.changedTasks));
+			}
+		} finally {
+			monitor.done();
+		}
+	}
+
 }
