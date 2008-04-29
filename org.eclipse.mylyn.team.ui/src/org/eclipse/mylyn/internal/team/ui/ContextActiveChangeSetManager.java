@@ -136,6 +136,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 							ContextChangeSet contextChangeSet = new ContextChangeSet(task, collector);
 							contextChangeSet.restoreResources(restoredSet.getResources());
 							collector.remove(restoredSet);
+
 							collector.add(contextChangeSet);
 						} catch (Exception e) {
 							StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.PLUGIN_ID,

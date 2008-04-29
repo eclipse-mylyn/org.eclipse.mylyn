@@ -23,8 +23,8 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylyn.context.ui.InterestFilter;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.internal.tasks.ui.views.AdaptiveRefreshPolicy;
+import org.eclipse.mylyn.provisional.workbench.ui.AdaptiveRefreshPolicy;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.AccessibleAdapter;
 import org.eclipse.swt.accessibility.AccessibleEvent;
@@ -158,8 +158,8 @@ public class CommonNavigatorFilterBar extends Composite {
 			};
 
 			clearTextAction.setToolTipText(WorkbenchMessages.FilteredTree_ClearToolTip);
-			clearTextAction.setImageDescriptor(TasksUiImages.FIND_CLEAR);
-			clearTextAction.setDisabledImageDescriptor(TasksUiImages.FIND_CLEAR_DISABLED);
+			clearTextAction.setImageDescriptor(CommonImages.FIND_CLEAR);
+			clearTextAction.setDisabledImageDescriptor(CommonImages.FIND_CLEAR_DISABLED);
 			filterToolBar.add(clearTextAction);
 		}
 	}

@@ -33,7 +33,7 @@ public abstract class AbstractContextChangeSetManager implements IInteractionCon
 		if (!isEnabled) {
 			isEnabled = true;
 			TasksUi.getTaskListManager().getTaskList().addChangeListener(TASKLIST_CHANGE_LISTENER);
-			if (TasksUiPlugin.getTaskListManager().isTaskListInitialized()) {
+			if (TasksUiPlugin.getTaskListManager().getTaskList().isInitialized()) {
 				initContextChangeSets(); // otherwise listener will do it
 			}
 
