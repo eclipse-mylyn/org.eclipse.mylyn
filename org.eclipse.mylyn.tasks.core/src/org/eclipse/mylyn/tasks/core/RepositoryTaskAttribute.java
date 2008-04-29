@@ -21,7 +21,7 @@ import java.util.Map;
  * @author Rob Elves
  * @since 2.0
  */
-public class RepositoryTaskAttribute implements Serializable {
+public final class RepositoryTaskAttribute implements Serializable {
 
 	private static final long serialVersionUID = 5548885751645139746L;
 

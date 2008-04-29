@@ -18,7 +18,7 @@ import java.io.Serializable;
  * @since 2.0
  */
 //API 3.0 deprecate
-public class RepositoryAttachment extends AttributeContainer implements Serializable {
+public final class RepositoryAttachment extends AttributeContainer implements Serializable {
 
 	private static final long serialVersionUID = 2663237137799050826L;
 

@@ -18,8 +18,6 @@ public final class TaskData {
 
 	private final String connectorKind;
 
-	private boolean isNew;
-
 	private boolean partial;
 
 	private String version;
