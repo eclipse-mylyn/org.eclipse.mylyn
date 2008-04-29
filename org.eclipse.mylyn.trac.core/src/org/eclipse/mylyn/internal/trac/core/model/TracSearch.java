@@ -20,10 +20,10 @@ import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter.CompareOperator;
-import org.eclipse.mylyn.monitor.core.StatusHandler;
 
 /**
  * Represents a Trac search. A search can have multiple {@link TracSearchFilter}s that all need to match.

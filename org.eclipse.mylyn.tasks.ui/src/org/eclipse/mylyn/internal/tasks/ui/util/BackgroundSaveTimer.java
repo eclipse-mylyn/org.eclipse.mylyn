@@ -9,10 +9,10 @@ package org.eclipse.mylyn.internal.tasks.ui.util;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.monitor.core.ActivityTimerThread;
 import org.eclipse.mylyn.monitor.core.IActivityTimerListener;
-import org.eclipse.mylyn.monitor.core.StatusHandler;
 
 /**
  * Timer that periodically runs saveRequested() on its client as a job

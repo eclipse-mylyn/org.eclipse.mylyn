@@ -19,8 +19,8 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.internal.monitor.core.IMonitorCoreConstants;
-import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.commons.core.IMonitorCoreConstants;
 import org.eclipse.mylyn.tasks.bugs.AbstractTaskContributor;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 

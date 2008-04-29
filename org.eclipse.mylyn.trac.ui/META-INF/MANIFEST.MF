@@ -10,12 +10,12 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.search;bundle-version="3.4.0",
  org.eclipse.ui,
  org.eclipse.ui.forms,
- org.eclipse.mylyn.monitor.core;bundle-version="[3.0.0,4.0.0)",
+ org.eclipse.mylyn.commons.core;bundle-version="[3.0.0,4.0.0)",
  org.eclipse.mylyn.tasks.core;bundle-version="[3.0.0,4.0.0)",
  org.eclipse.mylyn.tasks.ui;bundle-version="[3.0.0,4.0.0)",
  org.eclipse.mylyn.trac.core;bundle-version="[3.0.0,4.0.0)",
  org.eclipse.mylyn.web.core;bundle-version="[3.0.0,4.0.0)",
- org.eclipse.mylyn.workbench.ui;bundle-version="[3.0.0,4.0.0)"
+ org.eclipse.mylyn.commons.ui;bundle-version="[3.0.0,4.0.0)"
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.mylyn.internal.trac.ui;x-internal:=true,
  org.eclipse.mylyn.internal.trac.ui.editor;x-internal:=true,
