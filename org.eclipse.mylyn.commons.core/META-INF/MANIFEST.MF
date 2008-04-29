@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mylyn Commons Core
+Bundle-SymbolicName: org.eclipse.mylyn.commons.core;singleton:=true
+Bundle-Version: 3.0.0.qualifier
+Bundle-Vendor: Eclipse.org
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Export-Package: org.eclipse.mylyn.commons.core,
+ org.eclipse.mylyn.internal.commons.core;x-internal:=true
+Require-Bundle: org.eclipse.core.runtime
+Bundle-ClassPath: .

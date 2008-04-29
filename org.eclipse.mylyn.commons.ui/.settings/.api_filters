@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<component id="org.eclipse.mylyn.tasks.ui" version="1">
+    <resource path="src/org/eclipse/mylyn/tasks/ui/editors/AbstractRepositoryTaskEditor.java">
+        <filter id="643846161" messageargs="org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskOutlineNode"/>
+        <filter id="643842064" messageargs="org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskOutlinePage"/>
+        <filter id="643846161" messageargs="org.eclipse.mylyn.internal.tasks.ui.editors.IRepositoryTaskAttributeListener"/>
+    </resource>
+    <resource path="src/org/eclipse/mylyn/tasks/ui/editors/AbstractNewRepositoryTaskEditor.java">
+        <filter id="627060751" messageargs="org.eclipse.mylyn.internal.tasks.ui.ScheduleDatePicker"/>
+    </resource>
+</component>
