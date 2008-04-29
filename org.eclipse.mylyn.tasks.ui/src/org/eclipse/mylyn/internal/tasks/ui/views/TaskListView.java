@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
@@ -31,6 +32,7 @@ import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -1108,17 +1110,19 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	/*
 	 * TODO: clean up, consider relying on extension points for groups
 	 */
-	private void fillContextMenu(IMenuManager manager) {
+	private void fillContextMenu(final IMenuManager manager) {
 		updateDrillDownActions();
-		AbstractTaskContainer element = null;
+		final AbstractTaskContainer element;
 
 		final Object firstSelectedObject = ((IStructuredSelection) getViewer().getSelection()).getFirstElement();
 		if (firstSelectedObject instanceof AbstractTaskContainer) {
 			element = (AbstractTaskContainer) firstSelectedObject;
+		} else {
+			element = null;
 		}
-		List<AbstractTaskContainer> selectedElements = getSelectedTaskContainers();
+		final List<AbstractTaskContainer> selectedElements = getSelectedTaskContainers();
 		AbstractTask task = null;
-		if ((element instanceof AbstractTask)) {
+		if (element instanceof AbstractTask) {
 			task = (AbstractTask) element;
 		}
 
@@ -1142,11 +1146,21 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		Map<String, List<IDynamicSubMenuContributor>> dynamicMenuMap = TasksUiPlugin.getDefault().getDynamicMenuMap();
 		for (String menuPath : dynamicMenuMap.keySet()) {
 			if (!ID_SEPARATOR_CONTEXT.equals(menuPath)) {
-				for (IDynamicSubMenuContributor contributor : dynamicMenuMap.get(menuPath)) {
-					MenuManager subMenuManager = contributor.getSubMenuManager(selectedElements);
-					if (subMenuManager != null) {
-						addMenuManager(subMenuManager, manager, element);
-					}
+				for (final IDynamicSubMenuContributor contributor : dynamicMenuMap.get(menuPath)) {
+					SafeRunnable.run(new ISafeRunnable() {
+						public void handleException(Throwable e) {
+							StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+									"Menu contributor failed"));
+						}
+
+						public void run() throws Exception {
+							MenuManager subMenuManager = contributor.getSubMenuManager(selectedElements);
+							if (subMenuManager != null) {
+								addMenuManager(subMenuManager, manager, element);
+							}
+						}
+
+					});
 				}
 			}
 		}
