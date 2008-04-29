@@ -53,6 +53,8 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		if (newInput instanceof RepositorySearchResult) {
 			searchResult = (RepositorySearchResult) newInput;
+			clear();
+			elementsChanged(searchResult.getElements());
 		}
 	}
 
