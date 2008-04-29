@@ -6,17 +6,18 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.tasks.ui;
+package org.eclipse.mylyn.internal.tasks.core.externalization;
 
 /**
- * @author Mik Kersten
+ * @author Rob Elves
  */
-public interface ITasksUiConstants {
+public interface IExternalizationContext {
 
-	public static final String TITLE_DIALOG = "Mylyn Information";
+	public enum KIND {
+		SAVE, SNAPSHOT, LOAD;
+	}
 
-	public static final String MESSAGE_RESTORE = "Could not read task list.  Consider restoring via File -> Import -> Mylyn Task Data";
+	public abstract KIND getKind();
 
-	public static final String URL_HOMEPAGE = "http://eclipse.org/mylyn";
-
+	public abstract String getRootPath();
 }

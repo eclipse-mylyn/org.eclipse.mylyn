@@ -9,7 +9,6 @@
 package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -24,8 +23,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
@@ -44,8 +41,10 @@ import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizationParticipant;
+import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizer;
+import org.eclipse.mylyn.internal.tasks.ui.util.TaskListElementImporter;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskListSaveManager;
-import org.eclipse.mylyn.internal.tasks.ui.util.TaskListWriter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskActivationHistory;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
@@ -61,11 +60,8 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
-import org.eclipse.mylyn.tasks.ui.TaskListModifyOperation;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.progress.IProgressService;
 
 /**
  * Provides facilities for using and managing the Task List and task activity information.
@@ -87,7 +83,7 @@ public class TaskListManager implements ITaskListManager {
 
 	private final List<ITaskActivationListener> taskActivationListeners = new ArrayList<ITaskActivationListener>();
 
-	private final TaskListWriter taskListWriter;
+	private final TaskListExternalizer taskListWriter;
 
 	private File taskListFile;
 
@@ -102,6 +98,10 @@ public class TaskListManager implements ITaskListManager {
 	private final Timer timer;
 
 	private AbstractTask activeTask;
+
+	private TaskListExternalizationParticipant taskListSaveParticipant;
+
+	private final TaskListElementImporter importer;
 
 //	private final ITaskListChangeListener CHANGE_LISTENER = new ITaskListChangeListener() {
 //
@@ -123,12 +123,13 @@ public class TaskListManager implements ITaskListManager {
 //		}
 //	};
 
-	public TaskListManager(TaskListWriter taskListWriter, File file) {
+	public TaskListManager(TaskListExternalizer taskListWriter, File file) {
 		this.taskListFile = file;
 		this.taskListWriter = taskListWriter;
 		timer = new Timer();
 		timer.schedule(new RolloverCheck(), ROLLOVER_DELAY, ROLLOVER_DELAY);
-		//taskList.addChangeListener(CHANGE_LISTENER);
+		importer = new TaskListElementImporter();
+		importer.setDelegateExternalizers(taskListWriter.getExternalizers());
 	}
 
 	public void addActivationListener(ITaskActivationListener listener) {
@@ -263,39 +264,50 @@ public class TaskListManager implements ITaskListManager {
 	}
 
 	public boolean readExistingOrCreateNewList() {
-		IProgressService service = PlatformUI.getWorkbench().getProgressService();
-		TaskListModifyOperation modOperation = new TaskListModifyOperation() {
-
-			@Override
-			protected void operations(IProgressMonitor monitor) throws CoreException, InvocationTargetException,
-					InterruptedException {
-				try {
-					if (taskListFile.exists()) {
-						prepareOrphanContainers();
-						taskList.readStart();
-						taskListWriter.readTaskList(taskList, taskListFile, TasksUiPlugin.getTaskDataStorageManager());
-						taskList.readComplete();
-					} else {
-						resetTaskList();
-					}
-					taskListInitialized = true;
-				} catch (Throwable t) {
-					throw new InvocationTargetException(t);
-				}
-			}
-		};
-
-		try {
-			service.run(false, false, modOperation);
-		} catch (InvocationTargetException e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Could not read task list, consider restoring via view menu", e.getCause()));
-			return false;
-		} catch (InterruptedException e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Read of task list file cancelled.",
-					e));
-			return false;
+		prepareOrphanContainers();
+		if (taskListSaveParticipant == null) {
+			taskListSaveParticipant = new TaskListExternalizationParticipant(taskList, taskListWriter,
+					TasksUiPlugin.getExternalizationManager());
+			//TasksUiExtensionReader.initStartupExtensions(taskListSaveParticipant.getTaskListWriter());
+			TasksUiPlugin.getExternalizationManager().addParticipant(taskListSaveParticipant);
+			taskList.addChangeListener(taskListSaveParticipant);
 		}
+
+		TasksUiPlugin.getExternalizationManager().load(taskListSaveParticipant);
+
+//		IProgressService service = PlatformUI.getWorkbench().getProgressService();
+//		TaskListModifyOperation modOperation = new TaskListModifyOperation() {
+//
+//			@Override
+//			protected void operations(IProgressMonitor monitor) throws CoreException, InvocationTargetException,
+//					InterruptedException {
+//				try {
+//					if (taskListFile.exists()) {
+//						prepareOrphanContainers();
+//						taskList.preTaskListRead();
+//						taskListWriter.readTaskList(taskList, taskListFile);
+//						taskList.postTaskListRead();
+//					} else {
+//						resetTaskList();
+//					}
+//					taskListInitialized = true;
+//				} catch (Throwable t) {
+//					throw new InvocationTargetException(t);
+//				}
+//			}
+//		};
+//
+//		try {
+//			service.run(false, false, modOperation);
+//		} catch (InvocationTargetException e) {
+//			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+//					"Could not read task list, consider restoring via view menu", e.getCause()));
+//			return false;
+//		} catch (InterruptedException e) {
+//			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Read of task list file cancelled.",
+//					e));
+//			return false;
+//		}
 
 		return true;
 	}
@@ -312,18 +324,22 @@ public class TaskListManager implements ITaskListManager {
 
 	/**
 	 * Will not save an empty task list to avoid losing data on bad startup.
+	 * 
+	 * @deprecated use <code>TasksUiPlugin.getExternalizationManager().requestSave()</code>
 	 */
+	@Deprecated
 	public synchronized void saveTaskList() {
-		try {
-			if (taskListInitialized && taskListSaveManager != null) {
-				taskListSaveManager.saveTaskList(true, false);
-			} else {
-				StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
-						"Task list save attempted before initialization"));
-			}
-		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not save task list", e));
-		}
+		TasksUiPlugin.getExternalizationManager().requestSave();
+//		try {
+//			if (taskListInitialized && taskListSaveManager != null) {
+//				taskListSaveManager.saveTaskList(true, false);
+//			} else {
+//				StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
+//						"Task list save attempted before initialization"));
+//			}
+//		} catch (Exception e) {
+//			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not save task list", e));
+//		}
 	}
 
 	public TaskList getTaskList() {
@@ -402,6 +418,10 @@ public class TaskListManager implements ITaskListManager {
 		this.taskListFile = file;
 	}
 
+	/**
+	 * @deprecated
+	 */
+	@Deprecated
 	public void copyDataDirContentsTo(String newDataDir) {
 		taskListSaveManager.copyDataDirContentsTo(newDataDir);
 	}
@@ -410,8 +430,8 @@ public class TaskListManager implements ITaskListManager {
 		return taskListInitialized;
 	}
 
-	public TaskListWriter getTaskListWriter() {
-		return taskListWriter;
+	public TaskListElementImporter getTaskListWriter() {
+		return importer;
 	}
 
 	public File getTaskListFile() {

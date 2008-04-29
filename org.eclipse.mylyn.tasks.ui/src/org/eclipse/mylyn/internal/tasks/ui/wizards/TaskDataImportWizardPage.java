@@ -9,9 +9,7 @@ package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import java.io.File;
 import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.SortedMap;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -113,7 +111,7 @@ public class TaskDataImportWizardPage extends WizardPage {
 			container.setLayout(layout);
 			createContentSelectionControl(container);
 			createImportFromZipControl(container);
-			createImportBackupControl(container);
+			createImportFromBackupControl(container);
 			addRadioListeners();
 			initSettings();
 			setControl(container);
@@ -198,7 +196,7 @@ public class TaskDataImportWizardPage extends WizardPage {
 
 	}
 
-	private void createImportBackupControl(Composite container) {
+	private void createImportFromBackupControl(Composite container) {
 
 		importViaBackupButton = new Button(container, SWT.RADIO);
 		importViaBackupButton.setText(LABEL_IMPORT_BACKUP);
@@ -212,34 +210,39 @@ public class TaskDataImportWizardPage extends WizardPage {
 		TableColumn filenameColumn = new TableColumn(backupFilesTable, SWT.LEFT);
 		filenameColumn.setWidth(200);
 
-		String destination = TasksUiPlugin.getDefault().getBackupFolderPath();
+		SortedMap<Long, File> backupFilesMap = TasksUiPlugin.getBackupManager().getBackupFiles();
 
-		File backupFolder = new File(destination);
-		ArrayList<File> backupFiles = new ArrayList<File>();
-		if (backupFolder.exists()) {
-			File[] files = backupFolder.listFiles();
-			for (File file : files) {
-				if (file.getName().startsWith(TaskDataExportWizard.ZIP_FILE_PREFIX)) {
-					backupFiles.add(file);
-				}
-			}
+//		String destination = TasksUiPlugin.getDefault().getBackupFolderPath();
+//
+//		File backupFolder = new File(destination);
+//		ArrayList<File> backupFiles = new ArrayList<File>();
+//		if (backupFolder.exists()) {
+//			File[] files = backupFolder.listFiles();
+//			if (files != null) {
+//				for (File file : files) {
+//					if (file.getName().startsWith(TaskListBackupManager.BACKUP_FILE_PREFIX)) {
+//						backupFiles.add(file);
+//					}
+//				}
+//			}
+//		}
+//
+//		File[] backupFileArray = backupFiles.toArray(new File[backupFiles.size()]);
+//
+//		if (backupFileArray != null && backupFileArray.length > 0) {
+//			Arrays.sort(backupFileArray, new Comparator<File>() {
+//				public int compare(File file1, File file2) {
+//					return (new Long((file1).lastModified()).compareTo(new Long((file2).lastModified()))) * -1;
+//				}
+//
+//			});
+		for (Long time : backupFilesMap.keySet()) {
+			File file = backupFilesMap.get(time);
+			TableItem item = new TableItem(backupFilesTable, SWT.NONE);
+			item.setData(file.getAbsolutePath());
+			item.setText(DateFormat.getDateTimeInstance().format(time));
 		}
-
-		File[] backupFileArray = backupFiles.toArray(new File[backupFiles.size()]);
-
-		if (backupFileArray != null && backupFileArray.length > 0) {
-			Arrays.sort(backupFileArray, new Comparator<File>() {
-				public int compare(File file1, File file2) {
-					return (new Long((file1).lastModified()).compareTo(new Long((file2).lastModified()))) * -1;
-				}
-
-			});
-			for (File file : backupFileArray) {
-				TableItem item = new TableItem(backupFilesTable, SWT.NONE);
-				item.setData(file.getAbsolutePath());
-				item.setText(DateFormat.getDateTimeInstance().format(file.lastModified()));
-			}
-		}
+//		}
 
 		backupFilesTable.addSelectionListener(new SelectionAdapter() {
 

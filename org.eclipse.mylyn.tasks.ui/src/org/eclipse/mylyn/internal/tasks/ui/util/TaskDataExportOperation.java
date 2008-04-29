@@ -28,8 +28,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.internal.monitor.core.util.ZipFileUtil;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
-import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.WorkspaceAwareContextStore;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
@@ -45,7 +45,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  * @author Mik Kersten
  * @author Rob Elves
  */
-public class TaskDataExportJob extends TaskListModifyOperation {
+public class TaskDataExportOperation extends TaskListModifyOperation {
 
 	private static final String JOB_LABEL = "Exporting Mylyn Task Data";
 
@@ -66,14 +66,14 @@ public class TaskDataExportJob extends TaskListModifyOperation {
 	private final Collection<AbstractTask> tasks;
 
 	/** export all data */
-	public TaskDataExportJob(String destinationDirectory, boolean zipIt, String zipFileName) {
+	public TaskDataExportOperation(String destinationDirectory, boolean zipIt, String zipFileName) {
 		this(destinationDirectory, true, true, true, zipIt, zipFileName, TasksUi.getTaskListManager()
 				.getTaskList()
 				.getAllTasks());
 	}
 
 	/** export specified data */
-	public TaskDataExportJob(String destinationDirectory, boolean exportTaskList, boolean exportActivationHistory,
+	public TaskDataExportOperation(String destinationDirectory, boolean exportTaskList, boolean exportActivationHistory,
 			boolean exportTaskContexts, boolean zipIt, String zipFileName, Collection<AbstractTask> taskContextsToExport) {
 		this.zipFileName = zipFileName;
 		this.zip = zipIt;
@@ -144,11 +144,11 @@ public class TaskDataExportJob extends TaskListModifyOperation {
 			TasksUiPlugin.getTaskListManager().saveTaskList();
 
 			String sourceTaskListPath = TasksUiPlugin.getDefault().getDataDirectory() + File.separator
-					+ ITasksUiConstants.DEFAULT_TASK_LIST_FILE;
+					+ ITasksCoreConstants.DEFAULT_TASK_LIST_FILE;
 			File sourceTaskListFile = new File(sourceTaskListPath);
 			if (sourceTaskListFile.exists()) {
 				File destTaskListFile = new File(destinationDirectory + File.separator
-						+ ITasksUiConstants.DEFAULT_TASK_LIST_FILE);
+						+ ITasksCoreConstants.DEFAULT_TASK_LIST_FILE);
 
 				if (zip) {
 					filesToZip.add(sourceTaskListFile);

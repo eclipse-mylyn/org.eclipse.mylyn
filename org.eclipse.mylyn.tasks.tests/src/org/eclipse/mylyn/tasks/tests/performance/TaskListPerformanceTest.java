@@ -13,7 +13,7 @@ import java.io.File;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.util.TaskListWriter;
+import org.eclipse.mylyn.internal.tasks.ui.util.TaskListElementImporter;
 import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 import org.eclipse.test.performance.PerformanceTestCase;
 
@@ -43,7 +43,7 @@ public class TaskListPerformanceTest extends PerformanceTestCase {
 
 	public void testReadTasksWith4000Tasks() {
 		final File file = TaskTestUtil.getLocalFile(TASK_LIST_4000);
-		final TaskListWriter taskListWriter = taskListManager.getTaskListWriter();
+		final TaskListElementImporter taskListWriter = taskListManager.getTaskListWriter();
 
 		for (int i = 0; i < 10; i++) {
 			startMeasuring();
@@ -58,11 +58,11 @@ public class TaskListPerformanceTest extends PerformanceTestCase {
 
 	public void testReadTaskListWith4000Tasks() {
 		final File file = TaskTestUtil.getLocalFile(TASK_LIST_4000);
-		final TaskListWriter taskListWriter = taskListManager.getTaskListWriter();
+		final TaskListElementImporter taskListWriter = taskListManager.getTaskListWriter();
 
 		for (int i = 0; i < 10; i++) {
 			startMeasuring();
-			taskListWriter.readTaskList(taskList, file, TasksUiPlugin.getTaskDataStorageManager());
+			taskListWriter.readTaskList(taskList, file);
 			stopMeasuring();
 			taskList.reset();
 		}

@@ -45,7 +45,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextExternalizer;
-import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskExternalizationException;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoriesExternalizer;
@@ -77,7 +77,11 @@ import org.xml.sax.SAXException;
 // - make the externalization stream based instead of file base
 // - separate repository externalization and task list externalization
 // - provide roll-back when import fails
-public class TaskListWriter {
+/**
+ * @deprecated
+ */
+@Deprecated
+public class TaskListElementImporter {
 
 	private static final String TRANSFORM_PROPERTY_VERSION = "version";
 
@@ -111,7 +115,7 @@ public class TaskListWriter {
 
 	private boolean hasCaughtException = false;
 
-	public TaskListWriter() {
+	public TaskListElementImporter() {
 		this.delagatingExternalizer = new DelegatingTaskExternalizer();
 		this.repositoriesExternalizer = new TaskRepositoriesExternalizer();
 		this.contextExternalizer = new InteractionContextExternalizer();
@@ -191,7 +195,7 @@ public class TaskListWriter {
 	 * @throws IOException
 	 */
 	private void writeTaskList(Document doc, ZipOutputStream outputStream) throws IOException {
-		ZipEntry zipEntry = new ZipEntry(ITasksUiConstants.OLD_TASK_LIST_FILE);
+		ZipEntry zipEntry = new ZipEntry(ITasksCoreConstants.OLD_TASK_LIST_FILE);
 		outputStream.putNextEntry(zipEntry);
 		outputStream.setMethod(ZipOutputStream.DEFLATED);
 		// OutputStream outputStream = new FileOutputStream(file);
@@ -235,9 +239,10 @@ public class TaskListWriter {
 	}
 
 	/**
-	 * TODO: fix this old mess
+	 * @deprecated
 	 */
-	public void readTaskList(TaskList taskList, File inFile, TaskDataStorageManager taskDataManager) {
+	@Deprecated
+	public void readTaskList(TaskList taskList, File inFile) {
 		hasCaughtException = false;
 		delagatingExternalizer.getLegacyParentCategoryMap().clear();
 		Map<AbstractTask, NodeList> tasksWithSubtasks = new HashMap<AbstractTask, NodeList>();
@@ -445,13 +450,13 @@ public class TaskListWriter {
 			// Parse the content of the given file as an XML document
 			// and return a new DOM Document object. Also throws IOException
 			InputStream inputStream = null;
-			if (inputFile.getName().endsWith(ITasksUiConstants.FILE_EXTENSION)) {
+			if (inputFile.getName().endsWith(ITasksCoreConstants.FILE_EXTENSION)) {
 				// is zipped context
 				inputStream = new ZipInputStream(new FileInputStream(inputFile));
 				// search for TaskList entry
 				ZipEntry entry = ((ZipInputStream) inputStream).getNextEntry();
 				while (entry != null) {
-					if (ITasksUiConstants.OLD_TASK_LIST_FILE.equals(entry.getName())) {
+					if (ITasksCoreConstants.OLD_TASK_LIST_FILE.equals(entry.getName())) {
 						break;
 					}
 					entry = ((ZipInputStream) inputStream).getNextEntry();

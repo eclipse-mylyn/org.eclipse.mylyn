@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TaskTransfer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
@@ -87,8 +87,8 @@ public class TaskDragSourceListener extends DragSourceAdapter {
 		List<File> taskFiles = new ArrayList<File>(queries.size() + tasks.size());
 		try {
 			for (AbstractRepositoryQuery query : queries) {
-				String encodedName = URLEncoder.encode(query.getHandleIdentifier(), ITasksUiConstants.FILENAME_ENCODING);
-				File file = File.createTempFile(encodedName, ITasksUiConstants.FILE_EXTENSION, tempDir);
+				String encodedName = URLEncoder.encode(query.getHandleIdentifier(), ITasksCoreConstants.FILENAME_ENCODING);
+				File file = File.createTempFile(encodedName, ITasksCoreConstants.FILE_EXTENSION, tempDir);
 				file.deleteOnExit();
 
 				TasksUiPlugin.getTaskListManager().getTaskListWriter().writeQueries(Collections.singletonList(query),
@@ -97,8 +97,8 @@ public class TaskDragSourceListener extends DragSourceAdapter {
 			}
 
 			for (AbstractTask task : tasks) {
-				String encodedName = URLEncoder.encode(task.getHandleIdentifier(), ITasksUiConstants.FILENAME_ENCODING);
-				File file = File.createTempFile(encodedName, ITasksUiConstants.FILE_EXTENSION, tempDir);
+				String encodedName = URLEncoder.encode(task.getHandleIdentifier(), ITasksCoreConstants.FILENAME_ENCODING);
+				File file = File.createTempFile(encodedName, ITasksCoreConstants.FILE_EXTENSION, tempDir);
 				file.deleteOnExit();
 
 				TasksUiPlugin.getTaskListManager().getTaskListWriter().writeTask(task, file);

@@ -76,7 +76,7 @@ public class TaskListBackupManagerTest extends TestCase {
 
 		// Test removal of old backups
 		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TasksUiPreferenceConstants.BACKUP_MAXFILES, 0);
-		TasksUiPlugin.getDefault().getBackupManager().removeOldBackups(backupFileFolder);
+		TasksUiPlugin.getBackupManager().removeOldBackups();
 		assertTrue(backupFileFolder.listFiles(new FilenameFilter() {
 			public boolean accept(File dir, String name) {
 				if (name.matches("mylyndata-.*")) {

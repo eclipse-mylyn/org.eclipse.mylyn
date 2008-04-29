@@ -20,7 +20,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.swt.SWT;
@@ -80,7 +80,7 @@ public class TaskExportAction extends Action implements IViewActionDelegate {
 		if (tasks.size() == 1) {
 			// open FileDialog
 			FileDialog dialog = new FileDialog(shell, SWT.PRIMARY_MODAL | SWT.SAVE);
-			dialog.setFilterExtensions(new String[] { "*" + ITasksUiConstants.FILE_EXTENSION });
+			dialog.setFilterExtensions(new String[] { "*" + ITasksCoreConstants.FILE_EXTENSION });
 
 			AbstractTask task = tasks.get(0);
 
@@ -128,7 +128,7 @@ public class TaskExportAction extends Action implements IViewActionDelegate {
 		if (fileName.length() > 50) {
 			fileName = fileName.substring(0, 50);
 		}
-		fileName = task.getTaskId() + " - " + fileName + ITasksUiConstants.FILE_EXTENSION;
+		fileName = task.getTaskId() + " - " + fileName + ITasksCoreConstants.FILE_EXTENSION;
 		return fileName;
 	}
 

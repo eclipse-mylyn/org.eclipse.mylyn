@@ -27,7 +27,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.internal.monitor.core.util.ZipFileUtil;
-import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -125,7 +125,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 					// ignore directories (shouldn't be any)
 					continue;
 				}
-				if (!importPage.importTaskList() && entry.getName().endsWith(ITasksUiConstants.OLD_TASK_LIST_FILE)) {
+				if (!importPage.importTaskList() && entry.getName().endsWith(ITasksCoreConstants.OLD_TASK_LIST_FILE)) {
 					continue;
 				}
 

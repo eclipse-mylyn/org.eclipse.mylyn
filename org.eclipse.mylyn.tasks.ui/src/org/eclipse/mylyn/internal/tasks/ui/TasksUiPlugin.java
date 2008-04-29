@@ -42,20 +42,21 @@ import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.ContextPreferenceContstants;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
-import org.eclipse.mylyn.internal.tasks.core.data.TaskDataStore;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
+import org.eclipse.mylyn.internal.tasks.core.data.TaskDataStore;
+import org.eclipse.mylyn.internal.tasks.core.externalization.ExternalizationManager;
+import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizer;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.AbstractNotification;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotification;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationQueryIncoming;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationReminder;
-import org.eclipse.mylyn.internal.tasks.ui.util.TaskListSaveManager;
-import org.eclipse.mylyn.internal.tasks.ui.util.TaskListWriter;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiExtensionReader;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
@@ -120,6 +121,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private static TasksUiPlugin INSTANCE;
 
+	private static ExternalizationManager externalizationManager;
+
 	private static TaskListManager taskListManager;
 
 	private static TaskActivityManager taskActivityManager;
@@ -132,7 +135,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private static Map<String, AbstractRepositoryConnectorUi> repositoryConnectorUiMap = new HashMap<String, AbstractRepositoryConnectorUi>();
 
-	private TaskListSaveManager taskListSaveManager;
+	//private TaskListSaveManager taskListSaveManager;
 
 	private TaskListNotificationManager taskListNotificationManager;
 
@@ -151,7 +154,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	private final TreeSet<AbstractTaskRepositoryLinkProvider> repositoryLinkProviders = new TreeSet<AbstractTaskRepositoryLinkProvider>(
 			new OrderComparator());
 
-	private TaskListWriter taskListWriter;
+	private TaskListExternalizer taskListWriter;
 
 	private ITaskHighlighter highlighter;
 
@@ -359,6 +362,10 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				// relies on images.
 				TasksUiExtensionReader.initWorkbenchUiExtensions();
 
+				if (externalizationManager.getLoadStatus() != null) {
+					// XXX: recovery from task list load failure  (Rendered in task list)
+				}
+
 				// Needs to happen asynchronously to avoid bug 159706
 				for (AbstractTask task : taskListManager.getTaskList().getAllTasks()) {
 					if (task.isActive()) {
@@ -386,7 +393,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			monitor.worked(1);
 
 			try {
-				taskListBackupManager = new TaskListBackupManager();
+				taskListBackupManager = new TaskListBackupManager(getBackupFolderPath());
 				getPreferenceStore().addPropertyChangeListener(taskListBackupManager);
 
 				synchronizationScheduler = new TaskListSynchronizationScheduler(tasksJobFactory);
@@ -398,8 +405,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			monitor.worked(1);
 
 			try {
-				taskListSaveManager = new TaskListSaveManager();
-				taskListManager.setTaskListSaveManager(taskListSaveManager);
+				//taskListSaveManager = new TaskListSaveManager();
+				//taskListManager.setTaskListSaveManager(taskListSaveManager);
 
 				ContextCorePlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
 
@@ -454,12 +461,13 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			WebUtil.init();
 			WebClientLog.setLoggingEnabled(DEBUG_HTTPCLIENT);
 			initializeDefaultPreferences(getPreferenceStore());
-			taskListWriter = new TaskListWriter();
+			taskListWriter = new TaskListExternalizer();
+
+			externalizationManager = new ExternalizationManager(getDataDirectory());
 
 			File dataDir = new File(getDataDirectory());
 			dataDir.mkdirs();
-			String path = getDataDirectory() + File.separator + ITasksUiConstants.DEFAULT_TASK_LIST_FILE;
-
+			String path = getDataDirectory() + File.separator + ITasksCoreConstants.DEFAULT_TASK_LIST_FILE;
 			File taskListFile = new File(path);
 			taskListManager = new TaskListManager(taskListWriter, taskListFile);
 			repositoryManager = new TaskRepositoryManager(taskListManager.getTaskList());
@@ -517,10 +525,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			// NOTE: task list must be read before Task List view can be initialized
 			taskListManager.addActivationListener(CONTEXT_TASK_ACTIVATION_LISTENER);
 
-			taskListManager.readExistingOrCreateNewList();
-
 			// readExistingOrCreateNewList() must be called after repositories have been read in
-			//taskListManager.readExistingOrCreateNewList();
+			taskListManager.readExistingOrCreateNewList();
 
 			initialized = true;
 
@@ -646,7 +652,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				getPreferenceStore().removePropertyChangeListener(taskListNotificationManager);
 				getPreferenceStore().removePropertyChangeListener(taskListBackupManager);
 				getPreferenceStore().removePropertyChangeListener(PROPERTY_LISTENER);
-				taskListManager.getTaskList().removeChangeListener(taskListSaveManager);
+				//taskListManager.getTaskList().removeChangeListener(taskListSaveManager);
 				TaskListColorsAndFonts.dispose();
 				if (ContextCorePlugin.getDefault() != null) {
 					ContextCorePlugin.getDefault().getPluginPreferences().removePropertyChangeListener(
@@ -690,7 +696,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		loadTemplateRepositories();
 		getTaskListManager().resetTaskList();
 		getTaskListManager().setTaskListFile(
-				new File(getDataDirectory() + File.separator + ITasksUiConstants.DEFAULT_TASK_LIST_FILE));
+				new File(getDataDirectory() + File.separator + ITasksCoreConstants.DEFAULT_TASK_LIST_FILE));
 		ContextCore.getContextManager().loadActivityMetaContext();
 		getTaskListManager().readExistingOrCreateNewList();
 		getTaskListManager().initActivityHistory();
@@ -790,7 +796,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	}
 
 	public String getBackupFolderPath() {
-		return getDataDirectory() + DEFAULT_PATH_SEPARATOR + ITasksUiConstants.DEFAULT_BACKUP_FOLDER_NAME;
+		return getDataDirectory() + DEFAULT_PATH_SEPARATOR + ITasksCoreConstants.DEFAULT_BACKUP_FOLDER_NAME;
 	}
 
 	public ITaskHighlighter getHighlighter() {
@@ -881,8 +887,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		}
 	}
 
-	public TaskListBackupManager getBackupManager() {
-		return taskListBackupManager;
+	public static TaskListBackupManager getBackupManager() {
+		return INSTANCE.taskListBackupManager;
 	}
 
 	public static TaskDataStorageManager getTaskDataStorageManager() {
@@ -1024,12 +1030,12 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		return null;
 	}
 
-	/**
-	 * Public for testing.
-	 */
-	public static TaskListSaveManager getTaskListSaveManager() {
-		return INSTANCE.taskListSaveManager;
-	}
+//	/**
+//	 * Public for testing.
+//	 */
+//	public static TaskListSaveManager getTaskListSaveManager() {
+//		return INSTANCE.taskListSaveManager;
+//	}
 
 	public String getNextNewRepositoryTaskId() {
 		return getTaskDataStorageManager().getNewRepositoryTaskId();
@@ -1257,6 +1263,10 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				this.added = new ArrayList<String>();
 			}
 		}
+	}
+
+	public static ExternalizationManager getExternalizationManager() {
+		return externalizationManager;
 	}
 
 }

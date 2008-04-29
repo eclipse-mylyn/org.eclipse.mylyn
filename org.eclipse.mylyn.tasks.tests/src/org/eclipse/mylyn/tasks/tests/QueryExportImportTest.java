@@ -23,8 +23,8 @@ import java.util.zip.ZipInputStream;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
-import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListFactory;
@@ -290,7 +290,7 @@ public class QueryExportImportTest extends TestCase {
 		}
 		inputStream.close();
 
-		assertTrue("exported file contains a file with queries", files.contains(ITasksUiConstants.OLD_TASK_LIST_FILE));
+		assertTrue("exported file contains a file with queries", files.contains(ITasksCoreConstants.OLD_TASK_LIST_FILE));
 		assertTrue("exported file contains a file with repositories",
 				files.contains(TaskRepositoryManager.OLD_REPOSITORIES_FILE));
 

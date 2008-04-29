@@ -28,10 +28,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
-import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListBackupManager;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -39,7 +38,8 @@ import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
-import org.eclipse.ui.PlatformUI;
+
+//import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
@@ -54,7 +54,7 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 
 	private final TaskListSaverJob taskListSaverJob;
 
-	private boolean initializationWarningDialogShow = false;
+	private final boolean initializationWarningDialogShow = false;
 
 	private static final int MAX_TASKLIST_SNAPSHOTS = 8;
 
@@ -112,26 +112,26 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 				}
 				internalSaveTaskList();
 			}
-		} else if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
-			StatusHandler.fail(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
-					"Possible task list initialization failure, not saving list"));
-			if (!initializationWarningDialogShow) {
-				initializationWarningDialogShow = true;
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						if (PlatformUI.getWorkbench() != null && PlatformUI.getWorkbench().getDisplay() != null) {
-							MessageDialog.openInformation(
-									PlatformUI.getWorkbench().getDisplay().getActiveShell(),
-									ITasksUiConstants.TITLE_DIALOG,
-									"If task list is blank, Mylyn Task List may have failed to initialize.\n\n"
-											+ "First, try restarting to see if that corrects the problem.\n\n"
-											+ "Then, check the Error Log view for messages, and the FAQ for solutions.\n\n"
-											+ ITasksUiConstants.URL_HOMEPAGE);
-						}
-					}
-				});
-			}
-		}
+		} /*else if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
+									StatusHandler.fail(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
+											"Possible task list initialization failure, not saving list"));
+									if (!initializationWarningDialogShow) {
+										initializationWarningDialogShow = true;
+										PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+											public void run() {
+												if (PlatformUI.getWorkbench() != null && PlatformUI.getWorkbench().getDisplay() != null) {
+													MessageDialog.openInformation(
+															PlatformUI.getWorkbench().getDisplay().getActiveShell(),
+															ITasksUiConstants.TITLE_DIALOG,
+															"If task list is blank, Mylyn Task List may have failed to initialize.\n\n"
+																	+ "First, try restarting to see if that corrects the problem.\n\n"
+																	+ "Then, check the Error Log view for messages, and the FAQ for solutions.\n\n"
+																	+ ITasksUiConstants.URL_HOMEPAGE);
+												}
+											}
+										});
+									}*/
+		//}
 	}
 
 	private synchronized void internalSaveTaskList() {
@@ -139,7 +139,7 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 		File current = taskListManager.getTaskListFile();
 		SimpleDateFormat format = new SimpleDateFormat(TaskListBackupManager.TIMESTAMP_FORMAT, Locale.ENGLISH);
 		String date = format.format(new Date());
-		String backupFileName = ITasksUiConstants.PREFIX_TASKLIST + "-" + date + ITasksUiConstants.FILE_EXTENSION;
+		String backupFileName = ITasksCoreConstants.PREFIX_TASKLIST + "-" + date + ITasksCoreConstants.FILE_EXTENSION;
 
 		String destination = TasksUiPlugin.getDefault().getBackupFolderPath();
 
@@ -150,10 +150,10 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 
 		File backup = new File(backupFolder, backupFileName);
 		if (current.renameTo(backup)) {
-			TaskListBackupManager.removeOldBackups(backupFolder, SNAPSHOT_REGEXP, MAX_TASKLIST_SNAPSHOTS);
+			TasksUiPlugin.getBackupManager().removeOldBackups();
 
 			String newTasklistPath = TasksUiPlugin.getDefault().getDataDirectory() + File.separator
-					+ ITasksUiConstants.DEFAULT_TASK_LIST_FILE;
+					+ ITasksCoreConstants.DEFAULT_TASK_LIST_FILE;
 			File newTaskListFile = new File(newTasklistPath);
 			taskListManager.setTaskListFile(newTaskListFile);
 		} else {

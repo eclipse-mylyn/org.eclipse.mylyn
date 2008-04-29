@@ -21,8 +21,8 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.internal.monitor.core.util.ZipFileUtil;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
-import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.WorkspaceAwareContextStore;
 
@@ -165,8 +165,8 @@ class TaskListDataMigration implements IRunnableWithProgress {
 	}
 
 	public boolean migrateTaskList(IProgressMonitor monitor) throws Exception {
-		File oldTasklistFile = new File(dataDirectory, ITasksUiConstants.OLD_TASK_LIST_FILE);
-		File newTasklistFile = new File(dataDirectory, ITasksUiConstants.DEFAULT_TASK_LIST_FILE);
+		File oldTasklistFile = new File(dataDirectory, ITasksCoreConstants.OLD_TASK_LIST_FILE);
+		File newTasklistFile = new File(dataDirectory, ITasksCoreConstants.DEFAULT_TASK_LIST_FILE);
 		if (!oldTasklistFile.exists()) {
 			return false;
 		}

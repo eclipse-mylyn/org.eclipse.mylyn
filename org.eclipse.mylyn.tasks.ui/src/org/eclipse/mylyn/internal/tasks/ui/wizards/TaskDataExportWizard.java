@@ -22,9 +22,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
-import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.util.TaskDataExportJob;
+import org.eclipse.mylyn.internal.tasks.ui.util.TaskDataExportOperation;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -118,7 +118,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 			return false;
 		}
 
-		final File destTaskListFile = new File(destDir + File.separator + ITasksUiConstants.DEFAULT_TASK_LIST_FILE);
+		final File destTaskListFile = new File(destDir + File.separator + ITasksCoreConstants.DEFAULT_TASK_LIST_FILE);
 		final File destActivationHistoryFile = new File(destDir + File.separator
 				+ IInteractionContextManager.CONTEXT_HISTORY_FILE_NAME
 				+ IInteractionContextManager.CONTEXT_FILE_EXTENSION);
@@ -172,7 +172,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 
 		// FileCopyJob job = new FileCopyJob(destZipFile, destTaskListFile,
 		// destActivationHistoryFile);
-		TaskDataExportJob job = new TaskDataExportJob(exportPage.getDestinationDirectory(),
+		TaskDataExportOperation job = new TaskDataExportOperation(exportPage.getDestinationDirectory(),
 				exportPage.exportTaskList(), exportPage.exportActivationHistory(), exportPage.exportTaskContexts(),
 				exportPage.zip(), destZipFile.getName(), taskContextsToExport);
 		IProgressService service = PlatformUI.getWorkbench().getProgressService();

@@ -22,9 +22,9 @@ import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.context.tests.AbstractContextTest;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
-import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -94,7 +94,7 @@ public class TaskExportImportTest extends AbstractContextTest {
 		}
 		inputStream.close();
 
-		assertTrue("exported file contains a file with queries", files.contains(ITasksUiConstants.OLD_TASK_LIST_FILE));
+		assertTrue("exported file contains a file with queries", files.contains(ITasksCoreConstants.OLD_TASK_LIST_FILE));
 
 		String handleIdentifier = mockContext.getHandleIdentifier();
 		String encoded = URLEncoder.encode(handleIdentifier, IInteractionContextManager.CONTEXT_FILENAME_ENCODING);

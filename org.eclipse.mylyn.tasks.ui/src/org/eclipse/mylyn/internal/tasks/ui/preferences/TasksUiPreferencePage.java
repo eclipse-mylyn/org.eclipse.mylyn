@@ -15,7 +15,7 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.mylyn.internal.monitor.ui.ActivityContextManager;
 import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -249,12 +249,12 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 			checkForExistingTasklist(taskDirectory);
 			if (taskDataDirectoryAction != IDialogConstants.CANCEL_ID) {
 				taskDirectoryText.setText(taskDirectory);
-				backupFolderText.setText(taskDirectory + FORWARDSLASH + ITasksUiConstants.DEFAULT_BACKUP_FOLDER_NAME);
+				backupFolderText.setText(taskDirectory + FORWARDSLASH + ITasksCoreConstants.DEFAULT_BACKUP_FOLDER_NAME);
 				backupNow.setEnabled(false);
 			}
 		} else {
 			taskDirectoryText.setText(taskDirectory);
-			backupFolderText.setText(taskDirectory + FORWARDSLASH + ITasksUiConstants.DEFAULT_BACKUP_FOLDER_NAME);
+			backupFolderText.setText(taskDirectory + FORWARDSLASH + ITasksCoreConstants.DEFAULT_BACKUP_FOLDER_NAME);
 			backupNow.setEnabled(true);
 		}
 
@@ -389,7 +389,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 				if (taskDataDirectoryAction != IDialogConstants.CANCEL_ID) {
 					taskDirectoryText.setText(dir);
-					backupFolderText.setText(dir + FORWARDSLASH + ITasksUiConstants.DEFAULT_BACKUP_FOLDER_NAME);
+					backupFolderText.setText(dir + FORWARDSLASH + ITasksCoreConstants.DEFAULT_BACKUP_FOLDER_NAME);
 					backupNow.setEnabled(false);
 				}
 			}

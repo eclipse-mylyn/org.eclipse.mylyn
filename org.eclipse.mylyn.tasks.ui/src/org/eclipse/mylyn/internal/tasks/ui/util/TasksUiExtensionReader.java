@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
+import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizer;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -136,7 +137,7 @@ public class TasksUiExtensionReader {
 
 	private static boolean coreExtensionsRead = false;
 
-	public static void initStartupExtensions(TaskListWriter delegatingExternalizer) {
+	public static void initStartupExtensions(TaskListExternalizer delegatingExternalizer) {
 		List<AbstractTaskListFactory> externalizers = new ArrayList<AbstractTaskListFactory>();
 		if (!coreExtensionsRead) {
 			IExtensionRegistry registry = Platform.getExtensionRegistry();

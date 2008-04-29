@@ -16,11 +16,10 @@ import java.util.Locale;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
-import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListBackupManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.util.TaskListSaveManager;
 
 /**
  * @author Rob Elves
@@ -73,7 +72,7 @@ public class TaskListSaveManagerTest extends TestCase {
 		time.add(Calendar.MILLISECOND, -4000);
 		File previousDay5 = createFile(backupFolder, time);
 
-		TaskListBackupManager.removeOldBackups(backupFolder, TaskListSaveManager.SNAPSHOT_REGEXP, 0);
+		TasksUiPlugin.getBackupManager().removeOldBackups();
 		assertTrue(thisHour.exists());
 		assertFalse(thisHourEarlier.exists());
 		assertTrue(previousHour.exists());
@@ -95,8 +94,8 @@ public class TaskListSaveManagerTest extends TestCase {
 
 	private File createFile(File backupFolder, Calendar time) {
 		SimpleDateFormat format = new SimpleDateFormat(TaskListBackupManager.TIMESTAMP_FORMAT, Locale.ENGLISH);
-		File newFile = new File(backupFolder, ITasksUiConstants.PREFIX_TASKLIST + "-" + format.format(time.getTime())
-				+ ITasksUiConstants.FILE_EXTENSION);
+		File newFile = new File(backupFolder, ITasksCoreConstants.PREFIX_TASKLIST + "-" + format.format(time.getTime())
+				+ ITasksCoreConstants.FILE_EXTENSION);
 		try {
 			newFile.createNewFile();
 		} catch (IOException e) {
