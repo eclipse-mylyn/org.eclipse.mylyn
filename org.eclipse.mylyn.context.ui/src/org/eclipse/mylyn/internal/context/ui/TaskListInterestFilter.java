@@ -9,7 +9,7 @@
 package org.eclipse.mylyn.internal.context.ui;
 
 import java.util.Calendar;
-import java.util.Set;
+import java.util.Collection;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -51,7 +51,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 					}
 				}
 			} else if (child instanceof AbstractTaskContainer) {
-				Set<AbstractTask> children = ((AbstractTaskContainer) child).getChildren();
+				Collection<AbstractTask> children = ((AbstractTaskContainer) child).getChildren();
 				// Always display empty containers
 				if (children.size() == 0) {
 					return false;
@@ -95,8 +95,8 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 				|| !task.isCompleted()
 				&& (LocalRepositoryConnector.DEFAULT_SUMMARY.equals(task.getSummary())
 						|| shouldShowInFocusedWorkweekDateContainer(parent, task)
-						|| TasksUiPlugin.getTaskActivityManager().isOverdue(task) || isInterestingForThisWeek(parent, task) || hasInterestingSubTasks(
-						parent, task, depth));
+						|| TasksUiPlugin.getTaskActivityManager().isOverdue(task)
+						|| isInterestingForThisWeek(parent, task) || hasInterestingSubTasks(parent, task, depth));
 	}
 
 	private boolean hasInterestingSubTasks(Object parent, AbstractTask task, int depth) {
