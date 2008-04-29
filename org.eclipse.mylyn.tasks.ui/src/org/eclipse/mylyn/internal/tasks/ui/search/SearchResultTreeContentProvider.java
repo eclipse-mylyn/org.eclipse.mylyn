@@ -9,7 +9,6 @@
 package org.eclipse.mylyn.internal.tasks.ui.search;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +17,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.internal.tasks.core.Person;
 import org.eclipse.mylyn.internal.tasks.core.TaskGroup;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.ui.search.RepositorySearchResult;
 
 /**
@@ -29,9 +29,6 @@ import org.eclipse.mylyn.tasks.ui.search.RepositorySearchResult;
  * @author Frank Becker
  */
 public class SearchResultTreeContentProvider extends SearchResultContentProvider {
-
-	/** The page the Bugzilla search results are displayed in */
-	private final RepositorySearchResultView searchResultsPage;
 
 	private final List<Object> elements = new ArrayList<Object>();
 
@@ -45,8 +42,7 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 
 	private GroupBy selectedGroup;
 
-	public SearchResultTreeContentProvider(RepositorySearchResultView page) {
-		searchResultsPage = page;
+	public SearchResultTreeContentProvider() {
 	}
 
 	@Override
@@ -62,7 +58,7 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 	 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
 	 */
 	public Object[] getElements(Object inputElement) {
-		if (inputElement instanceof RepositorySearchResult) {
+		if (inputElement == searchResult) {
 			if (selectedGroup == GroupBy.OWNER) {
 				return owners.values().toArray();
 			} else if (selectedGroup == GroupBy.COMPLETION) {
@@ -76,20 +72,8 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 	}
 
 	public Object[] getChildren(Object parentElement) {
-		if (selectedGroup == GroupBy.OWNER && parentElement instanceof Person) {
-			Collection<AbstractTask> children = ((Person) parentElement).getChildren();
-			if (children != null) {
-				return children.toArray();
-			} else {
-				return EMPTY_ARR;
-			}
-		} else if (selectedGroup == GroupBy.COMPLETION && parentElement instanceof TaskGroup) {
-			Collection<AbstractTask> children = ((TaskGroup) parentElement).getChildren();
-			if (children != null) {
-				return children.toArray();
-			} else {
-				return EMPTY_ARR;
-			}
+		if (parentElement instanceof AbstractTaskContainer) {
+			return ((AbstractTaskContainer) parentElement).getChildren().toArray();
 		} else {
 			return EMPTY_ARR;
 		}
@@ -100,13 +84,8 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 	}
 
 	public boolean hasChildren(Object element) {
-		if (selectedGroup == GroupBy.OWNER && element instanceof String) {
-			Collection<AbstractTask> children = ((Person) element).getChildren();
-			if (children != null) {
-				return !children.isEmpty();
-			} else {
-				return false;
-			}
+		if (element instanceof AbstractTaskContainer) {
+			return !((AbstractTaskContainer) element).getChildren().isEmpty();
 		} else {
 			return !(element instanceof AbstractTask);
 		}
@@ -121,7 +100,7 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 				AbstractTask task = ((AbstractTask) object);
 				String owner = task.getOwner();
 				if (owner == null) {
-					owner = "UNKNOWN";
+					owner = "<unknown>";
 				}
 				Person person = owners.get(owner);
 				if (person == null) {
@@ -129,9 +108,9 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 					owners.put(owner, person);
 				}
 				person.internalAddChild(task);
-				boolean completed = task.isCompleted();
+
 				TaskGroup completeIncomplete = null;
-				if (completed) {
+				if (task.isCompleted()) {
 					completeIncomplete = completeState.get("Complete");
 					if (completeIncomplete == null) {
 						completeIncomplete = new TaskGroup("group-complete", "Complete", GroupBy.COMPLETION.name());
@@ -147,20 +126,6 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 				completeIncomplete.internalAddChild(task);
 			}
 		}
-
-		searchResultsPage.getViewer().refresh();
-////		boolean tableLimited = SearchPreferencePage.isTableLimited();
-//		for (int i = 0; i < updatedElements.length; i++) {
-//			if (searchResult.getMatchCount(updatedElements[i]) > 0) {
-//				if (viewer.testFindItem(updatedElements[i]) != null)
-//					viewer.update(updatedElements[i], null);
-//				else {
-////					if (!tableLimited || viewer.getTable().getItemCount() < SearchPreferencePage.getTableLimit())
-//					viewer.add(updatedElements[i]);
-//				}
-//			} else
-//				viewer.remove(updatedElements[i]);
-//		}
 	}
 
 	@Override
@@ -168,7 +133,6 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 		elements.clear();
 		owners.clear();
 		completeState.clear();
-		searchResultsPage.getViewer().refresh();
 	}
 
 	public GroupBy getSelectedGroup() {
@@ -177,6 +141,6 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 
 	public void setSelectedGroup(GroupBy selectedGroup) {
 		this.selectedGroup = selectedGroup;
-		searchResultsPage.getViewer().setInput(searchResultsPage.getViewer().getInput());
 	}
+
 }

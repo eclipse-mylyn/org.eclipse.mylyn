@@ -38,6 +38,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.search.internal.ui.SearchMessages;
 import org.eclipse.search.ui.IContextMenuConstants;
+import org.eclipse.search.ui.ISearchResult;
 import org.eclipse.search.ui.text.AbstractTextSearchViewPage;
 import org.eclipse.search.ui.text.Match;
 import org.eclipse.swt.SWT;
@@ -91,6 +92,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 				contentProvider.setSelectedGroup(groupBy);
 				setChecked(true);
 			}
+			getViewer().refresh();
 		}
 	}
 
@@ -156,6 +158,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 	protected void elementsChanged(Object[] objects) {
 		if (searchResultProvider != null) {
 			searchResultProvider.elementsChanged(objects);
+			getViewer().refresh();
 		}
 	}
 
@@ -163,6 +166,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 	protected void clear() {
 		if (searchResultProvider != null) {
 			searchResultProvider.clear();
+			getViewer().refresh();
 		}
 	}
 
@@ -175,8 +179,8 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 	@Override
 	protected void configureTreeViewer(TreeViewer viewer) {
 		viewer.setUseHashlookup(true);
-		viewer.setContentProvider(new SearchResultTreeContentProvider(this));
-		searchResultProvider = (SearchResultContentProvider) viewer.getContentProvider();
+		searchResultProvider = new SearchResultTreeContentProvider();
+		viewer.setContentProvider(searchResultProvider);
 
 		DecoratingLabelProvider labelProvider = new DecoratingLabelProvider(new SearchResultsLabelProvider(
 				searchResultProvider), PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator());
@@ -260,7 +264,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 	 * Sets the new sorting category, and reorders all of the tasks.
 	 * 
 	 * @param sortOrder
-	 *            The new category to sort by
+	 * 		The new category to sort by
 	 */
 	public void setSortOrder(int sortOrder) {
 		StructuredViewer viewer = getViewer();
@@ -376,6 +380,11 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		for (Action action : groupingActions) {
 			menuManager.appendToGroup(IContextMenuConstants.GROUP_VIEWER_SETUP, action);
 		}
+	}
+
+	@Override
+	public void setInput(ISearchResult newSearch, Object viewState) {
+		super.setInput(newSearch, viewState);
 	}
 
 }
