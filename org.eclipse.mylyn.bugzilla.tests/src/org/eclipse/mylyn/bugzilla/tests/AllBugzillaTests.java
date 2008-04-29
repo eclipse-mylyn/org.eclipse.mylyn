@@ -25,7 +25,6 @@ public class AllBugzillaTests {
 		suite.addTestSuite(TaskListNotificationManagerTest.class);
 		suite.addTestSuite(BugzillaTaskTest.class);
 		suite.addTestSuite(BugzillaTaskDataHandlerTest.class);
-		suite.addTestSuite(TaskReportGeneratorTest.class);
 		suite.addTestSuite(TaskListStandaloneTest.class);
 		suite.addTestSuite(BugzillaTaskListManagerTest.class);
 		suite.addTestSuite(TaskEditorTest.class);
