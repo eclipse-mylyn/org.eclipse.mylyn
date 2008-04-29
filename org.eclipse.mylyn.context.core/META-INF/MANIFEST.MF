@@ -7,7 +7,7 @@ Bundle-Activator: org.eclipse.mylyn.internal.context.core.ContextCorePlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn.monitor.core;bundle-version="[3.0.0,4.0.0)"
-Eclipse-AutoStart: true
+Bundle-ActivationPolicy: lazy
 Bundle-Vendor: Eclipse.org
 Export-Package: org.eclipse.mylyn.context.core,
  org.eclipse.mylyn.internal.context.core;x-friends:="org.eclipse.mylyn.context.ui"

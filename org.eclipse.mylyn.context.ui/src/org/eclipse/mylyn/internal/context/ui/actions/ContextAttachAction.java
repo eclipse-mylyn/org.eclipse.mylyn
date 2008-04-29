@@ -94,12 +94,10 @@ public class ContextAttachAction extends Action implements IViewActionDelegate {
 		AbstractTask selectedTask = TaskListView.getSelectedTask(selection);
 		if (selectedTask != null) {
 			task = selectedTask;
-			repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
-					task.getRepositoryUrl());
+			repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 			connector = TasksUi.getRepositoryManager().getRepositoryConnector(task.getConnectorKind());
 			AbstractAttachmentHandler handler = connector.getAttachmentHandler();
-			action.setEnabled(handler != null
-					&& handler.canUploadAttachment(repository, task)
+			action.setEnabled(handler != null && handler.canUploadAttachment(repository, task)
 					&& (task.isActive() || ContextCore.getContextManager().hasContext(task.getHandleIdentifier())));
 		} else {
 			task = null;

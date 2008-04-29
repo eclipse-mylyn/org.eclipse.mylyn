@@ -35,6 +35,7 @@ import org.eclipse.mylyn.internal.context.ui.views.ContextNodeOpenListener;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
@@ -185,7 +186,7 @@ public class ContextEditorFormPage extends FormPage {
 		sectionClient.setLayoutData(new GridData());
 
 		Label label = toolkit.createLabel(sectionClient, "");
-		label.setImage(TasksUiImages.getImage(TasksUiImages.FILTER));
+		label.setImage(CommonImages.getImage(CommonImages.FILTER));
 
 		doiScale = new Scale(sectionClient, SWT.FLAT);
 		GridData scaleGridData = new GridData(GridData.FILL_HORIZONTAL);
@@ -224,7 +225,7 @@ public class ContextEditorFormPage extends FormPage {
 		}
 
 		Label attachImage = toolkit.createLabel(sectionClient, "");
-		attachImage.setImage(TasksUiImages.getImage(ContextUiImages.CONTEXT_ATTACH));
+		attachImage.setImage(CommonImages.getImage(ContextUiImages.CONTEXT_ATTACH));
 		attachImage.setEnabled(task != null);
 		Hyperlink attachHyperlink = toolkit.createHyperlink(sectionClient, "Attach context...", SWT.NONE);
 		attachHyperlink.setEnabled(task != null);
@@ -244,7 +245,7 @@ public class ContextEditorFormPage extends FormPage {
 		});
 
 		Label retrieveImage = toolkit.createLabel(sectionClient, "");
-		retrieveImage.setImage(TasksUiImages.getImage(ContextUiImages.CONTEXT_RETRIEVE));
+		retrieveImage.setImage(CommonImages.getImage(ContextUiImages.CONTEXT_RETRIEVE));
 		retrieveImage.setEnabled(task != null);
 		Hyperlink retrieveHyperlink = toolkit.createHyperlink(sectionClient, "Retrieve Context...", SWT.NONE);
 		retrieveHyperlink.setEnabled(task != null);
@@ -264,7 +265,7 @@ public class ContextEditorFormPage extends FormPage {
 		});
 
 		Label copyImage = toolkit.createLabel(sectionClient, "");
-		copyImage.setImage(TasksUiImages.getImage(ContextUiImages.CONTEXT_COPY));
+		copyImage.setImage(CommonImages.getImage(ContextUiImages.CONTEXT_COPY));
 		Hyperlink copyHyperlink = toolkit.createHyperlink(sectionClient, "Copy Context to...", SWT.NONE);
 		copyHyperlink.addMouseListener(new MouseListener() {
 
@@ -282,7 +283,7 @@ public class ContextEditorFormPage extends FormPage {
 		});
 
 		Label clearImage = toolkit.createLabel(sectionClient, "");
-		clearImage.setImage(TasksUiImages.getImage(TasksUiImages.CONTEXT_CLEAR));
+		clearImage.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_CLEAR));
 		Hyperlink clearHyperlink = toolkit.createHyperlink(sectionClient, "Clear Context", SWT.NONE);
 		clearHyperlink.addMouseListener(new MouseListener() {
 

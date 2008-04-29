@@ -10,6 +10,7 @@ package org.eclipse.mylyn.internal.context.ui.editors;
 
 import org.eclipse.mylyn.context.ui.ContextUi;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
@@ -41,7 +42,7 @@ public class ContextPageFactory extends AbstractTaskEditorPageFactory {
 
 	@Override
 	public Image getPageImage() {
-		return TasksUiImages.getImage(TasksUiImages.TASK_ACTIVE_CENTERED);
+		return CommonImages.getImage(TasksUiImages.CONTEXT_ACTIVE_CENTERED);
 	}
 
 	@Override
