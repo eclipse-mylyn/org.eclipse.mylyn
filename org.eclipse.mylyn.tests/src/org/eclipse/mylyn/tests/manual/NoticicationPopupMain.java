@@ -7,7 +7,7 @@
 
 package org.eclipse.mylyn.tests.manual;
 
-import org.eclipse.mylyn.internal.tasks.ui.notifications.AbstractNotificationPopup;
+import org.eclipse.mylyn.provisional.workbench.ui.notifications.AbstractNotificationPopup;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.layout.FillLayout;
