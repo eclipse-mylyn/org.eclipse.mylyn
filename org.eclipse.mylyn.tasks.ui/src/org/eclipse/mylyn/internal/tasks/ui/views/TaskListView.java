@@ -86,7 +86,6 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.RenameAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeAutomaticallyAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.TaskListElementPropertiesAction;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskListChangeAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDragSourceListener;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListTableSorter.SortByIndex;
@@ -104,7 +103,6 @@ import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
@@ -197,6 +195,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private static final String ID_SEPARATOR_REPOSITORY = "repository";
 
+	private static final String ID_SEPARATOR_PROPERTIES = "properties";
+
 	private static final String ID_SEPARATOR_NAVIGATE = "navigate";
 
 	private static final String LABEL_NO_TASKS = "no task active";
@@ -237,8 +237,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	private CopyTaskDetailsAction copyDetailsAction;
 
 	private OpenTaskListElementAction openAction;
-
-	private TaskListElementPropertiesAction propertiesAction;
 
 	private OpenWithBrowserAction openWithBrowser;
 
@@ -1205,10 +1203,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		manager.add(new Separator(ID_SEPARATOR_REPOSITORY));
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 
-		if (element instanceof AbstractRepositoryQuery || element instanceof TaskCategory) {
-			manager.add(new Separator());
-			addAction(propertiesAction, manager, element);
-		}
+		manager.add(new Separator());
+		manager.add(new Separator(ID_SEPARATOR_PROPERTIES));
 	}
 
 	public List<AbstractTaskContainer> getSelectedTaskContainers() {
@@ -1304,7 +1300,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		collapseAll = new CollapseAllAction(this);
 		expandAll = new ExpandAllAction(this);
 		openAction = new OpenTaskListElementAction(this.getViewer());
-		propertiesAction = new TaskListElementPropertiesAction(this.getViewer());
 		openWithBrowser = new OpenWithBrowserAction();
 		filterCompleteTask = new FilterCompletedTasksAction(this);
 		filterSubTasksAction = new GroupSubTasksAction(this);
@@ -1321,7 +1316,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	}
 
 	private void hookOpenAction() {
-
 		getViewer().addOpenListener(new IOpenListener() {
 			public void open(OpenEvent event) {
 				openAction.run();
@@ -1330,17 +1324,12 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 		getViewer().addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
-				StructuredSelection selection = (StructuredSelection) getViewer().getSelection();
-				Object object = selection.getFirstElement();
 				if (TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
 						TasksUiPreferenceConstants.ACTIVATE_WHEN_OPENED)) {
 					AbstractTask selectedTask = TaskListView.getFromActivePerspective().getSelectedTask();
 					if (selectedTask != null) {
 						activateAction.run(selectedTask);
 					}
-				}
-				if (object instanceof TaskCategory || object instanceof AbstractRepositoryQuery) {
-					TasksUiUtil.refreshAndOpenTaskListElement((AbstractTaskContainer) object);
 				}
 			}
 		});

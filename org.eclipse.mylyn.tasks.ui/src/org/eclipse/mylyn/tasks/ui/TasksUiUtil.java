@@ -72,6 +72,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -510,13 +511,20 @@ public class TasksUiUtil {
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window != null) {
 			IEditorPart activeEditor = null;
+			IWorkbenchPart activePart = null;
 			IWorkbenchPage activePage = window.getActivePage();
 			if (activePage != null) {
 				activeEditor = activePage.getActiveEditor();
+				activePart = activePage.getActivePart();
 			}
 			boolean opened = openTask(task);
-			if (opened && activePage != null && activeEditor != null) {
-				activePage.bringToTop(activeEditor);
+			if (opened && activePage != null) {
+				if (activeEditor != null) {
+					activePage.bringToTop(activeEditor);
+				}
+				if (activePart != null) {
+					activePage.activate(activePart);
+				}
 			}
 			return opened;
 		} else {
