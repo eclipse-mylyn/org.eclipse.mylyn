@@ -7,10 +7,11 @@
  *******************************************************************************/
 package org.eclipse.mylyn.tasks.core;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.PlatformObject;
@@ -27,7 +28,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 
 	private String handleIdentifier = "";
 
-	private final Set<AbstractTask> children = new CopyOnWriteArraySet<AbstractTask>();
+	private final Collection<AbstractTask> children = new CopyOnWriteArrayList<AbstractTask>();
 
 	/**
 	 * Optional URL corresponding to the web resource associated with this container.
@@ -61,9 +62,11 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	 * Removes any cyclic dependencies in children.
 	 * 
 	 * TODO: review to make sure that this is too expensive, or move to creation.
+	 * 
+	 * @since 3.0
 	 */
-	public Set<AbstractTask> getChildren() {
-		return Collections.unmodifiableSet(children);
+	public Collection<AbstractTask> getChildren() {
+		return Collections.unmodifiableCollection(children);
 	}
 
 	/**
@@ -71,10 +74,10 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	 * 
 	 * API-3.0: remove this method (bug 207659)
 	 * 
-	 * @since 2.2
+	 * @since 3.0
 	 */
-	public Set<AbstractTask> getChildrenInternal() {
-		return Collections.unmodifiableSet(children);
+	public Collection<AbstractTask> getChildrenInternal() {
+		return Collections.unmodifiableCollection(children);
 	}
 
 	/**
@@ -87,7 +90,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 		return containsHelper(getChildrenInternal(), handle, new HashSet<AbstractTaskContainer>());
 	}
 
-	private boolean containsHelper(Set<AbstractTask> children, String handle,
+	private boolean containsHelper(Collection<AbstractTask> children, String handle,
 			Set<AbstractTaskContainer> visitedContainers) {
 		for (AbstractTask child : children) {
 			if (visitedContainers.contains(child)) {
@@ -155,7 +158,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 
 	public String getPriority() {
 		String highestPriority = PriorityLevel.P5.toString();
-		Set<AbstractTask> tasks = getChildren();
+		Collection<AbstractTask> tasks = getChildren();
 		if (tasks.isEmpty()) {
 			return PriorityLevel.P1.toString();
 		}

@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.internal.tasks.core;
 
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
 
@@ -75,7 +76,7 @@ public class ScheduledTaskDelegate extends AbstractTask {
 	}
 
 	@Override
-	public Set<AbstractTask> getChildren() {
+	public Collection<AbstractTask> getChildren() {
 		return task.getChildren();
 	}
 
@@ -303,7 +304,7 @@ public class ScheduledTaskDelegate extends AbstractTask {
 	}
 
 	@Override
-	public Set<AbstractTask> getChildrenInternal() {
+	public Collection<AbstractTask> getChildrenInternal() {
 		return task.getChildrenInternal();
 	}
 

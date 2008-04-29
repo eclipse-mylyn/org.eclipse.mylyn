@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -229,13 +230,15 @@ public class TaskListManagerTest extends TestCase {
 		RepositoryTaskData taskData = new RepositoryTaskData(new MockAttributeFactory(), task.getConnectorKind(),
 				task.getRepositoryUrl(), task.getTaskId(), task.getTaskKind());
 		TasksUiPlugin.getTaskDataStorageManager().setNewTaskData(taskData);
-		assertNotNull(TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId()));
+		assertNotNull(TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task.getRepositoryUrl(),
+				task.getTaskId()));
 
 		RepositoryTaskData taskData2 = new RepositoryTaskData(new MockAttributeFactory(), task2.getConnectorKind(),
 				task2.getRepositoryUrl(), task2.getTaskId(), task2.getTaskKind());
 		taskData2.setNewComment("TEST");
 		TasksUiPlugin.getTaskDataStorageManager().setNewTaskData(taskData2);
-		assertNotNull(TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task2.getRepositoryUrl(), task2.getTaskId()));
+		assertNotNull(TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task2.getRepositoryUrl(),
+				task2.getTaskId()));
 		assertEquals("TEST", TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task2.getRepositoryUrl(),
 				task2.getTaskId()).getNewComment());
 
@@ -243,8 +246,8 @@ public class TaskListManagerTest extends TestCase {
 		assertNull(manager.getTaskList().getTask("http://a-123"));
 		assertNotNull(manager.getTaskList().getTask("http://b-123"));
 		assertNotNull(TasksUiPlugin.getTaskDataStorageManager().getNewTaskData("http://b", "123"));
-		RepositoryTaskData otherData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task2.getRepositoryUrl(),
-				task2.getTaskId());
+		RepositoryTaskData otherData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(
+				task2.getRepositoryUrl(), task2.getTaskId());
 		assertNotNull(otherData);
 		assertEquals("TEST", otherData.getNewComment());
 	}
@@ -672,7 +675,7 @@ public class TaskListManagerTest extends TestCase {
 //		assertTrue(rootTasks.containsAll(manager.getTaskList().getOrphanContainer(
 //				LocalRepositoryConnector.REPOSITORY_URL).getChildren()));
 
-		Set<AbstractTask> readList = manager.getTaskList().getDefaultCategory().getChildren();
+		Collection<AbstractTask> readList = manager.getTaskList().getDefaultCategory().getChildren();
 		for (AbstractTask task : readList) {
 			if (task.equals(task1)) {
 				assertEquals(task1.getSummary(), task.getSummary());
@@ -737,7 +740,7 @@ public class TaskListManagerTest extends TestCase {
 //		assertTrue(rootTasks.containsAll(manager.getTaskList().getOrphanContainer(
 //				LocalRepositoryConnector.REPOSITORY_URL).getChildren()));
 
-		Set<AbstractTask> readList = manager.getTaskList().getDefaultCategory().getChildren();
+		Collection<AbstractTask> readList = manager.getTaskList().getDefaultCategory().getChildren();
 		for (AbstractTask task : readList) {
 			if (task.equals(task1)) {
 				assertEquals(task1.getSummary(), task.getSummary());

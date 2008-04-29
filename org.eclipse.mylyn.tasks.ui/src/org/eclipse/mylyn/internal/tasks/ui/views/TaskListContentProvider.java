@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -138,7 +139,7 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 		if (containsNoFilterText((this.taskListView.getFilteredTree().getFilterControl()).getText())) {
 			List<AbstractTaskContainer> children = new ArrayList<AbstractTaskContainer>();
 			if (parent instanceof AbstractTask) {
-				Set<AbstractTask> subTasks = ((AbstractTask) parent).getChildren();
+				Collection<AbstractTask> subTasks = ((AbstractTask) parent).getChildren();
 				for (AbstractTask t : subTasks) {
 					if (!filter(parent, t)) {
 						children.add(t);
@@ -164,7 +165,7 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	private List<AbstractTaskContainer> getFilteredRootChildren(AbstractTaskContainer parent) {
 		List<AbstractTaskContainer> result = new ArrayList<AbstractTaskContainer>();
 		if (TasksUiPlugin.getDefault().groupSubtasks(parent)) {
-			Set<AbstractTask> parentTasks = parent.getChildren();
+			Collection<AbstractTask> parentTasks = parent.getChildren();
 			Set<AbstractTaskContainer> parents = new HashSet<AbstractTaskContainer>();
 			Set<AbstractTask> children = new HashSet<AbstractTask>();
 			// get all children

@@ -7,7 +7,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.ui;
 
-import java.util.Set;
+import java.util.Collection;
 
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -38,7 +38,7 @@ public abstract class AbstractTaskListFilter {
 	}
 
 	private static boolean hasDescendantIncoming(AbstractTaskContainer container, int depth) {
-		Set<AbstractTask> children = container.getChildren();
+		Collection<AbstractTask> children = container.getChildren();
 		if (children == null || depth <= 0) {
 			return false;
 		}
@@ -58,7 +58,7 @@ public abstract class AbstractTaskListFilter {
 	}
 
 	private static boolean hasIncompleteDescendant(AbstractTaskContainer container, int depth) {
-		Set<AbstractTask> children = container.getChildren();
+		Collection<AbstractTask> children = container.getChildren();
 		if (children == null || depth <= 0) {
 			return false;
 		}

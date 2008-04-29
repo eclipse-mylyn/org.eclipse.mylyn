@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.internal.tasks.core;
 
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
@@ -175,7 +176,7 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 	}
 
 	@Override
-	public Set<AbstractTask> getChildren() {
+	public Collection<AbstractTask> getChildren() {
 		Set<AbstractTask> children = new HashSet<AbstractTask>();
 		Calendar beginning = TaskActivityUtil.getCalendar();
 		beginning.setTimeInMillis(0);
@@ -229,7 +230,7 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 	}
 
 	@Override
-	public Set<AbstractTask> getChildrenInternal() {
+	public Collection<AbstractTask> getChildrenInternal() {
 		return getChildren();
 	}
 

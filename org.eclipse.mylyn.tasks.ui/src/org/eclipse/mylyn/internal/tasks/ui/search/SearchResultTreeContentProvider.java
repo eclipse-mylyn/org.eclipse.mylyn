@@ -9,10 +9,10 @@
 package org.eclipse.mylyn.internal.tasks.ui.search;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.internal.tasks.core.Person;
@@ -75,14 +75,14 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 
 	public Object[] getChildren(Object parentElement) {
 		if (selectedGroup == GroupBy.OWNER && parentElement instanceof Person) {
-			Set<AbstractTask> children = ((Person) parentElement).getChildren();
+			Collection<AbstractTask> children = ((Person) parentElement).getChildren();
 			if (children != null) {
 				return children.toArray();
 			} else {
 				return EMPTY_ARR;
 			}
 		} else if (selectedGroup == GroupBy.COMPLETION && parentElement instanceof TaskGroup) {
-			Set<AbstractTask> children = ((TaskGroup) parentElement).getChildren();
+			Collection<AbstractTask> children = ((TaskGroup) parentElement).getChildren();
 			if (children != null) {
 				return children.toArray();
 			} else {
@@ -99,7 +99,7 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 
 	public boolean hasChildren(Object element) {
 		if (selectedGroup == GroupBy.OWNER && element instanceof String) {
-			Set<AbstractTask> children = ((Person) element).getChildren();
+			Collection<AbstractTask> children = ((Person) element).getChildren();
 			if (children != null) {
 				return !children.isEmpty();
 			} else {

@@ -8,7 +8,7 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
-import java.util.Set;
+import java.util.Collection;
 
 import junit.framework.TestCase;
 
@@ -65,7 +65,7 @@ public class TaskListDnDTest extends TestCase {
 		String urlData = url + "\n" + title;
 
 		dropAdapter.performDrop(urlData);
-		Set<AbstractTask> tasks = manager.getTaskList().getDefaultCategory().getChildren();
+		Collection<AbstractTask> tasks = manager.getTaskList().getDefaultCategory().getChildren();
 		assertNotNull(tasks);
 		assertEquals(1, tasks.size());
 		assertEquals(url, tasks.iterator().next().getUrl());

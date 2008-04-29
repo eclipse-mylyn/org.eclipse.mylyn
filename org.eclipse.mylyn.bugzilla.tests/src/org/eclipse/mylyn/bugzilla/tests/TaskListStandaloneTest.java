@@ -10,9 +10,9 @@ package org.eclipse.mylyn.bugzilla.tests;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import junit.framework.TestCase;
 
@@ -63,7 +63,7 @@ public class TaskListStandaloneTest extends TestCase {
 		manager.resetTaskList();
 		manager.readExistingOrCreateNewList();
 		assertEquals(1, manager.getTaskList().getAllTasks().size());
-		Set<AbstractTask> readList = manager.getTaskList().getDefaultCategory().getChildren();
+		Collection<AbstractTask> readList = manager.getTaskList().getDefaultCategory().getChildren();
 		AbstractTask readTask = readList.iterator().next();
 		assertTrue(readTask.getSummary().equals("task 1"));
 		assertTrue(readTask.getDueDate().compareTo(dueDate) == 0);
@@ -108,7 +108,7 @@ public class TaskListStandaloneTest extends TestCase {
 		// assertNotNull(manager.getTaskList());
 		assertEquals(1, manager.getTaskList().getDefaultCategory().getChildren().size());
 
-		Set<AbstractTask> readList = manager.getTaskList().getDefaultCategory().getChildren();
+		Collection<AbstractTask> readList = manager.getTaskList().getDefaultCategory().getChildren();
 		AbstractTask readTask = readList.iterator().next();
 		assertTrue(readTask.getSummary().equals("task 1"));
 
