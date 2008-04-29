@@ -11,12 +11,12 @@ package org.eclipse.mylyn.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.bugzilla.tests.AllBugzillaTests;
 import org.eclipse.mylyn.context.tests.AllContextTests;
 import org.eclipse.mylyn.ide.tests.AllIdeTests;
 import org.eclipse.mylyn.java.tests.AllJavaTests;
 import org.eclipse.mylyn.jira.tests.AllJiraTests;
-import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.monitor.tests.AllMonitorTests;
 import org.eclipse.mylyn.resources.tests.AllResourcesTests;
 import org.eclipse.mylyn.tasks.tests.AllTasksTests;

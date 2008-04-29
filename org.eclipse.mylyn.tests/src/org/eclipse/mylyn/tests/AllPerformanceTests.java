@@ -11,7 +11,7 @@ package org.eclipse.mylyn.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.tasks.tests.AllTasksPerformanceTests;
 import org.eclipse.mylyn.tests.integration.TestingStatusNotifier;
 
