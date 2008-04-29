@@ -30,6 +30,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
@@ -39,6 +40,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
+import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.ContextPreferenceContstants;
@@ -997,37 +999,48 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	 * 
 	 * NOTE: if call does not return in LINK_PROVIDER_TIMEOUT_SECONDS, the provide will be disabled until the next time
 	 * that the Workbench starts.
-	 * 
-	 * API-3.0: remove "silent" parameter
 	 */
-	public TaskRepository getRepositoryForResource(IResource resource, boolean silent) {
-		if (resource == null) {
-			return null;
-		}
+	public TaskRepository getRepositoryForResource(final IResource resource) {
+		Assert.isNotNull(resource);
 		Set<AbstractTaskRepositoryLinkProvider> defectiveLinkProviders = new HashSet<AbstractTaskRepositoryLinkProvider>();
-		for (AbstractTaskRepositoryLinkProvider linkProvider : repositoryLinkProviders) {
+		for (final AbstractTaskRepositoryLinkProvider linkProvider : repositoryLinkProviders) {
 			long startTime = System.nanoTime();
-			TaskRepository repository = linkProvider.getTaskRepository(resource, getRepositoryManager());
+			final TaskRepository[] repository = new TaskRepository[1];
+			SafeRunnable.run(new ISafeRunnable() {
+				public void handleException(Throwable e) {
+					StatusHandler.log(new Status(IStatus.ERROR, ID_PLUGIN, "Repository link provider failed: \""
+							+ linkProvider.getId() + "\"", e));
+				}
+
+				public void run() throws Exception {
+					repository[0] = linkProvider.getTaskRepository(resource, getRepositoryManager());
+				}
+			});
 			long elapsed = System.nanoTime() - startTime;
 			if (elapsed > LINK_PROVIDER_TIMEOUT_SECONDS * 1000 * 1000 * 1000) {
 				defectiveLinkProviders.add(linkProvider);
 			}
-			if (repository != null) {
-				return repository;
+			if (repository[0] != null) {
+				return repository[0];
 			}
 		}
 		if (!defectiveLinkProviders.isEmpty()) {
 			repositoryLinkProviders.removeAll(defectiveLinkProviders);
 			StatusHandler.log(new Status(IStatus.WARNING, ID_PLUGIN,
-					"Repository link provider took over 5s to execute and was timed out: " + defectiveLinkProviders));
+					"Repository link provider took over 5s to execute and was timed out: \"" + defectiveLinkProviders
+							+ "\""));
 		}
+		return null;
+	}
 
-		if (!silent) {
+	@Deprecated
+	public TaskRepository getRepositoryForResource(final IResource resource, boolean silent) {
+		TaskRepository repository = getRepositoryForResource(resource);
+		if (repository == null && !silent) {
 			MessageDialog.openInformation(null, "No Repository Found",
 					"No repository was found. Associate a Task Repository with this project via the project's property page.");
 		}
-
-		return null;
+		return repository;
 	}
 
 //	/**

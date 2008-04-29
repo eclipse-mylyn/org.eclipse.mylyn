@@ -143,7 +143,7 @@ public class ProjectTaskRepositoryPage extends PropertyPage {
 	}
 
 	void updateLinkedRepository() {
-		TaskRepository repository = TasksUiPlugin.getDefault().getRepositoryForResource(project, true);
+		TaskRepository repository = TasksUiPlugin.getDefault().getRepositoryForResource(project);
 		if (repository != null) {
 			listViewer.setCheckedElements(new Object[] { repository });
 		}

@@ -111,7 +111,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 
 						for (IProject project : projects) {
 							TaskRepository taskRepository = TasksUiPlugin.getDefault().getRepositoryForResource(
-									project, true);
+									project);
 							if (container.equals(taskRepository)) {
 								mappedProjects.add(project);
 							} else if (taskRepository == null) {

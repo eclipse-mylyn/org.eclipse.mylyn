@@ -259,12 +259,12 @@ public class TasksUiUtil {
 			return TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 		} else if (element instanceof IResource) {
 			IResource resource = (IResource) element;
-			return TasksUiPlugin.getDefault().getRepositoryForResource(resource, true);
+			return TasksUiPlugin.getDefault().getRepositoryForResource(resource);
 		} else if (element instanceof IAdaptable) {
 			IAdaptable adaptable = (IAdaptable) element;
 			IResource resource = (IResource) adaptable.getAdapter(IResource.class);
 			if (resource != null) {
-				return TasksUiPlugin.getDefault().getRepositoryForResource(resource, true);
+				return TasksUiPlugin.getDefault().getRepositoryForResource(resource);
 			} else {
 				AbstractTask task = (AbstractTask) adaptable.getAdapter(AbstractTask.class);
 				if (task != null) {

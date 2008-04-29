@@ -119,7 +119,7 @@ public class TaskHyperlinkDetector extends AbstractHyperlinkDetector {
 			}
 		}
 		if (resource != null) {
-			return TasksUiPlugin.getDefault().getRepositoryForResource(resource, true);
+			return TasksUiPlugin.getDefault().getRepositoryForResource(resource);
 		}
 		return null;
 	}
