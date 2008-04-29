@@ -47,7 +47,7 @@ public class OpenTaskListElementAction extends Action {
 		List<?> list = ((IStructuredSelection) selection).toList();
 		for (Object element : list) {
 			if (element instanceof AbstractTask && event != null && (event.keyCode & SWT.MOD1) != 0) {
-				TasksUiUtil.openTaskInBackground((AbstractTask) element);
+				TasksUiUtil.openTaskInBackground((AbstractTask) element, true);
 			} else if (element instanceof AbstractTask) {
 				TasksUiUtil.refreshAndOpenTaskListElement((AbstractTaskContainer) element);
 			} else {

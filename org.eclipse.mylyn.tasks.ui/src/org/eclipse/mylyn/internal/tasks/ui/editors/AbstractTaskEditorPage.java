@@ -116,7 +116,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 					TasksUi.getTaskListManager().getTaskList().addTask(newTask, parent);
 					close();
 					TasksUi.getTaskListManager().getTaskList().deleteTask(getTask());
-					TasksUiUtil.openTaskInBackground(newTask);
+					TasksUiUtil.openTaskInBackground(newTask, false);
 				}
 
 				public void run() {

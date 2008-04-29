@@ -22,7 +22,7 @@ public class OpenSelectedTaskHandler extends AbstractTaskListViewHandler {
 	@Override
 	protected void execute(ExecutionEvent event, TaskListView taskListView, AbstractTaskContainer item) {
 		if (item instanceof AbstractTask) {
-			TasksUiUtil.openTaskInBackground((AbstractTask) item);
+			TasksUiUtil.openTaskInBackground((AbstractTask) item, true);
 		}
 	}
 

@@ -507,7 +507,7 @@ public class TasksUiUtil {
 	/**
 	 * @since 3.0
 	 */
-	public static boolean openTaskInBackground(AbstractTask task) {
+	public static boolean openTaskInBackground(AbstractTask task, boolean bringToTop) {
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window != null) {
 			IEditorPart activeEditor = null;
@@ -519,7 +519,7 @@ public class TasksUiUtil {
 			}
 			boolean opened = openTask(task);
 			if (opened && activePage != null) {
-				if (activeEditor != null) {
+				if (!bringToTop && activeEditor != null) {
 					activePage.bringToTop(activeEditor);
 				}
 				if (activePart != null) {
