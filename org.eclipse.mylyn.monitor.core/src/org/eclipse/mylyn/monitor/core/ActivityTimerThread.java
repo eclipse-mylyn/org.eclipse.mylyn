@@ -20,6 +20,7 @@ import java.util.List;
  * @author Shawn Minto
  * @since 2.0
  */
+@Deprecated
 public class ActivityTimerThread extends Thread implements Runnable {
 
 	private static final int SECOND = 1000;

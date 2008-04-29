@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mylyn Workbench Extensions Plug-in
+Bundle-SymbolicName: org.eclipse.mylyn.commons.ui
+Bundle-Version: 3.0.0.qualifier
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-Activator: org.eclipse.mylyn.internal.workbench.ui.WorkbenchExtensionsPlugin
+Export-Package: org.eclipse.mylyn.internal.workbench.ui,
+ org.eclipse.mylyn.provisional.workbench.ui,
+ org.eclipse.mylyn.provisional.workbench.ui.notifications
