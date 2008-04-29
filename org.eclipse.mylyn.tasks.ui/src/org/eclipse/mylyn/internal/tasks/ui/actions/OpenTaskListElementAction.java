@@ -13,7 +13,9 @@ import java.util.List;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -27,9 +29,9 @@ public class OpenTaskListElementAction extends Action {
 
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.open";
 
-	private final StructuredViewer viewer;
+	private final TreeViewer viewer;
 
-	public OpenTaskListElementAction(StructuredViewer view) {
+	public OpenTaskListElementAction(TreeViewer view) {
 		this.viewer = view;
 		setText("Open");
 		setToolTipText("Open Task List Element");
@@ -48,6 +50,12 @@ public class OpenTaskListElementAction extends Action {
 		for (Object element : list) {
 			if (element instanceof AbstractTask && event != null && (event.keyCode & SWT.MOD1) != 0) {
 				TasksUiUtil.openTaskInBackground((AbstractTask) element);
+			} else if (element instanceof TaskCategory || element instanceof AbstractRepositoryQuery) {
+				if (viewer.getExpandedState(element)) {
+					viewer.collapseToLevel(element, 1);
+				} else {
+					viewer.expandToLevel(element, 1);
+				}
 			} else if (element instanceof AbstractTaskContainer) {
 				TasksUiUtil.refreshAndOpenTaskListElement((AbstractTaskContainer) element);
 			}
