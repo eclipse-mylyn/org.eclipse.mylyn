@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.SortedMap;
 import java.util.Timer;
@@ -35,6 +36,7 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylyn.internal.context.core.ContextPreferenceContstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDataExportOperation;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
@@ -89,9 +91,8 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 	}
 
 	public void backupNow(boolean synchronous) {
-		String destination = backupFolderPath;
 
-		File backupFolder = new File(destination);
+		File backupFolder = new File(backupFolderPath);
 		if (!backupFolder.exists()) {
 			backupFolder.mkdir();
 		}
@@ -113,10 +114,8 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 
 		} else {
 
-			final TaskDataExportOperation backupJob = new TaskDataExportOperation(destination, true,
-					getBackupFileName());
-//			final TaskDataExportOperation backupJob = new TaskDataExportOperation(destination, true, true, false,
-//					false, backkupFilePath, new HashSet<AbstractTask>());
+			final TaskDataExportOperation backupJob = new TaskDataExportOperation(backupFolderPath, true, true, false,
+					true, getBackupFileName(), new HashSet<AbstractTask>());
 
 			IProgressService service = PlatformUI.getWorkbench().getProgressService();
 			try {
@@ -281,7 +280,9 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 
 		public ExportJob(String destination, String filename) {
 			super(BACKUP_JOB_NAME);
-			backupJob = new TaskDataExportOperation(destination, true, filename);
+
+			backupJob = new TaskDataExportOperation(destination, true, true, false, true, filename,
+					new HashSet<AbstractTask>());
 		}
 
 		@Override
