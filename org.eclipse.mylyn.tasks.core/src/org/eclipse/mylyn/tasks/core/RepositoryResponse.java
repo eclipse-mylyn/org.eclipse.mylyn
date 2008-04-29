@@ -10,6 +10,7 @@ package org.eclipse.mylyn.tasks.core;
 
 /**
  * @author Steffen Pingel
+ * @since 3.0
  */
 public class RepositoryResponse {
 

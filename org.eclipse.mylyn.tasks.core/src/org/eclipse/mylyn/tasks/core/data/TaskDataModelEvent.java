@@ -8,6 +8,10 @@
 
 package org.eclipse.mylyn.tasks.core.data;
 
+/**
+ * @author Steffen Pingel
+ * @since 3.0
+ */
 public class TaskDataModelEvent {
 
 	public enum EventKind {

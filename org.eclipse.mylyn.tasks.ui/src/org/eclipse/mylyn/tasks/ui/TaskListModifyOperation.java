@@ -23,6 +23,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
  * Use to perform atomic operations on the task list i.e. open/restore
  * 
  * @author Rob Elves
+ * @since 3.0
  */
 public abstract class TaskListModifyOperation implements IRunnableWithProgress {
 

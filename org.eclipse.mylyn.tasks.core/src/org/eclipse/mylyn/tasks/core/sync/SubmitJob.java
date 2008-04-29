@@ -25,6 +25,7 @@ import org.eclipse.mylyn.web.core.Policy;
 
 /**
  * @author Steffen Pingel
+ * @since 3.0
  */
 public abstract class SubmitJob extends Job {
 

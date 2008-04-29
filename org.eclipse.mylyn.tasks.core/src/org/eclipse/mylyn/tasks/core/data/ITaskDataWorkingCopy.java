@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * @author Steffen Pingel
+ * @since 3.0
  */
 public interface ITaskDataWorkingCopy {
 

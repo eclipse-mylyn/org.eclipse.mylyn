@@ -25,6 +25,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataModelEvent.EventKind;
 
 /**
  * @author Steffen Pingel
+ * @since 3.0
  */
 public class TaskDataModel {
 
@@ -50,7 +51,7 @@ public class TaskDataModel {
 	 * Invoke upon change to attribute value.
 	 * 
 	 * @param attribute
-	 *            changed attribute
+	 * 		changed attribute
 	 */
 	public void attributeChanged(TaskAttribute attribute) {
 		if (attribute.getParentAttribute() != getTaskData().getRoot()) {

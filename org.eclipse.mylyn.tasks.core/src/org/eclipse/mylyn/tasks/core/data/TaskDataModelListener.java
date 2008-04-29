@@ -10,6 +10,7 @@ package org.eclipse.mylyn.tasks.core.data;
 
 /**
  * @author Steffen Pingel
+ * @since 3.0
  */
 public abstract class TaskDataModelListener {
 
