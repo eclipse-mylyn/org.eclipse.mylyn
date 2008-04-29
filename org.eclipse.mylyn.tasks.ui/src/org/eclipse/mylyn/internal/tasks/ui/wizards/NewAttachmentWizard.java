@@ -34,6 +34,8 @@ import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
+import org.eclipse.mylyn.provisional.workbench.ui.ScreenshotCreationPage;
 import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -69,7 +71,7 @@ public class NewAttachmentWizard extends Wizard {
 
 	private NewAttachmentWizardDialog dialog;
 
-	private ScreenshotAttachmentPage shotPage;
+	private ScreenshotCreationPage shotPage;
 
 	private boolean hasNewDialogSettings;
 
@@ -86,7 +88,7 @@ public class NewAttachmentWizard extends Wizard {
 
 		if (screenshotMode) {
 			setWindowTitle("Attach Screenshot");
-			setDefaultPageImageDescriptor(TasksUiImages.BANNER_SCREENSHOT);
+			setDefaultPageImageDescriptor(CommonImages.BANNER_SCREENSHOT);
 		} else {
 			setWindowTitle("Add Attachment");
 			setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPOSITORY);

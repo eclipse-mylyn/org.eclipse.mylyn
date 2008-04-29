@@ -12,8 +12,8 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -34,7 +34,7 @@ public class RemoveFromCategoryAction extends Action {
 		this.view = view;
 		setText(LABEL);
 		setId(ID);
-		setImageDescriptor(TasksUiImages.REMOVE);
+		setImageDescriptor(CommonImages.REMOVE);
 	}
 
 	@Override

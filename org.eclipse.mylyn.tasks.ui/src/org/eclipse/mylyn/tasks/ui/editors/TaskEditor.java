@@ -42,6 +42,7 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionContributor;
 import org.eclipse.mylyn.internal.tasks.ui.util.SelectionProviderAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDragSourceListener;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
@@ -361,7 +362,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 					editor.init(getEditorSite(), input);
 					int index = addPage(taskEditor);
 					if (input.getImageDescriptor() != null) {
-						setPageImage(index, TasksUiImages.getImage(input.getImageDescriptor()));
+						setPageImage(index, CommonImages.getImage(input.getImageDescriptor()));
 					}
 					if (editor instanceof AbstractRepositoryTaskEditor) {
 						((AbstractRepositoryTaskEditor) editor).setParentEditor(this);
@@ -397,14 +398,14 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(task.getConnectorKind());
 			if (connectorUi != null) {
 				ImageDescriptor overlayDescriptor = connectorUi.getTaskKindOverlay(task);
-				setTitleImage(TasksUiImages.getCompositeTaskImage(TasksUiImages.TASK, overlayDescriptor, false));
+				setTitleImage(CommonImages.getCompositeTaskImage(TasksUiImages.TASK, overlayDescriptor, false));
 			} else {
-				setTitleImage(TasksUiImages.getImage(TasksUiImages.TASK));
+				setTitleImage(CommonImages.getImage(TasksUiImages.TASK));
 			}
 		} else if (getEditorInput() instanceof AbstractRepositoryTaskEditorInput) {
-			this.setTitleImage(TasksUiImages.getImage(TasksUiImages.TASK_REMOTE));
+			this.setTitleImage(CommonImages.getImage(TasksUiImages.TASK_REMOTE));
 		} else {
-			setTitleImage(TasksUiImages.getImage(TasksUiImages.TASK));
+			setTitleImage(CommonImages.getImage(TasksUiImages.TASK));
 		}
 	}
 
@@ -449,7 +450,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	@Override
 	protected void createHeaderContents(IManagedForm headerForm) {
 		getToolkit().decorateFormHeading(headerForm.getForm().getForm());
-		headerForm.getForm().setImage(TasksUiImages.getImage(TasksUiImages.TASK));
+		headerForm.getForm().setImage(CommonImages.getImage(TasksUiImages.TASK));
 		updateFormTitle();
 	}
 
@@ -508,7 +509,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 	private void setFormHeaderImage(String repositoryKind) {
 		ImageDescriptor overlay = TasksUiPlugin.getDefault().getOverlayIcon(repositoryKind);
-		Image image = TasksUiImages.getImageWithOverlay(TasksUiImages.REPOSITORY, overlay, false, false);
+		Image image = CommonImages.getImageWithOverlay(TasksUiImages.REPOSITORY, overlay, false, false);
 		if (getHeaderForm() != null) {
 			getHeaderForm().getForm().setImage(image);
 		}

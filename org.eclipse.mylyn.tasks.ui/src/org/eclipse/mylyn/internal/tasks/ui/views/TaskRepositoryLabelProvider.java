@@ -12,6 +12,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.swt.graphics.Image;
@@ -38,13 +39,13 @@ public class TaskRepositoryLabelProvider implements ILabelProvider {
 			if (image != null) {
 				return image;
 			} else {
-				return TasksUiImages.getImage(TasksUiImages.REPOSITORY);
+				return CommonImages.getImage(TasksUiImages.REPOSITORY);
 			}
 		} else if (object instanceof TaskRepository) {
 			if (((TaskRepository) object).isOffline()) {
-				return TasksUiImages.getImage(TasksUiImages.REPOSITORY_OFFLINE);
+				return CommonImages.getImage(TasksUiImages.REPOSITORY_OFFLINE);
 			} else {
-				return TasksUiImages.getImage(TasksUiImages.REPOSITORY);
+				return CommonImages.getImage(TasksUiImages.REPOSITORY);
 			}
 		}
 		return null;

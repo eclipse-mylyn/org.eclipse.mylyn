@@ -26,6 +26,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
 import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
@@ -117,16 +118,16 @@ public class CompareAttachmentsAction extends BaseSelectionListenerAction implem
 
 	private Image getImage(RepositoryAttachment attachment) {
 		if (AttachmentUtil.isContext(attachment)) {
-			return TasksUiImages.getImage(TasksUiImages.CONTEXT_TRANSFER);
+			return CommonImages.getImage(TasksUiImages.CONTEXT_TRANSFER);
 		} else if (attachment.isPatch()) {
-			return TasksUiImages.getImage(TasksUiImages.ATTACHMENT_PATCH);
+			return CommonImages.getImage(TasksUiImages.TASK_ATTACHMENT_PATCH);
 		} else {
 			String filename = attachment.getFilename();
 			if (filename != null) {
 				filename = filename.toLowerCase();
 				for (String extension : IMAGE_EXTENSIONS) {
 					if (filename.endsWith(extension)) {
-						return TasksUiImages.getImage(TasksUiImages.IMAGE_FILE);
+						return CommonImages.getImage(CommonImages.IMAGE_FILE);
 					}
 				}
 			}

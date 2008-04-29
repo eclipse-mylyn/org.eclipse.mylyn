@@ -22,11 +22,11 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizer;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.AbstractTaskListPresentation;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
 import org.eclipse.mylyn.tasks.core.AbstractDuplicateDetector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListFactory;
@@ -405,7 +405,7 @@ public class TasksUiExtensionReader {
 							.getName(), iconPath);
 					if (descriptor != null) {
 						TasksUiPlugin.getDefault().addBrandingIcon(connectorUi.getConnectorKind(),
-								TasksUiImages.getImage(descriptor));
+								CommonImages.getImage(descriptor));
 					}
 				}
 				String overlayIconPath = element.getAttribute(ATTR_OVERLAY_ICON);

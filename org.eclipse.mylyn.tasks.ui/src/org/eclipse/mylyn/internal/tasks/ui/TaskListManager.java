@@ -93,8 +93,6 @@ public class TaskListManager implements ITaskListManager {
 
 	private final TaskActivationHistory taskActivityHistory = new TaskActivationHistory();
 
-	private boolean taskListInitialized = false;
-
 	private final Timer timer;
 
 	private AbstractTask activeTask;
@@ -145,8 +143,6 @@ public class TaskListManager implements ITaskListManager {
 		resetAndRollOver();
 		taskList.reset();
 		prepareOrphanContainers();
-
-		taskListInitialized = true;
 		TaskListView view = TaskListView.getFromActivePerspective();
 		if (view != null) {
 			view.refresh();
@@ -273,7 +269,6 @@ public class TaskListManager implements ITaskListManager {
 		}
 
 		TasksUiPlugin.getExternalizationManager().load(taskListSaveParticipant);
-		taskListInitialized = true;
 
 //		IProgressService service = PlatformUI.getWorkbench().getProgressService();
 //		TaskListModifyOperation modOperation = new TaskListModifyOperation() {
@@ -428,10 +423,6 @@ public class TaskListManager implements ITaskListManager {
 		taskListSaveManager.copyDataDirContentsTo(newDataDir);
 	}
 
-	public boolean isTaskListInitialized() {
-		return taskListInitialized;
-	}
-
 	public TaskListElementImporter getTaskListWriter() {
 		return importer;
 	}
@@ -448,7 +439,7 @@ public class TaskListManager implements ITaskListManager {
 	}
 
 	public void resetAndRollOver(Date startDate) {
-		if (isTaskListInitialized()) {
+		if (taskList.isInitialized()) {
 			TasksUiPlugin.getTaskActivityManager().clear(startDate);
 			List<InteractionEvent> events = ContextCore.getContextManager()
 					.getActivityMetaContext()

@@ -25,10 +25,8 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.TaskHistoryDropDown;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.TaskSearchPage;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskDialogAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
@@ -37,6 +35,9 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskWorkingSetAction;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskListChangeAdapter;
+import org.eclipse.mylyn.provisional.workbench.ui.AbstractFilteredTree;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonColorsAndFonts;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
@@ -196,7 +197,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 		final TaskListHyperlink searchLink = new TaskListHyperlink(searchComposite, SWT.LEFT);
 		searchLink.setText(LABEL_SEARCH);
-		searchLink.setForeground(TaskListColorsAndFonts.COLOR_HYPERLINK_WIDGET);
+		searchLink.setForeground(CommonColorsAndFonts.COLOR_HYPERLINK_WIDGET);
 
 		searchLink.addHyperlinkListener(new IHyperlinkListener() {
 
@@ -260,13 +261,13 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 	@Override
 	protected Composite createActiveWorkingSetComposite(Composite container) {
 		final ImageHyperlink workingSetButton = new ImageHyperlink(container, SWT.FLAT);
-		workingSetButton.setImage(TasksUiImages.getImage(TasksUiImages.TOOLBAR_ARROW_RIGHT));
+		workingSetButton.setImage(CommonImages.getImage(CommonImages.TOOLBAR_ARROW_RIGHT));
 		workingSetButton.setToolTipText("Select Working Set");
 
 		workingSetLink = new TaskListHyperlink(container, SWT.LEFT);
 		workingSetLink.setText(TaskWorkingSetAction.LABEL_SETS_NONE);
 		workingSetLink.setUnderlined(false);
-		workingSetLink.setForeground(TaskListColorsAndFonts.COLOR_HYPERLINK_WIDGET);
+		workingSetLink.setForeground(CommonColorsAndFonts.COLOR_HYPERLINK_WIDGET);
 
 		final TaskWorkingSetAction workingSetAction = new TaskWorkingSetAction();
 		workingSetButton.addHyperlinkListener(new IHyperlinkListener() {
@@ -276,11 +277,11 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			}
 
 			public void linkEntered(org.eclipse.ui.forms.events.HyperlinkEvent e) {
-				workingSetButton.setImage(TasksUiImages.getImage(TasksUiImages.TOOLBAR_ARROW_DOWN));
+				workingSetButton.setImage(CommonImages.getImage(CommonImages.TOOLBAR_ARROW_DOWN));
 			}
 
 			public void linkExited(org.eclipse.ui.forms.events.HyperlinkEvent e) {
-				workingSetButton.setImage(TasksUiImages.getImage(TasksUiImages.TOOLBAR_ARROW_RIGHT));
+				workingSetButton.setImage(CommonImages.getImage(CommonImages.TOOLBAR_ARROW_RIGHT));
 			}
 		});
 
@@ -317,7 +318,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 	@Override
 	protected Composite createActiveTaskComposite(final Composite container) {
 		final ImageHyperlink activeTaskButton = new ImageHyperlink(container, SWT.LEFT);// SWT.ARROW | SWT.RIGHT);
-		activeTaskButton.setImage(TasksUiImages.getImage(TasksUiImages.TOOLBAR_ARROW_RIGHT));
+		activeTaskButton.setImage(CommonImages.getImage(CommonImages.TOOLBAR_ARROW_RIGHT));
 		activeTaskButton.setToolTipText("Select Active Task");
 
 		activeTaskLink = new TaskListHyperlink(container, SWT.LEFT);
@@ -349,7 +350,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		TasksUi.getTaskListManager().getTaskList().addChangeListener(changeListener);
 
 		activeTaskLink.setText(LABEL_ACTIVE_NONE);
-		activeTaskLink.setForeground(TaskListColorsAndFonts.COLOR_HYPERLINK_WIDGET);
+		activeTaskLink.setForeground(CommonColorsAndFonts.COLOR_HYPERLINK_WIDGET);
 		// avoid having the Hyperlink class show a native tooltip when it shortens the text which would overlap with the task list tooltip 
 		activeTaskLink.setToolTipText("");
 
@@ -376,11 +377,11 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			}
 
 			public void linkEntered(HyperlinkEvent event) {
-				activeTaskButton.setImage(TasksUiImages.getImage(TasksUiImages.TOOLBAR_ARROW_DOWN));
+				activeTaskButton.setImage(CommonImages.getImage(CommonImages.TOOLBAR_ARROW_DOWN));
 			}
 
 			public void linkExited(HyperlinkEvent event) {
-				activeTaskButton.setImage(TasksUiImages.getImage(TasksUiImages.TOOLBAR_ARROW_RIGHT));
+				activeTaskButton.setImage(CommonImages.getImage(CommonImages.TOOLBAR_ARROW_RIGHT));
 			}
 		});
 

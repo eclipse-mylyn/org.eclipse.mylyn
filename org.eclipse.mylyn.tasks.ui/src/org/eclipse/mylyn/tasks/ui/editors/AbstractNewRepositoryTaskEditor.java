@@ -29,6 +29,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskOutlineNode;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskSelection;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
@@ -234,7 +235,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 //		});
 
 		ImageHyperlink clearReminder = getManagedForm().getToolkit().createImageHyperlink(sectionClient, SWT.NONE);
-		clearReminder.setImage(TasksUiImages.getImage(TasksUiImages.REMOVE));
+		clearReminder.setImage(CommonImages.getImage(CommonImages.REMOVE));
 		clearReminder.setToolTipText("Clear");
 		clearReminder.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
@@ -268,7 +269,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		// label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
 		ImageHyperlink clearEstimated = getManagedForm().getToolkit().createImageHyperlink(sectionClient, SWT.NONE);
-		clearEstimated.setImage(TasksUiImages.getImage(TasksUiImages.REMOVE));
+		clearEstimated.setImage(CommonImages.getImage(CommonImages.REMOVE));
 		clearEstimated.setToolTipText("Clear");
 		clearEstimated.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
@@ -420,7 +421,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		submitButton = toolkit.createButton(buttonComposite, LABEL_SUMBIT, SWT.NONE);
 		GridData submitButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		submitButtonData.widthHint = 100;
-		submitButton.setImage(TasksUiImages.getImage(TasksUiImages.REPOSITORY_SUBMIT));
+		submitButton.setImage(CommonImages.getImage(TasksUiImages.REPOSITORY_SUBMIT));
 		submitButton.setLayoutData(submitButtonData);
 		submitButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event e) {

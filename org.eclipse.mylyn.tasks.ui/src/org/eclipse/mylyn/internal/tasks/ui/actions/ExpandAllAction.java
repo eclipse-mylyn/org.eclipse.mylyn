@@ -9,8 +9,8 @@
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
 
 /**
  * @author Mik Kersten
@@ -29,7 +29,7 @@ public class ExpandAllAction extends Action {
 		setId(ID);
 		setText(LABEL);
 		setToolTipText(LABEL);
-		setImageDescriptor(TasksUiImages.EXPAND_ALL);
+		setImageDescriptor(CommonImages.EXPAND_ALL);
 	}
 
 	@Override

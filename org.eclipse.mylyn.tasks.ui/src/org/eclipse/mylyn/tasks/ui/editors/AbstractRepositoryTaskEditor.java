@@ -74,7 +74,6 @@ import org.eclipse.mylyn.internal.tasks.core.CommentQuoter;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalProvider;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -101,6 +100,8 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.TaskUrlHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.views.UpdateRepositoryConfigurationAction;
 import org.eclipse.mylyn.monitor.core.DateUtil;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonColorsAndFonts;
 import org.eclipse.mylyn.tasks.core.AbstractDuplicateDetector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
@@ -595,7 +596,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected void createFormContent(final IManagedForm managedForm) {
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		colorIncoming = themeManager.getCurrentTheme().getColorRegistry().get(
-				TaskListColorsAndFonts.THEME_COLOR_TASKS_INCOMING_BACKGROUND);
+				CommonColorsAndFonts.THEME_COLOR_TASKS_INCOMING_BACKGROUND);
 
 		super.createFormContent(managedForm);
 		form = managedForm.getForm();
@@ -759,7 +760,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						}
 					};
 
-					openBrowserAction.setImageDescriptor(TasksUiImages.BROWSER_OPEN_TASK);
+					openBrowserAction.setImageDescriptor(CommonImages.BROWSER_OPEN_TASK);
 					openBrowserAction.setToolTipText("Open with Web Browser");
 					toolBarManager.add(openBrowserAction);
 				}
@@ -1705,7 +1706,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		Button attachScreenshotButton = toolkit.createButton(attachmentControlsComposite, AttachScreenshotAction.LABEL,
 				SWT.PUSH);
-		attachScreenshotButton.setImage(TasksUiImages.getImage(TasksUiImages.IMAGE_CAPTURE));
+		attachScreenshotButton.setImage(CommonImages.getImage(CommonImages.IMAGE_CAPTURE));
 
 		final AbstractTask task = TasksUi.getTaskListManager().getTaskList().getTask(repository.getRepositoryUrl(),
 				taskData.getTaskId());
@@ -1905,7 +1906,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected ImageHyperlink createReplyHyperlink(final int commentNum, Composite composite, final String commentBody) {
 		final ImageHyperlink replyLink = new ImageHyperlink(composite, SWT.NULL);
 		toolkit.adapt(replyLink, true, true);
-		replyLink.setImage(TasksUiImages.getImage(TasksUiImages.REPLY));
+		replyLink.setImage(CommonImages.getImage(TasksUiImages.COMMENT_REPLY));
 		replyLink.setToolTipText(LABEL_REPLY);
 		// no need for the background - transparency will take care of it
 		replyLink.setBackground(null);
@@ -2215,7 +2216,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			collapseAllHyperlink.setToolTipText("Collapse All Comments");
 			toolkit.adapt(collapseAllHyperlink, true, true);
 			collapseAllHyperlink.setBackground(null);
-			collapseAllHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.COLLAPSE_ALL));
+			collapseAllHyperlink.setImage(CommonImages.getImage(CommonImages.COLLAPSE_ALL));
 			collapseAllHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 				@Override
 				public void linkActivated(HyperlinkEvent e) {
@@ -2227,7 +2228,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			expandAllHyperlink.setToolTipText("Expand All Comments");
 			toolkit.adapt(expandAllHyperlink, true, true);
 			expandAllHyperlink.setBackground(null);
-			expandAllHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.EXPAND_ALL));
+			expandAllHyperlink.setImage(CommonImages.getImage(CommonImages.EXPAND_ALL));
 			expandAllHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 				@Override
 				public void linkActivated(HyperlinkEvent e) {
@@ -2276,9 +2277,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			formHyperlink.setFont(expandableComposite.getFont());
 			formHyperlink.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 			if (taskComment.getAuthor() != null && taskComment.getAuthor().equalsIgnoreCase(repository.getUserName())) {
-				formHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.PERSON_ME_NARROW));
+				formHyperlink.setImage(CommonImages.getImage(CommonImages.PERSON_ME_NARROW));
 			} else {
-				formHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.PERSON_NARROW));
+				formHyperlink.setImage(CommonImages.getImage(CommonImages.PERSON_NARROW));
 			}
 
 			String authorName = taskComment.getAuthorName();
@@ -2305,7 +2306,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			if (supportsCommentDelete()) {
 				final ImageHyperlink deleteComment = new ImageHyperlink(toolbarButtonComp, SWT.NULL);
 				toolkit.adapt(deleteComment, true, true);
-				deleteComment.setImage(TasksUiImages.getImage(TasksUiImages.REMOVE));
+				deleteComment.setImage(CommonImages.getImage(CommonImages.REMOVE));
 				deleteComment.setToolTipText("Remove");
 
 				deleteComment.addHyperlinkListener(new HyperlinkAdapter() {
@@ -2796,7 +2797,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		submitButton = toolkit.createButton(buttonComposite, LABEL_BUTTON_SUBMIT, SWT.NONE);
 		GridData submitButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		submitButtonData.widthHint = 100;
-		submitButton.setImage(TasksUiImages.getImage(TasksUiImages.REPOSITORY_SUBMIT));
+		submitButton.setImage(CommonImages.getImage(TasksUiImages.REPOSITORY_SUBMIT));
 		submitButton.setLayoutData(submitButtonData);
 		submitButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event e) {
@@ -3041,15 +3042,15 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		sortHyperlink.setEnabled(enabled);
 		if (enabled) {
 			if (commentSortIsUp) {
-				sortHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.SORT_COMMENT_UP));
+				sortHyperlink.setImage(CommonImages.getImage(TasksUiImages.COMMENT_SORT_UP));
 			} else {
-				sortHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.SORT_COMMENT_DOWN));
+				sortHyperlink.setImage(CommonImages.getImage(TasksUiImages.COMMENT_SORT_DOWN));
 			}
 		} else {
 			if (commentSortIsUp) {
-				sortHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.SORT_COMMENT_UP_GRAY));
+				sortHyperlink.setImage(CommonImages.getImage(TasksUiImages.COMMENT_SORT_UP_GRAY));
 			} else {
-				sortHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.SORT_COMMENT_DOWN_GRAY));
+				sortHyperlink.setImage(CommonImages.getImage(TasksUiImages.COMMENT_SORT_DOWN_GRAY));
 			}
 		}
 	}
@@ -3459,7 +3460,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	protected void addAttachContextButton(Composite buttonComposite, AbstractTask task) {
 		attachContextButton = toolkit.createButton(buttonComposite, "Attach Context", SWT.CHECK);
-		attachContextButton.setImage(TasksUiImages.getImage(TasksUiImages.CONTEXT_ATTACH));
+		attachContextButton.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_ATTACH));
 	}
 
 	/**
@@ -3491,7 +3492,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		toolkit.createLabel(composite, "");
 		final Button addSelfButton = toolkit.createButton(composite, "Add me to CC", SWT.CHECK);
 		addSelfButton.setSelection(RepositoryTaskAttribute.TRUE.equals(taskData.getAttributeValue(RepositoryTaskAttribute.ADD_SELF_CC)));
-		addSelfButton.setImage(TasksUiImages.getImage(TasksUiImages.PERSON));
+		addSelfButton.setImage(CommonImages.getImage(CommonImages.PERSON));
 		addSelfButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

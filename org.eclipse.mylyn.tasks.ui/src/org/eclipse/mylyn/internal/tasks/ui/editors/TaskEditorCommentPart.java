@@ -17,6 +17,7 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.internal.tasks.core.CommentQuoter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
 import org.eclipse.mylyn.tasks.core.data.RepositoryPerson;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskComment;
@@ -192,9 +193,9 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		RepositoryPerson author = taskComment.getAuthor();
 		if (author != null
 				&& author.getPersonId().equalsIgnoreCase(getTaskEditorPage().getTaskRepository().getUserName())) {
-			formHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.PERSON_ME_NARROW));
+			formHyperlink.setImage(CommonImages.getImage(CommonImages.PERSON_ME_NARROW));
 		} else {
-			formHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.PERSON_NARROW));
+			formHyperlink.setImage(CommonImages.getImage(CommonImages.PERSON_NARROW));
 		}
 		StringBuilder sb = new StringBuilder();
 		sb.append(taskComment.getNumber());
@@ -221,7 +222,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 	private ImageHyperlink createReplyHyperlink(Composite composite, FormToolkit toolkit, final TaskComment taskComment) {
 		final ImageHyperlink replyLink = new ImageHyperlink(composite, SWT.NULL);
 		toolkit.adapt(replyLink, true, true);
-		replyLink.setImage(TasksUiImages.getImage(TasksUiImages.REPLY));
+		replyLink.setImage(CommonImages.getImage(TasksUiImages.COMMENT_REPLY));
 		replyLink.setToolTipText(LABEL_REPLY);
 		// no need for the background - transparency will take care of it
 		replyLink.setBackground(null);
@@ -263,7 +264,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 				hideAllComments();
 			}
 		};
-		collapseAllAction.setImageDescriptor(TasksUiImages.COLLAPSE_ALL);
+		collapseAllAction.setImageDescriptor(CommonImages.COLLAPSE_ALL);
 		collapseAllAction.setToolTipText("Collapse All Comments");
 		barManager.add(collapseAllAction);
 
@@ -273,7 +274,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 				expandAllComments();
 			}
 		};
-		expandAllAction.setImageDescriptor(TasksUiImages.EXPAND_ALL);
+		expandAllAction.setImageDescriptor(CommonImages.EXPAND_ALL);
 		expandAllAction.setToolTipText("Expand All Comments");
 		barManager.add(expandAllAction);
 	}

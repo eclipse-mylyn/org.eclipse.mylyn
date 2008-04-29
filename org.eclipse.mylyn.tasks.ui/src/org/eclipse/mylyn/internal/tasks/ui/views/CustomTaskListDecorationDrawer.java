@@ -15,6 +15,7 @@ import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
@@ -34,11 +35,11 @@ class CustomTaskListDecorationDrawer implements Listener {
 
 	private final int activationImageOffset;
 
-	private final Image taskActive = TasksUiImages.getImage(TasksUiImages.TASK_ACTIVE);
+	private final Image taskActive = CommonImages.getImage(TasksUiImages.CONTEXT_ACTIVE);
 
-	private final Image taskInactive = TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE);
+	private final Image taskInactive = CommonImages.getImage(TasksUiImages.CONTEXT_INACTIVE_EMPTY);
 
-	private final Image taskInactiveContext = TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE_CONTEXT);
+	private final Image taskInactiveContext = CommonImages.getImage(TasksUiImages.CONTEXT_INACTIVE);
 
 	// see bug 185004
 	private final int platformSpecificSquish;
@@ -140,21 +141,21 @@ class CustomTaskListDecorationDrawer implements Listener {
 		}
 		if (element != null) {
 			if (element instanceof AbstractTask) {
-				image = TasksUiImages.getImage(TaskElementLabelProvider.getSynchronizationImageDescriptor(element,
+				image = CommonImages.getImage(TaskElementLabelProvider.getSynchronizationImageDescriptor(element,
 						taskListView.synchronizationOverlaid));
 			} else {
 				int imageOffset = 0;
 				if (!hideDecorationOnContainer(element, (TreeItem) event.item)
 						&& AbstractTaskListFilter.hasDescendantIncoming(element)) {
 					if (taskListView.synchronizationOverlaid) {
-						image = TasksUiImages.getImage(TasksUiImages.OVERLAY_SYNCH_INCOMMING);
+						image = CommonImages.getImage(CommonImages.OVERLAY_SYNC_OLD_INCOMMING);
 					} else {
-						image = TasksUiImages.getImage(TasksUiImages.OVERLAY_INCOMMING);
+						image = CommonImages.getImage(CommonImages.OVERLAY_SYNC_INCOMMING);
 					}
 				} else if (element instanceof AbstractRepositoryQuery) {
 					AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
 					if (query.getSynchronizationStatus() != null) {
-						image = TasksUiImages.getImage(TasksUiImages.OVERLAY_WARNING);
+						image = CommonImages.getImage(CommonImages.OVERLAY_SYNC_WARNING);
 						if (taskListView.synchronizationOverlaid) {
 							imageOffset = 11;
 						} else {

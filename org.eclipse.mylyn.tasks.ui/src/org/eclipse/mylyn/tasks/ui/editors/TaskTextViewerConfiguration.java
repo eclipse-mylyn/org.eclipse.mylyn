@@ -33,9 +33,9 @@ import org.eclipse.jface.text.rules.RuleBasedScanner;
 import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTextViewer;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTextViewerConfiguration;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonColorsAndFonts;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -213,7 +213,7 @@ public class TaskTextViewerConfiguration extends TextSourceViewerConfiguration {
 		public RepositoryTextScanner() {
 			IToken bugToken = new Token(new TextAttribute(JFaceResources.getColorRegistry().get(
 					JFacePreferences.ACTIVE_HYPERLINK_COLOR)));
-			IToken quoteToken = new Token(new TextAttribute(TaskListColorsAndFonts.COLOR_QUOTED_TEXT));
+			IToken quoteToken = new Token(new TextAttribute(CommonColorsAndFonts.COLOR_QUOTED_TEXT));
 			IRule[] rules = new IRule[16];
 			rules[0] = (new SingleLineRule("http://", " ", bugToken));
 			rules[1] = (new SingleLineRule("https://", " ", bugToken));

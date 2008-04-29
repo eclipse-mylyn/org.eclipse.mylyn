@@ -9,8 +9,8 @@
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
 
 /**
  * @author Mik Kersten
@@ -29,7 +29,7 @@ public class CollapseAllAction extends Action {
 		setId(ID);
 		setText(LABEL);
 		setToolTipText(LABEL);
-		setImageDescriptor(TasksUiImages.COLLAPSE_ALL);
+		setImageDescriptor(CommonImages.COLLAPSE_ALL);
 	}
 
 	@Override

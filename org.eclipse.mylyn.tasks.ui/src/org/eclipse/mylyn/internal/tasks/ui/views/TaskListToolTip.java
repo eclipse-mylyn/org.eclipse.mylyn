@@ -30,8 +30,9 @@ import org.eclipse.mylyn.internal.tasks.ui.TaskListHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
-import org.eclipse.mylyn.internal.tasks.ui.notifications.AbstractNotification;
 import org.eclipse.mylyn.monitor.core.DateUtil;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
+import org.eclipse.mylyn.provisional.workbench.ui.notifications.AbstractNotification;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -367,7 +368,7 @@ public class TaskListToolTip extends ToolTip {
 				return TasksUiPlugin.getDefault().getBrandingIcon(connector.getConnectorKind());
 			}
 		} else if (element instanceof ScheduledTaskContainer) {
-			return TasksUiImages.getImage(TasksUiImages.CALENDAR);
+			return CommonImages.getImage(CommonImages.CALENDAR);
 		}
 		return null;
 	}
@@ -446,21 +447,21 @@ public class TaskListToolTip extends ToolTip {
 
 		String synchText = getSynchText(currentTipElement);
 		if (synchText != null) {
-			addIconAndLabel(composite, TasksUiImages.getImage(TasksUiImages.REPOSITORY_SYNCHRONIZE), synchText);
+			addIconAndLabel(composite, CommonImages.getImage(TasksUiImages.REPOSITORY_SYNCHRONIZE), synchText);
 		}
 
 		String activityText = getActivityText(currentTipElement);
 		if (activityText != null) {
-			addIconAndLabel(composite, TasksUiImages.getImage(TasksUiImages.CALENDAR), activityText);
+			addIconAndLabel(composite, CommonImages.getImage(CommonImages.CALENDAR), activityText);
 		}
 
 		String incommingText = getIncommingText(currentTipElement);
 		if (incommingText != null) {
-			Image image = TasksUiImages.getImage(TasksUiImages.OVERLAY_INCOMMING);
+			Image image = CommonImages.getImage(CommonImages.OVERLAY_SYNC_INCOMMING);
 			if (currentTipElement instanceof AbstractTask) {
 				AbstractTask task = (AbstractTask) currentTipElement;
 				if (task.getLastReadTimeStamp() == null) {
-					image = TasksUiImages.getImage(TasksUiImages.OVERLAY_INCOMMING_NEW);
+					image = CommonImages.getImage(CommonImages.OVERLAY_SYNC_INCOMMING_NEW);
 				}
 			}
 			addIconAndLabel(composite, image, incommingText);
@@ -501,12 +502,12 @@ public class TaskListToolTip extends ToolTip {
 
 		String statusText = getStatusText(currentTipElement);
 		if (statusText != null) {
-			addIconAndLabel(composite, TasksUiImages.getImage(TasksUiImages.WARNING), statusText);
+			addIconAndLabel(composite, CommonImages.getImage(CommonImages.WARNING), statusText);
 		}
 
 		String helpText = getHelpText(currentTipElement);
 		if (helpText != null) {
-			addIconAndLabel(composite, TasksUiImages.getImage(TasksUiImages.QUESTION), helpText);
+			addIconAndLabel(composite, CommonImages.getImage(CommonImages.QUESTION), helpText);
 		}
 
 		visible = true;

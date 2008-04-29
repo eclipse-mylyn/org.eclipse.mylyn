@@ -12,11 +12,13 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.monitor.core.DateUtil;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
+import org.eclipse.mylyn.provisional.workbench.ui.DatePicker;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
-import org.eclipse.mylyn.tasks.ui.DatePicker;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -65,7 +67,8 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 				value = f.format(date);
 			}
 
-			datePicker = new DatePicker(dateWithClearComposite, /* SWT.NONE */SWT.BORDER, value);
+			datePicker = new DatePicker(dateWithClearComposite, /* SWT.NONE */SWT.BORDER, value, true,
+					TasksUiPlugin.getDefault().getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
 			datePicker.setEnabled(!isReadOnly());
 			datePicker.setFont(TEXT_FONT);
 			datePicker.setDatePattern("yyyy-MM-dd");
@@ -84,7 +87,7 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 			});
 
 			ImageHyperlink clearDeadlineDate = toolkit.createImageHyperlink(dateWithClearComposite, SWT.NONE);
-			clearDeadlineDate.setImage(TasksUiImages.getImage(TasksUiImages.REMOVE));
+			clearDeadlineDate.setImage(CommonImages.getImage(CommonImages.REMOVE));
 			clearDeadlineDate.setToolTipText("Clear");
 			clearDeadlineDate.addHyperlinkListener(new HyperlinkAdapter() {
 				@Override

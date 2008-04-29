@@ -10,6 +10,7 @@ package org.eclipse.mylyn.internal.tasks.ui;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.fieldassist.IContentProposal;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -56,9 +57,9 @@ public class PersonContentProposal implements IContentProposal, Comparable<Perso
 
 	public Image getImage() {
 		if (isCurrentUser) {
-			return TasksUiImages.getImage(TasksUiImages.PERSON_ME);
+			return CommonImages.getImage(CommonImages.PERSON_ME);
 		} else {
-			return TasksUiImages.getImage(TasksUiImages.PERSON);
+			return CommonImages.getImage(CommonImages.PERSON);
 		}
 	}
 

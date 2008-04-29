@@ -186,7 +186,7 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 					"org.eclipse.mylyn.ui.context.capture.pause", // id 
 					"org.eclipse.mylyn.ui.context.capture.pause.command", // commandId 
 					Collections.EMPTY_MAP, // params 
-					TasksUiImages.CAPTURE_PAUSE, // icon 
+					TasksUiImages.CONTEXT_CAPTURE_PAUSE, // icon 
 					null, null, "Pause Capturing Context", // label 
 					null, // mnemonic 
 					"Pause Capturing Context", // tooltip

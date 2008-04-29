@@ -691,4 +691,9 @@ public class TaskList implements ISchedulingRule, ITaskList {
 	public static ISchedulingRule getSchedulingRule() {
 		return ITasksCoreConstants.TASKLIST_SCHEDULING_RULE;
 	}
+
+	// API-3.0: remove or make the TaskList know more about its lifecycle
+	public boolean isInitialized() {
+		return readComplete;
+	}
 }

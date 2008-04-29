@@ -38,10 +38,10 @@ import org.eclipse.jface.text.source.ISharedTextColors;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.ImageUtilities;
 import org.eclipse.jface.text.source.SourceViewer;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTextViewer;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTextViewerConfiguration;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionContributor;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonColorsAndFonts;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -286,7 +286,7 @@ public class TaskFormPage extends FormPage {
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 
 		commentViewer.getTextWidget().setFont(
-				themeManager.getCurrentTheme().getFontRegistry().get(TaskListColorsAndFonts.TASK_EDITOR_FONT));
+				themeManager.getCurrentTheme().getFontRegistry().get(CommonColorsAndFonts.TASK_EDITOR_FONT));
 
 		commentViewer.addSelectionChangedListener(actionContributor);
 
@@ -364,7 +364,7 @@ public class TaskFormPage extends FormPage {
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 
 		commentViewer.getTextWidget().setFont(
-				themeManager.getCurrentTheme().getFontRegistry().get(TaskListColorsAndFonts.TASK_EDITOR_FONT));
+				themeManager.getCurrentTheme().getFontRegistry().get(CommonColorsAndFonts.TASK_EDITOR_FONT));
 
 		commentViewer.addSelectionChangedListener(actionContributor);
 
@@ -653,7 +653,7 @@ public class TaskFormPage extends FormPage {
 		}
 
 		public Color getColor(RGB rgb) {
-			return TaskListColorsAndFonts.COLOR_SPELLING_ERROR;
+			return CommonColorsAndFonts.COLOR_SPELLING_ERROR;
 		}
 
 		public void dispose() {

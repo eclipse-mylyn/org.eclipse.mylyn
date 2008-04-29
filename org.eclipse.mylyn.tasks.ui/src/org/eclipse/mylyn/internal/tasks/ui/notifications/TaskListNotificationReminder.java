@@ -10,7 +10,8 @@ package org.eclipse.mylyn.internal.tasks.ui.notifications;
 
 import java.util.Date;
 
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
+import org.eclipse.mylyn.provisional.workbench.ui.notifications.AbstractNotification;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.swt.graphics.Image;
 
@@ -26,7 +27,7 @@ public class TaskListNotificationReminder extends TaskListNotification {
 
 	@Override
 	public Image getNotificationKindImage() {
-		return TasksUiImages.getImage(TasksUiImages.OVERLAY_HAS_DUE);
+		return CommonImages.getImage(CommonImages.OVERLAY_DATE_DUE);
 	}
 
 	@Override

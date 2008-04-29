@@ -27,12 +27,12 @@ import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskActivationHistory;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -137,7 +137,7 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 
 		private CompletionProposal createSeparator() {
 			return new CompletionProposal("", offset, 0, 0,
-					TasksUiImages.getImage(TasksUiImages.CONTENT_ASSIST_SEPARATOR), LABEL_SEPARATOR, null, null);
+					CommonImages.getImage(CommonImages.SEPARATOR_LIST), LABEL_SEPARATOR, null, null);
 		}
 
 		/**

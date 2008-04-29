@@ -59,7 +59,6 @@ import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.ScheduledPresentation;
 import org.eclipse.mylyn.internal.tasks.ui.TaskArchiveFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskCompletionFilter;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListPatternFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskPriorityFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskTransfer;
@@ -93,6 +92,8 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TaskDragSourceListener;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListTableSorter.SortByIndex;
 import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonColorsAndFonts;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
@@ -480,11 +481,11 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	private final IPropertyChangeListener THEME_CHANGE_LISTENER = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
 			if (event.getProperty().equals(IThemeManager.CHANGE_CURRENT_THEME)
-					|| TaskListColorsAndFonts.isTaskListTheme(event.getProperty())) {
+					|| CommonColorsAndFonts.isTaskListTheme(event.getProperty())) {
 				configureGradientColors();
 				taskListTableLabelProvider.setCategoryBackgroundColor(themeManager.getCurrentTheme()
 						.getColorRegistry()
-						.get(TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY));
+						.get(CommonColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY));
 				getViewer().refresh();
 			}
 		}
@@ -496,9 +497,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private void configureGradientColors() {
 		categoryGradientStart = themeManager.getCurrentTheme().getColorRegistry().get(
-				TaskListColorsAndFonts.THEME_COLOR_CATEGORY_GRADIENT_START);
+				CommonColorsAndFonts.THEME_COLOR_CATEGORY_GRADIENT_START);
 		categoryGradientEnd = themeManager.getCurrentTheme().getColorRegistry().get(
-				TaskListColorsAndFonts.THEME_COLOR_CATEGORY_GRADIENT_END);
+				CommonColorsAndFonts.THEME_COLOR_CATEGORY_GRADIENT_END);
 
 		boolean customized = true;
 		if (categoryGradientStart != null && categoryGradientStart.getRed() == 240
@@ -752,7 +753,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 		final IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		Color categoryBackground = themeManager.getCurrentTheme().getColorRegistry().get(
-				TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY);
+				CommonColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY);
 		taskListTableLabelProvider = new TaskTableLabelProvider(new TaskElementLabelProvider(true),
 				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator(), categoryBackground);
 		getViewer().setLabelProvider(taskListTableLabelProvider);
@@ -1502,7 +1503,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		isPaused = paused;
 		IStatusLineManager statusLineManager = getViewSite().getActionBars().getStatusLineManager();
 		if (isPaused) {
-			statusLineManager.setMessage(TasksUiImages.getImage(TasksUiImages.TASKLIST), "Mylyn context capture paused");
+			statusLineManager.setMessage(CommonImages.getImage(TasksUiImages.TASKS_VIEW), "Mylyn context capture paused");
 			setPartName("(paused) " + PART_NAME);
 		} else {
 			statusLineManager.setMessage("");

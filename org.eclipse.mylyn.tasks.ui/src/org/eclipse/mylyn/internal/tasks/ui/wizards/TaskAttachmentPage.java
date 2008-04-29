@@ -18,6 +18,7 @@ import java.util.Map;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachment;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -176,7 +177,7 @@ public class TaskAttachmentPage extends WizardPage {
 		attachContextButton = new Button(composite, SWT.CHECK);
 		attachContextButton.setLayoutData(new GridData(SWT.DEFAULT, SWT.DEFAULT, false, false, 2, 1));
 		attachContextButton.setText("Attach Context");
-		attachContextButton.setImage(TasksUiImages.getImage(TasksUiImages.CONTEXT_ATTACH));
+		attachContextButton.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_ATTACH));
 		attachContextButton.setEnabled((((NewAttachmentWizard) getWizard()).hasContext()));
 
 		/*

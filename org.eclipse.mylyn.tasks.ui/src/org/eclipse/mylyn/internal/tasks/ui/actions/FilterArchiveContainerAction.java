@@ -9,10 +9,10 @@
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
 
 /**
  * @author Mik Kersten
@@ -32,7 +32,7 @@ public class FilterArchiveContainerAction extends Action {
 		setText(LABEL);
 		setToolTipText(LABEL);
 		setId(ID);
-		setImageDescriptor(TasksUiImages.FILTER_ARCHIVE);
+		setImageDescriptor(CommonImages.FILTER_ARCHIVE);
 		setChecked(TasksUiPlugin.getDefault().getPreferenceStore().contains(
 				TasksUiPreferenceConstants.FILTER_ARCHIVE_MODE));
 	}

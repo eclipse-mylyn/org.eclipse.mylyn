@@ -12,11 +12,11 @@ import java.util.Calendar;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
+import org.eclipse.mylyn.provisional.workbench.ui.DatePicker;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.ui.DatePicker;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -80,7 +80,8 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 		// Reminder
 		getManagedForm().getToolkit().createLabel(sectionClient, "Scheduled for:");
 		// label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		scheduledForDate = new DatePicker(sectionClient, SWT.FLAT, DatePicker.LABEL_CHOOSE);
+		scheduledForDate = new DatePicker(sectionClient, SWT.FLAT, DatePicker.LABEL_CHOOSE, true,
+				TasksUiPlugin.getDefault().getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
 		scheduledForDate.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		scheduledForDate.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		Calendar newTaskSchedule = Calendar.getInstance();
@@ -103,7 +104,7 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 //		});
 
 		ImageHyperlink clearReminder = getManagedForm().getToolkit().createImageHyperlink(sectionClient, SWT.NONE);
-		clearReminder.setImage(TasksUiImages.getImage(TasksUiImages.REMOVE));
+		clearReminder.setImage(CommonImages.getImage(CommonImages.REMOVE));
 		clearReminder.setToolTipText("Clear");
 		clearReminder.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
@@ -137,7 +138,7 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 		// label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
 		ImageHyperlink clearEstimated = getManagedForm().getToolkit().createImageHyperlink(sectionClient, SWT.NONE);
-		clearEstimated.setImage(TasksUiImages.getImage(TasksUiImages.REMOVE));
+		clearEstimated.setImage(CommonImages.getImage(CommonImages.REMOVE));
 		clearEstimated.setToolTipText("Clear");
 		clearEstimated.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override

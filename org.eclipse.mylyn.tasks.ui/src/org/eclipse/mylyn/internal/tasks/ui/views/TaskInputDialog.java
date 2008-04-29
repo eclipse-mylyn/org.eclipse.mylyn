@@ -16,8 +16,9 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.mylyn.internal.tasks.ui.RetrieveTitleFromUrlJob;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
-import org.eclipse.mylyn.tasks.ui.DatePicker;
+import org.eclipse.mylyn.provisional.workbench.ui.DatePicker;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
@@ -116,7 +117,8 @@ public class TaskInputDialog extends Dialog {
 //		reminderCompGD.horizontalAlignment = SWT.RIGHT;
 //		reminderComp.setLayoutData(reminderCompGD);
 //		Label reminderLabel = new Label(reminderComp, SWT.NONE);
-		final DatePicker datePicker = new DatePicker(composite, SWT.BORDER, DatePicker.LABEL_CHOOSE);
+		final DatePicker datePicker = new DatePicker(composite, SWT.BORDER, DatePicker.LABEL_CHOOSE, true,
+				TasksUiPlugin.getDefault().getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
 		datePicker.addPickerSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent arg0) {
 				if (datePicker.getDate() != null) {

@@ -22,7 +22,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.mylyn.monitor.core;bundle-version="[3.0.0,4.0.0)",
  org.eclipse.mylyn.monitor.ui;bundle-version="[3.0.0,4.0.0)",
  org.eclipse.mylyn.tasks.core;bundle-version="[3.0.0,4.0.0)",
- org.eclipse.mylyn.web.core;bundle-version="[3.0.0,4.0.0)"
+ org.eclipse.mylyn.web.core;bundle-version="[3.0.0,4.0.0)",
+ org.eclipse.mylyn.workbench.ui;bundle-version="[3.0.0,4.0.0)"
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: Eclipse.org
 Export-Package: org.eclipse.mylyn.internal.tasks.ui;x-internal:=true,
@@ -31,7 +32,6 @@ Export-Package: org.eclipse.mylyn.internal.tasks.ui;x-internal:=true,
  org.eclipse.mylyn.internal.tasks.ui.dialogs;x-internal:=true,
  org.eclipse.mylyn.internal.tasks.ui.editors;x-internal:=true,
  org.eclipse.mylyn.internal.tasks.ui.notifications;x-internal:=true,
- org.eclipse.mylyn.internal.tasks.ui.planner;x-internal:=true,
  org.eclipse.mylyn.internal.tasks.ui.preferences;x-internal:=true,
  org.eclipse.mylyn.internal.tasks.ui.properties;x-internal:=true,
  org.eclipse.mylyn.internal.tasks.ui.search;x-internal:=true,

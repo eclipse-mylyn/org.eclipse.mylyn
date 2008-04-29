@@ -14,9 +14,9 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
@@ -38,7 +38,7 @@ public class ClearOutgoingAction extends Action {
 		this.selectedElements = selectedElements;
 		setText(ACTION_NAME);
 		setToolTipText(ACTION_NAME);
-		setImageDescriptor(TasksUiImages.CLEAR);
+		setImageDescriptor(CommonImages.CLEAR);
 		setId(ID);
 		if (selectedElements.size() == 1 && (selectedElements.get(0) instanceof AbstractTask)) {
 			AbstractTask task = (AbstractTask) selectedElements.get(0);

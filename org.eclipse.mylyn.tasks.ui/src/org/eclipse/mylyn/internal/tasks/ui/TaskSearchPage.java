@@ -20,6 +20,7 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -187,7 +188,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		});
 
 		ImageHyperlink clearKey = new ImageHyperlink(group, SWT.NONE);
-		clearKey.setImage(TasksUiImages.getImage(TasksUiImages.REMOVE));
+		clearKey.setImage(CommonImages.getImage(CommonImages.REMOVE));
 		clearKey.addHyperlinkListener(new HyperlinkAdapter() {
 
 			@Override

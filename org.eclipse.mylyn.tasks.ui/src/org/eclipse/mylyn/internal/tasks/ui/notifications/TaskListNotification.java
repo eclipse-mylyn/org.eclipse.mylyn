@@ -11,8 +11,9 @@ package org.eclipse.mylyn.internal.tasks.ui.notifications;
 import java.util.Date;
 
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
+import org.eclipse.mylyn.provisional.workbench.ui.notifications.AbstractNotification;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.graphics.Image;
@@ -73,9 +74,9 @@ public class TaskListNotification extends AbstractNotification {
 	@Override
 	public Image getNotificationKindImage() {
 		if (task != null && task.getLastReadTimeStamp() == null) {
-			return TasksUiImages.getImage(TasksUiImages.OVERLAY_INCOMMING_NEW);
+			return CommonImages.getImage(CommonImages.OVERLAY_SYNC_INCOMMING_NEW);
 		} else {
-			return TasksUiImages.getImage(TasksUiImages.OVERLAY_INCOMMING);
+			return CommonImages.getImage(CommonImages.OVERLAY_SYNC_INCOMMING);
 		}
 	}
 

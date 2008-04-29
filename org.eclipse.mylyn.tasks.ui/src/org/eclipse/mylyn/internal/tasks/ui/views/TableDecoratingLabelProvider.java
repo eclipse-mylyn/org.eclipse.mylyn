@@ -14,6 +14,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
@@ -39,16 +40,16 @@ public class TableDecoratingLabelProvider extends DecoratingLabelProvider implem
 				AbstractTask task = TaskElementLabelProvider.getCorrespondingTask((AbstractTaskContainer) element);
 				if (task != null) {
 					if (task.isActive()) {
-						return TasksUiImages.getImage(TasksUiImages.TASK_ACTIVE);
+						return CommonImages.getImage(TasksUiImages.CONTEXT_ACTIVE);
 					} else {
 						if (ContextCore.getContextManager().hasContext(task.getHandleIdentifier())) {
-							return TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE_CONTEXT);
+							return CommonImages.getImage(TasksUiImages.CONTEXT_INACTIVE);
 						} else {
-							return TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE);
+							return CommonImages.getImage(TasksUiImages.CONTEXT_INACTIVE_EMPTY);
 						}
 					}
 				} else {
-					return TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE);
+					return CommonImages.getImage(TasksUiImages.CONTEXT_INACTIVE_EMPTY);
 				}
 			}
 		} else if (columnIndex == 1) {

@@ -40,7 +40,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TaskSearchPage;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskActivationHistory;
@@ -50,6 +49,7 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskListFilteredTree;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
 import org.eclipse.mylyn.internal.tasks.ui.workingsets.WorkingSetLabelComparator;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonColorsAndFonts;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.search.internal.ui.SearchDialog;
@@ -521,7 +521,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 
 		ImageHyperlink openHyperlink = new ImageHyperlink(composite, SWT.NONE);
 		openHyperlink.setText(TaskListFilteredTree.LABEL_SEARCH);
-		openHyperlink.setForeground(TaskListColorsAndFonts.COLOR_HYPERLINK_WIDGET);
+		openHyperlink.setForeground(CommonColorsAndFonts.COLOR_HYPERLINK_WIDGET);
 		openHyperlink.setUnderlined(true);
 		openHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 

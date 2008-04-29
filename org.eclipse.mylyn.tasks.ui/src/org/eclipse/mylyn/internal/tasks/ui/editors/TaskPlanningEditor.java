@@ -31,11 +31,14 @@ import org.eclipse.mylyn.internal.tasks.ui.RetrieveTitleFromUrlJob;
 import org.eclipse.mylyn.internal.tasks.ui.ScheduleDatePicker;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ToggleTaskActivationAction;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.monitor.core.DateUtil;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.monitor.ui.MonitorUi;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
+import org.eclipse.mylyn.provisional.workbench.ui.DatePicker;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
@@ -44,7 +47,6 @@ import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
-import org.eclipse.mylyn.tasks.ui.DatePicker;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
@@ -528,7 +530,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		}
 
 		getDescLink = toolkit.createImageHyperlink(urlComposite, SWT.NONE);
-		getDescLink.setImage(TasksUiImages.getImage(TasksUiImages.TASK_RETRIEVE));
+		getDescLink.setImage(CommonImages.getImage(TasksUiImages.TASK_RETRIEVE));
 		getDescLink.setToolTipText("Retrieve task description from URL");
 		getDescLink.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 		setButtonStatus();
@@ -557,7 +559,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		});
 
 		openUrlLink = toolkit.createImageHyperlink(urlComposite, SWT.NONE);
-		openUrlLink.setImage(TasksUiImages.getImage(TasksUiImages.BROWSER_SMALL));
+		openUrlLink.setImage(CommonImages.getImage(CommonImages.BROWSER_SMALL));
 		openUrlLink.setToolTipText("Open with Web Browser");
 		openUrlLink.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 		openUrlLink.addHyperlinkListener(new IHyperlinkListener() {
@@ -662,7 +664,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		});
 
 		ImageHyperlink clearScheduledDate = toolkit.createImageHyperlink(nameValueComp, SWT.NONE);
-		clearScheduledDate.setImage(TasksUiImages.getImage(TasksUiImages.REMOVE));
+		clearScheduledDate.setImage(CommonImages.getImage(CommonImages.REMOVE));
 		clearScheduledDate.setToolTipText(CLEAR);
 		clearScheduledDate.addHyperlinkListener(new HyperlinkAdapter() {
 
@@ -678,7 +680,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 		label = toolkit.createLabel(nameValueComp, LABEL_DUE);
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 
-		dueDatePicker = new DatePicker(nameValueComp, SWT.FLAT, DatePicker.LABEL_CHOOSE);
+		dueDatePicker = new DatePicker(nameValueComp, SWT.FLAT, DatePicker.LABEL_CHOOSE, true,
+				TasksUiPlugin.getDefault().getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
 
 		Calendar calendar = TaskActivityUtil.getCalendar();
 
@@ -700,7 +703,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		toolkit.paintBordersFor(nameValueComp);
 
 		ImageHyperlink clearDueDate = toolkit.createImageHyperlink(nameValueComp, SWT.NONE);
-		clearDueDate.setImage(TasksUiImages.getImage(TasksUiImages.REMOVE));
+		clearDueDate.setImage(CommonImages.getImage(CommonImages.REMOVE));
 		clearDueDate.setToolTipText(CLEAR);
 		clearDueDate.addHyperlinkListener(new HyperlinkAdapter() {
 
@@ -744,7 +747,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		estimated.setLayoutData(estimatedDataLayout);
 
 		ImageHyperlink clearEstimated = toolkit.createImageHyperlink(nameValueComp, SWT.NONE);
-		clearEstimated.setImage(TasksUiImages.getImage(TasksUiImages.REMOVE));
+		clearEstimated.setImage(CommonImages.getImage(CommonImages.REMOVE));
 		clearEstimated.setToolTipText(CLEAR);
 		clearEstimated.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
@@ -815,7 +818,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		TasksUiPlugin.getTaskActivityManager().addActivityListener(timingListener);
 
 		ImageHyperlink resetActivityTimeButton = toolkit.createImageHyperlink(nameValueComp, SWT.NONE);
-		resetActivityTimeButton.setImage(TasksUiImages.getImage(TasksUiImages.REMOVE));
+		resetActivityTimeButton.setImage(CommonImages.getImage(CommonImages.REMOVE));
 		resetActivityTimeButton.setToolTipText(RESET);
 		resetActivityTimeButton.addHyperlinkListener(new HyperlinkAdapter() {
 

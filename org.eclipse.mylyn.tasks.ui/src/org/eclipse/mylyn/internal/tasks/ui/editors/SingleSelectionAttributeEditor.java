@@ -11,8 +11,8 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.SelectionAdapter;

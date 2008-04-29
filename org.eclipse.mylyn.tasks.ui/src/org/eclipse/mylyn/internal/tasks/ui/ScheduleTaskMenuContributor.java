@@ -20,10 +20,11 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
-import org.eclipse.mylyn.internal.tasks.ui.planner.DateSelectionDialog;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
+import org.eclipse.mylyn.provisional.workbench.ui.DatePicker;
+import org.eclipse.mylyn.provisional.workbench.ui.DateSelectionDialog;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.ui.DatePicker;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -63,7 +64,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 
 		// Today
 		Action action = createDateSelectionAction(TasksUiPlugin.getTaskActivityManager().getActivityToday(),
-				TasksUiImages.SCHEDULE_DAY);
+				CommonImages.SCHEDULE_DAY);
 		subMenuManager.add(action);
 
 		// Special case: Over scheduled tasks always 'scheduled' for today
@@ -84,7 +85,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 
 		// This Week
 		action = createDateSelectionAction(TasksUiPlugin.getTaskActivityManager().getActivityThisWeek(),
-				TasksUiImages.SCHEDULE_WEEK);
+				CommonImages.SCHEDULE_WEEK);
 		subMenuManager.add(action);
 
 		// Next Week
@@ -127,7 +128,9 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 				}
 				DateSelectionDialog reminderDialog = new DateSelectionDialog(PlatformUI.getWorkbench()
 						.getActiveWorkbenchWindow()
-						.getShell(), theCalendar, DatePicker.TITLE_DIALOG, false);
+						.getShell(), theCalendar, DatePicker.TITLE_DIALOG, false, TasksUiPlugin.getDefault()
+						.getPreferenceStore()
+						.getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
 				int result = reminderDialog.open();
 				if (result == Window.OK) {
 					Calendar cal = null;

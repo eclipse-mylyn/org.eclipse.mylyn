@@ -28,7 +28,7 @@ public class TaskActivateAction extends Action implements IViewActionDelegate {
 	public TaskActivateAction() {
 		setId(ID);
 		setText("Activate");
-		setImageDescriptor(TasksUiImages.TASK_ACTIVE_CENTERED);
+		setImageDescriptor(TasksUiImages.CONTEXT_ACTIVE_CENTERED);
 	}
 
 	public void init(IViewPart view) {

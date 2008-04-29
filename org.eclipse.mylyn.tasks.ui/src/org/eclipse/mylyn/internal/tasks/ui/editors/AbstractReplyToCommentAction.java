@@ -23,7 +23,7 @@ public abstract class AbstractReplyToCommentAction extends Action {
 	public AbstractReplyToCommentAction(AbstractTaskEditorPage editor, int commentNum) {
 		this.editor = editor;
 		this.commentNum = commentNum;
-		setImageDescriptor(TasksUiImages.REPLY);
+		setImageDescriptor(TasksUiImages.COMMENT_REPLY);
 		setToolTipText(LABEL_REPLY);
 	}
 

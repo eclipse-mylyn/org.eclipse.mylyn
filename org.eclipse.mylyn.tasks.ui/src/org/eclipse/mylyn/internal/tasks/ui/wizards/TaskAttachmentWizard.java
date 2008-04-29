@@ -29,6 +29,9 @@ import org.eclipse.mylyn.internal.tasks.ui.SubmitTaskAttachmentJob;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.provisional.workbench.ui.IImageCreator;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
+import org.eclipse.mylyn.provisional.workbench.ui.ScreenshotCreationPage;
 import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
@@ -224,7 +227,7 @@ public class TaskAttachmentWizard extends Wizard {
 
 		if (mode == Mode.SCREENSHOT) {
 			setWindowTitle("Attach Screenshot");
-			setDefaultPageImageDescriptor(TasksUiImages.BANNER_SCREENSHOT);
+			setDefaultPageImageDescriptor(CommonImages.BANNER_SCREENSHOT);
 		} else {
 			setWindowTitle("Add Attachment");
 			setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
@@ -238,7 +241,7 @@ public class TaskAttachmentWizard extends Wizard {
 	public void addPages() {
 		if (getSource() == null) {
 			if (mode == Mode.SCREENSHOT) {
-				ScreenshotAttachmentPage shotPage = new ScreenshotAttachmentPage();
+				ScreenshotCreationPage shotPage = new ScreenshotAttachmentPage();
 				setSource(new ImageSource(shotPage));
 				addPage(shotPage);
 			} else {

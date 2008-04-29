@@ -47,7 +47,7 @@ public class ActivateTaskHistoryDropDownAction extends Action implements IWorkbe
 		setToolTipText(LABEL);
 		setId(ID);
 		setEnabled(true);
-		setImageDescriptor(TasksUiImages.NAVIGATE_PREVIOUS);
+		setImageDescriptor(TasksUiImages.CONTEXT_HISTORY_PREVIOUS);
 	}
 
 	public void dispose() {

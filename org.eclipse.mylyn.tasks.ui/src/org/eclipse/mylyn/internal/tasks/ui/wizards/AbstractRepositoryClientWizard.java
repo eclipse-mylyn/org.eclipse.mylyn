@@ -61,8 +61,7 @@ public abstract class AbstractRepositoryClientWizard extends Wizard implements I
 
 	@Override
 	public void addPages() {
-		Collection<AbstractRepositoryConnector> connectors = TasksUi.getRepositoryManager()
-				.getRepositoryConnectors();
+		Collection<AbstractRepositoryConnector> connectors = TasksUi.getRepositoryManager().getRepositoryConnectors();
 		if (repositoryType != null || connectors.size() == 1) {
 			AbstractRepositoryConnector connector = null;
 			if (repositoryType != null) {

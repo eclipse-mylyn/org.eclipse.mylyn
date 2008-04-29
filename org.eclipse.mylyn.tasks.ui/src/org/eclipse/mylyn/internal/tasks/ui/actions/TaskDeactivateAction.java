@@ -28,7 +28,7 @@ public class TaskDeactivateAction extends Action {
 	public TaskDeactivateAction() {
 		setId(ID);
 		setText("Deactivate");
-		setImageDescriptor(TasksUiImages.TASK_INACTIVE);
+		setImageDescriptor(TasksUiImages.CONTEXT_INACTIVE_EMPTY);
 	}
 
 	public void run(AbstractTask task) {

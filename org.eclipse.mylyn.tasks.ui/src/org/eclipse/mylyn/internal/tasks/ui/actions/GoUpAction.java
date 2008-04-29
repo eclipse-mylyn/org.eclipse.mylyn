@@ -8,8 +8,8 @@
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
 import org.eclipse.ui.part.DrillDownAdapter;
 
 public class GoUpAction extends Action {
@@ -20,7 +20,7 @@ public class GoUpAction extends Action {
 		setText("Go Up To Root");
 		setToolTipText("Go Up To Root");
 		setId(ID);
-		setImageDescriptor(TasksUiImages.GO_UP);
+		setImageDescriptor(CommonImages.GO_UP);
 	}
 
 	@Override

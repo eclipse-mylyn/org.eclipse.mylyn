@@ -18,6 +18,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
 import org.eclipse.mylyn.tasks.core.TaskComment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -85,18 +86,18 @@ public class RepositoryTaskOutlinePage extends ContentOutlinePage {
 
 					if (RepositoryTaskOutlineNode.LABEL_COMMENTS.equals(node.getContents())
 							|| RepositoryTaskOutlineNode.LABEL_NEW_COMMENT.equals(node.getContents())) {
-						return TasksUiImages.getImage(TasksUiImages.COMMENT);
+						return CommonImages.getImage(TasksUiImages.COMMENT);
 					}
 					if (RepositoryTaskOutlineNode.LABEL_DESCRIPTION.equals(node.getContents())) {
-						return TasksUiImages.getImage(TasksUiImages.TASK_NOTES);
+						return CommonImages.getImage(TasksUiImages.TASK_NOTES);
 					} else if (node.getComment() != null) {
 						if (repository != null && node.getComment().getAuthor().equals(repository.getUserName())) {
-							return TasksUiImages.getImage(TasksUiImages.PERSON_ME);
+							return CommonImages.getImage(CommonImages.PERSON_ME);
 						} else {
-							return TasksUiImages.getImage(TasksUiImages.PERSON);
+							return CommonImages.getImage(CommonImages.PERSON);
 						}
 					} else {
-						return TasksUiImages.getImage(TasksUiImages.TASK);
+						return CommonImages.getImage(TasksUiImages.TASK);
 					}
 				} else {
 					return super.getImage(element);

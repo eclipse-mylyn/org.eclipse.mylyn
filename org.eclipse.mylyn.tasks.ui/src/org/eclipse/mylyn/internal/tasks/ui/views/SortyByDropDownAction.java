@@ -12,8 +12,8 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListTableSorter.SortByIndex;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 
@@ -79,7 +79,7 @@ class SortyByDropDownAction extends Action implements IMenuCreator {
 		};
 		byPriority.setEnabled(true);
 		byPriority.setText("Priority");
-		byPriority.setImageDescriptor(TasksUiImages.PRIORITY_1);
+		byPriority.setImageDescriptor(CommonImages.PRIORITY_1);
 		new ActionContributionItem(byPriority).fill(dropDownMenu, -1);
 
 		bySummary = new Action("", AS_CHECK_BOX) {
@@ -106,7 +106,7 @@ class SortyByDropDownAction extends Action implements IMenuCreator {
 		};
 		byDateCreated.setEnabled(true);
 		byDateCreated.setText("Date Created");
-		byDateCreated.setImageDescriptor(TasksUiImages.CALENDAR_SMALL);
+		byDateCreated.setImageDescriptor(CommonImages.CALENDAR_SMALL);
 		new ActionContributionItem(byDateCreated).fill(dropDownMenu, -1);
 
 		new Separator().fill(dropDownMenu, -1);

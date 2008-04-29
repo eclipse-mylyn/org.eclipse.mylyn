@@ -10,8 +10,8 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
 
 /**
  * @author Willian Mitsuda
@@ -22,7 +22,7 @@ public class LinkWithEditorAction extends Action {
 
 	public LinkWithEditorAction(TaskListView taskListView) {
 		super("&Link with Editor", IAction.AS_CHECK_BOX);
-		setImageDescriptor(TasksUiImages.LINK_EDITOR);
+		setImageDescriptor(CommonImages.LINK_EDITOR);
 		this.taskListView = taskListView;
 	}
 

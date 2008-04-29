@@ -63,7 +63,7 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 		super(LABEL);
 		setToolTipText(TOOLTIP);
 		setId(ID);
-		setImageDescriptor(TasksUiImages.NEW_SUB_TASK);
+		setImageDescriptor(TasksUiImages.TASK_NEW_SUB);
 	}
 
 	@Override

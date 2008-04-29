@@ -40,7 +40,7 @@ public class ToggleTaskActivationAction extends Action implements ITaskActivatio
 		this.task = task;
 		this.toolBarManager = toolBarManager;
 		setId(ID);
-		setImageDescriptor(TasksUiImages.TASK_ACTIVE_CENTERED);
+		setImageDescriptor(TasksUiImages.CONTEXT_ACTIVE_CENTERED);
 		update();
 		TasksUi.getTaskListManager().addActivationListener(this);
 	}

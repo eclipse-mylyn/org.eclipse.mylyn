@@ -75,12 +75,12 @@ public class TaskHistoryHandler extends AbstractHandler implements IElementUpdat
 	@SuppressWarnings("unchecked")
 	public void updateElement(UIElement element, Map parameters) {
 		if (TasksUi.getTaskListManager().getActiveTask() == null) {
-			element.setIcon(TasksUiImages.NAVIGATE_PREVIOUS);
+			element.setIcon(TasksUiImages.CONTEXT_HISTORY_PREVIOUS);
 		} else {
 			if (ContextCore.getContextManager().isContextCapturePaused()) {
-				element.setIcon(TasksUiImages.NAVIGATE_PREVIOUS_PAUSE);
+				element.setIcon(TasksUiImages.CONTEXT_HISTORY_PREVIOUS_PAUSE);
 			} else {
-				element.setIcon(TasksUiImages.NAVIGATE_PREVIOUS_ACTIVE);
+				element.setIcon(TasksUiImages.CONTEXT_HISTORY_PREVIOUS_ACTIVE);
 			}
 		}
 	}

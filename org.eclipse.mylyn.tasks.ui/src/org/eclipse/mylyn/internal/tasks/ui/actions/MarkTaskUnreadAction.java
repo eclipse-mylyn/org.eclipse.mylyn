@@ -10,8 +10,8 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import java.util.List;
 
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 
@@ -33,7 +33,7 @@ public class MarkTaskUnreadAction extends AbstractTaskAction {
 		setToolTipText("Mark " + ACTION_NAME);
 		setId(ID);
 		setActionDefinitionId(DEFINITION_ID);
-		setImageDescriptor(TasksUiImages.OVERLAY_INCOMMING);
+		setImageDescriptor(CommonImages.OVERLAY_SYNC_INCOMMING);
 //		if (containsArchiveContainer(selectedElements)) {
 //			setEnabled(false);
 //		} else {

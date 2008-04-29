@@ -33,6 +33,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.ClearOutgoingAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewSubTaskAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeEditorAction;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
@@ -577,7 +578,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 					}
 				};
 
-				openBrowserAction.setImageDescriptor(TasksUiImages.BROWSER_OPEN_TASK);
+				openBrowserAction.setImageDescriptor(CommonImages.BROWSER_OPEN_TASK);
 				openBrowserAction.setToolTipText("Open with Web Browser");
 				toolBarManager.add(openBrowserAction);
 			}

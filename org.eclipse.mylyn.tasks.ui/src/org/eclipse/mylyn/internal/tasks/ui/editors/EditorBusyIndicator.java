@@ -7,7 +7,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;
@@ -77,7 +77,7 @@ public class EditorBusyIndicator {
 
 		try {
 			if (images == null) {
-				images = TasksUiImages.getProgressImages();
+				images = CommonImages.getProgressImages();
 				// if image fails to load do not continue
 				if (images == null) {
 					return;

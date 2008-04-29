@@ -14,8 +14,9 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonColorsAndFonts;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.swt.graphics.Color;
@@ -50,9 +51,9 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 		RepositoryAttachment attachment = (RepositoryAttachment) element;
 		if (columnIndex == 0) {
 			if (AttachmentUtil.isContext(attachment)) {
-				return TasksUiImages.getImage(TasksUiImages.CONTEXT_TRANSFER);
+				return CommonImages.getImage(TasksUiImages.CONTEXT_TRANSFER);
 			} else if (attachment.isPatch()) {
-				return TasksUiImages.getImage(TasksUiImages.ATTACHMENT_PATCH);
+				return CommonImages.getImage(TasksUiImages.TASK_ATTACHMENT_PATCH);
 			} else {
 				String filename = attachment.getFilename();
 				if (filename != null) {
@@ -61,7 +62,7 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 						String fileType = filename.substring(dotIndex + 1);
 						for (String element2 : IMAGE_EXTENSIONS) {
 							if (element2.equalsIgnoreCase(fileType)) {
-								return TasksUiImages.getImage(TasksUiImages.IMAGE_FILE);
+								return CommonImages.getImage(CommonImages.IMAGE_FILE);
 							}
 						}
 					}
@@ -131,7 +132,7 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 	public Color getForeground(Object element, int columnIndex) {
 		RepositoryAttachment att = (RepositoryAttachment) element;
 		if (att.isObsolete()) {
-			return themeManager.getCurrentTheme().getColorRegistry().get(TaskListColorsAndFonts.THEME_COLOR_COMPLETED);
+			return themeManager.getCurrentTheme().getColorRegistry().get(CommonColorsAndFonts.THEME_COLOR_COMPLETED);
 		}
 		return super.getForeground(element);
 	}
