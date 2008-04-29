@@ -17,7 +17,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.security.GeneralSecurityException;
 
-import org.eclipse.mylyn.web.core.XmlUtil;
+import org.eclipse.mylyn.internal.commons.core.XmlStringConverter;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
@@ -61,7 +61,7 @@ public class AbstractReportFactory {
 			public int read() throws IOException {
 				int c;
 				while ((c = is.read()) != -1) {
-					if (XmlUtil.isValid((char) c)) {
+					if (XmlStringConverter.isValid((char) c)) {
 						return c;
 					}
 				}
