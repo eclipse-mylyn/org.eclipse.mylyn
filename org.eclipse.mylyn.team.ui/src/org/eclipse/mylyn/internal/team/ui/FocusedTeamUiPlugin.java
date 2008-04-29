@@ -13,8 +13,8 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateManager;
-import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.team.ui.AbstractActiveChangeSetProvider;
 import org.eclipse.mylyn.team.ui.AbstractContextChangeSetManager;
 import org.eclipse.ui.IStartup;

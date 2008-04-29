@@ -15,8 +15,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin;
-import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.osgi.service.prefs.BackingStoreException;
 
 /**

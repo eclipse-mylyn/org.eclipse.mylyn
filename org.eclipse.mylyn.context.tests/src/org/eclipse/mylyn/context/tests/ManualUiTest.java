@@ -12,7 +12,7 @@ package org.eclipse.mylyn.context.tests;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 
 /**
  * @author Mik Kersten

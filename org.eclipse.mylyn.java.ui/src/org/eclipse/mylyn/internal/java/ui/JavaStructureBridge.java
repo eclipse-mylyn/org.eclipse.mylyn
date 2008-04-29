@@ -40,6 +40,7 @@ import org.eclipse.jdt.internal.core.JarPackageFragmentRoot;
 import org.eclipse.jdt.internal.ui.packageview.ClassPathContainer;
 import org.eclipse.jdt.internal.ui.packageview.PackageFragmentRootContainer;
 import org.eclipse.jdt.internal.ui.util.ExceptionHandler;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.AbstractRelationProvider;
 import org.eclipse.mylyn.context.core.ContextCore;
@@ -51,7 +52,6 @@ import org.eclipse.mylyn.internal.java.ui.search.JavaReadAccessProvider;
 import org.eclipse.mylyn.internal.java.ui.search.JavaReferencesProvider;
 import org.eclipse.mylyn.internal.java.ui.search.JavaWriteAccessProvider;
 import org.eclipse.mylyn.internal.resources.ui.ResourceStructureBridge;
-import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.ui.internal.WorkingSet;
 import org.eclipse.ui.views.markers.internal.ConcreteMarker;
 

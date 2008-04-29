@@ -25,9 +25,10 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.mylyn.context.ui;bundle-version="[3.0.0,4.0.0)",
  org.eclipse.mylyn.ide.ui;bundle-version="[3.0.0,4.0.0)",
  org.eclipse.mylyn.java.ui;bundle-version="[3.0.0,4.0.0)",
- org.eclipse.mylyn.monitor.core;bundle-version="[3.0.0,4.0.0)",
+ org.eclipse.mylyn.commons.core;bundle-version="[3.0.0,4.0.0)",
  org.eclipse.mylyn.monitor.ui;bundle-version="[3.0.0,4.0.0)",
- org.eclipse.mylyn.resources.ui;bundle-version="[3.0.0,4.0.0)"
+ org.eclipse.mylyn.resources.ui;bundle-version="[3.0.0,4.0.0)",
+ org.eclipse.mylyn.monitor.core;bundle-version="[3.0.0,4.0.0)"
 Bundle-Activator: org.eclipse.mylyn.internal.pde.ui.PdeUiBridgePlugin
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .

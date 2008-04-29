@@ -14,10 +14,10 @@ import java.util.Locale;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.IInteractionContextScaling;
-import org.eclipse.mylyn.internal.monitor.core.util.XmlStringConverter;
+import org.eclipse.mylyn.internal.commons.core.XmlStringConverter;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
-import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.monitor.core.InteractionEvent.Kind;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;

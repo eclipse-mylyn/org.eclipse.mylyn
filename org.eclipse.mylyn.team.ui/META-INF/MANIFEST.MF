@@ -16,11 +16,12 @@ Require-Bundle: org.eclipse.compare,
  org.eclipse.ui.navigator.resources;bundle-version="3.3.100",
  org.eclipse.mylyn.context.core;bundle-version="[3.0.0,4.0.0)",
  org.eclipse.mylyn.context.ui;bundle-version="[3.0.0,4.0.0)",
- org.eclipse.mylyn.monitor.core;bundle-version="[3.0.0,4.0.0)",
+ org.eclipse.mylyn.commons.core;bundle-version="[3.0.0,4.0.0)",
  org.eclipse.mylyn.resources.ui;bundle-version="[3.0.0,4.0.0)",
  org.eclipse.mylyn.tasks.core;bundle-version="[3.0.0,4.0.0)",
  org.eclipse.mylyn.tasks.ui;bundle-version="[3.0.0,4.0.0)",
- org.eclipse.mylyn.workbench.ui;bundle-version="[3.0.0,4.0.0)"
+ org.eclipse.mylyn.commons.ui;bundle-version="[3.0.0,4.0.0)",
+ org.eclipse.mylyn.monitor.core;bundle-version="[3.0.0,4.0.0)"
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.mylyn.internal.team.ui;x-internal:=true,
  org.eclipse.mylyn.internal.team.ui.actions;x-internal:=true,

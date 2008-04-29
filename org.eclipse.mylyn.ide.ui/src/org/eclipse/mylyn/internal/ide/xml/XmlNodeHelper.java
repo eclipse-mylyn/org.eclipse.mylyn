@@ -17,8 +17,8 @@ import java.io.InputStreamReader;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.ide.ui.IdeUiBridgePlugin;
-import org.eclipse.mylyn.monitor.core.StatusHandler;
 
 /**
  * Class to help get the handle for an xml file
