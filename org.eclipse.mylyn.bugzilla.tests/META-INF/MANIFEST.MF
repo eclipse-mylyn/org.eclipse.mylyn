@@ -23,8 +23,9 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.mylyn,
  org.eclipse.search,
  org.eclipse.mylyn.web.core,
- org.eclipse.mylyn.bugzilla.ide;bundle-version="2.3.0"
-Eclipse-AutoStart: true
+ org.eclipse.mylyn.bugzilla.ide;bundle-version="2.3.0",
+ org.eclipse.mylyn.workbench.ui;bundle-version="[3.0.0,4.0.0)"
+Bundle-ActivationPolicy: lazy
 Bundle-Vendor: Eclipse.org
 Bundle-ClassPath: bugzilla-test.jar
 Export-Package: org.eclipse.mylyn.bugzilla.tests;x-internal:=true,

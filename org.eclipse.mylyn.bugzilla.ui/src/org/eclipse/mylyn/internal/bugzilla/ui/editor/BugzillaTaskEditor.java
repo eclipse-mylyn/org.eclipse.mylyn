@@ -34,13 +34,14 @@ import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_OPERATION;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
+import org.eclipse.mylyn.provisional.workbench.ui.DatePicker;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryOperation;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
-import org.eclipse.mylyn.tasks.ui.DatePicker;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
@@ -86,7 +87,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 	private static final String LABEL_TIME_TRACKING = "Bugzilla Time Tracking";
 
 	private static final String LABEL_CUSTOM_FIELD = "Custom Fields";
-	
+
 	protected Text keywordsText;
 
 	protected Text estimateText;
@@ -120,7 +121,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		// config.setRightImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT));
 		// compareInput = new BugzillaCompareInput(config);
 	}
-	
+
 	@Override
 	protected boolean supportsCommentSort() {
 		return false;
@@ -132,7 +133,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		try {
 			RepositoryConfiguration configuration = BugzillaCorePlugin.getRepositoryConfiguration(this.repository,
 					false, new NullProgressMonitor());
-		
+
 			if (configuration != null) {
 				List<BugzillaCustomField> customFields = configuration.getCustomFields();
 				if (!customFields.isEmpty()) {
@@ -201,11 +202,11 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		if (attribute != null && !attribute.isReadOnly()) {
 			Label label = createLabel(composite, attribute);
 			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
-			
+
 			Composite textFieldComposite = getManagedForm().getToolkit().createComposite(composite);
 			GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).applyTo(textFieldComposite);
 			GridLayoutFactory.swtDefaults().margins(1, 3).spacing(0, 3).applyTo(textFieldComposite);
-			
+
 			GridData textData = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL);
 			textData.horizontalSpan = 1;
 			textData.widthHint = 135;
@@ -351,8 +352,8 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			for (String bugNumber : values.split(",")) {
 				final String bugId = bugNumber.trim();
 				final String bugUrl = repository.getRepositoryUrl() + IBugzillaConstants.URL_GET_SHOW_BUG + bugId;
-				final AbstractTask task = TasksUi.getTaskListManager().getTaskList().getTask(repository.getRepositoryUrl(),
-						bugId);
+				final AbstractTask task = TasksUi.getTaskListManager().getTaskList().getTask(
+						repository.getRepositoryUrl(), bugId);
 				createTaskListHyperlink(hyperlinksComposite, bugId, bugUrl, task);
 			}
 		}
@@ -414,7 +415,8 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			operation = BUGZILLA_OPERATION.valueOf(repositoryOperation.getKnobName());
 		} catch (RuntimeException e) {
 			// FIXME: ?
-			StatusHandler.log(new Status(IStatus.INFO, BugzillaUiPlugin.PLUGIN_ID, "Unrecognized operation: " + repositoryOperation.getKnobName(), e));
+			StatusHandler.log(new Status(IStatus.INFO, BugzillaUiPlugin.PLUGIN_ID, "Unrecognized operation: "
+					+ repositoryOperation.getKnobName(), e));
 			operation = null;
 		}
 
@@ -536,7 +538,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			dateWithClear.setLayout(layout);
 
 			deadlinePicker = new DatePicker(dateWithClear, /* SWT.NONE */SWT.BORDER,
-					taskData.getAttributeValue(BugzillaReportElement.DEADLINE.getKeyString()), false);
+					taskData.getAttributeValue(BugzillaReportElement.DEADLINE.getKeyString()), false, 0);
 			deadlinePicker.setFont(TEXT_FONT);
 			deadlinePicker.setDatePattern("yyyy-MM-dd");
 			if (hasChanged(attribute)) {
@@ -568,7 +570,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			});
 
 			ImageHyperlink clearDeadlineDate = toolkit.createImageHyperlink(dateWithClear, SWT.NONE);
-			clearDeadlineDate.setImage(TasksUiImages.getImage(TasksUiImages.REMOVE));
+			clearDeadlineDate.setImage(CommonImages.getImage(CommonImages.REMOVE));
 			clearDeadlineDate.setToolTipText("Clear");
 			clearDeadlineDate.addHyperlinkListener(new HyperlinkAdapter() {
 
@@ -623,7 +625,8 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 
 				List<String> validKeywords = new ArrayList<String>();
 				try {
-					validKeywords = BugzillaCorePlugin.getRepositoryConfiguration(repository, false, new NullProgressMonitor()).getKeywords();
+					validKeywords = BugzillaCorePlugin.getRepositoryConfiguration(repository, false,
+							new NullProgressMonitor()).getKeywords();
 				} catch (Exception ex) {
 					// ignore
 				}
@@ -672,7 +675,8 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				if (BugzillaTaskEditor.this.getEditor() instanceof TaskEditor) {
-					TasksUiUtil.openUrl(repository.getRepositoryUrl() + IBugzillaConstants.URL_SHOW_VOTES + taskData.getTaskId());
+					TasksUiUtil.openUrl(repository.getRepositoryUrl() + IBugzillaConstants.URL_SHOW_VOTES
+							+ taskData.getTaskId());
 				}
 			}
 		});
@@ -682,7 +686,8 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				if (BugzillaTaskEditor.this.getEditor() instanceof TaskEditor) {
-					TasksUiUtil.openUrl(repository.getRepositoryUrl() + IBugzillaConstants.URL_VOTE + taskData.getTaskId());
+					TasksUiUtil.openUrl(repository.getRepositoryUrl() + IBugzillaConstants.URL_VOTE
+							+ taskData.getTaskId());
 				}
 			}
 		});
@@ -711,7 +716,8 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		if (assignedAttribute != null) {
 			String bugzillaVersion;
 			try {
-				bugzillaVersion = BugzillaCorePlugin.getRepositoryConfiguration(repository, false, new NullProgressMonitor()).getInstallVersion();
+				bugzillaVersion = BugzillaCorePlugin.getRepositoryConfiguration(repository, false,
+						new NullProgressMonitor()).getInstallVersion();
 			} catch (CoreException e1) {
 				// ignore
 				bugzillaVersion = "2.18";
@@ -800,9 +806,9 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			if (haveRealName) {
 				textField.setText(textField.getText() + " <"
 						+ taskData.getAttributeValue(BugzillaReportElement.QA_CONTACT.getKeyString()) + ">");
-			}			
+			}
 		}
-		
+
 		super.addSelfToCC(composite);
 
 	}

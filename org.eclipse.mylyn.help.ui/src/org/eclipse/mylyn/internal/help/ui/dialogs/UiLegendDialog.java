@@ -14,11 +14,12 @@ import java.util.List;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.PopupDialog;
 import org.eclipse.jface.preference.PreferenceDialog;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
+import org.eclipse.mylyn.provisional.workbench.ui.CommonColorsAndFonts;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
@@ -146,23 +147,23 @@ public class UiLegendDialog extends PopupDialog {
 
 		Label imageLabel;
 		imageLabel = toolkit.createLabel(tasksClient, "");
-		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.TASK));
+		imageLabel.setImage(CommonImages.getImage(TasksUiImages.TASK));
 		toolkit.createLabel(tasksClient, "Task");
 
 		imageLabel = toolkit.createLabel(tasksClient, "");
-		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.CATEGORY));
+		imageLabel.setImage(CommonImages.getImage(TasksUiImages.CATEGORY));
 		toolkit.createLabel(tasksClient, "Category");
 
 		imageLabel = toolkit.createLabel(tasksClient, "");
-		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.QUERY));
+		imageLabel.setImage(CommonImages.getImage(TasksUiImages.QUERY));
 		toolkit.createLabel(tasksClient, "Query");
 
 		imageLabel = toolkit.createLabel(tasksClient, "");
-		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.CALENDAR));
+		imageLabel.setImage(CommonImages.getImage(CommonImages.CALENDAR));
 		toolkit.createLabel(tasksClient, "Date range");
 
 		imageLabel = toolkit.createLabel(tasksClient, "");
-		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.BLANK));
+		imageLabel.setImage(CommonImages.getImage(CommonImages.BLANK));
 
 		Hyperlink openView = toolkit.createHyperlink(tasksClient, "Open Task List...", SWT.WRAP);
 		openView.addHyperlinkListener(new IHyperlinkListener() {
@@ -201,23 +202,23 @@ public class UiLegendDialog extends PopupDialog {
 
 		Label imageLabel;
 		imageLabel = toolkit.createLabel(prioritiesClient, "");
-		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.PRIORITY_1));
+		imageLabel.setImage(CommonImages.getImage(CommonImages.PRIORITY_1));
 		toolkit.createLabel(prioritiesClient, PriorityLevel.P1.getDescription());
 
 		imageLabel = toolkit.createLabel(prioritiesClient, "");
-		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.PRIORITY_2));
+		imageLabel.setImage(CommonImages.getImage(CommonImages.PRIORITY_2));
 		toolkit.createLabel(prioritiesClient, PriorityLevel.P2.getDescription());
 
 		imageLabel = toolkit.createLabel(prioritiesClient, "");
-		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.PRIORITY_3));
+		imageLabel.setImage(CommonImages.getImage(CommonImages.PRIORITY_3));
 		toolkit.createLabel(prioritiesClient, PriorityLevel.P3.getDescription() + " (default)");
 
 		imageLabel = toolkit.createLabel(prioritiesClient, "");
-		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.PRIORITY_4));
+		imageLabel.setImage(CommonImages.getImage(CommonImages.PRIORITY_4));
 		toolkit.createLabel(prioritiesClient, PriorityLevel.P4.getDescription());
 
 		imageLabel = toolkit.createLabel(prioritiesClient, "");
-		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.PRIORITY_5));
+		imageLabel.setImage(CommonImages.getImage(CommonImages.PRIORITY_5));
 		toolkit.createLabel(prioritiesClient, PriorityLevel.P5.getDescription());
 	}
 
@@ -240,16 +241,16 @@ public class UiLegendDialog extends PopupDialog {
 		activitySection.setClient(activityClient);
 
 		Label imageLabel = toolkit.createLabel(activityClient, "");
-		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.TASK));
+		imageLabel.setImage(CommonImages.getImage(TasksUiImages.TASK));
 		Label labelToday = toolkit.createLabel(activityClient, "Scheduled for today");
 		labelToday.setForeground(themeManager.getCurrentTheme().getColorRegistry().get(
-				TaskListColorsAndFonts.THEME_COLOR_TASK_TODAY_SCHEDULED));
+				CommonColorsAndFonts.THEME_COLOR_TASK_TODAY_SCHEDULED));
 
 		imageLabel = toolkit.createLabel(activityClient, "");
-		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.TASK));
+		imageLabel.setImage(CommonImages.getImage(TasksUiImages.TASK));
 		Label labelOverdue = toolkit.createLabel(activityClient, "Past scheduled date");
 		labelOverdue.setForeground(themeManager.getCurrentTheme().getColorRegistry().get(
-				TaskListColorsAndFonts.THEME_COLOR_TASK_PAST_SCHEDULED));
+				CommonColorsAndFonts.THEME_COLOR_TASK_PAST_SCHEDULED));
 
 // imageLabel = toolkit.createLabel(activityClient, "");
 // imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.TASK));
@@ -259,32 +260,32 @@ public class UiLegendDialog extends PopupDialog {
 // TaskListColorsAndFonts.THEME_COLOR_TASK_THISWEEK_SCHEDULED));
 
 		imageLabel = toolkit.createLabel(activityClient, "");
-		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.TASK));
+		imageLabel.setImage(CommonImages.getImage(TasksUiImages.TASK));
 		Label labelCompleted = toolkit.createLabel(activityClient, "Completed");
-		labelCompleted.setFont(TaskListColorsAndFonts.STRIKETHROUGH);
+		labelCompleted.setFont(CommonColorsAndFonts.STRIKETHROUGH);
 // labelCompleted.setForeground(TaskListColorsAndFonts.COLOR_TASK_COMPLETED);
 		labelCompleted.setForeground(themeManager.getCurrentTheme().getColorRegistry().get(
-				TaskListColorsAndFonts.THEME_COLOR_COMPLETED));
+				CommonColorsAndFonts.THEME_COLOR_COMPLETED));
 
 		imageLabel = toolkit.createLabel(activityClient, "");
-		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.TASK));
+		imageLabel.setImage(CommonImages.getImage(TasksUiImages.TASK));
 		Label labelCompletedToday = toolkit.createLabel(activityClient, "Completed today");
-		labelCompletedToday.setFont(TaskListColorsAndFonts.STRIKETHROUGH);
+		labelCompletedToday.setFont(CommonColorsAndFonts.STRIKETHROUGH);
 		labelCompletedToday.setForeground(themeManager.getCurrentTheme().getColorRegistry().get(
-				TaskListColorsAndFonts.THEME_COLOR_TASK_TODAY_COMPLETED));
+				CommonColorsAndFonts.THEME_COLOR_TASK_TODAY_COMPLETED));
 
 		imageLabel = toolkit.createLabel(activityClient, "");
-		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.OVERLAY_HAS_DUE));
+		imageLabel.setImage(CommonImages.getImage(CommonImages.OVERLAY_DATE_DUE));
 		toolkit.createLabel(activityClient, "Has due date");
 
 		imageLabel = toolkit.createLabel(activityClient, "");
-		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.OVERLAY_OVER_DUE));
+		imageLabel.setImage(CommonImages.getImage(CommonImages.OVERLAY_DATE_OVERDUE));
 		Label textLabel = toolkit.createLabel(activityClient, "Past Due date");
 		textLabel.setForeground(themeManager.getCurrentTheme().getColorRegistry().get(
-				TaskListColorsAndFonts.THEME_COLOR_TASK_PAST_DUE));
+				CommonColorsAndFonts.THEME_COLOR_TASK_PAST_DUE));
 
 		imageLabel = toolkit.createLabel(activityClient, "");
-		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.BLANK));
+		imageLabel.setImage(CommonImages.getImage(CommonImages.BLANK));
 		Hyperlink adjust = toolkit.createHyperlink(activityClient, "Adjust Colors and Fonts...", SWT.WRAP);
 		adjust.addHyperlinkListener(new IHyperlinkListener() {
 			public void linkActivated(HyperlinkEvent e) {
@@ -325,19 +326,19 @@ public class UiLegendDialog extends PopupDialog {
 
 		Label imageLabel;
 		imageLabel = toolkit.createLabel(contextClient, "");
-		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.CONTEXT_FOCUS));
+		imageLabel.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_FOCUS));
 		toolkit.createLabel(contextClient, "Focus view on active task");
 
 		imageLabel = toolkit.createLabel(contextClient, "");
-		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE));
+		imageLabel.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_INACTIVE_EMPTY));
 		toolkit.createLabel(contextClient, "Inactive task with no context");
 
 		imageLabel = toolkit.createLabel(contextClient, "");
-		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE_CONTEXT));
+		imageLabel.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_INACTIVE));
 		toolkit.createLabel(contextClient, "Inactive task with context");
 
 		imageLabel = toolkit.createLabel(contextClient, "");
-		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.TASK_ACTIVE));
+		imageLabel.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_ACTIVE));
 		toolkit.createLabel(contextClient, "Active task");
 	}
 
@@ -361,23 +362,23 @@ public class UiLegendDialog extends PopupDialog {
 
 		Label imageLabel;
 		imageLabel = toolkit.createLabel(synchroClient, "");
-		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.OVERLAY_INCOMMING_NEW));
+		imageLabel.setImage(CommonImages.getImage(CommonImages.OVERLAY_SYNC_INCOMMING_NEW));
 		toolkit.createLabel(synchroClient, "New task, open to view");
 
 		imageLabel = toolkit.createLabel(synchroClient, "");
-		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.OVERLAY_INCOMMING));
+		imageLabel.setImage(CommonImages.getImage(CommonImages.OVERLAY_SYNC_INCOMMING));
 		toolkit.createLabel(synchroClient, "Incoming changes, open to view");
 
 		imageLabel = toolkit.createLabel(synchroClient, "");
-		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.OVERLAY_OUTGOING));
+		imageLabel.setImage(CommonImages.getImage(CommonImages.OVERLAY_SYNC_OUTGOING));
 		toolkit.createLabel(synchroClient, "Outgoing changes");
 
 		imageLabel = toolkit.createLabel(synchroClient, "");
-		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.OVERLAY_WARNING));
+		imageLabel.setImage(CommonImages.getImage(CommonImages.OVERLAY_SYNC_WARNING));
 		toolkit.createLabel(synchroClient, "Synchronization failed, mouse over for details");
 
 		imageLabel = toolkit.createLabel(synchroClient, "");
-		imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.OVERLAY_CONFLICT));
+		imageLabel.setImage(CommonImages.getImage(CommonImages.OVERLAY_SYNC_CONFLICT));
 		toolkit.createLabel(synchroClient, "Conflicting changes, need to synchronize");
 	}
 
@@ -394,8 +395,7 @@ public class UiLegendDialog extends PopupDialog {
 		composite.setLayout(layout);
 		composite.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 
-		Collection<AbstractRepositoryConnector> connectors = TasksUi.getRepositoryManager()
-				.getRepositoryConnectors();
+		Collection<AbstractRepositoryConnector> connectors = TasksUi.getRepositoryManager().getRepositoryConnectors();
 		for (AbstractRepositoryConnector connector : connectors) {
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(connector.getConnectorKind());
 			if (connectorUi != null) {
@@ -474,7 +474,7 @@ public class UiLegendDialog extends PopupDialog {
 	private class CloseDialogAction extends Action {
 
 		private CloseDialogAction() {
-			setImageDescriptor(TasksUiImages.NOTIFICATION_CLOSE);
+			setImageDescriptor(CommonImages.NOTIFICATION_CLOSE);
 			setText("Close Dialog");
 		}
 
