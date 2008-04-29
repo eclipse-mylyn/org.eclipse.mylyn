@@ -46,8 +46,6 @@ public class TaskList implements ISchedulingRule, ITaskList {
 
 	private static ILock lock = Job.getJobManager().newLock();
 
-	private static ILock writeLock = Job.getJobManager().newLock();
-
 	private Map<String, AbstractTaskCategory> categories;
 
 	private final Set<ITaskListChangeListener> changeListeners = new CopyOnWriteArraySet<ITaskListChangeListener>();
@@ -64,22 +62,21 @@ public class TaskList implements ISchedulingRule, ITaskList {
 
 	private boolean readComplete;
 
+	private Set<TaskContainerDelta> delta;
+
 	public TaskList() {
 		reset();
 	}
 
 	public void addCategory(TaskCategory category) throws IllegalArgumentException {
 		Assert.isNotNull(category);
-
 		try {
-			lock.acquire();
+			lock();
 			categories.put(category.getHandleIdentifier(), category);
+			delta.add(new TaskContainerDelta(category, TaskContainerDelta.Kind.ADDED));
 		} finally {
-			lock.release();
+			unlock();
 		}
-		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
-		delta.add(new TaskContainerDelta(category, TaskContainerDelta.Kind.ADDED));
-		fireDelta(delta);
 	}
 
 	public void addChangeListener(ITaskListChangeListener listener) {
@@ -107,14 +104,12 @@ public class TaskList implements ISchedulingRule, ITaskList {
 		Assert.isNotNull(query);
 
 		try {
-			lock.acquire();
+			lock();
 			queries.put(query.getHandleIdentifier(), query);
+			delta.add(new TaskContainerDelta(query, TaskContainerDelta.Kind.ADDED));
 		} finally {
-			lock.release();
+			unlock();
 		}
-		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
-		delta.add(new TaskContainerDelta(query, TaskContainerDelta.Kind.ADDED));
-		fireDelta(delta);
 	}
 
 	/**
@@ -128,10 +123,8 @@ public class TaskList implements ISchedulingRule, ITaskList {
 		Assert.isNotNull(task);
 		Assert.isLegal(!(container instanceof UnmatchedTaskContainer));
 
-		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
 		try {
-			lock.acquire();
-
+			lock();
 			task = getOrCreateTask(task);
 			if (container == null) {
 				container = getUnmatchedContainer(task.getRepositoryUrl());
@@ -166,13 +159,12 @@ public class TaskList implements ISchedulingRule, ITaskList {
 
 			task.addParentContainer(container);
 			container.internalAddChild(task);
+			delta.add(new TaskContainerDelta(task, TaskContainerDelta.Kind.CHANGED));
+			delta.add(new TaskContainerDelta(container, TaskContainerDelta.Kind.CHANGED));
 		} finally {
-			lock.release();
+			unlock();
 		}
 
-		delta.add(new TaskContainerDelta(task, TaskContainerDelta.Kind.CHANGED));
-		delta.add(new TaskContainerDelta(container, TaskContainerDelta.Kind.CHANGED));
-		fireDelta(delta);
 		return true;
 	}
 
@@ -185,35 +177,31 @@ public class TaskList implements ISchedulingRule, ITaskList {
 	}
 
 	public void deleteCategory(AbstractTaskCategory category) {
-		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
 		try {
-			lock.acquire();
+			lock();
 			categories.remove(category.getHandleIdentifier());
 			for (AbstractTask task : category.getChildren()) {
 				task.removeParentContainer(category);
 				addOrphan(task, delta);
 			}
+			delta.add(new TaskContainerDelta(category, TaskContainerDelta.Kind.REMOVED));
 		} finally {
-			lock.release();
+			unlock();
 		}
-		delta.add(new TaskContainerDelta(category, TaskContainerDelta.Kind.REMOVED));
-		fireDelta(delta);
 	}
 
 	public void deleteQuery(AbstractRepositoryQuery query) {
-		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
 		try {
-			lock.acquire();
+			lock();
 			queries.remove(query.getHandleIdentifier());
 			for (AbstractTask task : query.getChildren()) {
 				task.removeParentContainer(query);
 				addOrphan(task, delta);
 			}
+			delta.add(new TaskContainerDelta(query, TaskContainerDelta.Kind.REMOVED));
 		} finally {
-			lock.release();
+			unlock();
 		}
-		delta.add(new TaskContainerDelta(query, TaskContainerDelta.Kind.REMOVED));
-		fireDelta(delta);
 	}
 
 	/**
@@ -221,9 +209,8 @@ public class TaskList implements ISchedulingRule, ITaskList {
 	 * orphaned.
 	 */
 	public void deleteTask(AbstractTask task) {
-		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
 		try {
-			lock.acquire();
+			lock();
 
 			// remove task from all parent containers
 			for (AbstractTaskContainer container : task.getParentContainers()) {
@@ -237,16 +224,17 @@ public class TaskList implements ISchedulingRule, ITaskList {
 			}
 
 			tasks.remove(task.getHandleIdentifier());
+			delta.add(new TaskContainerDelta(task, TaskContainerDelta.Kind.REMOVED));
 		} finally {
-			lock.release();
+			unlock();
 		}
-		delta.add(new TaskContainerDelta(task, TaskContainerDelta.Kind.REMOVED));
-		fireDelta(delta);
 	}
 
-	private void fireDelta(Set<TaskContainerDelta> delta) {
-		for (ITaskListChangeListener listener : changeListeners) {
-			listener.containersChanged(delta);
+	private void fireDelta(HashSet<TaskContainerDelta> deltaToFire) {
+		if (readComplete) {
+			for (ITaskListChangeListener listener : changeListeners) {
+				listener.containersChanged(deltaToFire);
+			}
 		}
 	}
 
@@ -288,10 +276,10 @@ public class TaskList implements ISchedulingRule, ITaskList {
 
 	public int getNextLocalTaskId() {
 		try {
-			lock.acquire();
+			lock();
 			return ++maxLocalTaskId;
 		} finally {
-			lock.release();
+			unlock();
 		}
 	}
 
@@ -455,18 +443,19 @@ public class TaskList implements ISchedulingRule, ITaskList {
 	}
 
 	public void notifyContainersUpdated(Set<? extends AbstractTaskContainer> containers) {
-		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
+		HashSet<TaskContainerDelta> containersUpdatedDelta = new HashSet<TaskContainerDelta>();
 		if (containers == null) {
-			delta.add(new TaskContainerDelta(null, TaskContainerDelta.Kind.ROOT));
+			containersUpdatedDelta.add(new TaskContainerDelta(null, TaskContainerDelta.Kind.ROOT));
 		} else {
 			for (AbstractTaskContainer abstractTaskContainer : containers) {
-				delta.add(new TaskContainerDelta(abstractTaskContainer, TaskContainerDelta.Kind.CHANGED));
+				containersUpdatedDelta.add(new TaskContainerDelta(abstractTaskContainer,
+						TaskContainerDelta.Kind.CHANGED));
 			}
 		}
 
 		for (ITaskListChangeListener listener : changeListeners) {
 			try {
-				listener.containersChanged(Collections.unmodifiableSet(delta));
+				listener.containersChanged(Collections.unmodifiableSet(containersUpdatedDelta));
 			} catch (Throwable t) {
 				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Notification failed for: "
 						+ listener, t));
@@ -475,18 +464,18 @@ public class TaskList implements ISchedulingRule, ITaskList {
 	}
 
 	public void notifyTaskChanged(AbstractTask task, boolean content) {
-		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
+		HashSet<TaskContainerDelta> taskChangeDeltas = new HashSet<TaskContainerDelta>();
 		TaskContainerDelta.Kind kind;
 		if (content) {
 			kind = TaskContainerDelta.Kind.CONTENT;
 		} else {
 			kind = TaskContainerDelta.Kind.CHANGED;
 		}
-		delta.add(new TaskContainerDelta(task, kind));
+		taskChangeDeltas.add(new TaskContainerDelta(task, kind));
 
 		for (ITaskListChangeListener listener : changeListeners) {
 			try {
-				listener.containersChanged(Collections.unmodifiableSet(delta));
+				listener.containersChanged(Collections.unmodifiableSet(taskChangeDeltas));
 			} catch (Throwable t) {
 				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Notification failed for: "
 						+ listener, t));
@@ -498,9 +487,8 @@ public class TaskList implements ISchedulingRule, ITaskList {
 		Assert.isNotNull(oldRepositoryUrl);
 		Assert.isNotNull(newRepositoryUrl);
 
-		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
 		try {
-			lock.acquire();
+			lock();
 			for (AbstractTask task : tasks.values()) {
 				if (oldRepositoryUrl.equals(RepositoryTaskHandleUtil.getRepositoryUrl(task.getHandleIdentifier()))) {
 					tasks.remove(task.getHandleIdentifier());
@@ -531,9 +519,8 @@ public class TaskList implements ISchedulingRule, ITaskList {
 				}
 			}
 		} finally {
-			lock.release();
+			unlock();
 		}
-		fireDelta(delta);
 	}
 
 	public void removeChangeListener(ITaskListChangeListener listener) {
@@ -550,18 +537,15 @@ public class TaskList implements ISchedulingRule, ITaskList {
 	public void removeFromContainer(AbstractTaskContainer container, Set<AbstractTask> tasks) {
 		Assert.isNotNull(container);
 		Assert.isNotNull(tasks);
-
-		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
 		try {
-			lock.acquire();
+			lock();
 			for (AbstractTask task : tasks) {
 				removeFromContainerInternal(container, task, delta);
 				addOrphan(task, delta);
 			}
 		} finally {
-			lock.release();
+			unlock();
 		}
-		fireDelta(delta);
 	}
 
 	/**
@@ -598,9 +582,8 @@ public class TaskList implements ISchedulingRule, ITaskList {
 		Assert.isLegal(!(container instanceof AbstractTask));
 		Assert.isLegal(!(container instanceof UnmatchedTaskContainer));
 
-		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
 		try {
-			lock.acquire();
+			lock();
 
 			if (queries.remove(container.getHandleIdentifier()) != null) {
 				if (container instanceof AbstractTaskCategory) {
@@ -614,13 +597,11 @@ public class TaskList implements ISchedulingRule, ITaskList {
 				((TaskCategory) container).setHandleIdentifier(newDescription);
 				categories.put(((TaskCategory) container).getHandleIdentifier(), (TaskCategory) container);
 			}
+			delta.add(new TaskContainerDelta(container, TaskContainerDelta.Kind.REMOVED));
+			delta.add(new TaskContainerDelta(container, TaskContainerDelta.Kind.ADDED));
 		} finally {
-			lock.release();
+			unlock();
 		}
-		// TODO: make this delta policy symmetrical with tasks
-		delta.add(new TaskContainerDelta(container, TaskContainerDelta.Kind.REMOVED));
-		delta.add(new TaskContainerDelta(container, TaskContainerDelta.Kind.ADDED));
-		fireDelta(delta);
 	}
 
 	/**
@@ -628,7 +609,7 @@ public class TaskList implements ISchedulingRule, ITaskList {
 	 */
 	public void reset() {
 		try {
-			lock.acquire();
+			lock();
 			tasks = new ConcurrentHashMap<String, AbstractTask>();
 
 			repositoryOrphansMap = new ConcurrentHashMap<String, UnmatchedTaskContainer>();
@@ -641,15 +622,15 @@ public class TaskList implements ISchedulingRule, ITaskList {
 			maxLocalTaskId = 0;
 			categories.put(defaultCategory.getHandleIdentifier(), defaultCategory);
 		} finally {
-			lock.release();
+			unlock();
 		}
 	}
 
-	public void readStart() {
+	public void preTaskListRead() {
 		readComplete = false;
 	}
 
-	public void readComplete() {
+	public void postTaskListRead() {
 		readComplete = true;
 		for (ITaskListChangeListener listener : changeListeners) {
 			listener.taskListRead();
@@ -673,10 +654,20 @@ public class TaskList implements ISchedulingRule, ITaskList {
 
 	}
 
+	private void lock() {
+		lock.acquire();
+		if (lock.getDepth() == 1) {
+			delta = new HashSet<TaskContainerDelta>();
+		}
+	}
+
 	private void lock(IProgressMonitor monitor) throws CoreException {
 		while (!monitor.isCanceled()) {
 			try {
 				if (lock.acquire(3000)) {
+					if (lock.getDepth() == 1) {
+						delta = new HashSet<TaskContainerDelta>();
+					}
 					return;
 				}
 			} catch (InterruptedException e) {
@@ -687,7 +678,13 @@ public class TaskList implements ISchedulingRule, ITaskList {
 	}
 
 	private void unlock() {
+		HashSet<TaskContainerDelta> toFire = null;
+		if (lock.getDepth() == 1) {
+			toFire = new HashSet<TaskContainerDelta>(delta);
+		}
 		lock.release();
+		if (toFire != null && toFire.size() > 0) {
+			fireDelta(toFire);
+		}
 	}
-
 }
