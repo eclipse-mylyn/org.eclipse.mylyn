@@ -160,7 +160,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 	private static boolean hasChangesHelper(Object parent, AbstractTask task) {
 		if (task.getSynchronizationState().isOutgoing()) {
 			return true;
-		} else if (task.getSynchronizationState().isIncoming() && (parent instanceof AbstractTask)) {
+		} else if (task.getSynchronizationState().isIncoming() && !(parent instanceof ScheduledTaskContainer)) {
 			return true;
 		}
 		for (AbstractTask child : task.getChildren()) {
