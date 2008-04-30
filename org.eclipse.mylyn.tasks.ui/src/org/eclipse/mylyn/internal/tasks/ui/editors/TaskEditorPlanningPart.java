@@ -11,11 +11,11 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 import java.util.Calendar;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.provisional.commons.ui.DatePicker;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
-import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
-import org.eclipse.mylyn.provisional.workbench.ui.DatePicker;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;

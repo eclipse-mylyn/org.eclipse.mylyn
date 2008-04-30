@@ -8,7 +8,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
-import org.eclipse.mylyn.provisional.workbench.ui.CommonColorsAndFonts;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColorsAndFonts;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
