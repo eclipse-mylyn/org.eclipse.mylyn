@@ -9,7 +9,6 @@
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -25,7 +24,7 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AbstractTaskEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AttachAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AttachScreenshotAction;
-import org.eclipse.mylyn.tasks.core.data.TaskAttachment;
+import org.eclipse.mylyn.tasks.core.data.ITaskAttachment2;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
@@ -81,7 +80,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 
 	private TableViewer attachmentsTableViewer;
 
-	private List<TaskAttribute> attachments;
+	private TaskAttribute[] attachments;
 
 	private boolean hasIncoming;
 
@@ -112,8 +111,8 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		attachmentsTableViewer.setSorter(new ViewerSorter() {
 			@Override
 			public int compare(Viewer viewer, Object e1, Object e2) {
-				TaskAttachment attachment1 = (TaskAttachment) e1;
-				TaskAttachment attachment2 = (TaskAttachment) e2;
+				ITaskAttachment2 attachment1 = (ITaskAttachment2) e1;
+				ITaskAttachment2 attachment2 = (ITaskAttachment2) e2;
 				Date created1 = attachment1.getCreationDate();
 				Date created2 = attachment2.getCreationDate();
 				if (created1 != null && created2 != null) {
@@ -128,20 +127,18 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 			}
 		});
 
-		List<TaskAttachment> attachmentList = new ArrayList<TaskAttachment>(attachments.size());
+		List<ITaskAttachment2> attachmentList = new ArrayList<ITaskAttachment2>(attachments.length);
 		for (TaskAttribute attribute : attachments) {
 			attachmentList.add(getTaskData().getAttributeMapper().getTaskAttachment(attribute));
 		}
 		attachmentsTableViewer.setContentProvider(new AttachmentsTableContentProvider2(attachmentList));
-
 		attachmentsTableViewer.setLabelProvider(new AttachmentTableLabelProvider2(
 				getTaskEditorPage().getAttributeEditorToolkit()));
-
 		attachmentsTableViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				if (!event.getSelection().isEmpty()) {
 					StructuredSelection selection = (StructuredSelection) event.getSelection();
-					TaskAttachment attachment = (TaskAttachment) selection.getFirstElement();
+					ITaskAttachment2 attachment = (ITaskAttachment2) selection.getFirstElement();
 					TasksUiUtil.openUrl(attachment.getUrl());
 				}
 			}
@@ -347,13 +344,13 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		initialize();
 
 		Section section = createSection(parent, toolkit, hasIncoming);
-		section.setText(getPartName() + " (" + attachments.size() + ")");
+		section.setText(getPartName() + " (" + attachments.length + ")");
 
 		final Composite attachmentsComposite = toolkit.createComposite(section);
 		attachmentsComposite.setLayout(new GridLayout(1, false));
 		attachmentsComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		if (attachments.size() > 0) {
+		if (attachments.length > 0) {
 			createAttachmentTable(toolkit, attachmentsComposite);
 			createAttachmentTableMenu();
 		} else {
@@ -376,12 +373,8 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 	}
 
 	private void initialize() {
-		TaskAttribute container = getTaskData().getMappedAttribute(TaskAttribute.CONTAINER_ATTACHMENTS);
-		if (container != null) {
-			attachments = new ArrayList<TaskAttribute>(container.getAttributes().values());
-		} else {
-			attachments = Collections.emptyList();
-		}
+		attachments = getTaskData().getAttributeMapper().getAttributesByType(getTaskData(),
+				TaskAttribute.TYPE_ATTACHMENT);
 	}
 
 }

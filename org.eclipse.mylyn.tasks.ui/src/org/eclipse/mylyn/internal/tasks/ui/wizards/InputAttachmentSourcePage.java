@@ -35,9 +35,9 @@ import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.core.data.TaskAttachment;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
+import org.eclipse.mylyn.tasks.core.data.ITaskAttachment2;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
@@ -118,7 +118,7 @@ public class InputAttachmentSourcePage extends WizardPage {
 
 	private final String S_LAST_SELECTION = "lastSelection"; //$NON-NLS-1$
 
-	private TaskAttachment taskAttachment;
+	private ITaskAttachment2 taskAttachment;
 
 	public InputAttachmentSourcePage(NewAttachmentWizard wizard) {
 		super("InputAttachmentPage");
@@ -700,11 +700,11 @@ public class InputAttachmentSourcePage extends WizardPage {
 		}
 	}
 
-	public TaskAttachment getTaskAttachment() {
+	public ITaskAttachment2 getTaskAttachment() {
 		return taskAttachment;
 	}
 
-	public void setTaskAttachment(TaskAttachment taskAttachment) {
+	public void setTaskAttachment(ITaskAttachment2 taskAttachment) {
 		this.taskAttachment = taskAttachment;
 	}
 

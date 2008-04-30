@@ -20,6 +20,8 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
 import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler2;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
@@ -65,7 +67,7 @@ public abstract class AbstractRepositoryConnector {
 	 * 
 	 * @since 3.0
 	 */
-	public void init2(ITaskDataManager taskDataManager) {
+	public void init(ITaskDataManager taskDataManager) {
 		this.taskDataManager = taskDataManager;
 	}
 
@@ -558,6 +560,20 @@ public abstract class AbstractRepositoryConnector {
 	public TaskData getTaskData2(TaskRepository taskRepository, String taskId, IProgressMonitor monitor)
 			throws CoreException {
 		return null;
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public AbstractTaskAttachmentHandler getTaskAttachmentHandler() {
+		return null;
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public TaskScheme getTaskScheme(TaskData taskData) {
+		return new TaskScheme(taskData);
 	}
 
 }

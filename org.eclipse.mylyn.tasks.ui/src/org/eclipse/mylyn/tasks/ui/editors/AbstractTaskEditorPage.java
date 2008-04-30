@@ -78,7 +78,6 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
@@ -175,11 +174,45 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 	}
 
+	private class TaskListChangeListener extends TaskListChangeAdapter {
+		@Override
+		public void containersChanged(Set<TaskContainerDelta> containers) {
+			AbstractTask taskToRefresh = null;
+			for (TaskContainerDelta taskContainerDelta : containers) {
+				if (task.equals(taskContainerDelta.getContainer())) {
+					if (taskContainerDelta.getKind().equals(TaskContainerDelta.Kind.CONTENT)) {
+						taskToRefresh = (AbstractTask) taskContainerDelta.getContainer();
+						break;
+					}
+				}
+			}
+			if (taskToRefresh != null) {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						if (task.getSynchronizationState() == SynchronizationState.INCOMING
+								|| task.getSynchronizationState() == SynchronizationState.CONFLICT) {
+							getTaskEditor().setMessage("Task has incoming changes", IMessageProvider.WARNING,
+									new HyperlinkAdapter() {
+										@Override
+										public void linkActivated(HyperlinkEvent e) {
+											refreshFormContent();
+										}
+									});
+
+							// TODO EDITOR this needs to be tracked somewhere else
+							if (actionPart != null) {
+								actionPart.setSubmitEnabled(false);
+							}
+						} else {
+							refreshFormContent();
+						}
+					}
+				});
+			}
+		}
+	};
+
 	private static final String ERROR_NOCONNECTIVITY = "Unable to submit at this time. Check connectivity and retry.";
-
-	private static final String LABEL_HISTORY = "History";
-
-	private static final Font TITLE_FONT = JFaceResources.getBannerFont();
 
 	private TaskEditorActionPart actionPart;
 
@@ -225,7 +258,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 	private TaskEditorPlanningPart planningPart;
 
-	private boolean reflow = true;
+	private boolean reflow;
 
 	private TaskEditorSummaryPart summaryPart;
 
@@ -235,52 +268,17 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 	private TaskData taskData;
 
-	private final ITaskListChangeListener taskListChangeListener = new TaskListChangeAdapter() {
-		@Override
-		public void containersChanged(Set<TaskContainerDelta> containers) {
-			AbstractTask taskToRefresh = null;
-			for (TaskContainerDelta taskContainerDelta : containers) {
-				if (task.equals(taskContainerDelta.getContainer())) {
-					if (taskContainerDelta.getKind().equals(TaskContainerDelta.Kind.CONTENT)) {
-						taskToRefresh = (AbstractTask) taskContainerDelta.getContainer();
-						break;
-					}
-				}
-			}
-			if (taskToRefresh != null) {
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						if (task.getSynchronizationState() == SynchronizationState.INCOMING
-								|| task.getSynchronizationState() == SynchronizationState.CONFLICT) {
-							getTaskEditor().setMessage("Task has incoming changes", IMessageProvider.WARNING,
-									new HyperlinkAdapter() {
-										@Override
-										public void linkActivated(HyperlinkEvent e) {
-											refreshFormContent();
-										}
-									});
-
-							// TODO EDITOR this needs to be tracked somewhere else
-							if (actionPart != null) {
-								actionPart.setSubmitEnabled(false);
-							}
-						} else {
-							refreshFormContent();
-						}
-					}
-				});
-			}
-		}
-	};
+	private ITaskListChangeListener taskListChangeListener;
 
 	private TaskRepository taskRepository;
 
 	private FormToolkit toolkit;
 
 	public AbstractTaskEditorPage(TaskEditor editor, String connectorKind) {
-		super(editor, "id", "label"); //$NON-NLS-1$ //$NON-NLS-2$
+		super(editor, "id", "label");
 		Assert.isNotNull(connectorKind);
 		this.connectorKind = connectorKind;
+		this.reflow = true;
 	}
 
 	private void addFocusListener(Composite composite, FocusListener listener) {
@@ -387,7 +385,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		} finally {
 			setReflow(true);
 		}
-		resetLayout();
+		reflow();
 	}
 
 	protected TaskDataModel createModel(TaskEditorInput input) throws CoreException {
@@ -486,7 +484,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 			getTaskEditor().setMessage("Could not save task", IMessageProvider.ERROR, new HyperlinkAdapter() {
 				@Override
 				public void linkActivated(HyperlinkEvent event) {
-					StatusHandler.displayStatus("Save failed", e.getStatus());
+					TasksUiInternal.displayStatus("Save failed", e.getStatus());
 				}
 			});
 		}
@@ -516,7 +514,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 	 * Override for customizing the toolbar.
 	 */
 	public void fillToolBar(IToolBarManager toolBarManager) {
-		ControlContribution repositoryLabelControl = new ControlContribution("Title") { //$NON-NLS-1$
+		ControlContribution repositoryLabelControl = new ControlContribution("Title") {
 			@Override
 			protected Control createControl(Composite parent) {
 				Composite composite = toolkit.createComposite(parent);
@@ -529,7 +527,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 				Hyperlink link = new Hyperlink(composite, SWT.NONE);
 				link.setText(label);
-				link.setFont(TITLE_FONT);
+				link.setFont(JFaceResources.getBannerFont());
 				link.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 				link.addHyperlinkListener(new HyperlinkAdapter() {
 
@@ -572,7 +570,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 					};
 
 					historyAction.setImageDescriptor(TasksUiImages.TASK_REPOSITORY_HISTORY);
-					historyAction.setToolTipText(LABEL_HISTORY);
+					historyAction.setToolTipText("History");
 					toolBarManager.add(historyAction);
 				}
 			}
@@ -632,7 +630,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		if (form != null && !form.isDisposed()) {
 			final IStatus status = job.getError();
 			if (status.getCode() == RepositoryStatus.REPOSITORY_COMMENT_REQUIRED) {
-				StatusHandler.displayStatus("Comment required", status);
+				TasksUiInternal.displayStatus("Comment required", status);
 				if (newCommentPart != null) {
 					newCommentPart.setFocus();
 				}
@@ -652,7 +650,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 				getTaskEditor().setMessage(message, IMessageProvider.ERROR, new HyperlinkAdapter() {
 					@Override
 					public void linkActivated(HyperlinkEvent e) {
-						StatusHandler.displayStatus("Submit failed", status);
+						TasksUiInternal.displayStatus("Submit failed", status);
 					}
 				});
 			}
@@ -673,6 +671,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 			getTaskEditor().setStatus("Error opening task", "Open failed", e.getStatus());
 		}
 
+		taskListChangeListener = new TaskListChangeListener();
 		TasksUi.getTaskListManager().getTaskList().addChangeListener(taskListChangeListener);
 	}
 
@@ -763,7 +762,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		} finally {
 			showEditorBusy(false);
 		}
-		resetLayout();
+		reflow();
 	}
 
 	private void refreshInput() {
@@ -794,7 +793,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 	/**
 	 * force a re-layout of entire form
 	 */
-	public void resetLayout() {
+	public void reflow() {
 		if (reflow) {
 			form.layout(true, true);
 			form.reflow(true);
@@ -842,8 +841,8 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		});
 	}
 
-	public void setReflow(boolean redrawEnabled) {
-		this.reflow = redrawEnabled;
+	public void setReflow(boolean reflow) {
+		this.reflow = reflow;
 		form.setRedraw(reflow);
 	}
 

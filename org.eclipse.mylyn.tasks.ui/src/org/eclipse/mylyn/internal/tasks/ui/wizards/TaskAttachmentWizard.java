@@ -28,7 +28,6 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.IImageCreator;
 import org.eclipse.mylyn.internal.provisional.commons.ui.ScreenshotCreationPage;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.internal.tasks.ui.SubmitTaskAttachmentJob;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -37,6 +36,8 @@ import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
+import org.eclipse.mylyn.tasks.core.data.ITaskAttachment2;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachment;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
@@ -92,6 +93,11 @@ public class TaskAttachmentWizard extends Wizard {
 		}
 
 		@Override
+		public String getDescription() {
+			return "Clipboard";
+		}
+
+		@Override
 		public String getName() {
 			return "clipboard.txt";
 		}
@@ -123,6 +129,11 @@ public class TaskAttachmentWizard extends Wizard {
 		@Override
 		public String getContentType() {
 			return null;
+		}
+
+		@Override
+		public String getDescription() {
+			return getName();
 		}
 
 		@Override
@@ -179,6 +190,11 @@ public class TaskAttachmentWizard extends Wizard {
 		@Override
 		public long getLength() {
 			return (file != null) ? file.length() : -1;
+		}
+
+		@Override
+		public String getDescription() {
+			return "Screenshot";
 		}
 
 		@Override
@@ -259,7 +275,7 @@ public class TaskAttachmentWizard extends Wizard {
 		return new TaskAttachmentPage(taskAttachment);
 	}
 
-	public TaskAttachment getAttachment() {
+	public ITaskAttachment2 getAttachment() {
 		return taskAttachment;
 	}
 

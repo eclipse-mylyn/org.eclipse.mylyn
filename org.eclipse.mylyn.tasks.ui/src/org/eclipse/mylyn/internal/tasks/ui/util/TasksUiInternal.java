@@ -30,6 +30,7 @@ import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskDelegate;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
+import org.eclipse.mylyn.internal.tasks.ui.RepositoryAwareStatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.editors.CategoryEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.CategoryEditorInput;
@@ -207,10 +208,11 @@ public class TasksUiInternal {
 		synchronized (taskRepository) {
 			taskRepository.setUpdating(true);
 		}
-	
+
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				taskRepository.getConnectorKind());
-		final TaskJob job = TasksUiInternal.getJobFactory().createUpdateRepositoryConfigurationJob(connector, taskRepository);
+		final TaskJob job = TasksUiInternal.getJobFactory().createUpdateRepositoryConfigurationJob(connector,
+				taskRepository);
 		job.addJobChangeListener(new JobChangeAdapter() {
 			@Override
 			public void done(IJobChangeEvent event) {
@@ -220,7 +222,7 @@ public class TasksUiInternal {
 				if (job.getError() != null) {
 					Display display = PlatformUI.getWorkbench().getDisplay();
 					if (!display.isDisposed()) {
-						StatusHandler.displayStatus("Configuration Refresh Failed", job.getError());
+						TasksUiInternal.displayStatus("Configuration Refresh Failed", job.getError());
 					}
 				}
 			}
@@ -243,13 +245,13 @@ public class TasksUiInternal {
 	public static final Job synchronizeQueries(AbstractRepositoryConnector connector, TaskRepository repository,
 			Set<AbstractRepositoryQuery> queries, IJobChangeListener listener, boolean force) {
 		Assert.isTrue(queries.size() > 0);
-	
+
 		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 		for (AbstractRepositoryQuery query : queries) {
 			query.setSynchronizing(true);
 		}
 		taskList.notifyContainersUpdated(queries);
-	
+
 		SynchronizationJob job = TasksUiPlugin.getTasksJobFactory().createSynchronizeQueriesJob(connector, repository,
 				queries);
 		job.setUser(force);
@@ -264,7 +266,7 @@ public class TasksUiInternal {
 					if (query.getSynchronizationStatus() != null) {
 						Display display = PlatformUI.getWorkbench().getDisplay();
 						if (!display.isDisposed()) {
-							StatusHandler.displayStatus("Query Synchronization Failed",
+							TasksUiInternal.displayStatus("Query Synchronization Failed",
 									query.getSynchronizationStatus());
 						}
 					}
@@ -325,7 +327,7 @@ public class TasksUiInternal {
 			taskList.notifyTaskChanged(task, false);
 		}
 		// TODO notify task list?
-	
+
 		SynchronizationJob job = TasksUiPlugin.getTasksJobFactory().createSynchronizeTasksJob(connector, tasks);
 		job.setUser(force);
 		job.setPriority(Job.DECORATE);
@@ -340,7 +342,8 @@ public class TasksUiInternal {
 					if (task.getSynchronizationStatus() != null) {
 						Display display = PlatformUI.getWorkbench().getDisplay();
 						if (!display.isDisposed()) {
-							StatusHandler.displayStatus("Task Synchronization Failed", task.getSynchronizationStatus());
+							TasksUiInternal.displayStatus("Task Synchronization Failed",
+									task.getSynchronizationStatus());
 						}
 					}
 				}
@@ -354,4 +357,18 @@ public class TasksUiInternal {
 	public static ITaskJobFactory getJobFactory() {
 		return TasksUiPlugin.getTasksJobFactory();
 	}
+
+	/**
+	 * Display error to user
+	 * 
+	 * @param title
+	 * 		dialog title
+	 * @param status
+	 * 		IStatus to reveal in dialog FIXME deprecated use
+	 * 		<code>org.eclipse.ui.statushandlers.StatusMananger#getManager().handle()</code> instead.
+	 */
+	public static void displayStatus(String title, IStatus status) {
+		RepositoryAwareStatusHandler.getInstance().displayStatus(title, status);
+	}
+
 }

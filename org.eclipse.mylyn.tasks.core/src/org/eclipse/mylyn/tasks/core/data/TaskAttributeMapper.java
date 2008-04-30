@@ -23,9 +23,9 @@ public abstract class TaskAttributeMapper {
 	public TaskAttributeMapper() {
 	}
 
-	public TaskAttachment createTaskAttachment(TaskData taskData) {
+	public ITaskAttachment2 createTaskAttachment(TaskData taskData) {
 		// FIXME implement
-		TaskAttachment attachment = new TaskAttachment(taskData.getRepositoryUrl(), taskData.getConnectorKind(),
+		ITaskAttachment2 attachment = new TaskAttachment(taskData.getRepositoryUrl(), taskData.getConnectorKind(),
 				taskData.getTaskId(), "");
 		return attachment;
 	}
@@ -42,7 +42,7 @@ public abstract class TaskAttributeMapper {
 		return null;
 	}
 
-	public List<TaskAttribute> getAttributesByType(TaskData taskData, String type) {
+	public TaskAttribute[] getAttributesByType(TaskData taskData, String type) {
 		TaskAttribute container = null;
 		if (type.equals(TaskAttribute.TYPE_COMMENT)) {
 			container = taskData.getMappedAttribute(TaskAttribute.CONTAINER_COMMENTS);
@@ -52,7 +52,8 @@ public abstract class TaskAttributeMapper {
 		} else if (type.equals(TaskAttribute.TYPE_OPERATION)) {
 			container = taskData.getMappedAttribute(TaskAttribute.CONTAINER_OPERATIONS);
 		}
-		return (container != null) ? new ArrayList<TaskAttribute>(container.getAttributes().values()) : null;
+		return (container != null) ? container.getAttributes().values().toArray(new TaskAttribute[0])
+				: new TaskAttribute[0];
 	}
 
 	public boolean getBooleanValue(TaskAttribute attribute) {
@@ -121,11 +122,11 @@ public abstract class TaskAttributeMapper {
 		return person;
 	}
 
-	public TaskAttachment getTaskAttachment(TaskAttribute taskAttribute) {
+	public ITaskAttachment2 getTaskAttachment(TaskAttribute taskAttribute) {
 		return TaskAttachment.createFrom(taskAttribute);
 	}
 
-	public TaskComment getTaskComment(TaskAttribute taskAttribute) {
+	public ITaskComment getTaskComment(TaskAttribute taskAttribute) {
 		return TaskComment.createFrom(taskAttribute);
 	}
 

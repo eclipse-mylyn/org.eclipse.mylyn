@@ -518,7 +518,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			taskDataManager.setDataPath(getDataDirectory());
 
 			for (AbstractRepositoryConnector connector : repositoryManager.getRepositoryConnectors()) {
-				connector.init2(taskDataManager);
+				connector.init(taskDataManager);
 			}
 
 			loadTemplateRepositories();

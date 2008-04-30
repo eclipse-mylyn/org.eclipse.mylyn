@@ -31,7 +31,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
-import org.eclipse.mylyn.tasks.core.data.TaskAttachment;
+import org.eclipse.mylyn.tasks.core.data.ITaskAttachment2;
 
 /**
  * @author Steffen Pingel
@@ -117,7 +117,7 @@ public class AttachmentUtil {
 				|| CONTEXT_DESCRIPTION_LEGACY.equals(attachment.getDescription());
 	}
 
-	public static boolean isContext(TaskAttachment attachment) {
+	public static boolean isContext(ITaskAttachment2 attachment) {
 		return CONTEXT_DESCRIPTION.equals(attachment.getDescription())
 				|| CONTEXT_DESCRIPTION_LEGACY.equals(attachment.getDescription());
 	}

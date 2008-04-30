@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.data.TaskAttachment;
+import org.eclipse.mylyn.tasks.core.data.ITaskAttachment2;
 
 /**
  * @author Steffen Pingel
@@ -23,7 +23,7 @@ public class SubmitTaskAttachmentJob extends Job {
 
 	private static final String LABEL_JOB_SUBMIT = "Submitting to repository";
 
-	private final TaskAttachment taskAttachment;
+	private final ITaskAttachment2 taskAttachment;
 
 	private final AbstractRepositoryConnector connector;
 
@@ -32,7 +32,7 @@ public class SubmitTaskAttachmentJob extends Job {
 	private AbstractTask task;
 
 	public SubmitTaskAttachmentJob(AbstractRepositoryConnector connector, TaskRepository taskRepository,
-			TaskAttachment taskAttachment) {
+			ITaskAttachment2 taskAttachment) {
 		super(LABEL_JOB_SUBMIT);
 		this.connector = connector;
 		this.taskRepository = taskRepository;
