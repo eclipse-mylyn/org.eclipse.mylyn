@@ -16,8 +16,8 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.ProgressMonitorWrapper;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.mylyn.internal.commons.net.InfiniteSubProgressMonitor;
 import org.eclipse.mylyn.internal.commons.net.CommonsNetPlugin;
+import org.eclipse.mylyn.internal.commons.net.InfiniteSubProgressMonitor;
 
 /**
  * @since 2.3

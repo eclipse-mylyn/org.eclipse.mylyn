@@ -47,11 +47,11 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer.Token;
 import org.eclipse.mylyn.internal.commons.net.CloneableHostConfiguration;
+import org.eclipse.mylyn.internal.commons.net.CommonsNetPlugin;
 import org.eclipse.mylyn.internal.commons.net.PollingInputStream;
 import org.eclipse.mylyn.internal.commons.net.PollingProtocolSocketFactory;
 import org.eclipse.mylyn.internal.commons.net.PollingSslProtocolSocketFactory;
 import org.eclipse.mylyn.internal.commons.net.TimeoutInputStream;
-import org.eclipse.mylyn.internal.commons.net.CommonsNetPlugin;
 
 /**
  * @author Mik Kersten

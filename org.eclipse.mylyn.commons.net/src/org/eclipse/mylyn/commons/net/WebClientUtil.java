@@ -29,8 +29,8 @@ import org.eclipse.core.net.proxy.IProxyData;
 import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.mylyn.internal.commons.net.SslProtocolSocketFactory;
 import org.eclipse.mylyn.internal.commons.net.CommonsNetPlugin;
+import org.eclipse.mylyn.internal.commons.net.SslProtocolSocketFactory;
 
 /**
  * @author Mik Kersten

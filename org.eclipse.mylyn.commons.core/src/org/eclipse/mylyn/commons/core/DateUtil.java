@@ -25,10 +25,12 @@ import org.eclipse.mylyn.internal.commons.core.ICommonsCoreConstants;
  */
 public class DateUtil {
 
+	@Deprecated
 	public static String getFormattedDate() {
 		return getFormattedDate(Calendar.getInstance());
 	}
 
+	@Deprecated
 	public static String getFormattedDate(Calendar calendar) {
 		try {
 			int monthInt = (calendar.get(Calendar.MONTH) + 1);
@@ -47,11 +49,13 @@ public class DateUtil {
 		}
 	}
 
+	@Deprecated
 	public static String getFormattedTime() {
 		return Calendar.getInstance().get(Calendar.HOUR_OF_DAY) + ":" + Calendar.getInstance().get(Calendar.MINUTE)
 				+ ":" + Calendar.getInstance().get(Calendar.SECOND);
 	}
 
+	@Deprecated
 	public static String getFormattedDateTime(long time) {
 		// XXX: need to get UTC times
 		Calendar c = Calendar.getInstance();
@@ -151,6 +155,7 @@ public class DateUtil {
 		return formatted;
 	}
 
+	@Deprecated
 	public static String getZoneFormattedDate(TimeZone zone, Date date, String dateFormat) {
 		SimpleDateFormat formatter = new SimpleDateFormat();
 
@@ -159,6 +164,7 @@ public class DateUtil {
 		return formatter.format(date);
 	}
 
+	@Deprecated
 	public static String getFormattedDate(Date date, String format) {
 		SimpleDateFormat formatter = new SimpleDateFormat();
 
@@ -167,6 +173,7 @@ public class DateUtil {
 		return formatter.format(date);
 	}
 
+	@Deprecated
 	public static TimeZone getTimeZone(String zoneId) {
 		TimeZone timeZone = TimeZone.getTimeZone(zoneId);
 		if (!timeZone.getID().equals(zoneId)) {

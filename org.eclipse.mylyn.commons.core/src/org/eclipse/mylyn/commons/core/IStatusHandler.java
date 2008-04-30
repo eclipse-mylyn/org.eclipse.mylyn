@@ -14,27 +14,18 @@ import org.eclipse.core.runtime.IStatus;
  * @author Mik Kersten
  * @since 3.0
  */
+@Deprecated
 public interface IStatusHandler {
 
 	/**
 	 * Display/log internal failure
 	 * 
 	 * @param status
-	 *            IStatus representing failure
+	 * 		IStatus representing failure
 	 * @param inform
-	 *            inform user via dialog, if no only status is logged
+	 * 		inform user via dialog, if no only status is logged
 	 * @since 3.0
 	 */
 	public abstract void fail(IStatus status, boolean informUser);
 
-	/**
-	 * Display funtional error to user
-	 * 
-	 * @param title
-	 *            Title of dialog to display
-	 * @param status
-	 *            IStatus to display
-	 * @since 3.0
-	 */
-	public abstract void displayStatus(final String title, final IStatus status);
 }
