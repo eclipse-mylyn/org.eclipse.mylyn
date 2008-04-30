@@ -34,6 +34,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskSelection;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
+import org.eclipse.mylyn.tasks.core.data.TaskComment;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.swt.widgets.Shell;
@@ -66,7 +67,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	/**
 	 * @param repository
 	 * @param queryToEdit
-	 *            can be null
+	 * 		can be null
 	 */
 	public abstract IWizard getQueryWizard(TaskRepository repository, AbstractRepositoryQuery queryToEdit);
 
@@ -103,7 +104,7 @@ public abstract class AbstractRepositoryConnectorUi {
 
 	/**
 	 * @param repositoryTask
-	 *            can be null
+	 * 		can be null
 	 */
 	public String getTaskKindLabel(AbstractTask task) {
 		return LABEL_TASK_DEFAULT;
@@ -186,7 +187,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * Override to return a URL that provides the user with an account creation page for the repository
 	 * 
 	 * @param taskRepository
-	 *            TODO
+	 * 		TODO
 	 */
 	public String getAccountCreationUrl(TaskRepository taskRepository) {
 		return null;
@@ -196,7 +197,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * Override to return a URL that provides the user with an account management page for the repository
 	 * 
 	 * @param taskRepository
-	 *            TODO
+	 * 		TODO
 	 */
 	public String getAccountManagementUrl(TaskRepository taskRepository) {
 		return null;
@@ -213,11 +214,24 @@ public abstract class AbstractRepositoryConnectorUi {
 	}
 
 	/**
+	 * Override to return a textual reference to a comment, e.g. for Bugzilla this method returns <code>#12</code> for
+	 * comment 12. This reference is used when generating replies to comments
+	 * 
+	 * @return a reference to <code>comment</code>; null, if no reference is available
+	 * @since 3.0
+	 */
+	public String getReply(TaskRepository taskRepository, AbstractTask task, TaskComment taskComment,
+			boolean includeTask) {
+		return null;
+	}
+
+	/**
 	 * Only override if task should be opened by a custom editor, default behavior is to open with a rich editor,
 	 * falling back to the web browser if not available.
 	 * 
 	 * @return true if the task was successfully opened
 	 */
+	// API 3.0 review, move to tasks ui
 	public boolean openRepositoryTask(String repositoryUrl, String id) {
 		ITaskRepositoryManager repositoryManager = TasksUi.getRepositoryManager();
 		AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(getConnectorKind());

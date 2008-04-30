@@ -11,19 +11,22 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 import org.eclipse.jface.action.Action;
 import org.eclipse.mylyn.internal.tasks.core.CommentQuoter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.core.data.TaskComment;
+import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 
 public abstract class AbstractReplyToCommentAction extends Action {
 
 	private static final String LABEL_REPLY = "Reply";
 
-	private final int commentNum;
-
 	private final AbstractTaskEditorPage editor;
 
-	public AbstractReplyToCommentAction(AbstractTaskEditorPage editor, int commentNum) {
+	private final TaskComment taskComment;
+
+	public AbstractReplyToCommentAction(AbstractTaskEditorPage editor, TaskComment taskComment) {
 		this.editor = editor;
-		this.commentNum = commentNum;
+		this.taskComment = taskComment;
 		setImageDescriptor(TasksUiImages.COMMENT_REPLY);
 		setToolTipText(LABEL_REPLY);
 	}
@@ -32,14 +35,19 @@ public abstract class AbstractReplyToCommentAction extends Action {
 
 	@Override
 	public void run() {
+		reply(editor, taskComment, getText());
+	}
+
+	public static void reply(AbstractTaskEditorPage editor, TaskComment taskComment, String text) {
+		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(editor.getConnectorKind());
+		String reference = connectorUi.getReply(editor.getTaskRepository(), editor.getTask(), taskComment, false);
 		StringBuilder sb = new StringBuilder();
-		sb.append(" (In reply to comment #" + commentNum + ")\n");
-		String text = getText();
+		sb.append(reference);
+		sb.append("\n");
 		if (text != null) {
 			CommentQuoter quoter = new CommentQuoter();
 			sb.append(quoter.quote(text));
 		}
 		editor.appendTextToNewComment(sb.toString());
 	}
-
 }

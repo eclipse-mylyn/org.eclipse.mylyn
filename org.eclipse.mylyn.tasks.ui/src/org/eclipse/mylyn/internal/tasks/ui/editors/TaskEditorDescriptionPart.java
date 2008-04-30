@@ -115,7 +115,7 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 
 	@Override
 	protected void fillToolBar(ToolBarManager toolBar) {
-		AbstractReplyToCommentAction replyAction = new AbstractReplyToCommentAction(getTaskEditorPage(), 0) {
+		AbstractReplyToCommentAction replyAction = new AbstractReplyToCommentAction(getTaskEditorPage(), null) {
 			@Override
 			protected String getReplyText() {
 				return getEditor().getValue();
@@ -130,8 +130,8 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 
 		for (AbstractDuplicateDetector detector : allDetectors) {
 			if (detector.getName().equals(duplicateDetectorName)) {
-				return detector.getDuplicatesQuery(getTaskEditorPage().getTaskRepository(),
-						TaskDataUtil.toLegacyData(getTaskData(), IdentityAttributeFactory.getInstance()));
+				return detector.getDuplicatesQuery(getTaskEditorPage().getTaskRepository(), TaskDataUtil.toLegacyData(
+						getTaskData(), IdentityAttributeFactory.getInstance()));
 			}
 		}
 		// didn't find it

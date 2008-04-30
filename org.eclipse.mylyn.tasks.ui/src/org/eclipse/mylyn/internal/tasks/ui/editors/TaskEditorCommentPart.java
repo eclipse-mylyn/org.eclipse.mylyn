@@ -16,7 +16,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.mylyn.internal.tasks.core.CommentQuoter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.data.RepositoryPerson;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -220,7 +219,6 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		return formHyperlink;
 	}
 
-	// TODO EDITOR merge with AbstractReplyToAction
 	private ImageHyperlink createReplyHyperlink(Composite composite, FormToolkit toolkit, final TaskComment taskComment) {
 		final ImageHyperlink replyLink = new ImageHyperlink(composite, SWT.NULL);
 		toolkit.adapt(replyLink, true, true);
@@ -232,11 +230,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		replyLink.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
-				StringBuilder strBuilder = new StringBuilder();
-				strBuilder.append(" (In reply to comment #" + taskComment.getNumber() + ")\n");
-				CommentQuoter quoter = new CommentQuoter();
-				strBuilder.append(quoter.quote(taskComment.getText()));
-				getTaskEditorPage().appendTextToNewComment(strBuilder.toString());
+				AbstractReplyToCommentAction.reply(getTaskEditorPage(), taskComment, taskComment.getText());
 			}
 
 			@Override
