@@ -26,14 +26,14 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.mylyn.internal.web.core.SslProtocolSocketFactory;
+import org.eclipse.mylyn.commons.net.AbstractWebLocation;
+import org.eclipse.mylyn.commons.net.AuthenticatedProxy;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.commons.net.IProxyProvider;
+import org.eclipse.mylyn.commons.net.WebLocation;
+import org.eclipse.mylyn.commons.net.WebUtil;
+import org.eclipse.mylyn.internal.commons.net.SslProtocolSocketFactory;
 import org.eclipse.mylyn.tests.TestProxy.Message;
-import org.eclipse.mylyn.web.core.AbstractWebLocation;
-import org.eclipse.mylyn.web.core.AuthenticatedProxy;
-import org.eclipse.mylyn.web.core.AuthenticationType;
-import org.eclipse.mylyn.web.core.IProxyProvider;
-import org.eclipse.mylyn.web.core.WebLocation;
-import org.eclipse.mylyn.web.core.WebUtil;
 
 /**
  * @author Steffen Pingel
