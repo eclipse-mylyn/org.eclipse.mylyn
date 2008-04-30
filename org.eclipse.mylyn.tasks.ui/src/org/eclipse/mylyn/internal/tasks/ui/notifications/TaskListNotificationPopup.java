@@ -11,11 +11,11 @@ package org.eclipse.mylyn.internal.tasks.ui.notifications;
 import java.util.List;
 
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotification;
+import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotificationPopup;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.provisional.workbench.ui.notifications.AbstractNotification;
-import org.eclipse.mylyn.provisional.workbench.ui.notifications.AbstractNotificationPopup;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;

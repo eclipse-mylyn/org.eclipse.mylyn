@@ -11,9 +11,9 @@ package org.eclipse.mylyn.internal.tasks.ui.notifications;
 import java.util.Date;
 
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
+import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotification;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
-import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
-import org.eclipse.mylyn.provisional.workbench.ui.notifications.AbstractNotification;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.graphics.Image;

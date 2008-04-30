@@ -8,7 +8,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
-import org.eclipse.mylyn.provisional.workbench.ui.CommonColorsAndFonts;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColorsAndFonts;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;

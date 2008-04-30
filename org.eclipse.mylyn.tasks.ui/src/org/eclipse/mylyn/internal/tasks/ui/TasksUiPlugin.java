@@ -45,6 +45,8 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.ContextPreferenceContstants;
+import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotification;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
@@ -61,8 +63,6 @@ import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationQue
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationReminder;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiExtensionReader;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesView;
-import org.eclipse.mylyn.provisional.workbench.ui.CommonColorsAndFonts;
-import org.eclipse.mylyn.provisional.workbench.ui.notifications.AbstractNotification;
 import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylyn.tasks.core.AbstractDuplicateDetector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;

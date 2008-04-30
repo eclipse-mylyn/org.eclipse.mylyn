@@ -9,10 +9,10 @@
 package org.eclipse.mylyn.internal.trac.ui.editor;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
 import org.eclipse.mylyn.internal.trac.core.TracTask;
-import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;

@@ -65,11 +65,4 @@
       <editorFactory class="org.eclipse.mylyn.internal.bugzilla.ui.tasklist.BugzillaTaskEditorFactory"/>
    </extension>
    
-   <extension 
-   		point="org.eclipse.ui.perspectiveExtensions">
-          <perspectiveExtension targetID="org.eclipse.jdt.ui.JavaPerspective">
-               <newWizardShortcut id="org.eclipse.mylyn.bugzilla.bugWizard"/>
-          </perspectiveExtension>
-	</extension>
-   
 </plugin>

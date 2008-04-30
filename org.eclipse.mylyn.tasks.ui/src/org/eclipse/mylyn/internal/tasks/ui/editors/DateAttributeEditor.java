@@ -13,10 +13,10 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.eclipse.mylyn.commons.core.DateUtil;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.provisional.commons.ui.DatePicker;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
-import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
-import org.eclipse.mylyn.provisional.workbench.ui.DatePicker;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.swt.SWT;

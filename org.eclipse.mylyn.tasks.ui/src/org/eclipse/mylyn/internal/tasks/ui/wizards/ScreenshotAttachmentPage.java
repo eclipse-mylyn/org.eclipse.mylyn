@@ -9,7 +9,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import org.eclipse.jface.wizard.IWizardPage;
-import org.eclipse.mylyn.provisional.workbench.ui.ScreenshotCreationPage;
+import org.eclipse.mylyn.internal.provisional.commons.ui.ScreenshotCreationPage;
 
 /**
  * @author Mik Kersten
