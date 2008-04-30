@@ -48,6 +48,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
@@ -240,14 +241,14 @@ public class BugzillaProductPage extends WizardPage {
 							} catch (CoreException e) {
 								// TODO: remove exceptions from communication of connectivity errors to the user
 								if (e.getStatus().getException() instanceof GeneralSecurityException) {
-									StatusHandler.fail(new Status(IStatus.WARNING, BugzillaUiPlugin.PLUGIN_ID, "Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\n"
+									TasksUiInternal.displayStatus("Error", new Status(IStatus.WARNING, BugzillaUiPlugin.PLUGIN_ID, "Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\n"
 											+ "Please ensure proper configuration in "
 											+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ". ", e));
 								} else if (e.getStatus().getException() instanceof IOException) {
-									StatusHandler.fail(new Status(IStatus.WARNING, BugzillaUiPlugin.PLUGIN_ID, "Connection Error, please ensure proper configuration in "
+									TasksUiInternal.displayStatus("Error", new Status(IStatus.WARNING, BugzillaUiPlugin.PLUGIN_ID, "Connection Error, please ensure proper configuration in "
 											+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".", e));
 								} else {
-									StatusHandler.fail(new Status(IStatus.WARNING, BugzillaUiPlugin.PLUGIN_ID, "Error updating repository attributes for "
+									TasksUiInternal.displayStatus("Error", new Status(IStatus.WARNING, BugzillaUiPlugin.PLUGIN_ID, "Error updating repository attributes for "
 											+ repository.getRepositoryUrl(), e));
 								}
 								return;

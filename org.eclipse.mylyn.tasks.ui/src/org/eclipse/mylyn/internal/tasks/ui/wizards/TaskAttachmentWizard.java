@@ -32,6 +32,7 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.internal.tasks.ui.SubmitTaskAttachmentJob;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
@@ -272,7 +273,7 @@ public class TaskAttachmentWizard extends Wizard {
 				// performFinish();
 			}
 		} else {
-			StatusHandler.displayStatus("Attachment failed", exception.getStatus());
+			TasksUiInternal.displayStatus("Attachment failed", exception.getStatus());
 		}
 	}
 

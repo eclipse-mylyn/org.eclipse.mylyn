@@ -19,8 +19,8 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -234,7 +234,7 @@ public class PreviewAttributeEditor extends AbstractAttributeEditor {
 					} else {
 						getControl().getDisplay().asyncExec(new Runnable() {
 							public void run() {
-								StatusHandler.displayStatus("Error", job.getStatus());
+								TasksUiInternal.displayStatus("Error", job.getStatus());
 								// TODO EDITOR error handling
 								//getAttributeEditorManager().setMessage(job.getStatus().getMessage(), IMessageProvider.ERROR);
 							}

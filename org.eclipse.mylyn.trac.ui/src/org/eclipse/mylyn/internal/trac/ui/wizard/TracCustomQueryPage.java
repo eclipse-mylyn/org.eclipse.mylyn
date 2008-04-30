@@ -19,6 +19,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.TracException;
@@ -393,7 +394,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 					service.busyCursorWhile(runnable);
 				}
 			} catch (InvocationTargetException e) {
-				StatusHandler.displayStatus("Error updating attributes", TracCorePlugin.toStatus(e.getCause(),
+				TasksUiInternal.displayStatus("Error updating attributes", TracCorePlugin.toStatus(e.getCause(),
 						repository));
 				return;
 			} catch (InterruptedException e) {

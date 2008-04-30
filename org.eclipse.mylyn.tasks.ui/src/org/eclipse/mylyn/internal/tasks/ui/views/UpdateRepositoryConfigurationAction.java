@@ -19,6 +19,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AbstractTaskRepositoryAction;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -73,7 +74,7 @@ public class UpdateRepositoryConfigurationAction extends AbstractTaskRepositoryA
 		try {
 			connector.updateRepositoryConfiguration(repository, monitor);
 		} catch (CoreException ce) {
-			StatusHandler.displayStatus("Error updating repository configuration", ce.getStatus());
+			TasksUiInternal.displayStatus("Error updating repository configuration", ce.getStatus());
 		}
 	}
 

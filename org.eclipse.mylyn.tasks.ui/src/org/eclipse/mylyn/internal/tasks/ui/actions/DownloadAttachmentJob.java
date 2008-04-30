@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
@@ -66,7 +67,7 @@ public class DownloadAttachmentJob extends Job {
 			out = new FileOutputStream(this.targetFile);
 			handler.downloadAttachment(repository, attachment, out, monitor);
 		} catch (final CoreException e) {
-			StatusHandler.displayStatus("Download Attachment", e.getStatus());
+			TasksUiInternal.displayStatus("Download Attachment", e.getStatus());
 			return Status.OK_STATUS;
 		} catch (IOException e) {
 			return new RepositoryStatus(repository, IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,

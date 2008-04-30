@@ -14,9 +14,9 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
@@ -70,7 +70,7 @@ public class ClearOutgoingAction extends Action {
 				try {
 					TasksUiPlugin.getTaskDataManager().discardEdits(task, task.getConnectorKind());
 				} catch (CoreException e) {
-					StatusHandler.displayStatus("Clear outgoing failed", e.getStatus());
+					TasksUiInternal.displayStatus("Clear outgoing failed", e.getStatus());
 				}
 			}
 		}

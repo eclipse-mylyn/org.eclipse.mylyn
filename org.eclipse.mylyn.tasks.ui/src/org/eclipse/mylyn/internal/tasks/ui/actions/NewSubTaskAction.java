@@ -22,13 +22,13 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -95,7 +95,7 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 		final RepositoryTaskData selectedTaskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(repositoryUrl,
 				selectedTask.getTaskId());
 		if (selectedTaskData == null) {
-			StatusHandler.displayStatus("Unable to create subtask", new Status(IStatus.WARNING,
+			TasksUiInternal.displayStatus("Unable to create subtask", new Status(IStatus.WARNING,
 					TasksUiPlugin.ID_PLUGIN, "Could not retrieve task data for task: " + selectedTask.getUrl()));
 			// TODO try to retrieve task data or fall back to invoking connector code
 			return;
@@ -126,7 +126,7 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 				}
 			});
 		} catch (InvocationTargetException e) {
-			StatusHandler.displayStatus("Unable to create subtask", ((CoreException) e.getCause()).getStatus());
+			TasksUiInternal.displayStatus("Unable to create subtask", ((CoreException) e.getCause()).getStatus());
 			return;
 		} catch (InterruptedException e) {
 			// canceled
@@ -139,7 +139,7 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			TasksUiUtil.openEditor(editorInput, TaskEditor.ID_EDITOR, page);
 		} else {
-			StatusHandler.displayStatus("Unable to create subtask", new Status(IStatus.INFO, TasksUiPlugin.ID_PLUGIN,
+			TasksUiInternal.displayStatus("Unable to create subtask", new Status(IStatus.INFO, TasksUiPlugin.ID_PLUGIN,
 					"The connector does not support creating subtasks for this task"));
 		}
 	}

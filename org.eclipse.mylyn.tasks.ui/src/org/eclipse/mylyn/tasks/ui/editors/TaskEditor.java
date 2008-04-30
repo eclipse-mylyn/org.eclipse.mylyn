@@ -44,6 +44,7 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.IBusyEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionContributor;
 import org.eclipse.mylyn.internal.tasks.ui.util.SelectionProviderAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDragSourceListener;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
@@ -477,7 +478,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		setMessage(message, IMessageProvider.ERROR, new HyperlinkAdapter() {
 			@Override
 			public void linkActivated(HyperlinkEvent event) {
-				StatusHandler.displayStatus(title, status);
+				TasksUiInternal.displayStatus(title, status);
 			}
 		});
 	}

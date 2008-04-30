@@ -15,8 +15,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -123,7 +123,7 @@ public class SearchHitCollector extends TaskDataCollector implements ISearchQuer
 
 	public ISearchResult getSearchResult() {
 		if (searchResult.getMatchCount() >= TaskDataCollector.MAX_HITS) {
-			StatusHandler.displayStatus("Maximum hits reached", RepositoryStatus.createStatus(
+			TasksUiInternal.displayStatus("Maximum hits reached", RepositoryStatus.createStatus(
 					repository.getRepositoryUrl(), IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, LABEL_MAX_HITS_REACHED));
 		}
 		return searchResult;
@@ -145,7 +145,7 @@ public class SearchHitCollector extends TaskDataCollector implements ISearchQuer
 		if (connector != null) {
 			IStatus status = connector.performQuery(repository, repositoryQuery, this, null, monitor);
 			if (!status.isOK()) {
-				StatusHandler.displayStatus("Search failed", status);
+				TasksUiInternal.displayStatus("Search failed", status);
 			}
 		} else {
 			return new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, IStatus.OK,

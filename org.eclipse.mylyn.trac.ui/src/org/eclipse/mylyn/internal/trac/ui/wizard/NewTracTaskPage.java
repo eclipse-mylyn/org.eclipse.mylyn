@@ -13,8 +13,8 @@ import java.lang.reflect.InvocationTargetException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.TracException;
@@ -115,7 +115,7 @@ public class NewTracTaskPage extends WizardPage {
 
 				getContainer().run(true, true, runnable);
 			} catch (InvocationTargetException e) {
-				StatusHandler.displayStatus("Error updating attributes", TracCorePlugin.toStatus(e.getCause(),
+				TasksUiInternal.displayStatus("Error updating attributes", TracCorePlugin.toStatus(e.getCause(),
 						taskRepository));
 				return;
 			} catch (InterruptedException e) {
