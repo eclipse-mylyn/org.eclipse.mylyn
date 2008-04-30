@@ -61,7 +61,7 @@ public class TaskListViewCommands {
 			// TODO extract these into separate classes that are registered through the command extension point
 
 			AbstractHandler handler = new AbstractHandler() {
-				@Override
+
 				public Object execute(ExecutionEvent event) throws ExecutionException {
 					GoToUnreadTaskAction action = new GoToUnreadTaskAction();
 					action.init(taskListView);
@@ -73,7 +73,7 @@ public class TaskListViewCommands {
 			handlerService.activateHandler(GO_TO_NEXT_UNREAD_TASK_COMMAND_ID, handler);
 
 			handler = new AbstractHandler() {
-				@Override
+
 				public Object execute(ExecutionEvent event) throws ExecutionException {
 					GoToUnreadTaskAction action = new GoToUnreadTaskAction();
 					action.init(taskListView);
@@ -86,7 +86,7 @@ public class TaskListViewCommands {
 			handlerService.activateHandler(GO_TO_PREVIOUS_UNREAD_TASK_COMMAND_ID, handler);
 
 			handler = new AbstractHandler() {
-				@Override
+
 				public Object execute(ExecutionEvent event) throws ExecutionException {
 					ShowTooltipAction action = new ShowTooltipAction();
 					action.init(taskListView);
@@ -98,7 +98,7 @@ public class TaskListViewCommands {
 			handlerService.activateHandler(SHOW_TOOLTIP_COMMAND_ID, handler);
 
 			handler = new AbstractHandler() {
-				@Override
+
 				public Object execute(ExecutionEvent event) throws ExecutionException {
 					MarkTaskReadAction action = new MarkTaskReadAction(taskListView.getSelectedTaskContainers());
 					if (action.isEnabled()) {
@@ -111,7 +111,7 @@ public class TaskListViewCommands {
 			handlerService.activateHandler(MARK_TASK_READ_COMMAND_ID, handler);
 
 			handler = new AbstractHandler() {
-				@Override
+
 				public Object execute(ExecutionEvent event) throws ExecutionException {
 					return markReadGotoUnread(Direction.DOWN);
 				}
@@ -120,7 +120,7 @@ public class TaskListViewCommands {
 			handlerService.activateHandler(MARK_TASK_READ_GOTO_NEXT_TASK_COMMAND_ID, handler);
 
 			handler = new AbstractHandler() {
-				@Override
+
 				public Object execute(ExecutionEvent event) throws ExecutionException {
 					return markReadGotoUnread(Direction.UP);
 				}
@@ -129,7 +129,7 @@ public class TaskListViewCommands {
 			handlerService.activateHandler(MARK_TASK_READ_GOTO_PREVIOUS_TASK_COMMAND_ID, handler);
 
 			handler = new AbstractHandler() {
-				@Override
+
 				public Object execute(ExecutionEvent event) throws ExecutionException {
 					MarkTaskUnreadAction action = new MarkTaskUnreadAction(taskListView.getSelectedTaskContainers());
 					if (action.isEnabled()) {

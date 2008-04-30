@@ -23,7 +23,6 @@ import org.eclipse.ui.handlers.HandlerUtil;
  */
 public class NewSubTaskHandler extends AbstractHandler {
 
-	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchSite site = HandlerUtil.getActiveSite(event);
 		if (site instanceof IViewSite) {

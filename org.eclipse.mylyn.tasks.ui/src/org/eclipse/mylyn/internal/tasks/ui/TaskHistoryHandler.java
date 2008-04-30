@@ -34,7 +34,6 @@ import org.eclipse.ui.menus.UIElement;
  */
 public class TaskHistoryHandler extends AbstractHandler implements IElementUpdater {
 
-	@Override
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		if (TasksUi.getTaskListManager().getActiveTask() != null) {
 			if (ContextCore.getContextManager().isContextCapturePaused()) {

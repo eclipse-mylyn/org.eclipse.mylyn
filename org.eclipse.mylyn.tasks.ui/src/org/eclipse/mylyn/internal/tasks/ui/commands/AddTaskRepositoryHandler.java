@@ -25,7 +25,6 @@ import org.eclipse.ui.handlers.HandlerUtil;
  */
 public class AddTaskRepositoryHandler extends AbstractHandler {
 
-	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		Shell shell = HandlerUtil.getActiveShell(event);
 		if (shell != null && !shell.isDisposed()) {
