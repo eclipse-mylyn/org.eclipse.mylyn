@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.commons.core.ICommonsCoreConstants;
 import org.eclipse.mylyn.tasks.bugs.AbstractTaskContributor;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 
@@ -83,12 +82,12 @@ public class TaskContributorManager {
 			if (object instanceof AbstractTaskContributor) {
 				taskContributors.add((AbstractTaskContributor) object);
 			} else {
-				StatusHandler.log(new Status(IStatus.WARNING, ICommonsCoreConstants.ID_PLUGIN,
+				StatusHandler.log(new Status(IStatus.WARNING, TasksBugsPlugin.ID_PLUGIN,
 						"Could not load task contributor extenstion: \"" + object.getClass().getCanonicalName() + "\""
 								+ " does not implement \"" + AbstractTaskContributor.class.getCanonicalName() + "\""));
 			}
 		} catch (CoreException e) {
-			StatusHandler.log(new Status(IStatus.WARNING, ICommonsCoreConstants.ID_PLUGIN,
+			StatusHandler.log(new Status(IStatus.WARNING, TasksBugsPlugin.ID_PLUGIN,
 					"Could not load task contributor extension", e));
 		}
 	}
