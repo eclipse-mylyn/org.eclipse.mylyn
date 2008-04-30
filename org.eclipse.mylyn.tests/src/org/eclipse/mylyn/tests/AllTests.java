@@ -11,8 +11,8 @@ package org.eclipse.mylyn.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.bugzilla.tests.AllBugzillaTests;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.tests.AllContextTests;
 import org.eclipse.mylyn.ide.tests.AllIdeTests;
 import org.eclipse.mylyn.java.tests.AllJavaTests;
