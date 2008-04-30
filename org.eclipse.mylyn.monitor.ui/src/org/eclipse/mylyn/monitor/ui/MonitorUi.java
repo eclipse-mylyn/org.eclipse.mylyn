@@ -9,9 +9,11 @@
 package org.eclipse.mylyn.monitor.ui;
 
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.monitor.core.IInteractionEventListener;
+import org.eclipse.ui.IWorkbenchWindow;
 
 /**
  * @author Steffen Pingel
@@ -33,6 +35,14 @@ public class MonitorUi {
 
 	public static IActivityContextManager getActivityContextManager() {
 		return MonitorUiPlugin.getDefault().getActivityContextManager();
+	}
+
+	public static IWorkbenchWindow getLaunchingWorkbenchWindow() {
+		return MonitorUiPlugin.getDefault().getLaunchingWorkbenchWindow();
+	}
+
+	public static Set<IWorkbenchWindow> getMonitoredWindows() {
+		return MonitorUiPlugin.getDefault().getMonitoredWindows();
 	}
 
 }
