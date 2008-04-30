@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
@@ -104,7 +103,7 @@ public class AddExistingTaskJob extends Job {
 				});
 			}
 		} catch (final CoreException e) {
-			StatusHandler.displayStatus("Unable to open task", e.getStatus());
+			TasksUiInternal.displayStatus("Unable to open task", e.getStatus());
 		} finally {
 			monitor.done();
 		}

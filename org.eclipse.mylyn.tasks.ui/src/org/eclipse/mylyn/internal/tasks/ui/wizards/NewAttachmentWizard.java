@@ -285,7 +285,7 @@ public class NewAttachmentWizard extends Wizard {
 				// performFinish();
 			}
 		} else {
-			StatusHandler.displayStatus("Attachment failed", exception.getStatus());
+			TasksUiInternal.displayStatus("Attachment failed", exception.getStatus());
 		}
 	}
 

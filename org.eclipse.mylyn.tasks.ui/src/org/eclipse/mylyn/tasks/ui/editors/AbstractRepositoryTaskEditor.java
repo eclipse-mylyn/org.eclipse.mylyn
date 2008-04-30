@@ -3821,7 +3821,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						parentEditor.setMessage(ERROR_NOCONNECTIVITY, IMessageProvider.ERROR);
 						StatusHandler.log(exception.getStatus());
 					} else if (exception.getStatus().getCode() == RepositoryStatus.REPOSITORY_COMMENT_REQUIRED) {
-						StatusHandler.displayStatus("Comment required", exception.getStatus());
+						TasksUiInternal.displayStatus("Comment required", exception.getStatus());
 						if (!getManagedForm().getForm().isDisposed() && newCommentTextViewer != null
 								&& !newCommentTextViewer.getControl().isDisposed()) {
 							newCommentTextViewer.getControl().setFocus();
@@ -3832,7 +3832,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 							return;
 						}
 					} else {
-						StatusHandler.displayStatus("Submit failed", exception.getStatus());
+						TasksUiInternal.displayStatus("Submit failed", exception.getStatus());
 					}
 					setGlobalBusy(false);
 				}
