@@ -11,7 +11,7 @@ package org.eclipse.mylyn.internal.team.ui;
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColorsAndFonts;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
 
 /**
  * @author Mik Kersten
@@ -23,7 +23,7 @@ public class ContextChangeSetDecorator implements ILightweightLabelDecorator {
 //			decoration.addOverlay(ContextUiImages.MYLYN_OVERLAY, IDecoration.BOTTOM_RIGHT);
 			ContextChangeSet changeSet = (ContextChangeSet) element;
 			if (changeSet.getTask().isActive()) {
-				decoration.setFont(CommonColorsAndFonts.BOLD);
+				decoration.setFont(CommonFonts.BOLD);
 			}
 		}
 	}
