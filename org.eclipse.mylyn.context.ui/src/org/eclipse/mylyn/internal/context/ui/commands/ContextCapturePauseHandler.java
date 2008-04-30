@@ -42,7 +42,6 @@ public class ContextCapturePauseHandler extends AbstractHandler //
 		super.dispose();
 	}
 
-	@Override
 	public Object execute(ExecutionEvent e) throws ExecutionException {
 		if (ContextCore.getContextManager().isContextCapturePaused()) {
 			resume();
