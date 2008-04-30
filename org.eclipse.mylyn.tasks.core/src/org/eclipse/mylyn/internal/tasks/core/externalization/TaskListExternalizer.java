@@ -356,7 +356,7 @@ public class TaskListExternalizer {
 				for (AbstractTask task : delagatingExternalizer.getLegacyParentCategoryMap().keySet()) {
 					AbstractTaskCategory category = taskList.getContainerForHandle(delagatingExternalizer.getLegacyParentCategoryMap()
 							.get(task));
-					if (category != null) {
+					if (category != null && task.getParentContainers().isEmpty()) {
 						taskList.addTask(task, category);
 					}
 				}
