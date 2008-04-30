@@ -51,7 +51,7 @@ Export-Package: org.eclipse.mylyn.internal.commons.ui;x-internal:=true;
    org.eclipse.mylyn.trac.tests,
    org.eclipse.mylyn.trac.ui,
    org.eclipse.mylyn.trac.wiki,
-   org.eclipse.mylyn.web.core,
+   org.eclipse.mylyn.commons.net,
    org.eclipse.mylyn.web.tasks,
    org.eclipse.mylyn.web.ui,
    org.eclipse.mylyn.xplanner.core,

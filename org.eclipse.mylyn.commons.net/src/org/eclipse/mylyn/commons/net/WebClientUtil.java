@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.web.core;
+package org.eclipse.mylyn.commons.net;
 
 import java.io.OutputStream;
 import java.net.InetAddress;
@@ -29,8 +29,8 @@ import org.eclipse.core.net.proxy.IProxyData;
 import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.mylyn.internal.web.core.SslProtocolSocketFactory;
-import org.eclipse.mylyn.internal.web.core.WebCorePlugin;
+import org.eclipse.mylyn.internal.commons.net.SslProtocolSocketFactory;
+import org.eclipse.mylyn.internal.commons.net.CommonsNetPlugin;
 
 /**
  * @author Mik Kersten
@@ -108,7 +108,7 @@ public class WebClientUtil {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("Mylyn");
-		sb.append(getBundleVersion(WebCorePlugin.getDefault()));
+		sb.append(getBundleVersion(CommonsNetPlugin.getDefault()));
 
 		USER_AGENT_PREFIX = sb.toString();
 		sb.setLength(0);
@@ -350,7 +350,7 @@ public class WebClientUtil {
 	 */
 	public static Proxy getPlatformProxy() {
 		Proxy proxy = Proxy.NO_PROXY;
-		IProxyService service = WebCorePlugin.getProxyService();
+		IProxyService service = CommonsNetPlugin.getProxyService();
 		if (service != null && service.isProxiesEnabled()) {
 			IProxyData data = service.getProxyData(IProxyData.HTTP_PROXY_TYPE);
 			if (data.getHost() != null) {
@@ -377,7 +377,7 @@ public class WebClientUtil {
 	public static Proxy getPlatformProxy(String url) {
 		Proxy proxy = Proxy.NO_PROXY;
 		Type proxyType = Type.DIRECT;
-		IProxyService service = WebCorePlugin.getProxyService();
+		IProxyService service = CommonsNetPlugin.getProxyService();
 		if (service != null && service.isProxiesEnabled()) {
 			IProxyData proxyDataInUse = null;
 

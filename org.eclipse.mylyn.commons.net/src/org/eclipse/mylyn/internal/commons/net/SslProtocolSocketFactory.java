@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.web.core;
+package org.eclipse.mylyn.internal.commons.net;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -65,7 +65,7 @@ public class SslProtocolSocketFactory implements SecureProtocolSocketFactory {
 				keyManagerFactory.init(keyStore, password);
 				keymanagers = keyManagerFactory.getKeyManagers();
 			} catch (Exception e) {
-				WebCorePlugin.log(0, "Could not initialize keystore", e);
+				CommonsNetPlugin.log(0, "Could not initialize keystore", e);
 			}
 		}
 
@@ -76,7 +76,7 @@ public class SslProtocolSocketFactory implements SecureProtocolSocketFactory {
 			sslContext.init(keymanagers, new TrustManager[] { new TrustAllTrustManager() }, null);
 			this.socketFactory = sslContext.getSocketFactory();
 		} catch (Exception e) {
-			WebCorePlugin.log(0, "Could not initialize SSL context", e);
+			CommonsNetPlugin.log(0, "Could not initialize SSL context", e);
 		}
 	}
 

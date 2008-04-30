@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.web.core;
+package org.eclipse.mylyn.commons.net;
 
 import java.io.BufferedReader;
 import java.io.IOException;

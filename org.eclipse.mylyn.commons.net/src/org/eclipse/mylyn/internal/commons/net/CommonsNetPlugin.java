@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.web.core;
+package org.eclipse.mylyn.internal.commons.net;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.SynchronousQueue;
@@ -28,11 +28,11 @@ import org.osgi.util.tracker.ServiceTracker;
  * @author Steffen Pingel
  * @since 2.0
  */
-public class WebCorePlugin extends Plugin {
+public class CommonsNetPlugin extends Plugin {
 
 	public static final String ID_PLUGIN = "org.eclipse.mylyn.web.core";
 
-	private static WebCorePlugin INSTANCE;
+	private static CommonsNetPlugin INSTANCE;
 
 	private static final int MAX_CONCURRENT_REQUESTS = 100;
 
@@ -40,7 +40,7 @@ public class WebCorePlugin extends Plugin {
 
 	private static ExecutorService service;
 
-	public static WebCorePlugin getDefault() {
+	public static CommonsNetPlugin getDefault() {
 		return INSTANCE;
 	}
 
@@ -73,12 +73,12 @@ public class WebCorePlugin extends Plugin {
 	}
 
 	public static void setProxyService(IProxyService proxyService) {
-		WebCorePlugin.proxyService = proxyService;
+		CommonsNetPlugin.proxyService = proxyService;
 	}
 
 	private ServiceTracker tracker;
 
-	public WebCorePlugin() {
+	public CommonsNetPlugin() {
 		INSTANCE = this;
 	}
 

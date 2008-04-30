@@ -5,22 +5,20 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package org.eclipse.mylyn.web.core;
+
+package org.eclipse.mylyn.commons.net;
+
+import java.net.Proxy;
 
 /**
- * An enum of the supported authentication types.
- * 
  * @since 2.2
  * @author Steffen Pingel
  */
-public enum AuthenticationType {
+public interface IProxyProvider {
+
 	/**
-	 * HTTP authentication, this is typically basic authentication but other methods such as digest or NTLM are used as
-	 * well.
+	 * @since 2.2
 	 */
-	HTTP,
-	/** Proxy authentication. */
-	PROXY,
-	/** Task repository authentication. */
-	REPOSITORY
+	public Proxy getProxyForHost(String host, String proxyType);
+
 }

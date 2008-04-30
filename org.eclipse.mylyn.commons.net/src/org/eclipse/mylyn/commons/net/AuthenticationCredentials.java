@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package org.eclipse.mylyn.web.core;
+package org.eclipse.mylyn.commons.net;
 
 /**
  * Provides a user name and password.

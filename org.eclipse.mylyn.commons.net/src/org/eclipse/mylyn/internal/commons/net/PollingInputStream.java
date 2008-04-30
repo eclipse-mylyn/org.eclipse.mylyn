@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.internal.web.core;
+package org.eclipse.mylyn.internal.commons.net;
 
 import java.io.FilterInputStream;
 import java.io.IOException;
@@ -18,7 +18,7 @@ import java.io.InterruptedIOException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.mylyn.web.core.Policy;
+import org.eclipse.mylyn.commons.net.Policy;
 
 /**
  * Polls a progress monitor periodically and handles timeouts over extended durations. For this class to be effective, a
@@ -73,7 +73,7 @@ public class PollingInputStream extends FilterInputStream {
 		} catch (IOException e) {
 			// We shouldn't get an exception when we're getting the available input.
 			// If we do, just log it so we can close.
-			WebCorePlugin.log(IStatus.ERROR, e.getMessage(), e);
+			CommonsNetPlugin.log(IStatus.ERROR, e.getMessage(), e);
 		} finally {
 			boolean stop = false;
 			while (!stop) {

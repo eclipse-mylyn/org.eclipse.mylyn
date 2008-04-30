@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.web.core;
+package org.eclipse.mylyn.internal.commons.net;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -20,7 +20,7 @@ import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.apache.commons.httpclient.params.HttpConnectionParams;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.mylyn.web.core.WebUtil;
+import org.eclipse.mylyn.commons.net.WebUtil;
 
 /**
  * @author Steffen Pingel

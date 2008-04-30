@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.internal.web.core;
+package org.eclipse.mylyn.internal.commons.net;
 
 import java.io.FilterOutputStream;
 import java.io.IOException;
@@ -17,7 +17,7 @@ import java.io.OutputStream;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.mylyn.web.core.Policy;
+import org.eclipse.mylyn.commons.net.Policy;
 
 /**
  * Polls a progress monitor periodically and handles timeouts over extended durations. For this class to be effective, a

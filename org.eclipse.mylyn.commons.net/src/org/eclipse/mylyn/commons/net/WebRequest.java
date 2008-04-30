@@ -1,4 +1,4 @@
-package org.eclipse.mylyn.web.core;
+package org.eclipse.mylyn.commons.net;
 
 import java.util.concurrent.Callable;
 

@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.internal.web.core;
+package org.eclipse.mylyn.internal.commons.net;
 
 import java.io.FilterInputStream;
 import java.io.IOException;
@@ -18,7 +18,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import org.eclipse.mylyn.web.core.Policy;
+import org.eclipse.mylyn.commons.net.Policy;
 
 /**
  * Wraps an input stream that blocks indefinitely to simulate timeouts on read(), skip(), and close(). The resulting
@@ -75,7 +75,7 @@ public class TimeoutInputStream extends FilterInputStream {
 		this.readTimeout = readTimeout;
 		this.closeTimeout = closeTimeout;
 		this.iobuffer = new byte[bufferSize];
-		this.future = WebCorePlugin.getExecutorService().submit(new Runnable() {
+		this.future = CommonsNetPlugin.getExecutorService().submit(new Runnable() {
 			public void run() {
 				runThread();
 			}

@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.web.core;
+package org.eclipse.mylyn.commons.net;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -16,8 +16,8 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.ProgressMonitorWrapper;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.mylyn.internal.web.core.InfiniteSubProgressMonitor;
-import org.eclipse.mylyn.internal.web.core.WebCorePlugin;
+import org.eclipse.mylyn.internal.commons.net.InfiniteSubProgressMonitor;
+import org.eclipse.mylyn.internal.commons.net.CommonsNetPlugin;
 
 /**
  * @since 2.3
@@ -30,8 +30,8 @@ public class Policy {
 	public static boolean DEBUG_STREAMS = false;
 
 	static {
-		if (WebCorePlugin.getDefault() != null && WebCorePlugin.getDefault().isDebugging()) {
-			DEBUG_STREAMS = "true".equalsIgnoreCase(Platform.getDebugOption(WebCorePlugin.ID_PLUGIN + "/streams"));//$NON-NLS-1$ //$NON-NLS-2$
+		if (CommonsNetPlugin.getDefault() != null && CommonsNetPlugin.getDefault().isDebugging()) {
+			DEBUG_STREAMS = "true".equalsIgnoreCase(Platform.getDebugOption(CommonsNetPlugin.ID_PLUGIN + "/streams"));//$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 

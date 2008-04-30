@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.web.core;
+package org.eclipse.mylyn.commons.net;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -45,13 +45,13 @@ import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.mylyn.internal.web.core.CloneableHostConfiguration;
-import org.eclipse.mylyn.internal.web.core.PollingInputStream;
-import org.eclipse.mylyn.internal.web.core.PollingProtocolSocketFactory;
-import org.eclipse.mylyn.internal.web.core.PollingSslProtocolSocketFactory;
-import org.eclipse.mylyn.internal.web.core.TimeoutInputStream;
-import org.eclipse.mylyn.internal.web.core.WebCorePlugin;
-import org.eclipse.mylyn.web.core.HtmlStreamTokenizer.Token;
+import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer.Token;
+import org.eclipse.mylyn.internal.commons.net.CloneableHostConfiguration;
+import org.eclipse.mylyn.internal.commons.net.PollingInputStream;
+import org.eclipse.mylyn.internal.commons.net.PollingProtocolSocketFactory;
+import org.eclipse.mylyn.internal.commons.net.PollingSslProtocolSocketFactory;
+import org.eclipse.mylyn.internal.commons.net.TimeoutInputStream;
+import org.eclipse.mylyn.internal.commons.net.CommonsNetPlugin;
 
 /**
  * @author Mik Kersten
@@ -97,7 +97,7 @@ public class WebUtil {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("Mylyn");
-		sb.append(getBundleVersion(WebCorePlugin.getDefault()));
+		sb.append(getBundleVersion(CommonsNetPlugin.getDefault()));
 
 		USER_AGENT_PREFIX = sb.toString();
 		sb.setLength(0);
@@ -278,7 +278,7 @@ public class WebUtil {
 	public static <T> T execute(IProgressMonitor monitor, WebRequest<T> request) throws Throwable {
 		monitor = Policy.monitorFor(monitor);
 
-		Future<T> future = WebCorePlugin.getExecutorService().submit(request);
+		Future<T> future = CommonsNetPlugin.getExecutorService().submit(request);
 		while (true) {
 			if (monitor.isCanceled()) {
 				if (!future.cancel(false)) {
@@ -594,7 +594,7 @@ public class WebUtil {
 	 * @since 3.0
 	 */
 	public static void setProxyService(IProxyService proxyService) {
-		WebCorePlugin.setProxyService(proxyService);
+		CommonsNetPlugin.setProxyService(proxyService);
 	}
 
 }
