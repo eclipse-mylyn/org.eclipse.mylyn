@@ -300,7 +300,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			editorManager = new ContextEditorManager();
 			ContextCore.getContextManager().addListener(editorManager);
 		} catch (Exception e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Context UI initialization failed",
+			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Context UI initialization failed",
 					e));
 		}
 
@@ -325,7 +325,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			}
 			viewerManager.forceReferesh();
 		} catch (Exception e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
+			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
 					"Could not initialize focused viewers", e));
 		}
 	}
@@ -476,8 +476,6 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 		private static boolean extensionsRead = false;
 
-		private static UiExtensionPointReader thisReader = new UiExtensionPointReader();
-
 		public static final String EXTENSION_ID_CONTEXT = "org.eclipse.mylyn.context.ui.bridges";
 
 		public static final String ELEMENT_UI_BRIDGE = "uiBridge";
@@ -555,7 +553,6 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			}
 		}
 
-		@SuppressWarnings("deprecation")
 		private static void readBridge(IConfigurationElement element) {
 			try {
 				Object bridge = element.createExecutableExtension(UiExtensionPointReader.ELEMENT_CLASS);
@@ -567,7 +564,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 					String iconPath = element.getAttribute(ELEMENT_STRUCTURE_BRIDGE_SEARCH_ICON);
 					if (iconPath != null) {
 						ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(
-								element.getDeclaringExtension().getNamespace(), iconPath);
+								element.getDeclaringExtension().getContributor().getName(), iconPath);
 						if (descriptor != null) {
 							ContextUiPlugin.getDefault().setActiveSearchIcon((AbstractContextUiBridge) bridge,
 									descriptor);
@@ -579,11 +576,13 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 					}
 
 				} else {
-					StatusHandler.log("Could not load bridge: " + bridge.getClass().getCanonicalName()
-							+ " must implement " + AbstractContextUiBridge.class.getCanonicalName(), thisReader);
+					StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not load bridge: "
+							+ bridge.getClass().getCanonicalName() + " must implement "
+							+ AbstractContextUiBridge.class.getCanonicalName()));
 				}
 			} catch (CoreException e) {
-				StatusHandler.log(e, "Could not load bridge extension");
+				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
+						"Could not load bridge extension", e));
 			}
 		}
 	}
@@ -632,7 +631,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	/**
 	 * @param task
-	 *            can be null to indicate no task
+	 * 		can be null to indicate no task
 	 */
 	public String getPerspectiveIdFor(AbstractTask task) {
 		if (task != null) {
@@ -645,7 +644,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	/**
 	 * @param task
-	 *            can be null to indicate no task
+	 * 		can be null to indicate no task
 	 */
 	public void setPerspectiveIdFor(AbstractTask task, String perspectiveId) {
 		if (task != null) {
