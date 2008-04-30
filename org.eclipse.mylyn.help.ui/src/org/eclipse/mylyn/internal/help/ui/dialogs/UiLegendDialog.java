@@ -14,8 +14,9 @@ import java.util.List;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.PopupDialog;
 import org.eclipse.jface.preference.PreferenceDialog;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColorsAndFonts;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
@@ -244,13 +245,13 @@ public class UiLegendDialog extends PopupDialog {
 		imageLabel.setImage(CommonImages.getImage(TasksUiImages.TASK));
 		Label labelToday = toolkit.createLabel(activityClient, "Scheduled for today");
 		labelToday.setForeground(themeManager.getCurrentTheme().getColorRegistry().get(
-				CommonColorsAndFonts.THEME_COLOR_TASK_TODAY_SCHEDULED));
+				CommonThemes.COLOR_SCHEDULED_TODAY));
 
 		imageLabel = toolkit.createLabel(activityClient, "");
 		imageLabel.setImage(CommonImages.getImage(TasksUiImages.TASK));
 		Label labelOverdue = toolkit.createLabel(activityClient, "Past scheduled date");
 		labelOverdue.setForeground(themeManager.getCurrentTheme().getColorRegistry().get(
-				CommonColorsAndFonts.THEME_COLOR_TASK_PAST_SCHEDULED));
+				CommonThemes.COLOR_SCHEDULED_PAST));
 
 // imageLabel = toolkit.createLabel(activityClient, "");
 // imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.TASK));
@@ -262,17 +263,17 @@ public class UiLegendDialog extends PopupDialog {
 		imageLabel = toolkit.createLabel(activityClient, "");
 		imageLabel.setImage(CommonImages.getImage(TasksUiImages.TASK));
 		Label labelCompleted = toolkit.createLabel(activityClient, "Completed");
-		labelCompleted.setFont(CommonColorsAndFonts.STRIKETHROUGH);
+		labelCompleted.setFont(CommonFonts.STRIKETHROUGH);
 // labelCompleted.setForeground(TaskListColorsAndFonts.COLOR_TASK_COMPLETED);
 		labelCompleted.setForeground(themeManager.getCurrentTheme().getColorRegistry().get(
-				CommonColorsAndFonts.THEME_COLOR_COMPLETED));
+				CommonThemes.COLOR_COMPLETED));
 
 		imageLabel = toolkit.createLabel(activityClient, "");
 		imageLabel.setImage(CommonImages.getImage(TasksUiImages.TASK));
 		Label labelCompletedToday = toolkit.createLabel(activityClient, "Completed today");
-		labelCompletedToday.setFont(CommonColorsAndFonts.STRIKETHROUGH);
+		labelCompletedToday.setFont(CommonFonts.STRIKETHROUGH);
 		labelCompletedToday.setForeground(themeManager.getCurrentTheme().getColorRegistry().get(
-				CommonColorsAndFonts.THEME_COLOR_TASK_TODAY_COMPLETED));
+				CommonThemes.COLOR_COMPLETED_TODAY));
 
 		imageLabel = toolkit.createLabel(activityClient, "");
 		imageLabel.setImage(CommonImages.getImage(CommonImages.OVERLAY_DATE_DUE));
@@ -282,7 +283,7 @@ public class UiLegendDialog extends PopupDialog {
 		imageLabel.setImage(CommonImages.getImage(CommonImages.OVERLAY_DATE_OVERDUE));
 		Label textLabel = toolkit.createLabel(activityClient, "Past Due date");
 		textLabel.setForeground(themeManager.getCurrentTheme().getColorRegistry().get(
-				CommonColorsAndFonts.THEME_COLOR_TASK_PAST_DUE));
+				CommonThemes.COLOR_OVERDUE));
 
 		imageLabel = toolkit.createLabel(activityClient, "");
 		imageLabel.setImage(CommonImages.getImage(CommonImages.BLANK));

@@ -11,8 +11,8 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ViewerCell;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColorsAndFonts;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachment;
@@ -125,7 +125,7 @@ public class AttachmentTableLabelProvider2 extends ColumnLabelProvider {
 	public Color getForeground(Object element, int columnIndex) {
 		TaskAttachment att = (TaskAttachment) element;
 		if (att.isDeprecated()) {
-			return themeManager.getCurrentTheme().getColorRegistry().get(CommonColorsAndFonts.THEME_COLOR_COMPLETED);
+			return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_COMPLETED);
 		}
 		return super.getForeground(element);
 	}

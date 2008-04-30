@@ -13,8 +13,8 @@ import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ViewerCell;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColorsAndFonts;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
@@ -132,7 +132,7 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 	public Color getForeground(Object element, int columnIndex) {
 		RepositoryAttachment att = (RepositoryAttachment) element;
 		if (att.isObsolete()) {
-			return themeManager.getCurrentTheme().getColorRegistry().get(CommonColorsAndFonts.THEME_COLOR_COMPLETED);
+			return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_COMPLETED);
 		}
 		return super.getForeground(element);
 	}

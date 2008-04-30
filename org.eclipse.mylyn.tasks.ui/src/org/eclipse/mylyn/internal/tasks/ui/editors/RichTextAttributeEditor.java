@@ -16,7 +16,7 @@ import org.eclipse.jface.text.TextEvent;
 import org.eclipse.jface.text.source.AnnotationModel;
 import org.eclipse.jface.text.source.IAnnotationAccess;
 import org.eclipse.jface.text.source.SourceViewer;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColorsAndFonts;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
@@ -151,7 +151,7 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 		}
 
 		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
-		Font font = themeManager.getCurrentTheme().getFontRegistry().get(CommonColorsAndFonts.TASK_EDITOR_FONT);
+		Font font = themeManager.getCurrentTheme().getFontRegistry().get(CommonThemes.FONT_EDITOR_COMMENT);
 		viewer.getTextWidget().setFont(font);
 		toolkit.adapt(viewer.getTextWidget(), true, true);
 

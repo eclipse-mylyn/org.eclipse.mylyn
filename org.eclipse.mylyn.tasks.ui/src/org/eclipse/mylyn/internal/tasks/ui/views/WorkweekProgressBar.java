@@ -8,7 +8,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColorsAndFonts;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -61,7 +61,7 @@ public class WorkweekProgressBar extends Canvas {
 		});
 		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
 		completedColor = themeManager.getCurrentTheme().getColorRegistry().get(
-				CommonColorsAndFonts.THEME_COLOR_TASK_TODAY_COMPLETED);
+				CommonThemes.COLOR_COMPLETED_TODAY);
 	}
 
 	public void setMaximum(int max) {

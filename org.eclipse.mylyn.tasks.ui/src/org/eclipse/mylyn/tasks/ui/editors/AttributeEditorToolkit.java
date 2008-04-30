@@ -30,7 +30,7 @@ import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColorsAndFonts;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.tasks.core.IdentityAttributeFactory;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataUtil;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalLabelProvider;
@@ -114,7 +114,7 @@ public class AttributeEditorToolkit {
 		this.textViewers = new ArrayList<TextViewer>();
 		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
 		colorIncoming = themeManager.getCurrentTheme().getColorRegistry().get(
-				CommonColorsAndFonts.THEME_COLOR_TASKS_INCOMING_BACKGROUND);
+				CommonThemes.COLOR_INCOMING_BACKGROUND);
 	}
 
 	private IHandlerActivation activateHandler(SourceViewer viewer, int operation, String actionDefinitionId) {

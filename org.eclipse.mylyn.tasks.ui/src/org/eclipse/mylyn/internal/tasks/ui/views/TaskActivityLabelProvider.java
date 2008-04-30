@@ -20,7 +20,7 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.mylyn.commons.core.DateUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColorsAndFonts;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskDelegate;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
@@ -162,7 +162,7 @@ public class TaskActivityLabelProvider extends TaskElementLabelProvider implemen
 		if (element instanceof ScheduledTaskContainer) {
 			ScheduledTaskContainer container = (ScheduledTaskContainer) element;
 			if (container.isPresent()) {
-				return CommonColorsAndFonts.BOLD;
+				return CommonFonts.BOLD;
 			}
 		} else if (element instanceof ScheduledTaskDelegate) {
 			ScheduledTaskDelegate durationDelegate = (ScheduledTaskDelegate) element;

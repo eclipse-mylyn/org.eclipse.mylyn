@@ -16,8 +16,10 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColorsAndFonts;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColors;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.tasks.core.Person;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
@@ -262,37 +264,37 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			if (task != null) {
 				if (TasksUiPlugin.getTaskActivityManager().isCompletedToday(task)) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(
-							CommonColorsAndFonts.THEME_COLOR_TASK_TODAY_COMPLETED);
+							CommonThemes.COLOR_COMPLETED_TODAY);
 				} else if (task.isCompleted()) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(
-							CommonColorsAndFonts.THEME_COLOR_COMPLETED);
+							CommonThemes.COLOR_COMPLETED);
 				} else if (task.isActive()) {
-					return CommonColorsAndFonts.COLOR_TASK_ACTIVE;
+					return CommonColors.CONTEXT_ACTIVE;
 				} else if (TasksUiPlugin.getTaskActivityManager().isOverdue(task)) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(
-							CommonColorsAndFonts.THEME_COLOR_TASK_PAST_DUE);
+							CommonThemes.COLOR_OVERDUE);
 				} else if (TasksUiPlugin.getTaskActivityManager().isDueToday(task)) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(
-							CommonColorsAndFonts.THEME_COLOR_TASK_TODAY_SCHEDULED);
+							CommonThemes.COLOR_SCHEDULED_TODAY);
 				} else if (!task.internalIsFloatingScheduledDate() && task.isPastReminder()) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(
-							CommonColorsAndFonts.THEME_COLOR_TASK_PAST_SCHEDULED);
+							CommonThemes.COLOR_SCHEDULED_PAST);
 				} else if (TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task)) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(
-							CommonColorsAndFonts.THEME_COLOR_TASK_TODAY_SCHEDULED);
+							CommonThemes.COLOR_SCHEDULED_TODAY);
 				} else if (TasksUiPlugin.getTaskActivityManager().isScheduledForThisWeek(task)) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(
-							CommonColorsAndFonts.THEME_COLOR_TASK_THISWEEK_SCHEDULED);
+							CommonThemes.COLOR_SCHEDULED_THIS_WEEK);
 				}
 			}
 		} else if (object instanceof AbstractTaskContainer) {
 			for (AbstractTask child : ((AbstractTaskContainer) object).getChildren()) {
 				if (child.isActive() || showHasActiveChild(child)) {
-					return CommonColorsAndFonts.COLOR_TASK_ACTIVE;
+					return CommonColors.CONTEXT_ACTIVE;
 				} else if (TasksUiPlugin.getTaskActivityManager().isOverdue(child)) {
 //				} else if ((child.isPastReminder() && !child.isCompleted()) || showHasChildrenPastDue(child)) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(
-							CommonColorsAndFonts.THEME_COLOR_TASK_PAST_DUE);
+							CommonThemes.COLOR_OVERDUE);
 				}
 			}
 		}
@@ -351,31 +353,31 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		if (task != null) {
 			AbstractTask repositoryTask = task;
 			if (repositoryTask.isSynchronizing()) {
-				return CommonColorsAndFonts.ITALIC;
+				return CommonFonts.ITALIC;
 			}
 		}
 		if (element instanceof AbstractTaskContainer) {
 			if (element instanceof AbstractRepositoryQuery) {
 				if (((AbstractRepositoryQuery) element).isSynchronizing()) {
-					return CommonColorsAndFonts.ITALIC;
+					return CommonFonts.ITALIC;
 				}
 			}
 
 			for (AbstractTask child : ((AbstractTaskContainer) element).getChildren()) {
 				if (child.isActive() || showHasActiveChild(child)) {
-					return CommonColorsAndFonts.BOLD;
+					return CommonFonts.BOLD;
 				}
 			}
 		}
 		if (task != null) {
 			if (task.isActive()) {
-				return CommonColorsAndFonts.BOLD;
+				return CommonFonts.BOLD;
 			} else if (task.isCompleted()) {
-				return CommonColorsAndFonts.STRIKETHROUGH;
+				return CommonFonts.STRIKETHROUGH;
 			}
 			for (AbstractTask child : ((AbstractTaskContainer) element).getChildren()) {
 				if (child.isActive() || showHasActiveChild(child)) {
-					return CommonColorsAndFonts.BOLD;
+					return CommonFonts.BOLD;
 				}
 			}
 		}

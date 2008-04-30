@@ -72,8 +72,8 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.mylyn.commons.core.DateUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColorsAndFonts;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.tasks.core.CommentQuoter;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalLabelProvider;
@@ -599,7 +599,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected void createFormContent(final IManagedForm managedForm) {
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		colorIncoming = themeManager.getCurrentTheme().getColorRegistry().get(
-				CommonColorsAndFonts.THEME_COLOR_TASKS_INCOMING_BACKGROUND);
+				CommonThemes.COLOR_INCOMING_BACKGROUND);
 
 		super.createFormContent(managedForm);
 		form = managedForm.getForm();

@@ -51,8 +51,8 @@ import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColorsAndFonts;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
@@ -481,11 +481,11 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	private final IPropertyChangeListener THEME_CHANGE_LISTENER = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
 			if (event.getProperty().equals(IThemeManager.CHANGE_CURRENT_THEME)
-					|| CommonColorsAndFonts.isTaskListTheme(event.getProperty())) {
+					|| CommonThemes.isCommonTheme(event.getProperty())) {
 				configureGradientColors();
 				taskListTableLabelProvider.setCategoryBackgroundColor(themeManager.getCurrentTheme()
 						.getColorRegistry()
-						.get(CommonColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY));
+						.get(CommonThemes.COLOR_CATEGORY));
 				getViewer().refresh();
 			}
 		}
@@ -497,9 +497,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private void configureGradientColors() {
 		categoryGradientStart = themeManager.getCurrentTheme().getColorRegistry().get(
-				CommonColorsAndFonts.THEME_COLOR_CATEGORY_GRADIENT_START);
+				CommonThemes.COLOR_CATEGORY_GRADIENT_START);
 		categoryGradientEnd = themeManager.getCurrentTheme().getColorRegistry().get(
-				CommonColorsAndFonts.THEME_COLOR_CATEGORY_GRADIENT_END);
+				CommonThemes.COLOR_CATEGORY_GRADIENT_END);
 
 		boolean customized = true;
 		if (categoryGradientStart != null && categoryGradientStart.getRed() == 240
@@ -753,7 +753,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 		final IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		Color categoryBackground = themeManager.getCurrentTheme().getColorRegistry().get(
-				CommonColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY);
+				CommonThemes.COLOR_CATEGORY);
 		taskListTableLabelProvider = new TaskTableLabelProvider(new TaskElementLabelProvider(true),
 				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator(), categoryBackground);
 		getViewer().setLabelProvider(taskListTableLabelProvider);

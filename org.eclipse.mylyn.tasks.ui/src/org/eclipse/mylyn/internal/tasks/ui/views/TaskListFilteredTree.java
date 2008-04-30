@@ -24,7 +24,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractFilteredTree;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColorsAndFonts;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColors;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.TaskHistoryDropDown;
@@ -197,7 +197,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 		final TaskListHyperlink searchLink = new TaskListHyperlink(searchComposite, SWT.LEFT);
 		searchLink.setText(LABEL_SEARCH);
-		searchLink.setForeground(CommonColorsAndFonts.COLOR_HYPERLINK_WIDGET);
+		searchLink.setForeground(CommonColors.HYPERLINK_WIDGET);
 
 		searchLink.addHyperlinkListener(new IHyperlinkListener() {
 
@@ -267,7 +267,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		workingSetLink = new TaskListHyperlink(container, SWT.LEFT);
 		workingSetLink.setText(TaskWorkingSetAction.LABEL_SETS_NONE);
 		workingSetLink.setUnderlined(false);
-		workingSetLink.setForeground(CommonColorsAndFonts.COLOR_HYPERLINK_WIDGET);
+		workingSetLink.setForeground(CommonColors.HYPERLINK_WIDGET);
 
 		final TaskWorkingSetAction workingSetAction = new TaskWorkingSetAction();
 		workingSetButton.addHyperlinkListener(new IHyperlinkListener() {
@@ -350,7 +350,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		TasksUi.getTaskListManager().getTaskList().addChangeListener(changeListener);
 
 		activeTaskLink.setText(LABEL_ACTIVE_NONE);
-		activeTaskLink.setForeground(CommonColorsAndFonts.COLOR_HYPERLINK_WIDGET);
+		activeTaskLink.setForeground(CommonColors.HYPERLINK_WIDGET);
 		// avoid having the Hyperlink class show a native tooltip when it shortens the text which would overlap with the task list tooltip 
 		activeTaskLink.setToolTipText("");
 

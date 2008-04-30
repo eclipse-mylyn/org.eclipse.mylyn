@@ -48,7 +48,7 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.ContextPreferenceContstants;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotification;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColorsAndFonts;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColors;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
@@ -656,7 +656,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				getPreferenceStore().removePropertyChangeListener(taskListBackupManager);
 				getPreferenceStore().removePropertyChangeListener(PROPERTY_LISTENER);
 				//taskListManager.getTaskList().removeChangeListener(taskListSaveManager);
-				CommonColorsAndFonts.dispose();
+				CommonColors.dispose();
 				if (ContextCorePlugin.getDefault() != null) {
 					ContextCorePlugin.getDefault().getPluginPreferences().removePropertyChangeListener(
 							PREFERENCE_LISTENER);

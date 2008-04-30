@@ -8,7 +8,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColorsAndFonts;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColors;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
@@ -50,7 +50,7 @@ public class TaskListHyperlink extends ImageHyperlink {
 
 	public TaskListHyperlink(Composite parent, int style) {
 		super(parent, style);
-		setForeground(CommonColorsAndFonts.COLOR_HYPERLINK_WIDGET);
+		setForeground(CommonColors.HYPERLINK_WIDGET);
 		addMouseTrackListener(MOUSE_TRACK_LISTENER);
 	}
 
