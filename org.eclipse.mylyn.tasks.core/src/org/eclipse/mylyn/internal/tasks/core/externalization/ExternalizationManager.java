@@ -77,6 +77,15 @@ public class ExternalizationManager {
 		reschedule(saveJob, saveContext);
 	}
 
+//	public synchronized void saveNow(IProgressMonitor monitor) {
+//		if (saveJob != null) {
+//			saveJob.cancel();
+//			saveJob = null;
+//		}
+//		ExternalizationJob job = createJob("Save Now", new ExternalizationContext(KIND.SAVE, rootFolderPath));
+//		job.run(monitor);
+//	}
+
 	private synchronized void reschedule(ExternalizationJob job, IExternalizationContext context) {
 		if (!saveDisabled) {
 			job.setContext(context);
@@ -95,6 +104,10 @@ public class ExternalizationManager {
 	public void reset() {
 		saveDisabled = false;
 		loadStatus = null;
+		if (saveJob != null) {
+			saveJob.cancel();
+			saveJob = null;
+		}
 	}
 
 	class ExternalizationJob extends Job {
