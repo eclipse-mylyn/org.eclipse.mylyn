@@ -17,9 +17,9 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.tasks.core.data.ITaskComment;
 import org.eclipse.mylyn.tasks.core.data.RepositoryPerson;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
-import org.eclipse.mylyn.tasks.core.data.TaskComment;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
@@ -76,7 +76,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 				GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(editor.getControl());
 
 				getTaskEditorPage().getAttributeEditorToolkit().adapt(editor);
-				getTaskEditorPage().resetLayout();
+				getTaskEditorPage().reflow();
 			}
 		} else if (!expanded && composite.getData(KEY_EDITOR) != null) {
 			// dispose viewer
@@ -84,7 +84,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			getTaskEditorPage().getAttributeEditorToolkit().dispose(editor);
 			editor.getControl().dispose();
 			composite.setData(KEY_EDITOR, null);
-			getTaskEditorPage().resetLayout();
+			getTaskEditorPage().reflow();
 		}
 	}
 
@@ -118,7 +118,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		commentComposites = new ArrayList<ExpandableComposite>();
 		for (final TaskAttribute commentAttribute : comments) {
 			boolean hasIncomingChanges = getModel().hasIncomingChanges(commentAttribute);
-			TaskComment taskComment = getTaskData().getAttributeMapper().getTaskComment(commentAttribute);
+			ITaskComment taskComment = getTaskData().getAttributeMapper().getTaskComment(commentAttribute);
 			int style = ExpandableComposite.TREE_NODE | ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT;
 			if (hasIncomingChanges) {
 				style |= ExpandableComposite.EXPANDED;
@@ -187,7 +187,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 	}
 
 	private ImageHyperlink createTitleHyperLink(final FormToolkit toolkit, final Composite toolbarComp,
-			final TaskComment taskComment) {
+			final ITaskComment taskComment) {
 		ImageHyperlink formHyperlink = toolkit.createImageHyperlink(toolbarComp, SWT.NONE);
 		formHyperlink.setBackground(null);
 		formHyperlink.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
@@ -219,7 +219,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		return formHyperlink;
 	}
 
-	private ImageHyperlink createReplyHyperlink(Composite composite, FormToolkit toolkit, final TaskComment taskComment) {
+	private ImageHyperlink createReplyHyperlink(Composite composite, FormToolkit toolkit, final ITaskComment taskComment) {
 		final ImageHyperlink replyLink = new ImageHyperlink(composite, SWT.NULL);
 		toolkit.adapt(replyLink, true, true);
 		replyLink.setImage(CommonImages.getImage(TasksUiImages.COMMENT_REPLY));
@@ -291,7 +291,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		} finally {
 			getTaskEditorPage().setReflow(true);
 		}
-		getTaskEditorPage().resetLayout();
+		getTaskEditorPage().reflow();
 	}
 
 	private void expandAllComments() {
@@ -312,7 +312,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		} finally {
 			getTaskEditorPage().setReflow(true);
 		}
-		getTaskEditorPage().resetLayout();
+		getTaskEditorPage().reflow();
 	}
 
 }

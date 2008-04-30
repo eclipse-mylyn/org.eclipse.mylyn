@@ -13,12 +13,11 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
-import org.eclipse.mylyn.tasks.core.data.TaskAttachment;
+import org.eclipse.mylyn.tasks.core.data.ITaskAttachment2;
+import org.eclipse.mylyn.tasks.core.data.ITaskComment;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
-import org.eclipse.mylyn.tasks.core.data.TaskComment;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-import org.eclipse.mylyn.tasks.core.data.TaskOperation;
 
 /**
  * @author Steffen Pingel
@@ -30,7 +29,6 @@ public class TaskScheme {
 
 	public TaskScheme(TaskData taskData) {
 		Assert.isNotNull(taskData);
-
 		this.taskData = taskData;
 	}
 
@@ -242,13 +240,13 @@ public class TaskScheme {
 		return attribute;
 	}
 
-	public TaskComment[] getComments() {
+	public ITaskComment[] getComments() {
 		TaskAttribute attribute = taskData.getRoot().getAttribute(TaskAttribute.CONTAINER_COMMENTS);
 		if (attribute != null) {
 			TaskAttributeMapper attributeMapper = taskData.getAttributeMapper();
 			Map<String, TaskAttribute> children = attribute.getAttributes();
 			int i = 0;
-			TaskComment[] comments = new TaskComment[children.size()];
+			ITaskComment[] comments = new ITaskComment[children.size()];
 			for (TaskAttribute child : children.values()) {
 				comments[i] = attributeMapper.getTaskComment(child);
 				i++;
@@ -258,34 +256,18 @@ public class TaskScheme {
 		return null;
 	}
 
-	public TaskAttachment[] getAttachments() {
+	public ITaskAttachment2[] getAttachments() {
 		TaskAttribute attribute = taskData.getRoot().getAttribute(TaskAttribute.CONTAINER_ATTACHMENTS);
 		if (attribute != null) {
 			TaskAttributeMapper attributeMapper = taskData.getAttributeMapper();
 			Map<String, TaskAttribute> children = attribute.getAttributes();
 			int i = 0;
-			TaskAttachment[] attachments = new TaskAttachment[children.size()];
+			ITaskAttachment2[] attachments = new ITaskAttachment2[children.size()];
 			for (TaskAttribute child : children.values()) {
 				attachments[i] = attributeMapper.getTaskAttachment(child);
 				i++;
 			}
 			return attachments;
-		}
-		return null;
-	}
-
-	public TaskOperation[] getOperations() {
-		TaskAttribute attribute = taskData.getRoot().getAttribute(TaskAttribute.CONTAINER_OPERATIONS);
-		if (attribute != null) {
-			TaskAttributeMapper attributeMapper = taskData.getAttributeMapper();
-			Map<String, TaskAttribute> children = attribute.getAttributes();
-			int i = 0;
-			TaskOperation[] operations = new TaskOperation[children.size()];
-			for (TaskAttribute child : children.values()) {
-				operations[i] = attributeMapper.getTaskOperation(child);
-				i++;
-			}
-			return operations;
 		}
 		return null;
 	}

@@ -21,9 +21,9 @@ import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler2;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler2;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;

@@ -12,7 +12,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.mylyn.internal.tasks.core.CommentQuoter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.core.data.TaskComment;
+import org.eclipse.mylyn.tasks.core.data.ITaskComment;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 
@@ -22,9 +22,9 @@ public abstract class AbstractReplyToCommentAction extends Action {
 
 	private final AbstractTaskEditorPage editor;
 
-	private final TaskComment taskComment;
+	private final ITaskComment taskComment;
 
-	public AbstractReplyToCommentAction(AbstractTaskEditorPage editor, TaskComment taskComment) {
+	public AbstractReplyToCommentAction(AbstractTaskEditorPage editor, ITaskComment taskComment) {
 		this.editor = editor;
 		this.taskComment = taskComment;
 		setImageDescriptor(TasksUiImages.COMMENT_REPLY);
@@ -38,7 +38,7 @@ public abstract class AbstractReplyToCommentAction extends Action {
 		reply(editor, taskComment, getText());
 	}
 
-	public static void reply(AbstractTaskEditorPage editor, TaskComment taskComment, String text) {
+	public static void reply(AbstractTaskEditorPage editor, ITaskComment taskComment, String text) {
 		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(editor.getConnectorKind());
 		String reference = connectorUi.getReply(editor.getTaskRepository(), editor.getTask(), taskComment, false);
 		StringBuilder sb = new StringBuilder();

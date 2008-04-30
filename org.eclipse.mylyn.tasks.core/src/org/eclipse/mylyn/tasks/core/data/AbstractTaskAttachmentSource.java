@@ -6,13 +6,17 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.tasks.core;
+package org.eclipse.mylyn.tasks.core.data;
 
 import java.io.InputStream;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
+/**
+ * @author Steffen Pingel
+ * @since 3.0
+ */
 public abstract class AbstractTaskAttachmentSource {
 
 	public abstract InputStream createInputStream(IProgressMonitor monitor) throws CoreException;
@@ -24,5 +28,7 @@ public abstract class AbstractTaskAttachmentSource {
 	public abstract String getName();
 
 	public abstract String getContentType();
+
+	public abstract String getDescription();
 
 }

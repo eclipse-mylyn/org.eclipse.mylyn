@@ -17,7 +17,7 @@ import java.util.Date;
  * @author Steffen Pingel
  * @since 3.0
  */
-public class TaskComment {
+public class TaskComment implements ITaskComment {
 
 	private RepositoryPerson author;
 

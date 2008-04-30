@@ -15,7 +15,7 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.tasks.core.data.TaskAttachment;
+import org.eclipse.mylyn.tasks.core.data.ITaskAttachment2;
 import org.eclipse.mylyn.tasks.ui.editors.AttributeEditorToolkit;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -45,7 +45,7 @@ public class AttachmentTableLabelProvider2 extends ColumnLabelProvider {
 	}
 
 	public Image getColumnImage(Object element, int columnIndex) {
-		TaskAttachment attachment = (TaskAttachment) element;
+		ITaskAttachment2 attachment = (ITaskAttachment2) element;
 		if (columnIndex == 0) {
 			if (AttachmentUtil.isContext(attachment)) {
 				return CommonImages.getImage(TasksUiImages.CONTEXT_TRANSFER);
@@ -72,7 +72,7 @@ public class AttachmentTableLabelProvider2 extends ColumnLabelProvider {
 	}
 
 	public String getColumnText(Object element, int columnIndex) {
-		TaskAttachment attachment = (TaskAttachment) element;
+		ITaskAttachment2 attachment = (ITaskAttachment2) element;
 		switch (columnIndex) {
 		case 0:
 			if (AttachmentUtil.isContext(attachment)) {
@@ -123,7 +123,7 @@ public class AttachmentTableLabelProvider2 extends ColumnLabelProvider {
 	}
 
 	public Color getForeground(Object element, int columnIndex) {
-		TaskAttachment att = (TaskAttachment) element;
+		ITaskAttachment2 att = (ITaskAttachment2) element;
 		if (att.isDeprecated()) {
 			return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_COMPLETED);
 		}
@@ -140,7 +140,7 @@ public class AttachmentTableLabelProvider2 extends ColumnLabelProvider {
 
 	@Override
 	public String getToolTipText(Object element) {
-		TaskAttachment attachment = (TaskAttachment) element;
+		ITaskAttachment2 attachment = (ITaskAttachment2) element;
 		return "File: " + attachment.getFileName();
 		/*"\nFilename\t\t"  + attachment.getAttributeValue("filename")
 			  +"ID\t\t\t"        + attachment.getAttributeValue("attachid")

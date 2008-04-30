@@ -19,6 +19,7 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.tasks.core.data.ITaskAttachment2;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachment;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -251,7 +252,7 @@ public class TaskAttachmentPage extends WizardPage {
 		attachment.setComment(attachmentComment.getText());
 	}
 
-	public TaskAttachment getAttachment() {
+	public ITaskAttachment2 getAttachment() {
 		return attachment;
 	}
 

@@ -34,7 +34,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskSelection;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
-import org.eclipse.mylyn.tasks.core.data.TaskComment;
+import org.eclipse.mylyn.tasks.core.data.ITaskComment;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.swt.widgets.Shell;
@@ -220,7 +220,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * @return a reference to <code>comment</code>; null, if no reference is available
 	 * @since 3.0
 	 */
-	public String getReply(TaskRepository taskRepository, AbstractTask task, TaskComment taskComment,
+	public String getReply(TaskRepository taskRepository, AbstractTask task, ITaskComment taskComment,
 			boolean includeTask) {
 		return null;
 	}

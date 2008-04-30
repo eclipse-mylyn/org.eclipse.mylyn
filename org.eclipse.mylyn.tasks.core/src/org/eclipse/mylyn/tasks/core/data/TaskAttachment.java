@@ -14,7 +14,7 @@ import java.util.Date;
  * @since 3.0
  * @author Steffen Pingel
  */
-public class TaskAttachment {
+public class TaskAttachment implements ITaskAttachment2 {
 
 	private RepositoryPerson author;
 

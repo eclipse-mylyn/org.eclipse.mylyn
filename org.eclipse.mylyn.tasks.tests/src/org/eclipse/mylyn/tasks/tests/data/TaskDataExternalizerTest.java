@@ -90,7 +90,6 @@ public class TaskDataExternalizerTest extends TestCase {
 		assertEquals(taskScheme.getTaskKind(), legacyData.getTaskKind());
 		assertEquals(taskScheme.getComments().length, legacyData.getComments().size());
 		assertEquals(taskScheme.getAttachments().length, legacyData.getAttachments().size());
-		assertEquals(taskScheme.getOperations().length, legacyData.getOperations().size());
 
 		TaskData taskData2 = TaskDataUtil.toTaskData(legacyData, IdentityAttributeMapper.getInstance());
 		assertEquals(taskData.getConnectorKind(), taskData2.getConnectorKind());

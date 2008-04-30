@@ -12,16 +12,16 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylyn.tasks.core.data.TaskAttachment;
+import org.eclipse.mylyn.tasks.core.data.ITaskAttachment2;
 
 /**
  * @author Mik Kersten
  */
 public class AttachmentsTableContentProvider2 implements IStructuredContentProvider {
 
-	private final List<TaskAttachment> attachments;
+	private final List<ITaskAttachment2> attachments;
 
-	public AttachmentsTableContentProvider2(List<TaskAttachment> attachments) {
+	public AttachmentsTableContentProvider2(List<ITaskAttachment2> attachments) {
 		this.attachments = attachments;
 	}
 
