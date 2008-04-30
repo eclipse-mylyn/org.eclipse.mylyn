@@ -30,8 +30,8 @@ import org.eclipse.mylyn.context.core.IInteractionContextListener2;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.ContextUi;
-import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.monitor.ui.MonitorUi;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.editors.NewTaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
@@ -51,6 +51,7 @@ import org.eclipse.ui.internal.IWorkbenchConstants;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.internal.WorkbenchMessages;
 import org.eclipse.ui.internal.WorkbenchPage;
+import org.eclipse.ui.internal.WorkbenchWindow;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 /**
@@ -62,6 +63,16 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 	private static final String PREFS_PREFIX = "editors.task.";
 
 	private static final String KEY_CONTEXT_EDITORS = "ContextOpenEditors";
+
+	private static final String KEY_MONITORED_WINDOW_OPEN_EDITORS = "MonitoredWindowOpenEditors";
+
+	private static final String ATTRIBUTE_CLASS = "class";
+
+	private static final String ATTRIBUTE_NUMER = "number";
+
+	private static final String ATTRIBUTE_IS_LAUNCHING = "isLaunching";
+
+	private static final String ATTRIBUTE_IS_ACTIVE = "isActive";
 
 	private boolean previousCloseEditorsSetting = Workbench.getInstance().getPreferenceStore().getBoolean(
 			IPreferenceConstants.REUSE_EDITORS_BOOLEAN);
@@ -85,19 +96,31 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 				if (!wasPaused) {
 					ContextCore.getContextManager().setContextCapturePaused(true);
 				}
-				WorkbenchPage page = (WorkbenchPage) workbench.getActiveWorkbenchWindow().getActivePage();
-
 				String mementoString = null;
 				// API-3.0: remove coupling to AbstractTask, change where memento is stored
 				AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
 						context.getHandleIdentifier());
+				IWorkbenchWindow activeWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 				if (task != null) {
 					try {
 						mementoString = readEditorMemento(task);
 						if (mementoString != null && !mementoString.trim().equals("")) {
 							IMemento memento = XMLMemento.createReadRoot(new StringReader(mementoString));
-							if (memento != null) {
-								restoreEditors(page, memento);
+							IMemento[] children = memento.getChildren(KEY_MONITORED_WINDOW_OPEN_EDITORS);
+							if (children.length > 0) {
+								// This code supports restore from multiple windows
+								for (IMemento child : children) {
+									WorkbenchPage page = getWorkbenchPageForMemento(child, activeWindow);
+									if (child != null && page != null) {
+										restoreEditors(page, child, page.getWorkbenchWindow() == activeWindow);
+									}
+								}
+							} else {
+								// This code is for supporting the old editor management - only the active window
+								WorkbenchPage page = (WorkbenchPage) activeWindow.getActivePage();
+								if (memento != null) {
+									restoreEditors(page, memento, true);
+								}
 							}
 						}
 					} catch (Exception e) {
@@ -105,6 +128,7 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 								"Could not restore all editors, memento: \"" + mementoString + "\"", e));
 					}
 				}
+				activeWindow.setActivePage(activeWindow.getActivePage());
 				IInteractionElement activeNode = context.getActiveNode();
 				if (activeNode != null) {
 					ContextUi.getUiBridge(activeNode.getContentType()).open(activeNode);
@@ -118,6 +142,60 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 		}
 	}
 
+	private WorkbenchPage getWorkbenchPageForMemento(IMemento memento, IWorkbenchWindow activeWindow) {
+
+		String windowToRestoreClassName = memento.getString(ATTRIBUTE_CLASS);
+		if (windowToRestoreClassName == null) {
+			windowToRestoreClassName = "";
+		}
+		Integer windowToRestorenumber = memento.getInteger(ATTRIBUTE_NUMER);
+		if (windowToRestorenumber == null) {
+			windowToRestorenumber = 0;
+		}
+
+		// try to match the open windows to the one that we want to restore
+		Set<IWorkbenchWindow> monitoredWindows = MonitorUi.getMonitoredWindows();
+		for (IWorkbenchWindow window : monitoredWindows) {
+			int windowNumber = 0;
+			if (window instanceof WorkbenchWindow) {
+				windowNumber = ((WorkbenchWindow) window).getNumber();
+			}
+			if (window.getClass().getCanonicalName().equals(windowToRestoreClassName)
+					&& windowNumber == windowToRestorenumber) {
+				return (WorkbenchPage) window.getActivePage();
+			}
+		}
+
+		// we don't have a good match here, try to make an educated guess
+		Boolean isActive = memento.getBoolean(ATTRIBUTE_IS_ACTIVE);
+		if (isActive == null) {
+			isActive = false;
+		}
+
+		// both of these defaulting to true should ensure that all editors are opened even if their previous editor is not around
+		boolean shouldRestoreUnknownWindowToActive = true; // TODO could add a preference here
+		boolean shouldRestoreActiveWindowToActive = true; // TODO could add a preference here
+
+		if (isActive && shouldRestoreActiveWindowToActive) {
+			// if the window that we are trying to restore was the active window, restore it to the active window
+			return (WorkbenchPage) activeWindow.getActivePage();
+		}
+
+		if (shouldRestoreUnknownWindowToActive) {
+			// we can't find a good window, so restore it to the active one
+			return (WorkbenchPage) activeWindow.getActivePage();
+		}
+
+		if (shouldRestoreActiveWindowToActive && shouldRestoreUnknownWindowToActive) {
+			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
+					"Unable to find window to restore memento to.", new Exception()));
+		}
+
+		// we dont have a window that will work, so don't restore the editors
+		// we shouldn't get here if both *WindowToActive booleans are true
+		return null;
+	}
+
 	private String readEditorMemento(AbstractTask task) {
 		return preferenceStore.getString(PREFS_PREFIX + task.getHandleIdentifier());
 	}
@@ -128,16 +206,32 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 						ContextUiPrefContstants.AUTO_MANAGE_EDITORS)) {
 			closeAllButActiveTaskEditor(context.getHandleIdentifier());
 
-			XMLMemento memento = XMLMemento.createWriteRoot(KEY_CONTEXT_EDITORS);
-			((WorkbenchPage) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()).getEditorManager()
-					.saveState(memento);
+			XMLMemento rootMemento = XMLMemento.createWriteRoot(KEY_CONTEXT_EDITORS);
+
+			IWorkbenchWindow activeWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+			IWorkbenchWindow launchingWindow = MonitorUi.getLaunchingWorkbenchWindow();
+			Set<IWorkbenchWindow> monitoredWindows = MonitorUi.getMonitoredWindows();
+
+			for (IWorkbenchWindow window : monitoredWindows) {
+				IMemento memento = rootMemento.createChild(KEY_MONITORED_WINDOW_OPEN_EDITORS);
+
+				memento.putString(ATTRIBUTE_CLASS, window.getClass().getCanonicalName());
+				int number = 0;
+				if (window instanceof WorkbenchWindow) {
+					number = ((WorkbenchWindow) window).getNumber();
+				}
+				memento.putInteger(ATTRIBUTE_NUMER, number);
+				memento.putBoolean(ATTRIBUTE_IS_LAUNCHING, window == launchingWindow);
+				memento.putBoolean(ATTRIBUTE_IS_ACTIVE, window == activeWindow);
+				((WorkbenchPage) window.getActivePage()).getEditorManager().saveState(memento);
+			}
 
 			AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(context.getHandleIdentifier());
 			if (task != null) {
 				// TODO: avoid storing with preferences due to bloat?
 				StringWriter writer = new StringWriter();
 				try {
-					memento.save(writer);
+					rootMemento.save(writer);
 					writeEditorMemento(task, writer.getBuffer().toString());
 				} catch (IOException e) {
 					StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
@@ -164,7 +258,7 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 		XMLMemento memento = XMLMemento.createWriteRoot(KEY_CONTEXT_EDITORS);
 
 		if (task != null) {
-			// TODO: avoid storing with preferneces due to bloat?
+			// TODO: avoid storing with preferences due to bloat?
 			StringWriter writer = new StringWriter();
 			try {
 				memento.save(writer);
@@ -184,7 +278,7 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 	 * HACK: will fail to restore different parts with same name
 	 */
 	@SuppressWarnings("unchecked")
-	private void restoreEditors(WorkbenchPage page, IMemento memento) {
+	private void restoreEditors(WorkbenchPage page, IMemento memento, boolean isActiveWindow) {
 		EditorManager editorManager = page.getEditorManager();
 		final ArrayList visibleEditors = new ArrayList(5);
 		final IEditorReference activeEditor[] = new IEditorReference[1];
@@ -214,7 +308,7 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 				editorManager.setVisibleEditor((IEditorReference) visibleEditors.get(i), false);
 			}
 
-			if (activeEditor[0] != null) {
+			if (activeEditor[0] != null && isActiveWindow) {
 				IWorkbenchPart editor = activeEditor[0].getPart(true);
 				if (editor != null) {
 					page.activate(editor);
@@ -230,7 +324,7 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 			if (PlatformUI.getWorkbench().isClosing()) {
 				return;
 			}
-			for (IWorkbenchWindow window : MonitorUiPlugin.getDefault().getMonitoredWindows()) {
+			for (IWorkbenchWindow window : MonitorUi.getMonitoredWindows()) {
 				IWorkbenchPage page = window.getActivePage();
 				if (page != null) {
 					IEditorReference[] references = page.getEditorReferences();
@@ -265,7 +359,7 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 			if (PlatformUI.getWorkbench().isClosing()) {
 				return;
 			}
-			for (IWorkbenchWindow window : MonitorUiPlugin.getDefault().getMonitoredWindows()) {
+			for (IWorkbenchWindow window : MonitorUi.getMonitoredWindows()) {
 				IWorkbenchPage page = window.getActivePage();
 				if (page != null) {
 					IEditorReference[] references = page.getEditorReferences();
