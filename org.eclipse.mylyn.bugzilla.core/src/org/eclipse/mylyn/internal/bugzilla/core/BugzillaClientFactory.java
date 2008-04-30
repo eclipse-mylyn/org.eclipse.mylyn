@@ -9,9 +9,9 @@ package org.eclipse.mylyn.internal.bugzilla.core;
 
 import java.net.MalformedURLException;
 
+import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
-import org.eclipse.mylyn.web.core.AbstractWebLocation;
 
 /**
  * @author Steffen Pingel

@@ -19,6 +19,9 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.mylyn.commons.net.AbstractWebLocation;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.internal.trac.core.model.TracComponent;
 import org.eclipse.mylyn.internal.trac.core.model.TracMilestone;
 import org.eclipse.mylyn.internal.trac.core.model.TracPriority;
@@ -28,9 +31,6 @@ import org.eclipse.mylyn.internal.trac.core.model.TracTicketResolution;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicketStatus;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicketType;
 import org.eclipse.mylyn.internal.trac.core.model.TracVersion;
-import org.eclipse.mylyn.web.core.AbstractWebLocation;
-import org.eclipse.mylyn.web.core.AuthenticationCredentials;
-import org.eclipse.mylyn.web.core.WebUtil;
 
 /**
  * @author Steffen Pingel

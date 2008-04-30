@@ -24,12 +24,12 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.commons.net.WebClientUtil;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryLocation;
-import org.eclipse.mylyn.web.core.AuthenticationCredentials;
-import org.eclipse.mylyn.web.core.AuthenticationType;
-import org.eclipse.mylyn.web.core.WebClientUtil;
 
 /**
  * Note that task repositories use Strings for storing time stamps because using Date objects led to the following
@@ -361,7 +361,7 @@ public final class TaskRepository extends PlatformObject {
 	 * @param authType
 	 * 		the type of authentication
 	 * @return null, if no credentials are set for <code>authType</code>
-	 * @since 2.2
+	 * @since 3.0
 	 */
 	public synchronized AuthenticationCredentials getCredentials(AuthenticationType authType) {
 		String key = getKeyPrefix(authType);
@@ -488,7 +488,7 @@ public final class TaskRepository extends PlatformObject {
 	}
 
 	/**
-	 * @since 2.2
+	 * @since 3.0
 	 */
 	public boolean getSavePassword(AuthenticationType authType) {
 		String value = getProperty(getKeyPrefix(authType) + SAVE_PASSWORD);
@@ -637,7 +637,7 @@ public final class TaskRepository extends PlatformObject {
 	 * 		the credentials, if null, the credentials for <code>authType</code> will be flushed
 	 * @param savePassword
 	 * 		if true, the password will be persisted in the platform key ring; otherwise it will be stored in memory only
-	 * @since 2.2
+	 * @since 3.0
 	 */
 	public synchronized void setCredentials(AuthenticationType authType, AuthenticationCredentials credentials,
 			boolean savePassword) {

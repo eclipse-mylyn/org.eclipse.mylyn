@@ -39,6 +39,15 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.commons.net.AbstractWebLocation;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer;
+import org.eclipse.mylyn.commons.net.HtmlTag;
+import org.eclipse.mylyn.commons.net.Policy;
+import org.eclipse.mylyn.commons.net.UnsupportedRequestException;
+import org.eclipse.mylyn.commons.net.WebUtil;
+import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer.Token;
 import org.eclipse.mylyn.internal.trac.core.model.TracComponent;
 import org.eclipse.mylyn.internal.trac.core.model.TracMilestone;
 import org.eclipse.mylyn.internal.trac.core.model.TracPriority;
@@ -54,15 +63,6 @@ import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter.CompareOperat
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylyn.internal.trac.core.util.TracUtils;
 import org.eclipse.mylyn.internal.trac.core.util.TracHttpClientTransportFactory.TracHttpException;
-import org.eclipse.mylyn.web.core.AbstractWebLocation;
-import org.eclipse.mylyn.web.core.AuthenticationCredentials;
-import org.eclipse.mylyn.web.core.AuthenticationType;
-import org.eclipse.mylyn.web.core.HtmlStreamTokenizer;
-import org.eclipse.mylyn.web.core.HtmlTag;
-import org.eclipse.mylyn.web.core.Policy;
-import org.eclipse.mylyn.web.core.UnsupportedRequestException;
-import org.eclipse.mylyn.web.core.WebUtil;
-import org.eclipse.mylyn.web.core.HtmlStreamTokenizer.Token;
 
 /**
  * Represents a Trac repository that is accessed through the Trac's query script and web interface.

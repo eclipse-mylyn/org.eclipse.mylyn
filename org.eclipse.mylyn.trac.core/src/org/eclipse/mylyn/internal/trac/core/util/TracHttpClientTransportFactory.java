@@ -40,8 +40,8 @@ import org.apache.xmlrpc.common.XmlRpcStreamRequestConfig;
 import org.apache.xmlrpc.util.HttpUtil;
 import org.apache.xmlrpc.util.XmlRpcIOException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.mylyn.web.core.AbstractWebLocation;
-import org.eclipse.mylyn.web.core.WebUtil;
+import org.eclipse.mylyn.commons.net.AbstractWebLocation;
+import org.eclipse.mylyn.commons.net.WebUtil;
 import org.xml.sax.SAXException;
 
 /**

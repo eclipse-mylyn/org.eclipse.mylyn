@@ -14,12 +14,12 @@ import java.net.Proxy;
 import junit.framework.TestCase;
 
 import org.eclipse.core.net.proxy.IProxyData;
+import org.eclipse.mylyn.commons.net.AuthenticatedProxy;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.commons.net.UnsupportedRequestException;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryLocation;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.web.core.AuthenticatedProxy;
-import org.eclipse.mylyn.web.core.AuthenticationCredentials;
-import org.eclipse.mylyn.web.core.AuthenticationType;
-import org.eclipse.mylyn.web.core.UnsupportedRequestException;
 
 public class TaskRepositoryLocationTest extends TestCase {
 

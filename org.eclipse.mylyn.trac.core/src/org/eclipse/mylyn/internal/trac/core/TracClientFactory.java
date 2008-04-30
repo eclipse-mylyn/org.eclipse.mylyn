@@ -11,8 +11,8 @@ package org.eclipse.mylyn.internal.trac.core;
 import java.net.MalformedURLException;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
-import org.eclipse.mylyn.web.core.AbstractWebLocation;
 
 /**
  * @author Steffen Pingel

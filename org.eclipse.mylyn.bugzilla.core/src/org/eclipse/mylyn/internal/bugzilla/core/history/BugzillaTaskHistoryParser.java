@@ -21,10 +21,10 @@ import java.util.Locale;
 import javax.security.auth.login.LoginException;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer;
+import org.eclipse.mylyn.commons.net.HtmlTag;
+import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer.Token;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaLanguageSettings;
-import org.eclipse.mylyn.web.core.HtmlStreamTokenizer;
-import org.eclipse.mylyn.web.core.HtmlTag;
-import org.eclipse.mylyn.web.core.HtmlStreamTokenizer.Token;
 
 /**
  * Parses Bugzilla bug activity page to fill in a BugActivity object

@@ -15,7 +15,7 @@ import org.apache.commons.httpclient.HttpConnection;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.methods.GetMethod;
-import org.eclipse.mylyn.web.core.WebClientUtil;
+import org.eclipse.mylyn.commons.net.WebClientUtil;
 
 /**
  * Use <code>GzipGetMethod</code> instead of {@link GetMethod} to make Mylyn well-behaved when accessing repositories

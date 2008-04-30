@@ -8,8 +8,8 @@
 
 package org.eclipse.mylyn.tasks.core;
 
+import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryLocation;
-import org.eclipse.mylyn.web.core.AbstractWebLocation;
 
 /**
  * @since 2.2
@@ -17,6 +17,9 @@ import org.eclipse.mylyn.web.core.AbstractWebLocation;
  */
 public class TaskRepositoryLocationFactory {
 
+	/**
+	 * @since 3.0
+	 */
 	public AbstractWebLocation createWebLocation(final TaskRepository taskRepository) {
 		return new TaskRepositoryLocation(taskRepository);
 	}

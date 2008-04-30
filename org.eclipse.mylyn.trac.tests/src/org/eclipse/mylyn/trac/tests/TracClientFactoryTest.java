@@ -10,6 +10,7 @@ package org.eclipse.mylyn.trac.tests;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.context.tests.support.TestUtil;
 import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
 import org.eclipse.mylyn.context.tests.support.TestUtil.PrivilegeLevel;
@@ -20,7 +21,6 @@ import org.eclipse.mylyn.internal.trac.core.TracLoginException;
 import org.eclipse.mylyn.internal.trac.core.TracWebClient;
 import org.eclipse.mylyn.internal.trac.core.TracXmlRpcClient;
 import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
-import org.eclipse.mylyn.web.core.WebLocation;
 
 /**
  * @author Steffen Pingel

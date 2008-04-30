@@ -8,10 +8,10 @@
 
 package org.eclipse.mylyn.tasks.ui;
 
+import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.internal.tasks.ui.TaskRepositoryLocationUi;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
-import org.eclipse.mylyn.web.core.AbstractWebLocation;
 
 /**
  * @since 2.2

@@ -16,7 +16,7 @@ Require-Bundle: org.apache.xmlrpc;bundle-version="3.0.0",
  org.eclipse.mylyn.tasks.core,
  org.eclipse.mylyn.trac.ui,
  org.eclipse.mylyn.trac.core,
- org.eclipse.mylyn.web.core
+ org.eclipse.mylyn.commons.net
 Export-Package: org.eclipse.mylyn.internal.trac.ui;x-internal:=true,
  org.eclipse.mylyn.trac.tests;x-internal:=true,
  org.eclipse.mylyn.trac.tests.support;x-internal:=true

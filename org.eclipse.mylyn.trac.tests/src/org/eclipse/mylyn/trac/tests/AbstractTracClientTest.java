@@ -14,14 +14,14 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.mylyn.commons.net.IProxyProvider;
+import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.context.tests.support.TestUtil;
 import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
 import org.eclipse.mylyn.context.tests.support.TestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.TracClientFactory;
 import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
-import org.eclipse.mylyn.web.core.IProxyProvider;
-import org.eclipse.mylyn.web.core.WebLocation;
 
 /**
  * Provides a base implementation for test cases that access trac repositories.

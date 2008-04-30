@@ -19,9 +19,9 @@ import java.util.Vector;
 
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
+import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.internal.trac.core.TracXmlRpcClient;
 import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
-import org.eclipse.mylyn.web.core.WebLocation;
 
 /**
  * @author Steffen Pingel

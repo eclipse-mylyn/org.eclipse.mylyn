@@ -14,12 +14,12 @@ import java.net.Proxy.Type;
 
 import org.eclipse.core.net.proxy.IProxyData;
 import org.eclipse.core.net.proxy.IProxyService;
-import org.eclipse.mylyn.internal.web.core.WebCorePlugin;
+import org.eclipse.mylyn.commons.net.AbstractWebLocation;
+import org.eclipse.mylyn.commons.net.AuthenticatedProxy;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.internal.commons.net.CommonsNetPlugin;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.web.core.AbstractWebLocation;
-import org.eclipse.mylyn.web.core.AuthenticatedProxy;
-import org.eclipse.mylyn.web.core.AuthenticationCredentials;
-import org.eclipse.mylyn.web.core.AuthenticationType;
 
 /**
  * @author Steffen Pingel
@@ -40,7 +40,7 @@ public class TaskRepositoryLocation extends AbstractWebLocation {
 			return taskRepository.getProxy();
 		}
 
-		IProxyService service = WebCorePlugin.getProxyService();
+		IProxyService service = CommonsNetPlugin.getProxyService();
 		if (service != null && service.isProxiesEnabled()) {
 			IProxyData data = service.getProxyDataForHost(host, proxyType);
 			if (data != null && data.getHost() != null) {

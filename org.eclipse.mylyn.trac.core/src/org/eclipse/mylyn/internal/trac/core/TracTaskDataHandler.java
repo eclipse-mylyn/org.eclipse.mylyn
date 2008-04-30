@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.trac.core.TracAttributeFactory.Attribute;
 import org.eclipse.mylyn.internal.trac.core.TracTask.Kind;
 import org.eclipse.mylyn.internal.trac.core.model.TracAttachment;
@@ -42,7 +43,6 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskComment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.web.core.Policy;
 
 /**
  * @author Steffen Pingel
