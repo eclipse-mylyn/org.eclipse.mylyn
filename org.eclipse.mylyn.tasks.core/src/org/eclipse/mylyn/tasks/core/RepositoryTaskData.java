@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 /**
  * This data structure is not to be subclassed but rather used directly to hold repository task data (attribute key,
@@ -23,8 +24,9 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
  * @author Mik Kersten
  * @author Rob Elves
  * @since 2.0
+ * @deprecated use {@link TaskData} instead
  */
-//API 3.0 deprecate
+@Deprecated
 public final class RepositoryTaskData extends AttributeContainer implements Serializable {
 
 	private static final long serialVersionUID = 2304501248225237699L;
@@ -124,7 +126,7 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 	 * Get an operation from the bug based on its display name
 	 * 
 	 * @param displayText
-	 *            The display text for the operation
+	 * 		The display text for the operation
 	 * @return The operation that has the display text
 	 */
 	public RepositoryOperation getOperation(String displayText) {
@@ -200,7 +202,7 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 	 * Add an operation to the bug
 	 * 
 	 * @param o
-	 *            The operation to add
+	 * 		The operation to add
 	 */
 	public void addOperation(RepositoryOperation o) {
 		repositoryOperations.add(o);

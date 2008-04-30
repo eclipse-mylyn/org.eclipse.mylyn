@@ -36,6 +36,7 @@ import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -253,7 +254,7 @@ public class NewAttachmentWizard extends Wizard {
 	public static boolean forceRefreshInplace(AbstractTask task) {
 		if (task != null) {
 			String handleTarget = task.getHandleIdentifier();
-			for (TaskEditor editor : TasksUiUtil.getActiveRepositoryTaskEditors()) {
+			for (TaskEditor editor : TasksUiInternal.getActiveRepositoryTaskEditors()) {
 				if (editor.getEditorInput() instanceof AbstractRepositoryTaskEditorInput) {
 					AbstractRepositoryTaskEditorInput input = (AbstractRepositoryTaskEditorInput) editor.getEditorInput();
 					if (input.getTaskData() != null) {

@@ -28,6 +28,7 @@ import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
  * @author Steffen Pingel
  * @since 2.0
  */
+@Deprecated
 public abstract class AbstractAttachmentHandler {
 
 	protected static final int BUFFER_SIZE = 1024;

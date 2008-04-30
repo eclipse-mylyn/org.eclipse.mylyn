@@ -21,6 +21,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
@@ -73,7 +74,7 @@ public class AddExistingTaskJob extends Job {
 				TaskActivityUtil.snapEndOfWorkDay(newSchedule);
 				TasksUiPlugin.getTaskActivityManager().setScheduledFor(newTask, newSchedule.getTime());
 
-				TasksUiUtil.refreshAndOpenTaskListElement(newTask);
+				TasksUiInternal.refreshAndOpenTaskListElement(newTask);
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 
 					public void run() {

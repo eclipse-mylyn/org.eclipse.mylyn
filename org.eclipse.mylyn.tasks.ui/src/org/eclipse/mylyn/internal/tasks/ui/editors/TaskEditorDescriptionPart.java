@@ -17,14 +17,14 @@ import java.util.Set;
 
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.mylyn.internal.tasks.core.IdentityAttributeFactory;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylyn.tasks.core.AbstractDuplicateDetector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.IdentityAttributeFactory;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.mylyn.tasks.ui.search.SearchHitCollector;
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;

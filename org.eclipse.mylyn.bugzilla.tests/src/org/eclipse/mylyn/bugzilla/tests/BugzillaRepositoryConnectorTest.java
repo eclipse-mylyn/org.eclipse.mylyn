@@ -29,6 +29,8 @@ import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.tasks.core.LocalAttachment;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.search.RepositorySearchResult;
+import org.eclipse.mylyn.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryOperation;
@@ -38,8 +40,6 @@ import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationContext;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
-import org.eclipse.mylyn.tasks.ui.search.RepositorySearchResult;
-import org.eclipse.mylyn.tasks.ui.search.SearchHitCollector;
 
 /**
  * @author Mik Kersten

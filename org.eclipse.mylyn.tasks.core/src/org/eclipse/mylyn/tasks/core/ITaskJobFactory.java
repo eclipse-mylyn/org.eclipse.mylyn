@@ -6,14 +6,10 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.ui;
+package org.eclipse.mylyn.tasks.core;
 
 import java.util.Set;
 
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.sync.SubmitJob;
@@ -23,7 +19,7 @@ import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
  * @since 3.0
  * @author Steffen Pingel
  */
-public interface ITasksJobFactory {
+public interface ITaskJobFactory {
 
 	public abstract SynchronizationJob createSynchronizeTasksJob(AbstractRepositoryConnector connector,
 			TaskRepository taskRepository, Set<AbstractTask> tasks);

@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.tasks.ui.editors;
+package org.eclipse.mylyn.tasks.ui.editors;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.resource.JFaceResources;
@@ -24,12 +24,13 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
  * @author Steffen Pingel
+ * @since 3.0
  */
 public abstract class AbstractAttributeEditor {
 
-	protected static final int MAXIMUM_HEIGHT = 140;
+	public static final int MAXIMUM_HEIGHT = 140;
 
-	protected static final int MAXIMUM_WIDTH = 500;
+	public static final int MAXIMUM_WIDTH = 500;
 
 	// XXX why is this required?
 	protected static final Font TEXT_FONT = JFaceResources.getDefaultFont();

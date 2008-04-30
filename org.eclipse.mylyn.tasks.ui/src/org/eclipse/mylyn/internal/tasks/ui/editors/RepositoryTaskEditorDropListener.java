@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.ui.editors;
+package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import java.io.File;
 
@@ -15,7 +15,10 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.DropTargetListener;
@@ -30,9 +33,9 @@ import org.eclipse.swt.widgets.Control;
  * @author Mik Kersten
  * @author Maarten Meijer
  */
-class RepositoryTaskEditorDropListener implements DropTargetListener {
+public class RepositoryTaskEditorDropListener implements DropTargetListener {
 
-	private final AbstractRepositoryTaskEditor AbstractTaskEditor;
+	private final AbstractRepositoryTaskEditor editor;
 
 	private final FileTransfer fileTransfer;
 
@@ -40,9 +43,15 @@ class RepositoryTaskEditorDropListener implements DropTargetListener {
 
 	private final Control control;
 
-	public RepositoryTaskEditorDropListener(AbstractRepositoryTaskEditor AbstractTaskEditor, FileTransfer fileTransfer,
-			TextTransfer textTransfer, Control control) {
-		this.AbstractTaskEditor = AbstractTaskEditor;
+	private final TaskRepository repository;
+
+	private final RepositoryTaskData taskData;
+
+	public RepositoryTaskEditorDropListener(AbstractRepositoryTaskEditor editor, TaskRepository repository,
+			RepositoryTaskData taskData, FileTransfer fileTransfer, TextTransfer textTransfer, Control control) {
+		this.editor = editor;
+		this.repository = repository;
+		this.taskData = taskData;
 		this.fileTransfer = fileTransfer;
 		this.textTransfer = textTransfer;
 		this.control = control;
@@ -104,29 +113,28 @@ class RepositoryTaskEditorDropListener implements DropTargetListener {
 	public void drop(DropTargetEvent event) {
 		if (textTransfer.isSupportedType(event.currentDataType)) {
 			String text = (String) event.data;
-			AbstractTask task = TasksUi.getTaskListManager().getTaskList().getTask(
-					this.AbstractTaskEditor.repository.getRepositoryUrl(), this.AbstractTaskEditor.taskData.getTaskId());
+			AbstractTask task = TasksUi.getTaskListManager().getTaskList().getTask(repository.getRepositoryUrl(),
+					taskData.getTaskId());
 			if (!(task != null)) {
 				// Should not happen
 				return;
 			}
 
-			AbstractTaskEditor.setGlobalBusy(true);
-			NewAttachmentWizard naw = new NewAttachmentWizard(this.AbstractTaskEditor.repository, task, text);
+			editor.setGlobalBusy(true);
+			NewAttachmentWizard naw = new NewAttachmentWizard(repository, task, text);
 			openDialog(naw, null);
 		}
 		if (fileTransfer.isSupportedType(event.currentDataType)) {
 			String[] files = (String[]) event.data;
 			if (files.length > 0) {
-				AbstractTask task = TasksUi.getTaskListManager().getTaskList().getTask(
-						this.AbstractTaskEditor.repository.getRepositoryUrl(), this.AbstractTaskEditor.taskData.getTaskId());
+				AbstractTask task = TasksUi.getTaskListManager().getTaskList().getTask(repository.getRepositoryUrl(),
+						taskData.getTaskId());
 				if (task == null) {
 					// Should not happen
 					return;
 				}
 
-				NewAttachmentWizard naw = new NewAttachmentWizard(this.AbstractTaskEditor.repository, task, new File(
-						files[0]));
+				NewAttachmentWizard naw = new NewAttachmentWizard(repository, task, new File(files[0]));
 				String error = null;
 				if (files.length > 1) {
 					error = "Note that only the first file dragged will be attached.";
@@ -138,12 +146,12 @@ class RepositoryTaskEditorDropListener implements DropTargetListener {
 
 	/**
 	 * @param naw
-	 *            wizard to attach dialog to.
+	 * 		wizard to attach dialog to.
 	 * @param message
-	 *            error to display or none if <code>null</code>
+	 * 		error to display or none if <code>null</code>
 	 */
 	private void openDialog(NewAttachmentWizard naw, String message) {
-		AbstractTaskEditor.setGlobalBusy(true);
+		editor.setGlobalBusy(true);
 		NewAttachmentWizardDialog dialog = new NewAttachmentWizardDialog(control.getShell(), naw, true);
 		naw.setDialog(dialog);
 		dialog.create();
@@ -152,7 +160,7 @@ class RepositoryTaskEditorDropListener implements DropTargetListener {
 		}
 		int result = dialog.open();
 		if (result != Window.OK) {
-			AbstractTaskEditor.setGlobalBusy(false);
+			editor.setGlobalBusy(false);
 		}
 	}
 }

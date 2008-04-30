@@ -16,6 +16,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
  * @author Rob Elves
  * @since 3.0
  */
+@SuppressWarnings("deprecation")
 public abstract class TaskDataCollector {
 
 	/**
@@ -26,6 +27,7 @@ public abstract class TaskDataCollector {
 	/**
 	 * @since 3.0
 	 */
+	@Deprecated
 	public abstract void accept(RepositoryTaskData taskData);
 
 	public void accept(TaskData taskData) {

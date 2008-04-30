@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package org.eclipse.mylyn.internal.tasks.ui.editors;
+package org.eclipse.mylyn.tasks.ui.editors;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -31,12 +31,14 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColorsAndFonts;
+import org.eclipse.mylyn.internal.tasks.core.IdentityAttributeFactory;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataUtil;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalProvider;
-import org.eclipse.mylyn.tasks.core.IdentityAttributeFactory;
+import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTextViewer;
+import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextAttributeEditor;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionContributor;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
-import org.eclipse.mylyn.tasks.ui.editors.AbstractRenderingEngine;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -56,6 +58,7 @@ import org.eclipse.ui.themes.IThemeManager;
 
 /**
  * @author Steffen Pingel
+ * @since 3.0
  */
 // TODO EDITOR rename to AttributeUiToolkit?
 public class AttributeEditorToolkit {
@@ -180,9 +183,9 @@ public class AttributeEditorToolkit {
 	 * Adds content assist to the given text field.
 	 * 
 	 * @param text
-	 *            text field to decorate.
+	 * 		text field to decorate.
 	 * @param proposalProvider
-	 *            instance providing content proposals
+	 * 		instance providing content proposals
 	 * @return the ContentAssistCommandAdapter for the field.
 	 */
 	private ContentAssistCommandAdapter applyContentAssist(Text text, IContentProposalProvider proposalProvider) {
@@ -237,7 +240,7 @@ public class AttributeEditorToolkit {
 	 * Creates an IContentProposalProvider to provide content assist proposals for the given attribute.
 	 * 
 	 * @param attribute
-	 *            attribute for which to provide content assist.
+	 * 		attribute for which to provide content assist.
 	 * @return the IContentProposalProvider.
 	 */
 	private IContentProposalProvider createContentProposalProvider(TaskAttribute attribute) {
@@ -288,7 +291,7 @@ public class AttributeEditorToolkit {
 	 * Called to check if there's content assist available for the given attribute.
 	 * 
 	 * @param attribute
-	 *            the attribute
+	 * 		the attribute
 	 * @return true if content assist is available for the specified attribute.
 	 */
 	// TODO EDITOR make private

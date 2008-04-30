@@ -19,13 +19,14 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * @author Rob Elves
  * @since 2.0
  */
+@Deprecated
 public interface ITaskFactory {
 
 	/**
-	 * @param synchData -
-	 *            synchronize task with the provided taskData
-	 * @param forced -
-	 *            user requested synchronization
+	 * @param synchData
+	 * 		- synchronize task with the provided taskData
+	 * @param forced
+	 * 		- user requested synchronization
 	 */
 	public abstract AbstractTask createTask(RepositoryTaskData taskData, IProgressMonitor monitor) throws CoreException;
 

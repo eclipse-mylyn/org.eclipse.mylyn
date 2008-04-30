@@ -38,13 +38,13 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskWorkingSetAction;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskListChangeAdapter;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.search.internal.ui.SearchDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MenuDetectEvent;
@@ -413,7 +413,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 //						if (TaskListView.getFromActivePerspective().getDrilledIntoCategory() != null) {
 //							TaskListView.getFromActivePerspective().goUpToRoot();
 //						}
-						TasksUiUtil.refreshAndOpenTaskListElement(activeTask);
+						TasksUiInternal.refreshAndOpenTaskListElement(activeTask);
 					}
 				}
 			}
@@ -502,7 +502,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			manager.add(new OpenTaskListElementAction(null) {
 				@Override
 				public void run() {
-					TasksUiUtil.refreshAndOpenTaskListElement(activeTask);
+					TasksUiInternal.refreshAndOpenTaskListElement(activeTask);
 				}
 			});
 

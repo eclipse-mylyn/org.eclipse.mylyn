@@ -14,8 +14,10 @@ package org.eclipse.mylyn.tasks.core;
  * @author Mik Kersten
  * @since 2.0
  */
+// API 3.0 rename to ITaskRepositoryManagerListener
 public interface ITaskRepositoryListener {
 
+	// API 3.0 remove?
 	public abstract void repositoriesRead();
 
 	public abstract void repositoryAdded(TaskRepository repository);

@@ -6,14 +6,17 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.core;
+package org.eclipse.mylyn.internal.tasks.core;
 
 import java.util.Date;
+
+import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
 
 /**
  * @since 3.0
  * @author Steffen Pingel
  */
+@Deprecated
 public class IdentityAttributeFactory extends AbstractAttributeFactory {
 
 	private static final IdentityAttributeFactory INSTANCE = new IdentityAttributeFactory();

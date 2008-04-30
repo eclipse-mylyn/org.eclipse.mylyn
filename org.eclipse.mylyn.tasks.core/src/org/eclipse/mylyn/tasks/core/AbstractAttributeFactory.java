@@ -16,8 +16,10 @@ import java.util.Date;
  * 
  * @author Rob Elves
  * @since 2.0
+ * @deprecated use {@link AttributeMapper} instead
  */
 @SuppressWarnings("serial")
+@Deprecated
 public abstract class AbstractAttributeFactory implements Serializable {
 
 	public RepositoryTaskAttribute createAttribute(String key) {

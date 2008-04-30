@@ -10,7 +10,6 @@ package org.eclipse.mylyn.tasks.ui;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
@@ -24,9 +23,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceNode;
 import org.eclipse.jface.preference.IPreferencePage;
@@ -41,18 +38,16 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
-import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskDelegate;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiMessages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
-import org.eclipse.mylyn.internal.tasks.ui.editors.CategoryEditor;
-import org.eclipse.mylyn.internal.tasks.ui.editors.CategoryEditorInput;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.EditRepositoryWizard;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.MultiRepositoryAwareWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewLocalTaskWizard;
-import org.eclipse.mylyn.internal.tasks.ui.wizards.NewTaskWizard;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -70,7 +65,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -200,28 +194,12 @@ public class TasksUiUtil {
 		return task;
 	}
 
+	/**
+	 * @deprecated Use {@link TasksUiInternal#getActiveRepositoryTaskEditors()} instead
+	 */
+	@Deprecated
 	public static List<TaskEditor> getActiveRepositoryTaskEditors() {
-		List<TaskEditor> repositoryTaskEditors = new ArrayList<TaskEditor>();
-		IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
-		for (IWorkbenchWindow window : windows) {
-			IEditorReference[] editorReferences = window.getActivePage().getEditorReferences();
-			for (IEditorReference editorReference : editorReferences) {
-				try {
-					if (editorReference.getEditorInput() instanceof TaskEditorInput) {
-						TaskEditorInput input = (TaskEditorInput) editorReference.getEditorInput();
-						if (input.getTask() != null) {
-							IEditorPart editorPart = editorReference.getEditor(false);
-							if (editorPart instanceof TaskEditor) {
-								repositoryTaskEditors.add((TaskEditor) editorPart);
-							}
-						}
-					}
-				} catch (PartInitException e) {
-					// ignore
-				}
-			}
-		}
-		return repositoryTaskEditors;
+		return TasksUiInternal.getActiveRepositoryTaskEditors();
 	}
 
 	public static TaskRepository getSelectedRepository() {
@@ -407,17 +385,12 @@ public class TasksUiUtil {
 		return null;
 	}
 
-	private static void openEditor(TaskCategory category) {
-		final IEditorInput input = new CategoryEditorInput(category);
-		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-				if (window != null) {
-					IWorkbenchPage page = window.getActivePage();
-					openEditor(input, CategoryEditor.ID_EDITOR, page);
-				}
-			}
-		});
+	/**
+	 * @deprecated Use {@link TasksUiInternal#openEditor(TaskCategory)} instead
+	 */
+	@Deprecated
+	public static void openEditor(TaskCategory category) {
+		TasksUiInternal.openEditor(category);
 	}
 
 	public static int openEditRepositoryWizard(TaskRepository repository) {
@@ -456,7 +429,7 @@ public class TasksUiUtil {
 
 		// make sure the wizard has created its pages
 		dialog.create();
-		if (!(wizard instanceof NewTaskWizard) && wizard.canFinish()) {
+		if (!(wizard instanceof MultiRepositoryAwareWizard) && wizard.canFinish()) {
 			wizard.performFinish();
 			return true;
 		}
@@ -480,7 +453,7 @@ public class TasksUiUtil {
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskRepository.getConnectorKind());
 			wizard = connectorUi.getNewTaskWizard(taskRepository, taskSelection);
 		} else {
-			wizard = new NewTaskWizard(taskSelection);
+			wizard = TasksUiInternal.createNewTaskWizard(taskSelection);
 		}
 
 		return openNewTaskEditor(shell, wizard, taskSelection);
@@ -771,65 +744,12 @@ public class TasksUiUtil {
 		}
 	}
 
-	// API 3.0 move to internal class?
+	/**
+	 * @deprecated Use {@link TasksUiInternal#refreshAndOpenTaskListElement(AbstractTaskContainer)} instead
+	 */
+	@Deprecated
 	public static void refreshAndOpenTaskListElement(AbstractTaskContainer element) {
-		if (element instanceof AbstractTask || element instanceof ScheduledTaskDelegate) {
-			final AbstractTask task;
-			if (element instanceof ScheduledTaskDelegate) {
-				task = ((ScheduledTaskDelegate) element).getCorrespondingTask();
-			} else {
-				task = (AbstractTask) element;
-			}
-
-			if (task == null) {
-				// FIXME display error?
-				return;
-			}
-
-			if (task instanceof LocalTask) {
-				TasksUiUtil.openTask(task);
-			} else {
-				String repositoryKind = task.getConnectorKind();
-				final AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-						repositoryKind);
-
-				TaskRepository repository = TasksUi.getRepositoryManager().getRepository(repositoryKind,
-						task.getRepositoryUrl());
-				if (repository == null) {
-					StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-							"No repository found for task. Please create repository in "
-									+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + "."));
-					return;
-				}
-
-				if (connector != null) {
-					RepositoryTaskData taskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(
-							task.getRepositoryUrl(), task.getTaskId());
-					if (taskData != null || connector.getTaskDataHandler() == null
-							|| connector.getTaskDataHandler2() != null) {
-						TasksUiUtil.openTaskAndRefresh(task);
-					} else {
-						// TODO consider moving this into the editor, i.e. have the editor refresh the task if task data is missing
-						TasksUi.synchronizeTask(connector, task, true, new JobChangeAdapter() {
-							@Override
-							public void done(IJobChangeEvent event) {
-								PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-									public void run() {
-										TasksUiUtil.openTask(task);
-									}
-								});
-							}
-						});
-					}
-				}
-			}
-		} else if (element instanceof TaskCategory) {
-			TasksUiUtil.openEditor((TaskCategory) element);
-		} else if (element instanceof AbstractRepositoryQuery) {
-			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(query.getConnectorKind());
-			connectorUi.openEditQueryDialog(query);
-		}
+		TasksUiInternal.refreshAndOpenTaskListElement(element);
 	}
 
 	/**
@@ -839,7 +759,7 @@ public class TasksUiUtil {
 		if (task != null) {
 			if (task.getSynchronizationState() == RepositoryTaskSyncState.INCOMING
 					|| task.getSynchronizationState() == RepositoryTaskSyncState.CONFLICT) {
-				for (TaskEditor editor : getActiveRepositoryTaskEditors()) {
+				for (TaskEditor editor : TasksUiInternal.getActiveRepositoryTaskEditors()) {
 					if (editor.getEditorInput().equals(editorInput)) {
 						editor.refreshEditorContents();
 						editor.getEditorSite().getPage().activate(editor);

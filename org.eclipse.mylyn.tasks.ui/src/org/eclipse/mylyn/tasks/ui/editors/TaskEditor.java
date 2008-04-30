@@ -36,7 +36,6 @@ import org.eclipse.mylyn.internal.tasks.ui.TaskTransfer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ToggleTaskActivationAction;
-import org.eclipse.mylyn.internal.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorBusyIndicator;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.IBusyEditor;
@@ -180,6 +179,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	/**
 	 * Refresh editor with new contents (if any)
 	 */
+	@SuppressWarnings("deprecation")
 	public void refreshEditorContents() {
 		for (IFormPage page : getPages()) {
 			if (page instanceof AbstractRepositoryTaskEditor) {
@@ -270,6 +270,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		return taskEditorInput;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void addPages() {
 		editorBusyIndicator = new EditorBusyIndicator(new IBusyEditor() {
@@ -345,6 +346,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		updateTitleImage();
 	}
 
+	@Deprecated
 	private void addPage(AbstractTaskEditorFactory factory) {
 		IEditorInput editorInput;
 		if (taskEditorInput != null && taskEditorInput.getTask() == null) {
@@ -393,6 +395,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 	}
 
+	@SuppressWarnings("deprecation")
 	private void updateTitleImage() {
 		if (task != null) {
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(task.getConnectorKind());
@@ -482,6 +485,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	protected void updateFormTitle() {
 		RepositoryTaskData taskData = null;
 		IEditorInput input = getEditorInput();
@@ -552,31 +556,24 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	}
 
 	private void setFormHeaderLabel(RepositoryTaskData taskData) {
-		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskData.getConnectorKind());
-
 		String kindLabel = taskData.getTaskKind();
-
-		if (connectorUi != null && task != null) {
-			kindLabel = connectorUi.getTaskKindLabel(task);
-		}
-
 		String idLabel = taskData.getTaskKey();
 
-		if (taskData.isNew()) {
-			if (connectorUi != null) {
-				kindLabel = "New " + connectorUi.getTaskKindLabel(taskData);
-			} else {
-				kindLabel = "New " + taskData.getTaskKind();
+		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskData.getConnectorKind());
+		if (connectorUi != null && task != null) {
+			kindLabel = connectorUi.getTaskKindLabel(task);
+			if (taskData.isNew()) {
+				kindLabel = "New " + kindLabel;
+				idLabel = "";
 			}
-			idLabel = "";
 		}
 
-		if (idLabel != null) {
-			if (getHeaderForm().getForm() != null) {
+		if (getHeaderForm().getForm() != null) {
+			if (idLabel != null) {
 				getHeaderForm().getForm().setText(kindLabel + " " + idLabel);
+			} else {
+				getHeaderForm().getForm().setText(kindLabel);
 			}
-		} else if (getHeaderForm().getForm() != null) {
-			getHeaderForm().getForm().setText(kindLabel);
 		}
 	}
 

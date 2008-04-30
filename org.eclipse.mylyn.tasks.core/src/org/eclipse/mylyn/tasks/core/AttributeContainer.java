@@ -17,14 +17,16 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
 /**
  * Encapsulates attributes for task data.
  * 
  * @author Rob Elves
  * @since 2.0
+ * @use {@link TaskAttribute} instead
  */
-//API 3.0 deprecate
+@Deprecated
 public class AttributeContainer implements Serializable {
 
 	public static final String ERROR_NO_ATTRIBUTE_FACTORY = "Attribute factory not available.";

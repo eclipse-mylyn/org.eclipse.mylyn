@@ -10,6 +10,7 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.window.Window;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -46,7 +47,7 @@ public class OpenTaskAction extends ActionDelegate implements IWorkbenchWindowAc
 					TasksUiUtil.openUrl(task.getUrl());
 				}
 			} else {
-				TasksUiUtil.refreshAndOpenTaskListElement(task);
+				TasksUiInternal.refreshAndOpenTaskListElement(task);
 			}
 		}
 	}

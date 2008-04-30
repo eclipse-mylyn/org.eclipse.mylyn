@@ -10,7 +10,6 @@ package org.eclipse.mylyn.internal.tasks.ui.search;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylyn.tasks.ui.search.RepositorySearchResult;
 
 /**
  * @author Rob Elves (moved into task.ui)

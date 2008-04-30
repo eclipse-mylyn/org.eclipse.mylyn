@@ -85,10 +85,11 @@ import org.eclipse.ui.themes.IThemeManager;
  * @author Rob Elves
  * @author Eugene Kuleshov (spelling correction)
  * 
- * @ref: PDEFormPage.class ref:
- * @ref: http://dev.eclipse.org/newslists/news.eclipse.platform.swt/msg19676.html
+ * ref: PDEFormPage.class ref:
+ * ref: http://dev.eclipse.org/newslists/news.eclipse.platform.swt/msg19676.html
+ * @deprecated use {@link AbstractTaskEditorPage} instead
  */
-// API 3.0 deprecate
+@Deprecated
 public class TaskFormPage extends FormPage {
 
 	protected boolean isDirty;

@@ -46,6 +46,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.actions.QueryImportAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskImportAction;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -317,7 +318,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 				if (repository.getRepositoryUrl().equals(repositoryUrl)) {
 					try {
 						newTask = TasksUiUtil.createTask(repository, id, new NullProgressMonitor());
-						TasksUiUtil.refreshAndOpenTaskListElement(newTask);
+						TasksUiInternal.refreshAndOpenTaskListElement(newTask);
 						return true;
 					} catch (CoreException e) {
 						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not create task", e));

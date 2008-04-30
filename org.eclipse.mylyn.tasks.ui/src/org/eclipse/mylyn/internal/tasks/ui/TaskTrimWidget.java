@@ -28,13 +28,13 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.OpenTaskListElementAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenWithBrowserAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
 import org.eclipse.mylyn.tasks.core.TaskActivationAdapter;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MenuDetectEvent;
 import org.eclipse.swt.events.MenuDetectListener;
@@ -207,7 +207,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 				if (taskListView != null && taskListView.getDrilledIntoCategory() != null) {
 					taskListView.goUpToRoot();
 				}
-				TasksUiUtil.refreshAndOpenTaskListElement((TasksUi.getTaskListManager().getActiveTask()));
+				TasksUiInternal.refreshAndOpenTaskListElement((TasksUi.getTaskListManager().getActiveTask()));
 			}
 		});
 
@@ -223,7 +223,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 					taskListView.goUpToRoot();
 				}
 
-				TasksUiUtil.refreshAndOpenTaskListElement(activeTask);
+				TasksUiInternal.refreshAndOpenTaskListElement(activeTask);
 			}
 		});
 
@@ -250,7 +250,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 			manager.add(new OpenTaskListElementAction(null) {
 				@Override
 				public void run() {
-					TasksUiUtil.refreshAndOpenTaskListElement(activeTask);
+					TasksUiInternal.refreshAndOpenTaskListElement(activeTask);
 				}
 			});
 

@@ -27,6 +27,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.ITaskListManager;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
+import org.eclipse.mylyn.tasks.core.ITaskJobFactory;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
@@ -41,7 +42,7 @@ public class TasksUi {
 
 	public static final String ID_PLANNING_PAGE = "org.eclipse.mylyn.tasks.ui.pageFactory.Planning";
 
-	public static ITasksJobFactory getJobFactory() {
+	public static ITaskJobFactory getJobFactory() {
 		return TasksUiPlugin.getTasksJobFactory();
 	}
 

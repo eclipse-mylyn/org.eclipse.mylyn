@@ -21,6 +21,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
  * 
  * @author Rob Elves
  */
+@Deprecated
 class OfflineDataStore implements Serializable {
 
 	private static final long serialVersionUID = -3909632088254980426L;

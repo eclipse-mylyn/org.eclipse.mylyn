@@ -28,6 +28,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.AttachScreenshotAction;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachment;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;

@@ -17,8 +17,9 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  * @author Mik Kersten
  * @author Rob Elves
  * @since 2.0
+ * @deprecated use {@link TaskEditorInput} instead
  */
-// API 3.0 deprecate
+@Deprecated
 public class RepositoryTaskEditorInput extends AbstractRepositoryTaskEditorInput {
 
 	protected String taskId;

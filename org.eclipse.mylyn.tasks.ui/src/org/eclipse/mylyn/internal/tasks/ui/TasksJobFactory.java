@@ -26,6 +26,7 @@ import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizeTasksJob;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITaskJobFactory;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
@@ -33,14 +34,12 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.sync.SubmitJob;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
-import org.eclipse.mylyn.tasks.ui.ITasksJobFactory;
 import org.eclipse.ui.progress.IProgressConstants;
 
 /**
  * @author Steffen Pingel
- * @since 3.0
  */
-public class TasksJobFactory implements ITasksJobFactory {
+public class TasksJobFactory implements ITaskJobFactory {
 
 	private final TaskList taskList;
 

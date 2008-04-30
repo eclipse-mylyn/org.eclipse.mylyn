@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.ui.search;
+package org.eclipse.mylyn.internal.tasks.ui.search;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.search.internal.ui.SearchPluginImages;

@@ -16,6 +16,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
  * @author Steffen Pingel
  * @since 3.0
  */
+@SuppressWarnings("deprecation")
 public interface ITaskDataManager {
 
 	public ITaskDataWorkingCopy createWorkingCopy(AbstractTask task, String kind, TaskData taskData);

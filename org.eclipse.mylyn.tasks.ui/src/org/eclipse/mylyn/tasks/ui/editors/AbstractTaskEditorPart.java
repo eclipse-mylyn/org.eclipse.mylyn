@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.tasks.ui.editors;
+package org.eclipse.mylyn.tasks.ui.editors;
 
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.JFaceResources;
@@ -26,6 +26,7 @@ import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * @author Steffen Pingel
+ * @since 3.0
  */
 public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 

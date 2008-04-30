@@ -67,8 +67,25 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 
 	private boolean stale = false;
 
+	/**
+	 * @since 3.0
+	 */
 	public enum RepositoryTaskSyncState {
-		OUTGOING, SYNCHRONIZED, INCOMING, CONFLICT
+		OUTGOING, SYNCHRONIZED, INCOMING, CONFLICT, UNREAD, UNSUBMITTED;
+
+		/**
+		 * @since 3.0
+		 */
+		public boolean isIncoming() {
+			switch (this) {
+			case INCOMING:
+			case UNREAD:
+				//case 
+				return true;
+			default:
+				return false;
+			}
+		}
 	}
 
 	// ************ Planning ****************

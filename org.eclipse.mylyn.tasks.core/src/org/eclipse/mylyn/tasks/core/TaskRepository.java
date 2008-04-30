@@ -49,6 +49,7 @@ import org.eclipse.mylyn.web.core.WebClientUtil;
  * @author Steffen Pingel
  * @since 2.0
  */
+@SuppressWarnings("deprecation")
 public final class TaskRepository extends PlatformObject {
 
 	public static final String DEFAULT_CHARACTER_ENCODING = "UTF-8";
@@ -65,14 +66,14 @@ public final class TaskRepository extends PlatformObject {
 
 	/**
 	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access
-	 *             credentials
+	 * 	credentials
 	 */
 	@Deprecated
 	public static final String AUTH_PASSWORD = AUTH_REPOSITORY + PASSWORD;
 
 	/**
 	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access
-	 *             credentials
+	 * 	credentials
 	 */
 	@Deprecated
 	public static final String AUTH_USERNAME = AUTH_REPOSITORY + USERNAME;
@@ -83,14 +84,14 @@ public final class TaskRepository extends PlatformObject {
 
 	/**
 	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access
-	 *             credentials
+	 * 	credentials
 	 */
 	@Deprecated
 	public static final String AUTH_HTTP_PASSWORD = AUTH_HTTP + PASSWORD;
 
 	/**
 	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access
-	 *             credentials
+	 * 	credentials
 	 */
 	@Deprecated
 	public static final String AUTH_HTTP_USERNAME = AUTH_HTTP + USERNAME;
@@ -115,14 +116,14 @@ public final class TaskRepository extends PlatformObject {
 
 	/**
 	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access
-	 *             credentials
+	 * 	credentials
 	 */
 	@Deprecated
 	public static final String PROXY_USERNAME = AUTH_PROXY + USERNAME;
 
 	/**
 	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access
-	 *             credentials
+	 * 	credentials
 	 */
 	@Deprecated
 	public static final String PROXY_PASSWORD = AUTH_PROXY + PASSWORD;
@@ -219,7 +220,6 @@ public final class TaskRepository extends PlatformObject {
 	}
 
 	// TODO e3.4 move to new api
-	@SuppressWarnings("deprecation")
 	private void addAuthInfo(Map<String, String> map) {
 		synchronized (LOCK) {
 			try {
@@ -259,7 +259,6 @@ public final class TaskRepository extends PlatformObject {
 	}
 
 	// TODO e3.4 move to new api
-	@SuppressWarnings("deprecation")
 	public void flushAuthenticationCredentials() {
 		synchronized (LOCK) {
 			isCachedUserName = false;
@@ -291,7 +290,7 @@ public final class TaskRepository extends PlatformObject {
 	}
 
 	// TODO e3.4 move to new api
-	@SuppressWarnings( { "unchecked", "deprecation" })
+	@SuppressWarnings( { "unchecked" })
 	private Map<String, String> getAuthInfo() {
 		synchronized (LOCK) {
 			if (Platform.isRunning()) {
@@ -358,7 +357,7 @@ public final class TaskRepository extends PlatformObject {
 	 * Returns the credentials for an authentication type.
 	 * 
 	 * @param authType
-	 *            the type of authentication
+	 * 		the type of authentication
 	 * @return null, if no credentials are set for <code>authType</code>
 	 * @since 2.2
 	 */
@@ -619,7 +618,7 @@ public final class TaskRepository extends PlatformObject {
 	 * Set the Configuration date to the {@link Date} indicated.
 	 * 
 	 * @param configuration
-	 *            date {@link {@link Date}}
+	 * 		date {@link {@link Date}
 	 */
 	final public void setConfigurationDate(final Date date) {
 		this.setProperty(PROPERTY_CONFIG_TIMESTAMP, String.valueOf(date.getTime()));
@@ -631,12 +630,11 @@ public final class TaskRepository extends PlatformObject {
 	 * Sets the credentials for <code>authType</code>.
 	 * 
 	 * @param authType
-	 *            the type of authentication
+	 * 		the type of authentication
 	 * @param credentials
-	 *            the credentials, if null, the credentials for <code>authType</code> will be flushed
+	 * 		the credentials, if null, the credentials for <code>authType</code> will be flushed
 	 * @param savePassword
-	 *            if true, the password will be persisted in the platform key ring; otherwise it will be stored in
-	 *            memory only
+	 * 		if true, the password will be persisted in the platform key ring; otherwise it will be stored in memory only
 	 * @since 2.2
 	 */
 	public synchronized void setCredentials(AuthenticationType authType, AuthenticationCredentials credentials,

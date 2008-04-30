@@ -10,10 +10,12 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.TextViewer;
-import org.eclipse.mylyn.internal.tasks.ui.editors.LayoutHint.ColumnSpan;
-import org.eclipse.mylyn.internal.tasks.ui.editors.LayoutHint.RowSpan;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
+import org.eclipse.mylyn.tasks.ui.editors.LayoutHint;
+import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.ColumnSpan;
+import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.RowSpan;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.ModifyEvent;

@@ -10,6 +10,8 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.VerifyKeyListener;
 import org.eclipse.swt.events.VerifyEvent;

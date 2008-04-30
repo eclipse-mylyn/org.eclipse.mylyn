@@ -15,12 +15,14 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.internal.tasks.ui.wizards.NewTaskWizard;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.MultiRepositoryAwareWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.SelectRepositoryPage;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
+import org.eclipse.mylyn.tasks.ui.wizards.NewTaskWizard;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
@@ -48,7 +50,7 @@ public class NewTaskWizardRepositorySelectionTest extends TestCase {
 		view.getViewer().setSelection(new StructuredSelection(mockTask), true);
 		assertEquals(mockTask, ((StructuredSelection) view.getViewer().getSelection()).getFirstElement());
 
-		NewTaskWizard wizard = new NewTaskWizard(null);
+		MultiRepositoryAwareWizard wizard = TasksUiInternal.createNewTaskWizard(null);
 		WizardDialog dialog = null;
 		dialog = new WizardDialog(shell, wizard);
 		dialog.setBlockOnOpen(false);

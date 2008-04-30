@@ -14,6 +14,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -49,7 +50,7 @@ public class OpenTaskListElementAction extends Action {
 			if (element instanceof AbstractTask && event != null && (event.keyCode & SWT.MOD1) != 0) {
 				TasksUiUtil.openTaskInBackground((AbstractTask) element, true);
 			} else if (element instanceof AbstractTask) {
-				TasksUiUtil.refreshAndOpenTaskListElement((AbstractTaskContainer) element);
+				TasksUiInternal.refreshAndOpenTaskListElement((AbstractTaskContainer) element);
 			} else {
 				if (viewer.getExpandedState(element)) {
 					viewer.collapseToLevel(element, 1);

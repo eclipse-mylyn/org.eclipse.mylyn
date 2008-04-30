@@ -68,7 +68,9 @@ import org.eclipse.ui.forms.widgets.Section;
  * 
  * @author Rob Elves (modifications)
  * @since 2.0
+ * @deprecated use {@link TaskEditorInput} instead
  */
+@Deprecated
 public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepositoryTaskEditor {
 
 	private static final int DESCRIPTION_WIDTH = 79 * 7; // 500;
@@ -403,7 +405,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	 * Returns the {@link AbstractTaskContainer category} the new task belongs to
 	 * 
 	 * @return {@link AbstractTaskContainer category} where the new task must be added to, or null if it must not be
-	 *         added to the task list
+	 * 	added to the task list
 	 */
 	@Override
 	@SuppressWarnings("unchecked")

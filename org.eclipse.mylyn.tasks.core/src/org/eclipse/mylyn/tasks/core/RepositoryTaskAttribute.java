@@ -21,6 +21,7 @@ import java.util.Map;
  * @author Rob Elves
  * @since 2.0
  */
+@Deprecated
 public final class RepositoryTaskAttribute implements Serializable {
 
 	private static final long serialVersionUID = 5548885751645139746L;
@@ -286,9 +287,9 @@ public final class RepositoryTaskAttribute implements Serializable {
 	 * Adds an attribute option value
 	 * 
 	 * @param readableValue
-	 *            The value displayed on the screen
+	 * 		The value displayed on the screen
 	 * @param parameterValue
-	 *            The option value used when sending the form to the server
+	 * 		The option value used when sending the form to the server
 	 */
 	public void addOption(String readableValue, String parameterValue) {
 		options.add(readableValue);
@@ -317,7 +318,7 @@ public final class RepositoryTaskAttribute implements Serializable {
 	 * Set whether the field was hidden in the bug
 	 * 
 	 * @param b
-	 *            Whether the field was hidden or not
+	 * 		Whether the field was hidden or not
 	 */
 	public void setHidden(boolean b) {
 		hidden = b;

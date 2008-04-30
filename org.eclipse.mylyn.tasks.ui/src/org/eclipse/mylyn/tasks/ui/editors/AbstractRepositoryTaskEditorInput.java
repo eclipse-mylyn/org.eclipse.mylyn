@@ -26,7 +26,9 @@ import org.eclipse.ui.IPersistableElement;
  * 
  * @author Rob Elves (modifications)
  * @since 2.0
+ * @deprecated use {@link TaskEditorInput} instead
  */
+@Deprecated
 public abstract class AbstractRepositoryTaskEditorInput implements IEditorInput {
 
 	protected String toolTipText = "";
@@ -51,7 +53,7 @@ public abstract class AbstractRepositoryTaskEditorInput implements IEditorInput 
 	 * Sets the tool tip text for this editor input.
 	 * 
 	 * @param str
-	 *            The new tool tip text.
+	 * 		The new tool tip text.
 	 */
 	protected void setToolTipText(String str) {
 		// 03-20-03 Allows editor to store title (once it is known)
@@ -126,7 +128,8 @@ public abstract class AbstractRepositoryTaskEditorInput implements IEditorInput 
 	}
 
 	public void refreshInput() {
-		setEditableTaskData(TasksUiPlugin.getTaskDataStorageManager().getEditableCopy(repository.getRepositoryUrl(), taskId));
+		setEditableTaskData(TasksUiPlugin.getTaskDataStorageManager().getEditableCopy(repository.getRepositoryUrl(),
+				taskId));
 		setOldTaskData(TasksUiPlugin.getTaskDataStorageManager().getOldTaskData(repository.getRepositoryUrl(), taskId));
 		setOldEdits(TasksUiPlugin.getTaskDataStorageManager().getEdits(repository.getRepositoryUrl(), taskId));
 	}

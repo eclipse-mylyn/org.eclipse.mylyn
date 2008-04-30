@@ -72,11 +72,13 @@ public abstract class AbstractRepositoryConnector {
 	/**
 	 * @return null if not supported
 	 */
+	@Deprecated
 	public abstract AbstractAttachmentHandler getAttachmentHandler();
 
 	/**
 	 * @return null if not supported
 	 */
+	@Deprecated
 	public abstract AbstractTaskDataHandler getTaskDataHandler();
 
 	/**
@@ -98,6 +100,7 @@ public abstract class AbstractRepositoryConnector {
 	 * 
 	 * @since 3.0
 	 */
+	@Deprecated
 	public abstract RepositoryTaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
 			throws CoreException;
 
@@ -211,9 +214,8 @@ public abstract class AbstractRepositoryConnector {
 
 	/**
 	 * @since 2.0
-	 * @deprecated use
-	 *             {@link #performQuery(TaskRepository, AbstractRepositoryQuery, TaskDataCollector, SynchronizationContext, IProgressMonitor)}
-	 *             instead
+	 * @deprecated use {@link #performQuery(TaskRepository, AbstractRepositoryQuery, TaskDataCollector,
+	 * 	SynchronizationContext, IProgressMonitor)} instead
 	 */
 	@Deprecated
 	public IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository, IProgressMonitor monitor,
@@ -256,19 +258,19 @@ public abstract class AbstractRepositoryConnector {
 	public abstract String getConnectorKind();
 
 	/**
-	 * Updates the properties of <code>repositoryTask</code>. Invoked when on task synchronization if
-	 * {@link #getTaskDataHandler()} returns <code>null</code> or
-	 * {@link AbstractTaskDataHandler#getTaskData(TaskRepository, String)} returns <code>null</code>.
+	 * Updates the properties of <code>repositoryTask</code>. Invoked when on task synchronization if {@link
+	 * #getTaskDataHandler()} returns <code>null</code> or {@link AbstractTaskDataHandler#getTaskData(TaskRepository,
+	 * String)} returns <code>null</code>.
 	 * 
 	 * <p>
 	 * Connectors that provide {@link RepositoryTaskData} objects for all tasks do not need to implement this method.
 	 * 
 	 * @param repository
-	 *            the repository
+	 * 		the repository
 	 * @param repositoryTask
-	 *            the task that is synchronized
+	 * 		the task that is synchronized
 	 * @throws CoreException
-	 *             thrown in case of error while synchronizing
+	 * 		thrown in case of error while synchronizing
 	 * @see {@link #getTaskDataHandler()}
 	 */
 	@Deprecated
@@ -282,6 +284,7 @@ public abstract class AbstractRepositoryConnector {
 	 * @return true, if properties of <code>task</code> were changed
 	 * @since 3.0
 	 */
+	@Deprecated
 	public abstract boolean updateTaskFromTaskData(TaskRepository repository, AbstractTask task,
 			RepositoryTaskData taskData);
 
@@ -350,11 +353,11 @@ public abstract class AbstractRepositoryConnector {
 	 * synchronizations fail silently when disconnected.
 	 * 
 	 * @return false if there was no tasks changed in the repository, otherwise collection of updated tasks (within
-	 *         <code>tasks</code> collection), so empty collection means that there are some other tasks changed
+	 * 	<code>tasks</code> collection), so empty collection means that there are some other tasks changed
 	 * 
 	 * @throws CoreException
 	 * @deprecated use {@link #preQuerySynchronization(TaskRepository, SynchronizationContext, IProgressMonitor)}
-	 *             instead
+	 * 	instead
 	 */
 	@Deprecated
 	public boolean markStaleTasks(TaskRepository repository, Set<AbstractTask> tasks, IProgressMonitor monitor)
@@ -432,7 +435,7 @@ public abstract class AbstractRepositoryConnector {
 	 * Default implementation returns true every 24hrs
 	 * 
 	 * @param monitor
-	 *            TODO
+	 * 		TODO
 	 * 
 	 * @return true to indicate that the repository configuration is stale and requires update
 	 * @throws CoreException

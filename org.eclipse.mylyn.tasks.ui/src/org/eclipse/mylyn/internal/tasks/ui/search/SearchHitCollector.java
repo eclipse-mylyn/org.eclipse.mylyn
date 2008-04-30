@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package org.eclipse.mylyn.tasks.ui.search;
+package org.eclipse.mylyn.internal.tasks.ui.search;
 
 import java.util.HashSet;
 import java.util.Set;

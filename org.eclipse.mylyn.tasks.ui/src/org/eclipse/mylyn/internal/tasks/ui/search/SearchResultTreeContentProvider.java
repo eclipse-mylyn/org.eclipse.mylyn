@@ -18,7 +18,6 @@ import org.eclipse.mylyn.internal.tasks.core.Person;
 import org.eclipse.mylyn.internal.tasks.core.TaskGroup;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.ui.search.RepositorySearchResult;
 
 /**
  * This implementation of <code>SearchResultContentProvider</code> is used for the table view of a Bugzilla search

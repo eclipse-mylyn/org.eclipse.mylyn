@@ -987,7 +987,7 @@
          point="org.eclipse.search.searchResultViewPages">
       <viewPage
             class="org.eclipse.mylyn.internal.tasks.ui.search.RepositorySearchResultView"
-            searchResultClass="org.eclipse.mylyn.tasks.ui.search.RepositorySearchResult"
+            searchResultClass="org.eclipse.mylyn.internal.tasks.ui.search.RepositorySearchResult"
             id="org.eclipse.mylyn.internal.tasks.ui.search.RepositorySearchResultView"/>
 <!--            id="org.eclipse.mylyn.bugzilla.BugzillaSearchResultPage"/>-->
    </extension>

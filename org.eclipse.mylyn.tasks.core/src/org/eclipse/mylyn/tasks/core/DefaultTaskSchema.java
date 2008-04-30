@@ -17,6 +17,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
  * @author Steffen Pingel
  * @since 3.0
  */
+@Deprecated
 public class DefaultTaskSchema {
 
 	private final RepositoryTaskData taskData;

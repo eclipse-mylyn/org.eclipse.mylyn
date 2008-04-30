@@ -17,6 +17,7 @@ import org.eclipse.mylyn.internal.monitor.ui.ActivityContextManager;
 import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.swt.SWT;
@@ -717,7 +718,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 							IDialogConstants.CANCEL_LABEL }, IDialogConstants.CANCEL_ID);
 			taskDataDirectoryAction = dialogConfirm.open();
 
-			for (TaskEditor taskEditor : TasksUiUtil.getActiveRepositoryTaskEditors()) {
+			for (TaskEditor taskEditor : TasksUiInternal.getActiveRepositoryTaskEditors()) {
 				TasksUiUtil.closeEditorInActivePage(taskEditor.getTaskEditorInput().getTask(), true);
 			}
 

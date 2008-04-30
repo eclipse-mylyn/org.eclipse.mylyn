@@ -6,16 +6,25 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.tasks.ui.editors;
+package org.eclipse.mylyn.tasks.ui.editors;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.mylyn.internal.tasks.ui.editors.BooleanAttributeEditor;
+import org.eclipse.mylyn.internal.tasks.ui.editors.DateAttributeEditor;
+import org.eclipse.mylyn.internal.tasks.ui.editors.LongTextAttributeEditor;
+import org.eclipse.mylyn.internal.tasks.ui.editors.MultiSelectionAttributeEditor;
+import org.eclipse.mylyn.internal.tasks.ui.editors.PersonAttributeEditor;
+import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextAttributeEditor;
+import org.eclipse.mylyn.internal.tasks.ui.editors.SingleSelectionAttributeEditor;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskDependendyAttributeEditor;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TextAttributeEditor;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.swt.SWT;
 
 /**
- * @since 2.3
+ * @since 3.0
  * @author Steffen Pingel
  */
 public class AttributeEditorFactory {

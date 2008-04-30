@@ -24,6 +24,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeProperties;
 import org.eclipse.mylyn.tasks.core.data.TaskOperation;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.FocusAdapter;
@@ -107,7 +109,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 	 * Adds buttons to this composite. Subclasses can override this method to provide different/additional buttons.
 	 * 
 	 * @param buttonComposite
-	 *            Composite to add the buttons to.
+	 * 		Composite to add the buttons to.
 	 * @param toolkit
 	 */
 	private void createActionButtons(Composite buttonComposite, FormToolkit toolkit) {
@@ -279,7 +281,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		toolkit.paintBordersFor(buttonComposite);
 	}
 
-	boolean getAttachContext() {
+	public boolean getAttachContext() {
 		if (attachContextButton == null || attachContextButton.isDisposed()) {
 			return false;
 		} else {
@@ -303,7 +305,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		this.needsAttachContext = attachContextEnabled;
 	}
 
-	void setSubmitEnabled(boolean enabled) {
+	public void setSubmitEnabled(boolean enabled) {
 		if (submitButton != null && !submitButton.isDisposed()) {
 			submitButton.setEnabled(enabled);
 			if (enabled) {

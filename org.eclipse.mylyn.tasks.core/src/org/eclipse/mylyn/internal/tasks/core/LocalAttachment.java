@@ -24,6 +24,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
  * @author Jeff Pound
  * @since 2.0
  */
+@Deprecated
 public class LocalAttachment implements Serializable, ITaskAttachment {
 
 	private static final long serialVersionUID = -4477699536552617389L;

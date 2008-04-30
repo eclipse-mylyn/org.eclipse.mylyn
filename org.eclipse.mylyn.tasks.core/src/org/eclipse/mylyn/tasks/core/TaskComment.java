@@ -15,8 +15,9 @@ import java.io.Serializable;
  * 
  * @author Rob Elves
  * @since 2.0
+ * @deprecated use {@link org.eclipse.mylyn.tasks.core.data.TaskComment} instead
  */
-//API 3.0 deprecate
+@Deprecated
 public final class TaskComment extends AttributeContainer implements Serializable {
 
 	private static final long serialVersionUID = 1076016406335550318L;
@@ -46,7 +47,7 @@ public final class TaskComment extends AttributeContainer implements Serializabl
 	 * Set the comment number
 	 * 
 	 * @param number
-	 *            the number of the comment
+	 * 		the number of the comment
 	 */
 	public void setNumber(int number) {
 		this.number = number;

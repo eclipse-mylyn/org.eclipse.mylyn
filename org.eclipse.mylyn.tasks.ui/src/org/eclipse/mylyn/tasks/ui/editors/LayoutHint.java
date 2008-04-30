@@ -6,8 +6,12 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.tasks.ui.editors;
+package org.eclipse.mylyn.tasks.ui.editors;
 
+/**
+ * @author Steffen Pingel
+ * @since 3.0
+ */
 public class LayoutHint {
 
 	public final static int DEFAULT_PRIORITY = 10;

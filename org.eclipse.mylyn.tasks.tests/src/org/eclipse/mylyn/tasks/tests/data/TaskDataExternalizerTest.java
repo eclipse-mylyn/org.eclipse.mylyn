@@ -16,10 +16,10 @@ import java.util.zip.ZipInputStream;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.internal.tasks.core.IdentityAttributeFactory;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataExternalizer;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataState;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataUtil;
-import org.eclipse.mylyn.tasks.core.IdentityAttributeFactory;
 import org.eclipse.mylyn.tasks.core.IdentityAttributeMapper;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskScheme;

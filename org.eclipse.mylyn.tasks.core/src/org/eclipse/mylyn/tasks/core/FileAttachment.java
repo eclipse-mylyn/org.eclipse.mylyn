@@ -13,12 +13,16 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.eclipse.mylyn.tasks.core.data.TaskAttachment;
+
 /**
  * Proxy for a file attachment.
  * 
  * @author Steffen Pingel
  * @since 2.0
+ * @deprecated use {@link TaskAttachment} instead
  */
+@Deprecated
 public class FileAttachment implements ITaskAttachment {
 
 	private static final String APPLICATION_OCTET_STREAM = "application/octet-stream";

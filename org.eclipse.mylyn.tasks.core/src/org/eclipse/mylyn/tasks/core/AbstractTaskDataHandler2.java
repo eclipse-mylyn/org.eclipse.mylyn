@@ -9,7 +9,6 @@
 package org.eclipse.mylyn.tasks.core;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -135,28 +134,28 @@ public abstract class AbstractTaskDataHandler2 {
 //		}
 	}
 
-	private void copyAttributeValue(RepositoryTaskAttribute sourceAttribute, RepositoryTaskAttribute targetAttribute) {
-		if (targetAttribute == null) {
-			return;
-		}
-
-		if (!sourceAttribute.isReadOnly() && !sourceAttribute.isHidden() && !targetAttribute.isHidden()
-				&& !targetAttribute.isReadOnly()) {
-			targetAttribute.clearValues();
-			if (targetAttribute.getOptions().size() > 0) {
-				List<String> values = sourceAttribute.getValues();
-				for (String value : values) {
-					if (targetAttribute.getOptions().contains(value)) {
-						targetAttribute.addValue(value);
-					}
-				}
-			} else {
-				List<String> values = sourceAttribute.getValues();
-				for (String value : values) {
-					targetAttribute.addValue(value);
-				}
-			}
-		}
-	}
+//	private void copyAttributeValue(RepositoryTaskAttribute sourceAttribute, RepositoryTaskAttribute targetAttribute) {
+//		if (targetAttribute == null) {
+//			return;
+//		}
+//
+//		if (!sourceAttribute.isReadOnly() && !sourceAttribute.isHidden() && !targetAttribute.isHidden()
+//				&& !targetAttribute.isReadOnly()) {
+//			targetAttribute.clearValues();
+//			if (targetAttribute.getOptions().size() > 0) {
+//				List<String> values = sourceAttribute.getValues();
+//				for (String value : values) {
+//					if (targetAttribute.getOptions().contains(value)) {
+//						targetAttribute.addValue(value);
+//					}
+//				}
+//			} else {
+//				List<String> values = sourceAttribute.getValues();
+//				for (String value : values) {
+//					targetAttribute.addValue(value);
+//				}
+//			}
+//		}
+//	}
 
 }

@@ -20,7 +20,9 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  * 
  * @author Rob Elves
  * @since 2.0
+ * @deprecated use {@link TaskEditorInput} instead
  */
+@Deprecated
 public class NewTaskEditorInput extends RepositoryTaskEditorInput {
 
 	public NewTaskEditorInput(TaskRepository repository, RepositoryTaskData taskData) {

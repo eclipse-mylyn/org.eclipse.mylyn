@@ -10,14 +10,17 @@ package org.eclipse.mylyn.tasks.core;
 
 import java.io.Serializable;
 
+import org.eclipse.mylyn.tasks.core.data.TaskAttachment;
+
 /**
  * Encapsulates a file or other resource attached to a task.
  * 
  * @author Rob Elves
  * @author Mik Kersten
  * @since 2.0
+ * @use {@link TaskAttachment} instead
  */
-//API 3.0 deprecate
+@Deprecated
 public final class RepositoryAttachment extends AttributeContainer implements Serializable {
 
 	private static final long serialVersionUID = 2663237137799050826L;

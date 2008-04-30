@@ -23,6 +23,7 @@ public interface ITaskListChangeListener {
 	/**
 	 * @since 3.0
 	 */
+	// API 3.0 fold into containersChanged()
 	public abstract void taskListRead();
 
 }

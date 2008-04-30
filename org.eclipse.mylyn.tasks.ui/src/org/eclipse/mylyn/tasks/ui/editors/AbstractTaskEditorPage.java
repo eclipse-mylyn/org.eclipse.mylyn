@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.tasks.ui.editors;
+package org.eclipse.mylyn.tasks.ui.editors;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,6 +34,17 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ClearOutgoingAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewSubTaskAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeEditorAction;
+import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionPart;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorAttachmentPart;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorAttributePart;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorCommentPart;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorDescriptionPart;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorPeoplePart;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorPlanningPart;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorRichTextPart;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorSummaryPart;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskListChangeAdapter;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
@@ -54,8 +65,6 @@ import org.eclipse.mylyn.tasks.core.sync.SubmitJobListener;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
-import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
-import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.CTabFolder;
@@ -104,9 +113,8 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
  * 
  * @author Mik Kersten
  * @author Rob Elves
- * @author Jeff Pound (Attachment work)
  * @author Steffen Pingel
- * @author Xiaoyang Guan (Wiki HTML preview)
+ * @since 3.0
  */
 // TODO EDITOR selection service
 // TODO EDITOR outline
@@ -213,8 +221,6 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 	private NewSubTaskAction newSubTaskAction;
 
 	private Action openBrowserAction;
-
-	private RepositoryTaskOutlinePage outlinePage;
 
 	private TaskEditorPlanningPart planningPart;
 
@@ -585,7 +591,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		}
 	}
 
-	protected abstract AttributeEditorFactory getAttributeEditorFactory();
+	public abstract AttributeEditorFactory getAttributeEditorFactory();
 
 	public abstract AttributeEditorToolkit getAttributeEditorToolkit();
 
@@ -604,12 +610,8 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		return editorComposite;
 	}
 
-	protected TaskDataModel getModel() {
+	public TaskDataModel getModel() {
 		return model;
-	}
-
-	public RepositoryTaskOutlinePage getOutline() {
-		return outlinePage;
 	}
 
 	public TaskEditor getParentEditor() {
@@ -792,7 +794,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 	/**
 	 * force a re-layout of entire form
 	 */
-	protected void resetLayout() {
+	public void resetLayout() {
 		if (reflow) {
 			form.layout(true, true);
 			form.reflow(true);

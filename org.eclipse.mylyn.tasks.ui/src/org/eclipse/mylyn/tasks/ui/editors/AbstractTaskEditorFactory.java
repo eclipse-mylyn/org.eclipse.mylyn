@@ -17,8 +17,9 @@ import org.eclipse.ui.IEditorPart;
  * 
  * @author Mik Kersten
  * @since 2.0
+ * @deprecated use {@link AbstractTaskEditorPageFactory} instead
  */
-// API 3.0 deprecate
+@Deprecated
 public abstract class AbstractTaskEditorFactory {
 
 	public abstract IEditorPart createEditor(TaskEditor parentEditor, IEditorInput editorInput);
@@ -37,7 +38,7 @@ public abstract class AbstractTaskEditorFactory {
 
 	/**
 	 * @return A higher integer for high priority, low integer for low priority. Higher priority editors will be placed
-	 *         earlier in the tab list.
+	 * 	earlier in the tab list.
 	 */
 	public int getTabOrderPriority() {
 		return 1;

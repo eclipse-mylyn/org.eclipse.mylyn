@@ -14,9 +14,9 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.mylyn.tasks.core.ITaskJobFactory;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
-import org.eclipse.mylyn.tasks.ui.ITasksJobFactory;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
@@ -26,11 +26,11 @@ public class TaskListSynchronizationScheduler {
 
 	private long interval;
 
-	private final ITasksJobFactory jobFactory;
+	private final ITaskJobFactory jobFactory;
 
 	private SynchronizationJob refreshJob;
 
-	public TaskListSynchronizationScheduler(ITasksJobFactory jobFactory) {
+	public TaskListSynchronizationScheduler(ITaskJobFactory jobFactory) {
 		this.jobFactory = jobFactory;
 	}
 

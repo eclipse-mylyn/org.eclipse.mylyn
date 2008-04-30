@@ -8,7 +8,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.search;
 
-import org.eclipse.mylyn.tasks.ui.search.RepositorySearchResult;
 import org.eclipse.search.ui.ISearchQuery;
 import org.eclipse.search.ui.ISearchResult;
 
