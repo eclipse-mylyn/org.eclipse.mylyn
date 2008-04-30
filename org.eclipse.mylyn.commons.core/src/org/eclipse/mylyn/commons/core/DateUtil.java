@@ -15,7 +15,7 @@ import java.util.TimeZone;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.internal.commons.core.IMonitorCoreConstants;
+import org.eclipse.mylyn.internal.commons.core.ICommonsCoreConstants;
 
 /**
  * Used for formatting dates.
@@ -170,7 +170,7 @@ public class DateUtil {
 	public static TimeZone getTimeZone(String zoneId) {
 		TimeZone timeZone = TimeZone.getTimeZone(zoneId);
 		if (!timeZone.getID().equals(zoneId)) {
-			StatusHandler.log(new Status(IStatus.INFO, IMonitorCoreConstants.ID_PLUGIN,
+			StatusHandler.log(new Status(IStatus.INFO, ICommonsCoreConstants.ID_PLUGIN,
 					"Specified time zone not available, using " + timeZone.getDisplayName()
 							+ ". Check repository settings."));
 		}

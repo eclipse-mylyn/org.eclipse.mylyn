@@ -102,12 +102,12 @@ public class ErrorReporterManager {
 			if (object instanceof AbstractErrorReporter) {
 				errorReporters.add((AbstractErrorReporter) object);
 			} else {
-				StatusHandler.log(new Status(IStatus.WARNING, IMonitorCoreConstants.ID_PLUGIN,
+				StatusHandler.log(new Status(IStatus.WARNING, ICommonsCoreConstants.ID_PLUGIN,
 						"Could not load error reporter extenstion: \"" + object.getClass().getCanonicalName() + "\""
 								+ " does not implement \"" + AbstractErrorReporter.class.getCanonicalName() + "\""));
 			}
 		} catch (CoreException e) {
-			StatusHandler.log(new Status(IStatus.WARNING, IMonitorCoreConstants.ID_PLUGIN,
+			StatusHandler.log(new Status(IStatus.WARNING, ICommonsCoreConstants.ID_PLUGIN,
 					"Could not load error reporter extension", e));
 		}
 	}

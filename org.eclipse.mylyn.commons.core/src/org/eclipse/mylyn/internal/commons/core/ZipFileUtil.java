@@ -34,15 +34,16 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
  * @author Wesley Coelho
  * @author Shawn Minto (Wrote methods that were moved here)
  */
+// FIXME add try/finally blocks that properly close streams
 public class ZipFileUtil {
 
 	/**
 	 * Only unzips files in zip file not directories
 	 * 
 	 * @param zipped
-	 *            file
+	 * 		file
 	 * @param destPath
-	 *            Destination path
+	 * 		Destination path
 	 * @return Files that were unzipped
 	 */
 	public static List<File> unzipFiles(File zippedfile, String destPath) throws FileNotFoundException, IOException {
@@ -114,9 +115,9 @@ public class ZipFileUtil {
 
 	/**
 	 * @param zipFile
-	 *            Destination zipped file
+	 * 		Destination zipped file
 	 * @param files
-	 *            List of files to add to the zip file
+	 * 		List of files to add to the zip file
 	 */
 	public static void createZipFile(File zipFile, List<File> files) throws FileNotFoundException, IOException {
 		createZipFile(zipFile, files, null, null);
@@ -129,11 +130,11 @@ public class ZipFileUtil {
 
 	/**
 	 * @param zipFile
-	 *            Destination zipped file
+	 * 		Destination zipped file
 	 * @param files
-	 *            List of files to add to the zip file
+	 * 		List of files to add to the zip file
 	 * @param progressMonitor
-	 *            will report worked(1) to the monitor for each file zipped
+	 * 		will report worked(1) to the monitor for each file zipped
 	 * @author Shawn Minto
 	 * @author Wesley Coelho
 	 */
@@ -157,7 +158,7 @@ public class ZipFileUtil {
 					monitor.worked(1);
 				}
 			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.ERROR, IMonitorCoreConstants.ID_PLUGIN, "Could not add "
+				StatusHandler.log(new Status(IStatus.ERROR, ICommonsCoreConstants.ID_PLUGIN, "Could not add "
 						+ file.getName() + " to zip", e));
 			}
 		}

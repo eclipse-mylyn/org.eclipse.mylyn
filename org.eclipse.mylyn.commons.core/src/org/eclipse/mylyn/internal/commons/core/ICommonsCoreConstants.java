@@ -11,8 +11,8 @@ package org.eclipse.mylyn.internal.commons.core;
 /**
  * @author Steffen Pingel
  */
-public interface IMonitorCoreConstants {
+public interface ICommonsCoreConstants {
 
-	public static String ID_PLUGIN = "org.eclipse.mylyn.monitor.core";
+	public static String ID_PLUGIN = "org.eclipse.mylyn.commons.core";
 
 }
