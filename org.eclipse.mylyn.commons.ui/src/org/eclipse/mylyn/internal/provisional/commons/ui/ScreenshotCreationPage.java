@@ -810,7 +810,7 @@ public class ScreenshotCreationPage extends WizardPage implements IImageCreator 
 		Rectangle scaledSelection = getScaledSelection();
 
 		// Draw shadow
-		gc.setBackground(CommonColorsAndFonts.GRAY);
+		gc.setBackground(CommonColors.GRAY_MID);
 		gc.setAdvanced(true);
 		gc.setAlpha(120);
 

@@ -213,7 +213,7 @@ public abstract class AbstractNotificationPopup extends Window {
 
 		Label titleTextLabel = new Label(parent, SWT.NONE);
 		titleTextLabel.setText(getPopupShellTitle());
-		titleTextLabel.setFont(CommonColorsAndFonts.BOLD);
+		titleTextLabel.setFont(CommonFonts.BOLD);
 		titleTextLabel.setForeground(color.getTitleText());
 		titleTextLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
 		titleTextLabel.setCursor(parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND));
