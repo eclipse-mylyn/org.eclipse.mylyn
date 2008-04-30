@@ -36,7 +36,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskSelection;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
-import org.eclipse.mylyn.tasks.ui.search.AbstractRepositoryQueryPage;
+import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
 
 /**

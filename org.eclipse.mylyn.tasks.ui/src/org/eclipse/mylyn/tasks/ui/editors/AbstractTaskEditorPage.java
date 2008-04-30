@@ -45,6 +45,7 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorPlanningPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorRichTextPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorSummaryPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskListChangeAdapter;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
@@ -505,7 +506,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 		doSave(new NullProgressMonitor());
 
-		SubmitJob submitJob = TasksUi.getJobFactory().createSubmitJob(connector, taskRepository, task,
+		SubmitJob submitJob = TasksUiInternal.getJobFactory().createSubmitJob(connector, taskRepository, task,
 				getModel().getTaskData(), getModel().getChangedAttributes());
 		submitJob.addSubmitJobListener(new SubmitTaskJobListener(actionPart.getAttachContext()));
 		submitJob.schedule();

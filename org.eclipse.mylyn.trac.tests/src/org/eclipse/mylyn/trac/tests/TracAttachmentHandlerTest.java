@@ -23,6 +23,7 @@ import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
 import org.eclipse.mylyn.context.tests.support.TestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
@@ -33,7 +34,6 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.FileAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.trac.tests.support.TestFixture;
 import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
@@ -100,7 +100,7 @@ public class TracAttachmentHandlerTest extends TestCase {
 		init(url, Version.XML_RPC);
 		TracTask task = (TracTask) TasksUiUtil.createTask(repository, data.attachmentTicketId + "",
 				new NullProgressMonitor());
-		TasksUi.synchronizeTask(connector, task, true, null);
+		TasksUiInternal.synchronizeTask(connector, task, true, null);
 		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task.getRepositoryUrl(),
 				task.getTaskId());
 
@@ -133,7 +133,7 @@ public class TracAttachmentHandlerTest extends TestCase {
 		init(url, Version.XML_RPC);
 		TracTask task = (TracTask) TasksUiUtil.createTask(repository, data.attachmentTicketId + "",
 				new NullProgressMonitor());
-		TasksUi.synchronizeTask(connector, task, true, null);
+		TasksUiInternal.synchronizeTask(connector, task, true, null);
 		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task.getRepositoryUrl(),
 				task.getTaskId());
 

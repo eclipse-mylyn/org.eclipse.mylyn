@@ -11,7 +11,7 @@ package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.search.AbstractRepositoryQueryPage;
+import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;

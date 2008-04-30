@@ -80,6 +80,7 @@ import org.eclipse.ui.internal.browser.WorkbenchBrowserSupport;
  * @author Mik Kersten
  * @author Steffen Pingel
  */
+// move to util package?
 public class TasksUiUtil {
 
 	/**
@@ -329,7 +330,7 @@ public class TasksUiUtil {
 									AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
 											.getRepositoryConnector(repositoryTask.getConnectorKind());
 									if (connector != null) {
-										TasksUi.synchronizeTask(connector, repositoryTask, false, null);
+										TasksUiInternal.synchronizeTask(connector, repositoryTask, false, null);
 									}
 
 								}
@@ -670,7 +671,7 @@ public class TasksUiUtil {
 						AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 								task.getConnectorKind());
 						if (connector != null) {
-							TasksUi.synchronizeTask(connector, task, false, null);
+							TasksUiInternal.synchronizeTask(connector, task, false, null);
 						}
 					}
 					return Status.OK_STATUS;

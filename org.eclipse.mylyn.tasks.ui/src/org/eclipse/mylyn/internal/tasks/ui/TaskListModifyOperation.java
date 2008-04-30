@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.ui;
+package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListRunnable;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 
 /**
  * Use to perform atomic operations on the task list i.e. open/restore

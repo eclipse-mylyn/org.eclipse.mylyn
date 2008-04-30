@@ -34,6 +34,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskReadAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskUnreadAction;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -47,7 +48,6 @@ import org.eclipse.mylyn.tasks.tests.connector.MockAttributeFactory;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Mik Kersten
@@ -1016,7 +1016,7 @@ public class TaskListManagerTest extends TestCase {
 				MockRepositoryConnector.REPOSITORY_URL);
 		Set<AbstractRepositoryQuery> queries = new HashSet<AbstractRepositoryQuery>();
 		queries.add(query);
-		TasksUi.synchronizeQueries(new MockRepositoryConnector(), repository, queries, null, true);
+		TasksUiInternal.synchronizeQueries(new MockRepositoryConnector(), repository, queries, null, true);
 		//assertEquals(2, manager.getTaskList().getArchiveContainer().getChildren().size());
 		assertEquals(0, query.getChildren().size());
 	}

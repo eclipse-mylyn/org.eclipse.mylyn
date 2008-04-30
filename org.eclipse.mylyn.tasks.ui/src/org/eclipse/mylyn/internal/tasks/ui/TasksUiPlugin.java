@@ -173,7 +173,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private TaskEditorBloatMonitor taskEditorBloatManager;
 
-	private TasksJobFactory tasksJobFactory;
+	private TaskJobFactory tasksJobFactory;
 
 	private static final boolean DEBUG_HTTPCLIENT = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.mylyn.tasks.ui/debug/httpclient"));
 
@@ -523,7 +523,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			loadTemplateRepositories();
 
-			tasksJobFactory = new TasksJobFactory(taskListManager.getTaskList(), taskDataManager, repositoryManager);
+			tasksJobFactory = new TaskJobFactory(taskListManager.getTaskList(), taskDataManager, repositoryManager);
 
 			// NOTE: task list must be read before Task List view can be initialized
 			taskListManager.addActivationListener(CONTEXT_TASK_ACTIVATION_LISTENER);
@@ -928,7 +928,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	/**
 	 * @since 3.0
 	 */
-	public static TasksJobFactory getTasksJobFactory() {
+	public static TaskJobFactory getTasksJobFactory() {
 		return INSTANCE.tasksJobFactory;
 	}
 

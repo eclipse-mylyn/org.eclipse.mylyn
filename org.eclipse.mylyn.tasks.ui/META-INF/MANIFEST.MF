@@ -42,6 +42,5 @@ Export-Package: org.eclipse.mylyn.internal.tasks.ui;x-internal:=true,
  org.eclipse.mylyn.internal.tasks.ui.workingsets;x-internal:=true,
  org.eclipse.mylyn.tasks.ui,
  org.eclipse.mylyn.tasks.ui.editors,
- org.eclipse.mylyn.tasks.ui.search,
  org.eclipse.mylyn.tasks.ui.wizards
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

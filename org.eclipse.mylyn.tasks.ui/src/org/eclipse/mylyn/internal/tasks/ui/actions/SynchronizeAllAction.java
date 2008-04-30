@@ -10,7 +10,7 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 
@@ -25,7 +25,7 @@ public class SynchronizeAllAction implements IViewActionDelegate {
 	}
 
 	public void run(IAction action) {
-		TasksUi.synchronizeAllRepositories(true);
+		TasksUiInternal.synchronizeAllRepositories(true);
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {

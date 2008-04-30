@@ -22,6 +22,7 @@ import org.eclipse.mylyn.context.tests.support.TestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.tasks.core.IdentityAttributeFactory;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.InvalidTicketException;
 import org.eclipse.mylyn.internal.trac.core.TracAttributeFactory;
@@ -41,7 +42,6 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationContext;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.trac.tests.support.TestFixture;
 import org.eclipse.mylyn.trac.tests.support.TracTestUtil;
@@ -136,7 +136,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 	private void markStaleTasks() throws Exception {
 		TracTicket ticket = TracTestUtil.createTicket(client, "markStaleTasks");
 		TracTask task = (TracTask) TasksUiUtil.createTask(repository, ticket.getId() + "", null);
-		TasksUi.synchronizeTask(connector, task, true, null);
+		TasksUiInternal.synchronizeTask(connector, task, true, null);
 		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task.getRepositoryUrl(),
 				task.getTaskId());
 
@@ -285,7 +285,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 
 	private void postTaskDataInvalidCredentials() throws Exception {
 		TracTask task = (TracTask) TasksUiUtil.createTask(repository, data.offlineHandlerTicketId + "", null);
-		TasksUi.synchronizeTask(connector, task, true, null);
+		TasksUiInternal.synchronizeTask(connector, task, true, null);
 		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task.getRepositoryUrl(),
 				task.getTaskId());
 

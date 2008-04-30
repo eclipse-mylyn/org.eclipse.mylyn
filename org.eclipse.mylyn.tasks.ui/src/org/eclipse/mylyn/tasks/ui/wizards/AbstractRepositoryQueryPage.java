@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.ui.search;
+package org.eclipse.mylyn.tasks.ui.wizards;
 
 import java.util.Set;
 
@@ -21,7 +21,6 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.mylyn.tasks.ui.wizards.AbstractEditQueryWizard;
 import org.eclipse.search.ui.ISearchPage;
 import org.eclipse.search.ui.ISearchPageContainer;
 import org.eclipse.search.ui.NewSearchUI;
@@ -40,7 +39,7 @@ import org.eclipse.swt.widgets.Text;
  * Extend to provide repository-specific query page to the Workbench search dialog.
  * 
  * @author Rob Elves
- * @since 2.0
+ * @since 3.0
  */
 public abstract class AbstractRepositoryQueryPage extends WizardPage implements ISearchPage {
 

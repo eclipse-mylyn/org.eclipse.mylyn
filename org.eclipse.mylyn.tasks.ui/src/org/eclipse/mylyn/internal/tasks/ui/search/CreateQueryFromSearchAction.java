@@ -14,6 +14,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
@@ -72,7 +73,7 @@ public class CreateQueryFromSearchAction extends Action {
 					if (dialogResult == Window.OK) {
 						query.setHandleIdentifier(dialog.getValue());
 						TasksUi.getTaskListManager().getTaskList().addQuery(query);
-						TasksUi.synchronizeQuery(connector, query, null, true);
+						TasksUiInternal.synchronizeQuery(connector, query, null, true);
 					}
 				}
 			}

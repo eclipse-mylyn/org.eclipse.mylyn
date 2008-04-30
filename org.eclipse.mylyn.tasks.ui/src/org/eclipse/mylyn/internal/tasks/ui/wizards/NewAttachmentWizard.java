@@ -214,7 +214,7 @@ public class NewAttachmentWizard extends Wizard {
 		try {
 			getContainer().run(true, true, op);
 
-			TasksUi.synchronizeTask(connector, task, false, new JobChangeAdapter() {
+			TasksUiInternal.synchronizeTask(connector, task, false, new JobChangeAdapter() {
 				@Override
 				public void done(final IJobChangeEvent event) {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {

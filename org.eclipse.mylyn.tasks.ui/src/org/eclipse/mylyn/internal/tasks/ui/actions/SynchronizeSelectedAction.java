@@ -21,6 +21,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
@@ -106,14 +107,14 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 					AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
 							.getRepositoryConnector(repository.getConnectorKind());
 					Set<AbstractRepositoryQuery> queries = entry.getValue();
-					TasksUi.synchronizeQueries(connector, repository, queries, null, true);
+					TasksUiInternal.synchronizeQueries(connector, repository, queries, null, true);
 				}
 			}
 			if (!tasksToSyncMap.isEmpty()) {
 				for (AbstractRepositoryConnector connector : tasksToSyncMap.keySet()) {
 					List<AbstractTask> tasksToSync = tasksToSyncMap.get(connector);
 					if (tasksToSync != null && tasksToSync.size() > 0) {
-						TasksUi.synchronizeTasks(connector, new HashSet<AbstractTask>(tasksToSync), true, null);
+						TasksUiInternal.synchronizeTasks(connector, new HashSet<AbstractTask>(tasksToSync), true, null);
 					}
 				}
 			}

@@ -11,10 +11,11 @@ package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.mylyn.tasks.ui.search.AbstractRepositoryQueryPage;
+import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage;
 
 /**
  * @author Mik Kersten
@@ -57,7 +58,7 @@ public class NewBugzillaQueryWizard extends Wizard {
 		TasksUi.getTaskListManager().getTaskList().addQuery(queryCategory);
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				BugzillaCorePlugin.REPOSITORY_KIND);
-		TasksUi.synchronizeQuery(connector, queryCategory, null, true);
+		TasksUiInternal.synchronizeQuery(connector, queryCategory, null, true);
 		return true;
 	}
 

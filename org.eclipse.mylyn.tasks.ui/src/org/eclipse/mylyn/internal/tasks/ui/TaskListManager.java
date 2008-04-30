@@ -46,6 +46,7 @@ import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternaliza
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizer;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskListElementImporter;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskListSaveManager;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskActivationHistory;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
@@ -552,7 +553,7 @@ public class TaskListManager implements ITaskListManager {
 			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 					repository.getConnectorKind());
 			if (connector != null) {
-				TasksUi.synchronizeQuery(connector, query, null, true);
+				TasksUiInternal.synchronizeQuery(connector, query, null, true);
 			}
 
 		}

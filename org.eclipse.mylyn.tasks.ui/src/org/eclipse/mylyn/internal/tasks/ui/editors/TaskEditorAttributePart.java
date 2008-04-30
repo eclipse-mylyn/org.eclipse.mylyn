@@ -21,12 +21,12 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.UpdateRepositoryConfigurationAction;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeProperties;
 import org.eclipse.mylyn.tasks.core.sync.TaskJob;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.mylyn.tasks.ui.editors.AttributeEditorFactory;
@@ -163,7 +163,7 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 			@Override
 			public void run() {
 				getTaskEditorPage().showEditorBusy(true);
-				final TaskJob job = TasksUi.getJobFactory().createUpdateRepositoryConfigurationJob(
+				final TaskJob job = TasksUiInternal.getJobFactory().createUpdateRepositoryConfigurationJob(
 						getTaskEditorPage().getConnector(), getTaskEditorPage().getTaskRepository());
 				job.addJobChangeListener(new JobChangeAdapter() {
 					@Override

@@ -18,6 +18,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  * @author Xiaoyang Guan
  * @since 2.1
  */
+// API 3.0 move to core?
 public abstract class AbstractRenderingEngine {
 
 	/**

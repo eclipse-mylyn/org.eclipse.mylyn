@@ -13,6 +13,7 @@ import java.util.Iterator;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -64,7 +65,7 @@ public class SynchronizeEditorAction extends BaseSelectionListenerAction {
 			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 					task.getConnectorKind());
 			if (connector != null) {
-				TasksUi.synchronizeTask(connector, task, true, new JobChangeAdapter() {
+				TasksUiInternal.synchronizeTask(connector, task, true, new JobChangeAdapter() {
 					@Override
 					public void done(IJobChangeEvent event) {
 						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
