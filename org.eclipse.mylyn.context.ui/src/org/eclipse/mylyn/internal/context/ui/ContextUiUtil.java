@@ -21,6 +21,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
@@ -127,7 +128,7 @@ public class ContextUiUtil {
 				if (site instanceof IViewSite) {
 					IStatusLineManager statusLineManager = ((IViewSite) site).getActionBars().getStatusLineManager();
 					statusLineManager.setMessage("Context attached to task: " + task.getSummary());
-					TasksUi.synchronizeTask(connector, task, true, null);
+					TasksUiInternal.synchronizeTask(connector, task, true, null);
 				}
 			}
 		} catch (InvocationTargetException e) {
