@@ -16,6 +16,7 @@ import org.eclipse.core.internal.runtime.PlatformActivator;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.internal.commons.core.ErrorReporterManager;
 
 /**
  * @author Mik Kersten
@@ -23,16 +24,18 @@ import org.eclipse.core.runtime.Status;
  * @author Steffen Pingel
  * @since 3.0
  */
-// API 3.0 review for concurrency bugs
 public class StatusHandler {
 
 	@Deprecated
 	private static final String ID_PLUGIN = "org.eclipse.mylyn";
 
 	@Deprecated
-	private static Set<IStatusHandler> handlers = new HashSet<IStatusHandler>();
+	static Set<IStatusHandler> handlers = new HashSet<IStatusHandler>();
 
+	@Deprecated
 	private static IStatusHandler defaultHandler;
+
+	private static ErrorReporterManager errorReporterManager;
 
 	/**
 	 * @since 3.0
@@ -97,7 +100,7 @@ public class StatusHandler {
 	 * Plug-ins that require running in Eclipse are encouraged to use their plug-in log.
 	 * 
 	 * @param status
-	 *            status to log
+	 * 		status to log
 	 */
 	public static void log(IStatus status) {
 		if (InternalPlatform.getDefault() != null && PlatformActivator.getContext() != null) {
@@ -141,11 +144,11 @@ public class StatusHandler {
 
 	/**
 	 * @param throwable
-	 *            can be null
+	 * 		can be null
 	 * @param message
-	 *            The message to include
+	 * 		The message to include
 	 * @param informUser
-	 *            if true dialog box will be popped up
+	 * 		if true dialog box will be popped up
 	 * @deprecated use {@link #fail(IStatus)} or {{@link #log(IStatus)} instead
 	 */
 	@Deprecated
@@ -178,20 +181,15 @@ public class StatusHandler {
 		for (IStatusHandler handler : handlers) {
 			handler.fail(status, true);
 		}
+		// TODO enable
+		//getErrorReporterManager().fail(status);
 	}
 
-	/**
-	 * Display error to user
-	 * 
-	 * @param title
-	 *            dialog title
-	 * @param status
-	 *            IStatus to reveal in dialog FIXME deprecated use
-	 *            <code>org.eclipse.ui.statushandlers.StatusMananger#getManager().handle()</code> instead.
-	 */
-	public static void displayStatus(String title, IStatus status) {
-		for (IStatusHandler handler : handlers) {
-			handler.displayStatus(title, status);
+	private static synchronized ErrorReporterManager getErrorReporterManager() {
+		if (errorReporterManager == null) {
+			errorReporterManager = new ErrorReporterManager();
 		}
+		return errorReporterManager;
 	}
+
 }
