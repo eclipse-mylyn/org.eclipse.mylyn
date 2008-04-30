@@ -7,7 +7,7 @@
 
 package org.eclipse.mylyn.tests.manual;
 
-import org.eclipse.mylyn.provisional.workbench.ui.notifications.AbstractNotificationPopup;
+import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotificationPopup;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
