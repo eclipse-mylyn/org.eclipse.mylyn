@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.provisional.workbench.ui;
+package org.eclipse.mylyn.internal.provisional.commons.ui;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -15,7 +15,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.mylyn.provisional.workbench.ui.DatePickerPanel.DateSelection;
+import org.eclipse.mylyn.internal.provisional.commons.ui.DatePickerPanel.DateSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;

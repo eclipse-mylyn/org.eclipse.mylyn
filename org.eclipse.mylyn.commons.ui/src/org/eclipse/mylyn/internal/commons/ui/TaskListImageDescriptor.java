@@ -6,42 +6,58 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.workbench.ui;
+package org.eclipse.mylyn.internal.commons.ui;
 
 import org.eclipse.jface.resource.CompositeImageDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 
 /**
  * @author Mik Kersten
  */
-public class CompositeSyncImageDescriptor extends CompositeImageDescriptor {
+public class TaskListImageDescriptor extends CompositeImageDescriptor {
 
 	private final ImageData base;
 
-	private final ImageData background;
+	private ImageData overlay;
 
-	private final boolean fillBackground;
+	private boolean top;
+
+	private boolean left;
 
 	protected Point size;
 
-	static int WIDTH;
+	public TaskListImageDescriptor(ImageDescriptor baseDesc, ImageDescriptor overlayDesc, boolean top, boolean left) {
+		this.base = getImageData(baseDesc);
+		this.top = top;
+		this.left = left;
+		if (overlayDesc != null) {
+			this.overlay = getImageData(overlayDesc);
+		}
+		Point size = new Point(base.width, base.height);
+		setImageSize(size);
+	}
 
-	public CompositeSyncImageDescriptor(ImageDescriptor icon, boolean fillBackground) {
-		this.base = getImageData(icon);
-		this.background = getImageData(CommonImages.OVERLAY_WHITE);
-		this.size = new Point(background.width, background.height);
-		this.fillBackground = fillBackground;
+	public TaskListImageDescriptor(ImageDescriptor baseDesc, Point size) {
+		this.base = getImageData(baseDesc);
+		setImageSize(size);
 	}
 
 	@Override
 	protected void drawCompositeImage(int width, int height) {
-		if (fillBackground) {
-			drawImage(background, 0, 0);
+		drawImage(base, 0, 0);
+		int x = 0;
+		int y = 0;
+		if (!left) {
+			x = 8;// base.width - overlay.width;
 		}
-		drawImage(base, 3, 2);
+		if (!top) {
+			y = 8;// base.height - overlay.height;
+		}
+		if (overlay != null) {
+			drawImage(overlay, x, y);
+		}
 	}
 
 	private ImageData getImageData(ImageDescriptor descriptor) {
@@ -51,6 +67,10 @@ public class CompositeSyncImageDescriptor extends CompositeImageDescriptor {
 			data = DEFAULT_IMAGE_DATA;
 		}
 		return data;
+	}
+
+	public void setImageSize(Point size) {
+		this.size = size;
 	}
 
 	@Override

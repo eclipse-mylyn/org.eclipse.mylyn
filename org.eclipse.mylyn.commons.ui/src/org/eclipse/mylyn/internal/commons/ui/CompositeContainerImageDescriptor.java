@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.workbench.ui;
+package org.eclipse.mylyn.internal.commons.ui;
 
 import org.eclipse.jface.resource.CompositeImageDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -16,38 +16,31 @@ import org.eclipse.swt.graphics.Point;
 /**
  * @author Mik Kersten
  */
-public class CompositeElementImageDescriptor extends CompositeImageDescriptor {
+public class CompositeContainerImageDescriptor extends CompositeImageDescriptor {
 
 	private final ImageData base;
 
-	private ImageData kind;
+	private ImageData overlay;
 
 	protected Point size;
 
-	public static final int OFFSET_DECORATION = 6;
-
-	static final int WIDTH_ICON = 16;
-
-	private int offset = 0;
-
-	public CompositeElementImageDescriptor(ImageDescriptor icon, ImageDescriptor overlayKind, boolean wide) {
+	public CompositeContainerImageDescriptor(ImageDescriptor icon, ImageDescriptor overlay, boolean wide) {
 		this.base = getImageData(icon);
-		if (overlayKind != null) {
-			this.kind = getImageData(overlayKind);
+		if (overlay != null) {
+			this.overlay = getImageData(overlay);
 		}
-		int width = WIDTH_ICON;
+		int width = CompositeElementImageDescriptor.WIDTH_ICON;
 		if (wide) {
-			width += OFFSET_DECORATION;
-			offset = OFFSET_DECORATION;
+			width += CompositeElementImageDescriptor.OFFSET_DECORATION;
 		}
 		this.size = new Point(width, base.height);
 	}
 
 	@Override
 	protected void drawCompositeImage(int width, int height) {
-		drawImage(base, offset, 1);
-		if (kind != null) {
-			drawImage(kind, offset + 5, 6);
+		drawImage(base, 0, 0);
+		if (overlay != null) {
+			drawImage(overlay, base.width + 2, 0);
 		}
 	}
 

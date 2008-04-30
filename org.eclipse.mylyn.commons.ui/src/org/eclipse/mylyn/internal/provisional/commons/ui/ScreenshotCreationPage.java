@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.provisional.workbench.ui;
+package org.eclipse.mylyn.internal.provisional.commons.ui;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -26,7 +26,7 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylyn.internal.workbench.ui.ColorSelectionWindow;
+import org.eclipse.mylyn.internal.commons.ui.ColorSelectionWindow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.ViewForm;

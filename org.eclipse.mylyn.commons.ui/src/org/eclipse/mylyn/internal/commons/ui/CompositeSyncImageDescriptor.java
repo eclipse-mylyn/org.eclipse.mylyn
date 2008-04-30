@@ -6,58 +6,42 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.workbench.ui;
+package org.eclipse.mylyn.internal.commons.ui;
 
 import org.eclipse.jface.resource.CompositeImageDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 
 /**
  * @author Mik Kersten
  */
-public class TaskListImageDescriptor extends CompositeImageDescriptor {
+public class CompositeSyncImageDescriptor extends CompositeImageDescriptor {
 
 	private final ImageData base;
 
-	private ImageData overlay;
+	private final ImageData background;
 
-	private boolean top;
-
-	private boolean left;
+	private final boolean fillBackground;
 
 	protected Point size;
 
-	public TaskListImageDescriptor(ImageDescriptor baseDesc, ImageDescriptor overlayDesc, boolean top, boolean left) {
-		this.base = getImageData(baseDesc);
-		this.top = top;
-		this.left = left;
-		if (overlayDesc != null) {
-			this.overlay = getImageData(overlayDesc);
-		}
-		Point size = new Point(base.width, base.height);
-		setImageSize(size);
-	}
+	static int WIDTH;
 
-	public TaskListImageDescriptor(ImageDescriptor baseDesc, Point size) {
-		this.base = getImageData(baseDesc);
-		setImageSize(size);
+	public CompositeSyncImageDescriptor(ImageDescriptor icon, boolean fillBackground) {
+		this.base = getImageData(icon);
+		this.background = getImageData(CommonImages.OVERLAY_WHITE);
+		this.size = new Point(background.width, background.height);
+		this.fillBackground = fillBackground;
 	}
 
 	@Override
 	protected void drawCompositeImage(int width, int height) {
-		drawImage(base, 0, 0);
-		int x = 0;
-		int y = 0;
-		if (!left) {
-			x = 8;// base.width - overlay.width;
+		if (fillBackground) {
+			drawImage(background, 0, 0);
 		}
-		if (!top) {
-			y = 8;// base.height - overlay.height;
-		}
-		if (overlay != null) {
-			drawImage(overlay, x, y);
-		}
+		drawImage(base, 3, 2);
 	}
 
 	private ImageData getImageData(ImageDescriptor descriptor) {
@@ -67,10 +51,6 @@ public class TaskListImageDescriptor extends CompositeImageDescriptor {
 			data = DEFAULT_IMAGE_DATA;
 		}
 		return data;
-	}
-
-	public void setImageSize(Point size) {
-		this.size = size;
 	}
 
 	@Override

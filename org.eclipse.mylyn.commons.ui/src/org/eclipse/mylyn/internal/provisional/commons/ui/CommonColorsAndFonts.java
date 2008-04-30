@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.provisional.workbench.ui;
+package org.eclipse.mylyn.internal.provisional.commons.ui;
 
 import java.lang.reflect.Field;
 

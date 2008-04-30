@@ -6,18 +6,18 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.provisional.workbench.ui;
+package org.eclipse.mylyn.internal.provisional.commons.ui;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
-import org.eclipse.mylyn.internal.workbench.ui.CompositeContainerImageDescriptor;
-import org.eclipse.mylyn.internal.workbench.ui.CompositeElementImageDescriptor;
-import org.eclipse.mylyn.internal.workbench.ui.CompositeSyncImageDescriptor;
-import org.eclipse.mylyn.internal.workbench.ui.TaskListImageDescriptor;
-import org.eclipse.mylyn.internal.workbench.ui.WorkbenchExtensionsPlugin;
+import org.eclipse.mylyn.internal.commons.ui.CompositeContainerImageDescriptor;
+import org.eclipse.mylyn.internal.commons.ui.CompositeElementImageDescriptor;
+import org.eclipse.mylyn.internal.commons.ui.CompositeSyncImageDescriptor;
+import org.eclipse.mylyn.internal.commons.ui.TaskListImageDescriptor;
+import org.eclipse.mylyn.internal.commons.ui.WorkbenchExtensionsPlugin;
 import org.eclipse.swt.graphics.Image;
 
 /**

@@ -1,31 +1,16 @@
-/*   **********************************************************************  **
- **   Copyright notice                                                       **
- **                                                                          **
- **   (c) 2005-2006 RSSOwl Development Team                                  **
- **   http://www.rssowl.org/                                                 **
- **                                                                          **
- **   All rights reserved                                                    **
- **                                                                          **
- **   This program and the accompanying materials are made available under   **
- **   the terms of the Eclipse Public License v1.0 which accompanies this    **
- **   distribution, and is available at:                                     **
- **   http://www.rssowl.org/legal/epl-v10.html                               **
- **                                                                          **
- **   A copy is found in the file epl-v10.html and important notices to the  **
- **   license from the team is found in the textfile LICENSE.txt distributed **
- **   in this package.                                                       **
- **                                                                          **
- **   This copyright notice MUST APPEAR in all copies of the file!           **
- **                                                                          **
- **   Contributors:                                                          **
- **     RSSOwl Development Team - initial API and implementation             **
- **                                                                          **
- **  **********************************************************************  */
+/*******************************************************************************
+ * Copyright (c) 2004, 2007 Mylyn project committers and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *******************************************************************************/
 
-package org.eclipse.mylyn.provisional.workbench.ui.notifications;
+package org.eclipse.mylyn.internal.commons.ui;
 
 import org.eclipse.jface.resource.DeviceResourceException;
 import org.eclipse.jface.resource.ResourceManager;
+import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotificationPopup;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
@@ -37,9 +22,10 @@ import org.eclipse.swt.widgets.Display;
  * Note: Copied from FormColors of UI Forms.
  * </p>
  * 
- * @author Benjamin Pasero
+ * @author Benjamin Pasero (initial contribution from RSSOwl, see bug 177974)
+ * @author Mik Kersten
  */
-class NotificationPopupColors {
+public class NotificationPopupColors {
 
 	private final Display display;
 
@@ -53,7 +39,7 @@ class NotificationPopupColors {
 
 	private final ResourceManager resourceManager;
 
-	NotificationPopupColors(Display display, ResourceManager resourceManager) {
+	public NotificationPopupColors(Display display, ResourceManager resourceManager) {
 		this.display = display;
 		this.resourceManager = resourceManager;
 
@@ -67,19 +53,19 @@ class NotificationPopupColors {
 		titleText = getColor(resourceManager, getSystemColor(SWT.COLOR_TITLE_INACTIVE_FOREGROUND));
 	}
 
-	Color getGradientBegin() {
+	public Color getGradientBegin() {
 		return gradientBegin;
 	}
 
-	Color getGradientEnd() {
+	public Color getGradientEnd() {
 		return gradientEnd;
 	}
 
-	Color getBorder() {
+	public Color getBorder() {
 		return border;
 	}
 
-	Color getTitleText() {
+	public Color getTitleText() {
 		return titleText;
 	}
 

@@ -5,7 +5,7 @@
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
 
-package org.eclipse.mylyn.provisional.workbench.ui.notifications;
+package org.eclipse.mylyn.internal.provisional.commons.ui;
 
 import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -16,11 +16,10 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylyn.internal.workbench.ui.SwtUtil;
-import org.eclipse.mylyn.internal.workbench.ui.SwtUtil.FadeJob;
-import org.eclipse.mylyn.internal.workbench.ui.SwtUtil.IFadeListener;
-import org.eclipse.mylyn.provisional.workbench.ui.CommonColorsAndFonts;
-import org.eclipse.mylyn.provisional.workbench.ui.CommonImages;
+import org.eclipse.mylyn.internal.commons.ui.NotificationPopupColors;
+import org.eclipse.mylyn.internal.commons.ui.SwtUtil;
+import org.eclipse.mylyn.internal.commons.ui.SwtUtil.FadeJob;
+import org.eclipse.mylyn.internal.commons.ui.SwtUtil.IFadeListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;

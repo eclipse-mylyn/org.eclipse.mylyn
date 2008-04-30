@@ -6,22 +6,13 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.provisional.workbench.ui;
-
-import org.eclipse.swt.graphics.Image;
+package org.eclipse.mylyn.internal.provisional.commons.ui;
 
 /**
- * Something capable of creating {@link Image images}
- * 
- * @author Willian Mitsuda
  * @author Mik Kersten
  */
-// API-3.0: delete or expand
-public interface IImageCreator {
+public interface IFilteredTreeListener {
 
-	/**
-	 * Creates a {@link Image} object it represents; the caller is responsible for disposing the returned {@link Image}
-	 */
-	public Image createImage();
+	public void filterTextChanged(String text);
 
 }

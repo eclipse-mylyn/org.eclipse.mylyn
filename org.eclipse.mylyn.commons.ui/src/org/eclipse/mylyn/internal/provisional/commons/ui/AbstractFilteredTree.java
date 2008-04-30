@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.provisional.workbench.ui;
+package org.eclipse.mylyn.internal.provisional.commons.ui;
 
 import java.lang.reflect.Field;
 
@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.mylyn.internal.workbench.ui.WorkbenchExtensionsPlugin;
+import org.eclipse.mylyn.internal.commons.ui.WorkbenchExtensionsPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -27,7 +27,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
-import org.eclipse.ui.internal.WorkbenchMessages;
 
 /**
  * @author Mik Kersten
@@ -158,7 +157,7 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 				}
 			};
 
-			clearTextAction.setToolTipText(WorkbenchMessages.FilteredTree_ClearToolTip);
+			clearTextAction.setToolTipText("Clear");
 			clearTextAction.setImageDescriptor(CommonImages.FIND_CLEAR);
 			clearTextAction.setDisabledImageDescriptor(CommonImages.FIND_CLEAR_DISABLED);
 			filterToolBar.add(clearTextAction);
