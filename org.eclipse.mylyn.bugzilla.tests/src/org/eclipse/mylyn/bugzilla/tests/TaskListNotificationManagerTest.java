@@ -21,7 +21,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotification;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 
 /**
  * @author Rob Elves
@@ -75,7 +75,7 @@ public class TaskListNotificationManagerTest extends TestCase {
 		TasksUiPlugin.getRepositoryManager().addRepository(repository,
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		AbstractTask task = new BugzillaTask("https://bugs.eclipse.org/bugs", "142891", "label");
-		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSynchronizationState());
+		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
 		assertFalse(task.isNotified());
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
 		TaskListNotificationManager notificationManager = TasksUiPlugin.getTaskListNotificationManager();

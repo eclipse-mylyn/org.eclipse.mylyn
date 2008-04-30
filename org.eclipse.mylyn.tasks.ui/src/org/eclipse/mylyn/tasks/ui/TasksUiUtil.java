@@ -56,7 +56,7 @@ import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskSelection;
-import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.mylyn.web.core.Policy;
@@ -126,7 +126,7 @@ public class TasksUiUtil {
 				task = createTaskFromTaskData(connector, taskList, repository, taskData, true, new SubProgressMonitor(
 						monitor, 1));
 				if (task != null) {
-					task.setSynchronizationState(RepositoryTaskSyncState.INCOMING);
+					task.setSynchronizationState(SynchronizationState.INCOMING);
 					taskList.addTask(task);
 				}
 			}
@@ -147,7 +147,7 @@ public class TasksUiUtil {
 				task = createTaskFromTaskData(connector, taskList, repository, taskData, retrieveSubTasks,
 						new SubProgressMonitor(monitor, 1));
 				if (task != null) {
-					task.setSynchronizationState(RepositoryTaskSyncState.INCOMING);
+					task.setSynchronizationState(SynchronizationState.INCOMING);
 					taskList.addTask(task);
 				}
 			}
@@ -757,8 +757,8 @@ public class TasksUiUtil {
 	 */
 	private static boolean refreshIfOpen(AbstractTask task, IEditorInput editorInput) {
 		if (task != null) {
-			if (task.getSynchronizationState() == RepositoryTaskSyncState.INCOMING
-					|| task.getSynchronizationState() == RepositoryTaskSyncState.CONFLICT) {
+			if (task.getSynchronizationState() == SynchronizationState.INCOMING
+					|| task.getSynchronizationState() == SynchronizationState.CONFLICT) {
 				for (TaskEditor editor : TasksUiInternal.getActiveRepositoryTaskEditors()) {
 					if (editor.getEditorInput().equals(editorInput)) {
 						editor.refreshEditorContents();

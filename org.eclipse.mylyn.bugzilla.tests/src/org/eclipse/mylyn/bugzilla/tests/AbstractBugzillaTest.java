@@ -28,7 +28,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 
@@ -138,7 +138,7 @@ public abstract class AbstractBugzillaTest extends TestCase {
 	// repository.getPassword(), repository.getCharacterEncoding());
 	// }
 
-	protected void synchAndAssertState(Set<AbstractTask> tasks, RepositoryTaskSyncState state) {
+	protected void synchAndAssertState(Set<AbstractTask> tasks, SynchronizationState state) {
 		for (AbstractTask task : tasks) {
 			TasksUi.synchronizeTask(connector, task, true, null);
 			assertEquals(task.getSynchronizationState(), state);

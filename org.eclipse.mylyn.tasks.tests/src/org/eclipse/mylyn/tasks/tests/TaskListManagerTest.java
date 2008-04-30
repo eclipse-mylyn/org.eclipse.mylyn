@@ -42,7 +42,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.tasks.tests.connector.MockAttributeFactory;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
@@ -920,15 +920,15 @@ public class TaskListManagerTest extends TestCase {
 		String repositoryUrl = "http://mylyn.eclipse.org/bugs222";
 		MockTask task1 = new MockTask(repositoryUrl, "1");
 		MockTask task2 = new MockTask(repositoryUrl, "2");
-		task1.setSynchronizationState(RepositoryTaskSyncState.INCOMING);
-		task2.setSynchronizationState(RepositoryTaskSyncState.INCOMING);
+		task1.setSynchronizationState(SynchronizationState.INCOMING);
+		task2.setSynchronizationState(SynchronizationState.INCOMING);
 		List<AbstractTaskContainer> elements = new ArrayList<AbstractTaskContainer>();
 		elements.add(task1);
 		elements.add(task2);
 		MarkTaskReadAction readAction = new MarkTaskReadAction(elements);
 		readAction.run();
-		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task1.getSynchronizationState());
-		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task2.getSynchronizationState());
+		assertEquals(SynchronizationState.SYNCHRONIZED, task1.getSynchronizationState());
+		assertEquals(SynchronizationState.SYNCHRONIZED, task2.getSynchronizationState());
 
 		manager.getTaskList().reset();
 		MockTask hit1 = new MockTask("1");
@@ -946,7 +946,7 @@ public class TaskListManagerTest extends TestCase {
 		for (AbstractTaskContainer element : query.getChildren()) {
 			if (element instanceof MockTask) {
 				MockTask mockTask = (MockTask) element;
-				assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, mockTask.getSynchronizationState());
+				assertEquals(SynchronizationState.SYNCHRONIZED, mockTask.getSynchronizationState());
 			}
 		}
 
@@ -956,15 +956,15 @@ public class TaskListManagerTest extends TestCase {
 		String repositoryUrl = "http://mylyn.eclipse.org/bugs222";
 		MockTask task1 = new MockTask(repositoryUrl, "1");
 		MockTask task2 = new MockTask(repositoryUrl, "2");
-		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task1.getSynchronizationState());
-		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task2.getSynchronizationState());
+		assertEquals(SynchronizationState.SYNCHRONIZED, task1.getSynchronizationState());
+		assertEquals(SynchronizationState.SYNCHRONIZED, task2.getSynchronizationState());
 		List<AbstractTaskContainer> elements = new ArrayList<AbstractTaskContainer>();
 		elements.add(task1);
 		elements.add(task2);
 		MarkTaskUnreadAction unreadAction = new MarkTaskUnreadAction(elements);
 		unreadAction.run();
-		assertEquals(RepositoryTaskSyncState.INCOMING, task1.getSynchronizationState());
-		assertEquals(RepositoryTaskSyncState.INCOMING, task2.getSynchronizationState());
+		assertEquals(SynchronizationState.INCOMING, task1.getSynchronizationState());
+		assertEquals(SynchronizationState.INCOMING, task2.getSynchronizationState());
 
 		manager.getTaskList().reset();
 		MockTask hit1 = new MockTask("1");
@@ -982,7 +982,7 @@ public class TaskListManagerTest extends TestCase {
 		for (AbstractTaskContainer element : query.getChildren()) {
 			if (element instanceof MockTask) {
 				MockTask mockTask = (MockTask) element;
-				assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, mockTask.getSynchronizationState());
+				assertEquals(SynchronizationState.SYNCHRONIZED, mockTask.getSynchronizationState());
 			} else {
 				fail();
 			}
@@ -994,7 +994,7 @@ public class TaskListManagerTest extends TestCase {
 		for (AbstractTaskContainer element : query.getChildren()) {
 			if (element instanceof MockTask) {
 				MockTask mockTask = (MockTask) element;
-				assertEquals(RepositoryTaskSyncState.INCOMING, mockTask.getSynchronizationState());
+				assertEquals(SynchronizationState.INCOMING, mockTask.getSynchronizationState());
 			} else {
 				fail();
 			}

@@ -30,7 +30,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationContext;
@@ -78,6 +78,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 		}
 
 		@Override
+		@Deprecated
 		public void accept(RepositoryTaskData taskData) {
 			boolean changed;
 			AbstractTask task = taskList.getTask(taskData.getRepositoryUrl(), taskData.getTaskId());
@@ -93,10 +94,10 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 			if (!taskData.isPartial()) {
 				synchronizationManager.saveIncoming(task, taskData, isUser());
 			} else if (changed && !task.isStale()
-					&& task.getSynchronizationState() == RepositoryTaskSyncState.SYNCHRONIZED) {
+					&& task.getSynchronizationState() == SynchronizationState.SYNCHRONIZED) {
 				// TODO move to synchronizationManager
 				// set incoming marker for web tasks 
-				task.setSynchronizationState(RepositoryTaskSyncState.INCOMING);
+				task.setSynchronizationState(SynchronizationState.INCOMING);
 			}
 			if (isChangedTasksSynchronization() && task.isStale()) {
 				tasksToBeSynchronized.add(task);

@@ -121,7 +121,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskComment;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -425,8 +425,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			if (taskToRefresh != null) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						if (repositoryTask.getSynchronizationState() == RepositoryTaskSyncState.INCOMING
-								|| repositoryTask.getSynchronizationState() == RepositoryTaskSyncState.CONFLICT) {
+						if (repositoryTask.getSynchronizationState() == SynchronizationState.INCOMING
+								|| repositoryTask.getSynchronizationState() == SynchronizationState.CONFLICT) {
 							parentEditor.setMessage("Task has incoming changes", IMessageProvider.WARNING,
 									new HyperlinkAdapter() {
 										@Override
@@ -1761,7 +1761,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						return;
 					}
 					if (AbstractRepositoryTaskEditor.this.isDirty
-							|| task.getSynchronizationState().equals(RepositoryTaskSyncState.OUTGOING)) {
+							|| task.getSynchronizationState().equals(SynchronizationState.OUTGOING)) {
 						MessageDialog.openInformation(attachmentsComposite.getShell(),
 								"Task not synchronized or dirty editor",
 								"Commit edits or synchronize task before deleting attachments.");

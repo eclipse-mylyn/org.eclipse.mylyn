@@ -31,7 +31,7 @@ import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -75,7 +75,7 @@ public class TaskDataManager implements ITaskDataManager {
 	/** public for testing purposes */
 	@Deprecated
 	public boolean checkHasIncoming(AbstractTask repositoryTask, RepositoryTaskData newData) {
-		if (repositoryTask.getSynchronizationState() == RepositoryTaskSyncState.INCOMING) {
+		if (repositoryTask.getSynchronizationState() == SynchronizationState.INCOMING) {
 			return true;
 		}
 
@@ -131,10 +131,14 @@ public class TaskDataManager implements ITaskDataManager {
 				}
 				state.init(TaskDataManager.this, task);
 				state.revert();
-				if (task.getSynchronizationState() == RepositoryTaskSyncState.INCOMING) {
-					task.setSynchronizationState(RepositoryTaskSyncState.SYNCHRONIZED);
-				} else if (task.getSynchronizationState() == RepositoryTaskSyncState.CONFLICT) {
-					task.setSynchronizationState(RepositoryTaskSyncState.OUTGOING);
+				switch (task.getSynchronizationState()) {
+				case INCOMING:
+				case INCOMING_NEW:
+					task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
+					break;
+				case CONFLICT:
+					task.setSynchronizationState(SynchronizationState.OUTGOING);
+					break;
 				}
 				task.setMarkReadPending(true);
 				result[0] = state;
@@ -152,7 +156,7 @@ public class TaskDataManager implements ITaskDataManager {
 			public void execute(IProgressMonitor monitor) throws CoreException {
 				final File file = getFile(task, kind);
 				taskDataStore.putTaskData(ensurePathExists(file), state);
-				task.setSynchronizationState(RepositoryTaskSyncState.OUTGOING);
+				task.setSynchronizationState(SynchronizationState.OUTGOING);
 				taskList.addTask(task);
 			}
 		});
@@ -169,8 +173,10 @@ public class TaskDataManager implements ITaskDataManager {
 		if (changed || user) {
 			taskList.run(new ITaskListRunnable() {
 				public void execute(IProgressMonitor monitor) throws CoreException {
+					boolean newTask = false;
 					if (!taskData.isPartial()) {
 						File file = getMigratedFile(task, task.getConnectorKind());
+						newTask = !file.exists();
 						taskDataStore.putTaskData(ensurePathExists(file), taskData, task.isMarkReadPending());
 						task.setMarkReadPending(false);
 					}
@@ -178,16 +184,19 @@ public class TaskDataManager implements ITaskDataManager {
 					connector.updateTaskFromTaskData(repository, task, taskData);
 
 					if (changed) {
-						RepositoryTaskSyncState state = task.getSynchronizationState();
-						switch (state) {
+						switch (task.getSynchronizationState()) {
 						case OUTGOING:
-							state = RepositoryTaskSyncState.CONFLICT;
+							task.setSynchronizationState(SynchronizationState.CONFLICT);
 							break;
 						case SYNCHRONIZED:
-							state = RepositoryTaskSyncState.INCOMING;
+							if (newTask) {
+								// FIXME this won't work for tasks that have partial task data 
+								task.setSynchronizationState(SynchronizationState.INCOMING_NEW);
+							} else {
+								task.setSynchronizationState(SynchronizationState.INCOMING);
+							}
 							break;
 						}
-						task.setSynchronizationState(state);
 					}
 					task.setStale(false);
 					task.setSynchronizing(false);
@@ -225,10 +234,13 @@ public class TaskDataManager implements ITaskDataManager {
 		taskList.run(new ITaskListRunnable() {
 			public void execute(IProgressMonitor monitor) throws CoreException {
 				taskDataStore.discardEdits(getFile(task, kind));
-				if (task.getSynchronizationState() == RepositoryTaskSyncState.OUTGOING) {
-					task.setSynchronizationState(RepositoryTaskSyncState.SYNCHRONIZED);
-				} else if (task.getSynchronizationState() == RepositoryTaskSyncState.CONFLICT) {
-					task.setSynchronizationState(RepositoryTaskSyncState.OUTGOING);
+				switch (task.getSynchronizationState()) {
+				case OUTGOING:
+					task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
+					break;
+				case CONFLICT:
+					task.setSynchronizationState(SynchronizationState.INCOMING);
+					break;
 				}
 			}
 		});
@@ -238,7 +250,7 @@ public class TaskDataManager implements ITaskDataManager {
 	@Deprecated
 	public void discardOutgoing(AbstractTask repositoryTask) {
 		taskDataStorageManager.discardEdits(repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId());
-		repositoryTask.setSynchronizationState(RepositoryTaskSyncState.SYNCHRONIZED);
+		repositoryTask.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
 		taskList.notifyTaskChanged(repositoryTask, true);
 	}
 
@@ -310,7 +322,7 @@ public class TaskDataManager implements ITaskDataManager {
 
 				connector.updateTaskFromTaskData(repository, task, taskData);
 
-				task.setSynchronizationState(RepositoryTaskSyncState.SYNCHRONIZED);
+				task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
 				task.setStale(false);
 				task.setSynchronizing(false);
 				task.setSubmitting(false);
@@ -328,14 +340,14 @@ public class TaskDataManager implements ITaskDataManager {
 	public synchronized boolean saveIncoming(final AbstractTask repositoryTask, final RepositoryTaskData newTaskData,
 			boolean forceSync) {
 		Assert.isNotNull(newTaskData);
-		final RepositoryTaskSyncState startState = repositoryTask.getSynchronizationState();
-		RepositoryTaskSyncState status = repositoryTask.getSynchronizationState();
+		final SynchronizationState startState = repositoryTask.getSynchronizationState();
+		SynchronizationState status = repositoryTask.getSynchronizationState();
 
 		RepositoryTaskData previousTaskData = taskDataStorageManager.getNewTaskData(repositoryTask.getRepositoryUrl(),
 				repositoryTask.getTaskId());
 
 		if (repositoryTask.isSubmitting()) {
-			status = RepositoryTaskSyncState.SYNCHRONIZED;
+			status = SynchronizationState.SYNCHRONIZED;
 			repositoryTask.setSubmitting(false);
 			TaskDataStorageManager dataManager = taskDataStorageManager;
 			dataManager.discardEdits(repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId());
@@ -353,7 +365,7 @@ public class TaskDataManager implements ITaskDataManager {
 			switch (status) {
 			case OUTGOING:
 				if (checkHasIncoming(repositoryTask, newTaskData)) {
-					status = RepositoryTaskSyncState.CONFLICT;
+					status = SynchronizationState.CONFLICT;
 				}
 				taskDataStorageManager.setNewTaskData(newTaskData);
 				break;
@@ -369,7 +381,7 @@ public class TaskDataManager implements ITaskDataManager {
 			case SYNCHRONIZED:
 				boolean hasIncoming = checkHasIncoming(repositoryTask, newTaskData);
 				if (hasIncoming) {
-					status = RepositoryTaskSyncState.INCOMING;
+					status = SynchronizationState.INCOMING;
 					repositoryTask.setNotified(false);
 				}
 				if (hasIncoming || previousTaskData == null || forceSync) {
@@ -389,13 +401,13 @@ public class TaskDataManager implements ITaskDataManager {
 
 	/**
 	 * @param repositoryTask
-	 *            task that changed
+	 * 		task that changed
 	 * @param modifiedAttributes
-	 *            attributes that have changed during edit session
+	 * 		attributes that have changed during edit session
 	 */
 	@Deprecated
 	public synchronized void saveOutgoing(AbstractTask repositoryTask, Set<RepositoryTaskAttribute> modifiedAttributes) {
-		repositoryTask.setSynchronizationState(RepositoryTaskSyncState.OUTGOING);
+		repositoryTask.setSynchronizationState(SynchronizationState.OUTGOING);
 		taskDataStorageManager.saveEdits(repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId(),
 				Collections.unmodifiableSet(modifiedAttributes));
 		taskList.notifyTaskChanged(repositoryTask, false);
@@ -407,9 +419,9 @@ public class TaskDataManager implements ITaskDataManager {
 
 	/**
 	 * @param task
-	 *            repository task to mark as read or unread
+	 * 		repository task to mark as read or unread
 	 * @param read
-	 *            true to mark as read, false to mark as unread
+	 * 		true to mark as read, false to mark as unread
 	 */
 	public void setTaskRead(final AbstractTask task, final boolean read) {
 		Assert.isNotNull(task);
@@ -423,17 +435,23 @@ public class TaskDataManager implements ITaskDataManager {
 			taskList.run(new ITaskListRunnable() {
 				public void execute(IProgressMonitor monitor) throws CoreException {
 					if (read) {
-						if (task.getSynchronizationState() == RepositoryTaskSyncState.INCOMING) {
-							task.setSynchronizationState(RepositoryTaskSyncState.SYNCHRONIZED);
+						switch (task.getSynchronizationState()) {
+						case INCOMING:
+						case INCOMING_NEW:
+							task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
 							task.setMarkReadPending(true);
-						} else if (task.getSynchronizationState() == RepositoryTaskSyncState.CONFLICT) {
-							task.setSynchronizationState(RepositoryTaskSyncState.OUTGOING);
+							break;
+						case CONFLICT:
+							task.setSynchronizationState(SynchronizationState.OUTGOING);
 							task.setMarkReadPending(true);
+							break;
 						}
 					} else {
-						if (task.getSynchronizationState() == RepositoryTaskSyncState.SYNCHRONIZED) {
-							task.setSynchronizationState(RepositoryTaskSyncState.INCOMING);
+						switch (task.getSynchronizationState()) {
+						case SYNCHRONIZED:
+							task.setSynchronizationState(SynchronizationState.INCOMING);
 							task.setMarkReadPending(false);
+							break;
 						}
 					}
 				}
@@ -450,20 +468,20 @@ public class TaskDataManager implements ITaskDataManager {
 		RepositoryTaskData taskData = taskDataStorageManager.getNewTaskData(repositoryTask.getRepositoryUrl(),
 				repositoryTask.getTaskId());
 
-		if (read && repositoryTask.getSynchronizationState().equals(RepositoryTaskSyncState.INCOMING)) {
+		if (read && repositoryTask.getSynchronizationState().equals(SynchronizationState.INCOMING)) {
 			if (taskData != null && taskData.getLastModified() != null) {
 				repositoryTask.setLastReadTimeStamp(taskData.getLastModified());
 				taskDataStorageManager.setOldTaskData(taskData);
 			}
-			repositoryTask.setSynchronizationState(RepositoryTaskSyncState.SYNCHRONIZED);
+			repositoryTask.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
 			taskList.notifyTaskChanged(repositoryTask, false);
-		} else if (read && repositoryTask.getSynchronizationState().equals(RepositoryTaskSyncState.CONFLICT)) {
+		} else if (read && repositoryTask.getSynchronizationState().equals(SynchronizationState.CONFLICT)) {
 			if (taskData != null && taskData.getLastModified() != null) {
 				repositoryTask.setLastReadTimeStamp(taskData.getLastModified());
 			}
-			repositoryTask.setSynchronizationState(RepositoryTaskSyncState.OUTGOING);
+			repositoryTask.setSynchronizationState(SynchronizationState.OUTGOING);
 			taskList.notifyTaskChanged(repositoryTask, false);
-		} else if (read && repositoryTask.getSynchronizationState().equals(RepositoryTaskSyncState.SYNCHRONIZED)) {
+		} else if (read && repositoryTask.getSynchronizationState().equals(SynchronizationState.SYNCHRONIZED)) {
 			if (taskData != null && taskData.getLastModified() != null) {
 				repositoryTask.setLastReadTimeStamp(taskData.getLastModified());
 				// By setting old every time (and not setting upon submission)
@@ -482,8 +500,8 @@ public class TaskDataManager implements ITaskDataManager {
 //				repositoryTask.setLastReadTimeStamp(LocalTask.SYNC_DATE_NOW);
 //			}
 
-		} else if (!read && repositoryTask.getSynchronizationState().equals(RepositoryTaskSyncState.SYNCHRONIZED)) {
-			repositoryTask.setSynchronizationState(RepositoryTaskSyncState.INCOMING);
+		} else if (!read && repositoryTask.getSynchronizationState().equals(SynchronizationState.SYNCHRONIZED)) {
+			repositoryTask.setSynchronizationState(SynchronizationState.INCOMING);
 			taskList.notifyTaskChanged(repositoryTask, false);
 		}
 

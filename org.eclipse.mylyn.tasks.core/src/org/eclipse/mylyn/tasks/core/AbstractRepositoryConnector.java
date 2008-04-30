@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
-import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
@@ -147,7 +147,7 @@ public abstract class AbstractRepositoryConnector {
 				repositoryTask = createTaskFromTaskData(repository, taskData, retrieveSubTasks, new SubProgressMonitor(
 						monitor, 1));
 				if (repositoryTask != null) {
-					repositoryTask.setSynchronizationState(RepositoryTaskSyncState.INCOMING);
+					repositoryTask.setSynchronizationState(SynchronizationState.INCOMING);
 					taskList.addTask(repositoryTask);
 				}
 			}

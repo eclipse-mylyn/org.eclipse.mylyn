@@ -14,8 +14,10 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
+import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 
 /**
  * Encapsulates tasks that reside on a repository or local computer and participate in synchronization with the source
@@ -60,7 +62,7 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 
 	private boolean submitting;
 
-	private RepositoryTaskSyncState synchronizationState = RepositoryTaskSyncState.SYNCHRONIZED;
+	private SynchronizationState synchronizationState = SynchronizationState.SYNCHRONIZED;
 
 	// transient
 	private IStatus synchronizationStatus = null;
@@ -70,8 +72,8 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 	/**
 	 * @since 3.0
 	 */
-	public enum RepositoryTaskSyncState {
-		OUTGOING, SYNCHRONIZED, INCOMING, CONFLICT, UNREAD, UNSUBMITTED;
+	public enum SynchronizationState {
+		OUTGOING, SYNCHRONIZED, INCOMING, CONFLICT, INCOMING_NEW, OUTGOING_NEW;
 
 		/**
 		 * @since 3.0
@@ -79,8 +81,31 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 		public boolean isIncoming() {
 			switch (this) {
 			case INCOMING:
-			case UNREAD:
-				//case 
+			case INCOMING_NEW:
+			case CONFLICT:
+				return true;
+			default:
+				return false;
+			}
+		}
+
+		/**
+		 * @since 3.0
+		 */
+		public boolean isOutgoing() {
+			switch (this) {
+			case OUTGOING:
+			case OUTGOING_NEW:
+			case CONFLICT:
+				return true;
+			default:
+				return false;
+			}
+		}
+
+		public boolean isSynchronized() {
+			switch (this) {
+			case SYNCHRONIZED:
 				return true;
 			default:
 				return false;
@@ -244,11 +269,18 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 		this.lastReadTimeStamp = lastReadTimeStamp;
 	}
 
-	public void setSynchronizationState(RepositoryTaskSyncState syncState) {
+	/**
+	 * @since 3.0
+	 */
+	public void setSynchronizationState(SynchronizationState syncState) {
+		Assert.isNotNull(syncState);
 		this.synchronizationState = syncState;
 	}
 
-	public RepositoryTaskSyncState getSynchronizationState() {
+	/**
+	 * @since 3.0
+	 */
+	public SynchronizationState getSynchronizationState() {
 		return synchronizationState;
 	}
 
@@ -467,8 +499,9 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 	}
 
 	/**
-	 * API 3.0: Deprecate. Use TaskActivityManager.isPastReminder(Abstract task)
+	 * @deprecated use {@link TaskActivityManager#isPastReminder(AbstractTask)} instead
 	 */
+	@Deprecated
 	public boolean isPastReminder() {
 		if (isCompleted() || scheduledForDate == null) {
 			return false;

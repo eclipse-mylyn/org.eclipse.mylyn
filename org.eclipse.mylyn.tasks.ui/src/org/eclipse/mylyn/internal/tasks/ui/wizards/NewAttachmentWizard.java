@@ -42,7 +42,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditorInput;
@@ -171,7 +171,7 @@ public class NewAttachmentWizard extends Wizard {
 					}
 					monitor.beginTask("Attaching file...", 2);
 					task.setSubmitting(true);
-					task.setSynchronizationState(RepositoryTaskSyncState.OUTGOING);
+					task.setSynchronizationState(SynchronizationState.OUTGOING);
 
 					if (screenshotMode || InputAttachmentSourcePage.SCREENSHOT_LABEL.equals(path)) {
 						((ImageAttachment) attachment).ensureImageFileWasCreated();
@@ -233,7 +233,7 @@ public class NewAttachmentWizard extends Wizard {
 
 		} catch (InvocationTargetException e1) {
 			task.setSubmitting(false);
-			task.setSynchronizationState(RepositoryTaskSyncState.SYNCHRONIZED);
+			task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
 			if (e1.getCause() != null && e1.getCause() instanceof CoreException) {
 				handleSubmitError((CoreException) e1.getCause());
 			} else {
@@ -242,7 +242,7 @@ public class NewAttachmentWizard extends Wizard {
 			return false;
 		} catch (InterruptedException e1) {
 			task.setSubmitting(false);
-			task.setSynchronizationState(RepositoryTaskSyncState.SYNCHRONIZED);
+			task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
 		}
 
 		return true;

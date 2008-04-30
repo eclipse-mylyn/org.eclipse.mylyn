@@ -78,7 +78,7 @@ import org.eclipse.mylyn.tasks.core.TaskActivationAdapter;
 import org.eclipse.mylyn.tasks.core.TaskComment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
-import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.AbstractTaskRepositoryLinkProvider;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorFactory;
@@ -283,7 +283,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				if (connectorUi != null && !connectorUi.isCustomNotificationHandling()) {
 					for (AbstractTask repositoryTask : TasksUiPlugin.getTaskListManager().getTaskList().getTasks(
 							repository.getRepositoryUrl())) {
-						if ((repositoryTask.getLastReadTimeStamp() == null || repositoryTask.getSynchronizationState() == RepositoryTaskSyncState.INCOMING)
+						if ((repositoryTask.getLastReadTimeStamp() == null || repositoryTask.getSynchronizationState() == SynchronizationState.INCOMING)
 								&& repositoryTask.isNotified() == false) {
 							TaskListNotification notification = INSTANCE.getIncommingNotification(connector,
 									repositoryTask);
@@ -971,9 +971,9 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	 * Associate a Task Repository with a workbench project
 	 * 
 	 * @param resource
-	 *            project or resource belonging to a project
+	 * 		project or resource belonging to a project
 	 * @param repository
-	 *            task repository to associate with given project
+	 * 		task repository to associate with given project
 	 * @throws CoreException
 	 */
 	public void setRepositoryForResource(IResource resource, TaskRepository repository) throws CoreException {
@@ -1055,10 +1055,9 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * TODO: move, uses and exposes internal class.
-	 * 
-	 * @Deprecated
+	 * TODO 3.0: move, uses and exposes internal class.
 	 */
+	@Deprecated
 	public TaskListNotification getIncommingNotification(AbstractRepositoryConnector connector, AbstractTask task) {
 
 		TaskListNotification notification = new TaskListNotification(task);
@@ -1068,7 +1067,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				task.getTaskId());
 
 		try {
-			if (task.getSynchronizationState().equals(RepositoryTaskSyncState.INCOMING)
+			if (task.getSynchronizationState().equals(SynchronizationState.INCOMING)
 					&& task.getLastReadTimeStamp() == null) {
 				notification.setDescription("New unread task ");
 			} else if (newTaskData != null && oldTaskData != null) {

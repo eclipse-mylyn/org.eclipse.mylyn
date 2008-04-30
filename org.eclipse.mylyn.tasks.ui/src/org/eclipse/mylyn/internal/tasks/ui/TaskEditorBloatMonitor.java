@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.mylyn.monitor.ui.AbstractEditorTracker;
-import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -47,11 +46,9 @@ public class TaskEditorBloatMonitor extends AbstractEditorTracker {
 						TaskEditor taskEditor = (TaskEditor) editorReference.getEditor(false);
 						if (taskEditor == null) {
 							toClose.add(editorReference);
-						} else if (!taskEditor.equals(editorPartOpened)
-								&& !taskEditor.isDirty()
+						} else if (!taskEditor.equals(editorPartOpened) && !taskEditor.isDirty()
 								&& taskEditorInput.getTask() != null
-								&& RepositoryTaskSyncState.SYNCHRONIZED.equals(taskEditorInput.getTask()
-										.getSynchronizationState())) {
+								&& taskEditorInput.getTask().getSynchronizationState().isSynchronized()) {
 							toClose.add(editorReference);
 						}
 					}

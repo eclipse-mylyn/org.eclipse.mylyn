@@ -38,26 +38,26 @@ public interface ITasksCoreConstants {
 	public static final ISchedulingRule ROOT_SCHEDULING_RULE = new RootSchedulingRule();
 
 	static class TaskListSchedulingRule extends RootSchedulingRule {
+
+		@Override
+		public boolean contains(ISchedulingRule rule) {
+			return rule instanceof TaskListSchedulingRule;
+		}
+
 		@Override
 		public boolean isConflicting(ISchedulingRule rule) {
-			if (rule instanceof TaskListSchedulingRule) {
-				return true;
-			}
-			return super.isConflicting(rule);
+			return rule instanceof TaskListSchedulingRule;
 		}
 	}
 
 	static class RootSchedulingRule implements ISchedulingRule {
 
 		public boolean contains(ISchedulingRule rule) {
-			return isConflicting(rule);
+			return rule instanceof RootSchedulingRule;
 		}
 
 		public boolean isConflicting(ISchedulingRule rule) {
-			if (rule instanceof RootSchedulingRule) {
-				return true;
-			}
-			return false;
+			return rule instanceof RootSchedulingRule;
 		}
 	}
 

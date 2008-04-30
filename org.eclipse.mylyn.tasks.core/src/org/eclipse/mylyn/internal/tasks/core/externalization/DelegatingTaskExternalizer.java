@@ -35,7 +35,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListFactory;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
-import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -241,7 +241,7 @@ final class DelegatingTaskExternalizer {
 		if (abstractTask.getSynchronizationState() != null) {
 			node.setAttribute(KEY_SYNC_STATE, abstractTask.getSynchronizationState().toString());
 		} else {
-			node.setAttribute(KEY_SYNC_STATE, RepositoryTaskSyncState.SYNCHRONIZED.toString());
+			node.setAttribute(KEY_SYNC_STATE, SynchronizationState.SYNCHRONIZED.toString());
 		}
 
 		if (abstractTask.getOwner() != null) {
@@ -475,14 +475,14 @@ final class DelegatingTaskExternalizer {
 
 		if (element.hasAttribute(KEY_SYNC_STATE)) {
 			String syncState = element.getAttribute(KEY_SYNC_STATE);
-			if (syncState.compareTo(RepositoryTaskSyncState.SYNCHRONIZED.toString()) == 0) {
-				abstractTask.setSynchronizationState(RepositoryTaskSyncState.SYNCHRONIZED);
-			} else if (syncState.compareTo(RepositoryTaskSyncState.INCOMING.toString()) == 0) {
-				abstractTask.setSynchronizationState(RepositoryTaskSyncState.INCOMING);
-			} else if (syncState.compareTo(RepositoryTaskSyncState.OUTGOING.toString()) == 0) {
-				abstractTask.setSynchronizationState(RepositoryTaskSyncState.OUTGOING);
-			} else if (syncState.compareTo(RepositoryTaskSyncState.CONFLICT.toString()) == 0) {
-				abstractTask.setSynchronizationState(RepositoryTaskSyncState.CONFLICT);
+			if (syncState.compareTo(SynchronizationState.SYNCHRONIZED.toString()) == 0) {
+				abstractTask.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
+			} else if (syncState.compareTo(SynchronizationState.INCOMING.toString()) == 0) {
+				abstractTask.setSynchronizationState(SynchronizationState.INCOMING);
+			} else if (syncState.compareTo(SynchronizationState.OUTGOING.toString()) == 0) {
+				abstractTask.setSynchronizationState(SynchronizationState.OUTGOING);
+			} else if (syncState.compareTo(SynchronizationState.CONFLICT.toString()) == 0) {
+				abstractTask.setSynchronizationState(SynchronizationState.CONFLICT);
 			}
 		}
 

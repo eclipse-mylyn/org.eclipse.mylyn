@@ -19,7 +19,7 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 
 /**
  * Discard outgoing changes on selected task TODO: Enable multi task discard?
@@ -49,8 +49,8 @@ public class ClearOutgoingAction extends Action {
 	}
 
 	private boolean hasOutgoingChanges(AbstractTask task) {
-		return task.getSynchronizationState().equals(RepositoryTaskSyncState.OUTGOING)
-				|| task.getSynchronizationState().equals(RepositoryTaskSyncState.CONFLICT);
+		return task.getSynchronizationState().equals(SynchronizationState.OUTGOING)
+				|| task.getSynchronizationState().equals(SynchronizationState.CONFLICT);
 	}
 
 	@Override

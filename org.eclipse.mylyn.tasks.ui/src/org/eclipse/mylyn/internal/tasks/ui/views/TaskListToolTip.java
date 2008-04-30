@@ -39,7 +39,6 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.SWT;
@@ -270,9 +269,8 @@ public class TaskListToolTip extends ToolTip {
 	private String getIncommingText(AbstractTaskContainer element) {
 		if (element instanceof AbstractTask) {
 			AbstractTask task = (AbstractTask) element;
-			if (task.getSynchronizationState() == RepositoryTaskSyncState.INCOMING) {
-				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-						task);
+			if (task.getSynchronizationState().isIncoming()) {
+				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(task);
 				if (connector != null) {
 					AbstractNotification notification = TasksUiPlugin.getDefault().getIncommingNotification(connector,
 							task);
@@ -528,8 +526,7 @@ public class TaskListToolTip extends ToolTip {
 						boolean hasIncoming = false;
 						for (Object child : children) {
 							if (child instanceof AbstractTask) {
-								if (((AbstractTask) child).getSynchronizationState().equals(
-										RepositoryTaskSyncState.INCOMING)) {
+								if (((AbstractTask) child).getSynchronizationState().isIncoming()) {
 									hasIncoming = true;
 									break;
 								}

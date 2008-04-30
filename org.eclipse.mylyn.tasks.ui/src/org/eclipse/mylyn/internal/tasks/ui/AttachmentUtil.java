@@ -30,7 +30,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachment;
 
 /**
@@ -50,17 +50,18 @@ public class AttachmentUtil {
 	 * 
 	 * @return false, if operation is not supported by repository
 	 */
+	@Deprecated
 	public static boolean attachContext(AbstractAttachmentHandler attachmentHandler, TaskRepository repository,
 			AbstractTask task, String longComment, IProgressMonitor monitor) throws CoreException {
 		ContextCore.getContextManager().saveContext(task.getHandleIdentifier());
 		final File sourceContextFile = ContextCore.getContextManager().getFileForContext(task.getHandleIdentifier());
 
-		RepositoryTaskSyncState previousState = task.getSynchronizationState();
+		SynchronizationState previousState = task.getSynchronizationState();
 
 		if (sourceContextFile != null && sourceContextFile.exists()) {
 			try {
 				task.setSubmitting(true);
-				task.setSynchronizationState(RepositoryTaskSyncState.OUTGOING);
+				task.setSynchronizationState(SynchronizationState.OUTGOING);
 				FileAttachment attachment = new FileAttachment(sourceContextFile);
 				attachment.setDescription(CONTEXT_DESCRIPTION);
 				attachment.setFilename(CONTEXT_FILENAME);

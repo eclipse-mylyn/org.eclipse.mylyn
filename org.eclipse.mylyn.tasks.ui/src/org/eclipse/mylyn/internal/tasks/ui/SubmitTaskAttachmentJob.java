@@ -48,7 +48,7 @@ public class SubmitTaskAttachmentJob extends Job {
 //			}
 //			monitor.beginTask("Attaching file...", 2);
 //			task.setSubmitting(true);
-//			task.setSynchronizationState(RepositoryTaskSyncState.OUTGOING);
+//			task.setSynchronizationState(SynchronizationState.OUTGOING);
 //
 //			if (screenshotMode || InputAttachmentSourcePage.SCREENSHOT_LABEL.equals(path)) {
 //				((ImageAttachment) taskAttachment).ensureImageFileWasCreated();
@@ -81,7 +81,7 @@ public class SubmitTaskAttachmentJob extends Job {
 //			return e.getStatus();
 //		} finally {
 //			task.setSubmitting(false);
-//			task.setSynchronizationState(RepositoryTaskSyncState.SYNCHRONIZED);
+//			task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
 //
 //			monitor.done();
 //		}

@@ -27,7 +27,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
@@ -163,10 +163,10 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 		boolean changed = connector.updateTaskFromTaskData(repository, task, taskData);
 		if (!taskData.isPartial()) {
 			taskDataManager.saveIncoming(task, taskData, isUser());
-		} else if (changed && !task.isStale() && task.getSynchronizationState() == RepositoryTaskSyncState.SYNCHRONIZED) {
+		} else if (changed && !task.isStale() && task.getSynchronizationState() == SynchronizationState.SYNCHRONIZED) {
 			// TODO move to synchronizationManager
 			// set incoming marker for web tasks 
-			task.setSynchronizationState(RepositoryTaskSyncState.INCOMING);
+			task.setSynchronizationState(SynchronizationState.INCOMING);
 		}
 
 		// HACK: Remove once connectors can get access to
@@ -181,8 +181,8 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 
 		task.setStale(false);
 		task.setSynchronizing(false);
-		if (task.getSynchronizationState() == RepositoryTaskSyncState.INCOMING
-				|| task.getSynchronizationState() == RepositoryTaskSyncState.CONFLICT) {
+		if (task.getSynchronizationState() == SynchronizationState.INCOMING
+				|| task.getSynchronizationState() == SynchronizationState.CONFLICT) {
 			taskList.notifyTaskChanged(task, true);
 		} else {
 			taskList.notifyTaskChanged(task, false);

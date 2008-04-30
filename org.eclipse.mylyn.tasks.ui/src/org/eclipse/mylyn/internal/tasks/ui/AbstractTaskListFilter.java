@@ -12,7 +12,7 @@ import java.util.Collection;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 
 /**
  * Custom filters are used so that the "Find:" filter can 'see through' any filters that may have been applied.
@@ -46,7 +46,7 @@ public abstract class AbstractTaskListFilter {
 		for (AbstractTask task : children) {
 			if (task != null) {
 				AbstractTask containedRepositoryTask = task;
-				if (containedRepositoryTask.getSynchronizationState() == RepositoryTaskSyncState.INCOMING) {
+				if (containedRepositoryTask.getSynchronizationState() == SynchronizationState.INCOMING) {
 					return true;
 				} else if (TasksUiPlugin.getDefault().groupSubtasks(container)
 						&& hasDescendantIncoming(task, depth - 1)) {

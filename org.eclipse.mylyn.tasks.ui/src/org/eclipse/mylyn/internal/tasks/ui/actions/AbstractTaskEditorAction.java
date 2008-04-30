@@ -10,7 +10,7 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
@@ -32,8 +32,8 @@ public abstract class AbstractTaskEditorAction extends BaseSelectionListenerActi
 
 	protected boolean taskDirty(AbstractTask task) {
 		return (((editor != null && editor.isDirty())
-				|| task.getSynchronizationState().equals(RepositoryTaskSyncState.OUTGOING) || task.getSynchronizationState()
-				.equals(RepositoryTaskSyncState.CONFLICT)));
+				|| task.getSynchronizationState().equals(SynchronizationState.OUTGOING) || task.getSynchronizationState()
+				.equals(SynchronizationState.CONFLICT)));
 
 	}
 

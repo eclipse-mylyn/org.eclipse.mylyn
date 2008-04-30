@@ -52,7 +52,7 @@ import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -249,8 +249,8 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 			if (taskToRefresh != null) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						if (task.getSynchronizationState() == RepositoryTaskSyncState.INCOMING
-								|| task.getSynchronizationState() == RepositoryTaskSyncState.CONFLICT) {
+						if (task.getSynchronizationState() == SynchronizationState.INCOMING
+								|| task.getSynchronizationState() == SynchronizationState.CONFLICT) {
 							getParentEditor().setMessage("Task has incoming changes", IMessageProvider.WARNING,
 									new HyperlinkAdapter() {
 										@Override

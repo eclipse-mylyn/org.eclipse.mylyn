@@ -32,7 +32,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
-import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.graphics.Color;
@@ -149,7 +149,13 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 	public static ImageDescriptor getSynchronizationImageDescriptor(Object element, boolean synchViewStyle) {
 		if (element instanceof AbstractTask) {
 			AbstractTask repositoryTask = (AbstractTask) element;
-			if (repositoryTask.getSynchronizationState() == RepositoryTaskSyncState.INCOMING
+			if (repositoryTask.getSynchronizationState() == SynchronizationState.INCOMING_NEW) {
+				if (synchViewStyle) {
+					return CommonImages.OVERLAY_SYNC_OLD_INCOMMING_NEW;
+				} else {
+					return CommonImages.OVERLAY_SYNC_INCOMMING_NEW;
+				}
+			} else if (repositoryTask.getSynchronizationState() == SynchronizationState.INCOMING
 					&& repositoryTask.getLastReadTimeStamp() == null) {
 				if (synchViewStyle) {
 					return CommonImages.OVERLAY_SYNC_OLD_INCOMMING_NEW;
@@ -158,19 +164,20 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				}
 			}
 			ImageDescriptor imageDescriptor = null;
-			if (repositoryTask.getSynchronizationState() == RepositoryTaskSyncState.OUTGOING) {
+			if (repositoryTask.getSynchronizationState() == SynchronizationState.OUTGOING
+					|| repositoryTask.getSynchronizationState() == SynchronizationState.OUTGOING_NEW) {
 				if (synchViewStyle) {
 					imageDescriptor = CommonImages.OVERLAY_SYNC_OLD_OUTGOING;
 				} else {
 					imageDescriptor = CommonImages.OVERLAY_SYNC_OUTGOING;
 				}
-			} else if (repositoryTask.getSynchronizationState() == RepositoryTaskSyncState.INCOMING) {
+			} else if (repositoryTask.getSynchronizationState() == SynchronizationState.INCOMING) {
 				if (synchViewStyle) {
 					imageDescriptor = CommonImages.OVERLAY_SYNC_OLD_INCOMMING;
 				} else {
 					imageDescriptor = CommonImages.OVERLAY_SYNC_INCOMMING;
 				}
-			} else if (repositoryTask.getSynchronizationState() == RepositoryTaskSyncState.CONFLICT) {
+			} else if (repositoryTask.getSynchronizationState() == SynchronizationState.CONFLICT) {
 				imageDescriptor = CommonImages.OVERLAY_SYNC_CONFLICT;
 			}
 			if (imageDescriptor == null && repositoryTask.getSynchronizationStatus() != null) {

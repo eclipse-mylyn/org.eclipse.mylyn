@@ -24,7 +24,7 @@ import org.eclipse.mylyn.tasks.core.ITaskFactory;
 import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 
 /**
  * Used for creating tasks from repository task data.
@@ -78,7 +78,7 @@ public class TaskFactory implements ITaskFactory {
 		AbstractTask repositoryTask = taskList.getTask(taskData.getRepositoryUrl(), taskData.getTaskId());
 		if (repositoryTask == null) {
 			repositoryTask = createTaskFromTaskData(connector, repository, taskData, updateTasklist, monitor);
-			repositoryTask.setSynchronizationState(RepositoryTaskSyncState.INCOMING);
+			repositoryTask.setSynchronizationState(SynchronizationState.INCOMING);
 			if (updateTasklist) {
 				taskList.addTask(repositoryTask);
 				synchManager.saveIncoming(repositoryTask, taskData, forced);
@@ -164,7 +164,7 @@ public class TaskFactory implements ITaskFactory {
 				repositoryTask = createTaskFromTaskData(connector, repository, taskData, retrieveSubTasks,
 						new SubProgressMonitor(monitor, 1));
 				if (repositoryTask != null) {
-					repositoryTask.setSynchronizationState(RepositoryTaskSyncState.INCOMING);
+					repositoryTask.setSynchronizationState(SynchronizationState.INCOMING);
 					taskList.addTask(repositoryTask);
 				}
 			}
