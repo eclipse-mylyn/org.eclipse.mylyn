@@ -11,7 +11,7 @@ package org.eclipse.mylyn.internal.context.ui.wizards;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -72,7 +72,7 @@ public class ContextAttachWizardPage extends WizardPage {
 
 		setControl(composite);
 
-		if (task.getSynchronizationState() != RepositoryTaskSyncState.SYNCHRONIZED) {
+		if (task.getSynchronizationState() != SynchronizationState.SYNCHRONIZED) {
 			setErrorMessage("Task must be synchronized before attaching context");
 			complete = false;
 			getWizard().getContainer().updateButtons();

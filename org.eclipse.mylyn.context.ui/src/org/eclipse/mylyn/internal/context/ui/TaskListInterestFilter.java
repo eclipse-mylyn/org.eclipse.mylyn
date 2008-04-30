@@ -21,7 +21,6 @@ import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 
 /**
  * Goal is to have this reuse as much of the super as possible.
@@ -155,38 +154,20 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 				return false;
 			}
 		}
-
-		boolean result = false;
-		if (task != null) {
-			if (task.getSynchronizationState() == RepositoryTaskSyncState.OUTGOING) {
-				return true;
-			} else if (task.getSynchronizationState() == RepositoryTaskSyncState.INCOMING
-					&& !(parent instanceof ScheduledTaskContainer)) {
-				return true;
-			} else if (task.getSynchronizationState() == RepositoryTaskSyncState.CONFLICT) {
-				return true;
-			}
-			return hasChangesHelper(parent, task);
-		}
-		return result;
+		return hasChangesHelper(parent, task);
 	}
 
-	private static boolean hasChangesHelper(Object parent, AbstractTaskContainer container) {
-		boolean result = false;
-		for (AbstractTask task : container.getChildren()) {
-			if (task != null) {
-				if (task.getSynchronizationState() == RepositoryTaskSyncState.OUTGOING) {
-					result = true;
-				} else if (task.getSynchronizationState() == RepositoryTaskSyncState.INCOMING
-						&& !(parent instanceof ScheduledTaskContainer)) {
-					result = true;
-				} else if (task.getSynchronizationState() == RepositoryTaskSyncState.CONFLICT) {
-					result = true;
-				} else if (task.getChildren() != null && task.getChildren().size() > 0) {
-					result = hasChangesHelper(parent, task);
-				}
+	private static boolean hasChangesHelper(Object parent, AbstractTask task) {
+		if (task.getSynchronizationState().isOutgoing()) {
+			return true;
+		} else if (task.getSynchronizationState().isIncoming() && (parent instanceof AbstractTask)) {
+			return true;
+		}
+		for (AbstractTask child : task.getChildren()) {
+			if (hasChangesHelper(parent, child)) {
+				return true;
 			}
 		}
-		return result;
+		return false;
 	}
 }

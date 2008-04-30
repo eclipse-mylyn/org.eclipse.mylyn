@@ -23,7 +23,7 @@ import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
@@ -70,7 +70,7 @@ public class ContextAttachAction extends Action implements IViewActionDelegate {
 	}
 
 	public void run(AbstractTask task) {
-		if (task.getSynchronizationState() != RepositoryTaskSyncState.SYNCHRONIZED) {
+		if (task.getSynchronizationState() != SynchronizationState.SYNCHRONIZED) {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 					ITasksUiConstants.TITLE_DIALOG, "Task must be synchronized before attaching context");
 			return;

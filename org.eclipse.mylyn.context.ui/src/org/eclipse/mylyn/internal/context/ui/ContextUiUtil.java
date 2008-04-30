@@ -25,7 +25,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchSite;
@@ -117,7 +117,7 @@ public class ContextUiUtil {
 				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 						TITLE_DIALOG, MESSAGE_ATTACHMENTS_NOT_SUPPORTED + connector.getLabel());
 			} else {
-				task.setSynchronizationState(RepositoryTaskSyncState.SYNCHRONIZED);
+				task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
 				// FIXME check for null?
 				IWorkbenchSite site = PlatformUI.getWorkbench()
 						.getActiveWorkbenchWindow()
