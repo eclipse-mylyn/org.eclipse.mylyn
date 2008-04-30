@@ -26,7 +26,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.test.performance,
  org.eclipse.ui.ide,
  org.eclipse.mylyn.tasks.bugs,
- org.eclipse.mylyn.commons.core
+ org.eclipse.mylyn.commons.core,
+ org.eclipse.ui.browser
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: mylyn-tasklist-tests.jar
 Export-Package: org.eclipse.mylyn.tasks.tests;x-internal:=true,

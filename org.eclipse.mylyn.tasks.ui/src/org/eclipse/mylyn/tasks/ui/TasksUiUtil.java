@@ -79,6 +79,7 @@ import org.eclipse.ui.internal.browser.WorkbenchBrowserSupport;
  * @since 2.0
  * @author Mik Kersten
  * @author Steffen Pingel
+ * @author Shawn Minto
  */
 // move to util package?
 public class TasksUiUtil {
@@ -561,11 +562,10 @@ public class TasksUiUtil {
 				String repositoryUrl = connector.getRepositoryUrlFromTaskUrl(url);
 				String id = connector.getTaskIdFromTaskUrl(url);
 				TaskRepository repository = TasksUi.getRepositoryManager().getRepository(repositoryUrl);
-
 				opened = openTask(repository, id);
 			}
 			if (!opened) {
-				openUrl(url, FLAG_NO_RICH_EDITOR);
+				openUrl(url, 0);
 			}
 		}
 	}
@@ -688,7 +688,7 @@ public class TasksUiUtil {
 	 * @since 3.0
 	 */
 	public static void openUrl(String location) {
-		openUrl(location, 0);
+		openUrl(location, FLAG_NO_RICH_EDITOR);
 	}
 
 	/**
@@ -696,19 +696,20 @@ public class TasksUiUtil {
 	 */
 	@Deprecated
 	public static void openUrl(String url, boolean useRichEditorIfAvailable) {
-		if (useRichEditorIfAvailable) {
+		if (useRichEditorIfAvailable && url != null) {
 			openTask(url);
 		} else {
 			openUrl(url);
 		}
 	}
 
-	/**
-	 * @since 3.0
-	 */
 	private static void openUrl(String location, int customFlags) {
 		try {
-			URL url = new URL(location);
+			URL url = null;
+
+			if (location != null) {
+				url = new URL(location);
+			}
 			if (WebBrowserPreference.getBrowserChoice() == WebBrowserPreference.EXTERNAL) {
 				try {
 					IWorkbenchBrowserSupport support = PlatformUI.getWorkbench().getBrowserSupport();

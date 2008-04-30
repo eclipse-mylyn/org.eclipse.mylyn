@@ -13,6 +13,7 @@ import junit.framework.TestSuite;
 
 /**
  * @author Mik Kersten
+ * @author Shawn Minto
  */
 public class AllTasksTests {
 
@@ -43,6 +44,7 @@ public class AllTasksTests {
 		suite.addTestSuite(TaskTest.class);
 		suite.addTestSuite(TaskListUiTest.class);
 		suite.addTestSuite(TaskListDnDTest.class);
+		suite.addTestSuite(TasksUiUtilTest.class);
 		suite.addTestSuite(TaskDataExportTest.class);
 		// XXX: Put back
 		//suite.addTestSuite(TaskDataImportTest.class);
