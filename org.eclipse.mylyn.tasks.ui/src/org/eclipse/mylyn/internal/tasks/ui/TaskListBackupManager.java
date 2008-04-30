@@ -71,7 +71,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 
 	public TaskListBackupManager(String backupFolderPath) {
 		this.backupFolderPath = backupFolderPath;
-		start(7000);//HOUR
+		start(HOUR);//HOUR
 	}
 
 	public void start(long delay) {
@@ -306,10 +306,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 
 	public void propertyChange(PropertyChangeEvent event) {
 		if (event.getProperty().equals(ContextPreferenceContstants.PREF_DATA_DIR)) {
-			if (event.getNewValue() instanceof String) {
-				backupFolderPath = (String) event.getNewValue();
-				//System.err.println(">>> backup path changed: " + backupFolderPath);
-			}
+			backupFolderPath = TasksUiPlugin.getDefault().getBackupFolderPath();
 		}
 	}
 

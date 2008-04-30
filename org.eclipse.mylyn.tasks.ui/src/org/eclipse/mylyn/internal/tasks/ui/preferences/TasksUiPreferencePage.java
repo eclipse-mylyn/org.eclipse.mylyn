@@ -15,7 +15,6 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.mylyn.internal.monitor.ui.ActivityContextManager;
 import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
-import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -89,15 +88,15 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 	private Button browse = null;
 
-	private Button backupNow = null;
-
 	private Button notificationEnabledButton = null;
+
+//	private final Button backupNow = null;
 
 //	private Text backupScheduleTimeText;
 
-	private Text backupFolderText;
+//	private Text backupFolderText;
 
-	private Spinner hourDayStart;
+//	private Spinner hourDayStart;
 
 	private Spinner hourDayEnd;
 
@@ -206,7 +205,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 				timeoutEnabledButton.getSelection());
 		MonitorUiPlugin.getDefault().getPreferenceStore().setValue(ActivityContextManager.ACTIVITY_TIMEOUT,
 				timeoutMinutes.getSelection() * (60 * 1000));
-		backupNow.setEnabled(true);
+		//backupNow.setEnabled(true);
 		return true;
 	}
 
@@ -220,7 +219,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		notificationEnabledButton.setSelection(getPreferenceStore().getBoolean(
 				TasksUiPreferenceConstants.NOTIFICATIONS_ENABLED));
 		//backupScheduleTimeText.setText(getPreferenceStore().getString(TasksUiPreferenceConstants.BACKUP_SCHEDULE));
-		backupFolderText.setText(TasksUiPlugin.getDefault().getBackupFolderPath());
+		//backupFolderText.setText(TasksUiPlugin.getDefault().getBackupFolderPath());
 
 		useRichEditor.setSelection(getPreferenceStore().getBoolean(TasksUiPreferenceConstants.EDITOR_TASKS_RICH));
 		// synchQueries.setSelection(getPreferenceStore().getBoolean(
@@ -232,7 +231,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		weekStartCombo.select(getPreferenceStore().getInt(TasksUiPreferenceConstants.WEEK_START_DAY) - 1);
 		//hourDayStart.setSelection(getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_STARTHOUR));
 		hourDayEnd.setSelection(getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
-		backupNow.setEnabled(true);
+		//backupNow.setEnabled(true);
 		int minutes = MonitorUiPlugin.getDefault().getPreferenceStore().getInt(ActivityContextManager.ACTIVITY_TIMEOUT)
 				/ MS_MINUTES;
 		timeoutMinutes.setSelection(minutes);
@@ -249,13 +248,13 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 			checkForExistingTasklist(taskDirectory);
 			if (taskDataDirectoryAction != IDialogConstants.CANCEL_ID) {
 				taskDirectoryText.setText(taskDirectory);
-				backupFolderText.setText(taskDirectory + FORWARDSLASH + ITasksCoreConstants.DEFAULT_BACKUP_FOLDER_NAME);
-				backupNow.setEnabled(false);
+//				backupFolderText.setText(taskDirectory + FORWARDSLASH + ITasksCoreConstants.DEFAULT_BACKUP_FOLDER_NAME);
+//				backupNow.setEnabled(false);
 			}
 		} else {
 			taskDirectoryText.setText(taskDirectory);
-			backupFolderText.setText(taskDirectory + FORWARDSLASH + ITasksCoreConstants.DEFAULT_BACKUP_FOLDER_NAME);
-			backupNow.setEnabled(true);
+//			backupFolderText.setText(taskDirectory + FORWARDSLASH + ITasksCoreConstants.DEFAULT_BACKUP_FOLDER_NAME);
+//			backupNow.setEnabled(true);
 		}
 
 		notificationEnabledButton.setSelection(getPreferenceStore().getDefaultBoolean(
@@ -389,19 +388,19 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 				if (taskDataDirectoryAction != IDialogConstants.CANCEL_ID) {
 					taskDirectoryText.setText(dir);
-					backupFolderText.setText(dir + FORWARDSLASH + ITasksCoreConstants.DEFAULT_BACKUP_FOLDER_NAME);
-					backupNow.setEnabled(false);
+//					backupFolderText.setText(dir + FORWARDSLASH + ITasksCoreConstants.DEFAULT_BACKUP_FOLDER_NAME);
+//					backupNow.setEnabled(false);
 				}
 			}
 
 		});
 
-		Composite backupComposite = new Composite(taskDataGroup, SWT.NULL);
-		gridLayout = new GridLayout(5, false);
-		gridLayout.marginWidth = 0;
-		gridLayout.marginHeight = 0;
-		backupComposite.setLayout(gridLayout);
-		backupComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+//		Composite backupComposite = new Composite(taskDataGroup, SWT.NULL);
+//		gridLayout = new GridLayout(5, false);
+//		gridLayout.marginWidth = 0;
+//		gridLayout.marginHeight = 0;
+//		backupComposite.setLayout(gridLayout);
+//		backupComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 //		label = new Label(backupComposite, SWT.NULL);
 //		label.setText("Backup every");
@@ -420,23 +419,23 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 //		label = new Label(backupComposite, SWT.NONE);
 //		label.setText("days to");
 
-		String backupDirectory = TasksUiPlugin.getDefault().getBackupFolderPath();// getPreferenceStore().getString(TaskListPreferenceConstants.BACKUP_FOLDER);
-		backupDirectory = backupDirectory.replaceAll(BACKSLASH_MULTI, FORWARDSLASH);
-		backupFolderText = new Text(backupComposite, SWT.BORDER);
-		backupFolderText.setText(backupDirectory);
-		backupFolderText.setEditable(false);
-		backupFolderText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
-		backupNow = new Button(backupComposite, SWT.NONE);
-		backupNow.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
-		backupNow.setText("Backup Now");
-		backupNow.addSelectionListener(new SelectionAdapter() {
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				TasksUiPlugin.getBackupManager().backupNow(true);
-			}
-		});
+//		String backupDirectory = TasksUiPlugin.getDefault().getBackupFolderPath();// getPreferenceStore().getString(TaskListPreferenceConstants.BACKUP_FOLDER);
+//		backupDirectory = backupDirectory.replaceAll(BACKSLASH_MULTI, FORWARDSLASH);
+//		backupFolderText = new Text(backupComposite, SWT.BORDER);
+//		backupFolderText.setText(backupDirectory);
+//		backupFolderText.setEditable(false);
+//		backupFolderText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+//
+//		backupNow = new Button(backupComposite, SWT.NONE);
+//		backupNow.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+//		backupNow.setText("Backup Now");
+//		backupNow.addSelectionListener(new SelectionAdapter() {
+//
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				TasksUiPlugin.getBackupManager().backupNow(true);
+//			}
+//		});
 	}
 
 	private void createSchedulingGroup(Composite container) {

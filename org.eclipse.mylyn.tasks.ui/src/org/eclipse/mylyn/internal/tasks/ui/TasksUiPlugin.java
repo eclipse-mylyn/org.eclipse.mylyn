@@ -315,7 +315,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			// TODO: do we ever get here?
 			if (event.getProperty().equals(ContextPreferenceContstants.PREF_DATA_DIR)) {
 				if (event.getOldValue() instanceof String) {
-					reloadDataDirectory(true);
+					reloadDataDirectory();
 				}
 			}
 		}
@@ -326,7 +326,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		public void propertyChange(org.eclipse.jface.util.PropertyChangeEvent event) {
 			if (event.getProperty().equals(ContextPreferenceContstants.PREF_DATA_DIR)) {
 				if (event.getOldValue() instanceof String) {
-					reloadDataDirectory(true);
+					reloadDataDirectory();
 				}
 			}
 
@@ -690,16 +690,15 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	/**
 	 * Only support task data versions post 0.7
-	 * 
-	 * @param withProgress
 	 */
-	public void reloadDataDirectory(boolean withProgress) {
+	public void reloadDataDirectory() {
 		getTaskListManager().getTaskActivationHistory().clear();
 		getRepositoryManager().readRepositories(getRepositoriesFilePath());
 		loadTemplateRepositories();
 		getTaskListManager().resetTaskList();
 		getTaskListManager().setTaskListFile(
 				new File(getDataDirectory() + File.separator + ITasksCoreConstants.DEFAULT_TASK_LIST_FILE));
+		getExternalizationManager().setRootFolderPath(getDataDirectory());
 		ContextCore.getContextManager().loadActivityMetaContext();
 		getTaskListManager().readExistingOrCreateNewList();
 		getTaskListManager().initActivityHistory();

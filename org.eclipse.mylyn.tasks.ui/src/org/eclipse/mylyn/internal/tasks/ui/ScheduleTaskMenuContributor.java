@@ -196,15 +196,11 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 	private boolean canSchedule() {
 		if (taskListElementsToSchedule.size() == 0) {
 			return true;
+		} else if (singleTaskSelection instanceof AbstractTask) {
+			return ((!(singleTaskSelection).isCompleted()) || taskListElementsToSchedule.size() > 0);
+		} else {
+			return taskListElementsToSchedule.size() > 0;
 		}
-		return !(singleTaskSelection).isCompleted();
-//		if (taskListElementsToSchedule.size() == 0) {
-//			return true;
-//		} else if (singleTaskSelection instanceof AbstractTask) {
-//			return ((!(singleTaskSelection).isCompleted()) || taskListElementsToSchedule.size() > 0);
-//		} else {
-//			return taskListElementsToSchedule.size() > 0;
-//		}
 	}
 
 //	protected void setScheduledDate(Calendar scheduledDate, boolean floating) {

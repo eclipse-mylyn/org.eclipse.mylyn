@@ -19,7 +19,9 @@ import java.util.zip.ZipFile;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -90,8 +92,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 	@Override
 	public boolean performFinish() {
 
-		TasksUi.getTaskListManager().deactivateTask(
-				TasksUi.getTaskListManager().getActiveTask());
+		TasksUi.getTaskListManager().deactivateTask(TasksUi.getTaskListManager().getActiveTask());
 
 		File sourceDirFile = null;
 		File sourceZipFile = null;
@@ -164,15 +165,19 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 		FileCopyJob job = new FileCopyJob(sourceDirFile, sourceZipFile, sourceTaskListFile, sourceRepositoriesFile,
 				sourceActivationHistoryFile, contextFiles, zipFilesToExtract);
 
-		IProgressService service = PlatformUI.getWorkbench().getProgressService();
-
 		try {
-			// TODO use the wizard's progress service or IProgressService.busyCursorWhile(): bug 210710
-			service.run(true, false, job);
+			if (getContainer() != null) {
+				getContainer().run(true, true, job);
+			} else {
+//			IProgressService service = PlatformUI.getWorkbench().getProgressService();
+//			service.busyCursorWhile(updateRunnable);
+				IProgressService service = PlatformUI.getWorkbench().getProgressService();
+				service.run(true, true, job);
+			}
 		} catch (InvocationTargetException e) {
 			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not import files", e));
 		} catch (InterruptedException e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not import files", e));
+			// User cancelled
 		}
 
 		importPage.saveSettings();
@@ -197,44 +202,36 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 		public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 
 			// always a zip source since post 1.0.1
-
-			monitor.beginTask(JOB_LABEL, zipEntriesToExtract.size() + 2);
-
 			try {
+				monitor.beginTask(JOB_LABEL, zipEntriesToExtract.size() + 2);
+				Job.getJobManager().beginRule(ITasksCoreConstants.ROOT_SCHEDULING_RULE, monitor);
+
+				if (!sourceZipFile.exists()) {
+					throw new InvocationTargetException(new IOException("Source file does not exist."));
+				}
+
+				if (monitor.isCanceled()) {
+					throw new OperationCanceledException();
+				}
+
 				ZipFileUtil.extactEntries(sourceZipFile, zipEntriesToExtract, TasksUiPlugin.getDefault()
 						.getDataDirectory());
-				//ZipFileUtil.unzipFiles(sourceZipFile, TasksUiPlugin.getDefault().getDataDirectory());
-
+				readTaskListData();
 			} catch (IOException e) {
-				StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Problem occured extracting from zip file.", e));
-				return;
+				throw new InvocationTargetException(e);
+			} finally {
+				Job.getJobManager().endRule(ITasksCoreConstants.ROOT_SCHEDULING_RULE);
+				monitor.done();
 			}
-			readTaskListData();
-			monitor.done();
 			return;
 
 		}
 	}
 
-//	/** Returns all tasks in the task list root or a category in the task list */
-//	protected List<AbstractTask> getAllTasks() {
-//		List<AbstractTask> allTasks = new ArrayList<AbstractTask>();
-//		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
-//
-//		allTasks.addAll(taskList.getOrphanContainer(LocalRepositoryConnector.REPOSITORY_URL).getChildren());
-//
-//		for (AbstractTaskContainer category : taskList.getCategories()) {
-//			allTasks.addAll(category.getChildren());
-//		}
-//
-//		return allTasks;
-//	}
-
 	private void readTaskListData() {
 		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 			public void run() {
-				TasksUiPlugin.getDefault().reloadDataDirectory(true);
+				TasksUiPlugin.getDefault().reloadDataDirectory();
 			}
 		});
 	}
