@@ -251,7 +251,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 					public void run() {
 						if (task.getSynchronizationState() == SynchronizationState.INCOMING
 								|| task.getSynchronizationState() == SynchronizationState.CONFLICT) {
-							getParentEditor().setMessage("Task has incoming changes", IMessageProvider.WARNING,
+							getTaskEditor().setMessage("Task has incoming changes", IMessageProvider.WARNING,
 									new HyperlinkAdapter() {
 										@Override
 										public void linkActivated(HyperlinkEvent e) {
@@ -309,8 +309,8 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		activeDisplay.asyncExec(new Runnable() {
 			public void run() {
 				if (getSite() != null && getSite().getPage() != null && !getManagedForm().getForm().isDisposed()) {
-					if (getParentEditor() != null) {
-						getSite().getPage().closeEditor(getParentEditor(), false);
+					if (getTaskEditor() != null) {
+						getSite().getPage().closeEditor(getTaskEditor(), false);
 					} else {
 						getSite().getPage().closeEditor(AbstractTaskEditorPage.this, false);
 					}
@@ -370,7 +370,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskRepository.getConnectorKind());
 			if (connectorUi == null) {
-				getParentEditor().setMessage("The editor may not be fully loaded", IMessageProvider.INFORMATION,
+				getTaskEditor().setMessage("The editor may not be fully loaded", IMessageProvider.INFORMATION,
 						new HyperlinkAdapter() {
 							@Override
 							public void linkActivated(HyperlinkEvent e) {
@@ -379,10 +379,10 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 						});
 			}
 
-			updateHeaderControls();
 			if (taskData != null) {
 				createSections();
 			}
+			updateHeaderMessage();
 		} finally {
 			setReflow(true);
 		}
@@ -482,7 +482,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 			model.save(monitor);
 		} catch (final CoreException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error saving task", e));
-			getParentEditor().setMessage("Could not save task", IMessageProvider.ERROR, new HyperlinkAdapter() {
+			getTaskEditor().setMessage("Could not save task", IMessageProvider.ERROR, new HyperlinkAdapter() {
 				@Override
 				public void linkActivated(HyperlinkEvent event) {
 					StatusHandler.displayStatus("Save failed", e.getStatus());
@@ -490,8 +490,9 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 			});
 		}
 
+		updateHeaderMessage();
 		getManagedForm().dirtyStateChanged();
-		updateHeaderControls();
+		getTaskEditor().updateHeaderToolBar();
 	}
 
 	@Override
@@ -544,7 +545,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 		if (taskData != null && !taskData.isNew()) {
 			synchronizeEditorAction = new SynchronizeEditorAction();
-			synchronizeEditorAction.selectionChanged(new StructuredSelection(getParentEditor()));
+			synchronizeEditorAction.selectionChanged(new StructuredSelection(getTaskEditor()));
 			toolBarManager.add(synchronizeEditorAction);
 
 			clearOutgoingAction = new ClearOutgoingAction(Collections.singletonList((AbstractTaskContainer) task));
@@ -614,7 +615,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		return model;
 	}
 
-	public TaskEditor getParentEditor() {
+	public TaskEditor getTaskEditor() {
 		return (TaskEditor) getEditor();
 	}
 
@@ -647,7 +648,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 				} else {
 					message = "Submit failed";
 				}
-				getParentEditor().setMessage(message, IMessageProvider.ERROR, new HyperlinkAdapter() {
+				getTaskEditor().setMessage(message, IMessageProvider.ERROR, new HyperlinkAdapter() {
 					@Override
 					public void linkActivated(HyperlinkEvent e) {
 						StatusHandler.displayStatus("Submit failed", status);
@@ -668,12 +669,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 			setModel(createModel(taskEditorInput));
 		} catch (final CoreException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error opening task", e));
-			getParentEditor().setMessage("Could not open task", IMessageProvider.ERROR, new HyperlinkAdapter() {
-				@Override
-				public void linkActivated(HyperlinkEvent event) {
-					StatusHandler.displayStatus("Open failed", e.getStatus());
-				}
-			});
+			getTaskEditor().setStatus("Error opening task", "Open failed", e.getStatus());
 		}
 
 		TasksUi.getTaskListManager().getTaskList().addChangeListener(taskListChangeListener);
@@ -731,7 +727,6 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 			doSave(new NullProgressMonitor());
 			refreshInput();
 
-			updateHeaderControls();
 			if (taskData != null) {
 				try {
 					setReflow(false);
@@ -750,8 +745,8 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 					createSections();
 
-					getParentEditor().setMessage(null, 0);
-					getParentEditor().setActivePage(getId());
+					getTaskEditor().setMessage(null, 0);
+					getTaskEditor().setActivePage(getId());
 
 					if (actionPart != null) {
 						actionPart.setSubmitEnabled(true);
@@ -760,7 +755,10 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 					setReflow(true);
 				}
 			}
+
+			updateHeaderMessage();
 			getManagedForm().dirtyStateChanged();
+			getTaskEditor().updateHeaderToolBar();
 		} finally {
 			showEditorBusy(false);
 		}
@@ -771,7 +769,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		try {
 			model.refresh(null);
 		} catch (CoreException e) {
-			getParentEditor().setMessage("Failed to read task data: " + e.getMessage(), IMessageProvider.ERROR);
+			getTaskEditor().setMessage("Failed to read task data: " + e.getMessage(), IMessageProvider.ERROR);
 			taskData = null;
 			return;
 		}
@@ -893,16 +891,16 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 	}
 
 	public void showEditorBusy(boolean busy) {
-		getParentEditor().showBusy(busy);
+		getTaskEditor().showBusy(busy);
 	}
 
 	protected boolean supportsRefreshAttributes() {
 		return true;
 	}
 
-	private void updateHeaderControls() {
+	private void updateHeaderMessage() {
 		if (taskData == null) {
-			getParentEditor().setMessage(
+			getTaskEditor().setMessage(
 					"Task data not available. Press synchronize button (right) to retrieve latest data.",
 					IMessageProvider.WARNING, new HyperlinkAdapter() {
 						@Override
@@ -913,7 +911,6 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 						}
 					});
 		}
-		getParentEditor().updateHeader();
 	}
 
 }

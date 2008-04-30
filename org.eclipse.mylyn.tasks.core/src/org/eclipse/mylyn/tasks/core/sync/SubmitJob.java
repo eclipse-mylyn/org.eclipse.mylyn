@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -27,7 +26,7 @@ import org.eclipse.mylyn.web.core.Policy;
  * @author Steffen Pingel
  * @since 3.0
  */
-public abstract class SubmitJob extends Job {
+public abstract class SubmitJob extends TaskJob {
 
 	private final List<SubmitJobListener> submitJobListeners = new ArrayList<SubmitJobListener>();
 
@@ -46,8 +45,6 @@ public abstract class SubmitJob extends Job {
 	protected SubmitJobListener[] getSubmitJobListeners() {
 		return submitJobListeners.toArray(new SubmitJobListener[0]);
 	}
-
-	public abstract IStatus getError();
 
 	protected void fireTaskDataPosted(final IProgressMonitor monitor) throws CoreException {
 		SubmitJobListener[] listeners = submitJobListeners.toArray(new SubmitJobListener[0]);

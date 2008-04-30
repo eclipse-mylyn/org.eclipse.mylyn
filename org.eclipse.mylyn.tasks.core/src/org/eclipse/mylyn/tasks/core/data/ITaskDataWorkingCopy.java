@@ -27,6 +27,8 @@ public interface ITaskDataWorkingCopy {
 
 	public abstract TaskData getRepositoryData();
 
+	public abstract boolean isSaved();
+
 	public abstract void revert();
 
 	public abstract void refresh(IProgressMonitor monitor) throws CoreException;

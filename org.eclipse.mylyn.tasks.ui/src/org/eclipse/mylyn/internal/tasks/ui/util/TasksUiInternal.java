@@ -11,7 +11,9 @@ package org.eclipse.mylyn.internal.tasks.ui.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.ProgressMonitorWrapper;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
@@ -45,6 +47,87 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 public class TasksUiInternal {
+
+	public static MultiRepositoryAwareWizard createNewTaskWizard(TaskSelection taskSelection) {
+		return new NewTaskWizard(taskSelection);
+	}
+
+	public static List<TaskEditor> getActiveRepositoryTaskEditors() {
+		List<TaskEditor> repositoryTaskEditors = new ArrayList<TaskEditor>();
+		IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
+		for (IWorkbenchWindow window : windows) {
+			IEditorReference[] editorReferences = window.getActivePage().getEditorReferences();
+			for (IEditorReference editorReference : editorReferences) {
+				try {
+					if (editorReference.getEditorInput() instanceof TaskEditorInput) {
+						TaskEditorInput input = (TaskEditorInput) editorReference.getEditorInput();
+						if (input.getTask() != null) {
+							IEditorPart editorPart = editorReference.getEditor(false);
+							if (editorPart instanceof TaskEditor) {
+								repositoryTaskEditors.add((TaskEditor) editorPart);
+							}
+						}
+					}
+				} catch (PartInitException e) {
+					// ignore
+				}
+			}
+		}
+		return repositoryTaskEditors;
+	}
+
+	public static IProgressMonitor getUiMonitor(IProgressMonitor monitor) {
+		return new ProgressMonitorWrapper(monitor) {
+			@Override
+			public void beginTask(final String name, final int totalWork) {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						getWrappedProgressMonitor().beginTask(name, totalWork);
+					}
+				});
+			}
+
+			@Override
+			public void done() {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						getWrappedProgressMonitor().done();
+					}
+				});
+			}
+
+			@Override
+			public void subTask(final String name) {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						getWrappedProgressMonitor().subTask(name);
+					}
+				});
+			}
+
+			@Override
+			public void worked(final int work) {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						getWrappedProgressMonitor().worked(work);
+					}
+				});
+			}
+		};
+	}
+
+	public static void openEditor(TaskCategory category) {
+		final IEditorInput input = new CategoryEditorInput(category);
+		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+				if (window != null) {
+					IWorkbenchPage page = window.getActivePage();
+					TasksUiUtil.openEditor(input, CategoryEditor.ID_EDITOR, page);
+				}
+			}
+		});
+	}
 
 	// API 3.0 move to internal class?
 	public static void refreshAndOpenTaskListElement(AbstractTaskContainer element) {
@@ -106,46 +189,4 @@ public class TasksUiInternal {
 			connectorUi.openEditQueryDialog(query);
 		}
 	}
-
-	public static void openEditor(TaskCategory category) {
-		final IEditorInput input = new CategoryEditorInput(category);
-		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-				if (window != null) {
-					IWorkbenchPage page = window.getActivePage();
-					TasksUiUtil.openEditor(input, CategoryEditor.ID_EDITOR, page);
-				}
-			}
-		});
-	}
-
-	public static List<TaskEditor> getActiveRepositoryTaskEditors() {
-		List<TaskEditor> repositoryTaskEditors = new ArrayList<TaskEditor>();
-		IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
-		for (IWorkbenchWindow window : windows) {
-			IEditorReference[] editorReferences = window.getActivePage().getEditorReferences();
-			for (IEditorReference editorReference : editorReferences) {
-				try {
-					if (editorReference.getEditorInput() instanceof TaskEditorInput) {
-						TaskEditorInput input = (TaskEditorInput) editorReference.getEditorInput();
-						if (input.getTask() != null) {
-							IEditorPart editorPart = editorReference.getEditor(false);
-							if (editorPart instanceof TaskEditor) {
-								repositoryTaskEditors.add((TaskEditor) editorPart);
-							}
-						}
-					}
-				} catch (PartInitException e) {
-					// ignore
-				}
-			}
-		}
-		return repositoryTaskEditors;
-	}
-
-	public static MultiRepositoryAwareWizard createNewTaskWizard(TaskSelection taskSelection) {
-		return new NewTaskWizard(taskSelection);
-	}
-
 }

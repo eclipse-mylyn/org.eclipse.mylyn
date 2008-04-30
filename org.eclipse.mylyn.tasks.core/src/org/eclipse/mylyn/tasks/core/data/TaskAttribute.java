@@ -97,6 +97,8 @@ public final class TaskAttribute {
 
 	public static final String META_LABEL = "task.meta.label";
 
+	public static final String META_DEFAULT_OPTION = "task.meta.defaultOption";
+
 	public static final String META_READ_ONLY = "task.meta.readOnly";
 
 	//public static final String META_SHOW_IN_ATTRIBUTES_SECTION = "task.meta.showInTaskEditorAttributesSection";
@@ -392,9 +394,9 @@ public final class TaskAttribute {
 	 * Adds an attribute option value
 	 * 
 	 * @param readableValue
-	 *            The value displayed on the screen
+	 * 		The value displayed on the screen
 	 * @param parameterValue
-	 *            The option value used when sending the form to the server
+	 * 		The option value used when sending the form to the server
 	 */
 	public void putOption(String key, String value) {
 		Assert.isNotNull(key);

@@ -34,6 +34,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.sync.SubmitJob;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
+import org.eclipse.mylyn.tasks.core.sync.TaskJob;
 import org.eclipse.ui.progress.IProgressConstants;
 
 /**
@@ -101,6 +102,40 @@ public class TasksJobFactory implements ITaskJobFactory {
 		}
 		taskList.notifyTaskChanged(task, false);
 		return job;
+	}
+
+	public TaskJob createUpdateRepositoryConfigurationJob(final AbstractRepositoryConnector connector,
+			final TaskRepository taskRepository) {
+		TaskJob updateJob = new TaskJob("Refreshing repository configuration") {
+			private IStatus error;
+
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				monitor.beginTask("Receiving configuration", IProgressMonitor.UNKNOWN);
+				try {
+					try {
+						connector.updateRepositoryConfiguration(taskRepository, monitor);
+					} catch (CoreException e) {
+						error = e.getStatus();
+					}
+				} finally {
+					monitor.done();
+				}
+				return Status.OK_STATUS;
+			}
+
+			@Override
+			public boolean belongsTo(Object family) {
+				return family == taskRepository;
+			}
+
+			@Override
+			public IStatus getError() {
+				return error;
+			}
+		};
+		updateJob.setPriority(Job.INTERACTIVE);
+		return updateJob;
 	}
 
 }

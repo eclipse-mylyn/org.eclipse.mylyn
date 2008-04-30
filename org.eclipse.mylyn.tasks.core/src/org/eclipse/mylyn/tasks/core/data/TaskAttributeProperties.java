@@ -23,6 +23,7 @@ public class TaskAttributeProperties {
 		properties.setReadOnly(Boolean.parseBoolean(taskAttribute.getMetaData(TaskAttribute.META_READ_ONLY)));
 		properties.setShowInToolTip(Boolean.parseBoolean(taskAttribute.getMetaData(TaskAttribute.META_SHOW_IN_TOOL_TIP)));
 		properties.setType(taskAttribute.getMetaData(TaskAttribute.META_ATTRIBUTE_TYPE));
+		properties.setDefaultOption(taskAttribute.getMetaData(TaskAttribute.META_DEFAULT_OPTION));
 		return properties;
 	}
 
@@ -46,6 +47,8 @@ public class TaskAttributeProperties {
 
 	private String type;
 
+	private String defaultOption;
+
 	public void applyTo(TaskAttribute attribute) {
 		if (getKind() != null) {
 			attribute.putMetaDataValue(TaskAttribute.META_ATTRIBUTE_KIND, getKind());
@@ -63,6 +66,11 @@ public class TaskAttributeProperties {
 			attribute.putMetaDataValue(TaskAttribute.META_LABEL, getLabel());
 		} else {
 			attribute.removeMetaDataValue(TaskAttribute.META_LABEL);
+		}
+		if (getDefaultOption() != null) {
+			attribute.putMetaDataValue(TaskAttribute.META_DEFAULT_OPTION, getLabel());
+		} else {
+			attribute.removeMetaDataValue(TaskAttribute.META_DEFAULT_OPTION);
 		}
 	}
 
@@ -108,6 +116,14 @@ public class TaskAttributeProperties {
 	public TaskAttributeProperties setType(String value) {
 		this.type = value;
 		return this;
+	}
+
+	public String getDefaultOption() {
+		return defaultOption;
+	}
+
+	public void setDefaultOption(String defaultOption) {
+		this.defaultOption = defaultOption;
 	}
 
 }

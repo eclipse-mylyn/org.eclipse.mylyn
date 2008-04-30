@@ -14,6 +14,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.sync.SubmitJob;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
+import org.eclipse.mylyn.tasks.core.sync.TaskJob;
 
 /**
  * @since 3.0
@@ -31,5 +32,8 @@ public interface ITaskJobFactory {
 
 	public abstract SubmitJob createSubmitJob(AbstractRepositoryConnector connector, TaskRepository taskRepository,
 			AbstractTask task, TaskData taskData, Set<TaskAttribute> changedAttributes);
+
+	public abstract TaskJob createUpdateRepositoryConfigurationJob(final AbstractRepositoryConnector connector,
+			final TaskRepository taskRepository);
 
 }

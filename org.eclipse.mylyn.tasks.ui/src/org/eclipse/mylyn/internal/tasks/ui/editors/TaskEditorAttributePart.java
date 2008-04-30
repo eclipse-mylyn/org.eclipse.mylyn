@@ -14,19 +14,18 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.UpdateRepositoryConfigurationAction;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeProperties;
+import org.eclipse.mylyn.tasks.core.sync.TaskJob;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
@@ -162,28 +161,55 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 	protected void fillToolBar(ToolBarManager toolBar) {
 		UpdateRepositoryConfigurationAction repositoryConfigRefresh = new UpdateRepositoryConfigurationAction() {
 			@Override
-			public void performUpdate(TaskRepository repository, AbstractRepositoryConnector connector,
-					IProgressMonitor monitor) {
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						getTaskEditorPage().showEditorBusy(true);
+			public void run() {
+				getTaskEditorPage().showEditorBusy(true);
+				final TaskJob job = TasksUi.getJobFactory().createUpdateRepositoryConfigurationJob(
+						getTaskEditorPage().getConnector(), getTaskEditorPage().getTaskRepository());
+				job.addJobChangeListener(new JobChangeAdapter() {
+					@Override
+					public void done(IJobChangeEvent event) {
+						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+							public void run() {
+								getTaskEditorPage().showEditorBusy(false);
+								if (job.getError() != null) {
+									getTaskEditorPage().getTaskEditor().setStatus(
+											"Updating of repository configuration failed", "Update Failed",
+											job.getError());
+								} else {
+									getTaskEditorPage().refreshFormContent();
+								}
+							}
+						});
 					}
 				});
-				try {
-					super.performUpdate(repository, connector, monitor);
-					AbstractTask task = getTaskEditorPage().getTask();
-					Job job = TasksUi.synchronizeTask(connector, task, true, null);
-					job.join();
-				} catch (InterruptedException e) {
-					// ignore
-				} finally {
-					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							getTaskEditorPage().refreshFormContent();
-						}
-					});
-				}
-			}
+				job.setUser(true);
+				job.setPriority(Job.INTERACTIVE);
+				job.schedule();
+			};
+
+//			@Override
+//			public void performUpdate(TaskRepository repository, AbstractRepositoryConnector connector,
+//					IProgressMonitor monitor) {
+//				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+//					public void run() {
+//						getTaskEditorPage().showEditorBusy(true);
+//					}
+//				});
+//				try {
+//					super.performUpdate(repository, connector, monitor);
+//					AbstractTask task = getTaskEditorPage().getTask();
+//					Job job = TasksUi.synchronizeTask(connector, task, true, null);
+//					job.join();
+//				} catch (InterruptedException e) {
+//					// ignore
+//				} finally {
+//					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+//						public void run() {
+//							getTaskEditorPage().refreshFormContent();
+//						}
+//					});
+//				}
+//			}
 		};
 		repositoryConfigRefresh.setImageDescriptor(TasksUiImages.REPOSITORY_SYNCHRONIZE);
 		repositoryConfigRefresh.selectionChanged(new StructuredSelection(getTaskEditorPage().getTaskRepository()));

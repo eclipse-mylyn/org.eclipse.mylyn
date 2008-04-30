@@ -176,6 +176,8 @@ public final class TaskRepository extends PlatformObject {
 	 */
 	private boolean isBugRepository = false;
 
+	private transient volatile boolean updating;
+
 	public TaskRepository(String connectorKind, String repositoryUrl) {
 		this(connectorKind, repositoryUrl, NO_VERSION_SPECIFIED);
 	}
@@ -761,6 +763,20 @@ public final class TaskRepository extends PlatformObject {
 	@Override
 	public String toString() {
 		return getRepositoryUrl();
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public boolean isUpdating() {
+		return updating;
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public void setUpdating(boolean updating) {
+		this.updating = updating;
 	}
 
 }

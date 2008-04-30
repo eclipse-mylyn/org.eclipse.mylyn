@@ -24,13 +24,14 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITaskJobFactory;
 import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.ITaskListManager;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
-import org.eclipse.mylyn.tasks.core.ITaskJobFactory;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
+import org.eclipse.mylyn.tasks.core.sync.TaskJob;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
@@ -131,7 +132,7 @@ public class TasksUi {
 	 * you should call synchronize(Set<Set<AbstractTask> repositoryTasks, ...)
 	 * 
 	 * @param listener
-	 *            can be null
+	 * 		can be null
 	 */
 	public static Job synchronizeTask(AbstractRepositoryConnector connector, AbstractTask task, boolean force,
 			IJobChangeListener listener) {
@@ -140,7 +141,7 @@ public class TasksUi {
 
 	/**
 	 * @param listener
-	 *            can be null
+	 * 		can be null
 	 */
 	public static Job synchronizeTasks(AbstractRepositoryConnector connector, Set<AbstractTask> tasks, boolean force,
 			IJobChangeListener listener) {
@@ -178,6 +179,32 @@ public class TasksUi {
 
 	public static ITaskRepositoryManager getRepositoryManager() {
 		return TasksUiPlugin.getRepositoryManager();
+	}
+
+	public static TaskJob updateRepositoryConfiguration(final TaskRepository taskRepository) {
+		synchronized (taskRepository) {
+			taskRepository.setUpdating(true);
+		}
+
+		AbstractRepositoryConnector connector = getRepositoryManager().getRepositoryConnector(
+				taskRepository.getConnectorKind());
+		final TaskJob job = getJobFactory().createUpdateRepositoryConfigurationJob(connector, taskRepository);
+		job.addJobChangeListener(new JobChangeAdapter() {
+			@Override
+			public void done(IJobChangeEvent event) {
+				synchronized (taskRepository) {
+					taskRepository.setUpdating(false);
+				}
+				if (job.getError() != null) {
+					Display display = PlatformUI.getWorkbench().getDisplay();
+					if (!display.isDisposed()) {
+						StatusHandler.displayStatus("Configuration Refresh Failed", job.getError());
+					}
+				}
+			}
+		});
+		job.schedule();
+		return job;
 	}
 
 }

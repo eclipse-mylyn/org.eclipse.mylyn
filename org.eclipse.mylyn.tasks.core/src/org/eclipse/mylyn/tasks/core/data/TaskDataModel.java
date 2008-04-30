@@ -31,12 +31,12 @@ public class TaskDataModel {
 
 	private List<TaskDataModelListener> listeners;
 
-	private final ITaskDataWorkingCopy taskDataState;
+	private final ITaskDataWorkingCopy workingCopy;
 
 	private final Set<TaskAttribute> unsavedChanedAttributes;
 
 	public TaskDataModel(ITaskDataWorkingCopy taskDataState) {
-		this.taskDataState = taskDataState;
+		this.workingCopy = taskDataState;
 		this.unsavedChanedAttributes = new HashSet<TaskAttribute>();
 	}
 
@@ -79,11 +79,11 @@ public class TaskDataModel {
 	}
 
 	public TaskData getTaskData() {
-		return taskDataState.getLocalData();
+		return workingCopy.getLocalData();
 	}
 
 	public boolean hasIncomingChanges(TaskAttribute taskAttribute) {
-		TaskData lastReadData = taskDataState.getLastReadData();
+		TaskData lastReadData = workingCopy.getLastReadData();
 		if (lastReadData == null) {
 			return true;
 		}
@@ -101,15 +101,15 @@ public class TaskDataModel {
 	}
 
 	public boolean hasOutgoingChanges(TaskAttribute taskAttribute) {
-		return taskDataState.getEditsData().getMappedAttribute(taskAttribute.getPath()) != null;
+		return workingCopy.getEditsData().getMappedAttribute(taskAttribute.getPath()) != null;
 	}
 
 	public boolean isDirty() {
-		return !unsavedChanedAttributes.isEmpty();
+		return unsavedChanedAttributes.size() > 0 || !workingCopy.isSaved();
 	}
 
 	public void refresh(IProgressMonitor monitor) throws CoreException {
-		taskDataState.refresh(monitor);
+		workingCopy.refresh(monitor);
 	}
 
 	public void removeModelListener(TaskDataModelListener listener) {
@@ -117,17 +117,17 @@ public class TaskDataModel {
 	}
 
 	public void save(IProgressMonitor monitor) throws CoreException {
-		taskDataState.save(monitor, unsavedChanedAttributes);
+		workingCopy.save(monitor, unsavedChanedAttributes);
 		unsavedChanedAttributes.clear();
 	}
 
 	public void revert() {
-		taskDataState.revert();
+		workingCopy.revert();
 		unsavedChanedAttributes.clear();
 	}
 
 	public Set<TaskAttribute> getChangedAttributes() {
-		return new HashSet<TaskAttribute>(taskDataState.getEditsData().getRoot().getAttributes().values());
+		return new HashSet<TaskAttribute>(workingCopy.getEditsData().getRoot().getAttributes().values());
 	}
 
 }

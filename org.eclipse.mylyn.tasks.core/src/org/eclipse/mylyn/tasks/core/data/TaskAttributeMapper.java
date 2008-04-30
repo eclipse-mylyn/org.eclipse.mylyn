@@ -23,8 +23,36 @@ public abstract class TaskAttributeMapper {
 	public TaskAttributeMapper() {
 	}
 
-	public String mapToRepositoryKey(TaskAttribute parent, String key) {
-		return key;
+	public TaskAttachment createTaskAttachment(TaskData taskData) {
+		// FIXME implement
+		TaskAttachment attachment = new TaskAttachment(taskData.getRepositoryUrl(), taskData.getConnectorKind(),
+				taskData.getTaskId(), "");
+		return attachment;
+	}
+
+	public boolean equals(TaskAttribute newAttribute, TaskAttribute oldAttribute) {
+		return newAttribute.getValues().equals(oldAttribute.getValues());
+	}
+
+	public TaskAttribute getAssoctiatedAttribute(TaskAttribute taskAttribute) {
+		String id = taskAttribute.getMetaData(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID);
+		if (id != null) {
+			return taskAttribute.getAttribute(id);
+		}
+		return null;
+	}
+
+	public List<TaskAttribute> getAttributesByType(TaskData taskData, String type) {
+		TaskAttribute container = null;
+		if (type.equals(TaskAttribute.TYPE_COMMENT)) {
+			container = taskData.getMappedAttribute(TaskAttribute.CONTAINER_COMMENTS);
+		} else if (type.equals(TaskAttribute.TYPE_ATTACHMENT)) {
+			container = taskData.getMappedAttribute(TaskAttribute.CONTAINER_ATTACHMENTS);
+
+		} else if (type.equals(TaskAttribute.TYPE_OPERATION)) {
+			container = taskData.getMappedAttribute(TaskAttribute.CONTAINER_OPERATIONS);
+		}
+		return (container != null) ? new ArrayList<TaskAttribute>(container.getAttributes().values()) : null;
 	}
 
 	public boolean getBooleanValue(TaskAttribute attribute) {
@@ -33,10 +61,6 @@ public abstract class TaskAttributeMapper {
 			return Boolean.parseBoolean(booleanString);
 		}
 		return false;
-	}
-
-	public void setBooleanValue(TaskAttribute attribute, Boolean value) {
-		attribute.setValue(Boolean.toString(value));
 	}
 
 	public Date getDateValue(TaskAttribute attribute) {
@@ -51,12 +75,20 @@ public abstract class TaskAttributeMapper {
 		return null;
 	}
 
-	public void setDateValue(TaskAttribute attribute, Date date) {
-		if (date != null) {
-			attribute.setValue(Long.toString(date.getTime()));
-		} else {
-			attribute.clearValues();
+	public Integer getIntegerValue(TaskAttribute attribute) {
+		String integerString = attribute.getValue();
+		try {
+			if (integerString != null) {
+				return Integer.parseInt(integerString);
+			}
+		} catch (NumberFormatException e) {
+			// ignore
 		}
+		return null;
+	}
+
+	public String getLabel(TaskAttribute taskAttribute) {
+		return TaskAttributeProperties.from(taskAttribute).getLabel();
 	}
 
 	public Long getLongValue(TaskAttribute attribute) {
@@ -71,34 +103,6 @@ public abstract class TaskAttributeMapper {
 		return null;
 	}
 
-	public void setLongValue(TaskAttribute attribute, Long value) {
-		if (value != null) {
-			attribute.setValue(value.toString());
-		} else {
-			attribute.clearValues();
-		}
-	}
-
-	public Integer getIntegerValue(TaskAttribute attribute) {
-		String integerString = attribute.getValue();
-		try {
-			if (integerString != null) {
-				return Integer.parseInt(integerString);
-			}
-		} catch (NumberFormatException e) {
-			// ignore
-		}
-		return null;
-	}
-
-	public void setIntegerValue(TaskAttribute attribute, Integer value) {
-		if (value != null) {
-			attribute.setValue(value.toString());
-		} else {
-			attribute.clearValues();
-		}
-	}
-
 	/**
 	 * Returns labelByValue.
 	 */
@@ -106,24 +110,39 @@ public abstract class TaskAttributeMapper {
 		return attribute.getOptions();
 	}
 
-	public void setValue(TaskAttribute attribute, String value) {
-		attribute.setValue(value);
+	public RepositoryPerson getRepositoryPerson(TaskAttribute taskAttribute) {
+		TaskData taskData = taskAttribute.getTaskData();
+		RepositoryPerson person = new RepositoryPerson(taskData.getConnectorKind(), taskData.getRepositoryUrl(),
+				taskAttribute.getValue());
+		TaskAttribute child = taskAttribute.getMappedAttribute(TaskAttribute.PERSON_NAME);
+		if (child != null) {
+			person.setName(getValue(child));
+		}
+		return person;
 	}
 
-	public void setValues(TaskAttribute attribute, String[] values) {
-		attribute.setValues(Arrays.asList(values));
+	public TaskAttachment getTaskAttachment(TaskAttribute taskAttribute) {
+		return TaskAttachment.createFrom(taskAttribute);
 	}
 
-	public String[] getValues(TaskAttribute attribute) {
-		return attribute.getValues().toArray(new String[0]);
+	public TaskComment getTaskComment(TaskAttribute taskAttribute) {
+		return TaskComment.createFrom(taskAttribute);
+	}
+
+	public TaskOperation getTaskOperation(TaskAttribute taskAttribute) {
+		return TaskOperation.createFrom(taskAttribute);
+	}
+
+	public String getType(TaskAttribute taskAttribute) {
+		return TaskAttributeProperties.from(taskAttribute).getType();
+	}
+
+	public String getDefaultOption(TaskAttribute taskAttribute) {
+		return TaskAttributeProperties.from(taskAttribute).getDefaultOption();
 	}
 
 	public String getValue(TaskAttribute taskAttribute) {
 		return taskAttribute.getValue();
-	}
-
-	public String getLabel(TaskAttribute taskAttribute) {
-		return TaskAttributeProperties.from(taskAttribute).getLabel();
 	}
 
 	public String getValueLabel(TaskAttribute taskAttribute) {
@@ -153,63 +172,44 @@ public abstract class TaskAttributeMapper {
 		return result.toArray(new String[0]);
 	}
 
-	public String getType(TaskAttribute taskAttribute) {
-		return TaskAttributeProperties.from(taskAttribute).getType();
+	public String[] getValues(TaskAttribute attribute) {
+		return attribute.getValues().toArray(new String[0]);
 	}
 
-	public TaskAttachment getTaskAttachment(TaskAttribute taskAttribute) {
-		return TaskAttachment.createFrom(taskAttribute);
+	public boolean hasValue(TaskAttribute attribute) {
+		return attribute.getValues().size() > 0;
 	}
 
-	public TaskAttachment createTaskAttachment(TaskData taskData) {
-		// FIXME implement
-		TaskAttachment attachment = new TaskAttachment(taskData.getRepositoryUrl(), taskData.getConnectorKind(),
-				taskData.getTaskId(), "");
-		return attachment;
+	public String mapToRepositoryKey(TaskAttribute parent, String key) {
+		return key;
 	}
 
-	public TaskComment getTaskComment(TaskAttribute taskAttribute) {
-		return TaskComment.createFrom(taskAttribute);
+	public void setBooleanValue(TaskAttribute attribute, Boolean value) {
+		attribute.setValue(Boolean.toString(value));
 	}
 
-	public List<TaskAttribute> getAttributesByType(TaskData taskData, String type) {
-		TaskAttribute container = null;
-		if (type.equals(TaskAttribute.TYPE_COMMENT)) {
-			container = taskData.getMappedAttribute(TaskAttribute.CONTAINER_COMMENTS);
-		} else if (type.equals(TaskAttribute.TYPE_ATTACHMENT)) {
-			container = taskData.getMappedAttribute(TaskAttribute.CONTAINER_ATTACHMENTS);
-
-		} else if (type.equals(TaskAttribute.TYPE_OPERATION)) {
-			container = taskData.getMappedAttribute(TaskAttribute.CONTAINER_OPERATIONS);
+	public void setDateValue(TaskAttribute attribute, Date date) {
+		if (date != null) {
+			attribute.setValue(Long.toString(date.getTime()));
+		} else {
+			attribute.clearValues();
 		}
-		return (container != null) ? new ArrayList<TaskAttribute>(container.getAttributes().values()) : null;
 	}
 
-	public void setTaskOperation(TaskAttribute taskAttribute, TaskOperation taskOperation) {
-		taskOperation.applyTo(taskAttribute);
-	}
-
-	public TaskAttribute getAssoctiatedAttribute(TaskAttribute taskAttribute) {
-		String id = taskAttribute.getMetaData(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID);
-		if (id != null) {
-			return taskAttribute.getAttribute(id);
+	public void setIntegerValue(TaskAttribute attribute, Integer value) {
+		if (value != null) {
+			attribute.setValue(value.toString());
+		} else {
+			attribute.clearValues();
 		}
-		return null;
 	}
 
-	public TaskOperation getTaskOperation(TaskAttribute taskAttribute) {
-		return TaskOperation.createFrom(taskAttribute);
-	}
-
-	public RepositoryPerson getRepositoryPerson(TaskAttribute taskAttribute) {
-		TaskData taskData = taskAttribute.getTaskData();
-		RepositoryPerson person = new RepositoryPerson(taskData.getConnectorKind(), taskData.getRepositoryUrl(),
-				taskAttribute.getValue());
-		TaskAttribute child = taskAttribute.getMappedAttribute(TaskAttribute.PERSON_NAME);
-		if (child != null) {
-			person.setName(getValue(child));
+	public void setLongValue(TaskAttribute attribute, Long value) {
+		if (value != null) {
+			attribute.setValue(value.toString());
+		} else {
+			attribute.clearValues();
 		}
-		return person;
 	}
 
 	public void setRepositoryPerson(TaskAttribute taskAttribute, RepositoryPerson person) {
@@ -220,8 +220,16 @@ public abstract class TaskAttributeMapper {
 		}
 	}
 
-	public boolean equals(TaskAttribute newAttribute, TaskAttribute oldAttribute) {
-		return newAttribute.getValues().equals(oldAttribute.getValues());
+	public void setTaskOperation(TaskAttribute taskAttribute, TaskOperation taskOperation) {
+		taskOperation.applyTo(taskAttribute);
+	}
+
+	public void setValue(TaskAttribute attribute, String value) {
+		attribute.setValue(value);
+	}
+
+	public void setValues(TaskAttribute attribute, String[] values) {
+		attribute.setValues(Arrays.asList(values));
 	}
 
 }

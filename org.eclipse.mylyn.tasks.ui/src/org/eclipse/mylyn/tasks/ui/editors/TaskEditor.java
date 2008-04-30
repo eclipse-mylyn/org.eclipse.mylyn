@@ -25,12 +25,14 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.TaskTransfer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
@@ -58,6 +60,8 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.forms.editor.SharedHeaderFormEditor;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.part.WorkbenchPart;
@@ -72,202 +76,73 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 	public static final String ID_EDITOR = "org.eclipse.mylyn.tasks.ui.editors.task";
 
-	protected AbstractTask task;
+	private ToggleTaskActivationAction activateAction;
 
-	private TaskEditorInput taskEditorInput;
-
-	private final List<IEditorPart> editors = new ArrayList<IEditorPart>();
-
+	@Deprecated
 	private IEditorPart contentOutlineProvider = null;
-
-	public final Object FAMILY_SUBMIT = new Object();
-
-	private MenuManager menuManager = new MenuManager();
 
 	private EditorBusyIndicator editorBusyIndicator;
 
+	private MenuManager menuManager;
+
 	private IHyperlinkListener messageHyperLinkListener;
 
-	private TaskDragSourceListener titleDragSourceListener;
+	private AbstractTask task;
 
-	private ToggleTaskActivationAction activateAction;
+	private TaskEditorInput taskEditorInput;
+
+	private TaskDragSourceListener titleDragSourceListener;
 
 	public TaskEditor() {
 	}
 
-	protected void contextMenuAboutToShow(IMenuManager manager) {
-		TaskEditorActionContributor contributor = getActionBarContributor();
-		// IFormPage page = getActivePageInstance();
-		if (contributor != null) {
-			contributor.contextMenuAboutToShow(manager);
-		}
-	}
-
-	private TaskEditorActionContributor getActionBarContributor() {
-		return (TaskEditorActionContributor) getEditorSite().getActionBarContributor();
-	}
-
-	/**
-	 * Configures the standard task editor context menu
-	 * 
-	 * @Since 2.3
-	 */
-	public void configureContextMenuManager(MenuManager manager, TextViewer textViewer) {
-		if (manager == null) {
-			return;
-		}
-		IMenuListener listener = new IMenuListener() {
-			public void menuAboutToShow(IMenuManager manager) {
-				contextMenuAboutToShow(manager);
-			}
-		};
-		manager.setRemoveAllWhenShown(true);
-		manager.addMenuListener(listener);
-
-		if (textViewer != null) {
-			TaskEditorActionContributor contributor = getActionBarContributor();
-			if (contributor != null) {
-				contributor.addTextViewer(textViewer);
-			}
-		}
-	}
-
-	protected void configureContextMenuManager(MenuManager manager) {
-		configureContextMenuManager(manager, null);
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public Object getAdapter(Class adapter) {
-		return getAdapterDelgate(adapter);
-	}
-
-	public Object getAdapterDelgate(Class<?> adapter) {
-		// TODO: consider adding: IContentOutlinePage.class.equals(adapter) &&
-		if (contentOutlineProvider != null) {
-			return contentOutlineProvider.getAdapter(adapter);
+	@Deprecated
+	private void addPage(AbstractTaskEditorFactory factory) {
+		IEditorInput editorInput;
+		if (taskEditorInput != null && taskEditorInput.getTask() == null) {
+			editorInput = new RepositoryTaskEditorInput(taskEditorInput.getTaskRepository(), taskEditorInput.getTask()
+					.getTaskId(), "");
 		} else {
-			return super.getAdapter(adapter);
+			editorInput = getEditorInput();
 		}
-	}
+		if (factory.canCreateEditorFor(task) || factory.canCreateEditorFor(editorInput)) {
+			try {
+				IEditorPart editor = factory.createEditor(this, editorInput);
+				IEditorInput input = task != null ? factory.createEditorInput(task) : editorInput;
+				if (editor != null && input != null) {
+					FormPage taskEditor = (FormPage) editor;
+					editor.init(getEditorSite(), input);
+					int index = addPage(taskEditor);
+					if (input.getImageDescriptor() != null) {
+						setPageImage(index, CommonImages.getImage(input.getImageDescriptor()));
+					}
+					if (editor instanceof AbstractRepositoryTaskEditor) {
+						((AbstractRepositoryTaskEditor) editor).setParentEditor(this);
 
-	@Override
-	public void doSave(IProgressMonitor monitor) {
-		for (IFormPage page : getPages()) {
-			if (page.isDirty()) {
-				page.doSave(monitor);
-			}
-		}
+						if (editorInput instanceof RepositoryTaskEditorInput) {
+							RepositoryTaskEditorInput existingInput = (RepositoryTaskEditorInput) editorInput;
+							setPartName(existingInput.getName());
+						} else if (editorInput instanceof NewTaskEditorInput) {
+							String label = ((NewTaskEditorInput) editorInput).getName();
+							setPartName(label);
+						}
+						setPageText(index, factory.getTitle());
 
-		editorDirtyStateChanged();
-	}
-
-	@SuppressWarnings("unchecked")
-	IFormPage[] getPages() {
-		ArrayList formPages = new ArrayList();
-		if (pages != null) {
-			for (int i = 0; i < pages.size(); i++) {
-				Object page = pages.get(i);
-				if (page instanceof IFormPage) {
-					formPages.add(page);
+						// TODO review
+						setActivePage(index);
+					}
 				}
+
+				// HACK: overwrites if multiple present
+				if (factory.providesOutline()) {
+					contentOutlineProvider = editor;
+				}
+			} catch (Exception e) {
+				StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						"Could not create editor via factory: " + factory, e));
 			}
 		}
-		return (IFormPage[]) formPages.toArray(new IFormPage[formPages.size()]);
-	}
 
-	/**
-	 * Refresh editor with new contents (if any)
-	 */
-	@SuppressWarnings("deprecation")
-	public void refreshEditorContents() {
-		for (IFormPage page : getPages()) {
-			if (page instanceof AbstractRepositoryTaskEditor) {
-				AbstractRepositoryTaskEditor editor = (AbstractRepositoryTaskEditor) page;
-				editor.refreshEditor();
-			}
-		}
-	}
-
-	@Override
-	public void doSaveAs() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-		// API REVIEW remove the commented parts
-		//		if (!(input instanceof TaskEditorInput)) {
-//			throw new PartInitException("Invalid editor input \"" + input.getClass() + "\"");
-//		}
-
-		super.init(site, input);
-
-		// API REVIEW remove the instanceof check
-		if (input instanceof TaskEditorInput) {
-			this.taskEditorInput = (TaskEditorInput) input;
-			this.task = taskEditorInput.getTask();
-		}
-
-		setPartName(input.getName());
-	}
-
-	@Override
-	public boolean isSaveAsAllowed() {
-		return false;
-	}
-
-	@Override
-	public boolean isDirty() {
-		for (IFormPage page : getPages()) {
-			if (page.isDirty()) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	@Deprecated
-	public void markDirty() {
-		firePropertyChange(PROP_DIRTY);
-	}
-
-	@Override
-	public void setFocus() {
-		IFormPage page = getActivePageInstance();
-		if (page != null) {
-			page.setFocus();
-		} else {
-			super.setFocus();
-		}
-	}
-
-	@Deprecated
-	public void setFocusOfActivePage() {
-		if (this.getActivePage() > -1) {
-			IFormPage page = this.getPages()[this.getActivePage()];
-			if (page != null) {
-				page.setFocus();
-			}
-		}
-	}
-
-	@Override
-	public void dispose() {
-		if (editorBusyIndicator != null) {
-			editorBusyIndicator.stop();
-		}
-		for (IEditorPart part : editors) {
-			part.dispose();
-		}
-		if (activateAction != null) {
-			activateAction.dispose();
-		}
-		super.dispose();
-	}
-
-	public TaskEditorInput getTaskEditorInput() {
-		return taskEditorInput;
 	}
 
 	@SuppressWarnings("deprecation")
@@ -344,102 +219,120 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		}
 
 		updateTitleImage();
+		updateHeaderToolBar();
 	}
 
-	@Deprecated
-	private void addPage(AbstractTaskEditorFactory factory) {
-		IEditorInput editorInput;
-		if (taskEditorInput != null && taskEditorInput.getTask() == null) {
-			editorInput = new RepositoryTaskEditorInput(taskEditorInput.getTaskRepository(), taskEditorInput.getTask()
-					.getTaskId(), "");
-		} else {
-			editorInput = getEditorInput();
-		}
-		if (factory.canCreateEditorFor(task) || factory.canCreateEditorFor(editorInput)) {
-			try {
-				IEditorPart editor = factory.createEditor(this, editorInput);
-				IEditorInput input = task != null ? factory.createEditorInput(task) : editorInput;
-				if (editor != null && input != null) {
-					FormPage taskEditor = (FormPage) editor;
-					editor.init(getEditorSite(), input);
-					int index = addPage(taskEditor);
-					if (input.getImageDescriptor() != null) {
-						setPageImage(index, CommonImages.getImage(input.getImageDescriptor()));
-					}
-					if (editor instanceof AbstractRepositoryTaskEditor) {
-						((AbstractRepositoryTaskEditor) editor).setParentEditor(this);
-
-						if (editorInput instanceof RepositoryTaskEditorInput) {
-							RepositoryTaskEditorInput existingInput = (RepositoryTaskEditorInput) editorInput;
-							setPartName(existingInput.getName());
-						} else if (editorInput instanceof NewTaskEditorInput) {
-							String label = ((NewTaskEditorInput) editorInput).getName();
-							setPartName(label);
-						}
-						setPageText(index, factory.getTitle());
-
-						// TODO review
-						setActivePage(index);
-					}
-				}
-
-				// HACK: overwrites if multiple present
-				if (factory.providesOutline()) {
-					contentOutlineProvider = editor;
-				}
-			} catch (Exception e) {
-				StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Could not create editor via factory: " + factory, e));
-			}
-		}
-
-	}
-
-	@SuppressWarnings("deprecation")
-	private void updateTitleImage() {
-		if (task != null) {
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(task.getConnectorKind());
-			if (connectorUi != null) {
-				ImageDescriptor overlayDescriptor = connectorUi.getTaskKindOverlay(task);
-				setTitleImage(CommonImages.getCompositeTaskImage(TasksUiImages.TASK, overlayDescriptor, false));
-			} else {
-				setTitleImage(CommonImages.getImage(TasksUiImages.TASK));
-			}
-		} else if (getEditorInput() instanceof AbstractRepositoryTaskEditorInput) {
-			this.setTitleImage(CommonImages.getImage(TasksUiImages.TASK_REMOTE));
-		} else {
-			setTitleImage(CommonImages.getImage(TasksUiImages.TASK));
-		}
+	protected void configureContextMenuManager(MenuManager manager) {
+		configureContextMenuManager(manager, null);
 	}
 
 	/**
-	 * Update the title of the editor
+	 * Configures the standard task editor context menu
+	 * 
+	 * @Since 2.3
 	 */
-	@Deprecated
-	public void updateTitle(String name) {
-		// setContentDescription(name);
-		setPartName(name);
-		setTitleToolTip(name);
-		updateFormTitle();
+	public void configureContextMenuManager(MenuManager manager, TextViewer textViewer) {
+		if (manager == null) {
+			return;
+		}
+		IMenuListener listener = new IMenuListener() {
+			public void menuAboutToShow(IMenuManager manager) {
+				contextMenuAboutToShow(manager);
+			}
+		};
+		manager.setRemoveAllWhenShown(true);
+		manager.addMenuListener(listener);
+
+		if (textViewer != null) {
+			TaskEditorActionContributor contributor = getActionBarContributor();
+			if (contributor != null) {
+				contributor.addTextViewer(textViewer);
+			}
+		}
+	}
+
+	protected void contextMenuAboutToShow(IMenuManager manager) {
+		TaskEditorActionContributor contributor = getActionBarContributor();
+		// IFormPage page = getActivePageInstance();
+		if (contributor != null) {
+			contributor.contextMenuAboutToShow(manager);
+		}
 	}
 
 	@Override
-	public void showBusy(boolean busy) {
-		if (busy) {
-			if (TasksUiPlugin.isAnimationsEnabled()) {
-				editorBusyIndicator.start();
-			}
-		} else {
+	protected void createHeaderContents(IManagedForm headerForm) {
+		getToolkit().decorateFormHeading(headerForm.getForm().getForm());
+		updateHeader();
+		installTitleDrag(getHeaderForm().getForm().getForm());
+	}
+
+	@Override
+	public void dispose() {
+		if (editorBusyIndicator != null) {
 			editorBusyIndicator.stop();
 		}
-		Form form = getHeaderForm().getForm().getForm();
-		EditorUtil.setEnabledState(form.getBody(), !busy);
+		if (activateAction != null) {
+			activateAction.dispose();
+		}
+		super.dispose();
+	}
+
+	@Override
+	public void doSave(IProgressMonitor monitor) {
 		for (IFormPage page : getPages()) {
-			if (page instanceof WorkbenchPart) {
-				WorkbenchPart part = (WorkbenchPart) page;
-				part.showBusy(busy);
+			if (page.isDirty()) {
+				page.doSave(monitor);
 			}
 		}
+
+		editorDirtyStateChanged();
+	}
+
+	@Override
+	public void doSaveAs() {
+		throw new UnsupportedOperationException();
+	}
+
+	private TaskEditorActionContributor getActionBarContributor() {
+		return (TaskEditorActionContributor) getEditorSite().getActionBarContributor();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Object getAdapter(Class adapter) {
+		return getAdapterDelgate(adapter);
+	}
+
+	public Object getAdapterDelgate(Class<?> adapter) {
+		// TODO: consider adding: IContentOutlinePage.class.equals(adapter) &&
+		if (contentOutlineProvider != null) {
+			return contentOutlineProvider.getAdapter(adapter);
+		} else {
+			return super.getAdapter(adapter);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	IFormPage[] getPages() {
+		ArrayList formPages = new ArrayList();
+		if (pages != null) {
+			for (int i = 0; i < pages.size(); i++) {
+				Object page = pages.get(i);
+				if (page instanceof IFormPage) {
+					formPages.add(page);
+				}
+			}
+		}
+		return (IFormPage[]) formPages.toArray(new IFormPage[formPages.size()]);
+	}
+
+	@Deprecated
+	protected IWorkbenchSiteProgressService getProgressService() {
+		Object siteService = getEditorSite().getAdapter(IWorkbenchSiteProgressService.class);
+		if (siteService != null) {
+			return (IWorkbenchSiteProgressService) siteService;
+		}
+		return null;
 	}
 
 	public ISelection getSelection() {
@@ -450,15 +343,36 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		}
 	}
 
-	@Override
-	protected void createHeaderContents(IManagedForm headerForm) {
-		getToolkit().decorateFormHeading(headerForm.getForm().getForm());
-		headerForm.getForm().setImage(CommonImages.getImage(TasksUiImages.TASK));
-		updateFormTitle();
+	public TaskEditorInput getTaskEditorInput() {
+		return taskEditorInput;
 	}
 
-	private void installTitleDrag(Form form, final RepositoryTaskData taskData) {
-		if (taskData != null && taskData.isNew()) {
+	@Deprecated
+	public Form getTopForm() {
+		return this.getHeaderForm().getForm().getForm();
+	}
+
+	@Override
+	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
+		// API REVIEW remove the commented parts
+		//		if (!(input instanceof TaskEditorInput)) {
+//			throw new PartInitException("Invalid editor input \"" + input.getClass() + "\"");
+//		}
+
+		super.init(site, input);
+
+		// API REVIEW remove the instanceof check
+		if (input instanceof TaskEditorInput) {
+			this.taskEditorInput = (TaskEditorInput) input;
+			this.task = taskEditorInput.getTask();
+		}
+
+		setPartName(input.getName());
+	}
+
+	private void installTitleDrag(Form form) {
+		// API 3.0 remove
+		if (task == null) {
 			return;
 		}
 
@@ -473,55 +387,68 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			titleDragSourceListener = new TaskDragSourceListener(new SelectionProviderAdapter() {
 				@Override
 				public ISelection getSelection() {
-					if (task != null) {
-						return new StructuredSelection(task);
-					} else if (taskData != null && !taskData.isNew()) {
-						return new StructuredSelection(taskData);
-					}
-					return null;
+					return new StructuredSelection(task);
 				}
 			});
 			form.addTitleDragSupport(DND.DROP_MOVE | DND.DROP_LINK, transferTypes, titleDragSourceListener);
 		}
 	}
 
-	@SuppressWarnings("deprecation")
-	protected void updateFormTitle() {
-		RepositoryTaskData taskData = null;
-		IEditorInput input = getEditorInput();
-		if (input instanceof TaskEditorInput) {
-			if (task instanceof LocalTask) {
-				getHeaderForm().getForm().setText("Task: " + task.getSummary());
-			} else if (task != null) {
-				setFormHeaderImage(task.getConnectorKind());
-				setFormHeaderLabel(task);
-			}
-		} else if (input instanceof RepositoryTaskEditorInput) {
-			taskData = ((RepositoryTaskEditorInput) input).getTaskData();
-			if (task != null && taskData != null && !taskData.isNew()) {
-				setFormHeaderImage(task.getConnectorKind());
-				setFormHeaderLabel(task);
-			} else {
-				if (taskData != null) {
-					setFormHeaderImage(taskData.getConnectorKind());
-					setFormHeaderLabel(taskData);
-				}
+	@Override
+	public boolean isDirty() {
+		for (IFormPage page : getPages()) {
+			if (page.isDirty()) {
+				return true;
 			}
 		}
-		installTitleDrag(getHeaderForm().getForm().getForm(), taskData);
+		return false;
 	}
 
-	private void setFormHeaderImage(String repositoryKind) {
-		ImageDescriptor overlay = TasksUiPlugin.getDefault().getOverlayIcon(repositoryKind);
-		Image image = CommonImages.getImageWithOverlay(TasksUiImages.REPOSITORY, overlay, false, false);
-		if (getHeaderForm() != null) {
-			getHeaderForm().getForm().setImage(image);
+	@Override
+	public boolean isSaveAsAllowed() {
+		return false;
+	}
+
+	@Deprecated
+	public void markDirty() {
+		firePropertyChange(PROP_DIRTY);
+	}
+
+	/**
+	 * Refresh editor with new contents (if any)
+	 */
+	@Deprecated
+	public void refreshEditorContents() {
+		for (IFormPage page : getPages()) {
+			if (page instanceof AbstractRepositoryTaskEditor) {
+				AbstractRepositoryTaskEditor editor = (AbstractRepositoryTaskEditor) page;
+				editor.refreshEditor();
+			}
+		}
+	}
+
+	@Override
+	public void setFocus() {
+		IFormPage page = getActivePageInstance();
+		if (page != null) {
+			page.setFocus();
+		} else {
+			super.setFocus();
 		}
 	}
 
 	@Deprecated
-	public Form getTopForm() {
-		return this.getHeaderForm().getForm().getForm();
+	public void setFocusOfActivePage() {
+		if (this.getActivePage() > -1) {
+			IFormPage page = this.getPages()[this.getActivePage()];
+			if (page != null) {
+				page.setFocus();
+			}
+		}
+	}
+
+	public void setMessage(String message, int type) {
+		setMessage(message, type, null);
 	}
 
 	/**
@@ -543,19 +470,113 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		}
 	}
 
-	public void setMessage(String message, int type) {
-		setMessage(message, type, null);
+	/**
+	 * @since 3.0
+	 */
+	public void setStatus(String message, final String title, final IStatus status) {
+		setMessage(message, IMessageProvider.ERROR, new HyperlinkAdapter() {
+			@Override
+			public void linkActivated(HyperlinkEvent event) {
+				StatusHandler.displayStatus(title, status);
+			}
+		});
 	}
 
-	protected IWorkbenchSiteProgressService getProgressService() {
-		Object siteService = getEditorSite().getAdapter(IWorkbenchSiteProgressService.class);
-		if (siteService != null) {
-			return (IWorkbenchSiteProgressService) siteService;
+	@Override
+	public void showBusy(boolean busy) {
+		if (busy) {
+			if (TasksUiPlugin.isAnimationsEnabled()) {
+				editorBusyIndicator.start();
+			}
+		} else {
+			editorBusyIndicator.stop();
 		}
-		return null;
+		Form form = getHeaderForm().getForm().getForm();
+		EditorUtil.setEnabledState(form.getBody(), !busy);
+		for (IFormPage page : getPages()) {
+			if (page instanceof WorkbenchPart) {
+				WorkbenchPart part = (WorkbenchPart) page;
+				part.showBusy(busy);
+			}
+		}
 	}
 
-	private void setFormHeaderLabel(RepositoryTaskData taskData) {
+	@SuppressWarnings("deprecation")
+	private void updateHeader() {
+		IEditorInput input = getEditorInput();
+		if (input instanceof TaskEditorInput) {
+			updateHeaderImage(task.getConnectorKind());
+			updateHeaderLabel(task);
+		} else if (input instanceof RepositoryTaskEditorInput) {
+			RepositoryTaskData taskData = ((RepositoryTaskEditorInput) input).getTaskData();
+			if (task != null) {
+				updateHeaderImage(task.getConnectorKind());
+				updateHeaderLabel(task);
+			} else if (taskData != null) {
+				updateHeaderImage(taskData.getConnectorKind());
+				updateHeaderLabel(taskData);
+			}
+		}
+		installTitleDrag(getHeaderForm().getForm().getForm());
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public void updateHeaderToolBar() {
+		Form form = getHeaderForm().getForm().getForm();
+		IToolBarManager toolBarManager = form.getToolBarManager();
+
+		toolBarManager.removeAll();
+		toolBarManager.update(true);
+
+		for (IFormPage page : getPages()) {
+			if (page instanceof AbstractTaskEditorPage) {
+				AbstractTaskEditorPage taskEditorPage = (AbstractTaskEditorPage) page;
+				taskEditorPage.fillToolBar(toolBarManager);
+			}
+		}
+
+		if (activateAction == null) {
+			activateAction = new ToggleTaskActivationAction(task, toolBarManager);
+		}
+		toolBarManager.add(new Separator("activation"));
+		toolBarManager.add(activateAction);
+
+		toolBarManager.update(true);
+	}
+
+	private void updateHeaderImage(String connectorKind) {
+		if (LocalRepositoryConnector.CONNECTOR_KIND.equals(connectorKind)) {
+			getHeaderForm().getForm().setImage(CommonImages.getImage(TasksUiImages.TASK));
+		} else {
+			ImageDescriptor overlay = TasksUiPlugin.getDefault().getOverlayIcon(connectorKind);
+			Image image = CommonImages.getImageWithOverlay(TasksUiImages.REPOSITORY, overlay, false, false);
+			getHeaderForm().getForm().setImage(image);
+		}
+	}
+
+	private void updateHeaderLabel(AbstractTask task) {
+		if (task instanceof LocalTask) {
+			getHeaderForm().getForm().setText("Task: " + task.getSummary());
+		} else {
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(task.getConnectorKind());
+			String kindLabel = "";
+			if (connectorUi != null) {
+				kindLabel = connectorUi.getTaskKindLabel(task);
+			}
+
+			String idLabel = task.getTaskKey();
+			if (idLabel != null) {
+				getHeaderForm().getForm().setText(kindLabel + " " + idLabel);
+			} else {
+				getHeaderForm().getForm().setText(kindLabel);
+			}
+		}
+	}
+
+	@Deprecated
+	private void updateHeaderLabel(RepositoryTaskData taskData) {
 		String kindLabel = taskData.getTaskKind();
 		String idLabel = taskData.getTaskKey();
 
@@ -577,48 +598,32 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		}
 	}
 
-	private void setFormHeaderLabel(AbstractTask repositoryTask) {
-		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repositoryTask.getConnectorKind());
-		String kindLabel = "";
-		if (connectorUi != null) {
-			kindLabel = connectorUi.getTaskKindLabel(repositoryTask);
-		}
-
-		String idLabel = repositoryTask.getTaskKey();
-
-		if (idLabel != null) {
-			if (getHeaderForm().getForm() != null) {
-				getHeaderForm().getForm().setText(kindLabel + " " + idLabel);
-			}
-		} else if (getHeaderForm() != null && getHeaderForm().getForm() != null) {
-			getHeaderForm().getForm().setText(kindLabel);
-		}
+	/**
+	 * Update the title of the editor
+	 */
+	@Deprecated
+	public void updateTitle(String name) {
+		// setContentDescription(name);
+		setPartName(name);
+		setTitleToolTip(name);
+		updateHeader();
 	}
 
-	/**
-	 * @since 3.0
-	 */
-	public void updateHeader() {
-		Form form = getHeaderForm().getForm().getForm();
-		IToolBarManager toolBarManager = form.getToolBarManager();
-
-		toolBarManager.removeAll();
-		toolBarManager.update(true);
-
-		for (IFormPage page : getPages()) {
-			if (page instanceof AbstractTaskEditorPage) {
-				AbstractTaskEditorPage taskEditorPage = (AbstractTaskEditorPage) page;
-				taskEditorPage.fillToolBar(toolBarManager);
+	@SuppressWarnings("deprecation")
+	private void updateTitleImage() {
+		if (task != null) {
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(task.getConnectorKind());
+			if (connectorUi != null) {
+				ImageDescriptor overlayDescriptor = connectorUi.getTaskKindOverlay(task);
+				setTitleImage(CommonImages.getCompositeTaskImage(TasksUiImages.TASK, overlayDescriptor, false));
+			} else {
+				setTitleImage(CommonImages.getImage(TasksUiImages.TASK));
 			}
+		} else if (getEditorInput() instanceof AbstractRepositoryTaskEditorInput) {
+			setTitleImage(CommonImages.getImage(TasksUiImages.TASK_REMOTE));
+		} else {
+			setTitleImage(CommonImages.getImage(TasksUiImages.TASK));
 		}
-
-		if (activateAction == null) {
-			activateAction = new ToggleTaskActivationAction(task, toolBarManager);
-		}
-		toolBarManager.add(new Separator("activation"));
-		toolBarManager.add(activateAction);
-
-		toolBarManager.update(true);
 	}
 
 }
