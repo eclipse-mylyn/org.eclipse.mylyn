@@ -829,6 +829,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		for (Control control : editorComposite.getChildren()) {
 			control.dispose();
 		}
+		lastFocusControl = null;
 	}
 
 	/**
@@ -2857,7 +2858,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	@Override
 	public void setFocus() {
-		if (lastFocusControl != null) {
+		if (lastFocusControl != null && !lastFocusControl.isDisposed()) {
 			lastFocusControl.setFocus();
 		} else if (firstFocus && summaryTextViewer != null) {
 			summaryTextViewer.getControl().setFocus();

@@ -743,6 +743,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 					for (Control control : editorComposite.getChildren()) {
 						control.dispose();
 					}
+					lastFocusControl = null;
 
 					// restore menu
 					editorComposite.setMenu(menu);
@@ -807,7 +808,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 	@Override
 	public void setFocus() {
-		if (lastFocusControl != null) {
+		if (lastFocusControl != null && !lastFocusControl.isDisposed()) {
 			lastFocusControl.setFocus();
 		}
 	}
