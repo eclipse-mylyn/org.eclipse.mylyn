@@ -598,8 +598,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	@Override
 	protected void createFormContent(final IManagedForm managedForm) {
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
-		colorIncoming = themeManager.getCurrentTheme().getColorRegistry().get(
-				CommonThemes.COLOR_INCOMING_BACKGROUND);
+		colorIncoming = themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_INCOMING_BACKGROUND);
 
 		super.createFormContent(managedForm);
 		form = managedForm.getForm();

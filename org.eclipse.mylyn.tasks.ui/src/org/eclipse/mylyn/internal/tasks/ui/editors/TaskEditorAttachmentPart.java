@@ -12,20 +12,23 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.IOpenListener;
+import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.mylyn.internal.tasks.ui.actions.AbstractTaskEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AttachAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AttachScreenshotAction;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskAttachmentWizard.Mode;
 import org.eclipse.mylyn.tasks.core.data.ITaskAttachment2;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
@@ -35,6 +38,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.ISharedImages;
@@ -50,46 +54,50 @@ import org.eclipse.ui.internal.WorkbenchImages;
  */
 public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 
-	private static final String ATTACHMENT_DEFAULT_NAME = "attachment";
+//	private static final String ATTACHMENT_DEFAULT_NAME = "attachment";
+//
+//	private static final String CTYPE_ZIP = "zip";
+//
+//	private static final String CTYPE_OCTET_STREAM = "octet-stream";
+//
+//	private static final String CTYPE_TEXT = "text";
+//
+//	private static final String CTYPE_HTML = "html";
+//
+//	private static final String LABEL_TEXT_EDITOR = "Text Editor";
+//
+//	private static final String LABEL_COPY_URL_TO_CLIPBOARD = "Copy &URL";
+//
+//	private static final String LABEL_COPY_TO_CLIPBOARD = "Copy Contents";
+//
+//	private static final String LABEL_SAVE = "Save...";
+//
+//	private static final String LABEL_BROWSER = "Browser";
+//
+//	private static final String LABEL_DEFAULT_EDITOR = "Default Editor";
 
-	private static final String CTYPE_ZIP = "zip";
-
-	private static final String CTYPE_OCTET_STREAM = "octet-stream";
-
-	private static final String CTYPE_TEXT = "text";
-
-	private static final String CTYPE_HTML = "html";
-
-	private static final String LABEL_TEXT_EDITOR = "Text Editor";
-
-	private static final String LABEL_COPY_URL_TO_CLIPBOARD = "Copy &URL";
-
-	private static final String LABEL_COPY_TO_CLIPBOARD = "Copy Contents";
-
-	private static final String LABEL_SAVE = "Save...";
-
-	private static final String LABEL_BROWSER = "Browser";
-
-	private static final String LABEL_DEFAULT_EDITOR = "Default Editor";
+	private static final String ID_POPUP_MENU = "org.eclipse.mylyn.tasks.ui.editor.menu.attachments";
 
 	private final String[] attachmentsColumns = { "Name", "Description", "Type", "Size", "Creator", "Created" };
 
 	private final int[] attachmentsColumnWidths = { 140, 160, 100, 70, 100, 100 };
 
-	private Table attachmentsTable;
-
-	private TableViewer attachmentsTableViewer;
+//	private Table attachmentsTable;
+//
+//	private TableViewer attachmentsTableViewer;
 
 	private TaskAttribute[] attachments;
 
 	private boolean hasIncoming;
+
+	private MenuManager menuManager;
 
 	public TaskEditorAttachmentPart() {
 		setPartName("Attachments");
 	}
 
 	private void createAttachmentTable(FormToolkit toolkit, final Composite attachmentsComposite) {
-		attachmentsTable = toolkit.createTable(attachmentsComposite, SWT.SINGLE | SWT.BORDER | SWT.FULL_SELECTION);
+		Table attachmentsTable = toolkit.createTable(attachmentsComposite, SWT.SINGLE | SWT.BORDER | SWT.FULL_SELECTION);
 		attachmentsTable.setLinesVisible(true);
 		attachmentsTable.setHeaderVisible(true);
 		attachmentsTable.setLayout(new GridLayout());
@@ -103,12 +111,12 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		}
 		attachmentsTable.getColumn(3).setAlignment(SWT.RIGHT);
 
-		attachmentsTableViewer = new TableViewer(attachmentsTable);
-		attachmentsTableViewer.setUseHashlookup(true);
-		attachmentsTableViewer.setColumnProperties(attachmentsColumns);
-		ColumnViewerToolTipSupport.enableFor(attachmentsTableViewer, ToolTip.NO_RECREATE);
+		TableViewer attachmentsViewer = new TableViewer(attachmentsTable);
+		attachmentsViewer.setUseHashlookup(true);
+		attachmentsViewer.setColumnProperties(attachmentsColumns);
+		ColumnViewerToolTipSupport.enableFor(attachmentsViewer, ToolTip.NO_RECREATE);
 
-		attachmentsTableViewer.setSorter(new ViewerSorter() {
+		attachmentsViewer.setSorter(new ViewerSorter() {
 			@Override
 			public int compare(Viewer viewer, Object e1, Object e2) {
 				ITaskAttachment2 attachment1 = (ITaskAttachment2) e1;
@@ -131,11 +139,11 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		for (TaskAttribute attribute : attachments) {
 			attachmentList.add(getTaskData().getAttributeMapper().getTaskAttachment(attribute));
 		}
-		attachmentsTableViewer.setContentProvider(new AttachmentsTableContentProvider2(attachmentList));
-		attachmentsTableViewer.setLabelProvider(new AttachmentTableLabelProvider2(
+		attachmentsViewer.setContentProvider(new AttachmentsTableContentProvider2(attachmentList));
+		attachmentsViewer.setLabelProvider(new AttachmentTableLabelProvider2(
 				getTaskEditorPage().getAttributeEditorToolkit()));
-		attachmentsTableViewer.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
+		attachmentsViewer.addOpenListener(new IOpenListener() {
+			public void open(OpenEvent event) {
 				if (!event.getSelection().isEmpty()) {
 					StructuredSelection selection = (StructuredSelection) event.getSelection();
 					ITaskAttachment2 attachment = (ITaskAttachment2) selection.getFirstElement();
@@ -143,8 +151,14 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 				}
 			}
 		});
+		attachmentsViewer.addSelectionChangedListener(getTaskEditorPage());
+		attachmentsViewer.setInput(getTaskData());
 
-		attachmentsTableViewer.setInput(getTaskData());
+		menuManager = new MenuManager();
+		menuManager.setRemoveAllWhenShown(true);
+		getTaskEditorPage().getEditorSite().registerContextMenu(ID_POPUP_MENU, menuManager, attachmentsViewer, false);
+		Menu menu = menuManager.createContextMenu(attachmentsTable);
+		attachmentsTable.setMenu(menu);
 	}
 
 	private void createAttachmentTableMenu() {
@@ -315,26 +329,20 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 
 		Button attachFileButton = toolkit.createButton(attachmentControlsComposite, AttachAction.LABEL, SWT.PUSH);
 		attachFileButton.setImage(WorkbenchImages.getImage(ISharedImages.IMG_OBJ_FILE));
+		attachFileButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				openNewAttachmentWizard(Mode.DEFAULT);
+			}
+		});
 
 		Button attachScreenshotButton = toolkit.createButton(attachmentControlsComposite, AttachScreenshotAction.LABEL,
 				SWT.PUSH);
 		attachScreenshotButton.setImage(CommonImages.getImage(CommonImages.IMAGE_CAPTURE));
-
-		attachFileButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				AbstractTaskEditorAction attachFileAction = new AttachAction();
-				attachFileAction.selectionChanged(new StructuredSelection(getTaskEditorPage().getTask()));
-				attachFileAction.run();
-			}
-		});
-
 		attachScreenshotButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				AttachScreenshotAction attachScreenshotAction = new AttachScreenshotAction();
-				attachScreenshotAction.selectionChanged(new StructuredSelection(getTaskEditorPage().getTask()));
-				attachScreenshotAction.run();
+				openNewAttachmentWizard(Mode.SCREENSHOT);
 			}
 		});
 	}
@@ -352,7 +360,6 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 
 		if (attachments.length > 0) {
 			createAttachmentTable(toolkit, attachmentsComposite);
-			createAttachmentTableMenu();
 		} else {
 			toolkit.createLabel(attachmentsComposite, "No attachments");
 			// TODO EDITOR registerDropListener(label);
@@ -372,9 +379,22 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		setSection(toolkit, section);
 	}
 
+	@Override
+	public void dispose() {
+		menuManager.dispose();
+		super.dispose();
+	}
+
 	private void initialize() {
 		attachments = getTaskData().getAttributeMapper().getAttributesByType(getTaskData(),
 				TaskAttribute.TYPE_ATTACHMENT);
+	}
+
+	private void openNewAttachmentWizard(Mode mode) {
+		TaskAttributeMapper mapper = getModel().getTaskData().getAttributeMapper();
+		TaskAttribute attribute = mapper.createTaskAttachment(getModel().getTaskData());
+		TasksUiInternal.openNewAttachmentWizard(getTaskEditorPage().getSite().getShell(),
+				getTaskEditorPage().getTaskRepository(), getTaskEditorPage().getTask(), attribute, mode);
 	}
 
 }

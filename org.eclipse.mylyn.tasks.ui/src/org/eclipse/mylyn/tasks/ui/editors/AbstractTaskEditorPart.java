@@ -10,6 +10,7 @@ package org.eclipse.mylyn.tasks.ui.editors;
 
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -124,6 +125,10 @@ public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 			}
 		}
 		setControl(section);
+	}
+
+	protected boolean setSelection(ISelection selection) {
+		return false;
 	}
 
 }

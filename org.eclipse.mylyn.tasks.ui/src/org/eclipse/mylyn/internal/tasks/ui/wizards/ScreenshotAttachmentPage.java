@@ -14,17 +14,15 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.ScreenshotCreationPage;
 /**
  * @author Mik Kersten
  */
+@Deprecated
 public class ScreenshotAttachmentPage extends ScreenshotCreationPage {
 
 	@Override
 	public void setImageDirty(boolean pageDirty) {
 		super.setImageDirty(pageDirty);
 		if (pageDirty) {
-			// API 3.0 remove
-			if (getWizard() instanceof NewAttachmentWizard) {
-				NewAttachmentWizard wizard = (NewAttachmentWizard) getWizard();
-				((ImageAttachment) wizard.getAttachment()).markDirty();
-			}
+			NewAttachmentWizard wizard = (NewAttachmentWizard) getWizard();
+			((ImageAttachment) wizard.getAttachment()).markDirty();
 		}
 	}
 

@@ -1209,6 +1209,15 @@
             id="org.eclipse.mylyn.tasks.ui.command.openSelectedTask"
             name="Open Selected Task">
       </command>
+      <command
+            categoryId="org.eclipse.mylyn.tasks.ui.category.editor"
+            id="org.eclipse.mylyn.tasks.ui.command.attachment.openInBrowser"
+            name="Open Attachment in Browser">
+      </command>
+      <category
+            id="org.eclipse.mylyn.tasks.ui.category.editor"
+            name="Task Editor">
+      </category>
    </extension>
    <extension
          point="org.eclipse.ui.bindings">
@@ -1333,6 +1342,10 @@
             </and>
          </enabledWhen>
       </handler>
+      <handler
+            class="org.eclipse.mylyn.internal.tasks.ui.commands.OpenTaskAttachmentInBrowserHandler"
+            commandId="org.eclipse.mylyn.tasks.ui.command.attachment.openInBrowser">
+      </handler>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -1345,6 +1358,43 @@
                   checkEnabled="true">
             </visibleWhen>
          </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="popup:org.eclipse.mylyn.tasks.ui.editor.menu.attachments">
+         <separator
+               name="group.open"
+               visible="false">
+         </separator>
+         <menu
+               label="Open With">
+            <command
+                  commandId="org.eclipse.mylyn.tasks.ui.command.attachment.openInBrowser"
+                  label="Browser"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.eclipse.mylyn.tasks.ui.command3"
+                  label="Default Editor"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.eclipse.mylyn.tasks.ui.command4"
+                  label="Text Editor"
+                  style="push">
+            </command>
+         </menu>
+         <separator
+               name="group.save">
+         </separator>
+         <command
+               commandId="org.eclipse.mylyn.tasks.ui.command5"
+               label="Save"
+               style="push">
+         </command>
+         <separator
+               name="additions"
+               visible="false">
+         </separator>
       </menuContribution>
    </extension>
      

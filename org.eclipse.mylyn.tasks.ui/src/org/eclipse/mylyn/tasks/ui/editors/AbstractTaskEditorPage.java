@@ -16,7 +16,9 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ControlContribution;
@@ -24,6 +26,11 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.util.SafeRunnable;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.core.StatusHandler;
@@ -98,6 +105,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.forms.IFormColors;
+import org.eclipse.ui.forms.IFormPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
@@ -118,7 +126,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
  */
 // TODO EDITOR selection service
 // TODO EDITOR outline
-public abstract class AbstractTaskEditorPage extends FormPage {
+public abstract class AbstractTaskEditorPage extends FormPage implements ISelectionProvider, ISelectionChangedListener {
 
 	private class SubmitTaskJobListener extends SubmitJobListener {
 
@@ -238,6 +246,8 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 
 	protected Control lastFocusControl;
 
+	private ISelection lastSelection;
+
 	private TaskDataModel model;
 
 	private boolean needsAddToCategory;
@@ -259,6 +269,8 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 	private TaskEditorPlanningPart planningPart;
 
 	private boolean reflow;
+
+	private final ListenerList selectionChangedListeners = new ListenerList();
 
 	private TaskEditorSummaryPart summaryPart;
 
@@ -296,6 +308,10 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 				addFocusListener((Composite) control, listener);
 			}
 		}
+	}
+
+	public void addSelectionChangedListener(ISelectionChangedListener listener) {
+		selectionChangedListeners.add(listener);
 	}
 
 	public void appendTextToNewComment(String text) {
@@ -591,6 +607,22 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		}
 	}
 
+	protected void fireSelectionChanged(ISelection selection) {
+		// create an event
+		final SelectionChangedEvent event = new SelectionChangedEvent(this, selection);
+
+		// fire the event
+		Object[] listeners = selectionChangedListeners.getListeners();
+		for (int i = 0; i < listeners.length; ++i) {
+			final ISelectionChangedListener l = (ISelectionChangedListener) listeners[i];
+			SafeRunner.run(new SafeRunnable() {
+				public void run() {
+					l.selectionChanged(event);
+				}
+			});
+		}
+	}
+
 	public abstract AttributeEditorFactory getAttributeEditorFactory();
 
 	public abstract AttributeEditorToolkit getAttributeEditorToolkit();
@@ -614,12 +646,16 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		return model;
 	}
 
-	public TaskEditor getTaskEditor() {
-		return (TaskEditor) getEditor();
+	public ISelection getSelection() {
+		return lastSelection;
 	}
 
 	public AbstractTask getTask() {
 		return task;
+	}
+
+	public TaskEditor getTaskEditor() {
+		return (TaskEditor) getEditor();
 	}
 
 	public TaskRepository getTaskRepository() {
@@ -660,6 +696,8 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 	@Override
 	public void init(IEditorSite site, IEditorInput input) {
 		super.init(site, input);
+
+		site.setSelectionProvider(this);
 
 		TaskEditorInput taskEditorInput = (TaskEditorInput) input;
 		task = taskEditorInput.getTask();
@@ -713,6 +751,16 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 	}
 
 	/**
+	 * force a re-layout of entire form
+	 */
+	public void reflow() {
+		if (reflow) {
+			form.layout(true, true);
+			form.reflow(true);
+		}
+	}
+
+	/**
 	 * Update editor contents in place.
 	 */
 	public void refreshFormContent() {
@@ -739,6 +787,7 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 						control.dispose();
 					}
 					lastFocusControl = null;
+					lastSelection = null;
 
 					// restore menu
 					editorComposite.setMenu(menu);
@@ -790,14 +839,13 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 		//target.addDropListener(new RepositoryTaskEditorDropListener(this, fileTransfer, textTransfer, control));
 	}
 
-	/**
-	 * force a re-layout of entire form
-	 */
-	public void reflow() {
-		if (reflow) {
-			form.layout(true, true);
-			form.reflow(true);
-		}
+	public void removeSelectionChangedListener(ISelectionChangedListener listener) {
+		selectionChangedListeners.remove(listener);
+	}
+
+	public void selectionChanged(SelectionChangedEvent event) {
+		lastSelection = event.getSelection();
+		fireSelectionChanged(lastSelection);
 	}
 
 	public void setExpandAttributeSection(boolean expandAttributeSection) {
@@ -844,6 +892,18 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 	public void setReflow(boolean reflow) {
 		this.reflow = reflow;
 		form.setRedraw(reflow);
+	}
+
+	public void setSelection(ISelection selection) {
+		IFormPart[] parts = getManagedForm().getParts();
+		for (IFormPart formPart : parts) {
+			if (formPart instanceof AbstractTaskEditorPart) {
+				if (((AbstractTaskEditorPart) formPart).setSelection(selection)) {
+					lastSelection = selection;
+					return;
+				}
+			}
+		}
 	}
 
 	private void setTaskData(TaskData taskData) {
@@ -912,5 +972,4 @@ public abstract class AbstractTaskEditorPage extends FormPage {
 					});
 		}
 	}
-
 }

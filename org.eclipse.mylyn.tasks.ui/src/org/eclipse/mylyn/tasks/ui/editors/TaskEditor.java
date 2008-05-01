@@ -336,6 +336,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		return null;
 	}
 
+	@Deprecated
 	public ISelection getSelection() {
 		if (getSite() != null && getSite().getSelectionProvider() != null) {
 			return getSite().getSelectionProvider().getSelection();

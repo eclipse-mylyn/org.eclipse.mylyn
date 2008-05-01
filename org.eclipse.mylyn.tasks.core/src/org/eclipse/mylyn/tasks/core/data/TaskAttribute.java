@@ -119,6 +119,8 @@ public final class TaskAttribute {
 
 	public static final String NEW_CC = "task.common.newcc";
 
+	public static final String NEW_ATTACHMENT = "task.common.new.attachment";
+
 	public static final String OPERATION = "task.common.operation";
 
 	public static final String PRIORITY = "task.common.priority";

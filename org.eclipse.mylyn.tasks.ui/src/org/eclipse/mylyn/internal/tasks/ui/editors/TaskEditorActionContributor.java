@@ -181,7 +181,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 
 	public void contextMenuAboutToShow(IMenuManager manager, boolean addClipboard) {
 		if (editor != null) {
-			updateSelectableActions(editor.getSelection());
+			updateSelectableActions(getSelection());
 		}
 		if (addClipboard) {
 			addClipboardActions(manager);
@@ -209,7 +209,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 				}
 			}
 
-			copyTaskDetailsAction.selectionChanged(new StructuredSelection(editor.getSelection()));
+			copyTaskDetailsAction.selectionChanged(new StructuredSelection(getSelection()));
 			manager.add(subMenuManager);
 			return;
 
@@ -378,14 +378,14 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 	public void setActiveEditor(IEditorPart targetEditor) {
 		if (targetEditor instanceof TaskEditor) {
 			editor = (TaskEditor) targetEditor;
-			updateSelectableActions(editor.getSelection());
+			updateSelectableActions(getSelection());
 		}
 	}
 
 	@Override
 	public void setActivePage(IEditorPart newEditor) {
 		if (getEditor() != null) {
-			updateSelectableActions(getEditor().getSelection());
+			updateSelectableActions(getSelection());
 		}
 	}
 
@@ -407,10 +407,10 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 			if (getEditor().getActivePageInstance() instanceof TaskFormPage) {
 				TaskFormPage editor = (TaskFormPage) getEditor().getActivePageInstance();
 				editor.doAction(actionId);
-				updateSelectableActions(getEditor().getSelection());
+				updateSelectableActions(getSelection());
 			} else {
 				doAction(actionId);
-				updateSelectableActions(getEditor().getSelection());
+				updateSelectableActions(getSelection());
 			}
 		}
 
@@ -596,6 +596,14 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 			return textViewer.canDoOperation(ITextOperationTarget.SELECT_ALL);
 		}
 		return false;
+	}
+
+	public ISelection getSelection() {
+		if (editor.getSite().getSelectionProvider() != null) {
+			return editor.getSite().getSelectionProvider().getSelection();
+		} else {
+			return StructuredSelection.EMPTY;
+		}
 	}
 
 }

@@ -23,11 +23,11 @@ public abstract class TaskAttributeMapper {
 	public TaskAttributeMapper() {
 	}
 
-	public ITaskAttachment2 createTaskAttachment(TaskData taskData) {
-		// FIXME implement
-		ITaskAttachment2 attachment = new TaskAttachment(taskData.getRepositoryUrl(), taskData.getConnectorKind(),
-				taskData.getTaskId(), "");
-		return attachment;
+	public TaskAttribute createTaskAttachment(TaskData taskData) {
+		TaskAttribute taskAttribute = taskData.getRoot().createAttribute(
+				mapToRepositoryKey(taskData.getRoot(), TaskAttribute.NEW_ATTACHMENT));
+		TaskAttachment.createFrom(taskAttribute);
+		return taskAttribute;
 	}
 
 	public boolean equals(TaskAttribute newAttribute, TaskAttribute oldAttribute) {

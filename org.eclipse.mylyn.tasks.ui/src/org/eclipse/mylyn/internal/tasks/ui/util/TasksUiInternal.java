@@ -35,7 +35,9 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.editors.CategoryEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.CategoryEditorInput;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.MultiRepositoryAwareWizard;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewTaskWizard;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskAttachmentWizard;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -44,6 +46,7 @@ import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskSelection;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
 import org.eclipse.mylyn.tasks.core.sync.TaskJob;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
@@ -52,6 +55,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -369,6 +373,15 @@ public class TasksUiInternal {
 	 */
 	public static void displayStatus(String title, IStatus status) {
 		RepositoryAwareStatusHandler.getInstance().displayStatus(title, status);
+	}
+
+	public static void openNewAttachmentWizard(Shell shell, TaskRepository taskRepository, AbstractTask task,
+			TaskAttribute taskAttribute, TaskAttachmentWizard.Mode mode) {
+		TaskAttachmentWizard attachmentWizard = new TaskAttachmentWizard(taskRepository, task, taskAttribute);
+		attachmentWizard.setMode(mode);
+		NewAttachmentWizardDialog dialog = new NewAttachmentWizardDialog(shell, attachmentWizard, false);
+		dialog.create();
+		dialog.open();
 	}
 
 }
