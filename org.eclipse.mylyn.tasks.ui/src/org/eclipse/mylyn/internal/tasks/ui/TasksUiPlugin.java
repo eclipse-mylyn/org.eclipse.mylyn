@@ -744,6 +744,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 					ContextCore.getContextManager().loadActivityMetaContext();
 					getTaskListManager().readExistingOrCreateNewList();
 					getTaskListManager().initActivityHistory();
+					System.err.println(">> reload done");
 				} finally {
 					Job.getJobManager().endRule(ITasksCoreConstants.ROOT_SCHEDULING_RULE);
 					monitor.done();

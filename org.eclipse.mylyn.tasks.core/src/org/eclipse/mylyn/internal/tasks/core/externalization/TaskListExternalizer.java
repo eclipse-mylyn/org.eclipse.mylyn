@@ -40,6 +40,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
+import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskExternalizationException;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
@@ -290,6 +291,7 @@ public class TaskListExternalizer {
 	}
 
 	public void readTaskList(TaskList taskList, File inFile) throws CoreException {
+		delagatingExternalizer.getLegacyParentCategoryMap().clear();
 		Map<AbstractTask, NodeList> tasksWithSubtasks = new HashMap<AbstractTask, NodeList>();
 		if (!inFile.exists()) {
 			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
@@ -300,7 +302,8 @@ public class TaskListExternalizer {
 		doc = openAsDOM(inFile);
 
 		if (doc == null) {
-			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, ERROR_TASKLIST_READ));
+			StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "Empty TaskList"));
+			return;
 		}
 
 		Element root = doc.getDocumentElement();
@@ -356,7 +359,10 @@ public class TaskListExternalizer {
 				for (AbstractTask task : delagatingExternalizer.getLegacyParentCategoryMap().keySet()) {
 					AbstractTaskCategory category = taskList.getContainerForHandle(delagatingExternalizer.getLegacyParentCategoryMap()
 							.get(task));
-					if (category != null && task.getParentContainers().isEmpty()) {
+					if (category != null) {
+						if (task instanceof LocalTask && !task.getParentContainers().isEmpty()) {
+							continue;
+						}
 						taskList.addTask(task, category);
 					}
 				}

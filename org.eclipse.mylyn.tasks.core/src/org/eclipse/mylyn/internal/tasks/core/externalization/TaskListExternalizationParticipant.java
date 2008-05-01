@@ -105,9 +105,9 @@ public class TaskListExternalizationParticipant implements IExternalizationParti
 							//XXX taskList.reset();
 //							throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
 //								"Task List recovered from snapshot"))
-
-							StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
-									"Task List not found"));
+							throw e;
+//							StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
+//									"Task List not found"));
 						}
 					}
 				}

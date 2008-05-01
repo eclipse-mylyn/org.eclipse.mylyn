@@ -21,6 +21,8 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
@@ -69,7 +71,11 @@ public class TaskListManagerTest extends TestCase {
 					TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		}
 		manager.resetTaskList();
-		manager.readExistingOrCreateNewList();
+		assertEquals(0, manager.getTaskList().getAllTasks().size());
+//		manager.readExistingOrCreateNewList();
+		TasksUiPlugin.getExternalizationManager().saveNow(new NullProgressMonitor());
+		TasksUiPlugin.getDefault().reloadDataDirectory();
+
 		repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, MockRepositoryConnector.REPOSITORY_URL);
 		TasksUiPlugin.getRepositoryManager().addRepository(repository,
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
@@ -83,11 +89,11 @@ public class TaskListManagerTest extends TestCase {
 		TasksUiPlugin.getRepositoryManager().removeRepository(repository,
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		manager.resetTaskList();
-		TasksUiPlugin.getTaskListManager().saveTaskList();
+		TasksUiPlugin.getExternalizationManager().saveNow(null);
 		assertEquals(0, manager.getTaskList().getAllTasks().size());
 	}
 
-	public void testUncategorizedTasksNotLost() {
+	public void testUncategorizedTasksNotLost() throws CoreException {
 		MockRepositoryQuery query = new MockRepositoryQuery("Test");
 		manager.getTaskList().addQuery(query);
 		MockTask task = new MockTask("1");
@@ -96,11 +102,11 @@ public class TaskListManagerTest extends TestCase {
 		assertTrue(query.contains(task.getHandleIdentifier()));
 		assertTrue(manager.getTaskList().getDefaultCategory().contains(task.getHandleIdentifier()));
 
-		manager.saveTaskList();
+		TasksUiPlugin.getExternalizationManager().saveNow(null);
 		manager.resetTaskList();
 		assertEquals(0, manager.getTaskList().getAllTasks().size());
 		assertFalse(manager.getTaskList().getDefaultCategory().contains(task.getHandleIdentifier()));
-		manager.readExistingOrCreateNewList();
+		TasksUiPlugin.getDefault().reloadDataDirectory();
 
 		assertTrue(manager.getTaskList().getDefaultCategory().contains(task.getHandleIdentifier()));
 

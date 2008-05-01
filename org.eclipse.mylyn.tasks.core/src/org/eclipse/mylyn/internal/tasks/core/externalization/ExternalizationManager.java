@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.externalization.IExternalizationContext.KIND;
 
@@ -82,6 +83,7 @@ public class ExternalizationManager {
 	}
 
 	public synchronized void saveNow(IProgressMonitor monitor) {
+		monitor = Policy.monitorFor(monitor);
 		if (saveJob != null) {
 			saveJob.cancel();
 			saveJob = null;
@@ -95,7 +97,7 @@ public class ExternalizationManager {
 		}
 	}
 
-	private synchronized void reschedule(ExternalizationJob job, IExternalizationContext context) {
+	private void reschedule(ExternalizationJob job, IExternalizationContext context) {
 		if (!saveDisabled) {
 			if (!CoreUtil.TEST_MODE) {
 				job.setContext(context);

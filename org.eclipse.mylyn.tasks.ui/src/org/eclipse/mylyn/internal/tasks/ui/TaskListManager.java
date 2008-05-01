@@ -453,7 +453,7 @@ public class TaskListManager implements ITaskListManager {
 		resetAndRollOver(TaskActivityUtil.getCalendar().getTime());
 	}
 
-	private void resetAndRollOver(Date startDate) {
+	public void resetAndRollOver(Date startDate) {
 		if (taskList.isInitialized()) {
 			TasksUiPlugin.getTaskActivityManager().clear(startDate);
 			List<InteractionEvent> events = ContextCore.getContextManager()
