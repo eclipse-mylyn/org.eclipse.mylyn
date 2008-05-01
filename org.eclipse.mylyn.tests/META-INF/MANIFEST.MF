@@ -7,7 +7,6 @@ Bundle-ActivationPolicy: lazy
 Bundle-Vendor: Eclipse.org
 Export-Package: org.eclipse.mylyn.tests;x-internal:=true,
  org.eclipse.mylyn.tests.integration;x-internal:=true,
- org.eclipse.mylyn.tests.manual;x-internal:=true,
  org.eclipse.mylyn.tests.misc;x-internal:=true
 Bundle-ClassPath: mylyn-tests.jar
 Require-Bundle: org.junit,
