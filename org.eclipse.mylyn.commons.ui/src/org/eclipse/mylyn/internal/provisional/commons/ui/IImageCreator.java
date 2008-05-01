@@ -14,7 +14,6 @@ import org.eclipse.swt.graphics.Image;
  * Something capable of creating {@link Image images}
  * 
  * @author Willian Mitsuda
- * @author Mik Kersten
  */
 // API-3.0: delete or expand
 public interface IImageCreator {
