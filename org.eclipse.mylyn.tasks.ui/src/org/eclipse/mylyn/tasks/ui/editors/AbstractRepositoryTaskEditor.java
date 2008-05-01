@@ -643,7 +643,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	private void updateHeaderControls() {
-
 		if (taskData == null) {
 			parentEditor.setMessage(
 					"Task data not available. Press synchronize button (right) to retrieve latest data.",
@@ -656,7 +655,15 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						}
 					});
 		}
+		getParentEditor().updateHeaderToolBar();
+	}
 
+	/**
+	 * Override for customizing the toolbar.
+	 * 
+	 * @since 2.1 (NOTE: likely to change for 3.0)
+	 */
+	public void fillToolBar(IToolBarManager toolBarManager) {
 		ControlContribution repositoryLabelControl = new ControlContribution("Title") { //$NON-NLS-1$
 			@Override
 			protected Control createControl(Composite parent) {
@@ -683,33 +690,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				return composite;
 			}
 		};
-
-		if (parentEditor.getTopForm() != null) {
-			IToolBarManager toolBarManager = parentEditor.getTopForm().getToolBarManager();
-
-			// NOTE: the update call should not be needed, but toolbar can fail to show last item?
-			toolBarManager.removeAll();
-			toolBarManager.update(true);
-
-			toolBarManager.add(repositoryLabelControl);
-			fillToolBar(toolBarManager);
-
-			if (repositoryTask != null && taskData != null && !taskData.isNew()) {
-				activateAction = new ToggleTaskActivationAction(repositoryTask, toolBarManager);
-				toolBarManager.add(new Separator("activation"));
-				toolBarManager.add(activateAction);
-			}
-
-			toolBarManager.update(true);
-		}
-	}
-
-	/**
-	 * Override for customizing the toolbar.
-	 * 
-	 * @since 2.1 (NOTE: likely to change for 3.0)
-	 */
-	protected void fillToolBar(IToolBarManager toolBarManager) {
+		toolBarManager.add(repositoryLabelControl);
 
 		if ((taskData != null && !taskData.isNew()) || repositoryTask != null) {
 			synchronizeEditorAction = new SynchronizeEditorAction();

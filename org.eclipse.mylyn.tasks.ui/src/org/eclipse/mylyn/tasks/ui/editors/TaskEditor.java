@@ -536,14 +536,20 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			if (page instanceof AbstractTaskEditorPage) {
 				AbstractTaskEditorPage taskEditorPage = (AbstractTaskEditorPage) page;
 				taskEditorPage.fillToolBar(toolBarManager);
+			} else if (page instanceof AbstractRepositoryTaskEditor) {
+				AbstractRepositoryTaskEditor taskEditorPage = (AbstractRepositoryTaskEditor) page;
+				taskEditorPage.fillToolBar(toolBarManager);
 			}
 		}
 
-		if (activateAction == null) {
-			activateAction = new ToggleTaskActivationAction(task, toolBarManager);
+		// TODO EDITOR remove check
+		if (task != null) {
+			if (activateAction == null) {
+				activateAction = new ToggleTaskActivationAction(task, toolBarManager);
+			}
+			toolBarManager.add(new Separator("activation"));
+			toolBarManager.add(activateAction);
 		}
-		toolBarManager.add(new Separator("activation"));
-		toolBarManager.add(activateAction);
 
 		toolBarManager.update(true);
 	}
