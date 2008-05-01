@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -32,6 +33,7 @@ import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.internal.commons.core.ZipFileUtil;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
@@ -231,7 +233,12 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 	private void readTaskListData() {
 		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 			public void run() {
-				TasksUiPlugin.getDefault().reloadDataDirectory();
+				try {
+					TasksUiPlugin.getDefault().reloadDataDirectory();
+				} catch (CoreException e) {
+					TasksUiInternal.displayStatus("Import Error: Please retry importing or use alternate source",
+							e.getStatus());
+				}
 			}
 		});
 	}

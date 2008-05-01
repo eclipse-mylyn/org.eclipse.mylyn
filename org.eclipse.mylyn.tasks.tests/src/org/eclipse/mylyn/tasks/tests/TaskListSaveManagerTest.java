@@ -18,7 +18,6 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListBackupManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 
 /**
@@ -93,7 +92,7 @@ public class TaskListSaveManagerTest extends TestCase {
 	// test cancellation
 
 	private File createFile(File backupFolder, Calendar time) {
-		SimpleDateFormat format = new SimpleDateFormat(TaskListBackupManager.TIMESTAMP_FORMAT, Locale.ENGLISH);
+		SimpleDateFormat format = new SimpleDateFormat(ITasksCoreConstants.FILENAME_TIMESTAMP_FORMAT, Locale.ENGLISH);
 		File newFile = new File(backupFolder, ITasksCoreConstants.PREFIX_TASKLIST + "-" + format.format(time.getTime())
 				+ ITasksCoreConstants.FILE_EXTENSION);
 		try {

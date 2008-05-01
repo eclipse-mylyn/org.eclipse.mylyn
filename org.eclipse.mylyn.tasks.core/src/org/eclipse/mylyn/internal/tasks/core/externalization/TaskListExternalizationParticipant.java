@@ -10,6 +10,9 @@ package org.eclipse.mylyn.internal.tasks.core.externalization;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
@@ -18,6 +21,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListRunnable;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
@@ -28,6 +32,8 @@ import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
  * @author Rob Elves
  */
 public class TaskListExternalizationParticipant implements IExternalizationParticipant, ITaskListChangeListener {
+
+	private static final String SNAPSHOT_PREFIX = ".";
 
 	private final ExternalizationManager manager;
 
@@ -53,8 +59,8 @@ public class TaskListExternalizationParticipant implements IExternalizationParti
 	}
 
 	public void execute(IExternalizationContext context, IProgressMonitor monitor) throws CoreException {
-
 		Assert.isNotNull(context);
+
 		final File taskListFile = new File(context.getRootPath() + File.separator
 				+ ITasksCoreConstants.DEFAULT_TASK_LIST_FILE);
 
@@ -69,39 +75,90 @@ public class TaskListExternalizationParticipant implements IExternalizationParti
 
 		switch (context.getKind()) {
 		case SAVE:
+			if (!takeSnapshot(taskListFile)) {
+				StatusHandler.fail(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
+						"Task List snapshot failed"));
+			}
+
 			ITaskListRunnable saveRunnable = new ITaskListRunnable() {
 				public void execute(IProgressMonitor monitor) throws CoreException {
-//					System.err.println(">>> saving");
 					taskListWriter.writeTaskList(taskList, taskListFile);
 					synchronized (TaskListExternalizationParticipant.this) {
 						dirty = false;
 					}
 				}
 			};
+
 			taskList.run(saveRunnable, monitor);
+
 			break;
 		case LOAD:
-
 			ITaskListRunnable loadRunnable = new ITaskListRunnable() {
 
 				public void execute(IProgressMonitor monitor) throws CoreException {
-					if (taskListFile.exists()) {
-						taskList.preTaskListRead();
-						taskListWriter.readTaskList(taskList, taskListFile);
-						taskList.postTaskListRead();
-					} else {
-						// XXX:
-						//resetTaskList();
+					try {
+						resetAndLoad();
+					} catch (CoreException e) {
+						if (recover()) {
+							resetAndLoad();
+						} else {
+							//XXX taskList.reset();
+//							throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+//								"Task List recovered from snapshot"))
+
+							StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
+									"Task List not found"));
+						}
 					}
 				}
 
+				private void resetAndLoad() throws CoreException {
+					// XXX: taskList.reset();
+					taskList.preTaskListRead();
+					taskListWriter.readTaskList(taskList, taskListFile);
+					taskList.postTaskListRead();
+				}
+
+				private boolean recover() {
+					if (restoreSnapshot(taskListFile)) {
+						StatusHandler.log(new Status(IStatus.INFO, ITasksCoreConstants.ID_PLUGIN,
+								"Task List recovered from snapshot"));
+						return true;
+					} else {
+						return false;
+					}
+
+				}
+
 			};
+
 			taskList.run(loadRunnable, monitor);
+
 			break;
 		case SNAPSHOT:
 			break;
 		}
 
+	}
+
+	private boolean restoreSnapshot(File file) {
+		File backup = new File(file.getParentFile(), SNAPSHOT_PREFIX + file.getName());
+		File originalFile = file.getAbsoluteFile();
+		if (originalFile.exists()) {
+			SimpleDateFormat format = new SimpleDateFormat(ITasksCoreConstants.FILENAME_TIMESTAMP_FORMAT,
+					Locale.ENGLISH);
+			File failed = new File(file.getParentFile(), "failed-" + format.format(new Date()) + "-"
+					+ originalFile.getName());
+			originalFile.renameTo(failed);
+		}
+		return backup.renameTo(originalFile);
+	}
+
+	private boolean takeSnapshot(File file) {
+		File originalFile = file.getAbsoluteFile();
+		File backup = new File(file.getParentFile(), SNAPSHOT_PREFIX + file.getName());
+		backup.delete();
+		return originalFile.renameTo(backup);
 	}
 
 	public void containersChanged(Set<TaskContainerDelta> containers) {

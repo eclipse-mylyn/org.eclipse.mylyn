@@ -8,6 +8,7 @@
 package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -32,20 +33,23 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
-import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
+import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.util.SafeRunnable;
+import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.WebClientLog;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.ContextPreferenceContstants;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotification;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColors;
@@ -90,6 +94,7 @@ import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.progress.UIJob;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
@@ -309,26 +314,26 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		}
 	};
 
-	private final IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
-
-		public void propertyChange(PropertyChangeEvent event) {
-			// TODO: do we ever get here?
-			if (event.getProperty().equals(ContextPreferenceContstants.PREF_DATA_DIR)) {
-				if (event.getOldValue() instanceof String) {
-					reloadDataDirectory();
-				}
-			}
-		}
-	};
+//	private final IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
+//
+//		public void propertyChange(PropertyChangeEvent event) {
+//			// TODO: do we ever get here?
+////			if (event.getProperty().equals(ContextPreferenceContstants.PREF_DATA_DIR)) {
+////				if (event.getOldValue() instanceof String) {
+////					reloadDataDirectory();
+////				}
+////			}
+//		}
+//	};
 
 	private final org.eclipse.jface.util.IPropertyChangeListener PROPERTY_LISTENER = new org.eclipse.jface.util.IPropertyChangeListener() {
 
 		public void propertyChange(org.eclipse.jface.util.PropertyChangeEvent event) {
-			if (event.getProperty().equals(ContextPreferenceContstants.PREF_DATA_DIR)) {
-				if (event.getOldValue() instanceof String) {
-					reloadDataDirectory();
-				}
-			}
+//			if (event.getProperty().equals(ContextPreferenceContstants.PREF_DATA_DIR)) {
+//				if (event.getOldValue() instanceof String) {
+//					reloadDataDirectory();
+//				}
+//			}
 
 			if (event.getProperty().equals(TasksUiPreferenceConstants.PLANNING_ENDHOUR)
 					|| event.getProperty().equals(TasksUiPreferenceConstants.WEEK_START_DAY)) {
@@ -411,7 +416,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				//taskListSaveManager = new TaskListSaveManager();
 				//taskListManager.setTaskListSaveManager(taskListSaveManager);
 
-				ContextCorePlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
+				//ContextCorePlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
 
 				getPreferenceStore().addPropertyChangeListener(PROPERTY_LISTENER);
 
@@ -657,10 +662,10 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				getPreferenceStore().removePropertyChangeListener(PROPERTY_LISTENER);
 				//taskListManager.getTaskList().removeChangeListener(taskListSaveManager);
 				CommonColors.dispose();
-				if (ContextCorePlugin.getDefault() != null) {
-					ContextCorePlugin.getDefault().getPluginPreferences().removePropertyChangeListener(
-							PREFERENCE_LISTENER);
-				}
+//				if (ContextCorePlugin.getDefault() != null) {
+//					ContextCorePlugin.getDefault().getPluginPreferences().removePropertyChangeListener(
+//							PREFERENCE_LISTENER);
+//				}
 				taskEditorBloatManager.dispose(PlatformUI.getWorkbench());
 				INSTANCE = null;
 			}
@@ -677,31 +682,90 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				+ NAME_DATA_DIR;
 	}
 
-	public synchronized String getDataDirectory() {
+	public String getDataDirectory() {
 		return getPreferenceStore().getString(ContextPreferenceContstants.PREF_DATA_DIR);
 	}
 
-	public void setDataDirectory(String newPath) {
-		getTaskListManager().saveTaskList();
+	/**
+	 * Save first, then load from <code>newPath</code>. Sets the new data directory, which upon setting results in
+	 * reload of task list information from the <code>newPath</code> supplied.
+	 * 
+	 * @throws CoreException
+	 */
+	public void setDataDirectory(final String newPath, IProgressMonitor monitor) throws CoreException {
+
+		externalizationManager.saveNow(monitor);
+		//getBackupManager().backupNow(true);
+		// TODO: save repositories, activity
 		ContextCore.getContextManager().saveActivityContext();
+		//TasksUiPlugin.getBackupManager().backupNow(true);
+		loadDataDirectory(newPath);
 		getPreferenceStore().setValue(ContextPreferenceContstants.PREF_DATA_DIR, newPath);
 		ContextCore.getContextStore().contextStoreMoved();
+
+	}
+
+	public void reloadDataDirectory() throws CoreException {
+		// no save just load what is there
+		loadDataDirectory(getDataDirectory());
 	}
 
 	/**
 	 * Only support task data versions post 0.7
+	 * 
+	 * @throws CoreException
+	 * @throws InterruptedException
 	 */
-	public void reloadDataDirectory() {
-		getTaskListManager().getTaskActivationHistory().clear();
-		getRepositoryManager().readRepositories(getRepositoriesFilePath());
-		loadTemplateRepositories();
-		getTaskListManager().resetTaskList();
-		getTaskListManager().setTaskListFile(
-				new File(getDataDirectory() + File.separator + ITasksCoreConstants.DEFAULT_TASK_LIST_FILE));
-		getExternalizationManager().setRootFolderPath(getDataDirectory());
-		ContextCore.getContextManager().loadActivityMetaContext();
-		getTaskListManager().readExistingOrCreateNewList();
-		getTaskListManager().initActivityHistory();
+	private synchronized void loadDataDirectory(final String newPath) throws CoreException {
+
+		IRunnableWithProgress setDirectoryRunnable = new IRunnableWithProgress() {
+
+			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+
+				try {
+					monitor.beginTask("Set Data Directory", IProgressMonitor.UNKNOWN);
+					Job.getJobManager().beginRule(ITasksCoreConstants.ROOT_SCHEDULING_RULE,
+							new SubProgressMonitor(monitor, 1));
+					if (monitor.isCanceled()) {
+						throw new InterruptedException();
+					}
+					externalizationManager.reset();
+					externalizationManager.setRootFolderPath(newPath);
+					getTaskListManager().getTaskActivationHistory().clear();
+
+					getRepositoryManager().readRepositories(
+							newPath + File.separator + TaskRepositoryManager.DEFAULT_REPOSITORIES_FILE);
+					loadTemplateRepositories();
+
+					getTaskListManager().resetTaskList();
+					getTaskListManager().setTaskListFile(
+							new File(newPath + File.separator + ITasksCoreConstants.DEFAULT_TASK_LIST_FILE));
+
+					ContextCore.getContextManager().loadActivityMetaContext();
+					getTaskListManager().readExistingOrCreateNewList();
+					getTaskListManager().initActivityHistory();
+				} finally {
+					Job.getJobManager().endRule(ITasksCoreConstants.ROOT_SCHEDULING_RULE);
+					monitor.done();
+				}
+			}
+
+		};
+
+		IProgressService service = PlatformUI.getWorkbench().getProgressService();
+		try {
+			if (!CoreUtil.TEST_MODE) {
+				service.run(false, false, setDirectoryRunnable);
+			} else {
+				setDirectoryRunnable.run(new NullProgressMonitor());
+			}
+		} catch (InvocationTargetException e) {
+			throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to set data directory",
+					e.getCause()));
+		} catch (InterruptedException e) {
+			throw new OperationCanceledException();
+		}
+
 	}
 
 	@Override
@@ -971,9 +1035,9 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	 * Associate a Task Repository with a workbench project
 	 * 
 	 * @param resource
-	 * 		project or resource belonging to a project
+	 *            project or resource belonging to a project
 	 * @param repository
-	 * 		task repository to associate with given project
+	 *            task repository to associate with given project
 	 * @throws CoreException
 	 */
 	public void setRepositoryForResource(IResource resource, TaskRepository repository) throws CoreException {

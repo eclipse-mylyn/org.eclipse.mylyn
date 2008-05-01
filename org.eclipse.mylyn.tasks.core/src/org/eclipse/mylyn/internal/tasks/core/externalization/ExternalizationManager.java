@@ -17,8 +17,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.externalization.IExternalizationContext.KIND;
@@ -37,6 +39,8 @@ public class ExternalizationManager {
 	private static boolean saveDisabled = false;
 
 	private final Set<IExternalizationParticipant> externalizationParticipants = new HashSet<IExternalizationParticipant>();
+
+	private boolean forceSave = false;
 
 	public ExternalizationManager(String rootFolderPath) {
 		this.rootFolderPath = rootFolderPath;
@@ -77,19 +81,28 @@ public class ExternalizationManager {
 		reschedule(saveJob, saveContext);
 	}
 
-//	public synchronized void saveNow(IProgressMonitor monitor) {
-//		if (saveJob != null) {
-//			saveJob.cancel();
-//			saveJob = null;
-//		}
-//		ExternalizationJob job = createJob("Save Now", new ExternalizationContext(KIND.SAVE, rootFolderPath));
-//		job.run(monitor);
-//	}
+	public synchronized void saveNow(IProgressMonitor monitor) {
+		if (saveJob != null) {
+			saveJob.cancel();
+			saveJob = null;
+		}
+		try {
+			forceSave = true;
+			ExternalizationJob job = createJob("Save Now", new ExternalizationContext(KIND.SAVE, rootFolderPath));
+			job.run(monitor);
+		} finally {
+			forceSave = false;
+		}
+	}
 
 	private synchronized void reschedule(ExternalizationJob job, IExternalizationContext context) {
 		if (!saveDisabled) {
-			job.setContext(context);
-			job.schedule(5000);
+			if (!CoreUtil.TEST_MODE) {
+				job.setContext(context);
+				job.schedule(5000);
+			} else {
+				job.run(new NullProgressMonitor());
+			}
 		}
 	}
 
@@ -127,20 +140,26 @@ public class ExternalizationManager {
 		protected IStatus run(IProgressMonitor monitor) {
 			switch (context.getKind()) {
 			case SAVE:
-				for (IExternalizationParticipant participant : externalizationParticipants) {
-					ISchedulingRule rule = participant.getSchedulingRule();
-					if (participant.isDirty()) {
-						try {
-							Job.getJobManager().beginRule(rule, monitor);
-							monitor.setTaskName("Saving " + participant.getDescription());
-							participant.execute(context, monitor);
-						} catch (CoreException e) {
-							StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
-									"Save failed for " + participant.getDescription(), e));
-						} finally {
-							Job.getJobManager().endRule(rule);
+				try {
+					monitor.beginTask("Saving...", externalizationParticipants.size());
+					for (IExternalizationParticipant participant : externalizationParticipants) {
+						ISchedulingRule rule = participant.getSchedulingRule();
+						if (forceSave || participant.isDirty()) {
+							try {
+								Job.getJobManager().beginRule(rule, monitor);
+								monitor.setTaskName("Saving " + participant.getDescription());
+								participant.execute(context, new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN));
+							} catch (CoreException e) {
+								StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
+										"Save failed for " + participant.getDescription(), e));
+							} finally {
+								Job.getJobManager().endRule(rule);
+							}
 						}
+						monitor.worked(1);
 					}
+				} finally {
+					monitor.done();
 				}
 				break;
 			case SNAPSHOT:

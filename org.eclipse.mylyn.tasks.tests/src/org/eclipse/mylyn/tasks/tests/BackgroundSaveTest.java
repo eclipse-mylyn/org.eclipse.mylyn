@@ -13,51 +13,29 @@ import java.util.Locale;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.util.BackgroundSaveTimer;
-import org.eclipse.mylyn.internal.tasks.ui.util.TaskListSaveManager;
 
 /**
- * Tests the mechanism for saving the task data periodically. If this test fails unexpectedly, try adjusting the timing.
+ * Tests the mechanism for saving the task data periodically.
  * 
  * @author Wesley Coelho
  * @author Mik Kersten (rewrite)
  */
 public class BackgroundSaveTest extends TestCase {
 
-	private BackgroundSaveTimer saveTimer;
-
-	private TaskListSaveManager saveManager;
-
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		TasksUiPlugin.getTaskListManager().saveTaskList();
-		saveManager = new TaskListSaveManager();
-//		saveManager = TasksUiPlugin.getDefault().getTaskListSaveManager();
-
-		saveTimer = new BackgroundSaveTimer(saveManager);
-		saveTimer.setSaveIntervalMillis(50);
-		saveTimer.start();
-//		saveManager.setForceBackgroundSave(true);
-	}
-
-	@Override
-	protected void tearDown() throws Exception {
-		saveTimer.stop();
-		super.tearDown();
-//		saveManager.setForceBackgroundSave(false);
-	}
-
 	public void testBackgroundSave() throws InterruptedException, IOException {
 		if (System.getProperty("os.name").toLowerCase(Locale.ENGLISH).contains("linux")) {
 			System.out.println("> BackgroundSaveTest.testBackgroundSave() not run on Linux due to IO concurrency");
 		} else {
+			LocalTask task = new LocalTask("1", "summary");
 			File file = TasksUiPlugin.getTaskListManager().getTaskListFile();
 			long previouslyModified = file.lastModified();
-//			TasksUiPlugin.getTaskListManager().saveTaskList();
-			saveManager.saveTaskList(true, false);
+			TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
+			TasksUiPlugin.getExternalizationManager().requestSave();
+			Thread.sleep(5000);
 			assertTrue(file.lastModified() > previouslyModified);
+			TasksUiPlugin.getTaskListManager().getTaskList().deleteTask(task);
 		}
 	}
 }

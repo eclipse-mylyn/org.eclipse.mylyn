@@ -34,6 +34,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylyn.internal.context.core.ContextPreferenceContstants;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDataExportOperation;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -48,8 +49,6 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 	public static final String BACKUP_FILE_PREFIX = "mylyndata-";
 
 	public static final Pattern MYLYN_BACKUP_REGEXP = Pattern.compile("^" + BACKUP_FILE_PREFIX + ".*");
-
-	public static final String TIMESTAMP_FORMAT = "yyyy-MM-dd-HHmmss";
 
 	private static final String TITLE_TASKLIST_BACKUP = "Tasklist Backup";
 
@@ -69,9 +68,11 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 
 	private String backupFolderPath;
 
+	private ExportJob export;
+
 	public TaskListBackupManager(String backupFolderPath) {
 		this.backupFolderPath = backupFolderPath;
-		start(HOUR);//HOUR
+		start(30 * MINUTE);
 	}
 
 	public void start(long delay) {
@@ -84,7 +85,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 	}
 
 	private String getBackupFileName() {
-		SimpleDateFormat format = new SimpleDateFormat(TIMESTAMP_FORMAT, Locale.ENGLISH);
+		SimpleDateFormat format = new SimpleDateFormat(ITasksCoreConstants.FILENAME_TIMESTAMP_FORMAT, Locale.ENGLISH);
 		String date = format.format(new Date());
 		String backupFileName = BACKUP_FILE_PREFIX + date + ".zip";
 		return backupFileName;
@@ -97,11 +98,8 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 			backupFolder.mkdir();
 		}
 
-//		String backkupFilePath = backupFolderPath + File.separator + getBackupFileName();
-		TasksUiPlugin.getExternalizationManager().requestSave();
-
 		if (!synchronous) {
-			ExportJob export = new ExportJob(backupFolderPath, getBackupFileName());
+			export = new ExportJob(backupFolderPath, getBackupFileName());
 			export.addJobChangeListener(new JobChangeAdapter() {
 
 				@Override
@@ -121,8 +119,6 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 			try {
 				service.run(false, true, backupJob);
 
-//				TasksUiPlugin.getDefault().getPreferenceStore().setValue(TasksUiPreferenceConstants.BACKUP_LAST,
-//						new Date().getTime());
 			} catch (InterruptedException e) {
 				// ignore
 			} catch (InvocationTargetException e) {
@@ -151,7 +147,8 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 		for (File file : files) {
 			Matcher matcher = MYLYN_BACKUP_REGEXP.matcher(file.getName());
 			if (matcher.find()
-					&& file.getName().length() == BACKUP_FILE_PREFIX.length() + TIMESTAMP_FORMAT.length() + 4) {
+					&& file.getName().length() == BACKUP_FILE_PREFIX.length()
+							+ ITasksCoreConstants.FILENAME_TIMESTAMP_FORMAT.length() + 4) {
 				backupFiles.add(file);
 			}
 		}
@@ -170,8 +167,9 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 				if (name.startsWith(BACKUP_FILE_PREFIX)) {
 					try {
 						String dateString = name.substring(BACKUP_FILE_PREFIX.length(), BACKUP_FILE_PREFIX.length()
-								+ TIMESTAMP_FORMAT.length());
-						SimpleDateFormat format = new SimpleDateFormat(TIMESTAMP_FORMAT, Locale.ENGLISH);
+								+ ITasksCoreConstants.FILENAME_TIMESTAMP_FORMAT.length());
+						SimpleDateFormat format = new SimpleDateFormat(ITasksCoreConstants.FILENAME_TIMESTAMP_FORMAT,
+								Locale.ENGLISH);
 						Date date = format.parse(dateString);
 						if (date.getTime() < 0) {
 							continue;
@@ -244,33 +242,11 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 
 		@Override
 		public void run() {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					backupNow(false);
-				}
-			});
-//				if (!Platform.isRunning() || TasksUiPlugin.getDefault() == null) {
-//					return;
-//				} else {
-//					long lastBackup = TasksUiPlugin.getDefault().getPreferenceStore().getLong(
-//							TasksUiPreferenceConstants.BACKUP_LAST);
-//					int days = TasksUiPlugin.getDefault().getPreferenceStore().getInt(
-//							TasksUiPreferenceConstants.BACKUP_SCHEDULE);
-//					long waitPeriod = days * DAY;
-//					final long now = new Date().getTime();
-			//
-//					if ((now - lastBackup) > waitPeriod) {
-//						if (Platform.isRunning() && !PlatformUI.getWorkbench().isClosing()
-//								&& PlatformUI.getWorkbench().getDisplay() != null
-//								&& !PlatformUI.getWorkbench().getDisplay().isDisposed()) {
-//							PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-//								public void run() {
-//									backupNow(false);
-//								}
-//							});
-//						}
-//					}
+//			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+//				public void run() {
+			backupNow(false);
 //				}
+//			});
 		}
 	}
 
@@ -290,8 +266,6 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 			try {
 				if (Platform.isRunning()) {
 					backupJob.run(monitor);
-//					TasksUiPlugin.getDefault().getPreferenceStore().setValue(TasksUiPreferenceConstants.BACKUP_LAST,
-//							new Date().getTime());
 				}
 			} catch (InvocationTargetException e) {
 				MessageDialog.openError(null, BACKUP_JOB_NAME,
@@ -306,43 +280,12 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 
 	public void propertyChange(PropertyChangeEvent event) {
 		if (event.getProperty().equals(ContextPreferenceContstants.PREF_DATA_DIR)) {
+			if (export != null) {
+				export.cancel();
+				export = null;
+			}
 			backupFolderPath = TasksUiPlugin.getDefault().getBackupFolderPath();
 		}
 	}
-
-//	/** public for testing purposes */
-//	public void removeOldBackups(File folder) {
-//
-//		int maxBackups = TasksUiPlugin.getDefault().getPreferenceStore().getInt(
-//				TasksUiPreferenceConstants.BACKUP_MAXFILES);
-//
-//		File[] files = folder.listFiles();
-//		ArrayList<File> backupFiles = new ArrayList<File>();
-//		for (File file : files) {
-//			if (file.getName().startsWith(TaskDataExportWizard.ZIP_FILE_PREFIX)) {
-//				backupFiles.add(file);
-//			}
-//		}
-//
-//		File[] backupFileArray = backupFiles.toArray(new File[backupFiles.size()]);
-//
-//		if (backupFileArray != null && backupFileArray.length > 0) {
-//			Arrays.sort(backupFileArray, new Comparator<File>() {
-//				public int compare(File file1, File file2) {
-//					return new Long((file1).lastModified()).compareTo(new Long((file2).lastModified()));
-//				}
-//
-//			});
-//
-//			int toomany = backupFileArray.length - maxBackups;
-//			if (toomany > 0) {
-//				for (int x = 0; x < toomany; x++) {
-//					if (backupFileArray[x] != null) {
-//						backupFileArray[x].delete();
-//					}
-//				}
-//			}
-//		}
-//	}
 
 }

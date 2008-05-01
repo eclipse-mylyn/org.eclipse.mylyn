@@ -9,10 +9,14 @@ package org.eclipse.mylyn.internal.tasks.ui.preferences;
 
 import java.io.File;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.monitor.ui.ActivityContextManager;
 import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -170,23 +174,6 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 	@Override
 	public boolean performOk() {
-		String taskDirectory = taskDirectoryText.getText();
-		taskDirectory = taskDirectory.replaceAll(BACKSLASH_MULTI, FORWARDSLASH);
-
-		if (!taskDirectory.equals(TasksUiPlugin.getDefault().getDataDirectory())) {
-			if (taskDataDirectoryAction == IDialogConstants.OK_ID) {
-//				TasksUiPlugin.getDefault().getBackupManager().backupNow(true);
-////				TasksUiPlugin.getTaskListManager().saveTaskList();
-//				TasksUiPlugin.getTaskListManager().copyDataDirContentsTo(taskDirectory);
-//				TasksUiPlugin.getDefault().setDataDirectory(taskDirectory);
-//			} else if (taskDataDirectoryAction == LOAD_EXISTING) {
-				TasksUiPlugin.getBackupManager().backupNow(true);
-				TasksUiPlugin.getDefault().setDataDirectory(taskDirectory);
-
-			} else if (taskDataDirectoryAction == IDialogConstants.CANCEL_ID) {
-				// shouldn't get here
-			}
-		}
 		getPreferenceStore().setValue(TasksUiPreferenceConstants.NOTIFICATIONS_ENABLED,
 				notificationEnabledButton.getSelection());
 		//getPreferenceStore().setValue(TasksUiPreferenceConstants.BACKUP_SCHEDULE, backupScheduleTimeText.getText());
@@ -207,6 +194,36 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		MonitorUiPlugin.getDefault().getPreferenceStore().setValue(ActivityContextManager.ACTIVITY_TIMEOUT,
 				timeoutMinutes.getSelection() * (60 * 1000));
 		//backupNow.setEnabled(true);
+
+		String taskDirectory = taskDirectoryText.getText();
+		taskDirectory = taskDirectory.replaceAll(BACKSLASH_MULTI, FORWARDSLASH);
+
+		if (!taskDirectory.equals(TasksUiPlugin.getDefault().getDataDirectory())) {
+			if (taskDataDirectoryAction == IDialogConstants.OK_ID) {
+				Exception exception = null;
+				try {
+					TasksUiPlugin.getDefault().setDataDirectory(taskDirectory, new NullProgressMonitor());
+				} catch (CoreException e) {
+					exception = e;
+					StatusHandler.log(e.getStatus());
+					MessageDialog.openError(getShell(), "Task Data Directory Error",
+							"Error applying Task List data directory changes. The previous setting will be restored.");
+
+				} catch (OperationCanceledException ce) {
+					exception = ce;
+				}
+				if (exception != null && !taskDirectoryText.isDisposed()) {
+					String originalDirectory = TasksUiPlugin.getDefault().getDefaultDataDirectory();
+					if (!taskDirectory.equals(originalDirectory)) {
+						taskDirectoryText.setText(originalDirectory);
+					}
+				}
+
+			} else if (taskDataDirectoryAction == IDialogConstants.CANCEL_ID) {
+				// shouldn't get here
+			}
+		}
+
 		return true;
 	}
 
@@ -711,11 +728,11 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 			MessageDialog dialogConfirm = new MessageDialog(
 					null,
-					"Change data directory",
+					"Confirm Task List data directory change",
 					null,
-					"Your Task List will be backed up to the previous data directory and can be restored via:\n\n\tFile > Import > Mylyn > Task Data\n\nProceed to overwrite with Task List from:\n\n\t "
-							+ dir, MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL,
-							IDialogConstants.CANCEL_LABEL }, IDialogConstants.CANCEL_ID);
+					"A new empty Task List will be created in the chosen directory if one does not already exists. Your previous directory and its contents will not be deleted.\n\nProceed?",
+					MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL },
+					IDialogConstants.CANCEL_ID);
 			taskDataDirectoryAction = dialogConfirm.open();
 
 			for (TaskEditor taskEditor : TasksUiInternal.getActiveRepositoryTaskEditors()) {

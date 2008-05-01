@@ -107,7 +107,6 @@ public class TaskDataExportOperation implements IRunnableWithProgress {
 		try {
 			monitor.beginTask(JOB_LABEL, jobSize);
 			Job.getJobManager().beginRule(ITasksCoreConstants.ROOT_SCHEDULING_RULE, monitor);
-
 			// Create folders in zip file before contained files
 			String sourceContextsPath = TasksUiPlugin.getDefault().getDataDirectory() + File.separator
 					+ ITasksCoreConstants.CONTEXTS_DIRECTORY;
@@ -115,7 +114,6 @@ public class TaskDataExportOperation implements IRunnableWithProgress {
 			// if(contextsDirectory.exists()) {
 			// filesToZip.add(contextsDirectory);
 			// }
-
 			if (true) {
 				// Repositories always exported
 //				TasksUiPlugin.getRepositoryManager().saveRepositories(

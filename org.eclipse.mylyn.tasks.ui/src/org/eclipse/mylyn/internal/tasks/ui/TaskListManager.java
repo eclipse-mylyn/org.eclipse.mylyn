@@ -9,6 +9,11 @@
 package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,7 +50,6 @@ import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizer;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskListElementImporter;
-import org.eclipse.mylyn.internal.tasks.ui.util.TaskListSaveManager;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskActivationHistory;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
@@ -88,7 +92,7 @@ public class TaskListManager implements ITaskListManager {
 
 	private File taskListFile;
 
-	private TaskListSaveManager taskListSaveManager;
+//	private TaskListSaveManager taskListSaveManager;
 
 	private final TaskList taskList = new TaskList();
 
@@ -144,10 +148,6 @@ public class TaskListManager implements ITaskListManager {
 		resetAndRollOver();
 		taskList.reset();
 		prepareOrphanContainers();
-		TaskListView view = TaskListView.getFromActivePerspective();
-		if (view != null) {
-			view.refresh();
-		}
 		return taskList;
 	}
 
@@ -270,41 +270,6 @@ public class TaskListManager implements ITaskListManager {
 		}
 
 		TasksUiPlugin.getExternalizationManager().load(taskListSaveParticipant);
-
-//		IProgressService service = PlatformUI.getWorkbench().getProgressService();
-//		TaskListModifyOperation modOperation = new TaskListModifyOperation() {
-//
-//			@Override
-//			protected void operations(IProgressMonitor monitor) throws CoreException, InvocationTargetException,
-//					InterruptedException {
-//				try {
-//					if (taskListFile.exists()) {
-//						prepareOrphanContainers();
-//						taskList.preTaskListRead();
-//						taskListWriter.readTaskList(taskList, taskListFile);
-//						taskList.postTaskListRead();
-//					} else {
-//						resetTaskList();
-//					}
-//					taskListInitialized = true;
-//				} catch (Throwable t) {
-//					throw new InvocationTargetException(t);
-//				}
-//			}
-//		};
-//
-//		try {
-//			service.run(false, false, modOperation);
-//		} catch (InvocationTargetException e) {
-//			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-//					"Could not read task list, consider restoring via view menu", e.getCause()));
-//			return false;
-//		} catch (InterruptedException e) {
-//			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Read of task list file cancelled.",
-//					e));
-//			return false;
-//		}
-
 		return true;
 	}
 
@@ -417,11 +382,60 @@ public class TaskListManager implements ITaskListManager {
 	}
 
 	/**
+	 * Copies all files in the current data directory to the specified folder. Will overwrite.
+	 * 
 	 * @deprecated
 	 */
 	@Deprecated
-	public void copyDataDirContentsTo(String newDataDir) {
-		taskListSaveManager.copyDataDirContentsTo(newDataDir);
+	public void copyDataDirContentsTo(String targetFolderPath) {
+
+		File mainDataDir = new File(TasksUiPlugin.getDefault().getDataDirectory());
+
+		for (File currFile : mainDataDir.listFiles()) {
+			if (currFile.isFile()) {
+				File destFile = new File(targetFolderPath + File.separator + currFile.getName());
+				copy(currFile, destFile);
+			} else if (currFile.isDirectory()) {
+				File destDir = new File(targetFolderPath + File.separator + currFile.getName());
+				if (!destDir.exists()) {
+					if (!destDir.mkdir()) {
+						StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
+								"Unable to create destination context folder: " + destDir.getAbsolutePath()));
+						continue;
+					}
+				}
+				for (File file : currFile.listFiles()) {
+					File destFile = new File(destDir, file.getName());
+					if (destFile.exists()) {
+						destFile.delete();
+					}
+					copy(file, destFile);
+				}
+			}
+		}
+	}
+
+	/**
+	 * @deprecated
+	 */
+	@Deprecated
+	private boolean copy(File src, File dst) {
+		try {
+			InputStream in = new FileInputStream(src);
+			OutputStream out = new FileOutputStream(dst);
+
+			// Transfer bytes from in to out
+			byte[] buf = new byte[1024];
+			int len;
+			while ((len = in.read(buf)) > 0) {
+				out.write(buf, 0, len);
+			}
+			in.close();
+			out.close();
+			return true;
+		} catch (IOException ioe) {
+			return false;
+		}
 	}
 
 	public TaskListElementImporter getTaskListWriter() {
@@ -439,7 +453,7 @@ public class TaskListManager implements ITaskListManager {
 		resetAndRollOver(TaskActivityUtil.getCalendar().getTime());
 	}
 
-	public void resetAndRollOver(Date startDate) {
+	private void resetAndRollOver(Date startDate) {
 		if (taskList.isInitialized()) {
 			TasksUiPlugin.getTaskActivityManager().clear(startDate);
 			List<InteractionEvent> events = ContextCore.getContextManager()
@@ -472,10 +486,10 @@ public class TaskListManager implements ITaskListManager {
 		return taskActivityHistory;
 	}
 
-	protected void setTaskListSaveManager(TaskListSaveManager taskListSaveManager) {
-		this.taskListSaveManager = taskListSaveManager;
-		this.taskList.addChangeListener(taskListSaveManager);
-	}
+//	protected void setTaskListSaveManager(TaskListSaveManager taskListSaveManager) {
+//		this.taskListSaveManager = taskListSaveManager;
+//		this.taskList.addChangeListener(taskListSaveManager);
+//	}
 
 	/**
 	 * Creates a new local task and schedules for today
