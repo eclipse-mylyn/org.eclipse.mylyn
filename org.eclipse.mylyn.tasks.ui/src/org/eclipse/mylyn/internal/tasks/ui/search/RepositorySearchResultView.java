@@ -17,11 +17,14 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.AddExistingTaskJob;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListPatternFilter;
@@ -44,6 +47,7 @@ import org.eclipse.search.ui.text.Match;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.PartInitException;
@@ -96,6 +100,26 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		}
 	}
 
+	private class FilteringAction extends Action {
+
+		private final ViewerFilter filter;
+
+		public FilteringAction(String text, ViewerFilter filter) {
+			super(text, IAction.AS_CHECK_BOX);
+			this.filter = filter;
+			filterActions.add(this);
+		}
+
+		@Override
+		public void runWithEvent(Event event) {
+			if (isChecked()) {
+				getViewer().addFilter(filter);
+			} else {
+				getViewer().removeFilter(filter);
+			}
+		}
+	}
+
 	public static final int ORDER_PRIORITY = 1;
 
 	public static final int ORDER_DESCRIPTION = 2;
@@ -130,6 +154,8 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 
 	private final List<GroupingAction> groupingActions;
 
+	private final List<FilteringAction> filterActions;
+
 	private static final IShowInTargetList SHOW_IN_TARGET_LIST = new IShowInTargetList() {
 		public String[] getShowInTargetIds() {
 			return SHOW_IN_TARGETS;
@@ -152,6 +178,17 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		groupingActions = new ArrayList<GroupingAction>();
 		new GroupingAction("Group By Owner", GroupBy.OWNER);
 		new GroupingAction("Group By Complete", GroupBy.COMPLETION);
+
+		filterActions = new ArrayList<FilteringAction>();
+		new FilteringAction("Filter Completed Tasks", new ViewerFilter() {
+			@Override
+			public boolean select(Viewer viewer, Object parentElement, Object element) {
+				if (element instanceof AbstractTask) {
+					return !((AbstractTask) element).isCompleted();
+				}
+				return true;
+			}
+		});
 	}
 
 	@Override
@@ -325,6 +362,9 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		for (Action action : groupingActions) {
 			menuManager.appendToGroup(IContextMenuConstants.GROUP_VIEWER_SETUP, action);
 		}
+		for (Action action : filterActions) {
+			menuManager.appendToGroup(IContextMenuConstants.GROUP_VIEWER_SETUP, action);
+		}
 
 		menuManager.appendToGroup(IContextMenuConstants.GROUP_OPEN, openInEditorAction);
 		menuManager.appendToGroup(IContextMenuConstants.GROUP_OPEN, addTaskListAction);
@@ -378,6 +418,10 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		super.createControl(parent);
 		IMenuManager menuManager = getSite().getActionBars().getMenuManager();
 		for (Action action : groupingActions) {
+			menuManager.appendToGroup(IContextMenuConstants.GROUP_VIEWER_SETUP, action);
+		}
+		menuManager.appendToGroup(IContextMenuConstants.GROUP_VIEWER_SETUP, new Separator());
+		for (Action action : filterActions) {
 			menuManager.appendToGroup(IContextMenuConstants.GROUP_VIEWER_SETUP, action);
 		}
 	}

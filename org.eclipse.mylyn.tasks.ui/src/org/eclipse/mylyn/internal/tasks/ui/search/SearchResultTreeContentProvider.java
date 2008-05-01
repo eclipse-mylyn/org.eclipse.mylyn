@@ -70,9 +70,9 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 		}
 	}
 
-	public Object[] getChildren(Object parentElement) {
-		if (parentElement instanceof AbstractTaskContainer) {
-			return ((AbstractTaskContainer) parentElement).getChildren().toArray();
+	public Object[] getChildren(Object parent) {
+		if (parent instanceof TaskGroup || parent instanceof Person) {
+			return ((AbstractTaskContainer) parent).getChildren().toArray();
 		} else {
 			return EMPTY_ARR;
 		}
@@ -83,11 +83,7 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 	}
 
 	public boolean hasChildren(Object element) {
-		if (element instanceof AbstractTaskContainer) {
-			return !((AbstractTaskContainer) element).getChildren().isEmpty();
-		} else {
-			return !(element instanceof AbstractTask);
-		}
+		return getChildren(element).length > 0;
 	}
 
 	@Override
