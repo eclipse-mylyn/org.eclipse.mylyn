@@ -24,12 +24,10 @@ import org.eclipse.mylyn.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
-import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage;
 import org.eclipse.search.internal.ui.SearchPlugin;
 import org.eclipse.search.ui.ISearchPage;
@@ -52,7 +50,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -393,7 +390,6 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 	}
 
 	private void setDefaultValuesAndFocus() {
-		// TODO: generalize selection resolution
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window != null) {
 			IWorkbenchPage page = window.getActivePage();
@@ -408,21 +404,21 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 						}
 					}
 				}
-				if (repositoryUrl == null) {
-					IEditorPart editor = page.getActiveEditor();
-					if (editor instanceof TaskEditor) {
-						repositoryUrl = ((TaskEditor) editor).getTaskEditorInput().getTask().getRepositoryUrl();
-					}
-				}
-				if (repositoryUrl == null) {
-					TaskListView taskListView = TaskListView.getFromActivePerspective();
-					if (taskListView != null) {
-						AbstractTask selectedTask = taskListView.getSelectedTask();
-						if (selectedTask != null) {
-							repositoryUrl = selectedTask.getRepositoryUrl();
-						}
-					}
-				}
+//				if (repositoryUrl == null) {
+//					IEditorPart editor = page.getActiveEditor();
+//					if (editor instanceof TaskEditor) {
+//						repositoryUrl = ((TaskEditor) editor).getTaskEditorInput().getTask().getRepositoryUrl();
+//					}
+//				}
+//				if (repositoryUrl == null) {
+//					TaskListView taskListView = TaskListView.getFromActivePerspective();
+//					if (taskListView != null) {
+//						AbstractTask selectedTask = taskListView.getSelectedTask();
+//						if (selectedTask != null) {
+//							repositoryUrl = selectedTask.getRepositoryUrl();
+//						}
+//					}
+//				}
 				if (repositoryUrl != null) {
 					TaskRepository repository = TasksUi.getRepositoryManager().getRepository(repositoryUrl);
 					if (repository != null) {
