@@ -148,7 +148,7 @@ public class ScreenshotCreationPage extends WizardPage implements IImageCreator 
 	 */
 	private EditorAction currentAction = EditorAction.CROPPING;
 
-	protected ScreenshotCreationPage() {
+	public ScreenshotCreationPage() {
 		super("ScreenShotAttachment");
 		setTitle("Capture Screenshot");
 		setDescription("After capturing, you can crop the image and make drawings on it. This window will not be captured. "
@@ -883,7 +883,7 @@ public class ScreenshotCreationPage extends WizardPage implements IImageCreator 
 	 * Creates the final screenshot
 	 * 
 	 * @return The final screenshot, with all markings, and cropped according to user settings; <strong>The caller is
-	 *         responsible for disposing the returned image</strong>
+	 * 	responsible for disposing the returned image</strong>
 	 */
 	public Image createImage() {
 		Image screenshot = new Image(getShell().getDisplay(), currentSelection != null ? currentSelection
