@@ -101,7 +101,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		}
 	}
 
-	public class FilteringAction extends Action {
+	private class FilteringAction extends Action {
 
 		private final ViewerFilter filter;
 
