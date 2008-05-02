@@ -89,6 +89,8 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 	public Object getAdapter(Class adapter) {
 		if (adapter == IEditorInput.class) {
 			return this;
+		} else if (adapter == AbstractTask.class) {
+			return task;
 		}
 		return null;
 	}

@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Menu;
  */
 public class RepositoryTextViewer extends SourceViewer {
 
+	@Deprecated
 	private final MenuManager menuManager;
 
 	private TaskRepository repository;
@@ -64,10 +65,12 @@ public class RepositoryTextViewer extends SourceViewer {
 		super.handleDispose();
 	}
 
+	@Deprecated
 	public MenuManager getMenuManager() {
 		return menuManager;
 	}
 
+	@Deprecated
 	public void setMenu(Menu menu) {
 		if (getTextWidget() != null && !getTextWidget().isDisposed()) {
 			getTextWidget().setMenu(menu);

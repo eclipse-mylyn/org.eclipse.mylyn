@@ -381,7 +381,9 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 
 	@Override
 	public void dispose() {
-		menuManager.dispose();
+		if (menuManager != null) {
+			menuManager.dispose();
+		}
 		super.dispose();
 	}
 

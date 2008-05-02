@@ -223,6 +223,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		updateHeaderToolBar();
 	}
 
+	@Deprecated
 	protected void configureContextMenuManager(MenuManager manager) {
 		configureContextMenuManager(manager, null);
 	}
@@ -232,6 +233,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	 * 
 	 * @Since 2.3
 	 */
+	@Deprecated
 	public void configureContextMenuManager(MenuManager manager, TextViewer textViewer) {
 		if (manager == null) {
 			return;
@@ -252,6 +254,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		}
 	}
 
+	@Deprecated
 	protected void contextMenuAboutToShow(IMenuManager manager) {
 		TaskEditorActionContributor contributor = getActionBarContributor();
 		// IFormPage page = getActivePageInstance();
@@ -525,6 +528,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	/**
 	 * @since 3.0
 	 */
+	@SuppressWarnings("deprecation")
 	public void updateHeaderToolBar() {
 		Form form = getHeaderForm().getForm().getForm();
 		IToolBarManager toolBarManager = form.getToolBarManager();

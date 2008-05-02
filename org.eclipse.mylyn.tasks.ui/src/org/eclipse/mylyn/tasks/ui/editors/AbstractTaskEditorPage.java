@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.JFaceResources;
@@ -127,6 +128,8 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 // TODO EDITOR selection service
 // TODO EDITOR outline
 public abstract class AbstractTaskEditorPage extends FormPage implements ISelectionProvider, ISelectionChangedListener {
+
+	private static final String ID_POPUP_MENU = "org.eclipse.mylyn.tasks.ui.editor.menu.page";
 
 	private class SubmitTaskJobListener extends SubmitJobListener {
 
@@ -285,6 +288,8 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 	private TaskRepository taskRepository;
 
 	private FormToolkit toolkit;
+
+	private MenuManager menuManager;
 
 	public AbstractTaskEditorPage(TaskEditor editor, String connectorKind) {
 		super(editor, "id", "label");
@@ -470,6 +475,12 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		if (summaryPart != null) {
 			lastFocusControl = summaryPart.getControl();
 		}
+
+		menuManager = new MenuManager();
+		menuManager.setRemoveAllWhenShown(true);
+		getEditorSite().registerContextMenu(ID_POPUP_MENU, menuManager, this, true);
+
+		editorComposite.setMenu(menuManager.createContextMenu(editorComposite));
 	}
 
 	private void createSummarySection(Composite composite) {
@@ -481,6 +492,9 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 	@Override
 	public void dispose() {
+		if (menuManager != null) {
+			menuManager.dispose();
+		}
 		TasksUi.getTaskListManager().getTaskList().removeChangeListener(taskListChangeListener);
 		super.dispose();
 	}
