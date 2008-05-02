@@ -32,8 +32,6 @@ import org.eclipse.mylyn.tasks.core.sync.SubmitJob;
  */
 public class SubmitTaskJob extends SubmitJob {
 
-	private static final String LABEL_JOB_SUBMIT = "Submitting to repository";
-
 	private final TaskRepository taskRepository;
 
 	private final TaskData taskData;
@@ -52,7 +50,7 @@ public class SubmitTaskJob extends SubmitJob {
 
 	public SubmitTaskJob(ITaskDataManager taskDataManager, AbstractRepositoryConnector connector,
 			TaskRepository taskRepository, AbstractTask task, TaskData taskData, Set<TaskAttribute> changedAttributes) {
-		super(LABEL_JOB_SUBMIT);
+		super("Submitting Task");
 		this.taskDataManager = taskDataManager;
 		this.connector = connector;
 		this.taskRepository = taskRepository;
@@ -76,7 +74,7 @@ public class SubmitTaskJob extends SubmitJob {
 						RepositoryStatus.ERROR_INTERNAL,
 						"Task could not be created. No additional information was provided by the connector."));
 			}
-			fireTaskDataPosted(monitor);
+			fireTaskSubmitted(monitor);
 
 			// update task in task list
 			String taskId = response.getTaskId();
@@ -111,6 +109,7 @@ public class SubmitTaskJob extends SubmitJob {
 		return errorStatus;
 	}
 
+	@Override
 	public AbstractTask getTask() {
 		return task;
 	}

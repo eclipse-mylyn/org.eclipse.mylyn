@@ -40,8 +40,10 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ScrollBar;
@@ -67,9 +69,13 @@ public class PreviewAttachmentPage2 extends WizardPage {
 
 	private final TaskAttachmentModel model;
 
+	private Button runInBackgroundButton;
+
 	private ScrolledComposite scrolledComposite;
 
 	private final Set<String> textTypes;
+
+	private Composite contentComposite;
 
 	public PreviewAttachmentPage2(TaskAttachmentModel model) {
 		super(PAGE_NAME);
@@ -110,16 +116,34 @@ public class PreviewAttachmentPage2 extends WizardPage {
 		composite.setLayout(new GridLayout());
 		setControl(composite);
 
-		if (isTextAttachment() || isImageAttachment()) {
-			Object content = getContent(composite);
-			if (content instanceof String) {
-				createTextPreview(composite, (String) content);
-			} else if (content instanceof Image) {
-				createImagePreview(composite, (Image) content);
+		contentComposite = new Composite(composite, SWT.NONE);
+		contentComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
+		contentComposite.setLayout(new GridLayout());
+
+		runInBackgroundButton = new Button(composite, SWT.CHECK);
+		runInBackgroundButton.setText("Run in background");
+	}
+
+	@Override
+	public void setVisible(boolean visible) {
+		if (visible) {
+			Control[] children = contentComposite.getChildren();
+			for (Control control : children) {
+				control.dispose();
 			}
-		} else {
-			createGenericPreview(composite);
+			if (isTextAttachment() || isImageAttachment()) {
+				Object content = getContent(contentComposite);
+				if (content instanceof String) {
+					createTextPreview(contentComposite, (String) content);
+				} else if (content instanceof Image) {
+					createImagePreview(contentComposite, (Image) content);
+				}
+			} else {
+				createGenericPreview(contentComposite);
+			}
+			contentComposite.layout(true, true);
 		}
+		super.setVisible(visible);
 	}
 
 	private void createErrorPreview(Composite composite, String message) {
@@ -132,7 +156,7 @@ public class PreviewAttachmentPage2 extends WizardPage {
 		Label label = new Label(composite, SWT.NONE);
 		label.setLayoutData(new GridData(GridData.FILL_BOTH));
 		label.setText("Attaching File '" + model.getSource().getName() + "'\nA preview the type '"
-				+ model.getSource().getContentType() + "' is currently not available");
+				+ model.getContentType() + "' is currently not available");
 	}
 
 	private void createImagePreview(Composite composite, final Image bufferedImage) {
@@ -244,11 +268,15 @@ public class PreviewAttachmentPage2 extends WizardPage {
 	}
 
 	private boolean isImageAttachment() {
-		return imageTypes.contains(model.getSource().getContentType());
+		return imageTypes.contains(model.getContentType());
 	}
 
 	private boolean isTextAttachment() {
-		return textTypes.contains(model.getSource().getContentType());
+		return textTypes.contains(model.getContentType());
+	}
+
+	public boolean runInBackground() {
+		return runInBackgroundButton.getSelection();
 	}
 
 }

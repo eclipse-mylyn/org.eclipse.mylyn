@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.tasks.core.sync;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -28,7 +29,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
  */
 public abstract class SubmitJob extends TaskJob {
 
-	private final List<SubmitJobListener> submitJobListeners = new ArrayList<SubmitJobListener>();
+	private final List<SubmitJobListener> submitJobListeners = Collections.synchronizedList(new ArrayList<SubmitJobListener>());
 
 	public SubmitJob(String name) {
 		super(name);
@@ -46,30 +47,22 @@ public abstract class SubmitJob extends TaskJob {
 		return submitJobListeners.toArray(new SubmitJobListener[0]);
 	}
 
-	protected void fireTaskDataPosted(final IProgressMonitor monitor) throws CoreException {
+	protected void fireTaskSubmitted(final IProgressMonitor monitor) throws CoreException {
 		SubmitJobListener[] listeners = submitJobListeners.toArray(new SubmitJobListener[0]);
 		if (listeners.length > 0) {
 			final SubmitJobEvent event = new SubmitJobEvent(this);
 			for (final SubmitJobListener listener : listeners) {
-				listener.taskDataPosted(event, Policy.subMonitorFor(monitor, 100));
+				listener.taskSubmitted(event, Policy.subMonitorFor(monitor, 100));
 			}
 		}
 	}
 
-	protected void fireTaskSynchronized(final IProgressMonitor monitor) {
+	protected void fireTaskSynchronized(final IProgressMonitor monitor) throws CoreException {
 		SubmitJobListener[] listeners = submitJobListeners.toArray(new SubmitJobListener[0]);
 		if (listeners.length > 0) {
 			final SubmitJobEvent event = new SubmitJobEvent(this);
 			for (final SubmitJobListener listener : listeners) {
-				SafeRunner.run(new ISafeRunnable() {
-					public void handleException(Throwable e) {
-						StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Listener failed", e));
-					}
-
-					public void run() throws Exception {
-						listener.taskSynchronized(event, Policy.subMonitorFor(monitor, 100));
-					}
-				});
+				listener.taskSynchronized(event, Policy.subMonitorFor(monitor, 100));
 			}
 		}
 	}

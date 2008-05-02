@@ -19,10 +19,12 @@ import org.eclipse.mylyn.tasks.core.data.ITaskAttachment2;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+/**
+ * @author Steffen Pingel
+ */
 public class OpenTaskAttachmentInBrowserHandler extends AbstractHandler {
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		//ISelection selection = HandlerUtil.getActiveMenuSelection(event);
 		ISelection selection = HandlerUtil.getCurrentSelection(event);
 		if (selection instanceof IStructuredSelection) {
 			List<?> items = ((IStructuredSelection) selection).toList();

@@ -35,8 +35,9 @@ import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskAttachmentWizard.ClipboardSource;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskAttachmentWizard.ClipboardTaskAttachmentSource;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentModel;
 import org.eclipse.swt.SWT;
@@ -125,7 +126,7 @@ public class InputAttachmentSourcePage2 extends WizardPage {
 		super("InputAttachmentPage");
 		this.model = model;
 		setTitle("Select attachment source");
-		setDescription("Clipboard contents are for text attachments only.");
+		setDescription("Clipboard supports text and image attachments only.");
 		// setMessage("Please select the source for the attachment");
 	}
 
@@ -381,7 +382,7 @@ public class InputAttachmentSourcePage2 extends WizardPage {
 		boolean attachmentFound = false;
 		int inputMethod = getInputMethod();
 		if (inputMethod == CLIPBOARD) {
-			if (ClipboardSource.isSupportedType(getControl().getDisplay())) {
+			if (ClipboardTaskAttachmentSource.isSupportedType(getControl().getDisplay())) {
 				attachmentFound = true;
 			} else {
 				error = "Clipboard contains an unsupported data";
@@ -631,16 +632,16 @@ public class InputAttachmentSourcePage2 extends WizardPage {
 	public AbstractTaskAttachmentSource getSource() {
 		switch (getInputMethod()) {
 		case CLIPBOARD:
-			return new TaskAttachmentWizard.ClipboardSource();
+			return new TaskAttachmentWizard.ClipboardTaskAttachmentSource();
 		case WORKSPACE:
 			IResource[] resources = getResources(treeViewer.getSelection());
 			if (resources.length > 0) {
-				return new TaskAttachmentWizard.FileSource(resources[0].getLocation().toFile());
+				return new FileTaskAttachmentSource(resources[0].getLocation().toFile());
 			} else {
 				return null;
 			}
 		default: // FILE
-			return new TaskAttachmentWizard.FileSource(new File(getAttachmentFilePath()));
+			return new FileTaskAttachmentSource(new File(getAttachmentFilePath()));
 		}
 	}
 

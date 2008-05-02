@@ -44,4 +44,5 @@ public class NewAttachmentWizardDialog extends WizardDialog {
 		}
 		return section;
 	}
+
 }

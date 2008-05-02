@@ -19,6 +19,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.ITaskJobFactory;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListRunnable;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
+import org.eclipse.mylyn.internal.tasks.core.sync.SubmitTaskAttachmentJob;
 import org.eclipse.mylyn.internal.tasks.core.sync.SubmitTaskJob;
 import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizeAllTasksJob;
 import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizeQueriesJob;
@@ -29,6 +30,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -86,10 +88,9 @@ public class TaskJobFactory implements ITaskJobFactory {
 		return job;
 	}
 
-	public SubmitJob createSubmitJob(AbstractRepositoryConnector connector, TaskRepository taskRepository,
+	public SubmitJob createSubmitTaskJob(AbstractRepositoryConnector connector, TaskRepository taskRepository,
 			final AbstractTask task, TaskData taskData, Set<TaskAttribute> changedAttributes) {
-		SubmitTaskJob job = new SubmitTaskJob(taskDataManager, connector, taskRepository, task, taskData,
-				changedAttributes);
+		SubmitJob job = new SubmitTaskJob(taskDataManager, connector, taskRepository, task, taskData, changedAttributes);
 		job.setPriority(Job.INTERACTIVE);
 		try {
 			taskList.run(new ITaskListRunnable() {
@@ -138,4 +139,23 @@ public class TaskJobFactory implements ITaskJobFactory {
 		return updateJob;
 	}
 
+	public SubmitJob createSubmitTaskAttachmentJob(AbstractRepositoryConnector connector,
+			TaskRepository taskRepository, final AbstractTask task, AbstractTaskAttachmentSource source,
+			String comment, TaskAttribute attachmentAttribute) {
+		SubmitJob job = new SubmitTaskAttachmentJob(taskDataManager, connector, taskRepository, task, source, comment,
+				attachmentAttribute);
+		job.setPriority(Job.INTERACTIVE);
+		try {
+			taskList.run(new ITaskListRunnable() {
+				public void execute(IProgressMonitor monitor) throws CoreException {
+					task.setSubmitting(true);
+				}
+			});
+		} catch (CoreException e) {
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unexpected error", e));
+		}
+		taskList.notifyTaskChanged(task, false);
+		job.setUser(true);
+		return job;
+	}
 }

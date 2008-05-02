@@ -35,6 +35,7 @@ import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.tasks.core.data.ITaskAttachment2;
@@ -687,16 +688,16 @@ public class InputAttachmentSourcePage extends WizardPage {
 	public AbstractTaskAttachmentSource getSource() {
 		switch (getInputMethod()) {
 		case CLIPBOARD:
-			return new TaskAttachmentWizard.ClipboardSource();
+			return new TaskAttachmentWizard.ClipboardTaskAttachmentSource();
 		case WORKSPACE:
 			IResource[] resources = getResources(treeViewer.getSelection());
 			if (resources.length > 0) {
-				return new TaskAttachmentWizard.FileSource(resources[0].getLocation().toFile());
+				return new FileTaskAttachmentSource(resources[0].getLocation().toFile());
 			} else {
 				return null;
 			}
 		default: // FILE
-			return new TaskAttachmentWizard.FileSource(new File(getAttachmentFilePath()));
+			return new FileTaskAttachmentSource(new File(getAttachmentFilePath()));
 		}
 	}
 

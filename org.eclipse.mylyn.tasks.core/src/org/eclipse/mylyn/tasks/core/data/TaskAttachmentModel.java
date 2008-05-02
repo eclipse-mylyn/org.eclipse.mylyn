@@ -17,13 +17,19 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  */
 public class TaskAttachmentModel {
 
+	private boolean attachContext;
+
 	private final TaskAttribute attribute;
+
+	private String comment;
 
 	private AbstractTaskAttachmentSource source;
 
+	private final AbstractTask task;
+
 	private final TaskRepository taskRepository;
 
-	private final AbstractTask task;
+	private String contentType;
 
 	public TaskAttachmentModel(TaskRepository taskRepository, AbstractTask task, TaskAttribute attribute) {
 		this.taskRepository = taskRepository;
@@ -31,16 +37,20 @@ public class TaskAttachmentModel {
 		this.attribute = attribute;
 	}
 
+	public boolean getAttachContext() {
+		return attachContext;
+	}
+
 	public TaskAttribute getAttribute() {
 		return attribute;
 	}
 
-	public AbstractTaskAttachmentSource getSource() {
-		return source;
+	public String getComment() {
+		return comment;
 	}
 
-	public void setSource(AbstractTaskAttachmentSource source) {
-		this.source = source;
+	public AbstractTaskAttachmentSource getSource() {
+		return source;
 	}
 
 	public AbstractTask getTask() {
@@ -50,4 +60,28 @@ public class TaskAttachmentModel {
 	public TaskRepository getTaskRepository() {
 		return taskRepository;
 	}
+
+	public void setAttachContext(boolean attachContext) {
+		this.attachContext = attachContext;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public void setSource(AbstractTaskAttachmentSource source) {
+		this.source = source;
+	}
+
+	public String getContentType() {
+		if (contentType == null) {
+			return getSource().getContentType();
+		}
+		return contentType;
+	}
+
+	public void setContentType(String contentType) {
+		this.contentType = contentType;
+	}
+
 }

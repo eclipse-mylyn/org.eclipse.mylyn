@@ -23,6 +23,8 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.ITaskJobFactory;
@@ -30,7 +32,6 @@ import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskDelegate;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
-import org.eclipse.mylyn.internal.tasks.ui.RepositoryAwareStatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.editors.CategoryEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.CategoryEditorInput;
@@ -43,9 +44,11 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITaskList;
+import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskSelection;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
 import org.eclipse.mylyn.tasks.core.sync.TaskJob;
@@ -59,6 +62,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
@@ -147,7 +151,6 @@ public class TasksUiInternal {
 		});
 	}
 
-	// API 3.0 move to internal class?
 	public static void refreshAndOpenTaskListElement(AbstractTaskContainer element) {
 		if (element instanceof AbstractTask || element instanceof ScheduledTaskDelegate) {
 			final AbstractTask task;
@@ -362,26 +365,56 @@ public class TasksUiInternal {
 		return TasksUiPlugin.getTasksJobFactory();
 	}
 
-	/**
-	 * Display error to user
-	 * 
-	 * @param title
-	 * 		dialog title
-	 * @param status
-	 * 		IStatus to reveal in dialog FIXME deprecated use
-	 * 		<code>org.eclipse.ui.statushandlers.StatusMananger#getManager().handle()</code> instead.
-	 */
-	public static void displayStatus(String title, IStatus status) {
-		RepositoryAwareStatusHandler.getInstance().displayStatus(title, status);
-	}
-
-	public static void openNewAttachmentWizard(Shell shell, TaskRepository taskRepository, AbstractTask task,
-			TaskAttribute taskAttribute, TaskAttachmentWizard.Mode mode) {
+	public static NewAttachmentWizardDialog openNewAttachmentWizard(Shell shell, TaskRepository taskRepository,
+			AbstractTask task, TaskAttribute taskAttribute, TaskAttachmentWizard.Mode mode,
+			AbstractTaskAttachmentSource source) {
 		TaskAttachmentWizard attachmentWizard = new TaskAttachmentWizard(taskRepository, task, taskAttribute);
+		attachmentWizard.setSource(source);
 		attachmentWizard.setMode(mode);
 		NewAttachmentWizardDialog dialog = new NewAttachmentWizardDialog(shell, attachmentWizard, false);
+		dialog.setBlockOnOpen(false);
 		dialog.create();
 		dialog.open();
+		return dialog;
 	}
 
+	private static MessageDialog createDialog(Shell shell, String title, String message, int type) {
+		return new MessageDialog(shell, title, null, message, type, new String[] { IDialogConstants.OK_LABEL }, 0);
+	}
+
+	public static void displayStatus(Shell shell, final String title, final IStatus status) {
+		if (status.getCode() == RepositoryStatus.ERROR_INTERNAL) {
+			StatusHandler.fail(status);
+		} else {
+			if (status instanceof RepositoryStatus && ((RepositoryStatus) status).isHtmlMessage()) {
+				WebBrowserDialog.openAcceptAgreement(shell, title, status.getMessage(),
+						((RepositoryStatus) status).getHtmlMessage());
+			} else {
+				switch (status.getSeverity()) {
+				case IStatus.CANCEL:
+				case IStatus.INFO:
+					createDialog(shell, title, status.getMessage(), MessageDialog.INFORMATION).open();
+					break;
+				case IStatus.WARNING:
+					createDialog(shell, title, status.getMessage(), MessageDialog.WARNING).open();
+					break;
+				case IStatus.ERROR:
+				default:
+					createDialog(shell, title, status.getMessage(), MessageDialog.ERROR).open();
+					break;
+				}
+			}
+		}
+	}
+
+	public static void displayStatus(final String title, final IStatus status) {
+		IWorkbench workbench = PlatformUI.getWorkbench();
+		if (workbench != null && !workbench.getDisplay().isDisposed()
+				&& workbench.getDisplay().getActiveShell() != null) {
+			Shell shell = workbench.getDisplay().getActiveShell();
+			displayStatus(shell, title, status);
+		} else {
+			StatusHandler.log(status);
+		}
+	}
 }

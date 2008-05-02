@@ -17,9 +17,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
  */
 public abstract class SubmitJobListener {
 
-	public abstract void taskDataPosted(SubmitJobEvent event, IProgressMonitor monitor) throws CoreException;
+	public abstract void taskSubmitted(SubmitJobEvent event, IProgressMonitor monitor) throws CoreException;
 
-	public abstract void taskSynchronized(SubmitJobEvent event, IProgressMonitor monitor);
+	public abstract void taskSynchronized(SubmitJobEvent event, IProgressMonitor monitor) throws CoreException;
 
 	public abstract void done(SubmitJobEvent event);
 

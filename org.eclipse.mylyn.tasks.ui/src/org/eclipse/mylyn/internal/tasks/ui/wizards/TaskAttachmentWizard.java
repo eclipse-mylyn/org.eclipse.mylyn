@@ -12,29 +12,41 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.ScreenshotCreationPage;
+import org.eclipse.mylyn.internal.tasks.core.sync.SubmitTaskAttachmentJob;
+import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentModel;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.sync.SubmitJob;
+import org.eclipse.mylyn.tasks.core.sync.SubmitJobEvent;
+import org.eclipse.mylyn.tasks.core.sync.SubmitJobListener;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.ImageTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
@@ -49,22 +61,37 @@ import org.eclipse.ui.PlatformUI;
  * A wizard to add a new attachment to a task report.
  * 
  * @since 3.0
- * @author Jeff Pound
  * @author Steffen Pingel
  */
 public class TaskAttachmentWizard extends Wizard {
 
-	static class ClipboardSource extends AbstractTaskAttachmentSource {
+	static class ClipboardTaskAttachmentSource extends AbstractTaskAttachmentSource {
+
+		public static boolean isSupportedType(Display display) {
+			Clipboard clipboard = new Clipboard(display);
+			TransferData[] types = clipboard.getAvailableTypes();
+			for (TransferData transferData : types) {
+				if (ImageTransfer.getInstance().isSupportedType(transferData)
+						|| TextTransfer.getInstance().isSupportedType(transferData)) {
+					return true;
+				}
+			}
+			return false;
+		}
 
 		private Object contents;
 
-		public ClipboardSource() {
-			Clipboard clipboard = new Clipboard(PlatformUI.getWorkbench().getDisplay());
-			contents = clipboard.getContents(ImageTransfer.getInstance());
-			if (contents == null) {
-				contents = clipboard.getContents(TextTransfer.getInstance());
-			}
-			clipboard.dispose();
+		public ClipboardTaskAttachmentSource() {
+			BusyIndicator.showWhile(PlatformUI.getWorkbench().getDisplay(), new Runnable() {
+				public void run() {
+					Clipboard clipboard = new Clipboard(PlatformUI.getWorkbench().getDisplay());
+					contents = clipboard.getContents(ImageTransfer.getInstance());
+					if (contents == null) {
+						contents = clipboard.getContents(TextTransfer.getInstance());
+					}
+					clipboard.dispose();
+				}
+			});
 		}
 
 		@Override
@@ -89,12 +116,12 @@ public class TaskAttachmentWizard extends Wizard {
 			} else if (contents instanceof ImageData) {
 				return "image/png";
 			}
-			return "";
+			return "application/octet-stream";
 		}
 
 		@Override
 		public String getDescription() {
-			return "Clipboard";
+			return null;
 		}
 
 		@Override
@@ -120,63 +147,7 @@ public class TaskAttachmentWizard extends Wizard {
 			return true;
 		}
 
-		public static boolean isSupportedType(Display display) {
-			Clipboard clipboard = new Clipboard(display);
-			TransferData[] types = clipboard.getAvailableTypes();
-			for (TransferData transferData : types) {
-				if (ImageTransfer.getInstance().isSupportedType(transferData)
-						|| TextTransfer.getInstance().isSupportedType(transferData)) {
-					return true;
-				}
-			}
-			return false;
-		}
-
 	};
-
-	static class FileSource extends AbstractTaskAttachmentSource {
-
-		private final File file;
-
-		public FileSource(File file) {
-			this.file = file;
-		}
-
-		@Override
-		public InputStream createInputStream(IProgressMonitor monitor) throws CoreException {
-			try {
-				return new FileInputStream(file);
-			} catch (FileNotFoundException e) {
-				throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, e.getMessage(), e));
-			}
-		}
-
-		@Override
-		public String getContentType() {
-			return null;
-		}
-
-		@Override
-		public String getDescription() {
-			return getName();
-		}
-
-		@Override
-		public long getLength() {
-			return file.length();
-		}
-
-		@Override
-		public String getName() {
-			return file.getName();
-		}
-
-		@Override
-		public boolean isLocal() {
-			return true;
-		}
-
-	}
 
 	static class ImageSource extends AbstractTaskAttachmentSource {
 
@@ -249,16 +220,21 @@ public class TaskAttachmentWizard extends Wizard {
 
 	private static final String DIALOG_SETTINGS_KEY = "AttachmentWizard";
 
+	private final AbstractRepositoryConnector connector;
+
+	private IWizardPage editPage;
+
 	private Mode mode = Mode.DEFAULT;
 
 	private final TaskAttachmentModel model;
 
-	private IWizardPage editPage;
+	private PreviewAttachmentPage2 previewPage;
 
 	public TaskAttachmentWizard(TaskRepository taskRepository, AbstractTask task, TaskAttribute taskAttachment) {
 		Assert.isNotNull(taskRepository);
 		Assert.isNotNull(taskAttachment);
 		this.model = new TaskAttachmentModel(taskRepository, task, taskAttachment);
+		this.connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(taskRepository.getConnectorKind());
 		setMode(Mode.DEFAULT);
 		setNeedsProgressMonitor(true);
 		setDialogSettings(TasksUiPlugin.getDefault().getDialogSettings().getSection(DIALOG_SETTINGS_KEY));
@@ -279,74 +255,98 @@ public class TaskAttachmentWizard extends Wizard {
 				.getConnectorKind());
 		editPage = connectorUi.getAttachmentPage(model);
 		addPage(editPage);
-	}
 
-	public TaskAttachmentModel getModel() {
-		return model;
+		previewPage = new PreviewAttachmentPage2(model);
+		addPage(previewPage);
 	}
 
 	public Mode getMode() {
 		return mode;
 	}
 
-	@Override
-	public IWizardPage getNextPage(IWizardPage page) {
-		if (page == editPage) {
-			PreviewAttachmentPage2 previewPage = new PreviewAttachmentPage2(model);
-			previewPage.setWizard(this);
-			return previewPage;
-		}
-		return super.getNextPage(page);
+	public TaskAttachmentModel getModel() {
+		return model;
 	}
 
 	public AbstractTaskAttachmentSource getSource() {
 		return model.getSource();
 	}
 
-//	private void handleSubmitError(final CoreException exception) {
-//		if (exception.getStatus().getCode() == RepositoryStatus.ERROR_REPOSITORY_LOGIN) {
-//			if (TasksUiUtil.openEditRepositoryWizard(taskRepository) == Window.OK) {
-//				// performFinish();
-//			}
-//		} else {
-//			TasksUiInternal.displayStatus("Attachment failed", exception.getStatus());
-//		}
-//	}
+	private void handleDone(SubmitJob job) {
+		if (job.getError() != null) {
+			TasksUiInternal.displayStatus(getShell(), "Attachment Failed", job.getError());
+		}
+	}
 
 	@Override
 	public boolean performFinish() {
-//		attachPage.populateAttachment();
-//		final String path = inputPage.getAbsoluteAttachmentPath();
-		// upload the attachment
-//		final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-//				taskRepository.getConnectorKind());
-//		final AbstractAttachmentHandler attachmentHandler = connector.getAttachmentHandler();
-//		if (attachmentHandler == null) {
-//			return false;
-//		}
-//
-////		final boolean attachContext = attachPage.getAttachContext();
-//
-//		final SubmitTaskAttachmentJob job = new SubmitTaskAttachmentJob(connector, taskRepository, taskAttachment);
-//		try {
-//			getContainer().run(true, true, new IRunnableWithProgress() {
-//				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-//					job.run(monitor);
-//				}
-//			});
-//		} catch (InvocationTargetException e) {
-//			if (e.getCause() instanceof CoreException) {
-//				handleSubmitError((CoreException) e.getCause());
-//			} else {
-//				StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Attachment failure", e));
-//			}
-//			return false;
-//		} catch (InterruptedException e) {
-//			// cancelled
-//			return false;
-//		}
+		SubmitJob job = TasksUiInternal.getJobFactory()
+				.createSubmitTaskAttachmentJob(connector, model.getTaskRepository(), model.getTask(),
+						model.getSource(), model.getComment(), model.getAttribute());
+		final boolean attachContext = model.getAttachContext();
+		job.addSubmitJobListener(new SubmitJobListener() {
+			@Override
+			public void done(SubmitJobEvent event) {
+				// ignore
+			}
 
-		return true;
+			@Override
+			public void taskSubmitted(SubmitJobEvent event, IProgressMonitor monitor) throws CoreException {
+				if (attachContext) {
+					monitor.subTask("Attaching context");
+					AttachmentUtil.postContext(connector, model.getTaskRepository(), model.getTask(), null, monitor);
+				}
+			}
+
+			@Override
+			public void taskSynchronized(SubmitJobEvent event, IProgressMonitor monitor) throws CoreException {
+				// ignore				
+			}
+		});
+		if (previewPage.runInBackground()) {
+			runInBackground(job);
+			return false;
+		} else {
+			return runInWizard(job);
+		}
+	}
+
+	private void runInBackground(final SubmitJob job) {
+		getContainer().getShell().setVisible(false);
+		job.addJobChangeListener(new JobChangeAdapter() {
+			@Override
+			public void done(IJobChangeEvent event) {
+				Display.getDefault().asyncExec(new Runnable() {
+					public void run() {
+						if (job.getError() != null) {
+							getContainer().getShell().setVisible(true);
+						}
+						handleDone(job);
+					}
+				});
+			}
+		});
+		job.schedule();
+	}
+
+	private boolean runInWizard(final SubmitJob job) {
+		try {
+			getContainer().run(true, true, new IRunnableWithProgress() {
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+					if (((SubmitTaskAttachmentJob) job).run(monitor) == Status.CANCEL_STATUS) {
+						throw new InterruptedException();
+					}
+				}
+			});
+			handleDone(job);
+			return job.getError() == null;
+		} catch (InvocationTargetException e) {
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unexpected error", e));
+			return false;
+		} catch (InterruptedException e) {
+			// canceled
+			return false;
+		}
 	}
 
 	public void setMode(Mode mode) {

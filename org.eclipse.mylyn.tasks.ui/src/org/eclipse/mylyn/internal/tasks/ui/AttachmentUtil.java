@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,7 +24,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
+import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
 import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.FileAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
@@ -31,11 +34,12 @@ import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.ITaskAttachment2;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
 /**
  * @author Steffen Pingel
- * @since 3.0
  */
 public class AttachmentUtil {
 
@@ -44,6 +48,8 @@ public class AttachmentUtil {
 	private static final String CONTEXT_DESCRIPTION_LEGACY = "mylar/context/zip";
 
 	private static final String CONTEXT_FILENAME = "mylyn-context.zip";
+
+	private static final int BUFFER_SIZE = 1024;
 
 	/**
 	 * Attaches the associated context to <code>task</code>.
@@ -79,6 +85,21 @@ public class AttachmentUtil {
 		return true;
 	}
 
+	public static boolean postContext(AbstractRepositoryConnector connector, TaskRepository repository,
+			AbstractTask task, String comment, IProgressMonitor monitor) throws CoreException {
+		AbstractTaskAttachmentHandler attachmentHandler = connector.getTaskAttachmentHandler();
+		ContextCore.getContextManager().saveContext(task.getHandleIdentifier());
+		File file = ContextCore.getContextManager().getFileForContext(task.getHandleIdentifier());
+		if (file != null && file.exists()) {
+			FileTaskAttachmentSource attachment = new FileTaskAttachmentSource(file);
+			attachment.setDescription(CONTEXT_DESCRIPTION);
+			attachment.setName(CONTEXT_FILENAME);
+			attachmentHandler.postContent(repository, task, attachment, comment, null, monitor);
+			return true;
+		}
+		return false;
+	}
+
 	/**
 	 * Implementors of this repositoryOperations must perform it locally without going to the server since it is used
 	 * for frequent repositoryOperations such as decoration.
@@ -112,6 +133,7 @@ public class AttachmentUtil {
 		}
 	}
 
+	@Deprecated
 	public static boolean isContext(RepositoryAttachment attachment) {
 		return CONTEXT_DESCRIPTION.equals(attachment.getDescription())
 				|| CONTEXT_DESCRIPTION_LEGACY.equals(attachment.getDescription());
@@ -127,6 +149,7 @@ public class AttachmentUtil {
 	 * 
 	 * @return false, if operation is not supported by repository
 	 */
+	@Deprecated
 	public static boolean retrieveContext(AbstractAttachmentHandler attachmentHandler, TaskRepository repository,
 			AbstractTask task, RepositoryAttachment attachment, String destinationPath, IProgressMonitor monitor)
 			throws CoreException {
@@ -153,6 +176,33 @@ public class AttachmentUtil {
 				}
 			}
 		} catch (FileNotFoundException e) {
+			throw new CoreException(new RepositoryStatus(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					RepositoryStatus.ERROR_INTERNAL, "Could not create context file", e));
+		}
+		return true;
+	}
+
+	public static boolean getContext(AbstractRepositoryConnector connector, TaskRepository repository,
+			AbstractTask task, TaskAttribute attribute, IProgressMonitor monitor) throws CoreException {
+		AbstractTaskAttachmentHandler attachmentHandler = connector.getTaskAttachmentHandler();
+		File file = ContextCore.getContextManager().getFileForContext(task.getHandleIdentifier());
+		try {
+			FileOutputStream out = new FileOutputStream(file);
+			try {
+				InputStream in = attachmentHandler.getContent(repository, task, attribute, monitor);
+				try {
+					int len;
+					byte[] buffer = new byte[BUFFER_SIZE];
+					while ((len = in.read(buffer)) != -1) {
+						out.write(buffer, 0, len);
+					}
+				} finally {
+					in.close();
+				}
+			} finally {
+				out.close();
+			}
+		} catch (IOException e) {
 			throw new CoreException(new RepositoryStatus(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 					RepositoryStatus.ERROR_INTERNAL, "Could not create context file", e));
 		}

@@ -151,7 +151,7 @@ public class TaskAttachment implements ITaskAttachment2 {
 		TaskData taskData = taskAttribute.getTaskData();
 		TaskAttributeMapper mapper = taskAttribute.getTaskData().getAttributeMapper();
 		String attachmentId = mapper.getValue(taskAttribute);
-		TaskAttachment attachment = new TaskAttachment(taskData.getRepositoryUrl(), taskData.getConnectorKind(),
+		TaskAttachment attachment = new TaskAttachment(taskData.getConnectorKind(), taskData.getRepositoryUrl(),
 				taskData.getTaskId(), attachmentId);
 		TaskAttribute child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_AUTHOR);
 		if (child != null) {

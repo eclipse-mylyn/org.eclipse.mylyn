@@ -8,11 +8,13 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.OpenEvent;
@@ -22,22 +24,35 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
+import org.eclipse.mylyn.internal.tasks.core.data.TextTaskAttachmentSource;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AttachAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AttachScreenshotAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskAttachmentWizard.Mode;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.tasks.core.data.ITaskAttachment2;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DropTarget;
+import org.eclipse.swt.dnd.DropTargetEvent;
+import org.eclipse.swt.dnd.DropTargetListener;
+import org.eclipse.swt.dnd.FileTransfer;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -91,6 +106,8 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 	private boolean hasIncoming;
 
 	private MenuManager menuManager;
+
+	private TaskAttachmentDropListener dropListener;
 
 	public TaskEditorAttachmentPart() {
 		setPartName("Attachments");
@@ -161,8 +178,8 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		attachmentsTable.setMenu(menu);
 	}
 
-	private void createAttachmentTableMenu() {
-		// FIXME EDITOR
+//	private void createAttachmentTableMenu() {
+	// FIXME EDITOR
 //		final Action openWithBrowserAction = new Action(LABEL_BROWSER) {
 //			@Override
 //			public void run() {
@@ -320,7 +337,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 //						attachmentsTableViewer);
 //			}
 //		});
-	}
+//	}
 
 	private void createButtons(Composite attachmentsComposite, FormToolkit toolkit) {
 		final Composite attachmentControlsComposite = toolkit.createComposite(attachmentsComposite);
@@ -332,9 +349,10 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		attachFileButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				openNewAttachmentWizard(Mode.DEFAULT);
+				openNewAttachmentWizard(Mode.DEFAULT, null);
 			}
 		});
+		registerDropListener(attachFileButton, dropListener);
 
 		Button attachScreenshotButton = toolkit.createButton(attachmentControlsComposite, AttachScreenshotAction.LABEL,
 				SWT.PUSH);
@@ -342,9 +360,10 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		attachScreenshotButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				openNewAttachmentWizard(Mode.SCREENSHOT);
+				openNewAttachmentWizard(Mode.SCREENSHOT, null);
 			}
 		});
+		registerDropListener(attachScreenshotButton, dropListener);
 	}
 
 	@Override
@@ -358,6 +377,9 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		attachmentsComposite.setLayout(new GridLayout(1, false));
 		attachmentsComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
+		dropListener = new TaskAttachmentDropListener();
+		registerDropListener(section, dropListener);
+
 		if (attachments.length > 0) {
 			createAttachmentTable(toolkit, attachmentsComposite);
 		} else {
@@ -367,16 +389,17 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 
 		createButtons(attachmentsComposite, toolkit);
 
-		// TODO EDITOR fix drop listener 
-//		registerDropListener(section);
-//		registerDropListener(attachmentsComposite);
-//		registerDropListener(attachFileButton);
-//		if (supportsAttachmentDelete()) {
-//			registerDropListener(deleteAttachmentButton);
-//		}
-
 		section.setClient(attachmentsComposite);
 		setSection(toolkit, section);
+	}
+
+	private void registerDropListener(Control control, TaskAttachmentDropListener dropListener) {
+		DropTarget target = new DropTarget(control, DND.DROP_COPY | DND.DROP_DEFAULT);
+		final TextTransfer textTransfer = TextTransfer.getInstance();
+		final FileTransfer fileTransfer = FileTransfer.getInstance();
+		Transfer[] types = new Transfer[] { textTransfer, fileTransfer };
+		target.setTransfer(types);
+		target.addDropListener(dropListener);
 	}
 
 	@Override
@@ -392,11 +415,84 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 				TaskAttribute.TYPE_ATTACHMENT);
 	}
 
-	private void openNewAttachmentWizard(Mode mode) {
+	private NewAttachmentWizardDialog openNewAttachmentWizard(Mode mode, AbstractTaskAttachmentSource source) {
 		TaskAttributeMapper mapper = getModel().getTaskData().getAttributeMapper();
 		TaskAttribute attribute = mapper.createTaskAttachment(getModel().getTaskData());
-		TasksUiInternal.openNewAttachmentWizard(getTaskEditorPage().getSite().getShell(),
-				getTaskEditorPage().getTaskRepository(), getTaskEditorPage().getTask(), attribute, mode);
+		return TasksUiInternal.openNewAttachmentWizard(getTaskEditorPage().getSite().getShell(),
+				getTaskEditorPage().getTaskRepository(), getTaskEditorPage().getTask(), attribute, mode, source);
 	}
 
+	/**
+	 * @author Mik Kersten
+	 * @author Maarten Meijer
+	 * @author Steffen Pingel
+	 */
+	public class TaskAttachmentDropListener implements DropTargetListener {
+
+		public TaskAttachmentDropListener() {
+		}
+
+		public void dragEnter(DropTargetEvent event) {
+			if (event.detail == DND.DROP_DEFAULT) {
+				if ((event.operations & DND.DROP_COPY) != 0) {
+					event.detail = DND.DROP_COPY;
+				} else {
+					event.detail = DND.DROP_NONE;
+				}
+			}
+			// will accept text but prefer to have files dropped
+			for (TransferData dataType : event.dataTypes) {
+				if (FileTransfer.getInstance().isSupportedType(dataType)) {
+					event.currentDataType = dataType;
+					// files should only be copied
+					if (event.detail != DND.DROP_COPY) {
+						event.detail = DND.DROP_NONE;
+					}
+					break;
+				}
+			}
+		}
+
+		public void dragOver(DropTargetEvent event) {
+			event.feedback = DND.FEEDBACK_SELECT | DND.FEEDBACK_SCROLL;
+		}
+
+		public void dragOperationChanged(DropTargetEvent event) {
+			if ((event.detail == DND.DROP_DEFAULT) || (event.operations & DND.DROP_COPY) != 0) {
+				event.detail = DND.DROP_COPY;
+			} else {
+				event.detail = DND.DROP_NONE;
+			}
+			// allow text to be moved but files should only be copied
+			if (FileTransfer.getInstance().isSupportedType(event.currentDataType)) {
+				if (event.detail != DND.DROP_COPY) {
+					event.detail = DND.DROP_NONE;
+				}
+			}
+		}
+
+		public void dragLeave(DropTargetEvent event) {
+		}
+
+		public void dropAccept(DropTargetEvent event) {
+		}
+
+		public void drop(DropTargetEvent event) {
+			if (TextTransfer.getInstance().isSupportedType(event.currentDataType)) {
+				String text = (String) event.data;
+				openNewAttachmentWizard(null, new TextTaskAttachmentSource(text));
+			}
+			if (FileTransfer.getInstance().isSupportedType(event.currentDataType)) {
+				String[] files = (String[]) event.data;
+				if (files.length > 0) {
+					File file = new File(files[0]);
+					NewAttachmentWizardDialog dialog = openNewAttachmentWizard(null, new FileTaskAttachmentSource(file));
+					if (files.length > 1) {
+						dialog.setMessage("Note that only the first file dragged will be attached.",
+								IMessageProvider.WARNING);
+					}
+				}
+			}
+		}
+	}
 }

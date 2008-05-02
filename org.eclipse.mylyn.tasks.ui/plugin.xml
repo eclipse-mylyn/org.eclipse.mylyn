@@ -1218,6 +1218,11 @@
             id="org.eclipse.mylyn.tasks.ui.category.editor"
             name="Task Editor">
       </category>
+      <command
+            categoryId="org.eclipse.mylyn.tasks.ui.category.editor"
+            id="org.eclipse.mylyn.tasks.ui.command.attachment.openInDefaultEditor"
+            name="Open Attachment in Default Editor">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.bindings">
@@ -1346,6 +1351,10 @@
             class="org.eclipse.mylyn.internal.tasks.ui.commands.OpenTaskAttachmentInBrowserHandler"
             commandId="org.eclipse.mylyn.tasks.ui.command.attachment.openInBrowser">
       </handler>
+      <handler
+            class="org.eclipse.mylyn.internal.tasks.ui.commands.OpenTaskAttachmentInDefaultEditorHandler"
+            commandId="org.eclipse.mylyn.tasks.ui.command.attachment.openInDefaultEditor">
+      </handler>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -1365,15 +1374,15 @@
                name="group.open"
                visible="false">
          </separator>
+         <command
+               commandId="org.eclipse.mylyn.tasks.ui.command.attachment.openInBrowser"
+               label="Open With Browser"
+               style="push">
+         </command>
          <menu
                label="Open With">
             <command
-                  commandId="org.eclipse.mylyn.tasks.ui.command.attachment.openInBrowser"
-                  label="Browser"
-                  style="push">
-            </command>
-            <command
-                  commandId="org.eclipse.mylyn.tasks.ui.command3"
+                  commandId="org.eclipse.mylyn.tasks.ui.command.attachment.openInDefaultEditor"
                   label="Default Editor"
                   style="push">
             </command>

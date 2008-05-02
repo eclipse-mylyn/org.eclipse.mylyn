@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.tasks.ui.wizards;
+package org.eclipse.mylyn.tasks.ui.wizards;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -41,8 +41,9 @@ import org.eclipse.swt.widgets.Text;
  * @author Jeff Pound
  * @author Mik Kersten
  * @author Steffen Pingel
+ * @since 3.0
  */
-public class TaskAttachmentPage2 extends WizardPage {
+public class TaskAttachmentPage extends WizardPage {
 
 	private static List<String> contentTypes;
 
@@ -76,28 +77,30 @@ public class TaskAttachmentPage2 extends WizardPage {
 
 	private Button attachContextButton;
 
-	private Text attachmentComment;
+	private Text commentText;
 
-	private Text attachmentDesc;
+	private Text descriptionText;
 
 	private Combo contentTypeList;
 
-	private Text filePath;
+	private Text fileNameText;
 
 	private Button isPatchButton;
 
 	private final TaskAttachmentModel model;
 
-	private boolean supportsDescription = true;
+	private boolean needsDescription;
 
 	private final TaskAttachment taskAttachment;
 
-	public TaskAttachmentPage2(TaskAttachmentModel model) {
+	private boolean first = true;
+
+	public TaskAttachmentPage(TaskAttachmentModel model) {
 		super("AttachmentDetails");
-		setTitle("Attachment Details");
-		setMessage("Enter a description and verify the content type of the attachment");
 		this.model = model;
 		this.taskAttachment = TaskAttachment.createFrom(model.getAttribute());
+		setTitle("Attachment Details");
+		setNeedsDescription(true);
 	}
 
 	public void createControl(Composite parent) {
@@ -111,20 +114,20 @@ public class TaskAttachmentPage2 extends WizardPage {
 		composite.setLayout(new GridLayout(3, false));
 
 		new Label(composite, SWT.NONE).setText("File");
-		filePath = new Text(composite, SWT.BORDER);
-		filePath.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 2, 1));
+		fileNameText = new Text(composite, SWT.BORDER);
+		fileNameText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 2, 1));
 
-		if (supportsDescription) {
+		if (needsDescription) {
 			new Label(composite, SWT.NONE).setText("Description");
-			attachmentDesc = new Text(composite, SWT.BORDER);
-			attachmentDesc.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 2, 1));
+			descriptionText = new Text(composite, SWT.BORDER);
+			descriptionText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 2, 1));
 
-			attachmentDesc.addModifyListener(new ModifyListener() {
+			descriptionText.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
-					if ("".equals(attachmentDesc.getText().trim())) {
+					if ("".equals(descriptionText.getText().trim())) {
 						setErrorMessage("Description required");
 					} else {
-						if (!"".equals(filePath.getText())) {
+						if (!"".equals(fileNameText.getText())) {
 							setPageComplete(true);
 							setErrorMessage(null);
 						}
@@ -137,8 +140,8 @@ public class TaskAttachmentPage2 extends WizardPage {
 		Label label = new Label(composite, SWT.NONE);
 		label.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false));
 		label.setText("Comment");
-		attachmentComment = new Text(composite, SWT.V_SCROLL | SWT.BORDER | SWT.WRAP);
-		attachmentComment.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+		commentText = new Text(composite, SWT.V_SCROLL | SWT.BORDER | SWT.WRAP);
+		commentText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 
 		new Label(composite, SWT.NONE).setText("Content Type");// .setBackground(parent.getBackground());
 
@@ -188,12 +191,12 @@ public class TaskAttachmentPage2 extends WizardPage {
 		 * Attachment file name listener, update the local attachment
 		 * accordingly
 		 */
-		filePath.addModifyListener(new ModifyListener() {
+		fileNameText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				// Determine type by extension
-				int index = filePath.getText().lastIndexOf(".");
-				if (index > 0 && index < filePath.getText().length()) {
-					String ext = filePath.getText().substring(index + 1);
+				int index = fileNameText.getText().lastIndexOf(".");
+				if (index > 0 && index < fileNameText.getText().length()) {
+					String ext = fileNameText.getText().substring(index + 1);
 					String type = extensions2Types.get(ext.toLowerCase(Locale.ENGLISH));
 					if (type != null) {
 						contentTypeList.select(contentTypeIndices.get(type));
@@ -202,10 +205,10 @@ public class TaskAttachmentPage2 extends WizardPage {
 				}
 
 				// check page completenes
-				if (attachmentDesc != null && "".equals(attachmentDesc.getText())) {
+				if (descriptionText != null && "".equals(descriptionText.getText())) {
 					setErrorMessage("Description required");
 				} else {
-					if (!"".equals(filePath.getText())) {
+					if (!"".equals(fileNameText.getText())) {
 						setPageComplete(true);
 						setErrorMessage(null);
 					}
@@ -213,7 +216,7 @@ public class TaskAttachmentPage2 extends WizardPage {
 			}
 		});
 
-		filePath.setText(taskAttachment.getFileName() == null ? "" : taskAttachment.getFileName()); //$NON-NLS-1$
+		fileNameText.setText(taskAttachment.getFileName() == null ? "" : taskAttachment.getFileName()); //$NON-NLS-1$
 
 		/* Listener for isPatch */
 		isPatchButton.addSelectionListener(new SelectionListener() {
@@ -240,10 +243,12 @@ public class TaskAttachmentPage2 extends WizardPage {
 		});
 
 		setErrorMessage(null);
-	}
 
-	public boolean getAttachContext() {
-		return attachContextButton.getSelection();
+		if (descriptionText != null) {
+			descriptionText.setFocus();
+		} else {
+			commentText.setFocus();
+		}
 	}
 
 	public TaskAttachmentModel getModel() {
@@ -253,37 +258,30 @@ public class TaskAttachmentPage2 extends WizardPage {
 	@Override
 	public IWizardPage getNextPage() {
 		taskAttachment.applyTo(model.getAttribute());
+		model.setComment(commentText.getText());
+		model.setAttachContext(attachContextButton.getSelection());
+		model.setContentType(taskAttachment.getContentType());
 		return super.getNextPage();
 	}
 
 	@Override
 	public boolean isPageComplete() {
-		return !"".equals(filePath.getText().trim())
-				&& (attachmentDesc == null || !"".equals(attachmentDesc.getText().trim()));
+		return !"".equals(fileNameText.getText().trim())
+				&& (descriptionText == null || !"".equals(descriptionText.getText().trim()));
 	}
 
-	public void populateAttachment() {
-		if (attachmentDesc != null) {
-			taskAttachment.setDescription(attachmentDesc.getText());
-		}
-		taskAttachment.setComment(attachmentComment.getText());
-	}
-
-	public void setContentType() {
-		String type = taskAttachment.getContentType();
+	private void setContentType(String contentType) {
 		String[] typeList = contentTypeList.getItems();
 		for (int i = 0; i < typeList.length; i++) {
-			if (typeList[i].equals(type)) {
+			if (typeList[i].equals(contentType)) {
 				contentTypeList.select(i);
-				contentTypeList.setEnabled(false);
-				isPatchButton.setEnabled(false);
-				return;
+				break;
 			}
 		}
 	}
 
-	public void setFilePath(String path) {
-		filePath.setText(path);
+	private void setFilePath(String path) {
+		fileNameText.setText(path);
 		if (path.endsWith(".patch")) {
 			isPatchButton.setSelection(true);
 			if (attachContextButton.isEnabled()) {
@@ -292,12 +290,40 @@ public class TaskAttachmentPage2 extends WizardPage {
 		}
 	}
 
-	public void setSupportsDescription(boolean supportsDescription) {
-		this.supportsDescription = supportsDescription;
+	public void setNeedsDescription(boolean supportsDescription) {
+		this.needsDescription = supportsDescription;
+		if (supportsDescription) {
+			setMessage("Enter a description and verify the content type of the attachment");
+		} else {
+			setMessage("Verify the content type of the attachment");
+		}
 	}
 
 	public boolean supportsDescription() {
-		return supportsDescription;
+		return needsDescription;
+	}
+
+	@Override
+	public void setVisible(boolean visible) {
+		if (visible) {
+			if (fileNameText.getText().length() == 0) {
+				setFilePath(getModel().getSource().getName());
+			}
+			setContentType(getModel().getSource().getContentType());
+		}
+		super.setVisible(visible);
+		if (first) {
+			if (descriptionText != null) {
+				descriptionText.setFocus();
+				getShell().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+					}
+				});
+			} else {
+				commentText.setFocus();
+			}
+			first = false;
+		}
 	}
 
 }

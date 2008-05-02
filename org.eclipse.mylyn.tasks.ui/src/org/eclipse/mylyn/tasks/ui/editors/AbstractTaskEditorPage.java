@@ -172,7 +172,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		}
 
 		@Override
-		public void taskDataPosted(SubmitJobEvent event, IProgressMonitor monitor) throws CoreException {
+		public void taskSubmitted(SubmitJobEvent event, IProgressMonitor monitor) throws CoreException {
 			// attach context if required
 			if (attachContext && connector.getAttachmentHandler() != null) {
 				AttachmentUtil.attachContext(connector.getAttachmentHandler(), taskRepository, task, "", monitor);
@@ -534,7 +534,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 		doSave(new NullProgressMonitor());
 
-		SubmitJob submitJob = TasksUiInternal.getJobFactory().createSubmitJob(connector, taskRepository, task,
+		SubmitJob submitJob = TasksUiInternal.getJobFactory().createSubmitTaskJob(connector, taskRepository, task,
 				getModel().getTaskData(), getModel().getChangedAttributes());
 		submitJob.addSubmitJobListener(new SubmitTaskJobListener(actionPart.getAttachContext()));
 		submitJob.schedule();
