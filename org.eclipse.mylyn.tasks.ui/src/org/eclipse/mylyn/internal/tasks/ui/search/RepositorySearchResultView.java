@@ -25,6 +25,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.mylyn.internal.tasks.core.TaskGroup;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.AddExistingTaskJob;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListPatternFilter;
@@ -100,7 +101,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		}
 	}
 
-	private class FilteringAction extends Action {
+	public class FilteringAction extends Action {
 
 		private final ViewerFilter filter;
 
@@ -185,6 +186,9 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 			public boolean select(Viewer viewer, Object parentElement, Object element) {
 				if (element instanceof AbstractTask) {
 					return !((AbstractTask) element).isCompleted();
+				} else if (element instanceof TaskGroup) {
+					TaskGroup taskGroup = (TaskGroup) element;
+					return taskGroup.getHandleIdentifier().equals("group-incompleteIncomplete");
 				}
 				return true;
 			}
@@ -220,7 +224,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		viewer.setContentProvider(searchResultProvider);
 
 		DecoratingLabelProvider labelProvider = new DecoratingLabelProvider(new SearchResultsLabelProvider(
-				searchResultProvider), PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator());
+				searchResultProvider, viewer), PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator());
 		viewer.setLabelProvider(labelProvider);
 
 		// Set the order when the search view is loading so that the items are

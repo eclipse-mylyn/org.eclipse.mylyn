@@ -8,26 +8,48 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.search;
 
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylyn.internal.tasks.core.Person;
 import org.eclipse.mylyn.internal.tasks.core.TaskGroup;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 
 /**
  * @author Mik Kersten
+ * @author Steffen Pingel
  */
 public class SearchResultsLabelProvider extends TaskElementLabelProvider {
 
 	private final SearchResultContentProvider contentProvider;
 
-	public SearchResultsLabelProvider(SearchResultContentProvider contentProvider) {
+	private final TreeViewer viewer;
+
+	public SearchResultsLabelProvider(SearchResultContentProvider contentProvider, TreeViewer viewer) {
 		super(true);
 		this.contentProvider = contentProvider;
+		this.viewer = viewer;
 	}
 
 	@Override
 	public String getText(Object object) {
-		if (object instanceof Person || object instanceof TaskGroup) {
-			return super.getText(object) + " (" + contentProvider.getChildren(object).length + ")";
+		if (object instanceof TaskGroup || object instanceof Person) {
+			Object[] children = contentProvider.getChildren(object);
+			ViewerFilter[] filters = viewer.getFilters();
+			int filtered = 0;
+			if (filters.length > 0) {
+				for (Object child : children) {
+					for (ViewerFilter filter : filters) {
+						if (!filter.select(viewer, object, child)) {
+							filtered++;
+						}
+					}
+				}
+			}
+			if (filtered > 0) {
+				return super.getText(object) + " (" + (children.length - filtered) + " of " + children.length + ")";
+			} else {
+				return super.getText(object) + " (" + children.length + ")";
+			}
 		} else {
 			return super.getText(object);
 		}
