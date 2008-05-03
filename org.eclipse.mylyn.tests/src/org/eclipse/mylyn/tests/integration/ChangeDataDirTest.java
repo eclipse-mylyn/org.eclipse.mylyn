@@ -8,15 +8,24 @@
 package org.eclipse.mylyn.tests.integration;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import junit.framework.TestCase;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 
 /**
@@ -64,7 +73,7 @@ public class ChangeDataDirTest extends TestCase {
 	}
 
 	public void testTaskMove() throws CoreException {
-		AbstractTask task = manager.createNewLocalTask("label");
+		AbstractTask task = TasksUiInternal.createNewLocalTask("label");
 		String handle = task.getHandleIdentifier();
 		manager.getTaskList().addTask(task,
 				manager.getTaskList().getUnmatchedContainer(LocalRepositoryConnector.REPOSITORY_URL));
@@ -72,13 +81,70 @@ public class ChangeDataDirTest extends TestCase {
 		AbstractTask readTaskBeforeMove = manager.getTaskList().getTask(handle);
 		assertNotNull(readTaskBeforeMove);
 		assertTrue(manager.getTaskList().getAllTasks().size() > 0);
-		TasksUiPlugin.getTaskListManager().copyDataDirContentsTo(newDataDir);
+		copyDataDirContentsTo(newDataDir);
 		TasksUiPlugin.getDefault().setDataDirectory(newDataDir, new NullProgressMonitor());
 		assertTrue(manager.getTaskList().getAllTasks().size() > 0);
 		AbstractTask readTaskAfterMove = manager.getTaskList().getTask(handle);
 
 		assertNotNull(readTaskAfterMove);
 		assertEquals(readTaskBeforeMove.getCreationDate(), readTaskAfterMove.getCreationDate());
+	}
+
+	/**
+	 * Copies all files in the current data directory to the specified folder. Will overwrite.
+	 * 
+	 * @deprecated
+	 */
+	@Deprecated
+	public void copyDataDirContentsTo(String targetFolderPath) {
+
+		File mainDataDir = new File(TasksUiPlugin.getDefault().getDataDirectory());
+
+		for (File currFile : mainDataDir.listFiles()) {
+			if (currFile.isFile()) {
+				File destFile = new File(targetFolderPath + File.separator + currFile.getName());
+				copy(currFile, destFile);
+			} else if (currFile.isDirectory()) {
+				File destDir = new File(targetFolderPath + File.separator + currFile.getName());
+				if (!destDir.exists()) {
+					if (!destDir.mkdir()) {
+						StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
+								"Unable to create destination context folder: " + destDir.getAbsolutePath()));
+						continue;
+					}
+				}
+				for (File file : currFile.listFiles()) {
+					File destFile = new File(destDir, file.getName());
+					if (destFile.exists()) {
+						destFile.delete();
+					}
+					copy(file, destFile);
+				}
+			}
+		}
+	}
+
+	/**
+	 * @deprecated
+	 */
+	@Deprecated
+	private boolean copy(File src, File dst) {
+		try {
+			InputStream in = new FileInputStream(src);
+			OutputStream out = new FileOutputStream(dst);
+
+			// Transfer bytes from in to out
+			byte[] buf = new byte[1024];
+			int len;
+			while ((len = in.read(buf)) > 0) {
+				out.write(buf, 0, len);
+			}
+			in.close();
+			out.close();
+			return true;
+		} catch (IOException ioe) {
+			return false;
+		}
 	}
 
 }
