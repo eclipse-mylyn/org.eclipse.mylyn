@@ -50,8 +50,8 @@ import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.PlanningPerspectiveFactory;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
-import org.eclipse.mylyn.tasks.core.TaskActivationAdapter;
+import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
+import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.graphics.Image;
@@ -224,7 +224,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		}
 	};
 
-	private static final ITaskActivationListener TASK_ACTIVATION_LISTENER = new TaskActivationAdapter() {
+	private static final ITaskActivityListener TASK_ACTIVATION_LISTENER = new TaskActivityAdapter() {
 
 		@Override
 		public void taskActivated(AbstractTask task) {
@@ -293,9 +293,9 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			MonitorUiPlugin.getDefault().addWindowPartListener(contentOutlineManager);
 
 			perspectiveManager.addManagedPerspective(PlanningPerspectiveFactory.ID_PERSPECTIVE);
-			TasksUi.getTaskListManager().addActivationListener(perspectiveManager);
+			TasksUi.getTaskActivityManager().addActivityListener(perspectiveManager);
 			MonitorUiPlugin.getDefault().addWindowPerspectiveListener(perspectiveManager);
-			TasksUi.getTaskListManager().addActivationListener(TASK_ACTIVATION_LISTENER);
+			TasksUi.getTaskActivityManager().addActivityListener(TASK_ACTIVATION_LISTENER);
 
 			editorManager = new ContextEditorManager();
 			ContextCore.getContextManager().addListener(editorManager);
@@ -338,9 +338,9 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		ContextCore.getContextManager().removeListener(viewerManager);
 		MonitorUiPlugin.getDefault().removeWindowPartListener(contentOutlineManager);
 
-		TasksUi.getTaskListManager().removeActivationListener(perspectiveManager);
+		TasksUi.getTaskActivityManager().removeActivityListener(perspectiveManager);
 		MonitorUiPlugin.getDefault().removeWindowPerspectiveListener(perspectiveManager);
-		TasksUi.getTaskListManager().removeActivationListener(TASK_ACTIVATION_LISTENER);
+		TasksUi.getTaskActivityManager().removeActivityListener(TASK_ACTIVATION_LISTENER);
 	}
 
 	/**
