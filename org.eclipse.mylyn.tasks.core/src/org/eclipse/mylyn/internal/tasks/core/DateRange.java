@@ -6,24 +6,29 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.core;
+package org.eclipse.mylyn.internal.tasks.core;
+
+import java.util.Calendar;
 
 /**
  * @author Rob Elves
- * @since 3.0
  */
-public class TaskActivationAdapter implements ITaskActivationListener {
+public class DateRange {
 
-	public void preTaskActivated(AbstractTask task) {
+	public Calendar startDate;
+
+	public Calendar endDate;
+
+	public boolean isFloating = false;
+
+	public DateRange(Calendar startDate, Calendar endDate) {
+		this(startDate, endDate, false);
 	}
 
-	public void preTaskDeactivated(AbstractTask task) {
+	public DateRange(Calendar startDate, Calendar endDate, boolean isFloating) {
+		super();
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.isFloating = isFloating;
 	}
-
-	public void taskActivated(AbstractTask task) {
-	}
-
-	public void taskDeactivated(AbstractTask task) {
-	}
-
 }

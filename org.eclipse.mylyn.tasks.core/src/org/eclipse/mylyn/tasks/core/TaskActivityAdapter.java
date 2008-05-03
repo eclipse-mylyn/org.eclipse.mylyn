@@ -17,11 +17,19 @@ public class TaskActivityAdapter implements ITaskActivityListener {
 	public void activityReset() {
 	}
 
-	/**
-	 * Warning: This is called frequently (i.e. every 15s) Implementers are responsible for launching jobs for long
-	 * running activity.
-	 */
 	public void elapsedTimeUpdated(AbstractTask task, long newElapsedTime) {
+	}
+
+	public void preTaskActivated(AbstractTask task) {
+	}
+
+	public void preTaskDeactivated(AbstractTask task) {
+	}
+
+	public void taskActivated(AbstractTask task) {
+	}
+
+	public void taskDeactivated(AbstractTask task) {
 	}
 
 }

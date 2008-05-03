@@ -8,7 +8,6 @@
 
 package org.eclipse.mylyn.tasks.core;
 
-
 /**
  * @author Rob Elves
  * @since 3.0

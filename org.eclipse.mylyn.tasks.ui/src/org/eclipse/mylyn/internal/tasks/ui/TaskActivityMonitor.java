@@ -10,13 +10,19 @@ package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
+import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 
 /**
  * Monitors task activity.
@@ -73,25 +79,49 @@ public class TaskActivityMonitor {
 
 	private int timeTicks;
 
+	private final TaskList taskList;
+
 	public TaskActivityMonitor(TaskActivityManager taskActivityManager, IInteractionContextManager contextManager) {
 		this.taskActivityManager = taskActivityManager;
 		this.contextManager = contextManager;
+		this.taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 	}
 
 	public void start() {
 		contextManager.addActivityMetaContextListener(CONTEXT_LISTENER);
 	}
 
-	private void parseInteractionEvent(InteractionEvent event) {
-		if (taskActivityManager.parseInteractionEvent(event)) {
-			timeTicks++;
-			if (timeTicks > 3) {
-				// Save in case of system failure.
-				// TODO: request asynchronous save
-				ContextCore.getContextManager().saveActivityContext();
-				timeTicks = 0;
+	/** public for testing * */
+	public boolean parseInteractionEvent(InteractionEvent event) {
+		try {
+			if (event.getKind().equals(InteractionEvent.Kind.ATTENTION)) {
+				timeTicks++;
+				if (timeTicks > 3) {
+					// Save in case of system failure.
+					// TODO: request asynchronous save via ExternalizationManager
+					ContextCore.getContextManager().saveActivityContext();
+					timeTicks = 0;
+				}
+
+				if ((event.getDelta().equals("added") || event.getDelta().equals("add"))) {
+					AbstractTask activatedTask = taskList.getTask(event.getStructureHandle());
+					if (activatedTask != null) {
+						taskActivityManager.addElapsedTime(activatedTask, event.getDate(), event.getEndDate());
+						return true;
+					}
+				} else if (event.getDelta().equals("removed")) {
+					AbstractTask task = taskList.getTask(event.getStructureHandle());
+					if (task != null) {
+						taskActivityManager.removeElapsedTime(task, event.getDate(), event.getEndDate());
+						return true;
+					}
+				}
 			}
+		} catch (Throwable t) {
+			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+					"Error parsing interaction event", t));
 		}
+		return false;
 	}
 
 	public void stop() {

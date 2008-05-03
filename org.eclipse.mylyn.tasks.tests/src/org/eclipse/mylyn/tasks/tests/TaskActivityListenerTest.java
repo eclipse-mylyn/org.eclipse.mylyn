@@ -12,7 +12,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
+import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 
 /**
@@ -20,7 +20,7 @@ import org.eclipse.mylyn.tasks.tests.connector.MockTask;
  */
 public class TaskActivityListenerTest extends TestCase {
 
-	private class MockTaskActivationListener implements ITaskActivationListener {
+	private class MockTaskActivationListener extends TaskActivityAdapter {
 
 		private boolean hasActivated = false;
 
@@ -39,21 +39,25 @@ public class TaskActivityListenerTest extends TestCase {
 
 		}
 
+		@Override
 		public void preTaskActivated(AbstractTask task) {
 			assertFalse(hasActivated);
 			hasPreActivated = true;
 		}
 
+		@Override
 		public void preTaskDeactivated(AbstractTask task) {
 			assertFalse(hasDeactivated);
 			hasPreDeactivated = true;
 		}
 
+		@Override
 		public void taskActivated(AbstractTask task) {
 			assertTrue(hasPreActivated);
 			hasActivated = true;
 		}
 
+		@Override
 		public void taskDeactivated(AbstractTask task) {
 			assertTrue(hasPreDeactivated);
 			hasDeactivated = true;
@@ -70,7 +74,7 @@ public class TaskActivityListenerTest extends TestCase {
 		MockTask task = new MockTask("test:activation");
 		MockTaskActivationListener listener = new MockTaskActivationListener();
 		try {
-			TasksUiPlugin.getTaskListManager().addActivationListener(listener);
+			TasksUiPlugin.getTaskActivityManager().addActivityListener(listener);
 			try {
 				TasksUiPlugin.getTaskListManager().activateTask(task);
 				assertTrue(listener.hasPreActivated);
@@ -87,7 +91,7 @@ public class TaskActivityListenerTest extends TestCase {
 			assertTrue(listener.hasPreDeactivated);
 			assertTrue(listener.hasDeactivated);
 		} finally {
-			TasksUiPlugin.getTaskListManager().removeActivationListener(listener);
+			TasksUiPlugin.getTaskActivityManager().removeActivityListener(listener);
 		}
 	}
 

@@ -8,7 +8,7 @@
 
 package org.eclipse.mylyn.tasks.ui;
 
-
+import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.ITaskListManager;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
@@ -24,6 +24,13 @@ public class TasksUi {
 
 	public static ITaskListManager getTaskListManager() {
 		return TasksUiPlugin.getTaskListManager();
+	}
+
+	/**
+	 * TODO: in progress, will return interface once extraction complete
+	 */
+	public static TaskActivityManager getTaskActivityManager() {
+		return TasksUiPlugin.getTaskActivityManager();
 	}
 
 	public static ITaskDataManager getTaskDataManager() {

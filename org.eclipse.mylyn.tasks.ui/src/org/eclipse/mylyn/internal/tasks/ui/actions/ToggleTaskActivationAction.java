@@ -12,13 +12,13 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
+import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Mik Kersten
  */
-public class ToggleTaskActivationAction extends Action implements ITaskActivationListener {
+public class ToggleTaskActivationAction extends Action implements ITaskActivityListener {
 
 	public static final String ID = "org.eclipse.mylyn.tasks.ui.actions.task.activation.toggle";
 
@@ -32,9 +32,9 @@ public class ToggleTaskActivationAction extends Action implements ITaskActivatio
 
 	/**
 	 * @param task
-	 *            cannot be null
+	 * 		cannot be null
 	 * @param toolBarManager
-	 *            cannot be null
+	 * 		cannot be null
 	 */
 	public ToggleTaskActivationAction(AbstractTask task, IToolBarManager toolBarManager) {
 		this.task = task;
@@ -42,11 +42,11 @@ public class ToggleTaskActivationAction extends Action implements ITaskActivatio
 		setId(ID);
 		setImageDescriptor(TasksUiImages.CONTEXT_ACTIVE_CENTERED);
 		update();
-		TasksUi.getTaskListManager().addActivationListener(this);
+		TasksUi.getTaskActivityManager().addActivityListener(this);
 	}
 
 	public void dispose() {
-		TasksUi.getTaskListManager().addActivationListener(this);
+		TasksUi.getTaskActivityManager().addActivityListener(this);
 	}
 
 	private void update() {
@@ -87,6 +87,14 @@ public class ToggleTaskActivationAction extends Action implements ITaskActivatio
 
 	public void preTaskDeactivated(AbstractTask task) {
 		// ignore		
+	}
+
+	public void activityReset() {
+		// ignore
+	}
+
+	public void elapsedTimeUpdated(AbstractTask task, long newElapsedTime) {
+		// ignore
 	}
 
 }

@@ -9,11 +9,6 @@
 package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -52,7 +47,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
+import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.ITaskListManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -78,7 +73,7 @@ public class TaskListManager implements ITaskListManager {
 
 	private static final long ROLLOVER_DELAY = 30 * MINUTE;
 
-	private final List<ITaskActivationListener> taskActivationListeners = new ArrayList<ITaskActivationListener>();
+	private final List<ITaskActivityListener> taskActivationListeners = new ArrayList<ITaskActivityListener>();
 
 	private final TaskListExternalizer taskListWriter;
 
@@ -98,26 +93,6 @@ public class TaskListManager implements ITaskListManager {
 
 	private final TaskListElementImporter importer;
 
-//	private final ITaskListChangeListener CHANGE_LISTENER = new ITaskListChangeListener() {
-//
-//		public void containersChanged(Set<TaskContainerDelta> containers) {
-//			for (TaskContainerDelta taskContainerDelta : containers) {
-//				if (taskContainerDelta.getContainer() instanceof AbstractTask) {
-//					switch (taskContainerDelta.getKind()) {
-//					case REMOVED:
-//						TaskListManager.this.resetAndRollOver();
-//						return;
-//					}
-//				}
-//			}
-//		}
-//
-//		public void taskListRead() {
-//			// ignore
-//
-//		}
-//	};
-
 	public TaskListManager(TaskListExternalizer taskListWriter, File file) {
 		this.taskListFile = file;
 		this.taskListWriter = taskListWriter;
@@ -125,14 +100,6 @@ public class TaskListManager implements ITaskListManager {
 		timer.schedule(new RolloverCheck(), ROLLOVER_DELAY, ROLLOVER_DELAY);
 		importer = new TaskListElementImporter();
 		importer.setDelegateExternalizers(taskListWriter.getExternalizers());
-	}
-
-	public void addActivationListener(ITaskActivationListener listener) {
-		taskActivationListeners.add(listener);
-	}
-
-	public void removeActivationListener(ITaskActivationListener listener) {
-		taskActivationListeners.remove(listener);
 	}
 
 	public ITaskList resetTaskList() {
@@ -212,7 +179,7 @@ public class TaskListManager implements ITaskListManager {
 		deactivateAllTasks();
 
 		// notify that a task is about to be activated
-		for (ITaskActivationListener listener : new ArrayList<ITaskActivationListener>(taskActivationListeners)) {
+		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(taskActivationListeners)) {
 			try {
 				listener.preTaskActivated(task);
 			} catch (Throwable t) {
@@ -227,7 +194,7 @@ public class TaskListManager implements ITaskListManager {
 			taskActivityHistory.addTask(task);
 		}
 
-		for (ITaskActivationListener listener : new ArrayList<ITaskActivationListener>(taskActivationListeners)) {
+		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(taskActivationListeners)) {
 			try {
 				listener.taskActivated(task);
 			} catch (Throwable t) {
@@ -250,7 +217,7 @@ public class TaskListManager implements ITaskListManager {
 
 		if (task.isActive() && task == activeTask) {
 			// notify that a task is about to be deactivated
-			for (ITaskActivationListener listener : new ArrayList<ITaskActivationListener>(taskActivationListeners)) {
+			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(taskActivationListeners)) {
 				try {
 					listener.preTaskDeactivated(task);
 				} catch (Throwable t) {
@@ -262,7 +229,7 @@ public class TaskListManager implements ITaskListManager {
 			activeTask.setActive(false);
 			activeTask = null;
 
-			for (ITaskActivationListener listener : new ArrayList<ITaskActivationListener>(taskActivationListeners)) {
+			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(taskActivationListeners)) {
 				try {
 					listener.taskDeactivated(task);
 				} catch (Throwable t) {
@@ -275,63 +242,6 @@ public class TaskListManager implements ITaskListManager {
 
 	public void setTaskListFile(File file) {
 		this.taskListFile = file;
-	}
-
-	/**
-	 * Copies all files in the current data directory to the specified folder. Will overwrite.
-	 * 
-	 * @deprecated
-	 */
-	@Deprecated
-	public void copyDataDirContentsTo(String targetFolderPath) {
-
-		File mainDataDir = new File(TasksUiPlugin.getDefault().getDataDirectory());
-
-		for (File currFile : mainDataDir.listFiles()) {
-			if (currFile.isFile()) {
-				File destFile = new File(targetFolderPath + File.separator + currFile.getName());
-				copy(currFile, destFile);
-			} else if (currFile.isDirectory()) {
-				File destDir = new File(targetFolderPath + File.separator + currFile.getName());
-				if (!destDir.exists()) {
-					if (!destDir.mkdir()) {
-						StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
-								"Unable to create destination context folder: " + destDir.getAbsolutePath()));
-						continue;
-					}
-				}
-				for (File file : currFile.listFiles()) {
-					File destFile = new File(destDir, file.getName());
-					if (destFile.exists()) {
-						destFile.delete();
-					}
-					copy(file, destFile);
-				}
-			}
-		}
-	}
-
-	/**
-	 * @deprecated
-	 */
-	@Deprecated
-	private boolean copy(File src, File dst) {
-		try {
-			InputStream in = new FileInputStream(src);
-			OutputStream out = new FileOutputStream(dst);
-
-			// Transfer bytes from in to out
-			byte[] buf = new byte[1024];
-			int len;
-			while ((len = in.read(buf)) > 0) {
-				out.write(buf, 0, len);
-			}
-			in.close();
-			out.close();
-			return true;
-		} catch (IOException ioe) {
-			return false;
-		}
 	}
 
 	public TaskListElementImporter getTaskListWriter() {
@@ -356,7 +266,7 @@ public class TaskListManager implements ITaskListManager {
 					.getActivityMetaContext()
 					.getInteractionHistory();
 			for (InteractionEvent event : events) {
-				TasksUiPlugin.getTaskActivityManager().parseInteractionEvent(event);
+				TasksUiPlugin.getTaskActivityMonitor().parseInteractionEvent(event);
 			}
 			TasksUiPlugin.getTaskActivityManager().reloadTimingData();
 		}

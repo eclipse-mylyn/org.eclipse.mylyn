@@ -98,10 +98,8 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
-import org.eclipse.mylyn.tasks.core.TaskActivationAdapter;
 import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
@@ -402,9 +400,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				}
 			});
 		}
-	};
-
-	private final ITaskActivationListener TASK_ACTIVATION_LISTENER = new TaskActivationAdapter() {
 
 		@Override
 		public void taskActivated(final AbstractTask task) {
@@ -574,7 +569,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	public TaskListView() {
 		PlatformUI.getWorkbench().getWorkingSetManager().addPropertyChangeListener(this);
-		TasksUi.getTaskListManager().addActivationListener(TASK_ACTIVATION_LISTENER);
 		TasksUiPlugin.getTaskActivityManager().addActivityListener(TASK_ACTIVITY_LISTENER);
 		TasksUi.getTaskListManager().getTaskList().addChangeListener(TASKLIST_CHANGE_LISTENER);
 	}
@@ -583,7 +577,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	public void dispose() {
 		super.dispose();
 		TasksUi.getTaskListManager().getTaskList().removeChangeListener(TASKLIST_CHANGE_LISTENER);
-		TasksUi.getTaskListManager().removeActivationListener(TASK_ACTIVATION_LISTENER);
 		TasksUiPlugin.getTaskActivityManager().removeActivityListener(TASK_ACTIVITY_LISTENER);
 
 		PlatformUI.getWorkbench().getWorkingSetManager().removePropertyChangeListener(this);
@@ -752,8 +745,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		configureColumns(columnNames, columnWidths);
 
 		final IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
-		Color categoryBackground = themeManager.getCurrentTheme().getColorRegistry().get(
-				CommonThemes.COLOR_CATEGORY);
+		Color categoryBackground = themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_CATEGORY);
 		taskListTableLabelProvider = new TaskTableLabelProvider(new TaskElementLabelProvider(true),
 				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator(), categoryBackground);
 		getViewer().setLabelProvider(taskListTableLabelProvider);
@@ -1503,7 +1495,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		isPaused = paused;
 		IStatusLineManager statusLineManager = getViewSite().getActionBars().getStatusLineManager();
 		if (isPaused) {
-			statusLineManager.setMessage(CommonImages.getImage(TasksUiImages.TASKS_VIEW), "Mylyn context capture paused");
+			statusLineManager.setMessage(CommonImages.getImage(TasksUiImages.TASKS_VIEW),
+					"Mylyn context capture paused");
 			setPartName("(paused) " + PART_NAME);
 		} else {
 			statusLineManager.setMessage("");

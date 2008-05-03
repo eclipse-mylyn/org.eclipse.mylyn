@@ -33,7 +33,6 @@ import org.eclipse.ui.handlers.HandlerUtil;
  */
 public class OpenTaskAttachmentInDefaultEditorHandler extends AbstractHandler {
 
-	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchPage page = null;
 		ISelection selection = HandlerUtil.getCurrentSelection(event);

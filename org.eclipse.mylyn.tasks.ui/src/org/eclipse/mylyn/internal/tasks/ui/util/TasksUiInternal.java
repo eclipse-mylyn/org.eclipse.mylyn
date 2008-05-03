@@ -25,16 +25,20 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.ITaskJobFactory;
+import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskDelegate;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.editors.CategoryEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.CategoryEditorInput;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.MultiRepositoryAwareWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewTaskWizard;
@@ -48,6 +52,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskSelection;
+import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
@@ -416,5 +421,52 @@ public class TasksUiInternal {
 		} else {
 			StatusHandler.log(status);
 		}
+	}
+
+	/**
+	 * Creates a new local task and schedules for today
+	 * 
+	 * @param summary
+	 * 		if null DEFAULT_SUMMARY (New Task) used.
+	 */
+	public static LocalTask createNewLocalTask(String summary) {
+		if (summary == null) {
+			summary = LocalRepositoryConnector.DEFAULT_SUMMARY;
+		}
+		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+		LocalTask newTask = new LocalTask("" + taskList.getNextLocalTaskId(), summary);
+		newTask.setPriority(PriorityLevel.P3.toString());
+		TasksUi.getTaskListManager().getTaskList().addTask(newTask);
+		TasksUiPlugin.getTaskActivityManager().scheduleNewTask(newTask);
+
+		Object selectedObject = null;
+		TaskListView view = TaskListView.getFromActivePerspective();
+		if (view != null) {
+			selectedObject = ((IStructuredSelection) view.getViewer().getSelection()).getFirstElement();
+		}
+		if (selectedObject instanceof TaskCategory) {
+			taskList.addTask(newTask, (TaskCategory) selectedObject);
+		} else if (selectedObject instanceof AbstractTask) {
+			AbstractTask task = (AbstractTask) selectedObject;
+
+			AbstractTaskContainer container = TaskCategory.getParentTaskCategory(task);
+
+			if (container instanceof TaskCategory) {
+				taskList.addTask(newTask, container);
+			} else if (view != null && view.getDrilledIntoCategory() instanceof TaskCategory) {
+				taskList.addTask(newTask, view.getDrilledIntoCategory());
+			} else {
+				taskList.addTask(newTask, TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
+			}
+		} else if (view != null && view.getDrilledIntoCategory() instanceof TaskCategory) {
+			taskList.addTask(newTask, view.getDrilledIntoCategory());
+		} else {
+			if (view != null && view.getDrilledIntoCategory() != null) {
+				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), ITasksUiConstants.TITLE_DIALOG,
+						"The new task has been added to the root of the list, since tasks can not be added to a query.");
+			}
+			taskList.addTask(newTask, TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
+		}
+		return newTask;
 	}
 }
