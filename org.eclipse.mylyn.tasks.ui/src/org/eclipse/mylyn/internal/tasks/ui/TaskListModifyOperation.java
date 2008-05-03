@@ -13,7 +13,9 @@ import java.lang.reflect.InvocationTargetException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListRunnable;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
@@ -40,22 +42,24 @@ public abstract class TaskListModifyOperation implements IRunnableWithProgress {
 			InterruptedException;
 
 	final public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 		final InvocationTargetException[] ite = new InvocationTargetException[1];
 		try {
 			ITaskListRunnable runnable = new ITaskListRunnable() {
 
 				public void execute(IProgressMonitor monitor) throws CoreException {
 					try {
+						Job.getJobManager().beginRule(rule, new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN));
 						operations(monitor);
 					} catch (InvocationTargetException e) {
 						ite[0] = e;
 					} catch (InterruptedException e) {
 						throw new OperationCanceledException(e.getMessage());
+					} finally {
+						Job.getJobManager().endRule(rule);
 					}
 				}
 			};
-			taskList.run(runnable, monitor);
+			getTaskList().run(runnable, monitor);
 		} catch (CoreException e) {
 			throw new InvocationTargetException(e);
 		}
@@ -63,6 +67,9 @@ public abstract class TaskListModifyOperation implements IRunnableWithProgress {
 		if (ite[0] != null) {
 			throw ite[0];
 		}
+	}
 
+	protected TaskList getTaskList() {
+		return TasksUiPlugin.getTaskListManager().getTaskList();
 	}
 }

@@ -8,8 +8,14 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
+import java.lang.reflect.InvocationTargetException;
+
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.tasks.ui.RefactorRepositoryUrlOperation;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -50,7 +56,19 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 		if (canFinish()) {
 			String oldUrl = repository.getRepositoryUrl();
 			String newUrl = abstractRepositorySettingsPage.getServerUrl();
-			TasksUiPlugin.getTaskListManager().refactorRepositoryUrl(oldUrl, newUrl);
+			if (oldUrl != null && newUrl != null && !oldUrl.equals(newUrl)) {
+				TasksUiPlugin.getTaskListManager().deactivateAllTasks();
+
+				RefactorRepositoryUrlOperation operation = new RefactorRepositoryUrlOperation(oldUrl, newUrl);
+				try {
+					getContainer().run(true, false, operation);
+				} catch (InvocationTargetException e) {
+					StatusHandler.fail(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
+							"Failed to refactor repository urls"));
+				} catch (InterruptedException e) {
+					// should not get here
+				}
+			}
 
 			repository.flushAuthenticationCredentials();
 

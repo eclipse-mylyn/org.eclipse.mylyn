@@ -31,6 +31,7 @@ import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
+import org.eclipse.mylyn.internal.tasks.ui.RefactorRepositoryUrlOperation;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
@@ -178,12 +179,20 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(0, manager.getTaskList().getAllTasks().size());
 	}
 
+	private void runRepositoryUrlOperation(String oldUrl, String newUrl) {
+		try {
+			new RefactorRepositoryUrlOperation(oldUrl, newUrl).run(new NullProgressMonitor());
+		} catch (Exception e) {
+			fail();
+		}
+	}
+
 	public void testMigrateTaskContextFiles() throws IOException {
 		File fileA = ContextCore.getContextManager().getFileForContext("http://a-1");
 		fileA.createNewFile();
 		fileA.deleteOnExit();
 		assertTrue(fileA.exists());
-		manager.refactorRepositoryUrl("http://a", "http://b");
+		runRepositoryUrlOperation("http://a", "http://b");
 		File fileB = ContextCore.getContextManager().getFileForContext("http://b-1");
 		assertTrue(fileB.exists());
 		assertFalse(fileA.exists());
@@ -195,7 +204,7 @@ public class TaskListManagerTest extends TestCase {
 		query.setUrl("http://foo.bar/b");
 		manager.getTaskList().addQuery(query);
 		assertTrue(manager.getTaskList().getRepositoryQueries("http://foo.bar").size() > 0);
-		manager.refactorRepositoryUrl("http://foo.bar", "http://bar.baz");
+		runRepositoryUrlOperation("http://foo.bar", "http://bar.baz");
 		assertTrue(manager.getTaskList().getRepositoryQueries("http://foo.bar").size() == 0);
 		assertTrue(manager.getTaskList().getRepositoryQueries("http://bar.baz").size() > 0);
 		AbstractRepositoryQuery changedQuery = manager.getTaskList()
@@ -209,7 +218,7 @@ public class TaskListManagerTest extends TestCase {
 		AbstractRepositoryQuery query = new MockRepositoryQuery("mquery");
 		query.setRepositoryUrl("http://a");
 		manager.getTaskList().addQuery(query);
-		manager.refactorRepositoryUrl("http://a", "http://b");
+		runRepositoryUrlOperation("http://a", "http://b");
 		assertFalse(manager.getTaskList().getRepositoryQueries("http://b").isEmpty());
 		assertTrue(manager.getTaskList().getRepositoryQueries("http://a").isEmpty());
 	}
@@ -222,7 +231,7 @@ public class TaskListManagerTest extends TestCase {
 // AbstractQueryHit hit = new MockQueryHit(manager.getTaskList(), "http://a",
 // "", "123");
 // query.addHit(hit);
-// manager.refactorRepositoryUrl("http://a", "http://b");
+// runRepositoryUrlOperation("http://a", "http://b");
 // assertNotNull(manager.getTaskList().getQueryHit("http://b-123"));
 // assertEquals("http://b-123", hit.getHandleIdentifier());
 // }
@@ -248,7 +257,7 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals("TEST", TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task2.getRepositoryUrl(),
 				task2.getTaskId()).getNewComment());
 
-		manager.refactorRepositoryUrl("http://a", "http://b");
+		runRepositoryUrlOperation("http://a", "http://b");
 		assertNull(manager.getTaskList().getTask("http://a-123"));
 		assertNotNull(manager.getTaskList().getTask("http://b-123"));
 		assertNotNull(TasksUiPlugin.getTaskDataStorageManager().getNewTaskData("http://b", "123"));
@@ -262,7 +271,7 @@ public class TaskListManagerTest extends TestCase {
 		AbstractTask task = new MockTask("http://a", "123");
 		task.setUrl("http://a/task/123");
 		manager.getTaskList().addTask(task);
-		manager.refactorRepositoryUrl("http://a", "http://b");
+		runRepositoryUrlOperation("http://a", "http://b");
 		assertNull(manager.getTaskList().getTask("http://a-123"));
 		assertNotNull(manager.getTaskList().getTask("http://b-123"));
 		assertEquals("http://b/task/123", task.getUrl());
@@ -303,7 +312,7 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(2, metaContext.getInteractionHistory().size());
 		assertEquals(60 * 1000 * 5, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1));
 		assertEquals(2 * 60 * 1000 * 5, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task2));
-		manager.refactorRepositoryUrl(firstUrl, secondUrl);
+		runRepositoryUrlOperation(firstUrl, secondUrl);
 		metaContext = ContextCore.getContextManager().getActivityMetaContext();
 		assertEquals(2, metaContext.getInteractionHistory().size());
 		assertEquals(60 * 1000 * 5, TasksUiPlugin.getTaskActivityManager().getElapsedTime(new MockTask(secondUrl, "1")));

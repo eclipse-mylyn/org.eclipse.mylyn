@@ -744,7 +744,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 					ContextCore.getContextManager().loadActivityMetaContext();
 					getTaskListManager().readExistingOrCreateNewList();
 					getTaskListManager().initActivityHistory();
-					System.err.println(">> reload done");
 				} finally {
 					Job.getJobManager().endRule(ITasksCoreConstants.ROOT_SCHEDULING_RULE);
 					monitor.done();
@@ -1036,9 +1035,9 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	 * Associate a Task Repository with a workbench project
 	 * 
 	 * @param resource
-	 *            project or resource belonging to a project
+	 * 		project or resource belonging to a project
 	 * @param repository
-	 *            task repository to associate with given project
+	 * 		task repository to associate with given project
 	 * @throws CoreException
 	 */
 	public void setRepositoryForResource(IResource resource, TaskRepository repository) throws CoreException {

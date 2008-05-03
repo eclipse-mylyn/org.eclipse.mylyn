@@ -13,7 +13,9 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylyn.internal.tasks.ui.RefactorRepositoryUrlOperation;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
@@ -28,7 +30,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  */
 public class TracRepositoryQueryTest extends TestCase {
 
-	public void testChangeRepositoryUrl() {
+	public void testChangeRepositoryUrl() throws Exception {
 		TaskRepositoryManager manager = TasksUiPlugin.getRepositoryManager();
 		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
@@ -46,7 +48,7 @@ public class TracRepositoryQueryTest extends TestCase {
 
 		String oldUrl = repository.getRepositoryUrl();
 		String newUrl = TracTestConstants.TEST_TRAC_010_URL;
-		TasksUiPlugin.getTaskListManager().refactorRepositoryUrl(oldUrl, newUrl);
+		new RefactorRepositoryUrlOperation(oldUrl, newUrl).run(new NullProgressMonitor());
 		repository.setRepositoryUrl(newUrl);
 
 		assertEquals(newUrl, query.getRepositoryUrl());

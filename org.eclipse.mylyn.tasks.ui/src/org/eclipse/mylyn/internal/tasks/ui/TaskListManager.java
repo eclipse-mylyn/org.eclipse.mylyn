@@ -14,7 +14,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -34,17 +33,12 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.context.core.InteractionContext;
-import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
-import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
-import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizationParticipant;
@@ -61,8 +55,6 @@ import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
 import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.ITaskListManager;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -161,102 +153,6 @@ public class TaskListManager implements ITaskListManager {
 
 //		taskList.addOrphanContainer(new OrphanedTasksContainer(LocalRepositoryConnector.CONNECTOR_KIND,
 //				LocalRepositoryConnector.REPOSITORY_URL));
-	}
-
-	public void refactorRepositoryUrl(String oldUrl, String newUrl) {
-		if (oldUrl == null || newUrl == null || oldUrl.equals(newUrl)) {
-			return;
-		}
-		deactivateAllTasks();
-
-		refactorOfflineHandles(oldUrl, newUrl);
-		taskList.refactorRepositoryUrl(oldUrl, newUrl);
-		refactorMetaContextHandles(oldUrl, newUrl);
-
-		File dataDir = new File(TasksUiPlugin.getDefault().getDataDirectory(), ITasksCoreConstants.CONTEXTS_DIRECTORY);
-		if (dataDir.exists() && dataDir.isDirectory()) {
-			for (File file : dataDir.listFiles()) {
-				int dotIndex = file.getName().lastIndexOf(".xml");
-				if (dotIndex != -1) {
-					String storedHandle;
-					try {
-						storedHandle = URLDecoder.decode(file.getName().substring(0, dotIndex),
-								IInteractionContextManager.CONTEXT_FILENAME_ENCODING);
-						int delimIndex = storedHandle.lastIndexOf(RepositoryTaskHandleUtil.HANDLE_DELIM);
-						if (delimIndex != -1) {
-							String storedUrl = storedHandle.substring(0, delimIndex);
-							if (oldUrl.equals(storedUrl)) {
-								String id = RepositoryTaskHandleUtil.getTaskId(storedHandle);
-								String newHandle = RepositoryTaskHandleUtil.getHandle(newUrl, id);
-								File newFile = ContextCore.getContextManager().getFileForContext(newHandle);
-								file.renameTo(newFile);
-							}
-						}
-					} catch (Exception e) {
-						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-								"Could not move context file: " + file.getName(), e));
-					}
-				}
-			}
-		}
-
-		saveTaskList();
-	}
-
-	private void refactorMetaContextHandles(String oldRepositoryUrl, String newRepositoryUrl) {
-		InteractionContext metaContext = ContextCore.getContextManager().getActivityMetaContext();
-		ContextCore.getContextManager().resetActivityHistory();
-		InteractionContext newMetaContext = ContextCore.getContextManager().getActivityMetaContext();
-		for (InteractionEvent event : metaContext.getInteractionHistory()) {
-			if (event.getStructureHandle() != null) {
-				String storedUrl = RepositoryTaskHandleUtil.getRepositoryUrl(event.getStructureHandle());
-				if (storedUrl != null) {
-					if (oldRepositoryUrl.equals(storedUrl)) {
-						String taskId = RepositoryTaskHandleUtil.getTaskId(event.getStructureHandle());
-						if (taskId != null) {
-							String newHandle = RepositoryTaskHandleUtil.getHandle(newRepositoryUrl, taskId);
-							event = new InteractionEvent(event.getKind(), event.getStructureKind(), newHandle,
-									event.getOriginId(), event.getNavigation(), event.getDelta(),
-									event.getInterestContribution(), event.getDate(), event.getEndDate());
-						}
-					}
-				}
-			}
-			newMetaContext.parseEvent(event);
-		}
-		ContextCore.getContextManager().saveActivityContext();
-		initActivityHistory();
-	}
-
-	private void refactorOfflineHandles(String oldRepositoryUrl, String newRepositoryUrl) {
-		TaskDataStorageManager taskDataManager = TasksUiPlugin.getTaskDataStorageManager();
-		for (AbstractTask task : taskList.getAllTasks()) {
-			if (task != null) {
-				AbstractTask repositoryTask = task;
-				if (repositoryTask.getRepositoryUrl().equals(oldRepositoryUrl)) {
-					RepositoryTaskData newTaskData = taskDataManager.getNewTaskData(repositoryTask.getRepositoryUrl(),
-							repositoryTask.getTaskId());
-					RepositoryTaskData oldTaskData = taskDataManager.getOldTaskData(repositoryTask.getRepositoryUrl(),
-							repositoryTask.getTaskId());
-					Set<RepositoryTaskAttribute> edits = taskDataManager.getEdits(repositoryTask.getRepositoryUrl(),
-							repositoryTask.getTaskId());
-					taskDataManager.remove(repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId());
-
-					if (newTaskData != null) {
-						newTaskData.setRepositoryURL(newRepositoryUrl);
-						taskDataManager.setNewTaskData(newTaskData);
-					}
-					if (oldTaskData != null) {
-						oldTaskData.setRepositoryURL(newRepositoryUrl);
-						taskDataManager.setOldTaskData(oldTaskData);
-					}
-					if (!edits.isEmpty()) {
-						taskDataManager.saveEdits(newRepositoryUrl, repositoryTask.getTaskId(), edits);
-					}
-				}
-			}
-		}
-		TasksUiPlugin.getTaskDataStorageManager().saveNow();
 	}
 
 	public boolean readExistingOrCreateNewList() {
@@ -495,7 +391,7 @@ public class TaskListManager implements ITaskListManager {
 	 * Creates a new local task and schedules for today
 	 * 
 	 * @param summary
-	 *            if null DEFAULT_SUMMARY (New Task) used.
+	 * 		if null DEFAULT_SUMMARY (New Task) used.
 	 */
 	public LocalTask createNewLocalTask(String summary) {
 		if (summary == null) {
@@ -543,7 +439,7 @@ public class TaskListManager implements ITaskListManager {
 	 * that overlaps with the existing one, the the suffix [x] is added, where x is a number starting from 1.
 	 * 
 	 * @param queries
-	 *            to insert
+	 * 		to insert
 	 * @return the list queries, which were not inserted since because the related repository was not found.
 	 */
 	public List<AbstractRepositoryQuery> insertQueries(List<AbstractRepositoryQuery> queries) {
@@ -580,8 +476,8 @@ public class TaskListManager implements ITaskListManager {
 	 * 
 	 * @param query
 	 * @return a handle, that is not in conflict with any existed one in the system. If there were no conflict in the
-	 *         beginning, then the query's own identifier is returned. If there were, then the suffix [x] is applied the
-	 *         query's identifier, where x is a number.
+	 * 	beginning, then the query's own identifier is returned. If there were, then the suffix [x] is applied the
+	 * 	query's identifier, where x is a number.
 	 * @since 2.1
 	 */
 	public String resolveIdentifiersConflict(AbstractRepositoryQuery query) {
