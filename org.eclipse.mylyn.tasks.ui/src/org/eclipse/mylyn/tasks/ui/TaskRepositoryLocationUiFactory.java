@@ -19,6 +19,9 @@ import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
  */
 public class TaskRepositoryLocationUiFactory extends TaskRepositoryLocationFactory {
 
+	/**
+	 * @since 3.0
+	 */
 	@Override
 	public AbstractWebLocation createWebLocation(TaskRepository taskRepository) {
 		return new TaskRepositoryLocationUi(taskRepository);

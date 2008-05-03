@@ -40,13 +40,15 @@ public final class TaskAttribute {
 
 	public static final String ATTACHMENT_ID = "task.common.attachment.id";
 
+	public static final String ATTACHMENT_IS_DEPRECATED = "task.common.attachment.deprecated";
+
+	public static final String ATTACHMENT_IS_PATCH = "task.common.attachment.patch";
+
 	public static final String ATTACHMENT_SIZE = "task.common.attachment.size";
 
 	public static final String ATTACHMENT_URL = "task.common.attachment.url";
 
-	public static final String ATTACHMENT_IS_DEPRECATED = "task.common.attachment.deprecated";
-
-	public static final String ATTACHMENT_IS_PATCH = "task.common.attachment.patch";
+	public static final String COMMENT_ATTACHMENT_ID = "task.common.comment.attachment.id";
 
 	public static final String COMMENT_AUTHOR = "task.common.comment.author";
 
@@ -54,13 +56,11 @@ public final class TaskAttribute {
 
 	public static final String COMMENT_DATE = "task.common.comment.date";
 
+	public static final String COMMENT_HAS_ATTACHMENT = "task.common.comment.attachment";
+
 	public static final String COMMENT_NEW = "task.common.comment.new";
 
 	public static final String COMMENT_TEXT = "task.common.comment.text";
-
-	public static final String COMMENT_HAS_ATTACHMENT = "task.common.comment.attachment";
-
-	public static final String COMMENT_ATTACHMENT_ID = "task.common.comment.attachment.id";
 
 	public static final String COMMENT_URL = "task.common.comment.url";
 
@@ -93,35 +93,37 @@ public final class TaskAttribute {
 
 	public static final String KEYWORDS = "task.common.keywords";
 
-	public static final String META_ASSOCIATED_ATTRIBUTE_ID = "task.meta.associated.attribute";
-
-	public static final String META_LABEL = "task.meta.label";
-
-	public static final String META_DEFAULT_OPTION = "task.meta.defaultOption";
-
-	public static final String META_READ_ONLY = "task.meta.readOnly";
-
-	//public static final String META_SHOW_IN_ATTRIBUTES_SECTION = "task.meta.showInTaskEditorAttributesSection";
-
-	public static final String META_SHOW_IN_TOOL_TIP = "task.meta.showInToolTip";
-
-	public static final String META_ATTRIBUTE_TYPE = "task.meta.type";
-
-	public static final String META_ARTIFICIAL = "task.meta.artificial";
-
-	public static final String META_ATTRIBUTE_KIND = "task.meta.attributeKind";
-
 	public static final String KIND_DEFAULT = "task.common.kind.default";
-
-	public static final String KIND_PEOPLE = "task.common.kind.default";
 
 	public static final String KIND_OPERATION = "task.common.kind.operation";
 
-	public static final String NEW_CC = "task.common.newcc";
+	public static final String KIND_PEOPLE = "task.common.kind.default";
+
+	public static final String META_ARTIFICIAL = "task.meta.artificial";
+
+	//public static final String META_SHOW_IN_ATTRIBUTES_SECTION = "task.meta.showInTaskEditorAttributesSection";
+
+	public static final String META_ASSOCIATED_ATTRIBUTE_ID = "task.meta.associated.attribute";
+
+	public static final String META_ATTRIBUTE_KIND = "task.meta.attributeKind";
+
+	public static final String META_ATTRIBUTE_TYPE = "task.meta.type";
+
+	public static final String META_DEFAULT_OPTION = "task.meta.defaultOption";
+
+	public static final String META_LABEL = "task.meta.label";
+
+	public static final String META_READ_ONLY = "task.meta.readOnly";
+
+	public static final String META_SHOW_IN_TOOL_TIP = "task.meta.showInToolTip";
 
 	public static final String NEW_ATTACHMENT = "task.common.new.attachment";
 
+	public static final String NEW_CC = "task.common.newcc";
+
 	public static final String OPERATION = "task.common.operation";
+
+	public static final String PERSON_NAME = "task.common.person.name";
 
 	public static final String PRIORITY = "task.common.priority";
 
@@ -135,9 +137,9 @@ public final class TaskAttribute {
 
 	public static final String SUMMARY = "task.common.summary";
 
-	public static final String TASK_KIND = "task.common.kind";
-
 	public static final String TASK_KEY = "task.common.key";
+
+	public static final String TASK_KIND = "task.common.kind";
 
 	/**
 	 * @since 3.0
@@ -172,12 +174,12 @@ public final class TaskAttribute {
 	/**
 	 * @since 3.0
 	 */
-	public static final String TYPE_LONG_TEXT = "longText";
+	public static final String TYPE_LONG_RICH_TEXT = "longRichText";
 
 	/**
 	 * @since 3.0
 	 */
-	public static final String TYPE_LONG_RICH_TEXT = "longRichText";
+	public static final String TYPE_LONG_TEXT = "longText";
 
 	/**
 	 * @since 3.0
@@ -189,15 +191,12 @@ public final class TaskAttribute {
 	 */
 	public static final String TYPE_NUMBER = "number";
 
-	/**
-	 * @since 3.0
-	 */
-	public static final String TYPE_PERSON = "person";
+	public static final String TYPE_OPERATION = "operation";
 
 	/**
 	 * @since 3.0
 	 */
-	public static final String TYPE_SHORT_TEXT = "shortText";
+	public static final String TYPE_PERSON = "person";
 
 	/**
 	 * @since 3.0
@@ -207,9 +206,12 @@ public final class TaskAttribute {
 	/**
 	 * @since 3.0
 	 */
-	public static final String TYPE_SINGLE_SELECT = "singleSelect";
+	public static final String TYPE_SHORT_TEXT = "shortText";
 
-	public static final String TYPE_OPERATION = "operation";
+	/**
+	 * @since 3.0
+	 */
+	public static final String TYPE_SINGLE_SELECT = "singleSelect";
 
 	/**
 	 * @since 3.0
@@ -234,8 +236,6 @@ public final class TaskAttribute {
 
 	public static final String USER_REPORTER_NAME = "task.common.user.reporter.name";
 
-	public static final String PERSON_NAME = "task.common.person.name";
-
 	private Map<String, TaskAttribute> attributeById;
 
 	private final String attributeId;
@@ -244,6 +244,8 @@ public final class TaskAttribute {
 
 	private Map<String, String> optionByKey;
 
+	private final TaskAttribute parentAttribute;
+
 	private final TaskData taskData;
 
 	/**
@@ -251,13 +253,32 @@ public final class TaskAttribute {
 	 */
 	private final List<String> values;
 
-	private final TaskAttribute parentAttribute;
-
-	TaskAttribute(TaskData taskData, TaskAttribute parentAttribute, String attributeId) {
-		this.taskData = taskData;
+	public TaskAttribute(TaskAttribute parentAttribute, String attributeId) {
+		Assert.isNotNull(parentAttribute);
+		Assert.isNotNull(attributeId);
 		this.parentAttribute = parentAttribute;
 		this.attributeId = attributeId;
+		this.taskData = parentAttribute.getTaskData();
 		this.values = new ArrayList<String>(1);
+		parentAttribute.add(this);
+	}
+
+	/**
+	 * Constructor for the root node.
+	 */
+	TaskAttribute(TaskData taskData) {
+		Assert.isNotNull(taskData);
+		this.parentAttribute = null;
+		this.taskData = taskData;
+		this.attributeId = "root";
+		this.values = new ArrayList<String>(1);
+	}
+
+	private void add(TaskAttribute attribute) {
+		if (attributeById == null) {
+			attributeById = new LinkedHashMap<String, TaskAttribute>();
+		}
+		attributeById.put(attributeId, attribute);
 	}
 
 	public void addValue(String value) {
@@ -265,7 +286,11 @@ public final class TaskAttribute {
 		values.add(value);
 	}
 
-	public void clearMetaData() {
+	public void clearAttributes() {
+		attributeById = null;
+	}
+
+	public void clearMetaDatas() {
 		metaData = null;
 	}
 
@@ -278,12 +303,33 @@ public final class TaskAttribute {
 	}
 
 	public TaskAttribute createAttribute(String attributeId) {
-		TaskAttribute attribute = new TaskAttribute(getTaskData(), this, attributeId);
-		if (attributeById == null) {
-			attributeById = new LinkedHashMap<String, TaskAttribute>();
-		}
-		attributeById.put(attributeId, attribute);
+		TaskAttribute attribute = new TaskAttribute(this, attributeId);
 		return attribute;
+	}
+
+	public void deepAddCopy(TaskAttribute source) {
+		TaskAttribute target = createAttribute(source.getId());
+		target.values.addAll(source.values);
+		if (source.metaData != null) {
+			target.metaData = new LinkedHashMap<String, String>(source.metaData);
+		}
+		if (source.optionByKey != null) {
+			target.optionByKey = new LinkedHashMap<String, String>(source.optionByKey);
+		}
+		if (source.attributeById != null) {
+			for (TaskAttribute child : source.attributeById.values()) {
+				target.deepAddCopy(child);
+			}
+		}
+	}
+
+	// API 3.0 remove
+	public void deepCopyFrom(TaskAttribute source) {
+		if (source.attributeById != null) {
+			for (TaskAttribute child : source.attributeById.values()) {
+				deepAddCopy(child);
+			}
+		}
 	}
 
 	@Override
@@ -313,16 +359,6 @@ public final class TaskAttribute {
 		return (attributeById != null) ? attributeById.get(attributeId) : null;
 	}
 
-	public TaskAttribute getMappedAttribute(String attributeId) {
-		Assert.isNotNull(attributeId);
-		return (attributeById != null) ? attributeById.get(getTaskData().getAttributeMapper().mapToRepositoryKey(this,
-				attributeId)) : null;
-	}
-
-	public TaskAttribute getParentAttribute() {
-		return parentAttribute;
-	}
-
 	public Map<String, TaskAttribute> getAttributes() {
 		if (attributeById != null) {
 			return Collections.unmodifiableMap(attributeById);
@@ -335,16 +371,22 @@ public final class TaskAttribute {
 		return attributeId;
 	}
 
+	public TaskAttribute getMappedAttribute(String attributeId) {
+		Assert.isNotNull(attributeId);
+		return (attributeById != null) ? attributeById.get(getTaskData().getAttributeMapper().mapToRepositoryKey(this,
+				attributeId)) : null;
+	}
+
+	public String getMetaData(String key) {
+		return (metaData != null) ? metaData.get(key) : null;
+	}
+
 	public Map<String, String> getMetaDatas() {
 		if (metaData != null) {
 			return Collections.unmodifiableMap(metaData);
 		} else {
 			return Collections.emptyMap();
 		}
-	}
-
-	public String getMetaData(String key) {
-		return (metaData != null) ? metaData.get(key) : null;
 	}
 
 	public String getOption(String key) {
@@ -357,6 +399,21 @@ public final class TaskAttribute {
 		} else {
 			return Collections.emptyMap();
 		}
+	}
+
+	public TaskAttribute getParentAttribute() {
+		return parentAttribute;
+	}
+
+	public String[] getPath() {
+		List<String> path = new ArrayList<String>();
+		TaskAttribute attribute = this;
+		while (attribute.getParentAttribute() != null) {
+			path.add(attribute.getId());
+			attribute = attribute.getParentAttribute();
+		}
+		Collections.reverse(path);
+		return path.toArray(new String[0]);
 	}
 
 	public TaskData getTaskData() {
@@ -396,9 +453,9 @@ public final class TaskAttribute {
 	 * Adds an attribute option value
 	 * 
 	 * @param readableValue
-	 * 		The value displayed on the screen
+	 *            The value displayed on the screen
 	 * @param parameterValue
-	 * 		The option value used when sending the form to the server
+	 *            The option value used when sending the form to the server
 	 */
 	public void putOption(String key, String value) {
 		Assert.isNotNull(key);
@@ -407,10 +464,6 @@ public final class TaskAttribute {
 			optionByKey = new LinkedHashMap<String, String>();
 		}
 		optionByKey.put(key, value);
-	}
-
-	public void clearAttributes() {
-		attributeById = null;
 	}
 
 	public void removeAttribute(String attributeId) {
@@ -458,41 +511,6 @@ public final class TaskAttribute {
 				child.toString(sb, prefix + " ");
 			}
 		}
-	}
-
-	public void deepCopyFrom(TaskAttribute source) {
-		if (source.attributeById != null) {
-			for (TaskAttribute child : source.attributeById.values()) {
-				deepAddCopy(child);
-			}
-		}
-	}
-
-	public void deepAddCopy(TaskAttribute source) {
-		TaskAttribute target = createAttribute(source.getId());
-		target.values.addAll(source.values);
-		if (source.metaData != null) {
-			target.metaData = new LinkedHashMap<String, String>(source.metaData);
-		}
-		if (source.optionByKey != null) {
-			target.optionByKey = new LinkedHashMap<String, String>(source.optionByKey);
-		}
-		if (source.attributeById != null) {
-			for (TaskAttribute child : source.attributeById.values()) {
-				target.deepAddCopy(child);
-			}
-		}
-	}
-
-	public String[] getPath() {
-		List<String> path = new ArrayList<String>();
-		TaskAttribute attribute = this;
-		while (attribute.getParentAttribute() != null) {
-			path.add(attribute.getId());
-			attribute = attribute.getParentAttribute();
-		}
-		Collections.reverse(path);
-		return path.toArray(new String[0]);
 	}
 
 }
