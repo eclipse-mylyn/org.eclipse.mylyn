@@ -17,14 +17,17 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
+import org.eclipse.mylyn.internal.tasks.core.TaskActivationHistory;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskActivationHistory;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.PlatformUI;
@@ -33,7 +36,7 @@ import org.eclipse.ui.internal.WorkingSet;
 /**
  * @author Frank Becker
  * 
- * TODO merge with TaskHistoryTest
+ * 	TODO merge with TaskHistoryTest
  */
 public class TaskActivationHistoryTest extends TestCase {
 
@@ -45,7 +48,7 @@ public class TaskActivationHistoryTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		history = manager.getTaskActivationHistory();
+		history = TasksUi.getTaskActivityManager().getTaskActivationHistory();
 	}
 
 	@Override
@@ -87,14 +90,14 @@ public class TaskActivationHistoryTest extends TestCase {
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 3) == task12);
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 4) == task11);
 
-		prevHistoryList = history.getPreviousTasks(TaskListView.getActiveWorkingSets());
+		prevHistoryList = history.getPreviousTasks(TasksUiInternal.getContainersFromWorkingSet(TaskListView.getActiveWorkingSets()));
 
 		// Check that the previous history list looks right
 		assertTrue(prevHistoryList.size() >= 2);
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 1) == task12);
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 2) == task11);
 
-		prevHistoryList = history.getPreviousTasks(new HashSet<IWorkingSet>());
+		prevHistoryList = history.getPreviousTasks(new HashSet<AbstractTaskContainer>());
 
 		// Check that the previous history list looks right
 		assertTrue(prevHistoryList.size() >= 3);

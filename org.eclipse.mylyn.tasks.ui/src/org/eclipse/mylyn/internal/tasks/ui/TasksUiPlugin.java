@@ -381,7 +381,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 						break;
 					}
 				}
-				taskListManager.initActivityHistory();
+				taskActivityMonitor.reloadActivityTime(new Date());
 			} catch (Throwable t) {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 						"Could not initialize task activity", t));
@@ -731,7 +731,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 					}
 					externalizationManager.reset();
 					externalizationManager.setRootFolderPath(newPath);
-					getTaskListManager().getTaskActivationHistory().clear();
+					taskActivityManager.getTaskActivationHistory().clear();
 
 					getRepositoryManager().readRepositories(
 							newPath + File.separator + TaskRepositoryManager.DEFAULT_REPOSITORIES_FILE);

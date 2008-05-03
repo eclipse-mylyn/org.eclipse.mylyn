@@ -21,12 +21,9 @@ import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
@@ -40,7 +37,6 @@ import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternaliza
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizer;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskListElementImporter;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskActivationHistory;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -82,8 +78,6 @@ public class TaskListManager implements ITaskListManager {
 //	private TaskListSaveManager taskListSaveManager;
 
 	private final TaskList taskList = new TaskList();
-
-	private final TaskActivationHistory taskActivityHistory = new TaskActivationHistory();
 
 	private final Timer timer;
 
@@ -143,7 +137,7 @@ public class TaskListManager implements ITaskListManager {
 	 */
 	public void initActivityHistory() {
 		resetAndRollOver();
-		taskActivityHistory.loadPersistentHistory();
+//		taskActivityHistory.loadPersistentHistory();
 	}
 
 	/**
@@ -171,73 +165,20 @@ public class TaskListManager implements ITaskListManager {
 	}
 
 	public void activateTask(AbstractTask task) {
-		activateTask(task, true);
+		TasksUi.getTaskActivityManager().activateTask(task);
 	}
 
 	@Deprecated
 	public void activateTask(AbstractTask task, boolean addToHistory) {
-		deactivateAllTasks();
-
-		// notify that a task is about to be activated
-		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(taskActivationListeners)) {
-			try {
-				listener.preTaskActivated(task);
-			} catch (Throwable t) {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Task activity listener failed: "
-						+ listener, t));
-			}
-		}
-
-		activeTask = task;
-		activeTask.setActive(true);
-		if (addToHistory) {
-			taskActivityHistory.addTask(task);
-		}
-
-		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(taskActivationListeners)) {
-			try {
-				listener.taskActivated(task);
-			} catch (Throwable t) {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Task activity listener failed: "
-						+ listener, t));
-			}
-		}
+		TasksUi.getTaskActivityManager().activateTask(task, addToHistory);
 	}
 
 	public void deactivateAllTasks() {
-		if (activeTask != null) {
-			deactivateTask(activeTask);
-		}
+		TasksUi.getTaskActivityManager().deactivateAllTasks();
 	}
 
 	public void deactivateTask(AbstractTask task) {
-		if (task == null) {
-			return;
-		}
-
-		if (task.isActive() && task == activeTask) {
-			// notify that a task is about to be deactivated
-			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(taskActivationListeners)) {
-				try {
-					listener.preTaskDeactivated(task);
-				} catch (Throwable t) {
-					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Notification failed for: "
-							+ listener, t));
-				}
-			}
-
-			activeTask.setActive(false);
-			activeTask = null;
-
-			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(taskActivationListeners)) {
-				try {
-					listener.taskDeactivated(task);
-				} catch (Throwable t) {
-					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Notification failed for: "
-							+ listener, t));
-				}
-			}
-		}
+		TasksUi.getTaskActivityManager().deactivateTask(task);
 	}
 
 	public void setTaskListFile(File file) {
@@ -288,9 +229,9 @@ public class TaskListManager implements ITaskListManager {
 		}
 	}
 
-	public TaskActivationHistory getTaskActivationHistory() {
-		return taskActivityHistory;
-	}
+//	public TaskActivationHistory getTaskActivationHistory() {
+//		return taskActivityHistory;
+//	}
 
 //	protected void setTaskListSaveManager(TaskListSaveManager taskListSaveManager) {
 //		this.taskListSaveManager = taskListSaveManager;

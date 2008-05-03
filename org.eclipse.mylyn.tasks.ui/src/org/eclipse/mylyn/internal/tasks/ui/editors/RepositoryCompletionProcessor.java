@@ -27,15 +27,17 @@ import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
+import org.eclipse.mylyn.internal.tasks.core.TaskActivationHistory;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskActivationHistory;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
@@ -136,8 +138,8 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 		}
 
 		private CompletionProposal createSeparator() {
-			return new CompletionProposal("", offset, 0, 0,
-					CommonImages.getImage(CommonImages.SEPARATOR_LIST), LABEL_SEPARATOR, null, null);
+			return new CompletionProposal("", offset, 0, 0, CommonImages.getImage(CommonImages.SEPARATOR_LIST),
+					LABEL_SEPARATOR, null, null);
 		}
 
 		/**
@@ -247,8 +249,8 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 		}
 
 		// add tasks from activation history
-		TaskActivationHistory taskHistory = TasksUiPlugin.getTaskListManager().getTaskActivationHistory();
-		List<AbstractTask> tasks = taskHistory.getPreviousTasks(TaskListView.getActiveWorkingSets());
+		TaskActivationHistory taskHistory = TasksUi.getTaskActivityManager().getTaskActivationHistory();
+		List<AbstractTask> tasks = taskHistory.getPreviousTasks(TasksUiInternal.getContainersFromWorkingSet(TaskListView.getActiveWorkingSets()));
 		int count = 0;
 		for (int i = tasks.size() - 1; i >= 0 && count < MAX_ACTIVATED_TASKS; i--) {
 			AbstractTask task = tasks.get(i);

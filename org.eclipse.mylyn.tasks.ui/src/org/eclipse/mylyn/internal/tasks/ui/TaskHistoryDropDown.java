@@ -20,9 +20,9 @@ import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylyn.internal.tasks.core.TaskActivationHistory;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskDialogAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskActivationHistory;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -130,7 +130,7 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 	}
 
 	public TaskHistoryDropDown(String id) {
-		this(id, TasksUiPlugin.getTaskListManager().getTaskActivationHistory());
+		this(id, TasksUi.getTaskActivityManager().getTaskActivationHistory());
 	}
 
 	public TaskHistoryDropDown(String id, TaskActivationHistory taskHistory) {

@@ -8,18 +8,20 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import java.util.Date;
 import java.util.List;
 
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.internal.tasks.core.TaskActivationHistory;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskHistoryDropDownAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskActivationHistory;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Wes Coelho
@@ -62,14 +64,14 @@ public class TaskHistoryTest extends TestCase {
 		task5 = manager.createNewLocalTask("task 5");
 		manager.getTaskList().addTask(task5);
 
-		history = manager.getTaskActivationHistory();
+		history = TasksUi.getTaskActivityManager().getTaskActivationHistory();
 
 		previousTaskAction = new ActivateTaskHistoryDropDownAction();
 	}
 
 	private void resetHistory() {
 		manager.deactivateAllTasks();
-		manager.getTaskActivationHistory().clear();
+		TasksUi.getTaskActivityManager().clear(new Date());
 		ContextCore.getContextManager().resetActivityHistory();
 	}
 

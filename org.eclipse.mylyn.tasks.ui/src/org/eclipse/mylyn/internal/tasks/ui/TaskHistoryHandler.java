@@ -17,9 +17,9 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.internal.tasks.core.TaskActivationHistory;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskDialogAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskActivationHistory;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -55,7 +55,7 @@ public class TaskHistoryHandler extends AbstractHandler implements IElementUpdat
 				TasksUi.getTaskListManager().deactivateAllTasks();
 			}
 		} else {
-			TaskActivationHistory taskHistory = TasksUiPlugin.getTaskListManager().getTaskActivationHistory();
+			TaskActivationHistory taskHistory = TasksUi.getTaskActivityManager().getTaskActivationHistory();
 			if (taskHistory.hasPrevious()) {
 				AbstractTask previousTask = taskHistory.getPreviousTask();
 				new TaskActivateAction().run(previousTask);

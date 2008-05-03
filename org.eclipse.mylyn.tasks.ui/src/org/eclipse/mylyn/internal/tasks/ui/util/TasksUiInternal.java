@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.ProgressMonitorWrapper;
@@ -70,6 +71,7 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
@@ -469,4 +471,19 @@ public class TasksUiInternal {
 		}
 		return newTask;
 	}
+
+	public static Set<AbstractTaskContainer> getContainersFromWorkingSet(Set<IWorkingSet> containers) {
+
+		Set<AbstractTaskContainer> allTaskContainersInWorkingSets = new HashSet<AbstractTaskContainer>();
+		for (IWorkingSet workingSet : containers) {
+			IAdaptable[] elements = workingSet.getElements();
+			for (IAdaptable adaptable : elements) {
+				if (adaptable instanceof AbstractTaskContainer) {
+					allTaskContainersInWorkingSets.add(((AbstractTaskContainer) adaptable));
+				}
+			}
+		}
+		return allTaskContainersInWorkingSets;
+	}
+
 }

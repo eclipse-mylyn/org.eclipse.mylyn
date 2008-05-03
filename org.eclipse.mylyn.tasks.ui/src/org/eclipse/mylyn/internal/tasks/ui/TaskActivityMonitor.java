@@ -8,6 +8,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
+import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
@@ -25,7 +26,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 
 /**
- * Monitors task activity.
+ * Monitors task activity and maintains task activation history
  * 
  * @author Robert Elves
  * @author Steffen Pingel
@@ -94,7 +95,16 @@ public class TaskActivityMonitor {
 	/** public for testing * */
 	public boolean parseInteractionEvent(InteractionEvent event) {
 		try {
-			if (event.getKind().equals(InteractionEvent.Kind.ATTENTION)) {
+			if (event.getKind().equals(InteractionEvent.Kind.COMMAND)) {
+				if ((event.getDelta().equals(IInteractionContextManager.ACTIVITY_DELTA_ACTIVATED))) {
+					//addActivationHistory
+					AbstractTask activatedTask = taskList.getTask(event.getStructureHandle());
+					if (activatedTask != null) {
+						taskActivityManager.getTaskActivationHistory().addTask(activatedTask);
+						return true;
+					}
+				}
+			} else if (event.getKind().equals(InteractionEvent.Kind.ATTENTION)) {
 				timeTicks++;
 				if (timeTicks > 3) {
 					// Save in case of system failure.
@@ -102,7 +112,6 @@ public class TaskActivityMonitor {
 					ContextCore.getContextManager().saveActivityContext();
 					timeTicks = 0;
 				}
-
 				if ((event.getDelta().equals("added") || event.getDelta().equals("add"))) {
 					AbstractTask activatedTask = taskList.getTask(event.getStructureHandle());
 					if (activatedTask != null) {
@@ -126,6 +135,30 @@ public class TaskActivityMonitor {
 
 	public void stop() {
 		contextManager.removeActivityMetaContextListener(CONTEXT_LISTENER);
+	}
+
+	public void reloadActivityTime(Date startDate) {
+		taskActivityManager.clear(startDate);
+		List<InteractionEvent> events = contextManager.getActivityMetaContext().getInteractionHistory();
+		for (InteractionEvent event : events) {
+			parseInteractionEvent(event);
+		}
+
+		// XXX: Separate concern
+		taskActivityManager.reloadTimingData();
+	}
+
+	/**
+	 * Returns the task corresponding to the interaction event history item at the specified position
+	 */
+	protected AbstractTask getHistoryTaskAt(int pos) {
+		InteractionEvent event = ContextCore.getContextManager().getActivityMetaContext().getInteractionHistory().get(
+				pos);
+		if (event.getDelta().equals(IInteractionContextManager.ACTIVITY_DELTA_ACTIVATED)) {
+			return TasksUiPlugin.getTaskListManager().getTaskList().getTask(event.getStructureHandle());
+		} else {
+			return null;
+		}
 	}
 
 }

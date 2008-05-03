@@ -57,6 +57,8 @@ public class TaskActivityManager {
 
 	private static final String DESCRIPTION_PAST = "Past";
 
+	private final TaskActivationHistory taskActivationHistory = new TaskActivationHistory();
+
 	private final List<ITaskActivityListener> activityListeners = new ArrayList<ITaskActivityListener>();
 
 	private final SortedMap<Calendar, Set<AbstractTask>> scheduledTasks = Collections.synchronizedSortedMap(new TreeMap<Calendar, Set<AbstractTask>>());
@@ -88,6 +90,8 @@ public class TaskActivityManager {
 	private int endHour = 17;
 
 	private final TaskList taskList;
+
+	private AbstractTask activeTask;
 
 	private final TaskRepositoryManager repositoryManager;
 
@@ -165,6 +169,7 @@ public class TaskActivityManager {
 		dueTasks.clear();
 		scheduledTasks.clear();
 		activeTasks.clear();
+		taskActivationHistory.clear();
 		taskElapsedTimeMap.clear();
 		setupCalendarRanges();
 	}
@@ -299,6 +304,76 @@ public class TaskActivityManager {
 		synchronized (dueTasks) {
 			for (Set<AbstractTask> setOfTasks : dueTasks.values()) {
 				setOfTasks.remove(task);
+			}
+		}
+	}
+
+	public void activateTask(AbstractTask task) {
+		activateTask(task, true);
+	}
+
+	@Deprecated
+	public void activateTask(AbstractTask task, boolean addToHistory) {
+		deactivateAllTasks();
+
+		// notify that a task is about to be activated
+		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
+			try {
+				listener.preTaskActivated(task);
+			} catch (Throwable t) {
+				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+						"Task activity listener failed: " + listener, t));
+			}
+		}
+
+		activeTask = task;
+		activeTask.setActive(true);
+		if (addToHistory) {
+			taskActivationHistory.addTask(task);
+		}
+
+		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
+			try {
+				listener.taskActivated(task);
+			} catch (Throwable t) {
+				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+						"Task activity listener failed: " + listener, t));
+			}
+		}
+	}
+
+	public void deactivateAllTasks() {
+		if (activeTask != null) {
+			deactivateTask(activeTask);
+		}
+	}
+
+	public void deactivateTask(AbstractTask task) {
+		if (task == null) {
+			return;
+		}
+
+		if (task.isActive() && task == activeTask) {
+			// notify that a task is about to be deactivated
+			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
+				try {
+					listener.preTaskDeactivated(task);
+				} catch (Throwable t) {
+					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+							"Notification failed for: " + listener, t));
+				}
+			}
+
+			activeTask.setActive(false);
+			activeTask = null;
+
+			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
+				try {
+					listener.taskDeactivated(task);
+				} catch (Throwable t) {
+					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+							"Notification failed for: " + listener, t));
+				}
 			}
 		}
 	}
@@ -872,4 +947,7 @@ public class TaskActivityManager {
 		return null;
 	}
 
+	public TaskActivationHistory getTaskActivationHistory() {
+		return taskActivationHistory;
+	}
 }
