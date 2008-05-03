@@ -26,4 +26,11 @@ public interface ITaskRepositoryListener {
 
 	public abstract void repositorySettingsChanged(TaskRepository repository);
 
+	/**
+	 * TODO: Refactor into general delta notification
+	 * 
+	 * @since 3.0
+	 */
+	public abstract void repositoryUrlChanged(TaskRepository repository, String oldUrl);
+
 }

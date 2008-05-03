@@ -24,6 +24,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.DeleteTaskRepositoryAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.EditRepositoryPropertiesAction;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryListener;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.TaskRepositoryListenerAdapter;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -57,8 +58,9 @@ public class TaskRepositoriesView extends ViewPart {
 
 	private DisconnectRepositoryAction offlineAction;
 
-	private final ITaskRepositoryListener REPOSITORY_LISTENER = new ITaskRepositoryListener() {
+	private final ITaskRepositoryListener REPOSITORY_LISTENER = new TaskRepositoryListenerAdapter() {
 
+		@Override
 		public void repositoriesRead() {
 			asyncExec(new Runnable() {
 				public void run() {
@@ -75,6 +77,7 @@ public class TaskRepositoriesView extends ViewPart {
 			}
 		}
 
+		@Override
 		public void repositoryAdded(TaskRepository repository) {
 			asyncExec(new Runnable() {
 				public void run() {
@@ -83,6 +86,7 @@ public class TaskRepositoriesView extends ViewPart {
 			});
 		}
 
+		@Override
 		public void repositoryRemoved(TaskRepository repository) {
 			asyncExec(new Runnable() {
 				public void run() {
@@ -91,6 +95,7 @@ public class TaskRepositoriesView extends ViewPart {
 			});
 		}
 
+		@Override
 		public void repositorySettingsChanged(TaskRepository repository) {
 			asyncExec(new Runnable() {
 				public void run() {
@@ -262,17 +267,9 @@ public class TaskRepositoriesView extends ViewPart {
 		return viewer;
 	}
 
-	public class TaskRepositoryListener implements ITaskRepositoryListener {
+	public class TaskRepositoryListener extends TaskRepositoryListenerAdapter {
 
-		public void repositoriesRead() {
-		}
-
-		public void repositoryAdded(TaskRepository repository) {
-		}
-
-		public void repositoryRemoved(TaskRepository repository) {
-		}
-
+		@Override
 		public void repositorySettingsChanged(TaskRepository repository) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {

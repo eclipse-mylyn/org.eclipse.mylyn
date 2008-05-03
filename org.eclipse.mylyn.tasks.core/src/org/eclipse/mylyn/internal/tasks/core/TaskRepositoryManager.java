@@ -382,4 +382,16 @@ public class TaskRepositoryManager implements ITaskRepositoryManager {
 		return getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 	}
 
+	/**
+	 * @param repository
+	 * 		with new url
+	 * @param oldUrl
+	 * 		previous url for this repository
+	 */
+	public void notifyRepositoryUrlChanged(TaskRepository repository, String oldUrl) {
+		for (ITaskRepositoryListener listener : listeners) {
+			listener.repositoryUrlChanged(repository, oldUrl);
+		}
+	}
+
 }

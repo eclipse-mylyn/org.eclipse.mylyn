@@ -65,6 +65,7 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 				} catch (InvocationTargetException e) {
 					StatusHandler.fail(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
 							"Failed to refactor repository urls"));
+					return false;
 				} catch (InterruptedException e) {
 					// should not get here
 				}
@@ -75,6 +76,9 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 			repository.setRepositoryUrl(newUrl);
 			abstractRepositorySettingsPage.applyTo(repository);
 			abstractRepositorySettingsPage.updateProperties(repository);
+			if (oldUrl != null && newUrl != null && !oldUrl.equals(newUrl)) {
+				TasksUiPlugin.getRepositoryManager().notifyRepositoryUrlChanged(repository, oldUrl);
+			}
 			TasksUiPlugin.getRepositoryManager().notifyRepositorySettingsChanged(repository);
 			TasksUiPlugin.getRepositoryManager().saveRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 			return true;

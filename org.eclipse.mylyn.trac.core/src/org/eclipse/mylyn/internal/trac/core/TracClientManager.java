@@ -152,4 +152,8 @@ public class TracClientManager implements ITaskRepositoryListener {
 		this.taskRepositoryLocationFactory = taskRepositoryLocationFactory;
 	}
 
+	public void repositoryUrlChanged(TaskRepository repository, String oldUrl) {
+		// ignore
+	}
+
 }
