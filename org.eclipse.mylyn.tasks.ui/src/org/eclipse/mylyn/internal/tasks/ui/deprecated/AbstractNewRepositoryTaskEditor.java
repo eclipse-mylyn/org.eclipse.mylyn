@@ -362,7 +362,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		categoryChooser.setLayoutData(GridDataFactory.swtDefaults().hint(150, SWT.DEFAULT).create());
 		getManagedForm().getToolkit().adapt(categoryChooser, true, true);
 		categoryChooser.setFont(TEXT_FONT);
-		ITaskList taskList = TasksUi.getTaskListManager().getTaskList();
+		ITaskList taskList = TasksUi.getTaskList();
 		List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(taskList.getCategories());
 		Collections.sort(categories, new Comparator<AbstractTaskContainer>() {
 
@@ -499,7 +499,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 					}
 
 					if (selectedObject instanceof TaskCategory) {
-						TasksUi.getTaskListManager().getTaskList().addTask(newTask, ((TaskCategory) selectedObject));
+						TasksUi.getTaskList().addTask(newTask, ((TaskCategory) selectedObject));
 					}
 				}
 			});

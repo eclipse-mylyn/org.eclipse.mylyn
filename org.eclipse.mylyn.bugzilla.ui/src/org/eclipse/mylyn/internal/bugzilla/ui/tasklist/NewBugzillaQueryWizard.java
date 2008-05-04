@@ -55,7 +55,7 @@ public class NewBugzillaQueryWizard extends Wizard {
 		}
 
 		BugzillaRepositoryQuery queryCategory = (BugzillaRepositoryQuery) page.getQuery();
-		TasksUi.getTaskListManager().getTaskList().addQuery(queryCategory);
+		TasksUi.getTaskList().addQuery(queryCategory);
 		AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUi.getRepositoryManager().getRepositoryConnector(
 				BugzillaCorePlugin.REPOSITORY_KIND);
 		TasksUiInternal.synchronizeQuery(connector, queryCategory, null, true);

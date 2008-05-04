@@ -570,13 +570,13 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	public TaskListView() {
 		PlatformUI.getWorkbench().getWorkingSetManager().addPropertyChangeListener(this);
 		TasksUiPlugin.getTaskActivityManager().addActivityListener(TASK_ACTIVITY_LISTENER);
-		TasksUi.getTaskListManager().getTaskList().addChangeListener(TASKLIST_CHANGE_LISTENER);
+		TasksUi.getTaskList().addChangeListener(TASKLIST_CHANGE_LISTENER);
 	}
 
 	@Override
 	public void dispose() {
 		super.dispose();
-		TasksUi.getTaskListManager().getTaskList().removeChangeListener(TASKLIST_CHANGE_LISTENER);
+		TasksUi.getTaskList().removeChangeListener(TASKLIST_CHANGE_LISTENER);
 		TasksUiPlugin.getTaskActivityManager().removeActivityListener(TASK_ACTIVITY_LISTENER);
 
 		PlatformUI.getWorkbench().getWorkingSetManager().removePropertyChangeListener(this);

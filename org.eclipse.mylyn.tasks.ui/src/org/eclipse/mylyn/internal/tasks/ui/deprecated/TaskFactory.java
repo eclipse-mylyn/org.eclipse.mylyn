@@ -59,7 +59,7 @@ public class TaskFactory implements ITaskFactory {
 		connector = (AbstractLegacyRepositoryConnector) TasksUi.getRepositoryManager().getRepositoryConnector(
 				repository.getConnectorKind());
 		synchManager = TasksUiPlugin.getTaskDataManager();
-		taskList = TasksUi.getTaskListManager().getTaskList();
+		taskList = TasksUi.getTaskList();
 		//dataManager = TasksUiPlugin.getTaskDataManager();
 		dataHandler = connector.getLegacyTaskDataHandler();
 	}

@@ -44,7 +44,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  * @author Mik Kersten
  * @author Rob Elves
  * 
- * TODO: Move into internal.tasks.core
+ * 	TODO: Move into internal.tasks.core
  */
 public class TaskDataExportOperation implements IRunnableWithProgress {
 
@@ -68,9 +68,7 @@ public class TaskDataExportOperation implements IRunnableWithProgress {
 
 	/** export all data */
 	public TaskDataExportOperation(String destinationDirectory, boolean zipIt, String zipFileName) {
-		this(destinationDirectory, true, true, true, zipIt, zipFileName, TasksUi.getTaskListManager()
-				.getTaskList()
-				.getAllTasks());
+		this(destinationDirectory, true, true, true, zipIt, zipFileName, TasksUi.getTaskList().getAllTasks());
 	}
 
 	/** export specified data */

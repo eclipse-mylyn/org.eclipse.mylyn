@@ -153,7 +153,7 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 	public boolean searchForDuplicates(String duplicateDetectorName) {
 		AbstractRepositoryQuery duplicatesQuery = getDuplicateSearchCollector(duplicateDetectorName);
 		if (duplicatesQuery != null) {
-			SearchHitCollector collector = new SearchHitCollector(TasksUi.getTaskListManager().getTaskList(),
+			SearchHitCollector collector = new SearchHitCollector(TasksUi.getTaskList(),
 					getTaskEditorPage().getTaskRepository(), duplicatesQuery);
 			if (collector != null) {
 				NewSearchUI.runQueryInBackground(collector);

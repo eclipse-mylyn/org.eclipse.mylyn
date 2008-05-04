@@ -105,7 +105,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 		boolean overwrite = exportPage.overwrite();
 		boolean zip = exportPage.zip();
 
-		Collection<AbstractTask> taskContextsToExport = TasksUi.getTaskListManager().getTaskList().getAllTasks();
+		Collection<AbstractTask> taskContextsToExport = TasksUi.getTaskList().getAllTasks();
 
 		// Get file paths to check for existence
 		String destDir = exportPage.getDestinationDirectory();

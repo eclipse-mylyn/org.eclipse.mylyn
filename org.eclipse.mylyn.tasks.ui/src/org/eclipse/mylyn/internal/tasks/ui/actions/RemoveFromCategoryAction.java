@@ -45,7 +45,7 @@ public class RemoveFromCategoryAction extends Action {
 				AbstractTask task = (AbstractTask) selectedObject;
 				AbstractTaskCategory category = TaskCategory.getParentTaskCategory(task);
 				if (category != null) {
-					TasksUi.getTaskListManager().getTaskList().removeFromContainer(category, task);
+					TasksUi.getTaskList().removeFromContainer(category, task);
 				}
 			}
 		}

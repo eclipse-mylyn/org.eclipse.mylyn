@@ -10,6 +10,7 @@ package org.eclipse.mylyn.tasks.ui;
 
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.ITaskListManager;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
@@ -39,6 +40,10 @@ public class TasksUi {
 
 	public static ITaskRepositoryManager getRepositoryManager() {
 		return TasksUiPlugin.getRepositoryManager();
+	}
+
+	public static ITaskList getTaskList() {
+		return TasksUiPlugin.getTaskListManager().getTaskList();
 	}
 
 }

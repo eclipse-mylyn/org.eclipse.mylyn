@@ -93,7 +93,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 				List<IAdaptable> taskRepositoriesContainers = new ArrayList<IAdaptable>();
 				List<IAdaptable> resourcesRepositoriesContainers = new ArrayList<IAdaptable>();
 
-				for (AbstractTaskContainer category : TasksUi.getTaskListManager().getTaskList().getCategories()) {
+				for (AbstractTaskContainer category : TasksUi.getTaskList().getCategories()) {
 					taskRepositoriesContainers.add(category);
 				}
 

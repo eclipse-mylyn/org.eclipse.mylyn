@@ -146,7 +146,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		categoryChooser.setLayoutData(GridDataFactory.swtDefaults().hint(150, SWT.DEFAULT).create());
 		toolkit.adapt(categoryChooser, true, true);
 		categoryChooser.setFont(TEXT_FONT);
-		ITaskList taskList = TasksUi.getTaskListManager().getTaskList();
+		ITaskList taskList = TasksUi.getTaskList();
 		final List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(taskList.getCategories());
 		Collections.sort(categories, new Comparator<AbstractTaskContainer>() {
 

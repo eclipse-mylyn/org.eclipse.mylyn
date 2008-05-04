@@ -120,7 +120,7 @@ public class TaskImportAction extends Action implements IViewActionDelegate {
 				}
 			} else {
 				ContextCorePlugin.getContextManager().importContext(taskContexts.get(loadedTask));
-				TasksUi.getTaskListManager().getTaskList().addTask(loadedTask);
+				TasksUi.getTaskList().addTask(loadedTask);
 			}
 		}
 

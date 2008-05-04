@@ -119,7 +119,7 @@ public class TasksUiUtil {
 	public static AbstractTask createTask(TaskRepository repository, String id, IProgressMonitor monitor)
 			throws CoreException {
 		monitor = Policy.monitorFor(monitor);
-		ITaskList taskList = TasksUi.getTaskListManager().getTaskList();
+		ITaskList taskList = TasksUi.getTaskList();
 		AbstractTask task = taskList.getTask(repository.getRepositoryUrl(), id);
 		if (task == null) {
 			AbstractRepositoryConnector connector = TasksUiPlugin.getConnector(repository.getConnectorKind());
@@ -575,13 +575,13 @@ public class TasksUiUtil {
 	public static boolean openTask(String repositoryUrl, String taskId, String fullUrl) {
 		AbstractTask task = null;
 		if (repositoryUrl != null && taskId != null) {
-			task = TasksUi.getTaskListManager().getTaskList().getTask(repositoryUrl, taskId);
+			task = TasksUi.getTaskList().getTask(repositoryUrl, taskId);
 		}
 		if (task == null && fullUrl != null) {
 			task = TasksUiUtil.getTaskByUrl(fullUrl);
 		}
 		if (task == null && repositoryUrl != null && taskId != null) {
-			task = TasksUi.getTaskListManager().getTaskList().getTaskByKey(repositoryUrl, taskId);
+			task = TasksUi.getTaskList().getTaskByKey(repositoryUrl, taskId);
 		}
 
 		if (task != null) {
@@ -619,7 +619,7 @@ public class TasksUiUtil {
 	 * @since 2.0
 	 */
 	private static AbstractTask getTaskByUrl(String taskUrl) {
-		Collection<AbstractTask> tasks = TasksUi.getTaskListManager().getTaskList().getAllTasks();
+		Collection<AbstractTask> tasks = TasksUi.getTaskList().getAllTasks();
 		for (AbstractTask task : tasks) {
 			String currUrl = task.getUrl();
 			if (currUrl != null && !currUrl.equals("") && currUrl.equals(taskUrl)) {
@@ -636,9 +636,9 @@ public class TasksUiUtil {
 		Assert.isNotNull(repository);
 		Assert.isNotNull(taskId);
 
-		AbstractTask task = TasksUi.getTaskListManager().getTaskList().getTask(repository.getRepositoryUrl(), taskId);
+		AbstractTask task = TasksUi.getTaskList().getTask(repository.getRepositoryUrl(), taskId);
 		if (task == null) {
-			task = TasksUi.getTaskListManager().getTaskList().getTaskByKey(repository.getRepositoryUrl(), taskId);
+			task = TasksUi.getTaskList().getTaskByKey(repository.getRepositoryUrl(), taskId);
 		}
 		if (task != null) {
 			return TasksUiUtil.openTaskAndRefresh(task);

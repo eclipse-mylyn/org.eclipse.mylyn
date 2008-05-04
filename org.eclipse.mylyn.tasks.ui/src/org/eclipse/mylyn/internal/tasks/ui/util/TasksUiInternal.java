@@ -335,7 +335,7 @@ public class TasksUiInternal {
 	 */
 	public static Job synchronizeTasks(AbstractRepositoryConnector connector, Set<AbstractTask> tasks, boolean force,
 			IJobChangeListener listener) {
-		ITaskList taskList = TasksUi.getTaskListManager().getTaskList();
+		ITaskList taskList = TasksUi.getTaskList();
 		for (AbstractTask task : tasks) {
 			task.setSynchronizing(true);
 			taskList.notifyTaskChanged(task, false);
@@ -438,7 +438,7 @@ public class TasksUiInternal {
 		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 		LocalTask newTask = new LocalTask("" + taskList.getNextLocalTaskId(), summary);
 		newTask.setPriority(PriorityLevel.P3.toString());
-		TasksUi.getTaskListManager().getTaskList().addTask(newTask);
+		TasksUi.getTaskList().addTask(newTask);
 		TasksUiPlugin.getTaskActivityManager().scheduleNewTask(newTask);
 
 		Object selectedObject = null;

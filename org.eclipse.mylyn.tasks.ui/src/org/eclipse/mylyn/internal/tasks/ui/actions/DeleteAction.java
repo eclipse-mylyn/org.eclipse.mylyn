@@ -104,7 +104,7 @@ public class DeleteAction extends Action {
 				AbstractTask task = null;
 				task = (AbstractTask) selectedObject;
 				TasksUi.getTaskListManager().deactivateTask(task);
-				TasksUi.getTaskListManager().getTaskList().deleteTask(task);
+				TasksUi.getTaskList().deleteTask(task);
 				ContextCore.getContextManager().deleteContext(task.getHandleIdentifier());
 				TasksUiUtil.closeEditorInActivePage(task, false);
 			} else if (selectedObject instanceof AbstractRepositoryQuery) {
@@ -113,7 +113,7 @@ public class DeleteAction extends Action {
 				// .getActiveWorkbenchWindow().getShell(), "Confirm delete",
 				// "Delete the selected query? Task data will not be deleted.");
 				// if (deleteConfirmed) {
-				TasksUi.getTaskListManager().getTaskList().deleteQuery((AbstractRepositoryQuery) selectedObject);
+				TasksUi.getTaskList().deleteQuery((AbstractRepositoryQuery) selectedObject);
 				// }
 			} else if (selectedObject instanceof TaskCategory) {
 				// boolean deleteConfirmed =
@@ -128,7 +128,7 @@ public class DeleteAction extends Action {
 					ContextCore.getContextManager().deleteContext(task.getHandleIdentifier());
 					TasksUiUtil.closeEditorInActivePage(task, false);
 				}
-				TasksUi.getTaskListManager().getTaskList().deleteCategory(cat);
+				TasksUi.getTaskList().deleteCategory(cat);
 			} else if (selectedObject instanceof UnmatchedTaskContainer) {
 				// ignore
 			} else {

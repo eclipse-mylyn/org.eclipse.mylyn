@@ -149,9 +149,9 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 						parent = actionPart.getCategory();
 					}
 					// TODO copy context and scheduling
-					TasksUi.getTaskListManager().getTaskList().addTask(newTask, parent);
+					TasksUi.getTaskList().addTask(newTask, parent);
 					close();
-					TasksUi.getTaskListManager().getTaskList().deleteTask(getTask());
+					TasksUi.getTaskList().deleteTask(getTask());
 					TasksUiUtil.openTaskInBackground(newTask, false);
 				}
 
@@ -495,7 +495,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		if (menuManager != null) {
 			menuManager.dispose();
 		}
-		TasksUi.getTaskListManager().getTaskList().removeChangeListener(taskListChangeListener);
+		TasksUi.getTaskList().removeChangeListener(taskListChangeListener);
 		super.dispose();
 	}
 
@@ -726,7 +726,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		}
 
 		taskListChangeListener = new TaskListChangeListener();
-		TasksUi.getTaskListManager().getTaskList().addChangeListener(taskListChangeListener);
+		TasksUi.getTaskList().addChangeListener(taskListChangeListener);
 	}
 
 	private void initializePart(Composite parent, AbstractTaskEditorPart part) {

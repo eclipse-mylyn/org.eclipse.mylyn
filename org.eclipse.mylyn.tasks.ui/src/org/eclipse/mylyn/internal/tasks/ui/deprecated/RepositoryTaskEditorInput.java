@@ -33,7 +33,7 @@ public class RepositoryTaskEditorInput extends AbstractRepositoryTaskEditorInput
 		super(repository, taskId);
 		this.taskId = taskId;
 		this.url = taskUrl;
-		AbstractTask task = TasksUi.getTaskListManager().getTaskList().getTask(repository.getRepositoryUrl(), taskId);
+		AbstractTask task = TasksUi.getTaskList().getTask(repository.getRepositoryUrl(), taskId);
 		if (task != null) {
 			this.repositoryTask = task;
 		}

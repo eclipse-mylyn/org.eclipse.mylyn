@@ -141,7 +141,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 			}
 
 		});
-		tasksViewer.setInput(TasksUi.getTaskListManager().getTaskList().getAllTasks());
+		tasksViewer.setInput(TasksUi.getTaskList().getAllTasks());
 		idText.addModifyListener(new ModifyListener() {
 
 			public void modifyText(ModifyEvent e) {

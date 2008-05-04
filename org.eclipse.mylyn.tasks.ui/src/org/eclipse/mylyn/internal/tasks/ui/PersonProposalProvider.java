@@ -153,7 +153,7 @@ public class PersonProposalProvider implements IContentProposalProvider {
 				}
 			}
 
-			Collection<AbstractTask> allTasks = TasksUi.getTaskListManager().getTaskList().getAllTasks();
+			Collection<AbstractTask> allTasks = TasksUi.getTaskList().getAllTasks();
 			for (AbstractTask task : allTasks) {
 				if (repositoryUrl.equals(task.getRepositoryUrl())) {
 					tasks.add(task);

@@ -43,8 +43,7 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 		}
 		subMenuManager.setVisible(!selectedTasks.isEmpty());
 
-		List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(TasksUi.getTaskListManager()
-				.getTaskList()
+		List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(TasksUi.getTaskList()
 				.getCategories());
 		Collections.sort(categories);
 		for (final AbstractTaskCategory category : categories) {
@@ -110,7 +109,7 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 	private void moveToCategory(final List<AbstractTaskContainer> selectedElements, AbstractTaskCategory category) {
 		for (AbstractTaskContainer element : selectedElements) {
 			if (element instanceof AbstractTask) {
-				TasksUi.getTaskListManager().getTaskList().addTask((AbstractTask) element, category);
+				TasksUi.getTaskList().addTask((AbstractTask) element, category);
 			}
 		}
 	}

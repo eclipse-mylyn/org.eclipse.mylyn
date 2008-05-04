@@ -376,8 +376,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 
 		// HACK: this should be a contribution
 		final MenuManager subMenuManager = new MenuManager("Add to " + TaskListView.LABEL_VIEW + " Category");
-		List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(TasksUi.getTaskListManager()
-				.getTaskList()
+		List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(TasksUi.getTaskList()
 				.getCategories());
 
 		Collections.sort(categories);

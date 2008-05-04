@@ -58,8 +58,8 @@ public class NewCategoryAction extends Action implements IViewActionDelegate {
 		int dialogResult = dialog.open();
 		if (dialogResult == Window.OK) {
 			String name = dialog.getValue();
-			Set<AbstractRepositoryQuery> queries = TasksUi.getTaskListManager().getTaskList().getQueries();
-			Set<AbstractTaskCategory> categories = TasksUi.getTaskListManager().getTaskList().getCategories();
+			Set<AbstractRepositoryQuery> queries = TasksUi.getTaskList().getQueries();
+			Set<AbstractTaskCategory> categories = TasksUi.getTaskList().getCategories();
 
 			for (AbstractTaskCategory category : categories) {
 				if (name != null && name.equals(category.getSummary())) {

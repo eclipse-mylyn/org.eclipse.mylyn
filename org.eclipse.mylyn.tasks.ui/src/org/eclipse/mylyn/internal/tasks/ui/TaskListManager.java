@@ -173,7 +173,7 @@ public class TaskListManager implements ITaskListManager {
 			query.setHandleIdentifier(handle);
 
 			// add query
-			TasksUi.getTaskListManager().getTaskList().addQuery(query);
+			TasksUi.getTaskList().addQuery(query);
 
 			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 					repository.getConnectorKind());
@@ -306,7 +306,7 @@ public class TaskListManager implements ITaskListManager {
 //	}
 //	LocalTask newTask = new LocalTask("" + taskList.getNextLocalTaskId(), summary);
 //	newTask.setPriority(PriorityLevel.P3.toString());
-//	TasksUi.getTaskListManager().getTaskList().addTask(newTask);
+//	TasksUi.getTaskList().addTask(newTask);
 //
 //	TasksUiPlugin.getTaskActivityManager().scheduleNewTask(newTask);
 //

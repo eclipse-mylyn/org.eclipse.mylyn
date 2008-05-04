@@ -29,22 +29,27 @@ import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.ITaskListManager;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Rob Elves
  */
 public class TaskActivityTimingTest extends TestCase {
 
-	ITaskListManager manager = null;
+	private ITaskListManager manager;
 
-	TaskActivityManager activityManager = null;
+	private TaskActivityManager activityManager;
+
+	private ITaskList taskList;
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		manager = TasksUiPlugin.getTaskListManager();
-		activityManager = TasksUiPlugin.getTaskActivityManager();
+		manager = TasksUi.getTaskListManager();
+		activityManager = TasksUi.getTaskActivityManager();
+		taskList = TasksUi.getTaskList();
 	}
 
 	@Override
@@ -57,7 +62,7 @@ public class TaskActivityTimingTest extends TestCase {
 
 	public void testActivityCaptured() {
 		AbstractTask task1 = new LocalTask("task 1", "Task 1");
-		manager.getTaskList().addTask(task1);
+		taskList.addTask(task1);
 		assertEquals(0, activityManager.getElapsedTime(task1));
 
 		Calendar start = Calendar.getInstance();
@@ -96,7 +101,7 @@ public class TaskActivityTimingTest extends TestCase {
 	public void testActivityDelete() {
 
 		AbstractTask task1 = new LocalTask("1", "Task 1");
-		manager.getTaskList().addTask(task1);
+		taskList.addTask(task1);
 		assertEquals(0, activityManager.getElapsedTime(task1));
 
 		Calendar start = Calendar.getInstance();
@@ -153,7 +158,7 @@ public class TaskActivityTimingTest extends TestCase {
 //	public void testActivityReset() {
 //
 //		AbstractTask task1 = new LocalTask("1", "Task 1");
-//		manager.getTaskList().addTask(task1);
+//		taskList.addTask(task1);
 //		assertEquals(0, activityManager.getElapsedTime(task1));
 //
 //		Calendar start = Calendar.getInstance();
@@ -228,7 +233,7 @@ public class TaskActivityTimingTest extends TestCase {
 	public void testNegativeActivity() {
 
 		AbstractTask task1 = new LocalTask("task 1", "Task 1");
-		manager.getTaskList().addTask(task1);
+		taskList.addTask(task1);
 		assertEquals(0, activityManager.getElapsedTime(task1));
 
 		Calendar start = Calendar.getInstance();
@@ -260,7 +265,7 @@ public class TaskActivityTimingTest extends TestCase {
 
 	public void testNullTaskHandle() {
 		AbstractTask task1 = new LocalTask("task 1", "Task 1");
-		manager.getTaskList().addTask(task1);
+		taskList.addTask(task1);
 		assertEquals(0, activityManager.getElapsedTime(task1));
 
 		Calendar start = Calendar.getInstance();

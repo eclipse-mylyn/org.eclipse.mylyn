@@ -182,7 +182,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 	public TaskPlanningEditor(TaskEditor editor) {
 		super(editor, TasksUi.ID_PLANNING_PAGE, "Planning");
 		this.parentEditor = editor;
-		TasksUi.getTaskListManager().getTaskList().addChangeListener(TASK_LIST_LISTENER);
+		TasksUi.getTaskList().addChangeListener(TASK_LIST_LISTENER);
 	}
 
 	/** public for testing */
@@ -248,7 +248,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 			} else {
 				task.setCompletionDate(null);
 			}
-			TasksUi.getTaskListManager().getTaskList().notifyTaskChanged(task, false);
+			TasksUi.getTaskList().notifyTaskChanged(task, false);
 		}
 
 		String note = noteEditor.getTextWidget().getText();// notes.getText();
@@ -960,7 +960,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		if (timingListener != null) {
 			TasksUiPlugin.getTaskActivityManager().removeActivityListener(timingListener);
 		}
-		TasksUi.getTaskListManager().getTaskList().removeChangeListener(TASK_LIST_LISTENER);
+		TasksUi.getTaskList().removeChangeListener(TASK_LIST_LISTENER);
 	}
 
 	@Override

@@ -85,7 +85,7 @@ public class AddExistingTaskJob extends Job {
 								category = (TaskCategory) selectedObject;
 							}
 						}
-						TasksUi.getTaskListManager().getTaskList().addTask(newTask, category);
+						TasksUi.getTaskList().addTask(newTask, category);
 						taskListView.getViewer().setSelection(new StructuredSelection(newTask));
 					}
 				});

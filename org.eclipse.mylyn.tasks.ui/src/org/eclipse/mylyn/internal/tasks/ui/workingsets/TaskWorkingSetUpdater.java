@@ -79,12 +79,12 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 	}
 
 	public TaskWorkingSetUpdater() {
-		TasksUi.getTaskListManager().getTaskList().addChangeListener(this);
+		TasksUi.getTaskList().addChangeListener(this);
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
 	}
 
 	public void dispose() {
-		TasksUi.getTaskListManager().getTaskList().removeChangeListener(this);
+		TasksUi.getTaskList().removeChangeListener(this);
 	}
 
 	public void add(IWorkingSet workingSet) {

@@ -113,7 +113,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 	@Override
 	public void dispose() {
 		if (changeListener != null) {
-			TasksUi.getTaskListManager().getTaskList().removeChangeListener(changeListener);
+			TasksUi.getTaskList().removeChangeListener(changeListener);
 		}
 		super.dispose();
 		taskListToolTip.dispose();
@@ -158,7 +158,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		taskProgressBar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		updateTaskProgressBar();
 
-		TasksUi.getTaskListManager().getTaskList().addChangeListener(new TaskListChangeAdapter() {
+		TasksUi.getTaskList().addChangeListener(new TaskListChangeAdapter() {
 
 			@Override
 			public void containersChanged(Set<TaskContainerDelta> containers) {
@@ -347,7 +347,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 				}
 			}
 		};
-		TasksUi.getTaskListManager().getTaskList().addChangeListener(changeListener);
+		TasksUi.getTaskList().addChangeListener(changeListener);
 
 		activeTaskLink.setText(LABEL_ACTIVE_NONE);
 		activeTaskLink.setForeground(CommonColors.HYPERLINK_WIDGET);

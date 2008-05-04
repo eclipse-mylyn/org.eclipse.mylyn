@@ -192,20 +192,20 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 								TasksUiPreferenceConstants.LOCAL_SUB_TASKS_ENABLED)) {
 					for (AbstractTask task : tasksToMove) {
 						if (!task.contains(((LocalTask) currentTarget).getHandleIdentifier())) {
-							TasksUi.getTaskListManager().getTaskList().addTask(task, (LocalTask) currentTarget);
+							TasksUi.getTaskList().addTask(task, (LocalTask) currentTarget);
 						}
 					}
 				} else {
 					for (AbstractTask task : tasksToMove) {
 						if (currentTarget instanceof UncategorizedTaskContainer) {
-							TasksUi.getTaskListManager().getTaskList().addTask(task,
+							TasksUi.getTaskList().addTask(task,
 									(UncategorizedTaskContainer) currentTarget);
 						} else if (currentTarget instanceof TaskCategory) {
-							TasksUi.getTaskListManager().getTaskList().addTask(task, (TaskCategory) currentTarget);
+							TasksUi.getTaskList().addTask(task, (TaskCategory) currentTarget);
 						} else if (currentTarget instanceof UnmatchedTaskContainer) {
 							if (((UnmatchedTaskContainer) currentTarget).getRepositoryUrl().equals(
 									task.getRepositoryUrl())) {
-								TasksUi.getTaskListManager().getTaskList().addTask(task,
+								TasksUi.getTaskList().addTask(task,
 										(AbstractTaskCategory) currentTarget);
 							}
 						} else if (currentTarget instanceof AbstractTask) {
@@ -222,7 +222,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 								}
 							}
 							if (targetCategory != null) {
-								TasksUi.getTaskListManager().getTaskList().addTask(task, targetCategory);
+								TasksUi.getTaskList().addTask(task, targetCategory);
 							}
 						} else if (currentTarget instanceof ScheduledTaskContainer) {
 							ScheduledTaskContainer container = (ScheduledTaskContainer) currentTarget;
@@ -232,7 +232,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 							TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, newSchedule.getTime(),
 									container.isCaptureFloating());
 						} else if (currentTarget == null) {
-							TasksUi.getTaskListManager().getTaskList().addTask(newTask,
+							TasksUi.getTaskList().addTask(newTask,
 									TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 						}
 					}
@@ -406,7 +406,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 				@Override
 				protected void titleRetrieved(final String pageTitle) {
 					newTask.setSummary(pageTitle);
-					TasksUi.getTaskListManager().getTaskList().notifyTaskChanged(newTask, false);
+					TasksUi.getTaskList().notifyTaskChanged(newTask, false);
 				}
 			};
 			job.schedule();

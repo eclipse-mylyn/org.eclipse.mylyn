@@ -24,8 +24,6 @@ public interface ITaskListManager {
 
 	public abstract AbstractTask getActiveTask();
 
-	public abstract ITaskList getTaskList();
-
 //	public abstract void removeActivationListener(ITaskActivityListener activityListener);
 
 }

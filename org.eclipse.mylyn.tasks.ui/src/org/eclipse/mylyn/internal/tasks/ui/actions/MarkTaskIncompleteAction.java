@@ -66,7 +66,7 @@ public class MarkTaskIncompleteAction extends AbstractChangeCompletionAction {
 			}
 		}
 
-		ITaskList taskList = TasksUi.getTaskListManager().getTaskList();
+		ITaskList taskList = TasksUi.getTaskList();
 		for (AbstractTask task : toComplete) {
 			task.setCompletionDate(null);
 			taskList.notifyTaskChanged(task, false);

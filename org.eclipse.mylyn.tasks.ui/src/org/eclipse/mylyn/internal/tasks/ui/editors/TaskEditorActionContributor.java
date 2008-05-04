@@ -189,8 +189,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 
 		if (editor.getTaskEditorInput() == null && !(editor.getEditorInput() instanceof NewTaskEditorInput)) {
 			final MenuManager subMenuManager = new MenuManager("Add to " + TaskListView.LABEL_VIEW);
-			List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(TasksUi.getTaskListManager()
-					.getTaskList()
+			List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(TasksUi.getTaskList()
 					.getCategories());
 
 			Collections.sort(categories);

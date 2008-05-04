@@ -103,8 +103,8 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 
 	@Override
 	public boolean isPageComplete() {
-		Set<AbstractRepositoryQuery> queries = TasksUi.getTaskListManager().getTaskList().getQueries();
-		Set<AbstractTaskCategory> categories = TasksUi.getTaskListManager().getTaskList().getCategories();
+		Set<AbstractRepositoryQuery> queries = TasksUi.getTaskList().getQueries();
+		Set<AbstractTaskCategory> categories = TasksUi.getTaskList().getCategories();
 
 		if (title == null || title.getText().equals("")) {
 			setErrorMessage("Please specify a title for the query.");
@@ -164,7 +164,7 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				repository.getConnectorKind());
 		if (connector != null) {
-			SearchHitCollector collector = new SearchHitCollector(TasksUi.getTaskListManager().getTaskList(),
+			SearchHitCollector collector = new SearchHitCollector(TasksUi.getTaskList(),
 					repository, getQuery());
 			NewSearchUI.runQueryInBackground(collector);
 		}
