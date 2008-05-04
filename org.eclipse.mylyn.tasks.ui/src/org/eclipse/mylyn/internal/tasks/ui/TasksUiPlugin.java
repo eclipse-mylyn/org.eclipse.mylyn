@@ -381,7 +381,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 						break;
 					}
 				}
-				taskActivityMonitor.reloadActivityTime(new Date());
+				taskActivityMonitor.reloadActivityTime();
 			} catch (Throwable t) {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 						"Could not initialize task activity", t));
@@ -579,7 +579,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		if (oldWeekStartDay != newWeekStartDay) {
 			taskActivityManager.setWeekStartDay(newWeekStartDay);
 			TaskActivityUtil.setStartDay(newWeekStartDay);
-			taskListManager.resetAndRollOver();
+			taskActivityMonitor.reloadActivityTime();
 		}
 
 		// event.getProperty().equals(TaskListPreferenceConstants.PLANNING_STARTDAY)
@@ -731,7 +731,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 					}
 					externalizationManager.reset();
 					externalizationManager.setRootFolderPath(newPath);
-					taskActivityManager.getTaskActivationHistory().clear();
+					taskActivityManager.clear();
 
 					getRepositoryManager().readRepositories(
 							newPath + File.separator + TaskRepositoryManager.DEFAULT_REPOSITORIES_FILE);
@@ -743,7 +743,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 					ContextCore.getContextManager().loadActivityMetaContext();
 					getTaskListManager().readExistingOrCreateNewList();
-					getTaskListManager().initActivityHistory();
+					taskActivityMonitor.reloadActivityTime();
 				} finally {
 					Job.getJobManager().endRule(ITasksCoreConstants.ROOT_SCHEDULING_RULE);
 					monitor.done();

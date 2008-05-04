@@ -140,7 +140,7 @@ public class TaskActivityTimingTest extends TestCase {
 
 		ContextCore.getContextManager().saveActivityContext();
 		ContextCore.getContextManager().loadActivityMetaContext();
-		TasksUiPlugin.getTaskListManager().resetAndRollOver();
+		TasksUiPlugin.getTaskActivityMonitor().reloadActivityTime();
 
 		assertEquals(expectedTotalTime, activityManager.getElapsedTime(task1));
 
@@ -415,7 +415,7 @@ public class TaskActivityTimingTest extends TestCase {
 
 		ContextCore.getContextManager().saveActivityContext();
 		ContextCore.getContextManager().loadActivityMetaContext();
-		TasksUiPlugin.getTaskListManager().resetAndRollOver();
+		TasksUiPlugin.getTaskActivityMonitor().reloadActivityTime();
 
 		assertEquals(26000, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1));
 
@@ -451,7 +451,7 @@ public class TaskActivityTimingTest extends TestCase {
 
 		ContextCore.getContextManager().saveActivityContext();
 		ContextCore.getContextManager().loadActivityMetaContext();
-		TasksUiPlugin.getTaskListManager().resetAndRollOver();
+		TasksUiPlugin.getTaskActivityMonitor().reloadActivityTime();
 
 		assertEquals(20000, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1));
 
@@ -581,7 +581,7 @@ public class TaskActivityTimingTest extends TestCase {
 		assertEquals(4, ContextCore.getContextManager().getActivityMetaContext().getInteractionHistory().size());
 		assertEquals(0, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1));
 
-		TasksUiPlugin.getTaskListManager().resetAndRollOver();
+		TasksUiPlugin.getTaskActivityMonitor().reloadActivityTime();
 		assertEquals((endTime1.getTimeInMillis() - startTime1.getTimeInMillis())
 				+ (endTime2.getTimeInMillis() - startTime2.getTimeInMillis()), TasksUiPlugin.getTaskActivityManager()
 				.getElapsedTime(task1));
@@ -787,14 +787,14 @@ public class TaskActivityTimingTest extends TestCase {
 		ContextCore.getContextManager().saveActivityContext();
 		ContextCore.getContextManager().getActivityMetaContext().reset();
 		assertEquals(0, ContextCore.getContextManager().getActivityMetaContext().getInteractionHistory().size());
-		TasksUiPlugin.getTaskListManager().resetAndRollOver();
+		TasksUiPlugin.getTaskActivityMonitor().reloadActivityTime();
 		assertEquals(0, activityManager.getElapsedTime(task1));
 		assertEquals(0, activityManager.getElapsedTime(task1, startTime1, endTime1));
 		assertEquals(0, activityManager.getElapsedTime(task1, startTime2, endTime2));
 
 		ContextCore.getContextManager().loadActivityMetaContext();
 		assertEquals(3, ContextCore.getContextManager().getActivityMetaContext().getInteractionHistory().size());
-		TasksUiPlugin.getTaskListManager().resetAndRollOver();
+		TasksUiPlugin.getTaskActivityMonitor().reloadActivityTime();
 
 		startTime1 = Calendar.getInstance();
 		startTime1.set(Calendar.MINUTE, 0);

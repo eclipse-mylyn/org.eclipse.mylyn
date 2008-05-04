@@ -137,15 +137,16 @@ public class TaskActivityMonitor {
 		contextManager.removeActivityMetaContextListener(CONTEXT_LISTENER);
 	}
 
-	public void reloadActivityTime(Date startDate) {
-		taskActivityManager.clear(startDate);
+	public void reloadActivityTime() {
+		reloadActivityTime(new Date());
+	}
+
+	public void reloadActivityTime(Date date) {
+		taskActivityManager.clear(date);
 		List<InteractionEvent> events = contextManager.getActivityMetaContext().getInteractionHistory();
 		for (InteractionEvent event : events) {
 			parseInteractionEvent(event);
 		}
-
-		// XXX: Separate concern
-		taskActivityManager.reloadTimingData();
 	}
 
 	/**

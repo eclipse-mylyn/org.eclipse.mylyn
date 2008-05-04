@@ -108,7 +108,7 @@ public class TaskActivityManager {
 		this.taskListManager = taskListManager;
 		this.taskList = taskList;
 		this.repositoryManager = repositoryManager;
-
+		clear();
 	}
 
 	/**
@@ -164,17 +164,27 @@ public class TaskActivityManager {
 		activityListeners.remove(listener);
 	}
 
+	public void setStartTime(Date time) {
+		this.startTime = time;
+		// TODO: separate concerns
+		setupCalendarRanges();
+		reloadTimingData();
+	}
+
+	public void clear() {
+		clear(new Date());
+	}
+
 	public void clear(Date date) {
-		startTime = date;
 		dueTasks.clear();
 		scheduledTasks.clear();
 		activeTasks.clear();
 		taskActivationHistory.clear();
 		taskElapsedTimeMap.clear();
-		setupCalendarRanges();
+		setStartTime(date);
 	}
 
-	public void reloadTimingData() {
+	private void reloadTimingData() {
 		reloadScheduledData();
 		for (ITaskActivityListener listener : activityListeners) {
 			listener.activityReset();

@@ -11,7 +11,6 @@ package org.eclipse.mylyn.internal.tasks.ui;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +23,6 @@ import java.util.regex.Pattern;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
@@ -38,7 +36,6 @@ import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalize
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskListElementImporter;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -98,7 +95,7 @@ public class TaskListManager implements ITaskListManager {
 
 	public ITaskList resetTaskList() {
 		deactivateAllTasks();
-		resetAndRollOver();
+		//resetAndRollOver();
 		taskList.reset();
 		prepareOrphanContainers();
 		return taskList;
@@ -130,15 +127,15 @@ public class TaskListManager implements ITaskListManager {
 		return true;
 	}
 
-	/**
-	 * TODO: Move activation history to activity manager
-	 * 
-	 * Only to be called upon initial startup by plugin.
-	 */
-	public void initActivityHistory() {
-		resetAndRollOver();
-//		taskActivityHistory.loadPersistentHistory();
-	}
+//	/**
+//	 * TODO: Move activation history to activity manager
+//	 * 
+//	 * Only to be called upon initial startup by plugin.
+//	 */
+//	public void initActivityHistory() {
+//		resetAndRollOver();
+////		taskActivityHistory.loadPersistentHistory();
+//	}
 
 	/**
 	 * Will not save an empty task list to avoid losing data on bad startup.
@@ -148,16 +145,6 @@ public class TaskListManager implements ITaskListManager {
 	@Deprecated
 	public synchronized void saveTaskList() {
 		TasksUiPlugin.getExternalizationManager().requestSave();
-//		try {
-//			if (taskListInitialized && taskListSaveManager != null) {
-//				taskListSaveManager.saveTaskList(true, false);
-//			} else {
-//				StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
-//						"Task list save attempted before initialization"));
-//			}
-//		} catch (Exception e) {
-//			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not save task list", e));
-//		}
 	}
 
 	public TaskList getTaskList() {
@@ -193,25 +180,25 @@ public class TaskListManager implements ITaskListManager {
 		return taskListFile;
 	}
 
-	/**
-	 * public for testing TODO: Move to TaskActivityManager
-	 */
-	public void resetAndRollOver() {
-		resetAndRollOver(TaskActivityUtil.getCalendar().getTime());
-	}
-
-	public void resetAndRollOver(Date startDate) {
-		if (taskList.isInitialized()) {
-			TasksUiPlugin.getTaskActivityManager().clear(startDate);
-			List<InteractionEvent> events = ContextCore.getContextManager()
-					.getActivityMetaContext()
-					.getInteractionHistory();
-			for (InteractionEvent event : events) {
-				TasksUiPlugin.getTaskActivityMonitor().parseInteractionEvent(event);
-			}
-			TasksUiPlugin.getTaskActivityManager().reloadTimingData();
-		}
-	}
+//	/**
+//	 * public for testing TODO: Move to TaskActivityManager
+//	 */
+//	private void resetAndRollOver() {
+//		resetAndRollOver(TaskActivityUtil.getCalendar().getTime());
+//	}
+//
+//	private void resetAndRollOver(Date startDate) {
+//		if (taskList.isInitialized()) {
+//			TasksUiPlugin.getTaskActivityManager().clear();
+//			List<InteractionEvent> events = ContextCore.getContextManager()
+//					.getActivityMetaContext()
+//					.getInteractionHistory();
+//			for (InteractionEvent event : events) {
+//				TasksUiPlugin.getTaskActivityMonitor().parseInteractionEvent(event);
+//			}
+//			TasksUiPlugin.getTaskActivityManager().reloadTimingData();
+//		}
+//	}
 
 	private class RolloverCheck extends TimerTask {
 
@@ -223,7 +210,7 @@ public class TaskListManager implements ITaskListManager {
 				Calendar now = TaskActivityUtil.getCalendar();
 				ScheduledTaskContainer thisWeek = TasksUiPlugin.getTaskActivityManager().getActivityThisWeek();
 				if (!thisWeek.includes(now)) {
-					resetAndRollOver();
+					TasksUi.getTaskActivityManager().setStartTime(now.getTime());
 				}
 			}
 		}

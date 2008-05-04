@@ -8,7 +8,6 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
-import java.util.Date;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -71,7 +70,7 @@ public class TaskHistoryTest extends TestCase {
 
 	private void resetHistory() {
 		manager.deactivateAllTasks();
-		TasksUi.getTaskActivityManager().clear(new Date());
+		TasksUi.getTaskActivityManager().clear();
 		ContextCore.getContextManager().resetActivityHistory();
 	}
 

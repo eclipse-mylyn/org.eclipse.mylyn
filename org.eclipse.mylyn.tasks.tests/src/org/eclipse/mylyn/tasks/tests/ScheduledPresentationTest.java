@@ -56,7 +56,7 @@ public class ScheduledPresentationTest extends TestCase {
 		Calendar startOfWeekDate = TaskActivityUtil.getCalendar();
 		TaskActivityUtil.snapEndOfWeek(startOfWeekDate);
 		assertEquals(Calendar.SATURDAY, startOfWeekDate.get(Calendar.DAY_OF_WEEK));
-		TasksUiPlugin.getTaskListManager().resetAndRollOver(startOfWeekDate.getTime());
+		TasksUiPlugin.getTaskActivityMonitor().reloadActivityTime(startOfWeekDate.getTime());
 
 		AbstractTask task1 = new LocalTask("task 1", "Task 1");
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
@@ -78,7 +78,7 @@ public class ScheduledPresentationTest extends TestCase {
 
 		TasksUiPlugin.getTaskActivityManager().setWeekStartDay(Calendar.MONDAY);
 		TaskActivityUtil.setStartDay(Calendar.MONDAY);
-		TasksUiPlugin.getTaskListManager().resetAndRollOver(startOfWeekDate.getTime());
+		TasksUiPlugin.getTaskActivityMonitor().reloadActivityTime(startOfWeekDate.getTime());
 
 		assertTrue(TaskListInterestFilter.isInterestingForThisWeek(null, task1));
 		assertTrue(TaskListInterestFilter.isInterestingForThisWeek(null, task2));
@@ -144,7 +144,7 @@ public class ScheduledPresentationTest extends TestCase {
 		newStart.add(Calendar.WEEK_OF_MONTH, 1);
 		//TasksUiPlugin.getTaskListManager().snapToStartOfWeek(newStart);
 
-		TasksUiPlugin.getTaskListManager().resetAndRollOver(newStart.getTime());
+		TasksUiPlugin.getTaskActivityMonitor().reloadActivityTime(newStart.getTime());
 
 		//ScheduledTaskContainer newPastWeeks = TasksUiPlugin.getTaskListManager().getActivityPast();
 		ScheduledTaskContainer newPreviousWeek = TasksUiPlugin.getTaskActivityManager().getActivityPrevious();
@@ -166,7 +166,7 @@ public class ScheduledPresentationTest extends TestCase {
 		assertEquals(1, TasksUiPlugin.getTaskActivityManager().getScheduledTasks(newPreviousWeek.getStart(),
 				newPreviousWeek.getEnd()).size());
 
-		TasksUiPlugin.getTaskListManager().resetAndRollOver(oldStart);
+		TasksUiPlugin.getTaskActivityMonitor().reloadActivityTime(oldStart);
 	}
 
 	public void testScheduledTaskContainer() {
