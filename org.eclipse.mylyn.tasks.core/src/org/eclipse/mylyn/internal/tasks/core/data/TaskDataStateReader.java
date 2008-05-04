@@ -10,7 +10,6 @@ package org.eclipse.mylyn.internal.tasks.core.data;
 
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
-import org.eclipse.mylyn.tasks.core.IdentityAttributeMapper;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler2;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -584,11 +583,6 @@ public class TaskDataStateReader extends DefaultHandler {
 	}
 
 	private TaskAttributeMapper getAttributeMapper(String connectorKind, String repositoryUrl) throws SAXException {
-		// for testing
-		if (repositoryManager == null) {
-			return IdentityAttributeMapper.getInstance();
-		}
-
 		AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(connectorKind);
 		if (connector == null) {
 			throw new SAXException("No repository connector for kind \"" + connectorKind + "\" found");
@@ -599,10 +593,12 @@ public class TaskDataStateReader extends DefaultHandler {
 			throw new SAXException("Repository \"" + repositoryUrl + "\" not found for kind \"" + connectorKind + "\"");
 		}
 
-		TaskAttributeMapper attributeMapper = IdentityAttributeMapper.getInstance();
+		final TaskAttributeMapper attributeMapper;
 		AbstractTaskDataHandler2 taskDataHandler = connector.getTaskDataHandler2();
 		if (taskDataHandler != null) {
 			attributeMapper = taskDataHandler.getAttributeMapper(taskRepository);
+		} else {
+			attributeMapper = new TaskAttributeMapper(taskRepository);
 		}
 		return attributeMapper;
 	}

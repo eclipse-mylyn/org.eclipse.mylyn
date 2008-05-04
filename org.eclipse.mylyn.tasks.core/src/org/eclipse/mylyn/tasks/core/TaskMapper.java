@@ -9,25 +9,21 @@
 package org.eclipse.mylyn.tasks.core;
 
 import java.util.Date;
-import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
-import org.eclipse.mylyn.tasks.core.data.ITaskAttachment2;
-import org.eclipse.mylyn.tasks.core.data.ITaskComment;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
-import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 /**
  * @author Steffen Pingel
  * @since 3.0
  */
-public class TaskScheme {
+public class TaskMapper {
 
 	private final TaskData taskData;
 
-	public TaskScheme(TaskData taskData) {
+	public TaskMapper(TaskData taskData) {
 		Assert.isNotNull(taskData);
 		this.taskData = taskData;
 	}
@@ -238,38 +234,6 @@ public class TaskScheme {
 		}
 		taskData.getAttributeMapper().setValue(attribute, value);
 		return attribute;
-	}
-
-	public ITaskComment[] getComments() {
-		TaskAttribute attribute = taskData.getRoot().getAttribute(TaskAttribute.CONTAINER_COMMENTS);
-		if (attribute != null) {
-			TaskAttributeMapper attributeMapper = taskData.getAttributeMapper();
-			Map<String, TaskAttribute> children = attribute.getAttributes();
-			int i = 0;
-			ITaskComment[] comments = new ITaskComment[children.size()];
-			for (TaskAttribute child : children.values()) {
-				comments[i] = attributeMapper.getTaskComment(child);
-				i++;
-			}
-			return comments;
-		}
-		return null;
-	}
-
-	public ITaskAttachment2[] getAttachments() {
-		TaskAttribute attribute = taskData.getRoot().getAttribute(TaskAttribute.CONTAINER_ATTACHMENTS);
-		if (attribute != null) {
-			TaskAttributeMapper attributeMapper = taskData.getAttributeMapper();
-			Map<String, TaskAttribute> children = attribute.getAttributes();
-			int i = 0;
-			ITaskAttachment2[] attachments = new ITaskAttachment2[children.size()];
-			for (TaskAttribute child : children.values()) {
-				attachments[i] = attributeMapper.getTaskAttachment(child);
-				i++;
-			}
-			return attachments;
-		}
-		return null;
 	}
 
 }

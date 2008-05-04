@@ -20,7 +20,7 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.tasks.core.data.TaskAttachment;
+import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentModel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -91,14 +91,14 @@ public class TaskAttachmentPage extends WizardPage {
 
 	private boolean needsDescription;
 
-	private final TaskAttachment taskAttachment;
+	private final TaskAttachmentMapper taskAttachment;
 
 	private boolean first = true;
 
 	public TaskAttachmentPage(TaskAttachmentModel model) {
 		super("AttachmentDetails");
 		this.model = model;
-		this.taskAttachment = TaskAttachment.createFrom(model.getAttribute());
+		this.taskAttachment = TaskAttachmentMapper.createFrom(model.getAttribute());
 		setTitle("Attachment Details");
 		setNeedsDescription(true);
 	}

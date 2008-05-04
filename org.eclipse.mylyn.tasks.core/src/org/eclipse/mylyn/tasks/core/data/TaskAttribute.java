@@ -278,7 +278,7 @@ public final class TaskAttribute {
 		if (attributeById == null) {
 			attributeById = new LinkedHashMap<String, TaskAttribute>();
 		}
-		attributeById.put(attributeId, attribute);
+		attributeById.put(attribute.getId(), attribute);
 	}
 
 	public void addValue(String value) {
@@ -303,8 +303,7 @@ public final class TaskAttribute {
 	}
 
 	public TaskAttribute createAttribute(String attributeId) {
-		TaskAttribute attribute = new TaskAttribute(this, attributeId);
-		return attribute;
+		return new TaskAttribute(this, attributeId);
 	}
 
 	public void deepAddCopy(TaskAttribute source) {
@@ -453,9 +452,9 @@ public final class TaskAttribute {
 	 * Adds an attribute option value
 	 * 
 	 * @param readableValue
-	 *            The value displayed on the screen
+	 * 		The value displayed on the screen
 	 * @param parameterValue
-	 *            The option value used when sending the form to the server
+	 * 		The option value used when sending the form to the server
 	 */
 	public void putOption(String key, String value) {
 		Assert.isNotNull(key);

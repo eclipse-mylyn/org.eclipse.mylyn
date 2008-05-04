@@ -31,8 +31,14 @@ public interface ITaskActivityListener {
 	 */
 	public abstract void elapsedTimeUpdated(AbstractTask task, long newElapsedTime);
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract void preTaskActivated(AbstractTask task);
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract void preTaskDeactivated(AbstractTask task);
 
 	public abstract void taskActivated(AbstractTask task);

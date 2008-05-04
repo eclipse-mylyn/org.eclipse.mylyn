@@ -10,6 +10,9 @@ package org.eclipse.mylyn.tasks.core.data;
 
 import java.util.Date;
 
+import org.eclipse.mylyn.tasks.core.ITaskComment;
+import org.eclipse.mylyn.tasks.core.ITaskRepositoryPerson;
+
 /**
  * A comment posted by a user on a task.
  * 
@@ -17,43 +20,30 @@ import java.util.Date;
  * @author Steffen Pingel
  * @since 3.0
  */
-public class TaskComment implements ITaskComment {
+public class TaskCommentMapper {
 
-	private RepositoryPerson author;
+	private ITaskRepositoryPerson author;
 
 	private final String commentId;
-
-	private final String connectorKind;
 
 	private Date creationDate;
 
 	private int number;
 
-	private final String repositoryUrl;
-
-	private final String taskId;
-
 	private String text;
 
 	private String url;
 
-	public TaskComment(String connectorKind, String repositoryUrl, String taskId, String commentId) {
-		this.connectorKind = connectorKind;
-		this.repositoryUrl = repositoryUrl;
-		this.taskId = taskId;
+	public TaskCommentMapper(String commentId) {
 		this.commentId = commentId;
 	}
 
-	public RepositoryPerson getAuthor() {
+	public ITaskRepositoryPerson getAuthor() {
 		return author;
 	}
 
 	public String getCommentId() {
 		return commentId;
-	}
-
-	public String getConnectorKind() {
-		return connectorKind;
 	}
 
 	public Date getCreationDate() {
@@ -64,14 +54,6 @@ public class TaskComment implements ITaskComment {
 		return number;
 	}
 
-	public String getRepositoryUrl() {
-		return repositoryUrl;
-	}
-
-	public String getTaskId() {
-		return taskId;
-	}
-
 	public String getText() {
 		return text;
 	}
@@ -80,7 +62,7 @@ public class TaskComment implements ITaskComment {
 		return url;
 	}
 
-	public void setAuthor(RepositoryPerson author) {
+	public void setAuthor(ITaskRepositoryPerson author) {
 		this.author = author;
 	}
 
@@ -100,12 +82,11 @@ public class TaskComment implements ITaskComment {
 		this.url = url;
 	}
 
-	public static TaskComment createFrom(TaskAttribute taskAttribute) {
+	public static TaskCommentMapper createFrom(TaskAttribute taskAttribute) {
 		TaskData taskData = taskAttribute.getTaskData();
 		TaskAttributeMapper mapper = taskData.getAttributeMapper();
 		String commentId = mapper.getValue(taskAttribute);
-		TaskComment comment = new TaskComment(taskData.getRepositoryUrl(), taskData.getConnectorKind(),
-				taskData.getTaskId(), commentId);
+		TaskCommentMapper comment = new TaskCommentMapper(commentId);
 		try {
 			comment.setNumber(Integer.parseInt(taskAttribute.getId()));
 		} catch (NumberFormatException e) {
@@ -113,7 +94,7 @@ public class TaskComment implements ITaskComment {
 		}
 		TaskAttribute child = taskAttribute.getMappedAttribute(TaskAttribute.COMMENT_AUTHOR);
 		if (child != null) {
-			RepositoryPerson person = mapper.getRepositoryPerson(child);
+			ITaskRepositoryPerson person = mapper.getRepositoryPerson(child);
 			if (person.getName() == null) {
 				child = taskAttribute.getMappedAttribute(TaskAttribute.COMMENT_AUTHOR_NAME);
 				if (child != null) {
@@ -167,4 +148,18 @@ public class TaskComment implements ITaskComment {
 		}
 	}
 
+	public void applyTo(ITaskComment taskComment) {
+		if (getAuthor() != null) {
+			taskComment.setAuthor(getAuthor());
+		}
+		if (getCreationDate() != null) {
+			taskComment.setCreationDate(getCreationDate());
+		}
+		if (getUrl() != null) {
+			taskComment.setUrl(getUrl());
+		}
+		if (getText() != null) {
+			taskComment.setText(getText());
+		}
+	}
 }

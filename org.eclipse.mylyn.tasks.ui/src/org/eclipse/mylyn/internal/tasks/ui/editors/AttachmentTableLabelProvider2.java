@@ -15,7 +15,7 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.tasks.core.data.ITaskAttachment2;
+import org.eclipse.mylyn.tasks.core.ITaskAttachment2;
 import org.eclipse.mylyn.tasks.ui.editors.AttributeEditorToolkit;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;

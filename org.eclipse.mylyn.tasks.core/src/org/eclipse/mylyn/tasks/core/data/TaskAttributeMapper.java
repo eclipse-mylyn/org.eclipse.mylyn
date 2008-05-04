@@ -13,20 +13,30 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.mylyn.tasks.core.ITaskAttachment2;
+import org.eclipse.mylyn.tasks.core.ITaskComment;
+import org.eclipse.mylyn.tasks.core.ITaskRepositoryPerson;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+
 /**
  * @author Steffen Pingel
  * @since 3.0
  */
 // TODO EDITOR return null if attribute value invalid for primitive types? 
-public abstract class TaskAttributeMapper {
+public class TaskAttributeMapper {
 
-	public TaskAttributeMapper() {
+	private final TaskRepository taskRepository;
+
+	public TaskAttributeMapper(TaskRepository taskRepository) {
+		Assert.isNotNull(taskRepository);
+		this.taskRepository = taskRepository;
 	}
 
 	public TaskAttribute createTaskAttachment(TaskData taskData) {
 		TaskAttribute taskAttribute = taskData.getRoot().createAttribute(
 				mapToRepositoryKey(taskData.getRoot(), TaskAttribute.NEW_ATTACHMENT));
-		TaskAttachment.createFrom(taskAttribute);
+		TaskAttachmentMapper.createFrom(taskAttribute);
 		return taskAttribute;
 	}
 
@@ -76,6 +86,10 @@ public abstract class TaskAttributeMapper {
 		return null;
 	}
 
+	public String getDefaultOption(TaskAttribute taskAttribute) {
+		return TaskAttributeProperties.from(taskAttribute).getDefaultOption();
+	}
+
 	public Integer getIntegerValue(TaskAttribute attribute) {
 		String integerString = attribute.getValue();
 		try {
@@ -111,10 +125,8 @@ public abstract class TaskAttributeMapper {
 		return attribute.getOptions();
 	}
 
-	public RepositoryPerson getRepositoryPerson(TaskAttribute taskAttribute) {
-		TaskData taskData = taskAttribute.getTaskData();
-		RepositoryPerson person = new RepositoryPerson(taskData.getConnectorKind(), taskData.getRepositoryUrl(),
-				taskAttribute.getValue());
+	public ITaskRepositoryPerson getRepositoryPerson(TaskAttribute taskAttribute) {
+		ITaskRepositoryPerson person = taskRepository.createPerson(taskAttribute.getValue());
 		TaskAttribute child = taskAttribute.getMappedAttribute(TaskAttribute.PERSON_NAME);
 		if (child != null) {
 			person.setName(getValue(child));
@@ -122,24 +134,16 @@ public abstract class TaskAttributeMapper {
 		return person;
 	}
 
-	public ITaskAttachment2 getTaskAttachment(TaskAttribute taskAttribute) {
-		return TaskAttachment.createFrom(taskAttribute);
-	}
-
-	public ITaskComment getTaskComment(TaskAttribute taskAttribute) {
-		return TaskComment.createFrom(taskAttribute);
-	}
-
 	public TaskOperation getTaskOperation(TaskAttribute taskAttribute) {
 		return TaskOperation.createFrom(taskAttribute);
 	}
 
-	public String getType(TaskAttribute taskAttribute) {
-		return TaskAttributeProperties.from(taskAttribute).getType();
+	public TaskRepository getTaskRepository() {
+		return taskRepository;
 	}
 
-	public String getDefaultOption(TaskAttribute taskAttribute) {
-		return TaskAttributeProperties.from(taskAttribute).getDefaultOption();
+	public String getType(TaskAttribute taskAttribute) {
+		return TaskAttributeProperties.from(taskAttribute).getType();
 	}
 
 	public String getValue(TaskAttribute taskAttribute) {
@@ -213,7 +217,7 @@ public abstract class TaskAttributeMapper {
 		}
 	}
 
-	public void setRepositoryPerson(TaskAttribute taskAttribute, RepositoryPerson person) {
+	public void setRepositoryPerson(TaskAttribute taskAttribute, ITaskRepositoryPerson person) {
 		setValue(taskAttribute, person.getPersonId());
 		if (person.getName() != null) {
 			TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.PERSON_NAME);
@@ -231,6 +235,14 @@ public abstract class TaskAttributeMapper {
 
 	public void setValues(TaskAttribute attribute, String[] values) {
 		attribute.setValues(Arrays.asList(values));
+	}
+
+	public void updateTaskAttachment(ITaskAttachment2 taskAttachment, TaskAttribute taskAttribute) {
+		TaskAttachmentMapper.createFrom(taskAttribute).applyTo(taskAttachment);
+	}
+
+	public void updateTaskComment(ITaskComment taskComment, TaskAttribute taskAttribute) {
+		TaskCommentMapper.createFrom(taskAttribute).applyTo(taskComment);
 	}
 
 }

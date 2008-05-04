@@ -16,9 +16,10 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.tasks.core.TaskComment;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.tasks.core.data.ITaskComment;
-import org.eclipse.mylyn.tasks.core.data.RepositoryPerson;
+import org.eclipse.mylyn.tasks.core.ITaskComment;
+import org.eclipse.mylyn.tasks.core.ITaskRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
@@ -118,7 +119,9 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		commentComposites = new ArrayList<ExpandableComposite>();
 		for (final TaskAttribute commentAttribute : comments) {
 			boolean hasIncomingChanges = getModel().hasIncomingChanges(commentAttribute);
-			ITaskComment taskComment = getTaskData().getAttributeMapper().getTaskComment(commentAttribute);
+			TaskComment taskComment = new TaskComment(getModel().getTaskRepository(), getModel().getTask(),
+					commentAttribute);
+			getTaskData().getAttributeMapper().updateTaskComment(taskComment, commentAttribute);
 			int style = ExpandableComposite.TREE_NODE | ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT;
 			if (hasIncomingChanges) {
 				style |= ExpandableComposite.EXPANDED;
@@ -191,7 +194,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		ImageHyperlink formHyperlink = toolkit.createImageHyperlink(toolbarComp, SWT.NONE);
 		formHyperlink.setBackground(null);
 		formHyperlink.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-		RepositoryPerson author = taskComment.getAuthor();
+		ITaskRepositoryPerson author = taskComment.getAuthor();
 		if (author != null
 				&& author.getPersonId().equalsIgnoreCase(getTaskEditorPage().getTaskRepository().getUserName())) {
 			formHyperlink.setImage(CommonImages.getImage(CommonImages.PERSON_ME_NARROW));

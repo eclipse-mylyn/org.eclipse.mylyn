@@ -24,6 +24,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.tasks.core.TaskAttachment;
 import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
 import org.eclipse.mylyn.internal.tasks.core.data.TextTaskAttachmentSource;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AttachAction;
@@ -31,8 +32,8 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.AttachScreenshotAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskAttachmentWizard.Mode;
+import org.eclipse.mylyn.tasks.core.ITaskAttachment2;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
-import org.eclipse.mylyn.tasks.core.data.ITaskAttachment2;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -154,7 +155,10 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 
 		List<ITaskAttachment2> attachmentList = new ArrayList<ITaskAttachment2>(attachments.length);
 		for (TaskAttribute attribute : attachments) {
-			attachmentList.add(getTaskData().getAttributeMapper().getTaskAttachment(attribute));
+			TaskAttachment taskAttachment = new TaskAttachment(getModel().getTaskRepository(), getModel().getTask(),
+					attribute);
+			getTaskData().getAttributeMapper().updateTaskAttachment(taskAttachment, attribute);
+			attachmentList.add(taskAttachment);
 		}
 		attachmentsViewer.setContentProvider(new AttachmentsTableContentProvider2(attachmentList));
 		attachmentsViewer.setLabelProvider(new AttachmentTableLabelProvider2(

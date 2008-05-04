@@ -572,8 +572,8 @@ public abstract class AbstractRepositoryConnector {
 	/**
 	 * @since 3.0
 	 */
-	public TaskScheme getTaskScheme(TaskData taskData) {
-		return new TaskScheme(taskData);
+	public TaskMapper getTaskScheme(TaskData taskData) {
+		return new TaskMapper(taskData);
 	}
 
 }

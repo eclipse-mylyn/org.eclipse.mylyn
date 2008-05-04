@@ -29,13 +29,13 @@ import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.FileAttachment;
+import org.eclipse.mylyn.tasks.core.ITaskAttachment2;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
-import org.eclipse.mylyn.tasks.core.data.ITaskAttachment2;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
 /**

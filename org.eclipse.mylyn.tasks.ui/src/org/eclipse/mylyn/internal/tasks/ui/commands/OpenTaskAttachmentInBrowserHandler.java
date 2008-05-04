@@ -15,7 +15,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylyn.tasks.core.data.ITaskAttachment2;
+import org.eclipse.mylyn.tasks.core.ITaskAttachment2;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.ui.handlers.HandlerUtil;
 

@@ -16,17 +16,14 @@ import java.util.zip.ZipInputStream;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.internal.tasks.core.IdentityAttributeFactory;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataExternalizer;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataState;
-import org.eclipse.mylyn.internal.tasks.core.data.TaskDataUtil;
-import org.eclipse.mylyn.tasks.core.IdentityAttributeMapper;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
-import org.eclipse.mylyn.tasks.core.TaskScheme;
+import org.eclipse.mylyn.tasks.core.TaskMapper;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 
+@SuppressWarnings("deprecation")
 public class TaskDataExternalizerTest extends TestCase {
 
 	TaskDataExternalizer externalizer;
@@ -81,21 +78,22 @@ public class TaskDataExternalizerTest extends TestCase {
 		}
 
 		TaskData taskData = state.getRepositoryData();
-		TaskScheme taskScheme = new TaskScheme(taskData);
+		TaskMapper taskScheme = new TaskMapper(taskData);
 
-		RepositoryTaskData legacyData = TaskDataUtil.toLegacyData(taskData, IdentityAttributeFactory.getInstance());
-		assertEquals(taskData.getConnectorKind(), legacyData.getConnectorKind());
-		assertEquals(taskData.getRepositoryUrl(), legacyData.getRepositoryUrl());
-		assertEquals(taskData.getTaskId(), legacyData.getTaskId());
-		assertEquals(taskScheme.getTaskKind(), legacyData.getTaskKind());
-		assertEquals(taskScheme.getComments().length, legacyData.getComments().size());
-		assertEquals(taskScheme.getAttachments().length, legacyData.getAttachments().size());
-
-		TaskData taskData2 = TaskDataUtil.toTaskData(legacyData, IdentityAttributeMapper.getInstance());
-		assertEquals(taskData.getConnectorKind(), taskData2.getConnectorKind());
-		assertEquals(taskData.getRepositoryUrl(), taskData2.getRepositoryUrl());
-		assertEquals(taskData.getTaskId(), taskData2.getTaskId());
-
-		assertEquals(taskData.getRoot().toString(), taskData2.getRoot().toString());
+		fail("fixme");
+//		RepositoryTaskData legacyData = TaskDataUtil.toLegacyData(taskData, IdentityAttributeFactory.getInstance());
+//		assertEquals(taskData.getConnectorKind(), legacyData.getConnectorKind());
+//		assertEquals(taskData.getRepositoryUrl(), legacyData.getRepositoryUrl());
+//		assertEquals(taskData.getTaskId(), legacyData.getTaskId());
+//		assertEquals(taskScheme.getTaskKind(), legacyData.getTaskKind());
+//		assertEquals(taskScheme.getComments().length, legacyData.getComments().size());
+//		assertEquals(taskScheme.getAttachments().length, legacyData.getAttachments().size());
+//
+//		TaskData taskData2 = TaskDataUtil.toTaskData(legacyData, IdentityAttributeMapper.getInstance());
+//		assertEquals(taskData.getConnectorKind(), taskData2.getConnectorKind());
+//		assertEquals(taskData.getRepositoryUrl(), taskData2.getRepositoryUrl());
+//		assertEquals(taskData.getTaskId(), taskData2.getTaskId());
+//
+//		assertEquals(taskData.getRoot().toString(), taskData2.getRoot().toString());
 	}
 }

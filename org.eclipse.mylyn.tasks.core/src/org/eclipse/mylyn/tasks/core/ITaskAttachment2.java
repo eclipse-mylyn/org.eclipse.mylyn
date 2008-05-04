@@ -6,18 +6,18 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.core.data;
+package org.eclipse.mylyn.tasks.core;
 
 import java.util.Date;
+
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
 /**
  * @since 3.0
  */
 public interface ITaskAttachment2 {
 
-	public abstract String getAttachmentId();
-
-	public abstract RepositoryPerson getAuthor();
+	public abstract ITaskRepositoryPerson getAuthor();
 
 	public abstract String getComment();
 
@@ -35,12 +35,34 @@ public interface ITaskAttachment2 {
 
 	public abstract String getRepositoryUrl();
 
-	public abstract String getTaskId();
+	public abstract AbstractTask getTask();
+
+	public abstract TaskAttribute getTaskAttribute();
+
+	public abstract TaskRepository getTaskRepository();
 
 	public abstract String getUrl();
 
 	public abstract boolean isDeprecated();
 
 	public abstract boolean isPatch();
+
+	public abstract void setAuthor(ITaskRepositoryPerson author);
+
+	public abstract void setContentType(String contentType);
+
+	public abstract void setCreationDate(Date creationDate);
+
+	public abstract void setDeprecated(boolean deprecated);
+
+	public abstract void setDescription(String description);
+
+	public abstract void setFileName(String fileName);
+
+	public abstract void setLength(long length);
+
+	public abstract void setPatch(boolean patch);
+
+	public abstract void setUrl(String url);
 
 }

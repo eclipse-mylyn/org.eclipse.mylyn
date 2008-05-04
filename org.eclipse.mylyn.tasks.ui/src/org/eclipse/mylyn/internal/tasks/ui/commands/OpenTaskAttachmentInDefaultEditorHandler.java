@@ -20,7 +20,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskAttachmentEditorInput;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.tasks.core.data.ITaskAttachment2;
+import org.eclipse.mylyn.tasks.core.ITaskAttachment2;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;

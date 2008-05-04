@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
@@ -21,6 +22,8 @@ import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModelEvent.EventKind;
 
 /**
@@ -31,11 +34,20 @@ public class TaskDataModel {
 
 	private List<TaskDataModelListener> listeners;
 
-	private final ITaskDataWorkingCopy workingCopy;
+	private final AbstractTask task;
+
+	private final TaskRepository taskRepository;
 
 	private final Set<TaskAttribute> unsavedChanedAttributes;
 
-	public TaskDataModel(ITaskDataWorkingCopy taskDataState) {
+	private final ITaskDataWorkingCopy workingCopy;
+
+	public TaskDataModel(TaskRepository taskRepository, AbstractTask task, ITaskDataWorkingCopy taskDataState) {
+		Assert.isNotNull(taskRepository);
+		Assert.isNotNull(task);
+		Assert.isNotNull(taskDataState);
+		this.task = task;
+		this.taskRepository = taskRepository;
 		this.workingCopy = taskDataState;
 		this.unsavedChanedAttributes = new HashSet<TaskAttribute>();
 	}
@@ -78,8 +90,20 @@ public class TaskDataModel {
 		}
 	}
 
+	public Set<TaskAttribute> getChangedAttributes() {
+		return new HashSet<TaskAttribute>(workingCopy.getEditsData().getRoot().getAttributes().values());
+	}
+
+	public AbstractTask getTask() {
+		return task;
+	}
+
 	public TaskData getTaskData() {
 		return workingCopy.getLocalData();
+	}
+
+	public TaskRepository getTaskRepository() {
+		return taskRepository;
 	}
 
 	public boolean hasIncomingChanges(TaskAttribute taskAttribute) {
@@ -116,18 +140,14 @@ public class TaskDataModel {
 		listeners.remove(listener);
 	}
 
-	public void save(IProgressMonitor monitor) throws CoreException {
-		workingCopy.save(monitor, unsavedChanedAttributes);
-		unsavedChanedAttributes.clear();
-	}
-
 	public void revert() {
 		workingCopy.revert();
 		unsavedChanedAttributes.clear();
 	}
 
-	public Set<TaskAttribute> getChangedAttributes() {
-		return new HashSet<TaskAttribute>(workingCopy.getEditsData().getRoot().getAttributes().values());
+	public void save(IProgressMonitor monitor) throws CoreException {
+		workingCopy.save(monitor, unsavedChanedAttributes);
+		unsavedChanedAttributes.clear();
 	}
 
 }

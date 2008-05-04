@@ -10,17 +10,18 @@ package org.eclipse.mylyn.tasks.core.data;
 
 import java.util.Date;
 
+import org.eclipse.mylyn.tasks.core.ITaskAttachment2;
+import org.eclipse.mylyn.tasks.core.ITaskRepositoryPerson;
+
 /**
  * @since 3.0
  * @author Steffen Pingel
  */
-public class TaskAttachment implements ITaskAttachment2 {
+public class TaskAttachmentMapper {
 
-	private RepositoryPerson author;
+	private ITaskRepositoryPerson author;
 
 	private String comment;
-
-	private final String connectorKind;
 
 	private String contentType;
 
@@ -36,18 +37,11 @@ public class TaskAttachment implements ITaskAttachment2 {
 
 	private boolean patch;
 
-	private final String repositoryUrl;
-
-	private final String taskId;
-
 	private String url;
 
 	private final String attachmentId;
 
-	public TaskAttachment(String connectorKind, String repositoryUrl, String taskId, String attachmentId) {
-		this.connectorKind = connectorKind;
-		this.repositoryUrl = repositoryUrl;
-		this.taskId = taskId;
+	public TaskAttachmentMapper(String attachmentId) {
 		this.attachmentId = attachmentId;
 	}
 
@@ -55,16 +49,12 @@ public class TaskAttachment implements ITaskAttachment2 {
 		return attachmentId;
 	}
 
-	public RepositoryPerson getAuthor() {
+	public ITaskRepositoryPerson getAuthor() {
 		return author;
 	}
 
 	public String getComment() {
 		return comment;
-	}
-
-	public String getConnectorKind() {
-		return connectorKind;
 	}
 
 	public String getContentType() {
@@ -87,14 +77,6 @@ public class TaskAttachment implements ITaskAttachment2 {
 		return length;
 	}
 
-	public String getRepositoryUrl() {
-		return repositoryUrl;
-	}
-
-	public String getTaskId() {
-		return taskId;
-	}
-
 	public String getUrl() {
 		return url;
 	}
@@ -107,7 +89,7 @@ public class TaskAttachment implements ITaskAttachment2 {
 		return patch;
 	}
 
-	public void setAuthor(RepositoryPerson author) {
+	public void setAuthor(ITaskRepositoryPerson author) {
 		this.author = author;
 	}
 
@@ -147,12 +129,10 @@ public class TaskAttachment implements ITaskAttachment2 {
 		this.url = url;
 	}
 
-	public static TaskAttachment createFrom(TaskAttribute taskAttribute) {
-		TaskData taskData = taskAttribute.getTaskData();
+	public static TaskAttachmentMapper createFrom(TaskAttribute taskAttribute) {
 		TaskAttributeMapper mapper = taskAttribute.getTaskData().getAttributeMapper();
 		String attachmentId = mapper.getValue(taskAttribute);
-		TaskAttachment attachment = new TaskAttachment(taskData.getConnectorKind(), taskData.getRepositoryUrl(),
-				taskData.getTaskId(), attachmentId);
+		TaskAttachmentMapper attachment = new TaskAttachmentMapper(attachmentId);
 		TaskAttribute child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_AUTHOR);
 		if (child != null) {
 			attachment.setAuthor(mapper.getRepositoryPerson(child));
@@ -240,6 +220,30 @@ public class TaskAttachment implements ITaskAttachment2 {
 			child = taskAttribute.createAttribute(TaskAttribute.ATTACHMENT_URL);
 			TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_URL).applyTo(child);
 			mapper.setValue(child, getUrl());
+		}
+	}
+
+	public void applyTo(ITaskAttachment2 taskAttachment) {
+		if (getAuthor() != null) {
+			taskAttachment.setAuthor(getAuthor());
+		}
+		if (getContentType() != null) {
+			taskAttachment.setContentType(getContentType());
+		}
+		if (getCreationDate() != null) {
+			taskAttachment.setCreationDate(getCreationDate());
+		}
+		if (getDescription() != null) {
+			taskAttachment.setDescription(getDescription());
+		}
+		if (getFileName() != null) {
+			taskAttachment.setFileName(getFileName());
+		}
+		taskAttachment.setDeprecated(isDeprecated());
+		taskAttachment.setPatch(isPatch());
+		taskAttachment.setLength(getLength());
+		if (url != null) {
+			taskAttachment.setUrl(getUrl());
 		}
 	}
 

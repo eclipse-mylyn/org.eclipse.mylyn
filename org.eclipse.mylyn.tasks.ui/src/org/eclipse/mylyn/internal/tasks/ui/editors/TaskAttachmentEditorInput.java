@@ -21,11 +21,10 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITaskAttachment2;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
-import org.eclipse.mylyn.tasks.core.data.ITaskAttachment2;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
-import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IPersistableElement;
 import org.eclipse.ui.IStorageEditorInput;
@@ -81,21 +80,12 @@ public class TaskAttachmentEditorInput extends PlatformObject implements IStorag
 	}
 
 	public IStorage getStorage() throws CoreException {
-		TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(attachment.getConnectorKind(),
-				attachment.getRepositoryUrl());
-		AbstractTask task = TasksUi.getTaskListManager().getTaskList().getTask(attachment.getRepositoryUrl(),
-				attachment.getTaskId());
-		TaskData taskData = TasksUi.getTaskDataManager().getTaskData(task, taskRepository.getConnectorKind());
-		TaskAttribute[] attachments = taskData.getAttributeMapper().getAttributesByType(taskData,
-				TaskAttribute.TYPE_ATTACHMENT);
-		for (TaskAttribute taskAttribute : attachments) {
-			ITaskAttachment2 existingAttachment = taskData.getAttributeMapper().getTaskAttachment(taskAttribute);
-			if (existingAttachment.getAttachmentId().equals(attachment.getAttachmentId())) {
-				return new TaskAttachmentStorage(taskRepository, task, taskAttribute, name);
-			}
+		TaskAttribute taskAttribute = attachment.getTaskAttribute();
+		if (taskAttribute == null) {
+			throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to find attachment: "
+					+ attachment.getUrl()));
 		}
-		throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to find attachment: "
-				+ attachment.getUrl()));
+		return new TaskAttachmentStorage(attachment.getTaskRepository(), attachment.getTask(), taskAttribute, name);
 	}
 
 	public boolean exists() {
@@ -116,7 +106,7 @@ public class TaskAttachmentEditorInput extends PlatformObject implements IStorag
 	}
 
 	public String getToolTipText() {
-		return "Attachment: " + attachment.getAttachmentId() + " [" + attachment.getUrl() + "]";
+		return attachment.getUrl();
 	}
 
 	private static class TaskAttachmentStorage extends PlatformObject implements IStorage {

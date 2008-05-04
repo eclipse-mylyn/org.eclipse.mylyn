@@ -23,14 +23,14 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  */
 public abstract class AbstractTaskAttachmentHandler {
 
-	public abstract void postContent(TaskRepository repository, AbstractTask task, AbstractTaskAttachmentSource source,
-			String comment, TaskAttribute attachmentAttribute, IProgressMonitor monitor) throws CoreException;
+	public abstract boolean canGetContent(TaskRepository repository, AbstractTask task);
+
+	public abstract boolean canPostContent(TaskRepository repository, AbstractTask task);
 
 	public abstract InputStream getContent(TaskRepository repository, AbstractTask task,
 			TaskAttribute attachmentAttribute, IProgressMonitor monitor) throws CoreException;
 
-	public abstract boolean canPostContent(TaskRepository repository, AbstractTask task);
-
-	public abstract boolean canGetContent(TaskRepository repository, AbstractTask task);
+	public abstract void postContent(TaskRepository repository, AbstractTask task, AbstractTaskAttachmentSource source,
+			String comment, TaskAttribute attachmentAttribute, IProgressMonitor monitor) throws CoreException;
 
 }

@@ -15,7 +15,7 @@ import java.io.Serializable;
  * 
  * @author Rob Elves
  * @since 2.0
- * @deprecated use {@link org.eclipse.mylyn.tasks.core.data.TaskComment} instead
+ * @deprecated use {@link org.eclipse.mylyn.tasks.core.data.TaskCommentMapper} instead
  */
 @Deprecated
 public final class TaskComment extends AttributeContainer implements Serializable {

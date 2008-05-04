@@ -6,32 +6,23 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.core.data;
-
-import java.util.Date;
+package org.eclipse.mylyn.tasks.core;
 
 /**
- * @author Steffen Pingel
  * @since 3.0
  */
-public interface ITaskComment {
-
-	public abstract RepositoryPerson getAuthor();
-
-	public abstract String getCommentId();
+public interface ITaskRepositoryPerson {
 
 	public abstract String getConnectorKind();
 
-	public abstract Date getCreationDate();
+	public abstract String getName();
 
-	public abstract int getNumber();
+	public abstract String getPersonId();
 
 	public abstract String getRepositoryUrl();
 
-	public abstract String getTaskId();
+	public abstract TaskRepository getTaskRepository();
 
-	public abstract String getText();
-
-	public abstract String getUrl();
+	public abstract void setName(String name);
 
 }
