@@ -282,7 +282,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 				StatusHandler.log(new Status(IStatus.ERROR, super.getBundle().getSymbolicName(), IStatus.ERROR,
 						"Could not lazy start context plug-in", t));
 			}
-			if (TasksUi.getTaskListManager() != null) {
+			if (TasksUi.getTaskActivityManager() != null) {
 				ContextCore.getContextManager().removeListener(contextActivationListener);
 			}
 		}
@@ -352,7 +352,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		if (lazyStarted.get()) {
 			lazyStop();
 		}
-		if (TasksUi.getTaskListManager() != null) {
+		if (TasksUi.getTaskActivityManager() != null) {
 			ContextCore.getContextManager().removeListener(contextActivationListener);
 		}
 

@@ -75,7 +75,7 @@ public class ContextCopyAction extends TaskContextAction {
 		}
 
 		if (targetTask != null) {
-			TasksUi.getTaskListManager().deactivateAllTasks();
+			TasksUi.getTaskActivityManager().deactivateAllTasks();
 			IInteractionContext source = ContextCore.getContextManager().loadContext(sourceTask.getHandleIdentifier());
 
 			if (targetTask.equals(sourceTask)) {
@@ -89,7 +89,7 @@ public class ContextCopyAction extends TaskContextAction {
 				ContextCore.getContextManager().cloneContext(sourceTask.getHandleIdentifier(),
 						targetTask.getHandleIdentifier());
 
-				TasksUi.getTaskListManager().activateTask(targetTask);
+				TasksUi.getTaskActivityManager().activateTask(targetTask);
 				TaskListView view = TaskListView.getFromActivePerspective();
 				if (view != null) {
 					view.refresh();

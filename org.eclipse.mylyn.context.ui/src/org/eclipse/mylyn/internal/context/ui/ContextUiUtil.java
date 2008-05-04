@@ -52,7 +52,7 @@ public class ContextUiUtil {
 		final String directory = TasksUiPlugin.getDefault().getDataDirectory();
 		try {
 			if (task.isActive()) {
-				TasksUi.getTaskListManager().deactivateTask(task);
+				TasksUi.getTaskActivityManager().deactivateTask(task);
 			}
 
 			final boolean[] result = new boolean[1];
@@ -80,7 +80,7 @@ public class ContextUiUtil {
 						TITLE_DIALOG, MESSAGE_ATTACHMENTS_NOT_SUPPORTED + connector.getLabel());
 			} else {
 				TasksUi.getTaskList().notifyTaskChanged(task, false);
-				TasksUi.getTaskListManager().activateTask(task);
+				TasksUi.getTaskActivityManager().activateTask(task);
 			}
 		} catch (InvocationTargetException e) {
 			if (e.getCause() instanceof CoreException) {

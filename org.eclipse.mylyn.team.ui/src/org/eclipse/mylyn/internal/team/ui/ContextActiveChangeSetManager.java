@@ -249,7 +249,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 	}
 
 	private AbstractTask getTask(IInteractionContext context) {
-		return TasksUi.getTaskListManager().getActiveTask();
+		return TasksUi.getTaskActivityManager().getActiveTask();
 	}
 
 	/**
