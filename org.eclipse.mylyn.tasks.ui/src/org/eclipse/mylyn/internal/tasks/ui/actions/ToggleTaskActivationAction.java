@@ -63,9 +63,9 @@ public class ToggleTaskActivationAction extends Action implements ITaskActivityL
 	@Override
 	public void run() {
 		if (!task.isActive()) {
-			TasksUi.getTaskListManager().activateTask(task);
+			TasksUi.getTaskActivityManager().activateTask(task);
 		} else {
-			TasksUi.getTaskListManager().deactivateTask(task);
+			TasksUi.getTaskActivityManager().deactivateTask(task);
 		}
 		update();
 //		toolBarManager.add(this);

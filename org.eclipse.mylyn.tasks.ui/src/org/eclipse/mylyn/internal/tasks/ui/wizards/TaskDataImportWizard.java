@@ -94,7 +94,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 	@Override
 	public boolean performFinish() {
 
-		TasksUi.getTaskListManager().deactivateTask(TasksUi.getTaskListManager().getActiveTask());
+		TasksUi.getTaskActivityManager().deactivateTask(TasksUi.getTaskActivityManager().getActiveTask());
 
 		File sourceDirFile = null;
 		File sourceZipFile = null;

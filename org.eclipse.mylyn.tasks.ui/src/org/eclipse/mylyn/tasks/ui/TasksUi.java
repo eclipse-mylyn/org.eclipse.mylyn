@@ -11,7 +11,6 @@ package org.eclipse.mylyn.tasks.ui;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.ITaskList;
-import org.eclipse.mylyn.tasks.core.ITaskListManager;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 
@@ -22,10 +21,6 @@ import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 public class TasksUi {
 
 	public static final String ID_PLANNING_PAGE = "org.eclipse.mylyn.tasks.ui.pageFactory.Planning";
-
-	public static ITaskListManager getTaskListManager() {
-		return TasksUiPlugin.getTaskListManager();
-	}
 
 	/**
 	 * TODO: in progress, will return interface once extraction complete

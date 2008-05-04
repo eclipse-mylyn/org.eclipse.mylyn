@@ -103,7 +103,7 @@ public class DeleteAction extends Action {
 			if (selectedObject instanceof AbstractTask) {
 				AbstractTask task = null;
 				task = (AbstractTask) selectedObject;
-				TasksUi.getTaskListManager().deactivateTask(task);
+				TasksUi.getTaskActivityManager().deactivateTask(task);
 				TasksUi.getTaskList().deleteTask(task);
 				ContextCore.getContextManager().deleteContext(task.getHandleIdentifier());
 				TasksUiUtil.closeEditorInActivePage(task, false);

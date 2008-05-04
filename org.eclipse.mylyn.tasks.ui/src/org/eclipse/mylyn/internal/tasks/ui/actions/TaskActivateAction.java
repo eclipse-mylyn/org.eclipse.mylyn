@@ -42,7 +42,7 @@ public class TaskActivateAction extends Action implements IViewActionDelegate {
 
 	public void run(AbstractTask task) {
 		if (task != null && !task.isActive()) {
-			TasksUi.getTaskListManager().activateTask(task);
+			TasksUi.getTaskActivityManager().activateTask(task);
 		}
 	}
 

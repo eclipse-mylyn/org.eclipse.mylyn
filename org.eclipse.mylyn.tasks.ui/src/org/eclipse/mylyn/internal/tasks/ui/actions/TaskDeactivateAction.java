@@ -34,7 +34,7 @@ public class TaskDeactivateAction extends Action {
 	public void run(AbstractTask task) {
 		try {
 			if (task != null) {
-				TasksUi.getTaskListManager().deactivateTask(task);
+				TasksUi.getTaskActivityManager().deactivateTask(task);
 			}
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,

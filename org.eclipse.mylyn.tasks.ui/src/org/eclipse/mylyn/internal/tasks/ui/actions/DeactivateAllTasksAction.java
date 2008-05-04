@@ -25,7 +25,7 @@ public class DeactivateAllTasksAction extends ActionDelegate implements IWorkben
 
 	@Override
 	public void run(IAction action) {
-		TasksUi.getTaskListManager().deactivateAllTasks();
+		TasksUi.getTaskActivityManager().deactivateAllTasks();
 	}
 
 }

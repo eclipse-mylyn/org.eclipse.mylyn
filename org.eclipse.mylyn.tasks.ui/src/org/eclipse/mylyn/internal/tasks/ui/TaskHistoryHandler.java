@@ -35,7 +35,7 @@ import org.eclipse.ui.menus.UIElement;
 public class TaskHistoryHandler extends AbstractHandler implements IElementUpdater {
 
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
-		if (TasksUi.getTaskListManager().getActiveTask() != null) {
+		if (TasksUi.getTaskActivityManager().getActiveTask() != null) {
 			if (ContextCore.getContextManager().isContextCapturePaused()) {
 				IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
 				if (window != null) {
@@ -52,7 +52,7 @@ public class TaskHistoryHandler extends AbstractHandler implements IElementUpdat
 					}
 				}
 			} else {
-				TasksUi.getTaskListManager().deactivateAllTasks();
+				TasksUi.getTaskActivityManager().deactivateAllTasks();
 			}
 		} else {
 			TaskActivationHistory taskHistory = TasksUi.getTaskActivityManager().getTaskActivationHistory();
@@ -73,7 +73,7 @@ public class TaskHistoryHandler extends AbstractHandler implements IElementUpdat
 
 	@SuppressWarnings("unchecked")
 	public void updateElement(UIElement element, Map parameters) {
-		if (TasksUi.getTaskListManager().getActiveTask() == null) {
+		if (TasksUi.getTaskActivityManager().getActiveTask() == null) {
 			element.setIcon(TasksUiImages.CONTEXT_HISTORY_PREVIOUS);
 		} else {
 			if (ContextCore.getContextManager().isContextCapturePaused()) {

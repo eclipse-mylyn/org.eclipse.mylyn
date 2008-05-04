@@ -598,7 +598,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	}
 
 	private void updateDescription() {
-		AbstractTask task = TasksUi.getTaskListManager().getActiveTask();
+		AbstractTask task = TasksUi.getTaskActivityManager().getActiveTask();
 		if (getSite() == null || getSite().getPage() == null) {
 			return;
 		}
@@ -1035,7 +1035,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		final IWorkbench workbench = PlatformUI.getWorkbench();
 		workbench.getDisplay().asyncExec(new Runnable() {
 			public void run() {
-				AbstractTask task = TasksUi.getTaskListManager().getActiveTask();
+				AbstractTask task = TasksUi.getTaskActivityManager().getActiveTask();
 				if (task != null) {
 					getViewer().expandToLevel(task, 0);
 				}

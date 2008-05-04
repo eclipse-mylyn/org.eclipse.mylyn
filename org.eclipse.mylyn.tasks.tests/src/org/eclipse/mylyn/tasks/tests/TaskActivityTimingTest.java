@@ -30,15 +30,12 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskList;
-import org.eclipse.mylyn.tasks.core.ITaskListManager;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Rob Elves
  */
 public class TaskActivityTimingTest extends TestCase {
-
-	private ITaskListManager manager;
 
 	private TaskActivityManager activityManager;
 
@@ -47,7 +44,6 @@ public class TaskActivityTimingTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		manager = TasksUi.getTaskListManager();
 		activityManager = TasksUi.getTaskActivityManager();
 		taskList = TasksUi.getTaskList();
 	}

@@ -36,7 +36,6 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskList;
-import org.eclipse.mylyn.tasks.core.ITaskListManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
@@ -50,7 +49,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  * @author Jevgeni Holodkov (insertQueries)
  * @since 3.0
  */
-public class TaskListManager implements ITaskListManager {
+public class TaskListManager {
 
 	private static final long SECOND = 1000;
 

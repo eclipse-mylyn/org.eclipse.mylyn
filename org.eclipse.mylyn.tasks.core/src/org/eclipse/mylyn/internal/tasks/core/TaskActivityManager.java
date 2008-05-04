@@ -27,7 +27,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
-import org.eclipse.mylyn.tasks.core.ITaskListManager;
 
 /**
  * Manages task elapsed time, scheduling, due dates, and the date ranges
@@ -101,11 +100,7 @@ public class TaskActivityManager {
 
 	public static TaskActivityManager INSTANCE;
 
-	private final ITaskListManager taskListManager;
-
-	public TaskActivityManager(TaskRepositoryManager repositoryManager, ITaskListManager taskListManager,
-			TaskList taskList) {
-		this.taskListManager = taskListManager;
+	public TaskActivityManager(TaskRepositoryManager repositoryManager, TaskList taskList) {
 		this.taskList = taskList;
 		this.repositoryManager = repositoryManager;
 		clear();

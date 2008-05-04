@@ -480,8 +480,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			File taskListFile = new File(path);
 			taskListManager = new TaskListManager(taskListWriter, taskListFile);
 			repositoryManager = new TaskRepositoryManager(taskListManager.getTaskList());
-			taskActivityManager = new TaskActivityManager(repositoryManager, taskListManager,
-					taskListManager.getTaskList());
+			taskActivityManager = new TaskActivityManager(repositoryManager, taskListManager.getTaskList());
 			updateTaskActivityManager();
 
 			proxyServiceReference = context.getServiceReference(IProxyService.class.getName());
