@@ -13,11 +13,11 @@ package org.eclipse.mylyn.internal.team.ui.templates;
 import java.util.List;
 import java.util.Locale;
 
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskPlanningEditor;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.team.ui.AbstractCommitTemplateVariable;
 
@@ -25,7 +25,7 @@ import org.eclipse.mylyn.team.ui.AbstractCommitTemplateVariable;
  * @author Eike Stepper
  * @author Mik Kersten
  * 
- * TODO refactor into extension point
+ * 	TODO refactor into extension point
  */
 public class CommitTemplateVariables {
 
@@ -48,7 +48,7 @@ public class CommitTemplateVariables {
 		public String getValue(AbstractTask task) {
 			if (task != null) {
 				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-						task);
+						task.getConnectorKind());
 				if (connector != null) {
 					return connector.getTaskIdPrefix();
 				}

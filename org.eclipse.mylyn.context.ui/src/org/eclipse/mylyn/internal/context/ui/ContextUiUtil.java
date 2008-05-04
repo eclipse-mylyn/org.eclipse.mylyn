@@ -19,12 +19,13 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -44,8 +45,9 @@ public class ContextUiUtil {
 
 	public static boolean downloadContext(final AbstractTask task, final RepositoryAttachment attachment,
 			final IRunnableContext context) {
-		final AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(task);
-		final TaskRepository repository = TasksUi.getRepositoryManager().getRepository(
+		final AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+				task.getConnectorKind());
+		final TaskRepository repository = TasksUi.getRepositoryManager().getRepository(attachment.getRepositoryKind(),
 				attachment.getRepositoryUrl());
 		final String directory = TasksUiPlugin.getDefault().getDataDirectory();
 		try {
@@ -55,13 +57,16 @@ public class ContextUiUtil {
 
 			final boolean[] result = new boolean[1];
 			IRunnableWithProgress runnable = new IRunnableWithProgress() {
+				@SuppressWarnings( { "restriction", "deprecation" })
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					try {
-						if (connector.getAttachmentHandler() != null) {
-							result[0] = AttachmentUtil.retrieveContext(connector.getAttachmentHandler(), repository,
-									task, attachment, directory, monitor);
-						} else {
-							result[0] = false;
+						result[0] = false;
+						if (connector instanceof AbstractLegacyRepositoryConnector) {
+							if (((AbstractLegacyRepositoryConnector) connector).getAttachmentHandler() != null) {
+								result[0] = AttachmentUtil.retrieveContext(
+										((AbstractLegacyRepositoryConnector) connector).getAttachmentHandler(),
+										repository, task, attachment, directory, monitor);
+							}
 						}
 					} catch (CoreException e) {
 						throw new InvocationTargetException(e);
@@ -99,13 +104,16 @@ public class ContextUiUtil {
 		try {
 			final boolean[] result = new boolean[1];
 			IRunnableWithProgress runnable = new IRunnableWithProgress() {
+				@SuppressWarnings( { "restriction", "deprecation" })
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					try {
-						if (connector.getAttachmentHandler() != null) {
-							result[0] = AttachmentUtil.attachContext(connector.getAttachmentHandler(), repository,
-									task, comment, monitor);
-						} else {
-							result[0] = false;
+						result[0] = false;
+						if (connector instanceof AbstractLegacyRepositoryConnector) {
+							if (((AbstractLegacyRepositoryConnector) connector).getAttachmentHandler() != null) {
+								result[0] = AttachmentUtil.attachContext(
+										((AbstractLegacyRepositoryConnector) connector).getAttachmentHandler(),
+										repository, task, comment, monitor);
+							}
 						}
 					} catch (CoreException e) {
 						throw new InvocationTargetException(e);

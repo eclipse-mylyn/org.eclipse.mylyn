@@ -15,15 +15,15 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttributeFactory;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
-import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.SWT;
@@ -114,8 +114,8 @@ public class ContextRetrieveWizardPage extends WizardPage {
 
 		});
 
-		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-				repository.getConnectorKind());
+		AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUi.getRepositoryManager()
+				.getRepositoryConnector(repository.getConnectorKind());
 
 		List<RepositoryAttachment> contextAttachments = new ArrayList<RepositoryAttachment>();
 		if (connector.getAttachmentHandler() != null) {
@@ -126,8 +126,8 @@ public class ContextRetrieveWizardPage extends WizardPage {
 		Collections.sort(contextAttachments, new Comparator<RepositoryAttachment>() {
 
 			public int compare(RepositoryAttachment attachment1, RepositoryAttachment attachment2) {
-				RepositoryTaskData data = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task.getRepositoryUrl(),
-						task.getTaskId());
+				RepositoryTaskData data = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(
+						task.getRepositoryUrl(), task.getTaskId());
 
 				AbstractAttributeFactory factory = null;
 

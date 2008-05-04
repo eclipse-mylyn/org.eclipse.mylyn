@@ -100,7 +100,7 @@
       <objectContribution
             adaptable="false"
             id="org.eclipse.mylyn.ide.team.ui.contribution.attachment.patch"
-            objectClass="org.eclipse.mylyn.tasks.core.RepositoryAttachment">
+            objectClass="org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment">
          <action
                class="org.eclipse.mylyn.internal.team.ui.actions.ApplyPatchAction"
                icon="icons/elcl16/apply-patch.gif"

@@ -50,7 +50,7 @@
 	 <objectContribution
             adaptable="false"
             id="org.eclipse.mylyn.context.ui.task.attachment.contribution"
-            objectClass="org.eclipse.mylyn.tasks.core.RepositoryAttachment">
+            objectClass="org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment">
          <action
                class="org.eclipse.mylyn.internal.context.ui.actions.ContextRetrieveAction"
                icon="icons/etool16/context-retrieve.gif"

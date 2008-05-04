@@ -19,10 +19,10 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttachmentHandler;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment;
 import org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin;
-import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.custom.BusyIndicator;
@@ -61,7 +61,7 @@ public class ApplyPatchAction extends BaseSelectionListenerAction implements IVi
 					public InputStream getContents() throws CoreException {
 						TaskRepository repository = TasksUi.getRepositoryManager().getRepository(
 								attachment.getRepositoryKind(), attachment.getRepositoryUrl());
-						AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+						AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUi.getRepositoryManager()
 								.getRepositoryConnector(attachment.getRepositoryKind());
 						AbstractAttachmentHandler handler = connector.getAttachmentHandler();
 						return handler.getAttachmentAsStream(repository, attachment, new NullProgressMonitor());

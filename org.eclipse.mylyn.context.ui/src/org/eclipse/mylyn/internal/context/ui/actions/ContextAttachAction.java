@@ -16,10 +16,11 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.ui.wizards.ContextAttachWizard;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttachmentHandler;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -90,15 +91,18 @@ public class ContextAttachAction extends Action implements IViewActionDelegate {
 		}
 	}
 
+	@SuppressWarnings( { "deprecation", "restriction" })
 	public void selectionChanged(IAction action, ISelection selection) {
 		AbstractTask selectedTask = TaskListView.getSelectedTask(selection);
 		if (selectedTask != null) {
 			task = selectedTask;
 			repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 			connector = TasksUi.getRepositoryManager().getRepositoryConnector(task.getConnectorKind());
-			AbstractAttachmentHandler handler = connector.getAttachmentHandler();
-			action.setEnabled(handler != null && handler.canUploadAttachment(repository, task)
-					&& (task.isActive() || ContextCore.getContextManager().hasContext(task.getHandleIdentifier())));
+			if (connector instanceof AbstractLegacyRepositoryConnector) {
+				AbstractAttachmentHandler handler = ((AbstractLegacyRepositoryConnector) connector).getAttachmentHandler();
+				action.setEnabled(handler != null && handler.canUploadAttachment(repository, task)
+						&& (task.isActive() || ContextCore.getContextManager().hasContext(task.getHandleIdentifier())));
+			}
 		} else {
 			task = null;
 			action.setEnabled(false);

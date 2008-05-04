@@ -45,6 +45,7 @@ import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.IContextUiStartup;
 import org.eclipse.mylyn.internal.context.ui.actions.ContextRetrieveAction;
 import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.PlanningPerspectiveFactory;
@@ -226,24 +227,24 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	private static final ITaskActivityListener TASK_ACTIVATION_LISTENER = new TaskActivityAdapter() {
 
+		@SuppressWarnings( { "deprecation", "restriction" })
 		@Override
 		public void taskActivated(AbstractTask task) {
 			boolean hasLocalContext = ContextCore.getContextManager().hasContext(task.getHandleIdentifier());
 			if (!hasLocalContext) {
-				AbstractTask repositoryTask = task;
 				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-						repositoryTask);
-				TaskRepository repository = TasksUi.getRepositoryManager().getRepository(
-						repositoryTask.getRepositoryUrl());
-
-				if (connector != null && connector.getAttachmentHandler() != null
-						&& AttachmentUtil.hasContext(repository, repositoryTask)) {
+						task.getConnectorKind());
+				TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
+						task.getRepositoryUrl());
+				if (connector instanceof AbstractLegacyRepositoryConnector
+						&& ((AbstractLegacyRepositoryConnector) connector).getAttachmentHandler() != null
+						&& AttachmentUtil.hasContext(repository, task)) {
 					boolean getRemote = MessageDialog.openQuestion(PlatformUI.getWorkbench()
 							.getActiveWorkbenchWindow()
 							.getShell(), ITasksUiConstants.TITLE_DIALOG,
 							"No local task context exists.  Retrieve from repository?");
 					if (getRemote) {
-						new ContextRetrieveAction().run(repositoryTask);
+						new ContextRetrieveAction().run(task);
 					}
 				}
 			}

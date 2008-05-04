@@ -272,7 +272,8 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 				info = (AbstractTaskReference) ((IAdaptable) element).getAdapter(AbstractTaskReference.class);
 			}
 			if (info == null) {
-				info = (AbstractTaskReference) Platform.getAdapterManager().getAdapter(element, AbstractTaskReference.class);
+				info = (AbstractTaskReference) Platform.getAdapterManager().getAdapter(element,
+						AbstractTaskReference.class);
 			}
 
 			if (info != null) {
@@ -292,7 +293,8 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 					return Status.OK_STATUS;
 				}
 				if (info.getRepositoryUrl() != null && info.getTaskId() != null) {
-					TaskRepository repository = TasksUi.getRepositoryManager().getRepository(info.getRepositoryUrl());
+					TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+							info.getRepositoryUrl());
 					String taskId = info.getTaskId();
 					if (repository != null && taskId != null) {
 						AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
