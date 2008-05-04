@@ -554,7 +554,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 				public void saving(ISaveContext context) throws CoreException {
 					if (context.getKind() == ISaveContext.FULL_SAVE) {
-						taskListManager.saveTaskList();
+						//externalizationManager.requestSave();
 						taskDataStorageManager.stop();
 					}
 				}
@@ -579,7 +579,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		if (oldWeekStartDay != newWeekStartDay) {
 			taskActivityManager.setWeekStartDay(newWeekStartDay);
 			TaskActivityUtil.setStartDay(newWeekStartDay);
-			taskActivityMonitor.reloadActivityTime();
+			taskActivityManager.setStartTime(new Date());
 		}
 
 		// event.getProperty().equals(TaskListPreferenceConstants.PLANNING_STARTDAY)

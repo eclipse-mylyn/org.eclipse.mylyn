@@ -338,9 +338,9 @@ public class TaskActivityManager {
 
 		activeTask = task;
 		activeTask.setActive(true);
-		if (addToHistory) {
-			taskActivationHistory.addTask(task);
-		}
+//		if (addToHistory) {
+//			taskActivationHistory.addTask(task);
+//		}
 
 		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
 			try {
