@@ -12,7 +12,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.TaskSelection;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.ui.INewWizard;
@@ -52,7 +52,7 @@ public class NewLocalTaskWizard extends Wizard implements INewWizard {
 
 	@Override
 	public boolean performFinish() {
-		LocalTask task = TasksUiPlugin.getTaskListManager().createNewLocalTask(null);
+		LocalTask task = TasksUiInternal.createNewLocalTask(null);
 		if (taskSelection != null) {
 			task.setSummary(taskSelection.getTaskData().getSummary());
 			task.setNotes(taskSelection.getTaskData().getDescription());

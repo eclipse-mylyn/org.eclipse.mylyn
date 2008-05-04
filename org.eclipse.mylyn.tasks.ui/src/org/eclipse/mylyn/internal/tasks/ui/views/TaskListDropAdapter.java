@@ -286,7 +286,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 
 	/**
 	 * @param data
-	 *            string containing url and title separated by <quote>\n</quote>
+	 * 		string containing url and title separated by <quote>\n</quote>
 	 * @return true if task succesfully created, false otherwise
 	 */
 	public boolean createTaskFromUrl(Object data) {
@@ -341,7 +341,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			// }
 			retrieveTaskDescription(url);
 
-			newTask = TasksUiPlugin.getTaskListManager().createNewLocalTask(urlTitle);
+			newTask = TasksUiInternal.createNewLocalTask(urlTitle);
 
 			if (newTask == null) {
 				return false;
@@ -358,7 +358,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 
 	public boolean createTaskFromString(String title) {
 		//newTask = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), title);
-		newTask = TasksUiPlugin.getTaskListManager().createNewLocalTask(title);
+		newTask = TasksUiInternal.createNewLocalTask(title);
 
 		if (newTask == null) {
 			return false;

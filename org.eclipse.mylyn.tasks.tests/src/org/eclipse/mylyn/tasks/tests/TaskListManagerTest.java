@@ -128,13 +128,13 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testUniqueTaskID() {
-		LocalTask task1 = manager.createNewLocalTask("label");
+		LocalTask task1 = TasksUiInternal.createNewLocalTask("label");
 		manager.getTaskList().addTask(task1);
-		LocalTask task2 = manager.createNewLocalTask("label");
+		LocalTask task2 = TasksUiInternal.createNewLocalTask("label");
 		manager.getTaskList().addTask(task2);
 		assertEquals(2, manager.getTaskList().getLastLocalTaskId());
 		manager.getTaskList().deleteTask(task2);
-		LocalTask task3 = manager.createNewLocalTask("label");
+		LocalTask task3 = TasksUiInternal.createNewLocalTask("label");
 		manager.getTaskList().addTask(task3);
 		assertTrue(task3.getHandleIdentifier() + " should end with 3", task3.getHandleIdentifier().endsWith("3"));
 		assertEquals(3, manager.getTaskList().getLastLocalTaskId());
@@ -147,7 +147,7 @@ public class TaskListManagerTest extends TestCase {
 		manager.readExistingOrCreateNewList();
 		assertEquals(2, manager.getTaskList().getAllTasks().size());
 		assertEquals(3, manager.getTaskList().getLastLocalTaskId());
-		AbstractTask task4 = manager.createNewLocalTask("label");
+		AbstractTask task4 = TasksUiInternal.createNewLocalTask("label");
 		assertTrue(task4.getHandleIdentifier() + " should end with 4", task4.getHandleIdentifier().endsWith("4"));
 	}
 
@@ -701,15 +701,15 @@ public class TaskListManagerTest extends TestCase {
 
 	public void testCreationAndExternalization() {
 		Set<AbstractTask> rootTasks = new HashSet<AbstractTask>();
-		AbstractTask task1 = manager.createNewLocalTask("task 1");
+		AbstractTask task1 = TasksUiInternal.createNewLocalTask("task 1");
 		rootTasks.add(task1);
 
-		AbstractTask sub1 = manager.createNewLocalTask("sub 1");
+		AbstractTask sub1 = TasksUiInternal.createNewLocalTask("sub 1");
 		manager.getTaskList().addTask(sub1, task1);
 
 		//manager.getTaskList().moveToContainer(sub1, manager.getTaskList().getArchiveContainer());
 
-		AbstractTask task2 = manager.createNewLocalTask("task 2");
+		AbstractTask task2 = TasksUiInternal.createNewLocalTask("task 2");
 		rootTasks.add(task2);
 
 		Set<TaskCategory> categories = new HashSet<TaskCategory>();
@@ -717,15 +717,15 @@ public class TaskListManagerTest extends TestCase {
 		TaskCategory cat1 = new TaskCategory("Category 1");
 		manager.getTaskList().addCategory(cat1);
 		categories.add(cat1);
-		AbstractTask task3 = manager.createNewLocalTask("task 3");
+		AbstractTask task3 = TasksUiInternal.createNewLocalTask("task 3");
 		manager.getTaskList().addTask(task3, cat1);
 		cat1Contents.add(task3);
 		assertEquals(cat1, TaskCategory.getParentTaskCategory(task3));
-		AbstractTask sub2 = manager.createNewLocalTask("sub 2");
+		AbstractTask sub2 = TasksUiInternal.createNewLocalTask("sub 2");
 		manager.getTaskList().addTask(sub2, task3);
 		//manager.getTaskList().moveToContainer(sub2, manager.getTaskList().getArchiveContainer());
 
-		AbstractTask task4 = manager.createNewLocalTask("task 4");
+		AbstractTask task4 = TasksUiInternal.createNewLocalTask("task 4");
 		manager.getTaskList().addTask(task4, cat1);
 		cat1Contents.add(task4);
 
@@ -787,7 +787,7 @@ public class TaskListManagerTest extends TestCase {
 
 // String handle = AbstractTask.getHandle("http://url/repo-location",
 // 1);
-		AbstractTask task1 = manager.createNewLocalTask("task 1");
+		AbstractTask task1 = TasksUiInternal.createNewLocalTask("task 1");
 		manager.getTaskList().addTask(task1, manager.getTaskList().getDefaultCategory());
 		rootTasks.add(task1);
 

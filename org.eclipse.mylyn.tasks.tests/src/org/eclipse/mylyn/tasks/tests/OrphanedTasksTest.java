@@ -17,6 +17,7 @@ import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -54,7 +55,7 @@ public class OrphanedTasksTest extends TestCase {
 		Set<AbstractTask> tasks = TasksUiPlugin.getTaskListManager().getTaskList().getTasks(
 				LocalRepositoryConnector.REPOSITORY_URL);
 		assertTrue(tasks.isEmpty());
-		AbstractTask localTask = TasksUiPlugin.getTaskListManager().createNewLocalTask("Task 1");
+		AbstractTask localTask = TasksUiInternal.createNewLocalTask("Task 1");
 		assertNotNull(localTask);
 		assertEquals(1, localTask.getParentContainers().size());
 	}

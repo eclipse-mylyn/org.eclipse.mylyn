@@ -19,6 +19,7 @@ import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataExportWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataExportWizardPage;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
@@ -69,7 +70,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 		assertTrue(destinationDir.exists());
 
 		// Create a task and context with an interaction event to be saved
-		task1 = manager.createNewLocalTask("Export Test Task");
+		task1 = TasksUiInternal.createNewLocalTask("Export Test Task");
 		manager.getTaskList().addTask(task1);
 		mockContext = ContextCorePlugin.getContextManager().loadContext(task1.getHandleIdentifier());
 		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.EDIT, "structureKind", "handle", "originId");

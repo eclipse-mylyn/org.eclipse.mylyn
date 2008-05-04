@@ -499,12 +499,8 @@ public class TaskActivityManager {
 		TaskActivityUtil.snapStartOfDay(cal);
 	}
 
-	/**
-	 * @deprecated
-	 */
-	@Deprecated
 	public AbstractTask getActiveTask() {
-		return taskListManager.getActiveTask();
+		return activeTask;
 	}
 
 	private void reloadScheduledData() {

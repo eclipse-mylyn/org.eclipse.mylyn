@@ -26,6 +26,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TaskPriorityFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskCompleteAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewCategoryAction;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.internal.web.tasks.WebTask;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -94,30 +95,30 @@ public class TaskListUiTest extends TestCase {
 		cat1 = new TaskCategory("First Category");
 		manager.getTaskList().addCategory(cat1);
 
-		cat1task1 = manager.createNewLocalTask("task 1");
+		cat1task1 = TasksUiInternal.createNewLocalTask("task 1");
 		cat1task1.setPriority(PriorityLevel.P1.toString());
 		cat1task1.setCompletionDate(new Date());
 		manager.getTaskList().addTask(cat1task1, cat1);
 
-		cat1task1sub1 = manager.createNewLocalTask("sub task 1");
+		cat1task1sub1 = TasksUiInternal.createNewLocalTask("sub task 1");
 		cat1task1sub1.setPriority(PriorityLevel.P1.toString());
 		cat1task1sub1.setCompletionDate(new Date());
 		manager.getTaskList().addTask(cat1task1sub1, cat1task1);
 
-		cat1task2 = manager.createNewLocalTask("task 2");
+		cat1task2 = TasksUiInternal.createNewLocalTask("task 2");
 		cat1task2.setPriority(PriorityLevel.P2.toString());
 		manager.getTaskList().addTask(cat1task2, cat1);
 
-		cat1task3 = manager.createNewLocalTask("task 3");
+		cat1task3 = TasksUiInternal.createNewLocalTask("task 3");
 		cat1task3.setPriority(PriorityLevel.P3.toString());
 		cat1task3.setCompletionDate(new Date());
 		manager.getTaskList().addTask(cat1task3, cat1);
 
-		cat1task4 = manager.createNewLocalTask("task 4");
+		cat1task4 = TasksUiInternal.createNewLocalTask("task 4");
 		cat1task4.setPriority(PriorityLevel.P4.toString());
 		manager.getTaskList().addTask(cat1task4, cat1);
 
-		cat1task5 = manager.createNewLocalTask("task 5");
+		cat1task5 = TasksUiInternal.createNewLocalTask("task 5");
 		cat1task5.setPriority(PriorityLevel.P5.toString());
 		cat1task5.setCompletionDate(new Date());
 		manager.getTaskList().addTask(cat1task5, cat1);
@@ -127,29 +128,29 @@ public class TaskListUiTest extends TestCase {
 		cat2 = new TaskCategory("Second Category");
 		manager.getTaskList().addCategory(cat2);
 
-		cat2task1 = manager.createNewLocalTask("task 1");
+		cat2task1 = TasksUiInternal.createNewLocalTask("task 1");
 		cat2task1.setPriority(PriorityLevel.P1.toString());
 		manager.getTaskList().addTask(cat2task1, cat2);
 
-		cat2task1sub1 = manager.createNewLocalTask("sub task 1");
+		cat2task1sub1 = TasksUiInternal.createNewLocalTask("sub task 1");
 		cat2task1sub1.setPriority(PriorityLevel.P1.toString());
 		manager.getTaskList().addTask(cat2task1sub1, cat2task1);
 
-		cat2task2 = manager.createNewLocalTask("task 2");
+		cat2task2 = TasksUiInternal.createNewLocalTask("task 2");
 		cat2task2.setPriority(PriorityLevel.P2.toString());
 		cat2task2.setCompletionDate(new Date());
 		manager.getTaskList().addTask(cat2task2, cat2);
 
-		cat2task3 = manager.createNewLocalTask("task 3");
+		cat2task3 = TasksUiInternal.createNewLocalTask("task 3");
 		cat2task3.setPriority(PriorityLevel.P3.toString());
 		manager.getTaskList().addTask(cat2task3, cat2);
 
-		cat2task4 = manager.createNewLocalTask("task 4");
+		cat2task4 = TasksUiInternal.createNewLocalTask("task 4");
 		cat2task4.setPriority(PriorityLevel.P4.toString());
 		cat2task4.setCompletionDate(new Date());
 		manager.getTaskList().addTask(cat2task4, cat2);
 
-		cat2task5 = manager.createNewLocalTask("task 5");
+		cat2task5 = TasksUiInternal.createNewLocalTask("task 5");
 		cat2task5.setPriority(PriorityLevel.P5.toString());
 		manager.getTaskList().addTask(cat2task5, cat2);
 

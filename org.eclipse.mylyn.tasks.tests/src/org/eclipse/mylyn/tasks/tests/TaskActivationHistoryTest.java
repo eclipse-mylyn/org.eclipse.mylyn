@@ -60,10 +60,10 @@ public class TaskActivationHistoryTest extends TestCase {
 		MockRepositoryQuery query1 = new MockRepositoryQuery("Query 1");
 		MockRepositoryQuery query2 = new MockRepositoryQuery("Query 2");
 
-		AbstractTask task11 = manager.createNewLocalTask("Query1 Task 1");
-		AbstractTask task12 = manager.createNewLocalTask("Query1 Task 2");
-		AbstractTask task21 = manager.createNewLocalTask("Query2 Task 1");
-		AbstractTask task22 = manager.createNewLocalTask("Query2 Task 2");
+		AbstractTask task11 = TasksUiInternal.createNewLocalTask("Query1 Task 1");
+		AbstractTask task12 = TasksUiInternal.createNewLocalTask("Query1 Task 2");
+		AbstractTask task21 = TasksUiInternal.createNewLocalTask("Query2 Task 1");
+		AbstractTask task22 = TasksUiInternal.createNewLocalTask("Query2 Task 2");
 		manager.getTaskList().addQuery(query1);
 		manager.getTaskList().addQuery(query2);
 		createWorkingSet(query1);

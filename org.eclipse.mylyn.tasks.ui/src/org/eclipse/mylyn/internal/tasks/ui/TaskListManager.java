@@ -21,32 +21,24 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
-import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
-import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizer;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskListElementImporter;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.ITaskListManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.swt.widgets.Display;
 
 /**
  * Provides facilities for using and managing the Task List and task activity information.
@@ -78,7 +70,7 @@ public class TaskListManager implements ITaskListManager {
 
 	private final Timer timer;
 
-	private AbstractTask activeTask;
+//	private AbstractTask activeTask;
 
 	private TaskListExternalizationParticipant taskListSaveParticipant;
 
@@ -109,8 +101,10 @@ public class TaskListManager implements ITaskListManager {
 			}
 		}
 
-//		taskList.addOrphanContainer(new OrphanedTasksContainer(LocalRepositoryConnector.CONNECTOR_KIND,
-//				LocalRepositoryConnector.REPOSITORY_URL));
+	}
+
+	public TaskListElementImporter getTaskListWriter() {
+		return importer;
 	}
 
 	public boolean readExistingOrCreateNewList() {
@@ -127,78 +121,17 @@ public class TaskListManager implements ITaskListManager {
 		return true;
 	}
 
-//	/**
-//	 * TODO: Move activation history to activity manager
-//	 * 
-//	 * Only to be called upon initial startup by plugin.
-//	 */
-//	public void initActivityHistory() {
-//		resetAndRollOver();
-////		taskActivityHistory.loadPersistentHistory();
-//	}
-
-	/**
-	 * Will not save an empty task list to avoid losing data on bad startup.
-	 * 
-	 * @deprecated use <code>TasksUiPlugin.getExternalizationManager().requestSave()</code>
-	 */
-	@Deprecated
-	public synchronized void saveTaskList() {
-		TasksUiPlugin.getExternalizationManager().requestSave();
-	}
-
 	public TaskList getTaskList() {
 		return taskList;
-	}
-
-	public void activateTask(AbstractTask task) {
-		TasksUi.getTaskActivityManager().activateTask(task);
-	}
-
-	@Deprecated
-	public void activateTask(AbstractTask task, boolean addToHistory) {
-		TasksUi.getTaskActivityManager().activateTask(task, addToHistory);
-	}
-
-	public void deactivateAllTasks() {
-		TasksUi.getTaskActivityManager().deactivateAllTasks();
-	}
-
-	public void deactivateTask(AbstractTask task) {
-		TasksUi.getTaskActivityManager().deactivateTask(task);
 	}
 
 	public void setTaskListFile(File file) {
 		this.taskListFile = file;
 	}
 
-	public TaskListElementImporter getTaskListWriter() {
-		return importer;
-	}
-
 	public File getTaskListFile() {
 		return taskListFile;
 	}
-
-//	/**
-//	 * public for testing TODO: Move to TaskActivityManager
-//	 */
-//	private void resetAndRollOver() {
-//		resetAndRollOver(TaskActivityUtil.getCalendar().getTime());
-//	}
-//
-//	private void resetAndRollOver(Date startDate) {
-//		if (taskList.isInitialized()) {
-//			TasksUiPlugin.getTaskActivityManager().clear();
-//			List<InteractionEvent> events = ContextCore.getContextManager()
-//					.getActivityMetaContext()
-//					.getInteractionHistory();
-//			for (InteractionEvent event : events) {
-//				TasksUiPlugin.getTaskActivityMonitor().parseInteractionEvent(event);
-//			}
-//			TasksUiPlugin.getTaskActivityManager().reloadTimingData();
-//		}
-//	}
 
 	private class RolloverCheck extends TimerTask {
 
@@ -214,62 +147,6 @@ public class TaskListManager implements ITaskListManager {
 				}
 			}
 		}
-	}
-
-//	public TaskActivationHistory getTaskActivationHistory() {
-//		return taskActivityHistory;
-//	}
-
-//	protected void setTaskListSaveManager(TaskListSaveManager taskListSaveManager) {
-//		this.taskListSaveManager = taskListSaveManager;
-//		this.taskList.addChangeListener(taskListSaveManager);
-//	}
-
-	/**
-	 * Creates a new local task and schedules for today
-	 * 
-	 * @param summary
-	 * 		if null DEFAULT_SUMMARY (New Task) used.
-	 */
-	public LocalTask createNewLocalTask(String summary) {
-		if (summary == null) {
-			summary = LocalRepositoryConnector.DEFAULT_SUMMARY;
-		}
-		LocalTask newTask = new LocalTask("" + taskList.getNextLocalTaskId(), summary);
-		newTask.setPriority(PriorityLevel.P3.toString());
-		TasksUi.getTaskListManager().getTaskList().addTask(newTask);
-
-		TasksUiPlugin.getTaskActivityManager().scheduleNewTask(newTask);
-
-		Object selectedObject = null;
-		TaskListView view = TaskListView.getFromActivePerspective();
-		if (view != null) {
-			selectedObject = ((IStructuredSelection) view.getViewer().getSelection()).getFirstElement();
-		}
-		if (selectedObject instanceof TaskCategory) {
-			taskList.addTask(newTask, (TaskCategory) selectedObject);
-		} else if (selectedObject instanceof AbstractTask) {
-			AbstractTask task = (AbstractTask) selectedObject;
-
-			AbstractTaskContainer container = TaskCategory.getParentTaskCategory(task);
-
-			if (container instanceof TaskCategory) {
-				taskList.addTask(newTask, container);
-			} else if (view != null && view.getDrilledIntoCategory() instanceof TaskCategory) {
-				taskList.addTask(newTask, view.getDrilledIntoCategory());
-			} else {
-				taskList.addTask(newTask, TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
-			}
-		} else if (view != null && view.getDrilledIntoCategory() instanceof TaskCategory) {
-			taskList.addTask(newTask, view.getDrilledIntoCategory());
-		} else {
-			if (view != null && view.getDrilledIntoCategory() != null) {
-				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), ITasksUiConstants.TITLE_DIALOG,
-						"The new task has been added to the root of the list, since tasks can not be added to a query.");
-			}
-			taskList.addTask(newTask, TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
-		}
-		return newTask;
 	}
 
 	/**
@@ -348,8 +225,139 @@ public class TaskListManager implements ITaskListManager {
 		return handle;
 	}
 
+	/**
+	 * use <code>TasksUi.getTaskActivityManager().getActiveTask()</code>
+	 * 
+	 * @deprecated
+	 */
+	@Deprecated
 	public AbstractTask getActiveTask() {
-		return activeTask;
+		return TasksUi.getTaskActivityManager().getActiveTask();
 	}
 
+	/**
+	 * Will not save an empty task list to avoid losing data on bad startup.
+	 * 
+	 * @deprecated use <code>TasksUiPlugin.getExternalizationManager().requestSave()</code>
+	 */
+	@Deprecated
+	public synchronized void saveTaskList() {
+		TasksUiPlugin.getExternalizationManager().requestSave();
+	}
+
+	/**
+	 * use <code>TasksUi.getTaskActivityManager().activateTask(task)</code>
+	 * 
+	 * @deprecated
+	 */
+	@Deprecated
+	public void activateTask(AbstractTask task) {
+		TasksUi.getTaskActivityManager().activateTask(task);
+	}
+
+	/**
+	 * use <code>TasksUi.getTaskActivityManager().activateTask(task)</code>
+	 * 
+	 * @deprecated
+	 */
+	@Deprecated
+	public void activateTask(AbstractTask task, boolean addToHistory) {
+		TasksUi.getTaskActivityManager().activateTask(task);
+	}
+
+	/**
+	 * use <code>TasksUi.getTaskActivityManager().deactivateAllTasks()</code>
+	 * 
+	 * @deprecated
+	 */
+	@Deprecated
+	public void deactivateAllTasks() {
+		TasksUi.getTaskActivityManager().deactivateAllTasks();
+	}
+
+	/**
+	 * use <code>TasksUi.getTaskActivityManager().deactivateTask(task)</code>
+	 * 
+	 * @deprecated
+	 */
+	@Deprecated
+	public void deactivateTask(AbstractTask task) {
+		TasksUi.getTaskActivityManager().deactivateTask(task);
+	}
+
+//	public TaskActivationHistory getTaskActivationHistory() {
+//	return taskActivityHistory;
+//}
+
+//protected void setTaskListSaveManager(TaskListSaveManager taskListSaveManager) {
+//	this.taskListSaveManager = taskListSaveManager;
+//	this.taskList.addChangeListener(taskListSaveManager);
+//}
+
+///**
+// * Creates a new local task and schedules for today
+// * 
+// * @param summary
+// * 		if null DEFAULT_SUMMARY (New Task) used.
+// */
+//public LocalTask createNewLocalTask(String summary) {
+//	if (summary == null) {
+//		summary = LocalRepositoryConnector.DEFAULT_SUMMARY;
+//	}
+//	LocalTask newTask = new LocalTask("" + taskList.getNextLocalTaskId(), summary);
+//	newTask.setPriority(PriorityLevel.P3.toString());
+//	TasksUi.getTaskListManager().getTaskList().addTask(newTask);
+//
+//	TasksUiPlugin.getTaskActivityManager().scheduleNewTask(newTask);
+//
+//	Object selectedObject = null;
+//	TaskListView view = TaskListView.getFromActivePerspective();
+//	if (view != null) {
+//		selectedObject = ((IStructuredSelection) view.getViewer().getSelection()).getFirstElement();
+//	}
+//	if (selectedObject instanceof TaskCategory) {
+//		taskList.addTask(newTask, (TaskCategory) selectedObject);
+//	} else if (selectedObject instanceof AbstractTask) {
+//		AbstractTask task = (AbstractTask) selectedObject;
+//
+//		AbstractTaskContainer container = TaskCategory.getParentTaskCategory(task);
+//
+//		if (container instanceof TaskCategory) {
+//			taskList.addTask(newTask, container);
+//		} else if (view != null && view.getDrilledIntoCategory() instanceof TaskCategory) {
+//			taskList.addTask(newTask, view.getDrilledIntoCategory());
+//		} else {
+//			taskList.addTask(newTask, TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
+//		}
+//	} else if (view != null && view.getDrilledIntoCategory() instanceof TaskCategory) {
+//		taskList.addTask(newTask, view.getDrilledIntoCategory());
+//	} else {
+//		if (view != null && view.getDrilledIntoCategory() != null) {
+//			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), ITasksUiConstants.TITLE_DIALOG,
+//					"The new task has been added to the root of the list, since tasks can not be added to a query.");
+//		}
+//		taskList.addTask(newTask, TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
+//	}
+//	return newTask;
+//}
+
+//	/**
+//	 * public for testing TODO: Move to TaskActivityManager
+//	 */
+//	private void resetAndRollOver() {
+//		resetAndRollOver(TaskActivityUtil.getCalendar().getTime());
+//	}
+//
+//	private void resetAndRollOver(Date startDate) {
+//		if (taskList.isInitialized()) {
+//			TasksUiPlugin.getTaskActivityManager().clear();
+//			List<InteractionEvent> events = ContextCore.getContextManager()
+//					.getActivityMetaContext()
+//					.getInteractionHistory();
+//			for (InteractionEvent event : events) {
+//				TasksUiPlugin.getTaskActivityMonitor().parseInteractionEvent(event);
+//			}
+//			TasksUiPlugin.getTaskActivityManager().reloadTimingData();
+//		}
+//	}
 }

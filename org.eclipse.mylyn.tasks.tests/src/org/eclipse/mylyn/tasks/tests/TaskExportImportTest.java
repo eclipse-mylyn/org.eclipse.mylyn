@@ -26,6 +26,7 @@ import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 
@@ -65,7 +66,7 @@ public class TaskExportImportTest extends AbstractContextTest {
 
 	public void testTaskContextExport() throws IOException {
 
-		LocalTask task = TasksUiPlugin.getTaskListManager().createNewLocalTask("Test local task");
+		LocalTask task = TasksUiInternal.createNewLocalTask("Test local task");
 		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 		taskList.addTask(task, taskList.getDefaultCategory());
 		assertTrue(taskList.getAllTasks().size() > 0);

@@ -15,6 +15,7 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -52,12 +53,12 @@ public class TasksUiUtilTest extends TestCase {
 		cat1 = new TaskCategory("First Category");
 		manager.getTaskList().addCategory(cat1);
 
-		cat1task1 = manager.createNewLocalTask("task 1");
+		cat1task1 = TasksUiInternal.createNewLocalTask("task 1");
 		cat1task1.setPriority(PriorityLevel.P1.toString());
 		cat1task1.setCompletionDate(new Date());
 		manager.getTaskList().addTask(cat1task1, cat1);
 
-		cat1task2 = manager.createNewLocalTask("task 2");
+		cat1task2 = TasksUiInternal.createNewLocalTask("task 2");
 		cat1task2.setPriority(PriorityLevel.P2.toString());
 		manager.getTaskList().addTask(cat1task2, cat1);
 

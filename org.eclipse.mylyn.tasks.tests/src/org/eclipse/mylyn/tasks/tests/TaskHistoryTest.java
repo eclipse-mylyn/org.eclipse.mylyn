@@ -19,6 +19,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskHistoryDropDownAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
@@ -48,19 +49,19 @@ public class TaskHistoryTest extends TestCase {
 	protected void setUp() throws Exception {
 		resetHistory();
 
-		task1 = manager.createNewLocalTask("task 1");
+		task1 = TasksUiInternal.createNewLocalTask("task 1");
 		manager.getTaskList().addTask(task1);
 
-		task2 = manager.createNewLocalTask("task 2");
+		task2 = TasksUiInternal.createNewLocalTask("task 2");
 		manager.getTaskList().addTask(task2);
 
-		task3 = manager.createNewLocalTask("task 3");
+		task3 = TasksUiInternal.createNewLocalTask("task 3");
 		manager.getTaskList().addTask(task3);
 
-		task4 = manager.createNewLocalTask("task 4");
+		task4 = TasksUiInternal.createNewLocalTask("task 4");
 		manager.getTaskList().addTask(task4);
 
-		task5 = manager.createNewLocalTask("task 5");
+		task5 = TasksUiInternal.createNewLocalTask("task 5");
 		manager.getTaskList().addTask(task5);
 
 		history = TasksUi.getTaskActivityManager().getTaskActivationHistory();
